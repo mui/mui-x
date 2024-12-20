@@ -7,7 +7,7 @@ import {
   GridRenderCellParams,
   GridRowId,
 } from '@mui/x-data-grid';
-import { createSelectorMemoized } from '@mui/x-data-grid/internals';
+import { createSelector } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
@@ -29,7 +29,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const isExpandedSelector = createSelectorMemoized(
+const isExpandedSelector = createSelector(
   gridDetailPanelExpandedRowIdsSelector,
   (expandedRowIds, rowId: GridRowId) => {
     return expandedRowIds.has(rowId);
