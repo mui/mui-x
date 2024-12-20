@@ -54,7 +54,7 @@ When a selection in the last view is made, `onClose` will be called only if the 
 The default value of `closeOnSelect` depends on the component:
 
 - Date Picker and Date Range Picker: `true` on desktop and `false` on mobile variants;
-- Time Picker, Date Time Picker and Date Time Range Picker: `false` on both desktop and mobile variants.
+- Time Picker, Date Time Picker, and Date Time Range Picker: `false` on desktop and mobile variants.
 
   Here are a few examples:
 
@@ -231,7 +231,7 @@ When a selection in the last view is made, `onAccept` will be called only if the
 The default value of `closeOnSelect` depends on the component used:
 
 - Date Picker and Date Range Picker: `true` on desktop and `false` on mobile variants;
-- Time Picker, Date Time Picker and Date Time Range Picker: `false` on both desktop and mobile variants.
+- Time Picker, Date Time Picker, and Date Time Range Picker: `false` on desktop and mobile variants.
 
 Here are a few examples:
 
