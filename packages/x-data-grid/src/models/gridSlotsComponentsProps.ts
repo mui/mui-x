@@ -43,6 +43,7 @@ import type {
   IconButtonProps,
   LinearProgressProps,
   MenuItemProps,
+  SkeletonProps,
 } from './gridBaseSlots';
 
 type RootProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;
@@ -67,6 +68,7 @@ export interface BaseTooltipPropsOverrides {}
 export interface BasePopperPropsOverrides {}
 export interface BaseInputLabelPropsOverrides {}
 export interface BaseSelectOptionPropsOverrides {}
+export interface BaseSkeletonPropsOverrides {}
 export interface BaseChipPropsOverrides {}
 
 export interface CellPropsOverrides {}
@@ -112,6 +114,7 @@ interface BaseSlotProps {
     value: any;
     children?: React.ReactNode;
   } & BaseSelectOptionPropsOverrides;
+  baseSkeleton: SkeletonProps & BaseSkeletonPropsOverrides;
   baseChip: ChipProps & BaseChipPropsOverrides;
 }
 

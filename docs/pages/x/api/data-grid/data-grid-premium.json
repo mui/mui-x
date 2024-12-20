@@ -885,7 +885,13 @@
     {
       "name": "baseSelectOption",
       "description": "The custom SelectOption component used in the grid.",
-      "default": "MenuItem",
+      "default": "SelectOption",
+      "class": null
+    },
+    {
+      "name": "baseSkeleton",
+      "description": "The custom Skeleton component used in the grid.",
+      "default": "Skeleton",
       "class": null
     },
     {

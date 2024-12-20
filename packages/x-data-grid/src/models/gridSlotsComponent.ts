@@ -92,9 +92,14 @@ export interface GridBaseSlots {
   baseInputLabel: React.JSXElementConstructor<GridSlotProps['baseInputLabel']>;
   /**
    * The custom SelectOption component used in the grid.
-   * @default MenuItem
+   * @default SelectOption
    */
   baseSelectOption: React.JSXElementConstructor<GridSlotProps['baseSelectOption']>;
+  /**
+   * The custom Skeleton component used in the grid.
+   * @default Skeleton
+   */
+  baseSkeleton: React.JSXElementConstructor<GridSlotProps['baseSkeleton']>;
 }
 
 /**
