@@ -58,4 +58,4 @@ export const getFocusedListItemIndex = (listElement: HTMLUListElement): number =
   return children.indexOf(getActiveElement(document)!);
 };
 
-export const DEFAULT_DESKTOP_MODE_MEDIA_QUERY = '@media (pointer: fine)';
+export const DEFAULT_DESKTOP_MODE_MEDIA_QUERY = '@media (hover: hover) and (pointer: fine)';
