@@ -1,11 +1,12 @@
 import { DefaultizedProps } from '@mui/x-internals/types';
+import { AxisId } from '@mui/x-charts/internals';
 import {
   HeatmapItemIdentifier,
   HeatmapSeriesType,
   DefaultizedHeatmapSeriesType,
   HeatmapValueType,
 } from '../models/seriesType/heatmap';
-import { ZoomOptions } from '../context/ZoomProvider';
+import { ZoomOption as ZoomOptionPro } from '../internals/plugins/useChartProZoom/zoom.types';
 
 declare module '@mui/x-charts/internals' {
   interface ChartsSeriesConfig {
@@ -19,7 +20,14 @@ declare module '@mui/x-charts/internals' {
     };
   }
 
+  interface ZoomOption extends ZoomOptionPro {}
+
+  interface DefaultizedZoomOption extends Required<ZoomOptionPro> {
+    axisId: AxisId;
+    axisDirection: 'x' | 'y';
+  }
+
   interface AxisConfigExtension {
-    zoom?: boolean | ZoomOptions;
+    zoom?: boolean | ZoomOption;
   }
 }
