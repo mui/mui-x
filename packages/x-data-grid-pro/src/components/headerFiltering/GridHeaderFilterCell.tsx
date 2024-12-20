@@ -23,6 +23,8 @@ import {
   gridFilterModelSelector,
   gridFilterableColumnLookupSelector,
   GridPinnedColumnPosition,
+  gridDensitySelector,
+  GridDensity,
 } from '@mui/x-data-grid';
 import {
   GridStateColDef,
@@ -66,10 +68,11 @@ type OwnerState = DataGridProProcessedProps & {
   pinnedPosition?: GridPinnedColumnPosition;
   showRightBorder: boolean;
   showLeftBorder: boolean;
+  density: GridDensity;
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { colDef, classes, showRightBorder, showLeftBorder, pinnedPosition } = ownerState;
+  const { colDef, classes, showRightBorder, showLeftBorder, pinnedPosition, density } = ownerState;
 
   const slots = {
     root: [
@@ -83,6 +86,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       pinnedPosition === 'left' && 'columnHeader--pinnedLeft',
       pinnedPosition === 'right' && 'columnHeader--pinnedRight',
     ],
+    formControl: [density === 'compact' && 'headerFilterInput--compact'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -135,6 +139,8 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
 
     const menuOpenField = useGridSelector(apiRef, gridHeaderFilteringMenuSelector);
     const isMenuOpen = menuOpenField === colDef.field;
+
+    const density = useGridSelector(apiRef, gridDensitySelector);
 
     // TODO: Support for `isAnyOf` operator
     const filterOperators = React.useMemo(() => {
@@ -308,6 +314,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
       colDef,
       showLeftBorder,
       showRightBorder,
+      density,
     };
 
     const classes = useUtilityClasses(ownerState as OwnerState);
@@ -378,6 +385,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
               tabIndex={-1}
               InputLabelProps={null}
               sx={colDef.type === 'date' || colDef.type === 'dateTime' ? dateSx : undefined}
+              formControlClassName={classes.formControl}
               {...(isNoInputOperator ? { value: '' } : {})}
               {...currentOperator?.InputComponentProps}
               {...InputComponentProps}
