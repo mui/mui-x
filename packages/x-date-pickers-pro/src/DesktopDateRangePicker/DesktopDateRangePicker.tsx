@@ -53,6 +53,7 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
 
   const props = {
     ...defaultizedProps,
+    closeOnSelect: defaultizedProps.closeOnSelect ?? true,
     viewRenderers,
     format: utils.formats.keyboardDate,
     calendars: defaultizedProps.calendars ?? 2,

@@ -56,6 +56,7 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
   // Props with the default values specific to the desktop variant
   const props = {
     ...defaultizedProps,
+    closeOnSelect: defaultizedProps.closeOnSelect ?? true,
     viewRenderers,
     format: resolveDateFormat(utils, defaultizedProps, false),
     yearsPerRow: defaultizedProps.yearsPerRow ?? 4,

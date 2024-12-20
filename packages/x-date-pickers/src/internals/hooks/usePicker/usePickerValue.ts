@@ -155,7 +155,6 @@ export const usePickerValue = <
   props,
   valueManager,
   valueType,
-  variant,
   validator,
 }: UsePickerValueParams<TValue, TExternalProps>): UsePickerValueResponse<
   TValue,
@@ -168,7 +167,7 @@ export const usePickerValue = <
     onChange,
     value: inValueWithoutRenderTimezone,
     defaultValue: inDefaultValue,
-    closeOnSelect = variant === 'desktop' && !valueType.includes('time'),
+    closeOnSelect = false,
     timezone: timezoneProp,
     referenceDate,
   } = props;
