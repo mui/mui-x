@@ -12,14 +12,11 @@ import {
 
 export interface DesktopDateRangePickerSlots
   extends BaseDateRangePickerSlots,
-    MakeOptional<UseDesktopRangePickerSlots<'day'>, 'field'> {}
+    MakeOptional<UseDesktopRangePickerSlots, 'field'> {}
 
 export interface DesktopDateRangePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends BaseDateRangePickerSlotProps,
-    Omit<
-      UseDesktopRangePickerSlotProps<'day', TEnableAccessibleFieldDOMStructure>,
-      'tabs' | 'toolbar'
-    > {}
+    Omit<UseDesktopRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>, 'tabs' | 'toolbar'> {}
 
 export interface DesktopDateRangePickerProps<
   TEnableAccessibleFieldDOMStructure extends boolean = true,

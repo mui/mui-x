@@ -213,7 +213,7 @@ createTheme({
     },
     MuiDateTimePickerTabs: {
       defaultProps: {
-        view: 'day',
+        hidden: true,
         // @ts-expect-error invalid MuiDateTimePicker prop
         someRandomProp: true,
       },
@@ -356,7 +356,7 @@ createTheme({
     },
     MuiPickersPopper: {
       defaultProps: {
-        open: true,
+        placement: 'bottom',
         // @ts-expect-error invalid MuiPickersPopper prop
         someRandomProp: true,
       },

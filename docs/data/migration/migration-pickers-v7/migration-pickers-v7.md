@@ -374,76 +374,179 @@ If the updated values are not suitable for your use case, you can override them.
    );
   ```
 
-- The component passed to the `layout` slot no longer receives a `disabled` prop, instead you can use the `usePickerContext` hook:
+- The component passed to the `layout` slot no longer receives the `disabled` and `readOnly` props, instead you can use the `usePickerContext` hook:
 
   ```diff
-  -console.log(props.disabled);
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+
+  -const { disabled } = props;
   +const { disabled } = usePickerContext();
-  +console.log(disabled);
-  ```
 
-- The component passed to the `layout` slot no longer receives a `readOnly` prop, instead you can use the `usePickerContext` hook:
-
-  ```diff
-  -console.log(props.readOnly);
-  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+  -const { readOnly } = props;
   +const { readOnly } = usePickerContext();
-  +console.log(readOnly);
   ```
 
 - The component passed to the `layout` slot no longer receives an `isRtl` prop. If you need to access this information, you can use the `useRtl` hook from `@mui/system`:
 
   ```diff
   +import { useRtl } from '@mui/system/RtlProvider';
-   function CustomLayout(props) {
-  -  console.log(props.isRtl);
+
+  -  const { isRtl } = props;
   +  const isRtl = useRtl();
-  +  console.log(isRtl);
-   }
   ```
 
-- The component passed to the `layout` slot no longer receives an `orientation` and the `isLandscape` props, instead you can use the `usePickerContext` hook:
+- The component passed to the `layout` slot no longer receives the `orientation` and `isLandscape` props, instead you can use the `usePickerContext` hook:
 
   ```diff
-  -console.log(props.orientation);
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+
+  -const { orientation } = props;
   +const { orientation } = usePickerContext();
-  +console.log(orientation);
-  -console.log(props.isLandscape);
-  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+
+  -const { isLandscape } = props;
   +const { orientation } = usePickerContext();
-  +console.log(orientation === 'landscape');
+  +const isLandscape = orientation === 'landscape';
   ```
 
 - The component passed to the `layout` slot no longer receives a `wrapperVariant` prop, instead you can use the `usePickerContext` hook:
 
   ```diff
-  -console.log(props.wrapperVariant);
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+
+  -const { wrapperVariant } = props;
   +const { variant } = usePickerContext();
-  +console.log(variant);
   ```
+
+- The component passed to the `layout` slot no longer receives the `view`, `views` and `onViewChange` props, instead you can use the `usePickerContext` hook:
+
+  ```diff
+  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+
+  -const { view } = props;
+  +const { view } = usePickerContext();
+
+  -const { views } = props;
+  +const { views } = usePickerContext();
+
+  -const { onViewChange } = props;
+  +const { onViewChange } = usePickerContext();
+  ```
+
+- The component passed to the `layout` slot no longer receives the `onClear`, `onSetToday`, `onAccept`, `onCancel`, `onOpen`, `onClose` and `onDismiss` props, instead you can use the `usePickerActionsContext` or the `usePickerContext` hooks:
+
+  ```diff
+  +import { usePickerActionsContext } from '@mui/x-date-pickers/hooks';
+
+  -const { onClear } = props;
+  +const { clearValue } = usePickerActionsContext();
+
+  -const { onSetToday } = props;
+  +const { setValueToToday } = usePickerActionsContext();
+
+  -const { onAccept } = props;
+  +const { acceptValueChanges } = usePickerActionsContext();
+
+  -const { onCancel } = props;
+  +const { cancelValueChanges } = usePickerActionsContext();
+
+  -const { onOpen } = props;
+  +const { setOpen } = usePickerActionsContext();
+  +const onOpen = event => {
+  +  event.preventDefault();
+  +  setOpen(true);
+  +}
+
+  -props.onClose();
+  +const { setOpen } = usePickerActionsContext();
+  +const onClose = event => {
+  +  event.preventDefault();
+  +  setOpen(false);
+  +}
+
+   // This contains a small behavior change.
+   // If the picker is not controlled and has a default value,
+   // opening it and calling `acceptValueChanges` without any change will call `onAccept` with the default value.
+   // Whereas before, opening it and calling `onDimiss` without any change would not have called `onAccept`.
+  -const { onDismiss } = props;
+  +const { acceptValueChanges } = usePickerActionsContext();
+  +const onDismiss = acceptValueChanges
+  ```
+
+  :::success
+  The `usePickerContext` also contain all the actions returned by `usePickerActionsContext`.
+  The only difference is that `usePickerActionsContext` only contains variables with stable references that won't cause a re-render of your component.
+  :::
 
 ### Slot: `toolbar`
 
-- The component passed to the `toolbar` slot no longer receives a `disabled` prop, instead you can use the `usePickerContext` hook:
+- The component passed to the `toolbar` slot no longer receives the `disabled` and `readOnly` props, instead you can use the `usePickerContext` hook:
 
   ```diff
-  -console.log(props.disabled);
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+
+  -const { disabled } = props;
   +const { disabled } = usePickerContext();
-  +console.log(disabled);
+
+  -const { readOnly } = props;
+  +const { readOnly } = usePickerContext();
   ```
 
-- The component passed to the `toolbar` slot no longer receives a `readOnly` prop, instead you can use the `usePickerContext` hook:
+- The component passed to the `toolbar` slot no longer receives a `view`, `views` and `onViewChange` props, instead you can use the `usePickerContext` hook:
 
   ```diff
-  -console.log(props.readOnly);
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
-  +const { readOnly } = usePickerContext();
-  +console.log(readOnly);
+
+  -const { view } = props;
+  +const { view } = usePickerContext();
+
+  -const { views } = props;
+  +const { views } = usePickerContext();
+
+  -const { onViewChange } = props;
+  +const { onViewChange } = usePickerContext();
   ```
+
+### Slot: `tabs`
+
+- The component passed to the `tabs` slot no longer receives a `view`, `views` and `onViewChange` props, instead you can use the `usePickerContext` hook:
+
+  ```diff
+  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+
+  -const { view } = props;
+  +const { view } = usePickerContext();
+
+  -const { views } = props;
+  +const { views } = usePickerContext();
+
+  -const { onViewChange } = props;
+  +const { onViewChange } = usePickerContext();
+  ```
+
+### Slot: `actionBar`
+
+- The component passed to the `actionBar` slot no longer receives the `onClear`, `onSetToday`, `onAccept` and `onCancel` props. You can use the `usePickerActionsContext` or the `usePickerContext` hooks instead:
+
+  ```diff
+  +import { usePickerActionsContext } from '@mui/x-date-pickers/hooks';
+
+  -const { onClear } = props;
+  +const { clearValue } = usePickerActionsContext();
+
+  -const { onSetToday } = props;
+  +const { setValueToToday } = usePickerActionsContext();
+
+  -const { onAccept } = props;
+  +const { acceptValueChanges } = usePickerActionsContext();
+
+  -const { onCancel } = props;
+  +const { cancelValueChanges } = usePickerActionsContext();
+  ```
+
+  :::success
+  The `usePickerContext` also contain all the actions returned by `usePickerActionsContext`.
+  The only difference is that `usePickerActionsContext` only contains variables with stable references that won't cause a re-render of your component.
+  :::
 
 ## Renamed variables and types
 
