@@ -1,13 +1,8 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
-import { PickerValidValue } from '../value';
 
-export interface BaseToolbarProps<TValue extends PickerValidValue>
-  extends ExportedBaseToolbarProps {
-  isLandscape: boolean;
-  onChange: (newValue: TValue) => void;
-  value: TValue;
+export interface BaseToolbarProps extends ExportedBaseToolbarProps {
   titleId?: string;
 }
 
