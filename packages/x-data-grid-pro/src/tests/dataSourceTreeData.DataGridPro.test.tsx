@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
-import { createRenderer, waitFor, fireEvent, within } from '@mui/internal-test-utils';
+import { createRenderer, waitFor, fireEvent, within, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import {
   DataGridPro,
@@ -160,7 +160,9 @@ describe('<DataGridPro /> - Data source tree data', () => {
     expect(Object.keys(tree).length).to.equal(10 + 1);
     const cell11 = getCell(0, 0);
     const firstChildId = (tree[GRID_ROOT_GROUP_ID] as GridGroupNode).children[0];
-    apiRef.current.unstable_dataSource.fetchRows(firstChildId);
+    act(() => {
+      apiRef.current.unstable_dataSource.fetchRows(firstChildId);
+    });
     await raf();
 
     await waitFor(() => {
