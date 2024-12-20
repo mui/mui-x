@@ -22,6 +22,13 @@ export interface GridAggregationApi {
   setAggregationModel: (model: GridAggregationModel) => void;
 }
 
+export interface GridAggregationPrivateApi {
+  /**
+   * Applies the aggregation to the rows.
+   */
+  applyAggregation: () => void;
+}
+
 export interface GridAggregationGetCellValueParams {
   /**
    * The row model of the row that the current cell belongs to.
@@ -74,6 +81,14 @@ export interface GridAggregationFunction<V = any, AV = V> {
   getCellValue?: (params: GridAggregationGetCellValueParams) => V;
 }
 
+/**
+ * Grid aggregation function data sourcedefinition interface.
+ * @demos
+ *   - [Server-side aggregation](/x/react-data-grid/server-side-data/aggregation/)
+ */
+export interface GridAggregationFunctionDataSource
+  extends Omit<GridAggregationFunction, 'apply' | 'getCellValue'> {}
+
 export interface GridAggregationParams<V = any> {
   values: (V | undefined)[];
   groupId: GridRowId;
@@ -115,7 +130,7 @@ export interface GridAggregationHeaderMeta {
 
 export interface GridAggregationRule {
   aggregationFunctionName: string;
-  aggregationFunction: GridAggregationFunction;
+  aggregationFunction: GridAggregationFunction | GridAggregationFunctionDataSource;
 }
 
 /**

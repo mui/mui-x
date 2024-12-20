@@ -1,8 +1,6 @@
 import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
 import {
-  useGridApiEventHandler,
-  useGridApiMethod,
   GridDataSourceGroupNode,
   useGridSelector,
   gridPaginationModelSelector,
@@ -15,7 +13,7 @@ import {
   GridStateInitializer,
   GridStrategyGroup,
   GridStrategyProcessor,
-  useGridRegisterStrategyProcessor,
+  GridDataSourceCache,
 } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -28,7 +26,6 @@ import {
   RequestStatus,
   runIf,
 } from './utils';
-import { GridDataSourceCache } from '../../../models';
 import { GridDataSourceCacheDefault, GridDataSourceCacheDefaultConfig } from './cache';
 
 const INITIAL_STATE = {
@@ -59,8 +56,8 @@ export const dataSourceStateInitializer: GridStateInitializer = (state) => {
   };
 };
 
-export const useGridDataSource = (
-  apiRef: React.MutableRefObject<GridPrivateApiPro>,
+export const useGridDataSourceBase = <Api extends GridPrivateApiPro>(
+  apiRef: React.MutableRefObject<Api>,
   props: Pick<
     DataGridProProcessedProps,
     | 'unstable_dataSource'
@@ -371,33 +368,6 @@ export const useGridDataSource = (
     resetDataSourceState,
   };
 
-  useGridApiMethod(apiRef, dataSourceApi, 'public');
-  useGridApiMethod(apiRef, dataSourcePrivateApi, 'private');
-
-  useGridRegisterStrategyProcessor(
-    apiRef,
-    DataSourceRowsUpdateStrategy.Default,
-    'dataSourceRowsUpdate',
-    handleDataUpdate,
-  );
-
-  useGridApiEventHandler(apiRef, 'strategyAvailabilityChange', handleStrategyActivityChange);
-  useGridApiEventHandler(
-    apiRef,
-    'sortModelChange',
-    runIf(defaultRowsUpdateStrategyActive, () => fetchRows()),
-  );
-  useGridApiEventHandler(
-    apiRef,
-    'filterModelChange',
-    runIf(defaultRowsUpdateStrategyActive, () => fetchRows()),
-  );
-  useGridApiEventHandler(
-    apiRef,
-    'paginationModelChange',
-    runIf(defaultRowsUpdateStrategyActive, () => fetchRows()),
-  );
-
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
     if (isFirstRender.current) {
@@ -430,4 +400,19 @@ export const useGridDataSource = (
       scheduledGroups.current = groupsToAutoFetch.length;
     }
   }, [apiRef, nestedDataManager, groupsToAutoFetch]);
+
+  return {
+    api: { public: dataSourceApi, private: dataSourcePrivateApi },
+    strategyProcessor: {
+      strategyName: DataSourceRowsUpdateStrategy.Default,
+      group: 'dataSourceRowsUpdate',
+      processor: handleDataUpdate,
+    },
+    events: {
+      strategyAvailabilityChange: handleStrategyActivityChange,
+      sortModelChange: runIf(defaultRowsUpdateStrategyActive, () => fetchRows()),
+      filterModelChange: runIf(defaultRowsUpdateStrategyActive, () => fetchRows()),
+      paginationModelChange: runIf(defaultRowsUpdateStrategyActive, () => fetchRows()),
+    },
+  };
 };
