@@ -5,6 +5,108 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.0.0-alpha.5
+
+_Dec 19, 2024_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Korean (ko-KR) locale on the Data Grid
+- 🐞 Bugfixes
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@good-jinu, @k-rajat19.
+Following are all team members who have contributed to this release:
+@alexfauquette, @cherniavskii, @flaviendelangle, @KenanYusuf, @LukasTy, @MBilalShafi, @romgrk.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### Breaking changes
+
+- Passing additional props (like `data-*`, `aria-*`) directly on the Data Grid component is no longer supported. To pass the props, use `slotProps`.
+
+  - For `.root` element, use `slotProps.root`.
+  - For `.main` element (the one with `role="grid"`), use `slotProps.main`.
+
+- `detailPanelExpandedRowIds` and `onDetailPanelExpandedRowIdsChange` props use a [`Set`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) instead of an array:
+
+  ```diff
+  -detailPanelExpandedRowIds?: GridRowId[];
+  +detailPanelExpandedRowIds?: Set<GridRowId>;
+
+  -onDetailPanelExpandedRowIdsChange?: (ids: GridRowId[], details: GridCallbackDetails) => void;
+  +onDetailPanelExpandedRowIdsChange?: (ids: Set<GridRowId>, details: GridCallbackDetails) => void;
+  ```
+
+- `apiRef.current.getExpandedDetailPanels` and `apiRef.current.setExpandedDetailPanels` methods receive and return a [`Set`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) instead of an array.
+- `gridDetailPanelExpandedRowIdsSelector` returns a [`Set`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) instead of an array.
+- `gridDetailPanelExpandedRowsHeightCacheSelector` was removed.
+
+#### `@mui/x-data-grid@8.0.0-alpha.5`
+
+- [DataGrid] Consider `columnGroupHeaderHeight` prop in `getTotalHeaderHeight` method (#15915) @k-rajat19
+- [DataGrid] Fix autosizing with virtualized columns (#15116) @k-rajat19
+- [DataGrid] Move `<Badge />` to leaf import (#15879) @romgrk
+- [DataGrid] Move `<ListItemText />` and `<ListItemIcon />` to leaf import (#15869) @romgrk
+- [DataGrid] Remove the Joy UI demo (#15913) @romgrk
+- [DataGrid] Update quick filter input variant (#15909) @KenanYusuf
+- [DataGrid] Use `slotProps` to forward props to `.main` and `.root` elements (#15870) @MBilalShafi
+- [l10n] Improve Korean(ko-KR) locale (#15878) @good-jinu
+
+#### `@mui/x-data-grid-pro@8.0.0-alpha.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.0.0-alpha.5`, plus:
+
+- [DataGridPro] Use `Set` for `detailPanelExpandedRowIds` (#15835) @cherniavskii
+
+#### `@mui/x-data-grid-premium@8.0.0-alpha.5` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.5`.
+
+### Date and Time Pickers
+
+#### Breaking changes
+
+- The `<PickersMonth />` component has been moved inside the Month Calendar component — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#month-calendar).
+
+- The `<PickersYear />` component has been moved inside the Year Calendar component — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#year-calendar).
+
+#### `@mui/x-date-pickers@8.0.0-alpha.5`
+
+- [pickers] Add verification to disable skipped hours in spring forward DST (#15849) @flaviendelangle
+- [pickers] Remove `PickersMonth` and `PickersYear` from the theme and remove the `div` wrapping each button (#15806) @flaviendelangle
+- [pickers] Use the new `ownerState` object on the `<PickersTextField />` component (#15863) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@8.0.0-alpha.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.0.0-alpha.5`.
+
+### Charts
+
+#### `@mui/x-charts@8.0.0-alpha.5`
+
+- [charts] Fix `<ScatterChart />` value type if `null` (#15917) @alexfauquette
+
+#### `@mui/x-charts-pro@8.0.0-alpha.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.0.0-alpha.5`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.0.0-alpha.5`
+
+No changes since `@mui/x-tree-view-pro@v8.0.0-alpha.4`.
+
+#### `@mui/x-tree-view-pro@8.0.0-alpha.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.0.0-alpha.5`.
+
+### Core
+
+- [code-infra] Remove `@mui/material-nextjs` dependency (#15925) @LukasTy
+
 ## 8.0.0-alpha.4
 
 _Dec 13, 2024_
@@ -39,6 +141,7 @@ Following are all team members who have contributed to this release:
   -const output = useGridSelector(apiRef, selector, equals)
   +const output = useGridSelector(apiRef, selector, arguments, equals)
   ```
+
 - The default variant for text fields and selects in the filter panel has been changed to `outlined`.
 - The "row spanning" feature is now stable.
   ```diff
