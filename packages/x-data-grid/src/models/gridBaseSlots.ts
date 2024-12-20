@@ -47,3 +47,15 @@ export type MenuItemProps = {
   value?: number | string | readonly string[];
   style?: React.CSSProperties;
 };
+
+export type CircularProgressProps = {
+  /**
+   * Pixels or CSS value.
+   * @default 40
+   */
+  size?: number | string;
+  /** @default 'primary' */
+  color?: 'inherit' | 'primary';
+};
+
+export type LinearProgressProps = {};

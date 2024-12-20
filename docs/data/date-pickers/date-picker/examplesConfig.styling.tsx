@@ -115,25 +115,7 @@ export const staticDatePickerExamples: PickersSubcomponentType = {
         componentProps: { views: ['month'] },
       },
     },
-    slots: ['root'],
-  },
-  PickersMonth: {
-    examples: {
-      customTheme: {
-        type: 'success',
-        componentProps: { views: ['month'] },
-      },
-      sxProp: {
-        type: 'success',
-        componentProps: { views: ['month'] },
-      },
-
-      styledComponents: {
-        type: 'success',
-        componentProps: { views: ['month'] },
-      },
-    },
-    slots: ['root', 'monthButton'],
+    slots: ['root', 'button'],
   },
 };
 
@@ -240,7 +222,7 @@ export const datePickerExamples: PickersSubcomponentType = {
     },
     slots: ['root', 'today'],
   },
-  PickersMonth: {
+  MonthCalendar: {
     examples: {
       customTheme: {
         type: 'success',
@@ -263,7 +245,7 @@ export const datePickerExamples: PickersSubcomponentType = {
         componentProps: { views: ['month'] },
       },
     },
-    slots: ['root', 'monthButton'],
+    slots: ['button'],
   },
   PickersTextField: {
     examples: {

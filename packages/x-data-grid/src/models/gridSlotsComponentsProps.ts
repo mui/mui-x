@@ -2,6 +2,8 @@ import * as React from 'react';
 import type { BadgeProps as MUIBadgeProps } from '@mui/material/Badge';
 import type { ButtonProps as MUIButtonProps } from '@mui/material/Button';
 import type { CheckboxProps } from '@mui/material/Checkbox';
+import type { CircularProgressProps as MUICircularProgressProps } from '@mui/material/CircularProgress';
+import type { LinearProgressProps as MUILinearProgressProps } from '@mui/material/LinearProgress';
 import type { MenuListProps } from '@mui/material/MenuList';
 import type { MenuItemProps as MUIMenuItemProps } from '@mui/material/MenuItem';
 import type { TextFieldProps } from '@mui/material/TextField';
@@ -36,8 +38,10 @@ import type { GridColumnHeaderSortIconProps } from '../components/columnHeaders/
 import type {
   BadgeProps,
   ButtonProps,
+  CircularProgressProps,
   DividerProps,
   IconButtonProps,
+  LinearProgressProps,
   MenuItemProps,
 } from './gridBaseSlots';
 
@@ -47,7 +51,9 @@ type MainProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`,
 // Overrides for module augmentation
 export interface BaseBadgePropsOverrides {}
 export interface BaseCheckboxPropsOverrides {}
+export interface BaseCircularProgressPropsOverrides {}
 export interface BaseDividerPropsOverrides {}
+export interface BaseLinearProgressPropsOverrides {}
 export interface BaseMenuListPropsOverrides {}
 export interface BaseMenuItemPropsOverrides {}
 export interface BaseTextFieldPropsOverrides {}
@@ -62,6 +68,7 @@ export interface BasePopperPropsOverrides {}
 export interface BaseInputLabelPropsOverrides {}
 export interface BaseSelectOptionPropsOverrides {}
 export interface BaseChipPropsOverrides {}
+
 export interface CellPropsOverrides {}
 export interface ToolbarPropsOverrides {}
 export interface ColumnHeaderFilterIconButtonPropsOverrides {}
@@ -85,7 +92,9 @@ export interface RowPropsOverrides {}
 interface BaseSlotProps {
   baseBadge: BadgeProps & BaseBadgePropsOverrides;
   baseCheckbox: CheckboxProps & BaseCheckboxPropsOverrides;
+  baseCircularProgress: CircularProgressProps & BaseCircularProgressPropsOverrides;
   baseDivider: DividerProps & BaseDividerPropsOverrides;
+  baseLinearProgress: LinearProgressProps & BaseLinearProgressPropsOverrides;
   baseMenuList: MenuListProps & BaseMenuListPropsOverrides;
   baseMenuItem: MenuItemProps & BaseMenuItemPropsOverrides;
   baseTextField: TextFieldProps & BaseTextFieldPropsOverrides;
@@ -110,6 +119,8 @@ interface MaterialSlotProps {
   baseBadge: MUIBadgeProps;
   baseButton: MUIButtonProps;
   baseIconButton: MUIIconButtonProps;
+  baseLinearProgress: MUILinearProgressProps;
+  baseCircularProgress: MUICircularProgressProps;
   baseMenuItem: MUIMenuItemProps;
 }
 
