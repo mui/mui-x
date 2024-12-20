@@ -147,6 +147,12 @@
     "supportsApiRef": false
   },
   {
+    "name": "gridEditCellStateSelector",
+    "returnType": "GridEditCellProps<any>",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridEditRowsStateSelector",
     "returnType": "GridEditingState",
     "description": "Select the row editing state.",
@@ -400,6 +406,12 @@
   {
     "name": "gridRowGroupingSanitizedModelSelector",
     "returnType": "string[]",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridRowIsEditingSelector",
+    "returnType": "boolean",
     "description": "",
     "supportsApiRef": true
   },
