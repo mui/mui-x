@@ -263,6 +263,18 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
         };
       }
 
+      if (rootProps.pivotParams?.pivotMode) {
+        return {
+          filteredColumns: filterableColumns.filter(
+            (column) =>
+              rootProps.pivotParams?.initialColumns?.find(
+                (col: GridStateColDef) => col.field === column.field,
+              ) !== undefined,
+          ),
+          selectedField: itemField,
+        };
+      }
+
       if (filterColumns === undefined || typeof filterColumns !== 'function') {
         return { filteredColumns: filterableColumns, selectedField: itemField };
       }
