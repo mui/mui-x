@@ -18,6 +18,7 @@ import MUITooltip from '@mui/material/Tooltip';
 import MUIPopper from '@mui/material/Popper';
 import MUIInputLabel from '@mui/material/InputLabel';
 import MUIChip from '@mui/material/Chip';
+import MUISkeleton from '@mui/material/Skeleton';
 import { GridColumnUnsortedIcon } from './icons/GridColumnUnsortedIcon';
 import {
   GridAddIcon,
@@ -107,6 +108,7 @@ const baseSlots: GridBaseSlots = {
   basePopper: MUIPopper,
   baseInputLabel: MUIInputLabel,
   baseSelectOption: MUISelectOption,
+  baseSkeleton: MUISkeleton,
   baseChip: MUIChip,
 };
 

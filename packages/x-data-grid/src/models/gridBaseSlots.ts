@@ -33,3 +33,9 @@ export type CircularProgressProps = {
 };
 
 export type LinearProgressProps = {};
+
+export type SkeletonProps = {
+  variant?: 'circular' | 'text';
+  width?: number | string;
+  height?: number | string;
+};
