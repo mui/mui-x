@@ -55,7 +55,7 @@ const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
   { label: 'Reset', getValue: () => [null, null] },
 ];
 
-interface CustomLayoutProps extends PickersLayoutProps<DateRange<Dayjs>, 'day'> {
+interface CustomLayoutProps extends PickersLayoutProps<DateRange<Dayjs>> {
   layout: Layout;
 }
 
