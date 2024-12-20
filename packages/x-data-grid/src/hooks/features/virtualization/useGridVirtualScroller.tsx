@@ -252,8 +252,12 @@ export const useGridVirtualScroller = () => {
       // but only does something if the dimensions are also available.
       // So we wait until we have valid dimensions before publishing the first event.
       if (dimensions.isReady && didRowsIntervalChange) {
+        const isFirstRenderContextHydration = previousRowContext.current === EMPTY_RENDER_CONTEXT;
         previousRowContext.current = nextRenderContext;
-        apiRef.current.publishEvent('renderedRowsIntervalChange', nextRenderContext);
+
+        if (!isFirstRenderContextHydration) {
+            apiRef.current.publishEvent('renderedRowsIntervalChange', nextRenderContext);
+        }
       }
 
       previousContextScrollPosition.current = scrollPosition.current;
