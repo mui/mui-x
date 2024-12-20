@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { styled } from '@mui/system';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
+import { forwardRefShim } from '@mui/x-internals/forwardRefShim';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import {
@@ -48,7 +49,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 const getColIndex = (el: HTMLElement) => parseInt(el.getAttribute('data-colindex')!, 10);
 
-const GridSkeletonLoadingOverlay = React.forwardRef<
+const GridSkeletonLoadingOverlay = forwardRefShim<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(function GridSkeletonLoadingOverlay(props, forwardedRef) {
@@ -261,7 +262,7 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
   useGridApiEventHandler(apiRef, 'columnResize', handleColumnResize);
 
   return (
-    <SkeletonOverlay className={classes.root} ref={handleRef} {...props}>
+    <SkeletonOverlay className={classes.root} {...props} ref={handleRef}>
       {children}
     </SkeletonOverlay>
   );

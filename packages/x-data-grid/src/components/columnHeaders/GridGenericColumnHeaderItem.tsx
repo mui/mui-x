@@ -1,6 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
+import { forwardRefShim } from '@mui/x-internals/forwardRefShim';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
@@ -42,10 +43,10 @@ interface GridGenericColumnHeaderItemProps
   style?: React.CSSProperties;
 }
 
-const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnHeaderItem(
-  props: GridGenericColumnHeaderItemProps,
-  ref,
-) {
+const GridGenericColumnHeaderItem = forwardRefShim<
+  HTMLDivElement,
+  GridGenericColumnHeaderItemProps
+>(function GridGenericColumnHeaderItem(props, ref) {
   const {
     classes,
     columnMenuOpen,
@@ -98,7 +99,6 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
 
   return (
     <div
-      ref={handleRef}
       className={clsx(classes.root, headerClassName)}
       style={{
         ...style,
@@ -110,6 +110,7 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
       aria-colindex={colIndex + 1}
       aria-sort={ariaSort}
       {...other}
+      ref={handleRef}
     >
       <div
         className={classes.draggableContainer}

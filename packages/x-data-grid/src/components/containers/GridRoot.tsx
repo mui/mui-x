@@ -9,6 +9,7 @@ import {
 } from '@mui/utils';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
+import { forwardRefShim } from '@mui/x-internals/forwardRefShim';
 import { GridRootStyles } from './GridRootStyles';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
@@ -44,7 +45,7 @@ const useUtilityClasses = (ownerState: OwnerState, density: GridDensity) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(props, ref) {
+const GridRoot = forwardRefShim<HTMLDivElement, GridRootProps>(function GridRoot(props, ref) {
   const rootProps = useGridRootProps();
   const { className, ...other } = props;
   const apiRef = useGridPrivateApiContext();
@@ -68,10 +69,10 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
 
   return (
     <GridRootStyles
-      ref={handleRef}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
       {...other}
+      ref={handleRef}
     />
   );
 });

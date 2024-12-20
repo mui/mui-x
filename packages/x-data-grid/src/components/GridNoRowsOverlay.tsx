@@ -1,15 +1,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { forwardRefShim } from '@mui/x-internals/forwardRefShim';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { GridOverlay, GridOverlayProps } from './containers/GridOverlay';
 
-const GridNoRowsOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(
+const GridNoRowsOverlay = forwardRefShim<HTMLDivElement, GridOverlayProps>(
   function GridNoRowsOverlay(props, ref) {
     const apiRef = useGridApiContext();
     const noRowsLabel = apiRef.current.getLocaleText('noRowsLabel');
 
     return (
-      <GridOverlay ref={ref} {...props}>
+      <GridOverlay {...props} ref={ref}>
         {noRowsLabel}
       </GridOverlay>
     );

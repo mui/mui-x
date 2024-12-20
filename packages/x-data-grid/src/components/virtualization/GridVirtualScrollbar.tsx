@@ -5,6 +5,7 @@ import {
   unstable_useForkRef as useForkRef,
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
+import { forwardRefShim } from '@mui/x-internals/forwardRefShim';
 import { useOnMount } from '../../hooks/utils/useOnMount';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { gridDimensionsSelector, useGridSelector } from '../../hooks';
@@ -66,7 +67,7 @@ const ScrollbarHorizontal = styled(Scrollbar)({
   bottom: '0px',
 });
 
-const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollbarProps>(
+const GridVirtualScrollbar = forwardRefShim<HTMLDivElement, GridVirtualScrollbarProps>(
   function GridVirtualScrollbar(props, ref) {
     const apiRef = useGridPrivateApiContext();
     const rootProps = useGridRootProps();

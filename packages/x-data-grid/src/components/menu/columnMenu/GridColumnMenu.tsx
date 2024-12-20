@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 
+import { forwardRefShim } from '@mui/x-internals/forwardRefShim';
 import { useGridColumnMenuSlots } from '../../../hooks/features/columnMenu/useGridColumnMenuSlots';
 import { GridColumnMenuContainer } from './GridColumnMenuContainer';
 import { GridColumnMenuColumnsItem } from './menuItems/GridColumnMenuColumnsItem';
@@ -20,7 +21,7 @@ export const GRID_COLUMN_MENU_SLOT_PROPS = {
   columnMenuColumnsItem: { displayOrder: 30 },
 };
 
-const GridGenericColumnMenu = React.forwardRef<HTMLUListElement, GridGenericColumnMenuProps>(
+const GridGenericColumnMenu = forwardRefShim<HTMLUListElement, GridGenericColumnMenuProps>(
   function GridGenericColumnMenu(props, ref) {
     const { defaultSlots, defaultSlotProps, slots, slotProps, ...other } = props;
 
@@ -33,7 +34,7 @@ const GridGenericColumnMenu = React.forwardRef<HTMLUListElement, GridGenericColu
     });
 
     return (
-      <GridColumnMenuContainer ref={ref} {...other}>
+      <GridColumnMenuContainer {...other} ref={ref}>
         {orderedSlots.map(([Component, otherProps], index) => (
           <Component key={index} {...otherProps} />
         ))}
@@ -75,7 +76,7 @@ GridGenericColumnMenu.propTypes = {
   slots: PropTypes.object,
 } as any;
 
-const GridColumnMenu = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
+const GridColumnMenu = forwardRefShim<HTMLUListElement, GridColumnMenuProps>(
   function GridColumnMenu(props, ref) {
     return (
       <GridGenericColumnMenu

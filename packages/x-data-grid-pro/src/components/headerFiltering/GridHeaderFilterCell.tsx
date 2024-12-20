@@ -33,6 +33,7 @@ import {
   shouldCellShowLeftBorder,
   shouldCellShowRightBorder,
 } from '@mui/x-data-grid/internals';
+import { forwardRefShim } from '@mui/x-internals/forwardRefShim';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import { GridHeaderFilterMenuContainer } from './GridHeaderFilterMenuContainer';
@@ -101,7 +102,7 @@ const defaultInputComponents: { [key in GridColType]: React.JSXElementConstructo
   actions: null,
   custom: null,
 };
-const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCellProps>(
+const GridHeaderFilterCell = forwardRefShim<HTMLDivElement, GridHeaderFilterCellProps>(
   (props, ref) => {
     const {
       colIndex,
@@ -327,7 +328,6 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
     return (
       <div
         className={clsx(classes.root, headerClassName)}
-        ref={handleRef}
         style={{
           height,
           width,
@@ -338,6 +338,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
         aria-label={headerFilterComponent == null ? (colDef.headerName ?? colDef.field) : undefined}
         {...other}
         {...mouseEventsHandlers}
+        ref={handleRef}
       >
         {headerFilterComponent}
         {InputComponent && headerFilterComponent === undefined ? (

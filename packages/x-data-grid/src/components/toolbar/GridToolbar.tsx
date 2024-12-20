@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { forwardRefShim } from '@mui/x-internals/forwardRefShim';
 import {
   GridToolbarContainer,
   GridToolbarContainerProps,
@@ -23,7 +24,7 @@ export interface GridToolbarProps extends GridToolbarContainerProps, GridToolbar
   quickFilterProps?: GridToolbarQuickFilterProps;
 }
 
-const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarProps>(
+const GridToolbar = forwardRefShim<HTMLDivElement, GridToolbarProps>(
   function GridToolbar(props, ref) {
     // TODO v7: think about where export option should be passed.
     // from slotProps={{ toolbarExport: { ...exportOption } }} seems to be more appropriate
@@ -48,7 +49,7 @@ const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarProps>(
     }
 
     return (
-      <GridToolbarContainer ref={ref} {...other}>
+      <GridToolbarContainer {...other} ref={ref}>
         <GridToolbarColumnsButton />
         <GridToolbarFilterButton />
         <GridToolbarDensitySelector />

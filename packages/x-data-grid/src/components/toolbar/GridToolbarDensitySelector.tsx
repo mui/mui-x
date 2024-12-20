@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { unstable_useId as useId, unstable_useForkRef as useForkRef } from '@mui/utils';
 import { ButtonProps } from '@mui/material/Button';
 import { TooltipProps } from '@mui/material/Tooltip';
+import { forwardRefShim } from '@mui/x-internals/forwardRefShim';
 import { gridDensitySelector } from '../../hooks/features/density/densitySelector';
 import { GridDensity } from '../../models/gridDensity';
 import { isHideMenuKey } from '../../utils/keyboardUtils';
@@ -21,7 +22,7 @@ interface GridToolbarDensitySelectorProps {
   slotProps?: { button?: Partial<ButtonProps>; tooltip?: Partial<TooltipProps> };
 }
 
-const GridToolbarDensitySelector = React.forwardRef<
+const GridToolbarDensitySelector = forwardRefShim<
   HTMLButtonElement,
   GridToolbarDensitySelectorProps
 >(function GridToolbarDensitySelector(props, ref) {
@@ -113,7 +114,6 @@ const GridToolbarDensitySelector = React.forwardRef<
         {...tooltipProps}
       >
         <rootProps.slots.baseButton
-          ref={handleRef}
           size="small"
           startIcon={startIcon}
           aria-label={apiRef.current.getLocaleText('toolbarDensityLabel')}
@@ -124,6 +124,7 @@ const GridToolbarDensitySelector = React.forwardRef<
           onClick={handleDensitySelectorOpen}
           {...rootProps.slotProps?.baseButton}
           {...buttonProps}
+          ref={handleRef}
         >
           {apiRef.current.getLocaleText('toolbarDensity')}
         </rootProps.slots.baseButton>
