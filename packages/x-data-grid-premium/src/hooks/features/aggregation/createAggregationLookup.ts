@@ -22,18 +22,19 @@ import { gridAggregationModelSelector } from './gridAggregationSelectors';
 const getAggregationCellValue = ({
   apiRef,
   groupId,
+  rowIds,
   field,
   aggregationFunction,
   aggregationRowsScope,
 }: {
   apiRef: React.MutableRefObject<GridApiPremium>;
   groupId: GridRowId;
+  rowIds: GridRowId[];
   field: string;
   aggregationFunction: GridAggregationFunction;
   aggregationRowsScope: DataGridPremiumProcessedProps['aggregationRowsScope'];
 }) => {
   const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
-  const rowIds: GridRowId[] = apiRef.current.getRowGroupChildren({ groupId });
 
   const values: any[] = [];
   rowIds.forEach((rowId) => {
@@ -85,6 +86,8 @@ const getGroupAggregatedValue = ({
 }) => {
   const groupAggregationLookup: GridAggregationLookup[GridRowId] = {};
 
+  const rowIds: GridRowId[] = apiRef.current.getRowGroupChildren({ groupId });
+
   for (let j = 0; j < aggregatedFields.length; j += 1) {
     const aggregatedField = aggregatedFields[j];
     const columnAggregationRules = aggregationRules[aggregatedField];
@@ -94,6 +97,7 @@ const getGroupAggregatedValue = ({
       value: getAggregationCellValue({
         apiRef,
         groupId,
+        rowIds,
         field: aggregatedField,
         aggregationFunction: columnAggregationRules.aggregationFunction,
         aggregationRowsScope,
