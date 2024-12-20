@@ -36,7 +36,7 @@ export type DividerProps = {};
 
 export type MenuItemProps = {
   autoFocus?: boolean;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   /** For items that aren't interactive themselves (but may contain an interactive widget) */
   inert?: boolean;
   disabled?: boolean;
