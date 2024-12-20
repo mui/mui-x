@@ -44,7 +44,7 @@ const usePickerLayout = <TValue extends PickerValidValue>(
   props: PickersLayoutProps<TValue>,
 ): UsePickerLayoutResponse<TValue> => {
   const { ownerState: pickerOwnerState } = usePickerPrivateContext();
-  const { variant, orientation, view } = usePickerContext();
+  const { orientation, view } = usePickerContext();
   const isRtl = useRtl();
 
   const {
@@ -74,7 +74,7 @@ const usePickerLayout = <TValue extends PickerValidValue>(
     elementType: ActionBar,
     externalSlotProps: slotProps?.actionBar,
     additionalProps: {
-      actions: variant === 'desktop' ? [] : (['cancel', 'accept'] as PickersActionBarAction[]),
+      actions: ['cancel', 'accept'] as PickersActionBarAction[],
     },
     className: classes.actionBar,
     ownerState,

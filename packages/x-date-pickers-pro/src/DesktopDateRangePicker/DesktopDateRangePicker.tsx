@@ -10,6 +10,7 @@ import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { PickerOwnerState } from '@mui/x-date-pickers/models';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { refType } from '@mui/utils';
+import { PickerLayoutOwnerState } from '@mui/x-date-pickers/PickersLayout';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopDateRangePickerProps } from './DesktopDateRangePicker.types';
 import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
@@ -53,6 +54,7 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
 
   const props = {
     ...defaultizedProps,
+    closeOnSelect: defaultizedProps.closeOnSelect ?? true,
     viewRenderers,
     format: utils.formats.keyboardDate,
     calendars: defaultizedProps.calendars ?? 2,
@@ -73,6 +75,10 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
         hidden: true,
         ...defaultizedProps.slotProps?.toolbar,
       },
+      actionBar: (ownerState: PickerLayoutOwnerState) => ({
+        actions: [],
+        ...resolveComponentProps(defaultizedProps.slotProps?.actionBar, ownerState),
+      }),
     },
   };
 
@@ -109,8 +115,8 @@ DesktopDateRangePicker.propTypes = {
   calendars: PropTypes.oneOf([1, 2, 3]),
   className: PropTypes.string,
   /**
-   * If `true`, the popover or modal will close after submitting the full date.
-   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * If `true`, the Picker will close after submitting the full date.
+   * @default true
    */
   closeOnSelect: PropTypes.bool,
   /**

@@ -24,7 +24,6 @@ import {
   resolveDateTimeFormat,
   resolveTimeViewsResponse,
 } from '../internals/utils/date-time-utils';
-import { PickersActionBarAction } from '../PickersActionBar';
 import { PickerOwnerState } from '../models';
 import {
   renderDigitalClockTimeView,
@@ -42,7 +41,6 @@ import { UsePickerViewsProps } from '../internals/hooks/usePicker/usePickerViews
 import { isInternalTimeView } from '../internals/utils/time-utils';
 import { isDatePickerView } from '../internals/utils/date-utils';
 import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalization';
-import { PickerLayoutOwnerState } from '../PickersLayout';
 
 const rendererInterceptor = function rendererInterceptor<
   TView extends DateOrTimeViewWithMeridiem,
@@ -167,9 +165,6 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
   const views = !shouldHoursRendererContainMeridiemView
     ? resolvedViews.filter((view) => view !== 'meridiem')
     : resolvedViews;
-  const actionBarActions: PickersActionBarAction[] = shouldRenderTimeInASingleColumn
-    ? []
-    : ['accept'];
 
   // Props with the default values specific to the desktop variant
   const props = {
@@ -204,10 +199,6 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
         hidden: true,
         ...defaultizedProps.slotProps?.tabs,
       },
-      actionBar: (ownerState: PickerLayoutOwnerState) => ({
-        actions: actionBarActions,
-        ...resolveComponentProps(defaultizedProps.slotProps?.actionBar, ownerState),
-      }),
     },
   };
 
@@ -256,8 +247,8 @@ DesktopDateTimePicker.propTypes = {
   autoFocus: PropTypes.bool,
   className: PropTypes.string,
   /**
-   * If `true`, the popover or modal will close after submitting the full date.
-   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * If `true`, the Picker will close after submitting the full date.
+   * @default false
    */
   closeOnSelect: PropTypes.bool,
   /**
