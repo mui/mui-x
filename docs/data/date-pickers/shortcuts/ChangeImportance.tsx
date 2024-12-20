@@ -4,10 +4,8 @@ import Stack from '@mui/material/Stack';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import {
-  PickersShortcutsItem,
-  PickerShortcutChangeImportance,
-} from '@mui/x-date-pickers/PickersShortcuts';
+import { PickersShortcutsItem } from '@mui/x-date-pickers/PickersShortcuts';
+import { PickerChangeImportance } from '@mui/x-date-pickers/models';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 
@@ -80,7 +78,7 @@ const shortcutsItems: PickersShortcutsItem<Dayjs | null>[] = [
 
 export default function ChangeImportance() {
   const [changeImportance, setChangeImportance] =
-    React.useState<PickerShortcutChangeImportance>('accept');
+    React.useState<PickerChangeImportance>('accept');
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

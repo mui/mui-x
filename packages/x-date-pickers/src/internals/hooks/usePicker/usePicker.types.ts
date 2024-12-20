@@ -10,7 +10,7 @@ import {
   UsePickerViewsResponse,
   UsePickerViewsBaseProps,
 } from './usePickerViews';
-import { PickerOwnerState } from '../../../models';
+import { InferError, PickerOwnerState } from '../../../models';
 import { DateOrTimeViewWithMeridiem, PickerValidValue } from '../../models';
 import {
   UsePickerProviderParameters,
@@ -54,7 +54,7 @@ export interface UsePickerParams<
       UsePickerViewParams<TValue, TView, TExternalProps, TAdditionalProps>,
       'additionalViewProps' | 'autoFocusView' | 'rendererInterceptor' | 'fieldRef'
     >,
-    Pick<UsePickerProviderParameters<TValue, TView>, 'localeText'> {
+    Pick<UsePickerProviderParameters<TValue, TView, InferError<TAdditionalProps>>, 'localeText'> {
   props: TExternalProps;
 }
 
@@ -65,8 +65,7 @@ export interface UsePickerResponse<
 > extends Pick<UsePickerValueResponse<TValue, TError>, 'fieldProps'>,
     Pick<UsePickerViewsResponse<TView>, 'shouldRestoreFocus' | 'renderCurrentView'> {
   ownerState: PickerOwnerState;
-  providerProps: UsePickerProviderReturnValue;
-  layoutProps: UsePickerValueResponse<TValue, TError>['layoutProps'];
+  providerProps: UsePickerProviderReturnValue<TValue>;
   // TODO v8: Remove in https://github.com/mui/mui-x/pull/15671
   hasUIView: boolean;
 }
