@@ -11,7 +11,7 @@ import {
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<SingleInputDateRangeField /> - Editing', () => {
-  describeAdapters.only(
+  describeAdapters(
     'value props (value, defaultValue, onChange)',
     SingleInputDateRangeField,
     ({ adapter, renderWithProps, clock }) => {
