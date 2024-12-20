@@ -62,7 +62,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
         <ChartsOverlay {...overlayProps} />
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsAxisHighlight {...axisHighlightProps} />
-        {!props.loading && <Tooltip {...props?.slotProps?.tooltip} />}
+        {!props.loading && <Tooltip {...props?.slotProps?.tooltip} trigger="item" />}
         <ZoomSetup />
         {children}
       </ZAxisContextProvider>

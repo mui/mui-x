@@ -21,14 +21,12 @@ import {
   RangePickerFieldSlotProps,
 } from '../useEnrichedRangePickerFieldProps';
 
-export interface UseRangePickerSlots<TView extends DateOrTimeViewWithMeridiem>
-  extends ExportedPickersLayoutSlots<PickerRangeValue, TView>,
+export interface UseRangePickerSlots
+  extends ExportedPickersLayoutSlots<PickerRangeValue>,
     RangePickerFieldSlots {}
 
-export interface UseRangePickerSlotProps<
-  TView extends DateOrTimeViewWithMeridiem,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends ExportedPickersLayoutSlotProps<PickerRangeValue, TView>,
+export interface UseRangePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+  extends ExportedPickersLayoutSlotProps<PickerRangeValue>,
     RangePickerFieldSlotProps<TEnableAccessibleFieldDOMStructure> {
   tabs?: ExportedBaseTabsProps;
   toolbar?: ExportedBaseToolbarProps;

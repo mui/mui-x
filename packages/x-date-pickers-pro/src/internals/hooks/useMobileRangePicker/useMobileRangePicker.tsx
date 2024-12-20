@@ -85,8 +85,6 @@ export const useMobileRangePicker = <
   }
 
   const {
-    open,
-    actions,
     layoutProps,
     providerProps,
     renderCurrentView,
@@ -140,8 +138,9 @@ export const useMobileRangePicker = <
   >({
     variant: 'mobile',
     fieldType,
-    open,
-    actions,
+    // These direct access to `providerProps` will go away once the range fields handle the picker opening
+    open: providerProps.contextValue.open,
+    setOpen: providerProps.contextValue.setOpen,
     readOnly,
     labelId,
     disableOpenPicker,
@@ -197,7 +196,7 @@ export const useMobileRangePicker = <
     <PickerProvider {...providerProps}>
       <PickerRangePositionContext.Provider value={rangePositionResponse}>
         <Field {...enrichedFieldProps} />
-        <PickersModalDialog {...actions} open={open} slots={slots} slotProps={slotProps}>
+        <PickersModalDialog slots={slots} slotProps={slotProps}>
           <Layout {...layoutProps} {...slotProps?.layout} slots={slots} slotProps={slotProps}>
             {renderCurrentView()}
           </Layout>

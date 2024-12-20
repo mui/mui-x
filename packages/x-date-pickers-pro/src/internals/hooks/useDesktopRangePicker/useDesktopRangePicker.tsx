@@ -88,8 +88,6 @@ export const useDesktopRangePicker = <
   }
 
   const {
-    open,
-    actions,
     layoutProps,
     providerProps,
     renderCurrentView,
@@ -106,8 +104,8 @@ export const useDesktopRangePicker = <
   });
 
   React.useEffect(() => {
-    if (layoutProps.view) {
-      initialView.current = layoutProps.view;
+    if (providerProps.contextValue.view) {
+      initialView.current = providerProps.contextValue.view;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -121,7 +119,8 @@ export const useDesktopRangePicker = <
         return;
       }
 
-      actions.onDismiss();
+      // This direct access to `providerProps` will go away once the range fields stop having their views in a tooltip.
+      providerProps.privateContextValue.dismissViews();
     });
   };
 
@@ -164,8 +163,9 @@ export const useDesktopRangePicker = <
   >({
     variant: 'desktop',
     fieldType,
-    open,
-    actions,
+    // These direct access to `providerProps` will go away once the range fields handle the picker opening
+    open: providerProps.contextValue.open,
+    setOpen: providerProps.contextValue.setOpen,
     readOnly,
     disableOpenPicker,
     label,
@@ -178,9 +178,12 @@ export const useDesktopRangePicker = <
     startFieldRef,
     endFieldRef,
     singleInputFieldRef,
-    currentView: layoutProps.view !== props.openTo ? layoutProps.view : undefined,
+    currentView:
+      providerProps.contextValue.view !== props.openTo
+        ? providerProps.contextValue.view
+        : undefined,
     initialView: initialView.current ?? undefined,
-    onViewChange: layoutProps.onViewChange,
+    onViewChange: providerProps.contextValue.onViewChange,
     ...rangePositionResponse,
   });
 
@@ -196,8 +199,6 @@ export const useDesktopRangePicker = <
           containerRef={popperRef}
           anchorEl={anchorRef.current}
           onBlur={handleBlur}
-          {...actions}
-          open={open}
           slots={slots}
           slotProps={slotProps}
           shouldRestoreFocus={shouldRestoreFocus}

@@ -31,12 +31,12 @@ import {
 import { PickersTextFieldProps } from '../../../PickersTextField';
 import { UsePickerProviderNonStaticProps } from '../usePicker/usePickerProvider';
 
-export interface UseDesktopPickerSlots<TView extends DateOrTimeViewWithMeridiem>
+export interface UseDesktopPickerSlots
   extends Pick<
       PickersPopperSlots,
       'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper'
     >,
-    ExportedPickersLayoutSlots<PickerValue, TView>,
+    ExportedPickersLayoutSlots<PickerValue>,
     UseClearableFieldSlots {
   /**
    * Component used to enter the date with the keyboard.
@@ -63,17 +63,14 @@ export interface UseDesktopPickerSlots<TView extends DateOrTimeViewWithMeridiem>
   openPickerIcon: React.ElementType;
 }
 
-export interface UseDesktopPickerSlotProps<
-  TView extends DateOrTimeViewWithMeridiem,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends ExportedUseDesktopPickerSlotProps<TView, TEnableAccessibleFieldDOMStructure>,
-    Pick<PickersLayoutSlotProps<PickerValue, TView>, 'toolbar'> {}
+export interface UseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+  extends ExportedUseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure>,
+    Pick<PickersLayoutSlotProps<PickerValue>, 'toolbar'> {}
 
 export interface ExportedUseDesktopPickerSlotProps<
-  TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends PickersPopperSlotProps,
-    ExportedPickersLayoutSlotProps<PickerValue, TView>,
+    ExportedPickersLayoutSlotProps<PickerValue>,
     UseClearableFieldSlotProps {
   field?: SlotComponentPropsFromProps<
     PickerFieldSlotProps<PickerValue, TEnableAccessibleFieldDOMStructure>,
@@ -113,12 +110,12 @@ export interface UseDesktopPickerProps<
    * Overridable component slots.
    * @default {}
    */
-  slots: UseDesktopPickerSlots<TView>;
+  slots: UseDesktopPickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseDesktopPickerSlotProps<TView, TEnableAccessibleFieldDOMStructure>;
+  slotProps?: UseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure>;
 }
 
 export interface UseDesktopPickerParams<

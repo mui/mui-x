@@ -1,7 +1,7 @@
 # MUI X Data Grid Premium
 
 This package is the Premium plan edition of the Data Grid components.
-It's part of [MUI X](https://mui.com/x/), an open-core extension of MUI Core, with advanced components.
+It's part of [MUI X](https://mui.com/x/), an open-core extension of our Core libraries, with advanced components.
 
 ## Installation
 

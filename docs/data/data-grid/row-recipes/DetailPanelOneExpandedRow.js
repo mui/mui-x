@@ -15,13 +15,17 @@ const getDetailPanelHeight = () => 50;
 
 export default function DetailPanelOneExpandedRow() {
   const [detailPanelExpandedRowIds, setDetailPanelExpandedRowIds] = React.useState(
-    [],
+    () => new Set(),
   );
 
   const handleDetailPanelExpandedRowIdsChange = React.useCallback((newIds) => {
-    setDetailPanelExpandedRowIds(
-      newIds.length > 1 ? [newIds[newIds.length - 1]] : newIds,
-    );
+    if (newIds.size > 1) {
+      const newSet = new Set();
+      const newIdsArray = Array.from(newIds);
+      newSet.add(newIdsArray[newIdsArray.length - 1]);
+    } else {
+      setDetailPanelExpandedRowIds(newIds);
+    }
   }, []);
 
   return (

@@ -61,8 +61,6 @@ export const usePicker = <
 
   return {
     // Picker value
-    open: pickerValueResponse.open,
-    actions: pickerValueResponse.actions,
     fieldProps: pickerValueResponse.fieldProps,
 
     // Picker views
@@ -72,7 +70,6 @@ export const usePicker = <
 
     // Picker layout
     layoutProps: {
-      ...pickerViewsResponse.layoutProps,
       ...pickerValueResponse.layoutProps,
     },
 
