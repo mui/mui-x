@@ -467,6 +467,18 @@ This change causes a few breaking changes:
   The only difference is that `usePickerActionsContext` only contains variables with stable references that won't cause a re-render of your component.
   :::
 
+- The component passed to the `layout` slot no longer receives the `rangePosition` and `onRangePositionChange` on range pickers, instead you can use the `usePickerRangePositionContext` hook:
+
+  ```diff
+  +import { usePickerRangePositionContext } from '@mui/x-date-pickers-pro/hooks';
+
+  -const { rangePosition } = props;
+  +const { rangePosition } = usePickerRangePositionContext();
+
+  -const { onRangePositionChange } = props;
+  +const { onRangePositionChange } = usePickerRangePositionContext();
+  ```
+
 ### Slot: `toolbar`
 
 - The component passed to the `toolbar` slot no longer receives the `disabled` and `readOnly` props, instead you can use the `usePickerContext` hook:
@@ -496,6 +508,18 @@ This change causes a few breaking changes:
   +const { onViewChange } = usePickerContext();
   ```
 
+- The component passed to the `toolbar` slot no longer receives the `rangePosition` and `onRangePositionChange` on range pickers, instead you can use the `usePickerRangePositionContext` hook:
+
+  ```diff
+  +import { usePickerRangePositionContext } from '@mui/x-date-pickers-pro/hooks';
+
+  -const { rangePosition } = props;
+  +const { rangePosition } = usePickerRangePositionContext();
+
+  -const { onRangePositionChange } = props;
+  +const { onRangePositionChange } = usePickerRangePositionContext();
+  ```
+
 ### Slot: `tabs`
 
 - The component passed to the `tabs` slot no longer receives a `view`, `views` and `onViewChange` props, instead you can use the `usePickerContext` hook:
@@ -511,6 +535,18 @@ This change causes a few breaking changes:
 
   -const { onViewChange } = props;
   +const { onViewChange } = usePickerContext();
+  ```
+
+- The component passed to the `tabs` slot no longer receives the `rangePosition` and `onRangePositionChange` on range pickers, instead you can use the `usePickerRangePositionContext` hook:
+
+  ```diff
+  +import { usePickerRangePositionContext } from '@mui/x-date-pickers-pro/hooks';
+
+  -const { rangePosition } = props;
+  +const { rangePosition } = usePickerRangePositionContext();
+
+  -const { onRangePositionChange } = props;
+  +const { onRangePositionChange } = usePickerRangePositionContext();
   ```
 
 ### Slot: `actionBar`

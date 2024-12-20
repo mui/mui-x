@@ -53,19 +53,16 @@ export interface BaseDateTimePickerSlotProps extends DateCalendarSlotProps, Time
   toolbar?: ExportedDateTimePickerToolbarProps;
 }
 
-export type DateTimePickerViewRenderers<
-  TView extends DateOrTimeViewWithMeridiem,
-  TAdditionalProps extends {} = {},
-> = PickerViewRendererLookup<
-  PickerValue,
-  TView,
-  Omit<DateViewRendererProps<TView>, 'slots' | 'slotProps'> &
-    Omit<
-      TimeViewRendererProps<TimeViewWithMeridiem, BaseClockProps<TimeViewWithMeridiem>>,
-      'slots' | 'slotProps'
-    >,
-  TAdditionalProps
->;
+export type DateTimePickerViewRenderers<TView extends DateOrTimeViewWithMeridiem> =
+  PickerViewRendererLookup<
+    PickerValue,
+    TView,
+    Omit<DateViewRendererProps<TView>, 'slots' | 'slotProps'> &
+      Omit<
+        TimeViewRendererProps<TimeViewWithMeridiem, BaseClockProps<TimeViewWithMeridiem>>,
+        'slots' | 'slotProps'
+      >
+  >;
 
 export interface BaseDateTimePickerProps<TView extends DateOrTimeViewWithMeridiem>
   extends BasePickerInputProps<PickerValue, TView, DateTimeValidationError>,

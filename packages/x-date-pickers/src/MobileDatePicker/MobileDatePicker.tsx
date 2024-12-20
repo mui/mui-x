@@ -45,7 +45,7 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<
     MobileDatePickerProps<TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiMobileDatePicker');
 
-  const viewRenderers: DatePickerViewRenderers<DateView, any> = {
+  const viewRenderers: DatePickerViewRenderers<DateView> = {
     day: renderDateViewCalendar,
     month: renderDateViewCalendar,
     year: renderDateViewCalendar,

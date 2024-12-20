@@ -2,16 +2,15 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { StaticDateTimePickerProps } from './StaticDateTimePicker.types';
-import {
-  DateTimePickerViewRenderers,
-  useDateTimePickerDefaultizedProps,
-} from '../DateTimePicker/shared';
+import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
 import { DateOrTimeView } from '../models';
 import { validateDateTime } from '../validation';
+import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
+import { PickerValue } from '../internals/models';
 
 type StaticDateTimePickerComponent = ((
   props: StaticDateTimePickerProps & React.RefAttributes<HTMLDivElement>,
@@ -39,7 +38,7 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker(
   const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';
   const ampmInClock = defaultizedProps.ampmInClock ?? displayStaticWrapperAs === 'desktop';
 
-  const viewRenderers: DateTimePickerViewRenderers<DateOrTimeView, any> = {
+  const viewRenderers: PickerViewRendererLookup<PickerValue, any, any> = {
     day: renderDateViewCalendar,
     month: renderDateViewCalendar,
     year: renderDateViewCalendar,

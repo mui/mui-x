@@ -67,13 +67,12 @@ export const useDesktopPicker = <
     shouldRestoreFocus,
     fieldProps: pickerFieldProps,
     ownerState,
-  } = usePicker<PickerValue, TView, TExternalProps, {}>({
+  } = usePicker<PickerValue, TView, TExternalProps>({
     ...pickerParams,
     props,
     fieldRef,
     localeText,
     autoFocusView: true,
-    additionalViewProps: {},
     variant: 'desktop',
   });
 
