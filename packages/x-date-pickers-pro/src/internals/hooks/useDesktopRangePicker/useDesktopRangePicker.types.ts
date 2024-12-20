@@ -13,14 +13,10 @@ import {
   UseRangePickerSlots,
 } from '../models/useRangePicker';
 
-export interface UseDesktopRangePickerSlots<TView extends DateOrTimeViewWithMeridiem>
-  extends UseRangePickerSlots<TView>,
-    PickersPopperSlots {}
+export interface UseDesktopRangePickerSlots extends UseRangePickerSlots, PickersPopperSlots {}
 
-export interface UseDesktopRangePickerSlotProps<
-  TView extends DateOrTimeViewWithMeridiem,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends UseRangePickerSlotProps<TView, TEnableAccessibleFieldDOMStructure>,
+export interface UseDesktopRangePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+  extends UseRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
     PickersPopperSlotProps {}
 
 export interface DesktopRangeOnlyPickerProps extends RangeOnlyPickerProps {
@@ -45,12 +41,12 @@ export interface UseDesktopRangePickerProps<
    * Overridable component slots.
    * @default {}
    */
-  slots: UseDesktopRangePickerSlots<TView>;
+  slots: UseDesktopRangePickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseDesktopRangePickerSlotProps<TView, TEnableAccessibleFieldDOMStructure>;
+  slotProps?: UseDesktopRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
 }
 
 export interface DesktopRangePickerAdditionalViewProps extends RangePickerAdditionalViewProps {}
