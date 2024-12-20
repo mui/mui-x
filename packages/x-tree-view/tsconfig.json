@@ -10,5 +10,8 @@
     ],
     "noImplicitAny": false
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src/**/*",
+    "../x-tree-view-pro/src/internals/plugins/useTreeViewLazyLoading/useTreeViewLazyLoading.types.ts"
+  ]
 }

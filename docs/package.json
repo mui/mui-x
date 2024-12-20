@@ -86,6 +86,7 @@
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.54.1",
     "react-is": "^18.3.1",
+    "react-query": "^3.39.3",
     "react-router": "^6.28.0",
     "react-router-dom": "^6.28.0",
     "react-runner": "^1.0.5",
