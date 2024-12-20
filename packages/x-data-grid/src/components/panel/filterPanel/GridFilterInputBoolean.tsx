@@ -123,7 +123,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
   );
 }
 
-function sanitizeFilterItemValue(value: any): boolean | undefined {
+export function sanitizeFilterItemValue(value: any): boolean | undefined {
   if (String(value).toLowerCase() === 'true') {
     return true;
   }
