@@ -1,5 +1,6 @@
 /* eslint-disable react/no-unused-prop-types */
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import {
   useGridComponentRenderer,
@@ -32,8 +33,7 @@ const GridQuickFilterClear = React.forwardRef<HTMLButtonElement, GridQuickFilter
   function GridQuickFilterClear(props, ref) {
     const { render, className, ...other } = props;
     const rootProps = useGridRootProps();
-    const { value, clearValue } = useGridQuickFilterRootContext();
-    const state = { value };
+    const { state, clearValue } = useGridQuickFilterRootContext();
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
 
     return useGridComponentRenderer(
@@ -50,5 +50,20 @@ const GridQuickFilterClear = React.forwardRef<HTMLButtonElement, GridQuickFilter
     );
   },
 );
+
+GridQuickFilterClear.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  className: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  /**
+   * A function to customize rendering of the component.
+   */
+  render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+} as any;
 
 export { GridQuickFilterClear };

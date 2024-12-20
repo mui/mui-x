@@ -73,6 +73,9 @@ export default dataGridApiPages;
       'src/components/grid/export/GridExportPrintTrigger.tsx',
       'src/components/grid/export/GridExportCsvTrigger.tsx',
       'src/components/grid/export/GridExportExcelTrigger.tsx',
+      'src/components/grid/quickFilter/GridQuickFilterRoot.tsx',
+      'src/components/grid/quickFilter/GridQuickFilterControl.tsx',
+      'src/components/grid/quickFilter/GridQuickFilterClear.tsx',
     ].every((validPath) => !filename.endsWith(validPath));
   },
   skipAnnotatingComponentDefinition: true,

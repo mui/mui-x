@@ -11,9 +11,9 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 
 const DENISTY_OPTIONS = [
-  { label: 'Compact', value: 'compact' },
-  { label: 'Standard', value: 'standard' },
-  { label: 'Comfortable', value: 'comfortable' },
+  { label: 'Compact density', value: 'compact' },
+  { label: 'Standard density', value: 'standard' },
+  { label: 'Comfortable density', value: 'comfortable' },
 ];
 
 function Toolbar(props) {

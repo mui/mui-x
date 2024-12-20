@@ -2,9 +2,15 @@
 
 <p class="description">Components to trigger exports of the Data Grid.</p>
 
+## Basic usage
+
+The demo below shows how to use the Export component to trigger exports.
+
+{{"demo": "GridExportTrigger.js", "bg": "inline"}}
+
 ## Anatomy
 
-The Export component is comprised of the following parts:
+The Export component contains the following parts:
 
 ```tsx
 <Grid.Export.PrintTrigger />
@@ -12,27 +18,39 @@ The Export component is comprised of the following parts:
 <Grid.Export.ExcelTrigger />
 ```
 
-### Trigger
+### PrintTrigger
 
-A button that triggers an export.
+A button that triggers a print export.
 
-The `exportType` prop can be set to `print`, `csv` or `excel`[<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan').
+Renders the `baseButton` slot.
 
-## Examples
+### CsvTrigger
+
+A button that triggers a CSV export.
+
+Renders the `baseButton` slot.
+
+### ExcelTrigger
+
+A button that triggers an Excel export.
+
+Renders the `baseButton` slot.
+
+## Recipes
 
 Below are some ways the Export component can be used.
-
-### Toolbar export buttons
-
-Display export options as buttons on the toolbar.
-
-{{"demo": "GridExportTrigger.js", "bg": "inline"}}
 
 ### Toolbar export menu
 
 Display export options within a menu on the toolbar.
 
 {{"demo": "GridExportMenu.js", "bg": "inline"}}
+
+## Accessibility
+
+### ARIA
+
+- The element rendered by the `PrintTrigger`, `CsvTrigger` and `ExcelTrigger` components should have a text label, or an `aria-label` attribute set.
 
 ## API
 

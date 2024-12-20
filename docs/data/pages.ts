@@ -191,6 +191,10 @@ const pages: MuiPage[] = [
               },
               { pathname: '/x/react-data-grid/components/filter-panel', title: 'Filter Panel' },
               { pathname: '/x/react-data-grid/components/export', title: 'Export' },
+              {
+                pathname: '/x/react-data-grid/components/quick-filter',
+                title: 'Quick Filter',
+              },
             ],
           },
         ],

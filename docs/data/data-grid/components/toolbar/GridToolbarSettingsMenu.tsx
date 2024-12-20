@@ -29,9 +29,9 @@ type ToolbarProps = {
 };
 
 const DENISTY_OPTIONS: { label: string; value: GridDensity }[] = [
-  { label: 'Compact', value: 'compact' },
-  { label: 'Standard', value: 'standard' },
-  { label: 'Comfortable', value: 'comfortable' },
+  { label: 'Compact density', value: 'compact' },
+  { label: 'Standard density', value: 'standard' },
+  { label: 'Comfortable density', value: 'comfortable' },
 ];
 
 function Toolbar(props: ToolbarProps) {

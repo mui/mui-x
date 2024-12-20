@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { unstable_debounce as debounce } from '@mui/utils';
 import { GridQuickFilterRootContext } from './GridQuickFilterRootContext';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
@@ -13,9 +14,7 @@ export type GridQuickFilterRootProps = {
    * Function responsible for parsing text input in an array of independent values for quick filtering.
    * @param {string} input The value entered by the user
    * @returns {any[]} The array of value on which quick filter is applied
-   * @default (searchText: string) => searchText
-   *   .split(' ')
-   *   .filter((word) => word !== '')
+   * @default (searchText: string) => searchText.split(' ').filter((word) => word !== '')
    */
   parser?: (input: string) => any[];
   /**
@@ -48,15 +47,16 @@ const DEFAULT_FORMATTER = (values: string[]) => values.join(' ');
 function GridQuickFilterRoot(props: GridQuickFilterRootProps) {
   const rootProps = useGridRootProps();
   const {
-    children,
     parser = DEFAULT_PARSER,
     formatter = DEFAULT_FORMATTER,
     debounceMs = rootProps.filterDebounceMs,
+    children,
   } = props;
   const apiRef = useGridApiContext();
+  const controlRef = React.useRef<HTMLInputElement>(null);
+  const triggerRef = React.useRef<HTMLButtonElement>(null);
   const initialValue = useGridSelector(apiRef, gridQuickFilterValuesSelector);
   const [value, setValue] = React.useState(formatter(initialValue ?? []));
-  const controlRef = React.useRef<HTMLInputElement>(null);
 
   const setQuickFilterValueDebounced = React.useMemo(
     () =>
@@ -83,12 +83,15 @@ function GridQuickFilterRoot(props: GridQuickFilterRootProps) {
 
   const contextValue = React.useMemo(
     () => ({
-      value,
-      onValueChange: handleValueChange,
-      clearValue: handleClear,
       controlRef,
+      triggerRef,
+      state: {
+        value,
+      },
+      clearValue: handleClear,
+      onValueChange: handleValueChange,
     }),
-    [value, handleValueChange, handleClear, controlRef],
+    [value, handleValueChange, handleClear],
   );
 
   return (
@@ -97,5 +100,32 @@ function GridQuickFilterRoot(props: GridQuickFilterRootProps) {
     </GridQuickFilterRootContext.Provider>
   );
 }
+
+GridQuickFilterRoot.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  children: PropTypes.node,
+  /**
+   * The debounce time in milliseconds.
+   * @default 150
+   */
+  debounceMs: PropTypes.number,
+  /**
+   * Function responsible for formatting values of quick filter in a string when the model is modified
+   * @param {any[]} values The new values passed to the quick filter model
+   * @returns {string} The string to display in the text field
+   * @default (values: string[]) => values.join(' ')
+   */
+  formatter: PropTypes.func,
+  /**
+   * Function responsible for parsing text input in an array of independent values for quick filtering.
+   * @param {string} input The value entered by the user
+   * @returns {any[]} The array of value on which quick filter is applied
+   * @default (searchText: string) => searchText.split(' ').filter((word) => word !== '')
+   */
+  parser: PropTypes.func,
+} as any;
 
 export { GridQuickFilterRoot };

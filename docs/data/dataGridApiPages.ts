@@ -45,6 +45,18 @@ const dataGridApiPages: MuiPage[] = [
     title: 'GridFilterPanelTrigger',
   },
   {
+    pathname: '/x/api/data-grid/grid-quick-filter-clear',
+    title: 'GridQuickFilterClear',
+  },
+  {
+    pathname: '/x/api/data-grid/grid-quick-filter-control',
+    title: 'GridQuickFilterControl',
+  },
+  {
+    pathname: '/x/api/data-grid/grid-quick-filter-root',
+    title: 'GridQuickFilterRoot',
+  },
+  {
     pathname: '/x/api/data-grid/grid-toolbar-button',
     title: 'GridToolbarButton',
   },

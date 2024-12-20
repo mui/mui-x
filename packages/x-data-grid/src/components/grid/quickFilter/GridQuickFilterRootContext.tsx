@@ -4,10 +4,11 @@ export interface GridQuickFilterState {
   value: string;
 }
 
-export interface GridQuickFilterRootContextValue extends GridQuickFilterState {
+export interface GridQuickFilterRootContextValue {
+  state: GridQuickFilterState;
+  controlRef: React.RefObject<HTMLInputElement>;
   onValueChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   clearValue: () => void;
-  controlRef: React.RefObject<HTMLInputElement>;
 }
 
 export const GridQuickFilterRootContext = React.createContext<

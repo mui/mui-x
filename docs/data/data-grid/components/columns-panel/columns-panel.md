@@ -13,9 +13,15 @@ In the meantime, see the following:
 
 :::
 
+## Basic usage
+
+The demo below shows how to use the Columns Panel Trigger component to open the columns panel.
+
+{{"demo": "GridColumnsPanelTrigger.js", "bg": "inline"}}
+
 ## Anatomy
 
-The Columns Panel component is comprised of the following parts:
+The Columns Panel component contains the following parts:
 
 ```tsx
 <Grid.ColumnsPanel.Trigger />
@@ -25,15 +31,13 @@ The Columns Panel component is comprised of the following parts:
 
 A button that opens the columns panel.
 
-## Examples
+Renders the `baseButton` slot.
 
-Below are some ways the Columns Panel component can be used.
+## Accessibility
 
-### Toolbar columns panel trigger
+### ARIA
 
-Toggle the visibility of the columns panel.
-
-{{"demo": "GridColumnsPanelTrigger.js", "bg": "inline"}}
+- The element rendered by the `Trigger` component should have a text label, or an `aria-label` attribute set.
 
 ## API
 
