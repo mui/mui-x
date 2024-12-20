@@ -76,6 +76,18 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsItemTooltipContent',
   },
   {
+    pathname: '/x/api/charts/charts-label',
+    title: 'ChartsLabel',
+  },
+  {
+    pathname: '/x/api/charts/charts-label-gradient',
+    title: 'ChartsLabelGradient',
+  },
+  {
+    pathname: '/x/api/charts/charts-label-mark',
+    title: 'ChartsLabelMark',
+  },
+  {
     pathname: '/x/api/charts/charts-legend',
     title: 'ChartsLegend',
   },
@@ -118,10 +130,6 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/continuous-color-legend',
     title: 'ContinuousColorLegend',
-  },
-  {
-    pathname: '/x/api/charts/default-charts-legend',
-    title: 'DefaultChartsLegend',
   },
   {
     pathname: '/x/api/charts/gauge',

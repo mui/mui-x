@@ -24,6 +24,7 @@ describe('<BarChart />', () => {
         'themeStyleOverrides',
         'themeVariants',
         'themeCustomPalette',
+        'themeDefaultProps',
       ],
     }),
   );

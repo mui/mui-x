@@ -32,7 +32,7 @@ const legendPlacement = {
         vertical: 'middle',
         horizontal: 'right',
       },
-      direction: 'column',
+      direction: 'vertical',
       itemGap: 2,
     },
   },

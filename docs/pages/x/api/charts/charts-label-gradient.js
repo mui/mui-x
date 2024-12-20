@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ApiPage from 'docs/src/modules/components/ApiPage';
 import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './default-charts-legend.json';
+import jsonPageContent from './charts-label-gradient.json';
 
 export default function Page(props) {
   const { descriptions, pageContent } = props;
@@ -10,9 +10,9 @@ export default function Page(props) {
 
 Page.getInitialProps = () => {
   const req = require.context(
-    'docsx/translations/api-docs/charts/default-charts-legend',
+    'docsx/translations/api-docs/charts/charts-label-gradient',
     false,
-    /\.\/default-charts-legend.*.json$/,
+    /\.\/charts-label-gradient.*.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

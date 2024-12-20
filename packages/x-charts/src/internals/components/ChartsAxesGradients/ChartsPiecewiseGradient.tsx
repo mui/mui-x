@@ -31,6 +31,10 @@ export default function ChartsPiecewiseGradient(props: ChartsPiecewiseGradientPr
         }
         const offset = isReversed ? 1 - x / size : x / size;
 
+        if (Number.isNaN(offset)) {
+          return null;
+        }
+
         return (
           <React.Fragment key={threshold.toString() + index}>
             <stop offset={offset} stopColor={colorMap.colors[index]} stopOpacity={1} />

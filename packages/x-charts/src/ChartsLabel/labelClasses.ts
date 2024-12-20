@@ -8,8 +8,6 @@ export interface ChartsLabelClasses {
   root: string;
 }
 
-export type ChartsLabelClassKey = keyof ChartsLabelClasses;
-
 export function getLabelUtilityClass(slot: string) {
   return generateUtilityClass('MuiChartsLabel', slot);
 }
