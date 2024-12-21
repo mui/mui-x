@@ -12,7 +12,7 @@ import {
   PickerRangeValue,
   useToolbarOwnerState,
   PickerToolbarOwnerState,
-  DateTimePickerToolbarForceDesktopVariant,
+  DateTimePickerToolbarOverrideContext,
 } from '@mui/x-date-pickers/internals';
 import { usePickerContext, usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
@@ -37,7 +37,7 @@ const useUtilityClasses = (classes: Partial<DateTimeRangePickerToolbarClasses> |
 type DateTimeRangeViews = Exclude<DateOrTimeViewWithMeridiem, 'year' | 'month'>;
 
 export interface DateTimeRangePickerToolbarProps
-  extends BaseToolbarProps<PickerRangeValue, DateTimeRangeViews>,
+  extends BaseToolbarProps<PickerRangeValue>,
     Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'>,
     ExportedDateTimeRangePickerToolbarProps {
   ampm?: boolean;
@@ -93,12 +93,9 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
     onRangePositionChange,
     className,
     classes: classesProp,
-    onViewChange,
     onChange,
     classes: inClasses,
-    view,
     isLandscape,
-    views,
     ampm,
     hidden,
     toolbarFormat,
@@ -108,7 +105,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
     ...other
   } = props;
 
-  const { disabled, readOnly } = usePickerContext();
+  const { disabled, readOnly, view, onViewChange, views } = usePickerContext<DateTimeRangeViews>();
   const translations = usePickerTranslations();
   const ownerState = useToolbarOwnerState();
   const classes = useUtilityClasses(classesProp);
@@ -123,32 +120,6 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
     toolbarFormat,
     toolbarPlaceholder,
   };
-
-  const handleStartRangeViewChange = React.useCallback(
-    (newView: DateOrTimeViewWithMeridiem) => {
-      if (newView === 'year' || newView === 'month') {
-        return;
-      }
-      if (rangePosition !== 'start') {
-        onRangePositionChange('start');
-      }
-      onViewChange(newView);
-    },
-    [onRangePositionChange, onViewChange, rangePosition],
-  );
-
-  const handleEndRangeViewChange = React.useCallback(
-    (newView: DateOrTimeViewWithMeridiem) => {
-      if (newView === 'year' || newView === 'month') {
-        return;
-      }
-      if (rangePosition !== 'end') {
-        onRangePositionChange('end');
-      }
-      onViewChange(newView);
-    },
-    [onRangePositionChange, onViewChange, rangePosition],
-  );
 
   const handleOnChange = React.useCallback(
     (newDate: PickerValidDate | null) => {
@@ -165,6 +136,42 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
     [onChange, onRangePositionChange, props.value, rangePosition, utils],
   );
 
+  const startOverrides = React.useMemo(() => {
+    const handleStartRangeViewChange = (newView: DateOrTimeViewWithMeridiem) => {
+      if (newView === 'year' || newView === 'month') {
+        return;
+      }
+      if (rangePosition !== 'start') {
+        onRangePositionChange('start');
+      }
+      onViewChange(newView);
+    };
+
+    return {
+      forceDesktopVariant: true,
+      onViewChange: handleStartRangeViewChange,
+      view: rangePosition === 'start' ? view : null,
+    };
+  }, [rangePosition, view, onRangePositionChange, onViewChange]);
+
+  const endOverrides = React.useMemo(() => {
+    const handleEndRangeViewChange = (newView: DateOrTimeViewWithMeridiem) => {
+      if (newView === 'year' || newView === 'month') {
+        return;
+      }
+      if (rangePosition !== 'end') {
+        onRangePositionChange('end');
+      }
+      onViewChange(newView);
+    };
+
+    return {
+      forceDesktopVariant: true,
+      onViewChange: handleEndRangeViewChange,
+      view: rangePosition === 'end' ? view : null,
+    };
+  }, [rangePosition, view, onRangePositionChange, onViewChange]);
+
   if (hidden) {
     return null;
   }
@@ -177,30 +184,28 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
       sx={sx}
       {...other}
     >
-      <DateTimePickerToolbarForceDesktopVariant.Provider value>
+      <DateTimePickerToolbarOverrideContext.Provider value={startOverrides}>
         <DateTimeRangePickerToolbarStart
           value={start}
-          onViewChange={handleStartRangeViewChange}
           toolbarTitle={translations.start}
           ownerState={ownerState}
-          view={rangePosition === 'start' ? view : undefined}
           className={classes.startToolbar}
           onChange={handleOnChange}
           titleId={titleId ? `${titleId}-start-toolbar` : undefined}
           {...commonToolbarProps}
         />
+      </DateTimePickerToolbarOverrideContext.Provider>
+      <DateTimePickerToolbarOverrideContext.Provider value={endOverrides}>
         <DateTimeRangePickerToolbarEnd
           value={end}
-          onViewChange={handleEndRangeViewChange}
           toolbarTitle={translations.end}
           ownerState={ownerState}
-          view={rangePosition === 'end' ? view : undefined}
           className={classes.endToolbar}
           onChange={handleOnChange}
           titleId={titleId ? `${titleId}-end-toolbar` : undefined}
           {...commonToolbarProps}
         />
-      </DateTimePickerToolbarForceDesktopVariant.Provider>
+      </DateTimePickerToolbarOverrideContext.Provider>
     </DateTimeRangePickerToolbarRoot>
   );
 }) as DateTimeRangePickerToolbarComponent;
@@ -224,12 +229,6 @@ DateTimeRangePickerToolbar.propTypes = {
   isLandscape: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
   onRangePositionChange: PropTypes.func.isRequired,
-  /**
-   * Callback called when a toolbar is clicked
-   * @template TView
-   * @param {TView} view The view to open
-   */
-  onViewChange: PropTypes.func.isRequired,
   rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
@@ -250,16 +249,6 @@ DateTimeRangePickerToolbar.propTypes = {
    */
   toolbarPlaceholder: PropTypes.node,
   value: PropTypes.arrayOf(PropTypes.object).isRequired,
-  /**
-   * Currently visible picker view.
-   */
-  view: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'seconds']).isRequired,
-  /**
-   * Available views.
-   */
-  views: PropTypes.arrayOf(
-    PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'seconds']).isRequired,
-  ).isRequired,
 } as any;
 
 export { DateTimeRangePickerToolbar };

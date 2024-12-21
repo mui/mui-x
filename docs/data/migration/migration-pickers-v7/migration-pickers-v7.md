@@ -68,7 +68,9 @@ After running the codemods, make sure to test your application and that you don'
 Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
 :::
 
-## New DOM structure for the field
+## Components breaking changes
+
+### New DOM structure for the field
 
 Before version `v7.x`, the fields' DOM structure consisted of an `<input />`, which held the whole value for the component.
 Unfortunately it presented accessibility limitations, which are impossible to resolve.
@@ -78,7 +80,7 @@ This approach is recommended in [W3C ARIA](https://www.w3.org/WAI/ARIA/apg/patte
 
 Starting with version `v8.x`, the new DOM structure is the default for all fields.
 
-### Fallback to the non-accessible DOM structure
+#### Fallback to the non-accessible DOM structure
 
 ```tsx
 <DateField enableAccessibleFieldDOMStructure={false} />
@@ -86,7 +88,7 @@ Starting with version `v8.x`, the new DOM structure is the default for all field
 <DateRangePicker enableAccessibleFieldDOMStructure={false} />
 ```
 
-### Migrate `slotProps.field`
+#### Migrate `slotProps.field`
 
 When using `slotProps.field` to pass props to your field component,
 the field consumes some props (for example `shouldRespectLeadingZeros`) and forwards the rest to the `TextField`.
@@ -120,7 +122,7 @@ the field consumes some props (for example `shouldRespectLeadingZeros`) and forw
   />
   ```
 
-### Migrate `slotProps.textField`
+#### Migrate `slotProps.textField`
 
 If you are passing props to `slotProps.textField`,
 these props will now be received by `PickersTextField` and should keep working the same way as before.
@@ -142,14 +144,14 @@ If you are passing `inputProps` to `slotProps.textField`,
 these props will now be passed to the hidden `<input />` element.
 :::
 
-### Migrate `slots.field`
+#### Migrate `slots.field`
 
 If you are passing a custom field component to your pickers, you need to create a new one that is using the accessible DOM structure.
 This new component will need to use the `PickersSectionList` component instead of an `<input />` HTML element.
 
 You can have a look at the [Using a custom input](/x/react-date-pickers/custom-field/#using-a-custom-input) section to have a concrete example.
 
-### Migrate `slots.textField`
+#### Migrate `slots.textField`
 
 If you are passing a custom `TextField` component to your fields and pickers,
 you need to create a new one that is using the accessible DOM structure.
@@ -162,7 +164,7 @@ please consider having a look at the [Using a custom input](/x/react-date-picker
 This approach can be more appropriate for deeper changes.
 :::
 
-### Migrate the theme
+#### Migrate the theme
 
 If you are using the theme to customize `MuiTextField`,
 you need to pass the same config to `MuiPickersTextField`:
@@ -260,6 +262,88 @@ const theme = createTheme({
 });
 ```
 
+### Month Calendar
+
+To simplify the theme and class structure, the `<PickersMonth />` component has been moved inside the Month Calendar component.
+This change causes a few breaking changes:
+
+- The classes from `pickersMonthClasses` have been moved inside `monthCalendarClasses`:
+
+  ```diff
+  -import { pickersMonthClasses } from '@mui/x-date-pickers/MonthCalendar';
+  +import { monthCalendarClasses } from '@mui/x-date-pickers/MonthCalendar';
+
+  -const buttonClassName = pickersMonthClasses.monthButton;
+  +const buttonClassName = monthCalendarClasses.button;
+
+  -const selectedButtonClassName = pickersMonthClasses.selected;
+  +const selectedButtonClassName = monthCalendarClasses.selected;
+
+  -const disabledButtonClassName = pickersMonthClasses.disabled;
+  +const disabledButtonClassName = monthCalendarClasses.disabled;
+  ```
+
+- The `monthButton` slot of the `PickersMonth` style overrides has been replaced by the `button` slot of the `MonthCalendar` theme entry:
+
+  ```diff
+   const theme = createTheme({
+     components: {
+  -    PickersMonth: {
+  +    MonthCalendar: {
+         styleOverrides: {
+  -        monthButton: {
+  +        button: {
+             color: 'red',
+           },
+         },
+       },
+     },
+   });
+  ```
+
+- The button to render a single month is no longer wrapped in a `<div />`, the spacing are instead defined inside the `root` slot of the Month Calendar.
+
+### Year Calendar
+
+To simplify the theme and class structure, the `<PickersYear />` component has been moved inside the Year Calendar component.
+This change causes a few breaking changes:
+
+- The classes from `pickersYearClasses` have been moved inside `yearCalendarClasses`:
+
+  ```diff
+  -import { pickersYearClasses } from '@mui/x-date-pickers/YearCalendar';
+  +import { yearCalendarClasses } from '@mui/x-date-pickers/YearCalendar';
+
+  -const buttonClassName = pickersYearClasses.monthButton;
+  +const buttonClassName = yearCalendarClasses.button;
+
+  -const selectedButtonClassName = pickersYearClasses.selected;
+  +const selectedButtonClassName = yearCalendarClasses.selected;
+
+  -const disabledButtonClassName = pickersYearClasses.disabled;
+  +const disabledButtonClassName = yearCalendarClasses.disabled;
+  ```
+
+- The `yearButton` slot of the `PickersYear` style overrides has been replaced by the `button` slot of the `YearCalendar` theme entry:
+
+  ```diff
+   const theme = createTheme({
+     components: {
+  -    PickersYear: {
+  +    YearCalendar: {
+         styleOverrides: {
+  -        yearButton: {
+  +        button: {
+             color: 'red',
+           },
+         },
+       },
+     },
+   });
+  ```
+
+- The button to render a single year is no longer wrapped in a `<div />`, the spacing are instead defined inside the `root` slot of the Year Calendar.
+
 ## Slots breaking changes
 
 ### Slot: `layout`
@@ -280,76 +364,179 @@ const theme = createTheme({
    );
   ```
 
-- The component passed to the `layout` slot no longer receives a `disabled` prop, instead you can use the `usePickerContext` hook:
+- The component passed to the `layout` slot no longer receives the `disabled` and `readOnly` props, instead you can use the `usePickerContext` hook:
 
   ```diff
-  -console.log(props.disabled);
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+
+  -const { disabled } = props;
   +const { disabled } = usePickerContext();
-  +console.log(disabled);
-  ```
 
-- The component passed to the `layout` slot no longer receives a `readOnly` prop, instead you can use the `usePickerContext` hook:
-
-  ```diff
-  -console.log(props.readOnly);
-  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+  -const { readOnly } = props;
   +const { readOnly } = usePickerContext();
-  +console.log(readOnly);
   ```
 
 - The component passed to the `layout` slot no longer receives an `isRtl` prop. If you need to access this information, you can use the `useRtl` hook from `@mui/system`:
 
   ```diff
   +import { useRtl } from '@mui/system/RtlProvider';
-   function CustomLayout(props) {
-  -  console.log(props.isRtl);
+
+  -  const { isRtl } = props;
   +  const isRtl = useRtl();
-  +  console.log(isRtl);
-   }
   ```
 
-- The component passed to the `layout` slot no longer receives an `orientation` and the `isLandscape` props, instead you can use the `usePickerContext` hook:
+- The component passed to the `layout` slot no longer receives the `orientation` and `isLandscape` props, instead you can use the `usePickerContext` hook:
 
   ```diff
-  -console.log(props.orientation);
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+
+  -const { orientation } = props;
   +const { orientation } = usePickerContext();
-  +console.log(orientation);
-  -console.log(props.isLandscape);
-  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+
+  -const { isLandscape } = props;
   +const { orientation } = usePickerContext();
-  +console.log(orientation === 'landscape');
+  +const isLandscape = orientation === 'landscape';
   ```
 
 - The component passed to the `layout` slot no longer receives a `wrapperVariant` prop, instead you can use the `usePickerContext` hook:
 
   ```diff
-  -console.log(props.wrapperVariant);
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+
+  -const { wrapperVariant } = props;
   +const { variant } = usePickerContext();
-  +console.log(variant);
   ```
+
+- The component passed to the `layout` slot no longer receives the `view`, `views` and `onViewChange` props, instead you can use the `usePickerContext` hook:
+
+  ```diff
+  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+
+  -const { view } = props;
+  +const { view } = usePickerContext();
+
+  -const { views } = props;
+  +const { views } = usePickerContext();
+
+  -const { onViewChange } = props;
+  +const { onViewChange } = usePickerContext();
+  ```
+
+- The component passed to the `layout` slot no longer receives the `onClear`, `onSetToday`, `onAccept`, `onCancel`, `onOpen`, `onClose` and `onDismiss` props, instead you can use the `usePickerActionsContext` or the `usePickerContext` hooks:
+
+  ```diff
+  +import { usePickerActionsContext } from '@mui/x-date-pickers/hooks';
+
+  -const { onClear } = props;
+  +const { clearValue } = usePickerActionsContext();
+
+  -const { onSetToday } = props;
+  +const { setValueToToday } = usePickerActionsContext();
+
+  -const { onAccept } = props;
+  +const { acceptValueChanges } = usePickerActionsContext();
+
+  -const { onCancel } = props;
+  +const { cancelValueChanges } = usePickerActionsContext();
+
+  -const { onOpen } = props;
+  +const { setOpen } = usePickerActionsContext();
+  +const onOpen = event => {
+  +  event.preventDefault();
+  +  setOpen(true);
+  +}
+
+  -props.onClose();
+  +const { setOpen } = usePickerActionsContext();
+  +const onClose = event => {
+  +  event.preventDefault();
+  +  setOpen(false);
+  +}
+
+   // This contains a small behavior change.
+   // If the picker is not controlled and has a default value,
+   // opening it and calling `acceptValueChanges` without any change will call `onAccept` with the default value.
+   // Whereas before, opening it and calling `onDimiss` without any change would not have called `onAccept`.
+  -const { onDismiss } = props;
+  +const { acceptValueChanges } = usePickerActionsContext();
+  +const onDismiss = acceptValueChanges
+  ```
+
+  :::success
+  The `usePickerContext` also contain all the actions returned by `usePickerActionsContext`.
+  The only difference is that `usePickerActionsContext` only contains variables with stable references that won't cause a re-render of your component.
+  :::
 
 ### Slot: `toolbar`
 
-- The component passed to the `toolbar` slot no longer receives a `disabled` prop, instead you can use the `usePickerContext` hook:
+- The component passed to the `toolbar` slot no longer receives the `disabled` and `readOnly` props, instead you can use the `usePickerContext` hook:
 
   ```diff
-  -console.log(props.disabled);
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+
+  -const { disabled } = props;
   +const { disabled } = usePickerContext();
-  +console.log(disabled);
+
+  -const { readOnly } = props;
+  +const { readOnly } = usePickerContext();
   ```
 
-- The component passed to the `toolbar` slot no longer receives a `readOnly` prop, instead you can use the `usePickerContext` hook:
+- The component passed to the `toolbar` slot no longer receives a `view`, `views` and `onViewChange` props, instead you can use the `usePickerContext` hook:
 
   ```diff
-  -console.log(props.readOnly);
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
-  +const { readOnly } = usePickerContext();
-  +console.log(readOnly);
+
+  -const { view } = props;
+  +const { view } = usePickerContext();
+
+  -const { views } = props;
+  +const { views } = usePickerContext();
+
+  -const { onViewChange } = props;
+  +const { onViewChange } = usePickerContext();
   ```
+
+### Slot: `tabs`
+
+- The component passed to the `tabs` slot no longer receives a `view`, `views` and `onViewChange` props, instead you can use the `usePickerContext` hook:
+
+  ```diff
+  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+
+  -const { view } = props;
+  +const { view } = usePickerContext();
+
+  -const { views } = props;
+  +const { views } = usePickerContext();
+
+  -const { onViewChange } = props;
+  +const { onViewChange } = usePickerContext();
+  ```
+
+### Slot: `actionBar`
+
+- The component passed to the `actionBar` slot no longer receives the `onClear`, `onSetToday`, `onAccept` and `onCancel` props. You can use the `usePickerActionsContext` or the `usePickerContext` hooks instead:
+
+  ```diff
+  +import { usePickerActionsContext } from '@mui/x-date-pickers/hooks';
+
+  -const { onClear } = props;
+  +const { clearValue } = usePickerActionsContext();
+
+  -const { onSetToday } = props;
+  +const { setValueToToday } = usePickerActionsContext();
+
+  -const { onAccept } = props;
+  +const { acceptValueChanges } = usePickerActionsContext();
+
+  -const { onCancel } = props;
+  +const { cancelValueChanges } = usePickerActionsContext();
+  ```
+
+  :::success
+  The `usePickerContext` also contain all the actions returned by `usePickerActionsContext`.
+  The only difference is that `usePickerActionsContext` only contains variables with stable references that won't cause a re-render of your component.
+  :::
 
 ## Renamed variables and types
 
