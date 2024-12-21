@@ -390,12 +390,10 @@ export function useGridColumns(
    * EVENTS
    */
 
-  const prevInnerWidth = React.useRef<number | null>(null);
-  const handleGridSizeChange: GridEventListener<'viewportInnerSizeChange'> = (
-    viewportInnerSize,
-  ) => {
-    if (prevInnerWidth.current !== viewportInnerSize.width) {
-      prevInnerWidth.current = viewportInnerSize.width;
+  const prevOuterWidth = React.useRef<number | null>(null);
+  const handleGridSizeChange: GridEventListener<'resize'> = (size) => {
+    if (prevOuterWidth.current !== size.width) {
+      prevOuterWidth.current = size.width;
       setGridColumnsState(
         hydrateColumnsWidth(
           gridColumnsStateSelector(apiRef.current.state),
@@ -405,7 +403,7 @@ export function useGridColumns(
     }
   };
 
-  useGridApiEventHandler(apiRef, 'viewportInnerSizeChange', handleGridSizeChange);
+  useGridApiEventHandler(apiRef, 'resize', handleGridSizeChange);
 
   /**
    * APPLIERS
