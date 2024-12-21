@@ -9,8 +9,7 @@ import {
 } from '../gridRows';
 import type { GridStateColDef } from '../colDef/gridColDef';
 import { GridEditCellProps } from '../gridEditRowModel';
-import { GridApiCommunity } from '../api/gridApiCommunity';
-import { GridApiCommon } from '..';
+import { GridApiCommunity, GridApiCommon } from '../api/gridApiCommunity';
 
 /**
  * Object passed as parameter in the column [[GridColDef]] cell renderer.
