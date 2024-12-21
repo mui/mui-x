@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, SxProps, Theme } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -35,7 +36,7 @@ const GridToolbarContainerRoot = styled('div', {
   padding: theme.spacing(0.5, 0.5, 0),
 }));
 
-const GridToolbarContainer = React.forwardRef<HTMLDivElement, GridToolbarContainerProps>(
+const GridToolbarContainer = forwardRef<HTMLDivElement, GridToolbarContainerProps>(
   function GridToolbarContainer(props, ref) {
     const { className, children, ...other } = props;
     const rootProps = useGridRootProps();
@@ -46,10 +47,10 @@ const GridToolbarContainer = React.forwardRef<HTMLDivElement, GridToolbarContain
 
     return (
       <GridToolbarContainerRoot
-        ref={ref}
         className={clsx(classes.root, className)}
         ownerState={rootProps}
         {...other}
+        ref={ref}
       >
         {children}
       </GridToolbarContainerRoot>

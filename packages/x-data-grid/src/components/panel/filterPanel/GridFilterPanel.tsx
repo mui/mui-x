@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { SxProps, Theme } from '@mui/material/styles';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridFilterItem, GridLogicOperator } from '../../../models/gridFilterItem';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { GridPanelContent } from '../GridPanelContent';
@@ -69,7 +70,7 @@ const getGridFilter = (col: GridStateColDef): GridFilterItem => ({
   id: Math.round(Math.random() * 1e5),
 });
 
-const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
+const GridFilterPanel = forwardRef<HTMLDivElement, GridFilterPanelProps>(
   function GridFilterPanel(props, ref) {
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
@@ -234,7 +235,7 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
     }, [validFilters.length]);
 
     return (
-      <GridPanelWrapper ref={ref} {...other}>
+      <GridPanelWrapper {...other} ref={ref}>
         <GridPanelContent>
           {readOnlyFilters.map((item, index) => (
             <GridFilterForm

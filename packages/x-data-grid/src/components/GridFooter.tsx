@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { gridTopLevelRowCountSelector } from '../hooks/features/rows/gridRowsSelector';
 import { selectedGridRowsCountSelector } from '../hooks/features/rowSelection/gridRowSelectionSelector';
@@ -9,7 +10,7 @@ import { GridSelectedRowCount } from './GridSelectedRowCount';
 import { GridFooterContainer, GridFooterContainerProps } from './containers/GridFooterContainer';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
-const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerProps>(
+const GridFooter = forwardRef<HTMLDivElement, GridFooterContainerProps>(
   function GridFooter(props, ref) {
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
@@ -40,7 +41,7 @@ const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerProps>(
       );
 
     return (
-      <GridFooterContainer ref={ref} {...props}>
+      <GridFooterContainer {...props} ref={ref}>
         {selectedRowCountElement}
         {rowCountElement}
         {paginationElement}

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { isMultipleRowSelectionEnabled } from '../../hooks/features/rowSelection/utils';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridTabIndexColumnHeaderSelector } from '../../hooks/features/focus/gridFocusStateSelector';
@@ -27,7 +28,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridHeaderCheckbox = React.forwardRef<HTMLButtonElement, GridColumnHeaderParams>(
+const GridHeaderCheckbox = forwardRef<HTMLButtonElement, GridColumnHeaderParams>(
   function GridHeaderCheckbox(props, ref) {
     const { field, colDef, ...other } = props;
     const [, forceUpdate] = React.useState(false);
@@ -137,7 +138,6 @@ const GridHeaderCheckbox = React.forwardRef<HTMLButtonElement, GridColumnHeaderP
 
     return (
       <rootProps.slots.baseCheckbox
-        ref={ref}
         indeterminate={isIndeterminate}
         checked={isChecked && !isIndeterminate}
         onChange={handleChange}
@@ -148,6 +148,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLButtonElement, GridColumnHeaderP
         disabled={!isMultipleRowSelectionEnabled(rootProps)}
         {...rootProps.slotProps?.baseCheckbox}
         {...other}
+        ref={ref}
       />
     );
   },

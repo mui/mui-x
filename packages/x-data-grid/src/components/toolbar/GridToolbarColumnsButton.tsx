@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
 import { ButtonProps } from '@mui/material/Button';
 import { TooltipProps } from '@mui/material/Tooltip';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
@@ -17,7 +18,7 @@ interface GridToolbarColumnsButtonProps {
   slotProps?: { button?: Partial<ButtonProps>; tooltip?: Partial<TooltipProps> };
 }
 
-const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, GridToolbarColumnsButtonProps>(
+const GridToolbarColumnsButton = forwardRef<HTMLButtonElement, GridToolbarColumnsButtonProps>(
   function GridToolbarColumnsButton(props, ref) {
     const { slotProps = {} } = props;
     const buttonProps = slotProps.button || {};
@@ -61,7 +62,6 @@ const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, GridToolbar
         {...tooltipProps}
       >
         <rootProps.slots.baseButton
-          ref={ref}
           id={columnButtonId}
           size="small"
           aria-label={apiRef.current.getLocaleText('toolbarColumnsLabel')}
@@ -72,6 +72,7 @@ const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, GridToolbar
           onClick={showColumns}
           {...rootProps.slotProps?.baseButton}
           {...buttonProps}
+          ref={ref}
         >
           {apiRef.current.getLocaleText('toolbarColumns')}
         </rootProps.slots.baseButton>
