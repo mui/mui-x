@@ -6,13 +6,11 @@ import composeClasses from '@mui/utils/composeClasses';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import { BaseToolbarProps } from '../models/props/toolbar';
 import { getPickersToolbarUtilityClass, PickersToolbarClasses } from './pickersToolbarClasses';
-import { DateOrTimeViewWithMeridiem, PickerValidValue } from '../models';
+import { PickerValidValue } from '../models';
 import { PickerToolbarOwnerState, useToolbarOwnerState } from '../hooks/useToolbarOwnerState';
 
-export interface PickersToolbarProps<
-  TValue extends PickerValidValue,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends Pick<BaseToolbarProps<TValue, TView>, 'isLandscape' | 'hidden' | 'titleId'> {
+export interface PickersToolbarProps<TValue extends PickerValidValue>
+  extends Pick<BaseToolbarProps<TValue>, 'isLandscape' | 'hidden' | 'titleId'> {
   className?: string;
   landscapeDirection?: 'row' | 'column';
   toolbarTitle: React.ReactNode;
@@ -86,21 +84,13 @@ const PickersToolbarContent = styled('div', {
   ],
 });
 
-type PickersToolbarComponent = (<
-  TValue extends PickerValidValue,
-  TView extends DateOrTimeViewWithMeridiem,
->(
-  props: React.PropsWithChildren<PickersToolbarProps<TValue, TView>> &
-    React.RefAttributes<HTMLDivElement>,
+type PickersToolbarComponent = (<TValue extends PickerValidValue>(
+  props: React.PropsWithChildren<PickersToolbarProps<TValue>> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 export const PickersToolbar = React.forwardRef(function PickersToolbar<
   TValue extends PickerValidValue,
-  TView extends DateOrTimeViewWithMeridiem,
->(
-  inProps: React.PropsWithChildren<PickersToolbarProps<TValue, TView>>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+>(inProps: React.PropsWithChildren<PickersToolbarProps<TValue>>, ref: React.Ref<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersToolbar' });
   const {
     children,
