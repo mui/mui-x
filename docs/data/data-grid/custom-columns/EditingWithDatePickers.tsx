@@ -78,15 +78,15 @@ function GridEditDateCell({
           inputRef,
           variant: 'standard',
           fullWidth: true,
-          inputProps:{
-            "aria-hidden":false,
+          inputProps: {
+            'aria-hidden': false,
           },
           sx: {
             [`& .${pickersInputBaseClasses.root}`]: {
               fontSize: 'inherit',
               padding: '0px 9px',
-              marginTop:'10px'
-            }
+              marginTop: '10px',
+            },
           },
         },
       }}
