@@ -378,7 +378,6 @@
   { "name": "GridPanelWrapper", "kind": "Variable" },
   { "name": "GridPanelWrapperProps", "kind": "Interface" },
   { "name": "GridParamsApi", "kind": "Interface" },
-  { "name": "GridParamsPrivateApi", "kind": "Interface" },
   { "name": "GridPinnedColumnFields", "kind": "Interface" },
   { "name": "GridPinnedColumnPosition", "kind": "Enum" },
   { "name": "GridPinnedColumns", "kind": "Interface" },
