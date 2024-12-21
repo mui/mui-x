@@ -27,7 +27,7 @@ import {
 } from '../internals/hooks/useToolbarOwnerState';
 
 export interface TimePickerToolbarProps
-  extends BaseToolbarProps<PickerValue, TimeViewWithMeridiem>,
+  extends BaseToolbarProps<PickerValue>,
     ExportedTimePickerToolbarProps {
   ampm?: boolean;
   ampmInClock?: boolean;
@@ -160,9 +160,6 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
     value,
     isLandscape,
     onChange,
-    view,
-    onViewChange,
-    views,
     className,
     classes: classesProp,
     ...other
@@ -171,7 +168,8 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
   const translations = usePickerTranslations();
   const ownerState = useToolbarOwnerState();
   const classes = useUtilityClasses(classesProp, ownerState);
-  const { disabled, readOnly } = usePickerContext();
+  const { disabled, readOnly, view, onViewChange, views } =
+    usePickerContext<TimeViewWithMeridiem>();
 
   const showAmPmControl = Boolean(ampm && !ampmInClock && views.includes('hours'));
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, onChange);
@@ -281,12 +279,6 @@ TimePickerToolbar.propTypes = {
   isLandscape: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
   /**
-   * Callback called when a toolbar is clicked
-   * @template TView
-   * @param {TView} view The view to open
-   */
-  onViewChange: PropTypes.func.isRequired,
-  /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx: PropTypes.oneOfType([
@@ -305,15 +297,6 @@ TimePickerToolbar.propTypes = {
    */
   toolbarPlaceholder: PropTypes.node,
   value: PropTypes.object,
-  /**
-   * Currently visible picker view.
-   */
-  view: PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']).isRequired,
-  /**
-   * Available views.
-   */
-  views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']).isRequired)
-    .isRequired,
 } as any;
 
 export { TimePickerToolbar };
