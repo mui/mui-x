@@ -47,6 +47,7 @@ import { EMPTY_RENDER_CONTEXT } from './useGridVirtualization';
 import { gridRowSpanningHiddenCellsOriginMapSelector } from '../rows/gridRowSpanningSelectors';
 import { gridListColumnSelector } from '../listView/gridListViewSelectors';
 import { minimalContentHeight } from '../rows/gridRowsUtils';
+import { EMPTY_PINNED_COLUMN_FIELDS } from '../columns';
 
 const MINIMUM_COLUMN_WIDTH = 50;
 
@@ -112,11 +113,8 @@ export const useGridVirtualScroller = () => {
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
   const outerSize = dimensions.viewportOuterSize;
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
-  const pinnedColumnDefinitions = useGridSelector(
-    apiRef,
-    gridVisiblePinnedColumnDefinitionsSelector,
-  );
-  const pinnedColumns = listView ? { left: [], right: [] } : pinnedColumnDefinitions;
+  const pinnedColumnDefinitions = gridVisiblePinnedColumnDefinitionsSelector(apiRef);
+  const pinnedColumns = listView ? EMPTY_PINNED_COLUMN_FIELDS : pinnedColumnDefinitions;
   const hasBottomPinnedRows = pinnedRows.bottom.length > 0;
   const [panels, setPanels] = React.useState(EMPTY_DETAIL_PANELS);
 
