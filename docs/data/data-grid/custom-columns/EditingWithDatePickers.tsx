@@ -20,10 +20,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import InputBase, { InputBaseProps } from '@mui/material/InputBase';
 import { enUS as locale } from 'date-fns/locale';
-import { styled } from '@mui/material/styles';
-import { TextFieldProps } from '@mui/material/TextField';
+import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
+import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
 
 const dateAdapter = new AdapterDateFns({ locale });
 
@@ -50,38 +49,47 @@ const dateColumnType: GridColTypeDef<Date, string> = {
   },
 };
 
-const GridEditDateInput = styled(InputBase)({
-  fontSize: 'inherit',
-  padding: '0 9px',
-});
-
-function WrappedGridEditDateInput(props: TextFieldProps) {
-  const { InputProps, focused, ...other } = props;
-  return (
-    <GridEditDateInput fullWidth {...InputProps} {...(other as InputBaseProps)} />
-  );
-}
-
 function GridEditDateCell({
   id,
   field,
   value,
   colDef,
+  hasFocus,
 }: GridRenderEditCellParams<any, Date | null, string>) {
   const apiRef = useGridApiContext();
-
+  const inputRef = React.useRef<HTMLInputElement>();
   const Component = colDef.type === 'dateTime' ? DateTimePicker : DatePicker;
 
   const handleChange = (newValue: unknown) => {
     apiRef.current.setEditCellValue({ id, field, value: newValue });
   };
-
+  useEnhancedEffect(() => {
+    if (hasFocus) {
+      inputRef.current!.focus();
+    }
+  }, [hasFocus]);
   return (
     <Component
       value={value}
       autoFocus
       onChange={handleChange}
-      slots={{ textField: WrappedGridEditDateInput }}
+      slotProps={{
+        textField: {
+          inputRef,
+          variant: 'standard',
+          fullWidth: true,
+          inputProps:{
+            "aria-hidden":false,
+          },
+          sx: {
+            [`& .${pickersInputBaseClasses.root}`]: {
+              fontSize: 'inherit',
+              padding: '0px 9px',
+              marginTop:'10px'
+            }
+          },
+        },
+      }}
     />
   );
 }
