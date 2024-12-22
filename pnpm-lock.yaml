@@ -99,8 +99,8 @@ importers:
         specifier: ^5.16.11
         version: 5.16.11(@emotion/react@11.14.0(@types/react@18.3.17)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.17)(react@18.3.1))(@types/react@18.3.17)(react@18.3.1))(@types/react@18.3.17)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#356d5dffbcbc1c18b5ab8060a173ea7a3e90b58c
-        version: https://codeload.github.com/mui/material-ui/tar.gz/356d5dffbcbc1c18b5ab8060a173ea7a3e90b58c(encoding@0.1.13)
+        specifier: github:mui/material-ui#0ea1ef5241dae88c1f0ca093a4ff4f02a267fa60
+        version: https://codeload.github.com/mui/material-ui/tar.gz/0ea1ef5241dae88c1f0ca093a4ff4f02a267fa60(encoding@0.1.13)
       '@mui/utils':
         specifier: ^5.16.8
         version: 5.16.8(@types/react@18.3.17)(react@18.3.1)
@@ -3219,9 +3219,9 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/356d5dffbcbc1c18b5ab8060a173ea7a3e90b58c':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/356d5dffbcbc1c18b5ab8060a173ea7a3e90b58c}
-    version: 6.2.0
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/0ea1ef5241dae88c1f0ca093a4ff4f02a267fa60':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/0ea1ef5241dae88c1f0ca093a4ff4f02a267fa60}
+    version: 6.2.1
     engines: {pnpm: 9.14.4}
 
   '@mui/private-theming@5.16.8':
@@ -12195,7 +12195,7 @@ snapshots:
       '@emotion/styled': 11.14.0(@emotion/react@11.14.0(@types/react@18.3.17)(react@18.3.1))(@types/react@18.3.17)(react@18.3.1)
       '@types/react': 18.3.17
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/356d5dffbcbc1c18b5ab8060a173ea7a3e90b58c(encoding@0.1.13)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/0ea1ef5241dae88c1f0ca093a4ff4f02a267fa60(encoding@0.1.13)':
     dependencies:
       '@googleapis/sheets': 9.3.1(encoding@0.1.13)
       '@netlify/functions': 2.8.2
