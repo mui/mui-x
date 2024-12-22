@@ -390,10 +390,14 @@ export function useGridColumns(
    * EVENTS
    */
 
-  const prevInnerWidth = React.useRef<number | null>(null);
-  const handleGridSizeChange: GridEventListener<'viewportInnerSizeChange'> = (size) => {
-    if (prevInnerWidth.current !== size.width) {
-      prevInnerWidth.current = size.width;
+  const prevOuterWidth = React.useRef<number | null>(null);
+  const handleGridSizeChange: GridEventListener<'viewportInnerSizeChange'> = () => {
+    // TO-DO add event for outer width or similar instead; I suspect very few need to listen to inner size actually (and consumers may not understand what innersize even means internally), as that can change whenever pinned columns are added/removed/resized
+    const rootDimensions = apiRef.current.getRootDimensions();
+    const size = rootDimensions.viewportOuterSize;
+
+    if (prevOuterWidth.current !== size.width) {
+      prevOuterWidth.current = size.width;
 
       const hasFlexColumns = gridVisibleColumnDefinitionsSelector(apiRef).some(
         (col) => col.flex && col.flex > 0,
@@ -403,10 +407,7 @@ export function useGridColumns(
       }
 
       setGridColumnsState(
-        hydrateColumnsWidth(
-          gridColumnsStateSelector(apiRef.current.state),
-          apiRef.current.getRootDimensions(),
-        ),
+        hydrateColumnsWidth(gridColumnsStateSelector(apiRef.current.state), rootDimensions),
       );
     }
   };
