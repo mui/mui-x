@@ -26,7 +26,6 @@ import { GridRowEditStartParams, GridRowEditStopParams } from '../params/gridRow
 import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
 import { GridPaginationMeta, GridPaginationModel } from '../gridPaginationProps';
 import { GridDensity } from '../gridDensity';
-import { GridDimensions } from '../../hooks/features/dimensions/gridDimensionsApi';
 
 export interface GridRowEventLookup {
   /**
