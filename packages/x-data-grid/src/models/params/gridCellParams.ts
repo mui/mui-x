@@ -87,10 +87,6 @@ export interface GridRenderCellParams<
   Api extends GridApiCommon = GridApiCommunity,
 > extends GridCellParams<R, V, F, N, Api> {
   /**
-   * GridApi that let you manipulate the grid.
-   */
-  api: Api;
-  /**
    * A ref allowing to set imperative focus.
    * It can be passed to the element that should receive focus.
    * @ignore - do not document.
@@ -108,12 +104,7 @@ export interface GridRenderEditCellParams<
   N extends GridTreeNodeWithRender = GridTreeNodeWithRender,
   Api extends GridApiCommon = GridApiCommunity,
 > extends GridCellParams<R, V, F, N, Api>,
-    GridEditCellProps<V> {
-  /**
-   * GridApi that let you manipulate the grid.
-   */
-  api: Api;
-}
+    GridEditCellProps<V> {}
 
 /**
  * Object passed as parameter in the column [[GridColDef]] edit cell props change callback.
