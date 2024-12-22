@@ -99,14 +99,14 @@ importers:
         specifier: ^5.16.11
         version: 5.16.11(@emotion/react@11.14.0(@types/react@18.3.17)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.17)(react@18.3.1))(@types/react@18.3.17)(react@18.3.1))(@types/react@18.3.17)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#356d5dffbcbc1c18b5ab8060a173ea7a3e90b58c
-        version: https://codeload.github.com/mui/material-ui/tar.gz/356d5dffbcbc1c18b5ab8060a173ea7a3e90b58c(encoding@0.1.13)
+        specifier: github:mui/material-ui#0ea1ef5241dae88c1f0ca093a4ff4f02a267fa60
+        version: https://codeload.github.com/mui/material-ui/tar.gz/0ea1ef5241dae88c1f0ca093a4ff4f02a267fa60(encoding@0.1.13)
       '@mui/utils':
         specifier: ^5.16.8
         version: 5.16.8(@types/react@18.3.17)(react@18.3.1)
       '@next/eslint-plugin-next':
-        specifier: 15.1.0
-        version: 15.1.0
+        specifier: 15.1.2
+        version: 15.1.2
       '@octokit/plugin-retry':
         specifier: ^7.1.2
         version: 7.1.2(@octokit/core@4.2.4(encoding@0.1.13))
@@ -3219,9 +3219,9 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/356d5dffbcbc1c18b5ab8060a173ea7a3e90b58c':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/356d5dffbcbc1c18b5ab8060a173ea7a3e90b58c}
-    version: 6.2.0
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/0ea1ef5241dae88c1f0ca093a4ff4f02a267fa60':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/0ea1ef5241dae88c1f0ca093a4ff4f02a267fa60}
+    version: 6.2.1
     engines: {pnpm: 9.14.4}
 
   '@mui/private-theming@5.16.8':
@@ -3309,8 +3309,8 @@ packages:
   '@next/env@15.1.1':
     resolution: {integrity: sha512-ldU8IpUqxa87LsWyMh8eIqAzejt8+ZuEsdtCV+fpDog++cBO5b/PWaI7wQQwun8LKJeFFpnY4kv/6r+/dCON6A==}
 
-  '@next/eslint-plugin-next@15.1.0':
-    resolution: {integrity: sha512-+jPT0h+nelBT6HC9ZCHGc7DgGVy04cv4shYdAe6tKlEbjQUtwU3LzQhzbDHQyY2m6g39m6B0kOFVuLGBrxxbGg==}
+  '@next/eslint-plugin-next@15.1.2':
+    resolution: {integrity: sha512-sgfw3+WdaYOGPKCvM1L+UucBmRfh8V2Ygefp7ELON0+0vY7uohQwXXnVWg3rY7mXDKharQR3o7uedpfvnU2hlQ==}
 
   '@next/swc-darwin-arm64@15.1.1':
     resolution: {integrity: sha512-pq7Hzu0KaaH6UYcCQ22mOuj2mWCD6iqGvYprp/Ep1EcCxbdNOSS+8EJADFbPHsaXLkaonIJ8lTKBGWXaFxkeNQ==}
@@ -12195,7 +12195,7 @@ snapshots:
       '@emotion/styled': 11.14.0(@emotion/react@11.14.0(@types/react@18.3.17)(react@18.3.1))(@types/react@18.3.17)(react@18.3.1)
       '@types/react': 18.3.17
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/356d5dffbcbc1c18b5ab8060a173ea7a3e90b58c(encoding@0.1.13)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/0ea1ef5241dae88c1f0ca093a4ff4f02a267fa60(encoding@0.1.13)':
     dependencies:
       '@googleapis/sheets': 9.3.1(encoding@0.1.13)
       '@netlify/functions': 2.8.2
@@ -12303,7 +12303,7 @@ snapshots:
 
   '@next/env@15.1.1': {}
 
-  '@next/eslint-plugin-next@15.1.0':
+  '@next/eslint-plugin-next@15.1.2':
     dependencies:
       fast-glob: 3.3.1
 
