@@ -24,7 +24,7 @@
     "@types/karma": "^6.3.9",
     "@types/moment-jalaali": "^0.7.9",
     "@types/prop-types": "^15.7.14",
-    "@types/react": "^18.3.17",
+    "@types/react": "^18.3.18",
     "@types/semver": "^7.5.8",
     "chai": "^4.5.0",
     "dayjs": "^1.11.13",
