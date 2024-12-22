@@ -198,7 +198,7 @@ export function useGridDimensions(
         height: rootDimensionsRef.current.height,
       };
       viewportInnerSize = {
-        width: Math.max(0, viewportOuterSize.width - leftPinnedWidth - rightPinnedWidth),
+        width: Math.max(0, viewportOuterSize.width),
         height: Math.max(0, viewportOuterSize.height - topContainerHeight - bottomContainerHeight),
       };
 
@@ -265,8 +265,6 @@ export function useGridDimensions(
     if (!areElementSizesEqual(newDimensions.viewportInnerSize, prevDimensions.viewportInnerSize)) {
       apiRef.current.publishEvent('viewportInnerSizeChange', newDimensions.viewportInnerSize);
     }
-
-    apiRef.current.publishEvent('gridDimensionsChange', newDimensions);
 
     apiRef.current.updateRenderContext?.();
   }, [

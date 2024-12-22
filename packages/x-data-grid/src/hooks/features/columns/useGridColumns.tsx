@@ -390,10 +390,10 @@ export function useGridColumns(
    * EVENTS
    */
 
-  const prevOuterWidth = React.useRef<number | null>(null);
-  const handleGridSizeChange: GridEventListener<'gridDimensionsChange'> = (rootDimensions) => {
-    if (prevOuterWidth.current !== rootDimensions.viewportOuterSize.width) {
-      prevOuterWidth.current = rootDimensions.viewportOuterSize.width;
+  const prevInnerWidth = React.useRef<number | null>(null);
+  const handleGridSizeChange: GridEventListener<'viewportInnerSizeChange'> = (size) => {
+    if (prevInnerWidth.current !== size.width) {
+      prevInnerWidth.current = size.width;
 
       const hasFlexColumns = gridVisibleColumnDefinitionsSelector(apiRef).some(
         (col) => col.flex && col.flex > 0,
@@ -403,12 +403,15 @@ export function useGridColumns(
       }
 
       setGridColumnsState(
-        hydrateColumnsWidth(gridColumnsStateSelector(apiRef.current.state), rootDimensions),
+        hydrateColumnsWidth(
+          gridColumnsStateSelector(apiRef.current.state),
+          apiRef.current.getRootDimensions(),
+        ),
       );
     }
   };
 
-  useGridApiEventHandler(apiRef, 'gridDimensionsChange', handleGridSizeChange);
+  useGridApiEventHandler(apiRef, 'viewportInnerSizeChange', handleGridSizeChange);
 
   /**
    * APPLIERS

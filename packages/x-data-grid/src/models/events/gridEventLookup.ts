@@ -417,10 +417,6 @@ export interface GridEventLookup
    */
   viewportInnerSizeChange: { params: ElementSize };
   /**
-   * Fired when the dimensions of the grid have changed. Called with a [[GridDimensions]] object.
-   */
-  gridDimensionsChange: { params: GridDimensions };
-  /**
    * Fired when the grid is resized with a debounced time of 60ms.
    */
   debouncedResize: { params: ElementSize };
