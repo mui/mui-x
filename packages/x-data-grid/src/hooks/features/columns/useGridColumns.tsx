@@ -390,14 +390,23 @@ export function useGridColumns(
    * EVENTS
    */
 
-  const prevOuterWidth = React.useRef<number | null>(null);
-  const handleGridSizeChange: GridEventListener<'viewportInnerSizeChange'> = () => {
-    const rootDimensions = apiRef.current.getRootDimensions();
-    const size = rootDimensions.viewportOuterSize;
-    if (prevOuterWidth.current !== size.width) {
-      prevOuterWidth.current = size.width;
+  const prevInnerWidth = React.useRef<number | null>(null);
+  const handleGridSizeChange: GridEventListener<'viewportInnerSizeChange'> = (size) => {
+    if (prevInnerWidth.current !== size.width) {
+      prevInnerWidth.current = size.width;
+
+      const hasFlexColumns = gridVisibleColumnDefinitionsSelector(apiRef).some(
+        (col) => col.flex && col.flex > 0,
+      );
+      if (!hasFlexColumns) {
+        return;
+      }
+
       setGridColumnsState(
-        hydrateColumnsWidth(gridColumnsStateSelector(apiRef.current.state), rootDimensions),
+        hydrateColumnsWidth(
+          gridColumnsStateSelector(apiRef.current.state),
+          apiRef.current.getRootDimensions(),
+        ),
       );
     }
   };
