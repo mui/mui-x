@@ -48,7 +48,7 @@ const legendPlacement = {
   },
   margin: {
     top: 20,
-    right: 100,
+    right: 20,
   },
 } as const;
 
