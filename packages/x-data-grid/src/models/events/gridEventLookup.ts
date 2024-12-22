@@ -26,6 +26,7 @@ import { GridRowEditStartParams, GridRowEditStopParams } from '../params/gridRow
 import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
 import { GridPaginationMeta, GridPaginationModel } from '../gridPaginationProps';
 import { GridDensity } from '../gridDensity';
+import { GridDimensions } from '../../hooks/features/dimensions/gridDimensionsApi';
 
 export interface GridRowEventLookup {
   /**
@@ -415,6 +416,10 @@ export interface GridEventLookup
    * Fired when the inner size of the viewport changes. Called with an [[ElementSize]] object.
    */
   viewportInnerSizeChange: { params: ElementSize };
+  /**
+   * Fired when the dimensions of the grid have changed. Called with a [[GridDimensions]] object.
+   */
+  gridDimensionsChange: { params: GridDimensions };
   /**
    * Fired when the grid is resized with a debounced time of 60ms.
    */

@@ -266,6 +266,8 @@ export function useGridDimensions(
       apiRef.current.publishEvent('viewportInnerSizeChange', newDimensions.viewportInnerSize);
     }
 
+    apiRef.current.publishEvent('gridDimensionsChange', newDimensions);
+
     apiRef.current.updateRenderContext?.();
   }, [
     apiRef,
