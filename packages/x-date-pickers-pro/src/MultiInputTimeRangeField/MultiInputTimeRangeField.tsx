@@ -44,7 +44,7 @@ const useUtilityClasses = (classes: Partial<MultiInputRangeFieldClasses> | undef
 
 const MultiInputTimeRangeFieldRoot = styled(
   React.forwardRef((props: StackProps, ref: React.Ref<HTMLDivElement>) => (
-    <Stack ref={ref} spacing={2} direction="row" alignItems="center" {...props} />
+    <Stack ref={ref} spacing={2} direction="row" alignItems="start" {...props} />
   )),
   {
     name: 'MuiMultiInputTimeRangeField',
@@ -59,6 +59,7 @@ const MultiInputTimeRangeFieldSeparator = styled(Typography, {
   overridesResolver: (props, styles) => styles.separator,
 })({
   lineHeight: '1.4375em', // 23px
+  padding: '16.5px 0',
 });
 
 type MultiInputTimeRangeFieldComponent = (<
