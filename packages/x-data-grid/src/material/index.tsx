@@ -1,7 +1,9 @@
 import * as React from 'react';
 import MUIBadge from '@mui/material/Badge';
 import MUICheckbox from '@mui/material/Checkbox';
+import MUICircularProgress from '@mui/material/CircularProgress';
 import MUIDivider from '@mui/material/Divider';
+import MUILinearProgress from '@mui/material/LinearProgress';
 import MUIListItemIcon from '@mui/material/ListItemIcon';
 import MUIListItemText from '@mui/material/ListItemText';
 import MUIMenuList from '@mui/material/MenuList';
@@ -16,6 +18,7 @@ import MUITooltip from '@mui/material/Tooltip';
 import MUIPopper from '@mui/material/Popper';
 import MUIInputLabel from '@mui/material/InputLabel';
 import MUIChip from '@mui/material/Chip';
+import MUISkeleton from '@mui/material/Skeleton';
 import { GridColumnUnsortedIcon } from './icons/GridColumnUnsortedIcon';
 import {
   GridAddIcon,
@@ -101,7 +104,9 @@ const iconSlots: GridIconSlotsComponent = {
 const baseSlots: GridBaseSlots = {
   baseBadge: MUIBadge,
   baseCheckbox: MUICheckbox,
+  baseCircularProgress: MUICircularProgress,
   baseDivider: MUIDivider,
+  baseLinearProgress: MUILinearProgress,
   baseMenuList: MUIMenuList,
   baseMenuItem: BaseMenuItem,
   baseTextField: MUITextField,
@@ -114,6 +119,7 @@ const baseSlots: GridBaseSlots = {
   basePopper: MUIPopper,
   baseInputLabel: MUIInputLabel,
   baseSelectOption: MUISelectOption,
+  baseSkeleton: MUISkeleton,
   baseChip: MUIChip,
 };
 

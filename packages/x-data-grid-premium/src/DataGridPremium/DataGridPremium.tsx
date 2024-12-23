@@ -17,6 +17,7 @@ import {
   PropValidator,
   validateProps,
 } from '@mui/x-data-grid-pro/internals';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import clsx from 'clsx';
 import { useDataGridPremiumComponent } from './useDataGridPremiumComponent';
 import {
@@ -46,7 +47,7 @@ if (process.env.NODE_ENV !== 'production') {
   dataGridPremiumPropValidators = [...propValidatorsDataGrid, ...propValidatorsDataGridPro];
 }
 
-const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends GridValidRowModel>(
+const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridValidRowModel>(
   inProps: DataGridPremiumProps<R>,
   ref: React.Ref<HTMLDivElement>,
 ) {
@@ -66,8 +67,8 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
         className={clsx(props.className, pivotSettingsOpen && gridClasses.sidePanel)}
         style={props.style}
         sx={props.sx}
-        ref={ref}
         {...props.slotProps?.root}
+        ref={ref}
       >
         <div
           style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', flex: 1 }}
