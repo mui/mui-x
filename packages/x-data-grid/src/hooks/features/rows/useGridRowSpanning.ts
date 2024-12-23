@@ -4,6 +4,7 @@ import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../internals/constants';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridRenderContextSelector } from '../virtualization/gridVirtualizationSelectors';
+import { GridRenderContext } from '../../../models';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { gridRowTreeSelector } from './gridRowsSelector';
 import type { GridColDef } from '../../../models/colDef';
@@ -18,6 +19,8 @@ import {
   getCellValue,
 } from './gridRowSpanningUtils';
 import { GRID_CHECKBOX_SELECTION_FIELD } from '../../../colDef/gridCheckboxSelectionColDef';
+import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { runIf } from '../../../utils/utils';
 
 export interface GridRowSpanningState {
   spannedCells: Record<GridRowId, Record<GridColDef['field'], number>>;
@@ -225,7 +228,6 @@ export const useGridRowSpanning = (
   props: Pick<DataGridProcessedProps, 'rowSpanning' | 'pagination' | 'paginationMode'>,
 ): void => {
   const { range, rows: visibleRows } = useGridVisibleRows(apiRef, props);
-  const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
   const colDefs = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const tree = useGridSelector(apiRef, gridRowTreeSelector);
   const processedRange = useLazyRef<RowRange, void>(() => {
@@ -248,14 +250,7 @@ export const useGridRowSpanning = (
     // - The sorting is applied
     // - The `paginationModel` is updated
     // - The rows are updated
-    (resetState: boolean = true) => {
-      if (!props.rowSpanning) {
-        if (apiRef.current.state.rowSpanning !== EMPTY_STATE) {
-          apiRef.current.setState((state) => ({ ...state, rowSpanning: EMPTY_STATE }));
-        }
-        return;
-      }
-
+    (renderContext: GridRenderContext, resetState: boolean = true) => {
       if (range === null || !isRowContextInitialized(renderContext)) {
         return;
       }
@@ -322,35 +317,52 @@ export const useGridRowSpanning = (
         };
       });
     },
-    [apiRef, props.rowSpanning, range, renderContext, visibleRows, colDefs, processedRange],
+    [apiRef, range, visibleRows, colDefs, processedRange],
   );
 
-  const prevRenderContext = React.useRef(renderContext);
-  const isFirstRender = React.useRef(true);
+  const prevRenderContext = React.useRef(gridRenderContextSelector(apiRef));
   const shouldResetState = React.useRef(false);
   const previousTree = React.useRef(tree);
-  React.useEffect(() => {
-    const firstRender = isFirstRender.current;
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-    }
-    if (tree !== previousTree.current) {
-      previousTree.current = tree;
-      updateRowSpanningState(true);
-      return;
-    }
-    if (range && lastRange.current && isRowRangeUpdated(range, lastRange.current)) {
-      lastRange.current = range;
-      shouldResetState.current = true;
-    }
-    if (!firstRender && prevRenderContext.current !== renderContext) {
-      if (isRowRangeUpdated(prevRenderContext.current, renderContext)) {
-        updateRowSpanningState(shouldResetState.current);
-        shouldResetState.current = false;
+  const onRenderContextChange = React.useCallback(
+    (renderContext: GridRenderContext) => {
+      if (tree !== previousTree.current) {
+        previousTree.current = tree;
+        updateRowSpanningState(renderContext, true);
+        return;
       }
-      prevRenderContext.current = renderContext;
-      return;
+      if (range && lastRange.current && isRowRangeUpdated(range, lastRange.current)) {
+        lastRange.current = range;
+        shouldResetState.current = true;
+      }
+      if (prevRenderContext.current !== renderContext) {
+        if (isRowRangeUpdated(prevRenderContext.current, renderContext)) {
+          updateRowSpanningState(renderContext, shouldResetState.current);
+          shouldResetState.current = false;
+        }
+        prevRenderContext.current = renderContext;
+        return;
+      }
+      updateRowSpanningState(renderContext);
+    },
+    [updateRowSpanningState, range, lastRange, tree],
+  );
+
+  const onRowsUpdate = React.useCallback(() => {
+    onRenderContextChange(gridRenderContextSelector(apiRef));
+  }, [apiRef, onRenderContextChange]);
+
+  useGridApiEventHandler(
+    apiRef,
+    'renderedRowsIntervalChange',
+    runIf(props.rowSpanning, onRenderContextChange),
+  );
+  useGridApiEventHandler(apiRef, 'rowsSet', runIf(props.rowSpanning, onRowsUpdate));
+
+  React.useEffect(() => {
+    if (!props.rowSpanning) {
+      if (apiRef.current.state.rowSpanning !== EMPTY_STATE) {
+        apiRef.current.setState((state) => ({ ...state, rowSpanning: EMPTY_STATE }));
+      }
     }
-    updateRowSpanningState();
-  }, [updateRowSpanningState, renderContext, range, lastRange, tree]);
+  }, [apiRef, props.rowSpanning]);
 };
