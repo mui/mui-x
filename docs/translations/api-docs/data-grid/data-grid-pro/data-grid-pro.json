@@ -1027,6 +1027,15 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "pinned rows render zones"
     },
+    "pivotField": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot field"
+    },
+    "pivotField--sorted": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the pivot field",
+      "conditions": "sorted"
+    },
     "root": { "description": "Styles applied to the root element." },
     "root--densityComfortable": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",

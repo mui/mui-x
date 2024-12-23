@@ -1696,6 +1696,18 @@
       "isGlobal": false
     },
     {
+      "key": "pivotField",
+      "className": "MuiDataGridPro-pivotField",
+      "description": "Styles applied to the pivot field.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotField--sorted",
+      "className": "MuiDataGridPro-pivotField--sorted",
+      "description": "Styles applied to the pivot field when sorted.",
+      "isGlobal": false
+    },
+    {
       "key": "root",
       "className": "MuiDataGridPro-root",
       "description": "Styles applied to the root element.",
