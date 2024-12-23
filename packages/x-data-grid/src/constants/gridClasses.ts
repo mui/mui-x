@@ -207,6 +207,10 @@ export interface GridClasses {
    */
   'columnHeader--emptyGroup': string;
   /**
+   * Styles applied to the header filter cell.
+   */
+  'columnHeader--filter': string;
+  /**
    * Styles applied to the column headers.
    */
   columnHeaders: string;
@@ -728,6 +732,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnHeader--last',
   'columnHeader--lastUnpinned',
   'columnHeader--siblingFocused',
+  'columnHeader--filter',
   'columnHeaderCheckbox',
   'columnHeaderDraggableContainer',
   'columnHeaderTitle',

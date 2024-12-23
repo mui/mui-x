@@ -648,6 +648,10 @@
       "nodeName": "the column group header cell",
       "conditions": "not empty"
     },
+    "columnHeader--filter": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the header filter cell"
+    },
     "columnHeader--filtered": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the column header",

@@ -76,6 +76,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const slots = {
     root: [
       'columnHeader',
+      'columnHeader--filter',
       colDef.headerAlign === 'left' && 'columnHeader--alignLeft',
       colDef.headerAlign === 'center' && 'columnHeader--alignCenter',
       colDef.headerAlign === 'right' && 'columnHeader--alignRight',
@@ -321,7 +322,6 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
       style={{
         height,
         width,
-        paddingTop: 4,
         ...styleProp,
       }}
       role="columnheader"

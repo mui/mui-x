@@ -1144,6 +1144,12 @@
       "isGlobal": false
     },
     {
+      "key": "columnHeader--filter",
+      "className": "MuiDataGrid-columnHeader--filter",
+      "description": "Styles applied to the header filter cell.",
+      "isGlobal": false
+    },
+    {
       "key": "columnHeader--filtered",
       "className": "MuiDataGrid-columnHeader--filtered",
       "description": "Styles applied to the column header if the column has a filter applied to it.",
