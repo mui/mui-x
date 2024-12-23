@@ -371,6 +371,8 @@ export const useGridRowSpanning = (
       if (apiRef.current.state.rowSpanning !== EMPTY_STATE) {
         apiRef.current.setState((state) => ({ ...state, rowSpanning: EMPTY_STATE }));
       }
+    } else if (apiRef.current.state.rowSpanning === EMPTY_STATE) {
+      onRowsUpdate();
     }
   }, [apiRef, props.rowSpanning]);
 };
