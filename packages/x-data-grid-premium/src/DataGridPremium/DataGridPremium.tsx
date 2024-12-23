@@ -80,7 +80,7 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
           </GridBody>
           <GridFooterPlaceholder />
         </div>
-        {pivotSettingsOpen && (
+        {pivotParams && pivotSettingsOpen && (
           <GridSidebar>
             <GridSidebarColumnPanel pivotParams={pivotParams} />
           </GridSidebar>
@@ -949,7 +949,6 @@ DataGridPremiumRaw.propTypes = {
       rowGroupingModel: PropTypes.arrayOf(PropTypes.string),
       rows: PropTypes.array,
     }),
-    setIsPivot: PropTypes.func.isRequired,
   }),
   /**
    * Callback called before updating a row with new values in the row and cell editing.

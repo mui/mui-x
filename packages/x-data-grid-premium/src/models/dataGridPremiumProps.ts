@@ -24,7 +24,7 @@ import { GridPremiumSlotsComponent } from './gridPremiumSlotsComponent';
 import { GridInitialStatePremium } from './gridStatePremium';
 import { GridApiPremium } from './gridApiPremium';
 import { GridCellSelectionModel } from '../hooks/features/cellSelection';
-import { PivotModel } from '../hooks/features/pivoting/useGridPivoting';
+import type { PivotModel } from '../hooks/features/pivoting/useGridPivoting';
 
 export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
 
@@ -194,7 +194,6 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
   pivotParams?: {
     pivotMode: boolean;
     onPivotModeChange: (pivotMode: boolean) => void;
-    setIsPivot: (pivotMode: boolean) => void;
     props?: Pick<
       DataGridPremiumProps,
       | 'rows'
@@ -208,5 +207,7 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
     pivotModel: PivotModel;
     onPivotModelChange: React.Dispatch<React.SetStateAction<PivotModel>>;
     initialColumns: GridColDef[] | undefined;
+    pivotSettingsOpen: boolean;
+    onPivotSettingsOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
   };
 }

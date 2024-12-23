@@ -40,7 +40,7 @@ export function GridSidebarColumnPanelHeader(
           control={
             <Switch
               checked={pivotMode}
-              onChange={(e) => onPivotModeChange(e.target.checked)}
+              onChange={(event) => onPivotModeChange(event.target.checked)}
               size="small"
             />
           }
