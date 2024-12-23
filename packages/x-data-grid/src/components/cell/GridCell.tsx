@@ -9,6 +9,7 @@ import {
 } from '@mui/utils';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useRtl } from '@mui/system/RtlProvider';
+import { isEventTargetInPortal } from '../../utils/domUtils';
 import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import {
@@ -304,6 +305,11 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
 
   const publishMouseDown = React.useCallback(
     (eventName: GridEvents) => (event: React.MouseEvent<HTMLDivElement>) => {
+      // We use cellMouseDown event in useGridFocus and we don't want to tret events from portals as if the cell was clicked.
+      // Otherwise it can lead to issues like https://github.com/mui/material-ui/issues/43976
+      if (isEventTargetInPortal(event)) {
+        return;
+      }
       const params = apiRef.current.getCellParams(rowId, field || '');
       apiRef.current.publishEvent(eventName as any, params as any, event);
 
