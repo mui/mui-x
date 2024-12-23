@@ -357,6 +357,7 @@ export const useGridRowSpanning = (
     runIf(props.rowSpanning, onRenderContextChange),
   );
   useGridApiEventHandler(apiRef, 'rowsSet', runIf(props.rowSpanning, onRowsUpdate));
+  useGridApiEventHandler(apiRef, 'paginationModelChange', runIf(props.rowSpanning, onRowsUpdate));
 
   React.useEffect(() => {
     if (!props.rowSpanning) {
