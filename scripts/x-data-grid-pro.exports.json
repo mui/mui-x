@@ -612,7 +612,6 @@
   { "name": "renderEditSingleSelectCell", "kind": "Variable" },
   { "name": "renderRowReorderCell", "kind": "Variable" },
   { "name": "RowPropsOverrides", "kind": "Interface" },
-  { "name": "sanitizeFilterItemValue", "kind": "Variable" },
   { "name": "selectedGridRowsCountSelector", "kind": "Variable" },
   { "name": "selectedGridRowsSelector", "kind": "Variable" },
   { "name": "selectedIdsLookupSelector", "kind": "Variable" },
