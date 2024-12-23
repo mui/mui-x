@@ -60,6 +60,7 @@ const DataGridRaw = forwardRef(function DataGrid<R extends GridValidRowModel>(
         style={props.style}
         sx={props.sx}
         {...props.forwardedProps}
+        {...props.slotProps?.root}
         ref={ref}
       >
         <GridHeader />

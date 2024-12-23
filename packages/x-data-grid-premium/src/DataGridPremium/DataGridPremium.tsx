@@ -61,6 +61,7 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
         style={props.style}
         sx={props.sx}
         {...props.forwardedProps}
+        {...props.slotProps?.root}
         ref={ref}
       >
         <GridHeader />
