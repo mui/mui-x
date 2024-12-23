@@ -1,5 +1,5 @@
 import type { ChartsLegendSlotExtension } from '../ChartsLegend';
-import { DEFAULT_MARGINS, LEGEND_SIDE_MARGIN } from '../constants';
+import { DEFAULT_MARGINS, DEFAULT_LEGEND_FACING_MARGIN } from '../constants';
 import type { LayoutConfig } from '../models';
 import type { CartesianChartSeriesType, ChartsSeriesConfig } from '../models/seriesType/config';
 
@@ -12,7 +12,7 @@ export const calculateMargins = <
 >(
   props: T,
 ): Required<LayoutConfig['margin']> => {
-  if (props.margin || props.hideLegend || !props.series?.some((s) => s.label)) {
+  if (props.hideLegend || !props.series?.some((s) => s.label)) {
     return {
       ...DEFAULT_MARGINS,
       ...props.margin,
@@ -23,25 +23,29 @@ export const calculateMargins = <
     if (props.slotProps?.legend?.position?.horizontal === 'left') {
       return {
         ...DEFAULT_MARGINS,
-        left: LEGEND_SIDE_MARGIN,
+        left: DEFAULT_LEGEND_FACING_MARGIN,
+        ...props.margin,
       };
     }
 
     return {
       ...DEFAULT_MARGINS,
-      right: LEGEND_SIDE_MARGIN,
+      right: DEFAULT_LEGEND_FACING_MARGIN,
+      ...props.margin,
     };
   }
 
   if (props.slotProps?.legend?.position?.vertical === 'bottom') {
     return {
       ...DEFAULT_MARGINS,
-      bottom: LEGEND_SIDE_MARGIN,
+      bottom: DEFAULT_LEGEND_FACING_MARGIN,
+      ...props.margin,
     };
   }
 
   return {
     ...DEFAULT_MARGINS,
-    top: LEGEND_SIDE_MARGIN,
+    top: DEFAULT_LEGEND_FACING_MARGIN,
+    ...props.margin,
   };
 };
