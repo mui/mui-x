@@ -46,7 +46,7 @@ export interface PickersArrowSwitcherOwnerState extends PickerOwnerState {
   /**
    * If `true`, this button should be hidden.
    */
-  hidden: boolean;
+  isButtonHidden: boolean;
 }
 
 export interface PickersArrowSwitcherSlotPropsOverrides {}
