@@ -2,10 +2,9 @@ import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../internals/constants';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
-import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
+import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridRenderContextSelector } from '../virtualization/gridVirtualizationSelectors';
 import { GridRenderContext } from '../../../models';
-import { useGridSelector } from '../../utils/useGridSelector';
 import { gridRowTreeSelector } from './gridRowsSelector';
 import type { GridColDef } from '../../../models/colDef';
 import type { GridRowId, GridValidRowModel, GridRowEntry } from '../../../models/gridRows';
@@ -227,9 +226,6 @@ export const useGridRowSpanning = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'rowSpanning' | 'pagination' | 'paginationMode'>,
 ): void => {
-  const { range, rows: visibleRows } = useGridVisibleRows(apiRef, props);
-  const colDefs = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
-  const tree = useGridSelector(apiRef, gridRowTreeSelector);
   const processedRange = useLazyRef<RowRange, void>(() => {
     return Object.keys(apiRef.current.state.rowSpanning.spannedCells).length > 0
       ? {
@@ -251,6 +247,10 @@ export const useGridRowSpanning = (
     // - The `paginationModel` is updated
     // - The rows are updated
     (renderContext: GridRenderContext, resetState: boolean = true) => {
+      const { range, rows: visibleRows } = getVisibleRows(apiRef, {
+        pagination: props.pagination,
+        paginationMode: props.paginationMode,
+      });
       if (range === null || !isRowContextInitialized(renderContext)) {
         return;
       }
@@ -271,6 +271,7 @@ export const useGridRowSpanning = (
         return;
       }
 
+      const colDefs = gridVisibleColumnDefinitionsSelector(apiRef);
       const {
         spannedCells,
         hiddenCells,
@@ -316,20 +317,26 @@ export const useGridRowSpanning = (
           },
         };
       });
+      apiRef.current.updateRenderContext?.();
     },
-    [apiRef, range, visibleRows, colDefs, processedRange],
+    [apiRef, processedRange, props.pagination, props.paginationMode],
   );
 
   const prevRenderContext = React.useRef(gridRenderContextSelector(apiRef));
   const shouldResetState = React.useRef(false);
-  const previousTree = React.useRef(tree);
+  const previousTree = React.useRef(gridRowTreeSelector(apiRef));
   const onRenderContextChange = React.useCallback(
     (renderContext: GridRenderContext) => {
+      const tree = gridRowTreeSelector(apiRef);
       if (tree !== previousTree.current) {
         previousTree.current = tree;
         updateRowSpanningState(renderContext, true);
         return;
       }
+      const { range } = getVisibleRows(apiRef, {
+        pagination: props.pagination,
+        paginationMode: props.paginationMode,
+      });
       if (range && lastRange.current && isRowRangeUpdated(range, lastRange.current)) {
         lastRange.current = range;
         shouldResetState.current = true;
@@ -344,7 +351,7 @@ export const useGridRowSpanning = (
       }
       updateRowSpanningState(renderContext);
     },
-    [updateRowSpanningState, range, lastRange, tree],
+    [apiRef, updateRowSpanningState, lastRange, props.pagination, props.paginationMode],
   );
 
   const onRowsUpdate = React.useCallback(() => {
@@ -356,10 +363,8 @@ export const useGridRowSpanning = (
     'renderedRowsIntervalChange',
     runIf(props.rowSpanning, onRenderContextChange),
   );
-  useGridApiEventHandler(apiRef, 'rowsSet', runIf(props.rowSpanning, onRowsUpdate));
-  useGridApiEventHandler(apiRef, 'paginationModelChange', runIf(props.rowSpanning, onRowsUpdate));
-  useGridApiEventHandler(apiRef, 'sortModelChange', runIf(props.rowSpanning, onRowsUpdate));
-  useGridApiEventHandler(apiRef, 'filterModelChange', runIf(props.rowSpanning, onRowsUpdate));
+
+  useGridApiEventHandler(apiRef, 'sortedRowsSet', runIf(props.rowSpanning, onRowsUpdate));
 
   React.useEffect(() => {
     if (!props.rowSpanning) {
