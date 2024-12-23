@@ -31,7 +31,7 @@ const GridToolbarColumnsButton = forwardRef<HTMLButtonElement, GridToolbarColumn
     const preferencePanel = useGridSelector(apiRef, gridPreferencePanelStateSelector);
     // @ts-ignore
     const pivotParams = rootProps.pivotParams;
-    const pivotingFeatureEnabled = pivotParams?.pivotMode ?? false;
+    const pivotingFeatureEnabled = !!pivotParams;
     const pivotSettingsOpen = pivotParams?.pivotSettingsOpen ?? false;
     const onPivotSettingsOpenChange = pivotParams?.onPivotSettingsOpenChange;
 
