@@ -137,7 +137,6 @@ export const useGridAggregation = (
     // Re-apply the row hydration to add / remove the aggregation footers
     if (!areAggregationRulesEqual(rulesOnLastRowHydration, aggregationRules)) {
       if (props.unstable_dataSource) {
-        apiRef.current.unstable_dataSource.cache.clear();
         apiRef.current.unstable_dataSource.fetchRows();
       } else {
         apiRef.current.requestPipeProcessorsApplication('hydrateRows');

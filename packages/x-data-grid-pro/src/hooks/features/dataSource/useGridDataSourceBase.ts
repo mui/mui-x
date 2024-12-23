@@ -70,6 +70,9 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiPro>(
     | 'treeData'
     | 'unstable_lazyLoading'
   >,
+  options: {
+    cacheOptions?: GridDataSourceCacheDefaultConfig;
+  } = {},
 ) => {
   const setStrategyAvailability = React.useCallback(() => {
     apiRef.current.setStrategyAvailability(
@@ -100,7 +103,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiPro>(
     return new CacheChunkManager(cacheChunkSize);
   }).current;
   const [cache, setCache] = React.useState<GridDataSourceCache>(() =>
-    getCache(props.unstable_dataSourceCache),
+    getCache(props.unstable_dataSourceCache, options.cacheOptions),
   );
 
   const fetchRows = React.useCallback<GridDataSourceApiBase['fetchRows']>(
@@ -374,9 +377,12 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiPro>(
       isFirstRender.current = false;
       return;
     }
-    const newCache = getCache(props.unstable_dataSourceCache);
+    if (props.unstable_dataSourceCache === undefined) {
+      return;
+    }
+    const newCache = getCache(props.unstable_dataSourceCache, options.cacheOptions);
     setCache((prevCache) => (prevCache !== newCache ? newCache : prevCache));
-  }, [props.unstable_dataSourceCache]);
+  }, [props.unstable_dataSourceCache, options.cacheOptions]);
 
   React.useEffect(() => {
     setStrategyAvailability();

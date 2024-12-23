@@ -17,6 +17,13 @@ import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridDataSourcePremiumPrivateApi, GridGetRowsResponsePremium } from './models';
 import { gridAggregationModelSelector } from '../aggregation/gridAggregationSelectors';
+import { getKeyPremium } from './cache';
+
+const options = {
+  cacheOptions: {
+    getKey: getKeyPremium,
+  },
+};
 
 export const useGridDataSourcePremium = (
   apiRef: React.MutableRefObject<GridPrivateApiPremium>,
@@ -25,6 +32,7 @@ export const useGridDataSourcePremium = (
   const { api, strategyProcessor, events } = useGridDataSourceBase<GridPrivateApiPremium>(
     apiRef,
     props,
+    options,
   );
   const aggregationModel = useGridSelector(apiRef, gridAggregationModelSelector);
   const aggregateRowRef = React.useRef<GridValidRowModel>({});
