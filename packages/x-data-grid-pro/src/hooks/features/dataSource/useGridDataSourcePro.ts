@@ -4,11 +4,7 @@ import {
   useGridApiMethod,
   GridEventLookup,
 } from '@mui/x-data-grid';
-import {
-  GridStrategyProcessor,
-  useGridRegisterStrategyProcessor,
-  GridStrategyProcessorName,
-} from '@mui/x-data-grid/internals';
+import { useGridRegisterStrategyProcessor } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { useGridDataSourceBase } from './useGridDataSourceBase';
@@ -25,8 +21,8 @@ export const useGridDataSourcePro = (
   useGridRegisterStrategyProcessor(
     apiRef,
     strategyProcessor.strategyName,
-    strategyProcessor.group as GridStrategyProcessorName,
-    strategyProcessor.processor as GridStrategyProcessor<GridStrategyProcessorName>,
+    strategyProcessor.group,
+    strategyProcessor.processor,
   );
 
   Object.entries(events).forEach(([event, handler]) => {

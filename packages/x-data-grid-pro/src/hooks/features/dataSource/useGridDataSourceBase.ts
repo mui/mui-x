@@ -411,7 +411,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiPro>(
     api: { public: dataSourceApi, private: dataSourcePrivateApi },
     strategyProcessor: {
       strategyName: DataSourceRowsUpdateStrategy.Default,
-      group: 'dataSourceRowsUpdate',
+      group: 'dataSourceRowsUpdate' as const,
       processor: handleDataUpdate,
     },
     events: {

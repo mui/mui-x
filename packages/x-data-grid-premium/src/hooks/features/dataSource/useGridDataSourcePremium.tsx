@@ -11,7 +11,6 @@ import {
   useGridDataSourceBase,
   GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
-  GridStrategyProcessorName,
 } from '@mui/x-data-grid-pro/internals';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
@@ -84,8 +83,8 @@ export const useGridDataSourcePremium = (
   useGridRegisterStrategyProcessor(
     apiRef,
     strategyProcessor.strategyName,
-    strategyProcessor.group as GridStrategyProcessorName,
-    handleDataUpdate as any,
+    strategyProcessor.group,
+    handleDataUpdate,
   );
 
   Object.entries(events).forEach(([event, handler]) => {
