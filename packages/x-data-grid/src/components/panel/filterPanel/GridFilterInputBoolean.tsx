@@ -16,16 +16,6 @@ export type GridFilterInputBooleanProps = GridFilterInputValueProps &
     isFilterActive?: boolean;
   };
 
-export const sanitizeFilterItemValue = (value: any): boolean | undefined => {
-  if (String(value).toLowerCase() === 'true') {
-    return true;
-  }
-  if (String(value).toLowerCase() === 'false') {
-    return false;
-  }
-  return undefined;
-};
-
 function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
   const {
     item,
@@ -124,6 +114,16 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
       {clearButton}
     </React.Fragment>
   );
+}
+
+export function sanitizeFilterItemValue(value: any): boolean | undefined {
+  if (String(value).toLowerCase() === 'true') {
+    return true;
+  }
+  if (String(value).toLowerCase() === 'false') {
+    return false;
+  }
+  return undefined;
 }
 
 GridFilterInputBoolean.propTypes = {

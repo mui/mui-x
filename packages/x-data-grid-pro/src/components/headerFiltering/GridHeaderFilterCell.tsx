@@ -169,17 +169,6 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
       ? (currentOperator.InputComponent ?? defaultInputComponents[colDef.type as GridColType])
       : null;
 
-  const applyFilterChanges = React.useCallback(
-    (updatedItem: GridFilterItem) => {
-      if (item.value && updatedItem.value === undefined) {
-        apiRef.current.deleteFilterItem(updatedItem);
-        return;
-      }
-      apiRef.current.upsertFilterItem(updatedItem);
-    },
-    [apiRef, item],
-  );
-
   const clearFilterItem = React.useCallback(() => {
     apiRef.current.deleteFilterItem(item);
   }, [apiRef, item]);
@@ -348,10 +337,11 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
           apiRef={apiRef}
           item={item}
           inputRef={inputRef}
-          applyValue={applyFilterChanges}
+          applyValue={apiRef.current.upsertFilterItem}
           onFocus={() => apiRef.current.startHeaderFilterEditMode(colDef.field)}
           onBlur={(event: React.FocusEvent) => {
             apiRef.current.stopHeaderFilterEditMode();
+            // Blurring an input element should reset focus state only if `relatedTarget` is not the header filter cell
             if (!event.relatedTarget?.className.includes('columnHeader')) {
               apiRef.current.setState((state) => ({
                 ...state,
@@ -378,7 +368,7 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
               item={item}
               field={colDef.field}
               disabled={isFilterReadOnly}
-              applyFilterChanges={applyFilterChanges}
+              applyFilterChanges={apiRef.current.upsertFilterItem}
               headerFilterMenuRef={headerFilterMenuRef}
               buttonRef={buttonRef}
               isApplied={isApplied}

@@ -37,22 +37,25 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
     variant = 'outlined',
     ...others
   } = props;
+
   const filterTimeout = useTimeout();
-  const [filterValueState, setFilterValueState] = React.useState<string>(item.value ?? '');
+  const [filterValueState, setFilterValueState] = React.useState<string | number | undefined>(
+    sanitizeFilterItemValue(item.value, type),
+  );
   const [applying, setIsApplying] = React.useState(false);
   const id = useId();
   const rootProps = useGridRootProps();
 
   const onFilterChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      const { value } = event.target;
-      setFilterValueState(String(value));
+      const value = sanitizeFilterItemValue(event.target.value, type);
+      setFilterValueState(value);
 
       setIsApplying(true);
       filterTimeout.start(rootProps.filterDebounceMs, () => {
         const newItem = {
           ...item,
-          value: type === 'number' ? Number(value) : value,
+          value,
           fromInput: id!,
         };
         applyValue(newItem);
@@ -64,10 +67,10 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
 
   React.useEffect(() => {
     const itemPlusTag = item as ItemPlusTag;
-    if (itemPlusTag.fromInput !== id || item.value === undefined) {
-      setFilterValueState(String(item.value ?? ''));
+    if (itemPlusTag.fromInput !== id || item.value == null) {
+      setFilterValueState(sanitizeFilterItemValue(item.value, type));
     }
-  }, [id, item]);
+  }, [id, item, type]);
 
   return (
     <React.Fragment>
@@ -75,7 +78,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
         id={id}
         label={apiRef.current.getLocaleText('filterPanelInputLabel')}
         placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
-        value={filterValueState}
+        value={filterValueState === undefined ? '' : String(filterValueState)}
         onChange={onFilterChange}
         variant={variant}
         type={type || 'text'}
@@ -103,6 +106,16 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
       {clearButton}
     </React.Fragment>
   );
+}
+
+function sanitizeFilterItemValue(value: any, type: GridTypeFilterInputValueProps['type']) {
+  if (value == null || value === '') {
+    return undefined;
+  }
+  if (type === 'number') {
+    return Number(value);
+  }
+  return String(value);
 }
 
 GridFilterInputValue.propTypes = {
