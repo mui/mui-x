@@ -32,28 +32,17 @@ function RatingInputValue(
   };
 
   return (
-    <React.Fragment>
+    <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+      <Rating
+        name="custom-rating-filter-operator"
+        value={Number(item.value)}
+        onChange={handleFilterChange}
+        precision={0.5}
+        ref={ratingRef}
+      />
       {headerFilterMenu}
-      <Box
-        sx={{
-          display: 'inline-flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          height: '100%',
-          pl: '10px',
-          bl: '1px solid lightgrey',
-        }}
-      >
-        <Rating
-          name="custom-rating-filter-operator"
-          value={Number(item.value)}
-          onChange={handleFilterChange}
-          precision={0.5}
-          ref={ratingRef}
-        />
-      </Box>
       {clearButton}
-    </React.Fragment>
+    </Box>
   );
 }
 

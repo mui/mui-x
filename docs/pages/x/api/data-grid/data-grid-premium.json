@@ -1105,6 +1105,12 @@
       "class": null
     },
     {
+      "name": "menuItemCheckIcon",
+      "description": "Icon displayed to indicate that a menu item is selected.",
+      "default": "GridCheckIcon",
+      "class": null
+    },
+    {
       "name": "columnMenuPinLeftIcon",
       "description": "Icon displayed in column menu for left pinning",
       "default": "GridPushPinLeftIcon",

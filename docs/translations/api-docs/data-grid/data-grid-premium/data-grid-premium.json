@@ -1324,6 +1324,7 @@
     "headerFilterMenu": "Component responsible for showing menu in Header filter row",
     "loadIcon": "Icon displayed on the input while processing.",
     "loadingOverlay": "Loading overlay component rendered when the grid is in a loading state.",
+    "menuItemCheckIcon": "Icon displayed to indicate that a menu item is selected.",
     "moreActionsIcon": "Icon displayed on the <code>actions</code> column type to open the menu.",
     "noResultsOverlay": "No results overlay component rendered when the grid has no results after filtering.",
     "noRowsOverlay": "No rows overlay component rendered when the grid has no rows.",

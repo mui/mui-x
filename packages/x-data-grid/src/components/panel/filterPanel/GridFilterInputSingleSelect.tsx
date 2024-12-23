@@ -47,6 +47,7 @@ const renderSingleSelectOptions = ({
 
 export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
   TextFieldProps & {
+    headerFilterMenu?: React.ReactNode;
     clearButton?: React.ReactNode | null;
     /**
      * It is `true` if the filter either has a value or an operator with no value
@@ -66,9 +67,10 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     placeholder,
     tabIndex,
     label: labelProp,
-    variant = 'standard',
+    variant = 'outlined',
     isFilterActive,
     clearButton,
+    headerFilterMenu,
     InputLabelProps,
     ...others
   } = props;
@@ -112,55 +114,50 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   const label = labelProp ?? apiRef.current.getLocaleText('filterPanelInputLabel');
 
   return (
-    <rootProps.slots.baseFormControl fullWidth sx={others.sx}>
-      <rootProps.slots.baseInputLabel
-        {...rootProps.slotProps?.baseInputLabel}
-        id={labelId}
-        htmlFor={id}
-        shrink
-        variant={variant}
-      >
-        {label}
-      </rootProps.slots.baseInputLabel>
-      <rootProps.slots.baseSelect
-        id={id}
-        label={label}
-        labelId={labelId}
-        value={filterValue}
-        onChange={onFilterChange}
-        variant={variant}
-        type={type || 'text'}
-        startAdornment={others.InputProps?.startAdornment}
-        endAdornment={
-          <rootProps.slots.baseInputAdornment
-            position="end"
-            sx={{ position: 'absolute', right: 32 }}
-          >
-            {clearButton}
-          </rootProps.slots.baseInputAdornment>
-        }
-        inputProps={{
-          tabIndex,
-          ref: focusElementRef,
-          placeholder: placeholder ?? apiRef.current.getLocaleText('filterPanelInputPlaceholder'),
-        }}
-        native={isSelectNative}
-        notched={variant === 'outlined' ? true : undefined}
-        {
-          ...(others as any) /* FIXME: typing error */
-        }
-        {...rootProps.slotProps?.baseSelect}
-      >
-        {renderSingleSelectOptions({
-          column: resolvedColumn,
-          OptionComponent: rootProps.slots.baseSelectOption,
-          getOptionLabel,
-          getOptionValue,
-          isSelectNative,
-          baseSelectOptionProps: rootProps.slotProps?.baseSelectOption,
-        })}
-      </rootProps.slots.baseSelect>
-    </rootProps.slots.baseFormControl>
+    <React.Fragment>
+      <rootProps.slots.baseFormControl fullWidth sx={others.sx}>
+        <rootProps.slots.baseInputLabel
+          {...rootProps.slotProps?.baseInputLabel}
+          id={labelId}
+          htmlFor={id}
+          shrink
+          variant={variant}
+        >
+          {label}
+        </rootProps.slots.baseInputLabel>
+        <rootProps.slots.baseSelect
+          id={id}
+          label={label}
+          labelId={labelId}
+          value={filterValue}
+          onChange={onFilterChange}
+          variant={variant}
+          type={type || 'text'}
+          inputProps={{
+            tabIndex,
+            ref: focusElementRef,
+            placeholder: placeholder ?? apiRef.current.getLocaleText('filterPanelInputPlaceholder'),
+          }}
+          native={isSelectNative}
+          notched={variant === 'outlined' ? true : undefined}
+          {
+            ...(others as any) /* FIXME: typing error */
+          }
+          {...rootProps.slotProps?.baseSelect}
+        >
+          {renderSingleSelectOptions({
+            column: resolvedColumn,
+            OptionComponent: rootProps.slots.baseSelectOption,
+            getOptionLabel,
+            getOptionValue,
+            isSelectNative,
+            baseSelectOptionProps: rootProps.slotProps?.baseSelectOption,
+          })}
+        </rootProps.slots.baseSelect>
+      </rootProps.slots.baseFormControl>
+      {headerFilterMenu}
+      {clearButton}
+    </React.Fragment>
   );
 }
 
@@ -178,6 +175,7 @@ GridFilterInputSingleSelect.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  headerFilterMenu: PropTypes.node,
   /**
    * It is `true` if the filter either has a value or an operator with no value
    * required is selected (for example `isEmpty`)

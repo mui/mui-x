@@ -43,7 +43,12 @@ function AdminFilter(props: GridRenderHeaderFilterProps) {
   const label = !value ? 'Filter' : 'Is admin';
 
   return (
-    <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }} fullWidth>
+    <FormControl
+      variant="outlined"
+      size="small"
+      sx={{ '.MuiOutlinedInput-input': { fontSize: 14 } }}
+      fullWidth
+    >
       <InputLabel id="select-is-admin-label">{label}</InputLabel>
       <Select
         labelId="select-is-admin-label"

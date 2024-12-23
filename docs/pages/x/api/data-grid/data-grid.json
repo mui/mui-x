@@ -924,6 +924,12 @@
       "description": "Icon displayed on the column reorder button.",
       "default": "GridDragIcon",
       "class": null
+    },
+    {
+      "name": "menuItemCheckIcon",
+      "description": "Icon displayed to indicate that a menu item is selected.",
+      "default": "GridCheckIcon",
+      "class": null
     }
   ],
   "classes": [

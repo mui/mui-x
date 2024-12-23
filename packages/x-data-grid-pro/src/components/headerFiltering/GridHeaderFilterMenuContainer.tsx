@@ -19,6 +19,8 @@ function GridHeaderFilterMenuContainer(props: {
   headerFilterMenuRef: React.MutableRefObject<HTMLButtonElement | null>;
   buttonRef: React.Ref<HTMLButtonElement>;
   disabled?: boolean;
+  isApplied?: boolean;
+  clearFilterItem?: () => void;
 }) {
   const {
     operators,
@@ -27,6 +29,8 @@ function GridHeaderFilterMenuContainer(props: {
     buttonRef,
     headerFilterMenuRef,
     disabled = false,
+    isApplied = false,
+    clearFilterItem,
     ...others
   } = props;
 
@@ -62,12 +66,14 @@ function GridHeaderFilterMenuContainer(props: {
         aria-haspopup="true"
         tabIndex={-1}
         size="small"
-        edge="start"
         onClick={handleClick}
         disabled={disabled}
+        sx={{ ml: 0.25 }}
         {...rootProps.slotProps?.baseIconButton}
       >
-        <rootProps.slots.openFilterButtonIcon fontSize="inherit" />
+        <rootProps.slots.baseBadge color="primary" variant="dot" badgeContent={isApplied ? 1 : 0}>
+          <rootProps.slots.openFilterButtonIcon fontSize="inherit" />
+        </rootProps.slots.baseBadge>
       </rootProps.slots.baseIconButton>
       <rootProps.slots.headerFilterMenu
         field={field}
@@ -77,6 +83,8 @@ function GridHeaderFilterMenuContainer(props: {
         operators={operators}
         labelledBy={buttonId!}
         id={menuId!}
+        isApplied={isApplied}
+        clearFilterItem={clearFilterItem}
         {...others}
       />
     </React.Fragment>
@@ -90,11 +98,13 @@ GridHeaderFilterMenuContainer.propTypes = {
   // ----------------------------------------------------------------------
   applyFilterChanges: PropTypes.func.isRequired,
   buttonRef: refType,
+  clearFilterItem: PropTypes.func,
   disabled: PropTypes.bool,
   field: PropTypes.string.isRequired,
   headerFilterMenuRef: PropTypes.shape({
     current: PropTypes.object,
   }).isRequired,
+  isApplied: PropTypes.bool,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

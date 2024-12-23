@@ -11,9 +11,9 @@ function GridHeaderFilterClearButton(props: GridHeaderFilterClearIconProps) {
       tabIndex={-1}
       aria-label="Clear filter"
       size="small"
-      edge="end"
-      {...props}
+      sx={{ ml: 0.25 }}
       {...rootProps.slotProps?.baseIconButton}
+      {...props}
     >
       <rootProps.slots.columnMenuClearIcon fontSize="inherit" />
     </rootProps.slots.baseIconButton>

@@ -92,10 +92,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 const inputSx: SxProps = {
   flex: 1,
-  '.MuiOutlinedInput-root': { px: 1.25 },
   '.MuiOutlinedInput-input': { fontSize: 14 },
-  '.MuiInputLabel-outlined': { transform: 'translate(12px, -9px) scale(0.75)' },
-  '.MuiOutlinedInput-notchedOutline': { px: 0.75 },
 };
 const dateSx: SxProps = { [`& input[value=""]:not(:focus)`]: { color: 'transparent' } };
 
@@ -120,7 +117,7 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
     item,
     headerFilterMenuRef,
     InputComponentProps,
-    showClearIcon = true,
+    showClearIcon = false,
     pinnedPosition,
     style: styleProp,
     indexInSection,
@@ -319,16 +316,14 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
 
   const classes = useUtilityClasses(ownerState as OwnerState);
 
-  const isNoInputOperator = currentOperator.requiresFilterValue === false;
-
-  const isApplied = item?.value !== undefined || isNoInputOperator;
-
   const label =
     currentOperator.headerLabel ??
     apiRef.current.getLocaleText(
       `headerFilterOperator${capitalize(item.operator)}` as 'headerFilterOperatorContains',
     );
 
+  const isNoInputOperator = currentOperator.requiresFilterValue === false;
+  const isApplied = item?.value !== undefined || isNoInputOperator;
   const isFilterActive = isApplied || hasFocus;
 
   return (
@@ -376,32 +371,25 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
           size="small"
           disabled={isFilterReadOnly || isNoInputOperator}
           tabIndex={-1}
-          InputLabelProps={null}
-          InputProps={{
-            startAdornment: (
-              <rootProps.slots.baseInputAdornment position="start">
-                <GridHeaderFilterMenuContainer
-                  operators={filterOperators!}
-                  item={item}
-                  field={colDef.field}
-                  disabled={isFilterReadOnly}
-                  applyFilterChanges={applyFilterChanges}
-                  headerFilterMenuRef={headerFilterMenuRef}
-                  buttonRef={buttonRef}
-                />
-              </rootProps.slots.baseInputAdornment>
-            ),
-            endAdornment:
-              showClearIcon && isApplied ? (
-                <rootProps.slots.baseInputAdornment position="end">
-                  <GridHeaderFilterClearButton
-                    onClick={clearFilterItem}
-                    disabled={isFilterReadOnly}
-                  />
-                </rootProps.slots.baseInputAdornment>
-              ) : null,
-          }}
           sx={[inputSx, colDef.type === 'date' || colDef.type === 'dateTime' ? dateSx : undefined]}
+          headerFilterMenu={
+            <GridHeaderFilterMenuContainer
+              operators={filterOperators!}
+              item={item}
+              field={colDef.field}
+              disabled={isFilterReadOnly}
+              applyFilterChanges={applyFilterChanges}
+              headerFilterMenuRef={headerFilterMenuRef}
+              buttonRef={buttonRef}
+              isApplied={isApplied}
+              clearFilterItem={clearFilterItem}
+            />
+          }
+          clearButton={
+            showClearIcon && isApplied ? (
+              <GridHeaderFilterClearButton onClick={clearFilterItem} disabled={isFilterReadOnly} />
+            ) : null
+          }
           {...(isNoInputOperator ? { value: '' } : {})}
           {...currentOperator?.InputComponentProps}
           {...InputComponentProps}

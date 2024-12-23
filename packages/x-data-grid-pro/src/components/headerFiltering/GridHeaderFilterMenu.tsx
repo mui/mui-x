@@ -19,6 +19,8 @@ interface GridHeaderFilterMenuProps {
   id: string;
   labelledBy: string;
   target: HTMLElement | null;
+  isApplied: boolean;
+  clearFilterItem: () => void;
 }
 
 function GridHeaderFilterMenu({
@@ -30,6 +32,8 @@ function GridHeaderFilterMenu({
   item,
   id,
   labelledBy,
+  isApplied,
+  clearFilterItem,
 }: GridHeaderFilterMenuProps) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -61,7 +65,20 @@ function GridHeaderFilterMenu({
         id={id}
         onKeyDown={handleListKeyDown}
       >
-        {operators.map((op, i) => {
+        {isApplied && [
+          <rootProps.slots.baseMenuItem
+            key="filter-menu-clear-filter"
+            iconStart={<rootProps.slots.columnMenuClearIcon fontSize="small" />}
+            onClick={() => {
+              clearFilterItem();
+              hideMenu();
+            }}
+          >
+            {apiRef.current.getLocaleText('headerFilterClear')}
+          </rootProps.slots.baseMenuItem>,
+          <rootProps.slots.baseDivider key="filter-menu-divider" />,
+        ]}
+        {operators.map((op) => {
           const label =
             op?.headerLabel ??
             apiRef.current.getLocaleText(
@@ -70,13 +87,18 @@ function GridHeaderFilterMenu({
 
           return (
             <rootProps.slots.baseMenuItem
+              key={`${field}-${op.value}`}
+              iconStart={
+                op.value === item.operator ? (
+                  <rootProps.slots.menuItemCheckIcon fontSize="small" />
+                ) : (
+                  <span />
+                )
+              }
               onClick={() => {
                 applyFilterChanges({ ...item, operator: op.value });
                 hideMenu();
               }}
-              autoFocus={i === 0 ? open : false}
-              selected={op.value === item.operator}
-              key={`${field}-${op.value}`}
             >
               {label}
             </rootProps.slots.baseMenuItem>
@@ -93,8 +115,10 @@ GridHeaderFilterMenu.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   applyFilterChanges: PropTypes.func.isRequired,
+  clearFilterItem: PropTypes.func.isRequired,
   field: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
+  isApplied: PropTypes.bool.isRequired,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
