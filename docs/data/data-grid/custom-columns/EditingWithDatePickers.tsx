@@ -20,10 +20,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import InputBase, { InputBaseProps } from '@mui/material/InputBase';
 import { enUS as locale } from 'date-fns/locale';
-import { styled } from '@mui/material/styles';
-import { TextFieldProps } from '@mui/material/TextField';
 
 const dateAdapter = new AdapterDateFns({ locale });
 
@@ -50,18 +47,6 @@ const dateColumnType: GridColTypeDef<Date, string> = {
   },
 };
 
-const GridEditDateInput = styled(InputBase)({
-  fontSize: 'inherit',
-  padding: '0 9px',
-});
-
-function WrappedGridEditDateInput(props: TextFieldProps) {
-  const { InputProps, focused, ...other } = props;
-  return (
-    <GridEditDateInput fullWidth {...InputProps} {...(other as InputBaseProps)} />
-  );
-}
-
 function GridEditDateCell({
   id,
   field,
@@ -81,7 +66,20 @@ function GridEditDateCell({
       value={value}
       autoFocus
       onChange={handleChange}
-      slots={{ textField: WrappedGridEditDateInput }}
+      slotProps={{
+        textField: {
+          variant: 'standard',
+          fullWidth: true,
+          sx: {
+            padding: '0 9px',
+            justifyContent: 'center',
+          },
+          InputProps: {
+            disableUnderline: true,
+            sx: { fontSize: 'inherit' },
+          },
+        },
+      }}
     />
   );
 }
@@ -102,18 +100,7 @@ function GridFilterDateInput(
       value={item.value ? new Date(item.value) : null}
       autoFocus
       label={apiRef.current.getLocaleText('filterPanelInputLabel')}
-      slotProps={{
-        textField: {
-          variant: 'standard',
-        },
-        inputAdornment: {
-          sx: {
-            '& .MuiButtonBase-root': {
-              marginRight: -1,
-            },
-          },
-        },
-      }}
+      slotProps={{ textField: { size: 'small' } }}
       onChange={handleFilterChange}
     />
   );
