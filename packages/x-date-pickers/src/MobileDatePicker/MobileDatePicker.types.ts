@@ -9,15 +9,14 @@ import {
   BaseDatePickerSlots,
   BaseDatePickerSlotProps,
 } from '../DatePicker/shared';
-import { DateView } from '../models';
 
 export interface MobileDatePickerSlots
   extends BaseDatePickerSlots,
-    MakeOptional<UseMobilePickerSlots<DateView>, 'field'> {}
+    MakeOptional<UseMobilePickerSlots, 'field'> {}
 
 export interface MobileDatePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends BaseDatePickerSlotProps,
-    ExportedUseMobilePickerSlotProps<DateView, TEnableAccessibleFieldDOMStructure> {}
+    ExportedUseMobilePickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
 
 export interface MobileDatePickerProps<TEnableAccessibleFieldDOMStructure extends boolean = true>
   extends BaseDatePickerProps,

@@ -278,6 +278,7 @@ export const useGridColumnResize = (
     | 'disableAutosize'
     | 'onColumnResize'
     | 'onColumnWidthChange'
+    | 'disableVirtualization'
   >,
 ) => {
   const isRtl = useRtl();
@@ -687,6 +688,7 @@ export const useGridColumnResize = (
 
       apiRef.current.autosizeColumns({
         ...props.autosizeOptions,
+        disableColumnVirtualization: false,
         columns: [column.field],
       });
     });
@@ -719,8 +721,10 @@ export const useGridColumnResize = (
       const columns = options.columns.map((c) => apiRef.current.state.columns.lookup[c]);
 
       try {
-        apiRef.current.unstable_setColumnVirtualization(false);
-        await columnVirtualizationDisabled();
+        if (!props.disableVirtualization && options.disableColumnVirtualization) {
+          apiRef.current.unstable_setColumnVirtualization(false);
+          await columnVirtualizationDisabled();
+        }
 
         const widthByField = extractColumnWidths(apiRef, options, columns);
 
@@ -766,11 +770,14 @@ export const useGridColumnResize = (
           }
         });
       } finally {
-        apiRef.current.unstable_setColumnVirtualization(true);
+        if (!props.disableVirtualization) {
+          apiRef.current.unstable_setColumnVirtualization(true);
+        }
+
         isAutosizingRef.current = false;
       }
     },
-    [apiRef, columnVirtualizationDisabled],
+    [apiRef, columnVirtualizationDisabled, props.disableVirtualization],
   );
 
   /**
