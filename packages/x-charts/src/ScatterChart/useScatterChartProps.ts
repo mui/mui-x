@@ -55,7 +55,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     series: series.map((s) => ({ type: 'scatter' as const, ...s })),
     width,
     height,
-    margin: calculateMargins({ margin, hideLegend, slotProps }),
+    margin: calculateMargins({ margin, hideLegend, slotProps, series }),
     colors,
     xAxis,
     yAxis,

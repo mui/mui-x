@@ -1,16 +1,18 @@
-import { ChartsLegendSlotExtension } from '../ChartsLegend';
+import type { ChartsLegendSlotExtension } from '../ChartsLegend';
 import { DEFAULT_MARGINS, LEGEND_SIDE_MARGIN } from '../constants';
-import { LayoutConfig } from '../models';
+import type { LayoutConfig } from '../models';
+import type { CartesianChartSeriesType, ChartsSeriesConfig } from '../models/seriesType/config';
 
 export const calculateMargins = <
   T extends ChartsLegendSlotExtension &
     Pick<LayoutConfig, 'margin'> & {
       hideLegend?: boolean;
+      series?: Partial<ChartsSeriesConfig[CartesianChartSeriesType]['seriesProp']>[];
     },
 >(
   props: T,
 ): Required<LayoutConfig['margin']> => {
-  if (props.margin || props.hideLegend) {
+  if (props.margin || props.hideLegend || !props.series?.some((s) => s.label)) {
     return {
       ...DEFAULT_MARGINS,
       ...props.margin,

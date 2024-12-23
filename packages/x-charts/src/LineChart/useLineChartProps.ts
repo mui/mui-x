@@ -71,7 +71,7 @@ export const useLineChartProps = (props: LineChartProps) => {
     })),
     width,
     height,
-    margin: calculateMargins({ margin, hideLegend, slotProps }),
+    margin: calculateMargins({ margin, hideLegend, slotProps, series }),
     colors,
     dataset,
     xAxis: xAxis ?? [

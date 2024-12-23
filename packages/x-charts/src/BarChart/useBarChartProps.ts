@@ -79,7 +79,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     })),
     width,
     height,
-    margin: calculateMargins({ margin, hideLegend, slotProps }),
+    margin: calculateMargins({ margin, hideLegend, slotProps, series }),
     colors,
     dataset,
     xAxis:
