@@ -6,3 +6,4 @@ export const DEFAULT_MARGINS = {
   left: 50,
   right: 50,
 };
+export const LEGEND_SIDE_MARGIN = 20;

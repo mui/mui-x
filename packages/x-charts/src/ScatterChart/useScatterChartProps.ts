@@ -10,6 +10,7 @@ import { ZAxisContextProviderProps } from '../context';
 import type { ScatterChartProps } from './ScatterChart';
 import type { ScatterPlotProps } from './ScatterPlot';
 import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
+import { calculateMargins } from '../internals/calculateMargins';
 
 /**
  * A helper function that extracts ScatterChartProps from the input props
@@ -54,7 +55,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     series: series.map((s) => ({ type: 'scatter' as const, ...s })),
     width,
     height,
-    margin,
+    margin: calculateMargins({ margin, hideLegend, slotProps }),
     colors,
     xAxis,
     yAxis,
