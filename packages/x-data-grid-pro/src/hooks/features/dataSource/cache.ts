@@ -16,7 +16,7 @@ export type GridDataSourceCacheDefaultConfig = {
   getKey?: (params: GridGetRowsParams) => string;
 };
 
-function getKeyDefault(params: GridGetRowsParams) {
+export function getKeyDefault(params: GridGetRowsParams) {
   return JSON.stringify([
     params.filterModel,
     params.sortModel,
