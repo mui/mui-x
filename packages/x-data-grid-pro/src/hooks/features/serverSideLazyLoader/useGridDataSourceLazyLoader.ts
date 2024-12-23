@@ -20,7 +20,8 @@ import {
   GridStrategyGroup,
   GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
- runIf } from '@mui/x-data-grid/internals';
+  runIf,
+} from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { findSkeletonRowsSection } from '../lazyLoader/utils';
