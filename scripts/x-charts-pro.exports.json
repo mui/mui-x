@@ -189,6 +189,7 @@
   { "name": "isDefaultizedBarSeries", "kind": "Function" },
   { "name": "ItemHighlightedState", "kind": "TypeAlias" },
   { "name": "LayoutConfig", "kind": "TypeAlias" },
+  { "name": "LEGEND_SIDE_MARGIN", "kind": "Variable" },
   { "name": "legendClasses", "kind": "Variable" },
   { "name": "LegendItemContext", "kind": "TypeAlias" },
   { "name": "LegendItemParams", "kind": "Interface" },
