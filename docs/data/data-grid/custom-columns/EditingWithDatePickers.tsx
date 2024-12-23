@@ -21,8 +21,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { enUS as locale } from 'date-fns/locale';
-
-const dateAdapter = new AdapterDateFns({ locale });
+import format from 'date-fns/format';
 
 /**
  * `date` column
@@ -41,7 +40,7 @@ const dateColumnType: GridColTypeDef<Date, string> = {
   })),
   valueFormatter: (value) => {
     if (value) {
-      return dateAdapter.format(value, 'keyboardDate');
+      return format(value, 'MM/dd/yyyy', { locale });
     }
     return '';
   },
@@ -123,7 +122,7 @@ const dateTimeColumnType: GridColTypeDef<Date, string> = {
   })),
   valueFormatter: (value) => {
     if (value) {
-      return dateAdapter.format(value, 'keyboardDateTime');
+      return format(value, 'MM/dd/yyyy hh:mm a', { locale });
     }
     return '';
   },
