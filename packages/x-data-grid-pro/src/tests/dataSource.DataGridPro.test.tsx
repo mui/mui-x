@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
-import { act, createRenderer, waitFor } from '@mui/internal-test-utils';
+import { act, createRenderer, waitFor, screen, within } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import {
   DataGridPro,
@@ -13,7 +13,6 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { SinonSpy, spy } from 'sinon';
-import { getCell } from 'test/utils/helperFn';
 import { getKey } from '../hooks/features/dataSource/cache';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -135,7 +134,12 @@ describe('<DataGridPro /> - Data source', () => {
         expect(fetchRowsSpy.callCount).to.equal(1);
       });
 
-      const cell1Content = getCell(0, 0).innerText;
+      const dataRow1 = await screen.findByText(
+        (_, el) => el?.getAttribute('data-rowindex') === '0',
+      );
+
+      const cell1 = within(dataRow1).getByRole('gridcell');
+      const cell1Content = cell1.innerText;
 
       act(() => {
         apiRef.current.setPage(1);
@@ -145,7 +149,11 @@ describe('<DataGridPro /> - Data source', () => {
         expect(fetchRowsSpy.callCount).to.equal(2);
       });
 
-      const cell2Content = getCell(0, 0).innerText;
+      const dataRow2 = await screen.findByText(
+        (_, el) => el?.getAttribute('data-rowindex') === '0' && el !== dataRow1,
+      );
+      const cell2 = within(dataRow2).getByRole('gridcell');
+      const cell2Content = cell2.innerText;
       expect(cell2Content).not.to.equal(cell1Content);
 
       act(() => {
@@ -154,7 +162,11 @@ describe('<DataGridPro /> - Data source', () => {
 
       expect(fetchRowsSpy.callCount).to.equal(2);
 
-      const cell3Content = getCell(0, 0).innerText;
+      const dataRow3 = await screen.findByText(
+        (_, el) => el?.getAttribute('data-rowindex') === '0' && el !== dataRow1 && el !== dataRow2,
+      );
+      const cell3 = within(dataRow3).getByRole('gridcell');
+      const cell3Content = cell3.innerText;
       expect(cell3Content).to.equal(cell1Content);
     });
 
@@ -173,7 +185,13 @@ describe('<DataGridPro /> - Data source', () => {
       });
       expect(cache.size).to.equal(1);
 
-      const cell1Content = getCell(0, 0).innerText;
+      const dataRow1 = await screen.findByText(
+        (_, el) => el?.getAttribute('data-rowindex') === '0',
+      );
+
+      const cell1 = within(dataRow1).getByRole('gridcell');
+
+      const cell1Content = cell1.innerText;
 
       act(() => {
         apiRef.current.setPage(1);
@@ -184,14 +202,26 @@ describe('<DataGridPro /> - Data source', () => {
       });
       expect(cache.size).to.equal(2);
 
-      const cell2Content = getCell(0, 0).innerText;
+      const dataRow2 = await screen.findByText(
+        (_, el) => el?.getAttribute('data-rowindex') === '0' && el !== dataRow1,
+      );
+
+      const cell2 = within(dataRow2).getByRole('gridcell');
+
+      const cell2Content = cell2.innerText;
       expect(cell2Content).not.to.equal(cell1Content);
 
       act(() => {
         apiRef.current.setPage(0);
       });
 
-      const cell3Content = getCell(0, 0).innerText;
+      const dataRow3 = await screen.findByText(
+        (_, el) => el?.getAttribute('data-rowindex') === '0' && el !== dataRow1 && el !== dataRow2,
+      );
+
+      const cell3 = within(dataRow3).getByRole('gridcell');
+
+      const cell3Content = cell3.innerText;
       expect(cell3Content).to.equal(cell1Content);
 
       expect(fetchRowsSpy.callCount).to.equal(2);
@@ -199,12 +229,19 @@ describe('<DataGridPro /> - Data source', () => {
     });
 
     it('should allow to disable the default cache', async () => {
+      // only
       render(<TestDataSource unstable_dataSourceCache={null} />);
       await waitFor(() => {
         expect(fetchRowsSpy.callCount).to.equal(1);
       });
 
-      const cell1Content = getCell(0, 0).innerText;
+      const dataRow1 = await screen.findByText(
+        (_, el) => el?.getAttribute('data-rowindex') === '0',
+      );
+
+      const cell1 = within(dataRow1).getByRole('gridcell');
+
+      const cell1Content = cell1.innerText;
 
       act(() => {
         apiRef.current.setPage(1);
@@ -214,7 +251,13 @@ describe('<DataGridPro /> - Data source', () => {
         expect(fetchRowsSpy.callCount).to.equal(2);
       });
 
-      const cell2Content = getCell(0, 0).innerText;
+      const dataRow2 = await screen.findByText(
+        (_, el) => el?.getAttribute('data-rowindex') === '0' && el !== dataRow1,
+      );
+
+      const cell2 = within(dataRow2).getByRole('gridcell');
+
+      const cell2Content = cell2.innerText;
       expect(cell2Content).not.to.equal(cell1Content);
 
       act(() => {

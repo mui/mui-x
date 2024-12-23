@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
-import { createRenderer, waitFor, fireEvent, within, act } from '@mui/internal-test-utils';
+import { createRenderer, waitFor, fireEvent, within, act, screen } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import {
   DataGridPro,
@@ -13,7 +13,7 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { SinonSpy, spy } from 'sinon';
-import { getCell, raf } from 'test/utils/helperFn';
+import { raf } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -136,7 +136,9 @@ describe('<DataGridPro /> - Data source tree data', () => {
     });
     await raf();
     expect(Object.keys(apiRef.current.state.rows.tree).length).to.equal(10 + 1);
-    const cell11 = getCell(0, 0);
+    const dataRow1 = await screen.findByText((_, el) => el?.getAttribute('data-rowindex') === '0');
+
+    const cell11 = within(dataRow1).getAllByRole('gridcell')[0];
     fireEvent.click(within(cell11).getByRole('button'));
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
@@ -158,7 +160,9 @@ describe('<DataGridPro /> - Data source tree data', () => {
 
     const tree = apiRef.current.state.rows.tree;
     expect(Object.keys(tree).length).to.equal(10 + 1);
-    const cell11 = getCell(0, 0);
+    const dataRow1 = await screen.findByText((_, el) => el?.getAttribute('data-rowindex') === '0');
+
+    const cell11 = within(dataRow1).getAllByRole('gridcell')[0];
     const firstChildId = (tree[GRID_ROOT_GROUP_ID] as GridGroupNode).children[0];
     act(() => {
       apiRef.current.unstable_dataSource.fetchRows(firstChildId);
