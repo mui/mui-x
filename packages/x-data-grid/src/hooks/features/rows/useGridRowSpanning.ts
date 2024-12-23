@@ -317,7 +317,6 @@ export const useGridRowSpanning = (
           },
         };
       });
-      apiRef.current.updateRenderContext?.();
     },
     [apiRef, processedRange, props.pagination, props.paginationMode],
   );
