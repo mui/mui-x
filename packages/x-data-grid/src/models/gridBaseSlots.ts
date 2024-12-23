@@ -21,3 +21,21 @@ export type MenuItemProps = {
   selected?: boolean;
   value?: number | string | readonly string[];
 };
+
+export type CircularProgressProps = {
+  /**
+   * Pixels or CSS value.
+   * @default 40
+   */
+  size?: number | string;
+  /** @default 'primary' */
+  color?: 'inherit' | 'primary';
+};
+
+export type LinearProgressProps = {};
+
+export type SkeletonProps = {
+  variant?: 'circular' | 'text';
+  width?: number | string;
+  height?: number | string;
+};

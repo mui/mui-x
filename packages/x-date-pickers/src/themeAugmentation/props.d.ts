@@ -17,7 +17,6 @@ import { PickerPopperProps } from '../internals/components/PickersPopper';
 import { PickersToolbarProps } from '../internals/components/PickersToolbar';
 import { PickersToolbarButtonProps } from '../internals/components/PickersToolbarButton';
 import { ExportedPickersToolbarTextProps } from '../internals/components/PickersToolbarText';
-import { DateOrTimeView } from '../models';
 
 import { DatePickerProps } from '../DatePicker';
 import { ExportedDatePickerToolbarProps } from '../DatePicker/DatePickerToolbar';
@@ -77,10 +76,10 @@ export interface PickersComponentsPropsList {
   MuiPickersFadeTransitionGroup: PickersFadeTransitionGroupProps;
   MuiPickersPopper: PickerPopperProps;
   MuiPickersSlideTransition: ExportedSlideTransitionProps;
-  MuiPickersToolbar: PickersToolbarProps<PickerValidValue, DateOrTimeView>;
+  MuiPickersToolbar: PickersToolbarProps<PickerValidValue>;
   MuiPickersToolbarButton: PickersToolbarButtonProps;
   MuiPickersToolbarText: ExportedPickersToolbarTextProps;
-  MuiPickersLayout: PickersLayoutProps<PickerValidValue, DateOrTimeView>;
+  MuiPickersLayout: PickersLayoutProps<PickerValidValue>;
   MuiTimeClock: TimeClockProps;
   MuiTimeField: TimeFieldProps<any>;
   MuiTimePickerToolbar: ExportedTimePickerToolbarProps;
