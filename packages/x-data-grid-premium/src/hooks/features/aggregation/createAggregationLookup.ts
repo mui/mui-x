@@ -26,21 +26,13 @@ const getAggregationCellValue = ({
   field,
   aggregationFunction,
   aggregationRowsScope,
-  isDataSource,
 }: {
   apiRef: React.MutableRefObject<GridPrivateApiPremium>;
   groupId: GridRowId;
   field: string;
-  aggregationFunction: GridAggregationFunction | GridAggregationFunctionDataSource;
+  aggregationFunction: GridAggregationFunction;
   aggregationRowsScope: DataGridPremiumProcessedProps['aggregationRowsScope'];
-  isDataSource: boolean;
 }) => {
-  if (isDataSource) {
-    return apiRef.current.resolveGroupAggregation(groupId, field);
-  }
-
-  const clientSideAggregationFunction = aggregationFunction as GridAggregationFunction;
-
   const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
   const rowIds: GridRowId[] = apiRef.current.getRowGroupChildren({ groupId });
 
@@ -62,19 +54,44 @@ const getAggregationCellValue = ({
       return;
     }
 
-    if (typeof clientSideAggregationFunction.getCellValue === 'function') {
+    if (typeof aggregationFunction.getCellValue === 'function') {
       const row = apiRef.current.getRow(rowId);
-      values.push(clientSideAggregationFunction.getCellValue({ row }));
+      values.push(aggregationFunction.getCellValue({ row }));
     } else {
       values.push(apiRef.current.getCellValue(rowId, field));
     }
   });
 
-  return clientSideAggregationFunction.apply({
+  return aggregationFunction.apply({
     values,
     groupId,
     field, // Added per user request in https://github.com/mui/mui-x/issues/6995#issuecomment-1327423455
   });
+};
+
+const getGroupAggregatedValueDataSource = ({
+  groupId,
+  apiRef,
+  aggregatedFields,
+  position,
+}: {
+  groupId: GridRowId;
+  apiRef: React.MutableRefObject<GridPrivateApiPremium>;
+  aggregatedFields: string[];
+  position: GridAggregationPosition;
+}) => {
+  const groupAggregationLookup: GridAggregationLookup[GridRowId] = {};
+
+  for (let j = 0; j < aggregatedFields.length; j += 1) {
+    const aggregatedField = aggregatedFields[j];
+
+    groupAggregationLookup[aggregatedField] = {
+      position,
+      value: apiRef.current.resolveGroupAggregation(groupId, aggregatedField),
+    };
+  }
+
+  return groupAggregationLookup;
 };
 
 const getGroupAggregatedValue = ({
@@ -84,7 +101,6 @@ const getGroupAggregatedValue = ({
   aggregatedFields,
   aggregationRules,
   position,
-  isDataSource,
 }: {
   groupId: GridRowId;
   apiRef: React.MutableRefObject<GridPrivateApiPremium>;
@@ -92,7 +108,6 @@ const getGroupAggregatedValue = ({
   aggregatedFields: string[];
   aggregationRules: GridAggregationRules;
   position: GridAggregationPosition;
-  isDataSource: boolean;
 }) => {
   const groupAggregationLookup: GridAggregationLookup[GridRowId] = {};
 
@@ -106,9 +121,8 @@ const getGroupAggregatedValue = ({
         apiRef,
         groupId,
         field: aggregatedField,
-        aggregationFunction: columnAggregationRules.aggregationFunction,
+        aggregationFunction: columnAggregationRules.aggregationFunction as GridAggregationFunction,
         aggregationRowsScope,
-        isDataSource,
       }),
     };
   }
@@ -155,11 +169,17 @@ export const createAggregationLookup = ({
         createGroupAggregationLookup(childNode);
       }
     }
+    const position = getAggregationPosition(groupNode);
 
-    const hasAggregableChildren = groupNode.children.length;
-    if (hasAggregableChildren || isDataSource) {
-      const position = getAggregationPosition(groupNode);
-      if (position != null) {
+    if (position != null) {
+      if (isDataSource) {
+        aggregationLookup[groupNode.id] = getGroupAggregatedValueDataSource({
+          groupId: groupNode.id,
+          apiRef,
+          aggregatedFields,
+          position,
+        });
+      } else if (groupNode.children.length) {
         aggregationLookup[groupNode.id] = getGroupAggregatedValue({
           groupId: groupNode.id,
           apiRef,
@@ -167,7 +187,6 @@ export const createAggregationLookup = ({
           aggregationRowsScope,
           aggregationRules,
           position,
-          isDataSource,
         });
       }
     }
