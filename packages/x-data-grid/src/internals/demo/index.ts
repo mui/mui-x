@@ -1,1 +1,1 @@
-export { DemoContainer } from './DemoContainer';
+export { TailwindDemoContainer } from './TailwindDemoContainer';
