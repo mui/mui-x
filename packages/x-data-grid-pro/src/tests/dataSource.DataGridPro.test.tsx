@@ -13,14 +13,14 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { SinonSpy, spy } from 'sinon';
-import { getKey } from '../hooks/features/dataSource/cache';
+import { getKeyDefault } from '../hooks/features/dataSource/cache';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 const cache = new Map<string, GridGetRowsResponse>();
 
 const testCache: GridDataSourceCache = {
-  set: (key, value) => cache.set(getKey(key), value),
-  get: (key) => cache.get(getKey(key)),
+  set: (key, value) => cache.set(getKeyDefault(key), value),
+  get: (key) => cache.get(getKeyDefault(key)),
   clear: () => cache.clear(),
 };
 

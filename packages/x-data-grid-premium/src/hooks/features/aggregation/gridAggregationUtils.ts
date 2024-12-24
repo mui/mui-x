@@ -18,6 +18,7 @@ import {
 } from '@mui/x-data-grid-pro/internals';
 import {
   GridAggregationFunction,
+  GridAggregationFunctionDataSource,
   GridAggregationModel,
   GridAggregationRule,
   GridAggregationRules,
@@ -36,20 +37,29 @@ export const getAggregationFooterRowIdFromGroupId = (groupId: GridRowId | null) 
   return `auto-generated-group-footer-${groupId}`;
 };
 
+type AggregationFunction = GridAggregationFunction | GridAggregationFunctionDataSource | undefined;
+
+const isClientSideAggregateFunction = (
+  aggregationFunction: AggregationFunction,
+): aggregationFunction is GridAggregationFunction =>
+  !!aggregationFunction && 'apply' in aggregationFunction;
+
 export const canColumnHaveAggregationFunction = ({
   colDef,
   aggregationFunctionName,
   aggregationFunction,
+  isDataSource,
 }: {
   colDef: GridColDef | undefined;
   aggregationFunctionName: string;
-  aggregationFunction: GridAggregationFunction | undefined;
+  aggregationFunction: AggregationFunction;
+  isDataSource: boolean;
 }): boolean => {
   if (!colDef) {
     return false;
   }
 
-  if (!aggregationFunction) {
+  if (!isClientSideAggregateFunction(aggregationFunction) && !isDataSource) {
     return false;
   }
 
@@ -57,7 +67,7 @@ export const canColumnHaveAggregationFunction = ({
     return colDef.availableAggregationFunctions.includes(aggregationFunctionName);
   }
 
-  if (!aggregationFunction.columnTypes) {
+  if (!aggregationFunction?.columnTypes) {
     return true;
   }
 
@@ -67,15 +77,20 @@ export const canColumnHaveAggregationFunction = ({
 export const getAvailableAggregationFunctions = ({
   aggregationFunctions,
   colDef,
+  isDataSource,
 }: {
-  aggregationFunctions: Record<string, GridAggregationFunction>;
+  aggregationFunctions:
+    | Record<string, GridAggregationFunction>
+    | Record<string, GridAggregationFunctionDataSource>;
   colDef: GridColDef;
+  isDataSource: boolean;
 }) =>
   Object.keys(aggregationFunctions).filter((aggregationFunctionName) =>
     canColumnHaveAggregationFunction({
       colDef,
       aggregationFunctionName,
       aggregationFunction: aggregationFunctions[aggregationFunctionName],
+      isDataSource,
     }),
   );
 
@@ -90,10 +105,14 @@ export const getAggregationRules = ({
   columnsLookup,
   aggregationModel,
   aggregationFunctions,
+  isDataSource = false,
 }: {
   columnsLookup: GridColumnRawLookup;
   aggregationModel: GridAggregationModel;
-  aggregationFunctions: Record<string, GridAggregationFunction>;
+  aggregationFunctions:
+    | Record<string, GridAggregationFunction>
+    | Record<string, GridAggregationFunctionDataSource>;
+  isDataSource?: boolean;
 }) => {
   const aggregationRules: GridAggregationRules = {};
 
@@ -104,6 +123,7 @@ export const getAggregationRules = ({
         colDef: columnsLookup[field],
         aggregationFunctionName: columnItem,
         aggregationFunction: aggregationFunctions[columnItem],
+        isDataSource,
       })
     ) {
       aggregationRules[field] = {
