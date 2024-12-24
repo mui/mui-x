@@ -34,6 +34,14 @@ export const selectorIsItemEditable = createSelector(
  * @returns {boolean} `true` if the item is being edited, `false` otherwise.
  */
 export const selectorIsItemBeingEdited = createSelector(
-  [selectorTreeViewLabelState, (_, itemId: string) => itemId],
-  (labelState, itemId) => labelState.editedItemId === itemId,
+  [selectorTreeViewLabelState, (_, itemId: string | null) => itemId],
+  (labelState, itemId) => (itemId ? labelState.editedItemId === itemId : false),
+);
+/**
+ * Check if an item is being edited.
+ * @param {TreeViewState<[UseTreeViewLabelSignature]>} state The state of the tree view.
+ * @returns {boolean} `true` if there is an item that is being edited, `false` otherwise.
+ */
+export const selectorIsAnItemEdited = createSelector(selectorTreeViewLabelState, (labelState) =>
+  Boolean(labelState?.editedItemId),
 );
