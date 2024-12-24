@@ -10,12 +10,7 @@ import type { GridRowId, GridValidRowModel, GridRowEntry } from '../../../models
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
-import {
-  getUnprocessedRange,
-  isRowContextInitialized,
-  getCellValue,
-  isRowRangeUpdated,
-} from './gridRowSpanningUtils';
+import { getUnprocessedRange, isRowContextInitialized, getCellValue } from './gridRowSpanningUtils';
 import { GRID_CHECKBOX_SELECTION_FIELD } from '../../../colDef/gridCheckboxSelectionColDef';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { runIf } from '../../../utils/utils';
