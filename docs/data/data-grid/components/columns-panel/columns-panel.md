@@ -17,7 +17,7 @@ In the meantime, see the following:
 
 The demo below shows how to use the Columns Panel Trigger component to open the columns panel.
 
-{{"demo": "GridColumnsPanelTrigger.js", "bg": "inline"}}
+{{"demo": "GridColumnsPanelTrigger.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Anatomy
 

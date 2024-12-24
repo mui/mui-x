@@ -6,7 +6,7 @@
 
 The demo below shows how to use the Export component to trigger exports.
 
-{{"demo": "GridExportTrigger.js", "bg": "inline"}}
+{{"demo": "GridExportTrigger.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Anatomy
 
@@ -44,7 +44,7 @@ Below are some ways the Export component can be used.
 
 Display export options within a menu on the toolbar.
 
-{{"demo": "GridExportMenu.js", "bg": "inline"}}
+{{"demo": "GridExportMenu.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Accessibility
 

@@ -17,7 +17,7 @@ In the meantime, see the following:
 
 The demo below shows how to use the Filter Panel Trigger component to open the filter panel.
 
-{{"demo": "GridFilterPanelTrigger.js", "bg": "inline"}}
+{{"demo": "GridFilterPanelTrigger.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Anatomy
 

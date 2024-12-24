@@ -1,5 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
+import { TailwindDemoContainer } from '@mui/x-data-grid/internals';
 import { DataGrid, Grid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -66,8 +67,10 @@ export default function GridQuickFilterCustom() {
   });
 
   return (
-    <div style={{ height: 400, width: '100%' }}>
-      <DataGrid {...data} loading={loading} slots={{ toolbar: Toolbar }} />
-    </div>
+    <TailwindDemoContainer>
+      <div style={{ height: 400, width: '100%' }}>
+        <DataGrid {...data} loading={loading} slots={{ toolbar: Toolbar }} />
+      </div>
+    </TailwindDemoContainer>
   );
 }

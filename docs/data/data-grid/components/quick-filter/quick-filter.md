@@ -6,7 +6,7 @@
 
 The demo below shows the default Quick Filter configuration.
 
-{{"demo": "GridQuickFilter.js", "bg": "inline"}}
+{{"demo": "GridQuickFilter.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Anatomy
 
@@ -43,7 +43,7 @@ The default elements can be replaced using the `render` prop. See [Grid componen
 
 The demo below shows how to replace the default elements with custom ones, styled with Tailwind CSS.
 
-{{"demo": "GridQuickFilterCustom.js", "bg": "inline"}}
+{{"demo": "GridQuickFilterCustom.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Accessibility
 
