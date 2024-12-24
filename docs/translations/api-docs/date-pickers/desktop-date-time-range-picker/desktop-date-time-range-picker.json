@@ -9,7 +9,7 @@
       "description": "The number of calendars to render on <strong>desktop</strong>."
     },
     "closeOnSelect": {
-      "description": "If <code>true</code>, the popover or modal will close after submitting the full date."
+      "description": "If <code>true</code>, the Picker will close after submitting the full date."
     },
     "currentMonthCalendarPosition": { "description": "Position the current month is rendered in." },
     "dayOfWeekFormatter": {

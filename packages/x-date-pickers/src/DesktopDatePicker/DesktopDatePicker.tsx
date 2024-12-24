@@ -16,6 +16,7 @@ import { DateField } from '../DateField';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { resolveDateFormat } from '../internals/utils/date-utils';
 import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalization';
+import { PickerLayoutOwnerState } from '../PickersLayout';
 
 type DesktopDatePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   props: DesktopDatePickerProps<TEnableAccessibleFieldDOMStructure> &
@@ -56,6 +57,7 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
   // Props with the default values specific to the desktop variant
   const props = {
     ...defaultizedProps,
+    closeOnSelect: defaultizedProps.closeOnSelect ?? true,
     viewRenderers,
     format: resolveDateFormat(utils, defaultizedProps, false),
     yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
@@ -75,6 +77,10 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
         hidden: true,
         ...defaultizedProps.slotProps?.toolbar,
       },
+      actionBar: (ownerState: PickerLayoutOwnerState) => ({
+        actions: [],
+        ...resolveComponentProps(defaultizedProps.slotProps?.actionBar, ownerState),
+      }),
     },
   };
 
@@ -112,8 +118,8 @@ DesktopDatePicker.propTypes = {
   autoFocus: PropTypes.bool,
   className: PropTypes.string,
   /**
-   * If `true`, the popover or modal will close after submitting the full date.
-   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * If `true`, the Picker will close after submitting the full date.
+   * @default true
    */
   closeOnSelect: PropTypes.bool,
   /**

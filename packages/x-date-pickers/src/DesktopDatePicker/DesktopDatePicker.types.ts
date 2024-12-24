@@ -38,4 +38,9 @@ export interface DesktopDatePickerProps<TEnableAccessibleFieldDOMStructure exten
    * @default 4
    */
   yearsPerRow?: 3 | 4;
+  /**
+   * If `true`, the Picker will close after submitting the full date.
+   * @default true
+   */
+  closeOnSelect?: boolean;
 }
