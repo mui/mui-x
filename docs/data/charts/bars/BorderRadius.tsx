@@ -79,9 +79,8 @@ const chartSettingsH: Partial<BarChartProps> = {
   },
   slotProps: {
     legend: {
-      direction: 'row',
+      direction: 'horizontal',
       position: { vertical: 'bottom', horizontal: 'middle' },
-      padding: -5,
     },
   },
 };

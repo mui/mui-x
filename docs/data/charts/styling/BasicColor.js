@@ -29,7 +29,7 @@ export default function BasicColor() {
   };
 
   return (
-    <Stack direction="column" spacing={2} alignItems="center" sx={{ width: '100%' }}>
+    <Stack direction="column" spacing={2}>
       <LineChart
         {...chartsParams}
         series={[

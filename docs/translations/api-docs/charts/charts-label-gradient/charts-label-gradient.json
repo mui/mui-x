@@ -1,0 +1,27 @@
+{
+  "componentDescription": "Generates the label Gradient for the tooltip and legend.",
+  "propDescriptions": {
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "direction": { "description": "The direction of the gradient." },
+    "gradientId": {
+      "description": "A unique identifier for the gradient. The <code>gradientId</code> will be used as <code>fill=&quot;url(#gradientId)&quot;</code>."
+    },
+    "reverse": { "description": "If <code>true</code>, the gradient will be reversed." },
+    "rotate": {
+      "description": "If provided, the gradient will be rotated by 90deg. Useful for linear gradients that are not in the correct orientation."
+    },
+    "thickness": { "description": "The thickness of the gradient" }
+  },
+  "classDescriptions": {
+    "fill": {
+      "description": "Styles applied to the element containing the gradient&#39;s fill value"
+    },
+    "horizontal": { "description": "Styles applied when direction is &quot;row&quot;." },
+    "mask": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the &quot;mask&quot; that gives shape to the gradient"
+    },
+    "root": { "description": "Styles applied to the root element." },
+    "vertical": { "description": "Styles applied when direction is &quot;column&quot;." }
+  }
+}

@@ -110,6 +110,7 @@ export default function ColorConfig() {
       xAxis={[{ data: xData }]}
       yAxis={[{ data: yData }]}
       series={[{ data }]}
+      margin={{ left: 70 }}
       zAxis={[
         {
           min: 20,
