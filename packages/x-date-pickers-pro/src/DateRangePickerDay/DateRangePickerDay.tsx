@@ -358,7 +358,6 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
           data-testid="DateRangePickerDay"
           {...other}
           ref={ref}
-          disableMargin
           day={day}
           selected={isVisuallySelected}
           outsideCurrentMonth={outsideCurrentMonth}
