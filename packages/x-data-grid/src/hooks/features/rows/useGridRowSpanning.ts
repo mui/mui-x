@@ -3,7 +3,6 @@ import useLazyRef from '@mui/utils/useLazyRef';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../internals/constants';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
-import { gridRenderContextSelector } from '../virtualization/gridVirtualizationSelectors';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { gridRowTreeSelector } from './gridRowsSelector';
 import type { GridColDef } from '../../../models/colDef';
@@ -18,6 +17,7 @@ import {
   getCellValue,
 } from './gridRowSpanningUtils';
 import { GRID_CHECKBOX_SELECTION_FIELD } from '../../../colDef/gridCheckboxSelectionColDef';
+import type { GridRenderContext } from '../../../models';
 
 export interface GridRowSpanningState {
   spannedCells: Record<GridRowId, Record<GridColDef['field'], number>>;
@@ -225,7 +225,7 @@ export const useGridRowSpanning = (
   props: Pick<DataGridProcessedProps, 'rowSpanning' | 'pagination' | 'paginationMode'>,
 ): void => {
   const { range, rows: visibleRows } = useGridVisibleRows(apiRef, props);
-  const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
+  const renderContext = range ?? EMPTY_RANGE;
   const colDefs = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const tree = useGridSelector(apiRef, gridRowTreeSelector);
   const processedRange = useLazyRef<RowRange, void>(() => {
@@ -256,7 +256,7 @@ export const useGridRowSpanning = (
         return;
       }
 
-      if (range === null || !isRowContextInitialized(renderContext)) {
+      if (range === null || !isRowContextInitialized(renderContext as GridRenderContext)) {
         return;
       }
 
