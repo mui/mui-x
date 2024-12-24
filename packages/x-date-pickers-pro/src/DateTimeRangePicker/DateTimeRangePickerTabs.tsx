@@ -20,8 +20,8 @@ import {
   DateTimeRangePickerTabsClasses,
   getDateTimeRangePickerTabsUtilityClass,
 } from './dateTimeRangePickerTabsClasses';
-import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import { RangePosition } from '../models';
+import { usePickerRangePositionContext } from '../hooks';
 
 type TabValue = 'start-date' | 'start-time' | 'end-date' | 'end-time';
 
@@ -63,9 +63,7 @@ export interface ExportedDateTimeRangePickerTabsProps extends ExportedBaseTabsPr
   classes?: Partial<DateTimeRangePickerTabsClasses>;
 }
 
-export interface DateTimeRangePickerTabsProps
-  extends ExportedDateTimeRangePickerTabsProps,
-    Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {}
+export interface DateTimeRangePickerTabsProps extends ExportedDateTimeRangePickerTabsProps {}
 
 const useUtilityClasses = (classes: Partial<DateTimeRangePickerTabsClasses> | undefined) => {
   const slots = {
@@ -114,8 +112,6 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
     dateIcon = <DateRangeIcon />,
     timeIcon = <TimeIcon />,
     hidden = typeof window === 'undefined' || window.innerHeight < 667,
-    rangePosition,
-    onRangePositionChange,
     className,
     classes: classesProp,
     sx,
@@ -125,6 +121,8 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
   const { ownerState } = usePickerPrivateContext();
   const { view, onViewChange } = usePickerContext();
   const classes = useUtilityClasses(classesProp);
+  const { rangePosition, onRangePositionChange } = usePickerRangePositionContext();
+
   const value = React.useMemo(
     () => (view == null ? null : viewToTab(view, rangePosition)),
     [view, rangePosition],
@@ -241,8 +239,6 @@ DateTimeRangePickerTabs.propTypes = {
    * @default `window.innerHeight < 667` for `DesktopDateTimeRangePicker` and `MobileDateTimeRangePicker`
    */
   hidden: PropTypes.bool,
-  onRangePositionChange: PropTypes.func.isRequired,
-  rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

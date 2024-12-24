@@ -63,7 +63,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
     ? renderDigitalClockTimeView
     : renderMultiSectionDigitalClockTimeView;
 
-  const viewRenderers: TimePickerViewRenderers<TimeViewWithMeridiem, any> = {
+  const viewRenderers: TimePickerViewRenderers<TimeViewWithMeridiem> = {
     hours: renderTimeView,
     minutes: renderTimeView,
     seconds: renderTimeView,

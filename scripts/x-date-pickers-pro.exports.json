@@ -418,6 +418,7 @@
   { "name": "usePickerActionsContext", "kind": "Variable" },
   { "name": "usePickerContext", "kind": "Variable" },
   { "name": "usePickerLayout", "kind": "ExportAssignment" },
+  { "name": "usePickerRangePositionContext", "kind": "Function" },
   { "name": "usePickerTranslations", "kind": "Variable" },
   { "name": "UseSingleInputDateRangeFieldProps", "kind": "Interface" },
   { "name": "UseSingleInputDateTimeRangeFieldProps", "kind": "Interface" },

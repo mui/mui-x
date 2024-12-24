@@ -46,7 +46,7 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
     MobileDateRangePickerProps<TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiMobileDateRangePicker');
 
-  const viewRenderers: PickerViewRendererLookup<PickerRangeValue, 'day', any, {}> = {
+  const viewRenderers: PickerViewRendererLookup<PickerRangeValue, any, any> = {
     day: renderDateRangeViewCalendar,
     ...defaultizedProps.viewRenderers,
   };

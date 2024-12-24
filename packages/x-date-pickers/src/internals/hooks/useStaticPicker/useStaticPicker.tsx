@@ -33,15 +33,13 @@ export const useStaticPicker = <
   const { layoutProps, providerProps, renderCurrentView } = usePicker<
     PickerValue,
     TView,
-    TExternalProps,
-    {}
+    TExternalProps
   >({
     ...pickerParams,
     props,
     autoFocusView: autoFocus ?? false,
     fieldRef: undefined,
     localeText,
-    additionalViewProps: {},
     variant: displayStaticWrapperAs,
   });
 

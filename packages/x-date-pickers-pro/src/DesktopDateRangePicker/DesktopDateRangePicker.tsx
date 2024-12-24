@@ -46,7 +46,7 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
     DesktopDateRangePickerProps<TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiDesktopDateRangePicker');
 
-  const viewRenderers: PickerViewRendererLookup<PickerRangeValue, 'day', any, {}> = {
+  const viewRenderers: PickerViewRendererLookup<PickerRangeValue, any, any> = {
     day: renderDateRangeViewCalendar,
     ...defaultizedProps.viewRenderers,
   };

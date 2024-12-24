@@ -6,7 +6,6 @@ import {
 } from '@mui/x-date-pickers/internals';
 import {
   RangeOnlyPickerProps,
-  RangePickerAdditionalViewProps,
   UseRangePickerParams,
   UseRangePickerProps,
   UseRangePickerSlotProps,
@@ -25,8 +24,8 @@ export interface UseMobileRangePickerProps<
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-  TExternalProps extends UsePickerViewsProps<any, TView, any, any>,
-> extends UseRangePickerProps<TView, TError, TExternalProps, MobileRangePickerAdditionalViewProps> {
+  TExternalProps extends UsePickerViewsProps<any, TView, any>,
+> extends UseRangePickerProps<TView, TError, TExternalProps> {
   /**
    * Overridable component slots.
    * @default {}
@@ -39,8 +38,6 @@ export interface UseMobileRangePickerProps<
   slotProps?: UseMobileRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
 }
 
-export interface MobileRangePickerAdditionalViewProps extends RangePickerAdditionalViewProps {}
-
 export interface UseMobileRangePickerParams<
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
@@ -50,4 +47,4 @@ export interface UseMobileRangePickerParams<
     any,
     TExternalProps
   >,
-> extends UseRangePickerParams<TView, TExternalProps, MobileRangePickerAdditionalViewProps> {}
+> extends UseRangePickerParams<TView, TExternalProps> {}
