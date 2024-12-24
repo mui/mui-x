@@ -129,6 +129,7 @@ function PieArcLabel(props: PieArcLabelProps) {
   const classes = useUtilityClasses(ownerState);
 
   return (
+    // @ts-expect-error
     <PieArcLabelRoot
       className={classes.root}
       {...other}

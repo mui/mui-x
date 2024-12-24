@@ -81,14 +81,35 @@ commands:
                 # See https://stackoverflow.com/a/73411601
                 command: corepack enable --install-directory ~/bin
 
+      - when:
+          condition:
+            not:
+              equal: [stable, << pipeline.parameters.with-react-version >>]
+          steps:
+            - run:
+                name: Change pnpm setting to not install peer dependencies
+                command: pnpm config set auto-install-peers false --location project
+
       - run:
           name: View install environment
           command: |
             node --version
             pnpm --version
-      - run:
-          name: Install js dependencies
-          command: pnpm install
+      - when:
+          condition:
+            not:
+              equal: [stable, << pipeline.parameters.with-react-version >>]
+          steps:
+            - run:
+                name: Install js dependencies without frozen lockfile
+                command: pnpm install --no-frozen-lockfile
+      - when:
+          condition:
+            equal: [stable, << pipeline.parameters.with-react-version >>]
+          steps:
+            - run:
+                name: Install js dependencies
+                command: pnpm install
 
       - run:
           name: Resolve React version

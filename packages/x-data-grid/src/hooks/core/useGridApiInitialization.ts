@@ -23,7 +23,7 @@ export function unwrapPrivateAPI<
 let globalId = 0;
 
 function createPrivateAPI<PrivateApi extends GridPrivateApiCommon, Api extends GridApiCommon>(
-  publicApiRef: React.MutableRefObject<Api>,
+  publicApiRef: React.RefObject<Api>,
 ): PrivateApi {
   const existingPrivateApi = (publicApiRef.current as any)?.[SYMBOL_API_PRIVATE];
   if (existingPrivateApi) {
@@ -96,14 +96,14 @@ export function useGridApiInitialization<
   PrivateApi extends GridPrivateApiCommon,
   Api extends GridApiCommon,
 >(
-  inputApiRef: React.MutableRefObject<Api> | undefined,
+  inputApiRef: React.RefObject<Api> | undefined,
   props: Pick<DataGridProcessedProps, 'signature'>,
-): React.MutableRefObject<PrivateApi> {
-  const publicApiRef = React.useRef() as React.MutableRefObject<Api>;
-  const privateApiRef = React.useRef() as React.MutableRefObject<PrivateApi>;
+): React.RefObject<PrivateApi> {
+  const publicApiRef = React.useRef<Api>(null) as React.RefObject<Api>;
+  const privateApiRef = React.useRef<PrivateApi>(null) as React.RefObject<PrivateApi>;
 
   if (!privateApiRef.current) {
-    privateApiRef.current = createPrivateAPI(publicApiRef) as PrivateApi;
+    privateApiRef.current = createPrivateAPI(publicApiRef);
   }
 
   if (!publicApiRef.current) {

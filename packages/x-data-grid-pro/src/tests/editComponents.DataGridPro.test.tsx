@@ -232,12 +232,12 @@ describe('<DataGridPro /> - Edit components', () => {
       defaultData.columns = [{ field: 'createdAt', type: 'date', editable: true }];
     });
 
-    it('should call setEditCellValue with the value converted to Date', () => {
-      render(<TestCase />);
+    it('should call setEditCellValue with the value converted to Date', async () => {
+      const { user } = render(<TestCase />);
       const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
 
       const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
+      await user.dblClick(cell);
 
       const input = cell.querySelector('input')!;
       expect(input.value).to.equal('2022-02-18');
@@ -353,12 +353,12 @@ describe('<DataGridPro /> - Edit components', () => {
       defaultData.columns = [{ field: 'createdAt', type: 'dateTime', editable: true }];
     });
 
-    it('should call setEditCellValue with the value converted to Date', () => {
-      render(<TestCase />);
+    it('should call setEditCellValue with the value converted to Date', async () => {
+      const { user } = render(<TestCase />);
       const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
 
       const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
+      await user.dblClick(cell);
 
       const input = cell.querySelector('input')!;
       expect(input.value).to.equal('2022-02-18T14:30');
@@ -592,13 +592,16 @@ describe('<DataGridPro /> - Edit components', () => {
 
       defaultData.columns[0].renderEditCell = (params) => renderEditSingleSelectCell(params);
 
-      render(<TestCase processRowUpdate={processRowUpdate} />);
+      const { user } = render(<TestCase processRowUpdate={processRowUpdate} />);
 
       const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
-      fireUserEvent.mousePress(screen.queryAllByRole('option')[1]);
+      await user.dblClick(cell);
+      await user.click(screen.queryAllByRole('option')[1]);
       await waitFor(() => expect(screen.queryByRole('listbox')).to.equal(null));
-      fireEvent.keyDown(screen.getByRole('combobox'), { key: 'Enter' });
+      await act(() => {
+        screen.getByRole('combobox').focus();
+      });
+      await user.keyboard('{Enter}');
       expect(screen.queryByRole('listbox')).to.equal(null);
 
       resolveCallback!();

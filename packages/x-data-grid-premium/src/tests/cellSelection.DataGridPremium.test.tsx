@@ -88,14 +88,16 @@ describe('<DataGridPremium /> - Cell selection', () => {
   });
 
   describe('Ctrl + click', () => {
-    it('should add the clicked cells to the selection', () => {
-      render(<TestDataGridSelection />);
+    it('should add the clicked cells to the selection', async () => {
+      const { user } = render(<TestDataGridSelection />);
       expect(document.querySelector('.Mui-selected')).to.equal(null);
       const cell11 = getCell(1, 1);
-      fireEvent.click(cell11);
+      await user.click(cell11);
       expect(cell11).to.have.class('Mui-selected');
       const cell21 = getCell(2, 1);
-      fireEvent.click(cell21, { ctrlKey: true });
+      await user.keyboard('{Control>}');
+      await user.click(cell21);
+      await user.keyboard('{/Control}');
       expect(cell21).to.have.class('Mui-selected');
       expect(cell11).to.have.class('Mui-selected');
     });
@@ -187,14 +189,15 @@ describe('<DataGridPremium /> - Cell selection', () => {
       expect(spiedSelectCellsBetweenRange.lastCall.args[1]).to.deep.equal({ id: 1, field: 'id' });
     });
 
-    it('should call selectCellRange when ArrowUp is pressed', () => {
-      render(<TestDataGridSelection />);
+    it('should call selectCellRange when ArrowUp is pressed', async () => {
+      const { user } = render(<TestDataGridSelection />);
       const spiedSelectCellsBetweenRange = spyApi(apiRef.current, 'selectCellRange');
       const cell = getCell(1, 0);
-      cell.focus();
-      fireUserEvent.mousePress(cell);
-      fireEvent.keyDown(cell, { key: 'Shift' });
-      fireEvent.keyDown(cell, { key: 'ArrowUp', shiftKey: true });
+      await act(() => {
+        cell.focus();
+      });
+      await user.click(cell);
+      await user.keyboard('{Shift>}{ArrowUp}{/Shift}');
       expect(spiedSelectCellsBetweenRange.lastCall.args[0]).to.deep.equal({ id: 1, field: 'id' });
       expect(spiedSelectCellsBetweenRange.lastCall.args[1]).to.deep.equal({ id: 0, field: 'id' });
     });
@@ -298,9 +301,9 @@ describe('<DataGridPremium /> - Cell selection', () => {
         expect(getCell(2, 2)).to.have.class('Mui-selected');
       });
 
-      it('should select all cells within the given arguments if start > end', () => {
+      it('should select all cells within the given arguments if start > end', async () => {
         render(<TestDataGridSelection />);
-        act(() =>
+        await act(() =>
           apiRef.current.selectCellRange({ id: 0, field: 'id' }, { id: 2, field: 'price1M' }),
         );
 

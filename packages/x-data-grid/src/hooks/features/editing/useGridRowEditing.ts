@@ -65,7 +65,7 @@ export const useGridRowEditing = (
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
   const rowModesModelRef = React.useRef(rowModesModel);
   const prevRowModesModel = React.useRef<GridRowModesModel>({});
-  const focusTimeout = React.useRef<ReturnType<typeof setTimeout>>();
+  const focusTimeout = React.useRef<ReturnType<typeof setTimeout>>(undefined);
   const nextFocusedCell = React.useRef<GridCellParams | null>(null);
 
   const {

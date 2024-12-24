@@ -45,6 +45,7 @@ function TransitionComponent(props) {
   });
 
   return (
+    // @ts-expect-error
     <animated.div style={style}>
       <Collapse {...props} />
     </animated.div>
