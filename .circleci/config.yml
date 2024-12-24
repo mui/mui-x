@@ -95,9 +95,21 @@ commands:
           command: |
             node --version
             pnpm --version
-      - run:
-          name: Install js dependencies
-          command: pnpm install
+      - when:
+          condition:
+            not:
+              equal: [stable, << pipeline.parameters.with-react-version >>]
+          steps:
+            - run:
+                name: Install js dependencies without frozen lockfile
+                command: pnpm install --no-frozen-lockfile
+      - when:
+          condition:
+            equal: [stable, << pipeline.parameters.with-react-version >>]
+          steps:
+            - run:
+                name: Install js dependencies
+                command: pnpm install
 
       - run:
           name: Resolve React version
