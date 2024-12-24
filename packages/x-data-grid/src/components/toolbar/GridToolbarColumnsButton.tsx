@@ -29,9 +29,16 @@ const GridToolbarColumnsButton = forwardRef<HTMLButtonElement, GridToolbarColumn
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
     const preferencePanel = useGridSelector(apiRef, gridPreferencePanelStateSelector);
+    // @ts-ignore
+    const pivotParams = rootProps.pivotParams;
+    const pivotingFeatureEnabled = !!pivotParams;
+    const pivotSettingsOpen = pivotParams?.pivotSettingsOpen ?? false;
+    const onPivotSettingsOpenChange = pivotParams?.onPivotSettingsOpenChange;
 
     const showColumns = (event: React.MouseEvent<HTMLButtonElement>) => {
-      if (
+      if (pivotingFeatureEnabled) {
+        onPivotSettingsOpenChange?.(!pivotSettingsOpen);
+      } else if (
         preferencePanel.open &&
         preferencePanel.openedPanelValue === GridPreferencePanelsValue.columns
       ) {

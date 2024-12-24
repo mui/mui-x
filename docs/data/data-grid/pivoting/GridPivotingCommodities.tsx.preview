@@ -1,0 +1,9 @@
+<div style={{ height: 600, width: '100%' }}>
+  <DataGridPremium
+    rows={data.rows}
+    columns={data.columns}
+    apiRef={apiRef}
+    slots={{ toolbar: GridToolbar }}
+    pivotParams={pivotParams}
+  />
+</div>
