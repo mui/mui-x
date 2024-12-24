@@ -438,7 +438,7 @@ describe('<DataGrid /> - Rows', () => {
       );
       const firstCell = getCell(0, 0);
       const secondCell = getCell(0, 1);
-      await act(() => {
+      act(() => {
         firstCell.focus();
       });
 
@@ -450,7 +450,7 @@ describe('<DataGrid /> - Rows', () => {
       expect(printButton).to.have.property('tabIndex', 0);
       expect(menuButton).to.have.property('tabIndex', -1);
 
-      await act(() => {
+      act(() => {
         printButton.focus();
       });
       await user.keyboard('{ArrowRight}');
