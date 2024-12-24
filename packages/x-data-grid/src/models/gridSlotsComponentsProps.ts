@@ -35,6 +35,8 @@ import type { GridColumnsManagementProps } from '../components/columnsManagement
 import type { GridLoadingOverlayProps } from '../components/GridLoadingOverlay';
 import type { GridRowCountProps } from '../components/GridRowCount';
 import type { GridColumnHeaderSortIconProps } from '../components/columnHeaders/GridColumnHeaderSortIcon';
+import type { ToolbarProps as MUIToolbarProps } from '../material/components/Toolbar/Toolbar';
+import type { ToolbarButtonProps as MUIToolbarButtonProps } from '../material/components/ToolbarButton/ToolbarButton';
 import type {
   BadgeProps,
   CircularProgressProps,
@@ -42,6 +44,8 @@ import type {
   LinearProgressProps,
   MenuItemProps,
   SkeletonProps,
+  ToolbarButtonProps,
+  ToolbarProps,
 } from './gridBaseSlots';
 
 type RootProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;
@@ -88,6 +92,8 @@ export interface PanelPropsOverrides {}
 export interface PinnedRowsPropsOverrides {}
 export interface SkeletonCellPropsOverrides {}
 export interface RowPropsOverrides {}
+export interface BaseToolbarPropsOverrides {}
+export interface BaseToolbarButtonPropsOverrides {}
 
 interface BaseSlotProps {
   baseBadge: BadgeProps & BaseBadgePropsOverrides;
@@ -114,6 +120,8 @@ interface BaseSlotProps {
   } & BaseSelectOptionPropsOverrides;
   baseSkeleton: SkeletonProps & BaseSkeletonPropsOverrides;
   baseChip: ChipProps & BaseChipPropsOverrides;
+  baseToolbar: ToolbarProps & BaseToolbarPropsOverrides;
+  baseToolbarButton: ToolbarButtonProps & BaseToolbarButtonPropsOverrides;
 }
 
 interface MaterialSlotProps {
@@ -121,6 +129,8 @@ interface MaterialSlotProps {
   baseCircularProgress: MUICircularProgressProps;
   baseLinearProgress: MUILinearProgressProps;
   baseMenuItem: MUIMenuItemProps;
+  baseToolbar: MUIToolbarProps;
+  baseToolbarButton: MUIToolbarButtonProps;
 }
 
 interface ElementSlotProps {

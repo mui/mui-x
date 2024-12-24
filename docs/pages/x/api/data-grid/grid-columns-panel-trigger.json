@@ -1,0 +1,378 @@
+{
+  "props": {
+    "className": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" } },
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+  },
+  "name": "GridColumnsPanelTrigger",
+  "imports": [
+    "import { GridColumnsPanelTrigger } from '@mui/x-data-grid/components';",
+    "import { GridColumnsPanelTrigger } from '@mui/x-data-grid';",
+    "import { GridColumnsPanelTrigger } from '@mui/x-data-grid-pro';",
+    "import { GridColumnsPanelTrigger } from '@mui/x-data-grid-premium';"
+  ],
+  "classes": [
+    {
+      "key": "colorError",
+      "className": "MuiGridColumnsPanelTrigger-colorError",
+      "description": "Styles applied to the root element if `color=\"error\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorInfo",
+      "className": "MuiGridColumnsPanelTrigger-colorInfo",
+      "description": "Styles applied to the root element if `color=\"info\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorInherit",
+      "className": "MuiGridColumnsPanelTrigger-colorInherit",
+      "description": "Styles applied to the root element if `color=\"inherit\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorPrimary",
+      "className": "MuiGridColumnsPanelTrigger-colorPrimary",
+      "description": "Styles applied to the root element if `color=\"primary\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorSecondary",
+      "className": "MuiGridColumnsPanelTrigger-colorSecondary",
+      "description": "Styles applied to the root element if `color=\"secondary\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorSuccess",
+      "className": "MuiGridColumnsPanelTrigger-colorSuccess",
+      "description": "Styles applied to the root element if `color=\"success\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorWarning",
+      "className": "MuiGridColumnsPanelTrigger-colorWarning",
+      "description": "Styles applied to the root element if `color=\"warning\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "contained",
+      "className": "MuiGridColumnsPanelTrigger-contained",
+      "description": "Styles applied to the root element if `variant=\"contained\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "containedError",
+      "className": "MuiGridColumnsPanelTrigger-containedError",
+      "description": "Styles applied to the root element if `variant=\"contained\"` and `color=\"error\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "containedInfo",
+      "className": "MuiGridColumnsPanelTrigger-containedInfo",
+      "description": "Styles applied to the root element if `variant=\"contained\"` and `color=\"info\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "containedInherit",
+      "className": "MuiGridColumnsPanelTrigger-containedInherit",
+      "description": "Styles applied to the root element if `variant=\"contained\"` and `color=\"inherit\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "containedPrimary",
+      "className": "MuiGridColumnsPanelTrigger-containedPrimary",
+      "description": "Styles applied to the root element if `variant=\"contained\"` and `color=\"primary\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "containedSecondary",
+      "className": "MuiGridColumnsPanelTrigger-containedSecondary",
+      "description": "Styles applied to the root element if `variant=\"contained\"` and `color=\"secondary\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "containedSizeLarge",
+      "className": "MuiGridColumnsPanelTrigger-containedSizeLarge",
+      "description": "Styles applied to the root element if `size=\"large\"` and `variant=\"contained\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "containedSizeMedium",
+      "className": "MuiGridColumnsPanelTrigger-containedSizeMedium",
+      "description": "Styles applied to the root element if `size=\"medium\"` and `variant=\"contained\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "containedSizeSmall",
+      "className": "MuiGridColumnsPanelTrigger-containedSizeSmall",
+      "description": "Styles applied to the root element if `size=\"small\"` and `variant=\"contained\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "containedSuccess",
+      "className": "MuiGridColumnsPanelTrigger-containedSuccess",
+      "description": "Styles applied to the root element if `variant=\"contained\"` and `color=\"success\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "containedWarning",
+      "className": "MuiGridColumnsPanelTrigger-containedWarning",
+      "description": "Styles applied to the root element if `variant=\"contained\"` and `color=\"warning\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "disabled",
+      "className": "Mui-disabled",
+      "description": "State class applied to the root element if `disabled={true}`.",
+      "isGlobal": true
+    },
+    {
+      "key": "disableElevation",
+      "className": "MuiGridColumnsPanelTrigger-disableElevation",
+      "description": "Styles applied to the root element if `disableElevation={true}`.",
+      "isGlobal": false
+    },
+    {
+      "key": "endIcon",
+      "className": "MuiGridColumnsPanelTrigger-endIcon",
+      "description": "Styles applied to the endIcon element if supplied.",
+      "isGlobal": false
+    },
+    {
+      "key": "focusVisible",
+      "className": "Mui-focusVisible",
+      "description": "State class applied to the ButtonBase root element if the button is keyboard focused.",
+      "isGlobal": true
+    },
+    {
+      "key": "fullWidth",
+      "className": "MuiGridColumnsPanelTrigger-fullWidth",
+      "description": "Styles applied to the root element if `fullWidth={true}`.",
+      "isGlobal": false
+    },
+    {
+      "key": "icon",
+      "className": "MuiGridColumnsPanelTrigger-icon",
+      "description": "Styles applied to the icon element if supplied",
+      "isGlobal": false
+    },
+    {
+      "key": "iconSizeLarge",
+      "className": "MuiGridColumnsPanelTrigger-iconSizeLarge",
+      "description": "Styles applied to the icon element if supplied and `size=\"large\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "iconSizeMedium",
+      "className": "MuiGridColumnsPanelTrigger-iconSizeMedium",
+      "description": "Styles applied to the icon element if supplied and `size=\"medium\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "iconSizeSmall",
+      "className": "MuiGridColumnsPanelTrigger-iconSizeSmall",
+      "description": "Styles applied to the icon element if supplied and `size=\"small\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "outlined",
+      "className": "MuiGridColumnsPanelTrigger-outlined",
+      "description": "Styles applied to the root element if `variant=\"outlined\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "outlinedError",
+      "className": "MuiGridColumnsPanelTrigger-outlinedError",
+      "description": "Styles applied to the root element if `variant=\"outlined\"` and `color=\"error\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "outlinedInfo",
+      "className": "MuiGridColumnsPanelTrigger-outlinedInfo",
+      "description": "Styles applied to the root element if `variant=\"outlined\"` and `color=\"info\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "outlinedInherit",
+      "className": "MuiGridColumnsPanelTrigger-outlinedInherit",
+      "description": "Styles applied to the root element if `variant=\"outlined\"` and `color=\"inherit\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "outlinedPrimary",
+      "className": "MuiGridColumnsPanelTrigger-outlinedPrimary",
+      "description": "Styles applied to the root element if `variant=\"outlined\"` and `color=\"primary\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "outlinedSecondary",
+      "className": "MuiGridColumnsPanelTrigger-outlinedSecondary",
+      "description": "Styles applied to the root element if `variant=\"outlined\"` and `color=\"secondary\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "outlinedSizeLarge",
+      "className": "MuiGridColumnsPanelTrigger-outlinedSizeLarge",
+      "description": "Styles applied to the root element if `size=\"large\"` and `variant=\"outlined\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "outlinedSizeMedium",
+      "className": "MuiGridColumnsPanelTrigger-outlinedSizeMedium",
+      "description": "Styles applied to the root element if `size=\"medium\"` and `variant=\"outlined\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "outlinedSizeSmall",
+      "className": "MuiGridColumnsPanelTrigger-outlinedSizeSmall",
+      "description": "Styles applied to the root element if `size=\"small\"` and `variant=\"outlined\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "outlinedSuccess",
+      "className": "MuiGridColumnsPanelTrigger-outlinedSuccess",
+      "description": "Styles applied to the root element if `variant=\"outlined\"` and `color=\"success\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "outlinedWarning",
+      "className": "MuiGridColumnsPanelTrigger-outlinedWarning",
+      "description": "Styles applied to the root element if `variant=\"outlined\"` and `color=\"warning\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "root",
+      "className": "MuiGridColumnsPanelTrigger-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sizeLarge",
+      "className": "MuiGridColumnsPanelTrigger-sizeLarge",
+      "description": "Styles applied to the root element if `size=\"large\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "sizeMedium",
+      "className": "MuiGridColumnsPanelTrigger-sizeMedium",
+      "description": "Styles applied to the root element if `size=\"medium\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "sizeSmall",
+      "className": "MuiGridColumnsPanelTrigger-sizeSmall",
+      "description": "Styles applied to the root element if `size=\"small\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "startIcon",
+      "className": "MuiGridColumnsPanelTrigger-startIcon",
+      "description": "Styles applied to the startIcon element if supplied.",
+      "isGlobal": false
+    },
+    {
+      "key": "text",
+      "className": "MuiGridColumnsPanelTrigger-text",
+      "description": "Styles applied to the root element if `variant=\"text\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "textError",
+      "className": "MuiGridColumnsPanelTrigger-textError",
+      "description": "Styles applied to the root element if `variant=\"text\"` and `color=\"error\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "textInfo",
+      "className": "MuiGridColumnsPanelTrigger-textInfo",
+      "description": "Styles applied to the root element if `variant=\"text\"` and `color=\"info\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "textInherit",
+      "className": "MuiGridColumnsPanelTrigger-textInherit",
+      "description": "Styles applied to the root element if `variant=\"text\"` and `color=\"inherit\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "textPrimary",
+      "className": "MuiGridColumnsPanelTrigger-textPrimary",
+      "description": "Styles applied to the root element if `variant=\"text\"` and `color=\"primary\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "textSecondary",
+      "className": "MuiGridColumnsPanelTrigger-textSecondary",
+      "description": "Styles applied to the root element if `variant=\"text\"` and `color=\"secondary\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "textSizeLarge",
+      "className": "MuiGridColumnsPanelTrigger-textSizeLarge",
+      "description": "Styles applied to the root element if `size=\"large\"` and `variant=\"text\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "textSizeMedium",
+      "className": "MuiGridColumnsPanelTrigger-textSizeMedium",
+      "description": "Styles applied to the root element if `size=\"medium\"` and `variant=\"text\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "textSizeSmall",
+      "className": "MuiGridColumnsPanelTrigger-textSizeSmall",
+      "description": "Styles applied to the root element if `size=\"small\"` and `variant=\"text\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "textSuccess",
+      "className": "MuiGridColumnsPanelTrigger-textSuccess",
+      "description": "Styles applied to the root element if `variant=\"text\"` and `color=\"success\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "textWarning",
+      "className": "MuiGridColumnsPanelTrigger-textWarning",
+      "description": "Styles applied to the root element if `variant=\"text\"` and `color=\"warning\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    }
+  ],
+  "muiName": "MuiGridColumnsPanelTrigger",
+  "forwardsRefTo": "GridRoot",
+  "filename": "/packages/x-data-grid/src/components/grid/columnsPanel/GridColumnsPanelTrigger.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-plan\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-plan\">DataGridPremium</a></li></ul>",
+  "cssComponent": false
+}

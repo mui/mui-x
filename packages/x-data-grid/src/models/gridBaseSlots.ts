@@ -22,6 +22,18 @@ export type MenuItemProps = {
   value?: number | string | readonly string[];
 };
 
+export type ToolbarProps = {
+  ref?: React.Ref<HTMLDivElement>;
+  role?: string;
+  'aria-orientation'?: string;
+};
+
+export type ToolbarButtonProps = {
+  ref?: React.Ref<HTMLButtonElement>;
+  tabIndex?: number;
+  onKeyDown?: React.KeyboardEventHandler<HTMLButtonElement>;
+};
+
 export type CircularProgressProps = {
   /**
    * Pixels or CSS value.
