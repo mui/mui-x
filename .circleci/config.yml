@@ -88,7 +88,7 @@ commands:
           steps:
             - run:
                 name: Change pnpm setting to not install peer dependencies
-                command: pnpm config set auto-install-peers false
+                command: pnpm config set auto-install-peers false --location project
 
       - run:
           name: View install environment
