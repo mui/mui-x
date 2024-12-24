@@ -20,12 +20,13 @@ import {
   GridStrategyGroup,
   GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
+  runIf,
 } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { findSkeletonRowsSection } from '../lazyLoader/utils';
 import { GRID_SKELETON_ROW_ROOT_ID } from '../lazyLoader/useGridLazyLoaderPreProcessors';
-import { DataSourceRowsUpdateStrategy, runIf } from '../dataSource/utils';
+import { DataSourceRowsUpdateStrategy } from '../dataSource/utils';
 
 enum LoadingTrigger {
   VIEWPORT,
@@ -72,7 +73,6 @@ export const useGridDataSourceLazyLoader = (
   const paginationModel = useGridSelector(privateApiRef, gridPaginationModelSelector);
   const filteredSortedRowIds = useGridSelector(privateApiRef, gridFilteredSortedRowIdsSelector);
   const dimensions = useGridSelector(privateApiRef, gridDimensionsSelector);
-  const renderContext = useGridSelector(privateApiRef, gridRenderContextSelector);
   const renderedRowsIntervalCache = React.useRef(INTERVAL_CACHE_INITIAL_STATE);
   const previousLastRowIndex = React.useRef(0);
   const loadingTrigger = React.useRef<LoadingTrigger | null>(null);
@@ -308,6 +308,7 @@ export const useGridDataSourceLazyLoader = (
 
   const handleScrolling: GridEventListener<'scrollPositionChange'> = React.useCallback(
     (newScrollPosition) => {
+      const renderContext = gridRenderContextSelector(privateApiRef);
       if (
         loadingTrigger.current !== LoadingTrigger.SCROLL_END ||
         previousLastRowIndex.current >= renderContext.lastRowIndex
@@ -342,7 +343,6 @@ export const useGridDataSourceLazyLoader = (
       filterModel,
       dimensions,
       paginationModel.pageSize,
-      renderContext.lastRowIndex,
       adjustRowParams,
     ],
   );
@@ -419,6 +419,7 @@ export const useGridDataSourceLazyLoader = (
     (newSortModel) => {
       rowsStale.current = true;
       previousLastRowIndex.current = 0;
+      const renderContext = gridRenderContextSelector(privateApiRef);
       const rangeParams =
         loadingTrigger.current === LoadingTrigger.VIEWPORT
           ? {
@@ -442,7 +443,7 @@ export const useGridDataSourceLazyLoader = (
         adjustRowParams(getRowsParams),
       );
     },
-    [privateApiRef, filterModel, paginationModel.pageSize, renderContext, adjustRowParams],
+    [privateApiRef, filterModel, paginationModel.pageSize, adjustRowParams],
   );
 
   const handleGridFilterModelChange = React.useCallback<GridEventListener<'filterModelChange'>>(
