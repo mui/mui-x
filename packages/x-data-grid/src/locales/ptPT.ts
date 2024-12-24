@@ -114,6 +114,7 @@ const ptPTGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Melhor que ou igual a',
   'headerFilterOperator<': 'Menor que',
   'headerFilterOperator<=': 'Menos que ou igual a',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'qualquer',

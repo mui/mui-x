@@ -113,6 +113,7 @@ const svSEGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Större eller lika med',
   'headerFilterOperator<': 'Mindre än',
   'headerFilterOperator<=': 'Mindre eller lika med',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'något',

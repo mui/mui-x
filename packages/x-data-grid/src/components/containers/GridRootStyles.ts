@@ -348,6 +348,10 @@ export const GridRootStyles = styled('div', {
       display: 'flex',
       alignItems: 'center',
     },
+    [`& .${c['columnHeader--filter']}`]: {
+      paddingTop: 4,
+      overflow: 'hidden',
+    },
     [`& .${c['virtualScroller--hasScrollX']} .${c['columnHeader--last']}`]: {
       overflow: 'hidden',
     },

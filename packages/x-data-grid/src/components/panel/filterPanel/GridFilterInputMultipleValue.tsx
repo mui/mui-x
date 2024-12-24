@@ -21,7 +21,7 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
     error,
     helperText,
     size,
-    variant = 'standard',
+    variant = 'outlined',
     ...other
   } = props;
   const TextFieldProps = {

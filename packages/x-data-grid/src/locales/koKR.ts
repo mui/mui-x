@@ -113,6 +113,7 @@ const koKRGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': '같거나 더 큰',
   'headerFilterOperator<': '더 작은',
   'headerFilterOperator<=': '같거나 더 작은',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: '아무값',

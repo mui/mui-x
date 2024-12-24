@@ -120,6 +120,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Větší než nebo rovno',
   'headerFilterOperator<': 'Menší než',
   'headerFilterOperator<=': 'Menší než nebo rovno',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'jakýkoliv',

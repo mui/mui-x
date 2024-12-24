@@ -113,6 +113,7 @@ const faIRGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'بزرگتر یا مساوی',
   'headerFilterOperator<': 'کوچکتر',
   'headerFilterOperator<=': 'کوچکتر یا مساوی',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'هرچیزی',
