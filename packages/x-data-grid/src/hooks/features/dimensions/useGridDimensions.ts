@@ -75,6 +75,7 @@ const EMPTY_DIMENSIONS: GridDimensions = {
   topContainerHeight: 0,
   bottomContainerHeight: 0,
 };
+const MIN_HEADER_FILTER_HEIGHT = 52;
 
 export const dimensionsStateInitializer: GridStateInitializer<RootProps> = (state) => {
   const dimensions = EMPTY_DIMENSIONS;
@@ -110,8 +111,9 @@ export function useGridDimensions(
   const groupHeaderHeight = Math.floor(
     (props.columnGroupHeaderHeight ?? props.columnHeaderHeight) * densityFactor,
   );
-  const headerFilterHeight = Math.floor(
-    (props.headerFilterHeight ?? props.columnHeaderHeight) * densityFactor,
+  const headerFilterHeight = Math.max(
+    Math.floor((props.headerFilterHeight ?? props.columnHeaderHeight) * densityFactor),
+    MIN_HEADER_FILTER_HEIGHT,
   );
   const columnsTotalWidth = roundToDecimalPlaces(gridColumnsTotalWidthSelector(apiRef), 6);
   const headersTotalHeight = getTotalHeaderHeight(apiRef, props);

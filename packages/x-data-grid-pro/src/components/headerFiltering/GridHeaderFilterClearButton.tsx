@@ -4,6 +4,8 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 interface GridHeaderFilterClearIconProps extends IconButtonProps {}
 
+const SX = { ml: 0.25 };
+
 function GridHeaderFilterClearButton(props: GridHeaderFilterClearIconProps) {
   const rootProps = useGridRootProps();
   return (
@@ -11,7 +13,7 @@ function GridHeaderFilterClearButton(props: GridHeaderFilterClearIconProps) {
       tabIndex={-1}
       aria-label="Clear filter"
       size="small"
-      sx={{ ml: 0.25 }}
+      sx={SX}
       {...rootProps.slotProps?.baseIconButton}
       {...props}
     >

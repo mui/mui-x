@@ -71,7 +71,9 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     isFilterActive,
     clearButton,
     headerFilterMenu,
+    InputProps,
     InputLabelProps,
+    sx,
     ...others
   } = props;
   const filterValue = item.value ?? '';
@@ -115,7 +117,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
 
   return (
     <React.Fragment>
-      <rootProps.slots.baseFormControl fullWidth sx={others.sx}>
+      <rootProps.slots.baseFormControl fullWidth sx={sx}>
         <rootProps.slots.baseInputLabel
           {...rootProps.slotProps?.baseInputLabel}
           id={labelId}
@@ -137,13 +139,14 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
             tabIndex,
             ref: focusElementRef,
             placeholder: placeholder ?? apiRef.current.getLocaleText('filterPanelInputPlaceholder'),
+            ...InputProps?.inputProps,
           }}
           native={isSelectNative}
           notched={variant === 'outlined' ? true : undefined}
+          {...rootProps.slotProps?.baseSelect}
           {
             ...(others as any) /* FIXME: typing error */
           }
-          {...rootProps.slotProps?.baseSelect}
         >
           {renderSingleSelectOptions({
             column: resolvedColumn,

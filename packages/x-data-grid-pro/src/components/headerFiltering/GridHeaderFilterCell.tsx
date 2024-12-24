@@ -33,7 +33,6 @@ import {
   shouldCellShowLeftBorder,
   shouldCellShowRightBorder,
 } from '@mui/x-data-grid/internals';
-import { SxProps } from '@mui/system';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../models/dataGridProProps';
@@ -91,22 +90,22 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const inputSx: SxProps = {
-  flex: 1,
-  '.MuiOutlinedInput-input': { fontSize: 14 },
-};
-const dateSx: SxProps = { [`& input[value=""]:not(:focus)`]: { color: 'transparent' } };
+const INPUT_PROPS = { inputProps: { sx: { fontSize: 14 } } };
+const INPUT_SX = { flex: 1, minWidth: 40 };
+const DATE_INPUT_SX = { [`& input[value=""]:not(:focus)`]: { color: 'transparent' } };
 
-const defaultInputComponents: { [key in GridColType]: React.JSXElementConstructor<any> | null } = {
-  string: GridFilterInputValue,
-  number: GridFilterInputValue,
-  date: GridFilterInputDate,
-  dateTime: GridFilterInputDate,
-  boolean: GridFilterInputBoolean,
-  singleSelect: GridFilterInputSingleSelect,
-  actions: null,
-  custom: null,
-};
+const DEFAULT_INPUT_COMPONENTS: { [key in GridColType]: React.JSXElementConstructor<any> | null } =
+  {
+    string: GridFilterInputValue,
+    number: GridFilterInputValue,
+    date: GridFilterInputDate,
+    dateTime: GridFilterInputDate,
+    boolean: GridFilterInputBoolean,
+    singleSelect: GridFilterInputSingleSelect,
+    actions: null,
+    custom: null,
+  };
+
 const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProps>((props, ref) => {
   const {
     colIndex,
@@ -167,7 +166,7 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
 
   const InputComponent =
     colDef.filterable || isFilterReadOnly
-      ? (currentOperator.InputComponent ?? defaultInputComponents[colDef.type as GridColType])
+      ? (currentOperator.InputComponent ?? DEFAULT_INPUT_COMPONENTS[colDef.type as GridColType])
       : null;
 
   const clearFilterItem = React.useCallback(() => {
@@ -361,10 +360,13 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
           size="small"
           disabled={isFilterReadOnly || isNoInputOperator}
           tabIndex={-1}
-          sx={[inputSx, colDef.type === 'date' || colDef.type === 'dateTime' ? dateSx : undefined]}
+          sx={[
+            INPUT_SX,
+            colDef.type === 'date' || colDef.type === 'dateTime' ? DATE_INPUT_SX : undefined,
+          ]}
           headerFilterMenu={
             <GridHeaderFilterMenuContainer
-              operators={filterOperators!}
+              operators={filterOperators}
               item={item}
               field={colDef.field}
               disabled={isFilterReadOnly}
@@ -380,6 +382,7 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
               <GridHeaderFilterClearButton onClick={clearFilterItem} disabled={isFilterReadOnly} />
             ) : null
           }
+          InputProps={INPUT_PROPS}
           {...(isNoInputOperator ? { value: '' } : {})}
           {...currentOperator?.InputComponentProps}
           {...InputComponentProps}

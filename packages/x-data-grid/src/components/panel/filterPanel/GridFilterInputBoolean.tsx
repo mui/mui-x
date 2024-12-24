@@ -28,7 +28,9 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     tabIndex,
     label: labelProp,
     variant = 'outlined',
+    InputProps,
     InputLabelProps,
+    sx,
     ...others
   } = props;
   const [filterValueState, setFilterValueState] = React.useState<boolean | undefined>(
@@ -62,7 +64,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
 
   return (
     <React.Fragment>
-      <rootProps.slots.baseFormControl fullWidth>
+      <rootProps.slots.baseFormControl fullWidth sx={sx}>
         <rootProps.slots.baseInputLabel
           {...rootProps.slotProps?.baseInputLabel}
           id={labelId}
@@ -81,11 +83,15 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
           notched={variant === 'outlined' ? true : undefined}
           native={isSelectNative}
           displayEmpty
-          inputProps={{ ref: focusElementRef, tabIndex }}
+          inputProps={{
+            ref: focusElementRef,
+            tabIndex,
+            ...InputProps?.inputProps,
+          }}
+          {...baseSelectProps}
           {
             ...(others as any) /* FIXME: typing error */
           }
-          {...baseSelectProps}
         >
           <rootProps.slots.baseSelectOption
             {...baseSelectOptionProps}
