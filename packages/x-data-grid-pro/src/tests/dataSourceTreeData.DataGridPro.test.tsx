@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
-import { createRenderer, waitFor, within, act } from '@mui/internal-test-utils';
+import { createRenderer, waitFor, within } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import {
   DataGridPro,
@@ -137,9 +137,7 @@ describe('<DataGridPro /> - Data source tree data', () => {
     });
 
     const cell11 = getCell(0, 0);
-    await act(() => {
-      user.click(within(cell11).getByRole('button'));
-    });
+    user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
