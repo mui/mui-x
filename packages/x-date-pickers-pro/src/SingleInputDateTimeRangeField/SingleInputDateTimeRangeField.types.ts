@@ -1,29 +1,31 @@
 import * as React from 'react';
 import { TextFieldProps } from '@mui/material/TextField';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { MakeOptional, SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { PickersTextFieldProps } from '@mui/x-date-pickers/PickersTextField';
-import { PickerRangeValue, UseFieldInternalProps } from '@mui/x-date-pickers/internals';
+import { AmPmProps, PickerRangeValue, UseFieldInternalProps } from '@mui/x-date-pickers/internals';
 import { BuiltInFieldTextFieldProps, FieldOwnerState } from '@mui/x-date-pickers/models';
 import {
   ExportedUseClearableFieldProps,
   UseClearableFieldSlots,
   UseClearableFieldSlotProps,
 } from '@mui/x-date-pickers/hooks';
-import { UseDateTimeRangeFieldProps } from '../internals/models';
-import { DateTimeRangeValidationError } from '../models';
+import { DateTimeRangeValidationError, RangeFieldSeparatorProps } from '../models';
+import { ExportedValidateDateTimeRangeProps } from '../validation/validateDateTimeRange';
 
 export interface UseSingleInputDateTimeRangeFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends UseDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
-    ExportedUseClearableFieldProps,
-    Pick<
+> extends MakeOptional<
       UseFieldInternalProps<
         PickerRangeValue,
         TEnableAccessibleFieldDOMStructure,
         DateTimeRangeValidationError
       >,
-      'unstableFieldRef'
-    > {}
+      'format'
+    >,
+    RangeFieldSeparatorProps,
+    ExportedValidateDateTimeRangeProps,
+    AmPmProps,
+    ExportedUseClearableFieldProps {}
 
 export type SingleInputDateTimeRangeFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean = true,

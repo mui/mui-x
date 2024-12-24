@@ -3,12 +3,14 @@ export * from '@mui/x-date-pickers';
 export * from './DateRangePickerDay';
 
 // Fields
-export * from './MultiInputDateRangeField';
-export * from './MultiInputTimeRangeField';
-export * from './MultiInputDateTimeRangeField';
 export * from './SingleInputDateRangeField';
 export * from './SingleInputTimeRangeField';
 export * from './SingleInputDateTimeRangeField';
+
+export * from './MultiInputRangeField';
+export * from './MultiInputDateRangeField';
+export * from './MultiInputTimeRangeField';
+export * from './MultiInputDateTimeRangeField';
 
 // Calendars
 export * from './DateRangeCalendar';
@@ -29,3 +31,4 @@ export * from './dateRangeViewRenderers';
 
 export * from './models';
 export * from './validation';
+export * from './managers';
