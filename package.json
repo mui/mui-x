@@ -1,5 +1,5 @@
 {
-  "version": "8.0.0-alpha.4",
+  "version": "8.0.0-alpha.5",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -91,13 +91,13 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^5.16.11",
-    "@mui/internal-babel-plugin-resolve-imports": "1.0.18",
+    "@mui/internal-babel-plugin-resolve-imports": "1.0.19",
     "@mui/internal-markdown": "^1.0.22",
-    "@mui/internal-test-utils": "^1.0.22",
+    "@mui/internal-test-utils": "^1.0.23",
     "@mui/material": "^5.16.11",
-    "@mui/monorepo": "github:mui/material-ui#356d5dffbcbc1c18b5ab8060a173ea7a3e90b58c",
+    "@mui/monorepo": "github:mui/material-ui#0ea1ef5241dae88c1f0ca093a4ff4f02a267fa60",
     "@mui/utils": "^5.16.8",
-    "@next/eslint-plugin-next": "15.1.0",
+    "@next/eslint-plugin-next": "15.1.2",
     "@octokit/plugin-retry": "^7.1.2",
     "@octokit/rest": "^21.0.2",
     "@playwright/test": "^1.49.1",
@@ -110,7 +110,7 @@
     "@types/lodash": "^4.17.13",
     "@types/mocha": "^10.0.10",
     "@types/node": "^20.17.10",
-    "@types/react": "^18.3.17",
+    "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@types/requestidlecallback": "^0.3.7",
     "@types/sinon": "^17.0.3",
@@ -171,7 +171,7 @@
     "lerna": "^8.1.9",
     "lodash": "^4.17.21",
     "markdownlint-cli2": "^0.16.0",
-    "mocha": "^10.8.2",
+    "mocha": "^11.0.1",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.46",
     "nyc": "^17.1.0",
@@ -193,16 +193,16 @@
     "util": "^0.12.5",
     "webpack": "^5.97.1",
     "webpack-bundle-analyzer": "^4.10.2",
-    "webpack-cli": "^5.1.4",
+    "webpack-cli": "^6.0.1",
     "yargs": "^17.7.2"
   },
   "resolutions": {
     "react-is": "^18.3.1",
     "@types/node": "^20.17.10"
   },
-  "packageManager": "pnpm@9.15.0",
+  "packageManager": "pnpm@9.15.1",
   "engines": {
-    "pnpm": "9.15.0"
+    "pnpm": "9.15.1"
   },
   "pnpm": {
     "patchedDependencies": {

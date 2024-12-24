@@ -1,6 +1,8 @@
 import * as React from 'react';
 import type { BadgeProps as MUIBadgeProps } from '@mui/material/Badge';
 import type { CheckboxProps } from '@mui/material/Checkbox';
+import type { CircularProgressProps as MUICircularProgressProps } from '@mui/material/CircularProgress';
+import type { LinearProgressProps as MUILinearProgressProps } from '@mui/material/LinearProgress';
 import type { MenuListProps } from '@mui/material/MenuList';
 import type { MenuItemProps as MUIMenuItemProps } from '@mui/material/MenuItem';
 import type { TextFieldProps } from '@mui/material/TextField';
@@ -37,8 +39,11 @@ import type { ToolbarProps as MUIToolbarProps } from '../material/components/Too
 import type { ToolbarButtonProps as MUIToolbarButtonProps } from '../material/components/ToolbarButton/ToolbarButton';
 import type {
   BadgeProps,
+  CircularProgressProps,
   DividerProps,
+  LinearProgressProps,
   MenuItemProps,
+  SkeletonProps,
   ToolbarButtonProps,
   ToolbarProps,
 } from './gridBaseSlots';
@@ -49,7 +54,9 @@ type MainProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`,
 // Overrides for module augmentation
 export interface BaseBadgePropsOverrides {}
 export interface BaseCheckboxPropsOverrides {}
+export interface BaseCircularProgressPropsOverrides {}
 export interface BaseDividerPropsOverrides {}
+export interface BaseLinearProgressPropsOverrides {}
 export interface BaseMenuListPropsOverrides {}
 export interface BaseMenuItemPropsOverrides {}
 export interface BaseTextFieldPropsOverrides {}
@@ -63,7 +70,9 @@ export interface BaseTooltipPropsOverrides {}
 export interface BasePopperPropsOverrides {}
 export interface BaseInputLabelPropsOverrides {}
 export interface BaseSelectOptionPropsOverrides {}
+export interface BaseSkeletonPropsOverrides {}
 export interface BaseChipPropsOverrides {}
+
 export interface CellPropsOverrides {}
 export interface ToolbarPropsOverrides {}
 export interface ColumnHeaderFilterIconButtonPropsOverrides {}
@@ -89,7 +98,9 @@ export interface BaseToolbarButtonPropsOverrides {}
 interface BaseSlotProps {
   baseBadge: BadgeProps & BaseBadgePropsOverrides;
   baseCheckbox: CheckboxProps & BaseCheckboxPropsOverrides;
+  baseCircularProgress: CircularProgressProps & BaseCircularProgressPropsOverrides;
   baseDivider: DividerProps & BaseDividerPropsOverrides;
+  baseLinearProgress: LinearProgressProps & BaseLinearProgressPropsOverrides;
   baseMenuList: MenuListProps & BaseMenuListPropsOverrides;
   baseMenuItem: MenuItemProps & BaseMenuItemPropsOverrides;
   baseTextField: TextFieldProps & BaseTextFieldPropsOverrides;
@@ -107,6 +118,7 @@ interface BaseSlotProps {
     value: any;
     children?: React.ReactNode;
   } & BaseSelectOptionPropsOverrides;
+  baseSkeleton: SkeletonProps & BaseSkeletonPropsOverrides;
   baseChip: ChipProps & BaseChipPropsOverrides;
   baseToolbar: ToolbarProps & BaseToolbarPropsOverrides;
   baseToolbarButton: ToolbarButtonProps & BaseToolbarButtonPropsOverrides;
@@ -114,6 +126,8 @@ interface BaseSlotProps {
 
 interface MaterialSlotProps {
   baseBadge: MUIBadgeProps;
+  baseCircularProgress: MUICircularProgressProps;
+  baseLinearProgress: MUILinearProgressProps;
   baseMenuItem: MUIMenuItemProps;
   baseToolbar: MUIToolbarProps;
   baseToolbarButton: MUIToolbarButtonProps;

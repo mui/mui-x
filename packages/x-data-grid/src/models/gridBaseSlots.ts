@@ -34,12 +34,20 @@ export type ToolbarButtonProps = {
   onKeyDown?: React.KeyboardEventHandler<HTMLButtonElement>;
 };
 
-export type ToggleButtonProps = {
-  ref?: React.Ref<HTMLButtonElement>;
-  tabIndex?: number;
-  onKeyDown?: React.KeyboardEventHandler<HTMLButtonElement>;
+export type CircularProgressProps = {
+  /**
+   * Pixels or CSS value.
+   * @default 40
+   */
+  size?: number | string;
+  /** @default 'primary' */
+  color?: 'inherit' | 'primary';
 };
 
-export type ToggleButtonGroupProps = {
-  ref?: React.Ref<HTMLDivElement>;
+export type LinearProgressProps = {};
+
+export type SkeletonProps = {
+  variant?: 'circular' | 'text';
+  width?: number | string;
+  height?: number | string;
 };
