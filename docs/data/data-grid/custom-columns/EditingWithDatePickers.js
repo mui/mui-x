@@ -19,6 +19,8 @@ import InputBase from '@mui/material/InputBase';
 import { enUS as locale } from 'date-fns/locale';
 import { styled } from '@mui/material/styles';
 
+import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
+
 const dateAdapter = new AdapterDateFns({ locale });
 
 /**
@@ -54,21 +56,29 @@ function WrappedGridEditDateInput(props) {
   return <GridEditDateInput fullWidth {...InputProps} {...other} />;
 }
 
-function GridEditDateCell({ id, field, value, colDef }) {
+function GridEditDateCell({ id, field, value, colDef, hasFocus }) {
   const apiRef = useGridApiContext();
-
+  const inputRef = React.useRef();
   const Component = colDef.type === 'dateTime' ? DateTimePicker : DatePicker;
 
   const handleChange = (newValue) => {
     apiRef.current.setEditCellValue({ id, field, value: newValue });
   };
 
+  useEnhancedEffect(() => {
+    if (hasFocus) {
+      inputRef.current.focus();
+    }
+  }, [hasFocus]);
+
   return (
     <Component
       value={value}
       autoFocus
+      enableAccessibleFieldDOMStructure={false}
       onChange={handleChange}
       slots={{ textField: WrappedGridEditDateInput }}
+      slotProps={{ textField: { inputRef } }}
     />
   );
 }
