@@ -1,12 +1,11 @@
-import type { ChartsPlugin } from '../context/PluginProvider';
+import { ChartSeriesTypeConfig } from '../internals/plugins/models/seriesConfig';
 import { getExtremumX, getExtremumY } from './extremums';
 import formatter from './formatter';
 import getColor from './getColor';
 
-export const plugin: ChartsPlugin<'line'> = {
-  seriesType: 'line',
+export const plugin: ChartSeriesTypeConfig<'line'> = {
   colorProcessor: getColor,
-  seriesFormatter: formatter,
+  seriesProcessor: formatter,
   xExtremumGetter: getExtremumX,
   yExtremumGetter: getExtremumY,
 };

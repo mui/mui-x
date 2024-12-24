@@ -38,6 +38,7 @@
         "description": "{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string }"
       }
     },
+    "id": { "type": { "name": "string" } },
     "leftAxis": {
       "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
       "default": "yAxisIds[0] The id of the first provided axis"
@@ -47,8 +48,7 @@
       "type": {
         "name": "shape",
         "description": "{ bottom?: number, left?: number, right?: number, top?: number }"
-      },
-      "default": "object Depends on the charts type."
+      }
     },
     "onAreaClick": { "type": { "name": "func" } },
     "onAxisClick": {
