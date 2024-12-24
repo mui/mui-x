@@ -29,7 +29,7 @@ import {
   GridEditingSharedPrivateApi,
 } from '../../../models/api/gridEditingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { gridEditRowsStateSelector } from './gridEditingSelectors';
+import { gridEditRowsStateSelector, gridRowIsEditingSelector } from './gridEditingSelectors';
 import { GridRowId } from '../../../models/gridRows';
 import { isPrintableKey, isPasteShortcut } from '../../../utils/keyboardUtils';
 import {
@@ -330,8 +330,7 @@ export const useGridRowEditing = (
       if (props.editMode === GridEditModes.Cell) {
         return GridRowModes.View;
       }
-      const editingState = gridEditRowsStateSelector(apiRef.current.state);
-      const isEditing = editingState[id] && Object.keys(editingState[id]).length > 0;
+      const isEditing = gridRowIsEditingSelector(apiRef.current.state, id);
       return isEditing ? GridRowModes.Edit : GridRowModes.View;
     },
     [apiRef, props.editMode],
