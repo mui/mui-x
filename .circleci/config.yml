@@ -84,7 +84,7 @@ commands:
       - when:
           condition:
             not:
-              equal: [stable, << parameters.react-version >>]
+              equal: [stable, << pipeline.parameters.react-version >>]
           steps:
             - run:
                 name: Change pnpm setting to not install peer dependencies
