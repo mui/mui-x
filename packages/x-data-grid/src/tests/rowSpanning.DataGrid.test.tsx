@@ -250,7 +250,7 @@ describe('<DataGrid /> - Row spanning', () => {
 
   describe('rows update', () => {
     it('should update the row spanning state when the rows are updated', () => {
-      const rowSpanValueGetter = spy();
+      const rowSpanValueGetter = spy((value) => value);
       let rowSpanningStateUpdates = 0;
       let spannedCells = {};
       render(
@@ -271,7 +271,10 @@ describe('<DataGrid /> - Row spanning', () => {
       expect(rowSpanningStateUpdates).to.equal(1);
 
       act(() => {
-        apiRef.current.setRows([{ id: 1, code: 'A101' }]);
+        apiRef.current.setRows([
+          { id: 1, code: 'A101' },
+          { id: 2, code: 'A101' },
+        ]);
       });
 
       // Second update on row update
