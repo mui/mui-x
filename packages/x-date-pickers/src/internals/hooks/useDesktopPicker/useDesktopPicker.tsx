@@ -60,8 +60,6 @@ export const useDesktopPicker = <
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
 
   const {
-    open,
-    actions,
     hasUIView,
     layoutProps,
     providerProps,
@@ -95,7 +93,11 @@ export const useDesktopPicker = <
     externalSlotProps: innerSlotProps?.openPickerButton,
     additionalProps: {
       disabled: disabled || readOnly,
-      onClick: open ? actions.onClose : actions.onOpen,
+      // This direct access to `providerProps` will go away in https://github.com/mui/mui-x/pull/15671
+      onClick: (event: React.UIEvent) => {
+        event.preventDefault();
+        providerProps.contextValue.setOpen((prevOpen) => !prevOpen);
+      },
       'aria-label': getOpenDialogAriaText(pickerFieldProps.value),
       edge: inputAdornmentProps.position,
     },
@@ -135,7 +137,7 @@ export const useDesktopPicker = <
       sx,
       label,
       name,
-      focused: open ? true : undefined,
+      focused: providerProps.contextValue.open ? true : undefined,
       ...(isToolbarHidden && { id: labelId }),
       ...(!!inputRef && { inputRef }),
     },
@@ -202,8 +204,6 @@ export const useDesktopPicker = <
         role="dialog"
         placement="bottom-start"
         anchorEl={containerRef.current}
-        {...actions}
-        open={open}
         slots={slots}
         slotProps={slotProps}
         shouldRestoreFocus={shouldRestoreFocus}

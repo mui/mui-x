@@ -3,9 +3,8 @@ import { SxProps, Theme } from '@mui/material/styles';
 import { SlotComponentProps } from '@mui/utils';
 import { PickersActionBar, PickersActionBarProps } from '../PickersActionBar';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
-import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/tabs';
+import { ExportedBaseTabsProps } from '../internals/models/props/tabs';
 import { PickersLayoutClasses } from './pickersLayoutClasses';
-import { DateOrTimeViewWithMeridiem } from '../internals/models/common';
 import { PickersShortcutsProps } from '../PickersShortcuts';
 import {
   ExportedPickersShortcutProps,
@@ -13,13 +12,9 @@ import {
 } from '../PickersShortcuts/PickersShortcuts';
 import { PickerOwnerState } from '../models';
 import { PickerValidValue } from '../internals/models';
-import { UsePickerViewsLayoutResponse } from '../internals/hooks/usePicker/usePickerViews';
 import { UsePickerValueLayoutResponse } from '../internals/hooks/usePicker/usePickerValue.types';
 
-export interface ExportedPickersLayoutSlots<
-  TValue extends PickerValidValue,
-  TView extends DateOrTimeViewWithMeridiem,
-> {
+export interface ExportedPickersLayoutSlots<TValue extends PickerValidValue> {
   /**
    * Custom component for the action bar, it is placed below the picker views.
    * @default PickersActionBar
@@ -35,7 +30,7 @@ export interface ExportedPickersLayoutSlots<
    * It wraps the toolbar, views, action bar, and shortcuts.
    */
   layout?: React.JSXElementConstructor<
-    PickersLayoutProps<TValue, TView> & React.RefAttributes<HTMLDivElement>
+    PickersLayoutProps<TValue> & React.RefAttributes<HTMLDivElement>
   >;
 }
 
@@ -49,10 +44,7 @@ export interface PickerLayoutOwnerState extends PickerOwnerState {
   layoutDirection: 'ltr' | 'rtl';
 }
 
-export interface ExportedPickersLayoutSlotProps<
-  TValue extends PickerValidValue,
-  TView extends DateOrTimeViewWithMeridiem,
-> {
+export interface ExportedPickersLayoutSlotProps<TValue extends PickerValidValue> {
   /**
    * Props passed down to the action bar component.
    */
@@ -64,28 +56,24 @@ export interface ExportedPickersLayoutSlotProps<
   /**
    * Props passed down to the layoutRoot component.
    */
-  layout?: Partial<PickersLayoutProps<TValue, TView>>;
+  layout?: Partial<PickersLayoutProps<TValue>>;
 }
 
-export interface PickersLayoutSlots<
-  TValue extends PickerValidValue,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends ExportedPickersLayoutSlots<TValue, TView> {
+export interface PickersLayoutSlots<TValue extends PickerValidValue>
+  extends ExportedPickersLayoutSlots<TValue> {
   /**
    * Tabs enabling toggling between views.
    */
-  tabs?: React.ElementType<BaseTabsProps<TView>>;
+  tabs?: React.ElementType<{}>;
   /**
    * Custom component for the toolbar.
    * It is placed above the picker views.
    */
-  toolbar?: React.JSXElementConstructor<BaseToolbarProps<TValue, TView>>;
+  toolbar?: React.JSXElementConstructor<BaseToolbarProps<TValue>>;
 }
 
-export interface PickersLayoutSlotProps<
-  TValue extends PickerValidValue,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends ExportedPickersLayoutSlotProps<TValue, TView> {
+export interface PickersLayoutSlotProps<TValue extends PickerValidValue>
+  extends ExportedPickersLayoutSlotProps<TValue> {
   /**
    * Props passed down to the tabs component.
    */
@@ -96,11 +84,8 @@ export interface PickersLayoutSlotProps<
   toolbar?: ExportedBaseToolbarProps;
 }
 
-export interface PickersLayoutProps<
-  TValue extends PickerValidValue,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends UsePickerViewsLayoutResponse<TView>,
-    UsePickerValueLayoutResponse<TValue> {
+export interface PickersLayoutProps<TValue extends PickerValidValue>
+  extends UsePickerValueLayoutResponse<TValue> {
   className?: string;
   children?: React.ReactNode;
   /**
@@ -115,12 +100,12 @@ export interface PickersLayoutProps<
    * Overridable component slots.
    * @default {}
    */
-  slots?: PickersLayoutSlots<TValue, TView>;
+  slots?: PickersLayoutSlots<TValue>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: PickersLayoutSlotProps<TValue, TView>;
+  slotProps?: PickersLayoutSlotProps<TValue>;
 }
 
 export interface SubComponents<TValue extends PickerValidValue> {
