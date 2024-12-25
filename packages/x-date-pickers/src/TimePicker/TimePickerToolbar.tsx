@@ -40,13 +40,9 @@ export interface TimePickerToolbarProps
   disablePast?: boolean;
   disableFuture?: boolean;
   referenceDate?: PickerValidDate;
-  defaultValue: PickerValidDate;
+  defaultValue?: PickerValidDate;
   timezone: string;
   disableIgnoringDatePartForTimeValidation?: boolean;
-  isLandscape: boolean,
-      value:PickerValidDate,
-    onChange:Function,
-
 }
 
 export interface ExportedTimePickerToolbarProps extends ExportedBaseToolbarProps {
@@ -173,8 +169,6 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
   const {
     ampm,
     ampmInClock,
-    isLandscape,
-    onChange,
     className,
     classes: classesProp,
     maxTime,
@@ -345,10 +339,8 @@ TimePickerToolbar.propTypes = {
    * @default `true` for Desktop, `false` for Mobile.
    */
   hidden: PropTypes.bool,
-  isLandscape: PropTypes.bool.isRequired,
   maxTime: PropTypes.object,
   minTime: PropTypes.object,
-  onChange: PropTypes.func.isRequired,
   referenceDate: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
