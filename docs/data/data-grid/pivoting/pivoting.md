@@ -30,6 +30,10 @@ Pivoting will allow you to take a columns values and turn them into columns.
 
 {{"demo": "GridPivotingCommodities.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Financials
+
+{{"demo": "GridPivotingFinancial.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)
