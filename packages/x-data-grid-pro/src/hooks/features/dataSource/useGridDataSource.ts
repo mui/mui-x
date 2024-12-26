@@ -4,7 +4,6 @@ import {
   useGridApiEventHandler,
   useGridApiMethod,
   GridDataSourceGroupNode,
-  useGridSelector,
   gridPaginationModelSelector,
   GRID_ROOT_GROUP_ID,
   GridEventListener,
@@ -87,7 +86,6 @@ export const useGridDataSource = (
   const nestedDataManager = useLazyRef<NestedDataManager, void>(
     () => new NestedDataManager(apiRef),
   ).current;
-  const groupsToAutoFetch = useGridSelector(apiRef, gridRowGroupsToFetchSelector);
   const scheduledGroups = React.useRef<number>(0);
   const lastRequestId = React.useRef<number>(0);
 
@@ -357,6 +355,19 @@ export const useGridDataSource = (
     });
   }, [apiRef]);
 
+  const handleAutoFetchGroups = React.useCallback<GridEventListener<'rowsSet'>>(() => {
+    const groupsToAutoFetch = gridRowGroupsToFetchSelector(apiRef);
+    if (
+      groupsToAutoFetch &&
+      groupsToAutoFetch.length &&
+      scheduledGroups.current < groupsToAutoFetch.length
+    ) {
+      const groupsToSchedule = groupsToAutoFetch.slice(scheduledGroups.current);
+      nestedDataManager.queue(groupsToSchedule);
+      scheduledGroups.current = groupsToAutoFetch.length;
+    }
+  }, [apiRef, nestedDataManager]);
+
   const dataSourceApi: GridDataSourceApi = {
     unstable_dataSource: {
       setChildrenLoading,
@@ -397,6 +408,11 @@ export const useGridDataSource = (
     'paginationModelChange',
     runIf(defaultRowsUpdateStrategyActive, () => fetchRows()),
   );
+  useGridApiEventHandler(
+    apiRef,
+    'rowsSet',
+    runIf(defaultRowsUpdateStrategyActive, handleAutoFetchGroups),
+  );
 
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
@@ -418,16 +434,4 @@ export const useGridDataSource = (
       apiRef.current.unstable_dataSource.fetchRows();
     }
   }, [apiRef, props.unstable_dataSource]);
-
-  React.useEffect(() => {
-    if (
-      groupsToAutoFetch &&
-      groupsToAutoFetch.length &&
-      scheduledGroups.current < groupsToAutoFetch.length
-    ) {
-      const groupsToSchedule = groupsToAutoFetch.slice(scheduledGroups.current);
-      nestedDataManager.queue(groupsToSchedule);
-      scheduledGroups.current = groupsToAutoFetch.length;
-    }
-  }, [apiRef, nestedDataManager, groupsToAutoFetch]);
 };
