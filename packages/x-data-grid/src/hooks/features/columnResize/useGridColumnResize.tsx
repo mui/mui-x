@@ -35,14 +35,9 @@ import {
   useGridApiOptionHandler,
   useGridLogger,
   useGridNativeEventListener,
-  useGridSelector,
   useOnMount,
 } from '../../utils';
 import { gridVirtualizationColumnEnabledSelector } from '../virtualization';
-import {
-  ControllablePromise,
-  createControllablePromise,
-} from '../../../utils/createControllablePromise';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { clamp } from '../../../utils/utils';
 import { useTimeout } from '../../utils/useTimeout';
@@ -130,31 +125,16 @@ function preventClick(event: MouseEvent) {
 
 /**
  * Checker that returns a promise that resolves when the column virtualization
- * is disabled.
+ * is disabled. Needs to be async to force out of the event loop.
  */
-function useColumnVirtualizationDisabled(apiRef: React.MutableRefObject<GridPrivateApiCommunity>) {
-  const promise = React.useRef<ControllablePromise>();
-  const selector = () => gridVirtualizationColumnEnabledSelector(apiRef);
-  const value = useGridSelector(apiRef, selector);
-
-  React.useEffect(() => {
-    if (promise.current && value === false) {
-      promise.current.resolve();
-      promise.current = undefined;
-    }
-  });
-
-  const asyncCheck = () => {
-    if (!promise.current) {
-      if (selector() === false) {
-        return Promise.resolve();
-      }
-      promise.current = createControllablePromise();
-    }
-    return promise.current;
-  };
-
-  return asyncCheck;
+async function isColumnVirtualizationDisabledNow(
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+) {
+  if (gridVirtualizationColumnEnabledSelector(apiRef) === false) {
+    return true;
+  } else {
+    throw new Error('Column virtualization was not disabled');
+  }
 }
 
 /**
@@ -696,8 +676,6 @@ export const useGridColumnResize = (
   /**
    * API METHODS
    */
-
-  const columnVirtualizationDisabled = useColumnVirtualizationDisabled(apiRef);
   const isAutosizingRef = React.useRef(false);
   const autosizeColumns = React.useCallback<GridColumnResizeApi['autosizeColumns']>(
     async (userOptions) => {
@@ -723,7 +701,7 @@ export const useGridColumnResize = (
       try {
         if (!props.disableVirtualization && options.disableColumnVirtualization) {
           apiRef.current.unstable_setColumnVirtualization(false);
-          await columnVirtualizationDisabled();
+          await isColumnVirtualizationDisabledNow(apiRef);
         }
 
         const widthByField = extractColumnWidths(apiRef, options, columns);
@@ -777,7 +755,7 @@ export const useGridColumnResize = (
         isAutosizingRef.current = false;
       }
     },
-    [apiRef, columnVirtualizationDisabled, props.disableVirtualization],
+    [apiRef, props.disableVirtualization],
   );
 
   /**
