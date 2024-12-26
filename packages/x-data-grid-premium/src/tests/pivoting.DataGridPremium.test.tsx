@@ -1,0 +1,183 @@
+import * as React from 'react';
+import { createRenderer, screen, waitFor } from '@mui/internal-test-utils';
+import { expect } from 'chai';
+import {
+  DataGridPremium,
+  GridColDef,
+  GridToolbar,
+  Unstable_GridPivotModel,
+  unstable_useGridPivoting,
+  useGridApiRef,
+} from '@mui/x-data-grid-premium';
+import { getRowValues } from 'test/utils/helperFn';
+
+const rows = [
+  {
+    id: 1,
+    date: '2024-03-15',
+    ticker: 'AAPL',
+    price: 192.45,
+    volume: 5500,
+    type: 'stock',
+  },
+  {
+    id: 2,
+    date: '2024-03-16',
+    ticker: 'GOOGL',
+    price: 125.67,
+    volume: 3200,
+    type: 'stock',
+  },
+  {
+    id: 3,
+    date: '2024-03-17',
+    ticker: 'MSFT',
+    price: 345.22,
+    volume: 4100,
+    type: 'stock',
+  },
+  {
+    id: 4,
+    date: '2024-03-18',
+    ticker: 'AAPL',
+    price: 193.1,
+    volume: 6700,
+    type: 'stock',
+  },
+  {
+    id: 5,
+    date: '2024-03-19',
+    ticker: 'AMZN',
+    price: 145.33,
+    volume: 2900,
+    type: 'stock',
+  },
+  {
+    id: 6,
+    date: '2024-03-20',
+    ticker: 'GOOGL',
+    price: 126.45,
+    volume: 3600,
+    type: 'stock',
+  },
+  {
+    id: 7,
+    date: '2024-03-21',
+    ticker: 'US_TREASURY_2Y',
+    price: 98.75,
+    volume: 1000,
+    type: 'bond',
+  },
+  {
+    id: 8,
+    date: '2024-03-22',
+    ticker: 'MSFT',
+    price: 347.89,
+    volume: 4500,
+    type: 'stock',
+  },
+  {
+    id: 9,
+    date: '2024-03-23',
+    ticker: 'US_TREASURY_10Y',
+    price: 95.6,
+    volume: 750,
+    type: 'bond',
+  },
+  {
+    id: 10,
+    date: '2024-03-24',
+    ticker: 'AMZN',
+    price: 146.22,
+    volume: 3100,
+    type: 'stock',
+  },
+];
+
+const columns: GridColDef[] = [
+  { field: 'id', headerName: 'ID', width: 90 },
+  {
+    field: 'date',
+    type: 'date',
+    headerName: 'Date',
+    valueGetter: (value) => new Date(value),
+  },
+  { field: 'ticker', headerName: 'Ticker' },
+  { field: 'price', type: 'number', headerName: 'Price' },
+  { field: 'volume', type: 'number', headerName: 'Volume' },
+  {
+    field: 'type',
+    type: 'singleSelect',
+    valueOptions: ['stock', 'bond'],
+    headerName: 'Type',
+  },
+];
+
+describe('<DataGridPremium /> - Pivoting', () => {
+  const { render } = createRenderer();
+
+  function Test(props: { initialPivotModel: Unstable_GridPivotModel }) {
+    const apiRef = useGridApiRef();
+
+    const [pivotModel, setPivotModel] = React.useState<Unstable_GridPivotModel>(
+      props.initialPivotModel,
+    );
+
+    const [isPivotMode, setIsPivotMode] = React.useState(false);
+
+    const pivotParams = unstable_useGridPivoting({
+      apiRef,
+      pivotModel,
+      onPivotModelChange: setPivotModel,
+      pivotMode: isPivotMode,
+      onPivotModeChange: setIsPivotMode,
+    });
+
+    return (
+      <div style={{ width: '100%' }}>
+        <div style={{ height: 600, width: '100%' }}>
+          <DataGridPremium
+            rows={rows}
+            columns={columns}
+            apiRef={apiRef}
+            slots={{ toolbar: GridToolbar }}
+            pivotParams={pivotParams}
+            cellSelection
+          />
+        </div>
+      </div>
+    );
+  }
+
+  it('should pivot the data without pivot columns', async () => {
+    const { user } = render(
+      <Test
+        initialPivotModel={{
+          rows: [{ field: 'ticker' }],
+          columns: [],
+          values: [{ field: 'volume', aggFunc: 'sum' }],
+        }}
+      />,
+    );
+
+    const columnsBtn = screen.getByRole('button', { name: /Columns/i });
+    user.click(columnsBtn);
+
+    await waitFor(() => {
+      const pivotSwitch = screen.getByLabelText('Pivot');
+      user.click(pivotSwitch);
+    });
+
+    await waitFor(() => {
+      const pivotSwitch = screen.getByLabelText('Pivot');
+      expect(pivotSwitch).to.have.property('checked', true);
+    });
+
+    expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '12,200']);
+    expect(getRowValues(1)).to.deep.equal(['GOOGL (2)', '6,800']);
+    expect(getRowValues(2)).to.deep.equal(['MSFT (2)', '8,600']);
+    expect(getRowValues(3)).to.deep.equal(['AMZN (2)', '6,000']);
+    expect(getRowValues(4)).to.deep.equal(['US_TREASURY_2Y (1)', '1,000']);
+    expect(getRowValues(5)).to.deep.equal(['US_TREASURY_10Y (1)', '750']);
+  });
+});
