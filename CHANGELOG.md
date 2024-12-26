@@ -72,6 +72,7 @@ Same changes as in `@mui/x-charts@8.0.0-alpha.6`.
 ### Tree View
 
 #### `@mui/x-tree-view@8.0.0-alpha.6`
+
 No changes since `@mui/x-tree-view-pro@v8.0.0-alpha.5`.
 
 #### `@mui/x-tree-view-pro@8.0.0-alpha.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
