@@ -225,9 +225,10 @@ export const useGridRowGroupingPreProcessors = (
         isRowMatchingFilters: params.isRowMatchingFilters,
         filterModel: params.filterModel,
         apiRef,
+        rowGroupingColumnMode: props.rowGroupingColumnMode,
       });
     },
-    [apiRef],
+    [apiRef, props.rowGroupingColumnMode],
   );
 
   const sortRows = React.useCallback<GridStrategyProcessor<'sorting'>>(
