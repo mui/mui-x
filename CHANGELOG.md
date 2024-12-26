@@ -12,7 +12,7 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 - 🌍 Improve Dutch (nl-NL) locale on the Data Grid
 - 🐞 Bugfixes
 
-Special thanks go out to the community contributors who have helped make this release possible:
+Special thanks go out to the community contributor who has helped make this release possible:
 @JoepVerkoelen.
 Following are all team members who have contributed to this release:
 @arminmeh, @oliviertassinari.
