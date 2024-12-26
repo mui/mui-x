@@ -103,7 +103,12 @@ const columns: GridColDef[] = [
     valueGetter: (value) => new Date(value),
   },
   { field: 'ticker', headerName: 'Ticker' },
-  { field: 'price', type: 'number', headerName: 'Price' },
+  {
+    field: 'price',
+    type: 'number',
+    headerName: 'Price',
+    valueFormatter: (value: number) => `$${value.toFixed(2)}`,
+  },
   { field: 'volume', type: 'number', headerName: 'Volume' },
   {
     field: 'type',
@@ -179,5 +184,40 @@ describe('<DataGridPremium /> - Pivoting', () => {
     expect(getRowValues(3)).to.deep.equal(['AMZN (2)', '6,000']);
     expect(getRowValues(4)).to.deep.equal(['US_TREASURY_2Y (1)', '1,000']);
     expect(getRowValues(5)).to.deep.equal(['US_TREASURY_10Y (1)', '750']);
+  });
+
+  it('should pivot the data with 2 pivot values', async () => {
+    const { user } = render(
+      <Test
+        initialPivotModel={{
+          rows: [{ field: 'ticker' }],
+          columns: [],
+          values: [
+            { field: 'volume', aggFunc: 'sum' },
+            { field: 'price', aggFunc: 'avg' },
+          ],
+        }}
+      />,
+    );
+
+    const columnsBtn = screen.getByRole('button', { name: /Columns/i });
+    user.click(columnsBtn);
+
+    await waitFor(() => {
+      const pivotSwitch = screen.getByLabelText('Pivot');
+      user.click(pivotSwitch);
+    });
+
+    await waitFor(() => {
+      const pivotSwitch = screen.getByLabelText('Pivot');
+      expect(pivotSwitch).to.have.property('checked', true);
+    });
+
+    expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '$192.77', '12,200']);
+    expect(getRowValues(1)).to.deep.equal(['GOOGL (2)', '$126.06', '6,800']);
+    expect(getRowValues(2)).to.deep.equal(['MSFT (2)', '$346.56', '8,600']);
+    expect(getRowValues(3)).to.deep.equal(['AMZN (2)', '$145.78', '6,000']);
+    expect(getRowValues(4)).to.deep.equal(['US_TREASURY_2Y (1)', '$98.75', '1,000']);
+    expect(getRowValues(5)).to.deep.equal(['US_TREASURY_10Y (1)', '$95.60', '750']);
   });
 });
