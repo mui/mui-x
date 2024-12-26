@@ -138,13 +138,8 @@ const getPivotedData = ({
     newRows = rows;
 
     pivotModel.values.forEach((pivotValue) => {
-      pivotColumns.push({
-        field: pivotValue.field,
-        aggregable: true,
-        availableAggregationFunctions: [pivotValue.aggFunc],
-        ...getAttributesFromInitialColumn(pivotValue.field),
-      });
       aggregationModel[pivotValue.field] = pivotValue.aggFunc;
+      delete columnVisibilityModel[pivotValue.field];
     });
   } else {
     for (let i = 0; i < rows.length; i += 1) {
