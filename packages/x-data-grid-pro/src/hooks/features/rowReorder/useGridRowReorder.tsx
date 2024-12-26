@@ -76,7 +76,7 @@ export const useGridRowReorder = (
     const sortModel = gridSortModelSelector(apiRef);
     const treeDepth = gridRowMaximumTreeDepthSelector(apiRef);
     return !props.rowReordering || !!sortModel.length || treeDepth !== 1;
-  }, [props.rowReordering]);
+  }, [apiRef, props.rowReordering]);
 
   const handleDragStart = React.useCallback<GridEventListener<'rowDragStart'>>(
     (params, event) => {

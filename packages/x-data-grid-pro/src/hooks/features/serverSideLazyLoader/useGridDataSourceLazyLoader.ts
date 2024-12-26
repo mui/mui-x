@@ -19,7 +19,7 @@ import {
   GridStrategyGroup,
   GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
-  runIf
+  runIf,
 } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
