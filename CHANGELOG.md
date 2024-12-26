@@ -9,9 +9,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Dec 26, 2024_
 
-We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
-- 🏎️ Improve data grid's scrolling performance
+- 🏎️ Improve Data Grid scrolling performance
 - 🌍 Improve Dutch (nl-NL) locale on the Data Grid
 - 🐞 Bugfixes
 
@@ -36,7 +36,7 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Move progress components to leaf import (#15914) @romgrk
 - [DataGrid] Move skeleton to leaf import (#15931) @romgrk
 - [DataGrid] Replace `forwardRef` with a shim for forward compatibility (#15955) @lauri865
-- [l10n] Improve Dutch (nl-NL) locale (#15920) @JoepVerkoelen (#15994) @LukasTy
+- [l10n] Improve Dutch (nl-NL) locale (#15994) @JoepVerkoelen
 
 #### `@mui/x-data-grid-pro@8.0.0-alpha.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -81,7 +81,7 @@ Same changes as in `@mui/x-tree-view@8.0.0-alpha.6`.
 
 ### Docs
 
-- [docs] remove production profiler from docs build (#15959) @lauri865
+- [docs] Remove production profiler from docs build (#15959) @lauri865
 - [code-infra] Add new `next-env.d.ts` changes (#15947) @JCQuintas
 
 ## 8.0.0-alpha.5
