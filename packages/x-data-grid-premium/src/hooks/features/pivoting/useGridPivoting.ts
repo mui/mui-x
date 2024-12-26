@@ -30,11 +30,6 @@ export interface PivotModel {
   }[];
 }
 
-function getFieldValue(row: GridRowModel, field: GridColDef['field']) {
-  // TODO: valueGetter
-  return row[field];
-}
-
 function sortColumnGroups(
   columnGroups: GridColumnNode[],
   pivotModelColumns: PivotModel['columns'],
@@ -68,7 +63,7 @@ const getPivotedData = ({
   rows,
   columns,
   pivotModel,
-  // apiRef,
+  apiRef,
 }: {
   rows: GridRowModel[];
   columns: GridColDef[];
@@ -148,7 +143,8 @@ const getPivotedData = ({
       const columnGroupPath: string[] = [];
 
       pivotModel.columns.forEach(({ field: colGroupField }, depth) => {
-        const colValue = getFieldValue(row, colGroupField) || '(No value)';
+        const column = initialColumns.get(colGroupField);
+        const colValue = apiRef.current.getRowValue(row, column!) || '(No value)';
         columnGroupPath.push(String(colValue));
         const groupId = columnGroupPath.join('-');
 
