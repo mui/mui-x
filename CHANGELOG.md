@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v7.23.4
+
+_Dec 26, 2024_
+
+We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Dutch (nl-NL) locale on the Data Grid
+- 🐞 Bugfixes
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@JoepVerkoelen.
+Following are all team members who have contributed to this release:
+@arminmeh, @oliviertassinari.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.23.4`
+
+- [DataGrid] Fix header filters showing clear button while empty (#15990) @k-rajat19
+- [DataGrid] Replace `forwardRef` with a shim for forward compatibility (#15984) @lauri865
+- [l10n] Improve Dutch (nl-NL) locale (#15920) @JoepVerkoelen
+
+#### `@mui/x-data-grid-pro@7.23.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.23.4`.
+
+#### `@mui/x-data-grid-premium@7.23.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.23.4`, plus:
+
+- [DataGridPremium] Fix column pinning with checkbox selection and row grouping (@k-rajat19) (#15949) @github-actions[bot]
+
+### Docs
+
+- [docs] Fix outdated link to handbook (#15855) @oliviertassinari
+
 ## 7.23.3
 
 _Dec 19, 2024_
