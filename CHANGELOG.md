@@ -35,7 +35,7 @@ Same changes as in `@mui/x-data-grid@7.23.4`.
 
 Same changes as in `@mui/x-data-grid-pro@7.23.4`, plus:
 
-- [DataGridPremium] Fix column pinning with checkbox selection and row grouping (@k-rajat19) (#15949) @github-actions[bot]
+- [DataGridPremium] Fix column pinning with checkbox selection and row grouping (#15949) @k-rajat19
 
 ### Docs
 
