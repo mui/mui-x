@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  useGridSelector,
   gridVisibleColumnDefinitionsSelector,
   gridColumnsTotalWidthSelector,
   gridColumnPositionsSelector,
@@ -58,8 +57,6 @@ export const useGridColumnPinning = (
     | 'slots'
   >,
 ): void => {
-  const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
-
   /**
    * PRE-PROCESSING
    */
@@ -201,6 +198,7 @@ export const useGridColumnPinning = (
         return;
       }
 
+      const pinnedColumns = gridPinnedColumnsSelector(apiRef.current.state);
       const otherSide =
         side === GridPinnedColumnPosition.RIGHT
           ? GridPinnedColumnPosition.LEFT
@@ -213,17 +211,18 @@ export const useGridColumnPinning = (
 
       apiRef.current.setPinnedColumns(newPinnedColumns);
     },
-    [apiRef, pinnedColumns],
+    [apiRef],
   );
 
   const unpinColumn = React.useCallback<GridColumnPinningApi['unpinColumn']>(
     (field: string) => {
+      const pinnedColumns = gridPinnedColumnsSelector(apiRef.current.state);
       apiRef.current.setPinnedColumns({
         left: (pinnedColumns.left || []).filter((column) => column !== field),
         right: (pinnedColumns.right || []).filter((column) => column !== field),
       });
     },
-    [apiRef, pinnedColumns.left, pinnedColumns.right],
+    [apiRef],
   );
 
   const getPinnedColumns = React.useCallback<GridColumnPinningApi['getPinnedColumns']>(() => {
@@ -240,6 +239,7 @@ export const useGridColumnPinning = (
 
   const isColumnPinned = React.useCallback<GridColumnPinningApi['isColumnPinned']>(
     (field) => {
+      const pinnedColumns = gridPinnedColumnsSelector(apiRef.current.state);
       const leftPinnedColumns = pinnedColumns.left || [];
       if (leftPinnedColumns.includes(field)) {
         return GridPinnedColumnPosition.LEFT;
@@ -250,7 +250,7 @@ export const useGridColumnPinning = (
       }
       return false;
     },
-    [pinnedColumns.left, pinnedColumns.right],
+    [apiRef],
   );
 
   const columnPinningApi: GridColumnPinningApi = {

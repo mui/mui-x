@@ -25,7 +25,6 @@ import {
   gridFocusCellSelector,
   GridCellParams,
   GRID_REORDER_COL_DEF,
-  useGridSelector,
   gridSortedRowIdsSelector,
   gridDimensionsSelector,
 } from '@mui/x-data-grid-pro';
@@ -68,8 +67,6 @@ export const useGridCellSelection = (
   const lastMouseDownCell = React.useRef<GridCellCoordinates | null>();
   const mousePosition = React.useRef<{ x: number; y: number } | null>(null);
   const autoScrollRAF = React.useRef<number | null>();
-  const sortedRowIds = useGridSelector(apiRef, gridSortedRowIdsSelector);
-  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
   const totalHeaderHeight = getTotalHeaderHeight(apiRef, props);
 
   const ignoreValueFormatterProp = props.ignoreValueFormatterDuringExport;
@@ -291,6 +288,7 @@ export const useGridCellSelection = (
         return;
       }
 
+      const dimensions = gridDimensionsSelector(apiRef.current.state);
       const { x: mouseX, y: mouseY } = mousePosition.current;
       const { width, height: viewportOuterHeight } = dimensions.viewportOuterSize;
       const height = viewportOuterHeight - totalHeaderHeight;
@@ -330,7 +328,7 @@ export const useGridCellSelection = (
     }
 
     autoScroll();
-  }, [apiRef, dimensions, totalHeaderHeight]);
+  }, [apiRef, totalHeaderHeight]);
 
   const handleCellMouseOver = React.useCallback<GridEventListener<'cellMouseOver'>>(
     (params, event) => {
@@ -353,6 +351,7 @@ export const useGridCellSelection = (
         return;
       }
 
+      const dimensions = gridDimensionsSelector(apiRef.current.state);
       const { x, y } = virtualScrollerRect;
       const { width, height: viewportOuterHeight } = dimensions.viewportOuterSize;
       const height = viewportOuterHeight - totalHeaderHeight;
@@ -377,7 +376,7 @@ export const useGridCellSelection = (
         stopAutoScroll();
       }
     },
-    [apiRef, startAutoScroll, stopAutoScroll, totalHeaderHeight, dimensions],
+    [apiRef, startAutoScroll, stopAutoScroll, totalHeaderHeight],
   );
 
   const handleCellClick = useEventCallback<
@@ -565,6 +564,7 @@ export const useGridCellSelection = (
       if (apiRef.current.getSelectedCellsAsArray().length <= 1) {
         return value;
       }
+      const sortedRowIds = gridSortedRowIdsSelector(apiRef);
       const cellSelectionModel = apiRef.current.getCellSelectionModel();
       const unsortedSelectedRowIds = Object.keys(cellSelectionModel);
       const sortedSelectedRowIds = sortedRowIds.filter((id) =>
@@ -593,7 +593,7 @@ export const useGridCellSelection = (
       }, '');
       return copyData;
     },
-    [apiRef, ignoreValueFormatter, clipboardCopyCellDelimiter, sortedRowIds],
+    [apiRef, ignoreValueFormatter, clipboardCopyCellDelimiter],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'isCellSelected', checkIfCellIsSelected);

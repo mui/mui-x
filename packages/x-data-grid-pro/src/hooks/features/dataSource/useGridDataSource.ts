@@ -87,7 +87,6 @@ export const useGridDataSource = (
   const nestedDataManager = useLazyRef<NestedDataManager, void>(
     () => new NestedDataManager(apiRef),
   ).current;
-  const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
   const groupsToAutoFetch = useGridSelector(apiRef, gridRowGroupsToFetchSelector);
   const scheduledGroups = React.useRef<number>(0);
   const lastRequestId = React.useRef<number>(0);
@@ -98,6 +97,7 @@ export const useGridDataSource = (
     const sortedPageSizeOptions = props.pageSizeOptions
       .map((option) => (typeof option === 'number' ? option : option.value))
       .sort((a, b) => a - b);
+    const paginationModel = gridPaginationModelSelector(apiRef);
     const cacheChunkSize = Math.min(paginationModel.pageSize, sortedPageSizeOptions[0]);
 
     return new CacheChunkManager(cacheChunkSize);

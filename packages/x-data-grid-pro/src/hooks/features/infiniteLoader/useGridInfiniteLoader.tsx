@@ -10,6 +10,7 @@ import {
   useGridVisibleRows,
   GridInfiniteLoaderPrivateApi,
   useTimeout,
+  createSelector,
 } from '@mui/x-data-grid/internals';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { styled } from '@mui/system';
@@ -24,6 +25,16 @@ const InfiniteLoadingTriggerElement = styled('div')({
   height: 0,
 });
 
+const horizontalScrollbarSizeSelector = createSelector(
+  gridDimensionsSelector,
+  (dimensions, isEnabled: boolean) => {
+    if (!isEnabled) {
+      return 0;
+    }
+    return dimensions.hasScrollX ? dimensions.scrollbarSize : 0;
+  },
+);
+
 /**
  * @requires useGridColumns (state)
  * @requires useGridDimensions (method) - can be after
@@ -36,7 +47,6 @@ export const useGridInfiniteLoader = (
     'onRowsScrollEnd' | 'pagination' | 'paginationMode' | 'rowsLoadingMode' | 'scrollEndThreshold'
   >,
 ): void => {
-  const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const currentPage = useGridVisibleRows(apiRef, props);
   const observer = React.useRef<IntersectionObserver>();
   const updateTargetTimeout = useTimeout();
@@ -50,6 +60,7 @@ export const useGridInfiniteLoader = (
 
     if (isIntersecting && currentRatio === 1) {
       const viewportPageSize = apiRef.current.getViewportPageSize();
+      const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
       const rowScrollEndParams: GridRowScrollEndParams = {
         visibleColumns,
         viewportPageSize,
@@ -63,10 +74,12 @@ export const useGridInfiniteLoader = (
   });
 
   const virtualScroller = apiRef.current.virtualScrollerRef.current;
-  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
-
-  const marginBottom =
-    props.scrollEndThreshold - (dimensions.hasScrollX ? dimensions.scrollbarSize : 0);
+  const horizontalScrollbarSize = useGridSelector(
+    apiRef,
+    horizontalScrollbarSizeSelector,
+    isEnabled,
+  );
+  const marginBottom = props.scrollEndThreshold - horizontalScrollbarSize;
 
   React.useEffect(() => {
     if (!isEnabled) {

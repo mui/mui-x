@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   useGridApiEventHandler,
-  useGridSelector,
   gridSortModelSelector,
   gridFilterModelSelector,
   gridRenderContextSelector,
@@ -27,8 +26,6 @@ export const useGridLazyLoader = (
     'onFetchRows' | 'rowsLoadingMode' | 'pagination' | 'paginationMode' | 'experimentalFeatures'
   >,
 ): void => {
-  const sortModel = useGridSelector(privateApiRef, gridSortModelSelector);
-  const filterModel = useGridSelector(privateApiRef, gridFilterModelSelector);
   const renderedRowsIntervalCache = React.useRef({
     firstRowToRender: 0,
     lastRowToRender: 0,
@@ -42,6 +39,9 @@ export const useGridLazyLoader = (
       if (isDisabled) {
         return;
       }
+
+      const sortModel = gridSortModelSelector(privateApiRef);
+      const filterModel = gridFilterModelSelector(privateApiRef);
 
       const fetchRowsParams: GridFetchRowsParams = {
         firstRowToRender: params.firstRowIndex,
@@ -86,7 +86,7 @@ export const useGridLazyLoader = (
 
       privateApiRef.current.publishEvent('fetchRows', fetchRowsParams);
     },
-    [privateApiRef, isDisabled, props.pagination, props.paginationMode, sortModel, filterModel],
+    [privateApiRef, isDisabled, props.pagination, props.paginationMode],
   );
 
   const handleGridSortModelChange = React.useCallback<GridEventListener<'sortModelChange'>>(
@@ -98,6 +98,7 @@ export const useGridLazyLoader = (
       privateApiRef.current.requestPipeProcessorsApplication('hydrateRows');
 
       const renderContext = gridRenderContextSelector(privateApiRef);
+      const filterModel = gridFilterModelSelector(privateApiRef);
       const fetchRowsParams: GridFetchRowsParams = {
         firstRowToRender: renderContext.firstRowIndex,
         lastRowToRender: renderContext.lastRowIndex,
@@ -107,7 +108,7 @@ export const useGridLazyLoader = (
 
       privateApiRef.current.publishEvent('fetchRows', fetchRowsParams);
     },
-    [privateApiRef, isDisabled, filterModel],
+    [privateApiRef, isDisabled],
   );
 
   const handleGridFilterModelChange = React.useCallback<GridEventListener<'filterModelChange'>>(
@@ -119,6 +120,7 @@ export const useGridLazyLoader = (
       privateApiRef.current.requestPipeProcessorsApplication('hydrateRows');
 
       const renderContext = gridRenderContextSelector(privateApiRef);
+      const sortModel = gridSortModelSelector(privateApiRef);
       const fetchRowsParams: GridFetchRowsParams = {
         firstRowToRender: renderContext.firstRowIndex,
         lastRowToRender: renderContext.lastRowIndex,
@@ -128,7 +130,7 @@ export const useGridLazyLoader = (
 
       privateApiRef.current.publishEvent('fetchRows', fetchRowsParams);
     },
-    [privateApiRef, isDisabled, sortModel],
+    [privateApiRef, isDisabled],
   );
 
   useGridApiEventHandler(
