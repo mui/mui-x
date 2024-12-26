@@ -215,3 +215,9 @@ export function deepClone(obj: Record<string, any>) {
  * that hint disables checks on all values instead of just one.
  */
 export function eslintUseValue(_: any) {}
+
+export const runIf = (condition: boolean, fn: Function) => (params: unknown) => {
+  if (condition) {
+    fn(params);
+  }
+};

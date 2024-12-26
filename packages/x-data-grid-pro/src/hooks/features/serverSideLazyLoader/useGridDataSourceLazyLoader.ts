@@ -19,12 +19,13 @@ import {
   GridStrategyGroup,
   GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
+  runIf
 } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { findSkeletonRowsSection } from '../lazyLoader/utils';
 import { GRID_SKELETON_ROW_ROOT_ID } from '../lazyLoader/useGridLazyLoaderPreProcessors';
-import { DataSourceRowsUpdateStrategy, runIf } from '../dataSource/utils';
+import { DataSourceRowsUpdateStrategy } from '../dataSource/utils';
 
 enum LoadingTrigger {
   VIEWPORT,
