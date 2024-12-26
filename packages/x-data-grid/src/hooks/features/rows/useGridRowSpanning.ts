@@ -164,59 +164,59 @@ const computeRowSpanningState = (
  * @requires filterStateInitializer (method) - should be initialized before
  */
 export const rowSpanningStateInitializer: GridStateInitializer = (state, props, apiRef) => {
-  if (props.rowSpanning) {
-    const rowIds = state.rows!.dataRowIds || [];
-    const orderedFields = state.columns!.orderedFields || [];
-    const dataRowIdToModelLookup = state.rows!.dataRowIdToModelLookup;
-    const columnsLookup = state.columns!.lookup;
-    const isFilteringPending =
-      Boolean(state.filter!.filterModel!.items!.length) ||
-      Boolean(state.filter!.filterModel!.quickFilterValues?.length);
-
-    if (
-      !rowIds.length ||
-      !orderedFields.length ||
-      !dataRowIdToModelLookup ||
-      !columnsLookup ||
-      isFilteringPending ||
-      !props.rowSpanning
-    ) {
-      return {
-        ...state,
-        rowSpanning: EMPTY_STATE,
-      };
-    }
-    const rangeToProcess = {
-      firstRowIndex: 0,
-      lastRowIndex: Math.min(DEFAULT_ROWS_TO_PROCESS, Math.max(rowIds.length, 0)),
-    };
-    const rows = rowIds.map((id) => ({
-      id,
-      model: dataRowIdToModelLookup[id!],
-    })) as GridRowEntry<GridValidRowModel>[];
-    const colDefs = orderedFields.map((field) => columnsLookup[field!]) as GridColDef[];
-    const { spannedCells, hiddenCells, hiddenCellOriginMap } = computeRowSpanningState(
-      apiRef,
-      colDefs,
-      rows,
-      rangeToProcess,
-      rangeToProcess,
-      true,
-      EMPTY_RANGE,
-    );
-
+  if (!props.rowSpanning) {
     return {
       ...state,
-      rowSpanning: {
-        spannedCells,
-        hiddenCells,
-        hiddenCellOriginMap,
-      },
+      rowSpanning: EMPTY_STATE,
     };
   }
+
+  const rowIds = state.rows!.dataRowIds || [];
+  const orderedFields = state.columns!.orderedFields || [];
+  const dataRowIdToModelLookup = state.rows!.dataRowIdToModelLookup;
+  const columnsLookup = state.columns!.lookup;
+  const isFilteringPending =
+    Boolean(state.filter!.filterModel!.items!.length) ||
+    Boolean(state.filter!.filterModel!.quickFilterValues?.length);
+
+  if (
+    !rowIds.length ||
+    !orderedFields.length ||
+    !dataRowIdToModelLookup ||
+    !columnsLookup ||
+    isFilteringPending
+  ) {
+    return {
+      ...state,
+      rowSpanning: EMPTY_STATE,
+    };
+  }
+  const rangeToProcess = {
+    firstRowIndex: 0,
+    lastRowIndex: Math.min(DEFAULT_ROWS_TO_PROCESS, Math.max(rowIds.length, 0)),
+  };
+  const rows = rowIds.map((id) => ({
+    id,
+    model: dataRowIdToModelLookup[id!],
+  })) as GridRowEntry<GridValidRowModel>[];
+  const colDefs = orderedFields.map((field) => columnsLookup[field!]) as GridColDef[];
+  const { spannedCells, hiddenCells, hiddenCellOriginMap } = computeRowSpanningState(
+    apiRef,
+    colDefs,
+    rows,
+    rangeToProcess,
+    rangeToProcess,
+    true,
+    EMPTY_RANGE,
+  );
+
   return {
     ...state,
-    rowSpanning: EMPTY_STATE,
+    rowSpanning: {
+      spannedCells,
+      hiddenCells,
+      hiddenCellOriginMap,
+    },
   };
 };
 
@@ -319,7 +319,7 @@ export const useGridRowSpanning = (
   // - The sorting is applied
   // - The `paginationModel` is updated
   // - The rows are updated
-  const onRowsUpdate = React.useCallback(() => {
+  const resetRowSpanningState = React.useCallback(() => {
     const renderContext = gridRenderContextSelector(apiRef);
     if (!isRowContextInitialized(renderContext)) {
       return;
@@ -333,10 +333,18 @@ export const useGridRowSpanning = (
     runIf(props.rowSpanning, updateRowSpanningState),
   );
 
-  useGridApiEventHandler(apiRef, 'sortedRowsSet', runIf(props.rowSpanning, onRowsUpdate));
-  useGridApiEventHandler(apiRef, 'paginationModelChange', runIf(props.rowSpanning, onRowsUpdate));
-  useGridApiEventHandler(apiRef, 'filteredRowsSet', runIf(props.rowSpanning, onRowsUpdate));
-  useGridApiEventHandler(apiRef, 'columnsChange', runIf(props.rowSpanning, onRowsUpdate));
+  useGridApiEventHandler(apiRef, 'sortedRowsSet', runIf(props.rowSpanning, resetRowSpanningState));
+  useGridApiEventHandler(
+    apiRef,
+    'paginationModelChange',
+    runIf(props.rowSpanning, resetRowSpanningState),
+  );
+  useGridApiEventHandler(
+    apiRef,
+    'filteredRowsSet',
+    runIf(props.rowSpanning, resetRowSpanningState),
+  );
+  useGridApiEventHandler(apiRef, 'columnsChange', runIf(props.rowSpanning, resetRowSpanningState));
 
   React.useEffect(() => {
     if (!props.rowSpanning) {
@@ -344,7 +352,7 @@ export const useGridRowSpanning = (
         apiRef.current.setState((state) => ({ ...state, rowSpanning: EMPTY_STATE }));
       }
     } else if (apiRef.current.state.rowSpanning === EMPTY_STATE) {
-      onRowsUpdate();
+      resetRowSpanningState();
     }
-  }, [apiRef, onRowsUpdate, props.rowSpanning]);
+  }, [apiRef, resetRowSpanningState, props.rowSpanning]);
 };
