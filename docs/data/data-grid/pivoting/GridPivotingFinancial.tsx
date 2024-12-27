@@ -105,14 +105,13 @@ const columns: GridColDef[] = [
     type: 'number',
     headerName: 'Price',
     valueFormatter: (value: number | undefined) =>
-      value ? `$${value?.toFixed(2)}` : '',
+      value ? `$${value.toFixed(2)}` : null,
   },
   {
     field: 'year',
-    type: 'number',
     headerName: 'Year',
-    valueGetter: (value, row) => new Date(row.date).getFullYear(),
-    valueFormatter: (value: number) => value.toString(),
+    valueGetter: (value, row) =>
+      row.date ? new Date(row.date).getFullYear() : null,
   },
   { field: 'volume', type: 'number', headerName: 'Volume' },
   {

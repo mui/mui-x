@@ -102,14 +102,13 @@ const columns = [
     field: 'price',
     type: 'number',
     headerName: 'Price',
-    valueFormatter: (value) => (value ? `$${value?.toFixed(2)}` : ''),
+    valueFormatter: (value) => (value ? `$${value.toFixed(2)}` : null),
   },
   {
     field: 'year',
-    type: 'number',
     headerName: 'Year',
-    valueGetter: (value, row) => new Date(row.date).getFullYear(),
-    valueFormatter: (value) => value.toString(),
+    valueGetter: (value, row) =>
+      row.date ? new Date(row.date).getFullYear() : null,
   },
   { field: 'volume', type: 'number', headerName: 'Volume' },
   {
