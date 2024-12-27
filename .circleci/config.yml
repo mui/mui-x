@@ -66,8 +66,6 @@ test-react-18-context: &test-react-18-context
         - master
         - /^v.*\.x$/
         - next
-        # TODO: remove after testing
-        - renovate/major-react
 
 commands:
   install_js:
