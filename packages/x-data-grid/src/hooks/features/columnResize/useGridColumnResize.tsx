@@ -132,9 +132,8 @@ async function isColumnVirtualizationDisabledNow(
 ) {
   if (gridVirtualizationColumnEnabledSelector(apiRef) === false) {
     return true;
-  } else {
-    throw new Error('Column virtualization was not disabled');
   }
+  throw new Error('Column virtualization was not disabled');
 }
 
 /**
