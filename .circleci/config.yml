@@ -417,6 +417,7 @@ workflows:
   test-react-18:
     jobs:
       - test_unit:
+          <<: *default-context
           name: test_unit_react_18
           react-version: ^18
           filters:
@@ -428,6 +429,7 @@ workflows:
                 # TODO: remove after testing
                 - renovate/major-react
       - test_browser:
+          <<: *default-context
           name: test_browser_react_18
           react-version: ^18
           filters:
@@ -439,6 +441,7 @@ workflows:
                 # TODO: remove after testing
                 - renovate/major-react
       - test_regressions:
+          <<: *default-context
           name: test_regressions_react_18
           react-version: ^18
           filters:
@@ -450,6 +453,7 @@ workflows:
                 # TODO: remove after testing
                 - renovate/major-react
       - test_e2e:
+          <<: *default-context
           name: test_e2e_react_18
           react-version: ^18
           filters:
