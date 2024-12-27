@@ -64,6 +64,10 @@ commands:
         type: boolean
         default: false
         description: 'Set to true if you intend to any browser (for example with playwright).'
+      react-version:
+        type: string
+        default: << pipeline.parameters.react-version >>
+        description: The version of React to use.
 
     steps:
       - when:
