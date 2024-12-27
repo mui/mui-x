@@ -155,7 +155,7 @@ jobs:
     steps:
       - checkout
       - install_js:
-          react-version: << pipeline.parameters.react-version >>
+          react-version: << parameters.react-version >>
       - run:
           name: Tests fake browser
           command: pnpm test:coverage
@@ -265,7 +265,7 @@ jobs:
       - checkout
       - install_js:
           browsers: true
-          react-version: << pipeline.parameters.react-version >>
+          react-version: << parameters.react-version >>
       - run:
           name: Tests real browsers
           command: pnpm test:karma
@@ -297,7 +297,7 @@ jobs:
       - checkout
       - install_js:
           browsers: true
-          react-version: << pipeline.parameters.react-version >>
+          react-version: << parameters.react-version >>
       - run:
           name: Run e2e tests
           command: pnpm test:e2e
@@ -322,7 +322,7 @@ jobs:
       - checkout
       - install_js:
           browsers: true
-          react-version: << pipeline.parameters.react-version >>
+          react-version: << parameters.react-version >>
       - run:
           name: Install ffmpeg
           command: apt update && apt upgrade -y && apt install ffmpeg -y
