@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.23.5
+
+_Dec 27, 2024_
+
+Here are some highlights ✨:
+
+- 🐞 Fix version mismatch issue in Data Grid codesandbox/stackblitz demos
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.23.5`
+
+No changes since `@mui/x-data-grid@v7.23.4`.
+
+#### `@mui/x-data-grid-pro@7.23.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.23.5`.
+
+#### `@mui/x-data-grid-premium@7.23.5` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.23.5`.
+
 ## v7.23.4
 
 _Dec 27, 2024_

@@ -1,5 +1,5 @@
 {
-  "version": "7.23.4",
+  "version": "7.23.5",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
