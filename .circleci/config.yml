@@ -419,7 +419,7 @@ workflows:
       - test_unit:
           <<: *default-context
           name: test_unit_react_18
-          react-version: ^18
+          react-version: ^18.0.0
           filters:
             branches:
               only:
@@ -431,7 +431,7 @@ workflows:
       - test_browser:
           <<: *default-context
           name: test_browser_react_18
-          react-version: ^18
+          react-version: ^18.0.0
           filters:
             branches:
               only:
@@ -443,7 +443,7 @@ workflows:
       - test_regressions:
           <<: *default-context
           name: test_regressions_react_18
-          react-version: ^18
+          react-version: ^18.0.0
           filters:
             branches:
               only:
@@ -455,7 +455,7 @@ workflows:
       - test_e2e:
           <<: *default-context
           name: test_e2e_react_18
-          react-version: ^18
+          react-version: ^18.0.0
           filters:
             branches:
               only:
