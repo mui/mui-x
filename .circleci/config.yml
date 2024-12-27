@@ -331,7 +331,6 @@ jobs:
           name: Run danger on PRs
           command: pnpm danger ci --fail-on-errors
 workflows:
-  version: 2
   pipeline:
     when:
       equal: [pipeline, << pipeline.parameters.workflow >>]
