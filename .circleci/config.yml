@@ -90,7 +90,7 @@ commands:
       - when:
           condition:
             not:
-              equal: [stable, << pipeline.parameters.react-version >>]
+              equal: [stable, << parameters.react-version >>]
           steps:
             - run:
                 name: Change pnpm setting to not install peer dependencies
@@ -104,14 +104,14 @@ commands:
       - when:
           condition:
             not:
-              equal: [stable, << pipeline.parameters.react-version >>]
+              equal: [stable, << parameters.react-version >>]
           steps:
             - run:
                 name: Install js dependencies without frozen lockfile
                 command: pnpm install --no-frozen-lockfile
       - when:
           condition:
-            equal: [stable, << pipeline.parameters.react-version >>]
+            equal: [stable, << parameters.react-version >>]
           steps:
             - run:
                 name: Install js dependencies
@@ -154,7 +154,6 @@ jobs:
     <<: *default-job
     steps:
       - checkout
-      - run: echo "pipeline.parameters.react_version = << pipeline.parameters.react-version >>, pipeline.parameters.with_react_version = << pipeline.parameters.with-react-version >>, parameters.react_version = << parameters.react-version >>"
       - install_js:
           react-version: << pipeline.parameters.react-version >>
       - run:
@@ -264,7 +263,6 @@ jobs:
       - image: mcr.microsoft.com/playwright:v1.49.1-noble
     steps:
       - checkout
-      - run: echo "pipeline.parameters.react_version = << pipeline.parameters.react-version >>, pipeline.parameters.with_react_version = << pipeline.parameters.with-react-version >>, parameters.react_version = << parameters.react-version >>"
       - install_js:
           browsers: true
           react-version: << pipeline.parameters.react-version >>
@@ -297,7 +295,6 @@ jobs:
       - image: mcr.microsoft.com/playwright:v1.49.1-noble
     steps:
       - checkout
-      - run: echo "pipeline.parameters.react_version = << pipeline.parameters.react-version >>, pipeline.parameters.with_react_version = << pipeline.parameters.with-react-version >>, parameters.react_version = << parameters.react-version >>"
       - install_js:
           browsers: true
           react-version: << pipeline.parameters.react-version >>
@@ -323,7 +320,6 @@ jobs:
       - image: mcr.microsoft.com/playwright:v1.49.1-noble
     steps:
       - checkout
-      - run: echo "pipeline.parameters.react_version = << pipeline.parameters.react-version >>, pipeline.parameters.with_react_version = << pipeline.parameters.with-react-version >>, parameters.react_version = << parameters.react-version >>"
       - install_js:
           browsers: true
           react-version: << pipeline.parameters.react-version >>
