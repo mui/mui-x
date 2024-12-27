@@ -84,7 +84,7 @@ commands:
       - when:
           condition:
             not:
-              equal: [stable, << pipeline.parameters.with-react-version >>]
+              equal: [stable, << pipeline.parameters.react-version >>]
           steps:
             - run:
                 name: Change pnpm setting to not install peer dependencies
@@ -98,14 +98,14 @@ commands:
       - when:
           condition:
             not:
-              equal: [stable, << pipeline.parameters.with-react-version >>]
+              equal: [stable, << pipeline.parameters.react-version >>]
           steps:
             - run:
                 name: Install js dependencies without frozen lockfile
                 command: pnpm install --no-frozen-lockfile
       - when:
           condition:
-            equal: [stable, << pipeline.parameters.with-react-version >>]
+            equal: [stable, << pipeline.parameters.react-version >>]
           steps:
             - run:
                 name: Install js dependencies
