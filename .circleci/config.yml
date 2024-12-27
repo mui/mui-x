@@ -154,7 +154,9 @@ jobs:
     <<: *default-job
     steps:
       - checkout
-      - install_js
+      - run: echo "pipeline.parameters.react_version = << pipeline.parameters.react-version >>, pipeline.parameters.with_react_version = << pipeline.parameters.with-react-version >>, parameters.react_version = << parameters.react-version >>"
+      - install_js:
+          react-version: << pipeline.parameters.react-version >>
       - run:
           name: Tests fake browser
           command: pnpm test:coverage
@@ -262,8 +264,10 @@ jobs:
       - image: mcr.microsoft.com/playwright:v1.49.1-noble
     steps:
       - checkout
+      - run: echo "pipeline.parameters.react_version = << pipeline.parameters.react-version >>, pipeline.parameters.with_react_version = << pipeline.parameters.with-react-version >>, parameters.react_version = << parameters.react-version >>"
       - install_js:
           browsers: true
+          react-version: << pipeline.parameters.react-version >>
       - run:
           name: Tests real browsers
           command: pnpm test:karma
@@ -293,8 +297,10 @@ jobs:
       - image: mcr.microsoft.com/playwright:v1.49.1-noble
     steps:
       - checkout
+      - run: echo "pipeline.parameters.react_version = << pipeline.parameters.react-version >>, pipeline.parameters.with_react_version = << pipeline.parameters.with-react-version >>, parameters.react_version = << parameters.react-version >>"
       - install_js:
           browsers: true
+          react-version: << pipeline.parameters.react-version >>
       - run:
           name: Run e2e tests
           command: pnpm test:e2e
@@ -317,8 +323,10 @@ jobs:
       - image: mcr.microsoft.com/playwright:v1.49.1-noble
     steps:
       - checkout
+      - run: echo "pipeline.parameters.react_version = << pipeline.parameters.react-version >>, pipeline.parameters.with_react_version = << pipeline.parameters.with-react-version >>, parameters.react_version = << parameters.react-version >>"
       - install_js:
           browsers: true
+          react-version: << pipeline.parameters.react-version >>
       - run:
           name: Install ffmpeg
           command: apt update && apt upgrade -y && apt install ffmpeg -y
