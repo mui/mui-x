@@ -57,18 +57,6 @@ default-context: &default-context
   context:
     - org-global
 
-test-react-18-context: &test-react-18-context
-  <<: *default-context
-  react-version: ^18
-  filters:
-    branches:
-      only:
-        - master
-        - /^v.*\.x$/
-        - next
-        # TODO: remove after testing
-        - renovate/major-react
-
 commands:
   install_js:
     parameters:
@@ -429,14 +417,46 @@ workflows:
   test-react-18:
     jobs:
       - test_unit:
-          <<: *test-react-18-context
           name: test_unit_react_18
+          react-version: ^18
+          filters:
+            branches:
+              only:
+                - master
+                - /^v.*\.x$/
+                - next
+                # TODO: remove after testing
+                - renovate/major-react
       - test_browser:
-          <<: *test-react-18-context
           name: test_browser_react_18
+          react-version: ^18
+          filters:
+            branches:
+              only:
+                - master
+                - /^v.*\.x$/
+                - next
+                # TODO: remove after testing
+                - renovate/major-react
       - test_regressions:
-          <<: *test-react-18-context
           name: test_regressions_react_18
+          react-version: ^18
+          filters:
+            branches:
+              only:
+                - master
+                - /^v.*\.x$/
+                - next
+                # TODO: remove after testing
+                - renovate/major-react
       - test_e2e:
-          <<: *test-react-18-context
           name: test_e2e_react_18
+          react-version: ^18
+          filters:
+            branches:
+              only:
+                - master
+                - /^v.*\.x$/
+                - next
+                # TODO: remove after testing
+                - renovate/major-react
