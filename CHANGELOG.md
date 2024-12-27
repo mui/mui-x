@@ -9,7 +9,7 @@ _Dec 27, 2024_
 
 Here are some highlights ✨:
 
-- 🐞 Fix version mismatch issue in codesandbox/stackblitz demos
+- 🐞 Fix version mismatch issue in Data Grid codesandbox/stackblitz demos
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
