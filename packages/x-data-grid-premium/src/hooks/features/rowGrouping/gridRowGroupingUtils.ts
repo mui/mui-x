@@ -19,6 +19,7 @@ import {
   getRowGroupingCriteriaFromGroupingField,
   isGroupingColumn,
   GridStrategyGroup,
+  getRowValue,
 } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
@@ -231,7 +232,7 @@ export const getCellGroupingCriteria = ({
   if (groupingRule.groupingValueGetter) {
     key = groupingRule.groupingValueGetter(row[groupingRule.field] as never, row, colDef, apiRef);
   } else {
-    key = row[groupingRule.field] as GridKeyValue | null | undefined;
+    key = getRowValue(row, colDef, apiRef) as GridKeyValue | null | undefined;
   }
 
   return {
