@@ -20,7 +20,7 @@ The following demo shows how to use the `date-fns-jalali` adapter:
 {{"demo": "AdapterJalali.js"}}
 
 :::info
-Both `date-fns-jalali` major versions (v2.x and v3.x) are supported.
+We support `date-fns-jalali` package v2.x, v3.x, and v4.x major versions.
 
 A single adapter cannot work for all `date-fns-jalali` versions, because the way functions are exported has been changed in v3.x.
 
