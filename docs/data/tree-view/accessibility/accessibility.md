@@ -18,7 +18,7 @@ Common conformance guidelines for accessibility include:
 - US:
   - [ADA](https://www.ada.gov/) - US Department of Justice
   - [Section 508](https://www.section508.gov/) - US federal agencies
-- Europe: [EAA](https://ec.europa.eu/social/main.jsp?catId=1202) (European Accessibility Act)
+- Europe: [EAA](https://employment-social-affairs.ec.europa.eu/policies-and-activities/social-protection-social-inclusion/persons-disabilities/union-equality-strategy-rights-persons-disabilities-2021-2030/european-accessibility-act_en) (European Accessibility Act)
 
 WCAG 2.1 has three levels of conformance: A, AA, and AAA.
 Level AA exceeds the basic criteria for accessibility and is a common target for most organizations, so this is what we aim to support.
