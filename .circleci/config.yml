@@ -72,6 +72,7 @@ commands:
             - run:
                 name: Install pnpm package manager
                 command: corepack enable
+            - run: echo "parameters_react_version = << pipeline.parameters.react-version >>, parameters_with_react_version = << pipeline.parameters.with-react-version >>"
       - when:
           condition:
             not: << parameters.browsers >>
@@ -80,6 +81,7 @@ commands:
                 name: Install pnpm package manager
                 # See https://stackoverflow.com/a/73411601
                 command: corepack enable --install-directory ~/bin
+            - run: echo "parameters_react_version = << pipeline.parameters.react-version >>, parameters_with_react_version = << pipeline.parameters.with-react-version >>"
 
       - when:
           condition:
