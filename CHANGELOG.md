@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Dec 27, 2024_
 
-We'd like to offer a big thanks to the 0 contributors who made this release possible. Here are some highlights ✨:
+Here are some highlights ✨:
 
 - 🐞 Fix version mismatch issue in codesandbox/stackblitz demos
 
