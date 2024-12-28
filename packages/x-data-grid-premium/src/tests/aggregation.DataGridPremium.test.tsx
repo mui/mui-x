@@ -16,7 +16,10 @@ import {
   GridColDef,
 } from '@mui/x-data-grid-premium';
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 const baselineProps: DataGridPremiumProps = {
+  autoHeight: isJSDOM,
   disableVirtualization: true,
   rows: [
     { id: 0, category1: 'Cat A', category2: 'Cat 1' },

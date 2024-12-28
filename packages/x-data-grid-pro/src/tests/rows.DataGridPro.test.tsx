@@ -470,7 +470,7 @@ describe('<DataGridPro /> - Rows', () => {
     });
 
     it('should have all the rows rendered in the DOM when autoPageSize: true', () => {
-      render(<TestCaseVirtualization />);
+      render(<TestCaseVirtualization autoHeight />);
       expect(getRows()).to.have.length(apiRef.current.state.pagination.paginationModel.pageSize);
     });
 

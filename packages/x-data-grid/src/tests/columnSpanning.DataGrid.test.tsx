@@ -178,7 +178,12 @@ describe('<DataGrid /> - Column spanning', () => {
     it('should move down by the amount of rows visible on screen when pressing "PageDown"', () => {
       render(
         <div style={{ width: 500, height: 300 }}>
-          <DataGrid {...baselineProps} columns={columns} disableVirtualization={isJSDOM} />
+          <DataGrid
+            {...baselineProps}
+            columns={columns}
+            autoHeight={isJSDOM}
+            disableVirtualization={isJSDOM}
+          />
         </div>,
       );
 
@@ -192,7 +197,7 @@ describe('<DataGrid /> - Column spanning', () => {
     it('should move up by the amount of rows visible on screen when pressing "PageUp"', () => {
       render(
         <div style={{ width: 500, height: 300 }}>
-          <DataGrid {...baselineProps} columns={columns} />
+          <DataGrid {...baselineProps} columns={columns} autoHeight={isJSDOM} />
         </div>,
       );
 
