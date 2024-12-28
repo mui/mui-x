@@ -17,10 +17,10 @@
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
     "autoHeight": {
-      "type": { "name": "bool" },
+      "type": { "name": "custom", "description": "bool" },
       "default": "false",
       "deprecated": true,
-      "deprecationInfo": "Use flex parent container instead: <a href=\"https://mui.com/x/react-data-grid/layout/#flex-parent-container\">https://mui.com/x/react-data-grid/layout/#flex-parent-container</a>"
+      "deprecationInfo": "Use flex parent container instead: <a href=\"https://mui.com/r/x-grid-deprecate-auto-height\">https://mui.com/r/x-grid-deprecate-auto-height</a>."
     },
     "autoPageSize": { "type": { "name": "bool" }, "default": "false" },
     "autosizeOnMount": { "type": { "name": "bool" }, "default": "false" },

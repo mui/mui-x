@@ -115,7 +115,10 @@ DataGridRaw.propTypes = {
    *   <DataGrid />
    * </div>
    */
-  autoHeight: deprecatedPropType(PropTypes.bool, 'Use flex parent container instead: https://mui.com/r/x-grid-deprecate-auto-height.'),
+  autoHeight: deprecatedPropType(
+    PropTypes.bool,
+    'Use flex parent container instead: https://mui.com/r/x-grid-deprecate-auto-height.',
+  ),
   /**
    * If `true`, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar.
    * @default false
