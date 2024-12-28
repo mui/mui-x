@@ -14,8 +14,6 @@ import { expect } from 'chai';
 import Excel from 'exceljs';
 import { spyApi } from 'test/utils/helperFn';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 describe('<DataGridPremium /> - Export Excel', () => {
   const { render } = createRenderer();
 

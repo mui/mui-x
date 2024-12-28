@@ -46,8 +46,6 @@ function CustomInputValue(props: GridFilterInputValueProps) {
   );
 }
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 describe('<DataGrid /> - Filter panel', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 

@@ -50,6 +50,7 @@ describe('<DataGrid /> - Keyboard', () => {
     return (
       <div style={{ width: 300, height: HEIGHT }}>
         <DataGrid
+          autoHeight={isJSDOM}
           rows={data.rows}
           columns={transformColSizes(data.columns)}
           initialState={{ pagination: { paginationModel: { pageSize: PAGE_SIZE } } }}

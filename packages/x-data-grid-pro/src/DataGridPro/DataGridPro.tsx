@@ -12,7 +12,6 @@ import {
 } from '@mui/x-data-grid';
 import { validateProps } from '@mui/x-data-grid/internals';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import deprecatedPropType from '@mui/utils/deprecatedPropType';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import { DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
@@ -105,10 +104,7 @@ DataGridProRaw.propTypes = {
    *   <DataGrid />
    * </div>
    */
-  autoHeight: deprecatedPropType(
-    PropTypes.bool,
-    'Use flex parent container instead: https://mui.com/r/x-grid-deprecate-auto-height.',
-  ),
+  autoHeight: PropTypes.bool,
   /**
    * If `true`, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar.
    * @default false

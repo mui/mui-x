@@ -1101,7 +1101,7 @@ describe('<DataGrid /> - Rows', () => {
 
     it('should throw a console error if autoPageSize is used with autoHeight', () => {
       expect(() => {
-        render(<TestCase autoPageSize />);
+        render(<TestCase autoPageSize autoHeight />);
       }).toErrorDev(
         [
           'MUI X: `<DataGrid autoPageSize={true} autoHeight={true} />` are not valid props.',

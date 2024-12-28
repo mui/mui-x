@@ -34,8 +34,6 @@ import {
 } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 interface BaselineProps extends DataGridPremiumProps {
   rows: GridRowsProp;
 }

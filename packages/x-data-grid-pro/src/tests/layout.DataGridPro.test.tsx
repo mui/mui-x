@@ -148,6 +148,7 @@ describe('<DataGridPro /> - Layout', () => {
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro
           {...baselineProps}
+          autoHeight
           headerFilters
           columnHeaderHeight={20}
           headerFilterHeight={32}

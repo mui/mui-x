@@ -389,6 +389,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     const getDetailPanelHeight = spy(() => 100);
     const { setProps } = render(
       <TestCase
+        autoHeight
         columns={[{ field: 'brand' }]}
         rows={[
           { id: 0, brand: 'Nike' },

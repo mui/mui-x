@@ -2,7 +2,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
-import deprecatedPropType from '@mui/utils/deprecatedPropType';
 import {
   GridBody,
   GridFooterPlaceholder,
@@ -118,10 +117,7 @@ DataGridPremiumRaw.propTypes = {
    *   <DataGrid />
    * </div>
    */
-  autoHeight: deprecatedPropType(
-    PropTypes.bool,
-    'Use flex parent container instead: https://mui.com/r/x-grid-deprecate-auto-height.',
-  ),
+  autoHeight: PropTypes.bool,
   /**
    * If `true`, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar.
    * @default false

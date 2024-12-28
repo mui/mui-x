@@ -22,8 +22,6 @@ import {
   GridPaginationModel,
 } from '@mui/x-data-grid-pro';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 const rowsWithoutGap: GridRowsProp = [
   { name: 'A' },
   { name: 'A.A' },
