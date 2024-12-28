@@ -24,9 +24,9 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import { getColumnHeaderCell, getColumnValues, getSelectInput, grid } from 'test/utils/helperFn';
 
-const SUBMIT_FILTER_STROKE_TIME = DATA_GRID_PRO_PROPS_DEFAULT_VALUES.filterDebounceMs;
-
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
+const SUBMIT_FILTER_STROKE_TIME = DATA_GRID_PRO_PROPS_DEFAULT_VALUES.filterDebounceMs;
 
 describe('<DataGridPro /> - Filter', () => {
   const { clock, render } = createRenderer({ clock: 'fake' });
@@ -34,7 +34,6 @@ describe('<DataGridPro /> - Filter', () => {
   let apiRef: React.MutableRefObject<GridApi>;
 
   const baselineProps = {
-    autoHeight: isJSDOM,
     rows: [
       {
         id: 0,
@@ -886,7 +885,6 @@ describe('<DataGridPro /> - Filter', () => {
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro
-              autoHeight={isJSDOM}
               columns={columns || baselineProps.columns}
               rows={rows || baselineProps.rows}
               filterModel={caseFilterModel}

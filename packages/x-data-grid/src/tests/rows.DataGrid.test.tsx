@@ -37,7 +37,6 @@ import {
 } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import Dialog from '@mui/material/Dialog';
-
 import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/densitySelector';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -48,7 +47,6 @@ describe('<DataGrid /> - Rows', () => {
   let apiRef: React.MutableRefObject<GridApi>;
 
   const baselineProps = {
-    autoHeight: isJSDOM,
     rows: [
       {
         clientId: 'c1',
@@ -1053,7 +1051,6 @@ describe('<DataGrid /> - Rows', () => {
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
-            autoHeight={isJSDOM}
             apiRef={apiRef}
             rows={rows}
             columns={columns}
@@ -1104,7 +1101,7 @@ describe('<DataGrid /> - Rows', () => {
 
     it('should throw a console error if autoPageSize is used with autoHeight', () => {
       expect(() => {
-        render(<TestCase autoPageSize autoHeight />);
+        render(<TestCase autoPageSize />);
       }).toErrorDev(
         [
           'MUI X: `<DataGrid autoPageSize={true} autoHeight={true} />` are not valid props.',

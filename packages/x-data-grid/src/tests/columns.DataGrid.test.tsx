@@ -19,7 +19,7 @@ describe('<DataGrid /> - Columns', () => {
   ) {
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGrid columns={columns} rows={rows} {...props} autoHeight={isJSDOM} />
+        <DataGrid columns={columns} rows={rows} {...props} />
       </div>
     );
   }

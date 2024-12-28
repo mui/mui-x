@@ -10,7 +10,7 @@ describe('<DataGridPro /> - License', () => {
   it('should render watermark when the license is missing', async () => {
     LicenseInfo.setLicenseKey('');
 
-    expect(() => render(<DataGridPro columns={[]} rows={[]} autoHeight />)).toErrorDev([
+    expect(() => render(<DataGridPro columns={[]} rows={[]} />)).toErrorDev([
       'MUI X: Missing license key.',
     ]);
 

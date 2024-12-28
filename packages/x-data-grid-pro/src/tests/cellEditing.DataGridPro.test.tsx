@@ -806,7 +806,7 @@ describe('<DataGridPro /> - Cell editing', () => {
       });
 
       it(`should not publish 'cellEditStart' if space is pressed`, () => {
-        render(<TestCase autoHeight />);
+        render(<TestCase />);
         const listener = spy();
         apiRef.current.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 1);

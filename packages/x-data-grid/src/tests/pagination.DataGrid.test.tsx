@@ -27,7 +27,7 @@ describe('<DataGrid /> - Pagination', () => {
 
     return (
       <div style={{ width: 300, height }}>
-        <DataGrid {...basicData} autoHeight={isJSDOM} {...other} />
+        <DataGrid {...basicData} {...other} />
       </div>
     );
   }

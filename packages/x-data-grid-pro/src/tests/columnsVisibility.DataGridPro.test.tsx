@@ -15,8 +15,6 @@ import {
 } from '@mui/x-data-grid-pro';
 import { getColumnHeadersTextContent } from 'test/utils/helperFn';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 const rows: GridRowsProp = [{ id: 1 }];
 
 const columns: GridColDef[] = [{ field: 'id' }, { field: 'idBis' }];
@@ -34,13 +32,7 @@ describe('<DataGridPro /> - Columns visibility', () => {
 
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGridPro
-          columns={columns}
-          rows={rows}
-          {...props}
-          apiRef={apiRef}
-          autoHeight={isJSDOM}
-        />
+        <DataGridPro columns={columns} rows={rows} {...props} apiRef={apiRef} />
       </div>
     );
   }

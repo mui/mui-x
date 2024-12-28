@@ -23,7 +23,6 @@ describe('<DataGridPro /> - Columns', () => {
   let apiRef: React.MutableRefObject<GridApi>;
 
   const baselineProps = {
-    autoHeight: isJSDOM,
     rows: [
       { id: 0, brand: 'Nike' },
       { id: 1, brand: 'Adidas' },

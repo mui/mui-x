@@ -41,10 +41,7 @@ describe('<DataGrid /> - Keyboard', () => {
   const { render } = createRenderer();
 
   function NavigationTestCaseNoScrollX(
-    props: Omit<
-      DataGridProps,
-      'autoHeight' | 'rows' | 'columns' | 'pageSize' | 'pageSizeOptions'
-    > & {},
+    props: Omit<DataGridProps, 'rows' | 'columns' | 'pageSize' | 'pageSizeOptions'> & {},
   ) {
     const data = useBasicDemoData(100, 3);
     const transformColSizes = (columns: GridColDef[]) =>
@@ -53,7 +50,6 @@ describe('<DataGrid /> - Keyboard', () => {
     return (
       <div style={{ width: 300, height: HEIGHT }}>
         <DataGrid
-          autoHeight={isJSDOM}
           rows={data.rows}
           columns={transformColSizes(data.columns)}
           initialState={{ pagination: { paginationModel: { pageSize: PAGE_SIZE } } }}
@@ -316,7 +312,7 @@ describe('<DataGrid /> - Keyboard', () => {
       }
       render(
         <div style={{ width: 60, height: 300 }}>
-          <DataGrid autoHeight={isJSDOM} {...getBasicGridData(10, 10)} />
+          <DataGrid {...getBasicGridData(10, 10)} />
         </div>,
       );
       getColumnHeaderCell(0).focus();
@@ -333,7 +329,7 @@ describe('<DataGrid /> - Keyboard', () => {
       }
       render(
         <div style={{ width: 60, height: 300 }}>
-          <DataGrid autoHeight={isJSDOM} {...getBasicGridData(10, 10)} rows={[]} />
+          <DataGrid {...getBasicGridData(10, 10)} rows={[]} />
         </div>,
       );
       getColumnHeaderCell(0).focus();
@@ -469,10 +465,7 @@ describe('<DataGrid /> - Keyboard', () => {
     ];
 
     function NavigationTestGroupingCaseNoScrollX(
-      props: Omit<
-        DataGridProps,
-        'autoHeight' | 'rows' | 'columns' | 'pageSize' | 'pageSizeOptions'
-      > & {},
+      props: Omit<DataGridProps, 'rows' | 'columns' | 'pageSize' | 'pageSizeOptions'> & {},
     ) {
       const data = getBasicGridData(10, 10);
       const transformColSizes = (columns: GridColDef[]) =>
@@ -481,7 +474,6 @@ describe('<DataGrid /> - Keyboard', () => {
       return (
         <div style={{ width: 300, height: HEIGHT }}>
           <DataGrid
-            autoHeight={isJSDOM}
             rows={data.rows}
             columns={transformColSizes(data.columns)}
             paginationModel={{ pageSize: PAGE_SIZE, page: 0 }}
@@ -867,7 +859,7 @@ describe('<DataGrid /> - Keyboard', () => {
         column.valueSetter = valueSetterMock;
       });
 
-      render(<DataGrid rows={rows} columns={columns} editMode={editMode} autoHeight />);
+      render(<DataGrid rows={rows} columns={columns} editMode={editMode} />);
 
       return { valueSetterMock };
     }

@@ -18,7 +18,7 @@ describe('<DataGridPremium /> - License', () => {
         planVersion: 'initial',
       }),
     );
-    expect(() => render(<DataGridPremium columns={[]} rows={[]} autoHeight />)).toErrorDev([
+    expect(() => render(<DataGridPremium columns={[]} rows={[]} />)).toErrorDev([
       'MUI X: License key plan mismatch',
     ]);
   });
@@ -26,7 +26,7 @@ describe('<DataGridPremium /> - License', () => {
   it('should render watermark when the license is missing', async () => {
     LicenseInfo.setLicenseKey('');
 
-    expect(() => render(<DataGridPremium columns={[]} rows={[]} autoHeight />)).toErrorDev([
+    expect(() => render(<DataGridPremium columns={[]} rows={[]} />)).toErrorDev([
       'MUI X: Missing license key.',
     ]);
 

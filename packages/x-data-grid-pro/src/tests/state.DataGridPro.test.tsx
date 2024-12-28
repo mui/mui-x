@@ -4,13 +4,10 @@ import { getColumnValues } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import { DataGridPro, useGridApiRef, GridApi, DataGridProProps } from '@mui/x-data-grid-pro';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 describe('<DataGridPro /> - State', () => {
   const { render } = createRenderer();
 
   const baselineProps = {
-    autoHeight: isJSDOM,
     rows: [
       {
         id: 0,

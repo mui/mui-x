@@ -4,13 +4,10 @@ import { getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import { DataGrid, GridToolbar, GridColumnsManagementProps } from '@mui/x-data-grid';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 describe('<DataGrid /> - Toolbar', () => {
   const { render } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {
-    autoHeight: isJSDOM,
     rows: [
       {
         id: 0,

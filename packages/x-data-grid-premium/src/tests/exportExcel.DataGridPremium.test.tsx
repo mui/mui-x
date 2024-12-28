@@ -39,7 +39,6 @@ describe('<DataGridPremium /> - Export Excel', () => {
   const baselineProps = {
     columns,
     rows,
-    autoHeight: isJSDOM,
   };
 
   function TestCaseExcelExport(props: Partial<DataGridPremiumProps>) {

@@ -10,7 +10,6 @@ describe('<DataGridPro /> - Column headers', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {
-    autoHeight: isJSDOM,
     disableColumnResize: false,
     rows: [
       {

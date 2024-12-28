@@ -52,7 +52,6 @@ describe('<DataGrid /> - Filter panel', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   const baselineProps: DataGridProps = {
-    autoHeight: isJSDOM,
     disableVirtualization: true,
     rows: [
       {

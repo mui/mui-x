@@ -61,7 +61,6 @@ describe('<DataGridPremium /> - State persistence', () => {
           rows={rows}
           columns={columns}
           pagination
-          autoHeight={isJSDOM}
           apiRef={apiRef}
           disableVirtualization
           {...props}

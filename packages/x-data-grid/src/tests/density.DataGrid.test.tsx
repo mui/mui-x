@@ -15,7 +15,6 @@ describe('<DataGrid /> - Density', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {
-    autoHeight: isJSDOM,
     rows: [
       {
         id: 0,

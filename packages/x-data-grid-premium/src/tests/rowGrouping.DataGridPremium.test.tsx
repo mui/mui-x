@@ -58,7 +58,6 @@ const unbalancedRows: GridRowsProp = [
 ];
 
 const baselineProps: BaselineProps = {
-  autoHeight: isJSDOM,
   disableVirtualization: true,
   rows,
   columns: [

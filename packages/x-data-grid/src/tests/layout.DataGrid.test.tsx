@@ -1184,7 +1184,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
       render(
         <div style={{ maxWidth: 400 }}>
           <div style={{ display: 'grid' }}>
-            <DataGrid autoHeight columns={columns} rows={rows} />
+            <DataGrid columns={columns} rows={rows} />
           </div>
         </div>,
       );
@@ -1198,7 +1198,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
       render(
         <div style={{ maxWidth: 400 }}>
           <div style={{ display: 'flex' }}>
-            <DataGrid autoHeight columns={columns} rows={rows} />
+            <DataGrid columns={columns} rows={rows} />
           </div>
         </div>,
       );

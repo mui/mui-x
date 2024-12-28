@@ -45,7 +45,6 @@ const rowsWithGap: GridRowsProp = [
 ];
 
 const baselineProps: DataGridProProps = {
-  autoHeight: isJSDOM,
   rows: rowsWithoutGap,
   columns: [
     {

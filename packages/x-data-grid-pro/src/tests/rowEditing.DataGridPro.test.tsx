@@ -971,7 +971,7 @@ describe('<DataGridPro /> - Row editing', () => {
       });
 
       it('should not call startRowEditMode if space is pressed', () => {
-        render(<TestCase autoHeight />);
+        render(<TestCase />);
         const listener = spy();
         apiRef.current.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 1);

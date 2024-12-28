@@ -11,8 +11,6 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 interface BaselineProps extends DataGridPremiumProps {
   rows: GridRowsProp;
 }
@@ -26,7 +24,6 @@ const rows: GridRowsProp = [
 ];
 
 const baselineProps: BaselineProps = {
-  autoHeight: isJSDOM,
   disableVirtualization: true,
   rows,
   columns: [

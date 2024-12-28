@@ -399,7 +399,6 @@ describe('<DataGridPro /> - Detail panel', () => {
         pagination
         pageSizeOptions={[1]}
         initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
-        autoHeight
       />,
     );
 

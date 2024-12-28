@@ -95,7 +95,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
       return (
         <div style={{ width: 302, height: 300 }}>
-          <DataGridPro {...data} autoHeight pinnedRows={pinnedRows} />
+          <DataGridPro {...data} pinnedRows={pinnedRows} />
         </div>
       );
     }
