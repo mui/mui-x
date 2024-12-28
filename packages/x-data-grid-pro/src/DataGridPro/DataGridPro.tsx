@@ -12,6 +12,7 @@ import {
 } from '@mui/x-data-grid';
 import { validateProps } from '@mui/x-data-grid/internals';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import deprecatedPropType from '@mui/utils/deprecatedPropType';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import { DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
@@ -98,13 +99,13 @@ DataGridProRaw.propTypes = {
   /**
    * If `true`, the Data Grid height is dynamic and follows the number of rows in the Data Grid.
    * @default false
-   * @deprecated Use flex parent container instead: https://mui.com/x/react-data-grid/layout/#flex-parent-container
+   * @deprecated Use flex parent container instead: https://mui.com/r/x-grid-deprecate-auto-height.
    * @example
    * <div style={{ display: 'flex', flexDirection: 'column' }}>
    *   <DataGrid />
    * </div>
    */
-  autoHeight: PropTypes.bool,
+  autoHeight: deprecatedPropType(PropTypes.bool, 'Use flex parent container instead: https://mui.com/r/x-grid-deprecate-auto-height.'),
   /**
    * If `true`, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar.
    * @default false
