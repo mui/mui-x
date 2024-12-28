@@ -5,6 +5,85 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.0.0-alpha.6
+
+_Dec 26, 2024_
+
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- 🏎️ Improve Data Grid scrolling performance
+- 🌍 Improve Dutch (nl-NL) locale on the Data Grid
+- 🐞 Bugfixes
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@JoepVerkoelen, @k-rajat19, @lauri865.
+Following are all team members who have contributed to this release:
+@flaviendelangle, @JCQuintas, @LukasTy, @MBilalShafi, @romgrk.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### Breaking changes
+
+- The `sanitizeFilterItemValue()` utility is not exported anymore.
+
+#### `@mui/x-data-grid@8.0.0-alpha.6`
+
+- [DataGrid] Avoid subscribing to `renderContext` state in grid root for better scroll performance (#15986) @lauri865
+- [DataGrid] Fix header filters showing clear button while empty (#15829) @k-rajat19
+- [DataGrid] Improve test coverage of server side data source (#15942) @MBilalShafi
+- [DataGrid] Move progress components to leaf import (#15914) @romgrk
+- [DataGrid] Move skeleton to leaf import (#15931) @romgrk
+- [DataGrid] Replace `forwardRef` with a shim for forward compatibility (#15955) @lauri865
+- [l10n] Improve Dutch (nl-NL) locale (#15994) @JoepVerkoelen
+
+#### `@mui/x-data-grid-pro@8.0.0-alpha.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.0.0-alpha.6`.
+
+#### `@mui/x-data-grid-premium@8.0.0-alpha.6` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.6`, plus:
+
+- [DataGridPremium] Fix column unpinning with row grouping (#15908) @k-rajat19
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.0.0-alpha.6`
+
+- [pickers] Use `usePickerContext()` and `usePickerActionsContext()` to get the actions in the `actionBar` slot and in internal components (#15843) @flaviendelangle
+- [pickers] Use `usePickerContext()` to get the view-related props in the layout, toolbar and tabs slots (#15606) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@8.0.0-alpha.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.0.0-alpha.6`.
+
+### Charts
+
+#### `@mui/x-charts@8.0.0-alpha.6`
+
+No changes since `@mui/x-charts@v8.0.0-alpha.5`.
+
+#### `@mui/x-charts-pro@8.0.0-alpha.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.0.0-alpha.6`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.0.0-alpha.6`
+
+No changes since `@mui/x-tree-view-pro@v8.0.0-alpha.5`.
+
+#### `@mui/x-tree-view-pro@8.0.0-alpha.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.0.0-alpha.6`.
+
+### Docs
+
+- [docs] Remove production profiler from docs build (#15959) @lauri865
+- [code-infra] Add new `next-env.d.ts` changes (#15947) @JCQuintas
+
 ## 8.0.0-alpha.5
 
 _Dec 19, 2024_

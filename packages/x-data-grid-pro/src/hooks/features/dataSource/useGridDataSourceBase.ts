@@ -14,6 +14,7 @@ import {
   GridStrategyGroup,
   GridStrategyProcessor,
   GridDataSourceCache,
+  runIf,
 } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -24,7 +25,6 @@ import {
   DataSourceRowsUpdateStrategy,
   NestedDataManager,
   RequestStatus,
-  runIf,
 } from './utils';
 import { GridDataSourceCacheDefault, GridDataSourceCacheDefaultConfig } from './cache';
 

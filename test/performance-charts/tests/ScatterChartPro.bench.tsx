@@ -1,16 +1,12 @@
 import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { render, cleanup } from '@testing-library/react';
-import { afterEach, bench, describe } from 'vitest';
+import { bench, describe } from 'vitest';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import { LicenseInfo, generateLicense } from '@mui/x-license';
 import { options } from '../utils/options';
 
 describe('ScatterChartPro', () => {
-  afterEach(() => {
-    cleanup();
-  });
-
   const dataLength = 50;
   const data = Array.from({ length: dataLength }).map((_, i) => ({
     id: i,
@@ -55,6 +51,8 @@ describe('ScatterChartPro', () => {
       );
 
       await findByText('60', { ignore: 'span' });
+
+      cleanup();
     },
     options,
   );
