@@ -161,6 +161,7 @@ export const filterRowTreeFromGroupingColumns = (
     areAncestorsExpanded: boolean,
     isParentPassingFilter: boolean,
     shouldFilterParent: boolean,
+    ancestorsResults: GridAggregatedFilterItemApplierResult[],
   ): number => {
     const filterResults: GridAggregatedFilterItemApplierResult = {
       passingFilterItems: null,
@@ -177,9 +178,10 @@ export const filterRowTreeFromGroupingColumns = (
 
       const row = apiRef.current.getRow(node.id);
       isRowMatchingFilters(row, shouldApplyItem, filterResults);
+      const allResults = [...ancestorsResults, filterResults];
       isPassingFiltering = passFilterLogic(
-        [filterResults.passingFilterItems],
-        [filterResults.passingQuickFilterValues],
+        allResults.map((result) => result.passingFilterItems),
+        allResults.map((result) => result.passingQuickFilterValues),
         filterModel,
         params.apiRef,
         filterCache,
@@ -203,6 +205,7 @@ export const filterRowTreeFromGroupingColumns = (
           areAncestorsExpanded && !!node.childrenExpanded,
           isPassingFiltering,
           allowGroupToFilter,
+          [...ancestorsResults, filterResults],
         );
         filteredDescendantCount += childSubTreeSize;
         if (childSubTreeSize > 0) {
@@ -235,7 +238,7 @@ export const filterRowTreeFromGroupingColumns = (
   for (let i = 0; i < nodes.length; i += 1) {
     const node = nodes[i];
     if (node.depth === 0) {
-      filterTreeNode(node, true, true, false);
+      filterTreeNode(node, true, true, false, []);
     }
   }
 

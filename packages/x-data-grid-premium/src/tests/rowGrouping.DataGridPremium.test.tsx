@@ -2407,7 +2407,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
         );
 
         // Corresponds to rows id 0 because of Cat A, ann id 4 because of Cat 1
-        expect(getColumnValues(1)).to.deep.equal(['', '0', '', '4']);
+        expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2', '', '4']);
       });
 
       it('should keep the correct count of the children and descendants in the filter state', () => {
