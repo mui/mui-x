@@ -5,12 +5,12 @@ import {
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
 import useLazyRef from '@mui/utils/useLazyRef';
-import useTimeout from '@mui/utils/useTimeout';
 import { useRtl } from '@mui/system/RtlProvider';
 import reactMajor from '@mui/x-internals/reactMajor';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
+import { useTimeout } from '../../utils/useTimeout';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { useRunOnce } from '../../utils/useRunOnce';
 import {
@@ -262,14 +262,9 @@ export const useGridVirtualScroller = () => {
   );
 
   const triggerUpdateRenderContext = useEventCallback(() => {
-    const scroller = scrollerRef.current;
-    if (!scroller) {
-      return undefined;
-    }
-
     const newScroll = {
-      top: scroller.scrollTop,
-      left: scroller.scrollLeft,
+      top: scrollerRef.current!.scrollTop,
+      left: scrollerRef.current!.scrollLeft,
     };
 
     const dx = newScroll.left - scrollPosition.current.left;

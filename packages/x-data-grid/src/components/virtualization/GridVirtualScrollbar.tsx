@@ -6,7 +6,7 @@ import {
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { useOnMount } from '../../hooks/utils/useOnMount';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { gridDimensionsSelector, useGridSelector } from '../../hooks';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -95,10 +95,7 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
 
     const onScrollerScroll = useEventCallback(() => {
       const scroller = apiRef.current.virtualScrollerRef.current!;
-      const scrollbar = scrollbarRef.current;
-      if (!scrollbar) {
-        return;
-      }
+      const scrollbar = scrollbarRef.current!;
 
       if (scroller[propertyScroll] === lastPosition.current) {
         return;
@@ -118,10 +115,7 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
 
     const onScrollbarScroll = useEventCallback(() => {
       const scroller = apiRef.current.virtualScrollerRef.current!;
-      const scrollbar = scrollbarRef.current;
-      if (!scrollbar) {
-        return;
-      }
+      const scrollbar = scrollbarRef.current!;
 
       if (isLocked.current) {
         isLocked.current = false;
@@ -133,7 +127,7 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
       scroller[propertyScroll] = value * contentSize;
     });
 
-    useOnMount(() => {
+    useEnhancedEffect(() => {
       const scroller = apiRef.current.virtualScrollerRef.current!;
       const scrollbar = scrollbarRef.current!;
       scroller.addEventListener('scroll', onScrollerScroll, { capture: true });
@@ -142,7 +136,8 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
         scroller.removeEventListener('scroll', onScrollerScroll, { capture: true });
         scrollbar.removeEventListener('scroll', onScrollbarScroll, { capture: true });
       };
-    });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     React.useEffect(() => {
       const content = contentRef.current!;
