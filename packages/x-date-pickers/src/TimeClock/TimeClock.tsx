@@ -21,6 +21,7 @@ import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithT
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
+import { TimeViewWithMeridiem } from '../internals/models';
 
 const useUtilityClasses = (classes: Partial<TimeClockClasses> | undefined) => {
   const slots = {
@@ -150,10 +151,12 @@ export const TimeClock = React.forwardRef(function TimeClock(
   );
 
   const isTimeDisabled = React.useCallback(
-    (rawValue: number, viewType: TimeView) => {
+    (rawValue: number, viewType: TimeViewWithMeridiem) => {
       const isAfter = createIsAfterIgnoreDatePart(disableIgnoringDatePartForTimeValidation, utils);
       const shouldCheckPastEnd =
-        viewType === 'hours' || (viewType === 'minutes' && views.includes('seconds'));
+        viewType === 'hours' ||
+        (viewType === 'minutes' && views.includes('seconds')) ||
+        viewType === 'meridiem';
 
       const containsValidTime = ({
         start,
@@ -237,6 +240,15 @@ export const TimeClock = React.forwardRef(function TimeClock(
           const end = dateWithNewSeconds;
 
           return !containsValidTime({ start, end }) || !isValidValue(rawValue);
+        }
+
+        case 'meridiem': {
+          const start = utils.setSeconds(
+            utils.setMinutes(utils.setHours(utils.startOfDay(valueOrReferenceDate), rawValue), 0),
+            0,
+          );
+          const end = utils.addSeconds(utils.addMinutes(utils.addHours(start, 11), 59), 59);
+          return !containsValidTime({ start, end });
         }
 
         default:
