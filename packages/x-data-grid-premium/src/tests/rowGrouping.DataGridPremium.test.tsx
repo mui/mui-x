@@ -2172,6 +2172,12 @@ describe('<DataGridPremium /> - Row grouping', () => {
           '',
           '',
         ]);
+
+        fireEvent.change(getSelectByName('Operator'), {
+          target: { value: 'doesNotContain' },
+        });
+
+        expect(getColumnValues(0)).to.deep.equal(['Cat B (2)', 'Cat 2 (1)', '', 'Cat 1 (1)', '']);
       });
 
       it('should use the column grouping criteria for filtering if mainGroupingCriteria is one of the grouping criteria and leaf field is defined', () => {
@@ -2202,6 +2208,20 @@ describe('<DataGridPremium /> - Row grouping', () => {
           'Cat 1 (1)',
           '4',
         ]);
+
+        fireEvent.change(getSelectByName('Operator'), {
+          target: { value: 'doesNotContain' },
+        });
+
+        expect(getColumnValues(0)).to.deep.equal([
+          'Cat A (2)',
+          'Cat 2 (2)',
+          '1',
+          '2',
+          'Cat B (1)',
+          'Cat 2 (1)',
+          '3',
+        ]);
       });
 
       it('should use the leaf field for filtering if mainGroupingCriteria is not defined and leaf field is defined', () => {
@@ -2227,6 +2247,24 @@ describe('<DataGridPremium /> - Row grouping', () => {
         clock.tick(500);
 
         expect(getColumnValues(0)).to.deep.equal(['Cat B (2)', 'Cat 2 (1)', '3', 'Cat 1 (1)', '4']);
+        fireEvent.change(getSelectByName('Operator'), {
+          target: { value: '!=' },
+        });
+        fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
+          target: { value: 2 },
+        });
+        expect(getColumnValues(0)).to.deep.equal([
+          'Cat A (2)',
+          'Cat 1 (1)',
+          '0',
+          'Cat 2 (1)',
+          '1',
+          'Cat B (2)',
+          'Cat 2 (1)',
+          '3',
+          'Cat 1 (1)',
+          '4',
+        ]);
       });
 
       it('should use the leaf field for filtering if mainGroupingCriteria is not one of the grouping criteria and leaf field is defined', () => {
@@ -2253,6 +2291,24 @@ describe('<DataGridPremium /> - Row grouping', () => {
         clock.tick(500);
 
         expect(getColumnValues(0)).to.deep.equal(['Cat B (2)', 'Cat 2 (1)', '3', 'Cat 1 (1)', '4']);
+        fireEvent.change(getSelectByName('Operator'), {
+          target: { value: '!=' },
+        });
+        fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
+          target: { value: 2 },
+        });
+        expect(getColumnValues(0)).to.deep.equal([
+          'Cat A (2)',
+          'Cat 1 (1)',
+          '0',
+          'Cat 2 (1)',
+          '1',
+          'Cat B (2)',
+          'Cat 2 (1)',
+          '3',
+          'Cat 1 (1)',
+          '4',
+        ]);
       });
 
       it('should not filter the groups when filtering with an item that is not on the grouping column', () => {
@@ -2406,7 +2462,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
-        // Corresponds to rows id 0 because of Cat A, ann id 4 because of Cat 1
+        // Corresponds to rows id 0, 1, 2 because of Cat A, ann id 4 because of Cat 1
         expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2', '', '4']);
       });
 
@@ -2470,6 +2526,13 @@ describe('<DataGridPremium /> - Row grouping', () => {
 
         expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '']);
         expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2']);
+
+        fireEvent.change(getSelectByName('Operator'), {
+          target: { value: 'doesNotContain' },
+        });
+
+        expect(getColumnValues(0)).to.deep.equal(['Cat B (2)', '', '']);
+        expect(getColumnValues(1)).to.deep.equal(['', '3', '4']);
       });
 
       it('should use the column grouping criteria for filtering if mainGroupingCriteria matches the column grouping criteria and leaf field is defined', () => {
@@ -2494,6 +2557,12 @@ describe('<DataGridPremium /> - Row grouping', () => {
         clock.tick(500);
 
         expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '0', '1', '2']);
+
+        fireEvent.change(getSelectByName('Operator'), {
+          target: { value: 'doesNotContain' },
+        });
+
+        expect(getColumnValues(0)).to.deep.equal(['Cat B (2)', '3', '4']);
       });
 
       it('should use the leaf field for filtering if mainGroupingCriteria is not defined and leaf field is defined', () => {
@@ -2520,6 +2589,14 @@ describe('<DataGridPremium /> - Row grouping', () => {
         clock.tick(500);
 
         expect(getColumnValues(0)).to.deep.equal(['Cat B (2)', '3', '4']);
+
+        fireEvent.change(getSelectByName('Operator'), {
+          target: { value: '!=' },
+        });
+        fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
+          target: { value: 2 },
+        });
+        expect(getColumnValues(0)).to.deep.equal(['Cat A (2)', '0', '1', 'Cat B (2)', '3', '4']);
       });
 
       it("should use the leaf field for filtering if mainGroupingCriteria doesn't match the column grouping criteria and leaf field is defined", () => {
@@ -2547,6 +2624,14 @@ describe('<DataGridPremium /> - Row grouping', () => {
         clock.tick(500);
 
         expect(getColumnValues(0)).to.deep.equal(['Cat B (2)', '3', '4']);
+
+        fireEvent.change(getSelectByName('Operator'), {
+          target: { value: '!=' },
+        });
+        fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
+          target: { value: 2 },
+        });
+        expect(getColumnValues(0)).to.deep.equal(['Cat A (2)', '0', '1', 'Cat B (2)', '3', '4']);
       });
 
       it('should not filter the groups when filtering with an item that is not on the grouping column', () => {
