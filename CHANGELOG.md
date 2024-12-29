@@ -104,7 +104,7 @@ Following are all team members who have contributed to this release:
 
 #### Breaking changes
 
-- Passing additional props (like `data-*`, `aria-*`) directly on the Data Grid component is no longer supported. To pass the props, use `slotProps`.
+- Passing additional props (like `data-*`, `aria-*`) directly on the Data Grid component is no longer supported. To pass the props, use `slotProps`:
 
   - For `.root` element, use `slotProps.root`.
   - For `.main` element (the one with `role="grid"`), use `slotProps.main`.

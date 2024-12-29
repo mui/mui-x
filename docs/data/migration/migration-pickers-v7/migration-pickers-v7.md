@@ -356,8 +356,8 @@ This change causes a few breaking changes:
 
    return (
   -  <PickersLayoutRoot ownerState={props}>
-  +  <PickersLayoutRoot ownerState={ownerState}>
   -    <PickersLayoutContentWrapper>
+  +  <PickersLayoutRoot ownerState={ownerState}>
   +    <PickersLayoutContentWrapper ownerState={ownerState}>
        </PickersLayoutContentWrapper>
      </PickersLayoutRoot>
@@ -455,8 +455,10 @@ This change causes a few breaking changes:
 
    // This contains a small behavior change.
    // If the picker is not controlled and has a default value,
-   // opening it and calling `acceptValueChanges` without any change will call `onAccept` with the default value.
-   // Whereas before, opening it and calling `onDimiss` without any change would not have called `onAccept`.
+   // opening it and calling `acceptValueChanges` without any change will call `onAccept`
+   // with the default value.
+   // Whereas before, opening it and calling `onDimiss` without any change would
+   // not have called `onAccept`.
   -const { onDismiss } = props;
   +const { acceptValueChanges } = usePickerActionsContext();
   +const onDismiss = acceptValueChanges
