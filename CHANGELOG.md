@@ -5,7 +5,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 8.0.0-alpha.6
+## v8.0.0-alpha.6
 
 _Dec 26, 2024_
 
@@ -84,7 +84,7 @@ Same changes as in `@mui/x-tree-view@8.0.0-alpha.6`.
 - [docs] Remove production profiler from docs build (#15959) @lauri865
 - [code-infra] Add new `next-env.d.ts` changes (#15947) @JCQuintas
 
-## 8.0.0-alpha.5
+## v8.0.0-alpha.5
 
 _Dec 19, 2024_
 
@@ -186,7 +186,7 @@ Same changes as in `@mui/x-tree-view@8.0.0-alpha.5`.
 
 - [code-infra] Remove `@mui/material-nextjs` dependency (#15925) @LukasTy
 
-## 8.0.0-alpha.4
+## v8.0.0-alpha.4
 
 _Dec 13, 2024_
 
@@ -314,7 +314,7 @@ Releasing to benefit from license package fix (#15814).
 - [code-infra] Remove redundant `@type/react-test-renderer` dep (#15766) @LukasTy
 - [license] Use `console.log` for the error message on Codesandbox to avoid rendering error (#15814) @arminmeh
 
-## 8.0.0-alpha.3
+## v8.0.0-alpha.3
 
 _Dec 5, 2024_
 
@@ -690,7 +690,7 @@ Same changes as in `@mui/x-charts@v8.0.0-alpha.1`.
 - [docs-infra] Transpile `.ts` demo files (#15345) @KenanYusuf
 - [infra] Remove cherry-pick issue write permission (#15456) @oliviertassinari
 
-## 8.0.0-alpha.0
+## v8.0.0-alpha.0
 
 <img width="100%" alt="MUI X v8 Alpha is live" src="https://github.com/user-attachments/assets/114cf615-b617-435f-8499-76ac3c26c57b">
 
@@ -881,7 +881,117 @@ Same changes as in `@mui/x-charts@8.0.0-alpha.0`.
 - [release] v8 preparation (#15054) @michelengelen
 - [test] Fix advanced list view regression test snapshot (#15260) @KenanYusuf
 
-## 7.23.2
+## v7.23.5
+
+_Dec 27, 2024_
+
+Here are some highlights ✨:
+
+- 🐞 Fix version mismatch issue in Data Grid codesandbox/stackblitz demos
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.23.5`
+
+No changes since `@mui/x-data-grid@v7.23.4`.
+
+#### `@mui/x-data-grid-pro@7.23.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.23.5`.
+
+#### `@mui/x-data-grid-premium@7.23.5` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.23.5`.
+
+## v7.23.4
+
+_Dec 27, 2024_
+
+We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Dutch (nl-NL) locale on the Data Grid
+- 🐞 Bugfixes
+
+Special thanks go out to the community contributor who has helped make this release possible:
+@JoepVerkoelen.
+Following are all team members who have contributed to this release:
+@arminmeh, @oliviertassinari.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.23.4`
+
+- [DataGrid] Fix header filters showing clear button while empty (#15990) @k-rajat19
+- [DataGrid] Replace `forwardRef` with a shim for forward compatibility (#15984) @lauri865
+- [l10n] Improve Dutch (nl-NL) locale (#15920) @JoepVerkoelen
+
+#### `@mui/x-data-grid-pro@7.23.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.23.4`.
+
+#### `@mui/x-data-grid-premium@7.23.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.23.4`, plus:
+
+- [DataGridPremium] Fix column pinning with checkbox selection and row grouping (#15949) @k-rajat19
+
+### Docs
+
+- [docs] Fix outdated link to handbook (#15855) @oliviertassinari
+
+## v7.23.3
+
+_Dec 19, 2024_
+
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Korean (ko-KR) locale on the Data Grid
+- 🐞 Bugfixes
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@k-rajat19, @good-jinu.
+Following are all team members who have contributed to this release:
+@KenanYusuf, @MBilalShafi, @arminmeh, @flaviendelangle.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.23.3`
+
+- [DataGrid] Allow passing custom props to `.main` element (#15919) @MBilalShafi
+- [DataGrid] Consider `columnGroupHeaderHeight` prop in `getTotalHeaderHeight` method (#15927) @k-rajat19
+- [DataGrid] Deprecate `indeterminateCheckboxAction` prop (#15862) @MBilalShafi
+- [DataGrid] Fix `aria-label` value for group checkboxes (#15861) @MBilalShafi
+- [DataGrid] Fix autosizing with virtualized columns (#15929) @k-rajat19
+- [DataGrid] Round dimensions to avoid subpixel rendering error (#15873) @KenanYusuf
+- [DataGrid] Toggle menu on click in `<GridActionsCell />` (#15871) @k-rajat19
+- [DataGrid] Trigger row spanning computation on rows update (#15872) @MBilalShafi
+- [l10n] Improve Korean (ko-KR) locale (#15906) @good-jinu
+
+#### `@mui/x-data-grid-pro@7.23.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.23.3`.
+
+#### `@mui/x-data-grid-premium@7.23.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.23.3`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.23.3`
+
+- [pickers] Add verification to disable skipped hours in spring forward DST (#15918) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@7.23.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.23.3`.
+
+## v7.23.2
 
 _Dec 12, 2024_
 
@@ -962,7 +1072,7 @@ Releasing to benefit from license package fix (#15818).
 - [core] Add `@mui/x-tree-view-pro` to `releaseChangelog` (#15747) @flaviendelangle
 - [license] Use `console.log` for the error message on Codesandbox to avoid rendering error (#15818) @arminmeh
 
-## 7.23.1
+## v7.23.1
 
 _Dec 5, 2024_
 
@@ -1028,7 +1138,7 @@ Same changes as in `@mui/x-charts@7.23.1`.
 
 - [core] Add `@mui/x-tree-view-pro` to `releaseChangelog` (#15747) @flaviendelangle
 
-## 7.23.0
+## v7.23.0
 
 _Nov 29, 2024_
 
@@ -1198,7 +1308,7 @@ No changes since `@mui/x-charts@7.22.2`.
 - [docs-infra] Transpile `.ts` demo files (#15421) @KenanYusuf
 - [core] Clarify release version bump strategy (#15536) @cherniavskii
 
-## 7.22.2
+## v7.22.2
 
 _Nov 8, 2024_
 
@@ -1262,7 +1372,7 @@ Same changes as in `@mui/x-date-pickers@7.22.2`.
 
 Same changes as in `@mui/x-charts@7.22.2`.
 
-## 7.22.1
+## v7.22.1
 
 _Nov 1, 2024_
 
@@ -1324,7 +1434,7 @@ Same changes as in `@mui/x-tree-view@7.22.1`.
 
 - [docs] Add section explaining how to keep the selection while filtering in Data grid docs (#15199) @arminmeh
 
-## 7.22.0
+## v7.22.0
 
 _Oct 25, 2024_
 
@@ -1404,7 +1514,7 @@ Same changes as in `@mui/x-charts@7.22.0`.
 - [core] Update some `default-branch-switch` instances for `v7.x` (#15085) @MBilalShafi
 - [test] Revert to using `fireEvent` instead of `userEvent` (#14927) @LukasTy
 
-## 7.21.0
+## v7.21.0
 
 _Oct 17, 2024_
 
@@ -1493,7 +1603,7 @@ Same changes as in `@mui/x-charts@7.21.0`.
 - [test] Fix `AdapterDayjs` coverage calculation (#14957) @LukasTy
 - [test] Fix split infinitive API convention use @oliviertassinari
 
-## 7.20.0
+## v7.20.0
 
 _Oct 11, 2024_
 
@@ -1583,7 +1693,7 @@ Same changes as in `@mui/x-charts@7.20.0`.
 - [test] Replace `waitFor()` with `act()` (#14851) @oliviertassinari
 - [test] Restore "pnpm tc" CLI (#14852) @oliviertassinari
 
-## 7.19.0
+## v7.19.0
 
 _Oct 4, 2024_
 
@@ -1693,7 +1803,7 @@ Same changes as in `@mui/x-charts@7.19.0`.
 - [infra] Fix line break in Stack Overflow message @oliviertassinari
 - [test] Fix `Escape` event firing event (#14797) @oliviertassinari
 
-## 7.18.0
+## v7.18.0
 
 _Sep 20, 2024_
 
@@ -1786,7 +1896,7 @@ Same changes as in `@mui/x-charts@7.18.0`.
 - [docs-infra] Strengthen CSP (#14581) @oliviertassinari
 - [license] Finish renaming of LicensingModel (#14615) @oliviertassinari
 
-## 7.17.0
+## v7.17.0
 
 _Sep 13, 2024_
 
@@ -1873,7 +1983,7 @@ Same changes as in `@mui/x-charts@7.17.0`.
 - [license] Clean-up terminology to match codebase (#14531) @oliviertassinari
 - [test] Remove dead `act()` logic (#14529) @oliviertassinari
 
-## 7.16.0
+## v7.16.0
 
 _Sep 5, 2024_
 
@@ -1970,7 +2080,7 @@ Same changes as in `@mui/x-charts@7.16.0`, plus:
 - [infra] Switch "add closing message" to reusable workflow (#14499) @michelengelen
 - [infra] Switch "issue triage workflow" to reusable workflows (#14390) @michelengelen
 
-## 7.15.0
+## v7.15.0
 
 _Aug 29, 2024_
 
@@ -2039,7 +2149,7 @@ Same changes as in `@mui/x-charts@7.15.0`, plus:
 - [infra] Fix Issue cleanup action @oliviertassinari
 - [license] Prepare renaming of argument names @oliviertassinari
 
-## 7.14.0
+## v7.14.0
 
 _Aug 23, 2024_
 
@@ -2119,7 +2229,7 @@ Same changes as in `@mui/x-charts@7.14.0`, plus:
 - [code-infra] Set up `eslint-plugin-testing-library` (#14232) @LukasTy
 - [infra] Updated mui-x roadmap links with new project URL (#14271) @michelengelen
 
-## 7.13.0
+## v7.13.0
 
 _Aug 16, 2024_
 
@@ -2200,7 +2310,7 @@ Same changes as in `@mui/x-charts@7.13.0`.
 - [code-infra] Refactor Netlify `cache-docs` plugin setup (#14105) @LukasTy
 - [internals] Move utils needed for Tree View virtualization to shared package (#14202) @flaviendelangle
 
-## 7.12.1
+## v7.12.1
 
 _Aug 8, 2024_
 
@@ -2269,7 +2379,7 @@ No changes since `@mui/x-tree-view@7.12.0`.
 - [code-infra] Use concurrency 1 in CircleCI (#14110) @JCQuintas
 - [infra] Re-added the removal of `Latest Version` section (#14132) @michelengelen
 
-## 7.12.0
+## v7.12.0
 
 _Aug 1, 2024_
 
@@ -2375,7 +2485,7 @@ Same changes as in `@mui/x-date-pickers@7.12.0`.
 - [test] Fix adapters code coverage (#13969) @alexfauquette
 - [test] Fix mocha config to run charts tests (#14041) @alexfauquette
 
-## 7.11.1
+## v7.11.1
 
 _Jul 25, 2024_
 
@@ -2459,7 +2569,7 @@ Same changes as in `@mui/x-date-pickers@7.11.1`.
 - [infra] Fix regex in order id validation (#13976) @michelengelen
 - [infra] Issue template improvement (#13954) @michelengelen
 
-## 7.11.0
+## v7.11.0
 
 _Jul 18, 2024_
 
@@ -2544,7 +2654,7 @@ Same changes as in `@mui/x-date-pickers@7.11.0`, plus:
 - [code-infra] Use specific version for `@mui/docs` dependency (#13760) @LukasTy
 - [internals] Move `EventManager` to `@mui/x-internals` package (#13815) @flaviendelangle
 
-## 7.10.0
+## v7.10.0
 
 _Jul 11, 2024_
 
@@ -2618,7 +2728,7 @@ Same changes as in `@mui/x-date-pickers@7.10.0`, plus:
 - [core] Sort `DATA_GRID_PROPS_DEFAULT_VALUES` alphabetically (#13783) @oliviertassinari
 - [test] Fix split infinitive use in tests @oliviertassinari
 
-## 7.9.0
+## v7.9.0
 
 _Jul 5, 2024_
 
@@ -2684,7 +2794,7 @@ Same changes as in `@mui/x-date-pickers@7.9.0`.
 - [core] Remove `jscodeshift-add-imports` package (#13720) @LukasTy
 - [code-infra] Cleanup monorepo and `@mui/docs` usage (#13713) @LukasTy
 
-## 7.8.0
+## v7.8.0
 
 _Jun 28, 2024_
 
@@ -2783,7 +2893,7 @@ Same changes as in `@mui/x-date-pickers@7.8.0`.
 - [docs-infra] Sync `\_app` folder with monorepo (#13582) @Janpot
 - [license] Allow usage of Charts and Tree View Pro package for old premium licenses (#13619) @flaviendelangle
 
-## 7.7.1
+## v7.7.1
 
 _Jun 21, 2024_
 
@@ -2865,7 +2975,7 @@ Same changes as in `@mui/x-date-pickers@7.7.1`, plus:
 - [core] Fix failing CI test (#13574) @alexfauquette
 - [infra] Remove explicit `@testing-library/react` dependency (#13478) @LukasTy
 
-## 7.7.0
+## v7.7.0
 
 _Jun 13, 2024_
 
@@ -2946,7 +3056,7 @@ Same changes as in `@mui/x-date-pickers@7.7.0`.
 - [infra] Adjust CI setup (#13448) @LukasTy
 - [test] Add tests for the custom slots of `<TreeItem2 />` (#13314) @flaviendelangle
 
-## 7.6.2
+## v7.6.2
 
 _Jun 6, 2024_
 
@@ -3012,7 +3122,7 @@ Same changes as in `@mui/x-date-pickers@7.6.2`.
 - [core] Remove unused `@types/prettier` dependency (#13389) @LukasTy
 - [core] Add `docs/.env.local` to `.gitignore` (#13377) @KenanYusuf
 
-## 7.6.1
+## v7.6.1
 
 _May 31, 2024_
 
@@ -3037,7 +3147,7 @@ Same changes as in `@mui/x-data-grid@7.6.1`.
 
 Same changes as in `@mui/x-data-grid-pro@7.6.1`.
 
-## 7.6.0
+## v7.6.0
 
 _May 30, 2024_
 
@@ -3123,7 +3233,7 @@ Same changes as in `@mui/x-date-pickers@7.6.0`.
 - [test] Use test-utils from npm (#12880) @michaldudak
 - [typescript] Remove duplicate `DateRangePosition` type in favor of `RangePosition` (#13288) @LukasTy
 
-## 7.5.1
+## v7.5.1
 
 _May 23, 2024_
 
@@ -3183,7 +3293,7 @@ Same changes as in `@mui/x-date-pickers@7.5.1`.
 - [code-infra] Run corepack enable on all CI jobs (#13205) @Janpot
 - [code-infra] Use `nx` for lerna tasks (#13166) @LukasTy
 
-## 7.5.0
+## v7.5.0
 
 _May 17, 2024_
 
@@ -3254,7 +3364,7 @@ Same changes as in `@mui/x-date-pickers@7.5.0`.
 - [core] Shift aliasing from babel to webpack (#13051) @Janpot
 - [core] Reuse the `SectionTitle` component in the doc (#13139) @alexfauquette
 
-## 7.4.0
+## v7.4.0
 
 _May 10, 2024_
 
@@ -3321,7 +3431,7 @@ Same changes as in `@mui/x-date-pickers@7.4.0`.
 - [docs-infra] Fix Netlify PR preview path (#12993) @oliviertassinari
 - [infra] Automation: Add release PR reviewers (#12982) @michelengelen
 
-## 7.3.2
+## v7.3.2
 
 _May 2, 2024_
 
@@ -3390,7 +3500,7 @@ Same changes as in `@mui/x-date-pickers@7.3.2`.
 - [docs-infra] Use the `@mui/docs/HighlightedCode` (#12848) @alexfauquette
 - [test] Restore `t` command (#12948) @LukasTy
 
-## 7.3.1
+## v7.3.1
 
 _Apr 26, 2024_
 
@@ -3467,7 +3577,7 @@ Same changes as in `@mui/x-date-pickers@7.3.1`.
 - [code-infra] Closer sync with eslint config of codebase (#12864) @oliviertassinari
 - [support-infra] Add release announcement to GitHub workflows (#11867) (#12843) @michelengelen
 
-## 7.3.0
+## v7.3.0
 
 _Apr 18, 2024_
 
@@ -3542,7 +3652,7 @@ A typo fix:
 
 - [docs-infra] Prepare infra to document charts interfaces (#12653) @alexfauquette
 
-## 7.2.0
+## v7.2.0
 
 _Apr 12, 2024_
 
@@ -3628,7 +3738,7 @@ Same changes as in `@mui/x-date-pickers@7.2.0`, plus:
 - [core] Use `describeTreeView` for icons tests (#12672) @flaviendelangle
 - [core] Use `describeTreeView` in existing tests for `useTreeViewItems` (#12732) @flaviendelangle
 
-## 7.1.1
+## v7.1.1
 
 _Apr 5, 2024_
 
@@ -3729,7 +3839,7 @@ Same changes as in `@mui/x-date-pickers@7.1.1`, plus:
 - [support-infra] Fix user permission check (#12669) @michelengelen
 - [test] Fix Tree View test import (#12668) @LukasTy
 
-## 7.1.0
+## v7.1.0
 
 _Mar 28, 2024_
 
@@ -3800,7 +3910,7 @@ Same changes as in `@mui/x-date-pickers@7.1.0`, plus:
 - [core] Include `DateTimeRangePicker` tag in `releaseChangelog` (#12526) @LukasTy
 - [core] Upgrade monorepo (#12536) @cherniavskii
 
-## 7.0.0
+## v7.0.0
 
 _Mar 22, 2024_
 
@@ -3983,7 +4093,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0`, plus:
 - [core] Use Circle CI context @oliviertassinari
 - [license] Fix grammar on expired license error message (#12460) @joserodolfofreitas
 
-## 7.0.0-beta.7
+## v7.0.0-beta.7
 
 _Mar 14, 2024_
 
@@ -4079,7 +4189,7 @@ The `onNodeFocus` callback has been renamed to `onItemFocus` for consistency:
 - [core] Fix CI (#12414) @flaviendelangle
 - [core] Fix PR deploy link for Tree View doc pages (#12411) @flaviendelangle
 
-## 7.0.0-beta.6
+## v7.0.0-beta.6
 
 _Mar 8, 2024_
 
@@ -4165,7 +4275,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.6`.
 
 - [test] Add `Charts` test (#11551) @alexfauquette
 
-## 7.0.0-beta.5
+## v7.0.0-beta.5
 
 _Mar 1, 2024_
 
@@ -4248,7 +4358,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-beta.5`.
 - [infra] Update `no-response` workflow (#12193) @MBilalShafi
 - [infra] Fix missing permission reset @oliviertassinari
 
-## 7.0.0-beta.4
+## v7.0.0-beta.4
 
 _Feb 23, 2024_
 
@@ -4399,7 +4509,7 @@ These components are no longer exported from `@mui/x-charts`:
 - [docs-infra] Remove randomized API page layout (#11876) @alexfauquette
 - [test] Create local wrapper over `describeConformance` (#12130) @michaldudak
 
-## 7.0.0-beta.3
+## v7.0.0-beta.3
 
 _Feb 16, 2024_
 
@@ -4463,7 +4573,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.3`.
 - [core] Sort prop asc (#12033) @oliviertassinari
 - [core] Bump monorepo (#12055) @alexfauquette
 
-## 7.0.0-beta.2
+## v7.0.0-beta.2
 
 _Feb 9, 2024_
 
@@ -4565,7 +4675,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-beta.2`.
 - [core] Fix npm reference @oliviertassinari
 - [core] Normalize issue template @oliviertassinari
 
-## 7.0.0-beta.1
+## v7.0.0-beta.1
 
 _Feb 1, 2024_
 
@@ -4728,7 +4838,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-beta.1`.
 - [core] Rely on immutable ref when possible (#11847) @oliviertassinari
 - [core] Bump monorepo (#11897) @alexfauquette
 
-## 7.0.0-beta.0
+## v7.0.0-beta.0
 
 _Jan 26, 2024_
 
@@ -4828,7 +4938,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-beta.0`, plus:
 - [core] Polish issue templates @oliviertassinari
 - [code-infra] Update prettier and pretty-quick (#11735) @Janpot
 
-## 7.0.0-alpha.9
+## v7.0.0-alpha.9
 
 _Jan 19, 2024_
 
@@ -5166,7 +5276,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.9`.
 - [docs-infra] Enforce brand name rules (#11651) @oliviertassinari
 - [test] Fix flaky Data Grid test (#11725) @cherniavskii
 
-## 7.0.0-alpha.8
+## v7.0.0-alpha.8
 
 _Jan 11, 2024_
 
@@ -5250,7 +5360,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.8`.
 - [core] Sync playwright cache between MUI X and Material UI (#11607) @oliviertassinari
 - [core] Use MUI X official name in errors (#11645) @oliviertassinari
 
-## 7.0.0-alpha.7
+## v7.0.0-alpha.7
 
 _Jan 5, 2024_
 
@@ -5390,7 +5500,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.7`.
 - [core] Sync the release instructions with MUI Core @oliviertassinari
 - [core] Yaml format match most common convention @oliviertassinari
 
-## 7.0.0-alpha.6
+## v7.0.0-alpha.6
 
 _Dec 22, 2023_
 
@@ -5481,7 +5591,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.6`.
 - [core] Fix security regressions in cherry-pick-next-to-master.yml (#11482) @MBilalShafi
 - [test] Reload the page if its blank and there are no links to the remaining tests (#11466) @cherniavskii
 
-## 7.0.0-alpha.5
+## v7.0.0-alpha.5
 
 _Dec 14, 2023_
 
@@ -5642,7 +5752,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.5`, plus:
 - [infra] Update `no-response` workflow (#11369) @MBilalShafi
 - [test] Fix flaky screenshots (#11388) @cherniavskii
 
-## 7.0.0-alpha.4
+## v7.0.0-alpha.4
 
 _Dec 8, 2023_
 
@@ -5725,7 +5835,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.4`.
 - [docs] Improve `DemoContainer` styling coverage (#11315) @LukasTy
 - [docs] General revision of the Charts docs (#11249) @danilo-leal
 
-## 7.0.0-alpha.3
+## v7.0.0-alpha.3
 
 _Dec 4, 2023_
 
@@ -5907,7 +6017,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.3`.
 - [core] Remove outdated `ENABLE_AD` env variable (#11181) @oliviertassinari
 - [github] Do not add `plan: Pro` and `plan: Premium` labels on Pro / Premium issue templates (#10183) @flaviendelangle
 
-## 7.0.0-alpha.2
+## v7.0.0-alpha.2
 
 _Nov 23, 2023_
 
@@ -6032,7 +6142,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.2`.
 - [renovate] Monthly schedule for lockfile maintenance (#10336) @Janpot
 - [test] Skip flaky e2e test in webkit (#11110) @cherniavskii
 
-## 7.0.0-alpha.1
+## v7.0.0-alpha.1
 
 _Nov 17, 2023_
 
@@ -6449,7 +6559,7 @@ And if you need the exact same output you can apply the following transformation
 - [core] Fix script to release with `next` tag (#10996) @LukasTy
 - [test] Wait for images to load (#11004) @cherniavskii
 
-## 7.0.0-alpha.0
+## v7.0.0-alpha.0
 
 _Nov 10, 2023_
 

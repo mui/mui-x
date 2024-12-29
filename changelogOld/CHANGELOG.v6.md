@@ -1,6 +1,6 @@
 # Changelog for v6 releases
 
-## 6.19.12
+## v6.19.12
 
 _May 17, 2024_
 
@@ -22,7 +22,7 @@ Same changes as in `@mui/x-date-pickers@6.19.12`.
 
 - [docs] Use MUI X v6 in CodeSandbox and StackBlitz demos (#12838) @cherniavskii
 
-## 6.19.11
+## v6.19.11
 
 _Apr 18, 2024_
 
@@ -44,7 +44,7 @@ Same changes as in `@mui/x-data-grid@6.19.11`.
 
 Same changes as in `@mui/x-data-grid-pro@6.19.11`.
 
-## 6.19.10
+## v6.19.10
 
 _Apr 12, 2024_
 
@@ -72,7 +72,7 @@ Same changes as in `@mui/x-data-grid-pro@6.19.10`.
 
 - [core] Update the docs release source branch (#12685) @LukasTy
 
-## 6.19.9
+## v6.19.9
 
 _Apr 5, 2024_
 
@@ -114,7 +114,7 @@ No changes.
 
 - [core] Use Circle CI context (#12607) @cherniavskii
 
-## 6.19.8
+## v6.19.8
 
 _Mar 20, 2024_
 
@@ -142,7 +142,7 @@ Same changes as in `@mui/x-data-grid-pro@6.19.8`, plus:
 
 - [docs] Update links to v7 (#12495) @cherniavskii
 
-## 6.19.7
+## v6.19.7
 
 _Mar 14, 2024_
 
@@ -162,7 +162,7 @@ Same changes as in `@mui/x-date-pickers@6.19.7`.
 
 - [docs] Add Pickers custom start of week section (#12425) @LukasTy
 
-## 6.19.6
+## v6.19.6
 
 _Mar 1, 2024_
 
@@ -203,7 +203,7 @@ Same changes as in `@mui/x-date-pickers@6.19.6`.
 
 - [docs] Update lazy loading demo to show skeleton rows during initial rows fetch (#12062) @cherniavskii
 
-## 6.19.5
+## v6.19.5
 
 _Feb 23, 2024_
 
@@ -264,7 +264,7 @@ Same changes as in `@mui/x-date-pickers@6.19.5`.
 - [core] Fix CI @oliviertassinari
 - [core] Fix docs link check (#12137) @LukasTy
 
-## 6.19.4
+## v6.19.4
 
 _Feb 9, 2024_
 
@@ -320,7 +320,7 @@ Same changes as in `@mui/x-date-pickers@6.19.4`.
 - [docs] Refactor `Localization` documentation sections (#11997) @LukasTy
 - [code] Simplify bug reproduction (#11932) @alexfauquette
 
-## 6.19.3
+## v6.19.3
 
 _Feb 1, 2024_
 
@@ -369,7 +369,7 @@ Same changes as in `@mui/x-date-pickers@6.19.3`.
 - [docs] These API don't exist in MUI X v6 @oliviertassinari
 - [docs] Update whats new page with v7 Beta blogpost content (#11886) @joserodolfofreitas
 
-## 6.19.2
+## v6.19.2
 
 _Jan 25, 2024_
 
@@ -404,7 +404,7 @@ Same changes as in `@mui/x-data-grid@6.19.2`.
 
 Same changes as in `@mui/x-data-grid-pro@6.19.2`.
 
-## 6.19.1
+## v6.19.1
 
 _Jan 19, 2024_
 
@@ -433,7 +433,7 @@ Same changes as in `@mui/x-data-grid-pro@6.19.1`.
 - [charts] Do not propagate `innerRadius` and `outerRadius` to the DOM (#11719) @alexfauquette
 - [charts] Fix default `stackOffset` for `LineChart` (#11703) @alexfauquette
 
-## 6.19.0
+## v6.19.0
 
 _Jan 11, 2024_
 
@@ -475,7 +475,7 @@ Same changes as in `@mui/x-date-pickers@6.19.0`.
 - [docs] Improve landing page (#11570) @oliviertassinari
 - [docs] Give a general revision to the docs (#11249) @danilo-leal
 
-## 6.18.7
+## v6.18.7
 
 _Jan 5, 2024_
 
@@ -517,7 +517,7 @@ Same changes as in `@mui/x-date-pickers@6.18.7`.
 
 - [docs] Clarify Pickers usage with Luxon (#11566) @LukasTy
 
-## 6.18.6
+## v6.18.6
 
 _Dec 22, 2023_
 
@@ -566,7 +566,7 @@ Same changes as in `@mui/x-date-pickers@6.18.6`.
 - [docs] Limit `date-fns` package to v2 in codesandbox (#11478) @LukasTy
 - [test] Reload the page if its blank and there are no links to the remaining tests (#11471) @cherniavskii
 
-## 6.18.5
+## v6.18.5
 
 _Dec 14, 2023_
 
@@ -608,7 +608,7 @@ Same changes as in `@mui/x-date-pickers@6.18.5`, plus:
 - [docs] Respect GoT books (#11294) @janoma
 - [test] Fix flaky screenshots (#11391) @cherniavskii
 
-## 6.18.4
+## v6.18.4
 
 _Dec 8, 2023_
 
@@ -648,7 +648,7 @@ Same changes as in `@mui/x-date-pickers@6.18.4`.
 - [docs] Fix typo (#11323) @cadam11
 - [docs] Add FAQ page (#11347) @noraleonte
 
-## 6.18.3
+## v6.18.3
 
 _Dec 4, 2023_
 
@@ -707,7 +707,7 @@ Same changes as in `@mui/x-date-pickers@6.18.3`.
 - [docs] Improve Data Grid togglable columns example (#11241) @MBilalShafi
 - [docs] Split charts overview and getting started in distinct pages (#10910) @alexfauquette
 
-## 6.18.2
+## v6.18.2
 
 _Nov 23, 2023_
 
@@ -760,7 +760,7 @@ Same changes as in `@mui/x-date-pickers@6.18.2`.
 - [test] Skip flaky e2e test in webkit (#11115) @cherniavskii
 - [test] Wait for images to load (#11109) @cherniavskii
 
-## 6.18.1
+## v6.18.1
 
 _Nov 9, 2023_
 
@@ -818,7 +818,7 @@ Same changes as in `@mui/x-date-pickers@6.18.1`.
 - [core] Adds new alpha version to version select on the docs (#10944) @michelengelen
 - [core] Fix GitHub title tag consistency @oliviertassinari
 
-## 6.18.0
+## v6.18.0
 
 _Nov 3, 2023_
 
@@ -879,7 +879,7 @@ Same changes as in `@mui/x-date-pickers@6.18.0`.
 
 - [core] Generate `slot` API descriptions based on `slots` or `components` (#10879) @LukasTy
 
-## 6.17.0
+## v6.17.0
 
 _Oct 27, 2023_
 
@@ -945,7 +945,7 @@ No change
 
 - [test] Add missing type on `cleanText` utility function (#10780) @flaviendelangle
 
-## 6.16.3
+## v6.16.3
 
 _Oct 20, 2023_
 
@@ -1010,7 +1010,7 @@ Same changes as in `@mui/x-date-pickers@6.16.3`, plus:
 - [core] Update React renovate group with `@types` (#10723) @LukasTy
 - [core] Update `styled-components` (#10733) @LukasTy
 
-## 6.16.2
+## v6.16.2
 
 _Oct 12, 2023_
 
@@ -1115,7 +1115,7 @@ This comes with some breaking changes.
 - [test] Fix dev mode warning (#10610) @oliviertassinari
 - [test] Set UUID chance seed in visual tests (#10609) @oliviertassinari
 
-## 6.16.1
+## v6.16.1
 
 _Oct 6, 2023_
 
@@ -1175,7 +1175,7 @@ Same changes as in `@mui/x-date-pickers@6.16.1`, plus:
 - [core] Revert the link in the priority support ticket description (#10517) @michelengelen
 - [changelog] Polish image @oliviertassinari
 
-## 6.16.0
+## v6.16.0
 
 _Sep 29, 2023_
 
@@ -1259,7 +1259,7 @@ Same changes as in `@mui/x-date-pickers@6.16.0`.
 - [core] Update issue actions & templates (#10375) @romgrk
 - [core] Update release guide (#10468) @DanailH
 
-## 6.15.0
+## v6.15.0
 
 _Sep 22, 2023_
 
@@ -1342,7 +1342,7 @@ Same changes as in `@mui/x-date-pickers@6.15.0`.
 - [test] Do not use deprecated adapter methods (#10416) @flaviendelangle
 - [test] Name test suites according to sentence case (#10429) @alexfauquette
 
-## 6.14.0
+## v6.14.0
 
 _Sep 14, 2023_
 
@@ -1419,7 +1419,7 @@ Same changes as in `@mui/x-date-pickers@6.14.0`.
 - [core] Set logo height to fix layout shift in GitHub @oliviertassinari
 - [core] TrapFocus was renamed to FocusTrap @oliviertassinari
 
-## 6.13.0
+## v6.13.0
 
 _Sep 8, 2023_
 
@@ -1499,7 +1499,7 @@ Same changes as in `@mui/x-date-pickers@6.13.0`, plus:
 - [core] Prevent `e.g.` typo (#10193) @oliviertassinari
 - [core] Remove unused `babel-plugin-tester` package (#10243) @LukasTy
 
-## 6.12.1
+## v6.12.1
 
 _Aug 31, 2023_
 
@@ -1557,7 +1557,7 @@ Same changes as in `@mui/x-date-pickers@6.12.1`.
 - [core] Update babel configs (#9713) @romgrk
 - [test] Disable false positive e2e test on webkit (#10187) @LukasTy
 
-## 6.12.0
+## v6.12.0
 
 _Aug 25, 2023_
 
@@ -1624,7 +1624,7 @@ Same changes as in `@mui/x-date-pickers@6.12.0`.
 - [core] Remove outdated link (#10125) @oliviertassinari
 - [core] Update `no-response` workflow (#10102) @DanailH
 
-## 6.11.2
+## v6.11.2
 
 _Aug 17, 2023_
 
@@ -1680,7 +1680,7 @@ Same changes as in `@mui/x-date-pickers@6.11.2`.
 - [core] Set GitHub Action top level permission @oliviertassinari
 - [core] Split the pickers test utils (#9976) @flaviendelangle
 
-## 6.11.1
+## v6.11.1
 
 _Aug 11, 2023_
 
@@ -1742,7 +1742,7 @@ Same changes as in `@mui/x-date-pickers@6.11.1`.
 - [core] Port GitHub workflow for ensuring triage label is present (#9924) @DanailH
 - [docs-infra] Fix the import samples in Api pages (#9898) @alexfauquette
 
-## 6.11.0
+## v6.11.0
 
 _Aug 4, 2023_
 
@@ -1834,7 +1834,7 @@ Same changes as in `@mui/x-date-pickers@6.11.0`.
 - [test] Add pickers e2e tests (#9747) @LukasTy
 - [test] Data Grid e2e tests follow-up (#9822) @cherniavskii
 
-## 6.10.2
+## v6.10.2
 
 _Jul 27, 2023_
 
@@ -1898,7 +1898,7 @@ Same changes as in `@mui/x-date-pickers@6.10.2`.
 - [license] Only throw in dev mode (#9803) @oliviertassinari
 - [test] Fail the CI when new unexpected files are created (#9728) @oliviertassinari
 
-## 6.10.1
+## v6.10.1
 
 _Jul 20, 2023_
 
@@ -1967,7 +1967,7 @@ Same changes as in `@mui/x-date-pickers@6.10.1`.
 - [core] Add `validate` command (#9714) @romgrk
 - [changelog] Update generator to new format @oliviertassinari
 
-## 6.10.0
+## v6.10.0
 
 _Jul 13, 2023_
 
@@ -2026,7 +2026,7 @@ Same changes as in `@mui/x-date-pickers@6.10.0`.
 - [changelog] Clarify each plan (#9446) @oliviertassinari
 - [license] Fix error terminology (#9614) @oliviertassinari
 
-## 6.9.2
+## v6.9.2
 
 _Jul 6, 2023_
 
@@ -2099,7 +2099,7 @@ Same changes as in `@mui/x-date-pickers@6.9.2`.
 - [core] Fix typo in priority support @oliviertassinari
 - [core] Remove mention of Crowdin @oliviertassinari
 
-## 6.9.1
+## v6.9.1
 
 _Jun 30, 2023_
 
@@ -2176,7 +2176,7 @@ Same changes as in `@mui/x-date-pickers@6.9.1`.
 - [changelog] Remove height img attribute @oliviertassinari
 - [test] Skip flaky row pinning tests in JSDOM (#9511) @cherniavskii
 
-## 6.9.0
+## v6.9.0
 
 _Jun 22, 2023_
 
@@ -2257,7 +2257,7 @@ Same changes as in `@mui/x-date-pickers@6.9.0`.
 - [core] Move old release notes in `CHANGELOG.old.md` (#9269) @flaviendelangle
 - [core] Add priority support issue template (#8928) @DanailH
 
-## 6.8.0
+## v6.8.0
 
 _Jun 16, 2023_
 
@@ -2331,7 +2331,7 @@ Same changes as in `@mui/x-date-pickers@6.8.0`.
 - [charts] Prefix subcomponents with `Charts` (#9314) @alexfauquette
 - [license] Improve annual license expiration message (#9135) @oliviertassinari
 
-## 6.7.0
+## v6.7.0
 
 _Jun 9, 2023_
 
@@ -2418,7 +2418,7 @@ Same changes as in `@mui/x-date-pickers@6.7.0`, plus:
 - [charts] Improve axis label and ticks label alignements (#9190) @alexfauquette
 - [charts] Simplify the switch between responsive and fix dimensions (#9151) @alexfauquette
 
-## 6.6.0
+## v6.6.0
 
 _Jun 1, 2023_
 
@@ -2494,7 +2494,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [charts] Manage series stacking (#8888) @alexfauquette
 - [license] List side effects in the license package (#9092) @cherniavskii
 
-## 6.5.0
+## v6.5.0
 
 _May 19, 2023_
 
@@ -2550,7 +2550,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [DataGrid] Memoize root props for better performance (#8942) @romgrk
 - [test] Skip flaky unit tests in JSDOM (#8994) @cherniavskii
 
-## 6.4.0
+## v6.4.0
 
 _May 12, 2023_
 
@@ -2607,7 +2607,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - [test] Cover row grouping regression with a unit test (#8870) @cherniavskii
 - [test] Fix flaky regression tests (#8954) @cherniavskii
 
-## 6.3.1
+## v6.3.1
 
 _May 5, 2023_
 
@@ -2653,7 +2653,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - [charts] Improvement and docs on axis (#8654) @alexfauquette
 - [charts] Defaultize attributes (#8788) @alexfauquette
 
-## 6.3.0
+## v6.3.0
 
 _Apr 28, 2023_
 
@@ -2722,7 +2722,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [charts] Adapt line and scatter plot to the "band" scale type (#8701) @alexfauquette
 - [charts] Link the Gantt Charts issue in the docs (#8739) @flaviendelangle
 
-## 6.2.1
+## v6.2.1
 
 _Apr 20, 2023_
 
@@ -2770,7 +2770,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [core] Upgrade monorepo (#8668) @MBilalShafi
 - [charts] Support Tooltip (#8356) @alexfauquette
 
-## 6.2.0
+## v6.2.0
 
 _Apr 14, 2023_
 
@@ -2822,7 +2822,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [core] Upgrade monorepo (#8578) @cherniavskii
 - [core] Update last release date (#8569) @DanailH
 
-## 6.1.0
+## v6.1.0
 
 _Apr 10, 2023_
 
@@ -2880,7 +2880,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [core] Remove legacy token (#8457) @oliviertassinari
 - [charts] Add a styling system (#8445) @alexfauquette
 
-## 6.0.4
+## v6.0.4
 
 _Mar 30, 2023_
 
@@ -2941,7 +2941,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 - [charts] Work on typing (#8421) @flaviendelangle
 
-## 6.0.3
+## v6.0.3
 
 _Mar 23, 2023_
 
@@ -2995,7 +2995,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - [charts] Project setup (#8308) @alexfauquette
 - [test] Track visual regressions of column menu and filter/column panels (#8095) @cherniavskii
 
-## 6.0.2
+## v6.0.2
 
 _Mar 16, 2023_
 
@@ -3048,7 +3048,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [core] Regen api docs (#8220) @flaviendelangle
 - [core] Remove duplicated `/` (#8223) @alexfauquette
 
-## 6.0.1
+## v6.0.1
 
 _Mar 9, 2023_
 
@@ -3086,7 +3086,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 - [core] Upgrade monorepo (#8162) @m4theushw
 
-## 6.0.0
+## v6.0.0
 
 _Mar 3, 2023_
 
@@ -3186,7 +3186,7 @@ It can be overridden by specifying `ampmInClock` prop.
 - [core] Mention the use of Support key as an alternative to the OrderID (#6968) @joserodolfofreitas
 - [test] Fix flaky tests (#8097) @cherniavskii
 
-## 6.0.0-beta.5
+## v6.0.0-beta.5
 
 _Feb 23, 2023_
 
@@ -3240,7 +3240,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - [core] Fix `moment` locale on adapter tests (#8020) @flaviendelangle
 - [test] Support all adapters on the field tests about the formats (#7996) @flaviendelangle
 
-## 6.0.0-beta.4
+## v6.0.0-beta.4
 
 _Feb 16, 2023_
 
@@ -3287,7 +3287,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 - [core] Run editing field tests on all major adapters (#7868) @flaviendelangle
 
-## 6.0.0-beta.3
+## v6.0.0-beta.3
 
 _Feb 9, 2023_
 
@@ -3346,7 +3346,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - [core] Remove `tslint` package leftovers (#7841) @LukasTy
 - [test] Use `createDescribes` for `describeValue` and `describeValidation` (#7866) @flaviendelangle
 
-## 6.0.0-beta.2
+## v6.0.0-beta.2
 
 We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
@@ -3398,7 +3398,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - [core] Fix Next.js warning (#7754) @oliviertassinari
 - [core] Remove unused demos (#7758) @flaviendelangle
 
-## 6.0.0-beta.1
+## v6.0.0-beta.1
 
 _Jan 27, 2023_
 
@@ -3464,7 +3464,7 @@ We'd like to offer a big thanks to the 17 contributors who made this release pos
 - [core] Fix `innerslotProps` typo (#7697) @LukasTy
 - [core] Upgrade monorepo (#7676) @cherniavskii
 
-## 6.0.0-beta.0
+## v6.0.0-beta.0
 
 _Jan 19, 2023_
 
@@ -3679,7 +3679,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [core] Fix typo in `CHANGELOG` (#7611) @flaviendelangle
 - [test] Fix date range picker tests to work with western time zones (#7581) @m4theushw
 
-## 6.0.0-alpha.15
+## v6.0.0-alpha.15
 
 _Jan 13, 2023_
 
@@ -3836,7 +3836,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [core] Update package used to import LicenseInfo (#7442) @oliviertassinari
 - [test] Add a few inheritComponent (#7352) @oliviertassinari
 
-## 6.0.0-alpha.14
+## v6.0.0-alpha.14
 
 _Jan 5, 2023_
 
@@ -3915,7 +3915,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [core] Sync monorepo, fix layout scrollbar @oliviertassinari
 - [core] Upgrade monorepo (#7307) @LukasTy
 
-## 6.0.0-alpha.13
+## v6.0.0-alpha.13
 
 _Dec 24, 2022_
 
@@ -4047,7 +4047,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 - [core] Fix API demos callout spacing @oliviertassinari
 
-## 6.0.0-alpha.12
+## v6.0.0-alpha.12
 
 _Dec 16, 2022_
 
@@ -4119,7 +4119,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
 - [core] Fix broken test (#7179) @flaviendelangle
 
-## 6.0.0-alpha.11
+## v6.0.0-alpha.11
 
 _Dec 8, 2022_
 
@@ -4232,7 +4232,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - [core] Sync `ApiPage.js` with monorepo (#7073) @oliviertassinari
 - [test] Fix karma-mocha assertion error messages (#7054) @cherniavskii
 
-## 6.0.0-alpha.10
+## v6.0.0-alpha.10
 
 _Dec 1, 2022_
 
@@ -4324,7 +4324,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [core] Remove useless type casting in field hooks (#7045) @flaviendelangle
 - [test] Sync `test:unit` with monorepo (#6907) @oliviertassinari
 
-## 6.0.0-alpha.9
+## v6.0.0-alpha.9
 
 _Nov 24, 2022_
 
@@ -4400,7 +4400,7 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 - [core] Upgrade ESLint (#6738) @Janpot
 - [test] Test validation on date range view (#6941) @alexfauquette
 
-## 6.0.0-alpha.8
+## v6.0.0-alpha.8
 
 _Nov 17, 2022_
 
@@ -4470,7 +4470,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - [license] Polish error messages (#6881) @oliviertassinari
 - [test] Verify `onError` call on the pickers (#6771) @alexfauquette
 
-## 6.0.0-alpha.7
+## v6.0.0-alpha.7
 
 _Nov 10, 2022_
 
@@ -4512,7 +4512,7 @@ We'd like to offer a big thanks to the 5 contributors who made this release poss
 - [core] Remove default access to GitHub action scopes @oliviertassinari
 - [test] Fix test case name: Pro-> Premium @oliviertassinari
 
-## 6.0.0-alpha.6
+## v6.0.0-alpha.6
 
 _Nov 4, 2022_
 
@@ -4564,7 +4564,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [core] Fixes for upcoming eslint upgrade (#6667) @Janpot
 - [core] Pin GitHub Action to digests (#6683) @oliviertassinari
 
-## 6.0.0-alpha.5
+## v6.0.0-alpha.5
 
 _Oct 31, 2022_
 
@@ -4683,7 +4683,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [license] Improve the license content (#6459) @oliviertassinari
 - [test] Test Arrow up/down on every token (#6563) @alexfauquette
 
-## 6.0.0-alpha.4
+## v6.0.0-alpha.4
 
 _Oct 20, 2022_
 
@@ -4813,7 +4813,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [test] Add validation test on range pickers (#6504) @alexfauquette
 - [test] Remove BrowserStack (#6263) @DanailH
 
-## 6.0.0-alpha.3
+## v6.0.0-alpha.3
 
 _Oct 13, 2022_
 
@@ -5022,7 +5022,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [core] Test validation on textfield and date views (#6265) @alexfauquette
 - [test] Sync comment with monorepo @oliviertassinari
 
-## 6.0.0-alpha.2
+## v6.0.0-alpha.2
 
 _Oct 7, 2022_
 
@@ -5098,7 +5098,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [test] Remove redundant test clean-ups (#6377) @oliviertassinari
 - [test] Replace `React.render` with `React.createRoot` in e2e tests (#6393) @m4theushw
 
-## 6.0.0-alpha.1
+## v6.0.0-alpha.1
 
 _Sep 29, 2022_
 
@@ -5230,7 +5230,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [core] Simplify testing architecture (#6043) @flaviendelangle
 - [test] Skip test in Chrome non-headless and Edge (#6318) @m4theushw
 
-## 6.0.0-alpha.0
+## v6.0.0-alpha.0
 
 _Sep 22, 2022_
 
