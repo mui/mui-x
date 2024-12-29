@@ -461,6 +461,7 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Remove unused `resize` method (#15599) @cherniavskii
 - [DataGrid] Support column virtualization with dynamic row height (#15541) @cherniavskii
 - [DataGrid] Update the default value for `rowSelectionPropagation` (#15523) @MBilalShafi
+- [DataGrid] Fix scroll error (#15521) @cherniavskii
 - [l10n] Improve Chinese (zh-CN) locale (#15570) @headironc
 - [l10n] Improve Portuguese (pt-PT) locale (#15561) @mathzdev
 
