@@ -464,7 +464,9 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Update the default value for `rowSelectionPropagation` (#15523) @MBilalShafi
 - [l10n] Improve Chinese (zh-CN) locale (#15570) @headironc
 - [l10n] Improve German (de-DE) locale (#15610) @lhilgert9
+- [l10n] Improve Portuguese (Brazil) (pt-BR) locale (#15562) @mathzdev
 - [l10n] Improve Portuguese (pt-PT) locale (#15561) @mathzdev
+- [l10n] Improve Spanish (es-ES) locale (#15559) @dloeda
 
 #### `@mui/x-data-grid-pro@v8.0.0-alpha.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -539,6 +541,7 @@ Same changes as in `@mui/x-tree-view@v8.0.0-alpha.2`.
 - [docs] Fix layout shift image on Tree View docs (#15626) @oliviertassinari
 - [docs] Fix Pickers theme augmentation example (#15672) @LukasTy
 - [docs] Improve migration guide (#15673) @arminmeh
+- [docs] Remove selectors section from list view docs (#15637) @KenanYusuf
 - [docs] Replace use of "e.g." with "for example" (#15572) @oliviertassinari
 - [docs] Update stale `new` and `preview` tags in v8 docs (#15547) @JCQuintas
 
@@ -1165,17 +1168,20 @@ Following are all team members who have contributed to this release:
 
 #### `@mui/x-data-grid@v7.23.0`
 
-- [DataGrid] Change test dom check from `/jsdom/` to `/jsdom|HappyDOM/`. (#15642) @jedesroches
+- [DataGrid] Change test dom check from `/jsdom/` to `/jsdom|HappyDOM/` (#15642) @jedesroches
+- [DataGrid] Clear timers on unmount (#15624) @cherniavskii
 - [DataGrid] Fix last separator not being hidden when grid is scrollable (#15551) @KenanYusuf
-- [DataGrid] Fix order of spread props on toolbar items (#15556) @KenanYusuf
+- [DataGrid] Fix order of spread props on toolbar items (#15595) @KenanYusuf
 - [DataGrid] Fix row-spanning in combination with column-pinning (#15460) @lhilgert9
 - [DataGrid] Fix scroll error #15657 @cherniavskii
-- [DataGrid] Improve `GridCell` performance (#15621) @lauri865
 - [DataGrid] Improve resize performance (#15592) @lauri865
 - [DataGrid] React 19 support (#15557) @arminmeh
+- [DataGrid] Remove try/catch from `<GridCell />` due to performance issues (#15621) @lauri865
 - [DataGrid] Support column virtualization with dynamic row height (#15567) @cherniavskii
 - [l10n] Improve Chinese (zh-CN) locale (#15570) @headironc
+- [l10n] Improve Portuguese (Brazil) (pt-BR) locale (#15562) @mathzdev
 - [l10n] Improve Portuguese (pt-PT) locale (#15561) @mathzdev
+- [l10n] Improve Spanish (es-ES) locale (#15559) @dloeda
 
 #### `@mui/x-data-grid-pro@v7.23.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -1227,11 +1233,12 @@ Same changes as in `@mui/x-tree-view@7.23.0`.
 
 - [docs] Add data caching to lazy loaded detail panel demo (#15555) @cherniavskii
 - [docs] Remove selectors section from list view docs (#15639) @KenanYusuf
-- [docs] Add documentation for the list view feature (#15344) @KenanYusuf
+- [docs] Add documentation for the list view feature (#15635) @KenanYusuf
 
 ### Core
 
 - [core] Update @mui/monorepo (#15574) @oliviertassinari
+- [infra] Remove outdated cherry-pick Actions (#15665)
 
 ## v7.22.3
 
