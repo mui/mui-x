@@ -463,6 +463,7 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Support column virtualization with dynamic row height (#15541) @cherniavskii
 - [DataGrid] Update the default value for `rowSelectionPropagation` (#15523) @MBilalShafi
 - [l10n] Improve Chinese (zh-CN) locale (#15570) @headironc
+- [l10n] Improve German (de-DE) locale (#15610) @lhilgert9
 - [l10n] Improve Portuguese (pt-PT) locale (#15561) @mathzdev
 
 #### `@mui/x-data-grid-pro@v8.0.0-alpha.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -490,8 +491,9 @@ Same changes as in `@mui/x-data-grid-pro@v8.0.0-alpha.2`.
 - [l10n] Improve Dutch (nl-NL) locale (#15564) @nphmuller
 - [pickers] Fix DST issue with `America/Asuncion` timezone and `AdapterMoment` (#15552) @flaviendelangle
 - [pickers] Improve validation internals (#15419) @flaviendelangle
-- [pickers] Remove `TSection` and strictly type `TValue` (#15434) @flaviendelangle
 - [pickers] Remove `orientation`, `isLandscape`, `isRtl`, `wrapperVariant` and `disabled` props from `PickersLayout` (#15494) @flaviendelangle
+- [pickers] Remove `TSection` and strictly type `TValue` (#15434) @flaviendelangle
+- [pickers] Use new ownerState object in `<DateTimePickerTabs />` and `<DateTimeRangePickerTabs />` (#15498) @flaviendelangle
 - [pickers] Use the new `ownerState` in `<PickersCalendarHeader />`, `<PickersArrowSwitcher />` and `<DayCalendarSkeleton />` (#15499) @flaviendelangle
 - [pickers] Use the new `ownerState` object in all the field components (#15510) @flaviendelangle
 
@@ -508,10 +510,11 @@ Same changes as in `@mui/x-date-pickers@v8.0.0-alpha.2`.
 #### `@mui/x-charts@v8.0.0-alpha.2`
 
 - [charts] Allow the creation of custom HTML components using charts data (#15511) @JCQuintas
+- [charts] Fix custom Tooltip demos (#15631) @alexfauquette
 - [charts] Flatten imports from `@mui/utils` and `@mui/system` (#15603) @alexfauquette
 - [charts] Introduce the plugin system (#15513) @alexfauquette
 - [charts] Prevent invalid `releasePointerCapture` (#15602) @alexfauquette
-- [charts] Fix custom Tooltip demos (#15631) @alexfauquette
+- [charts] Remove labelFontSize and tickFontSize props (#15633) @JCQuintas
 
 #### `@mui/x-charts-pro@v8.0.0-alpha.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -529,14 +532,15 @@ Same changes as in `@mui/x-tree-view@v8.0.0-alpha.2`.
 
 ### Docs
 
+- [docs] Add documentation for the list view feature (#15344) @KenanYusuf
+- [docs] Fix `anchorEl` API page for charts (#15625) @oliviertassinari
 - [docs] Fix 404 links (#15575) @oliviertassinari
 - [docs] Fix bash comments (#15571) @oliviertassinari
+- [docs] Fix layout shift image on Tree View docs (#15626) @oliviertassinari
 - [docs] Fix Pickers theme augmentation example (#15672) @LukasTy
+- [docs] Improve migration guide (#15673) @arminmeh
 - [docs] Replace use of "e.g." with "for example" (#15572) @oliviertassinari
 - [docs] Update stale `new` and `preview` tags in v8 docs (#15547) @JCQuintas
-- [docs] Fix layout shift image on Tree View docs (#15626) @oliviertassinari
-- [docs] Fix `anchorEl` API page for charts (#15625) @oliviertassinari
-- [docs] Add documentation for the list view feature (#15344) @KenanYusuf
 
 ### Core
 
