@@ -548,6 +548,11 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-tree-view/rich-tree-view/customization' },
           { pathname: '/x/react-tree-view/rich-tree-view/focus' },
           { pathname: '/x/react-tree-view/rich-tree-view/editing', newFeature: true },
+          {
+            pathname: '/x/react-tree-view/rich-tree-view/lazy-loading',
+            plan: 'pro',
+            newFeature: true,
+          },
           { pathname: '/x/react-tree-view/rich-tree-view/ordering', plan: 'pro', newFeature: true },
         ],
       },

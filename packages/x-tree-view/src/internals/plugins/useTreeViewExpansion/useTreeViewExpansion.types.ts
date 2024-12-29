@@ -79,6 +79,16 @@ export interface UseTreeViewExpansionState {
   };
 }
 
+interface UseTreeViewExpansionEventLookup {
+  beforeItemToggleExpansion: {
+    params: {
+      isExpansionPrevented: boolean;
+      event: React.SyntheticEvent;
+      itemId: TreeViewItemId;
+    };
+  };
+}
+
 export type UseTreeViewExpansionSignature = TreeViewPluginSignature<{
   params: UseTreeViewExpansionParameters;
   defaultizedParams: UseTreeViewExpansionDefaultizedParameters;
@@ -88,4 +98,5 @@ export type UseTreeViewExpansionSignature = TreeViewPluginSignature<{
   state: UseTreeViewExpansionState;
   dependencies: [UseTreeViewItemsSignature];
   optionalDependencies: [UseTreeViewLabelSignature];
+  events: UseTreeViewExpansionEventLookup;
 }>;
