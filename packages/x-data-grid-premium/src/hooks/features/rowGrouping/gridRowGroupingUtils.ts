@@ -160,7 +160,7 @@ export const filterRowTreeFromGroupingColumns = (
   const filterTreeNode = (
     node: GridTreeNode,
     areAncestorsExpanded: boolean,
-    isParentPassingFilter: boolean | null,
+    isParentPassingFilter: boolean,
     shouldFilterParent: boolean,
     ancestorsResults: GridAggregatedFilterItemApplierResult[],
   ): number => {
@@ -195,7 +195,7 @@ export const filterRowTreeFromGroupingColumns = (
     let filteredDescendantCount = 0;
 
     if (shouldFilterParent && node.type !== 'footer') {
-      isPassingFiltering = isParentPassingFilter!;
+      isPassingFiltering = isParentPassingFilter;
       allowGroupToFilter = shouldFilterParent;
     }
 
@@ -245,7 +245,7 @@ export const filterRowTreeFromGroupingColumns = (
   for (let i = 0; i < nodes.length; i += 1) {
     const node = nodes[i];
     if (node.depth === 0) {
-      filterTreeNode(node, true, null, false, []);
+      filterTreeNode(node, true, true, false, []);
     }
   }
 
