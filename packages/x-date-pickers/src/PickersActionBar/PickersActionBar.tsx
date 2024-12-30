@@ -15,7 +15,8 @@ export interface PickersActionBarProps extends DialogActionsProps {
    * If empty, does not display that action bar.
    * @default
    * - `[]` for Desktop Date Picker and Desktop Date Range Picker
-   * - `['cancel', 'accept']` for all other Pickers   */
+   * - `['cancel', 'accept']` for all other Pickers
+   */
   actions?: PickersActionBarAction[];
 }
 
