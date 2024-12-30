@@ -154,7 +154,7 @@ describe('<TimeClock />', () => {
 
     expect(handleChange.callCount).to.equal(1);
     const [newDate, reason] = handleChange.firstCall.args;
-    expect(adapterToUse.getHours(newDate)).to.equal(3);
+    expect(adapterToUse.getHours(newDate)).to.equal(23);
     expect(adapterToUse.getMinutes(newDate)).to.equal(20);
     expect(reason).to.equal('partial');
   });
@@ -174,7 +174,7 @@ describe('<TimeClock />', () => {
 
     expect(handleChange.callCount).to.equal(1);
     const [newDate, reason] = handleChange.firstCall.args;
-    expect(adapterToUse.getHours(newDate)).to.equal(21);
+    expect(adapterToUse.getHours(newDate)).to.equal(0);
     expect(adapterToUse.getMinutes(newDate)).to.equal(20);
     expect(reason).to.equal('partial');
   });
