@@ -11,3 +11,18 @@ export const getPickersLocalization = (pickersTranslations: Partial<PickersLocal
     },
   };
 };
+
+export const buildGetOpenDialogAriaText = (params: {
+  utils: MuiPickersAdapter;
+  formatKey: keyof AdapterFormats;
+  contextTranslation: (formattedValue: string | null) => string;
+  propsTranslation: ((formattedValue: string | null) => string) | undefined;
+}) => {
+  const { utils, formatKey, contextTranslation, propsTranslation } = params;
+
+  return (value: PickerValidDate | null) => {
+    const formattedValue = utils.isValid(value) ? utils.format(value, formatKey) : null;
+    const translation = propsTranslation ?? contextTranslation;
+    return translation(formattedValue);
+  };
+};

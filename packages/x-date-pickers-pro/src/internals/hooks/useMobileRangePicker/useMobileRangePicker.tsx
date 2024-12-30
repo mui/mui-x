@@ -72,11 +72,12 @@ export const useMobileRangePicker = <
     fieldRef = endFieldRef;
   }
 
-  const { providerProps, renderCurrentView, ownerState } = usePicker<
-    PickerRangeValue,
-    TView,
-    TExternalProps
-  >({
+  const {
+    providerProps,
+    renderCurrentView,
+    fieldProps: pickerFieldProps,
+    ownerState,
+  } = usePicker<PickerRangeValue, TView, TExternalProps, MobileRangePickerAdditionalViewProps>({
     ...pickerParams,
     props,
     variant: 'mobile',
@@ -162,24 +163,13 @@ export const useMobileRangePicker = <
   };
 
   const renderPicker = () => (
-    <PickerProvider
-      {...providerProps}
-      // This override will go away once the range fields handle the picker opening
-      fieldPrivateContextValue={{
-        ...providerProps.fieldPrivateContextValue,
-        ...enrichedFieldResponse.fieldPrivateContextValue,
-      }}
-    >
-      <PickerFieldUIContextProvider slots={slots} slotProps={slotProps} inputRef={inputRef}>
-        <PickerRangePositionContext.Provider value={rangePositionResponse}>
-          <Field {...enrichedFieldResponse.fieldProps} />
-          <PickersModalDialog slots={slots} slotProps={slotProps}>
-            <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
-              {renderCurrentView()}
-            </Layout>
-          </PickersModalDialog>
-        </PickerRangePositionContext.Provider>
-      </PickerFieldUIContextProvider>
+    <PickerProvider {...providerProps}>
+      <Field {...enrichedFieldProps} />
+      <PickersModalDialog slots={slots} slotProps={slotProps}>
+        <Layout {...slotProps?.layout} slots={slots} slotProps={slotPropsForLayout}>
+          {renderCurrentView()}
+        </Layout>
+      </PickersModalDialog>
     </PickerProvider>
   );
 

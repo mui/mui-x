@@ -17,6 +17,7 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { usePickerContext, usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import {
   DateRangePickerToolbarClasses,
   getDateRangePickerToolbarUtilityClass,
@@ -34,7 +35,8 @@ const useUtilityClasses = (classes: Partial<DateRangePickerToolbarClasses> | und
 
 export interface DateRangePickerToolbarProps
   extends ExportedDateRangePickerToolbarProps,
-    Omit<BaseToolbarProps, 'onChange' | 'isLandscape'> {}
+    Omit<BaseToolbarProps, 'onChange' | 'isLandscape'>,
+    Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {}
 
 export interface ExportedDateRangePickerToolbarProps extends ExportedBaseToolbarProps {
   /**
@@ -80,14 +82,32 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar(
   const utils = useUtils();
   const props = useThemeProps({ props: inProps, name: 'MuiDateRangePickerToolbar' });
 
-  const { toolbarFormat: toolbarFormatProp, className, classes: classesProp, ...other } = props;
+  const {
+    rangePosition,
+    onRangePositionChange,
+    toolbarFormat: toolbarFormatProp,
+    className,
+    classes: classesProp,
+    ...other
+  } = props;
 
+  const { value } = usePickerContext<PickerRangeValue>();
   const { value } = usePickerContext<PickerRangeValue>();
   const translations = usePickerTranslations();
   const ownerState = useToolbarOwnerState();
   const { rangePosition, setRangePosition } = usePickerRangePositionContext();
   const classes = useUtilityClasses(classesProp);
 
+  // This can't be a default value when spreading because it breaks the API generation.
+  const toolbarFormat = toolbarFormatProp ?? utils.formats.shortDate;
+
+  const formatDate = (date: PickerValidDate | null, fallback: string) => {
+    if (!utils.isValid(date)) {
+      return fallback;
+    }
+
+    return utils.formatByString(date, toolbarFormat);
+  };
   // This can't be a default value when spreading because it breaks the API generation.
   const toolbarFormat = toolbarFormatProp ?? utils.formats.shortDate;
 
@@ -111,11 +131,15 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar(
         <PickersToolbarButton
           variant={value[0] == null ? 'h6' : 'h5'}
           value={formatDate(value[0], translations.start)}
+          variant={value[0] == null ? 'h6' : 'h5'}
+          value={formatDate(value[0], translations.start)}
           selected={rangePosition === 'start'}
           onClick={() => setRangePosition('start')}
         />
         <Typography variant="h5">&nbsp;{'–'}&nbsp;</Typography>
         <PickersToolbarButton
+          variant={value[1] == null ? 'h6' : 'h5'}
+          value={formatDate(value[1], translations.end)}
           variant={value[1] == null ? 'h6' : 'h5'}
           value={formatDate(value[1], translations.end)}
           selected={rangePosition === 'end'}

@@ -11,28 +11,25 @@ import {
   PickerValidValue,
   PickerVariant,
 } from '../models';
+import {
+  DateOrTimeViewWithMeridiem,
+  PickerOrientation,
+  PickerValidValue,
+  PickerVariant,
+} from '../models';
 import type {
   UsePickerValueActionsContextValue,
   UsePickerValueContextValue,
   UsePickerValuePrivateContextValue,
 } from '../hooks/usePicker/usePickerValue.types';
-import {
-  UsePickerViewsActionsContextValue,
-  UsePickerViewsContextValue,
-  UsePickerViewsPrivateContextValue,
-} from '../hooks/usePicker/usePickerViews';
+import { UsePickerViewsContextValue } from '../hooks/usePicker/usePickerViews';
 import { IsValidValueContext } from '../../hooks/useIsValidValue';
-import {
-  PickerFieldPrivateContext,
-  PickerFieldPrivateContextValue,
-} from '../hooks/useField/useFieldInternalPropsWithDefaults';
-import { PickerContext } from '../../hooks/usePickerContext';
 
-export const PickerActionsContext = React.createContext<PickerActionsContextValue<
-  any,
-  any,
-  any
-> | null>(null);
+export const PickerContext = React.createContext<PickerContextValue<any, any, any> | null>(null);
+
+export const PickerActionsContext = React.createContext<PickerActionsContextValue<any, any> | null>(
+  null,
+);
 
 export const PickerPrivateContext = React.createContext<PickerPrivateContextValue>({
   ownerState: {
@@ -62,7 +59,6 @@ export function PickerProvider<TValue extends PickerValidValue>(
     contextValue,
     actionsContextValue,
     privateContextValue,
-    fieldPrivateContextValue,
     isValidContextValue,
     localeText,
     children,
@@ -72,11 +68,9 @@ export function PickerProvider<TValue extends PickerValidValue>(
     <PickerContext.Provider value={contextValue}>
       <PickerActionsContext.Provider value={actionsContextValue}>
         <PickerPrivateContext.Provider value={privateContextValue}>
-          <PickerFieldPrivateContext.Provider value={fieldPrivateContextValue}>
-            <IsValidValueContext.Provider value={isValidContextValue}>
-              <LocalizationProvider localeText={localeText}>{children}</LocalizationProvider>
-            </IsValidValueContext.Provider>
-          </PickerFieldPrivateContext.Provider>
+          <IsValidValueContext.Provider value={isValidContextValue}>
+            <LocalizationProvider localeText={localeText}>{children}</LocalizationProvider>
+          </IsValidValueContext.Provider>
         </PickerPrivateContext.Provider>
       </PickerActionsContext.Provider>
     </PickerContext.Provider>
@@ -85,15 +79,18 @@ export function PickerProvider<TValue extends PickerValidValue>(
 
 export interface PickerProviderProps<TValue extends PickerValidValue> {
   contextValue: PickerContextValue<any, any, any>;
-  actionsContextValue: PickerActionsContextValue<any, any, any>;
+  actionsContextValue: PickerActionsContextValue<any, any>;
   privateContextValue: PickerPrivateContextValue;
-  fieldPrivateContextValue: PickerFieldPrivateContextValue;
   isValidContextValue: (value: TValue) => boolean;
   localeText: PickersInputLocaleText | undefined;
   children: React.ReactNode;
 }
 
 export interface PickerContextValue<
+  TValue extends PickerValidValue,
+  TView extends DateOrTimeViewWithMeridiem,
+  TError,
+> extends UsePickerValueContextValue<TValue, TError>,
   TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
@@ -184,12 +181,8 @@ export interface PickerContextValue<
   rootRef: React.ForwardedRef<HTMLDivElement> | undefined;
 }
 
-export interface PickerActionsContextValue<
-  TValue extends PickerValidValue,
-  TView extends DateOrTimeViewWithMeridiem,
-  TError = string | null,
-> extends UsePickerValueActionsContextValue<TValue, TError>,
-    UsePickerViewsActionsContextValue<TView> {}
+export interface PickerActionsContextValue<TValue extends PickerValidValue, TError = string>
+  extends UsePickerValueActionsContextValue<TValue, TError> {}
 
 export interface PickerPrivateContextValue
   extends UsePickerValuePrivateContextValue,

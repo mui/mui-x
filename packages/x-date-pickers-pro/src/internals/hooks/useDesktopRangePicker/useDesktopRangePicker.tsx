@@ -64,11 +64,13 @@ export const useDesktopRangePicker = <
     fieldRef = endFieldRef;
   }
 
-  const { providerProps, renderCurrentView, ownerState } = usePicker<
-    PickerRangeValue,
-    TView,
-    TExternalProps
-  >({
+  const {
+    providerProps,
+    renderCurrentView,
+    shouldRestoreFocus,
+    fieldProps: pickerFieldProps,
+    ownerState,
+  } = usePicker<PickerRangeValue, TView, TExternalProps, DesktopRangePickerAdditionalViewProps>({
     ...pickerParams,
     props,
     variant: 'desktop',
@@ -149,30 +151,23 @@ export const useDesktopRangePicker = <
   const Layout = slots?.layout ?? PickersLayout;
 
   const renderPicker = () => (
-    <PickerProvider
-      {...providerProps}
-      // This override will go away once the range fields handle the picker opening
-      fieldPrivateContextValue={{
-        ...providerProps.fieldPrivateContextValue,
-        ...enrichedFieldResponse.fieldPrivateContextValue,
-      }}
-    >
-      <PickerFieldUIContextProvider slots={slots} slotProps={slotProps} inputRef={inputRef}>
-        <PickerRangePositionContext.Provider value={rangePositionResponse}>
-          <Field {...enrichedFieldResponse.fieldProps} />
-          <PickerPopper
-            role="tooltip"
-            containerRef={popperRef}
-            onBlur={handleBlur}
-            slots={slots}
-            slotProps={slotProps}
-          >
-            <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
-              {renderCurrentView()}
-            </Layout>
-          </PickerPopper>
-        </PickerRangePositionContext.Provider>
-      </PickerFieldUIContextProvider>
+    <PickerProvider {...providerProps}>
+      <Field {...enrichedFieldProps} />
+      <PickersPopper
+        role="tooltip"
+        placement="bottom-start"
+        containerRef={popperRef}
+        anchorEl={anchorRef.current}
+        onBlur={handleBlur}
+        slots={slots}
+        slotProps={slotProps}
+        shouldRestoreFocus={shouldRestoreFocus}
+        reduceAnimations={reduceAnimations}
+      >
+        <Layout {...slotProps?.layout} slots={slots} slotProps={slotPropsForLayout}>
+          {renderCurrentView()}
+        </Layout>
+      </PickersPopper>
     </PickerProvider>
   );
 

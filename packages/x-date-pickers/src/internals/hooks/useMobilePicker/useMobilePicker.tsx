@@ -45,11 +45,12 @@ export const useMobilePicker = <
   const labelId = useId();
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
 
-  const { providerProps, renderCurrentView, ownerState } = usePicker<
-    PickerValue,
-    TView,
-    TExternalProps
-  >({
+  const {
+    providerProps,
+    renderCurrentView,
+    fieldProps: pickerFieldProps,
+    ownerState,
+  } = usePicker<PickerValue, TView, TExternalProps, {}>({
     ...pickerParams,
     props,
     fieldRef,
@@ -101,14 +102,17 @@ export const useMobilePicker = <
 
   const renderPicker = () => (
     <PickerProvider {...providerProps}>
-      <PickerFieldUIContextProvider slots={slots} slotProps={slotProps} inputRef={inputRef}>
-        <Field {...fieldProps} unstableFieldRef={handleFieldRef} />
-        <PickersModalDialog slots={slots} slotProps={slotProps}>
-          <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
-            {renderCurrentView()}
-          </Layout>
-        </PickersModalDialog>
-      </PickerFieldUIContextProvider>
+      <Field
+        {...fieldProps}
+        slots={slotsForField}
+        slotProps={slotProps}
+        unstableFieldRef={handleFieldRef}
+      />
+      <PickersModalDialog slots={slots} slotProps={slotProps}>
+        <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
+          {renderCurrentView()}
+        </Layout>
+      </PickersModalDialog>
     </PickerProvider>
   );
 

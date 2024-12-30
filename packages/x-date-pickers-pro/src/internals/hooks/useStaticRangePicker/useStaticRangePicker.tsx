@@ -38,7 +38,12 @@ export const useStaticRangePicker = <
 
   const rangePositionResponse = useRangePosition(props);
 
-  const { providerProps, renderCurrentView } = usePicker<PickerRangeValue, TView, TExternalProps>({
+  const { providerProps, renderCurrentView } = usePicker<
+    PickerRangeValue,
+    TView,
+    TExternalProps,
+    {}
+  >({
     ...pickerParams,
     props,
     autoFocusView: autoFocus ?? false,
@@ -50,20 +55,23 @@ export const useStaticRangePicker = <
   const Layout = slots?.layout ?? PickerStaticLayout;
 
   const renderPicker = () => (
-    <PickerRangePositionContext.Provider value={rangePositionResponse}>
-      <PickerProvider {...providerProps}>
-        <Layout
-          {...slotProps?.layout}
-          slots={slots}
-          slotProps={slotProps}
-          sx={mergeSx(providerProps.contextValue.rootSx, slotProps?.layout?.sx)}
-          className={clsx(providerProps.contextValue.rootClassName, slotProps?.layout?.className)}
-          ref={providerProps.contextValue.rootRef}
-        >
-          {renderCurrentView()}
-        </Layout>
-      </PickerProvider>
-    </PickerRangePositionContext.Provider>
+    <PickerProvider {...providerProps}>
+      <Layout
+        {...slotProps?.layout}
+        slots={slots}
+        slotProps={slotPropsForLayout}
+        sx={[
+          ...(Array.isArray(sx) ? sx : [sx]),
+          ...(Array.isArray(slotProps?.layout?.sx)
+            ? slotProps!.layout!.sx
+            : [slotProps?.layout?.sx]),
+        ]}
+        className={clsx(className, slotProps?.layout?.className)}
+        ref={ref}
+      >
+        {renderCurrentView()}
+      </Layout>
+    </PickerProvider>
   );
 
   return { renderPicker };

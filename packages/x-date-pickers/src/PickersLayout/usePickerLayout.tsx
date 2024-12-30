@@ -13,6 +13,7 @@ import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateCont
 import { usePickerContext } from '../hooks';
 
 function toolbarHasView(toolbarProps: BaseToolbarProps | any): toolbarProps is BaseToolbarProps {
+function toolbarHasView(toolbarProps: BaseToolbarProps | any): toolbarProps is BaseToolbarProps {
   return toolbarProps.view !== null;
 }
 
@@ -42,9 +43,10 @@ const usePickerLayout = <TValue extends PickerValidValue>(
   props: PickersLayoutProps<TValue>,
 ): UsePickerLayoutResponse<TValue> => {
   const { ownerState: pickerOwnerState } = usePickerPrivateContext();
-  const { view } = usePickerContext();
+  const { variant, view } = usePickerContext();
   const isRtl = useRtl();
 
+  const { children, slots, slotProps, classes: classesProp } = props;
   const { children, slots, slotProps, classes: classesProp } = props;
 
   const ownerState = React.useMemo<PickerLayoutOwnerState>(

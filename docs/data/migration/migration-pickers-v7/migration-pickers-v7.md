@@ -807,20 +807,6 @@ If the updated values do not fit your use case, you can [override them](/x/react
   The only difference is that `usePickerActionsContext` only contains variables with stable references that won't cause a re-render of your component.
   :::
 
-- The component passed to the `toolbar` slot no longer receives the `rangePosition` and `onRangePositionChange` on range pickers, instead you can use the `usePickerRangePositionContext` hook:
-
-  ```diff
-  +import { usePickerRangePositionContext } from '@mui/x-date-pickers-pro/hooks';
-
-  -const { rangePosition } = props;
-  +const { rangePosition } = usePickerRangePositionContext();
-
-  -const { onRangePositionChange } = props;
-  -onRangePositionChange('start');
-  +const { setRangePosition } = usePickerRangePositionContext();
-  +setRangePosition('start');
-  ```
-
 ### Slot: `tabs`
 
 - The component passed to the `tabs` slot no longer receives the `view`, `views` and `onViewChange` props, instead you can use the `usePickerContext` hook:

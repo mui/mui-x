@@ -69,6 +69,10 @@ export function usePickerProvider<
 >(
   parameters: UsePickerProviderParameters<TValue, TView, TError>,
 ): UsePickerProviderReturnValue<TValue> {
+  TError,
+>(
+  parameters: UsePickerProviderParameters<TValue, TView, TError>,
+): UsePickerProviderReturnValue<TValue> {
   const {
     ref,
     props,
@@ -109,18 +113,6 @@ export function usePickerProvider<
       props.readOnly,
     ],
   );
-
-  const triggerStatus = React.useMemo(() => {
-    if (props.disableOpenPicker || !paramsFromUsePickerViews.hasUIView) {
-      return 'hidden';
-    }
-
-    if (props.disabled || props.readOnly) {
-      return 'disabled';
-    }
-
-    return 'enabled';
-  }, [props.disableOpenPicker, paramsFromUsePickerViews.hasUIView, props.disabled, props.readOnly]);
 
   const contextValue = React.useMemo<PickerContextValue<TValue, TView, TError>>(
     () => ({
@@ -199,8 +191,7 @@ export function usePickerProvider<
     localeText,
     contextValue,
     privateContextValue,
-    actionsContextValue,
-    fieldPrivateContextValue,
+    actionsContextValue: paramsFromUsePickerValue.actionsContextValue,
     isValidContextValue: paramsFromUsePickerValue.isValidContextValue,
   };
 }
@@ -210,14 +201,16 @@ export interface UsePickerProviderParameters<
   TView extends DateOrTimeViewWithMeridiem,
   TError,
 > extends Pick<PickerProviderProps<TValue>, 'localeText'> {
-  ref: React.ForwardedRef<HTMLDivElement> | undefined;
-  props: UsePickerProps<TValue, any, any, any> & UsePickerProviderNonStaticProps;
+  props: UsePickerProps<TValue, any, any, any, any>;
   valueManager: PickerValueManager<TValue, any>;
   variant: PickerVariant;
+  paramsFromUsePickerValue: UsePickerValueProviderParams<TValue, TError>;
   paramsFromUsePickerValue: UsePickerValueProviderParams<TValue, TError>;
   paramsFromUsePickerViews: UsePickerViewsProviderParams<TView>;
 }
 
+export interface UsePickerProviderReturnValue<TValue extends PickerValidValue>
+  extends Omit<PickerProviderProps<TValue>, 'children'> {}
 export interface UsePickerProviderReturnValue<TValue extends PickerValidValue>
   extends Omit<PickerProviderProps<TValue>, 'children'> {}
 

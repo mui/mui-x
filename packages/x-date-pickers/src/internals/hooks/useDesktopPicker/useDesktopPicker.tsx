@@ -45,11 +45,14 @@ export const useDesktopPicker = <
   const labelId = useId();
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
 
-  const { providerProps, renderCurrentView, ownerState } = usePicker<
-    PickerValue,
-    TView,
-    TExternalProps
-  >({
+  const {
+    hasUIView,
+    providerProps,
+    renderCurrentView,
+    shouldRestoreFocus,
+    fieldProps: pickerFieldProps,
+    ownerState,
+  } = usePicker<PickerValue, TView, TExternalProps, {}>({
     ...pickerParams,
     props,
     fieldRef,
@@ -101,14 +104,25 @@ export const useDesktopPicker = <
 
   const renderPicker = () => (
     <PickerProvider {...providerProps}>
-      <PickerFieldUIContextProvider slots={slots} slotProps={slotProps} inputRef={inputRef}>
-        <Field {...fieldProps} unstableFieldRef={handleFieldRef} />
-        <PickerPopper role="dialog" slots={slots} slotProps={slotProps}>
-          <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
-            {renderCurrentView()}
-          </Layout>
-        </PickerPopper>
-      </PickerFieldUIContextProvider>
+      <Field
+        {...fieldProps}
+        slots={slotsForField}
+        slotProps={slotProps}
+        unstableFieldRef={handleFieldRef}
+      />
+      <PickersPopper
+        role="dialog"
+        placement="bottom-start"
+        anchorEl={containerRef.current}
+        slots={slots}
+        slotProps={slotProps}
+        shouldRestoreFocus={shouldRestoreFocus}
+        reduceAnimations={reduceAnimations}
+      >
+        <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
+          {renderCurrentView()}
+        </Layout>
+      </PickersPopper>
     </PickerProvider>
   );
 
