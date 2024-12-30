@@ -1,3 +1,5 @@
+import { ChartMargin } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.types';
+
 export interface CardinalDirections<T> {
   top?: T;
   bottom?: T;
@@ -14,5 +16,5 @@ export type LayoutConfig = {
    * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
    * @default object Depends on the charts type.
    */
-  margin?: Partial<CardinalDirections<number>>;
+  margin?: Partial<ChartMargin>;
 };

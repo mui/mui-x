@@ -5,7 +5,7 @@ export interface UseChartIdParameters {
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
-  id: string | undefined;
+  id?: string | undefined;
 }
 
 export type UseChartIdDefaultizedParameters = Required<UseChartIdParameters>;

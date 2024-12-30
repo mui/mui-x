@@ -10,5 +10,9 @@
     ],
     "noImplicitAny": false
   },
-  "include": ["src/**/*", "../../test/utils/addChaiAssertions.ts"]
+  "include": [
+    "src/**/*",
+    "../../test/utils/addChaiAssertions.ts",
+    "../x-charts/src/internals/plugins/featurePlugins/useChartCartesianAxis/createAxisFilterMapper.ts"
+  ]
 }
