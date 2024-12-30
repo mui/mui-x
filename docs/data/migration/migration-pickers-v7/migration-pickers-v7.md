@@ -802,6 +802,25 @@ The `TSection` generic of the `FieldRef` type has been replaced with the `TValue
 The following types are no longer exported by `@mui/x-date-pickers` and/or `@mui/x-date-pickers-pro`.
 If you were using them, you need to replace them with the following code:
 
+- `NonEmptyDateRange`
+
+  ```ts
+  // When using AdapterDayjs
+  import { Dayjs } from 'dayjs';
+  type NonEmptyDateRange = [Dayjs, Dayjs];
+
+  // When using AdapterLuxon
+  import { DateTime } from 'luxon';
+  type NonEmptyDateRange = [DateTime, DateTime];
+
+  // When using AdapterMoment, AdapterMomentJalaali or AdapterMomentHijri
+  import { Moment } from 'moment';
+  type NonEmptyDateRange = [Moment, Moment];
+
+  // When using AdapterDateFns, AdapterDateFnsV3, AdapterDateFnsJalali or AdapterDateFnsJalaliV3
+  type NonEmptyDateRange = [Date, Date];
+  ```
+
 - `UseDateFieldComponentProps`
 
   ```ts
