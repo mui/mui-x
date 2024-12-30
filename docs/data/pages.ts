@@ -586,12 +586,12 @@ const pages: MuiPage[] = [
             title: 'Breaking changes: Date and Time Pickers',
           },
           {
-            pathname: '/x/migration/migration-tree-view-v7',
-            title: 'Breaking changes: Tree View',
-          },
-          {
             pathname: '/x/migration/migration-charts-v7',
             title: 'Breaking changes: Charts',
+          },
+          {
+            pathname: '/x/migration/migration-tree-view-v7',
+            title: 'Breaking changes: Tree View',
           },
         ],
       },
@@ -605,12 +605,12 @@ const pages: MuiPage[] = [
             title: 'Breaking changes: Date and Time Pickers',
           },
           {
-            pathname: '/x/migration/migration-tree-view-v6',
-            title: 'Breaking changes: Tree View',
-          },
-          {
             pathname: '/x/migration/migration-charts-v6',
             title: 'Breaking changes: Charts',
+          },
+          {
+            pathname: '/x/migration/migration-tree-view-v6',
+            title: 'Breaking changes: Tree View',
           },
         ],
       },
