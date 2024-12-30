@@ -364,8 +364,7 @@ This change causes a few breaking changes:
    );
   ```
 
-- The component passed to the `layout` slot no longer receives the `value` prop.
-  You can use the `usePickerContext` hook instead:
+- The component passed to the `layout` slot no longer receives the `value` prop, instead you can use the `usePickerContext` hook:
 
   ```diff
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
@@ -378,8 +377,7 @@ This change causes a few breaking changes:
   +const { value } = usePickerContext();
   ```
 
-- The component passed to the `layout` slot no longer receives the `disabled` and `readOnly` props.
-  You can use the `usePickerContext` hook instead:
+- The component passed to the `layout` slot no longer receives the `disabled` and `readOnly` props, instead you can use the `usePickerContext` hook:
 
   ```diff
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
@@ -391,8 +389,7 @@ This change causes a few breaking changes:
   +const { readOnly } = usePickerContext();
   ```
 
-- The component passed to the `layout` slot no longer receives the `isRtl` prop.
-  You can use the `useRtl` hook from `@mui/system` instead:
+- The component passed to the `layout` slot no longer receives the `isRtl` prop. If you need to access this information, you can use the `useRtl` hook from `@mui/system`:
 
   ```diff
   +import { useRtl } from '@mui/system/RtlProvider';
@@ -415,8 +412,7 @@ This change causes a few breaking changes:
   +const isLandscape = orientation === 'landscape';
   ```
 
-- The component passed to the `layout` slot no longer receives the `wrapperVariant` prop.
-  You can use the `usePickerContext` hook instead:
+- The component passed to the `layout` slot no longer receives the `wrapperVariant` prop, instead you can use the `usePickerContext` hook:
 
   ```diff
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
@@ -443,6 +439,8 @@ This change causes a few breaking changes:
 
 - The component passed to the `layout` slot no longer receives the `onClear`, `onSetToday`, `onAccept`, `onCancel`, `onOpen`, `onClose` `onDismiss`, `onChange` and `onSelectShortcut` props.
   You can use the `usePickerActionsContext` or the `usePickerContext` hooks instead:
+- The component passed to the `layout` slot no longer receives the `onClear`, `onSetToday`, `onAccept`, `onCancel`, `onOpen`, `onClose` `onDismiss`, `onChange` and `onSelectShortcut` props.
+  You can use the `usePickerActionsContext` or the `usePickerContext` hooks instead:
 
   ```diff
   +import { usePickerActionsContext } from '@mui/x-date-pickers/hooks';
@@ -466,6 +464,7 @@ This change causes a few breaking changes:
   +  setOpen(true);
   +}
 
+  -const { onClose } = props;
   -const { onClose } = props;
   +const { setOpen } = usePickerActionsContext();
   +const onClose = event => {
@@ -494,6 +493,18 @@ This change causes a few breaking changes:
   -onSelectShortcut(dayjs(), 'accept', myShortcut);
   +const { setValue } = usePickerActionsContext();
   +setValue(dayjs(), { changeImportance: 'accept', shortcut: myShortcut });
+
+  -const { onChange } = props;
+  -onChange(dayjs(), 'partial');
+  -onChange(dayjs(), 'finish');
+  +const { setValue } = usePickerActionsContext();
+  +setValue(dayjs(), { changeImportance: 'set' });
+  +setValue(dayjs(), { changeImportance: 'accept' });
+
+  -const { onSelectShortcut } = props;
+  -onSelectShortcut(dayjs(), 'accept', myShortcut);
+  +const { setValue } = usePickerActionsContext();
+  +setValue(dayjs(), { changeImportance: 'accept', shortcut: myShortcut });
   ```
 
   :::success
@@ -503,8 +514,7 @@ This change causes a few breaking changes:
 
 ### Slot: `toolbar`
 
-- The component passed to the `toolbar` slot no longer receives the `value` prop.
-  You can use the `usePickerContext` hook instead:
+- The component passed to the `toolbar` slot no longer receives the `value` prop, instead you can use the `usePickerContext` hook:
 
   ```diff
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
@@ -517,8 +527,7 @@ This change causes a few breaking changes:
   +const { value } = usePickerContext();
   ```
 
-- The component passed to the `toolbar` slot no longer receives the `disabled` and `readOnly` props.
-  You can use the `usePickerContext` hook instead:
+- The component passed to the `toolbar` slot no longer receives the `disabled` and `readOnly` props, instead you can use the `usePickerContext` hook:
 
   ```diff
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
@@ -530,8 +539,7 @@ This change causes a few breaking changes:
   +const { readOnly } = usePickerContext();
   ```
 
-- The component passed to the `toolbar` slot no longer receives the `isLandscape` prop.
-  You can use the `usePickerContext` hook instead:
+- The component passed to the `toolbar` slot no longer receives the `isLandscape` prop, instead you can use the `usePickerContext` hook:
 
   ```diff
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
@@ -541,8 +549,7 @@ This change causes a few breaking changes:
   +const isLandscape = orientation === 'landscape';
   ```
 
-- The component passed to the `toolbar` slot no longer receives the `view`, `views` and `onViewChange` props.
-  You can use the `usePickerContext` hook instead:
+- The component passed to the `toolbar` slot no longer receives the `view`, `views` and `onViewChange` props, instead you can use the `usePickerContext` hook:
 
   ```diff
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
@@ -576,10 +583,28 @@ This change causes a few breaking changes:
   The only difference is that `usePickerActionsContext` only contains variables with stable references that won't cause a re-render of your component.
   :::
 
+- The component passed to the `toolbar` slot no longer receives the `onChange` prop.
+  You can use the `usePickerActionsContext` or the `usePickerContext` hooks instead:
+
+  ```diff
+  +import { usePickerActionsContext } from '@mui/x-date-pickers/hooks';
+
+  -const { onChange } = props;
+  -onChange(dayjs(), 'partial');
+  -onChange(dayjs(), 'finish');
+  +const { setValue } = usePickerActionsContext();
+  +setValue(dayjs(), { changeImportance: 'set' });
+  +setValue(dayjs(), { changeImportance: 'accept' });
+  ```
+
+  :::success
+  The `usePickerContext` also contain all the actions returned by `usePickerActionsContext`.
+  The only difference is that `usePickerActionsContext` only contains variables with stable references that won't cause a re-render of your component.
+  :::
+
 ### Slot: `tabs`
 
-- The component passed to the `tabs` slot no longer receives the `view`, `views` and `onViewChange` props.
-  You can use the `usePickerContext` hook instead:
+- The component passed to the `tabs` slot no longer receives the `view`, `views` and `onViewChange` props, instead you can use the `usePickerContext` hook:
 
   ```diff
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
@@ -596,6 +621,8 @@ This change causes a few breaking changes:
 
 ### Slot: `actionBar`
 
+- The component passed to the `actionBar` slot no longer receives the `onClear`, `onSetToday`, `onAccept` and `onCancel` props.
+  You can use the `usePickerActionsContext` or the `usePickerContext` hooks instead:
 - The component passed to the `actionBar` slot no longer receives the `onClear`, `onSetToday`, `onAccept` and `onCancel` props.
   You can use the `usePickerActionsContext` or the `usePickerContext` hooks instead:
 
@@ -622,8 +649,7 @@ This change causes a few breaking changes:
 
 ### Slot: `shortcuts`
 
-- The component passed to the `shortcuts` slot no longer receives the `isLandscape` prop.
-  You can use the `usePickerContext` hook instead:
+- The component passed to the `shortcuts` slot no longer receives the `isLandscape` prop, instead you can use the `usePickerContext` hook:
 
   ```diff
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
@@ -648,8 +674,7 @@ This change causes a few breaking changes:
   The only difference is that `usePickerActionsContext` only contains variables with stable references that won't cause a re-render of your component.
   :::
 
-- The component passed to the `shortcuts` slot no longer receives the `isValid` prop.
-  You can use the `useIsValidValue` hook instead:
+- The component passed to the `shortcuts` slot no longer receives the `isValid` prop, instead you can use the `useIsValidValue` hook:
 
   ```diff
   +import { useIsValidValue } from '@mui/x-date-pickers/hooks';
@@ -707,6 +732,7 @@ The following variables and types have been renamed to have a coherent `Picker` 
   ```
 
 - `RangeFieldSection`
+- `RangeFieldSection`
 
   ```diff
   -import { RangeFieldSection } from '@mui/x-date-pickers-pro/models';
@@ -714,6 +740,16 @@ The following variables and types have been renamed to have a coherent `Picker` 
 
   +import { FieldRangeSection } from '@mui/x-date-pickers-pro/models';
   +import { FieldRangeSection } from '@mui/x-date-pickers-pro';
+  ```
+
+- `PickerShortcutChangeImportance`
+
+  ```diff
+  -import { PickerShortcutChangeImportance } from '@mui/x-date-pickers/PickersShortcuts';
+  -import { PickerShortcutChangeImportance } from '@mui/x-date-pickers';
+
+  +import { PickerChangeImportance } from '@mui/x-date-pickers/models';
+  +import { PickerChangeImportance } from '@mui/x-date-pickers';
   ```
 
 - `PickerShortcutChangeImportance`
