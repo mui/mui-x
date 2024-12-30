@@ -71,11 +71,6 @@ export const usePicker = <
     hasUIView: pickerViewsResponse.provider.hasUIView,
     shouldRestoreFocus: pickerViewsResponse.shouldRestoreFocus,
 
-    // Picker layout
-    layoutProps: {
-      ...pickerValueResponse.layoutProps,
-    },
-
     // Picker provider
     providerProps,
 

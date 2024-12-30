@@ -91,7 +91,7 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-> extends Pick<UsePickerValueContextValue, 'open' | 'setOpen'>,
+> extends Pick<UsePickerValueContextValue<PickerRangeValue, TError>, 'open' | 'setOpen'>,
     UseRangePositionResponse {
   variant: PickerVariant;
   fieldType: FieldType;
