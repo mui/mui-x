@@ -3,6 +3,7 @@ import { createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import {
   DataGridPremium,
+  DataGridPremiumProps,
   GridColDef,
   GridToolbar,
   Unstable_GridPivotModel,
@@ -10,8 +11,9 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
 import { getRowValues } from 'test/utils/helperFn';
+import useTimeout from '@mui/utils/useTimeout';
 
-const rows = [
+const ROWS = [
   {
     id: 1,
     date: '2024-03-15',
@@ -94,7 +96,7 @@ const rows = [
   },
 ];
 
-const columns: GridColDef[] = [
+const COLUMNS: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 90 },
   {
     field: 'date',
@@ -126,17 +128,19 @@ const columns: GridColDef[] = [
 describe('<DataGridPremium /> - Pivoting', () => {
   const { render } = createRenderer();
 
-  function Test(props: {
-    initialPivotModel: Unstable_GridPivotModel;
-    initialIsPivotMode?: boolean;
-  }) {
+  function Test(
+    props: {
+      initialPivotModel: Unstable_GridPivotModel;
+      initialIsPivotMode?: boolean;
+    } & Partial<DataGridPremiumProps>,
+  ) {
     const apiRef = useGridApiRef();
 
-    const [pivotModel, setPivotModel] = React.useState<Unstable_GridPivotModel>(
-      props.initialPivotModel,
-    );
+    const { initialPivotModel, initialIsPivotMode, ...other } = props;
 
-    const [isPivotMode, setIsPivotMode] = React.useState(props.initialIsPivotMode ?? false);
+    const [pivotModel, setPivotModel] = React.useState<Unstable_GridPivotModel>(initialPivotModel);
+
+    const [isPivotMode, setIsPivotMode] = React.useState(initialIsPivotMode ?? false);
 
     const pivotParams = unstable_useGridPivoting({
       apiRef,
@@ -150,12 +154,13 @@ describe('<DataGridPremium /> - Pivoting', () => {
       <div style={{ width: '100%' }}>
         <div style={{ height: 600, width: '100%' }}>
           <DataGridPremium
-            rows={rows}
-            columns={columns}
+            rows={ROWS}
+            columns={COLUMNS}
             apiRef={apiRef}
             slots={{ toolbar: GridToolbar }}
             pivotParams={pivotParams}
             cellSelection
+            {...other}
           />
         </div>
       </div>
@@ -280,6 +285,49 @@ describe('<DataGridPremium /> - Pivoting', () => {
     );
 
     expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '$192.45', '5,500', '$193.10', '6,700']);
+    expect(getRowValues(1)).to.deep.equal(['GOOGL (2)', '$126.06', '6,800', '', '']);
+    expect(getRowValues(2)).to.deep.equal(['MSFT (2)', '$346.56', '8,600', '', '']);
+    expect(getRowValues(3)).to.deep.equal(['AMZN (2)', '$145.78', '6,000', '', '']);
+    expect(getRowValues(4)).to.deep.equal(['US_TREASURY_2Y (1)', '$98.75', '1,000', '', '']);
+    expect(getRowValues(5)).to.deep.equal(['US_TREASURY_10Y (1)', '$95.60', '750', '', '']);
+  });
+
+  it('should render in pivot mode when mounted with pivoting enabled and async data loading', async () => {
+    function Component() {
+      const [loading, setLoading] = React.useState(true);
+      const [rows, setRows] = React.useState<any[]>([]);
+      const fetchTimeout = useTimeout();
+
+      React.useEffect(() => {
+        fetchTimeout.start(500, () => {
+          setRows(ROWS);
+          setLoading(false);
+        });
+      }, [fetchTimeout]);
+
+      return (
+        <Test
+          loading={loading}
+          rows={rows}
+          initialIsPivotMode
+          initialPivotModel={{
+            rows: [{ field: 'ticker' }],
+            columns: [{ field: 'year' }],
+            values: [
+              { field: 'price', aggFunc: 'avg' },
+              { field: 'volume', aggFunc: 'sum' },
+            ],
+          }}
+        />
+      );
+    }
+
+    render(<Component />);
+
+    await waitFor(() => {
+      expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '$192.45', '5,500', '$193.10', '6,700']);
+    });
+
     expect(getRowValues(1)).to.deep.equal(['GOOGL (2)', '$126.06', '6,800', '', '']);
     expect(getRowValues(2)).to.deep.equal(['MSFT (2)', '$346.56', '8,600', '', '']);
     expect(getRowValues(3)).to.deep.equal(['AMZN (2)', '$145.78', '6,000', '', '']);

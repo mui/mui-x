@@ -11,7 +11,7 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 export default function GridPivotingCommodities() {
   const apiRef = useGridApiRef();
 
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 1_000,
     editable: true,
@@ -42,6 +42,7 @@ export default function GridPivotingCommodities() {
           apiRef={apiRef}
           slots={{ toolbar: GridToolbar }}
           pivotParams={pivotParams}
+          loading={loading}
         />
       </div>
     </div>
