@@ -57,6 +57,7 @@ In case of a problem, another method to generate the changelog is available at t
 
 > [!WARNING]
 > If the `pnpm release:tag` fails you can create and push the tag using the following command: `git tag -a v4.0.0-alpha.30 -m "Version 4.0.0-alpha.30" && git push upstream --tag`.
+> Make sure to copy the git tag command above so that the tag is annotated!
 
 ### Publish the documentation
 
