@@ -2,15 +2,17 @@
 
 ## Release
 
-> Tip: For people who are doing the release for the first time, make sure you sign in to npm from the command line using security-key flow as well as have two-factor authentication enabled.
-> You can follow [this guide](https://docs.npmjs.com/accessing-npm-using-2fa) for more information on how to set it up.
-
-> Tip: You can use `release:publish:dry-run` to test the release process without actually publishing the packages.
-> Be sure install [verdaccio](https://verdaccio.org/) (local npm registry) before doing it.
-
-> Tip: You can copy raw markdown checklist below to the release Pull Request and follow it step by step marking completed items.
-
 A typical release goes like this:
+
+### Prerequisites
+
+1. You must be a member of the `@mui` org in npm to publish the release.
+2. Set up your npm authToken by logging into npm (`npm login`). This will save a token to `~/.npmrc` as a line that looks
+   like this:
+   ```text
+   //registry.npmjs.org/:_authToken=npm_000000000000000000000000000000000000
+   ```
+3. Generate a GitHub Token at https://github.com/settings/personal-access-tokens/new and add it to your shell rc script (either `.bashrc` or `.zshrc`) as `GITHUB_TOKEN`.
 
 ### Prepare the release of the packages
 
@@ -50,16 +52,19 @@ In case of a problem, another method to generate the changelog is available at t
 
 ### Release the packages
 
-1. Checkout the last version of the working branch
-2. `pnpm i && pnpm release:build` (make sure you have the latest dependencies installed, and build the packages)
-3. `pnpm release:publish` (release the versions on npm, you need your 2FA device)
-4. `pnpm release:tag` (push the newly created tag)
+1. Checkout the last version of the working branch.
+2. `pnpm i && pnpm release:build` (make sure you have the latest dependencies installed, and build the packages).
+3. `pnpm release:publish` (release the versions on npm, you need your 2FA device).
+4. `pnpm release:tag` (push the newly created tag).
+
+> Tip: You can use `release:publish:dry-run` to test the release process without actually publishing the packages.
+> Be sure install [verdaccio](https://verdaccio.org/) (local npm registry) before doing it.
 
 ### Publish the documentation
 
 The documentation must be updated on the `docs-vX` branch (`docs-v4` for `v4.X` releases, `docs-v5` for `v5.X` releases, ...)
 
-Push the working branch on the documentation release branch to deploy the documentation with the latest changes.
+Push the working branch on the documentation release branch to deploy the documentation with the latest changes:
 
 <!-- #default-branch-switch -->
 
@@ -67,8 +72,7 @@ Push the working branch on the documentation release branch to deploy the docume
 pnpm docs:deploy
 ```
 
-You can follow the deployment process [on the Netlify Dashboard](https://app.netlify.com/sites/material-ui-x/deploys?filter=docs-v7)
-Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for the `docs-v7` deployment.
+You can follow the deployment process [on the Netlify Dashboard](https://app.netlify.com/sites/material-ui-x/deploys).
 
 ### Publish GitHub release
 
