@@ -80,7 +80,7 @@ export const useDesktopRangePicker = <
     fieldType === 'single-input' ? singleInputFieldRef : undefined,
   );
 
-  let fieldRef: React.RefObject<FieldRef<PickerValue> | FieldRef<PickerRangeValue>>;
+  let fieldRef: React.RefObject<FieldRef<PickerValue> | FieldRef<PickerRangeValue> | null>;
   if (fieldType === 'single-input') {
     fieldRef = singleInputFieldRef;
   } else if (rangePosition === 'start') {
@@ -90,7 +90,6 @@ export const useDesktopRangePicker = <
   }
 
   const {
-    layoutProps,
     providerProps,
     renderCurrentView,
     shouldRestoreFocus,
@@ -223,12 +222,7 @@ export const useDesktopRangePicker = <
         shouldRestoreFocus={shouldRestoreFocus}
         reduceAnimations={reduceAnimations}
       >
-        <Layout
-          {...layoutProps}
-          {...slotProps?.layout}
-          slots={slots}
-          slotProps={slotPropsForLayout}
-        >
+        <Layout {...slotProps?.layout} slots={slots} slotProps={slotPropsForLayout}>
           {renderCurrentView()}
         </Layout>
       </PickersPopper>

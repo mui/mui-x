@@ -150,9 +150,6 @@ PickersLayout.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
-  isValid: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired,
-  onSelectShortcut: PropTypes.func.isRequired,
   /**
    * The props used for each component slot.
    * @default {}
@@ -171,7 +168,6 @@ PickersLayout.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  value: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.object), PropTypes.object]),
 } as any;
 
 export { PickersLayout };
