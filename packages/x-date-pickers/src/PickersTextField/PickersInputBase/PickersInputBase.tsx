@@ -247,6 +247,10 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
     onFocus?.(event);
   };
 
+  const handleHiddenInputFocus = (event: React.FocusEvent<HTMLInputElement>) => {
+    handleInputFocus(event);
+  };
+
   const handleInputBlur = (event: React.FocusEvent<HTMLDivElement>) => {
     muiFormControl.onBlur?.(event);
     onBlur?.(event);
@@ -338,6 +342,9 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
         readOnly={readOnly}
         required={muiFormControl.required}
         disabled={muiFormControl.disabled}
+        // Hidden input element cannot be focused, trigger the root focus instead
+        // This allows to maintain the ability to do `inputRef.current.focus()` to focus the field
+        onFocus={handleHiddenInputFocus}
         {...inputProps}
         ref={handleInputRef}
       />
