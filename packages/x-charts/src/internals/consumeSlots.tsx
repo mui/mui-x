@@ -47,7 +47,7 @@ import * as React from 'react';
 export const consumeSlots = <
   Props extends {},
   Ref extends {},
-  RenderFunction = (props: Props, ref: React.Ref<Ref>) => JSX.Element,
+  RenderFunction = (props: Props, ref: React.Ref<Ref>) => React.ElementType,
 >(
   name: string,
   slotPropName: string,
