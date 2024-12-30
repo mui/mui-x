@@ -8,6 +8,7 @@ import getScatterLegend from '../ScatterChart/legend';
 import getLineLegend from '../LineChart/legend';
 import getPieLegend from '../PieChart/legend';
 import { useSeries } from './useSeries';
+import { LegendItemParams } from '../ChartsLegend';
 
 const legendGetter: { [T in ChartSeriesType]?: LegendGetter<T> } = {
   bar: getBarLegend,
@@ -25,9 +26,18 @@ function getSeriesToDisplay(series: FormattedSeries) {
   );
 }
 
-export const useLegend = () => {
+/**
+ * Get the legend items to display.
+ *
+ * This hook is used by the `ChartsLegend` component. And will return the legend items formatted for display.
+ *
+ * An alternative is to use the `useSeries` hook and format the legend items yourself.
+ *
+ * @returns legend data
+ */
+export function useLegend(): { items: LegendItemParams[] } {
   const series = useSeries();
   return {
     items: getSeriesToDisplay(series),
   };
-};
+}

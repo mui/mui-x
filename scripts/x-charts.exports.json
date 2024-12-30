@@ -310,6 +310,7 @@
   { "name": "useItemHighlighted", "kind": "Function" },
   { "name": "useItemTooltip", "kind": "Function" },
   { "name": "UseItemTooltipReturnValue", "kind": "Interface" },
+  { "name": "useLegend", "kind": "Function" },
   { "name": "useMouseTracker", "kind": "Function" },
   { "name": "useSvgRef", "kind": "Function" },
   { "name": "useXAxis", "kind": "Function" },
