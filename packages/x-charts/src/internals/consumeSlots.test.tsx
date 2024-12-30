@@ -7,7 +7,9 @@ type WrapperProps = {
   shouldOmit?: boolean;
   classes?: Record<'root', string>;
   slots?: {
-    wrapper?: React.ElementType<Omit<WrapperProps, 'slots'>>;
+    wrapper?:
+      | React.ElementType<Omit<WrapperProps, 'slots'>>
+      | React.ForwardRefRenderFunction<HTMLDivElement, Omit<WrapperProps, 'slots'>>;
   };
 };
 

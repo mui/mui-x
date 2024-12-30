@@ -8,7 +8,7 @@ import getScatterLegend from '../ScatterChart/legend';
 import getLineLegend from '../LineChart/legend';
 import getPieLegend from '../PieChart/legend';
 import { useSeries } from './useSeries';
-import { LegendItemParams } from '../ChartsLegend';
+import type { LegendItemParams } from '../ChartsLegend';
 
 const legendGetter: { [T in ChartSeriesType]?: LegendGetter<T> } = {
   bar: getBarLegend,
