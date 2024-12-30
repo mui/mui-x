@@ -50,6 +50,9 @@ const GridHeaderCheckbox = forwardRef<HTMLButtonElement, GridColumnHeaderParams>
       }
 
       return selection.filter((id) => {
+        if (rootProps.keepNonExistentRowsSelected) {
+          return true;
+        }
         // The row might have been deleted
         if (!apiRef.current.getRow(id)) {
           return false;
@@ -57,7 +60,7 @@ const GridHeaderCheckbox = forwardRef<HTMLButtonElement, GridColumnHeaderParams>
 
         return rootProps.isRowSelectable!(apiRef.current.getRowParams(id));
       });
-    }, [apiRef, rootProps.isRowSelectable, selection]);
+    }, [apiRef, rootProps.isRowSelectable, selection, rootProps.keepNonExistentRowsSelected]);
 
     // All the rows that could be selected / unselected by toggling this checkbox
     const selectionCandidates = React.useMemo(() => {
