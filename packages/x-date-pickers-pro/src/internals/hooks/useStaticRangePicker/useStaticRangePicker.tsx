@@ -38,11 +38,7 @@ export const useStaticRangePicker = <
 
   const rangePositionResponse = useRangePosition(props);
 
-  const { layoutProps, providerProps, renderCurrentView } = usePicker<
-    PickerRangeValue,
-    TView,
-    TExternalProps
-  >({
+  const { providerProps, renderCurrentView } = usePicker<PickerRangeValue, TView, TExternalProps>({
     ...pickerParams,
     props,
     autoFocusView: autoFocus ?? false,
@@ -57,7 +53,6 @@ export const useStaticRangePicker = <
     <PickerRangePositionContext.Provider value={rangePositionResponse}>
       <PickerProvider {...providerProps}>
         <Layout
-          {...layoutProps}
           {...slotProps?.layout}
           slots={slots}
           slotProps={slotProps}

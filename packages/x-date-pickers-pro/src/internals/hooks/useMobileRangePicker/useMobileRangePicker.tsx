@@ -85,7 +85,6 @@ export const useMobileRangePicker = <
   }
 
   const {
-    layoutProps,
     providerProps,
     renderCurrentView,
     fieldProps: pickerFieldProps,
@@ -197,7 +196,7 @@ export const useMobileRangePicker = <
       <PickerRangePositionContext.Provider value={rangePositionResponse}>
         <Field {...enrichedFieldProps} />
         <PickersModalDialog slots={slots} slotProps={slotProps}>
-          <Layout {...layoutProps} {...slotProps?.layout} slots={slots} slotProps={slotProps}>
+          <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
             {renderCurrentView()}
           </Layout>
         </PickersModalDialog>
