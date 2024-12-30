@@ -78,7 +78,7 @@ export const useDesktopRangePicker = <
     fieldType === 'single-input' ? singleInputFieldRef : undefined,
   );
 
-  let fieldRef: React.RefObject<FieldRef<PickerValue> | FieldRef<PickerRangeValue>>;
+  let fieldRef: React.RefObject<FieldRef<PickerValue> | FieldRef<PickerRangeValue> | null>;
   if (fieldType === 'single-input') {
     fieldRef = singleInputFieldRef;
   } else if (rangePositionResponse.rangePosition === 'start') {
