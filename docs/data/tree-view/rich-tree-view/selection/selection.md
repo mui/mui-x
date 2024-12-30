@@ -80,16 +80,10 @@ Use the `onItemSelectionToggle` prop if you want to react to an item selection c
 Automatically select an item when all of its children are selected and automatically select all children when the parent is selected.
 
 :::warning
-This feature isn't implemented yet. It's coming.
-
-👍 Upvote [issue #4821](https://github.com/mui/mui-x/issues/4821) if you want to see it land faster.
-
-Don't hesitate to leave a comment on the same issue to influence what gets built.
-Especially if you already have a use case for this component,
-or if you are facing a pain point with your current solution.
+This feature is only available in versions v8.x and above of the `@mui/x-tree-view` and `@mui/x-tree-view-pro` packages.
 :::
 
-If you cannot wait for the official implementation,
+If you cannot upgrade,
 you can create your own custom solution using the `selectedItems`,
 `onSelectedItemsChange` and `onItemSelectionToggle` props:
 
