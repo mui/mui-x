@@ -292,8 +292,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
   // This makes sure that `isWithinRange` works with any time in the start and end day.
   const valueDayRange = React.useMemo<PickerRangeValue>(
     () => [
-      value[0] == null || !utils.isValid(value[0]) ? value[0] : utils.startOfDay(value[0]),
-      value[1] == null || !utils.isValid(value[1]) ? value[1] : utils.endOfDay(value[1]),
+      !utils.isValid(value[0]) ? value[0] : utils.startOfDay(value[0]),
+      !utils.isValid(value[1]) ? value[1] : utils.endOfDay(value[1]),
     ],
     [value, utils],
   );
@@ -386,7 +386,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
   const prevValue = React.useRef<PickerRangeValue | null>(null);
   React.useEffect(() => {
     const date = rangePosition === 'start' ? value[0] : value[1];
-    if (!date || !utils.isValid(date)) {
+    if (!utils.isValid(date)) {
       return;
     }
 

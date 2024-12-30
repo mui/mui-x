@@ -19,7 +19,7 @@ import {
 } from './timePickerToolbarClasses';
 import { PickerValue, TimeViewWithMeridiem } from '../internals/models';
 import { formatMeridiem } from '../internals/utils/date-utils';
-import { PickerValidDate } from '../models';
+import { AdapterFormats, PickerValidDate } from '../models';
 import { usePickerContext } from '../hooks';
 import {
   PickerToolbarOwnerState,
@@ -31,7 +31,7 @@ import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate'
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 
 export interface TimePickerToolbarProps
-  extends BaseToolbarProps<PickerValue>,
+  extends BaseToolbarProps,
     ExportedTimePickerToolbarProps {
   ampm?: boolean;
   ampmInClock?: boolean;
@@ -40,9 +40,13 @@ export interface TimePickerToolbarProps
   disablePast?: boolean;
   disableFuture?: boolean;
   referenceDate?: PickerValidDate;
-  defaultValue?: PickerValidDate;
-  timezone?: string;
+  defaultValue: PickerValidDate;
+  timezone: string;
   disableIgnoringDatePartForTimeValidation?: boolean;
+  isLandscape: boolean,
+      value:PickerValidDate,
+    onChange:Function,
+
 }
 
 export interface ExportedTimePickerToolbarProps extends ExportedBaseToolbarProps {
@@ -169,7 +173,6 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
   const {
     ampm,
     ampmInClock,
-    value: valueProp,
     isLandscape,
     onChange,
     className,
@@ -180,7 +183,7 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
     disableFuture,
     referenceDate: referenceDateProp,
     defaultValue,
-    timezone: timezoneProp,
+    timezone,
     disableIgnoringDatePartForTimeValidation = false,
     ...other
   } = props;
@@ -188,20 +191,13 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
   const translations = usePickerTranslations();
   const ownerState = useToolbarOwnerState();
   const classes = useUtilityClasses(classesProp, ownerState);
-  const { disabled, readOnly, view, onViewChange, views } =
-    usePickerContext<TimeViewWithMeridiem>();
+  const { value, setValue, disabled, readOnly, view, onViewChange, views } = usePickerContext<
+    PickerValue,
+    TimeViewWithMeridiem
+  >();
 
   const showAmPmControl = Boolean(ampm && !ampmInClock && views.includes('hours'));
 
-  const { value, timezone } = useControlledValueWithTimezone({
-    name: 'TimePickerToolbar',
-    timezone: timezoneProp,
-    value: valueProp,
-    defaultValue,
-    referenceDate: referenceDateProp,
-    onChange,
-    valueManager: singleItemValueManager,
-  });
   const valueOrReferenceDate = useClockReferenceDate({
     value,
     referenceDate: referenceDateProp,
@@ -235,10 +231,17 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
 
     return true;
   };
-  const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, onChange);
+  const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, (newValue) =>
+    setValue(newValue, { changeImportance: 'set' }),
+  );
 
-  const formatHours = (time: PickerValidDate) =>
-    ampm ? utils.format(time, 'hours12h') : utils.format(time, 'hours24h');
+  const formatSection = (format: keyof AdapterFormats) => {
+    if (!utils.isValid(value)) {
+      return '--';
+    }
+
+    return utils.format(value, format);
+  };
 
   const separator = (
     <TimePickerToolbarSeparator
@@ -254,7 +257,6 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
     <TimePickerToolbarRoot
       landscapeDirection="row"
       toolbarTitle={translations.timePickerToolbarTitle}
-      isLandscape={isLandscape}
       ownerState={ownerState}
       className={clsx(classes.root, className)}
       {...other}
@@ -267,7 +269,7 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
             variant="h3"
             onClick={() => onViewChange('hours')}
             selected={view === 'hours'}
-            value={value ? formatHours(value) : '--'}
+            value={formatSection(ampm ? 'hours12h' : 'hours24h')}
           />
         )}
 
@@ -279,7 +281,7 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
             variant="h3"
             onClick={() => onViewChange('minutes')}
             selected={view === 'minutes'}
-            value={value ? utils.format(value, 'minutes') : '--'}
+            value={formatSection('minutes')}
           />
         )}
 
@@ -290,7 +292,7 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
             variant="h3"
             onClick={() => onViewChange('seconds')}
             selected={view === 'seconds'}
-            value={value ? utils.format(value, 'seconds') : '--'}
+            value={formatSection('seconds')}
           />
         )}
       </TimePickerToolbarHourMinuteLabel>
@@ -367,7 +369,6 @@ TimePickerToolbar.propTypes = {
    * @default "––"
    */
   toolbarPlaceholder: PropTypes.node,
-  value: PropTypes.object,
 } as any;
 
 export { TimePickerToolbar };

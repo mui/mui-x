@@ -548,10 +548,7 @@ export const getSectionsBoundaries = (
     }),
     day: ({ currentDate }) => ({
       minimum: 1,
-      maximum:
-        currentDate != null && utils.isValid(currentDate)
-          ? utils.getDaysInMonth(currentDate)
-          : maxDaysInMonth,
+      maximum: utils.isValid(currentDate) ? utils.getDaysInMonth(currentDate) : maxDaysInMonth,
       longestMonth: longestMonth!,
     }),
     weekDay: ({ format, contentType }) => {

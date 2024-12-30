@@ -15,7 +15,8 @@ import {
   PickerToolbarOwnerState,
   useToolbarOwnerState,
 } from '@mui/x-date-pickers/internals';
-import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
+import { usePickerContext, usePickerTranslations } from '@mui/x-date-pickers/hooks';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import {
   DateRangePickerToolbarClasses,
@@ -33,7 +34,7 @@ const useUtilityClasses = (classes: Partial<DateRangePickerToolbarClasses> | und
 
 export interface DateRangePickerToolbarProps
   extends ExportedDateRangePickerToolbarProps,
-    Omit<BaseToolbarProps<PickerRangeValue>, 'onChange' | 'isLandscape'>,
+    Omit<BaseToolbarProps, 'onChange' | 'isLandscape'>,
     Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {}
 
 export interface ExportedDateRangePickerToolbarProps extends ExportedBaseToolbarProps {
@@ -81,47 +82,49 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar(
   const props = useThemeProps({ props: inProps, name: 'MuiDateRangePickerToolbar' });
 
   const {
-    value: [start, end],
     rangePosition,
     onRangePositionChange,
-    toolbarFormat,
+    toolbarFormat: toolbarFormatProp,
     className,
     classes: classesProp,
     ...other
   } = props;
 
+  const { value } = usePickerContext<PickerRangeValue>();
   const translations = usePickerTranslations();
   const ownerState = useToolbarOwnerState();
   const classes = useUtilityClasses(classesProp);
 
-  const startDateValue = start
-    ? utils.formatByString(start, toolbarFormat || utils.formats.shortDate)
-    : translations.start;
+  // This can't be a default value when spreading because it breaks the API generation.
+  const toolbarFormat = toolbarFormatProp ?? utils.formats.shortDate;
 
-  const endDateValue = end
-    ? utils.formatByString(end, toolbarFormat || utils.formats.shortDate)
-    : translations.end;
+  const formatDate = (date: PickerValidDate | null, fallback: string) => {
+    if (!utils.isValid(date)) {
+      return fallback;
+    }
+
+    return utils.formatByString(date, toolbarFormat);
+  };
 
   return (
     <DateRangePickerToolbarRoot
       {...other}
       toolbarTitle={translations.dateRangePickerToolbarTitle}
-      isLandscape={false}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
       ref={ref}
     >
       <DateRangePickerToolbarContainer className={classes.container}>
         <PickersToolbarButton
-          variant={start !== null ? 'h5' : 'h6'}
-          value={startDateValue}
+          variant={value[0] == null ? 'h6' : 'h5'}
+          value={formatDate(value[0], translations.start)}
           selected={rangePosition === 'start'}
           onClick={() => onRangePositionChange('start')}
         />
         <Typography variant="h5">&nbsp;{'–'}&nbsp;</Typography>
         <PickersToolbarButton
-          variant={end !== null ? 'h5' : 'h6'}
-          value={endDateValue}
+          variant={value[1] == null ? 'h6' : 'h5'}
+          value={formatDate(value[1], translations.end)}
           selected={rangePosition === 'end'}
           onClick={() => onRangePositionChange('end')}
         />
@@ -165,7 +168,6 @@ DateRangePickerToolbar.propTypes = {
    * @default "––"
    */
   toolbarPlaceholder: PropTypes.node,
-  value: PropTypes.arrayOf(PropTypes.object).isRequired,
 } as any;
 
 export { DateRangePickerToolbar };

@@ -90,7 +90,6 @@ export const useDesktopRangePicker = <
   }
 
   const {
-    layoutProps,
     providerProps,
     renderCurrentView,
     shouldRestoreFocus,
@@ -223,12 +222,7 @@ export const useDesktopRangePicker = <
         shouldRestoreFocus={shouldRestoreFocus}
         reduceAnimations={reduceAnimations}
       >
-        <Layout
-          {...layoutProps}
-          {...slotProps?.layout}
-          slots={slots}
-          slotProps={slotPropsForLayout}
-        >
+        <Layout {...slotProps?.layout} slots={slots} slotProps={slotPropsForLayout}>
           {renderCurrentView()}
         </Layout>
       </PickersPopper>
