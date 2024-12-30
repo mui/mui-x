@@ -8,6 +8,7 @@ import {
 import { SelectChangeEvent } from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import {
   gridFilterableColumnDefinitionsSelector,
   gridColumnLookupSelector,
@@ -200,7 +201,7 @@ const getColumnLabel = (col: GridColDef) => col.headerName || col.field;
 
 const collator = new Intl.Collator();
 
-const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
+const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
   function GridFilterForm(props, ref) {
     const {
       item,
@@ -415,11 +416,11 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
 
     return (
       <GridFilterFormRoot
-        ref={ref}
         className={classes.root}
         data-id={item.id}
         ownerState={rootProps}
         {...other}
+        ref={ref}
       >
         <FilterFormDeleteIcon
           as={rootProps.slots.baseFormControl}

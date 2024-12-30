@@ -6,6 +6,7 @@ import TablePagination, {
   TablePaginationProps,
   LabelDisplayedRowsArgs,
 } from '@mui/material/TablePagination';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -60,7 +61,7 @@ interface GridPaginationOwnProps {
   component?: React.ElementType;
 }
 
-const GridPagination = React.forwardRef<
+const GridPagination = forwardRef<
   unknown,
   Partial<
     // See https://github.com/mui/material-ui/issues/40427
@@ -158,7 +159,6 @@ const GridPagination = React.forwardRef<
 
   return (
     <GridPaginationRoot
-      ref={ref}
       component="div"
       count={rowCount}
       page={computedPage}
@@ -173,6 +173,7 @@ const GridPagination = React.forwardRef<
       {...locales}
       labelDisplayedRows={wrappedLabelDisplayedRows}
       {...props}
+      ref={ref}
     />
   );
 });
