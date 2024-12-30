@@ -162,7 +162,7 @@ export class AdapterDateFnsJalali
     return dateFnsParse(value, format, new Date(), { locale: this.locale });
   };
 
-  public isValid = (value: Date | null): boolean => {
+  public isValid = (value: Date | null): value is Date => {
     if (value == null) {
       return false;
     }

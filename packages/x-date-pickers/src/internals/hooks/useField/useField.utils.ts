@@ -548,10 +548,7 @@ export const getSectionsBoundaries = (
     }),
     day: ({ currentDate }) => ({
       minimum: 1,
-      maximum:
-        currentDate != null && utils.isValid(currentDate)
-          ? utils.getDaysInMonth(currentDate)
-          : maxDaysInMonth,
+      maximum: utils.isValid(currentDate) ? utils.getDaysInMonth(currentDate) : maxDaysInMonth,
       longestMonth: longestMonth!,
     }),
     weekDay: ({ format, contentType }) => {
@@ -739,7 +736,7 @@ export const mergeDateIntoReferenceDate = (
 
 export const isAndroid = () => navigator.userAgent.toLowerCase().includes('android');
 
-// TODO v8: Remove if we drop the v6 TextField approach.
+// TODO v9: Remove
 export const getSectionOrder = (
   sections: FieldSection[],
   shouldApplyRTL: boolean,

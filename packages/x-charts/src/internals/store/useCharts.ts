@@ -14,9 +14,9 @@ import { UseChartBaseProps } from './useCharts.types';
 import { UseChartInteractionState } from '../plugins/featurePlugins/useChartInteraction/useChartInteraction.types';
 
 export function useChartApiInitialization<T>(
-  inputApiRef: React.MutableRefObject<T | undefined> | undefined,
+  inputApiRef: React.RefObject<T | undefined> | undefined,
 ): T {
-  const fallbackPublicApiRef = React.useRef({}) as React.MutableRefObject<T>;
+  const fallbackPublicApiRef = React.useRef({}) as React.RefObject<T>;
 
   if (inputApiRef) {
     if (inputApiRef.current == null) {
@@ -55,7 +55,7 @@ export function useCharts<
   const instanceRef = React.useRef({} as ChartInstance<TSignatures>);
   const instance = instanceRef.current as ChartInstance<TSignatures>;
   const publicAPI = useChartApiInitialization<ChartPublicAPI<TSignatures>>(props.apiRef);
-  const innerSvgRef: React.RefObject<SVGSVGElement> = React.useRef(null);
+  const innerSvgRef = React.useRef<SVGSVGElement>(null);
 
   const storeRef = React.useRef<ChartStore<TSignaturesWithCorePluginSignatures> | null>(null);
   if (storeRef.current == null) {

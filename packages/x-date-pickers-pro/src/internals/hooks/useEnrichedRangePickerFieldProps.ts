@@ -20,7 +20,7 @@ import {
 import { PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import {
   onSpaceOrEnter,
-  UsePickerResponse,
+  UsePickerValueContextValue,
   PickerVariant,
   DateOrTimeViewWithMeridiem,
   BaseSingleInputFieldProps,
@@ -91,7 +91,7 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-> extends Pick<UsePickerResponse<PickerRangeValue, TView, any>, 'open' | 'actions'>,
+> extends Pick<UsePickerValueContextValue<PickerRangeValue, TError>, 'open' | 'setOpen'>,
     UseRangePositionResponse {
   variant: PickerVariant;
   fieldType: FieldType;
@@ -112,9 +112,9 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   currentView?: TView | null;
   initialView?: TView;
   onViewChange?: (view: TView) => void;
-  startFieldRef: React.RefObject<FieldRef<PickerValue>>;
-  endFieldRef: React.RefObject<FieldRef<PickerValue>>;
-  singleInputFieldRef: React.RefObject<FieldRef<PickerRangeValue>>;
+  startFieldRef: React.RefObject<FieldRef<PickerValue> | null>;
+  endFieldRef: React.RefObject<FieldRef<PickerValue> | null>;
+  singleInputFieldRef: React.RefObject<FieldRef<PickerRangeValue> | null>;
 }
 
 const useMultiInputFieldSlotProps = <
@@ -124,7 +124,7 @@ const useMultiInputFieldSlotProps = <
 >({
   variant,
   open,
-  actions,
+  setOpen,
   readOnly,
   labelId,
   disableOpenPicker,
@@ -180,7 +180,8 @@ const useMultiInputFieldSlotProps = <
     event.stopPropagation();
     onRangePositionChange('start');
     if (!readOnly && !disableOpenPicker) {
-      actions.onOpen(event);
+      event.preventDefault();
+      setOpen(true);
     }
   };
 
@@ -188,7 +189,8 @@ const useMultiInputFieldSlotProps = <
     event.stopPropagation();
     onRangePositionChange('end');
     if (!readOnly && !disableOpenPicker) {
-      actions.onOpen(event);
+      event.preventDefault();
+      setOpen(true);
     }
   };
 
@@ -297,7 +299,7 @@ const useSingleInputFieldSlotProps = <
 >({
   variant,
   open,
-  actions,
+  setOpen,
   readOnly,
   labelId,
   disableOpenPicker,
@@ -371,7 +373,8 @@ const useSingleInputFieldSlotProps = <
     event.stopPropagation();
 
     if (!readOnly && !disableOpenPicker) {
-      actions.onOpen(event);
+      event.preventDefault();
+      setOpen(true);
     }
   };
 

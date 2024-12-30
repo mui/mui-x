@@ -1,6 +1,4 @@
 import * as React from 'react';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 import {
   gridColumnLookupSelector,
   useGridSelector,
@@ -35,21 +33,21 @@ export function GridColumnMenuRowUngroupItem(props: GridColumnMenuItemProps) {
 
   if (rowGroupingModel.includes(colDef.field)) {
     return (
-      <rootProps.slots.baseMenuItem onClick={ungroupColumn}>
-        <ListItemIcon>
-          <rootProps.slots.columnMenuUngroupIcon fontSize="small" />
-        </ListItemIcon>
-        <ListItemText>{apiRef.current.getLocaleText('unGroupColumn')(name)}</ListItemText>
+      <rootProps.slots.baseMenuItem
+        onClick={ungroupColumn}
+        iconStart={<rootProps.slots.columnMenuUngroupIcon fontSize="small" />}
+      >
+        {apiRef.current.getLocaleText('unGroupColumn')(name)}
       </rootProps.slots.baseMenuItem>
     );
   }
 
   return (
-    <rootProps.slots.baseMenuItem onClick={groupColumn}>
-      <ListItemIcon>
-        <rootProps.slots.columnMenuGroupIcon fontSize="small" />
-      </ListItemIcon>
-      <ListItemText>{apiRef.current.getLocaleText('groupColumn')(name)}</ListItemText>
+    <rootProps.slots.baseMenuItem
+      onClick={groupColumn}
+      iconStart={<rootProps.slots.columnMenuGroupIcon fontSize="small" />}
+    >
+      {apiRef.current.getLocaleText('groupColumn')(name)}
     </rootProps.slots.baseMenuItem>
   );
 }

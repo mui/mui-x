@@ -3,23 +3,18 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { refType } from '@mui/utils';
-import { DefaultizedProps } from '@mui/x-internals/types';
 import Divider from '@mui/material/Divider';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DateTimeField } from '../DateTimeField';
 import { DesktopDateTimePickerProps } from './DesktopDateTimePicker.types';
-import {
-  useDateTimePickerDefaultizedProps,
-  DateTimePickerViewRenderers,
-} from '../DateTimePicker/shared';
+import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
 import { renderDateViewCalendar } from '../dateViewRenderers/dateViewRenderers';
 import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { validateDateTime, extractValidationProps } from '../validation';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../internals/models';
 import { CalendarIcon } from '../icons';
-import { UseDesktopPickerProps, useDesktopPicker } from '../internals/hooks/useDesktopPicker';
-import { PickerViewsRendererProps } from '../internals/hooks/usePicker';
+import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import {
   resolveDateTimeFormat,
   resolveTimeViewsResponse,
@@ -38,33 +33,19 @@ import {
 import { digitalClockClasses } from '../DigitalClock';
 import { DesktopDateTimePickerLayout } from './DesktopDateTimePickerLayout';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
-import { UsePickerViewsProps } from '../internals/hooks/usePicker/usePickerViews';
+import {
+  PickerRendererInterceptorProps,
+  PickerViewRendererLookup,
+} from '../internals/hooks/usePicker/usePickerViews';
 import { isInternalTimeView } from '../internals/utils/time-utils';
 import { isDatePickerView } from '../internals/utils/date-utils';
 import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalization';
 import { PickerLayoutOwnerState } from '../PickersLayout';
 
-const rendererInterceptor = function rendererInterceptor<
-  TView extends DateOrTimeViewWithMeridiem,
-  TEnableAccessibleFieldDOMStructure extends boolean,
->(
-  inViewRenderers: DateTimePickerViewRenderers<DateOrTimeViewWithMeridiem, any>,
-  popperView: TView,
-  rendererProps: PickerViewsRendererProps<
-    PickerValue,
-    TView,
-    DefaultizedProps<
-      UseDesktopPickerProps<
-        TView,
-        TEnableAccessibleFieldDOMStructure,
-        any,
-        UsePickerViewsProps<PickerValue, TView, any, {}>
-      >,
-      'openTo'
-    >,
-    {}
-  >,
+const rendererInterceptor = function RendererInterceptor(
+  props: PickerRendererInterceptorProps<PickerValue, DateOrTimeViewWithMeridiem, any>,
 ) {
+  const { viewRenderers, popperView, rendererProps } = props;
   const { openTo, focusedView, timeViewsCount, ...otherProps } = rendererProps;
 
   const finalProps = {
@@ -83,26 +64,29 @@ const rendererInterceptor = function rendererInterceptor<
     ],
   };
   const isTimeViewActive = isInternalTimeView(popperView);
+  const dateView = isTimeViewActive ? 'day' : popperView;
+  const timeView = isTimeViewActive ? popperView : 'hours';
+
   return (
     <React.Fragment>
-      {inViewRenderers[!isTimeViewActive ? popperView : 'day']?.({
+      {viewRenderers[dateView]?.({
         ...rendererProps,
         view: !isTimeViewActive ? popperView : 'day',
         focusedView: focusedView && isDatePickerView(focusedView) ? focusedView : null,
         views: rendererProps.views.filter(isDatePickerView),
         sx: [{ gridColumn: 1 }, ...finalProps.sx],
-      })}
+      } as any)}
       {timeViewsCount > 0 && (
         <React.Fragment>
           <Divider orientation="vertical" sx={{ gridColumn: 2 }} />
-          {inViewRenderers[isTimeViewActive ? popperView : 'hours']?.({
+          {viewRenderers[timeView]?.({
             ...finalProps,
             view: isTimeViewActive ? popperView : 'hours',
             focusedView: focusedView && isInternalTimeView(focusedView) ? focusedView : null,
             openTo: isInternalTimeView(openTo) ? openTo : 'hours',
             views: rendererProps.views.filter(isInternalTimeView),
             sx: [{ gridColumn: 3 }, ...finalProps.sx],
-          })}
+          } as any)}
         </React.Fragment>
       )}
     </React.Fragment>
@@ -150,7 +134,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
     ? renderDigitalClockTimeView
     : renderMultiSectionDigitalClockTimeView;
 
-  const viewRenderers: DateTimePickerViewRenderers<DateOrTimeViewWithMeridiem, any> = {
+  const viewRenderers: PickerViewRendererLookup<PickerValue, any, any> = {
     day: renderDateViewCalendar,
     month: renderDateViewCalendar,
     year: renderDateViewCalendar,

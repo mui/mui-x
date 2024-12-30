@@ -3,7 +3,10 @@ import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals';
 import { DateRangeCalendar, DateRangeCalendarProps } from '../DateRangeCalendar';
 
 export interface DateRangeViewRendererProps<TView extends DateOrTimeViewWithMeridiem>
-  extends Omit<DateRangeCalendarProps, 'views'> {
+  extends Omit<
+    DateRangeCalendarProps,
+    'views' | 'onRangePositionChange' | 'rangePosition' | 'defaultRangePosition'
+  > {
   views: readonly TView[];
 }
 
@@ -25,9 +28,6 @@ export const renderDateRangeViewCalendar = ({
   shouldDisableDate,
   reduceAnimations,
   onMonthChange,
-  rangePosition,
-  defaultRangePosition,
-  onRangePositionChange,
   calendars,
   currentMonthCalendarPosition,
   slots,
@@ -65,9 +65,6 @@ export const renderDateRangeViewCalendar = ({
     shouldDisableDate={shouldDisableDate}
     reduceAnimations={reduceAnimations}
     onMonthChange={onMonthChange}
-    rangePosition={rangePosition}
-    defaultRangePosition={defaultRangePosition}
-    onRangePositionChange={onRangePositionChange}
     calendars={calendars}
     currentMonthCalendarPosition={currentMonthCalendarPosition}
     slots={slots}

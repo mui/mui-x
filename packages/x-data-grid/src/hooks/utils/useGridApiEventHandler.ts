@@ -43,7 +43,7 @@ export function createUseGridApiEventHandler(registryContainer: RegistryContaine
 
     const [objectRetainedByReact] = React.useState(new ObjectToBeRetainedByReact());
     const subscription = React.useRef<(() => void) | null>(null);
-    const handlerRef = React.useRef<GridEventListener<E> | undefined>();
+    const handlerRef = React.useRef<GridEventListener<E> | undefined>(null);
     handlerRef.current = handler;
     const cleanupTokenRef = React.useRef<UnregisterToken | null>(null);
 
