@@ -99,7 +99,7 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar(
   const toolbarFormat = toolbarFormatProp ?? utils.formats.shortDate;
 
   const formatDate = (date: PickerValidDate | null, fallback: string) => {
-    if (date == null || !utils.isValid(date)) {
+    if (!utils.isValid(date)) {
       return fallback;
     }
 

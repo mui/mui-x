@@ -371,8 +371,8 @@ This change causes a few breaking changes:
 
    // This contains a small behavior change.
    // If the picker receives an invalid date,
-   // the old value would equal `null`.
-   // the new value would equal the invalid date received.
+   // the old value equals `null`.
+   // the new value equals the invalid date received.
   -const { value } = props;
   +const { value } = usePickerContext();
   ```

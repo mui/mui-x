@@ -94,7 +94,7 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar(
   const classes = useUtilityClasses(classesProp);
 
   const dateText = React.useMemo(() => {
-    if (value == null || !utils.isValid(value)) {
+    if (!utils.isValid(value)) {
       return toolbarPlaceholder;
     }
 

@@ -168,7 +168,7 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
   );
 
   const formatSection = (format: keyof AdapterFormats) => {
-    if (value == null || !utils.isValid(value)) {
+    if (!utils.isValid(value)) {
       return '--';
     }
 

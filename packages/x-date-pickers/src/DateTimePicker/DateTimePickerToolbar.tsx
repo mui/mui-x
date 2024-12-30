@@ -303,7 +303,7 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
   const toolbarTitle = inToolbarTitle ?? translations.dateTimePickerToolbarTitle;
 
   const dateText = React.useMemo(() => {
-    if (value == null || !utils.isValid(value)) {
+    if (!utils.isValid(value)) {
       return toolbarPlaceholder;
     }
 
@@ -315,7 +315,7 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
   }, [value, toolbarFormat, toolbarPlaceholder, utils]);
 
   const formatSection = (format: keyof AdapterFormats, fallback: string) => {
-    if (value == null || !utils.isValid(value)) {
+    if (!utils.isValid(value)) {
       return fallback;
     }
 

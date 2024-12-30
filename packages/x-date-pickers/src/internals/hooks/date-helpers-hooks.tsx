@@ -57,10 +57,7 @@ export function useMeridiemMode(
   selectionState?: PickerSelectionState,
 ) {
   const utils = useUtils();
-  const cleanDate = React.useMemo(
-    () => (date == null || !utils.isValid(date) ? null : date),
-    [utils, date],
-  );
+  const cleanDate = React.useMemo(() => (!utils.isValid(date) ? null : date), [utils, date]);
 
   const meridiemMode = getMeridiem(cleanDate, utils);
 
