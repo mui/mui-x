@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { DefaultizedProps } from '@mui/x-internals/types';
 import {
   PickerSelectionState,
@@ -48,10 +47,7 @@ function DateTimeRangePickerTimeWrapper<
     Omit<BaseClockProps<TView>, 'value' | 'defaultValue' | 'onChange'>,
     'views'
   >,
->(
-  props: DateTimeRangePickerTimeWrapperProps<TView, TComponentProps>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+>(props: DateTimeRangePickerTimeWrapperProps<TView, TComponentProps>) {
   const utils = useUtils();
 
   const {
@@ -100,7 +96,6 @@ function DateTimeRangePickerTimeWrapper<
 
   return viewRenderer({
     ...other,
-    ref,
     views,
     onViewChange,
     value: currentValue,

@@ -53,7 +53,7 @@ export default function MinMaxHeightGrid() {
 function ContainerMeasurements({
   containerRef,
 }: {
-  containerRef: React.RefObject<HTMLDivElement>;
+  containerRef: React.RefObject<HTMLDivElement | null>;
 }) {
   const [containerHeight, setContainerHeight] = React.useState(0);
 
