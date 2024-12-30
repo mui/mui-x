@@ -92,6 +92,21 @@ To pass props to the legend, use the `slotProps.legend`.
 +<PieChart slotProps={{ legend: { ... } }} />
 ```
 
+## Legend direction value change ✅
+
+The `direction` prop of the legend has been changed to accept `'vertical'` and `'horizontal'` instead of `'column'` and `'row'`.
+
+```diff
+<PieChart
+  slotProps={{
+    legend: {
+-      direction: 'column'
++      direction: 'vertical'
+    }
+  }}
+/>
+```
+
 ## Removing ResponsiveChartContainer ✅
 
 The `ResponsiveChartContainer` has been removed.
