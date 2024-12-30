@@ -16,6 +16,10 @@ In chart components, the legend links series with `label` properties and their c
 
 ## Customization
 
+This section explains how to customize the legend using classes and properties.
+
+In order to fully customize the legend with custom components, see an example at the [HTML components docs](https://mui.com/x/react-charts/components/#html-components).
+
 ### Dimensions
 
 Much of the customization can be done using CSS properties.
