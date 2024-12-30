@@ -105,7 +105,7 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
           onBlur={(event) => event.stopPropagation()}
           native={isBaseSelectNative}
           fullWidth
-          {...rootProps.slotProps?.baseSelect}
+          {...baseSelectProps}
         >
           <rootProps.slots.baseSelectOption
             {...baseSelectOptionProps}
