@@ -10,7 +10,6 @@ import { GridGroupNode, GridRowId } from '../../../models/gridRows';
 import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { useGridSelector } from '../../utils/useGridSelector';
 import {
   gridRowsLookupSelector,
   gridRowMaximumTreeDepthSelector,
@@ -134,8 +133,6 @@ export const useGridRowSelection = (
 
   const canHaveMultipleSelection = isMultipleRowSelectionEnabled(props);
   const visibleRows = useGridVisibleRows(apiRef, props);
-  const tree = useGridSelector(apiRef, gridRowTreeSelector);
-  const isNestedData = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector) > 1;
 
   const expandMouseRowRangeSelection = React.useCallback(
     (id: GridRowId) => {
@@ -230,6 +227,7 @@ export const useGridRowSelection = (
         return;
       }
 
+      const tree = gridRowTreeSelector(apiRef);
       lastRowToggled.current = id;
 
       if (resetSelection) {
@@ -302,7 +300,6 @@ export const useGridRowSelection = (
       apiRef,
       logger,
       applyAutoSelection,
-      tree,
       props.rowSelectionPropagation?.descendants,
       props.rowSelectionPropagation?.parents,
       canHaveMultipleSelection,
@@ -313,6 +310,7 @@ export const useGridRowSelection = (
     (ids: GridRowId[], isSelected = true, resetSelection = false) => {
       logger.debug(`Setting selection for several rows`);
 
+      const tree = gridRowTreeSelector(apiRef);
       const selectableIds = ids.filter((id) => apiRef.current.isRowSelectable(id));
 
       let newSelection: Set<GridRowId>;
@@ -392,7 +390,6 @@ export const useGridRowSelection = (
       applyAutoSelection,
       canHaveMultipleSelection,
       apiRef,
-      tree,
       props.rowSelectionPropagation?.descendants,
       props.rowSelectionPropagation?.parents,
     ],
@@ -452,6 +449,7 @@ export const useGridRowSelection = (
    */
   const removeOutdatedSelection = React.useCallback(
     (sortModelUpdated = false) => {
+      const tree = gridRowTreeSelector(apiRef);
       const currentSelection = gridRowSelectionStateSelector(apiRef.current.state);
       const rowsLookup = gridRowsLookupSelector(apiRef);
       const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
@@ -498,6 +496,7 @@ export const useGridRowSelection = (
       // For nested data, on row tree updation (filtering, adding rows, etc.) when the selection is
       // not empty, we need to re-run scanning of the tree to propagate the selection changes
       // Example: A parent whose de-selected children are filtered out should now be selected
+      const isNestedData = gridRowMaximumTreeDepthSelector(apiRef) > 1;
       const shouldReapplyPropagation =
         isNestedData &&
         props.rowSelectionPropagation?.parents &&
@@ -514,11 +513,9 @@ export const useGridRowSelection = (
     },
     [
       apiRef,
-      isNestedData,
       props.rowSelectionPropagation?.parents,
       props.keepNonExistentRowsSelected,
       props.filterMode,
-      tree,
     ],
   );
 

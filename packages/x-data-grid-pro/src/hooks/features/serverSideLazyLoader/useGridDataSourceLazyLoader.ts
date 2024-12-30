@@ -2,7 +2,6 @@ import * as React from 'react';
 import { throttle } from '@mui/x-internals/throttle';
 import {
   useGridApiEventHandler,
-  useGridSelector,
   gridSortModelSelector,
   gridFilterModelSelector,
   GridEventListener,
@@ -68,11 +67,6 @@ export const useGridDataSourceLazyLoader = (
 
   const [lazyLoadingRowsUpdateStrategyActive, setLazyLoadingRowsUpdateStrategyActive] =
     React.useState(false);
-  const sortModel = useGridSelector(privateApiRef, gridSortModelSelector);
-  const filterModel = useGridSelector(privateApiRef, gridFilterModelSelector);
-  const paginationModel = useGridSelector(privateApiRef, gridPaginationModelSelector);
-  const filteredSortedRowIds = useGridSelector(privateApiRef, gridFilteredSortedRowIdsSelector);
-  const dimensions = useGridSelector(privateApiRef, gridDimensionsSelector);
   const renderedRowsIntervalCache = React.useRef(INTERVAL_CACHE_INITIAL_STATE);
   const previousLastRowIndex = React.useRef(0);
   const loadingTrigger = React.useRef<LoadingTrigger | null>(null);
@@ -86,13 +80,14 @@ export const useGridDataSourceLazyLoader = (
         return params;
       }
 
+      const paginationModel = gridPaginationModelSelector(privateApiRef);
       return {
         ...params,
         start: params.start - (params.start % paginationModel.pageSize),
         end: params.end + paginationModel.pageSize - (params.end % paginationModel.pageSize) - 1,
       };
     },
-    [paginationModel],
+    [privateApiRef],
   );
 
   const resetGrid = React.useCallback(() => {
@@ -100,6 +95,9 @@ export const useGridDataSourceLazyLoader = (
     privateApiRef.current.unstable_dataSource.cache.clear();
     rowsStale.current = true;
     previousLastRowIndex.current = 0;
+    const paginationModel = gridPaginationModelSelector(privateApiRef);
+    const filterModel = gridFilterModelSelector(privateApiRef);
+    const sortModel = gridSortModelSelector(privateApiRef);
     const getRowsParams: GridGetRowsParams = {
       start: 0,
       end: paginationModel.pageSize - 1,
@@ -108,7 +106,7 @@ export const useGridDataSourceLazyLoader = (
     };
 
     privateApiRef.current.unstable_dataSource.fetchRows(GRID_ROOT_GROUP_ID, getRowsParams);
-  }, [privateApiRef, sortModel, filterModel, paginationModel.pageSize]);
+  }, [privateApiRef]);
 
   const ensureValidRowCount = React.useCallback(
     (previousLoadingTrigger: LoadingTrigger, newLoadingTrigger: LoadingTrigger) => {
@@ -269,6 +267,7 @@ export const useGridDataSourceLazyLoader = (
           rebuildSkeletonRows();
         }
 
+        const filteredSortedRowIds = gridFilteredSortedRowIdsSelector(privateApiRef);
         const startingIndex =
           typeof fetchParams.start === 'string'
             ? Math.max(filteredSortedRowIds.indexOf(fetchParams.start), 0)
@@ -287,13 +286,7 @@ export const useGridDataSourceLazyLoader = (
       privateApiRef.current.setLoading(false);
       privateApiRef.current.requestPipeProcessorsApplication('hydrateRows');
     },
-    [
-      privateApiRef,
-      filteredSortedRowIds,
-      updateLoadingTrigger,
-      rebuildSkeletonRows,
-      addSkeletonRows,
-    ],
+    [privateApiRef, updateLoadingTrigger, rebuildSkeletonRows, addSkeletonRows],
   );
 
   const handleRowCountChange = React.useCallback(() => {
@@ -316,12 +309,16 @@ export const useGridDataSourceLazyLoader = (
         return;
       }
 
+      const dimensions = gridDimensionsSelector(privateApiRef.current.state);
       const position = newScrollPosition.top + dimensions.viewportInnerSize.height;
       const target = dimensions.contentSize.height - props.scrollEndThreshold;
 
       if (position >= target) {
         previousLastRowIndex.current = renderContext.lastRowIndex;
 
+        const paginationModel = gridPaginationModelSelector(privateApiRef);
+        const filterModel = gridFilterModelSelector(privateApiRef);
+        const sortModel = gridSortModelSelector(privateApiRef);
         const getRowsParams: GridGetRowsParams = {
           start: renderContext.lastRowIndex,
           end: renderContext.lastRowIndex + paginationModel.pageSize - 1,
@@ -336,15 +333,7 @@ export const useGridDataSourceLazyLoader = (
         );
       }
     },
-    [
-      privateApiRef,
-      props.scrollEndThreshold,
-      sortModel,
-      filterModel,
-      dimensions,
-      paginationModel.pageSize,
-      adjustRowParams,
-    ],
+    [privateApiRef, props.scrollEndThreshold, adjustRowParams],
   );
 
   const handleRenderedRowsIntervalChange = React.useCallback<
@@ -355,6 +344,8 @@ export const useGridDataSourceLazyLoader = (
         return;
       }
 
+      const filterModel = gridFilterModelSelector(privateApiRef);
+      const sortModel = gridSortModelSelector(privateApiRef);
       const getRowsParams: GridGetRowsParams = {
         start: params.firstRowIndex,
         end: params.lastRowIndex,
@@ -400,14 +391,7 @@ export const useGridDataSourceLazyLoader = (
         adjustRowParams(getRowsParams),
       );
     },
-    [
-      privateApiRef,
-      props.pagination,
-      props.paginationMode,
-      sortModel,
-      filterModel,
-      adjustRowParams,
-    ],
+    [privateApiRef, props.pagination, props.paginationMode, adjustRowParams],
   );
 
   const throttledHandleRenderedRowsIntervalChange = React.useMemo(
@@ -420,6 +404,7 @@ export const useGridDataSourceLazyLoader = (
       rowsStale.current = true;
       previousLastRowIndex.current = 0;
       const renderContext = gridRenderContextSelector(privateApiRef);
+      const paginationModel = gridPaginationModelSelector(privateApiRef);
       const rangeParams =
         loadingTrigger.current === LoadingTrigger.VIEWPORT
           ? {
@@ -431,6 +416,7 @@ export const useGridDataSourceLazyLoader = (
               end: paginationModel.pageSize - 1,
             };
 
+      const filterModel = gridFilterModelSelector(privateApiRef);
       const getRowsParams: GridGetRowsParams = {
         ...rangeParams,
         sortModel: newSortModel,
@@ -443,13 +429,15 @@ export const useGridDataSourceLazyLoader = (
         adjustRowParams(getRowsParams),
       );
     },
-    [privateApiRef, filterModel, paginationModel.pageSize, adjustRowParams],
+    [privateApiRef, adjustRowParams],
   );
 
   const handleGridFilterModelChange = React.useCallback<GridEventListener<'filterModelChange'>>(
     (newFilterModel) => {
       rowsStale.current = true;
       previousLastRowIndex.current = 0;
+      const paginationModel = gridPaginationModelSelector(privateApiRef);
+      const sortModel = gridSortModelSelector(privateApiRef);
       const getRowsParams: GridGetRowsParams = {
         start: 0,
         end: paginationModel.pageSize - 1,
@@ -460,7 +448,7 @@ export const useGridDataSourceLazyLoader = (
       privateApiRef.current.setLoading(true);
       privateApiRef.current.unstable_dataSource.fetchRows(GRID_ROOT_GROUP_ID, getRowsParams);
     },
-    [privateApiRef, sortModel, paginationModel.pageSize],
+    [privateApiRef],
   );
 
   const handleStrategyActivityChange = React.useCallback<
