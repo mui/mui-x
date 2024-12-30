@@ -93,12 +93,14 @@ describe('<DataGridPremium /> - State persistence', () => {
 
     it('should export the current version of the exportable state', async () => {
       render(<TestCase />);
-      await act(() => apiRef.current.setRowGroupingModel(['category']));
-      await act(() =>
+      await act(() => {
+        apiRef.current.setRowGroupingModel(['category']);
+      });
+      await act(() => {
         apiRef.current.setAggregationModel({
           id: 'size',
-        }),
-      );
+        });
+      });
 
       let exportedState: GridInitialStatePremium = {};
       await act(() => {
@@ -110,12 +112,14 @@ describe('<DataGridPremium /> - State persistence', () => {
 
     it('should export the current version of the exportable state when using exportOnlyDirtyModels', async () => {
       render(<TestCase />);
-      await act(() => apiRef.current.setRowGroupingModel(['category']));
-      await act(() =>
+      await act(() => {
+        apiRef.current.setRowGroupingModel(['category']);
+      });
+      await act(() => {
         apiRef.current.setAggregationModel({
           id: 'size',
-        }),
-      );
+        });
+      });
 
       let exportedState: GridInitialStatePremium = {};
       await act(() => {
