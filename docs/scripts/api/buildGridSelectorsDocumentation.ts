@@ -64,7 +64,7 @@ export default async function buildGridSelectorsDocumentation(
           isSelector = true;
         } else if (
           // Selector wrapped in `createSelector`
-          type.symbol.name === 'OutputSelector'
+          type.symbol?.name === 'OutputSelector'
         ) {
           isSelector = true;
           supportsApiRef = true;

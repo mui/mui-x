@@ -64,20 +64,12 @@ export const usePicker = <
 
   return {
     // Picker value
-    open: pickerValueResponse.open,
-    actions: pickerValueResponse.actions,
     fieldProps: pickerValueResponse.fieldProps,
 
     // Picker views
     renderCurrentView: pickerViewsResponse.renderCurrentView,
     hasUIView: pickerViewsResponse.provider.hasUIView,
     shouldRestoreFocus: pickerViewsResponse.shouldRestoreFocus,
-
-    // Picker layout
-    layoutProps: {
-      ...pickerViewsResponse.layoutProps,
-      ...pickerValueResponse.layoutProps,
-    },
 
     // Picker provider
     providerProps,

@@ -24,7 +24,7 @@ export type PickerViewsRendererProps<
   TAdditionalProps extends {},
 > = Omit<TExternalProps, 'className' | 'sx'> &
   TAdditionalProps &
-  UsePickerValueViewsResponse<TValue> & {
+  Pick<UsePickerValueViewsResponse<TValue>, 'value' | 'onChange'> & {
     view: TView;
     views: readonly TView[];
     focusedView: TView | null;
@@ -120,19 +120,30 @@ export interface UsePickerViewParams<
 export interface UsePickerViewsResponse<TView extends DateOrTimeViewWithMeridiem> {
   renderCurrentView: () => React.ReactNode;
   shouldRestoreFocus: () => boolean;
-  layoutProps: UsePickerViewsLayoutResponse<TView>;
   provider: UsePickerViewsProviderParams<TView>;
 }
 
-export interface UsePickerViewsLayoutResponse<TView extends DateOrTimeViewWithMeridiem> {
-  view: TView | null;
-  onViewChange: (view: TView) => void;
+export interface UsePickerViewsContextValue<TView extends DateOrTimeViewWithMeridiem> {
+  /**
+   * Available views.
+   */
   views: readonly TView[];
+  /**
+   * View currently rendered.
+   */
+  view: TView | null;
+  /**
+   * Callback called when the view to render changes
+   * @template TView
+   * @param {TView} view The view to render
+   */
+  onViewChange: (view: TView) => void;
 }
 
 export interface UsePickerViewsProviderParams<TView extends DateOrTimeViewWithMeridiem> {
   hasUIView: boolean;
   views: readonly TView[];
+  contextValue: UsePickerViewsContextValue<TView>;
 }
 
 /**
@@ -159,7 +170,7 @@ export const usePickerViews = <
   TExternalProps,
   TAdditionalProps
 >): UsePickerViewsResponse<TView> => {
-  const { onChange, open, onClose } = propsFromPickerValue;
+  const { onChange, value, open, setOpen } = propsFromPickerValue;
   const { view: inView, views, openTo, onViewChange, viewRenderers, timezone } = props;
   const { className, sx, ...propsToForwardToView } = props;
 
@@ -220,7 +231,7 @@ export const usePickerViews = <
   useEnhancedEffect(() => {
     // Handle case of `DateTimePicker` without time renderers
     if (currentViewMode === 'field' && open) {
-      onClose();
+      setOpen(false);
       setTimeout(() => {
         fieldRef?.current?.setSelectedSections(view);
         // focusing the input before the range selection is done
@@ -257,20 +268,23 @@ export const usePickerViews = <
     setFocusedView(newView, true);
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const layoutProps: UsePickerViewsLayoutResponse<TView> = {
-    views,
-    view: popperView,
-    onViewChange: setView,
-  };
+  const contextValue = React.useMemo<UsePickerViewsContextValue<TView>>(
+    () => ({
+      views,
+      view: popperView,
+      onViewChange: setView,
+    }),
+    [views, popperView, setView],
+  );
 
   const providerParams: UsePickerViewsProviderParams<TView> = {
     hasUIView,
     views,
+    contextValue,
   };
 
   return {
     shouldRestoreFocus,
-    layoutProps,
     provider: providerParams,
     renderCurrentView: () => {
       if (popperView == null) {
@@ -290,9 +304,9 @@ export const usePickerViews = <
       > = {
         ...propsToForwardToView,
         ...additionalViewProps,
-        ...propsFromPickerValue,
         views,
         timezone,
+        value,
         onChange: setValueAndGoToNextView,
         view: popperView,
         onViewChange: setView,
