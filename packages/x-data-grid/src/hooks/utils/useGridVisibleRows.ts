@@ -8,7 +8,7 @@ import { gridExpandedSortedRowEntriesSelector } from '../features/filter/gridFil
 import type { GridApiCommon, GridRowEntry } from '../../models';
 
 export const getVisibleRows = <Api extends GridApiCommon>(
-  apiRef: React.MutableRefObject<Api>,
+  apiRef: React.RefObject<Api>,
   props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,
 ) => {
   let rows: GridRowEntry[];
@@ -37,7 +37,7 @@ export const getVisibleRows = <Api extends GridApiCommon>(
  * - If the row tree is flat, it only contains up to `state.pageSize` rows.
  */
 export const useGridVisibleRows = <Api extends GridApiCommon>(
-  apiRef: React.MutableRefObject<Api>,
+  apiRef: React.RefObject<Api>,
   props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,
 ) => {
   const response = getVisibleRows(apiRef, props);

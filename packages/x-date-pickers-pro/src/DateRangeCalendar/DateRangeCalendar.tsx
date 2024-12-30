@@ -58,6 +58,7 @@ import {
   PickersRangeCalendarHeader,
   PickersRangeCalendarHeaderProps,
 } from '../PickersRangeCalendarHeader';
+import { useNullablePickerRangePositionContext } from '../internals/hooks/useNullablePickerRangePositionContext';
 
 const releaseInfo = getReleaseInfo();
 
@@ -187,8 +188,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     reduceAnimations,
     onMonthChange,
     rangePosition: rangePositionProp,
-    defaultRangePosition: inDefaultRangePosition,
-    onRangePositionChange: inOnRangePositionChange,
+    defaultRangePosition: defaultRangePositionProp,
+    onRangePositionChange: onRangePositionChangeProp,
     calendars,
     currentMonthCalendarPosition = 1,
     slots,
@@ -213,6 +214,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     onViewChange,
     ...other
   } = props;
+
+  const rangePositionContext = useNullablePickerRangePositionContext();
 
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone<
     PickerRangeValue,
@@ -241,9 +244,9 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
   const id = useId();
 
   const { rangePosition, onRangePositionChange } = useRangePosition({
-    rangePosition: rangePositionProp,
-    defaultRangePosition: inDefaultRangePosition,
-    onRangePositionChange: inOnRangePositionChange,
+    rangePosition: rangePositionProp ?? rangePositionContext?.rangePosition,
+    defaultRangePosition: defaultRangePositionProp,
+    onRangePositionChange: onRangePositionChangeProp ?? rangePositionContext?.onRangePositionChange,
   });
 
   const handleDatePositionChange = useEventCallback((position: RangePosition) => {
