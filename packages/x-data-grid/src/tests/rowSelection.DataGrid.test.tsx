@@ -133,12 +133,12 @@ describe('<DataGrid /> - Row selection', () => {
 
       const cell0 = getCell(0, 0);
       await user.click(cell0);
-      await user.keyboard('{Shift>}[Space/]{/Shift}');
+      await user.keyboard('{Shift>}[Space]{/Shift}');
       expect(getSelectedRowIds()).to.deep.equal([0]);
 
       const cell1 = getCell(1, 0);
       await user.click(cell1);
-      await user.keyboard('{Shift>}[Space/]{/Shift}');
+      await user.keyboard('{Shift>}[Space]{/Shift}');
       expect(getSelectedRowIds()).to.deep.equal([1]);
     });
 
@@ -165,14 +165,14 @@ describe('<DataGrid /> - Row selection', () => {
         const cell01 = getCell(0, 1);
         await user.click(cell01);
 
-        await user.keyboard('{Shift>}[Space/]{/Shift}');
+        await user.keyboard('{Shift>}[Space]{/Shift}');
 
         expect(onCellEditStart.callCount).to.equal(0);
         expect(getSelectedRowIds()).to.deep.equal([0]);
 
         const cell11 = getCell(1, 1);
         await user.click(cell11);
-        await user.keyboard('{Shift>}[Space/]{/Shift}');
+        await user.keyboard('{Shift>}[Space]{/Shift}');
 
         expect(onCellEditStart.callCount).to.equal(0);
         expect(getSelectedRowIds()).to.deep.equal([1]);
@@ -184,10 +184,10 @@ describe('<DataGrid /> - Row selection', () => {
       const cell00 = getCell(0, 0);
       await user.click(cell00);
 
-      await user.keyboard('{Shift>}[Space/]{/Shift}');
+      await user.keyboard('{Shift>}[Space]{/Shift}');
       expect(getSelectedRowIds()).to.deep.equal([0]);
 
-      await user.keyboard('{Shift>}[Space/]{/Shift}');
+      await user.keyboard('{Shift>}[Space]{/Shift}');
       expect(getSelectedRowIds()).to.deep.equal([]);
     });
 
@@ -196,10 +196,10 @@ describe('<DataGrid /> - Row selection', () => {
       const cell00 = getCell(0, 0);
       await user.click(cell00);
 
-      await user.keyboard('{Shift>}[Space/]{/Shift}');
+      await user.keyboard('{Shift>}[Space]{/Shift}');
       expect(getSelectedRowIds()).to.deep.equal([0]);
 
-      await user.keyboard('{Shift>}{ArrowDown/}{/Shift}');
+      await user.keyboard('{Shift>}[ArrowDown]{/Shift}');
 
       expect(getSelectedRowIds()).to.deep.equal([1]);
     });
@@ -484,7 +484,7 @@ describe('<DataGrid /> - Row selection', () => {
       const { user } = render(<TestDataGridSelection checkboxSelection />);
       await user.click(getCell(2, 1));
       expect(getSelectedRowIds()).to.deep.equal([2]);
-      await user.keyboard('{Shift>}{ArrowDown/}{/Shift}');
+      await user.keyboard('{Shift>}[ArrowDown]{/Shift}');
       expect(getSelectedRowIds()).to.deep.equal([2, 3]);
 
       await user.click(getCell(3, 1));
@@ -502,7 +502,7 @@ describe('<DataGrid /> - Row selection', () => {
       await user.keyboard('{/Shift}');
       expect(getSelectedRowIds()).to.deep.equal([1, 2, 3]);
 
-      await user.keyboard('{Shift>}{ArrowDown/}{/Shift}');
+      await user.keyboard('{Shift>}[ArrowDown]{/Shift}');
       expect(getSelectedRowIds()).to.deep.equal([2, 3]);
     });
 
@@ -516,7 +516,7 @@ describe('<DataGrid /> - Row selection', () => {
       await user.keyboard('{/Shift}');
       expect(getSelectedRowIds()).to.deep.equal([1, 2]);
 
-      await user.keyboard('{Shift>}{ArrowDown/}{/Shift}');
+      await user.keyboard('{Shift>}[ArrowDown]{/Shift}');
       expect(getSelectedRowIds()).to.deep.equal([1, 2, 3]);
 
       await user.keyboard('{ArrowDown/}');
@@ -533,7 +533,7 @@ describe('<DataGrid /> - Row selection', () => {
       await user.keyboard('{/Shift}');
       expect(getSelectedRowIds()).to.deep.equal([2, 3]);
 
-      await user.keyboard('{Shift>}{ArrowUp/}{/Shift}');
+      await user.keyboard('{Shift>}[ArrowUp]{/Shift}');
       expect(getSelectedRowIds()).to.deep.equal([2]);
     });
 
@@ -546,13 +546,13 @@ describe('<DataGrid /> - Row selection', () => {
 
       const cell21 = getCell(2, 1);
       await user.click(cell21);
-      await user.keyboard('{Shift>}[Space/]{/Shift}');
+      await user.keyboard('{Shift>}[Space]{/Shift}');
 
       expect(getSelectedRowIds()).to.deep.equal([2]);
 
       const cell11 = getCell(1, 1);
       await user.click(cell11);
-      await user.keyboard('{Shift>}[Space/]{/Shift}');
+      await user.keyboard('{Shift>}[Space]{/Shift}');
       expect(getSelectedRowIds()).to.deep.equal([1, 2]);
     });
 
@@ -949,7 +949,7 @@ describe('<DataGrid /> - Row selection', () => {
       );
       const cell0 = getCell(0, 0);
       await user.click(cell0);
-      await user.keyboard('{Shift>}[Space/]{/Shift}');
+      await user.keyboard('{Shift>}[Space]{/Shift}');
       expect(getSelectedRowIds()).to.deep.equal([]);
     });
 
