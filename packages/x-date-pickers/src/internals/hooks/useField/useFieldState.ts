@@ -287,7 +287,7 @@ export const useFieldState = <
   const updateValueFromValueStr = (valueStr: string) => {
     const parseDateStr = (dateStr: string, referenceDate: PickerValidDate) => {
       const date = utils.parse(dateStr, format);
-      if (date == null || !utils.isValid(date)) {
+      if (!utils.isValid(date)) {
         return null;
       }
 
@@ -334,7 +334,7 @@ export const useFieldState = <
     const newActiveDateSections = fieldValueManager.getDateSectionsFromValue(newSections, section);
     const newActiveDate = getDateFromDateSections(utils, newActiveDateSections, localizedDigits);
 
-    if (newActiveDate != null && utils.isValid(newActiveDate)) {
+    if (utils.isValid(newActiveDate)) {
       /**
        * If the new date is valid,
        * Then we merge the value of the modified sections into the reference date.
