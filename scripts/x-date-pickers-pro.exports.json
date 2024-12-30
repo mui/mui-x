@@ -243,7 +243,6 @@
   { "name": "MultiSectionDigitalClockSectionClassKey", "kind": "TypeAlias" },
   { "name": "MultiSectionDigitalClockSlotProps", "kind": "Interface" },
   { "name": "MultiSectionDigitalClockSlots", "kind": "Interface" },
-  { "name": "NonEmptyDateRange", "kind": "TypeAlias" },
   { "name": "OnErrorProps", "kind": "Interface" },
   { "name": "PickerChangeHandlerContext", "kind": "Interface" },
   { "name": "PickerChangeImportance", "kind": "TypeAlias" },
