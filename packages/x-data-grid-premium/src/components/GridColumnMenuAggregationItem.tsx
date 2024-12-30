@@ -74,7 +74,7 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
   }, []);
 
   const handleSelectKeyDown = React.useCallback((event: React.KeyboardEvent) => {
-    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === ' ') {
       event.stopPropagation();
     }
   }, []);
