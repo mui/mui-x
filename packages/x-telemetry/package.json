@@ -23,6 +23,7 @@
     "build:types": "node ../../scripts/buildTypes.mjs",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
+  "sideEffects": false,
   "bin": {
     "mui-x-telemetry": "cli/index.js"
   },

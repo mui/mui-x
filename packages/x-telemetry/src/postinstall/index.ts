@@ -8,6 +8,15 @@ import getAnonymousMachineId from './get-machine-id';
 import { TelemetryStorage } from './storage';
 
 (async () => {
+  // If Node.js support permissions, we need to check if the current user has
+  // the necessary permissions to write to the file system.
+  if (
+    typeof process.permission !== 'undefined' &&
+    !(process.permission.has('fs.read') && process.permission.has('fs.write'))
+  ) {
+    return;
+  }
+
   const storage = new TelemetryStorage({
     distDir: path.join(process.cwd()),
   });
