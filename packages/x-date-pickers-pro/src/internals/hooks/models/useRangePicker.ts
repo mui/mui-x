@@ -42,20 +42,18 @@ export interface RangeOnlyPickerProps
 export interface UseRangePickerProps<
   TView extends DateOrTimeViewWithMeridiem,
   TError,
-  TExternalProps extends UsePickerViewsProps<any, TView, any, any>,
-  TAdditionalViewProps extends {},
+  TExternalProps extends UsePickerViewsProps<any, TView, any>,
 > extends RangeOnlyPickerProps,
-    BasePickerProps<PickerRangeValue, TView, TError, TExternalProps, TAdditionalViewProps> {}
+    BasePickerProps<PickerRangeValue, TView, TError, TExternalProps> {}
 
 export interface RangePickerAdditionalViewProps
   extends Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {}
 
 export interface UseRangePickerParams<
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UseRangePickerProps<TView, any, TExternalProps, TAdditionalViewProps>,
-  TAdditionalViewProps extends {},
+  TExternalProps extends UseRangePickerProps<TView, any, TExternalProps>,
 > extends Pick<
-    UsePickerParams<PickerRangeValue, TView, TExternalProps, TAdditionalViewProps>,
+    UsePickerParams<PickerRangeValue, TView, TExternalProps>,
     'valueManager' | 'valueType' | 'validator' | 'rendererInterceptor'
   > {
   props: TExternalProps;

@@ -17,11 +17,11 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { usePickerContext, usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
-import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import {
   DateRangePickerToolbarClasses,
   getDateRangePickerToolbarUtilityClass,
 } from './dateRangePickerToolbarClasses';
+import { usePickerRangePositionContext } from '../hooks';
 
 const useUtilityClasses = (classes: Partial<DateRangePickerToolbarClasses> | undefined) => {
   const slots = {
@@ -34,8 +34,7 @@ const useUtilityClasses = (classes: Partial<DateRangePickerToolbarClasses> | und
 
 export interface DateRangePickerToolbarProps
   extends ExportedDateRangePickerToolbarProps,
-    Omit<BaseToolbarProps, 'onChange' | 'isLandscape'>,
-    Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {}
+    Omit<BaseToolbarProps, 'onChange' | 'isLandscape'> {}
 
 export interface ExportedDateRangePickerToolbarProps extends ExportedBaseToolbarProps {
   /**
@@ -81,18 +80,12 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar(
   const utils = useUtils();
   const props = useThemeProps({ props: inProps, name: 'MuiDateRangePickerToolbar' });
 
-  const {
-    rangePosition,
-    onRangePositionChange,
-    toolbarFormat: toolbarFormatProp,
-    className,
-    classes: classesProp,
-    ...other
-  } = props;
+  const { toolbarFormat: toolbarFormatProp, className, classes: classesProp, ...other } = props;
 
   const { value } = usePickerContext<PickerRangeValue>();
   const translations = usePickerTranslations();
   const ownerState = useToolbarOwnerState();
+  const { rangePosition, onRangePositionChange } = usePickerRangePositionContext();
   const classes = useUtilityClasses(classesProp);
 
   // This can't be a default value when spreading because it breaks the API generation.
@@ -148,8 +141,6 @@ DateRangePickerToolbar.propTypes = {
    * @default `true` for Desktop, `false` for Mobile.
    */
   hidden: PropTypes.bool,
-  onRangePositionChange: PropTypes.func.isRequired,
-  rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
