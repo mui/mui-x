@@ -736,7 +736,7 @@ export const mergeDateIntoReferenceDate = (
 
 export const isAndroid = () => navigator.userAgent.toLowerCase().includes('android');
 
-// TODO v8: Remove if we drop the v6 TextField approach.
+// TODO v9: Remove
 export const getSectionOrder = (
   sections: FieldSection[],
   shouldApplyRTL: boolean,
