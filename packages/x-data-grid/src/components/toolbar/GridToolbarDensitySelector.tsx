@@ -55,7 +55,7 @@ const GridToolbarDensitySelector = forwardRef<HTMLButtonElement, GridToolbarDens
       },
     ];
 
-    const startIcon = React.useMemo<React.ReactElement>(() => {
+    const startIcon = React.useMemo<React.ReactElement<any>>(() => {
       switch (density) {
         case 'compact':
           return <rootProps.slots.densityCompactIcon />;
@@ -92,7 +92,7 @@ const GridToolbarDensitySelector = forwardRef<HTMLButtonElement, GridToolbarDens
       return null;
     }
 
-    const densityElements = densityOptions.map<React.ReactElement>((option, index) => (
+    const densityElements = densityOptions.map<React.ReactElement<any>>((option, index) => (
       <rootProps.slots.baseMenuItem
         key={index}
         onClick={() => handleDensityUpdate(option.value)}
