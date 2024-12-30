@@ -25,36 +25,33 @@ export interface UsePickerBaseProps<
   TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
-  TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
-  TAdditionalProps extends {},
+  TExternalProps extends UsePickerViewsProps<TValue, TView, any>,
 > extends UsePickerValueBaseProps<TValue, TError>,
-    UsePickerViewsBaseProps<TValue, TView, TExternalProps, TAdditionalProps>,
+    UsePickerViewsBaseProps<TValue, TView, TExternalProps>,
     UsePickerProviderProps {}
 
 export interface UsePickerProps<
   TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
-  TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
-  TAdditionalProps extends {},
+  TExternalProps extends UsePickerViewsProps<TValue, TView, any>,
 > extends UsePickerValueProps<TValue, TError>,
-    UsePickerViewsProps<TValue, TView, TExternalProps, TAdditionalProps>,
+    UsePickerViewsProps<TValue, TView, TExternalProps>,
     UsePickerProviderProps {}
 
 export interface UsePickerParams<
   TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UsePickerProps<TValue, TView, any, any, any>,
-  TAdditionalProps extends {},
+  TExternalProps extends UsePickerProps<TValue, TView, any, any>,
 > extends Pick<
       UsePickerValueParams<TValue, TExternalProps>,
       'valueManager' | 'valueType' | 'variant' | 'validator'
     >,
     Pick<
-      UsePickerViewParams<TValue, TView, TExternalProps, TAdditionalProps>,
-      'additionalViewProps' | 'autoFocusView' | 'rendererInterceptor' | 'fieldRef'
+      UsePickerViewParams<TValue, TView, TExternalProps>,
+      'autoFocusView' | 'rendererInterceptor' | 'fieldRef'
     >,
-    Pick<UsePickerProviderParameters<TValue, TView, InferError<TAdditionalProps>>, 'localeText'> {
+    Pick<UsePickerProviderParameters<TValue, TView, InferError<TExternalProps>>, 'localeText'> {
   props: TExternalProps;
 }
 

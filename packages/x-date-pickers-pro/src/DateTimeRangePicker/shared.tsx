@@ -76,19 +76,16 @@ export interface BaseDateTimeRangePickerSlotProps
   toolbar?: ExportedDateTimeRangePickerToolbarProps;
 }
 
-export type DateTimeRangePickerRenderers<
-  TView extends DateOrTimeViewWithMeridiem,
-  TAdditionalProps extends {} = {},
-> = PickerViewRendererLookup<
-  PickerRangeValue,
-  TView,
-  Omit<DateRangeViewRendererProps<'day'>, 'view' | 'slots' | 'slotProps'> &
-    Omit<
-      TimeViewRendererProps<TimeViewWithMeridiem, BaseClockProps<TimeViewWithMeridiem>>,
-      'view' | 'slots' | 'slotProps'
-    > & { view: TView },
-  TAdditionalProps
->;
+export type DateTimeRangePickerRenderers<TView extends DateOrTimeViewWithMeridiem> =
+  PickerViewRendererLookup<
+    PickerRangeValue,
+    TView,
+    Omit<DateRangeViewRendererProps<'day'>, 'view' | 'slots' | 'slotProps'> &
+      Omit<
+        TimeViewRendererProps<TimeViewWithMeridiem, BaseClockProps<TimeViewWithMeridiem>>,
+        'view' | 'slots' | 'slotProps'
+      > & { view: TView }
+  >;
 
 export interface BaseDateTimeRangePickerProps
   extends Omit<
