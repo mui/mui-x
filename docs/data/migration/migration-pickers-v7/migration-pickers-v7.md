@@ -346,11 +346,10 @@ This change causes a few breaking changes:
 
 ### Update default `closeOnSelect` and Action Bar `actions` values
 
-The default value of the `closeOnSelect` prop has been updated to `false` for all Picker components with complex views.
-Only `<DesktopDatePicker />` and `<DesktopDateRangePicker />` have `closeOnSelect` set to `true` by default.
+The default value of the `closeOnSelect` prop has been updated to `false` for all Picker components, except `<DesktopDatePicker />` and `<DesktopDateRangePicker />`, which still have `closeOnSelect` set to `true`.
 
 This change goes hand in hand with the new default `actions` prop value for the `<PickersActionBar />` component.
-The default value of the `actions` prop has been updated to `['cancel', 'accept']` for all Picker components with complex views, except for `<DesktopDatePicker />` and `<DesktopDateRangePicker />`.
+The default value of the `actions` prop has been updated to `['cancel', 'accept']` for all Picker components, except `<DesktopDatePicker />` and `<DesktopDateRangePicker />`.
 
 If the updated values do not fit your use case, you can [override them](/x/react-date-pickers/custom-components/#component-props).
 
