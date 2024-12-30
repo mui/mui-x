@@ -11,8 +11,8 @@ import {
   gridStringOrNumberComparator,
   isLeaf,
 } from '@mui/x-data-grid-pro';
-import { usePreviousProps } from '@mui/utils';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { useMounted } from '@mui/x-internals/useMounted';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridAggregationModel } from '../aggregation';
@@ -245,14 +245,15 @@ export const useGridPivoting = ({
   const isPivot = pivotMode;
   const [pivotSettingsOpen, setPivotSettingsOpen] = React.useState(false);
   const exportedStateRef = React.useRef<GridInitialStatePremium | null>(null);
-  const prevProps = usePreviousProps({ isPivot });
   const nonPivotDataRef = React.useRef<{ rows: GridRowModel[]; columns: GridColDef[] } | undefined>(
     undefined,
   );
 
+  const isMounted = useMounted();
+
   const props = React.useMemo(() => {
-    if (isPivot) {
-      if (apiRef.current.exportState && prevProps.isPivot === false) {
+    if (isMounted && isPivot) {
+      if (apiRef.current.exportState) {
         exportedStateRef.current = apiRef.current.exportState();
 
         const rowIds = gridDataRowIdsSelector(apiRef);
@@ -274,7 +275,7 @@ export const useGridPivoting = ({
     }
 
     return nonPivotDataRef.current;
-  }, [isPivot, pivotModel, apiRef, prevProps.isPivot]);
+  }, [isPivot, pivotModel, apiRef, isMounted]);
 
   useEnhancedEffect(() => {
     if (!isPivot) {

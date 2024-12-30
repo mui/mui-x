@@ -126,14 +126,17 @@ const columns: GridColDef[] = [
 describe('<DataGridPremium /> - Pivoting', () => {
   const { render } = createRenderer();
 
-  function Test(props: { initialPivotModel: Unstable_GridPivotModel }) {
+  function Test(props: {
+    initialPivotModel: Unstable_GridPivotModel;
+    initialIsPivotMode?: boolean;
+  }) {
     const apiRef = useGridApiRef();
 
     const [pivotModel, setPivotModel] = React.useState<Unstable_GridPivotModel>(
       props.initialPivotModel,
     );
 
-    const [isPivotMode, setIsPivotMode] = React.useState(false);
+    const [isPivotMode, setIsPivotMode] = React.useState(props.initialIsPivotMode ?? false);
 
     const pivotParams = unstable_useGridPivoting({
       apiRef,
@@ -252,6 +255,29 @@ describe('<DataGridPremium /> - Pivoting', () => {
       const pivotSwitch = screen.getByLabelText('Pivot');
       expect(pivotSwitch).to.have.property('checked', true);
     });
+
+    expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '$192.45', '5,500', '$193.10', '6,700']);
+    expect(getRowValues(1)).to.deep.equal(['GOOGL (2)', '$126.06', '6,800', '', '']);
+    expect(getRowValues(2)).to.deep.equal(['MSFT (2)', '$346.56', '8,600', '', '']);
+    expect(getRowValues(3)).to.deep.equal(['AMZN (2)', '$145.78', '6,000', '', '']);
+    expect(getRowValues(4)).to.deep.equal(['US_TREASURY_2Y (1)', '$98.75', '1,000', '', '']);
+    expect(getRowValues(5)).to.deep.equal(['US_TREASURY_10Y (1)', '$95.60', '750', '', '']);
+  });
+
+  it('should render in pivot mode when mounted with pivoting enabled', async () => {
+    render(
+      <Test
+        initialIsPivotMode
+        initialPivotModel={{
+          rows: [{ field: 'ticker' }],
+          columns: [{ field: 'year' }],
+          values: [
+            { field: 'price', aggFunc: 'avg' },
+            { field: 'volume', aggFunc: 'sum' },
+          ],
+        }}
+      />,
+    );
 
     expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '$192.45', '5,500', '$193.10', '6,700']);
     expect(getRowValues(1)).to.deep.equal(['GOOGL (2)', '$126.06', '6,800', '', '']);
