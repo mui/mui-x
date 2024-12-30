@@ -10,7 +10,7 @@ import {
   UsePickerViewsResponse,
   UsePickerViewsBaseProps,
 } from './usePickerViews';
-import { PickerOwnerState } from '../../../models';
+import { InferError, PickerOwnerState } from '../../../models';
 import { DateOrTimeViewWithMeridiem, PickerValidValue } from '../../models';
 import {
   UsePickerProviderParameters,
@@ -54,7 +54,7 @@ export interface UsePickerParams<
       UsePickerViewParams<TValue, TView, TExternalProps, TAdditionalProps>,
       'additionalViewProps' | 'autoFocusView' | 'rendererInterceptor' | 'fieldRef'
     >,
-    Pick<UsePickerProviderParameters<TValue, TView>, 'localeText'> {
+    Pick<UsePickerProviderParameters<TValue, TView, InferError<TAdditionalProps>>, 'localeText'> {
   props: TExternalProps;
 }
 
@@ -62,10 +62,8 @@ export interface UsePickerResponse<
   TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
-> extends Pick<UsePickerValueResponse<TValue, TError>, 'open' | 'actions' | 'fieldProps'>,
+> extends Pick<UsePickerValueResponse<TValue, TError>, 'fieldProps'>,
     Pick<UsePickerViewsResponse<TView>, 'shouldRestoreFocus' | 'renderCurrentView'> {
   ownerState: PickerOwnerState;
-  providerProps: UsePickerProviderReturnValue;
-  layoutProps: UsePickerValueResponse<TValue, TError>['layoutProps'] &
-    UsePickerViewsResponse<TView>['layoutProps'];
+  providerProps: UsePickerProviderReturnValue<TValue>;
 }

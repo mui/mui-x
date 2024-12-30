@@ -14,8 +14,7 @@ export const useGetOpenDialogAriaLabel = (params: {
 
   return React.useCallback(
     (value: PickerValue) => {
-      const formattedValue =
-        value !== null && utils.isValid(value) ? utils.format(value, formatKey) : null;
+      const formattedValue = utils.isValid(value) ? utils.format(value, formatKey) : null;
       return translations[translationKey](formattedValue);
     },
     [formatKey, translationKey, translations, utils],

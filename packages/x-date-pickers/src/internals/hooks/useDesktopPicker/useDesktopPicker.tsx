@@ -56,9 +56,6 @@ export const useDesktopPicker = <
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
 
   const {
-    open,
-    actions,
-    layoutProps,
     providerProps,
     renderCurrentView,
     shouldRestoreFocus,
@@ -100,7 +97,7 @@ export const useDesktopPicker = <
       sx,
       label,
       name,
-      focused: open ? true : undefined,
+      focused: providerProps.contextValue.open ? true : undefined,
       ...(isToolbarHidden && { id: labelId }),
       ...(!!inputRef && { inputRef }),
     },
@@ -153,14 +150,12 @@ export const useDesktopPicker = <
         role="dialog"
         placement="bottom-start"
         anchorEl={providerProps.contextValue.triggerRef!.current}
-        {...actions}
-        open={open}
         slots={slots}
         slotProps={slotProps}
         shouldRestoreFocus={shouldRestoreFocus}
         reduceAnimations={reduceAnimations}
       >
-        <Layout {...layoutProps} {...slotProps?.layout} slots={slots} slotProps={slotProps}>
+        <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
           {renderCurrentView()}
         </Layout>
       </PickersPopper>

@@ -22,9 +22,9 @@ import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
 import { UsePickerProviderNonStaticProps } from '../usePicker/usePickerProvider';
 import { ExportedPickerFieldUISlots, PickerFieldUISlotProps } from '../../components/PickerFieldUI';
 
-export interface UseMobilePickerSlots<TView extends DateOrTimeViewWithMeridiem>
+export interface UseMobilePickerSlots
   extends PickersModalDialogSlots,
-    ExportedPickersLayoutSlots<PickerValue, TView>,
+    ExportedPickersLayoutSlots<PickerValue>,
     ExportedPickerFieldUISlots {
   /**
    * Component used to enter the date with the keyboard.
@@ -33,10 +33,9 @@ export interface UseMobilePickerSlots<TView extends DateOrTimeViewWithMeridiem>
 }
 
 export interface ExportedUseMobilePickerSlotProps<
-  TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends PickersModalDialogSlotProps,
-    ExportedPickersLayoutSlotProps<PickerValue, TView>,
+    ExportedPickersLayoutSlotProps<PickerValue>,
     PickerFieldUISlotProps {
   field?: SlotComponentPropsFromProps<
     PickerFieldSlotProps<PickerValue, TEnableAccessibleFieldDOMStructure>,
@@ -45,11 +44,9 @@ export interface ExportedUseMobilePickerSlotProps<
   >;
 }
 
-export interface UseMobilePickerSlotProps<
-  TView extends DateOrTimeViewWithMeridiem,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends ExportedUseMobilePickerSlotProps<TView, TEnableAccessibleFieldDOMStructure>,
-    Pick<PickersLayoutSlotProps<PickerValue, TView>, 'toolbar'> {}
+export interface UseMobilePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+  extends ExportedUseMobilePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
+    Pick<PickersLayoutSlotProps<PickerValue>, 'toolbar'> {}
 
 export interface MobileOnlyPickerProps
   extends BaseNonStaticPickerProps,
@@ -68,12 +65,12 @@ export interface UseMobilePickerProps<
    * Overridable component slots.
    * @default {}
    */
-  slots: UseMobilePickerSlots<TView>;
+  slots: UseMobilePickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseMobilePickerSlotProps<TView, TEnableAccessibleFieldDOMStructure>;
+  slotProps?: UseMobilePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
 }
 
 export interface UseMobilePickerParams<
