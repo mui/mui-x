@@ -30,7 +30,8 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
       }),
     [colDef, rootProps.aggregationFunctions],
   );
-  const { native: isBaseSelectNative = false, ...baseSelectProps } = rootProps.slotProps?.baseSelect || {};
+  const { native: isBaseSelectNative = false, ...baseSelectProps } =
+    rootProps.slotProps?.baseSelect || {};
 
   const baseSelectOptionProps = rootProps.slotProps?.baseSelectOption || {};
 
