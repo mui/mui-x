@@ -71,7 +71,7 @@ const rendererInterceptor = function RendererInterceptor(
         view: !isTimeViewActive ? popperView : 'day',
         views: rendererProps.views.filter(isDatePickerView),
         sx: [{ gridColumn: 1 }, ...finalProps.sx],
-      } as any)}
+      })}
       <Divider orientation="vertical" sx={{ gridColumn: 2 }} />
       <DateTimeRangePickerTimeWrapper
         {...finalProps}
