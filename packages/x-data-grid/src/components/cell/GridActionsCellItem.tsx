@@ -7,14 +7,14 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 interface GridActionsCellItemCommonProps {
   label: string;
-  icon?: React.ReactElement;
+  icon?: React.ReactElement<any>;
   /** from https://mui.com/material-ui/api/button-base/#ButtonBase-prop-component */
   component?: React.ElementType;
 }
 
 export type GridActionsCellItemProps = GridActionsCellItemCommonProps &
   (
-    | ({ showInMenu?: false; icon: React.ReactElement } & Omit<IconButtonProps, 'component'>)
+    | ({ showInMenu?: false; icon: React.ReactElement<any> } & Omit<IconButtonProps, 'component'>)
     | ({
         showInMenu: true;
         /**
@@ -44,7 +44,7 @@ const GridActionsCellItem = forwardRef<HTMLElement, GridActionsCellItemProps>((p
         {...other}
         onClick={handleClick}
         {...rootProps.slotProps?.baseIconButton}
-        ref={ref as React.MutableRefObject<HTMLButtonElement>}
+        ref={ref as React.RefObject<HTMLButtonElement>}
       >
         {React.cloneElement(icon!, { fontSize: 'small' })}
       </rootProps.slots.baseIconButton>

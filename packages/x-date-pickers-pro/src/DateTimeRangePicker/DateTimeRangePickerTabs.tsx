@@ -51,12 +51,12 @@ export interface ExportedDateTimeRangePickerTabsProps extends ExportedBaseTabsPr
    * Date tab icon.
    * @default DateRangeIcon
    */
-  dateIcon?: React.ReactElement;
+  dateIcon?: React.ReactElement<any>;
   /**
    * Time tab icon.
    * @default TimeIcon
    */
-  timeIcon?: React.ReactElement;
+  timeIcon?: React.ReactElement<any>;
   /**
    * Override or extend the styles applied to the component.
    */

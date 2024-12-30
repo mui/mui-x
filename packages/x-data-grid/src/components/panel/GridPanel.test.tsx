@@ -33,7 +33,7 @@ describe('<GridPanel />', () => {
     classes: classes as any,
     inheritComponent: Popper,
     muiName: 'MuiGridPanel',
-    render: (node: React.ReactElement) =>
+    render: (node: React.ReactElement<any>) =>
       render(
         <Wrapper>
           <div data-id="gridPanelAnchor" />
