@@ -354,7 +354,7 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should select the first section when `inputRef.current` is focused', () => {
-      const TestCase = () => {
+      function TestCase() {
         const inputRef = React.useRef<HTMLInputElement>(null);
         return (
           <React.Fragment>
@@ -362,7 +362,7 @@ describe('<DateField /> - Selection', () => {
             <button onClick={() => inputRef.current?.focus()}>Focus input</button>
           </React.Fragment>
         );
-      };
+      }
       render(<TestCase />);
 
       fireEvent.click(screen.getByRole('button', { name: 'Focus input' }));
