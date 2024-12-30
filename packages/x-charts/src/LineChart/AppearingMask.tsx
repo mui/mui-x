@@ -35,6 +35,7 @@ export function AppearingMask(props: AppearingMaskProps) {
       <clipPath id={clipId}>
         {transitionAppear((style) => (
           <animated.rect
+            // @ts-expect-error
             x={0}
             y={0}
             width={style.animatedWidth}

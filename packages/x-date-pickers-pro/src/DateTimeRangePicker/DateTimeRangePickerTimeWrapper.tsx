@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import {
   PickerSelectionState,
   PickerViewRenderer,
@@ -6,7 +6,6 @@ import {
   useUtils,
   TimeViewWithMeridiem,
   BaseClockProps,
-  DefaultizedProps,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { DateRange } from '../models';
@@ -50,10 +49,7 @@ function DateTimeRangePickerTimeWrapper<
     Omit<BaseClockProps<TDate, TView>, 'value' | 'defaultValue' | 'onChange'>,
     'views'
   >,
->(
-  props: DateTimeRangePickerTimeWrapperProps<TDate, TView, TComponentProps>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+>(props: DateTimeRangePickerTimeWrapperProps<TDate, TView, TComponentProps>) {
   const utils = useUtils<TDate>();
 
   const {
@@ -102,7 +98,6 @@ function DateTimeRangePickerTimeWrapper<
 
   return viewRenderer({
     ...other,
-    ref,
     views,
     onViewChange,
     value: currentValue,

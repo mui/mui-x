@@ -64,7 +64,7 @@ type UntypedStrategyProcessors = {
  * - sorting algorithm.
  * - filtering algorithm.
  */
-export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridPrivateApiCommon>) => {
+export const useGridStrategyProcessing = (apiRef: React.RefObject<GridPrivateApiCommon>) => {
   const availableStrategies = React.useRef(
     new Map<string, { group: GridStrategyGroup; isAvailable: () => boolean }>(),
   );

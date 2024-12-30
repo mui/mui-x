@@ -58,8 +58,8 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
   } = props;
 
   const apiRef = useGridApiContext();
-  const ref = React.useRef<any>();
-  const inputRef = React.useRef<any>();
+  const ref = React.useRef<any>(null);
+  const inputRef = React.useRef<any>(null);
   const [open, setOpen] = React.useState(initialOpen);
 
   const baseSelectProps = rootProps.slotProps?.baseSelect || {};

@@ -120,19 +120,19 @@ describe('<DataGridPremium /> - Row selection', () => {
       ]);
     });
 
-    it('should deselect auto selected parent if one of the children is deselected', () => {
-      render(<Test defaultGroupingExpansionDepth={-1} density="compact" />);
+    it('should deselect auto selected parent if one of the children is deselected', async () => {
+      const { user } = render(<Test defaultGroupingExpansionDepth={-1} density="compact" />);
 
-      fireEvent.click(getCell(1, 0).querySelector('input')!);
-      fireEvent.click(getCell(2, 0).querySelector('input')!);
-      fireEvent.click(getCell(3, 0).querySelector('input')!);
+      await user.click(getCell(1, 0).querySelector('input')!);
+      await user.click(getCell(2, 0).querySelector('input')!);
+      await user.click(getCell(3, 0).querySelector('input')!);
       expect(apiRef.current.getSelectedRows()).to.have.keys([
         0,
         1,
         2,
         'auto-generated-row-category1/Cat A',
       ]);
-      fireEvent.click(getCell(2, 0).querySelector('input')!);
+      await user.click(getCell(2, 0).querySelector('input')!);
       expect(apiRef.current.getSelectedRows()).to.have.keys([0, 2]);
     });
 

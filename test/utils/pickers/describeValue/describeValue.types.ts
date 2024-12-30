@@ -10,7 +10,7 @@ import { PickerComponentFamily } from '../describe.types';
 
 interface DescribeValueBaseOptions<TValue, C extends PickerComponentFamily> {
   componentFamily: C;
-  render: (node: React.ReactElement) => MuiRenderResult;
+  render: (node: React.ReactElement<any>) => MuiRenderResult;
   assertRenderedValue: (expectedValue: TValue) => void;
   values: [TValue, TValue];
   emptyValue: TValue;

@@ -81,6 +81,7 @@ function CircleMarkElement(props: CircleMarkElementProps) {
   return (
     <animated.circle
       {...other}
+      // @ts-expect-error
       cx={position.x}
       cy={position.y}
       r={5}

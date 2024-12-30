@@ -138,8 +138,8 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   currentView?: TView | null;
   initialView?: TView;
   onViewChange?: (view: TView) => void;
-  startFieldRef: React.RefObject<FieldRef<RangeFieldSection>>;
-  endFieldRef: React.RefObject<FieldRef<RangeFieldSection>>;
+  startFieldRef: React.RefObject<FieldRef<RangeFieldSection> | null>;
+  endFieldRef: React.RefObject<FieldRef<RangeFieldSection> | null>;
 }
 
 const useMultiInputFieldSlotProps = <
