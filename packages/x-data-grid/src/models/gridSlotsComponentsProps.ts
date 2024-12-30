@@ -146,16 +146,16 @@ interface ElementSlotProps {
   skeletonCell: GridSkeletonCellProps & SkeletonCellPropsOverrides;
   toolbar: GridToolbarProps & ToolbarPropsOverrides;
   /**
-   * Props passed to the `.main` (role="grid") element
+   * Props passed to the `.main` (role="grid") element.
    */
   main: MainProps;
   /**
-   * Props passed to the `.root` element
+   * Props passed to the `.root` element.
    */
   root: RootProps;
 }
 
-/* Merge MUI types into base types to keep slotProps working. */
+// Merge MUI types into base types to keep slotProps working.
 type Merge<A, B> = {
   [K in keyof A | keyof B]: K extends keyof A & keyof B
     ? A[K] & B[K]
