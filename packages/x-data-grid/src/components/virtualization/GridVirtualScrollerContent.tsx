@@ -2,6 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { styled, SxProps, Theme } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -24,7 +25,7 @@ const VirtualScrollerContentRoot = styled('div', {
   overridesResolver: (props, styles) => styles.virtualScrollerContent,
 })<{ ownerState: OwnerState }>({});
 
-const GridVirtualScrollerContent = React.forwardRef<
+const GridVirtualScrollerContent = forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> }
 >(function GridVirtualScrollerContent(props, ref) {
@@ -34,10 +35,10 @@ const GridVirtualScrollerContent = React.forwardRef<
 
   return (
     <VirtualScrollerContentRoot
-      ref={ref}
       {...props}
       ownerState={rootProps}
       className={clsx(classes.root, props.className)}
+      ref={ref}
     />
   );
 });

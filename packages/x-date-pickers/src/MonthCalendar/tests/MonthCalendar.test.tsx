@@ -52,7 +52,7 @@ describe('<MonthCalendar />', () => {
     expect(onChangeMock.callCount).to.equal(0);
   });
 
-  it('clicking on a PickersMonth button should not trigger the form submit', () => {
+  it('clicking on a month button should not trigger the form submit', () => {
     const onSubmitMock = spy();
     render(
       <form onSubmit={onSubmitMock}>

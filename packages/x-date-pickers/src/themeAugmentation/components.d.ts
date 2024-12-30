@@ -78,10 +78,6 @@ export interface PickerComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiPickersFadeTransitionGroup'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiPickersFadeTransitionGroup'];
   };
-  MuiPickersMonth?: {
-    defaultProps?: ComponentsProps['MuiPickersMonth'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiPickersMonth'];
-  };
   MuiPickersPopper?: {
     defaultProps?: ComponentsProps['MuiPickersPopper'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiPickersPopper'];
@@ -105,10 +101,6 @@ export interface PickerComponents<Theme = unknown> {
   MuiPickersLayout?: {
     defaultProps?: ComponentsProps['MuiPickersLayout'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiPickersLayout'];
-  };
-  MuiPickersYear?: {
-    defaultProps?: ComponentsProps['MuiPickersYear'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiPickersYear'];
   };
   MuiTimeClock?: {
     defaultProps?: ComponentsProps['MuiTimeClock'];

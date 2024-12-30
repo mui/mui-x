@@ -20,16 +20,16 @@ The following demo shows how to use the `date-fns-jalali` adapter:
 {{"demo": "AdapterJalali.js"}}
 
 :::info
-Both `date-fns-jalali` major versions (v2.x and v3.x) are supported.
+We support `date-fns-jalali` package v2.x, v3.x, and v4.x major versions.
 
-A single adapter cannot work for both `date-fns-jalali` v2.x and v3.x, because the way functions are exported has been changed in v3.x.
+A single adapter cannot work for all `date-fns-jalali` versions, because the way functions are exported has been changed in v3.x.
 
-To use `date-fns-jalali` v3.x, you will have to import the adapter from `@mui/x-date-pickers/AdapterDateFnsJalaliV3` instead of `@mui/x-date-pickers/AdapterDateFnsJalali`.
+To use `date-fns-jalali` v3.x or v4.x, you will have to import the adapter from `@mui/x-date-pickers/AdapterDateFnsJalaliV3` instead of `@mui/x-date-pickers/AdapterDateFnsJalali`.
 
 ```tsx
 // with date-fns-jalali v2.x
 import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
-// with date-fns-jalali v3.x
+// with date-fns-jalali v3.x or v4.x
 import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalaliV3';
 ```
 

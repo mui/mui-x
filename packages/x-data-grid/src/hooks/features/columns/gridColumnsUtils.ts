@@ -442,7 +442,7 @@ export function getTotalHeaderHeight(
   apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
-    'columnHeaderHeight' | 'headerFilterHeight' | 'unstable_listView'
+    'columnHeaderHeight' | 'headerFilterHeight' | 'unstable_listView' | 'columnGroupHeaderHeight'
   >,
 ) {
   if (props.unstable_listView) {
@@ -454,9 +454,12 @@ export function getTotalHeaderHeight(
   const isHeaderFilteringEnabled = gridHeaderFilteringEnabledSelector(apiRef);
 
   const columnHeadersHeight = Math.floor(props.columnHeaderHeight * densityFactor);
+  const columnGroupHeadersHeight = Math.floor(
+    (props.columnGroupHeaderHeight ?? props.columnHeaderHeight) * densityFactor,
+  );
   const filterHeadersHeight = isHeaderFilteringEnabled
     ? Math.floor((props.headerFilterHeight ?? props.columnHeaderHeight) * densityFactor)
     : 0;
 
-  return columnHeadersHeight * (1 + (maxDepth ?? 0)) + filterHeadersHeight;
+  return columnHeadersHeight + columnGroupHeadersHeight * maxDepth + filterHeadersHeight;
 }

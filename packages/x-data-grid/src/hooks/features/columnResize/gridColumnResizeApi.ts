@@ -5,6 +5,7 @@ export const DEFAULT_GRID_AUTOSIZE_OPTIONS = {
   includeOutliers: false,
   outliersFactor: 1.5,
   expand: false,
+  disableColumnVirtualization: true,
 };
 
 export type GridAutosizeOptions = {
@@ -32,6 +33,11 @@ export type GridAutosizeOptions = {
    * @default false
    */
   expand?: boolean;
+  /**
+   * If false, column virtualization is not disabled while resizing.
+   * @default true
+   */
+  disableColumnVirtualization?: boolean;
 };
 
 /**

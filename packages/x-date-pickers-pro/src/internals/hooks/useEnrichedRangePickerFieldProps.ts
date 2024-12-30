@@ -20,7 +20,7 @@ import {
 import { PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import {
   onSpaceOrEnter,
-  UsePickerResponse,
+  UsePickerValueContextValue,
   PickerVariant,
   DateOrTimeViewWithMeridiem,
   BaseSingleInputFieldProps,
@@ -91,7 +91,7 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-> extends Pick<UsePickerResponse<PickerRangeValue, TView, any>, 'open' | 'actions'>,
+> extends Pick<UsePickerValueContextValue, 'open' | 'setOpen'>,
     UseRangePositionResponse {
   variant: PickerVariant;
   fieldType: FieldType;
@@ -124,7 +124,7 @@ const useMultiInputFieldSlotProps = <
 >({
   variant,
   open,
-  actions,
+  setOpen,
   readOnly,
   labelId,
   disableOpenPicker,
@@ -180,7 +180,8 @@ const useMultiInputFieldSlotProps = <
     event.stopPropagation();
     onRangePositionChange('start');
     if (!readOnly && !disableOpenPicker) {
-      actions.onOpen(event);
+      event.preventDefault();
+      setOpen(true);
     }
   };
 
@@ -188,7 +189,8 @@ const useMultiInputFieldSlotProps = <
     event.stopPropagation();
     onRangePositionChange('end');
     if (!readOnly && !disableOpenPicker) {
-      actions.onOpen(event);
+      event.preventDefault();
+      setOpen(true);
     }
   };
 
@@ -297,7 +299,7 @@ const useSingleInputFieldSlotProps = <
 >({
   variant,
   open,
-  actions,
+  setOpen,
   readOnly,
   labelId,
   disableOpenPicker,
@@ -371,7 +373,8 @@ const useSingleInputFieldSlotProps = <
     event.stopPropagation();
 
     if (!readOnly && !disableOpenPicker) {
-      actions.onOpen(event);
+      event.preventDefault();
+      setOpen(true);
     }
   };
 

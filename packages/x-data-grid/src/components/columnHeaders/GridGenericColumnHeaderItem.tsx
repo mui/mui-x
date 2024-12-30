@@ -1,6 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
@@ -42,103 +43,107 @@ interface GridGenericColumnHeaderItemProps
   style?: React.CSSProperties;
 }
 
-const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnHeaderItem(
-  props: GridGenericColumnHeaderItemProps,
-  ref,
-) {
-  const {
-    classes,
-    columnMenuOpen,
-    colIndex,
-    height,
-    isResizing,
-    sortDirection,
-    hasFocus,
-    tabIndex,
-    separatorSide,
-    isDraggable,
-    headerComponent,
-    description,
-    elementId,
-    width,
-    columnMenuIconButton = null,
-    columnMenu = null,
-    columnTitleIconButtons = null,
-    headerClassName,
-    label,
-    resizable,
-    draggableContainerProps,
-    columnHeaderSeparatorProps,
-    style,
-    ...other
-  } = props;
+const GridGenericColumnHeaderItem = forwardRef<HTMLDivElement, GridGenericColumnHeaderItemProps>(
+  function GridGenericColumnHeaderItem(props, ref) {
+    const {
+      classes,
+      columnMenuOpen,
+      colIndex,
+      height,
+      isResizing,
+      sortDirection,
+      hasFocus,
+      tabIndex,
+      separatorSide,
+      isDraggable,
+      headerComponent,
+      description,
+      elementId,
+      width,
+      columnMenuIconButton = null,
+      columnMenu = null,
+      columnTitleIconButtons = null,
+      headerClassName,
+      label,
+      resizable,
+      draggableContainerProps,
+      columnHeaderSeparatorProps,
+      style,
+      ...other
+    } = props;
 
-  const apiRef = useGridPrivateApiContext();
-  const rootProps = useGridRootProps();
-  const headerCellRef = React.useRef<HTMLDivElement>(null);
+    const apiRef = useGridPrivateApiContext();
+    const rootProps = useGridRootProps();
+    const headerCellRef = React.useRef<HTMLDivElement>(null);
 
-  const handleRef = useForkRef(headerCellRef, ref);
+    const handleRef = useForkRef(headerCellRef, ref);
 
-  let ariaSort: 'ascending' | 'descending' | 'none' = 'none';
-  if (sortDirection != null) {
-    ariaSort = sortDirection === 'asc' ? 'ascending' : 'descending';
-  }
-
-  React.useLayoutEffect(() => {
-    const columnMenuState = apiRef.current.state.columnMenu;
-    if (hasFocus && !columnMenuState.open) {
-      const focusableElement = headerCellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
-      const elementToFocus = focusableElement || headerCellRef.current;
-      elementToFocus?.focus();
-      if (apiRef.current.columnHeadersContainerRef?.current) {
-        apiRef.current.columnHeadersContainerRef.current.scrollLeft = 0;
-      }
+    let ariaSort: 'ascending' | 'descending' | 'none' = 'none';
+    if (sortDirection != null) {
+      ariaSort = sortDirection === 'asc' ? 'ascending' : 'descending';
     }
-  }, [apiRef, hasFocus]);
 
-  return (
-    <div
-      ref={handleRef}
-      className={clsx(classes.root, headerClassName)}
-      style={{
-        ...style,
-        height,
-        width,
-      }}
-      role="columnheader"
-      tabIndex={tabIndex}
-      aria-colindex={colIndex + 1}
-      aria-sort={ariaSort}
-      {...other}
-    >
+    React.useLayoutEffect(() => {
+      const columnMenuState = apiRef.current.state.columnMenu;
+      if (hasFocus && !columnMenuState.open) {
+        const focusableElement =
+          headerCellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
+        const elementToFocus = focusableElement || headerCellRef.current;
+        elementToFocus?.focus();
+        if (apiRef.current.columnHeadersContainerRef?.current) {
+          apiRef.current.columnHeadersContainerRef.current.scrollLeft = 0;
+        }
+      }
+    }, [apiRef, hasFocus]);
+
+    return (
       <div
-        className={classes.draggableContainer}
-        draggable={isDraggable}
-        role="presentation"
-        {...draggableContainerProps}
+        className={clsx(classes.root, headerClassName)}
+        style={{
+          ...style,
+          height,
+          width,
+        }}
+        role="columnheader"
+        tabIndex={tabIndex}
+        aria-colindex={colIndex + 1}
+        aria-sort={ariaSort}
+        {...other}
+        ref={handleRef}
       >
-        <div className={classes.titleContainer} role="presentation">
-          <div className={classes.titleContainerContent}>
-            {headerComponent !== undefined ? (
-              headerComponent
-            ) : (
-              <GridColumnHeaderTitle label={label} description={description} columnWidth={width} />
-            )}
+        <div
+          className={classes.draggableContainer}
+          draggable={isDraggable}
+          role="presentation"
+          {...draggableContainerProps}
+        >
+          <div className={classes.titleContainer} role="presentation">
+            <div className={classes.titleContainerContent}>
+              {headerComponent !== undefined ? (
+                headerComponent
+              ) : (
+                <GridColumnHeaderTitle
+                  label={label}
+                  description={description}
+                  columnWidth={width}
+                />
+              )}
+            </div>
+            {columnTitleIconButtons}
           </div>
-          {columnTitleIconButtons}
+          {columnMenuIconButton}
         </div>
-        {columnMenuIconButton}
+        <GridColumnHeaderSeparator
+          resizable={!rootProps.disableColumnResize && !!resizable}
+          resizing={isResizing}
+          height={height}
+          side={separatorSide}
+          {...columnHeaderSeparatorProps}
+        />
+        {columnMenu}
       </div>
-      <GridColumnHeaderSeparator
-        resizable={!rootProps.disableColumnResize && !!resizable}
-        resizing={isResizing}
-        height={height}
-        side={separatorSide}
-        {...columnHeaderSeparatorProps}
-      />
-      {columnMenu}
-    </div>
-  );
-});
+    );
+  },
+);
 
 export { GridGenericColumnHeaderItem };

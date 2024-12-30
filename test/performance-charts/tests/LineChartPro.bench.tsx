@@ -1,16 +1,12 @@
 import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { render, cleanup } from '@testing-library/react';
-import { afterEach, bench, describe } from 'vitest';
+import { bench, describe } from 'vitest';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import { LicenseInfo, generateLicense } from '@mui/x-license';
 import { options } from '../utils/options';
 
 describe('LineChartPro', () => {
-  afterEach(() => {
-    cleanup();
-  });
-
   const dataLength = 600;
   const data = Array.from({ length: dataLength }).map((_, i) => ({
     x: i,
@@ -48,6 +44,8 @@ describe('LineChartPro', () => {
       );
 
       await findByText('60', { ignore: 'span' });
+
+      cleanup();
     },
     options,
   );

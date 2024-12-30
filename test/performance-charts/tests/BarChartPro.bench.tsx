@@ -1,16 +1,12 @@
 import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { render, cleanup } from '@testing-library/react';
-import { afterEach, bench, describe } from 'vitest';
+import { bench, describe } from 'vitest';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { LicenseInfo, generateLicense } from '@mui/x-license';
 import { options } from '../utils/options';
 
 describe('BarChartPro', () => {
-  afterEach(() => {
-    cleanup();
-  });
-
   const dataLength = 500;
   const data = Array.from({ length: dataLength + 1 }).map((_, i) => ({
     x: i,
@@ -48,6 +44,8 @@ describe('BarChartPro', () => {
       );
 
       await findByText('60', { ignore: 'span' });
+
+      cleanup();
     },
     options,
   );

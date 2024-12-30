@@ -8,11 +8,9 @@ import { UsePickerParams } from '../usePicker';
 import { UsePickerViewsProps } from '../usePicker/usePickerViews';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
 
-export interface UseStaticPickerSlots<TView extends DateOrTimeViewWithMeridiem>
-  extends ExportedPickersLayoutSlots<PickerValue, TView> {}
+export interface UseStaticPickerSlots extends ExportedPickersLayoutSlots<PickerValue> {}
 
-export interface UseStaticPickerSlotProps<TView extends DateOrTimeViewWithMeridiem>
-  extends ExportedPickersLayoutSlotProps<PickerValue, TView> {}
+export interface UseStaticPickerSlotProps extends ExportedPickersLayoutSlotProps<PickerValue> {}
 
 export interface StaticOnlyPickerProps {
   /**
@@ -43,12 +41,12 @@ export interface UseStaticPickerProps<
    * Overridable component slots.
    * @default {}
    */
-  slots?: UseStaticPickerSlots<TView>;
+  slots?: UseStaticPickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseStaticPickerSlotProps<TView>;
+  slotProps?: UseStaticPickerSlotProps;
 }
 
 export interface UseStaticPickerParams<

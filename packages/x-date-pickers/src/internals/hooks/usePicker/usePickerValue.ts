@@ -18,11 +18,12 @@ import {
   UsePickerValueFieldResponse,
   UsePickerValueLayoutResponse,
   UsePickerValueViewsResponse,
-  UsePickerValueActions,
   PickerSelectionState,
   PickerValueUpdaterParams,
   UsePickerValueContextValue,
   UsePickerValueProviderParams,
+  UsePickerValueActionsContextValue,
+  UsePickerValuePrivateContextValue,
 } from './usePickerValue.types';
 import { useValueWithTimezone } from '../useValueWithTimezone';
 import { PickerValidValue } from '../../models';
@@ -339,56 +340,6 @@ export const usePickerValue = <
     }));
   }
 
-  const handleClear = useEventCallback(() => {
-    updateDate({
-      value: valueManager.emptyValue,
-      name: 'setValueFromAction',
-      pickerAction: 'clear',
-    });
-  });
-
-  const handleAccept = useEventCallback(() => {
-    updateDate({
-      value: dateState.lastPublishedValue,
-      name: 'setValueFromAction',
-      pickerAction: 'accept',
-    });
-  });
-
-  const handleDismiss = useEventCallback(() => {
-    updateDate({
-      value: dateState.lastPublishedValue,
-      name: 'setValueFromAction',
-      pickerAction: 'dismiss',
-    });
-  });
-
-  const handleCancel = useEventCallback(() => {
-    updateDate({
-      value: dateState.lastCommittedValue,
-      name: 'setValueFromAction',
-      pickerAction: 'cancel',
-    });
-  });
-
-  const handleSetToday = useEventCallback(() => {
-    updateDate({
-      value: valueManager.getTodayValue(utils, timezone, valueType),
-      name: 'setValueFromAction',
-      pickerAction: 'today',
-    });
-  });
-
-  const handleOpen = useEventCallback((event: React.UIEvent) => {
-    event.preventDefault();
-    setOpen(true);
-  });
-
-  const handleClose = useEventCallback((event?: React.UIEvent) => {
-    event?.preventDefault();
-    setOpen(false);
-  });
-
   const handleChange = useEventCallback(
     (newValue: TValue, selectionState: PickerSelectionState = 'partial') =>
       updateDate({ name: 'setValueFromView', value: newValue, selectionState }),
@@ -413,16 +364,6 @@ export const usePickerValue = <
       updateDate({ name: 'setValueFromField', value: newValue, context }),
   );
 
-  const actions: UsePickerValueActions = {
-    onClear: handleClear,
-    onAccept: handleAccept,
-    onDismiss: handleDismiss,
-    onCancel: handleCancel,
-    onSetToday: handleSetToday,
-    onOpen: handleOpen,
-    onClose: handleClose,
-  };
-
   const fieldResponse: UsePickerValueFieldResponse<TValue, TError> = {
     value: dateState.draft,
     onChange: handleChangeFromField,
@@ -436,8 +377,8 @@ export const usePickerValue = <
   const viewResponse: UsePickerValueViewsResponse<TValue> = {
     value: valueWithoutError,
     onChange: handleChange,
-    onClose: handleClose,
     open,
+    setOpen,
   };
 
   const isValid = (testedValue: TValue) => {
@@ -452,31 +393,87 @@ export const usePickerValue = <
   };
 
   const layoutResponse: UsePickerValueLayoutResponse<TValue> = {
-    ...actions,
     value: valueWithoutError,
     onChange: handleChange,
     onSelectShortcut: handleSelectShortcut,
     isValid,
   };
 
-  const contextValue = React.useMemo<UsePickerValueContextValue>(() => {
-    return {
-      open,
+  const clearValue = useEventCallback(() =>
+    updateDate({
+      value: valueManager.emptyValue,
+      name: 'setValueFromAction',
+      pickerAction: 'clear',
+    }),
+  );
+
+  const setValueToToday = useEventCallback(() =>
+    updateDate({
+      value: valueManager.getTodayValue(utils, timezone, valueType),
+      name: 'setValueFromAction',
+      pickerAction: 'today',
+    }),
+  );
+
+  const acceptValueChanges = useEventCallback(() =>
+    updateDate({
+      value: dateState.lastPublishedValue,
+      name: 'setValueFromAction',
+      pickerAction: 'accept',
+    }),
+  );
+
+  const cancelValueChanges = useEventCallback(() =>
+    updateDate({
+      value: dateState.lastCommittedValue,
+      name: 'setValueFromAction',
+      pickerAction: 'cancel',
+    }),
+  );
+
+  const dismissViews = useEventCallback(() => {
+    updateDate({
+      value: dateState.lastPublishedValue,
+      name: 'setValueFromAction',
+      pickerAction: 'dismiss',
+    });
+  });
+
+  const actionsContextValue = React.useMemo<UsePickerValueActionsContextValue>(
+    () => ({
       setOpen,
-    };
-  }, [open, setOpen]);
+      clearValue,
+      setValueToToday,
+      acceptValueChanges,
+      cancelValueChanges,
+    }),
+    [setOpen, clearValue, setValueToToday, acceptValueChanges, cancelValueChanges],
+  );
+
+  const contextValue = React.useMemo<UsePickerValueContextValue>(
+    () => ({
+      ...actionsContextValue,
+      open,
+    }),
+    [actionsContextValue, open],
+  );
+
+  const privateContextValue = React.useMemo<UsePickerValuePrivateContextValue>(
+    () => ({ dismissViews }),
+    [dismissViews],
+  );
 
   const providerParams: UsePickerValueProviderParams<TValue> = {
     value: valueWithoutError,
     contextValue,
+    actionsContextValue,
+    privateContextValue,
   };
 
   return {
-    open,
     fieldProps: fieldResponse,
     viewProps: viewResponse,
     layoutProps: layoutResponse,
-    actions,
     provider: providerParams,
   };
 };

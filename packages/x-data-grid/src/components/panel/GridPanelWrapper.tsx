@@ -5,6 +5,7 @@ import FocusTrap, { TrapFocusProps } from '@mui/material/Unstable_TrapFocus';
 import { styled, Theme } from '@mui/material/styles';
 import { MUIStyledCommonProps } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -44,7 +45,7 @@ export interface GridPanelWrapperProps
   };
 }
 
-const GridPanelWrapper = React.forwardRef<HTMLDivElement, GridPanelWrapperProps>(
+const GridPanelWrapper = forwardRef<HTMLDivElement, GridPanelWrapperProps>(
   function GridPanelWrapper(props, ref) {
     const { className, slotProps = {}, ...other } = props;
     const rootProps = useGridRootProps();
@@ -53,11 +54,11 @@ const GridPanelWrapper = React.forwardRef<HTMLDivElement, GridPanelWrapperProps>
     return (
       <FocusTrap open disableEnforceFocus isEnabled={isEnabled} {...slotProps.TrapFocus}>
         <GridPanelWrapperRoot
-          ref={ref}
           tabIndex={-1}
           className={clsx(classes.root, className)}
           ownerState={rootProps}
           {...other}
+          ref={ref}
         />
       </FocusTrap>
     );

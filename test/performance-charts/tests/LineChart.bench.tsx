@@ -1,15 +1,11 @@
 import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { render, cleanup } from '@testing-library/react';
-import { afterEach, bench, describe } from 'vitest';
+import { bench, describe } from 'vitest';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { options } from '../utils/options';
 
 describe('LineChart', () => {
-  afterEach(() => {
-    cleanup();
-  });
-
   const dataLength = 600;
   const data = Array.from({ length: dataLength }).map((_, i) => ({
     x: i,
@@ -37,6 +33,8 @@ describe('LineChart', () => {
       );
 
       await findByText(dataLength.toLocaleString(), { ignore: 'span' });
+
+      cleanup();
     },
     options,
   );

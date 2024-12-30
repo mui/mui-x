@@ -122,7 +122,7 @@ The `<PieChart />` by error had the code to render axes.
 This code has been removed in v8, which implies removing the following props: `axisHighlight`, `topAxis`, `rightAxis`, `bottomAxis`, and `leftAxis`.
 
 This should not impact your code.
-If you used axes in a pie chart please open an issue, we would be curious to get more information about the use-case.
+If you used axes in a pie chart please open an issue, we would be curious to get more information about the use case.
 
 ## Remove `resolveSizeBeforeRender` prop
 

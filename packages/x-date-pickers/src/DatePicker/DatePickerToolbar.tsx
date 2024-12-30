@@ -9,7 +9,6 @@ import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
-import { DateView } from '../models';
 import {
   DatePickerToolbarClasses,
   getDatePickerToolbarUtilityClass,
@@ -20,9 +19,11 @@ import {
   PickerToolbarOwnerState,
   useToolbarOwnerState,
 } from '../internals/hooks/useToolbarOwnerState';
+import { usePickerContext } from '../hooks';
+import { DateView } from '../models/views';
 
 export interface DatePickerToolbarProps
-  extends BaseToolbarProps<PickerValue, DateView>,
+  extends BaseToolbarProps<PickerValue>,
     ExportedDatePickerToolbarProps {}
 
 export interface ExportedDatePickerToolbarProps extends ExportedBaseToolbarProps {
@@ -87,14 +88,12 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar(
     onChange,
     toolbarFormat,
     toolbarPlaceholder = '––',
-    views,
     className,
     classes: classesProp,
-    onViewChange,
-    view,
     ...other
   } = props;
   const utils = useUtils();
+  const { views } = usePickerContext<DateView>();
   const translations = usePickerTranslations();
   const ownerState = useToolbarOwnerState();
   const classes = useUtilityClasses(classesProp);
@@ -148,12 +147,6 @@ DatePickerToolbar.propTypes = {
   isLandscape: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
   /**
-   * Callback called when a toolbar is clicked
-   * @template TView
-   * @param {TView} view The view to open
-   */
-  onViewChange: PropTypes.func.isRequired,
-  /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx: PropTypes.oneOfType([
@@ -172,12 +165,4 @@ DatePickerToolbar.propTypes = {
    */
   toolbarPlaceholder: PropTypes.node,
   value: PropTypes.object,
-  /**
-   * Currently visible picker view.
-   */
-  view: PropTypes.oneOf(['day', 'month', 'year']).isRequired,
-  /**
-   * Available views.
-   */
-  views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired).isRequired,
 } as any;

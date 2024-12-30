@@ -9,11 +9,16 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
-import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
+import {
+  usePickerActionsContext,
+  usePickerTranslations,
+} from '@mui/x-date-pickers/hooks';
 
 function CustomActionBar(props: PickersActionBarProps) {
-  const { onAccept, onClear, onCancel, onSetToday, actions, className } = props;
+  const { actions, className } = props;
   const translations = usePickerTranslations();
+  const { clearValue, setValueToToday, acceptValueChanges, cancelValueChanges } =
+    usePickerActionsContext();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const open = Boolean(anchorEl);
   const id = useId();
@@ -28,7 +33,7 @@ function CustomActionBar(props: PickersActionBarProps) {
         return (
           <MenuItem
             onClick={() => {
-              onClear();
+              clearValue();
               setAnchorEl(null);
             }}
             key={actionType}
@@ -41,7 +46,7 @@ function CustomActionBar(props: PickersActionBarProps) {
           <MenuItem
             onClick={() => {
               setAnchorEl(null);
-              onCancel();
+              cancelValueChanges();
             }}
             key={actionType}
           >
@@ -53,7 +58,7 @@ function CustomActionBar(props: PickersActionBarProps) {
           <MenuItem
             onClick={() => {
               setAnchorEl(null);
-              onAccept();
+              acceptValueChanges();
             }}
             key={actionType}
           >
@@ -65,7 +70,7 @@ function CustomActionBar(props: PickersActionBarProps) {
           <MenuItem
             onClick={() => {
               setAnchorEl(null);
-              onSetToday();
+              setValueToToday();
             }}
             key={actionType}
           >

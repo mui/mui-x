@@ -7,7 +7,7 @@ import { BaseDateValidationProps, YearValidationProps } from '../internals/model
 import { PickerOwnerState, PickerValidDate, TimezoneProps } from '../models';
 import { FormProps } from '../internals/models/formProps';
 
-export interface PickerYearOwnerState extends PickerOwnerState {
+export interface YearButtonOwnerState extends PickerOwnerState {
   isYearSelected: boolean;
   isYearDisabled: boolean;
 }
@@ -24,7 +24,7 @@ export interface YearCalendarSlotProps {
   yearButton?: SlotComponentPropsFromProps<
     React.HTMLAttributes<HTMLButtonElement> & { sx: SxProps },
     {},
-    PickerYearOwnerState
+    YearButtonOwnerState
   >;
 }
 

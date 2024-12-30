@@ -275,16 +275,6 @@ export interface UsePickerValueParams<
   validator: Validator<TValue, InferError<TExternalProps>, TExternalProps>;
 }
 
-export interface UsePickerValueActions {
-  onAccept: () => void;
-  onClear: () => void;
-  onDismiss: () => void;
-  onCancel: () => void;
-  onSetToday: () => void;
-  onOpen: (event: React.UIEvent) => void;
-  onClose: (event?: React.UIEvent) => void;
-}
-
 export type UsePickerValueFieldResponse<TValue extends PickerValidValue, TError> = Required<
   Pick<UseFieldInternalProps<TValue, any, TError>, 'value' | 'onChange'>
 >;
@@ -296,14 +286,13 @@ export interface UsePickerValueViewsResponse<TValue extends PickerValidValue> {
   value: TValue;
   onChange: (value: TValue, selectionState?: PickerSelectionState) => void;
   open: boolean;
-  onClose: (event?: React.MouseEvent) => void;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 /**
  * Props passed to `usePickerLayoutProps`.
  */
-export interface UsePickerValueLayoutResponse<TValue extends PickerValidValue>
-  extends UsePickerValueActions {
+export interface UsePickerValueLayoutResponse<TValue extends PickerValidValue> {
   value: TValue;
   onChange: (newValue: TValue) => void;
   onSelectShortcut: (
@@ -320,20 +309,27 @@ export interface UsePickerValueLayoutResponse<TValue extends PickerValidValue>
 export interface UsePickerValueProviderParams<TValue extends PickerValidValue> {
   value: TValue;
   contextValue: UsePickerValueContextValue;
+  actionsContextValue: UsePickerValueActionsContextValue;
+  privateContextValue: UsePickerValuePrivateContextValue;
 }
 
 export interface UsePickerValueResponse<TValue extends PickerValidValue, TError> {
-  open: boolean;
-  actions: UsePickerValueActions;
   viewProps: UsePickerValueViewsResponse<TValue>;
   fieldProps: UsePickerValueFieldResponse<TValue, TError>;
   layoutProps: UsePickerValueLayoutResponse<TValue>;
   provider: UsePickerValueProviderParams<TValue>;
 }
 
-export interface UsePickerValueContextValue {
+export interface UsePickerValueContextValue extends UsePickerValueActionsContextValue {
   /**
-   * Sets the current open state of the Picker.
+   * `true` if the picker is open, `false` otherwise.
+   */
+  open: boolean;
+}
+
+export interface UsePickerValueActionsContextValue {
+  /**
+   * Set the current open state of the Picker.
    * ```ts
    * setOpen(true); // Opens the picker.
    * setOpen(false); // Closes the picker.
@@ -344,7 +340,32 @@ export interface UsePickerValueContextValue {
    */
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   /**
-   * `true` if the picker is open, `false` otherwise.
+   * Set the current value of the picker to be empty.
+   * The value will be `null` on single pickers and `[null, null]` on range pickers.
    */
-  open: boolean;
+  clearValue: () => void;
+  /**
+   * Set the current value of the picker to be the current date.
+   * The value will be `today` on single pickers and `[today, today]` on range pickers.
+   * With `today` being the current date, with its time set to `00:00:00` on Date Pickers and its time set to the current time on Time and Date Pickers.
+   */
+  setValueToToday: () => void;
+  /**
+   * Accept the current value of the picker.
+   * Will call `onAccept` if defined.
+   * If the picker is re-opened, this value will be the one used to initialize the views.
+   */
+  acceptValueChanges: () => void;
+  /**
+   * Cancel the changes made to the current value of the picker.
+   * The value will be reset to the last accepted value.
+   */
+  cancelValueChanges: () => void;
+}
+
+export interface UsePickerValuePrivateContextValue {
+  /**
+   * Closes the picker and accepts the current value if it is not equal to the last accepted value.
+   */
+  dismissViews: () => void;
 }

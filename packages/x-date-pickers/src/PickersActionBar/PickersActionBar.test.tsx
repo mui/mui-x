@@ -4,122 +4,61 @@ import { spy } from 'sinon';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import { PickersActionBar } from '@mui/x-date-pickers/PickersActionBar';
 import { createPickerRenderer } from 'test/utils/pickers';
+import { PickerActionsContext } from '../internals/components/PickerProvider';
 
 describe('<PickersActionBar />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
 
+  const renderWithContext = (element: React.ReactElement) => {
+    const spys = {
+      setOpen: spy(),
+      clearValue: spy(),
+      setValueToToday: spy(),
+      acceptValueChanges: spy(),
+      cancelValueChanges: spy(),
+    };
+
+    render(<PickerActionsContext.Provider value={spys}>{element}</PickerActionsContext.Provider>);
+
+    return spys;
+  };
+
   it('should not render buttons if actions array is empty', () => {
-    const onAccept = () => {};
-    const onClear = () => {};
-    const onCancel = () => {};
-    const onSetToday = () => {};
-    render(
-      <PickersActionBar
-        actions={[]}
-        onAccept={onAccept}
-        onClear={onClear}
-        onCancel={onCancel}
-        onSetToday={onSetToday}
-      />,
-    );
+    renderWithContext(<PickersActionBar actions={[]} />);
 
     expect(screen.queryByRole('button')).to.equal(null);
   });
 
   it('should render button for "clear" action calling the associated callback', () => {
-    const onAccept = spy();
-    const onClear = spy();
-    const onCancel = spy();
-    const onSetToday = spy();
-
-    render(
-      <PickersActionBar
-        actions={['clear']}
-        onAccept={onAccept}
-        onClear={onClear}
-        onCancel={onCancel}
-        onSetToday={onSetToday}
-      />,
-    );
+    const { clearValue } = renderWithContext(<PickersActionBar actions={['clear']} />);
 
     fireEvent.click(screen.getByText(/clear/i));
-    expect(onClear.callCount).to.equal(1);
+    expect(clearValue.callCount).to.equal(1);
   });
 
   it('should render button for "cancel" action calling the associated callback', () => {
-    const onAccept = spy();
-    const onClear = spy();
-    const onCancel = spy();
-    const onSetToday = spy();
-
-    render(
-      <PickersActionBar
-        actions={['cancel']}
-        onAccept={onAccept}
-        onClear={onClear}
-        onCancel={onCancel}
-        onSetToday={onSetToday}
-      />,
-    );
+    const { cancelValueChanges } = renderWithContext(<PickersActionBar actions={['cancel']} />);
 
     fireEvent.click(screen.getByText(/cancel/i));
-    expect(onCancel.callCount).to.equal(1);
+    expect(cancelValueChanges.callCount).to.equal(1);
   });
 
   it('should render button for "accept" action calling the associated callback', () => {
-    const onAccept = spy();
-    const onClear = spy();
-    const onCancel = spy();
-    const onSetToday = spy();
-
-    render(
-      <PickersActionBar
-        actions={['accept']}
-        onAccept={onAccept}
-        onClear={onClear}
-        onCancel={onCancel}
-        onSetToday={onSetToday}
-      />,
-    );
+    const { acceptValueChanges } = renderWithContext(<PickersActionBar actions={['accept']} />);
 
     fireEvent.click(screen.getByText(/ok/i));
-    expect(onAccept.callCount).to.equal(1);
+    expect(acceptValueChanges.callCount).to.equal(1);
   });
 
   it('should render button for "today" action calling the associated callback', () => {
-    const onAccept = spy();
-    const onClear = spy();
-    const onCancel = spy();
-    const onSetToday = spy();
-
-    render(
-      <PickersActionBar
-        actions={['today']}
-        onAccept={onAccept}
-        onClear={onClear}
-        onCancel={onCancel}
-        onSetToday={onSetToday}
-      />,
-    );
+    const { setValueToToday } = renderWithContext(<PickersActionBar actions={['today']} />);
 
     fireEvent.click(screen.getByText(/today/i));
-    expect(onSetToday.callCount).to.equal(1);
+    expect(setValueToToday.callCount).to.equal(1);
   });
 
   it('should respect actions order', () => {
-    const onAccept = () => {};
-    const onClear = () => {};
-    const onCancel = () => {};
-    const onSetToday = () => {};
-    render(
-      <PickersActionBar
-        actions={['today', 'accept', 'clear', 'cancel']}
-        onAccept={onAccept}
-        onClear={onClear}
-        onCancel={onCancel}
-        onSetToday={onSetToday}
-      />,
-    );
+    renderWithContext(<PickersActionBar actions={['today', 'accept', 'clear', 'cancel']} />);
 
     const buttons = screen.getAllByRole('button');
 

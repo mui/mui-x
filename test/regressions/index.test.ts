@@ -14,7 +14,12 @@ function sleep(timeoutMS: number | undefined) {
 const isMaterialUIv6 = materialPackageJson.version.startsWith('6.');
 
 // Tests that need a longer timeout.
-const timeSensitiveSuites = ['ColumnAutosizingAsync', 'DensitySelectorGrid'];
+const timeSensitiveSuites = [
+  'ColumnAutosizingAsync',
+  'DensitySelectorGrid',
+  'DataGridOverlays',
+  'PopularFeaturesDemo',
+];
 
 const isConsoleWarningIgnored = (msg?: string) => {
   const isMuiV6Error =
