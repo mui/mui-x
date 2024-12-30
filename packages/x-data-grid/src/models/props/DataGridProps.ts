@@ -104,7 +104,7 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
   /**
    * If `true`, the Data Grid height is dynamic and follows the number of rows in the Data Grid.
    * @default false
-   * @deprecated Use flex parent container instead: https://mui.com/x/react-data-grid/layout/#flex-parent-container
+   * @deprecated Use flex parent container instead: https://mui.com/r/x-grid-deprecate-auto-height.
    * @example
    * <div style={{ display: 'flex', flexDirection: 'column' }}>
    *   <DataGrid />

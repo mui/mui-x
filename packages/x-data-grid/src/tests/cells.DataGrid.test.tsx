@@ -13,7 +13,6 @@ describe('<DataGrid /> - Cells', () => {
   const { render } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {
-    autoHeight: isJSDOM,
     rows: [
       {
         id: 0,
@@ -96,7 +95,6 @@ describe('<DataGrid /> - Cells', () => {
         <div style={{ width: 300, height: 500 }}>
           <DataGrid
             {...baselineProps}
-            autoHeight
             columns={[{ field: 'id' }, { field: 'brand' }]}
             showCellVerticalBorder
           />
@@ -123,7 +121,6 @@ describe('<DataGrid /> - Cells', () => {
     render(
       <div style={{ width: 300, height: 500 }}>
         <DataGrid
-          autoHeight={isJSDOM}
           columns={[{ field: 'brand', renderCell: () => 0 }]}
           rows={[{ id: 1, brand: 'Nike' }]}
         />
@@ -136,7 +133,6 @@ describe('<DataGrid /> - Cells', () => {
     render(
       <div style={{ width: 300, height: 500 }}>
         <DataGrid
-          autoHeight={isJSDOM}
           columns={[{ field: 'brand', renderCell: () => null }]}
           rows={[{ id: 1, brand: 'Nike' }]}
         />

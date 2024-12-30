@@ -3,13 +3,10 @@ import { createRenderer } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { DataGrid, DATA_GRID_PROPS_DEFAULT_VALUES } from '@mui/x-data-grid';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 describe('<DataGrid />', () => {
   const { render } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {
-    autoHeight: isJSDOM,
     rows: [
       {
         id: 0,

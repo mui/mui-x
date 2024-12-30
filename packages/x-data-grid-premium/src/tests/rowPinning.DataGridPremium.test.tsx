@@ -8,8 +8,6 @@ import {
   gridClasses,
 } from '@mui/x-data-grid-premium';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 const rows: GridRowsProp = [
   { id: 0, category1: 'Cat A', category2: 'Cat 1' },
   { id: 1, category1: 'Cat A', category2: 'Cat 2' },
@@ -19,7 +17,6 @@ const rows: GridRowsProp = [
 ];
 
 const baselineProps: DataGridPremiumProps = {
-  autoHeight: isJSDOM,
   disableVirtualization: true,
   rows,
   columns: [

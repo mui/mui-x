@@ -34,7 +34,6 @@ describe('<DataGridPro /> - Filter', () => {
   let apiRef: React.MutableRefObject<GridApi>;
 
   const baselineProps = {
-    autoHeight: isJSDOM,
     rows: [
       {
         id: 0,
@@ -886,7 +885,6 @@ describe('<DataGridPro /> - Filter', () => {
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro
-              autoHeight={isJSDOM}
               columns={columns || baselineProps.columns}
               rows={rows || baselineProps.rows}
               filterModel={caseFilterModel}

@@ -6,14 +6,10 @@ import { SinonSpy, spy } from 'sinon';
 import { getCell } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 describe('<DataGridPro /> - Clipboard', () => {
   const { render } = createRenderer();
 
-  const baselineProps = {
-    autoHeight: isJSDOM,
-  };
+  const baselineProps = {};
 
   const columns = [{ field: 'id' }, { field: 'brand', headerName: 'Brand' }];
 

@@ -9,13 +9,10 @@ import {
 } from '@mui/x-data-grid-pro';
 import { createRenderer, act } from '@mui/internal-test-utils';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 describe('<DataGrid /> - Filter panel', () => {
   const { render } = createRenderer();
 
   const baselineProps: DataGridProProps = {
-    autoHeight: isJSDOM,
     disableVirtualization: true,
     rows: [],
     columns: [{ field: 'brand' }],

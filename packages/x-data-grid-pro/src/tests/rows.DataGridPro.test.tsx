@@ -40,7 +40,6 @@ describe('<DataGridPro /> - Rows', () => {
   describe('getRowId', () => {
     beforeEach(() => {
       baselineProps = {
-        autoHeight: isJSDOM,
         rows: [
           {
             clientId: 'c1',
@@ -124,13 +123,7 @@ describe('<DataGridPro /> - Rows', () => {
       function Test(props: Pick<DataGridProProps, 'rows'>) {
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGridPro
-              {...props}
-              columns={columns}
-              autoHeight={isJSDOM}
-              throttleRowsMs={100}
-              disableVirtualization
-            />
+            <DataGridPro {...props} columns={columns} throttleRowsMs={100} disableVirtualization />
           </div>
         );
       }
@@ -146,7 +139,6 @@ describe('<DataGridPro /> - Rows', () => {
   describe('apiRef: updateRows', () => {
     beforeEach(() => {
       baselineProps = {
-        autoHeight: isJSDOM,
         rows: [
           {
             id: 0,
@@ -322,7 +314,6 @@ describe('<DataGridPro /> - Rows', () => {
   describe('apiRef: setRows', () => {
     beforeEach(() => {
       baselineProps = {
-        autoHeight: isJSDOM,
         rows: [
           {
             id: 0,
@@ -741,7 +732,6 @@ describe('<DataGridPro /> - Rows', () => {
 
     beforeEach(() => {
       baselineProps = {
-        autoHeight: isJSDOM,
         rows: [
           {
             id: 1,

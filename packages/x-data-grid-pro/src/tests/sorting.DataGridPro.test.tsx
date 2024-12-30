@@ -16,7 +16,6 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Sorting', () => {
   const baselineProps: DataGridProProps = {
-    autoHeight: isJSDOM,
     rows: [
       {
         id: 0,
@@ -250,7 +249,6 @@ describe('<DataGridPro /> - Sorting', () => {
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro
-              autoHeight={isJSDOM}
               columns={columns || baselineProps.columns}
               rows={rows || baselineProps.rows}
               sortModel={caseSortModel}
@@ -274,7 +272,6 @@ describe('<DataGridPro /> - Sorting', () => {
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro
-              autoHeight={isJSDOM}
               columns={baselineProps.columns}
               rows={baselineProps.rows}
               onSortModelChange={onSortModelChange}

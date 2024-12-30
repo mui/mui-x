@@ -9,14 +9,10 @@ import { createRenderer, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import * as React from 'react';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 describe('<DataGridPro /> - Export', () => {
   const { render } = createRenderer();
 
-  const baselineProps = {
-    autoHeight: isJSDOM,
-  };
+  const baselineProps = {};
 
   let apiRef: React.MutableRefObject<GridApi>;
 
@@ -549,7 +545,7 @@ describe('<DataGridPro /> - Export', () => {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300 }}>
-            <DataGridPro apiRef={apiRef} autoHeight {...defaultProps} {...props} />
+            <DataGridPro apiRef={apiRef} {...defaultProps} {...props} />
           </div>
         );
       }

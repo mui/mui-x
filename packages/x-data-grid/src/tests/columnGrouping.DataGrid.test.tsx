@@ -4,8 +4,6 @@ import { expect } from 'chai';
 import { createRenderer, ErrorBoundary, fireEvent, screen } from '@mui/internal-test-utils';
 import { DataGrid, DataGridProps, GridRowModel, GridColDef } from '@mui/x-data-grid';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 const getDefaultProps = (nbColumns: number) => {
   const columns: GridColDef[] = [];
   const row: GridRowModel = {};
@@ -19,7 +17,6 @@ const getDefaultProps = (nbColumns: number) => {
     disableVirtualization: true,
     columns,
     rows: [{ id: 0, ...row }],
-    autoHeight: isJSDOM,
   };
 };
 

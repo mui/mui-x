@@ -11,8 +11,6 @@ import { useGridApiRef, DataGridPro, gridClasses, GridApi } from '@mui/x-data-gr
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { spy } from 'sinon';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 function createDragOverEvent(target: ChildNode) {
   const dragOverEvent = createEvent.dragOver(target);
   // Safari 13 doesn't have DragEvent.
@@ -36,7 +34,6 @@ describe('<DataGridPro /> - Columns reorder', () => {
   const { render } = createRenderer();
 
   const baselineProps = {
-    autoHeight: isJSDOM,
     rows: [
       {
         id: 0,

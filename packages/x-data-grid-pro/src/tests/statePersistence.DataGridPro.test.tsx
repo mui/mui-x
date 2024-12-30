@@ -18,8 +18,6 @@ import {
   getColumnValues,
 } from 'test/utils/helperFn';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 const rows: GridRowsProp = [
   { id: 0, category: 'Cat A' },
   { id: 1, category: 'Cat A' },
@@ -96,7 +94,6 @@ describe('<DataGridPro /> - State persistence', () => {
           rows={rows}
           columns={columns}
           pagination
-          autoHeight={isJSDOM}
           apiRef={apiRef}
           disableVirtualization
           pageSizeOptions={[100, 2]}

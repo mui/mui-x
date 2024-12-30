@@ -19,7 +19,6 @@ describe('<DataGrid /> - Quick filter', () => {
   const { render, clock } = createRenderer();
 
   const baselineProps = {
-    autoHeight: isJSDOM,
     disableVirtualization: true,
     rows: [
       {

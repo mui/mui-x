@@ -14,8 +14,6 @@ import { expect } from 'chai';
 import Excel from 'exceljs';
 import { spyApi } from 'test/utils/helperFn';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 describe('<DataGridPremium /> - Export Excel', () => {
   const { render } = createRenderer();
 
@@ -39,7 +37,6 @@ describe('<DataGridPremium /> - Export Excel', () => {
   const baselineProps = {
     columns,
     rows,
-    autoHeight: isJSDOM,
   };
 
   function TestCaseExcelExport(props: Partial<DataGridPremiumProps>) {

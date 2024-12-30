@@ -10,13 +10,10 @@ import {
 } from '@mui/x-data-grid-premium';
 import { getColumnValues } from 'test/utils/helperFn';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 describe('<DataGrid /> - Quick filter', () => {
   const { render } = createRenderer();
 
   const baselineProps = {
-    autoHeight: isJSDOM,
     disableVirtualization: true,
     rows: [
       {

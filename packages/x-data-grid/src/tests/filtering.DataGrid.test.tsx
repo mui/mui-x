@@ -14,13 +14,10 @@ import {
 import { getColumnValues } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 describe('<DataGrid /> - Filter', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {
-    autoHeight: isJSDOM,
     disableVirtualization: true,
     rows: [
       {
@@ -1415,7 +1412,6 @@ describe('<DataGrid /> - Filter', () => {
           filterModel={{
             items: [{ id: 0, field: 'isAdmin', operator: 'is', value: false }],
           }}
-          autoHeight
           rows={[
             {
               id: 0,
@@ -1565,7 +1561,6 @@ describe('<DataGrid /> - Filter', () => {
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
-            autoHeight={isJSDOM}
             columns={columns}
             filterModel={{
               items: [{ field: 'brand', operator: 'equals', value: 'Puma' }],
@@ -1600,7 +1595,6 @@ describe('<DataGrid /> - Filter', () => {
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
-            autoHeight={isJSDOM}
             columns={columns}
             filterModel={{
               items: [{ field: 'brand', operator: 'equals', value: 'Puma' }],

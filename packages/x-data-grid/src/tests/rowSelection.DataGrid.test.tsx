@@ -49,7 +49,6 @@ describe('<DataGrid /> - Row selection', () => {
         <DataGrid
           {...defaultData}
           {...props}
-          autoHeight={isJSDOM}
           experimentalFeatures={{
             warnIfFocusStateIsNotSynced: true,
             ...props.experimentalFeatures,
@@ -975,7 +974,6 @@ describe('<DataGrid /> - Row selection', () => {
               { id: 0, currencyPair: 'USDGBP' },
               { id: 1, currencyPair: 'USDEUR' },
             ]}
-            autoHeight={isJSDOM}
             checkboxSelection
           />
         </div>,

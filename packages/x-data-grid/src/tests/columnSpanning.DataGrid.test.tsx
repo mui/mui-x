@@ -212,12 +212,7 @@ describe('<DataGrid /> - Column spanning', () => {
       const editableColumns = columns.map((column) => ({ ...column, editable: true }));
       render(
         <div style={{ width: 500, height: 300 }}>
-          <DataGrid
-            {...baselineProps}
-            columns={editableColumns}
-            autoHeight={isJSDOM}
-            disableVirtualization={isJSDOM}
-          />
+          <DataGrid {...baselineProps} columns={editableColumns} disableVirtualization={isJSDOM} />
         </div>,
       );
 

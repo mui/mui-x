@@ -12,8 +12,6 @@ import { createRenderer, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { getColumnValues } from 'test/utils/helperFn';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 const rows: GridRowsProp = [
   { id: 0, category: 'Cat A' },
   { id: 1, category: 'Cat A' },
@@ -61,7 +59,6 @@ describe('<DataGridPremium /> - State persistence', () => {
           rows={rows}
           columns={columns}
           pagination
-          autoHeight={isJSDOM}
           apiRef={apiRef}
           disableVirtualization
           {...props}

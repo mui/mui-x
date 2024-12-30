@@ -14,13 +14,10 @@ import { getColumnValues, getColumnHeaderCell } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { GridInitialState } from '@mui/x-data-grid-pro';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 describe('<DataGrid /> - Sorting', () => {
   const { render } = createRenderer();
 
   const baselineProps: DataGridProps = {
-    autoHeight: isJSDOM,
     rows: [
       {
         id: 0,
@@ -47,7 +44,7 @@ describe('<DataGrid /> - Sorting', () => {
 
     render(
       <div style={{ width: 300, height: 300 }}>
-        <DataGrid autoHeight={isJSDOM} columns={cols} rows={rows} />
+        <DataGrid columns={cols} rows={rows} />
       </div>,
     );
     expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
@@ -216,7 +213,7 @@ describe('<DataGrid /> - Sorting', () => {
     function Demo(props: Omit<DataGridProps, 'columns'>) {
       return (
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid autoHeight={isJSDOM} columns={cols} sortingMode="server" {...props} />
+          <DataGrid columns={cols} sortingMode="server" {...props} />
         </div>
       );
     }
@@ -416,7 +413,7 @@ describe('<DataGrid /> - Sorting', () => {
       const { rows, columns } = props;
       return (
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid autoHeight={isJSDOM} rows={rows} columns={columns} />
+          <DataGrid rows={rows} columns={columns} />
         </div>
       );
     }
@@ -458,7 +455,6 @@ describe('<DataGrid /> - Sorting', () => {
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
-            autoHeight={isJSDOM}
             rows={rows}
             columns={columns}
             sortModel={sortModel}
@@ -699,7 +695,6 @@ describe('<DataGrid /> - Sorting', () => {
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
-            autoHeight={isJSDOM}
             columns={columns}
             sortModel={[{ field: 'brand', sort: 'asc' }]}
             onSortModelChange={onSortModelChange}
@@ -732,7 +727,6 @@ describe('<DataGrid /> - Sorting', () => {
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
-            autoHeight={isJSDOM}
             columns={columns}
             sortModel={[{ field: 'brand', sort: 'asc' }]}
             onSortModelChange={onSortModelChange}
@@ -778,7 +772,7 @@ describe('<DataGrid /> - Sorting', () => {
       ];
       render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid autoHeight={isJSDOM} columns={cols} rows={rows} />
+          <DataGrid columns={cols} rows={rows} />
         </div>,
       );
 
