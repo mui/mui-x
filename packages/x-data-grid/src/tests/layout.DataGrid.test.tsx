@@ -1191,51 +1191,47 @@ describe('<DataGrid /> - Layout & warnings', () => {
   });
 
   // See https://github.com/mui/mui-x/issues/8737
-  it('should not add horizontal scrollbar when .MuiDataGrid-main has border', async function test() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
+  testSkipIf(isJSDOM)(
+    'should not add horizontal scrollbar when .MuiDataGrid-main has border',
+    async () => {
+      render(
+        <div style={{ height: 300, width: 400, display: 'flex' }}>
+          <DataGrid
+            rows={[{ id: 1 }]}
+            columns={[{ field: 'id', flex: 1 }]}
+            sx={{ '.MuiDataGrid-main': { border: '2px solid red' } }}
+          />
+        </div>,
+      );
 
-    render(
-      <div style={{ height: 300, width: 400, display: 'flex' }}>
-        <DataGrid
-          rows={[{ id: 1 }]}
-          columns={[{ field: 'id', flex: 1 }]}
-          sx={{ '.MuiDataGrid-main': { border: '2px solid red' } }}
-        />
-      </div>,
-    );
+      const virtualScroller = $('.MuiDataGrid-virtualScroller')!;
+      const initialVirtualScrollerWidth = virtualScroller.clientWidth;
 
-    const virtualScroller = $('.MuiDataGrid-virtualScroller')!;
-    const initialVirtualScrollerWidth = virtualScroller.clientWidth;
+      // It should not have a horizontal scrollbar
+      expect(getVariable('--DataGrid-hasScrollX')).to.equal('0');
 
-    // It should not have a horizontal scrollbar
-    expect(getVariable('--DataGrid-hasScrollX')).to.equal('0');
-
-    await sleep(200);
-    // The width should not increase infinitely
-    expect(virtualScroller.clientWidth).to.equal(initialVirtualScrollerWidth);
-  });
+      await sleep(200);
+      // The width should not increase infinitely
+      expect(virtualScroller.clientWidth).to.equal(initialVirtualScrollerWidth);
+    },
+  );
 
   // See https://github.com/mui/mui-x/issues/8689#issuecomment-1582616570
-  it('should not add scrollbars when the parent container has fractional size', async function test() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
+  testSkipIf(isJSDOM)(
+    'should not add scrollbars when the parent container has fractional size',
+    async () => {
+      render(
+        <div style={{ height: 300.5, width: 400 }}>
+          <DataGrid rows={[]} columns={[{ field: 'id', flex: 1 }]} />
+        </div>,
+      );
 
-    render(
-      <div style={{ height: 300.5, width: 400 }}>
-        <DataGrid rows={[]} columns={[{ field: 'id', flex: 1 }]} />
-      </div>,
-    );
-
-    // It should not have a horizontal scrollbar
-    expect(getVariable('--DataGrid-hasScrollX')).to.equal('0');
-    // It should not have a vertical scrollbar
-    expect(getVariable('--DataGrid-hasScrollY')).to.equal('0');
-  });
+      // It should not have a horizontal scrollbar
+      expect(getVariable('--DataGrid-hasScrollX')).to.equal('0');
+      // It should not have a vertical scrollbar
+      expect(getVariable('--DataGrid-hasScrollY')).to.equal('0');
+    },
+  );
 
   // See https://github.com/mui/mui-x/issues/9510
   // needs layout

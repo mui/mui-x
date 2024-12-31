@@ -74,86 +74,86 @@ describe('<DataGridPro /> - Detail panel', () => {
     },
   );
 
-  it('should derive the height from the content if getDetailPanelHeight returns "auto"', async function test() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
-    const rowHeight = 50;
-    const detailPanelHeight = 100;
-    render(
-      <TestCase
-        nbRows={1}
-        rowHeight={rowHeight}
-        getDetailPanelContent={() => <div style={{ height: detailPanelHeight }} />}
-        getDetailPanelHeight={() => 'auto'}
-      />,
-    );
-    fireEvent.click(screen.getAllByRole('button', { name: 'Expand' })[0]);
-    await microtasks();
-
-    const virtualScrollerContent = $('.MuiDataGrid-virtualScrollerContent')!;
-    expect(virtualScrollerContent).toHaveComputedStyle({
-      height: `${rowHeight + detailPanelHeight}px`,
-    });
-    expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
-
-    const detailPanels = $$('.MuiDataGrid-detailPanel');
-    expect(detailPanels[0]).toHaveComputedStyle({
-      height: `${detailPanelHeight}px`,
-    });
-  });
-
-  it('should update the detail panel height if the content height changes when getDetailPanelHeight returns "auto"', async function test() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
-    function ExpandableCell() {
-      const [expanded, setExpanded] = React.useState(false);
-      return (
-        <div style={{ height: expanded ? 200 : 100 }}>
-          <button onClick={() => setExpanded(!expanded)}>
-            {expanded ? 'Decrease' : 'Increase'}
-          </button>
-        </div>
+  testSkipIf(isJSDOM)(
+    'should derive the height from the content if getDetailPanelHeight returns "auto"',
+    async () => {
+      const rowHeight = 50;
+      const detailPanelHeight = 100;
+      render(
+        <TestCase
+          nbRows={1}
+          rowHeight={rowHeight}
+          getDetailPanelContent={() => <div style={{ height: detailPanelHeight }} />}
+          getDetailPanelHeight={() => 'auto'}
+        />,
       );
-    }
-    const rowHeight = 50;
-    render(
-      <TestCase
-        nbRows={1}
-        rowHeight={rowHeight}
-        getDetailPanelContent={() => <ExpandableCell />}
-        getDetailPanelHeight={() => 'auto'}
-      />,
-    );
-    const virtualScrollerContent = grid('virtualScrollerContent')!;
-    fireEvent.click(screen.getByRole('button', { name: 'Expand' }));
+      fireEvent.click(screen.getAllByRole('button', { name: 'Expand' })[0]);
+      await microtasks();
 
-    await waitFor(() => {
-      expect(getRow(0).className).to.include(gridClasses['row--detailPanelExpanded']);
-    });
+      const virtualScrollerContent = $('.MuiDataGrid-virtualScrollerContent')!;
+      expect(virtualScrollerContent).toHaveComputedStyle({
+        height: `${rowHeight + detailPanelHeight}px`,
+      });
+      expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
 
-    await waitFor(() => {
-      expect(virtualScrollerContent).toHaveComputedStyle({ height: `${rowHeight + 100}px` });
-    });
-    expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
+      const detailPanels = $$('.MuiDataGrid-detailPanel');
+      expect(detailPanels[0]).toHaveComputedStyle({
+        height: `${detailPanelHeight}px`,
+      });
+    },
+  );
 
-    const detailPanels = $$('.MuiDataGrid-detailPanel');
-    expect(detailPanels[0]).toHaveComputedStyle({
-      height: `100px`,
-    });
+  testSkipIf(isJSDOM)(
+    'should update the detail panel height if the content height changes when getDetailPanelHeight returns "auto"',
+    async () => {
+      function ExpandableCell() {
+        const [expanded, setExpanded] = React.useState(false);
+        return (
+          <div style={{ height: expanded ? 200 : 100 }}>
+            <button onClick={() => setExpanded(!expanded)}>
+              {expanded ? 'Decrease' : 'Increase'}
+            </button>
+          </div>
+        );
+      }
+      const rowHeight = 50;
+      render(
+        <TestCase
+          nbRows={1}
+          rowHeight={rowHeight}
+          getDetailPanelContent={() => <ExpandableCell />}
+          getDetailPanelHeight={() => 'auto'}
+        />,
+      );
+      const virtualScrollerContent = grid('virtualScrollerContent')!;
+      fireEvent.click(screen.getByRole('button', { name: 'Expand' }));
 
-    fireEvent.click(screen.getByRole('button', { name: 'Increase' }));
+      await waitFor(() => {
+        expect(getRow(0).className).to.include(gridClasses['row--detailPanelExpanded']);
+      });
 
-    await waitFor(() => {
-      expect(virtualScrollerContent).toHaveComputedStyle({ height: `${rowHeight + 200}px` });
-    });
-    expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
+      await waitFor(() => {
+        expect(virtualScrollerContent).toHaveComputedStyle({ height: `${rowHeight + 100}px` });
+      });
+      expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
 
-    expect(detailPanels[0]).toHaveComputedStyle({
-      height: `200px`,
-    });
-  });
+      const detailPanels = $$('.MuiDataGrid-detailPanel');
+      expect(detailPanels[0]).toHaveComputedStyle({
+        height: `100px`,
+      });
+
+      fireEvent.click(screen.getByRole('button', { name: 'Increase' }));
+
+      await waitFor(() => {
+        expect(virtualScrollerContent).toHaveComputedStyle({ height: `${rowHeight + 200}px` });
+      });
+      expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
+
+      expect(detailPanels[0]).toHaveComputedStyle({
+        height: `200px`,
+      });
+    },
+  );
 
   // Doesn't work with mocked window.getComputedStyle
   testSkipIf(isJSDOM)('should position correctly the detail panels', () => {

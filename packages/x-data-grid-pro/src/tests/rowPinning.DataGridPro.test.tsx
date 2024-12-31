@@ -731,11 +731,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(getRowById(1)!).to.have.class(className);
   });
 
-  it('should support cell editing', async function test() {
-    if (isJSDOM) {
-      // flaky in JSDOM
-      this.skip();
-    }
+  testSkipIf(isJSDOM)('should support cell editing', async () => {
     const processRowUpdate = spy((row) => ({ ...row, currencyPair: 'USD-GBP' }));
     const columns: GridColDef[] = [{ field: 'id' }, { field: 'name', editable: true }];
     render(
@@ -770,11 +766,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(processRowUpdate.lastCall.args[0]).to.deep.equal({ id: 3, name: 'Marcus' });
   });
 
-  it('should support row editing', async function test() {
-    if (isJSDOM) {
-      // flaky in JSDOM
-      this.skip();
-    }
+  testSkipIf(isJSDOM)('should support row editing', async () => {
     const processRowUpdate = spy((row) => ({ ...row, currencyPair: 'USD-GBP' }));
     const columns: GridColDef[] = [{ field: 'id' }, { field: 'name', editable: true }];
     render(

@@ -197,7 +197,7 @@ describe('<DataGrid /> - Row spanning', () => {
   });
 
   describe('pagination', () => {
-    it('should only compute the row spanning state for current page', async function test() {
+    it('should only compute the row spanning state for current page', async () => {
       render(
         <TestDataGrid
           pagination

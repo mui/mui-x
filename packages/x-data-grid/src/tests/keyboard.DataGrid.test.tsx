@@ -492,48 +492,50 @@ describe('<DataGrid /> - Keyboard', () => {
       );
     }
 
-    it('should scroll horizontally when navigating between column group headers with arrows', async function test() {
-      if (isJSDOM) {
-        // Need layouting for column virtualization
-        this.skip();
-      }
-      const { user } = render(
-        <div style={{ width: 100, height: 300 }}>
-          <DataGrid columnGroupingModel={columnGroupingModel} {...getBasicGridData(10, 10)} />
-        </div>,
-      );
-      // Tab to the first column header
-      await user.keyboard('{Tab}');
-      const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
-      expect(virtualScroller.scrollLeft).to.equal(0);
-      // We then need to move up to the group header, then right to the first named column
-      await user.keyboard('{ArrowUp}{ArrowUp}{ArrowRight}');
-      expect(virtualScroller.scrollLeft).not.to.equal(0);
-    });
+    testSkipIf(isJSDOM)(
+      'should scroll horizontally when navigating between column group headers with arrows',
+      async () => {
+        const { user } = render(
+          <div style={{ width: 100, height: 300 }}>
+            <DataGrid columnGroupingModel={columnGroupingModel} {...getBasicGridData(10, 10)} />
+          </div>,
+        );
+        // Tab to the first column header
+        await user.keyboard('{Tab}');
+        const virtualScroller = document.querySelector<HTMLElement>(
+          '.MuiDataGrid-virtualScroller',
+        )!;
+        expect(virtualScroller.scrollLeft).to.equal(0);
+        // We then need to move up to the group header, then right to the first named column
+        await user.keyboard('{ArrowUp}{ArrowUp}{ArrowRight}');
+        expect(virtualScroller.scrollLeft).not.to.equal(0);
+      },
+    );
 
-    it('should scroll horizontally when navigating between column headers with arrows even if rows are empty', async function test() {
-      if (isJSDOM) {
-        // Need layouting for column virtualization
-        this.skip();
-      }
-      const { user } = render(
-        <div style={{ width: 100, height: 300 }}>
-          <DataGrid
-            columnGroupingModel={columnGroupingModel}
-            {...getBasicGridData(10, 10)}
-            rows={[]}
-          />
-        </div>,
-      );
-      // Tab to the first column header
-      await user.keyboard('{Tab}');
-      const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
-      expect(virtualScroller.scrollLeft).to.equal(0);
-      // We then need to move up to the group header, then right to the first named column
-      await user.keyboard('{ArrowUp}{ArrowUp}{ArrowRight}');
-      expect(virtualScroller.scrollLeft).not.to.equal(0);
-      expect(document.activeElement!).toHaveAccessibleName('prices');
-    });
+    testSkipIf(isJSDOM)(
+      'should scroll horizontally when navigating between column headers with arrows even if rows are empty',
+      async () => {
+        const { user } = render(
+          <div style={{ width: 100, height: 300 }}>
+            <DataGrid
+              columnGroupingModel={columnGroupingModel}
+              {...getBasicGridData(10, 10)}
+              rows={[]}
+            />
+          </div>,
+        );
+        // Tab to the first column header
+        await user.keyboard('{Tab}');
+        const virtualScroller = document.querySelector<HTMLElement>(
+          '.MuiDataGrid-virtualScroller',
+        )!;
+        expect(virtualScroller.scrollLeft).to.equal(0);
+        // We then need to move up to the group header, then right to the first named column
+        await user.keyboard('{ArrowUp}{ArrowUp}{ArrowRight}');
+        expect(virtualScroller.scrollLeft).not.to.equal(0);
+        expect(document.activeElement!).toHaveAccessibleName('prices');
+      },
+    );
 
     it('should move to the group header below when pressing "ArrowDown" on a column group header', async () => {
       const { user } = render(<NavigationTestGroupingCaseNoScrollX />);
