@@ -22,5 +22,8 @@ const testSkipIf: (condition: boolean) => Mocha.PendingTestFunction =
   };
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+const isOSX = /macintosh/i.test(window.navigator.userAgent);
+const hasTouchSupport =
+  typeof window.Touch !== 'undefined' && typeof window.TouchEvent !== 'undefined';
 
-export { describeSkipIf, testSkipIf, isJSDOM };
+export { describeSkipIf, testSkipIf, isJSDOM, isOSX, hasTouchSupport };
