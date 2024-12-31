@@ -10,6 +10,7 @@ import {
 } from '@mui/x-license';
 import { sharedLicenseStatuses } from './useLicenseVerifier';
 import { generateReleaseInfo } from '../verifyLicense';
+import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 const oneDayInMS = 1000 * 60 * 60 * 24;
 const releaseDate = new Date(3000, 0, 0, 0, 0, 0, 0);
@@ -20,12 +21,8 @@ function TestComponent(props: { packageName?: MuiCommercialPackageName }) {
   return <div data-testid="status">Status: {licenseStatus.status}</div>;
 }
 
-describe('useLicenseVerifier', function test() {
-  // Can't change the process.env.NODE_ENV in Karma
-  if (!/jsdom/.test(window.navigator.userAgent)) {
-    return;
-  }
-
+// Can't change the process.env.NODE_ENV in Karma
+describeSkipIf(!isJSDOM)('useLicenseVerifier', function test() {
   const { render } = createRenderer();
 
   let env: any;

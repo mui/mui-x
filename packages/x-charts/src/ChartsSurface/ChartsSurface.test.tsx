@@ -4,13 +4,10 @@ import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { expect } from 'chai';
 import { SizeProvider } from '../context/SizeProvider';
 import { ChartProvider } from '../context/ChartProvider';
+import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 
-describe('<ChartsSurface />', () => {
-  // JSDOM doesn't implement SVGElement
-  if (/jsdom/.test(window.navigator.userAgent)) {
-    return;
-  }
-
+// JSDOM doesn't implement SVGElement
+describeSkipIf(isJSDOM)('<ChartsSurface />', () => {
   const { render } = createRenderer();
 
   it('should pass ref when it is added directly to component', () => {

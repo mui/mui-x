@@ -9,7 +9,7 @@ import {
   UseTreeViewSelectionSignature,
 } from '@mui/x-tree-view/internals';
 import { TreeItemLabel } from '@mui/x-tree-view/TreeItem';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { describeSkipIf, testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describeTreeView<
   [UseTreeViewItemsSignature, UseTreeViewExpansionSignature, UseTreeViewSelectionSignature]
@@ -306,12 +306,8 @@ describeTreeView<
     });
 
     describe('API methods', () => {
-      describe('getItem', () => {
-        // This method is only usable with Rich Tree View components
-        if (treeViewComponentName === 'SimpleTreeView') {
-          return;
-        }
-
+      // This method is only usable with Rich Tree View components
+      describeSkipIf(treeViewComponentName === 'SimpleTreeView')('getItem', () => {
         it('should return the tree', () => {
           const view = render({
             items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
@@ -363,12 +359,8 @@ describeTreeView<
         });
       });
 
-      describe('getItemTree', () => {
-        // This method is only usable with Rich Tree View components
-        if (treeViewComponentName === 'SimpleTreeView') {
-          return;
-        }
-
+      // This method is only usable with Rich Tree View components
+      describeSkipIf(treeViewComponentName === 'SimpleTreeView')('getItemTree', () => {
         it('should return the tree', () => {
           const view = render({
             items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
@@ -399,38 +391,43 @@ describeTreeView<
         });
       });
 
-      describe('getItemOrderedChildrenIds', () => {
-        // This method is only usable with Rich Tree View components
-        if (treeViewComponentName === 'SimpleTreeView') {
-          return;
-        }
+      // This method is only usable with Rich Tree View components
+      describeSkipIf(treeViewComponentName === 'SimpleTreeView')(
+        'getItemOrderedChildrenIds',
+        () => {
+          it('should return the children of an item in their rendering order', () => {
+            const view = render({
+              items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }],
+            });
 
-        it('should return the children of an item in their rendering order', () => {
-          const view = render({
-            items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }],
+            expect(view.apiRef.current.getItemOrderedChildrenIds('1')).to.deep.equal([
+              '1.1',
+              '1.2',
+            ]);
           });
 
-          expect(view.apiRef.current.getItemOrderedChildrenIds('1')).to.deep.equal(['1.1', '1.2']);
-        });
+          it('should work for the root items', () => {
+            const view = render({
+              items: [{ id: '1' }, { id: '2' }],
+            });
 
-        it('should work for the root items', () => {
-          const view = render({
-            items: [{ id: '1' }, { id: '2' }],
+            expect(view.apiRef.current.getItemOrderedChildrenIds(null)).to.deep.equal(['1', '2']);
           });
 
-          expect(view.apiRef.current.getItemOrderedChildrenIds(null)).to.deep.equal(['1', '2']);
-        });
+          it('should have up to date children when props.items changes', () => {
+            const view = render({
+              items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
+            });
 
-        it('should have up to date children when props.items changes', () => {
-          const view = render({
-            items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
+            view.setItems([{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }]);
+
+            expect(view.apiRef.current.getItemOrderedChildrenIds('1')).to.deep.equal([
+              '1.1',
+              '1.2',
+            ]);
           });
-
-          view.setItems([{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }]);
-
-          expect(view.apiRef.current.getItemOrderedChildrenIds('1')).to.deep.equal(['1.1', '1.2']);
-        });
-      });
+        },
+      );
     });
   },
 );
