@@ -71,7 +71,6 @@ function GridEditDateCell({
     <Component
       value={value}
       autoFocus
-      enableAccessibleFieldDOMStructure={false}
       onChange={handleChange}
       slotProps={{
         textField: {
