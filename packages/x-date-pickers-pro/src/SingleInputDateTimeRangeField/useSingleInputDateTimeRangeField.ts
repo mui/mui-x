@@ -1,46 +1,38 @@
 'use client';
-import * as React from 'react';
 import {
   useField,
-  useDefaultizedDateTimeField,
+  useFieldInternalPropsWithDefaults,
   PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { UseSingleInputDateTimeRangeFieldProps } from './SingleInputDateTimeRangeField.types';
-import { rangeValueManager, getRangeFieldValueManager } from '../internals/utils/valueManagers';
-import { validateDateTimeRange } from '../validation';
+import { useDateTimeRangeManager } from '../managers';
 
 export const useSingleInputDateTimeRangeField = <
   TEnableAccessibleFieldDOMStructure extends boolean,
   TAllProps extends UseSingleInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
 >(
-  inProps: TAllProps,
+  props: TAllProps,
 ) => {
-  const props = useDefaultizedDateTimeField<
-    UseSingleInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
-    TAllProps
-  >(inProps);
-
+  const manager = useDateTimeRangeManager(props);
   const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date-time');
-
-  const fieldValueManager = React.useMemo(
-    () => getRangeFieldValueManager({ dateSeparator: internalProps.dateSeparator }),
-    [internalProps.dateSeparator],
-  );
+  const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
+    manager,
+    internalProps,
+  });
 
   return useField<
     PickerRangeValue,
     TEnableAccessibleFieldDOMStructure,
     typeof forwardedProps,
-    typeof internalProps
+    typeof internalPropsWithDefaults
   >({
     forwardedProps,
-    internalProps,
-    valueManager: rangeValueManager,
-    fieldValueManager,
-    validator: validateDateTimeRange,
-    valueType: 'date-time',
-    // TODO v8: Add a real aria label before enabling the button.
-    getOpenDialogAriaLabel: () => '',
+    internalProps: internalPropsWithDefaults,
+    valueManager: manager.internal_valueManager,
+    fieldValueManager: manager.internal_fieldValueManager,
+    validator: manager.validator,
+    valueType: manager.valueType,
+    getOpenDialogAriaLabel: manager.internal_getOpenDialogAriaLabel,
   });
 };
