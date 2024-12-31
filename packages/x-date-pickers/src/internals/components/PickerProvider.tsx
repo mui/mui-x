@@ -103,7 +103,7 @@ export interface PickerContextValue<
    * Is equal to "mobile" when using a mobile picker (like <MobileDatePicker />).
    * Is equal to "mobile" or "desktop" when using a responsive picker (like <DatePicker />) depending on the `desktopModeMediaQuery` prop.
    * Is equal to "mobile" or "desktop" when using a static picker (like <StaticDatePicker />) depending on the `displayStaticWrapperAs` prop.
-   * Is always equal to "desktop" if the component you are accessing the ownerState from is not wrapped by a picker.
+   * Is always equal to "desktop" if the component you are accessing the context from is not wrapped by a picker.
    */
   variant: PickerVariant;
   /**
@@ -111,9 +111,16 @@ export interface PickerContextValue<
    * Is equal to "landscape" when the picker is in landscape orientation.
    * Is equal to "portrait" when the picker is in portrait orientation.
    * You can use the "orientation" on any picker component to force the orientation.
-   * Is always equal to "portrait" if the component you are accessing the ownerState from is not wrapped by a picker.
+   * Is always equal to "portrait" if the component you are accessing the context from is not wrapped by a picker.
    */
   orientation: PickerOrientation;
+  /**
+   * Format that should be used to render the value in the field.
+   * Is equal to `props.format` on the picker component if defined.
+   * Is generated based on the available views if not defined.
+   * Is always equal to `null` if the component you are accessing the context from is not wrapped by a picker.
+   */
+  fieldFormat: string | null;
 }
 
 export interface PickerActionsContextValue<TValue extends PickerValidValue, TError = string>

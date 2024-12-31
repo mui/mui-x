@@ -1,5 +1,6 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { MakeRequired } from '@mui/x-internals/types';
 import { PickerOwnerState } from '../../../models';
 import { PickerValueManager, UsePickerValueProviderParams } from './usePickerValue.types';
 import {
@@ -18,7 +19,6 @@ import {
 import { useUtils } from '../useUtils';
 import { arrayIncludes } from '../../utils/utils';
 import { UsePickerViewsProviderParams } from './usePickerViews';
-import { UseFieldInternalProps } from '../useField';
 import { PickerFieldPrivateContextValue } from '../useField/useMergeFieldPropsWithPickerContextProps';
 
 function getOrientation(): PickerOrientation {
@@ -114,6 +114,7 @@ export function usePickerProvider<
       readOnly: props.readOnly ?? false,
       variant,
       orientation,
+      fieldFormat: props.format,
     }),
     [
       paramsFromUsePickerValue.contextValue,
@@ -122,6 +123,7 @@ export function usePickerProvider<
       orientation,
       props.disabled,
       props.readOnly,
+      props.format,
     ],
   );
 
@@ -132,14 +134,12 @@ export function usePickerProvider<
 
   const fieldPrivateContextValue = React.useMemo(
     () => ({
-      format: props.format,
       formatDensity: props.formatDensity,
       enableAccessibleFieldDOMStructure: props.enableAccessibleFieldDOMStructure,
       selectedSections: props.selectedSections,
       onSelectedSectionsChange: props.onSelectedSectionsChange,
     }),
     [
-      props.format,
       props.formatDensity,
       props.enableAccessibleFieldDOMStructure,
       props.selectedSections,
@@ -162,7 +162,8 @@ export interface UsePickerProviderParameters<
   TView extends DateOrTimeViewWithMeridiem,
   TError,
 > extends Pick<PickerProviderProps<TValue>, 'localeText'> {
-  props: UsePickerProps<TValue, any, any, any> & UsePickerProviderNonStaticProps;
+  props: UsePickerProps<TValue, any, any, any> &
+    MakeRequired<UsePickerProviderNonStaticProps, 'format'>;
   valueManager: PickerValueManager<TValue, any>;
   variant: PickerVariant;
   paramsFromUsePickerValue: UsePickerValueProviderParams<TValue, TError>;
@@ -187,6 +188,12 @@ export interface UsePickerProviderProps extends FormProps {
  * Props used to create the picker's contexts and that are not available on static pickers.
  */
 export interface UsePickerProviderNonStaticProps extends PickerFieldPrivateContextValue {
+  // We don't take the `format` prop from `UseFieldInternalProps` to have a custom JSDoc description.
+  /**
+   * Format of the date when rendered in the input(s).
+   * Defaults to localized format based on the used `views`.
+   */
+  format?: string;
   /**
    * If `true`, the open picker button will not be rendered (renders only the field).
    * @default false
