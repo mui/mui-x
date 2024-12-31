@@ -4,7 +4,7 @@ import { GridLocaleTextApi } from '../../models/api/gridLocaleTextApi';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 export const useGridLocaleText = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommon>,
+  apiRef: React.RefObject<GridPrivateApiCommon>,
   props: Pick<DataGridProcessedProps, 'localeText'>,
 ): void => {
   const getLocaleText = React.useCallback<GridLocaleTextApi['getLocaleText']>(

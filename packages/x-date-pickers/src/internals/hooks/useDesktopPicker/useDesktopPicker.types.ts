@@ -103,8 +103,8 @@ export interface UseDesktopPickerProps<
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-  TExternalProps extends UsePickerViewsProps<PickerValue, TView, any, {}>,
-> extends BasePickerProps<PickerValue, TView, TError, TExternalProps, {}>,
+  TExternalProps extends UsePickerViewsProps<PickerValue, TView, any>,
+> extends BasePickerProps<PickerValue, any, TError, TExternalProps>,
     MakeRequired<DesktopOnlyPickerProps, 'format'> {
   /**
    * Overridable component slots.
@@ -128,7 +128,7 @@ export interface UseDesktopPickerParams<
     TExternalProps
   >,
 > extends Pick<
-    UsePickerParams<PickerValue, TView, TExternalProps, {}>,
+    UsePickerParams<PickerValue, TView, TExternalProps>,
     'valueManager' | 'valueType' | 'validator' | 'rendererInterceptor'
   > {
   props: TExternalProps;
