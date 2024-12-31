@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import { ErrorBoundary, createRenderer, reactMajor, screen } from '@mui/internal-test-utils';
 import { useSvgRef } from './useSvgRef';
 import { ChartProvider } from '../context/ChartProvider';
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 function UseSvgRef() {
   const ref = useSvgRef();
@@ -16,13 +17,9 @@ function UseSvgRef() {
 describe('useSvgRef', () => {
   const { render } = createRenderer();
 
-  it('should throw an error when parent context not present', function test() {
-    if (!/jsdom/.test(window.navigator.userAgent)) {
-      // can't catch render errors in the browser for unknown reason
-      // tried try-catch + error boundary + window onError preventDefault
-      this.skip();
-    }
-
+  // can't catch render errors in the browser for unknown reason
+  // tried try-catch + error boundary + window onError preventDefault
+  testSkipIf(!isJSDOM)('should throw an error when parent context not present', () => {
     const errorRef = React.createRef<any>();
 
     const errorMessages = [
