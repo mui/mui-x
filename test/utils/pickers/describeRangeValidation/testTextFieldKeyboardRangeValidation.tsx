@@ -231,7 +231,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([true, true], isSingleInput);
     });
 
-    testSkipIf(!withDate)('should apply minTime', () => {
+    testSkipIf(!withTime)('should apply minTime', () => {
       const onErrorMock = spy();
       render(
         <ElementToTest onError={onErrorMock} minTime={adapterToUse.date('2018-03-10T12:00:00')} />,
@@ -267,7 +267,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([false, false], isSingleInput);
     });
 
-    testSkipIf(!withDate)('should apply maxTime', () => {
+    testSkipIf(!withTime)('should apply maxTime', () => {
       const onErrorMock = spy();
       render(
         <ElementToTest onError={onErrorMock} maxTime={adapterToUse.date('2018-03-10T12:00:00')} />,
