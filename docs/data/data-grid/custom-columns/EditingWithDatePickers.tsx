@@ -54,7 +54,7 @@ function GridEditDateCell({
   hasFocus,
 }: GridRenderEditCellParams<any, Date | null, string>) {
   const apiRef = useGridApiContext();
-  const inputRef = React.useRef<HTMLInputElement>();
+  const inputRef = React.useRef<HTMLInputElement>(null);
   const Component = colDef.type === 'dateTime' ? DateTimePicker : DatePicker;
 
   const handleChange = (newValue: unknown) => {
