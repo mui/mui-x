@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FieldChangeHandler, UseFieldInternalProps } from './useField.types';
+import type { FieldChangeHandler, UseFieldInternalProps } from './useField.types';
 import {
   PickerAnyManager,
   PickerManagerError,
@@ -7,7 +7,7 @@ import {
   PickerManagerFieldInternalPropsWithDefaults,
   PickerManagerValue,
 } from '../../models';
-import { PickerContext } from '../../components/PickerProvider';
+import { PickerContext } from '../../../hooks/usePickerContext';
 import { useLocalizationContext } from '../useUtils';
 
 export const PickerFieldPrivateContext = React.createContext<PickerFieldPrivateContextValue | null>(

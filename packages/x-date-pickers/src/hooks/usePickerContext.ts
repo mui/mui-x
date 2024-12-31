@@ -1,7 +1,9 @@
 'use client';
 import * as React from 'react';
-import { PickerContext, PickerContextValue } from '../internals/components/PickerProvider';
+import type { PickerContextValue } from '../internals/components/PickerProvider';
 import { DateOrTimeViewWithMeridiem, PickerValidValue, PickerValue } from '../internals/models';
+
+export const PickerContext = React.createContext<PickerContextValue<any, any, any> | null>(null);
 
 /**
  * Returns the context passed by the picker that wraps the current component.

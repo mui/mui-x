@@ -146,8 +146,8 @@ export const useDesktopRangePicker = <
     variant: 'desktop',
     fieldType,
     // These direct access to `providerProps` will go away once the range fields handle the picker opening
-    open: providerProps.contextValue.open,
-    setOpen: providerProps.contextValue.setOpen,
+    contextValue: providerProps.contextValue,
+    fieldPrivateContextValue: providerProps.fieldPrivateContextValue,
     readOnly,
     disableOpenPicker,
     label,
@@ -165,7 +165,6 @@ export const useDesktopRangePicker = <
         ? providerProps.contextValue.view
         : undefined,
     initialView: initialView.current ?? undefined,
-    onViewChange: providerProps.contextValue.onViewChange,
     ...rangePositionResponse,
   });
 

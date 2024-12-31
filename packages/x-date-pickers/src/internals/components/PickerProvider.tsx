@@ -19,8 +19,7 @@ import {
   PickerFieldPrivateContext,
   PickerFieldPrivateContextValue,
 } from '../hooks/useField/useFieldInternalPropsWithDefaults';
-
-export const PickerContext = React.createContext<PickerContextValue<any, any, any> | null>(null);
+import { PickerContext } from '../../hooks/usePickerContext';
 
 export const PickerActionsContext = React.createContext<PickerActionsContextValue<any, any> | null>(
   null,
@@ -118,7 +117,7 @@ export interface PickerContextValue<
    * Format that should be used to render the value in the field.
    * Is equal to `props.format` on the picker component if defined.
    * Is generated based on the available views if not defined.
-   * Is always equal to `null` if the component you are accessing the context from is not wrapped by a picker.
+   * Is always equal to `utils.formats.fullDate` if the component you are accessing the context from is not wrapped by a picker.
    */
   fieldFormat: string | null;
 }

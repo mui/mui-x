@@ -27,7 +27,6 @@ const cacheRtl = createCache({
 });
 
 function ButtonDateTimeField(props: DateTimePickerFieldProps) {
-  const { timezone, value, fieldFormat } = usePickerContext();
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
   const {
     InputProps,
@@ -41,16 +40,18 @@ function ButtonDateTimeField(props: DateTimePickerFieldProps) {
   } = forwardedProps;
 
   const pickerContext = usePickerContext();
-
-  const parsedFormat = useParsedFormat(internalProps);
+  const parsedFormat = useParsedFormat();
   const { hasValidationError } = useValidation({
     validator: validateDate,
-    value,
-    timezone,
+    value: pickerContext.value,
+    timezone: pickerContext.timezone,
     props: internalProps,
   });
 
-  const valueStr = value == null ? parsedFormat : value.format(fieldFormat);
+  const valueStr =
+    pickerContext.value == null
+      ? parsedFormat
+      : pickerContext.value.format(pickerContext.fieldFormat);
 
   return (
     <Button

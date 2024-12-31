@@ -3,7 +3,7 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
 import { useValidation } from '../../../validation';
-import { useLocalizationContext, useUtils } from '../useUtils';
+import { useUtils } from '../useUtils';
 import {
   UseFieldParams,
   UseFieldResponse,
@@ -19,12 +19,7 @@ import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
 import { useFieldV7TextField } from './useFieldV7TextField';
 import { useFieldV6TextField } from './useFieldV6TextField';
-import {
-  PickerValidValue,
-  PickerAnyManager,
-  PickerManagerFieldInternalProps,
-  PickerManagerFieldInternalPropsWithDefaults,
-} from '../../models';
+import { PickerValidValue } from '../../models';
 
 export const useField = <
   TValue extends PickerValidValue,

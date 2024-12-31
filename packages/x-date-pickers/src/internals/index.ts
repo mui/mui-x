@@ -5,6 +5,7 @@ export type {
   PickersArrowSwitcherSlotProps,
 } from './components/PickersArrowSwitcher';
 export { PickerProvider } from './components/PickerProvider';
+export type { PickerContextValue } from './components/PickerProvider';
 export { PickersModalDialog } from './components/PickersModalDialog';
 export type {
   PickersModalDialogSlots,
@@ -64,6 +65,7 @@ export type {
   FieldValueManager,
   FieldChangeHandler,
   FieldChangeHandlerContext,
+  PickerFieldPrivateContextValue,
 } from './hooks/useField';
 export { useFieldOwnerState } from './hooks/useFieldOwnerState';
 export type { MobileOnlyPickerProps } from './hooks/useMobilePicker';
