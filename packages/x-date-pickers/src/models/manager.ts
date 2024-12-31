@@ -1,6 +1,6 @@
 import type { FieldValueManager, UseFieldInternalProps } from '../internals/hooks/useField';
 import type { PickerValueManager } from '../internals/hooks/usePicker';
-import { UseLocalizationContextReturnValue } from '../internals/hooks/useUtils';
+import type { UseLocalizationContextReturnValue } from '../internals/hooks/useUtils';
 import type { PickerValidValue } from '../internals/models';
 import type { Validator } from '../validation';
 import type { PickerValueType } from './common';
@@ -78,16 +78,20 @@ export interface PickerManager<
    * - a default format to display the value in the field
    * - some default validation props that are needed to validate the value (e.g: minDate, maxDate)
    * This property is not part of the public API and should not be used directly.
-   * @param {ApplyDefaultsToFieldInternalPropsParameters} parameters The parameters to apply the defaults.
+   * @param {ApplyDefaultsToFieldInternalPropsParameters<TFieldInternalProps>} parameters The parameters to apply the defaults.
    * @returns {TFieldInternalPropsWithDefaults} The field internal props with the defaults applied.
    */
   internal_applyDefaultsToFieldInternalProps: (
     parameters: ApplyDefaultsToFieldInternalPropsParameters<TFieldInternalProps>,
   ) => TFieldInternalPropsWithDefaults;
   /**
-   *
+   * Returns the aria-label to apply on the button that opens the picker.
+   * @param {GetOpenPickerButtonAriaLabelParameters<TValue>} params The parameters to get the aria-label.
+   * @returns {string} The aria-label to apply on the button that opens the picker.
    */
-  internal_getOpenDialogAriaLabel: (params: GetOpenDialogAriaLabelParameters<TValue>) => string;
+  internal_getOpenPickerButtonAriaLabel: (
+    params: GetOpenPickerButtonAriaLabelParameters<TValue>,
+  ) => string;
 }
 
 interface ApplyDefaultsToFieldInternalPropsParameters<TFieldInternalProps extends {}>
@@ -95,7 +99,7 @@ interface ApplyDefaultsToFieldInternalPropsParameters<TFieldInternalProps extend
   internalProps: TFieldInternalProps;
 }
 
-interface GetOpenDialogAriaLabelParameters<TValue extends PickerValidValue>
+interface GetOpenPickerButtonAriaLabelParameters<TValue extends PickerValidValue>
   extends UseLocalizationContextReturnValue {
   value: TValue;
 }

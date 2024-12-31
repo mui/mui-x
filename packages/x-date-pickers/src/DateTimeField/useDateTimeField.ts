@@ -30,6 +30,6 @@ export const useDateTimeField = <
     fieldValueManager: manager.internal_fieldValueManager,
     validator: manager.validator,
     valueType: manager.valueType,
-    getOpenDialogAriaLabel: manager.internal_getOpenDialogAriaLabel,
+    getOpenPickerButtonAriaLabel: manager.internal_getOpenPickerButtonAriaLabel,
   });
 };

@@ -13,7 +13,6 @@ export const useDateField = <
 ) => {
   const manager = useDateManager(props);
   const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
-
   const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
     manager,
     internalProps,
@@ -31,6 +30,6 @@ export const useDateField = <
     fieldValueManager: manager.internal_fieldValueManager,
     validator: manager.validator,
     valueType: manager.valueType,
-    getOpenDialogAriaLabel: manager.internal_getOpenDialogAriaLabel,
+    getOpenPickerButtonAriaLabel: manager.internal_getOpenPickerButtonAriaLabel,
   });
 };

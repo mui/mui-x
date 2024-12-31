@@ -35,7 +35,7 @@ export interface UseFieldParams<
   fieldValueManager: FieldValueManager<TValue>;
   validator: Validator<TValue, InferError<TInternalProps>, TInternalProps>;
   valueType: PickerValueType;
-  getOpenDialogAriaLabel: (
+  getOpenPickerButtonAriaLabel: (
     parameters: UseLocalizationContextReturnValue & { value: TValue },
   ) => string;
 }

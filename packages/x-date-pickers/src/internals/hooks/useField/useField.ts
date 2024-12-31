@@ -78,7 +78,7 @@ export const useField = <
     fieldValueManager,
     valueManager,
     validator,
-    getOpenDialogAriaLabel: getOpenDialogAriaText,
+    getOpenPickerButtonAriaLabel: getOpenDialogAriaText,
   } = params;
 
   const isRtl = useRtl();
@@ -309,7 +309,7 @@ export const useField = <
   const localizationContext = useLocalizationContext();
   const openPickerAriaLabel = React.useMemo(
     () => getOpenDialogAriaText({ ...localizationContext, value: state.value }),
-    [getOpenDialogAriaText, state.value],
+    [getOpenDialogAriaText, state.value, localizationContext],
   );
 
   const commonAdditionalProps: UseFieldCommonAdditionalProps = {
