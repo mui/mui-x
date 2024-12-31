@@ -18,7 +18,7 @@ import { GridAggregationModel } from '../hooks/features/aggregation/gridAggregat
 function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
   const { colDef } = props;
   const apiRef = useGridApiContext();
-  const inputRef = React.useRef<any>();
+  const inputRef = React.useRef<any>(null);
   const rootProps = useGridRootProps();
   const id = useId();
   const aggregationModel = useGridSelector(apiRef, gridAggregationModelSelector);
