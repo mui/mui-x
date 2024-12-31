@@ -4,6 +4,7 @@ import { GridColumnMenuItemProps, useGridSelector } from '@mui/x-data-grid-pro';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import { unstable_useId as useId } from '@mui/utils';
+import { SelectChangeEvent } from '@mui/material/Select';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import {
@@ -17,10 +18,10 @@ import { GridAggregationModel } from '../hooks/features/aggregation/gridAggregat
 function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
   const { colDef } = props;
   const apiRef = useGridApiContext();
+  const inputRef = React.useRef<any>();
   const rootProps = useGridRootProps();
   const id = useId();
   const aggregationModel = useGridSelector(apiRef, gridAggregationModelSelector);
-
   const availableAggregationFunctions = React.useMemo(
     () =>
       getAvailableAggregationFunctions({
@@ -29,12 +30,15 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
       }),
     [colDef, rootProps.aggregationFunctions],
   );
+  const { native: isBaseSelectNative = false, ...baseSelectProps } =
+    rootProps.slotProps?.baseSelect || {};
+
+  const baseSelectOptionProps = rootProps.slotProps?.baseSelectOption || {};
 
   const selectedAggregationRule = React.useMemo(() => {
     if (!colDef || !aggregationModel[colDef.field]) {
       return '';
     }
-
     const aggregationFunctionName = aggregationModel[colDef.field];
     if (
       canColumnHaveAggregationFunction({
@@ -49,7 +53,7 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
     return '';
   }, [rootProps.aggregationFunctions, aggregationModel, colDef]);
 
-  const handleAggregationItemChange = (event: Event) => {
+  const handleAggregationItemChange = (event: SelectChangeEvent<unknown>) => {
     const newAggregationItem = (event.target as HTMLSelectElement | null)?.value || undefined;
     const currentModel = gridAggregationModelSelector(apiRef);
     const { [colDef.field]: columnItem, ...otherColumnItems } = currentModel;
@@ -64,26 +68,60 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
 
   const label = apiRef.current.getLocaleText('aggregationMenuItemHeader');
 
+  const handleMenuItemKeyDown = React.useCallback((event: React.KeyboardEvent) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      inputRef.current.focus();
+    }
+  }, []);
+
+  const handleSelectKeyDown = React.useCallback((event: React.KeyboardEvent) => {
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === ' ') {
+      event.stopPropagation();
+    }
+  }, []);
+
   return (
     <rootProps.slots.baseMenuItem
       inert
       iconStart={<rootProps.slots.columnMenuAggregationIcon fontSize="small" />}
+      onKeyDown={handleMenuItemKeyDown}
     >
       <FormControl size="small" fullWidth sx={{ minWidth: 150 }}>
-        <InputLabel id={`${id}-label`}>{label}</InputLabel>
+        <InputLabel id={`${id}-label`} htmlFor={`${id}-input`}>
+          {label}
+        </InputLabel>
         <rootProps.slots.baseSelect
           labelId={`${id}-label`}
+          inputRef={inputRef}
           id={`${id}-input`}
           value={selectedAggregationRule}
           label={label}
           color="primary"
-          onChange={handleAggregationItemChange as any}
+          onChange={handleAggregationItemChange}
+          MenuProps={{
+            PaperProps: {
+              onKeyDown: handleSelectKeyDown,
+            },
+          }}
           onBlur={(event) => event.stopPropagation()}
+          native={isBaseSelectNative}
           fullWidth
+          {...baseSelectProps}
         >
-          <rootProps.slots.baseMenuItem value="">...</rootProps.slots.baseMenuItem>
+          <rootProps.slots.baseSelectOption
+            {...baseSelectOptionProps}
+            native={isBaseSelectNative}
+            value=""
+          >
+            ...
+          </rootProps.slots.baseSelectOption>
           {availableAggregationFunctions.map((aggFunc) => (
-            <rootProps.slots.baseMenuItem key={aggFunc} value={aggFunc}>
+            <rootProps.slots.baseSelectOption
+              {...baseSelectOptionProps}
+              key={aggFunc}
+              value={aggFunc}
+              native={isBaseSelectNative}
+            >
               {getAggregationFunctionLabel({
                 apiRef,
                 aggregationRule: {
@@ -91,7 +129,7 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
                   aggregationFunction: rootProps.aggregationFunctions[aggFunc],
                 },
               })}
-            </rootProps.slots.baseMenuItem>
+            </rootProps.slots.baseSelectOption>
           ))}
         </rootProps.slots.baseSelect>
       </FormControl>
