@@ -362,7 +362,8 @@ This change causes a few breaking changes:
 
 ### Slot: `field`
 
-- The component passed to the `field` slot no longer receives `InputProps` and `inputProps` props. You now need to manually add the UI to open the picker using the `usePickerContext` hook:
+- The component passed to the `field` slot no longer receives `InputProps` and `inputProps` props.
+  You now need to manually add the UI to open the picker using the `usePickerContext` hook:
 
   ```diff
    import { unstable_useDateField } from '@mui/x-date-pickers/DateField';
@@ -439,7 +440,9 @@ This change causes a few breaking changes:
 
 ### Slot: `inputAdornment`
 
-- The `position` props passed to the `inputAdornment` slot props no longer sets the position of the opening button. This allow to define the position of the opening button and of the clear button independently. Instead you can use the `openPickerButtonPosition` prop:
+- The `position` props passed to the `inputAdornment` slot props no longer sets the position of the opening button.
+  This allow to define the position of the opening button and of the clear button independently.
+  You can use the `openPickerButtonPosition` prop instead:
 
   ```diff
    <DatePicker
