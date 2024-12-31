@@ -54,9 +54,9 @@ describe('<DataGridPro /> - Cell editing', () => {
 
   describe('apiRef', () => {
     describe('startCellEditMode', () => {
-      it('should throw when the cell is already in edit mode', () => {
+      it('should throw when the cell is already in edit mode', async () => {
         render(<TestCase />);
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        await act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(() => {
           apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' });
         }).to.throw('MUI X: The cell with id=0 and field=currencyPair is not in view mode.');
@@ -805,13 +805,13 @@ describe('<DataGridPro /> - Cell editing', () => {
         expect(listener.lastCall.args[0].reason).to.equal('printableKeyDown');
       });
 
-      it(`should not publish 'cellEditStart' if space is pressed`, () => {
-        render(<TestCase autoHeight />);
+      it(`should not publish 'cellEditStart' if space is pressed`, async () => {
+        const { user } = render(<TestCase autoHeight />);
         const listener = spy();
         apiRef.current.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 1);
-        fireUserEvent.mousePress(cell);
-        fireEvent.keyDown(cell, { key: ' ' });
+        await user.click(cell);
+        await user.keyboard('[Space]');
         expect(listener.callCount).to.equal(0);
       });
     });
@@ -1167,15 +1167,15 @@ describe('<DataGridPro /> - Cell editing', () => {
     });
 
     describe('by pressing Tab', () => {
-      it(`should publish 'cellEditStop' with reason=tabKeyDown`, () => {
-        render(<TestCase />);
+      it(`should publish 'cellEditStop' with reason=tabKeyDown`, async () => {
+        const { user } = render(<TestCase />);
         const listener = spy();
         apiRef.current.subscribeEvent('cellEditStop', listener);
         const cell = getCell(0, 1);
-        fireUserEvent.mousePress(cell);
-        fireEvent.doubleClick(cell);
+        await user.click(cell);
+        await user.dblClick(cell);
         expect(listener.callCount).to.equal(0);
-        fireEvent.keyDown(cell, { key: 'Tab' });
+        await user.keyboard('{Tab}');
         expect(listener.lastCall.args[0].reason).to.equal('tabKeyDown');
       });
 
@@ -1255,9 +1255,9 @@ describe('<DataGridPro /> - Cell editing', () => {
         const { setProps } = render(
           <TestCase cellModesModel={{ 0: { currencyPair: { mode: GridCellModes.Edit } } }} />,
         );
-        await act(() =>
-          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
-        );
+        await act(() => {
+          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
+        });
         setProps({
           cellModesModel: {
             0: { currencyPair: { mode: GridCellModes.View, cellToFocusAfter: 'below' } },

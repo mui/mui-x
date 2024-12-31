@@ -1,22 +1,19 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { useLicenseVerifier } from '@mui/x-license';
-import { PickersLayout, PickersLayoutSlotProps } from '@mui/x-date-pickers/PickersLayout';
+import { PickersLayout } from '@mui/x-date-pickers/PickersLayout';
 import {
   executeInTheNextEventLoopTick,
   getActiveElement,
   usePicker,
   PickersPopper,
-  ExportedBaseToolbarProps,
   DateOrTimeViewWithMeridiem,
-  ExportedBaseTabsProps,
   PickerProvider,
   PickerValue,
   PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import { FieldRef, InferError } from '@mui/x-date-pickers/models';
 import {
-  DesktopRangePickerAdditionalViewProps,
   UseDesktopRangePickerParams,
   UseDesktopRangePickerProps,
 } from './useDesktopRangePicker.types';
@@ -26,6 +23,7 @@ import {
 } from '../useEnrichedRangePickerFieldProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
 import { useRangePosition } from '../useRangePosition';
+import { PickerRangePositionContext } from '../../../hooks/usePickerRangePositionContext';
 
 const releaseInfo = getReleaseInfo();
 
@@ -74,15 +72,15 @@ export const useDesktopRangePicker = <
   const initialView = React.useRef<TView | null>(props.openTo ?? null);
 
   const fieldType = (slots.field as any).fieldType ?? 'multi-input';
-  const { rangePosition, onRangePositionChange } = useRangePosition(
+  const rangePositionResponse = useRangePosition(
     props,
     fieldType === 'single-input' ? singleInputFieldRef : undefined,
   );
 
-  let fieldRef: React.RefObject<FieldRef<PickerValue> | FieldRef<PickerRangeValue>>;
+  let fieldRef: React.RefObject<FieldRef<PickerValue> | FieldRef<PickerRangeValue> | null>;
   if (fieldType === 'single-input') {
     fieldRef = singleInputFieldRef;
-  } else if (rangePosition === 'start') {
+  } else if (rangePositionResponse.rangePosition === 'start') {
     fieldRef = startFieldRef;
   } else {
     fieldRef = endFieldRef;
@@ -94,17 +92,13 @@ export const useDesktopRangePicker = <
     shouldRestoreFocus,
     fieldProps: pickerFieldProps,
     ownerState,
-  } = usePicker<PickerRangeValue, TView, TExternalProps, DesktopRangePickerAdditionalViewProps>({
+  } = usePicker<PickerRangeValue, TView, TExternalProps>({
     ...pickerParams,
     props,
     variant: 'desktop',
     autoFocusView: false,
     fieldRef,
     localeText,
-    additionalViewProps: {
-      rangePosition,
-      onRangePositionChange,
-    },
   });
 
   // Temporary hack to hide the opening button on the range pickers until we have migrate them to the new opening logic.
@@ -178,8 +172,6 @@ export const useDesktopRangePicker = <
     label,
     localeText,
     onBlur: handleBlur,
-    rangePosition,
-    onRangePositionChange,
     pickerSlotProps: slotProps,
     pickerSlots: slots,
     fieldProps,
@@ -193,41 +185,31 @@ export const useDesktopRangePicker = <
         : undefined,
     initialView: initialView.current ?? undefined,
     onViewChange: providerProps.contextValue.onViewChange,
+    ...rangePositionResponse,
   });
 
-  const slotPropsForLayout: PickersLayoutSlotProps<PickerRangeValue> = {
-    ...slotProps,
-    tabs: {
-      ...slotProps?.tabs,
-      rangePosition,
-      onRangePositionChange,
-    } as ExportedBaseTabsProps,
-    toolbar: {
-      ...slotProps?.toolbar,
-      rangePosition,
-      onRangePositionChange,
-    } as ExportedBaseToolbarProps,
-  };
   const Layout = slots?.layout ?? PickersLayout;
 
   const renderPicker = () => (
     <PickerProvider {...providerProps}>
-      <Field {...enrichedFieldProps} />
-      <PickersPopper
-        role="tooltip"
-        placement="bottom-start"
-        containerRef={popperRef}
-        anchorEl={providerProps.contextValue.triggerRef.current}
-        onBlur={handleBlur}
-        slots={slots}
-        slotProps={slotProps}
-        shouldRestoreFocus={shouldRestoreFocus}
-        reduceAnimations={reduceAnimations}
-      >
-        <Layout {...slotProps?.layout} slots={slots} slotProps={slotPropsForLayout}>
-          {renderCurrentView()}
-        </Layout>
-      </PickersPopper>
+      <PickerRangePositionContext.Provider value={rangePositionResponse}>
+        <Field {...enrichedFieldProps} />
+        <PickersPopper
+          role="tooltip"
+          placement="bottom-start"
+          containerRef={popperRef}
+          anchorEl={providerProps.contextValue.triggerRef.current}
+          onBlur={handleBlur}
+          slots={slots}
+          slotProps={slotProps}
+          shouldRestoreFocus={shouldRestoreFocus}
+          reduceAnimations={reduceAnimations}
+        >
+          <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
+            {renderCurrentView()}
+          </Layout>
+        </PickersPopper>
+      </PickerRangePositionContext.Provider>
     </PickerProvider>
   );
 

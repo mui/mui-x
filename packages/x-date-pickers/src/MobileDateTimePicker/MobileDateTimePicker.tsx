@@ -6,10 +6,7 @@ import { refType } from '@mui/utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DateTimeField } from '../DateTimeField';
 import { MobileDateTimePickerProps } from './MobileDateTimePicker.types';
-import {
-  DateTimePickerViewRenderers,
-  useDateTimePickerDefaultizedProps,
-} from '../DateTimePicker/shared';
+import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
 import { useUtils } from '../internals/hooks/useUtils';
 import { extractValidationProps, validateDateTime } from '../validation';
 import { DateOrTimeView, PickerOwnerState } from '../models';
@@ -17,6 +14,8 @@ import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { resolveDateTimeFormat } from '../internals/utils/date-time-utils';
+import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
+import { PickerValue } from '../internals/models';
 
 type MobileDateTimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   props: MobileDateTimePickerProps<DateOrTimeView, TEnableAccessibleFieldDOMStructure> &
@@ -47,7 +46,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<
     MobileDateTimePickerProps<DateOrTimeView, TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiMobileDateTimePicker');
 
-  const viewRenderers: DateTimePickerViewRenderers<DateOrTimeView, any> = {
+  const viewRenderers: PickerViewRendererLookup<PickerValue, any, any> = {
     day: renderDateViewCalendar,
     month: renderDateViewCalendar,
     year: renderDateViewCalendar,

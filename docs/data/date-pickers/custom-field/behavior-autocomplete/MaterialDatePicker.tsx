@@ -51,7 +51,8 @@ function AutocompleteField(props: AutocompleteFieldProps) {
       ref={pickerContext.triggerRef}
       sx={{ minWidth: 250 }}
       renderInput={(params) => {
-        const endAdornment = params.InputProps.endAdornment as React.ReactElement;
+        const endAdornment = params.InputProps
+          .endAdornment as React.ReactElement<any>;
         return (
           <TextField
             {...params}
