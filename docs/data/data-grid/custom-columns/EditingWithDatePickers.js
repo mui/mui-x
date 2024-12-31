@@ -64,6 +64,7 @@ function GridEditDateCell({ id, field, value, colDef, hasFocus }) {
       onChange={handleChange}
       slotProps={{
         textField: {
+          inputRef,
           variant: 'standard',
           fullWidth: true,
           sx: {
