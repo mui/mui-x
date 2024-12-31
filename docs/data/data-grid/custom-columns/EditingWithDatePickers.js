@@ -17,10 +17,8 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import InputBase from '@mui/material/InputBase';
 import { enUS as locale } from 'date-fns/locale';
-import { styled } from '@mui/material/styles';
-
-const dateAdapter = new AdapterDateFns({ locale });
-
+import format from 'date-fns/format';
+import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 /**
  * `date` column
  */
@@ -44,31 +42,41 @@ const dateColumnType = {
   },
 };
 
-const GridEditDateInput = styled(InputBase)({
-  fontSize: 'inherit',
-  padding: '0 9px',
-});
-
-function WrappedGridEditDateInput(props) {
-  const { InputProps, focused, ...other } = props;
-  return <GridEditDateInput fullWidth {...InputProps} {...other} />;
-}
-
-function GridEditDateCell({ id, field, value, colDef }) {
+function GridEditDateCell({ id, field, value, colDef, hasFocus }) {
   const apiRef = useGridApiContext();
-
+  const inputRef = React.useRef(null);
   const Component = colDef.type === 'dateTime' ? DateTimePicker : DatePicker;
 
   const handleChange = (newValue) => {
     apiRef.current.setEditCellValue({ id, field, value: newValue });
   };
 
+  useEnhancedEffect(() => {
+    if (hasFocus) {
+      inputRef.current.focus();
+    }
+  }, [hasFocus]);
+
   return (
     <Component
       value={value}
       autoFocus
       onChange={handleChange}
-      slots={{ textField: WrappedGridEditDateInput }}
+      slotProps={{
+        textField: {
+          inputRef,
+          variant: 'standard',
+          fullWidth: true,
+          sx: {
+            padding: '0 9px',
+            justifyContent: 'center',
+          },
+          InputProps: {
+            disableUnderline: true,
+            sx: { fontSize: 'inherit' },
+          },
+        },
+      }}
     />
   );
 }

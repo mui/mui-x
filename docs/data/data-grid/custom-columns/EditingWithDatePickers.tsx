@@ -22,11 +22,8 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import InputBase, { InputBaseProps } from '@mui/material/InputBase';
 import { enUS as locale } from 'date-fns/locale';
-import { styled } from '@mui/material/styles';
-import { TextFieldProps } from '@mui/material/TextField';
-
-const dateAdapter = new AdapterDateFns({ locale });
-
+import format from 'date-fns/format';
+import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 /**
  * `date` column
  */
@@ -67,21 +64,42 @@ function GridEditDateCell({
   field,
   value,
   colDef,
+  hasFocus,
 }: GridRenderEditCellParams<any, Date | null, string>) {
   const apiRef = useGridApiContext();
-
+  const inputRef = React.useRef<HTMLInputElement>(null);
   const Component = colDef.type === 'dateTime' ? DateTimePicker : DatePicker;
 
   const handleChange = (newValue: unknown) => {
     apiRef.current.setEditCellValue({ id, field, value: newValue });
   };
 
+  useEnhancedEffect(() => {
+    if (hasFocus) {
+      inputRef.current!.focus();
+    }
+  }, [hasFocus]);
+
   return (
     <Component
       value={value}
       autoFocus
       onChange={handleChange}
-      slots={{ textField: WrappedGridEditDateInput }}
+      slotProps={{
+        textField: {
+          inputRef,
+          variant: 'standard',
+          fullWidth: true,
+          sx: {
+            padding: '0 9px',
+            justifyContent: 'center',
+          },
+          InputProps: {
+            disableUnderline: true,
+            sx: { fontSize: 'inherit' },
+          },
+        },
+      }}
     />
   );
 }
