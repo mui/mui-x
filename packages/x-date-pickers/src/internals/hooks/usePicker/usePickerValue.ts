@@ -423,8 +423,9 @@ export const usePickerValue = <
   const contextValue = React.useMemo<UsePickerValueContextValue<TValue, TError>>(
     () => ({
       ...actionsContextValue,
-      open,
       value: dateState.draft,
+      timezone,
+      open,
     }),
     [actionsContextValue, open, dateState.draft],
   );

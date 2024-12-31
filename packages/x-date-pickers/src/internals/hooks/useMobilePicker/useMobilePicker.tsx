@@ -36,7 +36,6 @@ export const useMobilePicker = <
     slotProps: innerSlotProps,
     className,
     sx,
-    timezone,
     name,
     label,
     inputRef,
@@ -74,8 +73,6 @@ export const useMobilePicker = <
     additionalProps: {
       // Internal props
       readOnly: readOnly ?? true,
-      disabled,
-      timezone,
 
       // Forwarded props
       className,

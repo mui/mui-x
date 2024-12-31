@@ -123,7 +123,7 @@ export interface PickerContextValue<
   fieldFormat: string | null;
 }
 
-export interface PickerActionsContextValue<TValue extends PickerValidValue, TError = string>
+export interface PickerActionsContextValue<TValue extends PickerValidValue, TError = string | null>
   extends UsePickerValueActionsContextValue<TValue, TError> {}
 
 export interface PickerPrivateContextValue extends UsePickerValuePrivateContextValue {

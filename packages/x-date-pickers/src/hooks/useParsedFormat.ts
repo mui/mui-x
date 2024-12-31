@@ -6,12 +6,23 @@ import { buildSectionsFromFormat } from '../internals/hooks/useField/buildSectio
 import { getLocalizedDigits } from '../internals/hooks/useField/useField.utils';
 import { usePickerTranslations } from './usePickerTranslations';
 import type { UseFieldInternalProps } from '../internals/hooks/useField';
+import { PickerFieldPrivateContext } from '../internals/hooks/useField/useMergeFieldPropsWithPickerContextProps';
+import { PickerContext } from '../internals/components/PickerProvider';
 
 interface UseParsedFormatParameters
-  extends Pick<
-    UseFieldInternalProps<any, any, any>,
-    'format' | 'formatDensity' | 'shouldRespectLeadingZeros'
-  > {}
+  extends Partial<Pick<UseFieldInternalProps<any, any, any>, 'shouldRespectLeadingZeros'>> {
+  /**
+   * Format to use for the placeholder.
+   * @default the format provided by the picker.
+   */
+  format?: string;
+  /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default the format density provided by the picker.
+   */
+  formatDensity?: 'dense' | 'spacious';
+}
 
 /**
  * Returns the parsed format to be rendered in the field when there is no value or in other parts of the Picker.
@@ -23,7 +34,14 @@ interface UseParsedFormatParameters
  * @returns
  */
 export const useParsedFormat = (parameters: UseParsedFormatParameters) => {
-  const { format, formatDensity = 'dense', shouldRespectLeadingZeros = false } = parameters;
+  const privateContextValue = React.useContext(PickerFieldPrivateContext);
+  const publicContextValue = React.useContext(PickerContext);
+
+  const {
+    format = publicContextValue?.fieldFormat ?? '',
+    formatDensity = privateContextValue?.formatDensity ?? 'dense',
+    shouldRespectLeadingZeros = false,
+  } = parameters;
   const utils = useUtils();
   const isRtl = useRtl();
   const translations = usePickerTranslations();

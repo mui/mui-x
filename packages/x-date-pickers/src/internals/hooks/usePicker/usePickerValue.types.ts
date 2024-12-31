@@ -305,6 +305,10 @@ export interface UsePickerValueContextValue<TValue extends PickerValidValue, TEr
    */
   value: TValue;
   /**
+   * The timezone to use to render the dates.
+   */
+  timezone: PickersTimezone;
+  /**
    * `true` if the picker is open, `false` otherwise.
    */
   open: boolean;
@@ -359,7 +363,7 @@ export interface UsePickerValuePrivateContextValue {
   dismissViews: () => void;
 }
 
-export interface SetValueActionOptions<TError = string> {
+export interface SetValueActionOptions<TError = string | null> {
   /**
    * Importance of the change when picking a value:
    * - "accept": fires `onChange`, fires `onAccept` and closes the picker.

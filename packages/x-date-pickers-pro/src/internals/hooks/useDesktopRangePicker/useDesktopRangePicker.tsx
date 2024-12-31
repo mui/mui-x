@@ -47,12 +47,10 @@ export const useDesktopRangePicker = <
     slotProps,
     className,
     sx,
-    timezone,
     label,
     inputRef,
     name,
     readOnly,
-    disabled,
     autoFocus,
     disableOpenPicker,
     localeText,
@@ -128,8 +126,6 @@ export const useDesktopRangePicker = <
     additionalProps: {
       // Internal props
       readOnly,
-      disabled,
-      timezone,
       autoFocus: autoFocus && !props.open,
 
       // Forwarded props

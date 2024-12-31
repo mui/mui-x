@@ -9,7 +9,7 @@ import { DateOrTimeViewWithMeridiem, PickerValidValue, PickerValue } from '../in
 export const usePickerContext = <
   TValue extends PickerValidValue = PickerValue,
   TView extends DateOrTimeViewWithMeridiem = DateOrTimeViewWithMeridiem,
-  TError = string,
+  TError = string | null,
 >() => {
   const value = React.useContext(PickerContext) as PickerContextValue<TValue, TView, TError>;
   if (value == null) {

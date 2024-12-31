@@ -48,12 +48,10 @@ export const useMobileRangePicker = <
     slotProps: innerSlotProps,
     className,
     sx,
-    timezone,
     label,
     inputRef,
     name,
     readOnly,
-    disabled,
     disableOpenPicker,
     localeText,
   } = props;
@@ -104,8 +102,6 @@ export const useMobileRangePicker = <
     additionalProps: {
       // Internal props
       readOnly: readOnly ?? true,
-      disabled,
-      timezone,
 
       // Forwarded props
       className,

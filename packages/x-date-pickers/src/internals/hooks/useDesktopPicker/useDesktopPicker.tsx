@@ -37,7 +37,6 @@ export const useDesktopPicker = <
     slotProps: innerSlotProps,
     className,
     sx,
-    timezone,
     name,
     label,
     inputRef,
@@ -112,8 +111,6 @@ export const useDesktopPicker = <
     additionalProps: {
       // Internal props
       readOnly,
-      disabled,
-      timezone,
       autoFocus: autoFocus && !props.open,
 
       // Forwarded props

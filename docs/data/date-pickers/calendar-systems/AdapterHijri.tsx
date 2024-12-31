@@ -27,8 +27,8 @@ const cacheRtl = createCache({
 });
 
 function ButtonDateTimeField(props: DateTimePickerFieldProps) {
+  const { timezone, value, fieldFormat } = usePickerContext();
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-  const { value, timezone, format } = internalProps;
   const {
     InputProps,
     slotProps,
@@ -50,7 +50,7 @@ function ButtonDateTimeField(props: DateTimePickerFieldProps) {
     props: internalProps,
   });
 
-  const valueStr = value == null ? parsedFormat : value.format(format);
+  const valueStr = value == null ? parsedFormat : value.format(fieldFormat);
 
   return (
     <Button
