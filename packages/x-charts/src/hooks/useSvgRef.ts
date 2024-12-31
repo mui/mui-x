@@ -14,5 +14,5 @@ export function useSvgRef(): React.RefObject<SVGSVGElement | null> {
     );
   }
 
-  return data as React.RefObject<SVGSVGElement>;
+  return data as React.RefObject<SVGSVGElement | null>;
 }
