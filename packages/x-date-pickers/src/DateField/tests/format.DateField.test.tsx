@@ -6,6 +6,7 @@ import {
   describeAdapters,
 } from 'test/utils/pickers';
 import { DateField } from '@mui/x-date-pickers/DateField';
+import { testSkipIf } from 'test/utils/skipIf';
 
 describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProps }) => {
   it('should support escaped characters in start separator', () => {
@@ -68,14 +69,10 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
     expectFieldValueV6(input, 'January Escaped 2019');
   });
 
-  it('should support nested escaped characters', function test() {
-    const { start: startChar, end: endChar } = adapter.escapedCharacters;
-    // If your start character and end character are equal
-    // Then you can't have nested escaped characters
-    if (startChar === endChar) {
-      this.skip();
-    }
-
+  const { start: startChar, end: endChar } = adapter.escapedCharacters;
+  // If your start character and end character are equal
+  // Then you can't have nested escaped characters
+  testSkipIf(startChar === endChar)('should support nested escaped characters', () => {
     // Test with accessible DOM structure
     let view = renderWithProps({
       enableAccessibleFieldDOMStructure: true,
@@ -135,7 +132,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
     expectFieldValueV6(input, 'Escaped January Escaped 2019');
   });
 
-  it('should support format with only escaped parts', function test() {
+  it('should support format with only escaped parts', () => {
     const { start: startChar, end: endChar } = adapter.escapedCharacters;
 
     // Test with accessible DOM structure
