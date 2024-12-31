@@ -37,10 +37,9 @@ import {
 } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import Dialog from '@mui/material/Dialog';
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/densitySelector';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Rows', () => {
   const { render } = createRenderer();
@@ -243,10 +242,7 @@ describe('<DataGrid /> - Rows', () => {
       );
     }
 
-    it('should throw an error if getActions is missing', function test() {
-      if (!isJSDOM) {
-        this.skip();
-      }
+    testSkipIf(!isJSDOM)('should throw an error if getActions is missing', () => {
       expect(() => {
         render(
           <ErrorBoundary>
@@ -966,11 +962,8 @@ describe('<DataGrid /> - Rows', () => {
       });
     });
 
-    it('should consider the spacing when computing the content size', function test() {
-      if (isJSDOM) {
-        // Need layouting
-        this.skip();
-      }
+    // Needs layout
+    testSkipIf(isJSDOM)('should consider the spacing when computing the content size', () => {
       const spacingTop = 5;
       const spacingBottom = 10;
       const rowHeight = 50;
@@ -987,11 +980,8 @@ describe('<DataGrid /> - Rows', () => {
       expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
     });
 
-    it('should update the content size when getRowSpacing is removed', function test() {
-      if (isJSDOM) {
-        // Need layouting
-        this.skip();
-      }
+    // Needs layout
+    testSkipIf(isJSDOM)('should update the content size when getRowSpacing is removed', () => {
       const spacingTop = 5;
       const spacingBottom = 10;
       const rowHeight = 50;
