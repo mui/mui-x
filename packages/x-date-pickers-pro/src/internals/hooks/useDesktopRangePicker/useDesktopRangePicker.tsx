@@ -19,8 +19,8 @@ import {
 } from './useDesktopRangePicker.types';
 import {
   RangePickerPropsForFieldSlot,
-  useEnrichedRangePickerFieldProps,
-} from '../useEnrichedRangePickerFieldProps';
+  useEnrichedRangePickerField,
+} from '../useEnrichedRangePickerField';
 import { getReleaseInfo } from '../../utils/releaseInfo';
 import { useRangePosition } from '../useRangePosition';
 import { PickerRangePositionContext } from '../../../hooks/usePickerRangePositionContext';
@@ -138,7 +138,7 @@ export const useDesktopRangePicker = <
     ownerState,
   });
 
-  const enrichedFieldProps = useEnrichedRangePickerFieldProps<
+  const enrichedFieldResponse = useEnrichedRangePickerField<
     TView,
     TEnableAccessibleFieldDOMStructure,
     InferError<TExternalProps>
@@ -171,9 +171,16 @@ export const useDesktopRangePicker = <
   const Layout = slots?.layout ?? PickersLayout;
 
   const renderPicker = () => (
-    <PickerProvider {...providerProps}>
+    <PickerProvider
+      {...providerProps}
+      // This override will go away once the range fields handle the picker opening
+      fieldPrivateContextValue={{
+        ...providerProps.fieldPrivateContextValue,
+        ...enrichedFieldResponse.fieldPrivateContextValue,
+      }}
+    >
       <PickerRangePositionContext.Provider value={rangePositionResponse}>
-        <Field {...enrichedFieldProps} />
+        <Field {...enrichedFieldResponse.fieldProps} />
         <PickersPopper
           role="tooltip"
           placement="bottom-start"

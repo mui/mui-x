@@ -21,10 +21,7 @@ import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateF
 const joyTheme = extendJoyTheme();
 
 const JoyDateField = React.forwardRef((props, ref) => {
-  const fieldResponse = useDateField({
-    ...props,
-    enableAccessibleFieldDOMStructure: false,
-  });
+  const fieldResponse = useDateField(props);
 
   const {
     // Should be ignored

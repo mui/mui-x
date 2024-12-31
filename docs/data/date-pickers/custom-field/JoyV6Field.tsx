@@ -26,10 +26,7 @@ const joyTheme = extendJoyTheme();
 
 const JoyDateField = React.forwardRef(
   (props: DatePickerFieldProps<false>, ref: React.Ref<HTMLDivElement>) => {
-    const fieldResponse = useDateField<false, typeof props>({
-      ...props,
-      enableAccessibleFieldDOMStructure: false,
-    });
+    const fieldResponse = useDateField<false, typeof props>(props);
 
     const {
       // Should be ignored

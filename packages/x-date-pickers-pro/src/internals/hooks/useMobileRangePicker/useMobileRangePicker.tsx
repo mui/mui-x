@@ -20,8 +20,8 @@ import {
 } from './useMobileRangePicker.types';
 import {
   RangePickerPropsForFieldSlot,
-  useEnrichedRangePickerFieldProps,
-} from '../useEnrichedRangePickerFieldProps';
+  useEnrichedRangePickerField,
+} from '../useEnrichedRangePickerField';
 import { getReleaseInfo } from '../../utils/releaseInfo';
 import { useRangePosition } from '../useRangePosition';
 import { PickerRangePositionContext } from '../../../hooks/usePickerRangePositionContext';
@@ -114,7 +114,7 @@ export const useMobileRangePicker = <
 
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
 
-  const enrichedFieldProps = useEnrichedRangePickerFieldProps<
+  const enrichedFieldResponse = useEnrichedRangePickerField<
     TView,
     TEnableAccessibleFieldDOMStructure,
     InferError<TExternalProps>
@@ -122,8 +122,8 @@ export const useMobileRangePicker = <
     variant: 'mobile',
     fieldType,
     // These direct access to `providerProps` will go away once the range fields handle the picker opening
-    open: providerProps.contextValue.open,
-    setOpen: providerProps.contextValue.setOpen,
+    contextValue: providerProps.contextValue,
+    fieldPrivateContextValue: providerProps.fieldPrivateContextValue,
     readOnly,
     labelId,
     disableOpenPicker,
@@ -176,9 +176,16 @@ export const useMobileRangePicker = <
   };
 
   const renderPicker = () => (
-    <PickerProvider {...providerProps}>
+    <PickerProvider
+      {...providerProps}
+      // This override will go away once the range fields handle the picker opening
+      fieldPrivateContextValue={{
+        ...providerProps.fieldPrivateContextValue,
+        ...enrichedFieldResponse.fieldPrivateContextValue,
+      }}
+    >
       <PickerRangePositionContext.Provider value={rangePositionResponse}>
-        <Field {...enrichedFieldProps} />
+        <Field {...enrichedFieldResponse.fieldProps} />
         <PickersModalDialog slots={slots} slotProps={slotProps}>
           <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
             {renderCurrentView()}

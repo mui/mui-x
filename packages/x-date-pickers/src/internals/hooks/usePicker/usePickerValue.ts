@@ -10,7 +10,6 @@ import {
   UsePickerValueResponse,
   PickerValueUpdateAction,
   UsePickerValueState,
-  UsePickerValueFieldResponse,
   UsePickerValueViewsResponse,
   PickerSelectionState,
   PickerValueUpdaterParams,
@@ -427,7 +426,7 @@ export const usePickerValue = <
       timezone,
       open,
     }),
-    [actionsContextValue, open, dateState.draft],
+    [actionsContextValue, timezone, open, dateState.draft],
   );
 
   const privateContextValue = React.useMemo<UsePickerValuePrivateContextValue>(

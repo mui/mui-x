@@ -288,7 +288,10 @@ const useMultiInputFieldSlotProps = <
     slotProps,
   };
 
-  return enrichedFieldProps;
+  return {
+    fieldProps: enrichedFieldProps,
+    fieldPrivateContextValue: {},
+  };
 };
 
 const useSingleInputFieldSlotProps = <
@@ -398,7 +401,6 @@ const useSingleInputFieldSlotProps = <
     label,
     unstableFieldRef: handleFieldRef,
     onKeyDown: onSpaceOrEnter(openPicker, fieldProps.onKeyDown),
-    onSelectedSectionsChange: handleSelectedSectionsChange,
     onBlur,
     InputProps: {
       ref: anchorRef,
@@ -412,10 +414,15 @@ const useSingleInputFieldSlotProps = <
     ...(!readOnly && !contextValue.disabled && { onClick: openPicker }),
   };
 
-  return enrichedFieldProps;
+  return {
+    fieldProps: enrichedFieldProps,
+    fieldPrivateContextValue: {
+      onSelectedSectionsChange: handleSelectedSectionsChange,
+    },
+  };
 };
 
-export const useEnrichedRangePickerFieldProps = <
+export const useEnrichedRangePickerField = <
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,

@@ -37,10 +37,7 @@ type JoySingleInputDateRangeFieldComponent = ((
 
 const JoySingleInputDateRangeField = React.forwardRef(
   (props: DateRangePickerFieldProps<false>, ref: React.Ref<HTMLDivElement>) => {
-    const fieldResponse = useSingleInputDateRangeField<false, typeof props>({
-      ...props,
-      enableAccessibleFieldDOMStructure: false,
-    });
+    const fieldResponse = useSingleInputDateRangeField<false, typeof props>(props);
 
     const {
       // Should be ignored
