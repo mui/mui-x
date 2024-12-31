@@ -15,7 +15,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import InputBase from '@mui/material/InputBase';
 import { enUS as locale } from 'date-fns/locale';
 import format from 'date-fns/format';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
@@ -36,7 +35,7 @@ const dateColumnType = {
   })),
   valueFormatter: (value) => {
     if (value) {
-      return dateAdapter.format(value, 'keyboardDate');
+      return format(value, 'MM/dd/yyyy', { locale });
     }
     return '';
   },
@@ -129,7 +128,7 @@ const dateTimeColumnType = {
   })),
   valueFormatter: (value) => {
     if (value) {
-      return dateAdapter.format(value, 'keyboardDateTime');
+      return format(value, 'MM/dd/yyyy hh:mm a', { locale });
     }
     return '';
   },
