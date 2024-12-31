@@ -27,7 +27,7 @@ describe('ChartsTooltip', () => {
 
   // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
   describeSkipIf(isJSDOM)('axis trigger', () => {
-    it('should show right values with vertical layout', () => {
+    it('should show right values with vertical layout on axis', () => {
       render(
         <div
           style={{
@@ -88,7 +88,7 @@ describe('ChartsTooltip', () => {
       ]);
     });
 
-    it('should show right values with horizontal layout', () => {
+    it('should show right values with horizontal layout on axis', () => {
       render(
         <div
           style={{
@@ -152,7 +152,7 @@ describe('ChartsTooltip', () => {
   });
 
   describeSkipIf(isJSDOM)('item trigger', () => {
-    it('should show right values with vertical layout', () => {
+    it('should show right values with vertical layout on item', () => {
       render(
         <div
           style={{
@@ -191,7 +191,7 @@ describe('ChartsTooltip', () => {
       expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', 'S2', '1']);
     });
 
-    it('should show right values with horizontal layout', () => {
+    it('should show right values with horizontal layout on item', () => {
       render(
         <div
           style={{
