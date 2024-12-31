@@ -32,7 +32,7 @@ import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
 import { GridColumnGroupingModel } from '../gridColumnGrouping';
 import { GridPaginationMeta, GridPaginationModel } from '../gridPaginationProps';
 import type { GridAutosizeOptions } from '../../hooks/features/columnResize';
-import type { GridDataSource } from '../gridDataSource';
+import type { GridDataSource, GridGetRowsParams, GridUpdateRowParams } from '../gridDataSource';
 import type { GridRowSelectionPropagation } from '../gridRowSelectionModel';
 
 export interface GridExperimentalFeatures {
@@ -859,6 +859,10 @@ export interface DataGridProSharedPropsWithoutDefaultValue<R extends GridValidRo
    */
   headerFilterHeight?: number;
   unstable_dataSource?: GridDataSource;
+  unstable_onDataSourceError?: (
+    error: Error,
+    params: GridGetRowsParams | GridUpdateRowParams,
+  ) => void;
   /**
    * Definition of the column rendered when the `unstable_listView` prop is enabled.
    */

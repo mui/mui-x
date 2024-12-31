@@ -1,4 +1,4 @@
-import { GridRowId } from '@mui/x-data-grid';
+import { GridRowId, GridRowModel } from '@mui/x-data-grid';
 import { GridDataSourceCache, GridGetRowsParams } from '../../../models';
 
 export interface GridDataSourceState {
@@ -52,4 +52,10 @@ export interface GridDataSourcePrivateApi {
    * Resets the data source state.
    */
   resetDataSourceState: () => void;
+  /**
+   * Mutates a row in the cache.
+   * @param {GridRowId} id The id of the row to be mutated.
+   * @param {GridRowModel} row The row to be mutated.
+   */
+  mutateRowInCache: (id: GridRowId, row: GridRowModel) => void;
 }

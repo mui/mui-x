@@ -7,6 +7,7 @@ import {
   GridColDef,
   GridInitialState,
   GridColumnVisibilityModel,
+  GridRowId,
 } from '@mui/x-data-grid-pro';
 import { extrapolateSeed, deepFreeze } from './useDemoData';
 import { getCommodityColumns } from '../columns/commodities.columns';
@@ -40,6 +41,7 @@ type UseMockServerResponse = {
   getGroupKey?: (row: GridRowModel) => string;
   getChildrenCount?: (row: GridRowModel) => number;
   fetchRows: (url: string) => Promise<GridGetRowsResponse>;
+  editRow: (rowId: GridRowId, updatedRow: GridRowModel) => Promise<GridRowModel>;
   loadNewData: () => void;
 };
 
@@ -350,12 +352,45 @@ export const useMockServer = (
     ],
   );
 
+  const editRow = React.useCallback(
+    async (rowId: GridRowId, updatedRow: GridRowModel) => {
+      return new Promise<GridRowModel>((resolve, reject) => {
+        const minDelay = serverOptions?.minDelay ?? DEFAULT_SERVER_OPTIONS.minDelay;
+        const maxDelay = serverOptions?.maxDelay ?? DEFAULT_SERVER_OPTIONS.maxDelay;
+        const delay = randomInt(minDelay, maxDelay);
+
+        if (shouldRequestsFailRef.current) {
+          setTimeout(() => reject(new Error('Could not update the row')), delay);
+          return;
+        }
+
+        setData((prevData) => {
+          const newData = { ...prevData } as GridDemoData;
+          newData.rows = newData.rows?.map((row) => (row.id === rowId ? updatedRow : row));
+          const cacheKey = `${options.dataSet}-${options.rowLength}-${index}-${options.maxColumns}`;
+          dataCache.set(cacheKey, newData!);
+          setTimeout(() => resolve(updatedRow), delay);
+          return newData;
+        });
+      });
+    },
+    [
+      index,
+      options.dataSet,
+      options.maxColumns,
+      options.rowLength,
+      serverOptions?.maxDelay,
+      serverOptions?.minDelay,
+    ],
+  );
+
   return {
     columns: columnsWithDefaultColDef,
     initialState: options.dataSet === 'Movies' ? {} : initialState,
     getGroupKey,
     getChildrenCount,
     fetchRows,
+    editRow,
     loadNewData: () => {
       setIndex((oldIndex) => oldIndex + 1);
     },

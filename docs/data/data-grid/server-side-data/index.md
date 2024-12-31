@@ -290,12 +290,12 @@ The first argument of this function is the error object, and the second argument
 
 {{"demo": "ServerSideErrorHandling.js", "bg": "inline"}}
 
-## Updating data 🚧
+## Updating data
 
-This feature is yet to be implemented, when completed, the method `unstable_dataSource.updateRow` will be called with the `GridRowModel` whenever the user edits a row.
-It will work in a similar way as the `processRowUpdate` prop.
+The data source also supports updating data on the server.
+Use data source's `updateRow` method to update a row on the server as the demo below shows.
 
-Feel free to upvote the related GitHub [issue](https://github.com/mui/mui-x/issues/13261) to see this feature land faster.
+{{"demo": "ServerSideEditing.js", "bg": "inline"}}
 
 ## API
 
