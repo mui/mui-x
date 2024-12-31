@@ -70,6 +70,7 @@ const JoyDatePicker = React.forwardRef(
       <DatePicker
         ref={ref}
         {...props}
+        enableAccessibleFieldDOMStructure={false}
         slots={{ ...props.slots, field: JoyDateField }}
       />
     );

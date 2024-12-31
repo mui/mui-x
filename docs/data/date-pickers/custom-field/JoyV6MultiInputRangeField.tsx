@@ -200,6 +200,7 @@ const JoyDateRangePicker = React.forwardRef(
       <DateRangePicker
         ref={ref}
         {...props}
+        enableAccessibleFieldDOMStructure={false}
         slots={{ ...props?.slots, field: JoyMultiInputDateRangeField }}
       />
     );

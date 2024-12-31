@@ -52,7 +52,7 @@ export function useFieldInternalPropsWithDefaults<TManager extends PickerAnyMana
     return {
       ...internalProps,
       onChange: handleChange,
-      value: internalProps.value ?? publicContextValue.value,
+      value: internalProps.value === undefined ? publicContextValue.value : internalProps.value,
       timezone: internalProps.timezone ?? publicContextValue.timezone,
       disabled: internalProps.disabled ?? publicContextValue.disabled,
       format: internalProps.format ?? publicContextValue.fieldFormat,
@@ -60,7 +60,10 @@ export function useFieldInternalPropsWithDefaults<TManager extends PickerAnyMana
       enableAccessibleFieldDOMStructure:
         internalProps.enableAccessibleFieldDOMStructure ??
         privateContextValue.enableAccessibleFieldDOMStructure,
-      selectedSections: internalProps.selectedSections ?? privateContextValue.selectedSections,
+      selectedSections:
+        internalProps.selectedSections === undefined
+          ? privateContextValue.selectedSections
+          : internalProps.selectedSections,
       onSelectedSectionsChange:
         internalProps.onSelectedSectionsChange ?? privateContextValue.onSelectedSectionsChange,
     };

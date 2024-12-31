@@ -89,6 +89,7 @@ const JoySingleInputDateRangePicker = React.forwardRef(
       <DateRangePicker
         {...props}
         ref={ref}
+        enableAccessibleFieldDOMStructure={false}
         slots={{ ...props.slots, field: JoySingleInputDateRangeField }}
       />
     );
