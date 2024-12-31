@@ -43,8 +43,7 @@ export function useMergeFieldPropsWithPickerContextProps<
     value: props.value ?? publicContextValue.value,
     timezone: props.timezone ?? publicContextValue.timezone,
     disabled: props.disabled ?? publicContextValue.disabled,
-    // TODO: Once the default value is applied inside useField, props.format should have the priority over publicContextValue.fieldFormat
-    format: publicContextValue.fieldFormat ?? props.format,
+    format: props.format ?? publicContextValue.fieldFormat,
     formatDensity: props.formatDensity ?? privateContextValue.formatDensity,
     enableAccessibleFieldDOMStructure:
       props.enableAccessibleFieldDOMStructure ??

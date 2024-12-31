@@ -3,7 +3,7 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
 import { useValidation } from '../../../validation';
-import { useUtils } from '../useUtils';
+import { useLocalizationContext, useUtils } from '../useUtils';
 import {
   UseFieldParams,
   UseFieldResponse,
@@ -19,8 +19,37 @@ import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
 import { useFieldV7TextField } from './useFieldV7TextField';
 import { useFieldV6TextField } from './useFieldV6TextField';
-import { PickerValidValue } from '../../models';
+import {
+  PickerValidValue,
+  PickerAnyManager,
+  PickerManagerFieldInternalProps,
+  PickerManagerFieldInternalPropsWithDefaults,
+} from '../../models';
 import { useMergeFieldPropsWithPickerContextProps } from './useMergeFieldPropsWithPickerContextProps';
+
+/**
+ * Applies the default values to the field internal props.
+ * This is a temporary hook that will be removed during a follow up when `useField` will receive the internal props without the defaults.
+ * It is only here to allow the migration to be done in smaller steps.
+ */
+export const useFieldInternalPropsWithDefaults = <TManager extends PickerAnyManager>({
+  manager,
+  internalProps,
+}: {
+  manager: TManager;
+  internalProps: PickerManagerFieldInternalProps<TManager>;
+}): PickerManagerFieldInternalPropsWithDefaults<TManager> => {
+  const internalPropsWithDefaultsFromContext =
+    useMergeFieldPropsWithPickerContextProps(internalProps);
+
+  const localizationContext = useLocalizationContext();
+  return React.useMemo(() => {
+    return manager.internal_applyDefaultsToFieldInternalProps({
+      ...localizationContext,
+      internalProps: internalPropsWithDefaultsFromContext,
+    });
+  }, [manager, internalPropsWithDefaultsFromContext, localizationContext]);
+};
 
 export const useField = <
   TValue extends PickerValidValue,
@@ -41,30 +70,23 @@ export const useField = <
   const utils = useUtils();
 
   const {
-    internalProps: internalPropsWithoutDefaults,
+    internalProps,
+    internalProps: {
+      unstableFieldRef,
+      minutesStep,
+      enableAccessibleFieldDOMStructure = true,
+      disabled = false,
+      readOnly = false,
+    },
     forwardedProps: { onKeyDown, error, clearable, onClear },
     fieldValueManager,
     valueManager,
     validator,
   } = params;
 
-  const internalProps = useMergeFieldPropsWithPickerContextProps<
-    TValue,
-    TEnableAccessibleFieldDOMStructure,
-    TInternalProps
-  >(internalPropsWithoutDefaults);
-
-  const {
-    unstableFieldRef,
-    minutesStep,
-    enableAccessibleFieldDOMStructure = true,
-    disabled = false,
-    readOnly = false,
-  } = internalProps;
-
   const isRtl = useRtl();
 
-  const stateResponse = useFieldState({ ...params, internalProps });
+  const stateResponse = useFieldState(params);
   const {
     state,
     activeSectionIndex,
