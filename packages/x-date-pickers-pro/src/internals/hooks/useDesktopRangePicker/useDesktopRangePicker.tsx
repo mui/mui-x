@@ -82,13 +82,11 @@ export const useDesktopRangePicker = <
     fieldRef = endFieldRef;
   }
 
-  const {
-    providerProps,
-    renderCurrentView,
-    shouldRestoreFocus,
-    fieldProps: pickerFieldProps,
-    ownerState,
-  } = usePicker<PickerRangeValue, TView, TExternalProps>({
+  const { providerProps, renderCurrentView, shouldRestoreFocus, ownerState } = usePicker<
+    PickerRangeValue,
+    TView,
+    TExternalProps
+  >({
     ...pickerParams,
     props,
     variant: 'desktop',
@@ -133,7 +131,6 @@ export const useDesktopRangePicker = <
       disabled,
       timezone,
       autoFocus: autoFocus && !props.open,
-      ...pickerFieldProps, // onChange and value
 
       // Forwarded props
       className,

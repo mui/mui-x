@@ -60,9 +60,6 @@ export const usePicker = <
   });
 
   return {
-    // Picker value
-    fieldProps: pickerValueResponse.fieldProps,
-
     // Picker views
     renderCurrentView: pickerViewsResponse.renderCurrentView,
     hasUIView: pickerViewsResponse.provider.hasUIView,

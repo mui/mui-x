@@ -1,7 +1,9 @@
 import * as React from 'react';
-import { UseFieldInternalProps } from './useField.types';
+import useEventCallback from '@mui/utils/useEventCallback';
+import { FieldChangeHandler, UseFieldInternalProps } from './useField.types';
 import { PickerValidValue } from '../../models';
 import { PickerContext } from '../../components/PickerProvider';
+import { InferError } from '../../../models';
 
 export const PickerFieldPrivateContext = React.createContext<PickerFieldPrivateContextValue | null>(
   null,
@@ -14,26 +16,40 @@ export function useMergeFieldPropsWithPickerContextProps<
     minutesStep?: number;
   },
 >(props: TInternalProps): typeof props {
-  const privateContextProps = React.useContext(PickerFieldPrivateContext);
+  const privateContextValue = React.useContext(PickerFieldPrivateContext);
   // TODO: Replace with useNullablePickerContext
-  const publicContextProps = React.useContext(PickerContext);
+  const publicContextValue = React.useContext(PickerContext);
 
   // If one of the context is null, the other always will be null as well.
-  if (privateContextProps == null || publicContextProps == null) {
+  if (privateContextValue == null || publicContextValue == null) {
     return props;
   }
 
+  const handleChange = useEventCallback<FieldChangeHandler<TValue, InferError<TInternalProps>>>(
+    (newValue, ctx) => {
+      if (props.onChange) {
+        return props.onChange(newValue, ctx);
+      }
+
+      return publicContextValue.setValue(newValue, {
+        validationError: ctx.validationError,
+      });
+    },
+  );
+
   return {
     ...props,
-    // TODO: Once the default value is applied inside useField, props.format should have the priority over publicContextProps.fieldFormat
-    format: publicContextProps.fieldFormat ?? props.format,
-    formatDensity: props.formatDensity ?? privateContextProps.formatDensity,
+    value: props.value ?? publicContextValue.value,
+    onChange: handleChange,
+    // TODO: Once the default value is applied inside useField, props.format should have the priority over publicContextValue.fieldFormat
+    format: publicContextValue.fieldFormat ?? props.format,
+    formatDensity: props.formatDensity ?? privateContextValue.formatDensity,
     enableAccessibleFieldDOMStructure:
       props.enableAccessibleFieldDOMStructure ??
-      privateContextProps.enableAccessibleFieldDOMStructure,
-    selectedSections: props.selectedSections ?? privateContextProps.selectedSections,
+      privateContextValue.enableAccessibleFieldDOMStructure,
+    selectedSections: props.selectedSections ?? privateContextValue.selectedSections,
     onSelectedSectionsChange:
-      props.onSelectedSectionsChange ?? privateContextProps.onSelectedSectionsChange,
+      props.onSelectedSectionsChange ?? privateContextValue.onSelectedSectionsChange,
   };
 }
 

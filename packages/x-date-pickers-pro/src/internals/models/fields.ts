@@ -21,9 +21,9 @@ export interface BaseMultiInputFieldProps<
 > extends MakeRequired<
       Pick<
         UseFieldInternalProps<PickerRangeValue, TEnableAccessibleFieldDOMStructure, TError>,
-        'readOnly' | 'disabled' | 'timezone' | 'autoFocus' | 'value' | 'onChange'
+        'readOnly' | 'disabled' | 'timezone' | 'autoFocus'
       >,
-      'value' | 'onChange' | 'timezone'
+      'timezone'
     >,
     RangeFieldSeparatorProps,
     MultiInputFieldRefs {

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { MakeRequired } from '@mui/x-internals/types';
 import { PickerOwnerState } from '../../../models';
 import { PickerValueManager, UsePickerValueProviderParams } from './usePickerValue.types';
 import {
@@ -114,7 +113,7 @@ export function usePickerProvider<
       readOnly: props.readOnly ?? false,
       variant,
       orientation,
-      fieldFormat: props.format,
+      fieldFormat: props.format ?? null,
     }),
     [
       paramsFromUsePickerValue.contextValue,
@@ -162,8 +161,7 @@ export interface UsePickerProviderParameters<
   TView extends DateOrTimeViewWithMeridiem,
   TError,
 > extends Pick<PickerProviderProps<TValue>, 'localeText'> {
-  props: UsePickerProps<TValue, any, any, any> &
-    MakeRequired<UsePickerProviderNonStaticProps, 'format'>;
+  props: UsePickerProps<TValue, any, any, any> & UsePickerProviderNonStaticProps;
   valueManager: PickerValueManager<TValue, any>;
   variant: PickerVariant;
   paramsFromUsePickerValue: UsePickerValueProviderParams<TValue, TError>;

@@ -295,7 +295,6 @@ export interface UsePickerValueProviderParams<TValue extends PickerValidValue, T
 
 export interface UsePickerValueResponse<TValue extends PickerValidValue, TError> {
   viewProps: UsePickerValueViewsResponse<TValue>;
-  fieldProps: UsePickerValueFieldResponse<TValue, TError>;
   provider: UsePickerValueProviderParams<TValue, TError>;
 }
 

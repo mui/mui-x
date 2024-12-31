@@ -79,12 +79,11 @@ export const useMobileRangePicker = <
     fieldRef = endFieldRef;
   }
 
-  const {
-    providerProps,
-    renderCurrentView,
-    fieldProps: pickerFieldProps,
-    ownerState,
-  } = usePicker<PickerRangeValue, TView, TExternalProps>({
+  const { providerProps, renderCurrentView, ownerState } = usePicker<
+    PickerRangeValue,
+    TView,
+    TExternalProps
+  >({
     ...pickerParams,
     props,
     variant: 'mobile',
@@ -107,7 +106,6 @@ export const useMobileRangePicker = <
       readOnly: readOnly ?? true,
       disabled,
       timezone,
-      ...pickerFieldProps, // onChange and value
 
       // Forwarded props
       className,

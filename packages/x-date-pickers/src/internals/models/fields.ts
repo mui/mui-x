@@ -51,8 +51,8 @@ export type BaseSingleInputFieldProps<
 > = MakeRequired<
   Pick<
     UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, TError>,
-    'readOnly' | 'disabled' | 'timezone' | 'value' | 'onChange' | 'unstableFieldRef' | 'autoFocus'
+    'readOnly' | 'disabled' | 'timezone' | 'unstableFieldRef' | 'autoFocus'
   >,
-  'value' | 'onChange' | 'timezone'
+  'timezone'
 > &
   BaseForwardedSingleInputFieldProps;
