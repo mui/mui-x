@@ -57,7 +57,6 @@ export interface UsePickerParams<
 export interface UsePickerResponse<
   TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
-  TError,
 > extends Pick<UsePickerViewsResponse<TView>, 'shouldRestoreFocus' | 'renderCurrentView'> {
   ownerState: PickerOwnerState;
   providerProps: UsePickerProviderReturnValue<TValue>;
