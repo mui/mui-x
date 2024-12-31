@@ -40,7 +40,7 @@ import { GridHeaderFilterMenuContainer } from './GridHeaderFilterMenuContainer';
 import { GridHeaderFilterClearButton } from './GridHeaderFilterClearButton';
 
 export interface GridRenderHeaderFilterProps extends GridHeaderFilterCellProps {
-  inputRef: React.RefObject<unknown | null>;
+  inputRef: React.RefObject<unknown>;
 }
 
 export interface GridHeaderFilterCellProps extends Pick<GridStateColDef, 'headerClassName'> {
