@@ -61,19 +61,17 @@ export const useDesktopPicker = <
 
   const {
     hasUIView,
-    layoutProps,
     providerProps,
     renderCurrentView,
     shouldRestoreFocus,
     fieldProps: pickerFieldProps,
     ownerState,
-  } = usePicker<PickerValue, TView, TExternalProps, {}>({
+  } = usePicker<PickerValue, TView, TExternalProps>({
     ...pickerParams,
     props,
     fieldRef,
     localeText,
     autoFocusView: true,
-    additionalViewProps: {},
     variant: 'desktop',
   });
 
@@ -209,7 +207,7 @@ export const useDesktopPicker = <
         shouldRestoreFocus={shouldRestoreFocus}
         reduceAnimations={reduceAnimations}
       >
-        <Layout {...layoutProps} {...slotProps?.layout} slots={slots} slotProps={slotProps}>
+        <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
           {renderCurrentView()}
         </Layout>
       </PickersPopper>

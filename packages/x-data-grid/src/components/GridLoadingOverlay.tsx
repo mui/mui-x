@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import type { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { GridOverlay, GridOverlayProps } from './containers/GridOverlay';
@@ -43,7 +44,7 @@ const LOADING_VARIANTS: Record<
   },
 };
 
-const GridLoadingOverlay = React.forwardRef<HTMLDivElement, GridLoadingOverlayProps>(
+const GridLoadingOverlay = forwardRef<HTMLDivElement, GridLoadingOverlayProps>(
   function GridLoadingOverlay(props, ref) {
     const { variant = 'linear-progress', noRowsVariant = 'skeleton', style, ...other } = props;
     const apiRef = useGridApiContext();
@@ -53,7 +54,7 @@ const GridLoadingOverlay = React.forwardRef<HTMLDivElement, GridLoadingOverlayPr
     const Component = activeVariant.component(rootProps);
 
     return (
-      <GridOverlay ref={ref} style={{ ...activeVariant.style, ...style }} {...other}>
+      <GridOverlay style={{ ...activeVariant.style, ...style }} {...other} ref={ref}>
         <Component />
       </GridOverlay>
     );

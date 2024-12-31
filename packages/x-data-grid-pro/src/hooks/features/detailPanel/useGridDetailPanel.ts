@@ -254,9 +254,9 @@ export const useGridDetailPanel = (
   useGridApiEventHandler(apiRef, 'sortedRowsSet', updateCachesAndForceUpdate);
 
   const previousGetDetailPanelContentProp =
-    React.useRef<DataGridProProcessedProps['getDetailPanelContent']>();
+    React.useRef<DataGridProProcessedProps['getDetailPanelContent']>(null);
   const previousGetDetailPanelHeightProp =
-    React.useRef<DataGridProProcessedProps['getDetailPanelHeight']>();
+    React.useRef<DataGridProProcessedProps['getDetailPanelHeight']>(null);
 
   const updateCachesIfNeeded = React.useCallback(() => {
     if (

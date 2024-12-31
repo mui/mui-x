@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import { Theme, SxProps, styled } from '@mui/system';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -37,20 +38,17 @@ const GridOverlayRoot = styled('div', {
   backgroundColor: 'var(--unstable_DataGrid-overlayBackground)',
 });
 
-const GridOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(function GridOverlay(
-  props: GridOverlayProps,
-  ref,
-) {
+const GridOverlay = forwardRef<HTMLDivElement, GridOverlayProps>(function GridOverlay(props, ref) {
   const { className, ...other } = props;
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
 
   return (
     <GridOverlayRoot
-      ref={ref}
       className={clsx(classes.root, className)}
       ownerState={rootProps}
       {...other}
+      ref={ref}
     />
   );
 });
