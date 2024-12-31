@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { act, createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
 import {
   DataGrid,
   DataGridProps,
@@ -18,7 +18,7 @@ const rows: GridRowsProp = [{ id: 1, idBis: 1 }];
 
 const columns: GridColDef[] = [{ field: 'id' }, { field: 'idBis' }];
 
-describe('<DataGridPro /> - Columns visibility', () => {
+describe('<DataGrid /> - Columns visibility', () => {
   const { render } = createRenderer();
 
   function TestDataGrid(
@@ -50,8 +50,8 @@ describe('<DataGridPro /> - Columns visibility', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'idBis']);
     });
 
-    it('should update the visible columns when props.onColumnVisibilityModelChange and props.columnVisibilityModel are not defined', () => {
-      render(
+    it('should update the visible columns when props.onColumnVisibilityModelChange and props.columnVisibilityModel are not defined', async () => {
+      const { user } = render(
         <TestDataGrid
           slots={{
             toolbar: GridToolbar,
@@ -60,14 +60,14 @@ describe('<DataGridPro /> - Columns visibility', () => {
       );
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'idBis']);
-      fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
-      fireEvent.click(screen.getByRole('checkbox', { name: 'id' }));
+      await user.click(screen.getByRole('button', { name: 'Select columns' }));
+      await user.click(screen.getByRole('checkbox', { name: 'id' }));
       expect(getColumnHeadersTextContent()).to.deep.equal(['idBis']);
     });
 
-    it('should call onColumnVisibilityModelChange and update the visible columns when props.columnVisibilityModel is not defined', () => {
+    it('should call onColumnVisibilityModelChange and update the visible columns when props.columnVisibilityModel is not defined', async () => {
       const onColumnVisibilityModelChange = spy();
-      render(
+      const { user } = render(
         <TestDataGrid
           slots={{
             toolbar: GridToolbar,
@@ -77,8 +77,8 @@ describe('<DataGridPro /> - Columns visibility', () => {
       );
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'idBis']);
-      fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
-      fireEvent.click(screen.getByRole('checkbox', { name: 'id' }));
+      await user.click(screen.getByRole('button', { name: 'Select columns' }));
+      await user.click(screen.getByRole('checkbox', { name: 'id' }));
       expect(getColumnHeadersTextContent()).to.deep.equal(['idBis']);
       expect(onColumnVisibilityModelChange.callCount).to.equal(1);
       expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({
@@ -109,7 +109,7 @@ describe('<DataGridPro /> - Columns visibility', () => {
       });
     });
 
-    it('should call onColumnVisibilityModelChange with the new model when toggling all columns', () => {
+    it('should call onColumnVisibilityModelChange with the new model when toggling all columns', async () => {
       const onColumnVisibilityModelChange = spy();
       function ControlledTest() {
         const [model, setModel] = React.useState<GridColumnVisibilityModel>({ idBis: false });
@@ -126,20 +126,20 @@ describe('<DataGridPro /> - Columns visibility', () => {
           />
         );
       }
-      render(<ControlledTest />);
+      const { user } = render(<ControlledTest />);
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
 
-      fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+      await user.click(screen.getByRole('button', { name: 'Select columns' }));
       const showHideAllCheckbox = screen.getByRole('checkbox', { name: 'Show/Hide All' });
 
       // Hide all
-      fireEvent.click(showHideAllCheckbox);
+      await user.click(showHideAllCheckbox);
       expect(onColumnVisibilityModelChange.callCount).to.equal(1);
       expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({});
 
       // Show all
-      fireEvent.click(showHideAllCheckbox);
+      await user.click(showHideAllCheckbox);
       expect(onColumnVisibilityModelChange.callCount).to.equal(2);
       expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({
         id: false,
@@ -148,8 +148,8 @@ describe('<DataGridPro /> - Columns visibility', () => {
     });
 
     // Fixes (1) and (2) in https://github.com/mui/mui-x/issues/7393#issuecomment-1372129661
-    it('should not show hidden non hideable columns when "Show/Hide All" is clicked', () => {
-      render(
+    it('should not show hidden non hideable columns when "Show/Hide All" is clicked', async () => {
+      const { user } = render(
         <TestDataGrid
           slots={{
             toolbar: GridToolbar,
@@ -163,13 +163,13 @@ describe('<DataGridPro /> - Columns visibility', () => {
         />,
       );
 
-      fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+      await user.click(screen.getByRole('button', { name: 'Select columns' }));
       const showHideAllCheckbox = screen.getByRole('checkbox', { name: 'Show/Hide All' });
       // Hide all
-      fireEvent.click(showHideAllCheckbox);
+      await user.click(showHideAllCheckbox);
       expect(getColumnHeadersTextContent()).to.deep.equal([]);
       // Show all
-      fireEvent.click(showHideAllCheckbox);
+      await user.click(showHideAllCheckbox);
       expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
     });
   });
@@ -226,8 +226,8 @@ describe('<DataGridPro /> - Columns visibility', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
     });
 
-    it('should allow to update the visible columns through the UI when initialized with initialState', () => {
-      render(
+    it('should allow to update the visible columns through the UI when initialized with initialState', async () => {
+      const { user } = render(
         <TestDataGrid
           initialState={{
             columns: {
@@ -241,14 +241,14 @@ describe('<DataGridPro /> - Columns visibility', () => {
       );
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
-      fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
-      fireEvent.click(screen.getByRole('checkbox', { name: 'id' }));
+      await user.click(screen.getByRole('button', { name: 'Select columns' }));
+      await user.click(screen.getByRole('checkbox', { name: 'id' }));
       expect(getColumnHeadersTextContent()).to.deep.equal([]);
     });
   });
 
-  it('should autofocus the first switch element in columns management when `autoFocusSearchField` disabled', () => {
-    render(
+  it('should autofocus the first switch element in columns management when `autoFocusSearchField` disabled', async () => {
+    const { user } = render(
       <TestDataGrid
         slots={{
           toolbar: GridToolbar,
@@ -261,13 +261,13 @@ describe('<DataGridPro /> - Columns visibility', () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+    await user.click(screen.getByRole('button', { name: 'Select columns' }));
 
     expect(screen.getByRole('checkbox', { name: columns[0].field })).toHaveFocus();
   });
 
-  it('should hide `Show/Hide all` in columns management when `disableShowHideToggle` is `true`', () => {
-    const { setProps } = render(
+  it('should hide `Show/Hide all` in columns management when `disableShowHideToggle` is `true`', async () => {
+    const { setProps, user } = render(
       <TestDataGrid
         slots={{
           toolbar: GridToolbar,
@@ -275,7 +275,7 @@ describe('<DataGridPro /> - Columns visibility', () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+    await user.click(screen.getByRole('button', { name: 'Select columns' }));
     // check if `Show/Hide all` checkbox is present initially
     expect(screen.getByRole('checkbox', { name: 'Show/Hide All' })).not.to.equal(null);
     setProps({
@@ -290,8 +290,8 @@ describe('<DataGridPro /> - Columns visibility', () => {
     expect(screen.queryByRole('checkbox', { name: 'Show/Hide All' })).to.equal(null);
   });
 
-  it('should hide `Reset` in columns panel when `disableResetButton` is `true`', () => {
-    const { setProps } = render(
+  it('should hide `Reset` in columns panel when `disableResetButton` is `true`', async () => {
+    const { setProps, user } = render(
       <TestDataGrid
         slots={{
           toolbar: GridToolbar,
@@ -299,7 +299,7 @@ describe('<DataGridPro /> - Columns visibility', () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+    await user.click(screen.getByRole('button', { name: 'Select columns' }));
     // check if Reset button is present initially
     expect(screen.getByRole('button', { name: 'Reset' })).not.to.equal(null);
     setProps({
@@ -313,8 +313,8 @@ describe('<DataGridPro /> - Columns visibility', () => {
     expect(screen.queryByRole('button', { name: 'Reset' })).to.equal(null);
   });
 
-  it('should reset the columns to initial columns state when `Reset` button is clicked in columns management panel', () => {
-    render(
+  it('should reset the columns to initial columns state when `Reset` button is clicked in columns management panel', async () => {
+    const { user } = render(
       <TestDataGrid
         slots={{
           toolbar: GridToolbar,
@@ -323,17 +323,17 @@ describe('<DataGridPro /> - Columns visibility', () => {
     );
 
     expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'idBis']);
-    fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+    await user.click(screen.getByRole('button', { name: 'Select columns' }));
     const resetButton = screen.getByRole('button', { name: 'Reset' });
     expect(resetButton).to.have.attribute('disabled');
 
     // Hide `idBis` column
-    fireEvent.click(screen.getByRole('checkbox', { name: 'idBis' }));
+    await user.click(screen.getByRole('checkbox', { name: 'idBis' }));
     expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
     expect(resetButton).not.to.have.attribute('disabled');
 
     // Reset columns
-    fireEvent.click(resetButton);
+    await user.click(resetButton);
     expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'idBis']);
     expect(resetButton).to.have.attribute('disabled');
   });
@@ -360,10 +360,10 @@ describe('<DataGridPro /> - Columns visibility', () => {
       expect(screen.queryByRole('checkbox', { name: 'idBis' })).to.equal(null);
     });
 
-    it('should avoid toggling columns provided by `getTogglableColumns` prop on `Show/Hide All`', () => {
+    it('should avoid toggling columns provided by `getTogglableColumns` prop on `Show/Hide All`', async () => {
       const getTogglableColumns = (cols: GridColDef[]) =>
         cols.filter((column) => column.field !== 'idBis').map((column) => column.field);
-      render(
+      const { user } = render(
         <TestDataGrid
           slots={{
             toolbar: GridToolbar,
@@ -376,19 +376,19 @@ describe('<DataGridPro /> - Columns visibility', () => {
         />,
       );
 
-      fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+      await user.click(screen.getByRole('button', { name: 'Select columns' }));
       const showHideAllCheckbox = screen.getByRole('checkbox', { name: 'Show/Hide All' });
-      fireEvent.click(showHideAllCheckbox);
+      await user.click(showHideAllCheckbox);
       expect(getColumnHeadersTextContent()).to.deep.equal(['idBis']);
 
-      fireEvent.click(showHideAllCheckbox);
+      await user.click(showHideAllCheckbox);
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'idBis']);
     });
   });
 
   describe('prop: toggleAllMode', () => {
-    it('should toggle filtered columns when `toggleAllMode` is `filtered`', () => {
-      render(
+    it('should toggle filtered columns when `toggleAllMode` is `filtered`', async () => {
+      const { user } = render(
         <div style={{ width: 400, height: 300 }}>
           <DataGrid
             columns={[
@@ -411,17 +411,18 @@ describe('<DataGridPro /> - Columns visibility', () => {
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'firstName', 'lastName', 'age']);
       const button = screen.getByRole('button', { name: 'Select columns' });
-      act(() => button.focus());
-      fireEvent.click(button);
+      await user.click(button);
 
       const input = screen.getByPlaceholderText('Search');
-      fireEvent.change(input, { target: { value: 'name' } });
+      await user.type(input, 'name');
       const showHideAllCheckbox = screen.getByRole('checkbox', { name: 'Show/Hide All' });
-      fireEvent.click(showHideAllCheckbox);
+      await user.click(showHideAllCheckbox);
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'age']);
 
-      fireEvent.change(input, { target: { value: 'firstName' } });
-      fireEvent.click(showHideAllCheckbox);
+      // clear the search before the new search
+      await user.clear(input);
+      await user.type(input, 'firstName');
+      await user.click(showHideAllCheckbox);
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'firstName', 'age']);
     });
   });

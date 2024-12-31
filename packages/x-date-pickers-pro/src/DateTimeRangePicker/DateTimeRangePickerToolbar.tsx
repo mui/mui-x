@@ -17,12 +17,12 @@ import {
 import { usePickerContext, usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { DateTimePickerToolbar } from '@mui/x-date-pickers/DateTimePicker';
-import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import {
   DateTimeRangePickerToolbarClasses,
   getDateTimeRangePickerToolbarUtilityClass,
 } from './dateTimeRangePickerToolbarClasses';
 import { calculateRangeChange } from '../internals/utils/date-range-manager';
+import { usePickerRangePositionContext } from '../hooks';
 
 const useUtilityClasses = (classes: Partial<DateTimeRangePickerToolbarClasses> | undefined) => {
   const slots = {
@@ -38,7 +38,6 @@ type DateTimeRangeViews = Exclude<DateOrTimeViewWithMeridiem, 'year' | 'month'>;
 
 export interface DateTimeRangePickerToolbarProps
   extends BaseToolbarProps,
-    Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'>,
     ExportedDateTimeRangePickerToolbarProps {
   ampm?: boolean;
 }
@@ -88,8 +87,6 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
   const utils = useUtils();
 
   const {
-    rangePosition,
-    onRangePositionChange,
     className,
     classes: classesProp,
     classes: inClasses,
@@ -108,6 +105,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
   >();
   const translations = usePickerTranslations();
   const ownerState = useToolbarOwnerState();
+  const { rangePosition, onRangePositionChange } = usePickerRangePositionContext();
   const classes = useUtilityClasses(classesProp);
 
   const commonToolbarProps = {
@@ -225,8 +223,6 @@ DateTimeRangePickerToolbar.propTypes = {
    * @default `true` for Desktop, `false` for Mobile.
    */
   hidden: PropTypes.bool,
-  onRangePositionChange: PropTypes.func.isRequired,
-  rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
