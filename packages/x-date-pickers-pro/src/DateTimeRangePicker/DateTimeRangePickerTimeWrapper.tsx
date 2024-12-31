@@ -1,4 +1,3 @@
-import { DefaultizedProps } from '@mui/x-internals/types';
 import {
   PickerSelectionState,
   PickerViewRenderer,
@@ -6,6 +5,7 @@ import {
   useUtils,
   TimeViewWithMeridiem,
   BaseClockProps,
+  DefaultizedProps,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { DateRange } from '../models';
