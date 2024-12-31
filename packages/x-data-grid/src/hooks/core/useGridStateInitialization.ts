@@ -6,7 +6,7 @@ import { useGridApiMethod } from '../utils';
 import { isFunction } from '../../utils/utils';
 
 export const useGridStateInitialization = <PrivateApi extends GridPrivateApiCommon>(
-  apiRef: React.MutableRefObject<PrivateApi>,
+  apiRef: React.RefObject<PrivateApi>,
 ) => {
   const controlStateMapRef = React.useRef<
     Record<string, GridControlStateItem<PrivateApi['state'], any, any>>

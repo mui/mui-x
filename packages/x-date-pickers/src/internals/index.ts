@@ -82,6 +82,7 @@ export type {
 } from './hooks/usePicker/usePickerValue.types';
 export type {
   PickerViewRendererLookup,
+  PickerRendererInterceptorProps,
   PickerViewRenderer,
   UsePickerViewsProps,
 } from './hooks/usePicker/usePickerViews';

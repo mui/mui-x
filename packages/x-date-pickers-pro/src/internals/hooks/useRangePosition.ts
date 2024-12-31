@@ -31,7 +31,7 @@ export interface UseRangePositionResponse {
 
 export const useRangePosition = (
   props: UseRangePositionProps,
-  singleInputFieldRef?: React.RefObject<FieldRef<PickerRangeValue>>,
+  singleInputFieldRef?: React.RefObject<FieldRef<PickerRangeValue> | null>,
 ): UseRangePositionResponse => {
   const [rangePosition, setRangePosition] = useControlled({
     name: 'useRangePosition',

@@ -55,6 +55,10 @@ In case of a problem, another method to generate the changelog is available at t
 3. `pnpm release:publish` (release the versions on npm, you need your 2FA device)
 4. `pnpm release:tag` (push the newly created tag)
 
+> [!WARNING]
+> If the `pnpm release:tag` fails you can create and push the tag using the following command: `git tag -a v4.0.0-alpha.30 -m "Version 4.0.0-alpha.30" && git push upstream --tag`.
+> Make sure to copy the git tag command above so that the tag is annotated!
+
 ### Publish the documentation
 
 The documentation must be updated on the `docs-vX` branch (`docs-v4` for `v4.X` releases, `docs-v5` for `v5.X` releases, ...)
@@ -99,10 +103,6 @@ You can use the following script in your browser console on any GitHub page to a
   window.location.href = diffPage;
 })();
 ```
-
-### Manually create the release tag
-
-If the `pnpm release:tag` fails you can create and push the tag using the following command: `git tag -a v4.0.0-alpha.30 -m "Version 4.0.0-alpha.30" && git push upstream --tag`.
 
 ### release:publish failed
 
