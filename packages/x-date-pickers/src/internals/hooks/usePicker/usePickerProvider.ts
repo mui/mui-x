@@ -18,7 +18,7 @@ import {
 import { useUtils } from '../useUtils';
 import { arrayIncludes } from '../../utils/utils';
 import { UsePickerViewsProviderParams } from './usePickerViews';
-import { PickerFieldPrivateContextValue } from '../useField/useMergeFieldPropsWithPickerContextProps';
+import { PickerFieldPrivateContextValue } from '../useField/useFieldInternalPropsWithDefaults';
 
 function getOrientation(): PickerOrientation {
   if (typeof window === 'undefined') {

@@ -6,7 +6,7 @@ import { buildSectionsFromFormat } from '../internals/hooks/useField/buildSectio
 import { getLocalizedDigits } from '../internals/hooks/useField/useField.utils';
 import { usePickerTranslations } from './usePickerTranslations';
 import type { UseFieldInternalProps } from '../internals/hooks/useField';
-import { PickerFieldPrivateContext } from '../internals/hooks/useField/useMergeFieldPropsWithPickerContextProps';
+import { PickerFieldPrivateContext } from '../internals/hooks/useField/useFieldInternalPropsWithDefaults';
 import { PickerContext } from '../internals/components/PickerProvider';
 
 interface UseParsedFormatParameters

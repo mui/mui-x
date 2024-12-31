@@ -18,7 +18,7 @@ import { IsValidValueContext } from '../../hooks/useIsValidValue';
 import {
   PickerFieldPrivateContext,
   PickerFieldPrivateContextValue,
-} from '../hooks/useField/useMergeFieldPropsWithPickerContextProps';
+} from '../hooks/useField/useFieldInternalPropsWithDefaults';
 
 export const PickerContext = React.createContext<PickerContextValue<any, any, any> | null>(null);
 

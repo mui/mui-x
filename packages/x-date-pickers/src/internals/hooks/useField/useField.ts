@@ -25,31 +25,6 @@ import {
   PickerManagerFieldInternalProps,
   PickerManagerFieldInternalPropsWithDefaults,
 } from '../../models';
-import { useMergeFieldPropsWithPickerContextProps } from './useMergeFieldPropsWithPickerContextProps';
-
-/**
- * Applies the default values to the field internal props.
- * This is a temporary hook that will be removed during a follow up when `useField` will receive the internal props without the defaults.
- * It is only here to allow the migration to be done in smaller steps.
- */
-export const useFieldInternalPropsWithDefaults = <TManager extends PickerAnyManager>({
-  manager,
-  internalProps,
-}: {
-  manager: TManager;
-  internalProps: PickerManagerFieldInternalProps<TManager>;
-}): PickerManagerFieldInternalPropsWithDefaults<TManager> => {
-  const internalPropsWithDefaultsFromContext =
-    useMergeFieldPropsWithPickerContextProps(internalProps);
-
-  const localizationContext = useLocalizationContext();
-  return React.useMemo(() => {
-    return manager.internal_applyDefaultsToFieldInternalProps({
-      ...localizationContext,
-      internalProps: internalPropsWithDefaultsFromContext,
-    });
-  }, [manager, internalPropsWithDefaultsFromContext, localizationContext]);
-};
 
 export const useField = <
   TValue extends PickerValidValue,
