@@ -23,6 +23,7 @@ import {
   grid,
 } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 // TODO Move to utils
 // Fix https://github.com/mui/mui-x/pull/2085/files/058f56ac3c729b2142a9a28b79b5b13535cdb819#diff-db85480a519a5286d7341e9b8957844762cf04cdacd946331ebaaaff287482ec
@@ -35,8 +36,6 @@ function createDragOverEvent(target: ChildNode) {
 
   return dragOverEvent;
 }
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Column pinning', () => {
   const { render, clock } = createRenderer();
@@ -89,70 +88,70 @@ describe('<DataGridPro /> - Column pinning', () => {
     window.ResizeObserver = originalResizeObserver;
   });
 
-  it('should scroll when the next cell to focus is covered by the left pinned columns', function test() {
-    if (isJSDOM) {
-      // Need layouting
-      this.skip();
-    }
-    render(<TestCase initialState={{ pinnedColumns: { left: ['id'] } }} />);
-    const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
-    virtualScroller.scrollLeft = 100;
-    act(() => virtualScroller.dispatchEvent(new Event('scroll')));
-    const cell = getCell(0, 2);
-    fireUserEvent.mousePress(cell);
-    fireEvent.keyDown(cell, { key: 'ArrowLeft' });
-    expect(virtualScroller.scrollLeft).to.equal(0);
-  });
+  testSkipIf(isJSDOM)(
+    'should scroll when the next cell to focus is covered by the left pinned columns',
+    () => {
+      render(<TestCase initialState={{ pinnedColumns: { left: ['id'] } }} />);
+      const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
+      virtualScroller.scrollLeft = 100;
+      act(() => virtualScroller.dispatchEvent(new Event('scroll')));
+      const cell = getCell(0, 2);
+      fireUserEvent.mousePress(cell);
+      fireEvent.keyDown(cell, { key: 'ArrowLeft' });
+      expect(virtualScroller.scrollLeft).to.equal(0);
+    },
+  );
 
-  it('should scroll when the next cell to focus is covered by the right pinned columns', function test() {
-    if (isJSDOM) {
-      // Need layouting
-      this.skip();
-    }
-    render(<TestCase initialState={{ pinnedColumns: { right: ['price16M'] } }} />);
-    const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
-    expect(virtualScroller.scrollLeft).to.equal(0);
-    const cell = getCell(0, 1);
-    fireUserEvent.mousePress(cell);
-    fireEvent.keyDown(cell, { key: 'ArrowRight' });
-    expect(virtualScroller.scrollLeft).to.equal(100);
-  });
+  testSkipIf(isJSDOM)(
+    'should scroll when the next cell to focus is covered by the right pinned columns',
+    () => {
+      render(<TestCase initialState={{ pinnedColumns: { right: ['price16M'] } }} />);
+      const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
+      expect(virtualScroller.scrollLeft).to.equal(0);
+      const cell = getCell(0, 1);
+      fireUserEvent.mousePress(cell);
+      fireEvent.keyDown(cell, { key: 'ArrowRight' });
+      expect(virtualScroller.scrollLeft).to.equal(100);
+    },
+  );
 
-  it('should increase the width of right pinned columns by resizing to the left', function test() {
-    if (isJSDOM) {
-      // Need layouting
-      this.skip();
-    }
-    render(<TestCase nbCols={3} initialState={{ pinnedColumns: { right: ['price1M'] } }} />);
-    const columnHeader = getColumnHeaderCell(2);
-    expect(columnHeader).toHaveInlineStyle({ width: '100px' });
+  testSkipIf(isJSDOM)(
+    'should increase the width of right pinned columns by resizing to the left',
+    () => {
+      render(<TestCase nbCols={3} initialState={{ pinnedColumns: { right: ['price1M'] } }} />);
+      const columnHeader = getColumnHeaderCell(2);
+      expect(columnHeader).toHaveInlineStyle({ width: '100px' });
 
-    const separator = columnHeader.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
-    fireEvent.mouseDown(separator, { clientX: 200 });
-    fireEvent.mouseMove(separator, { clientX: 190, buttons: 1 });
-    fireEvent.mouseUp(separator);
+      const separator = columnHeader.querySelector(
+        `.${gridClasses['columnSeparator--resizable']}`,
+      )!;
+      fireEvent.mouseDown(separator, { clientX: 200 });
+      fireEvent.mouseMove(separator, { clientX: 190, buttons: 1 });
+      fireEvent.mouseUp(separator);
 
-    expect(columnHeader).toHaveInlineStyle({ width: '110px' });
-    expect(separator).to.have.class(gridClasses['columnSeparator--sideLeft']);
-  });
+      expect(columnHeader).toHaveInlineStyle({ width: '110px' });
+      expect(separator).to.have.class(gridClasses['columnSeparator--sideLeft']);
+    },
+  );
 
-  it('should reduce the width of right pinned columns by resizing to the right', function test() {
-    if (isJSDOM) {
-      // Need layouting
-      this.skip();
-    }
-    render(<TestCase nbCols={3} initialState={{ pinnedColumns: { right: ['price1M'] } }} />);
-    const columnHeader = getColumnHeaderCell(2);
-    expect(columnHeader).toHaveInlineStyle({ width: '100px' });
+  testSkipIf(isJSDOM)(
+    'should reduce the width of right pinned columns by resizing to the right',
+    () => {
+      render(<TestCase nbCols={3} initialState={{ pinnedColumns: { right: ['price1M'] } }} />);
+      const columnHeader = getColumnHeaderCell(2);
+      expect(columnHeader).toHaveInlineStyle({ width: '100px' });
 
-    const separator = columnHeader.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
-    fireEvent.mouseDown(separator, { clientX: 200 });
-    fireEvent.mouseMove(separator, { clientX: 210, buttons: 1 });
-    fireEvent.mouseUp(separator);
+      const separator = columnHeader.querySelector(
+        `.${gridClasses['columnSeparator--resizable']}`,
+      )!;
+      fireEvent.mouseDown(separator, { clientX: 200 });
+      fireEvent.mouseMove(separator, { clientX: 210, buttons: 1 });
+      fireEvent.mouseUp(separator);
 
-    expect(columnHeader).toHaveInlineStyle({ width: '90px' });
-    expect(separator).to.have.class(gridClasses['columnSeparator--sideLeft']);
-  });
+      expect(columnHeader).toHaveInlineStyle({ width: '90px' });
+      expect(separator).to.have.class(gridClasses['columnSeparator--sideLeft']);
+    },
+  );
 
   it('should not allow to drag pinned columns', () => {
     render(
@@ -204,35 +203,29 @@ describe('<DataGridPro /> - Column pinning', () => {
     expect(getColumnHeadersTextContent()).to.deep.equal(['id', '', 'Currency Pair']);
   });
 
-  it('should add border to right pinned columns section when `showCellVerticalBorder={true}`', function test() {
-    if (isJSDOM) {
-      // Doesn't work with mocked window.getComputedStyle
-      this.skip();
-    }
+  // Doesn't work with mocked window.getComputedStyle
+  testSkipIf(isJSDOM)(
+    'should add border to right pinned columns section when `showCellVerticalBorder={true}`',
+    () => {
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <TestCase showCellVerticalBorder initialState={{ pinnedColumns: { right: ['id'] } }} />
+        </div>,
+      );
 
-    render(
-      <div style={{ width: 300, height: 500 }}>
-        <TestCase showCellVerticalBorder initialState={{ pinnedColumns: { right: ['id'] } }} />
-      </div>,
-    );
-
-    const computedStyle = window.getComputedStyle(
-      document.querySelector<HTMLElement>('.MuiDataGrid-cell--pinnedRight')!,
-    );
-    const borderLeftColor = computedStyle.getPropertyValue('border-left-color');
-    const borderLeftWidth = computedStyle.getPropertyValue('border-left-width');
-    expect(borderLeftWidth).to.equal('1px');
-    // should not be transparent
-    expect(borderLeftColor).not.to.equal('rgba(0, 0, 0, 0)');
-  });
+      const computedStyle = window.getComputedStyle(
+        document.querySelector<HTMLElement>('.MuiDataGrid-cell--pinnedRight')!,
+      );
+      const borderLeftColor = computedStyle.getPropertyValue('border-left-color');
+      const borderLeftWidth = computedStyle.getPropertyValue('border-left-width');
+      expect(borderLeftWidth).to.equal('1px');
+      // should not be transparent
+      expect(borderLeftColor).not.to.equal('rgba(0, 0, 0, 0)');
+    },
+  );
 
   // https://github.com/mui/mui-x/issues/12431
-  it('should not render unnecessary filler after the last row', function test() {
-    if (isJSDOM) {
-      // Needs layouting
-      this.skip();
-    }
-
+  testSkipIf(isJSDOM)('should not render unnecessary filler after the last row', () => {
     const rowHeight = 50;
     const columns: GridColDef[] = [
       { field: 'id', headerName: 'ID', width: 120 },

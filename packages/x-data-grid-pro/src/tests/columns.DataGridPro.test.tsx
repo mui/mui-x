@@ -14,8 +14,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { useGridPrivateApiContext } from '@mui/x-data-grid-pro/internals';
 import { getColumnHeaderCell, getCell, microtasks, getRow } from 'test/utils/helperFn';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Columns', () => {
   const { clock, render } = createRenderer({ clock: 'fake' });
@@ -93,26 +92,26 @@ describe('<DataGridPro /> - Columns', () => {
       expect(getCell(1, 0).getBoundingClientRect().width).to.equal(110);
     });
 
-    it('should allow to resize columns with the touch', function test() {
-      // Only run in supported browsers
-      if (typeof Touch === 'undefined') {
-        this.skip();
-      }
-      render(<Test columns={columns} />);
-      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
-      const now = Date.now();
-      fireEvent.touchStart(separator, {
-        changedTouches: [new Touch({ identifier: now, target: separator, clientX: 100 })],
-      });
-      fireEvent.touchMove(separator, {
-        changedTouches: [new Touch({ identifier: now, target: separator, clientX: 110 })],
-      });
-      fireEvent.touchEnd(separator, {
-        changedTouches: [new Touch({ identifier: now, target: separator, clientX: 110 })],
-      });
-      expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '110px' });
-      expect(getCell(1, 0).getBoundingClientRect().width).to.equal(110);
-    });
+    // Only run in supported browsers
+    testSkipIf(typeof Touch === 'undefined')(
+      'should allow to resize columns with the touch',
+      () => {
+        render(<Test columns={columns} />);
+        const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
+        const now = Date.now();
+        fireEvent.touchStart(separator, {
+          changedTouches: [new Touch({ identifier: now, target: separator, clientX: 100 })],
+        });
+        fireEvent.touchMove(separator, {
+          changedTouches: [new Touch({ identifier: now, target: separator, clientX: 110 })],
+        });
+        fireEvent.touchEnd(separator, {
+          changedTouches: [new Touch({ identifier: now, target: separator, clientX: 110 })],
+        });
+        expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '110px' });
+        expect(getCell(1, 0).getBoundingClientRect().width).to.equal(110);
+      },
+    );
 
     it('should call onColumnResize during resizing', () => {
       const onColumnResize = spy();
