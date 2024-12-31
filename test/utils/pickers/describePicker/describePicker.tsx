@@ -4,8 +4,8 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen, fireEvent, createDescribe } from '@mui/internal-test-utils';
 import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
-import { DescribePickerOptions } from './describePicker.types';
 import { testSkipIf } from 'test/utils/skipIf';
+import { DescribePickerOptions } from './describePicker.types';
 
 function innerDescribePicker(ElementToTest: React.ElementType, options: DescribePickerOptions) {
   const { render, fieldType, hasNoView, variant } = options;

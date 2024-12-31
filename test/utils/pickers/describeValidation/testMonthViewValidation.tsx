@@ -2,8 +2,8 @@ import { expect } from 'chai';
 import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { adapterToUse } from 'test/utils/pickers';
-import { DescribeValidationTestSuite } from './describeValidation.types';
 import { describeSkipIf } from 'test/utils/skipIf';
+import { DescribeValidationTestSuite } from './describeValidation.types';
 
 export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTest, getOptions) => {
   const { views, componentFamily, render, clock } = getOptions();

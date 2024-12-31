@@ -4,9 +4,9 @@ import { spy } from 'sinon';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import { PickerRangeValue, PickerValidValue } from '@mui/x-date-pickers/internals';
 import { getExpectedOnChangeCount, getFieldInputRoot, openPicker } from 'test/utils/pickers';
+import { describeSkipIf, testSkipIf } from 'test/utils/skipIf';
 import { DescribeValueTestSuite } from './describeValue.types';
 import { fireUserEvent } from '../../fireUserEvent';
-import { describeSkipIf, testSkipIf } from 'test/utils/skipIf';
 
 export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidValue, 'picker'> = (
   ElementToTest,

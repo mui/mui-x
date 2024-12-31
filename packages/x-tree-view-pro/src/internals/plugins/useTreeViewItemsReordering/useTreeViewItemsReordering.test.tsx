@@ -8,9 +8,9 @@ import {
   UseTreeViewExpansionSignature,
   UseTreeViewItemsSignature,
 } from '@mui/x-tree-view/internals';
+import { describeSkipIf } from 'test/utils/skipIf';
 import { chooseActionToApply } from './useTreeViewItemsReordering.utils';
 import { TreeViewItemItemReorderingValidActions } from './useTreeViewItemsReordering.types';
-import { describeSkipIf } from 'test/utils/skipIf';
 
 interface DragEventOptions {
   /**

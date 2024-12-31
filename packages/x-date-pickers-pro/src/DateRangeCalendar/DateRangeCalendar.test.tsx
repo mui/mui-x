@@ -15,8 +15,8 @@ import {
 } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { describeConformance } from 'test/utils/describeConformance';
-import { RangePosition } from '../models';
 import { testSkipIf } from 'test/utils/skipIf';
+import { RangePosition } from '../models';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
   within(screen.getByRole('grid', { name: picker })).getByRole('gridcell', { name });

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { DataGridPremium, DataGridPremiumProps } from '@mui/x-data-grid-premium';
-import { describeSkipIf, testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPremium /> - Row spanning', () => {
   const { render } = createRenderer();

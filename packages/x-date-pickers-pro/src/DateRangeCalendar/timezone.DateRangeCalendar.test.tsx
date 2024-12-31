@@ -2,8 +2,8 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { screen, fireEvent } from '@mui/internal-test-utils';
 import { describeAdapters } from 'test/utils/pickers';
-import { DateRangeCalendar } from './DateRangeCalendar';
 import { describeSkipIf } from 'test/utils/skipIf';
+import { DateRangeCalendar } from './DateRangeCalendar';
 
 describe('<DateRangeCalendar /> - Timezone', () => {
   describeAdapters('Timezone prop', DateRangeCalendar, ({ adapter, render }) => {

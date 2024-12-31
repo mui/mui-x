@@ -9,7 +9,7 @@ import {
   expectFieldValueV6,
 } from 'test/utils/pickers';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { testSkipIf } from 'test/utils/skipIf';
 
 describe('<DateField /> - Editing', () => {
   describeAdapters('key: ArrowDown', DateField, ({ adapter, testFieldKeyPress }) => {

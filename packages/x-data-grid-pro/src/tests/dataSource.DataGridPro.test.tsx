@@ -13,8 +13,8 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { SinonSpy, spy } from 'sinon';
-import { getKey } from '../hooks/features/dataSource/cache';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { getKey } from '../hooks/features/dataSource/cache';
 
 const cache = new Map<string, GridGetRowsResponse>();
 
@@ -79,6 +79,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
     );
   }
 
+  // eslint-disable-next-line mocha/no-top-level-hooks
   beforeEach(() => {
     cache.clear();
   });

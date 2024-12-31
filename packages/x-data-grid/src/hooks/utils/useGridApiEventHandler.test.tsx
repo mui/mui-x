@@ -3,10 +3,10 @@ import { spy } from 'sinon';
 import { expect } from 'chai';
 import { createRenderer, reactMajor } from '@mui/internal-test-utils';
 import { sleep } from 'test/utils/helperFn';
+import { isJSDOM, testSkipIf } from 'test/utils/skipIf';
 import { createUseGridApiEventHandler } from './useGridApiEventHandler';
 import { FinalizationRegistryBasedCleanupTracking } from '../../utils/cleanupTracking/FinalizationRegistryBasedCleanupTracking';
 import { TimerBasedCleanupTracking } from '../../utils/cleanupTracking/TimerBasedCleanupTracking';
-import { isJSDOM, testSkipIf } from 'test/utils/skipIf';
 
 const noop = spy();
 

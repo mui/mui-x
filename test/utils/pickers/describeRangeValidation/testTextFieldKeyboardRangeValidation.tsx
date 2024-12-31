@@ -3,8 +3,8 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { adapterToUse, getAllFieldInputRoot } from 'test/utils/pickers';
 import { act } from '@mui/internal-test-utils/createRenderer';
-import { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
 import { describeSkipIf, testSkipIf } from 'test/utils/skipIf';
+import { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
 
 const testInvalidStatus = (expectedAnswer: boolean[], isSingleInput?: boolean) => {
   const answers = isSingleInput ? [expectedAnswer[0] || expectedAnswer[1]] : expectedAnswer;
@@ -24,6 +24,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
   const { componentFamily, render, isSingleInput, withDate, withTime, setValue } = getOptions();
 
   describeSkipIf(componentFamily !== 'field' || !setValue)('text field keyboard:', () => {
+    // eslint-disable-next-line @typescript-eslint/no-shadow
     const setValue = getOptions().setValue!;
 
     it('should not accept end date prior to start state', () => {

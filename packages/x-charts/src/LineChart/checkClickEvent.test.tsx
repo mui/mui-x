@@ -3,8 +3,8 @@ import { expect } from 'chai';
 import { createRenderer, fireEvent } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { LineChart } from '@mui/x-charts/LineChart';
-import { firePointerEvent } from '../tests/firePointerEvent';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { firePointerEvent } from '../tests/firePointerEvent';
 
 const config = {
   dataset: [

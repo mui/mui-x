@@ -8,9 +8,9 @@ import {
   Unstable_LicenseInfoProvider as LicenseInfoProvider,
   MuiCommercialPackageName,
 } from '@mui/x-license';
+import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 import { sharedLicenseStatuses } from './useLicenseVerifier';
 import { generateReleaseInfo } from '../verifyLicense';
-import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 const oneDayInMS = 1000 * 60 * 60 * 24;
 const releaseDate = new Date(3000, 0, 0, 0, 0, 0, 0);
@@ -27,6 +27,7 @@ describeSkipIf(!isJSDOM)('useLicenseVerifier', function test() {
 
   let env: any;
 
+  // eslint-disable-next-line mocha/no-top-level-hooks
   beforeEach(() => {
     env = process.env.NODE_ENV;
     // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
@@ -34,6 +35,7 @@ describeSkipIf(!isJSDOM)('useLicenseVerifier', function test() {
     process.env['NODE_' + 'ENV'] = 'test';
   });
 
+  // eslint-disable-next-line mocha/no-top-level-hooks
   afterEach(() => {
     // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
     // eslint-disable-next-line no-useless-concat

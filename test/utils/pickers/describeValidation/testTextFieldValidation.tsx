@@ -3,8 +3,8 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { TimeView } from '@mui/x-date-pickers/models';
 import { adapterToUse, getFieldInputRoot } from 'test/utils/pickers';
-import { DescribeValidationTestSuite } from './describeValidation.types';
 import { describeSkipIf, testSkipIf } from 'test/utils/skipIf';
+import { DescribeValidationTestSuite } from './describeValidation.types';
 
 export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTest, getOptions) => {
   const { componentFamily, render, withDate, withTime } = getOptions();
