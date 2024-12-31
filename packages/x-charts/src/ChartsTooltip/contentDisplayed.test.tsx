@@ -151,7 +151,7 @@ describe('ChartsTooltip', () => {
     });
   });
 
-  describe('item trigger', () => {
+  describeSkipIf(isJSDOM)('item trigger', () => {
     it('should show right values with vertical layout', () => {
       render(
         <div
