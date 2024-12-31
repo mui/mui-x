@@ -6,21 +6,16 @@ import {
 } from '@mui/x-date-pickers/internals';
 import {
   RangeOnlyPickerProps,
-  RangePickerAdditionalViewProps,
   UseRangePickerParams,
   UseRangePickerProps,
   UseRangePickerSlotProps,
   UseRangePickerSlots,
 } from '../models/useRangePicker';
 
-export interface UseMobileRangePickerSlots<TView extends DateOrTimeViewWithMeridiem>
-  extends UseRangePickerSlots<TView>,
-    PickersModalDialogSlots {}
+export interface UseMobileRangePickerSlots extends UseRangePickerSlots, PickersModalDialogSlots {}
 
-export interface UseMobileRangePickerSlotProps<
-  TView extends DateOrTimeViewWithMeridiem,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends UseRangePickerSlotProps<TView, TEnableAccessibleFieldDOMStructure>,
+export interface UseMobileRangePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+  extends UseRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
     PickersModalDialogSlotProps {}
 
 export interface MobileRangeOnlyPickerProps extends RangeOnlyPickerProps {}
@@ -29,21 +24,19 @@ export interface UseMobileRangePickerProps<
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-  TExternalProps extends UsePickerViewsProps<any, TView, any, any>,
-> extends UseRangePickerProps<TView, TError, TExternalProps, MobileRangePickerAdditionalViewProps> {
+  TExternalProps extends UsePickerViewsProps<any, TView, any>,
+> extends UseRangePickerProps<TView, TError, TExternalProps> {
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots: UseMobileRangePickerSlots<TView>;
+  slots: UseMobileRangePickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseMobileRangePickerSlotProps<TView, TEnableAccessibleFieldDOMStructure>;
+  slotProps?: UseMobileRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
 }
-
-export interface MobileRangePickerAdditionalViewProps extends RangePickerAdditionalViewProps {}
 
 export interface UseMobileRangePickerParams<
   TView extends DateOrTimeViewWithMeridiem,
@@ -54,4 +47,4 @@ export interface UseMobileRangePickerParams<
     any,
     TExternalProps
   >,
-> extends UseRangePickerParams<TView, TExternalProps, MobileRangePickerAdditionalViewProps> {}
+> extends UseRangePickerParams<TView, TExternalProps> {}

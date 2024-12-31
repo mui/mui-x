@@ -56,20 +56,16 @@ export const useMobilePicker = <
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
 
   const {
-    open,
-    actions,
-    layoutProps,
     providerProps,
     renderCurrentView,
     fieldProps: pickerFieldProps,
     ownerState,
-  } = usePicker<PickerValue, TView, TExternalProps, {}>({
+  } = usePicker<PickerValue, TView, TExternalProps>({
     ...pickerParams,
     props,
     fieldRef,
     localeText,
     autoFocusView: true,
-    additionalViewProps: {},
     variant: 'mobile',
   });
 
@@ -100,8 +96,12 @@ export const useMobilePicker = <
       name,
       ...(isToolbarHidden && { id: labelId }),
       ...(!(disabled || readOnly) && {
-        onClick: actions.onOpen,
-        onKeyDown: onSpaceOrEnter(actions.onOpen),
+        // These direct access to `providerProps` will go away in https://github.com/mui/mui-x/pull/15671
+        onClick: (event: React.UIEvent) => {
+          event.preventDefault();
+          providerProps.contextValue.setOpen(true);
+        },
+        onKeyDown: onSpaceOrEnter(() => providerProps.contextValue.setOpen(true)),
       }),
       ...(!!inputRef && { inputRef }),
     },
@@ -151,8 +151,8 @@ export const useMobilePicker = <
         slotProps={slotProps}
         unstableFieldRef={handleFieldRef}
       />
-      <PickersModalDialog {...actions} open={open} slots={slots} slotProps={slotProps}>
-        <Layout {...layoutProps} {...slotProps?.layout} slots={slots} slotProps={slotProps}>
+      <PickersModalDialog slots={slots} slotProps={slotProps}>
+        <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
           {renderCurrentView()}
         </Layout>
       </PickersModalDialog>

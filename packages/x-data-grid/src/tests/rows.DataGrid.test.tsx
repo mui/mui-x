@@ -427,8 +427,8 @@ describe('<DataGrid /> - Rows', () => {
       expect(deleteButton).toHaveFocus();
     });
 
-    it('should set the correct tabIndex to the focused button', () => {
-      render(
+    it('should set the correct tabIndex to the focused button', async () => {
+      const { user } = render(
         <TestCase
           getActions={() => [
             <GridActionsCellItem icon={<span />} label="print" />,
@@ -438,9 +438,11 @@ describe('<DataGrid /> - Rows', () => {
       );
       const firstCell = getCell(0, 0);
       const secondCell = getCell(0, 1);
-      firstCell.focus();
+      act(() => {
+        firstCell.focus();
+      });
 
-      fireEvent.keyDown(firstCell, { key: 'ArrowRight' });
+      await user.keyboard('{ArrowRight}');
       expect(secondCell).to.have.property('tabIndex', -1);
 
       const printButton = screen.getByRole('menuitem', { name: 'print' });
@@ -448,7 +450,10 @@ describe('<DataGrid /> - Rows', () => {
       expect(printButton).to.have.property('tabIndex', 0);
       expect(menuButton).to.have.property('tabIndex', -1);
 
-      fireEvent.keyDown(printButton, { key: 'ArrowRight' });
+      act(() => {
+        printButton.focus();
+      });
+      await user.keyboard('{ArrowRight}');
       expect(printButton).to.have.property('tabIndex', -1);
       expect(menuButton).to.have.property('tabIndex', 0);
     });

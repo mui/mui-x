@@ -34,14 +34,12 @@ export default function MultipleYAxesScatterChart() {
         {
           data: data1,
           yAxisId: 'leftAxis',
-
-          valueFormatter: ({ x, y }) => `${x}cm, ${y}kg`,
+          valueFormatter: (value) => value && `${value.x}cm, ${value.y}kg`,
         },
         {
           data: data2,
           yAxisId: 'rightAxis',
-
-          valueFormatter: ({ x, y }) => `${x}cm, ${y}kg`,
+          valueFormatter: (value) => value && `${value.x}cm, ${value.y}kg`,
         },
       ]}
       xAxis={[{ min: 0 }]}

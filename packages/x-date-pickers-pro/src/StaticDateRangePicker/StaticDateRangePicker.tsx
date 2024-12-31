@@ -34,7 +34,7 @@ const StaticDateRangePicker = React.forwardRef(function StaticDateRangePicker(
 
   const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';
 
-  const viewRenderers: PickerViewRendererLookup<PickerRangeValue, 'day', any, {}> = {
+  const viewRenderers: PickerViewRendererLookup<PickerRangeValue, any, any> = {
     day: renderDateRangeViewCalendar,
     ...defaultizedProps.viewRenderers,
   };

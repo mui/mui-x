@@ -398,7 +398,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   /**
    * The ref object that allows Data Grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
-  apiRef?: React.MutableRefObject<GridApiCommunity>;
+  apiRef?: React.RefObject<GridApiCommunity>;
   /**
    * Signal to the underlying logic what version of the public component API
    * of the Data Grid is exposed [[GridSignature]].
