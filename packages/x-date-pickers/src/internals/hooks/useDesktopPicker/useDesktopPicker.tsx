@@ -37,11 +37,6 @@ export const useDesktopPicker = <
     slotProps: innerSlotProps,
     className,
     sx,
-    format,
-    formatDensity,
-    enableAccessibleFieldDOMStructure,
-    selectedSections,
-    onSelectedSectionsChange,
     timezone,
     name,
     label,
@@ -121,11 +116,6 @@ export const useDesktopPicker = <
       // Internal props
       readOnly,
       disabled,
-      format,
-      formatDensity,
-      enableAccessibleFieldDOMStructure,
-      selectedSections,
-      onSelectedSectionsChange,
       timezone,
       autoFocus: autoFocus && !props.open,
       ...pickerFieldProps, // onChange and value

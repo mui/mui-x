@@ -20,6 +20,7 @@ import { useFieldCharacterEditing } from './useFieldCharacterEditing';
 import { useFieldV7TextField } from './useFieldV7TextField';
 import { useFieldV6TextField } from './useFieldV6TextField';
 import { PickerValidValue } from '../../models';
+import { useMergeFieldPropsWithPickerContextProps } from './useMergeFieldPropsWithPickerContextProps';
 
 export const useField = <
   TValue extends PickerValidValue,
@@ -40,23 +41,30 @@ export const useField = <
   const utils = useUtils();
 
   const {
-    internalProps,
-    internalProps: {
-      unstableFieldRef,
-      minutesStep,
-      enableAccessibleFieldDOMStructure = true,
-      disabled = false,
-      readOnly = false,
-    },
+    internalProps: internalPropsWithoutDefaults,
     forwardedProps: { onKeyDown, error, clearable, onClear },
     fieldValueManager,
     valueManager,
     validator,
   } = params;
 
+  const internalProps = useMergeFieldPropsWithPickerContextProps<
+    TValue,
+    TEnableAccessibleFieldDOMStructure,
+    TInternalProps
+  >(internalPropsWithoutDefaults);
+
+  const {
+    unstableFieldRef,
+    minutesStep,
+    enableAccessibleFieldDOMStructure = true,
+    disabled = false,
+    readOnly = false,
+  } = internalProps;
+
   const isRtl = useRtl();
 
-  const stateResponse = useFieldState(params);
+  const stateResponse = useFieldState({ ...params, internalProps });
   const {
     state,
     activeSectionIndex,

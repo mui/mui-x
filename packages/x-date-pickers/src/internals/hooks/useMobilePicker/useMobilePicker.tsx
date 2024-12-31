@@ -36,11 +36,6 @@ export const useMobilePicker = <
     slotProps: innerSlotProps,
     className,
     sx,
-    format,
-    formatDensity,
-    enableAccessibleFieldDOMStructure,
-    selectedSections,
-    onSelectedSectionsChange,
     timezone,
     name,
     label,
@@ -81,11 +76,6 @@ export const useMobilePicker = <
       // Internal props
       readOnly: readOnly ?? true,
       disabled,
-      format,
-      formatDensity,
-      enableAccessibleFieldDOMStructure,
-      selectedSections,
-      onSelectedSectionsChange,
       timezone,
       ...pickerFieldProps, // onChange and value
 

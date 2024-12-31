@@ -48,11 +48,6 @@ export const useMobileRangePicker = <
     slotProps: innerSlotProps,
     className,
     sx,
-    format,
-    formatDensity,
-    enableAccessibleFieldDOMStructure,
-    selectedSections,
-    onSelectedSectionsChange,
     timezone,
     label,
     inputRef,
@@ -111,11 +106,6 @@ export const useMobileRangePicker = <
       // Internal props
       readOnly: readOnly ?? true,
       disabled,
-      format,
-      formatDensity,
-      enableAccessibleFieldDOMStructure,
-      selectedSections,
-      onSelectedSectionsChange,
       timezone,
       ...pickerFieldProps, // onChange and value
 

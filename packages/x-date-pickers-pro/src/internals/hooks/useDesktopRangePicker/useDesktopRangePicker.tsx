@@ -47,11 +47,6 @@ export const useDesktopRangePicker = <
     slotProps,
     className,
     sx,
-    format,
-    formatDensity,
-    enableAccessibleFieldDOMStructure,
-    selectedSections,
-    onSelectedSectionsChange,
     timezone,
     label,
     inputRef,
@@ -136,11 +131,6 @@ export const useDesktopRangePicker = <
       // Internal props
       readOnly,
       disabled,
-      format,
-      formatDensity,
-      enableAccessibleFieldDOMStructure,
-      selectedSections,
-      onSelectedSectionsChange,
       timezone,
       autoFocus: autoFocus && !props.open,
       ...pickerFieldProps, // onChange and value

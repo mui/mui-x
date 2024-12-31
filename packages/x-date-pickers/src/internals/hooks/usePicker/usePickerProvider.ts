@@ -18,6 +18,8 @@ import {
 import { useUtils } from '../useUtils';
 import { arrayIncludes } from '../../utils/utils';
 import { UsePickerViewsProviderParams } from './usePickerViews';
+import { UseFieldInternalProps } from '../useField';
+import { PickerFieldPrivateContextValue } from '../useField/useMergeFieldPropsWithPickerContextProps';
 
 function getOrientation(): PickerOrientation {
   if (typeof window === 'undefined') {
@@ -128,10 +130,28 @@ export function usePickerProvider<
     [paramsFromUsePickerValue, ownerState],
   );
 
+  const fieldPrivateContextValue = React.useMemo(
+    () => ({
+      format: props.format,
+      formatDensity: props.formatDensity,
+      enableAccessibleFieldDOMStructure: props.enableAccessibleFieldDOMStructure,
+      selectedSections: props.selectedSections,
+      onSelectedSectionsChange: props.onSelectedSectionsChange,
+    }),
+    [
+      props.format,
+      props.formatDensity,
+      props.enableAccessibleFieldDOMStructure,
+      props.selectedSections,
+      props.onSelectedSectionsChange,
+    ],
+  );
+
   return {
     localeText,
     contextValue,
     privateContextValue,
+    fieldPrivateContextValue,
     actionsContextValue: paramsFromUsePickerValue.actionsContextValue,
     isValidContextValue: paramsFromUsePickerValue.isValidContextValue,
   };
@@ -142,7 +162,7 @@ export interface UsePickerProviderParameters<
   TView extends DateOrTimeViewWithMeridiem,
   TError,
 > extends Pick<PickerProviderProps<TValue>, 'localeText'> {
-  props: UsePickerProps<TValue, any, any, any>;
+  props: UsePickerProps<TValue, any, any, any> & UsePickerProviderNonStaticProps;
   valueManager: PickerValueManager<TValue, any>;
   variant: PickerVariant;
   paramsFromUsePickerValue: UsePickerValueProviderParams<TValue, TError>;
@@ -166,7 +186,7 @@ export interface UsePickerProviderProps extends FormProps {
 /**
  * Props used to create the picker's contexts and that are not available on static pickers.
  */
-export interface UsePickerProviderNonStaticProps {
+export interface UsePickerProviderNonStaticProps extends PickerFieldPrivateContextValue {
   /**
    * If `true`, the open picker button will not be rendered (renders only the field).
    * @default false

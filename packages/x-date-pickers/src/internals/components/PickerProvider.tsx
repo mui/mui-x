@@ -15,6 +15,10 @@ import type {
 } from '../hooks/usePicker/usePickerValue.types';
 import { UsePickerViewsContextValue } from '../hooks/usePicker/usePickerViews';
 import { IsValidValueContext } from '../../hooks/useIsValidValue';
+import {
+  PickerFieldPrivateContext,
+  PickerFieldPrivateContextValue,
+} from '../hooks/useField/useMergeFieldPropsWithPickerContextProps';
 
 export const PickerContext = React.createContext<PickerContextValue<any, any, any> | null>(null);
 
@@ -48,6 +52,7 @@ export function PickerProvider<TValue extends PickerValidValue>(
     contextValue,
     actionsContextValue,
     privateContextValue,
+    fieldPrivateContextValue,
     isValidContextValue,
     localeText,
     children,
@@ -57,9 +62,11 @@ export function PickerProvider<TValue extends PickerValidValue>(
     <PickerContext.Provider value={contextValue}>
       <PickerActionsContext.Provider value={actionsContextValue}>
         <PickerPrivateContext.Provider value={privateContextValue}>
-          <IsValidValueContext.Provider value={isValidContextValue}>
-            <LocalizationProvider localeText={localeText}>{children}</LocalizationProvider>
-          </IsValidValueContext.Provider>
+          <PickerFieldPrivateContext.Provider value={fieldPrivateContextValue}>
+            <IsValidValueContext.Provider value={isValidContextValue}>
+              <LocalizationProvider localeText={localeText}>{children}</LocalizationProvider>
+            </IsValidValueContext.Provider>
+          </PickerFieldPrivateContext.Provider>
         </PickerPrivateContext.Provider>
       </PickerActionsContext.Provider>
     </PickerContext.Provider>
@@ -70,6 +77,7 @@ export interface PickerProviderProps<TValue extends PickerValidValue> {
   contextValue: PickerContextValue<any, any, any>;
   actionsContextValue: PickerActionsContextValue<any, any>;
   privateContextValue: PickerPrivateContextValue;
+  fieldPrivateContextValue: PickerFieldPrivateContextValue;
   isValidContextValue: (value: TValue) => boolean;
   localeText: PickersInputLocaleText | undefined;
   children: React.ReactNode;

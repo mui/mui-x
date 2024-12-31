@@ -3,7 +3,6 @@ import {
   BasePickerProps,
   ExportedBaseToolbarProps,
   UsePickerViewsProps,
-  BaseNonStaticPickerProps,
   UsePickerValueNonStaticProps,
   UsePickerProviderNonStaticProps,
   DateOrTimeViewWithMeridiem,
@@ -33,8 +32,7 @@ export interface UseRangePickerSlotProps<TEnableAccessibleFieldDOMStructure exte
 }
 
 export interface RangeOnlyPickerProps
-  extends BaseNonStaticPickerProps,
-    UsePickerValueNonStaticProps,
+  extends UsePickerValueNonStaticProps,
     UsePickerProviderNonStaticProps,
     BaseRangeNonStaticPickerProps,
     UseRangePositionProps {}
