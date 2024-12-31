@@ -510,7 +510,6 @@ describe('<DataGrid /> - Row selection', () => {
       await user.keyboard('{Shift>}[ArrowDown]{/Shift}');
       expect(getSelectedRowIds()).to.deep.equal([2, 3]);
 
-      await user.click(getCell(3, 1));
       await user.keyboard('{ArrowDown}');
       expect(getSelectedRowIds()).to.deep.equal([2, 3]); // Already on the last row
     });
@@ -542,7 +541,7 @@ describe('<DataGrid /> - Row selection', () => {
       await user.keyboard('{Shift>}[ArrowDown]{/Shift}');
       expect(getSelectedRowIds()).to.deep.equal([1, 2, 3]);
 
-      await user.keyboard('{ArrowDown/}');
+      await user.keyboard('{ArrowDown}');
       expect(getSelectedRowIds()).to.deep.equal([1, 2, 3]); // Already on the last row
     });
 
