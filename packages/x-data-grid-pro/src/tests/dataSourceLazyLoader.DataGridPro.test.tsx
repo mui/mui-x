@@ -13,10 +13,9 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { SinonSpy, spy } from 'sinon';
+import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
-describe('<DataGridPro /> - Data source lazy loader', () => {
+describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
   const { render } = createRenderer();
   const defaultTransformGetRowsResponse = (response: GridGetRowsResponse) => response;
 
@@ -73,11 +72,7 @@ describe('<DataGridPro /> - Data source lazy loader', () => {
     );
   }
 
-  beforeEach(function beforeTest() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
-
+  beforeEach(() => {
     transformGetRowsResponse = defaultTransformGetRowsResponse;
   });
 

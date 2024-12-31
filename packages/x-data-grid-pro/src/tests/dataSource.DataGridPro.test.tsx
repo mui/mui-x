@@ -14,8 +14,8 @@ import {
 } from '@mui/x-data-grid-pro';
 import { SinonSpy, spy } from 'sinon';
 import { getKey } from '../hooks/features/dataSource/cache';
+import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 const cache = new Map<string, GridGetRowsResponse>();
 
 const testCache: GridDataSourceCache = {
@@ -24,7 +24,7 @@ const testCache: GridDataSourceCache = {
   clear: () => cache.clear(),
 };
 
-describe('<DataGridPro /> - Data source', () => {
+describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
   const { render } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
@@ -79,11 +79,7 @@ describe('<DataGridPro /> - Data source', () => {
     );
   }
 
-  beforeEach(function beforeTest() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
-
+  beforeEach(() => {
     cache.clear();
   });
 

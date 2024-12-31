@@ -6,7 +6,7 @@ import { inputBaseClasses } from '@mui/material/InputBase';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { createPickerRenderer, adapterToUse, openPicker } from 'test/utils/pickers';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { describeSkipIf, testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DesktopDatePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -136,7 +136,8 @@ describe('<DesktopDatePicker />', () => {
     });
   });
 
-  describe('scroll', () => {
+  // JSDOM has neither layout nor window.scrollTo
+  describeSkipIf(isJSDOM)('scroll', () => {
     const NoTransition = React.forwardRef(function NoTransition(
       props: TransitionProps & { children?: React.ReactNode },
       ref: React.Ref<HTMLDivElement>,
@@ -151,13 +152,6 @@ describe('<DesktopDatePicker />', () => {
           {children}
         </div>
       );
-    });
-
-    before(function beforeHook() {
-      // JSDOM has neither layout nor window.scrollTo
-      if (/jsdom/.test(window.navigator.userAgent)) {
-        this.skip();
-      }
     });
 
     let originalScrollX: number;

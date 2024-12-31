@@ -37,7 +37,7 @@ import {
 } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import Dialog from '@mui/material/Dialog';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { testSkipIf, isJSDOM, describeSkipIf } from 'test/utils/skipIf';
 
 import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/densitySelector';
 
@@ -497,14 +497,7 @@ describe('<DataGrid /> - Rows', () => {
     });
   });
 
-  describe('prop: getRowHeight', () => {
-    before(function beforeHook() {
-      if (isJSDOM) {
-        // Need layouting
-        this.skip();
-      }
-    });
-
+  describeSkipIf(isJSDOM)('prop: getRowHeight', () => {
     describe('static row height', () => {
       const ROW_HEIGHT = 52;
       function TestCase(props: Partial<DataGridProps>) {

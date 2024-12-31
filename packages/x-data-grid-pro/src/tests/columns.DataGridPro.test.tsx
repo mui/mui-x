@@ -14,7 +14,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { useGridPrivateApiContext } from '@mui/x-data-grid-pro/internals';
 import { getColumnHeaderCell, getCell, microtasks, getRow } from 'test/utils/helperFn';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { describeSkipIf, testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Columns', () => {
   const { clock, render } = createRenderer({ clock: 'fake' });
@@ -72,14 +72,7 @@ describe('<DataGridPro /> - Columns', () => {
     });
   });
 
-  describe('resizing', () => {
-    before(function beforeHook() {
-      if (isJSDOM) {
-        // Need layouting
-        this.skip();
-      }
-    });
-
+  describeSkipIf(isJSDOM)('resizing', () => {
     const columns = [{ field: 'brand', width: 100 }];
 
     it('should allow to resize columns with the mouse', () => {
@@ -300,14 +293,7 @@ describe('<DataGridPro /> - Columns', () => {
       expect(emptyCell.getBoundingClientRect().width).to.equal(rowWidth - 50);
     });
 
-    describe('flex resizing', () => {
-      before(function beforeHook() {
-        if (isJSDOM) {
-          // Need layouting
-          this.skip();
-        }
-      });
-
+    describeSkipIf(isJSDOM)('flex resizing', () => {
       it('should resize the flex width after resizing another column with api', () => {
         const twoColumns = [
           { field: 'id', width: 100, flex: 1 },
@@ -497,14 +483,7 @@ describe('<DataGridPro /> - Columns', () => {
     });
   });
 
-  describe('autosizing', () => {
-    before(function beforeHook() {
-      if (isJSDOM) {
-        // Need layouting
-        this.skip();
-      }
-    });
-
+  describeSkipIf(isJSDOM)('autosizing', () => {
     const rows = [
       { id: 0, brand: 'Nike' },
       { id: 1, brand: 'Adidas' },

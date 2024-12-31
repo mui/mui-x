@@ -8,10 +8,9 @@ import {
   COMFORTABLE_DENSITY_FACTOR,
   COMPACT_DENSITY_FACTOR,
 } from '../hooks/features/density/densitySelector';
+import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
-describe('<DataGrid /> - Density', () => {
+describeSkipIf(isJSDOM)('<DataGrid /> - Density', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {
@@ -49,13 +48,6 @@ describe('<DataGrid /> - Density', () => {
       `${Math.floor(value)}px`,
     );
   }
-
-  before(function beforeHook() {
-    if (isJSDOM) {
-      // JSDOM seem to not support CSS variables properly and `height: var(--height)` ends up being `height: ''`
-      this.skip();
-    }
-  });
 
   describe('prop: `initialState.density`', () => {
     it('should set the density to the value of initialState.density', () => {

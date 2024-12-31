@@ -1148,13 +1148,8 @@ describe('<DataGrid /> - Layout & warnings', () => {
     expect(NoRowsOverlay.callCount).not.to.equal(0);
   });
 
-  describe('should not overflow parent', () => {
-    before(function beforeHook() {
-      if (/jsdom/.test(window.navigator.userAgent)) {
-        this.skip(); // Doesn't work with mocked window.getComputedStyle
-      }
-    });
-
+  // Doesn't work with mocked window.getComputedStyle
+  describeSkipIf(isJSDOM)('should not overflow parent', () => {
     const rows = [{ id: 1, username: '@MUI', age: 20 }];
     const columns = [
       { field: 'id', width: 300 },

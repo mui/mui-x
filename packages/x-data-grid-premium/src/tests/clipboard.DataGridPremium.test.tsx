@@ -12,6 +12,7 @@ import { SinonSpy, spy, stub, SinonStub } from 'sinon';
 import { getCell, getColumnValues, sleep } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
+import { isJSDOM, describeSkipIf } from 'test/utils/skipIf';
 
 describe('<DataGridPremium /> - Clipboard', () => {
   const { render } = createRenderer();
@@ -168,14 +169,8 @@ describe('<DataGridPremium /> - Clipboard', () => {
     });
   });
 
-  describe('paste', () => {
-    before(function beforeHook() {
-      if (/jsdom/.test(window.navigator.userAgent)) {
-        // These test are flaky in JSDOM
-        this.skip();
-      }
-    });
-
+  // These test are flaky in JSDOM
+  describeSkipIf(isJSDOM)('paste', () => {
     function paste(cell: HTMLElement, pasteText: string) {
       const pasteEvent = new Event('paste');
 
