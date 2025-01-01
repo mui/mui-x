@@ -358,9 +358,9 @@ This change causes a few breaking changes:
   +const { value } = usePickerContext();
 
   -const { onChange } = props;
+  -onChange(dayjs(), { validationError: null });
   +const { setValue } = usePickerContext();
-   onChange(dayjs(), { validationError: null });
-   setValue(dayjs(), { validationError: null });
+  -setValue(dayjs(), { validationError: null });
 
   -const { timezone } = props;
   +const { timezone } = usePickerContext();
