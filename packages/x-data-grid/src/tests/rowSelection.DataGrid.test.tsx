@@ -645,7 +645,8 @@ describe('<DataGrid /> - Row selection', () => {
         }
         render(<TestDataGridSelection checkboxSelection />);
         const cell = getCell(1, 1);
-        fireEvent.click(cell);
+        // instead of `fireUserEvent.mousePress()`, which basically executes click twice
+        fireEvent.dblClick(cell);
         fireEvent.keyDown(cell, { key: 'ArrowLeft' });
         fireEvent.keyDown(getCell(1, 0).querySelector('input')!, { key: 'ArrowUp' });
         clock.runToLast(); // Wait for transition
