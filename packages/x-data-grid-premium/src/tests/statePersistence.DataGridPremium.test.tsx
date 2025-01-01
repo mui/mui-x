@@ -51,7 +51,7 @@ const FULL_INITIAL_STATE: GridInitialState = {
 describe('<DataGridPremium /> - State persistence', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
 
   function TestCase(props: Omit<DataGridPremiumProps, 'rows' | 'columns' | 'apiRef'>) {
     apiRef = useGridApiRef();
@@ -102,10 +102,7 @@ describe('<DataGridPremium /> - State persistence', () => {
         });
       });
 
-      let exportedState: GridInitialStatePremium = {};
-      await act(() => {
-        exportedState = apiRef.current.exportState();
-      });
+      const exportedState = apiRef.current.exportState();
       expect(exportedState.rowGrouping).to.deep.equal(FULL_INITIAL_STATE.rowGrouping);
       expect(exportedState.aggregation).to.deep.equal(FULL_INITIAL_STATE.aggregation);
     });
@@ -121,10 +118,7 @@ describe('<DataGridPremium /> - State persistence', () => {
         });
       });
 
-      let exportedState: GridInitialStatePremium = {};
-      await act(() => {
-        exportedState = apiRef.current.exportState({ exportOnlyDirtyModels: true });
-      });
+      const exportedState = apiRef.current.exportState({ exportOnlyDirtyModels: true });
       expect(exportedState.rowGrouping).to.deep.equal(FULL_INITIAL_STATE.rowGrouping);
       expect(exportedState.aggregation).to.deep.equal(FULL_INITIAL_STATE.aggregation);
     });
