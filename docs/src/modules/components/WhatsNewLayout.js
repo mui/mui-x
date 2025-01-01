@@ -384,7 +384,6 @@ function BlogCard({ entry }) {
               width: { xs: '100%', sm: 'fit-content' },
             }}
           >
-            {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
             {'Read more'}
           </Button>
         )}
