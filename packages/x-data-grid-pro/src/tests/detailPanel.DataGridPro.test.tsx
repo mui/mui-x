@@ -38,6 +38,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     );
   }
 
+  // Needs layout
   testSkipIf(isJSDOM)(
     'should not allow to expand rows that do not specify a detail element',
     () => {
@@ -49,6 +50,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     },
   );
 
+  // Needs layout
   testSkipIf(isJSDOM)(
     'should not consider the height of the detail panels when rendering new rows during scroll',
     () => {
@@ -74,6 +76,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     },
   );
 
+  // Needs layout
   testSkipIf(isJSDOM)(
     'should derive the height from the content if getDetailPanelHeight returns "auto"',
     async () => {
@@ -103,6 +106,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     },
   );
 
+  // Needs layout
   testSkipIf(isJSDOM)(
     'should update the detail panel height if the content height changes when getDetailPanelHeight returns "auto"',
     async () => {
@@ -200,6 +204,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(screen.queryByText('Row 0')).to.equal(null);
   });
 
+  // Needs layout
   testSkipIf(isJSDOM)(
     'should consider the height of the detail panel when scrolling to a cell',
     () => {
@@ -228,6 +233,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     },
   );
 
+  // Needs layout
   testSkipIf(isJSDOM)('should not scroll vertically when navigating expanded row cells', () => {
     function Component() {
       const data = useBasicDemoData(10, 4);
@@ -508,6 +514,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(screen.getByTestId(`detail-panel-content`).textContent).to.equal(`${counter}`);
   });
 
+  // Needs layout
   testSkipIf(isJSDOM)(
     "should not render detail panel for the focused row if it's outside of the viewport",
     () => {
