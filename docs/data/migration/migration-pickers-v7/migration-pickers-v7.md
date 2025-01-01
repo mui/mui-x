@@ -346,6 +346,74 @@ This change causes a few breaking changes:
 
 ## Slots breaking changes
 
+### Slot: `field`
+
+- The component passed to the `field` slot no longer receives the `value`, `onChange`, `format` and `timezone` prop.
+  You can use the `usePickerContext` hook instead:
+
+  ```diff
+  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+
+  -const { value } = props;
+  +const { value } = usePickerContext();
+
+  -const { onChange } = props;
+  +const { setValue } = usePickerContext();
+   onChange(dayjs(), { validationError: null });
+   setValue(dayjs(), { validationError: null });
+
+  -const { timezone } = props;
+  +const { timezone } = usePickerContext();
+  ```
+
+  - The component passed to the `field` slot no longer receives the `disabled`, `format` and `timezone` prop.
+    You can use the `usePickerContext` hook instead:
+
+  ```diff
+  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+
+  -const { disabled } = props;
+  +const { disabled } = usePickerContext();
+  ```
+
+  - The component passed to the `field` slot no longer receives the `format` prop.
+    You can use the `usePickerContext` hook instead:
+
+  ```diff
+  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+
+  -const { format } = props;
+  +const { fieldFormat } = usePickerContext();
+  ```
+
+- The component passed to the `field` slot no longer receives the `formatDensity`, `enableAccessibleFieldDOMStructure` and `selectedSections` and `onSelectedSectionsChange` props.
+  They are currently not exposed by the picker, but previously they were always equal to their equivalent prop on the picker.
+  You can manually pass them using `slotProps.field` to keep the same behavior:
+
+  ```diff
+   <DatePicker
+     enableAccessibleFieldDOMStructure={false}
+     formatDensity='spacious'
+     selectedSections={selectedSections}
+     onSelectedSectionsChange={onSelectedSectionsChange}
+  +  slotProps={{
+       field: {
+         enableAccessibleFieldDOMStructure: false,
+         formatDensity: 'spacious',
+         selectedSections,
+         onSelectedSectionsChange,
+       },
+     }}
+   />
+  ```
+
+  If you were not passing those props to the picker, then you can use their default value:
+
+  - `formatDensity`: `"dense"`
+  - `enableAccessibleFieldDOMStructure`: `true`
+  - `selectedSections`: `undefined`
+  - `onSelectedSectionsChange`: `undefined`
+
 ### Slot: `layout`
 
 - The `<PickersLayoutRoot />` and `<PickersLayoutContentWrapper />` components must now receive the `ownerState` returned by `usePickerLayout` instead of their props:
