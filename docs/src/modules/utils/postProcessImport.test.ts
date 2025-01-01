@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import pickersPackageJson from '@mui/x-date-pickers/package.json';
+import pickersPackageJson from '../../../../packages/x-date-pickers/package.json';
 import { ADAPTER_TO_LIBRARY, postProcessImport } from './postProcessImport';
 
 describe('postProcessImport', () => {

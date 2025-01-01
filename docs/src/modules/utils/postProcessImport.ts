@@ -1,4 +1,4 @@
-import pickersPackageJson from '@mui/x-date-pickers/package.json';
+import pickersPackageJson from '../../../../packages/x-date-pickers/package.json';
 
 export const ADAPTER_TO_LIBRARY: Record<string, keyof typeof pickersPackageJson.devDependencies> = {
   AdapterDateFns: 'date-fns',

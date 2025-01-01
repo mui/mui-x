@@ -69,6 +69,7 @@ function ApiProperty({ index, property, plan }) {
       >
         <PrimaryHeading>
           <React.Fragment>
+            {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
             {`${property.name}()`}
             <PlanIcon plan={plan} />
           </React.Fragment>
@@ -76,6 +77,7 @@ function ApiProperty({ index, property, plan }) {
         <SecondaryHeading dangerouslySetInnerHTML={{ __html: property.description }} />
       </AccordionSummary>
       <AccordionDetails sx={{ display: 'block' }}>
+        {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
         <Typography variant="subtitle2">Signature:</Typography>
         <HighlightedCode
           code={`${property.name}: ${property.type}`}
