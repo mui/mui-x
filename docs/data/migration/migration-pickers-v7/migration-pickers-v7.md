@@ -438,7 +438,9 @@ This change causes a few breaking changes:
   +const { views } = usePickerContext();
 
   -const { onViewChange } = props;
+  -onViewChange('month');
   +const { setView } = usePickerContext();
+  +setView('month');
   ```
 
 - The component passed to the `layout` slot no longer receives the `onClear`, `onSetToday`, `onAccept`, `onCancel`, `onOpen`, `onClose` `onDismiss`, `onChange` and `onSelectShortcut` props.
