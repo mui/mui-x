@@ -4,7 +4,7 @@
  * @param {boolean} condition - The condition to check.
  * @returns {Function} The test suite function.
  */
-const describeSkipIf: (condition: boolean) => Mocha.PendingSuiteFunction =
+export const describeSkipIf: (condition: boolean) => Mocha.PendingSuiteFunction =
   (describe as any).skipIf ??
   function describeSkipIf(condition: boolean) {
     return condition ? describe.skip : describe;
@@ -15,15 +15,13 @@ const describeSkipIf: (condition: boolean) => Mocha.PendingSuiteFunction =
  * @param {boolean} condition - The condition to check.
  * @returns {Function} The test function.
  */
-const testSkipIf: (condition: boolean) => Mocha.PendingTestFunction =
+export const testSkipIf: (condition: boolean) => Mocha.PendingTestFunction =
   (it as any).skipIf ??
   function testSkipIf(condition: boolean) {
     return condition ? it.skip : it;
   };
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-const isOSX = /macintosh/i.test(window.navigator.userAgent);
-const hasTouchSupport =
+export const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+export const isOSX = /macintosh/i.test(window.navigator.userAgent);
+export const hasTouchSupport =
   typeof window.Touch !== 'undefined' && typeof window.TouchEvent !== 'undefined';
-
-export { describeSkipIf, testSkipIf, isJSDOM, isOSX, hasTouchSupport };
