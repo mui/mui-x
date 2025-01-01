@@ -386,6 +386,7 @@ describe('<DataGrid /> - Pagination', () => {
   });
 
   // Need layouting
+  // Need layouting
   describeSkipIf(isJSDOM)('prop: autoPageSize', () => {
     function TestCaseAutoPageSize(
       props: Omit<DataGridProps, 'rows' | 'columns'> & { height: number; nbRows: number },
@@ -626,6 +627,7 @@ describe('<DataGrid /> - Pagination', () => {
     expect(getCell(1, 0)).to.have.attr('tabindex', '0');
   });
 
+  // Need layouting
   // Need layouting
   describeSkipIf(isJSDOM)('prop: initialState.pagination', () => {
     it('should allow to initialize the paginationModel', () => {
