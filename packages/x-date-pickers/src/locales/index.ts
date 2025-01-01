@@ -36,4 +36,5 @@ export * from './urPK';
 export * from './viVN';
 export * from './zhCN';
 export * from './zhHK';
+export * from './ar';
 export * from './utils/pickersLocaleTextApi';
