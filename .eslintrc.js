@@ -275,7 +275,6 @@ module.exports = {
       files: ['docs/**/*{.ts,.tsx,.js}'],
       excludedFiles: ['*.d.ts'],
       rules: {
-        'material-ui/no-hardcoded-labels': 'off',
         'no-restricted-imports': [
           'error',
           {
