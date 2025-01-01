@@ -497,6 +497,7 @@ describe('<DataGrid /> - Rows', () => {
     });
   });
 
+  // Need layouting
   describeSkipIf(isJSDOM)('prop: getRowHeight', () => {
     describe('static row height', () => {
       const ROW_HEIGHT = 52;
@@ -1106,6 +1107,7 @@ describe('<DataGrid /> - Rows', () => {
   });
 
   // https://github.com/mui/mui-x/issues/10373
+  // needs virtualization
   testSkipIf(isJSDOM)(
     'should set proper `data-rowindex` and `aria-rowindex` when focused row is out of the viewport',
     async () => {

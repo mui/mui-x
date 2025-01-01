@@ -35,6 +35,7 @@ describe('<DataGridPro /> - Column spanning', () => {
     ],
   };
 
+  // Need layouting
   testSkipIf(isJSDOM)(
     'should not apply `colSpan` in pinned columns section if there is only one column there',
     () => {
@@ -152,6 +153,7 @@ describe('<DataGridPro /> - Column spanning', () => {
     expect(() => getCell(2, 3)).to.throw(/not found/);
   });
 
+  // Need layouting
   testSkipIf(isJSDOM)('should work with column resizing', () => {
     const columns = [{ field: 'brand', colSpan: 2 }, { field: 'category' }, { field: 'price' }];
 

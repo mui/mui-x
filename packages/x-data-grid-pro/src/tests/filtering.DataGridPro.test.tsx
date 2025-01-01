@@ -659,6 +659,7 @@ describe('<DataGridPro /> - Filter', () => {
     });
   });
 
+  // Needs layout
   testSkipIf(isJSDOM)('should not scroll the page when a filter is removed from the panel', () => {
     render(
       <div>
@@ -690,6 +691,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(window.scrollY).to.equal(initialScrollPosition);
   });
 
+  // Needs layout
   testSkipIf(isJSDOM)(
     'should not scroll the page when opening the filter panel and the operator=isAnyOf',
     () => {

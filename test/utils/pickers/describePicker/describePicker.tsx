@@ -23,7 +23,7 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
   );
 
   describe('Localization', () => {
-    testSkipIf(!!hasNoView)('should respect the `localeText` prop', () => {
+    testSkipIf(Boolean(hasNoView))('should respect the `localeText` prop', () => {
       render(
         <ElementToTest
           {...propsToOpen}
@@ -124,7 +124,7 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
   });
 
   describe('Component slot: Toolbar', () => {
-    testSkipIf(!!hasNoView)(
+    testSkipIf(Boolean(hasNoView))(
       'should render toolbar on mobile but not on desktop when `hidden` is not defined',
       () => {
         render(
@@ -142,7 +142,7 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
       },
     );
 
-    testSkipIf(!!hasNoView)('should render toolbar when `hidden` is `false`', () => {
+    testSkipIf(Boolean(hasNoView))('should render toolbar when `hidden` is `false`', () => {
       render(
         <ElementToTest
           {...propsToOpen}
@@ -153,7 +153,7 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
       expect(screen.getByTestId('pickers-toolbar')).toBeVisible();
     });
 
-    testSkipIf(!!hasNoView)('should not render toolbar when `hidden` is `true`', () => {
+    testSkipIf(Boolean(hasNoView))('should not render toolbar when `hidden` is `true`', () => {
       render(
         <ElementToTest
           {...propsToOpen}

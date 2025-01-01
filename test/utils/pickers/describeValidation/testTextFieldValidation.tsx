@@ -41,6 +41,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       },
     );
 
+    // TODO: Remove when DateTimePickers will support those props
     testSkipIf(!withDate)('should apply shouldDisableYear', () => {
       const onErrorMock = spy();
       const { setProps } = render(
@@ -62,6 +63,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
     });
 
+    // TODO: Remove when DateTimePickers will support those props
     testSkipIf(!withDate)('should apply shouldDisableMonth', () => {
       const onErrorMock = spy();
       const { setProps } = render(

@@ -151,6 +151,7 @@ describe('ChartsTooltip', () => {
     });
   });
 
+  // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
   describeSkipIf(isJSDOM)('item trigger', () => {
     it('should show right values with vertical layout on item', () => {
       render(

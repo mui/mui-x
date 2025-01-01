@@ -360,8 +360,8 @@ describeTreeView<
       });
 
       // This method is only usable with Rich Tree View components
-      describeSkipIf(treeViewComponentName === 'SimpleTreeView')('getItemTree', () => {
-        it('should return the tree rich tree view', () => {
+      describeSkipIf(treeViewComponentName === 'SimpleTreeView')('getItemTree with RichTreeView', () => {
+        it('should return the tree', () => {
           const view = render({
             items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
           });
@@ -372,7 +372,7 @@ describeTreeView<
           ]);
         });
 
-        it('should have up to date tree when props.items changes rich tree view', () => {
+        it('should have up to date tree when props.items changes', () => {
           const view = render({
             items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
           });
@@ -382,7 +382,7 @@ describeTreeView<
           expect(view.apiRef.current.getItemTree()).to.deep.equal([{ id: '1' }, { id: '2' }]);
         });
 
-        it('should contain custom item properties rich tree view', () => {
+        it('should contain custom item properties', () => {
           const view = render({
             items: [{ id: '1', customProp: 'foo' }],
           });

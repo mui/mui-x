@@ -395,6 +395,7 @@ describe('<DataGridPro /> - Rows', () => {
     });
   });
 
+  // Need layouting
   describeSkipIf(isJSDOM)('virtualization', () => {
     let apiRef: React.MutableRefObject<GridApi>;
     function TestCaseVirtualization(

@@ -210,6 +210,7 @@ describe('<DataGrid /> - Cells', () => {
   );
 
   // See https://github.com/mui/mui-x/issues/6378
+  // Needs layout
   testSkipIf(isJSDOM)(
     'should not cause scroll jump when focused cell mounts in the render zone',
     async () => {

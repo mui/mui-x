@@ -56,6 +56,7 @@ describe('<DataGridPro /> - Lazy loader', () => {
     );
   }
 
+  // Needs layout
   testSkipIf(isJSDOM)('should not call onFetchRows if the viewport is fully loaded', () => {
     const handleFetchRows = spy();
     const rows = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }, { id: 7 }];
@@ -63,6 +64,7 @@ describe('<DataGridPro /> - Lazy loader', () => {
     expect(handleFetchRows.callCount).to.equal(0);
   });
 
+  // Needs layout
   testSkipIf(isJSDOM)('should call onFetchRows when sorting is applied', () => {
     const handleFetchRows = spy();
     render(<TestLazyLoader onFetchRows={handleFetchRows} rowCount={50} />);
@@ -73,6 +75,7 @@ describe('<DataGridPro /> - Lazy loader', () => {
     expect(handleFetchRows.callCount).to.equal(2);
   });
 
+  // Needs layout
   testSkipIf(isJSDOM)(
     'should render skeleton cell if rowCount is bigger than the number of rows',
     () => {

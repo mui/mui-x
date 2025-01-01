@@ -492,6 +492,7 @@ describe('<DataGrid /> - Keyboard', () => {
       );
     }
 
+    // Need layouting for column virtualization
     testSkipIf(isJSDOM)(
       'should scroll horizontally when navigating between column group headers with arrows',
       async () => {
@@ -512,6 +513,7 @@ describe('<DataGrid /> - Keyboard', () => {
       },
     );
 
+    // Need layouting for column virtualization
     testSkipIf(isJSDOM)(
       'should scroll horizontally when navigating between column headers with arrows even if rows are empty',
       async () => {

@@ -524,6 +524,7 @@ describe('<DateCalendar />', () => {
       expect(screen.getByTestId('calendar-month-and-year-text')).to.have.text('January 2022');
     });
 
+    // Needs layout
     testSkipIf(isJSDOM)('should scroll to show the selected year', () => {
       render(
         <DateCalendar

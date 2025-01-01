@@ -13,6 +13,7 @@ describe('<DataGridPro /> - Infnite loader', () => {
 
   const { render } = createRenderer();
 
+  // Needs layout
   testSkipIf(isJSDOM)(
     'should call `onRowsScrollEnd` when viewport scroll reaches the bottom',
     async () => {
@@ -75,6 +76,7 @@ describe('<DataGridPro /> - Infnite loader', () => {
     },
   );
 
+  // Needs layout
   testSkipIf(isJSDOM)(
     'should call `onRowsScrollEnd` when there is not enough rows to cover the viewport height',
     async () => {
@@ -150,6 +152,7 @@ describe('<DataGridPro /> - Infnite loader', () => {
     },
   );
 
+  // Needs layout
   testSkipIf(isJSDOM)(
     'should not observe intersections with the rows pinned to the bottom',
     async () => {

@@ -72,6 +72,7 @@ describe('<DataGridPro /> - Columns', () => {
     });
   });
 
+  // Need layouting
   describeSkipIf(isJSDOM)('resizing', () => {
     const columns = [{ field: 'brand', width: 100 }];
 
@@ -293,6 +294,7 @@ describe('<DataGridPro /> - Columns', () => {
       expect(emptyCell.getBoundingClientRect().width).to.equal(rowWidth - 50);
     });
 
+    // Need layouting
     describeSkipIf(isJSDOM)('flex resizing', () => {
       it('should resize the flex width after resizing another column with api', () => {
         const twoColumns = [
@@ -483,6 +485,7 @@ describe('<DataGridPro /> - Columns', () => {
     });
   });
 
+  // Need layouting
   describeSkipIf(isJSDOM)('autosizing', () => {
     const rows = [
       { id: 0, brand: 'Nike' },

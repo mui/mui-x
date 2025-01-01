@@ -10,6 +10,7 @@ import {
   COMPACT_DENSITY_FACTOR,
 } from '../hooks/features/density/densitySelector';
 
+// JSDOM seem to not support CSS variables properly and `height: var(--height)` ends up being `height: ''`
 describeSkipIf(isJSDOM)('<DataGrid /> - Density', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 

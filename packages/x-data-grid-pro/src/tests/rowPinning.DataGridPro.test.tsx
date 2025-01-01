@@ -121,6 +121,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(screen.getByText(`Total Rows: ${rowCount - 2}`)).not.to.equal(null);
   });
 
+  // Needs layouting
   testSkipIf(isJSDOM)('should keep rows pinned on rows scroll', () => {
     render(<BaselineTestCase rowCount={20} colCount={5} />);
 
@@ -411,6 +412,7 @@ describe('<DataGridPro /> - Row pinning', () => {
       expect(getActiveCellRowId()).to.equal('1');
     });
 
+    // Needs layouting
     testSkipIf(isJSDOM)('should work with pinned columns', () => {
       function TestCase() {
         const data = getBasicGridData(5, 7);
@@ -475,6 +477,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     });
   });
 
+  // Needs layouting
   testSkipIf(isJSDOM)('should work with variable row height', () => {
     let apiRef!: React.MutableRefObject<GridApi>;
     function TestCase() {
@@ -503,6 +506,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(getRowById(1)?.clientHeight).to.equal(20);
   });
 
+  // Needs layouting
   testSkipIf(isJSDOM)('should always update on `rowHeight` change', async () => {
     const defaultRowHeight = 52;
 
@@ -535,6 +539,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(grid('pinnedRows--bottom')!.offsetHeight).to.equal(36);
   });
 
+  // Needs layouting
   testSkipIf(isJSDOM)('should work with `autoHeight`', () => {
     const columnHeaderHeight = 56;
     const rowHeight = 52;
@@ -554,6 +559,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(grid('main')!.clientHeight).to.equal(columnHeaderHeight + rowHeight * rowCount);
   });
 
+  // Needs layouting
   testSkipIf(isJSDOM)('should work with `autoPageSize`', () => {
     render(
       <BaselineTestCase
@@ -731,6 +737,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(getRowById(1)!).to.have.class(className);
   });
 
+  // flaky in JSDOM
   testSkipIf(isJSDOM)('should support cell editing', async () => {
     const processRowUpdate = spy((row) => ({ ...row, currencyPair: 'USD-GBP' }));
     const columns: GridColDef[] = [{ field: 'id' }, { field: 'name', editable: true }];
@@ -766,7 +773,8 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(processRowUpdate.lastCall.args[0]).to.deep.equal({ id: 3, name: 'Marcus' });
   });
 
-  testSkipIf(isJSDOM)('should support row editing', async () => {
+    // flaky in JSDOM
+    testSkipIf(isJSDOM)('should support row editing', async () => {
     const processRowUpdate = spy((row) => ({ ...row, currencyPair: 'USD-GBP' }));
     const columns: GridColDef[] = [{ field: 'id' }, { field: 'name', editable: true }];
     render(

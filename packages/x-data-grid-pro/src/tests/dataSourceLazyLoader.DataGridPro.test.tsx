@@ -15,6 +15,7 @@ import {
 import { SinonSpy, spy } from 'sinon';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 
+// Needs layout
 describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
   const { render } = createRenderer();
   const defaultTransformGetRowsResponse = (response: GridGetRowsResponse) => response;

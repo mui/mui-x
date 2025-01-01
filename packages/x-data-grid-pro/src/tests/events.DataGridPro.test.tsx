@@ -328,6 +328,7 @@ describe('<DataGridPro /> - Events params', () => {
     });
   });
 
+  // Needs layout
   testSkipIf(isJSDOM)(
     'publishing GRID_ROWS_SCROLL should call onFetchRows callback when rows lazy loading is enabled',
     () => {
