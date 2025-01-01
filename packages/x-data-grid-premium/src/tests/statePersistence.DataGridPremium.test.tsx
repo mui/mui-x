@@ -117,7 +117,7 @@ describe('<DataGridPremium /> - State persistence', () => {
         });
       });
 
-      let exportedState = apiRef.current.exportState({ exportOnlyDirtyModels: true });
+      const exportedState = apiRef.current.exportState({ exportOnlyDirtyModels: true });
       expect(exportedState.rowGrouping).to.deep.equal(FULL_INITIAL_STATE.rowGrouping);
       expect(exportedState.aggregation).to.deep.equal(FULL_INITIAL_STATE.aggregation);
     });
