@@ -11,7 +11,6 @@ import {
 import { createRenderer, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { getColumnValues } from 'test/utils/helperFn';
-import { GridInitialStatePremium } from '../models/gridStatePremium';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
