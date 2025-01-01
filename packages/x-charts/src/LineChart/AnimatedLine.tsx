@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { animated, useTransition } from '@react-spring/web';
 import { color as d3Color } from '@mui/x-charts-vendor/d3-color';
-import { styled, SxProps, Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import type { LineElementOwnerState } from './LineElement';
 import { useStringInterpolator } from '../internals/useStringInterpolator';
 import { AppearingMask } from './AppearingMask';
@@ -32,7 +32,6 @@ export interface AnimatedLineProps extends React.ComponentPropsWithoutRef<'path'
    * @default false
    */
   skipAnimation?: boolean;
-  sx?: SxProps<Theme>;
 }
 
 /**
@@ -87,11 +86,6 @@ AnimatedLine.propTypes = {
    * @default false
    */
   skipAnimation: PropTypes.bool,
-  sx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
 } as any;
 
 export { AnimatedLine };

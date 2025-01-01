@@ -3,7 +3,7 @@ import { LineChart, AnimatedLine } from '@mui/x-charts/LineChart';
 import { useChartId, useDrawingArea, useXScale } from '@mui/x-charts/hooks';
 
 function CustomAnimatedLine(props) {
-  const { limit, sxBefore, sxAfter, ...other } = props;
+  const { limit, ...other } = props;
   const { top, bottom, height, left, width } = useDrawingArea();
   const scale = useXScale();
   const chartId = useChartId();
@@ -40,11 +40,11 @@ function CustomAnimatedLine(props) {
           height={top + height + bottom}
         />
       </clipPath>
-      <g clipPath={`url(#${clipIdleft})`}>
-        <AnimatedLine {...other} sx={sxBefore} />
+      <g clipPath={`url(#${clipIdleft})`} className="line-before">
+        <AnimatedLine {...other} />
       </g>
-      <g clipPath={`url(#${clipIdRight})`}>
-        <AnimatedLine {...other} sx={sxAfter} />
+      <g clipPath={`url(#${clipIdRight})`} className="line-after">
+        <AnimatedLine {...other} />
       </g>
     </React.Fragment>
   );
@@ -64,7 +64,8 @@ export default function LineWithPrediction() {
       height={200}
       width={400}
       slots={{ line: CustomAnimatedLine }}
-      slotProps={{ line: { limit: 5, sxAfter: { strokeDasharray: '10 5' } } }}
+      slotProps={{ line: { limit: 5 } }}
+      sx={{ '& .line-after path': { strokeDasharray: '10 5' } }}
     />
   );
 }
