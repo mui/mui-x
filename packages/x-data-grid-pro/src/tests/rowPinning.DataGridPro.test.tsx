@@ -773,8 +773,8 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(processRowUpdate.lastCall.args[0]).to.deep.equal({ id: 3, name: 'Marcus' });
   });
 
-    // flaky in JSDOM
-    testSkipIf(isJSDOM)('should support row editing', async () => {
+  // flaky in JSDOM
+  testSkipIf(isJSDOM)('should support row editing', async () => {
     const processRowUpdate = spy((row) => ({ ...row, currencyPair: 'USD-GBP' }));
     const columns: GridColDef[] = [{ field: 'id' }, { field: 'name', editable: true }];
     render(
