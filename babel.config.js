@@ -30,6 +30,7 @@ const defaultAlias = {
   '@mui/x-tree-view': resolveAliasPath('./packages/x-tree-view/src'),
   '@mui/x-tree-view-pro': resolveAliasPath('./packages/x-tree-view-pro/src'),
   '@mui/x-internals': resolveAliasPath('./packages/x-internals/src'),
+  '@mui/material-nextjs': '@mui/monorepo/packages/mui-material-nextjs/src',
   '@mui-internal/api-docs-builder': resolveAliasPath(
     './node_modules/@mui/monorepo/packages/api-docs-builder',
   ),
@@ -115,7 +116,7 @@ module.exports = function getBabelConfig(api) {
       'babel-plugin-replace-imports',
       {
         test: /date-fns-jalali/i,
-        replacer: 'date-fns-jalali-v3',
+        replacer: 'date-fns-jalali-v4',
         // This option is provided by the `patches/babel-plugin-replace-imports@1.0.2.patch` patch
         filenameIncludes: 'src/AdapterDateFnsJalaliV3/',
       },

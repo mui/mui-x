@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { adapterToUse, getAllFieldInputRoot } from 'test/utils/pickers';
 import { act } from '@mui/internal-test-utils/createRenderer';
+import { describeSkipIf, testSkipIf } from 'test/utils/skipIf';
 import { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
 
 const testInvalidStatus = (expectedAnswer: boolean[], isSingleInput?: boolean) => {
@@ -22,11 +23,10 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
 ) => {
   const { componentFamily, render, isSingleInput, withDate, withTime, setValue } = getOptions();
 
-  if (componentFamily !== 'field' || !setValue) {
-    return;
-  }
+  describeSkipIf(componentFamily !== 'field' || !setValue)('text field keyboard:', () => {
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    const setValue = getOptions().setValue!;
 
-  describe('text field keyboard:', () => {
     it('should not accept end date prior to start state', () => {
       const onErrorMock = spy();
       render(<ElementToTest onError={onErrorMock} />);
@@ -45,11 +45,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([true, true], isSingleInput);
     });
 
-    it('should apply shouldDisableDate', function test() {
-      if (!withDate) {
-        return;
-      }
-
+    testSkipIf(!withDate)('should apply shouldDisableDate', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
@@ -96,7 +92,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([true, false], isSingleInput);
     });
 
-    it('should apply disablePast', function test() {
+    it('should apply disablePast', () => {
       const onErrorMock = spy();
       const now = adapterToUse.date();
       render(<ElementToTest disablePast onError={onErrorMock} />);
@@ -136,7 +132,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([false, true], isSingleInput);
     });
 
-    it('should apply disableFuture', function test() {
+    it('should apply disableFuture', () => {
       const onErrorMock = spy();
       const now = adapterToUse.date();
       render(<ElementToTest disableFuture onError={onErrorMock} />);
@@ -178,11 +174,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([false, true], isSingleInput);
     });
 
-    it('should apply minDate', function test() {
-      if (!withDate) {
-        return;
-      }
-
+    testSkipIf(!withDate)('should apply minDate', () => {
       const onErrorMock = spy();
       render(<ElementToTest onError={onErrorMock} minDate={adapterToUse.date('2018-03-15')} />);
 
@@ -215,11 +207,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([false, false], isSingleInput);
     });
 
-    it('should apply maxDate', function test() {
-      if (!withDate) {
-        return;
-      }
-
+    testSkipIf(!withDate)('should apply maxDate', () => {
       const onErrorMock = spy();
       render(<ElementToTest onError={onErrorMock} maxDate={adapterToUse.date('2018-03-15')} />);
 
@@ -244,11 +232,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([true, true], isSingleInput);
     });
 
-    it('should apply minTime', function test() {
-      if (!withTime) {
-        return;
-      }
-
+    testSkipIf(!withTime)('should apply minTime', () => {
       const onErrorMock = spy();
       render(
         <ElementToTest onError={onErrorMock} minTime={adapterToUse.date('2018-03-10T12:00:00')} />,
@@ -284,11 +268,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([false, false], isSingleInput);
     });
 
-    it('should apply maxTime', function test() {
-      if (!withTime) {
-        return;
-      }
-
+    testSkipIf(!withTime)('should apply maxTime', () => {
       const onErrorMock = spy();
       render(
         <ElementToTest onError={onErrorMock} maxTime={adapterToUse.date('2018-03-10T12:00:00')} />,

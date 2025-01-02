@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-tree-view",
-  "version": "8.0.0-alpha.4",
+  "version": "8.0.0-alpha.6",
   "description": "The community edition of the Tree View components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -70,9 +70,9 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.23",
-    "@mui/material": "^5.16.11",
-    "@mui/system": "^5.16.8",
+    "@mui/internal-test-utils": "^1.0.24",
+    "@mui/material": "^5.16.13",
+    "@mui/system": "^5.16.13",
     "@types/prop-types": "^15.7.14",
     "@types/use-sync-external-store": "^0.0.6",
     "rimraf": "^6.0.1"

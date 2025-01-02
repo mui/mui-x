@@ -3,5 +3,4 @@ export type {
   PickersShortcutsProps,
   PickersShortcutsItem,
   PickersShortcutsItemContext,
-  PickerShortcutChangeImportance,
 } from './PickersShortcuts';
