@@ -21,8 +21,7 @@ import {
 } from '@mui/internal-test-utils';
 import { $, $$, grid, getRow, getCell, getColumnValues, microtasks } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Detail panel', () => {
   const { render } = createRenderer();
@@ -39,128 +38,129 @@ describe('<DataGridPro /> - Detail panel', () => {
     );
   }
 
-  it('should not allow to expand rows that do not specify a detail element', function test() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
-    render(<TestCase getDetailPanelContent={({ id }) => (Number(id) === 0 ? null : <div />)} />);
-    const cell = getCell(0, 0);
-    expect(cell.querySelector('[aria-label="Expand"]')).to.have.attribute('disabled');
-    fireEvent.click(cell);
-    expect(getRow(0)).toHaveComputedStyle({ marginBottom: '0px' });
-  });
+  // Needs layout
+  testSkipIf(isJSDOM)(
+    'should not allow to expand rows that do not specify a detail element',
+    () => {
+      render(<TestCase getDetailPanelContent={({ id }) => (Number(id) === 0 ? null : <div />)} />);
+      const cell = getCell(0, 0);
+      expect(cell.querySelector('[aria-label="Expand"]')).to.have.attribute('disabled');
+      fireEvent.click(cell);
+      expect(getRow(0)).toHaveComputedStyle({ marginBottom: '0px' });
+    },
+  );
 
-  it('should not consider the height of the detail panels when rendering new rows during scroll', function test() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
-    const rowHeight = 50;
-    render(
-      <TestCase
-        getDetailPanelHeight={({ id }) => (Number(id) % 2 === 0 ? 1 : 2) * rowHeight} // 50px for even rows, otherwise 100px
-        getDetailPanelContent={() => <div />}
-        rowHeight={rowHeight}
-        rowBufferPx={0}
-        initialState={{
-          detailPanel: {
-            expandedRowIds: new Set([0, 1]),
-          },
-        }}
-      />,
-    );
-    expect(getColumnValues(1)[0]).to.equal('0');
-    const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-    virtualScroller.scrollTop = 250; // 50 + 50 (detail panel) + 50 + 100 (detail panel * 2)
-    act(() => virtualScroller.dispatchEvent(new Event('scroll')));
-    expect(getColumnValues(1)[0]).to.equal('2'); // If there was no expanded row, the first rendered would be 5
-  });
-
-  it('should derive the height from the content if getDetailPanelHeight returns "auto"', async function test() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
-    const rowHeight = 50;
-    const detailPanelHeight = 100;
-    render(
-      <TestCase
-        nbRows={1}
-        rowHeight={rowHeight}
-        getDetailPanelContent={() => <div style={{ height: detailPanelHeight }} />}
-        getDetailPanelHeight={() => 'auto'}
-      />,
-    );
-    fireEvent.click(screen.getAllByRole('button', { name: 'Expand' })[0]);
-    await microtasks();
-
-    const virtualScrollerContent = $('.MuiDataGrid-virtualScrollerContent')!;
-    expect(virtualScrollerContent).toHaveComputedStyle({
-      height: `${rowHeight + detailPanelHeight}px`,
-    });
-    expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
-
-    const detailPanels = $$('.MuiDataGrid-detailPanel');
-    expect(detailPanels[0]).toHaveComputedStyle({
-      height: `${detailPanelHeight}px`,
-    });
-  });
-
-  it('should update the detail panel height if the content height changes when getDetailPanelHeight returns "auto"', async function test() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
-    function ExpandableCell() {
-      const [expanded, setExpanded] = React.useState(false);
-      return (
-        <div style={{ height: expanded ? 200 : 100 }}>
-          <button onClick={() => setExpanded(!expanded)}>
-            {expanded ? 'Decrease' : 'Increase'}
-          </button>
-        </div>
+  // Needs layout
+  testSkipIf(isJSDOM)(
+    'should not consider the height of the detail panels when rendering new rows during scroll',
+    () => {
+      const rowHeight = 50;
+      render(
+        <TestCase
+          getDetailPanelHeight={({ id }) => (Number(id) % 2 === 0 ? 1 : 2) * rowHeight} // 50px for even rows, otherwise 100px
+          getDetailPanelContent={() => <div />}
+          rowHeight={rowHeight}
+          rowBufferPx={0}
+          initialState={{
+            detailPanel: {
+              expandedRowIds: new Set([0, 1]),
+            },
+          }}
+        />,
       );
-    }
-    const rowHeight = 50;
-    render(
-      <TestCase
-        nbRows={1}
-        rowHeight={rowHeight}
-        getDetailPanelContent={() => <ExpandableCell />}
-        getDetailPanelHeight={() => 'auto'}
-      />,
-    );
-    const virtualScrollerContent = grid('virtualScrollerContent')!;
-    fireEvent.click(screen.getByRole('button', { name: 'Expand' }));
+      expect(getColumnValues(1)[0]).to.equal('0');
+      const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+      virtualScroller.scrollTop = 250; // 50 + 50 (detail panel) + 50 + 100 (detail panel * 2)
+      act(() => virtualScroller.dispatchEvent(new Event('scroll')));
+      expect(getColumnValues(1)[0]).to.equal('2'); // If there was no expanded row, the first rendered would be 5
+    },
+  );
 
-    await waitFor(() => {
-      expect(getRow(0).className).to.include(gridClasses['row--detailPanelExpanded']);
-    });
+  // Needs layout
+  testSkipIf(isJSDOM)(
+    'should derive the height from the content if getDetailPanelHeight returns "auto"',
+    async () => {
+      const rowHeight = 50;
+      const detailPanelHeight = 100;
+      render(
+        <TestCase
+          nbRows={1}
+          rowHeight={rowHeight}
+          getDetailPanelContent={() => <div style={{ height: detailPanelHeight }} />}
+          getDetailPanelHeight={() => 'auto'}
+        />,
+      );
+      fireEvent.click(screen.getAllByRole('button', { name: 'Expand' })[0]);
+      await microtasks();
 
-    await waitFor(() => {
-      expect(virtualScrollerContent).toHaveComputedStyle({ height: `${rowHeight + 100}px` });
-    });
-    expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
+      const virtualScrollerContent = $('.MuiDataGrid-virtualScrollerContent')!;
+      expect(virtualScrollerContent).toHaveComputedStyle({
+        height: `${rowHeight + detailPanelHeight}px`,
+      });
+      expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
 
-    const detailPanels = $$('.MuiDataGrid-detailPanel');
-    expect(detailPanels[0]).toHaveComputedStyle({
-      height: `100px`,
-    });
+      const detailPanels = $$('.MuiDataGrid-detailPanel');
+      expect(detailPanels[0]).toHaveComputedStyle({
+        height: `${detailPanelHeight}px`,
+      });
+    },
+  );
 
-    fireEvent.click(screen.getByRole('button', { name: 'Increase' }));
+  // Needs layout
+  testSkipIf(isJSDOM)(
+    'should update the detail panel height if the content height changes when getDetailPanelHeight returns "auto"',
+    async () => {
+      function ExpandableCell() {
+        const [expanded, setExpanded] = React.useState(false);
+        return (
+          <div style={{ height: expanded ? 200 : 100 }}>
+            <button onClick={() => setExpanded(!expanded)}>
+              {expanded ? 'Decrease' : 'Increase'}
+            </button>
+          </div>
+        );
+      }
+      const rowHeight = 50;
+      render(
+        <TestCase
+          nbRows={1}
+          rowHeight={rowHeight}
+          getDetailPanelContent={() => <ExpandableCell />}
+          getDetailPanelHeight={() => 'auto'}
+        />,
+      );
+      const virtualScrollerContent = grid('virtualScrollerContent')!;
+      fireEvent.click(screen.getByRole('button', { name: 'Expand' }));
 
-    await waitFor(() => {
-      expect(virtualScrollerContent).toHaveComputedStyle({ height: `${rowHeight + 200}px` });
-    });
-    expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
+      await waitFor(() => {
+        expect(getRow(0).className).to.include(gridClasses['row--detailPanelExpanded']);
+      });
 
-    expect(detailPanels[0]).toHaveComputedStyle({
-      height: `200px`,
-    });
-  });
+      await waitFor(() => {
+        expect(virtualScrollerContent).toHaveComputedStyle({ height: `${rowHeight + 100}px` });
+      });
+      expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
 
-  it('should position correctly the detail panels', function test() {
-    if (isJSDOM) {
-      this.skip(); // Doesn't work with mocked window.getComputedStyle
-    }
+      const detailPanels = $$('.MuiDataGrid-detailPanel');
+      expect(detailPanels[0]).toHaveComputedStyle({
+        height: `100px`,
+      });
 
+      fireEvent.click(screen.getByRole('button', { name: 'Increase' }));
+
+      await waitFor(() => {
+        expect(virtualScrollerContent).toHaveComputedStyle({ height: `${rowHeight + 200}px` });
+      });
+      expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
+
+      expect(detailPanels[0]).toHaveComputedStyle({
+        height: `200px`,
+      });
+    },
+  );
+
+  // Doesn't work with mocked window.getComputedStyle
+  testSkipIf(isJSDOM)('should position correctly the detail panels', () => {
     const rowHeight = 50;
     const evenHeight = rowHeight;
     const oddHeight = 2 * rowHeight;
@@ -204,38 +204,37 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(screen.queryByText('Row 0')).to.equal(null);
   });
 
-  it('should consider the height of the detail panel when scrolling to a cell', function test() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
-    const rowHeight = 50;
-    const columnHeaderHeight = 50;
-    render(
-      <TestCase
-        getDetailPanelHeight={() => rowHeight}
-        getDetailPanelContent={() => <div />}
-        rowHeight={rowHeight}
-        columnHeaderHeight={columnHeaderHeight}
-        initialState={{
-          detailPanel: {
-            expandedRowIds: new Set([0]),
-          },
-        }}
-        hideFooter
-      />,
-    );
-    const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-    fireUserEvent.mousePress(getCell(2, 1));
-    fireEvent.keyDown(getCell(2, 1), { key: 'ArrowDown' });
-    expect(virtualScroller.scrollTop).to.equal(0);
-    fireEvent.keyDown(getCell(3, 1), { key: 'ArrowDown' });
-    expect(virtualScroller.scrollTop).to.equal(50);
-  });
+  // Needs layout
+  testSkipIf(isJSDOM)(
+    'should consider the height of the detail panel when scrolling to a cell',
+    () => {
+      const rowHeight = 50;
+      const columnHeaderHeight = 50;
+      render(
+        <TestCase
+          getDetailPanelHeight={() => rowHeight}
+          getDetailPanelContent={() => <div />}
+          rowHeight={rowHeight}
+          columnHeaderHeight={columnHeaderHeight}
+          initialState={{
+            detailPanel: {
+              expandedRowIds: new Set([0]),
+            },
+          }}
+          hideFooter
+        />,
+      );
+      const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+      fireUserEvent.mousePress(getCell(2, 1));
+      fireEvent.keyDown(getCell(2, 1), { key: 'ArrowDown' });
+      expect(virtualScroller.scrollTop).to.equal(0);
+      fireEvent.keyDown(getCell(3, 1), { key: 'ArrowDown' });
+      expect(virtualScroller.scrollTop).to.equal(50);
+    },
+  );
 
-  it('should not scroll vertically when navigating expanded row cells', function test() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
+  // Needs layout
+  testSkipIf(isJSDOM)('should not scroll vertically when navigating expanded row cells', () => {
     function Component() {
       const data = useBasicDemoData(10, 4);
       return (
@@ -381,40 +380,40 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(getDetailPanelHeight2.callCount).to.equal(2);
   });
 
-  it('should update the panel height if getDetailPanelHeight is changed while the panel is open', function test() {
-    if (isJSDOM) {
-      this.skip(); // Doesn't work with mocked window.getComputedStyle
-    }
+  // Doesn't work with mocked window.getComputedStyle
+  testSkipIf(isJSDOM)(
+    'should update the panel height if getDetailPanelHeight is changed while the panel is open',
+    () => {
+      const getDetailPanelHeight = spy(() => 100);
+      const { setProps } = render(
+        <TestCase
+          columns={[{ field: 'brand' }]}
+          rows={[
+            { id: 0, brand: 'Nike' },
+            { id: 1, brand: 'Adidas' },
+          ]}
+          getDetailPanelContent={() => <div>Detail</div>}
+          getDetailPanelHeight={getDetailPanelHeight}
+          pagination
+          pageSizeOptions={[1]}
+          initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
+          autoHeight
+        />,
+      );
 
-    const getDetailPanelHeight = spy(() => 100);
-    const { setProps } = render(
-      <TestCase
-        columns={[{ field: 'brand' }]}
-        rows={[
-          { id: 0, brand: 'Nike' },
-          { id: 1, brand: 'Adidas' },
-        ]}
-        getDetailPanelContent={() => <div>Detail</div>}
-        getDetailPanelHeight={getDetailPanelHeight}
-        pagination
-        pageSizeOptions={[1]}
-        initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
-        autoHeight
-      />,
-    );
+      fireEvent.click(screen.getByRole('button', { name: 'Expand' }));
+      const detailPanel = $$('.MuiDataGrid-detailPanel')[0];
+      expect(detailPanel).toHaveComputedStyle({ height: '100px' });
+      const virtualScroller = grid('virtualScroller')!;
+      expect(virtualScroller.scrollHeight).to.equal(208);
 
-    fireEvent.click(screen.getByRole('button', { name: 'Expand' }));
-    const detailPanel = $$('.MuiDataGrid-detailPanel')[0];
-    expect(detailPanel).toHaveComputedStyle({ height: '100px' });
-    const virtualScroller = grid('virtualScroller')!;
-    expect(virtualScroller.scrollHeight).to.equal(208);
+      const getDetailPanelHeight2 = spy(() => 200);
+      setProps({ getDetailPanelHeight: getDetailPanelHeight2 });
 
-    const getDetailPanelHeight2 = spy(() => 200);
-    setProps({ getDetailPanelHeight: getDetailPanelHeight2 });
-
-    expect(detailPanel).toHaveComputedStyle({ height: '200px' });
-    expect(virtualScroller.scrollHeight).to.equal(200 + 52 + 56);
-  });
+      expect(detailPanel).toHaveComputedStyle({ height: '200px' });
+      expect(virtualScroller.scrollHeight).to.equal(200 + 52 + 56);
+    },
+  );
 
   it('should only call getDetailPanelHeight on the rows that have detail content', () => {
     const getDetailPanelHeight = spy(({ row }) => row.id + 100); // Use `row` to allow to assert its args below
@@ -458,10 +457,8 @@ describe('<DataGridPro /> - Detail panel', () => {
   });
 
   // See https://github.com/mui/mui-x/issues/4607
-  it('should make detail panel to take full width of the content', function test() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
+  // Needs layout
+  testSkipIf(isJSDOM)('should make detail panel to take full width of the content', () => {
     render(
       <TestCase
         getDetailPanelContent={() => <div>Detail</div>}
@@ -485,20 +482,20 @@ describe('<DataGridPro /> - Detail panel', () => {
   });
 
   // See https://github.com/mui/mui-x/issues/6694
-  it('should add a bottom margin to the expanded row when using `getRowSpacing`', function test() {
-    if (isJSDOM) {
-      this.skip(); // Doesn't work with mocked window.getComputedStyle
-    }
-
-    render(
-      <TestCase
-        getDetailPanelContent={({ id }) => (id === 0 ? <div /> : null)}
-        getRowSpacing={() => ({ top: 2, bottom: 2 })}
-      />,
-    );
-    fireEvent.click(screen.getAllByRole('button', { name: 'Expand' })[0]);
-    expect(getRow(0)).toHaveComputedStyle({ marginBottom: '2px' });
-  });
+  // Doesn't work with mocked window.getComputedStyle
+  testSkipIf(isJSDOM)(
+    'should add a bottom margin to the expanded row when using `getRowSpacing`',
+    () => {
+      render(
+        <TestCase
+          getDetailPanelContent={({ id }) => (id === 0 ? <div /> : null)}
+          getRowSpacing={() => ({ top: 2, bottom: 2 })}
+        />,
+      );
+      fireEvent.click(screen.getAllByRole('button', { name: 'Expand' })[0]);
+      expect(getRow(0)).toHaveComputedStyle({ marginBottom: '2px' });
+    },
+  );
 
   it('should not reuse detail panel components', () => {
     let counter = 0;
@@ -517,28 +514,29 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(screen.getByTestId(`detail-panel-content`).textContent).to.equal(`${counter}`);
   });
 
-  it("should not render detail panel for the focused row if it's outside of the viewport", function test() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
-    render(
-      <TestCase
-        getDetailPanelHeight={() => 50}
-        getDetailPanelContent={() => <div />}
-        rowBufferPx={0}
-        nbRows={20}
-      />,
-    );
+  // Needs layout
+  testSkipIf(isJSDOM)(
+    "should not render detail panel for the focused row if it's outside of the viewport",
+    () => {
+      render(
+        <TestCase
+          getDetailPanelHeight={() => 50}
+          getDetailPanelContent={() => <div />}
+          rowBufferPx={0}
+          nbRows={20}
+        />,
+      );
 
-    fireUserEvent.mousePress(screen.getAllByRole('button', { name: 'Expand' })[0]);
+      fireUserEvent.mousePress(screen.getAllByRole('button', { name: 'Expand' })[0]);
 
-    const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
-    virtualScroller.scrollTop = 500;
-    act(() => virtualScroller.dispatchEvent(new Event('scroll')));
+      const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
+      virtualScroller.scrollTop = 500;
+      act(() => virtualScroller.dispatchEvent(new Event('scroll')));
 
-    const detailPanels = document.querySelectorAll(`.${gridClasses.detailPanel}`);
-    expect(detailPanels.length).to.equal(0);
-  });
+      const detailPanels = document.querySelectorAll(`.${gridClasses.detailPanel}`);
+      expect(detailPanels.length).to.equal(0);
+    },
+  );
 
   describe('prop: onDetailPanelsExpandedRowIds', () => {
     it('should call when a row is expanded or closed', async () => {

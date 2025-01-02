@@ -2,6 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { screen } from '@mui/internal-test-utils';
 import { adapterToUse } from 'test/utils/pickers';
+import { describeSkipIf } from 'test/utils/skipIf';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
 const queryByTextInView = (text: string) => {
@@ -19,11 +20,7 @@ const queryByTextInView = (text: string) => {
 export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTest, getOptions) => {
   const { views, componentFamily, render } = getOptions();
 
-  if (componentFamily === 'field' || !views.includes('year')) {
-    return;
-  }
-
-  describe('year view:', () => {
+  describeSkipIf(componentFamily === 'field' || !views.includes('year'))('year view:', () => {
     const defaultProps = {
       onChange: () => {},
       ...(views.length > 1 && {
@@ -38,7 +35,7 @@ export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTes
       }),
     };
 
-    it('should apply shouldDisableYear', function test() {
+    it('should apply shouldDisableYear', () => {
       render(
         <ElementToTest
           {...defaultProps}
@@ -52,7 +49,7 @@ export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTes
       expect(queryByTextInView('2017')).not.to.have.attribute('disabled');
     });
 
-    it('should apply disablePast', function test() {
+    it('should apply disablePast', () => {
       let now;
       function WithFakeTimer(props: any) {
         now = adapterToUse.date();
@@ -72,7 +69,7 @@ export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTes
       );
     });
 
-    it('should apply disableFuture', function test() {
+    it('should apply disableFuture', () => {
       let now;
       function WithFakeTimer(props: any) {
         now = adapterToUse.date();
@@ -92,7 +89,7 @@ export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTes
       );
     });
 
-    it('should apply minDate', function test() {
+    it('should apply minDate', () => {
       render(
         <ElementToTest
           {...defaultProps}
@@ -106,7 +103,7 @@ export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTes
       expect(queryByTextInView('2020')).not.to.equal(null);
     });
 
-    it('should apply maxDate', function test() {
+    it('should apply maxDate', () => {
       render(
         <ElementToTest
           {...defaultProps}

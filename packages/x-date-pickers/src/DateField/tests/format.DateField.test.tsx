@@ -6,11 +6,11 @@ import {
   describeAdapters,
 } from 'test/utils/pickers';
 import { DateField } from '@mui/x-date-pickers/DateField';
+import { testSkipIf } from 'test/utils/skipIf';
 
 describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProps }) => {
+  const { start: startChar, end: endChar } = adapter.escapedCharacters;
   it('should support escaped characters in start separator', () => {
-    const { start: startChar, end: endChar } = adapter.escapedCharacters;
-
     // Test with accessible DOM structure
     let view = renderWithProps({
       enableAccessibleFieldDOMStructure: true,
@@ -38,8 +38,6 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
   });
 
   it('should support escaped characters between sections separator', () => {
-    const { start: startChar, end: endChar } = adapter.escapedCharacters;
-
     // Test with accessible DOM structure
     let view = renderWithProps({
       enableAccessibleFieldDOMStructure: true,
@@ -68,14 +66,9 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
     expectFieldValueV6(input, 'January Escaped 2019');
   });
 
-  it('should support nested escaped characters', function test() {
-    const { start: startChar, end: endChar } = adapter.escapedCharacters;
-    // If your start character and end character are equal
-    // Then you can't have nested escaped characters
-    if (startChar === endChar) {
-      this.skip();
-    }
-
+  // If your start character and end character are equal
+  // Then you can't have nested escaped characters
+  testSkipIf(startChar === endChar)('should support nested escaped characters', () => {
     // Test with accessible DOM structure
     let view = renderWithProps({
       enableAccessibleFieldDOMStructure: true,
@@ -105,8 +98,6 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
   });
 
   it('should support several escaped parts', () => {
-    const { start: startChar, end: endChar } = adapter.escapedCharacters;
-
     // Test with accessible DOM structure
     let view = renderWithProps({
       enableAccessibleFieldDOMStructure: true,
@@ -135,9 +126,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
     expectFieldValueV6(input, 'Escaped January Escaped 2019');
   });
 
-  it('should support format with only escaped parts', function test() {
-    const { start: startChar, end: endChar } = adapter.escapedCharacters;
-
+  it('should support format with only escaped parts', () => {
     // Test with accessible DOM structure
     const view = renderWithProps({
       enableAccessibleFieldDOMStructure: true,
