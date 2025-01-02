@@ -22,7 +22,7 @@ function TestComponent(props: { packageName?: MuiCommercialPackageName }) {
 }
 
 // Can't change the process.env.NODE_ENV in Karma
-describeSkipIf(!isJSDOM)('useLicenseVerifier', function test() {
+describeSkipIf(!isJSDOM)('useLicenseVerifier', () => {
   const { render } = createRenderer();
 
   let env: any;
