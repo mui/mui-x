@@ -64,7 +64,6 @@ describe('<DataGrid /> - Cells', () => {
       expect(color).not.to.equal('rgba(0, 0, 0, 0)');
     }
 
-    // Doesn't work with mocked window.getComputedStyle
     it('should add right border to cells', () => {
       render(
         <div style={{ width: 300, height: 500 }}>
@@ -82,7 +81,6 @@ describe('<DataGrid /> - Cells', () => {
     });
 
     // See https://github.com/mui/mui-x/issues/4122
-    // Doesn't work with mocked window.getComputedStyle
     it('should add right border to cells in the last row', () => {
       render(
         <div style={{ width: 300, height: 500 }}>
