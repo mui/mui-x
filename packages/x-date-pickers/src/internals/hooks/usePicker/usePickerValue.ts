@@ -8,12 +8,10 @@ import {
   UsePickerValueProps,
   UsePickerValueParams,
   UsePickerValueResponse,
-  PickerValueUpdateAction,
   UsePickerValueState,
   UsePickerValueFieldResponse,
   UsePickerValueViewsResponse,
   PickerSelectionState,
-  PickerValueUpdaterParams,
   UsePickerValueContextValue,
   UsePickerValueProviderParams,
   UsePickerValueActionsContextValue,
@@ -22,98 +20,6 @@ import {
 } from './usePickerValue.types';
 import { useValueWithTimezone } from '../useValueWithTimezone';
 import { PickerValidValue } from '../../models';
-
-/**
- * Decide if the new value should be published
- * The published value will be passed to `onChange` if defined.
- */
-const shouldPublishValue = <TValue extends PickerValidValue, TError>(
-  params: PickerValueUpdaterParams<TValue, TError>,
-): boolean => {
-  const { action, hasChanged, dateState, isControlled } = params;
-
-  const isCurrentValueTheDefaultValue = !isControlled && !dateState.hasBeenModifiedSinceMount;
-
-  if (action.name === 'setValueFromView' && action.selectionState !== 'shallow') {
-    // On the first view,
-    // If the value is not controlled, then clicking on any value (including the one equal to `defaultValue`) should call `onChange`
-    if (isCurrentValueTheDefaultValue) {
-      return true;
-    }
-
-    return hasChanged(dateState.lastPublishedValue);
-  }
-
-  if (action.name === 'setExplicitValue') {
-    // If the value is not controlled and the value has never been modified before,
-    // Then clicking on any value (including the one equal to `defaultValue`) should call `onChange`
-    if (!action.options.skipPublicationIfPristine && isCurrentValueTheDefaultValue) {
-      return true;
-    }
-
-    return hasChanged(dateState.lastPublishedValue);
-  }
-
-  return false;
-};
-
-/**
- * Decide if the new value should be committed.
- * The committed value will be passed to `onAccept` if defined.
- * It will also be used as a reset target when calling the `cancel` picker action (when clicking on the "Cancel" button).
- */
-const shouldCommitValue = <TValue extends PickerValidValue, TError>(
-  params: PickerValueUpdaterParams<TValue, TError>,
-): boolean => {
-  const { action, hasChanged, dateState, isControlled, closeOnSelect } = params;
-
-  const isCurrentValueTheDefaultValue = !isControlled && !dateState.hasBeenModifiedSinceMount;
-
-  if (action.name === 'setValueFromView' && action.selectionState === 'finish' && closeOnSelect) {
-    // On picker where the 1st view is also the last view,
-    // If the value is not controlled, then clicking on any value (including the one equal to `defaultValue`) should call `onAccept`
-    if (isCurrentValueTheDefaultValue) {
-      return true;
-    }
-
-    return hasChanged(dateState.lastCommittedValue);
-  }
-
-  if (action.name === 'setExplicitValue') {
-    if (action.options.changeImportance === 'set') {
-      return false;
-    }
-
-    // If the value is not controlled and the value has never been modified before,
-    // Then clicking on any value (including the one equal to `defaultValue`) should call `onChange`
-    if (!action.options.skipPublicationIfPristine && isCurrentValueTheDefaultValue) {
-      return true;
-    }
-
-    return hasChanged(dateState.lastCommittedValue);
-  }
-
-  return false;
-};
-
-/**
- * Decide if the picker should be closed after the value is updated.
- */
-const shouldClosePicker = <TValue extends PickerValidValue, TError>(
-  params: PickerValueUpdaterParams<TValue, TError>,
-): boolean => {
-  const { action, closeOnSelect } = params;
-
-  if (action.name === 'setValueFromView') {
-    return action.selectionState === 'finish' && closeOnSelect;
-  }
-
-  if (action.name === 'setExplicitValue') {
-    return action.options.changeImportance === 'accept';
-  }
-
-  return false;
-};
 
 /**
  * Manage the value lifecycle of all the pickers.
@@ -235,24 +141,52 @@ export const usePickerValue = <
     onError: props.onError,
   });
 
-  const updateDate = useEventCallback((action: PickerValueUpdateAction<TValue, TError>) => {
-    const updaterParams: PickerValueUpdaterParams<TValue, TError> = {
-      action,
-      dateState,
-      hasChanged: (comparison) => !valueManager.areValuesEqual(utils, action.value, comparison),
-      isControlled,
-      closeOnSelect,
-    };
+  const setValue = useEventCallback((newValue: TValue, options?: SetValueActionOptions<TError>) => {
+    const {
+      changeImportance = 'accept',
+      skipPublicationIfPristine = false,
+      validationError: validationErrorFromOptions,
+      shortcut,
+    } = options ?? {};
 
-    const shouldPublish = shouldPublishValue(updaterParams);
-    const shouldCommit = shouldCommitValue(updaterParams);
-    const shouldClose = shouldClosePicker(updaterParams);
+    const isCurrentValueTheDefaultValue = !isControlled && !dateState.hasBeenModifiedSinceMount;
+
+    /**
+     * Check if the value should be published.
+     */
+    let shouldPublish: boolean;
+    if (!skipPublicationIfPristine && isCurrentValueTheDefaultValue) {
+      // If the value is not controlled and the value has never been modified before,
+      // Then clicking on any value (including the one equal to `defaultValue`) should call `onChange`
+      shouldPublish = true;
+    } else {
+      shouldPublish = !valueManager.areValuesEqual(utils, newValue, dateState.lastPublishedValue);
+    }
+
+    /**
+     * Check if the value should be committed.
+     */
+    let shouldCommit: boolean;
+    if (changeImportance === 'set') {
+      shouldCommit = false;
+    } else if (!skipPublicationIfPristine && isCurrentValueTheDefaultValue) {
+      // If the value is not controlled and the value has never been modified before,
+      // Then clicking on any value (including the one equal to `defaultValue`) should call `onChange`
+      shouldCommit = true;
+    } else {
+      shouldCommit = !valueManager.areValuesEqual(utils, newValue, dateState.lastCommittedValue);
+    }
+
+    /**
+     * Check if the picker should be closed.
+     */
+    const shouldClose = changeImportance === 'accept';
 
     setDateState((prev) => ({
       ...prev,
-      draft: action.value,
-      lastPublishedValue: shouldPublish ? action.value : prev.lastPublishedValue,
-      lastCommittedValue: shouldCommit ? action.value : prev.lastCommittedValue,
+      draft: newValue,
+      lastPublishedValue: shouldPublish ? newValue : prev.lastPublishedValue,
+      lastCommittedValue: shouldCommit ? newValue : prev.lastCommittedValue,
       hasBeenModifiedSinceMount: true,
     }));
 
@@ -260,18 +194,16 @@ export const usePickerValue = <
     const getContext = (): PickerChangeHandlerContext<TError> => {
       if (!cachedContext) {
         const validationError =
-          action.name === 'setExplicitValue' && action.options.validationError != null
-            ? action.options.validationError
-            : getValidationErrorForNewValue(action.value);
+          validationErrorFromOptions == null
+            ? getValidationErrorForNewValue(newValue)
+            : validationErrorFromOptions;
 
         cachedContext = {
           validationError,
         };
 
-        if (action.name === 'setExplicitValue') {
-          if (action.options.shortcut) {
-            cachedContext.shortcut = action.options.shortcut;
-          }
+        if (shortcut) {
+          cachedContext.shortcut = shortcut;
         }
       }
 
@@ -279,11 +211,11 @@ export const usePickerValue = <
     };
 
     if (shouldPublish) {
-      handleValueChange(action.value, getContext());
+      handleValueChange(newValue, getContext());
     }
 
     if (shouldCommit && onAccept) {
-      onAccept(action.value, getContext());
+      onAccept(newValue, getContext());
     }
 
     if (shouldClose) {
@@ -312,23 +244,6 @@ export const usePickerValue = <
     }));
   }
 
-  const handleChange = useEventCallback(
-    (newValue: TValue, selectionState: PickerSelectionState = 'partial') =>
-      updateDate({ name: 'setValueFromView', value: newValue, selectionState }),
-  );
-
-  const valueWithoutError = React.useMemo(
-    () => valueManager.cleanValue(utils, dateState.draft),
-    [utils, valueManager, dateState.draft],
-  );
-
-  const viewResponse: UsePickerValueViewsResponse<TValue> = {
-    value: valueWithoutError,
-    onChange: handleChange,
-    open,
-    setOpen,
-  };
-
   const isValid = (testedValue: TValue) => {
     const error = validator({
       adapter,
@@ -339,14 +254,6 @@ export const usePickerValue = <
 
     return !valueManager.hasError(error);
   };
-
-  const setValue = useEventCallback((newValue: TValue, options?: SetValueActionOptions<TError>) =>
-    updateDate({
-      name: 'setExplicitValue',
-      value: newValue,
-      options: { changeImportance: 'accept', skipPublicationIfPristine: false, ...options },
-    }),
-  );
 
   const clearValue = useEventCallback(() => setValue(valueManager.emptyValue));
 
@@ -370,6 +277,34 @@ export const usePickerValue = <
     value: dateState.draft,
     onChange: (newValue, context) =>
       setValue(newValue, { validationError: context.validationError }),
+  };
+
+  const setValueFromView = useEventCallback(
+    (newValue: TValue, selectionState: PickerSelectionState = 'partial') => {
+      if (selectionState === 'shallow') {
+        setDateState((prev) => ({
+          ...prev,
+          draft: newValue,
+          hasBeenModifiedSinceMount: true,
+        }));
+      }
+
+      setValue(newValue, {
+        changeImportance: selectionState === 'finish' && closeOnSelect ? 'accept' : 'set',
+      });
+    },
+  );
+
+  const valueWithoutError = React.useMemo(
+    () => valueManager.cleanValue(utils, dateState.draft),
+    [utils, valueManager, dateState.draft],
+  );
+
+  const viewResponse: UsePickerValueViewsResponse<TValue> = {
+    value: valueWithoutError,
+    onChange: setValueFromView,
+    open,
+    setOpen,
   };
 
   const actionsContextValue = React.useMemo<UsePickerValueActionsContextValue<TValue, TError>>(
