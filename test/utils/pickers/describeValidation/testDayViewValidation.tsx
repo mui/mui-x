@@ -175,7 +175,6 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
     });
 
     // prop only available on DateTime pickers
-    // prop only available on DateTime pickers
     testSkipIf(!withDate || !withTime)('should apply maxDateTime', () => {
       render(
         <ElementToTest
@@ -191,7 +190,6 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
       expect(screen.getByRole('gridcell', { name: '30' })).to.have.attribute('disabled');
     });
 
-    // prop only available on DateTime pickers
     // prop only available on DateTime pickers
     testSkipIf(!withDate || !withTime)('should apply minDateTime', () => {
       render(

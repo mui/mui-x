@@ -1186,7 +1186,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
   });
 
   // See https://github.com/mui/mui-x/issues/8737
-  // Need layouting
+  // Need layout
   testSkipIf(isJSDOM)(
     'should not add horizontal scrollbar when .MuiDataGrid-main has border',
     async () => {
@@ -1213,7 +1213,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
   );
 
   // See https://github.com/mui/mui-x/issues/8689#issuecomment-1582616570
-  // Need layouting
+  // Need layout
   testSkipIf(isJSDOM)(
     'should not add scrollbars when the parent container has fractional size',
     async () => {
@@ -1231,7 +1231,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
   );
 
   // See https://github.com/mui/mui-x/issues/9510
-  // needs layout
+  // Need layout
   testSkipIf(isJSDOM)(
     'should not exceed maximum call stack size when the parent container has fractional width',
     () => {
