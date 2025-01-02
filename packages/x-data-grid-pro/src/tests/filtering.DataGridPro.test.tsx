@@ -1181,6 +1181,48 @@ describe('<DataGridPro /> - Filter', () => {
       expect(getRows({ operator: 'is', value: null })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operator: 'is', value: 'test' })).to.deep.equal(ALL_ROWS); // Ignores invalid values
     });
+
+    it('should allow temporary invalid values while updating the number filter', () => {
+      const changeSpy = spy();
+      render(
+        <TestCase
+          rows={[
+            { id: 1, amount: 1 },
+            { id: 2, amount: 10 },
+            { id: 3, amount: 100 },
+            { id: 4, amount: 1000 },
+          ]}
+          columns={[{ field: 'amount', type: 'number' }]}
+          headerFilters
+          onFilterModelChange={changeSpy}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['1', '10', '100', '1,000']);
+
+      const filterCell = getColumnHeaderCell(0, 1);
+      fireEvent.click(filterCell);
+
+      fireEvent.click(within(filterCell).getByLabelText('Operator'));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Greater than' }));
+
+      const input = within(filterCell).getByLabelText('Greater than');
+      input.focus();
+
+      fireEvent.change(input, { target: { value: '1' } });
+      clock.tick(SUBMIT_FILTER_STROKE_TIME);
+      expect(getColumnValues(0)).to.deep.equal(['10', '100', '1,000']);
+      expect(changeSpy.lastCall.args[0].items[0].value).to.equal(1);
+
+      fireEvent.change(input, { target: { value: '1e' } });
+      clock.tick(SUBMIT_FILTER_STROKE_TIME);
+      expect(getColumnValues(0)).to.deep.equal(['1', '10', '100', '1,000']);
+      expect(changeSpy.lastCall.args[0].items[0].value).to.equal(undefined);
+
+      fireEvent.change(input, { target: { value: '1e2' } });
+      clock.tick(SUBMIT_FILTER_STROKE_TIME);
+      expect(getColumnValues(0)).to.deep.equal(['1,000']);
+      expect(changeSpy.lastCall.args[0].items[0].value).to.equal(100);
+    });
   });
 
   describe('Read-only filters', () => {
