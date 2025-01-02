@@ -26,6 +26,7 @@ export function AnimatedBarElement(props: BarProps) {
   return (
     <animated.rect
       {...other}
+      // @ts-expect-error
       filter={ownerState.isHighlighted ? 'brightness(120%)' : undefined}
       opacity={ownerState.isFaded ? 0.3 : 1}
     />
