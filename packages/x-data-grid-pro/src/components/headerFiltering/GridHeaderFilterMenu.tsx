@@ -78,7 +78,8 @@ function GridHeaderFilterMenu({
           </rootProps.slots.baseMenuItem>,
           <rootProps.slots.baseDivider key="filter-menu-divider" />,
         ]}
-        {operators.map((op) => {
+        {operators.map((op, i) => {
+          const selected = op.value === item.operator;
           const label =
             op?.headerLabel ??
             apiRef.current.getLocaleText(
@@ -89,16 +90,13 @@ function GridHeaderFilterMenu({
             <rootProps.slots.baseMenuItem
               key={`${field}-${op.value}`}
               iconStart={
-                op.value === item.operator ? (
-                  <rootProps.slots.menuItemCheckIcon fontSize="small" />
-                ) : (
-                  <span />
-                )
+                selected ? <rootProps.slots.menuItemCheckIcon fontSize="small" /> : <span />
               }
               onClick={() => {
                 applyFilterChanges({ ...item, operator: op.value });
                 hideMenu();
               }}
+              autoFocus={selected ? open : false}
             >
               {label}
             </rootProps.slots.baseMenuItem>
