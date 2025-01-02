@@ -34,19 +34,6 @@ const shouldPublishValue = <TValue extends PickerValidValue, TError>(
 
   const isCurrentValueTheDefaultValue = !isControlled && !dateState.hasBeenModifiedSinceMount;
 
-  if (action.name === 'setValueFromAction') {
-    // If the component is not controlled, and the value has not been modified since the mount,
-    // Then we want to publish the default value whenever the user pressed the "Accept", "Today" or "Clear" button.
-    if (
-      isCurrentValueTheDefaultValue &&
-      ['accept', 'today', 'clear'].includes(action.pickerAction)
-    ) {
-      return true;
-    }
-
-    return hasChanged(dateState.lastPublishedValue);
-  }
-
   if (action.name === 'setValueFromView' && action.selectionState !== 'shallow') {
     // On the first view,
     // If the value is not controlled, then clicking on any value (including the one equal to `defaultValue`) should call `onChange`
@@ -58,9 +45,9 @@ const shouldPublishValue = <TValue extends PickerValidValue, TError>(
   }
 
   if (action.name === 'setExplicitValue') {
-    // On the first view,
-    // If the value is not controlled, then clicking on any value (including the one equal to `defaultValue`) should call `onChange`
-    if (isCurrentValueTheDefaultValue) {
+    // If the value is not controlled and the value has never been modified before,
+    // Then clicking on any value (including the one equal to `defaultValue`) should call `onChange`
+    if (!action.options.skipPublicationIfPristine && isCurrentValueTheDefaultValue) {
       return true;
     }
 
@@ -82,19 +69,6 @@ const shouldCommitValue = <TValue extends PickerValidValue, TError>(
 
   const isCurrentValueTheDefaultValue = !isControlled && !dateState.hasBeenModifiedSinceMount;
 
-  if (action.name === 'setValueFromAction') {
-    // If the component is not controlled, and the value has not been modified since the mount,
-    // Then we want to commit the default value whenever the user pressed the "Accept", "Today" or "Clear" button.
-    if (
-      isCurrentValueTheDefaultValue &&
-      ['accept', 'today', 'clear'].includes(action.pickerAction)
-    ) {
-      return true;
-    }
-
-    return hasChanged(dateState.lastCommittedValue);
-  }
-
   if (action.name === 'setValueFromView' && action.selectionState === 'finish' && closeOnSelect) {
     // On picker where the 1st view is also the last view,
     // If the value is not controlled, then clicking on any value (including the one equal to `defaultValue`) should call `onAccept`
@@ -106,7 +80,17 @@ const shouldCommitValue = <TValue extends PickerValidValue, TError>(
   }
 
   if (action.name === 'setExplicitValue') {
-    return action.options.changeImportance === 'accept' && hasChanged(dateState.lastCommittedValue);
+    if (action.options.changeImportance === 'set') {
+      return false;
+    }
+
+    // If the value is not controlled and the value has never been modified before,
+    // Then clicking on any value (including the one equal to `defaultValue`) should call `onChange`
+    if (!action.options.skipPublicationIfPristine && isCurrentValueTheDefaultValue) {
+      return true;
+    }
+
+    return hasChanged(dateState.lastCommittedValue);
   }
 
   return false;
@@ -119,10 +103,6 @@ const shouldClosePicker = <TValue extends PickerValidValue, TError>(
   params: PickerValueUpdaterParams<TValue, TError>,
 ): boolean => {
   const { action, closeOnSelect } = params;
-
-  if (action.name === 'setValueFromAction') {
-    return true;
-  }
 
   if (action.name === 'setValueFromView') {
     return action.selectionState === 'finish' && closeOnSelect;
@@ -364,47 +344,25 @@ export const usePickerValue = <
     updateDate({
       name: 'setExplicitValue',
       value: newValue,
-      options: { changeImportance: 'accept', ...options },
+      options: { changeImportance: 'accept', skipPublicationIfPristine: false, ...options },
     }),
   );
 
-  const clearValue = useEventCallback(() =>
-    updateDate({
-      value: valueManager.emptyValue,
-      name: 'setValueFromAction',
-      pickerAction: 'clear',
-    }),
-  );
+  const clearValue = useEventCallback(() => setValue(valueManager.emptyValue));
 
   const setValueToToday = useEventCallback(() =>
-    updateDate({
-      value: valueManager.getTodayValue(utils, timezone, valueType),
-      name: 'setValueFromAction',
-      pickerAction: 'today',
-    }),
+    setValue(valueManager.getTodayValue(utils, timezone, valueType)),
   );
 
-  const acceptValueChanges = useEventCallback(() =>
-    updateDate({
-      value: dateState.lastPublishedValue,
-      name: 'setValueFromAction',
-      pickerAction: 'accept',
-    }),
-  );
+  const acceptValueChanges = useEventCallback(() => setValue(dateState.lastPublishedValue));
 
   const cancelValueChanges = useEventCallback(() =>
-    updateDate({
-      value: dateState.lastCommittedValue,
-      name: 'setValueFromAction',
-      pickerAction: 'cancel',
-    }),
+    setValue(dateState.lastCommittedValue, { skipPublicationIfPristine: true }),
   );
 
   const dismissViews = useEventCallback(() => {
-    updateDate({
-      value: dateState.lastPublishedValue,
-      name: 'setValueFromAction',
-      pickerAction: 'dismiss',
+    setValue(dateState.lastPublishedValue, {
+      skipPublicationIfPristine: true,
     });
   });
 
