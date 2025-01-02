@@ -11,8 +11,7 @@ import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { getColumnValues, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Sorting', () => {
   const baselineProps: DataGridProProps = {
@@ -170,47 +169,46 @@ describe('<DataGridPro /> - Sorting', () => {
     });
   });
 
-  it('should prune rendering on cells', function test() {
-    // The number of renders depends on the user-agent
-    if (!/HeadlessChrome/.test(window.navigator.userAgent) || !isJSDOM) {
-      this.skip();
-    }
+  // The number of renders depends on the user-agent
+  testSkipIf(!/HeadlessChrome/.test(window.navigator.userAgent) || !isJSDOM)(
+    'should prune rendering on cells',
+    () => {
+      let renderCellCount: number = 0;
 
-    let renderCellCount: number = 0;
+      function CounterRender(props: { value: string }) {
+        React.useEffect(() => {
+          if (props.value === 'Nike') {
+            renderCellCount += 1;
+          }
+        });
+        return <React.Fragment>{props.value}</React.Fragment>;
+      }
 
-    function CounterRender(props: { value: string }) {
-      React.useEffect(() => {
-        if (props.value === 'Nike') {
-          renderCellCount += 1;
-        }
-      });
-      return <React.Fragment>{props.value}</React.Fragment>;
-    }
+      const columns: GridColDef[] = [
+        {
+          field: 'brand',
+          renderCell: (params) => <CounterRender value={params.value} />,
+        },
+      ];
 
-    const columns: GridColDef[] = [
-      {
-        field: 'brand',
-        renderCell: (params) => <CounterRender value={params.value} />,
-      },
-    ];
+      function Test(props: Omit<DataGridProProps, 'columns' | 'rows'>) {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro {...baselineProps} columns={columns} checkboxSelection {...props} />
+          </div>
+        );
+      }
 
-    function Test(props: Omit<DataGridProProps, 'columns' | 'rows'>) {
-      return (
-        <div style={{ width: 300, height: 300 }}>
-          <DataGridPro {...baselineProps} columns={columns} checkboxSelection {...props} />
-        </div>
-      );
-    }
-
-    const { setProps } = render(<Test />);
-    expect(renderCellCount).to.equal(1);
-    const cell = getCell(1, 0);
-    cell.focus();
-    fireEvent.click(cell);
-    expect(renderCellCount).to.equal(2);
-    setProps({ extra: true });
-    expect(renderCellCount).to.equal(2);
-  });
+      const { setProps } = render(<Test />);
+      expect(renderCellCount).to.equal(1);
+      const cell = getCell(1, 0);
+      cell.focus();
+      fireEvent.click(cell);
+      expect(renderCellCount).to.equal(2);
+      setProps({ extra: true });
+      expect(renderCellCount).to.equal(2);
+    },
+  );
 
   describe('control Sorting', () => {
     it('should update the sorting state when neither the model nor the onChange are set', () => {

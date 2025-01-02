@@ -14,8 +14,7 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Lazy loader', () => {
   const { render } = createRenderer();
@@ -57,20 +56,16 @@ describe('<DataGridPro /> - Lazy loader', () => {
     );
   }
 
-  it('should not call onFetchRows if the viewport is fully loaded', function test() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
+  // Needs layout
+  testSkipIf(isJSDOM)('should not call onFetchRows if the viewport is fully loaded', () => {
     const handleFetchRows = spy();
     const rows = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }, { id: 7 }];
     render(<TestLazyLoader onFetchRows={handleFetchRows} rowCount={50} rows={rows} />);
     expect(handleFetchRows.callCount).to.equal(0);
   });
 
-  it('should call onFetchRows when sorting is applied', function test() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
+  // Needs layout
+  testSkipIf(isJSDOM)('should call onFetchRows when sorting is applied', () => {
     const handleFetchRows = spy();
     render(<TestLazyLoader onFetchRows={handleFetchRows} rowCount={50} />);
 
@@ -80,16 +75,16 @@ describe('<DataGridPro /> - Lazy loader', () => {
     expect(handleFetchRows.callCount).to.equal(2);
   });
 
-  it('should render skeleton cell if rowCount is bigger than the number of rows', function test() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
+  // Needs layout
+  testSkipIf(isJSDOM)(
+    'should render skeleton cell if rowCount is bigger than the number of rows',
+    () => {
+      render(<TestLazyLoader rowCount={10} />);
 
-    render(<TestLazyLoader rowCount={10} />);
-
-    // The 4th row should be a skeleton one
-    expect(getRow(3).dataset.id).to.equal('auto-generated-skeleton-row-root-0');
-  });
+      // The 4th row should be a skeleton one
+      expect(getRow(3).dataset.id).to.equal('auto-generated-skeleton-row-root-0');
+    },
+  );
 
   it('should update all rows accordingly when `apiRef.current.unstable_replaceRows` is called', () => {
     render(<TestLazyLoader rowCount={6} />);
