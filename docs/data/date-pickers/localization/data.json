@@ -53,7 +53,7 @@
     "localeName": "Chinese (Taiwan)",
     "missingKeysCount": 0,
     "totalKeysCount": 50,
-    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/zhTW.ts"
+    "githubLink": "https://github.com/mui/mui-x/blob/v7.x/packages/x-date-pickers/src/locales/zhTW.ts"
   },
   {
     "languageTag": "hr-HR",
