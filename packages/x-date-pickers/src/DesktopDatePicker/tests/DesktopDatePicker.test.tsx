@@ -168,14 +168,7 @@ describe('<DesktopDatePicker />', () => {
       }
     });
 
-    it('does not scroll when opened', function test(t = {}) {
-      // JSDOM has neither layout nor window.scrollTo
-      if (isJSDOM) {
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
-
+    it('does not scroll when opened', () => {
       const handleClose = spy();
       const handleOpen = spy();
       function BottomAnchoredDesktopTimePicker() {

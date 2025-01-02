@@ -51,14 +51,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Density', () => {
   }
 
   describe('prop: `initialState.density`', () => {
-    it('should set the density to the value of initialState.density', function test(t = {}) {
-      if (isJSDOM) {
-        // JSDOM seem to not support CSS variables properly and `height: var(--height)` ends up being `height: ''`
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
-
+    it('should set the density to the value of initialState.density', () => {
       const rowHeight = 30;
       render(
         <div style={{ width: 300, height: 300 }}>
@@ -78,14 +71,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Density', () => {
   });
 
   describe('prop: `density`', () => {
-    it('should set the density value using density prop', function test(t = {}) {
-      if (isJSDOM) {
-        // JSDOM seem to not support CSS variables properly and `height: var(--height)` ends up being `height: ''`
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
-
+    it('should set the density value using density prop', () => {
       const rowHeight = 30;
       render(
         <div style={{ width: 300, height: 300 }}>
@@ -96,13 +82,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Density', () => {
       expectHeight(rowHeight * COMPACT_DENSITY_FACTOR);
     });
 
-    it('should allow to control the density from the prop using state', function test(t = {}) {
-      if (isJSDOM) {
-        // JSDOM seem to not support CSS variables properly and `height: var(--height)` ends up being `height: ''`
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
+    it('should allow to control the density from the prop using state', () => {
       const rowHeight = 30;
 
       function Grid(props: Partial<DataGridProps>) {
@@ -136,13 +116,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Density', () => {
       expectHeight(rowHeight * COMPACT_DENSITY_FACTOR);
     });
 
-    it('should call `onDensityChange` prop when density gets updated', function test(t = {}) {
-      if (isJSDOM) {
-        // JSDOM seem to not support CSS variables properly and `height: var(--height)` ends up being `height: ''`
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
+    it('should call `onDensityChange` prop when density gets updated', () => {
       const onDensityChange = spy();
       function Test() {
         return (
@@ -166,14 +140,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Density', () => {
   });
 
   describe('density selection menu', () => {
-    it('should increase grid density when selecting compact density', function test(t = {}) {
-      if (isJSDOM) {
-        // JSDOM seem to not support CSS variables properly and `height: var(--height)` ends up being `height: ''`
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
-
+    it('should increase grid density when selecting compact density', () => {
       const rowHeight = 30;
       render(
         <div style={{ width: 300, height: 300 }}>
@@ -194,14 +161,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Density', () => {
       expectHeight(rowHeight * COMPACT_DENSITY_FACTOR);
     });
 
-    it('should decrease grid density when selecting comfortable density', function test(t = {}) {
-      if (isJSDOM) {
-        // JSDOM seem to not support CSS variables properly and `height: var(--height)` ends up being `height: ''`
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
-
+    it('should decrease grid density when selecting comfortable density', () => {
       const rowHeight = 30;
       render(
         <div style={{ width: 300, height: 300 }}>
@@ -221,14 +181,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Density', () => {
       expectHeight(rowHeight * COMFORTABLE_DENSITY_FACTOR);
     });
 
-    it('should increase grid density even if toolbar is not enabled', function test(t = {}) {
-      if (isJSDOM) {
-        // JSDOM seem to not support CSS variables properly and `height: var(--height)` ends up being `height: ''`
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
-
+    it('should increase grid density even if toolbar is not enabled', () => {
       const rowHeight = 30;
       render(
         <div style={{ width: 300, height: 300 }}>
@@ -239,14 +192,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Density', () => {
       expectHeight(rowHeight * COMPACT_DENSITY_FACTOR);
     });
 
-    it('should decrease grid density even if toolbar is not enabled', function test(t = {}) {
-      if (isJSDOM) {
-        // JSDOM seem to not support CSS variables properly and `height: var(--height)` ends up being `height: ''`
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
-
+    it('should decrease grid density even if toolbar is not enabled', () => {
       const rowHeight = 30;
       render(
         <div style={{ width: 300, height: 300 }}>
@@ -257,14 +203,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Density', () => {
       expectHeight(rowHeight * COMFORTABLE_DENSITY_FACTOR);
     });
 
-    it('should apply to the root element a class corresponding to the current density', function test(t = {}) {
-      if (isJSDOM) {
-        // JSDOM seem to not support CSS variables properly and `height: var(--height)` ends up being `height: ''`
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
-
+    it('should apply to the root element a class corresponding to the current density', () => {
       function Test(props: Partial<DataGridProps>) {
         return (
           <div style={{ width: 300, height: 300 }}>

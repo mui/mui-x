@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import semver from 'semver';
 import childProcess from 'child_process';
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 type PackageJson = {
   name: string;
@@ -14,35 +15,30 @@ export function checkMaterialVersion({
   packageJson: PackageJson & { devDependencies: { '@mui/material': string } };
   materialPackageJson: PackageJson;
 }) {
-  return it(`${packageJson.name} should resolve proper @mui/material version`, function test(t = {}) {
-    const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+  return testSkipIf(!isJSDOM)(
+    `${packageJson.name} should resolve proper @mui/material version`,
+    () => {
+      const expectedVersion = packageJson.devDependencies['@mui/material'];
 
-    if (!isJSDOM) {
-      // @ts-expect-error to support mocha and vitest
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      this?.skip?.() || t?.skip();
-    }
+      const versions = childProcess.execSync(
+        `npm dist-tag ls ${'@mui/material'} ${expectedVersion}`,
+        {
+          encoding: 'utf8',
+        },
+      );
+      const tagMapping = versions
+        .split('\n')
+        .find((mapping) => {
+          return mapping.startsWith(`${expectedVersion}: `);
+        })
+        ?.split(': ')[1];
 
-    const expectedVersion = packageJson.devDependencies['@mui/material'];
+      const version = tagMapping ?? expectedVersion;
 
-    const versions = childProcess.execSync(
-      `npm dist-tag ls ${'@mui/material'} ${expectedVersion}`,
-      {
-        encoding: 'utf8',
-      },
-    );
-    const tagMapping = versions
-      .split('\n')
-      .find((mapping) => {
-        return mapping.startsWith(`${expectedVersion}: `);
-      })
-      ?.split(': ')[1];
-
-    const version = tagMapping ?? expectedVersion;
-
-    expect(semver.satisfies(materialPackageJson.version, version)).to.equal(
-      true,
-      `Expected @mui/material ${version}, but found ${materialPackageJson.version}`,
-    );
-  });
+      expect(semver.satisfies(materialPackageJson.version, version)).to.equal(
+        true,
+        `Expected @mui/material ${version}, but found ${materialPackageJson.version}`,
+      );
+    },
+  );
 }
