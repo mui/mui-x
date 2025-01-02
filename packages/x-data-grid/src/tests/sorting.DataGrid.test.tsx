@@ -119,7 +119,7 @@ describe('<DataGrid /> - Sorting', () => {
     expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
   });
 
-  it('should allow clearing the current sorting using `sortColumn` idempotently', () => {
+  it('should allow clearing the current sorting using `sortColumn` idempotently', async () => {
     let apiRef: React.MutableRefObject<GridApi>;
     function TestCase() {
       apiRef = useGridApiRef();
@@ -133,20 +133,20 @@ describe('<DataGrid /> - Sorting', () => {
       );
     }
 
-    render(<TestCase />);
+    const { user } = render(<TestCase />);
     expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
     const header = getColumnHeaderCell(0);
 
     // Trigger a sort using the header
-    fireEvent.click(header);
+    await user.click(header);
     expect(getColumnValues(0)).to.deep.equal(['0', '5', '10']);
 
     // Clear the value using `apiRef`
-    act(() => apiRef.current.sortColumn('id', null));
+    await act(() => apiRef.current.sortColumn('id', null));
     expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
 
     // Check the behavior is idempotent
-    act(() => apiRef.current.sortColumn('id', null));
+    await act(() => apiRef.current.sortColumn('id', null));
     expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
   });
 

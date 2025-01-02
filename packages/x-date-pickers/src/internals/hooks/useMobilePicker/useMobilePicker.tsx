@@ -56,18 +56,16 @@ export const useMobilePicker = <
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
 
   const {
-    layoutProps,
     providerProps,
     renderCurrentView,
     fieldProps: pickerFieldProps,
     ownerState,
-  } = usePicker<PickerValue, TView, TExternalProps, {}>({
+  } = usePicker<PickerValue, TView, TExternalProps>({
     ...pickerParams,
     props,
     fieldRef,
     localeText,
     autoFocusView: true,
-    additionalViewProps: {},
     variant: 'mobile',
   });
 
@@ -154,7 +152,7 @@ export const useMobilePicker = <
         unstableFieldRef={handleFieldRef}
       />
       <PickersModalDialog slots={slots} slotProps={slotProps}>
-        <Layout {...layoutProps} {...slotProps?.layout} slots={slots} slotProps={slotProps}>
+        <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
           {renderCurrentView()}
         </Layout>
       </PickersModalDialog>

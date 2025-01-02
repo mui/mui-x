@@ -89,7 +89,7 @@ function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonPro
       title={
         apiRef.current.getLocaleText('columnHeaderFiltersTooltipActive')(
           counter,
-        ) as React.ReactElement
+        ) as React.ReactElement<any>
       }
       enterDelay={1000}
       {...rootProps.slotProps?.baseTooltip}

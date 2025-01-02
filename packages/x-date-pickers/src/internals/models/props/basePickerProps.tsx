@@ -16,9 +16,8 @@ export interface BasePickerProps<
   TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
-  TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
-  TAdditionalProps extends {},
-> extends UsePickerBaseProps<TValue, TView, TError, TExternalProps, TAdditionalProps> {
+  TExternalProps extends UsePickerViewsProps<TValue, TView, any>,
+> extends UsePickerBaseProps<TValue, TView, TError, TExternalProps> {
   className?: string;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
@@ -39,7 +38,7 @@ export interface BasePickerInputProps<
   TView extends DateOrTimeViewWithMeridiem,
   TError,
 > extends Omit<
-    MakeOptional<BasePickerProps<TValue, TView, TError, any, any>, 'openTo' | 'views'>,
+    MakeOptional<BasePickerProps<TValue, TView, TError, any>, 'openTo' | 'views'>,
     'viewRenderers'
   > {}
 
