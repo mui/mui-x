@@ -304,12 +304,6 @@ module.exports = {
         ],
       },
     },
-    {
-      files: ['**/*.browser.test.?(c|m)[jt]s?(x)'],
-      rules: {
-        'testing-library/prefer-screen-queries': 'off',
-      },
-    },
     ...buildPackageRestrictedImports('@mui/x-charts', 'x-charts', false),
     ...buildPackageRestrictedImports('@mui/x-charts-pro', 'x-charts-pro', false),
     ...buildPackageRestrictedImports('@mui/x-codemod', 'x-codemod', false),

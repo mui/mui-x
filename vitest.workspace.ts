@@ -58,7 +58,6 @@ export default defineWorkspace([
       plugins: [react()],
       test: {
         include: [`packages/${name}/src/**/*.test.?(c|m)[jt]s?(x)`],
-        exclude: [`packages/${name}/src/**/*.browser.test.?(c|m)[jt]s?(x)`],
         name: `jsdom/${name}`,
         environment: 'jsdom',
       },
