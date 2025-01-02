@@ -128,7 +128,7 @@ async function main() {
     routes.forEach((route) => {
       const pathURL = route.replace(baseURL, '');
 
-      it(`creates screenshots of ${pathURL}`, async () => {
+      it(`creates screenshots of ${pathURL}`, async function test() {
         // Move cursor offscreen to not trigger unwanted hover effects.
         // This needs to be done before the navigation to avoid hover and mouse enter/leave effects.
         await page.mouse.move(0, 0);
@@ -220,7 +220,7 @@ async function main() {
       await testcase.screenshot({ path: screenshotPath, type: 'png' });
     });
 
-    it('should take a screenshot of the print preview', async () => {
+    it('should take a screenshot of the print preview', async function test() {
       this.timeout(20000);
       const pathURL = `/docs-data-grid-export/ExportDefaultToolbar`;
 
