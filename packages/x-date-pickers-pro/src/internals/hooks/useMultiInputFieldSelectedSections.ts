@@ -14,9 +14,20 @@ interface UseMultiInputFieldSelectedSectionsParams
   unstableEndFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
 }
 
+interface UseMultiInputFieldSelectedSectionsResponseItem {
+  unstableFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
+  selectedSections: FieldSelectedSections;
+  onSelectedSectionsChange: (newSelectedSections: FieldSelectedSections) => void;
+}
+
+interface UseMultiInputFieldSelectedSectionsResponse {
+  start: UseMultiInputFieldSelectedSectionsResponseItem;
+  end: UseMultiInputFieldSelectedSectionsResponseItem;
+}
+
 export const useMultiInputFieldSelectedSections = (
   params: UseMultiInputFieldSelectedSectionsParams,
-) => {
+): UseMultiInputFieldSelectedSectionsResponse => {
   const unstableEndFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
   const handleUnstableEndFieldRef = useForkRef(params.unstableEndFieldRef, unstableEndFieldRef);
 

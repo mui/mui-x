@@ -53,7 +53,7 @@ export const useDefaultDates = <TDate extends PickerValidDate>() =>
 export const useNow = <TDate extends PickerValidDate>(timezone: PickersTimezone): TDate => {
   const utils = useUtils<TDate>();
 
-  const now = React.useRef() as React.MutableRefObject<TDate>;
+  const now = React.useRef<TDate>(undefined);
   if (now.current === undefined) {
     now.current = utils.date(undefined, timezone);
   }

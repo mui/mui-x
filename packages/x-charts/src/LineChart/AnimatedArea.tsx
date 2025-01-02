@@ -58,6 +58,7 @@ function AnimatedArea(props: AnimatedAreaProps) {
   return (
     <AppearingMask skipAnimation={skipAnimation} id={`${ownerState.id}-area-clip`}>
       {transitionChange((style, interpolator) => (
+        // @ts-expect-error
         <AreaElementPath {...other} ownerState={ownerState} d={style.value.to(interpolator)} />
       ))}
     </AppearingMask>

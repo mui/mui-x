@@ -88,7 +88,7 @@ export const buildFieldInteractions = <P extends {}>({
     props,
     { hook, componentFamily = 'field', direction = 'ltr' } = {},
   ) => {
-    let fieldRef: React.RefObject<FieldRef<FieldSection>> = { current: null };
+    let fieldRef: React.RefObject<FieldRef<FieldSection> | null> = { current: null };
 
     function WrappedComponent(propsFromRender: any) {
       fieldRef = React.useRef<FieldRef<FieldSection>>(null);

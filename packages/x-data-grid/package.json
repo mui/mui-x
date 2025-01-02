@@ -71,11 +71,11 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.17",
-    "@mui/joy": "^5.0.0-beta.48",
-    "@mui/material": "^5.16.7",
-    "@mui/system": "^5.16.7",
-    "@mui/types": "^7.2.15",
+    "@mui/internal-test-utils": "^1.0.24",
+    "@mui/joy": "^5.0.0-beta.51",
+    "@mui/material": "^5.16.13",
+    "@mui/system": "^5.16.13",
+    "@mui/types": "^7.2.20",
     "@types/prop-types": "^15.7.13",
     "rimraf": "^6.0.1"
   },
