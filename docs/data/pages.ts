@@ -164,7 +164,7 @@ const pages: MuiPage[] = [
               {
                 pathname: '/x/react-data-grid/server-side-data/aggregation',
                 plan: 'premium',
-                planned: true,
+                unstable: true,
               },
             ],
           },
@@ -233,6 +233,10 @@ const pages: MuiPage[] = [
               {
                 pathname: '/x/api/data-grid/grid-aggregation-function',
                 title: 'GridAggregationFunction',
+              },
+              {
+                pathname: '/x/api/data-grid/grid-aggregation-function-data-source',
+                title: 'GridAggregationFunctionDataSource',
               },
               {
                 pathname: '/x/api/data-grid/grid-csv-export-options',

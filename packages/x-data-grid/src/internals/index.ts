@@ -21,7 +21,10 @@ export {
   useGridRegisterStrategyProcessor,
   GRID_DEFAULT_STRATEGY,
 } from '../hooks/core/strategyProcessing';
-export type { GridStrategyProcessor } from '../hooks/core/strategyProcessing';
+export type {
+  GridStrategyProcessor,
+  GridStrategyProcessorName,
+} from '../hooks/core/strategyProcessing';
 export { useGridInitialization } from '../hooks/core/useGridInitialization';
 export { unwrapPrivateAPI } from '../hooks/core/useGridApiInitialization';
 
