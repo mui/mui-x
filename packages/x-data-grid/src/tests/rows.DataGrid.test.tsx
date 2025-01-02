@@ -498,7 +498,6 @@ describe('<DataGrid /> - Rows', () => {
   });
 
   // Need layouting
-  // Need layouting
   describeSkipIf(isJSDOM)('prop: getRowHeight', () => {
     describe('static row height', () => {
       const ROW_HEIGHT = 52;

@@ -525,7 +525,6 @@ describe('<DateCalendar />', () => {
     });
 
     // Needs layout
-    // Needs layout
     testSkipIf(isJSDOM)('should scroll to show the selected year', () => {
       render(
         <DateCalendar
