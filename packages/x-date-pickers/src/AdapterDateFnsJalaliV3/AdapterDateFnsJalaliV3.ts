@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-// TODO remove when date-fns-jalali-v3 is the default
+// TODO remove when date-fns-jalali-v4 is the default
 // @ts-nocheck
 import { addSeconds } from 'date-fns-jalali/addSeconds';
 import { addMinutes } from 'date-fns-jalali/addMinutes';
@@ -45,7 +45,7 @@ import { startOfYear } from 'date-fns-jalali/startOfYear';
 import { isWithinInterval } from 'date-fns-jalali/isWithinInterval';
 import { faIR as defaultLocale } from 'date-fns-jalali/locale/fa-IR';
 // date-fns-jalali v2 does not export types
-// @ts-ignore TODO remove when date-fns-jalali-v3 is the default
+// @ts-ignore TODO remove when date-fns-jalali-v4 is the default
 import type { Locale as DateFnsLocale } from 'date-fns-jalali/locale/types';
 import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
 import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
