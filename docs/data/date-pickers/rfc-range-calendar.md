@@ -21,33 +21,37 @@ The user can use the `<RangeCalendar.DaysGrid />`, `<RangeCalendar.DaysGridHeade
 import { RangeCalendar } from '@base-ui-components/react-x-date-pickers-pro/range-calendar';
 
 <RangeCalendar.Root value={value} onChange={setValue}>
-  <div>
-    <RangeCalendar.GoToMonth target="previous">◀</Calendar.GoToMonth>
-    <RangeCalendar.FormattedValue format="MMMM YYYY" />
-    <RangeCalendar.GoToMonth target="next">▶</Calendar.GoToMonth>
-  </div>
-  <RangeCalendar.DaysGrid>
-    <RangeCalendar.DaysGridHeader>
-      {({ days }) =>
-        days.map((day) => (
-          <RangeCalendar.DaysGridHeaderCell value={day} key={day.toString()} />
-        ))
-      }
-    </RangeCalendar.DaysGridHeader>
-    <RangeCalendar.DaysGridBody>
-      {({ weeks }) =>
-        weeks.map((week) => (
-          <RangeCalendar.DaysWeekRow value={week}>
-            {({ days }) =>
-              days.map((day) => (
-                <RangeCalendar.DaysCell value={day} key={day.toString()} />
-              ))
-            }
-          </RangeCalendar.DaysWeekRow>
-        ))
-      }
-    </RangeCalendar.DaysGridBody>
-  </RangeCalendar.DaysGrid>
+  {({ visibleMonth }) => (
+    <React.Fragment>
+      <div>
+        <RangeCalendar.GoToMonth target="previous">◀</RangeCalendar.GoToMonth>
+        {visibleMonth.format('MMMM YYYY')}
+        <RangeCalendar.GoToMonth target="next">▶</RangeCalendar.GoToMonth>
+      </div>
+      <RangeCalendar.DaysGrid>
+        <RangeCalendar.DaysGridHeader>
+          {({ days }) =>
+            days.map((day) => (
+              <RangeCalendar.DaysGridHeaderCell value={day} key={day.toString()} />
+            ))
+          }
+        </RangeCalendar.DaysGridHeader>
+        <RangeCalendar.DaysGridBody>
+          {({ weeks }) =>
+            weeks.map((week) => (
+              <RangeCalendar.DaysWeekRow value={week}>
+                {({ days }) =>
+                  days.map((day) => (
+                    <RangeCalendar.DaysCell value={day} key={day.toString()} />
+                  ))
+                }
+              </RangeCalendar.DaysWeekRow>
+            ))
+          }
+        </RangeCalendar.DaysGridBody>
+      </RangeCalendar.DaysGrid>
+    </React.Fragment>
+  )}
 </RangeCalendar.Root>;
 ```
 
