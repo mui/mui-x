@@ -179,7 +179,7 @@ function App() {
                 }
 
                 const isDataGridTest =
-                  suite.indexOf('/docs-data-grid') === 0 || suite === 'test-regressions-data-grid';
+                  suite.indexOf('docs-data-grid') === 0 || suite === 'test-regressions-data-grid';
                 return (
                   <Route
                     key={test.name}
