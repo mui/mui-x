@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterMomentHijri } from '@mui/x-date-pickers/AdapterMomentHijri';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
+import { testSkipIf, isJSDOM, isVitest } from 'test/utils/skipIf';
 import {
   createPickerRenderer,
   expectFieldValueV7,
@@ -21,16 +22,9 @@ describe('<AdapterMomentHijri />', () => {
     },
   });
 
-  const isJsdom = typeof window !== 'undefined' && window.navigator.userAgent.includes('jsdom');
-
   describe('Adapter localization', () => {
-    it('Formatting', (t = {}) => {
-      // TODO: All Hijri tests are failing on vitest browser (2024-11)
-      if (process.env.VITEST === 'true' && !isJsdom) {
-        // @ts-expect-error to support mocha and vitest
-        t?.skip();
-      }
-
+    // TODO: All Hijri tests are failing on vitest browser (2024-11)
+    testSkipIf(isVitest && !isJSDOM)('Formatting', () => {
       const adapter = new AdapterMomentHijri();
 
       const expectDate = (format: keyof AdapterFormats, expectedWithArSA: string) => {
@@ -88,12 +82,7 @@ describe('<AdapterMomentHijri />', () => {
           expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].placeholder);
         });
 
-        it('should have well formatted value', (t = {}) => {
-          if (process.env.VITEST === 'true' && !isJsdom) {
-            // @ts-expect-error to support mocha and vitest
-            t?.skip();
-          }
-
+        testSkipIf(isVitest && !isJSDOM)('should have well formatted value', () => {
           const view = renderWithProps({
             enableAccessibleFieldDOMStructure: true,
             value: adapter.date(testDate),
