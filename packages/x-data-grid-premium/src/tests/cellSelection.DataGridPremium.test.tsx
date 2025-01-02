@@ -2,7 +2,7 @@ import * as React from 'react';
 import { stub, SinonStub, spy } from 'sinon';
 import { expect } from 'chai';
 import { spyApi, getCell, grid } from 'test/utils/helperFn';
-import { createRenderer, act, screen } from '@mui/internal-test-utils';
+import { createRenderer, act, screen, waitFor } from '@mui/internal-test-utils';
 import {
   DataGridPremium,
   DataGridPremiumProps,
@@ -426,7 +426,10 @@ describe('<DataGridPremium /> - Cell selection', () => {
         { target: cell71, coords: { x: rect.x, y: rect.y + rect.height - 0 } },
         { keys: '[/MouseLeft]' },
       ]);
-      expect(virtualScroller.scrollTop).to.equal(20);
+
+      await waitFor(() => {
+        expect(virtualScroller.scrollTop).to.equal(20);
+      });
     });
 
     it('should auto-scroll when the mouse approaches the top edge', async () => {
