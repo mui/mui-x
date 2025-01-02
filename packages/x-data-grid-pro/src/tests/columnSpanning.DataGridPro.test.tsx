@@ -4,8 +4,7 @@ import { expect } from 'chai';
 import { DataGridPro, GridApi, useGridApiRef, GridColDef, gridClasses } from '@mui/x-data-grid-pro';
 import { getActiveCell, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Column spanning', () => {
   const { render } = createRenderer({ clock: 'fake' });
@@ -36,31 +35,30 @@ describe('<DataGridPro /> - Column spanning', () => {
     ],
   };
 
-  it('should not apply `colSpan` in pinned columns section if there is only one column there', function test() {
-    if (isJSDOM) {
-      // Need layouting
-      this.skip();
-    }
+  // Need layouting
+  testSkipIf(isJSDOM)(
+    'should not apply `colSpan` in pinned columns section if there is only one column there',
+    () => {
+      render(
+        <div style={{ width: 500, height: 300 }}>
+          <DataGridPro
+            {...baselineProps}
+            columns={[
+              { field: 'brand', colSpan: 2, width: 110 },
+              { field: 'category' },
+              { field: 'price' },
+            ]}
+            initialState={{ pinnedColumns: { left: ['brand'], right: [] } }}
+          />
+        </div>,
+      );
 
-    render(
-      <div style={{ width: 500, height: 300 }}>
-        <DataGridPro
-          {...baselineProps}
-          columns={[
-            { field: 'brand', colSpan: 2, width: 110 },
-            { field: 'category' },
-            { field: 'price' },
-          ]}
-          initialState={{ pinnedColumns: { left: ['brand'], right: [] } }}
-        />
-      </div>,
-    );
-
-    expect(getCell(0, 0).offsetWidth).to.equal(110);
-    expect(() => getCell(0, 0)).not.to.throw();
-    expect(() => getCell(0, 1)).not.to.throw();
-    expect(() => getCell(0, 2)).not.to.throw();
-  });
+      expect(getCell(0, 0).offsetWidth).to.equal(110);
+      expect(() => getCell(0, 0)).not.to.throw();
+      expect(() => getCell(0, 1)).not.to.throw();
+      expect(() => getCell(0, 2)).not.to.throw();
+    },
+  );
 
   it('should apply `colSpan` inside pinned columns section', () => {
     render(
@@ -155,12 +153,8 @@ describe('<DataGridPro /> - Column spanning', () => {
     expect(() => getCell(2, 3)).to.throw(/not found/);
   });
 
-  it('should work with column resizing', function test() {
-    if (isJSDOM) {
-      // Need layouting
-      this.skip();
-    }
-
+  // Need layouting
+  testSkipIf(isJSDOM)('should work with column resizing', () => {
     const columns = [{ field: 'brand', colSpan: 2 }, { field: 'category' }, { field: 'price' }];
 
     render(

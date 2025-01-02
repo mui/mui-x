@@ -9,6 +9,7 @@ import {
   expectFieldValueV6,
 } from 'test/utils/pickers';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
+import { testSkipIf } from 'test/utils/skipIf';
 
 describe('<DateField /> - Editing', () => {
   describeAdapters(
@@ -1229,12 +1230,8 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should support day with letter suffix', function test() {
-      // Luxon don't have any day format with a letter suffix
-      if (adapter.lib === 'luxon') {
-        this.skip();
-      }
-
+    // Luxon doesn't have any day format with a letter suffix
+    testSkipIf(adapter.lib === 'luxon')('should support day with letter suffix', () => {
       testFieldChange({
         format: adapter.lib === 'date-fns' ? 'do' : 'Do',
         keyStrokes: [
