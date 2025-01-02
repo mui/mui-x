@@ -15,30 +15,27 @@ export function checkMaterialVersion({
   packageJson: PackageJson & { devDependencies: { '@mui/material': string } };
   materialPackageJson: PackageJson;
 }) {
-  return testSkipIf(!isJSDOM)(
-    `${packageJson.name} should resolve proper @mui/material version`,
-    () => {
-      const expectedVersion = packageJson.devDependencies['@mui/material'];
+  testSkipIf(!isJSDOM)(`${packageJson.name} should resolve proper @mui/material version`, () => {
+    const expectedVersion = packageJson.devDependencies['@mui/material'];
 
-      const versions = childProcess.execSync(
-        `npm dist-tag ls ${'@mui/material'} ${expectedVersion}`,
-        {
-          encoding: 'utf8',
-        },
-      );
-      const tagMapping = versions
-        .split('\n')
-        .find((mapping) => {
-          return mapping.startsWith(`${expectedVersion}: `);
-        })
-        ?.split(': ')[1];
+    const versions = childProcess.execSync(
+      `npm dist-tag ls ${'@mui/material'} ${expectedVersion}`,
+      {
+        encoding: 'utf8',
+      },
+    );
+    const tagMapping = versions
+      .split('\n')
+      .find((mapping) => {
+        return mapping.startsWith(`${expectedVersion}: `);
+      })
+      ?.split(': ')[1];
 
-      const version = tagMapping ?? expectedVersion;
+    const version = tagMapping ?? expectedVersion;
 
-      expect(semver.satisfies(materialPackageJson.version, version)).to.equal(
-        true,
-        `Expected @mui/material ${version}, but found ${materialPackageJson.version}`,
-      );
-    },
-  );
+    expect(semver.satisfies(materialPackageJson.version, version)).to.equal(
+      true,
+      `Expected @mui/material ${version}, but found ${materialPackageJson.version}`,
+    );
+  });
 }
