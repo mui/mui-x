@@ -24,8 +24,7 @@ import {
   microtasks,
 } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Row pinning', () => {
   const { render } = createRenderer();
@@ -122,12 +121,8 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(screen.getByText(`Total Rows: ${rowCount - 2}`)).not.to.equal(null);
   });
 
-  it('should keep rows pinned on rows scroll', function test() {
-    if (isJSDOM) {
-      // Need layouting
-      this.skip();
-    }
-
+  // Needs layouting
+  testSkipIf(isJSDOM)('should keep rows pinned on rows scroll', () => {
     render(<BaselineTestCase rowCount={20} colCount={5} />);
 
     const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
@@ -417,12 +412,8 @@ describe('<DataGridPro /> - Row pinning', () => {
       expect(getActiveCellRowId()).to.equal('1');
     });
 
-    it('should work with pinned columns', function test() {
-      if (isJSDOM) {
-        // Need layouting
-        this.skip();
-      }
-
+    // Needs layouting
+    testSkipIf(isJSDOM)('should work with pinned columns', () => {
       function TestCase() {
         const data = getBasicGridData(5, 7);
         const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
@@ -486,12 +477,8 @@ describe('<DataGridPro /> - Row pinning', () => {
     });
   });
 
-  it('should work with variable row height', function test() {
-    if (isJSDOM) {
-      // Need layouting
-      this.skip();
-    }
-
+  // Needs layouting
+  testSkipIf(isJSDOM)('should work with variable row height', () => {
     let apiRef!: React.MutableRefObject<GridApi>;
     function TestCase() {
       apiRef = useGridApiRef();
@@ -519,12 +506,8 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(getRowById(1)?.clientHeight).to.equal(20);
   });
 
-  it('should always update on `rowHeight` change', async function test() {
-    if (isJSDOM) {
-      // Need layouting
-      this.skip();
-    }
-
+  // Needs layouting
+  testSkipIf(isJSDOM)('should always update on `rowHeight` change', async () => {
     const defaultRowHeight = 52;
 
     let apiRef!: React.MutableRefObject<GridApi>;
@@ -556,12 +539,8 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(grid('pinnedRows--bottom')!.offsetHeight).to.equal(36);
   });
 
-  it('should work with `autoHeight`', function test() {
-    if (isJSDOM) {
-      // Need layouting
-      this.skip();
-    }
-
+  // Needs layouting
+  testSkipIf(isJSDOM)('should work with `autoHeight`', () => {
     const columnHeaderHeight = 56;
     const rowHeight = 52;
     const rowCount = 10;
@@ -580,12 +559,8 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(grid('main')!.clientHeight).to.equal(columnHeaderHeight + rowHeight * rowCount);
   });
 
-  it('should work with `autoPageSize`', function test() {
-    if (isJSDOM) {
-      // Need layouting
-      this.skip();
-    }
-
+  // Needs layouting
+  testSkipIf(isJSDOM)('should work with `autoPageSize`', () => {
     render(
       <BaselineTestCase
         rowCount={10}
@@ -762,11 +737,8 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(getRowById(1)!).to.have.class(className);
   });
 
-  it('should support cell editing', async function test() {
-    if (isJSDOM) {
-      // flaky in JSDOM
-      this.skip();
-    }
+  // flaky in JSDOM
+  testSkipIf(isJSDOM)('should support cell editing', async () => {
     const processRowUpdate = spy((row) => ({ ...row, currencyPair: 'USD-GBP' }));
     const columns: GridColDef[] = [{ field: 'id' }, { field: 'name', editable: true }];
     render(
@@ -801,11 +773,8 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(processRowUpdate.lastCall.args[0]).to.deep.equal({ id: 3, name: 'Marcus' });
   });
 
-  it('should support row editing', async function test() {
-    if (isJSDOM) {
-      // flaky in JSDOM
-      this.skip();
-    }
+  // flaky in JSDOM
+  testSkipIf(isJSDOM)('should support row editing', async () => {
     const processRowUpdate = spy((row) => ({ ...row, currencyPair: 'USD-GBP' }));
     const columns: GridColDef[] = [{ field: 'id' }, { field: 'name', editable: true }];
     render(

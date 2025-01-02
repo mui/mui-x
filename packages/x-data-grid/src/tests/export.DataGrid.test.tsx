@@ -4,8 +4,10 @@ import { spy, SinonSpy } from 'sinon';
 import { DataGrid, DataGridProps, GridToolbar, GridToolbarExport } from '@mui/x-data-grid';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createRenderer, screen, fireEvent } from '@mui/internal-test-utils';
+import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 
-describe('<DataGrid /> - Export', () => {
+// We need `createObjectURL` to test the downloaded value
+describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   function TestCase(props: Omit<DataGridProps, 'rows' | 'columns'>) {
@@ -18,20 +20,14 @@ describe('<DataGrid /> - Export', () => {
     );
   }
 
-  // We need `createObjectURL` to test the downloaded value
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
-
   let spyCreateObjectURL: SinonSpy;
 
+  // eslint-disable-next-line mocha/no-top-level-hooks
   beforeEach(() => {
     spyCreateObjectURL = spy(global.URL, 'createObjectURL');
   });
 
+  // eslint-disable-next-line mocha/no-top-level-hooks
   afterEach(() => {
     spyCreateObjectURL.restore();
   });
