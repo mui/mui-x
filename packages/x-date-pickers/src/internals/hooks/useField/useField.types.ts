@@ -9,31 +9,37 @@ import {
   PickerValidDate,
   FieldRef,
   OnErrorProps,
-  InferError,
   InferFieldSection,
-  PickerValueType,
+  PickerManager,
 } from '../../../models';
-import type { PickerValueManager } from '../usePicker';
-import type { Validator } from '../../../validation';
-import type { UseFieldStateResponse } from './useFieldState';
+import type { UseFieldStateReturnValue } from './useFieldState';
 import type { UseFieldCharacterEditingResponse } from './useFieldCharacterEditing';
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
 import { ExportedUseClearableFieldProps } from '../../../hooks/useClearableField';
 import { FormProps, InferNonNullablePickerValue, PickerValidValue } from '../../models';
 
-export interface UseFieldParams<
+export interface UseFieldParameters<
   TValue extends PickerValidValue,
   TEnableAccessibleFieldDOMStructure extends boolean,
+  TError,
+  TFieldInternalProps extends {},
+  TFieldInternalPropsWithDefaults extends UseFieldInternalProps<
+    TValue,
+    TEnableAccessibleFieldDOMStructure,
+    TError
+  >,
   TForwardedProps extends UseFieldCommonForwardedProps &
     UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
-  TInternalProps extends UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, any>,
 > {
+  manager: PickerManager<
+    TValue,
+    TEnableAccessibleFieldDOMStructure,
+    TError,
+    TFieldInternalProps,
+    TFieldInternalPropsWithDefaults
+  >;
   forwardedProps: TForwardedProps;
-  internalProps: TInternalProps;
-  valueManager: PickerValueManager<TValue, InferError<TInternalProps>>;
-  fieldValueManager: FieldValueManager<TValue>;
-  validator: Validator<TValue, InferError<TInternalProps>, TInternalProps>;
-  valueType: PickerValueType;
+  internalProps: TFieldInternalProps;
 }
 
 export interface UseFieldInternalProps<
@@ -175,7 +181,7 @@ interface UseFieldV7AdditionalProps {
   areAllSectionsEmpty: boolean;
 }
 
-export type UseFieldResponse<
+export type UseFieldReturnValue<
   TEnableAccessibleFieldDOMStructure extends boolean,
   TForwardedProps extends UseFieldCommonForwardedProps & { [key: string]: any },
 > = Omit<TForwardedProps, keyof UseFieldCommonForwardedProps> &
@@ -414,18 +420,22 @@ export interface UseFieldTextFieldInteractions {
 
 export type UseFieldTextField<TEnableAccessibleFieldDOMStructure extends boolean> = <
   TValue extends PickerValidValue,
+  TError,
+  TFieldInternalPropsWithDefaults extends UseFieldInternalProps<
+    TValue,
+    TEnableAccessibleFieldDOMStructure,
+    TError
+  >,
   TForwardedProps extends TEnableAccessibleFieldDOMStructure extends false
     ? UseFieldV6ForwardedProps
     : UseFieldV7ForwardedProps,
-  TInternalProps extends UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, any> & {
-    minutesStep?: number;
-  },
 >(
-  params: UseFieldTextFieldParams<
+  params: UseFieldTextFieldParameters<
     TValue,
     TEnableAccessibleFieldDOMStructure,
-    TForwardedProps,
-    TInternalProps
+    TError,
+    TFieldInternalPropsWithDefaults,
+    TForwardedProps
   >,
 ) => {
   interactions: UseFieldTextFieldInteractions;
@@ -434,21 +444,29 @@ export type UseFieldTextField<TEnableAccessibleFieldDOMStructure extends boolean
     : UseFieldV7AdditionalProps & Required<UseFieldV7ForwardedProps>;
 };
 
-interface UseFieldTextFieldParams<
+interface UseFieldTextFieldParameters<
   TValue extends PickerValidValue,
   TEnableAccessibleFieldDOMStructure extends boolean,
+  TError,
+  TFieldInternalPropsWithDefaults extends UseFieldInternalProps<
+    TValue,
+    TEnableAccessibleFieldDOMStructure,
+    TError
+  >,
   TForwardedProps extends TEnableAccessibleFieldDOMStructure extends false
     ? UseFieldV6ForwardedProps
     : UseFieldV7ForwardedProps,
-  TInternalProps extends UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, any>,
-> extends UseFieldParams<
-      TValue,
-      TEnableAccessibleFieldDOMStructure,
-      TForwardedProps,
-      TInternalProps
-    >,
-    UseFieldStateResponse<TValue>,
+> extends UseFieldStateReturnValue<TValue>,
     UseFieldCharacterEditingResponse {
+  manager: PickerManager<
+    TValue,
+    TEnableAccessibleFieldDOMStructure,
+    TError,
+    any,
+    TFieldInternalPropsWithDefaults
+  >;
+  internalPropsWithDefaults: TFieldInternalPropsWithDefaults;
+  forwardedProps: TForwardedProps;
   areAllSectionsEmpty: boolean;
   sectionOrder: SectionOrdering;
 }

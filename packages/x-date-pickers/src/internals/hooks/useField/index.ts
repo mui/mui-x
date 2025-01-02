@@ -2,8 +2,8 @@ export { useField, useFieldInternalPropsWithDefaults } from './useField';
 export type {
   FieldValueManager,
   UseFieldInternalProps,
-  UseFieldParams,
-  UseFieldResponse,
+  UseFieldParameters,
+  UseFieldReturnValue,
   FieldChangeHandler,
   FieldChangeHandlerContext,
 } from './useField.types';

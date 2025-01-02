@@ -5,8 +5,8 @@ import { useRtl } from '@mui/system/RtlProvider';
 import { useValidation } from '../../../validation';
 import { useLocalizationContext, useUtils } from '../useUtils';
 import {
-  UseFieldParams,
-  UseFieldResponse,
+  UseFieldParameters,
+  UseFieldReturnValue,
   UseFieldCommonForwardedProps,
   UseFieldInternalProps,
   AvailableAdjustKeyCode,
@@ -28,8 +28,6 @@ import {
 
 /**
  * Applies the default values to the field internal props.
- * This is a temporary hook that will be removed during a follow up when `useField` will receive the internal props without the defaults.
- * It is only here to allow the migration to be done in smaller steps.
  */
 export const useFieldInternalPropsWithDefaults = <TManager extends PickerAnyManager>({
   manager,
@@ -50,39 +48,50 @@ export const useFieldInternalPropsWithDefaults = <TManager extends PickerAnyMana
 export const useField = <
   TValue extends PickerValidValue,
   TEnableAccessibleFieldDOMStructure extends boolean,
-  TForwardedProps extends UseFieldCommonForwardedProps &
-    UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
-  TInternalProps extends UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, any> & {
-    minutesStep?: number;
-  },
->(
-  params: UseFieldParams<
+  TError,
+  TFieldInternalProps extends {},
+  TFieldInternalPropsWithDefaults extends UseFieldInternalProps<
     TValue,
     TEnableAccessibleFieldDOMStructure,
-    TForwardedProps,
-    TInternalProps
+    TError
+  > & { minutesStep?: number },
+  TForwardedProps extends UseFieldCommonForwardedProps &
+    UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
+>(
+  parameters: UseFieldParameters<
+    TValue,
+    TEnableAccessibleFieldDOMStructure,
+    TError,
+    TFieldInternalProps,
+    TFieldInternalPropsWithDefaults,
+    TForwardedProps
   >,
-): UseFieldResponse<TEnableAccessibleFieldDOMStructure, TForwardedProps> => {
+): UseFieldReturnValue<TEnableAccessibleFieldDOMStructure, TForwardedProps> => {
+  const {
+    manager,
+    manager: {
+      internal_fieldValueManager: fieldValueManager,
+      internal_valueManager: valueManager,
+      validator,
+    },
+    internalProps,
+    forwardedProps,
+    forwardedProps: { onKeyDown, error, clearable, onClear },
+  } = parameters;
+
+  const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({ manager, internalProps });
+  const isRtl = useRtl();
   const utils = useUtils();
 
   const {
-    internalProps,
-    internalProps: {
-      unstableFieldRef,
-      minutesStep,
-      enableAccessibleFieldDOMStructure = true,
-      disabled = false,
-      readOnly = false,
-    },
-    forwardedProps: { onKeyDown, error, clearable, onClear },
-    fieldValueManager,
-    valueManager,
-    validator,
-  } = params;
+    unstableFieldRef,
+    minutesStep,
+    enableAccessibleFieldDOMStructure = true,
+    disabled = false,
+    readOnly = false,
+  } = internalPropsWithDefaults;
 
-  const isRtl = useRtl();
-
-  const stateResponse = useFieldState(params);
+  const stateResponse = useFieldState({ manager, internalPropsWithDefaults });
   const {
     state,
     activeSectionIndex,
@@ -124,7 +133,9 @@ export const useField = <
   );
 
   const { returnedValue, interactions } = useFieldTextField({
-    ...params,
+    manager,
+    forwardedProps,
+    internalPropsWithDefaults,
     ...stateResponse,
     ...characterEditingResponse,
     areAllSectionsEmpty,
@@ -243,11 +254,11 @@ export const useField = <
   });
 
   const { hasValidationError } = useValidation({
-    props: internalProps,
+    props: internalPropsWithDefaults,
     validator,
     timezone,
     value: state.value,
-    onError: internalProps.onError,
+    onError: internalPropsWithDefaults.onError,
   });
 
   const inputError = React.useMemo(() => {
@@ -311,7 +322,7 @@ export const useField = <
   };
 
   return {
-    ...params.forwardedProps,
+    ...parameters.forwardedProps,
     ...commonForwardedProps,
     ...commonAdditionalProps,
     ...returnedValue,

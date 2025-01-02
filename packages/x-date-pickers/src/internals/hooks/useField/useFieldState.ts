@@ -5,12 +5,10 @@ import { usePickerTranslations } from '../../../hooks/usePickerTranslations';
 import { useUtils, useLocalizationContext } from '../useUtils';
 import {
   UseFieldInternalProps,
-  UseFieldParams,
   UseFieldState,
   FieldParsedSelectedSections,
   FieldChangeHandlerContext,
   FieldSectionsValueBoundaries,
-  UseFieldForwardedProps,
 } from './useField.types';
 import {
   mergeDateIntoReferenceDate,
@@ -25,8 +23,8 @@ import {
   FieldSelectedSections,
   PickersTimezone,
   PickerValidDate,
-  InferError,
   InferFieldSection,
+  PickerManager,
 } from '../../../models';
 import { useValueWithTimezone } from '../useValueWithTimezone';
 import {
@@ -35,65 +33,37 @@ import {
 } from '../../utils/getDefaultReferenceDate';
 import { PickerValidValue } from '../../models';
 
-export interface UpdateSectionValueParams<TValue extends PickerValidValue> {
-  /**
-   * The section on which we want to apply the new value.
-   */
-  activeSection: InferFieldSection<TValue>;
-  /**
-   * Value to apply to the active section.
-   */
-  newSectionValue: string;
-  /**
-   * If `true`, the focus will move to the next section.
-   */
-  shouldGoToNextSection: boolean;
-}
-
-export interface UseFieldStateResponse<TValue extends PickerValidValue> {
-  state: UseFieldState<TValue>;
-  activeSectionIndex: number | null;
-  parsedSelectedSections: FieldParsedSelectedSections;
-  setSelectedSections: (sections: FieldSelectedSections) => void;
-  clearValue: () => void;
-  clearActiveSection: () => void;
-  updateSectionValue: (params: UpdateSectionValueParams<TValue>) => void;
-  updateValueFromValueStr: (valueStr: string) => void;
-  setTempAndroidValueStr: (tempAndroidValueStr: string | null) => void;
-  sectionsValueBoundaries: FieldSectionsValueBoundaries;
-  getSectionsFromValue: (
-    value: TValue,
-    fallbackSections?: InferFieldSection<TValue>[] | null,
-  ) => InferFieldSection<TValue>[];
-  localizedDigits: string[];
-  timezone: PickersTimezone;
-}
-
 export const useFieldState = <
   TValue extends PickerValidValue,
   TEnableAccessibleFieldDOMStructure extends boolean,
-  TForwardedProps extends UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
-  TInternalProps extends UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, any>,
->(
-  params: UseFieldParams<
+  TError,
+  TFieldInternalPropsWithDefaults extends UseFieldInternalProps<
     TValue,
     TEnableAccessibleFieldDOMStructure,
-    TForwardedProps,
-    TInternalProps
+    TError
   >,
-): UseFieldStateResponse<TValue> => {
+>(
+  parameters: UseFieldStateParameters<
+    TValue,
+    TEnableAccessibleFieldDOMStructure,
+    TError,
+    TFieldInternalPropsWithDefaults
+  >,
+): UseFieldStateReturnValue<TValue> => {
   const utils = useUtils();
   const translations = usePickerTranslations();
   const adapter = useLocalizationContext();
   const isRtl = useRtl();
 
   const {
-    valueManager,
-    fieldValueManager,
-    valueType,
-    validator,
-    internalProps,
-    internalProps: {
+    manager: {
+      validator,
+      valueType,
+      internal_valueManager: valueManager,
+      internal_fieldValueManager: fieldValueManager,
+    },
+    internalPropsWithDefaults,
+    internalPropsWithDefaults: {
       value: valueProp,
       defaultValue,
       referenceDate: referenceDateProp,
@@ -106,7 +76,7 @@ export const useFieldState = <
       timezone: timezoneProp,
       enableAccessibleFieldDOMStructure = true,
     },
-  } = params;
+  } = parameters;
 
   const {
     timezone,
@@ -171,7 +141,7 @@ export const useFieldState = <
       referenceDate: referenceDateProp,
       value: valueFromTheOutside,
       utils,
-      props: internalProps as GetDefaultReferenceDateProps,
+      props: internalPropsWithDefaults as GetDefaultReferenceDateProps,
       granularity,
       timezone,
     });
@@ -218,12 +188,12 @@ export const useFieldState = <
       return;
     }
 
-    const context: FieldChangeHandlerContext<InferError<TInternalProps>> = {
+    const context: FieldChangeHandlerContext<TError> = {
       validationError: validator({
         adapter,
         value,
         timezone,
-        props: internalProps,
+        props: internalPropsWithDefaults,
       }),
     };
 
@@ -420,3 +390,57 @@ export const useFieldState = <
     timezone,
   };
 };
+
+export interface UpdateSectionValueParams<TValue extends PickerValidValue> {
+  /**
+   * The section on which we want to apply the new value.
+   */
+  activeSection: InferFieldSection<TValue>;
+  /**
+   * Value to apply to the active section.
+   */
+  newSectionValue: string;
+  /**
+   * If `true`, the focus will move to the next section.
+   */
+  shouldGoToNextSection: boolean;
+}
+
+export interface UseFieldStateParameters<
+  TValue extends PickerValidValue,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TError,
+  TFieldInternalPropsWithDefaults extends UseFieldInternalProps<
+    TValue,
+    TEnableAccessibleFieldDOMStructure,
+    TError
+  >,
+> {
+  manager: PickerManager<
+    TValue,
+    TEnableAccessibleFieldDOMStructure,
+    TError,
+    any,
+    TFieldInternalPropsWithDefaults
+  >;
+  internalPropsWithDefaults: TFieldInternalPropsWithDefaults;
+}
+
+export interface UseFieldStateReturnValue<TValue extends PickerValidValue> {
+  state: UseFieldState<TValue>;
+  activeSectionIndex: number | null;
+  parsedSelectedSections: FieldParsedSelectedSections;
+  setSelectedSections: (sections: FieldSelectedSections) => void;
+  clearValue: () => void;
+  clearActiveSection: () => void;
+  updateSectionValue: (params: UpdateSectionValueParams<TValue>) => void;
+  updateValueFromValueStr: (valueStr: string) => void;
+  setTempAndroidValueStr: (tempAndroidValueStr: string | null) => void;
+  sectionsValueBoundaries: FieldSectionsValueBoundaries;
+  getSectionsFromValue: (
+    value: TValue,
+    fallbackSections?: InferFieldSection<TValue>[] | null,
+  ) => InferFieldSection<TValue>[];
+  localizedDigits: string[];
+  timezone: PickersTimezone;
+}
