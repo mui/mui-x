@@ -18,7 +18,7 @@
     "autosizeOptions": {
       "type": {
         "name": "shape",
-        "description": "{ columns?: Array&lt;string&gt;, expand?: bool, includeHeaders?: bool, includeOutliers?: bool, outliersFactor?: number }"
+        "description": "{ columns?: Array&lt;string&gt;, disableColumnVirtualization?: bool, expand?: bool, includeHeaders?: bool, includeOutliers?: bool, outliersFactor?: number }"
       }
     },
     "cellModesModel": { "type": { "name": "object" } },
@@ -450,6 +450,7 @@
       "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'margin'" },
       "default": "\"margin\""
     },
+    "rowSpanning": { "type": { "name": "bool" }, "default": "false" },
     "scrollbarSize": { "type": { "name": "number" } },
     "showCellVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
     "showColumnVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
@@ -476,7 +477,6 @@
       },
       "additionalInfo": { "sx": true }
     },
-    "unstable_rowSpanning": { "type": { "name": "bool" }, "default": "false" },
     "virtualizeColumnsWithAutoRowHeight": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "DataGrid",
@@ -620,9 +620,21 @@
       "class": null
     },
     {
+      "name": "baseCircularProgress",
+      "description": "The custom CircularProgress component used in the grid.",
+      "default": "CircularProgress",
+      "class": null
+    },
+    {
       "name": "baseDivider",
       "description": "The custom Divider component used in the grid.",
       "default": "Divider",
+      "class": null
+    },
+    {
+      "name": "baseLinearProgress",
+      "description": "The custom LinearProgress component used in the grid.",
+      "default": "LinearProgress",
       "class": null
     },
     {
@@ -694,7 +706,13 @@
     {
       "name": "baseSelectOption",
       "description": "The custom SelectOption component used in the grid.",
-      "default": "MenuItem",
+      "default": "SelectOption",
+      "class": null
+    },
+    {
+      "name": "baseSkeleton",
+      "description": "The custom Skeleton component used in the grid.",
+      "default": "Skeleton",
       "class": null
     },
     {

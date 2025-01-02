@@ -6,10 +6,10 @@ import { useGridApiMethod } from '../utils';
 import { isFunction } from '../../utils/utils';
 
 export const useGridStateInitialization = <PrivateApi extends GridPrivateApiCommon>(
-  apiRef: React.MutableRefObject<PrivateApi>,
+  apiRef: React.RefObject<PrivateApi>,
 ) => {
   const controlStateMapRef = React.useRef<
-    Record<string, GridControlStateItem<PrivateApi['state'], any>>
+    Record<string, GridControlStateItem<PrivateApi['state'], any, any>>
   >({});
   const [, rawForceUpdate] = React.useState<PrivateApi['state']>();
 
@@ -40,10 +40,15 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
         const controlState = controlStateMapRef.current[stateId];
         const oldSubState = controlState.stateSelector(
           apiRef.current.state,
+          undefined,
           apiRef.current.instanceId,
         );
 
-        const newSubState = controlState.stateSelector(newState, apiRef.current.instanceId);
+        const newSubState = controlState.stateSelector(
+          newState,
+          undefined,
+          apiRef.current.instanceId,
+        );
         if (newSubState === oldSubState) {
           return;
         }
@@ -82,7 +87,7 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
       if (updatedControlStateIds.length === 1) {
         const { stateId, hasPropChanged } = updatedControlStateIds[0];
         const controlState = controlStateMapRef.current[stateId];
-        const model = controlState.stateSelector(newState, apiRef.current.instanceId);
+        const model = controlState.stateSelector(newState, undefined, apiRef.current.instanceId);
 
         if (controlState.propOnChange && hasPropChanged) {
           controlState.propOnChange(model, {

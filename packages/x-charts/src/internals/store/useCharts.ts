@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useId from '@mui/utils/useId';
 import { ChartStore } from '../plugins/utils/ChartStore';
 import {
   ChartAnyPluginSignature,
@@ -13,9 +14,9 @@ import { UseChartBaseProps } from './useCharts.types';
 import { UseChartInteractionState } from '../plugins/featurePlugins/useChartInteraction/useChartInteraction.types';
 
 export function useChartApiInitialization<T>(
-  inputApiRef: React.MutableRefObject<T | undefined> | undefined,
+  inputApiRef: React.RefObject<T | undefined> | undefined,
 ): T {
-  const fallbackPublicApiRef = React.useRef({}) as React.MutableRefObject<T>;
+  const fallbackPublicApiRef = React.useRef({}) as React.RefObject<T>;
 
   if (inputApiRef) {
     if (inputApiRef.current == null) {
@@ -48,11 +49,13 @@ export function useCharts<
     [inPlugins],
   );
 
-  const pluginParams = {}; // To generate when plugins use params.
+  const defaultChartId = useId();
+
+  const pluginParams = { id: defaultChartId }; // To generate when plugins use params.
   const instanceRef = React.useRef({} as ChartInstance<TSignatures>);
   const instance = instanceRef.current as ChartInstance<TSignatures>;
   const publicAPI = useChartApiInitialization<ChartPublicAPI<TSignatures>>(props.apiRef);
-  const innerSvgRef: React.RefObject<SVGSVGElement> = React.useRef(null);
+  const innerSvgRef = React.useRef<SVGSVGElement>(null);
 
   const storeRef = React.useRef<ChartStore<TSignaturesWithCorePluginSignatures> | null>(null);
   if (storeRef.current == null) {
@@ -70,7 +73,7 @@ export function useCharts<
 
     plugins.forEach((plugin) => {
       if (plugin.getInitialState) {
-        Object.assign(initialState, plugin.getInitialState({}));
+        Object.assign(initialState, plugin.getInitialState({ id: defaultChartId }));
       }
     });
     storeRef.current = new ChartStore(initialState);

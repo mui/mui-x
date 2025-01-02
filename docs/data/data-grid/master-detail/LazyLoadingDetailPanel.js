@@ -45,6 +45,7 @@ function DetailPanelContent({ row: rowProp }) {
         // Store the data in cache so that when detail panel unmounts due to virtualization, the data is not lost
         detailPanelDataCache.set(rowProp.id, response);
       }
+
       const result = detailPanelDataCache.get(rowProp.id);
 
       if (!isMounted) {
@@ -125,14 +126,11 @@ export default function LazyLoadingDetailPanel() {
   const handleDetailPanelExpansionChange = React.useCallback(
     (newExpandedRowIds) => {
       // Only keep cached data for detail panels that are still expanded
-      const preservedEntries = newExpandedRowIds.map((id) => [
-        id,
-        detailPanelDataCache.get(id),
-      ]);
-      detailPanelDataCache.clear();
-      preservedEntries.forEach(
-        ([id, value]) => value && detailPanelDataCache.set(id, value),
-      );
+      for (const [id] of detailPanelDataCache) {
+        if (!newExpandedRowIds.has(id)) {
+          detailPanelDataCache.delete(id);
+        }
+      }
     },
     [detailPanelDataCache],
   );
