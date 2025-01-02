@@ -41,9 +41,15 @@ export const pieArcClasses: PieArcClasses = generateUtilityClasses('MuiPieArc', 
 ]);
 
 const useUtilityClasses = (ownerState: PieArcOwnerState) => {
-  const { classes, id, isFaded, isHighlighted } = ownerState;
+  const { classes, id, isFaded, isHighlighted, dataIndex } = ownerState;
   const slots = {
-    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isFaded && 'faded'],
+    root: [
+      'root',
+      `series-${id}`,
+      `data-index-${dataIndex}`,
+      isHighlighted && 'highlighted',
+      isFaded && 'faded',
+    ],
   };
 
   return composeClasses(slots, getPieArcUtilityClass, classes);
@@ -54,9 +60,9 @@ const PieArcRoot = styled(animated.path, {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.arc,
 })<{ ownerState: PieArcOwnerState }>(({ theme }) => ({
+  // Got to move stroke to an element prop instead of style.
   stroke: (theme.vars || theme).palette.background.paper,
-  strokeWidth: 1,
-  strokeLinejoin: 'round',
+  transition: 'opacity 0.2s ease-in, fill 0.2s ease-in, filter 0.2s ease-in',
 }));
 
 export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> &
@@ -114,10 +120,16 @@ function PieArc(props: PieArcProps) {
           })!,
       )}
       visibility={to([startAngle, endAngle], (sA, eA) => (sA === eA ? 'hidden' : 'visible'))}
+      // @ts-expect-error
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
       ownerState={ownerState}
       className={classes.root}
+      fill={ownerState.color}
+      opacity={ownerState.isFaded ? 0.3 : 1}
+      filter={ownerState.isHighlighted ? 'brightness(120%)' : 'none'}
+      strokeWidth={1}
+      strokeLinejoin="round"
       {...other}
       {...getInteractionItemProps({ type: 'pie', seriesId: id, dataIndex })}
     />

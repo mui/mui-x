@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import { createRenderer, fireEvent } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { BarChart } from '@mui/x-charts/BarChart';
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 import { firePointerEvent } from '../tests/firePointerEvent';
 
 const config = {
@@ -23,8 +24,6 @@ const config = {
 // | X X X X
 // ---A---B-
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 describe('BarChart - click event', () => {
   const { render } = createRenderer();
 
@@ -41,13 +40,8 @@ describe('BarChart - click event', () => {
   });
 
   describe('onAxisClick', () => {
-    it('should provide the right context as second argument', function test(t = {}) {
-      if (isJSDOM) {
-        // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
+    // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
+    testSkipIf(isJSDOM)('should provide the right context as second argument', () => {
       const onAxisClick = spy();
       render(
         <div
@@ -94,63 +88,62 @@ describe('BarChart - click event', () => {
       });
     });
 
-    it('should provide the right context as second argument with layout="horizontal"', function test(t = {}) {
-      if (isJSDOM) {
-        // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
-      const onAxisClick = spy();
-      render(
-        <div
-          style={{
-            width: 400,
-            height: 400,
-          }}
-        >
-          <BarChart
-            {...config}
-            layout="horizontal"
-            series={[
-              { dataKey: 'v1', id: 's1' },
-              { dataKey: 'v2', id: 's2' },
-            ]}
-            yAxis={[{ scaleType: 'band', dataKey: 'x' }]}
-            onAxisClick={onAxisClick}
-          />
-        </div>,
-      );
-      const svg = document.querySelector<HTMLElement>('svg')!;
+    // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
+    testSkipIf(isJSDOM)(
+      'should provide the right context as second argument with layout="horizontal"',
+      () => {
+        const onAxisClick = spy();
+        render(
+          <div
+            style={{
+              margin: -8, // Removes the body default margins
+              width: 400,
+              height: 400,
+            }}
+          >
+            <BarChart
+              {...config}
+              layout="horizontal"
+              series={[
+                { dataKey: 'v1', id: 's1' },
+                { dataKey: 'v2', id: 's2' },
+              ]}
+              yAxis={[{ scaleType: 'band', dataKey: 'x' }]}
+              onAxisClick={onAxisClick}
+            />
+          </div>,
+        );
+        const svg = document.querySelector<HTMLElement>('svg')!;
 
-      firePointerEvent(svg, 'pointermove', {
-        clientX: 60,
-        clientY: 198,
-      });
-      fireEvent.click(svg);
+        firePointerEvent(svg, 'pointermove', {
+          clientX: 60,
+          clientY: 198,
+        });
+        fireEvent.click(svg);
 
-      expect(onAxisClick.lastCall.args[1]).to.deep.equal({
-        dataIndex: 0,
-        axisValue: 'A',
-        seriesValues: { s1: 4, s2: 2 },
-      });
+        expect(onAxisClick.lastCall.args[1]).to.deep.equal({
+          dataIndex: 0,
+          axisValue: 'A',
+          seriesValues: { s1: 4, s2: 2 },
+        });
 
-      firePointerEvent(svg, 'pointermove', {
-        clientX: 60,
-        clientY: 201,
-      });
-      fireEvent.click(svg);
+        firePointerEvent(svg, 'pointermove', {
+          clientX: 60,
+          clientY: 201,
+        });
+        fireEvent.click(svg);
 
-      expect(onAxisClick.lastCall.args[1]).to.deep.equal({
-        dataIndex: 1,
-        axisValue: 'B',
-        seriesValues: { s1: 1, s2: 1 },
-      });
-    });
+        expect(onAxisClick.lastCall.args[1]).to.deep.equal({
+          dataIndex: 1,
+          axisValue: 'B',
+          seriesValues: { s1: 1, s2: 1 },
+        });
+      },
+    );
   });
 
   describe('onItemClick', () => {
-    it('should add cursor="pointer" to bar elements', function test() {
+    it('should add cursor="pointer" to bar elements', () => {
       render(
         <BarChart
           {...config}
@@ -169,13 +162,8 @@ describe('BarChart - click event', () => {
       ).to.deep.equal(['pointer', 'pointer', 'pointer', 'pointer']);
     });
 
-    it('should provide the right context as second argument', function test(t = {}) {
-      if (isJSDOM) {
-        // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
+    // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
+    testSkipIf(isJSDOM)('should provide the right context as second argument', () => {
       const onItemClick = spy();
       render(
         <div

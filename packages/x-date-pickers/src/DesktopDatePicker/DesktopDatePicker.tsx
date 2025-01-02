@@ -46,7 +46,7 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
     DesktopDatePickerProps<TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiDesktopDatePicker');
 
-  const viewRenderers: DatePickerViewRenderers<DateView, any> = {
+  const viewRenderers: DatePickerViewRenderers<DateView> = {
     day: renderDateViewCalendar,
     month: renderDateViewCalendar,
     year: renderDateViewCalendar,

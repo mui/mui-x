@@ -12,8 +12,7 @@ import {
   getGridStringQuickFilterFn,
 } from '@mui/x-data-grid';
 import { getColumnValues, sleep } from 'test/utils/helperFn';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGrid /> - Quick filter', () => {
   const { render, clock } = createRenderer();
@@ -645,12 +644,7 @@ describe('<DataGrid /> - Quick filter', () => {
   });
 
   // https://github.com/mui/mui-x/issues/6783
-  it('should not override user input when typing', async function test(t = {}) {
-    if (isJSDOM) {
-      // @ts-expect-error to support mocha and vitest
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      this?.skip?.() || t?.skip();
-    }
+  testSkipIf(isJSDOM)('should not override user input when typing', async () => {
     // Warning: this test doesn't fail consistently as it is timing-sensitive.
     const debounceMs = 50;
 

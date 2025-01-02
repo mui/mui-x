@@ -91,7 +91,7 @@ const MultiInputJoyDateRangeFieldSeparator = styled(
     <FormControl>
       {/* Ensure that the separator is correctly aligned */}
       <span />
-      <Typography {...props}>{props.children ?? ' — '}</Typography>
+      <Typography {...props}>{props.children ?? ' – '}</Typography>
     </FormControl>
   ),
   {

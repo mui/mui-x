@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import { createRenderer, fireEvent } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
+import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 const config = {
   dataset: [
@@ -25,11 +26,10 @@ const config = {
 // .....
 // 4...3
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 describe('ScatterChart - click event', () => {
   const { render } = createRenderer();
 
+  // TODO: Remove beforeEach/afterEach after vitest becomes our main runner
   beforeEach(() => {
     if (window?.document?.body?.style) {
       window.document.body.style.margin = '0';
@@ -42,14 +42,9 @@ describe('ScatterChart - click event', () => {
     }
   });
 
-  describe('onItemClick - using vornoid', () => {
-    it('should provide the right context as second argument when clicking svg', function test(t = {}) {
-      if (isJSDOM) {
-        // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
+  // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
+  describeSkipIf(isJSDOM)('onItemClick - using vornoid', () => {
+    it('should provide the right context as second argument when clicking svg', () => {
       const onItemClick = spy();
       render(
         <div
@@ -90,12 +85,7 @@ describe('ScatterChart - click event', () => {
       expect(onItemClick.callCount).to.equal(2);
     });
 
-    it('should provide the right context as second argument when clicking mark', function test(t = {}) {
-      if (isJSDOM) {
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
+    it('should provide the right context as second argument when clicking mark', () => {
       const onItemClick = spy();
       render(
         <div
@@ -128,12 +118,7 @@ describe('ScatterChart - click event', () => {
   });
 
   describe('onItemClick - disabling vornoid', () => {
-    it('should not call onItemClick when clicking the SVG', function test(t = {}) {
-      if (isJSDOM) {
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
+    it('should not call onItemClick when clicking the SVG', () => {
       const onItemClick = spy();
       render(
         <div
@@ -159,12 +144,7 @@ describe('ScatterChart - click event', () => {
       expect(onItemClick.callCount).to.equal(0);
     });
 
-    it('should provide the right context as second argument when clicking mark', function test(t = {}) {
-      if (isJSDOM) {
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
+    it('should provide the right context as second argument when clicking mark', () => {
       const onItemClick = spy();
       render(
         <div

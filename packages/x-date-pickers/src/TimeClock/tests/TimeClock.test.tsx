@@ -4,6 +4,7 @@ import { spy } from 'sinon';
 import { fireEvent, fireTouchChangedEvent, screen, within } from '@mui/internal-test-utils';
 import { TimeClock } from '@mui/x-date-pickers/TimeClock';
 import { createPickerRenderer, adapterToUse, timeClockHandler } from 'test/utils/pickers';
+import { testSkipIf, hasTouchSupport, describeSkipIf } from 'test/utils/skipIf';
 
 describe('<TimeClock />', () => {
   const { render } = createPickerRenderer();
@@ -154,7 +155,7 @@ describe('<TimeClock />', () => {
 
     expect(handleChange.callCount).to.equal(1);
     const [newDate, reason] = handleChange.firstCall.args;
-    expect(adapterToUse.getHours(newDate)).to.equal(3);
+    expect(adapterToUse.getHours(newDate)).to.equal(23);
     expect(adapterToUse.getMinutes(newDate)).to.equal(20);
     expect(reason).to.equal('partial');
   });
@@ -174,7 +175,7 @@ describe('<TimeClock />', () => {
 
     expect(handleChange.callCount).to.equal(1);
     const [newDate, reason] = handleChange.firstCall.args;
-    expect(adapterToUse.getHours(newDate)).to.equal(21);
+    expect(adapterToUse.getHours(newDate)).to.equal(0);
     expect(adapterToUse.getMinutes(newDate)).to.equal(20);
     expect(reason).to.equal('partial');
   });
@@ -220,67 +221,65 @@ describe('<TimeClock />', () => {
     });
   });
 
-  it('should display options, but not update value when readOnly prop is passed', function test(t = {}) {
-    // Only run in supported browsers
-    if (typeof Touch === 'undefined') {
-      // @ts-expect-error to support mocha and vitest
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      this?.skip?.() || t?.skip();
-    }
-    const selectEvent = {
-      changedTouches: [
-        {
-          clientX: 150,
-          clientY: 60,
-        },
-      ],
-    };
-    const onChangeMock = spy();
-    render(<TimeClock value={adapterToUse.date('2019-01-01')} onChange={onChangeMock} readOnly />);
+  testSkipIf(!hasTouchSupport)(
+    'should display options, but not update value when readOnly prop is passed',
+    () => {
+      const selectEvent = {
+        changedTouches: [
+          {
+            clientX: 150,
+            clientY: 60,
+          },
+        ],
+      };
+      const onChangeMock = spy();
+      render(
+        <TimeClock value={adapterToUse.date('2019-01-01')} onChange={onChangeMock} readOnly />,
+      );
 
-    fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', selectEvent);
-    expect(onChangeMock.callCount).to.equal(0);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', selectEvent);
+      expect(onChangeMock.callCount).to.equal(0);
 
-    // hours are not disabled
-    const hoursContainer = screen.getByRole('listbox');
-    const hours = within(hoursContainer).getAllByRole('option');
-    const disabledHours = hours.filter((hour) => hour.getAttribute('aria-disabled') === 'true');
+      // hours are not disabled
+      const hoursContainer = screen.getByRole('listbox');
+      const hours = within(hoursContainer).getAllByRole('option');
+      const disabledHours = hours.filter((hour) => hour.getAttribute('aria-disabled') === 'true');
 
-    expect(hours.length).to.equal(12);
-    expect(disabledHours.length).to.equal(0);
-  });
+      expect(hours.length).to.equal(12);
+      expect(disabledHours.length).to.equal(0);
+    },
+  );
 
-  it('should display disabled options when disabled prop is passed', function test(t = {}) {
-    // Only run in supported browsers
-    if (typeof Touch === 'undefined') {
-      // @ts-expect-error to support mocha and vitest
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      this?.skip?.() || t?.skip();
-    }
-    const selectEvent = {
-      changedTouches: [
-        {
-          clientX: 150,
-          clientY: 60,
-        },
-      ],
-    };
-    const onChangeMock = spy();
-    render(<TimeClock value={adapterToUse.date('2019-01-01')} onChange={onChangeMock} disabled />);
+  testSkipIf(!hasTouchSupport)(
+    'should display disabled options when disabled prop is passed',
+    () => {
+      const selectEvent = {
+        changedTouches: [
+          {
+            clientX: 150,
+            clientY: 60,
+          },
+        ],
+      };
+      const onChangeMock = spy();
+      render(
+        <TimeClock value={adapterToUse.date('2019-01-01')} onChange={onChangeMock} disabled />,
+      );
 
-    fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', selectEvent);
-    expect(onChangeMock.callCount).to.equal(0);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', selectEvent);
+      expect(onChangeMock.callCount).to.equal(0);
 
-    // hours are disabled
-    const hoursContainer = screen.getByRole('listbox');
-    const hours = within(hoursContainer).getAllByRole('option');
-    const disabledHours = hours.filter((hour) => hour.getAttribute('aria-disabled') === 'true');
+      // hours are disabled
+      const hoursContainer = screen.getByRole('listbox');
+      const hours = within(hoursContainer).getAllByRole('option');
+      const disabledHours = hours.filter((hour) => hour.getAttribute('aria-disabled') === 'true');
 
-    expect(hours.length).to.equal(12);
-    expect(disabledHours.length).to.equal(12);
-  });
+      expect(hours.length).to.equal(12);
+      expect(disabledHours.length).to.equal(12);
+    },
+  );
 
-  describe('Time validation on touch ', () => {
+  describeSkipIf(!hasTouchSupport)('Time validation on touch ', () => {
     const clockTouchEvent = {
       '13:--': {
         changedTouches: [

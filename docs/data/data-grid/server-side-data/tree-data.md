@@ -59,10 +59,10 @@ It also caches the data by default.
 {{"demo": "ServerSideTreeData.js", "bg": "inline"}}
 
 :::info
-The data source demos use a utility function `useMockServer` to simulate the server-side data fetching.
-In a real-world scenario, you would replace this with your own server-side data fetching logic.
+The data source demos use a `useMockServer` utility function to simulate server-side data fetching.
+In a real-world scenario you would replace this with your own server-side data-fetching logic.
 
-Open the info section of the browser console to see the requests being made and the data being fetched in response.
+Open the Info section of your browser console to see the requests being made and the data being fetched in response.
 :::
 
 ## Error handling

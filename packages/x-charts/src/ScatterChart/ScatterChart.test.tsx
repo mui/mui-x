@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { createRenderer, fireEvent } from '@mui/internal-test-utils/createRenderer';
+import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/describeConformance';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { expect } from 'chai';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<ScatterChart />', () => {
   const { render } = createRenderer();
@@ -55,13 +54,8 @@ describe('<ScatterChart />', () => {
     height: 100,
   };
 
-  it('should show the tooltip without errors in default config', function test(t = {}) {
-    if (isJSDOM) {
-      // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
-      // @ts-expect-error to support mocha and vitest
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      this?.skip?.() || t?.skip();
-    }
+  // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
+  testSkipIf(isJSDOM)('should show the tooltip without errors in default config', () => {
     render(
       <div
         style={{
@@ -87,5 +81,49 @@ describe('<ScatterChart />', () => {
     fireEvent.pointerEnter(marks[4]);
     cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
     expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(5, 5)']);
+  });
+
+  testSkipIf(isJSDOM)('should support dataset with missing values', async () => {
+    // x from 500 to 600
+    // y from 100 to 200
+    const dataset = [
+      {
+        version: 'data-0',
+        a1: 500,
+        a2: 100,
+      },
+      {
+        version: 'data-1',
+        a1: 600,
+        a2: 200,
+      },
+      {
+        version: 'data-2',
+        // Item with missing x-values
+        // a1: 500,
+        a2: 200,
+      },
+      {
+        version: 'data-2',
+        // Item with missing y-values
+        a1: 500,
+        // a2: 200,
+      },
+    ];
+
+    render(
+      <ScatterChart
+        dataset={dataset}
+        series={[{ datasetKeys: { id: 'version', x: 'a1', y: 'a2' }, label: 'Series A' }]}
+        width={500}
+        height={300}
+      />,
+    );
+
+    const labelX = await screen.findByText('100');
+    expect(labelX).toBeVisible();
+
+    const labelY = await screen.findByText('600');
+    expect(labelY).toBeVisible();
   });
 });

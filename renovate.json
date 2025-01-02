@@ -41,14 +41,7 @@
     },
     {
       "groupName": "React",
-      "matchPackageNames": [
-        "react",
-        "react-dom",
-        "react-is",
-        "react-test-renderer",
-        "@types/react",
-        "@types/react-dom"
-      ]
+      "matchPackageNames": ["react", "react-dom", "react-is", "@types/react", "@types/react-dom"]
     },
     {
       "groupName": "React router",
@@ -93,7 +86,7 @@
       "matchPackageNames": ["vitest", "@vitest/**", "vitest-*"]
     },
     {
-      "groupName": "MUI Core",
+      "groupName": "Material UI",
       "matchPackageNames": [
         "@mui/icons-material",
         "@mui/joy",

@@ -3,6 +3,7 @@ import { spy } from 'sinon';
 import { expect } from 'chai';
 import { createRenderer, reactMajor } from '@mui/internal-test-utils';
 import { sleep } from 'test/utils/helperFn';
+import { isJSDOM, testSkipIf } from 'test/utils/skipIf';
 import { createUseGridApiEventHandler } from './useGridApiEventHandler';
 import { FinalizationRegistryBasedCleanupTracking } from '../../utils/cleanupTracking/FinalizationRegistryBasedCleanupTracking';
 import { TimerBasedCleanupTracking } from '../../utils/cleanupTracking/TimerBasedCleanupTracking';
@@ -13,18 +14,10 @@ describe('useGridApiEventHandler', () => {
   const { render } = createRenderer();
 
   describe('FinalizationRegistry-based implementation', () => {
-    it('should unsubscribe event listeners registered by uncommitted components', async function test(t = {}) {
-      if (
-        !/jsdom/.test(window.navigator.userAgent) ||
-        typeof FinalizationRegistry === 'undefined' ||
-        typeof global.gc === 'undefined'
-      ) {
-        // Needs ability to trigger the garbage collector and support for FinalizationRegistry (added in node 14)
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
-
+    // Needs ability to trigger the garbage collector and support for FinalizationRegistry (added in node 14)
+    testSkipIf(
+      !isJSDOM || typeof FinalizationRegistry === 'undefined' || typeof global.gc === 'undefined',
+    )('should unsubscribe event listeners registered by uncommitted components', async () => {
       const useGridApiEventHandler = createUseGridApiEventHandler({
         registry: new FinalizationRegistryBasedCleanupTracking(),
       });
@@ -50,8 +43,7 @@ describe('useGridApiEventHandler', () => {
       expect(apiRef.current.subscribeEvent.callCount).to.equal(expectedCallCount);
 
       unmount();
-      // @ts-expect-error to support mocha and vitest
-      global.gc(); // Triggers garbage collector
+      global.gc?.(); // Triggers garbage collector
       await sleep(50);
 
       // Ensure that both event listeners were unsubscribed

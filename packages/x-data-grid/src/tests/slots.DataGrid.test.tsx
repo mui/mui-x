@@ -10,6 +10,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { DataGrid, DataGridProps, GridOverlay } from '@mui/x-data-grid';
 import { getCell, getRow } from 'test/utils/helperFn';
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGrid /> - Slots', () => {
   const { render } = createRenderer();
@@ -166,16 +167,9 @@ describe('<DataGrid /> - Slots', () => {
     });
   });
 
-  it('should throw if a component is used without providing the context', function test(t = {}) {
-    // TODO is this fixed?
-    if (!/jsdom/.test(window.navigator.userAgent)) {
-      // can't catch render errors in the browser for unknown reason
-      // tried try-catch + error boundary + window onError preventDefault
-      // @ts-expect-error to support mocha and vitest
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      this?.skip?.() || t?.skip();
-    }
-
+  // can't catch render errors in the browser for unknown reason
+  // tried try-catch + error boundary + window onError preventDefault
+  testSkipIf(!isJSDOM)('should throw if a component is used without providing the context', () => {
     expect(() => {
       render(
         <ErrorBoundary>

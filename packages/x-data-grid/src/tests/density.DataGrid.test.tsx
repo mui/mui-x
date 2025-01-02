@@ -4,14 +4,14 @@ import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
 import { grid } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import { DataGrid, DataGridProps, GridToolbar, gridClasses } from '@mui/x-data-grid';
+import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 import {
   COMFORTABLE_DENSITY_FACTOR,
   COMPACT_DENSITY_FACTOR,
 } from '../hooks/features/density/densitySelector';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
-describe('<DataGrid /> - Density', () => {
+// JSDOM seem to not support CSS variables properly and `height: var(--height)` ends up being `height: ''`
+describeSkipIf(isJSDOM)('<DataGrid /> - Density', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {

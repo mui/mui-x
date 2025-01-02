@@ -116,8 +116,8 @@ module.exports = function getBabelConfig(api) {
     plugins.push([
       'babel-plugin-replace-imports',
       {
-        test: /date-fns-jalali\//i,
-        replacer: 'date-fns-jalali-v3/',
+        test: /date-fns-jalali/i,
+        replacer: 'date-fns-jalali-v4',
         // This option is provided by the `patches/babel-plugin-replace-imports@1.0.2.patch` patch
         filenameIncludes: 'src/AdapterDateFnsJalaliV3/',
       },

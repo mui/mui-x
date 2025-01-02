@@ -37,10 +37,9 @@ import {
 } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import Dialog from '@mui/material/Dialog';
+import { testSkipIf, isJSDOM, describeSkipIf } from 'test/utils/skipIf';
 
 import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/densitySelector';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Rows', () => {
   const { render } = createRenderer();
@@ -243,12 +242,7 @@ describe('<DataGrid /> - Rows', () => {
       );
     }
 
-    it('should throw an error if getActions is missing', function test(t = {}) {
-      if (!isJSDOM) {
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
+    testSkipIf(!isJSDOM)('should throw an error if getActions is missing', () => {
       expect(() => {
         render(
           <ErrorBoundary>
@@ -429,8 +423,8 @@ describe('<DataGrid /> - Rows', () => {
       expect(deleteButton).toHaveFocus();
     });
 
-    it('should set the correct tabIndex to the focused button', () => {
-      render(
+    it('should set the correct tabIndex to the focused button', async () => {
+      const { user } = render(
         <TestCase
           getActions={() => [
             <GridActionsCellItem icon={<span />} label="print" />,
@@ -440,9 +434,11 @@ describe('<DataGrid /> - Rows', () => {
       );
       const firstCell = getCell(0, 0);
       const secondCell = getCell(0, 1);
-      firstCell.focus();
+      act(() => {
+        firstCell.focus();
+      });
 
-      fireEvent.keyDown(firstCell, { key: 'ArrowRight' });
+      await user.keyboard('{ArrowRight}');
       expect(secondCell).to.have.property('tabIndex', -1);
 
       const printButton = screen.getByRole('menuitem', { name: 'print' });
@@ -450,7 +446,10 @@ describe('<DataGrid /> - Rows', () => {
       expect(printButton).to.have.property('tabIndex', 0);
       expect(menuButton).to.have.property('tabIndex', -1);
 
-      fireEvent.keyDown(printButton, { key: 'ArrowRight' });
+      act(() => {
+        printButton.focus();
+      });
+      await user.keyboard('{ArrowRight}');
       expect(printButton).to.have.property('tabIndex', -1);
       expect(menuButton).to.have.property('tabIndex', 0);
     });
@@ -498,12 +497,8 @@ describe('<DataGrid /> - Rows', () => {
     });
   });
 
-  describe('prop: getRowHeight', () => {
-    if (isJSDOM) {
-      // Need layouting
-      return;
-    }
-
+  // Need layouting
+  describeSkipIf(isJSDOM)('prop: getRowHeight', () => {
     describe('static row height', () => {
       const ROW_HEIGHT = 52;
       function TestCase(props: Partial<DataGridProps>) {
@@ -813,38 +808,36 @@ describe('<DataGrid /> - Rows', () => {
         expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
       });
 
-      it('should position correctly the render zone when the 2nd page has less rows than the 1st page', async function test(t = {}) {
-        const { userAgent } = window.navigator;
-        if (!userAgent.includes('Headless') || /edg/i.test(userAgent)) {
-          // FIXME: We need a waitFor that works with fake clock
-          // @ts-expect-error to support mocha and vitest
-          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-          this?.skip?.() || t?.skip();
-        }
-        const data = getBasicGridData(120, 3);
-        const columnHeaderHeight = 50;
-        const measuredRowHeight = 100;
-        render(
-          <TestCase
-            getBioContentHeight={() => measuredRowHeight}
-            getRowHeight={() => 'auto'}
-            rowBufferPx={0}
-            columnHeaderHeight={columnHeaderHeight}
-            getRowId={(row) => row.id}
-            hideFooter={false}
-            {...data}
-          />,
-        );
-        const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-        virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
-        virtualScroller.dispatchEvent(new Event('scroll'));
+      // FIXME: We need a waitFor that works with fake clock
+      const { userAgent } = window.navigator;
+      testSkipIf(!userAgent.includes('Headless') || /edg/i.test(userAgent))(
+        'should position correctly the render zone when the 2nd page has less rows than the 1st page',
+        async () => {
+          const data = getBasicGridData(120, 3);
+          const columnHeaderHeight = 50;
+          const measuredRowHeight = 100;
+          render(
+            <TestCase
+              getBioContentHeight={() => measuredRowHeight}
+              getRowHeight={() => 'auto'}
+              rowBufferPx={0}
+              columnHeaderHeight={columnHeaderHeight}
+              getRowId={(row) => row.id}
+              hideFooter={false}
+              {...data}
+            />,
+          );
+          const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+          virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
+          virtualScroller.dispatchEvent(new Event('scroll'));
 
-        fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+          fireEvent.click(screen.getByRole('button', { name: /next page/i }));
 
-        await waitFor(() => {
-          expect(gridOffsetTop()).to.equal(0);
-        });
-      });
+          await waitFor(() => {
+            expect(gridOffsetTop()).to.equal(0);
+          });
+        },
+      );
 
       it('should position correctly the render zone when changing pageSize to a lower value', async () => {
         const data = getBasicGridData(120, 3);
@@ -870,46 +863,43 @@ describe('<DataGrid /> - Rows', () => {
         expect(gridOffsetTop()).to.equal(0);
       });
 
-      it('should position correctly the render zone when changing pageSize to a lower value and moving to next page', async function test(t = {}) {
-        const { userAgent } = window.navigator;
-        if (!userAgent.includes('Headless') || /edg/i.test(userAgent)) {
-          // In Chrome non-headless and Edge this test is flacky
-          // @ts-expect-error to support mocha and vitest
-          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-          this?.skip?.() || t?.skip();
-        }
-        const data = getBasicGridData(120, 3);
-        const columnHeaderHeight = 50;
-        const measuredRowHeight = 100;
+      // In Chrome non-headless and Edge this test is flaky
+      testSkipIf(!userAgent.includes('Headless') || /edg/i.test(userAgent))(
+        'should position correctly the render zone when changing pageSize to a lower value and moving to next page',
+        async () => {
+          const data = getBasicGridData(120, 3);
+          const columnHeaderHeight = 50;
+          const measuredRowHeight = 100;
 
-        const { setProps } = render(
-          <TestCase
-            getBioContentHeight={() => measuredRowHeight}
-            getRowHeight={() => 'auto'}
-            rowBufferPx={0}
-            columnHeaderHeight={columnHeaderHeight}
-            getRowId={(row) => row.id}
-            hideFooter={false}
-            initialState={{ pagination: { paginationModel: { pageSize: 25 } } }}
-            pageSizeOptions={[10, 25]}
-            height={columnHeaderHeight + 10 * measuredRowHeight}
-            {...data}
-          />,
-        );
+          const { setProps } = render(
+            <TestCase
+              getBioContentHeight={() => measuredRowHeight}
+              getRowHeight={() => 'auto'}
+              rowBufferPx={0}
+              columnHeaderHeight={columnHeaderHeight}
+              getRowId={(row) => row.id}
+              hideFooter={false}
+              initialState={{ pagination: { paginationModel: { pageSize: 25 } } }}
+              pageSizeOptions={[10, 25]}
+              height={columnHeaderHeight + 10 * measuredRowHeight}
+              {...data}
+            />,
+          );
 
-        expect(gridOffsetTop()).to.equal(0);
-
-        const virtualScroller = grid('virtualScroller')!;
-        virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
-        virtualScroller.dispatchEvent(new Event('scroll'));
-
-        setProps({ pageSize: 10 });
-        fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-
-        await waitFor(() => {
           expect(gridOffsetTop()).to.equal(0);
-        });
-      });
+
+          const virtualScroller = grid('virtualScroller')!;
+          virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
+          virtualScroller.dispatchEvent(new Event('scroll'));
+
+          setProps({ pageSize: 10 });
+          fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+
+          await waitFor(() => {
+            expect(gridOffsetTop()).to.equal(0);
+          });
+        },
+      );
     });
   });
 
@@ -967,13 +957,8 @@ describe('<DataGrid /> - Rows', () => {
       });
     });
 
-    it('should consider the spacing when computing the content size', function test(t = {}) {
-      if (isJSDOM) {
-        // Need layouting
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
+    // Needs layout
+    testSkipIf(isJSDOM)('should consider the spacing when computing the content size', () => {
       const spacingTop = 5;
       const spacingBottom = 10;
       const rowHeight = 50;
@@ -990,13 +975,8 @@ describe('<DataGrid /> - Rows', () => {
       expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
     });
 
-    it('should update the content size when getRowSpacing is removed', function test(t = {}) {
-      if (isJSDOM) {
-        // Need layouting
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
+    // Needs layout
+    testSkipIf(isJSDOM)('should update the content size when getRowSpacing is removed', () => {
       const spacingTop = 5;
       const spacingBottom = 10;
       const rowHeight = 50;
@@ -1127,48 +1107,47 @@ describe('<DataGrid /> - Rows', () => {
   });
 
   // https://github.com/mui/mui-x/issues/10373
-  it('should set proper `data-rowindex` and `aria-rowindex` when focused row is out of the viewport', async function test(t = {}) {
-    if (isJSDOM) {
-      // needs virtualization
-      // @ts-expect-error to support mocha and vitest
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      this?.skip?.() || t?.skip();
-    }
-    render(
-      <div style={{ width: 300, height: 300 }}>
-        <DataGrid
-          columns={[{ field: 'id' }]}
-          rows={[
-            { id: 0 },
-            { id: 1 },
-            { id: 2 },
-            { id: 3 },
-            { id: 4 },
-            { id: 5 },
-            { id: 6 },
-            { id: 7 },
-            { id: 8 },
-            { id: 9 },
-          ]}
-        />
-      </div>,
-    );
+  // needs virtualization
+  // needs virtualization
+  testSkipIf(isJSDOM)(
+    'should set proper `data-rowindex` and `aria-rowindex` when focused row is out of the viewport',
+    async () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            columns={[{ field: 'id' }]}
+            rows={[
+              { id: 0 },
+              { id: 1 },
+              { id: 2 },
+              { id: 3 },
+              { id: 4 },
+              { id: 5 },
+              { id: 6 },
+              { id: 7 },
+              { id: 8 },
+              { id: 9 },
+            ]}
+          />
+        </div>,
+      );
 
-    const cell = getCell(0, 0);
-    fireUserEvent.mousePress(cell);
+      const cell = getCell(0, 0);
+      fireUserEvent.mousePress(cell);
 
-    const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-    virtualScroller.scrollTop = 1000;
-    virtualScroller.dispatchEvent(new Event('scroll'));
+      const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+      virtualScroller.scrollTop = 1000;
+      virtualScroller.dispatchEvent(new Event('scroll'));
 
-    const focusedRow = getRow(0);
-    expect(focusedRow.getAttribute('data-id')).to.equal('0');
-    expect(focusedRow.getAttribute('data-rowindex')).to.equal('0');
-    expect(focusedRow.getAttribute('aria-rowindex')).to.equal('2'); // 1-based, 1 is the header
+      const focusedRow = getRow(0);
+      expect(focusedRow.getAttribute('data-id')).to.equal('0');
+      expect(focusedRow.getAttribute('data-rowindex')).to.equal('0');
+      expect(focusedRow.getAttribute('aria-rowindex')).to.equal('2'); // 1-based, 1 is the header
 
-    const lastRow = getRow(9);
-    expect(lastRow.getAttribute('data-id')).to.equal('9');
-    expect(lastRow.getAttribute('data-rowindex')).to.equal('9');
-    expect(lastRow.getAttribute('aria-rowindex')).to.equal('11'); // 1-based, 1 is the header
-  });
+      const lastRow = getRow(9);
+      expect(lastRow.getAttribute('data-id')).to.equal('9');
+      expect(lastRow.getAttribute('data-rowindex')).to.equal('9');
+      expect(lastRow.getAttribute('aria-rowindex')).to.equal('11'); // 1-based, 1 is the header
+    },
+  );
 });

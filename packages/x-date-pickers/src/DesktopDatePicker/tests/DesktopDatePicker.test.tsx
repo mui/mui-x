@@ -6,8 +6,7 @@ import { inputBaseClasses } from '@mui/material/InputBase';
 import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { createPickerRenderer, adapterToUse, openPicker } from 'test/utils/pickers';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { describeSkipIf, testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DesktopDatePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -101,12 +100,7 @@ describe('<DesktopDatePicker />', () => {
       expect(screen.getByRole('radio', { checked: true, name: 'January' })).not.to.equal(null);
     });
 
-    it('should move the focus to the newly opened views', function test(t = {}) {
-      if (isJSDOM) {
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
+    testSkipIf(isJSDOM)('should move the focus to the newly opened views', () => {
       render(<DesktopDatePicker defaultValue={new Date(2019, 5, 5)} openTo="year" />);
 
       openPicker({ type: 'date', variant: 'desktop' });
@@ -142,7 +136,8 @@ describe('<DesktopDatePicker />', () => {
     });
   });
 
-  describe('scroll', () => {
+  // JSDOM has neither layout nor window.scrollTo
+  describeSkipIf(isJSDOM)('scroll', () => {
     const NoTransition = React.forwardRef(function NoTransition(
       props: TransitionProps & { children?: React.ReactNode },
       ref: React.Ref<HTMLDivElement>,

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { ErrorBoundary, createRenderer, screen, reactMajor } from '@mui/internal-test-utils';
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 import { useHighlighted } from './useHighlighted';
 import { HighlightedProvider } from './HighlightedProvider';
 import { SeriesProvider } from '../SeriesProvider';
@@ -14,15 +15,9 @@ function UseHighlighted() {
 describe('useHighlighted', () => {
   const { render } = createRenderer();
 
-  it('should throw an error when parent context not present', function test(t = {}) {
-    if (!/jsdom/.test(window.navigator.userAgent)) {
-      // can't catch render errors in the browser for unknown reason
-      // tried try-catch + error boundary + window onError preventDefault
-      // @ts-expect-error to support mocha and vitest
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      this?.skip?.() || t?.skip();
-    }
-
+  // can't catch render errors in the browser for unknown reason
+  // tried try-catch + error boundary + window onError preventDefault
+  testSkipIf(!isJSDOM)('should throw an error when parent context not present', () => {
     const errorRef = React.createRef<any>();
 
     const errorMessage1 = 'MUI X: Could not find the highlighted ref context.';

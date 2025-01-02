@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import { createRenderer, fireEvent } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { LineChart } from '@mui/x-charts/LineChart';
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 import { firePointerEvent } from '../tests/firePointerEvent';
 
 const config = {
@@ -16,8 +17,6 @@ const config = {
   width: 400,
   height: 400,
 };
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('LineChart - click event', () => {
   const { render } = createRenderer();
@@ -35,13 +34,8 @@ describe('LineChart - click event', () => {
   });
 
   describe('onAxisClick', () => {
-    it('should provide the right context as second argument', function test(t = {}) {
-      if (isJSDOM) {
-        // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
+    // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
+    testSkipIf(isJSDOM)('should provide the right context as second argument', () => {
       const onAxisClick = spy();
       render(
         <div
@@ -90,7 +84,7 @@ describe('LineChart - click event', () => {
   });
 
   describe('onMarkClick', () => {
-    it('should add cursor="pointer" to bar elements', function test() {
+    it('should add cursor="pointer" to bar elements', () => {
       render(
         <LineChart
           {...config}
@@ -116,13 +110,8 @@ describe('LineChart - click event', () => {
       ]);
     });
 
-    it('should provide the right context as second argument', function test(t = {}) {
-      if (isJSDOM) {
-        // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
+    // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
+    testSkipIf(isJSDOM)('should provide the right context as second argument', () => {
       const onMarkClick = spy();
       render(
         <div
@@ -169,7 +158,7 @@ describe('LineChart - click event', () => {
   });
 
   describe('onAreaClick', () => {
-    it('should add cursor="pointer" to bar elements', function test() {
+    it('should add cursor="pointer" to bar elements', () => {
       render(
         <LineChart
           {...config}
@@ -189,13 +178,8 @@ describe('LineChart - click event', () => {
       ]);
     });
 
-    it('should provide the right context as second argument', function test(t = {}) {
-      if (isJSDOM) {
-        // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
+    // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
+    testSkipIf(isJSDOM)('should provide the right context as second argument', () => {
       const onAreaClick = spy();
       render(
         <div
@@ -233,7 +217,7 @@ describe('LineChart - click event', () => {
   });
 
   describe('onLineClick', () => {
-    it('should add cursor="pointer" to bar elements', function test() {
+    it('should add cursor="pointer" to bar elements', () => {
       render(
         <LineChart
           {...config}
@@ -253,13 +237,8 @@ describe('LineChart - click event', () => {
       ]);
     });
 
-    it('should provide the right context as second argument', function test(t = {}) {
-      if (isJSDOM) {
-        // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
+    // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
+    testSkipIf(isJSDOM)('should provide the right context as second argument', () => {
       const onLineClick = spy();
       render(
         <div

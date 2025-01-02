@@ -725,6 +725,23 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
 
           expect(view.getItemCheckboxInput('1').dataset.indeterminate).to.equal('false');
         });
+
+        it('should update the intermediate state of the parent when selecting a child', () => {
+          const view = render({
+            multiSelect: true,
+            checkboxSelection: true,
+            items: [{ id: '1' }, { id: '2', children: [{ id: '2.1' }, { id: '2.2' }] }],
+            defaultExpandedItems: ['2'],
+          });
+
+          expect(view.getItemCheckboxInput('2').dataset.indeterminate).to.equal('false');
+
+          fireEvent.click(view.getItemCheckboxInput('2.1'));
+          expect(view.getItemCheckboxInput('2').dataset.indeterminate).to.equal('true');
+
+          fireEvent.click(view.getItemCheckboxInput('2.1'));
+          expect(view.getItemCheckboxInput('2').dataset.indeterminate).to.equal('false');
+        });
       });
 
       describe('multi selection with selectionPropagation.descendants = true', () => {

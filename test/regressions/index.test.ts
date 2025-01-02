@@ -14,7 +14,12 @@ function sleep(timeoutMS: number | undefined) {
 const isMaterialUIv6 = materialPackageJson.version.startsWith('6.');
 
 // Tests that need a longer timeout.
-const timeSensitiveSuites = ['ColumnAutosizingAsync', 'DensitySelectorGrid'];
+const timeSensitiveSuites = [
+  'ColumnAutosizingAsync',
+  'DensitySelectorGrid',
+  'DataGridOverlays',
+  'PopularFeaturesDemo',
+];
 
 async function navigateToTest(page: Page, testName: string) {
   try {
@@ -29,14 +34,15 @@ async function navigateToTest(page: Page, testName: string) {
 }
 
 const isConsoleWarningIgnored = (msg?: string) => {
-  if (
-    msg &&
-    ((isMaterialUIv6 &&
-      msg.startsWith(
-        'MUI: The Experimental_CssVarsProvider component has been ported into ThemeProvider.',
-      )) ||
-      msg?.includes('React Router Future Flag Warning'))
-  ) {
+  const isMuiV6Error =
+    isMaterialUIv6 &&
+    msg?.startsWith(
+      'MUI: The Experimental_CssVarsProvider component has been ported into ThemeProvider.',
+    );
+
+  const isReactRouterFlagsError = msg?.includes('React Router Future Flag Warning');
+
+  if (isMuiV6Error || isReactRouterFlagsError) {
     return true;
   }
   return false;
@@ -87,7 +93,7 @@ async function main() {
   await page.goto(`/#no-dev`, { waitUntil: 'networkidle' });
 
   // Simulate portrait mode for date pickers.
-  // See `useIsLandscape`.
+  // See `usePickerOrientation`.
   await page.evaluate(() => {
     Object.defineProperty(window.screen.orientation, 'angle', {
       get() {

@@ -5,8 +5,7 @@ import { fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DateCalendar />', () => {
   const { render, clock } = createPickerRenderer({ clockConfig: new Date(2019, 0, 2) });
@@ -443,7 +442,7 @@ describe('<DateCalendar />', () => {
     it('renders year selection standalone', () => {
       render(<DateCalendar defaultValue={adapterToUse.date('2019-01-01')} openTo="year" />);
 
-      expect(screen.getAllByTestId('year')).to.have.length(200);
+      expect(screen.getAllByRole('radio')).to.have.length(200);
     });
 
     it('should select the closest enabled date in the month if the current date is disabled', async () => {
@@ -528,12 +527,8 @@ describe('<DateCalendar />', () => {
       expect(screen.getByTestId('calendar-month-and-year-text')).to.have.text('January 2022');
     });
 
-    it('should scroll to show the selected year', function test(t = {}) {
-      if (isJSDOM) {
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
+    // Needs layout
+    testSkipIf(isJSDOM)('should scroll to show the selected year', () => {
       render(
         <DateCalendar
           defaultValue={adapterToUse.date('2019-04-29')}

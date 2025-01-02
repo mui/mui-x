@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { MuiPickersAdapter, PickersTimezone, PickerValidDate } from '@mui/x-date-pickers/models';
 import { getDateOffset } from 'test/utils/pickers';
-import moment from 'moment';
+import { testSkipIf } from 'test/utils/skipIf';
 import { DescribeGregorianAdapterTestSuite } from './describeGregorianAdapter.types';
 import { TEST_DATE_ISO_STRING, TEST_DATE_LOCALE_STRING } from './describeGregorianAdapter.utils';
 
@@ -93,11 +93,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
       }
     });
 
-    it('should parse undefined', () => {
-      if (adapterTZ.lib !== 'dayjs') {
-        return;
-      }
-
+    testSkipIf(adapterTZ.lib !== 'dayjs')('should parse undefined', () => {
       if (adapter.isTimezoneCompatible) {
         const testTodayZone = (timezone: PickersTimezone) => {
           const dateWithZone = adapterTZ.date(undefined, timezone);
@@ -124,11 +120,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     });
   });
 
-  it('Method: getTimezone', () => {
-    if (!adapter.isTimezoneCompatible) {
-      return;
-    }
-
+  testSkipIf(!adapter.isTimezoneCompatible)('Method: getTimezone', () => {
     const testTimezone = (timezone: string, expectedTimezone = timezone) => {
       expect(adapter.getTimezone(adapter.date(undefined, timezone))).to.equal(expectedTimezone);
     };
@@ -143,13 +135,13 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     setDefaultTimezone(undefined);
   });
 
-  it('should not mix Europe/London and UTC in winter', () => {
-    if (!adapter.isTimezoneCompatible) {
-      return;
-    }
-    const dateWithZone = adapter.date('2023-10-30T11:44:00.000Z', 'Europe/London');
-    expect(adapter.getTimezone(dateWithZone)).to.equal('Europe/London');
-  });
+  testSkipIf(!adapter.isTimezoneCompatible)(
+    'should not mix Europe/London and UTC in winter',
+    () => {
+      const dateWithZone = adapter.date('2023-10-30T11:44:00.000Z', 'Europe/London');
+      expect(adapter.getTimezone(dateWithZone)).to.equal('Europe/London');
+    },
+  );
 
   it('Method: setTimezone', () => {
     if (adapter.isTimezoneCompatible) {
@@ -220,13 +212,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
       expect(adapter.isEqual(null, testDateLocale)).to.equal(false);
     });
 
-    it('should work with different timezones', function test(t = {}) {
-      if (!adapter.isTimezoneCompatible) {
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
-
+    testSkipIf(!adapter.isTimezoneCompatible)('should work with different timezones', () => {
       const dateInLondonTZ = adapterTZ.setTimezone(testDateIso, 'Europe/London');
       const dateInParisTZ = adapterTZ.setTimezone(testDateIso, 'Europe/Paris');
 
@@ -250,13 +236,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
       ).to.equal(false);
     });
 
-    it('should work with different timezones', function test(t = {}) {
-      if (!adapter.isTimezoneCompatible) {
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
-
+    testSkipIf(!adapter.isTimezoneCompatible)('should work with different timezones', () => {
       // Both dates below have the same timestamp, but they are not in the same year when represented in their respective timezone.
       // The adapter should still consider that they are in the same year.
       const dateInLondonTZ = adapterTZ.endOfYear(
@@ -285,13 +265,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
       ).to.equal(false);
     });
 
-    it('should work with different timezones', function test(t = {}) {
-      if (!adapter.isTimezoneCompatible) {
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
-
+    testSkipIf(!adapter.isTimezoneCompatible)('should work with different timezones', () => {
       // Both dates below have the same timestamp, but they are not in the same month when represented in their respective timezone.
       // The adapter should still consider that they are in the same month.
       const dateInLondonTZ = adapterTZ.endOfMonth(
@@ -320,13 +294,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
       );
     });
 
-    it('should work with different timezones', function test(t = {}) {
-      if (!adapter.isTimezoneCompatible) {
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
-
+    testSkipIf(!adapter.isTimezoneCompatible)('should work with different timezones', () => {
       // Both dates below have the same timestamp, but they are not in the same day when represented in their respective timezone.
       // The adapter should still consider that they are in the same day.
       const dateInLondonTZ = adapterTZ.endOfDay(
@@ -349,13 +317,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
       );
     });
 
-    it('should work with different timezones', function test(t = {}) {
-      if (!adapter.isTimezoneCompatible) {
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
-
+    testSkipIf(!adapter.isTimezoneCompatible)('should work with different timezones', () => {
       // Both dates below have the same timestamp, but they are not in the same day when represented in their respective timezone.
       // The adapter should still consider that they are in the same day.
       const dateInLondonTZ = adapterTZ.setTimezone(testDateIso, 'Europe/London');
@@ -375,13 +337,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
       expect(adapter.isAfter(testDateLocale, adapter.date()!)).to.equal(false);
     });
 
-    it('should work with different timezones', function test(t = {}) {
-      if (!adapter.isTimezoneCompatible) {
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
-
+    testSkipIf(!adapter.isTimezoneCompatible)('should work with different timezones', () => {
       const dateInLondonTZ = adapterTZ.endOfDay(
         adapterTZ.setTimezone(testDateIso, 'Europe/London'),
       );
@@ -406,13 +362,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
       expect(adapter.isAfterYear(testDateLocale, nextYearLocale)).to.equal(false);
     });
 
-    it('should work with different timezones', function test(t = {}) {
-      if (!adapter.isTimezoneCompatible) {
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
-
+    testSkipIf(!adapter.isTimezoneCompatible)('should work with different timezones', () => {
       // Both dates below have the same timestamp, but they are not in the same year when represented in their respective timezone.
       // The adapter should still consider that they are in the same year.
       const dateInLondonTZ = adapterTZ.endOfYear(
@@ -436,13 +386,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
       expect(adapter.isAfterDay(testDateLocale, nextDayLocale)).to.equal(false);
     });
 
-    it('should work with different timezones', function test(t = {}) {
-      if (!adapter.isTimezoneCompatible) {
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
-
+    testSkipIf(!adapter.isTimezoneCompatible)('should work with different timezones', () => {
       // Both dates below have the same timestamp, but they are not in the same day when represented in their respective timezone.
       // The adapter should still consider that they are in the same day.
       const dateInLondonTZ = adapterTZ.endOfDay(
@@ -478,13 +422,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
       expect(adapter.isBefore(adapter.date()!, testDateLocale)).to.equal(false);
     });
 
-    it('should work with different timezones', function test(t = {}) {
-      if (!adapter.isTimezoneCompatible) {
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
-
+    testSkipIf(!adapter.isTimezoneCompatible)('should work with different timezones', () => {
       const dateInLondonTZ = adapterTZ.endOfDay(
         adapterTZ.setTimezone(testDateIso, 'Europe/London'),
       );
@@ -509,13 +447,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
       expect(adapter.isBeforeYear(testDateLocale, nextYearLocale)).to.equal(false);
     });
 
-    it('should work with different timezones', function test(t = {}) {
-      if (!adapter.isTimezoneCompatible) {
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
-
+    testSkipIf(!adapter.isTimezoneCompatible)('should work with different timezones', () => {
       // Both dates below have the same timestamp, but they are not in the same year when represented in their respective timezone.
       // The adapter should still consider that they are in the same year.
       const dateInLondonTZ = adapterTZ.endOfYear(
@@ -539,13 +471,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
       expect(adapter.isBeforeDay(testDateLocale, previousDayLocale)).to.equal(false);
     });
 
-    it('should work with different timezones', function test(t = {}) {
-      if (!adapter.isTimezoneCompatible) {
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
-
+    testSkipIf(!adapter.isTimezoneCompatible)('should work with different timezones', () => {
       // Both dates below have the same timestamp, but they are not in the same day when represented in their respective timezone.
       // The adapter should still consider that they are in the same day.
       const dateInLondonTZ = adapterTZ.endOfDay(
@@ -679,13 +605,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
       expect(adapter.endOfMonth(testDateLocale)).toEqualDateTime(expected);
     });
 
-    it('should update the offset when entering DST', function test(t = {}) {
-      if (!adapterTZ.isTimezoneCompatible) {
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
-
+    testSkipIf(!adapter.isTimezoneCompatible)('should update the offset when entering DST', () => {
       expectSameTimeInMonacoTZ(adapterTZ, testDateLastNonDSTDay);
       expectSameTimeInMonacoTZ(adapterTZ, adapterTZ.endOfMonth(testDateLastNonDSTDay));
     });
@@ -714,13 +634,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
       expect(adapter.addMonths(testDateIso, 3)).toEqualDateTime('2019-01-30T11:44:00.000Z');
     });
 
-    it('should update the offset when entering DST', function test(t = {}) {
-      if (!adapterTZ.isTimezoneCompatible) {
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
-
+    testSkipIf(!adapter.isTimezoneCompatible)('should update the offset when entering DST', () => {
       expectSameTimeInMonacoTZ(adapterTZ, testDateLastNonDSTDay);
       expectSameTimeInMonacoTZ(adapterTZ, adapterTZ.addMonths(testDateLastNonDSTDay, 1));
     });
@@ -732,13 +646,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
       expect(adapter.addWeeks(testDateIso, -2)).toEqualDateTime('2018-10-16T11:44:00.000Z');
     });
 
-    it('should update the offset when entering DST', function test(t = {}) {
-      if (!adapterTZ.isTimezoneCompatible) {
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
-
+    testSkipIf(!adapter.isTimezoneCompatible)('should update the offset when entering DST', () => {
       expectSameTimeInMonacoTZ(adapterTZ, testDateLastNonDSTDay);
       expectSameTimeInMonacoTZ(adapterTZ, adapterTZ.addWeeks(testDateLastNonDSTDay, 1));
     });
@@ -750,13 +658,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
       expect(adapter.addDays(testDateIso, -2)).toEqualDateTime('2018-10-28T11:44:00.000Z');
     });
 
-    it('should update the offset when entering DST', function test(t = {}) {
-      if (!adapterTZ.isTimezoneCompatible) {
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
-
+    testSkipIf(!adapter.isTimezoneCompatible)('should update the offset when entering DST', () => {
       expectSameTimeInMonacoTZ(adapterTZ, testDateLastNonDSTDay);
       expectSameTimeInMonacoTZ(adapterTZ, adapterTZ.addDays(testDateLastNonDSTDay, 1));
     });
@@ -861,13 +763,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
       });
     });
 
-    it('should respect the DST', function test(t = {}) {
-      if (!adapterTZ.isTimezoneCompatible) {
-        // @ts-expect-error to support mocha and vitest
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this?.skip?.() || t?.skip();
-      }
-
+    testSkipIf(!adapter.isTimezoneCompatible)('should respect the DST', () => {
       const referenceDate = adapterTZ.date('2022-03-17', 'Europe/Paris');
       const weekArray = adapterTZ.getWeekArray(referenceDate);
       let expectedDate = adapter.startOfWeek(adapter.startOfMonth(referenceDate));
@@ -886,11 +782,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
       });
     });
 
-    it('should respect the locale of the adapter, not the locale of the date', function test() {
-      if (adapter.lib === 'moment') {
-        moment.locale('en');
-      }
-
+    it('should respect the locale of the adapter, not the locale of the date', () => {
       const dateFr = adapterFr.date('2022-03-17', 'default');
       const weekArray = adapter.getWeekArray(dateFr);
 

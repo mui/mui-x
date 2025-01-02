@@ -89,9 +89,6 @@ function ChartsAxis(props: ChartsAxisProps) {
   const { topAxis, leftAxis, rightAxis, bottomAxis, slots, slotProps } = props;
   const { xAxis, xAxisIds, yAxis, yAxisIds } = useCartesianContext();
 
-  // TODO: use for plotting line without ticks or any thing
-  // const drawingArea = React.useContext(DrawingContext);
-
   const leftId = getAxisId(leftAxis === undefined ? yAxisIds[0] : leftAxis, yAxisIds[0]);
   const bottomId = getAxisId(bottomAxis === undefined ? xAxisIds[0] : bottomAxis, xAxisIds[0]);
   const topId = getAxisId(topAxis, xAxisIds[0]);

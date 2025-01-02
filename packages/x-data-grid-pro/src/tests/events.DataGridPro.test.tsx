@@ -17,8 +17,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { getCell, getColumnHeaderCell } from 'test/utils/helperFn';
 import { spy } from 'sinon';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Events params', () => {
   const { render, clock } = createRenderer();
@@ -329,27 +328,25 @@ describe('<DataGridPro /> - Events params', () => {
     });
   });
 
-  it('publishing GRID_ROWS_SCROLL should call onFetchRows callback when rows lazy loading is enabled', function test(t = {}) {
-    if (isJSDOM) {
-      // Needs layout
-      // @ts-expect-error to support mocha and vitest
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      this?.skip?.() || t?.skip();
-    }
-    const handleFetchRows = spy();
-    render(
-      <TestEvents
-        onFetchRows={handleFetchRows}
-        sortingMode="server"
-        filterMode="server"
-        rowsLoadingMode="server"
-        paginationMode="server"
-        rowCount={50}
-      />,
-    );
-    act(() => apiRef.current.publishEvent('scrollPositionChange', { left: 0, top: 3 * 52 }));
-    expect(handleFetchRows.callCount).to.equal(1);
-  });
+  // Needs layout
+  testSkipIf(isJSDOM)(
+    'publishing GRID_ROWS_SCROLL should call onFetchRows callback when rows lazy loading is enabled',
+    () => {
+      const handleFetchRows = spy();
+      render(
+        <TestEvents
+          onFetchRows={handleFetchRows}
+          sortingMode="server"
+          filterMode="server"
+          rowsLoadingMode="server"
+          paginationMode="server"
+          rowCount={50}
+        />,
+      );
+      act(() => apiRef.current.publishEvent('scrollPositionChange', { left: 0, top: 3 * 52 }));
+      expect(handleFetchRows.callCount).to.equal(1);
+    },
+  );
 
   it('should publish "unmount" event when unmounting the Grid', () => {
     const onUnmount = spy();
