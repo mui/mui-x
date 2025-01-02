@@ -22,7 +22,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { enUS as locale } from 'date-fns/locale';
 import format from 'date-fns/format';
-
+import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 /**
  * `date` column
  */
@@ -51,14 +51,21 @@ function GridEditDateCell({
   field,
   value,
   colDef,
+  hasFocus,
 }: GridRenderEditCellParams<any, Date | null, string>) {
   const apiRef = useGridApiContext();
-
+  const inputRef = React.useRef<HTMLInputElement>(null);
   const Component = colDef.type === 'dateTime' ? DateTimePicker : DatePicker;
 
   const handleChange = (newValue: unknown) => {
     apiRef.current.setEditCellValue({ id, field, value: newValue });
   };
+
+  useEnhancedEffect(() => {
+    if (hasFocus) {
+      inputRef.current!.focus();
+    }
+  }, [hasFocus]);
 
   return (
     <Component
@@ -67,6 +74,7 @@ function GridEditDateCell({
       onChange={handleChange}
       slotProps={{
         textField: {
+          inputRef,
           variant: 'standard',
           fullWidth: true,
           sx: {

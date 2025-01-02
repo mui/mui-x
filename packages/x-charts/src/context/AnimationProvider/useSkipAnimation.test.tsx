@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { ErrorBoundary, createRenderer, screen, reactMajor } from '@mui/internal-test-utils';
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 import { useSkipAnimation } from './useSkipAnimation';
 import { AnimationProvider } from './AnimationProvider';
 
@@ -28,13 +29,9 @@ describe('useSkipAnimation', () => {
     window.matchMedia = oldMatchMedia;
   });
 
-  it('should throw an error when parent context not present', function test() {
-    if (!/jsdom/.test(window.navigator.userAgent)) {
-      // can't catch render errors in the browser for unknown reason
-      // tried try-catch + error boundary + window onError preventDefault
-      this.skip();
-    }
-
+  // can't catch render errors in the browser for unknown reason
+  // tried try-catch + error boundary + window onError preventDefault
+  testSkipIf(!isJSDOM)('should throw an error when parent context not present', function test() {
     const errorRef = React.createRef<any>();
 
     const errorMessage1 = 'MUI X: Could not find the animation ref context.';
