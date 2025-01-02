@@ -19,7 +19,7 @@ interface GridHeaderFilterMenuProps {
   id: string;
   labelledBy: string;
   target: HTMLElement | null;
-  isApplied: boolean;
+  showClearItem: boolean;
   clearFilterItem: () => void;
 }
 
@@ -32,7 +32,7 @@ function GridHeaderFilterMenu({
   item,
   id,
   labelledBy,
-  isApplied,
+  showClearItem,
   clearFilterItem,
 }: GridHeaderFilterMenuProps) {
   const apiRef = useGridApiContext();
@@ -65,7 +65,7 @@ function GridHeaderFilterMenu({
         id={id}
         onKeyDown={handleListKeyDown}
       >
-        {isApplied && [
+        {showClearItem && [
           <rootProps.slots.baseMenuItem
             key="filter-menu-clear-filter"
             iconStart={<rootProps.slots.columnMenuClearIcon fontSize="small" />}
@@ -78,7 +78,7 @@ function GridHeaderFilterMenu({
           </rootProps.slots.baseMenuItem>,
           <rootProps.slots.baseDivider key="filter-menu-divider" />,
         ]}
-        {operators.map((op, i) => {
+        {operators.map((op) => {
           const selected = op.value === item.operator;
           const label =
             op?.headerLabel ??
@@ -116,7 +116,6 @@ GridHeaderFilterMenu.propTypes = {
   clearFilterItem: PropTypes.func.isRequired,
   field: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
-  isApplied: PropTypes.bool.isRequired,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -137,6 +136,7 @@ GridHeaderFilterMenu.propTypes = {
       value: PropTypes.string.isRequired,
     }),
   ).isRequired,
+  showClearItem: PropTypes.bool.isRequired,
   target: HTMLElementType,
 } as any;
 

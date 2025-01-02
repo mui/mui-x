@@ -1443,6 +1443,12 @@
       "isGlobal": false
     },
     {
+      "key": "columnHeaderFilterInput",
+      "className": "MuiDataGridPremium-columnHeaderFilterInput",
+      "description": "Styles applied to the header filter input element.",
+      "isGlobal": false
+    },
+    {
       "key": "columnHeaderTitle",
       "className": "MuiDataGridPremium-columnHeaderTitle",
       "description": "Styles applied to the column header's title element;",

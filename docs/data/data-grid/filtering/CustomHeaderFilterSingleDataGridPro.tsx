@@ -44,7 +44,9 @@ function AdminFilter(props: GridRenderHeaderFilterProps) {
 
   return (
     <FormControl variant="outlined" size="small" fullWidth>
-      <InputLabel id="select-is-admin-label">{label}</InputLabel>
+      <InputLabel id="select-is-admin-label" shrink>
+        {label}
+      </InputLabel>
       <Select
         labelId="select-is-admin-label"
         id="select-is-admin"
@@ -52,6 +54,7 @@ function AdminFilter(props: GridRenderHeaderFilterProps) {
         onChange={handleChange}
         label={label}
         inputProps={{ sx: { fontSize: 14 } }}
+        notched
       >
         <MenuItem value="">
           <em>None</em>

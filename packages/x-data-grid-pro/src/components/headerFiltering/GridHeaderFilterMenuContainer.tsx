@@ -21,7 +21,7 @@ function GridHeaderFilterMenuContainer(props: {
   headerFilterMenuRef: React.MutableRefObject<HTMLButtonElement | null>;
   buttonRef: React.Ref<HTMLButtonElement>;
   disabled?: boolean;
-  isApplied?: boolean;
+  showClearItem?: boolean;
   clearFilterItem?: () => void;
 }) {
   const {
@@ -31,7 +31,7 @@ function GridHeaderFilterMenuContainer(props: {
     buttonRef,
     headerFilterMenuRef,
     disabled = false,
-    isApplied = false,
+    showClearItem,
     clearFilterItem,
     ...others
   } = props;
@@ -73,7 +73,11 @@ function GridHeaderFilterMenuContainer(props: {
         sx={SX}
         {...rootProps.slotProps?.baseIconButton}
       >
-        <rootProps.slots.baseBadge color="primary" variant="dot" badgeContent={isApplied ? 1 : 0}>
+        <rootProps.slots.baseBadge
+          color="primary"
+          variant="dot"
+          badgeContent={showClearItem ? 1 : 0}
+        >
           <rootProps.slots.openFilterButtonIcon fontSize="inherit" />
         </rootProps.slots.baseBadge>
       </rootProps.slots.baseIconButton>
@@ -85,8 +89,8 @@ function GridHeaderFilterMenuContainer(props: {
         operators={operators}
         labelledBy={buttonId!}
         id={menuId!}
-        isApplied={isApplied}
         clearFilterItem={clearFilterItem}
+        showClearItem={showClearItem}
         {...others}
       />
     </React.Fragment>
@@ -106,7 +110,6 @@ GridHeaderFilterMenuContainer.propTypes = {
   headerFilterMenuRef: PropTypes.shape({
     current: PropTypes.object,
   }).isRequired,
-  isApplied: PropTypes.bool,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -125,6 +128,7 @@ GridHeaderFilterMenuContainer.propTypes = {
       value: PropTypes.string.isRequired,
     }),
   ).isRequired,
+  showClearItem: PropTypes.bool,
 } as any;
 
 export { GridHeaderFilterMenuContainer };

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { styled } from '@mui/system';
 import {
   unstable_useForkRef as useForkRef,
   unstable_composeClasses as composeClasses,
@@ -23,6 +24,7 @@ import {
   gridFilterModelSelector,
   gridFilterableColumnLookupSelector,
   GridPinnedColumnPosition,
+  gridClasses,
 } from '@mui/x-data-grid';
 import {
   GridStateColDef,
@@ -34,6 +36,7 @@ import {
   shouldCellShowRightBorder,
 } from '@mui/x-data-grid/internals';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import { inputBaseClasses } from '@mui/material/InputBase';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import { GridHeaderFilterMenuContainer } from './GridHeaderFilterMenuContainer';
@@ -69,6 +72,27 @@ type OwnerState = DataGridProProcessedProps & {
   showLeftBorder: boolean;
 };
 
+const StyledInputComponent = styled(GridFilterInputValue, {
+  name: 'MuiDataGrid',
+  slot: 'ColumnHeaderFilterInput',
+  overridesResolver: (props, styles) => styles.columnHeaderFilterInput,
+})(({ theme }) => ({
+  flex: 1,
+  '& input[type="date"], & input[type="datetime-local"]': {
+    '&[value=""]:not(:focus)': {
+      color: 'transparent',
+    },
+  },
+  [`& .${inputBaseClasses.input}`]: {
+    fontSize: '14px',
+  },
+  [`.${gridClasses['root--densityCompact']} & .${inputBaseClasses.input}`]: {
+    paddingTop: theme.spacing(0.5),
+    paddingBottom: theme.spacing(0.5),
+    height: 23,
+  },
+}));
+
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { colDef, classes, showRightBorder, showLeftBorder, pinnedPosition } = ownerState;
 
@@ -85,14 +109,11 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       pinnedPosition === 'left' && 'columnHeader--pinnedLeft',
       pinnedPosition === 'right' && 'columnHeader--pinnedRight',
     ],
+    input: ['columnHeaderFilterInput'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
-
-const INPUT_PROPS = { inputProps: { sx: { fontSize: 14 } } };
-const INPUT_SX = { flex: 1, minWidth: 40 };
-const DATE_INPUT_SX = { [`& input[value=""]:not(:focus)`]: { color: 'transparent' } };
 
 const DEFAULT_INPUT_COMPONENTS: { [key in GridColType]: React.JSXElementConstructor<any> | null } =
   {
@@ -332,7 +353,9 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
     >
       {headerFilterComponent}
       {InputComponent && headerFilterComponent === undefined ? (
-        <InputComponent
+        <StyledInputComponent
+          as={InputComponent}
+          className={classes.input}
           apiRef={apiRef}
           item={item}
           inputRef={inputRef}
@@ -360,10 +383,6 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
           size="small"
           disabled={isFilterReadOnly || isNoInputOperator}
           tabIndex={-1}
-          sx={[
-            INPUT_SX,
-            colDef.type === 'date' || colDef.type === 'dateTime' ? DATE_INPUT_SX : undefined,
-          ]}
           headerFilterMenu={
             <GridHeaderFilterMenuContainer
               operators={filterOperators}
@@ -373,7 +392,7 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
               applyFilterChanges={apiRef.current.upsertFilterItem}
               headerFilterMenuRef={headerFilterMenuRef}
               buttonRef={buttonRef}
-              isApplied={isApplied}
+              showClearItem={!showClearIcon && isApplied}
               clearFilterItem={clearFilterItem}
             />
           }
@@ -382,7 +401,6 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
               <GridHeaderFilterClearButton onClick={clearFilterItem} disabled={isFilterReadOnly} />
             ) : null
           }
-          InputProps={INPUT_PROPS}
           {...(isNoInputOperator ? { value: '' } : {})}
           {...currentOperator?.InputComponentProps}
           {...InputComponentProps}
