@@ -347,7 +347,7 @@ export interface SetValueActionOptions<TError = string> {
    */
   shortcut?: PickersShortcutsItemContext;
   /**
-   * Set the behavior of the picker when the value is not controlled and has never been modified.
+   * Decide if the value should call `onChange` and `onAccept` when the value is not controlled and has never been modified.
    * If `true`, the `onChange` and `onAccept` callback will only be fired if the value has been modified (and is not equal to the last published value).
    * If `false`, the `onChange` and `onAccept` callback will be fired when the value has never been modified (`onAccept` only if `changeImportance` is set to "accept").
    * @default false

@@ -145,42 +145,23 @@ export const usePickerValue = <
     const {
       changeImportance = 'accept',
       skipPublicationIfPristine = false,
-      validationError: validationErrorFromOptions,
+      validationError,
       shortcut,
     } = options ?? {};
 
-    const isCurrentValueTheDefaultValue = !isControlled && !dateState.hasBeenModifiedSinceMount;
-
-    /**
-     * Check if the value should be published.
-     */
     let shouldPublish: boolean;
-    if (!skipPublicationIfPristine && isCurrentValueTheDefaultValue) {
+    let shouldCommit: boolean;
+    if (!skipPublicationIfPristine && !isControlled && !dateState.hasBeenModifiedSinceMount) {
       // If the value is not controlled and the value has never been modified before,
-      // Then clicking on any value (including the one equal to `defaultValue`) should call `onChange`
+      // Then clicking on any value (including the one equal to `defaultValue`) should call `onChange` and `onAccept`
       shouldPublish = true;
+      shouldCommit = changeImportance === 'accept';
     } else {
       shouldPublish = !valueManager.areValuesEqual(utils, newValue, dateState.lastPublishedValue);
+      shouldCommit =
+        changeImportance === 'accept' &&
+        !valueManager.areValuesEqual(utils, newValue, dateState.lastCommittedValue);
     }
-
-    /**
-     * Check if the value should be committed.
-     */
-    let shouldCommit: boolean;
-    if (changeImportance === 'set') {
-      shouldCommit = false;
-    } else if (!skipPublicationIfPristine && isCurrentValueTheDefaultValue) {
-      // If the value is not controlled and the value has never been modified before,
-      // Then clicking on any value (including the one equal to `defaultValue`) should call `onChange`
-      shouldCommit = true;
-    } else {
-      shouldCommit = !valueManager.areValuesEqual(utils, newValue, dateState.lastCommittedValue);
-    }
-
-    /**
-     * Check if the picker should be closed.
-     */
-    const shouldClose = changeImportance === 'accept';
 
     setDateState((prev) => ({
       ...prev,
@@ -193,13 +174,9 @@ export const usePickerValue = <
     let cachedContext: PickerChangeHandlerContext<TError> | null = null;
     const getContext = (): PickerChangeHandlerContext<TError> => {
       if (!cachedContext) {
-        const validationError =
-          validationErrorFromOptions == null
-            ? getValidationErrorForNewValue(newValue)
-            : validationErrorFromOptions;
-
         cachedContext = {
-          validationError,
+          validationError:
+            validationError == null ? getValidationErrorForNewValue(newValue) : validationError,
         };
 
         if (shortcut) {
@@ -218,7 +195,7 @@ export const usePickerValue = <
       onAccept(newValue, getContext());
     }
 
-    if (shouldClose) {
+    if (changeImportance === 'accept') {
       setOpen(false);
     }
   });
@@ -281,6 +258,7 @@ export const usePickerValue = <
 
   const setValueFromView = useEventCallback(
     (newValue: TValue, selectionState: PickerSelectionState = 'partial') => {
+      // TODO: Expose a new method (private?) like `setView` that only updates the draft value.
       if (selectionState === 'shallow') {
         setDateState((prev) => ({
           ...prev,
