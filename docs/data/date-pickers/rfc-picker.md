@@ -191,20 +191,7 @@ If the library does not provide any higher level utilities to create a responsiv
 import { useDateManager } from '@base-ui-components/react-x-date-pickers/managers';
 import { useMediaQuery } from '@base-ui-components/react-utils/useMediaQuery'; // not sure how the util package will be named
 import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
-import { Popover } from '@base-ui-components/react/popover';
-import { Dialog } from '@base-ui-components/react/dialog';
-
-function DatePicker(props) {
-  const manager = useDateManager();
-  const isDesktop = useMediaQuery('@media (pointer: fine)', {
-    defaultMatches: true,
-  });
-
-  const field = (
-    <PickerField.Root>
-      {/** See field documentation */}
-      {isDesktop ? (
-        <Popover.Trigger>📅</Popover.Trigger>
+import { Popover } from '@base-ui-components/react/popover';picker
       ) : (
         <Dialog.Trigger>📅</Dialog.Trigger>
       )}
@@ -339,8 +326,8 @@ TODO
 The user can use the `<Picker.AcceptValue />`, `<Picker.CancelValue />` and `<Picker.SetValue />` components to create an action bar and interact with the value:
 
 ```tsx
-import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
 import { Popover } from '@base-ui-components/react/popover';
+import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
 
 <Popover.Popup>
  <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
@@ -362,18 +349,23 @@ TODO
 
 ### Without Material UI
 
-The user can use the `<Picker.FormattedValue />` component to create a toolbar for its picker:
+The user can use the `<Picker.FormattedDate />` component to create a toolbar for its picker:
 
 ```tsx
-import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
 import { Popover } from '@base-ui-components/react/popover';
+import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
+import { usePickerContext } from '@base-ui-components/react-x-date-pickers/hooks';
 
-<Popover.Popup>
-  <div>
-    <Picker.FormattedValue format="MMMM YYYY" />
-  </div>
-  <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
-</Popover.Popup>;
+function PickerToolbar() {
+  const { value } = usePickerContext();
+
+  return (
+    <Popover.Popup>
+      <div>{value.format('MMMM YYYY')}</div>
+      <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
+    </Popover.Popup>
+  );
+}
 ```
 
 The toolbar can also be used to switch between sections thanks to the `<Picker.SetActiveSection />` component:
@@ -381,18 +373,25 @@ The toolbar can also be used to switch between sections thanks to the `<Picker.S
 ```tsx
 import { Popover } from '@base-ui-components/react/popover';
 import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
+import { usePickerContext } from '@base-ui-components/react-x-date-pickers/hooks';
 
-<Popover.Popup>
-  <div>
-    <Picker.SetActiveSection target="year">
-      <Picker.FormattedValue format="YYYY" />
-    </Picker.SetActiveSection>
-    <Picker.SetActiveSection target="day">
-      <Picker.FormattedValue format="DD MMMM" />
-    </Picker.SetActiveSection>
-  </div>
-  <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
-</Popover.Popup>;
+function PickerToolbar() {
+  const { value } = usePickerContext();
+
+  return (
+    <Popover.Popup>
+      <div>
+        <Picker.SetActiveSection target="year">
+          {value.format('YYYY')}
+        </Picker.SetActiveSection>
+        <Picker.SetActiveSection target="day">
+          {value.format('DD MMMM')}
+        </Picker.SetActiveSection>
+      </div>
+      <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
+    </Popover.Popup>
+  );
+}
 ```
 
 ### With Material UI
@@ -573,20 +572,6 @@ Top level component that wraps the other components when there is not field UI b
 
   Same typing and behavior as today.
 
-### `Picker.FormattedValue`
-
-Formats the value based on the provided format.
-
-#### Props
-
-- Extends `React.HTMLAttributes<HTMLSpanElement>`
-
-- `format`: `string` - **required**
-
-#### Usages in the styled version
-
-- The title / individual sections in all the toolbar components (in combination with `<Picker.SetActiveSection />`)
-
 ### `Picker.ContextValue`
 
 Utility component to access the picker public context.
@@ -594,6 +579,7 @@ Doesn't render a DOM node (it does not have a `render` prop either).
 
 :::success
 The user can also use `usePickerContext()`, but a component allows to not create a dedicated component to access things close from `<Picker.Root />`
+We should probably start without it and add it if we feel the need.
 :::
 
 #### Props
@@ -610,9 +596,11 @@ Renders a button to set the current value.
 
 - `target`: `PickerValidDate` - **required**
 
-- `importance`: `'set' | 'accept'`, default: `'accept'` (equivalent of the `changeImportance` prop on the `shortcut` slot)
-
 - `skipValidation`: `boolean`, default: `false` (by default the button is disabled is the target value is not passing validation)
+
+- `changeImportance`: `'set' | 'accept'`, default: `'accept'`
+
+- `skipPublicationIfPristine`: `boolean`, default: `false`
 
 #### Usages in the styled version
 
@@ -659,7 +647,3 @@ Renders a button to set the active section.
 - Extends `React.HTMLAttributes<HTMLButtonELement>`
 
 - `target`: `PickerSectionType` (current `FieldSectionType` that would be renamed) - **required**
-
-#### Usages in the styled version
-
-- The title / individual sections in all the toolbar components (in combination with `<Picker.FormattedValue />`)
