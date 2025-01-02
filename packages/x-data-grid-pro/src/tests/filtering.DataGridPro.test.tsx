@@ -23,10 +23,9 @@ import { expect } from 'chai';
 import * as React from 'react';
 import { spy } from 'sinon';
 import { getColumnHeaderCell, getColumnValues, getSelectInput, grid } from 'test/utils/helperFn';
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 const SUBMIT_FILTER_STROKE_TIME = DATA_GRID_PRO_PROPS_DEFAULT_VALUES.filterDebounceMs;
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Filter', () => {
   const { clock, render } = createRenderer({ clock: 'fake' });
@@ -660,10 +659,8 @@ describe('<DataGridPro /> - Filter', () => {
     });
   });
 
-  it('should not scroll the page when a filter is removed from the panel', function test() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
+  // Needs layout
+  testSkipIf(isJSDOM)('should not scroll the page when a filter is removed from the panel', () => {
     render(
       <div>
         {/* To simulate a page that needs to be scrolled to reach the grid. */}
@@ -694,40 +691,40 @@ describe('<DataGridPro /> - Filter', () => {
     expect(window.scrollY).to.equal(initialScrollPosition);
   });
 
-  it('should not scroll the page when opening the filter panel and the operator=isAnyOf', function test() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
-
-    render(
-      <div>
-        {/* To simulate a page that needs to be scrolled to reach the grid. */}
-        <div style={{ height: '100vh', width: '100vh' }} />
-        <TestCase
-          initialState={{
-            preferencePanel: {
-              open: true,
-              openedPanelValue: GridPreferencePanelsValue.filters,
-            },
-            filter: {
-              filterModel: {
-                logicOperator: GridLogicOperator.Or,
-                items: [{ id: 1, field: 'brand', operator: 'isAnyOf' }],
+  // Needs layout
+  testSkipIf(isJSDOM)(
+    'should not scroll the page when opening the filter panel and the operator=isAnyOf',
+    () => {
+      render(
+        <div>
+          {/* To simulate a page that needs to be scrolled to reach the grid. */}
+          <div style={{ height: '100vh', width: '100vh' }} />
+          <TestCase
+            initialState={{
+              preferencePanel: {
+                open: true,
+                openedPanelValue: GridPreferencePanelsValue.filters,
               },
-            },
-          }}
-        />
-      </div>,
-    );
+              filter: {
+                filterModel: {
+                  logicOperator: GridLogicOperator.Or,
+                  items: [{ id: 1, field: 'brand', operator: 'isAnyOf' }],
+                },
+              },
+            }}
+          />
+        </div>,
+      );
 
-    grid('root')!.scrollIntoView();
-    const initialScrollPosition = window.scrollY;
-    expect(initialScrollPosition).not.to.equal(0);
-    act(() => apiRef.current.hidePreferences());
-    clock.tick(100);
-    act(() => apiRef.current.showPreferences(GridPreferencePanelsValue.filters));
-    expect(window.scrollY).to.equal(initialScrollPosition);
-  });
+      grid('root')!.scrollIntoView();
+      const initialScrollPosition = window.scrollY;
+      expect(initialScrollPosition).not.to.equal(0);
+      act(() => apiRef.current.hidePreferences());
+      clock.tick(100);
+      act(() => apiRef.current.showPreferences(GridPreferencePanelsValue.filters));
+      expect(window.scrollY).to.equal(initialScrollPosition);
+    },
+  );
 
   describe('Server', () => {
     it('should refresh the filter panel when adding filters', async () => {
@@ -912,11 +909,8 @@ describe('<DataGridPro /> - Filter', () => {
     });
   });
 
-  it('should give a stable ID to the filter item used as placeholder', function test() {
-    if (isJSDOM) {
-      this.skip(); // It's not re-rendering the filter panel correctly
-    }
-
+  // It's not re-rendering the filter panel correctly
+  testSkipIf(isJSDOM)('should give a stable ID to the filter item used as placeholder', () => {
     const { rerender } = render(<TestCase slots={{ toolbar: GridToolbar }} />);
     const filtersButton = screen.getByRole('button', { name: /Filters/i });
     fireEvent.click(filtersButton);
@@ -1228,7 +1222,7 @@ describe('<DataGridPro /> - Filter', () => {
       expect(getColumnValues(1)).to.deep.equal(['Puma']);
     });
 
-    it('should allow updating logic operator even from read-only filters', function test() {
+    it('should allow updating logic operator even from read-only filters', () => {
       const newModel = {
         items: [
           {
