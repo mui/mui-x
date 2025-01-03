@@ -424,12 +424,13 @@ describe('<DataGridPremium /> - Cell selection', () => {
         { keys: '[MouseLeft>]', target: cell11 },
         // 0=full speed
         { target: cell71, coords: { x: rect.x, y: rect.y + rect.height - 0 } },
-        { keys: '[/MouseLeft]' },
       ]);
 
       await waitFor(() => {
         expect(virtualScroller.scrollTop).to.equal(20);
       });
+
+      await user.pointer([{ keys: '[/MouseLeft]' }]);
     });
 
     it('should auto-scroll when the mouse approaches the top edge', async () => {
