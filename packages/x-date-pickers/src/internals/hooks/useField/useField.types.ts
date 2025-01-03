@@ -420,8 +420,19 @@ export interface UseFieldTextFieldInteractions {
 
 export type UseFieldTextField<TEnableAccessibleFieldDOMStructure extends boolean> = <
   TValue extends PickerValidValue,
+  TError,
+  TFieldInternalPropsWithDefaults extends UseFieldInternalProps<
+    TValue,
+    TEnableAccessibleFieldDOMStructure,
+    any
+  >,
 >(
-  params: UseFieldTextFieldParameters<TValue, TEnableAccessibleFieldDOMStructure>,
+  params: UseFieldTextFieldParameters<
+    TValue,
+    TEnableAccessibleFieldDOMStructure,
+    TError,
+    TFieldInternalPropsWithDefaults
+  >,
 ) => {
   interactions: UseFieldTextFieldInteractions;
   returnedValue: TEnableAccessibleFieldDOMStructure extends false
@@ -432,16 +443,22 @@ export type UseFieldTextField<TEnableAccessibleFieldDOMStructure extends boolean
 interface UseFieldTextFieldParameters<
   TValue extends PickerValidValue,
   TEnableAccessibleFieldDOMStructure extends boolean,
+  TError,
+  TFieldInternalPropsWithDefaults extends UseFieldInternalProps<
+    TValue,
+    TEnableAccessibleFieldDOMStructure,
+    any
+  >,
 > extends UseFieldStateReturnValue<TValue>,
     UseFieldCharacterEditingResponse {
   manager: PickerManager<
     TValue,
     TEnableAccessibleFieldDOMStructure,
+    TError,
     any,
-    any,
-    UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, any>
+    TFieldInternalPropsWithDefaults
   >;
-  internalPropsWithDefaults: UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, any>;
+  internalPropsWithDefaults: TFieldInternalPropsWithDefaults;
   forwardedProps: TEnableAccessibleFieldDOMStructure extends false
     ? UseFieldV6ForwardedProps
     : UseFieldV7ForwardedProps;

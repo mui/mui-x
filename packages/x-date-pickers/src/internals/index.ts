@@ -59,8 +59,8 @@ export {
 } from './hooks/useField';
 export type {
   UseFieldInternalProps,
-  UseFieldParameters as UseFieldParams,
-  UseFieldReturnValue as UseFieldResponse,
+  UseFieldParameters,
+  UseFieldReturnValue,
   FieldValueManager,
   FieldChangeHandler,
   FieldChangeHandlerContext,

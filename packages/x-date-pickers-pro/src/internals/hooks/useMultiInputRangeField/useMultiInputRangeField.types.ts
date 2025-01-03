@@ -1,4 +1,4 @@
-import { UseFieldResponse } from '@mui/x-date-pickers/internals';
+import { UseFieldReturnValue } from '@mui/x-date-pickers/internals';
 import { MultiInputFieldRefs } from '../../../models';
 
 export interface UseMultiInputRangeFieldParams<
@@ -14,6 +14,6 @@ export interface UseMultiInputRangeFieldResponse<
   TEnableAccessibleFieldDOMStructure extends boolean,
   TForwardedProps extends {},
 > {
-  startDate: UseFieldResponse<TEnableAccessibleFieldDOMStructure, TForwardedProps>;
-  endDate: UseFieldResponse<TEnableAccessibleFieldDOMStructure, TForwardedProps>;
+  startDate: UseFieldReturnValue<TEnableAccessibleFieldDOMStructure, TForwardedProps>;
+  endDate: UseFieldReturnValue<TEnableAccessibleFieldDOMStructure, TForwardedProps>;
 }
