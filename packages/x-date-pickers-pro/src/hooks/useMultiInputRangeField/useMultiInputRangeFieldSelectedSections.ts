@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
@@ -7,15 +8,14 @@ import {
   UseFieldInternalProps,
 } from '@mui/x-date-pickers/internals';
 import { FieldRef, FieldSelectedSections } from '@mui/x-date-pickers/models';
+import { MultiInputFieldRefs } from '../../models';
 
-interface UseMultiInputFieldSelectedSectionsParams
+interface UseMultiInputRangeFieldSelectedSectionsParameters
   extends Pick<
-    UseFieldInternalProps<PickerRangeValue, any, any>,
-    'selectedSections' | 'onSelectedSectionsChange'
-  > {
-  unstableStartFieldRef?: React.Ref<FieldRef<PickerValue>>;
-  unstableEndFieldRef?: React.Ref<FieldRef<PickerValue>>;
-}
+      UseFieldInternalProps<PickerRangeValue, any, any>,
+      'selectedSections' | 'onSelectedSectionsChange'
+    >,
+    MultiInputFieldRefs {}
 
 interface UseMultiInputFieldSelectedSectionsResponseItem {
   unstableFieldRef?: React.Ref<FieldRef<PickerValue>>;
@@ -28,14 +28,14 @@ interface UseMultiInputFieldSelectedSectionsResponse {
   end: UseMultiInputFieldSelectedSectionsResponseItem;
 }
 
-export const useMultiInputFieldSelectedSections = (
-  params: UseMultiInputFieldSelectedSectionsParams,
+export const useMultiInputRangeFieldSelectedSections = (
+  parameters: UseMultiInputRangeFieldSelectedSectionsParameters,
 ): UseMultiInputFieldSelectedSectionsResponse => {
   const unstableEndFieldRef = React.useRef<FieldRef<PickerValue>>(null);
-  const handleUnstableEndFieldRef = useForkRef(params.unstableEndFieldRef, unstableEndFieldRef);
+  const handleUnstableEndFieldRef = useForkRef(parameters.unstableEndFieldRef, unstableEndFieldRef);
 
   const [startSelectedSection, setStartSelectedSection] = React.useState<FieldSelectedSections>(
-    params.selectedSections ?? null,
+    parameters.selectedSections ?? null,
   );
   const [endSelectedSection, setEndSelectedSection] = React.useState<FieldSelectedSections>(null);
 
@@ -51,7 +51,7 @@ export const useMultiInputFieldSelectedSections = (
     (newSelectedSections: FieldSelectedSections) => {
       setStartSelectedSection(newSelectedSections);
       if (getActiveField() === 'start') {
-        params.onSelectedSectionsChange?.(newSelectedSections);
+        parameters.onSelectedSectionsChange?.(newSelectedSections);
       }
     },
   );
@@ -60,7 +60,7 @@ export const useMultiInputFieldSelectedSections = (
     (newSelectedSections: FieldSelectedSections) => {
       setEndSelectedSection(newSelectedSections);
       if (getActiveField() === 'end') {
-        params.onSelectedSectionsChange?.(newSelectedSections);
+        parameters.onSelectedSectionsChange?.(newSelectedSections);
       }
     },
   );
@@ -69,18 +69,18 @@ export const useMultiInputFieldSelectedSections = (
 
   return {
     start: {
-      unstableFieldRef: params.unstableStartFieldRef,
+      unstableFieldRef: parameters.unstableStartFieldRef,
       selectedSections:
-        activeField === 'start' && params.selectedSections !== undefined
-          ? params.selectedSections
+        activeField === 'start' && parameters.selectedSections !== undefined
+          ? parameters.selectedSections
           : startSelectedSection,
       onSelectedSectionsChange: handleStartSelectedSectionChange,
     },
     end: {
       unstableFieldRef: handleUnstableEndFieldRef,
       selectedSections:
-        activeField === 'end' && params.selectedSections !== undefined
-          ? params.selectedSections
+        activeField === 'end' && parameters.selectedSections !== undefined
+          ? parameters.selectedSections
           : endSelectedSection,
       onSelectedSectionsChange: handleEndSelectedSectionChange,
     },

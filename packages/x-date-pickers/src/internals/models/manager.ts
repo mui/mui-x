@@ -24,3 +24,9 @@ export type PickerManagerFieldInternalProps<TManager extends PickerAnyManager> =
 
 export type PickerManagerFieldInternalPropsWithDefaults<TManager extends PickerAnyManager> =
   PickerManagerProperties<TManager>['fieldInternalPropsWithDefaults'];
+
+export type PickerManagerEnableAccessibleFieldDOMStructure<TManager extends PickerAnyManager> =
+  PickerManagerProperties<TManager>['enableAccessibleFieldDOMStructure'];
+
+export type PickerManagerError<TManager extends PickerAnyManager> =
+  PickerManagerProperties<TManager>['error'];
