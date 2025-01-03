@@ -9,7 +9,7 @@ type GridDataSourceCacheDefaultConfig = {
   ttl?: number;
 };
 
-function getKey(params: GridGetRowsParams) {
+export function getKey(params: GridGetRowsParams) {
   return JSON.stringify([
     params.paginationModel,
     params.filterModel,
