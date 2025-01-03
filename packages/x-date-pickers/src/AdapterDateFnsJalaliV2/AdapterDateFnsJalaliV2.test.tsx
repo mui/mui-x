@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
-import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalaliV3';
+import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalaliV2';
 import {
   createPickerRenderer,
   expectFieldValueV7,
@@ -10,7 +10,7 @@ import {
 import { enUS, faIR } from 'date-fns-jalali/locale';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
 
-describe('<AdapterDateFnsJalaliV3 />', () => {
+describe('<AdapterDateFnsJalaliV2 />', () => {
   describeJalaliAdapter(AdapterDateFnsJalali, {});
 
   describe('Adapter localization', () => {
