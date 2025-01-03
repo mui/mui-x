@@ -16,7 +16,6 @@ import {
   renderDigitalClockTimeView,
   renderMultiSectionDigitalClockTimeView,
 } from '../timeViewRenderers';
-import { PickersActionBarAction } from '../PickersActionBar';
 import { TimeViewWithMeridiem } from '../internals/models';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
 import { resolveTimeViewsResponse } from '../internals/utils/date-time-utils';
@@ -72,9 +71,6 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
   };
 
   const ampmInClock = defaultizedProps.ampmInClock ?? true;
-  const actionBarActions: PickersActionBarAction[] = shouldRenderTimeInASingleColumn
-    ? []
-    : ['accept'];
   // Need to avoid adding the `meridiem` view when unexpected renderer is specified
   const shouldHoursRendererContainMeridiemView =
     viewRenderers.hours?.name === renderMultiSectionDigitalClockTimeView.name;
@@ -108,10 +104,6 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
         hidden: true,
         ampmInClock,
         ...defaultizedProps.slotProps?.toolbar,
-      },
-      actionBar: {
-        actions: actionBarActions,
-        ...defaultizedProps.slotProps?.actionBar,
       },
     },
   };
@@ -160,8 +152,8 @@ DesktopTimePicker.propTypes = {
   autoFocus: PropTypes.bool,
   className: PropTypes.string,
   /**
-   * If `true`, the popover or modal will close after submitting the full date.
-   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * If `true`, the Picker will close after submitting the full date.
+   * @default false
    */
   closeOnSelect: PropTypes.bool,
   /**
