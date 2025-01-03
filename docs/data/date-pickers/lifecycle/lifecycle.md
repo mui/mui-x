@@ -78,7 +78,7 @@ The examples below are using the desktop and mobile variants of the pickers, but
   - Default `views` prop: `['year', 'day']`
   - Explicit `closeOnSelect` prop: `false`
 
-  **Behavior:** The picker won't close when selecting a day. The user will have to click on the _OK_ action to close it.
+  **Behavior:** The picker will not close when selecting a day. The user will have to click on the _OK_ action to close it.
 
   :::success
   If you want to set `closeOnSelect` to `false` on a desktop picker, you should consider enabling the action bar to allow the user to validate the value:
@@ -99,7 +99,7 @@ The examples below are using the desktop and mobile variants of the pickers, but
   - Default `views` prop: `['year', 'day']`
   - Default `closeOnSelect` prop: `false`
 
-  **Behavior:** The picker won't close when selecting a day. The user will have to click on the _OK_ action to close it.
+  **Behavior:** The picker will not close when selecting a day. The user will have to click on the _OK_ action to close it.
 
 - ```tsx
   <DesktopDatePicker views={['day', 'month', 'year']} />
@@ -117,7 +117,7 @@ The examples below are using the desktop and mobile variants of the pickers, but
   - Default `views` prop: `['hours', 'minutes']` (plus a `meridiem` view if the locale is in 12-hours format)
   - Default `closeOnSelect` prop: `false`
 
-  **Behavior:** The picker won't close when selecting the minutes or meridiem (if a 12-hour clock is used).
+  **Behavior:** The picker will not close when selecting the minutes or meridiem (if a 12-hour clock is used).
 
 :::info
 You don't have to fill all the views for the picker to close automatically.
@@ -255,7 +255,7 @@ The examples below are using the desktop and mobile variants of the pickers, but
   - Default `views` prop: `['year', 'day']`
   - Explicit `closeOnSelect` prop: `false`
 
-  **Behavior:** The picker won't call `onAccept` when selecting a value.
+  **Behavior:** The picker will not call `onAccept` when selecting a value.
 
   :::success
   If you want to set `closeOnSelect` to `false` on a desktop picker, you should consider enabling the action bar to allow the user to validate the value:

@@ -40,7 +40,6 @@ export const usePicker = <
     props,
     valueManager,
     valueType,
-    variant,
     validator,
   });
 

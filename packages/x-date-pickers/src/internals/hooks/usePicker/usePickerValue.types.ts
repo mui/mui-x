@@ -2,7 +2,6 @@ import * as React from 'react';
 import { MakeRequired } from '@mui/x-internals/types';
 import { UseFieldInternalProps } from '../useField';
 import { Validator } from '../../../validation';
-import { PickerVariant } from '../../models/common';
 import {
   TimezoneProps,
   MuiPickersAdapter,
@@ -264,7 +263,6 @@ export interface UsePickerValueParams<
   props: TExternalProps;
   valueManager: PickerValueManager<TValue, InferError<TExternalProps>>;
   valueType: PickerValueType;
-  variant: PickerVariant;
   validator: Validator<TValue, InferError<TExternalProps>, TExternalProps>;
 }
 

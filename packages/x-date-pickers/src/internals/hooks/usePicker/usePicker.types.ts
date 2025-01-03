@@ -48,13 +48,16 @@ export interface UsePickerParams<
   TAdditionalProps extends {},
 > extends Pick<
       UsePickerValueParams<TValue, TExternalProps>,
-      'valueManager' | 'valueType' | 'variant' | 'validator'
+      'valueManager' | 'valueType' | 'validator'
     >,
     Pick<
       UsePickerViewParams<TValue, TView, TExternalProps, TAdditionalProps>,
       'additionalViewProps' | 'autoFocusView' | 'rendererInterceptor' | 'fieldRef'
     >,
-    Pick<UsePickerProviderParameters<TValue, TView, InferError<TAdditionalProps>>, 'localeText'> {
+    Pick<
+      UsePickerProviderParameters<TValue, TView, InferError<TAdditionalProps>>,
+      'localeText' | 'variant'
+    > {
   props: TExternalProps;
 }
 
