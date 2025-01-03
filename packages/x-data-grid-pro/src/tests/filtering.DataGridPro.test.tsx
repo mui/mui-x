@@ -1188,7 +1188,7 @@ describe('<DataGridPro /> - Filter', () => {
       const { user } = render(
         <TestCase
           rows={[
-            { id: 1, amount: 1 },
+            { id: 1, amount: -10 },
             { id: 2, amount: 10 },
             { id: 3, amount: 100 },
             { id: 4, amount: 1000 },
@@ -1198,7 +1198,7 @@ describe('<DataGridPro /> - Filter', () => {
           onFilterModelChange={changeSpy}
         />,
       );
-      expect(getColumnValues(0)).to.deep.equal(['1', '10', '100', '1,000']);
+      expect(getColumnValues(0)).to.deep.equal(['-10', '10', '100', '1,000']);
 
       const filterCell = getColumnHeaderCell(0, 1);
       await user.click(within(filterCell).getByLabelText('Operator'));
@@ -1208,17 +1208,25 @@ describe('<DataGridPro /> - Filter', () => {
       await user.click(input);
       expect(input).toHaveFocus();
 
+      await user.keyboard('0');
+      await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['10', '100', '1,000']));
+      expect(changeSpy.lastCall.args[0].items[0].value).to.equal(0);
+
+      await user.keyboard('.');
+      await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['10', '100', '1,000']));
+      expect(changeSpy.lastCall.args[0].items[0].value).to.equal(0); // 0.
+
       await user.keyboard('1');
       await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['10', '100', '1,000']));
-      expect(changeSpy.lastCall.args[0].items[0].value).to.equal(1);
+      await waitFor(() => expect(changeSpy.lastCall.args[0].items[0].value).to.equal(0.1)); // 0.1
 
       await user.keyboard('e');
-      await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['1', '10', '100', '1,000']));
-      expect(changeSpy.lastCall.args[0].items[0].value).to.equal(undefined); // 1e
+      await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['-10', '10', '100', '1,000']));
+      expect(changeSpy.lastCall.args[0].items[0].value).to.equal(undefined); // 0.1e
 
       await user.keyboard('2');
-      await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['1,000']));
-      expect(changeSpy.lastCall.args[0].items[0].value).to.equal(100); // 1e2
+      await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['100', '1,000']));
+      expect(changeSpy.lastCall.args[0].items[0].value).to.equal(10); // 0.1e2
     });
   });
 
