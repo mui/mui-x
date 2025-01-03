@@ -1,6 +1,6 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { MultiInputRangeFieldClasses } from '../MultiInputRangeField';
+import { MultiInputRangeFieldClasses } from '../internals/utils/createMultiInputRangeField';
 
 export interface MultiInputTimeRangeFieldClasses extends MultiInputRangeFieldClasses {}
 

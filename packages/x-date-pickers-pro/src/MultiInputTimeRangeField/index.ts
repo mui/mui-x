@@ -6,7 +6,7 @@ export {
   getMultiInputTimeRangeFieldUtilityClass,
 } from './multiInputTimeRangeFieldClasses';
 export type {
-  MultiInputTimeRangeFieldClassKey as MultiInputRangeFieldClassKey,
+  MultiInputTimeRangeFieldClassKey,
   MultiInputTimeRangeFieldClasses,
 } from './multiInputTimeRangeFieldClasses';
 

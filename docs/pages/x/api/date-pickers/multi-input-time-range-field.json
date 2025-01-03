@@ -107,13 +107,13 @@
       "name": "root",
       "description": "Element rendered at the root.",
       "default": "MultiInputRangeFieldRoot",
-      "class": null
+      "class": "MuiMultiInputTimeRangeField-root"
     },
     {
       "name": "separator",
       "description": "Element rendered between the two inputs.",
       "default": "MultiInputRangeFieldSeparator",
-      "class": null
+      "class": "MuiMultiInputTimeRangeField-separator"
     },
     {
       "name": "textField",
