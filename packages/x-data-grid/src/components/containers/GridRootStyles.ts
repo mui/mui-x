@@ -527,13 +527,11 @@ export const GridRootStyles = styled('div', {
         '@media (hover: none)': {
           backgroundColor: 'transparent',
         },
-        ...pinnedHoverStyles,
       },
       [`&.${c.rowSkeleton}:hover`]: {
         backgroundColor: 'transparent',
       },
       '&.Mui-selected': selectedStyles,
-      '&.Mui-selected:hover': pinnedSelectedHoverStyles,
     },
 
     /* Cell styles */
