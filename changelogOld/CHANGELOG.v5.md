@@ -1,6 +1,6 @@
 # Changelog for v5 releases
 
-## 5.17.25
+## v5.17.25
 
 _Feb 23, 2023_
 
@@ -20,7 +20,7 @@ We'd like to offer a big thanks to the 2 contributors who made this release poss
 
 - [DateTimePicker] Ensure toolbar `viewType` is correctly updated (#7942) @LukasTy
 
-## 5.17.24
+## v5.17.24
 
 _Feb 16, 2023_
 
@@ -44,7 +44,7 @@ We'd like to offer a big thanks to the 5 contributors who made this release poss
 
 - [l10n] Add Hungarian (hu-HU) locale (#7796) @noherczeg
 
-## 5.17.23
+## v5.17.23
 
 _Feb 9, 2023_
 
@@ -78,7 +78,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
 - [core] Upgrade monorepo (#7849) @cherniavskii
 
-## 5.17.22
+## v5.17.22
 
 _Feb 2, 2023_
 
@@ -104,7 +104,7 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 - [TimePicker] Add missing `themeAugmentation` entry (#7732) @LukasTy
 - [l10n] Improve Italian (it-IT) locale (#7761) @simonecervini
 
-## 5.17.21
+## v5.17.21
 
 _Jan 27, 2023_
 
@@ -142,7 +142,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 
 - [docs] Add info callout about available component `slots` (#7723) @Vivek-Prajapatii
 
-## 5.17.20
+## v5.17.20
 
 _Jan 19, 2023_
 
@@ -166,7 +166,7 @@ We'd like to offer a big thanks to the 5 contributors who made this release poss
 - [pickers] Ensure `key` is passed without object spreading (#7584) @alexfauquette
 - [l10n] Improve Italian (it-IT) locale (#7547) @marikadeveloper
 
-## 5.17.19
+## v5.17.19
 
 _Jan 16, 2023_
 We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
@@ -190,7 +190,7 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 - [pickers] Add Belarusian (be-BY) locale (#7450) @volhalink
 - [pickers] Add Urdu (ur-PK) locale (#7449) @MBilalShafi
 
-## 5.17.18
+## v5.17.18
 
 _Jan 5, 2023_
 
@@ -222,7 +222,7 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
 - [core] Fix the product license reference name (#7367) @oliviertassinari
 - [core] Upgrade monorepo (#7344) @cherniavskii
 
-## 5.17.17
+## v5.17.17
 
 _Dec 24, 2022_
 
@@ -245,7 +245,7 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 
 - [pickers] Improve Korean (ko-KR) locale (#7283) @hanbin9775
 
-## 5.17.16
+## v5.17.16
 
 _Dec 16, 2022_
 
@@ -271,7 +271,7 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 
 - [docs] Document aggregation selectors (#7151) @cherniavskii
 
-## 5.17.15
+## v5.17.15
 
 _Dec 8, 2022_
 
@@ -299,7 +299,7 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 - [docs] Keep track of the localization completion (#7099) @alexfauquette
 - [docs] Update localization doc to use existing locale (#7104) @LukasTy
 
-## 5.17.14
+## v5.17.14
 
 _Dec 1, 2022_
 
@@ -316,7 +316,7 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
 - [DataGridPremium] Update cache before hydrating columns (#7043) @m4theushw
 - [l10n] Improve Ukrainian (uk-UA) locale (#7035) @rettoua
 
-## 5.17.13
+## v5.17.13
 
 _Nov 24, 2022_
 
@@ -353,7 +353,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - [core] Upgrade monorepo (#6906) @cherniavskii
 - [core] Upgrade node to v14.21 (#6939) @piwysocki
 
-## 5.17.12
+## v5.17.12
 
 _Nov 17, 2022_
 
@@ -380,7 +380,7 @@ We'd like to offer a big thanks to the 5 contributors who made this release poss
 - [core] Upgrade monorepo (#6864) @m4theushw
 - [license] Polish error messages (#6881) @oliviertassinari
 
-## 5.17.11
+## v5.17.11
 
 _Nov 10, 2022_
 
@@ -409,7 +409,7 @@ We'd like to offer a big thanks to the 5 contributors who made this release poss
 
 - [license] Add new license status 'Out of scope' (#6774) @oliviertassinari
 
-## 5.17.10
+## v5.17.10
 
 _Nov 4, 2022_
 
@@ -434,7 +434,7 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 
 - [docs] Mark Data Grid column group available (#6659) @alexfauquette
 
-## 5.17.9
+## v5.17.9
 
 _Oct 28, 2022_
 
@@ -471,7 +471,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
 - [core] Upgrade monorepo (#6570) @cherniavskii
 
-## 5.17.8
+## v5.17.8
 
 _Oct 20, 2022_
 
@@ -501,7 +501,7 @@ We'd like to offer a big thanks to the 5 contributors who made this release poss
 
 - [docs] Fix 301 link to the sx prop page @oliviertassinari
 
-## 5.17.7
+## v5.17.7
 
 _Oct 13, 2022_
 
@@ -516,7 +516,7 @@ We'd like to offer a big thanks to the 2 contributors who made this release poss
 - [DataGrid] Fix error when using column grouping with all columns hidden (#6425) @alexfauquette
 - [DataGrid] Fix start edit mode with printable character in React 18 (#6478) @m4theushw
 
-## 5.17.6
+## v5.17.6
 
 _Oct 6, 2022_
 
@@ -546,7 +546,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 
 - [docs] Fix customized day rendering demo style (#6342) @Ambrish-git
 
-## 5.17.5
+## v5.17.5
 
 _Sep 29, 2022_
 
@@ -576,7 +576,7 @@ We'd like to offer a big thanks to the 2 contributors who made this release poss
 
 - [core] Reduce the amount of updated screenshots reported by Argos (#6310) @cherniavskii
 
-## 5.17.4
+## v5.17.4
 
 _Sep 22, 2022_
 
@@ -610,7 +610,7 @@ We'd like to offer a big thanks to the 5 contributors who made this release poss
 
 - [core] Use the official repository for `@mui/monorepo` instead of a fork (#6189) @oliviertassinari
 
-## 5.17.3
+## v5.17.3
 
 _Sep 16, 2022_
 
@@ -644,7 +644,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - [core] Update to TypeScript 4.8.3 (#6136) @flaviendelangle
 - [core] Update RFC template (#6100) @bytasv
 
-## 5.17.2
+## v5.17.2
 
 _Sep 9, 2022_
 
@@ -688,7 +688,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - [core] Add `yarn release:tag` script (#5169) @DanailH
 - [core] Upgrade monorepo (#6072) @m4theushw
 
-## 5.17.1
+## v5.17.1
 
 _Sep 5, 2022_
 
@@ -704,7 +704,7 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
 - [DataGrid] Fix focused cell if column is spanned and new editing API is used (#5962) @m4theushw
 - [DataGridPro] Fix import in lazy-loading causing a bundling error (#6031) @flaviendelangle
 
-## 5.17.0
+## v5.17.0
 
 _Sep 2, 2022_
 
@@ -781,7 +781,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [test] Fix time zone sensitive test (#5955) @LukasTy
 - [test] Use `userEvent.mousePress` instead of `fireClickEvent` (#5920) @cherniavskii
 
-## 5.16.0
+## v5.16.0
 
 _Aug 25, 2022_
 
@@ -837,7 +837,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - [core] Remove Firefox from the BrowserStack list (#5874) @DanailH
 - [core] Small changes to the release script (#5840) @m4theushw
 
-## 5.15.3
+## v5.15.3
 
 _Aug 18, 2022_
 
@@ -879,7 +879,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [license] Only log an error type once (#5730) @oliviertassinari
 - [test] Increase timeout to take print screenshot (#5799) @m4theushw
 
-## 5.15.2
+## v5.15.2
 
 _Aug 11, 2022_
 
@@ -923,7 +923,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - [core] Update tooling to run with React 18 (#4155) @m4theushw
 - [test] Fix failing dynamic row height tests on Edge (#5707) @m4theushw
 
-## 5.15.1
+## v5.15.1
 
 _Aug 4, 2022_
 
@@ -964,7 +964,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [core] Isolate asset loading under /x/ (#5594) @oliviertassinari
 - [core] Upgrade node to v14 (#4999) @cherniavskii
 
-## 5.15.0
+## v5.15.0
 
 _Jul 29, 2022_
 
@@ -1021,7 +1021,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
 - [core] Upgrade monorepo (#5560) @m4theushw
 
-## 5.14.0
+## v5.14.0
 
 _Jul 21, 2022_
 
@@ -1064,7 +1064,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [core] Polish on the bug issue template (#5525) @oliviertassinari
 - [test] Add more tests related to `isPrintableKey` (#5458) @mnajdova
 
-## 5.13.1
+## v5.13.1
 
 _Jul 15, 2022_
 
@@ -1114,7 +1114,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 - [core] Sort keys like in material-ui @oliviertassinari
 - [test] Wait for flags to load on regression tests (#5473) @m4theushw
 
-## 5.13.0
+## v5.13.0
 
 _Jul 7, 2022_
 
@@ -1747,7 +1747,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [core] Unify tests (#4368) @flaviendelangle
 - [core] Enforce `noImplicitAny` in `docs` folder (#4412) @cherniavskii
 
-## 5.8.0
+## v5.8.0
 
 _Apr 4, 2022_
 
@@ -1823,7 +1823,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - [core] Reuse previous state when updating the columns prop (#4229) @m4theushw
 - [core] Fix Argos flakiness for pickers tests (#4312) @flaviendelangle
 
-## 5.7.0
+## v5.7.0
 
 _Mar 24, 2022_
 
@@ -1893,7 +1893,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - [test] Mock `getComputedStyle` to speed up unit tests (#4142) @m4theushw
 - [test] Upgrade CircleCI convenience image (#4143) @m4theushw
 
-## 5.6.1
+## v5.6.1
 
 _Mar 10, 2022_
 
@@ -1936,7 +1936,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [test] Make focus state out-of-sync warning opt-in (#4129) @m4theushw
 - [test] Only test custom input keyboard event in edit mode (#4075) @alexfauquette
 
-## 5.6.0
+## v5.6.0
 
 _Mar 4, 2022_
 
@@ -2052,7 +2052,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [test] Reduce memory usage to run unit tests (#4031) @m4theushw
 - [test] Skip test on Firefox (#3926) @m4theushw
 
-## 5.5.1
+## v5.5.1
 
 _Feb 10, 2022_
 
@@ -2101,7 +2101,7 @@ A big thanks to the 6 contributors who made this release possible. Here are some
 - [core] Move the git repository to a new location (#3872) @oliviertassinari
 - [test] Add `codecov` (#3873) @oliviertassinari
 
-## 5.5.0
+## v5.5.0
 
 _Feb 3, 2022_
 
@@ -2153,7 +2153,7 @@ A big thanks to the 10 contributors who made this release possible. Here are som
 - [code] Fix `docs:api` silent crash (#3808) @cherniavskii
 - [test] Increase timeout for Firefox (#3813) @m4theushw
 
-## 5.4.0
+## v5.4.0
 
 _Jan 28, 2022_
 
@@ -2219,7 +2219,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [test] Wait for flags to load before creating snapshots (#3726) @m4theushw
 - [test] Warn when focusing cells without syncing the state (#3486) @m4theushw
 
-## 5.3.0
+## v5.3.0
 
 _Jan 21, 2022_
 
@@ -2361,7 +2361,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [test] Split cell/row editing tests (#3618) @m4theushw
 - [test] Skip tests on Safari (#3679) @m4theushw
 
-## 5.2.2
+## v5.2.2
 
 _Jan 6, 2022_
 
@@ -2411,7 +2411,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [core] Update dependency on the core (#3526) @oliviertassinari
 - [core] Update tweet example in release readme (#3481) @DanailH
 
-## 5.2.1
+## v5.2.1
 
 _Dec 17, 2021_
 
@@ -2452,7 +2452,7 @@ A big thanks to the 8 contributors who made this release possible. Here are some
 - [core] Remove 'x-data-grid' folder from DataGridPro bundle (#3394) @m4theushw
 - [core] Add link to OpenCollective (#3392) @oliviertassinari
 
-## 5.2.0
+## v5.2.0
 
 _Dec 9, 2021_
 
@@ -2532,7 +2532,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [core] Use pre-processors for sorting and filtering (#3318) @flaviendelangle
 - [test] Replace `useFakeTimers` (#3323) @m4theushw
 
-## 5.1.0
+## v5.1.0
 
 _Dec 2, 2021_
 
@@ -2623,7 +2623,7 @@ A big thanks to the 11 contributors who made this release possible. Here are som
 - [docs] Add demos using cell/row editing with server-side persistence (#3124) @flaviendelangle
 - [docs] Use relative links (#3299) @oliviertassinari
 
-## 5.0.1
+## v5.0.1
 
 _Nov 23, 2021_
 
@@ -2679,7 +2679,7 @@ A big thanks to the 3 contributors who made this release possible. Here are some
 - [core] Remove the `index.ts` of the export hooks (#3165) @flaviendelangle
 - [core] Set the correct release date for v5.0.0 in the CHANGELOG.md (#3192) @flaviendelangle
 
-## 5.0.0
+## v5.0.0
 
 _Nov 23, 2021_
 
@@ -2761,7 +2761,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 - [docs] Improve `rowCount` CSS class description (#3072) @ZeeshanTamboli
 - [docs] Use core repo constants for doc internationalization (#3143) @flaviendelangle
 
-## 5.0.0-beta.7
+## v5.0.0-beta.7
 
 _Nov 4, 2021_
 
@@ -2834,7 +2834,7 @@ _Nov 4, 2021_
 - [docs] Fix the outdated demo of the docs (#3058) @oliviertassinari
 - [docs] Fix inline previews #3081) @DanailH
 
-## 5.0.0-beta.6
+## v5.0.0-beta.6
 
 _Oct 29, 2021_
 
@@ -2943,7 +2943,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 - [core] Add additional test for `checkboxSelection` toggling (#2979) @flaviendelangle
 - [test] Fix flaky visual regression test (#2981) @m4theushw
 
-## 5.0.0-beta.5
+## v5.0.0-beta.5
 
 _Oct 22, 2021_
 
@@ -3079,7 +3079,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [core] Update monorepo version (#2927) @m4theushw
 - [test] Take screenshot of the print export (#2881) @m4theushw
 
-## 5.0.0-beta.4
+## v5.0.0-beta.4
 
 _Oct 14, 2021_
 
@@ -3251,7 +3251,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 - [core] Update hooks to initialize their state synchronously (#2782) @flaviendelangle
 - [core] Fix rollup external warnings (#2736) @eps1lon
 
-## 5.0.0-beta.3
+## v5.0.0-beta.3
 
 _Oct 7, 2021_
 
@@ -3323,7 +3323,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [core] Set up `eps1lon/actions-label-merge-conflict` action (#2751) @m4theushw
 - [core] Stop using selectors for Pro features on React components (#2716) @flaviendelangle
 
-## 5.0.0-beta.2
+## v5.0.0-beta.2
 
 _Sep 24, 2021_
 
@@ -3378,7 +3378,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 
 - [core] Upgrade JSS plugins to 10.8.0 (#2667) @m4theushw
 
-## 5.0.0-beta.1
+## v5.0.0-beta.1
 
 _Sep 17, 2021_
 
@@ -3399,7 +3399,7 @@ This is a hotfix to fix an important regression with `v5.0.0-beta.0`.
 - [core] Copy bin folder when building the libraries (#2627) @flaviendelangle
 - [core] Remove prop-types during build (#2586) @m4theushw
 
-## 5.0.0-beta.0
+## v5.0.0-beta.0
 
 _Sep 17, 2021_
 

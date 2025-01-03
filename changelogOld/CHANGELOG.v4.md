@@ -1,6 +1,6 @@
 # Changelog for v4 releases
 
-## 4.0.0
+## v4.0.0
 
 _Aug 27, 2021_
 
@@ -91,7 +91,7 @@ A big thanks to the 6 contributors who made this release possible. Here are some
 - [core] Upgrade dependency with the monorepo (#2377) @oliviertassinari
 - [test] Use `.not.to.equal` in favor of `.to.not.equal` (#2340) @oliviertassinari
 
-## 4.0.0-alpha.37
+## v4.0.0-alpha.37
 
 _Aug 12, 2021_
 
@@ -151,7 +151,7 @@ This is the last alpha release. We are moving to beta in the next release, next 
 - [core] Use type inference in selectors (#2244) @flaviendelangle
 - [core] Improve type coverage of `colDef` (#2188) @flaviendelangle
 
-## 4.0.0-alpha.36
+## v4.0.0-alpha.36
 
 _August 5, 2021_
 
@@ -234,7 +234,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - [core] Fix `rebaseWhen=auto` not working (#2271) @oliviertassinari
 - [core] Batch small changes (#2249) @oliviertassinari
 
-## 4.0.0-alpha.35
+## v4.0.0-alpha.35
 
 _July 31, 2021_
 
