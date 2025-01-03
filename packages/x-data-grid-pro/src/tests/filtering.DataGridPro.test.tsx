@@ -1,3 +1,7 @@
+import * as React from 'react';
+import { createRenderer, fireEvent, screen, act, within, waitFor } from '@mui/internal-test-utils';
+import { expect } from 'chai';
+import { spy } from 'sinon';
 import {
   getDefaultGridFilterModel,
   GridApi,
@@ -18,10 +22,6 @@ import {
   getGridStringOperators,
   GridFilterItem,
 } from '@mui/x-data-grid-pro';
-import { createRenderer, fireEvent, screen, act, within } from '@mui/internal-test-utils';
-import { expect } from 'chai';
-import * as React from 'react';
-import { spy } from 'sinon';
 import { getColumnHeaderCell, getColumnValues, getSelectInput, grid } from 'test/utils/helperFn';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
@@ -1182,9 +1182,10 @@ describe('<DataGridPro /> - Filter', () => {
       expect(getRows({ operator: 'is', value: 'test' })).to.deep.equal(ALL_ROWS); // Ignores invalid values
     });
 
-    it('should allow temporary invalid values while updating the number filter', () => {
+    it('should allow temporary invalid values while updating the number filter', async () => {
+      clock.restore();
       const changeSpy = spy();
-      render(
+      const { user } = render(
         <TestCase
           rows={[
             { id: 1, amount: 1 },
@@ -1200,28 +1201,24 @@ describe('<DataGridPro /> - Filter', () => {
       expect(getColumnValues(0)).to.deep.equal(['1', '10', '100', '1,000']);
 
       const filterCell = getColumnHeaderCell(0, 1);
-      fireEvent.click(filterCell);
-
-      fireEvent.click(within(filterCell).getByLabelText('Operator'));
-      fireEvent.click(screen.getByRole('menuitem', { name: 'Greater than' }));
+      await user.click(within(filterCell).getByLabelText('Operator'));
+      await user.click(screen.getByRole('menuitem', { name: 'Greater than' }));
 
       const input = within(filterCell).getByLabelText('Greater than');
-      input.focus();
+      await user.click(input);
+      expect(input).toHaveFocus();
 
-      fireEvent.change(input, { target: { value: '1' } });
-      clock.tick(SUBMIT_FILTER_STROKE_TIME);
-      expect(getColumnValues(0)).to.deep.equal(['10', '100', '1,000']);
+      await user.keyboard('1');
+      await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['10', '100', '1,000']));
       expect(changeSpy.lastCall.args[0].items[0].value).to.equal(1);
 
-      fireEvent.change(input, { target: { value: '1e' } });
-      clock.tick(SUBMIT_FILTER_STROKE_TIME);
-      expect(getColumnValues(0)).to.deep.equal(['1', '10', '100', '1,000']);
-      expect(changeSpy.lastCall.args[0].items[0].value).to.equal(undefined);
+      await user.keyboard('e');
+      await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['1', '10', '100', '1,000']));
+      expect(changeSpy.lastCall.args[0].items[0].value).to.equal(undefined); // 1e
 
-      fireEvent.change(input, { target: { value: '1e2' } });
-      clock.tick(SUBMIT_FILTER_STROKE_TIME);
-      expect(getColumnValues(0)).to.deep.equal(['1,000']);
-      expect(changeSpy.lastCall.args[0].items[0].value).to.equal(100);
+      await user.keyboard('2');
+      await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['1,000']));
+      expect(changeSpy.lastCall.args[0].items[0].value).to.equal(100); // 1e2
     });
   });
 
