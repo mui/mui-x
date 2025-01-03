@@ -17,7 +17,7 @@ describe('<MultiInputDateRangeField />', () => {
     render,
     muiName: 'MuiMultiInputDateRangeField',
     refInstanceof: window.HTMLDivElement,
-    skip: ['componentProp', 'componentsProp', 'themeVariants', 'themeStyleOverrides'],
+    skip: ['themeVariants', 'componentProp', 'componentsProp'],
   }));
 
   describeRangeValidation(MultiInputDateRangeField, () => ({
