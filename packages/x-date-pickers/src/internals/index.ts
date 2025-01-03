@@ -59,8 +59,7 @@ export {
 } from './hooks/useField';
 export type {
   UseFieldInternalProps,
-  UseFieldParams,
-  UseFieldResponse,
+  UseFieldReturnValue,
   FieldValueManager,
   FieldChangeHandler,
   FieldChangeHandlerContext,
@@ -117,6 +116,10 @@ export type {
   TimeViewWithMeridiem,
   DateOrTimeViewWithMeridiem,
 } from './models/common';
+export type {
+  PickerManagerFieldInternalProps,
+  PickerManagerFieldInternalPropsWithDefaults,
+} from './models/manager';
 export type {
   BaseDateValidationProps,
   BaseTimeValidationProps,

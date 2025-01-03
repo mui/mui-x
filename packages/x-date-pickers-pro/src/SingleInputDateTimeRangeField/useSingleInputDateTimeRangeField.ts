@@ -1,12 +1,14 @@
 'use client';
 import {
   useField,
-  useFieldInternalPropsWithDefaults,
   PickerRangeValue,
+  PickerManagerFieldInternalProps,
+  PickerManagerFieldInternalPropsWithDefaults,
 } from '@mui/x-date-pickers/internals';
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { UseSingleInputDateTimeRangeFieldProps } from './SingleInputDateTimeRangeField.types';
 import { useDateTimeRangeManager } from '../managers';
+import { DateTimeRangeValidationError } from '../models';
 
 export const useSingleInputDateTimeRangeField = <
   TEnableAccessibleFieldDOMStructure extends boolean,
@@ -16,22 +18,17 @@ export const useSingleInputDateTimeRangeField = <
 ) => {
   const manager = useDateTimeRangeManager(props);
   const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date-time');
-  const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
-    manager,
-    internalProps,
-  });
 
   return useField<
     PickerRangeValue,
     TEnableAccessibleFieldDOMStructure,
-    typeof forwardedProps,
-    typeof internalPropsWithDefaults
+    DateTimeRangeValidationError,
+    PickerManagerFieldInternalProps<typeof manager>,
+    PickerManagerFieldInternalPropsWithDefaults<typeof manager>,
+    typeof forwardedProps
   >({
+    manager,
     forwardedProps,
-    internalProps: internalPropsWithDefaults,
-    valueManager: manager.internal_valueManager,
-    fieldValueManager: manager.internal_fieldValueManager,
-    validator: manager.validator,
-    valueType: manager.valueType,
+    internalProps,
   });
 };

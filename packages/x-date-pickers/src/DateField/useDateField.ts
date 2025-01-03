@@ -1,9 +1,14 @@
 'use client';
-import { useField, useFieldInternalPropsWithDefaults } from '../internals/hooks/useField';
+import { useField } from '../internals/hooks/useField';
 import { UseDateFieldProps } from './DateField.types';
 import { useSplitFieldProps } from '../hooks';
 import { useDateManager } from '../managers';
-import { PickerValue } from '../internals/models';
+import {
+  PickerManagerFieldInternalProps,
+  PickerManagerFieldInternalPropsWithDefaults,
+  PickerValue,
+} from '../internals/models';
+import { DateValidationError } from '../models/validation';
 
 export const useDateField = <
   TEnableAccessibleFieldDOMStructure extends boolean,
@@ -13,22 +18,17 @@ export const useDateField = <
 ) => {
   const manager = useDateManager(props);
   const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
-  const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
-    manager,
-    internalProps,
-  });
 
   return useField<
     PickerValue,
     TEnableAccessibleFieldDOMStructure,
-    typeof forwardedProps,
-    typeof internalPropsWithDefaults
+    DateValidationError,
+    PickerManagerFieldInternalProps<typeof manager>,
+    PickerManagerFieldInternalPropsWithDefaults<typeof manager>,
+    typeof forwardedProps
   >({
+    manager,
     forwardedProps,
-    internalProps: internalPropsWithDefaults,
-    valueManager: manager.internal_valueManager,
-    fieldValueManager: manager.internal_fieldValueManager,
-    validator: manager.validator,
-    valueType: manager.valueType,
+    internalProps,
   });
 };
