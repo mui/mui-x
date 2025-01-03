@@ -62,7 +62,8 @@ describe('<DataGrid /> - Keyboard', () => {
           columnHeaderHeight={HEADER_HEIGHT}
           hideFooter
           filterModel={{ items: [{ field: 'id', operator: '>', value: 10 }] }}
-          experimentalFeatures={{ warnIfFocusStateIsNotSynced: true }}
+          // This had to be disabled again, `user.click` is not working with it
+          experimentalFeatures={{ warnIfFocusStateIsNotSynced: false }}
           {...props}
         />
       </div>
@@ -160,14 +161,14 @@ describe('<DataGrid /> - Keyboard', () => {
     // This test is not relevant if we can't choose the actual height
     testSkipIf(isJSDOM)(
       'should move down by the amount of rows visible on screen when pressing "PageDown"',
-      () => {
-        render(<NavigationTestCaseNoScrollX />);
+      async () => {
+        const { user } = render(<NavigationTestCaseNoScrollX />);
         const cell = getCell(1, 1);
-        fireUserEvent.mousePress(cell);
+        await user.click(cell);
         expect(getActiveCell()).to.equal('1-1');
-        fireEvent.keyDown(document.activeElement!, { key: 'PageDown' });
+        await user.keyboard('{PageDown}');
         expect(getActiveCell()).to.equal(`6-1`);
-        fireEvent.keyDown(document.activeElement!, { key: 'PageDown' });
+        await user.keyboard('{PageDown}');
         expect(getActiveCell()).to.equal(`9-1`);
       },
     );
@@ -306,18 +307,18 @@ describe('<DataGrid /> - Keyboard', () => {
     // Need layout for column virtualization
     testSkipIf(isJSDOM)(
       'should scroll horizontally when navigating between column headers with arrows',
-      () => {
-        render(
+      async () => {
+        const { user } = render(
           <div style={{ width: 60, height: 300 }}>
             <DataGrid autoHeight={isJSDOM} {...getBasicGridData(10, 10)} />
           </div>,
         );
-        getColumnHeaderCell(0).focus();
+        await act(() => getColumnHeaderCell(0).focus());
         const virtualScroller = document.querySelector<HTMLElement>(
           '.MuiDataGrid-virtualScroller',
         )!;
         expect(virtualScroller.scrollLeft).to.equal(0);
-        fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+        await user.keyboard('{ArrowRight}');
         expect(virtualScroller.scrollLeft).not.to.equal(0);
       },
     );
@@ -325,18 +326,18 @@ describe('<DataGrid /> - Keyboard', () => {
     // Need layout for column virtualization
     testSkipIf(isJSDOM)(
       'should scroll horizontally when navigating between column headers with arrows even if rows are empty',
-      () => {
-        render(
+      async () => {
+        const { user } = render(
           <div style={{ width: 60, height: 300 }}>
             <DataGrid autoHeight={isJSDOM} {...getBasicGridData(10, 10)} rows={[]} />
           </div>,
         );
-        getColumnHeaderCell(0).focus();
+        await act(() => getColumnHeaderCell(0).focus());
         const virtualScroller = document.querySelector<HTMLElement>(
           '.MuiDataGrid-virtualScroller',
         )!;
         expect(virtualScroller.scrollLeft).to.equal(0);
-        fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+        await user.keyboard('{ArrowRight}');
         expect(virtualScroller.scrollLeft).not.to.equal(0);
       },
     );
@@ -380,30 +381,33 @@ describe('<DataGrid /> - Keyboard', () => {
     // This test is not relevant if we can't choose the actual height
     testSkipIf(isJSDOM)(
       'should move down by the amount of rows visible on screen when pressing "PageDown"',
-      () => {
-        render(<NavigationTestCaseNoScrollX />);
-        getColumnHeaderCell(1).focus();
+      async () => {
+        const { user } = render(<NavigationTestCaseNoScrollX />);
+        await act(() => getColumnHeaderCell(1).focus());
         expect(getActiveColumnHeader()).to.equal('1');
-        fireEvent.keyDown(document.activeElement!, { key: 'PageDown' });
+        await user.keyboard('{PageDown}');
         expect(getActiveCell()).to.equal(`5-1`);
       },
     );
 
     // This test is not relevant if we can't choose the actual height
-    testSkipIf(isJSDOM)('should move focus when the focus is on a column header button', () => {
-      render(<NavigationTestCaseNoScrollX />);
+    testSkipIf(isJSDOM)(
+      'should move focus when the focus is on a column header button',
+      async () => {
+        const { user } = render(<NavigationTestCaseNoScrollX />);
 
-      // get the sort button in column header 1
-      const columnMenuButton =
-        getColumnHeaderCell(1).querySelector<HTMLElement>(`button[title="Sort"]`)!;
+        // get the sort button in column header 1
+        const columnMenuButton =
+          getColumnHeaderCell(1).querySelector<HTMLElement>(`button[title="Sort"]`)!;
 
-      // Simulate click on this button
-      fireUserEvent.mousePress(columnMenuButton);
-      columnMenuButton.focus();
+        // Simulate click on this button
+        await user.click(columnMenuButton);
+        await act(() => columnMenuButton.focus());
 
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
-      expect(getActiveCell()).to.equal(`0-1`);
-    });
+        await user.keyboard('{ArrowDown}');
+        expect(getActiveCell()).to.equal(`0-1`);
+      },
+    );
 
     it('should be able to use keyboard in a columnHeader child input', () => {
       const columns = [
