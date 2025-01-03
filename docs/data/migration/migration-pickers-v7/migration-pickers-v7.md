@@ -348,12 +348,13 @@ This change causes a few breaking changes:
 
 ### Slot: `field`
 
-- The component passed to the `field` slot no longer receives the `value`, `onChange`, `format` and `timezone` prop.
+- The component passed to the `field` slot no longer receives the `value`, `onChange`, `timezone`, `format` and `disabled` props.
   You can use the `usePickerContext` hook instead:
 
   ```diff
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
 
+  -const { value } = props;
   -const { value } = props;
   +const { value } = usePickerContext();
 
@@ -364,27 +365,17 @@ This change causes a few breaking changes:
 
   -const { timezone } = props;
   +const { timezone } = usePickerContext();
-  ```
 
-  - The component passed to the `field` slot no longer receives the `disabled`, `format` and `timezone` prop.
-    You can use the `usePickerContext` hook instead:
-
-  ```diff
-  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+  -const { format } = props;
+  +const { fieldFormat } = usePickerContext();
 
   -const { disabled } = props;
   +const { disabled } = usePickerContext();
   ```
 
-  - The component passed to the `field` slot no longer receives the `format` prop.
-    You can use the `usePickerContext` hook instead:
-
-  ```diff
-  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
-
-  -const { format } = props;
-  +const { fieldFormat } = usePickerContext();
-  ```
+  :::success
+  If you are using a hook like `useDateField`, you don't have anything to do, the value from the context are automatically applied.
+  :::
 
 - The component passed to the `field` slot no longer receives the `formatDensity`, `enableAccessibleFieldDOMStructure` and `selectedSections` and `onSelectedSectionsChange` props.
   They are currently not exposed by the picker, but previously they were always equal to their equivalent prop on the picker.
@@ -413,6 +404,10 @@ This change causes a few breaking changes:
   - `enableAccessibleFieldDOMStructure`: `true`
   - `selectedSections`: `undefined`
   - `onSelectedSectionsChange`: `undefined`
+
+  :::success
+  If you are using a hook like `useDateField`, you don't have anything to do, the value from the context are automatically applied.
+  :::
 
 ### Slot: `layout`
 
