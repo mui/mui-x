@@ -322,7 +322,7 @@ export const useField = <
   };
 
   return {
-    ...parameters.forwardedProps,
+    ...forwardedProps,
     ...commonForwardedProps,
     ...commonAdditionalProps,
     ...returnedValue,

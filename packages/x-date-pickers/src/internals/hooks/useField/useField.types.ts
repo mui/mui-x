@@ -420,23 +420,8 @@ export interface UseFieldTextFieldInteractions {
 
 export type UseFieldTextField<TEnableAccessibleFieldDOMStructure extends boolean> = <
   TValue extends PickerValidValue,
-  TError,
-  TFieldInternalPropsWithDefaults extends UseFieldInternalProps<
-    TValue,
-    TEnableAccessibleFieldDOMStructure,
-    TError
-  >,
-  TForwardedProps extends TEnableAccessibleFieldDOMStructure extends false
-    ? UseFieldV6ForwardedProps
-    : UseFieldV7ForwardedProps,
 >(
-  params: UseFieldTextFieldParameters<
-    TValue,
-    TEnableAccessibleFieldDOMStructure,
-    TError,
-    TFieldInternalPropsWithDefaults,
-    TForwardedProps
-  >,
+  params: UseFieldTextFieldParameters<TValue, TEnableAccessibleFieldDOMStructure>,
 ) => {
   interactions: UseFieldTextFieldInteractions;
   returnedValue: TEnableAccessibleFieldDOMStructure extends false
@@ -447,26 +432,19 @@ export type UseFieldTextField<TEnableAccessibleFieldDOMStructure extends boolean
 interface UseFieldTextFieldParameters<
   TValue extends PickerValidValue,
   TEnableAccessibleFieldDOMStructure extends boolean,
-  TError,
-  TFieldInternalPropsWithDefaults extends UseFieldInternalProps<
-    TValue,
-    TEnableAccessibleFieldDOMStructure,
-    TError
-  >,
-  TForwardedProps extends TEnableAccessibleFieldDOMStructure extends false
-    ? UseFieldV6ForwardedProps
-    : UseFieldV7ForwardedProps,
 > extends UseFieldStateReturnValue<TValue>,
     UseFieldCharacterEditingResponse {
   manager: PickerManager<
     TValue,
     TEnableAccessibleFieldDOMStructure,
-    TError,
     any,
-    TFieldInternalPropsWithDefaults
+    any,
+    UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, any>
   >;
-  internalPropsWithDefaults: TFieldInternalPropsWithDefaults;
-  forwardedProps: TForwardedProps;
+  internalPropsWithDefaults: UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, any>;
+  forwardedProps: TEnableAccessibleFieldDOMStructure extends false
+    ? UseFieldV6ForwardedProps
+    : UseFieldV7ForwardedProps;
   areAllSectionsEmpty: boolean;
   sectionOrder: SectionOrdering;
 }
