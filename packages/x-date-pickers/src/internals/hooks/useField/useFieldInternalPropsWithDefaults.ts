@@ -31,43 +31,38 @@ export function useFieldInternalPropsWithDefaults<TManager extends PickerAnyMana
   // TODO: Replace with useNullablePickerContext
   const publicContextValue = React.useContext(PickerContext);
 
+  const setValue = publicContextValue?.setValue;
+  const handleChangeFromPicker: FieldChangeHandler<
+    PickerManagerValue<TManager>,
+    PickerManagerError<TManager>
+  > = React.useCallback(
+    (newValue, ctx) => {
+      return setValue?.(newValue, {
+        validationError: ctx.validationError,
+      });
+    },
+    [setValue],
+  );
+
   const internalPropsWithDefaultsFromContext = React.useMemo(() => {
     // If one of the context is null, the other always will be null as well.
     if (privateContextValue == null || publicContextValue == null) {
       return internalProps;
     }
-    const handleChange: FieldChangeHandler<
-      PickerManagerValue<TManager>,
-      PickerManagerError<TManager>
-    > = (newValue, ctx) => {
-      if (internalProps.onChange) {
-        return internalProps.onChange(newValue, ctx);
-      }
-
-      return publicContextValue.setValue(newValue, {
-        validationError: ctx.validationError,
-      });
-    };
 
     return {
+      value: publicContextValue.value,
+      onChange: handleChangeFromPicker,
+      timezone: publicContextValue.timezone,
+      disabled: publicContextValue.disabled,
+      format: publicContextValue.fieldFormat,
+      formatDensity: privateContextValue.formatDensity,
+      enableAccessibleFieldDOMStructure: privateContextValue.enableAccessibleFieldDOMStructure,
+      selectedSections: privateContextValue.selectedSections,
+      onSelectedSectionsChange: privateContextValue.onSelectedSectionsChange,
       ...internalProps,
-      onChange: handleChange,
-      value: internalProps.value === undefined ? publicContextValue.value : internalProps.value,
-      timezone: internalProps.timezone ?? publicContextValue.timezone,
-      disabled: internalProps.disabled ?? publicContextValue.disabled,
-      format: internalProps.format ?? publicContextValue.fieldFormat,
-      formatDensity: internalProps.formatDensity ?? privateContextValue.formatDensity,
-      enableAccessibleFieldDOMStructure:
-        internalProps.enableAccessibleFieldDOMStructure ??
-        privateContextValue.enableAccessibleFieldDOMStructure,
-      selectedSections:
-        internalProps.selectedSections === undefined
-          ? privateContextValue.selectedSections
-          : internalProps.selectedSections,
-      onSelectedSectionsChange:
-        internalProps.onSelectedSectionsChange ?? privateContextValue.onSelectedSectionsChange,
     };
-  }, [internalProps, privateContextValue, publicContextValue]);
+  }, [internalProps, privateContextValue, publicContextValue, handleChangeFromPicker]);
 
   return React.useMemo(() => {
     return manager.internal_applyDefaultsToFieldInternalProps({
