@@ -65,7 +65,6 @@ export const useDesktopRangePicker = <
   } = props;
 
   const fieldContainerRef = React.useRef<HTMLDivElement>(null);
-  const anchorRef = React.useRef<HTMLDivElement>(null);
   const popperRef = React.useRef<HTMLDivElement>(null);
   const startFieldRef = React.useRef<FieldRef<PickerValue>>(null);
   const endFieldRef = React.useRef<FieldRef<PickerValue>>(null);
@@ -101,6 +100,9 @@ export const useDesktopRangePicker = <
     fieldRef,
     localeText,
   });
+
+  // Temporary hack to hide the opening button on the range pickers until we have migrate them to the new opening logic.
+  providerProps.contextValue.triggerStatus = 'hidden';
 
   React.useEffect(() => {
     if (providerProps.contextValue.view) {
@@ -173,7 +175,7 @@ export const useDesktopRangePicker = <
     pickerSlotProps: slotProps,
     pickerSlots: slots,
     fieldProps,
-    anchorRef,
+    anchorRef: providerProps.contextValue.triggerRef,
     startFieldRef,
     endFieldRef,
     singleInputFieldRef,
@@ -196,7 +198,7 @@ export const useDesktopRangePicker = <
           role="tooltip"
           placement="bottom-start"
           containerRef={popperRef}
-          anchorEl={anchorRef.current}
+          anchorEl={providerProps.contextValue.triggerRef.current}
           onBlur={handleBlur}
           slots={slots}
           slotProps={slotProps}

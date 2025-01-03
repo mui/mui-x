@@ -1,9 +1,5 @@
 import * as React from 'react';
 import { TextFieldProps } from '@mui/material/TextField';
-import type {
-  ExportedUseClearableFieldProps,
-  UseClearableFieldResponse,
-} from '../hooks/useClearableField';
 import type { ExportedPickersSectionListProps } from '../PickersSectionList';
 import type { UseFieldInternalProps, UseFieldResponse } from '../internals/hooks/useField';
 import type { PickersTextFieldProps } from '../PickersTextField';
@@ -14,6 +10,7 @@ import {
   PickerValidValue,
 } from '../internals/models';
 import { PickerOwnerState } from './pickers';
+import type { ExportedPickerFieldUIProps } from '../internals/components/PickerFieldUI';
 
 // Update PickersComponentAgnosticLocaleText -> viewNames when adding new entries
 export type FieldSectionType =
@@ -160,7 +157,7 @@ export interface FieldOwnerState extends PickerOwnerState {
 export type PickerFieldSlotProps<
   TValue extends PickerValidValue,
   TEnableAccessibleFieldDOMStructure extends boolean,
-> = ExportedUseClearableFieldProps &
+> = ExportedPickerFieldUIProps &
   Pick<
     UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, unknown>,
     'shouldRespectLeadingZeros' | 'readOnly'
@@ -170,13 +167,20 @@ export type PickerFieldSlotProps<
   };
 
 /**
- * Props the text field receives when used with a single input picker.
+ * Props the text field receives when used inside a single input picker.
  * Only contains what the MUI components are passing to the text field, not what users can pass using the `props.slotProps.field` and `props.slotProps.textField`.
  */
 export type BaseSingleInputPickersTextFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
-> = UseClearableFieldResponse<
-  UseFieldResponse<TEnableAccessibleFieldDOMStructure, BaseForwardedSingleInputFieldProps>
+> = Omit<
+  UseFieldResponse<TEnableAccessibleFieldDOMStructure, BaseForwardedSingleInputFieldProps>,
+  | 'slots'
+  | 'slotProps'
+  | 'clearable'
+  | 'onClear'
+  | 'openPickerButtonPosition'
+  | 'clearButtonPosition'
+  | 'openPickerAriaLabel'
 >;
 
 /**

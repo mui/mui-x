@@ -78,6 +78,7 @@ export const useField = <
     fieldValueManager,
     valueManager,
     validator,
+    getOpenPickerButtonAriaLabel: getOpenDialogAriaText,
   } = params;
 
   const isRtl = useRtl();
@@ -305,9 +306,16 @@ export const useField = <
     clearable: Boolean(clearable && !areAllSectionsEmpty && !readOnly && !disabled),
   };
 
+  const localizationContext = useLocalizationContext();
+  const openPickerAriaLabel = React.useMemo(
+    () => getOpenDialogAriaText({ ...localizationContext, value: state.value }),
+    [getOpenDialogAriaText, state.value, localizationContext],
+  );
+
   const commonAdditionalProps: UseFieldCommonAdditionalProps = {
     disabled,
     readOnly,
+    openPickerAriaLabel,
   };
 
   return {

@@ -6,7 +6,6 @@ import {
   PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import { FieldRef, PickerFieldSlotProps } from '@mui/x-date-pickers/models';
-import { UseClearableFieldResponse } from '@mui/x-date-pickers/hooks';
 
 export type { FieldRangeSection } from '@mui/x-date-pickers/internals';
 
@@ -62,6 +61,13 @@ export type PickerRangeFieldSlotProps<TEnableAccessibleFieldDOMStructure extends
  */
 export type BaseMultiInputPickersTextFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
-> = UseClearableFieldResponse<
-  UseFieldResponse<TEnableAccessibleFieldDOMStructure, MultiInputFieldSlotTextFieldProps>
+> = Omit<
+  UseFieldResponse<TEnableAccessibleFieldDOMStructure, MultiInputFieldSlotTextFieldProps>,
+  | 'slots'
+  | 'slotProps'
+  | 'clearable'
+  | 'onClear'
+  | 'openPickerButtonPosition'
+  | 'clearButtonPosition'
+  | 'openPickerAriaLabel'
 >;

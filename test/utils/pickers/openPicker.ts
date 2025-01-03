@@ -5,11 +5,9 @@ import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
 export type OpenPickerParams =
   | {
       type: 'date' | 'date-time' | 'time';
-      variant: 'mobile' | 'desktop';
     }
   | {
       type: 'date-range' | 'date-time-range';
-      variant: 'mobile' | 'desktop';
       initialFocus: 'start' | 'end';
       /**
        * @default false
@@ -32,12 +30,6 @@ export const openPicker = (params: OpenPickerParams) => {
 
       fireEvent.click(sections[sections.length - 1]);
     }
-
-    return true;
-  }
-
-  if (params.variant === 'mobile') {
-    fireEvent.click(fieldSectionsContainer);
 
     return true;
   }

@@ -7,10 +7,10 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import { refType } from '@mui/utils';
 import { DateTimeFieldProps } from './DateTimeField.types';
 import { useDateTimeField } from './useDateTimeField';
-import { useClearableField } from '../hooks';
 import { PickersTextField } from '../PickersTextField';
-import { convertFieldResponseIntoMuiTextFieldProps } from '../internals/utils/convertFieldResponseIntoMuiTextFieldProps';
 import { useFieldOwnerState } from '../internals/hooks/useFieldOwnerState';
+import { PickerFieldUI } from '../internals/components/PickerFieldUI';
+import { CalendarIcon } from '../icons';
 
 type DateTimeFieldComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   props: DateTimeFieldProps<TEnableAccessibleFieldDOMStructure> &
@@ -62,15 +62,14 @@ const DateTimeField = React.forwardRef(function DateTimeField<
   const fieldResponse = useDateTimeField<TEnableAccessibleFieldDOMStructure, typeof textFieldProps>(
     textFieldProps,
   );
-  const convertedFieldResponse = convertFieldResponseIntoMuiTextFieldProps(fieldResponse);
 
-  const processedFieldProps = useClearableField({
-    ...convertedFieldResponse,
-    slots,
-    slotProps,
-  });
-
-  return <TextField {...processedFieldProps} />;
+  return (
+    <PickerFieldUI
+      slots={{ openPickerIcon: CalendarIcon, ...slots }}
+      slotProps={slotProps}
+      fieldResponse={fieldResponse}
+    />
+  );
 }) as DateTimeFieldComponent;
 
 DateTimeField.propTypes = {
@@ -94,6 +93,12 @@ DateTimeField.propTypes = {
    * @default false
    */
   clearable: PropTypes.bool,
+  /**
+   * The position at which the clear button is placed.
+   * If the field is not clearable, the button is not rendered.
+   * @default 'end'
+   */
+  clearButtonPosition: PropTypes.oneOf(['end', 'start']),
   /**
    * The color of the component.
    * It supports both default and custom theme colors, which can be added as shown in the
@@ -265,6 +270,12 @@ DateTimeField.propTypes = {
    * @param {FieldSelectedSections} newValue The new selected sections.
    */
   onSelectedSectionsChange: PropTypes.func,
+  /**
+   * The position at which the opening button is placed.
+   * If there is no picker to open, the button is not rendered
+   * @default 'end'
+   */
+  openPickerButtonPosition: PropTypes.oneOf(['end', 'start']),
   /**
    * If `true`, the component is read-only.
    * When read-only, the value cannot be changed but the user can interact with the interface.

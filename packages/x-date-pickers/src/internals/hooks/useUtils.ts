@@ -38,9 +38,7 @@ export const useLocalizationContext = () => {
       ({
         ...localization,
         localeText,
-      }) as Omit<MuiPickersAdapterContextValue, 'localeText'> & {
-        localeText: PickersLocaleText;
-      },
+      }) as UseLocalizationContextReturnValue,
     [localization, localeText],
   );
 };
@@ -59,3 +57,8 @@ export const useNow = (timezone: PickersTimezone): PickerValidDate => {
 
   return now.current!;
 };
+
+export interface UseLocalizationContextReturnValue
+  extends Omit<MuiPickersAdapterContextValue, 'localeText'> {
+  localeText: PickersLocaleText;
+}
