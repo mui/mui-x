@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { TransitionProps } from '@mui/material/transitions';
 import { inputBaseClasses } from '@mui/material/InputBase';
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { createPickerRenderer, adapterToUse, openPicker } from 'test/utils/pickers';
 import { describeSkipIf, testSkipIf, isJSDOM } from 'test/utils/skipIf';
@@ -163,7 +163,9 @@ describe('<DesktopDatePicker />', () => {
     });
 
     afterEach(() => {
-      window.scrollTo(originalScrollX, originalScrollY);
+      if (!isJSDOM) {
+        window.scrollTo?.(originalScrollX, originalScrollY);
+      }
     });
 
     it('does not scroll when opened', () => {
@@ -200,7 +202,10 @@ describe('<DesktopDatePicker />', () => {
       render(<BottomAnchoredDesktopTimePicker />);
       const scrollYBeforeOpen = window.scrollY;
 
-      fireEvent.click(screen.getByLabelText(/choose date/i));
+      // Can't use `userEvent.click` as it scrolls the window before it clicks on browsers.
+      act(() => {
+        screen.getByLabelText(/choose date/i).click();
+      });
 
       expect(handleClose.callCount).to.equal(0);
       expect(handleOpen.callCount).to.equal(1);
