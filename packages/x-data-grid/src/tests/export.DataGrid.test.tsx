@@ -24,7 +24,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
 
   // eslint-disable-next-line mocha/no-top-level-hooks
   beforeEach(() => {
-    spyCreateObjectURL = spy(global.URL, 'createObjectURL');
+    spyCreateObjectURL = spy(globalThis.URL, 'createObjectURL');
   });
 
   // eslint-disable-next-line mocha/no-top-level-hooks

@@ -9,7 +9,11 @@ import {
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<MultiInputTimeRangeField />', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer({
+    clock: 'fake',
+    clockConfig: new Date(2018, 0, 10),
+    clockOptions: { toFake: ['Date'] },
+  });
 
   describeConformance(<MultiInputTimeRangeField />, () => ({
     classes: {} as any,

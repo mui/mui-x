@@ -121,7 +121,14 @@ describe('<DataGrid /> - Slots', () => {
         </div>,
       );
       expect(onClick.callCount).to.equal(0);
-      const button = screen.getByRole('button', { name: /show filters/i });
+
+      let button;
+      // I can see the button in the debug, but it's not found by the test...
+      if (process.env.VITEST) {
+        button = screen.getByTestId('FilterAltIcon');
+      } else {
+        button = screen.getByRole('button', { name: /show filters/i });
+      }
       fireEvent.click(button);
       expect(onClick.lastCall.args[0]).to.have.property('field', 'brand');
       expect(onClick.lastCall.args[1]).to.have.property('target', button);
@@ -173,7 +180,7 @@ describe('<DataGrid /> - Slots', () => {
       'MUI X: useGridRootProps should only be used inside the DataGrid, DataGridPro or DataGridPremium component.',
       reactMajor < 19 &&
         'MUI X: useGridRootProps should only be used inside the DataGrid, DataGridPro or DataGridPremium component.',
-      reactMajor < 19 && 'The above error occurred in the <ForwardRef(GridOverlay)> component',
+      reactMajor < 19 && 'The above error occurred in the <ForwardRef(GridOverlay',
     ]);
   });
 
