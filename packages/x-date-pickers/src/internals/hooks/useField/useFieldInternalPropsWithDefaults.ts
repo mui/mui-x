@@ -43,32 +43,37 @@ export function useFieldInternalPropsWithDefaults<TManager extends PickerAnyMana
     [setValue],
   );
 
-  const internalPropsWithDefaultsFromContext = React.useMemo(() => {
-    // If one of the context is null, the other always will be null as well.
-    if (fieldPrivateContext == null || pickerContext == null) {
-      return internalProps;
+  return React.useMemo(() => {
+    let internalPropsWithDefaultsFromContext = internalProps;
+    // If one of the context is null,
+    // Then the field is used as a standalone component and the other context will be null as well.
+    if (fieldPrivateContext != null && pickerContext != null) {
+      internalPropsWithDefaultsFromContext = {
+        value: pickerContext.value,
+        onChange: handleChangeFromPicker,
+        timezone: pickerContext.timezone,
+        disabled: pickerContext.disabled,
+        format: pickerContext.fieldFormat,
+        formatDensity: fieldPrivateContext.formatDensity,
+        enableAccessibleFieldDOMStructure: fieldPrivateContext.enableAccessibleFieldDOMStructure,
+        selectedSections: fieldPrivateContext.selectedSections,
+        onSelectedSectionsChange: fieldPrivateContext.onSelectedSectionsChange,
+        ...internalProps,
+      };
     }
 
-    return {
-      value: pickerContext.value,
-      onChange: handleChangeFromPicker,
-      timezone: pickerContext.timezone,
-      disabled: pickerContext.disabled,
-      format: pickerContext.fieldFormat,
-      formatDensity: fieldPrivateContext.formatDensity,
-      enableAccessibleFieldDOMStructure: fieldPrivateContext.enableAccessibleFieldDOMStructure,
-      selectedSections: fieldPrivateContext.selectedSections,
-      onSelectedSectionsChange: fieldPrivateContext.onSelectedSectionsChange,
-      ...internalProps,
-    };
-  }, [internalProps, fieldPrivateContext, pickerContext, handleChangeFromPicker]);
-
-  return React.useMemo(() => {
     return manager.internal_applyDefaultsToFieldInternalProps({
       ...localizationContext,
       internalProps: internalPropsWithDefaultsFromContext,
     });
-  }, [manager, internalPropsWithDefaultsFromContext, localizationContext]);
+  }, [
+    manager,
+    localizationContext,
+    pickerContext,
+    fieldPrivateContext,
+    internalProps,
+    handleChangeFromPicker,
+  ]);
 }
 
 export interface PickerFieldPrivateContextValue
