@@ -10,9 +10,13 @@ Grid components can be used by importing `Grid` from the data grid package:
 import { DataGrid, Grid } from '@mui/x-data-grid';
 ```
 
-By itself, `Grid` doesn't render anything. It is a namespace that acts to organize the grid components e.g. `Grid.Toolbar` and `Grid.FilterPanel`.
+### Composition
 
-The grid components can be used in combination with [slots](/x/react-data-grid/components/) to extend the Data Grid, as shown in the snippet below.
+The `Grid` namespace organizes composable UI components (like `Grid.Toolbar` and `Grid.FilterPanel`) that can be used to extend the Data Grid through [slots](/x/react-data-grid/components/).
+
+Each grid component is built of several parts. For example, `Grid.Toolbar.Root` and `Grid.Toolbar.Button` are parts of the [Toolbar component](/x/react-data-grid/components/toolbar/).
+
+The snippet below is an example of how to compose grid components to create a custom toolbar.
 
 ```tsx
 function Toolbar() {
@@ -30,17 +34,11 @@ function App() {
 }
 ```
 
-## Composition
-
-Each grid component is built of several parts. For example, `Grid.Toolbar.Root` and `Grid.Toolbar.Button` are parts of the [Toolbar component](/x/react-data-grid/components/toolbar/).
-
-The component namespace, e.g. `Grid.Toolbar`, does not render anything by itself, but acts as a way to organize the various parts.
-
-## Customization
+### Customization
 
 The grid components are highly customizable, built to integrate with components from any design system, and any styling method.
 
-### className
+#### className
 
 The `className` prop can be used to apply styles to grid components:
 
@@ -56,7 +54,7 @@ Some grid components also provide internal state that can be used to conditional
 />
 ```
 
-### render
+#### render
 
 The `render` prop can be used to override the element rendered by each grid component:
 

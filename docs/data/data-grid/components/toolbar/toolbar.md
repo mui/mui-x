@@ -6,7 +6,7 @@
 
 The demo below shows the default Toolbar configuration.
 
-{{"demo": "GridToolbar.js", "bg": "inline"}}
+{{"demo": "GridToolbar.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Anatomy
 
@@ -38,13 +38,13 @@ Below are some ways the Toolbar component can be used.
 
 Allow users to customize the data grid appearance from the toolbar.
 
-{{"demo": "GridToolbarSettingsMenu.js", "bg": "inline"}}
+{{"demo": "GridToolbarSettingsMenu.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Filter bar
 
 Show active filter chips in the toolbar.
 
-{{"demo": "GridToolbarFilterBar.js", "bg": "inline"}}
+{{"demo": "GridToolbarFilterBar.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Custom elements
 
@@ -52,7 +52,7 @@ The default elements can be replaced using the `render` prop. See [Grid componen
 
 The demo below shows how to replace the default elements with custom ones, styled with Tailwind CSS.
 
-{{"demo": "GridToolbarCustom.js", "bg": "inline"}}
+{{"demo": "GridToolbarCustom.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Accessibility
 
