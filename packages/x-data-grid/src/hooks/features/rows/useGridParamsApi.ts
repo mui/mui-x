@@ -13,6 +13,7 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridListColumnSelector } from '../listView/gridListViewSelectors';
+import { getRowValue as getRowValueFn } from './gridRowsUtils';
 
 export class MissingRowIdError extends Error {}
 
@@ -118,16 +119,7 @@ export function useGridParamsApi(
   );
 
   const getRowValue = React.useCallback<GridParamsApi['getRowValue']>(
-    (row, colDef) => {
-      const field = colDef.field;
-
-      if (!colDef || !colDef.valueGetter) {
-        return row[field];
-      }
-
-      const value = row[colDef.field];
-      return colDef.valueGetter(value as never, row, colDef, apiRef);
-    },
+    (row, colDef) => getRowValueFn(row, colDef, apiRef),
     [apiRef],
   );
 
