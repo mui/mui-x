@@ -5,6 +5,7 @@ import {
   ErrorBoundary,
   waitFor,
   reactMajor,
+  act,
 } from '@mui/internal-test-utils';
 import { stub, spy } from 'sinon';
 import { expect } from 'chai';
@@ -1206,7 +1207,9 @@ describe('<DataGrid /> - Layout & warnings', () => {
       // It should not have a horizontal scrollbar
       expect(getVariable('--DataGrid-hasScrollX')).to.equal('0');
 
-      await sleep(200);
+      await act(async () => {
+        await sleep(200);
+      });
       // The width should not increase infinitely
       expect(virtualScroller.clientWidth).to.equal(initialVirtualScrollerWidth);
     },
