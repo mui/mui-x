@@ -7,6 +7,7 @@ import { fireEvent, screen } from '@mui/internal-test-utils';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { createPickerRenderer, adapterToUse, openPicker } from 'test/utils/pickers';
 import { describeSkipIf, testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { PickersActionBar, PickersActionBarAction } from '@mui/x-date-pickers/PickersActionBar';
 
 describe('<DesktopDatePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -348,5 +349,47 @@ describe('<DesktopDatePicker />', () => {
 
       openPicker({ type: 'date', variant: 'desktop' });
     }).toWarnDev('MUI X: `openTo="month"` is not a valid prop.');
+  });
+
+  describe('performance', () => {
+    it('should not re-render the `PickersActionBar` on date change', () => {
+      const RenderCount = spy((props) => <PickersActionBar {...props} />);
+
+      render(
+        <DesktopDatePicker
+          slots={{ actionBar: React.memo(RenderCount) }}
+          closeOnSelect={false}
+          open
+        />,
+      );
+
+      const renderCountBeforeChange = RenderCount.callCount;
+      fireEvent.click(screen.getByRole('gridcell', { name: '2' }));
+      fireEvent.click(screen.getByRole('gridcell', { name: '3' }));
+      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(0); // no re-renders after selecting new values
+    });
+
+    it('should not re-render the `PickersActionBar` on date change with custom callback actions with root component updates', () => {
+      const RenderCount = spy((props) => <PickersActionBar {...props} />);
+      const actions: PickersActionBarAction[] = ['clear', 'today'];
+
+      const { setProps } = render(
+        <DesktopDatePicker
+          defaultValue={adapterToUse.date('2018-01-01')}
+          slots={{ actionBar: React.memo(RenderCount) }}
+          slotProps={{ actionBar: () => ({ actions }) }}
+          closeOnSelect={false}
+          open
+        />,
+      );
+
+      const renderCountBeforeChange = RenderCount.callCount;
+
+      setProps({ defaultValue: adapterToUse.date('2018-01-04') });
+
+      fireEvent.click(screen.getByRole('gridcell', { name: '2' }));
+      fireEvent.click(screen.getByRole('gridcell', { name: '3' }));
+      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(0); // no re-renders after selecting new values and causing a root component re-render
+    });
   });
 });

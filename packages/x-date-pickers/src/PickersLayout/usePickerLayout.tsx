@@ -55,7 +55,11 @@ const usePickerLayout = <TValue extends PickerValidValue>(
 
   // Action bar
   const ActionBar = slots?.actionBar ?? PickersActionBar;
-  const actionBarProps = useSlotProps({
+  const {
+    // PickersActionBar does not use it and providing it breaks memoization
+    ownerState: destructuredOwnerState,
+    ...actionBarProps
+  } = useSlotProps({
     elementType: ActionBar,
     externalSlotProps: slotProps?.actionBar,
     additionalProps: {
