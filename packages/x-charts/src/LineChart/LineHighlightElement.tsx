@@ -1,11 +1,13 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-vendor/d3-shape';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { SeriesId } from '../models/seriesType/common';
+import { getSymbol } from '../internals/getSymbol';
 
 export interface LineHighlightElementClasses {
   /** Styles applied to the root element. */
@@ -40,7 +42,7 @@ const useUtilityClasses = (ownerState: LineHighlightElementOwnerState) => {
   return composeClasses(slots, getHighlightElementUtilityClass, classes);
 };
 
-const HighlightElement = styled('circle', {
+const HighlightPathElement = styled('path', {
   name: 'MuiHighlightElement',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
@@ -50,8 +52,22 @@ const HighlightElement = styled('circle', {
   fill: ownerState.color,
 }));
 
-export type LineHighlightElementProps = LineHighlightElementOwnerState &
-  Omit<React.SVGProps<SVGCircleElement>, 'ref' | 'id'>;
+const HighlightCircleElement = styled('circle', {
+  name: 'MuiHighlightElement',
+  slot: 'Root',
+  overridesResolver: (_, styles) => styles.root,
+})<{ ownerState: LineHighlightElementOwnerState }>(({ ownerState }) => ({
+  transform: `translate(${ownerState.x}px, ${ownerState.y}px)`,
+  transformOrigin: `${ownerState.x}px ${ownerState.y}px`,
+  fill: ownerState.color,
+}));
+
+export type LineHighlightElementProps =
+  | (LineHighlightElementOwnerState &
+      ({ shape: 'circle' } & Omit<React.SVGProps<SVGCircleElement>, 'ref' | 'id'>))
+  | (LineHighlightElementOwnerState & {
+      shape: 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';
+    } & Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'>);
 
 /**
  * Demos:
@@ -64,7 +80,7 @@ export type LineHighlightElementProps = LineHighlightElementOwnerState &
  * - [LineHighlightElement API](https://mui.com/x/api/charts/line-highlight-element/)
  */
 function LineHighlightElement(props: LineHighlightElementProps) {
-  const { x, y, id, classes: innerClasses, color, ...other } = props;
+  const { x, y, id, classes: innerClasses, color, shape, ...other } = props;
 
   const ownerState = {
     id,
@@ -75,14 +91,20 @@ function LineHighlightElement(props: LineHighlightElementProps) {
   };
   const classes = useUtilityClasses(ownerState);
 
+  const Element = shape === 'circle' ? HighlightCircleElement : HighlightPathElement;
+
+  const additionalProps =
+    shape === 'circle'
+      ? { cx: 0, cy: 0, r: other.r === undefined ? 5 : other.r }
+      : {
+          d: d3Symbol(d3SymbolsFill[getSymbol(shape)])()!,
+        };
   return (
-    <HighlightElement
+    <Element
       pointerEvents="none"
       ownerState={ownerState}
       className={classes.root}
-      cx={0}
-      cy={0}
-      r={other.r === undefined ? 5 : other.r}
+      {...additionalProps}
       {...other}
     />
   );
@@ -95,6 +117,8 @@ LineHighlightElement.propTypes = {
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  shape: PropTypes.oneOf(['circle', 'cross', 'diamond', 'square', 'star', 'triangle', 'wye'])
+    .isRequired,
 } as any;
 
 export { LineHighlightElement };
