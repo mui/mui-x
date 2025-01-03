@@ -185,17 +185,28 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     [publish],
   );
 
+  const handleDragEnd = React.useCallback(
+    (event: DragEvent) => {
+      publish('columnHeaderDragEnd')(event);
+      event.currentTarget?.removeEventListener('dragend', handleDragEnd);
+    },
+    [publish],
+  );
+
   const draggableEventHandlers = React.useMemo(
     () =>
       isDraggable
         ? {
-            onDragStart: publish('columnHeaderDragStart'),
+            onDragStart: (event: React.DragEvent) => {
+              publish('columnHeaderDragStart')(event);
+              // TODO: fix types
+              event.currentTarget.addEventListener('dragend', handleDragEnd);
+            },
             onDragEnter: publish('columnHeaderDragEnter'),
             onDragOver: publish('columnHeaderDragOver'),
-            onDragEnd: publish('columnHeaderDragEnd'),
           }
         : {},
-    [isDraggable, publish],
+    [isDraggable, publish, handleDragEnd],
   );
 
   const columnHeaderSeparatorProps = React.useMemo(
