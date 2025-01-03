@@ -1,6 +1,11 @@
 import * as React from 'react';
+import { PickerValidDate } from '../../../../models';
 
-export interface CalendarRootContext {}
+export interface CalendarRootContext {
+  value: PickerValidDate | null;
+  selectMonth: (value: PickerValidDate) => void;
+  referenceDate: PickerValidDate;
+}
 
 export const CalendarRootContext = React.createContext<CalendarRootContext | undefined>(undefined);
 
