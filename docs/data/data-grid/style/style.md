@@ -116,9 +116,11 @@ The following demo illustrates how this can be achieved.
 
 {{"demo": "StripedGrid.js", "bg": "inline"}}
 
-## Theme header and pinned sections
+## Theme container, header and pinned sections
 
-By default, the Data Grid uses the Material UI `theme.palette.background.default` color for the background of its header and pinned sections. These elements require a solid color to hide the scrollable content behind them. You can override that color with the following configuration:
+By default, the Data Grid uses the Material UI `theme.palette.background.default` color for the background color of the grid container, the column headers, and the pinned rows and columns.
+
+You can override the various background colors with the following configuration:
 
 ```tsx
 import { createTheme } from '@mui/material/styles';
@@ -127,14 +129,18 @@ import type {} from '@mui/x-data-grid/themeAugmentation';
 const theme = createTheme({
   mixins: {
     MuiDataGrid: {
-      // Pinned columns sections
-      pinnedBackground: '#340606',
-      // Headers, and top & bottom fixed rows
-      containerBackground: '#343434',
+      // Container background
+      background: '#fafaf9',
+      // Pinned rows and columns background
+      pinnedBackground: '#f5f5f4',
+      // Column header background
+      headerBackground: '#eeedec',
     },
   },
 });
 ```
+
+{{"demo": "BackgroundColorsGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Custom theme
 

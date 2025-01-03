@@ -9,7 +9,8 @@ declare module '@mui/material/styles' {
 
   interface Mixins {
     MuiDataGrid?: {
-      containerBackground?: string;
+      background?: string;
+      headerBackground?: string;
       pinnedBackground?: string;
     };
   }
