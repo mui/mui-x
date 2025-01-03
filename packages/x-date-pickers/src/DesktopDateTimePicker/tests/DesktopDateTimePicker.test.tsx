@@ -56,6 +56,12 @@ describe('<DesktopDateTimePicker />', () => {
       // Change the meridiem (same value)
       fireEvent.click(screen.getByRole('option', { name: 'AM' }));
       expect(onChange.callCount).to.equal(1); // Don't call onChange again since the value did not change
+      // closeOnSelect false by default
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+
+      // Click on 'accept' action to close the picker
+      fireEvent.click(screen.getByText(/ok/i));
       expect(onAccept.callCount).to.equal(1);
       expect(onClose.callCount).to.equal(1);
     });
@@ -99,6 +105,12 @@ describe('<DesktopDateTimePicker />', () => {
     // Change the meridiem
     fireEvent.click(screen.getByRole('option', { name: 'PM' }));
     expect(onChange.callCount).to.equal(8);
+    // closeOnSelect false by default
+    expect(onAccept.callCount).to.equal(0);
+    expect(onClose.callCount).to.equal(0);
+
+    // Click on 'accept' action to close the picker
+    fireEvent.click(screen.getByText(/ok/i));
     expect(onAccept.callCount).to.equal(1);
     expect(onClose.callCount).to.equal(1);
   });
@@ -123,6 +135,10 @@ describe('<DesktopDateTimePicker />', () => {
 
       expect(onChange.callCount).to.equal(2);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 2, 3, 0, 0));
+      expect(onAccept.callCount).to.equal(0); // onAccept false by default
+
+      // Click on 'accept' action to close the picker
+      fireEvent.click(screen.getByText(/ok/i));
       expect(onAccept.callCount).to.equal(1);
     });
 
@@ -144,6 +160,10 @@ describe('<DesktopDateTimePicker />', () => {
 
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 3, 0, 0));
+      expect(onAccept.callCount).to.equal(0); // onAccept false by default
+
+      // Click on 'accept' action to close the picker
+      fireEvent.click(screen.getByText(/ok/i));
       expect(onAccept.callCount).to.equal(1);
     });
   });

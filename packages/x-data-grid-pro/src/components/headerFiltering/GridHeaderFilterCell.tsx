@@ -78,7 +78,7 @@ const StyledInputComponent = styled(GridFilterInputValue, {
   overridesResolver: (props, styles) => styles.columnHeaderFilterInput,
 })(({ theme }) => ({
   flex: 1,
-  '& input[type="date"], & input[type="datetime-local"]': {
+  '& input[type="number"], & input[type="date"], & input[type="datetime-local"]': {
     '&[value=""]:not(:focus)': {
       color: 'transparent',
     },
