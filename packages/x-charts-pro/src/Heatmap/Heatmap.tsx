@@ -90,16 +90,30 @@ export interface HeatmapProps
 
 // The GnBu: https://github.com/d3/d3-scale-chromatic/blob/main/src/sequential-multi/GnBu.js
 const defaultColorMap = interpolateRgbBasis([
-  '#f7fcf0',
-  '#e0f3db',
-  '#ccebc5',
-  '#a8ddb5',
-  '#7bccc4',
-  '#4eb3d3',
-  '#2b8cbe',
-  '#0868ac',
-  '#084081',
+  '#BDDEFF',
+  '#94C9FF',
+  '#6CB5FF',
+  '#47A3FF',
+  '#2E96FF',
+  '#0056B8',
+  '#0D47A1',
+  '#0A367B',
+  '#072555',
 ]);
+// [
+//   '#CAD4EE',
+//   '#98ADE5',
+//   '#7392E1',
+//   '#577EE3',
+//   '#4254FB',
+//   '#2A3DEF',
+//   '#2638DF',
+//   '#2736C5',
+//   '#222FA6',
+//   '#182596',
+//   '#111C7F',
+//   '#091159',
+// ];
 
 const Heatmap = React.forwardRef(function Heatmap(
   inProps: HeatmapProps,
