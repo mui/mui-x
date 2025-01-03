@@ -81,7 +81,7 @@ export const useSplitFieldProps = <
 
 /**
  * Extract the internal props from the props received by the field component.
- * Makes sure that internal props not defined in the props are not present in the result.
+ * This makes sure that the internal props not defined in the props are not present in the result.
  */
 type ExtractInternalProps<
   TValueType extends PickerValueType,
