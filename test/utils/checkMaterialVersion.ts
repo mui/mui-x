@@ -1,13 +1,12 @@
 import { expect } from 'chai';
 import semver from 'semver';
 import childProcess from 'child_process';
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 type PackageJson = {
   name: string;
   version: string;
 };
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 export function checkMaterialVersion({
   packageJson,
@@ -16,25 +15,24 @@ export function checkMaterialVersion({
   packageJson: PackageJson & { devDependencies: { '@mui/material': string } };
   materialPackageJson: PackageJson;
 }) {
-  if (!isJSDOM) {
-    return undefined;
-  }
+  testSkipIf(!isJSDOM)(`${packageJson.name} should resolve proper @mui/material version`, () => {
+    const expectedVersion = packageJson.devDependencies['@mui/material'];
 
-  const expectedVersion = packageJson.devDependencies['@mui/material'];
+    const versions = childProcess.execSync(
+      `npm dist-tag ls ${'@mui/material'} ${expectedVersion}`,
+      {
+        encoding: 'utf8',
+      },
+    );
+    const tagMapping = versions
+      .split('\n')
+      .find((mapping) => {
+        return mapping.startsWith(`${expectedVersion}: `);
+      })
+      ?.split(': ')[1];
 
-  const versions = childProcess.execSync(`npm dist-tag ls ${'@mui/material'} ${expectedVersion}`, {
-    encoding: 'utf8',
-  });
-  const tagMapping = versions
-    .split('\n')
-    .find((mapping) => {
-      return mapping.startsWith(`${expectedVersion}: `);
-    })
-    ?.split(': ')[1];
+    const version = tagMapping ?? expectedVersion;
 
-  const version = tagMapping ?? expectedVersion;
-
-  return it(`${packageJson.name} should resolve proper @mui/material version`, () => {
     expect(semver.satisfies(materialPackageJson.version, version)).to.equal(
       true,
       `Expected @mui/material ${version}, but found ${materialPackageJson.version}`,

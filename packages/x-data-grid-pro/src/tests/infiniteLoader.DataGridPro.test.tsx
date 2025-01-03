@@ -3,7 +3,7 @@ import { act, createRenderer, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { spy, restore } from 'sinon';
-import { getColumnValues, sleep } from 'test/utils/helperFn';
+import { getColumnValues } from 'test/utils/helperFn';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Infnite loader', () => {
@@ -195,11 +195,11 @@ describe('<DataGridPro /> - Infnite loader', () => {
       expect(observe.callCount).to.equal(0);
       // arbitrary number to make sure that the bottom of the grid window is reached.
       virtualScroller.scrollTop = 12345;
-      virtualScroller.dispatchEvent(new Event('scroll'));
-      // wait for the next render cycle
-      await sleep(0);
+      await act(() => virtualScroller.dispatchEvent(new Event('scroll')));
       // observer was attached
-      expect(observe.callCount).to.equal(1);
+      await waitFor(() => {
+        expect(observe.callCount).to.equal(1);
+      });
     },
   );
 });

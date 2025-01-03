@@ -6,7 +6,7 @@ import {
   DataGridPremiumProps,
   GridColDef,
 } from '@mui/x-data-grid-premium';
-import { createRenderer, fireEvent, waitFor } from '@mui/internal-test-utils';
+import { act, createRenderer, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { SinonSpy, spy, stub, SinonStub } from 'sinon';
 import { getCell, getColumnValues, sleep } from 'test/utils/helperFn';
@@ -180,7 +180,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       };
 
       fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true }); // Ctrl+V
-      document.activeElement!.dispatchEvent(pasteEvent);
+      act(() => document.activeElement!.dispatchEvent(pasteEvent));
     }
 
     ['ctrlKey', 'metaKey'].forEach((key) => {
@@ -237,7 +237,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       it('should paste into cells on the current page when `paginationMode="server"`', async () => {
         const rowLength = 4;
 
-        const { setProps } = render(
+        const { setProps, user } = render(
           <Test
             rowLength={rowLength}
             pagination
@@ -255,7 +255,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         expect(cell).not.to.have.text(clipboardData);
 
         cell.focus();
-        fireUserEvent.mousePress(cell);
+        await user.click(cell);
         paste(cell, clipboardData);
 
         // no update
@@ -267,7 +267,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         setProps({ paginationModel: { pageSize: 2, page: 1 } });
 
         cell.focus();
-        fireUserEvent.mousePress(cell);
+        await user.click(cell);
         paste(cell, clipboardData);
 
         // updated
@@ -446,10 +446,10 @@ describe('<DataGridPremium /> - Clipboard', () => {
       });
 
       it('should paste into selected rows when checkbox selection cell is focused', async () => {
-        render(<Test checkboxSelection />);
+        const { user } = render(<Test checkboxSelection />);
 
         const checkboxInput = getCell(0, 0).querySelector('input')!;
-        fireUserEvent.mousePress(checkboxInput!);
+        await user.click(checkboxInput!);
 
         const clipboardData = ['p01', 'p02', 'p03'].join('\t');
         paste(checkboxInput, clipboardData);

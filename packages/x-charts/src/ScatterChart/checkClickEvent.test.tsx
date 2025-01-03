@@ -29,6 +29,19 @@ const config = {
 describe('ScatterChart - click event', () => {
   const { render } = createRenderer();
 
+  // TODO: Remove beforeEach/afterEach after vitest becomes our main runner
+  beforeEach(() => {
+    if (window.document.body?.style) {
+      window.document.body.style.margin = '0';
+    }
+  });
+
+  afterEach(() => {
+    if (window.document.body?.style) {
+      window.document.body.style.margin = '8px';
+    }
+  });
+
   // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
   describeSkipIf(isJSDOM)('onItemClick - using vornoid', () => {
     it('should provide the right context as second argument when clicking svg', () => {
@@ -36,7 +49,6 @@ describe('ScatterChart - click event', () => {
       render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 100,
             height: 100,
           }}
@@ -78,7 +90,6 @@ describe('ScatterChart - click event', () => {
       render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 100,
             height: 100,
           }}
@@ -112,7 +123,6 @@ describe('ScatterChart - click event', () => {
       render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 100,
             height: 100,
           }}
@@ -139,7 +149,6 @@ describe('ScatterChart - click event', () => {
       render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 100,
             height: 100,
           }}
