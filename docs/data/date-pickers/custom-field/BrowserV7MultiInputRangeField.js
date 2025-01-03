@@ -80,18 +80,12 @@ const BrowserTextField = React.forwardRef((props, ref) => {
 const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
   const {
     slotProps,
-    value,
-    format,
-    onChange,
     readOnly,
-    disabled,
     shouldDisableDate,
     minDate,
     maxDate,
     disableFuture,
     disablePast,
-    selectedSections,
-    onSelectedSectionsChange,
     className,
     unstableStartFieldRef,
     unstableEndFieldRef,
@@ -111,18 +105,12 @@ const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
 
   const fieldResponse = useMultiInputDateRangeField({
     sharedProps: {
-      value,
-      format,
-      onChange,
       readOnly,
-      disabled,
       shouldDisableDate,
       minDate,
       maxDate,
       disableFuture,
       disablePast,
-      selectedSections,
-      onSelectedSectionsChange,
       enableAccessibleFieldDOMStructure: true,
     },
     startTextFieldProps,

@@ -2,7 +2,6 @@ import { warnOnce } from '@mui/x-internals/warning';
 import { UsePickerParams, UsePickerProps, UsePickerResponse } from './usePicker.types';
 import { usePickerValue } from './usePickerValue';
 import { usePickerViews } from './usePickerViews';
-import { InferError } from '../../../models';
 import { DateOrTimeViewWithMeridiem, PickerValidValue } from '../../models';
 import { usePickerProvider } from './usePickerProvider';
 
@@ -20,11 +19,7 @@ export const usePicker = <
   rendererInterceptor,
   fieldRef,
   localeText,
-}: UsePickerParams<TValue, TView, TExternalProps>): UsePickerResponse<
-  TValue,
-  TView,
-  InferError<TExternalProps>
-> => {
+}: UsePickerParams<TValue, TView, TExternalProps>): UsePickerResponse<TValue, TView> => {
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).renderInput != null) {
       warnOnce([
@@ -59,9 +54,6 @@ export const usePicker = <
   });
 
   return {
-    // Picker value
-    fieldProps: pickerValueResponse.fieldProps,
-
     // Picker views
     renderCurrentView: pickerViewsResponse.renderCurrentView,
     hasUIView: pickerViewsResponse.provider.hasUIView,

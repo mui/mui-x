@@ -12,7 +12,7 @@ import { PickerValidValue, PickerValue } from '../internals/models';
  */
 export const usePickerActionsContext = <
   TValue extends PickerValidValue = PickerValue,
-  TError = string,
+  TError = string | null,
 >() => {
   const value = React.useContext(PickerActionsContext) as PickerActionsContextValue<
     TValue,

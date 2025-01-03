@@ -10,7 +10,6 @@ import {
   UsePickerValueResponse,
   PickerValueUpdateAction,
   UsePickerValueState,
-  UsePickerValueFieldResponse,
   UsePickerValueViewsResponse,
   PickerSelectionState,
   PickerValueUpdaterParams,
@@ -407,12 +406,6 @@ export const usePickerValue = <
     });
   });
 
-  const fieldResponse: UsePickerValueFieldResponse<TValue, TError> = {
-    value: dateState.draft,
-    onChange: (newValue, context) =>
-      setValue(newValue, { validationError: context.validationError }),
-  };
-
   const actionsContextValue = React.useMemo<UsePickerValueActionsContextValue<TValue, TError>>(
     () => ({
       setValue,
@@ -428,10 +421,11 @@ export const usePickerValue = <
   const contextValue = React.useMemo<UsePickerValueContextValue<TValue, TError>>(
     () => ({
       ...actionsContextValue,
-      open,
       value: dateState.draft,
+      timezone,
+      open,
     }),
-    [actionsContextValue, open, dateState.draft],
+    [actionsContextValue, timezone, open, dateState.draft],
   );
 
   const privateContextValue = React.useMemo<UsePickerValuePrivateContextValue>(
@@ -440,7 +434,7 @@ export const usePickerValue = <
   );
 
   const providerParams: UsePickerValueProviderParams<TValue, TError> = {
-    value: valueWithoutError,
+    value: dateState.draft,
     contextValue,
     actionsContextValue,
     privateContextValue,
@@ -448,7 +442,6 @@ export const usePickerValue = <
   };
 
   return {
-    fieldProps: fieldResponse,
     viewProps: viewResponse,
     provider: providerParams,
   };

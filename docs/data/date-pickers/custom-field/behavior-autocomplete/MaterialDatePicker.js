@@ -6,12 +6,12 @@ import Stack from '@mui/material/Stack';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
+import { usePickerContext, useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 
 function AutocompleteField(props) {
-  const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-  const { value, timezone, onChange } = internalProps;
+  const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
+  const { timezone, value, setValue } = usePickerContext();
   const {
     InputProps,
     slotProps,
@@ -85,7 +85,7 @@ function AutocompleteField(props) {
       }}
       value={value}
       onChange={(_, newValue) => {
-        onChange(newValue, {
+        setValue(newValue, {
           validationError: getValidationErrorForNewValue(newValue),
         });
       }}

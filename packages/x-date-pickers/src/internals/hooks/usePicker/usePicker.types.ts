@@ -2,7 +2,6 @@ import {
   UsePickerValueParams,
   UsePickerValueProps,
   UsePickerValueBaseProps,
-  UsePickerValueResponse,
 } from './usePickerValue.types';
 import {
   UsePickerViewsProps,
@@ -61,9 +60,7 @@ export interface UsePickerParams<
 export interface UsePickerResponse<
   TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
-  TError,
-> extends Pick<UsePickerValueResponse<TValue, TError>, 'fieldProps'>,
-    Pick<UsePickerViewsResponse<TView>, 'shouldRestoreFocus' | 'renderCurrentView'> {
+> extends Pick<UsePickerViewsResponse<TView>, 'shouldRestoreFocus' | 'renderCurrentView'> {
   ownerState: PickerOwnerState;
   providerProps: UsePickerProviderReturnValue<TValue>;
   // TODO v8: Remove in https://github.com/mui/mui-x/pull/15671

@@ -1,5 +1,4 @@
 import { SxProps } from '@mui/material/styles';
-import { MakeRequired } from '@mui/x-internals/types';
 import type {
   ExportedUseClearableFieldProps,
   UseClearableFieldSlotProps,
@@ -48,22 +47,8 @@ export type BaseSingleInputFieldProps<
   TValue extends PickerValidValue,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-> = MakeRequired<
-  Pick<
-    UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, TError>,
-    | 'readOnly'
-    | 'disabled'
-    | 'format'
-    | 'formatDensity'
-    | 'enableAccessibleFieldDOMStructure'
-    | 'selectedSections'
-    | 'onSelectedSectionsChange'
-    | 'timezone'
-    | 'value'
-    | 'onChange'
-    | 'unstableFieldRef'
-    | 'autoFocus'
-  >,
-  'format' | 'value' | 'onChange' | 'timezone'
+> = Pick<
+  UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, TError>,
+  'readOnly' | 'unstableFieldRef' | 'autoFocus'
 > &
   BaseForwardedSingleInputFieldProps;

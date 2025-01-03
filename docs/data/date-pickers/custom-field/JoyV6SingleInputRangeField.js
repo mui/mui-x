@@ -27,10 +27,7 @@ export const DateRangeIcon = createSvgIcon(
 const joyTheme = extendJoyTheme();
 
 const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
-  const fieldResponse = useSingleInputDateRangeField({
-    ...props,
-    enableAccessibleFieldDOMStructure: false,
-  });
+  const fieldResponse = useSingleInputDateRangeField(props);
 
   const {
     // Should be ignored
@@ -78,6 +75,7 @@ const JoySingleInputDateRangePicker = React.forwardRef((props, ref) => {
     <DateRangePicker
       {...props}
       ref={ref}
+      enableAccessibleFieldDOMStructure={false}
       slots={{ ...props.slots, field: JoySingleInputDateRangeField }}
     />
   );
