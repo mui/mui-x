@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   TreeViewPlugin,
+  selectorIsItemBeingEdited,
   selectorItemIndex,
   selectorItemMeta,
   selectorItemOrderedChildrenIds,
@@ -131,15 +132,18 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
 
   const startDraggingItem = React.useCallback(
     (itemId: string) => {
-      store.update((prevState) => ({
-        ...prevState,
-        itemsReordering: {
-          targetItemId: itemId,
-          draggedItemId: itemId,
-          action: null,
-          newPosition: null,
-        },
-      }));
+      const itemBeingEdited = selectorIsItemBeingEdited(store.value, itemId);
+      if (!itemBeingEdited) {
+        store.update((prevState) => ({
+          ...prevState,
+          itemsReordering: {
+            targetItemId: itemId,
+            draggedItemId: itemId,
+            action: null,
+            newPosition: null,
+          },
+        }));
+      }
     },
     [store],
   );
