@@ -28,7 +28,8 @@ export type ButtonProps = {
 };
 
 export type IconButtonProps = Omit<ButtonProps, 'startIcon'> & {
-  color?: 'default' | 'primary';
+  label?: string;
+  color?: 'default' | 'inherit' | 'primary';
   edge?: 'start' | 'end' | false;
 };
 
