@@ -434,7 +434,7 @@ describe('<DataGrid /> - Rows', () => {
       );
       const firstCell = getCell(0, 0);
       const secondCell = getCell(0, 1);
-      act(() => {
+      await act(() => {
         firstCell.focus();
       });
 
@@ -446,7 +446,7 @@ describe('<DataGrid /> - Rows', () => {
       expect(printButton).to.have.property('tabIndex', 0);
       expect(menuButton).to.have.property('tabIndex', -1);
 
-      act(() => {
+      await act(() => {
         printButton.focus();
       });
       await user.keyboard('{ArrowRight}');
@@ -1066,29 +1066,29 @@ describe('<DataGrid /> - Rows', () => {
       ).to.throw(/You cannot update several rows at once/);
     });
 
-    it('should allow to update one row at the time', () => {
+    it('should allow to update one row at the time', async () => {
       render(<TestCase />);
-      act(() => apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]));
-      act(() => apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]));
-      act(() => apiRef.current.updateRows([{ id: 2, brand: 'Pum' }]));
+      await act(() => apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]));
+      await act(() => apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]));
+      await act(() => apiRef.current.updateRows([{ id: 2, brand: 'Pum' }]));
       expect(getColumnValues(0)).to.deep.equal(['Pata', 'Fila', 'Pum']);
     });
 
-    it('should allow adding rows', () => {
+    it('should allow adding rows', async () => {
       render(<TestCase />);
-      act(() => apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]));
-      act(() => apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]));
-      act(() => apiRef.current.updateRows([{ id: 2, brand: 'Pum' }]));
-      act(() => apiRef.current.updateRows([{ id: 3, brand: 'Jordan' }]));
+      await act(() => apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]));
+      await act(() => apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]));
+      await act(() => apiRef.current.updateRows([{ id: 2, brand: 'Pum' }]));
+      await act(() => apiRef.current.updateRows([{ id: 3, brand: 'Jordan' }]));
       expect(getColumnValues(0)).to.deep.equal(['Pata', 'Fila', 'Pum', 'Jordan']);
     });
 
-    it('should allow to delete rows', () => {
+    it('should allow to delete rows', async () => {
       render(<TestCase />);
-      act(() => apiRef.current.updateRows([{ id: 1, _action: 'delete' }]));
-      act(() => apiRef.current.updateRows([{ id: 0, brand: 'Apple' }]));
-      act(() => apiRef.current.updateRows([{ id: 2, _action: 'delete' }]));
-      act(() => apiRef.current.updateRows([{ id: 5, brand: 'Atari' }]));
+      await act(() => apiRef.current.updateRows([{ id: 1, _action: 'delete' }]));
+      await act(() => apiRef.current.updateRows([{ id: 0, brand: 'Apple' }]));
+      await act(() => apiRef.current.updateRows([{ id: 2, _action: 'delete' }]));
+      await act(() => apiRef.current.updateRows([{ id: 5, brand: 'Atari' }]));
       expect(getColumnValues(0)).to.deep.equal(['Apple', 'Atari']);
     });
 

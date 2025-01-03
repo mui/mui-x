@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { act, createRenderer, fireEvent } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { DataGrid, GridValueFormatter } from '@mui/x-data-grid';
 import { getCell } from 'test/utils/helperFn';
@@ -231,15 +231,15 @@ describe('<DataGrid /> - Cells', () => {
       const thirdRowCell = getCell(2, 0);
       await user.click(thirdRowCell);
 
-      let scrollTop = 6 * rowHeight;
-      virtualScroller.scrollTop = scrollTop;
-      await act(() => virtualScroller.dispatchEvent(new Event('scroll')));
-      expect(virtualScroller.scrollTop).to.equal(scrollTop);
+      virtualScroller.scrollTop = 300;
+      await waitFor(() => {
+        expect(virtualScroller.scrollTop).to.equal(300);
+      });
 
-      scrollTop = 2 * rowHeight;
-      virtualScroller.scrollTop = scrollTop;
-      await act(() => virtualScroller.dispatchEvent(new Event('scroll')));
-      expect(virtualScroller.scrollTop).to.equal(scrollTop);
+      virtualScroller.scrollTop = 100;
+      await waitFor(() => {
+        expect(virtualScroller.scrollTop).to.equal(100);
+      });
     },
   );
 });
