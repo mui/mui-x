@@ -119,7 +119,7 @@ export function createMultiInputRangeField<TManager extends PickerAnyRangeManage
       elementType: Separator,
       externalSlotProps: slotProps?.separator,
       additionalProps: {
-        children: (internalProps as any).dateSeparator ?? '–',
+        children: internalProps.dateSeparator ?? '–',
       },
       ownerState,
       className: classes.separator,
