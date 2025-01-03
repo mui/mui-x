@@ -64,8 +64,8 @@ TimePicker.propTypes = {
   autoFocus: PropTypes.bool,
   className: PropTypes.string,
   /**
-   * If `true`, the popover or modal will close after submitting the full date.
-   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * If `true`, the Picker will close after submitting the full date.
+   * @default false
    */
   closeOnSelect: PropTypes.bool,
   /**
