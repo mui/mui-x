@@ -4,8 +4,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { DataGrid, useGridApiRef, DataGridProps, GridApi } from '@mui/x-data-grid';
 import { getCell, getActiveCell } from 'test/utils/helperFn';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGrid /> - Row spanning', () => {
   const { render } = createRenderer();
@@ -113,10 +112,7 @@ describe('<DataGrid /> - Row spanning', () => {
 
   const rowHeight = 52;
 
-  it('should span the repeating row values', function test() {
-    if (isJSDOM) {
-      this.skip();
-    }
+  testSkipIf(isJSDOM)('should span the repeating row values', () => {
     render(<TestDataGrid />);
     const rowsWithSpannedCells = Object.keys(apiRef.current.state.rowSpanning.spannedCells);
     expect(rowsWithSpannedCells.length).to.equal(1);
@@ -129,10 +125,7 @@ describe('<DataGrid /> - Row spanning', () => {
   });
 
   describe('sorting', () => {
-    it('should work with sorting when initializing sorting', function test() {
-      if (isJSDOM) {
-        this.skip();
-      }
+    testSkipIf(isJSDOM)('should work with sorting when initializing sorting', () => {
       render(
         <TestDataGrid
           initialState={{ sorting: { sortModel: [{ field: 'code', sort: 'desc' }] } }}
@@ -148,10 +141,7 @@ describe('<DataGrid /> - Row spanning', () => {
       expect(spannedCell).to.have.style('height', `${rowHeight * spanValue.code}px`);
     });
 
-    it('should work with sorting when controlling sorting', function test() {
-      if (isJSDOM) {
-        this.skip();
-      }
+    testSkipIf(isJSDOM)('should work with sorting when controlling sorting', () => {
       render(<TestDataGrid sortModel={[{ field: 'code', sort: 'desc' }]} />);
       const rowsWithSpannedCells = Object.keys(apiRef.current.state.rowSpanning.spannedCells);
       expect(rowsWithSpannedCells.length).to.equal(1);
@@ -165,10 +155,7 @@ describe('<DataGrid /> - Row spanning', () => {
   });
 
   describe('filtering', () => {
-    it('should work with filtering when initializing filter', function test() {
-      if (isJSDOM) {
-        this.skip();
-      }
+    testSkipIf(isJSDOM)('should work with filtering when initializing filter', () => {
       render(
         <TestDataGrid
           initialState={{
@@ -190,10 +177,7 @@ describe('<DataGrid /> - Row spanning', () => {
       expect(spannedCell).to.have.style('height', `${rowHeight * spanValue.code}px`);
     });
 
-    it('should work with filtering when controlling filter', function test() {
-      if (isJSDOM) {
-        this.skip();
-      }
+    testSkipIf(isJSDOM)('should work with filtering when controlling filter', () => {
       render(
         <TestDataGrid
           filterModel={{
@@ -213,10 +197,7 @@ describe('<DataGrid /> - Row spanning', () => {
   });
 
   describe('pagination', () => {
-    it('should only compute the row spanning state for current page', async function test() {
-      if (isJSDOM) {
-        this.skip();
-      }
+    testSkipIf(isJSDOM)('should only compute the row spanning state for current page', async () => {
       render(
         <TestDataGrid
           pagination

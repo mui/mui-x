@@ -2,6 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { adapterToUse, getAllFieldInputRoot } from 'test/utils/pickers';
+import { describeSkipIf, testSkipIf } from 'test/utils/skipIf';
 import { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
 
 const testInvalidStatus = (expectedAnswer: boolean[], isSingleInput: boolean | undefined) => {
@@ -21,11 +22,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
 ) => {
   const { componentFamily, render, isSingleInput, withDate, withTime } = getOptions();
 
-  if (!['picker', 'field'].includes(componentFamily)) {
-    return;
-  }
-
-  describe('text field:', () => {
+  describeSkipIf(!['picker', 'field'].includes(componentFamily))('text field:', () => {
     it('should accept single day range', () => {
       const onErrorMock = spy();
       render(
@@ -56,11 +53,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, true], isSingleInput);
     });
 
-    it('should apply shouldDisableDate', function test() {
-      if (!withDate) {
-        return;
-      }
-
+    testSkipIf(!withDate)('should apply shouldDisableDate', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
@@ -102,11 +95,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, false], isSingleInput);
     });
 
-    it('should apply shouldDisableDate specifically on end date', function test() {
-      if (!withDate) {
-        return;
-      }
-
+    testSkipIf(!withDate)('should apply shouldDisableDate specifically on end date', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
@@ -148,11 +137,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([false, false], isSingleInput);
     });
 
-    it('should apply shouldDisableDate specifically on start date', function test() {
-      if (!withDate) {
-        return;
-      }
-
+    testSkipIf(!withDate)('should apply shouldDisableDate specifically on start date', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
@@ -196,7 +181,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, false], isSingleInput);
     });
 
-    it('should apply disablePast', function test() {
+    it('should apply disablePast', () => {
       const onErrorMock = spy();
       let now;
       function WithFakeTimer(props) {
@@ -234,7 +219,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, true], isSingleInput);
     });
 
-    it('should apply disableFuture', function test() {
+    it('should apply disableFuture', () => {
       const onErrorMock = spy();
       let now;
       function WithFakeTimer(props) {
@@ -273,11 +258,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, true], isSingleInput);
     });
 
-    it('should apply minDate', function test() {
-      if (!withDate) {
-        return;
-      }
-
+    testSkipIf(!withDate)('should apply minDate', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
@@ -308,11 +289,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([false, false], isSingleInput);
     });
 
-    it('should apply minDate when only first field is filled', function test() {
-      if (!withDate) {
-        return;
-      }
-
+    testSkipIf(!withDate)('should apply minDate when only first field is filled', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
@@ -335,11 +312,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([false, false], isSingleInput);
     });
 
-    it('should apply minDate when only second field is filled', function test() {
-      if (!withDate) {
-        return;
-      }
-
+    testSkipIf(!withDate)('should apply minDate when only second field is filled', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
@@ -362,11 +335,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([false, false], isSingleInput);
     });
 
-    it('should apply maxDate', function test() {
-      if (!withDate) {
-        return;
-      }
-
+    testSkipIf(!withDate)('should apply maxDate', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
@@ -396,11 +365,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, true], isSingleInput);
     });
 
-    it('should apply minTime', function test() {
-      if (!withTime) {
-        return;
-      }
-
+    testSkipIf(!withTime)('should apply minTime', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
@@ -433,11 +398,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, null]);
       testInvalidStatus([false, false], isSingleInput);
     });
-    it('should ignore date when applying minTime', function test() {
-      if (!withTime) {
-        return;
-      }
-
+    testSkipIf(!withTime)('should ignore date when applying minTime', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
@@ -463,11 +424,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([false, false], isSingleInput);
     });
 
-    it('should apply minTime when only first field is filled', function test() {
-      if (!withTime) {
-        return;
-      }
-
+    testSkipIf(!withTime)('should apply minTime when only first field is filled', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
@@ -489,11 +446,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, false], isSingleInput);
     });
 
-    it('should apply minTime when only second field is filled', function test() {
-      if (!withTime) {
-        return;
-      }
-
+    testSkipIf(!withTime)('should apply minTime when only second field is filled', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
@@ -515,11 +468,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([false, true], isSingleInput);
     });
 
-    it('should apply maxTime', function test() {
-      if (!withTime) {
-        return;
-      }
-
+    testSkipIf(!withTime)('should apply maxTime', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
@@ -552,11 +501,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, true], isSingleInput);
     });
 
-    it('should ignore date when applying maxTime', function test() {
-      if (!withTime) {
-        return;
-      }
-
+    testSkipIf(!withTime)('should ignore date when applying maxTime', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
@@ -581,12 +526,8 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, true], isSingleInput);
     });
 
-    it('should apply maxDateTime', function test() {
-      if (!withDate || !withTime) {
-        // prop only available on DateTime pickers
-        return;
-      }
-
+    // prop only available on DateTime pickers
+    testSkipIf(!withDate || !withTime)('should apply maxDateTime', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
@@ -615,12 +556,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, true], isSingleInput);
     });
 
-    it('should apply minDateTime', function test() {
-      if (!withDate || !withTime) {
-        // prop only available on DateTime pickers
-        return;
-      }
-
+    testSkipIf(!withDate || !withTime)('should apply minDateTime', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
