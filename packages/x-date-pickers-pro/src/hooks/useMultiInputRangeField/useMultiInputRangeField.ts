@@ -11,8 +11,8 @@ import {
   useFieldInternalPropsWithDefaults,
 } from '@mui/x-date-pickers/internals';
 import { useValidation } from '@mui/x-date-pickers/validation';
-import { useMultiInputRangeFieldTextFieldProps } from '../../internals/utils/createMultiInputRangeField/useMultiInputRangeFieldTextFieldProps';
-import { useMultiInputRangeFieldSelectedSections } from '../../internals/utils/createMultiInputRangeField/useMultiInputRangeFieldSelectedSections';
+import { useMultiInputRangeFieldTextFieldProps } from './useMultiInputRangeFieldTextFieldProps';
+import { useMultiInputRangeFieldSelectedSections } from './useMultiInputRangeFieldSelectedSections';
 import { PickerAnyRangeManager } from '../../internals/models/managers';
 
 /**

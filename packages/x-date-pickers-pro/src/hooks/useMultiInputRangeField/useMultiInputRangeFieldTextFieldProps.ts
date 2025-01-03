@@ -17,12 +17,12 @@ import {
   useFieldInternalPropsWithDefaults,
   UseFieldResponse,
 } from '@mui/x-date-pickers/internals';
-import { PickerAnyRangeManager } from '../../models/managers';
+import { PickerAnyRangeManager } from '../../internals/models/managers';
 import {
   UseDateRangeManagerReturnValue,
   UseDateTimeRangeManagerReturnValue,
   UseTimeRangeManagerReturnValue,
-} from '../../../managers';
+} from '../../managers';
 
 /**
  * @ignore - internal hook.
