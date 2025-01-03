@@ -6,3 +6,4 @@ export * from './useGridNativeEventListener';
 export * from './useFirstRender';
 export * from './useOnMount';
 export * from './useRunOnce';
+export * from './useGridComponentRenderer';

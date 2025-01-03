@@ -31,6 +31,9 @@ export {
   GRID_COLUMN_MENU_SLOT_PROPS,
 } from './components/reexportable';
 
+export * from './components/grid';
+export * as Grid from './components/grid/index.parts';
+
 /**
  * The full grid API.
  * @demos

@@ -1,0 +1,5 @@
+<TailwindDemoContainer>
+  <div style={{ height: 400, width: '100%' }}>
+    <DataGrid {...data} loading={loading} slots={{ toolbar: Toolbar }} />
+  </div>
+</TailwindDemoContainer>
