@@ -8,7 +8,7 @@ const theme = createTheme({
     MuiDataGrid: {
       background: '#fafaf9',
       pinnedBackground: '#f5f5f4',
-      headerBackground: '#EEEDEC',
+      headerBackground: '#eeedec',
     },
   },
 });
