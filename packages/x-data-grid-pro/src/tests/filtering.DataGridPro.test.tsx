@@ -22,7 +22,13 @@ import {
   getGridStringOperators,
   GridFilterItem,
 } from '@mui/x-data-grid-pro';
-import { getColumnHeaderCell, getColumnValues, getSelectInput, grid } from 'test/utils/helperFn';
+import {
+  getColumnHeaderCell,
+  getColumnValues,
+  getSelectInput,
+  grid,
+  includeRowSelection,
+} from 'test/utils/helperFn';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 const SUBMIT_FILTER_STROKE_TIME = DATA_GRID_PRO_PROPS_DEFAULT_VALUES.filterDebounceMs;

@@ -847,7 +847,7 @@ describe('<DataGrid /> - Row selection', () => {
     });
 
     it('should not update the selection model when the rowSelectionModel prop is set', async () => {
-      const rowSelectionModel: GridInputRowSelectionModel = includeRowSelection([1]);
+      const rowSelectionModel: GridRowSelectionModel = includeRowSelection([1]);
       const { user } = render(<TestDataGridSelection rowSelectionModel={rowSelectionModel} />);
       expect(getSelectedRowIds()).to.deep.equal([1]);
 

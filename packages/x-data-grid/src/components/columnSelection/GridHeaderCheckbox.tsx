@@ -74,7 +74,7 @@ const GridHeaderCheckbox = forwardRef<HTMLButtonElement, GridColumnHeaderParams>
         }
       }
       return selectionModel;
-    }, [apiRef, rootProps.isRowSelectable, selection]);
+    }, [apiRef, rootProps.isRowSelectable, rootProps.keepNonExistentRowsSelected, selection]);
 
     // All the rows that could be selected / unselected by toggling this checkbox
     const selectionCandidates = React.useMemo(() => {
