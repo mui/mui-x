@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { createRenderer, fireEvent, screen, createEvent } from '@mui/internal-test-utils';
-import { getCell, getColumnValues, getRowsFieldContent } from 'test/utils/helperFn';
+import { getCell, getColumnValues, getRowsFieldContent, microtasks } from 'test/utils/helperFn';
 import { useGridApiRef, DataGridPro, gridClasses, GridApi } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 
@@ -245,5 +245,42 @@ describe('<DataGridPro /> - Row reorder', () => {
     const dragOverEvent = createDragOverEvent(targetCell);
     fireEvent(targetCell, dragOverEvent);
     expect(getRowsFieldContent('brand')).to.deep.equal(['Skechers', 'Puma']);
+  });
+
+  it('should reorder rows correctly with filtered data', async () => {
+    const rows = [
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
+      { id: 3, brand: 'Skechers' },
+    ];
+    const columns = [{ field: 'brand' }];
+
+    function Test() {
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            rows={rows}
+            columns={columns}
+            rowReordering
+            filterModel={{
+              items: [{ field: 'brand', operator: 'doesNotEqual', value: 'Nike' }],
+            }}
+          />
+        </div>
+      );
+    }
+
+    render(<Test />);
+    expect(getColumnValues(1)).to.deep.equal(['Adidas', 'Puma', 'Skechers']);
+    const rowReorderCell = getCell(0, 0).firstChild!;
+    const targetCell = getCell(1, 0);
+
+    fireEvent.dragStart(rowReorderCell);
+    fireEvent.dragEnter(targetCell);
+    const dragOverEvent = createDragOverEvent(targetCell);
+    fireEvent(targetCell, dragOverEvent);
+    await microtasks();
+    expect(getColumnValues(1)).to.deep.equal(['Puma', 'Adidas', 'Skechers']);
   });
 });
