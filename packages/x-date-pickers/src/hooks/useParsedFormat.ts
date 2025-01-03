@@ -5,7 +5,7 @@ import { useUtils } from '../internals/hooks/useUtils';
 import { buildSectionsFromFormat } from '../internals/hooks/useField/buildSectionsFromFormat';
 import { getLocalizedDigits } from '../internals/hooks/useField/useField.utils';
 import { usePickerTranslations } from './usePickerTranslations';
-import { PickerContext } from './usePickerContext';
+import { useNullablePickerContext } from '../internals/hooks/useNullablePickerContext';
 
 interface UseParsedFormatParameters {
   /**
@@ -23,12 +23,12 @@ interface UseParsedFormatParameters {
  * @returns
  */
 export const useParsedFormat = (parameters: UseParsedFormatParameters = {}) => {
-  const publicContextValue = React.useContext(PickerContext);
+  const pickerContext = useNullablePickerContext();
   const utils = useUtils();
   const isRtl = useRtl();
   const translations = usePickerTranslations();
   const localizedDigits = React.useMemo(() => getLocalizedDigits(utils), [utils]);
-  const { format = publicContextValue?.fieldFormat ?? utils.formats.fullDate } = parameters;
+  const { format = pickerContext?.fieldFormat ?? utils.formats.fullDate } = parameters;
 
   return React.useMemo(() => {
     const sections = buildSectionsFromFormat({

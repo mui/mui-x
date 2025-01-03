@@ -7,8 +7,8 @@ import {
   PickerManagerFieldInternalPropsWithDefaults,
   PickerManagerValue,
 } from '../../models';
-import { PickerContext } from '../../../hooks/usePickerContext';
 import { useLocalizationContext } from '../useUtils';
+import { useNullablePickerContext } from '../useNullablePickerContext';
 
 export const PickerFieldPrivateContext = React.createContext<PickerFieldPrivateContextValue | null>(
   null,
@@ -27,11 +27,10 @@ export function useFieldInternalPropsWithDefaults<TManager extends PickerAnyMana
   internalProps: PickerManagerFieldInternalProps<TManager>;
 }): PickerManagerFieldInternalPropsWithDefaults<TManager> {
   const localizationContext = useLocalizationContext();
-  const privateContextValue = React.useContext(PickerFieldPrivateContext);
-  // TODO: Replace with useNullablePickerContext
-  const publicContextValue = React.useContext(PickerContext);
+  const pickerContext = useNullablePickerContext();
+  const fieldPrivateContext = React.useContext(PickerFieldPrivateContext);
 
-  const setValue = publicContextValue?.setValue;
+  const setValue = pickerContext?.setValue;
   const handleChangeFromPicker: FieldChangeHandler<
     PickerManagerValue<TManager>,
     PickerManagerError<TManager>
@@ -46,23 +45,23 @@ export function useFieldInternalPropsWithDefaults<TManager extends PickerAnyMana
 
   const internalPropsWithDefaultsFromContext = React.useMemo(() => {
     // If one of the context is null, the other always will be null as well.
-    if (privateContextValue == null || publicContextValue == null) {
+    if (fieldPrivateContext == null || pickerContext == null) {
       return internalProps;
     }
 
     return {
-      value: publicContextValue.value,
+      value: pickerContext.value,
       onChange: handleChangeFromPicker,
-      timezone: publicContextValue.timezone,
-      disabled: publicContextValue.disabled,
-      format: publicContextValue.fieldFormat,
-      formatDensity: privateContextValue.formatDensity,
-      enableAccessibleFieldDOMStructure: privateContextValue.enableAccessibleFieldDOMStructure,
-      selectedSections: privateContextValue.selectedSections,
-      onSelectedSectionsChange: privateContextValue.onSelectedSectionsChange,
+      timezone: pickerContext.timezone,
+      disabled: pickerContext.disabled,
+      format: pickerContext.fieldFormat,
+      formatDensity: fieldPrivateContext.formatDensity,
+      enableAccessibleFieldDOMStructure: fieldPrivateContext.enableAccessibleFieldDOMStructure,
+      selectedSections: fieldPrivateContext.selectedSections,
+      onSelectedSectionsChange: fieldPrivateContext.onSelectedSectionsChange,
       ...internalProps,
     };
-  }, [internalProps, privateContextValue, publicContextValue, handleChangeFromPicker]);
+  }, [internalProps, fieldPrivateContext, pickerContext, handleChangeFromPicker]);
 
   return React.useMemo(() => {
     return manager.internal_applyDefaultsToFieldInternalProps({
