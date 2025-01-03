@@ -808,7 +808,6 @@ describe('<DataGrid /> - Rows', () => {
         expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
       });
 
-      // FIXME: We need a waitFor that works with fake clock
       const { userAgent } = window.navigator;
       testSkipIf(!userAgent.includes('Headless') || /edg/i.test(userAgent))(
         'should position correctly the render zone when the 2nd page has less rows than the 1st page',
