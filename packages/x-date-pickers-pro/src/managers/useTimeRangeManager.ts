@@ -54,8 +54,9 @@ export type UseTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure ex
     TimeRangeManagerFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>
   >;
 
-interface TimeRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends MakeOptional<
+export interface TimeRangeManagerFieldInternalProps<
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends MakeOptional<
       UseFieldInternalProps<
         PickerRangeValue,
         TEnableAccessibleFieldDOMStructure,

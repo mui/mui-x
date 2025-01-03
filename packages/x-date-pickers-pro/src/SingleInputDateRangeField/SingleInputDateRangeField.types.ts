@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { TextFieldProps } from '@mui/material/TextField';
-import { MakeOptional, SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { PickerRangeValue, UseFieldInternalProps } from '@mui/x-date-pickers/internals';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { BuiltInFieldTextFieldProps, FieldOwnerState } from '@mui/x-date-pickers/models';
 import {
   ExportedUseClearableFieldProps,
@@ -9,21 +8,11 @@ import {
   UseClearableFieldSlotProps,
 } from '@mui/x-date-pickers/hooks';
 import { PickersTextFieldProps } from '@mui/x-date-pickers/PickersTextField';
-import type { DateRangeValidationError, RangeFieldSeparatorProps } from '../models';
-import { ExportedValidateDateRangeProps } from '../validation/validateDateRange';
+import { DateRangeManagerFieldInternalProps } from '../managers/useDateRangeManager';
 
 export interface UseSingleInputDateRangeFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends MakeOptional<
-      UseFieldInternalProps<
-        PickerRangeValue,
-        TEnableAccessibleFieldDOMStructure,
-        DateRangeValidationError
-      >,
-      'format'
-    >,
-    RangeFieldSeparatorProps,
-    ExportedValidateDateRangeProps,
+> extends DateRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
     ExportedUseClearableFieldProps {}
 
 export type SingleInputDateRangeFieldProps<
