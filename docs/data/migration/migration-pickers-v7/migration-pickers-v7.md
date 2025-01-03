@@ -740,7 +740,7 @@ The following variables and types have been renamed to have a coherent `Picker` 
   +const pickerContext = usePickerContext();
   ```
 
-- `FieldValueType`
+- ✅ `FieldValueType`
 
   ```diff
   -import { FieldValueType } from '@mui/x-date-pickers/models';
