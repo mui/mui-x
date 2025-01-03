@@ -9,7 +9,7 @@ function InputNumberInterval(props) {
   const rootProps = useGridRootProps();
   const { item, applyValue, focusElementRef = null } = props;
 
-  const filterTimeout = React.useRef();
+  const filterTimeout = React.useRef(undefined);
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
   const [applying, setIsApplying] = React.useState(false);
 

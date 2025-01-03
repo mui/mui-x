@@ -220,7 +220,7 @@ const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
   { label: 'Reset', getValue: () => [null, null] },
 ];
 
-function DisabledCheckboxTooltip({ children }: { children: React.ReactElement }) {
+function DisabledCheckboxTooltip({ children }: { children: React.ReactElement<any> }) {
   return (
     <Tooltip title="At least one view has to be provided to the components">{children}</Tooltip>
   );

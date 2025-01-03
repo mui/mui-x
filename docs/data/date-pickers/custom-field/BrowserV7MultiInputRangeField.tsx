@@ -179,7 +179,7 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
         className={className}
       >
         <BrowserTextField {...fieldResponse.startDate} />
-        <span> — </span>
+        <span> – </span>
         <BrowserTextField {...fieldResponse.endDate} />
       </Stack>
     );

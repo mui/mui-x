@@ -62,7 +62,7 @@ type UntypedStrategyProcessors = {
  * Each processor name is part of a strategy group which can only have one active strategy at the time.
  * There are two active groups named `rowTree` and `dataSource`.
  */
-export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridPrivateApiCommon>) => {
+export const useGridStrategyProcessing = (apiRef: React.RefObject<GridPrivateApiCommon>) => {
   const availableStrategies = React.useRef(
     new Map<string, { group: GridStrategyGroupValue; isAvailable: () => boolean }>(),
   );

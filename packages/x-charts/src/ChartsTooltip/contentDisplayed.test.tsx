@@ -2,6 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { createRenderer, fireEvent } from '@mui/internal-test-utils';
 import { BarChart } from '@mui/x-charts/BarChart';
+import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 const config = {
   dataset: [
@@ -21,18 +22,12 @@ const config = {
 // | X X X X
 // ---A---B-
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 describe('ChartsTooltip', () => {
   const { render } = createRenderer();
 
-  describe('axis trigger', () => {
-    it('should show right values with vertical layout', function test() {
-      if (isJSDOM) {
-        // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        this.skip();
-      }
-
+  // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
+  describeSkipIf(isJSDOM)('axis trigger', () => {
+    it('should show right values with vertical layout on axis', () => {
       render(
         <div
           style={{
@@ -93,12 +88,7 @@ describe('ChartsTooltip', () => {
       ]);
     });
 
-    it('should show right values with horizontal layout', function test() {
-      if (isJSDOM) {
-        // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        this.skip();
-      }
-
+    it('should show right values with horizontal layout on axis', () => {
       render(
         <div
           style={{
@@ -161,13 +151,9 @@ describe('ChartsTooltip', () => {
     });
   });
 
-  describe('item trigger', () => {
-    it('should show right values with vertical layout', function test() {
-      if (isJSDOM) {
-        // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        this.skip();
-      }
-
+  // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
+  describeSkipIf(isJSDOM)('item trigger', () => {
+    it('should show right values with vertical layout on item', () => {
       render(
         <div
           style={{
@@ -206,12 +192,7 @@ describe('ChartsTooltip', () => {
       expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', 'S2', '1']);
     });
 
-    it('should show right values with horizontal layout', function test() {
-      if (isJSDOM) {
-        // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        this.skip();
-      }
-
+    it('should show right values with horizontal layout on item', () => {
       render(
         <div
           style={{
