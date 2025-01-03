@@ -173,7 +173,10 @@ export interface GridClasses {
    * @ignore - do not document.
    */
   'columnHeader--siblingFocused': string;
-
+  /**
+   * Styles applied to the header filter input element.
+   */
+  columnHeaderFilterInput: string;
   /**
    * Styles applied to the header checkbox cell element.
    */
@@ -206,6 +209,10 @@ export interface GridClasses {
    * Styles applied to the empty column group header cell.
    */
   'columnHeader--emptyGroup': string;
+  /**
+   * Styles applied to the header filter cell.
+   */
+  'columnHeader--filter': string;
   /**
    * Styles applied to the column headers.
    */
@@ -728,6 +735,8 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnHeader--last',
   'columnHeader--lastUnpinned',
   'columnHeader--siblingFocused',
+  'columnHeader--filter',
+  'columnHeaderFilterInput',
   'columnHeaderCheckbox',
   'columnHeaderDraggableContainer',
   'columnHeaderTitle',

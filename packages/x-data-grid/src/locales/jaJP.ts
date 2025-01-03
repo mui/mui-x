@@ -112,6 +112,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': '以上',
   'headerFilterOperator<': '未満',
   'headerFilterOperator<=': '以下',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'いずれか',

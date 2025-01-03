@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { DataGridPro, gridClasses } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-export default function SimpleHeaderFilteringDataGridPro() {
+export default function HeaderFilteringInlineClearDataGridPro() {
   const { data, loading } = useDemoData({
     dataSet: 'Employee',
     rowLength: 100,
@@ -22,12 +22,12 @@ export default function SimpleHeaderFilteringDataGridPro() {
             },
           },
         }}
-        disableColumnFilter
         headerFilters
-        slots={{
-          headerFilterMenu: null,
+        slotProps={{
+          headerFilterCell: {
+            showClearIcon: true,
+          },
         }}
-        sx={{ [`.${gridClasses['columnHeader--filter']}`]: { px: 1 } }}
       />
     </div>
   );

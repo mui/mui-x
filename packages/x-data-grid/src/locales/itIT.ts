@@ -113,6 +113,7 @@ const itITGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Maggiore o uguale a',
   'headerFilterOperator<': 'Minore di',
   'headerFilterOperator<=': 'Minore o uguale a',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'qualunque',

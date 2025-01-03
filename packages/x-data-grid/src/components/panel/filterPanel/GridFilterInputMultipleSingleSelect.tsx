@@ -38,7 +38,7 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     error,
     helperText,
     size,
-    variant = 'standard',
+    variant = 'outlined',
     ...other
   } = props;
   const TextFieldProps = {

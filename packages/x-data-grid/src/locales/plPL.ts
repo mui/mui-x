@@ -112,6 +112,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Większy lub równy',
   'headerFilterOperator<': 'Mniejszy niż',
   'headerFilterOperator<=': 'Mniejszy lub równe',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'dowolny',

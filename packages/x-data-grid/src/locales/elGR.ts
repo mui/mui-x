@@ -113,6 +113,7 @@ const elGRGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Μεγαλύτερο ή ίσο με',
   'headerFilterOperator<': 'Μικρότερο από',
   'headerFilterOperator<=': 'Μικρότερο ή ίσο με',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'οποιοδήποτε',
