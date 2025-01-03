@@ -48,8 +48,7 @@ describe('<DataGrid /> - Row selection', () => {
           {...props}
           autoHeight={isJSDOM}
           experimentalFeatures={{
-            // Unsure why this fails with `user.click` but not with `fireEvent.click`
-            warnIfFocusStateIsNotSynced: false,
+            warnIfFocusStateIsNotSynced: true,
             ...props.experimentalFeatures,
           }}
         />

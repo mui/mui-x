@@ -62,8 +62,7 @@ describe('<DataGrid /> - Keyboard', () => {
           columnHeaderHeight={HEADER_HEIGHT}
           hideFooter
           filterModel={{ items: [{ field: 'id', operator: '>', value: 10 }] }}
-          // This had to be disabled again, `user.click` is not working with it
-          experimentalFeatures={{ warnIfFocusStateIsNotSynced: false }}
+          experimentalFeatures={{ warnIfFocusStateIsNotSynced: true }}
           {...props}
         />
       </div>
@@ -164,7 +163,7 @@ describe('<DataGrid /> - Keyboard', () => {
       async () => {
         const { user } = render(<NavigationTestCaseNoScrollX />);
         const cell = getCell(1, 1);
-        await user.click(cell);
+        fireUserEvent.mousePress(cell);
         expect(getActiveCell()).to.equal('1-1');
         await user.keyboard('{PageDown}');
         expect(getActiveCell()).to.equal(`6-1`);
@@ -401,7 +400,7 @@ describe('<DataGrid /> - Keyboard', () => {
           getColumnHeaderCell(1).querySelector<HTMLElement>(`button[title="Sort"]`)!;
 
         // Simulate click on this button
-        await user.click(columnMenuButton);
+        fireUserEvent.mousePress(columnMenuButton);
         await act(() => columnMenuButton.focus());
 
         await user.keyboard('{ArrowDown}');
@@ -433,7 +432,7 @@ describe('<DataGrid /> - Keyboard', () => {
       );
       const input = screen.getByTestId('custom-input');
       fireUserEvent.mousePress(input);
-      input.focus();
+      act(() => input.focus());
 
       // Verify that the event is not prevented during the bubbling.
       // fireEvent.keyDown return false if it is the case
@@ -699,7 +698,7 @@ describe('<DataGrid /> - Keyboard', () => {
     );
     expect(renderCell.callCount).to.equal(2);
     const input = screen.getByTestId('custom-input');
-    input.focus();
+    act(() => input.focus());
     fireEvent.keyDown(input, { key: 'a' });
     expect(renderCell.callCount).to.equal(4);
     fireEvent.keyDown(input, { key: 'b' });
@@ -890,7 +889,7 @@ describe('<DataGrid /> - Keyboard', () => {
       const { valueSetterMock } = setupTest(rows, columns, editMode);
       const cell = getCell(0, 1);
 
-      cell.focus();
+      act(() => cell.focus());
       fireEvent.keyDown(cell, { key: keyType });
 
       return {
