@@ -9,3 +9,8 @@ export type {
   MultiInputDateRangeFieldClassKey as MultiInputRangeFieldClassKey,
   MultiInputDateRangeFieldClasses,
 } from './multiInputDateRangeFieldClasses';
+
+export {
+  MultiInputRangeFieldSlots as MultiInputDateRangeFieldSlots,
+  MultiInputRangeFieldSlotProps as MultiInputDateRangeFieldSlotProps,
+} from '../internals/utils/createMultiInputRangeField';
