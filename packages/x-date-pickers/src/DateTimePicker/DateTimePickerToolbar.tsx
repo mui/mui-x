@@ -243,7 +243,7 @@ export const DateTimePickerToolbarOverrideContext = React.createContext<{
   value: PickerValue;
   setValue: (value: PickerValue, options?: SetValueActionOptions<DateTimeValidationError>) => void;
   forceDesktopVariant: boolean;
-  onViewChange: (view: DateOrTimeViewWithMeridiem) => void;
+  setView: (view: DateOrTimeViewWithMeridiem) => void;
   view: DateOrTimeViewWithMeridiem | null;
 } | null>(null);
 
@@ -278,7 +278,7 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
     variant,
     orientation,
     view: viewContext,
-    onViewChange: onViewChangeContext,
+    setView: setViewContext,
     views,
   } = usePickerContext();
 
@@ -291,7 +291,7 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
   const value = overrides ? overrides.value : valueContext;
   const setValue = overrides ? overrides.setValue : setValueContext;
   const view = overrides ? overrides.view : viewContext;
-  const onViewChange = overrides ? overrides.onViewChange : onViewChangeContext;
+  const setView = overrides ? overrides.setView : setViewContext;
 
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, (newValue) =>
     setValue(newValue, { changeImportance: 'set' }),
@@ -336,7 +336,7 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
             tabIndex={-1}
             variant="subtitle1"
             data-testid="datetimepicker-toolbar-year"
-            onClick={() => onViewChange('year')}
+            onClick={() => setView('year')}
             selected={view === 'year'}
             value={formatSection('year', '–')}
           />
@@ -347,7 +347,7 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
             tabIndex={-1}
             variant={isDesktop ? 'h5' : 'h4'}
             data-testid="datetimepicker-toolbar-day"
-            onClick={() => onViewChange('day')}
+            onClick={() => setView('day')}
             selected={view === 'day'}
             value={dateText}
           />
@@ -373,7 +373,7 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
                     : undefined
                 }
                 data-testid="hours"
-                onClick={() => onViewChange('hours')}
+                onClick={() => setView('hours')}
                 selected={view === 'hours'}
                 value={formatSection(ampm ? 'hours12h' : 'hours24h', '--')}
               />
@@ -392,7 +392,7 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
                     : undefined
                 }
                 data-testid="minutes"
-                onClick={() => onViewChange('minutes')}
+                onClick={() => setView('minutes')}
                 selected={view === 'minutes' || (!views.includes('minutes') && view === 'hours')}
                 value={formatSection('minutes', '--')}
                 disabled={!views.includes('minutes')}
@@ -417,7 +417,7 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
                     : undefined
                 }
                 data-testid="seconds"
-                onClick={() => onViewChange('seconds')}
+                onClick={() => setView('seconds')}
                 selected={view === 'seconds'}
                 value={formatSection('seconds', '--')}
               />
@@ -452,7 +452,7 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
           <PickersToolbarButton
             variant="h5"
             data-testid="am-pm-view-button"
-            onClick={() => onViewChange('meridiem')}
+            onClick={() => setView('meridiem')}
             selected={view === 'meridiem'}
             value={value && meridiemMode ? formatMeridiem(utils, meridiemMode) : '--'}
             width={MULTI_SECTION_CLOCK_SECTION_WIDTH}

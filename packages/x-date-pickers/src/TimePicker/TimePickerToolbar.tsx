@@ -157,7 +157,7 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
   const translations = usePickerTranslations();
   const ownerState = useToolbarOwnerState();
   const classes = useUtilityClasses(classesProp, ownerState);
-  const { value, setValue, disabled, readOnly, view, onViewChange, views } = usePickerContext<
+  const { value, setValue, disabled, readOnly, view, setView, views } = usePickerContext<
     PickerValue,
     TimeViewWithMeridiem
   >();
@@ -199,7 +199,7 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
             data-testid="hours"
             tabIndex={-1}
             variant="h3"
-            onClick={() => onViewChange('hours')}
+            onClick={() => setView('hours')}
             selected={view === 'hours'}
             value={formatSection(ampm ? 'hours12h' : 'hours24h')}
           />
@@ -211,7 +211,7 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
             data-testid="minutes"
             tabIndex={-1}
             variant="h3"
-            onClick={() => onViewChange('minutes')}
+            onClick={() => setView('minutes')}
             selected={view === 'minutes'}
             value={formatSection('minutes')}
           />
@@ -222,7 +222,7 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
           <PickersToolbarButton
             data-testid="seconds"
             variant="h3"
-            onClick={() => onViewChange('seconds')}
+            onClick={() => setView('seconds')}
             selected={view === 'seconds'}
             value={formatSection('seconds')}
           />

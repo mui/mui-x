@@ -4,7 +4,7 @@ import {
   PickerActionsContext,
   PickerActionsContextValue,
 } from '../internals/components/PickerProvider';
-import { PickerValidValue, PickerValue } from '../internals/models';
+import { DateOrTimeViewWithMeridiem, PickerValidValue, PickerValue } from '../internals/models';
 
 /**
  * Returns a subset of the context passed by the picker wrapping the current component.
@@ -12,10 +12,12 @@ import { PickerValidValue, PickerValue } from '../internals/models';
  */
 export const usePickerActionsContext = <
   TValue extends PickerValidValue = PickerValue,
+  TView extends DateOrTimeViewWithMeridiem = DateOrTimeViewWithMeridiem,
   TError = string,
 >() => {
   const value = React.useContext(PickerActionsContext) as PickerActionsContextValue<
     TValue,
+    TView,
     TError
   > | null;
   if (value == null) {
