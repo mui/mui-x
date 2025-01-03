@@ -17,11 +17,14 @@ import { renderDateViewCalendar } from '../dateViewRenderers';
 import { resolveDateFormat } from '../internals/utils/date-utils';
 import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalization';
 import { PickerLayoutOwnerState } from '../PickersLayout';
+import { PickersActionBarAction } from '../PickersActionBar';
 
 type DesktopDatePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   props: DesktopDatePickerProps<TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
+
+const emptyActions: PickersActionBarAction[] = [];
 
 /**
  * Demos:
@@ -78,7 +81,7 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
         ...defaultizedProps.slotProps?.toolbar,
       },
       actionBar: (ownerState: PickerLayoutOwnerState) => ({
-        actions: [],
+        actions: emptyActions,
         ...resolveComponentProps(defaultizedProps.slotProps?.actionBar, ownerState),
       }),
     },
