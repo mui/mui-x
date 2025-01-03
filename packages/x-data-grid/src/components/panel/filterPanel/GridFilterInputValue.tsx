@@ -53,7 +53,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
       filterTimeout.start(rootProps.filterDebounceMs, () => {
         const newItem = {
           ...item,
-          value: type === 'number' && !isNaN(Number(value)) ? Number(value) : value,
+          value: type === 'number' && !Number.isNaN(Number(value)) ? Number(value) : value,
           fromInput: id!,
         };
         applyValue(newItem);
