@@ -1,4 +1,4 @@
-type Ref = React.RefCallback<HTMLElement> | React.RefObject<HTMLElement> | null;
+type Ref<T = HTMLElement> = React.RefCallback<T | null> | React.RefObject<T | null> | null;
 
 export type BadgeProps = {
   badgeContent?: React.ReactNode;
