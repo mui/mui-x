@@ -81,11 +81,5 @@
     },
     "value": { "description": "The selected value. Used when the component is controlled." }
   },
-  "classDescriptions": {
-    "root": { "description": "Styles applied to the root element." },
-    "separator": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the separator element"
-    }
-  }
+  "classDescriptions": {}
 }

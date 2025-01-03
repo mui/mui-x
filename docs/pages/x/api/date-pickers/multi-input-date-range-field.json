@@ -99,20 +99,7 @@
     "import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';",
     "import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro';"
   ],
-  "classes": [
-    {
-      "key": "root",
-      "className": "MuiMultiInputDateRangeField-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "separator",
-      "className": "MuiMultiInputDateRangeField-separator",
-      "description": "Styles applied to the separator element.",
-      "isGlobal": false
-    }
-  ],
+  "classes": [],
   "spread": true,
   "themeDefaultProps": true,
   "muiName": "MuiMultiInputDateRangeField",

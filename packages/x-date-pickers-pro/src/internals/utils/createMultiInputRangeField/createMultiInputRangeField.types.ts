@@ -4,20 +4,18 @@ import type { TextFieldProps } from '@mui/material/TextField';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { PickersTextFieldProps } from '@mui/x-date-pickers/PickersTextField';
 import { FieldOwnerState } from '@mui/x-date-pickers/models';
-import { PickerManagerFieldInternalProps } from '@mui/x-date-pickers/internals';
-import { MultiInputFieldRefs, RangeFieldSeparatorProps, RangePosition } from '../models';
-import { MultiInputRangeFieldClasses } from './multiInputRangeFieldClasses';
-import { PickerAnyRangeManager } from '../internals/models/managers';
+import {
+  PickerManagerEnableAccessibleFieldDOMStructure,
+  PickerManagerFieldInternalProps,
+} from '@mui/x-date-pickers/internals';
+import { MultiInputFieldRefs, RangeFieldSeparatorProps, RangePosition } from '../../../models';
+import { PickerAnyRangeManager } from '../../models/managers';
 
 export type MultiInputRangeFieldProps<TManager extends PickerAnyRangeManager> =
   MultiInputFieldRefs &
     RangeFieldSeparatorProps &
     Omit<PickerManagerFieldInternalProps<TManager>, 'unstableFieldRef' | 'clearable' | 'onClear'> &
     Omit<StackProps, 'position' | keyof PickerManagerFieldInternalProps<TManager>> & {
-      /**
-       * The manager for the used value type.
-       */
-      manager: TManager;
       /**
        * If `true`, the field is focused during the first mount.
        * @default false
@@ -70,3 +68,24 @@ export interface MultiInputRangeFieldSlotProps {
   >;
   separator?: SlotComponentPropsFromProps<TypographyProps, {}, FieldOwnerState>;
 }
+
+export interface MultiInputRangeFieldClasses {
+  /** Styles applied to the root element. */
+  root: string;
+  /** Styles applied to the separator element. */
+  separator: string;
+}
+
+export interface CreateMultiInputRangeFieldParameters<TManager extends PickerAnyRangeManager> {
+  name: string;
+  getUtilityClass: (slot: string) => string;
+  useManager: (
+    params: RangeFieldSeparatorProps & {
+      enableAccessibleFieldDOMStructure: PickerManagerEnableAccessibleFieldDOMStructure<TManager>;
+    },
+  ) => TManager;
+}
+
+export type CreateMultiInputRangeFieldReturnValue<TManager extends PickerAnyRangeManager> = (
+  props: MultiInputRangeFieldProps<TManager> & React.RefAttributes<HTMLDivElement>,
+) => React.JSX.Element;

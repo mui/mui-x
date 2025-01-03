@@ -1,24 +1,27 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useThemeProps from '@mui/system/useThemeProps';
 import { useDateTimeRangeManager, UseDateTimeRangeManagerReturnValue } from '../managers';
-import { MultiInputRangeField } from '../MultiInputRangeField/MultiInputRangeField';
-import { MultiInputRangeFieldProps, MultiInputRangeFieldClasses } from '../MultiInputRangeField';
+import {
+  // The alias is needed to have the doc gen working.
+  createMultiInputRangeField as createMultiInputDateTimeRangeField,
+  MultiInputRangeFieldProps,
+} from '../internals/utils/createMultiInputRangeField';
+import {
+  getMultiInputDateTimeRangeFieldUtilityClass,
+  MultiInputDateTimeRangeFieldClasses,
+} from './multiInputDateTimeRangeFieldClasses';
 
 export interface MultiInputDateTimeRangeFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends Omit<
-    MultiInputRangeFieldProps<
-      UseDateTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure>
-    >,
-    'manager'
+> extends MultiInputRangeFieldProps<
+    UseDateTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure>
   > {
   // We need to redefine the classes here, otherwise we don't have the doc generation.
   /**
    * Override or extend the styles applied to the component.
    */
-  classes?: Partial<MultiInputRangeFieldClasses>;
+  classes?: Partial<MultiInputDateTimeRangeFieldClasses>;
 }
 
 type MultiInputDateTimeRangeFieldComponent = (<
@@ -38,20 +41,10 @@ type MultiInputDateTimeRangeFieldComponent = (<
  *
  * - [MultiInputDateTimeRangeField API](https://mui.com/x/api/multi-input-date-time-range-field/)
  */
-const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTimeRangeField<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  props: MultiInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
-  ref: React.Ref<HTMLDivElement>,
-) {
-  const manager = useDateTimeRangeManager(props);
-
-  const themeProps = useThemeProps({
-    props,
-    name: 'MuiMultiInputDateTimeRangeField',
-  });
-
-  return <MultiInputRangeField {...themeProps} manager={manager} ref={ref} />;
+const MultiInputDateTimeRangeField = createMultiInputDateTimeRangeField({
+  name: 'MuiMultiInputDateTimeRangeField',
+  getUtilityClass: getMultiInputDateTimeRangeFieldUtilityClass,
+  useManager: useDateTimeRangeManager,
 }) as MultiInputDateTimeRangeFieldComponent;
 
 MultiInputDateTimeRangeField.propTypes = {

@@ -1,21 +1,26 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useThemeProps from '@mui/system/useThemeProps';
 import { useTimeRangeManager, UseTimeRangeManagerReturnValue } from '../managers';
-import { MultiInputRangeField } from '../MultiInputRangeField/MultiInputRangeField';
-import { MultiInputRangeFieldProps, MultiInputRangeFieldClasses } from '../MultiInputRangeField';
+import {
+  // The alias is needed to have the doc gen working.
+  createMultiInputRangeField as createMultiInputTimeRangeField,
+  MultiInputRangeFieldProps,
+} from '../internals/utils/createMultiInputRangeField';
+import {
+  getMultiInputTimeRangeFieldUtilityClass,
+  MultiInputTimeRangeFieldClasses,
+} from './multiInputTimeRangeFieldClasses';
 
 export interface MultiInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends Omit<
-    MultiInputRangeFieldProps<UseTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure>>,
-    'manager'
+  extends MultiInputRangeFieldProps<
+    UseTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure>
   > {
   // We need to redefine the classes here, otherwise we don't have the doc generation.
   /**
    * Override or extend the styles applied to the component.
    */
-  classes?: Partial<MultiInputRangeFieldClasses>;
+  classes?: Partial<MultiInputTimeRangeFieldClasses>;
 }
 
 type MultiInputTimeRangeFieldComponent = (<
@@ -35,20 +40,10 @@ type MultiInputTimeRangeFieldComponent = (<
  *
  * - [MultiInputTimeRangeField API](https://mui.com/x/api/multi-input-time-range-field/)
  */
-const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeField<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  props: MultiInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
-  ref: React.Ref<HTMLDivElement>,
-) {
-  const manager = useTimeRangeManager(props);
-
-  const themeProps = useThemeProps({
-    props,
-    name: 'MuiMultiInputTimeRangeField',
-  });
-
-  return <MultiInputRangeField {...themeProps} manager={manager} ref={ref} />;
+const MultiInputTimeRangeField = createMultiInputTimeRangeField({
+  name: 'MuiMultiInputTimeRangeField',
+  getUtilityClass: getMultiInputTimeRangeFieldUtilityClass,
+  useManager: useTimeRangeManager,
 }) as MultiInputTimeRangeFieldComponent;
 
 MultiInputTimeRangeField.propTypes = {

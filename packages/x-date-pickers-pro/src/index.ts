@@ -7,7 +7,6 @@ export * from './SingleInputDateRangeField';
 export * from './SingleInputTimeRangeField';
 export * from './SingleInputDateTimeRangeField';
 
-export * from './MultiInputRangeField';
 export * from './MultiInputDateRangeField';
 export * from './MultiInputTimeRangeField';
 export * from './MultiInputDateTimeRangeField';

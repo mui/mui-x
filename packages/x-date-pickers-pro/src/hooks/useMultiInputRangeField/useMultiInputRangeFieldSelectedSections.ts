@@ -8,7 +8,7 @@ import {
   UseFieldInternalProps,
 } from '@mui/x-date-pickers/internals';
 import { FieldRef, FieldSelectedSections } from '@mui/x-date-pickers/models';
-import { MultiInputFieldRefs } from '../models';
+import { MultiInputFieldRefs } from '../../models';
 
 interface UseMultiInputRangeFieldSelectedSectionsParameters
   extends Pick<
