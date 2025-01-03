@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useChartContext } from '../context/ChartProvider';
 
-export function useSvgRef(): React.RefObject<SVGSVGElement> {
+export function useSvgRef(): React.RefObject<SVGSVGElement | null> {
   const context = useChartContext();
 
   if (!context) {

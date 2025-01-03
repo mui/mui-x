@@ -30,14 +30,10 @@ export interface BaseTimePickerSlotProps extends TimeClockSlotProps {
   toolbar?: ExportedTimePickerToolbarProps;
 }
 
-export type TimePickerViewRenderers<
-  TView extends TimeViewWithMeridiem,
-  TAdditionalProps extends {} = {},
-> = PickerViewRendererLookup<
+export type TimePickerViewRenderers<TView extends TimeViewWithMeridiem> = PickerViewRendererLookup<
   PickerValue,
   TView,
-  TimeViewRendererProps<TView, BaseClockProps<TView>>,
-  TAdditionalProps
+  TimeViewRendererProps<TView, BaseClockProps<TView>>
 >;
 
 export interface BaseTimePickerProps<TView extends TimeViewWithMeridiem>

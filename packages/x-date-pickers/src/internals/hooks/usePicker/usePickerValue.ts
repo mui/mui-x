@@ -2,13 +2,8 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useOpenState } from '../useOpenState';
 import { useLocalizationContext, useUtils } from '../useUtils';
-import { FieldChangeHandlerContext } from '../useField';
 import { useValidation } from '../../../validation';
 import { PickerChangeHandlerContext, InferError } from '../../../models';
-import {
-  PickerShortcutChangeImportance,
-  PickersShortcutsItemContext,
-} from '../../../PickersShortcuts';
 import {
   UsePickerValueProps,
   UsePickerValueParams,
@@ -16,7 +11,6 @@ import {
   PickerValueUpdateAction,
   UsePickerValueState,
   UsePickerValueFieldResponse,
-  UsePickerValueLayoutResponse,
   UsePickerValueViewsResponse,
   PickerSelectionState,
   PickerValueUpdaterParams,
@@ -24,6 +18,7 @@ import {
   UsePickerValueProviderParams,
   UsePickerValueActionsContextValue,
   UsePickerValuePrivateContextValue,
+  SetValueActionOptions,
 } from './usePickerValue.types';
 import { useValueWithTimezone } from '../useValueWithTimezone';
 import { PickerValidValue } from '../../models';
@@ -38,11 +33,6 @@ const shouldPublishValue = <TValue extends PickerValidValue, TError>(
   const { action, hasChanged, dateState, isControlled } = params;
 
   const isCurrentValueTheDefaultValue = !isControlled && !dateState.hasBeenModifiedSinceMount;
-
-  // The field is responsible for only calling `onChange` when needed.
-  if (action.name === 'setValueFromField') {
-    return true;
-  }
 
   if (action.name === 'setValueFromAction') {
     // If the component is not controlled, and the value has not been modified since the mount,
@@ -67,7 +57,7 @@ const shouldPublishValue = <TValue extends PickerValidValue, TError>(
     return hasChanged(dateState.lastPublishedValue);
   }
 
-  if (action.name === 'setValueFromShortcut') {
+  if (action.name === 'setExplicitValue') {
     // On the first view,
     // If the value is not controlled, then clicking on any value (including the one equal to `defaultValue`) should call `onChange`
     if (isCurrentValueTheDefaultValue) {
@@ -115,8 +105,8 @@ const shouldCommitValue = <TValue extends PickerValidValue, TError>(
     return hasChanged(dateState.lastCommittedValue);
   }
 
-  if (action.name === 'setValueFromShortcut') {
-    return action.changeImportance === 'accept' && hasChanged(dateState.lastCommittedValue);
+  if (action.name === 'setExplicitValue') {
+    return action.options.changeImportance === 'accept' && hasChanged(dateState.lastCommittedValue);
   }
 
   return false;
@@ -138,8 +128,8 @@ const shouldClosePicker = <TValue extends PickerValidValue, TError>(
     return action.selectionState === 'finish' && closeOnSelect;
   }
 
-  if (action.name === 'setValueFromShortcut') {
-    return action.changeImportance === 'accept';
+  if (action.name === 'setExplicitValue') {
+    return action.options.changeImportance === 'accept';
   }
 
   return false;
@@ -290,16 +280,18 @@ export const usePickerValue = <
     const getContext = (): PickerChangeHandlerContext<TError> => {
       if (!cachedContext) {
         const validationError =
-          action.name === 'setValueFromField'
-            ? action.context.validationError
+          action.name === 'setExplicitValue' && action.options.validationError != null
+            ? action.options.validationError
             : getValidationErrorForNewValue(action.value);
 
         cachedContext = {
           validationError,
         };
 
-        if (action.name === 'setValueFromShortcut') {
-          cachedContext.shortcut = action.shortcut;
+        if (action.name === 'setExplicitValue') {
+          if (action.options.shortcut) {
+            cachedContext.shortcut = action.options.shortcut;
+          }
         }
       }
 
@@ -345,30 +337,6 @@ export const usePickerValue = <
       updateDate({ name: 'setValueFromView', value: newValue, selectionState }),
   );
 
-  const handleSelectShortcut = useEventCallback(
-    (
-      newValue: TValue,
-      changeImportance: PickerShortcutChangeImportance,
-      shortcut: PickersShortcutsItemContext,
-    ) =>
-      updateDate({
-        name: 'setValueFromShortcut',
-        value: newValue,
-        changeImportance,
-        shortcut,
-      }),
-  );
-
-  const handleChangeFromField = useEventCallback(
-    (newValue: TValue, context: FieldChangeHandlerContext<TError>) =>
-      updateDate({ name: 'setValueFromField', value: newValue, context }),
-  );
-
-  const fieldResponse: UsePickerValueFieldResponse<TValue, TError> = {
-    value: dateState.draft,
-    onChange: handleChangeFromField,
-  };
-
   const valueWithoutError = React.useMemo(
     () => valueManager.cleanValue(utils, dateState.draft),
     [utils, valueManager, dateState.draft],
@@ -392,12 +360,13 @@ export const usePickerValue = <
     return !valueManager.hasError(error);
   };
 
-  const layoutResponse: UsePickerValueLayoutResponse<TValue> = {
-    value: valueWithoutError,
-    onChange: handleChange,
-    onSelectShortcut: handleSelectShortcut,
-    isValid,
-  };
+  const setValue = useEventCallback((newValue: TValue, options?: SetValueActionOptions<TError>) =>
+    updateDate({
+      name: 'setExplicitValue',
+      value: newValue,
+      options: { changeImportance: 'accept', ...options },
+    }),
+  );
 
   const clearValue = useEventCallback(() =>
     updateDate({
@@ -439,23 +408,31 @@ export const usePickerValue = <
     });
   });
 
-  const actionsContextValue = React.useMemo<UsePickerValueActionsContextValue>(
+  const fieldResponse: UsePickerValueFieldResponse<TValue, TError> = {
+    value: dateState.draft,
+    onChange: (newValue, context) =>
+      setValue(newValue, { validationError: context.validationError }),
+  };
+
+  const actionsContextValue = React.useMemo<UsePickerValueActionsContextValue<TValue, TError>>(
     () => ({
+      setValue,
       setOpen,
       clearValue,
       setValueToToday,
       acceptValueChanges,
       cancelValueChanges,
     }),
-    [setOpen, clearValue, setValueToToday, acceptValueChanges, cancelValueChanges],
+    [setValue, setOpen, clearValue, setValueToToday, acceptValueChanges, cancelValueChanges],
   );
 
-  const contextValue = React.useMemo<UsePickerValueContextValue>(
+  const contextValue = React.useMemo<UsePickerValueContextValue<TValue, TError>>(
     () => ({
       ...actionsContextValue,
       open,
+      value: dateState.draft,
     }),
-    [actionsContextValue, open],
+    [actionsContextValue, open, dateState.draft],
   );
 
   const privateContextValue = React.useMemo<UsePickerValuePrivateContextValue>(
@@ -463,17 +440,17 @@ export const usePickerValue = <
     [dismissViews],
   );
 
-  const providerParams: UsePickerValueProviderParams<TValue> = {
+  const providerParams: UsePickerValueProviderParams<TValue, TError> = {
     value: valueWithoutError,
     contextValue,
     actionsContextValue,
     privateContextValue,
+    isValidContextValue: isValid,
   };
 
   return {
     fieldProps: fieldResponse,
     viewProps: viewResponse,
-    layoutProps: layoutResponse,
     provider: providerParams,
   };
 };
