@@ -8,7 +8,12 @@ import {
   PickerManagerEnableAccessibleFieldDOMStructure,
   PickerManagerFieldInternalProps,
 } from '@mui/x-date-pickers/internals';
-import { MultiInputFieldRefs, RangeFieldSeparatorProps, RangePosition } from '../../../models';
+import {
+  FieldType,
+  MultiInputFieldRefs,
+  RangeFieldSeparatorProps,
+  RangePosition,
+} from '../../../models';
 import { PickerAnyRangeManager } from '../../models/managers';
 
 export type MultiInputRangeFieldProps<TManager extends PickerAnyRangeManager> =
@@ -86,6 +91,6 @@ export interface CreateMultiInputRangeFieldParameters<TManager extends PickerAny
   ) => TManager;
 }
 
-export type CreateMultiInputRangeFieldReturnValue<TManager extends PickerAnyRangeManager> = (
+export type CreateMultiInputRangeFieldReturnValue<TManager extends PickerAnyRangeManager> = ((
   props: MultiInputRangeFieldProps<TManager> & React.RefAttributes<HTMLDivElement>,
-) => React.JSX.Element;
+) => React.JSX.Element) & { fieldType?: FieldType };

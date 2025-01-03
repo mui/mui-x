@@ -54,7 +54,7 @@ export function createMultiInputRangeField<TManager extends PickerAnyRangeManage
     lineHeight: '1.4375em', // 23px
   });
 
-  return React.forwardRef(function MultiInputRangeField(
+  const MultiInputRangeField = React.forwardRef(function MultiInputRangeField(
     props: MultiInputRangeFieldProps<TManager>,
     ref: React.Ref<HTMLDivElement>,
   ) {
@@ -136,4 +136,8 @@ export function createMultiInputRangeField<TManager extends PickerAnyRangeManage
       </Root>
     );
   } as any) as any;
+
+  MultiInputRangeField.fieldType = 'multi-input';
+
+  return MultiInputRangeField;
 }
