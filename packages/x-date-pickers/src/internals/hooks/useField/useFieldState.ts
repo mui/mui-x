@@ -35,20 +35,10 @@ import { PickerValidValue } from '../../models';
 
 export const useFieldState = <
   TValue extends PickerValidValue,
-  TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-  TFieldInternalPropsWithDefaults extends UseFieldInternalProps<
-    TValue,
-    TEnableAccessibleFieldDOMStructure,
-    TError
-  >,
+  TFieldInternalPropsWithDefaults extends UseFieldInternalProps<TValue, any, TError>,
 >(
-  parameters: UseFieldStateParameters<
-    TValue,
-    TEnableAccessibleFieldDOMStructure,
-    TError,
-    TFieldInternalPropsWithDefaults
-  >,
+  parameters: UseFieldStateParameters<TValue, TError, TFieldInternalPropsWithDefaults>,
 ): UseFieldStateReturnValue<TValue> => {
   const utils = useUtils();
   const translations = usePickerTranslations();
@@ -408,21 +398,10 @@ export interface UpdateSectionValueParams<TValue extends PickerValidValue> {
 
 export interface UseFieldStateParameters<
   TValue extends PickerValidValue,
-  TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-  TFieldInternalPropsWithDefaults extends UseFieldInternalProps<
-    TValue,
-    TEnableAccessibleFieldDOMStructure,
-    TError
-  >,
+  TFieldInternalPropsWithDefaults extends UseFieldInternalProps<TValue, any, TError>,
 > {
-  manager: PickerManager<
-    TValue,
-    TEnableAccessibleFieldDOMStructure,
-    TError,
-    any,
-    TFieldInternalPropsWithDefaults
-  >;
+  manager: PickerManager<TValue, any, TError, any, TFieldInternalPropsWithDefaults>;
   internalPropsWithDefaults: TFieldInternalPropsWithDefaults;
 }
 
