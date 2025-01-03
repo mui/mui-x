@@ -2,7 +2,7 @@ import * as fse from 'fs-extra';
 import { expect } from 'chai';
 import * as path from 'path';
 import * as childProcess from 'child_process';
-import { chromium } from '@playwright/test';
+import { chromium, expect as pwExpect } from '@playwright/test';
 import materialPackageJson from '@mui/material/package.json';
 
 function sleep(timeoutMS: number | undefined) {
@@ -98,14 +98,18 @@ async function main() {
   // prepare screenshots
   await fse.emptyDir(screenshotDir);
 
-  async function navigateToTest(testIndex: number) {
+  async function navigateToTest(testIndex: number, pathName: string) {
     // Use client-side routing which is much faster than full page navigation via page.goto().
     // Could become an issue with test isolation.
     // If tests are flaky due to global pollution switch to page.goto(route);
     // puppeteers built-in click() times out
-    return page.$eval(`#tests li:nth-of-type(${testIndex}) a`, (link) => {
+    await page.$eval(`#tests li:nth-of-type(${testIndex}) a`, (link) => {
       (link as HTMLAnchorElement).click();
     });
+    await pwExpect(page.getByRole('link', { includeHidden: true, name: pathName })).toHaveAttribute(
+      'aria-current',
+      'true',
+    );
   }
 
   describe('visual regressions', () => {
@@ -140,13 +144,13 @@ async function main() {
         }
 
         try {
-          await navigateToTest(index + 1);
+          await navigateToTest(index + 1, pathURL);
         } catch (error) {
           // When one demo crashes, the page becomes empty and there are no links to demos,
           // so navigation to the next demo throws an error.
           // Reloading the page fixes this.
           await page.reload();
-          await navigateToTest(index + 1);
+          await navigateToTest(index + 1, pathURL);
         }
 
         const screenshotPath = path.resolve(screenshotDir, `${route.replace(baseUrl, '.')}.png`);
@@ -172,7 +176,7 @@ async function main() {
           });
         }
 
-        if (/^\docs-charts-.*/.test(pathURL)) {
+        if (/^\/docs-charts-.*/.test(pathURL)) {
           // Run one tick of the clock to get the final animation state
           await sleep(10);
         }

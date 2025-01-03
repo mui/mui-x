@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router';
+import { createBrowserRouter, RouterProvider, Outlet, NavLink } from 'react-router';
 import TestViewer from 'test/regressions/TestViewer';
 import { useFakeTimers } from 'sinon';
 import { Globals } from '@react-spring/web';
@@ -124,7 +124,18 @@ if (unusedBlacklistPatterns.size > 0) {
   );
 }
 
-function App() {
+const suiteTestsMap = tests.reduce(
+  (acc, test) => {
+    if (!acc[test.suite]) {
+      acc[test.suite] = [];
+    }
+    acc[test.suite].push(test);
+    return acc;
+  },
+  {} as Record<string, Test[]>,
+);
+
+function Root() {
   function computeIsDev() {
     if (window.location.hash === '#dev') {
       return true;
@@ -149,53 +160,9 @@ function App() {
   function computePath(test: Test) {
     return `/${test.suite}/${test.name}`;
   }
-
-  const suiteTestsMap = React.useMemo(
-    () =>
-      tests.reduce(
-        (acc, test) => {
-          if (!acc[test.suite]) {
-            acc[test.suite] = [];
-          }
-          acc[test.suite].push(test);
-          return acc;
-        },
-        {} as Record<string, Test[]>,
-      ),
-    [],
-  );
-
   return (
-    <Router>
-      <Routes>
-        {Object.keys(suiteTestsMap).map((suite) => {
-          return (
-            <Route key={suite} path={suite}>
-              {suiteTestsMap[suite].map((test) => {
-                const TestCase = test.case;
-                if (TestCase === undefined) {
-                  console.warn('Missing test.case for ', test);
-                  return null;
-                }
-
-                const isDataGridTest =
-                  suite.indexOf('docs-data-grid') === 0 || suite === 'test-regressions-data-grid';
-                return (
-                  <Route
-                    key={test.name}
-                    path={test.name}
-                    element={
-                      <TestViewer isDataGridTest={isDataGridTest}>
-                        <TestCase />
-                      </TestViewer>
-                    }
-                  />
-                );
-              })}
-            </Route>
-          );
-        })}
-      </Routes>
+    <React.Fragment>
+      <Outlet />
       <div hidden={!isDev}>
         <p>
           Devtools can be enabled by appending <code>#dev</code> in the address bar or disabled by
@@ -210,7 +177,7 @@ function App() {
                 const path = computePath(test);
                 return (
                   <li key={path}>
-                    <Link to={path}>{path}</Link>
+                    <NavLink to={path}>{path}</NavLink>
                   </li>
                 );
               })}
@@ -218,8 +185,34 @@ function App() {
           </nav>
         </details>
       </div>
-    </Router>
+    </React.Fragment>
   );
+}
+
+function App() {
+  const routes = createBrowserRouter([
+    {
+      path: '/',
+      element: <Root />,
+      children: Object.keys(suiteTestsMap).map((suite) => {
+        const isDataGridTest =
+          suite.indexOf('docs-data-grid') === 0 || suite === 'test-regressions-data-grid';
+        return {
+          path: suite,
+          children: suiteTestsMap[suite].map((test) => ({
+            path: test.name,
+            element: (
+              <TestViewer isDataGridTest={isDataGridTest}>
+                <test.case />
+              </TestViewer>
+            ),
+          })),
+        };
+      }),
+    },
+  ]);
+
+  return <RouterProvider router={routes} />;
 }
 
 ReactDOM.createRoot(document.getElementById('react-root')!).render(<App />);
