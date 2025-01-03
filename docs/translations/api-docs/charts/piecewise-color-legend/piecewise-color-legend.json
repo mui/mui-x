@@ -8,27 +8,18 @@
       "description": "The id of the axis item with the color configuration to represent."
     },
     "classes": { "description": "Override or extend the styles applied to the component." },
-    "direction": {
-      "description": "The direction of the legend layout. The default depends on the chart."
-    },
-    "hideFirst": {
-      "description": "Hide the first item of the legend, corresponding to the [-infinity, min] piece."
-    },
-    "hideLast": {
-      "description": "Hide the last item of the legend, corresponding to the [max, +infinity] piece."
-    },
-    "itemGap": { "description": "Space between two legend items (in px)." },
-    "itemMarkHeight": { "description": "Height of the item mark (in px)." },
-    "itemMarkWidth": { "description": "Width of the item mark (in px)." },
+    "direction": { "description": "The direction of the legend layout." },
     "labelFormatter": {
       "description": "Format the legend labels.",
       "typeDescriptions": {
         "params": "The bound of the piece to format.",
-        "string | null": "The displayed label, or <code>null</code> to skip the item."
+        "string | null": "The displayed label, <code>&#39;&#39;</code> to skip the label but show the color mark, or <code>null</code> to skip it entirely."
       }
     },
-    "labelStyle": { "description": "Style applied to legend labels." },
-    "markGap": { "description": "Space between the mark and the label (in px)." },
+    "labelPosition": {
+      "description": "Where to position the labels relative to the gradient. The positions <code>&#39;below&#39;</code> and <code>&#39;left&#39;</code>, as well as <code>&#39;above&#39;</code> and <code>&#39;right&#39;</code> are equivalent."
+    },
+    "markType": { "description": "The type of the mark." },
     "onItemClick": {
       "description": "Callback fired when a legend item is clicked.",
       "typeDescriptions": {
@@ -36,28 +27,48 @@
         "legendItem": "The legend item data.",
         "index": "The index of the clicked legend item."
       }
-    },
-    "padding": {
-      "description": "Legend padding (in px). Can either be a single number, or an object with top, left, bottom, right properties."
-    },
-    "position": { "description": "The position of the legend." }
+    }
   },
   "classDescriptions": {
-    "column": {
+    "above": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the legend with column layout"
+      "nodeName": "the legend with the labels above the color marks"
     },
-    "itemBackground": {
+    "below": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the item background"
+      "nodeName": "the legend with the labels below the color marks"
     },
+    "extremes": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the legend with the labels on the extremes of the color marks"
+    },
+    "horizontal": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the legend in row layout"
+    },
+    "item": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the list items" },
     "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the series label" },
-    "mark": { "description": "Styles applied to {{nodeName}}.", "nodeName": "series mark element" },
-    "root": { "description": "Styles applied to the root element." },
-    "row": {
+    "left": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the legend with row layout"
+      "nodeName": "the legend with the labels on the left of the color marks"
     },
-    "series": { "description": "Styles applied to {{nodeName}}.", "nodeName": "a series element" }
+    "mark": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the marks" },
+    "maxLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the list item that renders the <code>maxLabel</code>"
+    },
+    "minLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the list item that renders the <code>minLabel</code>"
+    },
+    "right": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the legend with the labels on the right of the color marks"
+    },
+    "root": { "description": "Styles applied to the root element." },
+    "vertical": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the legend in column layout"
+    }
   }
 }

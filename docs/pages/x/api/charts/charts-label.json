@@ -1,0 +1,25 @@
+{
+  "props": { "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } } },
+  "name": "ChartsLabel",
+  "imports": [
+    "import { ChartsLabel } from '@mui/x-charts/ChartsLabel';",
+    "import { ChartsLabel } from '@mui/x-charts';",
+    "import { ChartsLabel } from '@mui/x-charts-pro';"
+  ],
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiChartsLabel-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "spread": true,
+  "themeDefaultProps": true,
+  "muiName": "MuiChartsLabel",
+  "forwardsRefTo": "HTMLSpanElement",
+  "filename": "/packages/x-charts/src/ChartsLabel/ChartsLabel.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/legend/\">Charts - Legend</a></li></ul>",
+  "cssComponent": false
+}

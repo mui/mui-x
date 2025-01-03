@@ -1,0 +1,59 @@
+{
+  "props": {
+    "gradientId": { "type": { "name": "string" }, "required": true },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "direction": {
+      "type": { "name": "enum", "description": "'vertical'<br>&#124;&nbsp;'horizontal'" },
+      "default": "'horizontal'"
+    },
+    "reverse": { "type": { "name": "bool" } },
+    "rotate": { "type": { "name": "bool" } },
+    "thickness": { "type": { "name": "number" }, "default": "12" }
+  },
+  "name": "ChartsLabelGradient",
+  "imports": [
+    "import { ChartsLabelGradient } from '@mui/x-charts/ChartsLabel';",
+    "import { ChartsLabelGradient } from '@mui/x-charts';",
+    "import { ChartsLabelGradient } from '@mui/x-charts-pro';"
+  ],
+  "classes": [
+    {
+      "key": "fill",
+      "className": "MuiChartsLabelGradient-fill",
+      "description": "Styles applied to the element containing the gradient's fill value",
+      "isGlobal": false
+    },
+    {
+      "key": "horizontal",
+      "className": "MuiChartsLabelGradient-horizontal",
+      "description": "Styles applied when direction is \"row\".",
+      "isGlobal": false
+    },
+    {
+      "key": "mask",
+      "className": "MuiChartsLabelGradient-mask",
+      "description": "Styles applied to the \"mask\" that gives shape to the gradient.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiChartsLabelGradient-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "vertical",
+      "className": "MuiChartsLabelGradient-vertical",
+      "description": "Styles applied when direction is \"column\".",
+      "isGlobal": false
+    }
+  ],
+  "spread": true,
+  "themeDefaultProps": true,
+  "muiName": "MuiChartsLabelGradient",
+  "forwardsRefTo": "HTMLDivElement",
+  "filename": "/packages/x-charts/src/ChartsLabel/ChartsLabelGradient.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/legend/\">Charts - Legend</a></li></ul>",
+  "cssComponent": false
+}

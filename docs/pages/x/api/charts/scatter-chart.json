@@ -158,7 +158,7 @@
   ],
   "classes": [],
   "spread": true,
-  "themeDefaultProps": true,
+  "themeDefaultProps": false,
   "muiName": "MuiScatterChart",
   "forwardsRefTo": "SVGSVGElement",
   "filename": "/packages/x-charts/src/ScatterChart/ScatterChart.tsx",

@@ -11,3 +11,4 @@ export {
   useBarSeries as unstable_useBarSeries,
   useScatterSeries as unstable_useScatterSeries,
 } from './useSeries';
+export * from './useLegend';

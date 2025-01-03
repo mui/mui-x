@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/describeConformance';
+import { ChartsLabelMark, labelMarkClasses } from '@mui/x-charts/ChartsLabel';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { ChartsLabelMark } from '@mui/x-charts/ChartsLabel/ChartsLabelMark';
-import { labelMarkClasses } from '@mui/x-charts/ChartsLabel/labelMarkClasses';
 
 describe('<ChartsLabelMark />', () => {
   const { render } = createRenderer();

@@ -21,6 +21,7 @@ export default function StraightAnglePieChart() {
         },
       ]}
       height={300}
+      width={300}
     />
   );
 }

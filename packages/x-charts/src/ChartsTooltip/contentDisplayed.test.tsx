@@ -1,15 +1,16 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { createRenderer, fireEvent } from '@mui/internal-test-utils';
-import { BarChart } from '@mui/x-charts/BarChart';
+import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 
-const config = {
+const config: Partial<BarChartProps> = {
   dataset: [
     { x: 'A', v1: 4, v2: 2 },
     { x: 'B', v1: 1, v2: 1 },
   ],
   margin: { top: 0, left: 0, bottom: 0, right: 0 },
+  hideLegend: true,
   width: 400,
   height: 400,
 };
