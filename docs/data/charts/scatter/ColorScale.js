@@ -247,7 +247,7 @@ const series = [
   },
 ].map((s) => ({
   ...s,
-  valueFormatter: (v) => `(${v.x.toFixed(1)}, ${v.y.toFixed(1)})`,
+  valueFormatter: (v) => v && `(${v.x.toFixed(1)}, ${v.y.toFixed(1)})`,
 }));
 
 function getGaussianSeriesData(mean, stdev = [0.5, 0.5], N = 50) {

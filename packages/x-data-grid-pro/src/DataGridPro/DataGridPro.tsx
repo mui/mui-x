@@ -11,6 +11,7 @@ import {
   GridValidRowModel,
 } from '@mui/x-data-grid';
 import { validateProps } from '@mui/x-data-grid/internals';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import { DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
@@ -29,7 +30,7 @@ const configuration = {
 };
 const releaseInfo = getReleaseInfo();
 
-const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValidRowModel>(
+const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowModel>(
   inProps: DataGridProProps<R>,
   ref: React.Ref<HTMLDivElement>,
 ) {
@@ -46,8 +47,8 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
         className={props.className}
         style={props.style}
         sx={props.sx}
+        {...props.slotProps?.root}
         ref={ref}
-        {...props.forwardedProps}
       >
         <GridHeader />
         <GridBody>
@@ -119,6 +120,7 @@ DataGridProRaw.propTypes = {
    */
   autosizeOptions: PropTypes.shape({
     columns: PropTypes.arrayOf(PropTypes.string),
+    disableColumnVirtualization: PropTypes.bool,
     expand: PropTypes.bool,
     includeHeaders: PropTypes.bool,
     includeOutliers: PropTypes.bool,
@@ -187,9 +189,7 @@ DataGridProRaw.propTypes = {
   /**
    * The row ids to show the detail panel.
    */
-  detailPanelExpandedRowIds: PropTypes.arrayOf(
-    PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  ),
+  detailPanelExpandedRowIds: PropTypes /* @typescript-to-proptypes-ignore */.instanceOf(Set),
   /**
    * If `true`, column autosizing on header separator double-click is disabled.
    * @default false
@@ -322,11 +322,6 @@ DataGridProRaw.propTypes = {
     quickFilterLogicOperator: PropTypes.oneOf(['and', 'or']),
     quickFilterValues: PropTypes.array,
   }),
-  /**
-   * Forwarded props for the Data Grid root element.
-   * @ignore - do not document.
-   */
-  forwardedProps: PropTypes.object,
   /**
    * Function that applies CSS classes dynamically on cells.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].

@@ -1,12 +1,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { FormControlState, useFormControl } from '@mui/material/FormControl';
+import { useFormControl } from '@mui/material/FormControl';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { refType } from '@mui/utils';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   pickersOutlinedInputClasses,
   getPickersOutlinedInputUtilityClass,
+  PickersOutlinedInputClasses,
 } from './pickersOutlinedInputClasses';
 import Outline from './Outline';
 import { PickersInputBase, PickersInputBaseProps } from '../PickersInputBase';
@@ -14,6 +15,7 @@ import {
   PickersInputBaseRoot,
   PickersInputBaseSectionsContainer,
 } from '../PickersInputBase/PickersInputBase';
+import { PickerTextFieldOwnerState } from '../PickersTextField.types';
 
 export interface PickersOutlinedInputProps extends PickersInputBaseProps {
   notched?: boolean;
@@ -23,7 +25,7 @@ const PickersOutlinedInputRoot = styled(PickersInputBaseRoot, {
   name: 'MuiPickersOutlinedInput',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: OwnerStateType }>(({ theme }) => {
+})<{ ownerState: PickerTextFieldOwnerState }>(({ theme }) => {
   const borderColor =
     theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
   return {
@@ -59,7 +61,7 @@ const PickersOutlinedInputRoot = styled(PickersInputBaseRoot, {
       // @ts-ignore
       .filter((key) => (theme.vars ?? theme).palette[key]?.main ?? false)
       .map((color) => ({
-        props: { color },
+        props: { inputColor: color },
         style: {
           [`&.${pickersOutlinedInputClasses.focused}:not(.${pickersOutlinedInputClasses.error}) .${pickersOutlinedInputClasses.notchedOutline}`]:
             {
@@ -75,11 +77,11 @@ const PickersOutlinedInputSectionsContainer = styled(PickersInputBaseSectionsCon
   name: 'MuiPickersOutlinedInput',
   slot: 'SectionsContainer',
   overridesResolver: (props, styles) => styles.sectionsContainer,
-})<{ ownerState: OwnerStateType }>({
+})<{ ownerState: PickerTextFieldOwnerState }>({
   padding: '16.5px 0',
   variants: [
     {
-      props: { size: 'small' },
+      props: { inputSize: 'small' },
       style: {
         padding: '8.5px 0',
       },
@@ -87,9 +89,7 @@ const PickersOutlinedInputSectionsContainer = styled(PickersInputBaseSectionsCon
   ],
 });
 
-const useUtilityClasses = (ownerState: OwnerStateType) => {
-  const { classes } = ownerState;
-
+const useUtilityClasses = (classes: Partial<PickersOutlinedInputClasses> | undefined) => {
   const slots = {
     root: ['root'],
     notchedOutline: ['notchedOutline'],
@@ -104,10 +104,6 @@ const useUtilityClasses = (ownerState: OwnerStateType) => {
   };
 };
 
-interface OwnerStateType
-  extends FormControlState,
-    Omit<PickersOutlinedInputProps, keyof FormControlState> {}
-
 /**
  * @ignore - internal component.
  */
@@ -120,17 +116,17 @@ const PickersOutlinedInput = React.forwardRef(function PickersOutlinedInput(
     name: 'MuiPickersOutlinedInput',
   });
 
-  const { label, autoFocus, ownerState: ownerStateProp, notched, ...other } = props;
+  const {
+    label,
+    autoFocus,
+    ownerState: ownerStateProp,
+    classes: classesProp,
+    notched,
+    ...other
+  } = props;
 
   const muiFormControl = useFormControl();
-
-  const ownerState = {
-    ...props,
-    ...ownerStateProp,
-    ...muiFormControl,
-    color: muiFormControl?.color || 'primary',
-  };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(classesProp);
 
   return (
     <PickersInputBase
@@ -150,7 +146,6 @@ const PickersOutlinedInput = React.forwardRef(function PickersOutlinedInput(
               label
             )
           }
-          ownerState={ownerState}
         />
       )}
       {...other}
