@@ -212,7 +212,7 @@ export default function ListViewEdit() {
         display: 'flex',
         flexDirection: 'column',
         maxWidth: 360,
-        maxHeight: 400,
+        height: 400,
       }}
     >
       <DataGridPro
