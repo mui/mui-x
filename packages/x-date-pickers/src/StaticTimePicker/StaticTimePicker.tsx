@@ -35,7 +35,7 @@ const StaticTimePicker = React.forwardRef(function StaticTimePicker(
   const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';
   const ampmInClock = defaultizedProps.ampmInClock ?? displayStaticWrapperAs === 'desktop';
 
-  const viewRenderers: TimePickerViewRenderers<TimeView, any> = {
+  const viewRenderers: TimePickerViewRenderers<TimeView> = {
     hours: renderTimeViewClock,
     minutes: renderTimeViewClock,
     seconds: renderTimeViewClock,

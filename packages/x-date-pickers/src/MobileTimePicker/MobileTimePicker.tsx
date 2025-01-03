@@ -46,7 +46,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<
     MobileTimePickerProps<TimeView, TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiMobileTimePicker');
 
-  const viewRenderers: TimePickerViewRenderers<TimeView, any> = {
+  const viewRenderers: TimePickerViewRenderers<TimeView> = {
     hours: renderTimeViewClock,
     minutes: renderTimeViewClock,
     seconds: renderTimeViewClock,
