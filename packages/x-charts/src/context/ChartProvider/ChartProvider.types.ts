@@ -25,7 +25,7 @@ export type ChartContextValue<
   /**
    * The ref to the <svg />.
    */
-  svgRef: React.RefObject<SVGSVGElement>;
+  svgRef: React.RefObject<SVGSVGElement | null>;
 };
 
 // export interface ChartProviderProps<TSignatures extends readonly ChartAnyPluginSignature[]> {

@@ -3,8 +3,7 @@ import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils/crea
 import { describeConformance } from 'test/utils/describeConformance';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { expect } from 'chai';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<ScatterChart />', () => {
   const { render } = createRenderer();
@@ -55,11 +54,8 @@ describe('<ScatterChart />', () => {
     height: 100,
   };
 
-  it('should show the tooltip without errors in default config', function test() {
-    if (isJSDOM) {
-      // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
-      this.skip();
-    }
+  // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
+  testSkipIf(isJSDOM)('should show the tooltip without errors in default config', () => {
     render(
       <div
         style={{
@@ -87,11 +83,7 @@ describe('<ScatterChart />', () => {
     expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(5, 5)']);
   });
 
-  it('should support dataset with missing values', async function test() {
-    if (isJSDOM) {
-      this.skip();
-    }
-
+  testSkipIf(isJSDOM)('should support dataset with missing values', async () => {
     // x from 500 to 600
     // y from 100 to 200
     const dataset = [

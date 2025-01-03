@@ -11,6 +11,7 @@ describe('<PickersActionBar />', () => {
 
   const renderWithContext = (element: React.ReactElement) => {
     const spys = {
+      setValue: spy(),
       setOpen: spy(),
       clearValue: spy(),
       setValueToToday: spy(),
