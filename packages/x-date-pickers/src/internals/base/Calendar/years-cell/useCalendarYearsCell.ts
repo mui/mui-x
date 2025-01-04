@@ -14,6 +14,8 @@ export function useCalendarYearsCell(parameters: useCalendarYearsCell.Parameters
     [utils, value, format],
   );
 
+  const isCurrent = React.useMemo(() => utils.isSameYear(value, utils.date()), [utils, value]);
+
   const onClick = useEventCallback(() => {
     ctx.selectYear(value);
   });
@@ -24,14 +26,15 @@ export function useCalendarYearsCell(parameters: useCalendarYearsCell.Parameters
         type: 'button' as const,
         role: 'radio',
         'aria-checked': ctx.isSelected,
+        'aria-current': isCurrent ? 'date' : undefined,
         children: formattedValue,
         onClick,
       });
     },
-    [formattedValue, ctx.isSelected, onClick],
+    [formattedValue, ctx.isSelected, onClick, isCurrent],
   );
 
-  return React.useMemo(() => ({ getYearCellProps }), [getYearCellProps]);
+  return React.useMemo(() => ({ getYearCellProps, isCurrent }), [getYearCellProps, isCurrent]);
 }
 
 export namespace useCalendarYearsCell {

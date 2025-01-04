@@ -65,8 +65,6 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
 
   const utils = useUtils();
   const validationProps = useAddDefaultsToValidationDates(parameters);
-  // TODO: Allow to control this state
-  const [activeSection, setActiveSection] = React.useState<'day' | 'month' | 'year'>('year');
 
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
     name: 'CalendarRoot',
@@ -76,11 +74,6 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
     referenceDate: referenceDateProp,
     onChange: onValueChange,
     valueManager: singleItemValueManager,
-  });
-
-  const isDateDisabled = useIsDateDisabled({
-    ...validationProps,
-    timezone,
   });
 
   const referenceDate = React.useMemo<PickerValidDate>(
@@ -99,6 +92,15 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [referenceDateProp, timezone],
   );
+
+  // TODO: Allow to control this state
+  const [activeSection, setActiveSection] = React.useState<'day' | 'month' | 'year'>('day');
+  const [visibleDate, setVisibleDate] = React.useState<PickerValidDate>(referenceDate);
+
+  const isDateDisabled = useIsDateDisabled({
+    ...validationProps,
+    timezone,
+  });
 
   const setValue = useEventCallback(
     (newValue: PickerValidDate, source: 'day' | 'month' | 'year') => {
@@ -125,6 +127,7 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
       isDateDisabled,
       validationProps,
       activeSection,
+      visibleDate,
     }),
     [
       value,
@@ -136,6 +139,7 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
       isDateDisabled,
       validationProps,
       activeSection,
+      visibleDate,
     ],
   );
 

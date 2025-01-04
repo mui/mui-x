@@ -1,0 +1,75 @@
+'use client';
+import * as React from 'react';
+import { useUtils } from '../../../hooks/useUtils';
+import { BaseUIComponentProps } from '../../utils/types';
+import { useComponentRenderer } from '../../utils/useComponentRender';
+import { useCalendarDaysGridContext } from '../days-grid/CalendarDaysGridContext';
+import { useCalendarDaysCell } from './useCalendarDaysCell';
+import { useCalendarRootContext } from '../root/CalendarRootContext';
+
+const InnerCalendarDaysCell = React.forwardRef(function CalendarDaysGrid(
+  props: InnerCalendarDaysCellProps,
+  forwardedRef: React.ForwardedRef<HTMLButtonElement>,
+) {
+  const { className, render, value, ctx, ...otherProps } = props;
+  const { getDaysCellProps, isCurrent } = useCalendarDaysCell({ value, ctx });
+
+  const state: CalendarDaysCell.State = React.useMemo(
+    () => ({ selected: ctx.isSelected, current: isCurrent }),
+    [ctx.isSelected, isCurrent],
+  );
+
+  const { renderElement } = useComponentRenderer({
+    propGetter: getDaysCellProps,
+    render: render ?? 'button',
+    ref: forwardedRef,
+    className,
+    state,
+    extraProps: otherProps,
+  });
+
+  return renderElement();
+});
+
+const MemoizedInnerCalendarDaysCell = React.memo(InnerCalendarDaysCell);
+
+const CalendarDaysCell = React.forwardRef(function CalendarDaysCell(
+  props: CalendarDaysCell.Props,
+  forwardedRef: React.ForwardedRef<HTMLButtonElement>,
+) {
+  const calendarRootContext = useCalendarRootContext();
+  const calendarMonthsListContext = useCalendarDaysGridContext();
+  const utils = useUtils();
+
+  const isSelected = React.useMemo(
+    () =>
+      calendarRootContext.value == null
+        ? false
+        : utils.isSameDay(calendarRootContext.value, props.value),
+    [calendarRootContext.value, props.value, utils],
+  );
+
+  const ctx = React.useMemo<useCalendarDaysCell.Context>(
+    () => ({
+      isSelected,
+      selectDay: calendarMonthsListContext.selectDay,
+    }),
+    [isSelected, calendarMonthsListContext.selectDay],
+  );
+
+  return <MemoizedInnerCalendarDaysCell {...props} ref={forwardedRef} ctx={ctx} />;
+});
+
+export namespace CalendarDaysCell {
+  export interface State {}
+
+  export interface Props
+    extends Omit<BaseUIComponentProps<'button', State>, 'value'>,
+      Omit<useCalendarDaysCell.Parameters, 'ctx'> {}
+}
+
+interface InnerCalendarDaysCellProps
+  extends Omit<BaseUIComponentProps<'button', CalendarDaysCell.State>, 'value'>,
+    useCalendarDaysCell.Parameters {}
+
+export { CalendarDaysCell };

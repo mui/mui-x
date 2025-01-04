@@ -52,58 +52,60 @@ export function useCalendarYearsList(parameters: useCalendarYearsList.Parameters
     ],
   );
 
+  const onKeyDown = useEventCallback((event: React.KeyboardEvent) => {
+    if (!SUPPORTED_KEYS.includes(event.key)) {
+      return;
+    }
+
+    event.preventDefault();
+
+    const triggers = getActiveCells(calendarYearsCellRefs);
+    const numOfEnabledTriggers = triggers.length;
+    const lastIndex = numOfEnabledTriggers - 1;
+
+    let nextIndex = -1;
+
+    const thisIndex = triggers.indexOf(event.target as HTMLButtonElement);
+
+    switch (event.key) {
+      case 'ArrowDown':
+        if (loop) {
+          nextIndex = thisIndex + 1 > lastIndex ? 0 : thisIndex + 1;
+        } else {
+          nextIndex = Math.min(thisIndex + 1, lastIndex);
+        }
+        break;
+      case 'ArrowUp':
+        if (loop) {
+          nextIndex = thisIndex === 0 ? lastIndex : thisIndex - 1;
+        } else {
+          nextIndex = thisIndex - 1;
+        }
+        break;
+      case 'Home':
+        nextIndex = 0;
+        break;
+      case 'End':
+        nextIndex = lastIndex;
+        break;
+      default:
+        break;
+    }
+
+    if (nextIndex > -1) {
+      triggers[nextIndex].focus();
+    }
+  });
+
   const getYearListProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
       return mergeReactProps(externalProps, {
         role: 'radiogroup',
         children: children == null ? null : children({ years }),
-        onKeyDown(event: React.KeyboardEvent) {
-          if (!SUPPORTED_KEYS.includes(event.key)) {
-            return;
-          }
-
-          event.preventDefault();
-
-          const triggers = getActiveCells(calendarYearsCellRefs);
-          const numOfEnabledTriggers = triggers.length;
-          const lastIndex = numOfEnabledTriggers - 1;
-
-          let nextIndex = -1;
-
-          const thisIndex = triggers.indexOf(event.target as HTMLButtonElement);
-
-          switch (event.key) {
-            case 'ArrowDown':
-              if (loop) {
-                nextIndex = thisIndex + 1 > lastIndex ? 0 : thisIndex + 1;
-              } else {
-                nextIndex = Math.min(thisIndex + 1, lastIndex);
-              }
-              break;
-            case 'ArrowUp':
-              if (loop) {
-                nextIndex = thisIndex === 0 ? lastIndex : thisIndex - 1;
-              } else {
-                nextIndex = thisIndex - 1;
-              }
-              break;
-            case 'Home':
-              nextIndex = 0;
-              break;
-            case 'End':
-              nextIndex = lastIndex;
-              break;
-            default:
-              break;
-          }
-
-          if (nextIndex > -1) {
-            triggers[nextIndex].focus();
-          }
-        },
+        onKeyDown,
       });
     },
-    [years, children, loop],
+    [years, children, onKeyDown],
   );
 
   const selectYear = useEventCallback((newValue: PickerValidDate) => {

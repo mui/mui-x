@@ -12,6 +12,7 @@ export interface CalendarRootContext {
   isDateDisabled: (day: PickerValidDate | null) => boolean;
   validationProps: ValidateDateProps;
   activeSection: 'day' | 'month' | 'year';
+  visibleDate: PickerValidDate;
 }
 
 export const CalendarRootContext = React.createContext<CalendarRootContext | undefined>(undefined);

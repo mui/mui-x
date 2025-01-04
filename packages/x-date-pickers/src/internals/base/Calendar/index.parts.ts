@@ -1,5 +1,8 @@
 export { CalendarRoot as Root } from './root/CalendarRoot';
 export { CalendarDaysGrid as DaysGrid } from './days-grid/CalendarDaysGrid';
+export { CalendarDaysGridBody as DaysGridBody } from './days-grid-body/CalendarDaysGridBody';
+export { CalendarDaysWeekRow as DaysWeekRow } from './days-week-row/CalendarDaysWeekRow';
+export { CalendarDaysCell as DaysCell } from './days-cell/CalendarDaysCell';
 export { CalendarMonthsList as MonthsList } from './months-list/CalendarMonthsList';
 export { CalendarMonthsCell as MonthsCell } from './months-cell/CalendarMonthsCell';
 export { CalendarYearsList as YearsList } from './years-list/CalendarYearsList';

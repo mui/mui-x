@@ -14,6 +14,8 @@ export function useCalendarMonthsCell(parameters: useCalendarMonthsCell.Paramete
     [utils, value, format],
   );
 
+  const isCurrent = React.useMemo(() => utils.isSameMonth(value, utils.date()), [utils, value]);
+
   const onClick = useEventCallback(() => {
     ctx.selectMonth(value);
   });
@@ -24,14 +26,15 @@ export function useCalendarMonthsCell(parameters: useCalendarMonthsCell.Paramete
         type: 'button' as const,
         role: 'radio',
         'aria-checked': ctx.isSelected,
+        'aria-current': isCurrent ? 'date' : undefined,
         children: formattedValue,
         onClick,
       });
     },
-    [formattedValue, ctx.isSelected, onClick],
+    [formattedValue, ctx.isSelected, onClick, isCurrent],
   );
 
-  return React.useMemo(() => ({ getMonthCellProps }), [getMonthCellProps]);
+  return React.useMemo(() => ({ getMonthCellProps, isCurrent }), [getMonthCellProps, isCurrent]);
 }
 
 export namespace useCalendarMonthsCell {
