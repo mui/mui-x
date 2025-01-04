@@ -67,6 +67,17 @@ export function navigateInList({
   }
 }
 
+export function navigateInGrid({
+  cells,
+  target,
+  key,
+  loop,
+}: {
+  cells: (HTMLElement | null)[][];
+  target: HTMLElement;
+  key: string;
+}) {}
+
 function isNavigable(element: HTMLElement | null): element is HTMLElement {
   return (
     element !== null &&
