@@ -7,31 +7,7 @@ import { useCalendarRootContext } from '../root/CalendarRootContext';
 import { GenericHTMLProps } from '../../utils/types';
 import { mergeReactProps } from '../../utils/mergeReactProps';
 import { CalendarYearsListContext } from './CalendarYearsListContext';
-
-const SUPPORTED_KEYS = ['ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft', 'Home', 'End'];
-
-function getActiveCells(calendarYearsCellRefs: { current: (HTMLElement | null)[] }): HTMLElement[] {
-  const { current: cells } = calendarYearsCellRefs;
-
-  const output: HTMLElement[] = [];
-
-  for (let i = 0; i < cells.length; i += 1) {
-    const cell = cells[i];
-    if (isNavigable(cell)) {
-      output.push(cell);
-    }
-  }
-
-  return output;
-}
-
-function isNavigable(element: HTMLElement | null): element is HTMLElement {
-  return (
-    element !== null &&
-    !element.hasAttribute('disabled') &&
-    element.getAttribute('data-disabled') !== 'true'
-  );
-}
+import { navigateInList } from '../utils/keyboardNavigation';
 
 export function useCalendarYearsList(parameters: useCalendarYearsList.Parameters) {
   const { children, loop = true, alwaysVisible = false } = parameters;
@@ -53,48 +29,12 @@ export function useCalendarYearsList(parameters: useCalendarYearsList.Parameters
   );
 
   const onKeyDown = useEventCallback((event: React.KeyboardEvent) => {
-    if (!SUPPORTED_KEYS.includes(event.key)) {
-      return;
-    }
-
-    event.preventDefault();
-
-    const triggers = getActiveCells(calendarYearsCellRefs);
-    const numOfEnabledTriggers = triggers.length;
-    const lastIndex = numOfEnabledTriggers - 1;
-
-    let nextIndex = -1;
-
-    const thisIndex = triggers.indexOf(event.target as HTMLButtonElement);
-
-    switch (event.key) {
-      case 'ArrowDown':
-        if (loop) {
-          nextIndex = thisIndex + 1 > lastIndex ? 0 : thisIndex + 1;
-        } else {
-          nextIndex = Math.min(thisIndex + 1, lastIndex);
-        }
-        break;
-      case 'ArrowUp':
-        if (loop) {
-          nextIndex = thisIndex === 0 ? lastIndex : thisIndex - 1;
-        } else {
-          nextIndex = thisIndex - 1;
-        }
-        break;
-      case 'Home':
-        nextIndex = 0;
-        break;
-      case 'End':
-        nextIndex = lastIndex;
-        break;
-      default:
-        break;
-    }
-
-    if (nextIndex > -1) {
-      triggers[nextIndex].focus();
-    }
+    navigateInList({
+      cells: calendarYearsCellRefs.current,
+      target: event.target as HTMLElement,
+      key: event.key,
+      loop,
+    });
   });
 
   const getYearListProps = React.useCallback(

@@ -94,7 +94,7 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
   );
 
   // TODO: Allow to control this state
-  const [activeSection, setActiveSection] = React.useState<'day' | 'month' | 'year'>('day');
+  const [activeSection, setActiveSection] = React.useState<'day' | 'month' | 'year'>('month');
   const [visibleDate, setVisibleDate] = React.useState<PickerValidDate>(referenceDate);
 
   const isDateDisabled = useIsDateDisabled({
