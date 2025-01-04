@@ -1,10 +1,17 @@
 import * as React from 'react';
-import { PickerValidDate } from '../../../../models';
+import { PickersTimezone, PickerValidDate } from '../../../../models';
+import { ValidateDateProps } from '../../../../validation';
 
 export interface CalendarRootContext {
   value: PickerValidDate | null;
-  selectMonth: (value: PickerValidDate) => void;
+  setValue: (value: PickerValidDate, source: 'day' | 'month' | 'year') => void;
   referenceDate: PickerValidDate;
+  timezone: PickersTimezone;
+  disabled: boolean;
+  readOnly: boolean;
+  isDateDisabled: (day: PickerValidDate | null) => boolean;
+  validationProps: ValidateDateProps;
+  activeSection: 'day' | 'month' | 'year';
 }
 
 export const CalendarRootContext = React.createContext<CalendarRootContext | undefined>(undefined);

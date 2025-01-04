@@ -1,16 +1,61 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { PickerValidDate, TimezoneProps } from '../../../../models';
+import { useIsDateDisabled } from '../../../../DateCalendar/useIsDateDisabled';
+import { ExportedValidateDateProps, ValidateDateProps } from '../../../../validation/validateDate';
 import { useControlledValueWithTimezone } from '../../../hooks/useValueWithTimezone';
-import { useUtils } from '../../../hooks/useUtils';
+import { useDefaultDates, useUtils } from '../../../hooks/useUtils';
 import { SECTION_TYPE_GRANULARITY } from '../../../utils/getDefaultReferenceDate';
 import { singleItemValueManager } from '../../../utils/valueManagers';
+import { applyDefaultDate } from '../../../utils/date-utils';
 import { FormProps } from '../../../models';
 import { CalendarRootContext } from './CalendarRootContext';
+import { set } from 'date-fns';
+
+function useAddDefaultsToValidationDates(
+  validationDate: ExportedValidateDateProps,
+): ValidateDateProps {
+  const utils = useUtils();
+  const defaultDates = useDefaultDates();
+
+  const {
+    shouldDisableDate,
+    shouldDisableMonth,
+    shouldDisableYear,
+    disablePast,
+    disableFuture,
+    minDate,
+    maxDate,
+  } = validationDate;
+
+  return React.useMemo(
+    () => ({
+      shouldDisableDate,
+      shouldDisableMonth,
+      shouldDisableYear,
+      disablePast: disablePast ?? false,
+      disableFuture: disableFuture ?? false,
+      minDate: applyDefaultDate(utils, minDate, defaultDates.minDate),
+      maxDate: applyDefaultDate(utils, maxDate, defaultDates.maxDate),
+    }),
+    [
+      shouldDisableDate,
+      shouldDisableMonth,
+      shouldDisableYear,
+      disablePast,
+      disableFuture,
+      minDate,
+      maxDate,
+      utils,
+      defaultDates,
+    ],
+  );
+}
 
 export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
   const {
-    readOnly,
+    readOnly = false,
+    disabled = false,
     defaultValue,
     onValueChange,
     value: valueProp,
@@ -19,6 +64,9 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
   } = parameters;
 
   const utils = useUtils();
+  const validationProps = useAddDefaultsToValidationDates(parameters);
+  // TODO: Allow to control this state
+  const [activeSection, setActiveSection] = React.useState<'day' | 'month' | 'year'>('year');
 
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
     name: 'CalendarRoot',
@@ -28,6 +76,11 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
     referenceDate: referenceDateProp,
     onChange: onValueChange,
     valueManager: singleItemValueManager,
+  });
+
+  const isDateDisabled = useIsDateDisabled({
+    ...validationProps,
+    timezone,
   });
 
   const referenceDate = React.useMemo<PickerValidDate>(
@@ -47,24 +100,50 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
     [referenceDateProp, timezone],
   );
 
-  const selectMonth = useEventCallback((newValue: PickerValidDate) => {
-    if (readOnly) {
-      return;
-    }
+  const setValue = useEventCallback(
+    (newValue: PickerValidDate, source: 'day' | 'month' | 'year') => {
+      if (source === 'month') {
+        setActiveSection('day');
+      }
 
-    handleValueChange(newValue);
-  });
+      if (source === 'year') {
+        setActiveSection('month');
+      }
+
+      handleValueChange(newValue);
+    },
+  );
 
   const context: CalendarRootContext = React.useMemo(
-    () => ({ value, selectMonth, referenceDate }),
-    [value, selectMonth, referenceDate],
+    () => ({
+      value,
+      setValue,
+      referenceDate,
+      timezone,
+      disabled,
+      readOnly,
+      isDateDisabled,
+      validationProps,
+      activeSection,
+    }),
+    [
+      value,
+      setValue,
+      referenceDate,
+      timezone,
+      disabled,
+      readOnly,
+      isDateDisabled,
+      validationProps,
+      activeSection,
+    ],
   );
 
   return React.useMemo(() => ({ context }), [context]);
 }
 
 export namespace useCalendarRoot {
-  export interface Parameters extends TimezoneProps, FormProps {
+  export interface Parameters extends TimezoneProps, FormProps, ExportedValidateDateProps {
     /**
      * The controlled value that should be selected.
      *

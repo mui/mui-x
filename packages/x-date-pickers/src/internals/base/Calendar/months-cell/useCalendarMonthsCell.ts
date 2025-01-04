@@ -1,13 +1,18 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { PickerValidDate } from '../../../../models';
+import { useUtils } from '../../../hooks/useUtils';
 import { GenericHTMLProps } from '../../utils/types';
 import { mergeReactProps } from '../../utils/mergeReactProps';
-import { useUtils } from '../../../hooks/useUtils';
 
-export function useCalendarMonthCell(parameters: useCalendarMonthCell.Parameters) {
-  const { value, ctx } = parameters;
+export function useCalendarMonthsCell(parameters: useCalendarMonthsCell.Parameters) {
   const utils = useUtils();
+  const { value, format = utils.formats.monthShort, ctx } = parameters;
+
+  const formattedValue = React.useMemo(
+    () => utils.formatByString(value, format),
+    [utils, value, format],
+  );
 
   const onClick = useEventCallback(() => {
     ctx.selectMonth(value);
@@ -19,19 +24,24 @@ export function useCalendarMonthCell(parameters: useCalendarMonthCell.Parameters
         type: 'button' as const,
         role: 'radio',
         'aria-checked': ctx.isSelected,
-        children: utils.format(value, 'monthShort'),
+        children: formattedValue,
         onClick,
       });
     },
-    [utils, value, ctx.isSelected, onClick],
+    [formattedValue, ctx.isSelected, onClick],
   );
 
   return React.useMemo(() => ({ getMonthCellProps }), [getMonthCellProps]);
 }
 
-export namespace useCalendarMonthCell {
+export namespace useCalendarMonthsCell {
   export interface Parameters {
     value: PickerValidDate;
+    /**
+     * The format to use to display the month.
+     * @default utils.formats.monthShort
+     */
+    format?: string;
     ctx: Context;
   }
 
