@@ -71,7 +71,7 @@ export function useCalendarMonthsList(parameters: useCalendarMonthsList.Paramete
       : newCleanValue;
 
     if (closestEnabledDate) {
-      calendarRootContext.setValue(newCleanValue, { section: 'month' });
+      calendarRootContext.setValue(closestEnabledDate, { section: 'month' });
     }
   });
 

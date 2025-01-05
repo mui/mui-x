@@ -66,10 +66,13 @@ const CalendarDaysCell = React.forwardRef(function CalendarDaysCell(
   );
 
   const isDateDisabled = calendarRootContext.isDateDisabled;
-  const isDisabled = React.useMemo(
-    () => calendarRootContext.disabled || isDateDisabled(props.value),
-    [calendarRootContext.disabled, isDateDisabled, props.value],
-  );
+  const isDisabled = React.useMemo(() => {
+    if (calendarRootContext.disabled) {
+      return true;
+    }
+
+    return isDateDisabled(props.value);
+  }, [calendarRootContext.disabled, isDateDisabled, props.value]);
 
   const ctx = React.useMemo<useCalendarDaysCell.Context>(
     () => ({

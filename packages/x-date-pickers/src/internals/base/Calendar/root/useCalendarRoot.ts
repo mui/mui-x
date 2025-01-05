@@ -92,6 +92,11 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
   );
 
   const [visibleDate, setVisibleDate] = React.useState<PickerValidDate>(referenceDate);
+  const [prevValue, setPrevValue] = React.useState<PickerValidDate | null>(value);
+  if (value !== prevValue && utils.isValid(value)) {
+    setVisibleDate(value);
+    setPrevValue(value);
+  }
 
   const isDateDisabled = useIsDateDisabled({
     ...validationProps,

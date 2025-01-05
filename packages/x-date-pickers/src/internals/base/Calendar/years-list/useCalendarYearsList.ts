@@ -79,7 +79,7 @@ export function useCalendarYearsList(parameters: useCalendarYearsList.Parameters
       : newCleanValue;
 
     if (closestEnabledDate) {
-      calendarRootContext.setValue(newCleanValue, { section: 'year' });
+      calendarRootContext.setValue(closestEnabledDate, { section: 'year' });
     }
   });
 
