@@ -3,8 +3,22 @@ import { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 // eslint-disable-next-line no-restricted-imports
-import { Calendar } from '@mui/x-date-pickers/internals/base/Calendar';
+import {
+  Calendar,
+  useCalendarContext,
+} from '@mui/x-date-pickers/internals/base/Calendar';
 import styles from './calendar.module.css';
+
+function Header(props: { activeSection: 'day' | 'month' | 'year' }) {
+  const { activeSection } = props;
+  const { visibleDate } = useCalendarContext();
+  return (
+    <header className={styles.Header}>
+      {activeSection === 'day' && visibleDate.format('MMMM YYYY')}
+      {activeSection === 'month' && visibleDate.format('YYYY')}
+    </header>
+  );
+}
 
 export default function YearMonthDayCalendar() {
   const [value, setValue] = React.useState<Dayjs | null>(null);
@@ -31,7 +45,7 @@ export default function YearMonthDayCalendar() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Calendar.Root value={value} onValueChange={handleValueChange} disableFuture>
         <div className={styles.Root}>
-          <header className={styles.Header}>Base UI Calendar</header>
+          <Header activeSection={activeSection} />
           {activeSection === 'year' && (
             <Calendar.YearsList className={styles.YearsList}>
               {({ years }) =>
