@@ -9,13 +9,57 @@ import {
 } from '@mui/x-date-pickers/internals/base/Calendar';
 import styles from './calendar.module.css';
 
-function Header(props: { activeSection: 'day' | 'month' | 'year' }) {
-  const { activeSection } = props;
-  const { visibleDate } = useCalendarContext();
+function Header(props: {
+  activeSection: 'day' | 'month' | 'year';
+  onActiveSectionChange: (newActiveSection: 'day' | 'month' | 'year') => void;
+}) {
+  const { activeSection, onActiveSectionChange } = props;
+  const { visibleDate, setVisibleDate } = useCalendarContext();
+
   return (
     <header className={styles.Header}>
-      {activeSection === 'day' && visibleDate.format('MMMM YYYY')}
-      {activeSection === 'month' && visibleDate.format('YYYY')}
+      {activeSection === 'day' && (
+        <div className={styles.HeaderBlock}>
+          <button
+            type="button"
+            onClick={() => setVisibleDate(visibleDate.subtract(1, 'month'))}
+          >
+            ◀
+          </button>
+          <button
+            type="button"
+            onClick={() => onActiveSectionChange('month')}
+            className={styles.HeaderMonthButton}
+          >
+            {visibleDate.format('MMMM')}
+          </button>
+          <button
+            type="button"
+            onClick={() => setVisibleDate(visibleDate.add(1, 'month'))}
+          >
+            ▶
+          </button>
+        </div>
+      )}
+      {(activeSection === 'month' || activeSection === 'day') && (
+        <div className={styles.HeaderBlock}>
+          <button
+            type="button"
+            onClick={() => setVisibleDate(visibleDate.subtract(1, 'year'))}
+          >
+            ◀
+          </button>
+          <button type="button" onClick={() => onActiveSectionChange('year')}>
+            {visibleDate.format('YYYY')}
+          </button>
+          <button
+            type="button"
+            onClick={() => setVisibleDate(visibleDate.add(1, 'year'))}
+          >
+            ▶
+          </button>
+        </div>
+      )}
     </header>
   );
 }
@@ -23,7 +67,7 @@ function Header(props: { activeSection: 'day' | 'month' | 'year' }) {
 export default function YearMonthDayCalendar() {
   const [value, setValue] = React.useState<Dayjs | null>(null);
   const [activeSection, setActiveSection] = React.useState<'day' | 'month' | 'year'>(
-    'year',
+    'day',
   );
 
   const handleValueChange = React.useCallback(
@@ -45,7 +89,10 @@ export default function YearMonthDayCalendar() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Calendar.Root value={value} onValueChange={handleValueChange} disableFuture>
         <div className={styles.Root}>
-          <Header activeSection={activeSection} />
+          <Header
+            activeSection={activeSection}
+            onActiveSectionChange={setActiveSection}
+          />
           {activeSection === 'year' && (
             <Calendar.YearsList className={styles.YearsList}>
               {({ years }) =>

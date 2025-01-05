@@ -113,6 +113,7 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
       isDateDisabled,
       validationProps,
       visibleDate,
+      setVisibleDate,
     }),
     [
       value,
@@ -124,6 +125,7 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
       isDateDisabled,
       validationProps,
       visibleDate,
+      setVisibleDate,
     ],
   );
 

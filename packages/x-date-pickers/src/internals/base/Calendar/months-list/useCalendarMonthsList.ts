@@ -16,8 +16,8 @@ export function useCalendarMonthsList(parameters: useCalendarMonthsList.Paramete
   const calendarMonthsCellRefs = React.useRef<(HTMLElement | null)[]>([]);
 
   const months = React.useMemo(
-    () => getMonthsInYear(utils, calendarRootContext.value ?? calendarRootContext.referenceDate),
-    [utils, calendarRootContext.value, calendarRootContext.referenceDate],
+    () => getMonthsInYear(utils, calendarRootContext.visibleDate),
+    [utils, calendarRootContext.visibleDate],
   );
 
   const onKeyDown = useEventCallback((event: React.KeyboardEvent) => {

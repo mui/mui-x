@@ -1,13 +1,26 @@
 .Root {
   border: 1px solid #78716c;
   width: 344px;
-  height: 320px;
+  height: 368px;
   display: flex;
   flex-direction: column;
 }
 
 .Header {
+  box-sizing: border-box;
   padding: 8px 12px;
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.HeaderBlock {
+  display: flex;
+  gap: 4px;
+}
+
+.HeaderMonthButton {
+  min-width: 96px;
 }
 
 .MonthsList,
