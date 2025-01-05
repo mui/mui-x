@@ -11,7 +11,7 @@ export function useCalendarDaysGridBody(parameters: useCalendarDaysGridBody.Para
   const { children } = parameters;
   const calendarDaysGridContext = useCalendarDaysGridContext();
   const calendarWeekRowRefs = React.useRef<(HTMLElement | null)[]>([]);
-  const calendarWeekRowCellsRef = React.useRef<
+  const calendarWeekRowsCellsRef = React.useRef<
     {
       rowRef: React.RefObject<HTMLElement | null>;
       cellsRef: React.RefObject<(HTMLElement | null)[]>;
@@ -21,7 +21,7 @@ export function useCalendarDaysGridBody(parameters: useCalendarDaysGridBody.Para
   const onKeyDown = useEventCallback((event: React.KeyboardEvent) => {
     navigateInGrid({
       rows: calendarWeekRowRefs.current,
-      cells: calendarWeekRowCellsRef.current,
+      rowsCells: calendarWeekRowsCellsRef.current,
       target: event.target as HTMLElement,
       event,
     });
@@ -46,10 +46,10 @@ export function useCalendarDaysGridBody(parameters: useCalendarDaysGridBody.Para
       weekRowRef: React.RefObject<HTMLElement | null>,
       cellsRef: React.RefObject<(HTMLElement | null)[]>,
     ) => {
-      calendarWeekRowCellsRef.current.push({ rowRef: weekRowRef, cellsRef });
+      calendarWeekRowsCellsRef.current.push({ rowRef: weekRowRef, cellsRef });
 
       return () => {
-        calendarWeekRowCellsRef.current = calendarWeekRowCellsRef.current.filter(
+        calendarWeekRowsCellsRef.current = calendarWeekRowsCellsRef.current.filter(
           (entry) => entry.rowRef !== weekRowRef,
         );
       };

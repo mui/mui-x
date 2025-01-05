@@ -70,12 +70,12 @@ const GRID_NAVIGATION_SUPPORTED_KEYS = [
 
 export function navigateInGrid({
   rows,
-  cells,
+  rowsCells,
   target,
   event,
 }: {
   rows: (HTMLElement | null)[];
-  cells: {
+  rowsCells: {
     rowRef: React.RefObject<HTMLElement | null>;
     cellsRef: React.RefObject<(HTMLElement | null)[]>;
   }[];
@@ -88,95 +88,136 @@ export function navigateInGrid({
 
   event.preventDefault();
 
-  const navigableCells: HTMLElement[][] = [];
+  const cells: HTMLElement[][] = [];
   for (let i = 0; i < rows.length; i += 1) {
     const row = rows[i];
-    if (isNavigable(row)) {
-      const rowNavigableCells: HTMLElement[] = [];
-      const rowCells = cells.find((entry) => entry.rowRef.current === row)?.cellsRef.current;
-      if (rowCells) {
-        for (let j = 0; j < rowCells.length; j += 1) {
-          const cell = rowCells[j];
-          if (isNavigable(cell)) {
-            rowNavigableCells.push(cell);
-          }
-        }
-
-        if (rowNavigableCells.length > 0) {
-          navigableCells.push(rowNavigableCells);
-        }
-      }
+    const rowCells = rowsCells
+      .find((entry) => entry.rowRef.current === row)
+      ?.cellsRef.current?.filter((cell) => cell !== null);
+    if (rowCells && rowCells.length > 0) {
+      cells.push(rowCells);
     }
   }
 
-  if (navigableCells.length === 0) {
+  if (cells.length === 0) {
     return;
   }
 
-  const lastRowIndex = navigableCells.length - 1;
-  const currentRowIndex = navigableCells.findIndex((row) => row.includes(target));
-  const currentCellIndex = navigableCells[currentRowIndex].indexOf(target);
-  let nextRowIndex = -1;
-  let nextCellIndex = -1;
+  const moveToRowBelow = () => {
+    const currentRowIndex = cells.findIndex((row) => row.includes(target));
+    const currentColIndex = cells[currentRowIndex].indexOf(target);
+    let nextRowIndex = -1;
+    let i = currentRowIndex + 1;
+    while (nextRowIndex === -1 && i < currentRowIndex + cells.length) {
+      const rowIndex = i % cells.length;
+      const cell = cells[rowIndex][currentColIndex];
+      if (isNavigable(cell)) {
+        nextRowIndex = rowIndex;
+      }
+      i += 1;
+    }
+
+    if (nextRowIndex > -1) {
+      cells[nextRowIndex][currentColIndex].focus();
+    }
+  };
+
+  const moveToRowAbove = () => {
+    const currentRowIndex = cells.findIndex((row) => row.includes(target));
+    const currentColIndex = cells[currentRowIndex].indexOf(target);
+    let nextRowIndex = -1;
+    let i = currentRowIndex - 1;
+    while (nextRowIndex === -1 && i > currentRowIndex - cells.length) {
+      const rowIndex = (cells.length + i) % cells.length;
+      const cell = cells[rowIndex][currentColIndex];
+      if (isNavigable(cell)) {
+        nextRowIndex = rowIndex;
+      }
+      i -= 1;
+    }
+
+    if (nextRowIndex > -1) {
+      cells[nextRowIndex][currentColIndex].focus();
+    }
+  };
+
+  const moveToRowOnTheRight = () => {
+    const flatCells = cells.flat();
+    const currentCellIndex = flatCells.indexOf(target);
+    let nextCellIndex = -1;
+    let i = currentCellIndex + 1;
+
+    while (nextCellIndex === -1 && i < currentCellIndex + flatCells.length) {
+      const cellIndex = i % flatCells.length;
+      const cell = flatCells[cellIndex];
+      if (isNavigable(cell)) {
+        nextCellIndex = cellIndex;
+      }
+      i += 1;
+    }
+
+    if (nextCellIndex > -1) {
+      flatCells[nextCellIndex].focus();
+    }
+  };
+
+  const moveToRowOnTheLeft = () => {
+    const flatCells = cells.flat();
+    const currentCellIndex = flatCells.indexOf(target);
+    let nextCellIndex = -1;
+    let i = currentCellIndex - 1;
+
+    while (nextCellIndex === -1 && i > currentCellIndex - flatCells.length) {
+      const cellIndex = (flatCells.length + i) % flatCells.length;
+      const cell = flatCells[cellIndex];
+      if (isNavigable(cell)) {
+        nextCellIndex = cellIndex;
+      }
+      i -= 1;
+    }
+
+    if (nextCellIndex > -1) {
+      flatCells[nextCellIndex].focus();
+    }
+  };
+
+  const moveToFirstCell = () => {
+    const cell = cells.flat().find(isNavigable);
+    if (cell) {
+      cell.focus();
+    }
+  };
+
+  const moveToLastCell = () => {
+    const cell = cells.flat().findLast(isNavigable);
+    if (cell) {
+      cell.focus();
+    }
+  };
 
   switch (event.key) {
     case 'ArrowRight':
-      if (currentCellIndex === navigableCells[currentRowIndex].length - 1) {
-        nextRowIndex = currentRowIndex === lastRowIndex ? 0 : currentRowIndex + 1;
-        nextCellIndex = 0;
-      } else {
-        nextRowIndex = currentRowIndex;
-        nextCellIndex = currentCellIndex + 1;
-      }
+      moveToRowOnTheRight();
       break;
     case 'ArrowLeft':
-      if (currentCellIndex === 0) {
-        nextRowIndex = currentRowIndex === 0 ? lastRowIndex : currentRowIndex - 1;
-        nextCellIndex = navigableCells[nextRowIndex].length - 1;
-      } else {
-        nextRowIndex = currentRowIndex;
-        nextCellIndex = currentCellIndex - 1;
-      }
+      moveToRowOnTheLeft();
       break;
     case 'ArrowDown':
       // TODO: Add multi month navigation
-      if (currentRowIndex === lastRowIndex) {
-        nextRowIndex = 0;
-      } else {
-        nextRowIndex = currentRowIndex + 1;
-      }
-
-      nextCellIndex =
-        currentCellIndex > navigableCells[nextRowIndex].length - 1
-          ? navigableCells[nextRowIndex].length - 1
-          : currentCellIndex;
+      moveToRowBelow();
       break;
     case 'ArrowUp':
       // TODO: Add multi month navigation
-      if (currentRowIndex === 0) {
-        nextRowIndex = lastRowIndex;
-      } else {
-        nextRowIndex = currentRowIndex - 1;
-      }
-      nextCellIndex =
-        currentCellIndex > navigableCells[nextRowIndex].length - 1
-          ? navigableCells[nextRowIndex].length - 1
-          : currentCellIndex;
+      moveToRowAbove();
       break;
     case 'Home':
-      nextRowIndex = 0;
-      nextCellIndex = 0;
+      moveToFirstCell();
       break;
     case 'End':
-      nextRowIndex = lastRowIndex;
-      nextCellIndex = navigableCells[lastRowIndex].length - 1;
+      moveToLastCell();
       break;
     default:
       break;
-  }
-
-  if (nextRowIndex > -1 && nextCellIndex > -1) {
-    navigableCells[nextRowIndex][nextCellIndex].focus();
   }
 }
 
