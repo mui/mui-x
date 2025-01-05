@@ -80,8 +80,7 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
         value,
         utils,
         timezone,
-        // TODO: Add validation props.
-        props: {},
+        props: validationProps,
         referenceDate: referenceDateProp,
         granularity: SECTION_TYPE_GRANULARITY.day,
       });
