@@ -76,7 +76,7 @@ export function navigateInGrid({
 }: {
   rows: (HTMLElement | null)[];
   cells: {
-    rowRef: React.RefObject<HTMLElement>;
+    rowRef: React.RefObject<HTMLElement | null>;
     cellsRef: React.RefObject<(HTMLElement | null)[]>;
   }[];
   target: HTMLElement;
@@ -181,9 +181,18 @@ export function navigateInGrid({
 }
 
 function isNavigable(element: HTMLElement | null): element is HTMLElement {
-  return (
-    element !== null &&
-    !element.hasAttribute('disabled') &&
-    element.getAttribute('data-disabled') !== 'true'
-  );
+  if (element === null) {
+    return false;
+  }
+
+  if (element.hasAttribute('disabled') || element.getAttribute('data-disabled') === 'true') {
+    return false;
+  }
+
+  const dimensions = element?.getBoundingClientRect();
+  if (dimensions?.width === 0 || dimensions?.height === 0) {
+    return false;
+  }
+
+  return true;
 }

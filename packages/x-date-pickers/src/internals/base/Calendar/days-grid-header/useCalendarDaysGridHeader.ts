@@ -19,7 +19,7 @@ export function useCalendarDaysGridHeader(parameters: useCalendarDaysGridHeader.
   const getDaysGridHeaderProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
       return mergeReactProps(externalProps, {
-        role: 'radiogroup',
+        role: 'row',
         children: children == null ? null : children({ days }),
       });
     },

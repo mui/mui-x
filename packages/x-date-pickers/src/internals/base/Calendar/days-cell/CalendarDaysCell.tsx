@@ -17,8 +17,12 @@ const InnerCalendarDaysCell = React.forwardRef(function CalendarDaysGrid(
   const { getDaysCellProps, isCurrent } = useCalendarDaysCell({ value, ctx });
 
   const state: CalendarDaysCell.State = React.useMemo(
-    () => ({ selected: ctx.isSelected, current: isCurrent }),
-    [ctx.isSelected, isCurrent],
+    () => ({
+      selected: ctx.isSelected,
+      outsideMonth: ctx.isOutsideCurrentMonth,
+      current: isCurrent,
+    }),
+    [ctx.isSelected, ctx.isOutsideCurrentMonth, isCurrent],
   );
 
   const { renderElement } = useComponentRenderer({
@@ -41,7 +45,7 @@ const CalendarDaysCell = React.forwardRef(function CalendarDaysCell(
 ) {
   const calendarRootContext = useCalendarRootContext();
   const calendarMonthsListContext = useCalendarDaysGridContext();
-  const { ref: listItemRef } = useCompositeListItem();
+  const { ref: listItemRef, index: colIndex } = useCompositeListItem();
   const utils = useUtils();
   const mergedRef = useForkRef(forwardedRef, listItemRef);
 
@@ -53,12 +57,22 @@ const CalendarDaysCell = React.forwardRef(function CalendarDaysCell(
     [calendarRootContext.value, props.value, utils],
   );
 
+  const isOutsideCurrentMonth = React.useMemo(
+    () =>
+      calendarMonthsListContext.currentMonth == null
+        ? false
+        : !utils.isSameMonth(calendarMonthsListContext.currentMonth, props.value),
+    [calendarMonthsListContext.currentMonth, props.value, utils],
+  );
+
   const ctx = React.useMemo<useCalendarDaysCell.Context>(
     () => ({
+      colIndex,
       isSelected,
+      isOutsideCurrentMonth,
       selectDay: calendarMonthsListContext.selectDay,
     }),
-    [isSelected, calendarMonthsListContext.selectDay],
+    [isSelected, isOutsideCurrentMonth, calendarMonthsListContext.selectDay, colIndex],
   );
 
   return <MemoizedInnerCalendarDaysCell ref={mergedRef} {...props} ctx={ctx} />;

@@ -13,7 +13,7 @@ export function useCalendarDaysGridBody(parameters: useCalendarDaysGridBody.Para
   const calendarWeekRowRefs = React.useRef<(HTMLElement | null)[]>([]);
   const calendarWeekRowCellsRef = React.useRef<
     {
-      rowRef: React.RefObject<HTMLElement>;
+      rowRef: React.RefObject<HTMLElement | null>;
       cellsRef: React.RefObject<(HTMLElement | null)[]>;
     }[]
   >([]);
@@ -43,7 +43,7 @@ export function useCalendarDaysGridBody(parameters: useCalendarDaysGridBody.Para
 
   const registerWeekRowCells = useEventCallback(
     (
-      weekRowRef: React.RefObject<HTMLElement>,
+      weekRowRef: React.RefObject<HTMLElement | null>,
       cellsRef: React.RefObject<(HTMLElement | null)[]>,
     ) => {
       calendarWeekRowCellsRef.current.push({ rowRef: weekRowRef, cellsRef });

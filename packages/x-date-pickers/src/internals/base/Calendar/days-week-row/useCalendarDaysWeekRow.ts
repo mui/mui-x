@@ -2,7 +2,7 @@ import * as React from 'react';
 import { PickerValidDate } from '../../../../models';
 import { GenericHTMLProps } from '../../utils/types';
 import { mergeReactProps } from '../../utils/mergeReactProps';
-import { CalendarDaysGridContext } from '../days-grid/CalendarDaysGridContext';
+import { CalendarDaysGridBodyContext } from '../days-grid-body/CalendarDaysGridBodyContext';
 
 export function useCalendarDaysWeekRow(parameters: useCalendarDaysWeekRow.Parameters) {
   const { children, ctx } = parameters;
@@ -43,7 +43,7 @@ export namespace useCalendarDaysWeekRow {
     days: PickerValidDate[];
   }
 
-  export interface Context extends Pick<CalendarDaysGridContext, 'registerWeekRowCells'> {
+  export interface Context extends Pick<CalendarDaysGridBodyContext, 'registerWeekRowCells'> {
     days: PickerValidDate[];
     rowIndex: number;
   }

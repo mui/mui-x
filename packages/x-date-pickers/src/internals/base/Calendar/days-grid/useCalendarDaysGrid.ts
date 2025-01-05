@@ -13,9 +13,14 @@ export function useCalendarDaysGrid(parameters: useCalendarDaysGrid.Parameters) 
   const utils = useUtils();
   const calendarRootContext = useCalendarRootContext();
 
+  const currentMonth = React.useMemo(
+    () => utils.startOfMonth(calendarRootContext.visibleDate),
+    [utils, calendarRootContext.visibleDate],
+  );
+
   const daysGrid = React.useMemo(() => {
-    const toDisplay = utils.getWeekArray(calendarRootContext.visibleDate);
-    let nextMonth = utils.addMonths(calendarRootContext.visibleDate, 1);
+    const toDisplay = utils.getWeekArray(currentMonth);
+    let nextMonth = utils.addMonths(currentMonth, 1);
     while (fixedWeekNumber && toDisplay.length < fixedWeekNumber) {
       const additionalWeeks = utils.getWeekArray(nextMonth);
       const hasCommonWeek = utils.isSameDay(
@@ -33,7 +38,7 @@ export function useCalendarDaysGrid(parameters: useCalendarDaysGrid.Parameters) 
     }
 
     return toDisplay;
-  }, [calendarRootContext.visibleDate, fixedWeekNumber, utils]);
+  }, [currentMonth, fixedWeekNumber, utils]);
 
   const getDaysGridProps = React.useCallback((externalProps: GenericHTMLProps) => {
     return mergeReactProps(externalProps, {
@@ -56,8 +61,8 @@ export function useCalendarDaysGrid(parameters: useCalendarDaysGrid.Parameters) 
   });
 
   const context: CalendarDaysGridContext = React.useMemo(
-    () => ({ selectDay, daysGrid }),
-    [selectDay, daysGrid],
+    () => ({ selectDay, daysGrid, currentMonth }),
+    [selectDay, daysGrid, currentMonth],
   );
 
   return React.useMemo(() => ({ getDaysGridProps, context }), [getDaysGridProps, context]);

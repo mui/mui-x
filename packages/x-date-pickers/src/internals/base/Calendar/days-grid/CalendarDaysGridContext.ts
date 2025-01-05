@@ -3,6 +3,7 @@ import { PickerValidDate } from '../../../../models';
 
 export interface CalendarDaysGridContext {
   selectDay: (value: PickerValidDate) => void;
+  currentMonth: PickerValidDate;
   daysGrid: PickerValidDate[][];
 }
 
