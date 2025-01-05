@@ -1,7 +1,7 @@
 .Root {
   border: 1px solid #78716c;
-  width: 344px;
-  height: 368px;
+  width: 276px;
+  height: 300px;
   display: flex;
   flex-direction: column;
 }
@@ -12,17 +12,54 @@
   height: 40px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .HeaderBlock {
   display: flex;
-  gap: 8px;
+  gap: 4px;
   flex-grow: 1;
   justify-content: center;
 }
 
-.HeaderMonthLabel {
-  min-width: 96px;
+.SetVisibleMonth,
+.SetVisibleYear,
+.SetActiveSectionMonth,
+.SetActiveSectionYear {
+  border: none;
+  background-color: transparent;
+  border-radius: 4px;
+  font-size: 12px;
+  height: 24px;
+  width: 24px;
+  text-align: center;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #e0f2fe;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #0ea5e9;
+  }
+
+  &:disabled {
+    pointer-events: none;
+  }
+}
+
+.SetVisibleMonth,
+.SetVisibleYear {
+  height: 24px;
+  width: 24px;
+}
+
+.SetActiveSectionMonth {
+  min-width: 72px;
+}
+
+.SetActiveSectionYear {
+  min-width: 42px;
 }
 
 .MonthsList,
@@ -45,34 +82,38 @@
   padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 }
 
 .DaysGridBody {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 }
 
 .DaysWeekRow,
 .DaysGridHeader {
   display: flex;
   justify-content: center;
-  gap: 8px;
+  gap: 4px;
 }
 
 .DaysCellWrapper {
-  height: 36px;
-  width: 40px;
-  min-width: 40px;
+  height: 32px;
+  width: 32px;
 }
 
 .DaysCell {
-  height: 40px;
-  width: 40px;
-  border-radius: 8px;
+  height: 32px;
+  width: 32px;
+  border-radius: 4px;
   border: none;
   background-color: transparent;
+  cursor: pointer;
+
+  &:not([data-selected]):hover {
+    background-color: #e0f2fe;
+  }
 
   &[data-current] {
     outline: 2px solid #9ca3af;
@@ -96,7 +137,7 @@
 }
 
 .DaysGridHeaderCell {
-  width: 48px;
+  width: 32px;
   text-align: center;
 }
 

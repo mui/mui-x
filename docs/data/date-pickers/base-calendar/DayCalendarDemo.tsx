@@ -14,16 +14,13 @@ function Header() {
 
   return (
     <header className={styles.Header}>
-      <div className={styles.HeaderBlock}>
-        <Calendar.SetVisibleMonth target="previous">◀</Calendar.SetVisibleMonth>
-        <span className={styles.HeaderMonthLabel}>{visibleDate.format('MMMM')}</span>
-        <Calendar.SetVisibleMonth target="next">▶</Calendar.SetVisibleMonth>
-      </div>
-      <div className={styles.HeaderBlock}>
-        <Calendar.SetVisibleYear target="previous">◀</Calendar.SetVisibleYear>
-        <span>{visibleDate.format('YYYY')}</span>
-        <Calendar.SetVisibleYear target="next">▶</Calendar.SetVisibleYear>
-      </div>
+      <Calendar.SetVisibleMonth target="previous" className={styles.SetVisibleMonth}>
+        ◀
+      </Calendar.SetVisibleMonth>
+      <span>{visibleDate.format('MMMM YYYY')}</span>
+      <Calendar.SetVisibleMonth target="next" className={styles.SetVisibleMonth}>
+        ▶
+      </Calendar.SetVisibleMonth>
     </header>
   );
 }

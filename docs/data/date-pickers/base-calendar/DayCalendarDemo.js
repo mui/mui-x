@@ -10,40 +10,17 @@ import {
 import styles from './calendar.module.css';
 
 function Header() {
-  const { visibleDate, setVisibleDate } = useCalendarContext();
+  const { visibleDate } = useCalendarContext();
 
   return (
     <header className={styles.Header}>
-      <div className={styles.HeaderBlock}>
-        <button
-          type="button"
-          onClick={() => setVisibleDate(visibleDate.subtract(1, 'month'))}
-        >
-          ◀
-        </button>
-        <span className={styles.HeaderMonthLabel}>{visibleDate.format('MMMM')}</span>
-        <button
-          type="button"
-          onClick={() => setVisibleDate(visibleDate.add(1, 'month'))}
-        >
-          ▶
-        </button>
-      </div>
-      <div className={styles.HeaderBlock}>
-        <button
-          type="button"
-          onClick={() => setVisibleDate(visibleDate.subtract(1, 'year'))}
-        >
-          ◀
-        </button>
-        <span>{visibleDate.format('YYYY')}</span>
-        <button
-          type="button"
-          onClick={() => setVisibleDate(visibleDate.add(1, 'year'))}
-        >
-          ▶
-        </button>
-      </div>
+      <Calendar.SetVisibleMonth target="previous" className={styles.SetVisibleMonth}>
+        ◀
+      </Calendar.SetVisibleMonth>
+      <span>{visibleDate.format('MMMM YYYY')}</span>
+      <Calendar.SetVisibleMonth target="next" className={styles.SetVisibleMonth}>
+        ▶
+      </Calendar.SetVisibleMonth>
     </header>
   );
 }
@@ -98,8 +75,7 @@ function DayCalendar(props) {
 export default function DayCalendarDemo() {
   const [value, setValue] = React.useState(null);
 
-  const handleValueChange = React.useCallback((newValue, context) => {
-    console.log(context);
+  const handleValueChange = React.useCallback((newValue) => {
     setValue(newValue);
   }, []);
 

@@ -18,28 +18,57 @@ function Header(props: {
 
   return (
     <header className={styles.Header}>
-      {activeSection === 'day' && (
-        <div className={styles.HeaderBlock}>
-          <Calendar.SetVisibleMonth target="previous">◀</Calendar.SetVisibleMonth>
-          <button
-            type="button"
-            onClick={() => onActiveSectionChange('month')}
-            className={styles.HeaderMonthLabel}
-          >
-            {visibleDate.format('MMMM')}
-          </button>
-          <Calendar.SetVisibleMonth target="next">▶</Calendar.SetVisibleMonth>
-        </div>
-      )}
-      {(activeSection === 'month' || activeSection === 'day') && (
-        <div className={styles.HeaderBlock}>
-          <Calendar.SetVisibleYear target="previous">◀</Calendar.SetVisibleYear>
-          <button type="button" onClick={() => onActiveSectionChange('year')}>
-            {visibleDate.format('YYYY')}
-          </button>
-          <Calendar.SetVisibleYear target="next">▶</Calendar.SetVisibleYear>
-        </div>
-      )}
+      <div className={styles.HeaderBlock}>
+        <Calendar.SetVisibleMonth
+          target="previous"
+          className={styles.SetVisibleMonth}
+          disabled={activeSection !== 'day' ? true : undefined}
+        >
+          ◀
+        </Calendar.SetVisibleMonth>
+        <button
+          type="button"
+          onClick={() =>
+            onActiveSectionChange(activeSection === 'month' ? 'day' : 'month')
+          }
+          disabled={activeSection === 'year' ? true : undefined}
+          className={styles.SetActiveSectionMonth}
+        >
+          {visibleDate.format('MMMM')}
+        </button>
+        <Calendar.SetVisibleMonth
+          target="next"
+          disabled={activeSection !== 'day' ? true : undefined}
+          className={styles.SetVisibleMonth}
+        >
+          ▶
+        </Calendar.SetVisibleMonth>
+      </div>
+      <div className={styles.HeaderBlock}>
+        <Calendar.SetVisibleYear
+          target="previous"
+          disabled={activeSection === 'year' ? true : undefined}
+          className={styles.SetVisibleYear}
+        >
+          ◀
+        </Calendar.SetVisibleYear>
+        <button
+          type="button"
+          onClick={() =>
+            onActiveSectionChange(activeSection === 'year' ? 'day' : 'year')
+          }
+          className={styles.SetActiveSectionYear}
+        >
+          {visibleDate.format('YYYY')}
+        </button>
+        <Calendar.SetVisibleYear
+          target="next"
+          disabled={activeSection === 'year' ? true : undefined}
+          className={styles.SetVisibleYear}
+        >
+          ▶
+        </Calendar.SetVisibleYear>
+      </div>
     </header>
   );
 }

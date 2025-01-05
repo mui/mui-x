@@ -11,52 +11,61 @@ import styles from './calendar.module.css';
 
 function Header(props) {
   const { activeSection, onActiveSectionChange } = props;
-  const { visibleDate, setVisibleDate } = useCalendarContext();
+  const { visibleDate } = useCalendarContext();
 
   return (
     <header className={styles.Header}>
-      {activeSection === 'day' && (
-        <div className={styles.HeaderBlock}>
-          <button
-            type="button"
-            onClick={() => setVisibleDate(visibleDate.subtract(1, 'month'))}
-          >
-            ◀
-          </button>
-          <button
-            type="button"
-            onClick={() => onActiveSectionChange('month')}
-            className={styles.HeaderMonthLabel}
-          >
-            {visibleDate.format('MMMM')}
-          </button>
-          <button
-            type="button"
-            onClick={() => setVisibleDate(visibleDate.add(1, 'month'))}
-          >
-            ▶
-          </button>
-        </div>
-      )}
-      {(activeSection === 'month' || activeSection === 'day') && (
-        <div className={styles.HeaderBlock}>
-          <button
-            type="button"
-            onClick={() => setVisibleDate(visibleDate.subtract(1, 'year'))}
-          >
-            ◀
-          </button>
-          <button type="button" onClick={() => onActiveSectionChange('year')}>
-            {visibleDate.format('YYYY')}
-          </button>
-          <button
-            type="button"
-            onClick={() => setVisibleDate(visibleDate.add(1, 'year'))}
-          >
-            ▶
-          </button>
-        </div>
-      )}
+      <div className={styles.HeaderBlock}>
+        <Calendar.SetVisibleMonth
+          target="previous"
+          className={styles.SetVisibleMonth}
+          disabled={activeSection !== 'day' ? true : undefined}
+        >
+          ◀
+        </Calendar.SetVisibleMonth>
+        <button
+          type="button"
+          onClick={() =>
+            onActiveSectionChange(activeSection === 'month' ? 'day' : 'month')
+          }
+          disabled={activeSection === 'year' ? true : undefined}
+          className={styles.SetActiveSectionMonth}
+        >
+          {visibleDate.format('MMMM')}
+        </button>
+        <Calendar.SetVisibleMonth
+          target="next"
+          disabled={activeSection !== 'day' ? true : undefined}
+          className={styles.SetVisibleMonth}
+        >
+          ▶
+        </Calendar.SetVisibleMonth>
+      </div>
+      <div className={styles.HeaderBlock}>
+        <Calendar.SetVisibleYear
+          target="previous"
+          disabled={activeSection === 'year' ? true : undefined}
+          className={styles.SetVisibleYear}
+        >
+          ◀
+        </Calendar.SetVisibleYear>
+        <button
+          type="button"
+          onClick={() =>
+            onActiveSectionChange(activeSection === 'year' ? 'day' : 'year')
+          }
+          className={styles.SetActiveSectionYear}
+        >
+          {visibleDate.format('YYYY')}
+        </button>
+        <Calendar.SetVisibleYear
+          target="next"
+          disabled={activeSection === 'year' ? true : undefined}
+          className={styles.SetVisibleYear}
+        >
+          ▶
+        </Calendar.SetVisibleYear>
+      </div>
     </header>
   );
 }
@@ -79,7 +88,7 @@ export default function YearMonthDayCalendar() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Calendar.Root value={value} onValueChange={handleValueChange} disableFuture>
+      <Calendar.Root value={value} onValueChange={handleValueChange}>
         <div className={styles.Root}>
           <Header
             activeSection={activeSection}

@@ -40,10 +40,10 @@ const CalendarSetVisibleYear = React.forwardRef(function CalendarSetVisibleYear(
 
   const targetDate = React.useMemo(() => {
     if (props.target === 'previous') {
-      return utils.startOfYear(utils.addYears(calendarRootContext.visibleDate, -1));
+      return utils.startOfMonth(utils.addYears(calendarRootContext.visibleDate, -1));
     }
 
-    return utils.startOfYear(utils.addYears(calendarRootContext.visibleDate, 1));
+    return utils.startOfMonth(utils.addYears(calendarRootContext.visibleDate, 1));
   }, [calendarRootContext.visibleDate, utils, props.target]);
 
   const isDisabled = React.useMemo(() => {
@@ -102,11 +102,11 @@ export namespace CalendarSetVisibleYear {
 
   export interface Props
     extends Omit<useCalendarSetVisibleYear.Parameters, 'ctx'>,
-      BaseUIComponentProps<'div', State> {}
+      BaseUIComponentProps<'button', State> {}
 }
 
 interface InnerCalendarSetVisibleYearProps
   extends useCalendarSetVisibleYear.Parameters,
-    BaseUIComponentProps<'div', CalendarSetVisibleYear.State> {}
+    BaseUIComponentProps<'button', CalendarSetVisibleYear.State> {}
 
 export { CalendarSetVisibleYear };

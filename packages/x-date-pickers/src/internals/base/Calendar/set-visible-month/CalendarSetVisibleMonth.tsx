@@ -106,11 +106,11 @@ export namespace CalendarSetVisibleMonth {
 
   export interface Props
     extends Omit<useCalendarSetVisibleMonth.Parameters, 'ctx'>,
-      BaseUIComponentProps<'div', State> {}
+      BaseUIComponentProps<'button', State> {}
 }
 
 interface InnerCalendarSetVisibleMonthProps
   extends useCalendarSetVisibleMonth.Parameters,
-    BaseUIComponentProps<'div', CalendarSetVisibleMonth.State> {}
+    BaseUIComponentProps<'button', CalendarSetVisibleMonth.State> {}
 
 export { CalendarSetVisibleMonth };
