@@ -1,0 +1,101 @@
+.Root {
+  border: 1px solid #78716c;
+  width: 344px;
+  height: 320px;
+  display: flex;
+  flex-direction: column;
+}
+
+.Header {
+  padding: 8px 12px;
+}
+
+.MonthsList,
+.YearsList {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  overflow-y: scroll;
+}
+
+.MonthsCell,
+.YearsCell {
+  height: 24px;
+  min-height: 24px;
+}
+
+.DaysGrid {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.DaysGridBody {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.DaysWeekRow,
+.DaysGridHeader {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.DaysCellWrapper {
+  height: 36px;
+  width: 40px;
+  min-width: 40px;
+}
+
+.DaysCell {
+  height: 40px;
+  width: 40px;
+  border-radius: 8px;
+  border: none;
+  background-color: transparent;
+
+  &[data-current] {
+    outline: 2px solid #9ca3af;
+  }
+
+  &[data-selected] {
+    background-color: #7dd3fc;
+
+    &:focus-visible {
+      outline: 2px solid #0ea5e9;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid #0ea5e9;
+  }
+
+  &[data-outsidemonth] {
+    display: none;
+  }
+}
+
+.DaysGridHeaderCell {
+  width: 48px;
+  text-align: center;
+}
+
+.MonthsCell,
+.YearsCell {
+  &[data-selected] {
+    background-color: #0ea5e9;
+  }
+
+  &:focus-visible {
+    border-width: 2px;
+
+    &[data-selected] {
+      background-color: #7dd3fc;
+    }
+  }
+}

@@ -274,6 +274,7 @@ const pages: MuiPage[] = [
                 title: 'Date Field',
               },
               { pathname: '/x/react-date-pickers/date-calendar', title: 'Date Calendar' },
+              { pathname: '/x/react-date-pickers/base-calendar', title: 'Base UI X: Calendar' },
             ],
           },
           {
