@@ -45,6 +45,7 @@ export function useCalendarDaysGridBody(parameters: useCalendarDaysGridBody.Para
 
   const onKeyDown = useEventCallback((event: React.KeyboardEvent) => {
     const changePage: NavigateInGridChangePage = (params) => {
+      // TODO: Jump over months with no valid date.
       if (params.direction === 'next') {
         calendarRootContext.setVisibleDate(utils.addMonths(calendarRootContext.visibleDate, 1));
       }

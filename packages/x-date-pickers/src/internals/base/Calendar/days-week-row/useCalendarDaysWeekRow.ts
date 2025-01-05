@@ -1,5 +1,4 @@
 import * as React from 'react';
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { PickerValidDate } from '../../../../models';
 import { GenericHTMLProps } from '../../utils/types';
 import { mergeReactProps } from '../../utils/mergeReactProps';
@@ -23,7 +22,7 @@ export function useCalendarDaysWeekRow(parameters: useCalendarDaysWeekRow.Parame
   );
 
   const registerWeekRowCells = ctx.registerWeekRowCells;
-  useEnhancedEffect(() => {
+  React.useEffect(() => {
     return registerWeekRowCells(ref, calendarDayCellRefs);
   }, [registerWeekRowCells]);
 

@@ -186,7 +186,7 @@ export function navigateInGrid({
     while (nextCellIndex === -1 && i < currentCellIndex + flatCells.length) {
       if (changePage && i > flatCells.length - 1) {
         changePage({
-          direction: 'previous',
+          direction: 'next',
           target: { type: 'first-cell' },
         });
         break;
