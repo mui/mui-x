@@ -7,11 +7,11 @@ import { useUtils } from '../../../hooks/useUtils';
 
 export function useCalendarDaysCell(parameters: useCalendarDaysCell.Parameters) {
   const utils = useUtils();
-  const { value, ctx } = parameters;
+  const { value, format = utils.formats.dayOfMonth, ctx } = parameters;
 
   const formattedValue = React.useMemo(
-    () => utils.formatByString(value, utils.formats.dayOfMonth),
-    [utils, value],
+    () => utils.formatByString(value, format),
+    [utils, value, format],
   );
 
   const isCurrent = React.useMemo(() => utils.isSameDay(value, utils.date()), [utils, value]);
@@ -40,8 +40,8 @@ export namespace useCalendarDaysCell {
   export interface Parameters {
     value: PickerValidDate;
     /**
-     * The format to use to display the day.
-     * @default utils.formats.monthShort
+     * The format used to display the day.
+     * @default utils.formats.dayOfMonth
      */
     format?: string;
     ctx: useCalendarDaysCell.Context;

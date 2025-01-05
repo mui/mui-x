@@ -2,15 +2,16 @@
 import * as React from 'react';
 import { useCalendarDaysGridBody } from './useCalendarDaysGridBody';
 import { BaseUIComponentProps } from '../../utils/types';
-import { useComponentRenderer } from '../../utils/useComponentRender';
+import { useComponentRenderer } from '../../utils/useComponentRenderer';
 import { CompositeList } from '../../composite/list/CompositeList';
+import { CalendarDaysGridBodyContext } from './CalendarDaysGridBodyContext';
 
 const CalendarDaysGridBody = React.forwardRef(function CalendarDaysGrid(
   props: CalendarDaysGridBody.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, render, children, ...otherProps } = props;
-  const { getDaysGridBodyProps, calendarDaysCellRefs } = useCalendarDaysGridBody({
+  const { getDaysGridBodyProps, context, calendarWeekRowRefs } = useCalendarDaysGridBody({
     children,
   });
   const state = React.useMemo(() => ({}), []);
@@ -24,7 +25,11 @@ const CalendarDaysGridBody = React.forwardRef(function CalendarDaysGrid(
     extraProps: otherProps,
   });
 
-  return <CompositeList elementsRef={calendarDaysCellRefs}>{renderElement()}</CompositeList>;
+  return (
+    <CalendarDaysGridBodyContext.Provider value={context}>
+      <CompositeList elementsRef={calendarWeekRowRefs}>{renderElement()}</CompositeList>
+    </CalendarDaysGridBodyContext.Provider>
+  );
 });
 
 export namespace CalendarDaysGridBody {

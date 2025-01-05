@@ -7,7 +7,7 @@ import { mergeReactProps } from '../../utils/mergeReactProps';
 
 export function useCalendarMonthsCell(parameters: useCalendarMonthsCell.Parameters) {
   const utils = useUtils();
-  const { value, format = utils.formats.monthShort, ctx } = parameters;
+  const { value, format = utils.formats.month, ctx } = parameters;
 
   const formattedValue = React.useMemo(
     () => utils.formatByString(value, format),
@@ -41,8 +41,8 @@ export namespace useCalendarMonthsCell {
   export interface Parameters {
     value: PickerValidDate;
     /**
-     * The format to use to display the month.
-     * @default utils.formats.monthShort
+     * The format used to display the month.
+     * @default utils.formats.month
      */
     format?: string;
     ctx: Context;

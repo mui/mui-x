@@ -1,0 +1,47 @@
+import * as React from 'react';
+import { PickerValidDate } from '../../../../models';
+import { GenericHTMLProps } from '../../utils/types';
+import { mergeReactProps } from '../../utils/mergeReactProps';
+import { useUtils } from '../../../hooks/useUtils';
+
+export function useCalendarDaysGridHeaderCell(
+  parameters: useCalendarDaysGridHeaderCell.Parameters,
+) {
+  const utils = useUtils();
+
+  const defaultFormatter = React.useCallback(
+    (date: PickerValidDate) => utils.format(date, 'weekdayShort').charAt(0).toUpperCase(),
+    [utils],
+  );
+
+  const { value, formatter = defaultFormatter } = parameters;
+
+  const formattedValue = React.useMemo(() => formatter(value), [formatter, value]);
+  const ariaLabel = React.useMemo(() => utils.format(value, 'weekday'), [utils, value]);
+
+  const getDaysGridHeaderCellProps = React.useCallback(
+    (externalProps: GenericHTMLProps) => {
+      return mergeReactProps(externalProps, {
+        role: 'columnheader',
+        'aria-label': ariaLabel,
+        children: formattedValue,
+      });
+    },
+    [formattedValue, ariaLabel],
+  );
+
+  return React.useMemo(() => ({ getDaysGridHeaderCellProps }), [getDaysGridHeaderCellProps]);
+}
+
+export namespace useCalendarDaysGridHeaderCell {
+  export interface Parameters {
+    value: PickerValidDate;
+    /**
+     * The formatter function used to display the day of the week.
+     * @param {PickerValidDate} date The date to format.
+     * @returns {string} The formatted date.
+     * @default (date) => utils.format(date, 'weekdayShort').charAt(0).toUpperCase()
+     */
+    formatter?: (date: PickerValidDate) => string;
+  }
+}

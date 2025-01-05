@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useCalendarMonthsList } from './useCalendarMonthsList';
 import { BaseUIComponentProps } from '../../utils/types';
-import { useComponentRenderer } from '../../utils/useComponentRender';
+import { useComponentRenderer } from '../../utils/useComponentRenderer';
 import { CompositeList } from '../../composite/list/CompositeList';
 import { CalendarMonthsListContext } from './CalendarMonthsListContext';
 

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import { useUtils } from '../../../hooks/useUtils';
-import { useComponentRenderer } from '../../utils/useComponentRender';
+import { useComponentRenderer } from '../../utils/useComponentRenderer';
 import { useCalendarRootContext } from '../root/CalendarRootContext';
 import { useCalendarYearsCell } from './useCalendarYearsCell';
 import { BaseUIComponentProps } from '../../utils/types';

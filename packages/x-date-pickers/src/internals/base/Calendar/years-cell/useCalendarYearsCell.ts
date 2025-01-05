@@ -41,7 +41,7 @@ export namespace useCalendarYearsCell {
   export interface Parameters {
     value: PickerValidDate;
     /**
-     * The format to use to display the year.
+     * The format used to display the year.
      * @default utils.formats.year
      */
     format?: string;

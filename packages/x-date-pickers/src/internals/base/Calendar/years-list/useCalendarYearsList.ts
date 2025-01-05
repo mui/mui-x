@@ -32,7 +32,7 @@ export function useCalendarYearsList(parameters: useCalendarYearsList.Parameters
     navigateInList({
       cells: calendarYearsCellRefs.current,
       target: event.target as HTMLElement,
-      key: event.key,
+      event,
       loop,
     });
   });

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import { useUtils } from '../../../hooks/useUtils';
-import { useComponentRenderer } from '../../utils/useComponentRender';
+import { useComponentRenderer } from '../../utils/useComponentRenderer';
 import { useCalendarRootContext } from '../root/CalendarRootContext';
 import { useCalendarMonthsCell } from './useCalendarMonthsCell';
 import { BaseUIComponentProps } from '../../utils/types';
@@ -61,7 +61,7 @@ const CalendarMonthsCell = React.forwardRef(function CalendarMonthsCell(
     [isSelected, calendarMonthsListContext.selectMonth],
   );
 
-  return <MemoizedInnerCalendarMonthsCell ref={mergedRef} {...props} ctx={ctx} />;
+  return <MemoizedInnerCalendarMonthsCell {...props} ref={mergedRef} ctx={ctx} />;
 });
 
 export namespace CalendarMonthsCell {

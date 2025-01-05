@@ -3,7 +3,7 @@ import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import { useUtils } from '../../../hooks/useUtils';
 import { BaseUIComponentProps } from '../../utils/types';
-import { useComponentRenderer } from '../../utils/useComponentRender';
+import { useComponentRenderer } from '../../utils/useComponentRenderer';
 import { useCalendarDaysGridContext } from '../days-grid/CalendarDaysGridContext';
 import { useCalendarDaysCell } from './useCalendarDaysCell';
 import { useCalendarRootContext } from '../root/CalendarRootContext';

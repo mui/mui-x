@@ -24,7 +24,7 @@ export function useCalendarMonthsList(parameters: useCalendarMonthsList.Paramete
     navigateInList({
       cells: calendarMonthsCellRefs.current,
       target: event.target as HTMLElement,
-      key: event.key,
+      event,
       loop,
     });
   });

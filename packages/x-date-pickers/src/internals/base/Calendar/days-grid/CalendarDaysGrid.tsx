@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useCalendarDaysGrid } from './useCalendarDaysGrid';
 import { BaseUIComponentProps } from '../../utils/types';
-import { useComponentRenderer } from '../../utils/useComponentRender';
+import { useComponentRenderer } from '../../utils/useComponentRenderer';
 import { CalendarDaysGridContext } from './CalendarDaysGridContext';
 
 const CalendarDaysGrid = React.forwardRef(function CalendarDaysGrid(
