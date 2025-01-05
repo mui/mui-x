@@ -53,7 +53,7 @@ export default function DayCalendar() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Calendar.Root value={value} onValueChange={setValue} disableFuture>
+      <Calendar.Root value={value} onValueChange={setValue}>
         <div className={styles.Root}>
           <Header />
           <Calendar.DaysGrid className={styles.DaysGrid}>

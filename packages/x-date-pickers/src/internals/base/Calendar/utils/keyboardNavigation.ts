@@ -1,3 +1,6 @@
+import { ta } from 'date-fns/locale';
+import { get } from 'http';
+
 const LIST_NAVIGATION_SUPPORTED_KEYS = ['ArrowDown', 'ArrowUp', 'Home', 'End'];
 
 export function navigateInList({
@@ -68,26 +71,16 @@ const GRID_NAVIGATION_SUPPORTED_KEYS = [
   'End',
 ];
 
-export function navigateInGrid({
+function getCellsInGrid({
   rows,
   rowsCells,
-  target,
-  event,
 }: {
   rows: (HTMLElement | null)[];
   rowsCells: {
     rowRef: React.RefObject<HTMLElement | null>;
     cellsRef: React.RefObject<(HTMLElement | null)[]>;
   }[];
-  target: HTMLElement;
-  event: React.KeyboardEvent;
 }) {
-  if (!GRID_NAVIGATION_SUPPORTED_KEYS.includes(event.key)) {
-    return;
-  }
-
-  event.preventDefault();
-
   const cells: HTMLElement[][] = [];
   for (let i = 0; i < rows.length; i += 1) {
     const row = rows[i];
@@ -99,6 +92,32 @@ export function navigateInGrid({
     }
   }
 
+  return cells;
+}
+
+export function navigateInGrid({
+  rows,
+  rowsCells,
+  target,
+  event,
+  changePage,
+}: {
+  rows: (HTMLElement | null)[];
+  rowsCells: {
+    rowRef: React.RefObject<HTMLElement | null>;
+    cellsRef: React.RefObject<(HTMLElement | null)[]>;
+  }[];
+  target: HTMLElement;
+  event: React.KeyboardEvent;
+  changePage: NavigateInGridChangePage | undefined;
+}) {
+  if (!GRID_NAVIGATION_SUPPORTED_KEYS.includes(event.key)) {
+    return;
+  }
+
+  event.preventDefault();
+
+  const cells = getCellsInGrid({ rows, rowsCells });
   if (cells.length === 0) {
     return;
   }
@@ -108,7 +127,16 @@ export function navigateInGrid({
     const currentColIndex = cells[currentRowIndex].indexOf(target);
     let nextRowIndex = -1;
     let i = currentRowIndex + 1;
+
     while (nextRowIndex === -1 && i < currentRowIndex + cells.length) {
+      if (changePage && i > cells.length - 1) {
+        changePage({
+          direction: 'next',
+          target: { type: 'first-cell-in-col', colIndex: currentColIndex },
+        });
+        break;
+      }
+
       const rowIndex = i % cells.length;
       const cell = cells[rowIndex][currentColIndex];
       if (isNavigable(cell)) {
@@ -128,6 +156,14 @@ export function navigateInGrid({
     let nextRowIndex = -1;
     let i = currentRowIndex - 1;
     while (nextRowIndex === -1 && i > currentRowIndex - cells.length) {
+      if (changePage && i < 0) {
+        changePage({
+          direction: 'previous',
+          target: { type: 'last-cell-in-col', colIndex: currentColIndex },
+        });
+        break;
+      }
+
       const rowIndex = (cells.length + i) % cells.length;
       const cell = cells[rowIndex][currentColIndex];
       if (isNavigable(cell)) {
@@ -148,6 +184,14 @@ export function navigateInGrid({
     let i = currentCellIndex + 1;
 
     while (nextCellIndex === -1 && i < currentCellIndex + flatCells.length) {
+      if (changePage && i > flatCells.length - 1) {
+        changePage({
+          direction: 'previous',
+          target: { type: 'first-cell' },
+        });
+        break;
+      }
+
       const cellIndex = i % flatCells.length;
       const cell = flatCells[cellIndex];
       if (isNavigable(cell)) {
@@ -168,6 +212,14 @@ export function navigateInGrid({
     let i = currentCellIndex - 1;
 
     while (nextCellIndex === -1 && i > currentCellIndex - flatCells.length) {
+      if (changePage && i < 0) {
+        changePage({
+          direction: 'previous',
+          target: { type: 'last-cell' },
+        });
+        break;
+      }
+
       const cellIndex = (flatCells.length + i) % flatCells.length;
       const cell = flatCells[cellIndex];
       if (isNavigable(cell)) {
@@ -218,6 +270,56 @@ export function navigateInGrid({
       break;
     default:
       break;
+  }
+}
+
+export type PageNavigationTarget =
+  | { type: 'first-cell' }
+  | { type: 'last-cell' }
+  | { type: 'first-cell-in-col'; colIndex: number }
+  | { type: 'last-cell-in-col'; colIndex: number }
+  | { type: 'first-cell-in-row'; rowIndex: number }
+  | { type: 'last-cell-in-row'; rowIndex: number };
+
+export type NavigateInGridChangePage = (params: {
+  direction: 'next' | 'previous';
+  target: PageNavigationTarget;
+}) => void;
+
+export function applyInitialFocusInGrid({
+  rows,
+  rowsCells,
+  target,
+}: {
+  rows: (HTMLElement | null)[];
+  rowsCells: {
+    rowRef: React.RefObject<HTMLElement | null>;
+    cellsRef: React.RefObject<(HTMLElement | null)[]>;
+  }[];
+  target: PageNavigationTarget;
+}) {
+  console.log(rows);
+  const cells = getCellsInGrid({ rows, rowsCells });
+  let cell: HTMLElement | undefined;
+
+  if (target.type === 'first-cell') {
+    cell = cells.flat().find(isNavigable);
+  }
+
+  if (target.type === 'last-cell') {
+    cell = cells.flat().findLast(isNavigable);
+  }
+
+  if (target.type === 'first-cell-in-col') {
+    cell = cells.map((row) => row[target.colIndex]).find(isNavigable);
+  }
+
+  if (target.type === 'last-cell-in-col') {
+    cell = cells.map((row) => row[target.colIndex]).findLast(isNavigable);
+  }
+
+  if (cell) {
+    cell.focus();
   }
 }
 
