@@ -1,6 +1,3 @@
-import { ta } from 'date-fns/locale';
-import { get } from 'http';
-
 const LIST_NAVIGATION_SUPPORTED_KEYS = ['ArrowDown', 'ArrowUp', 'Home', 'End'];
 
 export function navigateInList({
