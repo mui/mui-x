@@ -1,5 +1,6 @@
 .Root {
   border: 1px solid #78716c;
+  border-radius: 8px;
   width: 276px;
   height: 300px;
   display: flex;
