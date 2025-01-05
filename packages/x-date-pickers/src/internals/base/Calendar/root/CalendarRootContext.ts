@@ -5,7 +5,10 @@ import type { useCalendarRoot } from './useCalendarRoot';
 
 export interface CalendarRootContext {
   value: PickerValidDate | null;
-  setValue: (value: PickerValidDate, context: useCalendarRoot.ValueChangeHandlerContext) => void;
+  setValue: (
+    value: PickerValidDate | null,
+    context: Pick<useCalendarRoot.ValueChangeHandlerContext, 'section'>,
+  ) => void;
   referenceDate: PickerValidDate;
   timezone: PickersTimezone;
   disabled: boolean;

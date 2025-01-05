@@ -51,9 +51,17 @@ function Header() {
 export default function DayCalendar() {
   const [value, setValue] = React.useState<Dayjs | null>(null);
 
+  const handleValueChange = React.useCallback(
+    (newValue: Dayjs | null, context: Calendar.Root.ValueChangeHandlerContext) => {
+      console.log(context);
+      setValue(newValue);
+    },
+    [],
+  );
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Calendar.Root value={value} onValueChange={setValue}>
+      <Calendar.Root value={value} onValueChange={handleValueChange}>
         <div className={styles.Root}>
           <Header />
           <Calendar.DaysGrid className={styles.DaysGrid}>

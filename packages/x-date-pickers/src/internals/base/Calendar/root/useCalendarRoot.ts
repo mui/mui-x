@@ -1,14 +1,25 @@
 import * as React from 'react';
-import { PickerValidDate, TimezoneProps } from '../../../../models';
+import useEventCallback from '@mui/utils/useEventCallback';
+import {
+  DateValidationError,
+  OnErrorProps,
+  PickerValidDate,
+  TimezoneProps,
+} from '../../../../models';
 import { useIsDateDisabled } from '../../../../DateCalendar/useIsDateDisabled';
-import { ExportedValidateDateProps, ValidateDateProps } from '../../../../validation/validateDate';
+import {
+  ExportedValidateDateProps,
+  validateDate,
+  ValidateDateProps,
+} from '../../../../validation/validateDate';
 import { useControlledValueWithTimezone } from '../../../hooks/useValueWithTimezone';
 import { useDefaultDates, useUtils } from '../../../hooks/useUtils';
 import { SECTION_TYPE_GRANULARITY } from '../../../utils/getDefaultReferenceDate';
 import { singleItemValueManager } from '../../../utils/valueManagers';
 import { applyDefaultDate } from '../../../utils/date-utils';
-import { FormProps } from '../../../models';
+import { FormProps, PickerValue } from '../../../models';
 import { CalendarRootContext } from './CalendarRootContext';
+import { useValidation } from '../../../../validation';
 
 function useAddDefaultsToValidateDateProps(
   validationDate: ExportedValidateDateProps,
@@ -54,6 +65,7 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
   const {
     readOnly = false,
     disabled = false,
+    onError,
     defaultValue,
     onValueChange,
     value: valueProp,
@@ -90,6 +102,13 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
     [referenceDateProp, timezone],
   );
 
+  const { getValidationErrorForNewValue } = useValidation({
+    props: { ...validationProps, onError },
+    value,
+    timezone,
+    validator: validateDate,
+  });
+
   const [visibleDate, setVisibleDate] = React.useState<PickerValidDate>(referenceDate);
   const [prevValue, setPrevValue] = React.useState<PickerValidDate | null>(value);
   if (value !== prevValue && utils.isValid(value)) {
@@ -102,10 +121,17 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
     timezone,
   });
 
+  const setValue = useEventCallback<CalendarRootContext['setValue']>((newValue, context) => {
+    handleValueChange(newValue, {
+      ...context,
+      validationError: getValidationErrorForNewValue(newValue),
+    });
+  });
+
   const context: CalendarRootContext = React.useMemo(
     () => ({
       value,
-      setValue: handleValueChange,
+      setValue,
       referenceDate,
       timezone,
       disabled,
@@ -117,7 +143,7 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
     }),
     [
       value,
-      handleValueChange,
+      setValue,
       referenceDate,
       timezone,
       disabled,
@@ -133,7 +159,11 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
 }
 
 export namespace useCalendarRoot {
-  export interface Parameters extends TimezoneProps, FormProps, ExportedValidateDateProps {
+  export interface Parameters
+    extends TimezoneProps,
+      FormProps,
+      OnErrorProps<PickerValue, DateValidationError>,
+      ExportedValidateDateProps {
     /**
      * The controlled value that should be selected.
      *
@@ -171,5 +201,9 @@ export namespace useCalendarRoot {
      * The section handled by the UI that triggered the change.
      */
     section: 'day' | 'month' | 'year';
+    /**
+     * The validation error associated to the new value.
+     */
+    validationError: DateValidationError;
   }
 }

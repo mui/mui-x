@@ -298,7 +298,6 @@ export function applyInitialFocusInGrid({
   }[];
   target: PageNavigationTarget;
 }) {
-  console.log(rows);
   const cells = getCellsInGrid({ rows, rowsCells });
   let cell: HTMLElement | undefined;
 
