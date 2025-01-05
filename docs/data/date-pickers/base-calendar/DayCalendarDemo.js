@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
+
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 // eslint-disable-next-line no-restricted-imports
@@ -48,20 +48,10 @@ function Header() {
   );
 }
 
-export default function DayCalendar() {
-  const [value, setValue] = React.useState<Dayjs | null>(null);
-
-  const handleValueChange = React.useCallback(
-    (newValue: Dayjs | null, context: Calendar.Root.ValueChangeHandlerContext) => {
-      console.log(context);
-      setValue(newValue);
-    },
-    [],
-  );
-
+function DayCalendar(props) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Calendar.Root value={value} onValueChange={handleValueChange}>
+      <Calendar.Root {...props}>
         <div className={styles.Root}>
           <Header />
           <Calendar.DaysGrid className={styles.DaysGrid}>
@@ -101,6 +91,21 @@ export default function DayCalendar() {
           </Calendar.DaysGrid>
         </div>
       </Calendar.Root>
+    </LocalizationProvider>
+  );
+}
+
+export default function DayCalendarDemo() {
+  const [value, setValue] = React.useState(null);
+
+  const handleValueChange = React.useCallback((newValue, context) => {
+    console.log(context);
+    setValue(newValue);
+  }, []);
+
+  return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DayCalendar value={value} onValueChange={handleValueChange} />
     </LocalizationProvider>
   );
 }

@@ -14,18 +14,13 @@ function Header(props: {
   onActiveSectionChange: (newActiveSection: 'day' | 'month' | 'year') => void;
 }) {
   const { activeSection, onActiveSectionChange } = props;
-  const { visibleDate, setVisibleDate } = useCalendarContext();
+  const { visibleDate } = useCalendarContext();
 
   return (
     <header className={styles.Header}>
       {activeSection === 'day' && (
         <div className={styles.HeaderBlock}>
-          <button
-            type="button"
-            onClick={() => setVisibleDate(visibleDate.subtract(1, 'month'))}
-          >
-            ◀
-          </button>
+          <Calendar.SetVisibleMonth target="previous">◀</Calendar.SetVisibleMonth>
           <button
             type="button"
             onClick={() => onActiveSectionChange('month')}
@@ -33,31 +28,16 @@ function Header(props: {
           >
             {visibleDate.format('MMMM')}
           </button>
-          <button
-            type="button"
-            onClick={() => setVisibleDate(visibleDate.add(1, 'month'))}
-          >
-            ▶
-          </button>
+          <Calendar.SetVisibleMonth target="next">▶</Calendar.SetVisibleMonth>
         </div>
       )}
       {(activeSection === 'month' || activeSection === 'day') && (
         <div className={styles.HeaderBlock}>
-          <button
-            type="button"
-            onClick={() => setVisibleDate(visibleDate.subtract(1, 'year'))}
-          >
-            ◀
-          </button>
+          <Calendar.SetVisibleYear target="previous">◀</Calendar.SetVisibleYear>
           <button type="button" onClick={() => onActiveSectionChange('year')}>
             {visibleDate.format('YYYY')}
           </button>
-          <button
-            type="button"
-            onClick={() => setVisibleDate(visibleDate.add(1, 'year'))}
-          >
-            ▶
-          </button>
+          <Calendar.SetVisibleYear target="next">▶</Calendar.SetVisibleYear>
         </div>
       )}
     </header>
@@ -87,7 +67,7 @@ export default function YearMonthDayCalendar() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Calendar.Root value={value} onValueChange={handleValueChange} disableFuture>
+      <Calendar.Root value={value} onValueChange={handleValueChange}>
         <div className={styles.Root}>
           <Header
             activeSection={activeSection}

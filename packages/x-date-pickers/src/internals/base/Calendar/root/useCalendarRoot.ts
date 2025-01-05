@@ -71,6 +71,7 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
     value: valueProp,
     timezone: timezoneProp,
     referenceDate: referenceDateProp,
+    monthPageSize = 1,
   } = parameters;
 
   const utils = useUtils();
@@ -140,6 +141,7 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
       validationProps,
       visibleDate,
       setVisibleDate,
+      monthPageSize,
     }),
     [
       value,
@@ -152,6 +154,7 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
       validationProps,
       visibleDate,
       setVisibleDate,
+      monthPageSize,
     ],
   );
 
@@ -191,11 +194,18 @@ export namespace useCalendarRoot {
      * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.
      */
     referenceDate?: PickerValidDate;
+    /**
+     * The amount of months to navigate by when pressing <Calendar.SetVisibleMonth /> or when using keyboard navigation in the day grid.
+     * This is mostly useful when displaying multiple day grids.
+     * @default 1
+     */
+    monthPageSize?: number;
   }
 
   export interface ReturnValue {
     context: CalendarRootContext;
   }
+
   export interface ValueChangeHandlerContext {
     /**
      * The section handled by the UI that triggered the change.

@@ -17,6 +17,7 @@ export interface CalendarRootContext {
   validationProps: ValidateDateProps;
   visibleDate: PickerValidDate;
   setVisibleDate: (visibleDate: PickerValidDate) => void;
+  monthPageSize: number;
 }
 
 export const CalendarRootContext = React.createContext<CalendarRootContext | undefined>(undefined);

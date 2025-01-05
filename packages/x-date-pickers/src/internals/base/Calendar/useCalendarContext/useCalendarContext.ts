@@ -6,6 +6,5 @@ export function useCalendarContext() {
 
   return {
     visibleDate: calendarRootContext.visibleDate,
-    setVisibleDate: calendarRootContext.setVisibleDate,
   };
 }
