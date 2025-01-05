@@ -1,5 +1,4 @@
 import * as React from 'react';
-import useEventCallback from '@mui/utils/useEventCallback';
 import { PickerValidDate, TimezoneProps } from '../../../../models';
 import { useIsDateDisabled } from '../../../../DateCalendar/useIsDateDisabled';
 import { ExportedValidateDateProps, ValidateDateProps } from '../../../../validation/validateDate';
@@ -10,7 +9,6 @@ import { singleItemValueManager } from '../../../utils/valueManagers';
 import { applyDefaultDate } from '../../../utils/date-utils';
 import { FormProps } from '../../../models';
 import { CalendarRootContext } from './CalendarRootContext';
-import { set } from 'date-fns';
 
 function useAddDefaultsToValidationDates(
   validationDate: ExportedValidateDateProps,
@@ -93,8 +91,6 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
     [referenceDateProp, timezone],
   );
 
-  // TODO: Allow to control this state
-  const [activeSection, setActiveSection] = React.useState<'day' | 'month' | 'year'>('month');
   const [visibleDate, setVisibleDate] = React.useState<PickerValidDate>(referenceDate);
 
   const isDateDisabled = useIsDateDisabled({
@@ -102,43 +98,27 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
     timezone,
   });
 
-  const setValue = useEventCallback(
-    (newValue: PickerValidDate, source: 'day' | 'month' | 'year') => {
-      if (source === 'month') {
-        setActiveSection('day');
-      }
-
-      if (source === 'year') {
-        setActiveSection('month');
-      }
-
-      handleValueChange(newValue);
-    },
-  );
-
   const context: CalendarRootContext = React.useMemo(
     () => ({
       value,
-      setValue,
+      setValue: handleValueChange,
       referenceDate,
       timezone,
       disabled,
       readOnly,
       isDateDisabled,
       validationProps,
-      activeSection,
       visibleDate,
     }),
     [
       value,
-      setValue,
+      handleValueChange,
       referenceDate,
       timezone,
       disabled,
       readOnly,
       isDateDisabled,
       validationProps,
-      activeSection,
       visibleDate,
     ],
   );
@@ -164,8 +144,12 @@ export namespace useCalendarRoot {
      * Event handler called when the selected value changes.
      * Provides the new value as an argument.
      * @param {PickerValidDate | null} value The new selected value.
+     * @param {useCalendarRoot.ValueChangeHandlerContext} context Additional context information.
      */
-    onValueChange?: (value: PickerValidDate | null) => void;
+    onValueChange?: (
+      value: PickerValidDate | null,
+      context: useCalendarRoot.ValueChangeHandlerContext,
+    ) => void;
     /**
      * The date used to generate the new value when both `value` and `defaultValue` are empty.
      * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.
@@ -175,5 +159,11 @@ export namespace useCalendarRoot {
 
   export interface ReturnValue {
     context: CalendarRootContext;
+  }
+  export interface ValueChangeHandlerContext {
+    /**
+     * The section handled by the UI that triggered the change.
+     */
+    section: 'day' | 'month' | 'year';
   }
 }

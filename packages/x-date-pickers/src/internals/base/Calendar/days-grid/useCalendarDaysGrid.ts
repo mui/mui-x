@@ -9,7 +9,7 @@ import { mergeReactProps } from '../../utils/mergeReactProps';
 import { CalendarDaysGridContext } from './CalendarDaysGridContext';
 
 export function useCalendarDaysGrid(parameters: useCalendarDaysGrid.Parameters) {
-  const { alwaysVisible = false, fixedWeekNumber } = parameters;
+  const { fixedWeekNumber } = parameters;
   const utils = useUtils();
   const calendarRootContext = useCalendarRootContext();
 
@@ -52,7 +52,7 @@ export function useCalendarDaysGrid(parameters: useCalendarDaysGrid.Parameters) 
       calendarRootContext.value ?? calendarRootContext.referenceDate,
     );
 
-    calendarRootContext.setValue(newCleanValue, 'day');
+    calendarRootContext.setValue(newCleanValue, { section: 'day' });
   });
 
   const context: CalendarDaysGridContext = React.useMemo(
@@ -60,12 +60,7 @@ export function useCalendarDaysGrid(parameters: useCalendarDaysGrid.Parameters) 
     [selectDay, daysGrid],
   );
 
-  const shouldRender = calendarRootContext.activeSection === 'day' || alwaysVisible;
-
-  return React.useMemo(
-    () => ({ getDaysGridProps, context, shouldRender }),
-    [getDaysGridProps, context, shouldRender],
-  );
+  return React.useMemo(() => ({ getDaysGridProps, context }), [getDaysGridProps, context]);
 }
 
 export namespace useCalendarDaysGrid {
@@ -75,10 +70,5 @@ export namespace useCalendarDaysGrid {
      * Put it to 6 to have a fixed number of weeks in Gregorian calendars
      */
     fixedWeekNumber?: number;
-    /**
-     * If `true`, the year list will always be visible even when the active section is not 'year'.
-     * @default false
-     */
-    alwaysVisible?: boolean;
   }
 }

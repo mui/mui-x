@@ -1,11 +1,13 @@
 'use client';
 import * as React from 'react';
+import useForkRef from '@mui/utils/useForkRef';
 import { useUtils } from '../../../hooks/useUtils';
 import { BaseUIComponentProps } from '../../utils/types';
 import { useComponentRenderer } from '../../utils/useComponentRender';
 import { useCalendarDaysGridContext } from '../days-grid/CalendarDaysGridContext';
 import { useCalendarDaysCell } from './useCalendarDaysCell';
 import { useCalendarRootContext } from '../root/CalendarRootContext';
+import { useCompositeListItem } from '../../composite/list/useCompositeListItem';
 
 const InnerCalendarDaysCell = React.forwardRef(function CalendarDaysGrid(
   props: InnerCalendarDaysCellProps,
@@ -39,7 +41,9 @@ const CalendarDaysCell = React.forwardRef(function CalendarDaysCell(
 ) {
   const calendarRootContext = useCalendarRootContext();
   const calendarMonthsListContext = useCalendarDaysGridContext();
+  const { ref: listItemRef } = useCompositeListItem();
   const utils = useUtils();
+  const mergedRef = useForkRef(forwardedRef, listItemRef);
 
   const isSelected = React.useMemo(
     () =>
@@ -57,7 +61,7 @@ const CalendarDaysCell = React.forwardRef(function CalendarDaysCell(
     [isSelected, calendarMonthsListContext.selectDay],
   );
 
-  return <MemoizedInnerCalendarDaysCell {...props} ref={forwardedRef} ctx={ctx} />;
+  return <MemoizedInnerCalendarDaysCell ref={mergedRef} {...props} ctx={ctx} />;
 });
 
 export namespace CalendarDaysCell {

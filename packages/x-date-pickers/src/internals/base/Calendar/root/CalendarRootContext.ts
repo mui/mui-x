@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { PickersTimezone, PickerValidDate } from '../../../../models';
 import { ValidateDateProps } from '../../../../validation';
+import type { useCalendarRoot } from './useCalendarRoot';
 
 export interface CalendarRootContext {
   value: PickerValidDate | null;
-  setValue: (value: PickerValidDate, source: 'day' | 'month' | 'year') => void;
+  setValue: (value: PickerValidDate, context: useCalendarRoot.ValueChangeHandlerContext) => void;
   referenceDate: PickerValidDate;
   timezone: PickersTimezone;
   disabled: boolean;
   readOnly: boolean;
   isDateDisabled: (day: PickerValidDate | null) => boolean;
   validationProps: ValidateDateProps;
-  activeSection: 'day' | 'month' | 'year';
   visibleDate: PickerValidDate;
 }
 

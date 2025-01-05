@@ -16,6 +16,8 @@ export namespace CalendarRoot {
   export interface Props extends useCalendarRoot.Parameters {
     children: React.ReactNode;
   }
+
+  export interface ValueChangeHandlerContext extends useCalendarRoot.ValueChangeHandlerContext {}
 }
 
 export { CalendarRoot };

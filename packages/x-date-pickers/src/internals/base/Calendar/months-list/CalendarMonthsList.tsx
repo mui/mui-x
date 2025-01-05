@@ -10,13 +10,11 @@ const CalendarMonthsList = React.forwardRef(function CalendarMonthsList(
   props: CalendarMonthsList.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, render, children, loop, alwaysVisible, ...otherProps } = props;
-  const { getMonthListProps, context, calendarMonthsCellRefs, shouldRender } =
-    useCalendarMonthsList({
-      children,
-      loop,
-      alwaysVisible,
-    });
+  const { className, render, children, loop, ...otherProps } = props;
+  const { getMonthListProps, context, calendarMonthsCellRefs } = useCalendarMonthsList({
+    children,
+    loop,
+  });
   const state = React.useMemo(() => ({}), []);
 
   const { renderElement } = useComponentRenderer({
@@ -27,10 +25,6 @@ const CalendarMonthsList = React.forwardRef(function CalendarMonthsList(
     state,
     extraProps: otherProps,
   });
-
-  if (!shouldRender) {
-    return null;
-  }
 
   return (
     <CalendarMonthsListContext.Provider value={context}>

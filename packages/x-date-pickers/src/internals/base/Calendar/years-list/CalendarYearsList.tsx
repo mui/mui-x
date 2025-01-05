@@ -10,11 +10,10 @@ const CalendarYearsList = React.forwardRef(function CalendarYearsList(
   props: CalendarYearsList.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, render, children, loop, alwaysVisible, ...otherProps } = props;
-  const { getYearListProps, context, calendarYearsCellRefs, shouldRender } = useCalendarYearsList({
+  const { className, render, children, loop, ...otherProps } = props;
+  const { getYearListProps, context, calendarYearsCellRefs } = useCalendarYearsList({
     children,
     loop,
-    alwaysVisible,
   });
   const state = React.useMemo(() => ({}), []);
 
@@ -26,10 +25,6 @@ const CalendarYearsList = React.forwardRef(function CalendarYearsList(
     state,
     extraProps: otherProps,
   });
-
-  if (!shouldRender) {
-    return null;
-  }
 
   return (
     <CalendarYearsListContext.Provider value={context}>

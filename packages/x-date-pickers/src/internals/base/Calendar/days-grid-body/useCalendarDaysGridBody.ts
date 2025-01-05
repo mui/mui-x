@@ -9,11 +9,12 @@ import { navigateInGrid } from '../utils/keyboardNavigation';
 export function useCalendarDaysGridBody(parameters: useCalendarDaysGridBody.Parameters) {
   const { children } = parameters;
   const calendarDaysGridContext = useCalendarDaysGridContext();
+  const calendarDaysCellRefs = React.useRef<(HTMLElement | null)[]>([]);
 
   const onKeyDown = useEventCallback((event: React.KeyboardEvent) => {
     // TODO: Implement keyboard navigation
     navigateInGrid({
-      cells: [],
+      cells: calendarDaysCellRefs.current,
       target: event.target as HTMLElement,
       key: event.key,
     });
@@ -33,7 +34,10 @@ export function useCalendarDaysGridBody(parameters: useCalendarDaysGridBody.Para
     [calendarDaysGridContext.daysGrid, children, onKeyDown],
   );
 
-  return React.useMemo(() => ({ getDaysGridBodyProps }), [getDaysGridBodyProps]);
+  return React.useMemo(
+    () => ({ getDaysGridBodyProps, calendarDaysCellRefs }),
+    [getDaysGridBodyProps, calendarDaysCellRefs],
+  );
 }
 
 export namespace useCalendarDaysGridBody {

@@ -10,7 +10,7 @@ import { CalendarMonthsListContext } from './CalendarMonthsListContext';
 import { navigateInList } from '../utils/keyboardNavigation';
 
 export function useCalendarMonthsList(parameters: useCalendarMonthsList.Parameters) {
-  const { children, loop = true, alwaysVisible = false } = parameters;
+  const { children, loop = true } = parameters;
   const utils = useUtils();
   const calendarRootContext = useCalendarRootContext();
   const calendarMonthsCellRefs = React.useRef<(HTMLElement | null)[]>([]);
@@ -71,17 +71,15 @@ export function useCalendarMonthsList(parameters: useCalendarMonthsList.Paramete
       : newCleanValue;
 
     if (closestEnabledDate) {
-      calendarRootContext.setValue(newCleanValue, 'month');
+      calendarRootContext.setValue(newCleanValue, { section: 'month' });
     }
   });
 
   const context: CalendarMonthsListContext = React.useMemo(() => ({ selectMonth }), [selectMonth]);
 
-  const shouldRender = calendarRootContext.activeSection === 'month' || alwaysVisible;
-
   return React.useMemo(
-    () => ({ getMonthListProps, context, calendarMonthsCellRefs, shouldRender }),
-    [getMonthListProps, context, calendarMonthsCellRefs, shouldRender],
+    () => ({ getMonthListProps, context, calendarMonthsCellRefs }),
+    [getMonthListProps, context, calendarMonthsCellRefs],
   );
 }
 
@@ -93,11 +91,6 @@ export namespace useCalendarMonthsList {
      * @default true
      */
     loop?: boolean;
-    /**
-     * If `true`, the month list will always be visible even when the active section is not 'month'.
-     * @default false
-     */
-    alwaysVisible?: boolean;
     children?: (parameters: ChildrenParameters) => React.ReactNode;
   }
 

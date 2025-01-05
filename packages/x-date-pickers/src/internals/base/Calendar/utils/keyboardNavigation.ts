@@ -73,7 +73,7 @@ export function navigateInGrid({
   key,
   loop,
 }: {
-  cells: (HTMLElement | null)[][];
+  cells: (HTMLElement | null)[];
   target: HTMLElement;
   key: string;
 }) {}

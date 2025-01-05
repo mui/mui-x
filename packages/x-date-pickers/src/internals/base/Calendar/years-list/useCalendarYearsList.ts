@@ -10,7 +10,7 @@ import { CalendarYearsListContext } from './CalendarYearsListContext';
 import { navigateInList } from '../utils/keyboardNavigation';
 
 export function useCalendarYearsList(parameters: useCalendarYearsList.Parameters) {
-  const { children, loop = true, alwaysVisible = false } = parameters;
+  const { children, loop = true } = parameters;
   const utils = useUtils();
   const calendarRootContext = useCalendarRootContext();
   const calendarYearsCellRefs = React.useRef<(HTMLElement | null)[]>([]);
@@ -79,17 +79,15 @@ export function useCalendarYearsList(parameters: useCalendarYearsList.Parameters
       : newCleanValue;
 
     if (closestEnabledDate) {
-      calendarRootContext.setValue(newCleanValue, 'year');
+      calendarRootContext.setValue(newCleanValue, { section: 'year' });
     }
   });
 
   const context: CalendarYearsListContext = React.useMemo(() => ({ selectYear }), [selectYear]);
 
-  const shouldRender = calendarRootContext.activeSection === 'year' || alwaysVisible;
-
   return React.useMemo(
-    () => ({ getYearListProps, context, calendarYearsCellRefs, shouldRender }),
-    [getYearListProps, context, calendarYearsCellRefs, shouldRender],
+    () => ({ getYearListProps, context, calendarYearsCellRefs }),
+    [getYearListProps, context, calendarYearsCellRefs],
   );
 }
 
@@ -101,11 +99,6 @@ export namespace useCalendarYearsList {
      * @default true
      */
     loop?: boolean;
-    /**
-     * If `true`, the year list will always be visible even when the active section is not 'year'.
-     * @default false
-     */
-    alwaysVisible?: boolean;
     children?: (parameters: ChildrenParameters) => React.ReactNode;
   }
 

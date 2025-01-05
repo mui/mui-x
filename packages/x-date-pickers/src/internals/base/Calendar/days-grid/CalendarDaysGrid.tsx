@@ -9,9 +9,8 @@ const CalendarDaysGrid = React.forwardRef(function CalendarDaysGrid(
   props: CalendarDaysGrid.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, render, alwaysVisible, fixedWeekNumber, ...otherProps } = props;
-  const { getDaysGridProps, context, shouldRender } = useCalendarDaysGrid({
-    alwaysVisible,
+  const { className, render, fixedWeekNumber, ...otherProps } = props;
+  const { getDaysGridProps, context } = useCalendarDaysGrid({
     fixedWeekNumber,
   });
   const state = React.useMemo(() => ({}), []);
@@ -24,10 +23,6 @@ const CalendarDaysGrid = React.forwardRef(function CalendarDaysGrid(
     state,
     extraProps: otherProps,
   });
-
-  if (!shouldRender) {
-    return null;
-  }
 
   return (
     <CalendarDaysGridContext.Provider value={context}>
