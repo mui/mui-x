@@ -10,7 +10,7 @@ import { applyDefaultDate } from '../../../utils/date-utils';
 import { FormProps } from '../../../models';
 import { CalendarRootContext } from './CalendarRootContext';
 
-function useAddDefaultsToValidationDates(
+function useAddDefaultsToValidateDateProps(
   validationDate: ExportedValidateDateProps,
 ): ValidateDateProps {
   const utils = useUtils();
@@ -62,7 +62,7 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
   } = parameters;
 
   const utils = useUtils();
-  const validationProps = useAddDefaultsToValidationDates(parameters);
+  const validationProps = useAddDefaultsToValidateDateProps(parameters);
 
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
     name: 'CalendarRoot',
