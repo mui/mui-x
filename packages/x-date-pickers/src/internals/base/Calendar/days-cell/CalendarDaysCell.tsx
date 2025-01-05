@@ -65,14 +65,21 @@ const CalendarDaysCell = React.forwardRef(function CalendarDaysCell(
     [calendarMonthsListContext.currentMonth, props.value, utils],
   );
 
+  const isDateDisabled = calendarRootContext.isDateDisabled;
+  const isDisabled = React.useMemo(
+    () => calendarRootContext.disabled || isDateDisabled(props.value),
+    [calendarRootContext.disabled, isDateDisabled, props.value],
+  );
+
   const ctx = React.useMemo<useCalendarDaysCell.Context>(
     () => ({
       colIndex,
       isSelected,
+      isDisabled,
       isOutsideCurrentMonth,
       selectDay: calendarMonthsListContext.selectDay,
     }),
-    [isSelected, isOutsideCurrentMonth, calendarMonthsListContext.selectDay, colIndex],
+    [isSelected, isDisabled, isOutsideCurrentMonth, calendarMonthsListContext.selectDay, colIndex],
   );
 
   return <MemoizedInnerCalendarDaysCell ref={mergedRef} {...props} ctx={ctx} />;

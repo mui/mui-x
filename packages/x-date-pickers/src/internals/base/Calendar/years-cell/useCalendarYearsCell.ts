@@ -27,11 +27,12 @@ export function useCalendarYearsCell(parameters: useCalendarYearsCell.Parameters
         role: 'radio',
         'aria-checked': ctx.isSelected,
         'aria-current': isCurrent ? 'date' : undefined,
+        disabled: ctx.isDisabled,
         children: formattedValue,
         onClick,
       });
     },
-    [formattedValue, ctx.isSelected, onClick, isCurrent],
+    [formattedValue, ctx.isSelected, ctx.isDisabled, onClick, isCurrent],
   );
 
   return React.useMemo(() => ({ getYearCellProps, isCurrent }), [getYearCellProps, isCurrent]);
@@ -50,6 +51,7 @@ export namespace useCalendarYearsCell {
 
   export interface Context {
     isSelected: boolean;
+    isDisabled: boolean;
     selectYear: (value: PickerValidDate) => void;
   }
 }

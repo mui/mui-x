@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
-import { useUtils } from '../../../hooks/useUtils';
+import { useNow, useUtils } from '../../../hooks/useUtils';
 import { useComponentRenderer } from '../../utils/useComponentRenderer';
 import { useCalendarRootContext } from '../root/CalendarRootContext';
 import { useCalendarMonthsCell } from './useCalendarMonthsCell';
@@ -43,6 +43,7 @@ const CalendarMonthsCell = React.forwardRef(function CalendarMonthsCell(
   const calendarMonthsListContext = useCalendarMonthsListContext();
   const { ref: listItemRef } = useCompositeListItem();
   const utils = useUtils();
+  const now = useNow(calendarRootContext.timezone);
   const mergedRef = useForkRef(forwardedRef, listItemRef);
 
   const isSelected = React.useMemo(
@@ -53,12 +54,49 @@ const CalendarMonthsCell = React.forwardRef(function CalendarMonthsCell(
     [calendarRootContext.value, props.value, utils],
   );
 
+  const isDisabled = React.useMemo(() => {
+    if (calendarRootContext.disabled) {
+      return true;
+    }
+
+    const firstEnabledMonth = utils.startOfMonth(
+      calendarRootContext.validationProps.disablePast &&
+        utils.isAfter(now, calendarRootContext.validationProps.minDate)
+        ? now
+        : calendarRootContext.validationProps.minDate,
+    );
+
+    const lastEnabledMonth = utils.startOfMonth(
+      calendarRootContext.validationProps.disableFuture &&
+        utils.isBefore(now, calendarRootContext.validationProps.maxDate)
+        ? now
+        : calendarRootContext.validationProps.maxDate,
+    );
+
+    const monthToValidate = utils.startOfMonth(props.value);
+
+    if (utils.isBefore(monthToValidate, firstEnabledMonth)) {
+      return true;
+    }
+
+    if (utils.isAfter(monthToValidate, lastEnabledMonth)) {
+      return true;
+    }
+
+    if (!calendarRootContext.validationProps.shouldDisableMonth) {
+      return false;
+    }
+
+    return calendarRootContext.validationProps.shouldDisableMonth(monthToValidate);
+  }, [calendarRootContext.disabled, calendarRootContext.validationProps, props.value, now, utils]);
+
   const ctx = React.useMemo<useCalendarMonthsCell.Context>(
     () => ({
       isSelected,
+      isDisabled,
       selectMonth: calendarMonthsListContext.selectMonth,
     }),
-    [isSelected, calendarMonthsListContext.selectMonth],
+    [isSelected, isDisabled, calendarMonthsListContext.selectMonth],
   );
 
   return <MemoizedInnerCalendarMonthsCell {...props} ref={mergedRef} ctx={ctx} />;

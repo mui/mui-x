@@ -9,7 +9,7 @@ import styles from './calendar.module.css';
 export default function YearMonthDayCalendar() {
   const [value, setValue] = React.useState<Dayjs | null>(null);
   const [activeSection, setActiveSection] = React.useState<'day' | 'month' | 'year'>(
-    'day',
+    'year',
   );
 
   const handleValueChange = React.useCallback(
@@ -29,7 +29,7 @@ export default function YearMonthDayCalendar() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Calendar.Root value={value} onValueChange={handleValueChange}>
+      <Calendar.Root value={value} onValueChange={handleValueChange} disableFuture>
         <div className={styles.Root}>
           <header className={styles.Header}>Base UI Calendar</header>
           {activeSection === 'year' && (
@@ -88,7 +88,6 @@ export default function YearMonthDayCalendar() {
                             <Calendar.DaysCell
                               value={day}
                               className={styles.DaysCell}
-                              disabled={[5, 22, 24].includes(day.date())}
                             />
                           </div>
                         ))

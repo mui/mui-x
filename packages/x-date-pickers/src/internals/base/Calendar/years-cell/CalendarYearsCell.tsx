@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
-import { useUtils } from '../../../hooks/useUtils';
+import { useNow, useUtils } from '../../../hooks/useUtils';
 import { useComponentRenderer } from '../../utils/useComponentRenderer';
 import { useCalendarRootContext } from '../root/CalendarRootContext';
 import { useCalendarYearsCell } from './useCalendarYearsCell';
@@ -43,6 +43,7 @@ const CalendarYearsCell = React.forwardRef(function CalendarsYearCell(
   const calendarYearsListContext = useCalendarYearsListContext();
   const { ref: listItemRef } = useCompositeListItem();
   const utils = useUtils();
+  const now = useNow(calendarRootContext.timezone);
   const mergedRef = useForkRef(forwardedRef, listItemRef);
 
   const isSelected = React.useMemo(
@@ -53,12 +54,45 @@ const CalendarYearsCell = React.forwardRef(function CalendarsYearCell(
     [calendarRootContext.value, props.value, utils],
   );
 
+  const isDisabled = React.useMemo(() => {
+    if (calendarRootContext.disabled) {
+      return true;
+    }
+
+    if (calendarRootContext.validationProps.disablePast && utils.isBeforeYear(props.value, now)) {
+      return true;
+    }
+    if (calendarRootContext.validationProps.disableFuture && utils.isAfterYear(props.value, now)) {
+      return true;
+    }
+    if (
+      calendarRootContext.validationProps.minDate &&
+      utils.isBeforeYear(props.value, calendarRootContext.validationProps.minDate)
+    ) {
+      return true;
+    }
+    if (
+      calendarRootContext.validationProps.maxDate &&
+      utils.isAfterYear(props.value, calendarRootContext.validationProps.maxDate)
+    ) {
+      return true;
+    }
+
+    if (!calendarRootContext.validationProps.shouldDisableYear) {
+      return false;
+    }
+
+    const yearToValidate = utils.startOfYear(props.value);
+    return calendarRootContext.validationProps.shouldDisableYear(yearToValidate);
+  }, [calendarRootContext.disabled, calendarRootContext.validationProps, props.value, now, utils]);
+
   const ctx = React.useMemo<useCalendarYearsCell.Context>(
     () => ({
       isSelected,
+      isDisabled,
       selectYear: calendarYearsListContext.selectYear,
     }),
-    [isSelected, calendarYearsListContext.selectYear],
+    [isSelected, isDisabled, calendarYearsListContext.selectYear],
   );
 
   return <MemoizedInnerCalendarYearsCell ref={mergedRef} {...props} ctx={ctx} />;
