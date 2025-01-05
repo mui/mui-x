@@ -16,10 +16,12 @@
 
 .HeaderBlock {
   display: flex;
-  gap: 4px;
+  gap: 8px;
+  flex-grow: 1;
+  justify-content: center;
 }
 
-.HeaderMonthButton {
+.HeaderMonthLabel {
   min-width: 96px;
 }
 

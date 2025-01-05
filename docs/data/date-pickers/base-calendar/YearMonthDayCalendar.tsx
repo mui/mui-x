@@ -29,7 +29,7 @@ function Header(props: {
           <button
             type="button"
             onClick={() => onActiveSectionChange('month')}
-            className={styles.HeaderMonthButton}
+            className={styles.HeaderMonthLabel}
           >
             {visibleDate.format('MMMM')}
           </button>

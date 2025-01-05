@@ -3,8 +3,63 @@ import * as React from 'react';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 // eslint-disable-next-line no-restricted-imports
-import { Calendar } from '@mui/x-date-pickers/internals/base/Calendar';
+import {
+  Calendar,
+  useCalendarContext,
+} from '@mui/x-date-pickers/internals/base/Calendar';
 import styles from './calendar.module.css';
+
+function Header(props) {
+  const { activeSection, onActiveSectionChange } = props;
+  const { visibleDate, setVisibleDate } = useCalendarContext();
+
+  return (
+    <header className={styles.Header}>
+      {activeSection === 'day' && (
+        <div className={styles.HeaderBlock}>
+          <button
+            type="button"
+            onClick={() => setVisibleDate(visibleDate.subtract(1, 'month'))}
+          >
+            ◀
+          </button>
+          <button
+            type="button"
+            onClick={() => onActiveSectionChange('month')}
+            className={styles.HeaderMonthLabel}
+          >
+            {visibleDate.format('MMMM')}
+          </button>
+          <button
+            type="button"
+            onClick={() => setVisibleDate(visibleDate.add(1, 'month'))}
+          >
+            ▶
+          </button>
+        </div>
+      )}
+      {(activeSection === 'month' || activeSection === 'day') && (
+        <div className={styles.HeaderBlock}>
+          <button
+            type="button"
+            onClick={() => setVisibleDate(visibleDate.subtract(1, 'year'))}
+          >
+            ◀
+          </button>
+          <button type="button" onClick={() => onActiveSectionChange('year')}>
+            {visibleDate.format('YYYY')}
+          </button>
+          <button
+            type="button"
+            onClick={() => setVisibleDate(visibleDate.add(1, 'year'))}
+          >
+            ▶
+          </button>
+        </div>
+      )}
+    </header>
+  );
+}
 
 export default function YearMonthDayCalendar() {
   const [value, setValue] = React.useState(null);
@@ -24,9 +79,12 @@ export default function YearMonthDayCalendar() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Calendar.Root value={value} onValueChange={handleValueChange}>
+      <Calendar.Root value={value} onValueChange={handleValueChange} disableFuture>
         <div className={styles.Root}>
-          <header className={styles.Header}>Base UI Calendar</header>
+          <Header
+            activeSection={activeSection}
+            onActiveSectionChange={setActiveSection}
+          />
           {activeSection === 'year' && (
             <Calendar.YearsList className={styles.YearsList}>
               {({ years }) =>
@@ -83,7 +141,6 @@ export default function YearMonthDayCalendar() {
                             <Calendar.DaysCell
                               value={day}
                               className={styles.DaysCell}
-                              disabled={[5, 22, 24].includes(day.date())}
                             />
                           </div>
                         ))
