@@ -14,4 +14,4 @@ packageName: '@mui/x-date-pickers'
 
 ## Day, month and year view
 
-<!-- {{"demo": "YearMonthDayCalendar.js"}} -->
+{{"demo": "YearMonthDayCalendar.js"}}
