@@ -525,11 +525,30 @@ export const useGridRowSelection = (
       // not empty, we need to re-run scanning of the tree to propagate the selection changes
       // Example: A parent whose de-selected children are filtered out should now be selected
       const shouldReapplyPropagation =
-        isNestedData && props.rowSelectionPropagation?.parents && newSelectionModel.ids.size > 0;
+        isNestedData &&
+        props.rowSelectionPropagation?.parents &&
+        (newSelectionModel.ids.size > 0 ||
+          // In case of exclude selection, newSelectionModel.ids.size === 0 means all rows are selected
+          newSelectionModel.type === 'exclude');
 
       if (hasChanged || (shouldReapplyPropagation && !sortModelUpdated)) {
         if (shouldReapplyPropagation) {
-          apiRef.current.selectRows(Array.from(newSelectionModel.ids), true, true);
+          if (newSelectionModel.type === 'exclude') {
+            const unfilteredSelectedRowIds = getRowsToBeSelected();
+            const selectedRowIds = [];
+            for (let i = 0; i < unfilteredSelectedRowIds.length; i += 1) {
+              const rowId = unfilteredSelectedRowIds[i];
+              if (
+                (props.keepNonExistentRowsSelected || !isNonExistent(rowId)) &&
+                selectionManager.has(rowId)
+              ) {
+                selectedRowIds.push(rowId);
+              }
+            }
+            apiRef.current.selectRows(selectedRowIds, true, true);
+          } else {
+            apiRef.current.selectRows(Array.from(newSelectionModel.ids), true, true);
+          }
         } else {
           apiRef.current.setRowSelectionModel(newSelectionModel);
         }
@@ -542,6 +561,7 @@ export const useGridRowSelection = (
       props.keepNonExistentRowsSelected,
       props.filterMode,
       tree,
+      getRowsToBeSelected,
     ],
   );
 
