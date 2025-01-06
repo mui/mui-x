@@ -11,11 +11,11 @@ import {
 import type { GridSlotProps } from '../../../models';
 import { useGridToolbarRootContext } from './GridToolbarRootContext';
 
-export type GridToolbarButtonProps = GridSlotProps['baseToolbarButton'] & {
+export type GridToolbarButtonProps = GridSlotProps['baseIconButton'] & {
   /**
    * A function to customize rendering of the component.
    */
-  render?: RenderProp<GridSlotProps['baseToolbarButton']>;
+  render?: RenderProp<GridSlotProps['baseIconButton']>;
 };
 
 /**
@@ -56,8 +56,8 @@ const GridToolbarButton = React.forwardRef<HTMLButtonElement, GridToolbarButtonP
       }
     }, [focusableItemId, id]);
 
-    return useGridComponentRenderer(rootProps.slots.baseToolbarButton, render, {
-      ...rootProps.slotProps?.baseToolbarButton,
+    return useGridComponentRenderer(rootProps.slots.baseIconButton, render, {
+      ...rootProps.slotProps?.baseIconButton,
       ref: handleRef,
       tabIndex: focusableItemId === id ? 0 : -1,
       onKeyDown: onItemKeyDown,
@@ -71,20 +71,11 @@ GridToolbarButton.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  /**
-   * If `true`, the base button will have a keyboard focus ripple.
-   * @default true
-   */
-  focusRipple: PropTypes.bool,
+  label: PropTypes.string,
   /**
    * A function to customize rendering of the component.
    */
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
-  /**
-   * The size of the component.
-   * @default 'small'
-   */
-  size: PropTypes.oneOf(['large', 'medium', 'small']),
 } as any;
 
 export { GridToolbarButton };

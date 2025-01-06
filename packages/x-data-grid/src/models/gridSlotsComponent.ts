@@ -100,16 +100,6 @@ export interface GridBaseSlots {
    * @default Skeleton
    */
   baseSkeleton: React.JSXElementConstructor<GridSlotProps['baseSkeleton']>;
-  /**
-   * The custom Toolbar component used in the grid.
-   * @default Toolbar
-   */
-  baseToolbar: React.JSXElementConstructor<GridSlotProps['baseToolbar']>;
-  /**
-   * The custom ToolbarButton component used in the grid.
-   * @default ToolbarButton
-   */
-  baseToolbarButton: React.JSXElementConstructor<GridSlotProps['baseToolbarButton']>;
 }
 
 /**

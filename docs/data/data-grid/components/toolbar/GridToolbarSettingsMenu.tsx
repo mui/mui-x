@@ -66,7 +66,6 @@ function Toolbar(props: ToolbarProps) {
           aria-haspopup="true"
           aria-expanded={settingsMenuOpen ? 'true' : undefined}
           onClick={() => setSettingsMenuOpen(true)}
-          size="small"
         >
           <SettingsIcon fontSize="small" sx={{ ml: 'auto' }} />
         </Grid.Toolbar.Button>

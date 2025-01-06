@@ -12,6 +12,7 @@ import {
   GridToolbarProps,
 } from '@mui/x-data-grid-pro';
 import Chip from '@mui/material/Chip';
+import Tooltip from '@mui/material/Tooltip';
 import { unstable_capitalize as capitalize } from '@mui/utils';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
@@ -32,9 +33,11 @@ function Toolbar({ onRemoveFilter }: ToolbarProps) {
 
   return (
     <Grid.Toolbar.Root>
-      <Grid.FilterPanel.Trigger render={<Grid.Toolbar.Button size="small" />}>
-        <GridFilterListIcon fontSize="small" />
-      </Grid.FilterPanel.Trigger>
+      <Tooltip title="Filters">
+        <Grid.FilterPanel.Trigger render={<Grid.Toolbar.Button />}>
+          <GridFilterListIcon fontSize="small" />
+        </Grid.FilterPanel.Trigger>
+      </Tooltip>
 
       {activeFilters.map((filter) => {
         const column = columns[filter.field];

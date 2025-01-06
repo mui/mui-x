@@ -551,7 +551,7 @@
       "name": "toolbar",
       "description": "Toolbar component rendered inside the Header component.",
       "default": "null",
-      "class": null
+      "class": "MuiDataGrid-toolbar"
     },
     {
       "name": "loadingOverlay",
@@ -713,18 +713,6 @@
       "name": "baseSkeleton",
       "description": "The custom Skeleton component used in the grid.",
       "default": "Skeleton",
-      "class": null
-    },
-    {
-      "name": "baseToolbar",
-      "description": "The custom Toolbar component used in the grid.",
-      "default": "Toolbar",
-      "class": null
-    },
-    {
-      "name": "baseToolbarButton",
-      "description": "The custom ToolbarButton component used in the grid.",
-      "default": "ToolbarButton",
       "class": null
     },
     {

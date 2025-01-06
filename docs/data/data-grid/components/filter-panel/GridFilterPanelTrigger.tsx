@@ -1,15 +1,17 @@
 import * as React from 'react';
 import { DataGrid, Grid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
+import Tooltip from '@mui/material/Tooltip';
 import FilterListIcon from '@mui/icons-material/FilterList';
 
 function Toolbar() {
   return (
     <Grid.Toolbar.Root>
-      <Grid.FilterPanel.Trigger render={<Grid.Toolbar.Button size="small" />}>
-        <FilterListIcon fontSize="small" />
-        Filters
-      </Grid.FilterPanel.Trigger>
+      <Tooltip title="Filters">
+        <Grid.FilterPanel.Trigger render={<Grid.Toolbar.Button />}>
+          <FilterListIcon fontSize="small" />
+        </Grid.FilterPanel.Trigger>
+      </Tooltip>
     </Grid.Toolbar.Root>
   );
 }

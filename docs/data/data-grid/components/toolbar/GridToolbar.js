@@ -8,7 +8,6 @@ import ViewColumnIcon from '@mui/icons-material/ViewColumn';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import PrintIcon from '@mui/icons-material/Print';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
@@ -23,7 +22,7 @@ function Toolbar() {
   return (
     <Grid.Toolbar.Root>
       <Tooltip title="Columns">
-        <Grid.ColumnsPanel.Trigger render={<Grid.Toolbar.Button size="small" />}>
+        <Grid.ColumnsPanel.Trigger render={<Grid.Toolbar.Button />}>
           <ViewColumnIcon fontSize="small" />
         </Grid.ColumnsPanel.Trigger>
       </Tooltip>
@@ -31,7 +30,7 @@ function Toolbar() {
       <Tooltip title="Filters">
         <Grid.FilterPanel.Trigger
           render={(props, state) => (
-            <Grid.Toolbar.Button {...props} size="small">
+            <Grid.Toolbar.Button {...props} color="default">
               <Badge badgeContent={state.filterCount} color="primary" variant="dot">
                 <FilterListIcon fontSize="small" />
               </Badge>
@@ -42,7 +41,7 @@ function Toolbar() {
 
       <Divider orientation="vertical" variant="middle" flexItem sx={{ mx: 0.5 }} />
       <Tooltip title="Print">
-        <Grid.Export.PrintTrigger render={<Grid.Toolbar.Button size="small" />}>
+        <Grid.Export.PrintTrigger render={<Grid.Toolbar.Button />}>
           <PrintIcon fontSize="small" />
         </Grid.Export.PrintTrigger>
       </Tooltip>
@@ -55,10 +54,8 @@ function Toolbar() {
           aria-haspopup="true"
           aria-expanded={downloadMenuOpen ? 'true' : undefined}
           onClick={() => setDownloadMenuOpen(true)}
-          size="small"
         >
           <FileDownloadIcon fontSize="small" />
-          <ArrowDropDownIcon fontSize="small" sx={{ ml: -1, mr: -0.5 }} />
         </Grid.Toolbar.Button>
       </Tooltip>
 

@@ -18,8 +18,6 @@
   { "name": "BaseSkeletonPropsOverrides", "kind": "Interface" },
   { "name": "BaseSwitchPropsOverrides", "kind": "Interface" },
   { "name": "BaseTextFieldPropsOverrides", "kind": "Interface" },
-  { "name": "BaseToolbarButtonPropsOverrides", "kind": "Interface" },
-  { "name": "BaseToolbarPropsOverrides", "kind": "Interface" },
   { "name": "BaseTooltipPropsOverrides", "kind": "Interface" },
   { "name": "CellPropsOverrides", "kind": "Interface" },
   { "name": "checkGridRowIdIsValid", "kind": "Function" },

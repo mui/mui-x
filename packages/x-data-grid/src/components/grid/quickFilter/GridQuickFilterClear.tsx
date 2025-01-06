@@ -60,6 +60,7 @@ GridQuickFilterClear.propTypes = {
    * Override or extend the styles applied to the component.
    */
   className: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  label: PropTypes.string,
   /**
    * A function to customize rendering of the component.
    */

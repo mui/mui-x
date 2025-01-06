@@ -1,20 +1,23 @@
 import * as React from 'react';
 import { DataGrid, Grid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
+import Tooltip from '@mui/material/Tooltip';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import PrintIcon from '@mui/icons-material/Print';
 
 function Toolbar() {
   return (
     <Grid.Toolbar.Root>
-      <Grid.Export.CsvTrigger render={<Grid.Toolbar.Button size="small" />}>
-        <FileDownloadIcon fontSize="small" />
-        CSV
-      </Grid.Export.CsvTrigger>
-      <Grid.Export.PrintTrigger render={<Grid.Toolbar.Button size="small" />}>
-        <PrintIcon fontSize="small" />
-        Print
-      </Grid.Export.PrintTrigger>
+      <Tooltip title="Download as CSV">
+        <Grid.Export.CsvTrigger render={<Grid.Toolbar.Button />}>
+          <FileDownloadIcon fontSize="small" />
+        </Grid.Export.CsvTrigger>
+      </Tooltip>
+      <Tooltip title="Print">
+        <Grid.Export.PrintTrigger render={<Grid.Toolbar.Button />}>
+          <PrintIcon fontSize="small" />
+        </Grid.Export.PrintTrigger>
+      </Tooltip>
     </Grid.Toolbar.Root>
   );
 }

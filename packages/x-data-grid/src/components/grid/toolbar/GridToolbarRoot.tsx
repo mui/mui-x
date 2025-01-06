@@ -1,24 +1,53 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { styled } from '@mui/system';
+import { getDataGridUtilityClass } from '@mui/x-data-grid-pro';
+import composeClasses from '@mui/utils/composeClasses';
+import clsx from 'clsx';
 import {
   useGridComponentRenderer,
   RenderProp,
 } from '../../../hooks/utils/useGridComponentRenderer';
 import { GridToolbarRootContext } from './GridToolbarRootContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import type { GridSlotProps } from '../../../models';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 
-export type GridToolbarRootProps = GridSlotProps['baseToolbar'] & {
+export type GridToolbarRootProps = React.HTMLAttributes<HTMLDivElement> & {
   /**
    * A function to customize rendering of the component.
    */
-  render?: RenderProp<GridSlotProps['baseToolbar']>;
+  render?: RenderProp<React.ComponentProps<typeof Toolbar>>;
 };
+
+type OwnerState = DataGridProcessedProps;
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['toolbar'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
+
+const Toolbar = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'Toolbar',
+})<{ ownerState: OwnerState }>(({ theme }) => ({
+  flex: 0,
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(0.25),
+  padding: theme.spacing(0.5),
+  borderBottom: `1px solid ${theme.palette.divider}`,
+}));
 
 const GridToolbarRoot = React.forwardRef<HTMLDivElement, GridToolbarRootProps>(
   function GridToolbarRoot(props, ref) {
-    const { render, ...other } = props;
+    const { render, className, ...other } = props;
     const rootProps = useGridRootProps();
+    const classes = useUtilityClasses(rootProps);
 
     const [focusableItemId, setFocusableItemId] = React.useState<string | null>(null);
     const [items, setItems] = React.useState<string[]>([]);
@@ -79,11 +108,12 @@ const GridToolbarRoot = React.forwardRef<HTMLDivElement, GridToolbarRootProps>(
       [registerItem, unregisterItem, focusableItemId, onItemKeyDown],
     );
 
-    const element = useGridComponentRenderer(rootProps.slots.baseToolbar, render, {
-      ...rootProps.slotProps?.baseToolbar,
+    const element = useGridComponentRenderer(Toolbar, render, {
       ref,
       role: 'toolbar',
       'aria-orientation': 'horizontal',
+      className: clsx(classes.root, className),
+      ownerState: rootProps,
       ...other,
     });
 
@@ -110,11 +140,6 @@ GridToolbarRoot.propTypes = {
    * A function to customize rendering of the component.
    */
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
-  sx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
 } as any;
 
 export { GridToolbarRoot };

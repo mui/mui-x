@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { DataGridPremium, Grid } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
+import Tooltip from '@mui/material/Tooltip';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 function ExportMenu() {
   const [open, setOpen] = React.useState(false);
@@ -12,19 +12,18 @@ function ExportMenu() {
 
   return (
     <React.Fragment>
-      <Grid.Toolbar.Button
-        ref={triggerRef}
-        id="export-menu-trigger"
-        aria-controls="export-menu"
-        aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-        onClick={() => setOpen(true)}
-        size="small"
-      >
-        <FileDownloadIcon fontSize="small" />
-        Export
-        <ArrowDropDownIcon fontSize="small" sx={{ ml: -0.5, mr: -0.25 }} />
-      </Grid.Toolbar.Button>
+      <Tooltip title="Export">
+        <Grid.Toolbar.Button
+          ref={triggerRef}
+          id="export-menu-trigger"
+          aria-controls="export-menu"
+          aria-haspopup="true"
+          aria-expanded={open ? 'true' : undefined}
+          onClick={() => setOpen(true)}
+        >
+          <FileDownloadIcon fontSize="small" />
+        </Grid.Toolbar.Button>
+      </Tooltip>
       <Menu
         id="export-menu"
         anchorEl={triggerRef.current}

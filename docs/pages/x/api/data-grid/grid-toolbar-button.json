@@ -1,14 +1,6 @@
 {
   "props": {
-    "focusRipple": { "type": { "name": "bool" }, "default": "true" },
-    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } },
-    "size": {
-      "type": {
-        "name": "enum",
-        "description": "'large'<br>&#124;&nbsp;'medium'<br>&#124;&nbsp;'small'"
-      },
-      "default": "'small'"
-    }
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
   },
   "name": "GridToolbarButton",
   "imports": [
@@ -19,21 +11,87 @@
   ],
   "classes": [
     {
+      "key": "colorError",
+      "className": "MuiGridToolbarButton-colorError",
+      "description": "Styles applied to the root element if `color=\"error\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorInfo",
+      "className": "MuiGridToolbarButton-colorInfo",
+      "description": "Styles applied to the root element if `color=\"info\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorInherit",
+      "className": "MuiGridToolbarButton-colorInherit",
+      "description": "Styles applied to the root element if `color=\"inherit\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorPrimary",
+      "className": "MuiGridToolbarButton-colorPrimary",
+      "description": "Styles applied to the root element if `color=\"primary\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorSecondary",
+      "className": "MuiGridToolbarButton-colorSecondary",
+      "description": "Styles applied to the root element if `color=\"secondary\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorSuccess",
+      "className": "MuiGridToolbarButton-colorSuccess",
+      "description": "Styles applied to the root element if `color=\"success\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorWarning",
+      "className": "MuiGridToolbarButton-colorWarning",
+      "description": "Styles applied to the root element if `color=\"warning\"`.",
+      "isGlobal": false
+    },
+    {
       "key": "disabled",
       "className": "Mui-disabled",
       "description": "State class applied to the root element if `disabled={true}`.",
       "isGlobal": true
     },
     {
-      "key": "focusVisible",
-      "className": "Mui-focusVisible",
-      "description": "State class applied to the root element if keyboard focused.",
-      "isGlobal": true
+      "key": "edgeEnd",
+      "className": "MuiGridToolbarButton-edgeEnd",
+      "description": "Styles applied to the root element if `edge=\"end\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "edgeStart",
+      "className": "MuiGridToolbarButton-edgeStart",
+      "description": "Styles applied to the root element if `edge=\"start\"`.",
+      "isGlobal": false
     },
     {
       "key": "root",
       "className": "MuiGridToolbarButton-root",
       "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sizeLarge",
+      "className": "MuiGridToolbarButton-sizeLarge",
+      "description": "Styles applied to the root element if `size=\"large\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "sizeMedium",
+      "className": "MuiGridToolbarButton-sizeMedium",
+      "description": "Styles applied to the root element if `size=\"medium\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "sizeSmall",
+      "className": "MuiGridToolbarButton-sizeSmall",
+      "description": "Styles applied to the root element if `size=\"small\"`.",
       "isGlobal": false
     }
   ],
