@@ -10,6 +10,9 @@ import * as testingLibrary from '@testing-library/dom';
 // @ts-ignore
 globalThis.vi = vi;
 
+// @ts-ignore
+globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+
 let licenseKey: string = '';
 
 beforeAll(() => {
