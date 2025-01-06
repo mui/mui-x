@@ -150,10 +150,6 @@
   background-color: transparent;
   cursor: pointer;
 
-  &[data-selected] {
-    background-color: #7dd3fc;
-  }
-
   &:not([data-selected]):hover {
     background-color: #e0f2fe;
   }
@@ -162,7 +158,9 @@
     outline: 1px solid #9ca3af;
   }
 
-  &[data-selected] {
+  &:not([data-outsidemonth])[data-selected] {
+    background-color: #7dd3fc;
+
     &:focus-visible {
       outline: 2px solid #0ea5e9;
     }
