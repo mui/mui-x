@@ -48,6 +48,7 @@ export function useCalendarMonthCellCollection() {
       : newCleanValue;
 
     if (closestEnabledDate) {
+      calendarRootContext.setVisibleDate(closestEnabledDate, true);
       calendarRootContext.setValue(closestEnabledDate, { section: 'month' });
     }
   });

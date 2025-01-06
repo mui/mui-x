@@ -83,7 +83,7 @@ const CalendarSetVisibleYear = React.forwardRef(function CalendarSetVisibleYear(
     if (isDisabled) {
       return;
     }
-    calendarRootContext.setVisibleDate(targetDate);
+    calendarRootContext.setVisibleDate(targetDate, false);
   });
 
   const ctx = React.useMemo<useCalendarSetVisibleYear.Context>(

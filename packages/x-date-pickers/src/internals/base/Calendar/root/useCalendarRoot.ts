@@ -144,22 +144,23 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
   const [visibleDate, setVisibleDate] = React.useState<PickerValidDate>(referenceDate);
   const [prevValue, setPrevValue] = React.useState<PickerValidDate | null>(value);
 
-  if (value !== prevValue && utils.isValid(value)) {
-    let shouldNavigate: boolean;
+  const isDateCellVisible = (date: PickerValidDate) => {
     if (Object.values(sectionsRef.current.day).length > 0) {
-      shouldNavigate = Object.values(sectionsRef.current.day).every(
-        (month) => !utils.isSameMonth(value, month),
+      return Object.values(sectionsRef.current.day).every(
+        (month) => !utils.isSameMonth(date, month),
       );
-    } else if (Object.values(sectionsRef.current.month).length > 0) {
-      shouldNavigate = Object.values(sectionsRef.current.month).every(
-        (year) => !utils.isSameYear(value, year),
-      );
-    } else {
-      shouldNavigate = true;
     }
+    if (Object.values(sectionsRef.current.month).length > 0) {
+      return Object.values(sectionsRef.current.month).every(
+        (year) => !utils.isSameYear(date, year),
+      );
+    }
+    return true;
+  };
 
+  if (value !== prevValue && utils.isValid(value)) {
     setPrevValue(value);
-    if (shouldNavigate) {
+    if (isDateCellVisible(value)) {
       setVisibleDate(value);
     }
   }
@@ -169,6 +170,16 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
     setVisibleDate,
     monthPageSize,
   });
+
+  const handleVisibleDateChange = useEventCallback(
+    (newVisibleDate: PickerValidDate, skipIfAlreadyVisible: boolean) => {
+      if (skipIfAlreadyVisible && isDateCellVisible(newVisibleDate)) {
+        return;
+      }
+
+      setVisibleDate(newVisibleDate);
+    },
+  );
 
   const context: CalendarRootContext = React.useMemo(
     () => ({
@@ -182,7 +193,7 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
       isDateDisabled,
       validationProps,
       visibleDate,
-      setVisibleDate,
+      setVisibleDate: handleVisibleDateChange,
       monthPageSize,
       applyDayGridKeyboardNavigation,
       registerDaysGridCells,
@@ -199,7 +210,7 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
       isDateDisabled,
       validationProps,
       visibleDate,
-      setVisibleDate,
+      handleVisibleDateChange,
       monthPageSize,
       applyDayGridKeyboardNavigation,
       registerDaysGridCells,

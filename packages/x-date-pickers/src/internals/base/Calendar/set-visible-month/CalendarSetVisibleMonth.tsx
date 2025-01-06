@@ -87,7 +87,7 @@ const CalendarSetVisibleMonth = React.forwardRef(function CalendarSetVisibleMont
     if (isDisabled) {
       return;
     }
-    calendarRootContext.setVisibleDate(targetDate);
+    calendarRootContext.setVisibleDate(targetDate, false);
   });
 
   const ctx = React.useMemo<useCalendarSetVisibleMonth.Context>(
