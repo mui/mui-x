@@ -95,6 +95,13 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
     }
   });
 
+  afterEach(function afterTest() {
+    if (this.skipped) {
+      return;
+    }
+    getRowsSpy.restore();
+  });
+
   it('should show aggregation option in the column menu', async () => {
     const { user } = render(<TestDataSourceAggregation />);
     await user.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
