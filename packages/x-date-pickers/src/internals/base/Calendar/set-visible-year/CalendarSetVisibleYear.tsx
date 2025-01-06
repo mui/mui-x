@@ -1,11 +1,12 @@
 'use client';
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { useNow, useUtils } from '../../../hooks/useUtils';
+import { useUtils } from '../../../hooks/useUtils';
 import { useComponentRenderer } from '../../utils/useComponentRenderer';
 import { useCalendarRootContext } from '../root/CalendarRootContext';
 import { useCalendarSetVisibleYear } from './useCalendarSetVisibleYear';
 import { BaseUIComponentProps } from '../../utils/types';
+import { getFirstEnabledYear, getLastEnabledYear } from '../utils/date';
 
 const InnerCalendarSetVisibleYear = React.forwardRef(function InnerCalendarSetVisibleYear(
   props: InnerCalendarSetVisibleYearProps,
@@ -36,7 +37,6 @@ const CalendarSetVisibleYear = React.forwardRef(function CalendarSetVisibleYear(
 ) {
   const calendarRootContext = useCalendarRootContext();
   const utils = useUtils();
-  const now = useNow(calendarRootContext.timezone);
 
   const targetDate = React.useMemo(() => {
     if (props.target === 'previous') {
@@ -51,32 +51,26 @@ const CalendarSetVisibleYear = React.forwardRef(function CalendarSetVisibleYear(
       return true;
     }
 
+    // TODO: Check if the logic below works correctly when multiple months are rendered at once.
+    // All the months before the visible ones are fully disabled, we skip the navigation.
     if (props.target === 'previous') {
-      const firstEnabledYear = utils.startOfYear(
-        calendarRootContext.validationProps.disablePast &&
-          utils.isAfter(now, calendarRootContext.validationProps.minDate)
-          ? now
-          : calendarRootContext.validationProps.minDate,
+      return utils.isAfter(
+        getFirstEnabledYear(utils, calendarRootContext.validationProps),
+        targetDate,
       );
-
-      return utils.isAfter(firstEnabledYear, targetDate);
     }
 
-    const lastEnabledYear = utils.startOfYear(
-      calendarRootContext.validationProps.disableFuture &&
-        utils.isBefore(now, calendarRootContext.validationProps.maxDate)
-        ? now
-        : calendarRootContext.validationProps.maxDate,
+    // All the months after the visible ones are fully disabled, we skip the navigation.
+    return utils.isBefore(
+      getLastEnabledYear(utils, calendarRootContext.validationProps),
+      targetDate,
     );
-
-    return utils.isBefore(lastEnabledYear, targetDate);
   }, [
     calendarRootContext.disabled,
     calendarRootContext.validationProps,
     props.target,
     targetDate,
     utils,
-    now,
   ]);
 
   const setTarget = useEventCallback(() => {

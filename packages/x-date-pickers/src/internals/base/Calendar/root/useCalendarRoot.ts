@@ -76,6 +76,7 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
     timezone: timezoneProp,
     referenceDate: referenceDateProp,
     monthPageSize = 1,
+    yearPageSize = 1,
   } = parameters;
 
   const utils = useUtils();
@@ -196,6 +197,7 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
       visibleDate,
       setVisibleDate: handleVisibleDateChange,
       monthPageSize,
+      yearPageSize,
       applyDayGridKeyboardNavigation,
       registerDaysGridCells,
       registerSection,
@@ -213,6 +215,7 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
       visibleDate,
       handleVisibleDateChange,
       monthPageSize,
+      yearPageSize,
       applyDayGridKeyboardNavigation,
       registerDaysGridCells,
       registerSection,
@@ -269,6 +272,12 @@ export namespace useCalendarRoot {
      * @default 1
      */
     monthPageSize?: number;
+    /**
+     * The amount of months to navigate by when pressing <Calendar.SetVisibleYear /> or when using keyboard navigation in the month grid or the month list.
+     * This is mostly useful when displaying multiple month grids or month lists.
+     * @default 1
+     */
+    yearPageSize?: number;
   }
 
   export interface ValueChangeHandlerContext {

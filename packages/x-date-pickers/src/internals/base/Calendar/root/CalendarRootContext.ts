@@ -32,6 +32,7 @@ export interface CalendarRootContext {
   visibleDate: PickerValidDate;
   setVisibleDate: (visibleDate: PickerValidDate, skipIfAlreadyVisible: boolean) => void;
   monthPageSize: number;
+  yearPageSize: number;
   applyDayGridKeyboardNavigation: (event: React.KeyboardEvent) => void;
   registerDaysGridCells: (
     cellsRef: useCalendarDaysGridBody.CellsRef,
