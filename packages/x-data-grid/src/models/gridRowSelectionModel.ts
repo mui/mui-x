@@ -7,15 +7,15 @@ export type GridRowSelectionPropagation = {
 
 export type GridRowSelectionModel = { type: 'include' | 'exclude'; ids: Set<GridRowId> };
 
-interface SelectionManager {
+interface RowSelectionManager {
   data: Set<GridRowId>;
   has(id: GridRowId): boolean;
   select(id: GridRowId): void;
   unselect(id: GridRowId): void;
   size(): number;
 }
-class IncludeManager implements SelectionManager {
-  data: SelectionManager['data'];
+class IncludeManager implements RowSelectionManager {
+  data: RowSelectionManager['data'];
 
   constructor(model: GridRowSelectionModel) {
     this.data = model.ids;
@@ -37,8 +37,8 @@ class IncludeManager implements SelectionManager {
     return this.data.size;
   }
 }
-class ExcludeManager implements SelectionManager {
-  data: SelectionManager['data'];
+class ExcludeManager implements RowSelectionManager {
+  data: RowSelectionManager['data'];
 
   constructor(model: GridRowSelectionModel) {
     this.data = model.ids;
@@ -61,7 +61,7 @@ class ExcludeManager implements SelectionManager {
   }
 }
 
-export const createSelectionManager = (model: GridRowSelectionModel): SelectionManager => {
+export const createRowSelectionManager = (model: GridRowSelectionModel): RowSelectionManager => {
   if (model.type === 'include') {
     return new IncludeManager(model);
   }

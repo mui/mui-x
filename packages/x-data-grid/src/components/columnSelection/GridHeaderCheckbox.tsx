@@ -16,7 +16,7 @@ import { gridExpandedSortedRowIdsSelector } from '../../hooks/features/filter/gr
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../../hooks/features/pagination/gridPaginationSelector';
 import type { GridRowId } from '../../models/gridRows';
 import {
-  createSelectionManager,
+  createRowSelectionManager,
   type GridRowSelectionModel,
 } from '../../models/gridRowSelectionModel';
 
@@ -102,7 +102,7 @@ const GridHeaderCheckbox = forwardRef<HTMLButtonElement, GridColumnHeaderParams>
 
     // Amount of rows selected and that are visible in the current page
     const currentSelectionSize = React.useMemo(() => {
-      const selectionManager = createSelectionManager(filteredSelection);
+      const selectionManager = createRowSelectionManager(filteredSelection);
       let size = 0;
       for (const id of selectionCandidates) {
         if (selectionManager.has(id)) {
@@ -116,7 +116,7 @@ const GridHeaderCheckbox = forwardRef<HTMLButtonElement, GridColumnHeaderParams>
       if (filteredSelection.ids.size === 0) {
         return false;
       }
-      const selectionManager = createSelectionManager(filteredSelection);
+      const selectionManager = createRowSelectionManager(filteredSelection);
       for (const rowId of selectionCandidates) {
         if (!selectionManager.has(rowId)) {
           return true;

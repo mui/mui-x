@@ -32,7 +32,7 @@ import {
   type GridColumnsRenderContext,
   type GridRowEntry,
   type GridRowId,
-  createSelectionManager,
+  createRowSelectionManager,
 } from '../../../models';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
@@ -447,7 +447,7 @@ export const useGridVirtualScroller = () => {
     const rowProps = rootProps.slotProps?.row;
     const columnPositions = gridColumnPositionsSelector(apiRef);
 
-    const selectionManager = createSelectionManager(rowSelectionModel);
+    const selectionManager = createRowSelectionManager(rowSelectionModel);
 
     rowIndexes.forEach((rowIndexInPage) => {
       const { id, model } = rowModels[rowIndexInPage];

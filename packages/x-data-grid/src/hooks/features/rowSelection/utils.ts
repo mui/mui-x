@@ -12,7 +12,7 @@ import type {
   GridApiCommunity,
 } from '../../../models/api/gridApiCommunity';
 import {
-  createSelectionManager,
+  createRowSelectionManager,
   type GridRowSelectionPropagation,
 } from '../../../models/gridRowSelectionModel';
 
@@ -57,7 +57,7 @@ export function getCheckboxPropsSelector(groupId: GridRowId, autoSelectParents: 
     gridFilteredRowsLookupSelector,
     gridRowSelectionStateSelector,
     (rowTree, sortedRowIds, filteredRowsLookup, rowSelectionModel) => {
-      const selectionManager = createSelectionManager(rowSelectionModel);
+      const selectionManager = createRowSelectionManager(rowSelectionModel);
       const groupNode = rowTree[groupId];
       if (!groupNode || groupNode.type !== 'group') {
         return {
@@ -158,7 +158,7 @@ export const findRowsToSelect = (
 ) => {
   const filteredRows = gridFilteredRowsLookupSelector(apiRef);
   const rowSelectionModel = gridRowSelectionStateSelector(apiRef.current.state);
-  const selectionManager = createSelectionManager(rowSelectionModel);
+  const selectionManager = createRowSelectionManager(rowSelectionModel);
   const selectedDescendants: Set<GridRowId> = new Set([]);
 
   if (!autoSelectDescendants && !autoSelectParents) {
@@ -218,7 +218,7 @@ export const findRowsToDeselect = (
   removeRow: (rowId: GridRowId) => void,
 ) => {
   const rowSelectionModel = gridRowSelectionStateSelector(apiRef.current.state);
-  const selectionManager = createSelectionManager(rowSelectionModel);
+  const selectionManager = createRowSelectionManager(rowSelectionModel);
 
   if (!autoSelectParents && !autoSelectDescendants) {
     return;

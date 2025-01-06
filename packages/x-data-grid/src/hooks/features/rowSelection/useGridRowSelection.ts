@@ -38,7 +38,7 @@ import { gridClasses } from '../../../constants/gridClasses';
 import { isEventTargetInPortal } from '../../../utils/domUtils';
 import { isMultipleRowSelectionEnabled, findRowsToSelect, findRowsToDeselect } from './utils';
 import {
-  createSelectionManager,
+  createRowSelectionManager,
   type GridRowSelectionModel,
 } from '../../../models/gridRowSelectionModel';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination';
@@ -187,7 +187,7 @@ export const useGridRowSelection = (
   const isRowSelected = React.useCallback<GridRowSelectionApi['isRowSelected']>(
     (id) => {
       const model = gridRowSelectionStateSelector(apiRef.current.state);
-      const selectionManager = createSelectionManager(model);
+      const selectionManager = createRowSelectionManager(model);
       return selectionManager.has(id);
     },
     [apiRef],
@@ -260,7 +260,7 @@ export const useGridRowSelection = (
           type: selectionModel.type,
           ids: new Set(selectionModel.ids),
         };
-        const selectionManager = createSelectionManager(newSelectionModel);
+        const selectionManager = createRowSelectionManager(newSelectionModel);
         selectionManager.unselect(id);
 
         const addRow = (rowId: GridRowId) => {
@@ -334,7 +334,7 @@ export const useGridRowSelection = (
       if (resetSelection) {
         newSelectionModel = { type: 'include', ids: selectableIds };
         if (isSelected) {
-          const selectionManager = createSelectionManager(newSelectionModel);
+          const selectionManager = createRowSelectionManager(newSelectionModel);
           if (applyAutoSelection) {
             const addRow = (rowId: GridRowId) => {
               selectionManager.select(rowId);
@@ -365,7 +365,7 @@ export const useGridRowSelection = (
           type: currentSelectionModel.type,
           ids: new Set(currentSelectionModel.ids),
         };
-        const selectionManager = createSelectionManager(newSelectionModel);
+        const selectionManager = createRowSelectionManager(newSelectionModel);
         const addRow = (rowId: GridRowId) => {
           selectionManager.select(rowId);
         };
@@ -490,7 +490,7 @@ export const useGridRowSelection = (
         type: currentSelection.type,
         ids: new Set(currentSelection.ids),
       };
-      const selectionManager = createSelectionManager(newSelectionModel);
+      const selectionManager = createRowSelectionManager(newSelectionModel);
 
       let hasChanged = false;
       for (const id of currentSelection.ids) {
