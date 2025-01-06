@@ -14,17 +14,6 @@ import {
   getEnhancedPickersDayUtilityClass,
 } from './enhancedPickersDayClasses';
 import { EnhancedPickersDayProps, PickersDayOwnerState } from './EnhancedPickersDay.types';
-import {
-  border,
-  borderBottom,
-  borderColor,
-  borderRight,
-  borderRightColor,
-  borderTop,
-  boxSizing,
-  margin,
-  padding,
-} from '@mui/system';
 
 const DAY_SIZE = 40;
 
