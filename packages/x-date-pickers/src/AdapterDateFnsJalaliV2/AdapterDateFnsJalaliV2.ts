@@ -131,7 +131,7 @@ export class AdapterDateFnsJalali
         throw new Error(
           [
             'MUI: The `date-fns-jalali` package v3.x is not compatible with this adapter.',
-            'Please, install v2.x of the package or use the `AdapterDateFnsJalaliV3` instead.',
+            'Please, install v2.x of the package or use the `AdapterDateFnsJalali` instead.',
           ].join('\n'),
         );
       }

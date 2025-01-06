@@ -24,7 +24,7 @@ We support `date-fns-jalali` package v2.x, v3.x, and v4.x major versions.
 
 A single adapter cannot work for all `date-fns-jalali` versions, because the way functions are exported has been changed in v3.x.
 
-To use `date-fns-jalali` v2.x, you will have to import the adapter from `@mui/x-date-pickers/AdapterDateFnsJalaliV2` instead of `@mui/x-date-pickers/AdapterDateFnsJalali`.
+To use `date-fns-jalali` v2.x, you need to import the adapter from `@mui/x-date-pickers/AdapterDateFnsJalaliV2` instead of `@mui/x-date-pickers/AdapterDateFnsJalali`.
 
 ```tsx
 // with date-fns-jalali v3.x or v4.x
