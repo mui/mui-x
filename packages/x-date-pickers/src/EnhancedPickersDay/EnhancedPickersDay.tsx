@@ -14,6 +14,17 @@ import {
   getEnhancedPickersDayUtilityClass,
 } from './enhancedPickersDayClasses';
 import { EnhancedPickersDayProps, PickersDayOwnerState } from './EnhancedPickersDay.types';
+import {
+  border,
+  borderBottom,
+  borderColor,
+  borderRight,
+  borderRightColor,
+  borderTop,
+  boxSizing,
+  margin,
+  padding,
+} from '@mui/system';
 
 const DAY_SIZE = 40;
 
@@ -78,29 +89,29 @@ const overridesResolver = (props: { ownerState: any }, styles: Record<any, CSSIn
   ];
 };
 
+const SET_MARGIN = DAY_MARGIN; // should be working with any given margin
 const highlightStyles = (theme) => ({
   zIndex: -1,
   content: '""' /* Creates an empty element */,
   position: 'absolute',
-  width: `${DAY_SIZE + 2 * DAY_MARGIN}px`,
-  height: `${DAY_SIZE}px`,
-  boxSizing: 'border-box',
-  border: '1px solid transparent',
+  width: '100%',
+  height: '100%',
   backgroundColor: theme.vars
     ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.focusOpacity})`
     : alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
-  // top: -1 /* Aligns the top of the pseudo-element with the top of the div */,
+  boxSizing: 'content-box',
 });
-const previewStyles = {
+const previewStyles = (theme) => ({
   zIndex: -1,
   content: '""' /* Creates an empty element */,
   position: 'absolute',
-  width: `${DAY_SIZE + 2 * DAY_MARGIN}px`,
-  height: `${DAY_SIZE}px`,
-  boxSizing: 'border-box',
-  border: '1px solid transparent',
-  // top: -1 /* Aligns the top of the pseudo-element with the top of the div */,
-};
+  width: 'calc(100% - 2px)',
+  height: 'calc(100% - 2px)',
+  border: `1px dashed ${(theme.vars || theme).palette.divider}`,
+  borderLeftColor: 'transparent',
+  borderRightColor: 'transparent',
+  boxSizing: 'content-box',
+});
 
 const selectedDayStyles = (theme) => ({
   color: (theme.vars || theme).palette.primary.contrastText,
@@ -121,18 +132,18 @@ const selectedDayStyles = (theme) => ({
 
 const styleArg = ({ theme }) => ({
   ...theme.typography.caption,
-  boxSizing: 'border-box',
   width: DAY_SIZE,
   height: DAY_SIZE,
   borderRadius: '50%',
   padding: 0,
+  marginLeft: SET_MARGIN,
+  marginRight: SET_MARGIN,
   // explicitly setting to `transparent` to avoid potentially getting impacted by change from the overridden component
   backgroundColor: 'transparent',
   transition: theme.transitions.create('background-color', {
     duration: theme.transitions.duration.short,
   }),
   color: (theme.vars || theme).palette.text.primary,
-  border: '1px solid transparent',
 
   '@media (pointer: fine)': {
     '&:hover': {
@@ -149,13 +160,13 @@ const styleArg = ({ theme }) => ({
 
   variants: [
     {
-      props: { selected: true },
+      props: { isSelected: true },
       style: {
         ...selectedDayStyles(theme),
       },
     },
     {
-      props: { disabled: true },
+      props: { isDisabled: true },
       style: {
         color: (theme.vars || theme).palette.text.disabled,
       },
@@ -167,80 +178,90 @@ const styleArg = ({ theme }) => ({
       },
     },
     {
-      props: { outsideCurrentMonth: true },
+      props: { isOutsideCurrentMonth: true },
       style: {
         color: (theme.vars || theme).palette.text.secondary,
       },
     },
     {
-      props: { today: true },
+      props: {
+        isToday: true,
+        isSelected: false,
+        isStartOfSelectedRange: false,
+        isStartOfPreviewing: false,
+        isEndOfSelectedRange: false,
+        isEndOfPreviewing: false,
+        isWithinSelectedRange: false,
+        isPreviewing: false,
+        isDragSelected: false,
+      },
       style: {
-        borderColor: (theme.vars || theme).palette.text.secondary,
+        outline: `1px solid ${(theme.vars || theme).palette.text.secondary}`,
+        outlineOffset: -1,
       },
     },
     {
       props: { isStartOfPreviewing: true },
       style: {
         '::after': {
-          ...previewStyles,
-          border: `1px dashed ${(theme.vars || theme).palette.divider}`,
-          borderLeftColor: 'transparent',
-          borderRightColor: 'transparent',
-          width: `${DAY_SIZE / 2 + DAY_MARGIN}px`,
-          right: -(DAY_MARGIN + 1),
-        },
-        [`&:not(.${enhancedPickersDayClasses.endOfSelectedRange})::after`]: {
-          ...previewStyles,
-          border: `1px dashed ${(theme.vars || theme).palette.divider}`,
-          borderRightColor: 'transparent',
+          ...previewStyles(theme),
           borderTopLeftRadius: '50%',
           borderBottomLeftRadius: '50%',
-          width: `${DAY_SIZE + DAY_MARGIN}px`,
-          left: -1,
+          paddingRight: SET_MARGIN,
+          left: 0,
         },
       },
     },
+    {
+      props: { isStartOfPreviewing: true, isEndOfSelectedRange: false },
+      style: {
+        '::after': {
+          borderLeftColor: (theme.vars || theme).palette.divider,
+        },
+      },
+    },
+
     {
       props: { isEndOfPreviewing: true },
       style: {
         '::after': {
-          ...previewStyles,
-          border: `1px dashed ${(theme.vars || theme).palette.divider}`,
-          borderLeftColor: 'transparent',
-          borderRightColor: 'transparent',
-          width: `${DAY_SIZE / 2 + DAY_MARGIN}px`,
-          left: -(DAY_MARGIN + 1),
-        },
-        [`&:not(.${enhancedPickersDayClasses.startOfSelectedRange})::after`]: {
-          ...previewStyles,
-          border: `1px dashed ${(theme.vars || theme).palette.divider}`,
-          borderLeftColor: 'transparent',
+          ...previewStyles(theme),
           borderTopRightRadius: '50%',
           borderBottomRightRadius: '50%',
-          width: `${DAY_SIZE + DAY_MARGIN}px`,
-          right: -1,
+          paddingLeft: SET_MARGIN,
+          right: 0,
         },
       },
     },
     {
-      props: { isPreviewing: true },
+      props: { isEndOfPreviewing: true, isStartOfSelectedRange: false },
       style: {
         '::after': {
-          ...previewStyles,
-          border: `1px dashed ${(theme.vars || theme).palette.divider}`,
-          borderLeftColor: 'transparent',
-          borderRightColor: 'transparent',
-          left: -(DAY_MARGIN + 1),
+          borderRightColor: (theme.vars || theme).palette.divider,
         },
       },
     },
+
+    {
+      props: { isPreviewing: true },
+      style: {
+        '::after': {
+          ...previewStyles(theme),
+          paddingLeft: SET_MARGIN,
+          paddingRight: SET_MARGIN,
+        },
+      },
+    },
+
     {
       props: { isStartOfSelectedRange: true },
       style: {
         '::before': {
           ...highlightStyles(theme),
-          width: `${DAY_SIZE / 2 + DAY_MARGIN}px`,
-          left: `${DAY_SIZE / 2 - 1}px`,
+          borderTopLeftRadius: '50%',
+          borderBottomLeftRadius: '50%',
+          paddingRight: SET_MARGIN,
+          left: 0,
         },
       },
     },
@@ -249,8 +270,10 @@ const styleArg = ({ theme }) => ({
       style: {
         '::before': {
           ...highlightStyles(theme),
-          width: `${DAY_SIZE / 2 + DAY_MARGIN}px`,
-          left: -(DAY_MARGIN + 1),
+          borderTopRightRadius: '50%',
+          borderBottomRightRadius: '50%',
+          paddingLeft: SET_MARGIN,
+          right: 0,
         },
       },
     },
@@ -259,7 +282,8 @@ const styleArg = ({ theme }) => ({
       style: {
         '::before': {
           ...highlightStyles(theme),
-          left: -(DAY_MARGIN + 1),
+          paddingLeft: SET_MARGIN,
+          paddingRight: SET_MARGIN,
         },
       },
     },
@@ -270,38 +294,40 @@ const styleArg = ({ theme }) => ({
       },
     },
     {
-      props: { lastDayOfWeek: true },
+      props: { isLastDayOfWeek: true },
       style: {
         '::after': {
           borderTopRightRadius: '50%',
           borderBottomRightRadius: '50%',
-          width: `${DAY_SIZE + DAY_MARGIN}px`,
-          right: -1,
           borderRightColor: (theme.vars || theme).palette.divider,
+          paddingRight: 0,
+          right: 0,
         },
         '::before': {
           borderTopRightRadius: '50%',
           borderBottomRightRadius: '50%',
-          width: `${DAY_SIZE + DAY_MARGIN}px`,
-          right: -1,
+          paddingRight: 0,
+          right: 0,
         },
       },
     },
     {
-      props: { firstDayOfWeek: true },
+      props: {
+        isFirstDayOfWeek: true,
+      },
       style: {
         '::after': {
           borderTopLeftRadius: '50%',
           borderBottomLeftRadius: '50%',
-          width: `${DAY_SIZE + DAY_MARGIN}px`,
-          left: -1,
           borderLeftColor: (theme.vars || theme).palette.divider,
+          paddingLeft: 0,
+          left: 0,
         },
         '::before': {
           borderTopLeftRadius: '50%',
           borderBottomLeftRadius: '50%',
-          width: `${DAY_SIZE + DAY_MARGIN}px`,
-          left: -1,
+          paddingLeft: 0,
+          left: 0,
         },
       },
     },

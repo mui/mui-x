@@ -235,7 +235,6 @@ const PickersCalendarWeek = styled('div', {
   overridesResolver: (_, styles) => styles.weekContainer,
 })({
   margin: `${DAY_MARGIN}px 0`,
-  gap: `${2 * DAY_MARGIN}px`,
   display: 'flex',
   justifyContent: 'center',
 });
