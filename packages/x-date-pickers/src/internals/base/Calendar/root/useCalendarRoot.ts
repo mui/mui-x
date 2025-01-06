@@ -114,15 +114,6 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
     validator: validateDate,
   });
 
-  const [visibleDate, setVisibleDate] = React.useState<PickerValidDate>(referenceDate);
-  const [prevValue, setPrevValue] = React.useState<PickerValidDate | null>(value);
-
-  // TODO: Should not change visible date when clicking on a day cell in a grid with an offset.
-  if (value !== prevValue && utils.isValid(value)) {
-    setVisibleDate(value);
-    setPrevValue(value);
-  }
-
   const isDateDisabled = useIsDateDisabled({
     ...validationProps,
     timezone,
@@ -134,6 +125,44 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
       validationError: getValidationErrorForNewValue(newValue),
     });
   });
+
+  const sectionsRef = React.useRef<
+    Record<'day' | 'month' | 'year', Record<number, PickerValidDate>>
+  >({
+    day: {},
+    month: {},
+    year: {},
+  });
+  const registerSection = useEventCallback((section: useCalendarRoot.RegisterSectionParameters) => {
+    const id = Math.random();
+    sectionsRef.current[section.type][id] = section.value;
+    return () => {
+      delete sectionsRef.current[section.type][id];
+    };
+  });
+
+  const [visibleDate, setVisibleDate] = React.useState<PickerValidDate>(referenceDate);
+  const [prevValue, setPrevValue] = React.useState<PickerValidDate | null>(value);
+
+  if (value !== prevValue && utils.isValid(value)) {
+    let shouldNavigate;
+    if (Object.values(sectionsRef.current.day).length > 0) {
+      shouldNavigate = Object.values(sectionsRef.current.day).every(
+        (month) => !utils.isSameMonth(value, month),
+      );
+    } else if (Object.values(sectionsRef.current.month).length > 0) {
+      shouldNavigate = Object.values(sectionsRef.current.month).every(
+        (year) => !utils.isSameYear(value, year),
+      );
+    } else {
+      shouldNavigate = true;
+    }
+
+    setPrevValue(value);
+    if (shouldNavigate) {
+      setVisibleDate(value);
+    }
+  }
 
   const { applyDayGridKeyboardNavigation, registerDaysGridCells } = useCalendarDaysGridNavigation({
     visibleDate,
@@ -157,6 +186,7 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
       monthPageSize,
       applyDayGridKeyboardNavigation,
       registerDaysGridCells,
+      registerSection,
     }),
     [
       value,
@@ -173,6 +203,7 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
       monthPageSize,
       applyDayGridKeyboardNavigation,
       registerDaysGridCells,
+      registerSection,
     ],
   );
 
@@ -239,5 +270,10 @@ export namespace useCalendarRoot {
      * The validation error associated to the new value.
      */
     validationError: DateValidationError;
+  }
+
+  export interface RegisterSectionParameters {
+    type: 'day' | 'month' | 'year';
+    value: PickerValidDate;
   }
 }

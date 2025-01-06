@@ -15,10 +15,12 @@ export function useCalendarMonthsList(parameters: useCalendarMonthsList.Paramete
   const calendarRootContext = useCalendarRootContext();
   const calendarMonthsCellRefs = React.useRef<(HTMLElement | null)[]>([]);
 
-  const months = React.useMemo(
-    () => getMonthsInYear(utils, calendarRootContext.visibleDate),
+  const currentYear = React.useMemo(
+    () => utils.startOfYear(calendarRootContext.visibleDate),
     [utils, calendarRootContext.visibleDate],
   );
+
+  const months = React.useMemo(() => getMonthsInYear(utils, currentYear), [utils, currentYear]);
 
   const onKeyDown = useEventCallback((event: React.KeyboardEvent) => {
     navigateInList({
@@ -74,6 +76,11 @@ export function useCalendarMonthsList(parameters: useCalendarMonthsList.Paramete
       calendarRootContext.setValue(closestEnabledDate, { section: 'month' });
     }
   });
+
+  const registerSection = calendarRootContext.registerSection;
+  React.useEffect(() => {
+    return registerSection({ type: 'month', value: currentYear });
+  }, [registerSection, currentYear]);
 
   const context: CalendarMonthsListContext = React.useMemo(() => ({ selectMonth }), [selectMonth]);
 

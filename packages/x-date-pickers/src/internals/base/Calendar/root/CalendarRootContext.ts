@@ -1,15 +1,27 @@
 import * as React from 'react';
 import { PickersTimezone, PickerValidDate } from '../../../../models';
 import { ValidateDateProps } from '../../../../validation';
+import { PickerValue } from '../../../models';
 import type { useCalendarRoot } from './useCalendarRoot';
 import type { useCalendarDaysGridBody } from '../days-grid-body/useCalendarDaysGridBody';
 
 export interface CalendarRootContext {
-  value: PickerValidDate | null;
+  /**
+   * The current value of the calendar.
+   */
+  value: PickerValue;
+  /**
+   * Set the current value of the calendar.
+   * @param {PickerValue} value The new value of the calendar.
+   * @param {Pick<useCalendarRoot.ValueChangeHandlerContext, 'section'>} options The options to customize the behavior of this update.
+   */
   setValue: (
-    value: PickerValidDate | null,
-    context: Pick<useCalendarRoot.ValueChangeHandlerContext, 'section'>,
+    value: PickerValue,
+    options: Pick<useCalendarRoot.ValueChangeHandlerContext, 'section'>,
   ) => void;
+  /**
+   * The reference date of the calendar.
+   */
   referenceDate: PickerValidDate;
   timezone: PickersTimezone;
   disabled: boolean;
@@ -25,6 +37,7 @@ export interface CalendarRootContext {
     cellsRef: useCalendarDaysGridBody.CellsRef,
     rowsRef: useCalendarDaysGridBody.RowsRef,
   ) => () => void;
+  registerSection: (parameters: useCalendarRoot.RegisterSectionParameters) => () => void;
 }
 
 export const CalendarRootContext = React.createContext<CalendarRootContext | undefined>(undefined);

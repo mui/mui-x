@@ -83,6 +83,11 @@ export function useCalendarYearsList(parameters: useCalendarYearsList.Parameters
     }
   });
 
+  const registerSection = calendarRootContext.registerSection;
+  React.useEffect(() => {
+    return registerSection({ type: 'month', value: calendarRootContext.visibleDate });
+  }, [registerSection, calendarRootContext.visibleDate]);
+
   const context: CalendarYearsListContext = React.useMemo(() => ({ selectYear }), [selectYear]);
 
   return React.useMemo(

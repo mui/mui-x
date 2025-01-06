@@ -70,6 +70,11 @@ export function useCalendarDaysGrid(parameters: useCalendarDaysGrid.Parameters) 
     return flatDays.find((day) => utils.isSameMonth(day, currentMonth)) ?? null;
   }, [calendarRootContext.value, calendarRootContext.referenceDate, daysGrid, utils, currentMonth]);
 
+  const registerSection = calendarRootContext.registerSection;
+  React.useEffect(() => {
+    return registerSection({ type: 'day', value: currentMonth });
+  }, [registerSection, currentMonth]);
+
   const context: CalendarDaysGridContext = React.useMemo(
     () => ({ selectDay, daysGrid, currentMonth, tabbableDay }),
     [selectDay, daysGrid, currentMonth, tabbableDay],
