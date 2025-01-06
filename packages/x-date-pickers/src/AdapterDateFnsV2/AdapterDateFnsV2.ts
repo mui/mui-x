@@ -43,7 +43,7 @@ import startOfWeek from 'date-fns/startOfWeek';
 import startOfYear from 'date-fns/startOfYear';
 import isWithinInterval from 'date-fns/isWithinInterval';
 import defaultLocale from 'date-fns/locale/en-US';
-import { Locale as DateFnsLocale } from 'date-fns/locale'
+import { Locale as DateFnsLocale } from 'date-fns/locale';
 import longFormatters from 'date-fns/_lib/format/longFormatters';
 import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
 import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
