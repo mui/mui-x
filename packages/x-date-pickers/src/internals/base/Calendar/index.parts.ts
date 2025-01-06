@@ -10,6 +10,7 @@ export { CalendarDaysCell as DaysCell } from './days-cell/CalendarDaysCell';
 
 // Months
 export { CalendarMonthsList as MonthsList } from './months-list/CalendarMonthsList';
+export { CalendarMonthsGrid as MonthsGrid } from './months-grid/CalendarMonthsGrid';
 export { CalendarMonthsCell as MonthsCell } from './months-cell/CalendarMonthsCell';
 
 // Years

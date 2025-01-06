@@ -3,23 +3,36 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { PickerValidDate } from '../../../../models';
 import { GenericHTMLProps } from '../../utils/types';
 import { mergeReactProps } from '../../utils/mergeReactProps';
-import { navigateInList } from '../utils/keyboardNavigation';
+import { navigateInGrid } from '../utils/keyboardNavigation';
 import { useCalendarMonthCellCollection } from '../utils/month-cell-collection/useCalendarMonthCellCollection';
 
-export function useCalendarMonthsList(parameters: useCalendarMonthsList.Parameters) {
-  const { children, loop = true } = parameters;
+export function useCalendarMonthsGrid(parameters: useCalendarMonthsGrid.Parameters) {
+  const { children, cellsPerRow } = parameters;
   const calendarMonthsCellRefs = React.useRef<(HTMLElement | null)[]>([]);
   const { months, context } = useCalendarMonthCellCollection();
 
   const onKeyDown = useEventCallback((event: React.KeyboardEvent) => {
-    navigateInList({
-      cells: calendarMonthsCellRefs.current,
+    const grid: HTMLElement[][] = Array.from(
+      {
+        length: Math.ceil(calendarMonthsCellRefs.current.length / cellsPerRow),
+      },
+      () => [],
+    );
+    calendarMonthsCellRefs.current.forEach((cell, index) => {
+      const rowIndex = Math.floor(index / cellsPerRow);
+      if (cell != null) {
+        grid[rowIndex].push(cell);
+      }
+    });
+
+    navigateInGrid({
+      cells: [grid],
       event,
-      loop,
+      changePage: undefined,
     });
   });
 
-  const getMonthListProps = React.useCallback(
+  const getMonthGridProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
       return mergeReactProps(externalProps, {
         role: 'radiogroup',
@@ -31,19 +44,18 @@ export function useCalendarMonthsList(parameters: useCalendarMonthsList.Paramete
   );
 
   return React.useMemo(
-    () => ({ getMonthListProps, context, calendarMonthsCellRefs }),
-    [getMonthListProps, context, calendarMonthsCellRefs],
+    () => ({ getMonthGridProps, context, calendarMonthsCellRefs }),
+    [getMonthGridProps, context, calendarMonthsCellRefs],
   );
 }
 
-export namespace useCalendarMonthsList {
+export namespace useCalendarMonthsGrid {
   export interface Parameters {
     /**
-     * Whether to loop keyboard focus back to the first item
-     * when the end of the list is reached while using the arrow keys.
-     * @default true
+     * Cells rendered per row.
+     * This is used to make sure the keyboard navigation works correctly.
      */
-    loop?: boolean;
+    cellsPerRow: number;
     children?: (parameters: ChildrenParameters) => React.ReactNode;
   }
 

@@ -12,6 +12,10 @@ packageName: '@mui/x-date-pickers'
 
 {{"demo": "DayCalendarDemo.js"}}
 
+## Month view
+
+{{"demo": "MonthCalendarDemo.js"}}
+
 ## Day, month and year view
 
 {{"demo": "YearMonthDayCalendar.js"}}

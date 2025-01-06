@@ -31,7 +31,6 @@ export function useCalendarYearsList(parameters: useCalendarYearsList.Parameters
   const onKeyDown = useEventCallback((event: React.KeyboardEvent) => {
     navigateInList({
       cells: calendarYearsCellRefs.current,
-      target: event.target as HTMLElement,
       event,
       loop,
     });

@@ -50,7 +50,7 @@ export function useCalendarRootContext() {
   const context = React.useContext(CalendarRootContext);
   if (context === undefined) {
     throw new Error(
-      'Base UI X: CalendarRootContext is missing. Calendar parts must be placed withing <Calendar.Root />.',
+      'Base UI X: CalendarRootContext is missing. Calendar parts must be placed within <Calendar.Root />.',
     );
   }
   return context;

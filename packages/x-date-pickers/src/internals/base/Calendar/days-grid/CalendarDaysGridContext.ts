@@ -20,7 +20,7 @@ export function useCalendarDaysGridContext() {
   const context = React.useContext(CalendarDaysGridContext);
   if (context === undefined) {
     throw new Error(
-      'Base UI X: CalendarDaysGridContext is missing. Calendar Days Grid parts must be placed withing <Calendar.DaysGrid />.',
+      'Base UI X: CalendarDaysGridContext is missing. Calendar Days Grid parts must be placed within <Calendar.DaysGrid />.',
     );
   }
   return context;

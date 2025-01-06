@@ -1,24 +1,24 @@
 'use client';
 import * as React from 'react';
-import { useCalendarMonthsList } from './useCalendarMonthsList';
+import { useCalendarMonthsGrid } from './useCalendarMonthsGrid';
 import { BaseUIComponentProps } from '../../utils/types';
 import { useComponentRenderer } from '../../utils/useComponentRenderer';
 import { CompositeList } from '../../composite/list/CompositeList';
 import { CalendarMonthCellCollectionContext } from '../utils/month-cell-collection/CalendarMonthCellCollectionContext';
 
-const CalendarMonthsList = React.forwardRef(function CalendarMonthsList(
-  props: CalendarMonthsList.Props,
+const CalendarMonthsGrid = React.forwardRef(function CalendarMonthsList(
+  props: CalendarMonthsGrid.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, render, children, loop, ...otherProps } = props;
-  const { getMonthListProps, context, calendarMonthsCellRefs } = useCalendarMonthsList({
+  const { className, render, children, cellsPerRow, ...otherProps } = props;
+  const { getMonthGridProps, context, calendarMonthsCellRefs } = useCalendarMonthsGrid({
     children,
-    loop,
+    cellsPerRow,
   });
   const state = React.useMemo(() => ({}), []);
 
   const { renderElement } = useComponentRenderer({
-    propGetter: getMonthListProps,
+    propGetter: getMonthGridProps,
     render: render ?? 'div',
     ref: forwardedRef,
     className,
@@ -33,12 +33,12 @@ const CalendarMonthsList = React.forwardRef(function CalendarMonthsList(
   );
 });
 
-export namespace CalendarMonthsList {
+export namespace CalendarMonthsGrid {
   export interface State {}
 
   export interface Props
     extends Omit<BaseUIComponentProps<'div', State>, 'children'>,
-      useCalendarMonthsList.Parameters {}
+      useCalendarMonthsGrid.Parameters {}
 }
 
-export { CalendarMonthsList };
+export { CalendarMonthsGrid };

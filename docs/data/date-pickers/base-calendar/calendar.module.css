@@ -84,10 +84,42 @@
   overflow-y: scroll;
 }
 
+.MonthsGrid {
+  padding: 12px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 4px;
+  row-gap: 12px;
+}
+
 .MonthsCell,
 .YearsCell {
   height: 24px;
   min-height: 24px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+
+  &:not([data-selected]):hover {
+    background-color: #e0f2fe;
+  }
+
+  &[data-selected] {
+    background-color: #7dd3fc;
+
+    &:focus-visible {
+      outline: 2px solid #0ea5e9;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid #0ea5e9;
+  }
+
+  &:disabled {
+    pointer-events: none;
+  }
 }
 
 .DaysGrid {

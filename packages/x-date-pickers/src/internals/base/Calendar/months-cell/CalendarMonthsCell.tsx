@@ -7,7 +7,7 @@ import { useCalendarRootContext } from '../root/CalendarRootContext';
 import { useCalendarMonthsCell } from './useCalendarMonthsCell';
 import { BaseUIComponentProps } from '../../utils/types';
 import { useCompositeListItem } from '../../composite/list/useCompositeListItem';
-import { useCalendarMonthsListContext } from '../months-list/CalendarMonthsListContext';
+import { useCalendarMonthCellCollectionContext } from '../utils/month-cell-collection/CalendarMonthCellCollectionContext';
 
 const InnerCalendarMonthsCell = React.forwardRef(function InnerCalendarMonthsCell(
   props: InnerCalendarMonthsCellProps,
@@ -40,7 +40,7 @@ const CalendarMonthsCell = React.forwardRef(function CalendarMonthsCell(
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
   const calendarRootContext = useCalendarRootContext();
-  const calendarMonthsListContext = useCalendarMonthsListContext();
+  const calendarMonthCellCollectionContext = useCalendarMonthCellCollectionContext();
   const { ref: listItemRef } = useCompositeListItem();
   const utils = useUtils();
   const now = useNow(calendarRootContext.timezone);
@@ -103,9 +103,9 @@ const CalendarMonthsCell = React.forwardRef(function CalendarMonthsCell(
       isSelected,
       isDisabled,
       isTabbable,
-      selectMonth: calendarMonthsListContext.selectMonth,
+      selectMonth: calendarMonthCellCollectionContext.selectMonth,
     }),
-    [isSelected, isDisabled, isTabbable, calendarMonthsListContext.selectMonth],
+    [isSelected, isDisabled, isTabbable, calendarMonthCellCollectionContext.selectMonth],
   );
 
   return <MemoizedInnerCalendarMonthsCell {...props} ref={mergedRef} ctx={ctx} />;

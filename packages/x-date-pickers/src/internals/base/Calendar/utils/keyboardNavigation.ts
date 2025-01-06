@@ -2,12 +2,10 @@ const LIST_NAVIGATION_SUPPORTED_KEYS = ['ArrowDown', 'ArrowUp', 'Home', 'End'];
 
 export function navigateInList({
   cells,
-  target,
   event,
   loop,
 }: {
   cells: (HTMLElement | null)[];
-  target: HTMLElement;
   event: React.KeyboardEvent;
   loop: boolean;
 }) {
@@ -26,7 +24,7 @@ export function navigateInList({
   }
 
   const lastIndex = navigableCells.length - 1;
-  const currentIndex = navigableCells.indexOf(target);
+  const currentIndex = navigableCells.indexOf(event.target as HTMLElement);
   let nextIndex = -1;
 
   switch (event.key) {
