@@ -2,20 +2,23 @@ import * as React from 'react';
 import {
   useGridApiEventHandler as addEventHandler,
   useGridApiMethod,
-  useGridSelector,
   GridEventLookup,
   GRID_ROOT_GROUP_ID,
   GridValidRowModel,
 } from '@mui/x-data-grid-pro';
 import {
   useGridDataSourceBase,
-  GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
+  GridPipeProcessor,
+  useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid-pro/internals';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import { GridDataSourcePremiumPrivateApi, GridGetRowsResponsePremium } from './models';
-import { gridAggregationModelSelector } from '../aggregation/gridAggregationSelectors';
+import {
+  GridDataSourcePremiumPrivateApi,
+  GridGetRowsParamsPremium,
+  GridGetRowsResponsePremium,
+} from './models';
 import { getKeyPremium } from './cache';
 
 const options = {
@@ -33,30 +36,35 @@ export const useGridDataSourcePremium = (
     props,
     options,
   );
-  const aggregationModel = useGridSelector(apiRef, gridAggregationModelSelector);
   const aggregateRowRef = React.useRef<GridValidRowModel>({});
 
-  const handleDataUpdate = React.useCallback<GridStrategyProcessor<'dataSourceRowsUpdate'>>(
-    (params) => {
-      if ('error' in params) {
-        apiRef.current.setRows([]);
-        return;
-      }
-
-      const { response }: { response: GridGetRowsResponsePremium } = params;
-      if (response.rowCount !== undefined) {
-        apiRef.current.setRowCount(response.rowCount);
-      }
-      apiRef.current.setRows(response.rows);
+  const processDataSourceRows = React.useCallback<GridPipeProcessor<'processDataSourceRows'>>(
+    (
+      {
+        params,
+        response,
+      }: {
+        params: GridGetRowsParamsPremium;
+        response: GridGetRowsResponsePremium;
+      },
+      applyRowHydration: boolean,
+    ) => {
       if (response.aggregateRow) {
         aggregateRowRef.current = response.aggregateRow;
       }
-      if (Object.keys(aggregationModel).length > 0) {
-        apiRef.current.requestPipeProcessorsApplication('hydrateRows');
+      if (Object.keys(params.aggregationModel || {}).length > 0) {
+        if (applyRowHydration) {
+          apiRef.current.requestPipeProcessorsApplication('hydrateRows');
+        }
         apiRef.current.applyAggregation();
       }
+
+      return {
+        params,
+        response,
+      };
     },
-    [apiRef, aggregationModel],
+    [apiRef],
   );
 
   const resolveGroupAggregation = React.useCallback<
@@ -84,8 +92,9 @@ export const useGridDataSourcePremium = (
     apiRef,
     strategyProcessor.strategyName,
     strategyProcessor.group,
-    handleDataUpdate,
+    strategyProcessor.processor,
   );
+  useGridRegisterPipeProcessor(apiRef, 'processDataSourceRows', processDataSourceRows);
 
   Object.entries(events).forEach(([event, handler]) => {
     addEventHandler(apiRef, event as keyof GridEventLookup, handler);

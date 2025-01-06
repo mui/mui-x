@@ -344,6 +344,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiPro>(
         apiRef.current.setRowCount(response.rowCount);
       }
       apiRef.current.setRows(response.rows);
+      apiRef.current.unstable_applyPipeProcessors('processDataSourceRows', { params: params.fetchParams, response }, true);
     },
     [apiRef],
   );

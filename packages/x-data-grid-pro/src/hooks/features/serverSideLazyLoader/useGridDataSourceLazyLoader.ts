@@ -285,6 +285,7 @@ export const useGridDataSourceLazyLoader = (
 
       addSkeletonRows();
       privateApiRef.current.setLoading(false);
+      privateApiRef.current.unstable_applyPipeProcessors('processDataSourceRows', { params: params.fetchParams, response }, false)
       privateApiRef.current.requestPipeProcessorsApplication('hydrateRows');
     },
     [
