@@ -1,12 +1,20 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router';
 import TestViewer from './TestViewer';
 
-const fixtures = [];
+interface Fixture {
+  path: string;
+  suite: string;
+  name: string;
+  Component: React.ComponentType;
+}
 
+const fixtures: Fixture[] = [];
+
+// @ts-ignore
 const requireFixtures = require.context('./fixtures', true, /\.(js|ts|tsx)$/);
-requireFixtures.keys().forEach((path) => {
+requireFixtures.keys().forEach((path: string) => {
   // require.context contains paths for module alias imports and relative imports
   if (!path.startsWith('.')) {
     return;
@@ -45,32 +53,51 @@ function App() {
     };
   }, []);
 
-  function computePath(fixture) {
+  function computePath(fixture: Fixture) {
     return `/${fixture.suite}/${fixture.name}`;
   }
+
+  const suiteFixturesMap = React.useMemo(
+    () =>
+      fixtures.reduce(
+        (acc, fixture) => {
+          if (!acc[fixture.suite]) {
+            acc[fixture.suite] = [];
+          }
+          acc[fixture.suite].push(fixture);
+          return acc;
+        },
+        {} as Record<string, Fixture[]>,
+      ),
+    [],
+  );
 
   return (
     <Router>
       <Routes>
-        {fixtures.map((fixture) => {
-          const path = computePath(fixture);
-          const FixtureComponent = fixture.Component;
-          if (FixtureComponent === undefined) {
-            console.warn('Missing `Component` ', fixture);
-            return null;
-          }
-
+        {Object.keys(suiteFixturesMap).map((suite) => {
           return (
-            <Route
-              key={path}
-              exact
-              path={path}
-              element={
-                <TestViewer>
-                  <FixtureComponent />
-                </TestViewer>
-              }
-            />
+            <Route key={suite} path={suite}>
+              {suiteFixturesMap[suite].map((fixture) => {
+                const FixtureComponent = fixture.Component;
+                if (FixtureComponent === undefined) {
+                  console.warn('Missing `Component` ', fixture);
+                  return null;
+                }
+
+                return (
+                  <Route
+                    key={fixture.name}
+                    path={fixture.name}
+                    element={
+                      <TestViewer>
+                        <FixtureComponent />
+                      </TestViewer>
+                    }
+                  />
+                );
+              })}
+            </Route>
           );
         })}
       </Routes>
@@ -100,4 +127,4 @@ function App() {
   );
 }
 
-ReactDOM.createRoot(document.getElementById('react-root')).render(<App />);
+ReactDOM.createRoot(document.getElementById('react-root')!).render(<App />);
