@@ -249,7 +249,38 @@ npx @mui/x-codemod@next v8.0.0/pickers/preset-safe <path|folder>
 
 The list includes these transformers
 
+- [`rename-adapter-date-fns-imports`](#rename-adapter-date-fns-imports)
 - [`rename-and-move-field-value-type`](#rename-and-move-field-value-type)
+
+#### `rename-adapter-date-fns-imports`
+
+:::warning
+This codemod is not idempotent. Running it multiple times will rename the imports back and forth.
+:::
+
+- Renames `AdapterDateFns` and `AdapterDateFnsJalali` imports to `AdapterDateFnsV2` and `AdapterDateFnsJalaliV2` respectfully.
+
+  ```diff
+  -import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+  -import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
+  +import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV2';
+  +import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalaliV2';
+  ```
+
+- Renames `AdapterDateFnsV3` and `AdapterDateFnsJalaliV3` imports to `AdapterDateFns` and `AdapterDateFnsJalali` respectfully.
+
+  ```diff
+  -import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+  -import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalaliV3';
+  +import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+  +import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
+  ```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@next v8.0.0/pickers/rename-adapter-date-fns-imports <path>
+```
 
 #### `rename-and-move-field-value-type`
 
