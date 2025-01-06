@@ -79,6 +79,14 @@ const ALREADY_BOOKED_NIGHTS = [
   dayjs().add(15, 'day'),
   dayjs().add(16, 'day'),
   dayjs().add(17, 'day'),
+  dayjs().add(27, 'day'),
+  dayjs().add(28, 'day'),
+  dayjs().add(29, 'day'),
+  dayjs().add(30, 'day'),
+  dayjs().add(45, 'day'),
+  dayjs().add(46, 'day'),
+  dayjs().add(48, 'day'),
+  dayjs().add(49, 'day'),
 ];
 
 const ALREADY_BOOKED_NIGHTS_SET = new Set(
