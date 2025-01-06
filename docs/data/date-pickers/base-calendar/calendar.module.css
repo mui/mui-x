@@ -163,12 +163,14 @@
   }
 
   &[data-outsidemonth] {
-    opacity: 0.3;
+    color: #cbd5e1;
     pointer-events: none;
   }
 
-  &:disabled {
+  &:not([data-outsidemonth]):disabled {
     pointer-events: none;
+    text-decoration: line-through;
+    color: #64748b;
   }
 }
 
@@ -222,6 +224,15 @@
 
   &:not([data-outsidemonth])[data-selected] {
     background-color: #0369a1;
+  }
+
+  &[data-outsidemonth] {
+    color: #334155;
+    pointer-events: none;
+  }
+
+  &:not([data-outsidemonth]):disabled {
+    color: #64748b;
   }
 }
 
