@@ -23,3 +23,7 @@ packageName: '@mui/x-date-pickers'
 ## Multiple months
 
 {{"demo": "DayCalendarTwoMonthsDemo.js"}}
+
+## Validation
+
+{{"demo": "DayCalendarWithValidationDemo.js"}}
