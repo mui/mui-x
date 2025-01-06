@@ -145,7 +145,7 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
   const [prevValue, setPrevValue] = React.useState<PickerValidDate | null>(value);
 
   if (value !== prevValue && utils.isValid(value)) {
-    let shouldNavigate;
+    let shouldNavigate: boolean;
     if (Object.values(sectionsRef.current.day).length > 0) {
       shouldNavigate = Object.values(sectionsRef.current.day).every(
         (month) => !utils.isSameMonth(value, month),
