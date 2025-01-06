@@ -37,8 +37,8 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
   } = props;
 
   const filterTimeout = useTimeout();
-  const [filterValueState, setFilterValueState] = React.useState<string | number | undefined>(
-    sanitizeFilterItemValue(item.value, type),
+  const [filterValueState, setFilterValueState] = React.useState<string | undefined>(
+    sanitizeFilterItemValue(item.value),
   );
   const [applying, setIsApplying] = React.useState(false);
   const id = useId();
@@ -46,14 +46,14 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
 
   const onFilterChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      const value = sanitizeFilterItemValue(event.target.value, type);
-      setFilterValueState(value);
+      const value = sanitizeFilterItemValue(event.target.value);
 
+      setFilterValueState(value);
       setIsApplying(true);
       filterTimeout.start(rootProps.filterDebounceMs, () => {
         const newItem = {
           ...item,
-          value,
+          value: type === 'number' && !Number.isNaN(Number(value)) ? Number(value) : value,
           fromInput: id!,
         };
         applyValue(newItem);
@@ -66,16 +66,16 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
   React.useEffect(() => {
     const itemPlusTag = item as ItemPlusTag;
     if (itemPlusTag.fromInput !== id || item.value == null) {
-      setFilterValueState(sanitizeFilterItemValue(item.value, type));
+      setFilterValueState(sanitizeFilterItemValue(item.value));
     }
-  }, [id, item, type]);
+  }, [id, item]);
 
   return (
     <rootProps.slots.baseTextField
       id={id}
       label={apiRef.current.getLocaleText('filterPanelInputLabel')}
       placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
-      value={filterValueState === undefined ? '' : String(filterValueState)}
+      value={filterValueState ?? ''}
       onChange={onFilterChange}
       variant={variant}
       type={type || 'text'}
@@ -106,13 +106,11 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
   );
 }
 
-function sanitizeFilterItemValue(value: any, type: GridTypeFilterInputValueProps['type']) {
+function sanitizeFilterItemValue(value: unknown) {
   if (value == null || value === '') {
     return undefined;
   }
-  if (type === 'number') {
-    return Number(value);
-  }
+
   return String(value);
 }
 
