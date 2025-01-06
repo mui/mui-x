@@ -76,7 +76,7 @@ export default function DateCalendarMD2Demo() {
           onActiveSectionChange={setActiveSection}
         />
         {activeSection === 'year' && (
-          <Calendar.YearsList className={styles.YearsList}>
+          <Calendar.YearsGrid cellsPerRow={3} className={styles.YearsGrid}>
             {({ years }) =>
               years.map((year) => (
                 <Calendar.YearsCell
@@ -86,7 +86,7 @@ export default function DateCalendarMD2Demo() {
                 />
               ))
             }
-          </Calendar.YearsList>
+          </Calendar.YearsGrid>
         )}
         {activeSection === 'day' && (
           <Calendar.DaysGrid className={styles.DaysGrid}>

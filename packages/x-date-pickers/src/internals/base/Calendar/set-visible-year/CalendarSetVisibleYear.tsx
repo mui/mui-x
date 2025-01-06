@@ -40,11 +40,11 @@ const CalendarSetVisibleYear = React.forwardRef(function CalendarSetVisibleYear(
 
   const targetDate = React.useMemo(() => {
     if (props.target === 'previous') {
-      return utils.startOfYear(utils.addYears(rootContext.visibleDate, -1));
+      return utils.addYears(rootContext.visibleDate, -1);
     }
 
     if (props.target === 'next') {
-      return utils.startOfYear(utils.addYears(rootContext.visibleDate, 1));
+      return utils.addYears(rootContext.visibleDate, 1);
     }
 
     return utils.setYear(rootContext.visibleDate, utils.getYear(props.target));

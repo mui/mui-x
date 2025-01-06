@@ -104,6 +104,11 @@
   column-gap: 4px;
   row-gap: 12px;
   overflow-y: auto;
+
+  /* TODO: Use CSS variable instead */
+  &[data-cellsperrow='3'] {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .MonthsCell,

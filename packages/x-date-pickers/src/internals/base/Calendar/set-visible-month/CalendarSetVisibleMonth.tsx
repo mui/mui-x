@@ -40,15 +40,11 @@ const CalendarSetVisibleMonth = React.forwardRef(function CalendarSetVisibleMont
 
   const targetDate = React.useMemo(() => {
     if (props.target === 'previous') {
-      return utils.startOfMonth(
-        utils.addMonths(rootContext.visibleDate, -rootContext.monthPageSize),
-      );
+      return utils.addMonths(rootContext.visibleDate, -rootContext.monthPageSize);
     }
 
     if (props.target === 'next') {
-      return utils.startOfMonth(
-        utils.addMonths(rootContext.visibleDate, rootContext.monthPageSize),
-      );
+      return utils.addMonths(rootContext.visibleDate, rootContext.monthPageSize);
     }
 
     return utils.setMonth(rootContext.visibleDate, utils.getMonth(props.target));
