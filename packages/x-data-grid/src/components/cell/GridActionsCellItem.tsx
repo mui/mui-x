@@ -1,20 +1,23 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { IconButtonProps } from '@mui/material/IconButton';
-import { MenuItemProps } from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
+import { forwardRef } from '@mui/x-internals/forwardRef';
+import { GridSlotProps } from '../../models/gridSlotsComponentsProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 interface GridActionsCellItemCommonProps {
   label: string;
-  icon?: React.ReactElement;
+  icon?: React.ReactElement<any>;
   /** from https://mui.com/material-ui/api/button-base/#ButtonBase-prop-component */
   component?: React.ElementType;
 }
 
+// FIXME(v8:romgrk): Make parametric
 export type GridActionsCellItemProps = GridActionsCellItemCommonProps &
   (
-    | ({ showInMenu?: false; icon: React.ReactElement } & Omit<IconButtonProps, 'component'>)
+    | ({ showInMenu?: false; icon: React.ReactElement<any> } & Omit<
+        GridSlotProps['baseIconButton'],
+        'component'
+      >)
     | ({
         showInMenu: true;
         /**
@@ -23,60 +26,54 @@ export type GridActionsCellItemProps = GridActionsCellItemCommonProps &
          */
         closeMenuOnClick?: boolean;
         closeMenu?: () => void;
-      } & Omit<MenuItemProps, 'component'>)
+      } & Omit<GridSlotProps['baseMenuItem'], 'component'>)
   );
 
-const GridActionsCellItem = React.forwardRef<HTMLElement, GridActionsCellItemProps>(
-  (props, ref) => {
-    const rootProps = useGridRootProps();
+const GridActionsCellItem = forwardRef<HTMLElement, GridActionsCellItemProps>((props, ref) => {
+  const rootProps = useGridRootProps();
 
-    if (!props.showInMenu) {
-      const { label, icon, showInMenu, onClick, ...other } = props;
+  if (!props.showInMenu) {
+    const { label, icon, showInMenu, onClick, ...other } = props;
 
-      const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        onClick?.(event);
-      };
-
-      return (
-        <rootProps.slots.baseIconButton
-          ref={ref as React.MutableRefObject<HTMLButtonElement>}
-          size="small"
-          role="menuitem"
-          aria-label={label}
-          {...other}
-          onClick={handleClick}
-          {...rootProps.slotProps?.baseIconButton}
-        >
-          {React.cloneElement(icon!, { fontSize: 'small' })}
-        </rootProps.slots.baseIconButton>
-      );
-    }
-
-    const {
-      label,
-      icon,
-      showInMenu,
-      onClick,
-      closeMenuOnClick = true,
-      closeMenu,
-      ...other
-    } = props;
-
-    const handleClick = (event: React.MouseEvent<HTMLLIElement>) => {
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       onClick?.(event);
-      if (closeMenuOnClick) {
-        closeMenu?.();
-      }
     };
 
     return (
-      <rootProps.slots.baseMenuItem ref={ref} {...(other as any)} onClick={handleClick}>
-        {icon && <ListItemIcon>{icon}</ListItemIcon>}
-        {label}
-      </rootProps.slots.baseMenuItem>
+      <rootProps.slots.baseIconButton
+        size="small"
+        role="menuitem"
+        aria-label={label}
+        {...other}
+        onClick={handleClick}
+        {...rootProps.slotProps?.baseIconButton}
+        ref={ref as React.RefObject<HTMLButtonElement>}
+      >
+        {React.cloneElement(icon!, { fontSize: 'small' })}
+      </rootProps.slots.baseIconButton>
     );
-  },
-);
+  }
+
+  const { label, icon, showInMenu, onClick, closeMenuOnClick = true, closeMenu, ...other } = props;
+
+  const handleClick = (event: React.MouseEvent<HTMLLIElement>) => {
+    onClick?.(event);
+    if (closeMenuOnClick) {
+      closeMenu?.();
+    }
+  };
+
+  return (
+    <rootProps.slots.baseMenuItem
+      ref={ref}
+      {...(other as any)}
+      onClick={handleClick}
+      iconStart={icon}
+    >
+      {label}
+    </rootProps.slots.baseMenuItem>
+  );
+});
 
 GridActionsCellItem.propTypes = {
   // ----------------------------- Warning --------------------------------

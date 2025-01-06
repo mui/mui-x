@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled, SxProps, Theme } from '@mui/system';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../constants/gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -40,7 +41,7 @@ const GridRowCountRoot = styled('div', {
   margin: theme.spacing(0, 2),
 }));
 
-const GridRowCount = React.forwardRef<HTMLDivElement, GridRowCountProps>(
+const GridRowCount = forwardRef<HTMLDivElement, GridRowCountProps>(
   function GridRowCount(props, ref) {
     const { className, rowCount, visibleRowCount, ...other } = props;
     const apiRef = useGridApiContext();
@@ -58,10 +59,10 @@ const GridRowCount = React.forwardRef<HTMLDivElement, GridRowCountProps>(
 
     return (
       <GridRowCountRoot
-        ref={ref}
         className={clsx(classes.root, className)}
         ownerState={ownerState}
         {...other}
+        ref={ref}
       >
         {apiRef.current.getLocaleText('footerTotalRows')} {text}
       </GridRowCountRoot>

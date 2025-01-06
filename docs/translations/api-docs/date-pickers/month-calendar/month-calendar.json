@@ -48,7 +48,20 @@
     },
     "value": { "description": "The selected value. Used when the component is controlled." }
   },
-  "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
+  "classDescriptions": {
+    "button": {
+      "description": "Styles applied to the button element that represents a single month"
+    },
+    "disabled": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "a disabled button element"
+    },
+    "root": { "description": "Styles applied to the root element." },
+    "selected": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "a selected button element"
+    }
+  },
   "slotDescriptions": {
     "monthButton": "Button displayed to render a single month in the <code>month</code> view."
   }

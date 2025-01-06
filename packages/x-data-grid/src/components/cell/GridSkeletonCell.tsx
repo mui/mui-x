@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import Skeleton from '@mui/material/Skeleton';
 import {
   unstable_composeClasses as composeClasses,
   unstable_capitalize as capitalize,
@@ -99,7 +98,7 @@ function GridSkeletonCell(props: GridSkeletonCellProps) {
       style={{ height, maxWidth: width, minWidth: width, ...style }}
       {...other}
     >
-      {!empty && <Skeleton {...skeletonProps} />}
+      {!empty && <rootProps.slots.baseSkeleton {...skeletonProps} />}
     </div>
   );
 }

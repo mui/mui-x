@@ -1,79 +1,60 @@
 import * as React from 'react';
-import clsx from 'clsx';
-import { styled, alpha, useThemeProps } from '@mui/material/styles';
+import { styled, alpha } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
-  getPickersYearUtilityClass,
-  pickersYearClasses,
-  PickersYearClasses,
-} from './pickersYearClasses';
-import {
-  PickerYearOwnerState,
+  YearButtonOwnerState,
   YearCalendarSlotProps,
   YearCalendarSlots,
 } from './YearCalendar.types';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { PickerOwnerState } from '../models/pickers';
+import {
+  getYearCalendarUtilityClass,
+  yearCalendarClasses,
+  YearCalendarClasses,
+} from './yearCalendarClasses';
 
-export interface ExportedPickersYearProps {
-  classes?: Partial<PickersYearClasses>;
-}
-
-export interface PickersYearProps extends ExportedPickersYearProps {
-  'aria-current'?: React.AriaAttributes['aria-current'];
-  autoFocus?: boolean;
+export interface YearCalendarButtonProps {
+  value: number;
+  tabIndex: number;
+  selected: boolean;
+  disabled: boolean;
+  autoFocus: boolean;
+  classes: Partial<YearCalendarClasses> | undefined;
+  slots: YearCalendarSlots | undefined;
+  slotProps: YearCalendarSlotProps | undefined;
+  'aria-current': React.AriaAttributes['aria-current'];
   children: React.ReactNode;
-  className?: string;
-  disabled?: boolean;
   onClick: (event: React.MouseEvent, year: number) => void;
   onKeyDown: (event: React.KeyboardEvent, year: number) => void;
   onFocus: (event: React.FocusEvent, year: number) => void;
   onBlur: (event: React.FocusEvent, year: number) => void;
-  selected: boolean;
-  value: number;
-  tabIndex: number;
-  yearsPerRow: 3 | 4;
-  slots?: YearCalendarSlots;
-  slotProps?: YearCalendarSlotProps;
 }
 
 const useUtilityClasses = (
-  classes: Partial<PickersYearClasses> | undefined,
-  ownerState: PickerYearOwnerState,
+  classes: Partial<YearCalendarClasses> | undefined,
+  ownerState: YearButtonOwnerState,
 ) => {
   const slots = {
-    root: ['root'],
-    yearButton: [
-      'yearButton',
+    button: [
+      'button',
       ownerState.isYearDisabled && 'disabled',
       ownerState.isYearSelected && 'selected',
     ],
   };
 
-  return composeClasses(slots, getPickersYearUtilityClass, classes);
+  return composeClasses(slots, getYearCalendarUtilityClass, classes);
 };
 
-const PickersYearRoot = styled('div', {
-  name: 'MuiPickersYear',
-  slot: 'Root',
-  overridesResolver: (_, styles) => [styles.root],
-})<{ ownerState: PickerOwnerState }>({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  flexBasis: '33.3%',
-  variants: [{ props: { yearsPerRow: 4 }, style: { flexBasis: '25%' } }],
-});
-
-const YearCalendarButton = styled('button', {
-  name: 'MuiPickersYear',
-  slot: 'YearButton',
+const DefaultYearButton = styled('button', {
+  name: 'MuiYearCalendar',
+  slot: 'Button',
   overridesResolver: (_, styles) => [
-    styles.yearButton,
-    { [`&.${pickersYearClasses.disabled}`]: styles.disabled },
-    { [`&.${pickersYearClasses.selected}`]: styles.selected },
+    styles.button,
+    { [`&.${yearCalendarClasses.disabled}`]: styles.disabled },
+    { [`&.${yearCalendarClasses.selected}`]: styles.selected },
   ],
 })<{ ownerState: PickerOwnerState }>(({ theme }) => ({
   color: 'unset',
@@ -81,7 +62,6 @@ const YearCalendarButton = styled('button', {
   border: 0,
   outline: 0,
   ...theme.typography.subtitle1,
-  margin: '6px 0',
   height: 36,
   width: 72,
   borderRadius: 18,
@@ -100,10 +80,10 @@ const YearCalendarButton = styled('button', {
     cursor: 'auto',
     pointerEvents: 'none',
   },
-  [`&.${pickersYearClasses.disabled}`]: {
+  [`&.${yearCalendarClasses.disabled}`]: {
     color: (theme.vars || theme).palette.text.secondary,
   },
-  [`&.${pickersYearClasses.selected}`]: {
+  [`&.${yearCalendarClasses.selected}`]: {
     color: (theme.vars || theme).palette.primary.contrastText,
     backgroundColor: (theme.vars || theme).palette.primary.main,
     '&:focus, &:hover': {
@@ -115,27 +95,19 @@ const YearCalendarButton = styled('button', {
 /**
  * @ignore - internal component.
  */
-export const PickersYear = React.memo(function PickersYear(inProps: PickersYearProps) {
-  const props = useThemeProps({
-    props: inProps,
-    name: 'MuiPickersYear',
-  });
+export const YearCalendarButton = React.memo(function YearCalendarButton(
+  props: YearCalendarButtonProps,
+) {
   const {
     autoFocus,
-    className,
     classes: classesProp,
-    children,
-    disabled = false,
-    selected = false,
+    disabled,
+    selected,
     value,
-    tabIndex,
     onClick,
     onKeyDown,
     onFocus,
     onBlur,
-    'aria-current': ariaCurrent,
-    // We don't want to forward this prop to the root element
-    yearsPerRow,
     slots,
     slotProps,
     ...other
@@ -143,7 +115,7 @@ export const PickersYear = React.memo(function PickersYear(inProps: PickersYearP
 
   const ref = React.useRef<HTMLButtonElement>(null);
   const { ownerState: pickerOwnerState } = usePickerPrivateContext();
-  const ownerState: PickerYearOwnerState = {
+  const ownerState: YearButtonOwnerState = {
     ...pickerOwnerState,
     isYearDisabled: disabled,
     isYearSelected: selected,
@@ -158,18 +130,16 @@ export const PickersYear = React.memo(function PickersYear(inProps: PickersYearP
     }
   }, [autoFocus]);
 
-  const YearButton = slots?.yearButton ?? YearCalendarButton;
+  const YearButton = slots?.yearButton ?? DefaultYearButton;
   const yearButtonProps = useSlotProps({
     elementType: YearButton,
     externalSlotProps: slotProps?.yearButton,
+    externalForwardedProps: other,
     additionalProps: {
-      children,
       disabled,
-      tabIndex,
       ref,
       type: 'button' as const,
       role: 'radio',
-      'aria-current': ariaCurrent,
       'aria-checked': selected,
       onClick: (event: React.MouseEvent) => onClick(event, value),
       onKeyDown: (event: React.KeyboardEvent) => onKeyDown(event, value),
@@ -177,17 +147,8 @@ export const PickersYear = React.memo(function PickersYear(inProps: PickersYearP
       onBlur: (event: React.FocusEvent) => onBlur(event, value),
     },
     ownerState,
-    className: classes.yearButton,
+    className: classes.button,
   });
 
-  return (
-    <PickersYearRoot
-      data-testid="year"
-      className={clsx(classes.root, className)}
-      ownerState={ownerState}
-      {...other}
-    >
-      <YearButton {...yearButtonProps} />
-    </PickersYearRoot>
-  );
+  return <YearButton {...yearButtonProps} />;
 });

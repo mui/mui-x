@@ -20,13 +20,13 @@ import { TimeView } from '../models';
 
 export interface DesktopTimePickerSlots
   extends BaseTimePickerSlots,
-    MakeOptional<UseDesktopPickerSlots<TimeViewWithMeridiem>, 'field' | 'openPickerIcon'>,
+    MakeOptional<UseDesktopPickerSlots, 'field' | 'openPickerIcon'>,
     DigitalClockSlots,
     MultiSectionDigitalClockSlots {}
 
 export interface DesktopTimePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends BaseTimePickerSlotProps,
-    ExportedUseDesktopPickerSlotProps<TimeViewWithMeridiem, TEnableAccessibleFieldDOMStructure>,
+    ExportedUseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure>,
     DigitalClockSlotProps,
     MultiSectionDigitalClockSlotProps {}
 

@@ -241,15 +241,15 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
               <rootProps.slots.baseIconButton
                 aria-label={apiRef.current.getLocaleText('columnsManagementDeleteIconLabel')}
                 size="small"
-                sx={[
+                style={
                   searchValue
                     ? {
                         visibility: 'visible',
                       }
                     : {
                         visibility: 'hidden',
-                      },
-                ]}
+                      }
+                }
                 tabIndex={-1}
                 onClick={handleSearchReset}
                 {...rootProps.slotProps?.baseIconButton}
