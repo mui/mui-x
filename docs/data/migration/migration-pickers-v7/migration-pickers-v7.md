@@ -1129,7 +1129,7 @@ If you were using them, you need to replace them with the following code:
     +  extends BaseMultiInputPickersTextFieldProps<true> {}
     ```
 
-## Rename `date-fns` adapter imports
+## ✅ Rename `date-fns` adapter imports
 
 - The `AdapterDateFns` and `AdapterDateFnsJalali` adapters have been renamed to `AdapterDateFnsV2` and `AdapterDateFnsJalaliV2` respectively.
   If you were using the old imports, you need to update them:
