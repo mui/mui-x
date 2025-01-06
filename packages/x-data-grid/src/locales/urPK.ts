@@ -38,12 +38,12 @@ const urPKGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'پرنٹ کریں',
   toolbarExportExcel: 'ایکسل کے طور پر ڈاوٴنلوڈ کریں',
 
-  // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
-  // columnsManagementReset: 'Reset',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  Columns management text
+  columnsManagementSearchTitle: `تلاش`,
+  columnsManagementNoColumns: 'کوئی کالم نہیں',
+  columnsManagementShowHideAllText: 'تمام لکھائی دکھائیں/چھپائیں',
+  columnsManagementReset: 'ریسیٹ',
+  columnsManagementDeleteIconLabel: 'کلئیر',
 
   // Filter panel text
   filterPanelAddFilter: 'نیا فلٹر',
@@ -59,9 +59,9 @@ const urPKGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'شامل ہے',
-  // filterOperatorDoesNotContain: 'does not contain',
+  فilterOperatorDoesNotContain: 'موجود نہیں',
   filterOperatorEquals: 'برابر ہے',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'برابر نہیں',
   filterOperatorStartsWith: 'شروع ہوتا ہے',
   filterOperatorEndsWith: 'ختم ہوتا ہے',
   filterOperatorIs: 'ہے',
@@ -82,9 +82,9 @@ const urPKGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'شامل ہے',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'موجود نہیں',
   headerFilterOperatorEquals: 'برابر ہے',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'برابر نہیں',
   headerFilterOperatorStartsWith: 'شروع ہوتا ہے',
   headerFilterOperatorEndsWith: 'ختم ہوتا ہے',
   headerFilterOperatorIs: 'ہے',
