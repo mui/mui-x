@@ -71,7 +71,7 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.24",
+    "@mui/internal-test-utils": "^1.0.25",
     "@mui/material": "^5.16.13",
     "@mui/system": "^5.16.13",
     "@mui/types": "^7.2.20",
