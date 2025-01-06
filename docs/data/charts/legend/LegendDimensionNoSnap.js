@@ -29,9 +29,9 @@ export default function LegendDimensionNoSnap() {
           defaultValue: 'horizontal',
           options: ['horizontal', 'vertical'],
         },
-        { propName: 'markSize', knob: 'number', defaultValue: 15 },
-        { propName: 'markGap', knob: 'number', defaultValue: 8 },
-        { propName: 'itemGap', knob: 'number', defaultValue: 16 },
+        { propName: 'markSize', knob: 'number', defaultValue: 15, min: 0 },
+        { propName: 'markGap', knob: 'number', defaultValue: 8, min: 0 },
+        { propName: 'itemGap', knob: 'number', defaultValue: 16, min: 0 },
       ]}
       renderDemo={(
         /** @type {{ direction: "horizontal" | "vertical"; markSize: number; markGap: number; itemGap: number; scrollable: boolean;}} */
