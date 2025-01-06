@@ -101,22 +101,6 @@
   cursor: pointer;
   border-radius: 4px;
 
-  &:not([data-selected]):hover {
-    background-color: #e0f2fe;
-  }
-
-  &[data-selected] {
-    background-color: #7dd3fc;
-
-    &:focus-visible {
-      outline: 2px solid #0ea5e9;
-    }
-  }
-
-  &:focus-visible {
-    outline: 2px solid #0ea5e9;
-  }
-
   &:disabled {
     pointer-events: none;
   }
@@ -150,24 +134,8 @@
   background-color: transparent;
   cursor: pointer;
 
-  &:not([data-selected]):hover {
-    background-color: #e0f2fe;
-  }
-
   &[data-current] {
     outline: 1px solid #9ca3af;
-  }
-
-  &:not([data-outsidemonth])[data-selected] {
-    background-color: #7dd3fc;
-
-    &:focus-visible {
-      outline: 2px solid #0ea5e9;
-    }
-  }
-
-  &:focus-visible {
-    outline: 2px solid #0ea5e9;
   }
 
   &[data-outsidemonth] {
@@ -202,7 +170,40 @@
   }
 }
 
+.DaysCell,
+.MonthsCell,
+.YearsCell {
+  &:not([data-selected]):hover {
+    background-color: #e0f2fe;
+  }
+
+  &:not([data-outsidemonth])[data-selected] {
+    background-color: #7dd3fc;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #0ea5e9;
+  }
+}
+
 .Hidden {
   opacity: 0;
   pointer-events: none;
+}
+
+:global(.mode-dark) :where(.DaysCell, .MonthsCell, .YearsCell) {
+  &:not([data-selected]):hover {
+    background-color: #075985;
+  }
+
+  &:not([data-outsidemonth])[data-selected] {
+    background-color: #0369a1;
+  }
+}
+
+:global(.mode-dark)
+  :where(.SetVisibleMonth, .SetVisibleYear, .SetActiveSectionMonth, .SetActiveSectionYear) {
+  &:hover {
+    background-color: #075985;
+  }
 }
