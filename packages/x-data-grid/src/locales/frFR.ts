@@ -31,6 +31,17 @@ const frFRGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Recherche',
   toolbarQuickFilterDeleteIconLabel: 'Supprimer',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Exporter',
   toolbarExportLabel: 'Exporter',
@@ -43,6 +54,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Pas de colonnes',
   columnsManagementShowHideAllText: 'Afficher/masquer toutes',
   columnsManagementReset: 'Réinitialiser',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Ajouter un filtre',
@@ -58,7 +70,9 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'contient',
+  filterOperatorDoesNotContain: 'ne contient pas',
   filterOperatorEquals: 'est égal à',
+  filterOperatorDoesNotEqual: "n'est pas égal à",
   filterOperatorStartsWith: 'commence par',
   filterOperatorEndsWith: 'se termine par',
   filterOperatorIs: 'est',
@@ -79,7 +93,9 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Contient',
+  headerFilterOperatorDoesNotContain: 'Ne contient pas',
   headerFilterOperatorEquals: 'Est égal à',
+  headerFilterOperatorDoesNotEqual: "N'est pas égal à",
   headerFilterOperatorStartsWith: 'Commence par',
   headerFilterOperatorEndsWith: 'Se termine par',
   headerFilterOperatorIs: 'Est',

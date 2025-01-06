@@ -11,6 +11,7 @@ import {
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
+import { PickerValue } from '@mui/x-date-pickers/internals';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DesktopTimePicker /> - Describes', () => {
@@ -30,7 +31,7 @@ describe('<DesktopTimePicker /> - Describes', () => {
     variant: 'desktop',
   }));
 
-  describeConformance(<DesktopTimePicker enableAccessibleFieldDOMStructure />, () => ({
+  describeConformance(<DesktopTimePicker />, () => ({
     classes: {} as any,
     render,
     muiName: 'MuiDesktopTimePicker',
@@ -46,7 +47,7 @@ describe('<DesktopTimePicker /> - Describes', () => {
     ],
   }));
 
-  describeValue(DesktopTimePicker, () => ({
+  describeValue<PickerValue, 'picker'>(DesktopTimePicker, () => ({
     render,
     componentFamily: 'picker',
     type: 'time',
@@ -69,8 +70,8 @@ describe('<DesktopTimePicker /> - Describes', () => {
     },
     setNewValue: (value, { isOpened, applySameValue, selectSection, pressKey }) => {
       const newValue = applySameValue
-        ? value
-        : adapterToUse.addMinutes(adapterToUse.addHours(value, 1), 5);
+        ? value!
+        : adapterToUse.addMinutes(adapterToUse.addHours(value!, 1), 5);
 
       if (isOpened) {
         const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
@@ -95,7 +96,7 @@ describe('<DesktopTimePicker /> - Describes', () => {
         const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
         if (hasMeridiem) {
           selectSection('meridiem');
-          const previousHours = adapterToUse.getHours(value);
+          const previousHours = adapterToUse.getHours(value!);
           const newHours = adapterToUse.getHours(newValue);
           // update meridiem section if it changed
           if ((previousHours < 12 && newHours >= 12) || (previousHours >= 12 && newHours < 12)) {

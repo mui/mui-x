@@ -10,24 +10,29 @@
   "stopUpdatingLabel": "on hold",
   "packageRules": [
     {
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true
+    },
+    {
       "matchDepTypes": ["peerDependencies"],
       "rangeStrategy": "widen"
     },
     {
       "groupName": "babel",
-      "matchPackagePatterns": "@babel/*"
+      "matchPackageNames": ["@babel/**"]
     },
     {
       "groupName": "D3",
-      "matchPackagePatterns": ["d3-*", "@types/d3-*"]
+      "matchPackageNames": ["d3-*", "@types/d3-*"]
     },
     {
       "groupName": "react-spring",
-      "matchPackagePatterns": "@react-spring/*"
+      "matchPackageNames": ["@react-spring/**"]
     },
     {
       "groupName": "Emotion",
-      "matchPackagePatterns": "@emotion/*"
+      "matchPackageNames": ["@emotion/**"]
     },
     {
       "groupName": "core-js",
@@ -36,14 +41,7 @@
     },
     {
       "groupName": "React",
-      "matchPackageNames": [
-        "react",
-        "react-dom",
-        "react-is",
-        "react-test-renderer",
-        "@types/react",
-        "@types/react-dom"
-      ]
+      "matchPackageNames": ["react", "react-dom", "react-is", "@types/react", "@types/react-dom"]
     },
     {
       "groupName": "React router",
@@ -51,21 +49,26 @@
     },
     {
       "groupName": "typescript-eslint",
-      "matchPackagePatterns": "@typescript-eslint/*"
+      "matchPackageNames": ["@typescript-eslint/**"]
+    },
+    {
+      "groupName": "ESLint plugins",
+      "matchPackageNames": ["eslint-plugin-*", "!eslint-plugin-react-compiler"]
     },
     {
       "groupName": "@types/node",
       "matchPackageNames": ["@types/node"],
-      "allowedVersions": "< 21.0.0"
+      "allowedVersions": "< 21.0.0",
+      "automerge": true
     },
     {
       "groupName": "bundling fixtures",
-      "matchPaths": ["test/bundling/fixtures/**/package.json"],
+      "matchFileNames": ["test/bundling/fixtures/**/package.json"],
       "schedule": "every 6 months on the first day of the month"
     },
     {
       "groupName": "examples",
-      "matchPaths": ["examples/**/package.json"],
+      "matchFileNames": ["examples/**/package.json"],
       "minor": {
         "enabled": false
       },
@@ -79,7 +82,7 @@
       "enabled": false
     },
     {
-      "groupName": "MUI Core",
+      "groupName": "Material UI",
       "matchPackageNames": [
         "@mui/icons-material",
         "@mui/joy",
@@ -95,19 +98,24 @@
     },
     {
       "groupName": "MUI Internal",
-      "matchPackagePatterns": ["@mui/internal-*", "@mui/docs"]
+      "matchPackageNames": ["@mui/internal-*", "@mui/docs"]
     },
     {
       "groupName": "Playwright",
-      "matchPackagePatterns": ["playwright", "@playwright/test"]
+      "matchPackageNames": ["playwright", "@playwright/test", "mcr.microsoft.com/playwright"]
     },
     {
       "matchDepTypes": ["action"],
-      "pinDigests": true
+      "pinDigests": true,
+      "automerge": true
     },
     {
       "groupName": "GitHub Actions",
       "matchManagers": ["github-actions"]
+    },
+    {
+      "groupName": "Vite & Vitest",
+      "matchPackageNames": ["@vitejs/**", "/vitest/"]
     }
   ],
   "postUpdateOptions": ["pnpmDedupe"],

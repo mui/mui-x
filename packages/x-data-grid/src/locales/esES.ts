@@ -31,6 +31,18 @@ const esESGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Buscar',
   toolbarQuickFilterDeleteIconLabel: 'Limpiar',
 
+  // Prompt toolbar field
+  toolbarPromptControlPlaceholder: 'Escriba un prompt…',
+  toolbarPromptControlWithRecordingPlaceholder: 'Escriba o grabe un prompt…',
+  toolbarPromptControlRecordingPlaceholder: 'Esperando por un prompt…',
+  toolbarPromptControlLabel: 'Introduzca un prompt',
+  toolbarPromptControlRecordButtonDefaultLabel: 'Grabar',
+  toolbarPromptControlRecordButtonActiveLabel: 'Parar de grabar',
+  toolbarPromptControlSendActionLabel: 'Enviar',
+  toolbarPromptControlSendActionAriaLabel: 'Enviar prompt',
+  toolbarPromptControlErrorMessage:
+    'Ocurrió un error mientras se procesaba la petición. Por favor, intente de nuevo con otro prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Exportar',
   toolbarExportLabel: 'Exportar',
@@ -43,6 +55,7 @@ const esESGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Sin columnas',
   columnsManagementShowHideAllText: 'Mostrar/Ocultar todas',
   columnsManagementReset: 'Restablecer',
+  columnsManagementDeleteIconLabel: 'Limpiar',
 
   // Filter panel text
   filterPanelAddFilter: 'Agregar filtro',
@@ -58,7 +71,9 @@ const esESGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'contiene',
+  filterOperatorDoesNotContain: 'no contiene',
   filterOperatorEquals: 'es igual',
+  filterOperatorDoesNotEqual: 'es diferente a',
   filterOperatorStartsWith: 'comienza con',
   filterOperatorEndsWith: 'termina con',
   filterOperatorIs: 'es',
@@ -79,7 +94,9 @@ const esESGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Contiene',
+  headerFilterOperatorDoesNotContain: 'No contiene',
   headerFilterOperatorEquals: 'Es igual a',
+  headerFilterOperatorDoesNotEqual: 'Es diferente a',
   headerFilterOperatorStartsWith: 'Comienza con',
   headerFilterOperatorEndsWith: 'Termina con',
   headerFilterOperatorIs: 'Es',

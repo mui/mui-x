@@ -17,7 +17,7 @@ import { GridCellSelectionApi } from '../hooks/features/cellSelection/gridCellSe
 import type { DataGridPremiumProcessedProps } from './dataGridPremiumProps';
 
 /**
- * The api of `DataGridPremium`.
+ * The api of Data Grid Premium.
  * TODO: Do not redefine manually the pro features
  */
 export interface GridApiPremium

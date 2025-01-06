@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/utils';
+import { SlotComponentProps } from '@mui/utils/types';
 import { TreeViewPluginSignature } from '../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
@@ -19,7 +19,7 @@ interface UseTreeViewIconsSlots {
   expandIcon?: React.ElementType;
   /**
    * The default icon displayed next to an end item.
-   * This is applied to all tree items and can be overridden by the TreeItem `icon` slot prop.
+   * This is applied to all Tree Items and can be overridden by the TreeItem `icon` slot prop.
    */
   endIcon?: React.ElementType;
 }

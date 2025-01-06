@@ -16,7 +16,7 @@ export default function StackBars() {
         { dataKey: 'treas', stack: 'equity' },
       ])}
       xAxis={[{ scaleType: 'band', dataKey: 'year' }]}
-      slotProps={{ legend: { hidden: true } }}
+      hideLegend
       width={600}
       height={350}
     />

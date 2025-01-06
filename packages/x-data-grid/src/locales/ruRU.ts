@@ -55,6 +55,17 @@ const ruRUGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Поиск',
   toolbarQuickFilterDeleteIconLabel: 'Очистить',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Экспорт',
   toolbarExportLabel: 'Экспорт',
@@ -67,6 +78,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Нет столбцов',
   columnsManagementShowHideAllText: 'Показать/Скрыть Всё',
   columnsManagementReset: 'Сбросить',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Добавить фильтр',
@@ -82,7 +94,9 @@ const ruRUGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'содержит',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'равен',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'начинается с',
   filterOperatorEndsWith: 'заканчивается на',
   filterOperatorIs: 'равен',
@@ -103,7 +117,9 @@ const ruRUGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'содержит',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'равен',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'начинается с',
   headerFilterOperatorEndsWith: 'заканчивается на',
   headerFilterOperatorIs: 'равен',

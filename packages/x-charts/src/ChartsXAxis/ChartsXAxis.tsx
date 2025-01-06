@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
@@ -125,8 +126,6 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickLabelStyle,
     label,
     labelStyle,
-    tickFontSize,
-    labelFontSize,
     tickSize: tickSizeProp,
     valueFormatter,
     slots,
@@ -156,9 +155,9 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     externalSlotProps: slotProps?.axisTickLabel,
     additionalProps: {
       style: {
+        fontSize: 12,
         textAnchor: 'middle',
         dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
-        fontSize: tickFontSize ?? 12,
         ...tickLabelStyle,
       },
     } as Partial<ChartsTextProps>,
@@ -192,7 +191,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     externalSlotProps: slotProps?.axisLabel,
     additionalProps: {
       style: {
-        fontSize: labelFontSize ?? 14,
+        fontSize: 14,
         textAnchor: 'middle',
         dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
         ...labelStyle,
@@ -290,12 +289,6 @@ ChartsXAxis.propTypes = {
    */
   label: PropTypes.string,
   /**
-   * The font size of the axis label.
-   * @default 14
-   * @deprecated Consider using `labelStyle.fontSize` instead.
-   */
-  labelFontSize: PropTypes.number,
-  /**
    * The style applied to the axis label.
    */
   labelStyle: PropTypes.object,
@@ -323,12 +316,6 @@ ChartsXAxis.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * The font size of the axis ticks text.
-   * @default 12
-   * @deprecated Consider using `tickLabelStyle.fontSize` instead.
-   */
-  tickFontSize: PropTypes.number,
   /**
    * Defines which ticks are displayed.
    * Its value can be:

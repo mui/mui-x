@@ -25,8 +25,7 @@ import {
   GridValidRowModel,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 interface BaselineProps extends DataGridProProps {
   rows: GridValidRowModel[];
@@ -396,14 +395,8 @@ describe('<DataGridPro /> - Rows', () => {
     });
   });
 
-  describe('virtualization', () => {
-    before(function beforeHook() {
-      if (isJSDOM) {
-        // Need layouting
-        this.skip();
-      }
-    });
-
+  // Need layouting
+  describeSkipIf(isJSDOM)('virtualization', () => {
     let apiRef: React.MutableRefObject<GridApi>;
     function TestCaseVirtualization(
       props: Partial<DataGridProProps> & {
@@ -719,7 +712,9 @@ describe('<DataGridPro /> - Rows', () => {
         />,
       );
       expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(6);
-      act(() => apiRef.current.setPage(1));
+      act(() => {
+        apiRef.current.setPage(1);
+      });
       expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(4);
     });
   });
@@ -882,77 +877,6 @@ describe('<DataGridPro /> - Rows', () => {
         const columnHeaderCell = getColumnHeaderCell(0);
         fireEvent.focus(columnHeaderCell);
       }).not.to.throw();
-    });
-  });
-
-  describe('apiRef: setRowHeight', () => {
-    const ROW_HEIGHT = 52;
-
-    before(function beforeHook() {
-      if (isJSDOM) {
-        // Need layouting
-        this.skip();
-      }
-    });
-
-    beforeEach(() => {
-      baselineProps = {
-        rows: [
-          {
-            id: 0,
-            brand: 'Nike',
-          },
-          {
-            id: 1,
-            brand: 'Adidas',
-          },
-          {
-            id: 2,
-            brand: 'Puma',
-          },
-        ],
-        columns: [{ field: 'brand', headerName: 'Brand' }],
-      };
-    });
-
-    let apiRef: React.MutableRefObject<GridApi>;
-
-    function TestCase(props: Partial<DataGridProProps>) {
-      apiRef = useGridApiRef();
-      return (
-        <div style={{ width: 300, height: 300 }}>
-          <DataGridPro {...baselineProps} apiRef={apiRef} rowHeight={ROW_HEIGHT} {...props} />
-        </div>
-      );
-    }
-
-    it('should change row height', () => {
-      const resizedRowId = 1;
-      render(<TestCase />);
-
-      expect(getRow(1).clientHeight).to.equal(ROW_HEIGHT);
-
-      act(() => apiRef.current.unstable_setRowHeight(resizedRowId, 100));
-      expect(getRow(resizedRowId).clientHeight).to.equal(100);
-    });
-
-    it('should preserve changed row height after sorting', () => {
-      const resizedRowId = 0;
-      const getRowHeight = spy();
-      render(<TestCase getRowHeight={getRowHeight} />);
-
-      const row = getRow(resizedRowId);
-      expect(row.clientHeight).to.equal(ROW_HEIGHT);
-
-      getRowHeight.resetHistory();
-      act(() => apiRef.current.unstable_setRowHeight(resizedRowId, 100));
-      expect(row.clientHeight).to.equal(100);
-
-      // sort
-      fireEvent.click(getColumnHeaderCell(resizedRowId));
-
-      expect(row.clientHeight).to.equal(100);
-      expect(getRowHeight.neverCalledWithMatch({ id: resizedRowId })).to.equal(true);
     });
   });
 

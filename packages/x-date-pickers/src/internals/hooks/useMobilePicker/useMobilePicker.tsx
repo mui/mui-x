@@ -3,24 +3,13 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import useForkRef from '@mui/utils/useForkRef';
 import useId from '@mui/utils/useId';
 import { PickersModalDialog } from '../../components/PickersModalDialog';
-import {
-  UseMobilePickerParams,
-  UseMobilePickerProps,
-  UseMobilePickerSlotProps,
-} from './useMobilePicker.types';
+import { UseMobilePickerParams, UseMobilePickerProps } from './useMobilePicker.types';
 import { usePicker } from '../usePicker';
 import { onSpaceOrEnter } from '../../utils/utils';
-import { useUtils } from '../useUtils';
-import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersLayout } from '../../../PickersLayout';
-import { InferError } from '../useValidation';
-import {
-  FieldSection,
-  BaseSingleInputFieldProps,
-  PickerValidDate,
-  FieldRef,
-} from '../../../models';
-import { DateOrTimeViewWithMeridiem } from '../../models';
+import { FieldRef, InferError } from '../../../models';
+import { BaseSingleInputFieldProps, DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
+import { PickerProvider } from '../../components/PickerProvider';
 
 /**
  * Hook managing all the single-date mobile pickers:
@@ -29,11 +18,9 @@ import { DateOrTimeViewWithMeridiem } from '../../models';
  * - MobileTimePicker
  */
 export const useMobilePicker = <
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TExternalProps extends UseMobilePickerProps<
-    TDate,
     TView,
     TEnableAccessibleFieldDOMStructure,
     any,
@@ -43,7 +30,7 @@ export const useMobilePicker = <
   props,
   getOpenDialogAriaText,
   ...pickerParams
-}: UseMobilePickerParams<TDate, TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
+}: UseMobilePickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
   const {
     slots,
     slotProps: innerSlotProps,
@@ -63,72 +50,68 @@ export const useMobilePicker = <
     localeText,
   } = props;
 
-  const utils = useUtils<TDate>();
-  const fieldRef = React.useRef<FieldRef<FieldSection>>(null);
+  const fieldRef = React.useRef<FieldRef<PickerValue>>(null);
 
   const labelId = useId();
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
 
   const {
-    open,
-    actions,
-    layoutProps,
+    providerProps,
     renderCurrentView,
     fieldProps: pickerFieldProps,
-  } = usePicker<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>({
+    ownerState,
+  } = usePicker<PickerValue, TView, TExternalProps>({
     ...pickerParams,
     props,
     fieldRef,
+    localeText,
     autoFocusView: true,
-    additionalViewProps: {},
-    wrapperVariant: 'mobile',
+    variant: 'mobile',
   });
 
   const Field = slots.field;
-  const fieldProps = useSlotProps<
-    typeof Field,
-    UseMobilePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>['field'],
-    Partial<
-      BaseSingleInputFieldProps<
-        TDate | null,
-        TDate,
-        FieldSection,
-        TEnableAccessibleFieldDOMStructure,
-        InferError<TExternalProps>
-      >
-    >,
-    TExternalProps
-  >({
+  const fieldProps: BaseSingleInputFieldProps<
+    PickerValue,
+    TEnableAccessibleFieldDOMStructure,
+    InferError<TExternalProps>
+  > = useSlotProps({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
     additionalProps: {
-      ...pickerFieldProps,
-      ...(isToolbarHidden && { id: labelId }),
-      ...(!(disabled || readOnly) && {
-        onClick: actions.onOpen,
-        onKeyDown: onSpaceOrEnter(actions.onOpen),
-      }),
+      // Internal props
       readOnly: readOnly ?? true,
       disabled,
-      className,
-      sx,
       format,
       formatDensity,
       enableAccessibleFieldDOMStructure,
       selectedSections,
       onSelectedSectionsChange,
       timezone,
+      ...pickerFieldProps, // onChange and value
+
+      // Forwarded props
+      className,
+      sx,
       label,
       name,
-      ...(inputRef ? { inputRef } : {}),
+      ...(isToolbarHidden && { id: labelId }),
+      ...(!(disabled || readOnly) && {
+        // These direct access to `providerProps` will go away in https://github.com/mui/mui-x/pull/15671
+        onClick: (event: React.UIEvent) => {
+          event.preventDefault();
+          providerProps.contextValue.setOpen(true);
+        },
+        onKeyDown: onSpaceOrEnter(() => providerProps.contextValue.setOpen(true)),
+      }),
+      ...(!!inputRef && { inputRef }),
     },
-    ownerState: props,
+    ownerState,
   });
 
   // TODO: Move to `useSlotProps` when https://github.com/mui/material-ui/pull/35088 will be merged
   fieldProps.inputProps = {
     ...fieldProps.inputProps,
-    'aria-label': getOpenDialogAriaText(pickerFieldProps.value, utils),
+    'aria-label': getOpenDialogAriaText(pickerFieldProps.value),
   } as typeof fieldProps.inputProps;
 
   const slotsForField = {
@@ -161,19 +144,19 @@ export const useMobilePicker = <
   const handleFieldRef = useForkRef(fieldRef, fieldProps.unstableFieldRef);
 
   const renderPicker = () => (
-    <LocalizationProvider localeText={localeText}>
+    <PickerProvider {...providerProps}>
       <Field
         {...fieldProps}
         slots={slotsForField}
         slotProps={slotProps}
         unstableFieldRef={handleFieldRef}
       />
-      <PickersModalDialog {...actions} open={open} slots={slots} slotProps={slotProps}>
-        <Layout {...layoutProps} {...slotProps?.layout} slots={slots} slotProps={slotProps}>
+      <PickersModalDialog slots={slots} slotProps={slotProps}>
+        <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
           {renderCurrentView()}
         </Layout>
       </PickersModalDialog>
-    </LocalizationProvider>
+    </PickerProvider>
   );
 
   return { renderPicker };

@@ -94,12 +94,12 @@ export default function ServerSideTreeDataErrorHandling() {
           {...props}
           treeData
           unstable_dataSource={dataSource}
-          unstable_onDataSourceError={(e, params) => {
+          unstable_onDataSourceError={(error, params) => {
             if (!params.groupKeys || params.groupKeys.length === 0) {
-              setRootError(e.message);
+              setRootError(error.message);
             } else {
               setChildrenError(
-                `${e.message} (Requested level: ${params.groupKeys.join(' > ')})`,
+                `${error.message} (Requested level: ${params.groupKeys.join(' > ')})`,
               );
             }
           }}

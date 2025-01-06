@@ -8,10 +8,10 @@ components: PickersSectionList, PickersTextField
 
 # Custom field
 
-<p class="description">The Date and Time Pickers let you customize the field by passing props or custom components</p>
+<p class="description">The Date and Time Pickers let you customize the field by passing props or custom components.</p>
 
 :::success
-See [Common concepts—Custom slots and subcomponents](/x/common-concepts/custom-components/) to learn how to use slots.
+See [Common concepts—Slots and subcomponents](/x/common-concepts/custom-components/) to learn how to use slots.
 :::
 
 ## Customize the default field
@@ -66,30 +66,9 @@ Setting `formatDensity` to `"spacious"` will add a space before and after each `
 
 {{"demo": "FieldFormatDensity.js"}}
 
-## Usage with Material UI
+## With Material UI
 
-### Using Material `TextField`
-
-You can import the `TextField` component to create custom wrappers:
-
-{{"demo": "MaterialV6FieldWrapped.js"}}
-
-:::success
-This approach is only recommended if you need complex customizations on your `TextField`,
-or if you already have a wrapper also used outside the Date and Time Pickers.
-
-If you just need to set some default props, you can use [the `slotProps` prop](/x/react-date-pickers/custom-field/#customize-the-textfield).
-:::
-
-### Using Material `PickersTextField`
-
-Pass the `enableAccessibleFieldDOMStructure` to any Field or Picker component to enable the accessible DOM structure:
-
-{{"demo": "MaterialV7Field.js"}}
-
-:::success
-Learn more about the [accessible DOM structure](/x/react-date-pickers/fields/#accessible-dom-structure).
-:::
+### Wrapping `PickersTextField`
 
 You can import the `PickersTextField` component to create custom wrappers:
 
@@ -101,46 +80,26 @@ This approach is only recommended if you need complex customizations on your `Pi
 If you just need to set some default props, you can use [the `slotProps` prop](/x/react-date-pickers/custom-field/#customize-the-textfield).
 :::
 
-## Usage with Joy UI
+### Using Material `TextField`
 
-### Using Joy `Input`
+Pass the `enableAccessibleFieldDOMStructure={false}` to any Field or Picker component to use an `<input />` for the editing instead of the new accessible DOM structure:
 
-You can use the [Joy UI](https://mui.com/joy-ui/getting-started/) components instead of the Material UI ones:
-
-:::info
-A higher-level solution for _Joy UI_ will be provided in the near future for even simpler usage.
-:::
-
-{{"demo": "JoyV6Field.js", "defaultCodeOpen": false}}
-
-{{"demo": "JoyV6SingleInputRangeField.js", "defaultCodeOpen": false}}
-
-{{"demo": "JoyV6MultiInputRangeField.js", "defaultCodeOpen": false}}
-
-### Using Joy `PickersTextField`
+{{"demo": "MaterialV6Field.js"}}
 
 :::warning
-This component is not available yet.
+The non-accessible DOM structure will be deprecated in a follow up minor version and remove in `v9.x`.
+If you are unable to migrate for some reason, please open an issue to describe what is missing from the new DOM structure so that we can improve it before dropping the old one.
 :::
 
-## Usage with an unstyled input
+## With another Design System
 
-### Using the browser input
-
-{{"demo": "BrowserV6Field.js", "defaultCodeOpen": false}}
-
-{{"demo": "BrowserV6SingleInputRangeField.js", "defaultCodeOpen": false}}
-
-{{"demo": "BrowserV6MultiInputRangeField.js", "defaultCodeOpen": false}}
+### Using a custom input
 
 :::warning
-You will need to use a component that supports the `sx` prop as a wrapper for your input, in order to be able to benefit from the **hover** and **focus** behavior of the clear button. You will have access to the `clearable` and `onClear` props using native HTML elements, but the on **focus** and **hover** behavior depends on styles applied via the `sx` prop.
-:::
-
-### Using custom `PickersTextField`
-
-:::success
-Learn more about the accessible DOM structure and its difference compared to the current one on the [dedicated doc section](/x/react-date-pickers/fields/#accessible-dom-structure).
+You will need to use a component that supports the `sx` prop as a wrapper for your input
+to be able to benefit from the **hover** and **focus** behavior of the clear button.
+You will have access to the `clearable` and `onClear` props using native HTML elements,
+but the on **focus** and **hover** behavior depends on styles applied via the `sx` prop.
 :::
 
 {{"demo": "BrowserV7Field.js", "defaultCodeOpen": false}}
@@ -149,72 +108,49 @@ Learn more about the accessible DOM structure and its difference compared to the
 
 {{"demo": "BrowserV7MultiInputRangeField.js", "defaultCodeOpen": false}}
 
-## Usage with another UI
+### Using Joy UI
 
-### Using an `Autocomplete`
+You can use the [Joy UI](https://mui.com/joy-ui/getting-started/) components instead of the Material UI ones:
 
-If your user can only select a value in a small list of available dates,
-you can replace the field with an `Autocomplete` listing those dates:
+{{"demo": "JoyV6Field.js", "defaultCodeOpen": false}}
 
-{{"demo": "PickerWithAutocompleteField.js", "defaultCodeOpen": false}}
+{{"demo": "JoyV6SingleInputRangeField.js", "defaultCodeOpen": false}}
 
-### Using a `Button`
+{{"demo": "JoyV6MultiInputRangeField.js", "defaultCodeOpen": false}}
 
-If you only want to allow the user to pick a value through the views,
-you can replace the field with a `Button`:
-
-{{"demo": "PickerWithButtonField.js", "defaultCodeOpen": false}}
-
-The same can be applied to the `DateRangePicker`:
-
-{{"demo": "DateRangePickerWithButtonField.js", "defaultCodeOpen": false}}
-
-## How to build a custom field
-
-The main challenge when building a custom field, is to make sure that all the relevant props passed by the pickers are correctly handled.
-
-On the examples below, you can see that the typing of the props received by a custom field always have the same shape:
-
-```tsx
-interface JoyDateFieldProps
-  extends UseDateFieldProps<Dayjs, false>, // The headless field props
-    BaseSingleInputFieldProps<
-      Dayjs | null,
-      Dayjs,
-      FieldSection,
-      false, // `true` for `enableAccessibleFieldDOMStructure`
-      DateValidationError
-    > {} // The DOM field props
-
-interface JoyDateTimeFieldProps
-  extends UseDateTimeFieldProps<Dayjs, false>, // The headless field props
-    BaseSingleInputFieldProps<
-      Dayjs | null,
-      Dayjs,
-      FieldSection,
-      false, // `true` for `enableAccessibleFieldDOMStructure`
-      DateTimeValidationError
-    > {} // The DOM field props
-```
-
-### The headless field props
-
-This interface depends on which type of field you are building (`UseDateField` for date field, `UseTimeField` for a time field, `UseDateRangeFieldProps` for a date range field, etc.).
-
-It contains:
-
-- the basic props common to all the fields (`value`, `onChange`, `format`, `readOnly`, etc.)
-- the validation props for this type of field (`minDate`, `maxDate`, `shouldDisableDate`, etc.)
-
-:::info
-If you are building a custom field that doesn't have any input editing (e.g: the _Button field_), you can ignore most of those props.
+:::warning
+All the Joy UI examples use the non-accessible DOM structure.
+The new accessible DOM structure will become compatible with Joy UI in the future.
 :::
 
-### The DOM field props
+## With a custom editing experience
 
-This interface contains the props the pickers pass to its field in order to customize the rendering.
+### Using an Autocomplete
 
-These props are shaped to be received by the built-in fields which are using the `TextField` from `@mui/material`.
-When used with another type of input (or no input at all), you will have to manually pass them to the relevant component.
+If your user can only select a value in a small list of available dates, you can replace the field with the [Autocomplete](/material-ui/react-autocomplete/) component to list those dates:
 
-You can have a look at the `BaseSingleInputFieldProps` and `BaseMultiInputFieldProps` interfaces to know exactly what those interfaces contain.
+{{"demo": "behavior-autocomplete/MaterialDatePicker.js", "defaultCodeOpen": false}}
+
+### Using a masked Text Field
+
+If you want to use a simple mask approach for the field editing instead of the built-in logic, you can replace the default field with the [TextField](/material-ui/react-text-field/) component using a masked input value built with the [rifm](https://github.com/realadvisor/rifm) package.
+
+{{"demo": "behavior-masked-text-field/MaskedMaterialTextField.js", "defaultCodeOpen": false}}
+
+### Using a read-only Text Field
+
+If you want users to select a value exclusively through the views
+but you still want the UI to look like a Text Field, you can replace the field with a read-only [Text Field](/material-ui/react-text-field/) component:
+
+{{"demo": "behavior-read-only-text-field/MaterialDatePicker.js", "defaultCodeOpen": false}}
+
+### Using a Button
+
+If you want users to select a value exclusively through the views
+and you don't want the UI to look like a Text Field, you can replace the field with the [Button](/material-ui/react-button/) component:
+
+{{"demo": "behavior-button/MaterialDatePicker.js", "defaultCodeOpen": false}}
+
+The same logic can be applied to any Range Picker:
+
+{{"demo": "behavior-button/MaterialDateRangePicker.js", "defaultCodeOpen": false}}

@@ -1,54 +1,37 @@
-import * as React from 'react';
+'use client';
 import {
   useField,
-  splitFieldInternalAndForwardedProps,
-  useDefaultizedDateTimeField,
+  useFieldInternalPropsWithDefaults,
+  PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { UseSingleInputDateTimeRangeFieldProps } from './SingleInputDateTimeRangeField.types';
-import { rangeValueManager, getRangeFieldValueManager } from '../internals/utils/valueManagers';
-import { validateDateTimeRange } from '../internals/utils/validation/validateDateTimeRange';
-import { RangeFieldSection, DateRange } from '../models';
+import { useDateTimeRangeManager } from '../managers';
 
 export const useSingleInputDateTimeRangeField = <
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
-  TAllProps extends UseSingleInputDateTimeRangeFieldProps<
-    TDate,
-    TEnableAccessibleFieldDOMStructure
-  >,
+  TAllProps extends UseSingleInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
 >(
-  inProps: TAllProps,
+  props: TAllProps,
 ) => {
-  const props = useDefaultizedDateTimeField<
-    TDate,
-    UseSingleInputDateTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
-    TAllProps
-  >(inProps);
-
-  const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
-    typeof props,
-    keyof UseSingleInputDateTimeRangeFieldProps<any, any>
-  >(props, 'date-time');
-
-  const fieldValueManager = React.useMemo(
-    () => getRangeFieldValueManager<TDate>({ dateSeparator: internalProps.dateSeparator }),
-    [internalProps.dateSeparator],
-  );
+  const manager = useDateTimeRangeManager(props);
+  const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date-time');
+  const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
+    manager,
+    internalProps,
+  });
 
   return useField<
-    DateRange<TDate>,
-    TDate,
-    RangeFieldSection,
+    PickerRangeValue,
     TEnableAccessibleFieldDOMStructure,
     typeof forwardedProps,
-    typeof internalProps
+    typeof internalPropsWithDefaults
   >({
     forwardedProps,
-    internalProps,
-    valueManager: rangeValueManager,
-    fieldValueManager,
-    validator: validateDateTimeRange,
-    valueType: 'date-time',
+    internalProps: internalPropsWithDefaults,
+    valueManager: manager.internal_valueManager,
+    fieldValueManager: manager.internal_fieldValueManager,
+    validator: manager.validator,
+    valueType: manager.valueType,
   });
 };

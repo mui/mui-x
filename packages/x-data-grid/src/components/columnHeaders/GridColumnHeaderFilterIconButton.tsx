@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses, unstable_useId as useId } from '@mui/utils';
-import Badge from '@mui/material/Badge';
 import { useGridSelector } from '../../hooks';
 import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
@@ -72,7 +71,6 @@ function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonPro
     <rootProps.slots.baseIconButton
       id={labelId}
       onClick={toggleFilter}
-      color="default"
       aria-label={apiRef.current.getLocaleText('columnHeaderFiltersLabel')}
       size="small"
       tabIndex={-1}
@@ -90,16 +88,16 @@ function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonPro
       title={
         apiRef.current.getLocaleText('columnHeaderFiltersTooltipActive')(
           counter,
-        ) as React.ReactElement
+        ) as React.ReactElement<any>
       }
       enterDelay={1000}
       {...rootProps.slotProps?.baseTooltip}
     >
       <GridIconButtonContainer>
         {counter > 1 && (
-          <Badge badgeContent={counter} color="default">
+          <rootProps.slots.baseBadge badgeContent={counter} color="default">
             {iconButton}
-          </Badge>
+          </rootProps.slots.baseBadge>
         )}
 
         {counter === 1 && iconButton}

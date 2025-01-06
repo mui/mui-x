@@ -31,6 +31,17 @@ const faIRGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'جستجو',
   toolbarQuickFilterDeleteIconLabel: 'حذف',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'خروجی',
   toolbarExportLabel: 'خروجی',
@@ -43,6 +54,7 @@ const faIRGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'بدون سطر',
   columnsManagementShowHideAllText: 'نمایش/مخفی کردن همه',
   columnsManagementReset: 'بازنشانی',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'افزودن فیلتر',
@@ -58,7 +70,9 @@ const faIRGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'شامل',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'مساوی',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'شروع با',
   filterOperatorEndsWith: 'پایان با',
   filterOperatorIs: 'هست',
@@ -79,7 +93,9 @@ const faIRGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'شامل',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'مساوی',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'شروع با',
   headerFilterOperatorEndsWith: 'پایان با',
   headerFilterOperatorIs: 'هست',

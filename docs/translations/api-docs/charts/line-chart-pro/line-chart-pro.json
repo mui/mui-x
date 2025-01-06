@@ -18,10 +18,14 @@
     "disableLineItemHighlight": {
       "description": "If <code>true</code>, render the line highlight item."
     },
+    "experimentalMarkRendering": {
+      "description": "If <code>true</code> marks will render <code>&lt;circle /&gt;</code> instead of <code>&lt;path /&gt;</code> and drop theme override for faster rendering."
+    },
     "grid": { "description": "Option to display a cartesian grid in the background." },
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
+    "hideLegend": { "description": "If <code>true</code>, the legend is not rendered." },
     "highlightedItem": {
       "description": "The item currently highlighted. Turns highlighting into a controlled prop."
     },
@@ -59,10 +63,6 @@
     "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
-    "tooltip": {
-      "description": "The configuration of the tooltip.",
-      "seeMoreText": "See {{link}} for more details."
-    },
     "topAxis": {
       "description": "Indicate which axis to display the top of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
     },

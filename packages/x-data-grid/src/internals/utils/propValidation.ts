@@ -1,4 +1,4 @@
-import { warnOnce } from './warning';
+import { warnOnce } from '@mui/x-internals/warning';
 import { isNumber } from '../../utils/utils';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridSignature } from '../../hooks/utils/useGridApiEventHandler';

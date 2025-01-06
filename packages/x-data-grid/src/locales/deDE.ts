@@ -31,6 +31,18 @@ const deDEGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Suchen',
   toolbarQuickFilterDeleteIconLabel: 'Löschen',
 
+  // Prompt toolbar field
+  toolbarPromptControlPlaceholder: 'Prompt eingeben…',
+  toolbarPromptControlWithRecordingPlaceholder: 'Prompt eingeben oder aufnehmen…',
+  toolbarPromptControlRecordingPlaceholder: 'Hört Prompteingabe zu…',
+  toolbarPromptControlLabel: 'Prompteingabe',
+  toolbarPromptControlRecordButtonDefaultLabel: 'Aufnahme starten',
+  toolbarPromptControlRecordButtonActiveLabel: 'Aufnahme stoppen',
+  toolbarPromptControlSendActionLabel: 'Senden',
+  toolbarPromptControlSendActionAriaLabel: 'Prompt senden',
+  toolbarPromptControlErrorMessage:
+    'Ein Fehler ist während der Bearbeitung der Anfrage aufgetreten. Bitte versuche es nochmal mit einem anderen Prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Exportieren',
   toolbarExportLabel: 'Exportieren',
@@ -43,6 +55,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Keine Spalten',
   columnsManagementShowHideAllText: 'Alle anzeigen/verbergen',
   columnsManagementReset: 'Zurücksetzen',
+  columnsManagementDeleteIconLabel: 'Löschen',
 
   // Filter panel text
   filterPanelAddFilter: 'Filter hinzufügen',
@@ -58,7 +71,9 @@ const deDEGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'enthält',
+  filterOperatorDoesNotContain: 'enthält nicht',
   filterOperatorEquals: 'ist gleich',
+  filterOperatorDoesNotEqual: 'ist ungleich',
   filterOperatorStartsWith: 'beginnt mit',
   filterOperatorEndsWith: 'endet mit',
   filterOperatorIs: 'ist',
@@ -79,7 +94,9 @@ const deDEGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Enthält',
+  headerFilterOperatorDoesNotContain: 'Enthält nicht',
   headerFilterOperatorEquals: 'Gleich',
+  headerFilterOperatorDoesNotEqual: 'Ungleich',
   headerFilterOperatorStartsWith: 'Beginnt mit',
   headerFilterOperatorEndsWith: 'Endet mit',
   headerFilterOperatorIs: 'Ist',

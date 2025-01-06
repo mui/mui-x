@@ -1,45 +1,34 @@
-import {
-  singleItemFieldValueManager,
-  singleItemValueManager,
-} from '../internals/utils/valueManagers';
-import { useField } from '../internals/hooks/useField';
+'use client';
+import { useField, useFieldInternalPropsWithDefaults } from '../internals/hooks/useField';
 import { UseDateFieldProps } from './DateField.types';
-import { validateDate } from '../internals/utils/validation/validateDate';
-import { splitFieldInternalAndForwardedProps } from '../internals/utils/fields';
-import { FieldSection, PickerValidDate } from '../models';
-import { useDefaultizedDateField } from '../internals/hooks/defaultizedFieldProps';
+import { useSplitFieldProps } from '../hooks';
+import { useDateManager } from '../managers';
+import { PickerValue } from '../internals/models';
 
 export const useDateField = <
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
-  TAllProps extends UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  TAllProps extends UseDateFieldProps<TEnableAccessibleFieldDOMStructure>,
 >(
-  inProps: TAllProps,
+  props: TAllProps,
 ) => {
-  const props = useDefaultizedDateField<
-    TDate,
-    UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
-    TAllProps
-  >(inProps);
-
-  const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
-    typeof props,
-    keyof UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>
-  >(props, 'date');
+  const manager = useDateManager(props);
+  const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
+  const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
+    manager,
+    internalProps,
+  });
 
   return useField<
-    TDate | null,
-    TDate,
-    FieldSection,
+    PickerValue,
     TEnableAccessibleFieldDOMStructure,
     typeof forwardedProps,
-    typeof internalProps
+    typeof internalPropsWithDefaults
   >({
     forwardedProps,
-    internalProps,
-    valueManager: singleItemValueManager,
-    fieldValueManager: singleItemFieldValueManager,
-    validator: validateDate,
-    valueType: 'date',
+    internalProps: internalPropsWithDefaults,
+    valueManager: manager.internal_valueManager,
+    fieldValueManager: manager.internal_fieldValueManager,
+    validator: manager.validator,
+    valueType: manager.valueType,
   });
 };

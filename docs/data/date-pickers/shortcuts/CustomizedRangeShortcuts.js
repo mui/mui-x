@@ -1,13 +1,15 @@
 import * as React from 'react';
+import dayjs from 'dayjs';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
-import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
+
+import { useIsValidValue, usePickerContext } from '@mui/x-date-pickers/hooks';
 
 const shortcutsItems = [
   {
@@ -51,7 +53,9 @@ const shortcutsItems = [
 ];
 
 function CustomRangeShortcuts(props) {
-  const { items, onChange, isValid, changeImportance = 'accept' } = props;
+  const { items, changeImportance = 'accept' } = props;
+  const isValid = useIsValidValue();
+  const { setValue } = usePickerContext();
 
   if (items == null || items.length === 0) {
     return null;
@@ -63,7 +67,7 @@ function CustomRangeShortcuts(props) {
     return {
       label: item.label,
       onClick: () => {
-        onChange(newValue, changeImportance, item);
+        setValue(newValue, { changeImportance, shortcut: item });
       },
       disabled: !isValid(newValue),
     };

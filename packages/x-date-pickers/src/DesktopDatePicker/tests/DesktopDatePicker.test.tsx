@@ -6,8 +6,7 @@ import { inputBaseClasses } from '@mui/material/InputBase';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { createPickerRenderer, adapterToUse, openPicker } from 'test/utils/pickers';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { describeSkipIf, testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DesktopDatePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -101,10 +100,7 @@ describe('<DesktopDatePicker />', () => {
       expect(screen.getByRole('radio', { checked: true, name: 'January' })).not.to.equal(null);
     });
 
-    it('should move the focus to the newly opened views', function test() {
-      if (isJSDOM) {
-        this.skip();
-      }
+    testSkipIf(isJSDOM)('should move the focus to the newly opened views', () => {
       render(<DesktopDatePicker defaultValue={new Date(2019, 5, 5)} openTo="year" />);
 
       openPicker({ type: 'date', variant: 'desktop' });
@@ -140,7 +136,8 @@ describe('<DesktopDatePicker />', () => {
     });
   });
 
-  describe('scroll', () => {
+  // JSDOM has neither layout nor window.scrollTo
+  describeSkipIf(isJSDOM)('scroll', () => {
     const NoTransition = React.forwardRef(function NoTransition(
       props: TransitionProps & { children?: React.ReactNode },
       ref: React.Ref<HTMLDivElement>,
@@ -155,13 +152,6 @@ describe('<DesktopDatePicker />', () => {
           {children}
         </div>
       );
-    });
-
-    before(function beforeHook() {
-      // JSDOM has neither layout nor window.scrollTo
-      if (/jsdom/.test(window.navigator.userAgent)) {
-        this.skip();
-      }
     });
 
     let originalScrollX: number;
@@ -264,7 +254,7 @@ describe('<DesktopDatePicker />', () => {
   });
 
   describe('Month navigation', () => {
-    it('should not allow to navigate to previous month if props.minDate is after the last date of the previous month', () => {
+    it('should not allow to navigate to previous month if props.minDate is after the last day of the previous month', () => {
       render(
         <DesktopDatePicker
           defaultValue={adapterToUse.date('2018-02-10')}
@@ -277,7 +267,7 @@ describe('<DesktopDatePicker />', () => {
       expect(screen.getByLabelText('Previous month')).to.have.attribute('disabled');
     });
 
-    it('should allow to navigate to previous month if props.minDate is the last date of the previous month', () => {
+    it('should allow to navigate to previous month if props.minDate is the last day of the previous month', () => {
       render(
         <DesktopDatePicker
           defaultValue={adapterToUse.date('2018-02-10')}
@@ -290,7 +280,7 @@ describe('<DesktopDatePicker />', () => {
       expect(screen.getByLabelText('Previous month')).not.to.have.attribute('disabled');
     });
 
-    it('should not allow to navigate to next month if props.maxDate is before the last date of the next month', () => {
+    it('should not allow to navigate to next month if props.maxDate is before the first day of the next month', () => {
       render(
         <DesktopDatePicker
           defaultValue={adapterToUse.date('2018-02-10')}
@@ -303,11 +293,11 @@ describe('<DesktopDatePicker />', () => {
       expect(screen.getByLabelText('Next month')).to.have.attribute('disabled');
     });
 
-    it('should allow to navigate to next month if props.maxDate is the first date of the next month', () => {
+    it('should allow to navigate to next month if props.maxDate is the first day of the next month', () => {
       render(
         <DesktopDatePicker
           defaultValue={adapterToUse.date('2018-02-10')}
-          minDate={adapterToUse.date('2018-01-01')}
+          maxDate={adapterToUse.date('2018-03-01')}
         />,
       );
 

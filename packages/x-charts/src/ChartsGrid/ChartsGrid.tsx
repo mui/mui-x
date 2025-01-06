@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
@@ -5,7 +6,7 @@ import { useThemeProps } from '@mui/material/styles';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { ChartsGridClasses, getChartsGridUtilityClass } from './chartsGridClasses';
 import { useDrawingArea } from '../hooks/useDrawingArea';
-import { GridRoot } from './styledCommonents';
+import { GridRoot } from './styledComponents';
 import { ChartsGridVertical } from './ChartsVerticalGrid';
 import { ChartsGridHorizontal } from './ChartsHorizontalGrid';
 

@@ -10,7 +10,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'Меридием',
 };
 
-const kzKZPickers: Partial<PickersLocaleText<any>> = {
+const kzKZPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Алдыңғы ай',
   nextMonth: 'Келесі ай',
@@ -44,8 +44,8 @@ const kzKZPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Кезеңді таңдаңыз',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `${timeViews[view]} таңдау. ${time === null ? 'Уақыт таңдалмаған' : `Таңдалған уақыт ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `${timeViews[view]} таңдау. ${!formattedTime ? 'Уақыт таңдалмаған' : `Таңдалған уақыт ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} сағат`,
   minutesClockNumberText: (minutes) => `${minutes} минут`,
   secondsClockNumberText: (seconds) => `${seconds} секунд`,
@@ -60,15 +60,11 @@ const kzKZPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Күнді таңдаңыз, таңдалған күн ${utils.format(value, 'fullDate')}`
-      : 'Күнді таңдаңыз',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Уақытты таңдаңыз, таңдалған уақыт ${utils.format(value, 'fullTime')}`
-      : 'Уақытты таңдаңыз',
-  // fieldClearLabel: 'Clear value',
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Күнді таңдаңыз, таңдалған күн ${formattedDate}` : 'Күнді таңдаңыз',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Уақытты таңдаңыз, таңдалған уақыт ${formattedTime}` : 'Уақытты таңдаңыз',
+  // fieldClearLabel: 'Clear',
 
   // Table labels
   timeTableLabel: 'уақытты таңдау',

@@ -31,6 +31,17 @@ const fiFIGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Hae',
   toolbarQuickFilterDeleteIconLabel: 'Tyhjennä',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Vie',
   toolbarExportLabel: 'Vie',
@@ -43,6 +54,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Ei sarakkeita näytettäväksi',
   columnsManagementShowHideAllText: 'Näytä/Piilota kaikki',
   columnsManagementReset: 'Palauta',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Lisää suodatin',
@@ -58,7 +70,9 @@ const fiFIGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'sisältää',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'on yhtä suuri kuin',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'alkaa',
   filterOperatorEndsWith: 'päättyy',
   filterOperatorIs: 'on',
@@ -79,7 +93,9 @@ const fiFIGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Sisältää',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'On yhtä suuri kuin',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'Alkaa',
   headerFilterOperatorEndsWith: 'Päättyy',
   headerFilterOperatorIs: 'On',

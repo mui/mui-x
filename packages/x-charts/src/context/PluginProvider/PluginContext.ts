@@ -9,6 +9,8 @@ export const PluginContext = React.createContext<Initializable<PluginContextStat
     seriesFormatters: {},
     xExtremumGetters: {},
     yExtremumGetters: {},
+    rotationExtremumGetters: {},
+    radiusExtremumGetters: {},
   },
 });
 

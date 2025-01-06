@@ -63,6 +63,13 @@ If you only need the `year` view or the `month` view, you can use the `YearCalen
 
 {{"demo": "YearMonthCalendar.js", "defaultCodeOpen": false}}
 
+### Order of years
+
+By default, years are displayed in ascending order, chronologically from the minimum year to the maximum.
+Set the `yearsOrder` prop to `desc` to show the years in descending order.
+
+{{"demo": "YearsOrderDescendingCalendar.js",  "defaultCodeOpen": false}}
+
 ## Day view customization
 
 ### Show additional days

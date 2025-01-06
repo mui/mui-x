@@ -247,7 +247,7 @@ const series = [
   },
 ].map((s) => ({
   ...s,
-  valueFormatter: (v) => `(${v.x.toFixed(1)}, ${v.y.toFixed(1)})`,
+  valueFormatter: (v) => v && `(${v.x.toFixed(1)}, ${v.y.toFixed(1)})`,
 }));
 
 function getGaussianSeriesData(mean, stdev = [0.5, 0.5], N = 50) {
@@ -262,6 +262,6 @@ function getGaussianSeriesData(mean, stdev = [0.5, 0.5], N = 50) {
         Math.cos(2.0 * Math.PI * chance.floating({ min: 0, max: 0.99 })) *
         stdev[1] +
       mean[1];
-    return { x, y, z: x + y, id: i };
+    return { x, y, z: x + y, id: `${mean.join(',')}${i}` };
   });
 }

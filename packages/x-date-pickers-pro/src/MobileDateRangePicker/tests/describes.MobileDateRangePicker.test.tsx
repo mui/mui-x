@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { screen, fireDiscreteEvent, fireEvent } from '@mui/internal-test-utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
+import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
 import {
   adapterToUse,
   createPickerRenderer,
@@ -29,7 +30,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
     variant: 'mobile',
   }));
 
-  describeConformance(<MobileDateRangePicker enableAccessibleFieldDOMStructure />, () => ({
+  describeConformance(<MobileDateRangePicker />, () => ({
     classes: {} as any,
     render,
     muiName: 'MuiMobileDateRangePicker',
@@ -45,7 +46,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
     ],
   }));
 
-  describeValue(MobileDateRangePicker, () => ({
+  describeValue<PickerRangeValue, 'picker'>(MobileDateRangePicker, () => ({
     render,
     componentFamily: 'picker',
     type: 'date-range',
@@ -73,7 +74,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
       expectFieldValueV7(endFieldRoot, expectedEndValueStr);
     },
     setNewValue: (value, { isOpened, applySameValue, setEndDate = false }) => {
-      let newValue: any[];
+      let newValue: PickerNonNullableRangeValue;
       if (applySameValue) {
         newValue = value;
       } else if (setEndDate) {
@@ -87,9 +88,9 @@ describe('<MobileDateRangePicker /> - Describes', () => {
       }
 
       fireEvent.click(
-        screen.getAllByRole('gridcell', {
+        screen.getByRole('gridcell', {
           name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
-        })[0],
+        }),
       );
 
       // Close the picker

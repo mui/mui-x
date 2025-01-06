@@ -8,7 +8,8 @@ import {
   isDefined,
   getScale,
 } from '@mui/x-charts/internals';
-import { ChartsAxisProps, ScaleName, AxisConfig } from '@mui/x-charts';
+import { ScaleName, AxisConfig } from '@mui/x-charts/models';
+import { ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import { ZoomData } from '../ZoomProvider';
 
 type CreateAxisFilterMapperParams = {
@@ -38,7 +39,7 @@ export const createAxisFilterMapper =
     if (scaleType === 'point' || scaleType === 'band') {
       extremums = [0, (axis.data?.length ?? 1) - 1];
     } else {
-      extremums = getAxisExtremum(axis, extremumGetter, axisIndex === 0, formattedSeries);
+      extremums = getAxisExtremum(axis, extremumGetter, axisIndex, formattedSeries);
     }
 
     let min: number | Date;

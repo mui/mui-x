@@ -20,32 +20,34 @@ describe('<DateCalendar /> - localization', () => {
         adapterName,
       });
 
-      const { render: renderWithoutWrapper } = createRenderer();
-
       it('should display correct week day labels in Hebrew locale ', () => {
         render(<DateCalendar />);
 
         expect(screen.getByText('א')).toBeVisible();
       });
 
-      it('should correctly switch between locale with week starting in Monday and week starting in Sunday', () => {
-        const { setProps } = renderWithoutWrapper(
-          <LocalizationProvider dateAdapter={availableAdapters[adapterName]}>
-            <DateCalendar reduceAnimations />
-          </LocalizationProvider>,
-        );
+      describe('without wrapper', () => {
+        const { render: renderWithoutWrapper } = createRenderer();
 
-        expect(document.querySelector(`.${dayCalendarClasses.weekDayLabel}`)!.ariaLabel).to.equal(
-          'Sunday',
-        );
+        it('should correctly switch between locale with week starting in Monday and week starting in Sunday', () => {
+          const { setProps } = renderWithoutWrapper(
+            <LocalizationProvider dateAdapter={availableAdapters[adapterName]}>
+              <DateCalendar reduceAnimations />
+            </LocalizationProvider>,
+          );
 
-        setProps({
-          adapterLocale: adapterName === 'date-fns' ? fr : 'fr',
+          expect(document.querySelector(`.${dayCalendarClasses.weekDayLabel}`)!.ariaLabel).to.equal(
+            'Sunday',
+          );
+
+          setProps({
+            adapterLocale: adapterName === 'date-fns' ? fr : 'fr',
+          });
+
+          expect(document.querySelector(`.${dayCalendarClasses.weekDayLabel}`)!.ariaLabel).to.equal(
+            'lundi',
+          );
         });
-
-        expect(document.querySelector(`.${dayCalendarClasses.weekDayLabel}`)!.ariaLabel).to.equal(
-          'lundi',
-        );
       });
     });
   });

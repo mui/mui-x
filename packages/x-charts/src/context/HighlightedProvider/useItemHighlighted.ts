@@ -1,3 +1,4 @@
+'use client';
 import { HighlightItemData } from './HighlightedContext';
 import { useHighlighted } from './useHighlighted';
 

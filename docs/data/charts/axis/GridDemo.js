@@ -2,14 +2,12 @@ import * as React from 'react';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 import { chartsGridClasses } from '@mui/x-charts/ChartsGrid';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { dataset } from '../dataset/weather';
+import { dataset, valueFormatter } from '../dataset/weather';
 
 const chartSetting = {
   yAxis: [{ label: 'rainfall (mm)' }],
   height: 300,
 };
-
-const valueFormatter = (value) => `${value}mm`;
 
 export default function GridDemo() {
   return (

@@ -72,7 +72,7 @@ export const useGridColumnReorder = (
   });
   const originColumnIndex = React.useRef<number | null>(null);
   const forbiddenIndexes = React.useRef<{ [key: number]: boolean }>({});
-  const removeDnDStylesTimeout = React.useRef<ReturnType<typeof setTimeout>>();
+  const removeDnDStylesTimeout = React.useRef<ReturnType<typeof setTimeout>>(undefined);
   const ownerState = { classes: props.classes };
   const classes = useUtilityClasses(ownerState);
   const isRtl = useRtl();
@@ -311,6 +311,12 @@ export const useGridColumnReorder = (
       event.stopPropagation();
 
       clearTimeout(removeDnDStylesTimeout.current);
+
+      // For more information check here https://github.com/mui/mui-x/issues/14678
+      if (dragColNode.current!.classList.contains(classes.columnHeaderDragging)) {
+        dragColNode.current!.classList.remove(classes.columnHeaderDragging);
+      }
+
       dragColNode.current = null;
 
       // Check if the column was dropped outside the grid.
@@ -335,7 +341,13 @@ export const useGridColumnReorder = (
       }));
       apiRef.current.forceUpdate();
     },
-    [props.disableColumnReorder, props.keepColumnPositionIfDraggedOutside, logger, apiRef],
+    [
+      apiRef,
+      props.disableColumnReorder,
+      props.keepColumnPositionIfDraggedOutside,
+      logger,
+      classes.columnHeaderDragging,
+    ],
   );
 
   useGridApiEventHandler(apiRef, 'columnHeaderDragStart', handleDragStart);

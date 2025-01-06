@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { TreeViewAnyPluginSignature, TreeViewPublicAPI } from '../internals/models';
 import { RichTreeViewPluginSignatures } from '../RichTreeView/RichTreeView.plugins';

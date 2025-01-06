@@ -1,45 +1,34 @@
-import {
-  singleItemFieldValueManager,
-  singleItemValueManager,
-} from '../internals/utils/valueManagers';
-import { useField } from '../internals/hooks/useField';
+'use client';
+import { useField, useFieldInternalPropsWithDefaults } from '../internals/hooks/useField';
 import { UseTimeFieldProps } from './TimeField.types';
-import { validateTime } from '../internals/utils/validation/validateTime';
-import { splitFieldInternalAndForwardedProps } from '../internals/utils/fields';
-import { PickerValidDate, FieldSection } from '../models';
-import { useDefaultizedTimeField } from '../internals/hooks/defaultizedFieldProps';
+import { useSplitFieldProps } from '../hooks';
+import { useTimeManager } from '../managers';
+import { PickerValue } from '../internals/models';
 
 export const useTimeField = <
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
-  TAllProps extends UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  TAllProps extends UseTimeFieldProps<TEnableAccessibleFieldDOMStructure>,
 >(
-  inProps: TAllProps,
+  props: TAllProps,
 ) => {
-  const props = useDefaultizedTimeField<
-    TDate,
-    UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
-    TAllProps
-  >(inProps);
-
-  const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
-    typeof props,
-    keyof UseTimeFieldProps<any, TEnableAccessibleFieldDOMStructure>
-  >(props, 'time');
+  const manager = useTimeManager(props);
+  const { forwardedProps, internalProps } = useSplitFieldProps(props, 'time');
+  const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
+    manager,
+    internalProps,
+  });
 
   return useField<
-    TDate | null,
-    TDate,
-    FieldSection,
+    PickerValue,
     TEnableAccessibleFieldDOMStructure,
     typeof forwardedProps,
-    typeof internalProps
+    typeof internalPropsWithDefaults
   >({
     forwardedProps,
-    internalProps,
-    valueManager: singleItemValueManager,
-    fieldValueManager: singleItemFieldValueManager,
-    validator: validateTime,
-    valueType: 'time',
+    internalProps: internalPropsWithDefaults,
+    valueManager: manager.internal_valueManager,
+    fieldValueManager: manager.internal_fieldValueManager,
+    validator: manager.validator,
+    valueType: manager.valueType,
   });
 };

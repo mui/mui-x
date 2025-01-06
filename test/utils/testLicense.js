@@ -6,8 +6,8 @@ export function generateTestLicenseKey() {
   // Tests usually take up to 15 minutes to run on CI.
   expiryDate.setHours(expiryDate.getHours() + 1);
   return generateLicense({
-    licensingModel: 'subscription',
-    scope: 'premium',
+    licenseModel: 'subscription',
+    planScope: 'premium',
     orderNumber: 'MUI X tests',
     expiryDate,
     planVersion: 'Q3-2024',

@@ -31,6 +31,17 @@ const urPKGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'تلاش کریں',
   toolbarQuickFilterDeleteIconLabel: 'کلئیر کریں',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'ایکسپورٹ',
   toolbarExportLabel: 'ایکسپورٹ',
@@ -43,6 +54,7 @@ const urPKGrid: Partial<GridLocaleText> = {
   // columnsManagementNoColumns: 'No columns',
   // columnsManagementShowHideAllText: 'Show/Hide All',
   // columnsManagementReset: 'Reset',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'نیا فلٹر',
@@ -58,7 +70,9 @@ const urPKGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'شامل ہے',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'برابر ہے',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'شروع ہوتا ہے',
   filterOperatorEndsWith: 'ختم ہوتا ہے',
   filterOperatorIs: 'ہے',
@@ -79,7 +93,9 @@ const urPKGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'شامل ہے',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'برابر ہے',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'شروع ہوتا ہے',
   headerFilterOperatorEndsWith: 'ختم ہوتا ہے',
   headerFilterOperatorIs: 'ہے',

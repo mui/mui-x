@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { animated, SpringValue, to } from '@react-spring/web';
@@ -128,6 +129,7 @@ function PieArcLabel(props: PieArcLabelProps) {
   const classes = useUtilityClasses(ownerState);
 
   return (
+    // @ts-expect-error
     <PieArcLabelRoot
       className={classes.root}
       {...other}

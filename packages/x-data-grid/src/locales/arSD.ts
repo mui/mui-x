@@ -31,6 +31,17 @@ const arSDGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'بحث',
   toolbarQuickFilterDeleteIconLabel: 'أزال',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'تصدير',
   toolbarExportLabel: 'تصدير',
@@ -43,6 +54,7 @@ const arSDGrid: Partial<GridLocaleText> = {
   // columnsManagementNoColumns: 'No columns',
   // columnsManagementShowHideAllText: 'Show/Hide All',
   // columnsManagementReset: 'Reset',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'إضافة مرشِح',
@@ -58,7 +70,9 @@ const arSDGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'يحتوي',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'يساوي',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'يبدأ بـ',
   filterOperatorEndsWith: 'ينتهي بـ',
   filterOperatorIs: 'يكون',
@@ -79,7 +93,9 @@ const arSDGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'يحتوي على',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'يساوي',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'يبدأ ب',
   headerFilterOperatorEndsWith: 'ينتهي ب',
   headerFilterOperatorIs: 'هو',

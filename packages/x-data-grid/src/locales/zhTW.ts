@@ -30,6 +30,17 @@ const zhTWGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: '搜尋',
   toolbarQuickFilterDeleteIconLabel: '清除',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: '匯出',
   toolbarExportLabel: '匯出',
@@ -42,6 +53,7 @@ const zhTWGrid: Partial<GridLocaleText> = {
   // columnsManagementNoColumns: 'No columns',
   // columnsManagementShowHideAllText: 'Show/Hide All',
   // columnsManagementReset: 'Reset',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: '增加篩選器',
@@ -57,7 +69,9 @@ const zhTWGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: '包含',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: '等於',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: '以...開頭',
   filterOperatorEndsWith: '以...結束',
   filterOperatorIs: '為',
@@ -78,7 +92,9 @@ const zhTWGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: '包含',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: '等於',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: '以...開頭',
   headerFilterOperatorEndsWith: '以...結束',
   headerFilterOperatorIs: '為',

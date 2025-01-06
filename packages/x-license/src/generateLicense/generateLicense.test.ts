@@ -7,8 +7,8 @@ describe('License: generateLicense', () => {
       generateLicense({
         expiryDate: new Date(1591723879062),
         orderNumber: 'MUI-123',
-        scope: 'pro',
-        licensingModel: 'subscription',
+        planScope: 'pro',
+        licenseModel: 'subscription',
         planVersion: 'initial',
       }),
     ).to.equal(
@@ -21,8 +21,8 @@ describe('License: generateLicense', () => {
       generateLicense({
         expiryDate: new Date(1591723879062),
         orderNumber: 'MUI-123',
-        scope: 'premium',
-        licensingModel: 'subscription',
+        planScope: 'premium',
+        licenseModel: 'subscription',
         planVersion: 'initial',
       }),
     ).to.equal(
@@ -30,13 +30,13 @@ describe('License: generateLicense', () => {
     );
   });
 
-  it('should generate annual license when `licensingModel: "subscription"`', () => {
+  it('should generate annual license when `licenseModel: "subscription"`', () => {
     expect(
       generateLicense({
         expiryDate: new Date(1591723879062),
         orderNumber: 'MUI-123',
-        scope: 'pro',
-        licensingModel: 'subscription',
+        planScope: 'pro',
+        licenseModel: 'subscription',
         planVersion: 'initial',
       }),
     ).to.equal(
@@ -44,13 +44,13 @@ describe('License: generateLicense', () => {
     );
   });
 
-  it('should generate perpetual license when `licensingModel: "perpetual"`', () => {
+  it('should generate perpetual license when `licenseModel: "perpetual"`', () => {
     expect(
       generateLicense({
         expiryDate: new Date(1591723879062),
         orderNumber: 'MUI-123',
-        scope: 'pro',
-        licensingModel: 'perpetual',
+        planScope: 'pro',
+        licenseModel: 'perpetual',
         planVersion: 'initial',
       }),
     ).to.equal(
@@ -63,8 +63,8 @@ describe('License: generateLicense', () => {
       generateLicense({
         expiryDate: new Date(1591723879062),
         orderNumber: 'MUI-123',
-        scope: 'pro',
-        licensingModel: 'subscription',
+        planScope: 'pro',
+        licenseModel: 'subscription',
         planVersion: 'Q3-2024',
       }),
     ).to.equal(
@@ -77,8 +77,8 @@ describe('License: generateLicense', () => {
       generateLicense({
         expiryDate: new Date(1591723879062),
         orderNumber: 'MUI-123',
-        scope: 'premium',
-        licensingModel: 'subscription',
+        planScope: 'premium',
+        licenseModel: 'subscription',
         planVersion: 'Q3-2024',
       }),
     ).to.equal(

@@ -9,7 +9,7 @@ import {
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function DirectSelector() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
     maxColumns: 10,
@@ -37,6 +37,7 @@ export default function DirectSelector() {
       <Box sx={{ height: 400, mt: 1 }}>
         <DataGrid
           {...data}
+          loading={loading}
           apiRef={apiRef}
           pageSizeOptions={[10]}
           initialState={{

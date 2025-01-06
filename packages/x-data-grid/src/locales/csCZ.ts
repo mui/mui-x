@@ -38,6 +38,17 @@ const csCZGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Hledat',
   toolbarQuickFilterDeleteIconLabel: 'Vymazat',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Export',
   toolbarExportLabel: 'Export',
@@ -50,6 +61,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Žádné sloupce',
   columnsManagementShowHideAllText: 'Zobrazit/skrýt vše',
   columnsManagementReset: 'Resetovat',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Přidat filtr',
@@ -65,7 +77,9 @@ const csCZGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'obsahuje',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'rovná se',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'začíná na',
   filterOperatorEndsWith: 'končí na',
   filterOperatorIs: 'je',
@@ -86,7 +100,9 @@ const csCZGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Obsahuje',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'Rovná se',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'Začíná na',
   headerFilterOperatorEndsWith: 'Končí na',
   headerFilterOperatorIs: 'Je',

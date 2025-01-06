@@ -65,7 +65,6 @@ export interface UseGridColumnHeadersProps {
 export interface GetHeadersParams {
   position?: GridPinnedColumnPosition;
   renderContext?: GridColumnsRenderContext;
-  minFirstColumn?: number;
   maxLastColumn?: number;
 }
 
@@ -102,22 +101,19 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const isRtl = useRtl();
   const rootProps = useGridRootProps();
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
-  const hasVirtualization = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
+  const hasColumnVirtualization = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
   const columnGroupsModel = useGridSelector(apiRef, gridColumnGroupsUnwrappedModelSelector);
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const renderContext = useGridSelector(apiRef, gridRenderContextColumnsSelector);
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
   const columnsLookup = useGridSelector(apiRef, gridColumnLookupSelector);
-  const offsetLeft = computeOffsetLeft(
-    columnPositions,
-    renderContext,
-    isRtl,
-    pinnedColumns.left.length,
-  );
+  const offsetLeft = computeOffsetLeft(columnPositions, renderContext, pinnedColumns.left.length);
   const gridHasFiller = dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width;
 
   React.useEffect(() => {
-    apiRef.current.columnHeadersContainerRef!.current!.scrollLeft = 0;
+    if (apiRef.current.columnHeadersContainerRef.current) {
+      apiRef.current.columnHeadersContainerRef.current.scrollLeft = 0;
+    }
   }, [apiRef]);
 
   const handleColumnResizeStart = React.useCallback<GridEventListener<'columnResizeStart'>>(
@@ -163,14 +159,18 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
   // Helper for computation common between getColumnHeaders and getColumnGroupHeaders
   const getColumnsToRender = (params?: GetHeadersParams) => {
-    const {
-      renderContext: currentContext = renderContext,
-      // TODO: `minFirstColumn` is not used anymore, could be refactored out.
-      maxLastColumn = visibleColumns.length,
-    } = params || {};
+    const { renderContext: currentContext = renderContext, maxLastColumn = visibleColumns.length } =
+      params || {};
 
-    const firstColumnToRender = currentContext.firstColumnIndex;
-    const lastColumnToRender = !hasVirtualization ? maxLastColumn : currentContext.lastColumnIndex;
+    let firstColumnToRender;
+    let lastColumnToRender;
+    if (!rootProps.disableVirtualization && !hasColumnVirtualization) {
+      firstColumnToRender = 0;
+      lastColumnToRender = maxLastColumn;
+    } else {
+      firstColumnToRender = currentContext.firstColumnIndex;
+      lastColumnToRender = currentContext.lastColumnIndex;
+    }
     const renderedColumns = visibleColumns.slice(firstColumnToRender, lastColumnToRender);
 
     return {
@@ -230,7 +230,11 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     computedWidth: number;
   }) => {
     let style: React.CSSProperties | undefined;
-    if (pinnedPosition === 'left' || pinnedPosition === 'right') {
+
+    const isLeftPinned = pinnedPosition === GridPinnedColumnPosition.LEFT;
+    const isRightPinned = pinnedPosition === GridPinnedColumnPosition.RIGHT;
+
+    if (isLeftPinned || isRightPinned) {
       const pinnedOffset = getPinnedCellOffset(
         pinnedPosition,
         computedWidth,
@@ -238,12 +242,18 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         columnPositions,
         dimensions,
       );
+      let side = isLeftPinned ? 'left' : 'right';
+
+      if (isRtl) {
+        side = isLeftPinned ? 'right' : 'left';
+      }
+
       if (pinnedPosition === 'left') {
-        style = { left: pinnedOffset };
+        style = { [side]: pinnedOffset };
       }
 
       if (pinnedPosition === 'right') {
-        style = { right: pinnedOffset };
+        style = { [side]: pinnedOffset };
       }
     }
 
@@ -274,6 +284,17 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         computedWidth: colDef.computedWidth,
       });
 
+      const siblingWithBorderingSeparator =
+        pinnedPosition === GridPinnedColumnPosition.RIGHT
+          ? renderedColumns[i - 1]
+          : renderedColumns[i + 1];
+      const isSiblingFocused = siblingWithBorderingSeparator
+        ? columnHeaderFocus !== null &&
+          columnHeaderFocus.field === siblingWithBorderingSeparator.field
+        : false;
+      const isLastUnpinned =
+        columnIndex + 1 === columnPositions.length - pinnedColumns.right.length;
+
       columns.push(
         <GridColumnHeaderItem
           key={colDef.field}
@@ -295,6 +316,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           indexInSection={i}
           sectionLength={renderedColumns.length}
           gridHasFiller={gridHasFiller}
+          isLastUnpinned={isLastUnpinned}
+          isSiblingFocused={isSiblingFocused}
           {...other}
         />,
       );
@@ -316,14 +339,12 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
             {
               position: GridPinnedColumnPosition.LEFT,
               renderContext: leftRenderContext,
-              minFirstColumn: leftRenderContext.firstColumnIndex,
               maxLastColumn: leftRenderContext.lastColumnIndex,
             },
             { disableReorder: true },
           )}
         {getColumnHeaders({
           renderContext,
-          minFirstColumn: pinnedColumns.left.length,
           maxLastColumn: visibleColumns.length - pinnedColumns.right.length,
         })}
         {rightRenderContext &&
@@ -331,7 +352,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
             {
               position: GridPinnedColumnPosition.RIGHT,
               renderContext: rightRenderContext,
-              minFirstColumn: rightRenderContext.firstColumnIndex,
               maxLastColumn: rightRenderContext.lastColumnIndex,
             },
             {
@@ -355,7 +375,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       return null;
     }
 
-    const { renderedColumns, firstColumnToRender, lastColumnToRender } = columnsToRender;
+    const { firstColumnToRender, lastColumnToRender } = columnsToRender;
 
     const rowStructure = columnGroupsHeaderStructure[depth];
 
@@ -443,15 +463,15 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           fields={headerInfo.fields}
           colIndex={headerInfo.colIndex}
           depth={depth}
-          isLastColumn={headerInfo.colIndex === visibleColumns.length - headerInfo.fields.length}
+          isLastColumn={index === visibleColumnGroupHeader.length - 1}
           maxDepth={headerGroupingMaxDepth}
-          height={dimensions.headerHeight}
+          height={dimensions.groupHeaderHeight}
           hasFocus={hasFocus}
           tabIndex={tabIndex}
           pinnedPosition={pinnedPosition}
           style={style}
           indexInSection={indexInSection}
-          sectionLength={renderedColumns.length}
+          sectionLength={visibleColumnGroupHeader.length}
           gridHasFiller={gridHasFiller}
         />
       );
@@ -481,7 +501,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
               params: {
                 position: GridPinnedColumnPosition.LEFT,
                 renderContext: leftRenderContext,
-                minFirstColumn: leftRenderContext.firstColumnIndex,
                 maxLastColumn: leftRenderContext.lastColumnIndex,
               },
             })}
@@ -492,7 +511,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
               params: {
                 position: GridPinnedColumnPosition.RIGHT,
                 renderContext: rightRenderContext,
-                minFirstColumn: rightRenderContext.firstColumnIndex,
                 maxLastColumn: rightRenderContext.lastColumnIndex,
               },
             })}

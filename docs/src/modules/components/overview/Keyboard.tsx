@@ -410,20 +410,20 @@ export default function Keyboard() {
   const brandingTheme = useTheme();
   const theme = createTheme({ palette: { mode: brandingTheme.palette.mode } });
 
-  const handleKeySelection = (e: React.SyntheticEvent, key: SelectedKey | null) => {
+  const handleKeySelection = (event: React.SyntheticEvent, key: SelectedKey | null) => {
     const sectionContent = (ref.current as any).querySelector(
       `.MuiPickersSectionList-section[data-sectionindex="${selectedSection.current || 0}"] .MuiPickersSectionList-sectionContent`,
     );
     sectionContent.focus();
 
     if (key) {
-      const event = new KeyboardEvent('keydown', {
+      const keydownEvent = new KeyboardEvent('keydown', {
         ...key,
         bubbles: true,
         cancelable: true,
       });
 
-      sectionContent.dispatchEvent(event);
+      sectionContent.dispatchEvent(keydownEvent);
 
       if (key.key === 'Backspace') {
         sectionContent.textContent = '';
@@ -457,6 +457,7 @@ export default function Keyboard() {
           <SectionHeadline
             overline="Accessibility"
             title={
+              // eslint-disable-next-line material-ui/no-hardcoded-labels
               <Typography variant="h2" fontSize="1.625rem">
                 Assistive technology support
               </Typography>
@@ -468,8 +469,9 @@ export default function Keyboard() {
             href="/x/react-date-pickers/accessibility/"
             endIcon={<ArrowForwardIcon />}
             sx={{ width: 'fit-content' }}
+            // eslint-disable-next-line material-ui/no-hardcoded-labels
           >
-            More info
+            More about accessibility
           </Button>
         </Stack>
         <Stack spacing={2} sx={{ width: '100%', maxWidth: '500px' }}>
@@ -487,7 +489,6 @@ export default function Keyboard() {
               onKeyUp={() => {
                 setSelectedKey(null);
               }}
-              enableAccessibleFieldDOMStructure
               onSelectedSectionsChange={(newSelectedSection) => {
                 selectedSection.current = newSelectedSection;
               }}

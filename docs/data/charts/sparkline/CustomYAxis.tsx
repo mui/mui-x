@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
 
 const settings = {
-  valueFormatter: (v: number | null) => `${v}%`,
+  valueFormatter: (value: number | null) => `${value}%`,
   height: 100,
   showTooltip: true,
   showHighlight: true,

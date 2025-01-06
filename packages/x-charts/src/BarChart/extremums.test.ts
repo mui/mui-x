@@ -20,12 +20,14 @@ const buildData = (
             ]
           : [],
         layout,
+        valueFormatter: () => '',
       },
     },
     axis: {
       id: 'id',
       data,
     },
+    axisIndex: 0,
     isDefaultAxis: true,
   };
 };

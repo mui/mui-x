@@ -1,3 +1,4 @@
+'use client';
 import { isBandScale } from '../internals/isBandScale';
 import { AxisScaleConfig, D3Scale, ScaleName } from '../models/axis';
 import { useXAxis, useYAxis } from './useAxis';

@@ -1,10 +1,10 @@
 /* eslint-disable no-restricted-imports */
 // @ts-nocheck
 import {
-  TreeView,
-  TreeViewProps,
-  TreeViewClasses,
-  TreeViewClassKey,
-  treeViewClasses,
-  getTreeViewUtilityClass,
+  SimpleTreeView,
+  SimpleTreeViewProps,
+  SimpleTreeViewClasses,
+  SimpleTreeViewClassKey,
+  simpleTreeViewClasses,
+  getSimpleTreeViewUtilityClass,
 } from '@mui/x-tree-view';

@@ -1,0 +1,11 @@
+<Stack direction="row" spacing={1} sx={{ mb: 1 }}>
+  <Button size="small" onClick={removeRow}>
+    Remove a row
+  </Button>
+  <Button size="small" onClick={addRow}>
+    Add a row
+  </Button>
+</Stack>
+<div style={{ display: 'flex', flexDirection: 'column' }}>
+  <DataGrid {...data} rows={data.rows.slice(0, nbRows)} loading={loading} />
+</div>

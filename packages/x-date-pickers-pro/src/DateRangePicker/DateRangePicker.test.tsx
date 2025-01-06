@@ -22,7 +22,7 @@ describe('<DateRangePicker />', () => {
   });
 
   it('should not open mobile picker dialog when clicked on input', () => {
-    // Test with v7 input
+    // Test with accessible DOM structure
     const { unmount } = renderWithProps({ enableAccessibleFieldDOMStructure: true });
     fireEvent.click(getFieldInputRoot());
     clock.runToLast();
@@ -32,7 +32,7 @@ describe('<DateRangePicker />', () => {
 
     unmount();
 
-    // Test with v6 input
+    // Test with non-accessible DOM structure
     renderWithProps({ enableAccessibleFieldDOMStructure: false });
     fireEvent.click(screen.getAllByRole('textbox')[0]);
     clock.runToLast();
@@ -45,7 +45,7 @@ describe('<DateRangePicker />', () => {
     const originalMatchMedia = window.matchMedia;
     window.matchMedia = stubMatchMedia(false);
 
-    render(<DateRangePicker enableAccessibleFieldDOMStructure />);
+    render(<DateRangePicker />);
     fireEvent.click(getFieldInputRoot());
     clock.runToLast();
 

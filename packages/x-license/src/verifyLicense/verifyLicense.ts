@@ -1,8 +1,8 @@
 import { base64Decode, base64Encode } from '../encoding/base64';
 import { md5 } from '../encoding/md5';
 import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
-import { LicenseScope, LICENSE_SCOPES, PlanVersion } from '../utils/licenseScope';
-import { LicensingModel, LICENSING_MODELS } from '../utils/licensingModel';
+import { PlanScope, PLAN_SCOPES, PlanVersion } from '../utils/plan';
+import { LicenseModel, LICENSE_MODELS } from '../utils/licenseModel';
 import { MuiCommercialPackageName } from '../utils/commercialPackages';
 
 const getDefaultReleaseDate = () => {
@@ -16,11 +16,8 @@ export function generateReleaseInfo(releaseDate = getDefaultReleaseDate()) {
   return base64Encode(releaseDate.getTime().toString());
 }
 
-function isLicenseScopeSufficient(
-  packageName: MuiCommercialPackageName,
-  licenseScope: LicenseScope,
-) {
-  let acceptedScopes: LicenseScope[];
+function isPlanScopeSufficient(packageName: MuiCommercialPackageName, planScope: PlanScope) {
+  let acceptedScopes: PlanScope[];
   if (packageName.includes('-pro')) {
     acceptedScopes = ['pro', 'premium'];
   } else if (packageName.includes('-premium')) {
@@ -29,14 +26,14 @@ function isLicenseScopeSufficient(
     acceptedScopes = [];
   }
 
-  return acceptedScopes.includes(licenseScope);
+  return acceptedScopes.includes(planScope);
 }
 
 const expiryReg = /^.*EXPIRY=([0-9]+),.*$/;
 
 interface MuiLicense {
-  licensingModel: LicensingModel | null;
-  scope: LicenseScope | null;
+  licenseModel: LicenseModel | null;
+  planScope: PlanScope | null;
   expiryTimestamp: number | null;
   planVersion: PlanVersion;
 }
@@ -61,20 +58,20 @@ const decodeLicenseVersion1 = (license: string): MuiLicense => {
   }
 
   return {
-    scope: 'pro',
-    licensingModel: 'perpetual',
+    planScope: 'pro',
+    licenseModel: 'perpetual',
     expiryTimestamp,
     planVersion: 'initial',
   };
 };
 
 /**
- * Format: O=${orderNumber},E=${expiryTimestamp},S=${scope},LM=${licensingModel},PV=${planVersion},KV=2`;
+ * Format: O=${orderNumber},E=${expiryTimestamp},S=${planScope},LM=${licenseModel},PV=${planVersion},KV=2`;
  */
 const decodeLicenseVersion2 = (license: string): MuiLicense => {
   const licenseInfo: MuiLicense = {
-    scope: null,
-    licensingModel: null,
+    planScope: null,
+    licenseModel: null,
     expiryTimestamp: null,
     planVersion: 'initial',
   };
@@ -85,11 +82,11 @@ const decodeLicenseVersion2 = (license: string): MuiLicense => {
     .filter((el) => el.length === 2)
     .forEach(([key, value]) => {
       if (key === 'S') {
-        licenseInfo.scope = value as LicenseScope;
+        licenseInfo.planScope = value as PlanScope;
       }
 
       if (key === 'LM') {
-        licenseInfo.licensingModel = value as LicensingModel;
+        licenseInfo.licenseModel = value as LicenseModel;
       }
 
       if (key === 'E') {
@@ -155,7 +152,7 @@ export function verifyLicense({
     return { status: LICENSE_STATUS.Invalid };
   }
 
-  if (license.licensingModel == null || !LICENSING_MODELS.includes(license.licensingModel)) {
+  if (license.licenseModel == null || !LICENSE_MODELS.includes(license.licenseModel)) {
     console.error('MUI X: Error checking license. Licensing model not found or invalid!');
     return { status: LICENSE_STATUS.Invalid };
   }
@@ -165,7 +162,7 @@ export function verifyLicense({
     return { status: LICENSE_STATUS.Invalid };
   }
 
-  if (license.licensingModel === 'perpetual' || process.env.NODE_ENV === 'production') {
+  if (license.licenseModel === 'perpetual' || process.env.NODE_ENV === 'production') {
     const pkgTimestamp = parseInt(base64Decode(releaseInfo), 10);
     if (Number.isNaN(pkgTimestamp)) {
       throw new Error('MUI X: The release information is invalid. Not able to validate license.');
@@ -174,7 +171,7 @@ export function verifyLicense({
     if (license.expiryTimestamp < pkgTimestamp) {
       return { status: LICENSE_STATUS.ExpiredVersion };
     }
-  } else if (license.licensingModel === 'subscription' || license.licensingModel === 'annual') {
+  } else if (license.licenseModel === 'subscription' || license.licenseModel === 'annual') {
     if (new Date().getTime() > license.expiryTimestamp) {
       if (
         // 30 days grace
@@ -193,19 +190,19 @@ export function verifyLicense({
     }
   }
 
-  if (license.scope == null || !LICENSE_SCOPES.includes(license.scope)) {
-    console.error('MUI X: Error checking license. scope not found or invalid!');
+  if (license.planScope == null || !PLAN_SCOPES.includes(license.planScope)) {
+    console.error('MUI X: Error checking license. planScope not found or invalid!');
     return { status: LICENSE_STATUS.Invalid };
   }
 
-  if (!isLicenseScopeSufficient(packageName, license.scope)) {
+  if (!isPlanScopeSufficient(packageName, license.planScope)) {
     return { status: LICENSE_STATUS.OutOfScope };
   }
 
   // 'charts-pro' or 'tree-view-pro' can only be used with a newer Pro license
   if (
     license.planVersion === 'initial' &&
-    license.scope === 'pro' &&
+    license.planScope === 'pro' &&
     !PRO_PACKAGES_AVAILABLE_IN_INITIAL_PRO_PLAN.includes(packageName)
   ) {
     return { status: LICENSE_STATUS.NotAvailableInInitialProPlan };

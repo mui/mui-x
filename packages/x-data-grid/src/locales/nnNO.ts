@@ -31,6 +31,17 @@ const nnNOGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Søk',
   toolbarQuickFilterDeleteIconLabel: 'Slett',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Eksporter',
   toolbarExportLabel: 'Eksporter',
@@ -43,6 +54,7 @@ const nnNOGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Ingen kolonner',
   columnsManagementShowHideAllText: 'Vis/skjul alle',
   columnsManagementReset: 'Nullstill',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Legg til filter',
@@ -58,7 +70,9 @@ const nnNOGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'inneheld',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'er lik',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'startar med',
   filterOperatorEndsWith: 'sluttar med',
   filterOperatorIs: 'er',
@@ -79,7 +93,9 @@ const nnNOGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Inneheld',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'Lik',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'Startar på',
   headerFilterOperatorEndsWith: 'Sluttar på',
   headerFilterOperatorIs: 'Er',

@@ -29,6 +29,18 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   toolbarQuickFilterLabel: 'Search',
   toolbarQuickFilterDeleteIconLabel: 'Clear',
 
+  // Prompt toolbar field
+  toolbarPromptControlPlaceholder: 'Type a prompt…',
+  toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  toolbarPromptControlLabel: 'Prompt input',
+  toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  toolbarPromptControlSendActionLabel: 'Send',
+  toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  toolbarPromptControlErrorMessage:
+    'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Export',
   toolbarExportLabel: 'Export',
@@ -41,6 +53,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   columnsManagementNoColumns: 'No columns',
   columnsManagementShowHideAllText: 'Show/Hide All',
   columnsManagementReset: 'Reset',
+  columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Add filter',
@@ -56,7 +69,9 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
 
   // Filter operators text
   filterOperatorContains: 'contains',
+  filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'equals',
+  filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'starts with',
   filterOperatorEndsWith: 'ends with',
   filterOperatorIs: 'is',
@@ -77,7 +92,9 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Contains',
+  headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'Equals',
+  headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'Starts with',
   headerFilterOperatorEndsWith: 'Ends with',
   headerFilterOperatorIs: 'Is',

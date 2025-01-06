@@ -45,7 +45,7 @@ The paste operation only affects cells in the columns that are [`editable`](/x/r
 Same as with editing, you can use `valueParser` to modify the pasted value and `valueSetter` to update the row with new values.
 See [Value parser and value setter](/x/react-data-grid/editing/#value-parser-and-value-setter) section of the editing documentation for more details.
 
-The behavior of the clipboard paste operation depends on the selection state of the data grid and the data pasted from clipboard.
+The behavior of the clipboard paste operation depends on the selection state of the Data Grid and the data pasted from clipboard.
 The priority is the following, from highest to lowest:
 
 1. If multiple cells are selected (see [Cell selection<span class="plan-premium" title="Premium plan"></span>](/x/react-data-grid/cell-selection/)), the selected cells are updated with the pasted values.

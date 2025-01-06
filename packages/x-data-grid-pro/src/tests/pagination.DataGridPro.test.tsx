@@ -36,7 +36,6 @@ describe('<DataGridPro /> - Pagination', () => {
       act(() => {
         apiRef.current.setPage(1);
       });
-
       expect(getColumnValues(0)).to.deep.equal(['1']);
     });
 
@@ -65,7 +64,6 @@ describe('<DataGridPro /> - Pagination', () => {
       act(() => {
         apiRef.current.setPage(50);
       });
-
       expect(getColumnValues(0)).to.deep.equal(['19']);
     });
   });

@@ -19,7 +19,7 @@ export default function BorderRadius() {
           <Typography gutterBottom>Border Radius</Typography>
           <Slider
             value={radius}
-            onChange={(e, v) => setRadius(v as number)}
+            onChange={(event, value) => setRadius(value as number)}
             valueLabelDisplay="auto"
             min={0}
             max={50}

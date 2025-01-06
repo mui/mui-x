@@ -30,6 +30,18 @@ const trTRGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Ara',
   toolbarQuickFilterDeleteIconLabel: 'Temizle',
 
+  // Prompt toolbar field
+  toolbarPromptControlPlaceholder: 'Bir istem yazın…',
+  toolbarPromptControlWithRecordingPlaceholder: 'Bir istem yazın veya kaydedin…',
+  toolbarPromptControlRecordingPlaceholder: 'İstem dinleniyor…',
+  toolbarPromptControlLabel: 'İstem girişi',
+  toolbarPromptControlRecordButtonDefaultLabel: 'Kaydet',
+  toolbarPromptControlRecordButtonActiveLabel: 'Kaydı durdur',
+  toolbarPromptControlSendActionLabel: 'Gönder',
+  toolbarPromptControlSendActionAriaLabel: 'İstemi gönder',
+  toolbarPromptControlErrorMessage:
+    'İstek işlenirken bir hata oluştu. Lütfen farklı bir istemle tekrar deneyin.',
+
   // Export selector toolbar button text
   toolbarExport: 'Dışa aktar',
   toolbarExportLabel: 'Dışa aktar',
@@ -42,6 +54,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Kolon yok',
   columnsManagementShowHideAllText: 'Hepsini Göster/Gizle',
   columnsManagementReset: 'Sıfırla',
+  columnsManagementDeleteIconLabel: 'Temizle',
 
   // Filter panel text
   filterPanelAddFilter: 'Filtre Ekle',
@@ -57,7 +70,9 @@ const trTRGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'içerir',
+  filterOperatorDoesNotContain: 'içermiyor',
   filterOperatorEquals: 'eşittir',
+  filterOperatorDoesNotEqual: 'eşit değil',
   filterOperatorStartsWith: 'ile başlar',
   filterOperatorEndsWith: 'ile biter',
   filterOperatorIs: 'eşittir',
@@ -78,7 +93,9 @@ const trTRGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Şunu içerir',
+  headerFilterOperatorDoesNotContain: 'İçermez',
   headerFilterOperatorEquals: 'Şuna eşittir',
+  headerFilterOperatorDoesNotEqual: 'Eşit değildir',
   headerFilterOperatorStartsWith: 'Şununla başlar',
   headerFilterOperatorEndsWith: 'Şununla biter',
   headerFilterOperatorIs: 'Eşittir',

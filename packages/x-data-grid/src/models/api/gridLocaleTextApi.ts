@@ -41,6 +41,17 @@ export interface GridLocaleText {
   toolbarQuickFilterLabel: string;
   toolbarQuickFilterDeleteIconLabel: string;
 
+  // Prompt control toolbar field
+  toolbarPromptControlPlaceholder: string;
+  toolbarPromptControlWithRecordingPlaceholder: string;
+  toolbarPromptControlRecordingPlaceholder: string;
+  toolbarPromptControlLabel: string;
+  toolbarPromptControlRecordButtonDefaultLabel: string;
+  toolbarPromptControlRecordButtonActiveLabel: string;
+  toolbarPromptControlSendActionLabel: string;
+  toolbarPromptControlSendActionAriaLabel: string;
+  toolbarPromptControlErrorMessage: string;
+
   // Export selector toolbar button text
   toolbarExport: React.ReactNode;
   toolbarExportLabel: string;
@@ -53,6 +64,7 @@ export interface GridLocaleText {
   columnsManagementNoColumns: string;
   columnsManagementShowHideAllText: string;
   columnsManagementReset: string;
+  columnsManagementDeleteIconLabel: string;
 
   // Filter panel text
   filterPanelAddFilter: React.ReactNode;
@@ -68,7 +80,9 @@ export interface GridLocaleText {
 
   // Filter operators text
   filterOperatorContains: string;
+  filterOperatorDoesNotContain: string;
   filterOperatorEquals: string;
+  filterOperatorDoesNotEqual: string;
   filterOperatorStartsWith: string;
   filterOperatorEndsWith: string;
   filterOperatorIs: string;
@@ -89,7 +103,9 @@ export interface GridLocaleText {
 
   // Header filter operators text
   headerFilterOperatorContains: string;
+  headerFilterOperatorDoesNotContain: string;
   headerFilterOperatorEquals: string;
+  headerFilterOperatorDoesNotEqual: string;
   headerFilterOperatorStartsWith: string;
   headerFilterOperatorEndsWith: string;
   headerFilterOperatorIs: string;

@@ -26,7 +26,7 @@ To sort the row groups by the number of child rows, you can override it using `g
 
 {{"demo": "RowGroupingSortByChildRows.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Dispaying child row count in footer
+## Displaying child row count in footer
 
 By default, the row count in the footer is the number of top level rows that are visible after filtering.
 

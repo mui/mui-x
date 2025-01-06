@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTransition } from '@react-spring/web';
@@ -14,7 +15,6 @@ import {
   ValueWithHighlight,
   useTransformData,
 } from './dataTransform/useTransformData';
-import { useHighlighted } from '../context';
 
 export interface PieArcPlotSlots {
   pieArc?: React.JSXElementConstructor<PieArcProps>;
@@ -94,7 +94,6 @@ function PieArcPlot(props: PieArcPlotProps) {
     ...defaultTransitionConfig,
     immediate: skipAnimation,
   });
-  const { highlightScope } = useHighlighted();
 
   if (data.length === 0) {
     return null;
@@ -111,10 +110,8 @@ function PieArcPlot(props: PieArcPlotProps) {
             endAngle,
             paddingAngle: pA,
             innerRadius: iR,
-            arcLabelRadius,
             outerRadius: oR,
             cornerRadius: cR,
-            ...style
           },
           item,
           _,
@@ -128,11 +125,9 @@ function PieArcPlot(props: PieArcPlotProps) {
               innerRadius={iR}
               outerRadius={oR}
               cornerRadius={cR}
-              style={style}
               id={id}
               color={item.color}
               dataIndex={index}
-              highlightScope={highlightScope}
               isFaded={item.isFaded}
               isHighlighted={item.isHighlighted}
               onClick={

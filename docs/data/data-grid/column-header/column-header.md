@@ -34,6 +34,14 @@ const columns: GridColDef[] = [
 
 {{"demo": "RenderHeaderGrid.js", "bg": "inline"}}
 
+## Header height
+
+By default, column headers have a height of 56 pixels. This matches the height from the [Material Design guidelines](https://m2.material.io/components/data-tables).
+
+The `columnHeaderHeight` prop can be used to override the default value.
+
+{{"demo": "HeaderHeight.js", "bg": "inline"}}
+
 ## Styling header
 
 You can check the [styling header](/x/react-data-grid/style/#styling-column-headers) section for more information.

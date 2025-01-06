@@ -363,18 +363,16 @@ describe('<DataGrid /> - Column grouping', () => {
       fireEvent.click(screen.getByRole('button', { name: /Update columns/ }));
 
       const row1Headers = document.querySelectorAll<HTMLElement>(
-        '[aria-rowindex="1"] [role="columnheader"]',
+        '[aria-rowindex="1"] [role="columnheader"] .MuiDataGrid-columnHeaderTitle',
       );
       const row2Headers = document.querySelectorAll<HTMLElement>(
-        '[aria-rowindex="2"] [role="columnheader"]',
+        '[aria-rowindex="2"] [role="columnheader"] .MuiDataGrid-columnHeaderTitle',
       );
 
-      expect(
-        Array.from(row1Headers).map((header) => header.getAttribute('aria-label')),
-      ).to.deep.equal(['Group']);
-      expect(
-        Array.from(row2Headers).map((header) => header.getAttribute('aria-label')),
-      ).to.deep.equal(['field_1']);
+      expect(Array.from(row1Headers).map((header) => header.textContent)).to.deep.equal(['Group']);
+      expect(Array.from(row2Headers).map((header) => header.textContent)).to.deep.equal([
+        'field_1',
+      ]);
     });
   });
 

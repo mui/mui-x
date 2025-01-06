@@ -142,5 +142,8 @@
     "/components/backdrop": "Backdrop",
     "/components/alert": "Alert",
     "/components/pagination": "Pagination"
+  },
+  "api-docs": {
+    "interfacePageDescription": "Extended documentation for the {{name}} interface with detailed information on the module's properties and available APIs."
   }
 }

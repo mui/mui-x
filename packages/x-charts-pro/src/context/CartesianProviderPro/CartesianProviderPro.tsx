@@ -1,18 +1,17 @@
+'use client';
 import * as React from 'react';
 import {
   useDrawingArea,
   useSeries,
   CartesianContext,
   CartesianProviderProps,
-  cartesianProviderUtils,
+  computeAxisValue,
   useXExtremumGetter,
   useYExtremumGetter,
   ZoomAxisFilters,
 } from '@mui/x-charts/internals';
 import { useZoom } from '../ZoomProvider/useZoom';
 import { createAxisFilterMapper, createGetAxisFilters } from './createAxisFilterMapper';
-
-const { computeValue } = cartesianProviderUtils;
 
 export interface CartesianProviderProProps extends CartesianProviderProps {}
 
@@ -65,7 +64,7 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
 
   const xValues = React.useMemo(
     () =>
-      computeValue({
+      computeAxisValue({
         drawingArea,
         formattedSeries,
         axis: xAxis,
@@ -80,7 +79,7 @@ function CartesianProviderPro(props: CartesianProviderProProps) {
 
   const yValues = React.useMemo(
     () =>
-      computeValue({
+      computeAxisValue({
         drawingArea,
         formattedSeries,
         axis: yAxis,

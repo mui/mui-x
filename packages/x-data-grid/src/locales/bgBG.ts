@@ -30,6 +30,17 @@ const bgBGGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Търсене',
   toolbarQuickFilterDeleteIconLabel: 'Изчисти',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Изтегли',
   toolbarExportLabel: 'Изтегли',
@@ -38,10 +49,11 @@ const bgBGGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Изтегли като Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
-  // columnsManagementReset: 'Reset',
+  columnsManagementSearchTitle: 'Търсене',
+  columnsManagementNoColumns: 'Няма колони',
+  columnsManagementShowHideAllText: 'Покажи/Скрий Всичко',
+  columnsManagementReset: 'Нулирай',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Добави Филтър',
@@ -57,7 +69,9 @@ const bgBGGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'съдържа',
+  filterOperatorDoesNotContain: 'не съдържа',
   filterOperatorEquals: 'равно',
+  filterOperatorDoesNotEqual: 'не е равно',
   filterOperatorStartsWith: 'започва с',
   filterOperatorEndsWith: 'завършва с',
   filterOperatorIs: 'е',
@@ -78,7 +92,9 @@ const bgBGGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Съдържа',
+  headerFilterOperatorDoesNotContain: 'Не съдържа',
   headerFilterOperatorEquals: 'Равнo',
+  headerFilterOperatorDoesNotEqual: 'Не е равно',
   headerFilterOperatorStartsWith: 'Започва с',
   headerFilterOperatorEndsWith: 'Завършва с',
   headerFilterOperatorIs: 'Равно е на',

@@ -8,3 +8,5 @@ export * from './useColorProcessor';
 export * from './useSeriesFormatter';
 export * from './useXExtremumGetter';
 export * from './useYExtremumGetter';
+export * from './useRadiusExtremumGetter';
+export * from './useRotationExtremumGetter';

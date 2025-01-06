@@ -49,14 +49,39 @@ describe('<YearCalendar />', () => {
     expect(onChangeMock.callCount).to.equal(0);
   });
 
+  it('should display years in ascending (chronological order) by default', () => {
+    render(
+      <YearCalendar
+        minDate={adapterToUse.date('2020-01-01')}
+        maxDate={adapterToUse.date('2024-12-31')}
+      />,
+    );
+
+    const yearButtons = screen.queryAllByRole('radio');
+    expect(yearButtons[0]?.textContent).to.equal('2020');
+  });
+
+  it('should display years in descending (reverse chronological) order when props.yearsOrder = "desc"', () => {
+    render(
+      <YearCalendar
+        minDate={adapterToUse.date('2020-01-01')}
+        maxDate={adapterToUse.date('2024-12-31')}
+        yearsOrder="desc"
+      />,
+    );
+
+    const yearButtons = screen.queryAllByRole('radio');
+    expect(yearButtons[0]?.textContent).to.equal('2024');
+  });
+
   describe('Disabled', () => {
     it('should disable all years if props.disabled = true', () => {
       const onChange = spy();
       render(<YearCalendar value={adapterToUse.date('2017-02-15')} onChange={onChange} disabled />);
 
-      screen.getAllByRole('radio').forEach((monthButton) => {
-        expect(monthButton).to.have.attribute('disabled');
-        fireEvent.click(monthButton);
+      screen.getAllByRole('radio').forEach((yearButton) => {
+        expect(yearButton).to.have.attribute('disabled');
+        fireEvent.click(yearButton);
         expect(onChange.callCount).to.equal(0);
       });
     });
