@@ -6,7 +6,8 @@ export interface GridQuickFilterState {
 
 export interface GridQuickFilterRootContextValue {
   state: GridQuickFilterState;
-  controlRef: React.RefObject<HTMLInputElement>;
+  controlRef: React.RefObject<HTMLInputElement | null>;
+  triggerRef: React.RefObject<HTMLButtonElement | null>;
   onValueChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   clearValue: () => void;
 }

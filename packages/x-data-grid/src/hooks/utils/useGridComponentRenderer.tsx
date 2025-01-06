@@ -7,7 +7,9 @@ export type ComponentRenderFn<Props, State> = (
   state: State,
 ) => React.ReactElement<unknown>;
 
-export type RenderProp<Props, State = {}> = ComponentRenderFn<Props, State> | React.ReactElement;
+export type RenderProp<Props, State = {}> =
+  | ComponentRenderFn<Props, State>
+  | React.ReactElement<Props>;
 
 /**
  * Resolves the rendering logic for a component.
@@ -22,7 +24,7 @@ export function useGridComponentRenderer<
   Props extends React.HTMLAttributes<any>,
   State extends Record<string, any>,
 >(
-  defaultElement: keyof JSX.IntrinsicElements | React.ComponentType<Props>,
+  defaultElement: keyof React.JSX.IntrinsicElements | React.ComponentType<Props>,
   render: RenderProp<Props, State> | undefined,
   props: Props,
   state: State = {} as State,
@@ -34,7 +36,7 @@ export function useGridComponentRenderer<
   if (render) {
     const className = clsx(render.props.className, props.className);
     const style = { ...render.props.style, ...props.style };
-    const sx = mergeSx(render.props.sx, (props as any).sx);
+    const sx = mergeSx((render.props as any).sx, (props as any).sx);
     return React.cloneElement(render, { ...props, className, style, sx });
   }
 
