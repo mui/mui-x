@@ -97,8 +97,20 @@ export interface EnhancedPickersDayProps
   dayOfWeek: number;
 }
 
-export type OwnerState = Partial<EnhancedPickersDayProps> & {
+export type PickersDayOwnerState = {
   isDayHidden?: boolean;
-  lastDayOfWeek?: boolean;
-  firstDayOfWeek?: boolean;
+  isLastDayOfWeek?: boolean;
+  isFirstDayOfWeek?: boolean;
+  isSelected: boolean;
+  isHighlightTodayDisabled: boolean;
+  isToday: boolean;
+  isDisabled: boolean;
+  isOutsideCurrentMonth: boolean;
+  isStartOfPreviewing: boolean;
+  isEndOfPreviewing: boolean;
+  isPreviewing: boolean;
+  isStartOfSelectedRange: boolean;
+  isEndOfSelectedRange: boolean;
+  isWithinSelectedRange: boolean;
+  isDragSelected: boolean;
 };

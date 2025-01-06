@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { alpha, styled, useThemeProps, Theme, CSSInterpolation } from '@mui/material/styles';
+import { alpha, styled, useThemeProps, CSSInterpolation } from '@mui/material/styles';
 import ButtonBase from '@mui/material/ButtonBase';
 import {
   unstable_useEnhancedEffect as useEnhancedEffect,
@@ -13,17 +13,17 @@ import {
   enhancedPickersDayClasses,
   getEnhancedPickersDayUtilityClass,
 } from './enhancedPickersDayClasses';
-import { EnhancedPickersDayProps, OwnerState } from './EnhancedPickersDay.types';
+import { EnhancedPickersDayProps, PickersDayOwnerState } from './EnhancedPickersDay.types';
 
 const DAY_SIZE = 40;
 
-const useUtilityClasses = (ownerState: OwnerState) => {
+const useUtilityClasses = (ownerState: PickersDayOwnerState) => {
   const {
-    selected,
-    disableHighlightToday,
-    today,
-    disabled,
-    outsideCurrentMonth,
+    isSelected,
+    isHighlightTodayDisabled,
+    isToday,
+    isDisabled,
+    isOutsideCurrentMonth,
     isDayHidden,
     isStartOfPreviewing,
     isEndOfPreviewing,
@@ -32,17 +32,17 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     isEndOfSelectedRange,
     isWithinSelectedRange,
     isDragSelected,
-    firstDayOfWeek,
-    lastDayOfWeek,
+    isFirstDayOfWeek,
+    isLastDayOfWeek,
   } = ownerState;
 
   const slots = {
     root: [
       'root',
-      selected && !isDayHidden && 'selected',
-      disabled && 'disabled',
-      !disableHighlightToday && today && !selected && !isDayHidden && 'today',
-      outsideCurrentMonth && 'dayOutsideMonth',
+      isSelected && !isDayHidden && 'selected',
+      isDisabled && 'disabled',
+      !isHighlightTodayDisabled && isToday && !isSelected && !isDayHidden && 'today',
+      isOutsideCurrentMonth && 'dayOutsideMonth',
       isDayHidden && 'hiddenDay',
       isStartOfPreviewing && 'startOfPreviewing',
       isEndOfPreviewing && 'endOfPreviewing',
@@ -51,8 +51,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       isEndOfSelectedRange && 'endOfSelectedRange',
       isWithinSelectedRange && 'withinSelectedRange',
       isDragSelected && 'dragSelected',
-      lastDayOfWeek && 'lastDayOfWeek',
-      firstDayOfWeek && 'firstDayOfWeek',
+      isLastDayOfWeek && 'lastDayOfWeek',
+      isFirstDayOfWeek && 'firstDayOfWeek',
     ],
   };
 
@@ -63,8 +63,8 @@ const overridesResolver = (props: { ownerState: any }, styles: Record<any, CSSIn
   const { ownerState } = props;
   return [
     styles.root,
-    !ownerState.disableHighlightToday && ownerState.today && styles.today,
-    !ownerState.outsideCurrentMonth && styles.dayOutsideMonth,
+    !ownerState.isHighlightTodayDisabled && ownerState.today && styles.today,
+    !ownerState.isOutsideCurrentMonth && styles.dayOutsideMonth,
     ownerState.isDayHidden && styles.hiddenDay,
     ownerState.isStartOfPreviewing && styles.startOfPreviewing,
     ownerState.isEndOfPreviewing && styles.endOfPreviewing,
@@ -73,8 +73,8 @@ const overridesResolver = (props: { ownerState: any }, styles: Record<any, CSSIn
     ownerState.isEndOfSelectedRange && styles.endOfSelectedRange,
     ownerState.isWithinSelectedRange && styles.withinSelectedRange,
     ownerState.isDragSelected && styles.dragSelected,
-    ownerState.firstDayOfWeek && styles.firstDayOfWeek,
-    ownerState.lastDayOfWeek && styles.lastDayOfWeek,
+    ownerState.isFirstDayOfWeek && styles.firstDayOfWeek,
+    ownerState.isLastDayOfWeek && styles.lastDayOfWeek,
   ];
 };
 
@@ -119,7 +119,7 @@ const selectedDayStyles = (theme) => ({
   },
 });
 
-const styleArg = ({ theme }: { theme: Theme }) => ({
+const styleArg = ({ theme }) => ({
   ...theme.typography.caption,
   boxSizing: 'border-box',
   width: DAY_SIZE,
@@ -312,7 +312,7 @@ const EnhancedPickersDayRoot = styled(ButtonBase, {
   name: 'MuiEnhancedPickersDay',
   slot: 'Root',
   overridesResolver,
-})<{ ownerState: any }>(styleArg);
+})<{ ownerState: PickersDayOwnerState }>(styleArg);
 
 type EnhancedPickersDayComponent = ((
   props: EnhancedPickersDayProps & React.RefAttributes<HTMLButtonElement>,
@@ -363,14 +363,14 @@ const EnhancedPickersDayRaw = React.forwardRef(function EnhancedPickersDay(
   } = props;
 
   const ownerState = {
-    selected,
-    disableHighlightToday,
-    today: isToday,
-    disabled,
+    isSelected: selected,
+    isHighlightTodayDisabled: disableHighlightToday,
+    isToday,
+    isDisabled: disabled,
     isDayHidden: outsideCurrentMonth && !showDaysOutsideCurrentMonth,
-    outsideCurrentMonth: outsideCurrentMonth && showDaysOutsideCurrentMonth,
-    firstDayOfWeek: dayOfWeek === 1,
-    lastDayOfWeek: dayOfWeek === 7,
+    isOutsideCurrentMonth: outsideCurrentMonth && showDaysOutsideCurrentMonth,
+    isFirstDayOfWeek: dayOfWeek === 1,
+    isLastDayOfWeek: dayOfWeek === 7,
     isStartOfPreviewing,
     isEndOfPreviewing,
     isPreviewing,
