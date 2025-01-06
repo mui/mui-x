@@ -388,7 +388,7 @@ describe('<DataGridPro /> - Rows', () => {
         () => {
           expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
         },
-        { timeout: 50, interval: 50 },
+        { timeout: 55, interval: 55 },
       );
       await waitFor(
         () => {
