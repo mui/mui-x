@@ -174,7 +174,7 @@
 
   &[data-outsidemonth] {
     opacity: 0.3;
-    pointer-events: 'none';
+    pointer-events: none;
   }
 
   &:disabled {
