@@ -12,7 +12,6 @@ interface RowSelectionManager {
   has(id: GridRowId): boolean;
   select(id: GridRowId): void;
   unselect(id: GridRowId): void;
-  size(): number;
 }
 class IncludeManager implements RowSelectionManager {
   data: RowSelectionManager['data'];
@@ -32,10 +31,6 @@ class IncludeManager implements RowSelectionManager {
   unselect(id: GridRowId) {
     this.data.delete(id);
   }
-
-  size() {
-    return this.data.size;
-  }
 }
 class ExcludeManager implements RowSelectionManager {
   data: RowSelectionManager['data'];
@@ -54,10 +49,6 @@ class ExcludeManager implements RowSelectionManager {
 
   unselect(id: GridRowId) {
     this.data.add(id);
-  }
-
-  size() {
-    return this.data.size;
   }
 }
 
