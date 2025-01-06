@@ -26,7 +26,7 @@ export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({
       ...prev,
       series: {
         ...prev.series,
-        preprocessSeries: preprocessSeries({
+        processedSeries: preprocessSeries({
           series,
           colors: typeof colors === 'function' ? colors(theme) : colors,
           seriesConfig,
