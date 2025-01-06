@@ -22,6 +22,7 @@ import { CalendarRootContext } from './CalendarRootContext';
 import { useValidation } from '../../../../validation';
 import { mergeReactProps } from '../../utils/mergeReactProps';
 import { GenericHTMLProps } from '../../utils/types';
+import { useCalendarDaysGridNavigation } from './useCalendarDaysGridsNavigation';
 
 function useAddDefaultsToValidateDateProps(
   validationDate: ExportedValidateDateProps,
@@ -115,6 +116,8 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
 
   const [visibleDate, setVisibleDate] = React.useState<PickerValidDate>(referenceDate);
   const [prevValue, setPrevValue] = React.useState<PickerValidDate | null>(value);
+
+  // TODO: Should not change visible date when clicking on a day cell in a grid with an offset.
   if (value !== prevValue && utils.isValid(value)) {
     setVisibleDate(value);
     setPrevValue(value);
@@ -132,6 +135,12 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
     });
   });
 
+  const { applyDayGridKeyboardNavigation, registerDaysGridCells } = useCalendarDaysGridNavigation({
+    visibleDate,
+    setVisibleDate,
+    monthPageSize,
+  });
+
   const context: CalendarRootContext = React.useMemo(
     () => ({
       value,
@@ -146,6 +155,8 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
       visibleDate,
       setVisibleDate,
       monthPageSize,
+      applyDayGridKeyboardNavigation,
+      registerDaysGridCells,
     }),
     [
       value,
@@ -160,6 +171,8 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
       visibleDate,
       setVisibleDate,
       monthPageSize,
+      applyDayGridKeyboardNavigation,
+      registerDaysGridCells,
     ],
   );
 

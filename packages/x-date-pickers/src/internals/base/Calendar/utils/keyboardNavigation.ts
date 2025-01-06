@@ -1,3 +1,5 @@
+import type { useCalendarDaysGridBody } from '../days-grid-body/useCalendarDaysGridBody';
+
 const LIST_NAVIGATION_SUPPORTED_KEYS = ['ArrowDown', 'ArrowUp', 'Home', 'End'];
 
 export function navigateInList({
@@ -68,42 +70,87 @@ const GRID_NAVIGATION_SUPPORTED_KEYS = [
   'End',
 ];
 
-function getCellsInGrid({
-  rows,
-  rowsCells,
-}: {
-  rows: (HTMLElement | null)[];
-  rowsCells: {
-    rowRef: React.RefObject<HTMLElement | null>;
-    cellsRef: React.RefObject<(HTMLElement | null)[]>;
-  }[];
-}) {
-  const cells: HTMLElement[][] = [];
-  for (let i = 0; i < rows.length; i += 1) {
-    const row = rows[i];
-    const rowCells = rowsCells
-      .find((entry) => entry.rowRef.current === row)
-      ?.cellsRef.current?.filter((cell) => cell !== null);
-    if (rowCells && rowCells.length > 0) {
-      cells.push(rowCells);
+type Grid = { cells: useCalendarDaysGridBody.CellsRef; rows: useCalendarDaysGridBody.RowsRef };
+
+/* eslint-disable no-bitwise */
+function sortGridByDocumentPosition(a: HTMLElement[][], b: HTMLElement[][]) {
+  const position = a[0][0].compareDocumentPosition(b[0][0]);
+
+  if (
+    position & Node.DOCUMENT_POSITION_FOLLOWING ||
+    position & Node.DOCUMENT_POSITION_CONTAINED_BY
+  ) {
+    return -1;
+  }
+
+  if (position & Node.DOCUMENT_POSITION_PRECEDING || position & Node.DOCUMENT_POSITION_CONTAINS) {
+    return 1;
+  }
+
+  return 0;
+}
+/* eslint-enable no-bitwise */
+
+function getCellsInCalendar(grids: Grid[]) {
+  const cells: HTMLElement[][][] = [];
+
+  let rowCount = 0;
+  for (let i = 0; i < grids.length; i += 1) {
+    const grid = grids[i];
+    const gridCells: HTMLElement[][] = [];
+    for (let j = 0; j < grid.rows.current.length; j += 1) {
+      const row = grid.rows.current[j];
+      const rowCells = grid.cells.current
+        .find((entry) => entry.rowRef.current === row)
+        ?.cellsRef.current?.filter((cell) => cell !== null);
+      if (rowCells && rowCells.length > 0) {
+        rowCount += 1;
+        gridCells.push(rowCells);
+      }
+    }
+
+    if (gridCells.length > 0) {
+      cells.push(gridCells);
     }
   }
 
-  return cells;
+  const sortedCells = cells.sort(sortGridByDocumentPosition);
+
+  return {
+    list: sortedCells.flat(2),
+    rows: sortedCells.flat(1),
+    nested: sortedCells,
+    rowCount,
+  };
 }
 
+const localeTargetInCalendar = (
+  target: HTMLElement,
+  cells: ReturnType<typeof getCellsInCalendar>,
+) => {
+  let rowInAllCalendars = 0;
+  for (let i = 0; i < cells.nested.length; i += 1) {
+    for (let j = 0; j < cells.nested[i].length; j += 1) {
+      for (let k = 0; k < cells.nested[i][j].length; k += 1) {
+        if (cells.nested[i][j][k] === target) {
+          return { calendar: i, row: rowInAllCalendars, col: k, rowInCalendar: j };
+        }
+      }
+
+      rowInAllCalendars += 1;
+    }
+  }
+
+  throw new Error('Could not find target in calendar');
+};
+
 export function navigateInGrid({
-  rows,
-  rowsCells,
+  grids,
   target,
   event,
   changePage,
 }: {
-  rows: (HTMLElement | null)[];
-  rowsCells: {
-    rowRef: React.RefObject<HTMLElement | null>;
-    cellsRef: React.RefObject<(HTMLElement | null)[]>;
-  }[];
+  grids: Grid[];
   target: HTMLElement;
   event: React.KeyboardEvent;
   changePage: NavigateInGridChangePage | undefined;
@@ -114,28 +161,28 @@ export function navigateInGrid({
 
   event.preventDefault();
 
-  const cells = getCellsInGrid({ rows, rowsCells });
-  if (cells.length === 0) {
+  const cells = getCellsInCalendar(grids);
+  if (cells.nested.length === 0) {
     return;
   }
 
-  const moveToRowBelow = () => {
-    const currentRowIndex = cells.findIndex((row) => row.includes(target));
-    const currentColIndex = cells[currentRowIndex].indexOf(target);
-    let nextRowIndex = -1;
-    let i = currentRowIndex + 1;
+  const coordinates = localeTargetInCalendar(target, cells);
 
-    while (nextRowIndex === -1 && i < currentRowIndex + cells.length) {
-      if (changePage && i > cells.length - 1) {
+  const moveToRowBelow = () => {
+    let nextRowIndex = -1;
+    let i = coordinates.row + 1;
+
+    while (nextRowIndex === -1 && i < coordinates.row + cells.rowCount) {
+      if (changePage && i > cells.rowCount - 1) {
         changePage({
           direction: 'next',
-          target: { type: 'first-cell-in-col', colIndex: currentColIndex },
+          target: { type: 'first-cell-in-col', colIndex: coordinates.col },
         });
         break;
       }
 
-      const rowIndex = i % cells.length;
-      const cell = cells[rowIndex][currentColIndex];
+      const rowIndex = i % cells.rowCount;
+      const cell = cells.rows[rowIndex][coordinates.col];
       if (isNavigable(cell)) {
         nextRowIndex = rowIndex;
       }
@@ -143,26 +190,24 @@ export function navigateInGrid({
     }
 
     if (nextRowIndex > -1) {
-      cells[nextRowIndex][currentColIndex].focus();
+      cells.rows[nextRowIndex][coordinates.col].focus();
     }
   };
 
   const moveToRowAbove = () => {
-    const currentRowIndex = cells.findIndex((row) => row.includes(target));
-    const currentColIndex = cells[currentRowIndex].indexOf(target);
     let nextRowIndex = -1;
-    let i = currentRowIndex - 1;
-    while (nextRowIndex === -1 && i > currentRowIndex - cells.length) {
+    let i = coordinates.row - 1;
+    while (nextRowIndex === -1 && i > coordinates.row - cells.rowCount) {
       if (changePage && i < 0) {
         changePage({
           direction: 'previous',
-          target: { type: 'last-cell-in-col', colIndex: currentColIndex },
+          target: { type: 'last-cell-in-col', colIndex: coordinates.col },
         });
         break;
       }
 
-      const rowIndex = (cells.length + i) % cells.length;
-      const cell = cells[rowIndex][currentColIndex];
+      const rowIndex = (cells.rowCount + i) % cells.rowCount;
+      const cell = cells.rows[rowIndex][coordinates.col];
       if (isNavigable(cell)) {
         nextRowIndex = rowIndex;
       }
@@ -170,18 +215,17 @@ export function navigateInGrid({
     }
 
     if (nextRowIndex > -1) {
-      cells[nextRowIndex][currentColIndex].focus();
+      cells.rows[nextRowIndex][coordinates.col].focus();
     }
   };
 
   const moveToRowOnTheRight = () => {
-    const flatCells = cells.flat();
-    const currentCellIndex = flatCells.indexOf(target);
+    const currentCellIndex = cells.list.indexOf(target);
     let nextCellIndex = -1;
     let i = currentCellIndex + 1;
 
-    while (nextCellIndex === -1 && i < currentCellIndex + flatCells.length) {
-      if (changePage && i > flatCells.length - 1) {
+    while (nextCellIndex === -1 && i < currentCellIndex + cells.list.length) {
+      if (changePage && i > cells.list.length - 1) {
         changePage({
           direction: 'next',
           target: { type: 'first-cell' },
@@ -189,8 +233,8 @@ export function navigateInGrid({
         break;
       }
 
-      const cellIndex = i % flatCells.length;
-      const cell = flatCells[cellIndex];
+      const cellIndex = i % cells.list.length;
+      const cell = cells.list[cellIndex];
       if (isNavigable(cell)) {
         nextCellIndex = cellIndex;
       }
@@ -198,17 +242,16 @@ export function navigateInGrid({
     }
 
     if (nextCellIndex > -1) {
-      flatCells[nextCellIndex].focus();
+      cells.list[nextCellIndex].focus();
     }
   };
 
   const moveToRowOnTheLeft = () => {
-    const flatCells = cells.flat();
-    const currentCellIndex = flatCells.indexOf(target);
+    const currentCellIndex = cells.list.indexOf(target);
     let nextCellIndex = -1;
     let i = currentCellIndex - 1;
 
-    while (nextCellIndex === -1 && i > currentCellIndex - flatCells.length) {
+    while (nextCellIndex === -1 && i > currentCellIndex - cells.list.length) {
       if (changePage && i < 0) {
         changePage({
           direction: 'previous',
@@ -217,8 +260,8 @@ export function navigateInGrid({
         break;
       }
 
-      const cellIndex = (flatCells.length + i) % flatCells.length;
-      const cell = flatCells[cellIndex];
+      const cellIndex = (cells.list.length + i) % cells.list.length;
+      const cell = cells.list[cellIndex];
       if (isNavigable(cell)) {
         nextCellIndex = cellIndex;
       }
@@ -226,19 +269,19 @@ export function navigateInGrid({
     }
 
     if (nextCellIndex > -1) {
-      flatCells[nextCellIndex].focus();
+      cells.list[nextCellIndex].focus();
     }
   };
 
   const moveToFirstCell = () => {
-    const cell = cells.flat().find(isNavigable);
+    const cell = cells.list.find(isNavigable);
     if (cell) {
       cell.focus();
     }
   };
 
   const moveToLastCell = () => {
-    const cell = cells.flat().findLast(isNavigable);
+    const cell = cells.list.findLast(isNavigable);
     if (cell) {
       cell.focus();
     }
@@ -284,34 +327,30 @@ export type NavigateInGridChangePage = (params: {
 }) => void;
 
 export function applyInitialFocusInGrid({
-  rows,
-  rowsCells,
+  grids,
   target,
 }: {
-  rows: (HTMLElement | null)[];
-  rowsCells: {
-    rowRef: React.RefObject<HTMLElement | null>;
-    cellsRef: React.RefObject<(HTMLElement | null)[]>;
-  }[];
+  grids: Grid[];
   target: PageNavigationTarget;
 }) {
-  const cells = getCellsInGrid({ rows, rowsCells });
+  const cells = getCellsInCalendar(grids);
   let cell: HTMLElement | undefined;
 
   if (target.type === 'first-cell') {
-    cell = cells.flat().find(isNavigable);
+    cell = cells.list.find(isNavigable);
   }
 
   if (target.type === 'last-cell') {
-    cell = cells.flat().findLast(isNavigable);
+    cell = cells.list.findLast(isNavigable);
   }
 
   if (target.type === 'first-cell-in-col') {
-    cell = cells.map((row) => row[target.colIndex]).find(isNavigable);
+    cell = cells.rows.map((row) => row[target.colIndex]).find(isNavigable);
   }
 
+  // TODO: Support when the 1st month is fully disabled.
   if (target.type === 'last-cell-in-col') {
-    cell = cells.map((row) => row[target.colIndex]).findLast(isNavigable);
+    cell = cells.rows.map((row) => row[target.colIndex]).findLast(isNavigable);
   }
 
   if (cell) {

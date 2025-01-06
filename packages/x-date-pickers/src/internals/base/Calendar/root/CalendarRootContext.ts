@@ -2,6 +2,7 @@ import * as React from 'react';
 import { PickersTimezone, PickerValidDate } from '../../../../models';
 import { ValidateDateProps } from '../../../../validation';
 import type { useCalendarRoot } from './useCalendarRoot';
+import type { useCalendarDaysGridBody } from '../days-grid-body/useCalendarDaysGridBody';
 
 export interface CalendarRootContext {
   value: PickerValidDate | null;
@@ -19,6 +20,11 @@ export interface CalendarRootContext {
   visibleDate: PickerValidDate;
   setVisibleDate: (visibleDate: PickerValidDate) => void;
   monthPageSize: number;
+  applyDayGridKeyboardNavigation: (event: React.KeyboardEvent) => void;
+  registerDaysGridCells: (
+    cellsRef: useCalendarDaysGridBody.CellsRef,
+    rowsRef: useCalendarDaysGridBody.RowsRef,
+  ) => () => void;
 }
 
 export const CalendarRootContext = React.createContext<CalendarRootContext | undefined>(undefined);

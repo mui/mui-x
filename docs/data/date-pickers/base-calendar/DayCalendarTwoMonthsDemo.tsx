@@ -81,7 +81,11 @@ function DayGrid(props: { offset: 0 | 1 }) {
 function DayCalendar(props: Omit<Calendar.Root.Props, 'children'>) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Calendar.Root {...props} className={clsx(styles.Root, styles.RootTwoPanels)}>
+      <Calendar.Root
+        {...props}
+        monthPageSize={2}
+        className={clsx(styles.Root, styles.RootTwoPanels)}
+      >
         <DayGrid offset={0} />
         <DayGrid offset={1} />
       </Calendar.Root>
