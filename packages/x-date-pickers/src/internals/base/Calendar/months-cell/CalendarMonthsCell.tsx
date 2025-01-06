@@ -110,6 +110,9 @@ const CalendarMonthsCell = React.forwardRef(function CalendarMonthsCell(
 
 export namespace CalendarMonthsCell {
   export interface State {
+    /**
+     * Whether the month is selected.
+     */
     selected: boolean;
   }
 

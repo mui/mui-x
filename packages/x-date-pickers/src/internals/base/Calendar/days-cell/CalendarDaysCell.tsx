@@ -118,8 +118,17 @@ const CalendarDaysCell = React.forwardRef(function CalendarDaysCell(
 
 export namespace CalendarDaysCell {
   export interface State {
+    /**
+     * Whether the day is selected.
+     */
     selected: boolean;
+    /**
+     * Whether the day contains the current date.
+     */
     current: boolean;
+    /**
+     * Whether the day is outside the month rendered by the day grid wrapping it.
+     */
     outsideMonth: boolean;
   }
 

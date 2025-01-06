@@ -106,6 +106,9 @@ const CalendarYearsCell = React.forwardRef(function CalendarsYearCell(
 
 export namespace CalendarYearsCell {
   export interface State {
+    /**
+     * Whether the year is selected.
+     */
     selected: boolean;
   }
 

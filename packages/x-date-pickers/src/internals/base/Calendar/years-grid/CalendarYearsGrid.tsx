@@ -15,7 +15,7 @@ const CalendarYearsGrid = React.forwardRef(function CalendarYearsList(
     children,
     cellsPerRow,
   });
-  const state = React.useMemo(() => ({ cellsPerRow }), [cellsPerRow]);
+  const state = React.useMemo(() => ({}), []);
 
   const { renderElement } = useComponentRenderer({
     propGetter: getYearsGridProps,
@@ -34,9 +34,7 @@ const CalendarYearsGrid = React.forwardRef(function CalendarYearsList(
 });
 
 export namespace CalendarYearsGrid {
-  export interface State {
-    cellsPerRow: number;
-  }
+  export interface State {}
 
   export interface Props
     extends Omit<BaseUIComponentProps<'div', State>, 'children'>,

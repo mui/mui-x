@@ -236,11 +236,9 @@ export function navigateInGrid({
       moveToRowOnTheLeft();
       break;
     case 'ArrowDown':
-      // TODO: Add multi month navigation
       moveToRowBelow();
       break;
     case 'ArrowUp':
-      // TODO: Add multi month navigation
       moveToRowAbove();
       break;
     case 'Home':
@@ -313,7 +311,7 @@ function isNavigable(element: HTMLElement | null): element is HTMLElement {
     return false;
   }
 
-  if (element.dataset.outsidemonth != null) {
+  if (element.dataset['outside-month'] != null) {
     return false;
   }
 
