@@ -59,7 +59,7 @@ const urPKGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'شامل ہے',
-  filterOperatorDoesNotContain: 'موجود نہیں',
+  filterOperatorDoesNotContain: 'موجود نہیں ہے',
   filterOperatorEquals: 'برابر ہے',
   filterOperatorDoesNotEqual: 'برابر نہیں ہے',
   filterOperatorStartsWith: 'شروع ہوتا ہے',
