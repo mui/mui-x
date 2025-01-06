@@ -54,7 +54,6 @@ export function useCalendarDaysGridNavigation(
 
     navigateInGrid({
       grids: gridsRef.current,
-      target: event.target as HTMLElement,
       event,
       changePage,
     });

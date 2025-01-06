@@ -146,12 +146,10 @@ const localeTargetInCalendar = (
 
 export function navigateInGrid({
   grids,
-  target,
   event,
   changePage,
 }: {
   grids: Grid[];
-  target: HTMLElement;
   event: React.KeyboardEvent;
   changePage: NavigateInGridChangePage | undefined;
 }) {
@@ -166,6 +164,7 @@ export function navigateInGrid({
     return;
   }
 
+  const target = event.target as HTMLElement;
   const coordinates = localeTargetInCalendar(target, cells);
 
   const moveToRowBelow = () => {

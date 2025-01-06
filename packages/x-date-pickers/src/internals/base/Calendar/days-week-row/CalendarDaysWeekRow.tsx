@@ -46,7 +46,7 @@ const CalendarDaysWeekRow = React.forwardRef(function CalendarDaysWeekRow(
 
   // TODO: Improve how we pass the week to this component.
   const days = React.useMemo(
-    () => calendarDaysGridContext.daysGrid.find((week) => week[0] === props.value),
+    () => calendarDaysGridContext.daysGrid.find((week) => week[0] === props.value) ?? [],
     [calendarDaysGridContext.daysGrid, props.value],
   );
 
