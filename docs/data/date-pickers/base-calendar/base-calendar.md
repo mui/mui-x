@@ -38,4 +38,10 @@ TODO
 
 ## Full Date Calendar
 
-{{"demo": "YearMonthDayCalendar.js"}}
+### MD2-ish layout
+
+{{"demo": "DateCalendarMD2Demo.js"}}
+
+### MD3-ish layout
+
+{{"demo": "DateCalendarDemo.js"}}

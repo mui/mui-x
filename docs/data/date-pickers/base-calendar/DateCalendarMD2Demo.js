@@ -15,6 +15,16 @@ function Header(props) {
 
   return (
     <header className={styles.Header}>
+      <button
+        type="button"
+        onClick={() =>
+          onActiveSectionChange(activeSection === 'day' ? 'year' : 'day')
+        }
+        className={styles.SetActiveSectionYearMD2}
+      >
+        {visibleDate.format('MMMM YYYY')}
+        {activeSection === 'day' ? '▼' : '▲'}
+      </button>
       <div className={styles.HeaderBlock}>
         <Calendar.SetVisibleMonth
           target="previous"
@@ -23,16 +33,6 @@ function Header(props) {
         >
           ◀
         </Calendar.SetVisibleMonth>
-        <button
-          type="button"
-          onClick={() =>
-            onActiveSectionChange(activeSection === 'month' ? 'day' : 'month')
-          }
-          disabled={activeSection === 'year' ? true : undefined}
-          className={styles.SetActiveSectionMonth}
-        >
-          {visibleDate.format('MMMM')}
-        </button>
         <Calendar.SetVisibleMonth
           target="next"
           disabled={activeSection !== 'day' ? true : undefined}
@@ -40,42 +40,17 @@ function Header(props) {
         >
           ▶
         </Calendar.SetVisibleMonth>
-      </div>
-      <div className={styles.HeaderBlock}>
-        <Calendar.SetVisibleYear
-          target="previous"
-          disabled={activeSection === 'year' ? true : undefined}
-          className={styles.SetVisibleYear}
-        >
-          ◀
-        </Calendar.SetVisibleYear>
-        <button
-          type="button"
-          onClick={() =>
-            onActiveSectionChange(activeSection === 'year' ? 'day' : 'year')
-          }
-          className={styles.SetActiveSectionYear}
-        >
-          {visibleDate.format('YYYY')}
-        </button>
-        <Calendar.SetVisibleYear
-          target="next"
-          disabled={activeSection === 'year' ? true : undefined}
-          className={styles.SetVisibleYear}
-        >
-          ▶
-        </Calendar.SetVisibleYear>
       </div>
     </header>
   );
 }
 
-export default function YearMonthDayCalendar() {
+export default function DateCalendarMD2Demo() {
   const [value, setValue] = React.useState(null);
   const [activeSection, setActiveSection] = React.useState('day');
 
   const handleValueChange = React.useCallback((newValue, context) => {
-    if (context.section === 'month' || context.section === 'year') {
+    if (context.section === 'year') {
       setActiveSection('day');
     }
 
@@ -105,19 +80,6 @@ export default function YearMonthDayCalendar() {
               ))
             }
           </Calendar.YearsList>
-        )}
-        {activeSection === 'month' && (
-          <Calendar.MonthsList className={styles.MonthsList}>
-            {({ months }) =>
-              months.map((month) => (
-                <Calendar.MonthsCell
-                  value={month}
-                  className={styles.MonthsCell}
-                  key={month.toString()}
-                />
-              ))
-            }
-          </Calendar.MonthsList>
         )}
         {activeSection === 'day' && (
           <Calendar.DaysGrid className={styles.DaysGrid}>

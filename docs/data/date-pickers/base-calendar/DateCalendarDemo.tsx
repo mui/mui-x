@@ -73,7 +73,7 @@ function Header(props: {
   );
 }
 
-export default function YearMonthDayCalendar() {
+export default function DateCalendarDemo() {
   const [value, setValue] = React.useState<Dayjs | null>(null);
   const [activeSection, setActiveSection] = React.useState<'day' | 'month' | 'year'>(
     'day',

@@ -34,14 +34,14 @@
 .HeaderBlock {
   display: flex;
   gap: 4px;
-  flex-grow: 1;
   justify-content: center;
 }
 
 .SetVisibleMonth,
 .SetVisibleYear,
 .SetActiveSectionMonth,
-.SetActiveSectionYear {
+.SetActiveSectionYear,
+.SetActiveSectionYearMD2 {
   border: none;
   background-color: transparent;
   border-radius: 4px;
@@ -77,6 +77,11 @@
 
 .SetActiveSectionYear {
   min-width: 42px;
+  font-size: 0.85rem;
+}
+
+.SetActiveSectionYearMD2 {
+  min-width: 132px;
   font-size: 0.85rem;
 }
 
@@ -218,7 +223,13 @@
 }
 
 :global(.mode-dark)
-  :where(.SetVisibleMonth, .SetVisibleYear, .SetActiveSectionMonth, .SetActiveSectionYear) {
+  :where(
+    .SetVisibleMonth,
+    .SetVisibleYear,
+    .SetActiveSectionMonth,
+    .SetActiveSectionYear,
+    .SetActiveSectionYearMD2
+  ) {
   &:hover {
     background-color: #075985;
   }
