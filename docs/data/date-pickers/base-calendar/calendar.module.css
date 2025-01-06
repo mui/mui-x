@@ -93,15 +93,17 @@
   flex-direction: column;
   align-items: stretch;
   gap: 8px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
-.MonthsGrid {
+.MonthsGrid,
+.YearsGrid {
   padding: 12px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   column-gap: 4px;
   row-gap: 12px;
+  overflow-y: auto;
 }
 
 .MonthsCell,

@@ -35,40 +35,39 @@ const CalendarSetVisibleYear = React.forwardRef(function CalendarSetVisibleYear(
   props: CalendarSetVisibleYear.Props,
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
-  const calendarRootContext = useCalendarRootContext();
+  const rootContext = useCalendarRootContext();
   const utils = useUtils();
 
   const targetDate = React.useMemo(() => {
     if (props.target === 'previous') {
-      return utils.startOfMonth(utils.addYears(calendarRootContext.visibleDate, -1));
+      return utils.startOfYear(utils.addYears(rootContext.visibleDate, -1));
     }
 
-    return utils.startOfMonth(utils.addYears(calendarRootContext.visibleDate, 1));
-  }, [calendarRootContext.visibleDate, utils, props.target]);
+    if (props.target === 'next') {
+      return utils.startOfYear(utils.addYears(rootContext.visibleDate, 1));
+    }
+
+    return utils.setYear(rootContext.visibleDate, utils.getYear(props.target));
+  }, [rootContext.visibleDate, utils, props.target]);
 
   const isDisabled = React.useMemo(() => {
-    if (calendarRootContext.disabled) {
+    if (rootContext.disabled) {
       return true;
     }
 
-    // TODO: Check if the logic below works correctly when multiple months are rendered at once.
-    // All the months before the visible ones are fully disabled, we skip the navigation.
-    if (props.target === 'previous') {
-      return utils.isAfter(
-        getFirstEnabledYear(utils, calendarRootContext.validationProps),
-        targetDate,
-      );
+    const isMovingBefore = utils.isBefore(targetDate, rootContext.visibleDate);
+
+    // All the years before the visible ones are fully disabled, we skip the navigation.
+    if (isMovingBefore) {
+      return utils.isAfter(getFirstEnabledYear(utils, rootContext.validationProps), targetDate);
     }
 
-    // All the months after the visible ones are fully disabled, we skip the navigation.
-    return utils.isBefore(
-      getLastEnabledYear(utils, calendarRootContext.validationProps),
-      targetDate,
-    );
+    // All the years after the visible ones are fully disabled, we skip the navigation.
+    return utils.isBefore(getLastEnabledYear(utils, rootContext.validationProps), targetDate);
   }, [
-    calendarRootContext.disabled,
-    calendarRootContext.validationProps,
-    props.target,
+    rootContext.disabled,
+    rootContext.validationProps,
+    rootContext.visibleDate,
     targetDate,
     utils,
   ]);
@@ -77,7 +76,7 @@ const CalendarSetVisibleYear = React.forwardRef(function CalendarSetVisibleYear(
     if (isDisabled) {
       return;
     }
-    calendarRootContext.setVisibleDate(targetDate, false);
+    rootContext.setVisibleDate(targetDate, false);
   });
 
   const ctx = React.useMemo<useCalendarSetVisibleYear.Context>(

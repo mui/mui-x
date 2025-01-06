@@ -15,6 +15,7 @@ export { CalendarMonthsCell as MonthsCell } from './months-cell/CalendarMonthsCe
 
 // Years
 export { CalendarYearsList as YearsList } from './years-list/CalendarYearsList';
+export { CalendarYearsGrid as YearsGrid } from './years-grid/CalendarYearsGrid';
 export { CalendarYearsCell as YearsCell } from './years-cell/CalendarYearsCell';
 
 // Navigation

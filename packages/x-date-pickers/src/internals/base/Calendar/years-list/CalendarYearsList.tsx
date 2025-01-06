@@ -4,21 +4,21 @@ import { useCalendarYearsList } from './useCalendarYearsList';
 import { BaseUIComponentProps } from '../../utils/types';
 import { useComponentRenderer } from '../../utils/useComponentRenderer';
 import { CompositeList } from '../../composite/list/CompositeList';
-import { CalendarYearsListContext } from './CalendarYearsListContext';
+import { CalendarYearsCellCollectionContext } from '../utils/years-cell-collection/CalendarYearsCellCollectionContext';
 
 const CalendarYearsList = React.forwardRef(function CalendarYearsList(
   props: CalendarYearsList.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, render, children, loop, ...otherProps } = props;
-  const { getYearListProps, context, calendarYearsCellRefs } = useCalendarYearsList({
+  const { getYearsListProps, context, yearsCellRefs } = useCalendarYearsList({
     children,
     loop,
   });
   const state = React.useMemo(() => ({}), []);
 
   const { renderElement } = useComponentRenderer({
-    propGetter: getYearListProps,
+    propGetter: getYearsListProps,
     render: render ?? 'div',
     ref: forwardedRef,
     className,
@@ -27,9 +27,9 @@ const CalendarYearsList = React.forwardRef(function CalendarYearsList(
   });
 
   return (
-    <CalendarYearsListContext.Provider value={context}>
-      <CompositeList elementsRef={calendarYearsCellRefs}>{renderElement()}</CompositeList>
-    </CalendarYearsListContext.Provider>
+    <CalendarYearsCellCollectionContext.Provider value={context}>
+      <CompositeList elementsRef={yearsCellRefs}>{renderElement()}</CompositeList>
+    </CalendarYearsCellCollectionContext.Provider>
   );
 });
 

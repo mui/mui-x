@@ -36,6 +36,16 @@ packageName: '@mui/x-date-pickers'
 
 TODO
 
+## Year Calendar
+
+### Full list
+
+{{"demo": "YearCalendarDemo.js"}}
+
+### Grouped by decade
+
+{{"demo": "YearCalendarWithDecadeNavigationDemo.js"}}
+
 ## Full Date Calendar
 
 ### MD2-ish layout

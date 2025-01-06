@@ -11,26 +11,26 @@ import {
   NavigateInGridChangePage,
   PageNavigationTarget,
 } from '../utils/keyboardNavigation';
-import { useCalendarMonthCellCollection } from '../utils/month-cell-collection/useCalendarMonthCellCollection';
+import { useCalendarMonthsCellCollection } from '../utils/months-cell-collection/useCalendarMonthsCellCollection';
 import { useCalendarRootContext } from '../root/CalendarRootContext';
 import { getFirstEnabledYear, getLastEnabledYear } from '../utils/date';
 
 export function useCalendarMonthsGrid(parameters: useCalendarMonthsGrid.Parameters) {
   const { children, cellsPerRow } = parameters;
   const utils = useUtils();
-  const calendarRootContext = useCalendarRootContext();
-  const calendarMonthsCellRefs = React.useRef<(HTMLElement | null)[]>([]);
-  const { months, context } = useCalendarMonthCellCollection();
+  const rootContext = useCalendarRootContext();
+  const monthsCellRefs = React.useRef<(HTMLElement | null)[]>([]);
+  const { months, context } = useCalendarMonthsCellCollection();
   const pageNavigationTargetRef = React.useRef<PageNavigationTarget | null>(null);
 
   const getCellsInCalendar = useEventCallback(() => {
     const grid: HTMLElement[][] = Array.from(
       {
-        length: Math.ceil(calendarMonthsCellRefs.current.length / cellsPerRow),
+        length: Math.ceil(monthsCellRefs.current.length / cellsPerRow),
       },
       () => [],
     );
-    calendarMonthsCellRefs.current.forEach((cell, index) => {
+    monthsCellRefs.current.forEach((cell, index) => {
       const rowIndex = Math.floor(index / cellsPerRow);
       if (cell != null) {
         grid[rowIndex].push(cell);
@@ -49,7 +49,7 @@ export function useCalendarMonthsGrid(parameters: useCalendarMonthsGrid.Paramete
         applyInitialFocusInGrid({ cells, target });
       });
     }
-  }, [calendarRootContext.visibleDate, timeout, getCellsInCalendar]);
+  }, [rootContext.visibleDate, timeout, getCellsInCalendar]);
 
   // TODO: Add support for multiple months grids.
   const onKeyDown = useEventCallback((event: React.KeyboardEvent) => {
@@ -57,40 +57,35 @@ export function useCalendarMonthsGrid(parameters: useCalendarMonthsGrid.Paramete
       // TODO: Jump over months with no valid date.
       if (params.direction === 'previous') {
         const targetDate = utils.addYears(
-          utils.startOfYear(calendarRootContext.visibleDate),
-          -calendarRootContext.yearPageSize,
+          utils.startOfYear(rootContext.visibleDate),
+          -rootContext.yearPageSize,
         );
-        const lastYearInNewPage = utils.addYears(targetDate, calendarRootContext.yearPageSize - 1);
+        const lastYearInNewPage = utils.addYears(targetDate, rootContext.yearPageSize - 1);
 
         // All the years before the visible ones are fully disabled, we skip the navigation.
         if (
-          utils.isAfter(
-            getFirstEnabledYear(utils, calendarRootContext.validationProps),
-            lastYearInNewPage,
-          )
+          utils.isAfter(getFirstEnabledYear(utils, rootContext.validationProps), lastYearInNewPage)
         ) {
           return;
         }
 
-        calendarRootContext.setVisibleDate(
-          utils.addYears(calendarRootContext.visibleDate, -calendarRootContext.yearPageSize),
+        rootContext.setVisibleDate(
+          utils.addYears(rootContext.visibleDate, -rootContext.yearPageSize),
           false,
         );
       }
       if (params.direction === 'next') {
         const targetDate = utils.addYears(
-          utils.startOfYear(calendarRootContext.visibleDate),
-          calendarRootContext.yearPageSize,
+          utils.startOfYear(rootContext.visibleDate),
+          rootContext.yearPageSize,
         );
 
         // All the years after the visible ones are fully disabled, we skip the navigation.
-        if (
-          utils.isBefore(getLastEnabledYear(utils, calendarRootContext.validationProps), targetDate)
-        ) {
+        if (utils.isBefore(getLastEnabledYear(utils, rootContext.validationProps), targetDate)) {
           return;
         }
-        calendarRootContext.setVisibleDate(
-          utils.addYears(calendarRootContext.visibleDate, calendarRootContext.yearPageSize),
+        rootContext.setVisibleDate(
+          utils.addYears(rootContext.visibleDate, rootContext.yearPageSize),
           false,
         );
       }
@@ -105,7 +100,7 @@ export function useCalendarMonthsGrid(parameters: useCalendarMonthsGrid.Paramete
     });
   });
 
-  const getMonthGridProps = React.useCallback(
+  const getMonthsGridProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
       return mergeReactProps(externalProps, {
         role: 'radiogroup',
@@ -117,8 +112,8 @@ export function useCalendarMonthsGrid(parameters: useCalendarMonthsGrid.Paramete
   );
 
   return React.useMemo(
-    () => ({ getMonthGridProps, context, calendarMonthsCellRefs }),
-    [getMonthGridProps, context, calendarMonthsCellRefs],
+    () => ({ getMonthsGridProps, context, monthsCellRefs }),
+    [getMonthsGridProps, context, monthsCellRefs],
   );
 }
 

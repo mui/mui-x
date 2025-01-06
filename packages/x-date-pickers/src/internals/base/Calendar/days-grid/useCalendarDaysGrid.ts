@@ -11,12 +11,12 @@ import { CalendarDaysGridContext } from './CalendarDaysGridContext';
 export function useCalendarDaysGrid(parameters: useCalendarDaysGrid.Parameters) {
   const { fixedWeekNumber, offset = 0 } = parameters;
   const utils = useUtils();
-  const calendarRootContext = useCalendarRootContext();
+  const rootContext = useCalendarRootContext();
 
   const currentMonth = React.useMemo(() => {
-    const cleanVisibleDate = utils.startOfMonth(calendarRootContext.visibleDate);
+    const cleanVisibleDate = utils.startOfMonth(rootContext.visibleDate);
     return offset === 0 ? cleanVisibleDate : utils.addMonths(cleanVisibleDate, offset);
-  }, [utils, calendarRootContext.visibleDate, offset]);
+  }, [utils, rootContext.visibleDate, offset]);
 
   const daysGrid = React.useMemo(() => {
     const toDisplay = utils.getWeekArray(currentMonth);
@@ -47,30 +47,30 @@ export function useCalendarDaysGrid(parameters: useCalendarDaysGrid.Parameters) 
   }, []);
 
   const selectDay = useEventCallback((newValue: PickerValidDate) => {
-    if (calendarRootContext.readOnly) {
+    if (rootContext.readOnly) {
       return;
     }
 
     const newCleanValue = mergeDateAndTime(
       utils,
       newValue,
-      calendarRootContext.value ?? calendarRootContext.referenceDate,
+      rootContext.value ?? rootContext.referenceDate,
     );
 
-    calendarRootContext.setValue(newCleanValue, { section: 'day' });
+    rootContext.setValue(newCleanValue, { section: 'day' });
   });
 
   const tabbableDay = React.useMemo(() => {
     const flatDays = daysGrid.flat();
-    const tempTabbableDay = calendarRootContext.value ?? calendarRootContext.referenceDate;
+    const tempTabbableDay = rootContext.value ?? rootContext.referenceDate;
     if (flatDays.some((day) => utils.isSameDay(day, tempTabbableDay))) {
       return tempTabbableDay;
     }
 
     return flatDays.find((day) => utils.isSameMonth(day, currentMonth)) ?? null;
-  }, [calendarRootContext.value, calendarRootContext.referenceDate, daysGrid, utils, currentMonth]);
+  }, [rootContext.value, rootContext.referenceDate, daysGrid, utils, currentMonth]);
 
-  const registerSection = calendarRootContext.registerSection;
+  const registerSection = rootContext.registerSection;
   React.useEffect(() => {
     return registerSection({ type: 'day', value: currentMonth });
   }, [registerSection, currentMonth]);

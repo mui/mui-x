@@ -1,24 +1,24 @@
 'use client';
 import * as React from 'react';
-import { useCalendarMonthsGrid } from './useCalendarMonthsGrid';
+import { useCalendarYearsGrid } from './useCalendarYearsGrid';
 import { BaseUIComponentProps } from '../../utils/types';
 import { useComponentRenderer } from '../../utils/useComponentRenderer';
 import { CompositeList } from '../../composite/list/CompositeList';
-import { CalendarMonthsCellCollectionContext } from '../utils/months-cell-collection/CalendarMonthsCellCollectionContext';
+import { CalendarYearsCellCollectionContext } from '../utils/years-cell-collection/CalendarYearsCellCollectionContext';
 
-const CalendarMonthsGrid = React.forwardRef(function CalendarMonthsList(
-  props: CalendarMonthsGrid.Props,
+const CalendarYearsGrid = React.forwardRef(function CalendarYearsList(
+  props: CalendarYearsGrid.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, render, children, cellsPerRow, ...otherProps } = props;
-  const { getMonthsGridProps, context, monthsCellRefs } = useCalendarMonthsGrid({
+  const { getYearsGridProps, context, yearsCellRefs } = useCalendarYearsGrid({
     children,
     cellsPerRow,
   });
   const state = React.useMemo(() => ({}), []);
 
   const { renderElement } = useComponentRenderer({
-    propGetter: getMonthsGridProps,
+    propGetter: getYearsGridProps,
     render: render ?? 'div',
     ref: forwardedRef,
     className,
@@ -27,18 +27,18 @@ const CalendarMonthsGrid = React.forwardRef(function CalendarMonthsList(
   });
 
   return (
-    <CalendarMonthsCellCollectionContext.Provider value={context}>
-      <CompositeList elementsRef={monthsCellRefs}>{renderElement()}</CompositeList>
-    </CalendarMonthsCellCollectionContext.Provider>
+    <CalendarYearsCellCollectionContext.Provider value={context}>
+      <CompositeList elementsRef={yearsCellRefs}>{renderElement()}</CompositeList>
+    </CalendarYearsCellCollectionContext.Provider>
   );
 });
 
-export namespace CalendarMonthsGrid {
+export namespace CalendarYearsGrid {
   export interface State {}
 
   export interface Props
     extends Omit<BaseUIComponentProps<'div', State>, 'children'>,
-      useCalendarMonthsGrid.Parameters {}
+      useCalendarYearsGrid.Parameters {}
 }
 
-export { CalendarMonthsGrid };
+export { CalendarYearsGrid };

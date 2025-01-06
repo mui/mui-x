@@ -9,11 +9,11 @@ import { mergeReactProps } from '../../utils/mergeReactProps';
 export function useCalendarDaysGridHeader(parameters: useCalendarDaysGridHeader.Parameters) {
   const { children } = parameters;
   const utils = useUtils();
-  const calendarRootContext = useCalendarRootContext();
+  const rootContext = useCalendarRootContext();
 
   const days = React.useMemo(
-    () => getWeekdays(utils, calendarRootContext.value ?? calendarRootContext.referenceDate),
-    [utils, calendarRootContext.value, calendarRootContext.referenceDate],
+    () => getWeekdays(utils, rootContext.value ?? rootContext.referenceDate),
+    [utils, rootContext.value, rootContext.referenceDate],
   );
 
   const getDaysGridHeaderProps = React.useCallback(

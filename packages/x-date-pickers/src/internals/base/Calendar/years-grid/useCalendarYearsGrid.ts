@@ -3,23 +3,41 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { PickerValidDate } from '../../../../models';
 import { GenericHTMLProps } from '../../utils/types';
 import { mergeReactProps } from '../../utils/mergeReactProps';
-import { navigateInList } from '../utils/keyboardNavigation';
+import { navigateInGrid } from '../utils/keyboardNavigation';
 import { useCalendarYearsCellCollection } from '../utils/years-cell-collection/useCalendarYearsCellCollection';
 
-export function useCalendarYearsList(parameters: useCalendarYearsList.Parameters) {
-  const { children, loop = true } = parameters;
+export function useCalendarYearsGrid(parameters: useCalendarYearsGrid.Parameters) {
+  const { children, cellsPerRow } = parameters;
   const yearsCellRefs = React.useRef<(HTMLElement | null)[]>([]);
   const { years, context } = useCalendarYearsCellCollection();
 
+  const getCellsInCalendar = useEventCallback(() => {
+    const grid: HTMLElement[][] = Array.from(
+      {
+        length: Math.ceil(yearsCellRefs.current.length / cellsPerRow),
+      },
+      () => [],
+    );
+    yearsCellRefs.current.forEach((cell, index) => {
+      const rowIndex = Math.floor(index / cellsPerRow);
+      if (cell != null) {
+        grid[rowIndex].push(cell);
+      }
+    });
+
+    return [grid];
+  });
+
+  // TODO: Add support for multiple years grids.
   const onKeyDown = useEventCallback((event: React.KeyboardEvent) => {
-    navigateInList({
-      cells: yearsCellRefs.current,
+    navigateInGrid({
+      cells: getCellsInCalendar(),
       event,
-      loop,
+      changePage: undefined,
     });
   });
 
-  const getYearsListProps = React.useCallback(
+  const getYearsGridProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
       return mergeReactProps(externalProps, {
         role: 'radiogroup',
@@ -31,19 +49,18 @@ export function useCalendarYearsList(parameters: useCalendarYearsList.Parameters
   );
 
   return React.useMemo(
-    () => ({ getYearsListProps, context, yearsCellRefs }),
-    [getYearsListProps, context, yearsCellRefs],
+    () => ({ getYearsGridProps, context, yearsCellRefs }),
+    [getYearsGridProps, context, yearsCellRefs],
   );
 }
 
-export namespace useCalendarYearsList {
+export namespace useCalendarYearsGrid {
   export interface Parameters {
     /**
-     * Whether to loop keyboard focus back to the first item
-     * when the end of the list is reached while using the arrow keys.
-     * @default true
+     * Cells rendered per row.
+     * This is used to make sure the keyboard navigation works correctly.
      */
-    loop?: boolean;
+    cellsPerRow: number;
     children?: (parameters: ChildrenParameters) => React.ReactNode;
   }
 

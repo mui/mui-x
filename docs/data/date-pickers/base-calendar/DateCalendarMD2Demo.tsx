@@ -10,8 +10,8 @@ import {
 import styles from './calendar.module.css';
 
 function Header(props: {
-  activeSection: 'day' | 'month' | 'year';
-  onActiveSectionChange: (newActiveSection: 'day' | 'month' | 'year') => void;
+  activeSection: 'day' | 'year';
+  onActiveSectionChange: (newActiveSection: 'day' | 'year') => void;
 }) {
   const { activeSection, onActiveSectionChange } = props;
   const { visibleDate } = useCalendarContext();

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { PickerValidDate } from '../../../../models';
 import { GenericHTMLProps } from '../../utils/types';
 import { mergeReactProps } from '../../utils/mergeReactProps';
 
@@ -24,7 +25,7 @@ export namespace useCalendarSetVisibleMonth {
     /**
      * The month to navigate to.
      */
-    target: 'previous' | 'next';
+    target: 'previous' | 'next' | PickerValidDate;
     ctx: Context;
   }
 

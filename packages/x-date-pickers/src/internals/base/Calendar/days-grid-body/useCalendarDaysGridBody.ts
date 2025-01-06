@@ -9,8 +9,8 @@ import { useCalendarRootContext } from '../root/CalendarRootContext';
 
 export function useCalendarDaysGridBody(parameters: useCalendarDaysGridBody.Parameters) {
   const { children } = parameters;
-  const calendarRootContext = useCalendarRootContext();
-  const calendarDaysGridContext = useCalendarDaysGridContext();
+  const rootContext = useCalendarRootContext();
+  const daysGridContext = useCalendarDaysGridContext();
   const rowsRef: useCalendarDaysGridBody.RowsRef = React.useRef([]);
   const cellsRef: useCalendarDaysGridBody.CellsRef = React.useRef([]);
 
@@ -21,15 +21,11 @@ export function useCalendarDaysGridBody(parameters: useCalendarDaysGridBody.Para
         children:
           children == null
             ? null
-            : children({ weeks: calendarDaysGridContext.daysGrid.map((week) => week[0]) }),
-        onKeyDown: calendarRootContext.applyDayGridKeyboardNavigation,
+            : children({ weeks: daysGridContext.daysGrid.map((week) => week[0]) }),
+        onKeyDown: rootContext.applyDayGridKeyboardNavigation,
       });
     },
-    [
-      calendarDaysGridContext.daysGrid,
-      calendarRootContext.applyDayGridKeyboardNavigation,
-      children,
-    ],
+    [daysGridContext.daysGrid, rootContext.applyDayGridKeyboardNavigation, children],
   );
 
   const registerWeekRowCells = useEventCallback(
@@ -45,7 +41,7 @@ export function useCalendarDaysGridBody(parameters: useCalendarDaysGridBody.Para
     },
   );
 
-  const registerDaysGridCells = calendarRootContext.registerDaysGridCells;
+  const registerDaysGridCells = rootContext.registerDaysGridCells;
   React.useEffect(() => {
     return registerDaysGridCells(cellsRef, rowsRef);
   }, [registerDaysGridCells]);

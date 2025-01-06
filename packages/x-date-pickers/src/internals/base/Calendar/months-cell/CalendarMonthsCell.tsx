@@ -7,14 +7,14 @@ import { useCalendarRootContext } from '../root/CalendarRootContext';
 import { useCalendarMonthsCell } from './useCalendarMonthsCell';
 import { BaseUIComponentProps } from '../../utils/types';
 import { useCompositeListItem } from '../../composite/list/useCompositeListItem';
-import { useCalendarMonthCellCollectionContext } from '../utils/month-cell-collection/CalendarMonthCellCollectionContext';
+import { useCalendarMonthsCellCollectionContext } from '../utils/months-cell-collection/CalendarMonthsCellCollectionContext';
 
 const InnerCalendarMonthsCell = React.forwardRef(function InnerCalendarMonthsCell(
   props: InnerCalendarMonthsCellProps,
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
   const { className, render, value, format, ctx, ...otherProps } = props;
-  const { getMonthCellProps, isCurrent } = useCalendarMonthsCell({ value, format, ctx });
+  const { getMonthsCellProps, isCurrent } = useCalendarMonthsCell({ value, format, ctx });
 
   const state: CalendarMonthsCell.State = React.useMemo(
     () => ({ selected: ctx.isSelected, current: isCurrent }),
@@ -22,7 +22,7 @@ const InnerCalendarMonthsCell = React.forwardRef(function InnerCalendarMonthsCel
   );
 
   const { renderElement } = useComponentRenderer({
-    propGetter: getMonthCellProps,
+    propGetter: getMonthsCellProps,
     render: render ?? 'button',
     ref: forwardedRef,
     className,
@@ -39,38 +39,35 @@ const CalendarMonthsCell = React.forwardRef(function CalendarMonthsCell(
   props: CalendarMonthsCell.Props,
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
-  const calendarRootContext = useCalendarRootContext();
-  const calendarMonthCellCollectionContext = useCalendarMonthCellCollectionContext();
+  const rootContext = useCalendarRootContext();
+  const monthsCellCollectionContext = useCalendarMonthsCellCollectionContext();
   const { ref: listItemRef } = useCompositeListItem();
   const utils = useUtils();
-  const now = useNow(calendarRootContext.timezone);
+  const now = useNow(rootContext.timezone);
   const mergedRef = useForkRef(forwardedRef, listItemRef);
 
   const isSelected = React.useMemo(
-    () =>
-      calendarRootContext.value == null
-        ? false
-        : utils.isSameMonth(calendarRootContext.value, props.value),
-    [calendarRootContext.value, props.value, utils],
+    () => (rootContext.value == null ? false : utils.isSameMonth(rootContext.value, props.value)),
+    [rootContext.value, props.value, utils],
   );
 
   const isDisabled = React.useMemo(() => {
-    if (calendarRootContext.disabled) {
+    if (rootContext.disabled) {
       return true;
     }
 
     const firstEnabledMonth = utils.startOfMonth(
-      calendarRootContext.validationProps.disablePast &&
-        utils.isAfter(now, calendarRootContext.validationProps.minDate)
+      rootContext.validationProps.disablePast &&
+        utils.isAfter(now, rootContext.validationProps.minDate)
         ? now
-        : calendarRootContext.validationProps.minDate,
+        : rootContext.validationProps.minDate,
     );
 
     const lastEnabledMonth = utils.startOfMonth(
-      calendarRootContext.validationProps.disableFuture &&
-        utils.isBefore(now, calendarRootContext.validationProps.maxDate)
+      rootContext.validationProps.disableFuture &&
+        utils.isBefore(now, rootContext.validationProps.maxDate)
         ? now
-        : calendarRootContext.validationProps.maxDate,
+        : rootContext.validationProps.maxDate,
     );
 
     const monthToValidate = utils.startOfMonth(props.value);
@@ -83,19 +80,19 @@ const CalendarMonthsCell = React.forwardRef(function CalendarMonthsCell(
       return true;
     }
 
-    if (!calendarRootContext.validationProps.shouldDisableMonth) {
+    if (!rootContext.validationProps.shouldDisableMonth) {
       return false;
     }
 
-    return calendarRootContext.validationProps.shouldDisableMonth(monthToValidate);
-  }, [calendarRootContext.disabled, calendarRootContext.validationProps, props.value, now, utils]);
+    return rootContext.validationProps.shouldDisableMonth(monthToValidate);
+  }, [rootContext.disabled, rootContext.validationProps, props.value, now, utils]);
 
   const isTabbable = React.useMemo(
     () =>
-      utils.isValid(calendarRootContext.value)
+      utils.isValid(rootContext.value)
         ? isSelected
-        : utils.isSameMonth(calendarRootContext.referenceDate, props.value),
-    [utils, calendarRootContext.value, calendarRootContext.referenceDate, isSelected, props.value],
+        : utils.isSameMonth(rootContext.referenceDate, props.value),
+    [utils, rootContext.value, rootContext.referenceDate, isSelected, props.value],
   );
 
   const ctx = React.useMemo<useCalendarMonthsCell.Context>(
@@ -103,9 +100,9 @@ const CalendarMonthsCell = React.forwardRef(function CalendarMonthsCell(
       isSelected,
       isDisabled,
       isTabbable,
-      selectMonth: calendarMonthCellCollectionContext.selectMonth,
+      selectMonth: monthsCellCollectionContext.selectMonth,
     }),
-    [isSelected, isDisabled, isTabbable, calendarMonthCellCollectionContext.selectMonth],
+    [isSelected, isDisabled, isTabbable, monthsCellCollectionContext.selectMonth],
   );
 
   return <MemoizedInnerCalendarMonthsCell {...props} ref={mergedRef} ctx={ctx} />;

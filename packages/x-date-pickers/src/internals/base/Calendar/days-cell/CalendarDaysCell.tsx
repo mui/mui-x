@@ -43,43 +43,40 @@ const CalendarDaysCell = React.forwardRef(function CalendarDaysCell(
   props: CalendarDaysCell.Props,
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
-  const calendarRootContext = useCalendarRootContext();
-  const calendarMonthsListContext = useCalendarDaysGridContext();
+  const rootContext = useCalendarRootContext();
+  const monthsListContext = useCalendarDaysGridContext();
   const { ref: listItemRef, index: colIndex } = useCompositeListItem();
   const utils = useUtils();
   const mergedRef = useForkRef(forwardedRef, listItemRef);
 
   const isSelected = React.useMemo(
-    () =>
-      calendarRootContext.value == null
-        ? false
-        : utils.isSameDay(calendarRootContext.value, props.value),
-    [calendarRootContext.value, props.value, utils],
+    () => (rootContext.value == null ? false : utils.isSameDay(rootContext.value, props.value)),
+    [rootContext.value, props.value, utils],
   );
 
   const isOutsideCurrentMonth = React.useMemo(
     () =>
-      calendarMonthsListContext.currentMonth == null
+      monthsListContext.currentMonth == null
         ? false
-        : !utils.isSameMonth(calendarMonthsListContext.currentMonth, props.value),
-    [calendarMonthsListContext.currentMonth, props.value, utils],
+        : !utils.isSameMonth(monthsListContext.currentMonth, props.value),
+    [monthsListContext.currentMonth, props.value, utils],
   );
 
-  const isDateDisabled = calendarRootContext.isDateDisabled;
+  const isDateDisabled = rootContext.isDateDisabled;
   const isDisabled = React.useMemo(() => {
-    if (calendarRootContext.disabled) {
+    if (rootContext.disabled) {
       return true;
     }
 
     return isDateDisabled(props.value);
-  }, [calendarRootContext.disabled, isDateDisabled, props.value]);
+  }, [rootContext.disabled, isDateDisabled, props.value]);
 
   const isTabbable = React.useMemo(
     () =>
-      calendarMonthsListContext.tabbableDay == null
+      monthsListContext.tabbableDay == null
         ? false
-        : utils.isSameDay(calendarMonthsListContext.tabbableDay, props.value),
-    [utils, calendarMonthsListContext.tabbableDay, props.value],
+        : utils.isSameDay(monthsListContext.tabbableDay, props.value),
+    [utils, monthsListContext.tabbableDay, props.value],
   );
 
   const ctx = React.useMemo<useCalendarDaysCell.Context>(
@@ -89,14 +86,14 @@ const CalendarDaysCell = React.forwardRef(function CalendarDaysCell(
       isDisabled,
       isTabbable,
       isOutsideCurrentMonth,
-      selectDay: calendarMonthsListContext.selectDay,
+      selectDay: monthsListContext.selectDay,
     }),
     [
       isSelected,
       isDisabled,
       isTabbable,
       isOutsideCurrentMonth,
-      calendarMonthsListContext.selectDay,
+      monthsListContext.selectDay,
       colIndex,
     ],
   );

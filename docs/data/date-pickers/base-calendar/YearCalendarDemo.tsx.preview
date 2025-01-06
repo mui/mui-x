@@ -1,0 +1,13 @@
+<Calendar.Root value={value} onValueChange={setValue} className={styles.Root}>
+  <Calendar.YearsGrid cellsPerRow={2} className={styles.YearsGrid}>
+    {({ years }) =>
+      years.map((year) => (
+        <Calendar.YearsCell
+          value={year}
+          className={styles.YearsCell}
+          key={year.toString()}
+        />
+      ))
+    }
+  </Calendar.YearsGrid>
+</Calendar.Root>

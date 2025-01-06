@@ -20,7 +20,7 @@ export function useCalendarMonthsCell(parameters: useCalendarMonthsCell.Paramete
     ctx.selectMonth(value);
   });
 
-  const getMonthCellProps = React.useCallback(
+  const getMonthsCellProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
       return mergeReactProps(externalProps, {
         type: 'button' as const,
@@ -36,7 +36,7 @@ export function useCalendarMonthsCell(parameters: useCalendarMonthsCell.Paramete
     [formattedValue, ctx.isSelected, ctx.isDisabled, ctx.isTabbable, onClick, isCurrent],
   );
 
-  return React.useMemo(() => ({ getMonthCellProps, isCurrent }), [getMonthCellProps, isCurrent]);
+  return React.useMemo(() => ({ getMonthsCellProps, isCurrent }), [getMonthsCellProps, isCurrent]);
 }
 
 export namespace useCalendarMonthsCell {

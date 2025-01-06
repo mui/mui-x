@@ -2,9 +2,9 @@ import { useCalendarRootContext } from '../root/CalendarRootContext';
 
 // TODO: Use a dedicated context
 export function useCalendarContext() {
-  const calendarRootContext = useCalendarRootContext();
+  const rootContext = useCalendarRootContext();
 
   return {
-    visibleDate: calendarRootContext.visibleDate,
+    visibleDate: rootContext.visibleDate,
   };
 }

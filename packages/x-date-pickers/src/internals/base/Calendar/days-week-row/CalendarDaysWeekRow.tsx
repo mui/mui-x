@@ -14,7 +14,7 @@ const InnerCalendarDaysWeekRow = React.forwardRef(function CalendarDaysGrid(
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, render, value, ctx, children, ...otherProps } = props;
-  const { getDaysWeekRowProps, calendarDayCellRefs } = useCalendarDaysWeekRow({
+  const { getDaysWeekRowProps, dayCellRefs } = useCalendarDaysWeekRow({
     value,
     ctx,
     children,
@@ -30,7 +30,7 @@ const InnerCalendarDaysWeekRow = React.forwardRef(function CalendarDaysGrid(
     extraProps: otherProps,
   });
 
-  return <CompositeList elementsRef={calendarDayCellRefs}>{renderElement()}</CompositeList>;
+  return <CompositeList elementsRef={dayCellRefs}>{renderElement()}</CompositeList>;
 });
 
 const MemoizedInnerCalendarDaysWeekRow = React.memo(InnerCalendarDaysWeekRow);
@@ -39,24 +39,24 @@ const CalendarDaysWeekRow = React.forwardRef(function CalendarDaysWeekRow(
   props: CalendarDaysWeekRow.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const calendarDaysGridContext = useCalendarDaysGridContext();
-  const calendarDaysGridBodyContext = useCalendarDaysGridBodyContext();
+  const daysGridContext = useCalendarDaysGridContext();
+  const daysGridBodyContext = useCalendarDaysGridBodyContext();
   const { ref: listItemRef, index: rowIndex } = useCompositeListItem();
   const mergedRef = useForkRef(forwardedRef, listItemRef);
 
   // TODO: Improve how we pass the week to this component.
   const days = React.useMemo(
-    () => calendarDaysGridContext.daysGrid.find((week) => week[0] === props.value) ?? [],
-    [calendarDaysGridContext.daysGrid, props.value],
+    () => daysGridContext.daysGrid.find((week) => week[0] === props.value) ?? [],
+    [daysGridContext.daysGrid, props.value],
   );
 
   const ctx = React.useMemo(
     () => ({
       days,
       rowIndex,
-      registerWeekRowCells: calendarDaysGridBodyContext.registerWeekRowCells,
+      registerWeekRowCells: daysGridBodyContext.registerWeekRowCells,
     }),
-    [days, rowIndex, calendarDaysGridBodyContext.registerWeekRowCells],
+    [days, rowIndex, daysGridBodyContext.registerWeekRowCells],
   );
 
   return <MemoizedInnerCalendarDaysWeekRow {...props} ref={mergedRef} ctx={ctx} />;
