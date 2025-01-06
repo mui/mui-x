@@ -60,9 +60,19 @@ export function useCalendarDaysGrid(parameters: useCalendarDaysGrid.Parameters) 
     calendarRootContext.setValue(newCleanValue, { section: 'day' });
   });
 
+  const tabbableDay = React.useMemo(() => {
+    const flatDays = daysGrid.flat();
+    const tempTabbableDay = calendarRootContext.value ?? calendarRootContext.referenceDate;
+    if (flatDays.some((day) => utils.isSameDay(day, tempTabbableDay))) {
+      return tempTabbableDay;
+    }
+
+    return flatDays.find((day) => utils.isSameMonth(day, currentMonth)) ?? null;
+  }, [calendarRootContext.value, calendarRootContext.referenceDate, daysGrid, utils, currentMonth]);
+
   const context: CalendarDaysGridContext = React.useMemo(
-    () => ({ selectDay, daysGrid, currentMonth }),
-    [selectDay, daysGrid, currentMonth],
+    () => ({ selectDay, daysGrid, currentMonth, tabbableDay }),
+    [selectDay, daysGrid, currentMonth, tabbableDay],
   );
 
   return React.useMemo(() => ({ getDaysGridProps, context }), [getDaysGridProps, context]);

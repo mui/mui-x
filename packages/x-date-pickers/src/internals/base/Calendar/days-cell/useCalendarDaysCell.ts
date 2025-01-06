@@ -29,10 +29,19 @@ export function useCalendarDaysCell(parameters: useCalendarDaysCell.Parameters) 
         'aria-colindex': ctx.colIndex + 1,
         children: formattedValue,
         disabled: ctx.isDisabled,
+        tabIndex: ctx.isTabbable ? 0 : -1,
         onClick,
       });
     },
-    [formattedValue, ctx.isSelected, ctx.isDisabled, ctx.colIndex, isCurrent, onClick],
+    [
+      formattedValue,
+      ctx.isSelected,
+      ctx.isDisabled,
+      ctx.isTabbable,
+      ctx.colIndex,
+      isCurrent,
+      onClick,
+    ],
   );
 
   return React.useMemo(() => ({ getDaysCellProps, isCurrent }), [getDaysCellProps, isCurrent]);
@@ -53,6 +62,7 @@ export namespace useCalendarDaysCell {
     colIndex: number;
     isSelected: boolean;
     isDisabled: boolean;
+    isTabbable: boolean;
     isOutsideCurrentMonth: boolean;
     selectDay: (value: PickerValidDate) => void;
   }

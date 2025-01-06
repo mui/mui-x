@@ -28,11 +28,12 @@ export function useCalendarMonthsCell(parameters: useCalendarMonthsCell.Paramete
         'aria-checked': ctx.isSelected,
         'aria-current': isCurrent ? 'date' : undefined,
         disabled: ctx.isDisabled,
+        tabIndex: ctx.isTabbable ? 0 : -1,
         children: formattedValue,
         onClick,
       });
     },
-    [formattedValue, ctx.isSelected, ctx.isDisabled, onClick, isCurrent],
+    [formattedValue, ctx.isSelected, ctx.isDisabled, ctx.isTabbable, onClick, isCurrent],
   );
 
   return React.useMemo(() => ({ getMonthCellProps, isCurrent }), [getMonthCellProps, isCurrent]);
@@ -52,6 +53,7 @@ export namespace useCalendarMonthsCell {
   export interface Context {
     isSelected: boolean;
     isDisabled: boolean;
+    isTabbable: boolean;
     selectMonth: (value: PickerValidDate) => void;
   }
 }

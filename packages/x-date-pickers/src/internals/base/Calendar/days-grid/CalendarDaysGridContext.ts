@@ -4,6 +4,7 @@ import { PickerValidDate } from '../../../../models';
 export interface CalendarDaysGridContext {
   selectDay: (value: PickerValidDate) => void;
   currentMonth: PickerValidDate;
+  tabbableDay: PickerValidDate | null;
   daysGrid: PickerValidDate[][];
 }
 

@@ -13,6 +13,7 @@ export interface CalendarRootContext {
   timezone: PickersTimezone;
   disabled: boolean;
   readOnly: boolean;
+  autoFocus: boolean;
   isDateDisabled: (day: PickerValidDate | null) => boolean;
   validationProps: ValidateDateProps;
   visibleDate: PickerValidDate;

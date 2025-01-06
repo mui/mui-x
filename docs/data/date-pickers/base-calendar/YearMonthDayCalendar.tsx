@@ -81,12 +81,8 @@ export default function YearMonthDayCalendar() {
 
   const handleValueChange = React.useCallback(
     (newValue: Dayjs | null, context: Calendar.Root.ValueChangeHandlerContext) => {
-      if (context.section === 'month') {
+      if (context.section === 'month' || context.section === 'year') {
         setActiveSection('day');
-      }
-
-      if (context.section === 'year') {
-        setActiveSection('month');
       }
 
       setValue(newValue);
@@ -96,79 +92,77 @@ export default function YearMonthDayCalendar() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Calendar.Root value={value} onValueChange={handleValueChange}>
-        <div className={styles.Root}>
-          <Header
-            activeSection={activeSection}
-            onActiveSectionChange={setActiveSection}
-          />
-          {activeSection === 'year' && (
-            <Calendar.YearsList className={styles.YearsList}>
-              {({ years }) =>
-                years.map((year) => (
-                  <Calendar.YearsCell
-                    value={year}
-                    className={styles.YearsCell}
-                    key={year.toString()}
+      <Calendar.Root
+        value={value}
+        onValueChange={handleValueChange}
+        className={styles.Root}
+      >
+        <Header
+          activeSection={activeSection}
+          onActiveSectionChange={setActiveSection}
+        />
+        {activeSection === 'year' && (
+          <Calendar.YearsList className={styles.YearsList}>
+            {({ years }) =>
+              years.map((year) => (
+                <Calendar.YearsCell
+                  value={year}
+                  className={styles.YearsCell}
+                  key={year.toString()}
+                />
+              ))
+            }
+          </Calendar.YearsList>
+        )}
+        {activeSection === 'month' && (
+          <Calendar.MonthsList className={styles.MonthsList}>
+            {({ months }) =>
+              months.map((month) => (
+                <Calendar.MonthsCell
+                  value={month}
+                  className={styles.MonthsCell}
+                  key={month.toString()}
+                />
+              ))
+            }
+          </Calendar.MonthsList>
+        )}
+        {activeSection === 'day' && (
+          <Calendar.DaysGrid className={styles.DaysGrid}>
+            <Calendar.DaysGridHeader className={styles.DaysGridHeader}>
+              {({ days }) =>
+                days.map((day) => (
+                  <Calendar.DaysGridHeaderCell
+                    value={day}
+                    key={day.toString()}
+                    className={styles.DaysGridHeaderCell}
                   />
                 ))
               }
-            </Calendar.YearsList>
-          )}
-          {activeSection === 'month' && (
-            <Calendar.MonthsList className={styles.MonthsList}>
-              {({ months }) =>
-                months.map((month) => (
-                  <Calendar.MonthsCell
-                    value={month}
-                    className={styles.MonthsCell}
-                    key={month.toString()}
-                  />
+            </Calendar.DaysGridHeader>
+            <Calendar.DaysGridBody className={styles.DaysGridBody}>
+              {({ weeks }) =>
+                weeks.map((week) => (
+                  <Calendar.DaysWeekRow
+                    value={week}
+                    key={week.toString()}
+                    className={styles.DaysWeekRow}
+                  >
+                    {({ days }) =>
+                      days.map((day) => (
+                        <Calendar.DaysCell
+                          value={day}
+                          key={day.toString()}
+                          className={styles.DaysCell}
+                        />
+                      ))
+                    }
+                  </Calendar.DaysWeekRow>
                 ))
               }
-            </Calendar.MonthsList>
-          )}
-          {activeSection === 'day' && (
-            <Calendar.DaysGrid className={styles.DaysGrid}>
-              <Calendar.DaysGridHeader className={styles.DaysGridHeader}>
-                {({ days }) =>
-                  days.map((day) => (
-                    <Calendar.DaysGridHeaderCell
-                      value={day}
-                      key={day.toString()}
-                      className={styles.DaysGridHeaderCell}
-                    />
-                  ))
-                }
-              </Calendar.DaysGridHeader>
-              <Calendar.DaysGridBody className={styles.DaysGridBody}>
-                {({ weeks }) =>
-                  weeks.map((week) => (
-                    <Calendar.DaysWeekRow
-                      value={week}
-                      key={week.toString()}
-                      className={styles.DaysWeekRow}
-                    >
-                      {({ days }) =>
-                        days.map((day) => (
-                          <div
-                            key={day.toString()}
-                            className={styles.DaysCellWrapper}
-                          >
-                            <Calendar.DaysCell
-                              value={day}
-                              className={styles.DaysCell}
-                            />
-                          </div>
-                        ))
-                      }
-                    </Calendar.DaysWeekRow>
-                  ))
-                }
-              </Calendar.DaysGridBody>
-            </Calendar.DaysGrid>
-          )}
-        </div>
+            </Calendar.DaysGridBody>
+          </Calendar.DaysGrid>
+        )}
       </Calendar.Root>
     </LocalizationProvider>
   );

@@ -28,45 +28,42 @@ function Header() {
 function DayCalendar(props) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Calendar.Root {...props}>
-        <div className={styles.Root}>
-          <Header />
-          <Calendar.DaysGrid className={styles.DaysGrid}>
-            <Calendar.DaysGridHeader className={styles.DaysGridHeader}>
-              {({ days }) =>
-                days.map((day) => (
-                  <Calendar.DaysGridHeaderCell
-                    value={day}
-                    key={day.toString()}
-                    className={styles.DaysGridHeaderCell}
-                  />
-                ))
-              }
-            </Calendar.DaysGridHeader>
-            <Calendar.DaysGridBody className={styles.DaysGridBody}>
-              {({ weeks }) =>
-                weeks.map((week) => (
-                  <Calendar.DaysWeekRow
-                    value={week}
-                    key={week.toString()}
-                    className={styles.DaysWeekRow}
-                  >
-                    {({ days }) =>
-                      days.map((day) => (
-                        <div key={day.toString()} className={styles.DaysCellWrapper}>
-                          <Calendar.DaysCell
-                            value={day}
-                            className={styles.DaysCell}
-                          />
-                        </div>
-                      ))
-                    }
-                  </Calendar.DaysWeekRow>
-                ))
-              }
-            </Calendar.DaysGridBody>
-          </Calendar.DaysGrid>
-        </div>
+      <Calendar.Root {...props} className={styles.Root}>
+        <Header />
+        <Calendar.DaysGrid className={styles.DaysGrid}>
+          <Calendar.DaysGridHeader className={styles.DaysGridHeader}>
+            {({ days }) =>
+              days.map((day) => (
+                <Calendar.DaysGridHeaderCell
+                  value={day}
+                  key={day.toString()}
+                  className={styles.DaysGridHeaderCell}
+                />
+              ))
+            }
+          </Calendar.DaysGridHeader>
+          <Calendar.DaysGridBody className={styles.DaysGridBody}>
+            {({ weeks }) =>
+              weeks.map((week) => (
+                <Calendar.DaysWeekRow
+                  value={week}
+                  key={week.toString()}
+                  className={styles.DaysWeekRow}
+                >
+                  {({ days }) =>
+                    days.map((day) => (
+                      <Calendar.DaysCell
+                        value={day}
+                        key={day.toString()}
+                        className={styles.DaysCell}
+                      />
+                    ))
+                  }
+                </Calendar.DaysWeekRow>
+              ))
+            }
+          </Calendar.DaysGridBody>
+        </Calendar.DaysGrid>
       </Calendar.Root>
     </LocalizationProvider>
   );

@@ -86,13 +86,22 @@ const CalendarYearsCell = React.forwardRef(function CalendarsYearCell(
     return calendarRootContext.validationProps.shouldDisableYear(yearToValidate);
   }, [calendarRootContext.disabled, calendarRootContext.validationProps, props.value, now, utils]);
 
+  const isTabbable = React.useMemo(
+    () =>
+      utils.isValid(calendarRootContext.value)
+        ? isSelected
+        : utils.isSameYear(calendarRootContext.referenceDate, props.value),
+    [utils, calendarRootContext.value, calendarRootContext.referenceDate, isSelected, props.value],
+  );
+
   const ctx = React.useMemo<useCalendarYearsCell.Context>(
     () => ({
       isSelected,
       isDisabled,
+      isTabbable,
       selectYear: calendarYearsListContext.selectYear,
     }),
-    [isSelected, isDisabled, calendarYearsListContext.selectYear],
+    [isSelected, isDisabled, isTabbable, calendarYearsListContext.selectYear],
   );
 
   return <MemoizedInnerCalendarYearsCell ref={mergedRef} {...props} ctx={ctx} />;
@@ -105,11 +114,11 @@ export namespace CalendarYearsCell {
 
   export interface Props
     extends Omit<useCalendarYearsCell.Parameters, 'ctx'>,
-      BaseUIComponentProps<'div', State> {}
+      Omit<BaseUIComponentProps<'button', State>, 'value'> {}
 }
 
 interface InnerCalendarYearsCellProps
   extends useCalendarYearsCell.Parameters,
-    BaseUIComponentProps<'div', CalendarYearsCell.State> {}
+    Omit<BaseUIComponentProps<'button', CalendarYearsCell.State>, 'value'> {}
 
 export { CalendarYearsCell };

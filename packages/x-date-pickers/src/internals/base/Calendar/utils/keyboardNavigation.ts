@@ -328,8 +328,7 @@ function isNavigable(element: HTMLElement | null): element is HTMLElement {
     return false;
   }
 
-  const dimensions = element?.getBoundingClientRect();
-  if (dimensions?.width === 0 || dimensions?.height === 0) {
+  if (element.dataset.outsidemonth != null) {
     return false;
   }
 

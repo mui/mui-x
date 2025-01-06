@@ -90,13 +90,22 @@ const CalendarMonthsCell = React.forwardRef(function CalendarMonthsCell(
     return calendarRootContext.validationProps.shouldDisableMonth(monthToValidate);
   }, [calendarRootContext.disabled, calendarRootContext.validationProps, props.value, now, utils]);
 
+  const isTabbable = React.useMemo(
+    () =>
+      utils.isValid(calendarRootContext.value)
+        ? isSelected
+        : utils.isSameMonth(calendarRootContext.referenceDate, props.value),
+    [utils, calendarRootContext.value, calendarRootContext.referenceDate, isSelected, props.value],
+  );
+
   const ctx = React.useMemo<useCalendarMonthsCell.Context>(
     () => ({
       isSelected,
       isDisabled,
+      isTabbable,
       selectMonth: calendarMonthsListContext.selectMonth,
     }),
-    [isSelected, isDisabled, calendarMonthsListContext.selectMonth],
+    [isSelected, isDisabled, isTabbable, calendarMonthsListContext.selectMonth],
   );
 
   return <MemoizedInnerCalendarMonthsCell {...props} ref={mergedRef} ctx={ctx} />;
@@ -109,11 +118,11 @@ export namespace CalendarMonthsCell {
 
   export interface Props
     extends Omit<useCalendarMonthsCell.Parameters, 'ctx'>,
-      BaseUIComponentProps<'div', State> {}
+      Omit<BaseUIComponentProps<'button', State>, 'value'> {}
 }
 
 interface InnerCalendarMonthsCellProps
   extends useCalendarMonthsCell.Parameters,
-    BaseUIComponentProps<'div', CalendarMonthsCell.State> {}
+    Omit<BaseUIComponentProps<'button', CalendarMonthsCell.State>, 'value'> {}
 
 export { CalendarMonthsCell };

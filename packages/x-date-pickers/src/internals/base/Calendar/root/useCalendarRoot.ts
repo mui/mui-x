@@ -20,6 +20,8 @@ import { applyDefaultDate } from '../../../utils/date-utils';
 import { FormProps, PickerValue } from '../../../models';
 import { CalendarRootContext } from './CalendarRootContext';
 import { useValidation } from '../../../../validation';
+import { mergeReactProps } from '../../utils/mergeReactProps';
+import { GenericHTMLProps } from '../../utils/types';
 
 function useAddDefaultsToValidateDateProps(
   validationDate: ExportedValidateDateProps,
@@ -65,6 +67,7 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
   const {
     readOnly = false,
     disabled = false,
+    autoFocus = false,
     onError,
     defaultValue,
     onValueChange,
@@ -137,6 +140,7 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
       timezone,
       disabled,
       readOnly,
+      autoFocus,
       isDateDisabled,
       validationProps,
       visibleDate,
@@ -150,6 +154,7 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
       timezone,
       disabled,
       readOnly,
+      autoFocus,
       isDateDisabled,
       validationProps,
       visibleDate,
@@ -158,7 +163,11 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
     ],
   );
 
-  return React.useMemo(() => ({ context }), [context]);
+  const getRootProps = React.useCallback((externalProps: GenericHTMLProps) => {
+    return mergeReactProps(externalProps, {});
+  }, []);
+
+  return React.useMemo(() => ({ getRootProps, context }), [getRootProps, context]);
 }
 
 export namespace useCalendarRoot {
@@ -195,15 +204,17 @@ export namespace useCalendarRoot {
      */
     referenceDate?: PickerValidDate;
     /**
+     * If `true`, one of the cells will be automatically focused when the component is mounted.
+     * If a value or a default value is provided, the focused cell will be the one corresponding to the selected date.
+     * @default false
+     */
+    autoFocus?: boolean;
+    /**
      * The amount of months to navigate by when pressing <Calendar.SetVisibleMonth /> or when using keyboard navigation in the day grid.
      * This is mostly useful when displaying multiple day grids.
      * @default 1
      */
     monthPageSize?: number;
-  }
-
-  export interface ReturnValue {
-    context: CalendarRootContext;
   }
 
   export interface ValueChangeHandlerContext {
