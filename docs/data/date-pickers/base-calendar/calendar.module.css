@@ -169,12 +169,12 @@
     outline: 1px solid #9ca3af;
   }
 
-  &[data-outsidemonth] {
+  &[data-outside-month] {
     color: #cbd5e1;
     pointer-events: none;
   }
 
-  &:not([data-outsidemonth]):disabled {
+  &:not([data-outside-month]):disabled {
     pointer-events: none;
     text-decoration: line-through;
     color: #64748b;
@@ -210,7 +210,7 @@
     background-color: #e0f2fe;
   }
 
-  &:not([data-outsidemonth])[data-selected] {
+  &:not([data-outside-month])[data-selected] {
     background-color: #7dd3fc;
   }
 
@@ -229,16 +229,16 @@
     background-color: #075985;
   }
 
-  &:not([data-outsidemonth])[data-selected] {
+  &:not([data-outside-month])[data-selected] {
     background-color: #0369a1;
   }
 
-  &[data-outsidemonth] {
+  &[data-outside-month] {
     color: #334155;
     pointer-events: none;
   }
 
-  &:not([data-outsidemonth]):disabled {
+  &:not([data-outside-month]):disabled {
     color: #64748b;
   }
 }

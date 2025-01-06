@@ -8,6 +8,20 @@ import { useCalendarDaysGridContext } from '../days-grid/CalendarDaysGridContext
 import { useCalendarDaysCell } from './useCalendarDaysCell';
 import { useCalendarRootContext } from '../root/CalendarRootContext';
 import { useCompositeListItem } from '../../composite/list/useCompositeListItem';
+import { CustomStyleHookMapping } from '../../utils/getStyleHookProps';
+import { CalendarDaysCellDataAttributes } from './CalendarDaysCellDataAttributes';
+
+const customStyleHookMapping: CustomStyleHookMapping<CalendarDaysCell.State> = {
+  selected(value) {
+    return value ? { [CalendarDaysCellDataAttributes.selected]: '' } : null;
+  },
+  current(value) {
+    return value ? { [CalendarDaysCellDataAttributes.current]: '' } : null;
+  },
+  outsideMonth(value) {
+    return value ? { [CalendarDaysCellDataAttributes.outsideMonth]: '' } : null;
+  },
+};
 
 const InnerCalendarDaysCell = React.forwardRef(function CalendarDaysGrid(
   props: InnerCalendarDaysCellProps,
@@ -32,6 +46,7 @@ const InnerCalendarDaysCell = React.forwardRef(function CalendarDaysGrid(
     className,
     state,
     extraProps: otherProps,
+    customStyleHookMapping,
   });
 
   return renderElement();
@@ -102,7 +117,11 @@ const CalendarDaysCell = React.forwardRef(function CalendarDaysCell(
 });
 
 export namespace CalendarDaysCell {
-  export interface State {}
+  export interface State {
+    selected: boolean;
+    current: boolean;
+    outsideMonth: boolean;
+  }
 
   export interface Props
     extends Omit<BaseUIComponentProps<'button', State>, 'value'>,

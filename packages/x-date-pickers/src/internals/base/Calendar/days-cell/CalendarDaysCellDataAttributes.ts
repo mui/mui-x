@@ -10,5 +10,5 @@ export enum CalendarDaysCellDataAttributes {
   /**
    * Present when the day is outside the month rendered by the day grid wrapping it.
    */
-  outsideMonth = 'data-outsidemonth',
+  outsideMonth = 'data-outside-month',
 }
