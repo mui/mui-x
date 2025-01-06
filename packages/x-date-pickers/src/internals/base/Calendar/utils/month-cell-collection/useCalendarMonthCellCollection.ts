@@ -6,7 +6,7 @@ import { useUtils } from '../../../../hooks/useUtils';
 import { useCalendarRootContext } from '../../root/CalendarRootContext';
 import { CalendarMonthCellCollectionContext } from './CalendarMonthCellCollectionContext';
 
-export function useCalendarMonthCellCollection() {
+export function useCalendarMonthCellCollection(): useCalendarMonthCellCollection.ReturnValue {
   const calendarRootContext = useCalendarRootContext();
   const utils = useUtils();
 
@@ -64,4 +64,11 @@ export function useCalendarMonthCellCollection() {
   );
 
   return { months, context };
+}
+
+export namespace useCalendarMonthCellCollection {
+  export interface ReturnValue {
+    months: PickerValidDate[];
+    context: CalendarMonthCellCollectionContext;
+  }
 }
