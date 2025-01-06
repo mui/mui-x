@@ -94,7 +94,7 @@
     "rifm": "0.12.1",
     "rimraf": "^6.0.1",
     "rxjs": "^7.8.1",
-    "styled-components": "^6.1.13",
+    "styled-components": "^6.1.14",
     "stylis": "^4.3.4",
     "stylis-plugin-rtl": "^2.1.1",
     "webpack-bundle-analyzer": "^4.10.2"
