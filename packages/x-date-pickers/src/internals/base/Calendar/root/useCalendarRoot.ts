@@ -234,13 +234,11 @@ export namespace useCalendarRoot {
       ExportedValidateDateProps {
     /**
      * The controlled value that should be selected.
-     *
      * To render an uncontrolled Date Calendar, use the `defaultValue` prop instead.
      */
     value?: PickerValidDate | null;
     /**
      * The uncontrolled value that should be initially selected.
-     *
      * To render a controlled accordion, use the `value` prop instead.
      */
     defaultValue?: PickerValidDate | null;

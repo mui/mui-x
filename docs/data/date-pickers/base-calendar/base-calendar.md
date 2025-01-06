@@ -22,6 +22,10 @@ packageName: '@mui/x-date-pickers'
 
 {{"demo": "DayCalendarWithValidationDemo.js"}}
 
+### With week number
+
+{{"demo": "DayCalendarWithWeekNumberDemo.js"}}
+
 ## Month Calendar
 
 ### One year

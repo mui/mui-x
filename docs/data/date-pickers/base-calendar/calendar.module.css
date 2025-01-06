@@ -8,7 +8,11 @@
   font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
 }
 
-.RootTwoPanels {
+.RootWithWeekNumber {
+  width: 312px;
+}
+
+.RootWithTwoPanels {
   width: 540px;
   flex-direction: row;
   justify-content: space-between;
@@ -124,6 +128,16 @@
   display: flex;
   justify-content: center;
   gap: 4px;
+}
+
+.DaysWeekNumber {
+  height: 32px;
+  width: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: #64748b;
 }
 
 .DaysCell {

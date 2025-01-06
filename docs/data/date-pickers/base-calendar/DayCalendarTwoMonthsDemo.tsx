@@ -84,7 +84,7 @@ function DayCalendar(props: Omit<Calendar.Root.Props, 'children'>) {
       <Calendar.Root
         {...props}
         monthPageSize={2}
-        className={clsx(styles.Root, styles.RootTwoPanels)}
+        className={clsx(styles.Root, styles.RootWithTwoPanels)}
       >
         <DayGrid offset={0} />
         <DayGrid offset={1} />
