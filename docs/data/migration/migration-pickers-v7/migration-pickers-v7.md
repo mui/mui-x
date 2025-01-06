@@ -344,6 +344,15 @@ This change causes a few breaking changes:
 
 - The button to render a single year is no longer wrapped in a `<div />`, the spacing are instead defined inside the `root` slot of the Year Calendar.
 
+### Update default `closeOnSelect` and Action Bar `actions` values
+
+The default value of the `closeOnSelect` prop has been updated to `false` for all Picker components, except `<DesktopDatePicker />` and `<DesktopDateRangePicker />`, which still have `closeOnSelect` set to `true`.
+
+This change goes hand in hand with the new default `actions` prop value for the `<PickersActionBar />` component.
+The default value of the `actions` prop has been updated to `['cancel', 'accept']` for all Picker components, except `<DesktopDatePicker />` and `<DesktopDateRangePicker />`.
+
+If the updated values do not fit your use case, you can [override them](/x/react-date-pickers/custom-components/#component-props).
+
 ## Slots breaking changes
 
 ### Slot: `layout`
