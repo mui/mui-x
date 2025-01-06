@@ -128,16 +128,16 @@ const localeTargetInCalendar = (
   target: HTMLElement,
   cells: ReturnType<typeof getCellsInCalendar>,
 ) => {
-  let rowInAllCalendars = 0;
+  let rowInAllGrids = 0;
   for (let i = 0; i < cells.nested.length; i += 1) {
     for (let j = 0; j < cells.nested[i].length; j += 1) {
       for (let k = 0; k < cells.nested[i][j].length; k += 1) {
         if (cells.nested[i][j][k] === target) {
-          return { calendar: i, row: rowInAllCalendars, col: k, rowInCalendar: j };
+          return { calendar: i, row: rowInAllGrids, col: k };
         }
       }
 
-      rowInAllCalendars += 1;
+      rowInAllGrids += 1;
     }
   }
 
@@ -272,15 +272,15 @@ export function navigateInGrid({
     }
   };
 
-  const moveToFirstCell = () => {
-    const cell = cells.list.find(isNavigable);
+  const moveToFirstCellInGrid = () => {
+    const cell = cells.nested[coordinates.calendar].flat().find(isNavigable);
     if (cell) {
       cell.focus();
     }
   };
 
-  const moveToLastCell = () => {
-    const cell = cells.list.findLast(isNavigable);
+  const moveToLastCellInGrid = () => {
+    const cell = cells.nested[coordinates.calendar].flat().findLast(isNavigable);
     if (cell) {
       cell.focus();
     }
@@ -302,10 +302,10 @@ export function navigateInGrid({
       moveToRowAbove();
       break;
     case 'Home':
-      moveToFirstCell();
+      moveToFirstCellInGrid();
       break;
     case 'End':
-      moveToLastCell();
+      moveToLastCellInGrid();
       break;
     default:
       break;
