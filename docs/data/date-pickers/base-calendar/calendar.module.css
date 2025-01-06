@@ -45,7 +45,6 @@
   border: none;
   background-color: transparent;
   border-radius: 4px;
-  font-size: 12px;
   height: 24px;
   width: 24px;
   text-align: center;
@@ -68,14 +67,17 @@
 .SetVisibleYear {
   height: 24px;
   width: 24px;
+  font-size: 0.75rem;
 }
 
 .SetActiveSectionMonth {
-  min-width: 72px;
+  min-width: 80px;
+  font-size: 0.85rem;
 }
 
 .SetActiveSectionYear {
   min-width: 42px;
+  font-size: 0.85rem;
 }
 
 .MonthsList,
