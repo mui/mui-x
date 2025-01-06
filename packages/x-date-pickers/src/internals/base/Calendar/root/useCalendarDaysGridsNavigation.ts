@@ -31,10 +31,8 @@ export function useCalendarDaysGridNavigation(
     if (pageNavigationTargetRef.current) {
       const target = pageNavigationTargetRef.current;
       timeout.start(0, () => {
-        applyInitialFocusInGrid({
-          grids: gridsRef.current,
-          target,
-        });
+        const cells = getCellsInCalendar(gridsRef.current);
+        applyInitialFocusInGrid({ cells, target });
       });
     }
   }, [visibleDate, timeout]);
@@ -52,11 +50,8 @@ export function useCalendarDaysGridNavigation(
       pageNavigationTargetRef.current = params.target;
     };
 
-    navigateInGrid({
-      grids: gridsRef.current,
-      event,
-      changePage,
-    });
+    const cells = getCellsInCalendar(gridsRef.current);
+    navigateInGrid({ cells, event, changePage });
   });
 
   const registerDaysGridCells = useEventCallback(
@@ -87,4 +82,49 @@ export namespace useCalendarDaysGridNavigation {
 
   export interface ReturnValue
     extends Pick<CalendarRootContext, 'registerDaysGridCells' | 'applyDayGridKeyboardNavigation'> {}
+}
+
+/* eslint-disable no-bitwise */
+function sortGridByDocumentPosition(a: HTMLElement[][], b: HTMLElement[][]) {
+  const position = a[0][0].compareDocumentPosition(b[0][0]);
+
+  if (
+    position & Node.DOCUMENT_POSITION_FOLLOWING ||
+    position & Node.DOCUMENT_POSITION_CONTAINED_BY
+  ) {
+    return -1;
+  }
+
+  if (position & Node.DOCUMENT_POSITION_PRECEDING || position & Node.DOCUMENT_POSITION_CONTAINS) {
+    return 1;
+  }
+
+  return 0;
+}
+/* eslint-enable no-bitwise */
+
+function getCellsInCalendar(
+  grids: { cells: useCalendarDaysGridBody.CellsRef; rows: useCalendarDaysGridBody.RowsRef }[],
+) {
+  const cells: HTMLElement[][][] = [];
+
+  for (let i = 0; i < grids.length; i += 1) {
+    const grid = grids[i];
+    const gridCells: HTMLElement[][] = [];
+    for (let j = 0; j < grid.rows.current.length; j += 1) {
+      const row = grid.rows.current[j];
+      const rowCells = grid.cells.current
+        .find((entry) => entry.rowRef.current === row)
+        ?.cellsRef.current?.filter((cell) => cell !== null);
+      if (rowCells && rowCells.length > 0) {
+        gridCells.push(rowCells);
+      }
+    }
+
+    if (gridCells.length > 0) {
+      cells.push(gridCells);
+    }
+  }
+
+  return cells.sort(sortGridByDocumentPosition);
 }
