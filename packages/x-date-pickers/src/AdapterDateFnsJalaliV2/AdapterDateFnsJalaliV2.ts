@@ -43,11 +43,10 @@ import startOfWeek from 'date-fns-jalali/startOfWeek';
 import startOfYear from 'date-fns-jalali/startOfYear';
 import isWithinInterval from 'date-fns-jalali/isWithinInterval';
 import defaultLocale from 'date-fns-jalali/locale/fa-IR';
+import { Locale as DateFnsLocale } from 'date-fns-jalali/locale';
 import longFormatters from 'date-fns-jalali/_lib/format/longFormatters';
 import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
 import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
-
-type DateFnsLocale = typeof defaultLocale;
 
 const defaultFormats: AdapterFormats = {
   year: 'yyyy',
