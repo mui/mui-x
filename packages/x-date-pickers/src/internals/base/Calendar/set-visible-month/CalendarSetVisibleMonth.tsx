@@ -55,6 +55,8 @@ const CalendarSetVisibleMonth = React.forwardRef(function CalendarSetVisibleMont
       return true;
     }
 
+    // TODO: Check if the logic below works correctly when multiple months are rendered at once.
+
     // All the months before the visible ones are fully disabled, we skip the navigation.
     if (props.target === 'previous') {
       return utils.isAfter(
