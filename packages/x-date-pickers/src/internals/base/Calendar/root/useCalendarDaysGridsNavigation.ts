@@ -2,6 +2,7 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useTimeout from '@mui/utils/useTimeout';
 import { PickerValidDate } from '../../../../models';
+import { ValidateDateProps } from '../../../../validation';
 import { useUtils } from '../../../hooks/useUtils';
 import type { useCalendarDaysGridBody } from '../days-grid-body/useCalendarDaysGridBody';
 import {
@@ -11,6 +12,7 @@ import {
   PageNavigationTarget,
 } from '../utils/keyboardNavigation';
 import type { CalendarRootContext } from './CalendarRootContext';
+import { getFirstEnabledMonth, getLastEnabledMonth } from '../utils/date';
 
 /**
  * This logic needs to be in Calendar.Root to support multiple Calendar.DaysGrid.
@@ -19,7 +21,7 @@ import type { CalendarRootContext } from './CalendarRootContext';
 export function useCalendarDaysGridNavigation(
   parameters: useCalendarDaysGridNavigation.Parameters,
 ) {
-  const { visibleDate, setVisibleDate, monthPageSize } = parameters;
+  const { visibleDate, setVisibleDate, monthPageSize, validationProps } = parameters;
   const utils = useUtils();
   const gridsRef = React.useRef<
     { cells: useCalendarDaysGridBody.CellsRef; rows: useCalendarDaysGridBody.RowsRef }[]
@@ -40,11 +42,25 @@ export function useCalendarDaysGridNavigation(
   const applyDayGridKeyboardNavigation = useEventCallback((event: React.KeyboardEvent) => {
     const changePage: NavigateInGridChangePage = (params) => {
       // TODO: Jump over months with no valid date.
-      if (params.direction === 'next') {
-        setVisibleDate(utils.addMonths(visibleDate, monthPageSize));
-      }
       if (params.direction === 'previous') {
+        const targetDate = utils.addMonths(utils.startOfMonth(visibleDate), -monthPageSize);
+        const lastMonthInNewPage = utils.addMonths(targetDate, monthPageSize - 1);
+
+        // All the months before the visible ones are fully disabled, we skip the navigation.
+        if (utils.isAfter(getFirstEnabledMonth(utils, validationProps), lastMonthInNewPage)) {
+          return;
+        }
+
         setVisibleDate(utils.addMonths(visibleDate, -monthPageSize));
+      }
+      if (params.direction === 'next') {
+        const targetDate = utils.addMonths(utils.startOfMonth(visibleDate), monthPageSize);
+
+        // All the months after the visible ones are fully disabled, we skip the navigation.
+        if (utils.isBefore(getLastEnabledMonth(utils, validationProps), targetDate)) {
+          return;
+        }
+        setVisibleDate(utils.addMonths(visibleDate, monthPageSize));
       }
 
       pageNavigationTargetRef.current = params.target;
@@ -78,6 +94,7 @@ export namespace useCalendarDaysGridNavigation {
     visibleDate: PickerValidDate;
     setVisibleDate: (visibleDate: PickerValidDate) => void;
     monthPageSize: number;
+    validationProps: ValidateDateProps;
   }
 
   export interface ReturnValue

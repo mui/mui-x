@@ -169,6 +169,7 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
     visibleDate,
     setVisibleDate,
     monthPageSize,
+    validationProps,
   });
 
   const handleVisibleDateChange = useEventCallback(
