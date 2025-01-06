@@ -8,22 +8,30 @@ packageName: '@mui/x-date-pickers'
 
 <p class="description">POC of a Calendar component using the Base UI DX.</p>
 
-## Day view
+## Day Calendar
+
+### One month
 
 {{"demo": "DayCalendarDemo.js"}}
 
-## Month view
-
-{{"demo": "MonthCalendarDemo.js"}}
-
-## Day, month and year view
-
-{{"demo": "YearMonthDayCalendar.js"}}
-
-## Multiple months
+### Two months
 
 {{"demo": "DayCalendarTwoMonthsDemo.js"}}
 
-## Validation
+### With validation
 
 {{"demo": "DayCalendarWithValidationDemo.js"}}
+
+## Month Calendar
+
+### One year
+
+{{"demo": "MonthCalendarDemo.js"}}
+
+### Two years
+
+TODO
+
+## Full Date Calendar
+
+{{"demo": "YearMonthDayCalendar.js"}}
