@@ -1,7 +1,7 @@
-/* eslint-disable react/no-unused-prop-types */
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useGridComponentRenderer, RenderProp, GridSlotProps } from '@mui/x-data-grid';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { GridExcelExportOptions } from '../../../hooks/features/export';
@@ -28,7 +28,7 @@ export type GridExportExcelTriggerProps = GridSlotProps['baseButton'] & {
  *
  * - [GridExportExcelTrigger API](https://mui.com/x/api/data-grid/grid-export-excel-trigger/)
  */
-const GridExportExcelTrigger = React.forwardRef<HTMLButtonElement, GridExportExcelTriggerProps>(
+const GridExportExcelTrigger = forwardRef<HTMLButtonElement, GridExportExcelTriggerProps>(
   function GridExportExcelTrigger(props, ref) {
     const { render, options, onClick, ...other } = props;
     const rootProps = useGridRootProps();
@@ -39,12 +39,14 @@ const GridExportExcelTrigger = React.forwardRef<HTMLButtonElement, GridExportExc
       onClick?.(event);
     };
 
-    return useGridComponentRenderer(rootProps.slots.baseButton, render, {
-      ref,
+    const element = useGridComponentRenderer(rootProps.slots.baseButton, render, {
       onClick: handleClick,
       ...rootProps.slotProps?.baseButton,
       ...other,
+      ref,
     });
+
+    return <React.Fragment>{element}</React.Fragment>;
   },
 );
 

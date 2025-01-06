@@ -1,7 +1,7 @@
-/* eslint-disable react/no-unused-prop-types */
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import {
   useGridComponentRenderer,
@@ -30,7 +30,7 @@ export type GridQuickFilterControlProps = Omit<GridSlotProps['baseTextField'], '
  *
  * - [GridQuickFilterControl API](https://mui.com/x/api/data-grid/grid-quick-filter-control/)
  */
-const GridQuickFilterControl = React.forwardRef<HTMLInputElement, GridQuickFilterControlProps>(
+const GridQuickFilterControl = forwardRef<HTMLInputElement, GridQuickFilterControlProps>(
   function GridQuickFilterControl(props, ref) {
     const { render, className, ...other } = props;
     const rootProps = useGridRootProps();
@@ -46,20 +46,22 @@ const GridQuickFilterControl = React.forwardRef<HTMLInputElement, GridQuickFilte
       props.onKeyDown?.(event);
     };
 
-    return useGridComponentRenderer(
+    const element = useGridComponentRenderer(
       rootProps.slots.baseTextField,
       render,
       {
         ...rootProps.slotProps?.baseTextField,
-        ref: handleRef,
         value: state.value,
         className: resolvedClassName,
         onChange: onValueChange,
         onKeyDown: handleKeyDown,
         ...other,
+        ref: handleRef,
       },
       state,
     );
+
+    return <React.Fragment>{element}</React.Fragment>;
   },
 );
 

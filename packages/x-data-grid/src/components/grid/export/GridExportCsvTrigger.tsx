@@ -1,6 +1,6 @@
-/* eslint-disable react/no-unused-prop-types */
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import {
@@ -32,7 +32,7 @@ export type GridExportCsvTriggerProps = GridSlotProps['baseButton'] & {
  *
  * - [GridExportCsvTrigger API](https://mui.com/x/api/data-grid/grid-export-csv-trigger/)
  */
-const GridExportCsvTrigger = React.forwardRef<HTMLButtonElement, GridExportCsvTriggerProps>(
+const GridExportCsvTrigger = forwardRef<HTMLButtonElement, GridExportCsvTriggerProps>(
   function GridExportCsvTrigger(props, ref) {
     const { render, options, onClick, ...other } = props;
     const rootProps = useGridRootProps();
@@ -43,12 +43,14 @@ const GridExportCsvTrigger = React.forwardRef<HTMLButtonElement, GridExportCsvTr
       onClick?.(event);
     };
 
-    return useGridComponentRenderer(rootProps.slots.baseButton, render, {
+    const element = useGridComponentRenderer(rootProps.slots.baseButton, render, {
       ...rootProps.slotProps?.baseButton,
-      ref,
       onClick: handleClick,
       ...other,
+      ref,
     });
+
+    return <React.Fragment>{element}</React.Fragment>;
   },
 );
 

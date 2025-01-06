@@ -1,8 +1,8 @@
-/* eslint-disable react/no-unused-prop-types */
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import useId from '@mui/utils/useId';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import {
   useGridComponentRenderer,
@@ -27,7 +27,7 @@ export type GridToolbarButtonProps = GridSlotProps['baseIconButton'] & {
  *
  * - [GridToolbarButton API](https://mui.com/x/api/data-grid/grid-toolbar-button/)
  */
-const GridToolbarButton = React.forwardRef<HTMLButtonElement, GridToolbarButtonProps>(
+const GridToolbarButton = forwardRef<HTMLButtonElement, GridToolbarButtonProps>(
   function GridToolbarButton(props, ref) {
     const { render, ...other } = props;
     const id = useId();
@@ -56,13 +56,15 @@ const GridToolbarButton = React.forwardRef<HTMLButtonElement, GridToolbarButtonP
       }
     }, [focusableItemId, id]);
 
-    return useGridComponentRenderer(rootProps.slots.baseIconButton, render, {
+    const element = useGridComponentRenderer(rootProps.slots.baseIconButton, render, {
       ...rootProps.slotProps?.baseIconButton,
-      ref: handleRef,
       tabIndex: focusableItemId === id ? 0 : -1,
       onKeyDown: onItemKeyDown,
       ...other,
+      ref: handleRef,
     });
+
+    return <React.Fragment>{element}</React.Fragment>;
   },
 );
 

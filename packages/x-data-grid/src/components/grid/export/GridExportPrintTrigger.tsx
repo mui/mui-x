@@ -1,6 +1,6 @@
-/* eslint-disable react/no-unused-prop-types */
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import {
@@ -32,7 +32,7 @@ export type GridExportPrintTriggerProps = GridSlotProps['baseButton'] & {
  *
  * - [GridExportPrintTrigger API](https://mui.com/x/api/data-grid/grid-export-print-trigger/)
  */
-const GridExportPrintTrigger = React.forwardRef<HTMLButtonElement, GridExportPrintTriggerProps>(
+const GridExportPrintTrigger = forwardRef<HTMLButtonElement, GridExportPrintTriggerProps>(
   function GridExportPrintTrigger(props, ref) {
     const { render, options, onClick, ...other } = props;
     const rootProps = useGridRootProps();
@@ -43,12 +43,14 @@ const GridExportPrintTrigger = React.forwardRef<HTMLButtonElement, GridExportPri
       onClick?.(event);
     };
 
-    return useGridComponentRenderer(rootProps.slots.baseButton, render, {
+    const element = useGridComponentRenderer(rootProps.slots.baseButton, render, {
       ...rootProps.slotProps?.baseButton,
-      ref,
       onClick: handleClick,
       ...other,
+      ref,
     });
+
+    return <React.Fragment>{element}</React.Fragment>;
   },
 );
 

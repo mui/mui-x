@@ -1,7 +1,7 @@
-/* eslint-disable react/no-unused-prop-types */
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import {
   gridPreferencePanelStateSelector,
@@ -42,7 +42,7 @@ export type GridColumnsPanelTriggerProps = Omit<GridSlotProps['baseButton'], 'cl
  *
  * - [GridColumnsPanelTrigger API](https://mui.com/x/api/data-grid/grid-columns-panel-trigger/)
  */
-const GridColumnsPanelTrigger = React.forwardRef<HTMLButtonElement, GridColumnsPanelTriggerProps>(
+const GridColumnsPanelTrigger = forwardRef<HTMLButtonElement, GridColumnsPanelTriggerProps>(
   function GridColumnsPanelTrigger(props, ref) {
     const { render, className, onClick, ...other } = props;
     const rootProps = useGridRootProps();
@@ -65,12 +65,11 @@ const GridColumnsPanelTrigger = React.forwardRef<HTMLButtonElement, GridColumnsP
       onClick?.(event);
     };
 
-    return useGridComponentRenderer(
+    const element = useGridComponentRenderer(
       rootProps.slots.baseButton,
       render,
       {
         ...rootProps.slotProps?.baseButton,
-        ref,
         id: buttonId,
         'aria-haspopup': 'true',
         'aria-expanded': open ? 'true' : undefined,
@@ -78,9 +77,12 @@ const GridColumnsPanelTrigger = React.forwardRef<HTMLButtonElement, GridColumnsP
         onClick: handleClick,
         className: resolvedClassName,
         ...other,
+        ref,
       },
       state,
     );
+
+    return <React.Fragment>{element}</React.Fragment>;
   },
 );
 

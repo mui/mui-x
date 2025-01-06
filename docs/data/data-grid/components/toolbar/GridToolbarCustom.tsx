@@ -2,16 +2,11 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { DataGrid, Grid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import { TailwindDemoContainer } from '@mui/x-data-grid/internals';
 import ClearIcon from '@mui/icons-material/Clear';
 
-const Button = React.forwardRef<
-  HTMLButtonElement,
-  React.HTMLAttributes<HTMLButtonElement>
->(function Button(props, ref) {
+function Button(props: React.HTMLAttributes<HTMLButtonElement>) {
   return (
     <button
-      ref={ref}
       type="button"
       {...props}
       className={clsx(
@@ -20,15 +15,11 @@ const Button = React.forwardRef<
       )}
     />
   );
-});
+}
 
-const TextInput = React.forwardRef<
-  HTMLInputElement,
-  React.HTMLAttributes<HTMLInputElement>
->(function Input(props, ref) {
+function TextInput(props: React.HTMLAttributes<HTMLInputElement>) {
   return (
     <input
-      ref={ref}
       {...props}
       className={clsx(
         'h-9 rounded border border-gray-200 px-2.5 text-base text-gray-900 focus:outline focus:outline-2 focus:-outline-offset-1 focus:outline-blue-600',
@@ -36,7 +27,7 @@ const TextInput = React.forwardRef<
       )}
     />
   );
-});
+}
 
 function Toolbar() {
   return (
@@ -82,10 +73,8 @@ export default function GridToolbarCustom() {
   });
 
   return (
-    <TailwindDemoContainer>
-      <div style={{ height: 400, width: '100%' }}>
-        <DataGrid {...data} loading={loading} slots={{ toolbar: Toolbar }} />
-      </div>
-    </TailwindDemoContainer>
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGrid {...data} loading={loading} slots={{ toolbar: Toolbar }} />
+    </div>
   );
 }

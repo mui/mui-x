@@ -1,6 +1,6 @@
-/* eslint-disable react/no-unused-prop-types */
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import {
   useGridComponentRenderer,
@@ -29,25 +29,27 @@ export type GridQuickFilterClearProps = Omit<GridSlotProps['baseIconButton'], 'c
  *
  * - [GridQuickFilterClear API](https://mui.com/x/api/data-grid/grid-quick-filter-clear/)
  */
-const GridQuickFilterClear = React.forwardRef<HTMLButtonElement, GridQuickFilterClearProps>(
+const GridQuickFilterClear = forwardRef<HTMLButtonElement, GridQuickFilterClearProps>(
   function GridQuickFilterClear(props, ref) {
     const { render, className, ...other } = props;
     const rootProps = useGridRootProps();
     const { state, clearValue } = useGridQuickFilterRootContext();
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
 
-    return useGridComponentRenderer(
+    const element = useGridComponentRenderer(
       rootProps.slots.baseIconButton,
       render,
       {
         ...rootProps.slotProps?.baseIconButton,
-        ref,
         onClick: clearValue,
         className: resolvedClassName,
         ...other,
+        ref,
       },
       state,
     );
+
+    return <React.Fragment>{element}</React.Fragment>;
   },
 );
 

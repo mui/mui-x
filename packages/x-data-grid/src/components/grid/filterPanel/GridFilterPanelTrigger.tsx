@@ -1,7 +1,7 @@
-/* eslint-disable react/no-unused-prop-types */
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import {
   gridFilterActiveItemsSelector,
@@ -47,7 +47,7 @@ export type GridFilterPanelTriggerProps = Omit<GridSlotProps['baseButton'], 'cla
  *
  * - [GridFilterPanelTrigger API](https://mui.com/x/api/data-grid/grid-filter-panel-trigger/)
  */
-const GridFilterPanelTrigger = React.forwardRef<HTMLButtonElement, GridFilterPanelTriggerProps>(
+const GridFilterPanelTrigger = forwardRef<HTMLButtonElement, GridFilterPanelTriggerProps>(
   function GridFilterPanelTrigger(props, ref) {
     const { render, className, onClick, ...other } = props;
     const rootProps = useGridRootProps();
@@ -72,12 +72,11 @@ const GridFilterPanelTrigger = React.forwardRef<HTMLButtonElement, GridFilterPan
       onClick?.(event);
     };
 
-    return useGridComponentRenderer(
+    const element = useGridComponentRenderer(
       rootProps.slots.baseButton,
       render,
       {
         ...rootProps.slotProps?.baseButton,
-        ref,
         id: buttonId,
         'aria-haspopup': 'true',
         'aria-expanded': open ? 'true' : undefined,
@@ -85,9 +84,12 @@ const GridFilterPanelTrigger = React.forwardRef<HTMLButtonElement, GridFilterPan
         onClick: handleClick,
         className: resolvedClassName,
         ...other,
+        ref,
       },
       state,
     );
+
+    return <React.Fragment>{element}</React.Fragment>;
   },
 );
 

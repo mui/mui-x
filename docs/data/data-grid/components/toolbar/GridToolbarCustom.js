@@ -5,10 +5,9 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 import { TailwindDemoContainer } from '@mui/x-data-grid/internals';
 import ClearIcon from '@mui/icons-material/Clear';
 
-const Button = React.forwardRef(function Button(props, ref) {
+function Button(props) {
   return (
     <button
-      ref={ref}
       type="button"
       {...props}
       className={clsx(
@@ -17,12 +16,11 @@ const Button = React.forwardRef(function Button(props, ref) {
       )}
     />
   );
-});
+}
 
-const TextInput = React.forwardRef(function Input(props, ref) {
+function TextInput(props) {
   return (
     <input
-      ref={ref}
       {...props}
       className={clsx(
         'h-9 rounded border border-gray-200 px-2.5 text-base text-gray-900 focus:outline focus:outline-2 focus:-outline-offset-1 focus:outline-blue-600',
@@ -30,7 +28,7 @@ const TextInput = React.forwardRef(function Input(props, ref) {
       )}
     />
   );
-});
+}
 
 function Toolbar() {
   return (

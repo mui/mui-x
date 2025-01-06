@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
 import clsx from 'clsx';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { getDataGridUtilityClass } from '../../../constants/gridClasses';
 import {
   useGridComponentRenderer,
@@ -43,7 +44,16 @@ const Toolbar = styled('div', {
   borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
-const GridToolbarRoot = React.forwardRef<HTMLDivElement, GridToolbarRootProps>(
+/**
+ * Demos:
+ *
+ * - [Toolbar](https://mui.com/x/react-data-grid/components/toolbar/)
+ *
+ * API:
+ *
+ * - [GridToolbarRoot API](https://mui.com/x/api/data-grid/grid-toolbar-root/)
+ */
+const GridToolbarRoot = forwardRef<HTMLDivElement, GridToolbarRootProps>(
   function GridToolbarRoot(props, ref) {
     const { render, className, ...other } = props;
     const rootProps = useGridRootProps();
@@ -109,12 +119,12 @@ const GridToolbarRoot = React.forwardRef<HTMLDivElement, GridToolbarRootProps>(
     );
 
     const element = useGridComponentRenderer(Toolbar, render, {
-      ref,
       role: 'toolbar',
       'aria-orientation': 'horizontal',
       className: clsx(classes.root, className),
       ownerState: rootProps,
       ...other,
+      ref,
     });
 
     React.useEffect(() => {
