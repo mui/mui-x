@@ -100,15 +100,17 @@
 .YearsGrid {
   padding: 12px;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
   column-gap: 4px;
   row-gap: 12px;
   overflow-y: auto;
+}
 
-  /* TODO: Use CSS variable instead */
-  &[data-cellsperrow='3'] {
-    grid-template-columns: repeat(3, 1fr);
-  }
+.MonthsGrid {
+  grid-template-columns: repeat(var(--calendar-months-grid-cells-per-row), 1fr);
+}
+
+.YearsGrid {
+  grid-template-columns: repeat(var(--calendar-years-grid-cells-per-row), 1fr);
 }
 
 .MonthsCell,

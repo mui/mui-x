@@ -12,7 +12,7 @@ export default function YearCalendarDemo() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Calendar.Root value={value} onValueChange={setValue} className={styles.Root}>
-        <Calendar.YearsGrid cellsPerRow={2} className={styles.YearsGrid}>
+        <Calendar.YearsGrid cellsPerRow={3} className={styles.YearsGrid}>
           {({ years }) =>
             years.map((year) => (
               <Calendar.YearsCell

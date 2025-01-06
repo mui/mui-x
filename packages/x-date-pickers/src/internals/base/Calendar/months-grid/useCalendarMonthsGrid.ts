@@ -14,6 +14,7 @@ import {
 import { useCalendarMonthsCellCollection } from '../utils/months-cell-collection/useCalendarMonthsCellCollection';
 import { useCalendarRootContext } from '../root/CalendarRootContext';
 import { getFirstEnabledYear, getLastEnabledYear } from '../utils/date';
+import { CalendarMonthsGridCssVars } from './CalendarMonthsGridCssVars';
 
 export function useCalendarMonthsGrid(parameters: useCalendarMonthsGrid.Parameters) {
   const { children, cellsPerRow } = parameters;
@@ -106,9 +107,12 @@ export function useCalendarMonthsGrid(parameters: useCalendarMonthsGrid.Paramete
         role: 'radiogroup',
         children: children == null ? null : children({ months }),
         onKeyDown,
+        style: {
+          [CalendarMonthsGridCssVars.calendarMonthsGridCellsPerRow]: cellsPerRow,
+        },
       });
     },
-    [months, children, onKeyDown],
+    [months, children, onKeyDown, cellsPerRow],
   );
 
   return React.useMemo(
@@ -120,7 +124,7 @@ export function useCalendarMonthsGrid(parameters: useCalendarMonthsGrid.Paramete
 export namespace useCalendarMonthsGrid {
   export interface Parameters {
     /**
-     * Cells rendered per row.
+     * The number of cells per row.
      * This is used to make sure the keyboard navigation works correctly.
      */
     cellsPerRow: number;

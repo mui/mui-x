@@ -5,6 +5,7 @@ import { GenericHTMLProps } from '../../utils/types';
 import { mergeReactProps } from '../../utils/mergeReactProps';
 import { navigateInGrid } from '../utils/keyboardNavigation';
 import { useCalendarYearsCellCollection } from '../utils/years-cell-collection/useCalendarYearsCellCollection';
+import { CalendarYearsGridCssVars } from './CalendarYearsGridCssVars';
 
 export function useCalendarYearsGrid(parameters: useCalendarYearsGrid.Parameters) {
   const { children, cellsPerRow } = parameters;
@@ -43,9 +44,12 @@ export function useCalendarYearsGrid(parameters: useCalendarYearsGrid.Parameters
         role: 'radiogroup',
         children: children == null ? null : children({ years }),
         onKeyDown,
+        style: {
+          [CalendarYearsGridCssVars.calendarYearsGridCellsPerRow]: cellsPerRow,
+        },
       });
     },
-    [years, children, onKeyDown],
+    [years, children, onKeyDown, cellsPerRow],
   );
 
   return React.useMemo(
