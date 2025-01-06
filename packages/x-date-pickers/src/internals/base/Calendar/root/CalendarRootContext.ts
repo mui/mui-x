@@ -30,7 +30,7 @@ export interface CalendarRootContext {
   isDateDisabled: (day: PickerValidDate | null) => boolean;
   validationProps: ValidateDateProps;
   visibleDate: PickerValidDate;
-  setVisibleDate: (visibleDate: PickerValidDate) => void;
+  setVisibleDate: (visibleDate: PickerValidDate, skipIfAlreadyVisible: boolean) => void;
   monthPageSize: number;
   applyDayGridKeyboardNavigation: (event: React.KeyboardEvent) => void;
   registerDaysGridCells: (

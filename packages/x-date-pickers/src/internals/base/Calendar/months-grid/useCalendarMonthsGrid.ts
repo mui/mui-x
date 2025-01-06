@@ -11,6 +11,7 @@ export function useCalendarMonthsGrid(parameters: useCalendarMonthsGrid.Paramete
   const calendarMonthsCellRefs = React.useRef<(HTMLElement | null)[]>([]);
   const { months, context } = useCalendarMonthCellCollection();
 
+  // TODO: Add support for multiple months grids.
   const onKeyDown = useEventCallback((event: React.KeyboardEvent) => {
     const grid: HTMLElement[][] = Array.from(
       {
