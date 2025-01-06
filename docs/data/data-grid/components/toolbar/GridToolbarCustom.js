@@ -48,15 +48,15 @@ function Toolbar() {
         render={<Grid.Toolbar.Button render={<Button>Print</Button>} />}
       />
       <Grid.QuickFilter.Root>
-        <div className="flex gap-1 ml-auto">
+        <div className="flex ml-auto">
           <Grid.QuickFilter.Control
             aria-label="Search"
             placeholder="Search"
-            render={<TextInput className="w-56" />}
+            render={<TextInput className="w-56 rounded-r-none border-r-0" />}
           />
           <Grid.QuickFilter.Clear
             render={
-              <Button aria-label="Clear">
+              <Button aria-label="Clear" className="rounded-l-none">
                 <ClearIcon className="text-sm" />
               </Button>
             }

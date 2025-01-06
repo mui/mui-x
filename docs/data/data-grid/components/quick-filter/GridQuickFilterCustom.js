@@ -36,18 +36,20 @@ function Toolbar() {
   return (
     <Grid.Toolbar.Root>
       <Grid.QuickFilter.Root>
-        <Grid.QuickFilter.Control
-          aria-label="Search"
-          placeholder="Search"
-          render={<TextInput className="w-56" />}
-        />
-        <Grid.QuickFilter.Clear
-          render={
-            <Button aria-label="Clear">
-              <ClearIcon className="text-sm" />
-            </Button>
-          }
-        />
+        <div className="flex">
+          <Grid.QuickFilter.Control
+            aria-label="Search"
+            placeholder="Search"
+            render={<TextInput className="w-56 rounded-r-none border-r-0" />}
+          />
+          <Grid.QuickFilter.Clear
+            render={
+              <Button aria-label="Clear" className="rounded-l-none">
+                <ClearIcon className="text-sm" />
+              </Button>
+            }
+          />
+        </div>
       </Grid.QuickFilter.Root>
     </Grid.Toolbar.Root>
   );

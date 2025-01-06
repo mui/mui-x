@@ -16,6 +16,23 @@ const DENISTY_OPTIONS = [
   { label: 'Comfortable density', value: 'comfortable' },
 ];
 
+const SETTINGS_STORAGE_KEY = 'mui-data-grid-settings';
+
+const SETTINGS_DEFAULT = {
+  density: 'standard',
+  showCellBorders: false,
+  showColumnBorders: false,
+};
+
+const getInitialSettings = () => {
+  try {
+    const storedSettings = localStorage.getItem(SETTINGS_STORAGE_KEY);
+    return storedSettings ? JSON.parse(storedSettings) : SETTINGS_DEFAULT;
+  } catch (error) {
+    return SETTINGS_DEFAULT;
+  }
+};
+
 function Toolbar(props) {
   const { settings, onSettingsChange } = props;
   const [settingsMenuOpen, setSettingsMenuOpen] = React.useState(false);
@@ -100,11 +117,12 @@ export default function GridToolbarSettingsMenu() {
     rowLength: 10,
     maxColumns: 10,
   });
-  const [settings, setSettings] = React.useState({
-    density: 'standard',
-    showCellBorders: false,
-    showColumnBorders: false,
-  });
+
+  const [settings, setSettings] = React.useState(getInitialSettings());
+
+  React.useEffect(() => {
+    localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
+  }, [settings]);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
