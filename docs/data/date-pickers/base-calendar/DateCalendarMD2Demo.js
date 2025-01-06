@@ -23,6 +23,7 @@ function Header(props) {
         className={styles.SetActiveSectionYearMD2}
       >
         {visibleDate.format('MMMM YYYY')}
+        &nbsp; &nbsp;
         {activeSection === 'day' ? '▼' : '▲'}
       </button>
       <div className={styles.HeaderBlock}>

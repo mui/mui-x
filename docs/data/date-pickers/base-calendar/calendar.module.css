@@ -81,8 +81,9 @@
 }
 
 .SetActiveSectionYearMD2 {
-  min-width: 132px;
   font-size: 0.85rem;
+  min-width: fit-content;
+  text-wrap: nowrap;
 }
 
 .MonthsList,
