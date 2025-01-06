@@ -5,6 +5,17 @@
   height: 300px;
   display: flex;
   flex-direction: column;
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+}
+
+.RootTwoPanels {
+  width: 540px;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.Panel {
+  width: 276px;
 }
 
 .Header {
@@ -131,11 +142,17 @@
     opacity: 0;
     pointer-events: 'none';
   }
+
+  &:disabled {
+    pointer-events: none;
+  }
 }
 
 .DaysGridHeaderCell {
   width: 32px;
   text-align: center;
+  font-size: 0.75rem;
+  color: #64748b;
 }
 
 .MonthsCell,
@@ -151,4 +168,13 @@
       background-color: #7dd3fc;
     }
   }
+
+  &:disabled {
+    pointer-events: none;
+  }
+}
+
+.Hidden {
+  opacity: 0;
+  pointer-events: none;
 }

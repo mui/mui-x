@@ -9,14 +9,14 @@ import { mergeReactProps } from '../../utils/mergeReactProps';
 import { CalendarDaysGridContext } from './CalendarDaysGridContext';
 
 export function useCalendarDaysGrid(parameters: useCalendarDaysGrid.Parameters) {
-  const { fixedWeekNumber } = parameters;
+  const { fixedWeekNumber, offset = 0 } = parameters;
   const utils = useUtils();
   const calendarRootContext = useCalendarRootContext();
 
-  const currentMonth = React.useMemo(
-    () => utils.startOfMonth(calendarRootContext.visibleDate),
-    [utils, calendarRootContext.visibleDate],
-  );
+  const currentMonth = React.useMemo(() => {
+    const cleanVisibleDate = utils.startOfMonth(calendarRootContext.visibleDate);
+    return offset === 0 ? cleanVisibleDate : utils.addMonths(cleanVisibleDate, offset);
+  }, [utils, calendarRootContext.visibleDate, offset]);
 
   const daysGrid = React.useMemo(() => {
     const toDisplay = utils.getWeekArray(currentMonth);
@@ -85,5 +85,11 @@ export namespace useCalendarDaysGrid {
      * Put it to 6 to have a fixed number of weeks in Gregorian calendars
      */
     fixedWeekNumber?: number;
+    /**
+     * The offset to apply to the rendered month compared to the current month.
+     * This is mostly useful when displaying multiple day grids.
+     * @default 0
+     */
+    offset?: number;
   }
 }

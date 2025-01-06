@@ -9,9 +9,10 @@ const CalendarDaysGrid = React.forwardRef(function CalendarDaysGrid(
   props: CalendarDaysGrid.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, render, fixedWeekNumber, ...otherProps } = props;
+  const { className, render, fixedWeekNumber, offset, ...otherProps } = props;
   const { getDaysGridProps, context } = useCalendarDaysGrid({
     fixedWeekNumber,
+    offset,
   });
   const state = React.useMemo(() => ({}), []);
 
