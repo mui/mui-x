@@ -65,7 +65,7 @@
     {
       "name": "legend",
       "description": "Custom rendering of the legend.",
-      "default": "DefaultChartsLegend",
+      "default": "ChartsLegend",
       "class": null
     },
     {

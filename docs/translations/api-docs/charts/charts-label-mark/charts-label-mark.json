@@ -10,7 +10,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the mark type &quot;circle&quot;"
     },
-    "fill": { "description": "Styles applied to the element containing the fill value" },
+    "fill": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the element with fill={color} attribute"
+    },
     "line": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the mark type &quot;line&quot;"

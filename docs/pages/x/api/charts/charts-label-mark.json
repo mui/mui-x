@@ -26,7 +26,7 @@
     {
       "key": "fill",
       "className": "MuiChartsLabelMark-fill",
-      "description": "Styles applied to the element containing the fill value",
+      "description": "Styles applied to the element with fill={color} attribute.",
       "isGlobal": false
     },
     {

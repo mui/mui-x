@@ -20,7 +20,7 @@
     {
       "key": "fill",
       "className": "MuiChartsLabelGradient-fill",
-      "description": "Styles applied to the element containing the gradient's fill value",
+      "description": "Styles applied to the element filled by the gradient",
       "isGlobal": false
     },
     {

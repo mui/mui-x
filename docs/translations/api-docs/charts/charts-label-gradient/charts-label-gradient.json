@@ -13,9 +13,7 @@
     "thickness": { "description": "The thickness of the gradient" }
   },
   "classDescriptions": {
-    "fill": {
-      "description": "Styles applied to the element containing the gradient&#39;s fill value"
-    },
+    "fill": { "description": "Styles applied to the element filled by the gradient" },
     "horizontal": { "description": "Styles applied when direction is &quot;row&quot;." },
     "mask": {
       "description": "Styles applied to {{nodeName}}.",
