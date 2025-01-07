@@ -67,6 +67,7 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
       [fetchRows, getAggregatedValueProp],
     );
 
+    getRowsSpy?.restore();
     getRowsSpy = spy(dataSource, 'getRows');
 
     const baselineProps = {
@@ -93,10 +94,6 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
     if (isJSDOM) {
       this.skip(); // Needs layout
     }
-  });
-
-  afterEach(() => {
-    getRowsSpy.restore();
   });
 
   it('should show aggregation option in the column menu', async () => {
