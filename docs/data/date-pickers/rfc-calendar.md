@@ -963,6 +963,8 @@ It expects a function as its children, which receives the list of months to rend
 </Calendar.MonthsGrid>
 ```
 
+This component takes care of the keyboard navigation (for example <kbd class="key">Arrow Up</kbd>).
+
 #### Props
 
 - Extends `React.HTMLAttributes<HTMLDivElement>`
@@ -1020,6 +1022,8 @@ It expects a function as its children, which receives the list of years to rende
   }
 </Calendar.YearsGrid>
 ```
+
+This component takes care of the keyboard navigation (for example <kbd class="key">Arrow Up</kbd>).
 
 #### Props
 
