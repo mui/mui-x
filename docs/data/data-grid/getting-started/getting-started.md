@@ -45,10 +45,8 @@ yarn add @mui/material @emotion/react @emotion/styled
 Import the component that corresponds to the version you're using, along with the `GridRowsProp` and `GridColDef` utilities:
 
 ```js
-// choose one
+// Pro and Premium users: add `-pro` or `-premium` suffix to package name
 import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
-import { DataGridPro, GridRowsProp, GridColDef } from '@mui/x-data-grid-pro';
-import { DataGridPremium, GridRowsProp, GridColDef } from '@mui/x-data-grid-premium';
 ```
 
 ### Define rows
@@ -116,9 +114,9 @@ In order to benefit from the [CSS overrides](/material-ui/customization/theme-co
 Internally, it uses module augmentation to extend the default theme structure.
 
 ```tsx
+// Pro and Premium users: add `-pro` or `-premium` suffix to package name
 import type {} from '@mui/x-data-grid/themeAugmentation';
-import type {} from '@mui/x-data-grid-pro/themeAugmentation';
-import type {} from '@mui/x-data-grid-premium/themeAugmentation';
+
 
 const theme = createTheme({
   components: {
