@@ -1131,6 +1131,12 @@ If you were using them, you need to replace them with the following code:
 
 ## ✅ Rename `date-fns` adapter imports
 
+:::warning
+This codemod is not idempotent. Running it multiple times will rename the imports back and forth.
+
+In example: usage of `AdapterDateFnsV3` would be replaced by `AdapterDateFns` and a subsequent run would rename it to `AdapterDateFnsV2`.
+:::
+
 - The `AdapterDateFns` and `AdapterDateFnsJalali` adapters have been renamed to `AdapterDateFnsV2` and `AdapterDateFnsJalaliV2` respectively.
   If you were using the old imports, you need to update them:
 
