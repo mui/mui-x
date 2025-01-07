@@ -19,8 +19,8 @@ const InnerCalendarMonthsCell = React.forwardRef(function InnerCalendarMonthsCel
   const { getMonthsCellProps, isCurrent } = useCalendarMonthsCell({ value, format, ctx });
 
   const state: CalendarMonthsCell.State = React.useMemo(
-    () => ({ selected: ctx.isSelected, current: isCurrent }),
-    [ctx.isSelected, isCurrent],
+    () => ({ selected: ctx.isSelected, disabled: ctx.isDisabled, current: isCurrent }),
+    [ctx.isSelected, ctx.isDisabled, isCurrent],
   );
 
   const { renderElement } = useComponentRenderer({
@@ -151,6 +151,14 @@ export namespace CalendarMonthsCell {
      * Whether the month is selected.
      */
     selected: boolean;
+    /**
+     * Whether the month is disabled.
+     */
+    disabled: boolean;
+    /**
+     * Whether the month contains the current date.
+     */
+    current: boolean;
   }
 
   export interface Props

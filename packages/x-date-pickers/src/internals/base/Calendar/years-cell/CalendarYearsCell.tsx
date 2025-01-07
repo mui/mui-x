@@ -19,8 +19,8 @@ const InnerCalendarYearsCell = React.forwardRef(function InnerCalendarYearsCell(
   const { getYearCellProps, isCurrent } = useCalendarYearsCell({ value, format, ctx });
 
   const state: CalendarYearsCell.State = React.useMemo(
-    () => ({ selected: ctx.isSelected, current: isCurrent }),
-    [ctx.isSelected, isCurrent],
+    () => ({ selected: ctx.isSelected, disabled: ctx.isDisabled, current: isCurrent }),
+    [ctx.isSelected, ctx.isDisabled, isCurrent],
   );
 
   const { renderElement } = useComponentRenderer({
@@ -146,6 +146,14 @@ export namespace CalendarYearsCell {
      * Whether the year is selected.
      */
     selected: boolean;
+    /**
+     * Whether the year is disabled.
+     */
+    disabled: boolean;
+    /**
+     * Whether the year contains the current date.
+     */
+    current: boolean;
   }
 
   export interface Props

@@ -15,6 +15,9 @@ const customStyleHookMapping: CustomStyleHookMapping<CalendarDaysCell.State> = {
   selected(value) {
     return value ? { [CalendarDaysCellDataAttributes.selected]: '' } : null;
   },
+  disabled(value) {
+    return value ? { [CalendarDaysCellDataAttributes.disabled]: '' } : null;
+  },
   current(value) {
     return value ? { [CalendarDaysCellDataAttributes.current]: '' } : null;
   },
@@ -33,10 +36,11 @@ const InnerCalendarDaysCell = React.forwardRef(function CalendarDaysGrid(
   const state: CalendarDaysCell.State = React.useMemo(
     () => ({
       selected: ctx.isSelected,
+      disabled: ctx.isDisabled,
       outsideMonth: ctx.isOutsideCurrentMonth,
       current: isCurrent,
     }),
-    [ctx.isSelected, ctx.isOutsideCurrentMonth, isCurrent],
+    [ctx.isSelected, ctx.isDisabled, ctx.isOutsideCurrentMonth, isCurrent],
   );
 
   const { renderElement } = useComponentRenderer({
@@ -122,6 +126,10 @@ export namespace CalendarDaysCell {
      * Whether the day is selected.
      */
     selected: boolean;
+    /**
+     * Whether the day is disabled.
+     */
+    disabled: boolean;
     /**
      * Whether the day contains the current date.
      */
