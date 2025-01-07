@@ -113,7 +113,7 @@ export function usePickerProvider<
       readOnly: props.readOnly ?? false,
       variant,
       orientation,
-      fieldFormat: props.format ?? null,
+      fieldFormat: props.format ?? '',
     }),
     [
       paramsFromUsePickerValue.contextValue,
