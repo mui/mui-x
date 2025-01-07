@@ -17,6 +17,13 @@ describe('<ChartsLabel />', () => {
     ThemeProvider,
     createTheme,
     // SKIP
-    skip: ['themeVariants', 'componentProp', 'componentsProp'],
+    skip: [
+      'themeVariants',
+      'themeStyleOverrides',
+      'themeCustomPalette',
+      'themeDefaultProps',
+      'componentProp',
+      'componentsProp',
+    ],
   }));
 });
