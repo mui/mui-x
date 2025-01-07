@@ -1,5 +1,5 @@
 import * as React from 'react';
-import addYears from 'date-fns/addYears';
+import { addYears } from 'date-fns/addYears';
 import { expect } from 'chai';
 import { createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import { DataGridPremium } from '@mui/x-data-grid-premium';
