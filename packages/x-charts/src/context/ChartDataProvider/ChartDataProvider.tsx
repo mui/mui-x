@@ -6,12 +6,10 @@ import { AnimationProvider, AnimationProviderProps } from '../AnimationProvider'
 import { ZAxisContextProvider, ZAxisContextProviderProps } from '../ZAxisContextProvider';
 import { HighlightedProvider, HighlightedProviderProps } from '../HighlightedProvider';
 import { ChartProvider, ChartProviderProps } from '../ChartProvider';
-// import {
-//   useChartCartesianAxis,
-//   UseChartCartesianAxisSignature,
-// } from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { ChartSeriesType } from '../../models/seriesType/config';
 import { ChartAnyPluginSignature } from '../../internals/plugins/models/plugin';
+import { UseChartCartesianAxisSignature } from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { UseChartInteractionSignature } from '../../internals/plugins/featurePlugins/useChartInteraction';
 
 export type ChartDataProviderProps<
   TSignatures extends readonly ChartAnyPluginSignature[],
@@ -55,7 +53,10 @@ export type ChartDataProviderProps<
  * ```
  */
 function ChartDataProvider<
-  TSignatures extends readonly ChartAnyPluginSignature[],
+  TSignatures extends readonly ChartAnyPluginSignature[] = [
+    UseChartCartesianAxisSignature,
+    UseChartInteractionSignature,
+  ],
   TSeries extends ChartSeriesType = ChartSeriesType,
 >(props: ChartDataProviderProps<TSignatures, TSeries>) {
   const {
