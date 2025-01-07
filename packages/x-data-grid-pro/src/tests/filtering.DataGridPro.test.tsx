@@ -1,3 +1,7 @@
+import * as React from 'react';
+import { createRenderer, fireEvent, screen, act, within, waitFor } from '@mui/internal-test-utils';
+import { expect } from 'chai';
+import { spy } from 'sinon';
 import {
   getDefaultGridFilterModel,
   GridApi,
@@ -18,10 +22,6 @@ import {
   getGridStringOperators,
   GridFilterItem,
 } from '@mui/x-data-grid-pro';
-import { createRenderer, fireEvent, screen, act, within } from '@mui/internal-test-utils';
-import { expect } from 'chai';
-import * as React from 'react';
-import { spy } from 'sinon';
 import { getColumnHeaderCell, getColumnValues, getSelectInput, grid } from 'test/utils/helperFn';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
@@ -1180,6 +1180,53 @@ describe('<DataGridPro /> - Filter', () => {
       expect(getRows({ operator: 'is', value: undefined })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operator: 'is', value: null })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operator: 'is', value: 'test' })).to.deep.equal(ALL_ROWS); // Ignores invalid values
+    });
+
+    it('should allow temporary invalid values while updating the number filter', async () => {
+      clock.restore();
+      const changeSpy = spy();
+      const { user } = render(
+        <TestCase
+          rows={[
+            { id: 1, amount: -10 },
+            { id: 2, amount: 10 },
+            { id: 3, amount: 100 },
+            { id: 4, amount: 1000 },
+          ]}
+          columns={[{ field: 'amount', type: 'number' }]}
+          headerFilters
+          onFilterModelChange={changeSpy}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['-10', '10', '100', '1,000']);
+
+      const filterCell = getColumnHeaderCell(0, 1);
+      await user.click(within(filterCell).getByLabelText('Operator'));
+      await user.click(screen.getByRole('menuitem', { name: 'Greater than' }));
+
+      const input = within(filterCell).getByLabelText('Greater than');
+      await user.click(input);
+      expect(input).toHaveFocus();
+
+      await user.keyboard('0');
+      await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['10', '100', '1,000']));
+      expect(changeSpy.lastCall.args[0].items[0].value).to.equal(0);
+
+      await user.keyboard('.');
+      await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['10', '100', '1,000']));
+      expect(changeSpy.lastCall.args[0].items[0].value).to.equal(0); // 0.
+
+      await user.keyboard('1');
+      await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['10', '100', '1,000']));
+      await waitFor(() => expect(changeSpy.lastCall.args[0].items[0].value).to.equal(0.1)); // 0.1
+
+      await user.keyboard('e');
+      await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['-10', '10', '100', '1,000']));
+      expect(changeSpy.lastCall.args[0].items[0].value).to.equal(undefined); // 0.1e
+
+      await user.keyboard('2');
+      await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['100', '1,000']));
+      expect(changeSpy.lastCall.args[0].items[0].value).to.equal(10); // 0.1e2
     });
   });
 

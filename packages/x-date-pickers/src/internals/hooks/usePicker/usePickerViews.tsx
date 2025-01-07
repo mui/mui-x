@@ -118,7 +118,17 @@ export interface UsePickerViewsResponse<TView extends DateOrTimeViewWithMeridiem
   provider: UsePickerViewsProviderParams<TView>;
 }
 
-export interface UsePickerViewsContextValue<TView extends DateOrTimeViewWithMeridiem> {
+export interface UsePickerViewsActionsContextValue<TView extends DateOrTimeViewWithMeridiem> {
+  /**
+   * Set the current view.
+   * @template TView
+   * @param {TView} view The view to render
+   */
+  setView: (view: TView) => void;
+}
+
+export interface UsePickerViewsContextValue<TView extends DateOrTimeViewWithMeridiem>
+  extends UsePickerViewsActionsContextValue<TView> {
   /**
    * Available views.
    */
@@ -127,18 +137,13 @@ export interface UsePickerViewsContextValue<TView extends DateOrTimeViewWithMeri
    * View currently rendered.
    */
   view: TView | null;
-  /**
-   * Callback called when the view to render changes
-   * @template TView
-   * @param {TView} view The view to render
-   */
-  onViewChange: (view: TView) => void;
 }
 
 export interface UsePickerViewsProviderParams<TView extends DateOrTimeViewWithMeridiem> {
   hasUIView: boolean;
   views: readonly TView[];
   contextValue: UsePickerViewsContextValue<TView>;
+  actionsContextValue: UsePickerViewsActionsContextValue<TView>;
 }
 
 /**
@@ -256,19 +261,25 @@ export const usePickerViews = <
     setFocusedView(newView, true);
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const actionsContextValue = React.useMemo<UsePickerViewsActionsContextValue<TView>>(
+    () => ({ setView }),
+    [setView],
+  );
+
   const contextValue = React.useMemo<UsePickerViewsContextValue<TView>>(
     () => ({
+      ...actionsContextValue,
       views,
       view: popperView,
-      onViewChange: setView,
     }),
-    [views, popperView, setView],
+    [actionsContextValue, views, popperView],
   );
 
   const providerParams: UsePickerViewsProviderParams<TView> = {
     hasUIView,
     views,
     contextValue,
+    actionsContextValue,
   };
 
   return {

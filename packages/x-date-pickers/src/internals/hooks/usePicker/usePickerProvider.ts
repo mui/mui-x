@@ -128,11 +128,19 @@ export function usePickerProvider<
     [paramsFromUsePickerValue, ownerState],
   );
 
+  const actionsContextValue = React.useMemo(
+    () => ({
+      ...paramsFromUsePickerValue.actionsContextValue,
+      ...paramsFromUsePickerViews.actionsContextValue,
+    }),
+    [paramsFromUsePickerValue.actionsContextValue, paramsFromUsePickerViews.actionsContextValue],
+  );
+
   return {
     localeText,
     contextValue,
     privateContextValue,
-    actionsContextValue: paramsFromUsePickerValue.actionsContextValue,
+    actionsContextValue,
     isValidContextValue: paramsFromUsePickerValue.isValidContextValue,
   };
 }

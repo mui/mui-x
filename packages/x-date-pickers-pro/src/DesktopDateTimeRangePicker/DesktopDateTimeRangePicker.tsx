@@ -13,7 +13,6 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { PickerOwnerState } from '@mui/x-date-pickers/models';
-import { PickerLayoutOwnerState } from '@mui/x-date-pickers/PickersLayout';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { refType } from '@mui/utils';
 import {
@@ -26,7 +25,6 @@ import {
 } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import Divider from '@mui/material/Divider';
 import { digitalClockClasses } from '@mui/x-date-pickers/DigitalClock';
-import type { PickersActionBarAction } from '@mui/x-date-pickers/PickersActionBar';
 import { DesktopDateTimePickerLayout } from '@mui/x-date-pickers/DesktopDateTimePicker';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopDateTimeRangePickerProps } from './DesktopDateTimeRangePicker.types';
@@ -136,8 +134,6 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
   const views = !shouldHoursRendererContainMeridiemView
     ? defaultizedProps.views.filter((view) => view !== 'meridiem')
     : defaultizedProps.views;
-  const actionBarActions: PickersActionBarAction[] =
-    defaultizedProps.shouldRenderTimeInASingleColumn ? [] : ['accept'];
 
   const props = {
     ...defaultizedProps,
@@ -167,10 +163,6 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
         hidden: true,
         ...defaultizedProps.slotProps?.toolbar,
       },
-      actionBar: (ownerState: PickerLayoutOwnerState) => ({
-        actions: actionBarActions,
-        ...resolveComponentProps(defaultizedProps.slotProps?.actionBar, ownerState),
-      }),
     },
   };
 
@@ -213,8 +205,8 @@ DesktopDateTimeRangePicker.propTypes = {
   calendars: PropTypes.oneOf([1, 2, 3]),
   className: PropTypes.string,
   /**
-   * If `true`, the popover or modal will close after submitting the full date.
-   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * If `true`, the Picker will close after submitting the full date.
+   * @default false
    */
   closeOnSelect: PropTypes.bool,
   /**
