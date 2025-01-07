@@ -12,6 +12,7 @@ import {
   getColumnValues,
   getRows,
   getColumnHeaderCell,
+  sleep,
 } from 'test/utils/helperFn';
 import {
   GridRowModel,
@@ -182,22 +183,16 @@ describe('<DataGridPro /> - Rows', () => {
     });
 
     it('should allow to enable throttle', async () => {
-      render(<TestCase throttleRowsMs={100} />);
+      render(<TestCase throttleRowsMs={200} />);
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       await act(() => apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]));
 
-      await waitFor(
-        () => {
-          expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-        },
-        { timeout: 50, interval: 50 },
-      );
-      await waitFor(
-        () => {
-          expect(getColumnValues(0)).to.deep.equal(['Nike', 'Fila', 'Puma']);
-        },
-        { timeout: 100, interval: 100 },
-      );
+      await sleep(100);
+      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Nike', 'Fila', 'Puma']);
+      });
     });
 
     it('should allow to update row data', () => {
@@ -374,7 +369,7 @@ describe('<DataGridPro /> - Rows', () => {
     });
 
     it('should allow to enable throttle', async () => {
-      render(<TestCase throttleRowsMs={100} />);
+      render(<TestCase throttleRowsMs={200} />);
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       const newRows = [
         {
@@ -384,18 +379,13 @@ describe('<DataGridPro /> - Rows', () => {
       ];
       await act(() => apiRef.current.setRows(newRows));
 
-      await waitFor(
-        () => {
-          expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-        },
-        { timeout: 55, interval: 55 },
-      );
-      await waitFor(
-        () => {
-          expect(getColumnValues(0)).to.deep.equal(['Asics']);
-        },
-        { timeout: 100, interval: 100 },
-      );
+      await sleep(100);
+
+      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Asics']);
+      });
     });
 
     it('should work with `loading` prop change', async () => {

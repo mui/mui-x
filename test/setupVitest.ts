@@ -10,8 +10,9 @@ import * as testingLibrary from '@testing-library/dom';
 // @ts-ignore
 globalThis.vi = vi;
 
-// @ts-ignore
-globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+// Enable missing act warnings: https://github.com/reactwg/react-18/discussions/102
+(globalThis as any).jest = null;
+(globalThis as any).IS_REACT_ACT_ENVIRONMENT = true;
 
 let licenseKey: string = '';
 
