@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { PickerValidDate } from '../../../../models';
-import { GenericHTMLProps } from '../../base-utils/types';
-import { mergeReactProps } from '../../base-utils/mergeReactProps';
-import { CalendarDaysGridBodyContext } from '../../utils/base-calendar/days-grid-body/BaseCalendarDaysGridBodyContext';
+import { PickerValidDate } from '../../../../../models';
+import { GenericHTMLProps } from '../../../base-utils/types';
+import { mergeReactProps } from '../../../base-utils/mergeReactProps';
+import { BaseCalendarDaysGridBodyContext } from '../days-grid-body/BaseCalendarDaysGridBodyContext';
 
-export function useCalendarDaysWeekRow(parameters: useCalendarDaysWeekRow.Parameters) {
+export function useBaseCalendarDaysWeekRow(parameters: useBaseCalendarDaysWeekRow.Parameters) {
   const { children, ctx } = parameters;
   const ref = React.useRef(null);
   const dayCellRefs = React.useRef<(HTMLElement | null)[]>([]);
@@ -32,10 +32,10 @@ export function useCalendarDaysWeekRow(parameters: useCalendarDaysWeekRow.Parame
   );
 }
 
-export namespace useCalendarDaysWeekRow {
+export namespace useBaseCalendarDaysWeekRow {
   export interface Parameters {
     value: PickerValidDate;
-    ctx: useCalendarDaysWeekRow.Context;
+    ctx: useBaseCalendarDaysWeekRow.Context;
     children?: (parameters: ChildrenParameters) => React.ReactNode;
   }
 
@@ -43,7 +43,7 @@ export namespace useCalendarDaysWeekRow {
     days: PickerValidDate[];
   }
 
-  export interface Context extends Pick<CalendarDaysGridBodyContext, 'registerWeekRowCells'> {
+  export interface Context extends Pick<BaseCalendarDaysGridBodyContext, 'registerWeekRowCells'> {
     days: PickerValidDate[];
     rowIndex: number;
   }

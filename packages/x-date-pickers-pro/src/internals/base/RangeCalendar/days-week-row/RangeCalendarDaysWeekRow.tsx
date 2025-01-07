@@ -1,10 +1,15 @@
 'use client';
 import * as React from 'react';
-import { useBaseCalendarDaysWeekRow } from '../../utils/base-calendar/days-week-row/useBaseCalendarDaysWeekRow';
-import { BaseUIComponentProps } from '../../base-utils/types';
-import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
-import { CompositeList } from '../../composite/list/CompositeList';
-import { useBaseCalendarDaysWeekRowWrapper } from '../../utils/base-calendar/days-week-row/useBaseCalendarDaysWeekRowWrapper';
+// eslint-disable-next-line no-restricted-imports
+import { useBaseCalendarDaysWeekRow } from '@mui/x-date-pickers/internals/base/utils/base-calendar/days-week-row/useBaseCalendarDaysWeekRow';
+// eslint-disable-next-line no-restricted-imports
+import { useBaseCalendarDaysWeekRowWrapper } from '@mui/x-date-pickers/internals/base/utils/base-calendar/days-week-row/useBaseCalendarDaysWeekRowWrapper';
+// eslint-disable-next-line no-restricted-imports
+import { BaseUIComponentProps } from '@mui/x-date-pickers/internals/base/base-utils/types';
+// eslint-disable-next-line no-restricted-imports
+import { useComponentRenderer } from '@mui/x-date-pickers/internals/base/base-utils/useComponentRenderer';
+// eslint-disable-next-line no-restricted-imports
+import { CompositeList } from '@mui/x-date-pickers/internals/base/composite/list/CompositeList';
 
 const InnerCalendarDaysWeekRow = React.forwardRef(function CalendarDaysGrid(
   props: InnerCalendarDaysWeekRowProps,
