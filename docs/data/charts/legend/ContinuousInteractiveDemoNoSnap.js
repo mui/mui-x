@@ -29,7 +29,6 @@ export default function ContinuousInteractiveDemoNoSnap() {
           knob: 'number',
           defaultValue: 50,
           min: 10,
-          max: 80,
         },
         {
           propName: 'thickness',
@@ -92,7 +91,7 @@ export default function ContinuousInteractiveDemoNoSnap() {
               reverseGradient: props.reverseGradient,
               sx: {
                 [props.direction === 'horizontal' ? 'width' : 'height']:
-                  `${props.length}%`,
+                  `${props.length}${props.direction === 'horizontal' ? '%' : 'px'}`,
               },
             },
           }}
@@ -118,7 +117,7 @@ import { ContinuousColorLegend } from '@mui/x-charts/ChartsLegend';
       thickness: ${props.thickness},
       labelPosition: '${props.labelPosition}',
       reverseGradient: ${props.reverseGradient},
-      sx: { ${props.direction === 'horizontal' ? 'width' : 'height'}: '${props.length}%' },
+      sx: { ${props.direction === 'horizontal' ? 'width' : 'height'}: '${props.length}${props.direction === 'horizontal' ? '%' : 'px'}' },
     },
   }}
 />
