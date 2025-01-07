@@ -20,7 +20,7 @@ The user can use the `<Calendar.DaysGrid />`, `<Calendar.DaysGridHeader />`, `<C
 ```tsx
 import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
-<Calendar.Root value={value} onChange={setValue}>
+<Calendar.Root value={value} onValueChange={setValue}>
   {({ visibleMonth }) => (
     <React.Fragment>
       <div>
@@ -80,12 +80,12 @@ The user can use the `<Calendar.MonthsList />` and `<Calendar.MonthsCell />` com
 ```tsx
 import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
-<Calendar.Root value={value} onChange={setValue}>
+<Calendar.Root value={value} onValueChange={setValue}>
   {({ visibleMonth }) => (
     <React.Fragment>
       <div>
         <Calendar.SetVisibleYear target="previous">◀</Calendar.SetVisibleYear>
-        {visibleMonth.format('YYYY')}}
+        {visibleMonth.format('YYYY')}
         <Calendar.SetVisibleYear target="next">▶</Calendar.SetVisibleYear>
       </div>
       <Calendar.MonthsList>
@@ -102,29 +102,23 @@ import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
 #### Grid layout
 
-The user can use the `<Calendar.MonthsGrid />`, `<Calendar.MonthsRow />` and `<Calendar.MonthsCell />` components to create a grid of months and utility components like `<Calendar.SetVisibleYear />` to create a header to navigate across the years:
+The user can use the `<Calendar.MonthsGrid />` and `<Calendar.MonthsCell />` components to create a grid of months and utility components like `<Calendar.SetVisibleYear />` to create a header to navigate across the years:
 
 ```tsx
 import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
-<Calendar.Root value={value} onChange={setValue}>
+<Calendar.Root value={value} onValueChange={setValue}>
   {({ visibleMonth }) => (
     <React.Fragment>
       <div>
         <Calendar.SetVisibleYear target="previous">◀</Calendar.SetVisibleYear>
-        {visibleMonth.format('YYYY')}}
+        {visibleMonth.format('YYYY')}
         <Calendar.SetVisibleYear target="next">▶</Calendar.SetVisibleYear>
       </div>
-      <Calendar.MonthsGrid>
-        {({ rows }) =>
-          rows.map((row) => (
-            <Calendar.MonthsRow value={row} key={row.toString()}>
-              {({ months }) =>
-                months.map((month) => (
-                  <Calendar.MonthsCell value={month} key={month.toString()} />
-                ))
-              }
-            </Calendar.MonthsRow>
+      <Calendar.MonthsGrid cellsPerRow={2}>
+        {({ months }) =>
+          months.map((month) => (
+            <Calendar.MonthsCell value={month} key={month.toString()} />
           ))
         }
       </Calendar.MonthsGrid>
@@ -163,7 +157,7 @@ The user can use the `<Calendar.YearsList />` and `<Calendar.YearsCell />` compo
 ```tsx
 import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
-<Calendar.Root value={value} onChange={setValue}>
+<Calendar.Root value={value} onValueChange={setValue}>
   <Calendar.YearsList>
     {({ years }) =>
       years.map((year) => <Calendar.YearsCell value={year} key={year.toString()} />)
@@ -174,25 +168,17 @@ import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
 #### Grid layout
 
-The user can use the `<Calendar.YearsGrid />`, `<Calendar.YearsRow />` and `<Calendar.YearsCell />` components to create a grid of years:
+The user can use the `<Calendar.YearsGrid />` and `<Calendar.YearsCell />` components to create a grid of years:
 
 ```tsx
 import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
-<Calendar.Root value={value} onChange={setValue}>
-  <Calendar.YearsGrid>
-    {({ rows }) =>
-      rows.map((row) => (
-        <Calendar.YearsRow value={row} key={row.toString()}>
-          {({ years }) =>
-            years.map((year) => (
-              <Calendar.YearsCell value={year} key={year.toString()} />
-            ))
-          }
-        </Calendar.YearsRow>
-      ))
+<Calendar.Root value={value} onValueChange={setValue}>
+  <Calendar.YearsGrid cellsPerRow={3}>
+    {({ years }) =>
+      years.map((year) => <Calendar.YearsCell value={year} key={year.toString()} />)
     }
-  </Calendar.YearsList>
+  </Calendar.YearsGrid>
 </Calendar.Root>;
 ```
 
@@ -222,43 +208,68 @@ Once the `Calendar.*` unstyled component is ready, the `<YearCalendar />` should
 ```tsx
 import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
-<Calendar.Root value={value} onChange={setValue}>
-  <div>{/** See calendar header documentation */}</div>
-  <Calendar.DaysGrid>
-    <Calendar.DaysGridHeader>
-      {({ days }) =>
-        days.map((day) => (
-          <Calendar.DaysGridHeaderCell value={day} key={day.toString()} />
-        ))
-      }
-    </Calendar.DaysGridHeader>
-    <Calendar.DaysGridBody>
-      {({ weeks }) =>
-        weeks.map((week) => (
-          <Calendar.DaysWeekRow value={week} key={week.toString()}>
+function DateCalendar() {
+  const [value, setValue] = React.useState(null);
+  const [activeSection, setActiveSection] = React.useState<'day' | 'month' | 'year'>(
+    'day',
+  );
+
+  const handleValueChange = (newValue, context) => {
+    if (context.section === 'month' || context.section === 'year') {
+      setActiveSection('day');
+    }
+
+    setValue(newValue);
+  };
+
+  return (
+    <Calendar.Root value={value} onValueChange={handleValueChange}>
+      <div>{/** See calendar header documentation */}</div>
+      {activeSection === 'day' && (
+        <Calendar.DaysGrid>
+          <Calendar.DaysGridHeader>
             {({ days }) =>
               days.map((day) => (
-                <Calendar.DaysCell value={day} key={day.toString()} />
+                <Calendar.DaysGridHeaderCell value={day} key={day.toString()} />
               ))
             }
-          </Calendar.DaysWeekRow>
-        ))
-      }
-    </Calendar.DaysGridBody>
-  </Calendar.DaysGrid>
-  <Calendar.MonthsList>
-    {({ months }) =>
-      months.map((month) => (
-        <Calendar.MonthsCell value={month} key={month.toString()} />
-      ))
-    }
-  </Calendar.MonthsList>
-  <Calendar.YearsList>
-    {({ years }) =>
-      years.map((year) => <Calendar.YearsCell value={year} key={year.toString()} />)
-    }
-  </Calendar.YearsList>
-</Calendar.Root>;
+          </Calendar.DaysGridHeader>
+          <Calendar.DaysGridBody>
+            {({ weeks }) =>
+              weeks.map((week) => (
+                <Calendar.DaysWeekRow value={week} key={week.toString()}>
+                  {({ days }) =>
+                    days.map((day) => (
+                      <Calendar.DaysCell value={day} key={day.toString()} />
+                    ))
+                  }
+                </Calendar.DaysWeekRow>
+              ))
+            }
+          </Calendar.DaysGridBody>
+        </Calendar.DaysGrid>
+      )}
+      {activeSection === 'month' && (
+        <Calendar.MonthsList>
+          {({ months }) =>
+            months.map((month) => (
+              <Calendar.MonthsCell value={month} key={month.toString()} />
+            ))
+          }
+        </Calendar.MonthsList>
+      )}
+      {activeSection === 'year' && (
+        <Calendar.YearsList>
+          {({ years }) =>
+            years.map((year) => (
+              <Calendar.YearsCell value={year} key={year.toString()} />
+            ))
+          }
+        </Calendar.YearsList>
+      )}
+    </Calendar.Root>
+  );
+}
 ```
 
 ### With Material UI
@@ -283,7 +294,7 @@ When MD3 is supported, the default views of `<DateCalendar />` should probably b
 
 ### Without Material UI
 
-The user can use the `<Calendar.SetVisibleMonth />` and `<Calendar.SetActiveSection />` to build basically any kind of header they could think of:
+The user can use the `<Calendar.SetVisibleMonth />` to build basically any kind of header they could think of:
 
 #### Very basic header (without month and year UI)
 
@@ -311,17 +322,23 @@ import {
   useCalendarContext,
 } from '@base-ui-components/react-x-date-pickers/calendar';
 
-function CalendarHeader() {
-  const { visibleMonth, activeSection } = useCalendarContext();
+function CalendarHeader(props: {
+  activeSection: 'day' | 'month' | 'year';
+  onActiveSectionChange: (activeSection: 'day' | 'month' | 'year') => void;
+}) {
+  const { activeSection, onActiveSectionChange } = props;
+  const { visibleMonth } = useCalendarContext();
 
   return (
     <div>
-      <Calendar.SetActiveSection
-        target={activeSection === 'year' ? 'month' : 'year'}
+      <div
+        onClick={() =>
+          onActiveSectionChange(activeSection === 'year' ? 'month' : 'year')
+        }
       >
         {visibleMonth.format('MMMM YYYY')}
         {activeSection === 'year' ? '▲' : '▼'}
-      </Calendar.SetActiveSection>
+      </div>
       {activeSection === 'day' && (
         <div>
           <Calendar.SetVisibleMonth target="previous">◀</Calendar.SetVisibleMonth>
@@ -333,13 +350,36 @@ function CalendarHeader() {
 }
 ```
 
+The `activeSection` and `onActiveSectionChange` needs to be passed by the parent component:
+
+```tsx
+function DateCalendar() {
+  const [activeSection, setActiveSection] = React.useState<'day' | 'month' | 'year'>(
+    'day',
+  );
+  return (
+    <Calendar.Root>
+      <Header
+        activeSection={activeSection}
+        onActiveSectionChange={setActiveSection}
+      />
+      {/** Rest of the UI */}
+    </Calendar.Root>
+  );
+}
+```
+
 #### MD3 header
 
 ```tsx
 import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
-function CalendarHeader() {
-  const { visibleMonth, activeSection } = useCalendarContext();
+function CalendarHeader(props: {
+  activeSection: 'day' | 'month' | 'year';
+  onActiveSectionChange: (activeSection: 'day' | 'month' | 'year') => void;
+}) {
+  const { activeSection, onActiveSectionChange } = props;
+  const { visibleMonth } = useCalendarContext();
 
   return (
     <div>
@@ -347,12 +387,14 @@ function CalendarHeader() {
         {activeSection === 'day' && (
           <Calendar.SetVisibleMonth target="previous">◀</Calendar.SetVisibleMonth>
         )}
-        <Calendar.SetActiveSection
-          target={activeSection === 'year' ? 'day' : 'year'}
+        <button
+          onClick={() =>
+            onActiveSectionChange(activeSection === 'year' ? 'day' : 'year')
+          }
           disabled={activeSection === 'month'}
         >
-          {visibleMonth.format('MMMM')}}
-        </Calendar.SetActiveSection>
+          {visibleMonth.format('MMMM')}
+        </button>
         {activeSection === 'day' && (
           <Calendar.SetVisibleMonth target="next">▶</Calendar.SetVisibleMonth>
         )}
@@ -361,12 +403,14 @@ function CalendarHeader() {
         {activeSection === 'day' && (
           <Calendar.SetVisibleYear target="previous">◀</Calendar.SetVisibleYear>
         )}
-        <Calendar.SetActiveSection
-          target={activeSection === 'month' ? 'day' : 'month'}
+        <button
+          onClick={() =>
+            onActiveSectionChange(activeSection === 'month' ? 'day' : 'month')
+          }
           disabled={activeSection === 'year'}
         >
-          {visibleMonth.format('YYYY')}}
-        </Calendar.SetActiveSection>
+          {visibleMonth.format('YYYY')}
+        </button>
         {activeSection === 'day' && (
           <Calendar.SetVisibleYear target="next">▶</Calendar.SetVisibleYear>
         )}
@@ -582,7 +626,7 @@ function CalendarGrid({ offset }) {
   );
 }
 
-<Calendar.Root value={value} onChange={setValue}>
+<Calendar.Root value={value} onValueChange={setValue}>
   <div>{/** See demo below for the navigation with multiple months */}</div>
   <div>
     <CalendarGrid offset={0} />
@@ -659,16 +703,16 @@ This is currently not doable.
 
 ### Without Material UI
 
-The user can use the `<Calendar.DaysGridWeekNumberHeaderCell />` and `<Calendar.DaysGridWeekNumberCell />` components to add a column to the grid:
+The user can add custom elements to add the week number to the grid:
 
 ```tsx
 <Calendar.DaysGrid>
   <Calendar.DaysGridHeader>
     {({ days }) => (
       <React.Fragment>
-        <Calendar.DaysGridWeekNumberHeaderCell>
+        <span role="columnheader" aria-label="Week number">
           #
-        </Calendar.DaysGridWeekNumberHeaderCell>
+        </span>
         {days.map((day) => (
           <Calendar.DaysGridHeaderCell value={day} key={day.toString()} />
         ))}
@@ -681,7 +725,9 @@ The user can use the `<Calendar.DaysGridWeekNumberHeaderCell />` and `<Calendar.
         <Calendar.DaysWeekRow value={week} key={week.toString()}>
           {({ days }) => (
             <React.Fragment>
-              <Calendar.DaysGridWeekNumberCell />
+              <span role="rowheader" aria-label={`Week ${days[0].week()}`}>
+                {days[0].week()}
+              </span>
               {days.map((day) => (
                 <Calendar.DaysCell value={day} key={day.toString()} />
               ))}
@@ -718,9 +764,9 @@ Top level component that wraps the other components.
 
 - Extends `React.HTMLAttributes<HTMLDivElement>`
 
-- **Value props**: `value`, `defaultValue`, `referenceDate`, `onChange`, `onError` and `timezone`.
+- **Value props**: `value`, `defaultValue`, `referenceDate`, `onValueChange`, `onError` and `timezone`.
 
-  Same typing and behavior as today.
+  Same typing and behavior as today (just `onChange` becomes `onValueChange`)
 
 - **Validation props**: `maxDate`, `minDate`, `disableFuture`, `disablePast`, `shouldDisableDate`, `shouldDisableMonth`, `shouldDisableYear`.
 
@@ -759,20 +805,6 @@ That way, users only have to pass the props specific to the calendar to the `Cal
 
 :::
 
-### `Calendar.ContextValue`
-
-Utility component to access the calendar public context.
-Doesn't render a DOM node (it does not have a `render` prop either).
-
-:::success
-The user can also use `useCalendarContext()`, but a component allows to not create a dedicated component to access things close from `<Calendar.Root />`
-We should probably start without it and add it if we feel the need.
-:::
-
-#### Props
-
-- `children`: `(contextValue: CalendarContextValue) => React.ReactNode`
-
 ### `Calendar.SetVisibleMonth`
 
 Renders a button to go to the previous or the next month.
@@ -782,7 +814,7 @@ It does not modify the value it only navigates to the target month.
 
 - Extends `React.HTMLAttributes<HTMLButtonElement>`
 
-- `target`: `'previous' | 'next'`
+- `target`: `'previous' | 'next' | PickerValidDate`
 
 :::success
 TODO: Clarify the behavior when multiple calendars are rendered at once.
@@ -797,21 +829,11 @@ It does not modify the value it only navigates to the target year.
 
 - Extends `React.HTMLAttributes<HTMLButtonElement>`
 
-- `target`: `'previous' | 'next'`
+- `target`: `'previous' | 'next' | PickerValidDate`
 
 :::success
 TODO: Clarify the behavior when multiple calendars are rendered at once.
 :::
-
-### `Calendar.SetActiveSection`
-
-Renders a button to set the active section.
-
-#### Props
-
-- Extends `React.HTMLAttributes<HTMLButtonELement>`
-
-- `target`: `"day" | "month" | "year"` - **required**
 
 ### `Calendar.DaysGrid`
 
@@ -844,24 +866,6 @@ It expects a function as its children, which receives the list of days to render
 - Extends `React.HTMLAttributes<HTMLDivElement>`
 
 - `children`: `(params: { days: PickerValidDate[] }) => React.ReactNode`
-
-### `Calendar.DaysGridHeaderCell`
-
-Renders the header of a day in the week.
-
-#### Props
-
-- Extends `React.HTMLAttributes<HTMLSpanElement>`
-
-- `value`: `PickerValidDate` - **required**.
-
-### `Calendar.DaysGridWeekNumberHeaderCell`
-
-Renders the header of the week number column.
-
-#### Props
-
-- Extends `React.HTMLAttributes<HTMLSpanElement>`
 
 ### `Calendar.DaysGridBody`
 
@@ -915,12 +919,6 @@ Renders the cell for a single day.
 
 - `value`: `PickerValidDate` - **required**
 
-### `Calendar.DaysGridWeekNumberCell`
-
-Renders the number of the current week.
-
-- Extends `React.HTMLAttributes<HTMLParagraphElement>`
-
 ### `Calendar.MonthsList`
 
 Top level component to pick a month.
@@ -953,12 +951,14 @@ This component takes care of the keyboard navigation (for example <kbd class="ke
 
 Top level component to pick a month, when the layout is a grid.
 
-It expects a function as its children, which receives the list of rows to render as a parameter:
+It expects a function as its children, which receives the list of months to render as a parameter:
 
 ```tsx
-<Calendar.MonthsGrid>
-  {({ rows }) =>
-    rows.map((row) => <Calendar.MonthsRow value={row} key={row.toString()} />)
+<Calendar.MonthsGrid cellsPerRow={2}>
+  {({ months }) =>
+    months.map((month) => (
+      <Calendar.MonthsCell value={month} key={month.toString()} />
+    ))
   }
 </Calendar.MonthsGrid>
 ```
@@ -967,35 +967,11 @@ It expects a function as its children, which receives the list of rows to render
 
 - Extends `React.HTMLAttributes<HTMLDivElement>`
 
-- `children`: `(params: { rows: PickerValidDate[] }) => React.ReactNode`
-
-- `itemsOrder`: `'asc' | 'desc'`, default: `'asc'`.
-
-- `itemsPerRow`: `number` **required**.
-
-- `alwaysVisible`: `boolean`, default: `false`. By default this component is only rendered when the active section is `"month"`.
-
-### `Calendar.MonthsRow`
-
-Renders a row of months.
-
-It expects a function as its children, which receives the list of months to render as a parameter:
-
-```tsx
-<Calendar.MonthsRow>
-  {({ months }) =>
-    months.map((month) => (
-      <Calendar.MonthsCell value={month} key={month.toString()} />
-    ))
-  }
-</Calendar.MonthsRow>
-```
-
-#### Props
-
-- Extends `React.HTMLAttributes<HTMLDivElement>`
-
 - `children`: `(params: { months: PickerValidDate[] }) => React.ReactNode`
+
+- `cellsOrder`: `'asc' | 'desc'`, default: `'asc'`.
+
+- `cellsPerRow`: `number` **required**.
 
 ### `Calendar.MonthsCell`
 
@@ -1029,20 +1005,18 @@ This component takes care of the keyboard navigation (for example <kbd class="ke
 
 - `children`: `(params: { years: PickerValidDate[] }) => React.ReactNode`
 
-- `itemsOrder`: `'asc' | 'desc'`, default: `'asc'`.
-
-- `alwaysVisible`: `boolean`, default: `false`. By default this component is only rendered when the active section is `"year"`.
+- `cellsOrder`: `'asc' | 'desc'`, default: `'asc'`.
 
 ### `Calendar.YearsGrid`
 
 Top level component to pick a year when the layout is a grid.
 
-It expects a function as its children, which receives the list of rows to render as a parameter:
+It expects a function as its children, which receives the list of years to render as a parameter:
 
 ```tsx
-<Calendar.YearsGrid>
-  {({ rows }) =>
-    rows.map((row) => <Calendar.YearsRow value={row} key={row.toString()} />)
+<Calendar.YearsGrid cellsPerRo={3}>
+  {({ years }) =>
+    years.map((year) => <Calendar.YearsCell value={year} key={year.toString()} />)
   }
 </Calendar.YearsGrid>
 ```
@@ -1051,33 +1025,11 @@ It expects a function as its children, which receives the list of rows to render
 
 - Extends `React.HTMLAttributes<HTMLDivElement>`
 
-- `children`: `(params: { rows: PickerValidDate[] }) => React.ReactNode`
-
-- `itemsOrder`: `'asc' | 'desc'`, default: `'asc'`.
-
-- `itemsPerRow`: `number` **required**.
-
-- `alwaysVisible`: `boolean`, default: `false`. By default this component is only rendered when the active section is `"year"`.
-
-### `Calendar.YearsRow`
-
-Renders a row of years.
-
-It expects a function as its children, which receives the list of years to render as a parameter:
-
-```tsx
-<Calendar.YearsRow>
-  {({ years }) =>
-    years.map((year) => <Calendar.YearsCell value={year} key={year.toString()} />)
-  }
-</Calendar.YearsRow>
-```
-
-#### Props
-
-- Extends `React.HTMLAttributes<HTMLDivElement>`
-
 - `children`: `(params: { years: PickerValidDate[] }) => React.ReactNode`
+
+- `cellsOrder`: `'asc' | 'desc'`, default: `'asc'`.
+
+- `cellsPerRow`: `number` **required**.
 
 ### `Calendar.YearsCell`
 
