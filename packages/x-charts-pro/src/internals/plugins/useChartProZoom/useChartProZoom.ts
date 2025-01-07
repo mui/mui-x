@@ -396,7 +396,9 @@ useChartProZoom.getInitialState = (params) => {
     zoom: {
       optionsLookup: params.optionsLookup,
       zoomData:
-        params.initialZoom === undefined ? initializeZoomData(params.optionsLookup) : params.initialZoom,
+        params.initialZoom === undefined
+          ? initializeZoomData(params.optionsLookup)
+          : params.initialZoom,
       isInteracting: false,
     },
   };

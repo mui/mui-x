@@ -44,7 +44,10 @@ const selectorChartZoomMap = createSelector(
   (zoom) => zoom?.zoomData && createZoomMap(zoom?.zoomData),
 );
 
-const selectorChartZoomOptionsLookup = createSelector(selectorChartZoomState, (zoom) => zoom?.optionsLookup);
+const selectorChartZoomOptionsLookup = createSelector(
+  selectorChartZoomState,
+  (zoom) => zoom?.optionsLookup,
+);
 
 const selectorChartXFilter = createSelector(
   [
