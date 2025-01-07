@@ -24,7 +24,7 @@ In order to fully customize the legend with custom components, see an example at
 
 Much of the customization can be done using CSS properties.
 There is a main class for the legend container, `.MuiChartsLegend-root`.
-Alternatively the `legendClasses` variable can be used if using CSS in JS to target the elements.
+Alternatively the `legendClasses` variable can be used if using CSS-in-JS to target the elements.
 
 Each legend item is composed of two main elements: the `mark` and the `label`.
 
@@ -45,7 +45,8 @@ It can also be moved with the `position: { vertical, horizontal }` property whic
 By default, the legend is placed above the charts.
 
 :::warning
-This property is only available in the `slotProps`, but not in the `<ChartsLegend />` component itself, since the chart wrapper is responsible for the layout.
+The `position` property is only available in the `slotProps`, but not in the `<ChartsLegend />`.
+In the second case, you are free to place the legend where you want.
 :::
 
 {{"demo": "LegendPositionNoSnap.js", "hideToolbar": true, "bg": "playground"}}
@@ -135,7 +136,7 @@ It takes the min/max of the piece and returns the label.
 
 Values can be `null` for the first and last pieces.
 And returning `null` removes the piece from the legend.
-Returning an empty string will remove any label, but will still display the `mark`.
+Returning an empty string removes any label, but still display the `mark`.
 
 ```ts
 labelFormatter = ({ index, length, min, max, formattedMin, formattedMax }) =>

@@ -14,7 +14,7 @@ export interface ChartsLabelMarkClasses {
   square: string;
   /** Styles applied to the mark type "circle". */
   circle: string;
-  /** Styles applied to the element containing the fill value */
+  /** Styles applied to the element with fill={color} attribute. */
   fill: string;
 }
 

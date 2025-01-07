@@ -6,7 +6,7 @@ import { PiecewiseColorLegendProps } from './PiecewiseColorLegend';
 export interface ChartsLegendSlots {
   /**
    * Custom rendering of the legend.
-   * @default DefaultChartsLegend
+   * @default ChartsLegend
    */
   legend?:
     | React.JSXElementConstructor<ChartsLegendProps>

@@ -12,7 +12,7 @@ export interface ChartsLabelGradientClasses {
   vertical: string;
   /** Styles applied when direction is "row". */
   horizontal: string;
-  /** Styles applied to the element containing the gradient's fill value */
+  /** Styles applied to the element filled by the gradient */
   fill: string;
 }
 

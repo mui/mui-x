@@ -129,7 +129,6 @@ const RootElement = styled('ul', {
       [`&.${piecewiseColorLegendClasses.above}, &.${piecewiseColorLegendClasses.right}`]: {
         alignItems: 'start',
       },
-      [`.${piecewiseColorLegendClasses.minLabel}`]: {},
       [`&.${piecewiseColorLegendClasses.extremes}`]: {
         alignItems: 'center',
         [`.${piecewiseColorLegendClasses.minLabel}, .${piecewiseColorLegendClasses.maxLabel}`]: {

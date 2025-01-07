@@ -4,7 +4,7 @@ import * as React from 'react';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { BarChart } from '@mui/x-charts/BarChart';
 
-const data = [
+const seriesConfig = [
   { id: 0, data: [10], label: 'Series A' },
   { id: 1, data: [15], label: 'Series B' },
   { id: 2, data: [20], label: 'Series C' },
@@ -28,8 +28,8 @@ export default function LegendMarkTypeNoSnap() {
         props,
       ) => (
         <BarChart
-          series={data.map((item) => ({
-            ...item,
+          series={seriesConfig.map((seriesItem) => ({
+            ...seriesItem,
             labelMarkType: props.markType,
           }))}
           xAxis={[
@@ -51,7 +51,7 @@ import { BarChart } from '@mui/x-charts/BarChart';
 <BarChart
   {/** ... */}
   series={
-    data.map((item) => ({
+    seriesConfig.map((seriesItem) => ({
       ...item,
       labelMarkType: '${props.markType}',
     }))

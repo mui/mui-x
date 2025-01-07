@@ -63,14 +63,13 @@ const RootElement = styled('ul', {
     background: 'none',
     border: 'none',
     padding: 0,
-    cursor: ownerState.onItemClick ? 'pointer' : 'unset',
     fontFamily: 'inherit',
     fontWeight: 'inherit',
     fontSize: 'inherit',
     letterSpacing: 'inherit',
     color: 'inherit',
   },
-  [`.${legendClasses.series}`]: {
+  [`& .${legendClasses.series}`]: {
     display: ownerState.direction === 'vertical' ? 'flex' : 'inline-flex',
     alignItems: 'center',
     gap: theme.spacing(1),
