@@ -127,6 +127,7 @@ const RootElement = styled('ul', {
   [`&.${continuousColorLegendClasses.vertical}`]: {
     gridTemplateRows: 'min-content auto min-content',
     gridTemplateColumns: 'min-content min-content',
+    height: '100%',
     [`&.${continuousColorLegendClasses.below}, &.${continuousColorLegendClasses.left}`]: {
       gridTemplateAreas: templateAreas.column.left,
       [`.${continuousColorLegendClasses.maxLabel}, .${continuousColorLegendClasses.minLabel}`]: {
