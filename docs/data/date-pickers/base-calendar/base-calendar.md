@@ -10,11 +10,11 @@ packageName: '@mui/x-date-pickers'
 
 ## Day Calendar
 
-### One month
+### Single visible month
 
 {{"demo": "DayCalendarDemo.js"}}
 
-### Two months
+### Multiple visible months
 
 {{"demo": "DayCalendarTwoMonthsDemo.js"}}
 
@@ -28,19 +28,27 @@ packageName: '@mui/x-date-pickers'
 
 ## Month Calendar
 
-### One year
+### Grid layout
 
 {{"demo": "MonthCalendarDemo.js"}}
 
-### Two years
+### List layout
+
+{{"demo": "MonthCalendarWithListLayoutDemo.js"}}
+
+### Multiple visible years
 
 TODO
 
 ## Year Calendar
 
-### Full list
+### Grid layout
 
 {{"demo": "YearCalendarDemo.js"}}
+
+### List layout
+
+{{"demo": "YearCalendarWithListLayoutDemo.js"}}
 
 ### Grouped by decade
 

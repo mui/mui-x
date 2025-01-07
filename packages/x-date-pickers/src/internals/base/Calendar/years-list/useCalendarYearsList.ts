@@ -16,6 +16,7 @@ export function useCalendarYearsList(parameters: useCalendarYearsList.Parameters
       cells: yearsCellRefs.current,
       event,
       loop,
+      changePage: undefined,
     });
   });
 

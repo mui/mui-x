@@ -2,27 +2,24 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useTimeout from '@mui/utils/useTimeout';
 import { PickerValidDate } from '../../../../models';
-import { useUtils } from '../../../hooks/useUtils';
 import { GenericHTMLProps } from '../../utils/types';
 import { mergeReactProps } from '../../utils/mergeReactProps';
 import {
   applyInitialFocusInGrid,
   navigateInGrid,
   NavigateInGridChangePage,
-  PageNavigationTarget,
+  PageGridNavigationTarget,
 } from '../utils/keyboardNavigation';
 import { useMonthsCells } from '../utils/useMonthsCells';
 import { useCalendarRootContext } from '../root/CalendarRootContext';
-import { getFirstEnabledYear, getLastEnabledYear } from '../utils/date';
 import { CalendarMonthsGridCssVars } from './CalendarMonthsGridCssVars';
 
 export function useCalendarMonthsGrid(parameters: useCalendarMonthsGrid.Parameters) {
   const { children, cellsPerRow } = parameters;
-  const utils = useUtils();
   const rootContext = useCalendarRootContext();
   const monthsCellRefs = React.useRef<(HTMLElement | null)[]>([]);
-  const { months } = useMonthsCells();
-  const pageNavigationTargetRef = React.useRef<PageNavigationTarget | null>(null);
+  const { months, changePage } = useMonthsCells();
+  const pageNavigationTargetRef = React.useRef<PageGridNavigationTarget | null>(null);
 
   const getCellsInCalendar = useEventCallback(() => {
     const grid: HTMLElement[][] = Array.from(
@@ -54,42 +51,8 @@ export function useCalendarMonthsGrid(parameters: useCalendarMonthsGrid.Paramete
 
   // TODO: Add support for multiple months grids.
   const onKeyDown = useEventCallback((event: React.KeyboardEvent) => {
-    const changePage: NavigateInGridChangePage = (params) => {
-      // TODO: Jump over months with no valid date.
-      if (params.direction === 'previous') {
-        const targetDate = utils.addYears(
-          utils.startOfYear(rootContext.visibleDate),
-          -rootContext.yearPageSize,
-        );
-        const lastYearInNewPage = utils.addYears(targetDate, rootContext.yearPageSize - 1);
-
-        // All the years before the visible ones are fully disabled, we skip the navigation.
-        if (
-          utils.isAfter(getFirstEnabledYear(utils, rootContext.validationProps), lastYearInNewPage)
-        ) {
-          return;
-        }
-
-        rootContext.setVisibleDate(
-          utils.addYears(rootContext.visibleDate, -rootContext.yearPageSize),
-          false,
-        );
-      }
-      if (params.direction === 'next') {
-        const targetDate = utils.addYears(
-          utils.startOfYear(rootContext.visibleDate),
-          rootContext.yearPageSize,
-        );
-
-        // All the years after the visible ones are fully disabled, we skip the navigation.
-        if (utils.isBefore(getLastEnabledYear(utils, rootContext.validationProps), targetDate)) {
-          return;
-        }
-        rootContext.setVisibleDate(
-          utils.addYears(rootContext.visibleDate, rootContext.yearPageSize),
-          false,
-        );
-      }
+    const changeGridPage: NavigateInGridChangePage = (params) => {
+      changePage(params.direction);
 
       pageNavigationTargetRef.current = params.target;
     };
@@ -97,7 +60,7 @@ export function useCalendarMonthsGrid(parameters: useCalendarMonthsGrid.Paramete
     navigateInGrid({
       cells: getCellsInCalendar(),
       event,
-      changePage,
+      changePage: changeGridPage,
     });
   });
 

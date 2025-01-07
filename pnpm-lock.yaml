@@ -410,6 +410,9 @@ importers:
       '@babel/runtime-corejs2':
         specifier: ^7.26.0
         version: 7.26.0
+      '@base-ui-components/react':
+        specifier: 1.0.0-alpha.4
+        version: 1.0.0-alpha.4(@types/react@19.0.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@docsearch/react':
         specifier: ^3.8.2
         version: 3.8.2(@algolia/client-search@5.15.0)(@types/react@19.0.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(search-insights@2.17.3)

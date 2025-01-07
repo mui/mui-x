@@ -6,13 +6,13 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Calendar } from '@mui/x-date-pickers/internals/base/Calendar';
 import styles from './calendar.module.css';
 
-export default function YearCalendarDemo() {
+export default function YearCalendarWithListLayoutDemo() {
   const [value, setValue] = React.useState(null);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Calendar.Root value={value} onValueChange={setValue} className={styles.Root}>
-        <Calendar.YearsGrid cellsPerRow={3} className={styles.YearsGrid}>
+        <Calendar.YearsList className={styles.YearsList}>
           {({ years }) =>
             years.map((year) => (
               <Calendar.YearsCell
@@ -22,7 +22,7 @@ export default function YearCalendarDemo() {
               />
             ))
           }
-        </Calendar.YearsGrid>
+        </Calendar.YearsList>
       </Calendar.Root>
     </LocalizationProvider>
   );

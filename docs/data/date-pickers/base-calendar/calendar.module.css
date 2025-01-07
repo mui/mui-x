@@ -13,7 +13,7 @@
 }
 
 .RootWithTwoPanels {
-  width: 540px;
+  width: 552px;
   flex-direction: row;
   justify-content: space-between;
 }
@@ -219,6 +219,12 @@
   }
 }
 
+.DaysGridSeparator {
+  background-color: #9ca3af;
+  margin: 24px 0;
+  width: 1px;
+}
+
 .Hidden {
   opacity: 0;
   pointer-events: none;
@@ -254,4 +260,8 @@
   &:hover {
     background-color: #075985;
   }
+}
+
+:global(.mode-dark):where(.DaysGridSeparator) {
+  background-color: #4b5563;
 }

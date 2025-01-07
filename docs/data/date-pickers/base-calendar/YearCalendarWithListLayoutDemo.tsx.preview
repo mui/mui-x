@@ -1,5 +1,5 @@
 <Calendar.Root value={value} onValueChange={setValue} className={styles.Root}>
-  <Calendar.YearsGrid cellsPerRow={3} className={styles.YearsGrid}>
+  <Calendar.YearsList className={styles.YearsList}>
     {({ years }) =>
       years.map((year) => (
         <Calendar.YearsCell
@@ -9,5 +9,5 @@
         />
       ))
     }
-  </Calendar.YearsGrid>
+  </Calendar.YearsList>
 </Calendar.Root>

@@ -4,10 +4,12 @@ export function navigateInList({
   cells,
   event,
   loop,
+  changePage,
 }: {
   cells: (HTMLElement | null)[];
   event: React.KeyboardEvent;
   loop: boolean;
+  changePage: NavigateInListChangePage | undefined;
 }) {
   if (!LIST_NAVIGATION_SUPPORTED_KEYS.includes(event.key)) {
     return;
@@ -29,15 +31,23 @@ export function navigateInList({
 
   switch (event.key) {
     case 'ArrowDown':
-      if (loop) {
-        nextIndex = currentIndex + 1 > lastIndex ? 0 : currentIndex + 1;
+      if (currentIndex === lastIndex) {
+        if (changePage) {
+          changePage({ direction: 'next', target: { type: 'first-cell' } });
+        } else {
+          nextIndex = loop ? 0 : -1;
+        }
       } else {
-        nextIndex = Math.min(currentIndex + 1, lastIndex);
+        nextIndex = currentIndex + 1;
       }
       break;
     case 'ArrowUp':
-      if (loop) {
-        nextIndex = currentIndex === 0 ? lastIndex : currentIndex - 1;
+      if (currentIndex === 0) {
+        if (changePage) {
+          changePage({ direction: 'previous', target: { type: 'last-cell' } });
+        } else {
+          nextIndex = loop ? lastIndex : -1;
+        }
       } else {
         nextIndex = currentIndex - 1;
       }
@@ -54,6 +64,35 @@ export function navigateInList({
 
   if (nextIndex > -1) {
     navigableCells[nextIndex].focus();
+  }
+}
+
+export type PageListNavigationTarget = { type: 'first-cell' } | { type: 'last-cell' };
+
+export type NavigateInListChangePage = (params: {
+  direction: 'next' | 'previous';
+  target: PageListNavigationTarget;
+}) => void;
+
+export function applyInitialFocusInList({
+  cells,
+  target,
+}: {
+  cells: (HTMLElement | null)[];
+  target: PageListNavigationTarget;
+}) {
+  let cell: HTMLElement | undefined;
+
+  if (target.type === 'first-cell') {
+    cell = cells.flat(2).find(isNavigable);
+  }
+
+  if (target.type === 'last-cell') {
+    cell = cells.flat(2).findLast(isNavigable);
+  }
+
+  if (cell) {
+    cell.focus();
   }
 }
 
@@ -252,7 +291,7 @@ export function navigateInGrid({
   }
 }
 
-export type PageNavigationTarget =
+export type PageGridNavigationTarget =
   | { type: 'first-cell' }
   | { type: 'last-cell' }
   | { type: 'first-cell-in-col'; colIndex: number }
@@ -262,7 +301,7 @@ export type PageNavigationTarget =
 
 export type NavigateInGridChangePage = (params: {
   direction: 'next' | 'previous';
-  target: PageNavigationTarget;
+  target: PageGridNavigationTarget;
 }) => void;
 
 export function applyInitialFocusInGrid({
@@ -270,7 +309,7 @@ export function applyInitialFocusInGrid({
   target,
 }: {
   cells: HTMLElement[][][];
-  target: PageNavigationTarget;
+  target: PageGridNavigationTarget;
 }) {
   let cell: HTMLElement | undefined;
 

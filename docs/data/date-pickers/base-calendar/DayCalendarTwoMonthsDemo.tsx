@@ -1,6 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { Dayjs } from 'dayjs';
+import { Separator } from '@base-ui-components/react/separator';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 // eslint-disable-next-line no-restricted-imports
@@ -35,7 +36,7 @@ function Header(props: { offset: 0 | 1 }) {
   );
 }
 
-function DayGrid(props: { offset: 0 | 1 }) {
+function DaysGrid(props: { offset: 0 | 1 }) {
   const { offset } = props;
   return (
     <div className={styles.Panel}>
@@ -86,8 +87,9 @@ function DayCalendar(props: Omit<Calendar.Root.Props, 'children'>) {
         monthPageSize={2}
         className={clsx(styles.Root, styles.RootWithTwoPanels)}
       >
-        <DayGrid offset={0} />
-        <DayGrid offset={1} />
+        <DaysGrid offset={0} />
+        <Separator className={styles.DaysGridSeparator} />
+        <DaysGrid offset={1} />
       </Calendar.Root>
     </LocalizationProvider>
   );

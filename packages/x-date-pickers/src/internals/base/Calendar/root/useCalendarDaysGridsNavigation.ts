@@ -9,7 +9,7 @@ import {
   applyInitialFocusInGrid,
   navigateInGrid,
   NavigateInGridChangePage,
-  PageNavigationTarget,
+  PageGridNavigationTarget,
 } from '../utils/keyboardNavigation';
 import type { CalendarRootContext } from './CalendarRootContext';
 import { getFirstEnabledMonth, getLastEnabledMonth } from '../utils/date';
@@ -26,7 +26,7 @@ export function useCalendarDaysGridNavigation(
   const gridsRef = React.useRef<
     { cells: useCalendarDaysGridBody.CellsRef; rows: useCalendarDaysGridBody.RowsRef }[]
   >([]);
-  const pageNavigationTargetRef = React.useRef<PageNavigationTarget | null>(null);
+  const pageNavigationTargetRef = React.useRef<PageGridNavigationTarget | null>(null);
 
   const timeout = useTimeout();
   React.useEffect(() => {

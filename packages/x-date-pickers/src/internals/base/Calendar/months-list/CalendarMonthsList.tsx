@@ -9,10 +9,11 @@ const CalendarMonthsList = React.forwardRef(function CalendarMonthsList(
   props: CalendarMonthsList.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, render, children, loop, ...otherProps } = props;
+  const { className, render, children, loop, canChangeYear, ...otherProps } = props;
   const { getMonthListProps, monthsCellRefs } = useCalendarMonthsList({
     children,
     loop,
+    canChangeYear,
   });
   const state = React.useMemo(() => ({}), []);
 
