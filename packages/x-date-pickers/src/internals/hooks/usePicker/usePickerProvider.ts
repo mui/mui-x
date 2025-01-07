@@ -131,6 +131,14 @@ export function usePickerProvider<
     [paramsFromUsePickerValue, ownerState],
   );
 
+  const actionsContextValue = React.useMemo(
+    () => ({
+      ...paramsFromUsePickerValue.actionsContextValue,
+      ...paramsFromUsePickerViews.actionsContextValue,
+    }),
+    [paramsFromUsePickerValue.actionsContextValue, paramsFromUsePickerViews.actionsContextValue],
+  );
+
   const fieldPrivateContextValue = React.useMemo(
     () => ({
       formatDensity: props.formatDensity,
@@ -150,8 +158,8 @@ export function usePickerProvider<
     localeText,
     contextValue,
     privateContextValue,
+    actionsContextValue,
     fieldPrivateContextValue,
-    actionsContextValue: paramsFromUsePickerValue.actionsContextValue,
     isValidContextValue: paramsFromUsePickerValue.isValidContextValue,
   };
 }

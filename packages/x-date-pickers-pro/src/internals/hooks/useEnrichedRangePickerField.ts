@@ -197,7 +197,7 @@ const useMultiInputFieldSlotProps = <
     if (contextValue.open) {
       onRangePositionChange('start');
       if (previousRangePosition.current !== 'start' && initialView) {
-        contextValue.onViewChange?.(initialView);
+        contextValue.setView?.(initialView);
       }
     }
   };
@@ -206,7 +206,7 @@ const useMultiInputFieldSlotProps = <
     if (contextValue.open) {
       onRangePositionChange('end');
       if (previousRangePosition.current !== 'end' && initialView) {
-        contextValue.onViewChange?.(initialView);
+        contextValue.setView?.(initialView);
       }
     }
   };

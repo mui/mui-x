@@ -17,6 +17,9 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
 
   const isRangeType = pickerParams.type === 'date-range' || pickerParams.type === 'date-time-range';
   const viewWrapperRole = isRangeType && pickerParams.variant === 'desktop' ? 'tooltip' : 'dialog';
+  const shouldCloseOnSelect =
+    (pickerParams.type === 'date' || pickerParams.type === 'date-range') &&
+    pickerParams.variant === 'desktop';
 
   describeSkipIf(componentFamily !== 'picker')('Picker open / close lifecycle', () => {
     it('should not open on mount if `props.open` is false', () => {
@@ -45,7 +48,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
       expect(onOpen.callCount).to.equal(0);
     });
 
-    it('should call onChange, onClose (if desktop) and onAccept (if desktop) when selecting a value', () => {
+    it('should call onChange and onClose and onAccept (if `DesktopDatePicker` or `DesktopDateRangePicker`) when selecting a value', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -82,8 +85,9 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
       } else {
         expect(onChange.lastCall.args[0]).toEqualDateTime(newValue);
       }
-      expect(onAccept.callCount).to.equal(pickerParams.variant === 'mobile' ? 0 : 1);
-      expect(onClose.callCount).to.equal(pickerParams.variant === 'mobile' ? 0 : 1);
+
+      expect(onAccept.callCount).to.equal(!shouldCloseOnSelect ? 0 : 1);
+      expect(onClose.callCount).to.equal(!shouldCloseOnSelect ? 0 : 1);
     });
 
     testSkipIf(pickerParams.variant !== 'mobile')(

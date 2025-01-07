@@ -252,7 +252,7 @@
   { "name": "PickerManager", "kind": "Interface" },
   { "name": "PickerOwnerState", "kind": "Interface" },
   { "name": "PickerRangeFieldSlotProps", "kind": "TypeAlias" },
-  { "name": "PickersActionBar", "kind": "Function" },
+  { "name": "PickersActionBar", "kind": "Variable" },
   { "name": "PickersActionBarAction", "kind": "TypeAlias" },
   { "name": "PickersActionBarProps", "kind": "Interface" },
   { "name": "PickersCalendarHeader", "kind": "Variable" },
