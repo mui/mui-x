@@ -75,6 +75,12 @@ The following example demonstrates a basic server-side aggregation.
 The data source mock server (`useMockServer()`) mocks the built-in aggregation functions listed in the [built-in functions](/x/react-data-grid/aggregation/#built-in-functions) section of the client-side aggregation. Provide the function names and minimal configuration to demonstrate the aggregation, as shown in the demo.
 :::
 
+## Usage with lazy loading
+
+Server-side aggregation working in combination with [server-side lazy loading](/x/react-data-grid/server-side-data/lazy-loading/) is demonstrated in the demo below.
+
+{{"demo": "ServerSideDataGridAggregationLazyLoading.js", "bg": "inline"}}
+
 ## Usage with row grouping
 
 Server-side aggregation works with row grouping in a similar way as described in [Aggregation—usage with row grouping](/x/react-data-grid/aggregation/#usage-with-row-grouping). The aggregated values are acquired from the parent rows using the `getAggregatedValue` method.
