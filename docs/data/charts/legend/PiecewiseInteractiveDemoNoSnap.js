@@ -21,12 +21,6 @@ export default function PiecewiseInteractiveDemoNoSnap() {
           options: ['horizontal', 'vertical'],
         },
         {
-          propName: 'labelPosition',
-          knob: 'select',
-          defaultValue: 'extremes',
-          options: ['above', 'right', 'extremes', 'below', 'left'],
-        },
-        {
           propName: 'markType',
           knob: 'select',
           defaultValue: 'square',
@@ -44,7 +38,7 @@ export default function PiecewiseInteractiveDemoNoSnap() {
         },
       ]}
       renderDemo={(
-        /** @type {{ direction: "vertical" | "horizontal"; markType: 'square' | 'circle' | 'line'; labelPosition:  'below' | 'above' | 'extremes' | 'left' | 'right'; padding: number; onlyShowExtremes: boolean; }} */
+        /** @type {{ direction: "vertical" | "horizontal"; markType: 'square' | 'circle' | 'line'; padding: number; onlyShowExtremes: boolean; }} */
         props,
       ) => (
         <LineChart
@@ -88,7 +82,7 @@ export default function PiecewiseInteractiveDemoNoSnap() {
               axisDirection: 'x',
               direction: props.direction,
               markType: props.markType,
-              labelPosition: props.labelPosition,
+              labelPosition: 'extremes',
               labelFormatter: props.onlyShowExtremes
                 ? (params) =>
                     params.index === 0 || params.index === params.length
@@ -105,7 +99,7 @@ export default function PiecewiseInteractiveDemoNoSnap() {
         </LineChart>
       )}
       getCode={(
-        /** @type {{props:{ direction: "vertical" | "horizontal"; markType: 'square' | 'circle' | 'line'; labelPosition:  'below' | 'above' | 'extremes' | 'left' | 'right'; padding: number; onlyShowExtremes: boolean; }}} */
+        /** @type {{props:{ direction: "vertical" | "horizontal"; markType: 'square' | 'circle' | 'line'; padding: number; onlyShowExtremes: boolean; }}} */
         { props },
       ) => {
         return `
@@ -123,7 +117,7 @@ import {
       axisDirection: 'x',
       direction: '${props.direction}',
       markType: '${props.markType}',
-      labelPosition: '${props.labelPosition}',
+      labelPosition: 'extremes',
       sx: { padding: ${props.padding} },${props.onlyShowExtremes ? "\n      labelFormatter: (params) =>\n        params.index === 0 || params.index === params.length\n          ? piecewiseColorDefaultLabelFormatter(params) \n          : ''" : ''}
     },
   }}
