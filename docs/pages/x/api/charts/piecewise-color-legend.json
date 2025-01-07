@@ -24,9 +24,9 @@
     "labelPosition": {
       "type": {
         "name": "enum",
-        "description": "'above'<br>&#124;&nbsp;'below'<br>&#124;&nbsp;'extremes'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right'"
+        "description": "'start'<br>&#124;&nbsp;'end'<br>&#124;&nbsp;'extremes'"
       },
-      "default": "'below'"
+      "default": "'extremes'"
     },
     "markType": {
       "type": {
@@ -51,15 +51,9 @@
   ],
   "classes": [
     {
-      "key": "above",
-      "className": "MuiPiecewiseColorLegend-above",
-      "description": "Styles applied to the legend with the labels above the color marks.",
-      "isGlobal": false
-    },
-    {
-      "key": "below",
-      "className": "MuiPiecewiseColorLegend-below",
-      "description": "Styles applied to the legend with the labels below the color marks.",
+      "key": "end",
+      "className": "MuiPiecewiseColorLegend-end",
+      "description": "Styles applied to the legend with the labels after the color marks.",
       "isGlobal": false
     },
     {
@@ -87,12 +81,6 @@
       "isGlobal": false
     },
     {
-      "key": "left",
-      "className": "MuiPiecewiseColorLegend-left",
-      "description": "Styles applied to the legend with the labels on the left of the color marks.",
-      "isGlobal": false
-    },
-    {
       "key": "mark",
       "className": "MuiPiecewiseColorLegend-mark",
       "description": "Styles applied to the marks.",
@@ -111,15 +99,15 @@
       "isGlobal": false
     },
     {
-      "key": "right",
-      "className": "MuiPiecewiseColorLegend-right",
-      "description": "Styles applied to the legend with the labels on the right of the color marks.",
-      "isGlobal": false
-    },
-    {
       "key": "root",
       "className": "MuiPiecewiseColorLegend-root",
       "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "start",
+      "className": "MuiPiecewiseColorLegend-start",
+      "description": "Styles applied to the legend with the labels before the color marks.",
       "isGlobal": false
     },
     {

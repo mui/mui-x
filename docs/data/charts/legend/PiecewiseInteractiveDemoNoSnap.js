@@ -24,7 +24,7 @@ export default function PiecewiseInteractiveDemoNoSnap() {
           propName: 'labelPosition',
           knob: 'select',
           defaultValue: 'extremes',
-          options: ['above', 'right', 'extremes', 'below', 'left'],
+          options: ['start', 'end', 'extremes'],
         },
         {
           propName: 'markType',
@@ -44,7 +44,7 @@ export default function PiecewiseInteractiveDemoNoSnap() {
         },
       ]}
       renderDemo={(
-        /** @type {{ direction: "vertical" | "horizontal"; markType: 'square' | 'circle' | 'line'; labelPosition:  'below' | 'above' | 'extremes' | 'left' | 'right'; padding: number; onlyShowExtremes: boolean; }} */
+        /** @type {{ direction: "vertical" | "horizontal"; markType: 'square' | 'circle' | 'line'; labelPosition:  'start' | 'end' | 'extremes'; padding: number; onlyShowExtremes: boolean; }} */
         props,
       ) => (
         <LineChart
@@ -105,7 +105,7 @@ export default function PiecewiseInteractiveDemoNoSnap() {
         </LineChart>
       )}
       getCode={(
-        /** @type {{props:{ direction: "vertical" | "horizontal"; markType: 'square' | 'circle' | 'line'; labelPosition:  'below' | 'above' | 'extremes' | 'left' | 'right'; padding: number; onlyShowExtremes: boolean; }}} */
+        /** @type {{props:{ direction: "vertical" | "horizontal"; markType: 'square' | 'circle' | 'line'; labelPosition:  'start' | 'end' | 'extremes'; padding: number; onlyShowExtremes: boolean; }}} */
         { props },
       ) => {
         return `

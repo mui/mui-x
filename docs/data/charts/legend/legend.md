@@ -107,12 +107,11 @@ This component position is done exactly the same way as the [legend for series](
 ### Label position
 
 The labels can be positioned in relation to the marks or gradient with the `labelPosition` prop.
-The values accepted are `'above'`, `'below'`, `'left'`, or `'right'` or `'extremes'`.
+The values accepted are `'start'`, `'end'` or `'extremes'`.
 
-- The `direction='horizontal'` accepts `'above'` and `'below'` position values relative to the visual marker.
-- The `direction='vertical'` accepts `'left'` and `'right'` position values.
-
-With the `'extremes'` value, the labels are positioned at the beginning and end of the visual marker.
+- With `direction='horizontal'`, using `'start'` places the labels above the visual marker, while `end` places them below.
+- When `direction='vertical'`, is `'start'` or `'end'` the labels are positioned `left` and `right` of the visual markers, respectively.
+- With the `'extremes'` value, the labels are positioned at both the beginning and end of the visual marker.
 
 {{"demo": "LegendLabelPositions.js"}}
 

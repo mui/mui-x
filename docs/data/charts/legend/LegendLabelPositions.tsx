@@ -29,19 +29,19 @@ export default function LegendLabelPositions() {
         <Typography variant="h5">Horizontal</Typography>
         <Stack direction="row" gap={2} sx={{ '&>div': { flex: 1 } }}>
           <div>
-            <Typography>above</Typography>
+            <Typography>start</Typography>
             <ContinuousColorLegend
               axisDirection="y"
               direction="horizontal"
-              labelPosition="above"
+              labelPosition="start"
             />
           </div>
           <div>
-            <Typography>below</Typography>
+            <Typography>end</Typography>
             <ContinuousColorLegend
               axisDirection="y"
               direction="horizontal"
-              labelPosition="below"
+              labelPosition="end"
             />
           </div>
           <div>
@@ -70,19 +70,19 @@ export default function LegendLabelPositions() {
           }}
         >
           <div>
-            <Typography>left</Typography>
+            <Typography>start</Typography>
             <ContinuousColorLegend
               axisDirection="y"
               direction="vertical"
-              labelPosition="left"
+              labelPosition="start"
             />
           </div>
           <div>
-            <Typography>right</Typography>
+            <Typography>end</Typography>
             <ContinuousColorLegend
               axisDirection="y"
               direction="vertical"
-              labelPosition="right"
+              labelPosition="end"
             />
           </div>
           <div>

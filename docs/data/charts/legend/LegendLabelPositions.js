@@ -5,6 +5,7 @@ import { ChartDataProvider } from '@mui/x-charts/context';
 import { ChartsAxesGradients } from '@mui/x-charts/internals';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
 
 export default function LegendLabelPositions() {
   return (
@@ -24,27 +25,27 @@ export default function LegendLabelPositions() {
         },
       ]}
     >
-      <Stack direction="column" width="100%" gap={2}>
-        <Typography>horizontal</Typography>
-        <Stack direction="row" width="100%" gap={2} sx={{ '&>div': { flex: 1 } }}>
+      <Stack direction="column" width="100%" height="100%" gap={2}>
+        <Typography variant="h5">Horizontal</Typography>
+        <Stack direction="row" gap={2} sx={{ '&>div': { flex: 1 } }}>
           <div>
-            <Typography variant="caption">above</Typography>
+            <Typography>start</Typography>
             <ContinuousColorLegend
               axisDirection="y"
               direction="horizontal"
-              labelPosition="above"
+              labelPosition="start"
             />
           </div>
           <div>
-            <Typography variant="caption">below</Typography>
+            <Typography>end</Typography>
             <ContinuousColorLegend
               axisDirection="y"
               direction="horizontal"
-              labelPosition="below"
+              labelPosition="end"
             />
           </div>
           <div>
-            <Typography variant="caption">extremes</Typography>
+            <Typography>extremes</Typography>
             <ContinuousColorLegend
               axisDirection="y"
               direction="horizontal"
@@ -52,35 +53,40 @@ export default function LegendLabelPositions() {
             />
           </div>
         </Stack>
-        <Typography>vertical</Typography>
+        <Divider />
+        <Typography variant="h5">Vertical</Typography>
         <Stack
           direction="row"
-          width="100%"
           height={150}
           gap={2}
           sx={{
-            '&>div': { flex: 1 },
-            '& .MuiContinuousColorLegend-root': { height: 100 },
+            '&>div': {
+              flex: 1,
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+            },
+            '& .MuiContinuousColorLegend-root': { flex: 1 },
           }}
         >
           <div>
-            <Typography variant="caption">left</Typography>
+            <Typography>start</Typography>
             <ContinuousColorLegend
               axisDirection="y"
               direction="vertical"
-              labelPosition="left"
+              labelPosition="start"
             />
           </div>
           <div>
-            <Typography variant="caption">right</Typography>
+            <Typography>end</Typography>
             <ContinuousColorLegend
               axisDirection="y"
               direction="vertical"
-              labelPosition="right"
+              labelPosition="end"
             />
           </div>
           <div>
-            <Typography variant="caption">extremes</Typography>
+            <Typography>extremes</Typography>
             <ContinuousColorLegend
               axisDirection="y"
               direction="vertical"

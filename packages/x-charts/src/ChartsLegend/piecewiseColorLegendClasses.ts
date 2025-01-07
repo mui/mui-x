@@ -17,16 +17,12 @@ export interface PiecewiseColorLegendClasses {
   vertical: string;
   /** Styles applied to the legend in row layout. */
   horizontal: string;
-  /** Styles applied to the legend with the labels below the color marks. */
-  below: string;
-  /** Styles applied to the legend with the labels above the color marks. */
-  above: string;
+  /** Styles applied to the legend with the labels before the color marks. */
+  start: string;
+  /** Styles applied to the legend with the labels after the color marks. */
+  end: string;
   /** Styles applied to the legend with the labels on the extremes of the color marks. */
   extremes: string;
-  /** Styles applied to the legend with the labels on the left of the color marks. */
-  left: string;
-  /** Styles applied to the legend with the labels on the right of the color marks. */
-  right: string;
   /** Styles applied to the marks. */
   mark: string;
   /** Styles applied to the series label. */
@@ -60,11 +56,9 @@ export const piecewiseColorLegendClasses: PiecewiseColorLegendClasses = generate
     'item',
     'vertical',
     'horizontal',
-    'below',
-    'above',
+    'start',
+    'end',
     'extremes',
-    'left',
-    'right',
     'mark',
     'label',
   ],

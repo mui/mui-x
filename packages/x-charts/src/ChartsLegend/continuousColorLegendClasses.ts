@@ -17,16 +17,12 @@ export interface ContinuousColorLegendClasses {
   vertical: string;
   /** Styles applied to the legend in row layout. */
   horizontal: string;
-  /** Styles applied to the legend with the labels below the gradient. */
-  below: string;
-  /** Styles applied to the legend with the labels above the gradient. */
-  above: string;
+  /** Styles applied to the legend with the labels before the gradient. */
+  start: string;
+  /** Styles applied to the legend with the labels after the gradient. */
+  end: string;
   /** Styles applied to the legend with the labels on the extremes of the gradient. */
   extremes: string;
-  /** Styles applied to the legend with the labels on the left of the gradient. */
-  left: string;
-  /** Styles applied to the legend with the labels on the right of the gradient. */
-  right: string;
   /** Styles applied to the series label. */
   label: string;
 }
@@ -60,11 +56,9 @@ export const continuousColorLegendClasses: ContinuousColorLegendClasses = genera
     'gradient',
     'vertical',
     'horizontal',
-    'below',
-    'above',
+    'start',
+    'end',
     'extremes',
-    'left',
-    'right',
     'label',
   ],
 );

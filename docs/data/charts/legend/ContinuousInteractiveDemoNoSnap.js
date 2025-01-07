@@ -21,8 +21,8 @@ export default function ContinuousInteractiveDemoNoSnap() {
         {
           propName: 'labelPosition',
           knob: 'select',
-          defaultValue: 'below',
-          options: ['above', 'right', 'extremes', 'below', 'left'],
+          defaultValue: 'end',
+          options: ['start', 'end', 'extremes'],
         },
         {
           propName: 'length',
@@ -45,7 +45,7 @@ export default function ContinuousInteractiveDemoNoSnap() {
         },
       ]}
       renderDemo={(
-        /** @type {{ direction: "horizontal" | "vertical"; length: number; thickness: number;  labelPosition:  'below' | 'above' | 'extremes' | 'left' | 'right'; reverseGradient: boolean; }} */
+        /** @type {{ direction: "horizontal" | "vertical"; length: number; thickness: number;  labelPosition:  'start' | 'end' | 'extremes'; reverseGradient: boolean; }} */
         props,
       ) => (
         <LineChart
@@ -101,7 +101,7 @@ export default function ContinuousInteractiveDemoNoSnap() {
         </LineChart>
       )}
       getCode={(
-        /** @type {{props: { direction: "horizontal" | "vertical"; length: number; thickness: number;  labelPosition:  'below' | 'above' | 'extremes' | 'left' | 'right'; reverseGradient: boolean; }}} */
+        /** @type {{props: { direction: "horizontal" | "vertical"; length: number; thickness: number;  labelPosition:  'start' | 'end' | 'extremes'; reverseGradient: boolean; }}} */
         { props },
       ) => {
         return `

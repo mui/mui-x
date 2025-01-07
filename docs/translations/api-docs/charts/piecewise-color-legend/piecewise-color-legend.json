@@ -16,9 +16,7 @@
         "string | null": "The displayed label, <code>&#39;&#39;</code> to skip the label but show the color mark, or <code>null</code> to skip it entirely."
       }
     },
-    "labelPosition": {
-      "description": "Where to position the labels relative to the gradient. The positions <code>&#39;below&#39;</code> and <code>&#39;left&#39;</code>, as well as <code>&#39;above&#39;</code> and <code>&#39;right&#39;</code> are equivalent."
-    },
+    "labelPosition": { "description": "Where to position the labels relative to the gradient." },
     "markType": { "description": "The type of the mark." },
     "onItemClick": {
       "description": "Callback fired when a legend item is clicked.",
@@ -30,13 +28,9 @@
     }
   },
   "classDescriptions": {
-    "above": {
+    "end": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the legend with the labels above the color marks"
-    },
-    "below": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the legend with the labels below the color marks"
+      "nodeName": "the legend with the labels after the color marks"
     },
     "extremes": {
       "description": "Styles applied to {{nodeName}}.",
@@ -48,10 +42,6 @@
     },
     "item": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the list items" },
     "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the series label" },
-    "left": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the legend with the labels on the left of the color marks"
-    },
     "mark": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the marks" },
     "maxLabel": {
       "description": "Styles applied to {{nodeName}}.",
@@ -61,11 +51,11 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the list item that renders the <code>minLabel</code>"
     },
-    "right": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the legend with the labels on the right of the color marks"
-    },
     "root": { "description": "Styles applied to the root element." },
+    "start": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the legend with the labels before the color marks"
+    },
     "vertical": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the legend in column layout"

@@ -35,10 +35,9 @@ export interface PiecewiseColorLegendProps
   labelFormatter?: (params: PiecewiseLabelFormatterParams) => string | null;
   /**
    * Where to position the labels relative to the gradient.
-   * The positions `'below'` and `'left'`, as well as `'above'` and `'right'` are equivalent.
-   * @default 'below'
+   * @default 'extremes'
    */
-  labelPosition?: 'below' | 'above' | 'extremes' | 'left' | 'right';
+  labelPosition?: 'start' | 'end' | 'extremes';
   /**
    * Callback fired when a legend item is clicked.
    * @param {React.MouseEvent<HTMLButtonElement, MouseEvent>} event The click event.
@@ -96,15 +95,21 @@ const RootElement = styled('ul', {
       {
         alignSelf: 'center',
       },
+    [`&.${piecewiseColorLegendClasses.start}`]: {
+      alignItems: 'end',
+    },
+    [`&.${piecewiseColorLegendClasses.end}`]: {
+      alignItems: 'start',
+    },
     [`&.${piecewiseColorLegendClasses.horizontal}`]: {
       alignItems: 'center',
       [`.${piecewiseColorLegendClasses.item}`]: {
         flexDirection: 'column',
       },
-      [`&.${piecewiseColorLegendClasses.below}, &.${piecewiseColorLegendClasses.left}`]: {
+      [`&.${piecewiseColorLegendClasses.start}`]: {
         alignItems: 'start',
       },
-      [`&.${piecewiseColorLegendClasses.above}, &.${piecewiseColorLegendClasses.right}`]: {
+      [`&.${piecewiseColorLegendClasses.end}`]: {
         alignItems: 'end',
       },
       [`.${piecewiseColorLegendClasses.minLabel}`]: {
@@ -123,10 +128,10 @@ const RootElement = styled('ul', {
         flexDirection: 'row',
         alignItems: 'center',
       },
-      [`&.${piecewiseColorLegendClasses.below}, &.${piecewiseColorLegendClasses.left}`]: {
+      [`&.${piecewiseColorLegendClasses.start}`]: {
         alignItems: 'end',
       },
-      [`&.${piecewiseColorLegendClasses.above}, &.${piecewiseColorLegendClasses.right}`]: {
+      [`&.${piecewiseColorLegendClasses.end}`]: {
         alignItems: 'start',
       },
       [`&.${piecewiseColorLegendClasses.extremes}`]: {
@@ -187,8 +192,8 @@ const PiecewiseColorLegend = consumeThemeProps(
 
     const orderedColors = isReverse ? colorMap.colors.slice().reverse() : colorMap.colors;
 
-    const isAbove = labelPosition === 'above' || labelPosition === 'right';
-    const isBelow = labelPosition === 'below' || labelPosition === 'left';
+    const isStart = labelPosition === 'start';
+    const isEnd = labelPosition === 'end';
     const isExtremes = labelPosition === 'extremes';
 
     return (
@@ -219,8 +224,8 @@ const PiecewiseColorLegend = consumeThemeProps(
             return null;
           }
 
-          const isTextBefore = (isVertical ? isBelow : isAbove) || (isExtremes && isFirst);
-          const isTextAfter = (isVertical ? isAbove : isBelow) || (isExtremes && isLast);
+          const isTextBefore = isStart || (isExtremes && isFirst);
+          const isTextAfter = isEnd || (isExtremes && isLast);
 
           const clickObject = {
             type: 'piecewiseColor',
@@ -291,10 +296,9 @@ PiecewiseColorLegend.propTypes = {
   labelFormatter: PropTypes.func,
   /**
    * Where to position the labels relative to the gradient.
-   * The positions `'below'` and `'left'`, as well as `'above'` and `'right'` are equivalent.
-   * @default 'below'
+   * @default 'extremes'
    */
-  labelPosition: PropTypes.oneOf(['above', 'below', 'extremes', 'left', 'right']),
+  labelPosition: PropTypes.oneOf(['start', 'end', 'extremes']),
   /**
    * The type of the mark.
    * @default 'square'

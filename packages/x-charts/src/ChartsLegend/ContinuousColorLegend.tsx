@@ -50,10 +50,9 @@ export interface ContinuousColorLegendProps
   gradientId?: string;
   /**
    * Where to position the labels relative to the gradient.
-   * The positions `'below'` and `'left'`, as well as `'above'` and `'right'` are equivalent.
-   * @default 'below'
+   * @default 'end'
    */
-  labelPosition?: 'below' | 'above' | 'extremes' | 'left' | 'right';
+  labelPosition?: 'start' | 'end' | 'extremes';
   /**
    * Override or extend the styles applied to the component.
    */
@@ -64,25 +63,25 @@ export interface ContinuousColorLegendProps
 
 const templateAreas = {
   row: {
-    below: `
+    start: `
+    'min-label . max-label'
+    'gradient gradient gradient'
+  `,
+    end: `
       'gradient gradient gradient'
       'min-label . max-label'
-    `,
-    above: `
-      'min-label . max-label'
-      'gradient gradient gradient'
     `,
     extremes: `
       'min-label gradient max-label'
     `,
   },
   column: {
-    left: `
+    start: `
       'max-label gradient'
       '. gradient'
       'min-label gradient'
     `,
-    right: `
+    end: `
       'gradient max-label'
       'gradient .'
       'gradient min-label'
@@ -113,11 +112,11 @@ const RootElement = styled('ul', {
   [`&.${continuousColorLegendClasses.horizontal}`]: {
     gridTemplateRows: 'min-content min-content',
     gridTemplateColumns: 'min-content auto min-content',
-    [`&.${continuousColorLegendClasses.below}, &.${continuousColorLegendClasses.left}`]: {
-      gridTemplateAreas: templateAreas.row.below,
+    [`&.${continuousColorLegendClasses.start}`]: {
+      gridTemplateAreas: templateAreas.row.start,
     },
-    [`&.${continuousColorLegendClasses.above}, &.${continuousColorLegendClasses.right}`]: {
-      gridTemplateAreas: templateAreas.row.above,
+    [`&.${continuousColorLegendClasses.end}`]: {
+      gridTemplateAreas: templateAreas.row.end,
     },
     [`&.${continuousColorLegendClasses.extremes}`]: {
       gridTemplateAreas: templateAreas.row.extremes,
@@ -128,14 +127,14 @@ const RootElement = styled('ul', {
     gridTemplateRows: 'min-content auto min-content',
     gridTemplateColumns: 'min-content min-content',
     height: '100%',
-    [`&.${continuousColorLegendClasses.below}, &.${continuousColorLegendClasses.left}`]: {
-      gridTemplateAreas: templateAreas.column.left,
+    [`&.${continuousColorLegendClasses.start}`]: {
+      gridTemplateAreas: templateAreas.column.start,
       [`.${continuousColorLegendClasses.maxLabel}, .${continuousColorLegendClasses.minLabel}`]: {
         justifySelf: 'end',
       },
     },
-    [`&.${continuousColorLegendClasses.above}, &.${continuousColorLegendClasses.right}`]: {
-      gridTemplateAreas: templateAreas.column.right,
+    [`&.${continuousColorLegendClasses.end}`]: {
+      gridTemplateAreas: templateAreas.column.end,
       [`.${continuousColorLegendClasses.maxLabel}, .${continuousColorLegendClasses.minLabel}`]: {
         justifySelf: 'start',
       },
@@ -175,7 +174,7 @@ const ContinuousColorLegend = consumeThemeProps(
   {
     defaultProps: {
       direction: 'horizontal',
-      labelPosition: 'below',
+      labelPosition: 'end',
       axisDirection: 'z',
     },
     classesResolver: useUtilityClasses,
@@ -286,10 +285,9 @@ ContinuousColorLegend.propTypes = {
   gradientId: PropTypes.string,
   /**
    * Where to position the labels relative to the gradient.
-   * The positions `'below'` and `'left'`, as well as `'above'` and `'right'` are equivalent.
-   * @default 'below'
+   * @default 'end'
    */
-  labelPosition: PropTypes.oneOf(['above', 'below', 'extremes', 'left', 'right']),
+  labelPosition: PropTypes.oneOf(['start', 'end', 'extremes']),
   /**
    * The label to display at the maximum side of the gradient.
    * Can either be a string, or a function.

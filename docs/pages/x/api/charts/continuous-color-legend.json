@@ -17,9 +17,9 @@
     "labelPosition": {
       "type": {
         "name": "enum",
-        "description": "'above'<br>&#124;&nbsp;'below'<br>&#124;&nbsp;'extremes'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right'"
+        "description": "'start'<br>&#124;&nbsp;'end'<br>&#124;&nbsp;'extremes'"
       },
-      "default": "'below'"
+      "default": "'end'"
     },
     "maxLabel": {
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" },
@@ -41,15 +41,9 @@
   ],
   "classes": [
     {
-      "key": "above",
-      "className": "MuiContinuousColorLegend-above",
-      "description": "Styles applied to the legend with the labels above the gradient.",
-      "isGlobal": false
-    },
-    {
-      "key": "below",
-      "className": "MuiContinuousColorLegend-below",
-      "description": "Styles applied to the legend with the labels below the gradient.",
+      "key": "end",
+      "className": "MuiContinuousColorLegend-end",
+      "description": "Styles applied to the legend with the labels after the gradient.",
       "isGlobal": false
     },
     {
@@ -77,12 +71,6 @@
       "isGlobal": false
     },
     {
-      "key": "left",
-      "className": "MuiContinuousColorLegend-left",
-      "description": "Styles applied to the legend with the labels on the left of the gradient.",
-      "isGlobal": false
-    },
-    {
       "key": "maxLabel",
       "className": "MuiContinuousColorLegend-maxLabel",
       "description": "Styles applied to the list item that renders the `maxLabel`.",
@@ -95,15 +83,15 @@
       "isGlobal": false
     },
     {
-      "key": "right",
-      "className": "MuiContinuousColorLegend-right",
-      "description": "Styles applied to the legend with the labels on the right of the gradient.",
-      "isGlobal": false
-    },
-    {
       "key": "root",
       "className": "MuiContinuousColorLegend-root",
       "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "start",
+      "className": "MuiContinuousColorLegend-start",
+      "description": "Styles applied to the legend with the labels before the gradient.",
       "isGlobal": false
     },
     {

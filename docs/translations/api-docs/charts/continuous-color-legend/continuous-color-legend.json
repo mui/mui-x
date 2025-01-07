@@ -12,9 +12,7 @@
     "gradientId": {
       "description": "The id for the gradient to use. If not provided, it will use the generated gradient from the axis configuration. The <code>gradientId</code> will be used as <code>fill=&quot;url(#gradientId)&quot;</code>."
     },
-    "labelPosition": {
-      "description": "Where to position the labels relative to the gradient. The positions <code>&#39;below&#39;</code> and <code>&#39;left&#39;</code>, as well as <code>&#39;above&#39;</code> and <code>&#39;right&#39;</code> are equivalent."
-    },
+    "labelPosition": { "description": "Where to position the labels relative to the gradient." },
     "maxLabel": {
       "description": "The label to display at the maximum side of the gradient. Can either be a string, or a function. If not defined, the formatted maximal value is display."
     },
@@ -28,13 +26,9 @@
     "thickness": { "description": "The thickness of the gradient" }
   },
   "classDescriptions": {
-    "above": {
+    "end": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the legend with the labels above the gradient"
-    },
-    "below": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the legend with the labels below the gradient"
+      "nodeName": "the legend with the labels after the gradient"
     },
     "extremes": {
       "description": "Styles applied to {{nodeName}}.",
@@ -49,10 +43,6 @@
       "nodeName": "the legend in row layout"
     },
     "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the series label" },
-    "left": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the legend with the labels on the left of the gradient"
-    },
     "maxLabel": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the list item that renders the <code>maxLabel</code>"
@@ -61,11 +51,11 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the list item that renders the <code>minLabel</code>"
     },
-    "right": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the legend with the labels on the right of the gradient"
-    },
     "root": { "description": "Styles applied to the root element." },
+    "start": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the legend with the labels before the gradient"
+    },
     "vertical": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the legend in column layout"
