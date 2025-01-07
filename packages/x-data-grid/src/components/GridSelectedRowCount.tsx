@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled, SxProps, Theme } from '@mui/system';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { vars } from '../constants/cssVariables';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../constants/gridClasses';
@@ -48,7 +49,7 @@ const GridSelectedRowCountRoot = styled('div', {
   },
 });
 
-const GridSelectedRowCount = React.forwardRef<HTMLDivElement, GridSelectedRowCountProps>(
+const GridSelectedRowCount = forwardRef<HTMLDivElement, GridSelectedRowCountProps>(
   function GridSelectedRowCount(props, ref) {
     const { className, selectedRowCount, ...other } = props;
     const apiRef = useGridApiContext();
@@ -58,10 +59,10 @@ const GridSelectedRowCount = React.forwardRef<HTMLDivElement, GridSelectedRowCou
 
     return (
       <GridSelectedRowCountRoot
-        ref={ref}
         className={clsx(classes.root, className)}
         ownerState={ownerState}
         {...other}
+        ref={ref}
       >
         {rowSelectedText}
       </GridSelectedRowCountRoot>

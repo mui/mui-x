@@ -17,7 +17,7 @@ export const singleItemValueManager: SingleItemPickerValueManager = {
   emptyValue: null,
   getTodayValue: getTodayDate,
   getInitialReferenceValue: ({ value, referenceDate, ...params }) => {
-    if (value != null && params.utils.isValid(value)) {
+    if (params.utils.isValid(value)) {
       return value;
     }
 
@@ -32,15 +32,14 @@ export const singleItemValueManager: SingleItemPickerValueManager = {
   isSameError: (a, b) => a === b,
   hasError: (error) => error != null,
   defaultErrorState: null,
-  getTimezone: (utils, value) =>
-    value == null || !utils.isValid(value) ? null : utils.getTimezone(value),
+  getTimezone: (utils, value) => (utils.isValid(value) ? utils.getTimezone(value) : null),
   setTimezone: (utils, timezone, value) =>
     value == null ? null : utils.setTimezone(value, timezone),
 };
 
 export const singleItemFieldValueManager: FieldValueManager<PickerValue> = {
   updateReferenceValue: (utils, value, prevReferenceValue) =>
-    value == null || !utils.isValid(value) ? prevReferenceValue : value,
+    !utils.isValid(value) ? prevReferenceValue : value,
   getSectionsFromValue: (utils, date, prevSections, getSectionsFromDate) => {
     const shouldReUsePrevDateSections = !utils.isValid(date) && !!prevSections;
 
@@ -58,10 +57,7 @@ export const singleItemFieldValueManager: FieldValueManager<PickerValue> = {
     getSections: (sections) => sections,
     getNewValuesFromNewActiveDate: (newActiveDate) => ({
       value: newActiveDate,
-      referenceValue:
-        newActiveDate == null || !utils.isValid(newActiveDate)
-          ? state.referenceValue
-          : newActiveDate,
+      referenceValue: utils.isValid(newActiveDate) ? newActiveDate : state.referenceValue,
     }),
   }),
   parseValueStr: (valueStr, referenceValue, parseDate) =>

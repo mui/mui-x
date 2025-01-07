@@ -71,7 +71,6 @@ function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonPro
     <rootProps.slots.baseIconButton
       id={labelId}
       onClick={toggleFilter}
-      color="default"
       aria-label={apiRef.current.getLocaleText('columnHeaderFiltersLabel')}
       size="small"
       tabIndex={-1}
@@ -89,7 +88,7 @@ function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonPro
       title={
         apiRef.current.getLocaleText('columnHeaderFiltersTooltipActive')(
           counter,
-        ) as React.ReactElement
+        ) as React.ReactElement<any>
       }
       enterDelay={1000}
       {...rootProps.slotProps?.baseTooltip}

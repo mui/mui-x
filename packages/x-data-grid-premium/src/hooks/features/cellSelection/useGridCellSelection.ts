@@ -49,7 +49,7 @@ const AUTO_SCROLL_SENSITIVITY = 50; // The distance from the edge to start scrol
 const AUTO_SCROLL_SPEED = 20; // The speed to scroll once the mouse enters the sensitivity area
 
 export const useGridCellSelection = (
-  apiRef: React.MutableRefObject<GridPrivateApiPremium>,
+  apiRef: React.RefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
     | 'cellSelection'
@@ -64,10 +64,10 @@ export const useGridCellSelection = (
 ) => {
   const hasRootReference = apiRef.current.rootElementRef.current !== null;
   const visibleRows = useGridVisibleRows(apiRef, props);
-  const cellWithVirtualFocus = React.useRef<GridCellCoordinates | null>();
-  const lastMouseDownCell = React.useRef<GridCellCoordinates | null>();
-  const mousePosition = React.useRef<{ x: number; y: number } | null>(null);
-  const autoScrollRAF = React.useRef<number | null>();
+  const cellWithVirtualFocus = React.useRef<GridCellCoordinates>(null);
+  const lastMouseDownCell = React.useRef<GridCellCoordinates>(null);
+  const mousePosition = React.useRef<{ x: number; y: number }>(null);
+  const autoScrollRAF = React.useRef<number>(null);
   const sortedRowIds = useGridSelector(apiRef, gridSortedRowIdsSelector);
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
   const totalHeaderHeight = getTotalHeaderHeight(apiRef, props);

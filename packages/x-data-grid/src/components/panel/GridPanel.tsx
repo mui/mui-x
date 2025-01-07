@@ -6,6 +6,7 @@ import { unstable_generateUtilityClasses as generateUtilityClasses } from '@mui/
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { vars } from '../../constants/cssVariables';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -55,7 +56,7 @@ const GridPaperRoot = styled(Paper, {
   overflow: 'auto',
 });
 
-const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
+const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
   const { children, className, classes: classesProp, ...other } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -117,13 +118,13 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
 
   return (
     <GridPanelRoot
-      ref={ref}
       placement="bottom-start"
       className={clsx(classes.panel, className)}
       ownerState={rootProps}
       anchorEl={anchorEl}
       modifiers={modifiers}
       {...other}
+      ref={ref}
     >
       <ClickAwayListener mouseEvent="onMouseUp" onClickAway={handleClickAway}>
         <GridPaperRoot
