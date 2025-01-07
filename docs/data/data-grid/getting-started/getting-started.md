@@ -52,7 +52,7 @@ import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
 ### Define rows
 
 Each row in the Data Grid is an object with key-value pairs that correspond to the column and its value, respectively.
-You should also provide an `id` property for delta updates and improved performance.
+You should provide an `id` property for delta updates and improved performance.
 
 The code snippet below defines three rows with values assigned to the `name` and `description` columns for each:
 
