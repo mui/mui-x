@@ -9,10 +9,11 @@ const CalendarMonthsGrid = React.forwardRef(function CalendarMonthsList(
   props: CalendarMonthsGrid.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, render, children, cellsPerRow, ...otherProps } = props;
+  const { className, render, children, cellsPerRow, canChangeYear, ...otherProps } = props;
   const { getMonthsGridProps, monthsCellRefs } = useCalendarMonthsGrid({
     children,
     cellsPerRow,
+    canChangeYear,
   });
   const state = React.useMemo(() => ({}), []);
 

@@ -15,7 +15,7 @@ import { useCalendarRootContext } from '../root/CalendarRootContext';
 import { CalendarMonthsGridCssVars } from './CalendarMonthsGridCssVars';
 
 export function useCalendarMonthsGrid(parameters: useCalendarMonthsGrid.Parameters) {
-  const { children, cellsPerRow } = parameters;
+  const { children, cellsPerRow, canChangeYear = true } = parameters;
   const rootContext = useCalendarRootContext();
   const monthsCellRefs = React.useRef<(HTMLElement | null)[]>([]);
   const { months, changePage } = useMonthsCells();
@@ -60,7 +60,7 @@ export function useCalendarMonthsGrid(parameters: useCalendarMonthsGrid.Paramete
     navigateInGrid({
       cells: getCellsInCalendar(),
       event,
-      changePage: changeGridPage,
+      changePage: canChangeYear ? changeGridPage : undefined,
     });
   });
 
@@ -91,6 +91,12 @@ export namespace useCalendarMonthsGrid {
      * This is used to make sure the keyboard navigation works correctly.
      */
     cellsPerRow: number;
+    /**
+     * Whether to go to the previous / next year
+     * when the end of the list is reached while using the arrow keys.
+     * @default true
+     */
+    canChangeYear?: boolean;
     children?: (parameters: ChildrenParameters) => React.ReactNode;
   }
 
