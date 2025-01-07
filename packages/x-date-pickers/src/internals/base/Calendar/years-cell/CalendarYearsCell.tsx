@@ -19,8 +19,13 @@ const InnerCalendarYearsCell = React.forwardRef(function InnerCalendarYearsCell(
   const { getYearCellProps, isCurrent } = useCalendarYearsCell({ value, format, ctx });
 
   const state: CalendarYearsCell.State = React.useMemo(
-    () => ({ selected: ctx.isSelected, disabled: ctx.isDisabled, current: isCurrent }),
-    [ctx.isSelected, ctx.isDisabled, isCurrent],
+    () => ({
+      selected: ctx.isSelected,
+      disabled: ctx.isDisabled,
+      invalid: ctx.isInvalid,
+      current: isCurrent,
+    }),
+    [ctx.isSelected, ctx.isDisabled, ctx.isInvalid, isCurrent],
   );
 
   const { renderElement } = useComponentRenderer({
@@ -52,11 +57,7 @@ const CalendarYearsCell = React.forwardRef(function CalendarsYearCell(
     [rootContext.value, props.value, utils],
   );
 
-  const isDisabled = React.useMemo(() => {
-    if (rootContext.disabled) {
-      return true;
-    }
-
+  const isInvalid = React.useMemo(() => {
     if (rootContext.validationProps.disablePast && utils.isBeforeYear(props.value, now)) {
       return true;
     }
@@ -81,8 +82,17 @@ const CalendarYearsCell = React.forwardRef(function CalendarsYearCell(
     }
 
     const yearToValidate = utils.startOfYear(props.value);
+
     return rootContext.validationProps.shouldDisableYear(yearToValidate);
-  }, [rootContext.disabled, rootContext.validationProps, props.value, now, utils]);
+  }, [rootContext.validationProps, props.value, now, utils]);
+
+  const isDisabled = React.useMemo(() => {
+    if (rootContext.disabled) {
+      return true;
+    }
+
+    return isInvalid;
+  }, [rootContext.disabled, isInvalid]);
 
   const isTabbable = React.useMemo(
     () =>
@@ -131,10 +141,11 @@ const CalendarYearsCell = React.forwardRef(function CalendarsYearCell(
     () => ({
       isSelected,
       isDisabled,
+      isInvalid,
       isTabbable,
       selectYear,
     }),
-    [isSelected, isDisabled, isTabbable, selectYear],
+    [isSelected, isDisabled, isInvalid, isTabbable, selectYear],
   );
 
   return <MemoizedInnerCalendarYearsCell ref={mergedRef} {...props} ctx={ctx} />;
@@ -150,6 +161,10 @@ export namespace CalendarYearsCell {
      * Whether the year is disabled.
      */
     disabled: boolean;
+    /**
+     * Whether the year is invalid.
+     */
+    invalid: boolean;
     /**
      * Whether the year contains the current date.
      */

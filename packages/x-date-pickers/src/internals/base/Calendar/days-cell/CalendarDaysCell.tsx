@@ -37,10 +37,11 @@ const InnerCalendarDaysCell = React.forwardRef(function CalendarDaysGrid(
     () => ({
       selected: ctx.isSelected,
       disabled: ctx.isDisabled,
+      invalid: ctx.isInvalid,
       outsideMonth: ctx.isOutsideCurrentMonth,
       current: isCurrent,
     }),
-    [ctx.isSelected, ctx.isDisabled, ctx.isOutsideCurrentMonth, isCurrent],
+    [ctx.isSelected, ctx.isDisabled, ctx.isInvalid, ctx.isOutsideCurrentMonth, isCurrent],
   );
 
   const { renderElement } = useComponentRenderer({
@@ -134,6 +135,10 @@ export namespace CalendarDaysCell {
      * Whether the day is disabled.
      */
     disabled: boolean;
+    /**
+     * Whether the day is invalid.
+     */
+    invalid: boolean;
     /**
      * Whether the day contains the current date.
      */

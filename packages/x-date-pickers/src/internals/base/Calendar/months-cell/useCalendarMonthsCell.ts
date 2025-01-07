@@ -53,6 +53,7 @@ export namespace useCalendarMonthsCell {
   export interface Context {
     isSelected: boolean;
     isDisabled: boolean;
+    isInvalid: boolean;
     isTabbable: boolean;
     selectMonth: (value: PickerValidDate) => void;
   }

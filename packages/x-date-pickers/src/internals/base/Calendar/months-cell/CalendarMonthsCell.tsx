@@ -19,8 +19,13 @@ const InnerCalendarMonthsCell = React.forwardRef(function InnerCalendarMonthsCel
   const { getMonthsCellProps, isCurrent } = useCalendarMonthsCell({ value, format, ctx });
 
   const state: CalendarMonthsCell.State = React.useMemo(
-    () => ({ selected: ctx.isSelected, disabled: ctx.isDisabled, current: isCurrent }),
-    [ctx.isSelected, ctx.isDisabled, isCurrent],
+    () => ({
+      selected: ctx.isSelected,
+      disabled: ctx.isDisabled,
+      invlid: ctx.isInvalid,
+      current: isCurrent,
+    }),
+    [ctx.isSelected, ctx.isDisabled, ctx.isInvalid, isCurrent],
   );
 
   const { renderElement } = useComponentRenderer({
@@ -52,11 +57,7 @@ const CalendarMonthsCell = React.forwardRef(function CalendarMonthsCell(
     [rootContext.value, props.value, utils],
   );
 
-  const isDisabled = React.useMemo(() => {
-    if (rootContext.disabled) {
-      return true;
-    }
-
+  const isInvalid = React.useMemo(() => {
     const firstEnabledMonth = utils.startOfMonth(
       rootContext.validationProps.disablePast &&
         utils.isAfter(now, rootContext.validationProps.minDate)
@@ -86,7 +87,15 @@ const CalendarMonthsCell = React.forwardRef(function CalendarMonthsCell(
     }
 
     return rootContext.validationProps.shouldDisableMonth(monthToValidate);
-  }, [rootContext.disabled, rootContext.validationProps, props.value, now, utils]);
+  }, [rootContext.validationProps, props.value, now, utils]);
+
+  const isDisabled = React.useMemo(() => {
+    if (rootContext.disabled) {
+      return true;
+    }
+
+    return isInvalid;
+  }, [rootContext.disabled, isInvalid]);
 
   const isTabbable = React.useMemo(
     () =>
@@ -136,10 +145,11 @@ const CalendarMonthsCell = React.forwardRef(function CalendarMonthsCell(
     () => ({
       isSelected,
       isDisabled,
+      isInvalid,
       isTabbable,
       selectMonth,
     }),
-    [isSelected, isDisabled, isTabbable, selectMonth],
+    [isSelected, isDisabled, isInvalid, isTabbable, selectMonth],
   );
 
   return <MemoizedInnerCalendarMonthsCell {...props} ref={mergedRef} ctx={ctx} />;
@@ -155,6 +165,10 @@ export namespace CalendarMonthsCell {
      * Whether the month is disabled.
      */
     disabled: boolean;
+    /**
+     * Whether the month is invalid.
+     */
+    invalid: boolean;
     /**
      * Whether the month contains the current date.
      */

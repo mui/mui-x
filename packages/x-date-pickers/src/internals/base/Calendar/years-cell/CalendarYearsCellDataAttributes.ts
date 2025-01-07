@@ -8,6 +8,10 @@ export enum CalendarYearsCellDataAttributes {
    */
   disabled = 'data-disabled',
   /**
+   * Present when the year is invalid.
+   */
+  invalid = 'data-invalid',
+  /**
    * Present when the year contains the current date.
    */
   current = 'data-current',

@@ -53,6 +53,7 @@ export namespace useCalendarYearsCell {
   export interface Context {
     isSelected: boolean;
     isDisabled: boolean;
+    isInvalid: boolean;
     isTabbable: boolean;
     selectYear: (value: PickerValidDate) => void;
   }
