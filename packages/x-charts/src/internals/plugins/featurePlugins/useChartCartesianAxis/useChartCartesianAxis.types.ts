@@ -66,7 +66,7 @@ export interface UseChartCartesianAxisState {
    * @ignore - state populated by the useChartProZoomPlugin
    */
   zoom?: {
-    options: Record<AxisId, DefaultizedZoomOption>;
+    optionsLookup: Record<AxisId, DefaultizedZoomOption>;
     isInteracting: boolean;
     zoomData: ZoomData[];
   };

@@ -44,12 +44,12 @@ const selectorChartZoomMap = createSelector(
   (zoom) => zoom?.zoomData && createZoomMap(zoom?.zoomData),
 );
 
-const selectorChartZoomOptions = createSelector(selectorChartZoomState, (zoom) => zoom?.options);
+const selectorChartZoomOptionsLookup = createSelector(selectorChartZoomState, (zoom) => zoom?.optionsLookup);
 
 const selectorChartXFilter = createSelector(
   [
     selectorChartZoomMap,
-    selectorChartZoomOptions,
+    selectorChartZoomOptionsLookup,
     selectorChartSeriesConfig,
     selectorChartSeriesProcessed,
   ],
@@ -68,7 +68,7 @@ const selectorChartXFilter = createSelector(
 const selectorChartYFilter = createSelector(
   [
     selectorChartZoomMap,
-    selectorChartZoomOptions,
+    selectorChartZoomOptionsLookup,
     selectorChartSeriesConfig,
     selectorChartSeriesProcessed,
   ],
@@ -127,7 +127,7 @@ export const selectorChartXAxis = createSelector(
     selectorChartSeriesProcessed,
     selectorChartSeriesConfig,
     selectorChartZoomMap,
-    selectorChartZoomOptions,
+    selectorChartZoomOptionsLookup,
     selectorChartZoomAxisFilters,
   ],
   (axis, drawingArea, formattedSeries, seriesConfig, zoomMap, zoomOptions, getFilters) =>
@@ -150,7 +150,7 @@ export const selectorChartYAxis = createSelector(
     selectorChartSeriesProcessed,
     selectorChartSeriesConfig,
     selectorChartZoomMap,
-    selectorChartZoomOptions,
+    selectorChartZoomOptionsLookup,
     selectorChartZoomAxisFilters,
   ],
   (axis, drawingArea, formattedSeries, seriesConfig, zoomMap, zoomOptions, getFilters) =>

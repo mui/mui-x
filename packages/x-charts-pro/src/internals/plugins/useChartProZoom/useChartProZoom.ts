@@ -21,7 +21,7 @@ import {
   preventDefault,
   zoomAtPoint,
 } from './useChartProZoom.utils';
-import { selectorChartZoomOptions } from './useChartProZoom.selectors';
+import { selectorChartZoomOptionsLookup } from './useChartProZoom.selectors';
 
 // It is helpful to avoid the need to provide the possibly auto-generated id for each axis.
 function initializeZoomData(options: Record<AxisId, DefaultizedZoomOption>) {
@@ -39,8 +39,8 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   params,
 }) => {
   const drawingArea = useSelector(store, selectorChartDrawingArea);
-  const options = useSelector(store, selectorChartZoomOptions);
-  const isZoomEnabled = Object.keys(options).length > 0;
+  const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
+  const isZoomEnabled = Object.keys(optionsLookup).length > 0;
 
   // Add events
   const eventCacheRef = React.useRef<PointerEvent[]>([]);
@@ -76,8 +76,8 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
 
   // Add event for chart panning
   const isPanEnabled = React.useMemo(
-    () => Object.values(options).some((v) => v.panning) || false,
-    [options],
+    () => Object.values(optionsLookup).some((v) => v.panning) || false,
+    [optionsLookup],
   );
   const isDraggingRef = React.useRef(false);
   const touchStartRef = React.useRef<{ x: number; y: number; zoomData: ZoomData[] } | null>(null);
@@ -97,17 +97,17 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
       const movementX = point.x - touchStartRef.current.x;
       const movementY = (point.y - touchStartRef.current.y) * -1;
       const newZoomData = touchStartRef.current.zoomData.map((zoom) => {
-        const option = options[zoom.axisId];
-        if (!option || !option.panning) {
+        const options = optionsLookup[zoom.axisId];
+        if (!options || !options.panning) {
           return zoom;
         }
         const min = zoom.start;
         const max = zoom.end;
         const span = max - min;
-        const MIN_PERCENT = option.minStart;
-        const MAX_PERCENT = option.maxEnd;
-        const movement = option.axisDirection === 'x' ? movementX : movementY;
-        const dimension = option.axisDirection === 'x' ? drawingArea.width : drawingArea.height;
+        const MIN_PERCENT = options.minStart;
+        const MAX_PERCENT = options.maxEnd;
+        const movement = options.axisDirection === 'x' ? movementX : movementY;
+        const dimension = options.axisDirection === 'x' ? drawingArea.width : drawingArea.height;
         let newMinPercent = min - (movement / dimension) * span;
         let newMaxPercent = max - (movement / dimension) * span;
         if (newMinPercent < MIN_PERCENT) {
@@ -121,8 +121,8 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
         if (
           newMinPercent < MIN_PERCENT ||
           newMaxPercent > MAX_PERCENT ||
-          span < option.minSpan ||
-          span > option.maxSpan
+          span < options.minSpan ||
+          span > options.maxSpan
         ) {
           return zoom;
         }
@@ -179,7 +179,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     isDraggingRef,
     setIsInteracting,
     isPanEnabled,
-    options,
+    optionsLookup,
     drawingArea.width,
     drawingArea.height,
     setZoomDataCallback,
@@ -217,7 +217,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
 
       setZoomDataCallback((prevZoomData) => {
         return prevZoomData.map((zoom) => {
-          const option = options[zoom.axisId];
+          const option = optionsLookup[zoom.axisId];
           if (!option) {
             return zoom;
           }
@@ -264,7 +264,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
 
       setZoomDataCallback((prevZoomData) => {
         const newZoomData = prevZoomData.map((zoom) => {
-          const option = options[zoom.axisId];
+          const option = optionsLookup[zoom.axisId];
           if (!option) {
             return zoom;
           }
@@ -344,7 +344,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     svgRef,
     drawingArea,
     isZoomEnabled,
-    options,
+    optionsLookup,
     setIsInteracting,
     instance,
     setZoomDataCallback,
@@ -366,7 +366,7 @@ useChartProZoom.params = {
 };
 
 useChartProZoom.getDefaultizedParams = ({ params }) => {
-  const options = {
+  const optionsLookup = {
     ...params.defaultizedXAxis.reduce<Record<AxisId, DefaultizedZoomOption>>((acc, v) => {
       const { zoom, id: axisId } = v;
       const defaultizedZoom = defaultizeZoom(zoom, axisId, 'x');
@@ -387,16 +387,16 @@ useChartProZoom.getDefaultizedParams = ({ params }) => {
 
   return {
     ...params,
-    options,
+    optionsLookup,
   };
 };
 
 useChartProZoom.getInitialState = (params) => {
   return {
     zoom: {
-      options: params.options,
+      optionsLookup: params.optionsLookup,
       zoomData:
-        params.initialZoom === undefined ? initializeZoomData(params.options) : params.initialZoom,
+        params.initialZoom === undefined ? initializeZoomData(params.optionsLookup) : params.initialZoom,
       isInteracting: false,
     },
   };

@@ -4,9 +4,9 @@ import { UseChartProZoomSignature } from './useChartProZoom.types';
 export const selectorChartZoomState: ChartRootSelector<UseChartProZoomSignature> = (state) =>
   state.zoom;
 
-export const selectorChartZoomOptions = createSelector(
+export const selectorChartZoomOptionsLookup = createSelector(
   selectorChartZoomState,
-  (zoom) => zoom.options,
+  (zoom) => zoom.optionsLookup,
 );
 
 export const selectorChartZoomData = createSelector(
@@ -20,6 +20,6 @@ export const selectorChartZoomIsInteracting = createSelector(
 );
 
 export const selectorChartZoomIsEnabled = createSelector(
-  selectorChartZoomOptions,
-  (options) => Object.keys(options).length > 0,
+  selectorChartZoomOptionsLookup,
+  (optionsLookup) => Object.keys(optionsLookup).length > 0,
 );
