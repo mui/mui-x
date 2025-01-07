@@ -12,6 +12,10 @@
   width: 312px;
 }
 
+.RootShort {
+  height: 204px;
+}
+
 .RootWithTwoPanels {
   width: 552px;
   flex-direction: row;

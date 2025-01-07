@@ -36,6 +36,10 @@ packageName: '@mui/x-date-pickers'
 
 {{"demo": "MonthCalendarWithListLayoutDemo.js"}}
 
+### Custom cell format
+
+{{"demo": "MonthCalendarWithCustomCellFormatDemo.js"}}
+
 ### Multiple visible years
 
 TODO

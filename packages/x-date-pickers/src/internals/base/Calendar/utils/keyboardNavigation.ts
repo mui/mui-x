@@ -350,7 +350,7 @@ function isNavigable(element: HTMLElement | null): element is HTMLElement {
     return false;
   }
 
-  if (element.dataset['outside-month'] != null) {
+  if (element.dataset.outsideMonth != null) {
     return false;
   }
 
