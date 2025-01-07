@@ -5,8 +5,9 @@ import type { ExtremumFilter } from './useChartCartesianAxis.types';
 export type ZoomData = { axisId: AxisId; start: number; end: number };
 
 export type ZoomFilterMode = 'keep' | 'discard';
+
 export interface ZoomOptions {
-  filterMode: ZoomFilterMode;
+  filterMode?: ZoomFilterMode;
 }
 
 export type ZoomAxisFilters = Record<AxisId, ExtremumFilter>;
