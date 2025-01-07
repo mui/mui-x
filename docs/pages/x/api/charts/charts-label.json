@@ -15,7 +15,7 @@
     }
   ],
   "spread": true,
-  "themeDefaultProps": true,
+  "themeDefaultProps": false,
   "muiName": "MuiChartsLabel",
   "forwardsRefTo": "HTMLSpanElement",
   "filename": "/packages/x-charts/src/ChartsLabel/ChartsLabel.tsx",
