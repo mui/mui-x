@@ -25,10 +25,10 @@ const nbNOPickers: Partial<PickersLocaleText<any>> = {
   // DateRange labels
   start: 'Start',
   end: 'Slutt',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: 'Startdato',
+  startTime: 'Starttid',
+  endDate: 'Sluttdato',
+  endTime: 'Slutttid',
 
   // Action bar
   cancelButtonLabel: 'Avbryt',
@@ -67,7 +67,7 @@ const nbNOPickers: Partial<PickersLocaleText<any>> = {
     formattedTime || (value !== null && utils.isValid(value))
       ? `Velg tid, valgt tid er ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Velg tid',
-  // fieldClearLabel: 'Clear',
+  fieldClearLabel: 'Slett',
 
   // Table labels
   timeTableLabel: 'velg tid',
@@ -84,17 +84,17 @@ const nbNOPickers: Partial<PickersLocaleText<any>> = {
   fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
-  // year: 'Year',
-  // month: 'Month',
-  // day: 'Day',
-  // weekDay: 'Week day',
-  // hours: 'Hours',
-  // minutes: 'Minutes',
-  // seconds: 'Seconds',
-  // meridiem: 'Meridiem',
+  year: 'År',
+  month: 'Måned',
+  day: 'Dag',
+  weekDay: 'Ukedag',
+  hours: 'Timer',
+  minutes: 'Minutter',
+  seconds: 'Sekunder',
+  meridiem: 'Meridiem',
 
   // Common
-  // empty: 'Empty',
+  empty: 'Tøm',
 };
 
 export const nbNO = getPickersLocalization(nbNOPickers);
