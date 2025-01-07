@@ -4,12 +4,12 @@ import { PickerValidDate } from '../../../../models';
 import { GenericHTMLProps } from '../../utils/types';
 import { mergeReactProps } from '../../utils/mergeReactProps';
 import { navigateInList } from '../utils/keyboardNavigation';
-import { useCalendarMonthsCellCollection } from '../utils/months-cell-collection/useCalendarMonthsCellCollection';
+import { useMonthsCells } from '../utils/useMonthsCells';
 
 export function useCalendarMonthsList(parameters: useCalendarMonthsList.Parameters) {
   const { children, loop = true } = parameters;
   const monthsCellRefs = React.useRef<(HTMLElement | null)[]>([]);
-  const { months, context } = useCalendarMonthsCellCollection();
+  const { months } = useMonthsCells();
 
   const onKeyDown = useEventCallback((event: React.KeyboardEvent) => {
     navigateInList({
@@ -31,8 +31,8 @@ export function useCalendarMonthsList(parameters: useCalendarMonthsList.Paramete
   );
 
   return React.useMemo(
-    () => ({ getMonthListProps, context, monthsCellRefs }),
-    [getMonthListProps, context, monthsCellRefs],
+    () => ({ getMonthListProps, monthsCellRefs }),
+    [getMonthListProps, monthsCellRefs],
   );
 }
 

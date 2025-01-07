@@ -1,13 +1,15 @@
 'use client';
 import * as React from 'react';
+import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
+import { PickerValidDate } from '../../../../models';
 import { useNow, useUtils } from '../../../hooks/useUtils';
+import { findClosestEnabledDate } from '../../../utils/date-utils';
 import { useComponentRenderer } from '../../utils/useComponentRenderer';
 import { useCalendarRootContext } from '../root/CalendarRootContext';
 import { useCalendarYearsCell } from './useCalendarYearsCell';
 import { BaseUIComponentProps } from '../../utils/types';
 import { useCompositeListItem } from '../../composite/list/useCompositeListItem';
-import { useCalendarYearsCellCollectionContext } from '../utils/years-cell-collection/CalendarYearsCellCollectionContext';
 
 const InnerCalendarYearsCell = React.forwardRef(function InnerCalendarYearsCell(
   props: InnerCalendarYearsCellProps,
@@ -40,7 +42,6 @@ const CalendarYearsCell = React.forwardRef(function CalendarsYearCell(
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
   const rootContext = useCalendarRootContext();
-  const yearsListContext = useCalendarYearsCellCollectionContext();
   const { ref: listItemRef } = useCompositeListItem();
   const utils = useUtils();
   const now = useNow(rootContext.timezone);
@@ -91,14 +92,49 @@ const CalendarYearsCell = React.forwardRef(function CalendarsYearCell(
     [utils, rootContext.value, rootContext.referenceDate, isSelected, props.value],
   );
 
+  const selectYear = useEventCallback((newValue: PickerValidDate) => {
+    if (rootContext.readOnly) {
+      return;
+    }
+
+    const newCleanValue = utils.setYear(
+      rootContext.value ?? rootContext.referenceDate,
+      utils.getYear(newValue),
+    );
+
+    const startOfYear = utils.startOfYear(newCleanValue);
+    const endOfYear = utils.endOfYear(newCleanValue);
+
+    const closestEnabledDate = rootContext.isDateDisabled(newCleanValue)
+      ? findClosestEnabledDate({
+          utils,
+          date: newCleanValue,
+          minDate: utils.isBefore(rootContext.validationProps.minDate, startOfYear)
+            ? startOfYear
+            : rootContext.validationProps.minDate,
+          maxDate: utils.isAfter(rootContext.validationProps.maxDate, endOfYear)
+            ? endOfYear
+            : rootContext.validationProps.maxDate,
+          disablePast: rootContext.validationProps.disablePast,
+          disableFuture: rootContext.validationProps.disableFuture,
+          isDateDisabled: rootContext.isDateDisabled,
+          timezone: rootContext.timezone,
+        })
+      : newCleanValue;
+
+    if (closestEnabledDate) {
+      rootContext.setValue(closestEnabledDate, { section: 'year' });
+    }
+  });
+
   const ctx = React.useMemo<useCalendarYearsCell.Context>(
     () => ({
       isSelected,
       isDisabled,
       isTabbable,
-      selectYear: yearsListContext.selectYear,
+      selectYear,
     }),
-    [isSelected, isDisabled, isTabbable, yearsListContext.selectYear],
+    [isSelected, isDisabled, isTabbable, selectYear],
   );
 
   return <MemoizedInnerCalendarYearsCell ref={mergedRef} {...props} ctx={ctx} />;

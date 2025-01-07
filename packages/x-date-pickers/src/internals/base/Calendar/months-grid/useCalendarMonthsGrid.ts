@@ -11,7 +11,7 @@ import {
   NavigateInGridChangePage,
   PageNavigationTarget,
 } from '../utils/keyboardNavigation';
-import { useCalendarMonthsCellCollection } from '../utils/months-cell-collection/useCalendarMonthsCellCollection';
+import { useMonthsCells } from '../utils/useMonthsCells';
 import { useCalendarRootContext } from '../root/CalendarRootContext';
 import { getFirstEnabledYear, getLastEnabledYear } from '../utils/date';
 import { CalendarMonthsGridCssVars } from './CalendarMonthsGridCssVars';
@@ -21,7 +21,7 @@ export function useCalendarMonthsGrid(parameters: useCalendarMonthsGrid.Paramete
   const utils = useUtils();
   const rootContext = useCalendarRootContext();
   const monthsCellRefs = React.useRef<(HTMLElement | null)[]>([]);
-  const { months, context } = useCalendarMonthsCellCollection();
+  const { months } = useMonthsCells();
   const pageNavigationTargetRef = React.useRef<PageNavigationTarget | null>(null);
 
   const getCellsInCalendar = useEventCallback(() => {
@@ -116,8 +116,8 @@ export function useCalendarMonthsGrid(parameters: useCalendarMonthsGrid.Paramete
   );
 
   return React.useMemo(
-    () => ({ getMonthsGridProps, context, monthsCellRefs }),
-    [getMonthsGridProps, context, monthsCellRefs],
+    () => ({ getMonthsGridProps, monthsCellRefs }),
+    [getMonthsGridProps, monthsCellRefs],
   );
 }
 

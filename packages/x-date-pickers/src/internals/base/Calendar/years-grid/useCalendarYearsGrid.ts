@@ -4,13 +4,13 @@ import { PickerValidDate } from '../../../../models';
 import { GenericHTMLProps } from '../../utils/types';
 import { mergeReactProps } from '../../utils/mergeReactProps';
 import { navigateInGrid } from '../utils/keyboardNavigation';
-import { useCalendarYearsCellCollection } from '../utils/years-cell-collection/useCalendarYearsCellCollection';
+import { useYearsCells } from '../utils/useYearsCells';
 import { CalendarYearsGridCssVars } from './CalendarYearsGridCssVars';
 
 export function useCalendarYearsGrid(parameters: useCalendarYearsGrid.Parameters) {
   const { children, cellsPerRow } = parameters;
   const yearsCellRefs = React.useRef<(HTMLElement | null)[]>([]);
-  const { years, context } = useCalendarYearsCellCollection();
+  const { years } = useYearsCells();
 
   const getCellsInCalendar = useEventCallback(() => {
     const grid: HTMLElement[][] = Array.from(
@@ -53,8 +53,8 @@ export function useCalendarYearsGrid(parameters: useCalendarYearsGrid.Parameters
   );
 
   return React.useMemo(
-    () => ({ getYearsGridProps, context, yearsCellRefs }),
-    [getYearsGridProps, context, yearsCellRefs],
+    () => ({ getYearsGridProps, yearsCellRefs }),
+    [getYearsGridProps, yearsCellRefs],
   );
 }
 

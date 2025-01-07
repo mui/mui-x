@@ -1,13 +1,15 @@
 'use client';
 import * as React from 'react';
+import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
+import { PickerValidDate } from '../../../../models';
 import { useNow, useUtils } from '../../../hooks/useUtils';
+import { findClosestEnabledDate } from '../../../utils/date-utils';
 import { useComponentRenderer } from '../../utils/useComponentRenderer';
 import { useCalendarRootContext } from '../root/CalendarRootContext';
 import { useCalendarMonthsCell } from './useCalendarMonthsCell';
 import { BaseUIComponentProps } from '../../utils/types';
 import { useCompositeListItem } from '../../composite/list/useCompositeListItem';
-import { useCalendarMonthsCellCollectionContext } from '../utils/months-cell-collection/CalendarMonthsCellCollectionContext';
 
 const InnerCalendarMonthsCell = React.forwardRef(function InnerCalendarMonthsCell(
   props: InnerCalendarMonthsCellProps,
@@ -40,7 +42,6 @@ const CalendarMonthsCell = React.forwardRef(function CalendarMonthsCell(
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
   const rootContext = useCalendarRootContext();
-  const monthsCellCollectionContext = useCalendarMonthsCellCollectionContext();
   const { ref: listItemRef } = useCompositeListItem();
   const utils = useUtils();
   const now = useNow(rootContext.timezone);
@@ -95,14 +96,50 @@ const CalendarMonthsCell = React.forwardRef(function CalendarMonthsCell(
     [utils, rootContext.value, rootContext.referenceDate, isSelected, props.value],
   );
 
+  const selectMonth = useEventCallback((newValue: PickerValidDate) => {
+    if (rootContext.readOnly) {
+      return;
+    }
+
+    const newCleanValue = utils.setMonth(
+      rootContext.value ?? rootContext.referenceDate,
+      utils.getMonth(newValue),
+    );
+
+    const startOfMonth = utils.startOfMonth(newCleanValue);
+    const endOfMonth = utils.endOfMonth(newCleanValue);
+
+    const closestEnabledDate = rootContext.isDateDisabled(newCleanValue)
+      ? findClosestEnabledDate({
+          utils,
+          date: newCleanValue,
+          minDate: utils.isBefore(rootContext.validationProps.minDate, startOfMonth)
+            ? startOfMonth
+            : rootContext.validationProps.minDate,
+          maxDate: utils.isAfter(rootContext.validationProps.maxDate, endOfMonth)
+            ? endOfMonth
+            : rootContext.validationProps.maxDate,
+          disablePast: rootContext.validationProps.disablePast,
+          disableFuture: rootContext.validationProps.disableFuture,
+          isDateDisabled: rootContext.isDateDisabled,
+          timezone: rootContext.timezone,
+        })
+      : newCleanValue;
+
+    if (closestEnabledDate) {
+      rootContext.setVisibleDate(closestEnabledDate, true);
+      rootContext.setValue(closestEnabledDate, { section: 'month' });
+    }
+  });
+
   const ctx = React.useMemo<useCalendarMonthsCell.Context>(
     () => ({
       isSelected,
       isDisabled,
       isTabbable,
-      selectMonth: monthsCellCollectionContext.selectMonth,
+      selectMonth,
     }),
-    [isSelected, isDisabled, isTabbable, monthsCellCollectionContext.selectMonth],
+    [isSelected, isDisabled, isTabbable, selectMonth],
   );
 
   return <MemoizedInnerCalendarMonthsCell {...props} ref={mergedRef} ctx={ctx} />;

@@ -4,14 +4,13 @@ import { useCalendarMonthsList } from './useCalendarMonthsList';
 import { BaseUIComponentProps } from '../../utils/types';
 import { useComponentRenderer } from '../../utils/useComponentRenderer';
 import { CompositeList } from '../../composite/list/CompositeList';
-import { CalendarMonthsCellCollectionContext } from '../utils/months-cell-collection/CalendarMonthsCellCollectionContext';
 
 const CalendarMonthsList = React.forwardRef(function CalendarMonthsList(
   props: CalendarMonthsList.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, render, children, loop, ...otherProps } = props;
-  const { getMonthListProps, context, monthsCellRefs } = useCalendarMonthsList({
+  const { getMonthListProps, monthsCellRefs } = useCalendarMonthsList({
     children,
     loop,
   });
@@ -26,11 +25,7 @@ const CalendarMonthsList = React.forwardRef(function CalendarMonthsList(
     extraProps: otherProps,
   });
 
-  return (
-    <CalendarMonthsCellCollectionContext.Provider value={context}>
-      <CompositeList elementsRef={monthsCellRefs}>{renderElement()}</CompositeList>
-    </CalendarMonthsCellCollectionContext.Provider>
-  );
+  return <CompositeList elementsRef={monthsCellRefs}>{renderElement()}</CompositeList>;
 });
 
 export namespace CalendarMonthsList {

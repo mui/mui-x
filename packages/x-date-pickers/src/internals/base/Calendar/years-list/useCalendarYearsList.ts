@@ -4,12 +4,12 @@ import { PickerValidDate } from '../../../../models';
 import { GenericHTMLProps } from '../../utils/types';
 import { mergeReactProps } from '../../utils/mergeReactProps';
 import { navigateInList } from '../utils/keyboardNavigation';
-import { useCalendarYearsCellCollection } from '../utils/years-cell-collection/useCalendarYearsCellCollection';
+import { useYearsCells } from '../utils/useYearsCells';
 
 export function useCalendarYearsList(parameters: useCalendarYearsList.Parameters) {
   const { children, loop = true } = parameters;
   const yearsCellRefs = React.useRef<(HTMLElement | null)[]>([]);
-  const { years, context } = useCalendarYearsCellCollection();
+  const { years } = useYearsCells();
 
   const onKeyDown = useEventCallback((event: React.KeyboardEvent) => {
     navigateInList({
@@ -31,8 +31,8 @@ export function useCalendarYearsList(parameters: useCalendarYearsList.Parameters
   );
 
   return React.useMemo(
-    () => ({ getYearsListProps, context, yearsCellRefs }),
-    [getYearsListProps, context, yearsCellRefs],
+    () => ({ getYearsListProps, yearsCellRefs }),
+    [getYearsListProps, yearsCellRefs],
   );
 }
 
