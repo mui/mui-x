@@ -1,5 +1,5 @@
 {
-  "interfaceDescription": "Grid aggregation function data sourcedefinition interface.",
+  "interfaceDescription": "Grid aggregation function data source definition interface.",
   "propertiesDescriptions": {
     "columnTypes": {
       "description": "Column types supported by this aggregation function.<br />If not defined, all types are supported (in most cases this property should be defined)."

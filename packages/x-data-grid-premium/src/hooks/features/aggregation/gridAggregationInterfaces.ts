@@ -82,7 +82,7 @@ export interface GridAggregationFunction<V = any, AV = V> {
 }
 
 /**
- * Grid aggregation function data sourcedefinition interface.
+ * Grid aggregation function data source definition interface.
  * @demos
  *   - [Server-side aggregation](/x/react-data-grid/server-side-data/aggregation/)
  */
