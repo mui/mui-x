@@ -162,8 +162,17 @@ interface ElementSlotProps {
 }
 
 // Merge MUI types into base types to keep slotProps working.
+type Select<A, B, K> = K extends keyof A ? A[K] : K extends keyof B ? B[K] : never;
 type Merge<A, B> = {
-  [K in keyof A | keyof B]: K extends keyof A ? A[K] : K extends keyof B ? B[K] : never;
+  [K in keyof A | keyof B]: K extends 'ref'
+    ? Select<A, B, 'ref'>
+    : K extends keyof A & keyof B
+      ? A[K] & B[K]
+      : K extends keyof B
+        ? B[K]
+        : K extends keyof A
+          ? A[K]
+          : never;
 };
 export type GridSlotProps = Merge<BaseSlotProps, MaterialSlotProps> & ElementSlotProps;
 
