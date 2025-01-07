@@ -40,7 +40,7 @@ function ButtonDateRangeField(props: DateRangePickerFieldProps) {
 
   const formattedValue = pickerContext.value
     .map((date: Dayjs) =>
-      date == null ? parsedFormat : date.format(pickerContext.fieldFormat!),
+      date == null ? parsedFormat : date.format(pickerContext.fieldFormat),
     )
     .join(' – ');
 

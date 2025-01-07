@@ -39,7 +39,7 @@ function MaskedDateField(props: DatePickerFieldProps) {
 
   // Control the input text
   const [inputValue, setInputValue] = React.useState<string>(() =>
-    getInputValueFromValue(pickerContext.value, pickerContext.fieldFormat!),
+    getInputValueFromValue(pickerContext.value, pickerContext.fieldFormat),
   );
 
   React.useEffect(() => {
@@ -62,7 +62,7 @@ function MaskedDateField(props: DatePickerFieldProps) {
   const handleInputValueChange = (newInputValue: string) => {
     setInputValue(newInputValue);
 
-    const newValue = dayjs(newInputValue, pickerContext.fieldFormat!);
+    const newValue = dayjs(newInputValue, pickerContext.fieldFormat);
     pickerContext.setValue(newValue, {
       validationError: getValidationErrorForNewValue(newValue),
     });
@@ -70,14 +70,14 @@ function MaskedDateField(props: DatePickerFieldProps) {
 
   const rifmFormat = React.useMemo(() => {
     const formattedDateWith1Digit = staticDateWith1DigitTokens.format(
-      pickerContext.fieldFormat!,
+      pickerContext.fieldFormat,
     );
     const inferredFormatPatternWith1Digits = formattedDateWith1Digit.replace(
       ACCEPT_REGEX,
       MASK_USER_INPUT_SYMBOL,
     );
     const inferredFormatPatternWith2Digits = staticDateWith2DigitTokens
-      .format(pickerContext.fieldFormat!)
+      .format(pickerContext.fieldFormat)
       .replace(ACCEPT_REGEX, '_');
 
     if (inferredFormatPatternWith1Digits !== inferredFormatPatternWith2Digits) {

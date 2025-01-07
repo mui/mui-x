@@ -117,9 +117,9 @@ export interface PickerContextValue<
    * Format that should be used to render the value in the field.
    * Is equal to `props.format` on the picker component if defined.
    * Is generated based on the available views if not defined.
-   * Is always equal to null if the component you are accessing the context from is not wrapped by a picker.
+   * Is always equal to an empty string if the component you are accessing the context from is not wrapped by a picker.
    */
-  fieldFormat: string | null;
+  fieldFormat: string;
 }
 
 export interface PickerActionsContextValue<TValue extends PickerValidValue, TError = string | null>

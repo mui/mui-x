@@ -374,11 +374,11 @@ This change causes a few breaking changes:
   ```
 
   :::success
-  If you are using a hook like `useDateField`, you don't have anything to do, the value from the context are automatically applied.
+  If you are using a hook like `useDateField`, you don't have to do anything, the value from the context are automatically applied.
   :::
 
-- The component passed to the `field` slot no longer receives the `formatDensity`, `enableAccessibleFieldDOMStructure` and `selectedSections` and `onSelectedSectionsChange` props.
-  They are currently not exposed by the picker, but previously they were always equal to their equivalent prop on the picker.
+- The component passed to the `field` slot no longer receives the `formatDensity`, `enableAccessibleFieldDOMStructure`, `selectedSections` and `onSelectedSectionsChange` props.
+  These props, formerly mirroring the picker's props, are no longer exposed.
   You can manually pass them using `slotProps.field` to keep the same behavior:
 
   ```diff
@@ -406,7 +406,7 @@ This change causes a few breaking changes:
   - `onSelectedSectionsChange`: `undefined`
 
   :::success
-  If you are using a hook like `useDateField`, you don't have anything to do, the value from the context are automatically applied.
+  If you are using a hook like `useDateField`, you don't have to do anything, the value from the context are automatically applied.
   :::
 
 ### Slot: `layout`
