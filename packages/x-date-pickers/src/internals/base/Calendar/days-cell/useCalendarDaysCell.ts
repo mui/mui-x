@@ -62,6 +62,7 @@ export namespace useCalendarDaysCell {
     colIndex: number;
     isSelected: boolean;
     isDisabled: boolean;
+    isInvalid: boolean;
     isTabbable: boolean;
     isOutsideCurrentMonth: boolean;
     selectDay: (value: PickerValidDate) => void;

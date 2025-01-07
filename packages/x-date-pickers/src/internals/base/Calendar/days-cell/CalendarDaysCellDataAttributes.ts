@@ -8,7 +8,11 @@ export enum CalendarDaysCellDataAttributes {
    */
   disabled = 'data-disabled',
   /**
-   * Present when the day contains the current date.
+   * Present when the day is invalid.
+   */
+  invalid = 'data-invalid',
+  /**
+   * Present when the day is the current date.
    */
   current = 'data-current',
   /**

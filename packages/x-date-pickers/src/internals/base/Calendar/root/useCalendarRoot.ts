@@ -115,7 +115,8 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
     validator: validateDate,
   });
 
-  const isDateDisabled = useIsDateDisabled({
+  // TODO: Rename this hook (if we keep it for Base UI X)
+  const isDateInvalid = useIsDateDisabled({
     ...validationProps,
     timezone,
   });
@@ -192,7 +193,7 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
       disabled,
       readOnly,
       autoFocus,
-      isDateDisabled,
+      isDateInvalid,
       validationProps,
       visibleDate,
       setVisibleDate: handleVisibleDateChange,
@@ -210,7 +211,7 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
       disabled,
       readOnly,
       autoFocus,
-      isDateDisabled,
+      isDateInvalid,
       validationProps,
       visibleDate,
       handleVisibleDateChange,

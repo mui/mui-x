@@ -105,7 +105,7 @@ const CalendarYearsCell = React.forwardRef(function CalendarsYearCell(
     const startOfYear = utils.startOfYear(newCleanValue);
     const endOfYear = utils.endOfYear(newCleanValue);
 
-    const closestEnabledDate = rootContext.isDateDisabled(newCleanValue)
+    const closestEnabledDate = rootContext.isDateInvalid(newCleanValue)
       ? findClosestEnabledDate({
           utils,
           date: newCleanValue,
@@ -117,7 +117,7 @@ const CalendarYearsCell = React.forwardRef(function CalendarsYearCell(
             : rootContext.validationProps.maxDate,
           disablePast: rootContext.validationProps.disablePast,
           disableFuture: rootContext.validationProps.disableFuture,
-          isDateDisabled: rootContext.isDateDisabled,
+          isDateDisabled: rootContext.isDateInvalid,
           timezone: rootContext.timezone,
         })
       : newCleanValue;

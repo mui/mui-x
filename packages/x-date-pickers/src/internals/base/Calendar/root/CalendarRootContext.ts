@@ -27,7 +27,7 @@ export interface CalendarRootContext {
   disabled: boolean;
   readOnly: boolean;
   autoFocus: boolean;
-  isDateDisabled: (day: PickerValidDate | null) => boolean;
+  isDateInvalid: (day: PickerValidDate | null) => boolean;
   validationProps: ValidateDateProps;
   visibleDate: PickerValidDate;
   setVisibleDate: (visibleDate: PickerValidDate, skipIfAlreadyVisible: boolean) => void;

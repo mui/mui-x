@@ -81,14 +81,16 @@ const CalendarDaysCell = React.forwardRef(function CalendarDaysCell(
     [monthsListContext.currentMonth, props.value, utils],
   );
 
-  const isDateDisabled = rootContext.isDateDisabled;
+  const isDateInvalid = rootContext.isDateInvalid;
+  const isInvalid = React.useMemo(() => isDateInvalid(props.value), [props.value, isDateInvalid]);
+
   const isDisabled = React.useMemo(() => {
     if (rootContext.disabled) {
       return true;
     }
 
-    return isDateDisabled(props.value);
-  }, [rootContext.disabled, isDateDisabled, props.value]);
+    return isInvalid;
+  }, [rootContext.disabled, isInvalid]);
 
   const isTabbable = React.useMemo(
     () =>
@@ -103,6 +105,7 @@ const CalendarDaysCell = React.forwardRef(function CalendarDaysCell(
       colIndex,
       isSelected,
       isDisabled,
+      isInvalid,
       isTabbable,
       isOutsideCurrentMonth,
       selectDay: monthsListContext.selectDay,
@@ -110,6 +113,7 @@ const CalendarDaysCell = React.forwardRef(function CalendarDaysCell(
     [
       isSelected,
       isDisabled,
+      isInvalid,
       isTabbable,
       isOutsideCurrentMonth,
       monthsListContext.selectDay,

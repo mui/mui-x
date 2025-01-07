@@ -109,7 +109,7 @@ const CalendarMonthsCell = React.forwardRef(function CalendarMonthsCell(
     const startOfMonth = utils.startOfMonth(newCleanValue);
     const endOfMonth = utils.endOfMonth(newCleanValue);
 
-    const closestEnabledDate = rootContext.isDateDisabled(newCleanValue)
+    const closestEnabledDate = rootContext.isDateInvalid(newCleanValue)
       ? findClosestEnabledDate({
           utils,
           date: newCleanValue,
@@ -121,7 +121,7 @@ const CalendarMonthsCell = React.forwardRef(function CalendarMonthsCell(
             : rootContext.validationProps.maxDate,
           disablePast: rootContext.validationProps.disablePast,
           disableFuture: rootContext.validationProps.disableFuture,
-          isDateDisabled: rootContext.isDateDisabled,
+          isDateDisabled: rootContext.isDateInvalid,
           timezone: rootContext.timezone,
         })
       : newCleanValue;
