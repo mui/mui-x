@@ -8,7 +8,7 @@ title: Data Grid - Cell selection
 
 ## Enabling cell selection
 
-The Community version of the Data Grid lets users select rows.
+The Community version of the Data Grid lets users select rows by default.
 With the Data Grid Premium, you can apply the `cellSelection` prop to let users select individual cells or ranges of cells.
 
 ```tsx
