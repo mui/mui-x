@@ -19,23 +19,27 @@ import {
 import { getAggregationRules } from './gridAggregationUtils';
 import { gridAggregationModelSelector } from './gridAggregationSelectors';
 
-const getAggregationCellValue = ({
-  apiRef,
+const getGroupAggregatedValue = ({
   groupId,
-  field,
-  aggregationFunction,
+  apiRef,
   aggregationRowsScope,
+  aggregatedFields,
+  aggregationRules,
+  position,
 }: {
-  apiRef: React.MutableRefObject<GridApiPremium>;
   groupId: GridRowId;
-  field: string;
-  aggregationFunction: GridAggregationFunction;
+  apiRef: React.MutableRefObject<GridApiPremium>;
   aggregationRowsScope: DataGridPremiumProcessedProps['aggregationRowsScope'];
+  aggregatedFields: string[];
+  aggregationRules: GridAggregationRules;
+  position: GridAggregationPosition;
 }) => {
-  const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
-  const rowIds: GridRowId[] = apiRef.current.getRowGroupChildren({ groupId });
+  const groupAggregationLookup: GridAggregationLookup[GridRowId] = {};
+  const aggregatedValues: { aggregatedField: string; values: any[] }[] = [];
 
-  const values: any[] = [];
+  const rowIds = apiRef.current.getRowGroupChildren({ groupId });
+  const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
+
   rowIds.forEach((rowId) => {
     if (aggregationRowsScope === 'filtered' && filteredRowsLookup[rowId] === false) {
       return;
@@ -53,51 +57,43 @@ const getAggregationCellValue = ({
       return;
     }
 
-    if (typeof aggregationFunction.getCellValue === 'function') {
-      const row = apiRef.current.getRow(rowId);
-      values.push(aggregationFunction.getCellValue({ row }));
-    } else {
-      values.push(apiRef.current.getCellValue(rowId, field));
+    const row = apiRef.current.getRow(rowId);
+
+    for (let j = 0; j < aggregatedFields.length; j += 1) {
+      const aggregatedField = aggregatedFields[j];
+      const columnAggregationRules = aggregationRules[aggregatedField];
+
+      const aggregationFunction = columnAggregationRules.aggregationFunction;
+      const field = aggregatedField;
+
+      if (aggregatedValues[j] === undefined) {
+        aggregatedValues[j] = {
+          aggregatedField,
+          values: [],
+        };
+      }
+
+      if (typeof aggregationFunction.getCellValue === 'function') {
+        aggregatedValues[j].values.push(aggregationFunction.getCellValue({ row }));
+      } else {
+        const colDef = apiRef.current.getColumn(field);
+        aggregatedValues[j].values.push(apiRef.current.getRowValue(row, colDef));
+      }
     }
   });
 
-  return aggregationFunction.apply({
-    values,
-    groupId,
-    field, // Added per user request in https://github.com/mui/mui-x/issues/6995#issuecomment-1327423455
-  });
-};
-
-const getGroupAggregatedValue = ({
-  groupId,
-  apiRef,
-  aggregationRowsScope,
-  aggregatedFields,
-  aggregationRules,
-  position,
-}: {
-  groupId: GridRowId;
-  apiRef: React.MutableRefObject<GridApiPremium>;
-  aggregationRowsScope: DataGridPremiumProcessedProps['aggregationRowsScope'];
-  aggregatedFields: string[];
-  aggregationRules: GridAggregationRules;
-  position: GridAggregationPosition;
-}) => {
-  const groupAggregationLookup: GridAggregationLookup[GridRowId] = {};
-
-  for (let j = 0; j < aggregatedFields.length; j += 1) {
-    const aggregatedField = aggregatedFields[j];
-    const columnAggregationRules = aggregationRules[aggregatedField];
+  for (let i = 0; i < aggregatedValues.length; i += 1) {
+    const { aggregatedField, values } = aggregatedValues[i];
+    const aggregationFunction = aggregationRules[aggregatedField].aggregationFunction;
+    const value = aggregationFunction.apply({
+      values,
+      groupId,
+      field: aggregatedField, // Added per user request in https://github.com/mui/mui-x/issues/6995#issuecomment-1327423455
+    });
 
     groupAggregationLookup[aggregatedField] = {
       position,
-      value: getAggregationCellValue({
-        apiRef,
-        groupId,
-        field: aggregatedField,
-        aggregationFunction: columnAggregationRules.aggregationFunction,
-        aggregationRowsScope,
-      }),
+      value,
     };
   }
 
