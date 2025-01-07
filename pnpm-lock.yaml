@@ -215,12 +215,12 @@ importers:
       danger:
         specifier: ^12.3.3
         version: 12.3.3(encoding@0.1.13)
-      date-fns-jalali-v4:
-        specifier: npm:date-fns-jalali@4.1.0-0
-        version: date-fns-jalali@4.1.0-0
-      date-fns-v4:
-        specifier: npm:date-fns@4.1.0
-        version: date-fns@4.1.0
+      date-fns-jalali-v2:
+        specifier: npm:date-fns-jalali@2.30.0-0
+        version: date-fns-jalali@2.30.0-0
+      date-fns-v2:
+        specifier: npm:date-fns@2.30.0
+        version: date-fns@2.30.0
       eslint:
         specifier: ^8.57.1
         version: 8.57.1
@@ -528,11 +528,11 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
       date-fns:
-        specifier: ^2.30.0
-        version: 2.30.0
+        specifier: ^4.1.0
+        version: 4.1.0
       date-fns-jalali:
-        specifier: ^2.30.0-0
-        version: 2.30.0-0
+        specifier: ^4.1.0-0
+        version: 4.1.0-0
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
@@ -1151,8 +1151,8 @@ importers:
         specifier: ^15.7.14
         version: 15.7.14
       date-fns:
-        specifier: ^2.30.0
-        version: 2.30.0
+        specifier: ^4.1.0
+        version: 4.1.0
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
@@ -1275,11 +1275,11 @@ importers:
         specifier: ^15.7.14
         version: 15.7.14
       date-fns:
-        specifier: ^2.30.0
-        version: 2.30.0
+        specifier: ^4.1.0
+        version: 4.1.0
       date-fns-jalali:
-        specifier: ^2.30.0-0
-        version: 2.30.0-0
+        specifier: ^4.1.0-0
+        version: 4.1.0-0
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
@@ -1364,11 +1364,11 @@ importers:
         specifier: ^15.7.14
         version: 15.7.14
       date-fns:
-        specifier: ^2.30.0
-        version: 2.30.0
+        specifier: ^4.1.0
+        version: 4.1.0
       date-fns-jalali:
-        specifier: ^2.30.0-0
-        version: 2.30.0-0
+        specifier: ^4.1.0-0
+        version: 4.1.0-0
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
