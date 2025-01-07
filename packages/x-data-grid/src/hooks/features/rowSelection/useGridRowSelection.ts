@@ -535,7 +535,7 @@ export const useGridRowSelection = (
         if (shouldReapplyPropagation) {
           if (newSelectionModel.type === 'exclude') {
             const unfilteredSelectedRowIds = getRowsToBeSelected();
-            const selectedRowIds = [];
+            const selectedRowIds: GridRowId[] = [];
             for (let i = 0; i < unfilteredSelectedRowIds.length; i += 1) {
               const rowId = unfilteredSelectedRowIds[i];
               if (
