@@ -95,10 +95,7 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
     }
   });
 
-  afterEach(function afterTest() {
-    if (this.skipped) {
-      return;
-    }
+  afterEach(() => {
     getRowsSpy.restore();
   });
 
