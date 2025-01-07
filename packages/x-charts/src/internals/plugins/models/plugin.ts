@@ -9,7 +9,7 @@ export interface ChartPluginOptions<TSignature extends ChartAnyPluginSignature> 
   params: ChartUsedDefaultizedParams<TSignature>;
   models: ChartUsedControlModels<TSignature>;
   store: ChartUsedStore<TSignature>;
-  svgRef: React.RefObject<SVGSVGElement>;
+  svgRef: React.RefObject<SVGSVGElement | null>;
   plugins: ChartPlugin<ChartAnyPluginSignature>[];
   seriesConfig: ChartSeriesConfig<any>;
 }

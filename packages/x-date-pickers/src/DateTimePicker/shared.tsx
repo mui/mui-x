@@ -11,11 +11,7 @@ import {
 import { TimeClockSlots, TimeClockSlotProps } from '../TimeClock/TimeClock.types';
 import { BasePickerInputProps } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
-import {
-  DateTimePickerTabs,
-  DateTimePickerTabsProps,
-  ExportedDateTimePickerTabsProps,
-} from './DateTimePickerTabs';
+import { DateTimePickerTabs, DateTimePickerTabsProps } from './DateTimePickerTabs';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 import {
   DateTimePickerToolbar,
@@ -50,26 +46,23 @@ export interface BaseDateTimePickerSlotProps extends DateCalendarSlotProps, Time
   /**
    * Props passed down to the tabs component.
    */
-  tabs?: ExportedDateTimePickerTabsProps;
+  tabs?: DateTimePickerTabsProps;
   /**
    * Props passed down to the toolbar component.
    */
   toolbar?: ExportedDateTimePickerToolbarProps;
 }
 
-export type DateTimePickerViewRenderers<
-  TView extends DateOrTimeViewWithMeridiem,
-  TAdditionalProps extends {} = {},
-> = PickerViewRendererLookup<
-  PickerValue,
-  TView,
-  Omit<DateViewRendererProps<TView>, 'slots' | 'slotProps'> &
-    Omit<
-      TimeViewRendererProps<TimeViewWithMeridiem, BaseClockProps<TimeViewWithMeridiem>>,
-      'slots' | 'slotProps'
-    >,
-  TAdditionalProps
->;
+export type DateTimePickerViewRenderers<TView extends DateOrTimeViewWithMeridiem> =
+  PickerViewRendererLookup<
+    PickerValue,
+    TView,
+    Omit<DateViewRendererProps<TView>, 'slots' | 'slotProps'> &
+      Omit<
+        TimeViewRendererProps<TimeViewWithMeridiem, BaseClockProps<TimeViewWithMeridiem>>,
+        'slots' | 'slotProps'
+      >
+  >;
 
 export interface BaseDateTimePickerProps<TView extends DateOrTimeViewWithMeridiem>
   extends BasePickerInputProps<PickerValue, TView, DateTimeValidationError>,
