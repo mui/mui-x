@@ -1,10 +1,10 @@
 export { RangeCalendarRoot as Root } from './root/RangeCalendarRoot';
 
 // // Days
-// export { CalendarDaysGrid as DaysGrid } from './days-grid/CalendarDaysGrid';
+export { RangeCalendarDaysGrid as DaysGrid } from './days-grid/RangeCalendarDaysGrid';
 // export { CalendarDaysGridHeader as DaysGridHeader } from './days-grid-header/CalendarDaysGridHeader';
 // export { CalendarDaysGridHeaderCell as DaysGridHeaderCell } from './days-grid-header-cell/CalendarDaysGridHeaderCell';
-// export { CalendarDaysGridBody as DaysGridBody } from './days-grid-body/CalendarDaysGridBody';
+export { CalendarDaysGridBody as DaysGridBody } from './days-grid-body/RangeCalendarDaysGridBody';
 // export { CalendarDaysWeekRow as DaysWeekRow } from './days-week-row/CalendarDaysWeekRow';
 // export { CalendarDaysCell as DaysCell } from './days-cell/CalendarDaysCell';
 
