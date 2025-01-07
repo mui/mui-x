@@ -34,10 +34,11 @@ export interface BaseDatePickerSlotProps extends DateCalendarSlotProps {
   toolbar?: ExportedDatePickerToolbarProps;
 }
 
-export type DatePickerViewRenderers<
-  TView extends DateView,
-  TAdditionalProps extends {} = {},
-> = PickerViewRendererLookup<PickerValue, TView, DateViewRendererProps<TView>, TAdditionalProps>;
+export type DatePickerViewRenderers<TView extends DateView> = PickerViewRendererLookup<
+  PickerValue,
+  TView,
+  DateViewRendererProps<TView>
+>;
 
 export interface BaseDatePickerProps
   extends BasePickerInputProps<PickerValue, DateView, DateValidationError>,

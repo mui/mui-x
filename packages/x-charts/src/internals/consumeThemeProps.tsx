@@ -62,7 +62,7 @@ export const consumeThemeProps = <
       | ((props: Props) => Omit<Partial<Props>, 'slots' | 'slotProps'>);
     classesResolver?: (props: Props, theme: any) => Record<string, string>;
   },
-  InComponent: React.JSXElementConstructor<Props>,
+  InComponent: React.ForwardRefRenderFunction<any, Props>,
 ) => {
   function InternalComponent(props: React.PropsWithoutRef<Props>, ref: React.Ref<any>) {
     const themedProps = useThemeProps({

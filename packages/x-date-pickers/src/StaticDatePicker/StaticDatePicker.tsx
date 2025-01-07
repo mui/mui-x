@@ -34,7 +34,7 @@ const StaticDatePicker = React.forwardRef(function StaticDatePicker(
 
   const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';
 
-  const viewRenderers: DatePickerViewRenderers<DateView, any> = {
+  const viewRenderers: DatePickerViewRenderers<DateView> = {
     day: renderDateViewCalendar,
     month: renderDateViewCalendar,
     year: renderDateViewCalendar,

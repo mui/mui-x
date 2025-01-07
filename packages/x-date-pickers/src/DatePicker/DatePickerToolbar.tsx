@@ -14,17 +14,15 @@ import {
   getDatePickerToolbarUtilityClass,
 } from './datePickerToolbarClasses';
 import { resolveDateFormat } from '../internals/utils/date-utils';
-import { PickerValue } from '../internals/models';
 import {
   PickerToolbarOwnerState,
   useToolbarOwnerState,
 } from '../internals/hooks/useToolbarOwnerState';
 import { usePickerContext } from '../hooks';
 import { DateView } from '../models/views';
+import { PickerValue } from '../internals/models';
 
-export interface DatePickerToolbarProps
-  extends BaseToolbarProps<PickerValue>,
-    ExportedDatePickerToolbarProps {}
+export interface DatePickerToolbarProps extends BaseToolbarProps, ExportedDatePickerToolbarProps {}
 
 export interface ExportedDatePickerToolbarProps extends ExportedBaseToolbarProps {
   /**
@@ -83,9 +81,6 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar(
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiDatePickerToolbar' });
   const {
-    value,
-    isLandscape,
-    onChange,
     toolbarFormat,
     toolbarPlaceholder = '––',
     className,
@@ -93,13 +88,13 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar(
     ...other
   } = props;
   const utils = useUtils();
-  const { views } = usePickerContext<DateView>();
+  const { value, views, orientation } = usePickerContext<PickerValue, DateView>();
   const translations = usePickerTranslations();
   const ownerState = useToolbarOwnerState();
   const classes = useUtilityClasses(classesProp);
 
   const dateText = React.useMemo(() => {
-    if (!value) {
+    if (!utils.isValid(value)) {
       return toolbarPlaceholder;
     }
 
@@ -112,14 +107,13 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar(
     <DatePickerToolbarRoot
       ref={ref}
       toolbarTitle={translations.datePickerToolbarTitle}
-      isLandscape={isLandscape}
       className={clsx(classes.root, className)}
       {...other}
     >
       <DatePickerToolbarTitle
         variant="h4"
         data-testid="datepicker-toolbar-date"
-        align={isLandscape ? 'left' : 'center'}
+        align={orientation === 'landscape' ? 'left' : 'center'}
         ownerState={ownerState}
         className={classes.title}
       >
@@ -144,8 +138,6 @@ DatePickerToolbar.propTypes = {
    * @default `true` for Desktop, `false` for Mobile.
    */
   hidden: PropTypes.bool,
-  isLandscape: PropTypes.bool.isRequired,
-  onChange: PropTypes.func.isRequired,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
@@ -164,5 +156,4 @@ DatePickerToolbar.propTypes = {
    * @default "––"
    */
   toolbarPlaceholder: PropTypes.node,
-  value: PropTypes.object,
 } as any;

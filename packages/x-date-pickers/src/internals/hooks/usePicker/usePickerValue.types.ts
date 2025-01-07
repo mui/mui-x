@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { FieldChangeHandlerContext, UseFieldInternalProps } from '../useField';
+import { UseFieldInternalProps } from '../useField';
 import { Validator } from '../../../validation';
-import { PickerVariant } from '../../models/common';
 import {
   TimezoneProps,
   MuiPickersAdapter,
@@ -11,12 +10,10 @@ import {
   OnErrorProps,
   InferError,
   PickerValueType,
+  PickerChangeImportance,
 } from '../../../models';
 import { GetDefaultReferenceDateProps } from '../../utils/getDefaultReferenceDate';
-import {
-  PickerShortcutChangeImportance,
-  PickersShortcutsItemContext,
-} from '../../../PickersShortcuts';
+import type { PickersShortcutsItemContext } from '../../../PickersShortcuts';
 import { InferNonNullablePickerValue, PickerValidValue } from '../../models';
 
 export interface PickerValueManager<TValue extends PickerValidValue, TError> {
@@ -157,43 +154,6 @@ export interface UsePickerValueState<TValue extends PickerValidValue> {
   hasBeenModifiedSinceMount: boolean;
 }
 
-export interface PickerValueUpdaterParams<TValue extends PickerValidValue, TError> {
-  action: PickerValueUpdateAction<TValue, TError>;
-  dateState: UsePickerValueState<TValue>;
-  /**
-   * Check if the new draft value has changed compared to some given value.
-   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
-   * @param {TValue} comparisonValue The value to compare the new draft value with.
-   * @returns {boolean} `true` if the new draft value is equal to the comparison value.
-   */
-  hasChanged: (comparisonValue: TValue) => boolean;
-  isControlled: boolean;
-  closeOnSelect: boolean;
-}
-
-export type PickerValueUpdateAction<TValue extends PickerValidValue, TError> =
-  | {
-      name: 'setValueFromView';
-      value: TValue;
-      selectionState: PickerSelectionState;
-    }
-  | {
-      name: 'setValueFromField';
-      value: TValue;
-      context: FieldChangeHandlerContext<TError>;
-    }
-  | {
-      name: 'setValueFromAction';
-      value: TValue;
-      pickerAction: 'accept' | 'today' | 'cancel' | 'dismiss' | 'clear';
-    }
-  | {
-      name: 'setValueFromShortcut';
-      value: TValue;
-      changeImportance: PickerShortcutChangeImportance;
-      shortcut: PickersShortcutsItemContext;
-    };
-
 /**
  * Props used to handle the value that are common to all pickers.
  */
@@ -232,8 +192,8 @@ export interface UsePickerValueBaseProps<TValue extends PickerValidValue, TError
  */
 export interface UsePickerValueNonStaticProps {
   /**
-   * If `true`, the popover or modal will close after submitting the full date.
-   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * If `true`, the Picker will close after submitting the full date.
+   * @default false
    */
   closeOnSelect?: boolean;
   /**
@@ -271,7 +231,6 @@ export interface UsePickerValueParams<
   props: TExternalProps;
   valueManager: PickerValueManager<TValue, InferError<TExternalProps>>;
   valueType: PickerValueType;
-  variant: PickerVariant;
   validator: Validator<TValue, InferError<TExternalProps>, TExternalProps>;
 }
 
@@ -290,44 +249,41 @@ export interface UsePickerValueViewsResponse<TValue extends PickerValidValue> {
 }
 
 /**
- * Props passed to `usePickerLayoutProps`.
- */
-export interface UsePickerValueLayoutResponse<TValue extends PickerValidValue> {
-  value: TValue;
-  onChange: (newValue: TValue) => void;
-  onSelectShortcut: (
-    newValue: TValue,
-    changeImportance: PickerShortcutChangeImportance,
-    shortcut: PickersShortcutsItemContext,
-  ) => void;
-  isValid: (value: TValue) => boolean;
-}
-
-/**
  * Params passed to `usePickerProvider`.
  */
-export interface UsePickerValueProviderParams<TValue extends PickerValidValue> {
+export interface UsePickerValueProviderParams<TValue extends PickerValidValue, TError> {
   value: TValue;
-  contextValue: UsePickerValueContextValue;
-  actionsContextValue: UsePickerValueActionsContextValue;
+  contextValue: UsePickerValueContextValue<TValue, TError>;
+  actionsContextValue: UsePickerValueActionsContextValue<TValue, TError>;
   privateContextValue: UsePickerValuePrivateContextValue;
+  isValidContextValue: (value: TValue) => boolean;
 }
 
 export interface UsePickerValueResponse<TValue extends PickerValidValue, TError> {
   viewProps: UsePickerValueViewsResponse<TValue>;
   fieldProps: UsePickerValueFieldResponse<TValue, TError>;
-  layoutProps: UsePickerValueLayoutResponse<TValue>;
-  provider: UsePickerValueProviderParams<TValue>;
+  provider: UsePickerValueProviderParams<TValue, TError>;
 }
 
-export interface UsePickerValueContextValue extends UsePickerValueActionsContextValue {
+export interface UsePickerValueContextValue<TValue extends PickerValidValue, TError>
+  extends UsePickerValueActionsContextValue<TValue, TError> {
+  /**
+   * The current value of the picker.
+   */
+  value: TValue;
   /**
    * `true` if the picker is open, `false` otherwise.
    */
   open: boolean;
 }
 
-export interface UsePickerValueActionsContextValue {
+export interface UsePickerValueActionsContextValue<TValue extends PickerValidValue, TError> {
+  /**
+   * Set the current value of the picker.
+   * @param {TValue} value The new value of the picker.
+   * @param {SetValueActionOptions<TError>} options The options to customize the behavior of this update.
+   */
+  setValue: (value: TValue, options?: SetValueActionOptions<TError>) => void;
   /**
    * Set the current open state of the Picker.
    * ```ts
@@ -368,4 +324,31 @@ export interface UsePickerValuePrivateContextValue {
    * Closes the picker and accepts the current value if it is not equal to the last accepted value.
    */
   dismissViews: () => void;
+}
+
+export interface SetValueActionOptions<TError = string> {
+  /**
+   * Importance of the change when picking a value:
+   * - "accept": fires `onChange`, fires `onAccept` and closes the picker.
+   * - "set": fires `onChange` but do not fire `onAccept` and does not close the picker.
+   * @default "accept"
+   */
+  changeImportance?: PickerChangeImportance;
+  /**
+   * The validation error associated to the current value.
+   * If not defined, the validation will be re-applied by the picker.
+   */
+  validationError?: TError;
+  /**
+   * The shortcut that triggered this change.
+   * Should not be defined if the change does not come from a shortcut.
+   */
+  shortcut?: PickersShortcutsItemContext;
+  /**
+   * Decide if the value should call `onChange` and `onAccept` when the value is not controlled and has never been modified.
+   * If `true`, the `onChange` and `onAccept` callback will only be fired if the value has been modified (and is not equal to the last published value).
+   * If `false`, the `onChange` and `onAccept` callback will be fired when the value has never been modified (`onAccept` only if `changeImportance` is set to "accept").
+   * @default false
+   */
+  skipPublicationIfPristine?: boolean;
 }

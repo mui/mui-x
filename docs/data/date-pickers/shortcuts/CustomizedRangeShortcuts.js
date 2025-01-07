@@ -9,6 +9,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
 
+import { useIsValidValue, usePickerContext } from '@mui/x-date-pickers/hooks';
+
 const shortcutsItems = [
   {
     label: 'This Week',
@@ -51,7 +53,9 @@ const shortcutsItems = [
 ];
 
 function CustomRangeShortcuts(props) {
-  const { items, onChange, isValid, changeImportance = 'accept' } = props;
+  const { items, changeImportance = 'accept' } = props;
+  const isValid = useIsValidValue();
+  const { setValue } = usePickerContext();
 
   if (items == null || items.length === 0) {
     return null;
@@ -63,7 +67,7 @@ function CustomRangeShortcuts(props) {
     return {
       label: item.label,
       onClick: () => {
-        onChange(newValue, changeImportance, item);
+        setValue(newValue, { changeImportance, shortcut: item });
       },
       disabled: !isValid(newValue),
     };

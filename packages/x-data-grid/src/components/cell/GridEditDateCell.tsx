@@ -66,7 +66,7 @@ function GridEditDateCell(props: GridEditDateCellProps) {
 
   const isDateTime = colDef.type === 'dateTime';
   const apiRef = useGridApiContext();
-  const inputRef = React.useRef<HTMLInputElement>();
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   const valueTransformed = React.useMemo(() => {
     let parsedDate: Date | null;

@@ -72,7 +72,7 @@ export const useGridColumnReorder = (
   });
   const originColumnIndex = React.useRef<number | null>(null);
   const forbiddenIndexes = React.useRef<{ [key: number]: boolean }>({});
-  const removeDnDStylesTimeout = React.useRef<ReturnType<typeof setTimeout>>();
+  const removeDnDStylesTimeout = React.useRef<ReturnType<typeof setTimeout>>(undefined);
   const ownerState = { classes: props.classes };
   const classes = useUtilityClasses(ownerState);
   const isRtl = useRtl();
