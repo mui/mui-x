@@ -2,8 +2,9 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useTimeout from '@mui/utils/useTimeout';
 import { PickerValidDate } from '../../../../models';
-import { GenericHTMLProps } from '../../utils/types';
-import { mergeReactProps } from '../../utils/mergeReactProps';
+import { GenericHTMLProps } from '../../base-utils/types';
+import { mergeReactProps } from '../../base-utils/mergeReactProps';
+import { useBaseCalendarRootContext } from '../../utils/base-calendar/root/BaseCalendarRootContext';
 import {
   applyInitialFocusInList,
   navigateInList,
@@ -11,11 +12,10 @@ import {
   PageListNavigationTarget,
 } from '../utils/keyboardNavigation';
 import { useMonthsCells } from '../utils/useMonthsCells';
-import { useCalendarRootContext } from '../root/CalendarRootContext';
 
 export function useCalendarMonthsList(parameters: useCalendarMonthsList.Parameters) {
   const { children, loop = true, canChangeYear = true } = parameters;
-  const rootContext = useCalendarRootContext();
+  const baseRootContext = useBaseCalendarRootContext();
   const monthsCellRefs = React.useRef<(HTMLElement | null)[]>([]);
   const { months, changePage } = useMonthsCells();
   const pageNavigationTargetRef = React.useRef<PageListNavigationTarget | null>(null);
@@ -28,7 +28,7 @@ export function useCalendarMonthsList(parameters: useCalendarMonthsList.Paramete
         applyInitialFocusInList({ cells: monthsCellRefs.current, target });
       });
     }
-  }, [rootContext.visibleDate, timeout]);
+  }, [baseRootContext.visibleDate, timeout]);
 
   const onKeyDown = useEventCallback((event: React.KeyboardEvent) => {
     const changeListPage: NavigateInListChangePage = (params) => {

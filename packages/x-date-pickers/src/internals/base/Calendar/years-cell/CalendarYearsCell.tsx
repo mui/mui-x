@@ -5,11 +5,12 @@ import useForkRef from '@mui/utils/useForkRef';
 import { PickerValidDate } from '../../../../models';
 import { useNow, useUtils } from '../../../hooks/useUtils';
 import { findClosestEnabledDate } from '../../../utils/date-utils';
-import { useComponentRenderer } from '../../utils/useComponentRenderer';
+import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
+import { BaseUIComponentProps } from '../../base-utils/types';
+import { useCompositeListItem } from '../../composite/list/useCompositeListItem';
+import { useBaseCalendarRootContext } from '../../utils/base-calendar/root/BaseCalendarRootContext';
 import { useCalendarRootContext } from '../root/CalendarRootContext';
 import { useCalendarYearsCell } from './useCalendarYearsCell';
-import { BaseUIComponentProps } from '../../utils/types';
-import { useCompositeListItem } from '../../composite/list/useCompositeListItem';
 
 const InnerCalendarYearsCell = React.forwardRef(function InnerCalendarYearsCell(
   props: InnerCalendarYearsCellProps,
@@ -47,9 +48,10 @@ const CalendarYearsCell = React.forwardRef(function CalendarsYearCell(
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
   const rootContext = useCalendarRootContext();
+  const baseRootContext = useBaseCalendarRootContext();
   const { ref: listItemRef } = useCompositeListItem();
   const utils = useUtils();
-  const now = useNow(rootContext.timezone);
+  const now = useNow(baseRootContext.timezone);
   const mergedRef = useForkRef(forwardedRef, listItemRef);
 
   const isSelected = React.useMemo(
@@ -87,35 +89,35 @@ const CalendarYearsCell = React.forwardRef(function CalendarsYearCell(
   }, [rootContext.validationProps, props.value, now, utils]);
 
   const isDisabled = React.useMemo(() => {
-    if (rootContext.disabled) {
+    if (baseRootContext.disabled) {
       return true;
     }
 
     return isInvalid;
-  }, [rootContext.disabled, isInvalid]);
+  }, [baseRootContext.disabled, isInvalid]);
 
   const isTabbable = React.useMemo(
     () =>
       utils.isValid(rootContext.value)
         ? isSelected
-        : utils.isSameYear(rootContext.referenceDate, props.value),
-    [utils, rootContext.value, rootContext.referenceDate, isSelected, props.value],
+        : utils.isSameYear(rootContext.referenceValue, props.value),
+    [utils, rootContext.value, rootContext.referenceValue, isSelected, props.value],
   );
 
   const selectYear = useEventCallback((newValue: PickerValidDate) => {
-    if (rootContext.readOnly) {
+    if (baseRootContext.readOnly) {
       return;
     }
 
     const newCleanValue = utils.setYear(
-      rootContext.value ?? rootContext.referenceDate,
+      rootContext.value ?? rootContext.referenceValue,
       utils.getYear(newValue),
     );
 
     const startOfYear = utils.startOfYear(newCleanValue);
     const endOfYear = utils.endOfYear(newCleanValue);
 
-    const closestEnabledDate = rootContext.isDateInvalid(newCleanValue)
+    const closestEnabledDate = baseRootContext.isDateInvalid(newCleanValue)
       ? findClosestEnabledDate({
           utils,
           date: newCleanValue,
@@ -127,8 +129,8 @@ const CalendarYearsCell = React.forwardRef(function CalendarsYearCell(
             : rootContext.validationProps.maxDate,
           disablePast: rootContext.validationProps.disablePast,
           disableFuture: rootContext.validationProps.disableFuture,
-          isDateDisabled: rootContext.isDateInvalid,
-          timezone: rootContext.timezone,
+          isDateDisabled: baseRootContext.isDateInvalid,
+          timezone: baseRootContext.timezone,
         })
       : newCleanValue;
 

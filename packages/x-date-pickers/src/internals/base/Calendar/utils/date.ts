@@ -1,9 +1,10 @@
 import { ValidateDateProps } from '../../../../validation';
 import { MuiPickersAdapter, PickerValidDate } from '../../../../models';
+import { BaseDateValidationProps } from '../../../models/validation';
 
 export function getFirstEnabledMonth(
   utils: MuiPickersAdapter,
-  validationProps: ValidateDateProps,
+  validationProps: Required<BaseDateValidationProps>,
 ): PickerValidDate {
   const now = utils.date();
   return utils.startOfMonth(
@@ -15,7 +16,7 @@ export function getFirstEnabledMonth(
 
 export function getLastEnabledMonth(
   utils: MuiPickersAdapter,
-  validationProps: ValidateDateProps,
+  validationProps: Required<BaseDateValidationProps>,
 ): PickerValidDate {
   const now = utils.date();
   return utils.startOfMonth(
@@ -27,7 +28,7 @@ export function getLastEnabledMonth(
 
 export function getFirstEnabledYear(
   utils: MuiPickersAdapter,
-  validationProps: ValidateDateProps,
+  validationProps: Required<BaseDateValidationProps>,
 ): PickerValidDate {
   const now = utils.date();
   return utils.startOfYear(
@@ -39,7 +40,7 @@ export function getFirstEnabledYear(
 
 export function getLastEnabledYear(
   utils: MuiPickersAdapter,
-  validationProps: ValidateDateProps,
+  validationProps: Required<BaseDateValidationProps>,
 ): PickerValidDate {
   const now = utils.date();
   return utils.startOfYear(

@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
 import { useCalendarDaysGridHeader } from './useCalendarDaysGridHeader';
-import { BaseUIComponentProps } from '../../utils/types';
-import { useComponentRenderer } from '../../utils/useComponentRenderer';
+import { BaseUIComponentProps } from '../../base-utils/types';
+import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
 
 const CalendarDaysGridHeader = React.forwardRef(function CalendarDaysGridHeader(
   props: CalendarDaysGridHeader.Props,

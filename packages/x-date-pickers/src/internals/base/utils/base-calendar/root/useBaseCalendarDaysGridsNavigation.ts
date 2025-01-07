@@ -1,25 +1,25 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useTimeout from '@mui/utils/useTimeout';
-import { PickerValidDate } from '../../../../models';
-import { ValidateDateProps } from '../../../../validation';
-import { useUtils } from '../../../hooks/useUtils';
-import type { useCalendarDaysGridBody } from '../days-grid-body/useCalendarDaysGridBody';
+import { PickerValidDate } from '../../../../../models';
+import { ValidateDateProps } from '../../../../../validation';
+import { useUtils } from '../../../../hooks/useUtils';
+import type { useCalendarDaysGridBody } from '../../../Calendar/days-grid-body/useCalendarDaysGridBody';
 import {
   applyInitialFocusInGrid,
   navigateInGrid,
   NavigateInGridChangePage,
   PageGridNavigationTarget,
-} from '../utils/keyboardNavigation';
-import type { CalendarRootContext } from './CalendarRootContext';
-import { getFirstEnabledMonth, getLastEnabledMonth } from '../utils/date';
+} from '../../../Calendar/utils/keyboardNavigation';
+import { getFirstEnabledMonth, getLastEnabledMonth } from '../../../Calendar/utils/date';
+import { BaseCalendarRootContext } from './BaseCalendarRootContext';
 
 /**
  * This logic needs to be in Calendar.Root to support multiple Calendar.DaysGrid.
  * We could introduce a Calendar.MultipleDaysGrid component that would handle this logic if we want to avoid having it in Calendar.Root.
  */
-export function useCalendarDaysGridNavigation(
-  parameters: useCalendarDaysGridNavigation.Parameters,
+export function useBaseCalendarDaysGridNavigation(
+  parameters: useBaseCalendarDaysGridNavigation.Parameters,
 ) {
   const { visibleDate, setVisibleDate, monthPageSize, validationProps } = parameters;
   const utils = useUtils();
@@ -89,7 +89,7 @@ export function useCalendarDaysGridNavigation(
   };
 }
 
-export namespace useCalendarDaysGridNavigation {
+export namespace useBaseCalendarDaysGridNavigation {
   export interface Parameters {
     visibleDate: PickerValidDate;
     setVisibleDate: (visibleDate: PickerValidDate) => void;
@@ -98,7 +98,10 @@ export namespace useCalendarDaysGridNavigation {
   }
 
   export interface ReturnValue
-    extends Pick<CalendarRootContext, 'registerDaysGridCells' | 'applyDayGridKeyboardNavigation'> {}
+    extends Pick<
+      BaseCalendarRootContext,
+      'registerDaysGridCells' | 'applyDayGridKeyboardNavigation'
+    > {}
 }
 
 /* eslint-disable no-bitwise */

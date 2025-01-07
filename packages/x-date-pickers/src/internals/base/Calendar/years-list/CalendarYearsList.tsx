@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
 import { useCalendarYearsList } from './useCalendarYearsList';
-import { BaseUIComponentProps } from '../../utils/types';
-import { useComponentRenderer } from '../../utils/useComponentRenderer';
+import { BaseUIComponentProps } from '../../base-utils/types';
+import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
 import { CompositeList } from '../../composite/list/CompositeList';
 
 const CalendarYearsList = React.forwardRef(function CalendarYearsList(

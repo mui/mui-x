@@ -5,11 +5,12 @@ import useForkRef from '@mui/utils/useForkRef';
 import { PickerValidDate } from '../../../../models';
 import { useNow, useUtils } from '../../../hooks/useUtils';
 import { findClosestEnabledDate } from '../../../utils/date-utils';
-import { useComponentRenderer } from '../../utils/useComponentRenderer';
+import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
+import { BaseUIComponentProps } from '../../base-utils/types';
+import { useCompositeListItem } from '../../composite/list/useCompositeListItem';
+import { useBaseCalendarRootContext } from '../../utils/base-calendar/root/BaseCalendarRootContext';
 import { useCalendarRootContext } from '../root/CalendarRootContext';
 import { useCalendarMonthsCell } from './useCalendarMonthsCell';
-import { BaseUIComponentProps } from '../../utils/types';
-import { useCompositeListItem } from '../../composite/list/useCompositeListItem';
 
 const InnerCalendarMonthsCell = React.forwardRef(function InnerCalendarMonthsCell(
   props: InnerCalendarMonthsCellProps,
@@ -47,9 +48,10 @@ const CalendarMonthsCell = React.forwardRef(function CalendarMonthsCell(
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
   const rootContext = useCalendarRootContext();
+  const baseRootContext = useBaseCalendarRootContext();
   const { ref: listItemRef } = useCompositeListItem();
   const utils = useUtils();
-  const now = useNow(rootContext.timezone);
+  const now = useNow(baseRootContext.timezone);
   const mergedRef = useForkRef(forwardedRef, listItemRef);
 
   const isSelected = React.useMemo(
@@ -90,35 +92,35 @@ const CalendarMonthsCell = React.forwardRef(function CalendarMonthsCell(
   }, [rootContext.validationProps, props.value, now, utils]);
 
   const isDisabled = React.useMemo(() => {
-    if (rootContext.disabled) {
+    if (baseRootContext.disabled) {
       return true;
     }
 
     return isInvalid;
-  }, [rootContext.disabled, isInvalid]);
+  }, [baseRootContext.disabled, isInvalid]);
 
   const isTabbable = React.useMemo(
     () =>
       utils.isValid(rootContext.value)
         ? isSelected
-        : utils.isSameMonth(rootContext.referenceDate, props.value),
-    [utils, rootContext.value, rootContext.referenceDate, isSelected, props.value],
+        : utils.isSameMonth(rootContext.referenceValue, props.value),
+    [utils, rootContext.value, rootContext.referenceValue, isSelected, props.value],
   );
 
   const selectMonth = useEventCallback((newValue: PickerValidDate) => {
-    if (rootContext.readOnly) {
+    if (baseRootContext.readOnly) {
       return;
     }
 
     const newCleanValue = utils.setMonth(
-      rootContext.value ?? rootContext.referenceDate,
+      rootContext.value ?? rootContext.referenceValue,
       utils.getMonth(newValue),
     );
 
     const startOfMonth = utils.startOfMonth(newCleanValue);
     const endOfMonth = utils.endOfMonth(newCleanValue);
 
-    const closestEnabledDate = rootContext.isDateInvalid(newCleanValue)
+    const closestEnabledDate = baseRootContext.isDateInvalid(newCleanValue)
       ? findClosestEnabledDate({
           utils,
           date: newCleanValue,
@@ -130,13 +132,13 @@ const CalendarMonthsCell = React.forwardRef(function CalendarMonthsCell(
             : rootContext.validationProps.maxDate,
           disablePast: rootContext.validationProps.disablePast,
           disableFuture: rootContext.validationProps.disableFuture,
-          isDateDisabled: rootContext.isDateInvalid,
-          timezone: rootContext.timezone,
+          isDateDisabled: baseRootContext.isDateInvalid,
+          timezone: baseRootContext.timezone,
         })
       : newCleanValue;
 
     if (closestEnabledDate) {
-      rootContext.setVisibleDate(closestEnabledDate, true);
+      baseRootContext.setVisibleDate(closestEnabledDate, true);
       rootContext.setValue(closestEnabledDate, { section: 'month' });
     }
   });

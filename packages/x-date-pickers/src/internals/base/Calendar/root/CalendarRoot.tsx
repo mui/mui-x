@@ -1,9 +1,12 @@
 'use client';
 import * as React from 'react';
+import { DateValidationError } from '../../../../models';
+import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
+import { BaseUIComponentProps } from '../../base-utils/types';
+import { BaseCalendarRootContext } from '../../utils/base-calendar/root/BaseCalendarRootContext';
+import { useBaseCalendarRoot } from '../../utils/base-calendar/root/useBaseCalendarRoot';
 import { CalendarRootContext } from './CalendarRootContext';
 import { useCalendarRoot } from './useCalendarRoot';
-import { useComponentRenderer } from '../../utils/useComponentRenderer';
-import { BaseUIComponentProps } from '../../utils/types';
 
 const CalendarRoot = React.forwardRef(function CalendarRoot(
   props: CalendarRoot.Props,
@@ -32,7 +35,7 @@ const CalendarRoot = React.forwardRef(function CalendarRoot(
     maxDate,
     ...otherProps
   } = props;
-  const { context, getRootProps } = useCalendarRoot({
+  const { getRootProps, context, baseContext } = useCalendarRoot({
     readOnly,
     disabled,
     autoFocus,
@@ -65,7 +68,9 @@ const CalendarRoot = React.forwardRef(function CalendarRoot(
   });
 
   return (
-    <CalendarRootContext.Provider value={context}>{renderElement()}</CalendarRootContext.Provider>
+    <BaseCalendarRootContext.Provider value={baseContext}>
+      <CalendarRootContext.Provider value={context}>{renderElement()}</CalendarRootContext.Provider>
+    </BaseCalendarRootContext.Provider>
   );
 });
 
@@ -78,7 +83,8 @@ export namespace CalendarRoot {
     children: React.ReactNode;
   }
 
-  export interface ValueChangeHandlerContext extends useCalendarRoot.ValueChangeHandlerContext {}
+  export interface ValueChangeHandlerContext
+    extends useBaseCalendarRoot.ValueChangeHandlerContext<DateValidationError> {}
 }
 
 export { CalendarRoot };

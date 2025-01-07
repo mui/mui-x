@@ -2,8 +2,8 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { PickerValidDate } from '../../../../models';
 import { useUtils } from '../../../hooks/useUtils';
-import { GenericHTMLProps } from '../../utils/types';
-import { mergeReactProps } from '../../utils/mergeReactProps';
+import { GenericHTMLProps } from '../../base-utils/types';
+import { mergeReactProps } from '../../base-utils/mergeReactProps';
 
 export function useCalendarMonthsCell(parameters: useCalendarMonthsCell.Parameters) {
   const utils = useUtils();

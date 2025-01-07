@@ -1,22 +1,24 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { PickerValidDate } from '../../../../models';
-import { useUtils } from '../../../hooks/useUtils';
-import { mergeDateAndTime } from '../../../utils/date-utils';
-import { useCalendarRootContext } from '../root/CalendarRootContext';
-import { GenericHTMLProps } from '../../utils/types';
-import { mergeReactProps } from '../../utils/mergeReactProps';
-import { CalendarDaysGridContext } from './CalendarDaysGridContext';
+import { PickerValidDate } from '../../../../../models';
+import { useUtils } from '../../../../hooks/useUtils';
+import { mergeDateAndTime } from '../../../../utils/date-utils';
+import { useCalendarRootContext } from '../../../Calendar/root/CalendarRootContext';
+import { GenericHTMLProps } from '../../../base-utils/types';
+import { mergeReactProps } from '../../../base-utils/mergeReactProps';
+import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
+import { BaseCalendarDaysGridContext } from './BaseCalendarDaysGridContext';
 
-export function useCalendarDaysGrid(parameters: useCalendarDaysGrid.Parameters) {
+export function useBaseCalendarDaysGrid(parameters: useBaseCalendarDaysGrid.Parameters) {
   const { fixedWeekNumber, offset = 0 } = parameters;
   const utils = useUtils();
   const rootContext = useCalendarRootContext();
+  const baseRootContext = useBaseCalendarRootContext();
 
   const currentMonth = React.useMemo(() => {
-    const cleanVisibleDate = utils.startOfMonth(rootContext.visibleDate);
+    const cleanVisibleDate = utils.startOfMonth(baseRootContext.visibleDate);
     return offset === 0 ? cleanVisibleDate : utils.addMonths(cleanVisibleDate, offset);
-  }, [utils, rootContext.visibleDate, offset]);
+  }, [utils, baseRootContext.visibleDate, offset]);
 
   const daysGrid = React.useMemo(() => {
     const toDisplay = utils.getWeekArray(currentMonth);
@@ -47,14 +49,14 @@ export function useCalendarDaysGrid(parameters: useCalendarDaysGrid.Parameters) 
   }, []);
 
   const selectDay = useEventCallback((newValue: PickerValidDate) => {
-    if (rootContext.readOnly) {
+    if (baseRootContext.readOnly) {
       return;
     }
 
     const newCleanValue = mergeDateAndTime(
       utils,
       newValue,
-      rootContext.value ?? rootContext.referenceDate,
+      rootContext.value ?? rootContext.referenceValue,
     );
 
     rootContext.setValue(newCleanValue, { section: 'day' });
@@ -62,20 +64,20 @@ export function useCalendarDaysGrid(parameters: useCalendarDaysGrid.Parameters) 
 
   const tabbableDay = React.useMemo(() => {
     const flatDays = daysGrid.flat();
-    const tempTabbableDay = rootContext.value ?? rootContext.referenceDate;
+    const tempTabbableDay = rootContext.value ?? rootContext.referenceValue;
     if (flatDays.some((day) => utils.isSameDay(day, tempTabbableDay))) {
       return tempTabbableDay;
     }
 
     return flatDays.find((day) => utils.isSameMonth(day, currentMonth)) ?? null;
-  }, [rootContext.value, rootContext.referenceDate, daysGrid, utils, currentMonth]);
+  }, [rootContext.value, rootContext.referenceValue, daysGrid, utils, currentMonth]);
 
-  const registerSection = rootContext.registerSection;
+  const registerSection = baseRootContext.registerSection;
   React.useEffect(() => {
     return registerSection({ type: 'day', value: currentMonth });
   }, [registerSection, currentMonth]);
 
-  const context: CalendarDaysGridContext = React.useMemo(
+  const context: BaseCalendarDaysGridContext = React.useMemo(
     () => ({ selectDay, daysGrid, currentMonth, tabbableDay }),
     [selectDay, daysGrid, currentMonth, tabbableDay],
   );
@@ -83,7 +85,7 @@ export function useCalendarDaysGrid(parameters: useCalendarDaysGrid.Parameters) 
   return React.useMemo(() => ({ getDaysGridProps, context }), [getDaysGridProps, context]);
 }
 
-export namespace useCalendarDaysGrid {
+export namespace useBaseCalendarDaysGrid {
   export interface Parameters {
     /**
      * The day view will show as many weeks as needed after the end of the current month to match this value.

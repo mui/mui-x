@@ -2,8 +2,8 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { fastObjectShallowCompare } from '../../utils/fastObjectShallowCompare';
-import { useEnhancedEffect } from '../../utils/useEnhancedEffect';
+import { fastObjectShallowCompare } from '../../base-utils/fastObjectShallowCompare';
+import { useEnhancedEffect } from '../../base-utils/useEnhancedEffect';
 import { CompositeListContext } from './CompositeListContext';
 
 function sortByDocumentPosition(a: Node, b: Node) {

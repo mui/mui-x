@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { PickerValidDate } from '../../../../models';
-import { GenericHTMLProps } from '../../utils/types';
-import { mergeReactProps } from '../../utils/mergeReactProps';
+import { GenericHTMLProps } from '../../base-utils/types';
+import { mergeReactProps } from '../../base-utils/mergeReactProps';
 import { useUtils } from '../../../hooks/useUtils';
 
 export function useCalendarDaysGridHeaderCell(

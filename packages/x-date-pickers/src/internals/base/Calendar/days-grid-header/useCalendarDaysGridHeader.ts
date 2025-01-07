@@ -3,8 +3,8 @@ import { PickerValidDate } from '../../../../models';
 import { getWeekdays } from '../../../utils/date-utils';
 import { useUtils } from '../../../hooks/useUtils';
 import { useCalendarRootContext } from '../root/CalendarRootContext';
-import { GenericHTMLProps } from '../../utils/types';
-import { mergeReactProps } from '../../utils/mergeReactProps';
+import { GenericHTMLProps } from '../../base-utils/types';
+import { mergeReactProps } from '../../base-utils/mergeReactProps';
 
 export function useCalendarDaysGridHeader(parameters: useCalendarDaysGridHeader.Parameters) {
   const { children } = parameters;
@@ -12,8 +12,8 @@ export function useCalendarDaysGridHeader(parameters: useCalendarDaysGridHeader.
   const rootContext = useCalendarRootContext();
 
   const days = React.useMemo(
-    () => getWeekdays(utils, rootContext.value ?? rootContext.referenceDate),
-    [utils, rootContext.value, rootContext.referenceDate],
+    () => getWeekdays(utils, rootContext.value ?? rootContext.referenceValue),
+    [utils, rootContext.value, rootContext.referenceValue],
   );
 
   const getDaysGridHeaderProps = React.useCallback(

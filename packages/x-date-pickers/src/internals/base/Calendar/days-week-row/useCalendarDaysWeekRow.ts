@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { PickerValidDate } from '../../../../models';
-import { GenericHTMLProps } from '../../utils/types';
-import { mergeReactProps } from '../../utils/mergeReactProps';
-import { CalendarDaysGridBodyContext } from '../days-grid-body/CalendarDaysGridBodyContext';
+import { GenericHTMLProps } from '../../base-utils/types';
+import { mergeReactProps } from '../../base-utils/mergeReactProps';
+import { CalendarDaysGridBodyContext } from '../../utils/base-calendar/days-grid-body/BaseCalendarDaysGridBodyContext';
 
 export function useCalendarDaysWeekRow(parameters: useCalendarDaysWeekRow.Parameters) {
   const { children, ctx } = parameters;

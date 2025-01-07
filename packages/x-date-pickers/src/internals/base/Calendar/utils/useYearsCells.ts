@@ -1,25 +1,25 @@
 import * as React from 'react';
 import { PickerValidDate } from '../../../../models';
 import { useUtils } from '../../../hooks/useUtils';
-import { useCalendarRootContext } from '../root/CalendarRootContext';
+import { useBaseCalendarRootContext } from '../../utils/base-calendar/root/BaseCalendarRootContext';
 
 export function useYearsCells(): useYearsCells.ReturnValue {
-  const rootContext = useCalendarRootContext();
+  const baseRootContext = useBaseCalendarRootContext();
   const utils = useUtils();
 
   const years = React.useMemo(
     () =>
       utils.getYearRange([
-        rootContext.validationProps.minDate,
-        rootContext.validationProps.maxDate,
+        baseRootContext.validationProps.minDate,
+        baseRootContext.validationProps.maxDate,
       ]),
-    [utils, rootContext.validationProps.minDate, rootContext.validationProps.maxDate],
+    [utils, baseRootContext.validationProps.minDate, baseRootContext.validationProps.maxDate],
   );
 
-  const registerSection = rootContext.registerSection;
+  const registerSection = baseRootContext.registerSection;
   React.useEffect(() => {
-    return registerSection({ type: 'month', value: rootContext.visibleDate });
-  }, [registerSection, rootContext.visibleDate]);
+    return registerSection({ type: 'month', value: baseRootContext.visibleDate });
+  }, [registerSection, baseRootContext.visibleDate]);
 
   return { years };
 }

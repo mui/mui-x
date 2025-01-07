@@ -2,12 +2,12 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import { useCalendarDaysWeekRow } from './useCalendarDaysWeekRow';
-import { BaseUIComponentProps } from '../../utils/types';
-import { useComponentRenderer } from '../../utils/useComponentRenderer';
-import { useCalendarDaysGridContext } from '../days-grid/CalendarDaysGridContext';
+import { BaseUIComponentProps } from '../../base-utils/types';
+import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
+import { useBaseCalendarDaysGridContext } from '../../utils/base-calendar/days-grid/BaseCalendarDaysGridContext';
 import { CompositeList } from '../../composite/list/CompositeList';
 import { useCompositeListItem } from '../../composite/list/useCompositeListItem';
-import { useCalendarDaysGridBodyContext } from '../days-grid-body/CalendarDaysGridBodyContext';
+import { useBaseCalendarDaysGridBodyContext } from '../../utils/base-calendar/days-grid-body/BaseCalendarDaysGridBodyContext';
 
 const InnerCalendarDaysWeekRow = React.forwardRef(function CalendarDaysGrid(
   props: InnerCalendarDaysWeekRowProps,
@@ -39,24 +39,24 @@ const CalendarDaysWeekRow = React.forwardRef(function CalendarDaysWeekRow(
   props: CalendarDaysWeekRow.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const daysGridContext = useCalendarDaysGridContext();
-  const daysGridBodyContext = useCalendarDaysGridBodyContext();
+  const baseDaysGridContext = useBaseCalendarDaysGridContext();
+  const baseDaysGridBodyContext = useBaseCalendarDaysGridBodyContext();
   const { ref: listItemRef, index: rowIndex } = useCompositeListItem();
   const mergedRef = useForkRef(forwardedRef, listItemRef);
 
   // TODO: Improve how we pass the week to this component.
   const days = React.useMemo(
-    () => daysGridContext.daysGrid.find((week) => week[0] === props.value) ?? [],
-    [daysGridContext.daysGrid, props.value],
+    () => baseDaysGridContext.daysGrid.find((week) => week[0] === props.value) ?? [],
+    [baseDaysGridContext.daysGrid, props.value],
   );
 
   const ctx = React.useMemo(
     () => ({
       days,
       rowIndex,
-      registerWeekRowCells: daysGridBodyContext.registerWeekRowCells,
+      registerWeekRowCells: baseDaysGridBodyContext.registerWeekRowCells,
     }),
-    [days, rowIndex, daysGridBodyContext.registerWeekRowCells],
+    [days, rowIndex, baseDaysGridBodyContext.registerWeekRowCells],
   );
 
   return <MemoizedInnerCalendarDaysWeekRow {...props} ref={mergedRef} ctx={ctx} />;

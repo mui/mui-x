@@ -2,13 +2,14 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import { useUtils } from '../../../hooks/useUtils';
-import { BaseUIComponentProps } from '../../utils/types';
-import { useComponentRenderer } from '../../utils/useComponentRenderer';
-import { useCalendarDaysGridContext } from '../days-grid/CalendarDaysGridContext';
+import { BaseUIComponentProps } from '../../base-utils/types';
+import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
+import { useBaseCalendarDaysGridContext } from '../../utils/base-calendar/days-grid/BaseCalendarDaysGridContext';
 import { useCalendarDaysCell } from './useCalendarDaysCell';
 import { useCalendarRootContext } from '../root/CalendarRootContext';
 import { useCompositeListItem } from '../../composite/list/useCompositeListItem';
-import { CustomStyleHookMapping } from '../../utils/getStyleHookProps';
+import { CustomStyleHookMapping } from '../../base-utils/getStyleHookProps';
+import { useBaseCalendarRootContext } from '../../utils/base-calendar/root/BaseCalendarRootContext';
 import { CalendarDaysCellDataAttributes } from './CalendarDaysCellDataAttributes';
 
 const customStyleHookMapping: CustomStyleHookMapping<CalendarDaysCell.State> = {
@@ -64,7 +65,8 @@ const CalendarDaysCell = React.forwardRef(function CalendarDaysCell(
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
   const rootContext = useCalendarRootContext();
-  const monthsListContext = useCalendarDaysGridContext();
+  const baseRootContext = useBaseCalendarRootContext();
+  const monthsListContext = useBaseCalendarDaysGridContext();
   const { ref: listItemRef, index: colIndex } = useCompositeListItem();
   const utils = useUtils();
   const mergedRef = useForkRef(forwardedRef, listItemRef);
@@ -82,16 +84,16 @@ const CalendarDaysCell = React.forwardRef(function CalendarDaysCell(
     [monthsListContext.currentMonth, props.value, utils],
   );
 
-  const isDateInvalid = rootContext.isDateInvalid;
+  const isDateInvalid = baseRootContext.isDateInvalid;
   const isInvalid = React.useMemo(() => isDateInvalid(props.value), [props.value, isDateInvalid]);
 
   const isDisabled = React.useMemo(() => {
-    if (rootContext.disabled) {
+    if (baseRootContext.disabled) {
       return true;
     }
 
     return isInvalid;
-  }, [rootContext.disabled, isInvalid]);
+  }, [baseRootContext.disabled, isInvalid]);
 
   const isTabbable = React.useMemo(
     () =>

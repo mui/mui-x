@@ -1,10 +1,10 @@
-import { useCalendarRootContext } from '../root/CalendarRootContext';
+import { useBaseCalendarRootContext } from '../../utils/base-calendar/root/BaseCalendarRootContext';
 
 // TODO: Use a dedicated context
 export function useCalendarContext() {
-  const rootContext = useCalendarRootContext();
+  const baseRootContext = useBaseCalendarRootContext();
 
   return {
-    visibleDate: rootContext.visibleDate,
+    visibleDate: baseRootContext.visibleDate,
   };
 }

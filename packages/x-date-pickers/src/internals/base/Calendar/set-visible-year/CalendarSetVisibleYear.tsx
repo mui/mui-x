@@ -2,10 +2,10 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useUtils } from '../../../hooks/useUtils';
-import { useComponentRenderer } from '../../utils/useComponentRenderer';
-import { useCalendarRootContext } from '../root/CalendarRootContext';
+import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
+import { useBaseCalendarRootContext } from '../../utils/base-calendar/root/BaseCalendarRootContext';
 import { useCalendarSetVisibleYear } from './useCalendarSetVisibleYear';
-import { BaseUIComponentProps } from '../../utils/types';
+import { BaseUIComponentProps } from '../../base-utils/types';
 import { getFirstEnabledYear, getLastEnabledYear } from '../utils/date';
 
 const InnerCalendarSetVisibleYear = React.forwardRef(function InnerCalendarSetVisibleYear(
@@ -35,39 +35,39 @@ const CalendarSetVisibleYear = React.forwardRef(function CalendarSetVisibleYear(
   props: CalendarSetVisibleYear.Props,
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
-  const rootContext = useCalendarRootContext();
+  const baseRootContext = useBaseCalendarRootContext();
   const utils = useUtils();
 
   const targetDate = React.useMemo(() => {
     if (props.target === 'previous') {
-      return utils.addYears(rootContext.visibleDate, -1);
+      return utils.addYears(baseRootContext.visibleDate, -1);
     }
 
     if (props.target === 'next') {
-      return utils.addYears(rootContext.visibleDate, 1);
+      return utils.addYears(baseRootContext.visibleDate, 1);
     }
 
-    return utils.setYear(rootContext.visibleDate, utils.getYear(props.target));
-  }, [rootContext.visibleDate, utils, props.target]);
+    return utils.setYear(baseRootContext.visibleDate, utils.getYear(props.target));
+  }, [baseRootContext.visibleDate, utils, props.target]);
 
   const isDisabled = React.useMemo(() => {
-    if (rootContext.disabled) {
+    if (baseRootContext.disabled) {
       return true;
     }
 
-    const isMovingBefore = utils.isBefore(targetDate, rootContext.visibleDate);
+    const isMovingBefore = utils.isBefore(targetDate, baseRootContext.visibleDate);
 
     // All the years before the visible ones are fully disabled, we skip the navigation.
     if (isMovingBefore) {
-      return utils.isAfter(getFirstEnabledYear(utils, rootContext.validationProps), targetDate);
+      return utils.isAfter(getFirstEnabledYear(utils, baseRootContext.validationProps), targetDate);
     }
 
     // All the years after the visible ones are fully disabled, we skip the navigation.
-    return utils.isBefore(getLastEnabledYear(utils, rootContext.validationProps), targetDate);
+    return utils.isBefore(getLastEnabledYear(utils, baseRootContext.validationProps), targetDate);
   }, [
-    rootContext.disabled,
-    rootContext.validationProps,
-    rootContext.visibleDate,
+    baseRootContext.disabled,
+    baseRootContext.validationProps,
+    baseRootContext.visibleDate,
     targetDate,
     utils,
   ]);
@@ -76,7 +76,7 @@ const CalendarSetVisibleYear = React.forwardRef(function CalendarSetVisibleYear(
     if (isDisabled) {
       return;
     }
-    rootContext.setVisibleDate(targetDate, false);
+    baseRootContext.setVisibleDate(targetDate, false);
   });
 
   const ctx = React.useMemo<useCalendarSetVisibleYear.Context>(
