@@ -110,13 +110,12 @@ export default function App() {
 
 ## TypeScript
 
-In order to benefit from the [CSS overrides](/material-ui/customization/theme-components/#theme-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#theme-default-props) with the theme, TypeScript users need to import the following types.
-Internally, it uses module augmentation to extend the default theme structure.
+To benefit from [CSS overrides](/material-ui/customization/theme-components/#theme-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#theme-default-props) with the theme, TypeScript users must import the following types.
+These types use module augmentation to extend the default theme structure.
 
 ```tsx
 // Pro and Premium users: add `-pro` or `-premium` suffix to package name
 import type {} from '@mui/x-data-grid/themeAugmentation';
-
 
 const theme = createTheme({
   components: {

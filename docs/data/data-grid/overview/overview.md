@@ -13,7 +13,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/grid/
 
 ## Overview
 
-The MUI X Data Grid is a highly performant, TypeScript-based React component that presents information in a structured format of rows and columns.
+The MUI X Data Grid is a TypeScript-based React component that presents information in a structured format of rows and columns.
 It provides developers with an intuitive API for implementing complex use cases; and end users with a smooth experience for manipulating an unlimited set of data.
 
 The Grid's theming features are designed to be frictionless when integrating with Material UI and other MUI X components, but it can also stand on its own and be customized to meet the needs of any design system.
@@ -21,10 +21,6 @@ The Grid's theming features are designed to be frictionless when integrating wit
 The Data Grid is **open-core**: The Community version is MIT-licensed and free forever, while more advanced features require a Pro or Premium commercial license.
 
 See [MUI X Licensing](/x/introduction/licensing/) for complete details.
-
-The demo below uses the Data Grid to both list and illustrate the key features available in each version:
-
-{{"demo": "PopularFeaturesDemo.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 ## Community version
 

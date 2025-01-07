@@ -104,10 +104,8 @@ To benefit from [CSS overrides](/material-ui/customization/theme-components/#the
 These types use module augmentation to extend the default theme structure.
 
 ```tsx
-// only one import is necessary,
-// from the version you're currently using.
+// Pro users: add `-pro` suffix to package name
 import type {} from '@mui/x-charts/themeAugmentation';
-import type {} from '@mui/x-charts-pro/themeAugmentation';
 
 const theme = createTheme({
   components: {
