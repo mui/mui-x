@@ -130,7 +130,7 @@ export class AdapterDateFnsJalali
       if (typeof addDays !== 'function') {
         throw new Error(
           [
-            'MUI: The `date-fns-jalali` package v3.x is not compatible with this adapter.',
+            'MUI: This adapter is only compatible with `date-fns-jalali` v2.x package versions.',
             'Please, install v2.x of the package or use the `AdapterDateFnsJalali` instead.',
           ].join('\n'),
         );
