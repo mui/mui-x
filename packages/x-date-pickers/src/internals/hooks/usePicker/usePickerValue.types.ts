@@ -303,7 +303,7 @@ export interface UsePickerValueContextValue<TValue extends PickerValidValue, TEr
    */
   value: TValue;
   /**
-   * The timezone to use to render the dates.
+   * The timezone to use when rendering the dates.
    */
   timezone: PickersTimezone;
   /**
