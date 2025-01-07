@@ -4,8 +4,8 @@ export { RangeCalendarRoot as Root } from './root/RangeCalendarRoot';
 export { RangeCalendarDaysGrid as DaysGrid } from './days-grid/RangeCalendarDaysGrid';
 // export { CalendarDaysGridHeader as DaysGridHeader } from './days-grid-header/CalendarDaysGridHeader';
 // export { CalendarDaysGridHeaderCell as DaysGridHeaderCell } from './days-grid-header-cell/CalendarDaysGridHeaderCell';
-export { CalendarDaysGridBody as DaysGridBody } from './days-grid-body/RangeCalendarDaysGridBody';
-// export { CalendarDaysWeekRow as DaysWeekRow } from './days-week-row/CalendarDaysWeekRow';
+export { RangeCalendarDaysGridBody as DaysGridBody } from './days-grid-body/RangeCalendarDaysGridBody';
+export { RangeCalendarDaysWeekRow as DaysWeekRow } from './days-week-row/RangeCalendarDaysWeekRow';
 // export { CalendarDaysCell as DaysCell } from './days-cell/CalendarDaysCell';
 
 // // Months

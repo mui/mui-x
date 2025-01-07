@@ -11,8 +11,8 @@ import { useBaseCalendarDaysGridBody } from '@mui/x-date-pickers/internals/base/
 // eslint-disable-next-line no-restricted-imports
 import { BaseCalendarDaysGridBodyContext } from '@mui/x-date-pickers/internals/base/utils/base-calendar/days-grid-body/BaseCalendarDaysGridBodyContext';
 
-const CalendarDaysGridBody = React.forwardRef(function CalendarDaysGrid(
-  props: CalendarDaysGridBody.Props,
+const RangeCalendarDaysGridBody = React.forwardRef(function CalendarDaysGrid(
+  props: RangeCalendarDaysGridBody.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, render, children, ...otherProps } = props;
@@ -37,7 +37,7 @@ const CalendarDaysGridBody = React.forwardRef(function CalendarDaysGrid(
   );
 });
 
-export namespace CalendarDaysGridBody {
+export namespace RangeCalendarDaysGridBody {
   export interface State {}
 
   export interface Props
@@ -45,4 +45,4 @@ export namespace CalendarDaysGridBody {
       useBaseCalendarDaysGridBody.Parameters {}
 }
 
-export { CalendarDaysGridBody };
+export { RangeCalendarDaysGridBody };

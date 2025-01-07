@@ -67,3 +67,7 @@ TODO
 ### MD3-ish layout
 
 {{"demo": "DateCalendarDemo.js"}}
+
+## Range calendar (TODO: move)
+
+{{"demo": "DayRangeCalendarDemo.js"}}

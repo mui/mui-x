@@ -6,7 +6,7 @@ import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
 import { CompositeList } from '../../composite/list/CompositeList';
 import { useBaseCalendarDaysWeekRowWrapper } from '../../utils/base-calendar/days-week-row/useBaseCalendarDaysWeekRowWrapper';
 
-const InnerCalendarDaysWeekRow = React.forwardRef(function CalendarDaysGrid(
+const InnerCalendarDaysWeekRow = React.forwardRef(function InnerCalendarDaysWeekRow(
   props: InnerCalendarDaysWeekRowProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {

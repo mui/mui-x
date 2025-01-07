@@ -4,72 +4,79 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 // eslint-disable-next-line no-restricted-imports
 import {
-  Calendar,
-  useCalendarContext,
-} from '@mui/x-date-pickers/internals/base/Calendar';
+  RangeCalendar,
+  // useRangeCalendarContext,
+} from '@mui/x-date-pickers-pro/internals/base/RangeCalendar';
 import styles from './calendar.module.css';
 
 function Header() {
-  const { visibleDate } = useCalendarContext();
+  // const { visibleDate } = useRangeCalendarContext();
 
   return (
     <header className={styles.Header}>
-      <Calendar.SetVisibleMonth target="previous" className={styles.SetVisibleMonth}>
+      {/* <RangeCalendar.SetVisibleMonth target="previous" className={styles.SetVisibleMonth}>
         ◀
-      </Calendar.SetVisibleMonth>
+      </RangeCalendar.SetVisibleMonth>
       <span>{visibleDate.format('MMMM YYYY')}</span>
-      <Calendar.SetVisibleMonth target="next" className={styles.SetVisibleMonth}>
+      <RangeCalendar.SetVisibleMonth target="next" className={styles.SetVisibleMonth}>
         ▶
-      </Calendar.SetVisibleMonth>
+      </RangeCalendar.SetVisibleMonth> */}
     </header>
   );
 }
 
-function DayCalendar(props: Omit<Calendar.Root.Props, 'children'>) {
+function DayCalendar(props: Omit<RangeCalendar.Root.Props, 'children'>) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Calendar.Root {...props} className={styles.Root}>
+      <RangeCalendar.Root {...props} className={styles.Root}>
         <Header />
-        <Calendar.DaysGrid className={styles.DaysGrid}>
-          <Calendar.DaysGridHeader className={styles.DaysGridHeader}>
+        <RangeCalendar.DaysGrid className={styles.DaysGrid}>
+          {/* <RangeCalendar.DaysGridHeader className={styles.DaysGridHeader}>
             {({ days }) =>
               days.map((day) => (
-                <Calendar.DaysGridHeaderCell
+                <RangeCalendar.DaysGridHeaderCell
                   value={day}
                   key={day.toString()}
                   className={styles.DaysGridHeaderCell}
                 />
               ))
             }
-          </Calendar.DaysGridHeader>
-          <Calendar.DaysGridBody className={styles.DaysGridBody}>
+          </RangeCalendar.DaysGridHeader> */}
+          <RangeCalendar.DaysGridBody className={styles.DaysGridBody}>
             {({ weeks }) =>
               weeks.map((week) => (
-                <Calendar.DaysWeekRow
+                <RangeCalendar.DaysWeekRow
                   value={week}
                   key={week.toString()}
                   className={styles.DaysWeekRow}
                 >
-                  {({ days }) =>
+                  {/* {({ days }) =>
                     days.map((day) => (
-                      <Calendar.DaysCell
+                      <RangeCalendar.DaysCell
                         value={day}
                         key={day.toString()}
                         className={styles.DaysCell}
                       />
                     ))
+                  } */}
+                  {({ days }) =>
+                    days.map((day) => (
+                      <button type="button" className={styles.DaysCell}>
+                        {day.format('D')}
+                      </button>
+                    ))
                   }
-                </Calendar.DaysWeekRow>
+                </RangeCalendar.DaysWeekRow>
               ))
             }
-          </Calendar.DaysGridBody>
-        </Calendar.DaysGrid>
-      </Calendar.Root>
+          </RangeCalendar.DaysGridBody>
+        </RangeCalendar.DaysGrid>
+      </RangeCalendar.Root>
     </LocalizationProvider>
   );
 }
 
-export default function DayCalendarDemo() {
+export default function DayRangeCalendarDemo() {
   const [value, setValue] = React.useState<Dayjs | null>(null);
 
   const handleValueChange = React.useCallback((newValue: Dayjs | null) => {
