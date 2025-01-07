@@ -10,7 +10,7 @@ import {
   AxisConfig,
 } from '../../../../models/axis';
 import { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
-import { ZoomData, ZoomOption } from './zoom.types';
+import { ZoomData, ZoomOptions } from './zoom.types';
 
 export type DefaultizedAxisConfig<AxisProps> = {
   [axisId: AxisId]: AxisDefaultized<ScaleName, any, AxisProps>;
@@ -56,7 +56,7 @@ export type UseChartCartesianAxisDefaultizedParameters = UseChartCartesianAxisPa
   defaultizedYAxis: AxisConfig<ScaleName, any, ChartsYAxisProps>[];
 };
 
-export interface DefaultizedZoomOption extends Required<ZoomOption> {
+export interface DefaultizedZoomOptions extends Required<ZoomOptions> {
   axisId: AxisId;
   axisDirection: 'x' | 'y';
 }
@@ -66,7 +66,7 @@ export interface UseChartCartesianAxisState {
    * @ignore - state populated by the useChartProZoomPlugin
    */
   zoom?: {
-    optionsLookup: Record<AxisId, DefaultizedZoomOption>;
+    optionsLookup: Record<AxisId, DefaultizedZoomOptions>;
     isInteracting: boolean;
     zoomData: ZoomData[];
   };

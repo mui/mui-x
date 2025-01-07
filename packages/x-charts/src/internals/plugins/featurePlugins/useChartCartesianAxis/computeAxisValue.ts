@@ -16,7 +16,7 @@ import { zoomScaleRange } from './zoom';
 import { getAxisExtremum } from './getAxisExtremum';
 import type { ChartDrawingArea } from '../../../../hooks';
 import { ChartSeriesConfig } from '../../models/seriesConfig';
-import { DefaultizedAxisConfig, DefaultizedZoomOption } from './useChartCartesianAxis.types';
+import { DefaultizedAxisConfig, DefaultizedZoomOptions } from './useChartCartesianAxis.types';
 import { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { GetZoomAxisFilters, ZoomData } from './zoom.types';
 
@@ -58,7 +58,7 @@ type ComputeCommonParams<T extends ChartSeriesType = ChartSeriesType> = {
   formattedSeries: ProcessedSeries<T>;
   seriesConfig: ChartSeriesConfig<T>;
   zoomMap?: Map<AxisId, ZoomData>;
-  zoomOptions?: Record<AxisId, DefaultizedZoomOption>;
+  zoomOptions?: Record<AxisId, DefaultizedZoomOptions>;
   getFilters?: GetZoomAxisFilters;
 };
 

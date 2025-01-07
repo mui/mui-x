@@ -3,7 +3,7 @@ import * as React from 'react';
 import {
   ChartPlugin,
   AxisId,
-  DefaultizedZoomOption,
+  DefaultizedZoomOptions,
   useSelector,
   getSVGPoint,
   selectorChartDrawingArea,
@@ -24,7 +24,7 @@ import {
 import { selectorChartZoomOptionsLookup } from './useChartProZoom.selectors';
 
 // It is helpful to avoid the need to provide the possibly auto-generated id for each axis.
-function initializeZoomData(options: Record<AxisId, DefaultizedZoomOption>) {
+function initializeZoomData(options: Record<AxisId, DefaultizedZoomOptions>) {
   return Object.values(options).map(({ axisId, minStart: start, maxEnd: end }) => ({
     axisId,
     start,
@@ -367,7 +367,7 @@ useChartProZoom.params = {
 
 useChartProZoom.getDefaultizedParams = ({ params }) => {
   const optionsLookup = {
-    ...params.defaultizedXAxis.reduce<Record<AxisId, DefaultizedZoomOption>>((acc, v) => {
+    ...params.defaultizedXAxis.reduce<Record<AxisId, DefaultizedZoomOptions>>((acc, v) => {
       const { zoom, id: axisId } = v;
       const defaultizedZoom = defaultizeZoom(zoom, axisId, 'x');
       if (defaultizedZoom) {
@@ -375,7 +375,7 @@ useChartProZoom.getDefaultizedParams = ({ params }) => {
       }
       return acc;
     }, {}),
-    ...params.defaultizedYAxis.reduce<Record<AxisId, DefaultizedZoomOption>>((acc, v) => {
+    ...params.defaultizedYAxis.reduce<Record<AxisId, DefaultizedZoomOptions>>((acc, v) => {
       const { zoom, id: axisId } = v;
       const defaultizedZoom = defaultizeZoom(zoom, axisId, 'y');
       if (defaultizedZoom) {

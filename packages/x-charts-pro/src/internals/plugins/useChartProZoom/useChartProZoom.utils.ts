@@ -1,4 +1,4 @@
-import { DefaultizedZoomOption, ZoomData } from '@mui/x-charts/internals';
+import { DefaultizedZoomOptions, ZoomData } from '@mui/x-charts/internals';
 
 /**
  * Helper to get the range (in percents of a reference range) corresponding to a given scale.
@@ -10,7 +10,7 @@ export const zoomAtPoint = (
   centerRatio: number,
   scaleRatio: number,
   currentZoomData: ZoomData,
-  options: DefaultizedZoomOption,
+  options: DefaultizedZoomOptions,
 ) => {
   const MIN_RANGE = options.minStart;
   const MAX_RANGE = options.maxEnd;
@@ -57,7 +57,7 @@ export function isSpanValid(
   minRange: number,
   maxRange: number,
   isZoomIn: boolean,
-  option: DefaultizedZoomOption,
+  option: DefaultizedZoomOptions,
 ) {
   const newSpanPercent = maxRange - minRange;
 

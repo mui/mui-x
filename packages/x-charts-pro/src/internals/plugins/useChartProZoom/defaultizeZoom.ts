@@ -1,6 +1,6 @@
-import { AxisId, DefaultizedZoomOption, ZoomOption } from '@mui/x-charts/internals';
+import { AxisId, DefaultizedZoomOptions, ZoomOptions } from '@mui/x-charts/internals';
 
-const defaultZoomOptions: Required<ZoomOption> = {
+const defaultZoomOptions: Required<ZoomOptions> = {
   minStart: 0,
   maxEnd: 100,
   step: 5,
@@ -11,10 +11,10 @@ const defaultZoomOptions: Required<ZoomOption> = {
 };
 
 export const defaultizeZoom = (
-  zoom: boolean | ZoomOption | undefined,
+  zoom: boolean | ZoomOptions | undefined,
   axisId: AxisId,
   axisDirection: 'x' | 'y',
-): DefaultizedZoomOption | undefined => {
+): DefaultizedZoomOptions | undefined => {
   if (!zoom) {
     return undefined;
   }

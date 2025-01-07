@@ -1,4 +1,4 @@
-export interface ZoomOption {
+export interface ZoomOptions {
   /**
    * The starting percentage of the zoom range. In the range of 0 to 100.
    *
