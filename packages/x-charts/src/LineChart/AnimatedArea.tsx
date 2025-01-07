@@ -43,6 +43,7 @@ function AnimatedArea(props: AnimatedAreaProps) {
     <AppearingMask skipAnimation={skipAnimation} id={`${ownerState.id}-area-clip`}>
       {transitionChange((style, interpolator) => (
         <animated.path
+          // @ts-expect-error
           d={style.value.to(interpolator)}
           fill={ownerState.gradientId ? `url(#${ownerState.gradientId})` : ownerState.color}
           filter={

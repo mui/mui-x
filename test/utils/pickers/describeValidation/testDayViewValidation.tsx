@@ -2,16 +2,13 @@ import { expect } from 'chai';
 import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { adapterToUse } from 'test/utils/pickers';
+import { describeSkipIf, testSkipIf } from 'test/utils/skipIf';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
 export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest, getOptions) => {
   const { componentFamily, views, render, clock, withDate, withTime } = getOptions();
 
-  if (componentFamily === 'field' || !views.includes('day')) {
-    return;
-  }
-
-  describe('day view:', () => {
+  describeSkipIf(componentFamily === 'field' || !views.includes('day'))('day view:', () => {
     const defaultProps = {
       onChange: () => {},
       open: true,
@@ -20,7 +17,7 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
       slotProps: { toolbar: { hidden: true } },
     };
 
-    it('should apply shouldDisableDate', function test() {
+    it('should apply shouldDisableDate', () => {
       render(
         <ElementToTest
           {...defaultProps}
@@ -37,7 +34,7 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
       expect(screen.getByRole('gridcell', { name: '12' })).to.have.attribute('disabled');
     });
 
-    it('should apply shouldDisableYear', function test() {
+    it('should apply shouldDisableYear', () => {
       const { setProps } = render(
         <ElementToTest
           {...defaultProps}
@@ -58,7 +55,7 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
       expect(screen.getByRole('gridcell', { name: '30' })).not.to.have.attribute('disabled');
     });
 
-    it('should apply shouldDisableMonth', function test() {
+    it('should apply shouldDisableMonth', () => {
       const { setProps } = render(
         <ElementToTest
           {...defaultProps}
@@ -79,7 +76,7 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
       expect(screen.getByRole('gridcell', { name: '28' })).not.to.have.attribute('disabled');
     });
 
-    it('should apply disablePast', function test() {
+    it('should apply disablePast', () => {
       let now;
       function WithFakeTimer(props: any) {
         now = adapterToUse.date();
@@ -111,7 +108,7 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
       ).to.have.attribute('disabled');
     });
 
-    it('should apply disableFuture', function test() {
+    it('should apply disableFuture', () => {
       let now;
       function WithFakeTimer(props: any) {
         now = adapterToUse.date();
@@ -143,7 +140,7 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
       ).not.to.have.attribute('disabled');
     });
 
-    it('should apply minDate', function test() {
+    it('should apply minDate', () => {
       render(
         <ElementToTest
           {...defaultProps}
@@ -160,7 +157,7 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
       expect(screen.getByLabelText('Next month')).not.to.have.attribute('disabled');
     });
 
-    it('should apply maxDate', function test() {
+    it('should apply maxDate', () => {
       render(
         <ElementToTest
           {...defaultProps}
@@ -177,12 +174,8 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
       expect(screen.getByLabelText('Next month')).to.have.attribute('disabled');
     });
 
-    it('should apply maxDateTime', function test() {
-      if (!withDate || !withTime) {
-        // prop only available on DateTime pickers
-        return;
-      }
-
+    // prop only available on DateTime pickers
+    testSkipIf(!withDate || !withTime)('should apply maxDateTime', () => {
       render(
         <ElementToTest
           {...defaultProps}
@@ -197,12 +190,8 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
       expect(screen.getByRole('gridcell', { name: '30' })).to.have.attribute('disabled');
     });
 
-    it('should apply minDateTime', function test() {
-      if (!withDate || !withTime) {
-        // prop only available on DateTime pickers
-        return;
-      }
-
+    // prop only available on DateTime pickers
+    testSkipIf(!withDate || !withTime)('should apply minDateTime', () => {
       render(
         <ElementToTest
           {...defaultProps}

@@ -39,6 +39,11 @@ export interface DateRangePickerProps<TEnableAccessibleFieldDOMStructure extends
    * @default {}
    */
   slotProps?: DateRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
+  /**
+   * If `true`, the Picker will close after submitting the full date.
+   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   */
+  closeOnSelect?: boolean;
 }
 
 /**

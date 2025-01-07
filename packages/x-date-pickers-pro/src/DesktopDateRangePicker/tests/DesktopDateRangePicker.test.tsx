@@ -16,8 +16,7 @@ import {
   getFieldSectionsContainer,
   getTextbox,
 } from 'test/utils/pickers';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
   within(screen.getByRole('grid', { name: picker })).getByRole('gridcell', { name });
@@ -441,36 +440,35 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(0);
     });
 
-    it('should call onClose when blur the current field without prior change', function test() {
-      // test:unit does not call `blur` when focusing another element.
-      if (isJSDOM) {
-        this.skip();
-      }
+    // test:unit does not call `blur` when focusing another element.
+    testSkipIf(isJSDOM)(
+      'should call onClose when blur the current field without prior change',
+      () => {
+        const onChange = spy();
+        const onAccept = spy();
+        const onClose = spy();
 
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+        render(
+          <React.Fragment>
+            <DesktopDateRangePicker onChange={onChange} onAccept={onAccept} onClose={onClose} />
+            <button type="button" id="test">
+              {' '}
+              focus me
+            </button>
+          </React.Fragment>,
+        );
 
-      render(
-        <React.Fragment>
-          <DesktopDateRangePicker onChange={onChange} onAccept={onAccept} onClose={onClose} />
-          <button type="button" id="test">
-            {' '}
-            focus me
-          </button>
-        </React.Fragment>,
-      );
+        openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+        expect(screen.getByRole('tooltip')).toBeVisible();
 
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
-      expect(screen.getByRole('tooltip')).toBeVisible();
+        document.querySelector<HTMLButtonElement>('#test')!.focus();
+        clock.runToLast();
 
-      document.querySelector<HTMLButtonElement>('#test')!.focus();
-      clock.runToLast();
-
-      expect(onChange.callCount).to.equal(0);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(1);
-    });
+        expect(onChange.callCount).to.equal(0);
+        expect(onAccept.callCount).to.equal(0);
+        expect(onClose.callCount).to.equal(1);
+      },
+    );
 
     it('should call onClose and onAccept when blur the current field', () => {
       const onChange = spy();
