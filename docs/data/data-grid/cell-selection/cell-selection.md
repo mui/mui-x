@@ -4,35 +4,35 @@ title: Data Grid - Cell selection
 
 # Data Grid - Cell selection [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-<p class="description">Cell selection allows the user to select individual cells or a range of cells.</p>
+<p class="description">Let users select individual cells or a range of cells.</p>
 
-The Data Grid has, by default, the ability to select rows.
-On the Data Grid Premium, you can also enable the ability to select cells with the `cellSelection` prop.
+The Community version of the Data Grid lets users select rows.
+With the Data Grid Premium, you can apply the `cellSelection` prop to let users select individual cells or ranges of cells.
 
 ```tsx
 <DataGridPremium cellSelection />
 ```
 
-To select a single cell, click on it or, with the cell focused, press <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Space</kbd></kbd>.
-Multiple cells can be selected by holding <kbd class="key">Ctrl</kbd> while clicking the cells.
-A cell can be deselected by also clicking it while <kbd class="key">Ctrl</kbd> is pressed.
+Select a single cell by clicking on it, or by pressing <kbd class="key">Shift</kbd>+<kbd class="key">Space</kbd> when the cell is in focus.
+Select multiple cells by holding <kbd class="key">Ctrl</kbd> while clicking on them.
+Press <kbd class="key">Ctrl</kbd> and click on a selected cell to deselect it.
 
-To select all cells within a range, you can use one of the interactions available:
+To select a range of cells, users can:
 
-- **Mouse drag:** Click on a cell, then drag the mouse over another cell and release it
-- **Shift + click**: Click on a cell and, while holding <kbd class="key">Shift</kbd>, click on another cell—if a third cell is clicked the selection will restart from the last clicked cell
-- **Shift + arrow keys**: Using the arrow keys, focus on a cell, then hold <kbd class="key">Shift</kbd> and navigate to another cell—if <kbd class="key">Shift</kbd> is released and pressed again, the selection will restart from the last focused cell
+- Click on a cell, drag the mouse over nearby cells, and then release
+- Click on a cell, then hold <kbd class="key">Shift</kbd> and click on another cell; if a third cell is clicked the selection will restart from the last clicked cell
+- Use the arrow keys to focus on a cell, then hold <kbd class="key">Shift</kbd> and navigate to another cell—if <kbd class="key">Shift</kbd> is released and pressed again, the selection will restart from the last focused cell
 
-The following demo allows to explore the cell selection feature.
-It has [row selection](/x/react-data-grid/row-selection/) disabled, but it's possible to set both selections to work in parallel.
+Try out the various actions to select cells in the demo below—[row selection](/x/react-data-grid/row-selection/) is disabled for the sake of simplicity, but it is possible to configure both selection features to work in parallel.
 
 {{"demo": "CellSelectionGrid.js", "bg": "inline"}}
 
 ## Controlled cell selection
 
 You can control which cells are selected with the `cellSelectionModel` prop.
-This props accepts an object whose keys are the row IDs that contain selected cells.
-The value of each key is another object, which in turn has column fields as keys, each with a boolean value to represent their selection state. You can set `true` to select the cell or `false` to deselect a cell.
+This props accepts an object with keys corresponding to the row IDs that contain selected cells.
+The value of each key is itself an object, which has a column field for a key and a boolean value for its selection state.
+You can set `true` to select a cell or `false` to deselect it.
 Removing the field from the object also deselects the cell.
 
 ```tsx
@@ -52,30 +52,29 @@ The following demo shows how these props can be combined to create an Excel-like
 
 ## Customize range styling
 
-When multiple selected cells make a range, specific class names are applied to the cells at the edges of this range.
-The class names applied are the following:
+When multiple selected cells form a range, specific class names are applied to the cells at the edges:
 
-- `MuiDataGrid-cell--rangeTop`: applied to all cells of the first row of the range
-- `MuiDataGrid-cell--rangeBottom`: applied to all cells of the last row of the range
-- `MuiDataGrid-cell--rangeLeft`: applied to all cells of the first column of the range
-- `MuiDataGrid-cell--rangeRight`: applied to all cells of the last column of the range
-
-You can use these classes to create CSS selectors targeting specific corners of each range.
-The demo below shows how to add a border around the range.
-
-{{"demo": "CellSelectionRangeStyling.js", "bg": "inline"}}
+- `MuiDataGrid-cell--rangeTop`: to all cells in the first row of the range
+- `MuiDataGrid-cell--rangeBottom`: to all cells in the last row of the range
+- `MuiDataGrid-cell--rangeLeft`: to all cells in the first column of the range
+- `MuiDataGrid-cell--rangeRight`: to all cells in the last column of the range
 
 :::info
 If a single cell is selected, all classes above are applied to the same element.
 :::
 
-## apiRef
+You can use these classes to create CSS selectors targeting specific corners of each range—for example, the demo below shows how to add a border around the range.
 
-The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
+{{"demo": "CellSelectionRangeStyling.js", "bg": "inline"}}
 
-:::warning
-Only use this API as the last option. Give preference to the props to control the Data Grid.
-:::
+## Programmatic interactions
+
+The Data Grid exposes an API object through the `apiRef` variable which contains all the methods available to programmatically interact with the Grid.
+This is what makes the cell selection features possible.
+
+If you find the default implementation or props too limiting, you can take full control of this API as a last resort, as shown in the demo below.
+
+See the [API object documentation](/x/react-data-grid/api-object/) for more details.
 
 {{"demo": "CellSelectionApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
