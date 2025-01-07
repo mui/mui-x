@@ -447,7 +447,9 @@ If the updated values do not fit your use case, you can [override them](/x/react
   +const { views } = usePickerContext();
 
   -const { onViewChange } = props;
-  +const { onViewChange } = usePickerContext();
+  -onViewChange('month');
+  +const { setView } = usePickerContext();
+  +setView('month');
   ```
 
 - The component passed to the `layout` slot no longer receives the `onClear`, `onSetToday`, `onAccept`, `onCancel`, `onOpen`, `onClose` `onDismiss`, `onChange` and `onSelectShortcut` props.

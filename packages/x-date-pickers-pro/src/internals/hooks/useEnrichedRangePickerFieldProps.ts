@@ -111,7 +111,7 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   anchorRef?: React.Ref<HTMLDivElement>;
   currentView?: TView | null;
   initialView?: TView;
-  onViewChange?: (view: TView) => void;
+  setView?: (view: TView) => void;
   startFieldRef: React.RefObject<FieldRef<PickerValue> | null>;
   endFieldRef: React.RefObject<FieldRef<PickerValue> | null>;
   singleInputFieldRef: React.RefObject<FieldRef<PickerRangeValue> | null>;
@@ -138,7 +138,7 @@ const useMultiInputFieldSlotProps = <
   anchorRef,
   currentView,
   initialView,
-  onViewChange,
+  setView,
   startFieldRef,
   endFieldRef,
 }: UseEnrichedRangePickerFieldPropsParams<
@@ -198,7 +198,7 @@ const useMultiInputFieldSlotProps = <
     if (open) {
       onRangePositionChange('start');
       if (previousRangePosition.current !== 'start' && initialView) {
-        onViewChange?.(initialView);
+        setView?.(initialView);
       }
     }
   };
@@ -207,7 +207,7 @@ const useMultiInputFieldSlotProps = <
     if (open) {
       onRangePositionChange('end');
       if (previousRangePosition.current !== 'end' && initialView) {
-        onViewChange?.(initialView);
+        setView?.(initialView);
       }
     }
   };
