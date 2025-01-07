@@ -22,7 +22,7 @@ export default function PickersRenderingInstructions() {
   const commandLines = [
     `import { LocalizationProvider } from '${componentPackage}';`,
     ...(libraryUsed === 'date-fns'
-      ? ['// If you are using date-fns v3.x or v4.x, please import the `AdapterDateFns`']
+      ? ['// If you are using date-fns v3.x or v4.x, please import `AdapterDateFns`']
       : []),
     `import { ${adapterName} } from '${componentPackage}/${adapterName}';`,
     ...(libraryUsed === 'date-fns'
