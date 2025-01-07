@@ -41,7 +41,8 @@ export default function LegendTextStylingNoSnap() {
               data,
             },
           ]}
-          height={400}
+          height={200}
+          width={200}
           slotProps={{
             legend: {
               sx: {

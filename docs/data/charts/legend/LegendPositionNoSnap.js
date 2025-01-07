@@ -63,13 +63,8 @@ export default function LegendPositionNoSnap() {
               data: data.slice(0, props.itemsNumber),
             },
           ]}
-          height={400}
-          margin={{
-            top: 20,
-            bottom: 20,
-            left: 40,
-            right: 40,
-          }}
+          height={200}
+          width={200}
           slotProps={{
             legend: {
               direction: props.direction,

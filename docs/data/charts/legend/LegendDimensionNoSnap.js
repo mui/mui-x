@@ -43,7 +43,6 @@ export default function LegendDimensionNoSnap() {
               data: data.slice(0, itemsNumber),
             },
           ]}
-          margin={{ top: 40, bottom: 40, left: 40, right: 40 }}
           slotProps={{
             legend: {
               direction: props.direction,
@@ -59,7 +58,8 @@ export default function LegendDimensionNoSnap() {
               },
             },
           }}
-          height={400}
+          height={200}
+          width={200}
         />
       )}
       getCode={(
