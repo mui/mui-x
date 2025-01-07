@@ -107,6 +107,10 @@ The `direction` prop of the legend has been changed to accept `'vertical'` and `
  />
 ```
 
+## The `getSeriesToDisplay` function was removed
+
+The `getSeriesToDisplay` function was removed in favor of the `useLegend` hook. You can check the [HTML Components example](/x/react-charts/components/#html-components) for usage information.
+
 ## Removing ResponsiveChartContainer ✅
 
 The `ResponsiveChartContainer` has been removed.
