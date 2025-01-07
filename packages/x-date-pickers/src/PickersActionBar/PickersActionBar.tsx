@@ -13,7 +13,9 @@ export interface PickersActionBarProps extends DialogActionsProps {
   /**
    * Ordered array of actions to display.
    * If empty, does not display that action bar.
-   * @default `['cancel', 'accept']` for mobile and `[]` for desktop
+   * @default
+   * - `[]` for Desktop Date Picker and Desktop Date Range Picker
+   * - `['cancel', 'accept']` for all other Pickers
    */
   actions?: PickersActionBarAction[];
 }
@@ -91,7 +93,9 @@ PickersActionBar.propTypes = {
   /**
    * Ordered array of actions to display.
    * If empty, does not display that action bar.
-   * @default `['cancel', 'accept']` for mobile and `[]` for desktop
+   * @default
+   * - `[]` for Desktop Date Picker and Desktop Date Range Picker
+   * - `['cancel', 'accept']` for all other Pickers
    */
   actions: PropTypes.arrayOf(PropTypes.oneOf(['accept', 'cancel', 'clear', 'today']).isRequired),
   /**
