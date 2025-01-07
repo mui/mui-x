@@ -52,7 +52,7 @@ import { BarChart } from '@mui/x-charts/BarChart';
   {/** ... */}
   series={
     seriesConfig.map((seriesItem) => ({
-      ...item,
+      ...seriesItem,
       labelMarkType: '${props.markType}',
     }))
   }
