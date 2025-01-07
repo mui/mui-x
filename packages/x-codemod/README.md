@@ -254,6 +254,7 @@ The list includes these transformers
 
 > [!WARNING]
 > This codemod is not idempotent. Running it multiple times will rename the imports back and forth.
+> Usage of `AdapterDateFnsV3` would be replaced by `AdapterDateFns` and a subsequent run would rename it to `AdapterDateFnsV2`.
 
 - Renames `AdapterDateFns` and `AdapterDateFnsJalali` imports to `AdapterDateFnsV2` and `AdapterDateFnsJalaliV2` respectfully.
 
