@@ -172,17 +172,15 @@ Renames `ResponsiveChartContainer` and `ResponsiveChartContainerPro` by `ChartCo
 +</ChartContainer>
 ```
 
-:::warning
-If you imported both `ResponsiveChartContainer` and `ChartContainer` in the same file, you might end up with duplicated import.
-Verify the git diff to remove the duplicate.
-
-```diff
- import { ChartContainer } from '@mui/x-charts/ChartContainer';
--import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
-+import { ChartContainer } from '@mui/x-charts/ChartContainer';
-```
-
-:::
+> [!WARNING]
+> If you imported both `ResponsiveChartContainer` and `ChartContainer` in the same file, you might end up with duplicated import.
+> Verify the git diff to remove the duplicate.
+>
+> ```diff
+>  import { ChartContainer } from '@mui/x-charts/ChartContainer';
+> -import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
+> +import { ChartContainer } from '@mui/x-charts/ChartContainer';
+> ```
 
 #### `rename-label-and-tick-font-size`
 
@@ -254,9 +252,8 @@ The list includes these transformers
 
 #### `rename-adapter-date-fns-imports`
 
-:::warning
-This codemod is not idempotent. Running it multiple times will rename the imports back and forth.
-:::
+> [!WARNING]
+> This codemod is not idempotent. Running it multiple times will rename the imports back and forth.
 
 - Renames `AdapterDateFns` and `AdapterDateFnsJalali` imports to `AdapterDateFnsV2` and `AdapterDateFnsJalaliV2` respectfully.
 
