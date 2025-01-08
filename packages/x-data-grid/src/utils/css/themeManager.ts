@@ -3,6 +3,7 @@ import { stylesToString } from './stylesToString';
 import { transformMaterialUITheme } from './transformVariables';
 
 const STYLE_ID = 'mui-x-data-grid';
+const CLASSNAME_PREFIX = 'MuiDataGridVariables';
 
 let element = undefined as HTMLStyleElement | undefined;
 
@@ -19,7 +20,7 @@ function getClassNameForTheme(theme: Theme) {
     return className;
   }
 
-  className = `mui-x-data-grid-variables-${nextClassNameId}`;
+  className = `${CLASSNAME_PREFIX}-${nextClassNameId}`;
   nextClassNameId += 1;
 
   classNameByTheme.set(theme, className);
