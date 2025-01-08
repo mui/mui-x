@@ -38,13 +38,13 @@ export default function ContinuousInteractiveDemoNoSnap() {
           max: 20,
         },
         {
-          propName: 'reverseGradient',
+          propName: 'reverse',
           knob: 'switch',
           defaultValue: false,
         },
       ]}
       renderDemo={(
-        /** @type {{ direction: "horizontal" | "vertical"; length: number; thickness: number;  labelPosition:  'start' | 'end' | 'extremes'; reverseGradient: boolean; }} */
+        /** @type {{ direction: "horizontal" | "vertical"; length: number; thickness: number;  labelPosition:  'start' | 'end' | 'extremes'; reverse: boolean; }} */
         props,
       ) => (
         <LineChart
@@ -88,7 +88,7 @@ export default function ContinuousInteractiveDemoNoSnap() {
               direction: props.direction,
               thickness: props.thickness,
               labelPosition: props.labelPosition,
-              reverseGradient: props.reverseGradient,
+              reverse: props.reverse,
               sx: {
                 [props.direction === 'horizontal' ? 'width' : 'height']:
                   `${props.length}${props.direction === 'horizontal' ? '%' : 'px'}`,
@@ -100,7 +100,7 @@ export default function ContinuousInteractiveDemoNoSnap() {
         </LineChart>
       )}
       getCode={(
-        /** @type {{props: { direction: "horizontal" | "vertical"; length: number; thickness: number;  labelPosition:  'start' | 'end' | 'extremes'; reverseGradient: boolean; }}} */
+        /** @type {{props: { direction: "horizontal" | "vertical"; length: number; thickness: number;  labelPosition:  'start' | 'end' | 'extremes'; reverse: boolean; }}} */
         { props },
       ) => {
         return `
@@ -116,7 +116,7 @@ import { ContinuousColorLegend } from '@mui/x-charts/ChartsLegend';
       direction: '${props.direction}',
       thickness: ${props.thickness},
       labelPosition: '${props.labelPosition}',
-      reverseGradient: ${props.reverseGradient},
+      reverse: ${props.reverse},
       sx: { ${props.direction === 'horizontal' ? 'width' : 'height'}: '${props.length}${props.direction === 'horizontal' ? '%' : 'px'}' },
     },
   }}

@@ -21,7 +21,7 @@ type LabelFormatter = (params: { value: number | Date; formattedValue: string })
 
 export interface ContinuousColorLegendProps
   extends ColorLegendSelector,
-    AppendKeys<Pick<ChartsLabelGradientProps, 'reverse' | 'rotate'>, 'gradient'>,
+    AppendKeys<Pick<ChartsLabelGradientProps, 'rotate'>, 'gradient'>,
     Pick<ChartsLabelGradientProps, 'thickness'> {
   /**
    * The direction of the legend layout.
@@ -54,6 +54,11 @@ export interface ContinuousColorLegendProps
    */
   labelPosition?: 'start' | 'end' | 'extremes';
   /**
+   * If `true`, the gradient and labels will be reversed.
+   * @default false
+   */
+  reverse?: boolean;
+  /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<ContinuousColorLegendClasses>;
@@ -61,44 +66,49 @@ export interface ContinuousColorLegendProps
   sx?: SxProps<Theme>;
 }
 
-const templateAreas = {
-  row: {
-    start: `
-    'min-label . max-label'
+const templateAreas = (reverse?: boolean) => {
+  const startLabel = reverse ? 'max-label' : 'min-label';
+  const endLabel = reverse ? 'min-label' : 'max-label';
+
+  return {
+    row: {
+      start: `
+    '${startLabel} . ${endLabel}'
     'gradient gradient gradient'
   `,
-    end: `
+      end: `
       'gradient gradient gradient'
-      'min-label . max-label'
+      '${startLabel} . ${endLabel}'
     `,
-    extremes: `
-      'min-label gradient max-label'
+      extremes: `
+      '${startLabel} gradient ${endLabel}'
     `,
-  },
-  column: {
-    start: `
-      'max-label gradient'
+    },
+    column: {
+      start: `
+      '${endLabel} gradient'
       '. gradient'
-      'min-label gradient'
+      '${startLabel} gradient'
     `,
-    end: `
-      'gradient max-label'
+      end: `
+      'gradient ${endLabel}'
       'gradient .'
-      'gradient min-label'
+      'gradient ${startLabel}'
     `,
-    extremes: `
-      'max-label'
+      extremes: `
+      '${endLabel}'
       'gradient'
-      'min-label'
+      '${startLabel}'
     `,
-  },
+    },
+  };
 };
 
 const RootElement = styled('ul', {
   name: 'MuiContinuousColorLegend',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: Pick<ContinuousColorLegendProps, 'direction'> }>(({ theme }) => ({
+})<{ ownerState: ContinuousColorLegendProps }>(({ theme, ownerState }) => ({
   ...theme.typography.caption,
   color: (theme.vars || theme).palette.text.primary,
   lineHeight: undefined,
@@ -113,33 +123,34 @@ const RootElement = styled('ul', {
     gridTemplateRows: 'min-content min-content',
     gridTemplateColumns: 'min-content auto min-content',
     [`&.${continuousColorLegendClasses.start}`]: {
-      gridTemplateAreas: templateAreas.row.start,
+      gridTemplateAreas: templateAreas(ownerState.reverse).row.start,
     },
     [`&.${continuousColorLegendClasses.end}`]: {
-      gridTemplateAreas: templateAreas.row.end,
+      gridTemplateAreas: templateAreas(ownerState.reverse).row.end,
     },
     [`&.${continuousColorLegendClasses.extremes}`]: {
-      gridTemplateAreas: templateAreas.row.extremes,
+      gridTemplateAreas: templateAreas(ownerState.reverse).row.extremes,
       gridTemplateRows: 'min-content',
+      alignItems: 'center',
     },
   },
   [`&.${continuousColorLegendClasses.vertical}`]: {
     gridTemplateRows: 'min-content auto min-content',
     gridTemplateColumns: 'min-content min-content',
     [`&.${continuousColorLegendClasses.start}`]: {
-      gridTemplateAreas: templateAreas.column.start,
+      gridTemplateAreas: templateAreas(ownerState.reverse).column.start,
       [`.${continuousColorLegendClasses.maxLabel}, .${continuousColorLegendClasses.minLabel}`]: {
         justifySelf: 'end',
       },
     },
     [`&.${continuousColorLegendClasses.end}`]: {
-      gridTemplateAreas: templateAreas.column.end,
+      gridTemplateAreas: templateAreas(ownerState.reverse).column.end,
       [`.${continuousColorLegendClasses.maxLabel}, .${continuousColorLegendClasses.minLabel}`]: {
         justifySelf: 'start',
       },
     },
     [`&.${continuousColorLegendClasses.extremes}`]: {
-      gridTemplateAreas: templateAreas.column.extremes,
+      gridTemplateAreas: templateAreas(ownerState.reverse).column.extremes,
       gridTemplateColumns: 'min-content',
       [`.${continuousColorLegendClasses.maxLabel}, .${continuousColorLegendClasses.minLabel}`]: {
         justifySelf: 'center',
@@ -189,7 +200,7 @@ const ContinuousColorLegend = consumeThemeProps(
       axisDirection,
       axisId,
       rotateGradient,
-      reverseGradient,
+      reverse,
       classes,
       className,
       gradientId,
@@ -223,28 +234,36 @@ const ContinuousColorLegend = consumeThemeProps(
     const minText = getText(minLabel, minValue, formattedMin);
     const maxText = getText(maxLabel, maxValue, formattedMax);
 
+    const minComponent = (
+      <li className={classes?.minLabel}>
+        <ChartsLabel className={classes?.label}>{minText}</ChartsLabel>
+      </li>
+    );
+
+    const maxComponent = (
+      <li className={classes?.maxLabel}>
+        <ChartsLabel className={classes?.label}>{maxText}</ChartsLabel>
+      </li>
+    );
+
     return (
       <RootElement
         className={clsx(classes?.root, className)}
         ref={ref}
         {...other}
-        ownerState={{ direction }}
+        ownerState={props}
       >
-        <li className={classes?.minLabel}>
-          <ChartsLabel className={classes?.label}>{minText}</ChartsLabel>
-        </li>
+        {reverse ? maxComponent : minComponent}
         <li className={classes?.gradient}>
           <ChartsLabelGradient
             direction={direction}
             rotate={rotateGradient}
-            reverse={reverseGradient}
+            reverse={reverse}
             thickness={thickness}
             gradientId={gradientId ?? generateGradientId(axisItem.id, axisDirection!)}
           />
         </li>
-        <li className={classes?.maxLabel}>
-          <ChartsLabel className={classes?.label}>{maxText}</ChartsLabel>
-        </li>
+        {reverse ? minComponent : maxComponent}
       </RootElement>
     );
   },
@@ -301,9 +320,10 @@ ContinuousColorLegend.propTypes = {
    */
   minLabel: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   /**
-   * If `true`, the gradient will be reversed.
+   * If `true`, the gradient and labels will be reversed.
+   * @default false
    */
-  reverseGradient: PropTypes.bool,
+  reverse: PropTypes.bool,
   /**
    * If provided, the gradient will be rotated by 90deg.
    * Useful for linear gradients that are not in the correct orientation.

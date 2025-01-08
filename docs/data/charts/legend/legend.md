@@ -124,7 +124,7 @@ To format labels use the `minLabel`/`maxLabel`.
 They accept either a string to display.
 Or a function `({value, formattedValue}) => string`.
 
-It is also possible to reverse the colors in the gradient with the `reverseGradient` prop.
+It is also possible to reverse the gradient with the `reverse` prop.
 
 {{"demo": "ContinuousInteractiveDemoNoSnap.js", "hideToolbar": true, "bg": "playground"}}
 

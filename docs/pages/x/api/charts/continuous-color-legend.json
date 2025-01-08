@@ -29,7 +29,7 @@
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" },
       "default": "formattedValue"
     },
-    "reverseGradient": { "type": { "name": "bool" } },
+    "reverse": { "type": { "name": "bool" }, "default": "false" },
     "rotateGradient": { "type": { "name": "bool" } },
     "thickness": { "type": { "name": "number" }, "default": "12" }
   },
