@@ -53,25 +53,13 @@ const GridPanelWrapper = forwardRef<HTMLDivElement, GridPanelWrapperProps>(
 
     return (
       <FocusTrap open disableEnforceFocus isEnabled={isEnabled} {...slotProps.TrapFocus}>
-<<<<<<< HEAD
-        <GridCSSVariables>
-          <GridPanelWrapperRoot
-            tabIndex={-1}
-            className={clsx(classes.root, className)}
-            ownerState={rootProps}
-            {...other}
-            ref={ref}
-          />
-        </GridCSSVariables>
-=======
         <GridPanelWrapperRoot
-          ref={ref}
           tabIndex={-1}
           className={clsx(classes.root, className)}
           ownerState={rootProps}
           {...other}
+          ref={ref}
         />
->>>>>>> parent of 23d3ad4f0 (draft: split CSS variables)
       </FocusTrap>
     );
   },
