@@ -176,13 +176,6 @@ const styleArg = ({ theme }) => ({
       props: {
         isToday: true,
         isSelected: false,
-        isStartOfSelectedRange: false,
-        isStartOfPreviewing: false,
-        isEndOfSelectedRange: false,
-        isEndOfPreviewing: false,
-        isWithinSelectedRange: false,
-        isPreviewing: false,
-        isDragSelected: false,
       },
       style: {
         outline: `1px solid ${(theme.vars || theme).palette.text.secondary}`,

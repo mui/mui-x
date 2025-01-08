@@ -366,6 +366,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
           draggable={draggable}
           isFirstVisibleCell={isFirstVisibleCell}
           isLastVisibleCell={isLastVisibleCell}
+          disableMargin
         />
       </DateRangePickerDayRangeIntervalPreview>
     </DateRangePickerDayRoot>
