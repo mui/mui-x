@@ -82,6 +82,10 @@
       "enabled": false
     },
     {
+      "groupName": "Vitest",
+      "matchPackageNames": ["vitest", "@vitest/**", "vitest-*"]
+    },
+    {
       "groupName": "Material UI",
       "matchPackageNames": [
         "@mui/icons-material",

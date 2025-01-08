@@ -180,6 +180,29 @@ jobs:
             curl -Os https://uploader.codecov.io/latest/linux/codecov
             chmod +x codecov
             ./codecov -t ${CODECOV_TOKEN} -Z -F "$REACT_VERSION-jsdom"
+
+  test_unit_vitest:
+    <<: *default-job
+    steps:
+      - checkout
+      - install_js
+      - run:
+          name: Tests fake browser (vitest)
+          command: pnpm vitest --reporter dot --project "jsdom/*" --coverage
+      - run:
+          name: Check coverage generated
+          command: |
+            if ! [[ -s coverage/lcov.info ]]
+            then
+              exit 1
+            fi
+      # - run:
+      #     name: Coverage
+      #     command: |
+      #       curl -Os https://uploader.codecov.io/latest/linux/codecov
+      #       chmod +x codecov
+      #       ./codecov -t ${CODECOV_TOKEN} -Z -F "$REACT_VERSION-jsdom"
+
   test_lint:
     <<: *default-job
     steps:
@@ -281,6 +304,27 @@ jobs:
           # hardcoded in karma-webpack
           path: /tmp/_karma_webpack_
           destination: artifact-file
+
+  test_browser_vitest:
+    <<: *default-job
+    docker:
+      - image: mcr.microsoft.com/playwright:v1.49.0-noble
+    resource_class: medium+
+    steps:
+      - checkout
+      - install_js:
+          browsers: true
+      - run:
+          name: Tests real browsers (vitest)
+          command: pnpm vitest --reporter dot --project "browser/*" --coverage
+      - run:
+          name: Check coverage generated
+          command: |
+            if ! [[ -s coverage/lcov.info ]]
+            then
+              exit 1
+            fi
+
   test_types:
     <<: *default-job
     steps:
@@ -359,6 +403,10 @@ workflows:
           <<: *default-context
           requires:
             - checkout
+      - test_unit_vitest:
+          <<: *default-context
+          requires:
+            - checkout
       - test_lint:
           <<: *default-context
           requires:
@@ -368,6 +416,10 @@ workflows:
           requires:
             - checkout
       - test_browser:
+          <<: *default-context
+          requires:
+            - checkout
+      - test_browser_vitest:
           <<: *default-context
           requires:
             - checkout

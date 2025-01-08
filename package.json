@@ -66,7 +66,8 @@
     "release:publish:dry-run": "pnpm publish --recursive --tag next --registry=\"http://localhost:4873/\"",
     "release:tag": "node scripts/releaseTag.mjs",
     "validate": "concurrently \"pnpm prettier && pnpm eslint\" \"pnpm proptypes\" \"pnpm docs:typescript:formatted\" \"pnpm docs:api\"",
-    "clean:node_modules": "rimraf --glob \"**/node_modules\""
+    "clean:node_modules": "rimraf --glob \"**/node_modules\"",
+    "vitest": "cross-env TZ=UTC IGNORE_ACT_WARNINGS=true vitest"
   },
   "devDependencies": {
     "@actions/core": "^1.11.1",
@@ -101,9 +102,10 @@
     "@octokit/plugin-retry": "^7.1.2",
     "@octokit/rest": "^21.0.2",
     "@playwright/test": "^1.49.1",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react": "^16.0.1",
     "@types/babel__core": "^7.20.5",
     "@types/babel__traverse": "^7.20.6",
-    "@types/chai": "^4.3.20",
     "@types/chai-dom": "^1.11.3",
     "@types/fs-extra": "^11.0.4",
     "@types/karma": "^6.3.9",
@@ -117,6 +119,9 @@
     "@types/yargs": "^17.0.33",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
+    "@vitejs/plugin-react": "^4.3.2",
+    "@vitest/browser": "^2.1.8",
+    "@vitest/coverage-istanbul": "^2.1.8",
     "autoprefixer": "^10.4.20",
     "axe-core": "4.10.2",
     "babel-loader": "^9.2.1",
@@ -191,6 +196,8 @@
     "typescript": "^5.7.2",
     "unist-util-visit": "^5.0.0",
     "util": "^0.12.5",
+    "vitest": "2.1.8",
+    "vitest-fail-on-console": "^0.7.1",
     "webpack": "^5.97.1",
     "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^6.0.1",
@@ -198,7 +205,11 @@
   },
   "resolutions": {
     "react-is": "^19.0.0",
-    "@types/node": "^20.17.11"
+    "@types/node": "^20.17.11",
+    "@playwright/test": "1.49.1",
+    "playwright": "1.49.1",
+    "@vitest/browser>playwright": "1.49.1",
+    "@mui/internal-test-utils>playwright": "1.49.1"
   },
   "packageManager": "pnpm@9.15.2",
   "engines": {

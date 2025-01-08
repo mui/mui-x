@@ -452,7 +452,6 @@ describe('<DesktopDateRangePicker />', () => {
           <React.Fragment>
             <DesktopDateRangePicker onChange={onChange} onAccept={onAccept} onClose={onClose} />
             <button type="button" id="test">
-              {' '}
               focus me
             </button>
           </React.Fragment>,
@@ -461,7 +460,7 @@ describe('<DesktopDateRangePicker />', () => {
         openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
         expect(screen.getByRole('tooltip')).toBeVisible();
 
-        document.querySelector<HTMLButtonElement>('#test')!.focus();
+        act(() => document.querySelector<HTMLButtonElement>('#test')!.focus());
         clock.runToLast();
 
         expect(onChange.callCount).to.equal(0);

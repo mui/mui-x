@@ -16,7 +16,11 @@ export function createPickerRenderer({
   instance,
   ...createRendererOptions
 }: CreatePickerRendererOptions = {}) {
-  const { clock, render: clientRender } = createRenderer(createRendererOptions);
+  const { clock, render: clientRender } = createRenderer({
+    ...createRendererOptions,
+    // @ts-ignore
+    vi: globalThis.vi ?? undefined,
+  });
 
   let adapterLocale = [
     'date-fns',
