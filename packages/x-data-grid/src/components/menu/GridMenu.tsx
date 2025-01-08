@@ -12,6 +12,7 @@ import Paper from '@mui/material/Paper';
 import Popper, { PopperProps } from '@mui/material/Popper';
 import { styled } from '@mui/material/styles';
 import { vars } from '../../constants/cssVariables';
+import { useThemeVariablesClassName } from '../../utils/css/themeManager';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -74,6 +75,7 @@ function GridMenu(props: GridMenuProps) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
+  const variablesClass = useThemeVariablesClassName();
 
   const savedFocusRef = React.useRef<HTMLElement | null>(null);
   useEnhancedEffect(() => {
@@ -112,7 +114,7 @@ function GridMenu(props: GridMenuProps) {
   return (
     <GridMenuRoot
       as={rootProps.slots.basePopper}
-      className={clsx(classes.root, className)}
+      className={clsx(classes.root, className, variablesClass)}
       ownerState={rootProps}
       open={open}
       anchorEl={target as any}
