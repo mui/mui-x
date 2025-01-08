@@ -1,6 +1,7 @@
 import { PieArcDatum as D3PieArcDatum } from '@mui/x-charts-vendor/d3-shape';
 import { DefaultizedProps } from '@mui/x-internals/types';
 import { CommonDefaultizedProps, CommonSeriesType, SeriesId } from './common';
+import type { ChartsLabelMarkProps } from '../../ChartsLabel';
 
 export type PieItemId = string | number;
 
@@ -15,6 +16,14 @@ export type PieValueType = {
    */
   label?: string | ((location: 'tooltip' | 'legend' | 'arc') => string);
   color?: string;
+  /**
+   * Defines the mark type for the pie item.
+   *
+   * It allows custom values which will be passed to the mark component if it was customized.
+   *
+   * @default 'circle'
+   */
+  labelMarkType?: ChartsLabelMarkProps['type'];
 };
 
 export type DefaultizedPieValueType = PieValueType &

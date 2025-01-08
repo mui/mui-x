@@ -83,7 +83,7 @@ With the introduction of the `ChartDataProvider` in v8, the chart data can be ac
 This allows you to create HTML components that interact with the charts data.
 
 In the next example, notice that `MyCustomLegend` component displays the series names and colors.
-This creates an html `table` element, which handles long series names better than the default legend.
+This creates an html `table` element, which can be customized in any way.
 
 {{"demo": "HtmlLegend.js"}}
 
@@ -91,7 +91,7 @@ This creates an html `table` element, which handles long series names better tha
 Note that the HTML components are not part of the SVG hierarchy.
 Hence, they should be:
 
-- Outside the `<ChartsSurface />` component to avoid mixing HTAM and SVG.
+- Outside the `<ChartsSurface />` component to avoid mixing HTML and SVG.
 - Inside the `<ChartDataProvider />` component to get access to the data.
 
 :::
