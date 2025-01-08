@@ -31,7 +31,6 @@ const ChartsSurfaceStyles = styled('svg', {
   height: ownerState.height ?? '100%',
   display: 'flex',
   position: 'relative',
-  flexGrow: 1,
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',

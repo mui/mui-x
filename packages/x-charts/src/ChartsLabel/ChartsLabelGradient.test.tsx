@@ -3,7 +3,7 @@ import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/describeConformance';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { ChartsLabelGradient } from '@mui/x-charts/ChartsLabel/ChartsLabelGradient';
-import { labelGradientClasses } from '@mui/x-charts/ChartsLabel/labelGradientClasses';
+import { labelGradientClasses } from '@mui/x-charts/ChartsLabel';
 
 describe('<ChartsLabelGradient />', () => {
   const { render } = createRenderer();
