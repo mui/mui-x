@@ -13,7 +13,7 @@ import {
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 
-interface AutocompleteFieldProps extends DatePickerFieldProps<Dayjs> {
+interface AutocompleteFieldProps extends DatePickerFieldProps {
   /**
    * @typescript-to-proptypes-ignore
    */
@@ -36,7 +36,7 @@ function AutocompleteField(props: AutocompleteFieldProps) {
     ...other
   } = forwardedProps;
 
-  const { hasValidationError } = useValidation({
+  const { hasValidationError, getValidationErrorForNewValue } = useValidation({
     validator: validateDate,
     value,
     timezone,
@@ -96,7 +96,9 @@ function AutocompleteField(props: AutocompleteFieldProps) {
       }}
       value={value}
       onChange={(_, newValue) => {
-        onChange?.(newValue, { validationError: null });
+        onChange(newValue, {
+          validationError: getValidationErrorForNewValue(newValue),
+        });
       }}
       isOptionEqualToValue={(option, valueToCheck) =>
         option.toISOString() === valueToCheck.toISOString()
@@ -105,7 +107,7 @@ function AutocompleteField(props: AutocompleteFieldProps) {
   );
 }
 
-interface AutocompleteDatePickerProps extends DatePickerProps<Dayjs> {
+interface AutocompleteDatePickerProps extends DatePickerProps {
   /**
    * @typescript-to-proptypes-ignore
    */

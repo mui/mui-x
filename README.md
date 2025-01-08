@@ -16,9 +16,7 @@
 [![Renovate status](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://github.com/mui/mui-x/issues/2081)
 [![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/mui/mui-x.svg)](https://isitmaintained.com/project/mui/mui-x 'Average time to resolve an issue')
 [![Open Collective backers and sponsors](https://img.shields.io/opencollective/all/mui-org)](https://opencollective.com/mui-org)
-[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/6293/badge)](https://bestpractices.coreinfrastructure.org/projects/6293)
-
-<!-- [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/8715/badge)](https://www.bestpractices.dev/projects/8715) -->
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/6293/badge)](https://www.bestpractices.dev/projects/6293)
 
 </div>
 

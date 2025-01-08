@@ -123,7 +123,7 @@ declare module '@mui/x-date-pickers/models' {
  */
 export class AdapterDateFnsJalali
   extends AdapterDateFnsBase<DateFnsLocale>
-  implements MuiPickersAdapter<Date, DateFnsLocale>
+  implements MuiPickersAdapter<DateFnsLocale>
 {
   constructor({ locale, formats }: AdapterOptions<DateFnsLocale, never> = {}) {
     /* istanbul ignore next */
@@ -155,7 +155,7 @@ export class AdapterDateFnsJalali
     return dateFnsParse(value, format, new Date(), { locale: this.locale });
   };
 
-  public isValid = (value: Date | null): boolean => {
+  public isValid = (value: Date | null): value is Date => {
     if (value == null) {
       return false;
     }

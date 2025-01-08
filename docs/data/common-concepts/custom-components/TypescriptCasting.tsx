@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
 import Stack from '@mui/material/Stack';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
@@ -35,7 +34,7 @@ function DisplayWeekNumberToggle({
 }
 
 interface CustomCalendarHeaderProps
-  extends PropsFromSlot<DateCalendarSlots<Dayjs>['calendarHeader']> {
+  extends PropsFromSlot<DateCalendarSlots['calendarHeader']> {
   displayWeekNumber: boolean;
   setDisplayWeekNumber: (displayWeekNumber: boolean) => void;
 }
@@ -66,13 +65,13 @@ export default function TypescriptCasting() {
         // Cast the custom component to the type expected by the X component
         slots={{
           calendarHeader:
-            CustomCalendarHeader as DateCalendarSlots<Dayjs>['calendarHeader'],
+            CustomCalendarHeader as DateCalendarSlots['calendarHeader'],
         }}
         slotProps={{
           calendarHeader: {
             displayWeekNumber,
             setDisplayWeekNumber,
-          } as DateCalendarSlotProps<Dayjs>['calendarHeader'],
+          } as DateCalendarSlotProps['calendarHeader'],
         }}
       />
     </LocalizationProvider>

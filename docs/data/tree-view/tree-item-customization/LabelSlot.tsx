@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeItem, TreeItemProps } from '@mui/x-tree-view/TreeItem';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
+import { useTreeItemModel } from '@mui/x-tree-view/hooks';
 
 type TreeItemWithLabel = {
   id: string;
@@ -87,12 +87,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   props: TreeItemProps,
   ref: React.Ref<HTMLLIElement>,
 ) {
-  const { publicAPI } = useTreeItemUtils({
-    itemId: props.itemId,
-    children: props.children,
-  });
-
-  const item = publicAPI.getItem(props.itemId);
+  const item = useTreeItemModel<TreeItemWithLabel>(props.itemId)!;
 
   return (
     <TreeItem

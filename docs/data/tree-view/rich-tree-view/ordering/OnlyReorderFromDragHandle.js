@@ -50,6 +50,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   const { id, itemId, label, disabled, children, ...other } = props;
 
   const {
+    getContextProviderProps,
     getRootProps,
     getContentProps,
     getIconContainerProps,
@@ -73,7 +74,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   };
 
   return (
-    <TreeItemProvider itemId={itemId}>
+    <TreeItemProvider {...getContextProviderProps()}>
       <TreeItemRoot {...otherRootProps}>
         <TreeItemContent {...getContentProps()}>
           <TreeItemIconContainer {...getIconContainerProps()}>
@@ -104,7 +105,6 @@ export default function OnlyReorderFromDragHandle() {
         items={MUI_X_PRODUCTS}
         defaultExpandedItems={['grid', 'pickers']}
         experimentalFeatures={{
-          indentationAtItemLevel: true,
           itemsReordering: true,
         }}
         itemsReordering

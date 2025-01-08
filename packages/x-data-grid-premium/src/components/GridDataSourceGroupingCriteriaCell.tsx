@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import Box from '@mui/material/Box';
-import CircularProgress from '@mui/material/CircularProgress';
 import { useGridPrivateApiContext } from '@mui/x-data-grid-pro/internals';
 import {
   useGridSelector,
@@ -67,7 +66,7 @@ function GridGroupingCriteriaCellIcon(props: GridGroupingCriteriaCellIconProps) 
   if (isDataLoading) {
     return (
       <div className={classes.loadingContainer}>
-        <CircularProgress size="1rem" color="inherit" />
+        <rootProps.slots.baseCircularProgress size="1rem" color="inherit" />
       </div>
     );
   }

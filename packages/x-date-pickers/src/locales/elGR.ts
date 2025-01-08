@@ -82,14 +82,14 @@ const elGRPickers: Partial<PickersLocaleText> = {
   fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
-  // year: 'Year',
-  // month: 'Month',
-  // day: 'Day',
-  // weekDay: 'Week day',
-  // hours: 'Hours',
-  // minutes: 'Minutes',
-  // seconds: 'Seconds',
-  // meridiem: 'Meridiem',
+  year: 'Χρόνος',
+  month: 'Μήνας',
+  day: 'Ημέρα',
+  weekDay: 'Καθημερινή',
+  hours: 'Ώρες',
+  minutes: 'Λεπτά',
+  seconds: 'Δευτερόλεπτα',
+  meridiem: 'Προ Μεσημβρίας',
 
   // Common
   // empty: 'Empty',

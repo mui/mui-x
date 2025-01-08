@@ -7,19 +7,17 @@ import { PickersInputComponentLocaleText } from '../../../locales/utils/pickersL
 import type { UsePickerViewsProps } from '../../hooks/usePicker/usePickerViews';
 import { DateOrTimeViewWithMeridiem } from '../common';
 import { UseFieldInternalProps } from '../../hooks/useField';
-import { PickerValidDate } from '../../../models';
+import { PickerValidValue } from '../value';
 
 /**
  * Props common to all pickers after applying the default props on each picker.
  */
 export interface BasePickerProps<
-  TValue,
-  TDate extends PickerValidDate,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
-  TExternalProps extends UsePickerViewsProps<TValue, TDate, TView, any, any>,
-  TAdditionalProps extends {},
-> extends UsePickerBaseProps<TValue, TDate, TView, TError, TExternalProps, TAdditionalProps> {
+  TExternalProps extends UsePickerViewsProps<TValue, TView, any>,
+> extends UsePickerBaseProps<TValue, TView, TError, TExternalProps> {
   className?: string;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
@@ -36,12 +34,11 @@ export interface BasePickerProps<
  * Props common to all pickers before applying the default props on each picker.
  */
 export interface BasePickerInputProps<
-  TValue,
-  TDate extends PickerValidDate,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
 > extends Omit<
-    MakeOptional<BasePickerProps<TValue, TDate, TView, TError, any, any>, 'openTo' | 'views'>,
+    MakeOptional<BasePickerProps<TValue, TView, TError, any>, 'openTo' | 'views'>,
     'viewRenderers'
   > {}
 
@@ -52,7 +49,7 @@ export interface BasePickerInputProps<
  */
 export interface BaseNonStaticPickerProps
   extends Pick<
-    UseFieldInternalProps<any, any, any, any, any>,
+    UseFieldInternalProps<any, any, any>,
     | 'formatDensity'
     | 'enableAccessibleFieldDOMStructure'
     | 'selectedSections'

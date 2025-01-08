@@ -6,6 +6,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import {
   createPickerRenderer,
@@ -15,8 +16,7 @@ import {
   getFieldSectionsContainer,
   getTextbox,
 } from 'test/utils/pickers';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
   within(screen.getByRole('grid', { name: picker })).getByRole('gridcell', { name });
@@ -220,7 +220,7 @@ describe('<DesktopDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];
@@ -262,7 +262,7 @@ describe('<DesktopDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];
@@ -296,7 +296,7 @@ describe('<DesktopDateRangePicker />', () => {
     it('should not call onClose and onAccept when selecting the end date if props.closeOnSelect = false', () => {
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];
@@ -323,7 +323,7 @@ describe('<DesktopDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];
@@ -385,7 +385,7 @@ describe('<DesktopDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];
@@ -440,42 +440,41 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(0);
     });
 
-    it('should call onClose when blur the current field without prior change', function test() {
-      // test:unit does not call `blur` when focusing another element.
-      if (isJSDOM) {
-        this.skip();
-      }
+    // test:unit does not call `blur` when focusing another element.
+    testSkipIf(isJSDOM)(
+      'should call onClose when blur the current field without prior change',
+      () => {
+        const onChange = spy();
+        const onAccept = spy();
+        const onClose = spy();
 
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+        render(
+          <React.Fragment>
+            <DesktopDateRangePicker onChange={onChange} onAccept={onAccept} onClose={onClose} />
+            <button type="button" id="test">
+              {' '}
+              focus me
+            </button>
+          </React.Fragment>,
+        );
 
-      render(
-        <React.Fragment>
-          <DesktopDateRangePicker onChange={onChange} onAccept={onAccept} onClose={onClose} />
-          <button type="button" id="test">
-            {' '}
-            focus me
-          </button>
-        </React.Fragment>,
-      );
+        openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+        expect(screen.getByRole('tooltip')).toBeVisible();
 
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
-      expect(screen.getByRole('tooltip')).toBeVisible();
+        document.querySelector<HTMLButtonElement>('#test')!.focus();
+        clock.runToLast();
 
-      document.querySelector<HTMLButtonElement>('#test')!.focus();
-      clock.runToLast();
-
-      expect(onChange.callCount).to.equal(0);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(1);
-    });
+        expect(onChange.callCount).to.equal(0);
+        expect(onAccept.callCount).to.equal(0);
+        expect(onClose.callCount).to.equal(1);
+      },
+    );
 
     it('should call onClose and onAccept when blur the current field', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];
@@ -515,7 +514,7 @@ describe('<DesktopDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];

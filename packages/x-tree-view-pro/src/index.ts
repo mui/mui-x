@@ -1,5 +1,4 @@
 // Tree View
-export * from '@mui/x-tree-view/TreeView';
 export * from '@mui/x-tree-view/SimpleTreeView';
 export * from './RichTreeViewPro';
 

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { createRenderer, fireEvent } from '@mui/internal-test-utils';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { firePointerEvent } from '../tests/firePointerEvent';
+import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 const config = {
   dataset: [
@@ -22,18 +22,12 @@ const config = {
 // | X X X X
 // ---A---B-
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 describe('ChartsTooltip', () => {
   const { render } = createRenderer();
 
-  describe('axis trigger', () => {
-    it('should show right values with vertical layout', function test() {
-      if (isJSDOM) {
-        // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        this.skip();
-      }
-
+  // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
+  describeSkipIf(isJSDOM)('axis trigger', () => {
+    it('should show right values with vertical layout on axis', () => {
       render(
         <div
           style={{
@@ -55,7 +49,7 @@ describe('ChartsTooltip', () => {
       const svg = document.querySelector<HTMLElement>('svg')!;
 
       fireEvent.pointerEnter(svg); // Trigger the tooltip
-      firePointerEvent(svg, 'pointermove', {
+      fireEvent.pointerMove(svg, {
         clientX: 198,
         clientY: 60,
       });
@@ -74,7 +68,7 @@ describe('ChartsTooltip', () => {
         '2',
       ]);
 
-      firePointerEvent(svg, 'pointermove', {
+      fireEvent.pointerMove(svg, {
         clientX: 201,
         clientY: 60,
       });
@@ -94,12 +88,7 @@ describe('ChartsTooltip', () => {
       ]);
     });
 
-    it('should show right values with horizontal layout', function test() {
-      if (isJSDOM) {
-        // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        this.skip();
-      }
-
+    it('should show right values with horizontal layout on axis', () => {
       render(
         <div
           style={{
@@ -122,7 +111,7 @@ describe('ChartsTooltip', () => {
       const svg = document.querySelector<HTMLElement>('svg')!;
 
       fireEvent.pointerEnter(svg); // Trigger the tooltip
-      firePointerEvent(svg, 'pointermove', {
+      fireEvent.pointerMove(svg, {
         clientX: 150,
         clientY: 60,
       });
@@ -141,7 +130,7 @@ describe('ChartsTooltip', () => {
         '2',
       ]);
 
-      firePointerEvent(svg, 'pointermove', {
+      fireEvent.pointerMove(svg, {
         clientX: 150,
         clientY: 220,
       });
@@ -162,13 +151,9 @@ describe('ChartsTooltip', () => {
     });
   });
 
-  describe('item trigger', () => {
-    it('should show right values with vertical layout', function test() {
-      if (isJSDOM) {
-        // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        this.skip();
-      }
-
+  // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
+  describeSkipIf(isJSDOM)('item trigger', () => {
+    it('should show right values with vertical layout on item', () => {
       render(
         <div
           style={{
@@ -184,7 +169,7 @@ describe('ChartsTooltip', () => {
               { dataKey: 'v2', id: 's2', label: 'S2' },
             ]}
             xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
-            tooltip={{ trigger: 'item' }}
+            slotProps={{ tooltip: { trigger: 'item' } }}
           />
         </div>,
       );
@@ -194,7 +179,7 @@ describe('ChartsTooltip', () => {
       fireEvent.pointerEnter(rectangles[0]);
 
       fireEvent.pointerEnter(svg); // Trigger the tooltip
-      firePointerEvent(svg, 'pointermove', {
+      fireEvent.pointerMove(svg, {
         clientX: 150,
         clientY: 60,
       }); // Only to set the tooltip position
@@ -207,12 +192,7 @@ describe('ChartsTooltip', () => {
       expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', 'S2', '1']);
     });
 
-    it('should show right values with horizontal layout', function test() {
-      if (isJSDOM) {
-        // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        this.skip();
-      }
-
+    it('should show right values with horizontal layout on item', () => {
       render(
         <div
           style={{
@@ -229,7 +209,7 @@ describe('ChartsTooltip', () => {
             ]}
             layout="horizontal"
             yAxis={[{ scaleType: 'band', dataKey: 'x' }]}
-            tooltip={{ trigger: 'item' }}
+            slotProps={{ tooltip: { trigger: 'item' } }}
           />
         </div>,
       );
@@ -239,7 +219,7 @@ describe('ChartsTooltip', () => {
       fireEvent.pointerEnter(rectangles[0]);
 
       fireEvent.pointerEnter(svg); // Trigger the tooltip
-      firePointerEvent(svg, 'pointermove', {
+      fireEvent.pointerMove(svg, {
         clientX: 150,
         clientY: 60,
       }); // Only to set the tooltip position

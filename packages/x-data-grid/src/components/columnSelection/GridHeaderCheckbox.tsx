@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { isMultipleRowSelectionEnabled } from '../../hooks/features/rowSelection/utils';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridTabIndexColumnHeaderSelector } from '../../hooks/features/focus/gridFocusStateSelector';
@@ -27,7 +28,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridHeaderCheckbox = React.forwardRef<HTMLButtonElement, GridColumnHeaderParams>(
+const GridHeaderCheckbox = forwardRef<HTMLButtonElement, GridColumnHeaderParams>(
   function GridHeaderCheckbox(props, ref) {
     const { field, colDef, ...other } = props;
     const [, forceUpdate] = React.useState(false);
@@ -49,6 +50,9 @@ const GridHeaderCheckbox = React.forwardRef<HTMLButtonElement, GridColumnHeaderP
       }
 
       return selection.filter((id) => {
+        if (rootProps.keepNonExistentRowsSelected) {
+          return true;
+        }
         // The row might have been deleted
         if (!apiRef.current.getRow(id)) {
           return false;
@@ -56,7 +60,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLButtonElement, GridColumnHeaderP
 
         return rootProps.isRowSelectable!(apiRef.current.getRowParams(id));
       });
-    }, [apiRef, rootProps.isRowSelectable, selection]);
+    }, [apiRef, rootProps.isRowSelectable, selection, rootProps.keepNonExistentRowsSelected]);
 
     // All the rows that could be selected / unselected by toggling this checkbox
     const selectionCandidates = React.useMemo(() => {
@@ -68,10 +72,14 @@ const GridHeaderCheckbox = React.forwardRef<HTMLButtonElement, GridColumnHeaderP
       // Convert to an object to make O(1) checking if a row exists or not
       // TODO create selector that returns visibleRowIds/paginatedVisibleRowIds as an object
       return rowIds.reduce<Record<GridRowId, true>>((acc, id) => {
+        if (!apiRef.current.isRowSelectable(id)) {
+          return acc;
+        }
         acc[id] = true;
         return acc;
       }, {});
     }, [
+      apiRef,
       rootProps.pagination,
       rootProps.checkboxSelectionVisibleOnly,
       paginatedVisibleRowIds,
@@ -126,27 +134,24 @@ const GridHeaderCheckbox = React.forwardRef<HTMLButtonElement, GridColumnHeaderP
     }, [apiRef, handleSelectionChange]);
 
     const label = apiRef.current.getLocaleText(
-      isChecked ? 'checkboxSelectionUnselectAllRows' : 'checkboxSelectionSelectAllRows',
+      isChecked && !isIndeterminate
+        ? 'checkboxSelectionUnselectAllRows'
+        : 'checkboxSelectionSelectAllRows',
     );
-
-    const checked =
-      rootProps.indeterminateCheckboxAction === 'select'
-        ? isChecked && !isIndeterminate
-        : isChecked;
 
     return (
       <rootProps.slots.baseCheckbox
-        ref={ref}
         indeterminate={isIndeterminate}
-        checked={checked}
+        checked={isChecked && !isIndeterminate}
         onChange={handleChange}
         className={classes.root}
-        inputProps={{ 'aria-label': label }}
+        inputProps={{ 'aria-label': label, name: 'select_all_rows' }}
         tabIndex={tabIndex}
         onKeyDown={handleKeyDown}
         disabled={!isMultipleRowSelectionEnabled(rootProps)}
         {...rootProps.slotProps?.baseCheckbox}
         {...other}
+        ref={ref}
       />
     );
   },

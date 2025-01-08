@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
 import Button from '@mui/material/Button';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -12,10 +11,10 @@ import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 import {
   useSplitFieldProps,
   useParsedFormat,
-  usePickersContext,
+  usePickerContext,
 } from '@mui/x-date-pickers/hooks';
 
-function ButtonDateField(props: DatePickerFieldProps<Dayjs>) {
+function ButtonDateField(props: DatePickerFieldProps) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
   const { value, timezone, format } = internalProps;
   const {
@@ -29,7 +28,7 @@ function ButtonDateField(props: DatePickerFieldProps<Dayjs>) {
     ...other
   } = forwardedProps;
 
-  const pickersContext = usePickersContext();
+  const pickerContext = usePickerContext();
 
   const parsedFormat = useParsedFormat(internalProps);
   const { hasValidationError } = useValidation({
@@ -39,14 +38,6 @@ function ButtonDateField(props: DatePickerFieldProps<Dayjs>) {
     props: internalProps,
   });
 
-  const handleTogglePicker = (event: React.UIEvent) => {
-    if (pickersContext.open) {
-      pickersContext.onClose(event);
-    } else {
-      pickersContext.onOpen(event);
-    }
-  };
-
   const valueStr = value == null ? parsedFormat : value.format(format);
 
   return (
@@ -55,14 +46,14 @@ function ButtonDateField(props: DatePickerFieldProps<Dayjs>) {
       variant="outlined"
       color={hasValidationError ? 'error' : 'primary'}
       ref={InputProps?.ref}
-      onClick={handleTogglePicker}
+      onClick={() => pickerContext.setOpen((prev) => !prev)}
     >
       {label ? `${label}: ${valueStr}` : valueStr}
     </Button>
   );
 }
 
-function ButtonFieldDatePicker(props: DatePickerProps<Dayjs>) {
+function ButtonFieldDatePicker(props: DatePickerProps) {
   return (
     <DatePicker {...props} slots={{ ...props.slots, field: ButtonDateField }} />
   );

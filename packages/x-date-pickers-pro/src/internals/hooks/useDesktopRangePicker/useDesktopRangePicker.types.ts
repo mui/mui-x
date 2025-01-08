@@ -4,27 +4,18 @@ import {
   UsePickerViewsProps,
   DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   RangeOnlyPickerProps,
-  RangePickerAdditionalViewProps,
   UseRangePickerParams,
   UseRangePickerProps,
   UseRangePickerSlotProps,
   UseRangePickerSlots,
 } from '../models/useRangePicker';
 
-export interface UseDesktopRangePickerSlots<
-  TDate extends PickerValidDate,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends UseRangePickerSlots<TDate, TView>,
-    PickersPopperSlots {}
+export interface UseDesktopRangePickerSlots extends UseRangePickerSlots, PickersPopperSlots {}
 
-export interface UseDesktopRangePickerSlotProps<
-  TDate extends PickerValidDate,
-  TView extends DateOrTimeViewWithMeridiem,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends UseRangePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>,
+export interface UseDesktopRangePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+  extends UseRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
     PickersPopperSlotProps {}
 
 export interface DesktopRangeOnlyPickerProps extends RangeOnlyPickerProps {
@@ -35,46 +26,30 @@ export interface DesktopRangeOnlyPickerProps extends RangeOnlyPickerProps {
 }
 
 export interface UseDesktopRangePickerProps<
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-  TExternalProps extends UsePickerViewsProps<any, any, TView, any, any>,
-> extends UseRangePickerProps<
-    TDate,
-    TView,
-    TError,
-    TExternalProps,
-    DesktopRangePickerAdditionalViewProps
-  > {
+  TExternalProps extends UsePickerViewsProps<any, TView, any>,
+> extends UseRangePickerProps<TView, TError, TExternalProps> {
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots: UseDesktopRangePickerSlots<TDate, TView>;
+  slots: UseDesktopRangePickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseDesktopRangePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>;
+  slotProps?: UseDesktopRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
 }
 
-export interface DesktopRangePickerAdditionalViewProps extends RangePickerAdditionalViewProps {}
-
 export interface UseDesktopRangePickerParams<
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TExternalProps extends UseDesktopRangePickerProps<
-    TDate,
     TView,
     TEnableAccessibleFieldDOMStructure,
     any,
     TExternalProps
   >,
-> extends UseRangePickerParams<
-    TDate,
-    TView,
-    TExternalProps,
-    DesktopRangePickerAdditionalViewProps
-  > {}
+> extends UseRangePickerParams<TView, TExternalProps> {}

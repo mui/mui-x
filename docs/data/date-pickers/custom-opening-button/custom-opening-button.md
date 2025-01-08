@@ -8,7 +8,7 @@ title: Date and Time Pickers - Custom opening button
 <p class="description">The date picker lets you customize the button to open the views.</p>
 
 :::success
-See [Common concepts—Custom slots and subcomponents](/x/common-concepts/custom-components/) to learn how to use slots.
+See [Common concepts—Slots and subcomponents](/x/common-concepts/custom-components/) to learn how to use slots.
 :::
 
 ## Set a custom opening icon
@@ -46,7 +46,7 @@ In the example below, the warning icon will be visible anytime the current value
 
 {{"demo": "AddWarningIconWhenInvalid.js"}}
 
-To add the same behavior to a picker that do not have an input adornment (e.g: Date Range Picker),
+To add the same behavior to a picker that do not have an input adornment (for example Date Range Picker),
 you need to use the `textField` slot to add one:
 
 {{"demo": "AddWarningIconWhenInvalidRange.js"}}

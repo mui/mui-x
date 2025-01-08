@@ -3,7 +3,7 @@ import { Logger } from '../../models/logger';
 import { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 
 export function useGridLogger<PrivateApi extends GridPrivateApiCommon>(
-  privateApiRef: React.MutableRefObject<PrivateApi>,
+  privateApiRef: React.RefObject<PrivateApi>,
   name: string,
 ): Logger {
   const logger = React.useRef<Logger | null>(null);

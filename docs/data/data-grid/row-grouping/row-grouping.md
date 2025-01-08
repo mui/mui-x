@@ -311,15 +311,15 @@ If you are dynamically switching the `leafField` or `mainGroupingCriteria`, the 
 
 ## Automatic parents and children selection
 
-By default, selecting a parent row does not select its children.
-You can override this behavior by using the `rowSelectionPropagation` prop.
+By default, selecting a parent row selects all its descendants automatically.
+You can customize this behavior by using the `rowSelectionPropagation` prop.
 
 Here's how it's structured:
 
 ```ts
 type GridRowSelectionPropagation = {
-  descendants?: boolean; // default: false
-  parents?: boolean; // default: false
+  descendants?: boolean; // default: true
+  parents?: boolean; // default: true
 };
 ```
 
@@ -395,22 +395,6 @@ Don't hesitate to leave a comment on the same issue to influence what gets built
 :::
 
 With this panel, your users will be able to control which columns are used for grouping just by dragging them inside the panel.
-
-## Accessibility changes in v8
-
-The Data Grid v8 with row grouping feature will improve the accessibility and will be more aligned with the WAI-ARIA authoring practices.
-
-You can start using the new accessibility features by enabling `ariaV8` experimental feature flag:
-
-```tsx
-<DataGridPremium experimentalFeatures={{ ariaV8: true }} />
-```
-
-:::warning
-The value of `ariaV8` should be constant and not change during the lifetime of the Data Grid.
-:::
-
-{{"demo": "RowGroupingAriaV8.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Full example
 

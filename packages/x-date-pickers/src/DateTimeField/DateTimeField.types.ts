@@ -1,13 +1,7 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/utils';
-import { MakeOptional } from '@mui/x-internals/types';
-import TextField from '@mui/material/TextField';
-import {
-  DateTimeValidationError,
-  FieldSection,
-  PickerValidDate,
-  BuiltInFieldTextFieldProps,
-} from '../models';
+import { MakeOptional, SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { TextFieldProps } from '@mui/material/TextField';
+import { DateTimeValidationError, BuiltInFieldTextFieldProps, FieldOwnerState } from '../models';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import {
   ExportedUseClearableFieldProps,
@@ -16,34 +10,29 @@ import {
 } from '../hooks/useClearableField';
 import { ExportedValidateDateTimeProps } from '../validation/validateDateTime';
 import { AmPmProps } from '../internals/models/props/time';
+import { PickerValue } from '../internals/models';
+import { PickersTextFieldProps } from '../PickersTextField';
 
-export interface UseDateTimeFieldProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends MakeOptional<
+export interface UseDateTimeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean>
+  extends MakeOptional<
       UseFieldInternalProps<
-        TDate | null,
-        TDate,
-        FieldSection,
+        PickerValue,
         TEnableAccessibleFieldDOMStructure,
         DateTimeValidationError
       >,
       'format'
     >,
-    ExportedValidateDateTimeProps<TDate>,
+    ExportedValidateDateTimeProps,
     ExportedUseClearableFieldProps,
     AmPmProps {}
 
-export type DateTimeFieldProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
-> =
+export type DateTimeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = true> =
   // The hook props
-  UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> &
+  UseDateTimeFieldProps<TEnableAccessibleFieldDOMStructure> &
     // The TextField props
     Omit<
       BuiltInFieldTextFieldProps<TEnableAccessibleFieldDOMStructure>,
-      keyof UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>
+      keyof UseDateTimeFieldProps<TEnableAccessibleFieldDOMStructure>
     > & {
       /**
        * Overridable component slots.
@@ -54,29 +43,21 @@ export type DateTimeFieldProps<
        * The props used for each component slot.
        * @default {}
        */
-      slotProps?: DateTimeFieldSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
+      slotProps?: DateTimeFieldSlotProps;
     };
-
-export type DateTimeFieldOwnerState<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> = DateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
 
 export interface DateTimeFieldSlots extends UseClearableFieldSlots {
   /**
    * Form control with an input to render the value.
-   * @default TextField from '@mui/material' or PickersTextField if `enableAccessibleFieldDOMStructure` is `true`.
+   * @default <PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.
    */
   textField?: React.ElementType;
 }
 
-export interface DateTimeFieldSlotProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends UseClearableFieldSlotProps {
-  textField?: SlotComponentProps<
-    typeof TextField,
+export interface DateTimeFieldSlotProps extends UseClearableFieldSlotProps {
+  textField?: SlotComponentPropsFromProps<
+    PickersTextFieldProps | TextFieldProps,
     {},
-    DateTimeFieldOwnerState<TDate, TEnableAccessibleFieldDOMStructure>
+    FieldOwnerState
   >;
 }

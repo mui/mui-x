@@ -16,13 +16,13 @@ const barChartsParams = {
   ],
   margin: { top: 10, right: 10 },
   height: 200,
-  slotProps: { legend: { hidden: true } },
+  hideLegend: true,
 };
 export default function Interaction() {
   return (
     <Stack direction="column" sx={{ width: '100%', maxWidth: 400 }}>
-      <BarChart {...barChartsParams} tooltip={{ trigger: 'axis' }} />
-      <BarChart {...barChartsParams} tooltip={{ trigger: 'item' }} />
+      <BarChart {...barChartsParams} slotProps={{ tooltip: { trigger: 'axis' } }} />
+      <BarChart {...barChartsParams} slotProps={{ tooltip: { trigger: 'item' } }} />
     </Stack>
   );
 }

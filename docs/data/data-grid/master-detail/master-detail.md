@@ -66,13 +66,13 @@ The following example demonstrates this option in action:
 
 ## Controlling expanded detail panels
 
-To control which rows are expanded, pass a list of row IDs to the `detailPanelExpandedRowIds` prop.
+To control which rows are expanded, pass a set of row IDs to the `detailPanelExpandedRowIds` prop.
 Passing a callback to the `onDetailPanelExpandedRowIds` prop can be used to detect when a row gets expanded or collapsed.
 
 On the other hand, if you only want to initialize the Data Grid with some rows already expanded, use the `initialState` prop as follows:
 
 ```tsx
-<DataGridPro initialState={{ detailPanel: { expandedRowIds: [1, 2, 3] } }}>
+<DataGridPro initialState={{ detailPanel: { expandedRowIds: new Set([1, 2, 3]) } }}>
 ```
 
 {{"demo": "ControlMasterDetail.js", "bg": "inline", "defaultCodeOpen": false}}

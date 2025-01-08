@@ -60,11 +60,11 @@ function RowPropTest() {
   return (
     <div>
       {/* @ts-expect-error */}
-      <DataGrid<{ firstName: string }> rows={[{ firstName: 2 }]} columns={[]} />;
+      <DataGrid<{ firstName: string }> rows={[{ firstName: 2 }]} columns={[]} />
       {/* @ts-expect-error */}
-      <DataGrid<{ firstName: string }> rows={[{}]} columns={[]} />;
-      <DataGrid<{ firstName: string }> rows={[{ firstName: 'John' }]} columns={[]} />;
-      <DataGrid rows={[{ firstName: 'John' }]} columns={[]} />;
+      <DataGrid<{ firstName: string }> rows={[{}]} columns={[]} />
+      <DataGrid<{ firstName: string }> rows={[{ firstName: 'John' }]} columns={[]} />
+      <DataGrid rows={[{ firstName: 'John' }]} columns={[]} />
     </div>
   );
 }
@@ -219,8 +219,6 @@ function ApiRefPrivateMethods() {
     apiRef.current.applyStrategyProcessor;
     // @ts-expect-error Property 'storeDetailPanelHeight' does not exist on type 'GridApiCommunity'
     apiRef.current.storeDetailPanelHeight;
-    // @ts-expect-error Property 'detailPanelHasAutoHeight' does not exist on type 'GridApiCommunity'
-    apiRef.current.detailPanelHasAutoHeight;
     // @ts-expect-error Property 'calculateColSpan' does not exist on type 'GridApiCommunity'
     apiRef.current.calculateColSpan;
     // @ts-expect-error Property 'rowHasAutoHeight' does not exist on type 'GridApiCommunity'

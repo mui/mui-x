@@ -1,4 +1,4 @@
-<ResponsiveChartContainer
+<ChartContainer
   margin={{ top: 20, left: 10, right: 10, bottom: 30 }}
   height={300}
   series={[
@@ -11,4 +11,4 @@
 >
   <LinePlot />
   <DrawingAreaBox />
-</ResponsiveChartContainer>
+</ChartContainer>

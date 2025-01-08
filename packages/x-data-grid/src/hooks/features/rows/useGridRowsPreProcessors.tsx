@@ -93,9 +93,7 @@ const flatRowTreeCreationMethod: GridStrategyProcessor<'rowTreeCreation'> = (par
   return updateFlatRowTree({ previousTree: params.previousTree!, actions: params.updates.actions });
 };
 
-export const useGridRowsPreProcessors = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-) => {
+export const useGridRowsPreProcessors = (apiRef: React.RefObject<GridPrivateApiCommunity>) => {
   useGridRegisterStrategyProcessor(
     apiRef,
     GRID_DEFAULT_STRATEGY,

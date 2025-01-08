@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { ButtonProps } from '@mui/material/Button';
 import { TooltipProps } from '@mui/material/Tooltip';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridCsvExportOptions, GridPrintExportOptions } from '../../models/gridExport';
@@ -32,7 +33,9 @@ export interface GridToolbarExportProps {
    * @default {}
    */
   slotProps?: { button?: Partial<ButtonProps>; tooltip?: Partial<TooltipProps> };
-  [key: string]: any;
+  // TODO v8: Remove this loophole
+  // Refactored from: [key: string]: any;
+  [x: `data-${string}`]: string;
 }
 
 function GridCsvExportMenuItem(props: GridCsvExportMenuItemProps) {
@@ -113,9 +116,14 @@ GridPrintExportMenuItem.propTypes = {
   }),
 } as any;
 
-const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportProps>(
+const GridToolbarExport = forwardRef<HTMLButtonElement, GridToolbarExportProps>(
   function GridToolbarExport(props, ref) {
-    const { csvOptions = {}, printOptions = {}, excelOptions, ...other } = props;
+    const {
+      csvOptions = {},
+      printOptions = {},
+      excelOptions,
+      ...other
+    } = props as typeof props & { excelOptions: any };
 
     const apiRef = useGridApiContext();
 

@@ -1,11 +1,10 @@
 'use client';
-import * as React from 'react';
-import { ZAxisContext } from '../context/ZAxisContextProvider';
 import { AxisDefaultized } from '../models/axis';
 import { useCartesianContext } from '../context/CartesianProvider/useCartesianContext';
 
 import { ZAxisDefaultized } from '../models/z-axis';
 import { ColorLegendSelector } from './legend.types';
+import { useZAxis } from '../hooks/useZAxis';
 
 /**
  * Helper to select an axis definition according to its direction and id.
@@ -15,7 +14,7 @@ export function useAxis({
   axisId,
 }: ColorLegendSelector): ZAxisDefaultized | AxisDefaultized {
   const { xAxis, xAxisIds, yAxis, yAxisIds } = useCartesianContext();
-  const { zAxis, zAxisIds } = React.useContext(ZAxisContext);
+  const { zAxis, zAxisIds } = useZAxis();
 
   switch (axisDirection) {
     case 'x': {

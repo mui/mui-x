@@ -9,11 +9,11 @@ import {
   GridRenderEditCellParams,
   GridValueSetter,
   GridPreProcessEditCellProps,
-  GridCellProps,
   GridCellModes,
+  GridColDef,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, act, waitFor } from '@mui/internal-test-utils';
 import { getCell, spyApi } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 
@@ -54,9 +54,9 @@ describe('<DataGridPro /> - Cell editing', () => {
 
   describe('apiRef', () => {
     describe('startCellEditMode', () => {
-      it('should throw when the cell is already in edit mode', () => {
+      it('should throw when the cell is already in edit mode', async () => {
         render(<TestCase />);
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        await act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(() => {
           apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' });
         }).to.throw('MUI X: The cell with id=0 and field=currencyPair is not in view mode.');
@@ -369,7 +369,7 @@ describe('<DataGridPro /> - Cell editing', () => {
     });
 
     describe('stopCellEditMode', () => {
-      function CustomEditComponent({ hasFocus }: GridCellProps) {
+      function CustomEditComponent({ hasFocus }: GridRenderEditCellParams) {
         const ref = React.useRef<HTMLInputElement>(null);
         React.useLayoutEffect(() => {
           if (hasFocus) {
@@ -631,7 +631,9 @@ describe('<DataGridPro /> - Cell editing', () => {
       });
 
       it('should move focus to the cell below when cellToFocusAfter=below', async () => {
-        const renderEditCellProp = (props: GridCellProps) => <CustomEditComponent {...props} />;
+        const renderEditCellProp: GridColDef['renderEditCell'] = (props) => (
+          <CustomEditComponent {...props} />
+        );
         render(<TestCase columnProps={{ renderEditCell: renderEditCellProp }} />);
 
         act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
@@ -647,7 +649,9 @@ describe('<DataGridPro /> - Cell editing', () => {
       });
 
       it('should move focus to the cell on the right when cellToFocusAfter=right', async () => {
-        const renderEditCellProp = (props: GridCellProps) => <CustomEditComponent {...props} />;
+        const renderEditCellProp: GridColDef['renderEditCell'] = (props) => (
+          <CustomEditComponent {...props} />
+        );
         render(
           <TestCase
             {...getBasicGridData(1, 3)}
@@ -673,7 +677,9 @@ describe('<DataGridPro /> - Cell editing', () => {
       });
 
       it('should move focus to the cell on the left when cellToFocusAfter=left', async () => {
-        const renderEditCellProp = (props: GridCellProps) => <CustomEditComponent {...props} />;
+        const renderEditCellProp: GridColDef['renderEditCell'] = (props) => (
+          <CustomEditComponent {...props} />
+        );
         render(
           <TestCase
             {...getBasicGridData(1, 3)}
@@ -799,13 +805,13 @@ describe('<DataGridPro /> - Cell editing', () => {
         expect(listener.lastCall.args[0].reason).to.equal('printableKeyDown');
       });
 
-      it(`should not publish 'cellEditStart' if space is pressed`, () => {
-        render(<TestCase autoHeight />);
+      it(`should not publish 'cellEditStart' if space is pressed`, async () => {
+        const { user } = render(<TestCase autoHeight />);
         const listener = spy();
         apiRef.current.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 1);
-        fireUserEvent.mousePress(cell);
-        fireEvent.keyDown(cell, { key: ' ' });
+        await user.click(cell);
+        await user.keyboard('[Space]');
         expect(listener.callCount).to.equal(0);
       });
     });
@@ -894,6 +900,25 @@ describe('<DataGridPro /> - Cell editing', () => {
           id: 0,
           field: 'currencyPair',
           deleteValue: true,
+        });
+      });
+
+      it('should call preProcessEditCellProps', async () => {
+        const preProcessEditCellProps = spy(({ props }: GridPreProcessEditCellProps) => props);
+        render(<TestCase columnProps={{ preProcessEditCellProps }} />);
+
+        const cell = getCell(0, 1);
+        fireUserEvent.mousePress(cell);
+        fireEvent.keyDown(cell, { key: 'Delete' });
+
+        await waitFor(() => {
+          expect(preProcessEditCellProps.callCount).to.equal(1);
+        });
+
+        expect(preProcessEditCellProps.lastCall.args[0].props).to.deep.equal({
+          value: '',
+          error: false,
+          isProcessingProps: true,
         });
       });
     });
@@ -1142,15 +1167,15 @@ describe('<DataGridPro /> - Cell editing', () => {
     });
 
     describe('by pressing Tab', () => {
-      it(`should publish 'cellEditStop' with reason=tabKeyDown`, () => {
-        render(<TestCase />);
+      it(`should publish 'cellEditStop' with reason=tabKeyDown`, async () => {
+        const { user } = render(<TestCase />);
         const listener = spy();
         apiRef.current.subscribeEvent('cellEditStop', listener);
         const cell = getCell(0, 1);
-        fireUserEvent.mousePress(cell);
-        fireEvent.doubleClick(cell);
+        await user.click(cell);
+        await user.dblClick(cell);
         expect(listener.callCount).to.equal(0);
-        fireEvent.keyDown(cell, { key: 'Tab' });
+        await user.keyboard('{Tab}');
         expect(listener.lastCall.args[0].reason).to.equal('tabKeyDown');
       });
 
@@ -1230,9 +1255,9 @@ describe('<DataGridPro /> - Cell editing', () => {
         const { setProps } = render(
           <TestCase cellModesModel={{ 0: { currencyPair: { mode: GridCellModes.Edit } } }} />,
         );
-        await act(() =>
-          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
-        );
+        await act(() => {
+          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
+        });
         setProps({
           cellModesModel: {
             0: { currencyPair: { mode: GridCellModes.View, cellToFocusAfter: 'below' } },

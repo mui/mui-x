@@ -9,7 +9,7 @@ import { validateDateRange } from '@mui/x-date-pickers-pro/validation';
 import {
   useSplitFieldProps,
   useParsedFormat,
-  usePickersContext,
+  usePickerContext,
 } from '@mui/x-date-pickers/hooks';
 
 function ButtonDateRangeField(props) {
@@ -26,7 +26,7 @@ function ButtonDateRangeField(props) {
     ...other
   } = forwardedProps;
 
-  const pickersContext = usePickersContext();
+  const pickerContext = usePickerContext();
 
   const parsedFormat = useParsedFormat(internalProps);
   const { hasValidationError } = useValidation({
@@ -35,14 +35,6 @@ function ButtonDateRangeField(props) {
     timezone,
     props: internalProps,
   });
-
-  const handleTogglePicker = (event) => {
-    if (pickersContext.open) {
-      pickersContext.onClose(event);
-    } else {
-      pickersContext.onOpen(event);
-    }
-  };
 
   const formattedValue = (value ?? [null, null])
     .map((date) => (date == null ? parsedFormat : date.format(format)))
@@ -54,7 +46,7 @@ function ButtonDateRangeField(props) {
       variant="outlined"
       color={hasValidationError ? 'error' : 'primary'}
       ref={InputProps?.ref}
-      onClick={handleTogglePicker}
+      onClick={() => pickerContext.setOpen((prev) => !prev)}
     >
       {label ? `${label}: ${formattedValue}` : formattedValue}
     </Button>

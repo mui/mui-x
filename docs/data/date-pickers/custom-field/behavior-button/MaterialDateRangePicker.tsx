@@ -13,10 +13,10 @@ import { validateDateRange } from '@mui/x-date-pickers-pro/validation';
 import {
   useSplitFieldProps,
   useParsedFormat,
-  usePickersContext,
+  usePickerContext,
 } from '@mui/x-date-pickers/hooks';
 
-function ButtonDateRangeField(props: DateRangePickerFieldProps<Dayjs>) {
+function ButtonDateRangeField(props: DateRangePickerFieldProps) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
   const { value, timezone, format } = internalProps;
   const {
@@ -30,7 +30,7 @@ function ButtonDateRangeField(props: DateRangePickerFieldProps<Dayjs>) {
     ...other
   } = forwardedProps;
 
-  const pickersContext = usePickersContext();
+  const pickerContext = usePickerContext();
 
   const parsedFormat = useParsedFormat(internalProps);
   const { hasValidationError } = useValidation({
@@ -40,16 +40,8 @@ function ButtonDateRangeField(props: DateRangePickerFieldProps<Dayjs>) {
     props: internalProps,
   });
 
-  const handleTogglePicker = (event: React.UIEvent) => {
-    if (pickersContext.open) {
-      pickersContext.onClose(event);
-    } else {
-      pickersContext.onOpen(event);
-    }
-  };
-
   const formattedValue = (value ?? [null, null])
-    .map((date) => (date == null ? parsedFormat : date.format(format)))
+    .map((date: Dayjs) => (date == null ? parsedFormat : date.format(format)))
     .join(' – ');
 
   return (
@@ -58,7 +50,7 @@ function ButtonDateRangeField(props: DateRangePickerFieldProps<Dayjs>) {
       variant="outlined"
       color={hasValidationError ? 'error' : 'primary'}
       ref={InputProps?.ref}
-      onClick={handleTogglePicker}
+      onClick={() => pickerContext.setOpen((prev) => !prev)}
     >
       {label ? `${label}: ${formattedValue}` : formattedValue}
     </Button>
@@ -68,7 +60,7 @@ function ButtonDateRangeField(props: DateRangePickerFieldProps<Dayjs>) {
 // TODO v8: Will be removed before the end of the alpha since single input will become the default field.
 ButtonDateRangeField.fieldType = 'single-input';
 
-function ButtonFieldDateRangePicker(props: DateRangePickerProps<Dayjs>) {
+function ButtonFieldDateRangePicker(props: DateRangePickerProps) {
   return (
     <DateRangePicker
       {...props}

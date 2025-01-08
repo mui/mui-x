@@ -20,6 +20,7 @@ const buildData = (
             ]
           : [],
         layout,
+        valueFormatter: () => '',
       },
     },
     axis: {
