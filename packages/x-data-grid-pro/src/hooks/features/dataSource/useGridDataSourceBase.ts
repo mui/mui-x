@@ -16,6 +16,7 @@ import {
   GridDataSourceCache,
   runIf,
 } from '@mui/x-data-grid/internals';
+import { unstable_debounce as debounce } from '@mui/utils';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { gridGetRowsParamsSelector, gridDataSourceErrorsSelector } from './gridDataSourceSelector';
@@ -322,6 +323,8 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiPro>(
     },
     [apiRef],
   );
+
+  const debouncedFetchRows = React.useMemo(() => debounce(fetchRows, 0), [fetchRows]);
 
   const handleStrategyActivityChange = React.useCallback<
     GridEventListener<'strategyAvailabilityChange'>

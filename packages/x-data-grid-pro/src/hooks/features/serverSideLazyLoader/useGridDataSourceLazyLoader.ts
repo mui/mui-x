@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { throttle } from '@mui/x-internals/throttle';
+import { unstable_debounce as debounce } from '@mui/utils';
 import {
   useGridApiEventHandler,
   useGridSelector,
@@ -420,6 +421,15 @@ export const useGridDataSourceLazyLoader = (
     [props.unstable_lazyLoadingRequestThrottleMs, handleRenderedRowsIntervalChange],
   );
 
+  const debouncedFetchRows = React.useCallback(
+    (params: Partial<GridGetRowsParams>) =>
+      debounce(
+        () => privateApiRef.current.unstable_dataSource.fetchRows(GRID_ROOT_GROUP_ID, params),
+        0,
+      ),
+    [privateApiRef],
+  );
+
   const handleGridSortModelChange = React.useCallback<GridEventListener<'sortModelChange'>>(
     (newSortModel) => {
       rowsStale.current = true;
@@ -443,12 +453,9 @@ export const useGridDataSourceLazyLoader = (
       };
 
       privateApiRef.current.setLoading(true);
-      privateApiRef.current.unstable_dataSource.fetchRows(
-        GRID_ROOT_GROUP_ID,
-        adjustRowParams(getRowsParams),
-      );
+      debouncedFetchRows(adjustRowParams(getRowsParams));
     },
-    [privateApiRef, filterModel, paginationModel.pageSize, adjustRowParams],
+    [privateApiRef, filterModel, paginationModel.pageSize, adjustRowParams, debouncedFetchRows],
   );
 
   const handleGridFilterModelChange = React.useCallback<GridEventListener<'filterModelChange'>>(
@@ -463,9 +470,9 @@ export const useGridDataSourceLazyLoader = (
       };
 
       privateApiRef.current.setLoading(true);
-      privateApiRef.current.unstable_dataSource.fetchRows(GRID_ROOT_GROUP_ID, getRowsParams);
+      debouncedFetchRows(getRowsParams);
     },
-    [privateApiRef, sortModel, paginationModel.pageSize],
+    [privateApiRef, sortModel, paginationModel.pageSize, debouncedFetchRows],
   );
 
   const handleStrategyActivityChange = React.useCallback<
