@@ -1,1 +1,1 @@
-export * from './useZoomIsInteracting';
+export * from './useIsZoomInteracting';

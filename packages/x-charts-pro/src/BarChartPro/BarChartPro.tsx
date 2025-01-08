@@ -13,10 +13,10 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { useBarChartProps } from '@mui/x-charts/internals';
 import { ChartContainerPro, ChartContainerProProps } from '../ChartContainerPro';
-import { useZoomIsInteracting } from '../hooks/zoom';
+import { useIsZoomInteracting } from '../hooks/zoom';
 
 function BarChartPlotZoom(props: BarPlotProps) {
-  const isInteracting = useZoomIsInteracting();
+  const isInteracting = useIsZoomInteracting();
 
   return <BarPlot {...props} skipAnimation={isInteracting || undefined} />;
 }

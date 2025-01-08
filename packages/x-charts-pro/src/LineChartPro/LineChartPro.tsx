@@ -22,10 +22,10 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { useLineChartProps } from '@mui/x-charts/internals';
 import { ChartContainerPro, ChartContainerProProps } from '../ChartContainerPro';
-import { useZoomIsInteracting } from '../hooks/zoom';
+import { useIsZoomInteracting } from '../hooks/zoom';
 
 function AreaPlotZoom(props: AreaPlotProps) {
-  const isInteracting = useZoomIsInteracting();
+  const isInteracting = useIsZoomInteracting();
   return <AreaPlot {...props} skipAnimation={isInteracting || undefined} />;
 }
 
@@ -58,7 +58,7 @@ AreaPlotZoom.propTypes = {
 } as any;
 
 function LinePlotZoom(props: LinePlotProps) {
-  const isInteracting = useZoomIsInteracting();
+  const isInteracting = useIsZoomInteracting();
   return <LinePlot {...props} skipAnimation={isInteracting || undefined} />;
 }
 
@@ -91,7 +91,7 @@ LinePlotZoom.propTypes = {
 } as any;
 
 function MarkPlotZoom(props: MarkPlotProps) {
-  const isInteracting = useZoomIsInteracting();
+  const isInteracting = useIsZoomInteracting();
   return <MarkPlot {...props} skipAnimation={isInteracting || undefined} />;
 }
 
