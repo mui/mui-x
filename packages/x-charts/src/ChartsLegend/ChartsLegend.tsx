@@ -10,7 +10,7 @@ import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
 import { seriesContextBuilder } from './onClickContextBuilder';
 import { legendClasses, useUtilityClasses, type ChartsLegendClasses } from './chartsLegendClasses';
 import { consumeSlots } from '../internals/consumeSlots';
-import { ChartsLabel } from '../ChartsLabel';
+import { ChartsLabel } from '../ChartsLabel/ChartsLabel';
 
 export interface ChartsLegendProps {
   /**

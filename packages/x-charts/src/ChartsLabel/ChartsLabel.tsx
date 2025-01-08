@@ -18,6 +18,7 @@ export interface ChartsLabelProps {
 
 /**
  * Generates the label mark for the tooltip and legend.
+ * @ignore - internal component.
  */
 const ChartsLabel = consumeThemeProps(
   'MuiChartsLabel',

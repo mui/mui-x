@@ -7,7 +7,8 @@ import { AppendKeys } from '@mui/x-internals/types';
 import { AxisDefaultized } from '../models/axis';
 import { useAxis } from './useAxis';
 import { ColorLegendSelector } from './colorLegend.types';
-import { ChartsLabel, ChartsLabelGradient, ChartsLabelGradientProps } from '../ChartsLabel';
+import { ChartsLabel } from '../ChartsLabel/ChartsLabel';
+import { ChartsLabelGradient, ChartsLabelGradientProps } from '../ChartsLabel/ChartsLabelGradient';
 import { Direction } from './direction';
 import { consumeThemeProps } from '../internals/consumeThemeProps';
 import {

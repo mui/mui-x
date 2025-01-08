@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import { styled, SxProps, Theme } from '@mui/material/styles';
 import clsx from 'clsx';
 import { PrependKeys } from '@mui/x-internals/types';
-import { ChartsLabel, ChartsLabelMark, ChartsLabelMarkProps } from '../ChartsLabel';
+import { ChartsLabel } from '../ChartsLabel/ChartsLabel';
+import { ChartsLabelMark, ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabelMark';
 import { Direction } from './direction';
 import { consumeThemeProps } from '../internals/consumeThemeProps';
 import {

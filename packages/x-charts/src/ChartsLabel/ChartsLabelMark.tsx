@@ -67,6 +67,7 @@ const Root = styled('div', {
 
 /**
  * Generates the label mark for the tooltip and legend.
+ * @ignore - internal component.
  */
 const ChartsLabelMark = consumeThemeProps(
   'MuiChartsLabelMark',
