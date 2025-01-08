@@ -86,15 +86,11 @@ export const mergeStateWithAggregationModel =
     aggregation: { ...state.aggregation, model: aggregationModel },
   });
 
-export const getAggregationRules = ({
-  columnsLookup,
-  aggregationModel,
-  aggregationFunctions,
-}: {
-  columnsLookup: GridColumnRawLookup;
-  aggregationModel: GridAggregationModel;
-  aggregationFunctions: Record<string, GridAggregationFunction>;
-}) => {
+export const getAggregationRules = (
+  columnsLookup: GridColumnRawLookup,
+  aggregationModel: GridAggregationModel,
+  aggregationFunctions: Record<string, GridAggregationFunction>,
+) => {
   const aggregationRules: GridAggregationRules = {};
 
   // eslint-disable-next-line guard-for-in

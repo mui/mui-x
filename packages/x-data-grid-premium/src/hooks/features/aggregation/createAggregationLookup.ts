@@ -104,11 +104,11 @@ export const createAggregationLookup = ({
   aggregationRowsScope: DataGridPremiumProcessedProps['aggregationRowsScope'];
   getAggregationPosition: DataGridPremiumProcessedProps['getAggregationPosition'];
 }): GridAggregationLookup => {
-  const aggregationRules = getAggregationRules({
-    columnsLookup: gridColumnLookupSelector(apiRef),
-    aggregationModel: gridAggregationModelSelector(apiRef),
+  const aggregationRules = getAggregationRules(
+    gridColumnLookupSelector(apiRef),
+    gridAggregationModelSelector(apiRef),
     aggregationFunctions,
-  });
+  );
 
   const aggregatedFields = Object.keys(aggregationRules);
   if (aggregatedFields.length === 0) {
