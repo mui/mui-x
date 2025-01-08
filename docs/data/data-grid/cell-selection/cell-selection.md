@@ -31,10 +31,10 @@ Try out the various actions to select cells in the demo below—you can toggle [
 
 {{"demo": "CellSelectionGrid.js", "bg": "inline"}}
 
-## Controlled cell selection
+## Controlling cell selection
 
 You can control which cells are selected with the `cellSelectionModel` prop.
-This props accepts an object with keys corresponding to the row IDs that contain selected cells.
+This prop accepts an object with keys corresponding to the row IDs that contain selected cells.
 The value of each key is itself an object, which has a column field for a key and a boolean value for its selection state.
 You can set `true` to select a cell or `false` to deselect it.
 Removing the field from the object also deselects the cell.
