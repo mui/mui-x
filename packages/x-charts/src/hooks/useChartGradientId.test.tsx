@@ -5,12 +5,12 @@ import { useChartGradientId, useChartGradientIdObjectBound } from './useChartGra
 import { ChartDataProvider } from '../context';
 
 function UseGradientId() {
-  const id = useChartGradientId('test-id', 'x');
+  const id = useChartGradientId('test-id');
   return <div>{id}</div>;
 }
 
 function UseGradientIdObjectBound() {
-  const id = useChartGradientIdObjectBound('test-id', 'z');
+  const id = useChartGradientIdObjectBound('test-id');
   return <div>{id}</div>;
 }
 
@@ -24,7 +24,7 @@ describe('useChartGradientId', () => {
       </ChartDataProvider>,
     );
 
-    expect(screen.getByText(/:\w+:-gradient-x-test-id/)).toBeVisible();
+    expect(screen.getByText(/:\w+:-gradient-test-id/)).toBeVisible();
   });
 
   describe('useChartGradientIdObjectBound', () => {
@@ -35,7 +35,7 @@ describe('useChartGradientId', () => {
         </ChartDataProvider>,
       );
 
-      expect(screen.getByText(/:\w+:-gradient-z-test-id-object-bound/)).toBeVisible();
+      expect(screen.getByText(/:\w+:-gradient-test-id-object-bound/)).toBeVisible();
     });
   });
 });

@@ -77,9 +77,9 @@ const useAggregatedData = () => {
         const yScale = yAxis[yAxisId].scale;
         const xData = xAxis[xAxisId].data;
 
-        const gradientUsed: [AxisId, 'x' | 'y'] | undefined =
-          (yAxis[yAxisId].colorScale && [yAxisId, 'y']) ||
-          (xAxis[xAxisId].colorScale && [xAxisId, 'x']) ||
+        const gradientUsed: [AxisId] | undefined =
+          (yAxis[yAxisId].colorScale && [yAxisId]) ||
+          (xAxis[xAxisId].colorScale && [xAxisId]) ||
           undefined;
 
         if (process.env.NODE_ENV !== 'production') {

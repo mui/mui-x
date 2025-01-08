@@ -35,8 +35,8 @@ export function ChartsAxesGradients() {
   return (
     <defs>
       {filteredYAxisIds.map((axisId) => {
-        const gradientId = getGradientId(axisId, 'y');
-        const objectBoundGradientId = getObjectBoundGradientId(axisId, 'y');
+        const gradientId = getGradientId(axisId);
+        const objectBoundGradientId = getObjectBoundGradientId(axisId);
         const { colorMap, scale, colorScale, reverse } = yAxis[axisId];
         if (colorMap?.type === 'piecewise') {
           return (
@@ -75,8 +75,8 @@ export function ChartsAxesGradients() {
         return null;
       })}
       {filteredXAxisIds.map((axisId) => {
-        const gradientId = getGradientId(axisId, 'x');
-        const objectBoundGradientId = getObjectBoundGradientId(axisId, 'x');
+        const gradientId = getGradientId(axisId);
+        const objectBoundGradientId = getObjectBoundGradientId(axisId);
 
         const { colorMap, scale, reverse, colorScale } = xAxis[axisId];
         if (colorMap?.type === 'piecewise') {
@@ -116,7 +116,7 @@ export function ChartsAxesGradients() {
         return null;
       })}
       {filteredZAxisIds.map((axisId) => {
-        const objectBoundGradientId = getObjectBoundGradientId(axisId, 'z');
+        const objectBoundGradientId = getObjectBoundGradientId(axisId);
         const { colorMap, colorScale } = zAxis[axisId];
         if (colorMap?.type === 'continuous') {
           return (
