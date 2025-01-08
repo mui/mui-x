@@ -253,6 +253,7 @@
   { "name": "PiecewiseColorLegendClasses", "kind": "Interface" },
   { "name": "PiecewiseColorLegendItemContext", "kind": "Interface" },
   { "name": "PiecewiseColorLegendProps", "kind": "Interface" },
+  { "name": "PiecewiseLabelFormatterParams", "kind": "TypeAlias" },
   { "name": "PieChart", "kind": "Variable" },
   { "name": "PieChartProps", "kind": "Interface" },
   { "name": "PieChartSlotProps", "kind": "Interface" },
