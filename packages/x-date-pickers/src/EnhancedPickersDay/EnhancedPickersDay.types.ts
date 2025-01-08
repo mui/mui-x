@@ -98,19 +98,68 @@ export interface EnhancedPickersDayProps
 }
 
 export type PickersDayOwnerState = {
+  /**
+   * If `true`, the day has visibility:' hidden'.
+   * Usually needed for days outside the current month, if we don't want to show them .
+   */
   isDayHidden?: boolean;
+  /**
+   * True if the day is the last day of the week (last column of the week container).
+   */
   isLastDayOfWeek?: boolean;
+  /**
+   * True if the day is the first day of the week (first column of the week container).
+   */
   isFirstDayOfWeek?: boolean;
+  /**
+   * True if the day is selected.
+   * Used for both range and simple calendars.
+   */
   isSelected: boolean;
+  /**
+   * If `true` the current day will not be highlighted.
+   */
   isHighlightTodayDisabled: boolean;
+  /**
+   * If `true`, the day is the current day.
+   */
   isToday: boolean;
+  /**
+   * If `true`, the day is disabled.
+   */
   isDisabled: boolean;
+  /**
+   * If `true`, the day is outside the month that is currently in view.
+   */
   isOutsideCurrentMonth: boolean;
+  /**
+   * If `true`, the day is the start hover range preview.
+   */
   isStartOfPreviewing: boolean;
+  /**
+   * If `true`, the day is the end hover range preview.
+   */
   isEndOfPreviewing: boolean;
+  /**
+   * If `true`, the day is in the hover range preview  - excluding the start and the end.
+   */
   isPreviewing: boolean;
+  /**
+   * If `true`, the day is the start of the selected range.
+   * isSelected should be `true` as well.
+   */
   isStartOfSelectedRange: boolean;
+  /**
+   * If `true`, the day is the end of the selected range.
+   * isSelected should be `true` as well.
+   */
   isEndOfSelectedRange: boolean;
+  /**
+   * If `true`, the day is in the selected range - excluding the start and the end.
+   */
   isWithinSelectedRange: boolean;
+  /**
+   * If `true`, the day is being dragged.
+   */
   isDragSelected: boolean;
 };
