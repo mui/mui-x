@@ -6,7 +6,6 @@ import { styled, Theme } from '@mui/material/styles';
 import { MUIStyledCommonProps } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { useThemeVariablesClassName } from '../../utils/css/themeManager';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -51,13 +50,12 @@ const GridPanelWrapper = forwardRef<HTMLDivElement, GridPanelWrapperProps>(
     const { className, slotProps = {}, ...other } = props;
     const rootProps = useGridRootProps();
     const classes = useUtilityClasses(rootProps);
-    const variablesClass = useThemeVariablesClassName();
 
     return (
       <FocusTrap open disableEnforceFocus isEnabled={isEnabled} {...slotProps.TrapFocus}>
         <GridPanelWrapperRoot
           tabIndex={-1}
-          className={clsx(classes.root, className, variablesClass)}
+          className={clsx(classes.root, className)}
           ownerState={rootProps}
           {...other}
           ref={ref}

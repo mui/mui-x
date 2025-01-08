@@ -90,7 +90,3 @@ function setOpacity(color: string, opacity: number) {
 function removeOpacity(color: string) {
   return setOpacity(color, 1);
 }
-
-function mix(background: string, overlay: string, opacity: number | string) {
-  return `color-mix(in srgb,${background}, ${overlay} calc(${opacity} * 100%))`;
-}

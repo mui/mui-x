@@ -35,7 +35,7 @@ function injectStyles(selector: string, variables: Record<string, any>) {
   }
   const style = setup();
   if (process.env.NODE_ENV === 'development') {
-    style.innerHTML += stylesToString(selector, variables).join('\n') + '\n';
+    style.innerHTML += `${stylesToString(selector, variables).join('\n')}\n`;
   } else {
     const rules = stylesToString(selector, variables);
     for (let i = 0; i < rules.length; i += 1) {

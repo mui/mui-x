@@ -1,6 +1,8 @@
 import type { CSSObject } from '@mui/system';
 import unitLessProperties from './unitLessProperties';
 
+/* eslint-disable prefer-template */
+
 const DASH_CHAR_CODE = '-'.charCodeAt(0);
 
 const SPECIAL_CHAR = /#|\.|\s|>|&|:/;
@@ -9,9 +11,9 @@ const UPPERCASE_LETTERS = /[A-Z]/g;
 // TODO: By using native CSS nesting, we could make `stylesToString` more simple & performant.
 
 const stack = [] as any[];
-export function stylesToString(selector: string, styles: CSSObject) {
+export function stylesToString(rootSelector: string, rootStyles: CSSObject) {
   stack.length = 0;
-  stack.push(selector, styles, '');
+  stack.push(rootSelector, rootStyles, '');
 
   const rules = [] as string[];
 
@@ -22,10 +24,8 @@ export function stylesToString(selector: string, styles: CSSObject) {
 
     let output = `${transformSelector(selector, parents)} { `;
 
-    for (let key in styles) {
-      const isSubStyles = SPECIAL_CHAR.test(key);
-
-      if (isSubStyles) {
+    for (const key in styles) {
+      if (isSubStyles(key)) {
         stack.push(key, styles[key], parents + ' ' + key);
       } else if (isVariable(key)) {
         const cssKey = key;
@@ -67,6 +67,10 @@ function transformValue(cssKey: string, value: any) {
     return String(value);
   }
   return String(value) + 'px';
+}
+
+function isSubStyles(key: string) {
+  return SPECIAL_CHAR.test(key);
 }
 
 function isVariable(cssKey: string) {
