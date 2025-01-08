@@ -29,6 +29,7 @@ export default function PieAnimation() {
     <Box sx={{ width: '100%' }}>
       <PieChart
         height={300}
+        width={300}
         series={[
           {
             data: mobileAndDesktopOS.slice(0, itemNb),
