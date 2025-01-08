@@ -21,7 +21,7 @@ export interface GridCellSelectionApi {
    */
   getCellSelectionModel: () => GridCellSelectionModel;
   /**
-   * Updates the cell selection model to the value passed to the `newModel` argument.
+   * Updates the cell selection model according to the value passed to the `newModel` argument.
    * Any cell already selected will be unselected.
    * @param {GridCellSelectionModel} newModel The cells to select.
    */

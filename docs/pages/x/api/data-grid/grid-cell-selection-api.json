@@ -24,7 +24,7 @@
     },
     {
       "name": "setCellSelectionModel",
-      "description": "Updates the cell selection model to the value passed to the <code>newModel</code> argument. Any cell already selected will be unselected.",
+      "description": "Updates the cell selection model according to the value passed to the <code>newModel</code> argument. Any cell already selected will be unselected.",
       "type": "(newModel: GridCellSelectionModel) => void"
     }
   ]
