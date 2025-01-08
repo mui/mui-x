@@ -53,6 +53,10 @@ vi.mock('date-fns-jalali/startOfWeek', () => import('date-fns-jalali-v2/startOfW
 vi.mock('date-fns-jalali/startOfYear', () => import('date-fns-jalali-v2/startOfYear'));
 vi.mock('date-fns-jalali/isWithinInterval', () => import('date-fns-jalali-v2/isWithinInterval'));
 vi.mock('date-fns-jalali/locale/fa-IR', () => import('date-fns-jalali-v2/locale/fa-IR'));
+vi.mock(
+  'date-fns-jalali/_lib/format/longFormatters',
+  () => import('date-fns-jalali-v2/_lib/format/longFormatters'),
+);
 
 describe('<AdapterDateFnsJalaliV2 />', () => {
   describeJalaliAdapter(AdapterDateFnsJalali, {});
