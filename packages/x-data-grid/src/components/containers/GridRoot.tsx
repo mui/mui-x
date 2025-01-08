@@ -10,7 +10,6 @@ import {
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { GridCSSVariables } from './GridCSSVariables';
 import { GridRootStyles } from './GridRootStyles';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
@@ -69,14 +68,12 @@ const GridRoot = forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(pro
   }
 
   return (
-    <GridCSSVariables>
-      <GridRootStyles
-        className={clsx(classes.root, className)}
-        ownerState={ownerState}
-        {...other}
-        ref={handleRef}
-      />
-    </GridCSSVariables>
+    <GridRootStyles
+      className={clsx(classes.root, className)}
+      ownerState={ownerState}
+      {...other}
+      ref={handleRef}
+    />
   );
 });
 
