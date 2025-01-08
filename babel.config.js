@@ -101,25 +101,23 @@ module.exports = function getBabelConfig(api) {
   // TODO: Remove once vitest is our default runner
   if (process.env.NODE_ENV === 'test' && process.env.VITEST !== 'true') {
     plugins.push(['@babel/plugin-transform-export-namespace-from']);
-    // We replace `date-fns` imports with an aliased `date-fns@v4` version installed as `date-fns-v4` for tests.
-    // The plugin is patched to only run on `AdapterDateFnsV3.ts`.
-    // TODO: remove when we upgrade to date-fns v4 by default.
+    // We replace `date-fns` imports with an aliased `date-fns@v2` version installed as `date-fns-v2` for tests.
     plugins.push([
       'babel-plugin-replace-imports',
       {
-        test: /date-fns(?!-v4)/i,
-        replacer: 'date-fns-v4',
+        test: /date-fns(?!-v2)/i,
+        replacer: 'date-fns-v2',
         // This option is provided by the `patches/babel-plugin-replace-imports@1.0.2.patch` patch
-        filenameIncludes: 'src/AdapterDateFnsV3/',
+        filenameIncludes: 'src/AdapterDateFnsV2/',
       },
     ]);
     plugins.push([
       'babel-plugin-replace-imports',
       {
-        test: /date-fns-jalali(?!-v4)/i,
-        replacer: 'date-fns-jalali-v4',
+        test: /date-fns-jalali(?!-v2)/i,
+        replacer: 'date-fns-jalali-v2',
         // This option is provided by the `patches/babel-plugin-replace-imports@1.0.2.patch` patch
-        filenameIncludes: 'src/AdapterDateFnsJalaliV3/',
+        filenameIncludes: 'src/AdapterDateFnsJalaliV2/',
       },
       'replace-date-fns-jalali-imports',
     ]);

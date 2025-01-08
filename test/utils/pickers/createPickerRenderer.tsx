@@ -5,7 +5,7 @@ import { AdapterClassToUse, AdapterName, adapterToUse, availableAdapters } from 
 
 interface CreatePickerRendererOptions extends CreateRendererOptions {
   // Set-up locale with date-fns object. Other are deduced from `locale.code`
-  locale?: Locale;
+  locale?: { code: string } | any;
   adapterName?: AdapterName;
   instance?: any;
 }
