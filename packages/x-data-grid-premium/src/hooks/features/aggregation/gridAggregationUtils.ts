@@ -97,7 +97,9 @@ export const getAggregationRules = ({
 }) => {
   const aggregationRules: GridAggregationRules = {};
 
-  Object.entries(aggregationModel).forEach(([field, columnItem]) => {
+  // eslint-disable-next-line guard-for-in
+  for (const item in aggregationModel) {
+    const [field, columnItem] = item;
     if (
       columnsLookup[field] &&
       canColumnHaveAggregationFunction({
@@ -111,7 +113,7 @@ export const getAggregationRules = ({
         aggregationFunction: aggregationFunctions[columnItem],
       };
     }
-  });
+  }
 
   return aggregationRules;
 };
