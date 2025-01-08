@@ -407,7 +407,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
    />
   ```
 
-  If you were not passing those props to the picker, then you can use their default value:
+  If you were not passing those props to the picker, then you can use their default values:
 
   - `formatDensity`: `"dense"`
   - `enableAccessibleFieldDOMStructure`: `true`
