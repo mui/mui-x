@@ -261,7 +261,7 @@ const ContinuousColorLegend = consumeThemeProps(
             rotate={rotateGradient}
             reverse={reverse}
             thickness={thickness}
-            gradientId={gradientId ?? generateGradientId(axisItem.id, axisDirection!)}
+            gradientId={gradientId ?? generateGradientId(axisItem.id)}
           />
         </li>
         {reverse ? minComponent : maxComponent}
