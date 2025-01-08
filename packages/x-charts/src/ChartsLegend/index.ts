@@ -12,4 +12,5 @@ export * from './PiecewiseColorLegend';
 export { piecewiseColorLegendClasses } from './piecewiseColorLegendClasses';
 export type { PiecewiseColorLegendClasses } from './piecewiseColorLegendClasses';
 export { piecewiseColorDefaultLabelFormatter } from './piecewiseColorDefaultLabelFormatter';
+export type { PiecewiseLabelFormatterParams } from './piecewiseColorLegend.types';
 export * from './legend.types';

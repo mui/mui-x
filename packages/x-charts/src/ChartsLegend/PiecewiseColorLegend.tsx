@@ -108,10 +108,10 @@ const RootElement = styled('ul', {
         flexDirection: 'column',
       },
       [`&.${piecewiseColorLegendClasses.start}`]: {
-        alignItems: 'start',
+        alignItems: 'end',
       },
       [`&.${piecewiseColorLegendClasses.end}`]: {
-        alignItems: 'end',
+        alignItems: 'start',
       },
       [`.${piecewiseColorLegendClasses.minLabel}`]: {
         alignItems: 'end',
@@ -191,7 +191,11 @@ const PiecewiseColorLegend = consumeThemeProps(
     const startClass = isReverse ? classes?.maxLabel : classes?.minLabel;
     const endClass = isReverse ? classes?.minLabel : classes?.maxLabel;
 
-    const orderedColors = isReverse ? colorMap.colors.slice().reverse() : colorMap.colors;
+    const colors = colorMap.colors.map((color, colorIndex) => ({
+      color,
+      colorIndex,
+    }));
+    const orderedColors = isReverse ? colors.reverse() : colors;
 
     const isStart = labelPosition === 'start';
     const isEnd = labelPosition === 'end';
@@ -204,19 +208,27 @@ const PiecewiseColorLegend = consumeThemeProps(
         {...other}
         ownerState={props}
       >
-        {orderedColors.map((color, index) => {
+        {orderedColors.map(({ color, colorIndex }, index) => {
           const isFirst = index === 0;
           const isLast = index === colorMap.colors.length - 1;
+          const isFirstColor = colorIndex === 0;
+          const isLastColor = colorIndex === colorMap.colors.length - 1;
 
           const data = {
-            index,
+            index: colorIndex,
             length: formattedLabels.length,
-            ...(isFirst
+            ...(isFirstColor
               ? { min: null, formattedMin: null }
-              : { min: colorMap.thresholds[index - 1], formattedMin: formattedLabels[index - 1] }),
-            ...(isLast
+              : {
+                  min: colorMap.thresholds[colorIndex - 1],
+                  formattedMin: formattedLabels[colorIndex - 1],
+                }),
+            ...(isLastColor
               ? { max: null, formattedMax: null }
-              : { max: colorMap.thresholds[index], formattedMax: formattedLabels[index] }),
+              : {
+                  max: colorMap.thresholds[colorIndex],
+                  formattedMax: formattedLabels[colorIndex],
+                }),
           };
 
           const label = labelFormatter?.(data);
@@ -239,7 +251,7 @@ const PiecewiseColorLegend = consumeThemeProps(
           const Element = onItemClick ? 'button' : 'div';
 
           return (
-            <li key={index}>
+            <li key={colorIndex}>
               <Element
                 role={onItemClick ? 'button' : undefined}
                 type={onItemClick ? 'button' : undefined}
