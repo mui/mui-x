@@ -92,8 +92,10 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
 
-    setProps({ sortModel: [{ field: 'name', sort: 'asc' }] });
-    setProps({ filterModel: { items: [{ field: 'name', value: 'John', operator: 'contains' }] } });
+    setProps({
+      sortModel: [{ field: 'name', sort: 'asc' }],
+      filterModel: { items: [{ field: 'name', value: 'John', operator: 'contains' }] },
+    });
 
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);

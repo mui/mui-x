@@ -422,14 +422,14 @@ export const useGridDataSourceLazyLoader = (
     [props.unstable_lazyLoadingRequestThrottleMs, handleRenderedRowsIntervalChange],
   );
 
-  const debouncedFetchRows = React.useCallback(
-    (params: Partial<GridGetRowsParams>) =>
-      debounce(
-        () => privateApiRef.current.unstable_dataSource.fetchRows(GRID_ROOT_GROUP_ID, params),
-        0,
-      ),
+  const fetchRows = React.useCallback(
+    (params: Partial<GridGetRowsParams>) => {
+      privateApiRef.current.unstable_dataSource.fetchRows(GRID_ROOT_GROUP_ID, params);
+    },
     [privateApiRef],
   );
+
+  const debouncedFetchRows = React.useMemo(() => debounce(fetchRows, 0), [fetchRows]);
 
   const handleGridSortModelChange = React.useCallback<GridEventListener<'sortModelChange'>>(
     (newSortModel) => {
