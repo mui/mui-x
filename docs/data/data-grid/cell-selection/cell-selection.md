@@ -73,7 +73,7 @@ You can use these classes to create CSS selectors targeting specific corners of 
 
 ## apiRef
 
-The Data Grid exposes a set of methods via the imperative `apiRef` that are used in the implementation of the cell selection feature.
+The Data Grid exposes a set of methods via the `apiRef` object that are used in the implementation of the cell selection feature.
 The reference below describes the relevant functions.
 See [API object](/x/react-data-grid/api-object/) for more details.
 
