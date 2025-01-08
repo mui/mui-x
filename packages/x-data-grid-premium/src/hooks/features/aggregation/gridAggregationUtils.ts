@@ -94,8 +94,8 @@ export const getAggregationRules = (
   const aggregationRules: GridAggregationRules = {};
 
   // eslint-disable-next-line guard-for-in
-  for (const item in aggregationModel) {
-    const [field, columnItem] = item;
+  for (const field in aggregationModel) {
+    const columnItem = aggregationModel[field];
     if (
       columnsLookup[field] &&
       canColumnHaveAggregationFunction({
