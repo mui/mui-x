@@ -64,10 +64,10 @@ When multiple selected cells form a continuous range of any size, specific class
 - `MuiDataGrid-cell--rangeRight`: to all cells in the last column of the range
 
 :::info
-If a single cell is selected, all classes above are applied to the same element.
+When a single cell is selected, all classes above are applied to that element.
 :::
 
-You can use these classes to create CSS selectors targeting specific corners of each range—for example, the demo below adds a boarder around the outside of the range.
+You can use these classes to create CSS selectors targeting specific corners of each range—for example, the demo below adds a border around the outside of the range.
 
 {{"demo": "CellSelectionRangeStyling.js", "bg": "inline"}}
 
