@@ -111,7 +111,7 @@ const RootElement = styled('ul', {
 })<{ ownerState: ContinuousColorLegendProps }>(({ theme, ownerState }) => ({
   ...theme.typography.caption,
   color: (theme.vars || theme).palette.text.primary,
-  lineHeight: undefined,
+  lineHeight: '100%',
   display: 'grid',
   flexShrink: 0,
   gap: theme.spacing(0.5),

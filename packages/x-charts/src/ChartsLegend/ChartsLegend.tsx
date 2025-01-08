@@ -44,7 +44,7 @@ const RootElement = styled('ul', {
 })<{ ownerState: ChartsLegendProps }>(({ ownerState, theme }) => ({
   ...theme.typography.caption,
   color: (theme.vars || theme).palette.text.primary,
-  lineHeight: undefined,
+  lineHeight: '100%',
   display: 'flex',
   flexDirection: ownerState.direction === 'vertical' ? 'column' : 'row',
   alignItems: ownerState.direction === 'vertical' ? undefined : 'center',
