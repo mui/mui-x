@@ -383,7 +383,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
   ```
 
   :::success
-  If you are using a hook like `useDateField`, you don't have to do anything, the value from the context are automatically applied.
+  If you are using a hook, like `useDateField`, you don't have to do anything, the values from the context are automatically applied.
   :::
 
 - The component passed to the `field` slot no longer receives the `formatDensity`, `enableAccessibleFieldDOMStructure`, `selectedSections` and `onSelectedSectionsChange` props.
