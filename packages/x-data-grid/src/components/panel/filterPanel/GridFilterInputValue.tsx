@@ -82,13 +82,13 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
         onChange={onFilterChange}
         variant={variant}
         type={type || 'text'}
+        disabled={disabled}
         InputProps={{
           endAdornment: applying ? (
             <rootProps.slots.baseInputAdornment position="end">
               <rootProps.slots.loadIcon fontSize="small" color="action" />
             </rootProps.slots.baseInputAdornment>
           ) : null,
-          disabled,
           ...InputProps,
           inputProps: {
             tabIndex,

@@ -98,6 +98,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
         onChange={onFilterChange}
         variant="standard"
         type={type || 'text'}
+        disabled={disabled}
         InputLabelProps={{
           shrink: true,
         }}
@@ -106,7 +107,6 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
           endAdornment: applying ? (
             <rootProps.slots.loadIcon fontSize="small" color="action" />
           ) : null,
-          disabled,
           ...InputProps,
           inputProps: {
             max: type === 'datetime-local' ? '9999-12-31T23:59' : '9999-12-31',
