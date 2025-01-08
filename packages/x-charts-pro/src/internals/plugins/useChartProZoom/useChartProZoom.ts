@@ -43,7 +43,8 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   const isZoomEnabled = Object.keys(optionsLookup).length > 0;
 
   // Add events
-  const eventCacheRef = React.useRef<PointerEvent[]>([]);
+  const panningEventCacheRef = React.useRef<PointerEvent[]>([]);
+  const zoomEventCacheRef = React.useRef<PointerEvent[]>([]);
   const eventPrevDiff = React.useRef<number>(0);
   const interactionTimeoutRef = React.useRef<number | undefined>(undefined);
 
@@ -87,7 +88,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
       return () => {};
     }
     const handlePan = (event: PointerEvent) => {
-      if (element === null || !isDraggingRef.current || eventCacheRef.current.length > 1) {
+      if (element === null || !isDraggingRef.current || panningEventCacheRef.current.length > 1) {
         return;
       }
       if (touchStartRef.current == null) {
@@ -135,13 +136,13 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
       setZoomDataCallback(newZoomData);
     };
     const handleDown = (event: PointerEvent) => {
-      eventCacheRef.current.push(event);
+      panningEventCacheRef.current.push(event);
       const point = getSVGPoint(element, event);
       if (!instance.isPointInside(point)) {
         return;
       }
       // If there is only one pointer, prevent selecting text
-      if (eventCacheRef.current.length === 1) {
+      if (panningEventCacheRef.current.length === 1) {
         event.preventDefault();
       }
       isDraggingRef.current = true;
@@ -153,8 +154,10 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
       };
     };
     const handleUp = (event: PointerEvent) => {
-      eventCacheRef.current.splice(
-        eventCacheRef.current.findIndex((cachedEvent) => cachedEvent.pointerId === event.pointerId),
+      panningEventCacheRef.current.splice(
+        panningEventCacheRef.current.findIndex(
+          (cachedEvent) => cachedEvent.pointerId === event.pointerId,
+        ),
         1,
       );
       setIsInteracting(false);
@@ -240,7 +243,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     };
 
     function pointerDownHandler(event: PointerEvent) {
-      eventCacheRef.current.push(event);
+      zoomEventCacheRef.current.push(event);
       setIsInteracting(true);
     }
 
@@ -249,18 +252,18 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
         return;
       }
 
-      const index = eventCacheRef.current.findIndex(
+      const index = zoomEventCacheRef.current.findIndex(
         (cachedEv) => cachedEv.pointerId === event.pointerId,
       );
-      eventCacheRef.current[index] = event;
+      zoomEventCacheRef.current[index] = event;
 
       // Not a pinch gesture
-      if (eventCacheRef.current.length !== 2) {
+      if (zoomEventCacheRef.current.length !== 2) {
         return;
       }
 
-      const firstEvent = eventCacheRef.current[0];
-      const curDiff = getDiff(eventCacheRef.current);
+      const firstEvent = zoomEventCacheRef.current[0];
+      const curDiff = getDiff(zoomEventCacheRef.current);
 
       setZoomDataCallback((prevZoomData) => {
         const newZoomData = prevZoomData.map((zoom) => {
@@ -300,12 +303,14 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     }
 
     function pointerUpHandler(event: PointerEvent) {
-      eventCacheRef.current.splice(
-        eventCacheRef.current.findIndex((cachedEvent) => cachedEvent.pointerId === event.pointerId),
+      zoomEventCacheRef.current.splice(
+        zoomEventCacheRef.current.findIndex(
+          (cachedEvent) => cachedEvent.pointerId === event.pointerId,
+        ),
         1,
       );
 
-      if (eventCacheRef.current.length < 2) {
+      if (zoomEventCacheRef.current.length < 2) {
         eventPrevDiff.current = 0;
       }
 
