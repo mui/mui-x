@@ -1,37 +1,22 @@
 import * as React from 'react';
 import { useCartesianContext } from '../../../context/CartesianProvider';
-import { useChartId, useDrawingArea } from '../../../hooks';
+import { useDrawingArea } from '../../../hooks';
 import ChartsPiecewiseGradient from './ChartsPiecewiseGradient';
 import ChartsContinuousGradient from './ChartsContinuousGradient';
-import { AxisId } from '../../../models/axis';
 import ChartsContinuousGradientObjectBound from './ChartsContinuousGradientObjectBound';
 import { useZAxis } from '../../../hooks/useZAxis';
-
-export function useChartGradient() {
-  const chartId = useChartId();
-  return React.useCallback(
-    (axisId: AxisId, direction: 'x' | 'y' | 'z') => `${chartId}-gradient-${direction}-${axisId}`,
-    [chartId],
-  );
-}
-
-// TODO: make public?
-export function useChartGradientObjectBound() {
-  const chartId = useChartId();
-  return React.useCallback(
-    (axisId: AxisId, direction: 'x' | 'y' | 'z') =>
-      `${chartId}-gradient-${direction}-${axisId}-object-bound`,
-    [chartId],
-  );
-}
+import {
+  useChartGradientIdBuilder,
+  useChartGradientIdObjectBoundBuilder,
+} from '../../../hooks/useChartGradientId';
 
 export function ChartsAxesGradients() {
   const { top, height, bottom, left, width, right } = useDrawingArea();
 
   const svgHeight = top + height + bottom;
   const svgWidth = left + width + right;
-  const getGradientId = useChartGradient();
-  const getObjectBoundGradientId = useChartGradientObjectBound();
+  const getGradientId = useChartGradientIdBuilder();
+  const getObjectBoundGradientId = useChartGradientIdObjectBoundBuilder();
   const { xAxisIds, xAxis, yAxisIds, yAxis } = useCartesianContext();
   const { zAxisIds, zAxis } = useZAxis();
 

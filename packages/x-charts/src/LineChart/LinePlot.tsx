@@ -15,10 +15,10 @@ import { getValueToPositionMapper } from '../hooks/useScale';
 import getCurveFactory from '../internals/getCurve';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { LineItemIdentifier } from '../models/seriesType/line';
-import { useChartGradient } from '../internals/components/ChartsAxesGradients';
 import { useLineSeries } from '../hooks/useSeries';
 import { AxisId } from '../models/axis';
 import { useSkipAnimation } from '../context/AnimationProvider';
+import { useChartGradientIdBuilder } from '../hooks/useChartGradientId';
 
 export interface LinePlotSlots extends LineElementSlots {}
 
@@ -140,7 +140,7 @@ function LinePlot(props: LinePlotProps) {
   const { slots, slotProps, skipAnimation: inSkipAnimation, onItemClick, ...other } = props;
   const skipAnimation = useSkipAnimation(inSkipAnimation);
 
-  const getGradientId = useChartGradient();
+  const getGradientId = useChartGradientIdBuilder();
   const completedData = useAggregatedData();
   return (
     <LinePlotRoot {...other}>
