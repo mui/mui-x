@@ -122,7 +122,7 @@ describe('LineChart - click event', () => {
         </div>,
       );
 
-      const marks = document.querySelectorAll<HTMLElement>('path.MuiMarkElement-root');
+      const marks = document.querySelectorAll<HTMLElement>('circle.MuiMarkElement-root');
 
       fireEvent.click(marks[0]);
       expect(onMarkClick.lastCall.args[1]).to.deep.equal({
