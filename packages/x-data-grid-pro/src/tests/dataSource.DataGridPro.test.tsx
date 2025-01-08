@@ -128,6 +128,21 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
     });
   });
 
+  it('should re-fetch the data once if multiple models have changed', async () => {
+    const { setProps } = render(<TestDataSource />);
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+
+    setProps({ paginationModel: { page: 1, pageSize: 10 } });
+    setProps({ sortModel: [{ field: 'name', sort: 'asc' }] });
+    setProps({ filterModel: { items: [{ field: 'name', value: 'John', operator: 'contains' }] } });
+
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(2);
+    });
+  });
+
   describe('Cache', () => {
     it('should cache the data using the default cache', async () => {
       render(<TestDataSource />);

@@ -86,6 +86,20 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
     });
   });
 
+  it('should re-fetch the data once if multiple models have changed', async () => {
+    const { setProps } = render(<TestDataSourceLazyLoader />);
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+
+    setProps({ sortModel: [{ field: 'name', sort: 'asc' }] });
+    setProps({ filterModel: { items: [{ field: 'name', value: 'John', operator: 'contains' }] } });
+
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(2);
+    });
+  });
+
   describe('Viewport loading', () => {
     it('should render skeleton rows if rowCount is bigger than the number of rows', async () => {
       render(<TestDataSourceLazyLoader />);
