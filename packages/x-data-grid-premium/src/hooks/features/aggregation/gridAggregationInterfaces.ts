@@ -51,7 +51,7 @@ export interface GridAggregationFunction<V = any, AV = V> {
   apply: (params: GridAggregationParams<V>) => AV | null | undefined;
   /**
    * Label of the aggregation function.
-   * Will be used to add a label on the footer of the grouping column when this aggregation function is the only one being used.
+   * Used for adding a label to the footer of the grouping column when this aggregation function is the only one being used.
    * @default apiRef.current.getLocaleText('aggregationFunctionLabel{capitalize(name)})
    */
   label?: string;
@@ -61,12 +61,12 @@ export interface GridAggregationFunction<V = any, AV = V> {
    */
   columnTypes?: string[];
   /**
-   * Function that allows to apply a formatter to the aggregated value.
-   * If not defined, the grid will use the formatter of the column.
+   * Function for applying a formatter to the aggregated value.
+   * If not defined, the grid uses the formatter of the column.
    */
   valueFormatter?: GridValueFormatter;
   /**
-   * Indicates if the aggregated value have the same unit as the cells used to generate it.
+   * Indicates if the aggregated value has the same unit as the cells used to generate it.
    * It can be used to apply a custom cell renderer only if the aggregated value has the same unit.
    * @default true
    */
