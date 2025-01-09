@@ -158,7 +158,7 @@ The same logic can be applied to any Range Picker:
 ### Build your own custom field
 
 :::success
-The sections below show how to build a field for your picker.
+The sections below show how to build a field for your Picker.
 Unlike the field components exposed by `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`, those fields are not suitable for a standalone usage.
 :::
 
