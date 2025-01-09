@@ -11,9 +11,12 @@ import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
-import { useBarChartProps } from '@mui/x-charts/internals';
-import { ChartContainerPro, ChartContainerProProps } from '../ChartContainerPro';
+import { useBarChartProps, ChartsWrapper } from '@mui/x-charts/internals';
+import { ChartDataProvider } from '@mui/x-charts/context';
+import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import { ChartContainerProProps } from '../ChartContainerPro';
 import { useIsZoomInteracting } from '../hooks/zoom';
+import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 
 function BarChartPlotZoom(props: BarPlotProps) {
   const isInteracting = useIsZoomInteracting();
@@ -83,6 +86,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   const props = useThemeProps({ props: inProps, name: 'MuiBarChartPro' });
   const { initialZoom, onZoomChange, apiRef, ...other } = props;
   const {
+    chartsWrapperProps,
     chartContainerProps,
     barPlotProps,
     axisClickHandlerProps,
@@ -96,29 +100,37 @@ const BarChartPro = React.forwardRef(function BarChartPro(
     children,
   } = useBarChartProps(other);
 
+  const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps(
+    { ...chartContainerProps, apiRef },
+    ref,
+  );
+
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
 
   return (
-    <ChartContainerPro
-      ref={ref}
-      {...chartContainerProps}
+    <ChartDataProvider
+      {...chartDataProviderProProps}
       apiRef={apiRef}
       initialZoom={initialZoom}
       onZoomChange={onZoomChange}
     >
-      {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
-      <ChartsGrid {...gridProps} />
-      <g {...clipPathGroupProps}>
-        <BarChartPlotZoom {...barPlotProps} />
-        <ChartsOverlay {...overlayProps} />
-        <ChartsAxisHighlight {...axisHighlightProps} />
-      </g>
-      <ChartsAxis {...chartsAxisProps} />
-      {!props.hideLegend && <ChartsLegend {...legendProps} />}
-      {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
-      <ChartsClipPath {...clipPathProps} />
-      {children}
-    </ChartContainerPro>
+      <ChartsWrapper {...chartsWrapperProps}>
+        {!props.hideLegend && <ChartsLegend {...legendProps} />}
+        <ChartsSurface {...chartsSurfaceProps}>
+          {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
+          <ChartsGrid {...gridProps} />
+          <g {...clipPathGroupProps}>
+            <BarChartPlotZoom {...barPlotProps} />
+            <ChartsOverlay {...overlayProps} />
+            <ChartsAxisHighlight {...axisHighlightProps} />
+          </g>
+          <ChartsAxis {...chartsAxisProps} />
+          {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
+          <ChartsClipPath {...clipPathProps} />
+          {children}
+        </ChartsSurface>
+      </ChartsWrapper>
+    </ChartDataProvider>
   );
 });
 

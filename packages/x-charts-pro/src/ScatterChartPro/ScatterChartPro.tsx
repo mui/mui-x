@@ -4,15 +4,17 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ScatterChartProps, ScatterPlot } from '@mui/x-charts/ScatterChart';
-import { ZAxisContextProvider } from '@mui/x-charts/context';
+import { ChartDataProvider, ZAxisContextProvider } from '@mui/x-charts/context';
 import { ChartsVoronoiHandler } from '@mui/x-charts/ChartsVoronoiHandler';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
+import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
-import { useScatterChartProps } from '@mui/x-charts/internals';
-import { ChartContainerPro, ChartContainerProProps } from '../ChartContainerPro';
+import { useScatterChartProps, ChartsWrapper } from '@mui/x-charts/internals';
+import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
+import { ChartContainerProProps } from '../ChartContainerPro/ChartContainerPro';
 
 export interface ScatterChartProProps
   extends Omit<ScatterChartProps, 'apiRef'>,
@@ -35,6 +37,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   const props = useThemeProps({ props: inProps, name: 'MuiScatterChartPro' });
   const { initialZoom, onZoomChange, apiRef, ...other } = props;
   const {
+    chartsWrapperProps,
     chartContainerProps,
     zAxisProps,
     voronoiHandlerProps,
@@ -46,32 +49,39 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
     axisHighlightProps,
     children,
   } = useScatterChartProps(other);
+  const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps(
+    { ...chartContainerProps, apiRef },
+    ref,
+  );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
 
   return (
-    <ChartContainerPro
-      ref={ref}
-      {...chartContainerProps}
+    <ChartDataProvider
+      {...chartDataProviderProProps}
       apiRef={apiRef}
       initialZoom={initialZoom}
       onZoomChange={onZoomChange}
     >
-      <ZAxisContextProvider {...zAxisProps}>
-        {!props.disableVoronoi && <ChartsVoronoiHandler {...voronoiHandlerProps} />}
-        <ChartsAxis {...chartsAxisProps} />
-        <ChartsGrid {...gridProps} />
-        <g data-drawing-container>
-          {/* The `data-drawing-container` indicates that children are part of the drawing area. Ref: https://github.com/mui/mui-x/issues/13659 */}
-          <ScatterPlot {...scatterPlotProps} />
-        </g>
-        <ChartsOverlay {...overlayProps} />
+      <ChartsWrapper {...chartsWrapperProps}>
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsAxisHighlight {...axisHighlightProps} />
-        {!props.loading && <Tooltip {...props?.slotProps?.tooltip} trigger="item" />}
-        {children}
-      </ZAxisContextProvider>
-    </ChartContainerPro>
+        <ChartsSurface {...chartsSurfaceProps}>
+          <ZAxisContextProvider {...zAxisProps}>
+            {!props.disableVoronoi && <ChartsVoronoiHandler {...voronoiHandlerProps} />}
+            <ChartsAxis {...chartsAxisProps} />
+            <ChartsGrid {...gridProps} />
+            <g data-drawing-container>
+              {/* The `data-drawing-container` indicates that children are part of the drawing area. Ref: https://github.com/mui/mui-x/issues/13659 */}
+              <ScatterPlot {...scatterPlotProps} />
+            </g>
+            <ChartsOverlay {...overlayProps} />
+            <ChartsAxisHighlight {...axisHighlightProps} />
+            {!props.loading && <Tooltip {...props?.slotProps?.tooltip} trigger="item" />}
+            {children}
+          </ZAxisContextProvider>
+        </ChartsSurface>
+      </ChartsWrapper>
+    </ChartDataProvider>
   );
 });
 

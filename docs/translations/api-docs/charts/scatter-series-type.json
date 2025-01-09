@@ -15,6 +15,9 @@
     "label": {
       "description": "The label to display on the tooltip or the legend. It can be a string or a function."
     },
+    "labelMarkType": {
+      "description": "Defines the mark type for the series.<br /><br />There is a default mark type for each series type.<br /><br />It allows custom values which will be passed to the mark component if it was customized."
+    },
     "markerSize": { "description": "" },
     "valueFormatter": {
       "description": "Formatter used to render values in tooltip or other data display."

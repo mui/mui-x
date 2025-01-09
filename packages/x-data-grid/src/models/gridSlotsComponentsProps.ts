@@ -12,7 +12,7 @@ import type { SelectProps } from '@mui/material/Select';
 import type { SwitchProps } from '@mui/material/Switch';
 import type { IconButtonProps as MUIIconButtonProps } from '@mui/material/IconButton';
 import type { InputAdornmentProps } from '@mui/material/InputAdornment';
-import type { TooltipProps } from '@mui/material/Tooltip';
+import type { TooltipProps as MUITooltipProps } from '@mui/material/Tooltip';
 import type { InputLabelProps } from '@mui/material/InputLabel';
 import type { PopperProps } from '@mui/material/Popper';
 import type { TablePaginationProps } from '@mui/material/TablePagination';
@@ -44,6 +44,7 @@ import type {
   LinearProgressProps,
   MenuItemProps,
   SkeletonProps,
+  TooltipProps,
 } from './gridBaseSlots';
 
 type RootProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;
@@ -125,6 +126,7 @@ interface MaterialSlotProps {
   baseLinearProgress: MUILinearProgressProps;
   baseCircularProgress: MUICircularProgressProps;
   baseMenuItem: MUIMenuItemProps;
+  baseTooltip: MUITooltipProps;
 }
 
 interface ElementSlotProps {
@@ -160,14 +162,17 @@ interface ElementSlotProps {
 }
 
 // Merge MUI types into base types to keep slotProps working.
+type Select<A, B, K> = K extends keyof A ? A[K] : K extends keyof B ? B[K] : never;
 type Merge<A, B> = {
-  [K in keyof A | keyof B]: K extends keyof A & keyof B
-    ? A[K] & B[K]
-    : K extends keyof B
-      ? B[K]
-      : K extends keyof A
-        ? A[K]
-        : never;
+  [K in keyof A | keyof B]: K extends 'ref'
+    ? Select<A, B, 'ref'>
+    : K extends keyof A & keyof B
+      ? A[K] & B[K]
+      : K extends keyof B
+        ? B[K]
+        : K extends keyof A
+          ? A[K]
+          : never;
 };
 export type GridSlotProps = Merge<BaseSlotProps, MaterialSlotProps> & ElementSlotProps;
 

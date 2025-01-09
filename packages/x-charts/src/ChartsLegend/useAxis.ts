@@ -1,9 +1,9 @@
 'use client';
 import { AxisDefaultized } from '../models/axis';
 import { ZAxisDefaultized } from '../models/z-axis';
-import { ColorLegendSelector } from './legend.types';
 import { useZAxis } from '../hooks/useZAxis';
 import { useXAxes, useYAxes } from '../hooks/useAxis';
+import { ColorLegendSelector } from './colorLegend.types';
 
 /**
  * Helper to select an axis definition according to its direction and id.

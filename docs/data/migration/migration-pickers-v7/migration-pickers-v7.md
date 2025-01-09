@@ -742,7 +742,7 @@ The following variables and types have been renamed to have a coherent `Picker` 
   +const pickerContext = usePickerContext();
   ```
 
-- `FieldValueType`
+- ✅ `FieldValueType`
 
   ```diff
   -import { FieldValueType } from '@mui/x-date-pickers/models';
@@ -1130,6 +1130,36 @@ If you were using them, you need to replace them with the following code:
     -  extends BasePickersTextFieldProps<true> {}
     +  extends BaseMultiInputPickersTextFieldProps<true> {}
     ```
+
+## ✅ Rename `date-fns` adapter imports
+
+:::warning
+This codemod is not idempotent. Running it multiple times will rename the imports back and forth.
+
+In example: usage of `AdapterDateFnsV3` would be replaced by `AdapterDateFns` and a subsequent run would rename it to `AdapterDateFnsV2`.
+:::
+
+- The `AdapterDateFns` and `AdapterDateFnsJalali` adapters have been renamed to `AdapterDateFnsV2` and `AdapterDateFnsJalaliV2` respectively.
+  If you were using the old imports, you need to update them:
+
+  ```diff
+  -import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+  -import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
+  +import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV2';
+  +import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalaliV2';
+  ```
+
+  Or consider updating the `date-fns` or `date-fns-jalali` package to the latest version and use the updated adapters.
+
+- The `AdapterDateFnsV3` and `AdapterDateFnsJalaliV3` adapters have been renamed to `AdapterDateFns` and `AdapterDateFnsJalali` respectively.
+  If you were using the old imports, you need to update them:
+
+  ```diff
+  -import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+  -import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalaliV3';
+  +import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+  +import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
+  ```
 
 ## Stop using `LicenseInfo` from `@mui/x-date-pickers-pro`
 

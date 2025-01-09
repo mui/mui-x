@@ -149,7 +149,7 @@
     {
       "name": "legend",
       "description": "Custom rendering of the legend.",
-      "default": "DefaultChartsLegend",
+      "default": "ChartsLegend",
       "class": null
     },
     {
@@ -173,7 +173,7 @@
   ],
   "classes": [],
   "spread": true,
-  "themeDefaultProps": true,
+  "themeDefaultProps": false,
   "muiName": "MuiBarChart",
   "forwardsRefTo": "SVGSVGElement",
   "filename": "/packages/x-charts/src/BarChart/BarChart.tsx",

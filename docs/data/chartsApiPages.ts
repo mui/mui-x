@@ -120,10 +120,6 @@ const chartsApiPages: MuiPage[] = [
     title: 'ContinuousColorLegend',
   },
   {
-    pathname: '/x/api/charts/default-charts-legend',
-    title: 'DefaultChartsLegend',
-  },
-  {
     pathname: '/x/api/charts/gauge',
     title: 'Gauge',
   },

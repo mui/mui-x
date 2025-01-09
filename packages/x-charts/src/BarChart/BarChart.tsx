@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { MakeOptional } from '@mui/x-internals/types';
 import { BarPlot, BarPlotProps, BarPlotSlotProps, BarPlotSlots } from './BarPlot';
-import { ChartContainer, ChartContainerProps } from '../ChartContainer';
+import { ChartContainerProps } from '../ChartContainer';
 import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis';
 import { BarSeriesType } from '../models/seriesType/bar';
 import { ChartsTooltip } from '../ChartsTooltip';
@@ -25,6 +25,10 @@ import {
   ChartsOverlaySlots,
 } from '../ChartsOverlay/ChartsOverlay';
 import { useBarChartProps } from './useBarChartProps';
+import { ChartDataProvider } from '../context';
+import { ChartsSurface } from '../ChartsSurface';
+import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
+import { ChartsWrapper } from '../internals/components/ChartsWrapper';
 
 export interface BarChartSlots
   extends ChartsAxisSlots,
@@ -100,6 +104,7 @@ const BarChart = React.forwardRef(function BarChart(
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiBarChart' });
   const {
+    chartsWrapperProps,
     chartContainerProps,
     barPlotProps,
     axisClickHandlerProps,
@@ -112,24 +117,32 @@ const BarChart = React.forwardRef(function BarChart(
     legendProps,
     children,
   } = useBarChartProps(props);
+  const { chartDataProviderProps, chartsSurfaceProps } = useChartContainerProps(
+    chartContainerProps,
+    ref,
+  );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
 
   return (
-    <ChartContainer ref={ref} {...chartContainerProps}>
-      {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
-      <ChartsGrid {...gridProps} />
-      <g {...clipPathGroupProps}>
-        <BarPlot {...barPlotProps} />
-        <ChartsOverlay {...overlayProps} />
-        <ChartsAxisHighlight {...axisHighlightProps} />
-      </g>
-      <ChartsAxis {...chartsAxisProps} />
-      {!props.hideLegend && <ChartsLegend {...legendProps} />}
-      {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
-      <ChartsClipPath {...clipPathProps} />
-      {children}
-    </ChartContainer>
+    <ChartDataProvider {...chartDataProviderProps}>
+      <ChartsWrapper {...chartsWrapperProps}>
+        {!props.hideLegend && <ChartsLegend {...legendProps} />}
+        <ChartsSurface {...chartsSurfaceProps}>
+          {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
+          <ChartsGrid {...gridProps} />
+          <g {...clipPathGroupProps}>
+            <BarPlot {...barPlotProps} />
+            <ChartsOverlay {...overlayProps} />
+            <ChartsAxisHighlight {...axisHighlightProps} />
+          </g>
+          <ChartsAxis {...chartsAxisProps} />
+          {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
+          <ChartsClipPath {...clipPathProps} />
+          {children}
+        </ChartsSurface>
+      </ChartsWrapper>
+    </ChartDataProvider>
   );
 });
 
