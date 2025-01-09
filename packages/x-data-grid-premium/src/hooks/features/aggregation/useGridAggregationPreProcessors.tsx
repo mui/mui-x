@@ -36,11 +36,11 @@ export const useGridAggregationPreProcessors = (
     (columnsState) => {
       const aggregationRules = props.disableAggregation
         ? {}
-        : getAggregationRules({
-            columnsLookup: columnsState.lookup,
-            aggregationModel: gridAggregationModelSelector(apiRef),
-            aggregationFunctions: props.aggregationFunctions,
-          });
+        : getAggregationRules(
+            columnsState.lookup,
+            gridAggregationModelSelector(apiRef),
+            props.aggregationFunctions,
+          );
 
       columnsState.orderedFields.forEach((field) => {
         const shouldHaveAggregationValue = !!aggregationRules[field];
@@ -76,11 +76,11 @@ export const useGridAggregationPreProcessors = (
     (value) => {
       const aggregationRules = props.disableAggregation
         ? {}
-        : getAggregationRules({
-            columnsLookup: gridColumnLookupSelector(apiRef),
-            aggregationModel: gridAggregationModelSelector(apiRef),
-            aggregationFunctions: props.aggregationFunctions,
-          });
+        : getAggregationRules(
+            gridColumnLookupSelector(apiRef),
+            gridAggregationModelSelector(apiRef),
+            props.aggregationFunctions,
+          );
 
       const hasAggregationRule = Object.keys(aggregationRules).length > 0;
 

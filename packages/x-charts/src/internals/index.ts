@@ -1,5 +1,6 @@
 // Components
 export * from './components/ChartsAxesGradients';
+export * from './components/ChartsWrapper';
 
 // hooks
 export { useSeries } from '../hooks/useSeries';
