@@ -43,3 +43,14 @@ export {
 
 export * from './components/grid';
 export * as Grid from './components/grid/index.parts';
+
+export type { GridDataSourceCache } from '@mui/x-data-grid-pro';
+
+export type {
+  GridGetRowsParamsPremium as GridGetRowsParams,
+  GridGetRowsResponsePremium as GridGetRowsResponse,
+  GridDataSourcePremium as GridDataSource,
+  GridDataSourceApiPremium as GridDataSourceApi,
+  GridDataSourceApiBasePremium as GridDataSourceApiBase,
+  GridDataSourcePremiumPrivateApi as GridDataSourcePrivateApi,
+} from './hooks/features/dataSource/models';

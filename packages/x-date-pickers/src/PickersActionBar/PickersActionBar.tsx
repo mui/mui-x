@@ -36,7 +36,7 @@ const PickersActionBarRoot = styled(DialogActions, {
  *
  * - [PickersActionBar API](https://mui.com/x/api/date-pickers/pickers-action-bar/)
  */
-function PickersActionBar(props: PickersActionBarProps) {
+function PickersActionBarComponent(props: PickersActionBarProps) {
   const { actions, ...other } = props;
 
   const translations = usePickerTranslations();
@@ -85,7 +85,7 @@ function PickersActionBar(props: PickersActionBarProps) {
   return <PickersActionBarRoot {...other}>{buttons}</PickersActionBarRoot>;
 }
 
-PickersActionBar.propTypes = {
+PickersActionBarComponent.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -112,5 +112,7 @@ PickersActionBar.propTypes = {
     PropTypes.object,
   ]),
 } as any;
+
+const PickersActionBar = React.memo(PickersActionBarComponent);
 
 export { PickersActionBar };

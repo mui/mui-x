@@ -1,4 +1,4 @@
-import { LegendItemParams } from '../ChartsLegend/chartsLegend.types';
+import type { LegendItemParams } from '../ChartsLegend';
 import { getLabel } from '../internals/getLabel';
 import { LegendGetter } from '../context/PluginProvider';
 
@@ -12,6 +12,7 @@ const legendGetter: LegendGetter<'scatter'> = (params) => {
     }
 
     acc.push({
+      markType: series[seriesId].labelMarkType ?? 'circle',
       id: seriesId,
       seriesId,
       color: series[seriesId].color,

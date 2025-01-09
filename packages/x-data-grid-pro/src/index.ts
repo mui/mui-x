@@ -38,3 +38,16 @@ export type { GridColumnHeadersProps } from './components/GridColumnHeaders';
 
 export * from './components/grid';
 export * as Grid from './components/grid/index.parts';
+
+export type {
+  GridGetRowsParams,
+  GridGetRowsResponse,
+  GridDataSource,
+  GridDataSourceCache,
+} from '@mui/x-data-grid/internals';
+
+export type {
+  GridDataSourceApiBase,
+  GridDataSourceApi,
+  GridDataSourcePrivateApi,
+} from './hooks/features/dataSource/interfaces';

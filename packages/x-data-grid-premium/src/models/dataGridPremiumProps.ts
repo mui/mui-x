@@ -17,12 +17,14 @@ import type { GridRowGroupingModel } from '../hooks/features/rowGrouping';
 import type {
   GridAggregationModel,
   GridAggregationFunction,
+  GridAggregationFunctionDataSource,
   GridAggregationPosition,
 } from '../hooks/features/aggregation';
 import { GridPremiumSlotsComponent } from './gridPremiumSlotsComponent';
 import { GridInitialStatePremium } from './gridStatePremium';
 import { GridApiPremium } from './gridApiPremium';
 import { GridCellSelectionModel } from '../hooks/features/cellSelection';
+import { GridDataSourcePremium as GridDataSource } from '../hooks/features/dataSource/models';
 
 export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
 
@@ -86,9 +88,11 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
   rowGroupingColumnMode: 'single' | 'multiple';
   /**
    * Aggregation functions available on the grid.
-   * @default GRID_AGGREGATION_FUNCTIONS
+   * @default GRID_AGGREGATION_FUNCTIONS when `unstable_dataSource` is not provided, `{}` when `unstable_dataSource` is provided
    */
-  aggregationFunctions: Record<string, GridAggregationFunction>;
+  aggregationFunctions:
+    | Record<string, GridAggregationFunction>
+    | Record<string, GridAggregationFunctionDataSource>;
   /**
    * Rows used to generate the aggregated value.
    * If `filtered`, the aggregated values are generated using only the rows currently passing the filtering process.
@@ -118,7 +122,10 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
-  extends Omit<DataGridProPropsWithoutDefaultValue<R>, 'initialState' | 'apiRef'> {
+  extends Omit<
+    DataGridProPropsWithoutDefaultValue<R>,
+    'initialState' | 'apiRef' | 'unstable_dataSource'
+  > {
   /**
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
@@ -188,4 +195,5 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
    */
   experimentalFeatures?: Partial<GridExperimentalPremiumFeatures>;
+  unstable_dataSource?: GridDataSource;
 }
