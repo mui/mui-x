@@ -86,18 +86,16 @@ export const mergeStateWithAggregationModel =
     aggregation: { ...state.aggregation, model: aggregationModel },
   });
 
-export const getAggregationRules = ({
-  columnsLookup,
-  aggregationModel,
-  aggregationFunctions,
-}: {
-  columnsLookup: GridColumnRawLookup;
-  aggregationModel: GridAggregationModel;
-  aggregationFunctions: Record<string, GridAggregationFunction>;
-}) => {
+export const getAggregationRules = (
+  columnsLookup: GridColumnRawLookup,
+  aggregationModel: GridAggregationModel,
+  aggregationFunctions: Record<string, GridAggregationFunction>,
+) => {
   const aggregationRules: GridAggregationRules = {};
 
-  Object.entries(aggregationModel).forEach(([field, columnItem]) => {
+  // eslint-disable-next-line guard-for-in
+  for (const field in aggregationModel) {
+    const columnItem = aggregationModel[field];
     if (
       columnsLookup[field] &&
       canColumnHaveAggregationFunction({
@@ -111,7 +109,7 @@ export const getAggregationRules = ({
         aggregationFunction: aggregationFunctions[columnItem],
       };
     }
-  });
+  }
 
   return aggregationRules;
 };

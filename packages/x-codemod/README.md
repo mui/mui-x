@@ -143,6 +143,7 @@ npx @mui/x-codemod@next v8.0.0/charts/preset-safe <path|folder>
 The list includes these transformers
 
 - [`rename-legend-to-slots-legend`](#rename-legend-to-slots-legend)
+- [`replace-legend-direction-values`](#replace-legend-direction-values)
 - [`rename-responsive-chart-container`](#rename-responsive-chart-container)
 - [`rename-label-and-tick-font-size`](#rename-label-and-tick-font-size)
 
@@ -154,6 +155,21 @@ Renames legend props to the corresponding slotProps.
  <LineChart
 -  legend={{ hiden: true}}
 +  slotProps={{ legend: { hiden: true} }}
+ />
+```
+
+#### `replace-legend-direction-values`
+
+Replace `row` and `column` values by `horizontal` and `vertical` respectively.
+
+```diff
+ <BarChart
+    slotProps={{
+      legend: {
+-        direction: "row"
++        direction: "horizontal"
+      }
+    }}
  />
 ```
 
