@@ -59,14 +59,20 @@ const CalendarSetVisibleYear = React.forwardRef(function CalendarSetVisibleYear(
 
     // All the years before the visible ones are fully disabled, we skip the navigation.
     if (isMovingBefore) {
-      return utils.isAfter(getFirstEnabledYear(utils, baseRootContext.validationProps), targetDate);
+      return utils.isAfter(
+        getFirstEnabledYear(utils, baseRootContext.dateValidationProps),
+        targetDate,
+      );
     }
 
     // All the years after the visible ones are fully disabled, we skip the navigation.
-    return utils.isBefore(getLastEnabledYear(utils, baseRootContext.validationProps), targetDate);
+    return utils.isBefore(
+      getLastEnabledYear(utils, baseRootContext.dateValidationProps),
+      targetDate,
+    );
   }, [
     baseRootContext.disabled,
-    baseRootContext.validationProps,
+    baseRootContext.dateValidationProps,
     baseRootContext.visibleDate,
     targetDate,
     utils,

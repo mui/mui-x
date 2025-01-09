@@ -28,7 +28,7 @@ export function useMonthsCells(): useMonthsCells.ReturnValue {
       // All the years before the visible ones are fully disabled, we skip the navigation.
       if (
         utils.isAfter(
-          getFirstEnabledYear(utils, baseRootContext.validationProps),
+          getFirstEnabledYear(utils, baseRootContext.dateValidationProps),
           lastYearInNewPage,
         )
       ) {
@@ -47,7 +47,9 @@ export function useMonthsCells(): useMonthsCells.ReturnValue {
       );
 
       // All the years after the visible ones are fully disabled, we skip the navigation.
-      if (utils.isBefore(getLastEnabledYear(utils, baseRootContext.validationProps), targetDate)) {
+      if (
+        utils.isBefore(getLastEnabledYear(utils, baseRootContext.dateValidationProps), targetDate)
+      ) {
         return;
       }
       baseRootContext.setVisibleDate(

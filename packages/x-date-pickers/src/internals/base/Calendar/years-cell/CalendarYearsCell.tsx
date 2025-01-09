@@ -60,33 +60,33 @@ const CalendarYearsCell = React.forwardRef(function CalendarsYearCell(
   );
 
   const isInvalid = React.useMemo(() => {
-    if (rootContext.validationProps.disablePast && utils.isBeforeYear(props.value, now)) {
+    if (baseRootContext.dateValidationProps.disablePast && utils.isBeforeYear(props.value, now)) {
       return true;
     }
-    if (rootContext.validationProps.disableFuture && utils.isAfterYear(props.value, now)) {
+    if (baseRootContext.dateValidationProps.disableFuture && utils.isAfterYear(props.value, now)) {
       return true;
     }
     if (
-      rootContext.validationProps.minDate &&
-      utils.isBeforeYear(props.value, rootContext.validationProps.minDate)
+      baseRootContext.dateValidationProps.minDate &&
+      utils.isBeforeYear(props.value, baseRootContext.dateValidationProps.minDate)
     ) {
       return true;
     }
     if (
-      rootContext.validationProps.maxDate &&
-      utils.isAfterYear(props.value, rootContext.validationProps.maxDate)
+      baseRootContext.dateValidationProps.maxDate &&
+      utils.isAfterYear(props.value, baseRootContext.dateValidationProps.maxDate)
     ) {
       return true;
     }
 
-    if (!rootContext.validationProps.shouldDisableYear) {
+    if (!baseRootContext.dateValidationProps.shouldDisableYear) {
       return false;
     }
 
     const yearToValidate = utils.startOfYear(props.value);
 
-    return rootContext.validationProps.shouldDisableYear(yearToValidate);
-  }, [rootContext.validationProps, props.value, now, utils]);
+    return baseRootContext.dateValidationProps.shouldDisableYear(yearToValidate);
+  }, [baseRootContext.dateValidationProps, props.value, now, utils]);
 
   const isDisabled = React.useMemo(() => {
     if (baseRootContext.disabled) {
@@ -121,14 +121,14 @@ const CalendarYearsCell = React.forwardRef(function CalendarsYearCell(
       ? findClosestEnabledDate({
           utils,
           date: newCleanValue,
-          minDate: utils.isBefore(rootContext.validationProps.minDate, startOfYear)
+          minDate: utils.isBefore(baseRootContext.dateValidationProps.minDate, startOfYear)
             ? startOfYear
-            : rootContext.validationProps.minDate,
-          maxDate: utils.isAfter(rootContext.validationProps.maxDate, endOfYear)
+            : baseRootContext.dateValidationProps.minDate,
+          maxDate: utils.isAfter(baseRootContext.dateValidationProps.maxDate, endOfYear)
             ? endOfYear
-            : rootContext.validationProps.maxDate,
-          disablePast: rootContext.validationProps.disablePast,
-          disableFuture: rootContext.validationProps.disableFuture,
+            : baseRootContext.dateValidationProps.maxDate,
+          disablePast: baseRootContext.dateValidationProps.disablePast,
+          disableFuture: baseRootContext.dateValidationProps.disableFuture,
           isDateDisabled: baseRootContext.isDateInvalid,
           timezone: baseRootContext.timezone,
         })

@@ -4,7 +4,7 @@ import useTimeout from '@mui/utils/useTimeout';
 import { PickerValidDate } from '../../../../../models';
 import { ValidateDateProps } from '../../../../../validation';
 import { useUtils } from '../../../../hooks/useUtils';
-import type { useCalendarDaysGridBody } from '../../../Calendar/days-grid-body/useCalendarDaysGridBody';
+import type { useBaseCalendarDaysGridBody } from '../days-grid-body/useBaseCalendarDaysGridBody';
 import {
   applyInitialFocusInGrid,
   navigateInGrid,
@@ -21,10 +21,10 @@ import { BaseCalendarRootContext } from './BaseCalendarRootContext';
 export function useBaseCalendarDaysGridNavigation(
   parameters: useBaseCalendarDaysGridNavigation.Parameters,
 ) {
-  const { visibleDate, setVisibleDate, monthPageSize, validationProps } = parameters;
+  const { visibleDate, setVisibleDate, monthPageSize, dateValidationProps } = parameters;
   const utils = useUtils();
   const gridsRef = React.useRef<
-    { cells: useCalendarDaysGridBody.CellsRef; rows: useCalendarDaysGridBody.RowsRef }[]
+    { cells: useBaseCalendarDaysGridBody.CellsRef; rows: useBaseCalendarDaysGridBody.RowsRef }[]
   >([]);
   const pageNavigationTargetRef = React.useRef<PageGridNavigationTarget | null>(null);
 
@@ -47,7 +47,7 @@ export function useBaseCalendarDaysGridNavigation(
         const lastMonthInNewPage = utils.addMonths(targetDate, monthPageSize - 1);
 
         // All the months before the visible ones are fully disabled, we skip the navigation.
-        if (utils.isAfter(getFirstEnabledMonth(utils, validationProps), lastMonthInNewPage)) {
+        if (utils.isAfter(getFirstEnabledMonth(utils, dateValidationProps), lastMonthInNewPage)) {
           return;
         }
 
@@ -57,7 +57,7 @@ export function useBaseCalendarDaysGridNavigation(
         const targetDate = utils.addMonths(utils.startOfMonth(visibleDate), monthPageSize);
 
         // All the months after the visible ones are fully disabled, we skip the navigation.
-        if (utils.isBefore(getLastEnabledMonth(utils, validationProps), targetDate)) {
+        if (utils.isBefore(getLastEnabledMonth(utils, dateValidationProps), targetDate)) {
           return;
         }
         setVisibleDate(utils.addMonths(visibleDate, monthPageSize));
@@ -72,8 +72,8 @@ export function useBaseCalendarDaysGridNavigation(
 
   const registerDaysGridCells = useEventCallback(
     (
-      gridCellsRef: useCalendarDaysGridBody.CellsRef,
-      gridRowsRef: useCalendarDaysGridBody.RowsRef,
+      gridCellsRef: useBaseCalendarDaysGridBody.CellsRef,
+      gridRowsRef: useBaseCalendarDaysGridBody.RowsRef,
     ) => {
       gridsRef.current.push({ cells: gridCellsRef, rows: gridRowsRef });
 
@@ -94,7 +94,7 @@ export namespace useBaseCalendarDaysGridNavigation {
     visibleDate: PickerValidDate;
     setVisibleDate: (visibleDate: PickerValidDate) => void;
     monthPageSize: number;
-    validationProps: ValidateDateProps;
+    dateValidationProps: ValidateDateProps;
   }
 
   export interface ReturnValue
@@ -124,7 +124,10 @@ function sortGridByDocumentPosition(a: HTMLElement[][], b: HTMLElement[][]) {
 /* eslint-enable no-bitwise */
 
 function getCellsInCalendar(
-  grids: { cells: useCalendarDaysGridBody.CellsRef; rows: useCalendarDaysGridBody.RowsRef }[],
+  grids: {
+    cells: useBaseCalendarDaysGridBody.CellsRef;
+    rows: useBaseCalendarDaysGridBody.RowsRef;
+  }[],
 ) {
   const cells: HTMLElement[][][] = [];
 

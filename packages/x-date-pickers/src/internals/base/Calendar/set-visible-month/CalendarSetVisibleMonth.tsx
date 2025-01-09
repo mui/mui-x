@@ -61,16 +61,19 @@ const CalendarSetVisibleMonth = React.forwardRef(function CalendarSetVisibleMont
     // All the months before the visible ones are fully disabled, we skip the navigation.
     if (isMovingBefore) {
       return utils.isAfter(
-        getFirstEnabledMonth(utils, baseRootContext.validationProps),
+        getFirstEnabledMonth(utils, baseRootContext.dateValidationProps),
         targetDate,
       );
     }
 
     // All the months after the visible ones are fully disabled, we skip the navigation.
-    return utils.isBefore(getLastEnabledMonth(utils, baseRootContext.validationProps), targetDate);
+    return utils.isBefore(
+      getLastEnabledMonth(utils, baseRootContext.dateValidationProps),
+      targetDate,
+    );
   }, [
     baseRootContext.disabled,
-    baseRootContext.validationProps,
+    baseRootContext.dateValidationProps,
     baseRootContext.visibleDate,
     targetDate,
     utils,

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DateValidationError } from '../../../../models';
 import { useDateManager } from '../../../../managers';
-import { ExportedValidateDateProps, ValidateDateProps } from '../../../../validation/validateDate';
+import { ExportedValidateDateProps } from '../../../../validation/validateDate';
 import { useUtils } from '../../../hooks/useUtils';
 import { PickerValue } from '../../../models';
 import { CalendarRootContext } from './CalendarRootContext';
@@ -10,10 +10,10 @@ import { GenericHTMLProps } from '../../base-utils/types';
 import { useBaseCalendarRoot } from '../../utils/base-calendar/root/useBaseCalendarRoot';
 
 export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
-  const { shouldDisableDate, shouldDisableMonth, shouldDisableYear, ...baseParameters } =
-    parameters;
+  const { ...baseParameters } = parameters;
   const utils = useUtils();
   const manager = useDateManager();
+
   const {
     value,
     setValue,
@@ -21,17 +21,11 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
     setVisibleDate,
     isDateCellVisible,
     context: baseContext,
-    validationProps: baseValidationProps,
   } = useBaseCalendarRoot({
     ...baseParameters,
     manager,
     getInitialVisibleDate: (referenceValueParam) => referenceValueParam,
   });
-
-  const validationProps = React.useMemo<ValidateDateProps>(
-    () => ({ ...baseValidationProps, shouldDisableDate, shouldDisableMonth, shouldDisableYear }),
-    [baseValidationProps, shouldDisableDate, shouldDisableMonth, shouldDisableYear],
-  );
 
   const [prevValue, setPrevValue] = React.useState<PickerValue>(value);
   if (value !== prevValue && utils.isValid(value)) {
@@ -46,9 +40,8 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
       value,
       setValue,
       referenceValue,
-      validationProps,
     }),
-    [value, setValue, referenceValue, validationProps],
+    [value, setValue, referenceValue],
   );
 
   const getRootProps = React.useCallback((externalProps: GenericHTMLProps) => {

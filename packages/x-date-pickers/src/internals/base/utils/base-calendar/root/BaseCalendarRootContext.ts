@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { PickersTimezone, PickerValidDate } from '../../../../../models';
+import { ValidateDateProps } from '../../../../../validation';
 import type { useBaseCalendarRoot } from './useBaseCalendarRoot';
-import { BaseDateValidationProps } from '../../../../models/validation';
 import type { useBaseCalendarDaysGridBody } from '../days-grid-body/useBaseCalendarDaysGridBody';
 
 export interface BaseCalendarRootContext {
@@ -10,7 +10,7 @@ export interface BaseCalendarRootContext {
   readOnly: boolean;
   autoFocus: boolean;
   isDateInvalid: (day: PickerValidDate | null) => boolean;
-  validationProps: Required<BaseDateValidationProps>;
+  dateValidationProps: ValidateDateProps;
   visibleDate: PickerValidDate;
   setVisibleDate: (visibleDate: PickerValidDate, skipIfAlreadyVisible: boolean) => void;
   monthPageSize: number;

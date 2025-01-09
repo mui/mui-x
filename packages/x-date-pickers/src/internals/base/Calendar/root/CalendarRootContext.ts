@@ -2,7 +2,6 @@ import * as React from 'react';
 import { PickerValidDate } from '../../../../models';
 import { PickerValue } from '../../../models';
 import { useBaseCalendarRoot } from '../../utils/base-calendar/root/useBaseCalendarRoot';
-import { ValidateDateProps } from '../../../../validation';
 
 export interface CalendarRootContext {
   /**
@@ -19,7 +18,6 @@ export interface CalendarRootContext {
     options: Pick<useBaseCalendarRoot.ValueChangeHandlerContext<PickerValue>, 'section'>,
   ) => void;
   referenceValue: PickerValidDate;
-  validationProps: ValidateDateProps;
 }
 
 export const CalendarRootContext = React.createContext<CalendarRootContext | undefined>(undefined);

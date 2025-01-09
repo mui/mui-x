@@ -10,10 +10,14 @@ export function useYearsCells(): useYearsCells.ReturnValue {
   const years = React.useMemo(
     () =>
       utils.getYearRange([
-        baseRootContext.validationProps.minDate,
-        baseRootContext.validationProps.maxDate,
+        baseRootContext.dateValidationProps.minDate,
+        baseRootContext.dateValidationProps.maxDate,
       ]),
-    [utils, baseRootContext.validationProps.minDate, baseRootContext.validationProps.maxDate],
+    [
+      utils,
+      baseRootContext.dateValidationProps.minDate,
+      baseRootContext.dateValidationProps.maxDate,
+    ],
   );
 
   const registerSection = baseRootContext.registerSection;

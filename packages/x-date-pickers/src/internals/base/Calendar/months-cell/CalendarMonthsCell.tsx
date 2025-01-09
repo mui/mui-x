@@ -23,7 +23,7 @@ const InnerCalendarMonthsCell = React.forwardRef(function InnerCalendarMonthsCel
     () => ({
       selected: ctx.isSelected,
       disabled: ctx.isDisabled,
-      invlid: ctx.isInvalid,
+      invalid: ctx.isInvalid,
       current: isCurrent,
     }),
     [ctx.isSelected, ctx.isDisabled, ctx.isInvalid, isCurrent],
@@ -61,17 +61,17 @@ const CalendarMonthsCell = React.forwardRef(function CalendarMonthsCell(
 
   const isInvalid = React.useMemo(() => {
     const firstEnabledMonth = utils.startOfMonth(
-      rootContext.validationProps.disablePast &&
-        utils.isAfter(now, rootContext.validationProps.minDate)
+      baseRootContext.dateValidationProps.disablePast &&
+        utils.isAfter(now, baseRootContext.dateValidationProps.minDate)
         ? now
-        : rootContext.validationProps.minDate,
+        : baseRootContext.dateValidationProps.minDate,
     );
 
     const lastEnabledMonth = utils.startOfMonth(
-      rootContext.validationProps.disableFuture &&
-        utils.isBefore(now, rootContext.validationProps.maxDate)
+      baseRootContext.dateValidationProps.disableFuture &&
+        utils.isBefore(now, baseRootContext.dateValidationProps.maxDate)
         ? now
-        : rootContext.validationProps.maxDate,
+        : baseRootContext.dateValidationProps.maxDate,
     );
 
     const monthToValidate = utils.startOfMonth(props.value);
@@ -84,12 +84,12 @@ const CalendarMonthsCell = React.forwardRef(function CalendarMonthsCell(
       return true;
     }
 
-    if (!rootContext.validationProps.shouldDisableMonth) {
+    if (!baseRootContext.dateValidationProps.shouldDisableMonth) {
       return false;
     }
 
-    return rootContext.validationProps.shouldDisableMonth(monthToValidate);
-  }, [rootContext.validationProps, props.value, now, utils]);
+    return baseRootContext.dateValidationProps.shouldDisableMonth(monthToValidate);
+  }, [baseRootContext.dateValidationProps, props.value, now, utils]);
 
   const isDisabled = React.useMemo(() => {
     if (baseRootContext.disabled) {
@@ -124,14 +124,14 @@ const CalendarMonthsCell = React.forwardRef(function CalendarMonthsCell(
       ? findClosestEnabledDate({
           utils,
           date: newCleanValue,
-          minDate: utils.isBefore(rootContext.validationProps.minDate, startOfMonth)
+          minDate: utils.isBefore(baseRootContext.dateValidationProps.minDate, startOfMonth)
             ? startOfMonth
-            : rootContext.validationProps.minDate,
-          maxDate: utils.isAfter(rootContext.validationProps.maxDate, endOfMonth)
+            : baseRootContext.dateValidationProps.minDate,
+          maxDate: utils.isAfter(baseRootContext.dateValidationProps.maxDate, endOfMonth)
             ? endOfMonth
-            : rootContext.validationProps.maxDate,
-          disablePast: rootContext.validationProps.disablePast,
-          disableFuture: rootContext.validationProps.disableFuture,
+            : baseRootContext.dateValidationProps.maxDate,
+          disablePast: baseRootContext.dateValidationProps.disablePast,
+          disableFuture: baseRootContext.dateValidationProps.disableFuture,
           isDateDisabled: baseRootContext.isDateInvalid,
           timezone: baseRootContext.timezone,
         })

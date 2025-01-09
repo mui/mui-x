@@ -1,4 +1,3 @@
-import { ValidateDateProps } from '../../../../validation';
 import { MuiPickersAdapter, PickerValidDate } from '../../../../models';
 import { BaseDateValidationProps } from '../../../models/validation';
 
