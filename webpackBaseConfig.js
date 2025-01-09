@@ -39,7 +39,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js|ts|tsx)$/,
+        test: /\.(js|mjs|ts|tsx)$/,
         exclude: /node_modules\/.*\/node_modules\/(?!@mui)/,
         loader: 'babel-loader',
         options: {
