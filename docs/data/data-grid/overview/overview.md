@@ -53,3 +53,9 @@ You can experiment with grouping other columns in the column header menus.
 You can also try exporting to Excel, and copying and pasting data to and from Excel tables.
 
 {{"demo": "DataGridPremiumDemo.js", "defaultCodeOpen": false, "disableAd": true, "bg": "inline"}}
+
+## API
+
+- [DataGrid](/x/api/data-grid/data-grid/)
+- [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)
