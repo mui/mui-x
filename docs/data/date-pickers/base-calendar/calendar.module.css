@@ -168,7 +168,7 @@
   background-color: transparent;
   cursor: pointer;
 
-  &[data-current] {
+  &[data-current]:not([data-selected]) {
     outline: 1px solid #9ca3af;
   }
 

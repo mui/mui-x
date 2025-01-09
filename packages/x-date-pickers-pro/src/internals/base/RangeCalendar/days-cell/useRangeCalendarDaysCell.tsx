@@ -11,6 +11,8 @@ import type { RangeCalendarRootDragContext } from '../root/RangeCalendarRootDrag
 export function useRangeCalendarDaysCell(parameters: useRangeCalendarDaysCell.Parameters) {
   const { ctx, value } = parameters;
 
+  const isDraggable = ctx.isSelectionStart || ctx.isSelectionEnd;
+
   const startDragging = () => {
     ctx.startDragging(ctx.isSelectionStart ? 'start' : 'end');
   };
@@ -103,33 +105,21 @@ export function useRangeCalendarDaysCell(parameters: useRangeCalendarDaysCell.Pa
 
     ctx.stopDragging();
 
-    const target = resolveElementFromTouch(event, true);
-    if (!target) {
-      return;
-    }
-
     // make sure the focused element is the element where touch ended
-    target.focus();
-    const newDate = resolveDateFromTarget(target, utils, timezone);
-    if (newDate) {
-      ctx.selectDayFromDrag(newDate);
+    ctx.selectDayFromDrag(value);
+
+    const target = resolveElementFromTouch(event, true);
+    if (target) {
+      target.focus();
     }
   });
 
   const onTouchMove = useEventCallback((event: React.TouchEvent<HTMLButtonElement>) => {
-    const target = resolveElementFromTouch(event);
-    if (!target) {
-      return;
-    }
-
-    const newDate = resolveDateFromTarget(target, utils, timezone);
-    if (newDate) {
-      ctx.setDragTarget(newDate);
-    }
+    ctx.setDragTarget(value);
 
     // this prevents initiating drag when user starts touchmove outside and then moves over a draggable element
-    const targetsAreIdentical = target === event.changedTouches[0].target;
-    if (!targetsAreIdentical || !isElementDraggable(newDate)) {
+    const target = resolveElementFromTouch(event);
+    if (target == null || target !== event.changedTouches[0].target || !isDraggable) {
       return;
     }
 
@@ -143,7 +133,7 @@ export function useRangeCalendarDaysCell(parameters: useRangeCalendarDaysCell.Pa
     (externalProps: GenericHTMLProps) => {
       return mergeReactProps(externalProps, {
         ...baseProps,
-        ...(ctx.isSelectionStart || ctx.isSelectionEnd ? { draggable: true } : {}),
+        ...(isDraggable ? { draggable: true } : {}),
         onDragStart,
         onDragEnter,
         onDragLeave,
@@ -157,8 +147,7 @@ export function useRangeCalendarDaysCell(parameters: useRangeCalendarDaysCell.Pa
     },
     [
       baseProps,
-      ctx.isSelectionStart,
-      ctx.isSelectionEnd,
+      isDraggable,
       onDragStart,
       onDragEnter,
       onDragLeave,
@@ -194,4 +183,38 @@ export namespace useRangeCalendarDaysCell {
     isSelectionStart: boolean;
     isSelectionEnd: boolean;
   }
+}
+
+function resolveButtonElement(element: Element | null): HTMLButtonElement | null {
+  if (element) {
+    if (element instanceof HTMLButtonElement && !element.disabled) {
+      return element;
+    }
+    if (element.children.length) {
+      return resolveButtonElement(element.children[0]);
+    }
+    return null;
+  }
+  return element;
+}
+
+function resolveElementFromTouch(
+  event: React.TouchEvent<HTMLButtonElement>,
+  ignoreTouchTarget?: boolean,
+) {
+  // don't parse multi-touch result
+  if (event.changedTouches?.length === 1 && event.touches.length <= 1) {
+    const element = document.elementFromPoint(
+      event.changedTouches[0].clientX,
+      event.changedTouches[0].clientY,
+    );
+    // `elementFromPoint` could have resolved preview div or wrapping div
+    // might need to recursively find the nested button
+    const buttonElement = resolveButtonElement(element);
+    if (ignoreTouchTarget && buttonElement === event.changedTouches[0].target) {
+      return null;
+    }
+    return buttonElement;
+  }
+  return null;
 }
