@@ -259,7 +259,7 @@ import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 
 const {
   // The error associated with the current value.
-  // i.e.: "minDate" if `props.value < props.minDate`.
+  // For example: "minDate" if `props.value < props.minDate`.
   validationError,
   // `true` if the value is invalid.
   // On range pickers it is true if the start date or the end date is invalid.
@@ -328,8 +328,8 @@ function CustomDateField(props) {
 You can use the `useParsedFormat` to get a clean placeholder.
 This hook applies two main transformations on the format:
 
-1. It replaces all the localized tokens (i.e.: `L` for a date with `dayjs`) with their expanded value (`DD/MM/YYYY` for the same date with `dayjs`).
-2. It replaces each token with its token from the localization object (i.e.: `YYYY` remains `YYYY` for the English locale but becomes `AAAA` for the French locale).
+1. It replaces all the localized tokens (for example `L` for a date with `dayjs`) with their expanded value (`DD/MM/YYYY` for the same date with `dayjs`).
+2. It replaces each token with its token from the localization object (for example `YYYY` remains `YYYY` for the English locale but becomes `AAAA` for the French locale).
 
 :::warning
 The format returned by `useParsedFormat` cannot be parsed by your date library.
