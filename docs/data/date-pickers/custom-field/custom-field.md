@@ -277,7 +277,7 @@ const {
 
 ##### Import
 
-Each picker component has a validator adapted to its value type:
+Each Picker component has a validator adapted to its value type:
 
 |       Picker component | Import validator                                                             |
 | ---------------------: | :--------------------------------------------------------------------------- |
