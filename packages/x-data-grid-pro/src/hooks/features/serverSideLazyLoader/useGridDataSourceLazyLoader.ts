@@ -324,12 +324,12 @@ export const useGridDataSourceLazyLoader = (
 
   const handleScrolling: GridEventListener<'scrollPositionChange'> = React.useCallback(
     (newScrollPosition) => {
+      if (rowsStale.current || loadingTrigger.current !== LoadingTrigger.SCROLL_END) {
+        return;
+      }
+
       const renderContext = gridRenderContextSelector(privateApiRef);
-      if (
-        rowsStale.current ||
-        loadingTrigger.current !== LoadingTrigger.SCROLL_END ||
-        previousLastRowIndex.current >= renderContext.lastRowIndex
-      ) {
+      if (previousLastRowIndex.current >= renderContext.lastRowIndex) {
         return;
       }
 
