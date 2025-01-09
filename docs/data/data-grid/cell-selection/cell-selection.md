@@ -36,7 +36,7 @@ Try out the various actions to select cells in the demo below—you can toggle [
 You can control which cells are selected using the `cellSelectionModel` prop.
 This prop accepts an object with keys corresponding to the row IDs that contain selected cells.
 The value of each key is itself an object, which has a column field for a key and a boolean value for its selection state.
-You can set `true` to select a cell or `false` to deselect it.
+You can set this to `true` to select a cell or `false` to deselect it.
 Removing the field from the object also deselects the cell.
 
 ```tsx
@@ -56,7 +56,7 @@ The following demo shows how these props can be combined to create an Excel-like
 
 ## Customizing selected ranges
 
-When multiple selected cells form a continuous range of any size, specific class names are applied to the cells at the edges:
+When multiple selected cells form a continuous range of any size, the following class names are applied to the cells at the edges:
 
 - `MuiDataGrid-cell--rangeTop`: to all cells in the first row of the range
 - `MuiDataGrid-cell--rangeBottom`: to all cells in the last row of the range
