@@ -53,7 +53,7 @@ const ChartContainerPro = React.forwardRef(function ChartContainerProInner<
   useLicenseVerifier('x-charts-pro', releaseInfo);
 
   return (
-    <ChartDataProvider<[UseChartCartesianAxisSignature<TSeries>, UseChartProZoomSignature], any>
+    <ChartDataProvider<TSeries, [UseChartCartesianAxisSignature<TSeries>, UseChartProZoomSignature]>
       {...chartDataProviderProProps}
     >
       <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>

@@ -12,8 +12,8 @@ import { UseChartCartesianAxisSignature } from '../../internals/plugins/featureP
 import { UseChartInteractionSignature } from '../../internals/plugins/featurePlugins/useChartInteraction';
 
 export type ChartDataProviderProps<
-  TSignatures extends readonly ChartAnyPluginSignature[],
-  TSeries extends ChartSeriesType = ChartSeriesType,
+TSignatures extends readonly ChartAnyPluginSignature[],
+TSeries extends ChartSeriesType = ChartSeriesType,
 > = Omit<
   ZAxisContextProviderProps &
     HighlightedProviderProps &
@@ -53,11 +53,11 @@ export type ChartDataProviderProps<
  * ```
  */
 function ChartDataProvider<
+  TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = [
-    UseChartCartesianAxisSignature,
+    UseChartCartesianAxisSignature<TSeries>,
     UseChartInteractionSignature,
   ],
-  TSeries extends ChartSeriesType = ChartSeriesType,
 >(props: ChartDataProviderProps<TSignatures, TSeries>) {
   const {
     children,

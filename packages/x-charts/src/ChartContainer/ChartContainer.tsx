@@ -5,7 +5,8 @@ import { ChartSeriesType } from '../models/seriesType/config';
 import { ChartDataProvider, ChartDataProviderProps } from '../context/ChartDataProvider';
 import { useChartContainerProps } from './useChartContainerProps';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
-import { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
+import { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 
 export interface ChartContainerProps<SeriesType extends ChartSeriesType = ChartSeriesType>
   extends Omit<
@@ -48,7 +49,12 @@ const ChartContainer = React.forwardRef(function ChartContainer<TSeries extends 
   );
 
   return (
-    <ChartDataProvider<[UseChartCartesianAxisSignature<TSeries>], any> {...chartDataProviderProps}>
+    <ChartDataProvider<
+      TSeries,
+      [UseChartCartesianAxisSignature<TSeries>, UseChartInteractionSignature]
+    >
+      {...chartDataProviderProps}
+    >
       <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
     </ChartDataProvider>
   );

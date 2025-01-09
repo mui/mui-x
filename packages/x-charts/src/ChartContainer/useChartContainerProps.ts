@@ -7,11 +7,15 @@ import {
   useChartCartesianAxis,
   UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import {
+  useChartInteraction,
+  UseChartInteractionSignature,
+} from '../internals/plugins/featurePlugins/useChartInteraction';
 import { ChartSeriesType } from '../models/seriesType/config';
 
 export type UseChartContainerPropsReturnValue<TSeries extends ChartSeriesType> = {
   chartDataProviderProps: ChartDataProviderProps<
-    [UseChartCartesianAxisSignature<TSeries>],
+    [UseChartCartesianAxisSignature<TSeries>, UseChartInteractionSignature],
     TSeries
   >;
   chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> };
@@ -54,7 +58,10 @@ export const useChartContainerProps = <TSeries extends ChartSeriesType = ChartSe
   };
 
   const chartDataProviderProps: Omit<
-    ChartDataProviderProps<[UseChartCartesianAxisSignature<TSeries>], TSeries>,
+    ChartDataProviderProps<
+      [UseChartCartesianAxisSignature<TSeries>, UseChartInteractionSignature],
+      TSeries
+    >,
     'children'
   > = {
     margin,
@@ -70,7 +77,7 @@ export const useChartContainerProps = <TSeries extends ChartSeriesType = ChartSe
     width,
     height,
     seriesConfig,
-    plugins: [useChartCartesianAxis as any],
+    plugins: [useChartCartesianAxis as any, useChartInteraction],
   };
 
   return {
