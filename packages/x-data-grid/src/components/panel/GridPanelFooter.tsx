@@ -25,7 +25,7 @@ const GridPanelFooterRoot = styled('div', {
   slot: 'PanelFooter',
   overridesResolver: (props, styles) => styles.panelFooter,
 })<{ ownerState: OwnerState }>({
-  padding: vars.spacing(0.5),
+  padding: vars.spacing(1),
   display: 'flex',
   justifyContent: 'space-between',
   borderTop: `1px solid ${vars.colors.border.base}`,
