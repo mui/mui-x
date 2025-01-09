@@ -78,9 +78,13 @@ function DayCalendar(props: Omit<RangeCalendar.Root.Props, 'children'>) {
 }
 
 export default function DayRangeCalendarDemo() {
+  // const [value, setValue] = React.useState<[Dayjs | null, Dayjs | null]>([
+  //   dayjs('2025-01-03'),
+  //   dayjs('2025-01-07'),
+  // ]);
   const [value, setValue] = React.useState<[Dayjs | null, Dayjs | null]>([
-    dayjs('2025-01-03'),
-    dayjs('2025-01-07'),
+    null,
+    null,
   ]);
 
   const handleValueChange = React.useCallback(

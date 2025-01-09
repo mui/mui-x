@@ -1,6 +1,4 @@
 import * as React from 'react';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
-import { RangePosition } from '@mui/x-date-pickers/internals';
 import useEventCallback from '@mui/utils/useEventCallback';
 // eslint-disable-next-line no-restricted-imports
 import { useBaseCalendarDaysCell } from '@mui/x-date-pickers/internals/base/utils/base-calendar/days-cell/useBaseCalendarDaysCell';
@@ -17,8 +15,21 @@ export function useRangeCalendarDaysCell(parameters: useRangeCalendarDaysCell.Pa
     ctx.startDragging(ctx.isSelectionStart ? 'start' : 'end');
   };
 
-  const onTouchStart = useEventCallback(() => {
+  /**
+   * Mouse events
+   */
+  const onDragStart = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    if (ctx.emptyDragImgRef.current) {
+      event.dataTransfer.setDragImage(ctx.emptyDragImgRef.current, 0, 0);
+    }
     ctx.setDragTarget(value);
+    event.dataTransfer.effectAllowed = 'move';
+    startDragging();
+    const buttonDataset = (event.target as HTMLButtonElement).dataset;
+    if (buttonDataset.timestamp) {
+      event.dataTransfer.setData('draggingDate', buttonDataset.timestamp);
+    }
   });
 
   const onDragEnter = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
@@ -30,27 +41,6 @@ export function useRangeCalendarDaysCell(parameters: useRangeCalendarDaysCell.Pa
     event.stopPropagation();
     event.dataTransfer.dropEffect = 'move';
     ctx.setDragTarget(parameters.value);
-  });
-
-  const onTouchMove = useEventCallback((event: React.TouchEvent<HTMLButtonElement>) => {
-    const target = resolveElementFromTouch(event);
-    if (!target) {
-      return;
-    }
-
-    const newDate = resolveDateFromTarget(target, utils, timezone);
-    if (newDate) {
-      ctx.setDragTarget(newDate);
-    }
-
-    // this prevents initiating drag when user starts touchmove outside and then moves over a draggable element
-    const targetsAreIdentical = target === event.changedTouches[0].target;
-    if (!targetsAreIdentical || !isElementDraggable(newDate)) {
-      return;
-    }
-
-    // on mobile we should only initialize dragging state after move is detected
-    startDragging();
   });
 
   const onDragLeave = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
@@ -72,12 +62,45 @@ export function useRangeCalendarDaysCell(parameters: useRangeCalendarDaysCell.Pa
     event.dataTransfer.dropEffect = 'move';
   });
 
+  const onDragEnd = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
+    if (!ctx.isDraggingRef.current) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+    ctx.stopDragging();
+  });
+
+  const onDrop = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
+    if (!ctx.isDraggingRef.current) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+    ctx.stopDragging();
+    // make sure the focused element is the element where drop ended
+    event.currentTarget.focus();
+    if (ctx.isEqualToDragTarget(value)) {
+      return;
+    }
+    ctx.selectDayFromDrag(value);
+  });
+
+  /**
+   * Touch events
+   */
+
+  const onTouchStart = useEventCallback(() => {
+    ctx.setDragTarget(value);
+  });
+
   const onTouchEnd = useEventCallback((event: React.TouchEvent<HTMLButtonElement>) => {
     if (!ctx.isDraggingRef.current) {
       return;
     }
 
-    ctx.setDragTarget(null);
     ctx.stopDragging();
 
     const target = resolveElementFromTouch(event, true);
@@ -93,32 +116,25 @@ export function useRangeCalendarDaysCell(parameters: useRangeCalendarDaysCell.Pa
     }
   });
 
-  const onDragEnd = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
-    if (!ctx.isDraggingRef.current) {
+  const onTouchMove = useEventCallback((event: React.TouchEvent<HTMLButtonElement>) => {
+    const target = resolveElementFromTouch(event);
+    if (!target) {
       return;
     }
 
-    event.preventDefault();
-    event.stopPropagation();
-    ctx.stopDragging();
-    ctx.setDragTarget(null);
-  });
+    const newDate = resolveDateFromTarget(target, utils, timezone);
+    if (newDate) {
+      ctx.setDragTarget(newDate);
+    }
 
-  const onDrop = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
-    if (!ctx.isDraggingRef.current) {
+    // this prevents initiating drag when user starts touchmove outside and then moves over a draggable element
+    const targetsAreIdentical = target === event.changedTouches[0].target;
+    if (!targetsAreIdentical || !isElementDraggable(newDate)) {
       return;
     }
 
-    event.preventDefault();
-    event.stopPropagation();
-    ctx.stopDragging();
-    ctx.setDragTarget(null);
-    // make sure the focused element is the element where drop ended
-    event.currentTarget.focus();
-    if (isSameAsDraggingDate(event)) {
-      return;
-    }
-    ctx.selectDayFromDrag(value);
+    // on mobile we should only initialize dragging state after move is detected
+    startDragging();
   });
 
   const { baseProps, isCurrent } = useBaseCalendarDaysCell(parameters);
@@ -172,6 +188,7 @@ export namespace useRangeCalendarDaysCell {
         | 'startDragging'
         | 'stopDragging'
         | 'setDragTarget'
+        | 'isEqualToDragTarget'
         | 'emptyDragImgRef'
       > {
     isSelectionStart: boolean;

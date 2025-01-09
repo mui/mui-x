@@ -149,16 +149,6 @@ export function useRangeCalendarRoot(parameters: useRangeCalendarRoot.Parameters
     calendarValueManager,
   });
 
-  // // Range going for the start of the start day to the end of the end day.
-  // // This makes sure that `isWithinRange` works with any time in the start and end day.
-  // const valueDayRange = React.useMemo<PickerRangeValue>(
-  //   () => [
-  //     !utils.isValid(value[0]) ? value[0] : utils.startOfDay(value[0]),
-  //     !utils.isValid(value[1]) ? value[1] : utils.endOfDay(value[1]),
-  //   ],
-  //   [value, utils],
-  // );
-
   // TODO: Apply some logic based on the range position.
   const [prevValue, setPrevValue] = React.useState<PickerRangeValue>(value);
   if (value !== prevValue) {
@@ -174,12 +164,13 @@ export function useRangeCalendarRoot(parameters: useRangeCalendarRoot.Parameters
     }
   }
 
-  const { dragContext, draggingDatePosition } = useRangeCalendarDragEditing({
+  const { dragContext } = useRangeCalendarDragEditing({
     baseContext,
     setValue,
     value,
     referenceDate,
     onRangePositionChange,
+    rangePosition,
     disableDragEditing,
     getNewValueFromNewSelectedDate,
   });
@@ -228,13 +219,45 @@ function useRangeCalendarDragEditing(parameters: UseRangeCalendarDragEditingPara
     setValue,
     referenceDate,
     baseContext,
+    rangePosition,
     onRangePositionChange,
     getNewValueFromNewSelectedDate,
     disableDragEditing: disableDragEditingProp,
   } = parameters;
   const utils = useUtils();
-  const [isDragging, setIsDragging] = React.useState(false);
-  const [dragTarget, setDragTarget] = React.useState<PickerValidDate | null>(null);
+
+  // Range going for the start of the start day to the end of the end day.
+  // This makes sure that `isWithinRange` works with any time in the start and end day.
+  const valueDayRange = React.useMemo<PickerRangeValue>(
+    () => [
+      !utils.isValid(value[0]) ? value[0] : utils.startOfDay(value[0]),
+      !utils.isValid(value[1]) ? value[1] : utils.endOfDay(value[1]),
+    ],
+    [value, utils],
+  );
+
+  const [dragState, setDragState] = React.useState<{
+    isDragging: boolean;
+    targetDate: PickerValidDate | null;
+    draggedDate: PickerValidDate | null;
+  }>({ isDragging: false, targetDate: null, draggedDate: null });
+
+  const highlightedRange = React.useMemo<PickerRangeValue>(() => {
+    if (!valueDayRange[0] || !valueDayRange[1] || !dragState.targetDate) {
+      return valueDayRange;
+    }
+
+    const newRange = calculateRangeChange({
+      utils,
+      range: valueDayRange,
+      newDate: dragState.targetDate,
+      rangePosition,
+      allowRangeFlip: true,
+    }).newRange;
+    return newRange[0] !== null && newRange[1] !== null
+      ? [utils.startOfDay(newRange[0]), utils.endOfDay(newRange[1])]
+      : newRange;
+  }, [rangePosition, dragState.targetDate, utils, valueDayRange]);
 
   const selectDayFromDrag = useEventCallback((selectedDate: PickerValidDate) => {
     const response = getNewValueFromNewSelectedDate({
@@ -249,9 +272,9 @@ function useRangeCalendarDragEditing(parameters: UseRangeCalendarDragEditingPara
 
   const disableDragEditing = disableDragEditingProp || baseContext.disabled || baseContext.readOnly;
 
-  const isDraggingRef = React.useRef(isDragging);
+  const isDraggingRef = React.useRef(dragState.isDragging);
   useEnhancedEffect(() => {
-    isDraggingRef.current = isDragging;
+    isDraggingRef.current = dragState.isDragging;
   });
 
   const emptyDragImgRef = React.useRef<HTMLImageElement | null>(null);
@@ -263,44 +286,54 @@ function useRangeCalendarDragEditing(parameters: UseRangeCalendarDragEditingPara
   }, []);
 
   const startDragging = useEventCallback((position: RangePosition) => {
-    setIsDragging(true);
+    setDragState((prev) => ({ ...prev, isDragging: true }));
     onRangePositionChange(position);
   });
 
-  const stopDragging = useEventCallback(() => setIsDragging(false));
+  const stopDragging = useEventCallback(() => {
+    setDragState((prev) => ({
+      ...prev,
+      isDragging: false,
+      draggedDate: null,
+      targetDate: null,
+    }));
+  });
 
-  const handleDragTargetChange = useEventCallback((newDragTarget: PickerValidDate | null) => {
-    if (utils.isEqual(newDragTarget, dragTarget)) {
+  const handleSetDragTarget = useEventCallback((newTargetDate: PickerValidDate) => {
+    if (utils.isEqual(newTargetDate, dragState.targetDate)) {
       return;
     }
 
-    setDragTarget(newDragTarget);
+    setDragState((prev) => ({ ...prev, targetDate: newTargetDate }));
+
+    if (value[0] && utils.isBeforeDay(newTargetDate, value[0])) {
+      onRangePositionChange('start');
+    } else if (value[1] && utils.isAfterDay(newTargetDate, value[1])) {
+      onRangePositionChange('end');
+    }
   });
 
-  const draggingDatePosition: RangePosition | null = React.useMemo(() => {
-    const [start, end] = value;
-    if (dragTarget) {
-      if (start && utils.isBefore(dragTarget, start)) {
-        return 'start';
-      }
-      if (end && utils.isAfter(dragTarget, end)) {
-        return 'end';
-      }
+  const isSameAsDraggedDate = useEventCallback((date: PickerValidDate) => {
+    if (dragState.draggedDate == null) {
+      return false;
     }
-    return null;
-  }, [value, dragTarget, utils]);
+    return utils.isSameDay(date, dragState.draggedDate);
+  });
 
   const dragContext: RangeCalendarRootDragContext = {
+    highlightedRange,
     disableDragEditing,
     isDraggingRef,
     emptyDragImgRef,
     selectDayFromDrag,
     startDragging,
     stopDragging,
-    setDragTarget: handleDragTargetChange,
+    setDragTarget: handleSetDragTarget,
+    isEqualToDragTarget: isSameAsDraggedDate,
+    isDragging: dragState.isDragging,
   };
 
-  return { dragContext, draggingDatePosition };
+  return { dragContext };
 }
 
 interface UseRangeCalendarDragEditingParameters {
@@ -315,4 +348,5 @@ interface UseRangeCalendarDragEditingParameters {
     },
   ) => useBaseCalendarRoot.GetNewValueFromNewSelectedDateReturnValue<PickerRangeValue>;
   onRangePositionChange: (position: RangePosition) => void;
+  rangePosition: RangePosition;
 }
