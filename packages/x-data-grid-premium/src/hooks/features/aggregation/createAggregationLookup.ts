@@ -8,10 +8,11 @@ import {
   gridRowTreeSelector,
   GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid-pro';
-import { GridApiPremium } from '../../../models/gridApiPremium';
+import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
   GridAggregationFunction,
+  GridAggregationFunctionDataSource,
   GridAggregationLookup,
   GridAggregationPosition,
   GridAggregationRules,
@@ -21,7 +22,7 @@ import { gridAggregationModelSelector } from './gridAggregationSelectors';
 
 const getGroupAggregatedValue = (
   groupId: GridRowId,
-  apiRef: React.MutableRefObject<GridApiPremium>,
+  apiRef: React.MutableRefObject<GridPrivateApiPremium>,
   aggregationRowsScope: DataGridPremiumProcessedProps['aggregationRowsScope'],
   aggregatedFields: string[],
   aggregationRules: GridAggregationRules,
@@ -56,7 +57,8 @@ const getGroupAggregatedValue = (
       const aggregatedField = aggregatedFields[j];
       const columnAggregationRules = aggregationRules[aggregatedField];
 
-      const aggregationFunction = columnAggregationRules.aggregationFunction;
+      const aggregationFunction =
+        columnAggregationRules.aggregationFunction as GridAggregationFunction;
       const field = aggregatedField;
 
       if (aggregatedValues[j] === undefined) {
@@ -77,7 +79,8 @@ const getGroupAggregatedValue = (
 
   for (let i = 0; i < aggregatedValues.length; i += 1) {
     const { aggregatedField, values } = aggregatedValues[i];
-    const aggregationFunction = aggregationRules[aggregatedField].aggregationFunction;
+    const aggregationFunction = aggregationRules[aggregatedField]
+      .aggregationFunction as GridAggregationFunction;
     const value = aggregationFunction.apply({
       values,
       groupId,
@@ -93,21 +96,46 @@ const getGroupAggregatedValue = (
   return groupAggregationLookup;
 };
 
+const getGroupAggregatedValueDataSource = (
+  groupId: GridRowId,
+  apiRef: React.MutableRefObject<GridPrivateApiPremium>,
+  aggregatedFields: string[],
+  position: GridAggregationPosition,
+) => {
+  const groupAggregationLookup: GridAggregationLookup[GridRowId] = {};
+
+  for (let j = 0; j < aggregatedFields.length; j += 1) {
+    const aggregatedField = aggregatedFields[j];
+
+    groupAggregationLookup[aggregatedField] = {
+      position,
+      value: apiRef.current.resolveGroupAggregation(groupId, aggregatedField),
+    };
+  }
+
+  return groupAggregationLookup;
+};
+
 export const createAggregationLookup = ({
   apiRef,
   aggregationFunctions,
   aggregationRowsScope,
   getAggregationPosition,
+  isDataSource,
 }: {
-  apiRef: React.MutableRefObject<GridApiPremium>;
-  aggregationFunctions: Record<string, GridAggregationFunction>;
+  apiRef: React.MutableRefObject<GridPrivateApiPremium>;
+  aggregationFunctions:
+    | Record<string, GridAggregationFunction>
+    | Record<string, GridAggregationFunctionDataSource>;
   aggregationRowsScope: DataGridPremiumProcessedProps['aggregationRowsScope'];
   getAggregationPosition: DataGridPremiumProcessedProps['getAggregationPosition'];
+  isDataSource: boolean;
 }): GridAggregationLookup => {
   const aggregationRules = getAggregationRules(
     gridColumnLookupSelector(apiRef),
     gridAggregationModelSelector(apiRef),
     aggregationFunctions,
+    isDataSource,
   );
 
   const aggregatedFields = Object.keys(aggregationRules);
@@ -128,10 +156,17 @@ export const createAggregationLookup = ({
       }
     }
 
-    const hasAggregableChildren = groupNode.children.length;
-    if (hasAggregableChildren) {
-      const position = getAggregationPosition(groupNode);
-      if (position != null) {
+    const position = getAggregationPosition(groupNode);
+
+    if (position !== null) {
+      if (isDataSource) {
+        aggregationLookup[groupNode.id] = getGroupAggregatedValueDataSource(
+          groupNode.id,
+          apiRef,
+          aggregatedFields,
+          position,
+        );
+      } else if (groupNode.children.length) {
         aggregationLookup[groupNode.id] = getGroupAggregatedValue(
           groupNode.id,
           apiRef,
