@@ -174,11 +174,12 @@ export function useRangeCalendarRoot(parameters: useRangeCalendarRoot.Parameters
     }
   }
 
-  const dragContext = useRangeCalendarDragEditing({
+  const { dragContext, draggingDatePosition } = useRangeCalendarDragEditing({
     baseContext,
     setValue,
     value,
     referenceDate,
+    onRangePositionChange,
     disableDragEditing,
     getNewValueFromNewSelectedDate,
   });
@@ -221,21 +222,21 @@ export namespace useRangeCalendarRoot {
   }
 }
 
-function useRangeCalendarDragEditing(
-  parameters: UseRangeCalendarDragEditingParameters,
-): RangeCalendarRootDragContext {
+function useRangeCalendarDragEditing(parameters: UseRangeCalendarDragEditingParameters) {
   const {
     value,
     setValue,
     referenceDate,
     baseContext,
+    onRangePositionChange,
     getNewValueFromNewSelectedDate,
     disableDragEditing: disableDragEditingProp,
   } = parameters;
+  const utils = useUtils();
   const [isDragging, setIsDragging] = React.useState(false);
   const [dragTarget, setDragTarget] = React.useState<PickerValidDate | null>(null);
 
-  const selectDay = useEventCallback((selectedDate: PickerValidDate) => {
+  const selectDayFromDrag = useEventCallback((selectedDate: PickerValidDate) => {
     const response = getNewValueFromNewSelectedDate({
       prevValue: value,
       selectedDate,
@@ -253,13 +254,53 @@ function useRangeCalendarDragEditing(
     isDraggingRef.current = isDragging;
   });
 
-  return {
+  const emptyDragImgRef = React.useRef<HTMLImageElement | null>(null);
+  React.useEffect(() => {
+    // Preload the image - required for Safari support: https://stackoverflow.com/a/40923520/3303436
+    emptyDragImgRef.current = document.createElement('img');
+    emptyDragImgRef.current.src =
+      'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+  }, []);
+
+  const startDragging = useEventCallback((position: RangePosition) => {
+    setIsDragging(true);
+    onRangePositionChange(position);
+  });
+
+  const stopDragging = useEventCallback(() => setIsDragging(false));
+
+  const handleDragTargetChange = useEventCallback((newDragTarget: PickerValidDate | null) => {
+    if (utils.isEqual(newDragTarget, dragTarget)) {
+      return;
+    }
+
+    setDragTarget(newDragTarget);
+  });
+
+  const draggingDatePosition: RangePosition | null = React.useMemo(() => {
+    const [start, end] = value;
+    if (dragTarget) {
+      if (start && utils.isBefore(dragTarget, start)) {
+        return 'start';
+      }
+      if (end && utils.isAfter(dragTarget, end)) {
+        return 'end';
+      }
+    }
+    return null;
+  }, [value, dragTarget, utils]);
+
+  const dragContext: RangeCalendarRootDragContext = {
     disableDragEditing,
     isDraggingRef,
-    selectDay,
-    setIsDragging,
-    setDragTarget,
+    emptyDragImgRef,
+    selectDayFromDrag,
+    startDragging,
+    stopDragging,
+    setDragTarget: handleDragTargetChange,
   };
+
+  return { dragContext, draggingDatePosition };
 }
 
 interface UseRangeCalendarDragEditingParameters {
@@ -273,4 +314,5 @@ interface UseRangeCalendarDragEditingParameters {
       allowRangeFlip?: boolean;
     },
   ) => useBaseCalendarRoot.GetNewValueFromNewSelectedDateReturnValue<PickerRangeValue>;
+  onRangePositionChange: (position: RangePosition) => void;
 }

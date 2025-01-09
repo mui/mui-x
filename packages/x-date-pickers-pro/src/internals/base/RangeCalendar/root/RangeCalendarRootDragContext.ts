@@ -1,12 +1,15 @@
 import * as React from 'react';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { RangePosition } from '@mui/x-date-pickers/internals';
 
 export interface RangeCalendarRootDragContext {
   isDraggingRef: React.RefObject<boolean>;
   disableDragEditing: boolean;
-  selectDay: (value: PickerValidDate) => void;
-  setIsDragging: (value: boolean) => void;
+  selectDayFromDrag: (value: PickerValidDate) => void;
+  startDragging: (position: RangePosition) => void;
+  stopDragging: () => void;
   setDragTarget: (value: PickerValidDate | null) => void;
+  emptyDragImgRef: React.RefObject<HTMLImageElement | null>;
 }
 
 export const RangeCalendarRootDragContext = React.createContext<

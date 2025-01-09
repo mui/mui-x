@@ -45,36 +45,30 @@ export function useRangeCalendarDaysCellWrapper(
     [utils, value, rangeRootContext.value, baseCtx.isSelected],
   );
 
-  const isDraggable = React.useMemo(() => {
-    return (
-      !rangeRootDragContext.disableDragEditing &&
-      (isStartOfRange(utils, value, rangeRootContext.value) ||
-        isEndOfRange(utils, value, rangeRootContext.value))
-    );
-  }, [utils, value, rangeRootContext.value, rangeRootDragContext.disableDragEditing]);
-
   const ctx = React.useMemo<useRangeCalendarDaysCell.Context>(
     () => ({
       ...baseCtx,
       isSelected,
       isSelectionStart,
       isSelectionEnd,
-      isDraggable,
       isDraggingRef: rangeRootDragContext.isDraggingRef,
-      selectDayFromDrag: rangeRootDragContext.selectDay,
-      setIsDragging: rangeRootDragContext.setIsDragging,
+      selectDayFromDrag: rangeRootDragContext.selectDayFromDrag,
+      startDragging: rangeRootDragContext.startDragging,
+      stopDragging: rangeRootDragContext.stopDragging,
       setDragTarget: rangeRootDragContext.setDragTarget,
+      emptyDragImgRef: rangeRootDragContext.emptyDragImgRef,
     }),
     [
       baseCtx,
       isSelected,
       isSelectionStart,
       isSelectionEnd,
-      isDraggable,
       rangeRootDragContext.isDraggingRef,
-      rangeRootDragContext.selectDay,
-      rangeRootDragContext.setIsDragging,
+      rangeRootDragContext.selectDayFromDrag,
+      rangeRootDragContext.startDragging,
+      rangeRootDragContext.stopDragging,
       rangeRootDragContext.setDragTarget,
+      rangeRootDragContext.emptyDragImgRef,
     ],
   );
 
