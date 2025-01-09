@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled, SxProps, Theme } from '@mui/material/styles';
 import clsx from 'clsx';
+import { useRtl } from '@mui/system/RtlProvider';
 import {
   ChartsLabelGradientClasses,
   useUtilityClasses,
@@ -43,32 +44,40 @@ export interface ChartsLabelGradientProps {
   sx?: SxProps<Theme>;
 }
 
+const applyRtl = (isRtl: boolean | undefined, value: number) => (isRtl ? value - 180 : value);
+
 const getRotation = (
   direction?: 'vertical' | 'horizontal',
   reverse?: boolean,
   rotate?: boolean,
+  isRtl?: boolean,
 ) => {
   if (!rotate && reverse) {
-    return direction === 'vertical' ? 90 : 180;
+    return direction === 'vertical' ? 90 : applyRtl(isRtl, 180);
   }
 
   if (rotate && !reverse) {
-    return direction === 'vertical' ? 0 : 90;
+    return direction === 'vertical' ? applyRtl(isRtl, 0) : 90;
   }
 
   if (rotate && reverse) {
-    return direction === 'vertical' ? 180 : -90;
+    return direction === 'vertical' ? applyRtl(isRtl, 180) : -90;
   }
 
-  return direction === 'vertical' ? -90 : 0;
+  return direction === 'vertical' ? -90 : applyRtl(isRtl, 0);
 };
 
 const Root = styled('div', {
   name: 'MuiChartsLabelGradient',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: ChartsLabelGradientProps }>(({ ownerState }) => {
-  const rotation = getRotation(ownerState.direction, ownerState.reverse, ownerState.rotate);
+})<{ ownerState: ChartsLabelGradientProps & { isRtl: boolean } }>(({ ownerState }) => {
+  const rotation = getRotation(
+    ownerState.direction,
+    ownerState.reverse,
+    ownerState.rotate,
+    ownerState.isRtl,
+  );
 
   return {
     display: 'flex',
@@ -118,11 +127,12 @@ const ChartsLabelGradient = consumeThemeProps(
   function ChartsLabelGradient(props: ChartsLabelGradientProps, ref: React.Ref<HTMLDivElement>) {
     const { gradientId, direction, classes, className, rotate, reverse, thickness, ...other } =
       props;
+    const isRtl = useRtl();
 
     return (
       <Root
         className={clsx(classes?.root, className)}
-        ownerState={props}
+        ownerState={{ ...props, isRtl }}
         aria-hidden="true"
         ref={ref}
         {...other}
