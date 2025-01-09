@@ -326,7 +326,7 @@ function CustomDateField(props) {
 #### Localized placeholder
 
 You can use the `useParsedFormat` to get a clean placeholder.
-This hook applies two main transformation on the format:
+This hook applies two main transformations on the format:
 
 1. It replaces all the localized tokens (i.e.: `L` for a date with `dayjs`) with their expanded value (`DD/MM/YYYY` for the same date with `dayjs`).
 2. It replaces each token with its token from the localization object (i.e.: `YYYY` remains `YYYY` for the English locale but becomes `AAAA` for the French locale).
