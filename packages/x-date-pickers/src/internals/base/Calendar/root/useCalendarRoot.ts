@@ -12,6 +12,16 @@ import {
   useBaseCalendarRoot,
 } from '../../utils/base-calendar/root/useBaseCalendarRoot';
 
+const calendarValueManager: useBaseCalendarRoot.ValueManager<PickerValue> = {
+  getDateToUseForReferenceDate: (value) => value,
+  getNewValueFromNewSelectedDate: ({ selectedDate }) => ({
+    value: selectedDate,
+    changeImportance: 'accept',
+  }),
+  getCurrentDateFromValue: (value) => value,
+  getSelectedDatesFromValue: (value) => (value == null ? [] : [value]),
+};
+
 export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
   const {
     // Validation props
@@ -55,13 +65,7 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
     manager,
     dateValidationProps: validationProps,
     valueValidationProps: validationProps,
-    getDateToUseForReferenceDate: (initialValue) => initialValue,
-    getNewValueFromNewSelectedDate: ({ selectedDate }) => ({
-      value: selectedDate,
-      changeImportance: 'accept',
-    }),
-    getCurrentDateFromValue: (currentValue) => currentValue,
-    getSelectedDatesFromValue,
+    calendarValueManager,
   });
 
   const [prevValue, setPrevValue] = React.useState<PickerValue>(value);
@@ -93,8 +97,4 @@ export namespace useCalendarRoot {
   export interface Parameters
     extends useBaseCalendarRoot.PublicParameters<PickerValue, DateValidationError>,
       ExportedValidateDateProps {}
-}
-
-function getSelectedDatesFromValue(value: PickerValue): PickerValidDate[] {
-  return value == null ? [] : [value];
 }

@@ -258,6 +258,8 @@
   }
 
   &:not([data-outside-month])[data-selected] {
+    background-color: #0369a1;
+
     &.RangeDaysCell {
       background-color: #0c4a6e;
 

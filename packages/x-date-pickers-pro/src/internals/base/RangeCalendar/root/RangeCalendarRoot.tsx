@@ -11,6 +11,7 @@ import { useComponentRenderer } from '@mui/x-date-pickers/internals/base/base-ut
 import { DateRangeValidationError } from '../../../../models';
 import { RangeCalendarRootContext } from './RangeCalendarRootContext';
 import { useRangeCalendarRoot } from './useRangeCalendarRoot';
+import { RangeCalendarRootDragContext } from './RangeCalendarRootDragContext';
 
 const RangeCalendarRoot = React.forwardRef(function RangeCalendarRoot(
   props: RangeCalendarRoot.Props,
@@ -37,7 +38,7 @@ const RangeCalendarRoot = React.forwardRef(function RangeCalendarRoot(
     maxDate,
     ...otherProps
   } = props;
-  const { getRootProps, context, baseContext } = useRangeCalendarRoot({
+  const { getRootProps, context, baseContext, dragContext } = useRangeCalendarRoot({
     readOnly,
     disabled,
     autoFocus,
@@ -70,7 +71,9 @@ const RangeCalendarRoot = React.forwardRef(function RangeCalendarRoot(
   return (
     <BaseCalendarRootContext.Provider value={baseContext}>
       <RangeCalendarRootContext.Provider value={context}>
-        {renderElement()}
+        <RangeCalendarRootDragContext.Provider value={dragContext}>
+          {renderElement()}
+        </RangeCalendarRootDragContext.Provider>
       </RangeCalendarRootContext.Provider>
     </BaseCalendarRootContext.Provider>
   );

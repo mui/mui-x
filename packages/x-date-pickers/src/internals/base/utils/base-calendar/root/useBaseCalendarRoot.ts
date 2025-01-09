@@ -37,12 +37,14 @@ export function useBaseCalendarRoot<
     monthPageSize = 1,
     yearPageSize = 1,
     manager,
-    getDateToUseForReferenceDate,
-    getNewValueFromNewSelectedDate,
-    getCurrentDateFromValue,
-    getSelectedDatesFromValue,
     dateValidationProps,
     valueValidationProps,
+    calendarValueManager: {
+      getDateToUseForReferenceDate,
+      getNewValueFromNewSelectedDate,
+      getCurrentDateFromValue,
+      getSelectedDatesFromValue,
+    },
   } = parameters;
 
   const utils = useUtils();
@@ -142,6 +144,19 @@ export function useBaseCalendarRoot<
     [adapter, dateValidationProps, timezone],
   );
 
+  const setValue = useEventCallback(
+    (
+      newValue: TValue,
+      options: { section: 'day' | 'month' | 'year'; changeImportance: 'set' | 'accept' },
+    ) => {
+      handleValueChange(newValue, {
+        section: options.section,
+        changeImportance: options.changeImportance,
+        validationError: getValidationErrorForNewValue(newValue),
+      });
+    },
+  );
+
   const selectDate = useEventCallback<BaseCalendarRootContext['selectDate']>(
     (selectedDate: PickerValidDate, options) => {
       const response = getNewValueFromNewSelectedDate({
@@ -150,10 +165,9 @@ export function useBaseCalendarRoot<
         referenceDate,
       });
 
-      handleValueChange(response.value, {
-        changeImportance: response.changeImportance,
-        validationError: getValidationErrorForNewValue(response.value),
+      return setValue(response.value, {
         section: options.section,
+        changeImportance: response.changeImportance,
       });
     },
   );
@@ -206,6 +220,8 @@ export function useBaseCalendarRoot<
 
   return {
     value,
+    referenceDate,
+    setValue,
     setVisibleDate,
     isDateCellVisible,
     context,
@@ -279,6 +295,42 @@ export namespace useBaseCalendarRoot {
      * The props used to validate the value.
      */
     valueValidationProps: TValidationProps;
+    calendarValueManager: ValueManager<TValue>;
+  }
+
+  export interface ReturnValue<TValue extends PickerValidValue> {
+    value: TValue;
+    referenceDate: PickerValidDate;
+    setValue: (
+      newValue: TValue,
+      options: { section: 'day' | 'month' | 'year'; changeImportance: 'set' | 'accept' },
+    ) => void;
+    setVisibleDate: (newVisibleDate: PickerValidDate, skipIfAlreadyVisible: boolean) => void;
+    isDateCellVisible: (date: PickerValidDate) => boolean;
+    context: BaseCalendarRootContext;
+  }
+
+  export interface ValueChangeHandlerContext<TError> {
+    /**
+     * The section handled by the UI that triggered the change.
+     */
+    section: 'day' | 'month' | 'year';
+    /**
+     * The validation error associated to the new value.
+     */
+    validationError: TError;
+    /**
+     * The importance of the change.
+     */
+    changeImportance: PickerChangeImportance;
+  }
+
+  export interface RegisterSectionParameters {
+    type: 'day' | 'month' | 'year';
+    value: PickerValidDate;
+  }
+
+  export interface ValueManager<TValue extends PickerValidValue> {
     /**
      * TODO: Write description.
      * @param {TValue} value The value to get the reference date from.
@@ -305,26 +357,6 @@ export namespace useBaseCalendarRoot {
      * @returns {PickerValidDate[]} The selected dates.
      */
     getSelectedDatesFromValue: (value: TValue) => PickerValidDate[];
-  }
-
-  export interface ValueChangeHandlerContext<TError> {
-    /**
-     * The section handled by the UI that triggered the change.
-     */
-    section: 'day' | 'month' | 'year';
-    /**
-     * The validation error associated to the new value.
-     */
-    validationError: TError;
-    /**
-     * The importance of the change.
-     */
-    changeImportance: PickerChangeImportance;
-  }
-
-  export interface RegisterSectionParameters {
-    type: 'day' | 'month' | 'year';
-    value: PickerValidDate;
   }
 
   export interface GetNewValueFromNewSelectedDateParameters<TValue extends PickerValidValue> {

@@ -10,6 +10,7 @@ import {
   isEndOfRange,
   isRangeValid,
 } from '../../../utils/date-utils';
+import { useRangeCalendarRootDragContext } from '../root/RangeCalendarRootDragContext';
 
 export function useRangeCalendarDaysCellWrapper(
   parameters: useRangeCalendarDaysCellWrapper.Parameters,
@@ -18,6 +19,7 @@ export function useRangeCalendarDaysCellWrapper(
   const { ref, ctx: baseCtx } = useBaseCalendarDaysCellWrapper(parameters);
   const utils = useUtils();
   const rangeRootContext = useRangeCalendarRootContext();
+  const rangeRootDragContext = useRangeCalendarRootDragContext();
 
   const isSelected = React.useMemo(
     () =>
@@ -43,9 +45,37 @@ export function useRangeCalendarDaysCellWrapper(
     [utils, value, rangeRootContext.value, baseCtx.isSelected],
   );
 
+  const isDraggable = React.useMemo(() => {
+    return (
+      !rangeRootDragContext.disableDragEditing &&
+      (isStartOfRange(utils, value, rangeRootContext.value) ||
+        isEndOfRange(utils, value, rangeRootContext.value))
+    );
+  }, [utils, value, rangeRootContext.value, rangeRootDragContext.disableDragEditing]);
+
   const ctx = React.useMemo<useRangeCalendarDaysCell.Context>(
-    () => ({ ...baseCtx, isSelected, isSelectionStart, isSelectionEnd }),
-    [baseCtx, isSelected, isSelectionStart, isSelectionEnd],
+    () => ({
+      ...baseCtx,
+      isSelected,
+      isSelectionStart,
+      isSelectionEnd,
+      isDraggable,
+      isDraggingRef: rangeRootDragContext.isDraggingRef,
+      selectDayFromDrag: rangeRootDragContext.selectDay,
+      setIsDragging: rangeRootDragContext.setIsDragging,
+      setDragTarget: rangeRootDragContext.setDragTarget,
+    }),
+    [
+      baseCtx,
+      isSelected,
+      isSelectionStart,
+      isSelectionEnd,
+      isDraggable,
+      rangeRootDragContext.isDraggingRef,
+      rangeRootDragContext.selectDay,
+      rangeRootDragContext.setIsDragging,
+      rangeRootDragContext.setDragTarget,
+    ],
   );
 
   return { ref, ctx };

@@ -1,4 +1,6 @@
 import * as React from 'react';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { ValidateDateProps } from '@mui/x-date-pickers/validation';
 import { PickerRangeValue, RangePosition, useUtils } from '@mui/x-date-pickers/internals';
@@ -7,6 +9,8 @@ import {
   useAddDefaultsToBaseDateValidationProps,
   useBaseCalendarRoot,
 } from '@mui/x-date-pickers/internals/base/utils/base-calendar/root/useBaseCalendarRoot';
+// eslint-disable-next-line no-restricted-imports
+import { BaseCalendarRootContext } from '@mui/x-date-pickers/internals/base/utils/base-calendar/root/BaseCalendarRootContext';
 // eslint-disable-next-line no-restricted-imports
 import { mergeReactProps } from '@mui/x-date-pickers/internals/base/base-utils/mergeReactProps';
 // eslint-disable-next-line no-restricted-imports
@@ -21,6 +25,9 @@ import { calculateRangeChange } from '../../../utils/date-range-manager';
 import { isRangeValid } from '../../../utils/date-utils';
 import { useRangePosition, UseRangePositionProps } from '../../../hooks/useRangePosition';
 import { RangeCalendarRootContext } from './RangeCalendarRootContext';
+import { RangeCalendarRootDragContext } from './RangeCalendarRootDragContext';
+
+const DEFAULT_AVAILABLE_RANGE_POSITIONS: RangePosition[] = ['start', 'end'];
 
 export function useRangeCalendarRoot(parameters: useRangeCalendarRoot.Parameters) {
   const {
@@ -34,13 +41,14 @@ export function useRangeCalendarRoot(parameters: useRangeCalendarRoot.Parameters
     rangePosition: rangePositionProp,
     defaultRangePosition: defaultRangePositionProp,
     onRangePositionChange: onRangePositionChangeProp,
+    availableRangePositions = DEFAULT_AVAILABLE_RANGE_POSITIONS,
+    // Other range-specific parameters
+    disableDragEditing = false,
     // Parameters forwarded to `useBaseCalendarRoot`
     ...baseParameters
   } = parameters;
   const utils = useUtils();
   const manager = useDateRangeManager();
-
-  const availableRangePositions: RangePosition[] = ['start', 'end'];
 
   // TODO: Add support for range position from the context when implementing the Picker Base UI X component.
   const { rangePosition, onRangePositionChange } = useRangePosition({
@@ -55,14 +63,6 @@ export function useRangeCalendarRoot(parameters: useRangeCalendarRoot.Parameters
     disablePast,
     disableFuture,
   });
-
-  const valueValidationProps = React.useMemo<ValidateDateRangeProps>(
-    () => ({
-      ...baseDateValidationProps,
-      shouldDisableDate,
-    }),
-    [baseDateValidationProps, shouldDisableDate],
-  );
 
   const shouldDisableDateForSingleDateValidation = React.useMemo(() => {
     if (!shouldDisableDate) {
@@ -82,39 +82,62 @@ export function useRangeCalendarRoot(parameters: useRangeCalendarRoot.Parameters
     [baseDateValidationProps, shouldDisableDateForSingleDateValidation],
   );
 
-  const getNewValueFromNewSelectedDate = ({
-    prevValue,
-    selectedDate,
-    referenceDate,
-    allowRangeFlip,
-  }: useBaseCalendarRoot.GetNewValueFromNewSelectedDateParameters<PickerRangeValue> & {
-    allowRangeFlip?: boolean;
-  }): useBaseCalendarRoot.GetNewValueFromNewSelectedDateReturnValue<PickerRangeValue> => {
-    const { nextSelection, newRange } = calculateRangeChange({
-      newDate: selectedDate,
-      utils,
-      range: prevValue,
-      rangePosition,
-      allowRangeFlip,
-      shouldMergeDateAndTime: true,
+  const valueValidationProps = React.useMemo<ValidateDateRangeProps>(
+    () => ({
+      ...baseDateValidationProps,
+      shouldDisableDate,
+    }),
+    [baseDateValidationProps, shouldDisableDate],
+  );
+
+  const getNewValueFromNewSelectedDate = useEventCallback(
+    ({
+      prevValue,
+      selectedDate,
       referenceDate,
-    });
+      allowRangeFlip,
+    }: useBaseCalendarRoot.GetNewValueFromNewSelectedDateParameters<PickerRangeValue> & {
+      allowRangeFlip?: boolean;
+    }): useBaseCalendarRoot.GetNewValueFromNewSelectedDateReturnValue<PickerRangeValue> => {
+      const { nextSelection, newRange } = calculateRangeChange({
+        newDate: selectedDate,
+        utils,
+        range: prevValue,
+        rangePosition,
+        allowRangeFlip,
+        shouldMergeDateAndTime: true,
+        referenceDate,
+      });
 
-    const isNextSectionAvailable = availableRangePositions.includes(nextSelection);
-    if (isNextSectionAvailable) {
-      onRangePositionChange(nextSelection);
-    }
+      const isNextSectionAvailable = availableRangePositions.includes(nextSelection);
+      if (isNextSectionAvailable) {
+        onRangePositionChange(nextSelection);
+      }
 
-    const isFullRangeSelected = rangePosition === 'end' && isRangeValid(utils, newRange);
+      const isFullRangeSelected = rangePosition === 'end' && isRangeValid(utils, newRange);
 
+      return {
+        value: newRange,
+        changeImportance: isFullRangeSelected || !isNextSectionAvailable ? 'set' : 'accept',
+      };
+    },
+  );
+
+  const calendarValueManager = React.useMemo<
+    useBaseCalendarRoot.ValueManager<PickerRangeValue>
+  >(() => {
     return {
-      value: newRange,
-      changeImportance: isFullRangeSelected || !isNextSectionAvailable ? 'set' : 'accept',
+      getDateToUseForReferenceDate: (value) => value[0] ?? value[1],
+      getCurrentDateFromValue: (value) => (rangePosition === 'start' ? value[0] : value[1]),
+      getNewValueFromNewSelectedDate,
+      getSelectedDatesFromValue: (value) => value.filter((date) => date != null),
     };
-  };
+  }, [rangePosition, getNewValueFromNewSelectedDate]);
 
   const {
     value,
+    referenceDate,
+    setValue,
     setVisibleDate,
     isDateCellVisible,
     context: baseContext,
@@ -123,12 +146,18 @@ export function useRangeCalendarRoot(parameters: useRangeCalendarRoot.Parameters
     manager,
     valueValidationProps,
     dateValidationProps,
-    getDateToUseForReferenceDate: (initialValue) => initialValue[0] ?? initialValue[1],
-    getCurrentDateFromValue: (currentValue) =>
-      rangePosition === 'start' ? currentValue[0] : currentValue[1],
-    getNewValueFromNewSelectedDate,
-    getSelectedDatesFromValue,
+    calendarValueManager,
   });
+
+  // // Range going for the start of the start day to the end of the end day.
+  // // This makes sure that `isWithinRange` works with any time in the start and end day.
+  // const valueDayRange = React.useMemo<PickerRangeValue>(
+  //   () => [
+  //     !utils.isValid(value[0]) ? value[0] : utils.startOfDay(value[0]),
+  //     !utils.isValid(value[1]) ? value[1] : utils.endOfDay(value[1]),
+  //   ],
+  //   [value, utils],
+  // );
 
   // TODO: Apply some logic based on the range position.
   const [prevValue, setPrevValue] = React.useState<PickerRangeValue>(value);
@@ -145,6 +174,15 @@ export function useRangeCalendarRoot(parameters: useRangeCalendarRoot.Parameters
     }
   }
 
+  const dragContext = useRangeCalendarDragEditing({
+    baseContext,
+    setValue,
+    value,
+    referenceDate,
+    disableDragEditing,
+    getNewValueFromNewSelectedDate,
+  });
+
   const context: RangeCalendarRootContext = React.useMemo(
     () => ({
       value,
@@ -157,8 +195,8 @@ export function useRangeCalendarRoot(parameters: useRangeCalendarRoot.Parameters
   }, []);
 
   return React.useMemo(
-    () => ({ getRootProps, context, baseContext }),
-    [getRootProps, context, baseContext],
+    () => ({ getRootProps, context, baseContext, dragContext }),
+    [getRootProps, context, baseContext, dragContext],
   );
 }
 
@@ -166,9 +204,73 @@ export namespace useRangeCalendarRoot {
   export interface Parameters
     extends useBaseCalendarRoot.PublicParameters<PickerRangeValue, DateRangeValidationError>,
       ExportedValidateDateRangeProps,
-      UseRangePositionProps {}
+      UseRangePositionProps {
+    /**
+     * Range positions available for selection.
+     * This list is checked against when checking if a next range position can be selected.
+     *
+     * Used on Date Time Range pickers with current `rangePosition` to force a `finish` selection after just one range position selection.
+     * @default ['start', 'end']
+     */
+    availableRangePositions?: RangePosition[];
+    /**
+     * If `true`, editing dates by dragging is disabled.
+     * @default false
+     */
+    disableDragEditing?: boolean;
+  }
 }
 
-function getSelectedDatesFromValue(value: PickerRangeValue): PickerValidDate[] {
-  return value.filter((date) => date != null);
+function useRangeCalendarDragEditing(
+  parameters: UseRangeCalendarDragEditingParameters,
+): RangeCalendarRootDragContext {
+  const {
+    value,
+    setValue,
+    referenceDate,
+    baseContext,
+    getNewValueFromNewSelectedDate,
+    disableDragEditing: disableDragEditingProp,
+  } = parameters;
+  const [isDragging, setIsDragging] = React.useState(false);
+  const [dragTarget, setDragTarget] = React.useState<PickerValidDate | null>(null);
+
+  const selectDay = useEventCallback((selectedDate: PickerValidDate) => {
+    const response = getNewValueFromNewSelectedDate({
+      prevValue: value,
+      selectedDate,
+      referenceDate,
+      allowRangeFlip: true,
+    });
+
+    setValue(response.value, { changeImportance: response.changeImportance, section: 'day' });
+  });
+
+  const disableDragEditing = disableDragEditingProp || baseContext.disabled || baseContext.readOnly;
+
+  const isDraggingRef = React.useRef(isDragging);
+  useEnhancedEffect(() => {
+    isDraggingRef.current = isDragging;
+  });
+
+  return {
+    disableDragEditing,
+    isDraggingRef,
+    selectDay,
+    setIsDragging,
+    setDragTarget,
+  };
+}
+
+interface UseRangeCalendarDragEditingParameters {
+  value: PickerRangeValue;
+  referenceDate: PickerValidDate;
+  setValue: useBaseCalendarRoot.ReturnValue<PickerRangeValue>['setValue'];
+  baseContext: BaseCalendarRootContext;
+  disableDragEditing: boolean;
+  getNewValueFromNewSelectedDate: (
+    parameters: useBaseCalendarRoot.GetNewValueFromNewSelectedDateParameters<PickerRangeValue> & {
+      allowRangeFlip?: boolean;
+    },
+  ) => useBaseCalendarRoot.GetNewValueFromNewSelectedDateReturnValue<PickerRangeValue>;
 }
