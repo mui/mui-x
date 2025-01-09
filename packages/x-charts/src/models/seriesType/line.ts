@@ -74,7 +74,7 @@ export interface LineSeriesType
   showMark?: boolean | ((params: ShowMarkParams) => boolean);
   /**
    * The shape of the mark elements.
-   * Notice that using something else than 'circle' will render <path /> instead of <circle /> leading to a small performance decrease.
+   * Using 'circle' renders a `<circle />` element, while all other options render a `<path />` instead. The path causes a small decrease in performance.
    * @default 'circle'
    */
   shape?: 'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';

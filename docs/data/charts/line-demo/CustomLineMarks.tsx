@@ -13,7 +13,7 @@ const xLabels = [
   'Page G',
 ];
 
-export default function CustomeLineMarks() {
+export default function CustomLineMarks() {
   return (
     <LineChart
       width={500}
