@@ -9,8 +9,8 @@ _Jan 9, 2025_
 
 We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
-- 🌍 Add Chinese (Taiwan) (zh-TW) locale on the Date and Time Picker components
-- 🌍 Improve Norwegian (nb-NO) locale on the Date and Time Picker components
+- 🌍 Add Chinese (Taiwan) (zh-TW) locale on the Date and Time Pickers
+- 🌍 Improve Norwegian (nb-NO) locale on the Date and Time Pickers
 - 🌍 Improve Dutch (nl-NL) locale on the Data Grid
 - 🐞 Bugfixes
 
