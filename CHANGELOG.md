@@ -25,6 +25,7 @@ Following are all team members who have contributed to this release:
 
 #### `@mui/x-data-grid@7.23.6`
 
+- [DataGrid] Improve React 19 support (#16048) @LukasTy
 - [DataGrid] Add `name` attribute to selection checkboxes (#16041) @derek-0000
 - [DataGrid] Fix number filter field formatting values while typing (#16068) @arminmeh
 - [DataGrid] Fix select all checkbox state reset with server side data (#16039) @MBilalShafi
@@ -41,6 +42,7 @@ Same changes as in `@mui/x-data-grid-pro@7.23.6`.
 
 #### `@mui/x-date-pickers@7.23.6`
 
+- [pickers] Improve React 19 support (#16048) @LukasTy
 - [l10n] Add Chinese (Taiwan) (zh-TW) locale (#16057) @nusr
 - [l10n] Improve Norwegian (nb-NO) locale (#16083) @josteinjhauge
 - [pickers] Support `date-fns-jalali` v4 (#16013) @LukasTy
@@ -53,7 +55,8 @@ Same changes as in `@mui/x-date-pickers@7.23.6`.
 
 #### `@mui/x-charts@7.23.6`
 
-- [charts]
+- [charts] Improve React 19 support (#16048) @LukasTy
+- [charts] Fix 301 redirection in the API documentation @oliviertassinari
 
 #### `@mui/x-charts-pro@7.23.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -63,7 +66,7 @@ Same changes as in `@mui/x-charts@7.23.6`.
 
 #### `@mui/x-tree-view@7.23.6`
 
-No changes since `@mui/x-tree-view-pro@v7.23.5`.
+- [TreeView] Improve React 19 support (#16048) @LukasTy
 
 #### `@mui/x-tree-view-pro@7.23.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -74,12 +77,10 @@ Same changes as in `@mui/x-tree-view@7.23.6`.
 - [docs] Fix `EditingWithDatePickers` demo (#16047) @k-rajat19
 - [docs] Fix doc warning for automatic children selection on tree view (#16037) @flaviendelangle
 - [docs] Fix non-existing "adapter" property of `LocalizationProvider` (#16088) @tomashauser
-- [docs] Fix 301 redirection @oliviertassinari
 
 ### Core
 
 - [core] Clarify the release strategy (#16012) @MBilalShafi
-- [core] Improve React 19 support (#16048) @LukasTy
 - [core] Update the `release:version` docs (#16040) @cherniavskii
 
 ## 7.23.5
