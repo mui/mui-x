@@ -96,7 +96,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
   });
 
   it('should re-fetch the data on filter change', async () => {
-    const { setProps } = render(<TestDataSource />);
+    render(<TestDataSource />);
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
