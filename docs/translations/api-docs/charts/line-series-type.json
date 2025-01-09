@@ -23,6 +23,9 @@
     "label": {
       "description": "The label to display on the tooltip or the legend. It can be a string or a function."
     },
+    "labelMarkType": {
+      "description": "Defines the mark type for the series.<br /><br />There is a default mark type for each series type.<br /><br />It allows custom values which will be passed to the mark component if it was customized."
+    },
     "shape": {
       "description": "The shape of the mark elements.<br />Notice that using something else than &#39;circle&#39; will render &lt;path /&gt; instead of &lt;circle /&gt; leading to a small performance decrease."
     },

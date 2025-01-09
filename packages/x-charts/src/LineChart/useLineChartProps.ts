@@ -4,7 +4,7 @@ import { ChartsAxisProps } from '../ChartsAxis';
 import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPathProps } from '../ChartsClipPath';
 import { ChartsGridProps } from '../ChartsGrid';
-import { ChartsLegendProps } from '../ChartsLegend';
+import { ChartsLegendSlotExtension } from '../ChartsLegend';
 import { ChartsOnAxisClickHandlerProps } from '../ChartsOnAxisClickHandler';
 import { ChartsOverlayProps } from '../ChartsOverlay';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
@@ -14,6 +14,8 @@ import type { LineChartProps } from './LineChart';
 import { LineHighlightPlotProps } from './LineHighlightPlot';
 import { LinePlotProps } from './LinePlot';
 import { MarkPlotProps } from './MarkPlot';
+import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
+import { calculateMargins } from '../internals/calculateMargins';
 
 /**
  * A helper function that extracts LineChartProps from the input props
@@ -68,7 +70,7 @@ export const useLineChartProps = (props: LineChartProps) => {
     })),
     width,
     height,
-    margin,
+    margin: calculateMargins({ margin, hideLegend, slotProps, series }),
     colors,
     dataset,
     xAxis: xAxis ?? [
@@ -82,7 +84,6 @@ export const useLineChartProps = (props: LineChartProps) => {
       },
     ],
     yAxis,
-    sx,
     highlightedItem,
     onHighlightChange,
     disableAxisListener:
@@ -155,12 +156,19 @@ export const useLineChartProps = (props: LineChartProps) => {
     slotProps,
   };
 
-  const legendProps: ChartsLegendProps = {
+  const legendProps: ChartsLegendSlotExtension = {
     slots,
     slotProps,
   };
 
+  const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {
+    sx,
+    legendPosition: props.slotProps?.legend?.position,
+    legendDirection: props.slotProps?.legend?.direction,
+  };
+
   return {
+    chartsWrapperProps,
     chartContainerProps,
     axisClickHandlerProps,
     gridProps,

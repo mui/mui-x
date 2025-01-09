@@ -35,6 +35,7 @@
     "highlightScope": { "type": { "description": "Partial&lt;HighlightScope&gt;" } },
     "id": { "type": { "description": "SeriesId" } },
     "innerRadius": { "type": { "description": "number | string" }, "default": "0" },
+    "labelMarkType": { "type": { "description": "ChartsLabelMarkProps['type']" } },
     "outerRadius": { "type": { "description": "number | string" }, "default": "'100%'" },
     "paddingAngle": { "type": { "description": "number" }, "default": "0" },
     "sortingValues": { "type": { "description": "ChartsPieSorting" }, "default": "'none'" },

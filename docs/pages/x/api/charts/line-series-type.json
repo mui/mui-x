@@ -19,6 +19,7 @@
     "label": {
       "type": { "description": "string | ((location: 'tooltip' | 'legend') =&gt; string)" }
     },
+    "labelMarkType": { "type": { "description": "ChartsLabelMarkProps['type']" } },
     "shape": {
       "type": {
         "description": "'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye'"
