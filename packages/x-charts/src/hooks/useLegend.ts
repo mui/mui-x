@@ -16,7 +16,7 @@ const legendGetter: { [T in ChartSeriesType]?: LegendGetter<T> } = {
   pie: getPieLegend,
 };
 
-export function getSeriesToDisplay(series: ProcessedSeries) {
+function getSeriesToDisplay(series: ProcessedSeries) {
   return (Object.keys(series) as ChartSeriesType[]).flatMap(
     <T extends ChartSeriesType>(seriesType: T) => {
       const getter = legendGetter[seriesType as T];
