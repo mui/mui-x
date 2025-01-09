@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { useTheme, type Theme } from '@mui/material/styles';
 import { stylesToString } from './stylesToString';
 import { transformMaterialUITheme } from './transformVariables';
