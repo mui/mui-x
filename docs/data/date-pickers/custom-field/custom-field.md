@@ -258,7 +258,7 @@ You can use the `useValidation` hook to check if the current value passed to you
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 
 const {
-  // The error associated to the current value.
+  // The error associated with the current value.
   // i.e.: "minDate" if `props.value < props.minDate`.
   validationError,
   // `true` if the value is invalid.
