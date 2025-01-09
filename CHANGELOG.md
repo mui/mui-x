@@ -51,7 +51,7 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.7`, plus:
 
 From https://github.com/mui/mui-x/pull/15948
 
-### Breaking changes
+#### Breaking changes
 
 - The component passed to the `layout` slot no longer receives the `value`, `onChange` and `onSelectShortcut` props — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#slot-layout).
 - The component passed to the `toolbar` slot no longer receives the `value`, `onChange` and `isLandscape` props — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#slot-toolbar).
@@ -84,7 +84,7 @@ Same changes as in `@mui/x-date-pickers@8.0.0-alpha.7`.
 
 ### Charts
 
-### Breaking changes
+#### Breaking changes
 
 - Removed `DefaultChartsLegend` component, since it is now easier to create custom legends — [Learn more](https://next.mui.com/x/react-charts/components/#html-components).
 - The default legend is now an HTML element and can be styled more easily.
