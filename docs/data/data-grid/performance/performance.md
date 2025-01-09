@@ -2,13 +2,15 @@
 
 <p class="description">Follow these recommendations to improve your Data Grid's performance.</p>
 
+The Data Grid is a complex component that renders many elements, and you can inadvertantly introduce performance issues by triggering unnecessary re-renders.
+This guide describes best practices for implementing your Data Grid to avoid common problems.
+
 ## Maintain a stable reference when passing props
 
-The Data Grid is a complex component that renders many elements. 
 As a general rule, all the non-primitive props should keep a stable reference between renders to avoid unnecessary re-renders.
 
-This is especially important for the `columns` prop. 
-The columns are designed to be definitions that never change once the component is mounted. 
+This is especially important for the `columns` prop.
+The columns are designed to be definitions that never change once the component is mounted.
 Otherwise, you risk losing elements like column width or order.
 
 There are two ways to maintain a stable reference:
@@ -61,9 +63,9 @@ There are two ways to maintain a stable reference:
 
 ## Extract static objects and memoize root props
 
-The Data Grid component uses `React.memo` to optimize its performance, which means itself and its subcomponents only re-render when their props change. 
-But it's very easy to cause unnecessary re-renders if the root props of your Data Grid aren't memoized. 
-Take the example below, the `slots` and `initialState` objects are re-created on every render, which means the Data Grid itself has no choice but to re-render as well.
+The Data Grid component uses `React.memo` to optimize its performance, which means it and its subcomponents only re-render when their props change.
+But it's very easy to cause unnecessary re-renders if the root props of your Data Grid aren't memoized.
+In the example below, the `slots` and `initialState` objects are re-created on every render, which means the Data Grid itself has no choice but to re-render as well.
 
 ```tsx
 function Component(props) {
@@ -79,8 +81,8 @@ function Component(props) {
 }
 ```
 
-An easy way to prevent re-renders is to extract any object that can be a static object, and to memoize any object that depends on another object. 
-This applies to any prop that is an object or a function.
+An easy way to prevent re-renders is to extract any and all objects that can be static, and to memoize any and all objects that depends other objects.
+This applies to any prop that's an object or a function.
 
 ```tsx
 const slots = {
@@ -99,10 +101,10 @@ function Component(props) {
 }
 ```
 
-## Visualization
+## Visualizing the re-rendering process
 
-The Data Grid memoizes some of its subcomponents to avoid re-rendering more than needed. 
-Below is a visualization thatshows you which cells re-render in reaction to your interaction with the grid.
+The Data Grid memoizes some of its subcomponents to avoid re-rendering more than needed.
+Below is a visualization that shows you which cells re-render in reaction to your interaction with the Grid.
 
 {{"demo": "GridVisualization.js", "bg": "inline", "defaultCodeOpen": false}}
 
