@@ -12,7 +12,7 @@ const legendGetter: LegendGetter<'scatter'> = (params) => {
     }
 
     acc.push({
-      markType: series[seriesId].labelMarkType ?? 'circle',
+      markType: series[seriesId].labelMarkType,
       id: seriesId,
       seriesId,
       color: series[seriesId].color,

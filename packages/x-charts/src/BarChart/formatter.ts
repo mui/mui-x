@@ -57,6 +57,7 @@ const formatter: SeriesFormatter<'bar'> = (params, dataset) => {
       const dataKey = series[id].dataKey;
       completedSeries[id] = {
         layout: 'vertical',
+        labelMarkType: 'square',
         ...series[id],
         data: dataKey
           ? dataset!.map((data) => {

@@ -14,6 +14,7 @@ import { selectorChartsInteractionItem } from '../internals/plugins/featurePlugi
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import { useZAxis } from '../hooks/useZAxis';
+import { ChartsLabelMarkProps } from '../ChartsLabel';
 
 export interface UseItemTooltipReturnValue<T extends ChartSeriesType> {
   identifier: ChartItemIdentifier<T>;
@@ -21,6 +22,7 @@ export interface UseItemTooltipReturnValue<T extends ChartSeriesType> {
   label: string | undefined;
   value: ChartsSeriesConfig[T]['valueType'];
   formattedValue: string | undefined;
+  markType: ChartsLabelMarkProps['type'];
 }
 
 export function useItemTooltip<T extends ChartSeriesType>(): null | UseItemTooltipReturnValue<T> {
@@ -56,28 +58,30 @@ export function useItemTooltip<T extends ChartSeriesType>(): null | UseItemToolt
     const value = { ...point, label };
     const formattedValue = (
       itemSeries.valueFormatter as CommonSeriesType<typeof value>['valueFormatter']
-    )?.(value, { dataIndex: item.dataIndex });
+    )?.(value, { dataIndex: item.dataIndex })!;
 
     return {
-      identifier: item as ChartItemIdentifier<T>,
+      identifier: item,
       color: getColor(item.dataIndex),
       label,
       value,
       formattedValue,
-    } as UseItemTooltipReturnValue<T>;
+      markType: point.labelMarkType ?? itemSeries.labelMarkType,
+    };
   }
 
   const label = getLabel(itemSeries.label, 'tooltip');
   const value = itemSeries.data[item.dataIndex];
   const formattedValue = (
     itemSeries.valueFormatter as CommonSeriesType<typeof value>['valueFormatter']
-  )?.(value, { dataIndex: item.dataIndex });
+  )?.(value, { dataIndex: item.dataIndex })!;
 
   return {
-    identifier: item as ChartItemIdentifier<T>,
+    identifier: item,
     color: getColor(item.dataIndex),
     label,
     value,
     formattedValue,
-  } as UseItemTooltipReturnValue<T>;
+    markType: itemSeries.labelMarkType,
+  };
 }
