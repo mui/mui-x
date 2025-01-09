@@ -103,8 +103,8 @@ const CalendarMonthsCell = React.forwardRef(function CalendarMonthsCell(
     () =>
       utils.isValid(rootContext.value)
         ? isSelected
-        : utils.isSameMonth(rootContext.referenceValue, props.value),
-    [utils, rootContext.value, rootContext.referenceValue, isSelected, props.value],
+        : utils.isSameMonth(baseRootContext.currentDate, props.value),
+    [utils, rootContext.value, baseRootContext.currentDate, isSelected, props.value],
   );
 
   const selectMonth = useEventCallback((newValue: PickerValidDate) => {
@@ -112,10 +112,7 @@ const CalendarMonthsCell = React.forwardRef(function CalendarMonthsCell(
       return;
     }
 
-    const newCleanValue = utils.setMonth(
-      rootContext.value ?? rootContext.referenceValue,
-      utils.getMonth(newValue),
-    );
+    const newCleanValue = utils.setMonth(baseRootContext.currentDate, utils.getMonth(newValue));
 
     const startOfMonth = utils.startOfMonth(newCleanValue);
     const endOfMonth = utils.endOfMonth(newCleanValue);
@@ -139,7 +136,7 @@ const CalendarMonthsCell = React.forwardRef(function CalendarMonthsCell(
 
     if (closestEnabledDate) {
       baseRootContext.setVisibleDate(closestEnabledDate, true);
-      rootContext.setValue(closestEnabledDate, { section: 'month' });
+      baseRootContext.selectDate(closestEnabledDate, { section: 'month' });
     }
   });
 

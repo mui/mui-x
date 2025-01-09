@@ -1,23 +1,29 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { OnErrorProps, PickerManager, PickerValidDate, TimezoneProps } from '../../../../../models';
-import { useValidation } from '../../../../../validation';
 import {
-  ValidateDateProps,
-  ExportedValidateDateProps,
-  validateDate,
-} from '../../../../../validation/validateDate';
-import { FormProps, InferNonNullablePickerValue, PickerValidValue } from '../../../../models';
+  OnErrorProps,
+  PickerChangeImportance,
+  PickerManager,
+  PickerValidDate,
+  TimezoneProps,
+} from '../../../../../models';
+import { useValidation } from '../../../../../validation';
+import { ValidateDateProps, validateDate } from '../../../../../validation/validateDate';
+import { FormProps, PickerValidValue } from '../../../../models';
 import { SECTION_TYPE_GRANULARITY } from '../../../../utils/getDefaultReferenceDate';
+import { singleItemValueManager } from '../../../../utils/valueManagers';
 import { applyDefaultDate } from '../../../../utils/date-utils';
 import { useDefaultDates, useLocalizationContext, useUtils } from '../../../../hooks/useUtils';
 import { useControlledValueWithTimezone } from '../../../../hooks/useValueWithTimezone';
+import { BaseDateValidationProps } from '../../../../models/validation';
 import { useBaseCalendarDaysGridNavigation } from './useBaseCalendarDaysGridsNavigation';
 import { BaseCalendarRootContext } from './BaseCalendarRootContext';
 
-export function useBaseCalendarRoot<TValue extends PickerValidValue, TError>(
-  parameters: useBaseCalendarRoot.Parameters<TValue, TError>,
-) {
+export function useBaseCalendarRoot<
+  TValue extends PickerValidValue,
+  TError,
+  TValidationProps extends Required<BaseDateValidationProps>,
+>(parameters: useBaseCalendarRoot.Parameters<TValue, TError, TValidationProps>) {
   const {
     readOnly = false,
     disabled = false,
@@ -31,27 +37,16 @@ export function useBaseCalendarRoot<TValue extends PickerValidValue, TError>(
     monthPageSize = 1,
     yearPageSize = 1,
     manager,
-    minDate,
-    maxDate,
-    disablePast,
-    disableFuture,
-    shouldDisableDate,
-    shouldDisableMonth,
-    shouldDisableYear,
-    getInitialVisibleDate,
+    getDateToUseForReferenceDate,
+    getNewValueFromNewSelectedDate,
+    getCurrentDateFromValue,
+    getSelectedDatesFromValue,
+    dateValidationProps,
+    valueValidationProps,
   } = parameters;
 
   const utils = useUtils();
   const adapter = useLocalizationContext();
-  const dateValidationProps = useAddDefaultsToDateValidationProps({
-    minDate,
-    maxDate,
-    disablePast,
-    disableFuture,
-    shouldDisableDate,
-    shouldDisableMonth,
-    shouldDisableYear,
-  });
 
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
     name: 'CalendarRoot',
@@ -63,10 +58,10 @@ export function useBaseCalendarRoot<TValue extends PickerValidValue, TError>(
     valueManager: manager.internal_valueManager,
   });
 
-  const referenceValue = React.useMemo(
+  const referenceDate = React.useMemo(
     () => {
-      return manager.internal_valueManager.getInitialReferenceValue({
-        value,
+      return singleItemValueManager.getInitialReferenceValue({
+        value: getDateToUseForReferenceDate(value),
         utils,
         timezone,
         props: dateValidationProps,
@@ -80,24 +75,11 @@ export function useBaseCalendarRoot<TValue extends PickerValidValue, TError>(
   );
 
   const { getValidationErrorForNewValue } = useValidation({
-    // TODO: This is incorrect
-    props: { ...dateValidationProps, onError },
+    props: { ...valueValidationProps, onError },
     value,
     timezone,
     validator: manager.validator,
   });
-
-  const setValue = useEventCallback(
-    (
-      newValue: TValue,
-      context: Pick<useBaseCalendarRoot.ValueChangeHandlerContext<TValue>, 'section'>,
-    ) => {
-      handleValueChange(newValue, {
-        ...context,
-        validationError: getValidationErrorForNewValue(newValue),
-      });
-    },
-  );
 
   const sectionsRef = React.useRef<
     Record<'day' | 'month' | 'year', Record<number, PickerValidDate>>
@@ -130,9 +112,7 @@ export function useBaseCalendarRoot<TValue extends PickerValidValue, TError>(
     return true;
   };
 
-  const [visibleDate, setVisibleDate] = React.useState<PickerValidDate>(() =>
-    getInitialVisibleDate(referenceValue),
-  );
+  const [visibleDate, setVisibleDate] = React.useState<PickerValidDate>(referenceDate);
   const handleVisibleDateChange = useEventCallback(
     (newVisibleDate: PickerValidDate, skipIfAlreadyVisible: boolean) => {
       if (skipIfAlreadyVisible && isDateCellVisible(newVisibleDate)) {
@@ -162,6 +142,29 @@ export function useBaseCalendarRoot<TValue extends PickerValidValue, TError>(
     [adapter, dateValidationProps, timezone],
   );
 
+  const selectDate = useEventCallback<BaseCalendarRootContext['selectDate']>(
+    (selectedDate: PickerValidDate, options) => {
+      const response = getNewValueFromNewSelectedDate({
+        prevValue: value,
+        selectedDate,
+        referenceDate,
+      });
+
+      handleValueChange(response.value, {
+        changeImportance: response.changeImportance,
+        validationError: getValidationErrorForNewValue(response.value),
+        section: options.section,
+      });
+    },
+  );
+
+  const currentDate = getCurrentDateFromValue(value) ?? referenceDate;
+
+  const selectedDates = React.useMemo(
+    () => getSelectedDatesFromValue(value),
+    [getSelectedDatesFromValue, value],
+  );
+
   const context: BaseCalendarRootContext = React.useMemo(
     () => ({
       timezone,
@@ -170,12 +173,15 @@ export function useBaseCalendarRoot<TValue extends PickerValidValue, TError>(
       autoFocus,
       isDateInvalid,
       visibleDate,
+      currentDate,
+      selectedDates,
       setVisibleDate: handleVisibleDateChange,
       monthPageSize,
       yearPageSize,
       applyDayGridKeyboardNavigation,
       registerDaysGridCells,
       registerSection,
+      selectDate,
       dateValidationProps,
     }),
     [
@@ -185,6 +191,8 @@ export function useBaseCalendarRoot<TValue extends PickerValidValue, TError>(
       autoFocus,
       isDateInvalid,
       visibleDate,
+      currentDate,
+      selectedDates,
       handleVisibleDateChange,
       monthPageSize,
       yearPageSize,
@@ -192,13 +200,12 @@ export function useBaseCalendarRoot<TValue extends PickerValidValue, TError>(
       registerDaysGridCells,
       registerSection,
       dateValidationProps,
+      selectDate,
     ],
   );
 
   return {
     value,
-    setValue,
-    referenceValue,
     setVisibleDate,
     isDateCellVisible,
     context,
@@ -206,21 +213,10 @@ export function useBaseCalendarRoot<TValue extends PickerValidValue, TError>(
 }
 
 export namespace useBaseCalendarRoot {
-  export interface Parameters<TValue extends PickerValidValue, TError>
+  export interface PublicParameters<TValue extends PickerValidValue, TError>
     extends TimezoneProps,
       FormProps,
-      OnErrorProps<TValue, TError>,
-      ExportedValidateDateProps {
-    /**
-     * The manager of the calendar (uses `useDateManager` for Calendar and `useDateRangeManager` for RangeCalendar).
-     */
-    manager: PickerManager<TValue, any, TError, any, any>;
-    /**
-     * TODO: Write description
-     * @param {InferNonNullablePickerValue<TValue>} referenceValue The reference value to get the initial visible date from.
-     * @returns {PickerValidDate | null} The initial visible date.
-     */
-    getInitialVisibleDate: (referenceValue: InferNonNullablePickerValue<TValue>) => PickerValidDate;
+      OnErrorProps<TValue, TError> {
     /**
      * The controlled value that should be selected.
      * To render an uncontrolled Date Calendar, use the `defaultValue` prop instead.
@@ -266,6 +262,51 @@ export namespace useBaseCalendarRoot {
     yearPageSize?: number;
   }
 
+  export interface Parameters<
+    TValue extends PickerValidValue,
+    TError,
+    TValidationProps extends Required<BaseDateValidationProps>,
+  > extends PublicParameters<TValue, TError> {
+    /**
+     * The manager of the calendar (uses `useDateManager` for Calendar and `useDateRangeManager` for RangeCalendar).
+     */
+    manager: PickerManager<TValue, any, TError, any, any>;
+    /**
+     * The props used to validate a single date.
+     */
+    dateValidationProps: ValidateDateProps;
+    /**
+     * The props used to validate the value.
+     */
+    valueValidationProps: TValidationProps;
+    /**
+     * TODO: Write description.
+     * @param {TValue} value The value to get the reference date from.
+     * @returns {PickerValidDate | null} The initial visible date.
+     */
+    getDateToUseForReferenceDate: (value: TValue) => PickerValidDate | null;
+    /**
+     * TODO: Write description.
+     * @param {GetNewValueFromNewSelectedDateParameters} parameters The parameters to get the new value from the new selected date.
+     * @returns {GetNewValueFromNewSelectedDateReturnValue<TValue>} The new value and its change importance.
+     */
+    getNewValueFromNewSelectedDate: (
+      parameters: GetNewValueFromNewSelectedDateParameters<TValue>,
+    ) => GetNewValueFromNewSelectedDateReturnValue<TValue>;
+    /**
+     * TODO: Write description.
+     * @param {TValue} value The current value.
+     * @returns {PickerValidDate | null} The current date.
+     */
+    getCurrentDateFromValue: (value: TValue) => PickerValidDate | null;
+    /**
+     * TODO: Write description.
+     * @param {TValue} value The current value.
+     * @returns {PickerValidDate[]} The selected dates.
+     */
+    getSelectedDatesFromValue: (value: TValue) => PickerValidDate[];
+  }
+
   export interface ValueChangeHandlerContext<TError> {
     /**
      * The section handled by the UI that triggered the change.
@@ -275,29 +316,51 @@ export namespace useBaseCalendarRoot {
      * The validation error associated to the new value.
      */
     validationError: TError;
+    /**
+     * The importance of the change.
+     */
+    changeImportance: PickerChangeImportance;
   }
 
   export interface RegisterSectionParameters {
     type: 'day' | 'month' | 'year';
     value: PickerValidDate;
   }
+
+  export interface GetNewValueFromNewSelectedDateParameters<TValue extends PickerValidValue> {
+    /**
+     * The value before the change.
+     */
+    prevValue: TValue;
+    /**
+     * The date to select.
+     */
+    selectedDate: PickerValidDate;
+    /**
+     * The reference date.
+     */
+    referenceDate: PickerValidDate;
+  }
+
+  export interface GetNewValueFromNewSelectedDateReturnValue<TValue extends PickerValidValue> {
+    /**
+     * The new value.
+     */
+    value: TValue;
+    /**
+     * The importance of the change.
+     */
+    changeImportance: PickerChangeImportance;
+  }
 }
 
-export function useAddDefaultsToDateValidationProps(
-  validationDate: ExportedValidateDateProps,
-): ValidateDateProps {
+export function useAddDefaultsToBaseDateValidationProps(
+  validationDate: BaseDateValidationProps,
+): Required<BaseDateValidationProps> {
   const utils = useUtils();
   const defaultDates = useDefaultDates();
 
-  const {
-    disablePast,
-    disableFuture,
-    minDate,
-    maxDate,
-    shouldDisableDate,
-    shouldDisableMonth,
-    shouldDisableYear,
-  } = validationDate;
+  const { disablePast, disableFuture, minDate, maxDate } = validationDate;
 
   return React.useMemo(
     () => ({
@@ -305,20 +368,7 @@ export function useAddDefaultsToDateValidationProps(
       disableFuture: disableFuture ?? false,
       minDate: applyDefaultDate(utils, minDate, defaultDates.minDate),
       maxDate: applyDefaultDate(utils, maxDate, defaultDates.maxDate),
-      shouldDisableDate,
-      shouldDisableMonth,
-      shouldDisableYear,
     }),
-    [
-      disablePast,
-      disableFuture,
-      minDate,
-      maxDate,
-      shouldDisableDate,
-      shouldDisableMonth,
-      shouldDisableYear,
-      utils,
-      defaultDates,
-    ],
+    [disablePast, disableFuture, minDate, maxDate, utils, defaultDates],
   );
 }

@@ -2,8 +2,8 @@ export { RangeCalendarRoot as Root } from './root/RangeCalendarRoot';
 
 // // Days
 export { RangeCalendarDaysGrid as DaysGrid } from './days-grid/RangeCalendarDaysGrid';
-// export { CalendarDaysGridHeader as DaysGridHeader } from './days-grid-header/CalendarDaysGridHeader';
-// export { CalendarDaysGridHeaderCell as DaysGridHeaderCell } from './days-grid-header-cell/CalendarDaysGridHeaderCell';
+export { RangeCalendarDaysGridHeader as DaysGridHeader } from './days-grid-header/RangeCalendarDaysGridHeader';
+export { RangeCalendarDaysGridHeaderCell as DaysGridHeaderCell } from './days-grid-header-cell/RangeCalendarDaysGridHeaderCell';
 export { RangeCalendarDaysGridBody as DaysGridBody } from './days-grid-body/RangeCalendarDaysGridBody';
 export { RangeCalendarDaysWeekRow as DaysWeekRow } from './days-week-row/RangeCalendarDaysWeekRow';
 // export { CalendarDaysCell as DaysCell } from './days-cell/CalendarDaysCell';
@@ -18,6 +18,6 @@ export { RangeCalendarDaysWeekRow as DaysWeekRow } from './days-week-row/RangeCa
 // export { CalendarYearsGrid as YearsGrid } from './years-grid/CalendarYearsGrid';
 // export { CalendarYearsCell as YearsCell } from './years-cell/CalendarYearsCell';
 
-// // Navigation
-// export { CalendarSetVisibleMonth as SetVisibleMonth } from './set-visible-month/CalendarSetVisibleMonth';
-// export { CalendarSetVisibleYear as SetVisibleYear } from './set-visible-year/CalendarSetVisibleYear';
+// Navigation
+export { RangeCalendarSetVisibleMonth as SetVisibleMonth } from './set-visible-month/RangeCalendarSetVisibleMonth';
+export { RangeCalendarSetVisibleYear as SetVisibleYear } from './set-visible-year/RangeCalendarSetVisibleYear';

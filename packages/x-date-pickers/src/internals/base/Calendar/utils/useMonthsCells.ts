@@ -2,7 +2,7 @@ import * as React from 'react';
 import { PickerValidDate } from '../../../../models';
 import { getMonthsInYear } from '../../../utils/date-utils';
 import { useUtils } from '../../../hooks/useUtils';
-import { getFirstEnabledYear, getLastEnabledYear } from './date';
+import { getFirstEnabledYear, getLastEnabledYear } from '../../utils/base-calendar/utils/date';
 import { useBaseCalendarRootContext } from '../../utils/base-calendar/root/BaseCalendarRootContext';
 
 export function useMonthsCells(): useMonthsCells.ReturnValue {

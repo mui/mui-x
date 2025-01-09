@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { PickerValidDate } from '../../../../models';
-import { GenericHTMLProps } from '../../base-utils/types';
-import { mergeReactProps } from '../../base-utils/mergeReactProps';
-import { useUtils } from '../../../hooks/useUtils';
+import { PickerValidDate } from '../../../../../models';
+import { GenericHTMLProps } from '../../../base-utils/types';
+import { mergeReactProps } from '../../../base-utils/mergeReactProps';
+import { useUtils } from '../../../../hooks/useUtils';
 
-export function useCalendarDaysGridHeaderCell(
-  parameters: useCalendarDaysGridHeaderCell.Parameters,
+export function useBaseCalendarDaysGridHeaderCell(
+  parameters: useBaseCalendarDaysGridHeaderCell.Parameters,
 ) {
   const utils = useUtils();
 
@@ -33,7 +33,7 @@ export function useCalendarDaysGridHeaderCell(
   return React.useMemo(() => ({ getDaysGridHeaderCellProps }), [getDaysGridHeaderCellProps]);
 }
 
-export namespace useCalendarDaysGridHeaderCell {
+export namespace useBaseCalendarDaysGridHeaderCell {
   export interface Parameters {
     value: PickerValidDate;
     /**

@@ -3,7 +3,6 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { PickerValidDate } from '../../../../../models';
 import { useUtils } from '../../../../hooks/useUtils';
 import { mergeDateAndTime } from '../../../../utils/date-utils';
-import { useCalendarRootContext } from '../../../Calendar/root/CalendarRootContext';
 import { GenericHTMLProps } from '../../../base-utils/types';
 import { mergeReactProps } from '../../../base-utils/mergeReactProps';
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
@@ -12,7 +11,6 @@ import { BaseCalendarDaysGridContext } from './BaseCalendarDaysGridContext';
 export function useBaseCalendarDaysGrid(parameters: useBaseCalendarDaysGrid.Parameters) {
   const { fixedWeekNumber, offset = 0 } = parameters;
   const utils = useUtils();
-  const rootContext = useCalendarRootContext();
   const baseRootContext = useBaseCalendarRootContext();
 
   const currentMonth = React.useMemo(() => {
@@ -53,24 +51,34 @@ export function useBaseCalendarDaysGrid(parameters: useBaseCalendarDaysGrid.Para
       return;
     }
 
-    const newCleanValue = mergeDateAndTime(
-      utils,
-      newValue,
-      rootContext.value ?? rootContext.referenceValue,
-    );
+    const newCleanValue = mergeDateAndTime(utils, newValue, baseRootContext.currentDate);
 
-    rootContext.setValue(newCleanValue, { section: 'day' });
+    baseRootContext.selectDate(newCleanValue, { section: 'day' });
   });
 
-  const tabbableDay = React.useMemo(() => {
+  const tabbableDays = React.useMemo(() => {
     const flatDays = daysGrid.flat();
-    const tempTabbableDay = rootContext.value ?? rootContext.referenceValue;
-    if (flatDays.some((day) => utils.isSameDay(day, tempTabbableDay))) {
-      return tempTabbableDay;
+
+    let tempTabbableDays: PickerValidDate[] = [];
+    tempTabbableDays = flatDays.filter((day) =>
+      baseRootContext.selectedDates.some((selectedDay) => utils.isSameDay(day, selectedDay)),
+    );
+
+    if (tempTabbableDays.length === 0) {
+      tempTabbableDays = flatDays.filter((day) =>
+        utils.isSameDay(day, baseRootContext.currentDate),
+      );
     }
 
-    return flatDays.find((day) => utils.isSameMonth(day, currentMonth)) ?? null;
-  }, [rootContext.value, rootContext.referenceValue, daysGrid, utils, currentMonth]);
+    if (tempTabbableDays.length === 0) {
+      const firstDayInMonth = flatDays.find((day) => utils.isSameMonth(day, currentMonth));
+      if (firstDayInMonth != null) {
+        tempTabbableDays = [firstDayInMonth];
+      }
+    }
+
+    return tempTabbableDays;
+  }, [baseRootContext.currentDate, baseRootContext.selectedDates, daysGrid, utils, currentMonth]);
 
   const registerSection = baseRootContext.registerSection;
   React.useEffect(() => {
@@ -78,8 +86,8 @@ export function useBaseCalendarDaysGrid(parameters: useBaseCalendarDaysGrid.Para
   }, [registerSection, currentMonth]);
 
   const context: BaseCalendarDaysGridContext = React.useMemo(
-    () => ({ selectDay, daysGrid, currentMonth, tabbableDay }),
-    [selectDay, daysGrid, currentMonth, tabbableDay],
+    () => ({ selectDay, daysGrid, currentMonth, tabbableDays }),
+    [selectDay, daysGrid, currentMonth, tabbableDays],
   );
 
   return React.useMemo(() => ({ getDaysGridProps, context }), [getDaysGridProps, context]);

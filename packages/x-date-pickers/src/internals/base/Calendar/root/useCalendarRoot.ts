@@ -1,30 +1,67 @@
 import * as React from 'react';
-import { DateValidationError } from '../../../../models';
+import { DateValidationError, PickerValidDate } from '../../../../models';
 import { useDateManager } from '../../../../managers';
-import { ExportedValidateDateProps } from '../../../../validation/validateDate';
+import { ExportedValidateDateProps, ValidateDateProps } from '../../../../validation/validateDate';
 import { useUtils } from '../../../hooks/useUtils';
 import { PickerValue } from '../../../models';
 import { CalendarRootContext } from './CalendarRootContext';
 import { mergeReactProps } from '../../base-utils/mergeReactProps';
 import { GenericHTMLProps } from '../../base-utils/types';
-import { useBaseCalendarRoot } from '../../utils/base-calendar/root/useBaseCalendarRoot';
+import {
+  useAddDefaultsToBaseDateValidationProps,
+  useBaseCalendarRoot,
+} from '../../utils/base-calendar/root/useBaseCalendarRoot';
 
 export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
-  const { ...baseParameters } = parameters;
+  const {
+    // Validation props
+    minDate,
+    maxDate,
+    disablePast,
+    disableFuture,
+    shouldDisableDate,
+    shouldDisableMonth,
+    shouldDisableYear,
+    // Parameters forwarded to `useBaseCalendarRoot`
+    ...baseParameters
+  } = parameters;
   const utils = useUtils();
   const manager = useDateManager();
 
+  const baseDateValidationProps = useAddDefaultsToBaseDateValidationProps({
+    minDate,
+    maxDate,
+    disablePast,
+    disableFuture,
+  });
+
+  const validationProps = React.useMemo<ValidateDateProps>(
+    () => ({
+      ...baseDateValidationProps,
+      shouldDisableDate,
+      shouldDisableMonth,
+      shouldDisableYear,
+    }),
+    [baseDateValidationProps, shouldDisableDate, shouldDisableMonth, shouldDisableYear],
+  );
+
   const {
     value,
-    setValue,
-    referenceValue,
     setVisibleDate,
     isDateCellVisible,
     context: baseContext,
   } = useBaseCalendarRoot({
     ...baseParameters,
     manager,
-    getInitialVisibleDate: (referenceValueParam) => referenceValueParam,
+    dateValidationProps: validationProps,
+    valueValidationProps: validationProps,
+    getDateToUseForReferenceDate: (initialValue) => initialValue,
+    getNewValueFromNewSelectedDate: ({ selectedDate }) => ({
+      value: selectedDate,
+      changeImportance: 'accept',
+    }),
+    getCurrentDateFromValue: (currentValue) => currentValue,
+    getSelectedDatesFromValue,
   });
 
   const [prevValue, setPrevValue] = React.useState<PickerValue>(value);
@@ -38,10 +75,8 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
   const context: CalendarRootContext = React.useMemo(
     () => ({
       value,
-      setValue,
-      referenceValue,
     }),
-    [value, setValue, referenceValue],
+    [value],
   );
 
   const getRootProps = React.useCallback((externalProps: GenericHTMLProps) => {
@@ -56,9 +91,10 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
 
 export namespace useCalendarRoot {
   export interface Parameters
-    extends Omit<
-        useBaseCalendarRoot.Parameters<PickerValue, DateValidationError>,
-        'manager' | 'getInitialVisibleDate'
-      >,
+    extends useBaseCalendarRoot.PublicParameters<PickerValue, DateValidationError>,
       ExportedValidateDateProps {}
+}
+
+function getSelectedDatesFromValue(value: PickerValue): PickerValidDate[] {
+  return value == null ? [] : [value];
 }

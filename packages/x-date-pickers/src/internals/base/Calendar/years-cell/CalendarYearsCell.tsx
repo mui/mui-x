@@ -100,8 +100,8 @@ const CalendarYearsCell = React.forwardRef(function CalendarsYearCell(
     () =>
       utils.isValid(rootContext.value)
         ? isSelected
-        : utils.isSameYear(rootContext.referenceValue, props.value),
-    [utils, rootContext.value, rootContext.referenceValue, isSelected, props.value],
+        : utils.isSameYear(baseRootContext.currentDate, props.value),
+    [utils, rootContext.value, baseRootContext.currentDate, isSelected, props.value],
   );
 
   const selectYear = useEventCallback((newValue: PickerValidDate) => {
@@ -109,10 +109,7 @@ const CalendarYearsCell = React.forwardRef(function CalendarsYearCell(
       return;
     }
 
-    const newCleanValue = utils.setYear(
-      rootContext.value ?? rootContext.referenceValue,
-      utils.getYear(newValue),
-    );
+    const newCleanValue = utils.setYear(baseRootContext.currentDate, utils.getYear(newValue));
 
     const startOfYear = utils.startOfYear(newCleanValue);
     const endOfYear = utils.endOfYear(newCleanValue);
@@ -135,7 +132,7 @@ const CalendarYearsCell = React.forwardRef(function CalendarsYearCell(
       : newCleanValue;
 
     if (closestEnabledDate) {
-      rootContext.setValue(closestEnabledDate, { section: 'year' });
+      baseRootContext.selectDate(closestEnabledDate, { section: 'year' });
     }
   });
 

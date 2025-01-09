@@ -66,7 +66,7 @@ const CalendarDaysCell = React.forwardRef(function CalendarDaysCell(
 ) {
   const rootContext = useCalendarRootContext();
   const baseRootContext = useBaseCalendarRootContext();
-  const monthsListContext = useBaseCalendarDaysGridContext();
+  const baseDaysGridContext = useBaseCalendarDaysGridContext();
   const { ref: listItemRef, index: colIndex } = useCompositeListItem();
   const utils = useUtils();
   const mergedRef = useForkRef(forwardedRef, listItemRef);
@@ -78,10 +78,10 @@ const CalendarDaysCell = React.forwardRef(function CalendarDaysCell(
 
   const isOutsideCurrentMonth = React.useMemo(
     () =>
-      monthsListContext.currentMonth == null
+      baseDaysGridContext.currentMonth == null
         ? false
-        : !utils.isSameMonth(monthsListContext.currentMonth, props.value),
-    [monthsListContext.currentMonth, props.value, utils],
+        : !utils.isSameMonth(baseDaysGridContext.currentMonth, props.value),
+    [baseDaysGridContext.currentMonth, props.value, utils],
   );
 
   const isDateInvalid = baseRootContext.isDateInvalid;
@@ -96,11 +96,8 @@ const CalendarDaysCell = React.forwardRef(function CalendarDaysCell(
   }, [baseRootContext.disabled, isInvalid]);
 
   const isTabbable = React.useMemo(
-    () =>
-      monthsListContext.tabbableDay == null
-        ? false
-        : utils.isSameDay(monthsListContext.tabbableDay, props.value),
-    [utils, monthsListContext.tabbableDay, props.value],
+    () => baseDaysGridContext.tabbableDays.some((day) => utils.isSameDay(day, props.value)),
+    [utils, baseDaysGridContext.tabbableDays, props.value],
   );
 
   const ctx = React.useMemo<useCalendarDaysCell.Context>(
@@ -111,7 +108,7 @@ const CalendarDaysCell = React.forwardRef(function CalendarDaysCell(
       isInvalid,
       isTabbable,
       isOutsideCurrentMonth,
-      selectDay: monthsListContext.selectDay,
+      selectDay: baseDaysGridContext.selectDay,
     }),
     [
       isSelected,
@@ -119,7 +116,7 @@ const CalendarDaysCell = React.forwardRef(function CalendarDaysCell(
       isInvalid,
       isTabbable,
       isOutsideCurrentMonth,
-      monthsListContext.selectDay,
+      baseDaysGridContext.selectDay,
       colIndex,
     ],
   );

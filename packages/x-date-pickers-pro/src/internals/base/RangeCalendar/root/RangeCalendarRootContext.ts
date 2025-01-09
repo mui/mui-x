@@ -1,25 +1,8 @@
 import * as React from 'react';
-import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
-// eslint-disable-next-line no-restricted-imports
-import { useBaseCalendarRoot } from '@mui/x-date-pickers/internals/base/utils/base-calendar/root/useBaseCalendarRoot';
-import { ValidateDateRangeProps } from '../../../../validation';
+import { PickerRangeValue } from '@mui/x-date-pickers/internals';
 
 export interface RangeCalendarRootContext {
-  /**
-   * The current value of the calendar.
-   */
   value: PickerRangeValue;
-  /**
-   * Set the current value of the calendar.
-   * @param {PickerRangeValue} value The new value of the calendar.
-   * @param {Pick<useBaseCalendarRoot.ValueChangeHandlerContext<PickerRangeValue>, 'section'>} options The options to customize the behavior of this update.
-   */
-  setValue: (
-    value: PickerRangeValue,
-    options: Pick<useBaseCalendarRoot.ValueChangeHandlerContext<PickerRangeValue>, 'section'>,
-  ) => void;
-  referenceValue: PickerNonNullableRangeValue;
-  validationProps: ValidateDateRangeProps;
 }
 
 export const RangeCalendarRootContext = React.createContext<RangeCalendarRootContext | undefined>(

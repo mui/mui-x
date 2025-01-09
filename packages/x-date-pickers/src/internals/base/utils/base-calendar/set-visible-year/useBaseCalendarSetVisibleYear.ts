@@ -1,9 +1,11 @@
 import * as React from 'react';
-import { PickerValidDate } from '../../../../models';
-import { GenericHTMLProps } from '../../base-utils/types';
-import { mergeReactProps } from '../../base-utils/mergeReactProps';
+import { PickerValidDate } from '../../../../../models';
+import { GenericHTMLProps } from '../../../base-utils/types';
+import { mergeReactProps } from '../../../base-utils/mergeReactProps';
 
-export function useCalendarSetVisibleYear(parameters: useCalendarSetVisibleYear.Parameters) {
+export function useBaseCalendarSetVisibleYear(
+  parameters: useBaseCalendarSetVisibleYear.Parameters,
+) {
   const { ctx } = parameters;
 
   const getSetVisibleYearProps = React.useCallback(
@@ -20,7 +22,7 @@ export function useCalendarSetVisibleYear(parameters: useCalendarSetVisibleYear.
   return React.useMemo(() => ({ getSetVisibleYearProps }), [getSetVisibleYearProps]);
 }
 
-export namespace useCalendarSetVisibleYear {
+export namespace useBaseCalendarSetVisibleYear {
   export interface Parameters {
     /**
      * The year to navigate to.

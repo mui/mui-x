@@ -1,10 +1,13 @@
 'use client';
 import * as React from 'react';
-import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
-import { useBaseCalendarDaysGridHeaderCell } from '../../utils/base-calendar/days-grid-header-cell/useBaseCalendarDaysGridHeaderCell';
-import { BaseUIComponentProps } from '../../base-utils/types';
+// eslint-disable-next-line no-restricted-imports
+import { BaseUIComponentProps } from '@mui/x-date-pickers/internals/base/base-utils/types';
+// eslint-disable-next-line no-restricted-imports
+import { useComponentRenderer } from '@mui/x-date-pickers/internals/base/base-utils/useComponentRenderer';
+// eslint-disable-next-line no-restricted-imports
+import { useBaseCalendarDaysGridHeaderCell } from '@mui/x-date-pickers/internals/base/utils/base-calendar/days-grid-header-cell/useBaseCalendarDaysGridHeaderCell';
 
-const CalendarDaysGridHeaderCell = React.forwardRef(function CalendarDaysGridHeaderCell(
+const RangeCalendarDaysGridHeaderCell = React.forwardRef(function RangeCalendarDaysGridHeaderCell(
   props: CalendarDaysGridHeaderCell.Props,
   forwardedRef: React.ForwardedRef<HTMLSpanElement>,
 ) {
@@ -33,6 +36,6 @@ export namespace CalendarDaysGridHeaderCell {
       BaseUIComponentProps<'span', State> {}
 }
 
-const MemoizedCalendarDaysGridHeaderCell = React.memo(CalendarDaysGridHeaderCell);
+const MemoizedRangeCalendarDaysGridHeaderCell = React.memo(RangeCalendarDaysGridHeaderCell);
 
-export { MemoizedCalendarDaysGridHeaderCell as CalendarDaysGridHeaderCell };
+export { MemoizedRangeCalendarDaysGridHeaderCell as RangeCalendarDaysGridHeaderCell };

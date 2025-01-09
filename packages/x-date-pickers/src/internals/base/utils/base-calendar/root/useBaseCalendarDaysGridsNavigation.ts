@@ -11,7 +11,7 @@ import {
   NavigateInGridChangePage,
   PageGridNavigationTarget,
 } from '../../../Calendar/utils/keyboardNavigation';
-import { getFirstEnabledMonth, getLastEnabledMonth } from '../../../Calendar/utils/date';
+import { getFirstEnabledMonth, getLastEnabledMonth } from '../utils/date';
 import { BaseCalendarRootContext } from './BaseCalendarRootContext';
 
 /**

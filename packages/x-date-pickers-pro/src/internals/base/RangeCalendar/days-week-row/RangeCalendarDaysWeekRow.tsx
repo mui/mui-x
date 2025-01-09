@@ -37,7 +37,7 @@ const InnerRangeCalendarDaysWeekRow = React.forwardRef(function InnerRangeCalend
 
 const MemoizedInnerRangeCalendarDaysWeekRow = React.memo(InnerRangeCalendarDaysWeekRow);
 
-const CalendarDaysWeekRow = React.forwardRef(function CalendarDaysWeekRow(
+const RangeCalendarDaysWeekRow = React.forwardRef(function CalendarDaysWeekRow(
   props: RangeCalendarDaysWeekRow.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
@@ -57,4 +57,4 @@ interface InnerRangeCalendarDaysWeekRowProps
   extends Omit<BaseUIComponentProps<'div', RangeCalendarDaysWeekRow.State>, 'children'>,
     useBaseCalendarDaysWeekRow.Parameters {}
 
-export { CalendarDaysWeekRow };
+export { RangeCalendarDaysWeekRow };

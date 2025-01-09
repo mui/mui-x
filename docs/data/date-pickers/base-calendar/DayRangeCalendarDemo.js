@@ -1,26 +1,33 @@
 import * as React from 'react';
 
+import NoSsr from '@mui/material/NoSsr';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 // eslint-disable-next-line no-restricted-imports
 import {
   RangeCalendar,
-  // useRangeCalendarContext,
+  useRangeCalendarContext,
 } from '@mui/x-date-pickers-pro/internals/base/RangeCalendar';
 import styles from './calendar.module.css';
 
 function Header() {
-  // const { visibleDate } = useRangeCalendarContext();
+  const { visibleDate } = useRangeCalendarContext();
 
   return (
     <header className={styles.Header}>
-      {/* <RangeCalendar.SetVisibleMonth target="previous" className={styles.SetVisibleMonth}>
-         ◀
-        </RangeCalendar.SetVisibleMonth>
-        <span>{visibleDate.format('MMMM YYYY')}</span>
-        <RangeCalendar.SetVisibleMonth target="next" className={styles.SetVisibleMonth}>
-         ▶
-        </RangeCalendar.SetVisibleMonth> */}
+      <RangeCalendar.SetVisibleMonth
+        target="previous"
+        className={styles.SetVisibleMonth}
+      >
+        ◀
+      </RangeCalendar.SetVisibleMonth>
+      <span>{visibleDate.format('MMMM YYYY')}</span>
+      <RangeCalendar.SetVisibleMonth
+        target="next"
+        className={styles.SetVisibleMonth}
+      >
+        ▶
+      </RangeCalendar.SetVisibleMonth>
     </header>
   );
 }
@@ -31,17 +38,17 @@ function DayCalendar(props) {
       <RangeCalendar.Root {...props} className={styles.Root}>
         <Header />
         <RangeCalendar.DaysGrid className={styles.DaysGrid}>
-          {/* <RangeCalendar.DaysGridHeader className={styles.DaysGridHeader}>
-             {({ days }) =>
-               days.map((day) => (
-                 <RangeCalendar.DaysGridHeaderCell
-                   value={day}
-                   key={day.toString()}
-                   className={styles.DaysGridHeaderCell}
-                 />
-               ))
-             }
-            </RangeCalendar.DaysGridHeader> */}
+          <RangeCalendar.DaysGridHeader className={styles.DaysGridHeader}>
+            {({ days }) =>
+              days.map((day) => (
+                <RangeCalendar.DaysGridHeaderCell
+                  value={day}
+                  key={day.toString()}
+                  className={styles.DaysGridHeaderCell}
+                />
+              ))
+            }
+          </RangeCalendar.DaysGridHeader>
           <RangeCalendar.DaysGridBody className={styles.DaysGridBody}>
             {({ weeks }) =>
               weeks.map((week) => (
@@ -77,15 +84,17 @@ function DayCalendar(props) {
 }
 
 export default function DayRangeCalendarDemo() {
-  const [value, setValue] = React.useState(null);
+  const [value, setValue] = React.useState([null, null]);
 
   const handleValueChange = React.useCallback((newValue) => {
     setValue(newValue);
   }, []);
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DayCalendar value={value} onValueChange={handleValueChange} />
-    </LocalizationProvider>
+    <NoSsr>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DayCalendar value={value} onValueChange={handleValueChange} />
+      </LocalizationProvider>
+    </NoSsr>
   );
 }

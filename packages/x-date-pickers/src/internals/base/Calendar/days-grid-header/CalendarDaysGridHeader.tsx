@@ -1,15 +1,15 @@
 'use client';
 import * as React from 'react';
-import { useCalendarDaysGridHeader } from './useCalendarDaysGridHeader';
 import { BaseUIComponentProps } from '../../base-utils/types';
 import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
+import { useBaseCalendarDaysGridHeader } from '../../utils/base-calendar/days-grid-header/useBaseCalendarDaysGridHeader';
 
 const CalendarDaysGridHeader = React.forwardRef(function CalendarDaysGridHeader(
   props: CalendarDaysGridHeader.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, render, children, ...otherProps } = props;
-  const { getDaysGridHeaderProps } = useCalendarDaysGridHeader({
+  const { getDaysGridHeaderProps } = useBaseCalendarDaysGridHeader({
     children,
   });
   const state = React.useMemo(() => ({}), []);
@@ -31,7 +31,7 @@ export namespace CalendarDaysGridHeader {
 
   export interface Props
     extends Omit<BaseUIComponentProps<'div', State>, 'children'>,
-      useCalendarDaysGridHeader.Parameters {}
+      useBaseCalendarDaysGridHeader.Parameters {}
 }
 
 export { CalendarDaysGridHeader };

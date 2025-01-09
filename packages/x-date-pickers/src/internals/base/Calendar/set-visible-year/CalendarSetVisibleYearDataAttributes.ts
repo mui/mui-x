@@ -1,1 +1,1 @@
-export enum CalendarSetVisCalendarSetVisibleYearDataAttributesibleMonthDataAttributes {}
+export enum CalendarSetVisibleYearDataAttributes {}
