@@ -199,7 +199,8 @@
   "resolutions": {
     "react-is": "^19.0.0",
     "@types/node": "^20.17.11",
-    "@mui/internal-markdown": "https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/internal-markdown"
+    "@mui/internal-markdown": "https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/internal-markdown",
+    "@mui/docs": "https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/docs"
   },
   "packageManager": "pnpm@9.15.2",
   "engines": {

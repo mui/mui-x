@@ -8,6 +8,7 @@ overrides:
   react-is: ^19.0.0
   '@types/node': ^20.17.11
   '@mui/internal-markdown': https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/internal-markdown
+  '@mui/docs': https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/docs
 
 patchedDependencies:
   babel-plugin-replace-imports@1.0.2:
@@ -427,8 +428,8 @@ importers:
         specifier: ^11.14.0
         version: 11.14.0(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react@19.0.0)
       '@mui/docs':
-        specifier: 6.3.1
-        version: 6.3.1(blv5x5f4uwinouobypxmqapbba)
+        specifier: https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/docs
+        version: https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/docs(blv5x5f4uwinouobypxmqapbba)
       '@mui/icons-material':
         specifier: ^5.16.13
         version: 5.16.13(@mui/material@5.16.13(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@types/react@19.0.2)(react@19.0.0)
@@ -3098,8 +3099,9 @@ packages:
   '@mui/core-downloads-tracker@5.16.13':
     resolution: {integrity: sha512-xe5RwI0Q2O709Bd2Y7l1W1NIwNmln0y+xaGk5VgX3vDJbkQEqzdfTFZ73e0CkEZgJwyiWgk5HY0l8R4nysOxjw==}
 
-  '@mui/docs@6.3.1':
-    resolution: {integrity: sha512-0JqU2+dEKX1b0MZTDG4qM+iiW5wgapwzq8Q1Joehlq91PrW9atddbKIDUpFdy7MY+DKSFDNB+QRT+pez42PGWA==}
+  '@mui/docs@https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/docs':
+    resolution: {tarball: https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/docs}
+    version: 6.3.1
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@mui/base': '*'
@@ -12098,7 +12100,7 @@ snapshots:
 
   '@mui/core-downloads-tracker@5.16.13': {}
 
-  '@mui/docs@6.3.1(blv5x5f4uwinouobypxmqapbba)':
+  '@mui/docs@https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/docs(blv5x5f4uwinouobypxmqapbba)':
     dependencies:
       '@babel/runtime': 7.26.0
       '@mui/base': 5.0.0-beta.40-0(@types/react@19.0.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
