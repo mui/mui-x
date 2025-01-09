@@ -94,6 +94,7 @@
   { "name": "GridAggregationApi", "kind": "Interface" },
   { "name": "GridAggregationCellMeta", "kind": "Interface" },
   { "name": "GridAggregationFunction", "kind": "Interface" },
+  { "name": "GridAggregationFunctionDataSource", "kind": "Interface" },
   { "name": "GridAggregationGetCellValueParams", "kind": "Interface" },
   { "name": "GridAggregationHeaderMeta", "kind": "Interface" },
   { "name": "GridAggregationInitialState", "kind": "Interface" },

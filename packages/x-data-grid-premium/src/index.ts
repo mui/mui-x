@@ -41,5 +41,16 @@ export {
   GRID_COLUMN_MENU_SLOT_PROPS,
 } from './components/reexports';
 
+export type { GridDataSourceCache } from '@mui/x-data-grid-pro';
+
+export type {
+  GridGetRowsParamsPremium as GridGetRowsParams,
+  GridGetRowsResponsePremium as GridGetRowsResponse,
+  GridDataSourcePremium as GridDataSource,
+  GridDataSourceApiPremium as GridDataSourceApi,
+  GridDataSourceApiBasePremium as GridDataSourceApiBase,
+  GridDataSourcePremiumPrivateApi as GridDataSourcePrivateApi,
+} from './hooks/features/dataSource/models';
+
 export { useGridPivoting as unstable_useGridPivoting } from './hooks/features/pivoting/useGridPivoting';
 export type { PivotModel as Unstable_GridPivotModel } from './hooks/features/pivoting/useGridPivoting';
