@@ -68,6 +68,6 @@ TODO
 
 {{"demo": "DateCalendarDemo.js"}}
 
-## Range calendar (TODO: move)
+## Day Range Calendar
 
 {{"demo": "DayRangeCalendarDemo.js"}}
