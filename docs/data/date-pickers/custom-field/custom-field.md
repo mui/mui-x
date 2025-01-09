@@ -329,7 +329,7 @@ You can use the `useParsedFormat` to get a clean placeholder.
 This hook applies two main transformation on the format:
 
 1. It replaces all the localized tokens (i.e.: `L` for a date with `dayjs`) with their expanded value (`DD/MM/YYYY` for the same date with `dayjs`).
-2. It replaces each token with its token from our localization object (i.e: `YYYY` remains `YYYY` for the english locale but becomes `AAAA` for the french locale).
+2. It replaces each token with its token from the localization object (i.e.: `YYYY` remains `YYYY` for the English locale but becomes `AAAA` for the French locale).
 
 :::warning
 The format returned by `useParsedFormat` cannot be parsed by your date library.
