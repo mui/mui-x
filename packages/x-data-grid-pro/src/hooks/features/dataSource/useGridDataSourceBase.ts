@@ -1,8 +1,6 @@
 import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
 import {
-  useGridApiEventHandler,
-  useGridApiMethod,
   GridDataSourceGroupNode,
   useGridSelector,
   gridPaginationModelSelector,
@@ -15,7 +13,7 @@ import {
   GridStateInitializer,
   GridStrategyGroup,
   GridStrategyProcessor,
-  useGridRegisterStrategyProcessor,
+  GridDataSourceCache,
   runIf,
 } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
@@ -28,7 +26,6 @@ import {
   NestedDataManager,
   RequestStatus,
 } from './utils';
-import { GridDataSourceCache } from '../../../models';
 import { GridDataSourceCacheDefault, GridDataSourceCacheDefaultConfig } from './cache';
 
 const INITIAL_STATE = {
@@ -59,8 +56,8 @@ export const dataSourceStateInitializer: GridStateInitializer = (state) => {
   };
 };
 
-export const useGridDataSource = (
-  apiRef: React.MutableRefObject<GridPrivateApiPro>,
+export const useGridDataSourceBase = <Api extends GridPrivateApiPro>(
+  apiRef: React.MutableRefObject<Api>,
   props: Pick<
     DataGridProProcessedProps,
     | 'unstable_dataSource'
@@ -73,6 +70,9 @@ export const useGridDataSource = (
     | 'treeData'
     | 'unstable_lazyLoading'
   >,
+  options: {
+    cacheOptions?: GridDataSourceCacheDefaultConfig;
+  } = {},
 ) => {
   const setStrategyAvailability = React.useCallback(() => {
     apiRef.current.setStrategyAvailability(
@@ -103,7 +103,7 @@ export const useGridDataSource = (
     return new CacheChunkManager(cacheChunkSize);
   }).current;
   const [cache, setCache] = React.useState<GridDataSourceCache>(() =>
-    getCache(props.unstable_dataSourceCache),
+    getCache(props.unstable_dataSourceCache, options.cacheOptions),
   );
 
   const fetchRows = React.useCallback<GridDataSourceApiBase['fetchRows']>(
@@ -344,6 +344,11 @@ export const useGridDataSource = (
         apiRef.current.setRowCount(response.rowCount);
       }
       apiRef.current.setRows(response.rows);
+      apiRef.current.unstable_applyPipeProcessors(
+        'processDataSourceRows',
+        { params: params.fetchParams, response },
+        true,
+      );
     },
     [apiRef],
   );
@@ -371,42 +376,18 @@ export const useGridDataSource = (
     resetDataSourceState,
   };
 
-  useGridApiMethod(apiRef, dataSourceApi, 'public');
-  useGridApiMethod(apiRef, dataSourcePrivateApi, 'private');
-
-  useGridRegisterStrategyProcessor(
-    apiRef,
-    DataSourceRowsUpdateStrategy.Default,
-    'dataSourceRowsUpdate',
-    handleDataUpdate,
-  );
-
-  useGridApiEventHandler(apiRef, 'strategyAvailabilityChange', handleStrategyActivityChange);
-  useGridApiEventHandler(
-    apiRef,
-    'sortModelChange',
-    runIf(defaultRowsUpdateStrategyActive, () => fetchRows()),
-  );
-  useGridApiEventHandler(
-    apiRef,
-    'filterModelChange',
-    runIf(defaultRowsUpdateStrategyActive, () => fetchRows()),
-  );
-  useGridApiEventHandler(
-    apiRef,
-    'paginationModelChange',
-    runIf(defaultRowsUpdateStrategyActive, () => fetchRows()),
-  );
-
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
     }
-    const newCache = getCache(props.unstable_dataSourceCache);
+    if (props.unstable_dataSourceCache === undefined) {
+      return;
+    }
+    const newCache = getCache(props.unstable_dataSourceCache, options.cacheOptions);
     setCache((prevCache) => (prevCache !== newCache ? newCache : prevCache));
-  }, [props.unstable_dataSourceCache]);
+  }, [props.unstable_dataSourceCache, options.cacheOptions]);
 
   React.useEffect(() => {
     setStrategyAvailability();
@@ -430,4 +411,19 @@ export const useGridDataSource = (
       scheduledGroups.current = groupsToAutoFetch.length;
     }
   }, [apiRef, nestedDataManager, groupsToAutoFetch]);
+
+  return {
+    api: { public: dataSourceApi, private: dataSourcePrivateApi },
+    strategyProcessor: {
+      strategyName: DataSourceRowsUpdateStrategy.Default,
+      group: 'dataSourceRowsUpdate' as const,
+      processor: handleDataUpdate,
+    },
+    events: {
+      strategyAvailabilityChange: handleStrategyActivityChange,
+      sortModelChange: runIf(defaultRowsUpdateStrategyActive, () => fetchRows()),
+      filterModelChange: runIf(defaultRowsUpdateStrategyActive, () => fetchRows()),
+      paginationModelChange: runIf(defaultRowsUpdateStrategyActive, () => fetchRows()),
+    },
+  };
 };
