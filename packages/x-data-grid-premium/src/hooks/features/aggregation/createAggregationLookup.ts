@@ -57,7 +57,8 @@ const getGroupAggregatedValue = (
       const aggregatedField = aggregatedFields[j];
       const columnAggregationRules = aggregationRules[aggregatedField];
 
-      const aggregationFunction = columnAggregationRules.aggregationFunction as Record<string, GridAggregationFunction>;
+      const aggregationFunction =
+        columnAggregationRules.aggregationFunction as GridAggregationFunction;
       const field = aggregatedField;
 
       if (aggregatedValues[j] === undefined) {
@@ -78,7 +79,8 @@ const getGroupAggregatedValue = (
 
   for (let i = 0; i < aggregatedValues.length; i += 1) {
     const { aggregatedField, values } = aggregatedValues[i];
-    const aggregationFunction = aggregationRules[aggregatedField].aggregationFunction as Record<string, GridAggregationFunction>;
+    const aggregationFunction = aggregationRules[aggregatedField]
+      .aggregationFunction as GridAggregationFunction;
     const value = aggregationFunction.apply({
       values,
       groupId,
