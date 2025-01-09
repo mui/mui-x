@@ -2,7 +2,7 @@
   border: 1px solid #78716c;
   border-radius: 8px;
   width: 276px;
-  height: 300px;
+  height: 312px;
   display: flex;
   flex-direction: column;
   font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
@@ -141,19 +141,18 @@
 .DaysGridBody {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .DaysWeekRow,
 .DaysGridHeader {
   display: flex;
   justify-content: center;
-  gap: 4px;
 }
 
 .DaysWeekNumber {
-  height: 32px;
-  width: 32px;
+  height: 36px;
+  width: 36px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -162,8 +161,8 @@
 }
 
 .DaysCell {
-  height: 32px;
-  width: 32px;
+  height: 36px;
+  width: 36px;
   border-radius: 4px;
   border: none;
   background-color: transparent;
@@ -183,10 +182,20 @@
     text-decoration: line-through;
     color: #64748b;
   }
+
+  &.RangeDaysCell[data-selected]:not([data-selection-start]) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  &.RangeDaysCell[data-selected]:not([data-selection-end]) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
 }
 
 .DaysGridHeaderCell {
-  width: 32px;
+  width: 36px;
   text-align: center;
   font-size: 0.75rem;
   color: #64748b;
@@ -216,6 +225,15 @@
 
   &:not([data-outside-month])[data-selected] {
     background-color: #7dd3fc;
+
+    &.RangeDaysCell {
+      background-color: #e0f2fe;
+
+      &[data-selection-start],
+      &[data-selection-end] {
+        background-color: #7dd3fc;
+      }
+    }
   }
 
   &:focus-visible {
@@ -240,7 +258,14 @@
   }
 
   &:not([data-outside-month])[data-selected] {
-    background-color: #0369a1;
+    &.RangeDaysCell {
+      background-color: #0c4a6e;
+
+      &[data-selection-start],
+      &[data-selection-end] {
+        background-color: #0369a1;
+      }
+    }
   }
 
   &[data-outside-month] {

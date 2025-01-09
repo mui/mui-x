@@ -1,6 +1,5 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
-import { PickerValidDate } from '../../../../../models';
 import { useCompositeListItem } from '../../../composite/list/useCompositeListItem';
 import { useBaseCalendarDaysGridBodyContext } from '../days-grid-body/BaseCalendarDaysGridBodyContext';
 import { useBaseCalendarDaysGridContext } from '../days-grid/BaseCalendarDaysGridContext';
@@ -34,9 +33,11 @@ export function useBaseCalendarDaysWeekRowWrapper(
 }
 
 export namespace useBaseCalendarDaysWeekRowWrapper {
-  export interface Parameters {
+  export interface Parameters extends Pick<useBaseCalendarDaysWeekRow.Parameters, 'value'> {
+    /**
+     * The ref forwarded by the parent component.
+     */
     forwardedRef: React.ForwardedRef<HTMLDivElement>;
-    value: PickerValidDate;
   }
 
   export interface ReturnValue {

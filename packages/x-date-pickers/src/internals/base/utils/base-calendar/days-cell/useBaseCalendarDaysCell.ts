@@ -1,11 +1,11 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { PickerValidDate } from '../../../../models';
-import { GenericHTMLProps } from '../../base-utils/types';
-import { mergeReactProps } from '../../base-utils/mergeReactProps';
-import { useUtils } from '../../../hooks/useUtils';
+import { PickerValidDate } from '../../../../../models';
+import { GenericHTMLProps } from '../../../base-utils/types';
+import { mergeReactProps } from '../../../base-utils/mergeReactProps';
+import { useUtils } from '../../../../hooks/useUtils';
 
-export function useCalendarDaysCell(parameters: useCalendarDaysCell.Parameters) {
+export function useBaseCalendarDaysCell(parameters: useBaseCalendarDaysCell.Parameters) {
   const utils = useUtils();
   const { value, format = utils.formats.dayOfMonth, ctx } = parameters;
 
@@ -47,15 +47,18 @@ export function useCalendarDaysCell(parameters: useCalendarDaysCell.Parameters) 
   return React.useMemo(() => ({ getDaysCellProps, isCurrent }), [getDaysCellProps, isCurrent]);
 }
 
-export namespace useCalendarDaysCell {
+export namespace useBaseCalendarDaysCell {
   export interface Parameters {
+    /**
+     * The date object representing the day.
+     */
     value: PickerValidDate;
     /**
      * The format used to display the day.
      * @default utils.formats.dayOfMonth
      */
     format?: string;
-    ctx: useCalendarDaysCell.Context;
+    ctx: useBaseCalendarDaysCell.Context;
   }
 
   export interface Context {

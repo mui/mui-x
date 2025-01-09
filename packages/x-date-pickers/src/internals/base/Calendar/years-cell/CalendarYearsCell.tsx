@@ -55,8 +55,8 @@ const CalendarYearsCell = React.forwardRef(function CalendarsYearCell(
   const mergedRef = useForkRef(forwardedRef, listItemRef);
 
   const isSelected = React.useMemo(
-    () => (rootContext.value == null ? false : utils.isSameYear(rootContext.value, props.value)),
-    [rootContext.value, props.value, utils],
+    () => baseRootContext.selectedDates.some((date) => utils.isSameYear(date, props.value)),
+    [baseRootContext.selectedDates, props.value, utils],
   );
 
   const isInvalid = React.useMemo(() => {

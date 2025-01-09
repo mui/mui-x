@@ -55,8 +55,8 @@ const CalendarMonthsCell = React.forwardRef(function CalendarMonthsCell(
   const mergedRef = useForkRef(forwardedRef, listItemRef);
 
   const isSelected = React.useMemo(
-    () => (rootContext.value == null ? false : utils.isSameMonth(rootContext.value, props.value)),
-    [rootContext.value, props.value, utils],
+    () => baseRootContext.selectedDates.some((date) => utils.isSameMonth(date, props.value)),
+    [baseRootContext.selectedDates, props.value, utils],
   );
 
   const isInvalid = React.useMemo(() => {

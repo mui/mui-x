@@ -13,7 +13,7 @@ if (process.env.NODE_ENV !== 'production') {
   RangeCalendarRootContext.displayName = 'RangeCalendarRootContext';
 }
 
-export function useCalendarRootContext() {
+export function useRangeCalendarRootContext() {
   const context = React.useContext(RangeCalendarRootContext);
   if (context === undefined) {
     throw new Error(

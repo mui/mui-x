@@ -45,7 +45,7 @@ import {
   isEndOfRange,
   isRangeValid,
   isStartOfRange,
-  isWithinRange,
+  isDateWithinRange,
 } from '../internals/utils/date-utils';
 import { calculateRangeChange, calculateRangePreview } from '../internals/utils/date-range-manager';
 import { RangePosition } from '../models';
@@ -452,7 +452,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
 
   const handleDayMouseEnter = useEventCallback(
     (event: React.MouseEvent<HTMLDivElement>, newPreviewRequest: PickerValidDate) => {
-      if (!isWithinRange(utils, newPreviewRequest, valueDayRange)) {
+      if (!isDateWithinRange(utils, newPreviewRequest, valueDayRange)) {
         setRangePreviewDay(newPreviewRequest);
       } else {
         setRangePreviewDay(null);
@@ -488,12 +488,12 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
         : isSelectedEndDate;
 
       return {
-        isPreviewing: shouldHavePreview ? isWithinRange(utils, day, previewingRange) : false,
+        isPreviewing: shouldHavePreview ? isDateWithinRange(utils, day, previewingRange) : false,
         isStartOfPreviewing: shouldHavePreview
           ? isStartOfRange(utils, day, previewingRange)
           : false,
         isEndOfPreviewing: shouldHavePreview ? isEndOfRange(utils, day, previewingRange) : false,
-        isHighlighting: isWithinRange(utils, day, isDragging ? draggingRange : valueDayRange),
+        isHighlighting: isDateWithinRange(utils, day, isDragging ? draggingRange : valueDayRange),
         isStartOfHighlighting,
         isEndOfHighlighting: isDragging
           ? isEndOfRange(utils, day, draggingRange)

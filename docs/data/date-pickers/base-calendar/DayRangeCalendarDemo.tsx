@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
+import clsx from 'clsx';
+import dayjs, { Dayjs } from 'dayjs';
 import NoSsr from '@mui/material/NoSsr';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -57,20 +58,13 @@ function DayCalendar(props: Omit<RangeCalendar.Root.Props, 'children'>) {
                   key={week.toString()}
                   className={styles.DaysWeekRow}
                 >
-                  {/* {({ days }) =>
+                  {({ days }) =>
                     days.map((day) => (
                       <RangeCalendar.DaysCell
                         value={day}
                         key={day.toString()}
-                        className={styles.DaysCell}
+                        className={clsx(styles.DaysCell, styles.RangeDaysCell)}
                       />
-                    ))
-                  } */}
-                  {({ days }) =>
-                    days.map((day) => (
-                      <button type="button" className={styles.DaysCell}>
-                        {day.format('D')}
-                      </button>
                     ))
                   }
                 </RangeCalendar.DaysWeekRow>
@@ -85,8 +79,8 @@ function DayCalendar(props: Omit<RangeCalendar.Root.Props, 'children'>) {
 
 export default function DayRangeCalendarDemo() {
   const [value, setValue] = React.useState<[Dayjs | null, Dayjs | null]>([
-    null,
-    null,
+    dayjs('2025-01-03'),
+    dayjs('2025-01-07'),
   ]);
 
   const handleValueChange = React.useCallback(

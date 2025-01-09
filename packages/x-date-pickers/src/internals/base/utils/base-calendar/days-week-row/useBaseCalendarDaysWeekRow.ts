@@ -34,6 +34,9 @@ export function useBaseCalendarDaysWeekRow(parameters: useBaseCalendarDaysWeekRo
 
 export namespace useBaseCalendarDaysWeekRow {
   export interface Parameters {
+    /**
+     * The date object representing the week.
+     */
     value: PickerValidDate;
     ctx: useBaseCalendarDaysWeekRow.Context;
     children?: (parameters: ChildrenParameters) => React.ReactNode;

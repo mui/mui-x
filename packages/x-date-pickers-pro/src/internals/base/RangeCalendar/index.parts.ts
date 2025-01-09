@@ -6,7 +6,7 @@ export { RangeCalendarDaysGridHeader as DaysGridHeader } from './days-grid-heade
 export { RangeCalendarDaysGridHeaderCell as DaysGridHeaderCell } from './days-grid-header-cell/RangeCalendarDaysGridHeaderCell';
 export { RangeCalendarDaysGridBody as DaysGridBody } from './days-grid-body/RangeCalendarDaysGridBody';
 export { RangeCalendarDaysWeekRow as DaysWeekRow } from './days-week-row/RangeCalendarDaysWeekRow';
-// export { CalendarDaysCell as DaysCell } from './days-cell/CalendarDaysCell';
+export { RangeCalendarDaysCell as DaysCell } from './days-cell/RangeCalendarDaysCell';
 
 // // Months
 // export { CalendarMonthsList as MonthsList } from './months-list/CalendarMonthsList';
