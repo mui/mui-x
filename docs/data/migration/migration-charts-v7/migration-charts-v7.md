@@ -92,6 +92,25 @@ To pass props to the legend, use the `slotProps.legend`.
 +<PieChart slotProps={{ legend: { ... } }} />
 ```
 
+## Legend direction value change ✅
+
+The `direction` prop of the legend has been changed to accept `'vertical'` and `'horizontal'` instead of `'column'` and `'row'`.
+
+```diff
+ <PieChart
+   slotProps={{
+     legend: {
+-      direction: 'column'
++      direction: 'vertical'
+     }
+   }}
+ />
+```
+
+## The `getSeriesToDisplay` function was removed
+
+The `getSeriesToDisplay` function was removed in favor of the `useLegend` hook. You can check the [HTML Components example](/x/react-charts/components/#html-components) for usage information.
+
 ## Removing ResponsiveChartContainer ✅
 
 The `ResponsiveChartContainer` has been removed.
@@ -122,7 +141,7 @@ The `<PieChart />` by error had the code to render axes.
 This code has been removed in v8, which implies removing the following props: `axisHighlight`, `topAxis`, `rightAxis`, `bottomAxis`, and `leftAxis`.
 
 This should not impact your code.
-If you used axes in a pie chart please open an issue, we would be curious to get more information about the use-case.
+If you used axes in a pie chart please open an issue, we would be curious to get more information about the use case.
 
 ## Remove `resolveSizeBeforeRender` prop
 

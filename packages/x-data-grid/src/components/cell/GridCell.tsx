@@ -9,6 +9,7 @@ import {
 } from '@mui/utils';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useRtl } from '@mui/system/RtlProvider';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import {
@@ -152,7 +153,7 @@ let warnedOnce = false;
 
 // TODO(v7): Removing the wrapper will break the docs performance visualization demo.
 
-const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCell(props, ref) {
+const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(props, ref) {
   const {
     column,
     rowId,
@@ -207,6 +208,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
       result.api = apiRef.current;
       return result;
     },
+    undefined,
     objectShallowCompare,
   );
 
@@ -488,7 +490,6 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
 
   return (
     <div
-      ref={handleRef}
       className={clsx(classes.root, classNames, className)}
       role="gridcell"
       data-field={field}
@@ -509,6 +510,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
       {...draggableEventHandlers}
       {...other}
       onFocus={handleFocus}
+      ref={handleRef}
     >
       {children}
     </div>

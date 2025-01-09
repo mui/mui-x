@@ -32,14 +32,14 @@ const legendPlacement = {
         vertical: 'middle',
         horizontal: 'right',
       },
-      direction: 'column',
+      direction: 'vertical',
       itemGap: 2,
     },
   },
   margin: {
     top: 20,
-    right: 150,
-    left: 20,
+    right: 20,
+    left: 30,
   },
 };
 const series = [
@@ -58,7 +58,7 @@ const series = [
   { label: 'Series 13', data: getGaussianSeriesData([7, 0]) },
 ].map((s) => ({
   ...s,
-  valueFormatter: (v) => `(${v.x.toFixed(1)}, ${v.y.toFixed(1)})`,
+  valueFormatter: (v) => v && `(${v.x.toFixed(1)}, ${v.y.toFixed(1)})`,
 }));
 
 const categories = {

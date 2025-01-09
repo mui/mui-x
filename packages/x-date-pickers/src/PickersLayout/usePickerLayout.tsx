@@ -8,13 +8,11 @@ import { PickerLayoutOwnerState, PickersLayoutProps, SubComponents } from './Pic
 import { getPickersLayoutUtilityClass, PickersLayoutClasses } from './pickersLayoutClasses';
 import { PickersShortcuts } from '../PickersShortcuts';
 import { BaseToolbarProps } from '../internals/models/props/toolbar';
-import { DateOrTimeViewWithMeridiem, PickerValidValue } from '../internals/models';
+import { PickerValidValue } from '../internals/models';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { usePickerContext } from '../hooks';
 
-function toolbarHasView<TValue extends PickerValidValue, TView extends DateOrTimeViewWithMeridiem>(
-  toolbarProps: BaseToolbarProps<TValue, TView> | any,
-): toolbarProps is BaseToolbarProps<TValue, TView> {
+function toolbarHasView(toolbarProps: BaseToolbarProps | any): toolbarProps is BaseToolbarProps {
   return toolbarProps.view !== null;
 }
 
@@ -40,34 +38,14 @@ interface UsePickerLayoutResponse<TValue extends PickerValidValue> extends SubCo
   ownerState: PickerLayoutOwnerState;
 }
 
-const usePickerLayout = <TValue extends PickerValidValue, TView extends DateOrTimeViewWithMeridiem>(
-  props: PickersLayoutProps<TValue, TView>,
+const usePickerLayout = <TValue extends PickerValidValue>(
+  props: PickersLayoutProps<TValue>,
 ): UsePickerLayoutResponse<TValue> => {
   const { ownerState: pickerOwnerState } = usePickerPrivateContext();
-  const { variant, orientation } = usePickerContext();
+  const { view } = usePickerContext();
   const isRtl = useRtl();
 
-  const {
-    onAccept,
-    onClear,
-    onCancel,
-    onSetToday,
-    view,
-    views,
-    onViewChange,
-    value,
-    onChange,
-    onSelectShortcut,
-    isValid,
-    children,
-    slots,
-    slotProps,
-    classes: classesProp,
-    // TODO: Remove this "as" hack. It get introduced to mark `value` prop in PickersLayoutProps as not required.
-    // The true type should be
-    // - For pickers value: PickerValidDate | null
-    // - For range pickers value: [PickerValidDate | null, PickerValidDate | null]
-  } = props;
+  const { children, slots, slotProps, classes: classesProp } = props;
 
   const ownerState = React.useMemo<PickerLayoutOwnerState>(
     () => ({ ...pickerOwnerState, layoutDirection: isRtl ? 'rtl' : 'ltr' }),
@@ -77,15 +55,15 @@ const usePickerLayout = <TValue extends PickerValidValue, TView extends DateOrTi
 
   // Action bar
   const ActionBar = slots?.actionBar ?? PickersActionBar;
-  const actionBarProps = useSlotProps({
+  const {
+    // PickersActionBar does not use it and providing it breaks memoization
+    ownerState: destructuredOwnerState,
+    ...actionBarProps
+  } = useSlotProps({
     elementType: ActionBar,
     externalSlotProps: slotProps?.actionBar,
     additionalProps: {
-      onAccept,
-      onClear,
-      onCancel,
-      onSetToday,
-      actions: variant === 'desktop' ? [] : (['cancel', 'accept'] as PickersActionBarAction[]),
+      actions: ['cancel', 'accept'] as PickersActionBarAction[],
     },
     className: classes.actionBar,
     ownerState,
@@ -97,14 +75,6 @@ const usePickerLayout = <TValue extends PickerValidValue, TView extends DateOrTi
   const toolbarProps = useSlotProps({
     elementType: Toolbar!,
     externalSlotProps: slotProps?.toolbar,
-    additionalProps: {
-      isLandscape: orientation === 'landscape', // Will be removed in a follow up PR?
-      onChange,
-      value,
-      view,
-      onViewChange,
-      views,
-    },
     className: classes.toolbar,
     ownerState,
   });
@@ -115,21 +85,13 @@ const usePickerLayout = <TValue extends PickerValidValue, TView extends DateOrTi
 
   // Tabs
   const Tabs = slots?.tabs;
-  const tabs =
-    view && Tabs ? (
-      <Tabs view={view} onViewChange={onViewChange} className={classes.tabs} {...slotProps?.tabs} />
-    ) : null;
+  const tabs = view && Tabs ? <Tabs className={classes.tabs} {...slotProps?.tabs} /> : null;
 
   // Shortcuts
   const Shortcuts = slots?.shortcuts ?? PickersShortcuts;
   const shortcutsProps = useSlotProps({
     elementType: Shortcuts!,
     externalSlotProps: slotProps?.shortcuts,
-    additionalProps: {
-      isValid,
-      isLandscape: orientation === 'landscape', // Will be removed in a follow up PR?
-      onChange: onSelectShortcut,
-    },
     className: classes.shortcuts,
     ownerState,
   });
