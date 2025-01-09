@@ -424,6 +424,7 @@
   { "name": "GridPinnedRowNode", "kind": "TypeAlias" },
   { "name": "GridPinnedRowsProp", "kind": "Interface" },
   { "name": "GridPipeProcessingLookup", "kind": "Interface" },
+  { "name": "GridPortalWrapper", "kind": "Function" },
   { "name": "GridPreferencePanelInitialState", "kind": "TypeAlias" },
   { "name": "GridPreferencePanelParams", "kind": "Interface" },
   { "name": "GridPreferencePanelState", "kind": "Interface" },

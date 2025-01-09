@@ -14,6 +14,11 @@ export function useThemeVariablesClassName() {
   return getClassNameForTheme(useTheme());
 }
 
+export function GridPortalWrapper({ children }: { children: React.ReactNode }) {
+  const className = useThemeVariablesClassName();
+  return <div className={className}>{children}</div>;
+}
+
 function getClassNameForTheme(theme: Theme) {
   let className = classNameByTheme.get(theme);
   if (className) {
