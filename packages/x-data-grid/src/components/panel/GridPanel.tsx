@@ -8,7 +8,7 @@ import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { vars } from '../../constants/cssVariables';
-import { useThemeVariablesClassName } from '../../utils/css/themeManager';
+import { useCSSVariablesClass } from '../../utils/css/themeManager';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -63,7 +63,7 @@ const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
   const rootProps = useGridRootProps();
   const classes = gridPanelClasses;
   const [isPlaced, setIsPlaced] = React.useState(false);
-  const variablesClass = useThemeVariablesClassName();
+  const variablesClass = useCSSVariablesClass();
 
   const handleClickAway = React.useCallback(() => {
     apiRef.current.hidePreferences();

@@ -11,12 +11,12 @@ let element = undefined as HTMLStyleElement | undefined;
 let nextClassNameId = 1;
 const classNameByTheme = new WeakMap<object, string>();
 
-export function useThemeVariablesClassName() {
+export function useCSSVariablesClass() {
   return getClassNameForTheme(useTheme());
 }
 
 export function GridPortalWrapper({ children }: { children: React.ReactNode }) {
-  const className = useThemeVariablesClassName();
+  const className = useCSSVariablesClass();
   return <div className={className}>{children}</div>;
 }
 
