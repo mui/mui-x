@@ -228,6 +228,11 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
 
       apiRef.current.scrollToIndexes({ rowIndex: 9 });
 
+      // wait until the debounced fetch
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+
       // wait until the rows are rendered
       await waitFor(() => expect(getRow(10)).not.to.be.undefined);
 
@@ -236,6 +241,10 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       expect(beforeSortingSearchParams.get('end')).to.not.equal('9');
 
       apiRef.current.sortColumn(mockServer.columns[0].field, 'asc');
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(3);
+      });
 
       const afterSortingSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
       // last row is the end of the first page
@@ -248,6 +257,11 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       await waitFor(() => expect(getRow(0)).not.to.be.undefined);
 
       apiRef.current.scrollToIndexes({ rowIndex: 9 });
+
+      // wait until the debounced fetch
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
 
       // wait until the rows are rendered
       await waitFor(() => expect(getRow(10)).not.to.be.undefined);
@@ -264,6 +278,10 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
             operator: 'contains',
           },
         ],
+      });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(3);
       });
 
       const afterFilteringSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
@@ -287,7 +305,9 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       setProps({ rowCount: 100 });
 
       // The 11th row should be a skeleton
-      expect(getRow(10).dataset.id).to.equal('auto-generated-skeleton-row-root-10');
+      await waitFor(() =>
+        expect(getRow(10).dataset.id).to.equal('auto-generated-skeleton-row-root-10'),
+      );
     });
 
     it('should reset the grid if the rowCount becomes unknown', async () => {
