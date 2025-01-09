@@ -17,7 +17,7 @@
 }
 
 .RootWithTwoPanels {
-  width: 552px;
+  width: 564px;
   flex-direction: row;
   justify-content: space-between;
 }

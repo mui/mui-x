@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-
+import { Dayjs } from 'dayjs';
 import { Separator } from '@base-ui-components/react/separator';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -11,7 +11,7 @@ import {
 } from '@mui/x-date-pickers-pro/internals/base/RangeCalendar';
 import styles from './calendar.module.css';
 
-function Header(props) {
+function Header(props: { offset: 0 | 1 }) {
   const { offset } = props;
   const { visibleDate } = useRangeCalendarContext();
 
@@ -36,7 +36,7 @@ function Header(props) {
   );
 }
 
-function DaysGrid(props) {
+function DaysGrid(props: { offset: 0 | 1 }) {
   const { offset } = props;
   return (
     <div className={styles.Panel}>
@@ -79,7 +79,7 @@ function DaysGrid(props) {
   );
 }
 
-function DayCalendar(props) {
+function DayCalendar(props: Omit<RangeCalendar.Root.Props, 'children'>) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <RangeCalendar.Root
@@ -95,12 +95,18 @@ function DayCalendar(props) {
   );
 }
 
-export default function DayRangeCalendarDemo() {
-  const [value, setValue] = React.useState([null, null]);
+export default function DayRangeCalendarWithTwoMonthsDemo() {
+  const [value, setValue] = React.useState<[Dayjs | null, Dayjs | null]>([
+    null,
+    null,
+  ]);
 
-  const handleValueChange = React.useCallback((newValue) => {
-    setValue(newValue);
-  }, []);
+  const handleValueChange = React.useCallback(
+    (newValue: [Dayjs | null, Dayjs | null]) => {
+      setValue(newValue);
+    },
+    [],
+  );
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

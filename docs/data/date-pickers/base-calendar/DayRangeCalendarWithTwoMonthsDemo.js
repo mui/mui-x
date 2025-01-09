@@ -95,7 +95,7 @@ function DayCalendar(props) {
   );
 }
 
-export default function DayRangeCalendarDemo() {
+export default function DayRangeCalendarWithTwoMonthsDemo() {
   const [value, setValue] = React.useState([null, null]);
 
   const handleValueChange = React.useCallback((newValue) => {

@@ -70,4 +70,10 @@ TODO
 
 ## Day Range Calendar
 
+### Single visible month
+
 {{"demo": "DayRangeCalendarDemo.js"}}
+
+### Multiple visible months
+
+{{"demo": "DayRangeCalendarWithTwoMonthsDemo.js"}}
