@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { unstable_useBarSeries } from '@mui/x-charts/hooks';
+import { useLegend } from '@mui/x-charts/hooks';
 import { ChartDataProvider } from '@mui/x-charts/context';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { BarPlot } from '@mui/x-charts/BarChart';
@@ -8,7 +8,7 @@ import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 
 function MyCustomLegend() {
-  const s = unstable_useBarSeries();
+  const { items } = useLegend();
   return (
     <table
       style={{
@@ -17,7 +17,7 @@ function MyCustomLegend() {
       }}
     >
       <tbody>
-        {Object.values(s?.series ?? []).map((v) => {
+        {items.map((v) => {
           return (
             <tr key={v.id}>
               <td aria-hidden>
