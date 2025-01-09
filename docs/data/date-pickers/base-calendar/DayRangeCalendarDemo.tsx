@@ -32,7 +32,7 @@ function Header() {
   );
 }
 
-function DayCalendar(props: Omit<RangeCalendar.Root.Props, 'children'>) {
+function DayRangeCalendar(props: Omit<RangeCalendar.Root.Props, 'children'>) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <RangeCalendar.Root {...props} monthPageSize={2} className={clsx(styles.Root)}>
@@ -91,7 +91,7 @@ export default function DayRangeCalendarDemo() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DayCalendar value={value} onValueChange={handleValueChange} />
+      <DayRangeCalendar value={value} onValueChange={handleValueChange} />
     </LocalizationProvider>
   );
 }

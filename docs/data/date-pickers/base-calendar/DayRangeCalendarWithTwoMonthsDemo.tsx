@@ -79,7 +79,7 @@ function DaysGrid(props: { offset: 0 | 1 }) {
   );
 }
 
-function DayCalendar(props: Omit<RangeCalendar.Root.Props, 'children'>) {
+function DayRangeCalendar(props: Omit<RangeCalendar.Root.Props, 'children'>) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <RangeCalendar.Root
@@ -110,7 +110,7 @@ export default function DayRangeCalendarWithTwoMonthsDemo() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DayCalendar value={value} onValueChange={handleValueChange} />
+      <DayRangeCalendar value={value} onValueChange={handleValueChange} />
     </LocalizationProvider>
   );
 }
