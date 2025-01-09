@@ -9,7 +9,7 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import withDocsInfra from '@mui/monorepo/docs/nextConfigDocsInfra';
 import { findPages } from './src/modules/utils/find';
 import { LANGUAGES, LANGUAGES_SSR, LANGUAGES_IGNORE_PAGES, LANGUAGES_IN_PROGRESS } from './config';
-import constants from './constants';
+import { SOURCE_CODE_REPO, SOURCE_GITHUB_BRANCH } from './constants';
 
 const currentDirectory = url.fileURLToPath(new URL('.', import.meta.url));
 const require = createRequire(import.meta.url);
@@ -52,7 +52,7 @@ const treeViewPkg = loadPkg('./packages/x-tree-view');
 
 let localSettings = {};
 try {
-  // eslint-disable-next-line import/no-unresolved, import/extensions
+  // eslint-disable-next-line import/extensions
   localSettings = require('./next.config.local.js');
 } catch (_) {
   // Ignore
@@ -69,8 +69,8 @@ export default withDocsInfra({
   env: {
     // docs-infra
     LIB_VERSION: pkg.version,
-    SOURCE_CODE_REPO: constants.SOURCE_CODE_REPO,
-    SOURCE_GITHUB_BRANCH: constants.SOURCE_GITHUB_BRANCH,
+    SOURCE_CODE_REPO,
+    SOURCE_GITHUB_BRANCH,
     GITHUB_TEMPLATE_DOCS_FEEDBACK: '6.docs-feedback.yml',
     // MUI X related
     DATA_GRID_VERSION: dataGridPkg.version,
