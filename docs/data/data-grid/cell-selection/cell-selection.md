@@ -54,7 +54,7 @@ The following demo shows how these props can be combined to create an Excel-like
 
 {{"demo": "CellSelectionFormulaField.js", "bg": "inline"}}
 
-## Customizing selected ranges
+## Customizing range styles
 
 When multiple selected cells form a continuous range of any size, the following class names are applied to the cells at the edges:
 
