@@ -69,6 +69,7 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-data-grid/row-recipes', title: 'Recipes' },
             ],
           },
+          { pathname: '/x/react-data-grid/cells' },
           {
             pathname: '/x/react-data-grid/editing-group',
             title: 'Editing',
