@@ -422,9 +422,9 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiPro>(
     },
     events: {
       strategyAvailabilityChange: handleStrategyActivityChange,
-      sortModelChange: runIf(defaultRowsUpdateStrategyActive, () => fetchRows()),
-      filterModelChange: runIf(defaultRowsUpdateStrategyActive, () => fetchRows()),
-      paginationModelChange: runIf(defaultRowsUpdateStrategyActive, () => fetchRows()),
+      sortModelChange: runIf(defaultRowsUpdateStrategyActive, () => debouncedFetchRows()),
+      filterModelChange: runIf(defaultRowsUpdateStrategyActive, () => debouncedFetchRows()),
+      paginationModelChange: runIf(defaultRowsUpdateStrategyActive, () => debouncedFetchRows()),
     },
   };
 };
