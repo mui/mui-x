@@ -199,7 +199,7 @@
   "resolutions": {
     "react-is": "^19.0.0",
     "@types/node": "^20.17.11",
-    "@mui/internal-markdown": "https://ci.codesandbox.io/status/mui/material-ui/pr/44976/builds/576877#:~:text=%40mui/internal%2Dmarkdown"
+    "@mui/internal-markdown": "https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/internal-markdown"
   },
   "packageManager": "pnpm@9.15.2",
   "engines": {
