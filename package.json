@@ -198,7 +198,8 @@
   },
   "resolutions": {
     "react-is": "^19.0.0",
-    "@types/node": "^20.17.11"
+    "@types/node": "^20.17.11",
+    "@mui/internal-markdown": "https://ci.codesandbox.io/status/mui/material-ui/pr/44976/builds/576877#:~:text=%40mui/internal%2Dmarkdown"
   },
   "packageManager": "pnpm@9.15.2",
   "engines": {
