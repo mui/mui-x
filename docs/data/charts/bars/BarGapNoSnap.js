@@ -35,7 +35,6 @@ export default function BarGapNoSnap() {
         <BarChart
           dataset={balanceSheet}
           series={series}
-          width={500}
           height={300}
           margin={{ top: 15 }}
           xAxis={[
