@@ -12,9 +12,10 @@ _Jan 9, 2025_
 We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Charts legend is now an HTML element which can be styled more easily
+- 💫 Support [aggregation with server-side data](/x/react-data-grid/server-side-data/aggregation/)
 - 🏎️ Improve Data Grid aggregation performance
-- 🌍 Add Chinese (Taiwan) (zh-TW) locale on the Date and Time Picker components
-- 🌍 Improve Norwegian (nb-NO) locale on the Date and Time Picker components
+- 🌍 Add Chinese (Taiwan) (zh-TW) locale on the Date and Time Pickers
+- 🌍 Improve Norwegian (nb-NO) locale on the Date and Time Pickers
 - 🐞 Bugfixes
 
 Special thanks go out to the community contributors who have helped make this release possible:
@@ -29,7 +30,7 @@ Following are all team members who have contributed to this release:
 #### `@mui/x-data-grid@8.0.0-alpha.7`
 
 - [DataGrid] Improve React 19 support (#15769) @LukasTy
-- [DataGrid] Add `name` attribute to selection checkboxes (#15178) @derek-0000
+- [DataGrid] Add `name` attribute to the checkbox selection column (#15178) @derek-0000
 - [DataGrid] Fix number filter field formatting values while typing (#16062) @arminmeh
 - [DataGrid] Fix select all checkbox state reset with server side data (#16034) @MBilalShafi
 - [DataGrid] Refactor: create base button props (#15930) @romgrk
@@ -46,13 +47,14 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.7`, plus:
 
 - [DataGridPremium] Improve aggregation performance for multiple columns (#16097) @cherniavskii
 - [DataGridPremium] Make Aggregation keyboard accessible in the column menu (#15934) @k-rajat19
+- [DataGridPremium] Server-side aggregation with data source (#15741) @MBilalShafi
 
 ### Date and Time Pickers
 
-From https://github.com/mui/mui-x/pull/15948
-
 #### Breaking changes
 
+- The `date-fns` and `date-fns-jalali` date library adapters have been renamed to better align with the current stable major versions — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#✅-rename-date-fns-adapter-imports)
+- Update default `closeOnSelect` and Action Bar `actions` values - [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#update-default-closeonselect-and-action-bar-actions-values)
 - The component passed to the `layout` slot no longer receives the `value`, `onChange` and `onSelectShortcut` props — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#slot-layout).
 - The component passed to the `toolbar` slot no longer receives the `value`, `onChange` and `isLandscape` props — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#slot-toolbar).
 - The component passed to the `shortcuts` slot no longer receives the `onChange`, `isValid` and `isLandscape` props — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#slot-shortcuts).
@@ -76,7 +78,7 @@ From https://github.com/mui/mui-x/pull/15948
 - [pickers] Update `closeOnSelect` and `actionBar.actions` default values (#15944) @LukasTy
 - [pickers] Use `usePickerContext()` and `usePickerActionsContext()` instead of passing props to the `shortcuts` and `toolbar` slots (#15948) @flaviendelangle
 - [l10n] Add Chinese (Taiwan) (zh-TW) locale (#16033) @nusr
-- [l10n] Improve Norwegian (nb-NO) locale (#16083) (@josteinjhauge) (#16089) @LukasTy
+- [l10n] Improve Norwegian (nb-NO) locale (#16089) @josteinjhauge
 
 #### `@mui/x-date-pickers-pro@8.0.0-alpha.7` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
