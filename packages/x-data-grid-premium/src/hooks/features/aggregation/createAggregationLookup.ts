@@ -20,23 +20,20 @@ import {
 import { getAggregationRules } from './gridAggregationUtils';
 import { gridAggregationModelSelector } from './gridAggregationSelectors';
 
-const getAggregationCellValue = ({
-  apiRef,
-  groupId,
-  field,
-  aggregationFunction,
-  aggregationRowsScope,
-}: {
-  apiRef: React.MutableRefObject<GridPrivateApiPremium>;
-  groupId: GridRowId;
-  field: string;
-  aggregationFunction: GridAggregationFunction;
-  aggregationRowsScope: DataGridPremiumProcessedProps['aggregationRowsScope'];
-}) => {
-  const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
-  const rowIds: GridRowId[] = apiRef.current.getRowGroupChildren({ groupId });
+const getGroupAggregatedValue = (
+  groupId: GridRowId,
+  apiRef: React.MutableRefObject<GridPrivateApiPremium>,
+  aggregationRowsScope: DataGridPremiumProcessedProps['aggregationRowsScope'],
+  aggregatedFields: string[],
+  aggregationRules: GridAggregationRules,
+  position: GridAggregationPosition,
+) => {
+  const groupAggregationLookup: GridAggregationLookup[GridRowId] = {};
+  const aggregatedValues: { aggregatedField: string; values: any[] }[] = [];
 
-  const values: any[] = [];
+  const rowIds = apiRef.current.getRowGroupChildren({ groupId });
+  const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
+
   rowIds.forEach((rowId) => {
     if (aggregationRowsScope === 'filtered' && filteredRowsLookup[rowId] === false) {
       return;
@@ -54,32 +51,55 @@ const getAggregationCellValue = ({
       return;
     }
 
-    if (typeof aggregationFunction.getCellValue === 'function') {
-      const row = apiRef.current.getRow(rowId);
-      values.push(aggregationFunction.getCellValue({ row }));
-    } else {
-      values.push(apiRef.current.getCellValue(rowId, field));
+    const row = apiRef.current.getRow(rowId);
+
+    for (let j = 0; j < aggregatedFields.length; j += 1) {
+      const aggregatedField = aggregatedFields[j];
+      const columnAggregationRules = aggregationRules[aggregatedField];
+
+      const aggregationFunction = columnAggregationRules.aggregationFunction as Record<string, GridAggregationFunction>;
+      const field = aggregatedField;
+
+      if (aggregatedValues[j] === undefined) {
+        aggregatedValues[j] = {
+          aggregatedField,
+          values: [],
+        };
+      }
+
+      if (typeof aggregationFunction.getCellValue === 'function') {
+        aggregatedValues[j].values.push(aggregationFunction.getCellValue({ row }));
+      } else {
+        const colDef = apiRef.current.getColumn(field);
+        aggregatedValues[j].values.push(apiRef.current.getRowValue(row, colDef));
+      }
     }
   });
 
-  return aggregationFunction.apply({
-    values,
-    groupId,
-    field, // Added per user request in https://github.com/mui/mui-x/issues/6995#issuecomment-1327423455
-  });
+  for (let i = 0; i < aggregatedValues.length; i += 1) {
+    const { aggregatedField, values } = aggregatedValues[i];
+    const aggregationFunction = aggregationRules[aggregatedField].aggregationFunction as Record<string, GridAggregationFunction>;
+    const value = aggregationFunction.apply({
+      values,
+      groupId,
+      field: aggregatedField, // Added per user request in https://github.com/mui/mui-x/issues/6995#issuecomment-1327423455
+    });
+
+    groupAggregationLookup[aggregatedField] = {
+      position,
+      value,
+    };
+  }
+
+  return groupAggregationLookup;
 };
 
-const getGroupAggregatedValueDataSource = ({
-  groupId,
-  apiRef,
-  aggregatedFields,
-  position,
-}: {
-  groupId: GridRowId;
-  apiRef: React.MutableRefObject<GridPrivateApiPremium>;
-  aggregatedFields: string[];
-  position: GridAggregationPosition;
-}) => {
+const getGroupAggregatedValueDataSource = (
+  groupId: GridRowId,
+  apiRef: React.MutableRefObject<GridPrivateApiPremium>,
+  aggregatedFields: string[],
+  position: GridAggregationPosition,
+) => {
   const groupAggregationLookup: GridAggregationLookup[GridRowId] = {};
 
   for (let j = 0; j < aggregatedFields.length; j += 1) {
@@ -88,42 +108,6 @@ const getGroupAggregatedValueDataSource = ({
     groupAggregationLookup[aggregatedField] = {
       position,
       value: apiRef.current.resolveGroupAggregation(groupId, aggregatedField),
-    };
-  }
-
-  return groupAggregationLookup;
-};
-
-const getGroupAggregatedValue = ({
-  groupId,
-  apiRef,
-  aggregationRowsScope,
-  aggregatedFields,
-  aggregationRules,
-  position,
-}: {
-  groupId: GridRowId;
-  apiRef: React.MutableRefObject<GridPrivateApiPremium>;
-  aggregationRowsScope: DataGridPremiumProcessedProps['aggregationRowsScope'];
-  aggregatedFields: string[];
-  aggregationRules: GridAggregationRules;
-  position: GridAggregationPosition;
-}) => {
-  const groupAggregationLookup: GridAggregationLookup[GridRowId] = {};
-
-  for (let j = 0; j < aggregatedFields.length; j += 1) {
-    const aggregatedField = aggregatedFields[j];
-    const columnAggregationRules = aggregationRules[aggregatedField];
-
-    groupAggregationLookup[aggregatedField] = {
-      position,
-      value: getAggregationCellValue({
-        apiRef,
-        groupId,
-        field: aggregatedField,
-        aggregationFunction: columnAggregationRules.aggregationFunction as GridAggregationFunction,
-        aggregationRowsScope,
-      }),
     };
   }
 
@@ -145,12 +129,12 @@ export const createAggregationLookup = ({
   getAggregationPosition: DataGridPremiumProcessedProps['getAggregationPosition'];
   isDataSource: boolean;
 }): GridAggregationLookup => {
-  const aggregationRules = getAggregationRules({
-    columnsLookup: gridColumnLookupSelector(apiRef),
-    aggregationModel: gridAggregationModelSelector(apiRef),
+  const aggregationRules = getAggregationRules(
+    gridColumnLookupSelector(apiRef),
+    gridAggregationModelSelector(apiRef),
     aggregationFunctions,
     isDataSource,
-  });
+  );
 
   const aggregatedFields = Object.keys(aggregationRules);
   if (aggregatedFields.length === 0) {
@@ -169,25 +153,26 @@ export const createAggregationLookup = ({
         createGroupAggregationLookup(childNode);
       }
     }
+
     const position = getAggregationPosition(groupNode);
 
-    if (position != null) {
+    if (position !== null) {
       if (isDataSource) {
-        aggregationLookup[groupNode.id] = getGroupAggregatedValueDataSource({
-          groupId: groupNode.id,
+        aggregationLookup[groupNode.id] = getGroupAggregatedValueDataSource(
+          groupNode.id,
           apiRef,
           aggregatedFields,
           position,
-        });
+        );
       } else if (groupNode.children.length) {
-        aggregationLookup[groupNode.id] = getGroupAggregatedValue({
-          groupId: groupNode.id,
+        aggregationLookup[groupNode.id] = getGroupAggregatedValue(
+          groupNode.id,
           apiRef,
-          aggregatedFields,
           aggregationRowsScope,
+          aggregatedFields,
           aggregationRules,
           position,
-        });
+        );
       }
     }
   };

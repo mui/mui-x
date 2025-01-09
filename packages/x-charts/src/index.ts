@@ -11,6 +11,7 @@ export * from './ChartsYAxis';
 export * from './ChartsGrid';
 export * from './ChartsText';
 export * from './ChartsTooltip';
+export * from './ChartsLabel';
 export * from './ChartsLegend';
 export * from './ChartsAxisHighlight';
 export * from './ChartsVoronoiHandler';

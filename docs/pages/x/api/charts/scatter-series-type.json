@@ -19,6 +19,7 @@
     "label": {
       "type": { "description": "string | ((location: 'tooltip' | 'legend') =&gt; string)" }
     },
+    "labelMarkType": { "type": { "description": "ChartsLabelMarkProps['type']" } },
     "markerSize": { "type": { "description": "number" } },
     "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
     "xAxisId": { "type": { "description": "string" } },

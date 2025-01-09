@@ -127,12 +127,12 @@ export const useGridAggregation = (
 
     const aggregationRules = props.disableAggregation
       ? {}
-      : getAggregationRules({
-          columnsLookup: gridColumnLookupSelector(apiRef),
-          aggregationModel: gridAggregationModelSelector(apiRef),
-          aggregationFunctions: props.aggregationFunctions,
-          isDataSource: !!props.unstable_dataSource,
-        });
+      : getAggregationRules(
+          gridColumnLookupSelector(apiRef),
+          gridAggregationModelSelector(apiRef),
+          props.aggregationFunctions,
+          !!props.unstable_dataSource,
+        );
 
     // Re-apply the row hydration to add / remove the aggregation footers
     if (!areAggregationRulesEqual(rulesOnLastRowHydration, aggregationRules)) {
