@@ -6,7 +6,7 @@ import type {
 } from '../../models/seriesType/config';
 import type { SeriesId } from '../../models/seriesType/common';
 import type { StackingGroupsType } from '../../internals/stackSeries';
-import type { LegendItemParams } from '../../ChartsLegend/chartsLegend.types';
+import type { LegendItemParams } from '../../ChartsLegend';
 
 export type SeriesFormatterParams<T extends ChartSeriesType> = {
   series: Record<SeriesId, ChartsSeriesConfig[T]['seriesInput']>;

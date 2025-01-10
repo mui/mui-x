@@ -2,7 +2,6 @@ import * as React from 'react';
 import type { TextFieldProps } from '@mui/material/TextField';
 import { MakeRequired, SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import {
-  BaseNonStaticPickerProps,
   BasePickerProps,
   BaseNonRangeNonStaticPickerProps,
 } from '../../models/props/basePickerProps';
@@ -63,8 +62,7 @@ export interface UseMobilePickerSlotProps<TEnableAccessibleFieldDOMStructure ext
     Pick<PickersLayoutSlotProps<PickerValue>, 'toolbar'> {}
 
 export interface MobileOnlyPickerProps
-  extends BaseNonStaticPickerProps,
-    BaseNonRangeNonStaticPickerProps,
+  extends BaseNonRangeNonStaticPickerProps,
     UsePickerValueNonStaticProps,
     UsePickerProviderNonStaticProps {}
 
