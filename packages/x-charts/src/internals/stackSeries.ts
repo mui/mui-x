@@ -15,7 +15,6 @@ import {
 import type { BarSeriesType, LineSeriesType } from '../models/seriesType';
 import type { StackOffsetType, StackOrderType } from '../models/stacking';
 import { SeriesId } from '../models/seriesType/common';
-import { ChartSeriesType } from '../models/seriesType/config';
 
 type StackableSeries = Record<SeriesId, BarSeriesType> | Record<SeriesId, LineSeriesType>;
 
@@ -95,7 +94,7 @@ export const StackOffset: {
  * @param series the object of all bars series
  * @returns an array of groups, including the ids, the stacking order, and the stacking offset.
  */
-export const getStackingGroups = (params: FormatterParams, type?: ChartSeriesType) => {
+export const getStackingGroups = (params: FormatterParams) => {
   const { series, seriesOrder, defaultStrategy } = params;
 
   const stackingGroups: StackingGroupsType = [];
@@ -105,7 +104,7 @@ export const getStackingGroups = (params: FormatterParams, type?: ChartSeriesTyp
     const { stack, stackOrder, stackOffset } = series[id];
 
     // Funnel charts are stacked by default
-    const stackId = !stack && type === 'funnel' ? defaultStackId : stack;
+    const stackId = !stack ? defaultStackId : stack;
 
     if (stackId === undefined) {
       stackingGroups.push({

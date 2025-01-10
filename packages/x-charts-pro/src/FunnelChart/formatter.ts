@@ -28,16 +28,13 @@ const createPoint = ({
 const formatter: SeriesProcessor<'funnel'> = (params, dataset) => {
   const { seriesOrder, series } = params;
   // TODO: fix type
-  const stackingGroups = getStackingGroups(
-    {
-      ...params,
-      defaultStrategy: {
-        stackOrder: 'reverse',
-        stackOffset: 'none',
-      },
-    } as any,
-    'funnel',
-  );
+  const stackingGroups = getStackingGroups({
+    ...params,
+    defaultStrategy: {
+      stackOrder: 'reverse',
+      stackOffset: 'none',
+    },
+  } as any);
 
   // Create a data set with format adapted to d3
   const d3Dataset: FunnelDataset = (dataset as FunnelDataset) ?? [];
