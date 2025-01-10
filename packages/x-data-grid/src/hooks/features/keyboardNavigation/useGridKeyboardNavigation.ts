@@ -176,13 +176,13 @@ export const useGridKeyboardNavigation = (
 
       switch (event.key) {
         case 'ArrowDown': {
-          if (firstRowIndexInPage !== null) {
-            if (headerFilteringEnabled) {
-              goToHeaderFilter(colIndexBefore, event);
-            } else {
+          if (headerFilteringEnabled) {
+            goToHeaderFilter(colIndexBefore, event);
+          } else {
+            if (firstRowIndexInPage !== null)
               goToCell(colIndexBefore, getRowIdFromIndex(firstRowIndexInPage));
-            }
           }
+
           break;
         }
 
