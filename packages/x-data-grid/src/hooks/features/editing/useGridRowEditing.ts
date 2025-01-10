@@ -49,7 +49,7 @@ import { GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 import { getDefaultCellValue } from './utils';
 
 export const useGridRowEditing = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'editMode'

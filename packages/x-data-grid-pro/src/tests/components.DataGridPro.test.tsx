@@ -15,7 +15,7 @@ import { getCell, getRow } from 'test/utils/helperFn';
 describe('<DataGridPro/> - Components', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
 
   function TestCase(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();

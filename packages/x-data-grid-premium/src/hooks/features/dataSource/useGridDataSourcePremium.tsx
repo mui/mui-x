@@ -28,7 +28,7 @@ const options = {
 };
 
 export const useGridDataSourcePremium = (
-  apiRef: React.MutableRefObject<GridPrivateApiPremium>,
+  apiRef: React.RefObject<GridPrivateApiPremium>,
   props: DataGridPremiumProcessedProps,
 ) => {
   const { api, strategyProcessor, events } = useGridDataSourceBase<GridPrivateApiPremium>(

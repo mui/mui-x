@@ -29,7 +29,7 @@ export function createUseGridApiEventHandler(registryContainer: RegistryContaine
   let cleanupTokensCounter = 0;
 
   return function useGridApiEventHandler<Api extends GridApiCommon, E extends GridEvents>(
-    apiRef: React.MutableRefObject<Api>,
+    apiRef: React.RefObject<Api>,
     eventName: E,
     handler?: GridEventListener<E>,
     options?: EventListenerOptions,
@@ -118,7 +118,7 @@ export const useGridApiEventHandler = createUseGridApiEventHandler(registryConta
 const optionsSubscriberOptions: EventListenerOptions = { isFirst: true };
 
 export function useGridApiOptionHandler<Api extends GridApiCommon, E extends GridEvents>(
-  apiRef: React.MutableRefObject<Api>,
+  apiRef: React.RefObject<Api>,
   eventName: E,
   handler?: GridEventListener<E>,
 ) {
