@@ -49,7 +49,7 @@ The component is available in four variants:
   It renders the views inside a popover and a field for keyboard editing.
 
 - The `MobileDateRangePicker` component which works best for touch devices and small screens.
-  It renders the view inside a modal and a field for keyboard editing.
+  It renders the view inside a modal and does not allow editing values with the keyboard in the field.
 
 - The `DateRangePicker` component which renders `DesktopDateRangePicker` or `MobileDateRangePicker` depending on the device it runs on.
 
