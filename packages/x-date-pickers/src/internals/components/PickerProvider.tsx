@@ -107,7 +107,7 @@ export interface PickerContextValue<
    */
   orientation: PickerOrientation;
   /**
-   * The ref that should be attached to the element that triggers the picker opening.
+   * The ref that should be attached to the element that triggers the Picker opening.
    * When using a built-in field component, this property is automatically handled.
    */
   triggerRef: React.RefObject<any>;
