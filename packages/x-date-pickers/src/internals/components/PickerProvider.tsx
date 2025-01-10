@@ -18,8 +18,11 @@ import {
   UsePickerViewsContextValue,
 } from '../hooks/usePicker/usePickerViews';
 import { IsValidValueContext } from '../../hooks/useIsValidValue';
-
-export const PickerContext = React.createContext<PickerContextValue<any, any, any> | null>(null);
+import {
+  PickerFieldPrivateContext,
+  PickerFieldPrivateContextValue,
+} from '../hooks/useField/useFieldInternalPropsWithDefaults';
+import { PickerContext } from '../../hooks/usePickerContext';
 
 export const PickerActionsContext = React.createContext<PickerActionsContextValue<
   any,
@@ -53,6 +56,7 @@ export function PickerProvider<TValue extends PickerValidValue>(
     contextValue,
     actionsContextValue,
     privateContextValue,
+    fieldPrivateContextValue,
     isValidContextValue,
     localeText,
     children,
@@ -62,9 +66,11 @@ export function PickerProvider<TValue extends PickerValidValue>(
     <PickerContext.Provider value={contextValue}>
       <PickerActionsContext.Provider value={actionsContextValue}>
         <PickerPrivateContext.Provider value={privateContextValue}>
-          <IsValidValueContext.Provider value={isValidContextValue}>
-            <LocalizationProvider localeText={localeText}>{children}</LocalizationProvider>
-          </IsValidValueContext.Provider>
+          <PickerFieldPrivateContext.Provider value={fieldPrivateContextValue}>
+            <IsValidValueContext.Provider value={isValidContextValue}>
+              <LocalizationProvider localeText={localeText}>{children}</LocalizationProvider>
+            </IsValidValueContext.Provider>
+          </PickerFieldPrivateContext.Provider>
         </PickerPrivateContext.Provider>
       </PickerActionsContext.Provider>
     </PickerContext.Provider>
@@ -75,6 +81,7 @@ export interface PickerProviderProps<TValue extends PickerValidValue> {
   contextValue: PickerContextValue<any, any, any>;
   actionsContextValue: PickerActionsContextValue<any, any, any>;
   privateContextValue: PickerPrivateContextValue;
+  fieldPrivateContextValue: PickerFieldPrivateContextValue;
   isValidContextValue: (value: TValue) => boolean;
   localeText: PickersInputLocaleText | undefined;
   children: React.ReactNode;
@@ -100,7 +107,7 @@ export interface PickerContextValue<
    * Is equal to "mobile" when using a mobile picker (like <MobileDatePicker />).
    * Is equal to "mobile" or "desktop" when using a responsive picker (like <DatePicker />) depending on the `desktopModeMediaQuery` prop.
    * Is equal to "mobile" or "desktop" when using a static picker (like <StaticDatePicker />) depending on the `displayStaticWrapperAs` prop.
-   * Is always equal to "desktop" if the component you are accessing the ownerState from is not wrapped by a picker.
+   * Is always equal to "desktop" if the component you are accessing the context from is not wrapped by a picker.
    */
   variant: PickerVariant;
   /**
@@ -108,15 +115,23 @@ export interface PickerContextValue<
    * Is equal to "landscape" when the picker is in landscape orientation.
    * Is equal to "portrait" when the picker is in portrait orientation.
    * You can use the "orientation" on any picker component to force the orientation.
-   * Is always equal to "portrait" if the component you are accessing the ownerState from is not wrapped by a picker.
+   * Is always equal to "portrait" if the component you are accessing the context from is not wrapped by a picker.
    */
   orientation: PickerOrientation;
+  /**
+   * Format that should be used to render the value in the field.
+   * Is equal to `props.format` on the picker component if defined.
+   * Is generated based on the available views if not defined.
+   * Is equal to an empty string if the picker does not have a field (static pickers).
+   * Is always equal to an empty string if the component you are accessing the context from is not wrapped by a picker.
+   */
+  fieldFormat: string;
 }
 
 export interface PickerActionsContextValue<
   TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
-  TError = string,
+  TError = string | null,
 > extends UsePickerValueActionsContextValue<TValue, TError>,
     UsePickerViewsActionsContextValue<TView> {}
 

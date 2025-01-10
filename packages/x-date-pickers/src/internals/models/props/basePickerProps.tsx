@@ -6,7 +6,6 @@ import { UsePickerBaseProps } from '../../hooks/usePicker';
 import { PickersInputComponentLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 import type { UsePickerViewsProps } from '../../hooks/usePicker/usePickerViews';
 import { DateOrTimeViewWithMeridiem } from '../common';
-import { UseFieldInternalProps } from '../../hooks/useField';
 import { PickerValidValue } from '../value';
 
 /**
@@ -41,26 +40,6 @@ export interface BasePickerInputProps<
     MakeOptional<BasePickerProps<TValue, TView, TError, any>, 'openTo' | 'views'>,
     'viewRenderers'
   > {}
-
-// We don't take the `format` prop from `UseFieldInternalProps` to have a custom JSDoc description.
-/**
- * Props common to all non-static pickers.
- * These props are handled by the headless wrappers.
- */
-export interface BaseNonStaticPickerProps
-  extends Pick<
-    UseFieldInternalProps<any, any, any>,
-    | 'formatDensity'
-    | 'enableAccessibleFieldDOMStructure'
-    | 'selectedSections'
-    | 'onSelectedSectionsChange'
-  > {
-  /**
-   * Format of the date when rendered in the input(s).
-   * Defaults to localized format based on the used `views`.
-   */
-  format?: string;
-}
 
 /**
  * Props common to all non-range non-static pickers.
