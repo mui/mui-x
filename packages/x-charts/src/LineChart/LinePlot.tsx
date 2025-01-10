@@ -3,7 +3,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
-import { useCartesianContext } from '../context/CartesianProvider';
 import {
   LineElement,
   lineElementClasses,
@@ -19,6 +18,7 @@ import { useChartGradient } from '../internals/components/ChartsAxesGradients';
 import { useLineSeries } from '../hooks/useSeries';
 import { AxisId } from '../models/axis';
 import { useSkipAnimation } from '../context/AnimationProvider';
+import { useXAxes, useYAxes } from '../hooks';
 
 export interface LinePlotSlots extends LineElementSlots {}
 
@@ -50,7 +50,9 @@ const LinePlotRoot = styled('g', {
 
 const useAggregatedData = () => {
   const seriesData = useLineSeries();
-  const axisData = useCartesianContext();
+
+  const { xAxis, xAxisIds } = useXAxes();
+  const { yAxis, yAxisIds } = useYAxes();
 
   // This memo prevents odd line chart behavior when hydrating.
   const allData = React.useMemo(() => {
@@ -59,7 +61,6 @@ const useAggregatedData = () => {
     }
 
     const { series, stackingGroups } = seriesData;
-    const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
     const defaultXAxisId = xAxisIds[0];
     const defaultYAxisId = yAxisIds[0];
 
@@ -121,7 +122,7 @@ const useAggregatedData = () => {
         };
       });
     });
-  }, [seriesData, axisData]);
+  }, [seriesData, xAxisIds, yAxisIds, xAxis, yAxis]);
 
   return allData;
 };

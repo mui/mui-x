@@ -20,7 +20,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGridPremium /> - Data source aggregation', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
   let getRowsSpy: SinonSpy;
   let mockServer: ReturnType<typeof useMockServer>;
 

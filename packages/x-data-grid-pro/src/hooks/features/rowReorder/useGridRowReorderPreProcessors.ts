@@ -22,7 +22,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 export const useGridRowReorderPreProcessors = (
-  privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
+  privateApiRef: React.RefObject<GridPrivateApiPro>,
   props: DataGridProProcessedProps,
 ) => {
   const ownerState = { classes: props.classes };

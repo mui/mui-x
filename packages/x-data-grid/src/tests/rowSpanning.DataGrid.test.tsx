@@ -9,7 +9,7 @@ import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 describe('<DataGrid /> - Row spanning', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
   const baselineProps: DataGridProps = {
     rowSpanning: true,
     columns: [

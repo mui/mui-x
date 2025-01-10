@@ -88,7 +88,7 @@ export const columnGroupsStateInitializer: GridStateInitializer<
  * @requires useGridParamsApi (method)
  */
 export const useGridColumnGrouping = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'columnGroupingModel'>,
 ) => {
   /**

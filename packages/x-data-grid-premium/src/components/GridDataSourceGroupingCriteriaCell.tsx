@@ -38,7 +38,7 @@ interface GridGroupingCriteriaCellIconProps
 }
 
 function GridGroupingCriteriaCellIcon(props: GridGroupingCriteriaCellIconProps) {
-  const apiRef = useGridPrivateApiContext() as React.MutableRefObject<GridPrivateApiPremium>;
+  const apiRef = useGridPrivateApiContext() as React.RefObject<GridPrivateApiPremium>;
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
   const { rowNode, id, field, descendantCount } = props;
