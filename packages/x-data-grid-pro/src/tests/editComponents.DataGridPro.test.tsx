@@ -41,7 +41,7 @@ const generateDate = (
 describe('<DataGridPro /> - Edit components', () => {
   const { render, clock } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
 
   const defaultData: Pick<DataGridProProps, 'rows' | 'columns'> = { columns: [], rows: [] };
 

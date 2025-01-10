@@ -52,7 +52,7 @@ describe('<DataGridPro /> - Events params', () => {
     ],
   };
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
 
   function TestEvents(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();

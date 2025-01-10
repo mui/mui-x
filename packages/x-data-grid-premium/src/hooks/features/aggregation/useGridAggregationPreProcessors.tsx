@@ -22,7 +22,7 @@ import { GridInitialStatePremium } from '../../../models/gridStatePremium';
 import { GridAggregationRules } from './gridAggregationInterfaces';
 
 export const useGridAggregationPreProcessors = (
-  apiRef: React.MutableRefObject<GridPrivateApiPremium>,
+  apiRef: React.RefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
     | 'aggregationFunctions'

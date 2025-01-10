@@ -10,7 +10,7 @@ import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { useGridDataSourceBase } from './useGridDataSourceBase';
 
 export const useGridDataSourcePro = (
-  apiRef: React.MutableRefObject<GridPrivateApiPro>,
+  apiRef: React.RefObject<GridPrivateApiPro>,
   props: DataGridProProcessedProps,
 ) => {
   const { api, strategyProcessor, events } = useGridDataSourceBase(apiRef, props);
