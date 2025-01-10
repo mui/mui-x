@@ -11,7 +11,7 @@ import { refType, unstable_useId as useId } from '@mui/utils';
 import { gridHeaderFilteringMenuSelector } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-const sx = {
+const style = {
   width: 22,
   height: 22,
   margin: 'auto 0 10px 5px',
@@ -69,7 +69,7 @@ function GridHeaderFilterMenuContainer(props: {
         tabIndex={-1}
         size="small"
         onClick={handleClick}
-        sx={sx}
+        style={style}
         disabled={disabled}
         {...rootProps.slotProps?.baseIconButton}
       >

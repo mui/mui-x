@@ -1,3 +1,5 @@
+// @ts-check
+
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
@@ -8,13 +10,13 @@ import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
 import { ChartsLegend, PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';
 
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { ChartDataProvider } from '@mui/x-charts/context';
 
+/** @type {import('@mui/x-charts/PieChart').PieChartProps['series']} */
 const pieSeries = [
   {
     type: 'pie',
     id: 'series-1',
-    label: 'Series 1',
     data: [
       { label: 'Pie A', id: 'P1-A', value: 400 },
       { label: 'Pie B', id: 'P2-B', value: 300 },
@@ -22,6 +24,7 @@ const pieSeries = [
   },
 ];
 
+/** @type {import('@mui/x-charts/BarChart').BarChartProps['series']} */
 const barSeries = [
   {
     type: 'bar',
@@ -37,6 +40,7 @@ const barSeries = [
   },
 ];
 
+/** @type {import('@mui/x-charts/LineChart').LineChartProps['series']} */
 const lineSeries = [
   {
     type: 'line',
@@ -61,31 +65,44 @@ export default function LegendClickNoSnap() {
       spacing={{ xs: 0, md: 4 }}
       sx={{ width: '100%' }}
     >
-      <Box sx={{ flexGrow: 1 }}>
+      <Box
+        sx={{
+          flexGrow: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'start',
+          alignItems: 'start',
+        }}
+      >
         <Typography>Chart Legend</Typography>
-        <ChartContainer series={barSeries} width={400} height={60}>
+        <ChartDataProvider
+          // @ts-ignore
+          series={barSeries}
+          width={400}
+          height={60}
+        >
           <ChartsLegend
-            direction="row"
-            position={{
-              horizontal: 'left',
-              vertical: 'top',
-            }}
+            direction="horizontal"
+            // @ts-ignore
             onItemClick={(event, context, index) => setItemData([context, index])}
           />
-        </ChartContainer>
+        </ChartDataProvider>
         <Typography>Pie Chart Legend</Typography>
-        <ChartContainer series={pieSeries} width={400} height={60}>
+        <ChartDataProvider
+          // @ts-ignore
+          series={pieSeries}
+          width={400}
+          height={60}
+        >
           <ChartsLegend
-            direction="row"
-            position={{
-              horizontal: 'left',
-              vertical: 'top',
-            }}
+            direction="horizontal"
+            // @ts-ignore
             onItemClick={(event, context, index) => setItemData([context, index])}
           />
-        </ChartContainer>
-        <Typography>Pie Chart Legend</Typography>
-        <ChartContainer
+        </ChartDataProvider>
+        <Typography>Piecewise Color Legend</Typography>
+        <ChartDataProvider
+          // @ts-ignore
           series={lineSeries}
           width={400}
           height={60}
@@ -103,15 +120,12 @@ export default function LegendClickNoSnap() {
           ]}
         >
           <PiecewiseColorLegend
-            direction="row"
-            position={{
-              horizontal: 'left',
-              vertical: 'top',
-            }}
+            direction="horizontal"
             axisDirection="x"
+            // @ts-ignore
             onItemClick={(event, context, index) => setItemData([context, index])}
           />
-        </ChartContainer>
+        </ChartDataProvider>
       </Box>
 
       <Stack direction="column" sx={{ width: { xs: '100%', md: '40%' } }}>
@@ -127,6 +141,7 @@ export default function LegendClickNoSnap() {
             aria-label="reset"
             size="small"
             onClick={() => {
+              // @ts-ignore
               setItemData(null);
             }}
           >

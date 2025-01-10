@@ -3,7 +3,7 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
 import { useValidation } from '../../../validation';
-import { useLocalizationContext, useUtils } from '../useUtils';
+import { useUtils } from '../useUtils';
 import {
   UseFieldParameters,
   UseFieldReturnValue,
@@ -19,31 +19,7 @@ import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
 import { useFieldV7TextField } from './useFieldV7TextField';
 import { useFieldV6TextField } from './useFieldV6TextField';
-import {
-  PickerValidValue,
-  PickerAnyManager,
-  PickerManagerFieldInternalProps,
-  PickerManagerFieldInternalPropsWithDefaults,
-} from '../../models';
-
-/**
- * Applies the default values to the field internal props.
- */
-export const useFieldInternalPropsWithDefaults = <TManager extends PickerAnyManager>({
-  manager,
-  internalProps,
-}: {
-  manager: TManager;
-  internalProps: PickerManagerFieldInternalProps<TManager>;
-}): PickerManagerFieldInternalPropsWithDefaults<TManager> => {
-  const localizationContext = useLocalizationContext();
-  return React.useMemo(() => {
-    return manager.internal_applyDefaultsToFieldInternalProps({
-      ...localizationContext,
-      internalProps,
-    });
-  }, [manager, internalProps, localizationContext]);
-};
+import { PickerValidValue } from '../../models';
 
 export const useField = <
   TValue extends PickerValidValue,

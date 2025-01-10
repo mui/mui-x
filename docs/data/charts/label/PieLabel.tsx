@@ -21,6 +21,6 @@ export default function PieLabel() {
 }
 
 const props = {
-  width: 500,
+  width: 200,
   height: 200,
 };
