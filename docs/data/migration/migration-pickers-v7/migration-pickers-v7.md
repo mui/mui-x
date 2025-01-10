@@ -262,7 +262,7 @@ const theme = createTheme({
 });
 ```
 
-### Field editing on mobile pickers
+### Field editing on mobile Pickers
 
 The field is now editable if rendered inside a mobile Picker.
 Before v8, if rendered inside a mobile picker, the field were read-only and clicking anywhere on them would open the picker.
