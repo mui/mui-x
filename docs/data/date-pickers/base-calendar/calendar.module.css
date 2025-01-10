@@ -170,9 +170,7 @@
   background-color: transparent;
   cursor: pointer;
 
-  &[data-current]:not([data-selected]):not([data-selection-start]):not([data-selection-end]):not(
-      :focus-visible
-    ) {
+  &[data-current]:not([data-selected]):not(:focus-visible) {
     outline: 1px solid #9ca3af;
   }
 
@@ -188,38 +186,16 @@
   }
 
   &.RangeDaysCell {
-    &[data-selected],
-    &[data-selection-end],
-    &[data-previewed],
-    &[data-preview-end] {
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
+    &[data-previewed]:not([data-selected]) {
+      border-top: 1px dashed var(--day-preview-border-color);
+      border-bottom: 1px dashed var(--day-preview-border-color);
     }
 
-    &[data-selected],
-    &[data-selection-start],
-    &[data-previewed],
-    &[data-preview-start] {
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
-    }
-
-    &[data-preview-start],
-    &[data-preview-end],
-    &[data-previewed] {
-      &:not([data-selected]):not([data-selection-start]):not([data-selection-end]) {
-        border-top: 1px dashed var(--day-preview-border-color);
-        border-bottom: 1px dashed var(--day-preview-border-color);
-      }
-    }
-
-    &[data-preview-start]:not([data-selected]):not([data-selection-start]):not(
-        [data-selection-end]
-      ) {
+    &[data-preview-start]:not([data-selected]) {
       border-left: 1px dashed var(--day-preview-border-color);
     }
 
-    &[data-preview-end]:not([data-selected]):not([data-selection-start]):not([data-selection-end]) {
+    &[data-preview-end]:not([data-selected]) {
       border-right: 1px dashed var(--day-preview-border-color);
     }
   }

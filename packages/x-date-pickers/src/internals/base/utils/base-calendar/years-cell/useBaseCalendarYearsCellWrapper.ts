@@ -11,7 +11,7 @@ import { useBaseCalendarYearsGridOrListContext } from '../years-grid/BaseCalenda
 
 export function useBaseCalendarYearsCellWrapper(
   parameters: useBaseCalendarYearsCellWrapper.Parameters,
-) {
+): useBaseCalendarYearsCellWrapper.ReturnValue {
   const { forwardedRef, value } = parameters;
   const baseRootContext = useBaseCalendarRootContext();
   const baseYearsListOrGridContext = useBaseCalendarYearsGridOrListContext();
@@ -125,7 +125,7 @@ export namespace useBaseCalendarYearsCellWrapper {
     /**
      * The ref to forward to the component.
      */
-    ref: React.RefObject<HTMLButtonElement>;
+    ref: React.RefCallback<HTMLButtonElement> | null;
     /**
      * The memoized context to forward to the memoized component so that it does not need to subscribe to any context.
      */

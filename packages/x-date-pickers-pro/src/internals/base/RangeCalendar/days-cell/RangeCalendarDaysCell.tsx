@@ -20,6 +20,9 @@ const customStyleHookMapping: CustomStyleHookMapping<RangeCalendarDaysCell.State
   selectionEnd(value) {
     return value ? { [RangeCalendarDaysCellDataAttributes.selectionEnd]: '' } : null;
   },
+  insideSelection(value) {
+    return value ? { [RangeCalendarDaysCellDataAttributes.insideSelection]: '' } : null;
+  },
   previewed(value) {
     return value ? { [RangeCalendarDaysCellDataAttributes.previewed]: '' } : null;
   },
@@ -28,6 +31,9 @@ const customStyleHookMapping: CustomStyleHookMapping<RangeCalendarDaysCell.State
   },
   previewEnd(value) {
     return value ? { [RangeCalendarDaysCellDataAttributes.previewEnd]: '' } : null;
+  },
+  insidePreview(value) {
+    return value ? { [RangeCalendarDaysCellDataAttributes.insidePreview]: '' } : null;
   },
   disabled(value) {
     return value ? { [RangeCalendarDaysCellDataAttributes.disabled]: '' } : null;
@@ -55,9 +61,11 @@ const InnerRangeCalendarDaysCell = React.forwardRef(function RangeCalendarDaysGr
       selected: ctx.isSelected,
       selectionStart: ctx.isSelectionStart,
       selectionEnd: ctx.isSelectionEnd,
+      insideSelection: ctx.isSelected && !ctx.isSelectionStart && !ctx.isSelectionEnd,
       previewed: ctx.isPreviewed,
       previewStart: ctx.isPreviewStart,
       previewEnd: ctx.isPreviewEnd,
+      insidePreview: ctx.isPreviewed && !ctx.isPreviewStart && !ctx.isPreviewEnd,
       disabled: ctx.isDisabled,
       invalid: ctx.isInvalid,
       outsideMonth: ctx.isOutsideCurrentMonth,
@@ -104,7 +112,7 @@ const RangeCalendarDaysCell = React.forwardRef(function RangeCalendarDaysCell(
 export namespace RangeCalendarDaysCell {
   export interface State {
     /**
-     * Whether the day is within the selected range and is not its first or last day.
+     * Whether the day is within the selected range.
      */
     selected: boolean;
     /**
@@ -115,6 +123,10 @@ export namespace RangeCalendarDaysCell {
      * Whether the day is the last day of the selected range.
      */
     selectionEnd: boolean;
+    /**
+     * Whether the day is within the selected range and is not its first or last day.
+     */
+    insideSelection: boolean;
     /**
      * Whether the day is within the preview range and is not its first or last day.
      */
@@ -127,6 +139,10 @@ export namespace RangeCalendarDaysCell {
      * Whether the day is the last day of the preview range.
      */
     previewEnd: boolean;
+    /**
+     * Whether the day is within the preview range and is not its first or last day.
+     */
+    insidePreview: boolean;
     /**
      * Whether the day is disabled.
      */

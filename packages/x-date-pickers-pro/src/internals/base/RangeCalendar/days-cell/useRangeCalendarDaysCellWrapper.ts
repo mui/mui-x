@@ -19,6 +19,13 @@ export function useRangeCalendarDaysCellWrapper(
   const utils = useUtils();
   const rootContext = useRangeCalendarRootContext();
 
+  const isSelected = React.useMemo(() => {
+    if (!isRangeValid(utils, rootContext.highlightedRange)) {
+      return baseCtx.isSelected;
+    }
+    return isWithinRange(utils, value, rootContext.highlightedRange);
+  }, [utils, value, rootContext.highlightedRange, baseCtx.isSelected]);
+
   const isSelectionStart = React.useMemo(
     () => isStartOfRange(utils, value, rootContext.highlightedRange),
     [utils, value, rootContext.highlightedRange],
@@ -29,23 +36,9 @@ export function useRangeCalendarDaysCellWrapper(
     [utils, value, rootContext.highlightedRange],
   );
 
-  const isSelected = React.useMemo(() => {
-    if (!isRangeValid(utils, rootContext.highlightedRange)) {
-      return baseCtx.isSelected;
-    }
-    return (
-      !isSelectionStart &&
-      !isSelectionEnd &&
-      isWithinRange(utils, value, rootContext.highlightedRange)
-    );
-  }, [
-    utils,
-    value,
-    rootContext.highlightedRange,
-    baseCtx.isSelected,
-    isSelectionStart,
-    isSelectionEnd,
-  ]);
+  const isPreviewed = React.useMemo(() => {
+    return isWithinRange(utils, value, rootContext.previewRange);
+  }, [utils, value, rootContext.previewRange]);
 
   const isPreviewStart = React.useMemo(
     () => isStartOfRange(utils, value, rootContext.previewRange),
@@ -57,18 +50,12 @@ export function useRangeCalendarDaysCellWrapper(
     [utils, value, rootContext.previewRange],
   );
 
-  const isPreviewed = React.useMemo(() => {
-    return (
-      !isPreviewStart && !isPreviewEnd && isWithinRange(utils, value, rootContext.previewRange)
-    );
-  }, [utils, value, rootContext.previewRange, isPreviewStart, isPreviewEnd]);
-
   const ctx = React.useMemo<useRangeCalendarDaysCell.Context>(
     () => ({
       ...baseCtx,
       isSelected,
-      isSelectionStart: isSelectionStart && !isSelectionEnd,
-      isSelectionEnd: isSelectionEnd && !isSelectionStart,
+      isSelectionStart,
+      isSelectionEnd,
       isPreviewed,
       isPreviewStart,
       isPreviewEnd,

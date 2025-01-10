@@ -1,6 +1,6 @@
 export enum RangeCalendarDaysCellDataAttributes {
   /**
-   * Present when the day is within the selected range and is not its first or last day.
+   * Present when the day is within the selected range.
    */
   selected = 'data-selected',
   /**
@@ -12,7 +12,11 @@ export enum RangeCalendarDaysCellDataAttributes {
    */
   selectionEnd = 'data-selection-end',
   /**
-   * Present when the day is within the preview range and is not its first or last day.
+   * Present when the day is within the selected range and is not its first or last day.
+   */
+  insideSelection = 'data-inside-selection',
+  /**
+   * Present when the day is within the preview range.
    */
   previewed = 'data-previewed',
   /**
@@ -23,6 +27,10 @@ export enum RangeCalendarDaysCellDataAttributes {
    * Present when the day is the last day of the preview range.
    */
   previewEnd = 'data-preview-end',
+  /**
+   * Present when the day is within the preview range and is not its first or last day.
+   */
+  insidePreview = 'data-inside-preview',
   /**
    * Present when the day is disabled.
    */

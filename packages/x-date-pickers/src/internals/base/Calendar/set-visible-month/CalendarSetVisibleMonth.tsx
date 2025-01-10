@@ -33,8 +33,11 @@ const CalendarSetVisibleMonth = React.forwardRef(function CalendarSetVisibleMont
   props: CalendarSetVisibleMonth.Props,
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
-  const { ctx } = useBaseCalendarSetVisibleMonthWrapper({ target: props.target });
-  return <MemoizedInnerCalendarSetVisibleMonth {...props} ref={forwardedRef} ctx={ctx} />;
+  const { ref, ctx } = useBaseCalendarSetVisibleMonthWrapper({
+    forwardedRef,
+    target: props.target,
+  });
+  return <MemoizedInnerCalendarSetVisibleMonth {...props} ref={ref} ctx={ctx} />;
 });
 
 export namespace CalendarSetVisibleMonth {

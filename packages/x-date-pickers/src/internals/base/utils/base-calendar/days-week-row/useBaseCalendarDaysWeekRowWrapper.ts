@@ -7,7 +7,7 @@ import type { useBaseCalendarDaysWeekRow } from './useBaseCalendarDaysWeekRow';
 
 export function useBaseCalendarDaysWeekRowWrapper(
   parameters: useBaseCalendarDaysWeekRowWrapper.Parameters,
-) {
+): useBaseCalendarDaysWeekRowWrapper.ReturnValue {
   const { forwardedRef, value } = parameters;
   const baseDaysGridContext = useBaseCalendarDaysGridContext();
   const baseDaysGridBodyContext = useBaseCalendarDaysGridBodyContext();
@@ -44,7 +44,7 @@ export namespace useBaseCalendarDaysWeekRowWrapper {
     /**
      * The ref to forward to the component.
      */
-    ref: React.RefObject<HTMLDivElement>;
+    ref: React.RefCallback<HTMLButtonElement> | null;
     /**
      * The memoized context to forward to the memoized component so that it does not need to subscribe to any context.
      */

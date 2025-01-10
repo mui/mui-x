@@ -17,27 +17,38 @@ const RangeCalendarRoot = React.forwardRef(function RangeCalendarRoot(
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const {
+    // Rendering props
     className,
     render,
+    // Validation props
+    minDate,
+    maxDate,
+    disablePast,
+    disableFuture,
+    shouldDisableDate,
+    // Range position props
+    rangePosition: rangePositionProp,
+    defaultRangePosition: defaultRangePositionProp,
+    onRangePositionChange: onRangePositionChangeProp,
+    availableRangePositions,
+    // Other range-specific parameters
+    disableDragEditing,
+    disableHoverPreview,
+    // Form props
     readOnly,
     disabled,
+    // Focus and navigation props
     autoFocus,
+    monthPageSize,
+    yearPageSize,
+    // Value props
     onError,
     defaultValue,
     onValueChange,
     value,
     timezone,
     referenceDate,
-    monthPageSize,
-    yearPageSize,
-    shouldDisableDate,
-    disablePast,
-    disableFuture,
-    minDate,
-    maxDate,
-    availableRangePositions,
-    disableHoverPreview,
-    disableDragEditing,
+    // Props forwarded to the DOM element
     ...otherProps
   } = props;
   const { getRootProps, context, baseContext } = useRangeCalendarRoot({

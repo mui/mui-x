@@ -13,26 +13,32 @@ const CalendarRoot = React.forwardRef(function CalendarRoot(
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const {
+    // Rendering props
     className,
     render,
+    // Validation props
+    minDate,
+    maxDate,
+    disablePast,
+    disableFuture,
+    shouldDisableDate,
+    shouldDisableMonth,
+    shouldDisableYear,
+    // Form props
     readOnly,
     disabled,
+    // Focus and navigation props
     autoFocus,
+    monthPageSize,
+    yearPageSize,
+    // Value props
     onError,
     defaultValue,
     onValueChange,
     value,
     timezone,
     referenceDate,
-    monthPageSize,
-    yearPageSize,
-    shouldDisableDate,
-    shouldDisableMonth,
-    shouldDisableYear,
-    disablePast,
-    disableFuture,
-    minDate,
-    maxDate,
+    // Props forwarded to the DOM element
     ...otherProps
   } = props;
   const { getRootProps, context, baseContext } = useCalendarRoot({

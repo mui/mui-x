@@ -1,18 +1,22 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
+import useForkRef from '@mui/utils/useForkRef';
 import { useUtils } from '../../../../hooks/useUtils';
 import { useBaseCalendarSetVisibleYear } from './useBaseCalendarSetVisibleYear';
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 import { getFirstEnabledYear, getLastEnabledYear } from '../utils/date';
 import { useNullableBaseCalendarYearsGridOrListContext } from '../years-grid/BaseCalendarYearsGridOrListContext';
+import { useCompositeListItem } from '../../../composite/list/useCompositeListItem';
 
 export function useBaseCalendarSetVisibleYearWrapper(
   parameters: useBaseCalendarSetVisibleYearWrapper.Parameters,
-) {
-  const { target } = parameters;
+): useBaseCalendarSetVisibleYearWrapper.ReturnValue {
+  const { forwardedRef, target } = parameters;
   const baseRootContext = useBaseCalendarRootContext();
   const baseYearsListOrGridContext = useNullableBaseCalendarYearsGridOrListContext();
   const utils = useUtils();
+  const { ref: listItemRef } = useCompositeListItem();
+  const mergedRef = useForkRef(forwardedRef, listItemRef);
 
   const targetDate = React.useMemo(() => {
     if (target === 'previous') {
@@ -79,13 +83,22 @@ export function useBaseCalendarSetVisibleYearWrapper(
     [setTarget, isDisabled, isTabbable],
   );
 
-  return { ctx };
+  return { ref: mergedRef, ctx };
 }
 
 export namespace useBaseCalendarSetVisibleYearWrapper {
-  export interface Parameters extends Pick<useBaseCalendarSetVisibleYear.Parameters, 'target'> {}
+  export interface Parameters extends Pick<useBaseCalendarSetVisibleYear.Parameters, 'target'> {
+    /**
+     * The ref forwarded by the parent component.
+     */
+    forwardedRef: React.ForwardedRef<HTMLButtonElement>;
+  }
 
   export interface ReturnValue {
+    /**
+     * The ref to forward to the component.
+     */
+    ref: React.RefCallback<HTMLButtonElement> | null;
     /**
      * The memoized context to forward to the memoized component so that it does not need to subscribe to any context.
      */

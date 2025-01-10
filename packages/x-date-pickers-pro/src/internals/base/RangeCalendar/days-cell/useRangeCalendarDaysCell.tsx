@@ -128,7 +128,7 @@ export function useRangeCalendarDaysCell(parameters: useRangeCalendarDaysCell.Pa
    * Mouse events
    */
   const onMouseEnter = useEventCallback(() => {
-    if (!ctx.isSelected && !ctx.isSelectionStart && !ctx.isSelectionEnd) {
+    if (!ctx.isSelected) {
       ctx.setHoveredDate(value);
     } else {
       ctx.setHoveredDate(null);
@@ -142,7 +142,6 @@ export function useRangeCalendarDaysCell(parameters: useRangeCalendarDaysCell.Pa
       return mergeReactProps(
         externalProps,
         {
-          'aria-selected': ctx.isSelected || ctx.isSelectionStart || ctx.isSelectionEnd,
           ...(isDraggable
             ? { draggable: true, onDragStart, onDrop, onTouchStart, onTouchMove }
             : {}),
@@ -157,9 +156,6 @@ export function useRangeCalendarDaysCell(parameters: useRangeCalendarDaysCell.Pa
       );
     },
     [
-      ctx.isSelected,
-      ctx.isSelectionStart,
-      ctx.isSelectionEnd,
       getBaseDaysCellProps,
       isDraggable,
       onDragStart,
