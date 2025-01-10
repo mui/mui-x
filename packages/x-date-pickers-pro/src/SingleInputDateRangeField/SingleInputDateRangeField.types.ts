@@ -2,7 +2,7 @@ import {
   PickerRangeValue,
   UseFieldInternalProps,
   ExportedPickerFieldUIProps,
-  ExportedPickerFieldUISlots,
+  PickerFieldUISlots,
   PickerFieldUISlotProps,
 } from '@mui/x-date-pickers/internals';
 import { BuiltInFieldTextFieldProps } from '@mui/x-date-pickers/models';
@@ -41,6 +41,6 @@ export type SingleInputDateRangeFieldProps<
     slotProps?: SingleInputDateRangeFieldSlotProps;
   };
 
-export interface SingleInputDateRangeFieldSlots extends ExportedPickerFieldUISlots {}
+export interface SingleInputDateRangeFieldSlots extends PickerFieldUISlots {}
 
 export interface SingleInputDateRangeFieldSlotProps extends PickerFieldUISlotProps {}

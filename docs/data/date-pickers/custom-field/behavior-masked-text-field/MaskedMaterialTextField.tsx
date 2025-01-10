@@ -34,9 +34,7 @@ function getInputValueFromValue(value: Dayjs | null, format: string) {
 }
 
 function MaskedDateField(props: DatePickerFieldProps) {
-  const { slots, slotProps, ...other } = props;
-
-  const { forwardedProps, internalProps } = useSplitFieldProps(other, 'date');
+  const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
   const pickerContext = usePickerContext();
   const parsedFormat = useParsedFormat();
 

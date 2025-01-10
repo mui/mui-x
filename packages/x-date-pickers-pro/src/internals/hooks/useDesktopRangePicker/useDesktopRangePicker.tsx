@@ -11,6 +11,7 @@ import {
   PickerProvider,
   PickerValue,
   PickerRangeValue,
+  PickerFieldUIContextProvider,
 } from '@mui/x-date-pickers/internals';
 import { FieldRef, InferError } from '@mui/x-date-pickers/models';
 import {
@@ -181,24 +182,26 @@ export const useDesktopRangePicker = <
         ...enrichedFieldResponse.fieldPrivateContextValue,
       }}
     >
-      <PickerRangePositionContext.Provider value={rangePositionResponse}>
-        <Field {...enrichedFieldResponse.fieldProps} />
-        <PickersPopper
-          role="tooltip"
-          placement="bottom-start"
-          containerRef={popperRef}
-          anchorEl={providerProps.contextValue.triggerRef.current}
-          onBlur={handleBlur}
-          slots={slots}
-          slotProps={slotProps}
-          shouldRestoreFocus={shouldRestoreFocus}
-          reduceAnimations={reduceAnimations}
-        >
-          <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
-            {renderCurrentView()}
-          </Layout>
-        </PickersPopper>
-      </PickerRangePositionContext.Provider>
+      <PickerFieldUIContextProvider slots={slots} slotProps={slotProps}>
+        <PickerRangePositionContext.Provider value={rangePositionResponse}>
+          <Field {...enrichedFieldResponse.fieldProps} />
+          <PickersPopper
+            role="tooltip"
+            placement="bottom-start"
+            containerRef={popperRef}
+            anchorEl={providerProps.contextValue.triggerRef.current}
+            onBlur={handleBlur}
+            slots={slots}
+            slotProps={slotProps}
+            shouldRestoreFocus={shouldRestoreFocus}
+            reduceAnimations={reduceAnimations}
+          >
+            <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
+              {renderCurrentView()}
+            </Layout>
+          </PickersPopper>
+        </PickerRangePositionContext.Provider>
+      </PickerFieldUIContextProvider>
     </PickerProvider>
   );
 

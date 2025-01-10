@@ -310,8 +310,6 @@ const useSingleInputFieldSlotProps = <
   rangePosition,
   onRangePositionChange,
   singleInputFieldRef,
-  pickerSlots,
-  pickerSlotProps,
   fieldProps,
   currentView,
 }: UseEnrichedRangePickerFieldPropsParams<
@@ -379,24 +377,8 @@ const useSingleInputFieldSlotProps = <
     }
   };
 
-  const slots = {
-    ...fieldProps.slots,
-    textField: pickerSlots?.textField,
-    clearButton: pickerSlots?.clearButton,
-    clearIcon: pickerSlots?.clearIcon,
-  };
-
-  const slotProps = {
-    ...fieldProps.slotProps,
-    textField: pickerSlotProps?.textField,
-    clearButton: pickerSlotProps?.clearButton,
-    clearIcon: pickerSlotProps?.clearIcon,
-  };
-
   const enrichedFieldProps: ReturnType = {
     ...fieldProps,
-    slots,
-    slotProps,
     label,
     unstableFieldRef: handleFieldRef,
     onKeyDown: onSpaceOrEnter(openPicker, fieldProps.onKeyDown),

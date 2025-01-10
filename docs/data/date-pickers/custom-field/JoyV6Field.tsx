@@ -58,8 +58,6 @@ const JoyDateField = React.forwardRef(
       inputRef,
 
       // The rest can be passed to the root element
-      slotProps,
-      slots,
       id,
       ...other
     } = fieldResponse;

@@ -6,7 +6,7 @@ import { PickerValue } from '../internals/models';
 import {
   ExportedPickerFieldUIProps,
   PickerFieldUISlotProps,
-  ExportedPickerFieldUISlots,
+  PickerFieldUISlots,
 } from '../internals/components/PickerFieldUI';
 
 export interface UseDateFieldProps<TEnableAccessibleFieldDOMStructure extends boolean>
@@ -40,6 +40,6 @@ export type DateFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = 
 export type DateFieldOwnerState<TEnableAccessibleFieldDOMStructure extends boolean> =
   DateFieldProps<TEnableAccessibleFieldDOMStructure>;
 
-export interface DateFieldSlots extends ExportedPickerFieldUISlots {}
+export interface DateFieldSlots extends PickerFieldUISlots {}
 
 export interface DateFieldSlotProps extends PickerFieldUISlotProps {}

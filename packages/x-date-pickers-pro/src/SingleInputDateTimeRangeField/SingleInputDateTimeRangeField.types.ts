@@ -1,6 +1,6 @@
 import {
   ExportedPickerFieldUIProps,
-  ExportedPickerFieldUISlots,
+  PickerFieldUISlots,
   PickerFieldUISlotProps,
   PickerRangeValue,
   UseFieldInternalProps,
@@ -42,6 +42,6 @@ export type SingleInputDateTimeRangeFieldProps<
     slotProps?: SingleInputDateTimeRangeFieldSlotProps;
   };
 
-export interface SingleInputDateTimeRangeFieldSlots extends ExportedPickerFieldUISlots {}
+export interface SingleInputDateTimeRangeFieldSlots extends PickerFieldUISlots {}
 
 export interface SingleInputDateTimeRangeFieldSlotProps extends PickerFieldUISlotProps {}

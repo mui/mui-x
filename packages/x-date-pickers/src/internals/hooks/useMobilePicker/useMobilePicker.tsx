@@ -9,6 +9,7 @@ import { PickersLayout } from '../../../PickersLayout';
 import { FieldRef, InferError } from '../../../models';
 import { BaseSingleInputFieldProps, DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
 import { PickerProvider } from '../../components/PickerProvider';
+import { PickerFieldUIContextProvider } from '../../components/PickerFieldUI';
 
 /**
  * Hook managing all the single-date mobile pickers:
@@ -107,31 +108,18 @@ export const useMobilePicker = <
     },
   };
 
-  const slotsForField = {
-    ...slots,
-    ...fieldProps.slots,
-  };
-
-  const slotPropsForField = {
-    ...slotProps,
-    ...fieldProps.slotProps,
-  };
-
   const handleFieldRef = useForkRef(fieldRef, fieldProps.unstableFieldRef);
 
   const renderPicker = () => (
     <PickerProvider {...providerProps}>
-      <Field
-        {...fieldProps}
-        slots={slotsForField}
-        slotProps={slotPropsForField}
-        unstableFieldRef={handleFieldRef}
-      />
-      <PickersModalDialog slots={slots} slotProps={slotProps}>
-        <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
-          {renderCurrentView()}
-        </Layout>
-      </PickersModalDialog>
+      <PickerFieldUIContextProvider slots={slots} slotProps={slotProps}>
+        <Field {...fieldProps} unstableFieldRef={handleFieldRef} />
+        <PickersModalDialog slots={slots} slotProps={slotProps}>
+          <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
+            {renderCurrentView()}
+          </Layout>
+        </PickersModalDialog>
+      </PickerFieldUIContextProvider>
     </PickerProvider>
   );
 

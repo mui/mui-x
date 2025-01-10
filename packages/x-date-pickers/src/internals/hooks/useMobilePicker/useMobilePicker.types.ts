@@ -19,12 +19,15 @@ import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue.types'
 import { UsePickerViewsProps } from '../usePicker/usePickerViews';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
 import { UsePickerProviderNonStaticProps } from '../usePicker/usePickerProvider';
-import { ExportedPickerFieldUISlots, PickerFieldUISlotProps } from '../../components/PickerFieldUI';
+import {
+  PickerFieldUISlotsFromContext,
+  PickerFieldUISlotPropsFromContext,
+} from '../../components/PickerFieldUI';
 
 export interface UseMobilePickerSlots
   extends PickersModalDialogSlots,
     ExportedPickersLayoutSlots<PickerValue>,
-    ExportedPickerFieldUISlots {
+    PickerFieldUISlotsFromContext {
   /**
    * Component used to enter the date with the keyboard.
    */
@@ -35,7 +38,7 @@ export interface ExportedUseMobilePickerSlotProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends PickersModalDialogSlotProps,
     ExportedPickersLayoutSlotProps<PickerValue>,
-    PickerFieldUISlotProps {
+    PickerFieldUISlotPropsFromContext {
   field?: SlotComponentPropsFromProps<
     PickerFieldSlotProps<PickerValue, TEnableAccessibleFieldDOMStructure>,
     {},

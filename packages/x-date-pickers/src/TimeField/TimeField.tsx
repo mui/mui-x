@@ -2,13 +2,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import useSlotProps from '@mui/utils/useSlotProps';
 import { refType } from '@mui/utils';
 import { TimeFieldProps } from './TimeField.types';
 import { useTimeField } from './useTimeField';
-import { PickersTextField } from '../PickersTextField';
-import { useFieldOwnerState } from '../internals/hooks/useFieldOwnerState';
-import { PickerFieldUI } from '../internals/components/PickerFieldUI';
+import { PickerFieldUI, useFieldTextFieldProps } from '../internals/components/PickerFieldUI';
 import { ClockIcon } from '../icons';
 
 type TimeFieldComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
@@ -35,23 +32,13 @@ const TimeField = React.forwardRef(function TimeField<
 
   const { slots, slotProps, InputProps, inputProps, ...other } = themeProps;
 
-  const ownerState = useFieldOwnerState(themeProps);
-
-  // The `textField` slot props cannot be handled inside `PickerFieldUI` because it would be a breaking change to not pass the enriched props to `useField`.
-  // Once the non-accessible DOM structure will be removed, we will be able to remove the `textField` slot and clean this logic.
-  const textFieldProps = useSlotProps({
-    elementType: PickersTextField,
-    externalSlotProps: slotProps?.textField,
-    externalForwardedProps: other,
-    ownerState,
-    additionalProps: {
+  const textFieldProps = useFieldTextFieldProps<TimeFieldProps<TEnableAccessibleFieldDOMStructure>>(
+    {
+      slotProps,
       ref: inRef,
+      externalForwardedProps: other,
     },
-  }) as TimeFieldProps<TEnableAccessibleFieldDOMStructure>;
-
-  // TODO: Remove when mui/material-ui#35088 will be merged
-  textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
-  textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
+  );
 
   const fieldResponse = useTimeField<TEnableAccessibleFieldDOMStructure, typeof textFieldProps>(
     textFieldProps,
@@ -59,9 +46,10 @@ const TimeField = React.forwardRef(function TimeField<
 
   return (
     <PickerFieldUI
-      slots={{ openPickerIcon: ClockIcon, ...slots }}
+      slots={slots}
       slotProps={slotProps}
       fieldResponse={fieldResponse}
+      defaultOpenPickerIcon={ClockIcon}
     />
   );
 }) as TimeFieldComponent;

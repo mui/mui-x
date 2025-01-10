@@ -18,8 +18,7 @@ import {
 
 function ButtonDateRangeField(props: DateRangePickerFieldProps) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-  const { slotProps, slots, ownerState, label, focused, name, ...other } =
-    forwardedProps;
+  const { ownerState, label, focused, name, ...other } = forwardedProps;
 
   const pickerContext = usePickerContext();
   const parsedFormat = useParsedFormat();

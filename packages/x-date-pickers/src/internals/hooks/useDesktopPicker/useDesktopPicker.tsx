@@ -9,6 +9,7 @@ import { PickersLayout } from '../../../PickersLayout';
 import { FieldRef, InferError } from '../../../models';
 import { DateOrTimeViewWithMeridiem, BaseSingleInputFieldProps, PickerValue } from '../../models';
 import { PickerProvider } from '../../components/PickerProvider';
+import { PickerFieldUIContextProvider } from '../../components/PickerFieldUI';
 
 /**
  * Hook managing all the single-date desktop pickers:
@@ -108,39 +109,26 @@ export const useDesktopPicker = <
     },
   };
 
-  const slotsForField = {
-    ...slots,
-    ...fieldProps.slots,
-  };
-
-  const slotPropsForField = {
-    ...slotProps,
-    ...fieldProps.slotProps,
-  };
-
   const handleFieldRef = useForkRef(fieldRef, fieldProps.unstableFieldRef);
 
   const renderPicker = () => (
     <PickerProvider {...providerProps}>
-      <Field
-        {...fieldProps}
-        slots={slotsForField}
-        slotProps={slotPropsForField}
-        unstableFieldRef={handleFieldRef}
-      />
-      <PickersPopper
-        role="dialog"
-        placement="bottom-start"
-        anchorEl={providerProps.contextValue.triggerRef!.current}
-        slots={slots}
-        slotProps={slotProps}
-        shouldRestoreFocus={shouldRestoreFocus}
-        reduceAnimations={reduceAnimations}
-      >
-        <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
-          {renderCurrentView()}
-        </Layout>
-      </PickersPopper>
+      <PickerFieldUIContextProvider slots={slots} slotProps={slotProps}>
+        <Field {...fieldProps} unstableFieldRef={handleFieldRef} />
+        <PickersPopper
+          role="dialog"
+          placement="bottom-start"
+          anchorEl={providerProps.contextValue.triggerRef!.current}
+          slots={slots}
+          slotProps={slotProps}
+          shouldRestoreFocus={shouldRestoreFocus}
+          reduceAnimations={reduceAnimations}
+        >
+          <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
+            {renderCurrentView()}
+          </Layout>
+        </PickersPopper>
+      </PickerFieldUIContextProvider>
     </PickerProvider>
   );
 

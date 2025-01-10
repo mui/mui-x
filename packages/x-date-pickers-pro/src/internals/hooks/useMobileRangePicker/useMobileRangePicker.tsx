@@ -10,6 +10,7 @@ import {
   PickerProvider,
   PickerRangeValue,
   PickerValue,
+  PickerFieldUIContextProvider,
 } from '@mui/x-date-pickers/internals';
 import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import { FieldRef, InferError } from '@mui/x-date-pickers/models';
@@ -186,14 +187,16 @@ export const useMobileRangePicker = <
         ...enrichedFieldResponse.fieldPrivateContextValue,
       }}
     >
-      <PickerRangePositionContext.Provider value={rangePositionResponse}>
-        <Field {...enrichedFieldResponse.fieldProps} />
-        <PickersModalDialog slots={slots} slotProps={slotProps}>
-          <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
-            {renderCurrentView()}
-          </Layout>
-        </PickersModalDialog>
-      </PickerRangePositionContext.Provider>
+      <PickerFieldUIContextProvider slots={slots} slotProps={slotProps}>
+        <PickerRangePositionContext.Provider value={rangePositionResponse}>
+          <Field {...enrichedFieldResponse.fieldProps} />
+          <PickersModalDialog slots={slots} slotProps={slotProps}>
+            <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
+              {renderCurrentView()}
+            </Layout>
+          </PickersModalDialog>
+        </PickerRangePositionContext.Provider>
+      </PickerFieldUIContextProvider>
     </PickerProvider>
   );
 

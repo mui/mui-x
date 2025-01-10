@@ -4,10 +4,15 @@ export type {
   PickersArrowSwitcherSlots,
   PickersArrowSwitcherSlotProps,
 } from './components/PickersArrowSwitcher';
-export { PickerFieldUI, cleanFieldResponse } from './components/PickerFieldUI';
+export {
+  PickerFieldUI,
+  PickerFieldUIContextProvider,
+  cleanFieldResponse,
+  useFieldTextFieldProps,
+} from './components/PickerFieldUI';
 export type {
   ExportedPickerFieldUIProps,
-  ExportedPickerFieldUISlots,
+  PickerFieldUISlots,
   PickerFieldUISlotProps,
 } from './components/PickerFieldUI';
 export { PickerProvider } from './components/PickerProvider';

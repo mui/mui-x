@@ -440,6 +440,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
         {...customProps}
   -      ref={props.InputProps?.ref}
   +      ref={pickerContext.triggerRef}
+  +      aria-label={ariaLabel}
       >
         Open picker
       </button>

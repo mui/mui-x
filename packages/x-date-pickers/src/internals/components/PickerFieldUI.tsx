@@ -1,13 +1,14 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
+import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import MuiTextField, { TextFieldProps } from '@mui/material/TextField';
 import MuiIconButton, { IconButtonProps } from '@mui/material/IconButton';
 import MuiInputAdornment, { InputAdornmentProps } from '@mui/material/InputAdornment';
 import { SvgIconProps } from '@mui/material/SvgIcon';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { MakeOptional, SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { FieldOwnerState } from '../../models';
-import { useFieldOwnerState } from '../hooks/useFieldOwnerState';
+import { useFieldOwnerState, UseFieldOwnerStateParameters } from '../hooks/useFieldOwnerState';
 import { usePickerTranslations } from '../../hooks';
 import { ClearIcon as MuiClearIcon } from '../../icons';
 import { useNullablePickerContext } from '../hooks/useNullablePickerContext';
@@ -78,15 +79,21 @@ export const cleanFieldResponse = <
   };
 };
 
+const PickerFieldUIContext = React.createContext<PickerFieldUIContextValue>({
+  slots: {},
+  slotProps: {},
+});
+
 /**
  * Adds the button to open the picker and the button to clear the value of the field.
  * @ignore - internal component.
  */
 export function PickerFieldUI(props: PickerFieldUIProps) {
-  const { slots, slotProps, fieldResponse } = props;
+  const { slots, slotProps, fieldResponse, defaultOpenPickerIcon } = props;
 
   const translations = usePickerTranslations();
   const pickerContext = useNullablePickerContext();
+  const pickerFieldUIContext = React.useContext(PickerFieldUIContext);
   const {
     textFieldProps,
     onClear,
@@ -104,13 +111,18 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
   const openPickerButtonPosition = triggerStatus !== 'hidden' ? openPickerButtonPositionProp : null;
 
   const TextField =
-    slots.textField ??
+    slots?.textField ??
+    pickerFieldUIContext.slots.textField ??
     (fieldResponse.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
 
-  const InputAdornment = slots.inputAdornment ?? MuiInputAdornment;
+  const InputAdornment =
+    slots?.inputAdornment ?? pickerFieldUIContext.slots.inputAdornment ?? MuiInputAdornment;
   const { ownerState: startInputAdornmentOwnerState, ...startInputAdornmentProps } = useSlotProps({
     elementType: InputAdornment,
-    externalSlotProps: slotProps?.inputAdornment,
+    externalSlotProps: mergeSlotProps(
+      pickerFieldUIContext.slotProps.inputAdornment,
+      slotProps?.inputAdornment,
+    ),
     additionalProps: {
       position: 'start' as const,
     },
@@ -125,14 +137,14 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
     ownerState: { ...ownerState, position: 'end' },
   });
 
-  const OpenPickerButton = slots.openPickerButton ?? MuiIconButton;
+  const OpenPickerButton = pickerFieldUIContext.slots.openPickerButton ?? MuiIconButton;
   // We don't want to forward the `ownerState` to the `<IconButton />` component, see mui/material-ui#34056
   const {
     ownerState: openPickerButtonOwnerState,
     ...openPickerButtonProps
   }: IconButtonProps & { ownerState: any } = useSlotProps({
     elementType: OpenPickerButton,
-    externalSlotProps: slotProps?.openPickerButton,
+    externalSlotProps: pickerFieldUIContext.slotProps.openPickerButton,
     additionalProps: {
       disabled: triggerStatus === 'disabled',
       onClick: handleTogglePicker,
@@ -145,18 +157,21 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
     ownerState,
   });
 
-  const OpenPickerIcon = slots.openPickerIcon;
+  const OpenPickerIcon = pickerFieldUIContext.slots.openPickerIcon ?? defaultOpenPickerIcon;
   const openPickerIconProps = useSlotProps({
     elementType: OpenPickerIcon,
-    externalSlotProps: slotProps?.openPickerIcon,
+    externalSlotProps: pickerFieldUIContext.slotProps.openPickerIcon,
     ownerState,
   });
 
-  const ClearButton = slots.clearButton ?? MuiIconButton;
+  const ClearButton = slots?.clearButton ?? pickerFieldUIContext.slots.clearButton ?? MuiIconButton;
   // We don't want to forward the `ownerState` to the `<IconButton />` component, see mui/material-ui#34056
   const { ownerState: clearButtonOwnerState, ...clearButtonProps } = useSlotProps({
     elementType: ClearButton,
-    externalSlotProps: slotProps?.clearButton,
+    externalSlotProps: mergeSlotProps(
+      pickerFieldUIContext.slotProps.clearButton,
+      slotProps?.clearButton,
+    ),
     className: 'clearButton',
     additionalProps: {
       title: translations.fieldClearLabel,
@@ -170,10 +185,13 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
     ownerState,
   });
 
-  const ClearIcon = slots.clearIcon ?? MuiClearIcon;
+  const ClearIcon = slots?.clearIcon ?? pickerFieldUIContext.slots.clearIcon ?? MuiClearIcon;
   const clearIconProps = useSlotProps({
     elementType: ClearIcon,
-    externalSlotProps: slotProps?.clearIcon,
+    externalSlotProps: mergeSlotProps(
+      pickerFieldUIContext.slotProps.clearIcon,
+      slotProps?.clearIcon,
+    ),
     additionalProps: {
       fontSize: 'small',
     },
@@ -260,7 +278,7 @@ export interface PickerFieldUIProps {
    * Overridable component slots.
    * @default {}
    */
-  slots: PickerFieldUISlots;
+  slots?: PickerFieldUISlots;
   /**
    * The props used for each component slot.
    * @default {}
@@ -270,9 +288,13 @@ export interface PickerFieldUIProps {
    * Object returned by the `useField` hook or one of its wrapper (for example `useDateField`).
    */
   fieldResponse: UseFieldResponse<any, any>;
+  /**
+   * The component to use to render the picker opening icon if none is provided in the picker's slots.
+   */
+  defaultOpenPickerIcon: React.ElementType;
 }
 
-interface PickerFieldUISlots {
+export interface PickerFieldUISlots {
   /**
    * Form control with an input to render the value.
    * @default <PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.
@@ -283,15 +305,6 @@ interface PickerFieldUISlots {
    * @default InputAdornment
    */
   inputAdornment?: React.ElementType<InputAdornmentProps>;
-  /**
-   * Button to open the picker on desktop.
-   * @default IconButton
-   */
-  openPickerButton?: React.ElementType<IconButtonProps>;
-  /**
-   * Icon displayed in the open picker button on desktop.
-   */
-  openPickerIcon: React.ElementType;
   /**
    * Icon to display inside the clear button.
    * @default ClearIcon
@@ -304,8 +317,17 @@ interface PickerFieldUISlots {
   clearButton?: React.ElementType;
 }
 
-export interface ExportedPickerFieldUISlots
-  extends MakeOptional<PickerFieldUISlots, 'openPickerIcon'> {}
+export interface PickerFieldUISlotsFromContext extends PickerFieldUISlots {
+  /**
+   * Button to open the picker on desktop.
+   * @default IconButton
+   */
+  openPickerButton?: React.ElementType<IconButtonProps>;
+  /**
+   * Icon displayed in the open picker button on desktop.
+   */
+  openPickerIcon?: React.ElementType;
+}
 
 export interface PickerFieldUISlotProps {
   textField?: SlotComponentPropsFromProps<
@@ -318,12 +340,136 @@ export interface PickerFieldUISlotProps {
     {},
     FieldInputAdornmentOwnerState
   >;
-  openPickerButton?: SlotComponentPropsFromProps<IconButtonProps, {}, FieldOwnerState>;
-  openPickerIcon?: SlotComponentPropsFromProps<SvgIconProps, {}, FieldOwnerState>;
   clearIcon?: SlotComponentPropsFromProps<SvgIconProps, {}, FieldOwnerState>;
   clearButton?: SlotComponentPropsFromProps<IconButtonProps, {}, FieldOwnerState>;
 }
 
+export interface PickerFieldUISlotPropsFromContext extends PickerFieldUISlotProps {
+  openPickerButton?: SlotComponentPropsFromProps<IconButtonProps, {}, FieldOwnerState>;
+  openPickerIcon?: SlotComponentPropsFromProps<SvgIconProps, {}, FieldOwnerState>;
+}
+
 interface FieldInputAdornmentOwnerState extends FieldOwnerState {
   position: 'start' | 'end';
+}
+
+interface PickerFieldUIContextValue {
+  slots: PickerFieldUISlotsFromContext;
+  slotProps: PickerFieldUISlotPropsFromContext;
+}
+
+function mergeSlotProps<TProps extends {}, TOwnerState extends FieldOwnerState>(
+  slotPropsA: SlotComponentPropsFromProps<TProps, {}, TOwnerState> | undefined,
+  slotPropsB: SlotComponentPropsFromProps<TProps, {}, TOwnerState> | undefined,
+) {
+  if (!slotPropsA) {
+    return slotPropsB;
+  }
+
+  if (!slotPropsB) {
+    return slotPropsA;
+  }
+
+  return (ownerState: TOwnerState) => {
+    return {
+      ...resolveComponentProps(slotPropsB, ownerState),
+      ...resolveComponentProps(slotPropsA, ownerState),
+    };
+  };
+}
+
+/**
+ * The `textField` slot props cannot be handled inside `PickerFieldUI` because it would be a breaking change to not pass the enriched props to `useField`.
+ * Once the non-accessible DOM structure will be removed, we will be able to remove the `textField` slot and clean this logic.
+ */
+export function useFieldTextFieldProps<
+  TProps extends UseFieldOwnerStateParameters & { inputProps?: {}; InputProps?: {} },
+>(parameters: UseFieldTextFieldPropsParameters) {
+  const { ref, externalForwardedProps, slotProps } = parameters;
+  const pickerFieldUIContext = React.useContext(PickerFieldUIContext);
+  const ownerState = useFieldOwnerState(externalForwardedProps);
+
+  const { InputProps, inputProps, ...otherExternalForwardedProps } = externalForwardedProps;
+
+  const textFieldProps = useSlotProps({
+    elementType: PickersTextField,
+    externalSlotProps: mergeSlotProps(
+      pickerFieldUIContext.slotProps.textField as any,
+      slotProps?.textField as any,
+    ),
+    externalForwardedProps: otherExternalForwardedProps,
+    additionalProps: {
+      ref,
+    },
+    ownerState,
+  }) as any as TProps;
+
+  // TODO: Remove when mui/material-ui#35088 will be merged
+  textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
+  textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
+
+  return textFieldProps;
+}
+
+interface UseFieldTextFieldPropsParameters {
+  slotProps:
+    | {
+        textField?: SlotComponentPropsFromProps<
+          PickersTextFieldProps | TextFieldProps,
+          {},
+          FieldOwnerState
+        >;
+      }
+    | undefined;
+  ref: React.Ref<HTMLDivElement>;
+  externalForwardedProps: any;
+}
+
+export function PickerFieldUIContextProvider(props: PickerFieldUIContextProviderProps) {
+  const { slots = {}, slotProps = {}, children } = props;
+
+  const contextValue = React.useMemo<PickerFieldUIContextValue>(
+    () => ({
+      slots: {
+        openPickerButton: slots.openPickerButton,
+        openPickerIcon: slots.openPickerIcon,
+        textField: slots.textField,
+        inputAdornment: slots.inputAdornment,
+        clearIcon: slots.clearIcon,
+        clearButton: slots.clearButton,
+      },
+      slotProps: {
+        openPickerButton: slotProps.openPickerButton,
+        openPickerIcon: slotProps.openPickerIcon,
+        textField: slotProps.textField,
+        inputAdornment: slotProps.inputAdornment,
+        clearIcon: slotProps.clearIcon,
+        clearButton: slotProps.clearButton,
+      },
+    }),
+    [
+      slots.openPickerButton,
+      slots.openPickerIcon,
+      slots.textField,
+      slots.inputAdornment,
+      slots.clearIcon,
+      slots.clearButton,
+      slotProps.openPickerButton,
+      slotProps.openPickerIcon,
+      slotProps.textField,
+      slotProps.inputAdornment,
+      slotProps.clearIcon,
+      slotProps.clearButton,
+    ],
+  );
+
+  return (
+    <PickerFieldUIContext.Provider value={contextValue}>{children}</PickerFieldUIContext.Provider>
+  );
+}
+
+interface PickerFieldUIContextProviderProps {
+  children: React.ReactNode;
+  slots: PickerFieldUISlotsFromContext | undefined;
+  slotProps: PickerFieldUISlotPropsFromContext | undefined;
 }
