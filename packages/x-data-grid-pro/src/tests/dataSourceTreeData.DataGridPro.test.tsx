@@ -115,11 +115,11 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   });
 
   it('should re-fetch the data on pagination change', async () => {
-    const { setProps } = render(<TestDataSource />);
+    render(<TestDataSource />);
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
-    setProps({ paginationModel: { page: 1, pageSize: 10 } });
+    apiRef.current.setPaginationModel({ page: 1, pageSize: 10 });
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
     });

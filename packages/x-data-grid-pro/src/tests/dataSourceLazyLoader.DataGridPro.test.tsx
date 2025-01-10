@@ -87,15 +87,15 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
   });
 
   it('should re-fetch the data once if multiple models have changed', async () => {
-    const { setProps } = render(<TestDataSourceLazyLoader />);
+    render(<TestDataSourceLazyLoader />);
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
 
-    setProps({
-      sortModel: [{ field: 'name', sort: 'asc' }],
-      filterModel: { items: [{ field: 'name', value: 'John', operator: 'contains' }] },
+    apiRef.current.setFilterModel({
+      items: [{ field: 'name', value: 'John', operator: 'contains' }],
     });
+    apiRef.current.setSortModel([{ field: 'name', sort: 'asc' }]);
 
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
