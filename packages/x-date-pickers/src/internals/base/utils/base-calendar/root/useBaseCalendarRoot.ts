@@ -25,20 +25,25 @@ export function useBaseCalendarRoot<
   TValidationProps extends Required<BaseDateValidationProps>,
 >(parameters: useBaseCalendarRoot.Parameters<TValue, TError, TValidationProps>) {
   const {
+    // Form props
     readOnly = false,
     disabled = false,
+    // Focus and navigation props
     autoFocus = false,
+    monthPageSize = 1,
+    yearPageSize = 1,
+    // Value props
     onError,
     defaultValue,
     onValueChange,
     value: valueProp,
     timezone: timezoneProp,
     referenceDate: referenceDateProp,
-    monthPageSize = 1,
-    yearPageSize = 1,
-    manager,
+    // Validation props
     dateValidationProps,
     valueValidationProps,
+    // Manager props
+    manager,
     calendarValueManager: {
       getDateToUseForReferenceDate,
       getNewValueFromNewSelectedDate,
@@ -288,6 +293,11 @@ export namespace useBaseCalendarRoot {
      */
     manager: PickerManager<TValue, any, TError, any, any>;
     /**
+     * The methods needed to manage the value of the calendar.
+     * It helps sharing the code between the Calendar and the RangeCalendar.
+     */
+    calendarValueManager: ValueManager<TValue>;
+    /**
      * The props used to validate a single date.
      */
     dateValidationProps: ValidateDateProps;
@@ -295,7 +305,6 @@ export namespace useBaseCalendarRoot {
      * The props used to validate the value.
      */
     valueValidationProps: TValidationProps;
-    calendarValueManager: ValueManager<TValue>;
   }
 
   export interface ReturnValue<TValue extends PickerValidValue> {

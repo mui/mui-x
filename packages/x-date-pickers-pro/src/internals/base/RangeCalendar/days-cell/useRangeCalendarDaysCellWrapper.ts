@@ -46,7 +46,6 @@ export function useRangeCalendarDaysCellWrapper(
       selectDayFromDrag: rangeRootDragContext.selectDayFromDrag,
       startDragging: rangeRootDragContext.startDragging,
       stopDragging: rangeRootDragContext.stopDragging,
-      isEqualToDragTarget: rangeRootDragContext.isEqualToDragTarget,
       setDragTarget: rangeRootDragContext.setDragTarget,
       emptyDragImgRef: rangeRootDragContext.emptyDragImgRef,
     }),
@@ -60,7 +59,6 @@ export function useRangeCalendarDaysCellWrapper(
       rangeRootDragContext.startDragging,
       rangeRootDragContext.stopDragging,
       rangeRootDragContext.setDragTarget,
-      rangeRootDragContext.isEqualToDragTarget,
       rangeRootDragContext.emptyDragImgRef,
     ],
   );
@@ -72,6 +70,9 @@ export namespace useRangeCalendarDaysCellWrapper {
   export interface Parameters extends useBaseCalendarDaysCellWrapper.Parameters {}
 
   export interface ReturnValue extends Omit<useBaseCalendarDaysCellWrapper.ReturnValue, 'ctx'> {
+    /**
+     * The memoized context to forward to the memoized component so that it does not need to subscribe to any context.
+     */
     ctx: useRangeCalendarDaysCell.Context;
   }
 }

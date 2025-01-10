@@ -168,7 +168,7 @@
   background-color: transparent;
   cursor: pointer;
 
-  &[data-current]:not([data-selected]) {
+  &[data-current]:not([data-selected]):not(:focus-visible) {
     outline: 1px solid #9ca3af;
   }
 

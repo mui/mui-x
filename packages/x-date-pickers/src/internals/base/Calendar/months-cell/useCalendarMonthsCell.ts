@@ -47,6 +47,9 @@ export namespace useCalendarMonthsCell {
      * @default utils.formats.month
      */
     format?: string;
+    /**
+     * The memoized context forwarded by the wrapper component so that this component does not need to subscribe to any context.
+     */
     ctx: Context;
   }
 

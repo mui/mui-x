@@ -28,6 +28,9 @@ export namespace useBaseCalendarSetVisibleYear {
      * The year to navigate to.
      */
     target: 'previous' | 'next' | PickerValidDate;
+    /**
+     * The memoized context forwarded by the wrapper component so that this component does not need to subscribe to any context.
+     */
     ctx: Context;
   }
 

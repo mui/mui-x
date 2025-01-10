@@ -23,6 +23,9 @@ const customStyleHookMapping: CustomStyleHookMapping<RangeCalendarDaysCell.State
   disabled(value) {
     return value ? { [RangeCalendarDaysCellDataAttributes.disabled]: '' } : null;
   },
+  invalid(value) {
+    return value ? { [RangeCalendarDaysCellDataAttributes.invalid]: '' } : null;
+  },
   current(value) {
     return value ? { [RangeCalendarDaysCellDataAttributes.current]: '' } : null;
   },

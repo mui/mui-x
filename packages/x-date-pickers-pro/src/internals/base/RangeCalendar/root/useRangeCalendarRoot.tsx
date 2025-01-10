@@ -175,12 +175,7 @@ export function useRangeCalendarRoot(parameters: useRangeCalendarRoot.Parameters
     getNewValueFromNewSelectedDate,
   });
 
-  const context: RangeCalendarRootContext = React.useMemo(
-    () => ({
-      value,
-    }),
-    [value],
-  );
+  const context: RangeCalendarRootContext = React.useMemo(() => ({ value }), [value]);
 
   const getRootProps = React.useCallback((externalProps: GenericHTMLProps) => {
     return mergeReactProps(externalProps, {});
@@ -260,6 +255,10 @@ function useRangeCalendarDragEditing(parameters: UseRangeCalendarDragEditingPara
   }, [rangePosition, dragState.targetDate, utils, valueDayRange]);
 
   const selectDayFromDrag = useEventCallback((selectedDate: PickerValidDate) => {
+    if (dragState.draggedDate != null && utils.isSameDay(selectedDate, dragState.draggedDate)) {
+      return;
+    }
+
     const response = getNewValueFromNewSelectedDate({
       prevValue: value,
       selectedDate,
@@ -313,13 +312,6 @@ function useRangeCalendarDragEditing(parameters: UseRangeCalendarDragEditingPara
     }
   });
 
-  const isSameAsDraggedDate = useEventCallback((date: PickerValidDate) => {
-    if (dragState.draggedDate == null) {
-      return false;
-    }
-    return utils.isSameDay(date, dragState.draggedDate);
-  });
-
   const dragContext: RangeCalendarRootDragContext = {
     highlightedRange,
     disableDragEditing,
@@ -329,7 +321,6 @@ function useRangeCalendarDragEditing(parameters: UseRangeCalendarDragEditingPara
     startDragging,
     stopDragging,
     setDragTarget: handleSetDragTarget,
-    isEqualToDragTarget: isSameAsDraggedDate,
     isDragging: dragState.isDragging,
   };
 

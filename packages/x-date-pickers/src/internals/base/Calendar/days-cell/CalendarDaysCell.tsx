@@ -1,12 +1,11 @@
 'use client';
 import * as React from 'react';
-import { BaseUIComponentProps, GenericHTMLProps } from '../../base-utils/types';
+import { BaseUIComponentProps } from '../../base-utils/types';
 import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
 import { useBaseCalendarDaysCellWrapper } from '../../utils/base-calendar/days-cell/useBaseCalendarDaysCellWrapper';
 import { useBaseCalendarDaysCell } from '../../utils/base-calendar/days-cell/useBaseCalendarDaysCell';
 import { CustomStyleHookMapping } from '../../base-utils/getStyleHookProps';
 import { CalendarDaysCellDataAttributes } from './CalendarDaysCellDataAttributes';
-import { mergeReactProps } from '../../base-utils/mergeReactProps';
 
 const customStyleHookMapping: CustomStyleHookMapping<CalendarDaysCell.State> = {
   selected(value) {
@@ -14,6 +13,9 @@ const customStyleHookMapping: CustomStyleHookMapping<CalendarDaysCell.State> = {
   },
   disabled(value) {
     return value ? { [CalendarDaysCellDataAttributes.disabled]: '' } : null;
+  },
+  invalid(value) {
+    return value ? { [CalendarDaysCellDataAttributes.invalid]: '' } : null;
   },
   current(value) {
     return value ? { [CalendarDaysCellDataAttributes.current]: '' } : null;
@@ -28,16 +30,7 @@ const InnerCalendarDaysCell = React.forwardRef(function CalendarDaysGrid(
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
   const { className, render, value, ctx, ...otherProps } = props;
-  const { baseProps, isCurrent } = useBaseCalendarDaysCell({ value, ctx });
-
-  const getDaysCellProps = React.useCallback(
-    (externalProps: GenericHTMLProps) => {
-      return mergeReactProps(externalProps, {
-        ...baseProps,
-      });
-    },
-    [baseProps],
-  );
+  const { getDaysCellProps, isCurrent } = useBaseCalendarDaysCell({ value, ctx });
 
   const state: CalendarDaysCell.State = React.useMemo(
     () => ({

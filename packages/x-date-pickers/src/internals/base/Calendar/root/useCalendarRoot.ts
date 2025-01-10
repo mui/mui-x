@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DateValidationError, PickerValidDate } from '../../../../models';
+import { DateValidationError } from '../../../../models';
 import { useDateManager } from '../../../../managers';
 import { ExportedValidateDateProps, ValidateDateProps } from '../../../../validation/validateDate';
 import { useUtils } from '../../../hooks/useUtils';

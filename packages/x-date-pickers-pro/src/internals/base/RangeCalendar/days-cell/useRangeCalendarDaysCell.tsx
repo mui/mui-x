@@ -84,9 +84,6 @@ export function useRangeCalendarDaysCell(parameters: useRangeCalendarDaysCell.Pa
     ctx.stopDragging();
     // make sure the focused element is the element where drop ended
     event.currentTarget.focus();
-    if (ctx.isEqualToDragTarget(value)) {
-      return;
-    }
     ctx.selectDayFromDrag(value);
   });
 
@@ -127,12 +124,11 @@ export function useRangeCalendarDaysCell(parameters: useRangeCalendarDaysCell.Pa
     startDragging();
   });
 
-  const { baseProps, isCurrent } = useBaseCalendarDaysCell(parameters);
+  const { getDaysCellProps: getBaseDaysCellProps, isCurrent } = useBaseCalendarDaysCell(parameters);
 
   const getDaysCellProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
-      return mergeReactProps(externalProps, {
-        ...baseProps,
+      return mergeReactProps(externalProps, getBaseDaysCellProps(externalProps), {
         ...(isDraggable ? { draggable: true } : {}),
         onDragStart,
         onDragEnter,
@@ -146,7 +142,7 @@ export function useRangeCalendarDaysCell(parameters: useRangeCalendarDaysCell.Pa
       });
     },
     [
-      baseProps,
+      getBaseDaysCellProps,
       isDraggable,
       onDragStart,
       onDragEnter,
@@ -165,6 +161,9 @@ export function useRangeCalendarDaysCell(parameters: useRangeCalendarDaysCell.Pa
 
 export namespace useRangeCalendarDaysCell {
   export interface Parameters extends Omit<useBaseCalendarDaysCell.Parameters, 'ctx'> {
+    /**
+     * The memoized context forwarded by the wrapper component so that this component does not need to subscribe to any context.
+     */
     ctx: Context;
   }
 
@@ -177,7 +176,6 @@ export namespace useRangeCalendarDaysCell {
         | 'startDragging'
         | 'stopDragging'
         | 'setDragTarget'
-        | 'isEqualToDragTarget'
         | 'emptyDragImgRef'
       > {
     isSelectionStart: boolean;

@@ -38,7 +38,10 @@ export namespace useBaseCalendarDaysWeekRow {
      * The date object representing the week.
      */
     value: PickerValidDate;
-    ctx: useBaseCalendarDaysWeekRow.Context;
+    /**
+     * The memoized context forwarded by the wrapper component so that this component does not need to subscribe to any context.
+     */
+    ctx: Context;
     children?: (parameters: ChildrenParameters) => React.ReactNode;
   }
 
