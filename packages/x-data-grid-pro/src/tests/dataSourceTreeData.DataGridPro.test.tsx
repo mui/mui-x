@@ -30,7 +30,7 @@ const serverOptions = { minDelay: 0, maxDelay: 0, verbose: false };
 describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
   let fetchRowsSpy: SinonSpy;
   let mockServer: ReturnType<typeof useMockServer>;
 

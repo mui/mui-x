@@ -33,7 +33,6 @@ const legendPlacement = {
         horizontal: 'right',
       },
       direction: 'vertical',
-      itemGap: 2,
     },
   },
   margin: {

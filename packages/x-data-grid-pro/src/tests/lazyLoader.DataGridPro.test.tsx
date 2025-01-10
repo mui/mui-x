@@ -37,7 +37,7 @@ describe('<DataGridPro /> - Lazy loader', () => {
     columns: [{ field: 'id' }, { field: 'first' }],
   };
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
 
   function TestLazyLoader(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();

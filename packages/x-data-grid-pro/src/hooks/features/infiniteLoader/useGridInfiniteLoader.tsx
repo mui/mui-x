@@ -30,7 +30,7 @@ const InfiniteLoadingTriggerElement = styled('div')({
  * @requires useGridScroll (method
  */
 export const useGridInfiniteLoader = (
-  apiRef: React.MutableRefObject<GridPrivateApiPro>,
+  apiRef: React.RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     'onRowsScrollEnd' | 'pagination' | 'paginationMode' | 'rowsLoadingMode' | 'scrollEndThreshold'

@@ -19,7 +19,7 @@ import { describeSkipIf, testSkipIf, isJSDOM } from 'test/utils/skipIf';
 describe('<DataGridPro /> - Columns', () => {
   const { clock, render } = createRenderer({ clock: 'fake' });
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
 
   const baselineProps = {
     autoHeight: isJSDOM,

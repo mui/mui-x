@@ -50,7 +50,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     ...other
   } = props;
 
-  const chartContainerProps: ChartContainerProps = {
+  const chartContainerProps: Omit<ChartContainerProps<'scatter'>, 'plugins'> = {
     ...other,
     series: series.map((s) => ({ type: 'scatter' as const, ...s })),
     width,

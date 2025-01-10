@@ -39,7 +39,7 @@ export class NestedDataManager {
   private maxConcurrentRequests: number;
 
   constructor(
-    privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
+    privateApiRef: React.RefObject<GridPrivateApiPro>,
     maxConcurrentRequests = MAX_CONCURRENT_REQUESTS,
   ) {
     this.api = privateApiRef.current;

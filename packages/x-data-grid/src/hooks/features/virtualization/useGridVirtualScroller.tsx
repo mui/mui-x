@@ -676,7 +676,7 @@ export const useGridVirtualScroller = () => {
 type RenderContextInputs = {
   enabledForRows: boolean;
   enabledForColumns: boolean;
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>;
+  apiRef: React.RefObject<GridPrivateApiCommunity>;
   autoHeight: boolean;
   rowBufferPx: number;
   columnBufferPx: number;
@@ -698,7 +698,7 @@ type RenderContextInputs = {
 };
 
 function inputsSelector(
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   rootProps: ReturnType<typeof useGridRootProps>,
   enabledForRows: boolean,
   enabledForColumns: boolean,
