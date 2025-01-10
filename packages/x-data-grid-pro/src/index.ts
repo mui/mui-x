@@ -36,9 +36,6 @@ export {
 export { GridColumnHeaders } from './components/GridColumnHeaders';
 export type { GridColumnHeadersProps } from './components/GridColumnHeaders';
 
-export * from './components/grid';
-export * as Grid from './components/grid/index.parts';
-
 export type {
   GridGetRowsParams,
   GridGetRowsResponse,
