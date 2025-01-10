@@ -16,7 +16,7 @@ import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { gridRowGroupingSanitizedModelSelector } from './gridRowGroupingSelector';
 
 export const useGridDataSourceRowGroupingPreProcessors = (
-  apiRef: React.MutableRefObject<GridPrivateApiPremium>,
+  apiRef: React.RefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
     | 'disableRowGrouping'

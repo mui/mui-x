@@ -31,7 +31,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGridPro /> - Filter', () => {
   const { clock, render } = createRenderer({ clock: 'fake' });
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
 
   const baselineProps = {
     autoHeight: isJSDOM,

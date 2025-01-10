@@ -54,7 +54,7 @@ export const columnReorderStateInitializer: GridStateInitializer = (state) => ({
  * @requires useGridColumns (method)
  */
 export const useGridColumnReorder = (
-  apiRef: React.MutableRefObject<GridPrivateApiPro>,
+  apiRef: React.RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     | 'disableColumnReorder'

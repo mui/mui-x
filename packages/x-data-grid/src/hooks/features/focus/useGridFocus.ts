@@ -37,7 +37,7 @@ export const focusStateInitializer: GridStateInitializer = (state) => ({
  * @requires useGridEditing (event)
  */
 export const useGridFocus = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFocus');

@@ -43,7 +43,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGrid /> - Rows', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
 
   const baselineProps = {
     autoHeight: isJSDOM,
