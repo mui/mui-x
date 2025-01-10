@@ -9,7 +9,6 @@ import {
   UsePickerValueParams,
   UsePickerValueResponse,
   UsePickerValueState,
-  UsePickerValueFieldResponse,
   UsePickerValueViewsResponse,
   PickerSelectionState,
   UsePickerValueContextValue,
@@ -249,12 +248,6 @@ export const usePickerValue = <
     });
   });
 
-  const fieldResponse: UsePickerValueFieldResponse<TValue, TError> = {
-    value: dateState.draft,
-    onChange: (newValue, context) =>
-      setValue(newValue, { validationError: context.validationError }),
-  };
-
   const setValueFromView = useEventCallback(
     (newValue: TValue, selectionState: PickerSelectionState = 'partial') => {
       // TODO: Expose a new method (private?) like `setView` that only updates the draft value.
@@ -299,10 +292,11 @@ export const usePickerValue = <
   const contextValue = React.useMemo<UsePickerValueContextValue<TValue, TError>>(
     () => ({
       ...actionsContextValue,
-      open,
       value: dateState.draft,
+      timezone,
+      open,
     }),
-    [actionsContextValue, open, dateState.draft],
+    [actionsContextValue, timezone, open, dateState.draft],
   );
 
   const privateContextValue = React.useMemo<UsePickerValuePrivateContextValue>(
@@ -311,7 +305,7 @@ export const usePickerValue = <
   );
 
   const providerParams: UsePickerValueProviderParams<TValue, TError> = {
-    value: valueWithoutError,
+    value: dateState.draft,
     contextValue,
     actionsContextValue,
     privateContextValue,
@@ -319,7 +313,6 @@ export const usePickerValue = <
   };
 
   return {
-    fieldProps: fieldResponse,
     viewProps: viewResponse,
     provider: providerParams,
   };

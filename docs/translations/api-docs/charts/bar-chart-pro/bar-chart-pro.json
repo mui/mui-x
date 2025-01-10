@@ -27,6 +27,10 @@
     "highlightedItem": {
       "description": "The item currently highlighted. Turns highlighting into a controlled prop."
     },
+    "id": {
+      "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
+    },
+    "initialZoom": { "description": "The list of zoom data related to each axis." },
     "layout": { "description": "The direction of the bar elements." },
     "leftAxis": {
       "description": "Indicate which axis to display the left of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
@@ -80,7 +84,7 @@
     "yAxis": {
       "description": "The configuration of the y-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
     },
-    "zoom": { "description": "The list of zoom data related to each axis." }
+    "zAxis": { "description": "The configuration of the z-axes." }
   },
   "classDescriptions": {}
 }

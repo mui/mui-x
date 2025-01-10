@@ -38,7 +38,7 @@ describe('<DataGridPro /> - Sorting', () => {
 
   const { render } = createRenderer({ clock: 'fake' });
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
 
   function TestCase(props: Partial<DataGridProProps>) {
     const { rows, ...other } = props;

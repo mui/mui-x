@@ -22,14 +22,13 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { useLineChartProps, ChartsWrapper } from '@mui/x-charts/internals';
-import { ZoomSetup } from '../context/ZoomProvider/ZoomSetup';
-import { useZoom } from '../context/ZoomProvider/useZoom';
-import { ZoomProps } from '../context/ZoomProvider';
-import { ChartDataProviderPro } from '../context/ChartDataProviderPro';
+import { ChartDataProvider } from '@mui/x-charts/context';
+import { ChartContainerProProps } from '../ChartContainerPro';
+import { useIsZoomInteracting } from '../hooks/zoom';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 
 function AreaPlotZoom(props: AreaPlotProps) {
-  const { isInteracting } = useZoom();
+  const isInteracting = useIsZoomInteracting();
   return <AreaPlot {...props} skipAnimation={isInteracting || undefined} />;
 }
 
@@ -62,7 +61,7 @@ AreaPlotZoom.propTypes = {
 } as any;
 
 function LinePlotZoom(props: LinePlotProps) {
-  const { isInteracting } = useZoom();
+  const isInteracting = useIsZoomInteracting();
   return <LinePlot {...props} skipAnimation={isInteracting || undefined} />;
 }
 
@@ -95,7 +94,7 @@ LinePlotZoom.propTypes = {
 } as any;
 
 function MarkPlotZoom(props: MarkPlotProps) {
-  const { isInteracting } = useZoom();
+  const isInteracting = useIsZoomInteracting();
   return <MarkPlot {...props} skipAnimation={isInteracting || undefined} />;
 }
 
@@ -133,7 +132,9 @@ MarkPlotZoom.propTypes = {
   slots: PropTypes.object,
 } as any;
 
-export interface LineChartProProps extends LineChartProps, ZoomProps {}
+export interface LineChartProProps
+  extends Omit<LineChartProps, 'apiRef'>,
+    Omit<ChartContainerProProps<'line'>, 'series' | 'plugins' | 'seriesConfig'> {}
 
 /**
  * Demos:
@@ -150,7 +151,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(
   ref: React.Ref<SVGSVGElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiLineChartPro' });
-  const { zoom, onZoomChange, ...other } = props;
+  const { initialZoom, onZoomChange, apiRef, ...other } = props;
   const {
     chartsWrapperProps,
     chartContainerProps,
@@ -169,14 +170,19 @@ const LineChartPro = React.forwardRef(function LineChartPro(
     children,
   } = useLineChartProps(other);
   const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps(
-    chartContainerProps,
+    { ...chartContainerProps, apiRef },
     ref,
   );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
 
   return (
-    <ChartDataProviderPro {...chartDataProviderProProps} zoom={zoom} onZoomChange={onZoomChange}>
+    <ChartDataProvider
+      {...chartDataProviderProProps}
+      apiRef={apiRef}
+      initialZoom={initialZoom}
+      onZoomChange={onZoomChange}
+    >
       <ChartsWrapper {...chartsWrapperProps}>
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
@@ -196,11 +202,10 @@ const LineChartPro = React.forwardRef(function LineChartPro(
           <LineHighlightPlot {...lineHighlightPlotProps} />
           {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
           <ChartsClipPath {...clipPathProps} />
-          <ZoomSetup />
           {children}
         </ChartsSurface>
       </ChartsWrapper>
-    </ChartDataProviderPro>
+    </ChartDataProvider>
   );
 });
 
@@ -209,6 +214,11 @@ LineChartPro.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  apiRef: PropTypes.shape({
+    current: PropTypes.shape({
+      setZoomData: PropTypes.func.isRequired,
+    }),
+  }),
   /**
    * The configuration of axes highlight.
    * @see See {@link https://mui.com/x/react-charts/highlighting/ highlighting docs} for more details.
@@ -273,6 +283,21 @@ LineChartPro.propTypes = {
     seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   }),
   /**
+   * This prop is used to help implement the accessibility logic.
+   * If you don't provide this prop. It falls back to a randomly generated id.
+   */
+  id: PropTypes.string,
+  /**
+   * The list of zoom data related to each axis.
+   */
+  initialZoom: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      end: PropTypes.number.isRequired,
+      start: PropTypes.number.isRequired,
+    }),
+  ),
+  /**
    * Indicate which axis to display the left of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
    * @default yAxisIds[0] The id of the first provided axis
@@ -287,7 +312,6 @@ LineChartPro.propTypes = {
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
-   * @default object Depends on the charts type.
    */
   margin: PropTypes.shape({
     bottom: PropTypes.number,
@@ -357,6 +381,7 @@ LineChartPro.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
   /**
    * Indicate which axis to display the top of the charts.
@@ -541,13 +566,42 @@ LineChartPro.propTypes = {
     }),
   ),
   /**
-   * The list of zoom data related to each axis.
+   * The configuration of the z-axes.
    */
-  zoom: PropTypes.arrayOf(
+  zAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      end: PropTypes.number.isRequired,
-      start: PropTypes.number.isRequired,
+      colorMap: PropTypes.oneOfType([
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
+        PropTypes.shape({
+          color: PropTypes.oneOfType([
+            PropTypes.arrayOf(PropTypes.string.isRequired),
+            PropTypes.func,
+          ]).isRequired,
+          max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          type: PropTypes.oneOf(['continuous']).isRequired,
+        }),
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          thresholds: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+          ).isRequired,
+          type: PropTypes.oneOf(['piecewise']).isRequired,
+        }),
+      ]),
+      data: PropTypes.array,
+      dataKey: PropTypes.string,
+      id: PropTypes.string,
+      max: PropTypes.number,
+      min: PropTypes.number,
     }),
   ),
 } as any;

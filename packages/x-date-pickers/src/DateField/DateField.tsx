@@ -38,11 +38,8 @@ const DateField = React.forwardRef(function DateField<
 
   const ownerState = useFieldOwnerState(themeProps);
 
-  const TextField =
-    slots?.textField ??
-    (inProps.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
   const textFieldProps = useSlotProps({
-    elementType: TextField,
+    elementType: PickersTextField,
     externalSlotProps: slotProps?.textField,
     externalForwardedProps: other,
     additionalProps: {
@@ -65,6 +62,10 @@ const DateField = React.forwardRef(function DateField<
     slots,
     slotProps,
   });
+
+  const TextField =
+    slots?.textField ??
+    (fieldResponse.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
 
   return <TextField {...processedFieldProps} />;
 }) as DateFieldComponent;

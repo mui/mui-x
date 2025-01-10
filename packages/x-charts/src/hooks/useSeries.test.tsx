@@ -3,8 +3,7 @@ import { expect } from 'chai';
 import { ErrorBoundary, createRenderer, reactMajor, screen } from '@mui/internal-test-utils';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 import { useSeries } from './useSeries';
-import { SeriesProvider } from '../context/SeriesProvider';
-import { PluginProvider } from '../internals';
+import { ChartProvider } from '../context/ChartProvider';
 
 function UseSeries() {
   const { bar } = useSeries();
@@ -19,14 +18,14 @@ describe('useSeries', () => {
   testSkipIf(!isJSDOM)('should throw an error when parent context not present', () => {
     const errorRef = React.createRef<any>();
 
-    const errorMessage1 = 'MUI X: Could not find the series ref context.';
+    const errorMessage1 = 'MUI X: Could not find the Chart context.';
     const errorMessage2 =
-      'It looks like you rendered your component outside of a ChartsContainer parent component.';
+      'It looks like you rendered your component outside of a ChartDataProvider.';
     const errorMessage3 = 'The above error occurred in the <UseSeries> component:';
     const expextedError =
       reactMajor < 19
         ? [errorMessage1, errorMessage2, errorMessage3]
-        : `${errorMessage1}\n${errorMessage2}`;
+        : [errorMessage1, errorMessage2].join('\n');
 
     expect(() =>
       render(
@@ -37,18 +36,20 @@ describe('useSeries', () => {
     ).toErrorDev(expextedError);
 
     expect((errorRef.current as any).errors).to.have.length(1);
-    expect((errorRef.current as any).errors[0].toString()).to.include(
-      'MUI X: Could not find the series ref context.',
-    );
+    expect((errorRef.current as any).errors[0].toString()).to.include(errorMessage1);
   });
 
   it('should not throw an error when parent context is present', () => {
     render(
-      <PluginProvider>
-        <SeriesProvider series={[{ type: 'bar', id: 'test-id', data: [1, 2] }]}>
-          <UseSeries />
-        </SeriesProvider>
-      </PluginProvider>,
+      <ChartProvider
+        pluginParams={{
+          series: [{ type: 'bar', id: 'test-id', data: [1, 2] }],
+          width: 200,
+          height: 200,
+        }}
+      >
+        <UseSeries />
+      </ChartProvider>,
     );
 
     expect(screen.getByText('test-id')).toBeVisible();
