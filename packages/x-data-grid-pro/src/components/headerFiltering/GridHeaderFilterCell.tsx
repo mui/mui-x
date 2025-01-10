@@ -51,7 +51,7 @@ export interface GridHeaderFilterCellProps extends Pick<GridStateColDef, 'header
   tabIndex: 0 | -1;
   width: number;
   colDef: GridColDef;
-  headerFilterMenuRef: React.MutableRefObject<HTMLButtonElement | null>;
+  headerFilterMenuRef: React.RefObject<HTMLButtonElement | null>;
   item: GridFilterItem;
   showClearIcon?: boolean;
   InputComponentProps: GridFilterOperator['InputComponentProps'];

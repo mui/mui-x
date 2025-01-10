@@ -38,7 +38,7 @@ import { getVisibleRowsLookup } from '../../../utils/tree/utils';
 import { TreeDataStrategy } from '../treeData/gridTreeDataUtils';
 
 export const useGridDataSourceTreeDataPreProcessors = (
-  privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
+  privateApiRef: React.RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     | 'treeData'

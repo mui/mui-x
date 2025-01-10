@@ -19,8 +19,8 @@ import {
 } from './useDesktopRangePicker.types';
 import {
   RangePickerPropsForFieldSlot,
-  useEnrichedRangePickerFieldProps,
-} from '../useEnrichedRangePickerFieldProps';
+  useEnrichedRangePickerField,
+} from '../useEnrichedRangePickerField';
 import { getReleaseInfo } from '../../utils/releaseInfo';
 import { useRangePosition } from '../useRangePosition';
 import { PickerRangePositionContext } from '../../../hooks/usePickerRangePositionContext';
@@ -47,17 +47,10 @@ export const useDesktopRangePicker = <
     slotProps,
     className,
     sx,
-    format,
-    formatDensity,
-    enableAccessibleFieldDOMStructure,
-    selectedSections,
-    onSelectedSectionsChange,
-    timezone,
     label,
     inputRef,
     name,
     readOnly,
-    disabled,
     autoFocus,
     disableOpenPicker,
     localeText,
@@ -87,13 +80,11 @@ export const useDesktopRangePicker = <
     fieldRef = endFieldRef;
   }
 
-  const {
-    providerProps,
-    renderCurrentView,
-    shouldRestoreFocus,
-    fieldProps: pickerFieldProps,
-    ownerState,
-  } = usePicker<PickerRangeValue, TView, TExternalProps>({
+  const { providerProps, renderCurrentView, shouldRestoreFocus, ownerState } = usePicker<
+    PickerRangeValue,
+    TView,
+    TExternalProps
+  >({
     ...pickerParams,
     props,
     variant: 'desktop',
@@ -135,15 +126,7 @@ export const useDesktopRangePicker = <
     additionalProps: {
       // Internal props
       readOnly,
-      disabled,
-      format,
-      formatDensity,
-      enableAccessibleFieldDOMStructure,
-      selectedSections,
-      onSelectedSectionsChange,
-      timezone,
       autoFocus: autoFocus && !props.open,
-      ...pickerFieldProps, // onChange and value
 
       // Forwarded props
       className,
@@ -155,7 +138,7 @@ export const useDesktopRangePicker = <
     ownerState,
   });
 
-  const enrichedFieldProps = useEnrichedRangePickerFieldProps<
+  const enrichedFieldResponse = useEnrichedRangePickerField<
     TView,
     TEnableAccessibleFieldDOMStructure,
     InferError<TExternalProps>
@@ -163,8 +146,8 @@ export const useDesktopRangePicker = <
     variant: 'desktop',
     fieldType,
     // These direct access to `providerProps` will go away once the range fields handle the picker opening
-    open: providerProps.contextValue.open,
-    setOpen: providerProps.contextValue.setOpen,
+    contextValue: providerProps.contextValue,
+    fieldPrivateContextValue: providerProps.fieldPrivateContextValue,
     readOnly,
     disableOpenPicker,
     label,
@@ -188,9 +171,16 @@ export const useDesktopRangePicker = <
   const Layout = slots?.layout ?? PickersLayout;
 
   const renderPicker = () => (
-    <PickerProvider {...providerProps}>
+    <PickerProvider
+      {...providerProps}
+      // This override will go away once the range fields handle the picker opening
+      fieldPrivateContextValue={{
+        ...providerProps.fieldPrivateContextValue,
+        ...enrichedFieldResponse.fieldPrivateContextValue,
+      }}
+    >
       <PickerRangePositionContext.Provider value={rangePositionResponse}>
-        <Field {...enrichedFieldProps} />
+        <Field {...enrichedFieldResponse.fieldProps} />
         <PickersPopper
           role="tooltip"
           placement="bottom-start"

@@ -19,9 +19,7 @@ export const columnMenuStateInitializer: GridStateInitializer = (state) => ({
  * @requires useGridColumnResize (event)
  * @requires useGridInfiniteLoader (event)
  */
-export const useGridColumnMenu = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-): void => {
+export const useGridColumnMenu = (apiRef: React.RefObject<GridPrivateApiCommunity>): void => {
   const logger = useGridLogger(apiRef, 'useGridColumnMenu');
 
   /**

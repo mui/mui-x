@@ -55,7 +55,7 @@ export const getDerivedPaginationModel = (
  * @requires useGridDimensions (event) - can be after
  */
 export const useGridPaginationModel = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'paginationModel'

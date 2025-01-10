@@ -355,6 +355,69 @@ If the updated values do not fit your use case, you can [override them](/x/react
 
 ## Slots breaking changes
 
+### Slot: `field`
+
+- The component passed to the `field` slot no longer receives the `value`, `onChange`, `timezone`, `format` and `disabled` props.
+  You can use the `usePickerContext` hook instead:
+
+  ```diff
+  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+
+  -const { value } = props;
+  -const { value } = props;
+  +const { value } = usePickerContext();
+
+  -const { onChange } = props;
+  -onChange(dayjs(), { validationError: null });
+  +const { setValue } = usePickerContext();
+  -setValue(dayjs(), { validationError: null });
+
+  -const { timezone } = props;
+  +const { timezone } = usePickerContext();
+
+  -const { format } = props;
+  +const { fieldFormat } = usePickerContext();
+
+  -const { disabled } = props;
+  +const { disabled } = usePickerContext();
+  ```
+
+  :::success
+  If you are using a hook like `useDateField`, you don't have to do anything, the values from the context are automatically applied.
+  :::
+
+- The component passed to the `field` slot no longer receives the `formatDensity`, `enableAccessibleFieldDOMStructure`, `selectedSections` and `onSelectedSectionsChange` props.
+  These props, formerly mirroring the picker's props, are no longer exposed.
+  You can manually pass them using `slotProps.field` to keep the same behavior:
+
+  ```diff
+   <DatePicker
+     enableAccessibleFieldDOMStructure={false}
+     formatDensity='spacious'
+     selectedSections={selectedSections}
+     onSelectedSectionsChange={onSelectedSectionsChange}
+  +  slotProps={{
+       field: {
+         enableAccessibleFieldDOMStructure: false,
+         formatDensity: 'spacious',
+         selectedSections,
+         onSelectedSectionsChange,
+       },
+     }}
+   />
+  ```
+
+  If you were not passing those props to the picker, then you can use their default values:
+
+  - `formatDensity`: `"dense"`
+  - `enableAccessibleFieldDOMStructure`: `true`
+  - `selectedSections`: `undefined`
+  - `onSelectedSectionsChange`: `undefined`
+
+  :::success
+  If you are using a hook like `useDateField`, you don't have to do anything, the value from the context are automatically applied.
+  :::
+
 ### Slot: `layout`
 
 - The `<PickersLayoutRoot />` and `<PickersLayoutContentWrapper />` components must now receive the `ownerState` returned by `usePickerLayout` instead of their props:

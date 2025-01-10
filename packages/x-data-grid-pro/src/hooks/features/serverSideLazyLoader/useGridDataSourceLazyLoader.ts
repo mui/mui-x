@@ -47,7 +47,7 @@ const getSkeletonRowId = (index: number) => `${GRID_SKELETON_ROW_ROOT_ID}-${inde
  * @requires useGridScroll (method
  */
 export const useGridDataSourceLazyLoader = (
-  privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
+  privateApiRef: React.RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     | 'pagination'

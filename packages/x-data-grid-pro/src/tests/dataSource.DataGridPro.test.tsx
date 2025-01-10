@@ -28,7 +28,7 @@ const testCache: GridDataSourceCache = {
 describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
   let fetchRowsSpy: SinonSpy;
   let mockServer: ReturnType<typeof useMockServer>;
 

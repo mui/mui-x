@@ -264,7 +264,7 @@ export const createGroupingColDefForOneGroupingCriteria = ({
 };
 
 interface CreateGroupingColDefSeveralCriteriaParams {
-  apiRef: React.MutableRefObject<GridApiPremium>;
+  apiRef: React.RefObject<GridApiPremium>;
   columnsLookup: GridColumnRawLookup;
   /**
    * The fields from which we are grouping the rows.

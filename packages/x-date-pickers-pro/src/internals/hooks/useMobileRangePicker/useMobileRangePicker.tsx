@@ -20,8 +20,8 @@ import {
 } from './useMobileRangePicker.types';
 import {
   RangePickerPropsForFieldSlot,
-  useEnrichedRangePickerFieldProps,
-} from '../useEnrichedRangePickerFieldProps';
+  useEnrichedRangePickerField,
+} from '../useEnrichedRangePickerField';
 import { getReleaseInfo } from '../../utils/releaseInfo';
 import { useRangePosition } from '../useRangePosition';
 import { PickerRangePositionContext } from '../../../hooks/usePickerRangePositionContext';
@@ -48,17 +48,10 @@ export const useMobileRangePicker = <
     slotProps: innerSlotProps,
     className,
     sx,
-    format,
-    formatDensity,
-    enableAccessibleFieldDOMStructure,
-    selectedSections,
-    onSelectedSectionsChange,
-    timezone,
     label,
     inputRef,
     name,
     readOnly,
-    disabled,
     disableOpenPicker,
     localeText,
   } = props;
@@ -84,12 +77,11 @@ export const useMobileRangePicker = <
     fieldRef = endFieldRef;
   }
 
-  const {
-    providerProps,
-    renderCurrentView,
-    fieldProps: pickerFieldProps,
-    ownerState,
-  } = usePicker<PickerRangeValue, TView, TExternalProps>({
+  const { providerProps, renderCurrentView, ownerState } = usePicker<
+    PickerRangeValue,
+    TView,
+    TExternalProps
+  >({
     ...pickerParams,
     props,
     variant: 'mobile',
@@ -110,14 +102,6 @@ export const useMobileRangePicker = <
     additionalProps: {
       // Internal props
       readOnly: readOnly ?? true,
-      disabled,
-      format,
-      formatDensity,
-      enableAccessibleFieldDOMStructure,
-      selectedSections,
-      onSelectedSectionsChange,
-      timezone,
-      ...pickerFieldProps, // onChange and value
 
       // Forwarded props
       className,
@@ -130,7 +114,7 @@ export const useMobileRangePicker = <
 
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
 
-  const enrichedFieldProps = useEnrichedRangePickerFieldProps<
+  const enrichedFieldResponse = useEnrichedRangePickerField<
     TView,
     TEnableAccessibleFieldDOMStructure,
     InferError<TExternalProps>
@@ -138,8 +122,8 @@ export const useMobileRangePicker = <
     variant: 'mobile',
     fieldType,
     // These direct access to `providerProps` will go away once the range fields handle the picker opening
-    open: providerProps.contextValue.open,
-    setOpen: providerProps.contextValue.setOpen,
+    contextValue: providerProps.contextValue,
+    fieldPrivateContextValue: providerProps.fieldPrivateContextValue,
     readOnly,
     labelId,
     disableOpenPicker,
@@ -192,9 +176,16 @@ export const useMobileRangePicker = <
   };
 
   const renderPicker = () => (
-    <PickerProvider {...providerProps}>
+    <PickerProvider
+      {...providerProps}
+      // This override will go away once the range fields handle the picker opening
+      fieldPrivateContextValue={{
+        ...providerProps.fieldPrivateContextValue,
+        ...enrichedFieldResponse.fieldPrivateContextValue,
+      }}
+    >
       <PickerRangePositionContext.Provider value={rangePositionResponse}>
-        <Field {...enrichedFieldProps} />
+        <Field {...enrichedFieldResponse.fieldProps} />
         <PickersModalDialog slots={slots} slotProps={slotProps}>
           <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
             {renderCurrentView()}

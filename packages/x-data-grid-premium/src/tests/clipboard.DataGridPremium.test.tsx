@@ -17,7 +17,7 @@ import { isJSDOM, describeSkipIf } from 'test/utils/skipIf';
 describe('<DataGridPremium /> - Clipboard', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
 
   function Test({
     rowLength = 4,
