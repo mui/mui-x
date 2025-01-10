@@ -77,3 +77,7 @@ TODO
 ### Multiple visible months
 
 {{"demo": "DayRangeCalendarWithTwoMonthsDemo.js"}}
+
+## Date Range Calendar
+
+{{"demo": "DateRangeCalendarDemo.js"}}

@@ -1,20 +1,25 @@
 'use client';
 import * as React from 'react';
-import { useCalendarMonthsGrid } from './useCalendarMonthsGrid';
+import { useBaseCalendarMonthsGrid } from '../../utils/base-calendar/months-grid/useBaseCalendarMonthsGrid';
 import { BaseUIComponentProps } from '../../base-utils/types';
 import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
 import { CompositeList } from '../../composite/list/CompositeList';
+import { CalendarMonthsGridCssVars } from './CalendarMonthsGridCssVars';
+import { BaseCalendarMonthsGridOrListContext } from '../../utils/base-calendar/months-grid/BaseCalendarMonthsGridOrListContext';
 
 const CalendarMonthsGrid = React.forwardRef(function CalendarMonthsList(
   props: CalendarMonthsGrid.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, render, children, cellsPerRow, canChangeYear, ...otherProps } = props;
-  const { getMonthsGridProps, monthsCellRefs } = useCalendarMonthsGrid({
-    children,
-    cellsPerRow,
-    canChangeYear,
-  });
+  const { getMonthsGridProps, monthsCellRefs, monthsListOrGridContext } = useBaseCalendarMonthsGrid(
+    {
+      children,
+      cellsPerRow,
+      canChangeYear,
+      cellsPerRowCssVar: CalendarMonthsGridCssVars.calendarMonthsGridCellsPerRow,
+    },
+  );
   const state = React.useMemo(() => ({}), []);
 
   const { renderElement } = useComponentRenderer({
@@ -26,7 +31,11 @@ const CalendarMonthsGrid = React.forwardRef(function CalendarMonthsList(
     extraProps: otherProps,
   });
 
-  return <CompositeList elementsRef={monthsCellRefs}>{renderElement()}</CompositeList>;
+  return (
+    <BaseCalendarMonthsGridOrListContext.Provider value={monthsListOrGridContext}>
+      <CompositeList elementsRef={monthsCellRefs}>{renderElement()}</CompositeList>
+    </BaseCalendarMonthsGridOrListContext.Provider>
+  );
 });
 
 export namespace CalendarMonthsGrid {
@@ -34,7 +43,7 @@ export namespace CalendarMonthsGrid {
 
   export interface Props
     extends Omit<BaseUIComponentProps<'div', State>, 'children'>,
-      useCalendarMonthsGrid.Parameters {}
+      useBaseCalendarMonthsGrid.PublicParameters {}
 }
 
 export { CalendarMonthsGrid };

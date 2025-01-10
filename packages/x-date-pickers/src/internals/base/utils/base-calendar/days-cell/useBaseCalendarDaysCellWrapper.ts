@@ -84,7 +84,7 @@ export namespace useBaseCalendarDaysCellWrapper {
     /**
      * The ref to forward to the component.
      */
-    ref: React.RefObject<HTMLDivElement>;
+    ref: React.RefObject<HTMLButtonElement>;
     /**
      * The memoized context to forward to the memoized component so that it does not need to subscribe to any context.
      */

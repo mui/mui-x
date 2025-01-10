@@ -1,10 +1,10 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useTimeout from '@mui/utils/useTimeout';
-import { PickerValidDate } from '../../../../models';
-import { GenericHTMLProps } from '../../base-utils/types';
-import { mergeReactProps } from '../../base-utils/mergeReactProps';
-import { useBaseCalendarRootContext } from '../../utils/base-calendar/root/BaseCalendarRootContext';
+import { PickerValidDate } from '../../../../../models';
+import { GenericHTMLProps } from '../../../base-utils/types';
+import { mergeReactProps } from '../../../base-utils/mergeReactProps';
+import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 import {
   applyInitialFocusInGrid,
   navigateInGrid,
@@ -12,13 +12,12 @@ import {
   PageGridNavigationTarget,
 } from '../utils/keyboardNavigation';
 import { useMonthsCells } from '../utils/useMonthsCells';
-import { CalendarMonthsGridCssVars } from './CalendarMonthsGridCssVars';
 
-export function useCalendarMonthsGrid(parameters: useCalendarMonthsGrid.Parameters) {
-  const { children, cellsPerRow, canChangeYear = true } = parameters;
+export function useBaseCalendarMonthsGrid(parameters: useBaseCalendarMonthsGrid.Parameters) {
+  const { children, cellsPerRow, canChangeYear = true, cellsPerRowCssVar } = parameters;
   const baseRootContext = useBaseCalendarRootContext();
   const monthsCellRefs = React.useRef<(HTMLElement | null)[]>([]);
-  const { months, changePage } = useMonthsCells();
+  const { months, monthsListOrGridContext, changePage } = useMonthsCells();
   const pageNavigationTargetRef = React.useRef<PageGridNavigationTarget | null>(null);
 
   const getCellsInCalendar = useEventCallback(() => {
@@ -71,21 +70,21 @@ export function useCalendarMonthsGrid(parameters: useCalendarMonthsGrid.Paramete
         children: children == null ? null : children({ months }),
         onKeyDown,
         style: {
-          [CalendarMonthsGridCssVars.calendarMonthsGridCellsPerRow]: cellsPerRow,
+          [cellsPerRowCssVar]: cellsPerRow,
         },
       });
     },
-    [months, children, onKeyDown, cellsPerRow],
+    [months, children, onKeyDown, cellsPerRow, cellsPerRowCssVar],
   );
 
   return React.useMemo(
-    () => ({ getMonthsGridProps, monthsCellRefs }),
-    [getMonthsGridProps, monthsCellRefs],
+    () => ({ getMonthsGridProps, monthsCellRefs, monthsListOrGridContext }),
+    [getMonthsGridProps, monthsCellRefs, monthsListOrGridContext],
   );
 }
 
-export namespace useCalendarMonthsGrid {
-  export interface Parameters {
+export namespace useBaseCalendarMonthsGrid {
+  export interface PublicParameters {
     /**
      * The number of cells per row.
      * This is used to make sure the keyboard navigation works correctly.
@@ -98,6 +97,13 @@ export namespace useCalendarMonthsGrid {
      */
     canChangeYear?: boolean;
     children?: (parameters: ChildrenParameters) => React.ReactNode;
+  }
+
+  export interface Parameters extends PublicParameters {
+    /**
+     * The CSS variable that must contain the number of cells per row.
+     */
+    cellsPerRowCssVar: string;
   }
 
   export interface ChildrenParameters {

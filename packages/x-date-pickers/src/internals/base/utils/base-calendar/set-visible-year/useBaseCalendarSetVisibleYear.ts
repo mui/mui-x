@@ -14,9 +14,10 @@ export function useBaseCalendarSetVisibleYear(
         type: 'button' as const,
         disabled: ctx.isDisabled,
         onClick: ctx.setTarget,
+        tabIndex: ctx.isTabbable ? 0 : -1,
       });
     },
-    [ctx.isDisabled, ctx.setTarget],
+    [ctx.isDisabled, ctx.setTarget, ctx.isTabbable],
   );
 
   return React.useMemo(() => ({ getSetVisibleYearProps }), [getSetVisibleYearProps]);
@@ -37,5 +38,6 @@ export namespace useBaseCalendarSetVisibleYear {
   export interface Context {
     setTarget: () => void;
     isDisabled: boolean;
+    isTabbable: boolean;
   }
 }

@@ -1,15 +1,15 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { PickerValidDate } from '../../../../models';
-import { GenericHTMLProps } from '../../base-utils/types';
-import { mergeReactProps } from '../../base-utils/mergeReactProps';
+import { PickerValidDate } from '../../../../../models';
+import { GenericHTMLProps } from '../../../base-utils/types';
+import { mergeReactProps } from '../../../base-utils/mergeReactProps';
 import { navigateInList } from '../utils/keyboardNavigation';
 import { useYearsCells } from '../utils/useYearsCells';
 
-export function useCalendarYearsList(parameters: useCalendarYearsList.Parameters) {
+export function useBaseCalendarYearsList(parameters: useBaseCalendarYearsList.Parameters) {
   const { children, loop = true } = parameters;
   const yearsCellRefs = React.useRef<(HTMLElement | null)[]>([]);
-  const { years } = useYearsCells();
+  const { years, yearsListOrGridContext } = useYearsCells();
 
   const onKeyDown = useEventCallback((event: React.KeyboardEvent) => {
     navigateInList({
@@ -32,12 +32,12 @@ export function useCalendarYearsList(parameters: useCalendarYearsList.Parameters
   );
 
   return React.useMemo(
-    () => ({ getYearsListProps, yearsCellRefs }),
-    [getYearsListProps, yearsCellRefs],
+    () => ({ getYearsListProps, yearsCellRefs, yearsListOrGridContext }),
+    [getYearsListProps, yearsCellRefs, yearsListOrGridContext],
   );
 }
 
-export namespace useCalendarYearsList {
+export namespace useBaseCalendarYearsList {
   export interface Parameters {
     /**
      * Whether to loop keyboard focus back to the first item

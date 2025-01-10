@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { PickerValidDate } from '../../../../models';
-import { getMonthsInYear } from '../../../utils/date-utils';
-import { useUtils } from '../../../hooks/useUtils';
-import { getFirstEnabledYear, getLastEnabledYear } from '../../utils/base-calendar/utils/date';
-import { useBaseCalendarRootContext } from '../../utils/base-calendar/root/BaseCalendarRootContext';
+import { PickerValidDate } from '../../../../../models';
+import { getMonthsInYear } from '../../../../utils/date-utils';
+import { useUtils } from '../../../../hooks/useUtils';
+import { getFirstEnabledYear, getLastEnabledYear } from './date';
+import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
+import { BaseCalendarMonthsGridOrListContext } from '../months-grid/BaseCalendarMonthsGridOrListContext';
 
 export function useMonthsCells(): useMonthsCells.ReturnValue {
   const baseRootContext = useBaseCalendarRootContext();
@@ -15,6 +16,32 @@ export function useMonthsCells(): useMonthsCells.ReturnValue {
   );
 
   const months = React.useMemo(() => getMonthsInYear(utils, currentYear), [utils, currentYear]);
+
+  const tabbableMonths = React.useMemo(() => {
+    let tempTabbableDays: PickerValidDate[] = [];
+    tempTabbableDays = months.filter((day) =>
+      baseRootContext.selectedDates.some((selectedDay) => utils.isSameMonth(day, selectedDay)),
+    );
+
+    if (tempTabbableDays.length === 0) {
+      tempTabbableDays = months.filter((day) =>
+        utils.isSameMonth(day, baseRootContext.currentDate),
+      );
+    }
+
+    if (tempTabbableDays.length === 0) {
+      tempTabbableDays = [months[0]];
+    }
+
+    return tempTabbableDays;
+  }, [baseRootContext.currentDate, baseRootContext.selectedDates, months, utils]);
+
+  const monthsListOrGridContext = React.useMemo<BaseCalendarMonthsGridOrListContext>(
+    () => ({
+      tabbableMonths,
+    }),
+    [tabbableMonths],
+  );
 
   const changePage = (direction: 'next' | 'previous') => {
     // TODO: Jump over months with no valid date.
@@ -64,12 +91,13 @@ export function useMonthsCells(): useMonthsCells.ReturnValue {
     return registerSection({ type: 'month', value: currentYear });
   }, [registerSection, currentYear]);
 
-  return { months, changePage };
+  return { months, monthsListOrGridContext, changePage };
 }
 
 export namespace useMonthsCells {
   export interface ReturnValue {
     months: PickerValidDate[];
+    monthsListOrGridContext: BaseCalendarMonthsGridOrListContext;
     changePage: (direction: 'next' | 'previous') => void;
   }
 }

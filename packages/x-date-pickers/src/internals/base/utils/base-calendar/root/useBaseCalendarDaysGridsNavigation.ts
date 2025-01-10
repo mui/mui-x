@@ -10,7 +10,7 @@ import {
   navigateInGrid,
   NavigateInGridChangePage,
   PageGridNavigationTarget,
-} from '../../../Calendar/utils/keyboardNavigation';
+} from '../utils/keyboardNavigation';
 import { getFirstEnabledMonth, getLastEnabledMonth } from '../utils/date';
 import { BaseCalendarRootContext } from './BaseCalendarRootContext';
 

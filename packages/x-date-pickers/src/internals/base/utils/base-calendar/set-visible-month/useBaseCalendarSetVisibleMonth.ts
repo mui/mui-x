@@ -14,9 +14,10 @@ export function useBaseCalendarSetVisibleMonth(
         type: 'button' as const,
         disabled: ctx.isDisabled,
         onClick: ctx.setTarget,
+        tabIndex: ctx.isTabbable ? 0 : -1,
       });
     },
-    [ctx.isDisabled, ctx.setTarget],
+    [ctx.isDisabled, ctx.isTabbable, ctx.setTarget],
   );
 
   return React.useMemo(() => ({ getSetVisibleMonthProps }), [getSetVisibleMonthProps]);
@@ -37,5 +38,6 @@ export namespace useBaseCalendarSetVisibleMonth {
   export interface Context {
     setTarget: () => void;
     isDisabled: boolean;
+    isTabbable: boolean;
   }
 }

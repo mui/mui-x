@@ -1,1 +1,0 @@
-<DayRangeCalendar value={value} onValueChange={handleValueChange} />

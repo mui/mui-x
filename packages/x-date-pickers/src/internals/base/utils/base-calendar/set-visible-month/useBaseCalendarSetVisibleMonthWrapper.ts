@@ -4,12 +4,14 @@ import { useUtils } from '../../../../hooks/useUtils';
 import { getFirstEnabledMonth, getLastEnabledMonth } from '../utils/date';
 import { useBaseCalendarSetVisibleMonth } from './useBaseCalendarSetVisibleMonth';
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
+import { useNullableBaseCalendarMonthsGridOrListContext } from '../months-grid/BaseCalendarMonthsGridOrListContext';
 
 export function useBaseCalendarSetVisibleMonthWrapper(
   parameters: useBaseCalendarSetVisibleMonthWrapper.Parameters,
 ) {
   const { target } = parameters;
   const baseRootContext = useBaseCalendarRootContext();
+  const baseMonthsListOrGridContext = useNullableBaseCalendarMonthsGridOrListContext();
   const utils = useUtils();
 
   const targetDate = React.useMemo(() => {
@@ -53,6 +55,15 @@ export function useBaseCalendarSetVisibleMonthWrapper(
     utils,
   ]);
 
+  const tabbableMonths = baseMonthsListOrGridContext?.tabbableMonths;
+  const isTabbable = React.useMemo(() => {
+    if (tabbableMonths == null) {
+      return false;
+    }
+
+    return tabbableMonths.some((month) => utils.isSameMonth(month, targetDate));
+  }, [tabbableMonths, targetDate, utils]);
+
   const setTarget = useEventCallback(() => {
     if (isDisabled) {
       return;
@@ -64,8 +75,9 @@ export function useBaseCalendarSetVisibleMonthWrapper(
     () => ({
       setTarget,
       isDisabled,
+      isTabbable,
     }),
-    [setTarget, isDisabled],
+    [setTarget, isDisabled, isTabbable],
   );
 
   return { ctx };

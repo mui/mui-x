@@ -1,10 +1,10 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useTimeout from '@mui/utils/useTimeout';
-import { PickerValidDate } from '../../../../models';
-import { GenericHTMLProps } from '../../base-utils/types';
-import { mergeReactProps } from '../../base-utils/mergeReactProps';
-import { useBaseCalendarRootContext } from '../../utils/base-calendar/root/BaseCalendarRootContext';
+import { PickerValidDate } from '../../../../../models';
+import { GenericHTMLProps } from '../../../base-utils/types';
+import { mergeReactProps } from '../../../base-utils/mergeReactProps';
+import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 import {
   applyInitialFocusInList,
   navigateInList,
@@ -13,11 +13,11 @@ import {
 } from '../utils/keyboardNavigation';
 import { useMonthsCells } from '../utils/useMonthsCells';
 
-export function useCalendarMonthsList(parameters: useCalendarMonthsList.Parameters) {
+export function useBaseCalendarMonthsList(parameters: useBaseCalendarMonthsList.Parameters) {
   const { children, loop = true, canChangeYear = true } = parameters;
   const baseRootContext = useBaseCalendarRootContext();
   const monthsCellRefs = React.useRef<(HTMLElement | null)[]>([]);
-  const { months, changePage } = useMonthsCells();
+  const { months, monthsListOrGridContext, changePage } = useMonthsCells();
   const pageNavigationTargetRef = React.useRef<PageListNavigationTarget | null>(null);
 
   const timeout = useTimeout();
@@ -57,12 +57,12 @@ export function useCalendarMonthsList(parameters: useCalendarMonthsList.Paramete
   );
 
   return React.useMemo(
-    () => ({ getMonthListProps, monthsCellRefs }),
-    [getMonthListProps, monthsCellRefs],
+    () => ({ getMonthListProps, monthsCellRefs, monthsListOrGridContext }),
+    [getMonthListProps, monthsCellRefs, monthsListOrGridContext],
   );
 }
 
-export namespace useCalendarMonthsList {
+export namespace useBaseCalendarMonthsList {
   export interface Parameters {
     /**
      * Whether to loop keyboard focus back to the first item

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 // eslint-disable-next-line no-restricted-imports
@@ -32,10 +31,10 @@ function Header() {
   );
 }
 
-function DayRangeCalendar(props: Omit<RangeCalendar.Root.Props, 'children'>) {
+export default function DayRangeCalendarDemo() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <RangeCalendar.Root {...props} monthPageSize={2} className={clsx(styles.Root)}>
+      <RangeCalendar.Root monthPageSize={2} className={clsx(styles.Root)}>
         <Header />
         <RangeCalendar.DaysGrid className={styles.DaysGrid}>
           <RangeCalendar.DaysGridHeader className={styles.DaysGridHeader}>
@@ -72,26 +71,6 @@ function DayRangeCalendar(props: Omit<RangeCalendar.Root.Props, 'children'>) {
           </RangeCalendar.DaysGridBody>
         </RangeCalendar.DaysGrid>
       </RangeCalendar.Root>
-    </LocalizationProvider>
-  );
-}
-
-export default function DayRangeCalendarDemo() {
-  const [value, setValue] = React.useState<[Dayjs | null, Dayjs | null]>([
-    null,
-    null,
-  ]);
-
-  const handleValueChange = React.useCallback(
-    (newValue: [Dayjs | null, Dayjs | null]) => {
-      setValue(newValue);
-    },
-    [],
-  );
-
-  return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DayRangeCalendar value={value} onValueChange={handleValueChange} />
     </LocalizationProvider>
   );
 }

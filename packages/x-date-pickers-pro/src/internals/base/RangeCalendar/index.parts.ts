@@ -9,14 +9,16 @@ export { RangeCalendarDaysWeekRow as DaysWeekRow } from './days-week-row/RangeCa
 export { RangeCalendarDaysCell as DaysCell } from './days-cell/RangeCalendarDaysCell';
 
 // // Months
-// export { CalendarMonthsList as MonthsList } from './months-list/CalendarMonthsList';
-// export { CalendarMonthsGrid as MonthsGrid } from './months-grid/CalendarMonthsGrid';
-// export { CalendarMonthsCell as MonthsCell } from './months-cell/CalendarMonthsCell';
+export { RangeCalendarMonthsList as MonthsList } from './months-list/RangeCalendarMonthsList';
+export { RangeCalendarMonthsGrid as MonthsGrid } from './months-grid/RangeCalendarMonthsGrid';
+// TODO: Uncomment when the component supports good range editing
+// export { RangeCalendarMonthsCell as MonthsCell } from './months-cell/RangeCalendarMonthsCell';
 
 // // Years
-// export { CalendarYearsList as YearsList } from './years-list/CalendarYearsList';
-// export { CalendarYearsGrid as YearsGrid } from './years-grid/CalendarYearsGrid';
-// export { CalendarYearsCell as YearsCell } from './years-cell/CalendarYearsCell';
+export { RangeCalendarYearsList as YearsList } from './years-list/RangeCalendarYearsList';
+export { RangeCalendarYearsGrid as YearsGrid } from './years-grid/RangeCalendarYearsGrid';
+// TODO: Uncomment when the component supports good range editing
+// export { RangeCalendarYearsCell as YearsCell } from './years-cell/RangeCalendarYearsCell';
 
 // Navigation
 export { RangeCalendarSetVisibleMonth as SetVisibleMonth } from './set-visible-month/RangeCalendarSetVisibleMonth';

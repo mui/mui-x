@@ -1,18 +1,22 @@
 'use client';
 import * as React from 'react';
-import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
-import { BaseUIComponentProps } from '../../base-utils/types';
-import { useBaseCalendarYearsCell } from '../../utils/base-calendar/years-cell/useBaseCalendarYearsCell';
-import { useBaseCalendarYearsCellWrapper } from '../../utils/base-calendar/years-cell/useBaseCalendarYearsCellWrapper';
+// eslint-disable-next-line no-restricted-imports
+import { BaseUIComponentProps } from '@mui/x-date-pickers/internals/base/base-utils/types';
+// eslint-disable-next-line no-restricted-imports
+import { useComponentRenderer } from '@mui/x-date-pickers/internals/base/base-utils/useComponentRenderer';
+// eslint-disable-next-line no-restricted-imports
+import { useBaseCalendarYearsCell } from '@mui/x-date-pickers/internals/base/utils/base-calendar/years-cell/useBaseCalendarYearsCell';
+// eslint-disable-next-line no-restricted-imports
+import { useBaseCalendarYearsCellWrapper } from '@mui/x-date-pickers/internals/base/utils/base-calendar/years-cell/useBaseCalendarYearsCellWrapper';
 
-const InnerCalendarYearsCell = React.forwardRef(function InnerCalendarYearsCell(
-  props: InnerCalendarYearsCellProps,
+const InnerRangeCalendarYearsCell = React.forwardRef(function InnerRangeCalendarYearsCell(
+  props: InnerRangeCalendarYearsCellProps,
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
   const { className, render, value, format, ctx, ...otherProps } = props;
   const { getYearCellProps, isCurrent } = useBaseCalendarYearsCell({ value, format, ctx });
 
-  const state: CalendarYearsCell.State = React.useMemo(
+  const state: RangeCalendarYearsCell.State = React.useMemo(
     () => ({
       selected: ctx.isSelected,
       disabled: ctx.isDisabled,
@@ -34,18 +38,18 @@ const InnerCalendarYearsCell = React.forwardRef(function InnerCalendarYearsCell(
   return renderElement();
 });
 
-const MemoizedInnerCalendarYearsCell = React.memo(InnerCalendarYearsCell);
+const MemoizedInnerRangeCalendarYearsCell = React.memo(InnerRangeCalendarYearsCell);
 
-const CalendarYearsCell = React.forwardRef(function CalendarsYearCell(
-  props: CalendarYearsCell.Props,
+const RangeCalendarYearsCell = React.forwardRef(function RangeCalendarsYearCell(
+  props: RangeCalendarYearsCell.Props,
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
   const { ref, ctx } = useBaseCalendarYearsCellWrapper({ value: props.value, forwardedRef });
 
-  return <MemoizedInnerCalendarYearsCell ref={ref} {...props} ctx={ctx} />;
+  return <MemoizedInnerRangeCalendarYearsCell ref={ref} {...props} ctx={ctx} />;
 });
 
-export namespace CalendarYearsCell {
+export namespace RangeCalendarYearsCell {
   export interface State {
     /**
      * Whether the year is selected.
@@ -70,8 +74,8 @@ export namespace CalendarYearsCell {
       Omit<BaseUIComponentProps<'button', State>, 'value'> {}
 }
 
-interface InnerCalendarYearsCellProps
+interface InnerRangeCalendarYearsCellProps
   extends useBaseCalendarYearsCell.Parameters,
-    Omit<BaseUIComponentProps<'button', CalendarYearsCell.State>, 'value'> {}
+    Omit<BaseUIComponentProps<'button', RangeCalendarYearsCell.State>, 'value'> {}
 
-export { CalendarYearsCell };
+export { RangeCalendarYearsCell };

@@ -4,12 +4,14 @@ import { useUtils } from '../../../../hooks/useUtils';
 import { useBaseCalendarSetVisibleYear } from './useBaseCalendarSetVisibleYear';
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 import { getFirstEnabledYear, getLastEnabledYear } from '../utils/date';
+import { useNullableBaseCalendarYearsGridOrListContext } from '../years-grid/BaseCalendarYearsGridOrListContext';
 
 export function useBaseCalendarSetVisibleYearWrapper(
   parameters: useBaseCalendarSetVisibleYearWrapper.Parameters,
 ) {
   const { target } = parameters;
   const baseRootContext = useBaseCalendarRootContext();
+  const baseYearsListOrGridContext = useNullableBaseCalendarYearsGridOrListContext();
   const utils = useUtils();
 
   const targetDate = React.useMemo(() => {
@@ -52,6 +54,15 @@ export function useBaseCalendarSetVisibleYearWrapper(
     utils,
   ]);
 
+  const tabbableYears = baseYearsListOrGridContext?.tabbableYears;
+  const isTabbable = React.useMemo(() => {
+    if (tabbableYears == null) {
+      return false;
+    }
+
+    return tabbableYears.some((year) => utils.isSameYear(year, targetDate));
+  }, [tabbableYears, targetDate, utils]);
+
   const setTarget = useEventCallback(() => {
     if (isDisabled) {
       return;
@@ -63,8 +74,9 @@ export function useBaseCalendarSetVisibleYearWrapper(
     () => ({
       setTarget,
       isDisabled,
+      isTabbable,
     }),
-    [setTarget, isDisabled],
+    [setTarget, isDisabled, isTabbable],
   );
 
   return { ctx };

@@ -1,18 +1,22 @@
 'use client';
 import * as React from 'react';
-import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
-import { BaseUIComponentProps } from '../../base-utils/types';
-import { useBaseCalendarMonthsCell } from '../../utils/base-calendar/months-cell/useBaseCalendarMonthsCell';
-import { useBaseCalendarMonthsCellWrapper } from '../../utils/base-calendar/months-cell/useBaseCalendarMonthsCellWrapper';
+// eslint-disable-next-line no-restricted-imports
+import { BaseUIComponentProps } from '@mui/x-date-pickers/internals/base/base-utils/types';
+// eslint-disable-next-line no-restricted-imports
+import { useComponentRenderer } from '@mui/x-date-pickers/internals/base/base-utils/useComponentRenderer';
+// eslint-disable-next-line no-restricted-imports
+import { useBaseCalendarMonthsCell } from '@mui/x-date-pickers/internals/base/utils/base-calendar/months-cell/useBaseCalendarMonthsCell';
+// eslint-disable-next-line no-restricted-imports
+import { useBaseCalendarMonthsCellWrapper } from '@mui/x-date-pickers/internals/base/utils/base-calendar/months-cell/useBaseCalendarMonthsCellWrapper';
 
-const InnerCalendarMonthsCell = React.forwardRef(function InnerCalendarMonthsCell(
-  props: InnerCalendarMonthsCellProps,
+const InnerRangeCalendarMonthsCell = React.forwardRef(function InnerRangeCalendarMonthsCell(
+  props: InnerRangeCalendarMonthsCellProps,
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
   const { className, render, value, format, ctx, ...otherProps } = props;
   const { getMonthsCellProps, isCurrent } = useBaseCalendarMonthsCell({ value, format, ctx });
 
-  const state: CalendarMonthsCell.State = React.useMemo(
+  const state: RangeCalendarMonthsCell.State = React.useMemo(
     () => ({
       selected: ctx.isSelected,
       disabled: ctx.isDisabled,
@@ -34,18 +38,18 @@ const InnerCalendarMonthsCell = React.forwardRef(function InnerCalendarMonthsCel
   return renderElement();
 });
 
-const MemoizedInnerCalendarMonthsCell = React.memo(InnerCalendarMonthsCell);
+const MemoizedInnerRangeCalendarMonthsCell = React.memo(InnerRangeCalendarMonthsCell);
 
-const CalendarMonthsCell = React.forwardRef(function CalendarMonthsCell(
-  props: CalendarMonthsCell.Props,
+const RangeCalendarMonthsCell = React.forwardRef(function RangeCalendarMonthsCell(
+  props: RangeCalendarMonthsCell.Props,
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
   const { ref, ctx } = useBaseCalendarMonthsCellWrapper({ value: props.value, forwardedRef });
 
-  return <MemoizedInnerCalendarMonthsCell {...props} ref={ref} ctx={ctx} />;
+  return <MemoizedInnerRangeCalendarMonthsCell {...props} ref={ref} ctx={ctx} />;
 });
 
-export namespace CalendarMonthsCell {
+export namespace RangeCalendarMonthsCell {
   export interface State {
     /**
      * Whether the month is selected.
@@ -70,8 +74,8 @@ export namespace CalendarMonthsCell {
       Omit<BaseUIComponentProps<'button', State>, 'value'> {}
 }
 
-interface InnerCalendarMonthsCellProps
+interface InnerRangeCalendarMonthsCellProps
   extends useBaseCalendarMonthsCell.Parameters,
-    Omit<BaseUIComponentProps<'button', CalendarMonthsCell.State>, 'value'> {}
+    Omit<BaseUIComponentProps<'button', RangeCalendarMonthsCell.State>, 'value'> {}
 
-export { CalendarMonthsCell };
+export { RangeCalendarMonthsCell };

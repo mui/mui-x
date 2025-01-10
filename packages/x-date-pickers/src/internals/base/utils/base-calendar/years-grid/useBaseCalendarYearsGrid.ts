@@ -1,16 +1,15 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { PickerValidDate } from '../../../../models';
-import { GenericHTMLProps } from '../../base-utils/types';
-import { mergeReactProps } from '../../base-utils/mergeReactProps';
+import { PickerValidDate } from '../../../../../models';
+import { GenericHTMLProps } from '../../../base-utils/types';
+import { mergeReactProps } from '../../../base-utils/mergeReactProps';
 import { navigateInGrid } from '../utils/keyboardNavigation';
 import { useYearsCells } from '../utils/useYearsCells';
-import { CalendarYearsGridCssVars } from './CalendarYearsGridCssVars';
 
-export function useCalendarYearsGrid(parameters: useCalendarYearsGrid.Parameters) {
-  const { children, cellsPerRow } = parameters;
+export function useBaseCalendarYearsGrid(parameters: useBaseCalendarYearsGrid.Parameters) {
+  const { children, cellsPerRow, cellsPerRowCssVar } = parameters;
   const yearsCellRefs = React.useRef<(HTMLElement | null)[]>([]);
-  const { years } = useYearsCells();
+  const { years, yearsListOrGridContext } = useYearsCells();
 
   const getCellsInCalendar = useEventCallback(() => {
     const grid: HTMLElement[][] = Array.from(
@@ -45,27 +44,34 @@ export function useCalendarYearsGrid(parameters: useCalendarYearsGrid.Parameters
         children: children == null ? null : children({ years }),
         onKeyDown,
         style: {
-          [CalendarYearsGridCssVars.calendarYearsGridCellsPerRow]: cellsPerRow,
+          [cellsPerRowCssVar]: cellsPerRow,
         },
       });
     },
-    [years, children, onKeyDown, cellsPerRow],
+    [years, children, onKeyDown, cellsPerRow, cellsPerRowCssVar],
   );
 
   return React.useMemo(
-    () => ({ getYearsGridProps, yearsCellRefs }),
-    [getYearsGridProps, yearsCellRefs],
+    () => ({ getYearsGridProps, yearsCellRefs, yearsListOrGridContext }),
+    [getYearsGridProps, yearsCellRefs, yearsListOrGridContext],
   );
 }
 
-export namespace useCalendarYearsGrid {
-  export interface Parameters {
+export namespace useBaseCalendarYearsGrid {
+  export interface PublicParameters {
     /**
      * Cells rendered per row.
      * This is used to make sure the keyboard navigation works correctly.
      */
     cellsPerRow: number;
     children?: (parameters: ChildrenParameters) => React.ReactNode;
+  }
+
+  export interface Parameters extends PublicParameters {
+    /**
+     * The CSS variable that must contain the number of cells per row.
+     */
+    cellsPerRowCssVar: string;
   }
 
   export interface ChildrenParameters {

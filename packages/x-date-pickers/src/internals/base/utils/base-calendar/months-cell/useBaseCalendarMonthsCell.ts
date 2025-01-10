@@ -1,26 +1,26 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { PickerValidDate } from '../../../../models';
-import { useUtils } from '../../../hooks/useUtils';
-import { GenericHTMLProps } from '../../base-utils/types';
-import { mergeReactProps } from '../../base-utils/mergeReactProps';
+import { PickerValidDate } from '../../../../../models';
+import { useUtils } from '../../../../hooks/useUtils';
+import { GenericHTMLProps } from '../../../base-utils/types';
+import { mergeReactProps } from '../../../base-utils/mergeReactProps';
 
-export function useCalendarYearsCell(parameters: useCalendarYearsCell.Parameters) {
+export function useBaseCalendarMonthsCell(parameters: useBaseCalendarMonthsCell.Parameters) {
   const utils = useUtils();
-  const { value, format = utils.formats.year, ctx } = parameters;
+  const { value, format = utils.formats.month, ctx } = parameters;
 
   const formattedValue = React.useMemo(
     () => utils.formatByString(value, format),
     [utils, value, format],
   );
 
-  const isCurrent = React.useMemo(() => utils.isSameYear(value, utils.date()), [utils, value]);
+  const isCurrent = React.useMemo(() => utils.isSameMonth(value, utils.date()), [utils, value]);
 
   const onClick = useEventCallback(() => {
-    ctx.selectYear(value);
+    ctx.selectMonth(value);
   });
 
-  const getYearCellProps = React.useCallback(
+  const getMonthsCellProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
       return mergeReactProps(externalProps, {
         type: 'button' as const,
@@ -36,15 +36,15 @@ export function useCalendarYearsCell(parameters: useCalendarYearsCell.Parameters
     [formattedValue, ctx.isSelected, ctx.isDisabled, ctx.isTabbable, onClick, isCurrent],
   );
 
-  return React.useMemo(() => ({ getYearCellProps, isCurrent }), [getYearCellProps, isCurrent]);
+  return React.useMemo(() => ({ getMonthsCellProps, isCurrent }), [getMonthsCellProps, isCurrent]);
 }
 
-export namespace useCalendarYearsCell {
+export namespace useBaseCalendarMonthsCell {
   export interface Parameters {
     value: PickerValidDate;
     /**
-     * The format used to display the year.
-     * @default utils.formats.year
+     * The format used to display the month.
+     * @default utils.formats.month
      */
     format?: string;
     /**
@@ -58,6 +58,6 @@ export namespace useCalendarYearsCell {
     isDisabled: boolean;
     isInvalid: boolean;
     isTabbable: boolean;
-    selectYear: (value: PickerValidDate) => void;
+    selectMonth: (value: PickerValidDate) => void;
   }
 }
