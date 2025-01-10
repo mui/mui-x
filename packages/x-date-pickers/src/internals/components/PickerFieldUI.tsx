@@ -182,7 +182,6 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
         clearButtonPosition === 'end' && openPickerButtonPosition === 'end'
           ? undefined
           : clearButtonPosition,
-      'data-hidden': fieldResponse.areAllSectionsEmpty ? '' : undefined,
     },
     ownerState,
   });
@@ -253,16 +252,13 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
       {
         '& .clearButton': {
           opacity: 1,
-          '&[data-hidden]': {
-            opacity: 0,
-          },
         },
         '@media (pointer: fine)': {
           '& .clearButton': {
             opacity: 0,
           },
           '&:hover, &:focus-within': {
-            '.clearButton:not([data-hidden])': {
+            '.clearButton': {
               opacity: 1,
             },
           },

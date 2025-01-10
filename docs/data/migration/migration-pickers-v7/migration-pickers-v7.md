@@ -384,8 +384,6 @@ If the updated values do not fit your use case, you can [override them](/x/react
      return (
       <TextField
         {...customProps}
-  -      aria-label={props.inputProps?.['aria-label]}
-  +      aria-label={fieldResponse.openPickerAriaLabel}
   -      InputProps={props.InputProps}
   +      InputProps={{
   +        ref: pickerContext.triggerRef,
@@ -394,6 +392,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
   +            <IconButton
   +              onClick={() => pickerContext.setOpen((prev) => !prev)}
   +              edge="end"
+  +              aria-label={fieldResponse.openPickerAriaLabel}
   +            >
   +              <CalendarIcon />
   +            </IconButton>

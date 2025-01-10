@@ -146,7 +146,7 @@ but you still want the UI to look like a Text Field, you can replace the field w
 
 ### Using a read-only Text Field on mobile
 
-If you want to keep the default behavior on desktop but have a read-only TextField on mobile, you can conditionally render the custom field presented in the previous doc section:
+If you want to keep the default behavior on desktop but have a read-only TextField on mobile, you can conditionally render the custom field presented in the previous section:
 
 {{"demo": "behavior-read-only-mobile-text-field/MaterialDatePicker.js", "defaultCodeOpen": false}}
 
