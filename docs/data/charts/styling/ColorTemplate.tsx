@@ -36,14 +36,14 @@ const legendPlacement = {
         vertical: 'middle',
         horizontal: 'right',
       },
-      direction: 'column',
+      direction: 'vertical',
       itemGap: 2,
     },
   },
   margin: {
     top: 20,
-    right: 150,
-    left: 20,
+    right: 20,
+    left: 30,
   },
 } as const;
 const series = [

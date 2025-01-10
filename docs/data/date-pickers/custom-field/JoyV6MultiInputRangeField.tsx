@@ -142,18 +142,12 @@ const JoyMultiInputDateRangeField = React.forwardRef(
   (props: JoyMultiInputDateRangeFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const {
       slotProps,
-      value,
-      format,
-      onChange,
       readOnly,
-      disabled,
       shouldDisableDate,
       minDate,
       maxDate,
       disableFuture,
       disablePast,
-      selectedSections,
-      onSelectedSectionsChange,
       className,
       unstableStartFieldRef,
       unstableEndFieldRef,
@@ -176,18 +170,12 @@ const JoyMultiInputDateRangeField = React.forwardRef(
       MultiInputFieldSlotTextFieldProps
     >({
       sharedProps: {
-        value,
-        format,
-        onChange,
         readOnly,
-        disabled,
         shouldDisableDate,
         minDate,
         maxDate,
         disableFuture,
         disablePast,
-        selectedSections,
-        onSelectedSectionsChange,
         enableAccessibleFieldDOMStructure: false,
       },
       startTextFieldProps,
@@ -212,6 +200,7 @@ const JoyDateRangePicker = React.forwardRef(
       <DateRangePicker
         ref={ref}
         {...props}
+        enableAccessibleFieldDOMStructure={false}
         slots={{ ...props?.slots, field: JoyMultiInputDateRangeField }}
       />
     );

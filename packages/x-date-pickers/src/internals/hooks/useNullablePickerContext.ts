@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { PickerContext } from '../components/PickerProvider';
+import { PickerContext } from '../../hooks/usePickerContext';
 
 /**
  * Returns the context passed by the picker that wraps the current component.

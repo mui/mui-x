@@ -11,8 +11,8 @@ import { usePickerContext, useSplitFieldProps } from '@mui/x-date-pickers/hooks'
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 
 function AutocompleteField(props) {
-  const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-  const { value, timezone, onChange } = internalProps;
+  const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
+  const { timezone, value, setValue } = usePickerContext();
   const {
     slotProps,
     slots,
@@ -74,7 +74,7 @@ function AutocompleteField(props) {
       }}
       value={value}
       onChange={(_, newValue) => {
-        onChange(newValue, {
+        setValue(newValue, {
           validationError: getValidationErrorForNewValue(newValue),
         });
       }}

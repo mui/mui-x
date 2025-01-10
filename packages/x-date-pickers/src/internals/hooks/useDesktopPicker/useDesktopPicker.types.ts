@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { MakeRequired, SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import {
-  BaseNonStaticPickerProps,
   BasePickerProps,
   BaseNonRangeNonStaticPickerProps,
 } from '../../models/props/basePickerProps';
@@ -54,8 +53,7 @@ export interface UseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure ex
     Pick<PickersLayoutSlotProps<PickerValue>, 'toolbar'> {}
 
 export interface DesktopOnlyPickerProps
-  extends BaseNonStaticPickerProps,
-    BaseNonRangeNonStaticPickerProps,
+  extends BaseNonRangeNonStaticPickerProps,
     UsePickerValueNonStaticProps,
     UsePickerProviderNonStaticProps {
   /**

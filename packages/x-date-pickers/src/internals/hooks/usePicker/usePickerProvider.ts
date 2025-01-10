@@ -18,6 +18,7 @@ import {
 import { useUtils } from '../useUtils';
 import { arrayIncludes } from '../../utils/utils';
 import { UsePickerViewsProviderParams } from './usePickerViews';
+import { PickerFieldPrivateContextValue } from '../useField/useFieldInternalPropsWithDefaults';
 
 function getOrientation(): PickerOrientation {
   if (typeof window === 'undefined') {
@@ -127,6 +128,7 @@ export function usePickerProvider<
       orientation,
       triggerRef,
       triggerStatus,
+      fieldFormat: props.format ?? '',
     }),
     [
       paramsFromUsePickerValue.contextValue,
@@ -137,6 +139,7 @@ export function usePickerProvider<
       props.readOnly,
       triggerRef,
       triggerStatus,
+      props.format,
     ],
   );
 
@@ -145,11 +148,35 @@ export function usePickerProvider<
     [paramsFromUsePickerValue, ownerState],
   );
 
+  const actionsContextValue = React.useMemo(
+    () => ({
+      ...paramsFromUsePickerValue.actionsContextValue,
+      ...paramsFromUsePickerViews.actionsContextValue,
+    }),
+    [paramsFromUsePickerValue.actionsContextValue, paramsFromUsePickerViews.actionsContextValue],
+  );
+
+  const fieldPrivateContextValue = React.useMemo(
+    () => ({
+      formatDensity: props.formatDensity,
+      enableAccessibleFieldDOMStructure: props.enableAccessibleFieldDOMStructure,
+      selectedSections: props.selectedSections,
+      onSelectedSectionsChange: props.onSelectedSectionsChange,
+    }),
+    [
+      props.formatDensity,
+      props.enableAccessibleFieldDOMStructure,
+      props.selectedSections,
+      props.onSelectedSectionsChange,
+    ],
+  );
+
   return {
     localeText,
     contextValue,
     privateContextValue,
-    actionsContextValue: paramsFromUsePickerValue.actionsContextValue,
+    actionsContextValue,
+    fieldPrivateContextValue,
     isValidContextValue: paramsFromUsePickerValue.isValidContextValue,
   };
 }
@@ -183,7 +210,13 @@ export interface UsePickerProviderProps extends FormProps {
 /**
  * Props used to create the picker's contexts and that are not available on static pickers.
  */
-export interface UsePickerProviderNonStaticProps {
+export interface UsePickerProviderNonStaticProps extends PickerFieldPrivateContextValue {
+  // We don't take the `format` prop from `UseFieldInternalProps` to have a custom JSDoc description.
+  /**
+   * Format of the date when rendered in the input(s).
+   * Defaults to localized format based on the used `views`.
+   */
+  format?: string;
   /**
    * If `true`, the open picker button will not be rendered (renders only the field).
    * @default false

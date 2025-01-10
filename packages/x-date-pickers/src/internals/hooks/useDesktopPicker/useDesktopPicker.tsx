@@ -34,17 +34,10 @@ export const useDesktopPicker = <
     slotProps: innerSlotProps,
     className,
     sx,
-    format,
-    formatDensity,
-    enableAccessibleFieldDOMStructure,
-    selectedSections,
-    onSelectedSectionsChange,
-    timezone,
     name,
     label,
     inputRef,
     readOnly,
-    disabled,
     autoFocus,
     localeText,
     reduceAnimations,
@@ -55,13 +48,11 @@ export const useDesktopPicker = <
   const labelId = useId();
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
 
-  const {
-    providerProps,
-    renderCurrentView,
-    shouldRestoreFocus,
-    fieldProps: pickerFieldProps,
-    ownerState,
-  } = usePicker<PickerValue, TView, TExternalProps>({
+  const { providerProps, renderCurrentView, shouldRestoreFocus, ownerState } = usePicker<
+    PickerValue,
+    TView,
+    TExternalProps
+  >({
     ...pickerParams,
     props,
     fieldRef,
@@ -81,15 +72,7 @@ export const useDesktopPicker = <
     additionalProps: {
       // Internal props
       readOnly,
-      disabled,
-      format,
-      formatDensity,
-      enableAccessibleFieldDOMStructure,
-      selectedSections,
-      onSelectedSectionsChange,
-      timezone,
       autoFocus: autoFocus && !props.open,
-      ...pickerFieldProps, // onChange and value
 
       // Forwarded props
       className,

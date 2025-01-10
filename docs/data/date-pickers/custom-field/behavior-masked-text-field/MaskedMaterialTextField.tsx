@@ -37,27 +37,27 @@ function MaskedDateField(props: DatePickerFieldProps) {
   const { slots, slotProps, ...other } = props;
 
   const { forwardedProps, internalProps } = useSplitFieldProps(other, 'date');
-
-  const { format, value, onChange, timezone } = internalProps;
+  const pickerContext = usePickerContext();
+  const parsedFormat = useParsedFormat();
 
   // Control the input text
   const [inputValue, setInputValue] = React.useState<string>(() =>
-    getInputValueFromValue(value, format),
+    getInputValueFromValue(pickerContext.value, pickerContext.fieldFormat),
   );
 
   React.useEffect(() => {
-    if (value && value.isValid()) {
-      const newDisplayDate = getInputValueFromValue(value, format);
+    if (pickerContext.value && pickerContext.value.isValid()) {
+      const newDisplayDate = getInputValueFromValue(
+        pickerContext.value,
+        pickerContext.fieldFormat!,
+      );
       setInputValue(newDisplayDate);
     }
-  }, [format, value]);
-
-  const parsedFormat = useParsedFormat(internalProps);
-  const pickerContext = usePickerContext();
+  }, [pickerContext.fieldFormat, pickerContext.value]);
 
   const { hasValidationError, getValidationErrorForNewValue } = useValidation({
-    value,
-    timezone,
+    value: pickerContext.value,
+    timezone: pickerContext.timezone,
     props: internalProps,
     validator: validateDate,
   });
@@ -65,20 +65,22 @@ function MaskedDateField(props: DatePickerFieldProps) {
   const handleInputValueChange = (newInputValue: string) => {
     setInputValue(newInputValue);
 
-    const newValue = dayjs(newInputValue, format);
-    onChange(newValue, {
+    const newValue = dayjs(newInputValue, pickerContext.fieldFormat);
+    pickerContext.setValue(newValue, {
       validationError: getValidationErrorForNewValue(newValue),
     });
   };
 
   const rifmFormat = React.useMemo(() => {
-    const formattedDateWith1Digit = staticDateWith1DigitTokens.format(format);
+    const formattedDateWith1Digit = staticDateWith1DigitTokens.format(
+      pickerContext.fieldFormat,
+    );
     const inferredFormatPatternWith1Digits = formattedDateWith1Digit.replace(
       ACCEPT_REGEX,
       MASK_USER_INPUT_SYMBOL,
     );
     const inferredFormatPatternWith2Digits = staticDateWith2DigitTokens
-      .format(format)
+      .format(pickerContext.fieldFormat)
       .replace(ACCEPT_REGEX, '_');
 
     if (inferredFormatPatternWith1Digits !== inferredFormatPatternWith2Digits) {
@@ -125,7 +127,7 @@ function MaskedDateField(props: DatePickerFieldProps) {
         })
         .join('');
     };
-  }, [format]);
+  }, [pickerContext.fieldFormat]);
 
   const rifmProps = useRifm({
     value: inputValue,

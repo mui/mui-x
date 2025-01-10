@@ -1,81 +1,34 @@
-import { ChartsTextStyle } from '../ChartsText';
-import { PieItemId } from '../models';
-import { SeriesId } from '../models/seriesType/common';
+import type { ChartsLegendProps } from './ChartsLegend';
+import { ContinuousColorLegendProps } from './ContinuousColorLegend';
+import { ChartsLegendPosition } from './legend.types';
+import { PiecewiseColorLegendProps } from './PiecewiseColorLegend';
 
-interface LegendItemContextBase {
+export interface ChartsLegendSlots {
   /**
-   * The color used in the legend
+   * Custom rendering of the legend.
+   * @default ChartsLegend
    */
-  color: string;
-  /**
-   * The label displayed in the legend
-   */
-  label: string;
+  legend?:
+    | React.JSXElementConstructor<ChartsLegendProps>
+    | React.JSXElementConstructor<ContinuousColorLegendProps>
+    | React.JSXElementConstructor<PiecewiseColorLegendProps>;
 }
 
-export interface LegendItemParams
-  extends Partial<Omit<SeriesLegendItemContext, 'type' | keyof LegendItemContextBase>>,
-    Partial<Omit<PiecewiseColorLegendItemContext, 'type' | keyof LegendItemContextBase>>,
-    LegendItemContextBase {
-  /**
-   * The identifier of the legend element.
-   * Used for internal purpose such as `key` props
-   */
-  id: number | string;
+export interface ChartsLegendSlotProps {
+  legend?: Partial<ChartsLegendProps | ContinuousColorLegendProps | PiecewiseColorLegendProps> &
+    // We allow position only on slots.
+    ChartsLegendPosition;
 }
 
-export interface SeriesLegendItemContext extends LegendItemContextBase {
+export interface ChartsLegendSlotExtension {
   /**
-   * The type of the legend item
-   * - `series` is used for series legend item
-   * - `piecewiseColor` is used for piecewise color legend item
+   * Overridable component slots.
+   * @default {}
    */
-  type: 'series';
+  slots?: ChartsLegendSlots;
   /**
-   * The identifier of the series
+   * The props used for each component slot.
+   * @default {}
    */
-  seriesId: SeriesId;
-  /**
-   * The identifier of the pie item
-   */
-  itemId?: PieItemId;
+  slotProps?: ChartsLegendSlotProps;
 }
-
-export interface PiecewiseColorLegendItemContext extends LegendItemContextBase {
-  /**
-   * The type of the legend item
-   * - `series` is used for series legend item
-   * - `piecewiseColor` is used for piecewise color legend item
-   */
-  type: 'piecewiseColor';
-  /**
-   * The minimum value of the category
-   */
-  minValue: number | Date | null;
-  /**
-   * The maximum value of the category
-   */
-  maxValue: number | Date | null;
-}
-
-export type LegendItemContext = SeriesLegendItemContext | PiecewiseColorLegendItemContext;
-
-export interface LegendItemWithPosition extends LegendItemParams {
-  positionX: number;
-  positionY: number;
-  innerHeight: number;
-  innerWidth: number;
-  outerHeight: number;
-  outerWidth: number;
-  rowIndex: number;
-}
-
-export type GetItemSpaceType = (
-  label: string,
-  inStyle?: ChartsTextStyle,
-) => {
-  innerWidth: number;
-  innerHeight: number;
-  outerWidth: number;
-  outerHeight: number;
-};

@@ -22,8 +22,8 @@ interface AutocompleteFieldProps extends DatePickerFieldProps {
 }
 
 function AutocompleteField(props: AutocompleteFieldProps) {
-  const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-  const { value, timezone, onChange } = internalProps;
+  const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
+  const { timezone, value, setValue } = usePickerContext();
   const {
     slotProps,
     slots,
@@ -86,7 +86,7 @@ function AutocompleteField(props: AutocompleteFieldProps) {
       }}
       value={value}
       onChange={(_, newValue) => {
-        onChange(newValue, {
+        setValue(newValue, {
           validationError: getValidationErrorForNewValue(newValue),
         });
       }}

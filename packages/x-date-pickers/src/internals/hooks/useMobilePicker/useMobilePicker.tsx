@@ -34,17 +34,10 @@ export const useMobilePicker = <
     slotProps: innerSlotProps,
     className,
     sx,
-    format,
-    formatDensity,
-    enableAccessibleFieldDOMStructure,
-    selectedSections,
-    onSelectedSectionsChange,
-    timezone,
     name,
     label,
     inputRef,
     readOnly,
-    disabled,
     autoFocus,
     localeText,
   } = props;
@@ -54,12 +47,11 @@ export const useMobilePicker = <
   const labelId = useId();
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
 
-  const {
-    providerProps,
-    renderCurrentView,
-    fieldProps: pickerFieldProps,
-    ownerState,
-  } = usePicker<PickerValue, TView, TExternalProps>({
+  const { providerProps, renderCurrentView, ownerState } = usePicker<
+    PickerValue,
+    TView,
+    TExternalProps
+  >({
     ...pickerParams,
     props,
     fieldRef,
@@ -79,15 +71,7 @@ export const useMobilePicker = <
     additionalProps: {
       // Internal props
       readOnly,
-      disabled,
-      format,
-      formatDensity,
-      enableAccessibleFieldDOMStructure,
-      selectedSections,
-      onSelectedSectionsChange,
-      timezone,
       autoFocus: autoFocus && !props.open,
-      ...pickerFieldProps, // onChange and value
 
       // Forwarded props
       className,

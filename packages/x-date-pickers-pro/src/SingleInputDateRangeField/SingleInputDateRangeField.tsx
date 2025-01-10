@@ -43,9 +43,8 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
 
   // The `textField` slot props cannot be handled inside `PickerFieldUI` because it would be a breaking change to not pass the enriched props to `useField`.
   // Once the non-accessible DOM structure will be removed, we will be able to remove the `textField` slot and clean this logic.
-  const TextField = PickersTextField;
   const textFieldProps = useSlotProps({
-    elementType: TextField,
+    elementType: PickersTextField,
     externalSlotProps: slotProps?.textField,
     externalForwardedProps: other,
     ownerState,

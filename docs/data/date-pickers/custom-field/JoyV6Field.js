@@ -29,10 +29,7 @@ const CalendarIcon = createSvgIcon(
 const joyTheme = extendJoyTheme();
 
 const JoyDateField = React.forwardRef((props, ref) => {
-  const fieldResponse = useDateField({
-    ...props,
-    enableAccessibleFieldDOMStructure: false,
-  });
+  const fieldResponse = useDateField(props);
 
   const {
     // Should be ignored
@@ -87,6 +84,7 @@ const JoyDatePicker = React.forwardRef((props, ref) => {
     <DatePicker
       ref={ref}
       {...props}
+      enableAccessibleFieldDOMStructure={false}
       slots={{ ...props.slots, field: JoyDateField }}
     />
   );

@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import MuiTextField from '@mui/material/TextField';
 import { CalendarIcon } from '@mui/x-date-pickers/icons';
 import { PickerFieldUI, useFieldOwnerState } from '@mui/x-date-pickers/internals';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
@@ -42,11 +41,10 @@ const SingleInputDateTimeRangeField = React.forwardRef(function SingleInputDateT
 
   const ownerState = useFieldOwnerState(themeProps);
 
-  const TextField =
-    slots?.textField ??
-    (inProps.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
+  // The `textField` slot props cannot be handled inside `PickerFieldUI` because it would be a breaking change to not pass the enriched props to `useField`.
+  // Once the non-accessible DOM structure will be removed, we will be able to remove the `textField` slot and clean this logic.
   const textFieldProps = useSlotProps({
-    elementType: TextField,
+    elementType: PickersTextField,
     externalSlotProps: slotProps?.textField,
     externalForwardedProps: other,
     ownerState,
