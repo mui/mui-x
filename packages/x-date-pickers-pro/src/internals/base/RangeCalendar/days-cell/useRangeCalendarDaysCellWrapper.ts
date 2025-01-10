@@ -30,7 +30,7 @@ export function useRangeCalendarDaysCellWrapper(
       isSelected: positionInSelectedRange.isSelected,
       isSelectionStart: positionInSelectedRange.isSelectionStart,
       isSelectionEnd: positionInSelectedRange.isSelectionEnd,
-      isPreviewed: positionInSelectedRange.isSelected,
+      isPreviewed: positionInPreviewRange.isSelected,
       isPreviewStart: positionInPreviewRange.isSelectionStart,
       isPreviewEnd: positionInPreviewRange.isSelectionEnd,
       isDraggingRef: rootContext.isDraggingRef,

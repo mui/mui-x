@@ -37,11 +37,40 @@ export function getDatePositionInRange(
   date: PickerValidDate,
   range: PickerRangeValue,
 ) {
-  const isSelectionStart = range[0] != null && utils.isSameDay(date, range[0]);
-  const isSelectionEnd = range[1] != null && utils.isSameDay(date, range[1]);
-  const isSelected = isRangeValid(utils, range)
-    ? utils.isWithinRange(date, range)
-    : isSelectionStart || isSelectionEnd;
+  const [start, end] = range;
+  if (start == null && end == null) {
+    return { isSelected: false, isSelectionStart: false, isSelectionEnd: false };
+  }
 
-  return { isSelectionStart, isSelectionEnd, isSelected };
+  if (start == null) {
+    const isSelected = utils.isSameDay(date, end!);
+    return {
+      isSelected,
+      isSelectionStart: isSelected,
+      isSelectionEnd: isSelected,
+    };
+  }
+
+  if (end == null) {
+    const isSelected = utils.isSameDay(date, start!);
+    return {
+      isSelected,
+      isSelectionStart: isSelected,
+      isSelectionEnd: isSelected,
+    };
+  }
+
+  if (utils.isBefore(end, start)) {
+    return {
+      isSelected: false,
+      isSelectionStart: false,
+      isSelectionEnd: false,
+    };
+  }
+
+  return {
+    isSelected: utils.isWithinRange(date, [start, end]),
+    isSelectionStart: utils.isSameDay(date, start),
+    isSelectionEnd: utils.isSameDay(date, end),
+  };
 }
