@@ -33,6 +33,7 @@ const formatter: SeriesProcessor<'scatter'> = ({ series, seriesOrder }, dataset)
       return [
         seriesId,
         {
+          labelMarkType: 'circle' as const,
           ...seriesData,
           data,
           valueFormatter: seriesData.valueFormatter ?? ((v) => v && `(${v.x}, ${v.y})`),
