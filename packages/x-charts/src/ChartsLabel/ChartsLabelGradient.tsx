@@ -52,7 +52,7 @@ const getRotation = (
 ) => {
   const angle = (direction === 'vertical' ? -90 : 0) + (rotate ? 90 : 0) + (reverse ? 180 : 0);
 
-  if (isRtl && direction === 'horizontal') {
+  if (isRtl && direction !== 'vertical') {
     return angle + 180;
   }
 
