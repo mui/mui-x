@@ -118,32 +118,38 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
   });
 
   it('should re-fetch the data on sort change', async () => {
-    render(<TestDataSource />);
-    expect(fetchRowsSpy.callCount).to.equal(1);
-    apiRef.current.setSortModel([{ field: 'name', sort: 'asc' }]);
+    const { setProps } = render(<TestDataSource />);
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+    setProps({ sortModel: [{ field: 'name', sort: 'asc' }] });
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
     });
   });
 
   it('should re-fetch the data on pagination change', async () => {
-    render(<TestDataSource />);
-    expect(fetchRowsSpy.callCount).to.equal(1);
-    apiRef.current.setPage(1);
+    const { setProps } = render(<TestDataSource />);
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+    setProps({ paginationModel: { page: 1, pageSize: 10 } });
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
     });
   });
 
   it('should re-fetch the data once if multiple models have changed', async () => {
-    render(<TestDataSource />);
-    expect(fetchRowsSpy.callCount).to.equal(1);
-
-    apiRef.current.setFilterModel({
-      items: [{ field: 'name', value: 'John', operator: 'contains' }],
+    const { setProps } = render(<TestDataSource />);
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(1);
     });
-    apiRef.current.setSortModel([{ field: 'name', sort: 'asc' }]);
-    apiRef.current.setPaginationModel({ page: 1, pageSize: 10 });
+
+    setProps({
+      paginationModel: { page: 1, pageSize: 10 },
+      sortModel: [{ field: 'name', sort: 'asc' }],
+      filterModel: { items: [{ field: 'name', value: 'John', operator: 'contains' }] },
+    });
 
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
@@ -223,9 +229,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
       await waitFor(() => {
         expect(fetchRowsSpy.callCount).to.equal(2);
       });
-      await waitFor(() => {
-        expect(cache.size).to.equal(2);
-      });
+      expect(cache.size).to.equal(2);
 
       const dataRow2 = await screen.findByText(
         (_, el) => el?.getAttribute('data-rowindex') === '0' && el !== dataRow1,
