@@ -49,4 +49,4 @@ export namespace CalendarYearsList {
       useBaseCalendarYearsList.Parameters {}
 }
 
-export { RangeCalendarYearsList as RangeCalendarYearsList };
+export { RangeCalendarYearsList };

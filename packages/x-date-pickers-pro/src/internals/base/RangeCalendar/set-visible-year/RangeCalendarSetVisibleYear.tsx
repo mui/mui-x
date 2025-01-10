@@ -36,7 +36,7 @@ const RangeCalendarSetVisibleYear = React.forwardRef(function RangeCalendarSetVi
   props: RangeCalendarSetVisibleYear.Props,
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
-  const { ctx } = useBaseCalendarSetVisibleYearWrapper({ target: props.target });
+  const { ctx } = useBaseCalendarSetVisibleYearWrapper({ target: props.target, forwardedRef });
 
   return <MemoizedInnerRangeCalendarSetVisibleYear {...props} ref={forwardedRef} ctx={ctx} />;
 });

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import clsx from 'clsx';
-
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 // eslint-disable-next-line no-restricted-imports
@@ -16,19 +15,57 @@ function Header(props) {
 
   return (
     <header className={styles.Header}>
-      <RangeCalendar.SetVisibleMonth
-        target="previous"
-        className={clsx(styles.SetVisibleMonth)}
-      >
-        ◀
-      </RangeCalendar.SetVisibleMonth>
-      <span>{visibleDate.format('MMMM YYYY')}</span>
-      <RangeCalendar.SetVisibleMonth
-        target="next"
-        className={clsx(styles.SetVisibleMonth)}
-      >
-        ▶
-      </RangeCalendar.SetVisibleMonth>
+      <div className={styles.HeaderBlock}>
+        <RangeCalendar.SetVisibleMonth
+          target="previous"
+          className={styles.SetVisibleMonth}
+          disabled={activeSection !== 'day' ? true : undefined}
+        >
+          ◀
+        </RangeCalendar.SetVisibleMonth>
+        <button
+          type="button"
+          onClick={() =>
+            onActiveSectionChange(activeSection === 'month' ? 'day' : 'month')
+          }
+          disabled={activeSection === 'year' ? true : undefined}
+          className={styles.SetActiveSectionMonth}
+        >
+          {visibleDate.format('MMMM')}
+        </button>
+        <RangeCalendar.SetVisibleMonth
+          target="next"
+          disabled={activeSection !== 'day' ? true : undefined}
+          className={styles.SetVisibleMonth}
+        >
+          ▶
+        </RangeCalendar.SetVisibleMonth>
+      </div>
+      <div className={styles.HeaderBlock}>
+        <RangeCalendar.SetVisibleYear
+          target="previous"
+          disabled={activeSection === 'year' ? true : undefined}
+          className={styles.SetVisibleYear}
+        >
+          ◀
+        </RangeCalendar.SetVisibleYear>
+        <button
+          type="button"
+          onClick={() =>
+            onActiveSectionChange(activeSection === 'year' ? 'day' : 'year')
+          }
+          className={styles.SetActiveSectionYear}
+        >
+          {visibleDate.format('YYYY')}
+        </button>
+        <RangeCalendar.SetVisibleYear
+          target="next"
+          disabled={activeSection === 'year' ? true : undefined}
+          className={styles.SetVisibleYear}
+        >
+          ▶
+        </RangeCalendar.SetVisibleYear>
+      </div>
     </header>
   );
 }
@@ -52,6 +89,7 @@ export default function DateRangeCalendarDemo() {
                   className={styles.YearsCell}
                   key={year.toString()}
                   onClick={() => setActiveSection('day')}
+                  target={year}
                 >
                   {year.format('YYYY')}
                 </RangeCalendar.SetVisibleYear>
@@ -59,22 +97,23 @@ export default function DateRangeCalendarDemo() {
             }
           </RangeCalendar.YearsList>
         )}
-        {/* {activeSection === 'month' && (
-           <RangeCalendar.MonthsList className={styles.MonthsList}>
-             {({ months }) =>
-               months.map((month) => (
-                 <RangeCalendar.MonthsCell
-                   value={month}
-                   className={styles.MonthsCell}
-                   key={month.toString()}
-                   onClick={() => setActiveSection('day')}
-                 >
-                   {month.format('MMMM')}
-                 </RangeCalendar.MonthsCell>
-               ))
-             }
-           </RangeCalendar.MonthsList>
-          )} */}
+        {activeSection === 'month' && (
+          <RangeCalendar.MonthsList className={styles.MonthsList}>
+            {({ months }) =>
+              months.map((month) => (
+                <RangeCalendar.SetVisibleMonth
+                  value={month}
+                  className={styles.MonthsCell}
+                  key={month.toString()}
+                  onClick={() => setActiveSection('day')}
+                  target={month}
+                >
+                  {month.format('MMMM')}
+                </RangeCalendar.SetVisibleMonth>
+              ))
+            }
+          </RangeCalendar.MonthsList>
+        )}
         {activeSection === 'day' && (
           <RangeCalendar.DaysGrid className={styles.DaysGrid}>
             <RangeCalendar.DaysGridHeader className={styles.DaysGridHeader}>

@@ -450,8 +450,6 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     rangePosition,
   });
 
-  console.log(previewingRange);
-
   const handleDayMouseEnter = useEventCallback(
     (event: React.MouseEvent<HTMLDivElement>, newPreviewRequest: PickerValidDate) => {
       if (!isWithinRange(utils, newPreviewRequest, valueDayRange)) {
