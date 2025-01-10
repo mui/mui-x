@@ -14,6 +14,7 @@ import {
   selectorChartsInteractionXAxis,
   selectorChartsInteractionYAxis,
 } from '../internals/plugins/featurePlugins/useChartInteraction';
+import { ChartsLabelMarkProps } from '../ChartsLabel';
 
 export interface UseAxisTooltipReturnValue<
   SeriesT extends CartesianChartSeriesType = CartesianChartSeriesType,
@@ -32,9 +33,10 @@ interface SeriesItem<T extends CartesianChartSeriesType> {
   value: ChartsSeriesConfig[T]['valueType'];
   formattedValue: string;
   formattedLabel: string | null;
+  markType: ChartsLabelMarkProps['type'];
 }
 
-export function useAxisTooltip(): null | UseAxisTooltipReturnValue {
+export function useAxisTooltip(): UseAxisTooltipReturnValue | null {
   const defaultXAxis = useXAxis();
   const defaultYAxis = useYAxis();
 
@@ -104,12 +106,17 @@ export function useAxisTooltip(): null | UseAxisTooltipReturnValue {
             value,
             formattedValue,
             formattedLabel,
-          } as SeriesItem<SeriesT>;
+            markType: seriesToAdd.labelMarkType,
+          };
         }
         return undefined;
       });
     })
-    .filter((item) => item != null);
+    .filter(function truthy<T>(
+      item: T,
+    ): item is T extends false | '' | 0 | null | undefined ? never : T {
+      return Boolean(item);
+    });
 
   const axisFormatter =
     usedAxis.valueFormatter ??

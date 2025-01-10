@@ -34,6 +34,7 @@ const formatter: SeriesProcessor<'pie'> = (params) => {
       series[seriesId].data.map((piePoint) => piePoint.value),
     );
     defaultizedSeries[seriesId] = {
+      labelMarkType: 'circle',
       valueFormatter: (item: PieValueType) => item.value.toLocaleString(),
       ...series[seriesId],
       data: series[seriesId].data
@@ -43,6 +44,7 @@ const formatter: SeriesProcessor<'pie'> = (params) => {
           ...arcs[index],
         }))
         .map((item, index) => ({
+          labelMarkType: 'circle',
           ...item,
           formattedValue:
             series[seriesId].valueFormatter?.(
