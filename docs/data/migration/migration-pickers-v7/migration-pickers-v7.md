@@ -268,7 +268,7 @@ The field is now editable if rendered inside a mobile Picker.
 Before v8, if rendered inside a mobile Picker, the field was read-only, and clicking anywhere on it would open the Picker.
 The behavior is now the same as if rendered inside a desktop Picker:
 
-- clicking on the field value allows to edit it
+- clicking on the field allows editing value with the keyboard
 - clicking on the field end adornment opens the picker
 
 :::success
