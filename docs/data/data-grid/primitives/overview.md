@@ -95,8 +95,8 @@ Some components also provide internal state that can be used to control what is 
 
 ## Components
 
-- [Toolbar](/x/react-data-grid/components/toolbar/)
-- [Columns Panel](/x/react-data-grid/components/columns-panel/)
-- [Filter Panel](/x/react-data-grid/components/filter-panel/)
-- [Export](/x/react-data-grid/components/export/)
-- [Quick Filter](/x/react-data-grid/components/quick-filter/)
+- [Toolbar](/x/react-data-grid/primitives/toolbar/)
+- [Export](/x/react-data-grid/primitives/export/)
+- [Quick Filter](/x/react-data-grid/primitives/quick-filter/)
+- [Columns Panel](/x/react-data-grid/primitives/columns-panel/) 🚧
+- [Filter Panel](/x/react-data-grid/primitives/filter-panel/) 🚧

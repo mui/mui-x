@@ -2,53 +2,52 @@
   "props": {
     "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
   },
-  "name": "GridToolbarButton",
+  "name": "ToolbarButton",
   "imports": [
-    "import { GridToolbarButton } from '@mui/x-data-grid/components';",
-    "import { GridToolbarButton } from '@mui/x-data-grid';",
-    "import { GridToolbarButton } from '@mui/x-data-grid-pro';",
-    "import { GridToolbarButton } from '@mui/x-data-grid-premium';"
+    "import { ToolbarButton } from '@mui/x-data-grid/primitives';",
+    "import { ToolbarButton } from '@mui/x-data-grid-pro/primitives';",
+    "import { ToolbarButton } from '@mui/x-data-grid-premium/primitives';"
   ],
   "classes": [
     {
       "key": "colorError",
-      "className": "MuiGridToolbarButton-colorError",
+      "className": "MuiToolbarButton-colorError",
       "description": "Styles applied to the root element if `color=\"error\"`.",
       "isGlobal": false
     },
     {
       "key": "colorInfo",
-      "className": "MuiGridToolbarButton-colorInfo",
+      "className": "MuiToolbarButton-colorInfo",
       "description": "Styles applied to the root element if `color=\"info\"`.",
       "isGlobal": false
     },
     {
       "key": "colorInherit",
-      "className": "MuiGridToolbarButton-colorInherit",
+      "className": "MuiToolbarButton-colorInherit",
       "description": "Styles applied to the root element if `color=\"inherit\"`.",
       "isGlobal": false
     },
     {
       "key": "colorPrimary",
-      "className": "MuiGridToolbarButton-colorPrimary",
+      "className": "MuiToolbarButton-colorPrimary",
       "description": "Styles applied to the root element if `color=\"primary\"`.",
       "isGlobal": false
     },
     {
       "key": "colorSecondary",
-      "className": "MuiGridToolbarButton-colorSecondary",
+      "className": "MuiToolbarButton-colorSecondary",
       "description": "Styles applied to the root element if `color=\"secondary\"`.",
       "isGlobal": false
     },
     {
       "key": "colorSuccess",
-      "className": "MuiGridToolbarButton-colorSuccess",
+      "className": "MuiToolbarButton-colorSuccess",
       "description": "Styles applied to the root element if `color=\"success\"`.",
       "isGlobal": false
     },
     {
       "key": "colorWarning",
-      "className": "MuiGridToolbarButton-colorWarning",
+      "className": "MuiToolbarButton-colorWarning",
       "description": "Styles applied to the root element if `color=\"warning\"`.",
       "isGlobal": false
     },
@@ -60,45 +59,45 @@
     },
     {
       "key": "edgeEnd",
-      "className": "MuiGridToolbarButton-edgeEnd",
+      "className": "MuiToolbarButton-edgeEnd",
       "description": "Styles applied to the root element if `edge=\"end\"`.",
       "isGlobal": false
     },
     {
       "key": "edgeStart",
-      "className": "MuiGridToolbarButton-edgeStart",
+      "className": "MuiToolbarButton-edgeStart",
       "description": "Styles applied to the root element if `edge=\"start\"`.",
       "isGlobal": false
     },
     {
       "key": "root",
-      "className": "MuiGridToolbarButton-root",
+      "className": "MuiToolbarButton-root",
       "description": "Styles applied to the root element.",
       "isGlobal": false
     },
     {
       "key": "sizeLarge",
-      "className": "MuiGridToolbarButton-sizeLarge",
+      "className": "MuiToolbarButton-sizeLarge",
       "description": "Styles applied to the root element if `size=\"large\"`.",
       "isGlobal": false
     },
     {
       "key": "sizeMedium",
-      "className": "MuiGridToolbarButton-sizeMedium",
+      "className": "MuiToolbarButton-sizeMedium",
       "description": "Styles applied to the root element if `size=\"medium\"`.",
       "isGlobal": false
     },
     {
       "key": "sizeSmall",
-      "className": "MuiGridToolbarButton-sizeSmall",
+      "className": "MuiToolbarButton-sizeSmall",
       "description": "Styles applied to the root element if `size=\"small\"`.",
       "isGlobal": false
     }
   ],
-  "muiName": "MuiGridToolbarButton",
+  "muiName": "MuiToolbarButton",
   "forwardsRefTo": "GridRoot",
-  "filename": "/packages/x-data-grid/src/components/grid/toolbar/GridToolbarButton.tsx",
+  "filename": "/packages/x-data-grid/src/primitives/toolbar/ToolbarButton.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-plan\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-plan\">DataGridPremium</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/primitives/toolbar\">Toolbar</a></li></ul>",
   "cssComponent": false
 }

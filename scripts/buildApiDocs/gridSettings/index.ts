@@ -7,6 +7,27 @@ import { getComponentImports, getComponentInfo } from './getComponentInfo';
 
 type PageType = { pathname: string; title: string; plan?: 'community' | 'pro' | 'premium' };
 
+const COMPONENT_API_PAGES = [
+  'src/DataGridPremium/DataGridPremium.tsx',
+  'src/DataGridPro/DataGridPro.tsx',
+  'src/DataGrid/DataGrid.tsx',
+
+  'src/components/panel/filterPanel/GridFilterForm.tsx',
+  'src/components/panel/filterPanel/GridFilterPanel.tsx',
+  'src/components/toolbar/GridToolbarQuickFilter.tsx',
+
+  'src/primitives/toolbar/ToolbarRoot.tsx',
+  'src/primitives/toolbar/ToolbarButton.tsx',
+  'src/primitives/export/ExportPrint.tsx',
+  'src/primitives/export/ExportCsv.tsx',
+  'src/primitives/export/ExportExcel.tsx',
+  'src/primitives/quickFilter/QuickFilterRoot.tsx',
+  'src/primitives/quickFilter/QuickFilterControl.tsx',
+  'src/primitives/quickFilter/QuickFilterClear.tsx',
+  'src/primitives/filterPanel/FilterPanelTrigger.tsx',
+  'src/primitives/columnsPanel/ColumnsPanelTrigger.tsx',
+];
+
 export const projectGridSettings: ProjectSettings = {
   output: {
     apiManifestPath: path.join(process.cwd(), 'docs/data/dataGridApiPages.ts'),
@@ -41,43 +62,24 @@ export default dataGridApiPages;
     {
       name: 'data-grid',
       rootPath: path.join(process.cwd(), 'packages/x-data-grid'),
-      entryPointPath: 'src/index.ts',
+      entryPointPath: ['src/index.ts', 'src/primitives/index.ts'],
     },
     {
       name: 'data-grid-pro',
       rootPath: path.join(process.cwd(), 'packages/x-data-grid-pro'),
-      entryPointPath: 'src/index.ts',
+      entryPointPath: ['src/index.ts', 'src/primitives/index.ts'],
     },
-
     {
       name: 'data-grid-premium',
       rootPath: path.join(process.cwd(), 'packages/x-data-grid-premium'),
-      entryPointPath: 'src/index.ts',
+      entryPointPath: ['src/index.ts', 'src/primitives/index.ts'],
     },
   ],
   getApiPages: () => findApiPages('docs/pages/x/api/data-grid'),
   getComponentInfo,
   translationLanguages: LANGUAGES,
-  skipComponent(filename) {
-    return [
-      'src/DataGridPremium/DataGridPremium.tsx',
-      'src/DataGridPro/DataGridPro.tsx',
-      'src/DataGrid/DataGrid.tsx',
-      'src/components/panel/filterPanel/GridFilterForm.tsx',
-      'src/components/panel/filterPanel/GridFilterPanel.tsx',
-      'src/components/toolbar/GridToolbarQuickFilter.tsx',
-      'src/components/grid/toolbar/GridToolbarRoot.tsx',
-      'src/components/grid/toolbar/GridToolbarButton.tsx',
-      'src/components/grid/filterPanel/GridFilterPanelTrigger.tsx',
-      'src/components/grid/columnsPanel/GridColumnsPanelTrigger.tsx',
-      'src/components/grid/export/GridExportPrintTrigger.tsx',
-      'src/components/grid/export/GridExportCsvTrigger.tsx',
-      'src/components/grid/export/GridExportExcelTrigger.tsx',
-      'src/components/grid/quickFilter/GridQuickFilterRoot.tsx',
-      'src/components/grid/quickFilter/GridQuickFilterControl.tsx',
-      'src/components/grid/quickFilter/GridQuickFilterClear.tsx',
-    ].every((validPath) => !filename.endsWith(validPath));
-  },
+  skipComponent: (filename) =>
+    COMPONENT_API_PAGES.every((validPath) => !filename.endsWith(validPath)),
   skipAnnotatingComponentDefinition: true,
   translationPagesDirectory: 'docs/translations/api-docs/data-grid',
   importTranslationPagesDirectory: 'docsx/translations/api-docs/data-grid',

@@ -31,11 +31,31 @@ export function getComponentInfo(filename: string): ComponentInfo {
     },
     slotInterfaceName: `${name.replace('DataGrid', 'Grid')}SlotsComponent`,
     getInheritance: () => null, // TODO: Support inheritance
-    getDemos: () => [
-      { demoPathname: '/x/react-data-grid/#mit-version-free-forever', demoPageTitle: 'DataGrid' },
-      { demoPathname: '/x/react-data-grid/#pro-plan', demoPageTitle: 'DataGridPro' },
-      { demoPathname: '/x/react-data-grid/#premium-plan', demoPageTitle: 'DataGridPremium' },
-    ],
+    getDemos: () => {
+      if (filename.includes('/primitives/')) {
+        const componentCamelCase = filename.split('/primitives/')[1].split('/')[0];
+        const componentKebabCase = kebabCase(componentCamelCase);
+        const componentTitleCase =
+          componentCamelCase.charAt(0).toUpperCase() +
+          componentCamelCase
+            .slice(1)
+            .split(/(?=[A-Z])/)
+            .join(' ');
+
+        return [
+          {
+            demoPathname: `/x/react-data-grid/primitives/${componentKebabCase}`,
+            demoPageTitle: componentTitleCase,
+          },
+        ];
+      }
+
+      return [
+        { demoPathname: '/x/react-data-grid/#mit-version-free-forever', demoPageTitle: 'DataGrid' },
+        { demoPathname: '/x/react-data-grid/#pro-plan', demoPageTitle: 'DataGridPro' },
+        { demoPathname: '/x/react-data-grid/#premium-plan', demoPageTitle: 'DataGridPremium' },
+      ];
+    },
     layoutConfigPath: 'docsx/src/modules/utils/dataGridLayoutConfig',
   };
 }
@@ -67,6 +87,13 @@ export function getComponentImports(name: string, filename: string) {
   }
   if (rootImportPath === '@mui/x-data-grid-pro') {
     reExportPackage.push('@mui/x-data-grid-premium');
+  }
+
+  if (filename.includes('/primitives/')) {
+    // For primitives, only show imports from the /primitives subdirectory
+    return reExportPackage.map(
+      (importPath) => `import { ${name} } from '${importPath}/primitives';`,
+    );
   }
 
   return [

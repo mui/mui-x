@@ -173,13 +173,22 @@ const pages: MuiPage[] = [
       {
         pathname: '/x/react-data-grid/primitives-group',
         subheader: 'Primitives',
+        newFeature: true,
         children: [
           { pathname: '/x/react-data-grid/primitives', title: 'Overview' },
           { pathname: '/x/react-data-grid/primitives/toolbar', title: 'Toolbar' },
-          { pathname: '/x/react-data-grid/primitives/columns-panel', title: 'Columns Panel' },
-          { pathname: '/x/react-data-grid/primitives/filter-panel', title: 'Filter Panel' },
           { pathname: '/x/react-data-grid/primitives/export', title: 'Export' },
           { pathname: '/x/react-data-grid/primitives/quick-filter', title: 'Quick Filter' },
+          {
+            pathname: '/x/react-data-grid/primitives/columns-panel',
+            title: 'Columns Panel',
+            planned: true,
+          },
+          {
+            pathname: '/x/react-data-grid/primitives/filter-panel',
+            title: 'Filter Panel',
+            planned: true,
+          },
         ],
       },
       {

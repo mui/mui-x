@@ -3,53 +3,52 @@
     "className": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" } },
     "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
   },
-  "name": "GridQuickFilterClear",
+  "name": "QuickFilterClear",
   "imports": [
-    "import { GridQuickFilterClear } from '@mui/x-data-grid/components';",
-    "import { GridQuickFilterClear } from '@mui/x-data-grid';",
-    "import { GridQuickFilterClear } from '@mui/x-data-grid-pro';",
-    "import { GridQuickFilterClear } from '@mui/x-data-grid-premium';"
+    "import { QuickFilterClear } from '@mui/x-data-grid/primitives';",
+    "import { QuickFilterClear } from '@mui/x-data-grid-pro/primitives';",
+    "import { QuickFilterClear } from '@mui/x-data-grid-premium/primitives';"
   ],
   "classes": [
     {
       "key": "colorError",
-      "className": "MuiGridQuickFilterClear-colorError",
+      "className": "MuiQuickFilterClear-colorError",
       "description": "Styles applied to the root element if `color=\"error\"`.",
       "isGlobal": false
     },
     {
       "key": "colorInfo",
-      "className": "MuiGridQuickFilterClear-colorInfo",
+      "className": "MuiQuickFilterClear-colorInfo",
       "description": "Styles applied to the root element if `color=\"info\"`.",
       "isGlobal": false
     },
     {
       "key": "colorInherit",
-      "className": "MuiGridQuickFilterClear-colorInherit",
+      "className": "MuiQuickFilterClear-colorInherit",
       "description": "Styles applied to the root element if `color=\"inherit\"`.",
       "isGlobal": false
     },
     {
       "key": "colorPrimary",
-      "className": "MuiGridQuickFilterClear-colorPrimary",
+      "className": "MuiQuickFilterClear-colorPrimary",
       "description": "Styles applied to the root element if `color=\"primary\"`.",
       "isGlobal": false
     },
     {
       "key": "colorSecondary",
-      "className": "MuiGridQuickFilterClear-colorSecondary",
+      "className": "MuiQuickFilterClear-colorSecondary",
       "description": "Styles applied to the root element if `color=\"secondary\"`.",
       "isGlobal": false
     },
     {
       "key": "colorSuccess",
-      "className": "MuiGridQuickFilterClear-colorSuccess",
+      "className": "MuiQuickFilterClear-colorSuccess",
       "description": "Styles applied to the root element if `color=\"success\"`.",
       "isGlobal": false
     },
     {
       "key": "colorWarning",
-      "className": "MuiGridQuickFilterClear-colorWarning",
+      "className": "MuiQuickFilterClear-colorWarning",
       "description": "Styles applied to the root element if `color=\"warning\"`.",
       "isGlobal": false
     },
@@ -61,45 +60,45 @@
     },
     {
       "key": "edgeEnd",
-      "className": "MuiGridQuickFilterClear-edgeEnd",
+      "className": "MuiQuickFilterClear-edgeEnd",
       "description": "Styles applied to the root element if `edge=\"end\"`.",
       "isGlobal": false
     },
     {
       "key": "edgeStart",
-      "className": "MuiGridQuickFilterClear-edgeStart",
+      "className": "MuiQuickFilterClear-edgeStart",
       "description": "Styles applied to the root element if `edge=\"start\"`.",
       "isGlobal": false
     },
     {
       "key": "root",
-      "className": "MuiGridQuickFilterClear-root",
+      "className": "MuiQuickFilterClear-root",
       "description": "Styles applied to the root element.",
       "isGlobal": false
     },
     {
       "key": "sizeLarge",
-      "className": "MuiGridQuickFilterClear-sizeLarge",
+      "className": "MuiQuickFilterClear-sizeLarge",
       "description": "Styles applied to the root element if `size=\"large\"`.",
       "isGlobal": false
     },
     {
       "key": "sizeMedium",
-      "className": "MuiGridQuickFilterClear-sizeMedium",
+      "className": "MuiQuickFilterClear-sizeMedium",
       "description": "Styles applied to the root element if `size=\"medium\"`.",
       "isGlobal": false
     },
     {
       "key": "sizeSmall",
-      "className": "MuiGridQuickFilterClear-sizeSmall",
+      "className": "MuiQuickFilterClear-sizeSmall",
       "description": "Styles applied to the root element if `size=\"small\"`.",
       "isGlobal": false
     }
   ],
-  "muiName": "MuiGridQuickFilterClear",
+  "muiName": "MuiQuickFilterClear",
   "forwardsRefTo": "GridRoot",
-  "filename": "/packages/x-data-grid/src/components/grid/quickFilter/GridQuickFilterClear.tsx",
+  "filename": "/packages/x-data-grid/src/primitives/quickFilter/QuickFilterClear.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-plan\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-plan\">DataGridPremium</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/primitives/quick-filter\">Quick Filter</a></li></ul>",
   "cssComponent": false
 }

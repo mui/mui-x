@@ -2,7 +2,7 @@ import * as React from 'react';
 import ApiPage from 'docs/src/modules/components/ApiPage';
 import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
 import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
-import jsonPageContent from './grid-export-excel-trigger.json';
+import jsonPageContent from './toolbar-root.json';
 
 export default function Page(props) {
   const { descriptions, pageContent } = props;
@@ -11,9 +11,9 @@ export default function Page(props) {
 
 Page.getInitialProps = () => {
   const req = require.context(
-    'docsx/translations/api-docs/data-grid/grid-export-excel-trigger',
+    'docsx/translations/api-docs/data-grid/toolbar-root',
     false,
-    /\.\/grid-export-excel-trigger.*.json$/,
+    /\.\/toolbar-root.*.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

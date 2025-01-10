@@ -2,7 +2,7 @@ import * as React from 'react';
 import ApiPage from 'docs/src/modules/components/ApiPage';
 import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
 import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
-import jsonPageContent from './grid-export-print-trigger.json';
+import jsonPageContent from './quick-filter-control.json';
 
 export default function Page(props) {
   const { descriptions, pageContent } = props;
@@ -11,9 +11,9 @@ export default function Page(props) {
 
 Page.getInitialProps = () => {
   const req = require.context(
-    'docsx/translations/api-docs/data-grid/grid-export-print-trigger',
+    'docsx/translations/api-docs/data-grid/quick-filter-control',
     false,
-    /\.\/grid-export-print-trigger.*.json$/,
+    /\.\/quick-filter-control.*.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

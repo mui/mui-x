@@ -1,135 +1,129 @@
 {
   "props": {
-    "options": {
-      "type": {
-        "name": "shape",
-        "description": "{ allColumns?: bool, bodyClassName?: string, copyStyles?: bool, fields?: Array&lt;string&gt;, fileName?: string, getRowsToExport?: func, hideFooter?: bool, hideToolbar?: bool, includeCheckboxes?: bool, pageStyle?: func<br>&#124;&nbsp;string }"
-      }
-    },
+    "className": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" } },
     "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
   },
-  "name": "GridExportPrintTrigger",
+  "name": "FilterPanelTrigger",
   "imports": [
-    "import { GridExportPrintTrigger } from '@mui/x-data-grid/components';",
-    "import { GridExportPrintTrigger } from '@mui/x-data-grid';",
-    "import { GridExportPrintTrigger } from '@mui/x-data-grid-pro';",
-    "import { GridExportPrintTrigger } from '@mui/x-data-grid-premium';"
+    "import { FilterPanelTrigger } from '@mui/x-data-grid/primitives';",
+    "import { FilterPanelTrigger } from '@mui/x-data-grid-pro/primitives';",
+    "import { FilterPanelTrigger } from '@mui/x-data-grid-premium/primitives';"
   ],
   "classes": [
     {
       "key": "colorError",
-      "className": "MuiGridExportPrintTrigger-colorError",
+      "className": "MuiFilterPanelTrigger-colorError",
       "description": "Styles applied to the root element if `color=\"error\"`.",
       "isGlobal": false
     },
     {
       "key": "colorInfo",
-      "className": "MuiGridExportPrintTrigger-colorInfo",
+      "className": "MuiFilterPanelTrigger-colorInfo",
       "description": "Styles applied to the root element if `color=\"info\"`.",
       "isGlobal": false
     },
     {
       "key": "colorInherit",
-      "className": "MuiGridExportPrintTrigger-colorInherit",
+      "className": "MuiFilterPanelTrigger-colorInherit",
       "description": "Styles applied to the root element if `color=\"inherit\"`.",
       "isGlobal": false
     },
     {
       "key": "colorPrimary",
-      "className": "MuiGridExportPrintTrigger-colorPrimary",
+      "className": "MuiFilterPanelTrigger-colorPrimary",
       "description": "Styles applied to the root element if `color=\"primary\"`.",
       "isGlobal": false
     },
     {
       "key": "colorSecondary",
-      "className": "MuiGridExportPrintTrigger-colorSecondary",
+      "className": "MuiFilterPanelTrigger-colorSecondary",
       "description": "Styles applied to the root element if `color=\"secondary\"`.",
       "isGlobal": false
     },
     {
       "key": "colorSuccess",
-      "className": "MuiGridExportPrintTrigger-colorSuccess",
+      "className": "MuiFilterPanelTrigger-colorSuccess",
       "description": "Styles applied to the root element if `color=\"success\"`.",
       "isGlobal": false
     },
     {
       "key": "colorWarning",
-      "className": "MuiGridExportPrintTrigger-colorWarning",
+      "className": "MuiFilterPanelTrigger-colorWarning",
       "description": "Styles applied to the root element if `color=\"warning\"`.",
       "isGlobal": false
     },
     {
       "key": "contained",
-      "className": "MuiGridExportPrintTrigger-contained",
+      "className": "MuiFilterPanelTrigger-contained",
       "description": "Styles applied to the root element if `variant=\"contained\"`.",
       "isGlobal": false
     },
     {
       "key": "containedError",
-      "className": "MuiGridExportPrintTrigger-containedError",
+      "className": "MuiFilterPanelTrigger-containedError",
       "description": "Styles applied to the root element if `variant=\"contained\"` and `color=\"error\"`.",
       "isGlobal": false,
       "isDeprecated": true
     },
     {
       "key": "containedInfo",
-      "className": "MuiGridExportPrintTrigger-containedInfo",
+      "className": "MuiFilterPanelTrigger-containedInfo",
       "description": "Styles applied to the root element if `variant=\"contained\"` and `color=\"info\"`.",
       "isGlobal": false,
       "isDeprecated": true
     },
     {
       "key": "containedInherit",
-      "className": "MuiGridExportPrintTrigger-containedInherit",
+      "className": "MuiFilterPanelTrigger-containedInherit",
       "description": "Styles applied to the root element if `variant=\"contained\"` and `color=\"inherit\"`.",
       "isGlobal": false,
       "isDeprecated": true
     },
     {
       "key": "containedPrimary",
-      "className": "MuiGridExportPrintTrigger-containedPrimary",
+      "className": "MuiFilterPanelTrigger-containedPrimary",
       "description": "Styles applied to the root element if `variant=\"contained\"` and `color=\"primary\"`.",
       "isGlobal": false,
       "isDeprecated": true
     },
     {
       "key": "containedSecondary",
-      "className": "MuiGridExportPrintTrigger-containedSecondary",
+      "className": "MuiFilterPanelTrigger-containedSecondary",
       "description": "Styles applied to the root element if `variant=\"contained\"` and `color=\"secondary\"`.",
       "isGlobal": false,
       "isDeprecated": true
     },
     {
       "key": "containedSizeLarge",
-      "className": "MuiGridExportPrintTrigger-containedSizeLarge",
+      "className": "MuiFilterPanelTrigger-containedSizeLarge",
       "description": "Styles applied to the root element if `size=\"large\"` and `variant=\"contained\"`.",
       "isGlobal": false,
       "isDeprecated": true
     },
     {
       "key": "containedSizeMedium",
-      "className": "MuiGridExportPrintTrigger-containedSizeMedium",
+      "className": "MuiFilterPanelTrigger-containedSizeMedium",
       "description": "Styles applied to the root element if `size=\"medium\"` and `variant=\"contained\"`.",
       "isGlobal": false,
       "isDeprecated": true
     },
     {
       "key": "containedSizeSmall",
-      "className": "MuiGridExportPrintTrigger-containedSizeSmall",
+      "className": "MuiFilterPanelTrigger-containedSizeSmall",
       "description": "Styles applied to the root element if `size=\"small\"` and `variant=\"contained\"`.",
       "isGlobal": false,
       "isDeprecated": true
     },
     {
       "key": "containedSuccess",
-      "className": "MuiGridExportPrintTrigger-containedSuccess",
+      "className": "MuiFilterPanelTrigger-containedSuccess",
       "description": "Styles applied to the root element if `variant=\"contained\"` and `color=\"success\"`.",
       "isGlobal": false,
       "isDeprecated": true
     },
     {
       "key": "containedWarning",
-      "className": "MuiGridExportPrintTrigger-containedWarning",
+      "className": "MuiFilterPanelTrigger-containedWarning",
       "description": "Styles applied to the root element if `variant=\"contained\"` and `color=\"warning\"`.",
       "isGlobal": false,
       "isDeprecated": true
@@ -142,13 +136,13 @@
     },
     {
       "key": "disableElevation",
-      "className": "MuiGridExportPrintTrigger-disableElevation",
+      "className": "MuiFilterPanelTrigger-disableElevation",
       "description": "Styles applied to the root element if `disableElevation={true}`.",
       "isGlobal": false
     },
     {
       "key": "endIcon",
-      "className": "MuiGridExportPrintTrigger-endIcon",
+      "className": "MuiFilterPanelTrigger-endIcon",
       "description": "Styles applied to the endIcon element if supplied.",
       "isGlobal": false
     },
@@ -160,224 +154,224 @@
     },
     {
       "key": "fullWidth",
-      "className": "MuiGridExportPrintTrigger-fullWidth",
+      "className": "MuiFilterPanelTrigger-fullWidth",
       "description": "Styles applied to the root element if `fullWidth={true}`.",
       "isGlobal": false
     },
     {
       "key": "icon",
-      "className": "MuiGridExportPrintTrigger-icon",
+      "className": "MuiFilterPanelTrigger-icon",
       "description": "Styles applied to the icon element if supplied",
       "isGlobal": false
     },
     {
       "key": "iconSizeLarge",
-      "className": "MuiGridExportPrintTrigger-iconSizeLarge",
+      "className": "MuiFilterPanelTrigger-iconSizeLarge",
       "description": "Styles applied to the icon element if supplied and `size=\"large\"`.",
       "isGlobal": false,
       "isDeprecated": true
     },
     {
       "key": "iconSizeMedium",
-      "className": "MuiGridExportPrintTrigger-iconSizeMedium",
+      "className": "MuiFilterPanelTrigger-iconSizeMedium",
       "description": "Styles applied to the icon element if supplied and `size=\"medium\"`.",
       "isGlobal": false,
       "isDeprecated": true
     },
     {
       "key": "iconSizeSmall",
-      "className": "MuiGridExportPrintTrigger-iconSizeSmall",
+      "className": "MuiFilterPanelTrigger-iconSizeSmall",
       "description": "Styles applied to the icon element if supplied and `size=\"small\"`.",
       "isGlobal": false,
       "isDeprecated": true
     },
     {
       "key": "outlined",
-      "className": "MuiGridExportPrintTrigger-outlined",
+      "className": "MuiFilterPanelTrigger-outlined",
       "description": "Styles applied to the root element if `variant=\"outlined\"`.",
       "isGlobal": false
     },
     {
       "key": "outlinedError",
-      "className": "MuiGridExportPrintTrigger-outlinedError",
+      "className": "MuiFilterPanelTrigger-outlinedError",
       "description": "Styles applied to the root element if `variant=\"outlined\"` and `color=\"error\"`.",
       "isGlobal": false,
       "isDeprecated": true
     },
     {
       "key": "outlinedInfo",
-      "className": "MuiGridExportPrintTrigger-outlinedInfo",
+      "className": "MuiFilterPanelTrigger-outlinedInfo",
       "description": "Styles applied to the root element if `variant=\"outlined\"` and `color=\"info\"`.",
       "isGlobal": false,
       "isDeprecated": true
     },
     {
       "key": "outlinedInherit",
-      "className": "MuiGridExportPrintTrigger-outlinedInherit",
+      "className": "MuiFilterPanelTrigger-outlinedInherit",
       "description": "Styles applied to the root element if `variant=\"outlined\"` and `color=\"inherit\"`.",
       "isGlobal": false,
       "isDeprecated": true
     },
     {
       "key": "outlinedPrimary",
-      "className": "MuiGridExportPrintTrigger-outlinedPrimary",
+      "className": "MuiFilterPanelTrigger-outlinedPrimary",
       "description": "Styles applied to the root element if `variant=\"outlined\"` and `color=\"primary\"`.",
       "isGlobal": false,
       "isDeprecated": true
     },
     {
       "key": "outlinedSecondary",
-      "className": "MuiGridExportPrintTrigger-outlinedSecondary",
+      "className": "MuiFilterPanelTrigger-outlinedSecondary",
       "description": "Styles applied to the root element if `variant=\"outlined\"` and `color=\"secondary\"`.",
       "isGlobal": false,
       "isDeprecated": true
     },
     {
       "key": "outlinedSizeLarge",
-      "className": "MuiGridExportPrintTrigger-outlinedSizeLarge",
+      "className": "MuiFilterPanelTrigger-outlinedSizeLarge",
       "description": "Styles applied to the root element if `size=\"large\"` and `variant=\"outlined\"`.",
       "isGlobal": false,
       "isDeprecated": true
     },
     {
       "key": "outlinedSizeMedium",
-      "className": "MuiGridExportPrintTrigger-outlinedSizeMedium",
+      "className": "MuiFilterPanelTrigger-outlinedSizeMedium",
       "description": "Styles applied to the root element if `size=\"medium\"` and `variant=\"outlined\"`.",
       "isGlobal": false,
       "isDeprecated": true
     },
     {
       "key": "outlinedSizeSmall",
-      "className": "MuiGridExportPrintTrigger-outlinedSizeSmall",
+      "className": "MuiFilterPanelTrigger-outlinedSizeSmall",
       "description": "Styles applied to the root element if `size=\"small\"` and `variant=\"outlined\"`.",
       "isGlobal": false,
       "isDeprecated": true
     },
     {
       "key": "outlinedSuccess",
-      "className": "MuiGridExportPrintTrigger-outlinedSuccess",
+      "className": "MuiFilterPanelTrigger-outlinedSuccess",
       "description": "Styles applied to the root element if `variant=\"outlined\"` and `color=\"success\"`.",
       "isGlobal": false,
       "isDeprecated": true
     },
     {
       "key": "outlinedWarning",
-      "className": "MuiGridExportPrintTrigger-outlinedWarning",
+      "className": "MuiFilterPanelTrigger-outlinedWarning",
       "description": "Styles applied to the root element if `variant=\"outlined\"` and `color=\"warning\"`.",
       "isGlobal": false,
       "isDeprecated": true
     },
     {
       "key": "root",
-      "className": "MuiGridExportPrintTrigger-root",
+      "className": "MuiFilterPanelTrigger-root",
       "description": "Styles applied to the root element.",
       "isGlobal": false
     },
     {
       "key": "sizeLarge",
-      "className": "MuiGridExportPrintTrigger-sizeLarge",
+      "className": "MuiFilterPanelTrigger-sizeLarge",
       "description": "Styles applied to the root element if `size=\"large\"`.",
       "isGlobal": false
     },
     {
       "key": "sizeMedium",
-      "className": "MuiGridExportPrintTrigger-sizeMedium",
+      "className": "MuiFilterPanelTrigger-sizeMedium",
       "description": "Styles applied to the root element if `size=\"medium\"`.",
       "isGlobal": false
     },
     {
       "key": "sizeSmall",
-      "className": "MuiGridExportPrintTrigger-sizeSmall",
+      "className": "MuiFilterPanelTrigger-sizeSmall",
       "description": "Styles applied to the root element if `size=\"small\"`.",
       "isGlobal": false
     },
     {
       "key": "startIcon",
-      "className": "MuiGridExportPrintTrigger-startIcon",
+      "className": "MuiFilterPanelTrigger-startIcon",
       "description": "Styles applied to the startIcon element if supplied.",
       "isGlobal": false
     },
     {
       "key": "text",
-      "className": "MuiGridExportPrintTrigger-text",
+      "className": "MuiFilterPanelTrigger-text",
       "description": "Styles applied to the root element if `variant=\"text\"`.",
       "isGlobal": false
     },
     {
       "key": "textError",
-      "className": "MuiGridExportPrintTrigger-textError",
+      "className": "MuiFilterPanelTrigger-textError",
       "description": "Styles applied to the root element if `variant=\"text\"` and `color=\"error\"`.",
       "isGlobal": false,
       "isDeprecated": true
     },
     {
       "key": "textInfo",
-      "className": "MuiGridExportPrintTrigger-textInfo",
+      "className": "MuiFilterPanelTrigger-textInfo",
       "description": "Styles applied to the root element if `variant=\"text\"` and `color=\"info\"`.",
       "isGlobal": false,
       "isDeprecated": true
     },
     {
       "key": "textInherit",
-      "className": "MuiGridExportPrintTrigger-textInherit",
+      "className": "MuiFilterPanelTrigger-textInherit",
       "description": "Styles applied to the root element if `variant=\"text\"` and `color=\"inherit\"`.",
       "isGlobal": false,
       "isDeprecated": true
     },
     {
       "key": "textPrimary",
-      "className": "MuiGridExportPrintTrigger-textPrimary",
+      "className": "MuiFilterPanelTrigger-textPrimary",
       "description": "Styles applied to the root element if `variant=\"text\"` and `color=\"primary\"`.",
       "isGlobal": false,
       "isDeprecated": true
     },
     {
       "key": "textSecondary",
-      "className": "MuiGridExportPrintTrigger-textSecondary",
+      "className": "MuiFilterPanelTrigger-textSecondary",
       "description": "Styles applied to the root element if `variant=\"text\"` and `color=\"secondary\"`.",
       "isGlobal": false,
       "isDeprecated": true
     },
     {
       "key": "textSizeLarge",
-      "className": "MuiGridExportPrintTrigger-textSizeLarge",
+      "className": "MuiFilterPanelTrigger-textSizeLarge",
       "description": "Styles applied to the root element if `size=\"large\"` and `variant=\"text\"`.",
       "isGlobal": false,
       "isDeprecated": true
     },
     {
       "key": "textSizeMedium",
-      "className": "MuiGridExportPrintTrigger-textSizeMedium",
+      "className": "MuiFilterPanelTrigger-textSizeMedium",
       "description": "Styles applied to the root element if `size=\"medium\"` and `variant=\"text\"`.",
       "isGlobal": false,
       "isDeprecated": true
     },
     {
       "key": "textSizeSmall",
-      "className": "MuiGridExportPrintTrigger-textSizeSmall",
+      "className": "MuiFilterPanelTrigger-textSizeSmall",
       "description": "Styles applied to the root element if `size=\"small\"` and `variant=\"text\"`.",
       "isGlobal": false,
       "isDeprecated": true
     },
     {
       "key": "textSuccess",
-      "className": "MuiGridExportPrintTrigger-textSuccess",
+      "className": "MuiFilterPanelTrigger-textSuccess",
       "description": "Styles applied to the root element if `variant=\"text\"` and `color=\"success\"`.",
       "isGlobal": false,
       "isDeprecated": true
     },
     {
       "key": "textWarning",
-      "className": "MuiGridExportPrintTrigger-textWarning",
+      "className": "MuiFilterPanelTrigger-textWarning",
       "description": "Styles applied to the root element if `variant=\"text\"` and `color=\"warning\"`.",
       "isGlobal": false,
       "isDeprecated": true
     }
   ],
-  "muiName": "MuiGridExportPrintTrigger",
+  "muiName": "MuiFilterPanelTrigger",
   "forwardsRefTo": "GridRoot",
-  "filename": "/packages/x-data-grid/src/components/grid/export/GridExportPrintTrigger.tsx",
+  "filename": "/packages/x-data-grid/src/primitives/filterPanel/FilterPanelTrigger.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-plan\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-plan\">DataGridPremium</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/primitives/filter-panel\">Filter Panel</a></li></ul>",
   "cssComponent": false
 }
