@@ -124,10 +124,10 @@ export interface PickerContextValue<
    */
   triggerRef: React.RefObject<any>;
   /**
-   * The status of the element that triggers the picker opening.
-   * If it is "hidden", the field should not render the UI to open the picker.
-   * If it is "disabled", the field should render the UI to open the picker, but it should not have any behavior attached to it.
-   * If it is "enabled", the field should render the UI to open the picker and interacting with it should open the picker.
+   * The status of the element that triggers the Picker opening.
+   * If it is "hidden", the field should not render the UI to open the Picker.
+   * If it is "disabled", the field should render a disabled UI to open the Picker.
+   * If it is "enabled", the field should render an interactive UI to open the Picker.
    */
   triggerStatus: 'hidden' | 'disabled' | 'enabled';
   /**
