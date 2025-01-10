@@ -441,7 +441,7 @@ This change causes a few breaking changes:
 ### Slot: `inputAdornment`
 
 - The `position` props passed to the `inputAdornment` slot props no longer sets the position of the opening button.
-  This allow to define the position of the opening button and of the clear button independently.
+  This allows defining the position of the opening and clear buttons independently.
   You can use the `openPickerButtonPosition` prop instead:
 
   ```diff
