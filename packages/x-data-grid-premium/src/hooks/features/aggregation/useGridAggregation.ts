@@ -4,11 +4,15 @@ import {
   useGridApiEventHandler,
   useGridApiMethod,
 } from '@mui/x-data-grid-pro';
-import { GridStateInitializer } from '@mui/x-data-grid-pro/internals';
+import {
+  useGridRegisterPipeProcessor,
+  GridStateInitializer,
+  GridPipeProcessor,
+} from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { gridAggregationModelSelector } from './gridAggregationSelectors';
-import { GridAggregationApi } from './gridAggregationInterfaces';
+import { GridAggregationApi, GridAggregationPrivateApi } from './gridAggregationInterfaces';
 import {
   getAggregationRules,
   mergeStateWithAggregationModel,
@@ -45,6 +49,7 @@ export const useGridAggregation = (
     | 'aggregationRowsScope'
     | 'disableAggregation'
     | 'rowGroupingColumnMode'
+    | 'unstable_dataSource'
   >,
 ) => {
   apiRef.current.registerControlState({
@@ -75,6 +80,7 @@ export const useGridAggregation = (
       getAggregationPosition: props.getAggregationPosition,
       aggregationFunctions: props.aggregationFunctions,
       aggregationRowsScope: props.aggregationRowsScope,
+      isDataSource: !!props.unstable_dataSource,
     });
 
     apiRef.current.setState((state) => ({
@@ -86,13 +92,31 @@ export const useGridAggregation = (
     props.getAggregationPosition,
     props.aggregationFunctions,
     props.aggregationRowsScope,
+    props.unstable_dataSource,
   ]);
 
   const aggregationApi: GridAggregationApi = {
     setAggregationModel,
   };
 
+  const aggregationPrivateApi: GridAggregationPrivateApi = {
+    applyAggregation,
+  };
+
   useGridApiMethod(apiRef, aggregationApi, 'public');
+  useGridApiMethod(apiRef, aggregationPrivateApi, 'private');
+
+  const addGetRowsParams = React.useCallback<GridPipeProcessor<'getRowsParams'>>(
+    (params) => {
+      return {
+        ...params,
+        aggregationModel: gridAggregationModelSelector(apiRef),
+      };
+    },
+    [apiRef],
+  );
+
+  useGridRegisterPipeProcessor(apiRef, 'getRowsParams', addGetRowsParams);
 
   /**
    * EVENTS
@@ -107,12 +131,17 @@ export const useGridAggregation = (
           gridColumnLookupSelector(apiRef),
           gridAggregationModelSelector(apiRef),
           props.aggregationFunctions,
+          !!props.unstable_dataSource,
         );
 
     // Re-apply the row hydration to add / remove the aggregation footers
     if (!areAggregationRulesEqual(rulesOnLastRowHydration, aggregationRules)) {
-      apiRef.current.requestPipeProcessorsApplication('hydrateRows');
-      applyAggregation();
+      if (props.unstable_dataSource) {
+        apiRef.current.unstable_dataSource.fetchRows();
+      } else {
+        apiRef.current.requestPipeProcessorsApplication('hydrateRows');
+        applyAggregation();
+      }
     }
 
     // Re-apply the column hydration to wrap / unwrap the aggregated columns
@@ -120,7 +149,13 @@ export const useGridAggregation = (
       apiRef.current.caches.aggregation.rulesOnLastColumnHydration = aggregationRules;
       apiRef.current.requestPipeProcessorsApplication('hydrateColumns');
     }
-  }, [apiRef, applyAggregation, props.aggregationFunctions, props.disableAggregation]);
+  }, [
+    apiRef,
+    applyAggregation,
+    props.aggregationFunctions,
+    props.disableAggregation,
+    props.unstable_dataSource,
+  ]);
 
   useGridApiEventHandler(apiRef, 'aggregationModelChange', checkAggregationRulesDiff);
   useGridApiEventHandler(apiRef, 'columnsChange', checkAggregationRulesDiff);
