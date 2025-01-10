@@ -104,11 +104,11 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   });
 
   it('should re-fetch the data on sort change', async () => {
-    const { setProps } = render(<TestDataSource />);
+    render(<TestDataSource />);
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
-    setProps({ sortModel: [{ field: 'name', sort: 'asc' }] });
+    apiRef.current.sortColumn('name', 'asc');
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
     });
