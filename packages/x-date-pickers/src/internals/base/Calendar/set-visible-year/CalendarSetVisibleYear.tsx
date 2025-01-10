@@ -32,7 +32,7 @@ const CalendarSetVisibleYear = React.forwardRef(function CalendarSetVisibleYear(
   props: CalendarSetVisibleYear.Props,
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
-  const { ctx } = useBaseCalendarSetVisibleYearWrapper({ target: props.target });
+  const { ctx } = useBaseCalendarSetVisibleYearWrapper({ forwardedRef, target: props.target });
 
   return <MemoizedInnerCalendarSetVisibleYear {...props} ref={forwardedRef} ctx={ctx} />;
 });
