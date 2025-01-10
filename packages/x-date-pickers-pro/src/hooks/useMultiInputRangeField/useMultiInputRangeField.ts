@@ -164,6 +164,7 @@ export function useMultiInputRangeField<
   return {
     startDate: startDateProps,
     endDate: endDateProps,
+    enableAccessibleFieldDOMStructure,
   };
 }
 

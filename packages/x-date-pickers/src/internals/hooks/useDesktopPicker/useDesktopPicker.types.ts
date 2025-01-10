@@ -4,7 +4,6 @@ import type { InputAdornmentProps } from '@mui/material/InputAdornment';
 import type { TextFieldProps } from '@mui/material/TextField';
 import { MakeRequired, SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import {
-  BaseNonStaticPickerProps,
   BasePickerProps,
   BaseNonRangeNonStaticPickerProps,
 } from '../../models/props/basePickerProps';
@@ -88,8 +87,7 @@ export interface ExportedUseDesktopPickerSlotProps<
 }
 
 export interface DesktopOnlyPickerProps
-  extends BaseNonStaticPickerProps,
-    BaseNonRangeNonStaticPickerProps,
+  extends BaseNonRangeNonStaticPickerProps,
     UsePickerValueNonStaticProps,
     UsePickerProviderNonStaticProps {
   /**

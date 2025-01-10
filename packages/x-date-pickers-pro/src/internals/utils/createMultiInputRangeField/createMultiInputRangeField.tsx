@@ -93,21 +93,18 @@ export function createMultiInputRangeField<TManager extends PickerAnyRangeManage
       className: clsx(className, classes.root),
     });
 
-    const TextField =
-      slots?.textField ??
-      (props.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
     const startTextFieldProps = useSlotProps({
-      elementType: TextField,
+      elementType: PickersTextField,
       externalSlotProps: slotProps?.textField,
       ownerState: { ...ownerState, position: 'start' },
     });
     const endTextFieldProps = useSlotProps({
-      elementType: TextField,
+      elementType: PickersTextField,
       externalSlotProps: slotProps?.textField,
       ownerState: { ...ownerState, position: 'end' },
     });
 
-    const { startDate, endDate } = useMultiInputRangeField({
+    const { startDate, endDate, enableAccessibleFieldDOMStructure } = useMultiInputRangeField({
       manager,
       internalProps,
       startForwardedProps: startTextFieldProps,
@@ -127,6 +124,10 @@ export function createMultiInputRangeField<TManager extends PickerAnyRangeManage
 
     const cleanStartDate = convertFieldResponseIntoMuiTextFieldProps(startDate);
     const cleanEndDate = convertFieldResponseIntoMuiTextFieldProps(endDate);
+
+    const TextField =
+      slots?.textField ??
+      (enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
 
     return (
       <Root {...rootProps}>
