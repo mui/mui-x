@@ -11,11 +11,15 @@ import {
   useChartInteraction,
   UseChartInteractionSignature,
 } from '../internals/plugins/featurePlugins/useChartInteraction';
+import {
+  useChartZAxis,
+  UseChartZAxisSignature,
+} from '../internals/plugins/featurePlugins/useChartZAxis';
 import { ChartSeriesType } from '../models/seriesType/config';
 
 export type UseChartContainerPropsReturnValue<TSeries extends ChartSeriesType> = {
   chartDataProviderProps: ChartDataProviderProps<
-    [UseChartCartesianAxisSignature<TSeries>, UseChartInteractionSignature],
+    [UseChartZAxisSignature, UseChartCartesianAxisSignature<TSeries>, UseChartInteractionSignature],
     TSeries
   >;
   chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> };
@@ -59,7 +63,11 @@ export const useChartContainerProps = <TSeries extends ChartSeriesType = ChartSe
 
   const chartDataProviderProps: Omit<
     ChartDataProviderProps<
-      [UseChartCartesianAxisSignature<TSeries>, UseChartInteractionSignature],
+      [
+        UseChartZAxisSignature,
+        UseChartCartesianAxisSignature<TSeries>,
+        UseChartInteractionSignature,
+      ],
       TSeries
     >,
     'children'
@@ -77,7 +85,7 @@ export const useChartContainerProps = <TSeries extends ChartSeriesType = ChartSe
     width,
     height,
     seriesConfig,
-    plugins: [useChartCartesianAxis as any, useChartInteraction],
+    plugins: [useChartZAxis, useChartCartesianAxis as any, useChartInteraction],
   };
 
   return {

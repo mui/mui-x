@@ -7,10 +7,14 @@ import { useChartContainerProps } from './useChartContainerProps';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
 import { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
+import { UseChartZAxisSignature } from '../internals/plugins/featurePlugins/useChartZAxis';
 
 export interface ChartContainerProps<SeriesType extends ChartSeriesType = ChartSeriesType>
   extends Omit<
-      ChartDataProviderProps<[UseChartCartesianAxisSignature<SeriesType>], SeriesType>,
+      ChartDataProviderProps<
+        [UseChartZAxisSignature, UseChartCartesianAxisSignature<SeriesType>],
+        SeriesType
+      >,
       'children'
     >,
     ChartsSurfaceProps {}
@@ -51,7 +55,11 @@ const ChartContainer = React.forwardRef(function ChartContainer<TSeries extends 
   return (
     <ChartDataProvider<
       TSeries,
-      [UseChartCartesianAxisSignature<TSeries>, UseChartInteractionSignature]
+      [
+        UseChartZAxisSignature,
+        UseChartCartesianAxisSignature<TSeries>,
+        UseChartInteractionSignature,
+      ]
     >
       {...chartDataProviderProps}
     >

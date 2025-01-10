@@ -13,7 +13,7 @@ import { selectorChartsInteractionItem } from '../internals/plugins/featurePlugi
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import { useXAxes, useYAxes } from '../hooks';
-import { useZAxis } from '../hooks/useZAxis';
+import { useZAxes } from '../hooks/useZAxis';
 
 export interface UseItemTooltipReturnValue<T extends ChartSeriesType> {
   identifier: ChartItemIdentifier<T>;
@@ -31,7 +31,7 @@ export function useItemTooltip<T extends ChartSeriesType>(): null | UseItemToolt
 
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
-  const { zAxis, zAxisIds } = useZAxis();
+  const { zAxis, zAxisIds } = useZAxes();
   const colorProcessors = useColorProcessor();
 
   const xAxisId = (series as any).xAxisId ?? xAxisIds[0];

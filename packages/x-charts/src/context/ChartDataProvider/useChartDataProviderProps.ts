@@ -1,6 +1,5 @@
 'use client';
 import { useTheme } from '@mui/material/styles';
-import type { ZAxisContextProviderProps } from '../ZAxisContextProvider';
 import type { ChartDataProviderProps } from './ChartDataProvider';
 import { HighlightedProviderProps } from '../HighlightedProvider';
 import { AnimationProviderProps } from '../AnimationProvider';
@@ -21,7 +20,6 @@ export const useChartDataProviderProps = <
     height,
     series,
     margin,
-    zAxis,
     colors,
     dataset,
     highlightedItem,
@@ -58,11 +56,6 @@ export const useChartDataProviderProps = <
     skipAnimation,
   };
 
-  const zAxisContextProps: Omit<ZAxisContextProviderProps, 'children'> = {
-    zAxis,
-    dataset,
-  };
-
   const highlightedProviderProps: Omit<HighlightedProviderProps, 'children'> = {
     highlightedItem,
     onHighlightChange,
@@ -70,7 +63,6 @@ export const useChartDataProviderProps = <
 
   return {
     children,
-    zAxisContextProps,
     highlightedProviderProps,
     animationProviderProps,
     chartProviderProps,
