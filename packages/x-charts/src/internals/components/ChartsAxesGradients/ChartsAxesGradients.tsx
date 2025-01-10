@@ -35,7 +35,7 @@ export function ChartsAxesGradients() {
 
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
-  const { zAxisIds, zAxis } = useZAxes();
+  const { zAxis, zAxisIds } = useZAxes();
 
   const filteredYAxisIds = yAxisIds.filter((axisId) => yAxis[axisId].colorMap !== undefined);
   const filteredXAxisIds = xAxisIds.filter((axisId) => xAxis[axisId].colorMap !== undefined);

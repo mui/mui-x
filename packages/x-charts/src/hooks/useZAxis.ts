@@ -8,7 +8,10 @@ import { useSelector } from '../internals/store/useSelector';
 
 export function useZAxes() {
   const store = useStore<[UseChartZAxisSignature]>();
-  const { axis: zAxis, axisIds: zAxisIds } = useSelector(store, selectorChartZAxis);
+  const { axis: zAxis, axisIds: zAxisIds } = useSelector(store, selectorChartZAxis) ?? {
+    axis: {},
+    axisIds: [],
+  };
 
   return { zAxis, zAxisIds };
 }

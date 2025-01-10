@@ -1,6 +1,7 @@
-import { ChartRootSelector, createSelector } from '../../utils/selectors';
+import { ChartState } from '../../models/chart';
+import { createSelector } from '../../utils/selectors';
 import { UseChartZAxisSignature } from './useChartZAxis.types';
 
-const selectZAxis: ChartRootSelector<UseChartZAxisSignature> = (state) => state.zAxis;
+const selectRootState = (state: ChartState<[UseChartZAxisSignature]>) => state;
 
-export const selectorChartZAxis = createSelector([selectZAxis], (axis) => axis);
+export const selectorChartZAxis = createSelector([selectRootState], (state) => state.zAxis);
