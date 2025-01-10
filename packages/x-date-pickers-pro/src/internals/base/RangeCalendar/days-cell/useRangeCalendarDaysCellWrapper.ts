@@ -3,12 +3,7 @@ import { useUtils } from '@mui/x-date-pickers/internals';
 // eslint-disable-next-line no-restricted-imports
 import { useBaseCalendarDaysCellWrapper } from '@mui/x-date-pickers/internals/base/utils/base-calendar/days-cell/useBaseCalendarDaysCellWrapper';
 import type { useRangeCalendarDaysCell } from './useRangeCalendarDaysCell';
-import {
-  isWithinRange,
-  isStartOfRange,
-  isEndOfRange,
-  isRangeValid,
-} from '../../../utils/date-utils';
+import { getDatePositionInRange } from '../../../utils/date-utils';
 import { useRangeCalendarRootContext } from '../root/RangeCalendarRootContext';
 
 export function useRangeCalendarDaysCellWrapper(
@@ -19,46 +14,25 @@ export function useRangeCalendarDaysCellWrapper(
   const utils = useUtils();
   const rootContext = useRangeCalendarRootContext();
 
-  const isSelected = React.useMemo(() => {
-    if (!isRangeValid(utils, rootContext.highlightedRange)) {
-      return baseCtx.isSelected;
-    }
-    return isWithinRange(utils, value, rootContext.highlightedRange);
-  }, [utils, value, rootContext.highlightedRange, baseCtx.isSelected]);
-
-  const isSelectionStart = React.useMemo(
-    () => isStartOfRange(utils, value, rootContext.highlightedRange),
-    [utils, value, rootContext.highlightedRange],
+  const positionInSelectedRange = React.useMemo(
+    () => getDatePositionInRange(utils, value, rootContext.selectedRange),
+    [utils, value, rootContext.selectedRange],
   );
 
-  const isSelectionEnd = React.useMemo(
-    () => isEndOfRange(utils, value, rootContext.highlightedRange),
-    [utils, value, rootContext.highlightedRange],
-  );
-
-  const isPreviewed = React.useMemo(() => {
-    return isWithinRange(utils, value, rootContext.previewRange);
-  }, [utils, value, rootContext.previewRange]);
-
-  const isPreviewStart = React.useMemo(
-    () => isStartOfRange(utils, value, rootContext.previewRange),
-    [utils, value, rootContext.previewRange],
-  );
-
-  const isPreviewEnd = React.useMemo(
-    () => isEndOfRange(utils, value, rootContext.previewRange),
+  const positionInPreviewRange = React.useMemo(
+    () => getDatePositionInRange(utils, value, rootContext.previewRange),
     [utils, value, rootContext.previewRange],
   );
 
   const ctx = React.useMemo<useRangeCalendarDaysCell.Context>(
     () => ({
       ...baseCtx,
-      isSelected,
-      isSelectionStart,
-      isSelectionEnd,
-      isPreviewed,
-      isPreviewStart,
-      isPreviewEnd,
+      isSelected: positionInSelectedRange.isSelected,
+      isSelectionStart: positionInSelectedRange.isSelectionStart,
+      isSelectionEnd: positionInSelectedRange.isSelectionEnd,
+      isPreviewed: positionInSelectedRange.isSelected,
+      isPreviewStart: positionInPreviewRange.isSelectionStart,
+      isPreviewEnd: positionInPreviewRange.isSelectionEnd,
       isDraggingRef: rootContext.isDraggingRef,
       selectDayFromDrag: rootContext.selectDayFromDrag,
       startDragging: rootContext.startDragging,
@@ -69,12 +43,8 @@ export function useRangeCalendarDaysCellWrapper(
     }),
     [
       baseCtx,
-      isSelected,
-      isSelectionStart,
-      isSelectionEnd,
-      isPreviewed,
-      isPreviewStart,
-      isPreviewEnd,
+      positionInSelectedRange,
+      positionInPreviewRange,
       rootContext.isDraggingRef,
       rootContext.selectDayFromDrag,
       rootContext.startDragging,

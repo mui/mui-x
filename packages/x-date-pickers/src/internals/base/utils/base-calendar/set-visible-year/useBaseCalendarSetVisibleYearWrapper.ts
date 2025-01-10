@@ -60,8 +60,9 @@ export function useBaseCalendarSetVisibleYearWrapper(
 
   const tabbableYears = baseYearsListOrGridContext?.tabbableYears;
   const isTabbable = React.useMemo(() => {
+    // If the button is not inside a year list or grid, then it is always tabbable.
     if (tabbableYears == null) {
-      return false;
+      return true;
     }
 
     return tabbableYears.some((year) => utils.isSameYear(year, targetDate));

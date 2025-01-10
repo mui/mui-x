@@ -11,7 +11,7 @@ export interface RangeCalendarRootContext {
   stopDragging: () => void;
   setDragTarget: (value: PickerValidDate) => void;
   emptyDragImgRef: React.RefObject<HTMLImageElement | null>;
-  highlightedRange: PickerRangeValue;
+  selectedRange: PickerRangeValue;
   isDragging: boolean;
   setHoveredDate: (value: PickerValidDate | null) => void;
   previewRange: PickerRangeValue;

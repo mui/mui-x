@@ -245,7 +245,7 @@ function useBuildRangeCalendarRootContext(parameters: UseRangeCalendarDragEditin
     hoveredDate: PickerValidDate | null;
   }>({ isDragging: false, targetDate: null, draggedDate: null, hoveredDate: null });
 
-  const highlightedRange = React.useMemo<PickerRangeValue>(() => {
+  const selectedRange = React.useMemo<PickerRangeValue>(() => {
     if (!valueDayRange[0] || !valueDayRange[1] || !state.targetDate) {
       return valueDayRange;
     }
@@ -344,7 +344,7 @@ function useBuildRangeCalendarRootContext(parameters: UseRangeCalendarDragEditin
 
   const context: RangeCalendarRootContext = {
     value,
-    highlightedRange,
+    selectedRange,
     previewRange,
     disableDragEditing,
     isDraggingRef,

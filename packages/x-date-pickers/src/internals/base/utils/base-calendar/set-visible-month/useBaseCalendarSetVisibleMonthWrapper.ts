@@ -61,8 +61,9 @@ export function useBaseCalendarSetVisibleMonthWrapper(
 
   const tabbableMonths = baseMonthsListOrGridContext?.tabbableMonths;
   const isTabbable = React.useMemo(() => {
+    // If the button is not inside a month list or grid, then it is always tabbable.
     if (tabbableMonths == null) {
-      return false;
+      return true;
     }
 
     return tabbableMonths.some((month) => utils.isSameMonth(month, targetDate));

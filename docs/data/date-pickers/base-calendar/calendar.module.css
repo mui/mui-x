@@ -1,5 +1,18 @@
 .Root {
-  border: 1px solid #78716c;
+  --root-border-color: #78716c;
+  --button-hover-bg-color: #e0f2fe;
+  --button-focus-border-color: #0ea5e9;
+  --days-grid-separator-bg-color: #9ca3af;
+  --days-grid-header-color: #64748b;
+
+  --cell-selected-bg-color: #7dd3fc;
+  --cell-inside-selection-bg-color: #e0f2fe;
+  --cell-preview-border-color: #a1a1aa;
+  --cell-outside-month-color: #cbd5e1;
+  --cell-disabled-color: #64748b;
+  --cell-current-border-color: #9ca3af;
+
+  border: 1px solid var(--root-border-color);
   border-radius: 8px;
   width: 276px;
   height: 312px;
@@ -55,11 +68,11 @@
   cursor: pointer;
 
   &:hover {
-    background-color: #e0f2fe;
+    background-color: var(--button-hover-bg-color);
   }
 
   &:focus-visible {
-    outline: 2px solid #0ea5e9;
+    outline: 2px solid var(--button-focus-border-color);
   }
 
   &:disabled {
@@ -157,12 +170,31 @@
   align-items: center;
   justify-content: center;
   font-size: 0.75rem;
-  color: #64748b;
+  color: var(--days-grid-header-color);
+}
+
+.DaysCell,
+.MonthsCell,
+.YearsCell {
+  &:not([data-selected]):hover {
+    background-color: var(--button-hover-bg-color);
+  }
+
+  &[data-selected]:not([data-outside-month]):not([data-inside-selection]) {
+    background-color: var(--cell-selected-bg-color);
+  }
+
+  &:focus-visible {
+    z-index: 1;
+    outline: 2px solid var(--button-focus-border-color);
+  }
+
+  &:disabled {
+    pointer-events: none;
+  }
 }
 
 .DaysCell {
-  --day-preview-border-color: #a1a1aa;
-
   height: 36px;
   width: 36px;
   border-radius: 4px;
@@ -171,18 +203,21 @@
   cursor: pointer;
 
   &[data-current]:not([data-selected]):not(:focus-visible) {
-    outline: 1px solid #9ca3af;
-  }
-
-  &[data-outside-month] {
-    color: #cbd5e1;
-    pointer-events: none;
+    outline: 1px solid var(--cell-current-border-color);
   }
 
   &:not([data-outside-month]):disabled {
-    pointer-events: none;
     text-decoration: line-through;
-    color: #64748b;
+    color: var(--cell-disabled-color);
+  }
+
+  &[data-outside-month] {
+    color: var(--cell-outside-month-color);
+    pointer-events: none;
+  }
+
+  &[data-inside-selection] {
+    background-color: var(--cell-inside-selection-bg-color);
   }
 
   &.RangeDaysCell {
@@ -199,16 +234,16 @@
     }
 
     &[data-previewed]:not([data-selected]) {
-      border-top: 1px dashed var(--day-preview-border-color);
-      border-bottom: 1px dashed var(--day-preview-border-color);
+      border-top: 1px dashed var(--cell-preview-border-color);
+      border-bottom: 1px dashed var(--cell-preview-border-color);
     }
 
     &[data-preview-start]:not([data-selected]) {
-      border-left: 1px dashed var(--day-preview-border-color);
+      border-left: 1px dashed var(--cell-preview-border-color);
     }
 
     &[data-preview-end]:not([data-selected]) {
-      border-right: 1px dashed var(--day-preview-border-color);
+      border-right: 1px dashed var(--cell-preview-border-color);
     }
   }
 }
@@ -220,50 +255,8 @@
   color: #64748b;
 }
 
-.MonthsCell,
-.YearsCell {
-  &[data-selected] {
-    background-color: #7dd3fc;
-  }
-
-  &:focus-visible {
-    border-width: 2px;
-  }
-
-  &:disabled {
-    pointer-events: none;
-  }
-}
-
-.DaysCell,
-.MonthsCell,
-.YearsCell {
-  &:not([data-selected]):hover {
-    background-color: #e0f2fe;
-  }
-
-  &:not([data-outside-month]) {
-    &[data-selected] {
-      background-color: #7dd3fc;
-
-      &.RangeDaysCell {
-        background-color: #e0f2fe;
-      }
-    }
-
-    &[data-selection-start],
-    &[data-selection-end] {
-      background-color: #7dd3fc;
-    }
-  }
-
-  &:focus-visible {
-    outline: 2px solid #0ea5e9;
-  }
-}
-
 .DaysGridSeparator {
-  background-color: #9ca3af;
+  background-color: var(--days-grid-separator-bg-color);
   margin: 24px 0;
   width: 1px;
 }
@@ -273,49 +266,11 @@
   pointer-events: none;
 }
 
-:global(.mode-dark) :where(.DaysCell, .MonthsCell, .YearsCell) {
-  &:not([data-selected]):hover {
-    background-color: #075985;
-  }
-
-  &:not([data-outside-month]) {
-    &[data-selected] {
-      background-color: #0369a1;
-
-      &.RangeDaysCell {
-        background-color: #0c4a6e;
-      }
-    }
-
-    &[data-selection-start],
-    &[data-selection-end] {
-      background-color: #0369a1;
-    }
-  }
-
-  &[data-outside-month] {
-    color: #334155;
-    pointer-events: none;
-  }
-
-  &:not([data-outside-month]):disabled {
-    color: #64748b;
-  }
-}
-
-:global(.mode-dark)
-  :where(
-    .SetVisibleMonth,
-    .SetVisibleYear,
-    .SetActiveSectionMonth,
-    .SetActiveSectionYear,
-    .SetActiveSectionYearMD2
-  ) {
-  &:hover {
-    background-color: #075985;
-  }
-}
-
-:global(.mode-dark):where(.DaysGridSeparator) {
-  background-color: #4b5563;
+:global(.mode-dark) .Root {
+  --button-hover-bg-color: #075985;
+  --days-grid-separator-bg-color: #4b5563;
+  --cell-selected-bg-color: #0369a1;
+  --cell-inside-selection-bg-color: #0c4a6e;
+  --cell-outside-month-color: #334155;
+  --cell-disabled-color: #64748b;
 }
