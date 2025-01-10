@@ -8,7 +8,7 @@ import { useRangeCalendarRootContext } from '../root/RangeCalendarRootContext';
 
 export function useRangeCalendarDaysCellWrapper(
   parameters: useRangeCalendarDaysCellWrapper.Parameters,
-) {
+): useRangeCalendarDaysCellWrapper.ReturnValue {
   const { value } = parameters;
   const { ref, ctx: baseCtx } = useBaseCalendarDaysCellWrapper(parameters);
   const utils = useUtils();
