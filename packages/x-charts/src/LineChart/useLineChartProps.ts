@@ -62,7 +62,7 @@ export const useLineChartProps = (props: LineChartProps) => {
   const id = useId();
   const clipPathId = `${id}-clip-path`;
 
-  const chartContainerProps: ChartContainerProps = {
+  const chartContainerProps: Omit<ChartContainerProps<'line'>, 'plugins'> = {
     ...other,
     series: series.map((s) => ({
       disableHighlight: !!disableLineItemHighlight,

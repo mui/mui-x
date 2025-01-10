@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { useCartesianContext } from '../../../context/CartesianProvider';
-import { useChartId, useDrawingArea } from '../../../hooks';
+import { useChartId, useDrawingArea, useXAxes, useYAxes } from '../../../hooks';
 import ChartsPiecewiseGradient from './ChartsPiecewiseGradient';
 import ChartsContinuousGradient from './ChartsContinuousGradient';
 import { AxisId } from '../../../models/axis';
@@ -30,9 +29,12 @@ export function ChartsAxesGradients() {
 
   const svgHeight = top + height + bottom;
   const svgWidth = left + width + right;
+
   const getGradientId = useChartGradient();
   const getObjectBoundGradientId = useChartGradientObjectBound();
-  const { xAxisIds, xAxis, yAxisIds, yAxis } = useCartesianContext();
+
+  const { xAxis, xAxisIds } = useXAxes();
+  const { yAxis, yAxisIds } = useYAxes();
   const { zAxisIds, zAxis } = useZAxis();
 
   const filteredYAxisIds = yAxisIds.filter((axisId) => yAxis[axisId].colorMap !== undefined);
