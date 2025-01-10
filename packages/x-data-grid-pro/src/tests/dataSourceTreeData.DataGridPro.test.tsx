@@ -119,7 +119,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
-    apiRef.current.setPaginationModel({ page: 1, pageSize: 10 });
+    apiRef.current.setPage(1);
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
     });
