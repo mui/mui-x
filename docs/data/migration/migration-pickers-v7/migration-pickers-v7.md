@@ -269,7 +269,7 @@ Before v8, if rendered inside a mobile Picker, the field was read-only, and clic
 The behavior is now the same as if rendered inside a desktop Picker:
 
 - clicking on the field allows editing value with the keyboard
-- clicking on the field end adornment opens the picker
+- clicking on the field adornment opens the Picker
 
 :::success
 If you prefer the old behavior, you can create a custom field that renders a read-only Text Field on mobile.
