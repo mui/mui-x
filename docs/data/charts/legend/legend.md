@@ -1,7 +1,7 @@
 ---
 title: Charts - Legend
 productId: x-charts
-components: ChartsLegend, DefaultChartsLegend, ChartsText, ContinuousColorLegend, PiecewiseColorLegend
+components: ChartsLegend, DefaultChartsLegend, ChartsText, ContinuousColorLegend, PiecewiseColorLegend, ChartsLabel, ChartsLabelMark, ChartsLabelGradient
 ---
 
 # Charts - Legend
@@ -16,56 +16,69 @@ In chart components, the legend links series with `label` properties and their c
 
 ## Customization
 
+This section explains how to customize the legend using classes and properties.
+
+In order to fully customize the legend with custom components, see an example at the [HTML components docs](https://mui.com/x/react-charts/components/#html-components).
+
+### Dimensions
+
+Much of the customization can be done using CSS properties.
+There is a main class for the legend container, `.MuiChartsLegend-root`.
+Alternatively the `legendClasses` variable can be used if using CSS-in-JS to target the elements.
+
+Each legend item is composed of two main elements: the `mark` and the `label`.
+
+The example below explains how it is possible to customize some parts the legend.
+And shows how to use both the `legendClasses` variable and the CSS class directly.
+
+{{"demo": "LegendDimensionNoSnap.js", "hideToolbar": true, "bg": "playground"}}
+
 ### Position
 
-The legend can either be displayed in a `'column'` or `'row'` layout controlled with the `direction` property.
+The legend can either be displayed in a `'vertical'` or `'horizontal'` layout controlled with the `direction` property.
 
-It can also be moved with the `position: { vertical, horizontal }` property which defines how the legend aligns within the SVG.
+It can also be moved with the `position: { vertical, horizontal }` property which defines how the legend aligns itself in the parent container.
 
 - `vertical` can be `'top'`, `'middle'`, or `'bottom'`.
 - `horizontal` can be `'left'`, `'middle'`, or `'right'`.
 
-You can add spacing to a given `position` with the `padding` property, which can be either a number or an object `{ top, bottom, left, right }`.
-This `padding` will add space between the SVG borders and the legend.
-
 By default, the legend is placed above the charts.
+
+:::warning
+The `position` property is only available in the `slotProps`, but not in the `<ChartsLegend />`.
+In the second case, you are free to place the legend where you want.
+:::
 
 {{"demo": "LegendPositionNoSnap.js", "hideToolbar": true, "bg": "playground"}}
 
 ### Hiding
 
-You can hide the legend with the property `slotProps.legend.hidden`.
+You can hide the legend with the `hideLegend` property of the Chart.
 
 {{"demo": "HiddenLegend.js"}}
 
-### Dimensions
-
-Inside the legend, you can customize the pixel value of the width and height of the mark with the `itemMarkWidth` and `itemMarkHeight` props.
-
-You can also access the `markGap` prop to change the gap between the mark and its label, or the `itemGap` to change the gap between two legend items.
-Both props impact the values defined in pixels.
-
-{{"demo": "LegendDimensionNoSnap.js", "hideToolbar": true, "bg": "playground"}}
-
 ### Label styling
 
-To break lines in legend labels, use the special `\n` character. To customize the label style, you should not use CSS.
-Instead, pass a styling object to the `labelStyle` property.
+Changing the `label` style can be done by targeting the root component's font properties.
+
+To change the `mark` color or shape, the `fill` class is used instead.
+Keep in mind that the `mark` is an SVG element, so the `fill` property is used to change its color.
 
 {{"demo": "LegendTextStylingNoSnap.js", "hideToolbar": true, "bg": "playground"}}
 
-:::info
-The `labelStyle` property is needed to measure text size, and then place legend items at the correct position.
-Style applied by other means will not be taken into account.
-Which can lead to label overflow.
-:::
+### Change mark shape
 
-### Rounded symbol
+To change the mark shape, you can use the `labelMarkType` property of the series item.
+For the `pie` series, the `labelMarkType` property is available for each of the pie slices too.
 
-To create a rounded symbol, use the `legendClasses.mark` to apply CSS on marks.
-Notice that SVG `rect` uses `ry` property to control the symbol's corner radius instead of `border-radius`.
+{{"demo": "LegendMarkTypeNoSnap.js", "hideToolbar": true, "bg": "playground"}}
 
-{{"demo": "LegendRoundedSymbol.js"}}
+### Scrollable legend
+
+The legend can be made scrollable by setting the `overflowY` for vertical legends or `overflowX` for horizontal legends.
+Make sure that the legend container has a fixed height or width to enable scrolling.
+
+{{"demo": "ScrollableLegend.js"}}
 
 ## Color legend
 
@@ -73,6 +86,10 @@ To display legend associated to a [colorMap](https://mui.com/x/react-charts/styl
 
 - `<ContinuousColorLegend />` if you're using `colorMap.type='continuous'`
 - `<PiecewiseColorLegend />` if you're using `colorMap.type='piecewise'`.
+
+Then it is possible to override the `legend` slot to display the wanted legend, or use the [composition API](https://mui.com/x/react-charts/composition/) to add as many legends as needed.
+
+{{"demo": "VeryBasicColorLegend.js"}}
 
 ### Select data
 
@@ -87,16 +104,27 @@ To select the color mapping to represent, use the following props:
 
 This component position is done exactly the same way as the [legend for series](#position).
 
+### Label position
+
+The labels can be positioned in relation to the marks or gradient with the `labelPosition` prop.
+The values accepted are `'start'`, `'end'` or `'extremes'`.
+
+- With `direction='horizontal'`, using `'start'` places the labels above the visual marker, while `end` places them below.
+- When `direction='vertical'`, is `'start'` or `'end'` the labels are positioned `left` and `right` of the visual markers, respectively.
+- With the `'extremes'` value, the labels are positioned at both the beginning and end of the visual marker.
+
+{{"demo": "LegendLabelPositions.js"}}
+
 ### Continuous color mapping
 
 To modify the shape of the gradient, use the `length` and `thickness` props.
-The `length` can either be a number (in px) or a percentage string. The `"100%"` corresponds to the SVG dimension.
+The `length` can either be a number (in px) or a percentage string. The `"100%"` corresponds to the parent dimension.
 
 To format labels use the `minLabel`/`maxLabel`.
 They accept either a string to display.
 Or a function `({value, formattedValue}) => string`.
 
-The labels and gradient bar alignment can be modified by the `align` prop.
+It is also possible to reverse the gradient with the `reverse` prop.
 
 {{"demo": "ContinuousInteractiveDemoNoSnap.js", "hideToolbar": true, "bg": "playground"}}
 
@@ -105,17 +133,20 @@ The labels and gradient bar alignment can be modified by the `align` prop.
 The piecewise Legend is quite similar to the series legend.
 It accepts the same props for [customization](#dimensions).
 
-The props `hideFirst` and `hideLast` allows to hide the two extreme pieces: values lower than the min threshold, and value higher than the max threshold.
-
 To override labels generated by default, provide a `labelFormatter` prop.
 It takes the min/max of the piece and returns the label.
 
 Values can be `null` for the first and last pieces.
 And returning `null` removes the piece from the legend.
+Returning an empty string removes any label, but still display the `mark`.
 
 ```ts
-labelFormatter = ({ min, max, formattedMin, formattedMax }) => string | null;
+labelFormatter = ({ index, length, min, max, formattedMin, formattedMax }) =>
+  string | null;
 ```
+
+The `markType` can be changed with the `markType` prop.
+Since the color values are based on the axis, and not the series, the `markType` has to be set directly on the legend.
 
 {{"demo": "PiecewiseInteractiveDemoNoSnap.js", "hideToolbar": true, "bg": "playground"}}
 

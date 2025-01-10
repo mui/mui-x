@@ -1,11 +1,19 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { ChartSeriesType } from '../models/seriesType/config';
 import { ChartDataProvider, ChartDataProviderProps } from '../context/ChartDataProvider';
 import { useChartContainerProps } from './useChartContainerProps';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
+import { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 
-export interface ChartContainerProps extends ChartDataProviderProps, ChartsSurfaceProps {}
+export interface ChartContainerProps<SeriesType extends ChartSeriesType = ChartSeriesType>
+  extends Omit<
+      ChartDataProviderProps<[UseChartCartesianAxisSignature<SeriesType>], SeriesType>,
+      'children'
+    >,
+    ChartsSurfaceProps {}
 
 /**
  * It sets up the data providers as well as the `<svg>` for the chart.
@@ -31,8 +39,8 @@ export interface ChartContainerProps extends ChartDataProviderProps, ChartsSurfa
  * </ChartContainer>
  * ```
  */
-const ChartContainer = React.forwardRef(function ChartContainer(
-  props: ChartContainerProps,
+const ChartContainer = React.forwardRef(function ChartContainer<TSeries extends ChartSeriesType>(
+  props: ChartContainerProps<TSeries>,
   ref: React.Ref<SVGSVGElement>,
 ) {
   const { chartDataProviderProps, children, chartsSurfaceProps } = useChartContainerProps(
@@ -41,17 +49,29 @@ const ChartContainer = React.forwardRef(function ChartContainer(
   );
 
   return (
-    <ChartDataProvider {...chartDataProviderProps}>
+    <ChartDataProvider<
+      TSeries,
+      [UseChartCartesianAxisSignature<TSeries>, UseChartInteractionSignature]
+    >
+      {...chartDataProviderProps}
+    >
       <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
     </ChartDataProvider>
   );
-});
+}) as <TSeries extends ChartSeriesType>(
+  props: ChartContainerProps<TSeries> & { ref?: React.ForwardedRef<SVGSVGElement> },
+) => React.JSX.Element;
+
+// @ts-ignore
 
 ChartContainer.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  apiRef: PropTypes.shape({
+    current: PropTypes.object,
+  }),
   children: PropTypes.node,
   className: PropTypes.string,
   /**
@@ -82,10 +102,14 @@ ChartContainer.propTypes = {
     seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   }),
   /**
+   * This prop is used to help implement the accessibility logic.
+   * If you don't provide this prop. It falls back to a randomly generated id.
+   */
+  id: PropTypes.string,
+  /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
-   * @default object Depends on the charts type.
    */
   margin: PropTypes.shape({
     bottom: PropTypes.number,
@@ -100,16 +124,11 @@ ChartContainer.propTypes = {
    */
   onHighlightChange: PropTypes.func,
   /**
-   * An array of plugins defining how to preprocess data.
-   * If not provided, the container supports line, bar, scatter and pie charts.
-   */
-  plugins: PropTypes.arrayOf(PropTypes.object),
-  /**
    * The array of series to display.
    * Each type of series has its own specificity.
    * Please refer to the appropriate docs page to learn more about it.
    */
-  series: PropTypes.arrayOf(PropTypes.object).isRequired,
+  series: PropTypes.arrayOf(PropTypes.object),
   /**
    * If `true`, animations are skipped.
    * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
@@ -120,6 +139,7 @@ ChartContainer.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.

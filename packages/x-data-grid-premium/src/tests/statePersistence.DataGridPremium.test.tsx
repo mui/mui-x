@@ -50,7 +50,7 @@ const FULL_INITIAL_STATE: GridInitialState = {
 describe('<DataGridPremium /> - State persistence', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
 
   function TestCase(props: Omit<DataGridPremiumProps, 'rows' | 'columns' | 'apiRef'>) {
     apiRef = useGridApiRef();
@@ -90,28 +90,32 @@ describe('<DataGridPremium /> - State persistence', () => {
       });
     });
 
-    it('should export the current version of the exportable state', () => {
+    it('should export the current version of the exportable state', async () => {
       render(<TestCase />);
-      act(() => apiRef.current.setRowGroupingModel(['category']));
-      act(() =>
+      await act(() => {
+        apiRef.current.setRowGroupingModel(['category']);
+      });
+      await act(() => {
         apiRef.current.setAggregationModel({
           id: 'size',
-        }),
-      );
+        });
+      });
 
       const exportedState = apiRef.current.exportState();
       expect(exportedState.rowGrouping).to.deep.equal(FULL_INITIAL_STATE.rowGrouping);
       expect(exportedState.aggregation).to.deep.equal(FULL_INITIAL_STATE.aggregation);
     });
 
-    it('should export the current version of the exportable state when using exportOnlyDirtyModels', () => {
+    it('should export the current version of the exportable state when using exportOnlyDirtyModels', async () => {
       render(<TestCase />);
-      act(() => apiRef.current.setRowGroupingModel(['category']));
-      act(() =>
+      await act(() => {
+        apiRef.current.setRowGroupingModel(['category']);
+      });
+      await act(() => {
         apiRef.current.setAggregationModel({
           id: 'size',
-        }),
-      );
+        });
+      });
 
       const exportedState = apiRef.current.exportState({ exportOnlyDirtyModels: true });
       expect(exportedState.rowGrouping).to.deep.equal(FULL_INITIAL_STATE.rowGrouping);

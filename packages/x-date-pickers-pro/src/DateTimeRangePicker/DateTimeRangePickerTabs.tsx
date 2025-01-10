@@ -20,8 +20,8 @@ import {
   DateTimeRangePickerTabsClasses,
   getDateTimeRangePickerTabsUtilityClass,
 } from './dateTimeRangePickerTabsClasses';
-import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import { RangePosition } from '../models';
+import { usePickerRangePositionContext } from '../hooks';
 
 type TabValue = 'start-date' | 'start-time' | 'end-date' | 'end-time';
 
@@ -51,21 +51,19 @@ export interface ExportedDateTimeRangePickerTabsProps extends ExportedBaseTabsPr
    * Date tab icon.
    * @default DateRangeIcon
    */
-  dateIcon?: React.ReactElement;
+  dateIcon?: React.ReactElement<any>;
   /**
    * Time tab icon.
    * @default TimeIcon
    */
-  timeIcon?: React.ReactElement;
+  timeIcon?: React.ReactElement<any>;
   /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<DateTimeRangePickerTabsClasses>;
 }
 
-export interface DateTimeRangePickerTabsProps
-  extends ExportedDateTimeRangePickerTabsProps,
-    Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {}
+export interface DateTimeRangePickerTabsProps extends ExportedDateTimeRangePickerTabsProps {}
 
 const useUtilityClasses = (classes: Partial<DateTimeRangePickerTabsClasses> | undefined) => {
   const slots = {
@@ -114,8 +112,6 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
     dateIcon = <DateRangeIcon />,
     timeIcon = <TimeIcon />,
     hidden = typeof window === 'undefined' || window.innerHeight < 667,
-    rangePosition,
-    onRangePositionChange,
     className,
     classes: classesProp,
     sx,
@@ -123,8 +119,10 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
 
   const translations = usePickerTranslations();
   const { ownerState } = usePickerPrivateContext();
-  const { view, onViewChange } = usePickerContext();
+  const { view, setView } = usePickerContext();
   const classes = useUtilityClasses(classesProp);
+  const { rangePosition, onRangePositionChange } = usePickerRangePositionContext();
+
   const value = React.useMemo(
     () => (view == null ? null : viewToTab(view, rangePosition)),
     [view, rangePosition],
@@ -162,13 +160,13 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
 
   const changeToPreviousTab = useEventCallback(() => {
     const previousTab = value == null ? tabOptions[0] : tabOptions[tabOptions.indexOf(value) - 1];
-    onViewChange(tabToView(previousTab));
+    setView(tabToView(previousTab));
     handleRangePositionChange(previousTab);
   });
 
   const changeToNextTab = useEventCallback(() => {
     const nextTab = value == null ? tabOptions[0] : tabOptions[tabOptions.indexOf(value) + 1];
-    onViewChange(tabToView(nextTab));
+    setView(tabToView(nextTab));
     handleRangePositionChange(nextTab);
   });
 
@@ -241,8 +239,6 @@ DateTimeRangePickerTabs.propTypes = {
    * @default `window.innerHeight < 667` for `DesktopDateTimeRangePicker` and `MobileDateTimeRangePicker`
    */
   hidden: PropTypes.bool,
-  onRangePositionChange: PropTypes.func.isRequired,
-  rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

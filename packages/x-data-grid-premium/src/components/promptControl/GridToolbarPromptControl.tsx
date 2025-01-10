@@ -46,7 +46,7 @@ const GridToolbarPromptControlRoot = styled('div', {
   flexDirection: 'row',
 });
 
-function sampleData(apiRef: React.MutableRefObject<GridApiPremium>) {
+function sampleData(apiRef: React.RefObject<GridApiPremium>) {
   const columns = gridColumnDefinitionsSelector(apiRef);
   const rows = Object.values(gridRowsLookupSelector(apiRef));
   const columnExamples: Record<string, any[]> = {};
@@ -65,7 +65,7 @@ function sampleData(apiRef: React.MutableRefObject<GridApiPremium>) {
 }
 
 function generateContext(
-  apiRef: React.MutableRefObject<GridApiPremium>,
+  apiRef: React.RefObject<GridApiPremium>,
   examples?: Record<string, any[]>,
 ) {
   const columns = gridColumnDefinitionsSelector(apiRef);

@@ -36,7 +36,7 @@ Below are described the steps you need to make to migrate from v7 to v8.
 
 ### Props
 
-- Passing additional props (like `data-*`, `aria-*`) directly on the Data Grid component is no longer supported. To pass the props, use `slotProps`.
+- Passing additional props (like `data-*`, `aria-*`) directly on the Data Grid component is no longer supported. To pass the props, use `slotProps`:
   - For the `.root` element, use `slotProps.root`
   - For the `.main` element (the one with `role="grid"`), use `slotProps.main`
 
@@ -52,11 +52,12 @@ Below are described the steps you need to make to migrate from v7 to v8.
 - The `rowPositionsDebounceMs` prop was removed.
 - The `apiRef.current.resize()` method was removed.
 - The `<GridOverlays />` component is not exported anymore.
+- The `sanitizeFilterItemValue()` utility is not exported anymore.
 - `gridRowsDataRowIdToIdLookupSelector` was removed. Use `gridRowsLookupSelector` in combination with `getRowId()` API method instead.
 
   ```diff
   -const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
-  -const rowId = idToIdLookup[id]
+  -const rowId = idToIdLookup[id];
   +const rowsLookup = gridRowsLookupSelector(apiRef);
   +const rowId = apiRef.current.getRowId(rowsLookup[id]);
   ```
@@ -90,13 +91,14 @@ Below are described the steps you need to make to migrate from v7 to v8.
 - The `useGridSelector` signature has been updated due to the introduction of arguments parameter in the selectors. Pass `undefined` as `arguments` if the selector doesn't use any arguments.
 
   ```diff
-  -const output = useGridSelector(apiRef, selector, equals)
-  +const output = useGridSelector(apiRef, selector, arguments, equals)
+  -const output = useGridSelector(apiRef, selector, equals);
+  +const output = useGridSelector(apiRef, selector, arguments, equals);
   ```
 
 ### Other exports
 
-- `ariaV8` experimental flag is removed.
+- `ariaV8` experimental flag is removed. It's now the default behavior.
+- Sub-components that are in a React Portal must now be wrapped with `GridPortalWrapper`
 
 <!-- ### Editing
 

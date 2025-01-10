@@ -38,7 +38,7 @@ export const virtualizationStateInitializer: GridStateInitializer<RootProps> = (
 };
 
 export function useGridVirtualization(
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: RootProps,
 ): void {
   /*

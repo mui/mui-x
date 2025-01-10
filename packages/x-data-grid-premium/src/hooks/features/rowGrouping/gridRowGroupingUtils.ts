@@ -54,7 +54,7 @@ interface FilterRowTreeFromTreeDataParams {
   rowTree: GridRowTreeConfig;
   isRowMatchingFilters: GridAggregatedFilterItemApplier | null;
   filterModel: GridFilterModel;
-  apiRef: React.MutableRefObject<GridPrivateApiPremium>;
+  apiRef: React.RefObject<GridPrivateApiPremium>;
 }
 
 /**
@@ -196,7 +196,7 @@ export const mergeStateWithRowGroupingModel =
   });
 
 export const setStrategyAvailability = (
-  privateApiRef: React.MutableRefObject<GridPrivateApiPremium>,
+  privateApiRef: React.RefObject<GridPrivateApiPremium>,
   disableRowGrouping: boolean,
   dataSource?: GridDataSource,
 ) => {
@@ -224,7 +224,7 @@ export const getCellGroupingCriteria = ({
   row: GridRowModel;
   colDef: GridColDef;
   groupingRule: GridGroupingRule;
-  apiRef: React.MutableRefObject<GridPrivateApiPremium>;
+  apiRef: React.RefObject<GridPrivateApiPremium>;
 }) => {
   let key: GridKeyValue | null | undefined;
   if (groupingRule.groupingValueGetter) {

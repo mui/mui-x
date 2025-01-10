@@ -6,7 +6,7 @@ import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GRID_TREE_DATA_GROUPING_FIELD } from './gridTreeDataGroupColDef';
 
 export const useGridTreeData = (
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: React.RefObject<GridApiPro>,
   props: Pick<DataGridProProcessedProps, 'unstable_dataSource'>,
 ) => {
   /**

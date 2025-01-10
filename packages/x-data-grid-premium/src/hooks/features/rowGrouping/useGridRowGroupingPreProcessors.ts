@@ -40,7 +40,7 @@ import {
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 
 export const useGridRowGroupingPreProcessors = (
-  apiRef: React.MutableRefObject<GridPrivateApiPremium>,
+  apiRef: React.RefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
     | 'disableRowGrouping'

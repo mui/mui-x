@@ -47,7 +47,7 @@ export const columnPinningStateInitializer: GridStateInitializer<
 };
 
 export const useGridColumnPinning = (
-  apiRef: React.MutableRefObject<GridPrivateApiPro>,
+  apiRef: React.RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     | 'disableColumnPinning'
@@ -336,10 +336,7 @@ export const useGridColumnPinning = (
   }, [apiRef, props.pinnedColumns]);
 };
 
-function setState(
-  apiRef: React.MutableRefObject<GridPrivateApiPro>,
-  model: GridPinnedColumnFields,
-) {
+function setState(apiRef: React.RefObject<GridPrivateApiPro>, model: GridPinnedColumnFields) {
   apiRef.current.setState((state) => ({
     ...state,
     pinnedColumns: model,

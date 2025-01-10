@@ -5,12 +5,6 @@
     "direction": {
       "description": "The direction of the legend layout. The default depends on the chart."
     },
-    "hidden": { "description": "Set to true to hide the legend." },
-    "itemGap": { "description": "Space between two legend items (in px)." },
-    "itemMarkHeight": { "description": "Height of the item mark (in px)." },
-    "itemMarkWidth": { "description": "Width of the item mark (in px)." },
-    "labelStyle": { "description": "Style applied to legend labels." },
-    "markGap": { "description": "Space between the mark and the label (in px)." },
     "onItemClick": {
       "description": "Callback fired when a legend item is clicked.",
       "typeDescriptions": {
@@ -19,30 +13,22 @@
         "index": "The index of the clicked legend item."
       }
     },
-    "padding": {
-      "description": "Legend padding (in px). Can either be a single number, or an object with top, left, bottom, right properties."
-    },
-    "position": { "description": "The position of the legend." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." }
   },
   "classDescriptions": {
-    "column": {
+    "horizontal": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the legend with column layout"
-    },
-    "itemBackground": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the item background"
+      "nodeName": "the legend in row layout"
     },
     "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the series label" },
     "mark": { "description": "Styles applied to {{nodeName}}.", "nodeName": "series mark element" },
     "root": { "description": "Styles applied to the root element." },
-    "row": {
+    "series": { "description": "Styles applied to {{nodeName}}.", "nodeName": "a series element" },
+    "vertical": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the legend with row layout"
-    },
-    "series": { "description": "Styles applied to {{nodeName}}.", "nodeName": "a series element" }
+      "nodeName": "the legend in column layout"
+    }
   },
   "slotDescriptions": { "legend": "Custom rendering of the legend." }
 }

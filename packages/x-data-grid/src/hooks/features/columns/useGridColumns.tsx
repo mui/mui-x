@@ -65,7 +65,7 @@ export const columnsStateInitializer: GridStateInitializer<
  * TODO: Impossible priority - useGridParamsApi also needs to be after useGridColumns
  */
 export function useGridColumns(
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'initialState'

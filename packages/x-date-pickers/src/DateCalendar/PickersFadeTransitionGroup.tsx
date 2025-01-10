@@ -10,7 +10,7 @@ import {
 } from './pickersFadeTransitionGroupClasses';
 
 export interface PickersFadeTransitionGroupProps {
-  children: React.ReactElement;
+  children: React.ReactElement<any>;
   className?: string;
   reduceAnimations: boolean;
   transKey: React.Key;

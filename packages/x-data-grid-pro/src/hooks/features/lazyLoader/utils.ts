@@ -6,7 +6,7 @@ export const findSkeletonRowsSection = ({
   visibleRows,
   range,
 }: {
-  apiRef: React.MutableRefObject<GridPrivateApiPro>;
+  apiRef: React.RefObject<GridPrivateApiPro>;
   visibleRows: GridRowEntry[];
   range: { firstRowIndex: number; lastRowIndex: number };
 }) => {

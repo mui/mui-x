@@ -1,6 +1,9 @@
+// @ts-check
+
 import * as React from 'react';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { PieChart } from '@mui/x-charts/PieChart';
+import { legendClasses } from '@mui/x-charts/ChartsLegend';
 
 const data = [
   { id: 0, value: 10, label: 'Series A' },
@@ -13,7 +16,7 @@ const data = [
   { id: 7, value: 15, label: 'Series H' },
 ];
 
-const itemsNumber = 15;
+const itemsNumber = 8;
 
 export default function LegendDimensionNoSnap() {
   return (
@@ -23,15 +26,17 @@ export default function LegendDimensionNoSnap() {
         {
           propName: 'direction',
           knob: 'select',
-          defaultValue: 'column',
-          options: ['row', 'column'],
+          defaultValue: 'horizontal',
+          options: ['horizontal', 'vertical'],
         },
-        { propName: 'itemMarkWidth', knob: 'number', defaultValue: 20 },
-        { propName: 'itemMarkHeight', knob: 'number', defaultValue: 2 },
-        { propName: 'markGap', knob: 'number', defaultValue: 5 },
-        { propName: 'itemGap', knob: 'number', defaultValue: 10 },
+        { propName: 'markSize', knob: 'number', defaultValue: 15, min: 0 },
+        { propName: 'markGap', knob: 'number', defaultValue: 8, min: 0 },
+        { propName: 'itemGap', knob: 'number', defaultValue: 16, min: 0 },
       ]}
-      renderDemo={(props) => (
+      renderDemo={(
+        /** @type {{ direction: "horizontal" | "vertical"; markSize: number; markGap: number; itemGap: number; scrollable: boolean;}} */
+        props,
+      ) => (
         <PieChart
           series={[
             {
@@ -41,53 +46,51 @@ export default function LegendDimensionNoSnap() {
           slotProps={{
             legend: {
               direction: props.direction,
-              position: {
-                vertical: props.direction === 'row' ? 'top' : 'middle',
-                horizontal: props.direction === 'row' ? 'middle' : 'right',
+              sx: {
+                gap: `${props.itemGap}px`,
+                [`.${legendClasses.mark}`]: {
+                  height: props.markSize,
+                  width: props.markSize,
+                },
+                [`.${legendClasses.series}`]: {
+                  gap: `${props.markGap}px`,
+                },
               },
-              itemMarkWidth: props.itemMarkWidth,
-              itemMarkHeight: props.itemMarkHeight,
-              markGap: props.markGap,
-              itemGap: props.itemGap,
-              padding: 0,
             },
           }}
-          margin={{
-            top: 100,
-            bottom: 10,
-            left: 10,
-            right: 100,
-          }}
-          width={400}
-          height={400}
+          height={200}
+          width={200}
         />
       )}
-      getCode={({ props }) => {
-        return [
-          `import { PieChart } from '@mui/x-charts/PieChart';`,
-          '',
-          `<PieChart`,
-          '  margin={{ top: 100, bottom: 10, left: 10, right:100 }}',
-          '  {/** ... */}',
-          `  slotProps={{`,
-          `    legend: {`,
-          `      direction: props.direction,`,
-          ...(props.direction === 'row'
-            ? []
-            : [
-                `      position: {`,
-                `        vertical: 'middle',`,
-                `        horizontal: 'right',`,
-                `      },`,
-              ]),
-          `      itemMarkWidth: ${props.itemMarkWidth},`,
-          `      itemMarkHeight: ${props.itemMarkHeight},`,
-          `      markGap: ${props.markGap},`,
-          `      itemGap: ${props.itemGap},`,
-          `    }`,
-          `  }}`,
-          '/>',
-        ].join('\n');
+      getCode={(
+        /** @type {{ props: { direction: "horizontal" | "vertical"; markSize: number; markGap: number; itemGap: number; scrollable: boolean;}}} */
+        { props },
+      ) => {
+        return `
+import { PieChart } from '@mui/x-charts/PieChart';
+import { legendClasses } from '@mui/x-charts/ChartsLegend';
+
+<PieChart
+  {/** ... */}
+  slotProps={{
+    legend: {
+      direction: props.direction,
+      sx: {
+        gap: '${props.itemGap}px',
+        // CSS-in-JS
+        [\`.\${legendClasses.mark}\`]: {
+          height: ${props.markSize},
+          width: ${props.markSize},
+        },
+        // CSS class
+        ['.${legendClasses.series}']: {
+          gap: '${props.markGap}px',
+        },
+      },
+    },
+  }}
+/>
+`;
       }}
     />
   );

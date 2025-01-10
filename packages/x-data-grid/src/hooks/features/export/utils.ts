@@ -11,7 +11,7 @@ interface GridGetColumnsToExportParams {
   /**
    * The API of the grid.
    */
-  apiRef: React.MutableRefObject<GridApiCommunity>;
+  apiRef: React.RefObject<GridApiCommunity>;
   options: GridExportOptions;
 }
 

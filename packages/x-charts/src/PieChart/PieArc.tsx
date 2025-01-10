@@ -120,6 +120,7 @@ function PieArc(props: PieArcProps) {
           })!,
       )}
       visibility={to([startAngle, endAngle], (sA, eA) => (sA === eA ? 'hidden' : 'visible'))}
+      // @ts-expect-error
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
       ownerState={ownerState}

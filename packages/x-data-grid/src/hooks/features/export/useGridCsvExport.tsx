@@ -19,7 +19,7 @@ import type { DataGridProcessedProps } from '../../../models/props/DataGridProps
  * @requires useGridParamsApi (method)
  */
 export const useGridCsvExport = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'ignoreValueFormatterDuringExport'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridCsvExport');

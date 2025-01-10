@@ -36,12 +36,6 @@ export const useMobilePicker = <
     slotProps: innerSlotProps,
     className,
     sx,
-    format,
-    formatDensity,
-    enableAccessibleFieldDOMStructure,
-    selectedSections,
-    onSelectedSectionsChange,
-    timezone,
     name,
     label,
     inputRef,
@@ -55,19 +49,16 @@ export const useMobilePicker = <
   const labelId = useId();
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
 
-  const {
-    layoutProps,
-    providerProps,
-    renderCurrentView,
-    fieldProps: pickerFieldProps,
-    ownerState,
-  } = usePicker<PickerValue, TView, TExternalProps, {}>({
+  const { providerProps, renderCurrentView, ownerState } = usePicker<
+    PickerValue,
+    TView,
+    TExternalProps
+  >({
     ...pickerParams,
     props,
     fieldRef,
     localeText,
     autoFocusView: true,
-    additionalViewProps: {},
     variant: 'mobile',
   });
 
@@ -82,14 +73,6 @@ export const useMobilePicker = <
     additionalProps: {
       // Internal props
       readOnly: readOnly ?? true,
-      disabled,
-      format,
-      formatDensity,
-      enableAccessibleFieldDOMStructure,
-      selectedSections,
-      onSelectedSectionsChange,
-      timezone,
-      ...pickerFieldProps, // onChange and value
 
       // Forwarded props
       className,
@@ -113,7 +96,7 @@ export const useMobilePicker = <
   // TODO: Move to `useSlotProps` when https://github.com/mui/material-ui/pull/35088 will be merged
   fieldProps.inputProps = {
     ...fieldProps.inputProps,
-    'aria-label': getOpenDialogAriaText(pickerFieldProps.value),
+    'aria-label': getOpenDialogAriaText(providerProps.contextValue.value),
   } as typeof fieldProps.inputProps;
 
   const slotsForField = {
@@ -154,7 +137,7 @@ export const useMobilePicker = <
         unstableFieldRef={handleFieldRef}
       />
       <PickersModalDialog slots={slots} slotProps={slotProps}>
-        <Layout {...layoutProps} {...slotProps?.layout} slots={slots} slotProps={slotProps}>
+        <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
           {renderCurrentView()}
         </Layout>
       </PickersModalDialog>

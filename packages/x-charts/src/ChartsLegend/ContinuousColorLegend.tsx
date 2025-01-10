@@ -1,352 +1,280 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { ScaleSequential } from '@mui/x-charts-vendor/d3-scale';
-import { useTheme } from '@mui/material/styles';
-import { useRtl } from '@mui/system/RtlProvider';
-import ChartsContinuousGradient from '../internals/components/ChartsAxesGradients/ChartsContinuousGradient';
-import { AxisDefaultized, ContinuousScaleName } from '../models/axis';
-import { useChartId, useDrawingArea } from '../hooks';
-import { getScale } from '../internals/getScale';
-import { getPercentageValue } from '../internals/getPercentageValue';
-import { ChartsText, ChartsTextProps } from '../ChartsText';
-import { getStringSize } from '../internals/domUtils';
+import { styled, SxProps, Theme } from '@mui/material/styles';
+import clsx from 'clsx';
+import { AppendKeys } from '@mui/x-internals/types';
+import { AxisDefaultized } from '../models/axis';
 import { useAxis } from './useAxis';
+import { ColorLegendSelector } from './colorLegend.types';
+import { ChartsLabel } from '../ChartsLabel/ChartsLabel';
+import { ChartsLabelGradient, ChartsLabelGradientProps } from '../ChartsLabel/ChartsLabelGradient';
+import { Direction } from './direction';
+import { consumeThemeProps } from '../internals/consumeThemeProps';
 import {
-  AnchorPosition,
-  BoundingBox,
-  ColorLegendSelector,
-  LegendPlacement,
-  Position,
-  TextPosition,
-} from './legend.types';
-
-function getPositionOffset(position: AnchorPosition, legendBox: BoundingBox, svgBox: BoundingBox) {
-  let offsetX = 0;
-  let offsetY = 0;
-
-  switch (position.horizontal) {
-    case 'left':
-      offsetX = 0;
-      break;
-    case 'middle':
-      offsetX = (svgBox.width - legendBox.width) / 2;
-      break;
-    case 'right':
-    default:
-      offsetX = svgBox.width - legendBox.width;
-      break;
-  }
-  switch (position.vertical) {
-    case 'top':
-      offsetY = 0;
-      break;
-    case 'middle':
-      offsetY = (svgBox.height - legendBox.height) / 2;
-      break;
-    case 'bottom':
-    default:
-      offsetY = svgBox.height - legendBox.height;
-      break;
-  }
-
-  return { offsetX, offsetY };
-}
-
-/**
- * Takes placement parameters and element bounding boxes.
- * Returns the x, y coordinates of the elements. And the textAnchor, dominantBaseline for texts.
- */
-function getElementPositions(
-  text1Box: BoundingBox,
-  barBox: BoundingBox,
-  text2Box: BoundingBox,
-  params: {
-    spacing: number;
-    align: ContinuousColorLegendProps['align'];
-    direction: ContinuousColorLegendProps['direction'];
-  },
-): {
-  text1: TextPosition;
-  text2: TextPosition;
-  bar: Position;
-  boundingBox: BoundingBox;
-} {
-  if (params.direction === 'column') {
-    const text1 = { y: text1Box.height, dominantBaseline: 'auto' } as const;
-    const text2 = {
-      y: text1Box.height + 2 * params.spacing + barBox.height,
-      dominantBaseline: 'hanging',
-    } as const;
-    const bar = { y: text1Box.height + params.spacing };
-
-    const totalWidth = Math.max(text1Box.width, barBox.width, text2Box.width);
-    const totalHeight = text1Box.height + barBox.height + text2Box.height + 2 * params.spacing;
-
-    const boundingBox = { width: totalWidth, height: totalHeight };
-    switch (params.align) {
-      case 'start':
-        return {
-          text1: { ...text1, textAnchor: 'start', x: 0 },
-          text2: { ...text2, textAnchor: 'start', x: 0 },
-          bar: { ...bar, x: 0 },
-          boundingBox,
-        };
-      case 'end':
-        return {
-          text1: { ...text1, textAnchor: 'end', x: totalWidth },
-          text2: { ...text2, textAnchor: 'end', x: totalWidth },
-          bar: { ...bar, x: totalWidth - barBox.width },
-          boundingBox,
-        };
-      case 'middle':
-      default:
-        return {
-          text1: { ...text1, textAnchor: 'middle', x: totalWidth / 2 },
-          text2: { ...text2, textAnchor: 'middle', x: totalWidth / 2 },
-          bar: { ...bar, x: totalWidth / 2 - barBox.width / 2 },
-          boundingBox,
-        };
-    }
-  } else {
-    const text1 = { x: text1Box.width, textAnchor: 'end' } as const;
-    const text2 = {
-      x: text1Box.width + 2 * params.spacing + barBox.width,
-      textAnchor: 'start',
-    } as const;
-    const bar = { x: text1Box.width + params.spacing };
-
-    const totalHeight = Math.max(text1Box.height, barBox.height, text2Box.height);
-    const totalWidth = text1Box.width + barBox.width + text2Box.width + 2 * params.spacing;
-
-    const boundingBox = { width: totalWidth, height: totalHeight };
-
-    switch (params.align) {
-      case 'start':
-        return {
-          text1: { ...text1, dominantBaseline: 'hanging', y: 0 },
-          text2: { ...text2, dominantBaseline: 'hanging', y: 0 },
-          bar: { ...bar, y: 0 },
-          boundingBox,
-        };
-      case 'end':
-        return {
-          text1: { ...text1, dominantBaseline: 'auto', y: totalHeight },
-          text2: { ...text2, dominantBaseline: 'auto', y: totalHeight },
-          bar: { ...bar, y: totalHeight - barBox.height },
-          boundingBox,
-        };
-      case 'middle':
-      default:
-        return {
-          text1: { ...text1, dominantBaseline: 'central', y: totalHeight / 2 },
-          text2: { ...text2, dominantBaseline: 'central', y: totalHeight / 2 },
-          bar: { ...bar, y: totalHeight / 2 - barBox.height / 2 },
-          boundingBox,
-        };
-    }
-  }
-}
+  continuousColorLegendClasses,
+  ContinuousColorLegendClasses,
+  useUtilityClasses,
+} from './continuousColorLegendClasses';
+import { useChartGradientObjectBound } from '../internals/components/ChartsAxesGradients';
 
 type LabelFormatter = (params: { value: number | Date; formattedValue: string }) => string;
 
-export interface ContinuousColorLegendProps extends LegendPlacement, ColorLegendSelector {
+export interface ContinuousColorLegendProps
+  extends ColorLegendSelector,
+    AppendKeys<Pick<ChartsLabelGradientProps, 'rotate'>, 'gradient'>,
+    Pick<ChartsLabelGradientProps, 'thickness'> {
+  /**
+   * The direction of the legend layout.
+   * @default 'horizontal'
+   */
+  direction?: Direction;
   /**
    * The label to display at the minimum side of the gradient.
    * Can either be a string, or a function.
-   * @default ({ formattedValue }) => formattedValue
+   * @default formattedValue
    */
   minLabel?: string | LabelFormatter;
   /**
    * The label to display at the maximum side of the gradient.
    * Can either be a string, or a function.
    * If not defined, the formatted maximal value is display.
-   * @default ({ formattedValue }) => formattedValue
+   * @default formattedValue
    */
   maxLabel?: string | LabelFormatter;
   /**
-   * A unique identifier for the gradient.
+   * The id for the gradient to use.
+   * If not provided, it will use the generated gradient from the axis configuration.
+   * The `gradientId` will be used as `fill="url(#gradientId)"`.
    * @default auto-generated id
    */
-  id?: string;
+  gradientId?: string;
   /**
-   * The scale used to display gradient colors.
-   * @default 'linear'
+   * Where to position the labels relative to the gradient.
+   * @default 'end'
    */
-  scaleType?: ContinuousScaleName;
+  labelPosition?: 'start' | 'end' | 'extremes';
   /**
-   * The length of the gradient bar.
-   * Can be a number (in px) or a string with a percentage such as '50%'.
-   * The '100%' is the length of the svg.
-   * @default '50%'
+   * If `true`, the gradient and labels will be reversed.
+   * @default false
    */
-  length?: number | string;
+  reverse?: boolean;
   /**
-   * The thickness of the gradient bar.
-   * @default 5
+   * Override or extend the styles applied to the component.
    */
-  thickness?: number;
-  /**
-   * The alignment of the texts with the gradient bar.
-   * @default 'middle'
-   */
-  align?: 'start' | 'middle' | 'end';
-  /**
-   * The space between the gradient bar and the labels.
-   * @default 4
-   */
-  spacing?: number;
-  /**
-   * The style applied to labels.
-   * @default theme.typography.subtitle1
-   */
-  labelStyle?: ChartsTextProps['style'];
+  classes?: Partial<ContinuousColorLegendClasses>;
+  className?: string;
+  sx?: SxProps<Theme>;
 }
 
-const defaultLabelFormatter: LabelFormatter = ({ formattedValue }) => formattedValue;
+const templateAreas = (reverse?: boolean) => {
+  const startLabel = reverse ? 'max-label' : 'min-label';
+  const endLabel = reverse ? 'min-label' : 'max-label';
 
-function ContinuousColorLegend(props: ContinuousColorLegendProps) {
-  const theme = useTheme();
-  const isRtl = useRtl();
-  const {
-    id: idProp,
-    minLabel = defaultLabelFormatter,
-    maxLabel = defaultLabelFormatter,
-    scaleType = 'linear',
-    direction,
-    length = '50%',
-    thickness = 5,
-    spacing = 4,
-    align = 'middle',
-    labelStyle = theme.typography.subtitle1 as ChartsTextProps['style'],
-    position,
-    axisDirection,
-    axisId,
-  } = props;
+  return {
+    row: {
+      start: `
+    '${startLabel} . ${endLabel}'
+    'gradient gradient gradient'
+  `,
+      end: `
+      'gradient gradient gradient'
+      '${startLabel} . ${endLabel}'
+    `,
+      extremes: `
+      '${startLabel} gradient ${endLabel}'
+    `,
+    },
+    column: {
+      start: `
+      '${endLabel} gradient'
+      '. gradient'
+      '${startLabel} gradient'
+    `,
+      end: `
+      'gradient ${endLabel}'
+      'gradient .'
+      'gradient ${startLabel}'
+    `,
+      extremes: `
+      '${endLabel}'
+      'gradient'
+      '${startLabel}'
+    `,
+    },
+  };
+};
 
-  const chartId = useChartId();
-  const id = idProp ?? `gradient-legend-${chartId}`;
+const RootElement = styled('ul', {
+  name: 'MuiContinuousColorLegend',
+  slot: 'Root',
+  overridesResolver: (props, styles) => styles.root,
+})<{ ownerState: ContinuousColorLegendProps }>(({ theme, ownerState }) => ({
+  ...theme.typography.caption,
+  color: (theme.vars || theme).palette.text.primary,
+  lineHeight: '100%',
+  display: 'grid',
+  flexShrink: 0,
+  gap: theme.spacing(0.5),
+  listStyleType: 'none',
+  paddingInlineStart: 0,
+  marginBlock: theme.spacing(1),
+  marginInline: theme.spacing(1),
+  [`&.${continuousColorLegendClasses.horizontal}`]: {
+    gridTemplateRows: 'min-content min-content',
+    gridTemplateColumns: 'min-content auto min-content',
+    [`&.${continuousColorLegendClasses.start}`]: {
+      gridTemplateAreas: templateAreas(ownerState.reverse).row.start,
+    },
+    [`&.${continuousColorLegendClasses.end}`]: {
+      gridTemplateAreas: templateAreas(ownerState.reverse).row.end,
+    },
+    [`&.${continuousColorLegendClasses.extremes}`]: {
+      gridTemplateAreas: templateAreas(ownerState.reverse).row.extremes,
+      gridTemplateRows: 'min-content',
+      alignItems: 'center',
+    },
+  },
+  [`&.${continuousColorLegendClasses.vertical}`]: {
+    gridTemplateRows: 'min-content auto min-content',
+    gridTemplateColumns: 'min-content min-content',
+    [`&.${continuousColorLegendClasses.start}`]: {
+      gridTemplateAreas: templateAreas(ownerState.reverse).column.start,
+      [`.${continuousColorLegendClasses.maxLabel}, .${continuousColorLegendClasses.minLabel}`]: {
+        justifySelf: 'end',
+      },
+    },
+    [`&.${continuousColorLegendClasses.end}`]: {
+      gridTemplateAreas: templateAreas(ownerState.reverse).column.end,
+      [`.${continuousColorLegendClasses.maxLabel}, .${continuousColorLegendClasses.minLabel}`]: {
+        justifySelf: 'start',
+      },
+    },
+    [`&.${continuousColorLegendClasses.extremes}`]: {
+      gridTemplateAreas: templateAreas(ownerState.reverse).column.extremes,
+      gridTemplateColumns: 'min-content',
+      [`.${continuousColorLegendClasses.maxLabel}, .${continuousColorLegendClasses.minLabel}`]: {
+        justifySelf: 'center',
+      },
+    },
+  },
+  [`.${continuousColorLegendClasses.gradient}`]: {
+    gridArea: 'gradient',
+  },
+  [`.${continuousColorLegendClasses.maxLabel}`]: {
+    gridArea: 'max-label',
+  },
+  [`.${continuousColorLegendClasses.minLabel}`]: {
+    gridArea: 'min-label',
+  },
+}));
 
-  const axisItem = useAxis({ axisDirection, axisId });
-  const { width, height, left, right, top, bottom } = useDrawingArea();
-
-  const refLength = direction === 'column' ? height + top + bottom : width + left + right;
-  const size = getPercentageValue(length, refLength);
-
-  const isReversed = direction === 'column';
-
-  const colorMap = axisItem?.colorMap;
-  if (!colorMap || !colorMap.type || colorMap.type !== 'continuous') {
-    return null;
+const getText = (
+  label: string | LabelFormatter | undefined,
+  value: number | Date,
+  formattedValue: string,
+) => {
+  if (typeof label === 'string') {
+    return label;
   }
+  return label?.({ value, formattedValue }) ?? formattedValue;
+};
 
-  // Define the coordinate to color mapping
+const ContinuousColorLegend = consumeThemeProps(
+  'MuiContinuousColorLegend',
+  {
+    defaultProps: {
+      direction: 'horizontal',
+      labelPosition: 'end',
+      axisDirection: 'z',
+    },
+    classesResolver: useUtilityClasses,
+  },
+  function ContinuousColorLegend(
+    props: ContinuousColorLegendProps,
+    ref: React.Ref<HTMLUListElement>,
+  ) {
+    const {
+      minLabel,
+      maxLabel,
+      direction,
+      axisDirection,
+      axisId,
+      rotateGradient,
+      reverse,
+      classes,
+      className,
+      gradientId,
+      labelPosition,
+      thickness,
+      ...other
+    } = props;
 
-  const colorScale = axisItem.colorScale as ScaleSequential<string, string | null>;
+    const generateGradientId = useChartGradientObjectBound();
+    const axisItem = useAxis({ axisDirection, axisId });
 
-  const minValue = colorMap.min ?? 0;
-  const maxValue = colorMap.max ?? 100;
+    const colorMap = axisItem?.colorMap;
+    if (!colorMap || !colorMap.type || colorMap.type !== 'continuous') {
+      return null;
+    }
 
-  const scale = getScale(scaleType, [minValue, maxValue], isReversed ? [size, 0] : [0, size]);
+    const minValue = colorMap.min ?? 0;
+    const maxValue = colorMap.max ?? 100;
 
-  // Get texts to display
+    // Get texts to display
 
-  const formattedMin =
-    (axisItem as AxisDefaultized).valueFormatter?.(minValue, { location: 'legend' }) ??
-    minValue.toLocaleString();
+    const valueFormatter = (axisItem as AxisDefaultized)?.valueFormatter;
+    const formattedMin = valueFormatter
+      ? valueFormatter(minValue, { location: 'legend' })
+      : minValue.toLocaleString();
 
-  const formattedMax =
-    (axisItem as AxisDefaultized).valueFormatter?.(maxValue, { location: 'legend' }) ??
-    maxValue.toLocaleString();
+    const formattedMax = valueFormatter
+      ? valueFormatter(maxValue, { location: 'legend' })
+      : maxValue.toLocaleString();
 
-  const minText =
-    typeof minLabel === 'string'
-      ? minLabel
-      : minLabel({ value: minValue ?? 0, formattedValue: formattedMin });
+    const minText = getText(minLabel, minValue, formattedMin);
+    const maxText = getText(maxLabel, maxValue, formattedMax);
 
-  const maxText =
-    typeof maxLabel === 'string'
-      ? maxLabel
-      : maxLabel({ value: maxValue ?? 0, formattedValue: formattedMax });
+    const minComponent = (
+      <li className={classes?.minLabel}>
+        <ChartsLabel className={classes?.label}>{minText}</ChartsLabel>
+      </li>
+    );
 
-  const text1 = isReversed ? maxText : minText;
-  const text2 = isReversed ? minText : maxText;
+    const maxComponent = (
+      <li className={classes?.maxLabel}>
+        <ChartsLabel className={classes?.label}>{maxText}</ChartsLabel>
+      </li>
+    );
 
-  const text1Box = getStringSize(text1, { ...labelStyle });
-  const text2Box = getStringSize(text2, { ...labelStyle });
-
-  // Place bar and texts
-
-  const barBox =
-    direction === 'column' || (isRtl && direction === 'row')
-      ? { width: thickness, height: size }
-      : { width: size, height: thickness };
-
-  const legendPositions = getElementPositions(text1Box, barBox, text2Box, {
-    spacing,
-    align,
-    direction,
-  });
-  const svgBoundingBox = { width: width + left + right, height: height + top + bottom };
-
-  const positionOffset = getPositionOffset(
-    { horizontal: 'middle', vertical: 'top', ...position },
-    legendPositions.boundingBox,
-    svgBoundingBox,
-  );
-
-  return (
-    <React.Fragment>
-      <ChartsContinuousGradient
-        isReversed={isReversed}
-        gradientId={id}
-        size={size}
-        direction={direction === 'row' ? 'x' : 'y'}
-        scale={scale}
-        colorScale={colorScale}
-        colorMap={colorMap}
-        gradientUnits="objectBoundingBox"
-      />
-      <ChartsText
-        text={text1}
-        x={positionOffset.offsetX + legendPositions.text1.x}
-        y={positionOffset.offsetY + legendPositions.text1.y}
-        style={{
-          dominantBaseline: legendPositions.text1.dominantBaseline,
-          textAnchor: legendPositions.text1.textAnchor,
-          ...labelStyle,
-        }}
-      />
-      <rect
-        x={positionOffset.offsetX + legendPositions.bar.x}
-        y={positionOffset.offsetY + legendPositions.bar.y}
-        {...barBox}
-        fill={`url(#${id})`}
-      />
-      <ChartsText
-        text={text2}
-        x={positionOffset.offsetX + legendPositions.text2.x}
-        y={positionOffset.offsetY + legendPositions.text2.y}
-        style={{
-          dominantBaseline: legendPositions.text2.dominantBaseline,
-          textAnchor: legendPositions.text2.textAnchor,
-          ...labelStyle,
-        }}
-      />
-    </React.Fragment>
-  );
-}
+    return (
+      <RootElement
+        className={clsx(classes?.root, className)}
+        ref={ref}
+        {...other}
+        ownerState={props}
+      >
+        {reverse ? maxComponent : minComponent}
+        <li className={classes?.gradient}>
+          <ChartsLabelGradient
+            direction={direction}
+            rotate={rotateGradient}
+            reverse={reverse}
+            thickness={thickness}
+            gradientId={gradientId ?? generateGradientId(axisItem.id, axisDirection!)}
+          />
+        </li>
+        {reverse ? minComponent : maxComponent}
+      </RootElement>
+    );
+  },
+);
 
 ContinuousColorLegend.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  /**
-   * The alignment of the texts with the gradient bar.
-   * @default 'middle'
-   */
-  align: PropTypes.oneOf(['end', 'middle', 'start']),
   /**
    * The axis direction containing the color configuration to represent.
    * @default 'z'
@@ -358,62 +286,60 @@ ContinuousColorLegend.propTypes = {
    */
   axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
-   * The direction of the legend layout.
-   * The default depends on the chart.
+   * Override or extend the styles applied to the component.
    */
-  direction: PropTypes.oneOf(['column', 'row']),
+  classes: PropTypes.object,
+  className: PropTypes.string,
   /**
-   * A unique identifier for the gradient.
+   * The direction of the legend layout.
+   * @default 'horizontal'
+   */
+  direction: PropTypes.oneOf(['horizontal', 'vertical']),
+  /**
+   * The id for the gradient to use.
+   * If not provided, it will use the generated gradient from the axis configuration.
+   * The `gradientId` will be used as `fill="url(#gradientId)"`.
    * @default auto-generated id
    */
-  id: PropTypes.string,
+  gradientId: PropTypes.string,
   /**
-   * The style applied to labels.
-   * @default theme.typography.subtitle1
+   * Where to position the labels relative to the gradient.
+   * @default 'end'
    */
-  labelStyle: PropTypes.object,
-  /**
-   * The length of the gradient bar.
-   * Can be a number (in px) or a string with a percentage such as '50%'.
-   * The '100%' is the length of the svg.
-   * @default '50%'
-   */
-  length: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  labelPosition: PropTypes.oneOf(['start', 'end', 'extremes']),
   /**
    * The label to display at the maximum side of the gradient.
    * Can either be a string, or a function.
    * If not defined, the formatted maximal value is display.
-   * @default ({ formattedValue }) => formattedValue
+   * @default formattedValue
    */
   maxLabel: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   /**
    * The label to display at the minimum side of the gradient.
    * Can either be a string, or a function.
-   * @default ({ formattedValue }) => formattedValue
+   * @default formattedValue
    */
   minLabel: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   /**
-   * The position of the legend.
+   * If `true`, the gradient and labels will be reversed.
+   * @default false
    */
-  position: PropTypes.shape({
-    horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
-    vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
-  }),
+  reverse: PropTypes.bool,
   /**
-   * The scale used to display gradient colors.
-   * @default 'linear'
+   * If provided, the gradient will be rotated by 90deg.
+   * Useful for linear gradients that are not in the correct orientation.
    */
-  scaleType: PropTypes.oneOf(['linear', 'log', 'pow', 'sqrt', 'time', 'utc']),
+  rotateGradient: PropTypes.bool,
   /**
-   * The space between the gradient bar and the labels.
-   * @default 4
-   */
-  spacing: PropTypes.number,
-  /**
-   * The thickness of the gradient bar.
-   * @default 5
+   * The thickness of the gradient
+   * @default 12
    */
   thickness: PropTypes.number,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
 } as any;
 
 export { ContinuousColorLegend };

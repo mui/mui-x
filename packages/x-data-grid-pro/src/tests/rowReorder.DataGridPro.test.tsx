@@ -29,7 +29,7 @@ describe('<DataGridPro /> - Row reorder', () => {
   const { render } = createRenderer();
 
   it('should cancel the reordering when dropping the row outside the grid', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: React.RefObject<GridApi>;
     const rows = [
       { id: 0, brand: 'Nike' },
       { id: 1, brand: 'Adidas' },
@@ -65,7 +65,7 @@ describe('<DataGridPro /> - Row reorder', () => {
   });
 
   it('should keep the order of the rows when dragStart is fired and rowReordering=false', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: React.RefObject<GridApi>;
     const rows = [
       { id: 0, brand: 'Nike' },
       { id: 1, brand: 'Adidas' },
@@ -91,7 +91,7 @@ describe('<DataGridPro /> - Row reorder', () => {
   });
 
   it('should keep the order of the rows when dragEnd is fired and rowReordering=false', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: React.RefObject<GridApi>;
     const rows = [
       { id: 0, brand: 'Nike' },
       { id: 1, brand: 'Adidas' },
@@ -119,7 +119,7 @@ describe('<DataGridPro /> - Row reorder', () => {
 
   it('should call onRowOrderChange after the row stops being dragged', () => {
     const handleOnRowOrderChange = spy();
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: React.RefObject<GridApi>;
     function Test() {
       apiRef = useGridApiRef();
       const rows = [
@@ -165,7 +165,7 @@ describe('<DataGridPro /> - Row reorder', () => {
     const handleDragEnter = spy();
     const handleDragOver = spy();
     const handleDragEnd = spy();
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: React.RefObject<GridApi>;
     function Test() {
       apiRef = useGridApiRef();
       const data = useBasicDemoData(3, 3);
@@ -202,7 +202,7 @@ describe('<DataGridPro /> - Row reorder', () => {
   });
 
   it('should reorder rows correctly on any page when pagination is enabled', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: React.RefObject<GridApi>;
     const rows = [
       { id: 0, brand: 'Nike' },
       { id: 1, brand: 'Adidas' },

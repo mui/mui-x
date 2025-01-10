@@ -86,7 +86,7 @@ export const dimensionsStateInitializer: GridStateInitializer<RootProps> = (stat
 };
 
 export function useGridDimensions(
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: RootProps,
 ) {
   const logger = useGridLogger(apiRef, 'useResizeContainer');

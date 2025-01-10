@@ -42,7 +42,7 @@ import {
 import { getDefaultCellValue } from './utils';
 
 export const useGridCellEditing = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'editMode'

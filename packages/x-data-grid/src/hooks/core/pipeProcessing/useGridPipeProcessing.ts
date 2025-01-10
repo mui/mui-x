@@ -49,7 +49,7 @@ type GroupCache = {
  *   * a processor is registered.
  *   * `apiRef.current.requestPipeProcessorsApplication` is called for the given group.
  */
-export const useGridPipeProcessing = (apiRef: React.MutableRefObject<GridPrivateApiCommon>) => {
+export const useGridPipeProcessing = (apiRef: React.RefObject<GridPrivateApiCommon>) => {
   const cache = React.useRef<Cache>({});
 
   const isRunning = React.useRef(false);

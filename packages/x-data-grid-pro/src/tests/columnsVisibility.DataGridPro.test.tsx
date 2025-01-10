@@ -24,7 +24,7 @@ const columns: GridColDef[] = [{ field: 'id' }, { field: 'idBis' }];
 describe('<DataGridPro /> - Columns visibility', () => {
   const { render } = createRenderer({ clock: 'fake' });
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
 
   function TestDataGridPro(
     props: Omit<DataGridProProps, 'columns' | 'rows' | 'apiRef'> &

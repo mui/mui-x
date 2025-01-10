@@ -82,14 +82,12 @@ import {
   rowPinningStateInitializer,
 } from '../hooks/features/rowPinning/useGridRowPinning';
 import { useGridRowPinningPreProcessors } from '../hooks/features/rowPinning/useGridRowPinningPreProcessors';
-import {
-  useGridDataSource,
-  dataSourceStateInitializer,
-} from '../hooks/features/dataSource/useGridDataSource';
+import { useGridDataSourcePro as useGridDataSource } from '../hooks/features/dataSource/useGridDataSourcePro';
+import { dataSourceStateInitializer } from '../hooks/features/dataSource/useGridDataSourceBase';
 import { useGridDataSourceLazyLoader } from '../hooks/features/serverSideLazyLoader/useGridDataSourceLazyLoader';
 
 export const useDataGridProComponent = (
-  inputApiRef: React.MutableRefObject<GridApiPro> | undefined,
+  inputApiRef: React.RefObject<GridApiPro> | undefined,
   props: DataGridProProcessedProps,
 ) => {
   const apiRef = useGridInitialization<GridPrivateApiPro, GridApiPro>(inputApiRef, props);

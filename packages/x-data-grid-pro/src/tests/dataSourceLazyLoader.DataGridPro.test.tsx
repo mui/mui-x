@@ -13,15 +13,15 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { SinonSpy, spy } from 'sinon';
+import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
-describe('<DataGridPro /> - Data source lazy loader', () => {
+// Needs layout
+describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
   const { render } = createRenderer();
   const defaultTransformGetRowsResponse = (response: GridGetRowsResponse) => response;
 
   let transformGetRowsResponse: (response: GridGetRowsResponse) => GridGetRowsResponse;
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
   let fetchRowsSpy: SinonSpy;
   let mockServer: ReturnType<typeof useMockServer>;
 
@@ -73,11 +73,8 @@ describe('<DataGridPro /> - Data source lazy loader', () => {
     );
   }
 
-  beforeEach(function beforeTest() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
-
+  // eslint-disable-next-line mocha/no-top-level-hooks
+  beforeEach(() => {
     transformGetRowsResponse = defaultTransformGetRowsResponse;
   });
 

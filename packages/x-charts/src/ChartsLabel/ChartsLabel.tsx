@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, SxProps, Theme } from '@mui/material/styles';
+import { SxProps, Theme } from '@mui/material/styles';
 import clsx from 'clsx';
 import { ChartsLabelClasses, useUtilityClasses } from './labelClasses';
 import { consumeThemeProps } from '../internals/consumeThemeProps';
@@ -16,21 +16,9 @@ export interface ChartsLabelProps {
   sx?: SxProps<Theme>;
 }
 
-const Root = styled('span', {
-  name: 'MuiChartsLabel',
-  slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: ChartsLabelProps }>(({ theme }) => ({
-  ...theme.typography.caption,
-  color: (theme.vars || theme).palette.text.primary,
-  lineHeight: undefined,
-  display: 'flex',
-}));
-
 /**
- * @ignore - internal component.
- *
  * Generates the label mark for the tooltip and legend.
+ * @ignore - internal component.
  */
 const ChartsLabel = consumeThemeProps(
   'MuiChartsLabel',
@@ -41,9 +29,9 @@ const ChartsLabel = consumeThemeProps(
     const { children, className, classes, ...other } = props;
 
     return (
-      <Root className={clsx(classes?.root, className)} ownerState={props} ref={ref} {...other}>
+      <span className={clsx(classes?.root, className)} ref={ref} {...other}>
         {children}
-      </Root>
+      </span>
     );
   },
 );

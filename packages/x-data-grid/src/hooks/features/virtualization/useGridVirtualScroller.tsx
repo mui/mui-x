@@ -98,7 +98,7 @@ try {
 }
 
 export const useGridVirtualScroller = () => {
-  const apiRef = useGridPrivateApiContext() as React.MutableRefObject<PrivateApiWithInfiniteLoader>;
+  const apiRef = useGridPrivateApiContext() as React.RefObject<PrivateApiWithInfiniteLoader>;
   const rootProps = useGridRootProps();
   const { unstable_listView: listView } = rootProps;
   const visibleColumns = useGridSelector(apiRef, () =>
@@ -133,6 +133,8 @@ export const useGridVirtualScroller = () => {
   const hasColSpan = useGridSelector(apiRef, gridHasColSpanSelector);
   const isRenderContextReady = React.useRef(false);
 
+  const previousSize = React.useRef<{ width: number; height: number }>(null);
+
   const mainRefCallback = React.useCallback(
     (node: HTMLDivElement | null) => {
       mainRef.current = node;
@@ -142,10 +144,16 @@ export const useGridVirtualScroller = () => {
       }
 
       const initialRect = node.getBoundingClientRect();
-
       let lastSize = roundDimensions(initialRect);
 
-      apiRef.current.publishEvent('resize', lastSize);
+      if (
+        !previousSize.current ||
+        (lastSize.width !== previousSize.current.width &&
+          lastSize.height !== previousSize.current.height)
+      ) {
+        previousSize.current = lastSize;
+        apiRef.current.publishEvent('resize', lastSize);
+      }
 
       if (typeof ResizeObserver === 'undefined') {
         return undefined;
@@ -652,7 +660,7 @@ export const useGridVirtualScroller = () => {
 type RenderContextInputs = {
   enabledForRows: boolean;
   enabledForColumns: boolean;
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>;
+  apiRef: React.RefObject<GridPrivateApiCommunity>;
   autoHeight: boolean;
   rowBufferPx: number;
   columnBufferPx: number;
@@ -674,7 +682,7 @@ type RenderContextInputs = {
 };
 
 function inputsSelector(
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   rootProps: ReturnType<typeof useGridRootProps>,
   enabledForRows: boolean,
   enabledForColumns: boolean,

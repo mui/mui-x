@@ -17,7 +17,7 @@ import { describeConformance } from 'test/utils/describeConformance';
 describe('<DesktopDateTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  it('should respect the `localeText` prop', function test() {
+  it('should respect the `localeText` prop', () => {
     render(
       <DesktopDateTimePicker
         open

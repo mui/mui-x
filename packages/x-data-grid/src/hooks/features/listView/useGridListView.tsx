@@ -20,7 +20,7 @@ export const listViewStateInitializer: GridStateInitializer<
 });
 
 export function useGridListView(
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'unstable_listView' | 'unstable_listColumn'>,
 ) {
   /*
@@ -83,6 +83,6 @@ export function useGridListView(
   }, [props.unstable_listView, props.unstable_listColumn]);
 }
 
-function getListColumnWidth(apiRef: React.MutableRefObject<GridPrivateApiCommunity>) {
+function getListColumnWidth(apiRef: React.RefObject<GridPrivateApiCommunity>) {
   return gridDimensionsSelector(apiRef.current.state).viewportInnerSize.width;
 }

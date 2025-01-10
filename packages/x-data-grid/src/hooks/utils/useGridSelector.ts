@@ -18,7 +18,7 @@ type Selector<Api extends GridApiCommon, Args, T> =
   | OutputSelector<Api['state'], Args, T>;
 
 function applySelector<Api extends GridApiCommon, Args, T>(
-  apiRef: React.MutableRefObject<Api>,
+  apiRef: React.RefObject<Api>,
   selector: Selector<Api, Args, T>,
   args: Args,
   instanceId: GridCoreApi['instanceId'],
@@ -52,7 +52,7 @@ export const argsEqual = (prev: any, curr: any) => {
 const createRefs = () => ({ state: null, equals: null, selector: null, args: null }) as any;
 
 export const useGridSelector = <Api extends GridApiCommon, Args, T>(
-  apiRef: React.MutableRefObject<Api>,
+  apiRef: React.RefObject<Api>,
   selector: Selector<Api, Args, T>,
   args: Args = undefined as Args,
   equals: <U = T>(a: U, b: U) => boolean = defaultCompare,

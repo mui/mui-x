@@ -19,6 +19,7 @@
     "label": {
       "type": { "description": "string | ((location: 'tooltip' | 'legend') =&gt; string)" }
     },
+    "labelMarkType": { "type": { "description": "ChartsLabelMarkProps['type']" } },
     "showMark": { "type": { "description": "boolean | ((params: ShowMarkParams) =&gt; boolean)" } },
     "stack": { "type": { "description": "string" } },
     "stackOffset": { "type": { "description": "StackOffsetType" }, "default": "'none'" },

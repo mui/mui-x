@@ -6,7 +6,7 @@ import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
 
 export function enrichPageRowsWithPinnedRows(
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.RefObject<GridApiCommunity>,
   rows: GridRowEntry[],
 ) {
   const pinnedRows = gridPinnedRowsSelector(apiRef) || {};
@@ -61,7 +61,7 @@ export const getRightColumnIndex = ({
 };
 
 export function findNonRowSpannedCell(
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.RefObject<GridApiCommunity>,
   rowId: GridRowId,
   field: GridColDef['field'],
   rowSpanScanDirection: 'up' | 'down',

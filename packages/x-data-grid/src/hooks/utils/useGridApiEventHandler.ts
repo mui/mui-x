@@ -29,7 +29,7 @@ export function createUseGridApiEventHandler(registryContainer: RegistryContaine
   let cleanupTokensCounter = 0;
 
   return function useGridApiEventHandler<Api extends GridApiCommon, E extends GridEvents>(
-    apiRef: React.MutableRefObject<Api>,
+    apiRef: React.RefObject<Api>,
     eventName: E,
     handler?: GridEventListener<E>,
     options?: EventListenerOptions,
@@ -43,7 +43,7 @@ export function createUseGridApiEventHandler(registryContainer: RegistryContaine
 
     const [objectRetainedByReact] = React.useState(new ObjectToBeRetainedByReact());
     const subscription = React.useRef<(() => void) | null>(null);
-    const handlerRef = React.useRef<GridEventListener<E> | undefined>();
+    const handlerRef = React.useRef<GridEventListener<E> | undefined>(null);
     handlerRef.current = handler;
     const cleanupTokenRef = React.useRef<UnregisterToken | null>(null);
 
@@ -118,7 +118,7 @@ export const useGridApiEventHandler = createUseGridApiEventHandler(registryConta
 const optionsSubscriberOptions: EventListenerOptions = { isFirst: true };
 
 export function useGridApiOptionHandler<Api extends GridApiCommon, E extends GridEvents>(
-  apiRef: React.MutableRefObject<Api>,
+  apiRef: React.RefObject<Api>,
   eventName: E,
   handler?: GridEventListener<E>,
 ) {

@@ -4,7 +4,7 @@ import { DateOrTimeView } from '@mui/x-date-pickers/models';
 import { PickerComponentFamily } from '../describe.types';
 
 export interface DescribeValidationInputOptions {
-  render: (node: React.ReactElement) => MuiRenderResult;
+  render: (node: React.ReactElement<any>) => MuiRenderResult;
   // TODO: Export `Clock` from monorepo
   clock: ReturnType<typeof createRenderer>['clock'];
   after?: () => void;

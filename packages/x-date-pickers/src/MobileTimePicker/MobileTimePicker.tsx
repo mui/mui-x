@@ -46,7 +46,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<
     MobileTimePickerProps<TimeView, TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiMobileTimePicker');
 
-  const viewRenderers: TimePickerViewRenderers<TimeView, any> = {
+  const viewRenderers: TimePickerViewRenderers<TimeView> = {
     hours: renderTimeViewClock,
     minutes: renderTimeViewClock,
     seconds: renderTimeViewClock,
@@ -123,8 +123,8 @@ MobileTimePicker.propTypes = {
   autoFocus: PropTypes.bool,
   className: PropTypes.string,
   /**
-   * If `true`, the popover or modal will close after submitting the full date.
-   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * If `true`, the Picker will close after submitting the full date.
+   * @default false
    */
   closeOnSelect: PropTypes.bool,
   /**

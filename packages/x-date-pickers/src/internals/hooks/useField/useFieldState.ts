@@ -274,7 +274,7 @@ export const useFieldState = <
   const updateValueFromValueStr = (valueStr: string) => {
     const parseDateStr = (dateStr: string, referenceDate: PickerValidDate) => {
       const date = utils.parse(dateStr, format);
-      if (date == null || !utils.isValid(date)) {
+      if (!utils.isValid(date)) {
         return null;
       }
 
@@ -335,7 +335,7 @@ export const useFieldState = <
      * Then we merge the value of the modified sections into the reference date.
      * This makes sure that we don't lose some information of the initial date (like the time on a date field).
      */
-    if (newActiveDate != null && utils.isValid(newActiveDate)) {
+    if (utils.isValid(newActiveDate)) {
       const mergedDate = mergeDateIntoReferenceDate(
         utils,
         newActiveDate,

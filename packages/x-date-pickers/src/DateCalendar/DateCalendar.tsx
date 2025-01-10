@@ -293,7 +293,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
   });
 
   React.useEffect(() => {
-    if (value != null && utils.isValid(value)) {
+    if (utils.isValid(value)) {
       changeMonth(value);
     }
   }, [value]); // eslint-disable-line

@@ -12,6 +12,10 @@ The aggregated values are rendered in a footer row at the bottom of the Data Gri
 
 {{"demo": "AggregationInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
 
+:::info
+If you're looking for aggregation on the server side, see [Server-side data—Aggregation](/x/react-data-grid/server-side-data/aggregation/).
+:::
+
 ## Pass aggregation to the Data Grid
 
 ### Structure of the model

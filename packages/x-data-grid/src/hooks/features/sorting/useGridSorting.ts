@@ -52,7 +52,7 @@ export const sortingStateInitializer: GridStateInitializer<
  * @requires useGridColumns (event)
  */
 export const useGridSorting = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'initialState'

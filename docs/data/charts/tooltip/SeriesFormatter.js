@@ -3,7 +3,7 @@ import { PieChart } from '@mui/x-charts/PieChart';
 import { legendClasses } from '@mui/x-charts/ChartsLegend';
 
 const otherProps = {
-  width: 400,
+  width: 200,
   height: 200,
   sx: {
     [`.${legendClasses.root}`]: {

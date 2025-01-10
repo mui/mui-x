@@ -7,7 +7,6 @@ import {
   GridDataSourceGroupNode,
   useGridSelector,
 } from '@mui/x-data-grid';
-import CircularProgress from '@mui/material/CircularProgress';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
@@ -48,7 +47,7 @@ interface GridTreeDataGroupingCellIconProps
 }
 
 function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) {
-  const apiRef = useGridPrivateApiContext() as React.MutableRefObject<GridPrivateApiPro>;
+  const apiRef = useGridPrivateApiContext() as React.RefObject<GridPrivateApiPro>;
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
   const { rowNode, id, field, descendantCount } = props;
@@ -74,7 +73,7 @@ function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) 
   if (isDataLoading) {
     return (
       <div className={classes.loadingContainer}>
-        <CircularProgress size="1rem" color="inherit" />
+        <rootProps.slots.baseCircularProgress size="1rem" color="inherit" />
       </div>
     );
   }

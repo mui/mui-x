@@ -56,7 +56,7 @@ export const rowPinningStateInitializer: GridStateInitializer<
 };
 
 export const useGridRowPinning = (
-  apiRef: React.MutableRefObject<GridPrivateApiPro>,
+  apiRef: React.RefObject<GridPrivateApiPro>,
   props: Pick<DataGridProProcessedProps, 'pinnedRows' | 'getRowId'>,
 ): void => {
   const setPinnedRows = React.useCallback<GridRowPinningApi['unstable_setPinnedRows']>(

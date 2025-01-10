@@ -31,7 +31,7 @@ interface GridColDefWithAggregationWrappers extends GridBaseColDef {
 }
 
 type ColumnPropertyWrapper<P extends WrappableColumnProperty> = (params: {
-  apiRef: React.MutableRefObject<GridApiPremium>;
+  apiRef: React.RefObject<GridApiPremium>;
   value: GridBaseColDef[P];
   colDef: GridBaseColDef;
   aggregationRule: GridAggregationRule;
@@ -188,7 +188,7 @@ export const wrapColumnWithAggregationValue = ({
   aggregationRule,
 }: {
   column: GridBaseColDef;
-  apiRef: React.MutableRefObject<GridApiPremium>;
+  apiRef: React.RefObject<GridApiPremium>;
   aggregationRule: GridAggregationRule;
 }): GridBaseColDef => {
   const getCellAggregationResult = (

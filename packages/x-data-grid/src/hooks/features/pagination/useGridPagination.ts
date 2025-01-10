@@ -51,7 +51,7 @@ export const paginationStateInitializer: GridStateInitializer<
  * @requires useGridDimensions (event) - can be after
  */
 export const useGridPagination = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: DataGridProcessedProps,
 ) => {
   useGridPaginationMeta(apiRef, props);

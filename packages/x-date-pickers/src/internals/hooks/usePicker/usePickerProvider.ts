@@ -18,6 +18,7 @@ import {
 import { useUtils } from '../useUtils';
 import { arrayIncludes } from '../../utils/utils';
 import { UsePickerViewsProviderParams } from './usePickerViews';
+import { PickerFieldPrivateContextValue } from '../useField/useFieldInternalPropsWithDefaults';
 
 function getOrientation(): PickerOrientation {
   if (typeof window === 'undefined') {
@@ -63,7 +64,10 @@ export const usePickerOrientation = (
 export function usePickerProvider<
   TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
->(parameters: UsePickerProviderParameters<TValue, TView>): UsePickerProviderReturnValue {
+  TError,
+>(
+  parameters: UsePickerProviderParameters<TValue, TView, TError>,
+): UsePickerProviderReturnValue<TValue> {
   const {
     props,
     valueManager,
@@ -101,7 +105,7 @@ export function usePickerProvider<
     ],
   );
 
-  const contextValue = React.useMemo<PickerContextValue<TView>>(
+  const contextValue = React.useMemo<PickerContextValue<TValue, TView, TError>>(
     () => ({
       ...paramsFromUsePickerValue.contextValue,
       ...paramsFromUsePickerViews.contextValue,
@@ -109,6 +113,7 @@ export function usePickerProvider<
       readOnly: props.readOnly ?? false,
       variant,
       orientation,
+      fieldFormat: props.format ?? '',
     }),
     [
       paramsFromUsePickerValue.contextValue,
@@ -117,6 +122,7 @@ export function usePickerProvider<
       orientation,
       props.disabled,
       props.readOnly,
+      props.format,
     ],
   );
 
@@ -125,26 +131,53 @@ export function usePickerProvider<
     [paramsFromUsePickerValue, ownerState],
   );
 
+  const actionsContextValue = React.useMemo(
+    () => ({
+      ...paramsFromUsePickerValue.actionsContextValue,
+      ...paramsFromUsePickerViews.actionsContextValue,
+    }),
+    [paramsFromUsePickerValue.actionsContextValue, paramsFromUsePickerViews.actionsContextValue],
+  );
+
+  const fieldPrivateContextValue = React.useMemo(
+    () => ({
+      formatDensity: props.formatDensity,
+      enableAccessibleFieldDOMStructure: props.enableAccessibleFieldDOMStructure,
+      selectedSections: props.selectedSections,
+      onSelectedSectionsChange: props.onSelectedSectionsChange,
+    }),
+    [
+      props.formatDensity,
+      props.enableAccessibleFieldDOMStructure,
+      props.selectedSections,
+      props.onSelectedSectionsChange,
+    ],
+  );
+
   return {
     localeText,
     contextValue,
-    actionsContextValue: paramsFromUsePickerValue.actionsContextValue,
     privateContextValue,
+    actionsContextValue,
+    fieldPrivateContextValue,
+    isValidContextValue: paramsFromUsePickerValue.isValidContextValue,
   };
 }
 
 export interface UsePickerProviderParameters<
   TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
-> extends Pick<PickerProviderProps, 'localeText'> {
-  props: UsePickerProps<TValue, any, any, any, any>;
+  TError,
+> extends Pick<PickerProviderProps<TValue>, 'localeText'> {
+  props: UsePickerProps<TValue, any, any, any> & UsePickerProviderNonStaticProps;
   valueManager: PickerValueManager<TValue, any>;
   variant: PickerVariant;
-  paramsFromUsePickerValue: UsePickerValueProviderParams<TValue>;
+  paramsFromUsePickerValue: UsePickerValueProviderParams<TValue, TError>;
   paramsFromUsePickerViews: UsePickerViewsProviderParams<TView>;
 }
 
-export interface UsePickerProviderReturnValue extends Omit<PickerProviderProps, 'children'> {}
+export interface UsePickerProviderReturnValue<TValue extends PickerValidValue>
+  extends Omit<PickerProviderProps<TValue>, 'children'> {}
 
 /**
  * Props used to create the picker's contexts.
@@ -160,7 +193,13 @@ export interface UsePickerProviderProps extends FormProps {
 /**
  * Props used to create the picker's contexts and that are not available on static pickers.
  */
-export interface UsePickerProviderNonStaticProps {
+export interface UsePickerProviderNonStaticProps extends PickerFieldPrivateContextValue {
+  // We don't take the `format` prop from `UseFieldInternalProps` to have a custom JSDoc description.
+  /**
+   * Format of the date when rendered in the input(s).
+   * Defaults to localized format based on the used `views`.
+   */
+  format?: string;
   /**
    * If `true`, the open picker button will not be rendered (renders only the field).
    * @default false

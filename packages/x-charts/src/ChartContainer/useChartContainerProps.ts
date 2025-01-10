@@ -3,17 +3,29 @@ import * as React from 'react';
 import { ChartsSurfaceProps } from '../ChartsSurface';
 import { ChartDataProviderProps } from '../context/ChartDataProvider';
 import type { ChartContainerProps } from './ChartContainer';
+import {
+  useChartCartesianAxis,
+  UseChartCartesianAxisSignature,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import {
+  useChartInteraction,
+  UseChartInteractionSignature,
+} from '../internals/plugins/featurePlugins/useChartInteraction';
+import { ChartSeriesType } from '../models/seriesType/config';
 
-export type UseChartContainerPropsReturnValue = {
-  chartDataProviderProps: ChartDataProviderProps;
+export type UseChartContainerPropsReturnValue<TSeries extends ChartSeriesType> = {
+  chartDataProviderProps: ChartDataProviderProps<
+    [UseChartCartesianAxisSignature<TSeries>, UseChartInteractionSignature],
+    TSeries
+  >;
   chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> };
   children: React.ReactNode;
 };
 
-export const useChartContainerProps = (
-  props: ChartContainerProps,
+export const useChartContainerProps = <TSeries extends ChartSeriesType = ChartSeriesType>(
+  props: ChartContainerProps<TSeries>,
   ref: React.Ref<SVGSVGElement>,
-): UseChartContainerPropsReturnValue => {
+): UseChartContainerPropsReturnValue<TSeries> => {
   const {
     width,
     height,
@@ -26,13 +38,13 @@ export const useChartContainerProps = (
     disableAxisListener,
     highlightedItem,
     onHighlightChange,
-    plugins,
     sx,
     title,
     xAxis,
     yAxis,
     zAxis,
     skipAnimation,
+    seriesConfig,
     ...other
   } = props;
 
@@ -45,20 +57,27 @@ export const useChartContainerProps = (
     ...other,
   };
 
-  const chartDataProviderProps: ChartDataProviderProps = {
+  const chartDataProviderProps: Omit<
+    ChartDataProviderProps<
+      [UseChartCartesianAxisSignature<TSeries>, UseChartInteractionSignature],
+      TSeries
+    >,
+    'children'
+  > = {
     margin,
     series,
     colors,
     dataset,
     highlightedItem,
     onHighlightChange,
-    plugins,
     xAxis,
     yAxis,
     zAxis,
     skipAnimation,
     width,
     height,
+    seriesConfig,
+    plugins: [useChartCartesianAxis as any, useChartInteraction],
   };
 
   return {

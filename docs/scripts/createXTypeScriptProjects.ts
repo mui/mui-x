@@ -152,6 +152,7 @@ export const interfacesToDocument: InterfacesToDocumentType[] = [
 
       // Aggregation
       'GridAggregationFunction',
+      'GridAggregationFunctionDataSource',
     ],
   },
   {

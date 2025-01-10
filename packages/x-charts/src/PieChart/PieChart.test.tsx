@@ -34,6 +34,7 @@ describe('<PieChart />', () => {
         'themeStyleOverrides',
         'themeVariants',
         'themeCustomPalette',
+        'themeDefaultProps',
       ],
     }),
   );

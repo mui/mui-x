@@ -1,6 +1,7 @@
+import * as React from 'react';
 import { expect } from 'chai';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { act, fireEvent } from '@mui/internal-test-utils';
+import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   expectFieldValueV7,
@@ -349,6 +350,23 @@ describe('<DateField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
 
       fireEvent.keyDown(input, { key: 'ArrowLeft' });
+      expect(getCleanedSelectedContent()).to.equal('MM');
+    });
+
+    it('should select the first section when `inputRef.current` is focused', () => {
+      function TestCase() {
+        const inputRef = React.useRef<HTMLInputElement>(null);
+        return (
+          <React.Fragment>
+            <DateField inputRef={inputRef} />
+            <button onClick={() => inputRef.current?.focus()}>Focus input</button>
+          </React.Fragment>
+        );
+      }
+      render(<TestCase />);
+
+      fireEvent.click(screen.getByRole('button', { name: 'Focus input' }));
+
       expect(getCleanedSelectedContent()).to.equal('MM');
     });
   });

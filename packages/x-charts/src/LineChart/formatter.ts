@@ -5,10 +5,10 @@ import { getStackingGroups } from '../internals/stackSeries';
 import { ChartSeries, DatasetElementType, DatasetType } from '../models/seriesType/config';
 import { defaultizeValueFormatter } from '../internals/defaultizeValueFormatter';
 import { SeriesId } from '../models/seriesType/common';
-import { SeriesFormatter } from '../context/PluginProvider/SeriesFormatter.types';
+import { SeriesProcessor } from '../internals/plugins/models';
 
 // For now it's a copy past of bar charts formatter, but maybe will diverge later
-const formatter: SeriesFormatter<'line'> = (params, dataset) => {
+const formatter: SeriesProcessor<'line'> = (params, dataset) => {
   const { seriesOrder, series } = params;
   const stackingGroups = getStackingGroups({ ...params, defaultStrategy: { stackOffset: 'none' } });
 
@@ -54,6 +54,7 @@ const formatter: SeriesFormatter<'line'> = (params, dataset) => {
     ids.forEach((id, index) => {
       const dataKey = series[id].dataKey;
       completedSeries[id] = {
+        labelMarkType: 'line',
         ...series[id],
         data: dataKey
           ? dataset!.map((data) => {

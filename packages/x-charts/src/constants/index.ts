@@ -6,3 +6,4 @@ export const DEFAULT_MARGINS = {
   left: 50,
   right: 50,
 };
+export const DEFAULT_LEGEND_FACING_MARGIN = 20;

@@ -10,6 +10,7 @@ import {
   getClockTouchEvent,
   getFieldSectionsContainer,
 } from 'test/utils/pickers';
+import { testSkipIf, hasTouchSupport } from 'test/utils/skipIf';
 
 describe('<MobileTimePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
@@ -45,11 +46,7 @@ describe('<MobileTimePicker />', () => {
       expect(handleChange.firstCall.args[0]).toEqualDateTime(new Date(2019, 0, 1, 16, 20));
     });
 
-    it('should call onChange when selecting each view', function test() {
-      if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
-        this.skip();
-      }
-
+    testSkipIf(!hasTouchSupport)('should call onChange when selecting each view', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();

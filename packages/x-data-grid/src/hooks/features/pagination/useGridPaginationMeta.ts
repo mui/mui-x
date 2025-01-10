@@ -7,7 +7,7 @@ import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipe
 import { gridPaginationMetaSelector } from './gridPaginationSelector';
 
 export const useGridPaginationMeta = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     'paginationMeta' | 'initialState' | 'paginationMode' | 'onPaginationMetaChange'

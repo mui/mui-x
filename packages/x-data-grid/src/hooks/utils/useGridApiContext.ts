@@ -5,7 +5,7 @@ import { GridApiCommunity } from '../../models/api/gridApiCommunity';
 
 export function useGridApiContext<
   Api extends GridApiCommon = GridApiCommunity,
->(): React.MutableRefObject<Api> {
+>(): React.RefObject<Api> {
   const apiRef = React.useContext(GridApiContext);
 
   if (apiRef === undefined) {
@@ -18,5 +18,5 @@ export function useGridApiContext<
     );
   }
 
-  return apiRef as React.MutableRefObject<Api>;
+  return apiRef as React.RefObject<Api>;
 }

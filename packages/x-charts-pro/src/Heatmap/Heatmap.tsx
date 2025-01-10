@@ -13,6 +13,7 @@ import {
   ChartsXAxisProps,
   ChartsYAxisProps,
   AxisConfig,
+  ChartSeriesConfig,
 } from '@mui/x-charts/internals';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import {
@@ -101,6 +102,8 @@ const defaultColorMap = interpolateRgbBasis([
   '#084081',
 ]);
 
+const seriesConfig: ChartSeriesConfig<'heatmap'> = { heatmap: heatmapPlugin };
+
 const Heatmap = React.forwardRef(function Heatmap(
   inProps: HeatmapProps,
   ref: React.Ref<SVGSVGElement>,
@@ -161,9 +164,9 @@ const Heatmap = React.forwardRef(function Heatmap(
   const Tooltip = props.slots?.tooltip ?? HeatmapTooltip;
 
   return (
-    <ChartContainerPro
+    <ChartContainerPro<'heatmap'>
       ref={ref}
-      plugins={[heatmapPlugin]}
+      seriesConfig={seriesConfig}
       series={series.map((s) => ({
         type: 'heatmap',
         ...s,
@@ -207,6 +210,11 @@ Heatmap.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  apiRef: PropTypes.shape({
+    current: PropTypes.shape({
+      setZoomData: PropTypes.func.isRequired,
+    }),
+  }),
   /**
    * Indicate which axis to display the bottom of the charts.
    * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.
@@ -243,6 +251,21 @@ Heatmap.propTypes = {
     seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   }),
   /**
+   * This prop is used to help implement the accessibility logic.
+   * If you don't provide this prop. It falls back to a randomly generated id.
+   */
+  id: PropTypes.string,
+  /**
+   * The list of zoom data related to each axis.
+   */
+  initialZoom: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      end: PropTypes.number.isRequired,
+      start: PropTypes.number.isRequired,
+    }),
+  ),
+  /**
    * Indicate which axis to display the left of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
    * @default yAxisIds[0] The id of the first provided axis
@@ -257,7 +280,6 @@ Heatmap.propTypes = {
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
-   * @default object Depends on the charts type.
    */
   margin: PropTypes.shape({
     bottom: PropTypes.number,
@@ -290,6 +312,11 @@ Heatmap.propTypes = {
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
+   * The configuration helpers used to compute attributes according to the serries type.
+   * @ignore Unstable props for internal usage.
+   */
+  seriesConfig: PropTypes.object,
+  /**
    * The props used for each component slot.
    * @default {}
    */
@@ -304,6 +331,7 @@ Heatmap.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
   /**
    * The configuration of the tooltip.

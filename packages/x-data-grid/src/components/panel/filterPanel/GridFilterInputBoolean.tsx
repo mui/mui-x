@@ -16,16 +16,6 @@ export type GridFilterInputBooleanProps = GridFilterInputValueProps &
     isFilterActive?: boolean;
   };
 
-export const sanitizeFilterItemValue = (value: any): boolean | undefined => {
-  if (String(value).toLowerCase() === 'true') {
-    return true;
-  }
-  if (String(value).toLowerCase() === 'false') {
-    return false;
-  }
-  return undefined;
-};
-
 const BooleanOperatorContainer = styled('div')({
   display: 'flex',
   alignItems: 'center',
@@ -131,6 +121,16 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
       {clearButton}
     </BooleanOperatorContainer>
   );
+}
+
+export function sanitizeFilterItemValue(value: any): boolean | undefined {
+  if (String(value).toLowerCase() === 'true') {
+    return true;
+  }
+  if (String(value).toLowerCase() === 'false') {
+    return false;
+  }
+  return undefined;
 }
 
 GridFilterInputBoolean.propTypes = {

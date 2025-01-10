@@ -7,7 +7,7 @@ import { GridConfiguration } from '../models/configuration/gridConfiguration';
 import { GridConfigurationContext } from '../components/GridConfigurationContext';
 
 type GridContextProviderProps = {
-  privateApiRef: React.MutableRefObject<GridPrivateApiCommunity>;
+  privateApiRef: React.RefObject<GridPrivateApiCommunity>;
   configuration: GridConfiguration;
   props: {};
   children: React.ReactNode;

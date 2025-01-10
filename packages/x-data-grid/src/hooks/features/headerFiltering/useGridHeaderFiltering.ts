@@ -24,7 +24,7 @@ export const headerFilteringStateInitializer: GridStateInitializer = (
 });
 
 export const useGridHeaderFiltering = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'signature' | 'headerFilters'>,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridHeaderFiltering');

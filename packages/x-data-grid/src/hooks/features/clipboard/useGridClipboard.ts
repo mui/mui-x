@@ -59,7 +59,7 @@ function hasNativeSelection(element: HTMLInputElement) {
  * @requires useGridSelection (method)
  */
 export const useGridClipboard = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     'ignoreValueFormatterDuringExport' | 'onClipboardCopy' | 'clipboardCopyCellDelimiter'

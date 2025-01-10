@@ -37,7 +37,7 @@ import { updateRowTree } from '../../../utils/tree/updateRowTree';
 import { getVisibleRowsLookup } from '../../../utils/tree/utils';
 
 export const useGridTreeDataPreProcessors = (
-  privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
+  privateApiRef: React.RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     | 'treeData'

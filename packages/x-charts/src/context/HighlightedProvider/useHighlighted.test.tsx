@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { ErrorBoundary, createRenderer, screen, reactMajor } from '@mui/internal-test-utils';
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 import { useHighlighted } from './useHighlighted';
 import { HighlightedProvider } from './HighlightedProvider';
-import { SeriesProvider } from '../SeriesProvider';
-import { PluginProvider } from '../PluginProvider';
+import { ChartProvider } from '../ChartProvider';
 
 function UseHighlighted() {
   const { highlightedItem } = useHighlighted();
@@ -14,13 +14,9 @@ function UseHighlighted() {
 describe('useHighlighted', () => {
   const { render } = createRenderer();
 
-  it('should throw an error when parent context not present', function test() {
-    if (!/jsdom/.test(window.navigator.userAgent)) {
-      // can't catch render errors in the browser for unknown reason
-      // tried try-catch + error boundary + window onError preventDefault
-      this.skip();
-    }
-
+  // can't catch render errors in the browser for unknown reason
+  // tried try-catch + error boundary + window onError preventDefault
+  testSkipIf(!isJSDOM)('should throw an error when parent context not present', () => {
     const errorRef = React.createRef<any>();
 
     const errorMessage1 = 'MUI X: Could not find the highlighted ref context.';
@@ -48,13 +44,11 @@ describe('useHighlighted', () => {
 
   it('should not throw an error when parent context is present', () => {
     render(
-      <PluginProvider>
-        <SeriesProvider series={[]}>
-          <HighlightedProvider highlightedItem={{ seriesId: 'test-id' }}>
-            <UseHighlighted />
-          </HighlightedProvider>
-        </SeriesProvider>
-      </PluginProvider>,
+      <ChartProvider pluginParams={{ series: [], width: 200, height: 200 }}>
+        <HighlightedProvider highlightedItem={{ seriesId: 'test-id' }}>
+          <UseHighlighted />
+        </HighlightedProvider>
+      </ChartProvider>,
     );
 
     expect(screen.getByText('test-id')).toBeVisible();

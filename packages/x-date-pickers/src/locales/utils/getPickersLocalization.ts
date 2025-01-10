@@ -22,8 +22,7 @@ export const buildGetOpenDialogAriaText = (params: {
   const { utils, formatKey, contextTranslation, propsTranslation } = params;
 
   return (value: PickerValidDate | null) => {
-    const formattedValue =
-      value !== null && utils.isValid(value) ? utils.format(value, formatKey) : null;
+    const formattedValue = utils.isValid(value) ? utils.format(value, formatKey) : null;
     const translation = propsTranslation ?? contextTranslation;
     return translation(formattedValue);
   };

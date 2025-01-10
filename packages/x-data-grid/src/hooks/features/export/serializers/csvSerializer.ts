@@ -142,7 +142,7 @@ interface BuildCSVOptions {
     >
   >;
   ignoreValueFormatter: boolean;
-  apiRef: React.MutableRefObject<GridApiCommunity>;
+  apiRef: React.RefObject<GridApiCommunity>;
 }
 
 export function buildCSV(options: BuildCSVOptions): string {

@@ -8,8 +8,7 @@ import {
   buildFieldInteractions,
 } from 'test/utils/pickers';
 import { enUS } from 'date-fns/locale';
-import faIR from 'date-fns-jalali/locale/fa-IR';
-import faJalaliIR from 'date-fns-jalali/locale/fa-jalali-IR';
+import { faIR } from 'date-fns-jalali/locale/fa-IR';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
 
 describe('<AdapterDateFnsJalali />', () => {
@@ -50,17 +49,11 @@ describe('<AdapterDateFnsJalali />', () => {
         placeholder: 'YYYY/MM/DD hh:mm aa',
         value: '1397/02/25 09:35 ق.ظ.',
       },
-      faJalaliIR: {
-        // Not sure about what's the difference between this and fa-IR
-        placeholder: 'YYYY/MM/DD hh:mm aa',
-        value: '1397/02/25 09:35 ق.ظ.',
-      },
     };
 
     Object.keys(localizedTexts).forEach((localeKey) => {
       const localeObject = {
         faIR,
-        faJalaliIR,
         enUS,
       }[localeKey];
 

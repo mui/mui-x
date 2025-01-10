@@ -18,7 +18,6 @@ import {
 
 function ButtonDateRangeField(props: DateRangePickerFieldProps) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-  const { value, timezone, format } = internalProps;
   const {
     InputProps,
     slotProps,
@@ -31,17 +30,18 @@ function ButtonDateRangeField(props: DateRangePickerFieldProps) {
   } = forwardedProps;
 
   const pickerContext = usePickerContext();
-
-  const parsedFormat = useParsedFormat(internalProps);
+  const parsedFormat = useParsedFormat();
   const { hasValidationError } = useValidation({
     validator: validateDateRange,
-    value,
-    timezone,
+    value: pickerContext.value,
+    timezone: pickerContext.timezone,
     props: internalProps,
   });
 
-  const formattedValue = (value ?? [null, null])
-    .map((date: Dayjs) => (date == null ? parsedFormat : date.format(format)))
+  const formattedValue = pickerContext.value
+    .map((date: Dayjs) =>
+      date == null ? parsedFormat : date.format(pickerContext.fieldFormat),
+    )
     .join(' – ');
 
   return (

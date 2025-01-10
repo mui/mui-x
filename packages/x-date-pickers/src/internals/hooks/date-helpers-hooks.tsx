@@ -57,15 +57,17 @@ export function useMeridiemMode(
   selectionState?: PickerSelectionState,
 ) {
   const utils = useUtils();
-  const meridiemMode = getMeridiem(date, utils);
+  const cleanDate = React.useMemo(() => (!utils.isValid(date) ? null : date), [utils, date]);
+
+  const meridiemMode = getMeridiem(cleanDate, utils);
 
   const handleMeridiemChange = React.useCallback(
     (mode: 'am' | 'pm') => {
       const timeWithMeridiem =
-        date == null ? null : convertToMeridiem(date, mode, Boolean(ampm), utils);
+        cleanDate == null ? null : convertToMeridiem(cleanDate, mode, Boolean(ampm), utils);
       onChange(timeWithMeridiem, selectionState ?? 'partial');
     },
-    [ampm, date, onChange, selectionState, utils],
+    [ampm, cleanDate, onChange, selectionState, utils],
   );
 
   return { meridiemMode, handleMeridiemChange };

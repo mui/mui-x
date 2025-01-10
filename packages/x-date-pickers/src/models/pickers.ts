@@ -16,6 +16,14 @@ export type PickerValidDate = keyof PickerValidDateLookup extends never
   ? any
   : PickerValidDateLookup[keyof PickerValidDateLookup];
 
+/**
+ * Importance of the change when picking a value:
+ * - "accept": fires `onChange`, fires `onAccept` and closes the picker.
+ * - "set": fires `onChange` but do not fire `onAccept` and does not close the picker.
+ * @default "accept"
+ */
+export type PickerChangeImportance = 'set' | 'accept';
+
 export interface PickerOwnerState {
   /**
    * `true` if the value of the picker is currently empty.

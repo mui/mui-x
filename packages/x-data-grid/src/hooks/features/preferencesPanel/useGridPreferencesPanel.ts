@@ -19,13 +19,13 @@ export const preferencePanelStateInitializer: GridStateInitializer<
  * TODO: Add a single `setPreferencePanel` method to avoid multiple `setState`
  */
 export const useGridPreferencesPanel = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'initialState'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridPreferencesPanel');
 
-  const hideTimeout = React.useRef<ReturnType<typeof setTimeout>>();
-  const immediateTimeout = React.useRef<ReturnType<typeof setTimeout>>();
+  const hideTimeout = React.useRef<ReturnType<typeof setTimeout>>(undefined);
+  const immediateTimeout = React.useRef<ReturnType<typeof setTimeout>>(undefined);
 
   /**
    * API METHODS

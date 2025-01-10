@@ -14,7 +14,7 @@ interface DescribeValueBaseOptions<
   C extends PickerComponentFamily,
 > {
   componentFamily: C;
-  render: (node: React.ReactElement) => MuiRenderResult;
+  render: (node: React.ReactElement<any>) => MuiRenderResult;
   assertRenderedValue: (expectedValue: TValue) => void;
   values: [InferNonNullablePickerValue<TValue>, InferNonNullablePickerValue<TValue>];
   emptyValue: TValue;

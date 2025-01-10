@@ -1,24 +1,28 @@
 import * as React from 'react';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
-
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 
+const initialZoomData = [
+  {
+    axisId: 'my-x-axis',
+    start: 20,
+    end: 40,
+  },
+];
+
 export default function ZoomControlled() {
-  const [zoom, setZoom] = React.useState([
-    {
-      axisId: 'my-x-axis',
-      start: 20,
-      end: 40,
-    },
-  ]);
+  const apiRef = React.useRef(undefined);
+
+  const [zoomData, setZoomData] = React.useState(initialZoomData);
 
   return (
     <Stack direction={'column'} alignItems={'center'}>
       <LineChartPro
         {...chartProps}
-        zoom={zoom}
-        onZoomChange={setZoom}
+        initialZoom={initialZoomData}
+        apiRef={apiRef}
+        onZoomChange={(newZoomData) => setZoomData(newZoomData)}
         xAxis={[
           {
             zoom: true,
@@ -28,9 +32,12 @@ export default function ZoomControlled() {
           },
         ]}
       />
+      <pre>{JSON.stringify(zoomData, null, 2)}</pre>
       <Button
         variant="contained"
-        onClick={() => setZoom([{ axisId: 'my-x-axis', start: 0, end: 100 }])}
+        onClick={() =>
+          apiRef.current.setZoomData([{ axisId: 'my-x-axis', start: 0, end: 100 }])
+        }
       >
         Reset zoom
       </Button>

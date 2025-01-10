@@ -10,7 +10,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 export function useGridPrivateApiContext<
   PrivateApi extends GridPrivateApiCommon = GridPrivateApiCommunity,
->(): React.MutableRefObject<PrivateApi> {
+>(): React.RefObject<PrivateApi> {
   const privateApiRef = React.useContext(GridPrivateApiContext);
 
   if (privateApiRef === undefined) {
@@ -23,5 +23,5 @@ export function useGridPrivateApiContext<
     );
   }
 
-  return privateApiRef as React.MutableRefObject<PrivateApi>;
+  return privateApiRef as React.RefObject<PrivateApi>;
 }

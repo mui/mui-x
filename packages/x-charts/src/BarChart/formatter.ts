@@ -5,11 +5,11 @@ import { getStackingGroups } from '../internals/stackSeries';
 import { ChartSeries, DatasetElementType, DatasetType } from '../models/seriesType/config';
 import { defaultizeValueFormatter } from '../internals/defaultizeValueFormatter';
 import { SeriesId } from '../models/seriesType/common';
-import { SeriesFormatter } from '../context/PluginProvider/SeriesFormatter.types';
+import { SeriesProcessor } from '../internals/plugins/models';
 
 type BarDataset = DatasetType<number | null>;
 
-const formatter: SeriesFormatter<'bar'> = (params, dataset) => {
+const formatter: SeriesProcessor<'bar'> = (params, dataset) => {
   const { seriesOrder, series } = params;
   const stackingGroups = getStackingGroups(params);
 
@@ -57,6 +57,7 @@ const formatter: SeriesFormatter<'bar'> = (params, dataset) => {
       const dataKey = series[id].dataKey;
       completedSeries[id] = {
         layout: 'vertical',
+        labelMarkType: 'square',
         ...series[id],
         data: dataKey
           ? dataset!.map((data) => {
