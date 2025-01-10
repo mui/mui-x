@@ -48,7 +48,7 @@ export const useField = <
       disabled = false,
       readOnly = false,
     },
-    forwardedProps: { onKeyDown, error, clearable, onClear },
+    forwardedProps: { onKeyDown, error, clearable = false, onClear },
     fieldValueManager,
     valueManager,
     validator,
@@ -277,7 +277,7 @@ export const useField = <
     onKeyDown: handleContainerKeyDown,
     onClear: handleClearValue,
     error: inputError,
-    clearable: Boolean(clearable && !areAllSectionsEmpty && !readOnly && !disabled),
+    clearable,
   };
 
   const localizationContext = useLocalizationContext();

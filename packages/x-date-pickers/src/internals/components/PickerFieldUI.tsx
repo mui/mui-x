@@ -177,10 +177,12 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
       title: translations.fieldClearLabel,
       tabIndex: -1,
       onClick: onClear,
+      disabled: fieldResponse.disabled || fieldResponse.readOnly,
       edge:
         clearButtonPosition === 'end' && openPickerButtonPosition === 'end'
           ? undefined
           : clearButtonPosition,
+      'data-hidden': fieldResponse.areAllSectionsEmpty ? '' : undefined,
     },
     ownerState,
   });
@@ -244,6 +246,30 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
         )}
       </InputAdornment>
     );
+  }
+
+  if (clearButtonPosition != null) {
+    textFieldProps.sx = [
+      {
+        '& .clearButton': {
+          opacity: 1,
+          '&[data-hidden]': {
+            opacity: 0,
+          },
+        },
+        '@media (pointer: fine)': {
+          '& .clearButton': {
+            opacity: 0,
+          },
+          '&:hover, &:focus-within': {
+            '.clearButton:not([data-hidden])': {
+              opacity: 1,
+            },
+          },
+        },
+      },
+      ...(Array.isArray(textFieldProps.sx) ? textFieldProps.sx : [textFieldProps.sx]),
+    ];
   }
 
   return <TextField {...textFieldProps} />;
