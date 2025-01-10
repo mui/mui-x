@@ -54,6 +54,7 @@ const formatter: SeriesProcessor<'line'> = (params, dataset) => {
     ids.forEach((id, index) => {
       const dataKey = series[id].dataKey;
       completedSeries[id] = {
+        labelMarkType: 'line',
         ...series[id],
         data: dataKey
           ? dataset!.map((data) => {
