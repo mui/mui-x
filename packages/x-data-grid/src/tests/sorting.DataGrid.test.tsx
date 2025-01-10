@@ -90,7 +90,7 @@ describe('<DataGrid /> - Sorting', () => {
   });
 
   it('should allow sorting using `apiRef` for unsortable columns', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: React.RefObject<GridApi>;
     function TestCase() {
       apiRef = useGridApiRef();
       const cols = [{ field: 'id', sortable: false }];
@@ -120,7 +120,7 @@ describe('<DataGrid /> - Sorting', () => {
   });
 
   it('should allow clearing the current sorting using `sortColumn` idempotently', async () => {
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: React.RefObject<GridApi>;
     function TestCase() {
       apiRef = useGridApiRef();
       const cols = [{ field: 'id' }];
@@ -152,7 +152,7 @@ describe('<DataGrid /> - Sorting', () => {
 
   // See https://github.com/mui/mui-x/issues/12271
   it('should not keep the sort item with `item.sort = null`', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: React.RefObject<GridApi>;
     const onSortModelChange = spy();
     function TestCase() {
       apiRef = useGridApiRef();
@@ -667,7 +667,7 @@ describe('<DataGrid /> - Sorting', () => {
   });
 
   it('should apply the sortModel prop correctly on GridApiRef update row data', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: React.RefObject<GridApi>;
     function TestCase() {
       apiRef = useGridApiRef();
 

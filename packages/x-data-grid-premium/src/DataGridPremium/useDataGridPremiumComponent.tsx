@@ -96,7 +96,7 @@ import {
 import { useGridClipboardImport } from '../hooks/features/clipboard/useGridClipboardImport';
 
 export const useDataGridPremiumComponent = (
-  inputApiRef: React.MutableRefObject<GridApiPremium> | undefined,
+  inputApiRef: React.RefObject<GridApiPremium> | undefined,
   props: DataGridPremiumProcessedProps,
 ) => {
   const apiRef = useGridInitialization<GridPrivateApiPremium, GridApiPremium>(inputApiRef, props);

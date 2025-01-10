@@ -221,7 +221,7 @@ export const rowSpanningStateInitializer: GridStateInitializer = (state, props, 
 };
 
 export const useGridRowSpanning = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'rowSpanning' | 'pagination' | 'paginationMode'>,
 ): void => {
   const processedRange = useLazyRef<RowRange, void>(() => {
