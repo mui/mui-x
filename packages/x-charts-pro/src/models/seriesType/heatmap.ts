@@ -1,5 +1,5 @@
+import { DefaultizedProps } from '@mui/x-internals/types';
 import {
-  DefaultizedProps,
   CommonDefaultizedProps,
   CommonSeriesType,
   CartesianSeriesType,

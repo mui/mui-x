@@ -546,6 +546,9 @@ const ROWS: GridRowModel<Movie>[] = [
   },
 ];
 
+export const getMovieColumns = (): GridColDef[] => COLUMNS;
+export const getMovieRows = (): GridRowModel<Movie>[] => ROWS;
+
 export const useMovieData = () => {
   return {
     rows: ROWS,

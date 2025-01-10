@@ -36,7 +36,7 @@ const updateColumnVisibilityModel = (
  */
 export const useKeepGroupedColumnsHidden = (
   props: {
-    apiRef: React.MutableRefObject<GridApi>;
+    apiRef: React.RefObject<GridApi>;
   } & Pick<DataGridPremiumProps, 'initialState' | 'rowGroupingModel'>,
 ) => {
   const initialProps = React.useRef(props);

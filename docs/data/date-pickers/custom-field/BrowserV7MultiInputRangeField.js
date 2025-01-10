@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import useForkRef from '@mui/utils/useForkRef';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { styled } from '@mui/material/styles';
@@ -25,8 +24,6 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
   },
 );
 
-// This demo uses `BasePickersTextFieldProps` instead of `BaseMultiInputPickersTextFieldProps`,
-// That way you can reuse the same `BrowserTextField` for all your pickers, range or not.
 const BrowserTextField = React.forwardRef((props, ref) => {
   const {
     // Should be ignored
@@ -83,20 +80,12 @@ const BrowserTextField = React.forwardRef((props, ref) => {
 const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
   const {
     slotProps,
-    value,
-    defaultValue,
-    format,
-    onChange,
     readOnly,
-    disabled,
-    onError,
     shouldDisableDate,
     minDate,
     maxDate,
     disableFuture,
     disablePast,
-    selectedSections,
-    onSelectedSectionsChange,
     className,
     unstableStartFieldRef,
     unstableEndFieldRef,
@@ -116,20 +105,12 @@ const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
 
   const fieldResponse = useMultiInputDateRangeField({
     sharedProps: {
-      value,
-      defaultValue,
-      format,
-      onChange,
       readOnly,
-      disabled,
-      onError,
       shouldDisableDate,
       minDate,
       maxDate,
       disableFuture,
       disablePast,
-      selectedSections,
-      onSelectedSectionsChange,
       enableAccessibleFieldDOMStructure: true,
     },
     startTextFieldProps,
@@ -147,7 +128,7 @@ const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
       className={className}
     >
       <BrowserTextField {...fieldResponse.startDate} />
-      <span> — </span>
+      <span> – </span>
       <BrowserTextField {...fieldResponse.endDate} />
     </Stack>
   );

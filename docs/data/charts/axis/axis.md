@@ -56,7 +56,7 @@ Which expects an array of value coherent with the `scaleType`:
 Some series types also require specific axis attributes:
 
 - line plots require an `xAxis` to have `data` provided
-- bar plots require an `xAxis` with `scaleType='band'` and some `data` provided.
+- bar plots require an `xAxis` with `scaleType="band"` and some `data` provided.
 
 ### Axis formatter
 
@@ -85,6 +85,20 @@ xAxis={[
 ```
 
 {{"demo": "MinMaxExample.js"}}
+
+### Relative axis subdomain
+
+You can adjust the axis range relatively to its data by using the `domainLimit` option.
+It can take 3 different values:
+
+- `"nice"` Rounds the domain at human friendly values. It's the default behavior.
+- `"strict"` Sets the domain to the min/max value to display.
+- `([minValue, maxValue]) => [min, max]` Receives the calculated extremums as parameters, and should return the axis domain.
+
+The demo below shows different ways to set the y-axis range.
+They always display the same data, going from -15 to 92, but with different `domainLimit` settings.
+
+{{"demo": "CustomDomainYAxis.js"}}
 
 ### Axis direction
 
@@ -192,7 +206,7 @@ The x-axis label placement is based on the axis configuration, and the y-axis is
 ### Position
 
 Charts components provide 4 props: `topAxis`, `rightAxis`, `bottomAxis`, and `leftAxis` allowing to define the 4 axes of the chart.
-Those pros can accept three type of value:
+Those props can accept three type of value:
 
 - `null` to not display the axis
 - `string` which should correspond to the id of a `xAxis` for top and bottom. Or to the id of a `yAxis` for left and right.

@@ -67,7 +67,7 @@
     },
     "getExpandedDetailPanels": { "description": "Returns the rows whose detail panel is open." },
     "getFilterState": {
-      "description": "Returns the filter state for the given filter model without applying it to the data grid."
+      "description": "Returns the filter state for the given filter model without applying it to the Data Grid."
     },
     "getLocaleText": { "description": "Returns the translation for the <code>key</code>." },
     "getPinnedColumns": { "description": "Returns which columns are pinned." },
@@ -127,9 +127,6 @@
     "publishEvent": { "description": "Emits an event." },
     "removeRowGroupingCriteria": { "description": "Remove the field from the row grouping model." },
     "resetRowHeights": { "description": "Forces the recalculation of the heights of all rows." },
-    "resize": {
-      "description": "Triggers a resize of the component and recalculation of width and height."
-    },
     "restoreState": { "description": "Inject the given values into the state of the DataGrid." },
     "scroll": {
       "description": "Triggers the viewport to scroll to the given positions (in pixels)."

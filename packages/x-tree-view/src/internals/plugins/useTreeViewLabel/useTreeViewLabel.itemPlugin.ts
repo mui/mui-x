@@ -1,40 +1,45 @@
 import * as React from 'react';
 import { useTreeViewContext } from '../../TreeViewProvider';
-import { MuiCancellableEvent, TreeViewItemPlugin } from '../../models';
+import { TreeViewCancellableEvent } from '../../../models';
+import { TreeViewItemPlugin } from '../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import {
-  UseTreeItem2LabelInputSlotPropsFromLabelEditing,
+  UseTreeItemLabelInputSlotPropsFromLabelEditing,
   UseTreeViewLabelSignature,
 } from './useTreeViewLabel.types';
+import { useSelector } from '../../hooks/useSelector';
+import { selectorIsItemBeingEdited, selectorIsItemEditable } from './useTreeViewLabel.selectors';
 
-export const useTreeViewLabelItemPlugin: TreeViewItemPlugin<any> = ({ props }) => {
-  const { instance } = useTreeViewContext<[UseTreeViewItemsSignature, UseTreeViewLabelSignature]>();
+export const useTreeViewLabelItemPlugin: TreeViewItemPlugin = ({ props }) => {
+  const {
+    store,
+    label: { isItemEditable },
+  } = useTreeViewContext<[UseTreeViewItemsSignature, UseTreeViewLabelSignature]>();
   const { label, itemId } = props;
 
-  const [labelInputValue, setLabelInputValue] = React.useState(label);
+  const [labelInputValue, setLabelInputValue] = React.useState(label as string);
 
-  const isItemBeingEdited = instance.isItemBeingEdited(itemId);
+  const editable = useSelector(store, selectorIsItemEditable, { itemId, isItemEditable });
+  const editing = useSelector(store, selectorIsItemBeingEdited, itemId);
 
   React.useEffect(() => {
-    if (!isItemBeingEdited) {
-      setLabelInputValue(label);
+    if (!editing) {
+      setLabelInputValue(label as string);
     }
-  }, [isItemBeingEdited, label]);
+  }, [editing, label]);
 
   return {
     propsEnhancers: {
       labelInput: ({
         externalEventHandlers,
         interactions,
-      }): UseTreeItem2LabelInputSlotPropsFromLabelEditing => {
-        const editable = instance.isItemEditable(itemId);
-
+      }): UseTreeItemLabelInputSlotPropsFromLabelEditing => {
         if (!editable) {
           return {};
         }
 
         const handleKeydown = (
-          event: React.KeyboardEvent<HTMLInputElement> & MuiCancellableEvent,
+          event: React.KeyboardEvent<HTMLInputElement> & TreeViewCancellableEvent,
         ) => {
           externalEventHandlers.onKeyDown?.(event);
           if (event.defaultMuiPrevented) {
@@ -49,7 +54,9 @@ export const useTreeViewLabelItemPlugin: TreeViewItemPlugin<any> = ({ props }) =
           }
         };
 
-        const handleBlur = (event: React.FocusEvent<HTMLInputElement> & MuiCancellableEvent) => {
+        const handleBlur = (
+          event: React.FocusEvent<HTMLInputElement> & TreeViewCancellableEvent,
+        ) => {
           externalEventHandlers.onBlur?.(event);
           if (event.defaultMuiPrevented) {
             return;

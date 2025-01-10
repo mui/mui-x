@@ -41,7 +41,7 @@ const generateDate = (
 describe('<DataGridPro /> - Edit components', () => {
   const { render, clock } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
 
   const defaultData: Pick<DataGridProProps, 'rows' | 'columns'> = { columns: [], rows: [] };
 
@@ -232,12 +232,12 @@ describe('<DataGridPro /> - Edit components', () => {
       defaultData.columns = [{ field: 'createdAt', type: 'date', editable: true }];
     });
 
-    it('should call setEditCellValue with the value converted to Date', () => {
-      render(<TestCase />);
+    it('should call setEditCellValue with the value converted to Date', async () => {
+      const { user } = render(<TestCase />);
       const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
 
       const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
+      await user.dblClick(cell);
 
       const input = cell.querySelector('input')!;
       expect(input.value).to.equal('2022-02-18');
@@ -273,7 +273,7 @@ describe('<DataGridPro /> - Edit components', () => {
       const input = cell.querySelector('input')!;
       expect(input.value).to.equal('2022-02-18');
       await act(async () => {
-        await apiRef.current.setEditCellValue({
+        apiRef.current.setEditCellValue({
           id: 0,
           field: 'createdAt',
           value: new Date(2022, 1, 10),
@@ -353,12 +353,12 @@ describe('<DataGridPro /> - Edit components', () => {
       defaultData.columns = [{ field: 'createdAt', type: 'dateTime', editable: true }];
     });
 
-    it('should call setEditCellValue with the value converted to Date', () => {
-      render(<TestCase />);
+    it('should call setEditCellValue with the value converted to Date', async () => {
+      const { user } = render(<TestCase />);
       const spiedSetEditCellValue = spyApi(apiRef.current, 'setEditCellValue');
 
       const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
+      await user.dblClick(cell);
 
       const input = cell.querySelector('input')!;
       expect(input.value).to.equal('2022-02-18T14:30');
@@ -394,7 +394,7 @@ describe('<DataGridPro /> - Edit components', () => {
       const input = cell.querySelector('input')!;
       expect(input.value).to.equal('2022-02-18T14:30');
       await act(async () => {
-        await apiRef.current.setEditCellValue({
+        apiRef.current.setEditCellValue({
           id: 0,
           field: 'createdAt',
           value: new Date(2022, 1, 10, 15, 10, 0),
@@ -542,7 +542,9 @@ describe('<DataGridPro /> - Edit components', () => {
       fireEvent.doubleClick(cell);
 
       expect(cell.textContent!.replace(/[\W]+/, '')).to.equal('Nike'); // We use .replace to remove &ZeroWidthSpace;
-      await act(() => apiRef.current.setEditCellValue({ id: 0, field: 'brand', value: 'Adidas' }));
+      await act(async () => {
+        apiRef.current.setEditCellValue({ id: 0, field: 'brand', value: 'Adidas' });
+      });
       expect(cell.textContent!.replace(/[\W]+/, '')).to.equal('Adidas');
     });
 
@@ -590,13 +592,16 @@ describe('<DataGridPro /> - Edit components', () => {
 
       defaultData.columns[0].renderEditCell = (params) => renderEditSingleSelectCell(params);
 
-      render(<TestCase processRowUpdate={processRowUpdate} />);
+      const { user } = render(<TestCase processRowUpdate={processRowUpdate} />);
 
       const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
-      fireUserEvent.mousePress(screen.queryAllByRole('option')[1]);
+      await user.dblClick(cell);
+      await user.click(screen.queryAllByRole('option')[1]);
       await waitFor(() => expect(screen.queryByRole('listbox')).to.equal(null));
-      fireEvent.keyDown(screen.getByRole('combobox'), { key: 'Enter' });
+      await act(() => {
+        screen.getByRole('combobox').focus();
+      });
+      await user.keyboard('{Enter}');
       expect(screen.queryByRole('listbox')).to.equal(null);
 
       resolveCallback!();
@@ -642,7 +647,7 @@ describe('<DataGridPro /> - Edit components', () => {
       const input = within(cell).getByRole<HTMLInputElement>('checkbox');
       await user.click(input);
 
-      await waitFor(() => expect(onValueChange.callCount).to.equal(1));
+      expect(onValueChange.callCount).to.equal(1);
       expect(onValueChange.lastCall.args[1]).to.equal(true);
     });
   });

@@ -56,7 +56,7 @@ const getTreeDataPath: DataGridProProps['getTreeDataPath'] = (row) =>
 
 :::warning
 The `getTreeDataPath` prop should keep the same reference between two renders.
-If it changes, the data grid will consider that the data has changed and will recompute the tree resulting in collapsing all the rows.
+If it changes, the Data Grid will consider that the data has changed and will recompute the tree resulting in collapsing all the rows.
 :::
 
 {{"demo": "TreeDataSimple.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -93,7 +93,7 @@ Same behavior as for the [Row grouping](/x/react-data-grid/row-grouping/#automat
 
 ## Gaps in the tree
 
-If some entries are missing to build the full tree, the `DataGridPro` will automatically create rows to fill those gaps.
+If some entries are missing to build the full tree, the Data Grid Pro will automatically create rows to fill those gaps.
 
 {{"demo": "TreeDataWithGap.js", "bg": "inline", "defaultCodeOpen": false}}
 

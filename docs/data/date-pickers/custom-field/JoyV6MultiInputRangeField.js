@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import {
   useTheme as useMaterialTheme,
   useColorScheme as useMaterialColorScheme,
@@ -92,7 +91,7 @@ const MultiInputJoyDateRangeFieldSeparator = styled(
     <FormControl>
       {/* Ensure that the separator is correctly aligned */}
       <span />
-      <Typography {...props}>{props.children ?? ' — '}</Typography>
+      <Typography {...props}>{props.children ?? ' – '}</Typography>
     </FormControl>
   ),
   {
@@ -105,21 +104,15 @@ const MultiInputJoyDateRangeFieldSeparator = styled(
 const JoyMultiInputDateRangeField = React.forwardRef((props, ref) => {
   const {
     slotProps,
-    value,
-    defaultValue,
-    format,
-    onChange,
     readOnly,
-    disabled,
-    onError,
     shouldDisableDate,
     minDate,
     maxDate,
     disableFuture,
     disablePast,
-    selectedSections,
-    onSelectedSectionsChange,
     className,
+    unstableStartFieldRef,
+    unstableEndFieldRef,
   } = props;
 
   const startTextFieldProps = useSlotProps({
@@ -136,24 +129,18 @@ const JoyMultiInputDateRangeField = React.forwardRef((props, ref) => {
 
   const fieldResponse = useMultiInputDateRangeField({
     sharedProps: {
-      value,
-      defaultValue,
-      format,
-      onChange,
       readOnly,
-      disabled,
-      onError,
       shouldDisableDate,
       minDate,
       maxDate,
       disableFuture,
       disablePast,
-      selectedSections,
-      onSelectedSectionsChange,
       enableAccessibleFieldDOMStructure: false,
     },
     startTextFieldProps,
     endTextFieldProps,
+    unstableStartFieldRef,
+    unstableEndFieldRef,
   });
 
   return (
@@ -170,6 +157,7 @@ const JoyDateRangePicker = React.forwardRef((props, ref) => {
     <DateRangePicker
       ref={ref}
       {...props}
+      enableAccessibleFieldDOMStructure={false}
       slots={{ ...props?.slots, field: JoyMultiInputDateRangeField }}
     />
   );

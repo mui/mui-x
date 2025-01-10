@@ -4,6 +4,7 @@ export type {
   ValueOptions,
   GridKeyValue,
   GridColDef,
+  GridListColDef,
   GridColTypeDef,
   GridColumnsMeta,
   GridSingleSelectColDef,

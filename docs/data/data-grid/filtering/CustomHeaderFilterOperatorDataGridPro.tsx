@@ -58,7 +58,7 @@ function RatingInputValue(
 }
 
 export default function CustomHeaderFilterOperatorDataGridPro() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     rowLength: 100,
     visibleFields: VISIBLE_FIELDS,
@@ -88,7 +88,7 @@ export default function CustomHeaderFilterOperatorDataGridPro() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro {...data} columns={columns} headerFilters />
+      <DataGridPro {...data} loading={loading} columns={columns} headerFilters />
     </div>
   );
 }

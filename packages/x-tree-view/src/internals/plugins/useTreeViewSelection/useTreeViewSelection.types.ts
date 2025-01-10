@@ -1,7 +1,9 @@
 import * as React from 'react';
-import type { DefaultizedProps, TreeViewPluginSignature } from '../../models';
+import type { DefaultizedProps } from '@mui/x-internals/types';
+import type { TreeViewPluginSignature } from '../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
+import { TreeViewSelectionPropagation, TreeViewCancellableEventHandler } from '../../../models';
 
 export interface UseTreeViewSelectionPublicAPI {
   /**
@@ -21,12 +23,6 @@ export interface UseTreeViewSelectionPublicAPI {
 }
 
 export interface UseTreeViewSelectionInstance extends UseTreeViewSelectionPublicAPI {
-  /**
-   * Check if an item is selected.
-   * @param {TreeViewItemId} itemId The id of the item to check.
-   * @returns {boolean} `true` if the item is selected, `false` otherwise.
-   */
-  isItemSelected: (itemId: string) => boolean;
   /**
    * Select all the navigable items in the tree.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
@@ -90,12 +86,29 @@ export interface UseTreeViewSelectionParameters<Multiple extends boolean | undef
    */
   multiSelect?: Multiple;
   /**
-   * If `true`, the tree view renders a checkbox at the left of its label that allows selecting it.
+   * If `true`, the Tree View renders a checkbox at the left of its label that allows selecting it.
    * @default false
    */
   checkboxSelection?: boolean;
   /**
-   * Callback fired when tree items are selected/deselected.
+   * When `selectionPropagation.descendants` is set to `true`.
+   *
+   * - Selecting a parent selects all its descendants automatically.
+   * - Deselecting a parent deselects all its descendants automatically.
+   *
+   * When `selectionPropagation.parents` is set to `true`.
+   *
+   * - Selecting all the descendants of a parent selects the parent automatically.
+   * - Deselecting a descendant of a selected parent deselects the parent automatically.
+   *
+   * Only works when `multiSelect` is `true`.
+   * On the <SimpleTreeView />, only the expanded items are considered (since the collapsed item are not passed to the Tree View component at all)
+   *
+   * @default { parents: false, descendants: false }
+   */
+  selectionPropagation?: TreeViewSelectionPropagation;
+  /**
+   * Callback fired when Tree Items are selected/deselected.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
    * @param {string[] | string} itemIds The ids of the selected items.
    * When `multiSelect` is `true`, this is an array of strings; when false (default) a string.
@@ -105,7 +118,7 @@ export interface UseTreeViewSelectionParameters<Multiple extends boolean | undef
     itemIds: TreeViewSelectionValue<Multiple>,
   ) => void;
   /**
-   * Callback fired when a tree item is selected or deselected.
+   * Callback fired when a Tree Item is selected or deselected.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
    * @param {array} itemId The itemId of the modified item.
    * @param {array} isSelected `true` if the item has just been selected, `false` if it has just been deselected.
@@ -119,13 +132,23 @@ export interface UseTreeViewSelectionParameters<Multiple extends boolean | undef
 
 export type UseTreeViewSelectionDefaultizedParameters<Multiple extends boolean> = DefaultizedProps<
   UseTreeViewSelectionParameters<Multiple>,
-  'disableSelection' | 'defaultSelectedItems' | 'multiSelect' | 'checkboxSelection'
+  | 'disableSelection'
+  | 'defaultSelectedItems'
+  | 'multiSelect'
+  | 'checkboxSelection'
+  | 'selectionPropagation'
 >;
+
+export interface UseTreeViewSelectionState {
+  selection: {
+    selectedItemsMap: Map<string, true>;
+  };
+}
 
 interface UseTreeViewSelectionContextValue {
   selection: Pick<
     UseTreeViewSelectionDefaultizedParameters<boolean>,
-    'multiSelect' | 'checkboxSelection' | 'disableSelection'
+    'multiSelect' | 'checkboxSelection' | 'disableSelection' | 'selectionPropagation'
   >;
 }
 
@@ -136,9 +159,22 @@ export type UseTreeViewSelectionSignature = TreeViewPluginSignature<{
   publicAPI: UseTreeViewSelectionPublicAPI;
   contextValue: UseTreeViewSelectionContextValue;
   modelNames: 'selectedItems';
+  state: UseTreeViewSelectionState;
   dependencies: [
     UseTreeViewItemsSignature,
     UseTreeViewExpansionSignature,
     UseTreeViewItemsSignature,
   ];
 }>;
+
+export interface UseTreeItemCheckboxSlotPropsFromSelection {
+  visible?: boolean;
+  checked?: boolean;
+  disabled?: boolean;
+  tabIndex?: -1;
+  onChange?: TreeViewCancellableEventHandler<React.ChangeEvent<HTMLInputElement>>;
+}
+
+declare module '@mui/x-tree-view/useTreeItem' {
+  interface UseTreeItemCheckboxSlotOwnProps extends UseTreeItemCheckboxSlotPropsFromSelection {}
+}

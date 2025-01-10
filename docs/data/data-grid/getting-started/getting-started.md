@@ -1,6 +1,6 @@
 # Data Grid - Getting started
 
-<p class="description">Get started with the last React data grid you will need. Install the package, configure the columns, provide rows, and you are set.</p>
+<p class="description">Get started with the last React Data Grid you will need. Install the package, configure the columns, provide rows, and you are set.</p>
 
 ## Installation
 
@@ -35,8 +35,8 @@ Please note that [react](https://www.npmjs.com/package/react) and [react-dom](ht
 
 ```json
 "peerDependencies": {
-  "react": "^17.0.0 || ^18.0.0",
-  "react-dom": "^17.0.0 || ^18.0.0"
+  "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+  "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
 },
 ```
 
@@ -67,7 +67,7 @@ Take a look at the [Styled Components guide](/material-ui/integrations/styled-co
 ## Quickstart
 
 First, you have to import the component as below.
-To avoid name conflicts the component is named `DataGridPro` for the full-featured enterprise grid, and `DataGrid` for the free community version.
+To avoid name conflicts the component is named Data Grid Pro for the full-featured enterprise grid, and Data Grid for the free community version.
 
 ```js
 import { DataGrid } from '@mui/x-data-grid';
@@ -158,7 +158,7 @@ const theme = createTheme({
 
 ## Licenses
 
-While MUI Core is entirely licensed under MIT, MUI X serves a part of its components under a commercial license.
+While our Core libraries are entirely licensed under MIT, MUI X serves a part of its components under a commercial license.
 Please pay attention to the license.
 
 ### Plans
@@ -173,7 +173,7 @@ You can find more information about the plans in [the Licensing page](/x/introdu
 
 ### Feature comparison
 
-The following table summarizes the features available in the community `DataGrid` and enterprise `DataGridPro` components.
+The following table summarizes the features available in the community Data Grid and enterprise Data Grid Pro components.
 All the features of the community version are available in the enterprise one.
 The enterprise components come in two plans: Pro and Premium.
 

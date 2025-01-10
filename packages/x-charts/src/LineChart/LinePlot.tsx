@@ -1,10 +1,11 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { styled } from '@mui/material/styles';
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
-import { useCartesianContext } from '../context/CartesianProvider';
 import {
   LineElement,
+  lineElementClasses,
   LineElementProps,
   LineElementSlotProps,
   LineElementSlots,
@@ -16,6 +17,8 @@ import { LineItemIdentifier } from '../models/seriesType/line';
 import { useChartGradient } from '../internals/components/ChartsAxesGradients';
 import { useLineSeries } from '../hooks/useSeries';
 import { AxisId } from '../models/axis';
+import { useSkipAnimation } from '../context/AnimationProvider';
+import { useXAxes, useYAxes } from '../hooks';
 
 export interface LinePlotSlots extends LineElementSlots {}
 
@@ -35,9 +38,21 @@ export interface LinePlotProps
   ) => void;
 }
 
+const LinePlotRoot = styled('g', {
+  name: 'MuiAreaPlot',
+  slot: 'Root',
+  overridesResolver: (_, styles) => styles.root,
+})({
+  [`& .${lineElementClasses.root}`]: {
+    transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
+  },
+});
+
 const useAggregatedData = () => {
   const seriesData = useLineSeries();
-  const axisData = useCartesianContext();
+
+  const { xAxis, xAxisIds } = useXAxes();
+  const { yAxis, yAxisIds } = useYAxes();
 
   // This memo prevents odd line chart behavior when hydrating.
   const allData = React.useMemo(() => {
@@ -46,24 +61,18 @@ const useAggregatedData = () => {
     }
 
     const { series, stackingGroups } = seriesData;
-    const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
     const defaultXAxisId = xAxisIds[0];
     const defaultYAxisId = yAxisIds[0];
 
     return stackingGroups.flatMap(({ ids: groupIds }) => {
       return groupIds.flatMap((seriesId) => {
         const {
-          xAxisId: xAxisIdProp,
-          yAxisId: yAxisIdProp,
-          xAxisKey = defaultXAxisId,
-          yAxisKey = defaultYAxisId,
+          xAxisId = defaultXAxisId,
+          yAxisId = defaultYAxisId,
           stackedData,
           data,
           connectNulls,
         } = series[seriesId];
-
-        const xAxisId = xAxisIdProp ?? xAxisKey;
-        const yAxisId = yAxisIdProp ?? yAxisKey;
 
         const xScale = getValueToPositionMapper(xAxis[xAxisId].scale);
         const yScale = yAxis[yAxisId].scale;
@@ -113,7 +122,7 @@ const useAggregatedData = () => {
         };
       });
     });
-  }, [seriesData, axisData]);
+  }, [seriesData, xAxisIds, yAxisIds, xAxis, yAxis]);
 
   return allData;
 };
@@ -129,12 +138,13 @@ const useAggregatedData = () => {
  * - [LinePlot API](https://mui.com/x/api/charts/line-plot/)
  */
 function LinePlot(props: LinePlotProps) {
-  const { slots, slotProps, skipAnimation, onItemClick, ...other } = props;
+  const { slots, slotProps, skipAnimation: inSkipAnimation, onItemClick, ...other } = props;
+  const skipAnimation = useSkipAnimation(inSkipAnimation);
 
   const getGradientId = useChartGradient();
   const completedData = useAggregatedData();
   return (
-    <g {...other}>
+    <LinePlotRoot {...other}>
       {completedData.map(({ d, seriesId, color, gradientUsed }) => {
         return (
           <LineElement
@@ -150,7 +160,7 @@ function LinePlot(props: LinePlotProps) {
           />
         );
       })}
-    </g>
+    </LinePlotRoot>
   );
 }
 

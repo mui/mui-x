@@ -132,8 +132,8 @@ function preventClick(event: MouseEvent) {
  * Checker that returns a promise that resolves when the column virtualization
  * is disabled.
  */
-function useColumnVirtualizationDisabled(apiRef: React.MutableRefObject<GridPrivateApiCommunity>) {
-  const promise = React.useRef<ControllablePromise>();
+function useColumnVirtualizationDisabled(apiRef: React.RefObject<GridPrivateApiCommunity>) {
+  const promise = React.useRef<ControllablePromise>(undefined);
   const selector = () => gridVirtualizationColumnEnabledSelector(apiRef);
   const value = useGridSelector(apiRef, selector);
 
@@ -184,7 +184,7 @@ function excludeOutliers(inputValues: number[], factor: number) {
 }
 
 function extractColumnWidths(
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   options: AutosizeOptionsRequired,
   columns: GridStateColDef[],
 ) {
@@ -270,7 +270,7 @@ function createResizeRefs() {
  * TODO: improve experience for last column
  */
 export const useGridColumnResize = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'autosizeOptions'
@@ -278,6 +278,7 @@ export const useGridColumnResize = (
     | 'disableAutosize'
     | 'onColumnResize'
     | 'onColumnWidthChange'
+    | 'disableVirtualization'
   >,
 ) => {
   const isRtl = useRtl();
@@ -288,11 +289,11 @@ export const useGridColumnResize = (
   // To improve accessibility, the separator has padding on both sides.
   // Clicking inside the padding area should be treated as a click in the separator.
   // This ref stores the offset between the click and the separator.
-  const initialOffsetToSeparator = React.useRef<number>();
-  const resizeDirection = React.useRef<ResizeDirection>();
+  const initialOffsetToSeparator = React.useRef<number>(null);
+  const resizeDirection = React.useRef<ResizeDirection>(null);
 
   const stopResizeEventTimeout = useTimeout();
-  const touchId = React.useRef<number>();
+  const touchId = React.useRef<number>(undefined);
 
   const updateWidth = (newWidth: number) => {
     logger.debug(`Updating width to ${newWidth} for col ${refs.colDef!.field}`);
@@ -300,12 +301,14 @@ export const useGridColumnResize = (
     const prevWidth = refs.columnHeaderElement!.offsetWidth;
     const widthDiff = newWidth - prevWidth;
     const columnWidthDiff = newWidth - refs.initialColWidth;
-    const newTotalWidth = refs.initialTotalWidth + columnWidthDiff;
 
-    apiRef.current.rootElementRef?.current?.style.setProperty(
-      '--DataGrid-rowWidth',
-      `${newTotalWidth}px`,
-    );
+    if (columnWidthDiff > 0) {
+      const newTotalWidth = refs.initialTotalWidth + columnWidthDiff;
+      apiRef.current.rootElementRef?.current?.style.setProperty(
+        '--DataGrid-rowWidth',
+        `${newTotalWidth}px`,
+      );
+    }
 
     refs.colDef!.computedWidth = newWidth;
     refs.colDef!.width = newWidth;
@@ -685,6 +688,7 @@ export const useGridColumnResize = (
 
       apiRef.current.autosizeColumns({
         ...props.autosizeOptions,
+        disableColumnVirtualization: false,
         columns: [column.field],
       });
     });
@@ -717,8 +721,10 @@ export const useGridColumnResize = (
       const columns = options.columns.map((c) => apiRef.current.state.columns.lookup[c]);
 
       try {
-        apiRef.current.unstable_setColumnVirtualization(false);
-        await columnVirtualizationDisabled();
+        if (!props.disableVirtualization && options.disableColumnVirtualization) {
+          apiRef.current.unstable_setColumnVirtualization(false);
+          await columnVirtualizationDisabled();
+        }
 
         const widthByField = extractColumnWidths(apiRef, options, columns);
 
@@ -726,6 +732,7 @@ export const useGridColumnResize = (
           ...column,
           width: widthByField[column.field],
           computedWidth: widthByField[column.field],
+          flex: 0,
         }));
 
         if (options.expand) {
@@ -763,11 +770,14 @@ export const useGridColumnResize = (
           }
         });
       } finally {
-        apiRef.current.unstable_setColumnVirtualization(true);
+        if (!props.disableVirtualization) {
+          apiRef.current.unstable_setColumnVirtualization(true);
+        }
+
         isAutosizingRef.current = false;
       }
     },
-    [apiRef, columnVirtualizationDisabled],
+    [apiRef, columnVirtualizationDisabled, props.disableVirtualization],
   );
 
   /**

@@ -1,17 +1,18 @@
 'use client';
-import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useCartesianContext } from '../context/CartesianProvider';
-import { MarkElement, MarkElementProps } from './MarkElement';
-import { getValueToPositionMapper } from '../hooks/useScale';
-import { useChartId } from '../hooks/useChartId';
+import * as React from 'react';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import { LineItemIdentifier } from '../models/seriesType/line';
-import { cleanId } from '../internals/cleanId';
-import getColor from './getColor';
+import { useSkipAnimation } from '../context/AnimationProvider';
+import { useChartId } from '../hooks/useChartId';
+import { getValueToPositionMapper } from '../hooks/useScale';
 import { useLineSeries } from '../hooks/useSeries';
-import { useDrawingArea } from '../hooks/useDrawingArea';
+import { cleanId } from '../internals/cleanId';
+import { LineItemIdentifier } from '../models/seriesType/line';
 import { CircleMarkElement } from './CircleMarkElement';
+import getColor from './getColor';
+import { MarkElement, MarkElementProps } from './MarkElement';
+import { useChartContext } from '../context/ChartProvider';
+import { useXAxes, useYAxes } from '../hooks';
 
 export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps>;
@@ -62,12 +63,22 @@ export interface MarkPlotProps
  * - [MarkPlot API](https://mui.com/x/api/charts/mark-plot/)
  */
 function MarkPlot(props: MarkPlotProps) {
-  const { slots, slotProps, skipAnimation, onItemClick, experimentalRendering, ...other } = props;
+  const {
+    slots,
+    slotProps,
+    skipAnimation: inSkipAnimation,
+    onItemClick,
+    experimentalRendering,
+    ...other
+  } = props;
+  const skipAnimation = useSkipAnimation(inSkipAnimation);
 
   const seriesData = useLineSeries();
-  const axisData = useCartesianContext();
+  const { xAxis, xAxisIds } = useXAxes();
+  const { yAxis, yAxisIds } = useYAxes();
+
   const chartId = useChartId();
-  const drawingArea = useDrawingArea();
+  const { instance } = useChartContext();
 
   const Mark = slots?.mark ?? (experimentalRendering ? CircleMarkElement : MarkElement);
 
@@ -75,7 +86,6 @@ function MarkPlot(props: MarkPlotProps) {
     return null;
   }
   const { series, stackingGroups } = seriesData;
-  const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];
 
@@ -84,10 +94,8 @@ function MarkPlot(props: MarkPlotProps) {
       {stackingGroups.flatMap(({ ids: groupIds }) => {
         return groupIds.map((seriesId) => {
           const {
-            xAxisId: xAxisIdProp,
-            yAxisId: yAxisIdProp,
-            xAxisKey = defaultXAxisId,
-            yAxisKey = defaultYAxisId,
+            xAxisId = defaultXAxisId,
+            yAxisId = defaultYAxisId,
             stackedData,
             data,
             showMark = true,
@@ -96,9 +104,6 @@ function MarkPlot(props: MarkPlotProps) {
           if (showMark === false) {
             return null;
           }
-
-          const xAxisId = xAxisIdProp ?? xAxisKey;
-          const yAxisId = yAxisIdProp ?? yAxisKey;
 
           const xScale = getValueToPositionMapper(xAxis[xAxisId].scale);
           const yScale = yAxis[yAxisId].scale;
@@ -136,7 +141,7 @@ function MarkPlot(props: MarkPlotProps) {
                     // Remove missing data point
                     return false;
                   }
-                  if (!drawingArea.isPointInside({ x, y })) {
+                  if (!instance.isPointInside({ x, y })) {
                     // Remove out of range
                     return false;
                   }

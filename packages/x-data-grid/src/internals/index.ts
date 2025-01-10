@@ -11,15 +11,21 @@ export type { GridPinnedRowsProps } from '../components/GridPinnedRows';
 export { GridHeaders } from '../components/GridHeaders';
 export { GridBaseColumnHeaders } from '../components/columnHeaders/GridBaseColumnHeaders';
 export { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
+export { vars } from '../constants/cssVariables';
 
 export { getGridFilter } from '../components/panel/filterPanel/GridFilterPanel';
+export { getValueOptions } from '../components/panel/filterPanel/filterPanelUtils';
 export { useGridRegisterPipeProcessor } from '../hooks/core/pipeProcessing';
 export type { GridPipeProcessor } from '../hooks/core/pipeProcessing';
 export {
+  GridStrategyGroup,
   useGridRegisterStrategyProcessor,
   GRID_DEFAULT_STRATEGY,
 } from '../hooks/core/strategyProcessing';
-export type { GridStrategyProcessor } from '../hooks/core/strategyProcessing';
+export type {
+  GridStrategyProcessor,
+  GridStrategyProcessorName,
+} from '../hooks/core/strategyProcessing';
 export { useGridInitialization } from '../hooks/core/useGridInitialization';
 export { unwrapPrivateAPI } from '../hooks/core/useGridApiInitialization';
 
@@ -116,6 +122,7 @@ export {
 export { useGridRowSelectionPreProcessors } from '../hooks/features/rowSelection/useGridRowSelectionPreProcessors';
 export { useGridSorting, sortingStateInitializer } from '../hooks/features/sorting/useGridSorting';
 export type { GridSortingModelApplier } from '../hooks/features/sorting/gridSortingState';
+export { gridSortedRowIndexLookupSelector } from '../hooks/features/sorting/gridSortingSelector';
 export { useGridScroll } from '../hooks/features/scroll/useGridScroll';
 export { useGridEvents } from '../hooks/features/events/useGridEvents';
 export {
@@ -134,6 +141,10 @@ export {
   columnResizeStateInitializer,
 } from '../hooks/features/columnResize/useGridColumnResize';
 export { ROW_SELECTION_PROPAGATION_DEFAULT } from '../hooks/features/rowSelection/utils';
+export {
+  useGridListView,
+  listViewStateInitializer,
+} from '../hooks/features/listView/useGridListView';
 
 export { useTimeout } from '../hooks/utils/useTimeout';
 export { useGridVisibleRows, getVisibleRows } from '../hooks/utils/useGridVisibleRows';
@@ -144,20 +155,14 @@ export type * from '../models/props/DataGridProps';
 export type * from '../models/gridDataSource';
 export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/export/utils';
 export * from '../utils/createControllablePromise';
-export {
-  createSelector,
-  createSelectorV8,
-  createSelectorMemoized,
-  createSelectorMemoizedV8,
-} from '../utils/createSelector';
-export { useGridSelectorV8 } from '../hooks/utils/useGridSelector';
+export { createSelector, createSelectorMemoized } from '../utils/createSelector';
 export { gridRowGroupsToFetchSelector } from '../hooks/features/rows/gridRowsSelector';
 export {
   findParentElementFromClassName,
   getActiveElement,
   isEventTargetInPortal,
 } from '../utils/domUtils';
-export { isNavigationKey, isPasteShortcut } from '../utils/keyboardUtils';
+export { isNavigationKey, isPasteShortcut, isCopyShortcut } from '../utils/keyboardUtils';
 export * from '../utils/utils';
 export { exportAs } from '../utils/exportAs';
 export * from '../utils/getPublicApiRef';
@@ -173,4 +178,5 @@ export type { GridApiCaches } from '../models/gridApiCaches';
 export { serializeCellValue } from '../hooks/features/export/serializers/csvSerializer';
 
 export * from './utils';
+export * from './constants';
 export type { Localization } from '../utils/getGridLocalization';

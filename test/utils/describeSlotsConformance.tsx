@@ -5,7 +5,7 @@ import { MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
 
 interface DescribeSlotsConformanceParams {
   getElement: (params: { slotName: string; props: any }) => React.ReactElement<any>;
-  render: (node: React.ReactElement) => MuiRenderResult;
+  render: (node: React.ReactElement<any>) => MuiRenderResult;
   slots: { [slotName: string]: { className: string } };
 }
 

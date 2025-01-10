@@ -8,14 +8,15 @@ import {
   isInternalTimeView,
   isDatePickerView,
   PickerViewRenderer,
-  DefaultizedProps,
-  PickerViewsRendererProps,
   TimeViewWithMeridiem,
   resolveDateTimeFormat,
   useUtils,
+  PickerRangeValue,
+  PickerViewRendererLookup,
+  PickerRendererInterceptorProps,
 } from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { PickerOwnerState } from '@mui/x-date-pickers/models';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import {
   renderDigitalClockTimeView,
@@ -29,47 +30,24 @@ import { digitalClockClasses } from '@mui/x-date-pickers/DigitalClock';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { MobileDateTimeRangePickerProps } from './MobileDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
-import {
-  UseMobileRangePickerProps,
-  useMobileRangePicker,
-} from '../internals/hooks/useMobileRangePicker';
+import { useMobileRangePicker } from '../internals/hooks/useMobileRangePicker';
 import { validateDateTimeRange } from '../validation';
 import { DateTimeRangePickerView } from '../internals/models';
-import { DateRange } from '../models';
-import {
-  DateTimeRangePickerRenderers,
-  useDateTimeRangePickerDefaultizedProps,
-} from '../DateTimeRangePicker/shared';
+import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
 import { MultiInputDateTimeRangeField } from '../MultiInputDateTimeRangeField';
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
+import { usePickerRangePositionContext } from '../hooks';
 
-const rendererInterceptor = function rendererInterceptor<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean,
->(
-  inViewRenderers: DateTimeRangePickerRenderers<TDate, DateTimeRangePickerView, any>,
-  popperView: DateTimeRangePickerView,
-  rendererProps: PickerViewsRendererProps<
-    DateRange<TDate>,
-    DateTimeRangePickerView,
-    DefaultizedProps<
-      UseMobileRangePickerProps<
-        TDate,
-        DateTimeRangePickerView,
-        TEnableAccessibleFieldDOMStructure,
-        any,
-        any
-      >,
-      'rangePosition' | 'onRangePositionChange' | 'openTo'
-    >,
-    {}
-  >,
+const rendererInterceptor = function RendererInterceptor(
+  props: PickerRendererInterceptorProps<PickerRangeValue, DateTimeRangePickerView, any>,
 ) {
-  const { view, openTo, rangePosition, ...otherRendererProps } = rendererProps;
+  const { viewRenderers, popperView, rendererProps } = props;
+  const { rangePosition } = usePickerRangePositionContext();
+  const { view, openTo, ...otherRendererProps } = rendererProps;
+
   const finalProps = {
     ...otherRendererProps,
-    rangePosition,
     focusedView: null,
     sx: [
       {
@@ -96,7 +74,7 @@ const rendererInterceptor = function rendererInterceptor<
     ],
   };
   const isTimeView = isInternalTimeView(popperView);
-  const viewRenderer = inViewRenderers[popperView];
+  const viewRenderer = viewRenderers[popperView];
   if (!viewRenderer) {
     return null;
   }
@@ -104,9 +82,7 @@ const rendererInterceptor = function rendererInterceptor<
     return (
       <DateTimeRangePickerTimeWrapper
         {...finalProps}
-        viewRenderer={
-          viewRenderer as PickerViewRenderer<DateRange<TDate>, TimeViewWithMeridiem, any, {}>
-        }
+        viewRenderer={viewRenderer as PickerViewRenderer<PickerRangeValue, any>}
         view={view && isInternalTimeView(view) ? view : 'hours'}
         views={finalProps.views as TimeViewWithMeridiem[]}
         openTo={isInternalTimeView(openTo) ? openTo : 'hours'}
@@ -114,7 +90,7 @@ const rendererInterceptor = function rendererInterceptor<
     );
   }
   // avoiding problem of `props: never`
-  const typedViewRenderer = viewRenderer as PickerViewRenderer<DateRange<TDate>, 'day', any, any>;
+  const typedViewRenderer = viewRenderer as PickerViewRenderer<PickerRangeValue, any>;
 
   return typedViewRenderer({
     ...finalProps,
@@ -125,11 +101,8 @@ const rendererInterceptor = function rendererInterceptor<
   });
 };
 
-type MobileDateRangePickerComponent = (<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
->(
-  props: MobileDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
+type MobileDateRangePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
+  props: MobileDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -144,24 +117,22 @@ type MobileDateRangePickerComponent = (<
  * - [MobileDateTimeRangePicker API](https://mui.com/x/api/date-pickers/mobile-date-time-range-picker/)
  */
 const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangePicker<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
-  inProps: MobileDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  inProps: MobileDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const utils = useUtils<TDate>();
+  const utils = useUtils();
   // Props with the default values common to all date time range pickers
   const defaultizedProps = useDateTimeRangePickerDefaultizedProps<
-    TDate,
-    MobileDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>
+    MobileDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiMobileDateTimeRangePicker');
 
   const renderTimeView = defaultizedProps.shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeView
     : renderMultiSectionDigitalClockTimeView;
 
-  const viewRenderers: DateTimeRangePickerRenderers<TDate, DateTimeRangePickerView, any> = {
+  const viewRenderers: PickerViewRendererLookup<any, any, any> = {
     day: renderDateRangeViewCalendar,
     hours: renderTimeView,
     minutes: renderTimeView,
@@ -184,7 +155,7 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
     },
     slotProps: {
       ...defaultizedProps.slotProps,
-      field: (ownerState: any) => ({
+      field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
@@ -195,14 +166,12 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
       },
       toolbar: {
         hidden: false,
-        toolbarVariant: 'mobile',
         ...defaultizedProps.slotProps?.toolbar,
       },
     },
   };
 
   const { renderPicker } = useMobileRangePicker<
-    TDate,
     DateTimeRangePickerView,
     TEnableAccessibleFieldDOMStructure,
     typeof props
@@ -236,8 +205,8 @@ MobileDateTimeRangePicker.propTypes = {
   autoFocus: PropTypes.bool,
   className: PropTypes.string,
   /**
-   * If `true`, the popover or modal will close after submitting the full date.
-   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * If `true`, the Picker will close after submitting the full date.
+   * @default false
    */
   closeOnSelect: PropTypes.bool,
   /**
@@ -247,9 +216,9 @@ MobileDateTimeRangePicker.propTypes = {
   currentMonthCalendarPosition: PropTypes.oneOf([1, 2, 3]),
   /**
    * Formats the day of week displayed in the calendar header.
-   * @param {TDate} date The date of the day of week provided by the adapter.
+   * @param {PickerValidDate} date The date of the day of week provided by the adapter.
    * @returns {string} The name to display.
-   * @default (date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
+   * @default (date: PickerValidDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
    */
   dayOfWeekFormatter: PropTypes.func,
   /**
@@ -269,7 +238,8 @@ MobileDateTimeRangePicker.propTypes = {
    */
   disableAutoMonthSwitching: PropTypes.bool,
   /**
-   * If `true`, the picker and text field are disabled.
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
    * @default false
    */
   disabled: PropTypes.bool,
@@ -308,7 +278,7 @@ MobileDateTimeRangePicker.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
-   * @default false
+   * @default true
    */
   enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
@@ -419,8 +389,7 @@ MobileDateTimeRangePicker.propTypes = {
   onError: PropTypes.func,
   /**
    * Callback fired on month change.
-   * @template TDate
-   * @param {TDate} month The new month.
+   * @param {PickerValidDate} month The new month.
    */
   onMonthChange: PropTypes.func,
   /**
@@ -460,6 +429,11 @@ MobileDateTimeRangePicker.propTypes = {
    * Used when the component position is controlled.
    */
   rangePosition: PropTypes.oneOf(['end', 'start']),
+  /**
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
+   * @default false
+   */
   readOnly: PropTypes.bool,
   /**
    * If `true`, disable heavy animations.
@@ -506,16 +480,14 @@ MobileDateTimeRangePicker.propTypes = {
    *
    * Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
    *
-   * @template TDate
-   * @param {TDate} day The date to test.
+   * @param {PickerValidDate} day The date to test.
    * @param {string} position The date to test, 'start' or 'end'.
    * @returns {boolean} Returns `true` if the date should be disabled.
    */
   shouldDisableDate: PropTypes.func,
   /**
    * Disable specific time.
-   * @template TDate
-   * @param {TDate} value The value to check.
+   * @param {PickerValidDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */

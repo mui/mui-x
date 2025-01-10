@@ -2,14 +2,15 @@
 import { ChartsAxisProps } from '../ChartsAxis';
 import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsGridProps } from '../ChartsGrid';
-import { ChartsLegendProps } from '../ChartsLegend';
+import { ChartsLegendSlotExtension } from '../ChartsLegend';
 import { ChartsOverlayProps } from '../ChartsOverlay';
-import { ChartsTooltipProps } from '../ChartsTooltip';
 import type { ChartsVoronoiHandlerProps } from '../ChartsVoronoiHandler';
-import { ResponsiveChartContainerProps } from '../ResponsiveChartContainer';
+import { ChartContainerProps } from '../ChartContainer';
 import { ZAxisContextProviderProps } from '../context';
 import type { ScatterChartProps } from './ScatterChart';
 import type { ScatterPlotProps } from './ScatterPlot';
+import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
+import { calculateMargins } from '../internals/calculateMargins';
 
 /**
  * A helper function that extracts ScatterChartProps from the input props
@@ -24,11 +25,10 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     yAxis,
     zAxis,
     series,
-    tooltip,
     axisHighlight,
     voronoiMaxRadius,
     disableVoronoi,
-    legend,
+    hideLegend,
     width,
     height,
     margin,
@@ -50,16 +50,15 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     ...other
   } = props;
 
-  const chartContainerProps: ResponsiveChartContainerProps = {
+  const chartContainerProps: Omit<ChartContainerProps<'scatter'>, 'plugins'> = {
     ...other,
     series: series.map((s) => ({ type: 'scatter' as const, ...s })),
     width,
     height,
-    margin,
+    margin: calculateMargins({ margin, hideLegend, slotProps, series }),
     colors,
     xAxis,
     yAxis,
-    sx,
     highlightedItem,
     onHighlightChange,
     className,
@@ -97,8 +96,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     slotProps,
   };
 
-  const legendProps: ChartsLegendProps = {
-    ...legend,
+  const legendProps: ChartsLegendSlotExtension = {
     slots,
     slotProps,
   };
@@ -109,14 +107,14 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     ...axisHighlight,
   };
 
-  const tooltipProps: ChartsTooltipProps<'scatter'> = {
-    trigger: 'item' as const,
-    ...tooltip,
-    slots,
-    slotProps,
+  const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {
+    sx,
+    legendPosition: props.slotProps?.legend?.position,
+    legendDirection: props.slotProps?.legend?.direction,
   };
 
   return {
+    chartsWrapperProps,
     chartContainerProps,
     zAxisProps,
     voronoiHandlerProps,
@@ -126,7 +124,6 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     overlayProps,
     legendProps,
     axisHighlightProps,
-    tooltipProps,
     children,
   };
 };

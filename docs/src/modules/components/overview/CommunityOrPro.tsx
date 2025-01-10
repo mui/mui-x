@@ -20,6 +20,7 @@ export default function CommunityOrPro() {
           sx={{ maxWidth: { xs: '500px', md: '100%' } }}
         >
           <Stack flexBasis={{ xs: '100%', md: '65%' }} sx={{ marginBottom: { xs: '16px', md: 0 } }}>
+            {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
             <Typography variant="body2" color="primary" fontWeight="semiBold">
               Community and Pro
             </Typography>
@@ -29,9 +30,11 @@ export default function CommunityOrPro() {
               fontWeight="semiBold"
               color="text.primary"
               fontSize="1.625rem"
+              // eslint-disable-next-line material-ui/no-hardcoded-labels
             >
               Two packages for every need
             </Typography>
+            {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
             <Typography variant="body1" color="text.secondary">
               Start with the free-forever Community version, then upgrade to Pro when you are ready
               for additional features and components.
@@ -43,6 +46,7 @@ export default function CommunityOrPro() {
             href="/x/introduction/licensing/"
             endIcon={<ArrowForwardIcon />}
             sx={{ width: 'fit-content' }}
+            // eslint-disable-next-line material-ui/no-hardcoded-labels
           >
             About licensing
           </Button>

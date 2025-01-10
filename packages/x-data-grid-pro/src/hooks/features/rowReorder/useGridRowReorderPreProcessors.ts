@@ -22,7 +22,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 export const useGridRowReorderPreProcessors = (
-  privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
+  privateApiRef: React.RefObject<GridPrivateApiPro>,
   props: DataGridProProcessedProps,
 ) => {
   const ownerState = { classes: props.classes };
@@ -41,6 +41,10 @@ export const useGridRowReorderPreProcessors = (
       const haveReorderColumn = columnsState.lookup[reorderColumn.field] != null;
 
       if (shouldHaveReorderColumn && haveReorderColumn) {
+        columnsState.lookup[reorderColumn.field] = {
+          ...reorderColumn,
+          ...columnsState.lookup[reorderColumn.field],
+        };
         return columnsState;
       }
 

@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, Theme, styled } from '@mui/material/styles';
-import { useCartesianContext } from '../context/CartesianProvider';
 import { useTicks, TickItemType } from '../hooks/useTicks';
 import { AxisDefaultized, ChartsXAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
@@ -16,6 +15,8 @@ import { useDrawingArea } from '../hooks/useDrawingArea';
 import { getWordsByLines } from '../internals/getWordsByLines';
 import { isInfinity } from '../internals/isInfinity';
 import { isBandScale } from '../internals/isBandScale';
+import { useChartContext } from '../context/ChartProvider/useChartContext';
+import { useXAxes } from '../hooks/useAxis';
 
 const useUtilityClasses = (ownerState: ChartsXAxisProps & { theme: Theme }) => {
   const { classes, position } = ownerState;
@@ -107,7 +108,7 @@ const defaultProps = {
  * - [ChartsXAxis API](https://mui.com/x/api/charts/charts-x-axis/)
  */
 function ChartsXAxis(inProps: ChartsXAxisProps) {
-  const { xAxisIds, xAxis } = useCartesianContext();
+  const { xAxis, xAxisIds } = useXAxes();
   const { scale: xScale, tickNumber, reverse, ...settings } = xAxis[inProps.axisId ?? xAxisIds[0]];
 
   const isMounted = useMounted();
@@ -126,8 +127,6 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickLabelStyle,
     label,
     labelStyle,
-    tickFontSize,
-    labelFontSize,
     tickSize: tickSizeProp,
     valueFormatter,
     slots,
@@ -141,7 +140,8 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
 
   const theme = useTheme();
   const classes = useUtilityClasses({ ...defaultizedProps, theme });
-  const { left, top, width, height, isPointInside } = useDrawingArea();
+  const { left, top, width, height } = useDrawingArea();
+  const { instance } = useChartContext();
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
@@ -157,9 +157,9 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     externalSlotProps: slotProps?.axisTickLabel,
     additionalProps: {
       style: {
+        fontSize: 12,
         textAnchor: 'middle',
         dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
-        fontSize: tickFontSize ?? 12,
         ...tickLabelStyle,
       },
     } as Partial<ChartsTextProps>,
@@ -193,7 +193,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     externalSlotProps: slotProps?.axisLabel,
     additionalProps: {
       style: {
-        fontSize: labelFontSize ?? 14,
+        fontSize: 14,
         textAnchor: 'middle',
         dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
         ...labelStyle,
@@ -224,8 +224,11 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
         const xTickLabel = labelOffset ?? 0;
         const yTickLabel = positionSign * (tickSize + 3);
 
-        const showTick = isPointInside({ x: offset, y: -1 }, { direction: 'x' });
-        const showTickLabel = isPointInside({ x: offset + xTickLabel, y: -1 }, { direction: 'x' });
+        const showTick = instance.isPointInside({ x: offset, y: -1 }, { direction: 'x' });
+        const showTickLabel = instance.isPointInside(
+          { x: offset + xTickLabel, y: -1 },
+          { direction: 'x' },
+        );
         return (
           <g key={index} transform={`translate(${offset}, 0)`} className={classes.tickContainer}>
             {!disableTicks && showTick && (
@@ -291,12 +294,6 @@ ChartsXAxis.propTypes = {
    */
   label: PropTypes.string,
   /**
-   * The font size of the axis label.
-   * @default 14
-   * @deprecated Consider using `labelStyle.fontSize` instead.
-   */
-  labelFontSize: PropTypes.number,
-  /**
    * The style applied to the axis label.
    */
   labelStyle: PropTypes.object,
@@ -324,12 +321,6 @@ ChartsXAxis.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * The font size of the axis ticks text.
-   * @default 12
-   * @deprecated Consider using `tickLabelStyle.fontSize` instead.
-   */
-  tickFontSize: PropTypes.number,
   /**
    * Defines which ticks are displayed.
    * Its value can be:

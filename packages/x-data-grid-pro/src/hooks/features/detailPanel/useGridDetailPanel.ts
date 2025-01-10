@@ -18,7 +18,6 @@ import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from './gridDetailPanelToggleColDef';
 import {
   gridDetailPanelExpandedRowIdsSelector,
   gridDetailPanelExpandedRowsContentCacheSelector,
-  gridDetailPanelExpandedRowsHeightCacheSelector,
   gridDetailPanelRawHeightCacheSelector,
 } from './gridDetailPanelSelector';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -31,6 +30,8 @@ import {
 // FIXME: calling `api.updateDimensions()` here triggers a cycle where `updateDimensions` is
 // called 3 times when opening/closing a panel.
 
+const emptySet = new Set();
+
 export const detailPanelStateInitializer: GridStateInitializer<
   Pick<DataGridProProcessedProps, 'initialState' | 'detailPanelExpandedRowIds'>
 > = (state, props) => {
@@ -39,13 +40,15 @@ export const detailPanelStateInitializer: GridStateInitializer<
     detailPanel: {
       heightCache: {},
       expandedRowIds:
-        props.detailPanelExpandedRowIds ?? props.initialState?.detailPanel?.expandedRowIds ?? [],
+        props.detailPanelExpandedRowIds ??
+        props.initialState?.detailPanel?.expandedRowIds ??
+        emptySet,
     },
   };
 };
 
 function cacheContentAndHeight(
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: React.RefObject<GridApiPro>,
   getDetailPanelContent: DataGridProProcessedProps['getDetailPanelContent'],
   getDetailPanelHeight: DataGridProProcessedProps['getDetailPanelHeight'],
   previousHeightCache: GridDetailPanelState['heightCache'],
@@ -57,31 +60,29 @@ function cacheContentAndHeight(
   // TODO change to lazy approach using a Proxy
   // only call getDetailPanelContent when asked for an id
   const rowIds = gridDataRowIdsSelector(apiRef);
-  const contentCache = rowIds.reduce<Record<GridRowId, ReturnType<typeof getDetailPanelContent>>>(
-    (acc, id) => {
-      const params = apiRef.current.getRowParams(id);
-      acc[id] = getDetailPanelContent(params);
-      return acc;
-    },
-    {},
-  );
 
-  const heightCache = rowIds.reduce<GridDetailPanelState['heightCache']>((acc, id) => {
-    if (contentCache[id] == null) {
-      return acc;
-    }
+  const contentCache: Record<GridRowId, ReturnType<typeof getDetailPanelContent>> = {};
+  const heightCache: GridDetailPanelState['heightCache'] = {};
+
+  for (let i = 0; i < rowIds.length; i += 1) {
+    const id = rowIds[i];
     const params = apiRef.current.getRowParams(id);
+    const content = getDetailPanelContent(params);
+    contentCache[id] = content;
+
+    if (content == null) {
+      continue;
+    }
     const height = getDetailPanelHeight(params);
     const autoHeight = height === 'auto';
-    acc[id] = { autoHeight, height: autoHeight ? previousHeightCache[id]?.height : height };
-    return acc;
-  }, {});
+    heightCache[id] = { autoHeight, height: autoHeight ? previousHeightCache[id]?.height : height };
+  }
 
   return { contentCache, heightCache };
 }
 
 export const useGridDetailPanel = (
-  apiRef: React.MutableRefObject<GridPrivateApiPro>,
+  apiRef: React.RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     | 'getDetailPanelContent'
@@ -150,9 +151,13 @@ export const useGridDetailPanel = (
       }
 
       const ids = apiRef.current.getExpandedDetailPanels();
-      apiRef.current.setExpandedDetailPanels(
-        ids.includes(id) ? ids.filter((rowId) => rowId !== id) : [...ids, id],
-      );
+      const newIds = new Set(ids);
+      if (ids.has(id)) {
+        newIds.delete(id);
+      } else {
+        newIds.add(id);
+      }
+      apiRef.current.setExpandedDetailPanels(newIds);
     },
     [apiRef, contentCache, props.getDetailPanelContent],
   );
@@ -183,7 +188,7 @@ export const useGridDetailPanel = (
     GridDetailPanelPrivateApi['storeDetailPanelHeight']
   >(
     (id, height) => {
-      const heightCache = gridDetailPanelRawHeightCacheSelector(apiRef.current.state);
+      const heightCache = gridDetailPanelRawHeightCacheSelector(apiRef);
 
       if (!heightCache[id] || heightCache[id].height === height) {
         return;
@@ -205,16 +210,6 @@ export const useGridDetailPanel = (
     [apiRef],
   );
 
-  const detailPanelHasAutoHeight = React.useCallback<
-    GridDetailPanelPrivateApi['detailPanelHasAutoHeight']
-  >(
-    (id) => {
-      const heightCache = gridDetailPanelRawHeightCacheSelector(apiRef.current.state);
-      return heightCache[id] ? heightCache[id].autoHeight : false;
-    },
-    [apiRef],
-  );
-
   const detailPanelPubicApi: GridDetailPanelApi = {
     toggleDetailPanel,
     getExpandedDetailPanels,
@@ -223,7 +218,6 @@ export const useGridDetailPanel = (
 
   const detailPanelPrivateApi: GridDetailPanelPrivateApi = {
     storeDetailPanelHeight,
-    detailPanelHasAutoHeight,
   };
 
   useGridApiMethod(apiRef, detailPanelPubicApi, 'public');
@@ -260,9 +254,9 @@ export const useGridDetailPanel = (
   useGridApiEventHandler(apiRef, 'sortedRowsSet', updateCachesAndForceUpdate);
 
   const previousGetDetailPanelContentProp =
-    React.useRef<DataGridProProcessedProps['getDetailPanelContent']>();
+    React.useRef<DataGridProProcessedProps['getDetailPanelContent']>(null);
   const previousGetDetailPanelHeightProp =
-    React.useRef<DataGridProProcessedProps['getDetailPanelHeight']>();
+    React.useRef<DataGridProProcessedProps['getDetailPanelHeight']>(null);
 
   const updateCachesIfNeeded = React.useCallback(() => {
     if (
@@ -294,16 +288,16 @@ export const useGridDetailPanel = (
 
   const addDetailHeight = React.useCallback<GridPipeProcessor<'rowHeight'>>(
     (initialValue, row) => {
-      if (!expandedRowIds || expandedRowIds.length === 0 || !expandedRowIds.includes(row.id)) {
+      if (!expandedRowIds || expandedRowIds.size === 0 || !expandedRowIds.has(row.id)) {
         initialValue.detail = 0;
         return initialValue;
       }
 
       updateCachesIfNeeded();
 
-      const heightCache = gridDetailPanelExpandedRowsHeightCacheSelector(apiRef);
+      const heightCache = gridDetailPanelRawHeightCacheSelector(apiRef);
 
-      initialValue.detail = heightCache[row.id] ?? 0; // Fallback to zero because the cache might not be ready yet (for example page was changed)
+      initialValue.detail = heightCache[row.id].height ?? 0; // Fallback to zero because the cache might not be ready yet (for example page was changed)
       return initialValue;
     },
     [apiRef, expandedRowIds, updateCachesIfNeeded],
@@ -313,7 +307,13 @@ export const useGridDetailPanel = (
 
   const isFirstRender = React.useRef(true);
   if (isFirstRender.current) {
-    isFirstRender.current = false;
     updateCachesIfNeeded();
   }
+  React.useEffect(() => {
+    if (!isFirstRender.current) {
+      updateCachesIfNeeded();
+      apiRef.current.hydrateRowsMeta();
+    }
+    isFirstRender.current = false;
+  }, [apiRef, updateCachesIfNeeded]);
 };

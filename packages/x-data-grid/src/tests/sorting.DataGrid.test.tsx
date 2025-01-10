@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import {
   DataGrid,
@@ -90,7 +90,7 @@ describe('<DataGrid /> - Sorting', () => {
   });
 
   it('should allow sorting using `apiRef` for unsortable columns', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: React.RefObject<GridApi>;
     function TestCase() {
       apiRef = useGridApiRef();
       const cols = [{ field: 'id', sortable: false }];
@@ -119,8 +119,8 @@ describe('<DataGrid /> - Sorting', () => {
     expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
   });
 
-  it('should allow clearing the current sorting using `sortColumn` idempotently', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
+  it('should allow clearing the current sorting using `sortColumn` idempotently', async () => {
+    let apiRef: React.RefObject<GridApi>;
     function TestCase() {
       apiRef = useGridApiRef();
       const cols = [{ field: 'id' }];
@@ -133,26 +133,26 @@ describe('<DataGrid /> - Sorting', () => {
       );
     }
 
-    render(<TestCase />);
+    const { user } = render(<TestCase />);
     expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
     const header = getColumnHeaderCell(0);
 
     // Trigger a sort using the header
-    fireEvent.click(header);
+    await user.click(header);
     expect(getColumnValues(0)).to.deep.equal(['0', '5', '10']);
 
     // Clear the value using `apiRef`
-    act(() => apiRef.current.sortColumn('id', null));
+    await act(() => apiRef.current.sortColumn('id', null));
     expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
 
     // Check the behavior is idempotent
-    act(() => apiRef.current.sortColumn('id', null));
+    await act(() => apiRef.current.sortColumn('id', null));
     expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
   });
 
   // See https://github.com/mui/mui-x/issues/12271
   it('should not keep the sort item with `item.sort = null`', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: React.RefObject<GridApi>;
     const onSortModelChange = spy();
     function TestCase() {
       apiRef = useGridApiRef();
@@ -667,7 +667,7 @@ describe('<DataGrid /> - Sorting', () => {
   });
 
   it('should apply the sortModel prop correctly on GridApiRef update row data', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: React.RefObject<GridApi>;
     function TestCase() {
       apiRef = useGridApiRef();
 
@@ -712,9 +712,7 @@ describe('<DataGrid /> - Sorting', () => {
     expect(getColumnValues(1)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
 
     setProps({ columns: [{ field: 'id' }] });
-    await waitFor(() => {
-      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
-    });
+    expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
     expect(onSortModelChange.callCount).to.equal(1);
     expect(onSortModelChange.lastCall.firstArg).to.deep.equal([]);
   });
@@ -747,9 +745,7 @@ describe('<DataGrid /> - Sorting', () => {
     expect(getColumnValues(1)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
 
     setProps({ columns: [{ field: 'id' }], sortModel: [{ field: 'id', sort: 'desc' }] });
-    await waitFor(() => {
-      expect(getColumnValues(0)).to.deep.equal(['2', '1', '0']);
-    });
+    expect(getColumnValues(0)).to.deep.equal(['2', '1', '0']);
     expect(onSortModelChange.callCount).to.equal(0);
   });
 
@@ -790,9 +786,7 @@ describe('<DataGrid /> - Sorting', () => {
 
       const header = getColumnHeaderCell(0);
       fireEvent.click(header);
-      await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['a', 'b', '', '']);
-      });
+      expect(getColumnValues(0)).to.deep.equal(['a', 'b', '', '']);
 
       fireEvent.click(header);
       expect(getColumnValues(0)).to.deep.equal(['b', 'a', '', '']);

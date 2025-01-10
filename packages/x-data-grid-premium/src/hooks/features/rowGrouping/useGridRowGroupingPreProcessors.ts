@@ -31,7 +31,7 @@ import {
 import {
   filterRowTreeFromGroupingColumns,
   getColDefOverrides,
-  ROW_GROUPING_STRATEGY,
+  RowGroupingStrategy,
   isGroupingColumn,
   setStrategyAvailability,
   getCellGroupingCriteria,
@@ -40,7 +40,7 @@ import {
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 
 export const useGridRowGroupingPreProcessors = (
-  apiRef: React.MutableRefObject<GridPrivateApiPremium>,
+  apiRef: React.RefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
     | 'disableRowGrouping'
@@ -48,6 +48,7 @@ export const useGridRowGroupingPreProcessors = (
     | 'rowGroupingColumnMode'
     | 'defaultGroupingExpansionDepth'
     | 'isGroupExpandedByDefault'
+    | 'unstable_dataSource'
   >,
 ) => {
   const getGroupingColDefs = React.useCallback(
@@ -55,6 +56,10 @@ export const useGridRowGroupingPreProcessors = (
       if (props.disableRowGrouping) {
         return [];
       }
+
+      const strategy = props.unstable_dataSource
+        ? RowGroupingStrategy.DataSource
+        : RowGroupingStrategy.Default;
 
       const groupingColDefProp = props.groupingColDef;
 
@@ -73,8 +78,9 @@ export const useGridRowGroupingPreProcessors = (
             createGroupingColDefForAllGroupingCriteria({
               apiRef,
               rowGroupingModel,
-              colDefOverride: getColDefOverrides(groupingColDefProp, rowGroupingModel),
+              colDefOverride: getColDefOverrides(groupingColDefProp, rowGroupingModel, strategy),
               columnsLookup: columnsState.lookup,
+              strategy,
             }),
           ];
         }
@@ -86,6 +92,7 @@ export const useGridRowGroupingPreProcessors = (
               colDefOverride: getColDefOverrides(groupingColDefProp, [groupingCriteria]),
               groupedByColDef: columnsState.lookup[groupingCriteria],
               columnsLookup: columnsState.lookup,
+              strategy,
             }),
           );
         }
@@ -95,7 +102,13 @@ export const useGridRowGroupingPreProcessors = (
         }
       }
     },
-    [apiRef, props.groupingColDef, props.rowGroupingColumnMode, props.disableRowGrouping],
+    [
+      apiRef,
+      props.groupingColDef,
+      props.rowGroupingColumnMode,
+      props.disableRowGrouping,
+      props.unstable_dataSource,
+    ],
   );
 
   const updateGroupingColumn = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
@@ -103,10 +116,13 @@ export const useGridRowGroupingPreProcessors = (
       const groupingColDefs = getGroupingColDefs(columnsState);
       let newColumnFields: string[] = [];
       const newColumnsLookup: GridColumnRawLookup = {};
+      const prevGroupingfields: string[] = [];
 
       // We only keep the non-grouping columns
       columnsState.orderedFields.forEach((field) => {
-        if (!isGroupingColumn(field)) {
+        if (isGroupingColumn(field)) {
+          prevGroupingfields.push(field);
+        } else {
           newColumnFields.push(field);
           newColumnsLookup[field] = columnsState.lookup[field];
         }
@@ -122,14 +138,17 @@ export const useGridRowGroupingPreProcessors = (
 
         newColumnsLookup[groupingColDef.field] = groupingColDef;
       });
-      const startIndex = newColumnFields[0] === GRID_CHECKBOX_SELECTION_FIELD ? 1 : 0;
-      newColumnFields = [
-        ...newColumnFields.slice(0, startIndex),
-        ...groupingColDefs.map((colDef) => colDef.field),
-        ...newColumnFields.slice(startIndex),
-      ];
 
-      columnsState.orderedFields = newColumnFields;
+      if (prevGroupingfields.length !== groupingColDefs.length) {
+        const startIndex = newColumnFields[0] === GRID_CHECKBOX_SELECTION_FIELD ? 1 : 0;
+        newColumnFields = [
+          ...newColumnFields.slice(0, startIndex),
+          ...groupingColDefs.map((colDef) => colDef.field),
+          ...newColumnFields.slice(startIndex),
+        ];
+        columnsState.orderedFields = newColumnFields;
+      }
+
       columnsState.lookup = newColumnsLookup;
 
       return columnsState;
@@ -177,7 +196,7 @@ export const useGridRowGroupingPreProcessors = (
           nodes: params.updates.rows.map(getRowTreeBuilderNode),
           defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
           isGroupExpandedByDefault: props.isGroupExpandedByDefault,
-          groupingName: ROW_GROUPING_STRATEGY,
+          groupingName: RowGroupingStrategy.Default,
         });
       }
 
@@ -191,7 +210,7 @@ export const useGridRowGroupingPreProcessors = (
         previousTreeDepth: params.previousTreeDepths!,
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
         isGroupExpandedByDefault: props.isGroupExpandedByDefault,
-        groupingName: ROW_GROUPING_STRATEGY,
+        groupingName: RowGroupingStrategy.Default,
       });
     },
     [apiRef, props.defaultGroupingExpansionDepth, props.isGroupExpandedByDefault],
@@ -228,35 +247,29 @@ export const useGridRowGroupingPreProcessors = (
   useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', updateGroupingColumn);
   useGridRegisterStrategyProcessor(
     apiRef,
-    ROW_GROUPING_STRATEGY,
+    RowGroupingStrategy.Default,
     'rowTreeCreation',
     createRowTreeForRowGrouping,
   );
-  useGridRegisterStrategyProcessor(apiRef, ROW_GROUPING_STRATEGY, 'filtering', filterRows);
-  useGridRegisterStrategyProcessor(apiRef, ROW_GROUPING_STRATEGY, 'sorting', sortRows);
+  useGridRegisterStrategyProcessor(apiRef, RowGroupingStrategy.Default, 'filtering', filterRows);
+  useGridRegisterStrategyProcessor(apiRef, RowGroupingStrategy.Default, 'sorting', sortRows);
   useGridRegisterStrategyProcessor(
     apiRef,
-    ROW_GROUPING_STRATEGY,
+    RowGroupingStrategy.Default,
     'visibleRowsLookupCreation',
     getVisibleRowsLookup,
   );
 
-  /**
-   * 1ST RENDER
-   */
   useFirstRender(() => {
-    setStrategyAvailability(apiRef, props.disableRowGrouping);
+    setStrategyAvailability(apiRef, props.disableRowGrouping, props.unstable_dataSource);
   });
 
-  /**
-   * EFFECTS
-   */
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
     if (!isFirstRender.current) {
-      setStrategyAvailability(apiRef, props.disableRowGrouping);
+      setStrategyAvailability(apiRef, props.disableRowGrouping, props.unstable_dataSource);
     } else {
       isFirstRender.current = false;
     }
-  }, [apiRef, props.disableRowGrouping]);
+  }, [apiRef, props.disableRowGrouping, props.unstable_dataSource]);
 };

@@ -6,7 +6,7 @@ import { DataGrid, useGridApiRef } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function UseGridApiRef() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
     maxColumns: 6,
@@ -27,10 +27,12 @@ export default function UseGridApiRef() {
       <Box sx={{ height: 400, width: '100%' }}>
         <DataGrid
           {...data}
+          loading={loading}
           apiRef={apiRef}
           pagination
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
+          pageSizeOptions={[10, 25, 50, 100]}
         />
       </Box>
     </Stack>

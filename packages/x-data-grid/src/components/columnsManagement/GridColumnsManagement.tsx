@@ -4,6 +4,9 @@ import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { styled } from '@mui/material/styles';
+import TextField, { TextFieldProps } from '@mui/material/TextField';
+import { inputBaseClasses } from '@mui/material/InputBase';
+import { vars } from '../../constants/cssVariables';
 import {
   gridColumnDefinitionsSelector,
   gridColumnVisibilityModelSelector,
@@ -24,6 +27,7 @@ export interface GridColumnsManagementProps {
    */
   sort?: 'asc' | 'desc';
   searchPredicate?: (column: GridColDef, searchValue: string) => boolean;
+  searchInputProps?: Partial<TextFieldProps>;
   /**
    * If `true`, the column search field will be focused automatically.
    * If `false`, the first column switch input will be focused automatically.
@@ -66,6 +70,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const slots = {
     root: ['columnsManagement'],
     header: ['columnsManagementHeader'],
+    searchInput: ['columnsManagementSearchInput'],
     footer: ['columnsManagementFooter'],
     row: ['columnsManagementRow'],
   };
@@ -95,6 +100,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
     disableResetButton = false,
     toggleAllMode = 'all',
     getTogglableColumns,
+    searchInputProps,
   } = props;
 
   const isResetDisabled = React.useMemo(
@@ -207,27 +213,59 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
     }
     return false;
   };
+  const handleSearchReset = React.useCallback(() => {
+    setSearchValue('');
+    searchInputRef.current!.focus();
+  }, []);
 
   return (
     <React.Fragment>
       <GridColumnsManagementHeader className={classes.header} ownerState={rootProps}>
-        <rootProps.slots.baseTextField
+        <SearchInput
+          as={rootProps.slots.baseTextField}
+          ownerState={rootProps}
           placeholder={apiRef.current.getLocaleText('columnsManagementSearchTitle')}
           inputRef={searchInputRef}
+          className={classes.searchInput}
           value={searchValue}
           onChange={handleSearchValueChange}
           variant="outlined"
           size="small"
+          type="search"
           InputProps={{
             startAdornment: (
               <rootProps.slots.baseInputAdornment position="start">
                 <rootProps.slots.quickFilterIcon />
               </rootProps.slots.baseInputAdornment>
             ),
-            sx: { pl: 1.5 },
+            endAdornment: (
+              <rootProps.slots.baseIconButton
+                aria-label={apiRef.current.getLocaleText('columnsManagementDeleteIconLabel')}
+                size="small"
+                style={
+                  searchValue
+                    ? {
+                        visibility: 'visible',
+                      }
+                    : {
+                        visibility: 'hidden',
+                      }
+                }
+                tabIndex={-1}
+                onClick={handleSearchReset}
+                {...rootProps.slotProps?.baseIconButton}
+              >
+                <rootProps.slots.quickFilterClearIcon fontSize="small" />
+              </rootProps.slots.baseIconButton>
+            ),
           }}
+          inputProps={{
+            'aria-label': apiRef.current.getLocaleText('columnsManagementSearchTitle'),
+          }}
+          autoComplete="off"
           fullWidth
           {...rootProps.slotProps?.baseTextField}
+          {...searchInputProps}
         />
       </GridColumnsManagementHeader>
       <GridColumnsManagementBody className={classes.root} ownerState={rootProps}>
@@ -321,6 +359,7 @@ GridColumnsManagement.propTypes = {
    * @returns {GridColDef['field'][]} The list of togglable columns' field names.
    */
   getTogglableColumns: PropTypes.func,
+  searchInputProps: PropTypes.object,
   searchPredicate: PropTypes.func,
   sort: PropTypes.oneOf(['asc', 'desc']),
   /**
@@ -335,39 +374,52 @@ GridColumnsManagement.propTypes = {
 const GridColumnsManagementBody = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnsManagement',
-  overridesResolver: (props, styles) => styles.columnsManagement,
-})<{ ownerState: OwnerState }>(({ theme }) => ({
-  padding: theme.spacing(0, 3, 1.5),
+})<{ ownerState: OwnerState }>({
+  padding: vars.spacing(0, 3, 1.5),
   display: 'flex',
   flexDirection: 'column',
   overflow: 'auto',
   flex: '1 1',
   maxHeight: 400,
   alignItems: 'flex-start',
-}));
+});
 
 const GridColumnsManagementHeader = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnsManagementHeader',
-  overridesResolver: (props, styles) => styles.columnsManagementHeader,
-})<{ ownerState: OwnerState }>(({ theme }) => ({
-  padding: theme.spacing(1.5, 3),
-}));
+})<{ ownerState: OwnerState }>({
+  padding: vars.spacing(1.5, 3),
+});
+
+const SearchInput = styled(TextField, {
+  name: 'MuiDataGrid',
+  slot: 'ColumnsManagementSearchInput',
+})<{ ownerState: OwnerState }>({
+  [`& .${inputBaseClasses.root}`]: {
+    padding: vars.spacing(0, 1.5, 0, 1.5),
+  },
+  [`& .${inputBaseClasses.input}::-webkit-search-decoration,
+      & .${inputBaseClasses.input}::-webkit-search-cancel-button,
+      & .${inputBaseClasses.input}::-webkit-search-results-button,
+      & .${inputBaseClasses.input}::-webkit-search-results-decoration`]: {
+    /* clears the 'X' icon from Chrome */
+    display: 'none',
+  },
+});
 
 const GridColumnsManagementFooter = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnsManagementFooter',
-  overridesResolver: (props, styles) => styles.columnsManagementFooter,
-})<{ ownerState: OwnerState }>(({ theme }) => ({
-  padding: theme.spacing(0.5, 1, 0.5, 3),
+})<{ ownerState: OwnerState }>({
+  padding: vars.spacing(0.5, 1, 0.5, 3),
   display: 'flex',
   justifyContent: 'space-between',
-  borderTop: `1px solid ${theme.palette.divider}`,
-}));
+  borderTop: `1px solid ${vars.colors.border.base}`,
+});
 
-const GridColumnsManagementEmptyText = styled('div')<{ ownerState: OwnerState }>(({ theme }) => ({
-  padding: theme.spacing(0.5, 0),
-  color: theme.palette.grey[500],
-}));
+const GridColumnsManagementEmptyText = styled('div')<{ ownerState: OwnerState }>({
+  padding: vars.spacing(0.5, 0),
+  color: vars.colors.foreground.muted,
+});
 
 export { GridColumnsManagement };

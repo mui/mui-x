@@ -4,9 +4,8 @@ import { PickersInputBaseClasses, pickersInputBaseClasses } from '../PickersInpu
 
 export interface PickersFilledInputClasses extends PickersInputBaseClasses {
   /** Styles applied to the root element unless `disableUnderline={true}`. */
-  underline?: string;
+  underline: string;
 }
-
 export type PickersFilledInputClassKey = keyof PickersFilledInputClasses;
 
 export function getPickersFilledInputUtilityClass(slot: string) {

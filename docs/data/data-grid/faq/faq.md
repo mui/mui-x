@@ -11,7 +11,7 @@ packageName: '@mui/x-data-grid'
 
 If you still have trouble, you can refer to the [support page](/x/introduction/support/).
 
-## How to pass props to the data grid for better performance?
+## How to pass props to the Data Grid for better performance?
 
 The Data Grid is a complex component that renders a lot of elements. As a general rule, all the non-primitive props should keep a stable reference between renders to avoid unnecessary re-renders.
 

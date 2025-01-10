@@ -7,20 +7,17 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { TimeField } from '../TimeField';
 import { MobileTimePickerProps } from './MobileTimePicker.types';
 import { TimePickerViewRenderers, useTimePickerDefaultizedProps } from '../TimePicker/shared';
-import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { extractValidationProps, validateTime } from '../validation';
-import { PickerValidDate, TimeView } from '../models';
+import { PickerOwnerState, TimeView } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
 import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalization';
 
-type MobileTimePickerComponent = (<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
->(
-  props: MobileTimePickerProps<TDate, TimeView, TEnableAccessibleFieldDOMStructure> &
+type MobileTimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
+  props: MobileTimePickerProps<TimeView, TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -35,23 +32,21 @@ type MobileTimePickerComponent = (<
  * - [MobileTimePicker API](https://mui.com/x/api/date-pickers/mobile-time-picker/)
  */
 const MobileTimePicker = React.forwardRef(function MobileTimePicker<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
-  inProps: MobileTimePickerProps<TDate, TimeView, TEnableAccessibleFieldDOMStructure>,
+  inProps: MobileTimePickerProps<TimeView, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const translations = usePickersTranslations<TDate>();
-  const utils = useUtils<TDate>();
+  const translations = usePickerTranslations();
+  const utils = useUtils();
 
   // Props with the default values common to all time pickers
   const defaultizedProps = useTimePickerDefaultizedProps<
-    TDate,
     TimeView,
-    MobileTimePickerProps<TDate, TimeView, TEnableAccessibleFieldDOMStructure>
+    MobileTimePickerProps<TimeView, TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiMobileTimePicker');
 
-  const viewRenderers: TimePickerViewRenderers<TDate, TimeView, any> = {
+  const viewRenderers: TimePickerViewRenderers<TimeView> = {
     hours: renderTimeViewClock,
     minutes: renderTimeViewClock,
     seconds: renderTimeViewClock,
@@ -71,7 +66,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<
     },
     slotProps: {
       ...defaultizedProps.slotProps,
-      field: (ownerState: any) => ({
+      field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
@@ -85,7 +80,6 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<
   };
 
   const { renderPicker } = useMobilePicker<
-    TDate,
     TimeView,
     TEnableAccessibleFieldDOMStructure,
     typeof props
@@ -129,8 +123,8 @@ MobileTimePicker.propTypes = {
   autoFocus: PropTypes.bool,
   className: PropTypes.string,
   /**
-   * If `true`, the popover or modal will close after submitting the full date.
-   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * If `true`, the Picker will close after submitting the full date.
+   * @default false
    */
   closeOnSelect: PropTypes.bool,
   /**
@@ -139,7 +133,8 @@ MobileTimePicker.propTypes = {
    */
   defaultValue: PropTypes.object,
   /**
-   * If `true`, the picker and text field are disabled.
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
    * @default false
    */
   disabled: PropTypes.bool,
@@ -164,7 +159,7 @@ MobileTimePicker.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
-   * @default false
+   * @default true
    */
   enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
@@ -272,6 +267,11 @@ MobileTimePicker.propTypes = {
    * Force rendering in particular orientation.
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
+  /**
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
+   * @default false
+   */
   readOnly: PropTypes.bool,
   /**
    * If `true`, disable heavy animations.
@@ -309,8 +309,7 @@ MobileTimePicker.propTypes = {
   ]),
   /**
    * Disable specific time.
-   * @template TDate
-   * @param {TDate} value The value to check.
+   * @param {PickerValidDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */

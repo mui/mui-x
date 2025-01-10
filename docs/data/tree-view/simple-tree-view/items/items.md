@@ -51,7 +51,7 @@ Use the `disabled` prop on the Tree Item component to disable interaction and fo
 
 #### The disabledItemsFocusable prop
 
-Note that the demo above also includes a switch.
+Note that the demo below also includes a switch.
 This toggles the `disabledItemsFocusable` prop, which controls whether or not a disabled Tree Item can be focused.
 
 When this prop is set to false:
@@ -91,13 +91,13 @@ const apiRef = useTreeViewApiRef();
 return <SimpleTreeView apiRef={apiRef}>{children}</SimpleTreeView>;
 ```
 
-When your component first renders, `apiRef` will be `undefined`.
+When your component first renders, `apiRef` is `undefined`.
 After this initial render, `apiRef` holds methods to interact imperatively with the Tree View.
 :::
 
 ### Get an item's DOM element by ID
 
-Use the `getItemDOMElement` API method to get an item's DOM element by its ID.
+Use the `getItemDOMElement()` API method to get an item's DOM element by its ID.
 
 ```ts
 const itemElement = apiRef.current.getItemDOMElement(

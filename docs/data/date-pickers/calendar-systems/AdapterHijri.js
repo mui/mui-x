@@ -1,19 +1,75 @@
 import * as React from 'react';
+import moment from 'moment-hijri';
 import { prefixer } from 'stylis';
 import rtlPlugin from 'stylis-plugin-rtl';
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
-import moment from 'moment-hijri';
+import Button from '@mui/material/Button';
+import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import { AdapterMomentHijri } from '@mui/x-date-pickers/AdapterMomentHijri';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
+import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
+import {
+  useSplitFieldProps,
+  useParsedFormat,
+  usePickerContext,
+} from '@mui/x-date-pickers/hooks';
 
 // Create rtl cache
 const cacheRtl = createCache({
   key: 'adapter-moment-hijri-demo',
   stylisPlugins: [prefixer, rtlPlugin],
 });
+
+function ButtonDateTimeField(props) {
+  const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
+  const {
+    InputProps,
+    slotProps,
+    slots,
+    ownerState,
+    label,
+    focused,
+    name,
+    ...other
+  } = forwardedProps;
+
+  const pickerContext = usePickerContext();
+  const parsedFormat = useParsedFormat();
+  const { hasValidationError } = useValidation({
+    validator: validateDate,
+    value: pickerContext.value,
+    timezone: pickerContext.timezone,
+    props: internalProps,
+  });
+
+  const valueStr =
+    pickerContext.value == null
+      ? parsedFormat
+      : pickerContext.value.format(pickerContext.fieldFormat);
+
+  return (
+    <Button
+      {...other}
+      variant="outlined"
+      color={hasValidationError ? 'error' : 'primary'}
+      ref={InputProps?.ref}
+      onClick={() => pickerContext.setOpen((prev) => !prev)}
+    >
+      {label ? `${label}: ${valueStr}` : valueStr}
+    </Button>
+  );
+}
+
+function ButtonFieldDateTimePicker(props) {
+  return (
+    <DateTimePicker
+      {...props}
+      slots={{ ...props.slots, field: ButtonDateTimeField }}
+    />
+  );
+}
 
 export default function AdapterHijri() {
   // Inherit the theme from the docs site (dark/light mode)
@@ -29,8 +85,7 @@ export default function AdapterHijri() {
       <ThemeProvider theme={theme}>
         <div dir="rtl">
           <LocalizationProvider dateAdapter={AdapterMomentHijri}>
-            <DateTimePicker
-              label="AdapterMomentHijri"
+            <ButtonFieldDateTimePicker
               defaultValue={moment(new Date(2022, 1, 1))}
               // moment-hijri support dates between 1356-01-01 and 1499-12-29 H (1937-03-14 and 2076-11-26)
               minDate={moment(new Date(1938, 0, 1))}

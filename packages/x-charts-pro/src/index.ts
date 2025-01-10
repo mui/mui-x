@@ -28,11 +28,7 @@ export * from '@mui/x-charts/ChartsSurface';
 
 // Pro components
 export * from './Heatmap';
-export * from './ResponsiveChartContainerPro';
 export * from './ChartContainerPro';
 export * from './ScatterChartPro';
 export * from './BarChartPro';
 export * from './LineChartPro';
-
-// Pro context
-export * from './context';

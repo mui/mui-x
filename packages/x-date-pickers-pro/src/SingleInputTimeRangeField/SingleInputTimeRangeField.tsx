@@ -3,8 +3,10 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import MuiTextField from '@mui/material/TextField';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
-import { convertFieldResponseIntoMuiTextFieldProps } from '@mui/x-date-pickers/internals';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
+import {
+  convertFieldResponseIntoMuiTextFieldProps,
+  useFieldOwnerState,
+} from '@mui/x-date-pickers/internals';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import { useThemeProps } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
@@ -13,11 +15,8 @@ import { SingleInputTimeRangeFieldProps } from './SingleInputTimeRangeField.type
 import { useSingleInputTimeRangeField } from './useSingleInputTimeRangeField';
 import { FieldType } from '../models';
 
-type DateRangeFieldComponent = (<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
->(
-  props: SingleInputTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> &
+type DateRangeFieldComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
+  props: SingleInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any; fieldType?: FieldType };
 
@@ -32,10 +31,9 @@ type DateRangeFieldComponent = (<
  * - [SingleInputTimeRangeField API](https://mui.com/x/api/single-input-time-range-field/)
  */
 const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRangeField<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
-  inProps: SingleInputTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  inProps: SingleInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
   inRef: React.Ref<HTMLDivElement>,
 ) {
   const themeProps = useThemeProps({
@@ -45,27 +43,23 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
 
   const { slots, slotProps, InputProps, inputProps, ...other } = themeProps;
 
-  const ownerState = themeProps;
+  const ownerState = useFieldOwnerState(themeProps);
 
-  const TextField =
-    slots?.textField ??
-    (inProps.enableAccessibleFieldDOMStructure ? PickersTextField : MuiTextField);
   const textFieldProps = useSlotProps({
-    elementType: TextField,
+    elementType: PickersTextField,
     externalSlotProps: slotProps?.textField,
     externalForwardedProps: other,
     ownerState,
     additionalProps: {
       ref: inRef,
     },
-  }) as SingleInputTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  }) as SingleInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>;
 
   // TODO: Remove when mui/material-ui#35088 will be merged
   textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
   textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
 
   const fieldResponse = useSingleInputTimeRangeField<
-    TDate,
     TEnableAccessibleFieldDOMStructure,
     typeof textFieldProps
   >(textFieldProps);
@@ -76,6 +70,10 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
     slots,
     slotProps,
   });
+
+  const TextField =
+    slots?.textField ??
+    (fieldResponse.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
 
   return <TextField {...processedFieldProps} />;
 }) as DateRangeFieldComponent;
@@ -122,6 +120,7 @@ SingleInputTimeRangeField.propTypes = {
   defaultValue: PropTypes.arrayOf(PropTypes.object),
   /**
    * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
    * @default false
    */
   disabled: PropTypes.bool,
@@ -141,7 +140,7 @@ SingleInputTimeRangeField.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
-   * @default false
+   * @default true
    */
   enableAccessibleFieldDOMStructure: PropTypes.bool,
   /**
@@ -261,8 +260,8 @@ SingleInputTimeRangeField.propTypes = {
    */
   onSelectedSectionsChange: PropTypes.func,
   /**
-   * It prevents the user from changing the value of the field
-   * (not from interacting with the field).
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
    * @default false
    */
   readOnly: PropTypes.bool,
@@ -303,17 +302,16 @@ SingleInputTimeRangeField.propTypes = {
   ]),
   /**
    * Disable specific time.
-   * @template TDate
-   * @param {TDate} value The value to check.
+   * @param {PickerValidDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,
   /**
-   * If `true`, the format will respect the leading zeroes (e.g: on dayjs, the format `M/D/YYYY` will render `8/16/2018`)
-   * If `false`, the format will always add leading zeroes (e.g: on dayjs, the format `M/D/YYYY` will render `08/16/2018`)
+   * If `true`, the format will respect the leading zeroes (for example on dayjs, the format `M/D/YYYY` will render `8/16/2018`)
+   * If `false`, the format will always add leading zeroes (for example on dayjs, the format `M/D/YYYY` will render `08/16/2018`)
    *
-   * Warning n°1: Luxon is not able to respect the leading zeroes when using macro tokens (e.g: "DD"), so `shouldRespectLeadingZeros={true}` might lead to inconsistencies when using `AdapterLuxon`.
+   * Warning n°1: Luxon is not able to respect the leading zeroes when using macro tokens (for example "DD"), so `shouldRespectLeadingZeros={true}` might lead to inconsistencies when using `AdapterLuxon`.
    *
    * Warning n°2: When `shouldRespectLeadingZeros={true}`, the field will add an invisible character on the sections containing a single digit to make sure `onChange` is fired.
    * If you need to get the clean value from the input, you can remove this character using `input.value.replace(/\u200e/g, '')`.

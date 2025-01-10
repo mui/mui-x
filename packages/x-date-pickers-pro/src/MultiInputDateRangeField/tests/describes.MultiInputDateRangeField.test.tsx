@@ -11,7 +11,7 @@ import { describeConformance } from 'test/utils/describeConformance';
 describe('<MultiInputDateRangeField />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  describeConformance(<MultiInputDateRangeField enableAccessibleFieldDOMStructure />, () => ({
+  describeConformance(<MultiInputDateRangeField />, () => ({
     classes: {} as any,
     inheritComponent: 'div',
     render,

@@ -7,6 +7,7 @@ import {
   GridValidRowModel,
   GridGroupNode,
   GridFeatureMode,
+  GridListColDef,
 } from '@mui/x-data-grid';
 import type {
   GridExperimentalFeatures,
@@ -57,7 +58,7 @@ interface DataGridProPropsWithComplexDefaultValueAfterProcessing
 }
 
 /**
- * The props of the `DataGridPro` component after the pre-processing phase.
+ * The props of the Data Grid Pro component after the pre-processing phase.
  */
 export interface DataGridProProcessedProps<R extends GridValidRowModel = any>
   extends DataGridProPropsWithDefaultValue<R>,
@@ -67,7 +68,7 @@ export interface DataGridProProcessedProps<R extends GridValidRowModel = any>
 export type DataGridProForcedPropsKey = 'signature';
 
 /**
- * The `DataGridPro` options with a default value overridable through props
+ * The Data Grid Pro options with a default value overridable through props
  * None of the entry of this interface should be optional, they all have default values and `DataGridProps` already applies a `Partial<DataGridSimpleOptions>` for the public interface
  * The controlled model do not have a default value at the prop processing level, so they must be defined in `DataGridOtherProps`
  */
@@ -76,6 +77,7 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
     DataGridProSharedPropsWithDefaultValue {
   /**
    * Set the area in `px` at the bottom of the grid viewport where onRowsScrollEnd is called.
+   * If combined with `unstable_lazyLoading`, it defines the area where the next data request is triggered.
    * @default 80
    */
   scrollEndThreshold: number;
@@ -128,7 +130,7 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
    * Loading rows can be processed on the server or client-side.
    * Set it to 'client' if you would like enable infnite loading.
    * Set it to 'server' if you would like to enable lazy loading.
-   * * @default "client"
+   * @default "client"
    */
   rowsLoadingMode: GridFeatureMode;
   /**
@@ -137,6 +139,23 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
    * @default false
    */
   keepColumnPositionIfDraggedOutside: boolean;
+  /**
+   * If `true`, displays the data in a list view.
+   * Use in combination with `unstable_listColumn`.
+   */
+  unstable_listView: boolean;
+  /**
+   * Used together with `unstable_dataSource` to enable lazy loading.
+   * If enabled, the grid stops adding `paginationModel` to the data requests (`getRows`)
+   * and starts sending `start` and `end` values depending on the loading mode and the scroll position.
+   * @default false
+   */
+  unstable_lazyLoading: boolean;
+  /**
+   * If positive, the Data Grid will throttle data source requests on rendered rows interval change.
+   * @default 500
+   */
+  unstable_lazyLoadingRequestThrottleMs: number;
 }
 
 interface DataGridProDataSourceProps {
@@ -167,7 +186,7 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
   /**
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
-  apiRef?: React.MutableRefObject<GridApiPro>;
+  apiRef?: React.RefObject<GridApiPro>;
   /**
    * The initial state of the DataGridPro.
    * The data in it will be set in the state on initialization but will not be controlled.
@@ -210,13 +229,13 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
   /**
    * The row ids to show the detail panel.
    */
-  detailPanelExpandedRowIds?: GridRowId[];
+  detailPanelExpandedRowIds?: Set<GridRowId>;
   /**
    * Callback fired when the detail panel of a row is opened or closed.
    * @param {GridRowId[]} ids The ids of the rows which have the detail panel open.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onDetailPanelExpandedRowIdsChange?: (ids: GridRowId[], details: GridCallbackDetails) => void;
+  onDetailPanelExpandedRowIdsChange?: (ids: Set<GridRowId>, details: GridCallbackDetails) => void;
   /**
    * Function that returns the element to render in row detail.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
@@ -245,4 +264,8 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * Overridable components props dynamically passed to the component at rendering.
    */
   slotProps?: GridProSlotProps;
+  /**
+   * Definition of the column rendered when the `unstable_listView` prop is enabled.
+   */
+  unstable_listColumn?: GridListColDef<R>;
 }

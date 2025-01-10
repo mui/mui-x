@@ -4,6 +4,18 @@
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." }
   },
-  "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
+  "classDescriptions": {
+    "faded": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "it is faded"
+    },
+    "highlighted": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "it is highlighted"
+    },
+    "root": { "description": "Styles applied to the root element." }
+  },
   "slotDescriptions": { "bar": "The component that renders the bar." }
 }

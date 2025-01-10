@@ -25,11 +25,14 @@ import {
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
   useControlledValueWithTimezone,
   useViews,
+  PickerRangeValue,
+  usePickerPrivateContext,
 } from '@mui/x-date-pickers/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import {
+  DateRangeCalendarClasses,
   dateRangeCalendarClasses,
   getDateRangeCalendarUtilityClass,
 } from './dateRangeCalendarClasses';
@@ -45,7 +48,7 @@ import {
   isWithinRange,
 } from '../internals/utils/date-utils';
 import { calculateRangeChange, calculateRangePreview } from '../internals/utils/date-range-manager';
-import { DateRange, RangePosition } from '../models';
+import { RangePosition } from '../models';
 import { DateRangePickerDay, dateRangePickerDayClasses as dayClasses } from '../DateRangePickerDay';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { useDragRange } from './useDragRange';
@@ -55,6 +58,7 @@ import {
   PickersRangeCalendarHeader,
   PickersRangeCalendarHeaderProps,
 } from '../PickersRangeCalendarHeader';
+import { useNullablePickerRangePositionContext } from '../internals/hooks/useNullablePickerRangePositionContext';
 
 const releaseInfo = getReleaseInfo();
 
@@ -62,7 +66,7 @@ const DateRangeCalendarRoot = styled('div', {
   name: 'MuiDateRangeCalendar',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: DateRangeCalendarOwnerState<any> }>({
+})<{ ownerState: DateRangeCalendarOwnerState }>({
   display: 'flex',
   flexDirection: 'row',
 });
@@ -79,7 +83,7 @@ const DateRangeCalendarMonthContainer = styled('div', {
 
 const weeksContainerHeight = (DAY_RANGE_SIZE + DAY_MARGIN * 2) * 6;
 
-const DayCalendarForRange = styled(DayCalendar)(({ theme }) => ({
+const InnerDayCalendarForRange = styled(DayCalendar)(({ theme }) => ({
   minWidth: 312,
   minHeight: weeksContainerHeight,
   [`&.${dateRangeCalendarClasses.dayDragging}`]: {
@@ -99,14 +103,16 @@ const DayCalendarForRange = styled(DayCalendar)(({ theme }) => ({
       },
     },
   },
-})) as typeof DayCalendar;
+}));
 
-function useDateRangeCalendarDefaultizedProps<TDate extends PickerValidDate>(
-  props: DateRangeCalendarProps<TDate>,
+const DayCalendarForRange = InnerDayCalendarForRange as typeof DayCalendar;
+
+function useDateRangeCalendarDefaultizedProps(
+  props: DateRangeCalendarProps,
   name: string,
-): DateRangeCalendarDefaultizedProps<TDate> {
-  const utils = useUtils<TDate>();
-  const defaultDates = useDefaultDates<TDate>();
+): DateRangeCalendarDefaultizedProps {
+  const utils = useUtils();
+  const defaultDates = useDefaultDates();
   const defaultReduceAnimations = useDefaultReduceAnimations();
   const themeProps = useThemeProps({
     props,
@@ -116,7 +122,7 @@ function useDateRangeCalendarDefaultizedProps<TDate extends PickerValidDate>(
   return {
     ...themeProps,
     renderLoading:
-      themeProps.renderLoading ?? (() => <span data-mui-test="loading-progress">...</span>),
+      themeProps.renderLoading ?? (() => <span data-testid="loading-progress">...</span>),
     reduceAnimations: themeProps.reduceAnimations ?? defaultReduceAnimations,
     loading: props.loading ?? false,
     disablePast: props.disablePast ?? false,
@@ -131,19 +137,21 @@ function useDateRangeCalendarDefaultizedProps<TDate extends PickerValidDate>(
   };
 }
 
-const useUtilityClasses = (ownerState: DateRangeCalendarOwnerState<any>) => {
-  const { classes, isDragging } = ownerState;
+const useUtilityClasses = (
+  classes: Partial<DateRangeCalendarClasses> | undefined,
+  ownerState: DateRangeCalendarOwnerState,
+) => {
   const slots = {
     root: ['root'],
     monthContainer: ['monthContainer'],
-    dayCalendar: [isDragging && 'dayDragging'],
+    dayCalendar: [ownerState.isDraggingDay && 'dayDragging'],
   };
 
   return composeClasses(slots, getDateRangeCalendarUtilityClass, classes);
 };
 
-type DateRangeCalendarComponent = (<TDate extends PickerValidDate>(
-  props: DateRangeCalendarProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type DateRangeCalendarComponent = ((
+  props: DateRangeCalendarProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -156,9 +164,10 @@ type DateRangeCalendarComponent = (<TDate extends PickerValidDate>(
  *
  * - [DateRangeCalendar API](https://mui.com/x/api/date-pickers/date-range-calendar/)
  */
-const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
-  TDate extends PickerValidDate,
->(inProps: DateRangeCalendarProps<TDate>, ref: React.Ref<HTMLDivElement>) {
+const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
+  inProps: DateRangeCalendarProps,
+  ref: React.Ref<HTMLDivElement>,
+) {
   const props = useDateRangeCalendarDefaultizedProps(inProps, 'MuiDateRangeCalendar');
   const shouldHavePreview = useMediaQuery(DEFAULT_DESKTOP_MODE_MEDIA_QUERY, {
     defaultMatches: false,
@@ -170,6 +179,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     referenceDate,
     onChange,
     className,
+    classes: classesProp,
     disableFuture,
     disablePast,
     minDate,
@@ -178,8 +188,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     reduceAnimations,
     onMonthChange,
     rangePosition: rangePositionProp,
-    defaultRangePosition: inDefaultRangePosition,
-    onRangePositionChange: inOnRangePositionChange,
+    defaultRangePosition: defaultRangePositionProp,
+    onRangePositionChange: onRangePositionChangeProp,
     calendars,
     currentMonthCalendarPosition = 1,
     slots,
@@ -205,14 +215,16 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     ...other
   } = props;
 
+  const rangePositionContext = useNullablePickerRangePositionContext();
+
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone<
-    TDate,
-    DateRange<TDate>,
+    PickerRangeValue,
     NonNullable<typeof onChange>
   >({
     name: 'DateRangeCalendar',
     timezone: timezoneProp,
     value: valueProp,
+    referenceDate,
     defaultValue,
     onChange,
     valueManager: rangeValueManager,
@@ -227,14 +239,14 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     autoFocus,
   });
 
-  const utils = useUtils<TDate>();
-  const now = useNow<TDate>(timezone);
+  const utils = useUtils();
+  const now = useNow(timezone);
   const id = useId();
 
   const { rangePosition, onRangePositionChange } = useRangePosition({
-    rangePosition: rangePositionProp,
-    defaultRangePosition: inDefaultRangePosition,
-    onRangePositionChange: inOnRangePositionChange,
+    rangePosition: rangePositionProp ?? rangePositionContext?.rangePosition,
+    defaultRangePosition: defaultRangePositionProp,
+    onRangePositionChange: onRangePositionChangeProp ?? rangePositionContext?.onRangePositionChange,
   });
 
   const handleDatePositionChange = useEventCallback((position: RangePosition) => {
@@ -245,7 +257,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
 
   const handleSelectedDayChange = useEventCallback(
     (
-      newDate: TDate | null,
+      newDate: PickerValidDate | null,
       selectionState: PickerSelectionState | undefined,
       allowRangeFlip: boolean = false,
     ) => {
@@ -256,6 +268,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
         rangePosition,
         allowRangeFlip,
         shouldMergeDateAndTime: true,
+        referenceDate,
       });
 
       const isNextSectionAvailable = availableRangePositions.includes(nextSelection);
@@ -272,7 +285,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     },
   );
 
-  const handleDrop = useEventCallback((newDate: TDate) => {
+  const handleDrop = useEventCallback((newDate: PickerValidDate) => {
     handleSelectedDayChange(newDate, undefined, true);
   });
 
@@ -280,10 +293,10 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
 
   // Range going for the start of the start day to the end of the end day.
   // This makes sure that `isWithinRange` works with any time in the start and end day.
-  const valueDayRange = React.useMemo<DateRange<TDate>>(
+  const valueDayRange = React.useMemo<PickerRangeValue>(
     () => [
-      value[0] == null || !utils.isValid(value[0]) ? value[0] : utils.startOfDay(value[0]),
-      value[1] == null || !utils.isValid(value[1]) ? value[1] : utils.endOfDay(value[1]),
+      !utils.isValid(value[0]) ? value[0] : utils.startOfDay(value[0]),
+      !utils.isValid(value[1]) ? value[1] : utils.endOfDay(value[1]),
     ],
     [value, utils],
   );
@@ -297,10 +310,14 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     timezone,
   });
 
-  const ownerState = { ...props, isDragging };
-  const classes = useUtilityClasses(ownerState);
+  const { ownerState: pickersOwnerState } = usePickerPrivateContext();
+  const ownerState: DateRangeCalendarOwnerState = {
+    ...pickersOwnerState,
+    isDraggingDay: isDragging,
+  };
+  const classes = useUtilityClasses(classesProp, ownerState);
 
-  const draggingRange = React.useMemo<DateRange<TDate>>(() => {
+  const draggingRange = React.useMemo<PickerRangeValue>(() => {
     if (!valueDayRange[0] || !valueDayRange[1] || !rangeDragDay) {
       return [null, null];
     }
@@ -321,7 +338,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
       return undefined;
     }
 
-    return (dayToTest: TDate) =>
+    return (dayToTest: PickerValidDate) =>
       shouldDisableDate(dayToTest, draggingDatePosition || rangePosition);
   }, [shouldDisableDate, rangePosition, draggingDatePosition]);
 
@@ -331,7 +348,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     changeMonth,
     handleChangeMonth,
     onMonthSwitchingAnimationEnd,
-  } = useCalendarState<TDate>({
+  } = useCalendarState({
     value: value[0] || value[1],
     referenceDate,
     disableFuture,
@@ -346,35 +363,33 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
   });
 
   const CalendarHeader = slots?.calendarHeader ?? PickersRangeCalendarHeader;
-  const calendarHeaderProps: Omit<
-    PickersRangeCalendarHeaderProps<TDate>,
-    'month' | 'monthIndex'
-  > = useSlotProps({
-    elementType: CalendarHeader,
-    externalSlotProps: slotProps?.calendarHeader,
-    additionalProps: {
-      calendars,
-      views: ['day'],
-      view: 'day',
-      currentMonth: calendarState.currentMonth,
-      onMonthChange: (newMonth, direction) => handleChangeMonth({ newMonth, direction }),
-      minDate,
-      maxDate,
-      disabled,
-      disablePast,
-      disableFuture,
-      reduceAnimations,
-      timezone,
-      slots,
-      slotProps,
-    },
-    ownerState: props,
-  });
+  const calendarHeaderProps: Omit<PickersRangeCalendarHeaderProps, 'month' | 'monthIndex'> =
+    useSlotProps({
+      elementType: CalendarHeader,
+      externalSlotProps: slotProps?.calendarHeader,
+      additionalProps: {
+        calendars,
+        views: ['day'],
+        view: 'day',
+        currentMonth: calendarState.currentMonth,
+        onMonthChange: (newMonth, direction) => handleChangeMonth({ newMonth, direction }),
+        minDate,
+        maxDate,
+        disabled,
+        disablePast,
+        disableFuture,
+        reduceAnimations,
+        timezone,
+        slots,
+        slotProps,
+      },
+      ownerState,
+    });
 
-  const prevValue = React.useRef<DateRange<TDate> | null>(null);
+  const prevValue = React.useRef<PickerRangeValue | null>(null);
   React.useEffect(() => {
     const date = rangePosition === 'start' ? value[0] : value[1];
-    if (!date || !utils.isValid(date)) {
+    if (!utils.isValid(date)) {
       return;
     }
 
@@ -406,7 +421,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     }
   }, [rangePosition, value]); // eslint-disable-line
 
-  const baseDateValidationProps: Required<BaseDateValidationProps<TDate>> = {
+  const baseDateValidationProps: Required<BaseDateValidationProps> = {
     disablePast,
     disableFuture,
     maxDate,
@@ -419,7 +434,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     disabled,
   };
 
-  const [rangePreviewDay, setRangePreviewDay] = React.useState<TDate | null>(null);
+  const [rangePreviewDay, setRangePreviewDay] = React.useState<PickerValidDate | null>(null);
 
   const CalendarTransitionProps = React.useMemo(
     () => ({
@@ -436,7 +451,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
   });
 
   const handleDayMouseEnter = useEventCallback(
-    (event: React.MouseEvent<HTMLDivElement>, newPreviewRequest: TDate) => {
+    (event: React.MouseEvent<HTMLDivElement>, newPreviewRequest: PickerValidDate) => {
       if (!isWithinRange(utils, newPreviewRequest, valueDayRange)) {
         setRangePreviewDay(newPreviewRequest);
       } else {
@@ -448,12 +463,12 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
   const slotsForDayCalendar = {
     day: DateRangePickerDay,
     ...slots,
-  } as DayCalendarSlots<TDate>;
+  } as DayCalendarSlots;
 
   const slotPropsForDayCalendar = {
     ...slotProps,
     day: (dayOwnerState) => {
-      const { day } = dayOwnerState;
+      const { day, isDaySelected } = dayOwnerState;
       const isSelectedStartDate = isStartOfRange(utils, day, valueDayRange);
       const isSelectedEndDate = isEndOfRange(utils, day, valueDayRange);
       const shouldInitDragging = !shouldDisableDragEditing && valueDayRange[0] && valueDayRange[1];
@@ -486,14 +501,14 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
         onMouseEnter: shouldHavePreview ? handleDayMouseEnter : undefined,
         // apply selected styling to the dragging start or end day
         isVisuallySelected:
-          dayOwnerState.selected || (isDragging && (isStartOfHighlighting || isEndOfHighlighting)),
+          isDaySelected || (isDragging && (isStartOfHighlighting || isEndOfHighlighting)),
         'data-position': datePosition,
         ...dragEventHandlers,
         draggable: isElementDraggable ? true : undefined,
         ...(resolveComponentProps(slotProps?.day, dayOwnerState) ?? {}),
       };
     },
-  } as DayCalendarSlotProps<TDate>;
+  } as DayCalendarSlotProps;
 
   const calendarMonths = React.useMemo(
     () => Array.from({ length: calendars }).map((_, index) => index),
@@ -554,13 +569,13 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
 
         return (
           <DateRangeCalendarMonthContainer key={monthIndex} className={classes.monthContainer}>
-            <CalendarHeader<TDate>
+            <CalendarHeader
               {...calendarHeaderProps}
               month={month}
               monthIndex={monthIndex}
               labelId={labelId}
             />
-            <DayCalendarForRange<TDate>
+            <DayCalendarForRange
               className={classes.dayCalendar}
               {...calendarState}
               {...baseDateValidationProps}
@@ -629,9 +644,9 @@ DateRangeCalendar.propTypes = {
   currentMonthCalendarPosition: PropTypes.oneOf([1, 2, 3]),
   /**
    * Formats the day of week displayed in the calendar header.
-   * @param {TDate} date The date of the day of week provided by the adapter.
+   * @param {PickerValidDate} date The date of the day of week provided by the adapter.
    * @returns {string} The name to display.
-   * @default (date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
+   * @default (date: PickerValidDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
    */
   dayOfWeekFormatter: PropTypes.func,
   /**
@@ -651,7 +666,8 @@ DateRangeCalendar.propTypes = {
    */
   disableAutoMonthSwitching: PropTypes.bool,
   /**
-   * If `true`, the picker and text field are disabled.
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
    * @default false
    */
   disabled: PropTypes.bool,
@@ -722,8 +738,7 @@ DateRangeCalendar.propTypes = {
   onFocusedViewChange: PropTypes.func,
   /**
    * Callback fired on month change.
-   * @template TDate
-   * @param {TDate} month The new month.
+   * @param {PickerValidDate} month The new month.
    */
   onMonthChange: PropTypes.func,
   /**
@@ -749,7 +764,8 @@ DateRangeCalendar.propTypes = {
    */
   rangePosition: PropTypes.oneOf(['end', 'start']),
   /**
-   * Make picker read only.
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
    * @default false
    */
   readOnly: PropTypes.bool,
@@ -774,8 +790,7 @@ DateRangeCalendar.propTypes = {
    *
    * Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
    *
-   * @template TDate
-   * @param {TDate} day The date to test.
+   * @param {PickerValidDate} day The date to test.
    * @param {string} position The date to test, 'start' or 'end'.
    * @returns {boolean} Returns `true` if the date should be disabled.
    */

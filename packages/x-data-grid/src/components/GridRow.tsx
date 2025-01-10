@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { fastMemo } from '@mui/x-internals/fastMemo';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridRowEventLookup } from '../models/events';
 import { GridRowId, GridRowModel } from '../models/gridRows';
 import { GridEditModes, GridRowModes, GridCellModes } from '../models/gridEditRowModel';
-import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { gridClasses } from '../constants/gridClasses';
 import { composeGridClasses } from '../utils/composeGridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -20,7 +20,7 @@ import { useGridVisibleRows } from '../hooks/utils/useGridVisibleRows';
 import { findParentElementFromClassName, isEventTargetInPortal } from '../utils/domUtils';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../colDef/gridCheckboxSelectionColDef';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../colDef/gridActionsColDef';
-import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../constants/gridDetailPanelToggleField';
+import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../internals/constants';
 import type { GridDimensions } from '../hooks/features/dimensions';
 import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSelector';
 import { gridRowMaximumTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
@@ -29,6 +29,8 @@ import { PinnedPosition, gridPinnedColumnPositionLookup } from './cell/GridCell'
 import { GridScrollbarFillerCell as ScrollbarFiller } from './GridScrollbarFillerCell';
 import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
 import { useGridConfiguration } from '../hooks/utils/useGridConfiguration';
+import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
+import { gridVirtualizationColumnEnabledSelector } from '../hooks';
 
 export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   row: GridRowModel;
@@ -64,24 +66,10 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
   onMouseLeave?: React.MouseEventHandler<HTMLDivElement>;
-  [x: string]: any; // Allow custom attributes like data-* and aria-*
+  [x: `data-${string}`]: string;
 }
 
-function EmptyCell({ width }: { width: number }) {
-  if (!width) {
-    return null;
-  }
-
-  return (
-    <div
-      role="presentation"
-      className={clsx(gridClasses.cell, gridClasses.cellEmpty)}
-      style={{ '--width': `${width}px` } as React.CSSProperties}
-    />
-  );
-}
-
-const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props, refProp) {
+const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props, refProp) {
   const {
     selected,
     rowId,
@@ -101,7 +89,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     isLastVisible,
     isNotVisible,
     showBottomBorder,
-    focusedCell,
     tabbableCell,
     onClick,
     onDoubleClick,
@@ -111,7 +98,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     onMouseOver,
     ...other
   } = props;
-  const apiRef = useGridApiContext();
+  const apiRef = useGridPrivateApiContext();
   const configuration = useGridConfiguration();
   const ref = React.useRef<HTMLDivElement>(null);
   const rootProps = useGridRootProps();
@@ -126,7 +113,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
   const gridHasFiller = dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width;
   const editing = apiRef.current.getRowMode(rowId) === GridRowModes.Edit;
   const editable = rootProps.editMode === GridEditModes.Row;
-
+  const hasColumnVirtualization = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
   const hasFocusCell = focusedColumnIndex !== undefined;
   const hasVirtualFocusCellLeft =
     hasFocusCell &&
@@ -153,37 +140,19 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
 
   React.useLayoutEffect(() => {
     if (currentPage.range) {
-      // The index prop is relative to the rows from all pages. As example, the index prop of the
-      // first row is 5 if `paginationModel.pageSize=5` and `paginationModel.page=1`. However, the index used by the virtualization
-      // doesn't care about pagination and considers the rows from the current page only, so the
-      // first row always has index=0. We need to subtract the index of the first row to make it
-      // compatible with the index used by the virtualization.
       const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(rowId);
-      // pinned rows are not part of the visible rows
-      if (rowIndex != null) {
+      // Pinned rows are not part of the visible rows
+      if (rowIndex !== undefined) {
         apiRef.current.unstable_setLastMeasuredRowIndex(rowIndex);
       }
     }
 
-    const rootElement = ref.current;
-    const hasFixedHeight = rowHeight !== 'auto';
-    if (!rootElement || hasFixedHeight || typeof ResizeObserver === 'undefined') {
-      return undefined;
+    if (ref.current && rowHeight === 'auto') {
+      return apiRef.current.observeRowHeight(ref.current, rowId);
     }
 
-    const resizeObserver = new ResizeObserver((entries) => {
-      const [entry] = entries;
-      const height =
-        entry.borderBoxSize && entry.borderBoxSize.length > 0
-          ? entry.borderBoxSize[0].blockSize
-          : entry.contentRect.height;
-      apiRef.current.unstable_storeRowHeightMeasurement(rowId, height);
-    });
-
-    resizeObserver.observe(rootElement);
-
-    return () => resizeObserver.disconnect();
-  }, [apiRef, currentPage.range, index, rowHeight, rowId]);
+    return undefined;
+  }, [apiRef, currentPage.range, rowHeight, rowId]);
 
   const publish = React.useCallback(
     (
@@ -254,21 +223,12 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
 
   const rowReordering = (rootProps as any).rowReordering as boolean;
 
-  const sizes = useGridSelector(
+  const heightEntry = useGridSelector(
     apiRef,
-    () => ({ ...apiRef.current.unstable_getRowInternalSizes(rowId) }),
+    () => ({ ...apiRef.current.getRowHeightEntry(rowId) }),
+    undefined,
     objectShallowCompare,
   );
-
-  let minHeight = rowHeight;
-  if (minHeight === 'auto' && sizes) {
-    const numberOfBaseSizes = 1;
-    const maximumSize = sizes.baseCenter ?? 0;
-
-    if (maximumSize > 0 && numberOfBaseSizes > 1) {
-      minHeight = maximumSize;
-    }
-  }
 
   const style = React.useMemo(() => {
     if (isNotVisible) {
@@ -282,28 +242,28 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     const rowStyle = {
       ...styleProp,
       maxHeight: rowHeight === 'auto' ? 'none' : rowHeight, // max-height doesn't support "auto"
-      minHeight,
+      minHeight: rowHeight,
       '--height': typeof rowHeight === 'number' ? `${rowHeight}px` : rowHeight,
     };
 
-    if (sizes?.spacingTop) {
+    if (heightEntry.spacingTop) {
       const property = rootProps.rowSpacingType === 'border' ? 'borderTopWidth' : 'marginTop';
-      rowStyle[property] = sizes.spacingTop;
+      rowStyle[property] = heightEntry.spacingTop;
     }
 
-    if (sizes?.spacingBottom) {
+    if (heightEntry.spacingBottom) {
       const property = rootProps.rowSpacingType === 'border' ? 'borderBottomWidth' : 'marginBottom';
       let propertyValue = rowStyle[property];
       // avoid overriding existing value
       if (typeof propertyValue !== 'number') {
         propertyValue = parseInt(propertyValue || '0', 10);
       }
-      propertyValue += sizes.spacingBottom;
+      propertyValue += heightEntry.spacingBottom;
       rowStyle[property] = propertyValue;
     }
 
     return rowStyle;
-  }, [isNotVisible, rowHeight, styleProp, minHeight, sizes, rootProps.rowSpacingType]);
+  }, [isNotVisible, rowHeight, styleProp, heightEntry, rootProps.rowSpacingType]);
 
   const rowClassNames = apiRef.current.unstable_applyPipeProcessors('rowClassName', [], rowId);
   const ariaAttributes = rowNode ? getRowAriaAttributes(rowNode, index) : undefined;
@@ -439,12 +399,27 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       ),
     );
   }
-  for (let i = renderContext.firstColumnIndex; i < renderContext.lastColumnIndex; i += 1) {
+  let firstColumnIndex;
+  let lastColumnIndex;
+  if (!rootProps.disableVirtualization && !hasColumnVirtualization) {
+    firstColumnIndex = 0;
+    lastColumnIndex = visibleColumns.length;
+  } else {
+    firstColumnIndex = renderContext.firstColumnIndex;
+    lastColumnIndex = renderContext.lastColumnIndex;
+  }
+
+  for (let i = firstColumnIndex; i < lastColumnIndex; i += 1) {
     const column = visibleColumns[i];
     const indexInSection = i - pinnedColumns.left.length;
 
+    if (!column) {
+      continue;
+    }
+
     cells.push(getCell(column, indexInSection, i, middleColumnsLength));
   }
+
   if (hasVirtualFocusCellRight) {
     cells.push(
       getCell(
@@ -468,13 +443,8 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       }
     : null;
 
-  const expandedWidth =
-    dimensions.viewportOuterSize.width - dimensions.columnsTotalWidth - scrollbarWidth;
-  const emptyCellWidth = Math.max(0, expandedWidth);
-
   return (
     <div
-      ref={handleRef}
       data-id={rowId}
       data-rowindex={index}
       role="row"
@@ -483,6 +453,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       {...ariaAttributes}
       {...eventHandlers}
       {...other}
+      ref={handleRef}
     >
       {leftCells}
       <div
@@ -491,8 +462,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         style={{ width: offsetLeft }}
       />
       {cells}
-      {emptyCellWidth > 0 && <EmptyCell width={emptyCellWidth} />}
-      {rightCells.length > 0 && <div role="presentation" className={gridClasses.filler} />}
+      <div role="presentation" className={clsx(gridClasses.cell, gridClasses.cellEmpty)} />
       {rightCells}
       {scrollbarWidth !== 0 && <ScrollbarFiller pinnedRight={pinnedColumns.right.length > 0} />}
     </div>

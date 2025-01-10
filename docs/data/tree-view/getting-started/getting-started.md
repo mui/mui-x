@@ -1,7 +1,7 @@
 ---
 productId: x-tree-view
 title: Tree View - Getting started
-components: SimpleTreeView, RichTreeView, TreeItem, TreeView
+components: SimpleTreeView, RichTreeView, TreeItem
 packageName: '@mui/x-tree-view'
 githubLabel: 'component: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
@@ -44,8 +44,8 @@ Please note that [react](https://www.npmjs.com/package/react) and [react-dom](ht
 
 ```json
 "peerDependencies": {
-  "react": "^17.0.0 || ^18.0.0",
-  "react-dom": "^17.0.0 || ^18.0.0"
+  "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+  "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
 },
 ```
 
@@ -72,7 +72,7 @@ Take a look at the [Styled engine guide](/material-ui/integrations/styled-compon
 
 ## Render your first component
 
-To make sure that everything is set up correctly, try rendering a `SimpleTreeView` component:
+To make sure that everything is set up correctly, try rendering a Simple Tree View component:
 
 {{"demo": "FirstComponent.js"}}
 
@@ -82,7 +82,7 @@ To make sure that everything is set up correctly, try rendering a `SimpleTreeVie
 
 The component follows the WAI-ARIA authoring practices.
 
-To have an accessible tree view you must use `aria-labelledby`
+To have an accessible Tree View you must use `aria-labelledby`
 or `aria-label` to reference or provide a label on the TreeView,
 otherwise, screen readers will announce it as "tree", making it hard to understand the context of a specific tree item.
 

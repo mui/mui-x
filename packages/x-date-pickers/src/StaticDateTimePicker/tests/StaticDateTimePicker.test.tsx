@@ -31,7 +31,7 @@ describe('<StaticDateTimePicker />', () => {
         />,
       );
 
-      expect(screen.queryByMuiTest('picker-toolbar-title')).not.to.equal(null);
+      expect(screen.queryByTestId('picker-toolbar-title')).not.to.equal(null);
       expect(screen.queryByRole('tab', { name: 'pick date' })).to.equal(null);
     });
 
@@ -45,7 +45,7 @@ describe('<StaticDateTimePicker />', () => {
         />,
       );
 
-      expect(screen.queryByMuiTest('picker-toolbar-title')).to.equal(null);
+      expect(screen.queryByTestId('picker-toolbar-title')).to.equal(null);
       expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
     });
 

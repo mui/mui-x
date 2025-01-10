@@ -1,4 +1,4 @@
-import { DefaultizedProps } from '../helpers';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import { CartesianSeriesType, CommonDefaultizedProps, CommonSeriesType, SeriesId } from './common';
 
 export type ScatterValueType = {
@@ -11,9 +11,11 @@ export type ScatterValueType = {
   id: string | number;
 };
 
-export interface ScatterSeriesType extends CommonSeriesType<ScatterValueType>, CartesianSeriesType {
+export interface ScatterSeriesType
+  extends CommonSeriesType<ScatterValueType | null>,
+    CartesianSeriesType {
   type: 'scatter';
-  data: ScatterValueType[];
+  data?: ScatterValueType[];
   markerSize?: number;
   /**
    * The label to display on the tooltip or the legend. It can be a string or a function.
@@ -26,13 +28,33 @@ export interface ScatterSeriesType extends CommonSeriesType<ScatterValueType>, C
   disableHover?: boolean;
   /**
    * The id of the z-axis used to render the series.
-   * @deprecated Use `zAxisId` instead.
-   */
-  zAxisKey?: string;
-  /**
-   * The id of the z-axis used to render the series.
    */
   zAxisId?: string;
+
+  /**
+   * The keys used to retrieve data from the dataset.
+   *
+   * When this prop is provided, all of `x`, `y`, and `id` must be provided.
+   * While `z` is optional.
+   */
+  datasetKeys?: {
+    /**
+     * The key used to retrieve data from the dataset for the X axis.
+     */
+    x: string;
+    /**
+     * The key used to retrieve data from the dataset for the Y axis.
+     */
+    y: string;
+    /**
+     * The key used to retrieve data from the dataset for the Z axis.
+     */
+    z?: string;
+    /**
+     * The key used to retrieve data from the dataset for the id.
+     */
+    id: string;
+  };
 }
 
 /**

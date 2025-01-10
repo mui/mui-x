@@ -9,7 +9,7 @@ import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 
 dayjs.extend(isBetweenPlugin);
 
-interface CustomPickerDayProps extends PickersDayProps<Dayjs> {
+interface CustomPickerDayProps extends PickersDayProps {
   isSelected: boolean;
   isHovered: boolean;
 }
@@ -56,7 +56,7 @@ const isInSameWeek = (dayA: Dayjs, dayB: Dayjs | null | undefined) => {
 };
 
 function Day(
-  props: PickersDayProps<Dayjs> & {
+  props: PickersDayProps & {
     selectedDay?: Dayjs | null;
     hoveredDay?: Dayjs | null;
   },

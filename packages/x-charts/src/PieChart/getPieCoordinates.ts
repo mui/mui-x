@@ -1,10 +1,10 @@
-import { DrawingArea } from '../context/DrawingProvider';
+import { ChartDrawingArea } from '../hooks';
 import { getPercentageValue } from '../internals/getPercentageValue';
 import { DefaultizedPieSeriesType } from '../models/seriesType/pie';
 
 export function getPieCoordinates(
   series: Pick<DefaultizedPieSeriesType, 'cx' | 'cy'>,
-  drawing: Pick<DrawingArea, 'width' | 'height'>,
+  drawing: Pick<ChartDrawingArea, 'width' | 'height'>,
 ): { cx: number; cy: number; availableRadius: number } {
   const { height, width } = drawing;
   const { cx: cxParam, cy: cyParam } = series;

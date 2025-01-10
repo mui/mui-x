@@ -66,13 +66,13 @@ The following example demonstrates this option in action:
 
 ## Controlling expanded detail panels
 
-To control which rows are expanded, pass a list of row IDs to the `detailPanelExpandedRowIds` prop.
+To control which rows are expanded, pass a set of row IDs to the `detailPanelExpandedRowIds` prop.
 Passing a callback to the `onDetailPanelExpandedRowIds` prop can be used to detect when a row gets expanded or collapsed.
 
-On the other hand, if you only want to initialize the data grid with some rows already expanded, use the `initialState` prop as follows:
+On the other hand, if you only want to initialize the Data Grid with some rows already expanded, use the `initialState` prop as follows:
 
 ```tsx
-<DataGridPro initialState={{ detailPanel: { expandedRowIds: [1, 2, 3] } }}>
+<DataGridPro initialState={{ detailPanel: { expandedRowIds: new Set([1, 2, 3]) } }}>
 ```
 
 {{"demo": "ControlMasterDetail.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -174,12 +174,12 @@ For a more advanced example check out the [Expand or collapse all detail panels]
 
 By default, the detail panel has a width that is the sum of the widths of all columns.
 This means that when a horizontal scrollbar is present, scrolling it will also scroll the panel content.
-To avoid this behavior, set the size of the detail panel to the outer size of the data grid.
+To avoid this behavior, set the size of the detail panel to the outer size of the Data Grid.
 Use `apiRef.current.getRootDimensions()` to get the latest dimension values.
 Finally, to prevent the panel from scrolling, set `position: sticky` and `left: 0`.
 
 The following demo shows how this can be achieved.
-Notice that the toggle column is pinned to make sure that it will always be visible when the data grid is scrolled horizontally.
+Notice that the toggle column is pinned to make sure that it will always be visible when the Data Grid is scrolled horizontally.
 
 {{"demo": "FullWidthDetailPanel.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -189,6 +189,7 @@ More examples of how to customize the detail panel:
 
 - [One expanded detail panel at a time](/x/react-data-grid/row-recipes/#one-expanded-detail-panel-at-a-time)
 - [Expand or collapse all detail panels](/x/react-data-grid/row-recipes/#expand-or-collapse-all-detail-panels)
+- [Toggling detail panels on row click](/x/react-data-grid/row-recipes/#toggling-detail-panels-on-row-click)
 
 ## apiRef
 

@@ -5,6 +5,7 @@ import {
   unstable_useForkRef as useForkRef,
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useOnMount } from '../../hooks/utils/useOnMount';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { gridDimensionsSelector, useGridSelector } from '../../hooks';
@@ -66,7 +67,7 @@ const ScrollbarHorizontal = styled(Scrollbar)({
   bottom: '0px',
 });
 
-const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollbarProps>(
+const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProps>(
   function GridVirtualScrollbar(props, ref) {
     const apiRef = useGridPrivateApiContext();
     const rootProps = useGridRootProps();
@@ -94,11 +95,16 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
 
     const onScrollerScroll = useEventCallback(() => {
       const scroller = apiRef.current.virtualScrollerRef.current!;
-      const scrollbar = scrollbarRef.current!;
+      const scrollbar = scrollbarRef.current;
+      if (!scrollbar) {
+        return;
+      }
 
       if (scroller[propertyScroll] === lastPosition.current) {
         return;
       }
+
+      lastPosition.current = scroller[propertyScroll];
 
       if (isLocked.current) {
         isLocked.current = false;
@@ -108,13 +114,14 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
 
       const value = scroller[propertyScroll] / contentSize;
       scrollbar[propertyScroll] = value * scrollbarInnerSize;
-
-      lastPosition.current = scroller[propertyScroll];
     });
 
     const onScrollbarScroll = useEventCallback(() => {
       const scroller = apiRef.current.virtualScrollerRef.current!;
-      const scrollbar = scrollbarRef.current!;
+      const scrollbar = scrollbarRef.current;
+      if (!scrollbar) {
+        return;
+      }
 
       if (isLocked.current) {
         isLocked.current = false;
@@ -148,6 +155,11 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
       <Container
         ref={useForkRef(ref, scrollbarRef)}
         className={classes.root}
+        style={
+          props.position === 'vertical' && rootProps.unstable_listView
+            ? { height: '100%', top: 0 }
+            : undefined
+        }
         tabIndex={-1}
         aria-hidden="true"
       >

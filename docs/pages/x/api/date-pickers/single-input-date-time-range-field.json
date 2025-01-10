@@ -84,7 +84,7 @@
     "shouldDisableDate": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(day: TDate, position: string) => boolean",
+        "type": "function(day: PickerValidDate, position: string) => boolean",
         "describedArgs": ["day", "position"],
         "returned": "boolean"
       }
@@ -92,7 +92,7 @@
     "shouldDisableTime": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(value: TDate, view: TimeView) => boolean",
+        "type": "function(value: PickerValidDate, view: TimeView) => boolean",
         "describedArgs": ["value", "view"],
         "returned": "boolean"
       }

@@ -89,7 +89,7 @@ class CellValueUpdater {
   updateRow: (row: GridRowModel) => void;
 
   options: {
-    apiRef: React.MutableRefObject<GridPrivateApiPremium>;
+    apiRef: React.RefObject<GridPrivateApiPremium>;
     processRowUpdate: DataGridPremiumProcessedProps['processRowUpdate'];
     onProcessRowUpdateError: DataGridPremiumProcessedProps['onProcessRowUpdateError'];
     getRowId: DataGridPremiumProcessedProps['getRowId'];
@@ -180,7 +180,7 @@ class CellValueUpdater {
 
         try {
           const oldRow = apiRef.current.getRow(rowId);
-          const finalRowUpdate = await processRowUpdate(newRow, oldRow);
+          const finalRowUpdate = await processRowUpdate(newRow, oldRow, { rowId });
           this.updateRow(finalRowUpdate);
         } catch (error) {
           handleError(error);
@@ -212,7 +212,7 @@ function defaultPasteResolver({
   paginationMode,
 }: {
   pastedData: string[][];
-  apiRef: React.MutableRefObject<GridApiPremium>;
+  apiRef: React.RefObject<GridApiPremium>;
   updateCell: CellValueUpdater['updateCell'];
   pagination: DataGridPremiumProcessedProps['pagination'];
   paginationMode: DataGridPremiumProcessedProps['paginationMode'];
@@ -321,7 +321,7 @@ function defaultPasteResolver({
 }
 
 export const useGridClipboardImport = (
-  apiRef: React.MutableRefObject<GridPrivateApiPremium>,
+  apiRef: React.RefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
     | 'pagination'

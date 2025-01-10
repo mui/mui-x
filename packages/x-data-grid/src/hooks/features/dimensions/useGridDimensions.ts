@@ -3,7 +3,6 @@ import {
   unstable_ownerDocument as ownerDocument,
   unstable_useEnhancedEffect as useEnhancedEffect,
   unstable_useEventCallback as useEventCallback,
-  unstable_ownerWindow as ownerWindow,
 } from '@mui/utils';
 import { throttle } from '@mui/x-internals/throttle';
 import { GridEventListener } from '../../../models/events';
@@ -27,9 +26,14 @@ import { gridRenderContextSelector } from '../virtualization';
 import { useGridSelector } from '../../utils';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
-import { calculatePinnedRowsHeight } from '../rows/gridRowsUtils';
+import {
+  calculatePinnedRowsHeight,
+  getValidRowHeight,
+  rowHeightWarning,
+} from '../rows/gridRowsUtils';
 import { getTotalHeaderHeight } from '../columns/gridColumnsUtils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../../constants/dataGridPropsDefaultValues';
 
 type RootProps = Pick<
   DataGridProcessedProps,
@@ -82,7 +86,7 @@ export const dimensionsStateInitializer: GridStateInitializer<RootProps> = (stat
 };
 
 export function useGridDimensions(
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: RootProps,
 ) {
   const logger = useGridLogger(apiRef, 'useResizeContainer');
@@ -92,7 +96,16 @@ export function useGridDimensions(
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
-  const rowHeight = Math.floor(props.rowHeight * densityFactor);
+  const validRowHeight = React.useMemo(
+    () =>
+      getValidRowHeight(
+        props.rowHeight,
+        DATA_GRID_PROPS_DEFAULT_VALUES.rowHeight,
+        rowHeightWarning,
+      ),
+    [props.rowHeight],
+  );
+  const rowHeight = Math.floor(validRowHeight * densityFactor);
   const headerHeight = Math.floor(props.columnHeaderHeight * densityFactor);
   const groupHeaderHeight = Math.floor(
     (props.columnGroupHeaderHeight ?? props.columnHeaderHeight) * densityFactor,
@@ -111,32 +124,13 @@ export function useGridDimensions(
     () => throttle(setSavedSize, props.resizeThrottleMs),
     [props.resizeThrottleMs],
   );
-  const previousSize = React.useRef<ElementSize>();
+  React.useEffect(() => debouncedSetSavedSize.clear, [debouncedSetSavedSize]);
 
   const getRootDimensions = () => apiRef.current.state.dimensions;
 
   const setDimensions = useEventCallback((dimensions: GridDimensions) => {
     apiRef.current.setState((state) => ({ ...state, dimensions }));
   });
-
-  const resize = React.useCallback(() => {
-    const element = apiRef.current.mainElementRef.current;
-    if (!element) {
-      return;
-    }
-
-    const computedStyle = ownerWindow(element).getComputedStyle(element);
-
-    const newSize = {
-      width: parseFloat(computedStyle.width) || 0,
-      height: parseFloat(computedStyle.height) || 0,
-    };
-
-    if (!previousSize.current || !areElementSizesEqual(previousSize.current, newSize)) {
-      apiRef.current.publishEvent('resize', newSize);
-      previousSize.current = newSize;
-    }
-  }, [apiRef]);
 
   const getViewportPageSize = React.useCallback(() => {
     const dimensions = gridDimensionsSelector(apiRef.current.state);
@@ -290,7 +284,6 @@ export function useGridDimensions(
   ]);
 
   const apiPublic: GridDimensionsApi = {
-    resize,
     getRootDimensions,
   };
 
@@ -336,12 +329,12 @@ export function useGridDimensions(
       rootDimensionsRef.current = size;
 
       // jsdom has no layout capabilities
-      const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+      const isJSDOM = /jsdom|HappyDOM/.test(window.navigator.userAgent);
 
       if (size.height === 0 && !errorShown.current && !props.autoHeight && !isJSDOM) {
         logger.error(
           [
-            'The parent DOM element of the data grid has an empty height.',
+            'The parent DOM element of the Data Grid has an empty height.',
             'Please make sure that this element has an intrinsic height.',
             'The grid displays with a height of 0px.',
             '',
@@ -353,7 +346,7 @@ export function useGridDimensions(
       if (size.width === 0 && !errorShown.current && !isJSDOM) {
         logger.error(
           [
-            'The parent DOM element of the data grid has an empty width.',
+            'The parent DOM element of the Data Grid has an empty width.',
             'Please make sure that this element has an intrinsic width.',
             'The grid displays with a width of 0px.',
             '',

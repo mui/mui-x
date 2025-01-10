@@ -31,7 +31,7 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector } from './gridEditingSelectors';
 import { GridRowId } from '../../../models/gridRows';
 import { isPrintableKey, isPasteShortcut } from '../../../utils/keyboardUtils';
-import { gridRowsDataRowIdToIdLookupSelector } from '../rows/gridRowsSelector';
+import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 import { deepClone } from '../../../utils/utils';
 import {
   GridCellEditStartParams,
@@ -42,7 +42,7 @@ import {
 import { getDefaultCellValue } from './utils';
 
 export const useGridCellEditing = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'editMode'
@@ -333,25 +333,49 @@ export const useGridCellEditing = (
   );
 
   const updateStateToStartCellEditMode = useEventCallback<[GridStartCellEditModeParams], void>(
-    (params) => {
+    async (params) => {
       const { id, field, deleteValue, initialValue } = params;
 
-      let newValue = apiRef.current.getCellValue(id, field);
+      const value = apiRef.current.getCellValue(id, field);
+      let newValue = value;
       if (deleteValue) {
         newValue = getDefaultCellValue(apiRef.current.getColumn(field));
       } else if (initialValue) {
         newValue = initialValue;
       }
 
-      const newProps = {
+      const column = apiRef.current.getColumn(field);
+      const shouldProcessEditCellProps = !!column.preProcessEditCellProps && deleteValue;
+
+      let newProps: GridEditCellProps = {
         value: newValue,
         error: false,
-        isProcessingProps: false,
+        isProcessingProps: shouldProcessEditCellProps,
       };
 
       updateOrDeleteFieldState(id, field, newProps);
 
       apiRef.current.setCellFocus(id, field);
+
+      if (shouldProcessEditCellProps) {
+        newProps = await Promise.resolve(
+          column.preProcessEditCellProps!({
+            id,
+            row: apiRef.current.getRow(id),
+            props: newProps,
+            hasChanged: newValue !== value,
+          }),
+        );
+        // Check if still in edit mode before updating
+        if (apiRef.current.getCellMode(id, field) === GridCellModes.Edit) {
+          const editingState = gridEditRowsStateSelector(apiRef.current.state);
+          updateOrDeleteFieldState(id, field, {
+            ...newProps,
+            value: editingState[id][field].value,
+            isProcessingProps: false,
+          });
+        }
+      }
     },
   ) as GridCellEditingApi['startCellEditMode'];
 
@@ -423,7 +447,7 @@ export const useGridCellEditing = (
 
         try {
           const row = apiRef.current.getRow(id)!;
-          Promise.resolve(processRowUpdate(rowUpdate, row))
+          Promise.resolve(processRowUpdate(rowUpdate, row, { rowId: id }))
             .then((finalRowUpdate) => {
               apiRef.current.updateRows([finalRowUpdate]);
               finishCellEditMode();
@@ -536,7 +560,7 @@ export const useGridCellEditing = (
 
   // Run this effect synchronously so that the keyboard event can impact the yet-to-be-rendered input.
   useEnhancedEffect(() => {
-    const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
+    const rowsLookup = gridRowsLookupSelector(apiRef);
 
     // Update the ref here because updateStateToStopCellEditMode may change it later
     const copyOfPrevCellModes = prevCellModesModel.current;
@@ -545,7 +569,7 @@ export const useGridCellEditing = (
     Object.entries(cellModesModel).forEach(([id, fields]) => {
       Object.entries(fields).forEach(([field, params]) => {
         const prevMode = copyOfPrevCellModes[id]?.[field]?.mode || GridCellModes.View;
-        const originalId = idToIdLookup[id] ?? id;
+        const originalId = apiRef.current.getRowId(rowsLookup[id]) ?? id;
         if (params.mode === GridCellModes.Edit && prevMode === GridCellModes.View) {
           updateStateToStartCellEditMode({ id: originalId, field, ...params });
         } else if (params.mode === GridCellModes.View && prevMode === GridCellModes.Edit) {

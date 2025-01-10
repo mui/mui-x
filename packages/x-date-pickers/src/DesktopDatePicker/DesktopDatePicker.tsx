@@ -6,24 +6,25 @@ import { refType } from '@mui/utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DesktopDatePickerProps } from './DesktopDatePicker.types';
 import { DatePickerViewRenderers, useDatePickerDefaultizedProps } from '../DatePicker/shared';
-import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { validateDate, extractValidationProps } from '../validation';
-import { DateView, PickerValidDate } from '../models';
+import { DateView, PickerOwnerState } from '../models';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { CalendarIcon } from '../icons';
 import { DateField } from '../DateField';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { resolveDateFormat } from '../internals/utils/date-utils';
 import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalization';
+import { PickerLayoutOwnerState } from '../PickersLayout';
+import { PickersActionBarAction } from '../PickersActionBar';
 
-type DesktopDatePickerComponent = (<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
->(
-  props: DesktopDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
+type DesktopDatePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
+  props: DesktopDatePickerProps<TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
+
+const emptyActions: PickersActionBarAction[] = [];
 
 /**
  * Demos:
@@ -36,22 +37,20 @@ type DesktopDatePickerComponent = (<
  * - [DesktopDatePicker API](https://mui.com/x/api/date-pickers/desktop-date-picker/)
  */
 const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
-  inProps: DesktopDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  inProps: DesktopDatePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const translations = usePickersTranslations<TDate>();
-  const utils = useUtils<TDate>();
+  const translations = usePickerTranslations();
+  const utils = useUtils();
 
   // Props with the default values common to all date pickers
   const defaultizedProps = useDatePickerDefaultizedProps<
-    TDate,
-    DesktopDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure>
+    DesktopDatePickerProps<TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiDesktopDatePicker');
 
-  const viewRenderers: DatePickerViewRenderers<TDate, DateView, any> = {
+  const viewRenderers: DatePickerViewRenderers<DateView> = {
     day: renderDateViewCalendar,
     month: renderDateViewCalendar,
     year: renderDateViewCalendar,
@@ -61,6 +60,7 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
   // Props with the default values specific to the desktop variant
   const props = {
     ...defaultizedProps,
+    closeOnSelect: defaultizedProps.closeOnSelect ?? true,
     viewRenderers,
     format: resolveDateFormat(utils, defaultizedProps, false),
     yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
@@ -71,7 +71,7 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
     },
     slotProps: {
       ...defaultizedProps.slotProps,
-      field: (ownerState: any) => ({
+      field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
@@ -80,11 +80,14 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
         hidden: true,
         ...defaultizedProps.slotProps?.toolbar,
       },
+      actionBar: (ownerState: PickerLayoutOwnerState) => ({
+        actions: emptyActions,
+        ...resolveComponentProps(defaultizedProps.slotProps?.actionBar, ownerState),
+      }),
     },
   };
 
   const { renderPicker } = useDesktopPicker<
-    TDate,
     DateView,
     TEnableAccessibleFieldDOMStructure,
     typeof props
@@ -118,15 +121,15 @@ DesktopDatePicker.propTypes = {
   autoFocus: PropTypes.bool,
   className: PropTypes.string,
   /**
-   * If `true`, the popover or modal will close after submitting the full date.
-   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * If `true`, the Picker will close after submitting the full date.
+   * @default true
    */
   closeOnSelect: PropTypes.bool,
   /**
    * Formats the day of week displayed in the calendar header.
-   * @param {TDate} date The date of the day of week provided by the adapter.
+   * @param {PickerValidDate} date The date of the day of week provided by the adapter.
    * @returns {string} The name to display.
-   * @default (date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
+   * @default (date: PickerValidDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
    */
   dayOfWeekFormatter: PropTypes.func,
   /**
@@ -135,7 +138,8 @@ DesktopDatePicker.propTypes = {
    */
   defaultValue: PropTypes.object,
   /**
-   * If `true`, the picker and text field are disabled.
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
    * @default false
    */
   disabled: PropTypes.bool,
@@ -164,7 +168,7 @@ DesktopDatePicker.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
-   * @default false
+   * @default true
    */
   enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
@@ -254,8 +258,7 @@ DesktopDatePicker.propTypes = {
   onError: PropTypes.func,
   /**
    * Callback fired on month change.
-   * @template TDate
-   * @param {TDate} month The new month.
+   * @param {PickerValidDate} month The new month.
    */
   onMonthChange: PropTypes.func,
   /**
@@ -276,8 +279,7 @@ DesktopDatePicker.propTypes = {
   onViewChange: PropTypes.func,
   /**
    * Callback fired on year change.
-   * @template TDate
-   * @param {TDate} year The new year.
+   * @param {PickerValidDate} year The new year.
    */
   onYearChange: PropTypes.func,
   /**
@@ -295,6 +297,11 @@ DesktopDatePicker.propTypes = {
    * Force rendering in particular orientation.
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
+  /**
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
+   * @default false
+   */
   readOnly: PropTypes.bool,
   /**
    * If `true`, disable heavy animations.
@@ -309,7 +316,7 @@ DesktopDatePicker.propTypes = {
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => <span data-mui-test="loading-progress">...</span>
+   * @default () => <span>...</span>
    */
   renderLoading: PropTypes.func,
   /**
@@ -341,22 +348,19 @@ DesktopDatePicker.propTypes = {
    *
    * Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
    *
-   * @template TDate
-   * @param {TDate} day The date to test.
+   * @param {PickerValidDate} day The date to test.
    * @returns {boolean} If `true` the date will be disabled.
    */
   shouldDisableDate: PropTypes.func,
   /**
    * Disable specific month.
-   * @template TDate
-   * @param {TDate} month The month to test.
+   * @param {PickerValidDate} month The month to test.
    * @returns {boolean} If `true`, the month will be disabled.
    */
   shouldDisableMonth: PropTypes.func,
   /**
    * Disable specific year.
-   * @template TDate
-   * @param {TDate} year The year to test.
+   * @param {PickerValidDate} year The year to test.
    * @returns {boolean} If `true`, the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,

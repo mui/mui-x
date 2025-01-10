@@ -18,7 +18,7 @@
     "autosizeOptions": {
       "type": {
         "name": "shape",
-        "description": "{ columns?: Array&lt;string&gt;, expand?: bool, includeHeaders?: bool, includeOutliers?: bool, outliersFactor?: number }"
+        "description": "{ columns?: Array&lt;string&gt;, disableColumnVirtualization?: bool, expand?: bool, includeHeaders?: bool, includeOutliers?: bool, outliersFactor?: number }"
       }
     },
     "cellModesModel": { "type": { "name": "object" } },
@@ -129,10 +129,6 @@
       },
       "default": "false"
     },
-    "indeterminateCheckboxAction": {
-      "type": { "name": "enum", "description": "'deselect'<br>&#124;&nbsp;'select'" },
-      "default": "\"deselect\""
-    },
     "initialState": { "type": { "name": "object" } },
     "isCellEditable": {
       "type": { "name": "func" },
@@ -219,6 +215,13 @@
       "signature": {
         "type": "function(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
         "describedArgs": ["params", "event", "details"]
+      }
+    },
+    "onColumnHeaderContextMenu": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>) => void",
+        "describedArgs": ["params", "event"]
       }
     },
     "onColumnHeaderDoubleClick": {
@@ -422,8 +425,8 @@
     "processRowUpdate": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(newRow: R, oldRow: R) => Promise<R> | R",
-        "describedArgs": ["newRow", "oldRow"],
+        "type": "function(newRow: R, oldRow: R, params: { rowId: GridRowId }) => Promise<R> | R",
+        "describedArgs": ["newRow", "oldRow", "params"],
         "returned": "Promise<R> | R"
       }
     },
@@ -432,7 +435,6 @@
     "rowCount": { "type": { "name": "number" } },
     "rowHeight": { "type": { "name": "number" }, "default": "52" },
     "rowModesModel": { "type": { "name": "object" } },
-    "rowPositionsDebounceMs": { "type": { "name": "number" }, "default": "166" },
     "rows": {
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "default": "[]"
@@ -448,6 +450,7 @@
       "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'margin'" },
       "default": "\"margin\""
     },
+    "rowSpanning": { "type": { "name": "bool" }, "default": "false" },
     "scrollbarSize": { "type": { "name": "number" } },
     "showCellVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
     "showColumnVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
@@ -474,7 +477,7 @@
       },
       "additionalInfo": { "sx": true }
     },
-    "unstable_rowSpanning": { "type": { "name": "bool" }, "default": "false" }
+    "virtualizeColumnsWithAutoRowHeight": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "DataGrid",
   "imports": [
@@ -605,9 +608,45 @@
       "class": "MuiDataGrid-row"
     },
     {
+      "name": "baseBadge",
+      "description": "The custom Badge component used in the grid for both header and cells.",
+      "default": "Badge",
+      "class": null
+    },
+    {
       "name": "baseCheckbox",
       "description": "The custom Checkbox component used in the grid for both header and cells.",
       "default": "Checkbox",
+      "class": null
+    },
+    {
+      "name": "baseCircularProgress",
+      "description": "The custom CircularProgress component used in the grid.",
+      "default": "CircularProgress",
+      "class": null
+    },
+    {
+      "name": "baseDivider",
+      "description": "The custom Divider component used in the grid.",
+      "default": "Divider",
+      "class": null
+    },
+    {
+      "name": "baseLinearProgress",
+      "description": "The custom LinearProgress component used in the grid.",
+      "default": "LinearProgress",
+      "class": null
+    },
+    {
+      "name": "baseMenuList",
+      "description": "The custom MenuList component used in the grid.",
+      "default": "MenuList",
+      "class": null
+    },
+    {
+      "name": "baseMenuItem",
+      "description": "The custom MenuItem component used in the grid.",
+      "default": "MenuItem",
       "class": null
     },
     {
@@ -667,7 +706,13 @@
     {
       "name": "baseSelectOption",
       "description": "The custom SelectOption component used in the grid.",
-      "default": "MenuItem",
+      "default": "SelectOption",
+      "class": null
+    },
+    {
+      "name": "baseSkeleton",
+      "description": "The custom Skeleton component used in the grid.",
+      "default": "Skeleton",
       "class": null
     },
     {
@@ -1231,6 +1276,12 @@
       "isGlobal": false
     },
     {
+      "key": "columnsManagementSearchInput",
+      "className": "MuiDataGrid-columnsManagementSearchInput",
+      "description": "Styles applied to the columns management search input element.",
+      "isGlobal": false
+    },
+    {
       "key": "container--bottom",
       "className": "MuiDataGrid-container--bottom",
       "description": "Styles applied to the bottom container.",
@@ -1642,6 +1693,36 @@
       "key": "toolbarFilterList",
       "className": "MuiDataGrid-toolbarFilterList",
       "description": "Styles applied to the toolbar filter list element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarPromptControl",
+      "className": "MuiDataGrid-toolbarPromptControl",
+      "description": "Styles applied to the toolbar prompt control element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarPromptControl--recording",
+      "className": "MuiDataGrid-toolbarPromptControl--recording",
+      "description": "Styles applied to the toolbar prompt control element when recording.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarPromptControlRecordButton",
+      "className": "MuiDataGrid-toolbarPromptControlRecordButton",
+      "description": "Styles applied to the toolbar prompt control record button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarPromptControlRecordingIndicator",
+      "className": "MuiDataGrid-toolbarPromptControlRecordingIndicator",
+      "description": "Styles applied to the toolbar prompt control recording indicator element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarPromptControlSendButton",
+      "className": "MuiDataGrid-toolbarPromptControlSendButton",
+      "description": "Styles applied to the toolbar prompt control send button element.",
       "isGlobal": false
     },
     {

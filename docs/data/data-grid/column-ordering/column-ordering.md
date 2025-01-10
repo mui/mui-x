@@ -15,7 +15,7 @@ You must upgrade to Firefox v130 or higher to avoid this issue.
 
 By default, columns are ordered according to the order they are included in the `columns` array.
 
-By default, `DataGridPro` allows all column reordering by dragging the header cells and moving them left or right.
+By default, Data Grid Pro allows all column reordering by dragging the header cells and moving them left or right.
 
 {{"demo": "ColumnOrderingGrid.js", "bg": "inline"}}
 

@@ -27,7 +27,7 @@ const useUtilityClasses = (props: GaugeProps) => {
   return composeClasses(slots, getGaugeUtilityClass, classes);
 };
 
-const Gauge = React.forwardRef(function Gauge(props: GaugeProps, ref) {
+const Gauge = React.forwardRef(function Gauge(props: GaugeProps, ref: React.Ref<SVGSVGElement>) {
   const { text, children, classes: propsClasses, className, ...other } = props;
   const classes = useUtilityClasses(props);
   return (
@@ -83,6 +83,11 @@ Gauge.propTypes = {
    */
   height: PropTypes.number,
   /**
+   * This prop is used to help implement the accessibility logic.
+   * If you don't provide this prop. It falls back to a randomly generated id.
+   */
+  id: PropTypes.string,
+  /**
    * The radius between circle center and the beginning of the arc.
    * Can be a number (in px) or a string with a percentage such as '50%'.
    * The '100%' is the maximal radius that fit into the drawing area.
@@ -93,7 +98,6 @@ Gauge.propTypes = {
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
-   * @default object Depends on the charts type.
    */
   margin: PropTypes.shape({
     bottom: PropTypes.number,
@@ -135,12 +139,6 @@ Gauge.propTypes = {
    * @default 0
    */
   valueMin: PropTypes.number,
-  viewBox: PropTypes.shape({
-    height: PropTypes.number,
-    width: PropTypes.number,
-    x: PropTypes.number,
-    y: PropTypes.number,
-  }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */

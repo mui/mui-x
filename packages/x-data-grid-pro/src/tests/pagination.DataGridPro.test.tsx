@@ -11,7 +11,7 @@ describe('<DataGridPro /> - Pagination', () => {
 
   describe('setPage', () => {
     it('should apply valid value', () => {
-      let apiRef: React.MutableRefObject<GridApi>;
+      let apiRef: React.RefObject<GridApi>;
 
       function GridTest() {
         const basicData = useBasicDemoData(20, 2);
@@ -36,12 +36,11 @@ describe('<DataGridPro /> - Pagination', () => {
       act(() => {
         apiRef.current.setPage(1);
       });
-
       expect(getColumnValues(0)).to.deep.equal(['1']);
     });
 
     it('should apply last page if trying to go to a non-existing page', () => {
-      let apiRef: React.MutableRefObject<GridApi>;
+      let apiRef: React.RefObject<GridApi>;
       function GridTest() {
         const basicData = useBasicDemoData(20, 2);
         apiRef = useGridApiRef();
@@ -65,14 +64,13 @@ describe('<DataGridPro /> - Pagination', () => {
       act(() => {
         apiRef.current.setPage(50);
       });
-
       expect(getColumnValues(0)).to.deep.equal(['19']);
     });
   });
 
   describe('setPageSize', () => {
     it('should apply value', () => {
-      let apiRef: React.MutableRefObject<GridApiPro>;
+      let apiRef: React.RefObject<GridApiPro>;
       function GridTest() {
         const basicData = useBasicDemoData(20, 2);
         apiRef = useGridApiRef();

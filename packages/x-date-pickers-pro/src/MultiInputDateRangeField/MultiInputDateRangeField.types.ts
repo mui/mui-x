@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
-import { SlotComponentProps } from '@mui/utils';
-import Typography from '@mui/material/Typography';
-import Stack, { StackProps } from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
+import type { TypographyProps } from '@mui/material/Typography';
+import type { StackProps } from '@mui/material/Stack';
+import type { TextFieldProps } from '@mui/material/TextField';
+import { FieldOwnerState } from '@mui/x-date-pickers/models';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { PickersTextFieldProps } from '@mui/x-date-pickers/PickersTextField';
 import { UseMultiInputRangeFieldParams } from '../internals/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
 import {
   MultiInputFieldRefs,
@@ -13,38 +14,30 @@ import {
 } from '../models';
 
 export type UseMultiInputDateRangeFieldParams<
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TTextFieldSlotProps extends {},
 > = UseMultiInputRangeFieldParams<
-  UseMultiInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  UseMultiInputDateRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
   TTextFieldSlotProps
 >;
 
 export interface UseMultiInputDateRangeFieldProps<
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends Omit<
-      UseDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+      UseDateRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
       'unstableFieldRef' | 'clearable' | 'onClear'
     >,
     MultiInputFieldRefs {}
 
 export type UseMultiInputDateRangeFieldComponentProps<
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TChildProps extends {},
-> = Omit<
-  TChildProps,
-  keyof UseMultiInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>
-> &
-  UseMultiInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
+> = Omit<TChildProps, keyof UseMultiInputDateRangeFieldProps<TEnableAccessibleFieldDOMStructure>> &
+  UseMultiInputDateRangeFieldProps<TEnableAccessibleFieldDOMStructure>;
 
 export interface MultiInputDateRangeFieldProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 > extends UseMultiInputDateRangeFieldComponentProps<
-    TDate,
     TEnableAccessibleFieldDOMStructure,
     Omit<StackProps, 'position'>
   > {
@@ -62,7 +55,7 @@ export interface MultiInputDateRangeFieldProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MultiInputDateRangeFieldSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  slotProps?: MultiInputDateRangeFieldSlotProps;
 }
 
 export interface MultiInputDateRangeFieldSlots {
@@ -74,7 +67,7 @@ export interface MultiInputDateRangeFieldSlots {
   /**
    * Form control with an input to render a date.
    * It is rendered twice: once for the start date and once for the end date.
-   * @default TextField from '@mui/material' or PickersTextField if `enableAccessibleFieldDOMStructure` is `true`.
+   * @default <PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.
    */
   textField?: React.ElementType;
   /**
@@ -84,25 +77,14 @@ export interface MultiInputDateRangeFieldSlots {
   separator?: React.ElementType;
 }
 
-export interface MultiInputDateRangeFieldSlotProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> {
-  root?: SlotComponentProps<
-    typeof Stack,
+export interface MultiInputDateRangeFieldSlotProps {
+  root?: SlotComponentPropsFromProps<StackProps, {}, FieldOwnerState>;
+  textField?: SlotComponentPropsFromProps<
+    PickersTextFieldProps | TextFieldProps,
     {},
-    MultiInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>
-  >;
-  textField?: SlotComponentProps<
-    typeof TextField,
-    {},
-    MultiInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> & {
+    FieldOwnerState & {
       position: RangePosition;
     }
   >;
-  separator?: SlotComponentProps<
-    typeof Typography,
-    {},
-    MultiInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>
-  >;
+  separator?: SlotComponentPropsFromProps<TypographyProps, {}, FieldOwnerState>;
 }

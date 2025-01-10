@@ -281,14 +281,14 @@ Most bundlers set this environment variable automatically when building for prod
 
 Note that `NODE_ENV=production` is not MUI X-specific and is a common practice in the JavaScript ecosystem.
 It allows bundlers and libraries to optimize the output for production and eliminate dead code, so it's worth checking if it's set correctly in your project.
-See related documentation for [Webpack](https://webpack.js.org/guides/production/#specify-the-mode), [Node.js](https://nodejs.org/en/learn/getting-started/nodejs-the-difference-between-development-and-production) and [Next.js](https://nextjs.org/docs/messages/non-standard-node-env) for more information.
+See related documentation for [webpack](https://webpack.js.org/guides/production/#specify-the-mode), [Node.js](https://nodejs.org/en/learn/getting-started/nodejs-the-difference-between-development-and-production) and [Next.js](https://nextjs.org/docs/messages/non-standard-node-env) for more information.
 :::
 
 ### 4. License key plan mismatch
 
 This error indicates that your use of MUI X is not compatible with the plan of your license key.
 The feature you are trying to use is not included in the plan of your license key.
-This happens if you try to use `DataGridPremium` with a license key for the Pro plan.
+This happens if you try to use Data Grid Premium with a license key for the Pro plan.
 
 To solve the issue, you can [upgrade your plan](https://mui.com/r/x-get-license/?scope=premium) from Pro to Premium.
 Or if you didn\'t intend to use Premium features, you can replace the import of `@mui/x-data-grid-premium` with `@mui/x-data-grid-pro`.

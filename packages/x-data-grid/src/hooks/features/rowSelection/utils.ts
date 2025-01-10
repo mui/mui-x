@@ -14,12 +14,12 @@ import type {
 import type { GridRowSelectionPropagation } from '../../../models/gridRowSelectionModel';
 
 export const ROW_SELECTION_PROPAGATION_DEFAULT: GridRowSelectionPropagation = {
-  parents: false,
-  descendants: false,
+  parents: true,
+  descendants: true,
 };
 
 function getGridRowGroupSelectableDescendants(
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.RefObject<GridApiCommunity>,
   groupId: GridRowId,
 ) {
   const rowTree = gridRowTreeSelector(apiRef);
@@ -69,8 +69,8 @@ export function getCheckboxPropsSelector(groupId: GridRowId, autoSelectParents: 
         };
       }
 
-      let selectableDescendentsCount = 0;
-      let selectedDescendentsCount = 0;
+      let selectableDescendantsCount = 0;
+      let selectedDescendantsCount = 0;
       const startIndex = sortedRowIds.findIndex((id) => id === groupId) + 1;
       for (
         let index = startIndex;
@@ -79,19 +79,19 @@ export function getCheckboxPropsSelector(groupId: GridRowId, autoSelectParents: 
       ) {
         const id = sortedRowIds[index];
         if (filteredRowsLookup[id] !== false) {
-          selectableDescendentsCount += 1;
+          selectableDescendantsCount += 1;
           if (rowSelectionLookup[id] !== undefined) {
-            selectedDescendentsCount += 1;
+            selectedDescendantsCount += 1;
           }
         }
       }
       return {
         isIndeterminate:
-          (selectedDescendentsCount > 0 && selectedDescendentsCount < selectableDescendentsCount) ||
-          (selectedDescendentsCount === selectableDescendentsCount &&
+          selectedDescendantsCount > 0 &&
+          (selectedDescendantsCount < selectableDescendantsCount ||
             rowSelectionLookup[groupId] === undefined),
         isChecked: autoSelectParents
-          ? selectedDescendentsCount > 0
+          ? selectedDescendantsCount > 0
           : rowSelectionLookup[groupId] === groupId,
       };
     },
@@ -148,7 +148,7 @@ const getFilteredRowNodeSiblings = (
 };
 
 export const findRowsToSelect = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   tree: GridRowTreeConfig,
   selectedRow: GridRowId,
   autoSelectDescendants: boolean,
@@ -208,7 +208,7 @@ export const findRowsToSelect = (
 };
 
 export const findRowsToDeselect = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   tree: GridRowTreeConfig,
   deselectedRow: GridRowId,
   autoSelectDescendants: boolean,

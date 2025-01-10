@@ -30,7 +30,7 @@ A custom operator is defined by creating a `GridFilterOperator` object.
 This object has to be added to the `filterOperators` attribute of the `GridColDef`.
 
 The main part of an operator is the `getApplyFilterFn` function.
-When applying the filters, the data grid will call this function with the filter item and the column on which the item must be applied.
+When applying the filters, the Data Grid will call this function with the filter item and the column on which the item must be applied.
 This function must return another function that takes the cell value as an input and return `true` if it satisfies the operator condition.
 
 ```ts
@@ -133,7 +133,7 @@ In the demo below, the `rating` column reuses the numeric operators but the rati
 
 ### Custom column types
 
-When defining a [custom column type](/x/react-data-grid/column-definition/#custom-column-types), by default the data grid will reuse the operators from the type that was extended.
+When defining a [custom column type](/x/react-data-grid/column-definition/#custom-column-types), by default the Data Grid will reuse the operators from the type that was extended.
 The filter operators can then be edited just like on a regular column.
 
 ```ts

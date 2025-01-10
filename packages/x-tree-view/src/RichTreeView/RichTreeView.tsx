@@ -10,7 +10,7 @@ import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { RICH_TREE_VIEW_PLUGINS, RichTreeViewPluginSignatures } from './RichTreeView.plugins';
-import { TreeItem, TreeItemProps } from '../TreeItem';
+import { RichTreeViewItems } from '../internals/components/RichTreeViewItems';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeView');
 
@@ -42,26 +42,6 @@ type RichTreeViewComponent = (<R extends {}, Multiple extends boolean | undefine
   props: RichTreeViewProps<R, Multiple> & React.RefAttributes<HTMLUListElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-function WrappedTreeItem<R extends {}>({
-  slots,
-  slotProps,
-  label,
-  id,
-  itemId,
-  children,
-}: Pick<RichTreeViewProps<R, any>, 'slots' | 'slotProps'> &
-  Pick<TreeItemProps, 'id' | 'itemId' | 'children'> & { label: string }) {
-  const Item = slots?.item ?? TreeItem;
-  const itemProps = useSlotProps({
-    elementType: Item,
-    externalSlotProps: slotProps?.item,
-    additionalProps: { itemId, id, label },
-    ownerState: { itemId, label },
-  });
-
-  return <Item {...itemProps}>{children}</Item>;
-}
-
 /**
  *
  * Demos:
@@ -81,17 +61,14 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).children != null) {
       warnOnce([
-        'MUI X: The `RichTreeView` component does not support JSX children.',
+        'MUI X: The Rich Tree View component does not support JSX children.',
         'If you want to add items, you need to use the `items` prop.',
         'Check the documentation for more details: https://mui.com/x/react-tree-view/rich-tree-view/items/.',
       ]);
     }
   }
 
-  const { getRootProps, contextValue, instance } = useTreeView<
-    RichTreeViewPluginSignatures,
-    typeof props
-  >({
+  const { getRootProps, contextValue } = useTreeView<RichTreeViewPluginSignatures, typeof props>({
     plugins: RICH_TREE_VIEW_PLUGINS,
     rootRef: ref,
     props,
@@ -109,31 +86,11 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     ownerState: props as RichTreeViewProps<any, any>,
   });
 
-  const itemsToRender = instance.getItemsToRender();
-
-  const renderItem = ({
-    label,
-    itemId,
-    id,
-    children,
-  }: ReturnType<typeof instance.getItemsToRender>[number]) => {
-    return (
-      <WrappedTreeItem
-        slots={slots}
-        slotProps={slotProps}
-        key={itemId}
-        label={label}
-        id={id}
-        itemId={itemId}
-      >
-        {children?.map(renderItem)}
-      </WrappedTreeItem>
-    );
-  };
-
   return (
     <TreeViewProvider value={contextValue}>
-      <Root {...rootProps}>{itemsToRender.map(renderItem)}</Root>
+      <Root {...rootProps}>
+        <RichTreeViewItems slots={slots} slotProps={slotProps} />
+      </Root>
     </TreeViewProvider>
   );
 }) as RichTreeViewComponent;
@@ -159,7 +116,7 @@ RichTreeView.propTypes = {
     }),
   }),
   /**
-   * If `true`, the tree view renders a checkbox at the left of its label that allows selecting it.
+   * If `true`, the Tree View renders a checkbox at the left of its label that allows selecting it.
    * @default false
    */
   checkboxSelection: PropTypes.bool,
@@ -206,7 +163,6 @@ RichTreeView.propTypes = {
    * the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
-    indentationAtItemLevel: PropTypes.bool,
     labelEditing: PropTypes.bool,
   }),
   /**
@@ -262,26 +218,26 @@ RichTreeView.propTypes = {
    */
   multiSelect: PropTypes.bool,
   /**
-   * Callback fired when tree items are expanded/collapsed.
+   * Callback fired when Tree Items are expanded/collapsed.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
    * @param {array} itemIds The ids of the expanded items.
    */
   onExpandedItemsChange: PropTypes.func,
   /**
-   * Callback fired when the `content` slot of a given tree item is clicked.
+   * Callback fired when the `content` slot of a given Tree Item is clicked.
    * @param {React.MouseEvent} event The DOM event that triggered the change.
    * @param {string} itemId The id of the focused item.
    */
   onItemClick: PropTypes.func,
   /**
-   * Callback fired when a tree item is expanded or collapsed.
+   * Callback fired when a Tree Item is expanded or collapsed.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
    * @param {array} itemId The itemId of the modified item.
    * @param {array} isExpanded `true` if the item has just been expanded, `false` if it has just been collapsed.
    */
   onItemExpansionToggle: PropTypes.func,
   /**
-   * Callback fired when a given tree item is focused.
+   * Callback fired when a given Tree Item is focused.
    * @param {React.SyntheticEvent | null} event The DOM event that triggered the change. **Warning**: This is a generic event not a focus event.
    * @param {string} itemId The id of the focused item.
    */
@@ -293,14 +249,14 @@ RichTreeView.propTypes = {
    */
   onItemLabelChange: PropTypes.func,
   /**
-   * Callback fired when a tree item is selected or deselected.
+   * Callback fired when a Tree Item is selected or deselected.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
    * @param {array} itemId The itemId of the modified item.
    * @param {array} isSelected `true` if the item has just been selected, `false` if it has just been deselected.
    */
   onItemSelectionToggle: PropTypes.func,
   /**
-   * Callback fired when tree items are selected/deselected.
+   * Callback fired when Tree Items are selected/deselected.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
    * @param {string[] | string} itemIds The ids of the selected items.
    * When `multiSelect` is `true`, this is an array of strings; when false (default) a string.
@@ -311,6 +267,26 @@ RichTreeView.propTypes = {
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    */
   selectedItems: PropTypes.any,
+  /**
+   * When `selectionPropagation.descendants` is set to `true`.
+   *
+   * - Selecting a parent selects all its descendants automatically.
+   * - Deselecting a parent deselects all its descendants automatically.
+   *
+   * When `selectionPropagation.parents` is set to `true`.
+   *
+   * - Selecting all the descendants of a parent selects the parent automatically.
+   * - Deselecting a descendant of a selected parent deselects the parent automatically.
+   *
+   * Only works when `multiSelect` is `true`.
+   * On the <SimpleTreeView />, only the expanded items are considered (since the collapsed item are not passed to the Tree View component at all)
+   *
+   * @default { parents: false, descendants: false }
+   */
+  selectionPropagation: PropTypes.shape({
+    descendants: PropTypes.bool,
+    parents: PropTypes.bool,
+  }),
   /**
    * The props used for each component slot.
    * @default {}

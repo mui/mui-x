@@ -15,7 +15,6 @@ import {
   ValueWithHighlight,
   useTransformData,
 } from './dataTransform/useTransformData';
-import { useHighlighted } from '../context';
 
 export interface PieArcPlotSlots {
   pieArc?: React.JSXElementConstructor<PieArcProps>;
@@ -95,7 +94,6 @@ function PieArcPlot(props: PieArcPlotProps) {
     ...defaultTransitionConfig,
     immediate: skipAnimation,
   });
-  const { highlightScope } = useHighlighted();
 
   if (data.length === 0) {
     return null;
@@ -112,10 +110,8 @@ function PieArcPlot(props: PieArcPlotProps) {
             endAngle,
             paddingAngle: pA,
             innerRadius: iR,
-            arcLabelRadius,
             outerRadius: oR,
             cornerRadius: cR,
-            ...style
           },
           item,
           _,
@@ -129,11 +125,9 @@ function PieArcPlot(props: PieArcPlotProps) {
               innerRadius={iR}
               outerRadius={oR}
               cornerRadius={cR}
-              style={style}
               id={id}
               color={item.color}
               dataIndex={index}
-              highlightScope={highlightScope}
               isFaded={item.isFaded}
               isHighlighted={item.isHighlighted}
               onClick={
@@ -174,6 +168,7 @@ PieArcPlot.propTypes = {
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       index: PropTypes.number.isRequired,
       label: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+      labelMarkType: PropTypes.oneOf(['circle', 'line', 'square']),
       padAngle: PropTypes.number.isRequired,
       startAngle: PropTypes.number.isRequired,
       value: PropTypes.number.isRequired,

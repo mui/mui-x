@@ -4,8 +4,8 @@ import InstallationInstructions from './InstallationInstructions';
 // #default-branch-switch
 
 const packages = {
-  Community: '@mui/x-tree-view',
-  Pro: '@mui/x-tree-view-pro',
+  Community: '@mui/x-tree-view@next',
+  Pro: '@mui/x-tree-view-pro@next',
 };
 
 export default function TreeViewInstallationInstructions() {

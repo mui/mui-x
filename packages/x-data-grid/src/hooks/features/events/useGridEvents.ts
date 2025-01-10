@@ -8,11 +8,12 @@ import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
  * @requires useGridColumns (event) - can be after, async only
  */
 export function useGridEvents(
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.RefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'onColumnHeaderClick'
     | 'onColumnHeaderDoubleClick'
+    | 'onColumnHeaderContextMenu'
     | 'onColumnHeaderOver'
     | 'onColumnHeaderOut'
     | 'onColumnHeaderEnter'
@@ -30,6 +31,7 @@ export function useGridEvents(
   >,
 ): void {
   useGridApiOptionHandler(apiRef, 'columnHeaderClick', props.onColumnHeaderClick);
+  useGridApiOptionHandler(apiRef, 'columnHeaderContextMenu', props.onColumnHeaderContextMenu);
   useGridApiOptionHandler(apiRef, 'columnHeaderDoubleClick', props.onColumnHeaderDoubleClick);
   useGridApiOptionHandler(apiRef, 'columnHeaderOver', props.onColumnHeaderOver);
   useGridApiOptionHandler(apiRef, 'columnHeaderOut', props.onColumnHeaderOut);

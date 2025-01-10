@@ -1,5 +1,4 @@
-import { CurveType } from '../curve';
-import { DefaultizedProps } from '../helpers';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import type { StackOffsetType } from '../stacking';
 import {
   CartesianSeriesType,
@@ -8,6 +7,7 @@ import {
   SeriesId,
   StackableSeriesType,
 } from './common';
+import { CurveType } from '../curve';
 
 export interface ShowMarkParams<AxisValue = number | Date> {
   /**

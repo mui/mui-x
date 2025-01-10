@@ -25,15 +25,15 @@ import {
 } from '../internals/utils/date-utils';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { useDefaultReduceAnimations } from '../internals/hooks/useDefaultReduceAnimations';
-import { getDateCalendarUtilityClass } from './dateCalendarClasses';
+import { DateCalendarClasses, getDateCalendarUtilityClass } from './dateCalendarClasses';
 import { BaseDateValidationProps } from '../internals/models/validation';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
-import { PickerValidDate } from '../models';
+import { PickerOwnerState, PickerValidDate } from '../models';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 
-const useUtilityClasses = (ownerState: DateCalendarProps<any>) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classes: Partial<DateCalendarClasses> | undefined) => {
   const slots = {
     root: ['root'],
     viewTransitionContainer: ['viewTransitionContainer'],
@@ -42,12 +42,12 @@ const useUtilityClasses = (ownerState: DateCalendarProps<any>) => {
   return composeClasses(slots, getDateCalendarUtilityClass, classes);
 };
 
-function useDateCalendarDefaultizedProps<TDate extends PickerValidDate>(
-  props: DateCalendarProps<TDate>,
+function useDateCalendarDefaultizedProps(
+  props: DateCalendarProps,
   name: string,
-): DateCalendarDefaultizedProps<TDate> {
-  const utils = useUtils<TDate>();
-  const defaultDates = useDefaultDates<TDate>();
+): DateCalendarDefaultizedProps {
+  const utils = useUtils();
+  const defaultDates = useDefaultDates();
   const defaultReduceAnimations = useDefaultReduceAnimations();
   const themeProps = useThemeProps({
     props,
@@ -63,7 +63,7 @@ function useDateCalendarDefaultizedProps<TDate extends PickerValidDate>(
     views: themeProps.views ?? ['year', 'day'],
     reduceAnimations: themeProps.reduceAnimations ?? defaultReduceAnimations,
     renderLoading:
-      themeProps.renderLoading ?? (() => <span data-mui-test="loading-progress">...</span>),
+      themeProps.renderLoading ?? (() => <span data-testid="loading-progress">...</span>),
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };
@@ -73,7 +73,7 @@ const DateCalendarRoot = styled(PickerViewRoot, {
   name: 'MuiDateCalendar',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: DateCalendarProps<any> }>({
+})<{ ownerState: PickerOwnerState }>({
   display: 'flex',
   flexDirection: 'column',
   height: VIEW_HEIGHT,
@@ -83,10 +83,10 @@ const DateCalendarViewTransitionContainer = styled(PickersFadeTransitionGroup, {
   name: 'MuiDateCalendar',
   slot: 'ViewTransitionContainer',
   overridesResolver: (props, styles) => styles.viewTransitionContainer,
-})<{ ownerState: DateCalendarProps<any> }>({});
+})<{ ownerState: PickerOwnerState }>({});
 
-type DateCalendarComponent = (<TDate extends PickerValidDate>(
-  props: DateCalendarProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type DateCalendarComponent = ((
+  props: DateCalendarProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -100,11 +100,12 @@ type DateCalendarComponent = (<TDate extends PickerValidDate>(
  *
  * - [DateCalendar API](https://mui.com/x/api/date-pickers/date-calendar/)
  */
-export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends PickerValidDate>(
-  inProps: DateCalendarProps<TDate>,
+export const DateCalendar = React.forwardRef(function DateCalendar(
+  inProps: DateCalendarProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const utils = useUtils<TDate>();
+  const utils = useUtils();
+  const { ownerState } = usePickerPrivateContext();
   const id = useId();
   const props = useDateCalendarDefaultizedProps(inProps, 'MuiDateCalendar');
 
@@ -127,6 +128,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
     views,
     openTo,
     className,
+    classes: classesProp,
     disabled,
     readOnly,
     minDate,
@@ -154,6 +156,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
     timezone: timezoneProp,
     value: valueProp,
     defaultValue,
+    referenceDate: referenceDateProp,
     onChange,
     valueManager: singleItemValueManager,
   });
@@ -199,7 +202,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
   const hasFocus = focusedView !== null;
 
   const CalendarHeader = slots?.calendarHeader ?? PickersCalendarHeader;
-  const calendarHeaderProps: PickersCalendarHeaderProps<TDate> = useSlotProps({
+  const calendarHeaderProps: PickersCalendarHeaderProps = useSlotProps({
     elementType: CalendarHeader,
     externalSlotProps: slotProps?.calendarHeader,
     additionalProps: {
@@ -217,10 +220,10 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
       timezone,
       labelId: gridLabelId,
     },
-    ownerState: props,
+    ownerState,
   });
 
-  const handleDateMonthChange = useEventCallback((newDate: TDate) => {
+  const handleDateMonthChange = useEventCallback((newDate: PickerValidDate) => {
     const startOfMonth = utils.startOfMonth(newDate);
     const endOfMonth = utils.endOfMonth(newDate);
 
@@ -248,7 +251,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
     changeFocusedDay(closestEnabledDate, true);
   });
 
-  const handleDateYearChange = useEventCallback((newDate: TDate) => {
+  const handleDateYearChange = useEventCallback((newDate: PickerValidDate) => {
     const startOfYear = utils.startOfYear(newDate);
     const endOfYear = utils.endOfYear(newDate);
 
@@ -276,7 +279,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
     changeFocusedDay(closestEnabledDate, true);
   });
 
-  const handleSelectedDayChange = useEventCallback((day: TDate | null) => {
+  const handleSelectedDayChange = useEventCallback((day: PickerValidDate | null) => {
     if (day) {
       // If there is a date already selected, then we want to keep its time
       return handleValueChange(
@@ -290,15 +293,14 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
   });
 
   React.useEffect(() => {
-    if (value != null && utils.isValid(value)) {
+    if (utils.isValid(value)) {
       changeMonth(value);
     }
   }, [value]); // eslint-disable-line
 
-  const ownerState = props;
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(classesProp);
 
-  const baseDateValidationProps: Required<BaseDateValidationProps<TDate>> = {
+  const baseDateValidationProps: Required<BaseDateValidationProps> = {
     disablePast,
     disableFuture,
     maxDate,
@@ -347,7 +349,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
       >
         <div>
           {view === 'year' && (
-            <YearCalendar<TDate>
+            <YearCalendar
               {...baseDateValidationProps}
               {...commonViewProps}
               value={value}
@@ -362,7 +364,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
           )}
 
           {view === 'month' && (
-            <MonthCalendar<TDate>
+            <MonthCalendar
               {...baseDateValidationProps}
               {...commonViewProps}
               hasFocus={hasFocus}
@@ -377,7 +379,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
           )}
 
           {view === 'day' && (
-            <DayCalendar<TDate>
+            <DayCalendar
               {...calendarState}
               {...baseDateValidationProps}
               {...commonViewProps}
@@ -424,9 +426,9 @@ DateCalendar.propTypes = {
   className: PropTypes.string,
   /**
    * Formats the day of week displayed in the calendar header.
-   * @param {TDate} date The date of the day of week provided by the adapter.
+   * @param {PickerValidDate} date The date of the day of week provided by the adapter.
    * @returns {string} The name to display.
-   * @default (date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
+   * @default (date: PickerValidDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
    */
   dayOfWeekFormatter: PropTypes.func,
   /**
@@ -435,7 +437,8 @@ DateCalendar.propTypes = {
    */
   defaultValue: PropTypes.object,
   /**
-   * If `true`, the picker and text field are disabled.
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
    * @default false
    */
   disabled: PropTypes.bool,
@@ -506,8 +509,7 @@ DateCalendar.propTypes = {
   onFocusedViewChange: PropTypes.func,
   /**
    * Callback fired on month change.
-   * @template TDate
-   * @param {TDate} month The new month.
+   * @param {PickerValidDate} month The new month.
    */
   onMonthChange: PropTypes.func,
   /**
@@ -518,8 +520,7 @@ DateCalendar.propTypes = {
   onViewChange: PropTypes.func,
   /**
    * Callback fired on year change.
-   * @template TDate
-   * @param {TDate} year The new year.
+   * @param {PickerValidDate} year The new year.
    */
   onYearChange: PropTypes.func,
   /**
@@ -529,7 +530,8 @@ DateCalendar.propTypes = {
    */
   openTo: PropTypes.oneOf(['day', 'month', 'year']),
   /**
-   * Make picker read only.
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
    * @default false
    */
   readOnly: PropTypes.bool,
@@ -546,7 +548,7 @@ DateCalendar.propTypes = {
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => <span data-mui-test="loading-progress">...</span>
+   * @default () => <span>...</span>
    */
   renderLoading: PropTypes.func,
   /**
@@ -554,22 +556,19 @@ DateCalendar.propTypes = {
    *
    * Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
    *
-   * @template TDate
-   * @param {TDate} day The date to test.
+   * @param {PickerValidDate} day The date to test.
    * @returns {boolean} If `true` the date will be disabled.
    */
   shouldDisableDate: PropTypes.func,
   /**
    * Disable specific month.
-   * @template TDate
-   * @param {TDate} month The month to test.
+   * @param {PickerValidDate} month The month to test.
    * @returns {boolean} If `true`, the month will be disabled.
    */
   shouldDisableMonth: PropTypes.func,
   /**
    * Disable specific year.
-   * @template TDate
-   * @param {TDate} year The year to test.
+   * @param {PickerValidDate} year The year to test.
    * @returns {boolean} If `true`, the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,

@@ -44,10 +44,11 @@ const chartParams: BarChartProps = {
         }).format((v || 0) * 1_000_000),
     },
   ],
-  slotProps: { legend: { hidden: true } },
+  hideLegend: true,
   dataset,
   width: 600,
   height: 400,
+  margin: { left: 60 },
   sx: {
     [`.${axisClasses.left} .${axisClasses.label}`]: {
       transform: 'translate(-20px, 0)',

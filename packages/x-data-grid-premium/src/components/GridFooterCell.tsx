@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { getDataGridUtilityClass, GridRenderCellParams } from '@mui/x-data-grid';
+import { vars } from '@mui/x-data-grid/internals';
 import { styled, Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
@@ -10,10 +11,10 @@ const GridFooterCellRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FooterCell',
   overridesResolver: (_, styles) => styles.footerCell,
-})<{ ownerState: OwnerState }>(({ theme }) => ({
-  fontWeight: theme.typography.fontWeightMedium,
-  color: (theme.vars || theme).palette.primary.dark,
-}));
+})<{ ownerState: OwnerState }>({
+  fontWeight: vars.typography.fontWeight.medium,
+  color: vars.colors.foreground.accent,
+});
 
 interface GridFooterCellProps extends GridRenderCellParams {
   sx?: SxProps<Theme>;

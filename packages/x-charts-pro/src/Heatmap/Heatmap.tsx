@@ -3,21 +3,17 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import useId from '@mui/utils/useId';
+import { MakeOptional } from '@mui/x-internals/types';
 import { interpolateRgbBasis } from '@mui/x-charts-vendor/d3-interpolate';
 import { ChartsAxis, ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
+import { ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
 import {
-  ChartsTooltip,
-  ChartsTooltipProps,
-  ChartsTooltipSlotProps,
-  ChartsTooltipSlots,
-} from '@mui/x-charts/ChartsTooltip';
-import {
-  MakeOptional,
   ChartsAxisSlots,
   ChartsAxisSlotProps,
   ChartsXAxisProps,
   ChartsYAxisProps,
   AxisConfig,
+  ChartSeriesConfig,
 } from '@mui/x-charts/internals';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import {
@@ -30,31 +26,31 @@ import {
   ChartsOverlaySlotProps,
   ChartsOverlaySlots,
 } from '@mui/x-charts/ChartsOverlay';
-import {
-  ResponsiveChartContainerPro,
-  ResponsiveChartContainerProProps,
-} from '../ResponsiveChartContainerPro';
+import { ChartContainerPro, ChartContainerProProps } from '../ChartContainerPro';
 import { HeatmapSeriesType } from '../models/seriesType/heatmap';
 import { HeatmapPlot } from './HeatmapPlot';
 import { plugin as heatmapPlugin } from './plugin';
-import { DefaultHeatmapTooltip } from './DefaultHeatmapTooltip';
+import { HeatmapTooltip, HeatmapTooltipProps } from './HeatmapTooltip';
 import { HeatmapItemSlotProps, HeatmapItemSlots } from './HeatmapItem';
 
-export interface HeatmapSlots
-  extends ChartsAxisSlots,
-    Omit<ChartsTooltipSlots<'heatmap'>, 'axisContent'>,
-    ChartsOverlaySlots,
-    HeatmapItemSlots {}
+export interface HeatmapSlots extends ChartsAxisSlots, ChartsOverlaySlots, HeatmapItemSlots {
+  /**
+   * Custom component for the tooltip popper.
+   * @default ChartsTooltipRoot
+   */
+  tooltip?: React.ElementType<HeatmapTooltipProps>;
+}
 export interface HeatmapSlotProps
   extends ChartsAxisSlotProps,
-    Omit<ChartsTooltipSlotProps<'heatmap'>, 'axisContent'>,
     ChartsOverlaySlotProps,
-    HeatmapItemSlotProps {}
+    HeatmapItemSlotProps {
+  tooltip?: Partial<HeatmapTooltipProps>;
+}
 
 export interface HeatmapProps
   extends Omit<
-      ResponsiveChartContainerProProps,
-      'series' | 'plugins' | 'xAxis' | 'yAxis' | 'zoom' | 'onZoomChange'
+      ChartContainerProProps,
+      'series' | 'plugins' | 'xAxis' | 'yAxis' | 'zoom' | 'onZoomChange' | 'skipAnimation'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
@@ -80,7 +76,7 @@ export interface HeatmapProps
    * The configuration of the tooltip.
    * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
    */
-  tooltip?: ChartsTooltipProps<'heatmap'>;
+  tooltip?: ChartsTooltipProps;
   /**
    * Overridable component slots.
    * @default {}
@@ -106,7 +102,12 @@ const defaultColorMap = interpolateRgbBasis([
   '#084081',
 ]);
 
-const Heatmap = React.forwardRef(function Heatmap(inProps: HeatmapProps, ref) {
+const seriesConfig: ChartSeriesConfig<'heatmap'> = { heatmap: heatmapPlugin };
+
+const Heatmap = React.forwardRef(function Heatmap(
+  inProps: HeatmapProps,
+  ref: React.Ref<SVGSVGElement>,
+) {
   const props = useThemeProps({ props: inProps, name: 'MuiHeatmap' });
   const {
     xAxis,
@@ -119,7 +120,6 @@ const Heatmap = React.forwardRef(function Heatmap(inProps: HeatmapProps, ref) {
     colors,
     dataset,
     sx,
-    tooltip,
     topAxis,
     leftAxis,
     rightAxis,
@@ -161,10 +161,12 @@ const Heatmap = React.forwardRef(function Heatmap(inProps: HeatmapProps, ref) {
     [zAxis],
   );
 
+  const Tooltip = props.slots?.tooltip ?? HeatmapTooltip;
+
   return (
-    <ResponsiveChartContainerPro
+    <ChartContainerPro<'heatmap'>
       ref={ref}
-      plugins={[heatmapPlugin]}
+      seriesConfig={seriesConfig}
       series={series.map((s) => ({
         type: 'heatmap',
         ...s,
@@ -195,18 +197,11 @@ const Heatmap = React.forwardRef(function Heatmap(inProps: HeatmapProps, ref) {
         slots={slots}
         slotProps={slotProps}
       />
-      {!loading && (
-        <ChartsTooltip
-          trigger="item"
-          {...tooltip}
-          slots={{ itemContent: DefaultHeatmapTooltip, ...slots }}
-          slotProps={slotProps}
-        />
-      )}
+      {!loading && <Tooltip {...slotProps?.tooltip} />}
 
       <ChartsClipPath id={clipPathId} />
       {children}
-    </ResponsiveChartContainerPro>
+    </ChartContainerPro>
   );
 });
 
@@ -215,6 +210,11 @@ Heatmap.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  apiRef: PropTypes.shape({
+    current: PropTypes.shape({
+      setZoomData: PropTypes.func.isRequired,
+    }),
+  }),
   /**
    * Indicate which axis to display the bottom of the charts.
    * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.
@@ -251,6 +251,21 @@ Heatmap.propTypes = {
     seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   }),
   /**
+   * This prop is used to help implement the accessibility logic.
+   * If you don't provide this prop. It falls back to a randomly generated id.
+   */
+  id: PropTypes.string,
+  /**
+   * The list of zoom data related to each axis.
+   */
+  initialZoom: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      end: PropTypes.number.isRequired,
+      start: PropTypes.number.isRequired,
+    }),
+  ),
+  /**
    * Indicate which axis to display the left of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
    * @default yAxisIds[0] The id of the first provided axis
@@ -265,7 +280,6 @@ Heatmap.propTypes = {
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
-   * @default object Depends on the charts type.
    */
   margin: PropTypes.shape({
     bottom: PropTypes.number,
@@ -287,16 +301,6 @@ Heatmap.propTypes = {
    */
   onHighlightChange: PropTypes.func,
   /**
-   * The chart will try to wait for the parent container to resolve its size
-   * before it renders for the first time.
-   *
-   * This can be useful in some scenarios where the chart appear to grow after
-   * the first render, like when used inside a grid.
-   *
-   * @default false
-   */
-  resolveSizeBeforeRender: PropTypes.bool,
-  /**
    * Indicate which axis to display the right of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
    * @default null
@@ -307,6 +311,11 @@ Heatmap.propTypes = {
    * An array of [[HeatmapSeriesType]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * The configuration helpers used to compute attributes according to the serries type.
+   * @ignore Unstable props for internal usage.
+   */
+  seriesConfig: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
@@ -322,31 +331,19 @@ Heatmap.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
   /**
    * The configuration of the tooltip.
    * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
    */
-  tooltip: PropTypes.shape({
-    axisContent: PropTypes.elementType,
-    classes: PropTypes.object,
-    itemContent: PropTypes.elementType,
-    slotProps: PropTypes.object,
-    slots: PropTypes.object,
-    trigger: PropTypes.oneOf(['axis', 'item', 'none']),
-  }),
+  tooltip: PropTypes.object,
   /**
    * Indicate which axis to display the top of the charts.
    * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.
    * @default null
    */
   topAxis: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  viewBox: PropTypes.shape({
-    height: PropTypes.number,
-    width: PropTypes.number,
-    x: PropTypes.number,
-    y: PropTypes.number,
-  }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
@@ -392,11 +389,11 @@ Heatmap.propTypes = {
       dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
+      domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
-      labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -411,7 +408,6 @@ Heatmap.propTypes = {
         PropTypes.func,
         PropTypes.object,
       ]),
-      tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
         PropTypes.array,
@@ -481,11 +477,11 @@ Heatmap.propTypes = {
       dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
+      domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
-      labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -500,7 +496,6 @@ Heatmap.propTypes = {
         PropTypes.func,
         PropTypes.object,
       ]),
-      tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
         PropTypes.array,

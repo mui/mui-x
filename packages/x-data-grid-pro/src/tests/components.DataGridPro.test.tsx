@@ -11,12 +11,11 @@ import {
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { getCell, getRow } from 'test/utils/helperFn';
-import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<DataGridPro/> - Components', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
 
   function TestCase(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
@@ -55,7 +54,7 @@ describe('<DataGridPro/> - Components', () => {
       it(`should still publish the '${event}' event when overriding the '${prop}' prop in slots.cell`, () => {
         const propHandler = spy();
         const eventHandler = spy();
-        render(<TestCase slotProps={{ cell: { [prop]: propHandler } }} />);
+        render(<TestCase slotProps={{ cell: { [prop as any]: propHandler } }} />);
         apiRef!.current.subscribeEvent(event, eventHandler);
 
         expect(propHandler.callCount).to.equal(0);
@@ -78,17 +77,17 @@ describe('<DataGridPro/> - Components', () => {
       });
     });
 
-    it(`should still publish the 'cellKeyDown' event when overriding the 'onKeyDown' prop in slots.cell`, () => {
+    it(`should still publish the 'cellKeyDown' event when overriding the 'onKeyDown' prop in slots.cell`, async () => {
       const propHandler = spy();
       const eventHandler = spy();
-      render(<TestCase slotProps={{ cell: { onKeyDown: propHandler } }} />);
+      const { user } = render(<TestCase slotProps={{ cell: { onKeyDown: propHandler } }} />);
       apiRef!.current.subscribeEvent('cellKeyDown', eventHandler);
 
       expect(propHandler.callCount).to.equal(0);
       expect(eventHandler.callCount).to.equal(0);
 
-      fireUserEvent.mousePress(getCell(0, 0));
-      fireEvent.keyDown(getCell(0, 0));
+      await user.click(getCell(0, 0));
+      await user.keyboard('a');
 
       expect(propHandler.callCount).to.equal(1);
       expect(propHandler.lastCall.args[0]).not.to.equal(undefined);
@@ -104,7 +103,7 @@ describe('<DataGridPro/> - Components', () => {
       it(`should still publish the '${event}' event when overriding the '${prop}' prop in slots.row`, () => {
         const propHandler = spy();
         const eventHandler = spy();
-        render(<TestCase slotProps={{ row: { [prop]: propHandler } }} />);
+        render(<TestCase slotProps={{ row: { [prop as any]: propHandler } }} />);
         apiRef!.current.subscribeEvent(event, eventHandler);
 
         expect(propHandler.callCount).to.equal(0);

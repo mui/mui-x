@@ -8,15 +8,20 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
+import { usePickerActionsContext } from '@mui/x-date-pickers/hooks';
 
 function ActionList(props: PickersActionBarProps) {
-  const { onAccept, onClear, onCancel, onSetToday, className } = props;
+  const { className } = props;
+  const { clearValue, setValueToToday, acceptValueChanges, cancelValueChanges } =
+    usePickerActionsContext();
+
   const actions = [
-    { text: 'Accept', method: onAccept },
-    { text: 'Clear', method: onClear },
-    { text: 'Cancel', method: onCancel },
-    { text: 'Today', method: onSetToday },
+    { text: 'Accept', method: acceptValueChanges },
+    { text: 'Clear', method: clearValue },
+    { text: 'Cancel', method: cancelValueChanges },
+    { text: 'Today', method: setValueToToday },
   ];
+
   return (
     // Propagate the className such that CSS selectors can be applied
     <List className={className}>
