@@ -9,7 +9,7 @@ import {
   isEndOfRange,
   isRangeValid,
 } from '../../../utils/date-utils';
-import { useRangeCalendarRootDragContext } from '../root/RangeCalendarRootDragContext';
+import { useRangeCalendarRootContext } from '../root/RangeCalendarRootContext';
 
 export function useRangeCalendarDaysCellWrapper(
   parameters: useRangeCalendarDaysCellWrapper.Parameters,
@@ -17,24 +17,51 @@ export function useRangeCalendarDaysCellWrapper(
   const { value } = parameters;
   const { ref, ctx: baseCtx } = useBaseCalendarDaysCellWrapper(parameters);
   const utils = useUtils();
-  const rangeRootDragContext = useRangeCalendarRootDragContext();
+  const rootContext = useRangeCalendarRootContext();
 
   const isSelectionStart = React.useMemo(
-    () => isStartOfRange(utils, value, rangeRootDragContext.highlightedRange),
-    [utils, value, rangeRootDragContext.highlightedRange],
+    () => isStartOfRange(utils, value, rootContext.highlightedRange),
+    [utils, value, rootContext.highlightedRange],
   );
 
   const isSelectionEnd = React.useMemo(
-    () => isEndOfRange(utils, value, rangeRootDragContext.highlightedRange),
-    [utils, value, rangeRootDragContext.highlightedRange],
+    () => isEndOfRange(utils, value, rootContext.highlightedRange),
+    [utils, value, rootContext.highlightedRange],
   );
 
   const isSelected = React.useMemo(() => {
-    if (!isRangeValid(utils, rangeRootDragContext.highlightedRange)) {
+    if (!isRangeValid(utils, rootContext.highlightedRange)) {
       return baseCtx.isSelected;
     }
-    return isWithinRange(utils, value, rangeRootDragContext.highlightedRange);
-  }, [utils, value, rangeRootDragContext.highlightedRange, baseCtx.isSelected]);
+    return (
+      !isSelectionStart &&
+      !isSelectionEnd &&
+      isWithinRange(utils, value, rootContext.highlightedRange)
+    );
+  }, [
+    utils,
+    value,
+    rootContext.highlightedRange,
+    baseCtx.isSelected,
+    isSelectionStart,
+    isSelectionEnd,
+  ]);
+
+  const isPreviewStart = React.useMemo(
+    () => isStartOfRange(utils, value, rootContext.previewRange),
+    [utils, value, rootContext.previewRange],
+  );
+
+  const isPreviewEnd = React.useMemo(
+    () => isEndOfRange(utils, value, rootContext.previewRange),
+    [utils, value, rootContext.previewRange],
+  );
+
+  const isPreviewed = React.useMemo(() => {
+    return (
+      !isPreviewStart && !isPreviewEnd && isWithinRange(utils, value, rootContext.previewRange)
+    );
+  }, [utils, value, rootContext.previewRange, isPreviewStart, isPreviewEnd]);
 
   const ctx = React.useMemo<useRangeCalendarDaysCell.Context>(
     () => ({
@@ -42,24 +69,32 @@ export function useRangeCalendarDaysCellWrapper(
       isSelected,
       isSelectionStart: isSelectionStart && !isSelectionEnd,
       isSelectionEnd: isSelectionEnd && !isSelectionStart,
-      isDraggingRef: rangeRootDragContext.isDraggingRef,
-      selectDayFromDrag: rangeRootDragContext.selectDayFromDrag,
-      startDragging: rangeRootDragContext.startDragging,
-      stopDragging: rangeRootDragContext.stopDragging,
-      setDragTarget: rangeRootDragContext.setDragTarget,
-      emptyDragImgRef: rangeRootDragContext.emptyDragImgRef,
+      isPreviewed,
+      isPreviewStart,
+      isPreviewEnd,
+      isDraggingRef: rootContext.isDraggingRef,
+      selectDayFromDrag: rootContext.selectDayFromDrag,
+      startDragging: rootContext.startDragging,
+      stopDragging: rootContext.stopDragging,
+      setDragTarget: rootContext.setDragTarget,
+      setHoveredDate: rootContext.setHoveredDate,
+      emptyDragImgRef: rootContext.emptyDragImgRef,
     }),
     [
       baseCtx,
       isSelected,
       isSelectionStart,
       isSelectionEnd,
-      rangeRootDragContext.isDraggingRef,
-      rangeRootDragContext.selectDayFromDrag,
-      rangeRootDragContext.startDragging,
-      rangeRootDragContext.stopDragging,
-      rangeRootDragContext.setDragTarget,
-      rangeRootDragContext.emptyDragImgRef,
+      isPreviewed,
+      isPreviewStart,
+      isPreviewEnd,
+      rootContext.isDraggingRef,
+      rootContext.selectDayFromDrag,
+      rootContext.startDragging,
+      rootContext.stopDragging,
+      rootContext.setDragTarget,
+      rootContext.setHoveredDate,
+      rootContext.emptyDragImgRef,
     ],
   );
 

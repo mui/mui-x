@@ -8,6 +8,7 @@ import {
   useRangeCalendarContext,
 } from '@mui/x-date-pickers-pro/internals/base/RangeCalendar';
 import styles from './calendar.module.css';
+import dayjs from 'dayjs';
 
 function Header(props: {
   activeSection: 'day' | 'month' | 'year';
@@ -80,7 +81,11 @@ export default function DateRangeCalendarDemo() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <RangeCalendar.Root monthPageSize={2} className={clsx(styles.Root)}>
+      <RangeCalendar.Root
+        monthPageSize={2}
+        className={clsx(styles.Root)}
+        defaultValue={[dayjs(), dayjs().add(1, 'day')]}
+      >
         <Header
           activeSection={activeSection}
           onActiveSectionChange={setActiveSection}

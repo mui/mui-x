@@ -161,6 +161,8 @@
 }
 
 .DaysCell {
+  --day-preview-border-color: #a1a1aa;
+
   height: 36px;
   width: 36px;
   border-radius: 4px;
@@ -168,7 +170,9 @@
   background-color: transparent;
   cursor: pointer;
 
-  &[data-current]:not([data-selected]):not(:focus-visible) {
+  &[data-current]:not([data-selected]):not([data-selection-start]):not([data-selection-end]):not(
+      :focus-visible
+    ) {
     outline: 1px solid #9ca3af;
   }
 
@@ -183,14 +187,41 @@
     color: #64748b;
   }
 
-  &.RangeDaysCell[data-selected]:not([data-selection-start]) {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-  }
+  &.RangeDaysCell {
+    &[data-selected],
+    &[data-selection-end],
+    &[data-previewed],
+    &[data-preview-end] {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
 
-  &.RangeDaysCell[data-selected]:not([data-selection-end]) {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+    &[data-selected],
+    &[data-selection-start],
+    &[data-previewed],
+    &[data-preview-start] {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    &[data-preview-start],
+    &[data-preview-end],
+    &[data-previewed] {
+      &:not([data-selected]):not([data-selection-start]):not([data-selection-end]) {
+        border-top: 1px dashed var(--day-preview-border-color);
+        border-bottom: 1px dashed var(--day-preview-border-color);
+      }
+    }
+
+    &[data-preview-start]:not([data-selected]):not([data-selection-start]):not(
+        [data-selection-end]
+      ) {
+      border-left: 1px dashed var(--day-preview-border-color);
+    }
+
+    &[data-preview-end]:not([data-selected]):not([data-selection-start]):not([data-selection-end]) {
+      border-right: 1px dashed var(--day-preview-border-color);
+    }
   }
 }
 
@@ -223,16 +254,18 @@
     background-color: #e0f2fe;
   }
 
-  &:not([data-outside-month])[data-selected] {
-    background-color: #7dd3fc;
+  &:not([data-outside-month]) {
+    &[data-selected] {
+      background-color: #7dd3fc;
 
-    &.RangeDaysCell {
-      background-color: #e0f2fe;
-
-      &[data-selection-start],
-      &[data-selection-end] {
-        background-color: #7dd3fc;
+      &.RangeDaysCell {
+        background-color: #e0f2fe;
       }
+    }
+
+    &[data-selection-start],
+    &[data-selection-end] {
+      background-color: #7dd3fc;
     }
   }
 
@@ -257,16 +290,18 @@
     background-color: #075985;
   }
 
-  &:not([data-outside-month])[data-selected] {
-    background-color: #0369a1;
+  &:not([data-outside-month]) {
+    &[data-selected] {
+      background-color: #0369a1;
 
-    &.RangeDaysCell {
-      background-color: #0c4a6e;
-
-      &[data-selection-start],
-      &[data-selection-end] {
-        background-color: #0369a1;
+      &.RangeDaysCell {
+        background-color: #0c4a6e;
       }
+    }
+
+    &[data-selection-start],
+    &[data-selection-end] {
+      background-color: #0369a1;
     }
   }
 

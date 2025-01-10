@@ -20,6 +20,15 @@ const customStyleHookMapping: CustomStyleHookMapping<RangeCalendarDaysCell.State
   selectionEnd(value) {
     return value ? { [RangeCalendarDaysCellDataAttributes.selectionEnd]: '' } : null;
   },
+  previewed(value) {
+    return value ? { [RangeCalendarDaysCellDataAttributes.previewed]: '' } : null;
+  },
+  previewStart(value) {
+    return value ? { [RangeCalendarDaysCellDataAttributes.previewStart]: '' } : null;
+  },
+  previewEnd(value) {
+    return value ? { [RangeCalendarDaysCellDataAttributes.previewEnd]: '' } : null;
+  },
   disabled(value) {
     return value ? { [RangeCalendarDaysCellDataAttributes.disabled]: '' } : null;
   },
@@ -46,6 +55,9 @@ const InnerRangeCalendarDaysCell = React.forwardRef(function RangeCalendarDaysGr
       selected: ctx.isSelected,
       selectionStart: ctx.isSelectionStart,
       selectionEnd: ctx.isSelectionEnd,
+      previewed: ctx.isPreviewed,
+      previewStart: ctx.isPreviewStart,
+      previewEnd: ctx.isPreviewEnd,
       disabled: ctx.isDisabled,
       invalid: ctx.isInvalid,
       outsideMonth: ctx.isOutsideCurrentMonth,
@@ -55,6 +67,9 @@ const InnerRangeCalendarDaysCell = React.forwardRef(function RangeCalendarDaysGr
       ctx.isSelected,
       ctx.isSelectionStart,
       ctx.isSelectionEnd,
+      ctx.isPreviewed,
+      ctx.isPreviewStart,
+      ctx.isPreviewEnd,
       ctx.isDisabled,
       ctx.isInvalid,
       ctx.isOutsideCurrentMonth,
@@ -89,7 +104,7 @@ const RangeCalendarDaysCell = React.forwardRef(function RangeCalendarDaysCell(
 export namespace RangeCalendarDaysCell {
   export interface State {
     /**
-     * Whether the day is within the selected range.
+     * Whether the day is within the selected range and is not its first or last day.
      */
     selected: boolean;
     /**
@@ -100,6 +115,18 @@ export namespace RangeCalendarDaysCell {
      * Whether the day is the last day of the selected range.
      */
     selectionEnd: boolean;
+    /**
+     * Whether the day is within the preview range and is not its first or last day.
+     */
+    previewed: boolean;
+    /**
+     * Whether the day is the first day of the preview range.
+     */
+    previewStart: boolean;
+    /**
+     * Whether the day is the last day of the preview range.
+     */
+    previewEnd: boolean;
     /**
      * Whether the day is disabled.
      */

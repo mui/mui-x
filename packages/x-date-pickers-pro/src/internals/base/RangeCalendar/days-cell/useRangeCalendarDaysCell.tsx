@@ -6,7 +6,7 @@ import { useBaseCalendarDaysCell } from '@mui/x-date-pickers/internals/base/util
 import { GenericHTMLProps } from '@mui/x-date-pickers/internals/base/base-utils/types';
 // eslint-disable-next-line no-restricted-imports
 import { mergeReactProps } from '@mui/x-date-pickers/internals/base/base-utils/mergeReactProps';
-import type { RangeCalendarRootDragContext } from '../root/RangeCalendarRootDragContext';
+import type { RangeCalendarRootContext } from '../root/RangeCalendarRootContext';
 
 export function useRangeCalendarDaysCell(parameters: useRangeCalendarDaysCell.Parameters) {
   const { ctx, value } = parameters;
@@ -124,24 +124,42 @@ export function useRangeCalendarDaysCell(parameters: useRangeCalendarDaysCell.Pa
     startDragging();
   });
 
+  /**
+   * Mouse events
+   */
+  const onMouseEnter = useEventCallback(() => {
+    if (!ctx.isSelected && !ctx.isSelectionStart && !ctx.isSelectionEnd) {
+      ctx.setHoveredDate(value);
+    } else {
+      ctx.setHoveredDate(null);
+    }
+  });
+
   const { getDaysCellProps: getBaseDaysCellProps, isCurrent } = useBaseCalendarDaysCell(parameters);
 
   const getDaysCellProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
-      return mergeReactProps(externalProps, getBaseDaysCellProps(externalProps), {
-        ...(isDraggable ? { draggable: true } : {}),
-        onDragStart,
-        onDragEnter,
-        onDragLeave,
-        onDragOver,
-        onDragEnd,
-        onTouchStart,
-        onTouchMove,
-        onTouchEnd,
-        onDrop,
-      });
+      return mergeReactProps(
+        externalProps,
+        {
+          'aria-selected': ctx.isSelected || ctx.isSelectionStart || ctx.isSelectionEnd,
+          ...(isDraggable
+            ? { draggable: true, onDragStart, onDrop, onTouchStart, onTouchMove }
+            : {}),
+          onDragEnter,
+          onDragLeave,
+          onDragOver,
+          onDragEnd,
+          onTouchEnd,
+          onMouseEnter,
+        },
+        getBaseDaysCellProps(externalProps),
+      );
     },
     [
+      ctx.isSelected,
+      ctx.isSelectionStart,
+      ctx.isSelectionEnd,
       getBaseDaysCellProps,
       isDraggable,
       onDragStart,
@@ -149,10 +167,11 @@ export function useRangeCalendarDaysCell(parameters: useRangeCalendarDaysCell.Pa
       onDragLeave,
       onDragOver,
       onDragEnd,
+      onDrop,
       onTouchStart,
       onTouchMove,
       onTouchEnd,
-      onDrop,
+      onMouseEnter,
     ],
   );
 
@@ -170,16 +189,20 @@ export namespace useRangeCalendarDaysCell {
   export interface Context
     extends useBaseCalendarDaysCell.Context,
       Pick<
-        RangeCalendarRootDragContext,
+        RangeCalendarRootContext,
         | 'isDraggingRef'
         | 'selectDayFromDrag'
         | 'startDragging'
         | 'stopDragging'
         | 'setDragTarget'
+        | 'setHoveredDate'
         | 'emptyDragImgRef'
       > {
     isSelectionStart: boolean;
     isSelectionEnd: boolean;
+    isPreviewed: boolean;
+    isPreviewStart: boolean;
+    isPreviewEnd: boolean;
   }
 }
 
@@ -196,6 +219,7 @@ function resolveButtonElement(element: Element | null): HTMLButtonElement | null
   return element;
 }
 
+// TODO: Check if this logic is still needed.
 function resolveElementFromTouch(
   event: React.TouchEvent<HTMLButtonElement>,
   ignoreTouchTarget?: boolean,
