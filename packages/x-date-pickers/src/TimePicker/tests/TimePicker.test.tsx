@@ -5,7 +5,7 @@ import { screen } from '@mui/internal-test-utils/createRenderer';
 import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers';
 
 describe('<TimePicker />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   it('should render in mobile mode when `useMediaQuery` returns `false`', async () => {
     const originalMatchMedia = window.matchMedia;
