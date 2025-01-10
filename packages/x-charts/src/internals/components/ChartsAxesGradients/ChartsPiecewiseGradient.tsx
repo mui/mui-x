@@ -31,7 +31,7 @@ export default function ChartsPiecewiseGradient(props: ChartsPiecewiseGradientPr
         }
         const offset = isReversed ? 1 - x / size : x / size;
 
-        if (Number.isNaN(offset)) {
+        if (Number.isNaN(offset) || !Number.isFinite(offset)) {
           return null;
         }
 
