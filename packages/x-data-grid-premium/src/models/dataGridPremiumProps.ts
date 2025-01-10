@@ -4,6 +4,7 @@ import {
   GridValidRowModel,
   GridGroupNode,
   GridEventListener,
+  GridColDef,
 } from '@mui/x-data-grid-pro';
 import {
   GridExperimentalProFeatures,
@@ -25,6 +26,7 @@ import { GridInitialStatePremium } from './gridStatePremium';
 import { GridApiPremium } from './gridApiPremium';
 import { GridCellSelectionModel } from '../hooks/features/cellSelection';
 import { GridDataSourcePremium as GridDataSource } from '../hooks/features/dataSource/models';
+import type { PivotModel } from '../hooks/features/pivoting/useGridPivoting';
 
 export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
 
@@ -196,4 +198,24 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    */
   experimentalFeatures?: Partial<GridExperimentalPremiumFeatures>;
   unstable_dataSource?: GridDataSource;
+
+  pivotParams?: {
+    pivotMode: boolean;
+    onPivotModeChange: (pivotMode: boolean) => void;
+    props?: Pick<
+      DataGridPremiumProps,
+      | 'rows'
+      | 'columns'
+      | 'rowGroupingModel'
+      | 'aggregationModel'
+      | 'getAggregationPosition'
+      | 'columnVisibilityModel'
+      | 'columnGroupingModel'
+    >;
+    pivotModel: PivotModel;
+    onPivotModelChange: React.Dispatch<React.SetStateAction<PivotModel>>;
+    initialColumns: GridColDef[] | undefined;
+    pivotSettingsOpen: boolean;
+    onPivotSettingsOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
+  };
 }

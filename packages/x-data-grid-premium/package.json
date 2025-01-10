@@ -44,6 +44,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.26.0",
+    "@formkit/auto-animate": "^0.8.1",
     "@mui/utils": "^5.16.6 || ^6.0.0",
     "@mui/x-data-grid": "workspace:*",
     "@mui/x-data-grid-pro": "workspace:*",
