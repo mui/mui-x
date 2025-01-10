@@ -16,18 +16,18 @@ import { useMonthsCells } from '../utils/useMonthsCells';
 export function useBaseCalendarMonthsGrid(parameters: useBaseCalendarMonthsGrid.Parameters) {
   const { children, cellsPerRow, canChangeYear = true, cellsPerRowCssVar } = parameters;
   const baseRootContext = useBaseCalendarRootContext();
-  const monthsCellRefs = React.useRef<(HTMLElement | null)[]>([]);
+  const cellRefs = React.useRef<(HTMLElement | null)[]>([]);
   const { months, monthsListOrGridContext, changePage } = useMonthsCells();
   const pageNavigationTargetRef = React.useRef<PageGridNavigationTarget | null>(null);
 
   const getCellsInCalendar = useEventCallback(() => {
     const grid: HTMLElement[][] = Array.from(
       {
-        length: Math.ceil(monthsCellRefs.current.length / cellsPerRow),
+        length: Math.ceil(cellRefs.current.length / cellsPerRow),
       },
       () => [],
     );
-    monthsCellRefs.current.forEach((cell, index) => {
+    cellRefs.current.forEach((cell, index) => {
       const rowIndex = Math.floor(index / cellsPerRow);
       if (cell != null) {
         grid[rowIndex].push(cell);
@@ -78,8 +78,8 @@ export function useBaseCalendarMonthsGrid(parameters: useBaseCalendarMonthsGrid.
   );
 
   return React.useMemo(
-    () => ({ getMonthsGridProps, monthsCellRefs, monthsListOrGridContext }),
-    [getMonthsGridProps, monthsCellRefs, monthsListOrGridContext],
+    () => ({ getMonthsGridProps, cellRefs, monthsListOrGridContext }),
+    [getMonthsGridProps, cellRefs, monthsListOrGridContext],
   );
 }
 

@@ -9,7 +9,7 @@ import { useYearsCells } from '../utils/useYearsCells';
 export function useBaseCalendarYearsGrid(parameters: useBaseCalendarYearsGrid.Parameters) {
   const { children, cellsPerRow, cellsPerRowCssVar } = parameters;
   const yearsCellRefs = React.useRef<(HTMLElement | null)[]>([]);
-  const { years, yearsListOrGridContext } = useYearsCells();
+  const { years, yearsListOrGridContext, scrollerRef } = useYearsCells();
 
   const getCellsInCalendar = useEventCallback(() => {
     const grid: HTMLElement[][] = Array.from(
@@ -52,8 +52,8 @@ export function useBaseCalendarYearsGrid(parameters: useBaseCalendarYearsGrid.Pa
   );
 
   return React.useMemo(
-    () => ({ getYearsGridProps, yearsCellRefs, yearsListOrGridContext }),
-    [getYearsGridProps, yearsCellRefs, yearsListOrGridContext],
+    () => ({ getYearsGridProps, yearsCellRefs, yearsListOrGridContext, scrollerRef }),
+    [getYearsGridProps, yearsCellRefs, yearsListOrGridContext, scrollerRef],
   );
 }
 

@@ -7,7 +7,7 @@ import { BaseCalendarDaysGridBodyContext } from '../days-grid-body/BaseCalendarD
 export function useBaseCalendarDaysWeekRow(parameters: useBaseCalendarDaysWeekRow.Parameters) {
   const { children, ctx } = parameters;
   const ref = React.useRef(null);
-  const dayCellRefs = React.useRef<(HTMLElement | null)[]>([]);
+  const cellRefs = React.useRef<(HTMLElement | null)[]>([]);
 
   const getDaysWeekRowProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
@@ -23,13 +23,10 @@ export function useBaseCalendarDaysWeekRow(parameters: useBaseCalendarDaysWeekRo
 
   const registerWeekRowCells = ctx.registerWeekRowCells;
   React.useEffect(() => {
-    return registerWeekRowCells(ref, dayCellRefs);
+    return registerWeekRowCells(ref, cellRefs);
   }, [registerWeekRowCells]);
 
-  return React.useMemo(
-    () => ({ getDaysWeekRowProps, dayCellRefs }),
-    [getDaysWeekRowProps, dayCellRefs],
-  );
+  return React.useMemo(() => ({ getDaysWeekRowProps, cellRefs }), [getDaysWeekRowProps, cellRefs]);
 }
 
 export namespace useBaseCalendarDaysWeekRow {

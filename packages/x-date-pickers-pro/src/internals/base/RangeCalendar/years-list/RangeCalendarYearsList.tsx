@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import useForkRef from '@mui/utils/useForkRef';
 // eslint-disable-next-line no-restricted-imports
 import { useBaseCalendarYearsList } from '@mui/x-date-pickers/internals/base/utils/base-calendar/years-list/useBaseCalendarYearsList';
 // eslint-disable-next-line no-restricted-imports
@@ -16,16 +17,18 @@ const RangeCalendarYearsList = React.forwardRef(function CalendarYearsList(
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, render, children, loop, ...otherProps } = props;
-  const { getYearsListProps, yearsCellRefs, yearsListOrGridContext } = useBaseCalendarYearsList({
-    children,
-    loop,
-  });
+  const { getYearsListProps, cellRefs, yearsListOrGridContext, scrollerRef } =
+    useBaseCalendarYearsList({
+      children,
+      loop,
+    });
   const state = React.useMemo(() => ({}), []);
+  const ref = useForkRef(forwardedRef, scrollerRef);
 
   const { renderElement } = useComponentRenderer({
     propGetter: getYearsListProps,
     render: render ?? 'div',
-    ref: forwardedRef,
+    ref,
     className,
     state,
     extraProps: otherProps,
@@ -33,7 +36,7 @@ const RangeCalendarYearsList = React.forwardRef(function CalendarYearsList(
 
   return (
     <BaseCalendarYearsGridOrListContext.Provider value={yearsListOrGridContext}>
-      <CompositeList elementsRef={yearsCellRefs}>{renderElement()}</CompositeList>
+      <CompositeList elementsRef={cellRefs}>{renderElement()}</CompositeList>
     </BaseCalendarYearsGridOrListContext.Provider>
   );
 });

@@ -16,7 +16,7 @@ import { useMonthsCells } from '../utils/useMonthsCells';
 export function useBaseCalendarMonthsList(parameters: useBaseCalendarMonthsList.Parameters) {
   const { children, loop = true, canChangeYear = true } = parameters;
   const baseRootContext = useBaseCalendarRootContext();
-  const monthsCellRefs = React.useRef<(HTMLElement | null)[]>([]);
+  const cellRefs = React.useRef<(HTMLElement | null)[]>([]);
   const { months, monthsListOrGridContext, changePage } = useMonthsCells();
   const pageNavigationTargetRef = React.useRef<PageListNavigationTarget | null>(null);
 
@@ -25,7 +25,7 @@ export function useBaseCalendarMonthsList(parameters: useBaseCalendarMonthsList.
     if (pageNavigationTargetRef.current) {
       const target = pageNavigationTargetRef.current;
       timeout.start(0, () => {
-        applyInitialFocusInList({ cells: monthsCellRefs.current, target });
+        applyInitialFocusInList({ cells: cellRefs.current, target });
       });
     }
   }, [baseRootContext.visibleDate, timeout]);
@@ -38,7 +38,7 @@ export function useBaseCalendarMonthsList(parameters: useBaseCalendarMonthsList.
     };
 
     navigateInList({
-      cells: monthsCellRefs.current,
+      cells: cellRefs.current,
       event,
       loop,
       changePage: canChangeYear ? changeListPage : undefined,
@@ -57,8 +57,8 @@ export function useBaseCalendarMonthsList(parameters: useBaseCalendarMonthsList.
   );
 
   return React.useMemo(
-    () => ({ getMonthListProps, monthsCellRefs, monthsListOrGridContext }),
-    [getMonthListProps, monthsCellRefs, monthsListOrGridContext],
+    () => ({ getMonthListProps, cellRefs, monthsListOrGridContext }),
+    [getMonthListProps, cellRefs, monthsListOrGridContext],
   );
 }
 

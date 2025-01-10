@@ -44,7 +44,7 @@ export namespace useBaseCalendarDaysWeekRowWrapper {
     /**
      * The ref to forward to the component.
      */
-    ref: React.RefCallback<HTMLButtonElement> | null;
+    ref: React.RefCallback<HTMLDivElement> | null;
     /**
      * The memoized context to forward to the memoized component so that it does not need to subscribe to any context.
      */

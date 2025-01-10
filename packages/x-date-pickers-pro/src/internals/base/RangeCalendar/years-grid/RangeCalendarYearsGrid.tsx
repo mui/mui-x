@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import useForkRef from '@mui/utils/useForkRef';
 // eslint-disable-next-line no-restricted-imports
 import { useBaseCalendarYearsGrid } from '@mui/x-date-pickers/internals/base/utils/base-calendar/years-grid/useBaseCalendarYearsGrid';
 // eslint-disable-next-line no-restricted-imports
@@ -10,22 +11,26 @@ import { useComponentRenderer } from '@mui/x-date-pickers/internals/base/base-ut
 import { CompositeList } from '@mui/x-date-pickers/internals/base/composite/list/CompositeList';
 // eslint-disable-next-line no-restricted-imports
 import { BaseCalendarYearsGridOrListContext } from '@mui/x-date-pickers/internals/base/utils/base-calendar/years-grid/BaseCalendarYearsGridOrListContext';
+import { RangeCalendarYearsGridCssVars } from './RangeCalendarYearsGridCssVars';
 
 const RangeCalendarYearsGrid = React.forwardRef(function CalendarYearsList(
   props: RangeCalendarYearsGrid.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, render, children, cellsPerRow, ...otherProps } = props;
-  const { getYearsGridProps, yearsCellRefs, yearsListOrGridContext } = useBaseCalendarYearsGrid({
-    children,
-    cellsPerRow,
-  });
+  const { getYearsGridProps, yearsCellRefs, yearsListOrGridContext, scrollerRef } =
+    useBaseCalendarYearsGrid({
+      children,
+      cellsPerRow,
+      cellsPerRowCssVar: RangeCalendarYearsGridCssVars.rangeCalendarYearsGridCellsPerRow,
+    });
   const state = React.useMemo(() => ({}), []);
+  const ref = useForkRef(forwardedRef, scrollerRef);
 
   const { renderElement } = useComponentRenderer({
     propGetter: getYearsGridProps,
     render: render ?? 'div',
-    ref: forwardedRef,
+    ref,
     className,
     state,
     extraProps: otherProps,

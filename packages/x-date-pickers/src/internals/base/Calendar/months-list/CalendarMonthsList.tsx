@@ -11,7 +11,7 @@ const CalendarMonthsList = React.forwardRef(function CalendarMonthsList(
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, render, children, loop, canChangeYear, ...otherProps } = props;
-  const { getMonthListProps, monthsCellRefs, monthsListOrGridContext } = useBaseCalendarMonthsList({
+  const { getMonthListProps, cellRefs, monthsListOrGridContext } = useBaseCalendarMonthsList({
     children,
     loop,
     canChangeYear,
@@ -29,7 +29,7 @@ const CalendarMonthsList = React.forwardRef(function CalendarMonthsList(
 
   return (
     <BaseCalendarMonthsGridOrListContext.Provider value={monthsListOrGridContext}>
-      <CompositeList elementsRef={monthsCellRefs}>{renderElement()}</CompositeList>
+      <CompositeList elementsRef={cellRefs}>{renderElement()}</CompositeList>
     </BaseCalendarMonthsGridOrListContext.Provider>
   );
 });

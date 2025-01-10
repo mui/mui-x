@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import useForkRef from '@mui/utils/useForkRef';
 import { useBaseCalendarYearsGrid } from '../../utils/base-calendar/years-grid/useBaseCalendarYearsGrid';
 import { BaseUIComponentProps } from '../../base-utils/types';
 import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
@@ -12,17 +13,19 @@ const CalendarYearsGrid = React.forwardRef(function CalendarYearsList(
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, render, children, cellsPerRow, ...otherProps } = props;
-  const { getYearsGridProps, yearsCellRefs, yearsListOrGridContext } = useBaseCalendarYearsGrid({
-    children,
-    cellsPerRow,
-    cellsPerRowCssVar: CalendarYearsGridCssVars.calendarYearsGridCellsPerRow,
-  });
+  const { getYearsGridProps, yearsCellRefs, yearsListOrGridContext, scrollerRef } =
+    useBaseCalendarYearsGrid({
+      children,
+      cellsPerRow,
+      cellsPerRowCssVar: CalendarYearsGridCssVars.calendarYearsGridCellsPerRow,
+    });
   const state = React.useMemo(() => ({}), []);
+  const ref = useForkRef(forwardedRef, scrollerRef);
 
   const { renderElement } = useComponentRenderer({
     propGetter: getYearsGridProps,
     render: render ?? 'div',
-    ref: forwardedRef,
+    ref,
     className,
     state,
     extraProps: otherProps,

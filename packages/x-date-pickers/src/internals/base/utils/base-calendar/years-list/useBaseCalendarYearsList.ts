@@ -8,12 +8,12 @@ import { useYearsCells } from '../utils/useYearsCells';
 
 export function useBaseCalendarYearsList(parameters: useBaseCalendarYearsList.Parameters) {
   const { children, loop = true } = parameters;
-  const yearsCellRefs = React.useRef<(HTMLElement | null)[]>([]);
-  const { years, yearsListOrGridContext } = useYearsCells();
+  const cellRefs = React.useRef<(HTMLElement | null)[]>([]);
+  const { years, yearsListOrGridContext, scrollerRef } = useYearsCells();
 
   const onKeyDown = useEventCallback((event: React.KeyboardEvent) => {
     navigateInList({
-      cells: yearsCellRefs.current,
+      cells: cellRefs.current,
       event,
       loop,
       changePage: undefined,
@@ -32,8 +32,8 @@ export function useBaseCalendarYearsList(parameters: useBaseCalendarYearsList.Pa
   );
 
   return React.useMemo(
-    () => ({ getYearsListProps, yearsCellRefs, yearsListOrGridContext }),
-    [getYearsListProps, yearsCellRefs, yearsListOrGridContext],
+    () => ({ getYearsListProps, cellRefs, yearsListOrGridContext, scrollerRef }),
+    [getYearsListProps, cellRefs, yearsListOrGridContext, scrollerRef],
   );
 }
 

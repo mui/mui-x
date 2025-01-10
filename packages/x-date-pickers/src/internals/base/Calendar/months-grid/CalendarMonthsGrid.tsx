@@ -12,14 +12,12 @@ const CalendarMonthsGrid = React.forwardRef(function CalendarMonthsList(
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, render, children, cellsPerRow, canChangeYear, ...otherProps } = props;
-  const { getMonthsGridProps, monthsCellRefs, monthsListOrGridContext } = useBaseCalendarMonthsGrid(
-    {
-      children,
-      cellsPerRow,
-      canChangeYear,
-      cellsPerRowCssVar: CalendarMonthsGridCssVars.calendarMonthsGridCellsPerRow,
-    },
-  );
+  const { getMonthsGridProps, cellRefs, monthsListOrGridContext } = useBaseCalendarMonthsGrid({
+    children,
+    cellsPerRow,
+    canChangeYear,
+    cellsPerRowCssVar: CalendarMonthsGridCssVars.calendarMonthsGridCellsPerRow,
+  });
   const state = React.useMemo(() => ({}), []);
 
   const { renderElement } = useComponentRenderer({
@@ -33,7 +31,7 @@ const CalendarMonthsGrid = React.forwardRef(function CalendarMonthsList(
 
   return (
     <BaseCalendarMonthsGridOrListContext.Provider value={monthsListOrGridContext}>
-      <CompositeList elementsRef={monthsCellRefs}>{renderElement()}</CompositeList>
+      <CompositeList elementsRef={cellRefs}>{renderElement()}</CompositeList>
     </BaseCalendarMonthsGridOrListContext.Provider>
   );
 });

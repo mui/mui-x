@@ -11,7 +11,7 @@ const InnerCalendarDaysWeekRow = React.forwardRef(function InnerCalendarDaysWeek
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, render, value, ctx, children, ...otherProps } = props;
-  const { getDaysWeekRowProps, dayCellRefs } = useBaseCalendarDaysWeekRow({
+  const { getDaysWeekRowProps, cellRefs } = useBaseCalendarDaysWeekRow({
     value,
     ctx,
     children,
@@ -27,7 +27,7 @@ const InnerCalendarDaysWeekRow = React.forwardRef(function InnerCalendarDaysWeek
     extraProps: otherProps,
   });
 
-  return <CompositeList elementsRef={dayCellRefs}>{renderElement()}</CompositeList>;
+  return <CompositeList elementsRef={cellRefs}>{renderElement()}</CompositeList>;
 });
 
 const MemoizedInnerCalendarDaysWeekRow = React.memo(InnerCalendarDaysWeekRow);
