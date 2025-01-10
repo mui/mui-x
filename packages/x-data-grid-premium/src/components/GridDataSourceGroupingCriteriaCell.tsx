@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import Box from '@mui/material/Box';
-import { useGridPrivateApiContext } from '@mui/x-data-grid-pro/internals';
+import { vars, useGridPrivateApiContext } from '@mui/x-data-grid-pro/internals';
 import {
   useGridSelector,
   getDataGridUtilityClass,
@@ -124,8 +124,7 @@ export function GridDataSourceGroupingCriteriaCell(props: GridGroupingCriteriaCe
         ml:
           rootProps.rowGroupingColumnMode === 'multiple'
             ? 0
-            : (theme) =>
-                `calc(var(--DataGrid-cellOffsetMultiplier) * ${theme.spacing(rowNode.depth)})`,
+            : `calc(var(--DataGrid-cellOffsetMultiplier) * ${vars.spacing(rowNode.depth)})`,
       }}
     >
       <div className={classes.toggle}>
