@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { refType } from '@mui/utils';
-import { CalendarIcon } from '@mui/x-date-pickers/icons';
+import { DateRangeIcon } from '@mui/x-date-pickers/icons';
 import { PickerFieldUI, useFieldTextFieldProps } from '@mui/x-date-pickers/internals';
 import { SingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
 import { useSingleInputDateRangeField } from './useSingleInputDateRangeField';
@@ -55,7 +55,7 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
       slots={slots}
       slotProps={slotProps}
       fieldResponse={fieldResponse}
-      defaultOpenPickerIcon={CalendarIcon}
+      defaultOpenPickerIcon={DateRangeIcon}
     />
   );
 }) as DateRangeFieldComponent;

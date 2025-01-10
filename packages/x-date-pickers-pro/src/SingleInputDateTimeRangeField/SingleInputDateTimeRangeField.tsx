@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { CalendarIcon } from '@mui/x-date-pickers/icons';
+import { DateRangeIcon } from '@mui/x-date-pickers/icons';
 import { PickerFieldUI, useFieldTextFieldProps } from '@mui/x-date-pickers/internals';
 import { useThemeProps } from '@mui/material/styles';
 import { refType } from '@mui/utils';
@@ -55,7 +55,7 @@ const SingleInputDateTimeRangeField = React.forwardRef(function SingleInputDateT
       slots={slots}
       slotProps={slotProps}
       fieldResponse={fieldResponse}
-      defaultOpenPickerIcon={CalendarIcon}
+      defaultOpenPickerIcon={DateRangeIcon}
     />
   );
 }) as DateRangeFieldComponent;
