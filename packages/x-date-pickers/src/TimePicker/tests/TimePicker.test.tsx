@@ -14,7 +14,7 @@ describe('<TimePicker />', () => {
     render(<TimePicker />);
 
     fireEvent.click(screen.getByLabelText(/Choose time/));
-    expect(screen.getAllByRole('dialog')).to.have.length(1);
+    expect(screen.queryByRole('dialog')).to.not.equal(null);
 
     window.matchMedia = originalMatchMedia;
   });

@@ -14,7 +14,7 @@ describe('<DatePicker />', () => {
     render(<DatePicker />);
 
     fireEvent.click(screen.getByLabelText(/Choose date/));
-    expect(screen.getAllByRole('dialog')).to.have.length(1);
+    expect(screen.queryByRole('dialog')).to.not.equal(null);
 
     window.matchMedia = originalMatchMedia;
   });
