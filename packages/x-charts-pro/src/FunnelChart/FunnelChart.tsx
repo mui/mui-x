@@ -1,45 +1,43 @@
 'use client';
 import { useThemeProps } from '@mui/material/styles';
 import * as React from 'react';
-import {
-  ResponsiveChartContainer,
-  ResponsiveChartContainerProps,
-} from '../ResponsiveChartContainer';
-import { ChartsAxisProps } from '../ChartsAxis';
+
+import { ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import {
   ChartsOverlay,
   ChartsOverlayProps,
   ChartsOverlaySlotProps,
   ChartsOverlaySlots,
-} from '../ChartsOverlay';
+} from '@mui/x-charts/ChartsOverlay';
 import {
   ChartsTooltip,
-  ChartsTooltipProps,
   ChartsTooltipSlotProps,
   ChartsTooltipSlots,
-} from '../ChartsTooltip';
+} from '@mui/x-charts/ChartsTooltip';
+import { ChartsAxisSlotProps, ChartsAxisSlots, ChartSeriesConfig } from '@mui/x-charts/internals';
+import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '@mui/x-charts/ChartsLegend';
+import { MakeOptional } from '@mui/x-internals/types';
 import { FunnelPlot, FunnelPlotProps, FunnelPlotSlotProps, FunnelPlotSlots } from './FunnelPlot';
 import { FunnelSeriesType } from './funnel.types';
-import { MakeOptional } from '../models/helpers';
-import { ChartsAxisSlotProps, ChartsAxisSlots } from '../models/axis';
-import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import { useFunnelChartProps } from './useFunnelChartProps';
+import { ChartContainerPro, ChartContainerProProps } from '../ChartContainerPro';
+import { plugin as funnelPlugin } from './plugin';
 
 export interface FunnelChartSlots
   extends ChartsAxisSlots,
     FunnelPlotSlots,
     ChartsLegendSlots,
-    ChartsTooltipSlots<'funnel'>,
+    ChartsTooltipSlots,
     ChartsOverlaySlots {}
 export interface FunnelChartSlotProps
   extends ChartsAxisSlotProps,
     FunnelPlotSlotProps,
     ChartsLegendSlotProps,
-    ChartsTooltipSlotProps<'funnel'>,
+    ChartsTooltipSlotProps,
     ChartsOverlaySlotProps {}
 
 export interface FunnelChartProps
-  extends Omit<ResponsiveChartContainerProps, 'series' | 'plugins' | 'zAxis'>,
+  extends Omit<ChartContainerProProps, 'series' | 'plugins' | 'zAxis' | 'zoom' | 'onZoomChange'>,
     Omit<FunnelPlotProps, 'slots' | 'slotProps'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
@@ -48,11 +46,6 @@ export interface FunnelChartProps
    * An array of [[FunnelSeriesType]] objects.
    */
   series: MakeOptional<FunnelSeriesType, 'type'>[];
-  /**
-   * The configuration of the tooltip.
-   * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
-   */
-  tooltip?: ChartsTooltipProps<'funnel'>;
   /**
    * Overridable component slots.
    * @default {}
@@ -70,26 +63,27 @@ export interface FunnelChartProps
   layout?: FunnelSeriesType['layout'];
 }
 
-const FunnelChart = React.forwardRef(function FunnelChart(inProps: FunnelChartProps, ref) {
+const seriesConfig: ChartSeriesConfig<'funnel'> = { funnel: funnelPlugin };
+
+const FunnelChart = React.forwardRef(function FunnelChart(
+  inProps: FunnelChartProps,
+  ref: React.Ref<SVGSVGElement>,
+) {
   const props = useThemeProps({ props: inProps, name: 'MuiFunnelChart' });
 
-  const {
-    chartContainerProps,
-    funnelPlotProps,
-    overlayProps,
-    tooltipProps,
-    legendProps,
-    children,
-  } = useFunnelChartProps(props);
+  const { chartContainerProps, funnelPlotProps, overlayProps, legendProps, children } =
+    useFunnelChartProps(props);
+
+  const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
 
   return (
-    <ResponsiveChartContainer ref={ref} {...chartContainerProps}>
+    <ChartContainerPro<'funnel'> ref={ref} {...chartContainerProps} seriesConfig={seriesConfig}>
       <ChartsOverlay {...overlayProps} />
       <FunnelPlot {...funnelPlotProps} />
       <ChartsLegend {...legendProps} />
-      {!props.loading && <ChartsTooltip {...tooltipProps} />}
+      {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
       {children}
-    </ResponsiveChartContainer>
+    </ChartContainerPro>
   );
 });
 

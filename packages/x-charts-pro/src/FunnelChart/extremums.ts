@@ -1,13 +1,13 @@
-import { ExtremumGetter } from '../context/PluginProvider/ExtremumGetter.types';
+import { CartesianExtremumGetter } from '@mui/x-charts/internals';
 
 const getValueExtremum =
-  (direction: 'x' | 'y'): ExtremumGetter<'funnel'> =>
+  (direction: 'x' | 'y'): CartesianExtremumGetter<'funnel'> =>
   (params) => {
     const { series, axis, isDefaultAxis } = params;
 
     return Object.keys(series)
       .filter((seriesId) => {
-        const yAxisId = series[seriesId].yAxisId ?? series[seriesId].yAxisKey;
+        const yAxisId = series[seriesId].yAxisId;
         return yAxisId === axis.id || (isDefaultAxis && yAxisId === undefined);
       })
       .reduce(
@@ -28,7 +28,7 @@ const getValueExtremum =
       );
   };
 
-export const getExtremumX: ExtremumGetter<'funnel'> = (params) => {
+export const getExtremumX: CartesianExtremumGetter<'funnel'> = (params) => {
   const isHorizontal = Object.keys(params.series).some(
     (seriesId) => params.series[seriesId].layout === 'horizontal',
   );
@@ -39,6 +39,6 @@ export const getExtremumX: ExtremumGetter<'funnel'> = (params) => {
   return getValueExtremum('x')(params);
 };
 
-export const getExtremumY: ExtremumGetter<'funnel'> = (params) => {
+export const getExtremumY: CartesianExtremumGetter<'funnel'> = (params) => {
   return getValueExtremum('y')(params);
 };

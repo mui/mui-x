@@ -1,14 +1,12 @@
 import * as React from 'react';
 
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
-import { FunnelItemIdentifier } from './funnel.types';
-import { useFunnelSeries } from '../hooks/useSeries';
-import { useCartesianContext } from '../context/CartesianProvider';
-import { AxisDefaultized, AxisId } from '../models/axis';
-import getCurveFactory from '../internals/getCurve';
+import { getCurveFactory, AxisDefaultized, AxisId } from '@mui/x-charts/internals';
+import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
+import { FunnelItemIdentifier, FunnelStackedData } from './funnel.types';
 import { FunnelElement } from './FunnelElement';
 import { FunnelLabel } from './FunnelLabel';
-import { FunnelStackedData } from '../models/seriesType/config';
+import { useFunnelSeries } from '../hooks/useSeries';
 
 export interface FunnelPlotSlots {}
 
@@ -244,7 +242,8 @@ const alignLabel = ({
 
 const useAggregatedData = (funnelLabel: FunnelPlotProps['funnelLabel']) => {
   const seriesData = useFunnelSeries();
-  const axisData = useCartesianContext();
+  const { xAxis, xAxisIds } = useXAxes();
+  const { yAxis, yAxisIds } = useYAxes();
 
   const allData = React.useMemo(() => {
     if (seriesData === undefined) {
@@ -252,7 +251,6 @@ const useAggregatedData = (funnelLabel: FunnelPlotProps['funnelLabel']) => {
     }
 
     const { series, stackingGroups } = seriesData;
-    const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
     const defaultXAxisId = xAxisIds[0];
     const defaultYAxisId = yAxisIds[0];
 
@@ -260,8 +258,8 @@ const useAggregatedData = (funnelLabel: FunnelPlotProps['funnelLabel']) => {
 
     const result = stackingGroups.map(({ ids: groupIds }) => {
       return groupIds.map((seriesId, bandIndex) => {
-        const xAxisId = series[seriesId].xAxisId ?? series[seriesId].xAxisKey ?? defaultXAxisId;
-        const yAxisId = series[seriesId].yAxisId ?? series[seriesId].yAxisKey ?? defaultYAxisId;
+        const xAxisId = series[seriesId].xAxisId ?? defaultXAxisId;
+        const yAxisId = series[seriesId].yAxisId ?? defaultYAxisId;
 
         const valueFormatter = series[seriesId].valueFormatter;
 
@@ -307,7 +305,7 @@ const useAggregatedData = (funnelLabel: FunnelPlotProps['funnelLabel']) => {
           .y((d) => yPosition(d.y, d.useBandWidth))
           .curve(curve);
 
-        return stackedData.map((values, dataIndex) => {
+        return (stackedData as unknown as FunnelStackedData[][]).map((values, dataIndex) => {
           const color = series[seriesId].color ?? 'black';
           const id = `${seriesId}-${dataIndex}`;
 
@@ -342,7 +340,7 @@ const useAggregatedData = (funnelLabel: FunnelPlotProps['funnelLabel']) => {
     });
 
     return result.flatMap((v) => v.toReversed().flat());
-  }, [seriesData, axisData, funnelLabel]);
+  }, [seriesData, xAxis, xAxisIds, yAxis, yAxisIds, funnelLabel]);
 
   return allData;
 };

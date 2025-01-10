@@ -1,11 +1,11 @@
-import { CurveType } from '../models/curve';
-import { DefaultizedProps } from '../models/helpers';
-import type {
-  CommonDefaultizedProps,
+import {
   CommonSeriesType,
   CartesianSeriesType,
   StackableSeriesType,
-} from '../models/seriesType/common';
+  CommonDefaultizedProps,
+} from '@mui/x-charts/internals';
+import { CurveType } from '@mui/x-charts/models';
+import { DefaultizedProps } from '@mui/x-internals/types';
 
 export interface FunnelSeriesType
   extends CommonSeriesType<number>,
@@ -52,3 +52,5 @@ export type FunnelItemIdentifier = {
 
 export interface DefaultizedFunnelSeriesType
   extends DefaultizedProps<FunnelSeriesType, CommonDefaultizedProps | 'color' | 'layout'> {}
+
+export type FunnelStackedData = Record<'x' | 'y', number> & Record<'useBandWidth', boolean>;

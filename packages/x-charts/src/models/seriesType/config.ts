@@ -14,11 +14,6 @@ import {
   PieValueType,
   DefaultizedPieValueType,
 } from './pie';
-import {
-  DefaultizedFunnelSeriesType,
-  FunnelItemIdentifier,
-  FunnelSeriesType,
-} from '../../FunnelChart/funnel.types';
 
 export interface ChartsSeriesConfig {
   bar: {
@@ -65,20 +60,9 @@ export interface ChartsSeriesConfig {
     itemIdentifier: PieItemIdentifier;
     valueType: DefaultizedPieValueType;
   };
-  funnel: {
-    seriesInput: DefaultizedProps<FunnelSeriesType, 'id'> & { color: string };
-    series: DefaultizedFunnelSeriesType;
-    seriesProp: FunnelSeriesType;
-    itemIdentifier: FunnelItemIdentifier;
-    valueType: number | null;
-    canBeStacked: true;
-    cartesian: true;
-  };
 }
 
 export type ChartSeriesType = keyof ChartsSeriesConfig;
-
-export type FunnelStackedData = Record<'x' | 'y', number> & Record<'useBandWidth', boolean>;
 
 export type CartesianChartSeriesType = keyof Pick<
   ChartsSeriesConfig,
@@ -97,21 +81,13 @@ export type StackableChartSeriesType = keyof Pick<
 export type ChartSeries<T extends ChartSeriesType> = ChartsSeriesConfig[T] extends {
   canBeStacked: true;
 }
-  ? T extends 'funnel'
-    ? ChartsSeriesConfig[T]['seriesInput'] & {
-        stackedData: FunnelStackedData[][];
-      }
-    : ChartsSeriesConfig[T]['seriesInput'] & { stackedData: [number, number][] }
+  ? ChartsSeriesConfig[T]['seriesInput'] & { stackedData: [number, number][] }
   : ChartsSeriesConfig[T]['seriesInput'];
 
 export type ChartSeriesDefaultized<T extends ChartSeriesType> = ChartsSeriesConfig[T] extends {
   canBeStacked: true;
 }
-  ? T extends 'funnel'
-    ? ChartsSeriesConfig[T]['series'] & {
-        stackedData: FunnelStackedData[][];
-      }
-    : ChartsSeriesConfig[T]['series'] & { stackedData: [number, number][] }
+  ? ChartsSeriesConfig[T]['series'] & { stackedData: [number, number][] }
   : ChartsSeriesConfig[T]['series'];
 
 export type ChartItemIdentifier<T extends ChartSeriesType> =

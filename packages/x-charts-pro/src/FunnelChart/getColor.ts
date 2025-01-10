@@ -1,4 +1,4 @@
-import { ColorProcessor } from '../context/PluginProvider/ColorProcessor.types';
+import { ColorProcessor } from '@mui/x-charts/internals';
 
 const getColor: ColorProcessor<'funnel'> = (series, xAxis, yAxis) => {
   const verticalLayout = series.layout === 'vertical';

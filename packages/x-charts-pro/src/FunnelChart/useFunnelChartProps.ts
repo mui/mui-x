@@ -1,12 +1,11 @@
 'use client';
-import type { FunnelChartProps } from './FunnelChart';
-import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
-import { ResponsiveChartContainerProps } from '../ResponsiveChartContainer';
+import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '@mui/x-charts/constants';
+import { ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
+import { ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
+import { ChartsLegendSlotExtension } from '@mui/x-charts/ChartsLegend';
 import { FunnelPlotProps } from './FunnelPlot';
-import { ChartsOverlayProps } from '../ChartsOverlay';
-import { ChartsAxisProps } from '../ChartsAxis';
-import { ChartsTooltipProps } from '../ChartsTooltip';
-import { ChartsLegendProps } from '../ChartsLegend';
+import type { FunnelChartProps } from './FunnelChart';
+import { ChartContainerProProps } from '../ChartContainerPro';
 
 /**
  * A helper function that extracts FunnelChartProps from the input props
@@ -26,7 +25,6 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     colors,
     dataset,
     sx,
-    tooltip,
     topAxis,
     leftAxis,
     rightAxis,
@@ -49,7 +47,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     layout === 'horizontal' ||
     (layout === undefined && series.some((item) => item.layout === 'horizontal'));
 
-  const chartContainerProps: ResponsiveChartContainerProps = {
+  const chartContainerProps: ChartContainerProProps<'funnel'> = {
     ...rest,
     series: series.map((s) => ({
       type: 'funnel' as const,
@@ -93,14 +91,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     slotProps,
   };
 
-  const tooltipProps: ChartsTooltipProps<'funnel'> = {
-    ...tooltip,
-    trigger: tooltip?.trigger ?? 'item',
-    slots,
-    slotProps,
-  };
-
-  const legendProps: ChartsLegendProps = {
+  const legendProps: ChartsLegendSlotExtension = {
     slots,
     slotProps,
   };
@@ -110,7 +101,6 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     funnelPlotProps,
     overlayProps,
     chartsAxisProps,
-    tooltipProps,
     legendProps,
     children,
   };

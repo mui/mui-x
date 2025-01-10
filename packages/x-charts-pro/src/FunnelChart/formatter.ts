@@ -1,11 +1,15 @@
 import { stack as d3Stack } from '@mui/x-charts-vendor/d3-shape';
+import {
+  DatasetType,
+  SeriesProcessor,
+  ChartSeries,
+  DatasetElementType,
+  SeriesId,
+  getStackingGroups,
+  defaultizeValueFormatter,
+} from '@mui/x-charts/internals';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import { warnOnce } from '@mui/x-internals/warning';
-import { getStackingGroups } from '../internals/stackSeries';
-import { ChartSeries, DatasetElementType, DatasetType } from '../models/seriesType/config';
-import { defaultizeValueFormatter } from '../internals/defaultizeValueFormatter';
-import { DefaultizedProps } from '../models/helpers';
-import { SeriesId } from '../models/seriesType/common';
-import { SeriesFormatter } from '../context/PluginProvider/SeriesFormatter.types';
 
 type FunnelDataset = DatasetType<number | null>;
 
@@ -21,8 +25,9 @@ const createPoint = ({
   useBandWidth: boolean;
 }) => (inverse ? { x: other, y: main, useBandWidth } : { x: main, y: other, useBandWidth });
 
-const formatter: SeriesFormatter<'funnel'> = (params, dataset) => {
+const formatter: SeriesProcessor<'funnel'> = (params, dataset) => {
   const { seriesOrder, series } = params;
+  // TODO: fix type
   const stackingGroups = getStackingGroups(
     {
       ...params,
@@ -30,7 +35,7 @@ const formatter: SeriesFormatter<'funnel'> = (params, dataset) => {
         stackOrder: 'reverse',
         stackOffset: 'none',
       },
-    },
+    } as any,
     'funnel',
   );
 
@@ -156,7 +161,8 @@ const formatter: SeriesFormatter<'funnel'> = (params, dataset) => {
             useBandWidth: false,
           }),
         ];
-      });
+        // TODO: fix type
+      }) as any;
     });
   });
 

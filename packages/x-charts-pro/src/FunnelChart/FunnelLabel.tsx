@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, SxProps, useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 
 export const FunnelLabelComponent = styled('text', {
@@ -18,7 +18,9 @@ export const FunnelLabelComponent = styled('text', {
   opacity: 1,
 }));
 
-export interface FunnelLabelProps extends Omit<React.SVGProps<SVGTextElement>, 'ref' | 'id'> {}
+export interface FunnelLabelProps extends Omit<React.SVGProps<SVGTextElement>, 'ref' | 'id'> {
+  sx?: SxProps;
+}
 
 function FunnelLabel(inProps: FunnelLabelProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiFunnelLabel' });

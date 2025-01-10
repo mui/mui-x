@@ -15,13 +15,9 @@ import {
 import type { BarSeriesType, LineSeriesType } from '../models/seriesType';
 import type { StackOffsetType, StackOrderType } from '../models/stacking';
 import { SeriesId } from '../models/seriesType/common';
-import { FunnelSeriesType } from '../FunnelChart/funnel.types';
 import { ChartSeriesType } from '../models/seriesType/config';
 
-type StackableSeries =
-  | Record<SeriesId, BarSeriesType>
-  | Record<SeriesId, LineSeriesType>
-  | Record<SeriesId, FunnelSeriesType>;
+type StackableSeries = Record<SeriesId, BarSeriesType> | Record<SeriesId, LineSeriesType>;
 
 type FormatterParams = {
   series: StackableSeries;

@@ -33,6 +33,8 @@ export * from './getSVGPoint';
 export * from './isDefined';
 export { unstable_cleanupDOM } from './domUtils';
 export * from './getScale';
+export * from './stackSeries';
+export * from './getCurve';
 
 // contexts
 

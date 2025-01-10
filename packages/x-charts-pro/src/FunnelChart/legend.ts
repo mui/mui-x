@@ -1,6 +1,5 @@
-import { LegendItemParams } from '../ChartsLegend/chartsLegend.types';
-import { getLabel } from '../internals/getLabel';
-import { LegendGetter } from '../context/PluginProvider';
+import { LegendItemParams } from '@mui/x-charts/ChartsLegend';
+import { LegendGetter, getLabel } from '@mui/x-charts/internals';
 
 const legendGetter: LegendGetter<'funnel'> = (params) => {
   const { seriesOrder, series } = params;
@@ -11,12 +10,13 @@ const legendGetter: LegendGetter<'funnel'> = (params) => {
       return acc;
     }
 
+    // TODO: Fix type
     acc.push({
       id: seriesId,
       seriesId,
       color: series[seriesId].color,
       label: formattedLabel,
-    });
+    } as any);
     return acc;
   }, [] as LegendItemParams[]);
 };

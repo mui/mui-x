@@ -12,7 +12,7 @@ import {
 } from '@mui/x-charts-vendor/d3-shape';
 import { CurveType } from '../models/curve';
 
-export default function getCurveFactory(curveType?: CurveType) {
+export function getCurveFactory(curveType?: CurveType) {
   switch (curveType) {
     case 'catmullRom':
       return curveCatmullRom.alpha(0.5);
