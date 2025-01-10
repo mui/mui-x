@@ -94,13 +94,13 @@ const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
   const startTextFieldProps = useSlotProps({
     elementType: 'input',
     externalSlotProps: slotProps?.textField,
-    ownerState: {},
+    ownerState: { position: 'start' },
   });
 
   const endTextFieldProps = useSlotProps({
     elementType: 'input',
     externalSlotProps: slotProps?.textField,
-    ownerState: {},
+    ownerState: { position: 'end' },
   });
 
   const fieldResponse = useMultiInputDateRangeField({
