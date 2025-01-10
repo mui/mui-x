@@ -163,12 +163,14 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
     });
 
     const {
+      // The multi input range field do not support clearable and onClear
       onClear: onClearStartDate,
       clearable: isStartDateClearable,
       openPickerAriaLabel: openPickerStartDateAriaLabel,
       ...startDateProps
     } = fieldResponse.startDate;
     const {
+      // The multi input range field do not support clearable and onClear
       onClear: onClearEndDate,
       clearable: isEndDateClearable,
       openPickerAriaLabel: openPickerEndDateAriaLabel,

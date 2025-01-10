@@ -30,9 +30,7 @@ function getInputValueFromValue(value, format) {
 }
 
 function MaskedDateField(props) {
-  const { slots, slotProps, ...other } = props;
-
-  const { forwardedProps, internalProps } = useSplitFieldProps(other, 'date');
+  const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
   const pickerContext = usePickerContext();
   const parsedFormat = useParsedFormat();
 

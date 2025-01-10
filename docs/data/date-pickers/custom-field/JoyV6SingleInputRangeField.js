@@ -41,8 +41,6 @@ const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
     id,
     label,
     inputRef,
-    slots,
-    slotProps,
     ...other
   } = fieldResponse;
 

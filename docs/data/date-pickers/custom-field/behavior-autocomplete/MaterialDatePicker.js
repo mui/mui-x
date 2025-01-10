@@ -14,8 +14,6 @@ function AutocompleteField(props) {
   const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
   const { timezone, value, setValue } = usePickerContext();
   const {
-    slotProps,
-    slots,
     ownerState,
     label,
     focused,

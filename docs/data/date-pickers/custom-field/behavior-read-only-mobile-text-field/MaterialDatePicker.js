@@ -14,7 +14,6 @@ import { DateField } from '@mui/x-date-pickers/DateField';
 
 function ReadOnlyDateField(props) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-  const { slotProps, slots, ...other } = forwardedProps;
 
   const pickerContext = usePickerContext();
 
@@ -28,7 +27,7 @@ function ReadOnlyDateField(props) {
 
   return (
     <TextField
-      {...other}
+      {...forwardedProps}
       value={
         pickerContext.value == null
           ? ''

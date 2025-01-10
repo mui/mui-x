@@ -13,7 +13,6 @@ import { CalendarIcon } from '@mui/x-date-pickers/icons';
 
 function ReadOnlyDateField(props) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-  const { slotProps, slots, ...other } = forwardedProps;
 
   const pickerContext = usePickerContext();
   const parsedFormat = useParsedFormat();
@@ -26,7 +25,7 @@ function ReadOnlyDateField(props) {
 
   return (
     <TextField
-      {...other}
+      {...forwardedProps}
       value={
         pickerContext.value == null
           ? ''
