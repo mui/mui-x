@@ -44,27 +44,19 @@ export interface ChartsLabelGradientProps {
   sx?: SxProps<Theme>;
 }
 
-const applyRtl = (isRtl: boolean | undefined, value: number) => (isRtl ? value - 180 : value);
-
 const getRotation = (
   direction?: 'vertical' | 'horizontal',
   reverse?: boolean,
   rotate?: boolean,
   isRtl?: boolean,
 ) => {
-  if (!rotate && reverse) {
-    return direction === 'vertical' ? 90 : applyRtl(isRtl, 180);
+  const angle = (direction === 'vertical' ? -90 : 0) + (rotate ? 90 : 0) + (reverse ? 180 : 0);
+
+  if (isRtl && direction === 'horizontal') {
+    return angle + 180;
   }
 
-  if (rotate && !reverse) {
-    return direction === 'vertical' ? applyRtl(isRtl, 0) : 90;
-  }
-
-  if (rotate && reverse) {
-    return direction === 'vertical' ? applyRtl(isRtl, 180) : -90;
-  }
-
-  return direction === 'vertical' ? -90 : applyRtl(isRtl, 0);
+  return angle;
 };
 
 const Root = styled('div', {

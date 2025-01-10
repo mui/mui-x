@@ -131,7 +131,7 @@ describe('<ChartsLabelGradient />', () => {
             { wrapper: RtlWrapper },
           );
           const svg = container.querySelector('svg');
-          expect(matrixToRotation(svg)).to.equal(90);
+          expect(matrixToRotation(svg)).to.equal(-90);
         });
 
         it('should reverse and rotate the gradient', () => {
@@ -140,7 +140,7 @@ describe('<ChartsLabelGradient />', () => {
             { wrapper: RtlWrapper },
           );
           const svg = container.querySelector('svg');
-          expect(matrixToRotation(svg)).to.equal(-90);
+          expect(matrixToRotation(svg)).to.equal(90);
         });
       });
 
@@ -169,7 +169,7 @@ describe('<ChartsLabelGradient />', () => {
             { wrapper: RtlWrapper },
           );
           const svg = container.querySelector('svg');
-          expect(matrixToRotation(svg)).to.equal(180);
+          expect(matrixToRotation(svg)).to.equal(0);
         });
 
         it('should reverse and rotate the gradient', () => {
@@ -183,7 +183,7 @@ describe('<ChartsLabelGradient />', () => {
             { wrapper: RtlWrapper },
           );
           const svg = container.querySelector('svg');
-          expect(matrixToRotation(svg)).to.equal(0);
+          expect(matrixToRotation(svg)).to.equal(180);
         });
       });
     });
