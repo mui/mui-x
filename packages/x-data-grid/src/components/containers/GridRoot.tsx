@@ -20,8 +20,6 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { gridDensitySelector } from '../../hooks/features/density/densitySelector';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridDensity } from '../../models/gridDensity';
-import { GridHeader } from '../GridHeader';
-import { GridBody, GridFooterPlaceholder } from '../base';
 
 export interface GridRootProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
