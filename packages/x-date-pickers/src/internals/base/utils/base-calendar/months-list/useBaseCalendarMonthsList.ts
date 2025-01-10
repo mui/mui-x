@@ -17,7 +17,7 @@ export function useBaseCalendarMonthsList(parameters: useBaseCalendarMonthsList.
   const { children, loop = true, canChangeYear = true } = parameters;
   const baseRootContext = useBaseCalendarRootContext();
   const cellRefs = React.useRef<(HTMLElement | null)[]>([]);
-  const { months, monthsListOrGridContext, changePage } = useMonthsCells();
+  const { months, monthsListOrGridContext, changePage, scrollerRef } = useMonthsCells();
   const pageNavigationTargetRef = React.useRef<PageListNavigationTarget | null>(null);
 
   const timeout = useTimeout();
@@ -57,8 +57,8 @@ export function useBaseCalendarMonthsList(parameters: useBaseCalendarMonthsList.
   );
 
   return React.useMemo(
-    () => ({ getMonthListProps, cellRefs, monthsListOrGridContext }),
-    [getMonthListProps, cellRefs, monthsListOrGridContext],
+    () => ({ getMonthListProps, cellRefs, monthsListOrGridContext, scrollerRef }),
+    [getMonthListProps, cellRefs, monthsListOrGridContext, scrollerRef],
   );
 }
 

@@ -5,6 +5,7 @@ import { useUtils } from '../../../../hooks/useUtils';
 import { getFirstEnabledYear, getLastEnabledYear } from './date';
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 import { BaseCalendarMonthsGridOrListContext } from '../months-grid/BaseCalendarMonthsGridOrListContext';
+import { useCellList } from './useCellList';
 
 export function useMonthsCells(): useMonthsCells.ReturnValue {
   const baseRootContext = useBaseCalendarRootContext();
@@ -15,6 +16,7 @@ export function useMonthsCells(): useMonthsCells.ReturnValue {
     [utils, baseRootContext.visibleDate],
   );
 
+  const { scrollerRef } = useCellList({ section: 'month', value: currentYear });
   const months = React.useMemo(() => getMonthsInYear(utils, currentYear), [utils, currentYear]);
 
   const tabbableMonths = React.useMemo(() => {
@@ -86,16 +88,11 @@ export function useMonthsCells(): useMonthsCells.ReturnValue {
     }
   };
 
-  const registerSection = baseRootContext.registerSection;
-  React.useEffect(() => {
-    return registerSection({ type: 'month', value: currentYear });
-  }, [registerSection, currentYear]);
-
-  return { months, monthsListOrGridContext, changePage };
+  return { months, monthsListOrGridContext, changePage, scrollerRef };
 }
 
 export namespace useMonthsCells {
-  export interface ReturnValue {
+  export interface ReturnValue extends useCellList.ReturnValue {
     months: PickerValidDate[];
     monthsListOrGridContext: BaseCalendarMonthsGridOrListContext;
     changePage: (direction: 'next' | 'previous') => void;

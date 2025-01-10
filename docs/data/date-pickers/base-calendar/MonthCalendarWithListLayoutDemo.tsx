@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 // eslint-disable-next-line no-restricted-imports
@@ -30,7 +30,12 @@ export default function MonthCalendarWithListLayoutDemo() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Calendar.Root value={value} onValueChange={setValue} className={styles.Root}>
+      <Calendar.Root
+        value={value}
+        onValueChange={setValue}
+        className={styles.Root}
+        referenceDate={dayjs('2025-10-01')}
+      >
         <Header />
         <Calendar.MonthsList className={styles.MonthsList}>
           {({ months }) =>

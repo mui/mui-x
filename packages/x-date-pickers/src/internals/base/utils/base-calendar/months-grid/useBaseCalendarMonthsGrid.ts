@@ -17,7 +17,7 @@ export function useBaseCalendarMonthsGrid(parameters: useBaseCalendarMonthsGrid.
   const { children, cellsPerRow, canChangeYear = true, cellsPerRowCssVar } = parameters;
   const baseRootContext = useBaseCalendarRootContext();
   const cellRefs = React.useRef<(HTMLElement | null)[]>([]);
-  const { months, monthsListOrGridContext, changePage } = useMonthsCells();
+  const { months, monthsListOrGridContext, changePage, scrollerRef } = useMonthsCells();
   const pageNavigationTargetRef = React.useRef<PageGridNavigationTarget | null>(null);
 
   const getCellsInCalendar = useEventCallback(() => {
@@ -78,8 +78,8 @@ export function useBaseCalendarMonthsGrid(parameters: useBaseCalendarMonthsGrid.
   );
 
   return React.useMemo(
-    () => ({ getMonthsGridProps, cellRefs, monthsListOrGridContext }),
-    [getMonthsGridProps, cellRefs, monthsListOrGridContext],
+    () => ({ getMonthsGridProps, cellRefs, monthsListOrGridContext, scrollerRef }),
+    [getMonthsGridProps, cellRefs, monthsListOrGridContext, scrollerRef],
   );
 }
 

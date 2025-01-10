@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import useForkRef from '@mui/utils/useForkRef';
 import { useBaseCalendarMonthsList } from '../../utils/base-calendar/months-list/useBaseCalendarMonthsList';
 import { BaseUIComponentProps } from '../../base-utils/types';
 import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
@@ -11,17 +12,19 @@ const CalendarMonthsList = React.forwardRef(function CalendarMonthsList(
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, render, children, loop, canChangeYear, ...otherProps } = props;
-  const { getMonthListProps, cellRefs, monthsListOrGridContext } = useBaseCalendarMonthsList({
-    children,
-    loop,
-    canChangeYear,
-  });
+  const { getMonthListProps, cellRefs, monthsListOrGridContext, scrollerRef } =
+    useBaseCalendarMonthsList({
+      children,
+      loop,
+      canChangeYear,
+    });
   const state = React.useMemo(() => ({}), []);
+  const ref = useForkRef(forwardedRef, scrollerRef);
 
   const { renderElement } = useComponentRenderer({
     propGetter: getMonthListProps,
     render: render ?? 'div',
-    ref: forwardedRef,
+    ref,
     className,
     state,
     extraProps: otherProps,

@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import useForkRef from '@mui/utils/useForkRef';
 // eslint-disable-next-line no-restricted-imports
 import { BaseUIComponentProps } from '@mui/x-date-pickers/internals/base/base-utils/types';
 // eslint-disable-next-line no-restricted-imports
@@ -17,18 +18,20 @@ const RangeCalendarMonthsGrid = React.forwardRef(function RangeCalendarMonthsLis
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, render, children, cellsPerRow, canChangeYear, ...otherProps } = props;
-  const { getMonthsGridProps, cellRefs, monthsListOrGridContext } = useBaseCalendarMonthsGrid({
-    children,
-    cellsPerRow,
-    canChangeYear,
-    cellsPerRowCssVar: RangeCalendarMonthsGridCssVars.calendarMonthsGridCellsPerRow,
-  });
+  const { getMonthsGridProps, cellRefs, monthsListOrGridContext, scrollerRef } =
+    useBaseCalendarMonthsGrid({
+      children,
+      cellsPerRow,
+      canChangeYear,
+      cellsPerRowCssVar: RangeCalendarMonthsGridCssVars.calendarMonthsGridCellsPerRow,
+    });
   const state = React.useMemo(() => ({}), []);
+  const ref = useForkRef(forwardedRef, scrollerRef);
 
   const { renderElement } = useComponentRenderer({
     propGetter: getMonthsGridProps,
     render: render ?? 'div',
-    ref: forwardedRef,
+    ref,
     className,
     state,
     extraProps: otherProps,
