@@ -123,7 +123,7 @@ interface AddFooterRowsParams {
    * If `true`, there are some aggregation rules to apply
    */
   hasAggregationRule: boolean;
-  apiRef: React.MutableRefObject<GridPrivateApiPremium>;
+  apiRef: React.RefObject<GridPrivateApiPremium>;
 }
 
 /**
@@ -248,7 +248,7 @@ export const getAggregationFunctionLabel = ({
   apiRef,
   aggregationRule,
 }: {
-  apiRef: React.MutableRefObject<GridApiPremium>;
+  apiRef: React.RefObject<GridApiPremium>;
   aggregationRule: GridAggregationRule;
 }): string => {
   if (aggregationRule.aggregationFunction.label != null) {

@@ -16,7 +16,7 @@ import { getBasicGridData } from '@mui/x-data-grid-generator';
 describe('<DataGridPremium /> - Clipboard', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
 
   function Test({
     rowLength = 4,

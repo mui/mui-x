@@ -29,7 +29,7 @@ function getSelectedRowIds() {
 describe('<DataGridPro /> - Row selection', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
 
   function TestDataGridSelection({
     rowLength = 4,

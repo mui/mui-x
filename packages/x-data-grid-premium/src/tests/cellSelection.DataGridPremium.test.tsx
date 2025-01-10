@@ -16,7 +16,7 @@ import { fireUserEvent } from 'test/utils/fireUserEvent';
 describe('<DataGridPremium /> - Cell selection', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
 
   function TestDataGridSelection({
     rowLength = 4,
