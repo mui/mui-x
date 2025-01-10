@@ -9,6 +9,7 @@ import {
 } from '@mui/utils';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
+import { fastMemo } from '@mui/x-internals/fastMemo';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridRootStyles } from './GridRootStyles';
 import { useCSSVariablesClass } from '../../utils/css/themeManager';
@@ -48,7 +49,7 @@ const useUtilityClasses = (ownerState: OwnerState, density: GridDensity) => {
 
 const GridRoot = forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(props, ref) {
   const rootProps = useGridRootProps();
-  const { className, ...other } = props;
+  const { className, children, ...other } = props;
   const apiRef = useGridPrivateApiContext();
   const density = useGridSelector(apiRef, gridDensitySelector);
   const rootElementRef = apiRef.current.rootElementRef;
@@ -94,4 +95,5 @@ GridRoot.propTypes = {
   ]),
 } as any;
 
-export { GridRoot };
+const MemoizedGridRoot = fastMemo(GridRoot);
+export { MemoizedGridRoot as GridRoot };
