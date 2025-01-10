@@ -186,6 +186,18 @@
   }
 
   &.RangeDaysCell {
+    &[data-selected]:not([data-selection-start]),
+    &[data-previewed]:not([data-preview-start]) {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+
+    &[data-selected]:not([data-selection-end]),
+    &[data-previewed]:not([data-preview-end]) {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
     &[data-previewed]:not([data-selected]) {
       border-top: 1px dashed var(--day-preview-border-color);
       border-bottom: 1px dashed var(--day-preview-border-color);
