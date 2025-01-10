@@ -270,6 +270,10 @@ const useAggregatedData = (funnelLabel: FunnelPlotProps['funnelLabel']) => {
         const isXAxisBand = xAxis[xAxisId].scaleType === 'band';
         const isYAxisBand = yAxis[yAxisId].scaleType === 'band';
 
+        console.log('isHorizontal', isHorizontal);
+        console.log(baseScaleConfig.id);
+        console.log(xAxis[xAxisId].scaleType, yAxis[yAxisId].scaleType);
+
         const bandWidth = ((isXAxisBand || isYAxisBand) && baseScaleConfig.scale.bandwidth()) || 0;
 
         const xScale = xAxis[xAxisId].scale;
@@ -280,7 +284,10 @@ const useAggregatedData = (funnelLabel: FunnelPlotProps['funnelLabel']) => {
           (xAxis[xAxisId].colorScale && [xAxisId, 'x']) ||
           undefined;
 
-        const { stackedData } = series[seriesId];
+        // TODO: fix type, type is correct, but need to be inferred
+        const { stackedData } = series[seriesId] as unknown as {
+          stackedData: FunnelStackedData[][];
+        };
 
         const curve = getCurveFactory(series[seriesId].curve ?? 'linear');
 
@@ -305,8 +312,8 @@ const useAggregatedData = (funnelLabel: FunnelPlotProps['funnelLabel']) => {
           .y((d) => yPosition(d.y, d.useBandWidth))
           .curve(curve);
 
-        return (stackedData as unknown as FunnelStackedData[][]).map((values, dataIndex) => {
-          const color = series[seriesId].color ?? 'black';
+        return stackedData.map((values, dataIndex) => {
+          const color = series[seriesId][dataIndex]?.color ?? 'black';
           const id = `${seriesId}-${dataIndex}`;
 
           return {
@@ -332,7 +339,7 @@ const useAggregatedData = (funnelLabel: FunnelPlotProps['funnelLabel']) => {
               }),
               value: valueFormatter
                 ? valueFormatter(series[seriesId].data[dataIndex], { dataIndex })
-                : series[seriesId].data[dataIndex]?.toLocaleString(),
+                : series[seriesId].data[dataIndex].value?.toLocaleString(),
             },
           };
         });

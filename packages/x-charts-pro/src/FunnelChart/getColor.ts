@@ -9,25 +9,25 @@ const getColor: ColorProcessor<'funnel'> = (series, xAxis, yAxis) => {
 
   if (valueColorScale) {
     return (dataIndex: number) => {
-      const value = series.data[dataIndex];
-      const color = value === null ? series.color : valueColorScale(value);
+      const item = series.data[dataIndex];
+      const color = valueColorScale(item.value);
       if (color === null) {
-        return series.color;
+        return item.color;
       }
       return color;
     };
   }
   if (bandColorScale && bandValues) {
     return (dataIndex: number) => {
-      const value = bandValues[dataIndex];
-      const color = value === null ? series.color : bandColorScale(value);
+      const item = bandValues[dataIndex];
+      const color = bandColorScale(item.value);
       if (color === null) {
-        return series.color;
+        return item.color;
       }
       return color;
     };
   }
-  return () => series.color;
+  return (dataIndex: number) => series.data[dataIndex].color;
 };
 
 export default getColor;

@@ -1,23 +1,49 @@
+import { ChartsLabelMarkProps } from '@mui/x-charts/ChartsLabel';
 import {
   CommonSeriesType,
   CartesianSeriesType,
   StackableSeriesType,
   CommonDefaultizedProps,
+  SeriesId,
 } from '@mui/x-charts/internals';
 import { CurveType } from '@mui/x-charts/models';
 import { DefaultizedProps } from '@mui/x-internals/types';
 
-export interface FunnelSeriesType
-  extends CommonSeriesType<number>,
+export type FunnelItemId = string | number;
+
+export type FunnelValueType = {
+  /**
+   * A unique identifier of the funnel section.
+   */
+  id?: FunnelItemId;
+  /**
+   * The value of the funnel section.
+   */
+  value: number;
+  /**
+   * The label to display on the tooltip, funnel section, or the legend. It can be a string or a function.
+   */
+  label?: string | ((location: 'tooltip' | 'legend' | 'section') => string);
+  /**
+   * The color of the funnel section
+   */
+  color?: string;
+  /**
+   * Defines the mark type for the funnel item.
+   * @default 'square'
+   */
+  labelMarkType?: ChartsLabelMarkProps['type'];
+};
+
+export interface FunnelSeriesType<TData = FunnelValueType>
+  extends Omit<CommonSeriesType<TData>, 'color'>,
     CartesianSeriesType,
     StackableSeriesType {
   type: 'funnel';
   /**
-   * Data associated to the funnel slice.
+   * Data associated to the funnel section.
    */
-  // TODO: unorthodox data type, here I'm expecting a `number[]` rather than `{label,value}` like the pie.
-  // mostly as a test to make data type more simple/flexible, thought it might not work properly with how we handle series data
-  data?: number[];
+  data?: TData[];
   /**
    * The key used to retrieve data from the dataset.
    */
@@ -46,11 +72,11 @@ export interface FunnelSeriesType
  */
 export type FunnelItemIdentifier = {
   type: 'funnel';
-  seriesId: DefaultizedFunnelSeriesType['id'];
+  seriesId: SeriesId;
   dataIndex: number;
 };
 
 export interface DefaultizedFunnelSeriesType
-  extends DefaultizedProps<FunnelSeriesType, CommonDefaultizedProps | 'color' | 'layout'> {}
+  extends DefaultizedProps<FunnelSeriesType, CommonDefaultizedProps | 'layout'> {}
 
 export type FunnelStackedData = Record<'x' | 'y', number> & Record<'useBandWidth', boolean>;

@@ -4,19 +4,22 @@ import { LegendGetter, getLabel } from '@mui/x-charts/internals';
 const legendGetter: LegendGetter<'funnel'> = (params) => {
   const { seriesOrder, series } = params;
   return seriesOrder.reduce((acc, seriesId) => {
-    const formattedLabel = getLabel(series[seriesId].label, 'legend');
+    series[seriesId].data.forEach((item) => {
+      const formattedLabel = getLabel(item.label, 'legend');
 
-    if (formattedLabel === undefined) {
-      return acc;
-    }
+      if (formattedLabel === undefined) {
+        return;
+      }
 
-    // TODO: Fix type
-    acc.push({
-      id: seriesId,
-      seriesId,
-      color: series[seriesId].color,
-      label: formattedLabel,
-    } as any);
+      acc.push({
+        markType: item.labelMarkType ?? series[seriesId].labelMarkType!,
+        seriesId,
+        id: item.id!,
+        itemId: item.id,
+        color: item.color!,
+        label: formattedLabel,
+      });
+    });
     return acc;
   }, [] as LegendItemParams[]);
 };

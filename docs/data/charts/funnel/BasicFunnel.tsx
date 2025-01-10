@@ -12,23 +12,28 @@ export default function BasicFunnel() {
 
 const data = [
   {
-    label: 'first',
-    data: [200],
-  },
-  {
-    label: 'second',
-    data: [150],
-  },
-  {
-    label: 'third',
-    data: [100],
-  },
-  {
-    label: 'fourth',
-    data: [120],
-  },
-  {
-    label: 'fifth',
-    data: [20],
+    label: 'Stack',
+    data: [
+      {
+        value: 200,
+        label: 'first',
+      },
+      {
+        value: 150,
+        label: 'second',
+      },
+      {
+        value: 100,
+        label: 'third',
+      },
+      {
+        value: 120,
+        label: 'fourth',
+      },
+      {
+        value: 20,
+        label: 'fifth',
+      },
+    ],
   },
 ];

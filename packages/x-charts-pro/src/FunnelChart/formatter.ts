@@ -2,16 +2,15 @@ import { stack as d3Stack } from '@mui/x-charts-vendor/d3-shape';
 import {
   DatasetType,
   SeriesProcessor,
-  ChartSeries,
   DatasetElementType,
   SeriesId,
   getStackingGroups,
   defaultizeValueFormatter,
+  ChartSeriesDefaultized,
 } from '@mui/x-charts/internals';
-import { DefaultizedProps } from '@mui/x-internals/types';
 import { warnOnce } from '@mui/x-internals/warning';
 
-type FunnelDataset = DatasetType<number | null>;
+type FunnelDataset = DatasetType<number>;
 
 const createPoint = ({
   main,
@@ -27,25 +26,24 @@ const createPoint = ({
 
 const formatter: SeriesProcessor<'funnel'> = (params, dataset) => {
   const { seriesOrder, series } = params;
-  // TODO: fix type
   const stackingGroups = getStackingGroups({
     ...params,
     defaultStrategy: {
       stackOrder: 'reverse',
       stackOffset: 'none',
     },
-  } as any);
+  });
 
   // Create a data set with format adapted to d3
   const d3Dataset: FunnelDataset = (dataset as FunnelDataset) ?? [];
   seriesOrder.forEach((id) => {
     const data = series[id].data;
     if (data !== undefined) {
-      data.forEach((value, index) => {
+      data.forEach((item, index) => {
         if (d3Dataset.length <= index) {
-          d3Dataset.push({ [id]: value });
+          d3Dataset.push({ [id]: item.value });
         } else {
-          d3Dataset[index][id] = value;
+          d3Dataset[index][id] = item.value;
         }
       });
     } else if (dataset === undefined) {
@@ -58,9 +56,7 @@ const formatter: SeriesProcessor<'funnel'> = (params, dataset) => {
     }
   });
 
-  const completedSeries: {
-    [id: string]: DefaultizedProps<ChartSeries<'funnel'>, 'data' | 'layout'>;
-  } = {};
+  const completedSeries: Record<string, ChartSeriesDefaultized<'funnel'>> = {};
 
   stackingGroups.forEach((stackingGroup) => {
     const { ids, stackingOffset, stackingOrder } = stackingGroup;
@@ -94,20 +90,21 @@ const formatter: SeriesProcessor<'funnel'> = (params, dataset) => {
                     'Funnel plots only support number values.',
                   ]);
                 }
-                return 0;
+                return { value: 0 };
               }
-              return value;
+              return { value };
             })
           : series[id].data!,
         stackedData: [],
-      };
+        // TODO: fix type
+      } as any;
     });
 
     ids.forEach((id, index) => {
-      completedSeries[id].stackedData = completedSeries[id].data.map((value, dataIndex) => {
-        const currentMaxMain = value ?? 0;
+      completedSeries[id].stackedData = completedSeries[id].data.map((item, dataIndex) => {
+        const currentMaxMain = item.value ?? 0;
         const nextId = ids[index === ids.length - 1 ? index : index + 1];
-        const nextMaxMain = completedSeries[nextId].data[dataIndex] ?? 0;
+        const nextMaxMain = completedSeries[nextId].data[dataIndex].value ?? 0;
         const [nextMaxOther, currentMaxOther] = stackedSeries[index][dataIndex];
 
         return [

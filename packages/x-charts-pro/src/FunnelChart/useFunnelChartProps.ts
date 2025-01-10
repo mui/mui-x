@@ -47,11 +47,24 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     layout === 'horizontal' ||
     (layout === undefined && series.some((item) => item.layout === 'horizontal'));
 
+  const defaultBaseAxisConfig = {
+    scaleType: 'band',
+    data: Array.from(
+      { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
+      (_, index) => index,
+    ),
+  } as const;
+
+  const defaultValueAxisConfig = {
+    scaleType: 'linear',
+  } as const;
+
   const chartContainerProps: ChartContainerProProps<'funnel'> = {
     ...rest,
     series: series.map((s) => ({
       type: 'funnel' as const,
       ...s,
+      valueFormatter: s.valueFormatter ?? ((item) => item.value.toLocaleString()),
       layout: hasHorizontalSeries ? ('horizontal' as const) : ('vertical' as const),
     })),
     width,
@@ -59,8 +72,16 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     margin,
     colors,
     dataset,
-    xAxis: xAxis ?? (hasHorizontalSeries ? undefined : [{ id: DEFAULT_X_AXIS_KEY }]),
-    yAxis: yAxis ?? (hasHorizontalSeries ? [{ id: DEFAULT_Y_AXIS_KEY }] : undefined),
+    xAxis:
+      xAxis ??
+      (hasHorizontalSeries
+        ? [{ id: DEFAULT_X_AXIS_KEY, ...defaultBaseAxisConfig }]
+        : [{ id: DEFAULT_X_AXIS_KEY, ...defaultValueAxisConfig }]),
+    yAxis:
+      yAxis ??
+      (hasHorizontalSeries
+        ? [{ id: DEFAULT_Y_AXIS_KEY, ...defaultValueAxisConfig }]
+        : [{ id: DEFAULT_Y_AXIS_KEY, ...defaultBaseAxisConfig }]),
     sx,
     highlightedItem,
     onHighlightChange,

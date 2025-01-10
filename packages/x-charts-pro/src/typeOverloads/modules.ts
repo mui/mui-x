@@ -1,4 +1,4 @@
-import { DefaultizedProps } from '@mui/x-internals/types';
+import { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
 import { AxisId } from '@mui/x-charts/internals';
 import {
   HeatmapItemIdentifier,
@@ -11,6 +11,7 @@ import {
   DefaultizedFunnelSeriesType,
   FunnelItemIdentifier,
   FunnelSeriesType,
+  FunnelValueType,
 } from '../FunnelChart/funnel.types';
 
 declare module '@mui/x-charts/internals' {
@@ -24,7 +25,9 @@ declare module '@mui/x-charts/internals' {
       cartesian: true;
     };
     funnel: {
-      seriesInput: DefaultizedProps<FunnelSeriesType, 'id'> & { color: string };
+      seriesInput: Omit<DefaultizedProps<FunnelSeriesType, 'id'>, 'data'> & {
+        data: MakeRequired<FunnelValueType, 'color'>[];
+      };
       series: DefaultizedFunnelSeriesType;
       seriesProp: FunnelSeriesType;
       itemIdentifier: FunnelItemIdentifier;
