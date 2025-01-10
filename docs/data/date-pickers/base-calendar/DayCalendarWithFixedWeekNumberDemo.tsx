@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 // eslint-disable-next-line no-restricted-imports
@@ -24,12 +25,12 @@ function Header() {
   );
 }
 
-export default function DayCalendarDemo() {
+export default function DayCalendarWithFixedWeekNumberDemo() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Calendar.Root className={styles.Root}>
         <Header />
-        <Calendar.DaysGrid className={styles.DaysGrid}>
+        <Calendar.DaysGrid className={styles.DaysGrid} fixedWeekNumber={6}>
           <Calendar.DaysGridHeader className={styles.DaysGridHeader}>
             {({ days }) =>
               days.map((day) => (
