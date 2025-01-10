@@ -60,6 +60,7 @@
 .SetActiveSectionYear,
 .SetActiveSectionYearMD2 {
   border: none;
+  user-select: none;
   background-color: transparent;
   border-radius: 4px;
   height: 24px;
@@ -176,6 +177,8 @@
 .DaysCell,
 .MonthsCell,
 .YearsCell {
+  user-select: none;
+
   &:not([data-selected]):hover {
     background-color: var(--button-hover-bg-color);
   }
