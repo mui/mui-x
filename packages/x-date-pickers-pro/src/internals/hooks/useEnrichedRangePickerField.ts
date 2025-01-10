@@ -20,12 +20,13 @@ import {
 import { PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import {
   onSpaceOrEnter,
-  UsePickerValueContextValue,
   PickerVariant,
   DateOrTimeViewWithMeridiem,
   BaseSingleInputFieldProps,
   PickerRangeValue,
   PickerValue,
+  PickerContextValue,
+  PickerFieldPrivateContextValue,
 } from '@mui/x-date-pickers/internals';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import {
@@ -91,8 +92,9 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-> extends Pick<UsePickerValueContextValue<PickerRangeValue, TError>, 'open' | 'setOpen'>,
-    UseRangePositionResponse {
+> extends UseRangePositionResponse {
+  contextValue: PickerContextValue<PickerRangeValue, TView, TError>;
+  fieldPrivateContextValue: PickerFieldPrivateContextValue;
   variant: PickerVariant;
   fieldType: FieldType;
   readOnly?: boolean;
@@ -111,7 +113,6 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   anchorRef?: React.Ref<HTMLDivElement>;
   currentView?: TView | null;
   initialView?: TView;
-  setView?: (view: TView) => void;
   startFieldRef: React.RefObject<FieldRef<PickerValue> | null>;
   endFieldRef: React.RefObject<FieldRef<PickerValue> | null>;
   singleInputFieldRef: React.RefObject<FieldRef<PickerRangeValue> | null>;
@@ -122,9 +123,8 @@ const useMultiInputFieldSlotProps = <
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
 >({
+  contextValue,
   variant,
-  open,
-  setOpen,
   readOnly,
   labelId,
   disableOpenPicker,
@@ -138,7 +138,6 @@ const useMultiInputFieldSlotProps = <
   anchorRef,
   currentView,
   initialView,
-  setView,
   startFieldRef,
   endFieldRef,
 }: UseEnrichedRangePickerFieldPropsParams<
@@ -156,7 +155,7 @@ const useMultiInputFieldSlotProps = <
   const previousRangePosition = React.useRef<RangePosition>(rangePosition);
 
   React.useEffect(() => {
-    if (!open || variant === 'mobile') {
+    if (!contextValue.open || variant === 'mobile') {
       return;
     }
 
@@ -174,14 +173,14 @@ const useMultiInputFieldSlotProps = <
       previousRangePosition.current === rangePosition ? currentView : 0,
     );
     previousRangePosition.current = rangePosition;
-  }, [rangePosition, open, currentView, startFieldRef, endFieldRef, variant]);
+  }, [rangePosition, contextValue.open, currentView, startFieldRef, endFieldRef, variant]);
 
   const openRangeStartSelection: React.UIEventHandler = (event) => {
     event.stopPropagation();
     onRangePositionChange('start');
     if (!readOnly && !disableOpenPicker) {
       event.preventDefault();
-      setOpen(true);
+      contextValue.setOpen(true);
     }
   };
 
@@ -190,24 +189,24 @@ const useMultiInputFieldSlotProps = <
     onRangePositionChange('end');
     if (!readOnly && !disableOpenPicker) {
       event.preventDefault();
-      setOpen(true);
+      contextValue.setOpen(true);
     }
   };
 
   const handleFocusStart = () => {
-    if (open) {
+    if (contextValue.open) {
       onRangePositionChange('start');
       if (previousRangePosition.current !== 'start' && initialView) {
-        setView?.(initialView);
+        contextValue.setView?.(initialView);
       }
     }
   };
 
   const handleFocusEnd = () => {
-    if (open) {
+    if (contextValue.open) {
       onRangePositionChange('end');
       if (previousRangePosition.current !== 'end' && initialView) {
-        setView?.(initialView);
+        contextValue.setView?.(initialView);
       }
     }
   };
@@ -232,10 +231,10 @@ const useMultiInputFieldSlotProps = <
           label: inLocaleText?.start ?? translations.start,
           onKeyDown: onSpaceOrEnter(openRangeStartSelection),
           onFocus: handleFocusStart,
-          focused: open ? rangePosition === 'start' : undefined,
+          focused: contextValue.open ? rangePosition === 'start' : undefined,
           // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
           // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
-          ...(!readOnly && !fieldProps.disabled && { onClick: openRangeStartSelection }),
+          ...(!readOnly && !contextValue.disabled && { onClick: openRangeStartSelection }),
           ...(variant === 'mobile' && { readOnly: true }),
         };
         if (anchorRef) {
@@ -249,10 +248,10 @@ const useMultiInputFieldSlotProps = <
           label: inLocaleText?.end ?? translations.end,
           onKeyDown: onSpaceOrEnter(openRangeEndSelection),
           onFocus: handleFocusEnd,
-          focused: open ? rangePosition === 'end' : undefined,
+          focused: contextValue.open ? rangePosition === 'end' : undefined,
           // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
           // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
-          ...(!readOnly && !fieldProps.disabled && { onClick: openRangeEndSelection }),
+          ...(!readOnly && !contextValue.disabled && { onClick: openRangeEndSelection }),
           ...(variant === 'mobile' && { readOnly: true }),
         };
         InputProps = resolvedComponentProps?.InputProps;
@@ -289,7 +288,10 @@ const useMultiInputFieldSlotProps = <
     slotProps,
   };
 
-  return enrichedFieldProps;
+  return {
+    fieldProps: enrichedFieldProps,
+    fieldPrivateContextValue: {},
+  };
 };
 
 const useSingleInputFieldSlotProps = <
@@ -297,9 +299,9 @@ const useSingleInputFieldSlotProps = <
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
 >({
+  contextValue,
+  fieldPrivateContextValue,
   variant,
-  open,
-  setOpen,
   readOnly,
   labelId,
   disableOpenPicker,
@@ -328,7 +330,7 @@ const useSingleInputFieldSlotProps = <
   const handleFieldRef = useForkRef(fieldProps.unstableFieldRef, singleInputFieldRef);
 
   React.useEffect(() => {
-    if (!open || !singleInputFieldRef.current || variant === 'mobile') {
+    if (!contextValue.open || !singleInputFieldRef.current || variant === 'mobile') {
       return;
     }
 
@@ -345,7 +347,7 @@ const useSingleInputFieldSlotProps = <
           : sections.lastIndexOf(currentView);
       singleInputFieldRef.current?.focusField(newSelectedSection);
     }
-  }, [rangePosition, open, currentView, singleInputFieldRef, variant]);
+  }, [rangePosition, contextValue.open, currentView, singleInputFieldRef, variant]);
 
   const updateRangePosition = () => {
     if (!singleInputFieldRef.current?.isFieldFocused()) {
@@ -365,7 +367,7 @@ const useSingleInputFieldSlotProps = <
   const handleSelectedSectionsChange = useEventCallback(
     (selectedSection: FieldSelectedSections) => {
       setTimeout(updateRangePosition);
-      fieldProps.onSelectedSectionsChange?.(selectedSection);
+      fieldPrivateContextValue.onSelectedSectionsChange?.(selectedSection);
     },
   );
 
@@ -374,7 +376,7 @@ const useSingleInputFieldSlotProps = <
 
     if (!readOnly && !disableOpenPicker) {
       event.preventDefault();
-      setOpen(true);
+      contextValue.setOpen(true);
     }
   };
 
@@ -399,24 +401,28 @@ const useSingleInputFieldSlotProps = <
     label,
     unstableFieldRef: handleFieldRef,
     onKeyDown: onSpaceOrEnter(openPicker, fieldProps.onKeyDown),
-    onSelectedSectionsChange: handleSelectedSectionsChange,
     onBlur,
     InputProps: {
       ref: anchorRef,
       ...fieldProps?.InputProps,
     },
-    focused: open ? true : undefined,
+    focused: contextValue.open ? true : undefined,
     ...(labelId != null && { id: labelId }),
     ...(variant === 'mobile' && { readOnly: true }),
     // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
     // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
-    ...(!readOnly && !fieldProps.disabled && { onClick: openPicker }),
+    ...(!readOnly && !contextValue.disabled && { onClick: openPicker }),
   };
 
-  return enrichedFieldProps;
+  return {
+    fieldProps: enrichedFieldProps,
+    fieldPrivateContextValue: {
+      onSelectedSectionsChange: handleSelectedSectionsChange,
+    },
+  };
 };
 
-export const useEnrichedRangePickerFieldProps = <
+export const useEnrichedRangePickerField = <
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
