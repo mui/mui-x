@@ -10,6 +10,7 @@ const formatter: SeriesProcessor<'heatmap'> = (params) => {
       // Defaultize the data and the value formatter.
       valueFormatter: (v) => v[2].toString(),
       data: [],
+      labelMarkType: 'square',
       ...series[seriesId],
     };
   });
