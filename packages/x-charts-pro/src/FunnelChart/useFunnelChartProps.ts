@@ -47,16 +47,12 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     layout === 'horizontal' ||
     (layout === undefined && series.some((item) => item.layout === 'horizontal'));
 
-  const defaultBaseAxisConfig = {
+  const defaultBandAxisConfig = {
     scaleType: 'band',
     data: Array.from(
       { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
       (_, index) => index,
     ),
-  } as const;
-
-  const defaultValueAxisConfig = {
-    scaleType: 'linear',
   } as const;
 
   const chartContainerProps: ChartContainerProProps<'funnel'> = {
@@ -74,14 +70,10 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     dataset,
     xAxis:
       xAxis ??
-      (hasHorizontalSeries
-        ? [{ id: DEFAULT_X_AXIS_KEY, ...defaultBaseAxisConfig }]
-        : [{ id: DEFAULT_X_AXIS_KEY, ...defaultValueAxisConfig }]),
+      (hasHorizontalSeries ? [{ id: DEFAULT_X_AXIS_KEY, ...defaultBandAxisConfig }] : undefined),
     yAxis:
       yAxis ??
-      (hasHorizontalSeries
-        ? [{ id: DEFAULT_Y_AXIS_KEY, ...defaultValueAxisConfig }]
-        : [{ id: DEFAULT_Y_AXIS_KEY, ...defaultBaseAxisConfig }]),
+      (hasHorizontalSeries ? undefined : [{ id: DEFAULT_Y_AXIS_KEY, ...defaultBandAxisConfig }]),
     sx,
     highlightedItem,
     onHighlightChange,

@@ -1,12 +1,19 @@
 import * as React from 'react';
 
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
-import { getCurveFactory, AxisDefaultized, AxisId } from '@mui/x-charts/internals';
+import {
+  getCurveFactory,
+  AxisDefaultized,
+  AxisId,
+  cartesianSeriesTypes,
+} from '@mui/x-charts/internals';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import { FunnelItemIdentifier, FunnelStackedData } from './funnel.types';
 import { FunnelElement } from './FunnelElement';
 import { FunnelLabel } from './FunnelLabel';
 import { useFunnelSeries } from '../hooks/useSeries';
+
+cartesianSeriesTypes.addType('funnel');
 
 export interface FunnelPlotSlots {}
 
