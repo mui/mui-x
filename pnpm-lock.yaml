@@ -7,6 +7,8 @@ settings:
 overrides:
   react-is: ^19.0.0
   '@types/node': ^20.17.11
+  '@mui/internal-markdown': https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/internal-markdown
+  '@mui/docs': https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/docs
 
 patchedDependencies:
   babel-plugin-replace-imports@1.0.2:
@@ -90,8 +92,8 @@ importers:
         specifier: 1.0.20
         version: 1.0.20(@babel/core@7.26.0)
       '@mui/internal-markdown':
-        specifier: ^1.0.24
-        version: 1.0.24
+        specifier: https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/internal-markdown
+        version: https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/internal-markdown
       '@mui/internal-test-utils':
         specifier: ^1.0.25
         version: 1.0.25(@babel/core@7.26.0)(@types/react-dom@19.0.2(@types/react@19.0.2))(@types/react@19.0.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -99,8 +101,8 @@ importers:
         specifier: ^5.16.13
         version: 5.16.13(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#5d892caa7325fdc8679862f83804c541954fecbc
-        version: https://codeload.github.com/mui/material-ui/tar.gz/5d892caa7325fdc8679862f83804c541954fecbc(encoding@0.1.13)
+        specifier: github:mui/material-ui#6619f7c9797cfa7775c53e038b17d2e818262f16
+        version: https://codeload.github.com/mui/material-ui/tar.gz/6619f7c9797cfa7775c53e038b17d2e818262f16(encoding@0.1.13)
       '@mui/utils':
         specifier: ^5.16.13
         version: 5.16.13(@types/react@19.0.2)(react@19.0.0)
@@ -426,8 +428,8 @@ importers:
         specifier: ^11.14.0
         version: 11.14.0(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react@19.0.0)
       '@mui/docs':
-        specifier: 6.3.1
-        version: 6.3.1(blv5x5f4uwinouobypxmqapbba)
+        specifier: https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/docs
+        version: https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/docs(blv5x5f4uwinouobypxmqapbba)
       '@mui/icons-material':
         specifier: ^5.16.13
         version: 5.16.13(@mui/material@5.16.13(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@types/react@19.0.2)(react@19.0.0)
@@ -3097,8 +3099,9 @@ packages:
   '@mui/core-downloads-tracker@5.16.13':
     resolution: {integrity: sha512-xe5RwI0Q2O709Bd2Y7l1W1NIwNmln0y+xaGk5VgX3vDJbkQEqzdfTFZ73e0CkEZgJwyiWgk5HY0l8R4nysOxjw==}
 
-  '@mui/docs@6.3.1':
-    resolution: {integrity: sha512-0JqU2+dEKX1b0MZTDG4qM+iiW5wgapwzq8Q1Joehlq91PrW9atddbKIDUpFdy7MY+DKSFDNB+QRT+pez42PGWA==}
+  '@mui/docs@https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/docs':
+    resolution: {tarball: https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/docs}
+    version: 6.3.1
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@mui/base': '*'
@@ -3133,8 +3136,9 @@ packages:
   '@mui/internal-docs-utils@1.0.16':
     resolution: {integrity: sha512-GEq4dG9+10WGlQVrmXUfCWNe1FiWoMr2KXbgn2/00Da5hdvp4nIa3PXYYZF08Wh+FtnBbLHKGkPmZ7iw9WKtjQ==}
 
-  '@mui/internal-markdown@1.0.24':
-    resolution: {integrity: sha512-bFjygozW3vhmnct9COgysXv5+afLzDgdt30LVUgPeDSaxZbAfSoyD0Q/b848Zl5WEaXpKrzg0TVKPoE8XAGoIg==}
+  '@mui/internal-markdown@https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/internal-markdown':
+    resolution: {tarball: https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/internal-markdown}
+    version: 1.0.24
 
   '@mui/internal-scripts@1.0.32':
     resolution: {integrity: sha512-iYccvD8q4KB4VhX1DTNdSlvGTfkZBMoQ3JfKbEphQCAyLU8Fwb9FfCt1aJC71ViXyHzmGwEKuLRyDzBh7C3BOg==}
@@ -3215,8 +3219,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/5d892caa7325fdc8679862f83804c541954fecbc':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/5d892caa7325fdc8679862f83804c541954fecbc}
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/6619f7c9797cfa7775c53e038b17d2e818262f16':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/6619f7c9797cfa7775c53e038b17d2e818262f16}
     version: 6.3.1
     engines: {pnpm: 9.15.2}
 
@@ -3290,16 +3294,16 @@ packages:
   '@napi-rs/wasm-runtime@0.2.4':
     resolution: {integrity: sha512-9zESzOO5aDByvhIAsOy9TbpZ0Ur2AJbUI7UT73kcUTS2mxAMHOBaa1st/jAymNoCtvrit99kkzT1FZuXVcgfIQ==}
 
-  '@netlify/functions@2.8.2':
-    resolution: {integrity: sha512-DeoAQh8LuNPvBE4qsKlezjKj0PyXDryOFJfJKo3Z1qZLKzQ21sT314KQKPVjfvw6knqijj+IO+0kHXy/TJiqNA==}
-    engines: {node: '>=14.0.0'}
+  '@netlify/functions@3.0.0':
+    resolution: {integrity: sha512-XXf9mNw4+fkxUzukDpJtzc32bl1+YlXZwEhc5ZgMcTbJPLpgRLDs5WWSPJ4eY/Mv1ZFvtxmMwmfgoQYVt68Qog==}
+    engines: {node: '>=18.0.0'}
 
   '@netlify/node-cookies@0.1.0':
     resolution: {integrity: sha512-OAs1xG+FfLX0LoRASpqzVntVV/RpYkgpI0VrUnw2u0Q1qiZUzcPffxRK8HF3gc4GjuhG5ahOEMJ9bswBiZPq0g==}
     engines: {node: ^14.16.0 || >=16.0.0}
 
-  '@netlify/serverless-functions-api@1.26.1':
-    resolution: {integrity: sha512-q3L9i3HoNfz0SGpTIS4zTcKBbRkxzCRpd169eyiTuk3IwcPC3/85mzLHranlKo2b+HYT0gu37YxGB45aD8A3Tw==}
+  '@netlify/serverless-functions-api@1.30.1':
+    resolution: {integrity: sha512-JkbaWFeydQdeDHz1mAy4rw+E3bl9YtbCgkntfTxq+IlNX/aIMv2/b1kZnQZcil4/sPoZGL831Dq6E374qRpU1A==}
     engines: {node: '>=18.0.0'}
 
   '@next/env@15.1.3':
@@ -12096,12 +12100,12 @@ snapshots:
 
   '@mui/core-downloads-tracker@5.16.13': {}
 
-  '@mui/docs@6.3.1(blv5x5f4uwinouobypxmqapbba)':
+  '@mui/docs@https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/docs(blv5x5f4uwinouobypxmqapbba)':
     dependencies:
       '@babel/runtime': 7.26.0
       '@mui/base': 5.0.0-beta.40-0(@types/react@19.0.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mui/icons-material': 5.16.13(@mui/material@5.16.13(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@types/react@19.0.2)(react@19.0.0)
-      '@mui/internal-markdown': 1.0.24
+      '@mui/internal-markdown': https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/internal-markdown
       '@mui/material': 5.16.13(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mui/system': 5.16.13(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react@19.0.0)
       chai: 5.1.2
@@ -12133,7 +12137,7 @@ snapshots:
       rimraf: 6.0.1
       typescript: 5.7.2
 
-  '@mui/internal-markdown@1.0.24':
+  '@mui/internal-markdown@https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/internal-markdown':
     dependencies:
       '@babel/runtime': 7.26.0
       lodash: 4.17.21
@@ -12254,10 +12258,10 @@ snapshots:
       '@emotion/styled': 11.14.0(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react@19.0.0)
       '@types/react': 19.0.2
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/5d892caa7325fdc8679862f83804c541954fecbc(encoding@0.1.13)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/6619f7c9797cfa7775c53e038b17d2e818262f16(encoding@0.1.13)':
     dependencies:
       '@googleapis/sheets': 9.3.1(encoding@0.1.13)
-      '@netlify/functions': 2.8.2
+      '@netlify/functions': 3.0.0
       '@slack/bolt': 4.2.0
       execa: 9.5.2
       google-auth-library: 9.15.0(encoding@0.1.13)
@@ -12349,13 +12353,13 @@ snapshots:
       '@emnapi/runtime': 1.3.1
       '@tybys/wasm-util': 0.9.0
 
-  '@netlify/functions@2.8.2':
+  '@netlify/functions@3.0.0':
     dependencies:
-      '@netlify/serverless-functions-api': 1.26.1
+      '@netlify/serverless-functions-api': 1.30.1
 
   '@netlify/node-cookies@0.1.0': {}
 
-  '@netlify/serverless-functions-api@1.26.1':
+  '@netlify/serverless-functions-api@1.30.1':
     dependencies:
       '@netlify/node-cookies': 0.1.0
       urlpattern-polyfill: 8.0.2
