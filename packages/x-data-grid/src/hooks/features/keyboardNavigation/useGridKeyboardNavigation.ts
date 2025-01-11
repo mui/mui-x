@@ -178,9 +178,8 @@ export const useGridKeyboardNavigation = (
         case 'ArrowDown': {
           if (headerFilteringEnabled) {
             goToHeaderFilter(colIndexBefore, event);
-          } else {
-            if (firstRowIndexInPage !== null)
-              goToCell(colIndexBefore, getRowIdFromIndex(firstRowIndexInPage));
+          } else if (firstRowIndexInPage !== null) {
+            goToCell(colIndexBefore, getRowIdFromIndex(firstRowIndexInPage));
           }
 
           break;
