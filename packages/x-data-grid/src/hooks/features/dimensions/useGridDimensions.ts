@@ -205,8 +205,8 @@ export function useGridDimensions(
       const content = contentSize;
       const container = viewportInnerSize;
 
-      const hasScrollXIfNoYScrollBar = content.width > container.width;
-      const hasScrollYIfNoXScrollBar = content.height > container.height;
+      const hasScrollXIfNoYScrollBar = Math.round(content.width) > Math.round(container.width);
+      const hasScrollYIfNoXScrollBar = Math.round(content.height) > Math.round(container.height);
 
       if (hasScrollXIfNoYScrollBar || hasScrollYIfNoXScrollBar) {
         hasScrollY = hasScrollYIfNoXScrollBar;
