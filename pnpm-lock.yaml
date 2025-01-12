@@ -108,8 +108,8 @@ importers:
         specifier: 15.1.4
         version: 15.1.4
       '@octokit/plugin-retry':
-        specifier: ^7.1.2
-        version: 7.1.2(@octokit/core@4.2.4(encoding@0.1.13))
+        specifier: ^7.1.3
+        version: 7.1.3(@octokit/core@4.2.4(encoding@0.1.13))
       '@octokit/rest':
         specifier: ^21.1.0
         version: 21.1.0
@@ -3626,8 +3626,8 @@ packages:
     peerDependencies:
       '@octokit/core': '>=3'
 
-  '@octokit/plugin-retry@7.1.2':
-    resolution: {integrity: sha512-XOWnPpH2kJ5VTwozsxGurw+svB2e61aWlmk5EVIYZPwFK5F9h4cyPyj9CIKRyMXMHSwpIsI3mPOdpMmrRhe7UQ==}
+  '@octokit/plugin-retry@7.1.3':
+    resolution: {integrity: sha512-8nKOXvYWnzv89gSyIvgFHmCBAxfQAOPRlkacUHL9r5oWtp5Whxl8Skb2n3ACZd+X6cYijD6uvmrQuPH/UCL5zQ==}
     engines: {node: '>= 18'}
     peerDependencies:
       '@octokit/core': '>=6'
@@ -12745,7 +12745,7 @@ snapshots:
       '@octokit/core': 4.2.4(encoding@0.1.13)
       '@octokit/types': 10.0.0
 
-  '@octokit/plugin-retry@7.1.2(@octokit/core@4.2.4(encoding@0.1.13))':
+  '@octokit/plugin-retry@7.1.3(@octokit/core@4.2.4(encoding@0.1.13))':
     dependencies:
       '@octokit/core': 4.2.4(encoding@0.1.13)
       '@octokit/request-error': 6.1.6
