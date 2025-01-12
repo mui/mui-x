@@ -31,3 +31,46 @@ export const isEndOfRange = (
 ) => {
   return isRangeValid(utils, range) && utils.isSameDay(day, range[1]!);
 };
+
+export function getDatePositionInRange(
+  utils: MuiPickersAdapter,
+  date: PickerValidDate,
+  range: PickerRangeValue,
+) {
+  const [start, end] = range;
+  if (start == null && end == null) {
+    return { isSelected: false, isSelectionStart: false, isSelectionEnd: false };
+  }
+
+  if (start == null) {
+    const isSelected = utils.isSameDay(date, end!);
+    return {
+      isSelected,
+      isSelectionStart: isSelected,
+      isSelectionEnd: isSelected,
+    };
+  }
+
+  if (end == null) {
+    const isSelected = utils.isSameDay(date, start!);
+    return {
+      isSelected,
+      isSelectionStart: isSelected,
+      isSelectionEnd: isSelected,
+    };
+  }
+
+  if (utils.isBefore(end, start)) {
+    return {
+      isSelected: false,
+      isSelectionStart: false,
+      isSelectionEnd: false,
+    };
+  }
+
+  return {
+    isSelected: utils.isWithinRange(date, [start, end]),
+    isSelectionStart: utils.isSameDay(date, start),
+    isSelectionEnd: utils.isSameDay(date, end),
+  };
+}

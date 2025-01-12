@@ -1,0 +1,14 @@
+<Calendar.Root value={value} onValueChange={setValue} className={styles.Root}>
+  <Header />
+  <Calendar.MonthsGrid cellsPerRow={2} className={styles.MonthsGrid}>
+    {({ months }) =>
+      months.map((month) => (
+        <Calendar.MonthsCell
+          value={month}
+          className={styles.MonthsCell}
+          key={month.toString()}
+        />
+      ))
+    }
+  </Calendar.MonthsGrid>
+</Calendar.Root>
