@@ -14,10 +14,10 @@ import { getValueToPositionMapper } from '../hooks/useScale';
 import getCurveFactory from '../internals/getCurve';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { LineItemIdentifier } from '../models/seriesType/line';
-import { useChartGradient } from '../internals/components/ChartsAxesGradients';
 import { useLineSeries } from '../hooks/useSeries';
 import { AxisId } from '../models/axis';
 import { useSkipAnimation } from '../context/AnimationProvider';
+import { useChartGradientIdBuilder } from '../hooks/useChartGradientId';
 import { useXAxes, useYAxes } from '../hooks';
 
 export interface LinePlotSlots extends LineElementSlots {}
@@ -78,9 +78,9 @@ const useAggregatedData = () => {
         const yScale = yAxis[yAxisId].scale;
         const xData = xAxis[xAxisId].data;
 
-        const gradientUsed: [AxisId, 'x' | 'y'] | undefined =
-          (yAxis[yAxisId].colorScale && [yAxisId, 'y']) ||
-          (xAxis[xAxisId].colorScale && [xAxisId, 'x']) ||
+        const gradientUsed: [AxisId] | undefined =
+          (yAxis[yAxisId].colorScale && [yAxisId]) ||
+          (xAxis[xAxisId].colorScale && [xAxisId]) ||
           undefined;
 
         if (process.env.NODE_ENV !== 'production') {
@@ -141,7 +141,7 @@ function LinePlot(props: LinePlotProps) {
   const { slots, slotProps, skipAnimation: inSkipAnimation, onItemClick, ...other } = props;
   const skipAnimation = useSkipAnimation(inSkipAnimation);
 
-  const getGradientId = useChartGradient();
+  const getGradientId = useChartGradientIdBuilder();
   const completedData = useAggregatedData();
   return (
     <LinePlotRoot {...other}>
