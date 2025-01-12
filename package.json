@@ -152,7 +152,7 @@
     "eslint-plugin-react-compiler": "19.0.0-beta-df7b47d-20241124",
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-testing-library": "^7.1.1",
-    "fast-glob": "^3.3.2",
+    "fast-glob": "^3.3.3",
     "format-util": "^1.0.5",
     "fs-extra": "^11.2.0",
     "glob-gitignore": "^1.0.15",
