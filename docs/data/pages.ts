@@ -32,9 +32,8 @@ const pages: MuiPage[] = [
     title: 'Data Grid',
     children: [
       { pathname: '/x/react-data-grid', title: 'Overview' },
-      { pathname: '/x/react-data-grid/getting-started' },
-      { pathname: '/x/react-data-grid/demo' },
-      { pathname: '/x/react-data-grid/faq', title: 'FAQs' },
+      { pathname: '/x/react-data-grid/getting-started', title: 'Quickstart' },
+      { pathname: '/x/react-data-grid/demo', title: 'Feature showcase' },
       {
         pathname: '/x/react-data-grid/main-features',
         subheader: 'Main features',
@@ -69,6 +68,7 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-data-grid/row-recipes', title: 'Recipes' },
             ],
           },
+          { pathname: '/x/react-data-grid/cells' },
           {
             pathname: '/x/react-data-grid/editing-group',
             title: 'Editing',
