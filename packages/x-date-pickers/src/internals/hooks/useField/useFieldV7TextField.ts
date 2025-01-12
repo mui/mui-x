@@ -16,7 +16,8 @@ import { useUtils } from '../useUtils';
 
 export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
   const {
-    internalProps: { disabled, readOnly = false },
+    manager: { internal_fieldValueManager: fieldValueManager },
+    internalPropsWithDefaults: { disabled, readOnly = false },
     forwardedProps: {
       sectionListRef: inSectionListRef,
       onBlur,
@@ -27,7 +28,6 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
       focused: focusedProp,
       autoFocus = false,
     },
-    fieldValueManager,
     applyCharacterEditing,
     resetCharacterQuery,
     setSelectedSections,

@@ -5,7 +5,7 @@ import {
   FieldChangeHandlerContext,
   PickerRangeValue,
   PickerValue,
-  UseFieldResponse,
+  UseFieldReturnValue,
   useControlledValueWithTimezone,
   useFieldInternalPropsWithDefaults,
 } from '@mui/x-date-pickers/internals';
@@ -137,11 +137,14 @@ export const useMultiInputDateRangeField = <
   const startDateResponse = useDateField<
     TEnableAccessibleFieldDOMStructure,
     typeof startFieldProps
-  >(startFieldProps) as UseFieldResponse<TEnableAccessibleFieldDOMStructure, TTextFieldSlotProps>;
+  >(startFieldProps) as UseFieldReturnValue<
+    TEnableAccessibleFieldDOMStructure,
+    TTextFieldSlotProps
+  >;
 
   const endDateResponse = useDateField<TEnableAccessibleFieldDOMStructure, typeof endFieldProps>(
     endFieldProps,
-  ) as UseFieldResponse<TEnableAccessibleFieldDOMStructure, TTextFieldSlotProps>;
+  ) as UseFieldReturnValue<TEnableAccessibleFieldDOMStructure, TTextFieldSlotProps>;
 
   /* TODO: Undo this change when a clearable behavior for multiple input range fields is implemented */
   return {

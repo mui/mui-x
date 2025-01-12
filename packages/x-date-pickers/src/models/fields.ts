@@ -5,7 +5,7 @@ import type {
   UseClearableFieldResponse,
 } from '../hooks/useClearableField';
 import type { ExportedPickersSectionListProps } from '../PickersSectionList';
-import type { UseFieldInternalProps, UseFieldResponse } from '../internals/hooks/useField';
+import type { UseFieldInternalProps, UseFieldReturnValue } from '../internals/hooks/useField';
 import type { PickersTextFieldProps } from '../PickersTextField';
 import {
   BaseForwardedSingleInputFieldProps,
@@ -176,7 +176,7 @@ export type PickerFieldSlotProps<
 export type BaseSingleInputPickersTextFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
 > = UseClearableFieldResponse<
-  UseFieldResponse<TEnableAccessibleFieldDOMStructure, BaseForwardedSingleInputFieldProps>
+  UseFieldReturnValue<TEnableAccessibleFieldDOMStructure, BaseForwardedSingleInputFieldProps>
 >;
 
 /**

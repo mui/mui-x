@@ -1,8 +1,8 @@
 import { TextFieldProps } from '@mui/material/TextField';
-import { UseFieldResponse } from '../hooks/useField';
+import { UseFieldReturnValue } from '../hooks/useField';
 
 export const convertFieldResponseIntoMuiTextFieldProps = <
-  TFieldResponse extends UseFieldResponse<any, any>,
+  TFieldResponse extends UseFieldReturnValue<any, any>,
 >({
   enableAccessibleFieldDOMStructure,
   ...fieldResponse
