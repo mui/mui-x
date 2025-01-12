@@ -114,10 +114,16 @@ class CellValueUpdater {
     }
 
     const { apiRef, getRowId } = this.options;
-    const colDef = apiRef.current.getColumn(field);
-    if (!colDef || !colDef.editable) {
+    const cellParams = apiRef.current.getCellParams(rowId, field);
+    if (!cellParams.isEditable) {
       return;
     }
+
+    const colDef = apiRef.current.getColumn(field);
+    if (!colDef) {
+      return;
+    }
+
     const row = this.rowsToUpdate[rowId] || { ...apiRef.current.getRow(rowId) };
     if (!row) {
       return;
