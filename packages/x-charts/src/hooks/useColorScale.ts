@@ -1,7 +1,7 @@
 'use client';
 import { AxisScaleComputedConfig, ScaleName } from '../models/axis';
 import { useXAxes, useYAxes } from './useAxis';
-import { useZAxis } from './useZAxis';
+import { useZAxes } from './useZAxis';
 
 export function useXColorScale<S extends ScaleName>(
   identifier?: number | string,
@@ -26,7 +26,7 @@ export function useYColorScale<S extends ScaleName>(
 export function useZColorScale<S extends ScaleName>(
   identifier?: number | string,
 ): AxisScaleComputedConfig[S]['colorScale'] | undefined {
-  const { zAxis, zAxisIds } = useZAxis();
+  const { zAxis, zAxisIds } = useZAxes();
 
   const id = typeof identifier === 'string' ? identifier : zAxisIds[identifier ?? 0];
 

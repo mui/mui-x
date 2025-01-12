@@ -5,7 +5,7 @@ import { Scatter, ScatterProps } from './Scatter';
 import getColor from './getColor';
 import { useScatterSeries } from '../hooks/useSeries';
 import { useXAxes, useYAxes } from '../hooks';
-import { useZAxis } from '../hooks/useZAxis';
+import { useZAxes } from '../hooks/useZAxis';
 
 export interface ScatterPlotSlots {
   scatter?: React.JSXElementConstructor<ScatterProps>;
@@ -43,7 +43,7 @@ function ScatterPlot(props: ScatterPlotProps) {
   const seriesData = useScatterSeries();
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
-  const { zAxis, zAxisIds } = useZAxis();
+  const { zAxis, zAxisIds } = useZAxes();
 
   if (seriesData === undefined) {
     return null;

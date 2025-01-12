@@ -3,20 +3,19 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useChartDataProviderProps } from './useChartDataProviderProps';
 import { AnimationProvider, AnimationProviderProps } from '../AnimationProvider';
-import { ZAxisContextProvider, ZAxisContextProviderProps } from '../ZAxisContextProvider';
 import { HighlightedProvider, HighlightedProviderProps } from '../HighlightedProvider';
 import { ChartProvider, ChartProviderProps } from '../ChartProvider';
 import { ChartSeriesType } from '../../models/seriesType/config';
 import { ChartAnyPluginSignature } from '../../internals/plugins/models/plugin';
 import { UseChartCartesianAxisSignature } from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { UseChartInteractionSignature } from '../../internals/plugins/featurePlugins/useChartInteraction';
+import { UseChartZAxisSignature } from '../../internals/plugins/featurePlugins/useChartZAxis';
 
 export type ChartDataProviderProps<
   TSignatures extends readonly ChartAnyPluginSignature[],
   TSeries extends ChartSeriesType = ChartSeriesType,
 > = Omit<
-  ZAxisContextProviderProps &
-    HighlightedProviderProps &
+  HighlightedProviderProps &
     AnimationProviderProps &
     ChartProviderProps<TSignatures, TSeries>['pluginParams'],
   'children'
@@ -55,25 +54,19 @@ export type ChartDataProviderProps<
 function ChartDataProvider<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = [
+    UseChartZAxisSignature,
     UseChartCartesianAxisSignature<TSeries>,
     UseChartInteractionSignature,
   ],
 >(props: ChartDataProviderProps<TSignatures, TSeries>) {
-  const {
-    children,
-    zAxisContextProps,
-    highlightedProviderProps,
-    animationProviderProps,
-    chartProviderProps,
-  } = useChartDataProviderProps(props);
+  const { children, highlightedProviderProps, animationProviderProps, chartProviderProps } =
+    useChartDataProviderProps(props);
 
   return (
     <ChartProvider<TSignatures, TSeries> {...chartProviderProps}>
-      <ZAxisContextProvider {...zAxisContextProps}>
-        <HighlightedProvider {...highlightedProviderProps}>
-          <AnimationProvider {...animationProviderProps}>{children}</AnimationProvider>
-        </HighlightedProvider>
-      </ZAxisContextProvider>
+      <HighlightedProvider {...highlightedProviderProps}>
+        <AnimationProvider {...animationProviderProps}>{children}</AnimationProvider>
+      </HighlightedProvider>
     </ChartProvider>
   );
 }
@@ -90,9 +83,6 @@ ChartDataProvider.propTypes = {
    * @default blueberryTwilightPalette
    */
   colors: PropTypes.any,
-  /**
-   * An array of objects that can be used to populate series and axes data using their `dataKey` property.
-   */
   dataset: PropTypes.any,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
@@ -135,10 +125,6 @@ ChartDataProvider.propTypes = {
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
   width: PropTypes.any,
-  /**
-   * The configuration of the z-axes.
-   */
-  zAxis: PropTypes.any,
 } as any;
 
 export { ChartDataProvider };
