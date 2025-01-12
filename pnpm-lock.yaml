@@ -894,7 +894,7 @@ importers:
         specifier: ^4.0.8
         version: 4.0.8
       '@types/d3-shape':
-        specifier: ^3.1.6
+        specifier: ^3.1.7
         version: 3.1.7
       '@types/d3-time':
         specifier: ^3.0.4
