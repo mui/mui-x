@@ -111,10 +111,6 @@ export interface LineChartProps
    * @default false
    */
   skipAnimation?: boolean;
-  /**
-   * If `true` marks will render `<circle />` instead of `<path />` and drop theme override for faster rendering.
-   */
-  experimentalMarkRendering?: boolean;
 }
 
 /**
@@ -229,10 +225,6 @@ LineChart.propTypes = {
    * If `true`, render the line highlight item.
    */
   disableLineItemHighlight: PropTypes.bool,
-  /**
-   * If `true` marks will render `<circle />` instead of `<path />` and drop theme override for faster rendering.
-   */
-  experimentalMarkRendering: PropTypes.bool,
   /**
    * Option to display a cartesian grid in the background.
    */
