@@ -270,7 +270,7 @@ importers:
         specifier: ^7.1.1
         version: 7.1.1(eslint@8.57.1)(typescript@5.7.2)
       fast-glob:
-        specifier: ^3.3.2
+        specifier: ^3.3.3
         version: 3.3.3
       format-util:
         specifier: ^1.0.5
