@@ -113,10 +113,10 @@ Each _Picker_ is available in a responsive, desktop and mobile variant:
 - The responsive component (for example `DatePicker`) which renders the desktop component or the mobile one depending on the device it runs on.
 
 - The desktop component (for example `DesktopDatePicker`) which works best for mouse devices and large screens.
-  It renders the views inside a popover and allows editing values directly inside the field.
+  It renders the views inside a popover and a field for keyboard editing.
 
 - The mobile component (for example `MobileDatePicker`) which works best for touch devices and small screens.
-  It renders the view inside a modal and does not allow editing values directly inside the field.
+  It renders the view inside a modal and a field for keyboard editing.
 
 {{"demo": "ResponsivePickers.js"}}
 

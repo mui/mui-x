@@ -34,6 +34,10 @@ export function useDateManager<TEnableAccessibleFieldDOMStructure extends boolea
         ...internalProps,
         ...getDateFieldInternalPropsDefaults({ defaultDates, utils, internalProps }),
       }),
+      internal_getOpenPickerButtonAriaLabel: ({ value, utils, localeText }) => {
+        const formattedValue = utils.isValid(value) ? utils.format(value, 'fullDate') : null;
+        return localeText.openDatePickerDialogue(formattedValue);
+      },
     }),
     [enableAccessibleFieldDOMStructure],
   );

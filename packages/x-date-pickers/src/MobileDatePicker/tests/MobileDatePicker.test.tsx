@@ -11,7 +11,6 @@ import {
   expectFieldValueV7,
   buildFieldInteractions,
   openPicker,
-  getFieldSectionsContainer,
 } from 'test/utils/pickers';
 
 describe('<MobileDatePicker />', () => {
@@ -132,17 +131,6 @@ describe('<MobileDatePicker />', () => {
   });
 
   describe('picker state', () => {
-    it('should open when clicking the input', () => {
-      const onOpen = spy();
-
-      render(<MobileDatePicker onOpen={onOpen} />);
-
-      fireEvent.click(getFieldSectionsContainer());
-
-      expect(onOpen.callCount).to.equal(1);
-      expect(screen.queryByRole('dialog')).toBeVisible();
-    });
-
     it('should call `onAccept` even if controlled', () => {
       const onAccept = spy();
 
@@ -154,7 +142,7 @@ describe('<MobileDatePicker />', () => {
 
       render(<ControlledMobileDatePicker onAccept={onAccept} />);
 
-      openPicker({ type: 'date', variant: 'mobile' });
+      openPicker({ type: 'date' });
 
       fireEvent.click(screen.getByText('15', { selector: 'button' }));
       fireEvent.click(screen.getByText('OK', { selector: 'button' }));
@@ -176,7 +164,7 @@ describe('<MobileDatePicker />', () => {
       expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
 
       // Open and Dismiss the picker
-      openPicker({ type: 'date', variant: 'mobile' });
+      openPicker({ type: 'date' });
       // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
       fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
       clock.runToLast();

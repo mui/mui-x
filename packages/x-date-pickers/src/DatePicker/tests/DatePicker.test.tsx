@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { screen } from '@mui/internal-test-utils/createRenderer';
+import { fireEvent, screen } from '@mui/internal-test-utils/createRenderer';
 import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers';
-import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
 
 describe('<DatePicker />', () => {
   const { render } = createPickerRenderer();
@@ -14,7 +13,8 @@ describe('<DatePicker />', () => {
 
     render(<DatePicker />);
 
-    expect(screen.getByLabelText(/Choose date/)).to.have.class(pickersInputBaseClasses.input);
+    fireEvent.click(screen.getByLabelText(/Choose date/));
+    expect(screen.queryByRole('dialog')).to.not.equal(null);
 
     window.matchMedia = originalMatchMedia;
   });

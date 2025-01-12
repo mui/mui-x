@@ -7,14 +7,12 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { TimeField } from '../TimeField';
 import { MobileTimePickerProps } from './MobileTimePicker.types';
 import { TimePickerViewRenderers, useTimePickerDefaultizedProps } from '../TimePicker/shared';
-import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { extractValidationProps, validateTime } from '../validation';
 import { PickerOwnerState, TimeView } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
-import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalization';
 
 type MobileTimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   props: MobileTimePickerProps<TimeView, TEnableAccessibleFieldDOMStructure> &
@@ -37,7 +35,6 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<
   inProps: MobileTimePickerProps<TimeView, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const translations = usePickerTranslations();
   const utils = useUtils();
 
   // Props with the default values common to all time pickers
@@ -87,12 +84,6 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<
     props,
     valueManager: singleItemValueManager,
     valueType: 'time',
-    getOpenDialogAriaText: buildGetOpenDialogAriaText({
-      utils,
-      formatKey: 'fullTime',
-      contextTranslation: translations.openTimePickerDialogue,
-      propsTranslation: props.localeText?.openTimePickerDialogue,
-    }),
     validator: validateTime,
   });
 

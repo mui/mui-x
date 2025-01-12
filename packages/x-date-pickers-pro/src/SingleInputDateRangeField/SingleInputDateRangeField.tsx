@@ -1,16 +1,10 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
-import useSlotProps from '@mui/utils/useSlotProps';
 import { refType } from '@mui/utils';
-import { useClearableField } from '@mui/x-date-pickers/hooks';
-import {
-  convertFieldResponseIntoMuiTextFieldProps,
-  useFieldOwnerState,
-} from '@mui/x-date-pickers/internals';
-import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
+import { DateRangeIcon } from '@mui/x-date-pickers/icons';
+import { PickerFieldUI, useFieldTextFieldProps } from '@mui/x-date-pickers/internals';
 import { SingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
 import { useSingleInputDateRangeField } from './useSingleInputDateRangeField';
 import { FieldType } from '../models';
@@ -41,41 +35,29 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
     name: 'MuiSingleInputDateRangeField',
   });
 
-  const { slots, slotProps, InputProps, inputProps, ...other } = themeProps;
+  const { slots, slotProps, ...other } = themeProps;
 
-  const ownerState = useFieldOwnerState(themeProps);
-
-  const textFieldProps = useSlotProps({
-    elementType: PickersTextField,
-    externalSlotProps: slotProps?.textField,
+  const textFieldProps = useFieldTextFieldProps<
+    SingleInputDateRangeFieldProps<TEnableAccessibleFieldDOMStructure>
+  >({
+    slotProps,
+    ref: inRef,
     externalForwardedProps: other,
-    ownerState,
-    additionalProps: {
-      ref: inRef,
-    },
-  }) as SingleInputDateRangeFieldProps<TEnableAccessibleFieldDOMStructure>;
-
-  // TODO: Remove when mui/material-ui#35088 will be merged
-  textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
-  textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
+  });
 
   const fieldResponse = useSingleInputDateRangeField<
     TEnableAccessibleFieldDOMStructure,
     typeof textFieldProps
   >(textFieldProps);
-  const convertedFieldResponse = convertFieldResponseIntoMuiTextFieldProps(fieldResponse);
 
-  const processedFieldProps = useClearableField({
-    ...convertedFieldResponse,
-    slots,
-    slotProps,
-  });
-
-  const TextField =
-    slots?.textField ??
-    (fieldResponse.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
-
-  return <TextField {...processedFieldProps} />;
+  return (
+    <PickerFieldUI
+      slots={slots}
+      slotProps={slotProps}
+      fieldResponse={fieldResponse}
+      defaultOpenPickerIcon={DateRangeIcon}
+    />
+  );
 }) as DateRangeFieldComponent;
 
 SingleInputDateRangeField.fieldType = 'single-input';
@@ -96,6 +78,12 @@ SingleInputDateRangeField.propTypes = {
    * @default false
    */
   clearable: PropTypes.bool,
+  /**
+   * The position at which the clear button is placed.
+   * If the field is not clearable, the button is not rendered.
+   * @default 'end'
+   */
+  clearButtonPosition: PropTypes.oneOf(['end', 'start']),
   /**
    * The color of the component.
    * It supports both default and custom theme colors, which can be added as shown in the

@@ -56,7 +56,6 @@ export const usePicker = <
   return {
     // Picker views
     renderCurrentView: pickerViewsResponse.renderCurrentView,
-    hasUIView: pickerViewsResponse.provider.hasUIView,
     shouldRestoreFocus: pickerViewsResponse.shouldRestoreFocus,
 
     // Picker provider

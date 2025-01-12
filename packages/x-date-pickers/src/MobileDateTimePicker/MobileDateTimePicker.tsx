@@ -7,7 +7,6 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DateTimeField } from '../DateTimeField';
 import { MobileDateTimePickerProps } from './MobileDateTimePicker.types';
 import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
-import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { extractValidationProps, validateDateTime } from '../validation';
 import { DateOrTimeView, PickerOwnerState } from '../models';
@@ -15,7 +14,6 @@ import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { resolveDateTimeFormat } from '../internals/utils/date-time-utils';
-import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalization';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { PickerValue } from '../internals/models';
 
@@ -40,7 +38,6 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<
   inProps: MobileDateTimePickerProps<DateOrTimeView, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const translations = usePickerTranslations();
   const utils = useUtils();
 
   // Props with the default values common to all date time pickers
@@ -97,12 +94,6 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<
     props,
     valueManager: singleItemValueManager,
     valueType: 'date-time',
-    getOpenDialogAriaText: buildGetOpenDialogAriaText({
-      utils,
-      formatKey: 'fullDate',
-      contextTranslation: translations.openDatePickerDialogue,
-      propsTranslation: props.localeText?.openDatePickerDialogue,
-    }),
     validator: validateDateTime,
   });
 

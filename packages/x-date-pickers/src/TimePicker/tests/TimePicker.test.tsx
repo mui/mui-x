@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { screen } from '@mui/internal-test-utils/createRenderer';
 import { expect } from 'chai';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { fireEvent, screen } from '@mui/internal-test-utils/createRenderer';
 import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers';
-import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
 
 describe('<TimePicker />', () => {
   const { render } = createPickerRenderer();
@@ -14,7 +13,8 @@ describe('<TimePicker />', () => {
 
     render(<TimePicker />);
 
-    expect(screen.getByLabelText(/Choose time/)).to.have.class(pickersInputBaseClasses.input);
+    fireEvent.click(screen.getByLabelText(/Choose time/));
+    expect(screen.queryByRole('dialog')).to.not.equal(null);
 
     window.matchMedia = originalMatchMedia;
   });

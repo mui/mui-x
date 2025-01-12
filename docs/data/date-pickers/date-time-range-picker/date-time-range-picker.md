@@ -47,10 +47,10 @@ Learn more about the _Controlled and uncontrolled_ pattern in the [React documen
 The component is available in three variants:
 
 - The `DesktopDateTimeRangePicker` component which works best for mouse devices and large screens.
-  It renders the views inside a popover and allows editing values directly inside the field.
+  It renders the views inside a popover and a field for keyboard editing.
 
 - The `MobileDateTimeRangePicker` component which works best for touch devices and small screens.
-  It renders the view inside a modal and does not allow editing values directly inside the field.
+  It renders the view inside a modal and does not allow editing values with the keyboard in the field.
 
 - The `DateTimeRangePicker` component which renders `DesktopDateTimeRangePicker` or `MobileDateTimeRangePicker` depending on the device it runs on.
 

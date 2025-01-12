@@ -35,6 +35,8 @@ export function useTimeRangeManager<TEnableAccessibleFieldDOMStructure extends b
         ...internalProps,
         ...getTimeFieldInternalPropsDefaults({ utils, internalProps }),
       }),
+      // TODO v8: Add a real aria label before moving the opening logic to the field on range pickers.
+      internal_getOpenPickerButtonAriaLabel: () => '',
     }),
     [enableAccessibleFieldDOMStructure, dateSeparator],
   );

@@ -13,7 +13,6 @@ import {
   WebError,
   Locator,
 } from '@playwright/test';
-import { pickersTextFieldClasses } from '@mui/x-date-pickers/PickersTextField';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
 
 function sleep(timeoutMS: number): Promise<void> {
@@ -799,19 +798,13 @@ async function initializeEnvironment(
         it('should allow selecting a value', async () => {
           await renderFixture('DatePicker/BasicMobileDatePicker');
 
-          // Old selector: await page.getByRole('textbox').click({ position: { x: 10, y: 2 } });
-          await page
-            .locator(`.${pickersTextFieldClasses.root}`)
-            .click({ position: { x: 10, y: 2 } });
+          await page.getByRole('button').click();
           await page.getByRole('gridcell', { name: '11' }).click();
           await page.getByRole('button', { name: 'OK' }).click();
 
-          await waitFor(async () => {
-            // assert that the dialog has been closed and the focused element is the input
-            expect(await page.evaluate(() => document.activeElement?.className)).to.contain(
-              pickersSectionListClasses.sectionContent,
-            );
-          });
+          // assert that the dialog closes after selection is complete
+          // could run into race condition otherwise
+          await page.waitForSelector('[role="dialog"]', { state: 'detached' });
           expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
             '04/11/2022',
           );
@@ -824,7 +817,7 @@ async function initializeEnvironment(
 
           const input = page.getByRole('textbox');
 
-          await input.click({ position: { x: 10, y: 2 } });
+          await page.getByRole('button').click();
           await page.getByRole('button', { name: 'Clear' }).click();
 
           await input.blur();

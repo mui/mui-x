@@ -79,6 +79,7 @@ export function usePickerProvider<
 
   const utils = useUtils();
   const orientation = usePickerOrientation(paramsFromUsePickerViews.views, props.orientation);
+  const triggerRef = React.useRef<HTMLElement>(null);
 
   const ownerState = React.useMemo<PickerOwnerState>(
     () => ({
@@ -105,6 +106,18 @@ export function usePickerProvider<
     ],
   );
 
+  const triggerStatus = React.useMemo(() => {
+    if (props.disableOpenPicker || !paramsFromUsePickerViews.hasUIView) {
+      return 'hidden';
+    }
+
+    if (props.disabled || props.readOnly) {
+      return 'disabled';
+    }
+
+    return 'enabled';
+  }, [props.disableOpenPicker, paramsFromUsePickerViews.hasUIView, props.disabled, props.readOnly]);
+
   const contextValue = React.useMemo<PickerContextValue<TValue, TView, TError>>(
     () => ({
       ...paramsFromUsePickerValue.contextValue,
@@ -113,6 +126,8 @@ export function usePickerProvider<
       readOnly: props.readOnly ?? false,
       variant,
       orientation,
+      triggerRef,
+      triggerStatus,
       fieldFormat: props.format ?? '',
     }),
     [
@@ -122,6 +137,8 @@ export function usePickerProvider<
       orientation,
       props.disabled,
       props.readOnly,
+      triggerRef,
+      triggerStatus,
       props.format,
     ],
   );

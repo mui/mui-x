@@ -5,11 +5,11 @@ import useId from '@mui/utils/useId';
 import { PickersModalDialog } from '../../components/PickersModalDialog';
 import { UseMobilePickerParams, UseMobilePickerProps } from './useMobilePicker.types';
 import { usePicker } from '../usePicker';
-import { onSpaceOrEnter } from '../../utils/utils';
 import { PickersLayout } from '../../../PickersLayout';
 import { FieldRef, InferError } from '../../../models';
 import { BaseSingleInputFieldProps, DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
 import { PickerProvider } from '../../components/PickerProvider';
+import { PickerFieldUIContextProvider } from '../../components/PickerFieldUI';
 
 /**
  * Hook managing all the single-date mobile pickers:
@@ -28,7 +28,6 @@ export const useMobilePicker = <
   >,
 >({
   props,
-  getOpenDialogAriaText,
   ...pickerParams
 }: UseMobilePickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
   const {
@@ -40,7 +39,7 @@ export const useMobilePicker = <
     label,
     inputRef,
     readOnly,
-    disabled,
+    autoFocus,
     localeText,
   } = props;
 
@@ -72,37 +71,20 @@ export const useMobilePicker = <
     externalSlotProps: innerSlotProps?.field,
     additionalProps: {
       // Internal props
-      readOnly: readOnly ?? true,
+      readOnly,
+      autoFocus: autoFocus && !props.open,
 
       // Forwarded props
       className,
       sx,
       label,
       name,
+      focused: providerProps.contextValue.open ? true : undefined,
       ...(isToolbarHidden && { id: labelId }),
-      ...(!(disabled || readOnly) && {
-        // These direct access to `providerProps` will go away in https://github.com/mui/mui-x/pull/15671
-        onClick: (event: React.UIEvent) => {
-          event.preventDefault();
-          providerProps.contextValue.setOpen(true);
-        },
-        onKeyDown: onSpaceOrEnter(() => providerProps.contextValue.setOpen(true)),
-      }),
       ...(!!inputRef && { inputRef }),
     },
     ownerState,
   });
-
-  // TODO: Move to `useSlotProps` when https://github.com/mui/material-ui/pull/35088 will be merged
-  fieldProps.inputProps = {
-    ...fieldProps.inputProps,
-    'aria-label': getOpenDialogAriaText(providerProps.contextValue.value),
-  } as typeof fieldProps.inputProps;
-
-  const slotsForField = {
-    textField: slots.textField,
-    ...fieldProps.slots,
-  };
 
   const Layout = slots.layout ?? PickersLayout;
 
@@ -130,17 +112,14 @@ export const useMobilePicker = <
 
   const renderPicker = () => (
     <PickerProvider {...providerProps}>
-      <Field
-        {...fieldProps}
-        slots={slotsForField}
-        slotProps={slotProps}
-        unstableFieldRef={handleFieldRef}
-      />
-      <PickersModalDialog slots={slots} slotProps={slotProps}>
-        <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
-          {renderCurrentView()}
-        </Layout>
-      </PickersModalDialog>
+      <PickerFieldUIContextProvider slots={slots} slotProps={slotProps}>
+        <Field {...fieldProps} unstableFieldRef={handleFieldRef} />
+        <PickersModalDialog slots={slots} slotProps={slotProps}>
+          <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
+            {renderCurrentView()}
+          </Layout>
+        </PickersModalDialog>
+      </PickerFieldUIContextProvider>
     </PickerProvider>
   );
 

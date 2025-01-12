@@ -35,7 +35,7 @@ describe('<DesktopDateTimePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-time', variant: 'desktop' });
+      openPicker({ type: 'date-time' });
 
       // Select year
       fireEvent.click(screen.getByRole('radio', { name: '2025' }));
@@ -81,7 +81,7 @@ describe('<DesktopDateTimePicker />', () => {
       />,
     );
 
-    openPicker({ type: 'date-time', variant: 'desktop' });
+    openPicker({ type: 'date-time' });
 
     // Change the date multiple times to check that picker doesn't close after cycling through all views internally
     fireEvent.click(screen.getByRole('gridcell', { name: '2' }));

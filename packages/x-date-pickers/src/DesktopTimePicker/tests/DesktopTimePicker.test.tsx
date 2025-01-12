@@ -75,7 +75,7 @@ describe('<DesktopTimePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'time', variant: 'desktop' });
+      openPicker({ type: 'time' });
 
       fireEvent.click(screen.getByRole('option', { name: '09:00 AM' }));
       expect(onChange.callCount).to.equal(1);
@@ -104,7 +104,7 @@ describe('<DesktopTimePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'time', variant: 'desktop' });
+      openPicker({ type: 'time' });
 
       fireEvent.click(screen.getByRole('option', { name: '2 hours' }));
       expect(onChange.callCount).to.equal(1);
@@ -142,7 +142,7 @@ describe('<DesktopTimePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'time', variant: 'desktop' });
+      openPicker({ type: 'time' });
 
       fireEvent.click(screen.getByRole('option', { name: '15 minutes' }));
       expect(onChange.callCount).to.equal(1);
@@ -185,7 +185,7 @@ describe('<DesktopTimePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'time', variant: 'desktop' });
+      openPicker({ type: 'time' });
 
       fireEvent.click(screen.getByRole('option', { name: 'PM' }));
       expect(onChange.callCount).to.equal(1);

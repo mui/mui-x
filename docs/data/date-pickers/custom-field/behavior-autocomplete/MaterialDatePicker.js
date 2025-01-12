@@ -1,8 +1,9 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
 import Autocomplete from '@mui/material/Autocomplete';
+import IconButton from '@mui/material/IconButton';
+import { CalendarIcon } from '@mui/x-date-pickers/icons';
 import TextField from '@mui/material/TextField';
-import Stack from '@mui/material/Stack';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -13,17 +14,15 @@ function AutocompleteField(props) {
   const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
   const { timezone, value, setValue } = usePickerContext();
   const {
-    InputProps,
-    slotProps,
-    slots,
     ownerState,
     label,
     focused,
     name,
     options = [],
-    inputProps,
     ...other
   } = forwardedProps;
+
+  const pickerContext = usePickerContext();
 
   const { hasValidationError, getValidationErrorForNewValue } = useValidation({
     validator: validateDate,
@@ -32,50 +31,38 @@ function AutocompleteField(props) {
     props: internalProps,
   });
 
-  const mergeAdornments = (...adornments) => {
-    const nonNullAdornments = adornments.filter((el) => el != null);
-    if (nonNullAdornments.length === 0) {
-      return null;
-    }
-
-    if (nonNullAdornments.length === 1) {
-      return nonNullAdornments[0];
-    }
-
-    return (
-      <Stack direction="row">
-        {nonNullAdornments.map((adornment, index) => (
-          <React.Fragment key={index}>{adornment}</React.Fragment>
-        ))}
-      </Stack>
-    );
-  };
-
   return (
     <Autocomplete
       {...other}
       options={options}
-      ref={InputProps?.ref}
+      ref={pickerContext.triggerRef}
       sx={{ minWidth: 250 }}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          error={hasValidationError}
-          label={label}
-          inputProps={{ ...params.inputProps, ...inputProps }}
-          InputProps={{
-            ...params.InputProps,
-            startAdornment: mergeAdornments(
-              InputProps?.startAdornment,
-              params.InputProps.startAdornment,
-            ),
-            endAdornment: mergeAdornments(
-              InputProps?.endAdornment,
-              params.InputProps.endAdornment,
-            ),
-          }}
-        />
-      )}
+      renderInput={(params) => {
+        const endAdornment = params.InputProps.endAdornment;
+        return (
+          <TextField
+            {...params}
+            error={hasValidationError}
+            label={label}
+            InputProps={{
+              ...params.InputProps,
+              endAdornment: React.cloneElement(endAdornment, {
+                children: (
+                  <React.Fragment>
+                    <IconButton
+                      onClick={() => pickerContext.setOpen((prev) => !prev)}
+                      size="small"
+                    >
+                      <CalendarIcon />
+                    </IconButton>
+                    {endAdornment.props.children}
+                  </React.Fragment>
+                ),
+              }),
+            }}
+          />
+        );
+      }}
       getOptionLabel={(option) => {
         if (!dayjs.isDayjs(option)) {
           return '';

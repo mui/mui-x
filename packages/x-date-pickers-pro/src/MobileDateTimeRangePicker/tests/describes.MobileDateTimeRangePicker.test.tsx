@@ -88,7 +88,7 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
       if (!isOpened) {
         openPicker({
           type: 'date-time-range',
-          variant: 'mobile',
+
           initialFocus: setEndDate ? 'end' : 'start',
         });
       }
