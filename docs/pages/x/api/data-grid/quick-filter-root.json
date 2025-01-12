@@ -1,0 +1,36 @@
+{
+  "props": {
+    "debounceMs": { "type": { "name": "number" }, "default": "150" },
+    "formatter": {
+      "type": { "name": "func" },
+      "default": "(values: string[]) => values.join(' ')",
+      "signature": {
+        "type": "function(values: Array<any>) => string",
+        "describedArgs": ["values"],
+        "returned": "string"
+      }
+    },
+    "parser": {
+      "type": { "name": "func" },
+      "default": "(searchText: string) => searchText.split(' ').filter((word) => word !== '')",
+      "signature": {
+        "type": "function(input: string) => Array<any>",
+        "describedArgs": ["input"],
+        "returned": "Array<any>"
+      }
+    }
+  },
+  "name": "QuickFilterRoot",
+  "imports": [
+    "import { QuickFilterRoot } from '@mui/x-data-grid/primitives';",
+    "import { QuickFilterRoot } from '@mui/x-data-grid-pro/primitives';",
+    "import { QuickFilterRoot } from '@mui/x-data-grid-premium/primitives';"
+  ],
+  "classes": [],
+  "muiName": "MuiQuickFilterRoot",
+  "forwardsRefTo": "GridRoot",
+  "filename": "/packages/x-data-grid/src/primitives/quickFilter/QuickFilterRoot.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-data-grid/primitives/quick-filter\">Quick Filter</a></li></ul>",
+  "cssComponent": false
+}

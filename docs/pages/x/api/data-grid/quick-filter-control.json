@@ -1,0 +1,26 @@
+{
+  "props": {
+    "className": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" } },
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+  },
+  "name": "QuickFilterControl",
+  "imports": [
+    "import { QuickFilterControl } from '@mui/x-data-grid/primitives';",
+    "import { QuickFilterControl } from '@mui/x-data-grid-pro/primitives';",
+    "import { QuickFilterControl } from '@mui/x-data-grid-premium/primitives';"
+  ],
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiQuickFilterControl-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiQuickFilterControl",
+  "forwardsRefTo": "GridRoot",
+  "filename": "/packages/x-data-grid/src/primitives/quickFilter/QuickFilterControl.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-data-grid/primitives/quick-filter\">Quick Filter</a></li></ul>",
+  "cssComponent": false
+}

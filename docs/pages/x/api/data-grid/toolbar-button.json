@@ -1,0 +1,103 @@
+{
+  "props": {
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+  },
+  "name": "ToolbarButton",
+  "imports": [
+    "import { ToolbarButton } from '@mui/x-data-grid/primitives';",
+    "import { ToolbarButton } from '@mui/x-data-grid-pro/primitives';",
+    "import { ToolbarButton } from '@mui/x-data-grid-premium/primitives';"
+  ],
+  "classes": [
+    {
+      "key": "colorError",
+      "className": "MuiToolbarButton-colorError",
+      "description": "Styles applied to the root element if `color=\"error\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorInfo",
+      "className": "MuiToolbarButton-colorInfo",
+      "description": "Styles applied to the root element if `color=\"info\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorInherit",
+      "className": "MuiToolbarButton-colorInherit",
+      "description": "Styles applied to the root element if `color=\"inherit\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorPrimary",
+      "className": "MuiToolbarButton-colorPrimary",
+      "description": "Styles applied to the root element if `color=\"primary\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorSecondary",
+      "className": "MuiToolbarButton-colorSecondary",
+      "description": "Styles applied to the root element if `color=\"secondary\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorSuccess",
+      "className": "MuiToolbarButton-colorSuccess",
+      "description": "Styles applied to the root element if `color=\"success\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorWarning",
+      "className": "MuiToolbarButton-colorWarning",
+      "description": "Styles applied to the root element if `color=\"warning\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "disabled",
+      "className": "Mui-disabled",
+      "description": "State class applied to the root element if `disabled={true}`.",
+      "isGlobal": true
+    },
+    {
+      "key": "edgeEnd",
+      "className": "MuiToolbarButton-edgeEnd",
+      "description": "Styles applied to the root element if `edge=\"end\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "edgeStart",
+      "className": "MuiToolbarButton-edgeStart",
+      "description": "Styles applied to the root element if `edge=\"start\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiToolbarButton-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sizeLarge",
+      "className": "MuiToolbarButton-sizeLarge",
+      "description": "Styles applied to the root element if `size=\"large\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "sizeMedium",
+      "className": "MuiToolbarButton-sizeMedium",
+      "description": "Styles applied to the root element if `size=\"medium\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "sizeSmall",
+      "className": "MuiToolbarButton-sizeSmall",
+      "description": "Styles applied to the root element if `size=\"small\"`.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiToolbarButton",
+  "forwardsRefTo": "GridRoot",
+  "filename": "/packages/x-data-grid/src/primitives/toolbar/ToolbarButton.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-data-grid/primitives/toolbar\">Toolbar</a></li></ul>",
+  "cssComponent": false
+}

@@ -1,0 +1,18 @@
+{
+  "props": {
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+  },
+  "name": "ToolbarRoot",
+  "imports": [
+    "import { ToolbarRoot } from '@mui/x-data-grid/primitives';",
+    "import { ToolbarRoot } from '@mui/x-data-grid-pro/primitives';",
+    "import { ToolbarRoot } from '@mui/x-data-grid-premium/primitives';"
+  ],
+  "classes": [],
+  "muiName": "MuiToolbarRoot",
+  "forwardsRefTo": "GridRoot",
+  "filename": "/packages/x-data-grid/src/primitives/toolbar/ToolbarRoot.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-data-grid/primitives/toolbar\">Toolbar</a></li></ul>",
+  "cssComponent": false
+}

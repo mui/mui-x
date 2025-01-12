@@ -9,6 +9,20 @@
 - [DataGridPremium](/x/api/data-grid/data-grid-premium/)
 - [GridFilterForm](/x/api/data-grid/grid-filter-form/)
 - [GridFilterPanel](/x/api/data-grid/grid-filter-panel/)
+- [GridToolbarQuickFilter](/x/api/data-grid/grid-toolbar-quick-filter/)
+
+## Primitive components
+
+- [ToolbarRoot](/x/api/data-grid/toolbar-root/)
+- [ToolbarButton](/x/api/data-grid/toolbar-button/)
+- [ExportCsv](/x/api/data-grid/export-csv/)
+- [ExportExcel](/x/api/data-grid/export-excel/)
+- [ExportPrint](/x/api/data-grid/export-print/)
+- [QuickFilterRoot](/x/api/data-grid/quick-filter-root/)
+- [QuickFilterControl](/x/api/data-grid/quick-filter-control/)
+- [QuickFilterClear](/x/api/data-grid/quick-filter-clear/)
+- [ColumnsPanelTrigger](/x/api/data-grid/columns-panel-trigger/)
+- [FilterPanelTrigger](/x/api/data-grid/filter-panel-trigger/)
 
 ## Interfaces
 
