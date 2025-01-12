@@ -349,10 +349,10 @@ export const createColumnsState = ({
     columnsToUpsertLookup[field] = true;
     columnsToKeep[field] = true;
     let existingState = columnsState.lookup[field];
-
+    const defaultColTypeDef = { ...getDefaultColTypeDef(newColumn.type) };
     if (existingState == null) {
       existingState = {
-        ...getDefaultColTypeDef(newColumn.type),
+        ...defaultColTypeDef,
         field,
         hasBeenResized: false,
       };
@@ -364,7 +364,7 @@ export const createColumnsState = ({
     // If the column type has changed - merge the existing state with the default column type definition
     if (existingState && existingState.type !== newColumn.type) {
       existingState = {
-        ...getDefaultColTypeDef(newColumn.type),
+        ...defaultColTypeDef,
         field,
       };
     }
@@ -380,7 +380,13 @@ export const createColumnsState = ({
       }
     });
 
-    columnsState.lookup[field] = resolveProps(existingState, { ...newColumn, hasBeenResized });
+    const newColumnWithDefaultValues = resolveProps(defaultColTypeDef, newColumn);
+
+    columnsState.lookup[field] = {
+      ...existingState,
+      ...newColumnWithDefaultValues,
+      hasBeenResized,
+    };
   });
 
   if (keepOnlyColumnsToUpsert && !isInsideStateInitializer) {
