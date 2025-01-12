@@ -2,7 +2,7 @@ import { TextFieldProps } from '@mui/material/TextField';
 import { UseFieldResponse } from '../hooks/useField';
 
 export const convertFieldResponseIntoMuiTextFieldProps = <
-  TFieldResponse extends UseFieldResponse<any, any>,
+  TFieldResponse extends Omit<UseFieldResponse<any, any>, 'clearable' | 'onClear'>,
 >({
   enableAccessibleFieldDOMStructure,
   ...fieldResponse

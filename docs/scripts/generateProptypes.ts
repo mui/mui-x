@@ -76,6 +76,7 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
         'rightAxis',
         'plugins',
         'seriesConfig',
+        'manager',
       ];
       if (propsToNotResolve.includes(name)) {
         return false;
