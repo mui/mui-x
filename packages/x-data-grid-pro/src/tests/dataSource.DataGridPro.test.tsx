@@ -12,8 +12,9 @@ import {
   GridGetRowsResponse,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { SinonSpy, spy } from 'sinon';
+import { SinonStub, spy, stub } from 'sinon';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import useLazyRef from '@mui/utils/useLazyRef';
 import { getKeyDefault } from '../hooks/features/dataSource/cache';
 
 const cache = new Map<string, GridGetRowsResponse>();
@@ -29,7 +30,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
   const { render } = createRenderer();
 
   let apiRef: React.RefObject<GridApi>;
-  let fetchRowsSpy: SinonSpy;
+  let fetchRowsSpy: SinonStub;
   let mockServer: ReturnType<typeof useMockServer>;
 
   function TestDataSource(props: Partial<DataGridProProps> & { shouldRequestsFail?: boolean }) {
@@ -40,8 +41,15 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
       { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false },
       shouldRequestsFail,
     );
-    fetchRowsSpy = spy(mockServer, 'fetchRows');
-    const { fetchRows } = mockServer;
+
+    // Reuse the same stub between rerenders to properly count the calls
+    fetchRowsSpy = useLazyRef(() => stub()).current;
+
+    const originalFetchRows = mockServer.fetchRows;
+    const fetchRows = React.useMemo<typeof originalFetchRows>(() => {
+      fetchRowsSpy.callsFake(originalFetchRows);
+      return (...args) => fetchRowsSpy(...args);
+    }, [originalFetchRows]);
 
     const dataSource: GridDataSource = React.useMemo(
       () => ({
@@ -83,6 +91,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
   // eslint-disable-next-line mocha/no-top-level-hooks
   beforeEach(() => {
     cache.clear();
+    fetchRowsSpy?.reset();
   });
 
   it('should fetch the data on initial render', async () => {
@@ -93,11 +102,13 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
   });
 
   it('should re-fetch the data on filter change', async () => {
-    const { setProps } = render(<TestDataSource />);
+    render(<TestDataSource />);
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
-    setProps({ filterModel: { items: [{ field: 'name', value: 'John', operator: 'contains' }] } });
+    apiRef.current.setFilterModel({
+      items: [{ field: 'name', value: 'John', operator: 'contains' }],
+    });
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
     });
@@ -120,6 +131,23 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
     setProps({ paginationModel: { page: 1, pageSize: 10 } });
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(2);
+    });
+  });
+
+  it('should re-fetch the data once if multiple models have changed', async () => {
+    const { setProps } = render(<TestDataSource />);
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+
+    setProps({
+      paginationModel: { page: 1, pageSize: 10 },
+      sortModel: [{ field: 'name', sort: 'asc' }],
+      filterModel: { items: [{ field: 'name', value: 'John', operator: 'contains' }] },
+    });
+
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
     });

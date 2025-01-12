@@ -12,9 +12,10 @@ import {
   GridGroupNode,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { SinonSpy, spy } from 'sinon';
+import { SinonStub, stub } from 'sinon';
 import { getCell } from 'test/utils/helperFn';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import useLazyRef from '@mui/utils/useLazyRef';
 
 const dataSetOptions = {
   dataSet: 'Employee' as const,
@@ -31,14 +32,22 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   const { render } = createRenderer();
 
   let apiRef: React.RefObject<GridApi>;
-  let fetchRowsSpy: SinonSpy;
+  let fetchRowsSpy: SinonStub;
   let mockServer: ReturnType<typeof useMockServer>;
 
   function TestDataSource(props: Partial<DataGridProProps> & { shouldRequestsFail?: boolean }) {
     apiRef = useGridApiRef();
     mockServer = useMockServer(dataSetOptions, serverOptions, props.shouldRequestsFail ?? false);
-    fetchRowsSpy = spy(mockServer, 'fetchRows');
-    const { fetchRows, columns } = mockServer;
+    const { columns } = mockServer;
+
+    // Reuse the same stub between rerenders to properly count the calls
+    fetchRowsSpy = useLazyRef(() => stub()).current;
+
+    const originalFetchRows = mockServer.fetchRows;
+    const fetchRows = React.useMemo<typeof originalFetchRows>(() => {
+      fetchRowsSpy.callsFake(originalFetchRows);
+      return (...args) => fetchRowsSpy(...args);
+    }, [originalFetchRows]);
 
     const dataSource: GridDataSource = React.useMemo(
       () => ({
@@ -82,6 +91,11 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     );
   }
 
+  // eslint-disable-next-line mocha/no-top-level-hooks
+  beforeEach(() => {
+    fetchRowsSpy?.reset();
+  });
+
   it('should fetch the data on initial render', async () => {
     render(<TestDataSource />);
     await waitFor(() => {
@@ -90,22 +104,24 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   });
 
   it('should re-fetch the data on filter change', async () => {
-    const { setProps } = render(<TestDataSource />);
+    render(<TestDataSource />);
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
-    setProps({ filterModel: { items: [{ field: 'name', value: 'John', operator: 'contains' }] } });
+    apiRef.current.setFilterModel({
+      items: [{ field: 'name', value: 'John', operator: 'contains' }],
+    });
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
     });
   });
 
   it('should re-fetch the data on sort change', async () => {
-    const { setProps } = render(<TestDataSource />);
+    render(<TestDataSource />);
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
-    setProps({ sortModel: [{ field: 'name', sort: 'asc' }] });
+    apiRef.current.sortColumn('name', 'asc');
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
     });

@@ -16,6 +16,7 @@ import {
   GridDataSourceCache,
   runIf,
 } from '@mui/x-data-grid/internals';
+import { unstable_debounce as debounce } from '@mui/utils';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { gridGetRowsParamsSelector, gridDataSourceErrorsSelector } from './gridDataSourceSelector';
@@ -63,9 +64,6 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiPro>(
     | 'unstable_dataSource'
     | 'unstable_dataSourceCache'
     | 'unstable_onDataSourceError'
-    | 'sortingMode'
-    | 'filterMode'
-    | 'paginationMode'
     | 'pageSizeOptions'
     | 'treeData'
     | 'unstable_lazyLoading'
@@ -323,6 +321,8 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiPro>(
     [apiRef],
   );
 
+  const debouncedFetchRows = React.useMemo(() => debounce(fetchRows, 0), [fetchRows]);
+
   const handleStrategyActivityChange = React.useCallback<
     GridEventListener<'strategyAvailabilityChange'>
   >(() => {
@@ -421,9 +421,9 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiPro>(
     },
     events: {
       strategyAvailabilityChange: handleStrategyActivityChange,
-      sortModelChange: runIf(defaultRowsUpdateStrategyActive, () => fetchRows()),
-      filterModelChange: runIf(defaultRowsUpdateStrategyActive, () => fetchRows()),
-      paginationModelChange: runIf(defaultRowsUpdateStrategyActive, () => fetchRows()),
+      sortModelChange: runIf(defaultRowsUpdateStrategyActive, () => debouncedFetchRows()),
+      filterModelChange: runIf(defaultRowsUpdateStrategyActive, () => debouncedFetchRows()),
+      paginationModelChange: runIf(defaultRowsUpdateStrategyActive, () => debouncedFetchRows()),
     },
   };
 };
