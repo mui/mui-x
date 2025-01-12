@@ -7,7 +7,10 @@ export type {
   RichTreeViewItemsSlotProps,
 } from './components/RichTreeViewItems';
 
-export { unstable_resetCleanupTracking } from './hooks/useInstanceEventHandler';
+export {
+  unstable_resetCleanupTracking,
+  useInstanceEventHandler,
+} from './hooks/useInstanceEventHandler';
 export { useSelector } from './hooks/useSelector';
 
 export type {
@@ -71,6 +74,14 @@ export type {
   UseTreeViewLabelSignature,
   UseTreeViewLabelParameters,
 } from './plugins/useTreeViewLabel';
+export { selectorIsItemExpanded } from './plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
+export { selectorIsItemSelected } from './plugins/useTreeViewSelection/useTreeViewSelection.selectors';
+export {
+  selectorDataSourceState,
+  selectorGetTreeItemError,
+} from './plugins/useTreeViewLazyLoading/useTreeViewLazyLoading.selectors';
+export type { UseTreeViewLazyLoadingSignature } from './plugins/useTreeViewLazyLoading';
+export type { UseTreeViewLazyLoadingParameters } from './plugins/useTreeViewLazyLoading';
 export { useTreeViewJSXItems } from './plugins/useTreeViewJSXItems';
 export type {
   UseTreeViewJSXItemsSignature,
