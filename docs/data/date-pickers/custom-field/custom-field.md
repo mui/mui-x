@@ -154,3 +154,157 @@ and you don't want the UI to look like a Text Field, you can replace the field w
 The same logic can be applied to any Range Picker:
 
 {{"demo": "behavior-button/MaterialDateRangePicker.js", "defaultCodeOpen": false}}
+
+## Build your own custom field
+
+:::success
+The sections below show how to build a field for your Picker.
+Unlike the field components exposed by `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`, those fields are not suitable for a standalone usage.
+:::
+
+### Typing
+
+Each Picker component exposes an interface describing the props it passes to its field.
+You can import it from the same endpoint as the Picker component and use it to type the props of your field:
+
+```tsx
+import { DatePickerFieldProps } from '@mui/x-date-pickers/DatePicker';
+import { DateRangePickerFieldProps } from '@mui/x-date-pickers-pro/DateRangePicker';
+
+function CustomDateField(props: DatePickerFieldProps) {
+  // Your custom field
+}
+
+function CustomDateRangeField(props: DateRangePickerFieldProps) {
+  // Your custom field
+}
+```
+
+#### Import
+
+|       Picker component | Field props interface           |
+| ---------------------: | :------------------------------ |
+|            Date Picker | `DatePickerFieldProps`          |
+|            Time Picker | `TimePickerFieldProps`          |
+|       Date Time Picker | `DateTimePickerFieldProps`      |
+|      Date Range Picker | `DateRangePickerFieldProps`     |
+| Date Time Range Picker | `DateTimeRangePickerFieldProps` |
+
+### Validation
+
+You can use the `useValidation` hook to check if the current value passed to your field is valid or not:
+
+```ts
+import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
+
+const {
+  // The error associated with the current value.
+  // For example: "minDate" if `props.value < props.minDate`.
+  validationError,
+  // `true` if the value is invalid.
+  // On range Pickers it is true if the start date or the end date is invalid.
+  hasValidationError,
+  // Imperatively get the error of a value.
+  getValidationErrorForNewValue,
+} = useValidation({
+  // If you have a value in an internal state, you should pass it here.
+  // Otherwise, you can pass the value returned by `usePickerContext()`.
+  value,
+  timezone,
+  props,
+  validator: validateDate,
+});
+```
+
+#### Import
+
+Each Picker component has a validator adapted to its value type:
+
+|       Picker component | Import validator                                                             |
+| ---------------------: | :--------------------------------------------------------------------------- |
+|            Date Picker | `import { validateDate } from '@mui/x-date-pickers/validation'`              |
+|            Time Picker | `import { validateTime } from '@mui/x-date-pickers/validation'`              |
+|       Date Time Picker | `import { validateDateTime } from '@mui/x-date-pickers/validation'`          |
+|      Date Range Picker | `import { validateDateRange } from '@mui/x-date-pickers-pro/validation'`     |
+| Date Time Range Picker | `import { validateDateTimeRange } from '@mui/x-date-pickers-pro/validation'` |
+
+### Localized placeholder
+
+You can use the `useParsedFormat` to get a clean placeholder.
+This hook applies two main transformations on the format:
+
+1. It replaces all the localized tokens (for example `L` for a date with `dayjs`) with their expanded value (`DD/MM/YYYY` for the same date with `dayjs`).
+2. It replaces each token with its token from the localization object (for example `YYYY` remains `YYYY` for the English locale but becomes `AAAA` for the French locale).
+
+:::warning
+The format returned by `useParsedFormat` cannot be parsed by your date library.
+:::
+
+```js
+import { useParsedFormat } from '@mui/x-date-pickers/hooks';
+
+// Uses the format defined by your Picker
+const parsedFormat = useParsedFormat();
+
+// Uses the custom format provided
+const parsedFormat = useParsedFormat({ format: 'MM/DD/YYYY' });
+```
+
+### Spread props to the DOM
+
+The field receives a lot of props that cannot be forwarded to the DOM element without warnings.
+You can use the `useSplitFieldProps` hook to get the props that can be forwarded safely to the DOM:
+
+```tsx
+const { internalProps, forwardedProps } = useSplitFieldProps(
+  // The props received by the field component
+  props,
+  // The value type ("date", "time" or "date-time")
+  'date',
+);
+
+return (
+  <TextField {...forwardedProps} value={inputValue} onChange={handleChange}>
+)
+```
+
+:::success
+The `forwardedProps` contain props like `slots`, `slotProps` and `sx` that are specific to MUI.
+You can omit them if the component your are forwarding the props to does not support those concepts:
+
+```jsx
+const { slots, slotProps, sx, ...other } = props;
+const { internalProps, forwardedProps } = useSplitFieldProps(other, 'date');
+
+return (
+  <input {...forwardedProps} value={inputValue} onChange={handleChange}>
+)
+```
+
+:::
+
+### Pass the field to the Picker
+
+You can pass your custom field to your Picker using the `field` slot:
+
+```tsx
+function DatePickerWithCustomField() {
+  return (
+    <DatePicker slots={{ field: CustomDateField }}>
+  )
+}
+
+// Also works with the other variants of the component
+function DesktopDatePickerWithCustomField() {
+  return (
+    <DesktopDatePicker slots={{ field: CustomDateField }}>
+  )
+}
+
+```
+
+### Full custom example
+
+Here is a live demo of the example created in all the previous sections:
+
+{{"demo": "behavior-tutorial/MaterialDatePicker.js", "defaultCodeOpen": false}}
