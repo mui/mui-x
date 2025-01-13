@@ -1,12 +1,7 @@
 import * as React from 'react';
 
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
-import {
-  getCurveFactory,
-  AxisDefaultized,
-  AxisId,
-  cartesianSeriesTypes,
-} from '@mui/x-charts/internals';
+import { getCurveFactory, AxisDefaultized, cartesianSeriesTypes } from '@mui/x-charts/internals';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import { FunnelItemIdentifier, FunnelStackedData } from './funnel.types';
 import { FunnelElement } from './FunnelElement';
@@ -83,14 +78,16 @@ const positionLabel = ({
   yPosition,
   isHorizontal,
   values,
+  dataIndex,
 }: {
   vertical?: 'top' | 'middle' | 'bottom';
   horizontal?: 'left' | 'center' | 'right';
   margin?: number | { top?: number; right?: number; bottom?: number; left?: number };
-  xPosition: (value: number, useBand?: boolean) => number | undefined;
-  yPosition: (value: number, useBand?: boolean) => number | undefined;
+  xPosition: (value: number, bandIndex: number, useBand?: boolean) => number | undefined;
+  yPosition: (value: number, bandIndex: number, useBand?: boolean) => number | undefined;
   isHorizontal: boolean;
-  values: { x: number; y: number }[];
+  values: FunnelStackedData[];
+  dataIndex: number;
 }) => {
   let x: number | undefined = 0;
   let y: number | undefined = 0;
@@ -119,33 +116,33 @@ const positionLabel = ({
   const ml = typeof margin === 'number' ? margin : (margin?.left ?? 0);
 
   if (isHorizontal) {
-    maxTop = yPosition(values[0].y)! + mt;
-    minTop = yPosition(values[1].y)! + mt;
-    minBottom = yPosition(values[2].y)! - mb;
-    maxBottom = yPosition(values[3].y)! - mb;
+    maxTop = yPosition(values[0].y, dataIndex)! + mt;
+    minTop = yPosition(values[1].y, dataIndex)! + mt;
+    minBottom = yPosition(values[2].y, dataIndex)! - mb;
+    maxBottom = yPosition(values[3].y, dataIndex)! - mb;
     minRight = 0;
-    maxRight = xPosition(Math.min(...values.map((v) => v.x)), true)! - mr;
+    maxRight = xPosition(Math.min(...values.map((v) => v.x)), dataIndex, true)! - mr;
     minLeft = 0;
-    maxLeft = xPosition(Math.max(...values.map((v) => v.x)))! + ml;
+    maxLeft = xPosition(Math.max(...values.map((v) => v.x)), dataIndex)! + ml;
     center = maxRight - (maxRight - maxLeft) / 2;
     leftCenter = 0;
     rightCenter = 0;
-    middle = yPosition(0)!;
-    topMiddle = yPosition(values[0].y - (values[0].y - values[1].y) / 2)! + mt;
-    bottomMiddle = yPosition(values[3].y - (values[3].y - values[2].y) / 2)! - mb;
+    middle = yPosition(0, dataIndex)!;
+    topMiddle = yPosition(values[0].y - (values[0].y - values[1].y) / 2, dataIndex)! + mt;
+    bottomMiddle = yPosition(values[3].y - (values[3].y - values[2].y) / 2, dataIndex)! - mb;
   } else {
     minTop = 0;
-    maxTop = yPosition(Math.max(...values.map((v) => v.y)))! + mt;
+    maxTop = yPosition(Math.max(...values.map((v) => v.y)), dataIndex)! + mt;
     minBottom = 0;
-    maxBottom = yPosition(Math.min(...values.map((v) => v.y)), true)! - mb;
-    maxRight = xPosition(values[0].x)! - mr;
-    minRight = xPosition(values[1].x)! - mr;
-    minLeft = xPosition(values[2].x)! + ml;
-    maxLeft = xPosition(values[3].x)! + ml;
-    center = xPosition(0)!;
-    rightCenter = xPosition(values[0].x - (values[0].x - values[1].x) / 2)! - mr;
-    leftCenter = xPosition(values[3].x - (values[3].x - values[2].x) / 2)! + ml;
-    middle = yPosition(values[0].y - (values[0].y - values[1].y) / 2)!;
+    maxBottom = yPosition(Math.min(...values.map((v) => v.y)), dataIndex, true)! - mb;
+    maxRight = xPosition(values[0].x, dataIndex)! - mr;
+    minRight = xPosition(values[1].x, dataIndex)! - mr;
+    minLeft = xPosition(values[2].x, dataIndex)! + ml;
+    maxLeft = xPosition(values[3].x, dataIndex)! + ml;
+    center = xPosition(0, dataIndex)!;
+    rightCenter = xPosition(values[0].x - (values[0].x - values[1].x) / 2, dataIndex)! - mr;
+    leftCenter = xPosition(values[3].x - (values[3].x - values[2].x) / 2, dataIndex)! + ml;
+    middle = yPosition(values[0].y - (values[0].y - values[1].y) / 2, dataIndex)!;
     middle = maxTop - (maxTop - maxBottom) / 2;
     topMiddle = 0;
     bottomMiddle = 0;
@@ -264,7 +261,7 @@ const useAggregatedData = (funnelLabel: FunnelPlotProps['funnelLabel']) => {
     const isHorizontal = Object.values(series).some((s) => s.layout === 'horizontal');
 
     const result = stackingGroups.map(({ ids: groupIds }) => {
-      return groupIds.map((seriesId, bandIndex) => {
+      return groupIds.map((seriesId) => {
         const xAxisId = series[seriesId].xAxisId ?? defaultXAxisId;
         const yAxisId = series[seriesId].yAxisId ?? defaultYAxisId;
 
@@ -277,19 +274,10 @@ const useAggregatedData = (funnelLabel: FunnelPlotProps['funnelLabel']) => {
         const isXAxisBand = xAxis[xAxisId].scaleType === 'band';
         const isYAxisBand = yAxis[yAxisId].scaleType === 'band';
 
-        console.log('isHorizontal', isHorizontal);
-        console.log(baseScaleConfig.id);
-        console.log(xAxis[xAxisId].scaleType, yAxis[yAxisId].scaleType);
-
         const bandWidth = ((isXAxisBand || isYAxisBand) && baseScaleConfig.scale.bandwidth()) || 0;
 
         const xScale = xAxis[xAxisId].scale;
         const yScale = yAxis[yAxisId].scale;
-
-        const gradientUsed: [AxisId, 'x' | 'y'] | undefined =
-          (yAxis[yAxisId].colorScale && [yAxisId, 'y']) ||
-          (xAxis[xAxisId].colorScale && [xAxisId, 'x']) ||
-          undefined;
 
         // TODO: fix type, type is correct, but need to be inferred
         const { stackedData } = series[seriesId] as unknown as {
@@ -298,7 +286,7 @@ const useAggregatedData = (funnelLabel: FunnelPlotProps['funnelLabel']) => {
 
         const curve = getCurveFactory(series[seriesId].curve ?? 'linear');
 
-        const xPosition = (v: number, useBand?: boolean) => {
+        const xPosition = (v: number, bandIndex: number, useBand?: boolean) => {
           if (isXAxisBand) {
             const value = xScale(bandIndex);
             return useBand ? value! + bandWidth : value!;
@@ -306,7 +294,7 @@ const useAggregatedData = (funnelLabel: FunnelPlotProps['funnelLabel']) => {
           return xScale(v)!;
         };
 
-        const yPosition = (v: number, useBand?: boolean) => {
+        const yPosition = (v: number, bandIndex: number, useBand?: boolean) => {
           if (isYAxisBand) {
             const value = yScale(bandIndex);
             return useBand ? value! + bandWidth : value!;
@@ -314,14 +302,14 @@ const useAggregatedData = (funnelLabel: FunnelPlotProps['funnelLabel']) => {
           return yScale(v)!;
         };
 
-        const line = d3Line<FunnelStackedData>()
-          .x((d) => xPosition(d.x, d.useBandWidth))
-          .y((d) => yPosition(d.y, d.useBandWidth))
-          .curve(curve);
-
         return stackedData.map((values, dataIndex) => {
-          const color = series[seriesId][dataIndex]?.color ?? 'black';
+          const color = series[seriesId][dataIndex]?.color ?? 'pink';
           const id = `${seriesId}-${dataIndex}`;
+
+          const line = d3Line<FunnelStackedData>()
+            .x((d) => xPosition(d.x, dataIndex, d.useBandWidth))
+            .y((d) => yPosition(d.y, dataIndex, d.useBandWidth))
+            .curve(curve);
 
           return {
             d: line(values)!,
@@ -329,7 +317,6 @@ const useAggregatedData = (funnelLabel: FunnelPlotProps['funnelLabel']) => {
             id,
             seriesId,
             dataIndex,
-            gradientUsed,
             label: funnelLabel !== false && {
               ...positionLabel({
                 vertical: funnelLabel?.position?.vertical,
@@ -339,6 +326,7 @@ const useAggregatedData = (funnelLabel: FunnelPlotProps['funnelLabel']) => {
                 yPosition,
                 isHorizontal,
                 values,
+                dataIndex,
               }),
               ...alignLabel({
                 vertical: funnelLabel?.position?.vertical,

@@ -101,10 +101,10 @@ const formatter: SeriesProcessor<'funnel'> = (params, dataset) => {
     });
 
     ids.forEach((id, index) => {
-      completedSeries[id].stackedData = completedSeries[id].data.map((item, dataIndex) => {
+      completedSeries[id].stackedData = completedSeries[id].data.map((item, dataIndex, array) => {
         const currentMaxMain = item.value ?? 0;
-        const nextId = ids[index === ids.length - 1 ? index : index + 1];
-        const nextMaxMain = completedSeries[nextId].data[dataIndex].value ?? 0;
+        const nextDataIndex = dataIndex === array.length - 1 ? dataIndex : dataIndex + 1;
+        const nextMaxMain = array[nextDataIndex].value ?? 0;
         const [nextMaxOther, currentMaxOther] = stackedSeries[index][dataIndex];
 
         return [

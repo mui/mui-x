@@ -5,8 +5,6 @@ const getValueExtremum =
   (params) => {
     const { series, axis, isDefaultAxis } = params;
 
-    console.log('series', series, axis);
-
     return Object.keys(series)
       .filter((seriesId) => {
         const yAxisId = series[seriesId].yAxisId;

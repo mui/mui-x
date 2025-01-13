@@ -79,4 +79,6 @@ export type FunnelItemIdentifier = {
 export interface DefaultizedFunnelSeriesType
   extends DefaultizedProps<FunnelSeriesType, CommonDefaultizedProps | 'layout'> {}
 
-export type FunnelStackedData = Record<'x' | 'y', number> & Record<'useBandWidth', boolean>;
+export type FunnelStackedData = Record<'x' | 'y', number> & {
+  useBandWidth: boolean;
+};
