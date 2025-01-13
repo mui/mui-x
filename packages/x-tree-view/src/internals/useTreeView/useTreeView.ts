@@ -21,9 +21,9 @@ import { extractPluginParamsFromProps } from './extractPluginParamsFromProps';
 import { useTreeViewBuildContext } from './useTreeViewBuildContext';
 
 export function useTreeViewApiInitialization<T>(
-  inputApiRef: React.MutableRefObject<T | undefined> | undefined,
+  inputApiRef: React.RefObject<T | undefined> | undefined,
 ): T {
-  const fallbackPublicApiRef = React.useRef({}) as React.MutableRefObject<T>;
+  const fallbackPublicApiRef = React.useRef({}) as React.RefObject<T>;
 
   if (inputApiRef) {
     if (inputApiRef.current == null) {

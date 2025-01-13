@@ -22,7 +22,7 @@ function GridHeaderFilterMenuContainer(props: {
   field: GridColDef['field'];
   item: GridFilterItem;
   applyFilterChanges: (item: GridFilterItem) => void;
-  headerFilterMenuRef: React.MutableRefObject<HTMLButtonElement | null>;
+  headerFilterMenuRef: React.RefObject<HTMLButtonElement | null>;
   buttonRef: React.Ref<HTMLButtonElement>;
   disabled?: boolean;
 }) {

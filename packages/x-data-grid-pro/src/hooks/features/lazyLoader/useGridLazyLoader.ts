@@ -19,7 +19,7 @@ function findSkeletonRowsSection({
   visibleRows,
   range,
 }: {
-  apiRef: React.MutableRefObject<GridPrivateApiPro>;
+  apiRef: React.RefObject<GridPrivateApiPro>;
   visibleRows: GridRowEntry[];
   range: { firstRowIndex: number; lastRowIndex: number };
 }) {
@@ -65,7 +65,7 @@ function findSkeletonRowsSection({
  * @requires useGridScroll (method
  */
 export const useGridLazyLoader = (
-  privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
+  privateApiRef: React.RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     'onFetchRows' | 'rowsLoadingMode' | 'pagination' | 'paginationMode' | 'experimentalFeatures'

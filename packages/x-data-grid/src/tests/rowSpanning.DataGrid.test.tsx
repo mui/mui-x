@@ -9,7 +9,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGrid /> - Row spanning', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
   const baselineProps: DataGridProps = {
     unstable_rowSpanning: true,
     columns: [
