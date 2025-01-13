@@ -2,6 +2,14 @@ import * as React from 'react';
 import { PickerValidDate } from '../../../../../models';
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 
+/**
+ * Internal utility hook to handle a list of cells:
+ * - Registers the section in the Calendar Root.
+ * - Focuses the first tabbable child on mount if `props.focusOnMount` is `true`.
+ * - Scrolls the scroller to center the focused element if it is not visible.
+ * @param {useCellList.Parameters} parameters The parameters of the hook.
+ * @returns {useCellList.ReturnValue} The return value of the hook.
+ */
 export function useCellList(parameters: useCellList.Parameters): useCellList.ReturnValue {
   const { section, value, focusOnMount = false } = parameters;
   const baseRootContext = useBaseCalendarRootContext();
@@ -57,11 +65,20 @@ export namespace useCellList {
   }
 
   export interface Parameters extends PublicParameters {
+    /**
+     * The type of the section.
+     */
     section: 'day' | 'month' | 'year';
+    /**
+     * The value of the section.
+     */
     value: PickerValidDate;
   }
 
   export interface ReturnValue {
+    /**
+     * The ref that must be attached to the scroller element.
+     */
     scrollerRef: React.RefObject<HTMLElement | null>;
   }
 }
