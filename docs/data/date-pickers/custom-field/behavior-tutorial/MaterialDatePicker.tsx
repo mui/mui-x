@@ -8,7 +8,11 @@ import {
   DatePickerProps,
   DatePickerFieldProps,
 } from '@mui/x-date-pickers/DatePicker';
-import { useSplitFieldProps, useParsedFormat } from '@mui/x-date-pickers/hooks';
+import {
+  useSplitFieldProps,
+  useParsedFormat,
+  usePickerContext,
+} from '@mui/x-date-pickers/hooks';
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 
 function CustomDateField(props: DatePickerFieldProps) {
@@ -16,24 +20,24 @@ function CustomDateField(props: DatePickerFieldProps) {
   const { slots, slotProps, ...other } = props;
   const { internalProps, forwardedProps } = useSplitFieldProps(other, 'date');
 
-  const { format, timezone, value, onChange } = internalProps;
-  const [inputValue, setInputValue] = useInputValue(value, format);
+  const pickerContext = usePickerContext();
+  const placeholder = useParsedFormat();
+  const [inputValue, setInputValue] = useInputValue();
 
-  const { hasValidationError, getValidationErrorForNewValue } = useValidation({
-    value,
-    timezone,
+  // Check if the current value is valid or not.
+  const { hasValidationError } = useValidation({
+    value: pickerContext.value,
+    timezone: pickerContext.timezone,
     props: internalProps,
     validator: validateDate,
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newInputValue = event.target.value;
-    const newValue = dayjs(newInputValue, format);
+    const newValue = dayjs(newInputValue, pickerContext.fieldFormat);
     setInputValue(newInputValue);
-    onChange(newValue, { validationError: getValidationErrorForNewValue(newValue) });
+    pickerContext.setValue(newValue);
   };
-
-  const placeholder = useParsedFormat(internalProps);
 
   return (
     <TextField
@@ -46,16 +50,19 @@ function CustomDateField(props: DatePickerFieldProps) {
   );
 }
 
-function useInputValue(valueProp: Dayjs | null, format: string) {
-  const [lastValueProp, setLastValueProp] = React.useState(valueProp);
+function useInputValue() {
+  const pickerContext = usePickerContext();
+  const [lastValueProp, setLastValueProp] = React.useState(pickerContext.value);
   const [inputValue, setInputValue] = React.useState(() =>
-    createInputValue(valueProp, format),
+    createInputValue(pickerContext.value, pickerContext.fieldFormat),
   );
 
-  if (lastValueProp !== valueProp) {
-    setLastValueProp(valueProp);
-    if (valueProp && valueProp.isValid()) {
-      setInputValue(createInputValue(valueProp, format));
+  if (lastValueProp !== pickerContext.value) {
+    setLastValueProp(pickerContext.value);
+    if (pickerContext.value && pickerContext.value.isValid()) {
+      setInputValue(
+        createInputValue(pickerContext.value, pickerContext.fieldFormat),
+      );
     }
   }
 
