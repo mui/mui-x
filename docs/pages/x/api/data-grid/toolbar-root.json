@@ -4,6 +4,7 @@
   },
   "name": "ToolbarRoot",
   "imports": [
+    "import { ToolbarRoot } from '@mui/x-data-grid/components';",
     "import { ToolbarRoot } from '@mui/x-data-grid';",
     "import { ToolbarRoot } from '@mui/x-data-grid-pro';",
     "import { ToolbarRoot } from '@mui/x-data-grid-premium';"
@@ -11,8 +12,8 @@
   "classes": [],
   "muiName": "MuiToolbarRoot",
   "forwardsRefTo": "GridRoot",
-  "filename": "/packages/x-data-grid/src/components/toolbar/ToolbarRoot.tsx",
+  "filename": "/packages/x-data-grid/src/components/toolbarV8/ToolbarRoot.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/toolbar\">Toolbar</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/components/toolbar\">Data Grid - Toolbar</a></li></ul>",
   "cssComponent": false
 }

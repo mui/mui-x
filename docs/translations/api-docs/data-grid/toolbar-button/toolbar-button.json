@@ -7,7 +7,6 @@
     "centerRipple": {
       "description": "If <code>true</code>, the ripples are centered. They won&#39;t start at the cursor interaction position."
     },
-    "className": { "description": "Override or extend the styles applied to the component." },
     "color": {
       "description": "The color of the component. It supports both default and custom theme colors, which can be added as shown in the <a href=\"https://mui.com/material-ui/customization/palette/#custom-colors\">palette customization guide</a>."
     },

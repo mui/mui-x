@@ -16,8 +16,8 @@ const COMPONENT_API_PAGES = [
   'src/components/panel/filterPanel/GridFilterPanel.tsx',
   'src/components/toolbar/GridToolbarQuickFilter.tsx',
 
-  'src/components/toolbar/ToolbarRoot.tsx',
-  'src/components/toolbar/ToolbarButton.tsx',
+  'src/components/toolbarV8/ToolbarRoot.tsx',
+  'src/components/toolbarV8/ToolbarButton.tsx',
   'src/components/export/ExportPrint.tsx',
   'src/components/export/ExportCsv.tsx',
   'src/components/export/ExportExcel.tsx',
