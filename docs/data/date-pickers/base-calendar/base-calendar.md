@@ -41,6 +41,12 @@ packageName: '@mui/x-date-pickers'
 
 ### With validation
 
+```tsx
+<Calendar.Root disablePast shouldDisableDate={shouldDisableDate}>
+  {children}
+</Calendar.Root>
+```
+
 {{"demo": "DayCalendarWithValidationDemo.js", "defaultCodeOpen": false}}
 
 ### With fixed week number
