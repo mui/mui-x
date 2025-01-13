@@ -41,6 +41,8 @@ packageName: '@mui/x-date-pickers'
 
 ### With validation
 
+For now, the validation behaviors are exactly the same as on `<DateCalendar />`:
+
 ```tsx
 <Calendar.Root disablePast>{children}</Calendar.Root>
 ```
