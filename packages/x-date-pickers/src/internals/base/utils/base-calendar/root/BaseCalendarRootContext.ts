@@ -17,11 +17,6 @@ export interface BaseCalendarRootContext {
    * Whether the calendar is read-only.
    */
   readOnly: boolean;
-  // TODO: Implement the behavior.
-  /**
-   * Whether the calendar should auto-focus on mount.
-   */
-  autoFocus: boolean;
   /**
    * The date currently visible.
    * It is used to determine:

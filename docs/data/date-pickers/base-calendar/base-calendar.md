@@ -42,9 +42,7 @@ packageName: '@mui/x-date-pickers'
 ### With validation
 
 ```tsx
-<Calendar.Root disablePast shouldDisableDate={shouldDisableDate}>
-  {children}
-</Calendar.Root>
+<Calendar.Root disablePast>{children}</Calendar.Root>
 ```
 
 {{"demo": "DayCalendarWithValidationDemo.js", "defaultCodeOpen": false}}
@@ -206,6 +204,12 @@ It's due to the DOM structure and the user can easily reproduce the old behavior
 :::
 
 {{"demo": "DayRangeCalendarWithTwoMonthsDemo.js", "defaultCodeOpen": false}}
+
+### Recipe: Booking UI
+
+The following demo shows a more advanced use case with lazy-loaded validation data:
+
+{{"demo": "DayRangeCalendarAirbnbRecipe.js", "defaultCodeOpen": false}}
 
 ## Date Range Calendar
 

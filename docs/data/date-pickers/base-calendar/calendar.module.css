@@ -217,8 +217,11 @@
   }
 
   &:not([data-outside-month]):disabled {
-    text-decoration: line-through;
     color: var(--cell-disabled-color);
+  }
+
+  &:not([data-outside-month])[data-invalid] {
+    text-decoration: line-through;
   }
 
   &[data-outside-month] {

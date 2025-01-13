@@ -1,5 +1,6 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
+import useControlled from '@mui/utils/useControlled';
 import {
   OnErrorProps,
   PickerChangeImportance,
@@ -29,17 +30,20 @@ export function useBaseCalendarRoot<
     readOnly = false,
     disabled = false,
     // Focus and navigation props
-    autoFocus = false,
     monthPageSize = 1,
     yearPageSize = 1,
     // Value props
-    onError,
     defaultValue,
     onValueChange,
     value: valueProp,
     timezone: timezoneProp,
     referenceDate: referenceDateProp,
+    // Visible date props
+    onVisibleDateChange,
+    visibleDate: visibleDateProp,
+    defaultVisibleDate,
     // Validation props
+    onError,
     dateValidationProps,
     valueValidationProps,
     // Manager props
@@ -56,7 +60,7 @@ export function useBaseCalendarRoot<
   const adapter = useLocalizationContext();
 
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
-    name: 'CalendarRoot',
+    name: '(Range)CalendarRoot',
     timezone: timezoneProp,
     value: valueProp,
     defaultValue,
@@ -119,13 +123,20 @@ export function useBaseCalendarRoot<
     return true;
   };
 
-  const [visibleDate, setVisibleDate] = React.useState<PickerValidDate>(referenceDate);
+  const [visibleDate, setVisibleDate] = useControlled({
+    name: '(Range)CalendarRoot',
+    state: 'visibleDate',
+    controlled: visibleDateProp,
+    default: defaultVisibleDate ?? referenceDate,
+  });
+
   const handleVisibleDateChange = useEventCallback(
     (newVisibleDate: PickerValidDate, skipIfAlreadyVisible: boolean) => {
       if (skipIfAlreadyVisible && isDateCellVisible(newVisibleDate)) {
         return;
       }
 
+      onVisibleDateChange?.(newVisibleDate);
       setVisibleDate(newVisibleDate);
     },
   );
@@ -189,7 +200,6 @@ export function useBaseCalendarRoot<
       timezone,
       disabled,
       readOnly,
-      autoFocus,
       isDateInvalid,
       visibleDate,
       currentDate,
@@ -207,7 +217,6 @@ export function useBaseCalendarRoot<
       timezone,
       disabled,
       readOnly,
-      autoFocus,
       isDateInvalid,
       visibleDate,
       currentDate,
@@ -240,12 +249,12 @@ export namespace useBaseCalendarRoot {
       OnErrorProps<TValue, TError> {
     /**
      * The controlled value that should be selected.
-     * To render an uncontrolled Date Calendar, use the `defaultValue` prop instead.
+     * To render an uncontrolled Calendar, use the `defaultValue` prop instead.
      */
     value?: TValue;
     /**
      * The uncontrolled value that should be initially selected.
-     * To render a controlled accordion, use the `value` prop instead.
+     * To render a controlled Calendar, use the `value` prop instead.
      */
     defaultValue?: TValue;
     /**
@@ -259,16 +268,26 @@ export namespace useBaseCalendarRoot {
       context: useBaseCalendarRoot.ValueChangeHandlerContext<TError>,
     ) => void;
     /**
+     * The date used to decide which month should be displayed in the Days Grid and which year should be displayed in the Months List and Months Grid.
+     * To render an uncontrolled Calendar, use the `defaultVisibleDate` prop instead.
+     */
+    visibleDate?: PickerValidDate;
+    /**
+     * The date used to decide which month should be initially displayed in the Days Grid and which year should be initially displayed in the Months List and Months Grid.
+     * To render a controlled Calendar, use the `visibleDate` prop instead.
+     */
+    defaultVisibleDate?: PickerValidDate;
+    /**
      * The date used to generate the new value when both `value` and `defaultValue` are empty.
      * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.
      */
     referenceDate?: PickerValidDate;
     /**
-     * If `true`, one of the cells will be automatically focused when the component is mounted.
-     * If a value or a default value is provided, the focused cell will be the one corresponding to the selected date.
-     * @default false
+     * Event handler called when the visible date changes.
+     * Provides the new visible date as an argument.
+     * @param {PickerValidDate} visibleDate The new visible date.
      */
-    autoFocus?: boolean;
+    onVisibleDateChange?: (visibleDate: PickerValidDate) => void;
     /**
      * The amount of months to navigate by when pressing <Calendar.SetVisibleMonth /> or when using keyboard navigation in the day grid.
      * This is mostly useful when displaying multiple day grids.

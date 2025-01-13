@@ -20,7 +20,24 @@ const RangeCalendarRoot = React.forwardRef(function RangeCalendarRoot(
     // Rendering props
     className,
     render,
+    // Form props
+    readOnly,
+    disabled,
+    // Focus and navigation props
+    monthPageSize,
+    yearPageSize,
+    // Value props
+    onValueChange,
+    defaultValue,
+    value,
+    timezone,
+    referenceDate,
+    // Visible date props
+    onVisibleDateChange,
+    visibleDate,
+    defaultVisibleDate,
     // Validation props
+    onError,
     minDate,
     maxDate,
     disablePast,
@@ -34,35 +51,24 @@ const RangeCalendarRoot = React.forwardRef(function RangeCalendarRoot(
     // Other range-specific parameters
     disableDragEditing,
     disableHoverPreview,
-    // Form props
-    readOnly,
-    disabled,
-    // Focus and navigation props
-    autoFocus,
-    monthPageSize,
-    yearPageSize,
-    // Value props
-    onError,
-    defaultValue,
-    onValueChange,
-    value,
-    timezone,
-    referenceDate,
+
     // Props forwarded to the DOM element
     ...otherProps
   } = props;
   const { getRootProps, context, baseContext } = useRangeCalendarRoot({
     readOnly,
     disabled,
-    autoFocus,
-    onError,
+    monthPageSize,
+    yearPageSize,
     defaultValue,
     onValueChange,
     value,
     timezone,
     referenceDate,
-    monthPageSize,
-    yearPageSize,
+    onVisibleDateChange,
+    visibleDate,
+    defaultVisibleDate,
+    onError,
     shouldDisableDate,
     disablePast,
     disableFuture,

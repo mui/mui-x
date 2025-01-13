@@ -16,7 +16,24 @@ const CalendarRoot = React.forwardRef(function CalendarRoot(
     // Rendering props
     className,
     render,
+    // Form props
+    readOnly,
+    disabled,
+    // Focus and navigation props
+    monthPageSize,
+    yearPageSize,
+    // Value props
+    onValueChange,
+    defaultValue,
+    value,
+    timezone,
+    referenceDate,
+    // Visible date props
+    onVisibleDateChange,
+    visibleDate,
+    defaultVisibleDate,
     // Validation props
+    onError,
     minDate,
     maxDate,
     disablePast,
@@ -24,35 +41,23 @@ const CalendarRoot = React.forwardRef(function CalendarRoot(
     shouldDisableDate,
     shouldDisableMonth,
     shouldDisableYear,
-    // Form props
-    readOnly,
-    disabled,
-    // Focus and navigation props
-    autoFocus,
-    monthPageSize,
-    yearPageSize,
-    // Value props
-    onError,
-    defaultValue,
-    onValueChange,
-    value,
-    timezone,
-    referenceDate,
     // Props forwarded to the DOM element
     ...otherProps
   } = props;
   const { getRootProps, context, baseContext } = useCalendarRoot({
     readOnly,
     disabled,
-    autoFocus,
-    onError,
-    defaultValue,
+    monthPageSize,
+    yearPageSize,
     onValueChange,
+    defaultValue,
     value,
     timezone,
     referenceDate,
-    monthPageSize,
-    yearPageSize,
+    onVisibleDateChange,
+    visibleDate,
+    defaultVisibleDate,
+    onError,
     shouldDisableDate,
     shouldDisableMonth,
     shouldDisableYear,
