@@ -25,10 +25,40 @@ function Header() {
   );
 }
 
-function DayCalendar(props) {
+const ALREADY_BOOKED_NIGHTS = [
+  dayjs().add(3, 'day'),
+  dayjs().add(8, 'day'),
+  dayjs().add(9, 'day'),
+  dayjs().add(10, 'day'),
+  dayjs().add(13, 'day'),
+  dayjs().add(14, 'day'),
+  dayjs().add(15, 'day'),
+  dayjs().add(16, 'day'),
+  dayjs().add(17, 'day'),
+  dayjs().add(27, 'day'),
+  dayjs().add(28, 'day'),
+  dayjs().add(29, 'day'),
+  dayjs().add(30, 'day'),
+  dayjs().add(45, 'day'),
+  dayjs().add(46, 'day'),
+  dayjs().add(48, 'day'),
+  dayjs().add(49, 'day'),
+];
+
+const ALREADY_BOOKED_NIGHTS_SET = new Set(
+  ALREADY_BOOKED_NIGHTS.map((date) => date.format('YYYY-MM-DD')),
+);
+
+export default function DayCalendarWithValidationDemo() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Calendar.Root {...props} className={styles.Root}>
+      <Calendar.Root
+        disablePast
+        shouldDisableDate={(date) =>
+          ALREADY_BOOKED_NIGHTS_SET.has(date.format('YYYY-MM-DD'))
+        }
+        className={styles.Root}
+      >
         <Header />
         <Calendar.DaysGrid className={styles.DaysGrid}>
           <Calendar.DaysGridHeader className={styles.DaysGridHeader}>
@@ -65,51 +95,6 @@ function DayCalendar(props) {
           </Calendar.DaysGridBody>
         </Calendar.DaysGrid>
       </Calendar.Root>
-    </LocalizationProvider>
-  );
-}
-
-const ALREADY_BOOKED_NIGHTS = [
-  dayjs().add(3, 'day'),
-  dayjs().add(8, 'day'),
-  dayjs().add(9, 'day'),
-  dayjs().add(10, 'day'),
-  dayjs().add(13, 'day'),
-  dayjs().add(14, 'day'),
-  dayjs().add(15, 'day'),
-  dayjs().add(16, 'day'),
-  dayjs().add(17, 'day'),
-  dayjs().add(27, 'day'),
-  dayjs().add(28, 'day'),
-  dayjs().add(29, 'day'),
-  dayjs().add(30, 'day'),
-  dayjs().add(45, 'day'),
-  dayjs().add(46, 'day'),
-  dayjs().add(48, 'day'),
-  dayjs().add(49, 'day'),
-];
-
-const ALREADY_BOOKED_NIGHTS_SET = new Set(
-  ALREADY_BOOKED_NIGHTS.map((date) => date.format('YYYY-MM-DD')),
-);
-
-export default function DayCalendarWithValidationDemo() {
-  const [value, setValue] = React.useState(null);
-
-  const handleValueChange = React.useCallback((newValue) => {
-    setValue(newValue);
-  }, []);
-
-  return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DayCalendar
-        value={value}
-        onValueChange={handleValueChange}
-        disablePast
-        shouldDisableDate={(date) =>
-          ALREADY_BOOKED_NIGHTS_SET.has(date.format('YYYY-MM-DD'))
-        }
-      />
     </LocalizationProvider>
   );
 }

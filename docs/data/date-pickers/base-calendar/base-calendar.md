@@ -185,6 +185,26 @@ Using the `getItems` prop instead of manually providing a list of `<Calendar.Yea
 
 ### Multiple visible months
 
+:::success
+Diff compared to the current `<DateRangeCalendar />`: change in the <kbd>Tab</kbd> sequence.
+
+On the demo below:
+
+1. Previous month button
+2. Next month button
+3. Start date button
+4. End date button
+
+On the existing Date Range Calendar:
+
+1. Previous month button
+2. Start date button
+3. Next month button
+4. End date button
+
+It's due to the DOM structure and the user can easily reproduce the old behavior, but I found the new one more coherent.
+:::
+
 {{"demo": "DayRangeCalendarWithTwoMonthsDemo.js", "defaultCodeOpen": false}}
 
 ## Date Range Calendar

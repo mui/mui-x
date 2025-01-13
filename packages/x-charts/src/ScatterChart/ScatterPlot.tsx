@@ -2,9 +2,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Scatter, ScatterProps } from './Scatter';
-import { useCartesianContext } from '../context/CartesianProvider';
 import getColor from './getColor';
 import { useScatterSeries } from '../hooks/useSeries';
+import { useXAxes, useYAxes } from '../hooks';
 import { useZAxis } from '../hooks/useZAxis';
 
 export interface ScatterPlotSlots {
@@ -41,14 +41,14 @@ export interface ScatterPlotProps extends Pick<ScatterProps, 'onItemClick'> {
 function ScatterPlot(props: ScatterPlotProps) {
   const { slots, slotProps, onItemClick } = props;
   const seriesData = useScatterSeries();
-  const axisData = useCartesianContext();
+  const { xAxis, xAxisIds } = useXAxes();
+  const { yAxis, yAxisIds } = useYAxes();
   const { zAxis, zAxisIds } = useZAxis();
 
   if (seriesData === undefined) {
     return null;
   }
   const { series, seriesOrder } = seriesData;
-  const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];
 

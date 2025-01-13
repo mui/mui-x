@@ -1,8 +1,0 @@
-<DayCalendar
-  value={value}
-  onValueChange={handleValueChange}
-  disablePast
-  shouldDisableDate={(date) =>
-    ALREADY_BOOKED_NIGHTS_SET.has(date.format('YYYY-MM-DD'))
-  }
-/>

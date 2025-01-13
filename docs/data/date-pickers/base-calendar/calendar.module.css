@@ -31,12 +31,12 @@
 
 .RootWithTwoPanels {
   width: 564px;
-  flex-direction: row;
-  justify-content: space-between;
 }
 
-.Panel {
-  width: 276px;
+.RootWithTwoPanelsContent {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .Header {
@@ -52,6 +52,12 @@
   display: flex;
   gap: 4px;
   justify-content: center;
+}
+
+.HeaderPanel {
+  display: flex;
+  flex-grow: 1;
+  justify-content: space-between;
 }
 
 .SetVisibleMonth,
@@ -147,6 +153,7 @@
 
 .DaysGrid {
   padding: 12px;
+  height: 276px;
   display: flex;
   flex-direction: column;
   gap: 4px;
