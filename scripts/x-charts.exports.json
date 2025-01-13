@@ -299,6 +299,8 @@
   { "name": "unstable_useSeries", "kind": "Function" },
   { "name": "useAxisTooltip", "kind": "Function" },
   { "name": "UseAxisTooltipReturnValue", "kind": "Interface" },
+  { "name": "useChartGradientId", "kind": "Function" },
+  { "name": "useChartGradientIdObjectBound", "kind": "Function" },
   { "name": "useChartId", "kind": "Function" },
   { "name": "useDrawingArea", "kind": "Function" },
   { "name": "useGaugeState", "kind": "Function" },

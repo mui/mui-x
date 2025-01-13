@@ -12,3 +12,4 @@ export {
   useScatterSeries as unstable_useScatterSeries,
 } from './useSeries';
 export * from './useLegend';
+export { useChartGradientId, useChartGradientIdObjectBound } from './useChartGradientId';
