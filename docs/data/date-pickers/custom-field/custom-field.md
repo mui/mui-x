@@ -164,8 +164,8 @@ Unlike the field components exposed by `@mui/x-date-pickers` and `@mui/x-date-pi
 
 ### Typing
 
-Each picker component exposes an interface describing the props it passes to its field.
-You can import it from the same endpoint as the picker component and use it to type the props of your field:
+Each Picker component exposes an interface describing the props it passes to its field.
+You can import it from the same endpoint as the Picker component and use it to type the props of your field:
 
 ```tsx
 import { DatePickerFieldProps } from '@mui/x-date-pickers/DatePicker';
@@ -202,7 +202,7 @@ const {
   // For example: "minDate" if `props.value < props.minDate`.
   validationError,
   // `true` if the value is invalid.
-  // On range pickers it is true if the start date or the end date is invalid.
+  // On range Pickers it is true if the start date or the end date is invalid.
   hasValidationError,
   // Imperatively get the error of a value.
   getValidationErrorForNewValue,
@@ -243,7 +243,7 @@ The format returned by `useParsedFormat` cannot be parsed by your date library.
 ```js
 import { useParsedFormat } from '@mui/x-date-pickers/hooks';
 
-// Uses the format defined by your picker
+// Uses the format defined by your Picker
 const parsedFormat = useParsedFormat();
 
 // Uses the custom format provided
@@ -283,9 +283,9 @@ return (
 
 :::
 
-### Pass the field to the picker
+### Pass the field to the Picker
 
-You can pass your custom field to your picker using the `field` slot:
+You can pass your custom field to your Picker using the `field` slot:
 
 ```tsx
 function DatePickerWithCustomField() {
