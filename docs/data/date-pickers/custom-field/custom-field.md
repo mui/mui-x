@@ -275,11 +275,11 @@ return (
 ```
 
 :::success
-The `forwardedProps` contain props like `slots`, `slotProps` and `sx` that are specific to MUI.
-You can omit them if the component your are forwarding the props to does not support those concepts:
+The `forwardedProps` contains the `sx` which is specific to MUI.
+You can omit it if the component your are forwarding the props to does not support this concept:
 
 ```jsx
-const { slots, slotProps, sx, ...other } = props;
+const { sx, ...other } = props;
 const { internalProps, forwardedProps } = useSplitFieldProps(other, 'date');
 
 return (

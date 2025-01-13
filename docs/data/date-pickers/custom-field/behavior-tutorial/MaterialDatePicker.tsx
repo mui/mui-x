@@ -16,9 +16,7 @@ import {
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 
 function CustomDateField(props: DatePickerFieldProps) {
-  // TextField does not support slots and slotProps before `@mui/material` v6.0
-  const { slots, slotProps, ...other } = props;
-  const { internalProps, forwardedProps } = useSplitFieldProps(other, 'date');
+  const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
 
   const pickerContext = usePickerContext();
   const placeholder = useParsedFormat();
