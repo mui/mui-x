@@ -4,9 +4,9 @@
   },
   "name": "ToolbarButton",
   "imports": [
-    "import { ToolbarButton } from '@mui/x-data-grid/primitives';",
-    "import { ToolbarButton } from '@mui/x-data-grid-pro/primitives';",
-    "import { ToolbarButton } from '@mui/x-data-grid-premium/primitives';"
+    "import { ToolbarButton } from '@mui/x-data-grid';",
+    "import { ToolbarButton } from '@mui/x-data-grid-pro';",
+    "import { ToolbarButton } from '@mui/x-data-grid-premium';"
   ],
   "classes": [
     {
@@ -96,8 +96,8 @@
   ],
   "muiName": "MuiToolbarButton",
   "forwardsRefTo": "GridRoot",
-  "filename": "/packages/x-data-grid/src/primitives/toolbar/ToolbarButton.tsx",
+  "filename": "/packages/x-data-grid/src/components/toolbar/ToolbarButton.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/primitives/toolbar\">Toolbar</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/toolbar\">Toolbar</a></li></ul>",
   "cssComponent": false
 }

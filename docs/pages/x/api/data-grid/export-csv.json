@@ -10,9 +10,10 @@
   },
   "name": "ExportCsv",
   "imports": [
-    "import { ExportCsv } from '@mui/x-data-grid/primitives';",
-    "import { ExportCsv } from '@mui/x-data-grid-pro/primitives';",
-    "import { ExportCsv } from '@mui/x-data-grid-premium/primitives';"
+    "import { ExportCsv } from '@mui/x-data-grid/components';",
+    "import { ExportCsv } from '@mui/x-data-grid';",
+    "import { ExportCsv } from '@mui/x-data-grid-pro';",
+    "import { ExportCsv } from '@mui/x-data-grid-premium';"
   ],
   "classes": [
     {
@@ -375,8 +376,8 @@
   ],
   "muiName": "MuiExportCsv",
   "forwardsRefTo": "GridRoot",
-  "filename": "/packages/x-data-grid/src/primitives/export/ExportCsv.tsx",
+  "filename": "/packages/x-data-grid/src/components/export/ExportCsv.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/primitives/export\">Export</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/export\">Export</a></li></ul>",
   "cssComponent": false
 }

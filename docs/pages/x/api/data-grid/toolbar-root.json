@@ -4,15 +4,15 @@
   },
   "name": "ToolbarRoot",
   "imports": [
-    "import { ToolbarRoot } from '@mui/x-data-grid/primitives';",
-    "import { ToolbarRoot } from '@mui/x-data-grid-pro/primitives';",
-    "import { ToolbarRoot } from '@mui/x-data-grid-premium/primitives';"
+    "import { ToolbarRoot } from '@mui/x-data-grid';",
+    "import { ToolbarRoot } from '@mui/x-data-grid-pro';",
+    "import { ToolbarRoot } from '@mui/x-data-grid-premium';"
   ],
   "classes": [],
   "muiName": "MuiToolbarRoot",
   "forwardsRefTo": "GridRoot",
-  "filename": "/packages/x-data-grid/src/primitives/toolbar/ToolbarRoot.tsx",
+  "filename": "/packages/x-data-grid/src/components/toolbar/ToolbarRoot.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/primitives/toolbar\">Toolbar</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/toolbar\">Toolbar</a></li></ul>",
   "cssComponent": false
 }

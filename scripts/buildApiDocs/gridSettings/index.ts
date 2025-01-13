@@ -16,16 +16,16 @@ const COMPONENT_API_PAGES = [
   'src/components/panel/filterPanel/GridFilterPanel.tsx',
   'src/components/toolbar/GridToolbarQuickFilter.tsx',
 
-  'src/primitives/toolbar/ToolbarRoot.tsx',
-  'src/primitives/toolbar/ToolbarButton.tsx',
-  'src/primitives/export/ExportPrint.tsx',
-  'src/primitives/export/ExportCsv.tsx',
-  'src/primitives/export/ExportExcel.tsx',
-  'src/primitives/quickFilter/QuickFilterRoot.tsx',
-  'src/primitives/quickFilter/QuickFilterControl.tsx',
-  'src/primitives/quickFilter/QuickFilterClear.tsx',
-  'src/primitives/filterPanel/FilterPanelTrigger.tsx',
-  'src/primitives/columnsPanel/ColumnsPanelTrigger.tsx',
+  'src/components/toolbar/ToolbarRoot.tsx',
+  'src/components/toolbar/ToolbarButton.tsx',
+  'src/components/export/ExportPrint.tsx',
+  'src/components/export/ExportCsv.tsx',
+  'src/components/export/ExportExcel.tsx',
+  'src/components/quickFilter/QuickFilterRoot.tsx',
+  'src/components/quickFilter/QuickFilterControl.tsx',
+  'src/components/quickFilter/QuickFilterClear.tsx',
+  'src/components/filterPanel/FilterPanelTrigger.tsx',
+  'src/components/columnsPanel/ColumnsPanelTrigger.tsx',
 ];
 
 export const projectGridSettings: ProjectSettings = {
@@ -62,17 +62,17 @@ export default dataGridApiPages;
     {
       name: 'data-grid',
       rootPath: path.join(process.cwd(), 'packages/x-data-grid'),
-      entryPointPath: ['src/index.ts', 'src/primitives/index.ts'],
+      entryPointPath: ['src/index.ts'],
     },
     {
       name: 'data-grid-pro',
       rootPath: path.join(process.cwd(), 'packages/x-data-grid-pro'),
-      entryPointPath: ['src/index.ts', 'src/primitives/index.ts'],
+      entryPointPath: ['src/index.ts'],
     },
     {
       name: 'data-grid-premium',
       rootPath: path.join(process.cwd(), 'packages/x-data-grid-premium'),
-      entryPointPath: ['src/index.ts', 'src/primitives/index.ts'],
+      entryPointPath: ['src/index.ts'],
     },
   ],
   getApiPages: () => findApiPages('docs/pages/x/api/data-grid'),

@@ -10,9 +10,6 @@
 - [GridFilterForm](/x/api/data-grid/grid-filter-form/)
 - [GridFilterPanel](/x/api/data-grid/grid-filter-panel/)
 - [GridToolbarQuickFilter](/x/api/data-grid/grid-toolbar-quick-filter/)
-
-## Primitive components
-
 - [ToolbarRoot](/x/api/data-grid/toolbar-root/)
 - [ToolbarButton](/x/api/data-grid/toolbar-button/)
 - [ExportCsv](/x/api/data-grid/export-csv/)

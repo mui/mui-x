@@ -22,15 +22,16 @@
   },
   "name": "QuickFilterRoot",
   "imports": [
-    "import { QuickFilterRoot } from '@mui/x-data-grid/primitives';",
-    "import { QuickFilterRoot } from '@mui/x-data-grid-pro/primitives';",
-    "import { QuickFilterRoot } from '@mui/x-data-grid-premium/primitives';"
+    "import { QuickFilterRoot } from '@mui/x-data-grid/components';",
+    "import { QuickFilterRoot } from '@mui/x-data-grid';",
+    "import { QuickFilterRoot } from '@mui/x-data-grid-pro';",
+    "import { QuickFilterRoot } from '@mui/x-data-grid-premium';"
   ],
   "classes": [],
   "muiName": "MuiQuickFilterRoot",
   "forwardsRefTo": "GridRoot",
-  "filename": "/packages/x-data-grid/src/primitives/quickFilter/QuickFilterRoot.tsx",
+  "filename": "/packages/x-data-grid/src/components/quickFilter/QuickFilterRoot.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/primitives/quick-filter\">Quick Filter</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/quick-filter\">Quick Filter</a></li></ul>",
   "cssComponent": false
 }

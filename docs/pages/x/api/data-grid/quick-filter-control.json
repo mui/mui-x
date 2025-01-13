@@ -5,9 +5,10 @@
   },
   "name": "QuickFilterControl",
   "imports": [
-    "import { QuickFilterControl } from '@mui/x-data-grid/primitives';",
-    "import { QuickFilterControl } from '@mui/x-data-grid-pro/primitives';",
-    "import { QuickFilterControl } from '@mui/x-data-grid-premium/primitives';"
+    "import { QuickFilterControl } from '@mui/x-data-grid/components';",
+    "import { QuickFilterControl } from '@mui/x-data-grid';",
+    "import { QuickFilterControl } from '@mui/x-data-grid-pro';",
+    "import { QuickFilterControl } from '@mui/x-data-grid-premium';"
   ],
   "classes": [
     {
@@ -19,8 +20,8 @@
   ],
   "muiName": "MuiQuickFilterControl",
   "forwardsRefTo": "GridRoot",
-  "filename": "/packages/x-data-grid/src/primitives/quickFilter/QuickFilterControl.tsx",
+  "filename": "/packages/x-data-grid/src/components/quickFilter/QuickFilterControl.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/primitives/quick-filter\">Quick Filter</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/quick-filter\">Quick Filter</a></li></ul>",
   "cssComponent": false
 }

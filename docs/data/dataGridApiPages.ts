@@ -60,13 +60,5 @@ const dataGridApiPages: MuiPage[] = [
     pathname: '/x/api/data-grid/quick-filter-root',
     title: 'QuickFilterRoot',
   },
-  {
-    pathname: '/x/api/data-grid/toolbar-button',
-    title: 'ToolbarButton',
-  },
-  {
-    pathname: '/x/api/data-grid/toolbar-root',
-    title: 'ToolbarRoot',
-  },
 ];
 export default dataGridApiPages;

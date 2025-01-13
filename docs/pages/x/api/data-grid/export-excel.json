@@ -9,7 +9,10 @@
     "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
   },
   "name": "ExportExcel",
-  "imports": ["import { ExportExcel } from '@mui/x-data-grid-premium/primitives';"],
+  "imports": [
+    "import { ExportExcel } from '@mui/x-data-grid-premium/components';",
+    "import { ExportExcel } from '@mui/x-data-grid-premium';"
+  ],
   "classes": [
     {
       "key": "colorError",
@@ -371,8 +374,8 @@
   ],
   "muiName": "MuiExportExcel",
   "forwardsRefTo": "GridRoot",
-  "filename": "/packages/x-data-grid-premium/src/primitives/export/ExportExcel.tsx",
+  "filename": "/packages/x-data-grid-premium/src/components/export/ExportExcel.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/primitives/export\">Export</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/export\">Export</a></li></ul>",
   "cssComponent": false
 }

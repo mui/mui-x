@@ -32,8 +32,8 @@ export function getComponentInfo(filename: string): ComponentInfo {
     slotInterfaceName: `${name.replace('DataGrid', 'Grid')}SlotsComponent`,
     getInheritance: () => null, // TODO: Support inheritance
     getDemos: () => {
-      if (filename.includes('/primitives/')) {
-        const componentCamelCase = filename.split('/primitives/')[1].split('/')[0];
+      if (filename.includes('/components/')) {
+        const componentCamelCase = filename.split('/components/')[1].split('/')[0];
         const componentKebabCase = kebabCase(componentCamelCase);
         const componentTitleCase =
           componentCamelCase.charAt(0).toUpperCase() +
@@ -44,7 +44,7 @@ export function getComponentInfo(filename: string): ComponentInfo {
 
         return [
           {
-            demoPathname: `/x/react-data-grid/primitives/${componentKebabCase}`,
+            demoPathname: `/x/react-data-grid/components/${componentKebabCase}`,
             demoPageTitle: componentTitleCase,
           },
         ];
@@ -87,13 +87,6 @@ export function getComponentImports(name: string, filename: string) {
   }
   if (rootImportPath === '@mui/x-data-grid-pro') {
     reExportPackage.push('@mui/x-data-grid-premium');
-  }
-
-  if (filename.includes('/primitives/')) {
-    // For primitives, only show imports from the /primitives subdirectory
-    return reExportPackage.map(
-      (importPath) => `import { ${name} } from '${importPath}/primitives';`,
-    );
   }
 
   return [
