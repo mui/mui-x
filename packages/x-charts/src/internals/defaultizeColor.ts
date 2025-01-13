@@ -18,7 +18,11 @@ export function defaultizeColor(
   seriesIndex: number,
   colors = DEFAULT_COLORS,
 ) {
-  if (series.type === 'pie') {
+  if (
+    series.type === 'pie' ||
+    // @ts-expect-error funnel is a pro feature
+    series.type === 'funnel'
+  ) {
     return {
       ...series,
       data: series.data.map((d, index) => ({ color: colors[index % colors.length], ...d })),

@@ -303,7 +303,7 @@ const useAggregatedData = (funnelLabel: FunnelPlotProps['funnelLabel']) => {
         };
 
         return stackedData.map((values, dataIndex) => {
-          const color = series[seriesId][dataIndex]?.color ?? 'pink';
+          const color = series[seriesId].data[dataIndex].color!;
           const id = `${seriesId}-${dataIndex}`;
 
           const line = d3Line<FunnelStackedData>()
