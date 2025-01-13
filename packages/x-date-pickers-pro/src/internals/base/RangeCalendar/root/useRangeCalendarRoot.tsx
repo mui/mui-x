@@ -180,7 +180,7 @@ export function useRangeCalendarRoot(parameters: useRangeCalendarRoot.Parameters
     return mergeReactProps(externalProps, {});
   }, []);
 
-  const isEmpty = React.useMemo(() => value[0] == null && value[1] == null, [value]);
+  const isEmpty = value[0] == null && value[1] == null;
 
   return React.useMemo(
     () => ({ getRootProps, context, baseContext, isEmpty }),
