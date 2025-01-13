@@ -14,10 +14,20 @@ import {
 import { useMonthsCells } from '../utils/useMonthsCells';
 
 export function useBaseCalendarMonthsGrid(parameters: useBaseCalendarMonthsGrid.Parameters) {
-  const { children, cellsPerRow, canChangeYear = true, cellsPerRowCssVar } = parameters;
+  const {
+    children,
+    cellsPerRow,
+    getItems,
+    focusOnMount,
+    canChangeYear = true,
+    cellsPerRowCssVar,
+  } = parameters;
   const baseRootContext = useBaseCalendarRootContext();
   const cellRefs = React.useRef<(HTMLElement | null)[]>([]);
-  const { months, monthsListOrGridContext, changePage, scrollerRef } = useMonthsCells();
+  const { items, monthsListOrGridContext, changePage, scrollerRef } = useMonthsCells({
+    getItems,
+    focusOnMount,
+  });
   const pageNavigationTargetRef = React.useRef<PageGridNavigationTarget | null>(null);
 
   const getCellsInCalendar = useEventCallback(() => {
@@ -67,14 +77,14 @@ export function useBaseCalendarMonthsGrid(parameters: useBaseCalendarMonthsGrid.
     (externalProps: GenericHTMLProps) => {
       return mergeReactProps(externalProps, {
         role: 'radiogroup',
-        children: children == null ? null : children({ months }),
+        children: children == null ? null : children({ months: items }),
         onKeyDown,
         style: {
           [cellsPerRowCssVar]: cellsPerRow,
         },
       });
     },
-    [months, children, onKeyDown, cellsPerRow, cellsPerRowCssVar],
+    [items, children, onKeyDown, cellsPerRow, cellsPerRowCssVar],
   );
 
   return React.useMemo(
@@ -84,7 +94,7 @@ export function useBaseCalendarMonthsGrid(parameters: useBaseCalendarMonthsGrid.
 }
 
 export namespace useBaseCalendarMonthsGrid {
-  export interface PublicParameters {
+  export interface PublicParameters extends useMonthsCells.Parameters {
     /**
      * The number of cells per row.
      * This is used to make sure the keyboard navigation works correctly.

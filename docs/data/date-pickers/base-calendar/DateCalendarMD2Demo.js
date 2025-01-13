@@ -49,14 +49,26 @@ function Header(props) {
 export default function DateCalendarMD2Demo() {
   const [value, setValue] = React.useState(null);
   const [activeSection, setActiveSection] = React.useState('day');
+  const [hasNavigated, setHasNavigated] = React.useState(false);
 
-  const handleValueChange = React.useCallback((newValue, context) => {
-    if (context.section === 'year') {
-      setActiveSection('day');
-    }
+  const handleActiveSectionChange = React.useCallback(
+    (newActiveSection) => {
+      setActiveSection(newActiveSection);
+      setHasNavigated(true);
+    },
+    [setActiveSection, setHasNavigated],
+  );
 
-    setValue(newValue);
-  }, []);
+  const handleValueChange = React.useCallback(
+    (newValue, context) => {
+      if (context.section === 'year') {
+        handleActiveSectionChange('day');
+      }
+
+      setValue(newValue);
+    },
+    [setValue, handleActiveSectionChange],
+  );
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -70,7 +82,11 @@ export default function DateCalendarMD2Demo() {
           onActiveSectionChange={setActiveSection}
         />
         {activeSection === 'year' && (
-          <Calendar.YearsGrid cellsPerRow={3} className={styles.YearsGrid}>
+          <Calendar.YearsGrid
+            cellsPerRow={3}
+            focusOnMount={hasNavigated}
+            className={styles.YearsGrid}
+          >
             {({ years }) =>
               years.map((year) => (
                 <Calendar.YearsCell
@@ -83,7 +99,7 @@ export default function DateCalendarMD2Demo() {
           </Calendar.YearsGrid>
         )}
         {activeSection === 'day' && (
-          <Calendar.DaysGrid className={styles.DaysGrid}>
+          <Calendar.DaysGrid focusOnMount={hasNavigated} className={styles.DaysGrid}>
             <Calendar.DaysGridHeader className={styles.DaysGridHeader}>
               {({ days }) =>
                 days.map((day) => (

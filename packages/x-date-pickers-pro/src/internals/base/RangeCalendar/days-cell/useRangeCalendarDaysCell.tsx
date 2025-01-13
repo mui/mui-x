@@ -11,8 +11,6 @@ import type { RangeCalendarRootContext } from '../root/RangeCalendarRootContext'
 export function useRangeCalendarDaysCell(parameters: useRangeCalendarDaysCell.Parameters) {
   const { ctx, value } = parameters;
 
-  const isDraggable = ctx.isSelectionStart || ctx.isSelectionEnd;
-
   const startDragging = () => {
     ctx.startDragging(ctx.isSelectionStart ? 'start' : 'end');
   };
@@ -103,7 +101,7 @@ export function useRangeCalendarDaysCell(parameters: useRangeCalendarDaysCell.Pa
     ctx.setDragTarget(target);
 
     // this prevents initiating drag when user starts touchmove outside and then moves over a draggable element
-    if (target !== event.changedTouches[0].target || !isDraggable) {
+    if (target !== event.changedTouches[0].target || !ctx.isDraggable) {
       return;
     }
 
@@ -145,7 +143,7 @@ export function useRangeCalendarDaysCell(parameters: useRangeCalendarDaysCell.Pa
       return mergeReactProps(
         externalProps,
         {
-          ...(isDraggable ? { draggable: true, onDragStart, onDrop, onTouchStart } : {}),
+          ...(ctx.isDraggable ? { draggable: true, onDragStart, onDrop, onTouchStart } : {}),
           onDragEnter,
           onDragLeave,
           onDragOver,
@@ -159,7 +157,7 @@ export function useRangeCalendarDaysCell(parameters: useRangeCalendarDaysCell.Pa
     },
     [
       getBaseDaysCellProps,
-      isDraggable,
+      ctx.isDraggable,
       onDragStart,
       onDragEnter,
       onDragLeave,
@@ -196,6 +194,7 @@ export namespace useRangeCalendarDaysCell {
         | 'setHoveredDate'
         | 'emptyDragImgRef'
       > {
+    isDraggable: boolean;
     isSelectionStart: boolean;
     isSelectionEnd: boolean;
     isPreviewed: boolean;

@@ -12,10 +12,21 @@ const CalendarMonthsGrid = React.forwardRef(function CalendarMonthsList(
   props: CalendarMonthsGrid.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, render, children, cellsPerRow, canChangeYear, ...otherProps } = props;
+  const {
+    className,
+    render,
+    children,
+    getItems,
+    focusOnMount,
+    cellsPerRow,
+    canChangeYear,
+    ...otherProps
+  } = props;
   const { getMonthsGridProps, cellRefs, monthsListOrGridContext, scrollerRef } =
     useBaseCalendarMonthsGrid({
       children,
+      getItems,
+      focusOnMount,
       cellsPerRow,
       canChangeYear,
       cellsPerRowCssVar: CalendarMonthsGridCssVars.calendarMonthsGridCellsPerRow,

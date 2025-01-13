@@ -3,7 +3,7 @@ import { PickerValidDate } from '../../../../../models';
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 
 export function useCellList(parameters: useCellList.Parameters): useCellList.ReturnValue {
-  const { section, value } = parameters;
+  const { section, value, focusOnMount = false } = parameters;
   const baseRootContext = useBaseCalendarRootContext();
 
   const registerSection = baseRootContext.registerSection;
@@ -11,45 +11,53 @@ export function useCellList(parameters: useCellList.Parameters): useCellList.Ret
     return registerSection({ type: section, value });
   }, [registerSection, value, section]);
 
+  const initialFocusOnMount = React.useRef(focusOnMount);
   const scrollerRef = React.useRef<HTMLElement>(null);
-  React.useEffect(
-    () => {
-      // TODO: Make sure this behavior remain consistent once auto focus is implemented.
-      if (/* autoFocus || */ scrollerRef.current === null) {
-        return;
-      }
-      const tabbableButton = scrollerRef.current.querySelector<HTMLElement>('[tabindex="0"]');
-      if (!tabbableButton) {
-        return;
-      }
+  React.useEffect(() => {
+    if (scrollerRef.current === null) {
+      return;
+    }
 
-      // Taken from useScroll in x-data-grid, but vertically centered
-      const offsetHeight = tabbableButton.offsetHeight;
-      const offsetTop = tabbableButton.offsetTop;
+    const tabbableButton = scrollerRef.current.querySelector<HTMLElement>('[tabindex="0"]');
+    if (!tabbableButton) {
+      return;
+    }
 
-      const clientHeight = scrollerRef.current.clientHeight;
-      const scrollTop = scrollerRef.current.scrollTop;
+    if (initialFocusOnMount.current) {
+      tabbableButton.focus();
+    }
 
-      const elementBottom = offsetTop + offsetHeight;
+    // Taken from useScroll in x-data-grid, but vertically centered
+    const offsetHeight = tabbableButton.offsetHeight;
+    const offsetTop = tabbableButton.offsetTop;
 
-      if (offsetHeight > clientHeight || offsetTop < scrollTop) {
-        // Button already visible
-        return;
-      }
+    const clientHeight = scrollerRef.current.clientHeight;
+    const scrollTop = scrollerRef.current.scrollTop;
 
-      scrollerRef.current.scrollTop = elementBottom - clientHeight / 2 - offsetHeight / 2;
-    },
-    [
-      /* autoFocus */
-    ],
-  );
+    const elementBottom = offsetTop + offsetHeight;
+
+    if (offsetHeight > clientHeight || offsetTop < scrollTop) {
+      // Button already visible
+      return;
+    }
+
+    scrollerRef.current.scrollTop = elementBottom - clientHeight / 2 - offsetHeight / 2;
+  }, []);
 
   return { scrollerRef };
 }
 
 export namespace useCellList {
-  export interface Parameters {
-    section: 'month' | 'year';
+  export interface PublicParameters {
+    /**
+     * If `true`, the first tabbable children inside this component will be focused on mount.
+     * @default false
+     */
+    focusOnMount?: boolean;
+  }
+
+  export interface Parameters extends PublicParameters {
+    section: 'day' | 'month' | 'year';
     value: PickerValidDate;
   }
 

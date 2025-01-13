@@ -17,10 +17,12 @@ const RangeCalendarYearsGrid = React.forwardRef(function CalendarYearsList(
   props: RangeCalendarYearsGrid.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, render, children, cellsPerRow, ...otherProps } = props;
+  const { className, render, children, cellsPerRow, getItems, focusOnMount, ...otherProps } = props;
   const { getYearsGridProps, yearsCellRefs, yearsListOrGridContext, scrollerRef } =
     useBaseCalendarYearsGrid({
       children,
+      getItems,
+      focusOnMount,
       cellsPerRow,
       cellsPerRowCssVar: RangeCalendarYearsGridCssVars.rangeCalendarYearsGridCellsPerRow,
     });

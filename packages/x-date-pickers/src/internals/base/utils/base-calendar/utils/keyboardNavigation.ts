@@ -62,7 +62,7 @@ export function navigateInList({
       break;
   }
 
-  if (nextIndex > -1) {
+  if (nextIndex > -1 && nextIndex < navigableCells.length) {
     navigableCells[nextIndex].focus();
   }
 }

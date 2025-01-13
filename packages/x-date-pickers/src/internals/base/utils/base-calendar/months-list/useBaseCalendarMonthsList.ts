@@ -14,10 +14,13 @@ import {
 import { useMonthsCells } from '../utils/useMonthsCells';
 
 export function useBaseCalendarMonthsList(parameters: useBaseCalendarMonthsList.Parameters) {
-  const { children, loop = true, canChangeYear = true } = parameters;
+  const { children, getItems, focusOnMount, loop = true, canChangeYear = true } = parameters;
   const baseRootContext = useBaseCalendarRootContext();
   const cellRefs = React.useRef<(HTMLElement | null)[]>([]);
-  const { months, monthsListOrGridContext, changePage, scrollerRef } = useMonthsCells();
+  const { items, monthsListOrGridContext, changePage, scrollerRef } = useMonthsCells({
+    getItems,
+    focusOnMount,
+  });
   const pageNavigationTargetRef = React.useRef<PageListNavigationTarget | null>(null);
 
   const timeout = useTimeout();
@@ -49,11 +52,11 @@ export function useBaseCalendarMonthsList(parameters: useBaseCalendarMonthsList.
     (externalProps: GenericHTMLProps) => {
       return mergeReactProps(externalProps, {
         role: 'radiogroup',
-        children: children == null ? null : children({ months }),
+        children: children == null ? null : children({ months: items }),
         onKeyDown,
       });
     },
-    [months, children, onKeyDown],
+    [items, children, onKeyDown],
   );
 
   return React.useMemo(
@@ -63,7 +66,7 @@ export function useBaseCalendarMonthsList(parameters: useBaseCalendarMonthsList.
 }
 
 export namespace useBaseCalendarMonthsList {
-  export interface Parameters {
+  export interface Parameters extends useMonthsCells.Parameters {
     /**
      * Whether to loop keyboard focus back to the first item
      * when the end of the list is reached while using the arrow keys.

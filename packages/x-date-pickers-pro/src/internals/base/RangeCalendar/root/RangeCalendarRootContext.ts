@@ -3,7 +3,14 @@ import { PickerRangeValue, RangePosition } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 
 export interface RangeCalendarRootContext {
+  /**
+   * The current value of the Range Calendar.
+   */
   value: PickerRangeValue;
+  /**
+   * A ref containing `true` if the user is currently dragging.
+   * This is used to check if the user is dragging in event handlers without causing re-renders.
+   */
   isDraggingRef: React.RefObject<boolean>;
   disableDragEditing: boolean;
   selectDateFromDrag: (valueOrElement: PickerValidDate | HTMLElement) => void;
@@ -11,11 +18,10 @@ export interface RangeCalendarRootContext {
   stopDragging: () => void;
   setDragTarget: (valueOrElement: PickerValidDate | HTMLElement) => void;
   emptyDragImgRef: React.RefObject<HTMLImageElement | null>;
+  registerCell: (element: HTMLElement, value: PickerValidDate) => () => void;
   selectedRange: PickerRangeValue;
-  isDragging: boolean;
   setHoveredDate: (value: PickerValidDate | null) => void;
   previewRange: PickerRangeValue;
-  registerCell: (element: HTMLElement, value: PickerValidDate) => () => void;
 }
 
 export const RangeCalendarRootContext = React.createContext<RangeCalendarRootContext | undefined>(

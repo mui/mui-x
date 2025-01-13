@@ -1,4 +1,0 @@
-<Calendar.Root value={value} onValueChange={setValue} className={styles.Root}>
-  <Header />
-  <YearsGrid />
-</Calendar.Root>

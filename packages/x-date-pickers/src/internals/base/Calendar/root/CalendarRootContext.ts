@@ -2,6 +2,9 @@ import * as React from 'react';
 import { PickerValue } from '../../../models';
 
 export interface CalendarRootContext {
+  /**
+   * The current value of the Calendar.
+   */
   value: PickerValue;
 }
 

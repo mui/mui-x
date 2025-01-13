@@ -7,7 +7,8 @@ import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 import { BaseCalendarMonthsGridOrListContext } from '../months-grid/BaseCalendarMonthsGridOrListContext';
 import { useCellList } from './useCellList';
 
-export function useMonthsCells(): useMonthsCells.ReturnValue {
+export function useMonthsCells(parameters: useMonthsCells.Parameters): useMonthsCells.ReturnValue {
+  const { getItems, focusOnMount } = parameters;
   const baseRootContext = useBaseCalendarRootContext();
   const utils = useUtils();
 
@@ -16,27 +17,34 @@ export function useMonthsCells(): useMonthsCells.ReturnValue {
     [utils, baseRootContext.visibleDate],
   );
 
-  const { scrollerRef } = useCellList({ section: 'month', value: currentYear });
-  const months = React.useMemo(() => getMonthsInYear(utils, currentYear), [utils, currentYear]);
+  const items = React.useMemo(() => {
+    if (getItems) {
+      return getItems({
+        year: currentYear,
+      });
+    }
+
+    return getMonthsInYear(utils, currentYear);
+  }, [utils, getItems, currentYear]);
+
+  const { scrollerRef } = useCellList({ focusOnMount, section: 'month', value: currentYear });
 
   const tabbableMonths = React.useMemo(() => {
     let tempTabbableDays: PickerValidDate[] = [];
-    tempTabbableDays = months.filter((day) =>
+    tempTabbableDays = items.filter((day) =>
       baseRootContext.selectedDates.some((selectedDay) => utils.isSameMonth(day, selectedDay)),
     );
 
     if (tempTabbableDays.length === 0) {
-      tempTabbableDays = months.filter((day) =>
-        utils.isSameMonth(day, baseRootContext.currentDate),
-      );
+      tempTabbableDays = items.filter((day) => utils.isSameMonth(day, baseRootContext.currentDate));
     }
 
     if (tempTabbableDays.length === 0) {
-      tempTabbableDays = [months[0]];
+      tempTabbableDays = [items[0]];
     }
 
     return tempTabbableDays;
-  }, [baseRootContext.currentDate, baseRootContext.selectedDates, months, utils]);
+  }, [baseRootContext.currentDate, baseRootContext.selectedDates, items, utils]);
 
   const monthsListOrGridContext = React.useMemo<BaseCalendarMonthsGridOrListContext>(
     () => ({
@@ -88,12 +96,25 @@ export function useMonthsCells(): useMonthsCells.ReturnValue {
     }
   };
 
-  return { months, monthsListOrGridContext, changePage, scrollerRef };
+  return { items, monthsListOrGridContext, changePage, scrollerRef };
 }
 
 export namespace useMonthsCells {
+  export interface Parameters extends useCellList.PublicParameters {
+    /**
+     * Generate the list of items to render the given visible date.
+     * @param {GetCellsParameters} parameters The current parameters of the list.
+     * @returns {PickerValidDate[]} The list of items.
+     */
+    getItems?: (parameters: GetCellsParameters) => PickerValidDate[];
+  }
+
+  export interface GetCellsParameters {
+    year: PickerValidDate;
+  }
+
   export interface ReturnValue extends useCellList.ReturnValue {
-    months: PickerValidDate[];
+    items: PickerValidDate[];
     monthsListOrGridContext: BaseCalendarMonthsGridOrListContext;
     changePage: (direction: 'next' | 'previous') => void;
   }

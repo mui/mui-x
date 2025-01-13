@@ -36,35 +36,34 @@ function Header() {
   );
 }
 
-function YearsGrid() {
-  const { visibleDate } = useCalendarContext();
-  const decade = Math.floor(visibleDate.year() / 10) * 10;
-
-  return (
-    <Calendar.YearsGrid cellsPerRow={2} className={styles.YearsGrid}>
-      {({ years }) =>
-        years
-          .filter((year: Dayjs) => Math.floor(year.year() / 10) * 10 === decade)
-          .map((year) => (
-            <Calendar.YearsCell
-              value={year}
-              className={styles.YearsCell}
-              key={year.toString()}
-            />
-          ))
-      }
-    </Calendar.YearsGrid>
+const getYearsInDecade = ({ visibleDate }: { visibleDate: Dayjs }) => {
+  const reference = visibleDate.startOf('year');
+  const decade = Math.floor(reference.year() / 10) * 10;
+  return Array.from({ length: 10 }, (_, index) =>
+    reference.set('year', decade + index),
   );
-}
+};
 
 export default function YearCalendarWithDecadeNavigationDemo() {
-  const [value, setValue] = React.useState<Dayjs | null>(null);
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Calendar.Root value={value} onValueChange={setValue} className={styles.Root}>
+      <Calendar.Root className={styles.Root}>
         <Header />
-        <YearsGrid />
+        <Calendar.YearsGrid
+          cellsPerRow={2}
+          className={styles.YearsGrid}
+          getItems={getYearsInDecade}
+        >
+          {({ years }) =>
+            years.map((year) => (
+              <Calendar.YearsCell
+                value={year}
+                className={styles.YearsCell}
+                key={year.toString()}
+              />
+            ))
+          }
+        </Calendar.YearsGrid>
       </Calendar.Root>
     </LocalizationProvider>
   );

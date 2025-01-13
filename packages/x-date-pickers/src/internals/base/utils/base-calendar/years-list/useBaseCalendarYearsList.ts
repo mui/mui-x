@@ -7,9 +7,9 @@ import { navigateInList } from '../utils/keyboardNavigation';
 import { useYearsCells } from '../utils/useYearsCells';
 
 export function useBaseCalendarYearsList(parameters: useBaseCalendarYearsList.Parameters) {
-  const { children, loop = true } = parameters;
+  const { children, getItems, focusOnMount, loop = true } = parameters;
   const cellRefs = React.useRef<(HTMLElement | null)[]>([]);
-  const { years, yearsListOrGridContext, scrollerRef } = useYearsCells();
+  const { items, yearsListOrGridContext, scrollerRef } = useYearsCells({ getItems, focusOnMount });
 
   const onKeyDown = useEventCallback((event: React.KeyboardEvent) => {
     navigateInList({
@@ -24,11 +24,11 @@ export function useBaseCalendarYearsList(parameters: useBaseCalendarYearsList.Pa
     (externalProps: GenericHTMLProps) => {
       return mergeReactProps(externalProps, {
         role: 'radiogroup',
-        children: children == null ? null : children({ years }),
+        children: children == null ? null : children({ years: items }),
         onKeyDown,
       });
     },
-    [years, children, onKeyDown],
+    [items, children, onKeyDown],
   );
 
   return React.useMemo(
@@ -38,7 +38,7 @@ export function useBaseCalendarYearsList(parameters: useBaseCalendarYearsList.Pa
 }
 
 export namespace useBaseCalendarYearsList {
-  export interface Parameters {
+  export interface Parameters extends useYearsCells.Parameters {
     /**
      * Whether to loop keyboard focus back to the first item
      * when the end of the list is reached while using the arrow keys.

@@ -16,10 +16,12 @@ const RangeCalendarYearsList = React.forwardRef(function CalendarYearsList(
   props: CalendarYearsList.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, render, children, loop, ...otherProps } = props;
+  const { className, render, children, getItems, focusOnMount, loop, ...otherProps } = props;
   const { getYearsListProps, cellRefs, yearsListOrGridContext, scrollerRef } =
     useBaseCalendarYearsList({
       children,
+      getItems,
+      focusOnMount,
       loop,
     });
   const state = React.useMemo(() => ({}), []);

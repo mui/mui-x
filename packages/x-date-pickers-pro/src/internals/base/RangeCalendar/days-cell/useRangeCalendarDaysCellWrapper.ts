@@ -35,6 +35,9 @@ export function useRangeCalendarDaysCellWrapper(
   const ctx = React.useMemo<useRangeCalendarDaysCell.Context>(
     () => ({
       ...baseCtx,
+      isDraggable:
+        (!rootContext.disableDragEditing && positionInSelectedRange.isSelectionStart) ||
+        positionInSelectedRange.isSelectionEnd,
       isSelected: positionInSelectedRange.isSelected,
       isSelectionStart: positionInSelectedRange.isSelectionStart,
       isSelectionEnd: positionInSelectedRange.isSelectionEnd,
@@ -53,6 +56,7 @@ export function useRangeCalendarDaysCellWrapper(
       baseCtx,
       positionInSelectedRange,
       positionInPreviewRange,
+      rootContext.disableDragEditing,
       rootContext.isDraggingRef,
       rootContext.selectDateFromDrag,
       rootContext.startDragging,

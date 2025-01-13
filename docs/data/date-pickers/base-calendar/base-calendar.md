@@ -12,7 +12,7 @@ packageName: '@mui/x-date-pickers'
 
 ### Single visible month
 
-{{"demo": "DayCalendarDemo.js"}}
+{{"demo": "DayCalendarDemo.js", "defaultCodeOpen": false}}
 
 ### Multiple visible months
 
@@ -37,13 +37,21 @@ packageName: '@mui/x-date-pickers'
 
    It will make sure that keyboard navigation and pressing `<Calendar.SetVisibleMonth />` switching month two by two.
 
-{{"demo": "DayCalendarTwoMonthsDemo.js"}}
+{{"demo": "DayCalendarTwoMonthsDemo.js", "defaultCodeOpen": false}}
 
 ### With validation
 
-{{"demo": "DayCalendarWithValidationDemo.js"}}
+{{"demo": "DayCalendarWithValidationDemo.js", "defaultCodeOpen": false}}
 
-### With week number
+### With fixed week number
+
+```tsx
+<Calendar.DaysGrid fixedWeekNumber={6}>{children}</Calendar.DaysGrid>
+```
+
+{{"demo": "DayCalendarWithFixedWeekNumberDemo.js", "defaultCodeOpen": false}}
+
+### Recipe: With week number
 
 1. Add a custom cell in `<Calendar.DaysGridHeader />`
 
@@ -75,15 +83,7 @@ packageName: '@mui/x-date-pickers'
    </Calendar.DaysWeekRow>
    ```
 
-{{"demo": "DayCalendarWithWeekNumberDemo.js"}}
-
-### With fixed week number
-
-```tsx
-<Calendar.DaysGrid fixedWeekNumber={6}>{children}</Calendar.DaysGrid>
-```
-
-{{"demo": "DayCalendarWithFixedWeekNumberDemo.js"}}
+{{"demo": "DayCalendarWithWeekNumberDemo.js", "defaultCodeOpen": false}}
 
 ## Month Calendar
 
@@ -93,7 +93,7 @@ packageName: '@mui/x-date-pickers'
 
 ### List layout
 
-{{"demo": "MonthCalendarWithListLayoutDemo.js"}}
+{{"demo": "MonthCalendarWithListLayoutDemo.js", "defaultCodeOpen": false}}
 
 ### Custom cell format
 
@@ -105,7 +105,7 @@ packageName: '@mui/x-date-pickers'
 This also works for the `<Calendar.DaysCell />` and `<Calendar.YearsCell />` components, but it's the `<Calendar.MonthsCell />` that benefits from it the most.
 :::
 
-{{"demo": "MonthCalendarWithCustomCellFormatDemo.js"}}
+{{"demo": "MonthCalendarWithCustomCellFormatDemo.js", "defaultCodeOpen": false}}
 
 ### Multiple visible years
 
@@ -119,32 +119,50 @@ TODO
 
 ### List layout
 
-{{"demo": "YearCalendarWithListLayoutDemo.js"}}
+{{"demo": "YearCalendarWithListLayoutDemo.js", "defaultCodeOpen": false}}
 
-### Grouped by decade
+### Recipe: Grouped by decade
 
-{{"demo": "YearCalendarWithDecadeNavigationDemo.js"}}
+```tsx
+const getYearsInDecade = ({ visibleDate }: { visibleDate: Dayjs }) => {
+  const reference = visibleDate.startOf('year');
+  const decade = Math.floor(reference.year() / 10) * 10;
+  return Array.from({ length: 10 }, (_, index) =>
+    reference.set('year', decade + index),
+  );
+};
+
+<Calendar.YearsGrid cellsPerRow={2} getItems={getYearsInDecade}>
+  {/** Year cells */}
+</Calendar.YearsGrid>;
+```
+
+:::success
+Using the `getItems` prop instead of manually providing a list of `<Calendar.YearsCell />` as children allows the `<Calendar.YearsGrid />` to always have at least one cell with `tabIndex={0}`.
+:::
+
+{{"demo": "YearCalendarWithDecadeNavigationDemo.js", "defaultCodeOpen": false}}
 
 ## Full Date Calendar
 
 ### MD2-ish layout
 
-{{"demo": "DateCalendarMD2Demo.js"}}
+{{"demo": "DateCalendarMD2Demo.js", "defaultCodeOpen": false}}
 
 ### MD3-ish layout
 
-{{"demo": "DateCalendarDemo.js"}}
+{{"demo": "DateCalendarDemo.js", "defaultCodeOpen": false}}
 
 ## Day Range Calendar
 
 ### Single visible month
 
-{{"demo": "DayRangeCalendarDemo.js"}}
+{{"demo": "DayRangeCalendarDemo.js", "defaultCodeOpen": false}}
 
 ### Multiple visible months
 
-{{"demo": "DayRangeCalendarWithTwoMonthsDemo.js"}}
+{{"demo": "DayRangeCalendarWithTwoMonthsDemo.js", "defaultCodeOpen": false}}
 
 ## Date Range Calendar
 
-{{"demo": "DateRangeCalendarDemo.js"}}
+{{"demo": "DateRangeCalendarDemo.js", "defaultCodeOpen": false}}

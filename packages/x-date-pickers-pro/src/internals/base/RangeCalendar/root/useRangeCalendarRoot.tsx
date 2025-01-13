@@ -372,7 +372,6 @@ function useBuildRangeCalendarRootContext(parameters: UseRangeCalendarDragEditin
     startDragging,
     stopDragging,
     setDragTarget: handleSetDragTarget,
-    isDragging: state.isDragging,
     setHoveredDate,
     registerCell,
   };

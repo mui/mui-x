@@ -7,9 +7,10 @@ import { GenericHTMLProps } from '../../../base-utils/types';
 import { mergeReactProps } from '../../../base-utils/mergeReactProps';
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 import { BaseCalendarDaysGridContext } from './BaseCalendarDaysGridContext';
+import { useCellList } from '../utils/useCellList';
 
 export function useBaseCalendarDaysGrid(parameters: useBaseCalendarDaysGrid.Parameters) {
-  const { fixedWeekNumber, offset = 0 } = parameters;
+  const { fixedWeekNumber, focusOnMount, offset = 0 } = parameters;
   const utils = useUtils();
   const baseRootContext = useBaseCalendarRootContext();
 
@@ -17,6 +18,12 @@ export function useBaseCalendarDaysGrid(parameters: useBaseCalendarDaysGrid.Para
     const cleanVisibleDate = utils.startOfMonth(baseRootContext.visibleDate);
     return offset === 0 ? cleanVisibleDate : utils.addMonths(cleanVisibleDate, offset);
   }, [utils, baseRootContext.visibleDate, offset]);
+
+  const { scrollerRef } = useCellList({
+    focusOnMount,
+    section: 'day',
+    value: currentMonth,
+  });
 
   const daysGrid = React.useMemo(() => {
     const toDisplay = utils.getWeekArray(currentMonth);
@@ -80,21 +87,19 @@ export function useBaseCalendarDaysGrid(parameters: useBaseCalendarDaysGrid.Para
     return tempTabbableDays;
   }, [baseRootContext.currentDate, baseRootContext.selectedDates, daysGrid, utils, currentMonth]);
 
-  const registerSection = baseRootContext.registerSection;
-  React.useEffect(() => {
-    return registerSection({ type: 'day', value: currentMonth });
-  }, [registerSection, currentMonth]);
-
   const context: BaseCalendarDaysGridContext = React.useMemo(
     () => ({ selectDay, daysGrid, currentMonth, tabbableDays }),
     [selectDay, daysGrid, currentMonth, tabbableDays],
   );
 
-  return React.useMemo(() => ({ getDaysGridProps, context }), [getDaysGridProps, context]);
+  return React.useMemo(
+    () => ({ getDaysGridProps, context, scrollerRef }),
+    [getDaysGridProps, context, scrollerRef],
+  );
 }
 
 export namespace useBaseCalendarDaysGrid {
-  export interface Parameters {
+  export interface Parameters extends useCellList.PublicParameters {
     /**
      * The day view will show as many weeks as needed after the end of the current month to match this value.
      * Put it to 6 to have a fixed number of weeks in Gregorian calendars
@@ -106,5 +111,10 @@ export namespace useBaseCalendarDaysGrid {
      * @default 0
      */
     offset?: number;
+    /**
+     * If `true`, the first tabbable children inside this component will be focused on mount.
+     * @default false
+     */
+    focusOnMount?: boolean;
   }
 }

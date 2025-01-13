@@ -5,36 +5,50 @@ import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 import { BaseCalendarYearsGridOrListContext } from '../years-grid/BaseCalendarYearsGridOrListContext';
 import { useCellList } from './useCellList';
 
-export function useYearsCells(): useYearsCells.ReturnValue {
+export function useYearsCells(parameters: useYearsCells.Parameters): useYearsCells.ReturnValue {
+  const { getItems, focusOnMount } = parameters;
   const baseRootContext = useBaseCalendarRootContext();
   const utils = useUtils();
-  const { scrollerRef } = useCellList({ section: 'year', value: baseRootContext.visibleDate });
 
-  const years = React.useMemo(
-    () =>
-      utils.getYearRange([
-        baseRootContext.dateValidationProps.minDate,
-        baseRootContext.dateValidationProps.maxDate,
-      ]),
-    [
-      utils,
+  const items = React.useMemo(() => {
+    if (getItems) {
+      return getItems({
+        visibleDate: baseRootContext.visibleDate,
+        minDate: baseRootContext.dateValidationProps.minDate,
+        maxDate: baseRootContext.dateValidationProps.maxDate,
+      });
+    }
+
+    return utils.getYearRange([
       baseRootContext.dateValidationProps.minDate,
       baseRootContext.dateValidationProps.maxDate,
-    ],
-  );
+    ]);
+  }, [
+    utils,
+    getItems,
+    baseRootContext.visibleDate,
+    baseRootContext.dateValidationProps.minDate,
+    baseRootContext.dateValidationProps.maxDate,
+  ]);
+
+  const { scrollerRef } = useCellList({
+    focusOnMount,
+    section: 'year',
+    value: baseRootContext.visibleDate,
+  });
 
   const tabbableYears = React.useMemo(() => {
     let tempTabbableDays: PickerValidDate[] = [];
-    tempTabbableDays = years.filter((day) =>
+    tempTabbableDays = items.filter((day) =>
       baseRootContext.selectedDates.some((selectedDay) => utils.isSameYear(day, selectedDay)),
     );
 
     if (tempTabbableDays.length === 0) {
-      tempTabbableDays = years.filter((day) => utils.isSameYear(day, baseRootContext.currentDate));
+      tempTabbableDays = items.filter((day) => utils.isSameYear(day, baseRootContext.currentDate));
     }
 
     return tempTabbableDays;
-  }, [baseRootContext.currentDate, baseRootContext.selectedDates, years, utils]);
+  }, [baseRootContext.currentDate, baseRootContext.selectedDates, items, utils]);
 
   const yearsListOrGridContext = React.useMemo<BaseCalendarYearsGridOrListContext>(
     () => ({
@@ -43,12 +57,27 @@ export function useYearsCells(): useYearsCells.ReturnValue {
     [tabbableYears],
   );
 
-  return { years, yearsListOrGridContext, scrollerRef };
+  return { items, scrollerRef, yearsListOrGridContext };
 }
 
 export namespace useYearsCells {
+  export interface Parameters extends useCellList.PublicParameters {
+    /**
+     * Generate the list of items to render the given visible date.
+     * @param {GetCellsParameters} parameters The current parameters of the list.
+     * @returns {PickerValidDate[]} The list of items.
+     */
+    getItems?: (parameters: GetCellsParameters) => PickerValidDate[];
+  }
+
+  export interface GetCellsParameters {
+    visibleDate: PickerValidDate;
+    minDate: PickerValidDate;
+    maxDate: PickerValidDate;
+  }
+
   export interface ReturnValue extends useCellList.ReturnValue {
-    years: PickerValidDate[];
     yearsListOrGridContext: BaseCalendarYearsGridOrListContext;
+    items: PickerValidDate[];
   }
 }

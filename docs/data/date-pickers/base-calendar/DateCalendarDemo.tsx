@@ -78,16 +78,25 @@ export default function DateCalendarDemo() {
   const [activeSection, setActiveSection] = React.useState<'day' | 'month' | 'year'>(
     'day',
   );
+  const [hasNavigated, setHasNavigated] = React.useState(false);
+
+  const handleActiveSectionChange = React.useCallback(
+    (newActiveSection: 'day' | 'month' | 'year') => {
+      setActiveSection(newActiveSection);
+      setHasNavigated(true);
+    },
+    [setActiveSection, setHasNavigated],
+  );
 
   const handleValueChange = React.useCallback(
     (newValue: Dayjs | null, context: Calendar.Root.ValueChangeHandlerContext) => {
       if (context.section === 'month' || context.section === 'year') {
-        setActiveSection('day');
+        handleActiveSectionChange('day');
       }
 
       setValue(newValue);
     },
-    [],
+    [handleActiveSectionChange],
   );
 
   return (
@@ -99,10 +108,13 @@ export default function DateCalendarDemo() {
       >
         <Header
           activeSection={activeSection}
-          onActiveSectionChange={setActiveSection}
+          onActiveSectionChange={handleActiveSectionChange}
         />
         {activeSection === 'year' && (
-          <Calendar.YearsList className={styles.YearsList}>
+          <Calendar.YearsList
+            focusOnMount={hasNavigated}
+            className={styles.YearsList}
+          >
             {({ years }) =>
               years.map((year) => (
                 <Calendar.YearsCell
@@ -115,7 +127,10 @@ export default function DateCalendarDemo() {
           </Calendar.YearsList>
         )}
         {activeSection === 'month' && (
-          <Calendar.MonthsList className={styles.MonthsList}>
+          <Calendar.MonthsList
+            focusOnMount={hasNavigated}
+            className={styles.MonthsList}
+          >
             {({ months }) =>
               months.map((month) => (
                 <Calendar.MonthsCell
@@ -128,7 +143,7 @@ export default function DateCalendarDemo() {
           </Calendar.MonthsList>
         )}
         {activeSection === 'day' && (
-          <Calendar.DaysGrid className={styles.DaysGrid}>
+          <Calendar.DaysGrid focusOnMount={hasNavigated} className={styles.DaysGrid}>
             <Calendar.DaysGridHeader className={styles.DaysGridHeader}>
               {({ days }) =>
                 days.map((day) => (

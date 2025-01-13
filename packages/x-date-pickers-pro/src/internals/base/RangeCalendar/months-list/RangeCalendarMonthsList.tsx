@@ -16,10 +16,21 @@ const RangeCalendarMonthsList = React.forwardRef(function RangeCalendarMonthsLis
   props: RangeCalendarMonthsList.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, render, children, loop, canChangeYear, ...otherProps } = props;
+  const {
+    className,
+    render,
+    children,
+    getItems,
+    focusOnMount,
+    loop,
+    canChangeYear,
+    ...otherProps
+  } = props;
   const { getMonthListProps, cellRefs, monthsListOrGridContext, scrollerRef } =
     useBaseCalendarMonthsList({
       children,
+      getItems,
+      focusOnMount,
       loop,
       canChangeYear,
     });

@@ -72,24 +72,35 @@ function Header(props) {
 
 export default function DateRangeCalendarDemo() {
   const [activeSection, setActiveSection] = React.useState('day');
+  const [hasNavigated, setHasNavigated] = React.useState(false);
+
+  const handleActiveSectionChange = React.useCallback(
+    (newActiveSection) => {
+      setActiveSection(newActiveSection);
+      setHasNavigated(true);
+    },
+    [setActiveSection, setHasNavigated],
+  );
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <RangeCalendar.Root monthPageSize={2} className={clsx(styles.Root)}>
         <Header
           activeSection={activeSection}
-          onActiveSectionChange={setActiveSection}
+          onActiveSectionChange={handleActiveSectionChange}
         />
         {activeSection === 'year' && (
-          <RangeCalendar.YearsList className={styles.YearsList}>
+          <RangeCalendar.YearsList
+            focusOnMount={hasNavigated}
+            className={styles.YearsList}
+          >
             {({ years }) =>
               years.map((year) => (
                 <RangeCalendar.SetVisibleYear
-                  value={year}
-                  className={styles.YearsCell}
-                  key={year.toString()}
-                  onClick={() => setActiveSection('day')}
                   target={year}
+                  key={year.toString()}
+                  onClick={() => handleActiveSectionChange('day')}
+                  className={styles.YearsCell}
                 >
                   {year.format('YYYY')}
                 </RangeCalendar.SetVisibleYear>
@@ -98,15 +109,17 @@ export default function DateRangeCalendarDemo() {
           </RangeCalendar.YearsList>
         )}
         {activeSection === 'month' && (
-          <RangeCalendar.MonthsList className={styles.MonthsList}>
+          <RangeCalendar.MonthsList
+            focusOnMount={hasNavigated}
+            className={styles.MonthsList}
+          >
             {({ months }) =>
               months.map((month) => (
                 <RangeCalendar.SetVisibleMonth
-                  value={month}
-                  className={styles.MonthsCell}
-                  key={month.toString()}
-                  onClick={() => setActiveSection('day')}
                   target={month}
+                  key={month.toString()}
+                  onClick={() => handleActiveSectionChange('day')}
+                  className={styles.MonthsCell}
                 >
                   {month.format('MMMM')}
                 </RangeCalendar.SetVisibleMonth>
@@ -115,7 +128,10 @@ export default function DateRangeCalendarDemo() {
           </RangeCalendar.MonthsList>
         )}
         {activeSection === 'day' && (
-          <RangeCalendar.DaysGrid className={styles.DaysGrid}>
+          <RangeCalendar.DaysGrid
+            focusOnMount={hasNavigated}
+            className={styles.DaysGrid}
+          >
             <RangeCalendar.DaysGridHeader className={styles.DaysGridHeader}>
               {({ days }) =>
                 days.map((day) => (

@@ -73,14 +73,26 @@ function Header(props) {
 export default function DateCalendarDemo() {
   const [value, setValue] = React.useState(null);
   const [activeSection, setActiveSection] = React.useState('day');
+  const [hasNavigated, setHasNavigated] = React.useState(false);
 
-  const handleValueChange = React.useCallback((newValue, context) => {
-    if (context.section === 'month' || context.section === 'year') {
-      setActiveSection('day');
-    }
+  const handleActiveSectionChange = React.useCallback(
+    (newActiveSection) => {
+      setActiveSection(newActiveSection);
+      setHasNavigated(true);
+    },
+    [setActiveSection, setHasNavigated],
+  );
 
-    setValue(newValue);
-  }, []);
+  const handleValueChange = React.useCallback(
+    (newValue, context) => {
+      if (context.section === 'month' || context.section === 'year') {
+        handleActiveSectionChange('day');
+      }
+
+      setValue(newValue);
+    },
+    [handleActiveSectionChange],
+  );
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -91,10 +103,13 @@ export default function DateCalendarDemo() {
       >
         <Header
           activeSection={activeSection}
-          onActiveSectionChange={setActiveSection}
+          onActiveSectionChange={handleActiveSectionChange}
         />
         {activeSection === 'year' && (
-          <Calendar.YearsList className={styles.YearsList}>
+          <Calendar.YearsList
+            focusOnMount={hasNavigated}
+            className={styles.YearsList}
+          >
             {({ years }) =>
               years.map((year) => (
                 <Calendar.YearsCell
@@ -107,7 +122,10 @@ export default function DateCalendarDemo() {
           </Calendar.YearsList>
         )}
         {activeSection === 'month' && (
-          <Calendar.MonthsList className={styles.MonthsList}>
+          <Calendar.MonthsList
+            focusOnMount={hasNavigated}
+            className={styles.MonthsList}
+          >
             {({ months }) =>
               months.map((month) => (
                 <Calendar.MonthsCell
@@ -120,7 +138,7 @@ export default function DateCalendarDemo() {
           </Calendar.MonthsList>
         )}
         {activeSection === 'day' && (
-          <Calendar.DaysGrid className={styles.DaysGrid}>
+          <Calendar.DaysGrid focusOnMount={hasNavigated} className={styles.DaysGrid}>
             <Calendar.DaysGridHeader className={styles.DaysGridHeader}>
               {({ days }) =>
                 days.map((day) => (
