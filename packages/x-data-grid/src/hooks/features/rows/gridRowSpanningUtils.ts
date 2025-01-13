@@ -50,7 +50,7 @@ export function isRowRangeUpdated(range1: RowRange, range2: RowRange) {
 export const getCellValue = (
   row: GridValidRowModel,
   colDef: GridColDef,
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.RefObject<GridApiCommunity>,
 ) => {
   if (!row) {
     return null;

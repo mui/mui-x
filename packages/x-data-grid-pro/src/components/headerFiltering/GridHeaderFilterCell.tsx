@@ -51,7 +51,7 @@ export interface GridHeaderFilterCellProps extends Pick<GridStateColDef, 'header
   tabIndex: 0 | -1;
   width: number;
   colDef: GridColDef;
-  headerFilterMenuRef: React.MutableRefObject<HTMLButtonElement | null>;
+  headerFilterMenuRef: React.RefObject<HTMLButtonElement | null>;
   item: GridFilterItem;
   showClearIcon?: boolean;
   InputComponentProps: GridFilterOperator['InputComponentProps'];
@@ -89,7 +89,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const dateSx = {
+const emptyFieldSx = {
   [`& input[value=""]:not(:focus)`]: { color: 'transparent' },
 };
 const defaultInputComponents: { [key in GridColType]: React.JSXElementConstructor<any> | null } = {
@@ -366,7 +366,11 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
             disabled={isFilterReadOnly || isNoInputOperator}
             tabIndex={-1}
             InputLabelProps={null}
-            sx={colDef.type === 'date' || colDef.type === 'dateTime' ? dateSx : undefined}
+            sx={
+              colDef.type === 'date' || colDef.type === 'dateTime' || colDef.type === 'number'
+                ? emptyFieldSx
+                : undefined
+            }
             {...(isNoInputOperator ? { value: '' } : {})}
             {...currentOperator?.InputComponentProps}
             {...InputComponentProps}

@@ -8,7 +8,7 @@ import {
   GridInitialState,
   GridColumnVisibilityModel,
   GridRowId,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid-premium';
 import { extrapolateSeed, deepFreeze } from './useDemoData';
 import { getCommodityColumns } from '../columns/commodities.columns';
 import { getEmployeeColumns } from '../columns/employees.columns';
@@ -300,7 +300,7 @@ export const useMockServer = (
       }
 
       if (isTreeData) {
-        const { rows, rootRowCount } = await processTreeDataRows(
+        const { rows, rootRowCount, aggregateRow } = await processTreeDataRows(
           data?.rows ?? [],
           params,
           serverOptionsWithDefault,
@@ -310,9 +310,10 @@ export const useMockServer = (
         getRowsResponse = {
           rows: rows.slice().map((row) => ({ ...row, path: undefined })),
           rowCount: rootRowCount,
+          ...(aggregateRow ? { aggregateRow } : {}),
         };
       } else if (isRowGrouping) {
-        const { rows, rootRowCount } = await processRowGroupingRows(
+        const { rows, rootRowCount, aggregateRow } = await processRowGroupingRows(
           data?.rows ?? [],
           params,
           serverOptionsWithDefault,
@@ -322,15 +323,21 @@ export const useMockServer = (
         getRowsResponse = {
           rows: rows.slice().map((row) => ({ ...row, path: undefined })),
           rowCount: rootRowCount,
+          ...(aggregateRow ? { aggregateRow } : {}),
         };
       } else {
-        const { returnedRows, nextCursor, totalRowCount } = await loadServerRows(
+        const { returnedRows, nextCursor, totalRowCount, aggregateRow } = await loadServerRows(
           data?.rows ?? [],
           { ...params, ...params.paginationModel },
           serverOptionsWithDefault,
           columnsWithDefaultColDef,
         );
-        getRowsResponse = { rows: returnedRows, rowCount: totalRowCount, pageInfo: { nextCursor } };
+        getRowsResponse = {
+          rows: returnedRows,
+          rowCount: totalRowCount,
+          pageInfo: { nextCursor },
+          ...(aggregateRow ? { aggregateRow } : {}),
+        };
       }
 
       return new Promise<GridGetRowsResponse>((resolve) => {

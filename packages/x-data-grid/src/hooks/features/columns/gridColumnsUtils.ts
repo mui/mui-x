@@ -313,7 +313,7 @@ export const createColumnsState = ({
   initialState: GridColumnsInitialState | undefined;
   columnVisibilityModel?: GridColumnVisibilityModel;
   keepOnlyColumnsToUpsert: boolean;
-  apiRef: React.MutableRefObject<GridApiCommunity>;
+  apiRef: React.RefObject<GridApiCommunity>;
 }) => {
   const isInsideStateInitializer = !apiRef.current.state.columns;
 
@@ -415,7 +415,7 @@ export function getFirstNonSpannedColumnToRender({
   visibleRows,
 }: {
   firstColumnToRender: number;
-  apiRef: React.MutableRefObject<GridApiCommon>;
+  apiRef: React.RefObject<GridApiCommon>;
   firstRowToRender: number;
   lastRowToRender: number;
   visibleRows: GridRowEntry[];
@@ -439,7 +439,7 @@ export function getFirstNonSpannedColumnToRender({
 }
 
 export function getTotalHeaderHeight(
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.RefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     'columnHeaderHeight' | 'headerFilterHeight' | 'unstable_listView' | 'columnGroupHeaderHeight'

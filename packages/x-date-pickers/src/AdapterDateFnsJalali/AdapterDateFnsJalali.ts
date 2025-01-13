@@ -1,53 +1,50 @@
 /* eslint-disable class-methods-use-this */
-import addSeconds from 'date-fns-jalali/addSeconds';
-import addMinutes from 'date-fns-jalali/addMinutes';
-import addHours from 'date-fns-jalali/addHours';
-import addDays from 'date-fns-jalali/addDays';
-import addWeeks from 'date-fns-jalali/addWeeks';
-import addMonths from 'date-fns-jalali/addMonths';
-import addYears from 'date-fns-jalali/addYears';
-import endOfDay from 'date-fns-jalali/endOfDay';
-import endOfWeek from 'date-fns-jalali/endOfWeek';
-import endOfYear from 'date-fns-jalali/endOfYear';
-import dateFnsFormat from 'date-fns-jalali/format';
-import getHours from 'date-fns-jalali/getHours';
-import getSeconds from 'date-fns-jalali/getSeconds';
-import getMilliseconds from 'date-fns-jalali/getMilliseconds';
-import getWeek from 'date-fns-jalali/getWeek';
-import getYear from 'date-fns-jalali/getYear';
-import getMonth from 'date-fns-jalali/getMonth';
-import getDate from 'date-fns-jalali/getDate';
-import getDaysInMonth from 'date-fns-jalali/getDaysInMonth';
-import getMinutes from 'date-fns-jalali/getMinutes';
-import isAfter from 'date-fns-jalali/isAfter';
-import isBefore from 'date-fns-jalali/isBefore';
-import isEqual from 'date-fns-jalali/isEqual';
-import isSameDay from 'date-fns-jalali/isSameDay';
-import isSameYear from 'date-fns-jalali/isSameYear';
-import isSameMonth from 'date-fns-jalali/isSameMonth';
-import isSameHour from 'date-fns-jalali/isSameHour';
-import isValid from 'date-fns-jalali/isValid';
-import dateFnsParse from 'date-fns-jalali/parse';
-import setDate from 'date-fns-jalali/setDate';
-import setHours from 'date-fns-jalali/setHours';
-import setMinutes from 'date-fns-jalali/setMinutes';
-import setMonth from 'date-fns-jalali/setMonth';
-import setSeconds from 'date-fns-jalali/setSeconds';
-import setMilliseconds from 'date-fns-jalali/setMilliseconds';
-import setYear from 'date-fns-jalali/setYear';
-import startOfDay from 'date-fns-jalali/startOfDay';
-import startOfMonth from 'date-fns-jalali/startOfMonth';
-import endOfMonth from 'date-fns-jalali/endOfMonth';
-import startOfWeek from 'date-fns-jalali/startOfWeek';
-import startOfYear from 'date-fns-jalali/startOfYear';
-import isWithinInterval from 'date-fns-jalali/isWithinInterval';
-import defaultLocale from 'date-fns-jalali/locale/fa-IR';
-// @ts-ignore
-import longFormatters from 'date-fns-jalali/_lib/format/longFormatters';
+import { addSeconds } from 'date-fns-jalali/addSeconds';
+import { addMinutes } from 'date-fns-jalali/addMinutes';
+import { addHours } from 'date-fns-jalali/addHours';
+import { addDays } from 'date-fns-jalali/addDays';
+import { addWeeks } from 'date-fns-jalali/addWeeks';
+import { addMonths } from 'date-fns-jalali/addMonths';
+import { addYears } from 'date-fns-jalali/addYears';
+import { endOfDay } from 'date-fns-jalali/endOfDay';
+import { endOfWeek } from 'date-fns-jalali/endOfWeek';
+import { endOfYear } from 'date-fns-jalali/endOfYear';
+import { format as dateFnsFormat, longFormatters } from 'date-fns-jalali/format';
+import { getHours } from 'date-fns-jalali/getHours';
+import { getSeconds } from 'date-fns-jalali/getSeconds';
+import { getMilliseconds } from 'date-fns-jalali/getMilliseconds';
+import { getWeek } from 'date-fns-jalali/getWeek';
+import { getYear } from 'date-fns-jalali/getYear';
+import { getMonth } from 'date-fns-jalali/getMonth';
+import { getDate } from 'date-fns-jalali/getDate';
+import { getDaysInMonth } from 'date-fns-jalali/getDaysInMonth';
+import { getMinutes } from 'date-fns-jalali/getMinutes';
+import { isAfter } from 'date-fns-jalali/isAfter';
+import { isBefore } from 'date-fns-jalali/isBefore';
+import { isEqual } from 'date-fns-jalali/isEqual';
+import { isSameDay } from 'date-fns-jalali/isSameDay';
+import { isSameYear } from 'date-fns-jalali/isSameYear';
+import { isSameMonth } from 'date-fns-jalali/isSameMonth';
+import { isSameHour } from 'date-fns-jalali/isSameHour';
+import { isValid } from 'date-fns-jalali/isValid';
+import { parse as dateFnsParse } from 'date-fns-jalali/parse';
+import { setDate } from 'date-fns-jalali/setDate';
+import { setHours } from 'date-fns-jalali/setHours';
+import { setMinutes } from 'date-fns-jalali/setMinutes';
+import { setMonth } from 'date-fns-jalali/setMonth';
+import { setSeconds } from 'date-fns-jalali/setSeconds';
+import { setMilliseconds } from 'date-fns-jalali/setMilliseconds';
+import { setYear } from 'date-fns-jalali/setYear';
+import { startOfDay } from 'date-fns-jalali/startOfDay';
+import { startOfMonth } from 'date-fns-jalali/startOfMonth';
+import { endOfMonth } from 'date-fns-jalali/endOfMonth';
+import { startOfWeek } from 'date-fns-jalali/startOfWeek';
+import { startOfYear } from 'date-fns-jalali/startOfYear';
+import { isWithinInterval } from 'date-fns-jalali/isWithinInterval';
+import { faIR as defaultLocale } from 'date-fns-jalali/locale/fa-IR';
+import { Locale as DateFnsLocale } from 'date-fns-jalali/locale';
 import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
 import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
-
-type DateFnsLocale = typeof defaultLocale;
 
 const defaultFormats: AdapterFormats = {
   year: 'yyyy',
@@ -131,9 +128,14 @@ export class AdapterDateFnsJalali
       if (typeof addDays !== 'function') {
         throw new Error(
           [
-            'MUI: The `date-fns-jalali` package v3.x is not compatible with this adapter.',
-            'Please, install v2.x of the package or use the `AdapterDateFnsJalaliV3` instead.',
+            'MUI: The `date-fns-jalali` package v2.x is not compatible with this adapter.',
+            'Please, install v3.x or v4.x of the package or use the `AdapterDateFnsJalaliV2` instead.',
           ].join('\n'),
+        );
+      }
+      if (!longFormatters) {
+        throw new Error(
+          'MUI: The minimum supported `date-fns-jalali` package version compatible with this adapter is `3.2.x`.',
         );
       }
     }
@@ -147,6 +149,7 @@ export class AdapterDateFnsJalali
     });
   }
 
+  // TODO: explicit return types can be removed once there is only one date-fns version supported
   public parse = (value: string, format: string): Date | null => {
     if (value === '') {
       return null;

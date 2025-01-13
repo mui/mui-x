@@ -1,7 +1,7 @@
 // @ts-nocheck
 import * as React from 'react';
 import { PieChart } from '@mui/x-charts/PieChart';
-import { BarPlot } from '@mui/x-charts/BarChart';
+import { BarPlot, BarChart } from '@mui/x-charts/BarChart';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 
@@ -43,5 +43,24 @@ import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
     tickStyle={{
       fontWeight: 'bold',
       fontSize: 12
+    }} />
+  <BarChart
+    slotProps={{
+      legend: {
+        direction: "horizontal"
+      }
+    }} />
+  <BarChart
+    slotProps={{
+      legend: {
+        position: { vertical: 'top', horizontal: 'middle' },
+        direction: "vertical"
+      }
+    }} />
+  <BarChart
+    slotProps={{
+      legend: {
+        direction: 'wrong'
+      }
     }} />
 </div>;

@@ -8,7 +8,7 @@ type ApplyFilterFn<R extends GridValidRowModel = any, V = any, F = V> = (
   value: V,
   row: R,
   column: GridColDef<R, V, F>,
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.RefObject<GridApiCommunity>,
 ) => boolean;
 
 export type GetApplyFilterFn<R extends GridValidRowModel = any, V = any, F = V> = (
