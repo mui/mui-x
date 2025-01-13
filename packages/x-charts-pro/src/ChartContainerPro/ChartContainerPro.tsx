@@ -6,16 +6,13 @@ import { Watermark } from '@mui/x-license/Watermark';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
 import { ChartsSurface, ChartsSurfaceProps } from '@mui/x-charts/ChartsSurface';
 import { ChartDataProvider, ChartDataProviderProps } from '@mui/x-charts/context';
-import { ChartSeriesType, UseChartCartesianAxisSignature } from '@mui/x-charts/internals';
+import { ChartSeriesType } from '@mui/x-charts/internals';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import { useChartContainerProProps } from './useChartContainerProProps';
-import { UseChartProZoomSignature } from '../internals/plugins/useChartProZoom/useChartProZoom.types';
+import { AllPluginSignatures } from '../internals/plugins/allPlugins';
 
 export interface ChartContainerProProps<TSeries extends ChartSeriesType = ChartSeriesType>
-  extends ChartDataProviderProps<
-      [UseChartCartesianAxisSignature<TSeries>, UseChartProZoomSignature],
-      TSeries
-    >,
+  extends ChartDataProviderProps<TSeries, AllPluginSignatures<TSeries>>,
     ChartsSurfaceProps {}
 
 const releaseInfo = getReleaseInfo();
@@ -53,9 +50,7 @@ const ChartContainerPro = React.forwardRef(function ChartContainerProInner<
   useLicenseVerifier('x-charts-pro', releaseInfo);
 
   return (
-    <ChartDataProvider<TSeries, [UseChartCartesianAxisSignature<TSeries>, UseChartProZoomSignature]>
-      {...chartDataProviderProProps}
-    >
+    <ChartDataProvider<TSeries, AllPluginSignatures<TSeries>> {...chartDataProviderProProps}>
       <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
       <Watermark packageName="x-charts-pro" releaseInfo={releaseInfo} />
     </ChartDataProvider>

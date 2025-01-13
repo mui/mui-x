@@ -132,7 +132,7 @@ function MaskedDateField(props) {
   return (
     <TextField
       placeholder={parsedFormat}
-      error={!!hasValidationError}
+      error={hasValidationError}
       {...rifmProps}
       {...forwardedProps}
       InputProps={{

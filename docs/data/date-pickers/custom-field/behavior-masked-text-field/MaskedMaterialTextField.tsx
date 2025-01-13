@@ -136,7 +136,7 @@ function MaskedDateField(props: DatePickerFieldProps) {
   return (
     <TextField
       placeholder={parsedFormat}
-      error={!!hasValidationError}
+      error={hasValidationError}
       {...rifmProps}
       {...forwardedProps}
       InputProps={{
