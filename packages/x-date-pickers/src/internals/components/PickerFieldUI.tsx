@@ -104,7 +104,10 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
   } = cleanFieldResponse(fieldResponse);
   const ownerState = useFieldOwnerState(textFieldProps);
 
-  const handleTogglePicker = useEventCallback(() => pickerContext?.setOpen((prev) => !prev));
+  const handleClickOpeningButton = useEventCallback((event: React.MouseEvent) => {
+    event.preventDefault();
+    pickerContext?.setOpen((prev) => !prev);
+  });
 
   const triggerStatus = pickerContext ? pickerContext.triggerStatus : 'hidden';
   const clearButtonPosition = clearable ? clearButtonPositionProp : null;
@@ -147,7 +150,7 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
     externalSlotProps: pickerFieldUIContext.slotProps.openPickerButton,
     additionalProps: {
       disabled: triggerStatus === 'disabled',
-      onClick: handleTogglePicker,
+      onClick: handleClickOpeningButton,
       'aria-label': openPickerAriaLabel,
       edge:
         clearButtonPosition === 'start' && openPickerButtonPosition === 'start'
