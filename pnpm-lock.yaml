@@ -546,8 +546,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
       jscodeshift:
-        specifier: 17.1.1
-        version: 17.1.1(@babel/preset-env@7.26.0(@babel/core@7.26.0))
+        specifier: 17.1.2
+        version: 17.1.2(@babel/preset-env@7.26.0(@babel/core@7.26.0))
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -976,8 +976,8 @@ importers:
         specifier: workspace:*
         version: link:../x-internals/build
       jscodeshift:
-        specifier: 17.1.1
-        version: 17.1.1(@babel/preset-env@7.26.0(@babel/core@7.26.0))
+        specifier: 17.1.2
+        version: 17.1.2(@babel/preset-env@7.26.0(@babel/core@7.26.0))
       yargs:
         specifier: ^17.7.2
         version: 17.7.2
@@ -7256,8 +7256,8 @@ packages:
   jsbn@1.1.0:
     resolution: {integrity: sha512-4bYVV3aAMtDTTu4+xsDYa6sy9GyJ69/amsu9sYF2zqjiEoZA5xJi3BrfX3uY+/IekIu7MwdObdbDWpoZdBv3/A==}
 
-  jscodeshift@17.1.1:
-    resolution: {integrity: sha512-4vq5B1sD37aa9qed3zWq2XQPun5XjxebIv+Folr57lt8B4HLGDHEz1UG7pfcxzSaelzPbcY7yZSs033/S0i6wQ==}
+  jscodeshift@17.1.2:
+    resolution: {integrity: sha512-uime4vFOiZ1o3ICT4Sm/AbItHEVw2oCxQ3a0egYVy3JMMOctxe07H3SKL1v175YqjMt27jn1N+3+Bj9SKDNgdQ==}
     engines: {node: '>=16'}
     hasBin: true
     peerDependencies:
@@ -16979,7 +16979,7 @@ snapshots:
 
   jsbn@1.1.0: {}
 
-  jscodeshift@17.1.1(@babel/preset-env@7.26.0(@babel/core@7.26.0)):
+  jscodeshift@17.1.2(@babel/preset-env@7.26.0(@babel/core@7.26.0)):
     dependencies:
       '@babel/core': 7.26.0
       '@babel/parser': 7.26.5
