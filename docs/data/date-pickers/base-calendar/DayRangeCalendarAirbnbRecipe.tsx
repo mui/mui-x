@@ -1,11 +1,10 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
 import { Separator } from '@base-ui-components/react/separator';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 // eslint-disable-next-line no-restricted-imports
 import {
   RangeCalendar,
@@ -15,10 +14,10 @@ import styles from './calendar.module.css';
 
 /**
  * Fake server request to fetch the booked dates for the visible range.
- * @param {PickerValidDate} month The month to fetch the booked dates for.
- * @returns {Promise<PickerValidDate[]>} The booked dates for the visible range.
+ * @param {Dayjs} month The month to fetch the booked dates for.
+ * @returns {Promise<Dayjs[]>} The booked dates for the visible range.
  */
-async function fetchBookedDates(month: PickerValidDate) {
+async function fetchBookedDates(month: Dayjs) {
   const BOOKED_NIGHTS = [
     dayjs().add(3, 'day'),
     dayjs().add(8, 'day'),
@@ -67,6 +66,13 @@ async function fetchBookedDates(month: PickerValidDate) {
   });
 }
 
+function useBookedDates(visibleDate: Dayjs) {
+  return useQuery({
+    queryKey: ['bookedDates', visibleDate.format('MM YYYY')],
+    queryFn: () => fetchBookedDates(visibleDate),
+  });
+}
+
 function Header() {
   const { visibleDate } = useRangeCalendarContext();
 
@@ -98,6 +104,9 @@ function Header() {
 
 function DaysGrid(props: { offset: 0 | 1 }) {
   const { offset } = props;
+  const { visibleDate } = useRangeCalendarContext();
+  const bookedDates = useBookedDates(visibleDate);
+
   return (
     <RangeCalendar.DaysGrid className={styles.DaysGrid} offset={offset}>
       <RangeCalendar.DaysGridHeader className={styles.DaysGridHeader}>
@@ -125,6 +134,8 @@ function DaysGrid(props: { offset: 0 | 1 }) {
                     value={day}
                     key={day.toString()}
                     className={clsx(styles.DaysCell, styles.RangeDaysCell)}
+                    // TODO: Passing `disabled: undefined` should keep the built-in behavior
+                    {...(bookedDates.isLoading ? { disabled: true } : undefined)}
                   />
                 ))
               }
@@ -138,13 +149,10 @@ function DaysGrid(props: { offset: 0 | 1 }) {
 
 function BookingCalendar() {
   const [visibleDate, setVisibleDate] = React.useState(() => dayjs());
-  const bookedDates = useQuery({
-    queryKey: ['bookedDates', visibleDate.format('MM YYYY')],
-    queryFn: () => fetchBookedDates(visibleDate),
-  });
+  const bookedDates = useBookedDates(visibleDate);
 
   const shouldDisableDate = React.useCallback(
-    (date: PickerValidDate) => {
+    (date: Dayjs) => {
       return bookedDates.data?.has(date.format('YYYY-MM-DD')) ?? false;
     },
     [bookedDates.data],
@@ -157,7 +165,6 @@ function BookingCalendar() {
       monthPageSize={2}
       visibleDate={visibleDate}
       onVisibleDateChange={setVisibleDate}
-      disabled={bookedDates.isLoading}
       disablePast
       maxDate={maxDate}
       shouldDisableDate={shouldDisableDate}

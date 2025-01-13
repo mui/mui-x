@@ -230,10 +230,6 @@ function resolveElementFromTouch(
 ) {
   // don't parse multi-touch result
   if (event.changedTouches?.length === 1 && event.touches.length <= 1) {
-    // const element = document.elementFromPoint(
-    //   event.changedTouches[0].clientX,
-    //   event.changedTouches[0].clientY,
-    // );
     const element = document.elementFromPoint(
       event.changedTouches[0].clientX,
       event.changedTouches[0].clientY,
