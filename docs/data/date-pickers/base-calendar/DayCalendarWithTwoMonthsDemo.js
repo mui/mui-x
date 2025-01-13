@@ -11,27 +11,31 @@ import {
 } from '@mui/x-date-pickers/internals/base/Calendar';
 import styles from './calendar.module.css';
 
-function Header(props) {
-  const { offset } = props;
+function Header() {
   const { visibleDate } = useCalendarContext();
-
-  const date = visibleDate.add(offset, 'month');
 
   return (
     <header className={styles.Header}>
-      <Calendar.SetVisibleMonth
-        target="previous"
-        className={clsx(styles.SetVisibleMonth, offset === 1 && styles.Hidden)}
-      >
-        ◀
-      </Calendar.SetVisibleMonth>
-      <span>{date.format('MMMM YYYY')}</span>
-      <Calendar.SetVisibleMonth
-        target="next"
-        className={clsx(styles.SetVisibleMonth, offset === 0 && styles.Hidden)}
-      >
-        ▶
-      </Calendar.SetVisibleMonth>
+      <div className={styles.HeaderPanel}>
+        <Calendar.SetVisibleMonth
+          target="previous"
+          className={clsx(styles.SetVisibleMonth)}
+        >
+          ◀
+        </Calendar.SetVisibleMonth>
+        <span>{visibleDate.format('MMMM YYYY')}</span>
+        <span />
+      </div>
+      <div className={styles.HeaderPanel}>
+        <span />
+        <span>{visibleDate.add(1, 'month').format('MMMM YYYY')}</span>
+        <Calendar.SetVisibleMonth
+          target="next"
+          className={clsx(styles.SetVisibleMonth)}
+        >
+          ▶
+        </Calendar.SetVisibleMonth>
+      </div>
     </header>
   );
 }
@@ -39,43 +43,40 @@ function Header(props) {
 function DaysGrid(props) {
   const { offset } = props;
   return (
-    <div className={styles.Panel}>
-      <Header offset={offset} />
-      <Calendar.DaysGrid className={styles.DaysGrid} offset={offset}>
-        <Calendar.DaysGridHeader className={styles.DaysGridHeader}>
-          {({ days }) =>
-            days.map((day) => (
-              <Calendar.DaysGridHeaderCell
-                value={day}
-                key={day.toString()}
-                className={styles.DaysGridHeaderCell}
-              />
-            ))
-          }
-        </Calendar.DaysGridHeader>
-        <Calendar.DaysGridBody className={styles.DaysGridBody}>
-          {({ weeks }) =>
-            weeks.map((week) => (
-              <Calendar.DaysWeekRow
-                value={week}
-                key={week.toString()}
-                className={styles.DaysWeekRow}
-              >
-                {({ days }) =>
-                  days.map((day) => (
-                    <Calendar.DaysCell
-                      value={day}
-                      key={day.toString()}
-                      className={styles.DaysCell}
-                    />
-                  ))
-                }
-              </Calendar.DaysWeekRow>
-            ))
-          }
-        </Calendar.DaysGridBody>
-      </Calendar.DaysGrid>
-    </div>
+    <Calendar.DaysGrid className={styles.DaysGrid} offset={offset}>
+      <Calendar.DaysGridHeader className={styles.DaysGridHeader}>
+        {({ days }) =>
+          days.map((day) => (
+            <Calendar.DaysGridHeaderCell
+              value={day}
+              key={day.toString()}
+              className={styles.DaysGridHeaderCell}
+            />
+          ))
+        }
+      </Calendar.DaysGridHeader>
+      <Calendar.DaysGridBody className={styles.DaysGridBody}>
+        {({ weeks }) =>
+          weeks.map((week) => (
+            <Calendar.DaysWeekRow
+              value={week}
+              key={week.toString()}
+              className={styles.DaysWeekRow}
+            >
+              {({ days }) =>
+                days.map((day) => (
+                  <Calendar.DaysCell
+                    value={day}
+                    key={day.toString()}
+                    className={styles.DaysCell}
+                  />
+                ))
+              }
+            </Calendar.DaysWeekRow>
+          ))
+        }
+      </Calendar.DaysGridBody>
+    </Calendar.DaysGrid>
   );
 }
 
@@ -87,9 +88,12 @@ function DayCalendar(props) {
         monthPageSize={2}
         className={clsx(styles.Root, styles.RootWithTwoPanels)}
       >
-        <DaysGrid offset={0} />
-        <Separator className={styles.DaysGridSeparator} />
-        <DaysGrid offset={1} />
+        <Header />
+        <div className={styles.RootWithTwoPanelsContent}>
+          <DaysGrid offset={0} />
+          <Separator className={styles.DaysGridSeparator} />
+          <DaysGrid offset={1} />
+        </div>
       </Calendar.Root>
     </LocalizationProvider>
   );
