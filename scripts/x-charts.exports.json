@@ -317,5 +317,7 @@
   { "name": "useYAxis", "kind": "Function" },
   { "name": "useYColorScale", "kind": "Function" },
   { "name": "useYScale", "kind": "Function" },
+  { "name": "useZAxes", "kind": "Function" },
+  { "name": "useZAxis", "kind": "Function" },
   { "name": "useZColorScale", "kind": "Function" }
 ]
