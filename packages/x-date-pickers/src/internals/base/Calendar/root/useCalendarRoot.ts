@@ -4,7 +4,6 @@ import { useDateManager } from '../../../../managers';
 import { ExportedValidateDateProps, ValidateDateProps } from '../../../../validation/validateDate';
 import { useUtils } from '../../../hooks/useUtils';
 import { PickerValue } from '../../../models';
-import { CalendarRootContext } from './CalendarRootContext';
 import { mergeReactProps } from '../../base-utils/mergeReactProps';
 import { GenericHTMLProps } from '../../base-utils/types';
 import {
