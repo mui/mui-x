@@ -308,3 +308,7 @@ function DesktopDatePickerWithCustomField() {
 Here is a live demo of the example created in all the previous sections:
 
 {{"demo": "behavior-tutorial/MaterialDatePicker.js", "defaultCodeOpen": false}}
+
+The same can be achieved without using components from `@mui/material`:
+
+{{"demo": "behavior-tutorial/BrowserDatePicker.js", "defaultCodeOpen": false}}
