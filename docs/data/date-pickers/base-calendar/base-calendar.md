@@ -37,7 +37,7 @@ packageName: '@mui/x-date-pickers'
 
    It will make sure that keyboard navigation and pressing `<Calendar.SetVisibleMonth />` switching month two by two.
 
-{{"demo": "DayCalendarTwoMonthsDemo.js", "defaultCodeOpen": false}}
+{{"demo": "DayCalendarWithTwoMonthsDemo.js", "defaultCodeOpen": false}}
 
 ### With validation
 

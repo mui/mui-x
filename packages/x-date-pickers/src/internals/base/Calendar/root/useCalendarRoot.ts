@@ -76,21 +76,11 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
     }
   }
 
-  const context: CalendarRootContext = React.useMemo(
-    () => ({
-      value,
-    }),
-    [value],
-  );
-
   const getRootProps = React.useCallback((externalProps: GenericHTMLProps) => {
     return mergeReactProps(externalProps, {});
   }, []);
 
-  return React.useMemo(
-    () => ({ getRootProps, context, baseContext }),
-    [getRootProps, context, baseContext],
-  );
+  return React.useMemo(() => ({ getRootProps, baseContext }), [getRootProps, baseContext]);
 }
 
 export namespace useCalendarRoot {

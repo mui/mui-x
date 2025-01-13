@@ -43,6 +43,9 @@ export namespace useBaseCalendarDaysWeekRow {
   }
 
   export interface ChildrenParameters {
+    /**
+     * The days of the week.
+     */
     days: PickerValidDate[];
   }
 

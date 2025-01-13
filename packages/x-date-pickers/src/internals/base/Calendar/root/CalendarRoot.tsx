@@ -5,7 +5,6 @@ import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
 import { BaseUIComponentProps } from '../../base-utils/types';
 import { BaseCalendarRootContext } from '../../utils/base-calendar/root/BaseCalendarRootContext';
 import { useBaseCalendarRoot } from '../../utils/base-calendar/root/useBaseCalendarRoot';
-import { CalendarRootContext } from './CalendarRootContext';
 import { useCalendarRoot } from './useCalendarRoot';
 
 const CalendarRoot = React.forwardRef(function CalendarRoot(
@@ -44,7 +43,7 @@ const CalendarRoot = React.forwardRef(function CalendarRoot(
     // Props forwarded to the DOM element
     ...otherProps
   } = props;
-  const { getRootProps, context, baseContext } = useCalendarRoot({
+  const { getRootProps, baseContext } = useCalendarRoot({
     readOnly,
     disabled,
     monthPageSize,
@@ -80,7 +79,7 @@ const CalendarRoot = React.forwardRef(function CalendarRoot(
 
   return (
     <BaseCalendarRootContext.Provider value={baseContext}>
-      <CalendarRootContext.Provider value={context}>{renderElement()}</CalendarRootContext.Provider>
+      {renderElement()}
     </BaseCalendarRootContext.Provider>
   );
 });
