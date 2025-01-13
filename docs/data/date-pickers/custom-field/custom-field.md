@@ -155,14 +155,14 @@ The same logic can be applied to any Range Picker:
 
 {{"demo": "behavior-button/MaterialDateRangePicker.js", "defaultCodeOpen": false}}
 
-### Build your own custom field
+## Build your own custom field
 
 :::success
 The sections below show how to build a field for your Picker.
 Unlike the field components exposed by `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`, those fields are not suitable for a standalone usage.
 :::
 
-#### Typing
+### Typing
 
 Each picker component exposes an interface describing the props it passes to its field.
 You can import it from the same endpoint as the picker component and use it to type the props of your field:
@@ -180,7 +180,7 @@ function CustomDateRangeField(props: DateRangePickerFieldProps) {
 }
 ```
 
-##### Import
+#### Import
 
 |       Picker component | Field props interface           |
 | ---------------------: | :------------------------------ |
@@ -190,7 +190,7 @@ function CustomDateRangeField(props: DateRangePickerFieldProps) {
 |      Date Range Picker | `DateRangePickerFieldProps`     |
 | Date Time Range Picker | `DateTimeRangePickerFieldProps` |
 
-#### Validation
+### Validation
 
 You can use the `useValidation` hook to check if the current value passed to your field is valid or not:
 
@@ -216,7 +216,7 @@ const {
 });
 ```
 
-##### Import
+#### Import
 
 Each Picker component has a validator adapted to its value type:
 
@@ -228,7 +228,7 @@ Each Picker component has a validator adapted to its value type:
 |      Date Range Picker | `import { validateDateRange } from '@mui/x-date-pickers-pro/validation'`     |
 | Date Time Range Picker | `import { validateDateTimeRange } from '@mui/x-date-pickers-pro/validation'` |
 
-#### Localized placeholder
+### Localized placeholder
 
 You can use the `useParsedFormat` to get a clean placeholder.
 This hook applies two main transformations on the format:
@@ -250,7 +250,7 @@ const parsedFormat = useParsedFormat();
 const parsedFormat = useParsedFormat({ format: 'MM/DD/YYYY' });
 ```
 
-#### Spread props to the DOM
+### Spread props to the DOM
 
 The field receives a lot of props that cannot be forwarded to the DOM element without warnings.
 You can use the `useSplitFieldProps` hook to get the props that can be forwarded safely to the DOM:
@@ -283,7 +283,7 @@ return (
 
 :::
 
-#### Pass the field to the picker
+### Pass the field to the picker
 
 You can pass your custom field to your picker using the `field` slot:
 
@@ -303,7 +303,7 @@ function DesktopDatePickerWithCustomField() {
 
 ```
 
-#### Full custom example
+### Full custom example
 
 Here is a live demo of the example created in all the previous sections:
 
