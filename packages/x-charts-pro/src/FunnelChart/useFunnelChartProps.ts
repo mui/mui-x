@@ -70,10 +70,16 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     colors,
     dataset,
     xAxis:
-      xAxis ??
+      xAxis?.map((axis) => ({
+        ...defaultBandAxisConfig,
+        ...axis,
+      })) ??
       (hasHorizontalSeries ? [{ id: DEFAULT_X_AXIS_KEY, ...defaultBandAxisConfig }] : undefined),
     yAxis:
-      yAxis ??
+      yAxis?.map((axis) => ({
+        ...defaultBandAxisConfig,
+        ...axis,
+      })) ??
       (hasHorizontalSeries ? undefined : [{ id: DEFAULT_Y_AXIS_KEY, ...defaultBandAxisConfig }]),
     sx,
     highlightedItem,
