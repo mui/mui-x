@@ -69,7 +69,7 @@ The purpose of this utility is to enable/disable telemetry for the current machi
 
 ### Possible commands
 
-```
+```bash
 npx mui-x-telemetry <command>
 
 Commands:
