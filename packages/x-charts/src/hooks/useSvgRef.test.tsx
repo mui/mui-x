@@ -27,7 +27,7 @@ describe('useSvgRef', () => {
       'It looks like you rendered your component outside of a ChartDataProvider.',
       'The above error occurred in the <UseSvgRef> component',
     ];
-    const expextedError = reactMajor < 19 ? errorMessages : errorMessages.slice(0, 2).join('\n');
+    const expectedError = reactMajor < 19 ? errorMessages : errorMessages.slice(0, 2).join('\n');
 
     expect(() =>
       render(
@@ -35,7 +35,7 @@ describe('useSvgRef', () => {
           <UseSvgRef />
         </ErrorBoundary>,
       ),
-    ).toErrorDev(expextedError);
+    ).toErrorDev(expectedError);
 
     expect((errorRef.current as any).errors).to.have.length(1);
     expect((errorRef.current as any).errors[0].toString()).to.include(
