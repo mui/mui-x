@@ -1,5 +1,7 @@
+import fs from 'fs';
 import path from 'path';
 import kebabCase from 'lodash/kebabCase';
+import { getHeaders, getTitle, renderMarkdown } from '@mui/internal-markdown';
 import {
   ComponentInfo,
   extractPackageFile,
@@ -7,6 +9,7 @@ import {
   parseFile,
   toGitHubPath,
 } from '@mui-internal/api-docs-builder/buildApiUtils';
+import findPagesMarkdown from '@mui-internal/api-docs-builder/utils/findPagesMarkdown';
 
 export function getComponentInfo(filename: string): ComponentInfo {
   const { name } = extractPackageFile(filename);
@@ -33,21 +36,29 @@ export function getComponentInfo(filename: string): ComponentInfo {
     getInheritance: () => null, // TODO: Support inheritance
     getDemos: () => {
       if (filename.includes('/components/')) {
-        const componentCamelCase = filename.split('/components/')[1].split('/')[0];
-        const componentKebabCase = kebabCase(componentCamelCase);
-        const componentTitleCase =
-          componentCamelCase.charAt(0).toUpperCase() +
-          componentCamelCase
-            .slice(1)
-            .split(/(?=[A-Z])/)
-            .join(' ');
+        const allMarkdowns = findPagesMarkdown(
+          path.join(__dirname, '../../../docs/data/data-grid/components/'),
+        ).map((markdown) => {
+          const markdownContent = fs.readFileSync(markdown.filename, 'utf8');
+          const markdownHeaders = getHeaders(markdownContent) as any;
 
-        return [
-          {
-            demoPathname: `/x/react-data-grid/components/${componentKebabCase}`,
-            demoPageTitle: componentTitleCase,
-          },
-        ];
+          return {
+            ...markdown,
+            markdownContent,
+            components: markdownHeaders.components as string[],
+          };
+        });
+
+        const componentDemos = allMarkdowns
+          .filter((page) => page.components?.includes(name))
+          .map((page) => ({
+            demoPageTitle: renderMarkdown(getTitle(page.markdownContent)),
+            demoPathname: `/x/react-data-grid/components/${path.basename(page.pathname)}`,
+          }));
+
+        if (componentDemos.length > 0) {
+          return componentDemos;
+        }
       }
 
       return [

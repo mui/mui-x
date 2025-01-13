@@ -373,6 +373,6 @@
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid/src/components/filterPanel/FilterPanelTrigger.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/filter-panel\">Filter Panel</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/components/filter-panel\">Data Grid - Filter Panel 🚧</a></li></ul>",
   "cssComponent": false
 }

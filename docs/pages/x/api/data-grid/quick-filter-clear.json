@@ -100,6 +100,6 @@
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid/src/components/quickFilter/QuickFilterClear.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/quick-filter\">Quick Filter</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/components/quick-filter\">Data Grid - Quick Filter</a></li></ul>",
   "cssComponent": false
 }

@@ -373,6 +373,6 @@
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid/src/components/columnsPanel/ColumnsPanelTrigger.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/columns-panel\">Columns Panel</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/components/columns-panel\">Data Grid - Columns Panel 🚧</a></li></ul>",
   "cssComponent": false
 }
