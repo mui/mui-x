@@ -11,18 +11,21 @@ export function useYearsCells(parameters: useYearsCells.Parameters): useYearsCel
   const utils = useUtils();
 
   const items = React.useMemo(() => {
+    const getDefaultItems = () =>
+      utils.getYearRange([
+        baseRootContext.dateValidationProps.minDate,
+        baseRootContext.dateValidationProps.maxDate,
+      ]);
     if (getItems) {
       return getItems({
         visibleDate: baseRootContext.visibleDate,
         minDate: baseRootContext.dateValidationProps.minDate,
         maxDate: baseRootContext.dateValidationProps.maxDate,
+        getDefaultItems,
       });
     }
 
-    return utils.getYearRange([
-      baseRootContext.dateValidationProps.minDate,
-      baseRootContext.dateValidationProps.maxDate,
-    ]);
+    return getDefaultItems();
   }, [
     utils,
     getItems,
@@ -74,6 +77,7 @@ export namespace useYearsCells {
     visibleDate: PickerValidDate;
     minDate: PickerValidDate;
     maxDate: PickerValidDate;
+    getDefaultItems: () => PickerValidDate[];
   }
 
   export interface ReturnValue extends useCellList.ReturnValue {

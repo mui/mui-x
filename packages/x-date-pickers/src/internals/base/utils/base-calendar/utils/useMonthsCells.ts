@@ -18,13 +18,16 @@ export function useMonthsCells(parameters: useMonthsCells.Parameters): useMonths
   );
 
   const items = React.useMemo(() => {
+    const getDefaultItems = () => getMonthsInYear(utils, currentYear);
+
     if (getItems) {
       return getItems({
         year: currentYear,
+        getDefaultItems,
       });
     }
 
-    return getMonthsInYear(utils, currentYear);
+    return getDefaultItems();
   }, [utils, getItems, currentYear]);
 
   const { scrollerRef } = useCellList({ focusOnMount, section: 'month', value: currentYear });
@@ -111,6 +114,7 @@ export namespace useMonthsCells {
 
   export interface GetCellsParameters {
     year: PickerValidDate;
+    getDefaultItems: () => PickerValidDate[];
   }
 
   export interface ReturnValue extends useCellList.ReturnValue {

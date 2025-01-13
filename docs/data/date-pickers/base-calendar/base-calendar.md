@@ -121,10 +121,28 @@ TODO
 
 {{"demo": "YearCalendarWithListLayoutDemo.js", "defaultCodeOpen": false}}
 
+### Recipe: Reversed order
+
+```tsx
+const getYears = ({ getDefaultItems }) => {
+  return getDefaultItems().toReversed();
+};
+
+<Calendar.YearsGrid cellsPerRow={2} getItems={getYearsInDecade}>
+  {/** Year cells */}
+</Calendar.YearsGrid>;
+```
+
+:::success
+Using the `getItems` prop instead of manually providing a list of `<Calendar.YearsCell />` as children allows the `<Calendar.YearsGrid />` to always have at least one cell with `tabIndex={0}` and to correctly scroll to the first item with `tabIndex={0}`
+:::
+
+{{"demo": "YearCalendarWithReversedOrderDemo.js", "defaultCodeOpen": false}}
+
 ### Recipe: Grouped by decade
 
 ```tsx
-const getYearsInDecade = ({ visibleDate }: { visibleDate: Dayjs }) => {
+const getYearsInDecade = ({ visibleDate }) => {
   const reference = visibleDate.startOf('year');
   const decade = Math.floor(reference.year() / 10) * 10;
   return Array.from({ length: 10 }, (_, index) =>
@@ -138,7 +156,7 @@ const getYearsInDecade = ({ visibleDate }: { visibleDate: Dayjs }) => {
 ```
 
 :::success
-Using the `getItems` prop instead of manually providing a list of `<Calendar.YearsCell />` as children allows the `<Calendar.YearsGrid />` to always have at least one cell with `tabIndex={0}`.
+Using the `getItems` prop instead of manually providing a list of `<Calendar.YearsCell />` as children allows the `<Calendar.YearsGrid />` to always have at least one cell with `tabIndex={0}` and to correctly scroll to the first item with `tabIndex={0}`
 :::
 
 {{"demo": "YearCalendarWithDecadeNavigationDemo.js", "defaultCodeOpen": false}}

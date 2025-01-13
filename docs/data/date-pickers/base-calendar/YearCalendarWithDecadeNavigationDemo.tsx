@@ -36,7 +36,7 @@ function Header() {
   );
 }
 
-const getYearsInDecade = ({ visibleDate }: { visibleDate: Dayjs }) => {
+const getYearsInDecade: Calendar.YearsGrid.Props['getItems'] = ({ visibleDate }) => {
   const reference = visibleDate.startOf('year');
   const decade = Math.floor(reference.year() / 10) * 10;
   return Array.from({ length: 10 }, (_, index) =>
