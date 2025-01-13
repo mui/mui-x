@@ -16,7 +16,7 @@ type ColSpanLookup = Record<GridRowId, Record<GridColumnIndex, GridCellColSpanIn
  * @requires useGridColumns (method, event)
  * @requires useGridParamsApi (method)
  */
-export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridPrivateApiCommunity>) => {
+export const useGridColumnSpanning = (apiRef: React.RefObject<GridPrivateApiCommunity>) => {
   const lookup = React.useRef<ColSpanLookup>({});
 
   const getCellColSpanInfo: GridColumnSpanningApi['unstable_getCellColSpanInfo'] = (
@@ -67,7 +67,7 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridPrivate
 };
 
 function calculateCellColSpan(params: {
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>;
+  apiRef: React.RefObject<GridPrivateApiCommunity>;
   lookup: ColSpanLookup;
   columnIndex: number;
   rowId: GridRowId;

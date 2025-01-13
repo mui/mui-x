@@ -1,9 +1,8 @@
-import type { ChartsPlugin } from '../context/PluginProvider';
+import { ChartSeriesTypeConfig } from '../internals/plugins/models/seriesConfig';
 import formatter from './formatter';
 import getColor from './getColor';
 
-export const plugin: ChartsPlugin<'pie'> = {
-  seriesType: 'pie',
+export const plugin: ChartSeriesTypeConfig<'pie'> = {
   colorProcessor: getColor,
-  seriesFormatter: formatter,
+  seriesProcessor: formatter,
 };

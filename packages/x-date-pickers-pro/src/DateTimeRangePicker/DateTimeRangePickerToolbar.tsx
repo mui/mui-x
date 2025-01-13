@@ -17,12 +17,12 @@ import {
 import { usePickerContext, usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { DateTimePickerToolbar } from '@mui/x-date-pickers/DateTimePicker';
-import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import {
   DateTimeRangePickerToolbarClasses,
   getDateTimeRangePickerToolbarUtilityClass,
 } from './dateTimeRangePickerToolbarClasses';
 import { calculateRangeChange } from '../internals/utils/date-range-manager';
+import { usePickerRangePositionContext } from '../hooks';
 
 const useUtilityClasses = (classes: Partial<DateTimeRangePickerToolbarClasses> | undefined) => {
   const slots = {
@@ -38,7 +38,6 @@ type DateTimeRangeViews = Exclude<DateOrTimeViewWithMeridiem, 'year' | 'month'>;
 
 export interface DateTimeRangePickerToolbarProps
   extends BaseToolbarProps,
-    Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'>,
     ExportedDateTimeRangePickerToolbarProps {
   ampm?: boolean;
 }
@@ -88,8 +87,6 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
   const utils = useUtils();
 
   const {
-    rangePosition,
-    onRangePositionChange,
     className,
     classes: classesProp,
     classes: inClasses,
@@ -102,12 +99,13 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
     ...other
   } = props;
 
-  const { value, setValue, disabled, readOnly, view, onViewChange, views } = usePickerContext<
+  const { value, setValue, disabled, readOnly, view, setView, views } = usePickerContext<
     PickerRangeValue,
     DateTimeRangeViews
   >();
   const translations = usePickerTranslations();
   const ownerState = useToolbarOwnerState();
+  const { rangePosition, onRangePositionChange } = usePickerRangePositionContext();
   const classes = useUtilityClasses(classesProp);
 
   const commonToolbarProps = {
@@ -143,17 +141,17 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
       if (rangePosition !== 'start') {
         onRangePositionChange('start');
       }
-      onViewChange(newView);
+      setView(newView);
     };
 
     return {
       value: value[0],
       setValue: wrappedSetValue,
       forceDesktopVariant: true,
-      onViewChange: handleStartRangeViewChange,
+      setView: handleStartRangeViewChange,
       view: rangePosition === 'start' ? view : null,
     };
-  }, [value, wrappedSetValue, rangePosition, view, onRangePositionChange, onViewChange]);
+  }, [value, wrappedSetValue, rangePosition, view, onRangePositionChange, setView]);
 
   const endOverrides = React.useMemo(() => {
     const handleEndRangeViewChange = (newView: DateOrTimeViewWithMeridiem) => {
@@ -163,17 +161,17 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
       if (rangePosition !== 'end') {
         onRangePositionChange('end');
       }
-      onViewChange(newView);
+      setView(newView);
     };
 
     return {
       value: value[1],
       setValue: wrappedSetValue,
       forceDesktopVariant: true,
-      onViewChange: handleEndRangeViewChange,
+      setView: handleEndRangeViewChange,
       view: rangePosition === 'end' ? view : null,
     };
-  }, [value, wrappedSetValue, rangePosition, view, onRangePositionChange, onViewChange]);
+  }, [value, wrappedSetValue, rangePosition, view, onRangePositionChange, setView]);
 
   if (hidden) {
     return null;
@@ -225,8 +223,6 @@ DateTimeRangePickerToolbar.propTypes = {
    * @default `true` for Desktop, `false` for Mobile.
    */
   hidden: PropTypes.bool,
-  onRangePositionChange: PropTypes.func.isRequired,
-  rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

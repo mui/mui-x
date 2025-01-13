@@ -96,7 +96,7 @@ export type UseTreeItemLabelInputSlotProps<ExternalProps = {}> = ExternalProps &
   UseTreeItemLabelInputSlotOwnProps;
 
 export interface UseTreeItemCheckboxSlotOwnProps {
-  ref: React.RefObject<HTMLButtonElement>;
+  ref: React.RefObject<HTMLButtonElement | null>;
 }
 
 export type UseTreeItemCheckboxSlotProps<ExternalProps = {}> = ExternalProps &

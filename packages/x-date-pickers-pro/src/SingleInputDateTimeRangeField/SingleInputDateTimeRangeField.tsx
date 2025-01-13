@@ -45,11 +45,8 @@ const SingleInputDateTimeRangeField = React.forwardRef(function SingleInputDateT
 
   const ownerState = useFieldOwnerState(themeProps);
 
-  const TextField =
-    slots?.textField ??
-    (inProps.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
   const textFieldProps = useSlotProps({
-    elementType: TextField,
+    elementType: PickersTextField,
     externalSlotProps: slotProps?.textField,
     externalForwardedProps: other,
     ownerState,
@@ -73,6 +70,10 @@ const SingleInputDateTimeRangeField = React.forwardRef(function SingleInputDateT
     slots,
     slotProps,
   });
+
+  const TextField =
+    slots?.textField ??
+    (fieldResponse.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
 
   return <TextField {...processedFieldProps} />;
 }) as DateRangeFieldComponent;

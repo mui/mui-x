@@ -2,31 +2,24 @@ import { warnOnce } from '@mui/x-internals/warning';
 import { UsePickerParams, UsePickerProps, UsePickerResponse } from './usePicker.types';
 import { usePickerValue } from './usePickerValue';
 import { usePickerViews } from './usePickerViews';
-import { InferError } from '../../../models';
 import { DateOrTimeViewWithMeridiem, PickerValidValue } from '../../models';
 import { usePickerProvider } from './usePickerProvider';
 
 export const usePicker = <
   TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UsePickerProps<TValue, TView, any, any, any>,
-  TAdditionalProps extends {},
+  TExternalProps extends UsePickerProps<TValue, TView, any, any>,
 >({
   props,
   valueManager,
   valueType,
   variant,
-  additionalViewProps,
   validator,
   autoFocusView,
   rendererInterceptor,
   fieldRef,
   localeText,
-}: UsePickerParams<TValue, TView, TExternalProps, TAdditionalProps>): UsePickerResponse<
-  TValue,
-  TView,
-  InferError<TExternalProps>
-> => {
+}: UsePickerParams<TValue, TView, TExternalProps>): UsePickerResponse<TValue, TView> => {
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).renderInput != null) {
       warnOnce([
@@ -40,13 +33,11 @@ export const usePicker = <
     props,
     valueManager,
     valueType,
-    variant,
     validator,
   });
 
-  const pickerViewsResponse = usePickerViews<TValue, TView, TExternalProps, TAdditionalProps>({
+  const pickerViewsResponse = usePickerViews<TValue, TView, TExternalProps>({
     props,
-    additionalViewProps,
     autoFocusView,
     fieldRef,
     propsFromPickerValue: pickerValueResponse.viewProps,
@@ -63,9 +54,6 @@ export const usePicker = <
   });
 
   return {
-    // Picker value
-    fieldProps: pickerValueResponse.fieldProps,
-
     // Picker views
     renderCurrentView: pickerViewsResponse.renderCurrentView,
     hasUIView: pickerViewsResponse.provider.hasUIView,

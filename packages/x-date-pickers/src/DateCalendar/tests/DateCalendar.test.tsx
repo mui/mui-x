@@ -5,8 +5,7 @@ import { fireEvent, screen } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DateCalendar />', () => {
   const { render, clock } = createPickerRenderer({
@@ -525,10 +524,8 @@ describe('<DateCalendar />', () => {
       expect(screen.getByTestId('calendar-month-and-year-text')).to.have.text('January 2022');
     });
 
-    it('should scroll to show the selected year', function test() {
-      if (isJSDOM) {
-        this.skip(); // Needs layout
-      }
+    // Needs layout
+    testSkipIf(isJSDOM)('should scroll to show the selected year', () => {
       render(
         <DateCalendar
           defaultValue={adapterToUse.date('2019-04-29')}

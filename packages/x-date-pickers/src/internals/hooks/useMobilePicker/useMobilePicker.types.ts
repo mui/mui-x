@@ -2,7 +2,6 @@ import * as React from 'react';
 import type { TextFieldProps } from '@mui/material/TextField';
 import { MakeRequired, SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import {
-  BaseNonStaticPickerProps,
   BasePickerProps,
   BaseNonRangeNonStaticPickerProps,
 } from '../../models/props/basePickerProps';
@@ -63,8 +62,7 @@ export interface UseMobilePickerSlotProps<TEnableAccessibleFieldDOMStructure ext
     Pick<PickersLayoutSlotProps<PickerValue>, 'toolbar'> {}
 
 export interface MobileOnlyPickerProps
-  extends BaseNonStaticPickerProps,
-    BaseNonRangeNonStaticPickerProps,
+  extends BaseNonRangeNonStaticPickerProps,
     UsePickerValueNonStaticProps,
     UsePickerProviderNonStaticProps {}
 
@@ -72,8 +70,8 @@ export interface UseMobilePickerProps<
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-  TExternalProps extends UsePickerViewsProps<any, TView, any, any>,
-> extends BasePickerProps<PickerValue, TView, TError, TExternalProps, {}>,
+  TExternalProps extends UsePickerViewsProps<any, TView, any>,
+> extends BasePickerProps<PickerValue, TView, TError, TExternalProps>,
     MakeRequired<MobileOnlyPickerProps, 'format'> {
   /**
    * Overridable component slots.
@@ -97,7 +95,7 @@ export interface UseMobilePickerParams<
     TExternalProps
   >,
 > extends Pick<
-    UsePickerParams<PickerValue, TView, TExternalProps, {}>,
+    UsePickerParams<PickerValue, TView, TExternalProps>,
     'valueManager' | 'valueType' | 'validator'
   > {
   props: TExternalProps;

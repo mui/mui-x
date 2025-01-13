@@ -5,8 +5,9 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { GridApi, useGridApiRef, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 import { ptBR } from '@mui/x-data-grid-pro/locales';
 import { grid } from 'test/utils/helperFn';
+import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 
-describe('<DataGridPro /> - Layout', () => {
+describeSkipIf(isJSDOM)('<DataGridPro /> - Layout', () => {
   const { render } = createRenderer();
 
   const baselineProps = {
@@ -26,13 +27,6 @@ describe('<DataGridPro /> - Layout', () => {
     ],
     columns: [{ field: 'brand', width: 100 }],
   };
-
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
 
   // Adaptation of describeConformance()
   describe('MUI component API', () => {
@@ -84,7 +78,7 @@ describe('<DataGridPro /> - Layout', () => {
 
   describe('columns width', () => {
     it('should resize flex: 1 column when changing column visibility to avoid exceeding grid width (apiRef setColumnVisibility method call)', () => {
-      let apiRef: React.MutableRefObject<GridApi>;
+      let apiRef: React.RefObject<GridApi>;
 
       function TestCase(props: Omit<DataGridProProps, 'apiRef'>) {
         apiRef = useGridApiRef();
@@ -170,11 +164,7 @@ describe('<DataGridPro /> - Layout', () => {
     expect(document.querySelector('[title="Ordenar"]')).not.to.equal(null);
   });
 
-  it('should support the sx prop', function test() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      this.skip(); // Doesn't work with mocked window.getComputedStyle
-    }
-
+  it('should support the sx prop', () => {
     const theme = createTheme({
       palette: {
         primary: {

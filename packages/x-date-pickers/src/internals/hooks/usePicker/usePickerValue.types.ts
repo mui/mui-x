@@ -1,8 +1,6 @@
 import * as React from 'react';
-import { MakeRequired } from '@mui/x-internals/types';
 import { UseFieldInternalProps } from '../useField';
 import { Validator } from '../../../validation';
-import { PickerVariant } from '../../models/common';
 import {
   TimezoneProps,
   MuiPickersAdapter,
@@ -156,37 +154,6 @@ export interface UsePickerValueState<TValue extends PickerValidValue> {
   hasBeenModifiedSinceMount: boolean;
 }
 
-export interface PickerValueUpdaterParams<TValue extends PickerValidValue, TError> {
-  action: PickerValueUpdateAction<TValue, TError>;
-  dateState: UsePickerValueState<TValue>;
-  /**
-   * Check if the new draft value has changed compared to some given value.
-   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
-   * @param {TValue} comparisonValue The value to compare the new draft value with.
-   * @returns {boolean} `true` if the new draft value is equal to the comparison value.
-   */
-  hasChanged: (comparisonValue: TValue) => boolean;
-  isControlled: boolean;
-  closeOnSelect: boolean;
-}
-
-export type PickerValueUpdateAction<TValue extends PickerValidValue, TError> =
-  | {
-      name: 'setValueFromView';
-      value: TValue;
-      selectionState: PickerSelectionState;
-    }
-  | {
-      name: 'setValueFromAction';
-      value: TValue;
-      pickerAction: 'accept' | 'today' | 'cancel' | 'dismiss' | 'clear';
-    }
-  | {
-      name: 'setExplicitValue';
-      value: TValue;
-      options: MakeRequired<SetValueActionOptions<TError>, 'changeImportance'>;
-    };
-
 /**
  * Props used to handle the value that are common to all pickers.
  */
@@ -225,8 +192,8 @@ export interface UsePickerValueBaseProps<TValue extends PickerValidValue, TError
  */
 export interface UsePickerValueNonStaticProps {
   /**
-   * If `true`, the popover or modal will close after submitting the full date.
-   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * If `true`, the Picker will close after submitting the full date.
+   * @default false
    */
   closeOnSelect?: boolean;
   /**
@@ -264,7 +231,6 @@ export interface UsePickerValueParams<
   props: TExternalProps;
   valueManager: PickerValueManager<TValue, InferError<TExternalProps>>;
   valueType: PickerValueType;
-  variant: PickerVariant;
   validator: Validator<TValue, InferError<TExternalProps>, TExternalProps>;
 }
 
@@ -295,7 +261,6 @@ export interface UsePickerValueProviderParams<TValue extends PickerValidValue, T
 
 export interface UsePickerValueResponse<TValue extends PickerValidValue, TError> {
   viewProps: UsePickerValueViewsResponse<TValue>;
-  fieldProps: UsePickerValueFieldResponse<TValue, TError>;
   provider: UsePickerValueProviderParams<TValue, TError>;
 }
 
@@ -305,6 +270,10 @@ export interface UsePickerValueContextValue<TValue extends PickerValidValue, TEr
    * The current value of the picker.
    */
   value: TValue;
+  /**
+   * The timezone to use when rendering the dates.
+   */
+  timezone: PickersTimezone;
   /**
    * `true` if the picker is open, `false` otherwise.
    */
@@ -360,7 +329,7 @@ export interface UsePickerValuePrivateContextValue {
   dismissViews: () => void;
 }
 
-export interface SetValueActionOptions<TError = string> {
+export interface SetValueActionOptions<TError = string | null> {
   /**
    * Importance of the change when picking a value:
    * - "accept": fires `onChange`, fires `onAccept` and closes the picker.
@@ -378,4 +347,11 @@ export interface SetValueActionOptions<TError = string> {
    * Should not be defined if the change does not come from a shortcut.
    */
   shortcut?: PickersShortcutsItemContext;
+  /**
+   * Decide if the value should call `onChange` and `onAccept` when the value is not controlled and has never been modified.
+   * If `true`, the `onChange` and `onAccept` callback will only be fired if the value has been modified (and is not equal to the last published value).
+   * If `false`, the `onChange` and `onAccept` callback will be fired when the value has never been modified (`onAccept` only if `changeImportance` is set to "accept").
+   * @default false
+   */
+  skipPublicationIfPristine?: boolean;
 }

@@ -43,7 +43,7 @@ const skippedFields = new Set([
 const DEFAULT_ROWS_TO_PROCESS = 20;
 
 const computeRowSpanningState = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   colDefs: GridColDef[],
   visibleRows: GridRowEntry<GridValidRowModel>[],
   range: RowRange,
@@ -221,7 +221,7 @@ export const rowSpanningStateInitializer: GridStateInitializer = (state, props, 
 };
 
 export const useGridRowSpanning = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'rowSpanning' | 'pagination' | 'paginationMode'>,
 ): void => {
   const processedRange = useLazyRef<RowRange, void>(() => {

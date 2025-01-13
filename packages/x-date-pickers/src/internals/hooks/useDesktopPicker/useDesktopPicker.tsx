@@ -37,12 +37,6 @@ export const useDesktopPicker = <
     slotProps: innerSlotProps,
     className,
     sx,
-    format,
-    formatDensity,
-    enableAccessibleFieldDOMStructure,
-    selectedSections,
-    onSelectedSectionsChange,
-    timezone,
     name,
     label,
     inputRef,
@@ -59,20 +53,16 @@ export const useDesktopPicker = <
   const labelId = useId();
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
 
-  const {
-    hasUIView,
-    providerProps,
-    renderCurrentView,
-    shouldRestoreFocus,
-    fieldProps: pickerFieldProps,
-    ownerState,
-  } = usePicker<PickerValue, TView, TExternalProps, {}>({
+  const { hasUIView, providerProps, renderCurrentView, shouldRestoreFocus, ownerState } = usePicker<
+    PickerValue,
+    TView,
+    TExternalProps
+  >({
     ...pickerParams,
     props,
     fieldRef,
     localeText,
     autoFocusView: true,
-    additionalViewProps: {},
     variant: 'desktop',
   });
 
@@ -97,7 +87,7 @@ export const useDesktopPicker = <
         event.preventDefault();
         providerProps.contextValue.setOpen((prevOpen) => !prevOpen);
       },
-      'aria-label': getOpenDialogAriaText(pickerFieldProps.value),
+      'aria-label': getOpenDialogAriaText(providerProps.contextValue.value),
       edge: inputAdornmentProps.position,
     },
     ownerState,
@@ -121,15 +111,7 @@ export const useDesktopPicker = <
     additionalProps: {
       // Internal props
       readOnly,
-      disabled,
-      format,
-      formatDensity,
-      enableAccessibleFieldDOMStructure,
-      selectedSections,
-      onSelectedSectionsChange,
-      timezone,
       autoFocus: autoFocus && !props.open,
-      ...pickerFieldProps, // onChange and value
 
       // Forwarded props
       className,
