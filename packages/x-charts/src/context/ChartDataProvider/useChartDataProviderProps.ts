@@ -7,12 +7,13 @@ import { ChartProviderProps } from '../ChartProvider';
 import { ChartAnyPluginSignature, MergeSignaturesProperty } from '../../internals/plugins/models';
 import { ChartSeriesType } from '../../models/seriesType/config';
 import { ChartCorePluginSignatures } from '../../internals/plugins/corePlugins';
+import { AllPluginSignatures } from '../../internals/plugins/allPlugins';
 
 export const useChartDataProviderProps = <
-  TSignatures extends readonly ChartAnyPluginSignature[],
   TSeries extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 >(
-  props: ChartDataProviderProps<TSignatures, TSeries>,
+  props: ChartDataProviderProps<TSeries, TSignatures>,
 ) => {
   const {
     apiRef,
@@ -33,7 +34,7 @@ export const useChartDataProviderProps = <
 
   const theme = useTheme();
 
-  const chartProviderProps: Omit<ChartProviderProps<TSignatures, TSeries>, 'children'> = {
+  const chartProviderProps: Omit<ChartProviderProps<TSeries, TSignatures>, 'children'> = {
     plugins,
     seriesConfig,
     pluginParams: {

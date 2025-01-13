@@ -29,9 +29,9 @@ export const defaultSeriesConfig: ChartSeriesConfig<'bar' | 'scatter' | 'line' |
 const defaultPlugins = [useChartZAxis, useChartCartesianAxis, useChartInteraction];
 
 function ChartProvider<
-  TSignatures extends readonly ChartAnyPluginSignature[],
   TSeriesType extends ChartSeriesType,
->(props: ChartProviderProps<TSignatures, TSeriesType>) {
+  TSignatures extends readonly ChartAnyPluginSignature[],
+>(props: ChartProviderProps<TSeriesType, TSignatures>) {
   const {
     children,
     plugins = defaultPlugins as unknown as ConvertSignaturesIntoPlugins<TSignatures>,
@@ -39,7 +39,7 @@ function ChartProvider<
     seriesConfig = defaultSeriesConfig as ChartSeriesConfig<TSeriesType>,
   } = props;
 
-  const { contextValue } = useCharts<TSignatures, TSeriesType>(plugins, pluginParams, seriesConfig);
+  const { contextValue } = useCharts<TSeriesType, TSignatures>(plugins, pluginParams, seriesConfig);
 
   return <ChartContext.Provider value={contextValue}>{children}</ChartContext.Provider>;
 }

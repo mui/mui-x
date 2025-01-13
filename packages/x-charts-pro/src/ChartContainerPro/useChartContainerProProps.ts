@@ -1,28 +1,19 @@
 'use client';
 import {
   ChartDataProviderProps,
-  ChartPlugin,
   ChartSeriesType,
-  useChartZAxis,
-  UseChartZAxisSignature,
-  useChartCartesianAxis,
-  UseChartCartesianAxisSignature,
   useChartContainerProps,
   UseChartContainerPropsReturnValue,
 } from '@mui/x-charts/internals';
 import * as React from 'react';
 import type { ChartContainerProProps } from './ChartContainerPro';
-import { useChartProZoom } from '../internals/plugins/useChartProZoom';
-import { UseChartProZoomSignature } from '../internals/plugins/useChartProZoom/useChartProZoom.types';
+import { ALL_PLUGINS, AllPluginsType, AllPluginSignatures } from '../internals/plugins/allPlugins';
 
 export type UseChartContainerProPropsReturnValue<TSeries extends ChartSeriesType> = Pick<
   UseChartContainerPropsReturnValue<TSeries>,
   'chartsSurfaceProps' | 'children'
 > & {
-  chartDataProviderProProps: ChartDataProviderProps<
-    [UseChartZAxisSignature, UseChartCartesianAxisSignature<TSeries>, UseChartProZoomSignature],
-    TSeries
-  >;
+  chartDataProviderProProps: ChartDataProviderProps<TSeries, AllPluginSignatures<TSeries>>;
 };
 
 export const useChartContainerProProps = <TSeries extends ChartSeriesType = ChartSeriesType>(
@@ -32,10 +23,7 @@ export const useChartContainerProProps = <TSeries extends ChartSeriesType = Char
   const { initialZoom, onZoomChange, plugins, apiRef, ...baseProps } = props;
 
   const chartDataProviderProProps: Pick<
-    ChartDataProviderProps<
-      [UseChartZAxisSignature, UseChartCartesianAxisSignature<TSeries>, UseChartProZoomSignature],
-      TSeries
-    >,
+    ChartDataProviderProps<TSeries, AllPluginSignatures<TSeries>>,
     'initialZoom' | 'onZoomChange'
   > = {
     initialZoom,
@@ -52,14 +40,7 @@ export const useChartContainerProProps = <TSeries extends ChartSeriesType = Char
       ...chartDataProviderProps,
       ...chartDataProviderProProps,
       apiRef,
-      plugins: plugins ?? [
-        // eslint-disable-next-line react-compiler/react-compiler
-        useChartZAxis,
-        // eslint-disable-next-line react-compiler/react-compiler
-        useChartCartesianAxis as unknown as ChartPlugin<UseChartCartesianAxisSignature<TSeries>>,
-        // eslint-disable-next-line react-compiler/react-compiler
-        useChartProZoom,
-      ],
+      plugins: plugins ?? (ALL_PLUGINS as unknown as AllPluginsType<TSeries>),
     },
     chartsSurfaceProps,
     children,

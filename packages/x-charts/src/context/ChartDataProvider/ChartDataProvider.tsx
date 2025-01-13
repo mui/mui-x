@@ -7,20 +7,18 @@ import { HighlightedProvider, HighlightedProviderProps } from '../HighlightedPro
 import { ChartProvider, ChartProviderProps } from '../ChartProvider';
 import { ChartSeriesType } from '../../models/seriesType/config';
 import { ChartAnyPluginSignature } from '../../internals/plugins/models/plugin';
-import { UseChartCartesianAxisSignature } from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
-import { UseChartInteractionSignature } from '../../internals/plugins/featurePlugins/useChartInteraction';
-import { UseChartZAxisSignature } from '../../internals/plugins/featurePlugins/useChartZAxis';
+import { AllPluginSignatures } from '../../internals/plugins/allPlugins';
 
 export type ChartDataProviderProps<
-  TSignatures extends readonly ChartAnyPluginSignature[],
   TSeries extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 > = Omit<
   HighlightedProviderProps &
     AnimationProviderProps &
-    ChartProviderProps<TSignatures, TSeries>['pluginParams'],
+    ChartProviderProps<TSeries, TSignatures>['pluginParams'],
   'children'
 > &
-  Pick<ChartProviderProps<TSignatures, TSeries>, 'seriesConfig' | 'plugins'> & {
+  Pick<ChartProviderProps<TSeries, TSignatures>, 'seriesConfig' | 'plugins'> & {
     children?: React.ReactNode;
   };
 
@@ -53,17 +51,13 @@ export type ChartDataProviderProps<
  */
 function ChartDataProvider<
   TSeries extends ChartSeriesType = ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = [
-    UseChartZAxisSignature,
-    UseChartCartesianAxisSignature<TSeries>,
-    UseChartInteractionSignature,
-  ],
->(props: ChartDataProviderProps<TSignatures, TSeries>) {
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+>(props: ChartDataProviderProps<TSeries, TSignatures>) {
   const { children, highlightedProviderProps, animationProviderProps, chartProviderProps } =
     useChartDataProviderProps(props);
 
   return (
-    <ChartProvider<TSignatures, TSeries> {...chartProviderProps}>
+    <ChartProvider<TSeries, TSignatures> {...chartProviderProps}>
       <HighlightedProvider {...highlightedProviderProps}>
         <AnimationProvider {...animationProviderProps}>{children}</AnimationProvider>
       </HighlightedProvider>
