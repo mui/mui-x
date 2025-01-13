@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useForkRef from '@mui/utils/useForkRef';
 import { useUtils } from '@mui/x-date-pickers/internals';
 // eslint-disable-next-line no-restricted-imports
 import { useBaseCalendarDaysCellWrapper } from '@mui/x-date-pickers/internals/base/utils/base-calendar/days-cell/useBaseCalendarDaysCellWrapper';
@@ -10,9 +11,16 @@ export function useRangeCalendarDaysCellWrapper(
   parameters: useRangeCalendarDaysCellWrapper.Parameters,
 ): useRangeCalendarDaysCellWrapper.ReturnValue {
   const { value } = parameters;
-  const { ref, ctx: baseCtx } = useBaseCalendarDaysCellWrapper(parameters);
+  const { ref: baseRef, ctx: baseCtx } = useBaseCalendarDaysCellWrapper(parameters);
   const utils = useUtils();
   const rootContext = useRangeCalendarRootContext();
+  const cellRef = React.useRef<HTMLElement | null>(null);
+  const ref = useForkRef(baseRef, cellRef);
+
+  const registerCell = rootContext.registerCell;
+  React.useEffect(() => {
+    return registerCell(cellRef.current!, value);
+  }, [registerCell, value]);
 
   const positionInSelectedRange = React.useMemo(
     () => getDatePositionInRange(utils, value, rootContext.selectedRange),
@@ -34,7 +42,7 @@ export function useRangeCalendarDaysCellWrapper(
       isPreviewStart: positionInPreviewRange.isSelectionStart,
       isPreviewEnd: positionInPreviewRange.isSelectionEnd,
       isDraggingRef: rootContext.isDraggingRef,
-      selectDayFromDrag: rootContext.selectDayFromDrag,
+      selectDateFromDrag: rootContext.selectDateFromDrag,
       startDragging: rootContext.startDragging,
       stopDragging: rootContext.stopDragging,
       setDragTarget: rootContext.setDragTarget,
@@ -46,7 +54,7 @@ export function useRangeCalendarDaysCellWrapper(
       positionInSelectedRange,
       positionInPreviewRange,
       rootContext.isDraggingRef,
-      rootContext.selectDayFromDrag,
+      rootContext.selectDateFromDrag,
       rootContext.startDragging,
       rootContext.stopDragging,
       rootContext.setDragTarget,

@@ -18,7 +18,7 @@ export function useRangeCalendarDaysCell(parameters: useRangeCalendarDaysCell.Pa
   };
 
   /**
-   * Mouse events
+   * Drag events
    */
   const onDragStart = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
     event.stopPropagation();
@@ -84,15 +84,31 @@ export function useRangeCalendarDaysCell(parameters: useRangeCalendarDaysCell.Pa
     ctx.stopDragging();
     // make sure the focused element is the element where drop ended
     event.currentTarget.focus();
-    ctx.selectDayFromDrag(value);
+    ctx.selectDateFromDrag(value);
   });
 
   /**
    * Touch events
    */
-
   const onTouchStart = useEventCallback(() => {
     ctx.setDragTarget(value);
+  });
+
+  const onTouchMove = useEventCallback((event: React.TouchEvent<HTMLButtonElement>) => {
+    const target = resolveElementFromTouch(event);
+    if (!target) {
+      return;
+    }
+
+    ctx.setDragTarget(target);
+
+    // this prevents initiating drag when user starts touchmove outside and then moves over a draggable element
+    if (target !== event.changedTouches[0].target || !isDraggable) {
+      return;
+    }
+
+    // on mobile we should only initialize dragging state after move is detected
+    startDragging();
   });
 
   const onTouchEnd = useEventCallback((event: React.TouchEvent<HTMLButtonElement>) => {
@@ -101,27 +117,14 @@ export function useRangeCalendarDaysCell(parameters: useRangeCalendarDaysCell.Pa
     }
 
     ctx.stopDragging();
-
-    // make sure the focused element is the element where touch ended
-    ctx.selectDayFromDrag(value);
-
     const target = resolveElementFromTouch(event, true);
-    if (target) {
-      target.focus();
-    }
-  });
-
-  const onTouchMove = useEventCallback((event: React.TouchEvent<HTMLButtonElement>) => {
-    ctx.setDragTarget(value);
-
-    // this prevents initiating drag when user starts touchmove outside and then moves over a draggable element
-    const target = resolveElementFromTouch(event);
-    if (target == null || target !== event.changedTouches[0].target || !isDraggable) {
+    if (!target) {
       return;
     }
 
-    // on mobile we should only initialize dragging state after move is detected
-    startDragging();
+    // make sure the focused element is the element where touch ended
+    target.focus();
+    ctx.selectDateFromDrag(target);
   });
 
   /**
@@ -142,13 +145,12 @@ export function useRangeCalendarDaysCell(parameters: useRangeCalendarDaysCell.Pa
       return mergeReactProps(
         externalProps,
         {
-          ...(isDraggable
-            ? { draggable: true, onDragStart, onDrop, onTouchStart, onTouchMove }
-            : {}),
+          ...(isDraggable ? { draggable: true, onDragStart, onDrop, onTouchStart } : {}),
           onDragEnter,
           onDragLeave,
           onDragOver,
           onDragEnd,
+          onTouchMove,
           onTouchEnd,
           onMouseEnter,
         },
@@ -187,7 +189,7 @@ export namespace useRangeCalendarDaysCell {
       Pick<
         RangeCalendarRootContext,
         | 'isDraggingRef'
-        | 'selectDayFromDrag'
+        | 'selectDateFromDrag'
         | 'startDragging'
         | 'stopDragging'
         | 'setDragTarget'
@@ -203,25 +205,36 @@ export namespace useRangeCalendarDaysCell {
 }
 
 function resolveButtonElement(element: Element | null): HTMLButtonElement | null {
-  if (element) {
-    if (element instanceof HTMLButtonElement && !element.disabled) {
-      return element;
-    }
-    if (element.children.length) {
-      return resolveButtonElement(element.children[0]);
-    }
+  if (!element) {
     return null;
   }
-  return element;
+
+  if (element instanceof HTMLButtonElement && !element.disabled) {
+    return element;
+  }
+
+  if (element.children.length) {
+    const allButtons = element.querySelectorAll<HTMLButtonElement>('button:not(:disabled)');
+    if (allButtons.length > 1) {
+      return null;
+    }
+
+    return allButtons[0] ?? null;
+  }
+
+  return null;
 }
 
-// TODO: Check if this logic is still needed.
 function resolveElementFromTouch(
   event: React.TouchEvent<HTMLButtonElement>,
   ignoreTouchTarget?: boolean,
 ) {
   // don't parse multi-touch result
   if (event.changedTouches?.length === 1 && event.touches.length <= 1) {
+    // const element = document.elementFromPoint(
+    //   event.changedTouches[0].clientX,
+    //   event.changedTouches[0].clientY,
+    // );
     const element = document.elementFromPoint(
       event.changedTouches[0].clientX,
       event.changedTouches[0].clientY,

@@ -6,15 +6,16 @@ export interface RangeCalendarRootContext {
   value: PickerRangeValue;
   isDraggingRef: React.RefObject<boolean>;
   disableDragEditing: boolean;
-  selectDayFromDrag: (value: PickerValidDate) => void;
+  selectDateFromDrag: (valueOrElement: PickerValidDate | HTMLElement) => void;
   startDragging: (position: RangePosition) => void;
   stopDragging: () => void;
-  setDragTarget: (value: PickerValidDate) => void;
+  setDragTarget: (valueOrElement: PickerValidDate | HTMLElement) => void;
   emptyDragImgRef: React.RefObject<HTMLImageElement | null>;
   selectedRange: PickerRangeValue;
   isDragging: boolean;
   setHoveredDate: (value: PickerValidDate | null) => void;
   previewRange: PickerRangeValue;
+  registerCell: (element: HTMLElement, value: PickerValidDate) => () => void;
 }
 
 export const RangeCalendarRootContext = React.createContext<RangeCalendarRootContext | undefined>(

@@ -241,12 +241,21 @@ function useBuildRangeCalendarRootContext(parameters: UseRangeCalendarDragEditin
   const [state, setState] = React.useState<{
     isDragging: boolean;
     targetDate: PickerValidDate | null;
-    draggedDate: PickerValidDate | null;
     hoveredDate: PickerValidDate | null;
-  }>({ isDragging: false, targetDate: null, draggedDate: null, hoveredDate: null });
+  }>({ isDragging: false, targetDate: null, hoveredDate: null });
+
+  const cellToDateMapRef = React.useRef(new Map<HTMLElement, PickerValidDate>());
+  const registerCell = useEventCallback(
+    (element: HTMLElement, valueToRegister: PickerValidDate) => {
+      cellToDateMapRef.current.set(element, valueToRegister);
+      return () => {
+        cellToDateMapRef.current.delete(element);
+      };
+    },
+  );
 
   const selectedRange = React.useMemo<PickerRangeValue>(() => {
-    if (!valueDayRange[0] || !valueDayRange[1] || !state.targetDate) {
+    if (!valueDayRange[0] || !valueDayRange[1] || !state.targetDate || !state.isDragging) {
       return valueDayRange;
     }
 
@@ -260,22 +269,7 @@ function useBuildRangeCalendarRootContext(parameters: UseRangeCalendarDragEditin
     return newRange[0] !== null && newRange[1] !== null
       ? [utils.startOfDay(newRange[0]), utils.endOfDay(newRange[1])]
       : newRange;
-  }, [rangePosition, state.targetDate, utils, valueDayRange]);
-
-  const selectDayFromDrag = useEventCallback((selectedDate: PickerValidDate) => {
-    if (state.draggedDate != null && utils.isSameDay(selectedDate, state.draggedDate)) {
-      return;
-    }
-
-    const response = getNewValueFromNewSelectedDate({
-      prevValue: value,
-      selectedDate,
-      referenceDate,
-      allowRangeFlip: true,
-    });
-
-    setValue(response.value, { changeImportance: response.changeImportance, section: 'day' });
-  });
+  }, [rangePosition, state.targetDate, state.isDragging, utils, valueDayRange]);
 
   const disableDragEditing = disableDragEditingProp || baseContext.disabled || baseContext.readOnly;
   const disableHoverPreview =
@@ -308,18 +302,43 @@ function useBuildRangeCalendarRootContext(parameters: UseRangeCalendarDragEditin
     }));
   });
 
-  const handleSetDragTarget = useEventCallback((newTargetDate: PickerValidDate) => {
-    if (utils.isEqual(newTargetDate, state.targetDate)) {
+  const handleSetDragTarget = useEventCallback((valueOrElement: PickerValidDate | HTMLElement) => {
+    const newTargetDate =
+      valueOrElement instanceof HTMLElement
+        ? cellToDateMapRef.current.get(valueOrElement)
+        : valueOrElement;
+
+    if (newTargetDate == null || utils.isEqual(newTargetDate, state.targetDate)) {
       return;
     }
 
     setState((prev) => ({ ...prev, targetDate: newTargetDate }));
 
+    // TODO: Buggy
     if (value[0] && utils.isBeforeDay(newTargetDate, value[0])) {
       onRangePositionChange('start');
     } else if (value[1] && utils.isAfterDay(newTargetDate, value[1])) {
       onRangePositionChange('end');
     }
+  });
+
+  const selectDateFromDrag = useEventCallback((valueOrElement: PickerValidDate | HTMLElement) => {
+    const selectedDate =
+      valueOrElement instanceof HTMLElement
+        ? cellToDateMapRef.current.get(valueOrElement)
+        : valueOrElement;
+    if (selectedDate == null) {
+      return;
+    }
+
+    const response = getNewValueFromNewSelectedDate({
+      prevValue: value,
+      selectedDate,
+      referenceDate,
+      allowRangeFlip: true,
+    });
+
+    setValue(response.value, { changeImportance: response.changeImportance, section: 'day' });
   });
 
   const setHoveredDate = useEventCallback((hoveredDate: PickerValidDate | null) => {
@@ -349,12 +368,13 @@ function useBuildRangeCalendarRootContext(parameters: UseRangeCalendarDragEditin
     disableDragEditing,
     isDraggingRef,
     emptyDragImgRef,
-    selectDayFromDrag,
+    selectDateFromDrag,
     startDragging,
     stopDragging,
     setDragTarget: handleSetDragTarget,
     isDragging: state.isDragging,
     setHoveredDate,
+    registerCell,
   };
 
   return { context };
