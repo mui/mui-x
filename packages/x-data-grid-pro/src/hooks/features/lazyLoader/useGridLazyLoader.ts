@@ -21,7 +21,7 @@ import { findSkeletonRowsSection } from './utils';
  * @requires useGridScroll (method
  */
 export const useGridLazyLoader = (
-  privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
+  privateApiRef: React.RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     'onFetchRows' | 'rowsLoadingMode' | 'pagination' | 'paginationMode' | 'experimentalFeatures'

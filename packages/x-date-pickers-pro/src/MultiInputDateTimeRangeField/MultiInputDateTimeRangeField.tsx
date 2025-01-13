@@ -114,30 +114,27 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
     className: clsx(className, classes.root),
   });
 
-  const TextField =
-    slots?.textField ??
-    (inProps.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
   const startTextFieldProps = useSlotProps<
-    typeof TextField,
+    typeof PickersTextField,
     MultiInputDateTimeRangeFieldSlotProps['textField'],
     {},
     MultiInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure> & {
       position: RangePosition;
     }
   >({
-    elementType: TextField,
+    elementType: PickersTextField,
     externalSlotProps: slotProps?.textField,
     ownerState: { ...ownerState, position: 'start' },
   });
   const endTextFieldProps = useSlotProps<
-    typeof TextField,
+    typeof PickersTextField,
     MultiInputDateTimeRangeFieldSlotProps['textField'],
     {},
     MultiInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure> & {
       position: RangePosition;
     }
   >({
-    elementType: TextField,
+    elementType: PickersTextField,
     externalSlotProps: slotProps?.textField,
     ownerState: { ...ownerState, position: 'end' },
   });
@@ -166,6 +163,12 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
 
   const startDateProps = convertFieldResponseIntoMuiTextFieldProps(fieldResponse.startDate);
   const endDateProps = convertFieldResponseIntoMuiTextFieldProps(fieldResponse.endDate);
+
+  const TextField =
+    slots?.textField ??
+    (fieldResponse.startDate.enableAccessibleFieldDOMStructure === false
+      ? MuiTextField
+      : PickersTextField);
 
   return (
     <Root {...rootProps}>

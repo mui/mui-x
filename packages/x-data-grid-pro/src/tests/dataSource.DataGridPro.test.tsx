@@ -14,13 +14,13 @@ import {
 } from '@mui/x-data-grid-pro';
 import { SinonSpy, spy } from 'sinon';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
-import { getKey } from '../hooks/features/dataSource/cache';
+import { getKeyDefault } from '../hooks/features/dataSource/cache';
 
 const cache = new Map<string, GridGetRowsResponse>();
 
 const testCache: GridDataSourceCache = {
-  set: (key, value) => cache.set(getKey(key), value),
-  get: (key) => cache.get(getKey(key)),
+  set: (key, value) => cache.set(getKeyDefault(key), value),
+  get: (key) => cache.get(getKeyDefault(key)),
   clear: () => cache.clear(),
 };
 
@@ -28,7 +28,7 @@ const testCache: GridDataSourceCache = {
 describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
   let fetchRowsSpy: SinonSpy;
   let mockServer: ReturnType<typeof useMockServer>;
 
