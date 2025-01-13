@@ -43,7 +43,7 @@ const CalendarRoot = React.forwardRef(function CalendarRoot(
     // Props forwarded to the DOM element
     ...otherProps
   } = props;
-  const { getRootProps, baseContext } = useCalendarRoot({
+  const { getRootProps, baseContext, isEmpty } = useCalendarRoot({
     readOnly,
     disabled,
     monthPageSize,
@@ -66,7 +66,7 @@ const CalendarRoot = React.forwardRef(function CalendarRoot(
     maxDate,
   });
 
-  const state: CalendarRoot.State = React.useMemo(() => ({}), []);
+  const state: CalendarRoot.State = React.useMemo(() => ({ empty: isEmpty }), [isEmpty]);
 
   const { renderElement } = useComponentRenderer({
     propGetter: getRootProps,

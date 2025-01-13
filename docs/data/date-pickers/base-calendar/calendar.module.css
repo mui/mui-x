@@ -276,31 +276,31 @@
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
     }
+  }
+}
 
-    &:not([data-outside-month])[data-previewed] {
-      &:not([data-preview-start]) {
-        border-top-left-radius: 0;
-        border-bottom-left-radius: 0;
-      }
+.Root:not([data-empty]) .RangeDaysCell:not([data-outside-month])[data-previewed] {
+  &:not([data-preview-start]) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
 
-      &:not([data-preview-end]) {
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
-      }
+  &:not([data-preview-end]) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
 
-      &:not([data-selected]) {
-        border-top: 1px dashed var(--cell-preview-border-color);
-        border-bottom: 1px dashed var(--cell-preview-border-color);
-      }
+  &:not([data-selected]) {
+    border-top: 1px dashed var(--cell-preview-border-color);
+    border-bottom: 1px dashed var(--cell-preview-border-color);
+  }
 
-      &[data-preview-start]:not([data-selected]) {
-        border-left: 1px dashed var(--cell-preview-border-color);
-      }
+  &[data-preview-start]:not([data-selected]) {
+    border-left: 1px dashed var(--cell-preview-border-color);
+  }
 
-      &[data-preview-end]:not([data-selected]) {
-        border-right: 1px dashed var(--cell-preview-border-color);
-      }
-    }
+  &[data-preview-end]:not([data-selected]) {
+    border-right: 1px dashed var(--cell-preview-border-color);
   }
 }
 

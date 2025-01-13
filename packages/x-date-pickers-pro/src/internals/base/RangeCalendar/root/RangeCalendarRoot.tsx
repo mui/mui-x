@@ -55,7 +55,7 @@ const RangeCalendarRoot = React.forwardRef(function RangeCalendarRoot(
     // Props forwarded to the DOM element
     ...otherProps
   } = props;
-  const { getRootProps, context, baseContext } = useRangeCalendarRoot({
+  const { getRootProps, context, baseContext, isEmpty } = useRangeCalendarRoot({
     readOnly,
     disabled,
     monthPageSize,
@@ -76,7 +76,12 @@ const RangeCalendarRoot = React.forwardRef(function RangeCalendarRoot(
     maxDate,
   });
 
-  const state: RangeCalendarRoot.State = React.useMemo(() => ({}), []);
+  const state: RangeCalendarRoot.State = React.useMemo(
+    () => ({
+      empty: isEmpty,
+    }),
+    [isEmpty],
+  );
 
   const { renderElement } = useComponentRenderer({
     propGetter: getRootProps,
@@ -97,7 +102,12 @@ const RangeCalendarRoot = React.forwardRef(function RangeCalendarRoot(
 });
 
 export namespace RangeCalendarRoot {
-  export interface State {}
+  export interface State {
+    /**
+     * Whether no start date and no end date are selected.
+     */
+    empty: boolean;
+  }
 
   export interface Props
     extends useRangeCalendarRoot.Parameters,

@@ -80,7 +80,12 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
     return mergeReactProps(externalProps, {});
   }, []);
 
-  return React.useMemo(() => ({ getRootProps, baseContext }), [getRootProps, baseContext]);
+  const isEmpty = value == null;
+
+  return React.useMemo(
+    () => ({ getRootProps, baseContext, isEmpty }),
+    [getRootProps, baseContext, isEmpty],
+  );
 }
 
 export namespace useCalendarRoot {
