@@ -255,7 +255,7 @@
   width: 36px;
   text-align: center;
   font-size: 0.75rem;
-  color: #64748b;
+  color: var(--days-grid-header-color);
 }
 
 .DaysGridSeparator {
