@@ -1,3 +1,4 @@
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 
-export const gridRowsMetaSelector = (state: GridStateCommunity) => state.rowsMeta;
+export const gridRowsMetaSelector = (apiRef: React.RefObject<GridApiCommunity>) =>
+  apiRef.current.state.rowsMeta;

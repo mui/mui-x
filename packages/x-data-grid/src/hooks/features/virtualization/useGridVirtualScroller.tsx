@@ -105,9 +105,7 @@ export const useGridVirtualScroller = () => {
   const rootProps = useGridRootProps();
   const { unstable_listView: listView } = rootProps;
   const visibleColumns = useGridSelector(apiRef, () =>
-    listView
-      ? [gridListColumnSelector(apiRef.current.state)!]
-      : gridVisibleColumnDefinitionsSelector(apiRef),
+    listView ? [gridListColumnSelector(apiRef)!] : gridVisibleColumnDefinitionsSelector(apiRef),
   );
   const enabledForRows = useGridSelector(apiRef, gridVirtualizationRowEnabledSelector) && !isJSDOM;
   const enabledForColumns =
@@ -780,10 +778,10 @@ function inputsSelector(
   enabledForRows: boolean,
   enabledForColumns: boolean,
 ): RenderContextInputs {
-  const dimensions = gridDimensionsSelector(apiRef.current.state);
+  const dimensions = gridDimensionsSelector(apiRef);
   const currentPage = getVisibleRows(apiRef, rootProps);
   const visibleColumns = rootProps.unstable_listView
-    ? [gridListColumnSelector(apiRef.current.state)!]
+    ? [gridListColumnSelector(apiRef)!]
     : gridVisibleColumnDefinitionsSelector(apiRef);
   const hiddenCellsOriginMap = gridRowSpanningHiddenCellsOriginMapSelector(apiRef);
   const lastRowId = apiRef.current.state.rows.dataRowIds.at(-1);
@@ -801,7 +799,7 @@ function inputsSelector(
     viewportInnerHeight: dimensions.viewportInnerSize.height,
     lastRowHeight: lastRowId !== undefined ? apiRef.current.unstable_getRowHeight(lastRowId) : 0,
     lastColumnWidth: lastColumn?.computedWidth ?? 0,
-    rowsMeta: gridRowsMetaSelector(apiRef.current.state),
+    rowsMeta: gridRowsMetaSelector(apiRef),
     columnPositions: gridColumnPositionsSelector(apiRef),
     rows: currentPage.rows,
     range: currentPage.range,

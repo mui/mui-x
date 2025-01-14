@@ -1,8 +1,8 @@
 import { createSelector } from '../../../utils/createSelector';
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 
-export const gridHeaderFilteringStateSelector = (state: GridStateCommunity) =>
-  state.headerFiltering;
+export const gridHeaderFilteringStateSelector = (apiRef: React.RefObject<GridApiCommunity>) =>
+  apiRef.current.state.headerFiltering;
 
 export const gridHeaderFilteringEnabledSelector = createSelector(
   gridHeaderFilteringStateSelector,

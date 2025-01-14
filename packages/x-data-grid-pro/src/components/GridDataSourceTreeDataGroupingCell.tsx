@@ -11,8 +11,7 @@ import {
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
-import { GridPrivateApiPro } from '../models/gridApiPro';
-import { GridStatePro } from '../models/gridStatePro';
+import { GridApiPro, GridPrivateApiPro } from '../models/gridApiPro';
 import {
   gridDataSourceErrorSelector,
   gridDataSourceLoadingIdSelector,
@@ -53,8 +52,8 @@ function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) 
   const classes = useUtilityClasses(rootProps);
   const { rowNode, id, field, descendantCount } = props;
 
-  const isDataLoading = useGridSelector(apiRef, gridDataSourceLoadingIdSelector, id);
-  const error = useGridSelector(apiRef, gridDataSourceErrorSelector, id);
+  const isDataLoading = useGridSelector(apiRef, gridDataSourceLoadingIdSelector);
+  const error = useGridSelector(apiRef, gridDataSourceErrorSelector);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!rowNode.childrenExpanded) {
@@ -104,7 +103,8 @@ export function GridDataSourceTreeDataGroupingCell(props: GridTreeDataGroupingCe
 
   const rootProps = useGridRootProps();
   const apiRef = useGridPrivateApiContext();
-  const rowSelector = (state: GridStatePro) => state.rows.dataRowIdToModelLookup[id];
+  const rowSelector = (apiRef: React.RefObject<GridApiPro>) =>
+    apiRef.current.state.rows.dataRowIdToModelLookup[id];
   const row = useGridSelector(apiRef, rowSelector);
   const classes = useUtilityClasses(rootProps);
 

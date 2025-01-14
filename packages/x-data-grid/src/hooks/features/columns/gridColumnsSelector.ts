@@ -1,5 +1,5 @@
 import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import {
   GridColumnLookup,
   GridPinnedColumnFields,
@@ -11,7 +11,8 @@ import { gridIsRtlSelector } from '../../core/gridCoreSelector';
  * Get the columns state
  * @category Columns
  */
-export const gridColumnsStateSelector = (state: GridStateCommunity) => state.columns;
+export const gridColumnsStateSelector = (apiRef: React.RefObject<GridApiCommunity>) =>
+  apiRef.current.state.columns;
 
 /**
  * Get an array of column fields in the order rendered on screen.
@@ -75,7 +76,8 @@ export const gridVisibleColumnFieldsSelector = createSelectorMemoized(
  * Get the visible pinned columns model.
  * @category Visible Columns
  */
-export const gridPinnedColumnsSelector = (state: GridStateCommunity) => state.pinnedColumns;
+export const gridPinnedColumnsSelector = (apiRef: React.RefObject<GridApiCommunity>) =>
+  apiRef.current.state.pinnedColumns;
 
 /**
  * Get the visible pinned columns.

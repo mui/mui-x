@@ -1,5 +1,5 @@
 import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import {
   gridExpandedSortedRowEntriesSelector,
   gridExpandedSortedRowIdsSelector,
@@ -15,7 +15,8 @@ const ALL_RESULTS_PAGE_VALUE = -1;
  * @category Pagination
  * @ignore - do not document.
  */
-export const gridPaginationSelector = (state: GridStateCommunity) => state.pagination;
+export const gridPaginationSelector = (apiRef: React.RefObject<GridApiCommunity>) =>
+  apiRef.current.state.pagination;
 
 /**
  * @category Pagination

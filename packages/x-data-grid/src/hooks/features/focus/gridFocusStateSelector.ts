@@ -1,8 +1,9 @@
 import { createSelector } from '../../../utils/createSelector';
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridFocusState, GridTabIndexState } from './gridFocusState';
 
-export const gridFocusStateSelector = (state: GridStateCommunity) => state.focus;
+export const gridFocusStateSelector = (apiRef: React.RefObject<GridApiCommunity>) =>
+  apiRef.current.state.focus;
 
 export const gridFocusCellSelector = createSelector(
   gridFocusStateSelector,
@@ -24,7 +25,8 @@ export const gridFocusColumnGroupHeaderSelector = createSelector(
   (focusState: GridFocusState) => focusState.columnGroupHeader,
 );
 
-export const gridTabIndexStateSelector = (state: GridStateCommunity) => state.tabIndex;
+export const gridTabIndexStateSelector = (apiRef: React.RefObject<GridApiCommunity>) =>
+  apiRef.current.state.tabIndex;
 
 export const gridTabIndexCellSelector = createSelector(
   gridTabIndexStateSelector,

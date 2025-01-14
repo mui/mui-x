@@ -1,7 +1,8 @@
 import { createSelector } from '../../../utils/createSelector';
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 
-export const gridColumnResizeSelector = (state: GridStateCommunity) => state.columnResize;
+export const gridColumnResizeSelector = (apiRef: React.RefObject<GridApiCommunity>) =>
+  apiRef.current.state.columnResize;
 
 export const gridResizingColumnFieldSelector = createSelector(
   gridColumnResizeSelector,

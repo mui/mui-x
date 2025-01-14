@@ -1,8 +1,30 @@
 import { createSelector } from '@mui/x-data-grid/internals';
 import type { GridRowId } from '@mui/x-data-grid';
-import type { GridStatePro } from '../../../models/gridStatePro';
+import { GridApiPro } from '../../../models/gridApiPro';
 
-export const gridDataSourceStateSelector = (state: GridStatePro) => state.dataSource;
+const computeStartEnd = (paginationModel: GridPaginationModel) => {
+  const start = paginationModel.page * paginationModel.pageSize;
+  const end = start + paginationModel.pageSize - 1;
+  return { start, end };
+};
+
+export const gridGetRowsParamsSelector = createSelector(
+  gridFilterModelSelector,
+  gridSortModelSelector,
+  gridPaginationModelSelector,
+  (filterModel, sortModel, paginationModel) => {
+    return {
+      groupKeys: [],
+      paginationModel,
+      sortModel,
+      filterModel,
+      ...computeStartEnd(paginationModel),
+    };
+  },
+);
+
+export const gridDataSourceStateSelector = (apiRef: React.RefObject<GridApiPro>) =>
+  apiRef.current.state.dataSource;
 
 export const gridDataSourceLoadingSelector = createSelector(
   gridDataSourceStateSelector,

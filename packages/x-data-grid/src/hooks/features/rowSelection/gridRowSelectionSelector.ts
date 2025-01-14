@@ -1,9 +1,10 @@
 import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
 
-export const gridRowSelectionStateSelector = (state: GridStateCommunity) => state.rowSelection;
+export const gridRowSelectionStateSelector = (apiRef: React.RefObject<GridApiCommunity>) =>
+  apiRef.current.state.rowSelection;
 
 export const selectedGridRowsCountSelector = createSelector(
   gridRowSelectionStateSelector,
