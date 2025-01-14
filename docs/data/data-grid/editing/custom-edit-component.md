@@ -3,8 +3,8 @@
 <p class="description">Creating custom edit component.</p>
 
 Each of the built-in column types provides a component to edit the value of the cells.
-To customize column types, or override the existing components, you can provide a new edit component through the `renderEditCell` property in the column definition.
-This property works like the `renderCell` property, which is rendered while cells are in view mode.
+To customize column types, or override the existing components, you can provide a new edit component through the `renderEditCell()` property in the column definition.
+This property works like the `renderCell()` property, which is rendered while cells are in view mode.
 
 ```tsx
 function CustomEditComponent(props: GridRenderEditCellParams) {
@@ -21,16 +21,16 @@ const columns: GridColDef[] = [
 ];
 ```
 
-The `renderEditCell` property receives all params from `GridRenderEditCellParams`, which extends `GridCellParams`.
+The `renderEditCell()` property receives all params from `GridRenderEditCellParams`, which extends `GridCellParams`.
 Additionally, the props added during [pre-processing](#validation) are also available in the params.
 These are the most important params to consider:
 
 - `value`: contains the current value of the cell in edit mode, overriding the value from `GridCellParams`
 - `error`: the error added during validation
-- `isProcessingProps`: whether `preProcessEditCellProps` is being executed or not
+- `isProcessingProps`: whether `preProcessEditCellProps()` is being executed or not
 
 Once a new value is entered into the input, it must be sent to the data grid.
-To do this, pass the row ID, the column field, and the new cell value to a call to `apiRef.current.setEditCellValue`.
+To do this, pass the row ID, the column field, and the new cell value to a call to `apiRef.current.setEditCellValue()`.
 The new value will be parsed and validated, and the `value` prop will reflect the changes in the next render.
 
 ```tsx
@@ -53,17 +53,17 @@ The following demo implements a custom edit component, based on the [`Rating`](h
 
 ## With debounce
 
-By default, each call to `apiRef.current.setEditCellValue` triggers a new render.
+By default, each call to `apiRef.current.setEditCellValue()` triggers a new render.
 If the edit component requires the user to type a new value, re-rendering the data grid too often will drastically reduce performance.
 One way to avoid this is to debounce the API calls.
-You can use `apiRef.current.setEditCellValue` to handle debouncing by setting the `debounceMs` param to a positive integer that defines a set time period in milliseconds.
+You can use `apiRef.current.setEditCellValue()` to handle debouncing by setting the `debounceMs` param to a positive integer that defines a set time period in milliseconds.
 No matter how many times the API method is called, the data grid will only be re-rendered after that period of time has passed.
 
 ```tsx
 apiRef.current.setEditCellValue({ id, field, value: newValue, debounceMs: 200 });
 ```
 
-When the data grid is only set to re-render after a given period of time has passed, the `value` prop will not be updated on each `apiRef.current.setEditCellValue` call.
+When the data grid is only set to re-render after a given period of time has passed, the `value` prop will not be updated on each `apiRef.current.setEditCellValue()` call.
 To avoid a frozen UI, the edit component can keep the current value in an internal state and sync it once `value` changes.
 Modify the edit component to enable this feature:
 
@@ -95,10 +95,10 @@ An edit component has "auto-stop" behavior when it stops edit mode as soon as th
 To picture better, imagine an edit component with a combo, created following the normal steps.
 By default, it would require two clicks to change the value of the cell: one click inside the cell to select a new value, and another click outside the cell to save.
 This second click can be avoided if the first click also stops the edit mode.
-To create an edit component with auto-stop, call `apiRef.current.stopCellEditMode` after setting the new value.
-Since `apiRef.current.setEditCellValue` may do additional processing, you must wait for it to resolve before stopping the edit mode.
-Also, it is a good practice to check if `apiRef.current.setEditCellValue` has returned `true`.
-It will be `false` if `preProcessEditProps` set an error during [validation](#validation).
+To create an edit component with auto-stop, call `apiRef.current.stopCellEditMode()` after setting the new value.
+Since `apiRef.current.setEditCellValue()` may do additional processing, you must wait for it to resolve before stopping the edit mode.
+Also, it is a good practice to check if `apiRef.current.setEditCellValue()` has returned `true`.
+It will be `false` if `preProcessEditProps()` set an error during [validation](#validation).
 
 ```tsx
 const handleChange = async (event: SelectChangeEvent) => {
@@ -119,7 +119,7 @@ The following demo implements an edit component with auto-stop, based on a nativ
 {{"demo": "AutoStopEditComponent.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::warning
-Avoid using edit components with auto-stop in columns that use long-running `preProcessEditCellProps` because the UI will freeze while waiting for `apiRef.current.setEditCellValue`.
+Avoid using edit components with auto-stop in columns that use long-running `preProcessEditCellProps()` because the UI will freeze while waiting for `apiRef.current.setEditCellValue()`.
 Instead, use the provided interactions to exit edit mode.
 :::
 

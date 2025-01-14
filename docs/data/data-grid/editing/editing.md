@@ -205,7 +205,7 @@ While the promise is not resolved, the edit component will receive an `isProcess
 You can control the active mode using the props `cellModesModel` and `rowModesModel` (only works if `editMode="row"`).
 
 The `cellModesModel` prop accepts an object containing the `mode` (and additional options) for a given column field, in a given row, as in the following example.
-The options accepted are the same available in [`apiRef.current.startCellEditMode`](#start-editing) and [`apiRef.current.stopCellEditMode`](#stop-editing).
+The options accepted are the same available in [`apiRef.current.startCellEditMode()`](#start-editing) and [`apiRef.current.stopCellEditMode()`](#stop-editing).
 
 ```tsx
 // Changes the mode of field=name from row with id=1 to "edit"
@@ -220,7 +220,7 @@ The options accepted are the same available in [`apiRef.current.startCellEditMod
 ```
 
 For row editing, the `rowModesModel` props work in a similar manner.
-The options accepted are the same available in [`apiRef.current.startRowEditMode`](#start-editing) and [`apiRef.current.stopRowEditMode`](#stop-editing).
+The options accepted are the same available in [`apiRef.current.startRowEditMode()`](#start-editing) and [`apiRef.current.stopRowEditMode()`](#stop-editing).
 
 ```tsx
 // Changes the mode of the row with id=1 to "edit"
@@ -236,7 +236,7 @@ The options accepted are the same available in [`apiRef.current.startRowEditMode
 />
 ```
 
-Additionally, the callback props `onCellModesModelChange` and `onRowModesModelChange` (only works if `editMode="row"`) are available.
+Additionally, the callback props `onCellModesModelChange()` and `onRowModesModelChange()` (only works if `editMode="row"`) are available.
 Use them to update the respective prop.
 
 In the demo below, `cellModesModel` is used to control the mode of selected cell using the external buttons.
