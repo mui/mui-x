@@ -288,7 +288,7 @@ const aggregationFunction: GridAggregationFunction = {
 
 ## Custom rendering
 
-If the column used to display aggregation has a  property, the aggregated cell calls it with a `params.aggregation` object to let you decide how you want to render it.
+If the column used to display aggregation has a `renderCell` property, the aggregated cell calls it with a `params.aggregation` object to let you decide how you want to render it.
 
 This object contains a `hasCellUnit` which lets you know if the current aggregation has the same unit as the rest of the column's data—for instance, if the column is in `$`, is the aggregated value is also in `$`?
 
