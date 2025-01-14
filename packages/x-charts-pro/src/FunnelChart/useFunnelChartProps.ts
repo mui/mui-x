@@ -71,13 +71,13 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     dataset,
     xAxis:
       xAxis?.map((axis) => ({
-        ...defaultBandAxisConfig,
+        ...(axis?.scaleType === 'band' ? defaultBandAxisConfig : {}),
         ...axis,
       })) ??
       (hasHorizontalSeries ? [{ id: DEFAULT_X_AXIS_KEY, ...defaultBandAxisConfig }] : undefined),
     yAxis:
       yAxis?.map((axis) => ({
-        ...defaultBandAxisConfig,
+        ...(axis?.scaleType === 'band' ? defaultBandAxisConfig : {}),
         ...axis,
       })) ??
       (hasHorizontalSeries ? undefined : [{ id: DEFAULT_Y_AXIS_KEY, ...defaultBandAxisConfig }]),
