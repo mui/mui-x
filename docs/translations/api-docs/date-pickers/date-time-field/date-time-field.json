@@ -8,6 +8,9 @@
     "clearable": {
       "description": "If <code>true</code>, a clear button will be shown in the field allowing value clearing."
     },
+    "clearButtonPosition": {
+      "description": "The position at which the clear button is placed. If the field is not clearable, the button is not rendered."
+    },
     "color": {
       "description": "The color of the component. It supports both default and custom theme colors, which can be added as shown in the <a href=\"https://mui.com/material-ui/customization/palette/#custom-colors\">palette customization guide</a>."
     },
@@ -94,6 +97,9 @@
     "onSelectedSectionsChange": {
       "description": "Callback fired when the selected sections change.",
       "typeDescriptions": { "newValue": "The new selected sections." }
+    },
+    "openPickerButtonPosition": {
+      "description": "The position at which the opening button is placed. If there is no picker to open, the button is not rendered"
     },
     "readOnly": {
       "description": "If <code>true</code>, the component is read-only. When read-only, the value cannot be changed but the user can interact with the interface."

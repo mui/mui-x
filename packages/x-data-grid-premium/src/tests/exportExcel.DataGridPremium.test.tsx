@@ -19,7 +19,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGridPremium /> - Export Excel', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
 
   const columns: GridColDef[] = [{ field: 'id' }, { field: 'brand', headerName: 'Brand' }];
   const rows = [

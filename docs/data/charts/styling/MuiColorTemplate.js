@@ -39,7 +39,6 @@ const legendPlacement = {
   slotProps: {
     legend: {
       direction: 'vertical',
-      itemGap: 2,
     },
   },
   margin: {

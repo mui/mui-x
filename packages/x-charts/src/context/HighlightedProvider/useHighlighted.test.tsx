@@ -4,8 +4,7 @@ import { ErrorBoundary, createRenderer, screen, reactMajor } from '@mui/internal
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 import { useHighlighted } from './useHighlighted';
 import { HighlightedProvider } from './HighlightedProvider';
-import { SeriesProvider } from '../SeriesProvider';
-import { PluginProvider } from '../PluginProvider';
+import { ChartProvider } from '../ChartProvider';
 
 function UseHighlighted() {
   const { highlightedItem } = useHighlighted();
@@ -24,7 +23,7 @@ describe('useHighlighted', () => {
     const errorMessage2 =
       'It looks like you rendered your component outside of a ChartsContainer parent component.';
     const errorMessage3 = 'The above error occurred in the <UseHighlighted> component:';
-    const expextedError =
+    const expectedError =
       reactMajor < 19
         ? [errorMessage1, errorMessage2, errorMessage3]
         : `${errorMessage1}\n${errorMessage2}`;
@@ -35,7 +34,7 @@ describe('useHighlighted', () => {
           <UseHighlighted />
         </ErrorBoundary>,
       ),
-    ).toErrorDev(expextedError);
+    ).toErrorDev(expectedError);
 
     expect((errorRef.current as any).errors).to.have.length(1);
     expect((errorRef.current as any).errors[0].toString()).to.include(
@@ -45,13 +44,11 @@ describe('useHighlighted', () => {
 
   it('should not throw an error when parent context is present', () => {
     render(
-      <PluginProvider>
-        <SeriesProvider series={[]}>
-          <HighlightedProvider highlightedItem={{ seriesId: 'test-id' }}>
-            <UseHighlighted />
-          </HighlightedProvider>
-        </SeriesProvider>
-      </PluginProvider>,
+      <ChartProvider pluginParams={{ series: [], width: 200, height: 200 }}>
+        <HighlightedProvider highlightedItem={{ seriesId: 'test-id' }}>
+          <UseHighlighted />
+        </HighlightedProvider>
+      </ChartProvider>,
     );
 
     expect(screen.getByText('test-id')).toBeVisible();
