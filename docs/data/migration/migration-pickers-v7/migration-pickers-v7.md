@@ -262,6 +262,20 @@ const theme = createTheme({
 });
 ```
 
+### Field editing on mobile Pickers
+
+The field is now editable if rendered inside a mobile Picker.
+Before v8, if rendered inside a mobile Picker, the field was read-only, and clicking anywhere on it would open the Picker.
+The mobile and desktop Pickers now behave similarly:
+
+- clicking on the field allows editing the value with the keyboard
+- clicking on the input adornment opens the Picker
+
+:::success
+If you prefer the old behavior, you can create a custom field that renders a read-only Text Field on mobile.
+See [Custom field—Using a read-only Text Field on mobile](/x/react-date-pickers/custom-field/#using-a-read-only-text-field-on-mobile) to learn more.
+:::
+
 ### Month Calendar
 
 To simplify the theme and class structure, the `<PickersMonth />` component has been moved inside the Month Calendar component.
@@ -354,6 +368,160 @@ The default value of the `actions` prop has been updated to `['cancel', 'accept'
 If the updated values do not fit your use case, you can [override them](/x/react-date-pickers/custom-components/#component-props).
 
 ## Slots breaking changes
+
+### Slot: `field`
+
+- The component passed to the `field` slot no longer receives `InputProps` and `inputProps` props.
+  You now need to manually add the UI to open the picker using the `usePickerContext` hook:
+
+  ```diff
+   import { unstable_useDateField } from '@mui/x-date-pickers/DateField';
+  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+
+   function CustomField(props) {
+  +  const pickerContext = usePickerContext();
+
+     return (
+      <TextField
+        {...customProps}
+  -      InputProps={props.InputProps}
+  +      InputProps={{
+  +        ref: pickerContext.triggerRef,
+  +        endAdornment: (
+  +          <InputAdornment position="end">
+  +            <IconButton
+  +              onClick={() => pickerContext.setOpen((prev) => !prev)}
+  +              edge="end"
+  +              aria-label={fieldResponse.openPickerAriaLabel}
+  +            >
+  +              <CalendarIcon />
+  +            </IconButton>
+  +          </InputAdornment>
+  +        ),
+  +      }}
+      />
+     );
+   }
+  ```
+
+  If you are extracting the `ref` from `InputProps` to pass it to another trigger component, you can replace it with `pickerContext.triggerRef`:
+
+  ```diff
+  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+
+   function CustomField(props) {
+  +  const pickerContext = usePickerContext();
+
+     return (
+      <button
+        {...customProps}
+  -      ref={props.InputProps?.ref}
+  +      ref={pickerContext.triggerRef}
+      >
+        Open picker
+      </button>
+     );
+   }
+  ```
+
+  If you are using a custom editing behavior, instead of using the `openPickerAriaLabel` property returned by the `useXXXField` hooks, you can generate it manually:
+
+  ```diff
+  +import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
+
+   function CustomField(props) {
+  +  const translations = usePickerTranslations();
+  +  const formattedValue = props.value?.isValid() ? value.format('ll') : null;
+  +  const ariaLabel = translations.openDatePickerDialogue(formattedValue);
+
+     return (
+      <button
+        {...customProps}
+  -      ref={props.InputProps?.ref}
+  +      ref={pickerContext.triggerRef}
+  +      aria-label={ariaLabel}
+      >
+        Open picker
+      </button>
+     );
+   }
+  ```
+
+- The component passed to the `field` slot no longer receives the `value`, `onChange`, `timezone`, `format` and `disabled` props.
+  You can use the `usePickerContext` hook instead:
+
+  ```diff
+  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+
+  -const { value } = props;
+  -const { value } = props;
+  +const { value } = usePickerContext();
+
+  -const { onChange } = props;
+  -onChange(dayjs(), { validationError: null });
+  +const { setValue } = usePickerContext();
+  -setValue(dayjs(), { validationError: null });
+
+  -const { timezone } = props;
+  +const { timezone } = usePickerContext();
+
+  -const { format } = props;
+  +const { fieldFormat } = usePickerContext();
+
+  -const { disabled } = props;
+  +const { disabled } = usePickerContext();
+  ```
+
+  :::success
+  If you are using a hook like `useDateField`, you don't have to do anything, the values from the context are automatically applied.
+  :::
+
+- The component passed to the `field` slot no longer receives the `formatDensity`, `enableAccessibleFieldDOMStructure`, `selectedSections` and `onSelectedSectionsChange` props.
+  These props, formerly mirroring the picker's props, are no longer exposed.
+  You can manually pass them using `slotProps.field` to keep the same behavior:
+
+  ```diff
+   <DatePicker
+     enableAccessibleFieldDOMStructure={false}
+     formatDensity='spacious'
+     selectedSections={selectedSections}
+     onSelectedSectionsChange={onSelectedSectionsChange}
+  +  slotProps={{
+       field: {
+         enableAccessibleFieldDOMStructure: false,
+         formatDensity: 'spacious',
+         selectedSections,
+         onSelectedSectionsChange,
+       },
+     }}
+   />
+  ```
+
+  If you were not passing those props to the picker, then you can use their default values:
+
+  - `formatDensity`: `"dense"`
+  - `enableAccessibleFieldDOMStructure`: `true`
+  - `selectedSections`: `undefined`
+  - `onSelectedSectionsChange`: `undefined`
+
+  :::success
+  If you are using a hook like `useDateField`, you don't have to do anything, the value from the context are automatically applied.
+  :::
+
+### Slot: `inputAdornment`
+
+- The `position` props passed to the `inputAdornment` slot props no longer sets the position of the opening button.
+  This allows defining the position of the opening and clear buttons independently.
+  You can use the `openPickerButtonPosition` prop instead:
+
+  ```diff
+   <DatePicker
+     slotProps={{
+  -    inputAdornment: { position: 'start' },
+  +    field: { openPickerButtonPosition: 'start' },
+     }}
+   />
+  ```
 
 ### Slot: `layout`
 

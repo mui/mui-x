@@ -22,7 +22,7 @@ import { gridAggregationModelSelector } from './gridAggregationSelectors';
 
 const getGroupAggregatedValue = (
   groupId: GridRowId,
-  apiRef: React.MutableRefObject<GridPrivateApiPremium>,
+  apiRef: React.RefObject<GridPrivateApiPremium>,
   aggregationRowsScope: DataGridPremiumProcessedProps['aggregationRowsScope'],
   aggregatedFields: string[],
   aggregationRules: GridAggregationRules,
@@ -98,7 +98,7 @@ const getGroupAggregatedValue = (
 
 const getGroupAggregatedValueDataSource = (
   groupId: GridRowId,
-  apiRef: React.MutableRefObject<GridPrivateApiPremium>,
+  apiRef: React.RefObject<GridPrivateApiPremium>,
   aggregatedFields: string[],
   position: GridAggregationPosition,
 ) => {
@@ -123,7 +123,7 @@ export const createAggregationLookup = ({
   getAggregationPosition,
   isDataSource,
 }: {
-  apiRef: React.MutableRefObject<GridPrivateApiPremium>;
+  apiRef: React.RefObject<GridPrivateApiPremium>;
   aggregationFunctions:
     | Record<string, GridAggregationFunction>
     | Record<string, GridAggregationFunctionDataSource>;

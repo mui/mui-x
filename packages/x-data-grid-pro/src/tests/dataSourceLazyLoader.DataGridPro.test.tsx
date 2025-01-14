@@ -21,7 +21,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
   const defaultTransformGetRowsResponse = (response: GridGetRowsResponse) => response;
 
   let transformGetRowsResponse: (response: GridGetRowsResponse) => GridGetRowsResponse;
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
   let fetchRowsSpy: SinonSpy;
   let mockServer: ReturnType<typeof useMockServer>;
 

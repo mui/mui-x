@@ -40,7 +40,7 @@ function createDragOverEvent(target: ChildNode) {
 describe('<DataGridPro /> - Column pinning', () => {
   const { render, clock } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
 
   function TestCase({ nbCols = 20, ...other }: Partial<DataGridProProps> & { nbCols?: number }) {
     apiRef = useGridApiRef();

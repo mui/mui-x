@@ -24,7 +24,7 @@ const getChangeCountForComponentFamily = (componentFamily: PickerComponentFamily
 
 export const getExpectedOnChangeCount = (
   componentFamily: PickerComponentFamily,
-  params: OpenPickerParams,
+  params: OpenPickerParams & { variant: 'desktop' | 'mobile' },
 ) => {
   if (componentFamily === 'digital-clock') {
     return getChangeCountForComponentFamily(componentFamily);

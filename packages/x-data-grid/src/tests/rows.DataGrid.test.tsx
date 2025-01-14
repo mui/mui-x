@@ -42,7 +42,7 @@ import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/densitySelecto
 describe('<DataGrid /> - Rows', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
 
   const baselineProps = {
     autoHeight: isJSDOM,

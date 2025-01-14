@@ -132,7 +132,11 @@ interface JoyMultiInputDateRangeFieldProps
       DateRangePickerFieldProps<false>,
       'unstableFieldRef' | 'clearable' | 'onClear'
     >,
-    MultiInputFieldRefs {}
+    MultiInputFieldRefs {
+  slotProps: {
+    textField: any;
+  };
+}
 
 type JoyMultiInputDateRangeFieldComponent = ((
   props: JoyMultiInputDateRangeFieldProps & React.RefAttributes<HTMLDivElement>,
@@ -142,18 +146,12 @@ const JoyMultiInputDateRangeField = React.forwardRef(
   (props: JoyMultiInputDateRangeFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const {
       slotProps,
-      value,
-      format,
-      onChange,
       readOnly,
-      disabled,
       shouldDisableDate,
       minDate,
       maxDate,
       disableFuture,
       disablePast,
-      selectedSections,
-      onSelectedSectionsChange,
       className,
       unstableStartFieldRef,
       unstableEndFieldRef,
@@ -162,13 +160,13 @@ const JoyMultiInputDateRangeField = React.forwardRef(
     const startTextFieldProps = useSlotProps({
       elementType: FormControl,
       externalSlotProps: slotProps?.textField,
-      ownerState: { ...props, position: 'start' },
+      ownerState: { position: 'start' } as any,
     }) as MultiInputFieldSlotTextFieldProps;
 
     const endTextFieldProps = useSlotProps({
       elementType: FormControl,
       externalSlotProps: slotProps?.textField,
-      ownerState: { ...props, position: 'end' },
+      ownerState: { position: 'end' } as any,
     }) as MultiInputFieldSlotTextFieldProps;
 
     const fieldResponse = useMultiInputDateRangeField<
@@ -176,18 +174,12 @@ const JoyMultiInputDateRangeField = React.forwardRef(
       MultiInputFieldSlotTextFieldProps
     >({
       sharedProps: {
-        value,
-        format,
-        onChange,
         readOnly,
-        disabled,
         shouldDisableDate,
         minDate,
         maxDate,
         disableFuture,
         disablePast,
-        selectedSections,
-        onSelectedSectionsChange,
         enableAccessibleFieldDOMStructure: false,
       },
       startTextFieldProps,
@@ -196,11 +188,26 @@ const JoyMultiInputDateRangeField = React.forwardRef(
       unstableEndFieldRef,
     });
 
+    const {
+      // The multi input range field do not support clearable,  onClear and openPickerAriaLabel
+      onClear: onClearStartDate,
+      clearable: isStartDateClearable,
+      openPickerAriaLabel: openPickerStartDateAriaLabel,
+      ...startDateProps
+    } = fieldResponse.startDate;
+    const {
+      // The multi input range field do not support clearable,  onClear and openPickerAriaLabel
+      onClear: onClearEndDate,
+      clearable: isEndDateClearable,
+      openPickerAriaLabel: openPickerEndDateAriaLabel,
+      ...endDateProps
+    } = fieldResponse.endDate;
+
     return (
       <MultiInputJoyDateRangeFieldRoot ref={ref} className={className}>
-        <JoyField {...fieldResponse.startDate} />
+        <JoyField {...startDateProps} />
         <MultiInputJoyDateRangeFieldSeparator />
-        <JoyField {...fieldResponse.endDate} />
+        <JoyField {...endDateProps} />
       </MultiInputJoyDateRangeFieldRoot>
     );
   },
@@ -212,6 +219,7 @@ const JoyDateRangePicker = React.forwardRef(
       <DateRangePicker
         ref={ref}
         {...props}
+        enableAccessibleFieldDOMStructure={false}
         slots={{ ...props?.slots, field: JoyMultiInputDateRangeField }}
       />
     );

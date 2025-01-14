@@ -893,7 +893,7 @@ describe('<DataGrid /> - Row selection', () => {
     });
 
     it('should throw if rowSelectionModel contains more than 1 row', () => {
-      let apiRef: React.MutableRefObject<GridApi>;
+      let apiRef: React.RefObject<GridApi>;
       function ControlCase() {
         apiRef = useGridApiRef();
         return <TestDataGridSelection apiRef={apiRef} />;
@@ -906,7 +906,7 @@ describe('<DataGrid /> - Row selection', () => {
     });
 
     it('should not throw if rowSelectionModel contains more than 1 item with checkbox selection', () => {
-      let apiRef: React.MutableRefObject<GridApi>;
+      let apiRef: React.RefObject<GridApi>;
       function ControlCase() {
         apiRef = useGridApiRef();
         return <TestDataGridSelection apiRef={apiRef} checkboxSelection />;

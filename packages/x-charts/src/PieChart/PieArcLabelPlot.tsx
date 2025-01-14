@@ -8,7 +8,7 @@ import {
   DefaultizedPieValueType,
   PieSeriesType,
 } from '../models/seriesType/pie';
-import { defaultLabelTransitionConfig } from './dataTransform/transition';
+import { getDefaultLabelTransitionConfig } from './dataTransform/transition';
 import {
   AnimatedObject,
   ValueWithHighlight,
@@ -121,7 +121,7 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
     data,
   });
   const transition = useTransition<ValueWithHighlight, AnimatedObject>(transformedData, {
-    ...defaultLabelTransitionConfig,
+    ...getDefaultLabelTransitionConfig(skipAnimation),
     immediate: skipAnimation,
   });
 
