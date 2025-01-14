@@ -53,17 +53,16 @@ function getIsTelemetryCollecting(): boolean | undefined {
   }
 
   try {
+    // e.g. Vite.js
     // eslint-disable-next-line global-require
     const { importMetaEnv } = require('./config.import-meta');
-    if (!importMetaEnv) {
-      return undefined;
-    }
-
-    const result = getBooleanEnvFromEnvObject('MUI_X_TELEMETRY_DISABLED', importMetaEnv);
-    if (typeof result === 'boolean') {
-      // If disabled=true, telemetry is disabled
-      // If disabled=false, telemetry is enabled
-      return !result;
+    if (importMetaEnv) {
+      const result = getBooleanEnvFromEnvObject('MUI_X_TELEMETRY_DISABLED', importMetaEnv);
+      if (typeof result === 'boolean') {
+        // If disabled=true, telemetry is disabled
+        // If disabled=false, telemetry is enabled
+        return !result;
+      }
     }
   } catch (_) {
     // If there is an error, return the default value
@@ -119,8 +118,10 @@ function getIsDebugModeEnabled(): boolean {
 
   try {
     // e.g. Vite.js
-    if (typeof (import.meta as any)?.env === 'object') {
-      const result = getBooleanEnvFromEnvObject('MUI_X_TELEMETRY_DEBUG', (import.meta as any).env);
+    // eslint-disable-next-line global-require
+    const { importMetaEnv } = require('./config.import-meta');
+    if (importMetaEnv) {
+      const result = getBooleanEnvFromEnvObject('MUI_X_TELEMETRY_DEBUG', importMetaEnv);
       if (typeof result === 'boolean') {
         return result;
       }
