@@ -28,7 +28,7 @@ export default function MonthCalendarWithListLayoutDemo() {
               >
                 ▶
               </Calendar.SetVisibleYear>
-            </header>{' '}
+            </header>
             <Calendar.MonthsList className={styles.MonthsList}>
               {({ months }) =>
                 months.map((month) => (

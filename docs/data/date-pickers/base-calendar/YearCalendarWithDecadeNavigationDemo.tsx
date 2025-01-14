@@ -38,7 +38,7 @@ export default function YearCalendarWithDecadeNavigationDemo() {
               >
                 ▶
               </Calendar.SetVisibleYear>
-            </header>{' '}
+            </header>
             <Calendar.YearsGrid
               cellsPerRow={2}
               className={styles.YearsGrid}

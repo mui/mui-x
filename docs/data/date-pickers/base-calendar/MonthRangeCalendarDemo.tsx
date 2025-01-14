@@ -26,7 +26,7 @@ export default function MonthRangeCalendarDemo() {
               >
                 ▶
               </RangeCalendar.SetVisibleYear>
-            </header>{' '}
+            </header>
             <RangeCalendar.MonthsGrid cellsPerRow={2} className={styles.MonthsGrid}>
               {({ months }) =>
                 months.map((month) => (

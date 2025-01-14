@@ -30,7 +30,7 @@ function DayCalendar(props: Omit<Calendar.Root.Props, 'children'>) {
               >
                 ▶
               </Calendar.SetVisibleMonth>
-            </header>{' '}
+            </header>
             <Calendar.DaysGrid className={styles.DaysGrid}>
               <Calendar.DaysGridHeader className={styles.DaysGridHeader}>
                 {({ days }) => (

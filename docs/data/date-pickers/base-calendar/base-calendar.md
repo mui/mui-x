@@ -8,6 +8,74 @@ packageName: '@mui/x-date-pickers'
 
 <p class="description">POC of a Calendar component using the Base UI DX.</p>
 
+## Anatomy
+
+### Days
+
+```tsx
+<Calendar.Root>
+  <Calendar.DaysGrid>
+    <Calendar.DaysGridHeader>
+      {({ days }) => days.map((day) => <Calendar.DaysGridHeaderCell value={day} />)}
+    </Calendar.DaysGridHeader>
+    <Calendar.DaysGridBody>
+      {({ weeks }) =>
+        weeks.map((week) => (
+          <Calendar.DaysWeekRow value={week}>
+            {({ days }) => days.map((day) => <Calendar.DaysCell value={day} />)}
+          </Calendar.DaysWeekRow>
+        ))
+      }
+    </Calendar.DaysGridBody>
+  </Calendar.DaysGrid>
+</Calendar.Root>
+```
+
+### Months
+
+```tsx
+// Grid layout
+<Calendar.Root>
+  <Calendar.MonthsGrid>
+    {({ months }) => months.map((month) => <Calendar.MonthsCell value={month} />)}
+  </Calendar.MonthsGrid>
+</Calendar.Root>
+
+// List layout
+<Calendar.Root>
+  <Calendar.MonthsList>
+    {({ months }) => months.map((month) => <Calendar.MonthsCell value={month} />)}
+  </Calendar.MonthsList>
+</Calendar.Root>
+```
+
+### Years
+
+```tsx
+// Grid layout
+<Calendar.Root>
+  <Calendar.YearsGrid>
+    {({ years }) => years.map((year) => <Calendar.YearsCell value={year} />)}
+  </Calendar.YearsGrid>
+</Calendar.Root>
+
+// List layout
+<Calendar.Root>
+  <Calendar.YearsList>
+    {({ years }) => years.map((year) => <Calendar.YearsCell value={year} />)}
+  </Calendar.YearsList>
+</Calendar.Root>
+```
+
+### Navigation
+
+```tsx
+<Calendar.Root>
+  <Calendar.SetVisibleYear />
+  <Calendar.SetVisibleMonth />
+</Calendar.Root>
+```
+
 ## Day Calendar
 
 ### Single visible month
