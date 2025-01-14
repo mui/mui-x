@@ -150,18 +150,16 @@ export function useRangeCalendarRoot(parameters: useRangeCalendarRoot.Parameters
     calendarValueManager,
   });
 
-  // TODO: Apply some logic based on the range position.
-  const [prevValue, setPrevValue] = React.useState<PickerRangeValue>(value);
-  if (value !== prevValue) {
-    setPrevValue(value);
-    let targetDate: PickerValidDate | null = null;
-    if (utils.isValid(value[0])) {
-      targetDate = value[0];
-    } else if (utils.isValid(value[1])) {
-      targetDate = value[1];
-    }
-    if (targetDate != null && isDateCellVisible(targetDate)) {
-      setVisibleDate(targetDate);
+  const [prevState, setPrevState] = React.useState<{
+    value: PickerRangeValue;
+    rangePosition: RangePosition;
+  }>({ value, rangePosition });
+  if (prevState.value !== value || prevState.rangePosition !== rangePosition) {
+    setPrevState({ value, rangePosition });
+    if (rangePosition === 'start' && utils.isValid(value[0]) && !isDateCellVisible(value[0])) {
+      setVisibleDate(value[0]);
+    } else if (rangePosition === 'end' && utils.isValid(value[1]) && !isDateCellVisible(value[1])) {
+      setVisibleDate(value[1]);
     }
   }
 

@@ -162,6 +162,7 @@ function BookingCalendar() {
 
   return (
     <RangeCalendar.Root
+      monthPageSize={2}
       visibleDate={visibleDate}
       onVisibleDateChange={setVisibleDate}
       disablePast
