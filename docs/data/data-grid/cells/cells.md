@@ -1,14 +1,21 @@
 # Data Grid - Cells
 
-<p class="description">The Data Grid provides several ways to customize the content of a cell.</p>
+<p class="description">Learn how to customize the rendered elements and values of a cell.</p>
 
-## What is the difference between renderCell, valueGetter, and valueFormatter? Which one should I use?
+## Customizing cells
 
-The Data Grid provides several ways to customize the content of a cell. Each of them has a different purpose and should be used in different situations. Here is a summary of their differences:
+The Data Grid provides several methods to customize the rendered elements and values of a cell.
+Each of them has a different purpose and should be used in different situations.
+Here is a summary of their differences:
 
-### `renderCell`
+### renderCell() function
 
-It is the most powerful way to customize the content of a cell. It allows you to render anything you want inside the cell. It is the only way to render a React component inside a cell. It is also the only way to customize the cell's behavior (for instance, add a click handler). It is the most flexible way to customize a cell, but it is also the most expensive one. It should be used only when the other options are not enough.
+The `renderCell()` function is the most powerful way to customize the content of a cell.
+It allows you to render anything you want inside the cell.
+It is the only way to render a React component inside a cell.
+It is also the only way to customize the cell's behavior (for instance, add a click handler).
+It is the most flexible way to customize a cell, but it is also the most expensive one.
+It should be used only when the other options are not enough.
 
 Here's an example for a cell that displays a button:
 
@@ -34,26 +41,33 @@ const columns: GridColDef[] = [
 ];
 ```
 
-See more about the `renderCell` method in the [rendering cells](/x/react-data-grid/column-definition/#rendering-cells) section.
+See more about the `renderCell` function in [Column definition—rendering cells](/x/react-data-grid/column-definition/#rendering-cells).
 
-### `valueGetter`
+### valueGetter() function
 
-It is a function that allows you to derive the cell value from the row data. It is the most performant way to customize the cell content. It is also the only way to customize the cell value without changing the row data. It should be used when you need to derive the cell value from the row data. Common use cases are:
+The `valueGetter()` function allows you to derive the cell value from the row data.
+It is the most performant way to customize the cell content.
+It is also the only way to customize the cell value without changing the row data.
+It should be used when you need to derive the cell value from the row data. Common use cases are:
 
 - Transforming the value (for example convert a decimal value to a percentage value)
 - Deriving the value from multiple fields (for example concatenating first name and last name)
 - Deriving the value from a nested field (for example `user.address.city`)
 
-This value is also used internally in the Grid to filter, sort, and render (if no `renderCell` or `valueFormatter` is provided). You can learn more about it in the [value getter](/x/react-data-grid/column-definition/#value-getter) section.
+This value is also used internally in the Grid to filter, sort, and render (if no `renderCell` or `valueFormatter` is provided).
+You can learn more about it in [Column definition—value getter](/x/react-data-grid/column-definition/#value-getter).
 
-### `valueFormatter`
+### valueFormatter() function
 
-It is a function that allows you to format the cell value. It could be used to customize the cell value without changing the row data. It should be used when you need to format the cell value.
+The `valueFormatter()` function allows you to format the cell value.
+It could be used to customize the cell value without changing the row data.
+It should be used when you need to format the cell value.
 
-A few common use-cases are:
+A few common use cases are:
 
 - Formatting a date to a custom display format
 - Formatting a decimal value to percentage and show `%` sign
 - Formatting a boolean value to `Yes` or `No`
 
-It only impacts the rendering part and does not impact the internal calculations like filtering or sorting. You can know more about it in the [value formatter](/x/react-data-grid/column-definition/#value-formatter) section.
+It only impacts the rendering part and does not impact the internal calculations like filtering or sorting.
+Learn more in [Column definition—value formatter](/x/react-data-grid/column-definition/#value-formatter).
