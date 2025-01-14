@@ -9,41 +9,10 @@ import { useComponentRenderer } from '@mui/x-date-pickers/internals/base/base-ut
 import { RangeCalendarDaysCellDataAttributes } from './RangeCalendarDaysCellDataAttributes';
 import { useRangeCalendarDaysCell } from './useRangeCalendarDaysCell';
 import { useRangeCalendarDaysCellWrapper } from './useRangeCalendarDaysCellWrapper';
+import { RangeCellState, rangeCellStyleHookMapping, useRangeCellState } from '../utils/rangeCell';
 
 const customStyleHookMapping: CustomStyleHookMapping<RangeCalendarDaysCell.State> = {
-  selected(value) {
-    return value ? { [RangeCalendarDaysCellDataAttributes.selected]: '' } : null;
-  },
-  selectionStart(value) {
-    return value ? { [RangeCalendarDaysCellDataAttributes.selectionStart]: '' } : null;
-  },
-  selectionEnd(value) {
-    return value ? { [RangeCalendarDaysCellDataAttributes.selectionEnd]: '' } : null;
-  },
-  insideSelection(value) {
-    return value ? { [RangeCalendarDaysCellDataAttributes.insideSelection]: '' } : null;
-  },
-  previewed(value) {
-    return value ? { [RangeCalendarDaysCellDataAttributes.previewed]: '' } : null;
-  },
-  previewStart(value) {
-    return value ? { [RangeCalendarDaysCellDataAttributes.previewStart]: '' } : null;
-  },
-  previewEnd(value) {
-    return value ? { [RangeCalendarDaysCellDataAttributes.previewEnd]: '' } : null;
-  },
-  insidePreview(value) {
-    return value ? { [RangeCalendarDaysCellDataAttributes.insidePreview]: '' } : null;
-  },
-  disabled(value) {
-    return value ? { [RangeCalendarDaysCellDataAttributes.disabled]: '' } : null;
-  },
-  invalid(value) {
-    return value ? { [RangeCalendarDaysCellDataAttributes.invalid]: '' } : null;
-  },
-  current(value) {
-    return value ? { [RangeCalendarDaysCellDataAttributes.current]: '' } : null;
-  },
+  ...rangeCellStyleHookMapping,
   outsideMonth(value) {
     return value ? { [RangeCalendarDaysCellDataAttributes.outsideMonth]: '' } : null;
   },
@@ -54,35 +23,12 @@ const InnerRangeCalendarDaysCell = React.forwardRef(function RangeCalendarDaysGr
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
   const { className, render, value, ctx, ...otherProps } = props;
-  const { getDaysCellProps, isCurrent } = useRangeCalendarDaysCell({ value, ctx });
+  const { getDaysCellProps } = useRangeCalendarDaysCell({ value, ctx });
 
-  const state: RangeCalendarDaysCell.State = React.useMemo(
-    () => ({
-      selected: ctx.isSelected,
-      selectionStart: ctx.isSelectionStart,
-      selectionEnd: ctx.isSelectionEnd,
-      insideSelection: ctx.isSelected && !ctx.isSelectionStart && !ctx.isSelectionEnd,
-      previewed: ctx.isPreviewed,
-      previewStart: ctx.isPreviewStart,
-      previewEnd: ctx.isPreviewEnd,
-      insidePreview: ctx.isPreviewed && !ctx.isPreviewStart && !ctx.isPreviewEnd,
-      disabled: ctx.isDisabled,
-      invalid: ctx.isInvalid,
-      outsideMonth: ctx.isOutsideCurrentMonth,
-      current: isCurrent,
-    }),
-    [
-      ctx.isSelected,
-      ctx.isSelectionStart,
-      ctx.isSelectionEnd,
-      ctx.isPreviewed,
-      ctx.isPreviewStart,
-      ctx.isPreviewEnd,
-      ctx.isDisabled,
-      ctx.isInvalid,
-      ctx.isOutsideCurrentMonth,
-      isCurrent,
-    ],
+  const cellState = useRangeCellState(ctx);
+  const state = React.useMemo<RangeCalendarDaysCell.State>(
+    () => ({ ...cellState, outsideMonth: ctx.isOutsideCurrentMonth }),
+    [cellState, ctx.isOutsideCurrentMonth],
   );
 
   const { renderElement } = useComponentRenderer({
@@ -110,53 +56,9 @@ const RangeCalendarDaysCell = React.forwardRef(function RangeCalendarDaysCell(
 });
 
 export namespace RangeCalendarDaysCell {
-  export interface State {
+  export interface State extends RangeCellState {
     /**
-     * Whether the day is within the selected range.
-     */
-    selected: boolean;
-    /**
-     * Whether the day is the first day of the selected range.
-     */
-    selectionStart: boolean;
-    /**
-     * Whether the day is the last day of the selected range.
-     */
-    selectionEnd: boolean;
-    /**
-     * Whether the day is within the selected range and is not its first or last day.
-     */
-    insideSelection: boolean;
-    /**
-     * Whether the day is within the preview range and is not its first or last day.
-     */
-    previewed: boolean;
-    /**
-     * Whether the day is the first day of the preview range.
-     */
-    previewStart: boolean;
-    /**
-     * Whether the day is the last day of the preview range.
-     */
-    previewEnd: boolean;
-    /**
-     * Whether the day is within the preview range and is not its first or last day.
-     */
-    insidePreview: boolean;
-    /**
-     * Whether the day is disabled.
-     */
-    disabled: boolean;
-    /**
-     * Whether the day is invalid.
-     */
-    invalid: boolean;
-    /**
-     * Whether the day contains the current date.
-     */
-    current: boolean;
-    /**
-     * Whether the day is outside the month rendered by the day grid wrapping it.
+     * Whether the cell is outside the month rendered by the day grid wrapping it.
      */
     outsideMonth: boolean;
   }

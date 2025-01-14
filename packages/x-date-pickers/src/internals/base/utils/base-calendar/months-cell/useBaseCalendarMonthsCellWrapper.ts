@@ -25,6 +25,8 @@ export function useBaseCalendarMonthsCellWrapper(
     [baseRootContext.selectedDates, value, utils],
   );
 
+  const isCurrent = React.useMemo(() => utils.isSameMonth(value, utils.date()), [utils, value]);
+
   const isInvalid = React.useMemo(() => {
     const firstEnabledMonth = utils.startOfMonth(
       baseRootContext.dateValidationProps.disablePast &&
@@ -110,9 +112,10 @@ export function useBaseCalendarMonthsCellWrapper(
       isDisabled,
       isInvalid,
       isTabbable,
+      isCurrent,
       selectMonth,
     }),
-    [isSelected, isDisabled, isInvalid, isTabbable, selectMonth],
+    [isSelected, isDisabled, isInvalid, isTabbable, isCurrent, selectMonth],
   );
 
   return { ref: mergedRef, ctx };

@@ -21,6 +21,8 @@ export function useBaseCalendarDaysCellWrapper(
     [baseRootContext.selectedDates, value, utils],
   );
 
+  const isCurrent = React.useMemo(() => utils.isSameDay(value, utils.date()), [utils, value]);
+
   const isOutsideCurrentMonth = React.useMemo(
     () =>
       baseDaysGridContext.currentMonth == null
@@ -52,6 +54,7 @@ export function useBaseCalendarDaysCellWrapper(
       isDisabled,
       isInvalid,
       isTabbable,
+      isCurrent,
       isOutsideCurrentMonth,
       selectDay: baseDaysGridContext.selectDay,
     }),
@@ -60,6 +63,7 @@ export function useBaseCalendarDaysCellWrapper(
       isDisabled,
       isInvalid,
       isTabbable,
+      isCurrent,
       isOutsideCurrentMonth,
       baseDaysGridContext.selectDay,
       colIndex,

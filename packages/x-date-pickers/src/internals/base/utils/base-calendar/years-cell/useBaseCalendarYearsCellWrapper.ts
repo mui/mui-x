@@ -25,6 +25,8 @@ export function useBaseCalendarYearsCellWrapper(
     [baseRootContext.selectedDates, value, utils],
   );
 
+  const isCurrent = React.useMemo(() => utils.isSameYear(value, utils.date()), [utils, value]);
+
   const isInvalid = React.useMemo(() => {
     if (baseRootContext.dateValidationProps.disablePast && utils.isBeforeYear(value, now)) {
       return true;
@@ -105,9 +107,10 @@ export function useBaseCalendarYearsCellWrapper(
       isDisabled,
       isInvalid,
       isTabbable,
+      isCurrent,
       selectYear,
     }),
-    [isSelected, isDisabled, isInvalid, isTabbable, selectYear],
+    [isSelected, isDisabled, isInvalid, isTabbable, isCurrent, selectYear],
   );
 
   return { ref: mergedRef, ctx };

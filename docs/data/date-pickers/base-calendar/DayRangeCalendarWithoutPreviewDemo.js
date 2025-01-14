@@ -34,11 +34,7 @@ function Header() {
 export default function DayRangeCalendarWithoutPreviewDemo() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <RangeCalendar.Root
-        monthPageSize={2}
-        className={clsx(styles.Root)}
-        disableHoverPreview
-      >
+      <RangeCalendar.Root className={clsx(styles.Root)} disableHoverPreview>
         <Header />
         <RangeCalendar.DaysGrid className={styles.DaysGrid}>
           <RangeCalendar.DaysGridHeader className={styles.DaysGridHeader}>

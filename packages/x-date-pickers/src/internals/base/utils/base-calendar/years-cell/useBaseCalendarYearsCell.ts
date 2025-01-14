@@ -14,29 +14,27 @@ export function useBaseCalendarYearsCell(parameters: useBaseCalendarYearsCell.Pa
     [utils, value, format],
   );
 
-  const isCurrent = React.useMemo(() => utils.isSameYear(value, utils.date()), [utils, value]);
-
   const onClick = useEventCallback(() => {
     ctx.selectYear(value);
   });
 
-  const getYearCellProps = React.useCallback(
+  const getYearsCellProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
       return mergeReactProps(externalProps, {
         type: 'button' as const,
         role: 'radio',
         'aria-checked': ctx.isSelected,
-        'aria-current': isCurrent ? 'date' : undefined,
+        'aria-current': ctx.isCurrent ? 'date' : undefined,
         disabled: ctx.isDisabled,
         tabIndex: ctx.isTabbable ? 0 : -1,
         children: formattedValue,
         onClick,
       });
     },
-    [formattedValue, ctx.isSelected, ctx.isDisabled, ctx.isTabbable, onClick, isCurrent],
+    [formattedValue, ctx.isSelected, ctx.isDisabled, ctx.isTabbable, onClick, ctx.isCurrent],
   );
 
-  return React.useMemo(() => ({ getYearCellProps, isCurrent }), [getYearCellProps, isCurrent]);
+  return React.useMemo(() => ({ getYearsCellProps }), [getYearsCellProps]);
 }
 
 export namespace useBaseCalendarYearsCell {
@@ -58,6 +56,7 @@ export namespace useBaseCalendarYearsCell {
     isDisabled: boolean;
     isInvalid: boolean;
     isTabbable: boolean;
+    isCurrent: boolean;
     selectYear: (value: PickerValidDate) => void;
   }
 }

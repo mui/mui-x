@@ -11,8 +11,7 @@ export function useRangeCalendarMonthsCell(parameters: useRangeCalendarMonthsCel
   const { ctx, value } = parameters;
   const rangeCellProps = useRangeCell({ ctx, value, section: 'month' });
 
-  const { getMonthsCellProps: getBaseMonthsCellProps, isCurrent } =
-    useBaseCalendarMonthsCell(parameters);
+  const { getMonthsCellProps: getBaseMonthsCellProps } = useBaseCalendarMonthsCell(parameters);
 
   const getMonthsCellProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
@@ -21,7 +20,7 @@ export function useRangeCalendarMonthsCell(parameters: useRangeCalendarMonthsCel
     [rangeCellProps, getBaseMonthsCellProps],
   );
 
-  return React.useMemo(() => ({ getMonthsCellProps, isCurrent }), [getMonthsCellProps, isCurrent]);
+  return React.useMemo(() => ({ getMonthsCellProps }), [getMonthsCellProps]);
 }
 
 export namespace useRangeCalendarMonthsCell {

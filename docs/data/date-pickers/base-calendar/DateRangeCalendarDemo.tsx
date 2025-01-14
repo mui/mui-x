@@ -89,7 +89,7 @@ export default function DateRangeCalendarDemo() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <RangeCalendar.Root monthPageSize={2} className={clsx(styles.Root)}>
+      <RangeCalendar.Root className={clsx(styles.Root)}>
         <Header
           activeSection={activeSection}
           onActiveSectionChange={handleActiveSectionChange}

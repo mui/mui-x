@@ -34,7 +34,7 @@ function Header() {
 export default function MonthRangeCalendarDemo() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <RangeCalendar.Root monthPageSize={2} className={clsx(styles.Root)}>
+      <RangeCalendar.Root className={clsx(styles.Root)}>
         <Header />
         <RangeCalendar.MonthsGrid cellsPerRow={2} className={styles.MonthsGrid}>
           {({ months }) =>

@@ -14,8 +14,6 @@ export function useBaseCalendarDaysCell(parameters: useBaseCalendarDaysCell.Para
     [utils, value, format],
   );
 
-  const isCurrent = React.useMemo(() => utils.isSameDay(value, utils.date()), [utils, value]);
-
   const onClick = useEventCallback(() => {
     ctx.selectDay(value);
   });
@@ -25,7 +23,7 @@ export function useBaseCalendarDaysCell(parameters: useBaseCalendarDaysCell.Para
       return mergeReactProps(externalProps, {
         role: 'gridcell',
         'aria-selected': ctx.isSelected,
-        'aria-current': isCurrent ? 'date' : undefined,
+        'aria-current': ctx.isCurrent ? 'date' : undefined,
         'aria-colindex': ctx.colIndex + 1,
         children: formattedValue,
         disabled: ctx.isDisabled,
@@ -39,12 +37,12 @@ export function useBaseCalendarDaysCell(parameters: useBaseCalendarDaysCell.Para
       ctx.isDisabled,
       ctx.isTabbable,
       ctx.colIndex,
-      isCurrent,
+      ctx.isCurrent,
       onClick,
     ],
   );
 
-  return React.useMemo(() => ({ getDaysCellProps, isCurrent }), [getDaysCellProps, isCurrent]);
+  return React.useMemo(() => ({ getDaysCellProps }), [getDaysCellProps]);
 }
 
 export namespace useBaseCalendarDaysCell {
@@ -70,6 +68,7 @@ export namespace useBaseCalendarDaysCell {
     isDisabled: boolean;
     isInvalid: boolean;
     isTabbable: boolean;
+    isCurrent: boolean;
     isOutsideCurrentMonth: boolean;
     selectDay: (value: PickerValidDate) => void;
   }

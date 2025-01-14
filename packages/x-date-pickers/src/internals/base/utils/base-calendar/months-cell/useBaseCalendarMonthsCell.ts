@@ -14,8 +14,6 @@ export function useBaseCalendarMonthsCell(parameters: useBaseCalendarMonthsCell.
     [utils, value, format],
   );
 
-  const isCurrent = React.useMemo(() => utils.isSameMonth(value, utils.date()), [utils, value]);
-
   const onClick = useEventCallback(() => {
     ctx.selectMonth(value);
   });
@@ -26,17 +24,17 @@ export function useBaseCalendarMonthsCell(parameters: useBaseCalendarMonthsCell.
         type: 'button' as const,
         role: 'radio',
         'aria-checked': ctx.isSelected,
-        'aria-current': isCurrent ? 'date' : undefined,
+        'aria-current': ctx.isCurrent ? 'date' : undefined,
         disabled: ctx.isDisabled,
         tabIndex: ctx.isTabbable ? 0 : -1,
         children: formattedValue,
         onClick,
       });
     },
-    [formattedValue, ctx.isSelected, ctx.isDisabled, ctx.isTabbable, onClick, isCurrent],
+    [formattedValue, ctx.isSelected, ctx.isDisabled, ctx.isTabbable, onClick, ctx.isCurrent],
   );
 
-  return React.useMemo(() => ({ getMonthsCellProps, isCurrent }), [getMonthsCellProps, isCurrent]);
+  return React.useMemo(() => ({ getMonthsCellProps }), [getMonthsCellProps]);
 }
 
 export namespace useBaseCalendarMonthsCell {
@@ -58,6 +56,7 @@ export namespace useBaseCalendarMonthsCell {
     isDisabled: boolean;
     isInvalid: boolean;
     isTabbable: boolean;
+    isCurrent: boolean;
     selectMonth: (value: PickerValidDate) => void;
   }
 }

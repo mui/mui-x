@@ -11,7 +11,7 @@ export function useRangeCalendarDaysCell(parameters: useRangeCalendarDaysCell.Pa
   const { ctx, value } = parameters;
   const rangeCellProps = useRangeCell({ ctx, value, section: 'day' });
 
-  const { getDaysCellProps: getBaseDaysCellProps, isCurrent } = useBaseCalendarDaysCell(parameters);
+  const { getDaysCellProps: getBaseDaysCellProps } = useBaseCalendarDaysCell(parameters);
 
   const getDaysCellProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
@@ -20,7 +20,7 @@ export function useRangeCalendarDaysCell(parameters: useRangeCalendarDaysCell.Pa
     [rangeCellProps, getBaseDaysCellProps],
   );
 
-  return React.useMemo(() => ({ getDaysCellProps, isCurrent }), [getDaysCellProps, isCurrent]);
+  return React.useMemo(() => ({ getDaysCellProps }), [getDaysCellProps]);
 }
 
 export namespace useRangeCalendarDaysCell {

@@ -1,0 +1,13 @@
+<RangeCalendar.Root className={clsx(styles.Root)}>
+  <RangeCalendar.YearsGrid cellsPerRow={2} className={styles.YearsGrid}>
+    {({ years }) =>
+      years.map((year) => (
+        <RangeCalendar.YearsCell
+          value={year}
+          className={clsx(styles.YearsCell, styles.RangeYearsCell)}
+          key={year.toString()}
+        />
+      ))
+    }
+  </RangeCalendar.YearsGrid>
+</RangeCalendar.Root>

@@ -239,6 +239,16 @@ Work in progress, this is probably quite buggy
 
 TODO
 
+## Year Range Calendar
+
+:::warning
+Work in progress, this is probably quite buggy
+:::
+
+### Single visible year
+
+{{"demo": "YearRangeCalendarDemo.js", "defaultCodeOpen": false}}
+
 ## Date Range Calendar
 
 {{"demo": "DateRangeCalendarDemo.js", "defaultCodeOpen": false}}

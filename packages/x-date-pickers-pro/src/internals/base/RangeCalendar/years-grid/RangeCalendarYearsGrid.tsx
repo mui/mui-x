@@ -50,7 +50,7 @@ export namespace RangeCalendarYearsGrid {
 
   export interface Props
     extends Omit<BaseUIComponentProps<'div', State>, 'children'>,
-      useBaseCalendarYearsGrid.Parameters {}
+      useBaseCalendarYearsGrid.PublicParameters {}
 }
 
 export { RangeCalendarYearsGrid };

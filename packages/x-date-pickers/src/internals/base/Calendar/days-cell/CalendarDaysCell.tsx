@@ -30,7 +30,7 @@ const InnerCalendarDaysCell = React.forwardRef(function CalendarDaysGrid(
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
   const { className, render, value, ctx, ...otherProps } = props;
-  const { getDaysCellProps, isCurrent } = useBaseCalendarDaysCell({ value, ctx });
+  const { getDaysCellProps } = useBaseCalendarDaysCell({ value, ctx });
 
   const state: CalendarDaysCell.State = React.useMemo(
     () => ({
@@ -38,9 +38,9 @@ const InnerCalendarDaysCell = React.forwardRef(function CalendarDaysGrid(
       disabled: ctx.isDisabled,
       invalid: ctx.isInvalid,
       outsideMonth: ctx.isOutsideCurrentMonth,
-      current: isCurrent,
+      current: ctx.isCurrent,
     }),
-    [ctx.isSelected, ctx.isDisabled, ctx.isInvalid, ctx.isOutsideCurrentMonth, isCurrent],
+    [ctx.isSelected, ctx.isDisabled, ctx.isInvalid, ctx.isOutsideCurrentMonth, ctx.isCurrent],
   );
 
   const { renderElement } = useComponentRenderer({
