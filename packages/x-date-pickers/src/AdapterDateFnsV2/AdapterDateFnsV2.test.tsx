@@ -1,5 +1,4 @@
 // @ts-nocheck
-
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV2';
 import { describeGregorianAdapter } from 'test/utils/pickers/describeGregorianAdapter';
 import { fr } from 'date-fns-v2/locale';

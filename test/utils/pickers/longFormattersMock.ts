@@ -62,7 +62,7 @@ const dateTimeLongFormatter = (pattern: any, formatLong: any) => {
     .replace('{{time}}', timeLongFormatter(timePattern, formatLong));
 };
 
-export default {
+export const longFormatters = {
   p: timeLongFormatter,
   P: dateTimeLongFormatter,
 };
