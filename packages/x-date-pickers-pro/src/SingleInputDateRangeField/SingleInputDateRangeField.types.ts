@@ -1,20 +1,16 @@
-import * as React from 'react';
-import { TextFieldProps } from '@mui/material/TextField';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { PickerRangeValue, UseFieldInternalProps } from '@mui/x-date-pickers/internals';
-import { BuiltInFieldTextFieldProps, FieldOwnerState } from '@mui/x-date-pickers/models';
 import {
-  ExportedUseClearableFieldProps,
-  UseClearableFieldSlots,
-  UseClearableFieldSlotProps,
-} from '@mui/x-date-pickers/hooks';
-import { PickersTextFieldProps } from '@mui/x-date-pickers/PickersTextField';
+  PickerRangeValue,
+  UseFieldInternalProps,
+  ExportedPickerFieldUIProps,
+  PickerFieldUISlots,
+  PickerFieldUISlotProps,
+} from '@mui/x-date-pickers/internals';
+import { BuiltInFieldTextFieldProps } from '@mui/x-date-pickers/models';
 import type { DateRangeValidationError, UseDateRangeFieldProps } from '../models';
 
 export interface UseSingleInputDateRangeFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends UseDateRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
-    ExportedUseClearableFieldProps,
     Pick<
       UseFieldInternalProps<
         PickerRangeValue,
@@ -22,7 +18,9 @@ export interface UseSingleInputDateRangeFieldProps<
         DateRangeValidationError
       >,
       'unstableFieldRef'
-    > {}
+    >,
+    // TODO v8: Remove once the range fields open with a button.
+    Omit<ExportedPickerFieldUIProps, 'openPickerButtonPosition'> {}
 
 export type SingleInputDateRangeFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean = true,
@@ -43,18 +41,6 @@ export type SingleInputDateRangeFieldProps<
     slotProps?: SingleInputDateRangeFieldSlotProps;
   };
 
-export interface SingleInputDateRangeFieldSlots extends UseClearableFieldSlots {
-  /**
-   * Form control with an input to render the value.
-   * @default <PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.
-   */
-  textField?: React.ElementType;
-}
+export interface SingleInputDateRangeFieldSlots extends PickerFieldUISlots {}
 
-export interface SingleInputDateRangeFieldSlotProps extends UseClearableFieldSlotProps {
-  textField?: SlotComponentPropsFromProps<
-    PickersTextFieldProps | TextFieldProps,
-    {},
-    FieldOwnerState
-  >;
-}
+export interface SingleInputDateRangeFieldSlotProps extends PickerFieldUISlotProps {}

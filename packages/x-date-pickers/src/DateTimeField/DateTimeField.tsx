@@ -1,16 +1,12 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
-import useSlotProps from '@mui/utils/useSlotProps';
 import { refType } from '@mui/utils';
 import { DateTimeFieldProps } from './DateTimeField.types';
 import { useDateTimeField } from './useDateTimeField';
-import { useClearableField } from '../hooks';
-import { PickersTextField } from '../PickersTextField';
-import { convertFieldResponseIntoMuiTextFieldProps } from '../internals/utils/convertFieldResponseIntoMuiTextFieldProps';
-import { useFieldOwnerState } from '../internals/hooks/useFieldOwnerState';
+import { PickerFieldUI, useFieldTextFieldProps } from '../internals/components/PickerFieldUI';
+import { CalendarIcon } from '../icons';
 
 type DateTimeFieldComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   props: DateTimeFieldProps<TEnableAccessibleFieldDOMStructure> &
@@ -38,40 +34,28 @@ const DateTimeField = React.forwardRef(function DateTimeField<
     name: 'MuiDateTimeField',
   });
 
-  const { slots, slotProps, InputProps, inputProps, ...other } = themeProps;
+  const { slots, slotProps, ...other } = themeProps;
 
-  const ownerState = useFieldOwnerState(themeProps);
-
-  const textFieldProps = useSlotProps({
-    elementType: PickersTextField,
-    externalSlotProps: slotProps?.textField,
+  const textFieldProps = useFieldTextFieldProps<
+    DateTimeFieldProps<TEnableAccessibleFieldDOMStructure>
+  >({
+    slotProps,
+    ref: inRef,
     externalForwardedProps: other,
-    ownerState,
-    additionalProps: {
-      ref: inRef,
-    },
-  }) as DateTimeFieldProps<TEnableAccessibleFieldDOMStructure>;
-
-  // TODO: Remove when mui/material-ui#35088 will be merged
-  textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
-  textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
+  });
 
   const fieldResponse = useDateTimeField<TEnableAccessibleFieldDOMStructure, typeof textFieldProps>(
     textFieldProps,
   );
-  const convertedFieldResponse = convertFieldResponseIntoMuiTextFieldProps(fieldResponse);
 
-  const processedFieldProps = useClearableField({
-    ...convertedFieldResponse,
-    slots,
-    slotProps,
-  });
-
-  const TextField =
-    slots?.textField ??
-    (fieldResponse.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
-
-  return <TextField {...processedFieldProps} />;
+  return (
+    <PickerFieldUI
+      slots={slots}
+      slotProps={slotProps}
+      fieldResponse={fieldResponse}
+      defaultOpenPickerIcon={CalendarIcon}
+    />
+  );
 }) as DateTimeFieldComponent;
 
 DateTimeField.propTypes = {
@@ -95,6 +79,12 @@ DateTimeField.propTypes = {
    * @default false
    */
   clearable: PropTypes.bool,
+  /**
+   * The position at which the clear button is placed.
+   * If the field is not clearable, the button is not rendered.
+   * @default 'end'
+   */
+  clearButtonPosition: PropTypes.oneOf(['end', 'start']),
   /**
    * The color of the component.
    * It supports both default and custom theme colors, which can be added as shown in the
@@ -266,6 +256,12 @@ DateTimeField.propTypes = {
    * @param {FieldSelectedSections} newValue The new selected sections.
    */
   onSelectedSectionsChange: PropTypes.func,
+  /**
+   * The position at which the opening button is placed.
+   * If there is no picker to open, the button is not rendered
+   * @default 'end'
+   */
+  openPickerButtonPosition: PropTypes.oneOf(['end', 'start']),
   /**
    * If `true`, the component is read-only.
    * When read-only, the value cannot be changed but the user can interact with the interface.

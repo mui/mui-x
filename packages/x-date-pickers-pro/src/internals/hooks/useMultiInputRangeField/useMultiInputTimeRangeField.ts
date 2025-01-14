@@ -16,7 +16,6 @@ import { validateTimeRange } from '../../../validation';
 import { rangeValueManager } from '../../utils/valueManagers';
 import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.types';
 import { TimeRangeValidationError } from '../../../models';
-import { excludeProps } from './shared';
 import { useMultiInputFieldSelectedSections } from '../useMultiInputFieldSelectedSections';
 import { useTimeRangeManager } from '../../../managers';
 
@@ -143,9 +142,8 @@ export const useMultiInputTimeRangeField = <
     endFieldProps,
   ) as UseFieldResponse<TEnableAccessibleFieldDOMStructure, TTextFieldSlotProps>;
 
-  /* TODO: Undo this change when a clearable behavior for multiple input range fields is implemented */
   return {
-    startDate: excludeProps(startDateResponse, ['clearable', 'onClear']),
-    endDate: excludeProps(endDateResponse, ['clearable', 'onClear']),
+    startDate: startDateResponse,
+    endDate: endDateResponse,
   };
 };
