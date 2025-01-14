@@ -54,7 +54,6 @@ export default defineWorkspace([
             plugins: [react(), filterReplace],
             test: {
               include: [`packages/${name}/src/**/*.test.?(c|m)[jt]s?(x)`],
-              exclude: [`packages/${name}/src/**/*.jsdom.test.?(c|m)[jt]s?(x)`],
               name: `browser/${name}`,
               browser: {
                 enabled: true,

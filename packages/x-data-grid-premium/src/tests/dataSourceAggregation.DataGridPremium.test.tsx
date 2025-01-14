@@ -14,10 +14,9 @@ import {
 } from '@mui/x-data-grid-premium';
 import { SinonSpy, spy } from 'sinon';
 import { getColumnHeaderCell } from 'test/utils/helperFn';
+import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
-describe('<DataGridPremium /> - Data source aggregation', () => {
+describeSkipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => {
   const { render } = createRenderer();
 
   let apiRef: React.RefObject<GridApi>;
@@ -89,12 +88,6 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
       </div>
     );
   }
-
-  beforeEach(function beforeTest() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
-  });
 
   it('should show aggregation option in the column menu', async () => {
     const { user } = render(<TestDataSourceAggregation />);
