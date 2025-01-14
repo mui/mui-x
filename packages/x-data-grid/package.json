@@ -76,6 +76,8 @@
     "@mui/system": "^5.16.14",
     "@mui/types": "^7.2.20",
     "@types/prop-types": "^15.7.14",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "rimraf": "^6.0.1"
   },
   "engines": {
