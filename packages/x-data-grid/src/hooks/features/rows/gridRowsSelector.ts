@@ -1,7 +1,8 @@
 import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 
-const gridRowsStateSelector = (state: GridStateCommunity) => state.rows;
+const gridRowsStateSelector = (apiRef: React.RefObject<GridApiCommunity>) =>
+  apiRef.current.state.rows;
 
 export const gridRowCountSelector = createSelector(
   gridRowsStateSelector,

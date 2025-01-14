@@ -1,7 +1,8 @@
 import { createSelector } from '../../../utils/createSelector';
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 
-const gridRowSpanningStateSelector = (state: GridStateCommunity) => state.rowSpanning;
+const gridRowSpanningStateSelector = (apiRef: React.RefObject<GridApiCommunity>) =>
+  apiRef.current.state.rowSpanning;
 
 export const gridRowSpanningHiddenCellsSelector = createSelector(
   gridRowSpanningStateSelector,
