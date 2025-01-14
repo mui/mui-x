@@ -121,7 +121,7 @@ interface ApplySelectedDateOnRangeReturnValue {
 }
 
 export function createPreviewRange(parameters: CreatePreviewRangeParameters): PickerRangeValue {
-  const { utils, value, hoveredDate, position } = parameters;
+  const { utils, value, hoveredDate, section, position } = parameters;
   if (hoveredDate == null) {
     return [null, null];
   }
@@ -129,19 +129,19 @@ export function createPreviewRange(parameters: CreatePreviewRangeParameters): Pi
   const roundedValue = getRoundedRange({
     utils,
     range: value,
-    section: hoveredDate.section,
+    section,
   });
 
   const [start, end] = roundedValue;
   const changes = applySelectedDateOnRange({
     utils,
-    range: value,
-    selectedDate: hoveredDate.value,
+    section,
     position,
+    range: value,
+    selectedDate: hoveredDate,
     allowRangeFlip: false,
     shouldMergeDateAndTime: false,
-    referenceDate: hoveredDate.value,
-    section: hoveredDate.section,
+    referenceDate: hoveredDate,
   });
 
   if (!start || !end) {
@@ -155,13 +155,14 @@ export function createPreviewRange(parameters: CreatePreviewRangeParameters): Pi
 interface CreatePreviewRangeParameters {
   utils: MuiPickersAdapter;
   value: PickerRangeValue;
-  hoveredDate: { value: PickerValidDate; section: BaseCalendarSection } | null;
+  hoveredDate: PickerValidDate;
+  section: BaseCalendarSection;
   position: RangePosition;
 }
 
 /**
  * Create a range going for the start of the first selected cell to the end of the last selected cell.
- * This makes sure that `isWithinRange` works with any time in the start and end day.
+ * This makes sure that methods like `isWithinRange` works with any time in the start and end day.
  */
 export function getRoundedRange({
   utils,
