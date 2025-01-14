@@ -73,7 +73,7 @@ export const rowSelectionStateInitializer: GridStateInitializer<
  * @requires useGridKeyboardNavigation (`cellKeyDown` event must first be consumed by it)
  */
 export const useGridRowSelection = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'checkboxSelection'

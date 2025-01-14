@@ -32,7 +32,7 @@ function AnimatedArea(props: AnimatedAreaProps) {
   const stringInterpolator = useStringInterpolator(d);
 
   const transitionChange = useTransition([stringInterpolator], {
-    from: { value: 0 },
+    from: skipAnimation ? undefined : { value: 0 },
     to: { value: 1 },
     enter: { value: 1 },
     reset: false,

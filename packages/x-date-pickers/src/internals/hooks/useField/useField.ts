@@ -19,33 +19,7 @@ import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
 import { useFieldV7TextField } from './useFieldV7TextField';
 import { useFieldV6TextField } from './useFieldV6TextField';
-import {
-  PickerValidValue,
-  PickerAnyManager,
-  PickerManagerFieldInternalProps,
-  PickerManagerFieldInternalPropsWithDefaults,
-} from '../../models';
-
-/**
- * Applies the default values to the field internal props.
- * This is a temporary hook that will be removed during a follow up when `useField` will receive the internal props without the defaults.
- * It is only here to allow the migration to be done in smaller steps.
- */
-export const useFieldInternalPropsWithDefaults = <TManager extends PickerAnyManager>({
-  manager,
-  internalProps,
-}: {
-  manager: TManager;
-  internalProps: PickerManagerFieldInternalProps<TManager>;
-}): PickerManagerFieldInternalPropsWithDefaults<TManager> => {
-  const localizationContext = useLocalizationContext();
-  return React.useMemo(() => {
-    return manager.internal_applyDefaultsToFieldInternalProps({
-      ...localizationContext,
-      internalProps,
-    });
-  }, [manager, internalProps, localizationContext]);
-};
+import { PickerValidValue } from '../../models';
 
 export const useField = <
   TValue extends PickerValidValue,
@@ -78,6 +52,7 @@ export const useField = <
     fieldValueManager,
     valueManager,
     validator,
+    getOpenPickerButtonAriaLabel: getOpenDialogAriaText,
   } = params;
 
   const isRtl = useRtl();
@@ -305,9 +280,16 @@ export const useField = <
     clearable: Boolean(clearable && !areAllSectionsEmpty && !readOnly && !disabled),
   };
 
+  const localizationContext = useLocalizationContext();
+  const openPickerAriaLabel = React.useMemo(
+    () => getOpenDialogAriaText({ ...localizationContext, value: state.value }),
+    [getOpenDialogAriaText, state.value, localizationContext],
+  );
+
   const commonAdditionalProps: UseFieldCommonAdditionalProps = {
     disabled,
     readOnly,
+    openPickerAriaLabel,
   };
 
   return {
