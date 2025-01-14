@@ -1,6 +1,8 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
+// eslint-disable-next-line no-restricted-imports
+import { BaseCalendarSection } from '@mui/x-date-pickers/internals/base/utils/base-calendar/utils/types';
 import { RangeCalendarRootContext } from '../root/RangeCalendarRootContext';
 
 /**
@@ -167,7 +169,7 @@ export namespace useRangeCell {
   export interface Parameters {
     value: PickerValidDate;
     ctx: Context;
-    section: 'day' | 'month' | 'year';
+    section: BaseCalendarSection;
   }
 
   export interface Context

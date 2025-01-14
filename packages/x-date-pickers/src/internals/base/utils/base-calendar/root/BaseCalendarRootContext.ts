@@ -3,6 +3,7 @@ import { PickersTimezone, PickerValidDate } from '../../../../../models';
 import { ValidateDateProps } from '../../../../../validation';
 import type { useBaseCalendarRoot } from './useBaseCalendarRoot';
 import type { useBaseCalendarDaysGridBody } from '../days-grid-body/useBaseCalendarDaysGridBody';
+import { BaseCalendarSection } from '../utils/types';
 
 export interface BaseCalendarRootContext {
   /**
@@ -41,9 +42,9 @@ export interface BaseCalendarRootContext {
    * Selects a date.
    * @param {PickerValidDate} date The date to select.
    * @param {object} options The options to select the date.
-   * @param {'day' | 'month' | 'year'} options.section The section handled by the UI that triggered the change.
+   * @param {BaseCalendarSection} options.section The section handled by the UI that triggered the change.
    */
-  selectDate: (date: PickerValidDate, options: { section: 'day' | 'month' | 'year' }) => void;
+  selectDate: (date: PickerValidDate, options: { section: BaseCalendarSection }) => void;
   /**
    * Determines if the given date is invalid.
    * @param {PickerValidDate} date The date to check.

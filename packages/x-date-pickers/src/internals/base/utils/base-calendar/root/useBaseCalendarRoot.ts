@@ -19,6 +19,7 @@ import { useControlledValueWithTimezone } from '../../../../hooks/useValueWithTi
 import { BaseDateValidationProps } from '../../../../models/validation';
 import { useBaseCalendarDaysGridNavigation } from './useBaseCalendarDaysGridsNavigation';
 import { BaseCalendarRootContext } from './BaseCalendarRootContext';
+import { BaseCalendarSection } from '../utils/types';
 
 export function useBaseCalendarRoot<
   TValue extends PickerValidValue,
@@ -92,9 +93,7 @@ export function useBaseCalendarRoot<
     validator: manager.validator,
   });
 
-  const sectionsRef = React.useRef<
-    Record<'day' | 'month' | 'year', Record<number, PickerValidDate>>
-  >({
+  const sectionsRef = React.useRef<Record<BaseCalendarSection, Record<number, PickerValidDate>>>({
     day: {},
     month: {},
     year: {},
@@ -163,7 +162,7 @@ export function useBaseCalendarRoot<
   const setValue = useEventCallback(
     (
       newValue: TValue,
-      options: { section: 'day' | 'month' | 'year'; changeImportance: 'set' | 'accept' },
+      options: { section: BaseCalendarSection; changeImportance: 'set' | 'accept' },
     ) => {
       handleValueChange(newValue, {
         section: options.section,
@@ -331,7 +330,7 @@ export namespace useBaseCalendarRoot {
     referenceDate: PickerValidDate;
     setValue: (
       newValue: TValue,
-      options: { section: 'day' | 'month' | 'year'; changeImportance: 'set' | 'accept' },
+      options: { section: BaseCalendarSection; changeImportance: 'set' | 'accept' },
     ) => void;
     setVisibleDate: (newVisibleDate: PickerValidDate, skipIfAlreadyVisible: boolean) => void;
     isDateCellVisible: (date: PickerValidDate) => boolean;
@@ -342,7 +341,7 @@ export namespace useBaseCalendarRoot {
     /**
      * The section handled by the UI that triggered the change.
      */
-    section: 'day' | 'month' | 'year';
+    section: BaseCalendarSection;
     /**
      * The validation error associated to the new value.
      */
@@ -354,7 +353,7 @@ export namespace useBaseCalendarRoot {
   }
 
   export interface RegisterSectionParameters {
-    type: 'day' | 'month' | 'year';
+    type: BaseCalendarSection;
     value: PickerValidDate;
   }
 

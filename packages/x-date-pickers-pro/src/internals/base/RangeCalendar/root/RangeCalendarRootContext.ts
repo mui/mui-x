@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { PickerRangeValue, RangePosition } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
+// eslint-disable-next-line no-restricted-imports
+import { BaseCalendarSection } from '@mui/x-date-pickers/internals/base/utils/base-calendar/utils/types';
 
 export interface RangeCalendarRootContext {
   /**
@@ -11,16 +13,16 @@ export interface RangeCalendarRootContext {
    * A ref containing the section being dragged.
    * This is used to check if the user is dragging in event handlers without causing re-renders.
    */
-  draggedSectionRef: React.RefObject<'year' | 'month' | 'day' | null>;
+  draggedSectionRef: React.RefObject<BaseCalendarSection | null>;
   disableDragEditing: boolean;
   selectDateFromDrag: (valueOrElement: PickerValidDate | HTMLElement) => void;
-  startDragging: (position: RangePosition, section: 'year' | 'month' | 'day') => void;
+  startDragging: (position: RangePosition, section: BaseCalendarSection) => void;
   stopDragging: () => void;
   setDragTarget: (valueOrElement: PickerValidDate | HTMLElement) => void;
   emptyDragImgRef: React.RefObject<HTMLImageElement | null>;
   registerCell: (element: HTMLElement, value: PickerValidDate) => () => void;
   selectedRange: PickerRangeValue;
-  setHoveredDate: (value: PickerValidDate | null, section: 'year' | 'month' | 'day') => void;
+  setHoveredDate: (value: PickerValidDate | null, section: BaseCalendarSection) => void;
   previewRange: PickerRangeValue;
 }
 

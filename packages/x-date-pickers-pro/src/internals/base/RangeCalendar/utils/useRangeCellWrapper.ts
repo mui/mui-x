@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { useUtils } from '@mui/x-date-pickers/internals';
+// eslint-disable-next-line no-restricted-imports
+import { BaseCalendarSection } from '@mui/x-date-pickers/internals/base/utils/base-calendar/utils/types';
 import { useRangeCalendarRootContext } from '../root/RangeCalendarRootContext';
 import { useRangeCell } from './useRangeCell';
-import { getDatePositionInRange } from './date-range';
+import { getDatePositionInRange } from './range';
 
 /**
  * Add support for drag&drop and preview to the cell components of the Range Calendar.
@@ -69,6 +71,6 @@ export function useRangeCellWrapper(parameters: useRangeCellWrapper.Parameters) 
 export namespace useRangeCellWrapper {
   export interface Parameters {
     value: PickerValidDate;
-    section: 'day' | 'month' | 'year';
+    section: BaseCalendarSection;
   }
 }

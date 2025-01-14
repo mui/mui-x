@@ -1,5 +1,7 @@
 import { PickerRangeValue } from '@mui/x-date-pickers/internals';
 import { MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
+// eslint-disable-next-line no-restricted-imports
+import { BaseCalendarSection } from '@mui/x-date-pickers/internals/base/utils/base-calendar/utils/types';
 
 export function getDatePositionInRange({
   utils,
@@ -10,7 +12,7 @@ export function getDatePositionInRange({
   utils: MuiPickersAdapter;
   date: PickerValidDate;
   range: PickerRangeValue;
-  section: 'year' | 'month' | 'day';
+  section: BaseCalendarSection;
 }) {
   const [start, end] = range;
   if (start == null && end == null) {
@@ -51,19 +53,6 @@ export function getDatePositionInRange({
   };
 }
 
-export function getCalendarSectionMethods(
-  utils: MuiPickersAdapter,
-  section: 'day' | 'month' | 'year',
-) {
-  if (section === 'year') {
-    return { isSame: utils.isSameYear, startOf: utils.startOfYear, endOf: utils.endOfYear };
-  }
-  if (section === 'month') {
-    return { isSame: utils.isSameMonth, startOf: utils.startOfMonth, endOf: utils.endOfMonth };
-  }
-  return { isSame: utils.isSameDay, startOf: utils.startOfDay, endOf: utils.endOfDay };
-}
-
 /**
  * Create a range going for the start of the first selected cell to the end of the last selected cell.
  * This makes sure that `isWithinRange` works with any time in the start and end day.
@@ -75,7 +64,7 @@ export function getRoundedRange({
 }: {
   utils: MuiPickersAdapter;
   range: PickerRangeValue;
-  section: 'day' | 'month' | 'year';
+  section: BaseCalendarSection;
 }): PickerRangeValue {
   const sectionMethods = getCalendarSectionMethods(utils, section);
 
@@ -83,4 +72,14 @@ export function getRoundedRange({
     utils.isValid(range[0]) ? sectionMethods.startOf(range[0]) : null,
     utils.isValid(range[1]) ? sectionMethods.endOf(range[1]) : null,
   ];
+}
+
+export function getCalendarSectionMethods(utils: MuiPickersAdapter, section: BaseCalendarSection) {
+  if (section === 'year') {
+    return { isSame: utils.isSameYear, startOf: utils.startOfYear, endOf: utils.endOfYear };
+  }
+  if (section === 'month') {
+    return { isSame: utils.isSameMonth, startOf: utils.startOfMonth, endOf: utils.endOfMonth };
+  }
+  return { isSame: utils.isSameDay, startOf: utils.startOfDay, endOf: utils.endOfDay };
 }

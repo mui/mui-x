@@ -5,6 +5,8 @@ import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { ValidateDateProps } from '@mui/x-date-pickers/validation';
 import { PickerRangeValue, RangePosition, useUtils } from '@mui/x-date-pickers/internals';
 // eslint-disable-next-line no-restricted-imports
+import { BaseCalendarSection } from '@mui/x-date-pickers/internals/base/utils/base-calendar/utils/types';
+// eslint-disable-next-line no-restricted-imports
 import {
   useAddDefaultsToBaseDateValidationProps,
   useBaseCalendarRoot,
@@ -25,7 +27,7 @@ import { calculateRangeChange, calculateRangePreview } from '../../../utils/date
 import { isRangeValid } from '../../../utils/date-utils';
 import { useRangePosition, UseRangePositionProps } from '../../../hooks/useRangePosition';
 import { RangeCalendarRootContext } from './RangeCalendarRootContext';
-import { getRoundedRange } from '../utils/date-range';
+import { getRoundedRange } from '../utils/range';
 
 const DEFAULT_AVAILABLE_RANGE_POSITIONS: RangePosition[] = ['start', 'end'];
 
@@ -230,9 +232,9 @@ function useBuildRangeCalendarRootContext(parameters: UseRangeCalendarDragEditin
   const utils = useUtils();
 
   const [state, setState] = React.useState<{
-    draggedSection: 'day' | 'month' | 'year' | null;
+    draggedSection: BaseCalendarSection | null;
     targetDate: PickerValidDate | null;
-    hoveredDate: { value: PickerValidDate; section: 'day' | 'month' | 'year' } | null;
+    hoveredDate: { value: PickerValidDate; section: BaseCalendarSection } | null;
   }>({ draggedSection: null, targetDate: null, hoveredDate: null });
 
   const cellToDateMapRef = React.useRef(new Map<HTMLElement, PickerValidDate>());
@@ -319,27 +321,29 @@ function useBuildRangeCalendarRootContext(parameters: UseRangeCalendarDragEditin
     }
   });
 
-  const selectDateFromDrag = useEventCallback((valueOrElement: PickerValidDate | HTMLElement) => {
-    const selectedDate =
-      valueOrElement instanceof HTMLElement
-        ? cellToDateMapRef.current.get(valueOrElement)
-        : valueOrElement;
-    if (selectedDate == null) {
-      return;
-    }
+  const selectDateFromDrag: RangeCalendarRootContext['selectDateFromDrag'] = useEventCallback(
+    (valueOrElement) => {
+      const selectedDate =
+        valueOrElement instanceof HTMLElement
+          ? cellToDateMapRef.current.get(valueOrElement)
+          : valueOrElement;
+      if (selectedDate == null) {
+        return;
+      }
 
-    const response = getNewValueFromNewSelectedDate({
-      prevValue: value,
-      selectedDate,
-      referenceDate,
-      allowRangeFlip: true,
-    });
+      const response = getNewValueFromNewSelectedDate({
+        prevValue: value,
+        selectedDate,
+        referenceDate,
+        allowRangeFlip: true,
+      });
 
-    setValue(response.value, { changeImportance: response.changeImportance, section: 'day' });
-  });
+      setValue(response.value, { changeImportance: response.changeImportance, section: 'day' });
+    },
+  );
 
-  const setHoveredDate = useEventCallback(
-    (date: PickerValidDate | null, section: 'day' | 'month' | 'year') => {
+  const setHoveredDate: RangeCalendarRootContext['setHoveredDate'] = useEventCallback(
+    (date, section) => {
       if (disableHoverPreview) {
         return;
       }

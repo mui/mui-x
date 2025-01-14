@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { PickerValidDate } from '../../../../../models';
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
+import { BaseCalendarSection } from './types';
 
 /**
  * Internal utility hook to handle a list of cells:
@@ -68,7 +69,7 @@ export namespace useCellList {
     /**
      * The type of the section.
      */
-    section: 'day' | 'month' | 'year';
+    section: BaseCalendarSection;
     /**
      * The value of the section.
      */
