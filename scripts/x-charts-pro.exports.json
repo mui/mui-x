@@ -326,7 +326,7 @@
   { "name": "useYAxis", "kind": "Function" },
   { "name": "useYColorScale", "kind": "Function" },
   { "name": "useYScale", "kind": "Function" },
-  { "name": "useZColorScale", "kind": "Function" },
-  { "name": "ZAxisContextProvider", "kind": "Function" },
-  { "name": "ZAxisContextProviderProps", "kind": "TypeAlias" }
+  { "name": "useZAxes", "kind": "Function" },
+  { "name": "useZAxis", "kind": "Function" },
+  { "name": "useZColorScale", "kind": "Function" }
 ]
