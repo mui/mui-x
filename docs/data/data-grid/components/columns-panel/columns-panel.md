@@ -8,12 +8,12 @@ githubLabel: 'component: data grid'
 
 # Data Grid - Columns Panel 🚧
 
-<p class="description">Customize the columns panel UI.</p>
+<p class="description">Customize the Data Grid's columns panel.</p>
 
 :::warning
 This component is incomplete.
 
-Currently, the only part available for the Columns Panel component is the Trigger. In the future, this component will allow you to extend the Data Grid's columns panel.
+Currently, the only part available for the Columns Panel component is the Trigger. In future, this component will allow you to extend the Data Grid's columns panel.
 
 In the meantime, see the following:
 

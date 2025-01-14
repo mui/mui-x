@@ -50,6 +50,12 @@ As mentioned above, the column menu is a component slot that can be recomposed e
 
 ### Toolbar
 
+:::warning
+
+The examples below use the `<GridToolbar />`, `<GridToolbarContainer />` and various toolbar button components. In v8, these components will be replaced by the new [Toolbar component](/x/react-data-grid/components/toolbar/).
+
+:::
+
 To enable the toolbar you need to add the `toolbar: GridToolbar` to the Data Grid `slots` prop.
 This demo showcases how this can be achieved.
 

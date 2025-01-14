@@ -8,7 +8,7 @@ githubLabel: 'component: data grid'
 
 # Data Grid - Toolbar
 
-<p class="description">The Toolbar component enables adding custom actions and controls to the Data Grid.</p>
+<p class="description">Add custom actions and controls to the Data Grid.</p>
 
 ## Basic usage
 

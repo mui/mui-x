@@ -8,7 +8,7 @@ githubLabel: 'component: data grid'
 
 # Data Grid - Quick Filter
 
-<p class="description">A search field that enables users to filter data in the Data Grid.</p>
+<p class="description">A search field that lets users to filter data in the Data Grid.</p>
 
 ## Basic usage
 
@@ -55,7 +55,7 @@ See the [Toolbar—Custom elements demo](/x/react-data-grid/toolbar/#custom-elem
 
 ### ARIA
 
-- The element rendered by the `<QuickFilter.Control />` component should have a label associated to it, or an `aria-label` attribute set.
+- The element rendered by the `<QuickFilter.Control />` component should have a `<label />` with a `for` attribute set to the `id` of the control, or an `aria-label` attribute set for screen readers.
 
 ### Keyboard
 

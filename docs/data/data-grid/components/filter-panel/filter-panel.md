@@ -8,12 +8,12 @@ githubLabel: 'component: data grid'
 
 # Data Grid - Filter Panel 🚧
 
-<p class="description">Customize the filter panel UI.</p>
+<p class="description">Customize the Data Grid's filter panel.</p>
 
 :::warning
 This component is incomplete.
 
-Currently, the only part available for the Filter Panel component is the Trigger. In the future, this component will allow you to extend the Data Grid's filter panel.
+Currently, the only part available for the Filter Panel component is the Trigger. In future, this component will allow you to extend the Data Grid's filter panel.
 
 In the meantime, see the following:
 

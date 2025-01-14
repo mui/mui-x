@@ -1,6 +1,6 @@
 # Data Grid - Components
 
-<p class="description">A set of composable components that can be used to customize the Data Grid.</p>
+<p class="description">Composable components that can be used to customize the Data Grid.</p>
 
 ## Introduction
 
@@ -38,8 +38,6 @@ Any props you pass to these parts will be forwarded directly to their correspond
 // This will render a <div /> element with the class and aria-label attributes
 <Toolbar.Root className="my-toolbar" aria-label="Grid toolbar" />
 ```
-
-See [Available components](#available-components) for the full list of components.
 
 ### Customization
 
