@@ -23,11 +23,10 @@ import {
   ValidateDateRangeProps,
   ExportedValidateDateRangeProps,
 } from '../../../../validation/validateDateRange';
-import { calculateRangeChange, calculateRangePreview } from '../../../utils/date-range-manager';
 import { isRangeValid } from '../../../utils/date-utils';
 import { useRangePosition, UseRangePositionProps } from '../../../hooks/useRangePosition';
 import { RangeCalendarRootContext } from './RangeCalendarRootContext';
-import { getRoundedRange } from '../utils/range';
+import { applySelectedDateOnRange, createPreviewRange, getRoundedRange } from '../utils/range';
 
 const DEFAULT_AVAILABLE_RANGE_POSITIONS: RangePosition[] = ['start', 'end'];
 
@@ -97,28 +96,30 @@ export function useRangeCalendarRoot(parameters: useRangeCalendarRoot.Parameters
       selectedDate,
       referenceDate,
       allowRangeFlip,
+      section,
     }: useBaseCalendarRoot.GetNewValueFromNewSelectedDateParameters<PickerRangeValue> & {
       allowRangeFlip?: boolean;
     }): useBaseCalendarRoot.GetNewValueFromNewSelectedDateReturnValue<PickerRangeValue> => {
-      const { nextSelection, newRange } = calculateRangeChange({
-        newDate: selectedDate,
+      const changes = applySelectedDateOnRange({
+        selectedDate,
         utils,
         range: prevValue,
-        rangePosition,
-        allowRangeFlip,
+        position: rangePosition,
+        allowRangeFlip: allowRangeFlip ?? false,
         shouldMergeDateAndTime: true,
         referenceDate,
+        section,
       });
 
-      const isNextSectionAvailable = availableRangePositions.includes(nextSelection);
+      const isNextSectionAvailable = availableRangePositions.includes(changes.position);
       if (isNextSectionAvailable) {
-        onRangePositionChange(nextSelection);
+        onRangePositionChange(changes.position);
       }
 
-      const isFullRangeSelected = rangePosition === 'end' && isRangeValid(utils, newRange);
+      const isFullRangeSelected = rangePosition === 'end' && isRangeValid(utils, changes.range);
 
       return {
-        value: newRange,
+        value: changes.range,
         changeImportance: isFullRangeSelected || !isNextSectionAvailable ? 'set' : 'accept',
       };
     },
@@ -271,7 +272,7 @@ function useBuildRangeCalendarRootContext(parameters: UseBuildRangeCalendarRootC
         valueOrElement instanceof HTMLElement
           ? cellToDateMapRef.current.get(valueOrElement)
           : valueOrElement;
-      if (selectedDate == null) {
+      if (selectedDate == null || state.draggedSection == null) {
         return;
       }
 
@@ -280,6 +281,7 @@ function useBuildRangeCalendarRootContext(parameters: UseBuildRangeCalendarRootC
         selectedDate,
         referenceDate,
         allowRangeFlip: true,
+        section: state.draggedSection,
       });
 
       setValue(response.value, { changeImportance: response.changeImportance, section: 'day' });
@@ -330,32 +332,30 @@ function useBuildRangeCalendarRootContext(parameters: UseBuildRangeCalendarRootC
       return roundedRange;
     }
 
-    const rangeAfterDragAndDrop = calculateRangeChange({
+    const rangeAfterDragAndDrop = applySelectedDateOnRange({
       utils,
       range: roundedRange,
-      newDate: state.targetDate,
-      rangePosition,
+      selectedDate: state.targetDate,
+      position: rangePosition,
       allowRangeFlip: true,
-    }).newRange;
+      shouldMergeDateAndTime: false,
+      referenceDate,
+      section: state.draggedSection,
+    }).range;
 
     return getRoundedRange({ utils, range: rangeAfterDragAndDrop, section: state.draggedSection });
-  }, [rangePosition, state.targetDate, state.draggedSection, utils, value]);
+  }, [rangePosition, state.targetDate, state.draggedSection, utils, value, referenceDate]);
 
   const previewRange = React.useMemo<PickerRangeValue>(() => {
-    if (disableHoverPreview || state.hoveredDate == null) {
+    if (disableHoverPreview) {
       return [null, null];
     }
 
-    const roundedRange = getRoundedRange({
+    return createPreviewRange({
       utils,
-      range: value,
-      section: state.hoveredDate?.section,
-    });
-    return calculateRangePreview({
-      utils,
-      range: roundedRange,
-      newDate: state.hoveredDate.value,
-      rangePosition,
+      value,
+      hoveredDate: state.hoveredDate,
+      position: rangePosition,
     });
   }, [utils, rangePosition, state.hoveredDate, value, disableHoverPreview]);
 

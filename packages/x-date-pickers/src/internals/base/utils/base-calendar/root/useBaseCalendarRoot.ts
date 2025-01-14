@@ -178,6 +178,7 @@ export function useBaseCalendarRoot<
         prevValue: value,
         selectedDate,
         referenceDate,
+        section: options.section,
       });
 
       return setValue(response.value, {
@@ -399,6 +400,10 @@ export namespace useBaseCalendarRoot {
      * The reference date.
      */
     referenceDate: PickerValidDate;
+    /**
+     * The section handled by the UI that triggered the change.
+     */
+    section: BaseCalendarSection;
   }
 
   export interface GetNewValueFromNewSelectedDateReturnValue<TValue extends PickerValidValue> {
