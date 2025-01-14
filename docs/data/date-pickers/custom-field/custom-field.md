@@ -144,6 +144,12 @@ but you still want the UI to look like a Text Field, you can replace the field w
 
 {{"demo": "behavior-read-only-text-field/MaterialDatePicker.js", "defaultCodeOpen": false}}
 
+### Using a read-only Text Field on mobile
+
+If you want to keep the default behavior on desktop but have a read-only TextField on mobile, you can conditionally render the custom field presented in the previous section:
+
+{{"demo": "behavior-read-only-mobile-text-field/MaterialDatePicker.js", "defaultCodeOpen": false}}
+
 ### Using a Button
 
 If you want users to select a value exclusively through the views
@@ -269,11 +275,11 @@ return (
 ```
 
 :::success
-The `forwardedProps` contain props like `slots`, `slotProps` and `sx` that are specific to MUI.
-You can omit them if the component your are forwarding the props to does not support those concepts:
+The `forwardedProps` contains the `sx` which is specific to MUI.
+You can omit it if the component your are forwarding the props to does not support this concept:
 
 ```jsx
-const { slots, slotProps, sx, ...other } = props;
+const { sx, ...other } = props;
 const { internalProps, forwardedProps } = useSplitFieldProps(other, 'date');
 
 return (

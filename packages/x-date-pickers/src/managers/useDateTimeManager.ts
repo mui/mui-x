@@ -35,6 +35,10 @@ export function useDateTimeManager<TEnableAccessibleFieldDOMStructure extends bo
         ...internalProps,
         ...getDateTimeFieldInternalPropsDefaults({ internalProps, utils, defaultDates }),
       }),
+      internal_getOpenPickerButtonAriaLabel: ({ value, utils, localeText }) => {
+        const formattedValue = utils.isValid(value) ? utils.format(value, 'fullDate') : null;
+        return localeText.openDatePickerDialogue(formattedValue);
+      },
     }),
     [enableAccessibleFieldDOMStructure],
   );
