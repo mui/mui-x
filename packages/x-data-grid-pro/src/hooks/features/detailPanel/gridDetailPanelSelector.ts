@@ -1,13 +1,15 @@
 import { createSelectorMemoized } from '@mui/x-data-grid/internals';
-import { GridStatePro } from '../../../models/gridStatePro';
+import { GridApiPro } from '../../../models/gridApiPro';
 
-const gridDetailPanelStateSelector = (state: GridStatePro) => state.detailPanel;
+const gridDetailPanelStateSelector = (apiRef: React.RefObject<GridApiPro>) =>
+  apiRef.current.state.detailPanel;
 
-export const gridDetailPanelExpandedRowIdsSelector = (state: GridStatePro) =>
-  state.detailPanel.expandedRowIds;
+export const gridDetailPanelExpandedRowIdsSelector = (apiRef: React.RefObject<GridApiPro>) =>
+  apiRef.current.state.detailPanel.expandedRowIds;
 
-export const gridDetailPanelExpandedRowsContentCacheSelector = (state: GridStatePro) =>
-  state.detailPanel.contentCache;
+export const gridDetailPanelExpandedRowsContentCacheSelector = (
+  apiRef: React.RefObject<GridApiPro>,
+) => apiRef.current.state.detailPanel.contentCache;
 
 export const gridDetailPanelRawHeightCacheSelector = createSelectorMemoized(
   gridDetailPanelStateSelector,

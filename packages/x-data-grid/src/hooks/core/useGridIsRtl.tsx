@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useRtl } from '@mui/system/RtlProvider';
 import { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
+import { GridState } from '../..';
 
 export const useGridIsRtl = (apiRef: React.RefObject<GridPrivateApiCommon>): void => {
   const isRtl = useRtl();
@@ -14,7 +15,7 @@ export const useGridIsRtl = (apiRef: React.RefObject<GridPrivateApiCommon>): voi
     if (isFirstEffect.current) {
       isFirstEffect.current = false;
     } else {
-      apiRef.current.setState((state) => ({ ...state, isRtl }));
+      apiRef.current.setState((state: GridState) => ({ ...state, isRtl }));
     }
   }, [apiRef, isRtl]);
 };

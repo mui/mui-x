@@ -65,10 +65,7 @@ export const useGridRowsMeta = (
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const currentPage = useGridVisibleRows(apiRef, props);
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
-  const rowHeight = useGridSelector(
-    apiRef,
-    () => gridDimensionsSelector(apiRef.current.state).rowHeight,
-  );
+  const rowHeight = useGridSelector(apiRef, () => gridDimensionsSelector(apiRef).rowHeight);
 
   const getRowHeightEntry: GridRowsMetaPrivateApi['getRowHeightEntry'] = (rowId) => {
     let entry = heightCache.get(rowId);
@@ -90,7 +87,7 @@ export const useGridRowsMeta = (
     (row: GridRowEntry) => {
       // HACK: rowHeight trails behind the most up-to-date value just enough to
       // mess the initial rowsMeta hydration :/
-      const baseRowHeight = gridDimensionsSelector(apiRef.current.state).rowHeight;
+      const baseRowHeight = gridDimensionsSelector(apiRef).rowHeight;
       eslintUseValue(rowHeight);
 
       const entry = apiRef.current.getRowHeightEntry(row.id);

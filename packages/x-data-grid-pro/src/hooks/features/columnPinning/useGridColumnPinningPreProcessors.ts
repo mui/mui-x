@@ -18,7 +18,7 @@ export const useGridColumnPinningPreProcessors = (
 
   let pinnedColumns: GridPinnedColumnFields | null;
   if (apiRef.current.state.columns) {
-    pinnedColumns = gridPinnedColumnsSelector(apiRef.current.state);
+    pinnedColumns = gridPinnedColumnsSelector(apiRef);
   } else {
     pinnedColumns = null;
   }
