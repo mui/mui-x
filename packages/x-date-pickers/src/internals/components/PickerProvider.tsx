@@ -119,6 +119,18 @@ export interface PickerContextValue<
    */
   orientation: PickerOrientation;
   /**
+   * The ref that should be attached to the element that triggers the Picker opening.
+   * When using a built-in field component, this property is automatically handled.
+   */
+  triggerRef: React.RefObject<any>;
+  /**
+   * The status of the element that triggers the Picker opening.
+   * If it is "hidden", the field should not render the UI to open the Picker.
+   * If it is "disabled", the field should render a disabled UI to open the Picker.
+   * If it is "enabled", the field should render an interactive UI to open the Picker.
+   */
+  triggerStatus: 'hidden' | 'disabled' | 'enabled';
+  /**
    * Format that should be used to render the value in the field.
    * Is equal to `props.format` on the picker component if defined.
    * Is generated based on the available views if not defined.

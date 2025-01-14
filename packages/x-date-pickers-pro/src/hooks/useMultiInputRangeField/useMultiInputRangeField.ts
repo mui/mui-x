@@ -28,6 +28,7 @@ import { PickerAnyRangeManager } from '../../internals/models/managers';
  *   const manager = useDateRangeManager();
  *   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
  *   const { startDate, endDate } = useMultiInputRangeField({
+ *     manager,
  *     internalProps,
  *     startForwardedProps: forwardedProps,
  *     endForwardedProps: forwardedProps,

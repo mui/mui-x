@@ -100,7 +100,11 @@ interface JoyMultiInputDateRangeFieldProps
       DateRangePickerFieldProps<false>,
       'unstableFieldRef' | 'clearable' | 'onClear'
     >,
-    MultiInputFieldRefs {}
+    MultiInputFieldRefs {
+  slotProps: {
+    textField: any;
+  };
+}
 
 type JoyMultiInputDateRangeFieldComponent = ((
   props: JoyMultiInputDateRangeFieldProps & React.RefAttributes<HTMLDivElement>,
@@ -112,18 +116,18 @@ const JoyMultiInputDateRangeField = React.forwardRef(
       enableAccessibleFieldDOMStructure: false,
     });
     const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-    const { slotProps, slots, ownerState, ...otherForwardedProps } = forwardedProps;
+    const { slotProps, ownerState, ...otherForwardedProps } = forwardedProps;
 
     const startTextFieldProps = useSlotProps({
       elementType: 'input',
       externalSlotProps: slotProps?.textField,
-      ownerState: { ...props, position: 'start' },
+      ownerState: { position: 'start' } as any,
     }) as MultiInputFieldSlotTextFieldProps;
 
     const endTextFieldProps = useSlotProps({
       elementType: 'input',
       externalSlotProps: slotProps?.textField,
-      ownerState: { ...props, position: 'end' },
+      ownerState: { position: 'end' } as any,
     }) as MultiInputFieldSlotTextFieldProps;
 
     const fieldResponse = useMultiInputRangeField({

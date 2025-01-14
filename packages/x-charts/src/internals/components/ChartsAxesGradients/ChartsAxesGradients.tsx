@@ -1,28 +1,13 @@
 import * as React from 'react';
-import { useChartId, useDrawingArea, useXAxes, useYAxes } from '../../../hooks';
+import { useDrawingArea, useXAxes, useYAxes } from '../../../hooks';
 import ChartsPiecewiseGradient from './ChartsPiecewiseGradient';
 import ChartsContinuousGradient from './ChartsContinuousGradient';
-import { AxisId } from '../../../models/axis';
 import ChartsContinuousGradientObjectBound from './ChartsContinuousGradientObjectBound';
-import { useZAxis } from '../../../hooks/useZAxis';
-
-export function useChartGradient() {
-  const chartId = useChartId();
-  return React.useCallback(
-    (axisId: AxisId, direction: 'x' | 'y' | 'z') => `${chartId}-gradient-${direction}-${axisId}`,
-    [chartId],
-  );
-}
-
-// TODO: make public?
-export function useChartGradientObjectBound() {
-  const chartId = useChartId();
-  return React.useCallback(
-    (axisId: AxisId, direction: 'x' | 'y' | 'z') =>
-      `${chartId}-gradient-${direction}-${axisId}-object-bound`,
-    [chartId],
-  );
-}
+import { useZAxes } from '../../../hooks/useZAxis';
+import {
+  useChartGradientIdBuilder,
+  useChartGradientIdObjectBoundBuilder,
+} from '../../../hooks/useChartGradientId';
 
 export function ChartsAxesGradients() {
   const { top, height, bottom, left, width, right } = useDrawingArea();
@@ -30,12 +15,12 @@ export function ChartsAxesGradients() {
   const svgHeight = top + height + bottom;
   const svgWidth = left + width + right;
 
-  const getGradientId = useChartGradient();
-  const getObjectBoundGradientId = useChartGradientObjectBound();
+  const getGradientId = useChartGradientIdBuilder();
+  const getObjectBoundGradientId = useChartGradientIdObjectBoundBuilder();
 
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
-  const { zAxisIds, zAxis } = useZAxis();
+  const { zAxis, zAxisIds } = useZAxes();
 
   const filteredYAxisIds = yAxisIds.filter((axisId) => yAxis[axisId].colorMap !== undefined);
   const filteredXAxisIds = xAxisIds.filter((axisId) => xAxis[axisId].colorMap !== undefined);
@@ -52,8 +37,8 @@ export function ChartsAxesGradients() {
   return (
     <defs>
       {filteredYAxisIds.map((axisId) => {
-        const gradientId = getGradientId(axisId, 'y');
-        const objectBoundGradientId = getObjectBoundGradientId(axisId, 'y');
+        const gradientId = getGradientId(axisId);
+        const objectBoundGradientId = getObjectBoundGradientId(axisId);
         const { colorMap, scale, colorScale, reverse } = yAxis[axisId];
         if (colorMap?.type === 'piecewise') {
           return (
@@ -92,8 +77,8 @@ export function ChartsAxesGradients() {
         return null;
       })}
       {filteredXAxisIds.map((axisId) => {
-        const gradientId = getGradientId(axisId, 'x');
-        const objectBoundGradientId = getObjectBoundGradientId(axisId, 'x');
+        const gradientId = getGradientId(axisId);
+        const objectBoundGradientId = getObjectBoundGradientId(axisId);
 
         const { colorMap, scale, reverse, colorScale } = xAxis[axisId];
         if (colorMap?.type === 'piecewise') {
@@ -133,7 +118,7 @@ export function ChartsAxesGradients() {
         return null;
       })}
       {filteredZAxisIds.map((axisId) => {
-        const objectBoundGradientId = getObjectBoundGradientId(axisId, 'z');
+        const objectBoundGradientId = getObjectBoundGradientId(axisId);
         const { colorMap, colorScale } = zAxis[axisId];
         if (colorMap?.type === 'continuous') {
           return (

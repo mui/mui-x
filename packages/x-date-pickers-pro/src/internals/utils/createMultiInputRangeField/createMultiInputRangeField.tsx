@@ -7,10 +7,7 @@ import Typography from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import useSlotProps from '@mui/utils/useSlotProps';
-import {
-  convertFieldResponseIntoMuiTextFieldProps,
-  useFieldOwnerState,
-} from '@mui/x-date-pickers/internals';
+import { cleanFieldResponse, useFieldOwnerState } from '@mui/x-date-pickers/internals';
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import {
@@ -122,8 +119,8 @@ export function createMultiInputRangeField<TManager extends PickerAnyRangeManage
       className: classes.separator,
     });
 
-    const cleanStartDate = convertFieldResponseIntoMuiTextFieldProps(startDate);
-    const cleanEndDate = convertFieldResponseIntoMuiTextFieldProps(endDate);
+    const { textFieldProps: startDateProps } = cleanFieldResponse(startDate);
+    const { textFieldProps: endDateProps } = cleanFieldResponse(endDate);
 
     const TextField =
       slots?.textField ??
@@ -131,9 +128,9 @@ export function createMultiInputRangeField<TManager extends PickerAnyRangeManage
 
     return (
       <Root {...rootProps}>
-        <TextField fullWidth {...cleanStartDate} />
+        <TextField fullWidth {...startDateProps} />
         <Separator {...separatorProps} />
-        <TextField fullWidth {...cleanEndDate} />
+        <TextField fullWidth {...endDateProps} />
       </Root>
     );
   } as any) as any;

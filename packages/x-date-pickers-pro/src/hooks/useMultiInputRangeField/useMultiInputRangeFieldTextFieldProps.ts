@@ -81,6 +81,8 @@ export function useMultiInputRangeFieldTextFieldProps<
     fieldValueManager: manager.internal_fieldValueManager,
     validator: manager.validator,
     valueType: manager.valueType,
+    // TODO v8: Add a real aria label before moving the opening logic to the field on range pickers.
+    getOpenPickerButtonAriaLabel: () => '',
   }) as UseFieldResponse<TEnableAccessibleFieldDOMStructure, TForwardedProps>;
 
   return fieldResponse;

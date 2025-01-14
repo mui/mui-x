@@ -35,6 +35,8 @@ export function useDateTimeRangeManager<TEnableAccessibleFieldDOMStructure exten
         ...internalProps,
         ...getDateTimeFieldInternalPropsDefaults({ internalProps, utils, defaultDates }),
       }),
+      // TODO v8: Add a real aria label before moving the opening logic to the field on range pickers.
+      internal_getOpenPickerButtonAriaLabel: () => '',
     }),
     [enableAccessibleFieldDOMStructure, dateSeparator],
   );

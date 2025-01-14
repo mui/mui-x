@@ -36,8 +36,8 @@ export function useChartApiInitialization<T>(
 let globalId = 0;
 
 export function useCharts<
-  TSignatures extends readonly ChartAnyPluginSignature[],
   TSeriesType extends ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[],
 >(
   inPlugins: ConvertSignaturesIntoPlugins<TSignatures>,
   props: Partial<UseChartBaseProps<TSignatures>>,

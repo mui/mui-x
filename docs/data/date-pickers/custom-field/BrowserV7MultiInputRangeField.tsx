@@ -108,7 +108,11 @@ interface BrowserMultiInputDateRangeFieldProps
       DateRangePickerFieldProps,
       'unstableFieldRef' | 'clearable' | 'onClear'
     >,
-    MultiInputFieldRefs {}
+    MultiInputFieldRefs {
+  slotProps: {
+    textField: any;
+  };
+}
 
 type BrowserMultiInputDateRangeFieldComponent = ((
   props: BrowserMultiInputDateRangeFieldProps & React.RefAttributes<HTMLDivElement>,
@@ -118,18 +122,18 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
   (props: BrowserMultiInputDateRangeFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const manager = useDateRangeManager();
     const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-    const { slotProps, slots, ownerState, ...otherForwardedProps } = forwardedProps;
+    const { slotProps, ownerState, ...otherForwardedProps } = forwardedProps;
 
     const startTextFieldProps = useSlotProps({
       elementType: 'input',
       externalSlotProps: slotProps?.textField,
-      ownerState: { ...props, position: 'start' },
+      ownerState: { position: 'start' } as any,
     }) as MultiInputFieldSlotTextFieldProps;
 
     const endTextFieldProps = useSlotProps({
       elementType: 'input',
       externalSlotProps: slotProps?.textField,
-      ownerState: { ...props, position: 'end' },
+      ownerState: { position: 'end' } as any,
     }) as MultiInputFieldSlotTextFieldProps;
 
     const fieldResponse = useMultiInputRangeField({
