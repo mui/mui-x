@@ -44,7 +44,7 @@ import startOfYear from 'date-fns-jalali/startOfYear';
 import isWithinInterval from 'date-fns-jalali/isWithinInterval';
 import defaultLocale from 'date-fns-jalali/locale/fa-IR';
 import { Locale as DateFnsLocale } from 'date-fns-jalali/locale';
-import longFormatters from 'date-fns-jalali/_lib/format/longFormatters';
+import longFormatters from '../AdapterDateFnsBase/longFormatters';
 import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
 import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
 

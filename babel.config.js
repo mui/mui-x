@@ -105,7 +105,7 @@ module.exports = function getBabelConfig(api) {
     plugins.push([
       'babel-plugin-replace-imports',
       {
-        test: /date-fns(?!-v2)/i,
+        test: /date-fns/i,
         replacer: 'date-fns-v2',
         // This option is provided by the `patches/babel-plugin-replace-imports@1.0.2.patch` patch
         filenameIncludes: 'src/AdapterDateFnsV2/',
@@ -114,7 +114,7 @@ module.exports = function getBabelConfig(api) {
     plugins.push([
       'babel-plugin-replace-imports',
       {
-        test: /date-fns-jalali(?!-v2)/i,
+        test: /date-fns-jalali/i,
         replacer: 'date-fns-jalali-v2',
         // This option is provided by the `patches/babel-plugin-replace-imports@1.0.2.patch` patch
         filenameIncludes: 'src/AdapterDateFnsJalaliV2/',

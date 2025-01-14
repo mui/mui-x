@@ -1,5 +1,6 @@
 import react from '@vitejs/plugin-react';
 import { defineWorkspace, WorkspaceProjectConfiguration } from 'vitest/config';
+import filterReplacePlugin from 'vite-plugin-filter-replace';
 
 const packages = [
   'x-charts',
@@ -23,6 +24,26 @@ const jsdomOnlyPackages = [
 
 const allPackages = [...packages, ...jsdomOnlyPackages];
 
+const filterReplace = filterReplacePlugin(
+  [
+    {
+      filter: /\/src\/AdapterDateFnsV2\/.*/,
+      replace: {
+        from: /from 'date-fns'/g,
+        to: "from 'date-fns-v2'",
+      },
+    },
+    {
+      filter: /\/src\/AdapterDateFnsJalaliV2\/.*/,
+      replace: {
+        from: /from 'date-fns-jalali'/g,
+        to: "from 'date-fns-jalali-v2'",
+      },
+    },
+  ],
+  { enforce: 'pre' },
+);
+
 export default defineWorkspace([
   ...allPackages.flatMap((name): WorkspaceProjectConfiguration[] => [
     ...(jsdomOnlyPackages.includes(name)
@@ -30,7 +51,7 @@ export default defineWorkspace([
       : [
           {
             extends: './vitest.config.mts',
-            plugins: [react()],
+            plugins: [react(), filterReplace],
             test: {
               include: [`packages/${name}/src/**/*.test.?(c|m)[jt]s?(x)`],
               exclude: [`packages/${name}/src/**/*.jsdom.test.?(c|m)[jt]s?(x)`],
@@ -55,7 +76,7 @@ export default defineWorkspace([
         ]),
     {
       extends: './vitest.config.mts',
-      plugins: [react()],
+      plugins: [react(), filterReplace],
       test: {
         include: [`packages/${name}/src/**/*.test.?(c|m)[jt]s?(x)`],
         name: `jsdom/${name}`,
