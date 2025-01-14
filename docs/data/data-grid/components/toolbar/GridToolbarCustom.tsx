@@ -9,6 +9,7 @@ import {
   QuickFilter,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
+import { TailwindDemoContainer } from '@mui/x-data-grid/internals';
 import ClearIcon from '@mui/icons-material/Clear';
 
 function Button(props: React.HTMLAttributes<HTMLButtonElement>) {
@@ -47,7 +48,6 @@ function CustomToolbar() {
       />
       <Export.Csv render={<Toolbar.Button render={<Button>Export CSV</Button>} />} />
       <Export.Print render={<Toolbar.Button render={<Button>Print</Button>} />} />
-
       <QuickFilter.Root>
         <div className="flex ml-auto">
           <QuickFilter.Control
@@ -68,16 +68,21 @@ function CustomToolbar() {
   );
 }
 
-export default function GridToolbarCustom() {
+export default function GridToolbarCustom({ window }: { window: () => Window }) {
   const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 10,
     maxColumns: 10,
   });
 
+  // This is used only for the example, you can remove it.
+  const documentBody = window !== undefined ? window().document.body : undefined;
+
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid {...data} loading={loading} slots={{ toolbar: CustomToolbar }} />
+      <TailwindDemoContainer documentBody={documentBody}>
+        <DataGrid {...data} loading={loading} slots={{ toolbar: CustomToolbar }} />
+      </TailwindDemoContainer>
     </div>
   );
 }
