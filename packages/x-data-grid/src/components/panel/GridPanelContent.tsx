@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, SxProps, Theme } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
+import { vars } from '../../constants/cssVariables';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -29,6 +30,8 @@ const GridPanelContentRoot = styled('div', {
   overflow: 'auto',
   flex: '1 1',
   maxHeight: 400,
+  padding: vars.spacing(2.5, 1.5, 2, 1),
+  gap: vars.spacing(2.5),
 });
 
 function GridPanelContent(props: React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> }) {

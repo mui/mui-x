@@ -41,10 +41,10 @@ You should provide an array of items, each item should be one of these types:
   <DataGrid pageSizeOptions={[5, 10, 25]}>
   ```
 
-- **object**, the `value` and `label` keys will be used respectively for the value and label of the option.
+- **object**, the `value` and `label` keys will be used respectively for the value and label of the option. Define `value` as `-1` to display all results.
 
   ```jsx
-  <DataGrid pageSizeOptions={[10, 100, { value: 1000, label: '1,000' }]}>
+  <DataGrid pageSizeOptions={[10, 100, { value: 1000, label: '1,000' }, { value: -1, label: 'All' }]}>
   ```
 
 {{"demo": "PageSizeCustomOptions.js", "bg": "inline"}}
@@ -235,10 +235,12 @@ The following example demonstrates how to show the estimated row count in the pa
 ```jsx
 const labelDisplayedRows = ({ from, to, count, estimated }) => {
   if (!estimated) {
-    return `${from}–${to} od ${count !== -1 ? count : `više nego ${to}`}`,
+    return `${from}–${to} od ${count !== -1 ? count : `više nego ${to}`}`;
   }
-  return `${from}–${to} od ${count !== -1 ? count : `više nego ${estimated > to ? estimated : to}`}`;
-}
+  const estimateLabel =
+    estimated && estimated > to ? `oko ${estimated}` : `više nego ${to}`;
+  return `${from}–${to} od ${count !== -1 ? count : estimateLabel}`;
+};
 
 <DataGrid
   {...data}
@@ -247,7 +249,7 @@ const labelDisplayedRows = ({ from, to, count, estimated }) => {
       labelDisplayedRows,
     },
   }}
-/>
+/>;
 ```
 
 For more information, see the [Translation keys](/x/react-data-grid/localization/#translation-keys) section of the localization documentation.

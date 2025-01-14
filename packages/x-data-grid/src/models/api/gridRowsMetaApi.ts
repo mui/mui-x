@@ -1,4 +1,5 @@
 import { GridRowId } from '../gridRows';
+import { HeightEntry } from '../../hooks/features/rows/gridRowsMetaInterfaces';
 
 /**
  * The Row Meta API interface that is available in the grid `apiRef`.
@@ -11,20 +12,6 @@ export interface GridRowsMetaApi {
    * @ignore - do not document.
    */
   unstable_getRowHeight: (id: GridRowId) => number;
-  /**
-   * Gets all sizes that compose the total height that the given row takes.
-   * @param {GridRowId} id The id of the row.
-   * @returns {Record<string, number>} The object containing the sizes.
-   * @ignore - do not document.
-   */
-  unstable_getRowInternalSizes: (id: GridRowId) => Record<string, number> | undefined;
-  /**
-   * Updates the base height of a row.
-   * @param {GridRowId} id The id of the row.
-   * @param {number} height The new height.
-   * @ignore - do not document.
-   */
-  unstable_setRowHeight: (id: GridRowId, height: number) => void;
   /**
    * Stores the row height measurement and triggers an hydration, if needed.
    * @param {GridRowId} id The id of the row.
@@ -46,6 +33,14 @@ export interface GridRowsMetaApi {
 }
 
 export interface GridRowsMetaPrivateApi {
+  hydrateRowsMeta: () => void;
+  /**
+   * Observe row for 'auto' height changes.
+   * @param {Element} element The row element to observe.
+   * @param {GridRowId} rowId The id of the row.
+   * @returns {ReturnType<React.EffectCallback>} A dispose callback
+   */
+  observeRowHeight: (element: Element, rowId: GridRowId) => ReturnType<React.EffectCallback>;
   /**
    * Determines if the height of a row is "auto".
    * @param {GridRowId} id The id of the row.
@@ -58,4 +53,10 @@ export interface GridRowsMetaPrivateApi {
    * @returns {number} The index of the last measured row.
    */
   getLastMeasuredRowIndex: () => number;
+  /**
+   * Get the height entry from the cache or create one.
+   * @param {GridRowId} id The id of the row.
+   * @returns {HeightEntry} The height cache entry
+   */
+  getRowHeightEntry: (id: GridRowId) => HeightEntry;
 }

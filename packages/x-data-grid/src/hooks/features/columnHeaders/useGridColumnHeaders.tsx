@@ -101,7 +101,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const isRtl = useRtl();
   const rootProps = useGridRootProps();
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
-  const hasVirtualization = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
+  const hasColumnVirtualization = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
   const columnGroupsModel = useGridSelector(apiRef, gridColumnGroupsUnwrappedModelSelector);
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const renderContext = useGridSelector(apiRef, gridRenderContextColumnsSelector);
@@ -111,7 +111,9 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const gridHasFiller = dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width;
 
   React.useEffect(() => {
-    apiRef.current.columnHeadersContainerRef!.current!.scrollLeft = 0;
+    if (apiRef.current.columnHeadersContainerRef.current) {
+      apiRef.current.columnHeadersContainerRef.current.scrollLeft = 0;
+    }
   }, [apiRef]);
 
   const handleColumnResizeStart = React.useCallback<GridEventListener<'columnResizeStart'>>(
@@ -160,8 +162,15 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     const { renderContext: currentContext = renderContext, maxLastColumn = visibleColumns.length } =
       params || {};
 
-    const firstColumnToRender = currentContext.firstColumnIndex;
-    const lastColumnToRender = !hasVirtualization ? maxLastColumn : currentContext.lastColumnIndex;
+    let firstColumnToRender;
+    let lastColumnToRender;
+    if (!rootProps.disableVirtualization && !hasColumnVirtualization) {
+      firstColumnToRender = 0;
+      lastColumnToRender = maxLastColumn;
+    } else {
+      firstColumnToRender = currentContext.firstColumnIndex;
+      lastColumnToRender = currentContext.lastColumnIndex;
+    }
     const renderedColumns = visibleColumns.slice(firstColumnToRender, lastColumnToRender);
 
     return {
@@ -366,7 +375,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       return null;
     }
 
-    const { renderedColumns, firstColumnToRender, lastColumnToRender } = columnsToRender;
+    const { firstColumnToRender, lastColumnToRender } = columnsToRender;
 
     const rowStructure = columnGroupsHeaderStructure[depth];
 
@@ -454,7 +463,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           fields={headerInfo.fields}
           colIndex={headerInfo.colIndex}
           depth={depth}
-          isLastColumn={headerInfo.colIndex === visibleColumns.length - headerInfo.fields.length}
+          isLastColumn={index === visibleColumnGroupHeader.length - 1}
           maxDepth={headerGroupingMaxDepth}
           height={dimensions.groupHeaderHeight}
           hasFocus={hasFocus}
@@ -462,7 +471,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           pinnedPosition={pinnedPosition}
           style={style}
           indexInSection={indexInSection}
-          sectionLength={renderedColumns.length}
+          sectionLength={visibleColumnGroupHeader.length}
           gridHasFiller={gridHasFiller}
         />
       );

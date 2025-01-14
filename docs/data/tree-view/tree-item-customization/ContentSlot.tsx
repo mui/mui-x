@@ -2,14 +2,14 @@ import * as React from 'react';
 import { alpha, styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { TreeItem2, TreeItem2Props } from '@mui/x-tree-view/TreeItem2';
-import { UseTreeItem2ContentSlotOwnProps } from '@mui/x-tree-view/useTreeItem2';
+import { TreeItem, TreeItemProps } from '@mui/x-tree-view/TreeItem';
+import { UseTreeItemContentSlotOwnProps } from '@mui/x-tree-view/useTreeItem';
 import { MUI_X_PRODUCTS } from './products';
 
 const CustomContent = styled('div')(({ theme }) => ({
   padding: theme.spacing(0.5, 1),
+  paddingLeft: `calc(${theme.spacing(1)} + var(--TreeView-itemChildrenIndentation) * var(--TreeView-itemDepth))`,
   borderRadius: theme.shape.borderRadius,
-  width: '100%',
   border: '1px solid',
   display: 'flex',
   '&:hover': {
@@ -17,14 +17,14 @@ const CustomContent = styled('div')(({ theme }) => ({
   },
   variants: [
     {
-      props: ({ status }: UseTreeItem2ContentSlotOwnProps) => status.disabled,
+      props: ({ status }: UseTreeItemContentSlotOwnProps) => status.disabled,
       style: {
         opacity: 0.5,
         backgroundColor: theme.palette.action.disabledBackground,
       },
     },
     {
-      props: ({ status }: UseTreeItem2ContentSlotOwnProps) => status.selected,
+      props: ({ status }: UseTreeItemContentSlotOwnProps) => status.selected,
       style: {
         backgroundColor: alpha((theme.vars || theme).palette.primary.main, 0.4),
       },
@@ -33,11 +33,11 @@ const CustomContent = styled('div')(({ theme }) => ({
 }));
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(
-  props: TreeItem2Props,
+  props: TreeItemProps,
   ref: React.Ref<HTMLLIElement>,
 ) {
   return (
-    <TreeItem2
+    <TreeItem
       {...props}
       ref={ref}
       slots={{

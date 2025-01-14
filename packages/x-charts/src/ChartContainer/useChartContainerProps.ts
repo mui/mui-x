@@ -1,102 +1,75 @@
 'use client';
 import * as React from 'react';
-import useForkRef from '@mui/utils/useForkRef';
-import type { DrawingProviderProps } from '../context/DrawingProvider';
-import type { CartesianProviderProps } from '../context/CartesianProvider';
-import type { SeriesProviderProps } from '../context/SeriesProvider';
-import type { ZAxisContextProviderProps } from '../context/ZAxisContextProvider';
-import type { ChartContainerProps } from './ChartContainer';
-import { HighlightedProviderProps } from '../context';
 import { ChartsSurfaceProps } from '../ChartsSurface';
-import { useDefaultizeAxis } from './useDefaultizeAxis';
-import { PluginProviderProps } from '../context/PluginProvider';
-import { useReducedMotion } from '../hooks/useReducedMotion';
+import { ChartDataProviderProps } from '../context/ChartDataProvider';
+import type { ChartContainerProps } from './ChartContainer';
+import { ChartSeriesType } from '../models/seriesType/config';
+import { ALL_PLUGINS, AllPluginSignatures, AllPluginsType } from '../internals/plugins/allPlugins';
 
-export const useChartContainerProps = (
-  props: ChartContainerProps,
-  ref: React.ForwardedRef<unknown>,
-) => {
+export type UseChartContainerPropsReturnValue<TSeries extends ChartSeriesType> = {
+  chartDataProviderProps: ChartDataProviderProps<TSeries, AllPluginSignatures<TSeries>>;
+  chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> };
+  children: React.ReactNode;
+};
+
+export const useChartContainerProps = <TSeries extends ChartSeriesType = ChartSeriesType>(
+  props: ChartContainerProps<TSeries>,
+  ref: React.Ref<SVGSVGElement>,
+): UseChartContainerPropsReturnValue<TSeries> => {
   const {
     width,
     height,
-    series,
     margin,
+    children,
+    series,
+    colors,
+    dataset,
+    desc,
+    disableAxisListener,
+    highlightedItem,
+    onHighlightChange,
+    sx,
+    title,
     xAxis,
     yAxis,
     zAxis,
-    colors,
-    dataset,
-    sx,
-    title,
-    desc,
-    disableAxisListener,
-    highlightedItem,
-    onHighlightChange,
-    plugins,
-    children,
+    skipAnimation,
+    seriesConfig,
     ...other
   } = props;
-  const svgRef = React.useRef<SVGSVGElement>(null);
-  const chartSurfaceRef = useForkRef(ref, svgRef);
 
-  useReducedMotion(); // a11y reduce motion (see: https://react-spring.dev/docs/utilities/use-reduced-motion)
+  const chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> } = {
+    title,
+    desc,
+    sx,
+    disableAxisListener,
+    ref,
+    ...other,
+  };
 
-  const [defaultizedXAxis, defaultizedYAxis] = useDefaultizeAxis(xAxis, yAxis, dataset);
-
-  const drawingProviderProps: Omit<DrawingProviderProps, 'children'> = {
-    width,
-    height,
+  const chartDataProviderProps: Omit<
+    ChartDataProviderProps<TSeries, AllPluginSignatures<TSeries>>,
+    'children'
+  > = {
     margin,
-    svgRef,
-  };
-
-  const pluginProviderProps: Omit<PluginProviderProps, 'children'> = {
-    plugins,
-  };
-
-  const seriesProviderProps: Omit<SeriesProviderProps, 'children'> = {
     series,
     colors,
     dataset,
-  };
-
-  const cartesianProviderProps: Omit<CartesianProviderProps, 'children'> = {
-    xAxis: defaultizedXAxis,
-    yAxis: defaultizedYAxis,
-    dataset,
-  };
-
-  const zAxisContextProps: Omit<ZAxisContextProviderProps, 'children'> = {
-    zAxis,
-    dataset,
-  };
-
-  const highlightedProviderProps: Omit<HighlightedProviderProps, 'children'> = {
     highlightedItem,
     onHighlightChange,
-  };
-
-  const chartsSurfaceProps: ChartsSurfaceProps & { ref: any } = {
-    ...other,
+    xAxis,
+    yAxis,
+    zAxis,
+    skipAnimation,
     width,
     height,
-    ref: chartSurfaceRef,
-    sx,
-    title,
-    desc,
-    disableAxisListener,
+    seriesConfig,
+    plugins: ALL_PLUGINS as unknown as AllPluginsType<TSeries>,
   };
 
   return {
-    children,
-    drawingProviderProps,
-    seriesProviderProps,
-    cartesianProviderProps,
-    zAxisContextProps,
-    highlightedProviderProps,
+    chartDataProviderProps,
     chartsSurfaceProps,
-    pluginProviderProps,
-    xAxis: defaultizedXAxis,
-    yAxis: defaultizedYAxis,
+    children,
   };
 };

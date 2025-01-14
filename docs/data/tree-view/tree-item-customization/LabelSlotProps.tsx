@@ -1,15 +1,15 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { TreeItem2, TreeItem2Props } from '@mui/x-tree-view/TreeItem2';
+import { TreeItem, TreeItemProps } from '@mui/x-tree-view/TreeItem';
 import { MUI_X_PRODUCTS } from './products';
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(
-  props: TreeItem2Props,
+  props: TreeItemProps,
   ref: React.Ref<HTMLLIElement>,
 ) {
   return (
-    <TreeItem2
+    <TreeItem
       {...props}
       ref={ref}
       slotProps={{

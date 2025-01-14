@@ -20,7 +20,7 @@ Same changes as in `@mui/x-date-pickers@6.19.12`.
 
 ### Docs
 
-- [docs] Use MUI X v6 in Codesandbox and Stackblitz demos (#12838) @cherniavskii
+- [docs] Use MUI X v6 in CodeSandbox and StackBlitz demos (#12838) @cherniavskii
 
 ## 6.19.11
 
@@ -1485,7 +1485,7 @@ Same changes as in `@mui/x-date-pickers@6.13.0`, plus:
 - [docs] Fix charts demo using too deep import (#10263) @LukasTy
 - [docs] Fix `e.g.` typo @oliviertassinari
 - [docs] Fix npm package indentation @oliviertassinari
-- [docs] Fix typo in tree view docs @oliviertassinari
+- [docs] Fix typo in Tree View docs @oliviertassinari
 - [docs] Improve the week picker example (#8257) @flaviendelangle
 - [docs] Include code links in the Data Grid demo (#10219) @cherniavskii
 - [docs] Polish page for SEO (#10216) @oliviertassinari
@@ -1546,7 +1546,7 @@ Same changes as in `@mui/x-date-pickers@6.12.1`.
 
 - [docs] Add `DemoContainer` and `DemoItem` JSDoc (#10186) @LukasTy
 - [docs] Add link to `custom layout` page (#10184) @LukasTy
-- [docs] Add tree view nav item (#10181) @LukasTy
+- [docs] Add Tree View nav item (#10181) @LukasTy
 - [docs] Fix wrong chart tooltip reference (#10169) @oliviertassinari
 - [docs] Improve chart SEO (#10170) @oliviertassinari
 - [docs] Precise expired license key condition (#10165) @oliviertassinari
@@ -1748,7 +1748,7 @@ _Aug 4, 2023_
 
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
-- ⌚️ Move the tree view component from `@mui/lab` package
+- ⌚️ Move the Tree View component from `@mui/lab` package
 
   The `<TreeView />` component has been moved to the MUI X repository.
   It is now accessible from its own package: `@mui/x-tree-view`.
@@ -1804,7 +1804,7 @@ Same changes as in `@mui/x-date-pickers@6.11.0`.
 ### Tree View / `@mui/x-tree-view@6.0.0-alpha.0`
 
 - [TreeView] Add missing exported types (#9862) @flaviendelangle
-- [TreeView] Add tree view to changelog generator script (#9903) @MBilalShafi
+- [TreeView] Add Tree View to changelog generator script (#9903) @MBilalShafi
 - [TreeView] Create the package on the X repository (#9798) @flaviendelangle
 - [TreeView] Improve props typing (#9855) @flaviendelangle
 
@@ -2596,7 +2596,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - [docs] Fix date pickers typo in the docs (#8939) @richbustos
 - [docs] Fix master detail demo (#8894) @m4theushw
 - [docs] Fix typo in clipboard docs (#8971) @MBilalShafi
-- [docs] Reduce list of dependencies in Codesandbox/Stackblitz demos (#8535) @cherniavskii
+- [docs] Reduce list of dependencies in CodeSandbox/StackBlitz demos (#8535) @cherniavskii
 
 ### Core
 
@@ -2625,7 +2625,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - [DataGrid] Fix missing watermark in Pro and Premium packages (#8797) @cherniavskii
 - [DataGrid] Remove unwarranted warning log (#8847) @romgrk
 - [DataGrid] Add Joy UI slots (`Select`, `SelectOption`, `InputLabel`, `FormControl`) (#8747) @cherniavskii
-- [DataGridPremium] Fix expanded groups being collapsed after calling `updateRows` (#8823) @cherniavskii
+- [DataGridPremium] Fix expanded groups being collapsed after calling `updateRows()` (#8823) @cherniavskii
 
 ### `@mui/x-date-pickers@6.3.1` / `@mui/x-date-pickers-pro@6.3.1`
 
@@ -3256,7 +3256,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 - [DataGrid] Add interface for `singleSelect` column (#7685) @m4theushw
 - [DataGrid] Allow to pass props to the `FocusTrap` inside the panel wrapper (#7733) @ivek-Prajapatii
-- [DataGrid] Avoid unnecessary rerenders after `updateRows` (#7857) @cherniavskii
+- [DataGrid] Avoid unnecessary rerenders after `updateRows()` (#7857) @cherniavskii
 - [DataGridPro] Change cursor when dragging a column (#7725) @sai6855
 - [DataGridPremium] Fix `leafField` to have correct focus value (#7950) @MBilalShafi
 
@@ -4362,7 +4362,7 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 - [DataGrid] Stop exporting root base state selectors (#6912) @DanailH
 - [DataGrid] Support `theme.vars` (#6784) @alexfauquette
 - [DataGrid] Rename `rowsScroll` event to `scrollPositionChange` (#6957) @DanailH
-- [DataGridPro] Fix lazy-loaded rows not working with `updateRows` API method (#6976) @cherniavskii
+- [DataGridPro] Fix lazy-loaded rows not working with `updateRows()` API method (#6976) @cherniavskii
 - [DataGridPremium] Improve typing for theme in `styleOverrides` (#6920) @m4theushw
 - [l10n] Fix translation of `filterOperatorBefore` in Arabic (ar-SD) locale (#6884) @HassanGhazy
 

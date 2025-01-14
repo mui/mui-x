@@ -17,10 +17,13 @@ interface FilterRowTreeFromTreeDataParams {
   disableChildrenFiltering: boolean;
   isRowMatchingFilters: GridAggregatedFilterItemApplier | null;
   filterModel: GridFilterModel;
-  apiRef: React.MutableRefObject<GridPrivateApiPro>;
+  apiRef: React.RefObject<GridPrivateApiPro>;
 }
 
-export const TREE_DATA_STRATEGY = 'tree-data';
+export enum TreeDataStrategy {
+  Default = 'tree-data',
+  DataSource = 'tree-data-source',
+}
 
 /**
  * A node is visible if one of the following criteria is met:

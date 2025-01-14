@@ -1,10 +1,11 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { styled } from '@mui/material/styles';
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
-import { useCartesianContext } from '../context/CartesianProvider';
 import {
   LineElement,
+  lineElementClasses,
   LineElementProps,
   LineElementSlotProps,
   LineElementSlots,
@@ -13,9 +14,10 @@ import { getValueToPositionMapper } from '../hooks/useScale';
 import getCurveFactory from '../internals/getCurve';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { LineItemIdentifier } from '../models/seriesType/line';
-import { useChartGradient } from '../internals/components/ChartsAxesGradients';
 import { useLineSeries } from '../hooks/useSeries';
-import { AxisId } from '../models/axis';
+import { useSkipAnimation } from '../context/AnimationProvider';
+import { useChartGradientIdBuilder } from '../hooks/useChartGradientId';
+import { useXAxes, useYAxes } from '../hooks';
 
 export interface LinePlotSlots extends LineElementSlots {}
 
@@ -35,9 +37,22 @@ export interface LinePlotProps
   ) => void;
 }
 
+const LinePlotRoot = styled('g', {
+  name: 'MuiAreaPlot',
+  slot: 'Root',
+  overridesResolver: (_, styles) => styles.root,
+})({
+  [`& .${lineElementClasses.root}`]: {
+    transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
+  },
+});
+
 const useAggregatedData = () => {
   const seriesData = useLineSeries();
-  const axisData = useCartesianContext();
+
+  const { xAxis, xAxisIds } = useXAxes();
+  const { yAxis, yAxisIds } = useYAxes();
+  const getGradientId = useChartGradientIdBuilder();
 
   // This memo prevents odd line chart behavior when hydrating.
   const allData = React.useMemo(() => {
@@ -46,32 +61,26 @@ const useAggregatedData = () => {
     }
 
     const { series, stackingGroups } = seriesData;
-    const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
     const defaultXAxisId = xAxisIds[0];
     const defaultYAxisId = yAxisIds[0];
 
     return stackingGroups.flatMap(({ ids: groupIds }) => {
       return groupIds.flatMap((seriesId) => {
         const {
-          xAxisId: xAxisIdProp,
-          yAxisId: yAxisIdProp,
-          xAxisKey = defaultXAxisId,
-          yAxisKey = defaultYAxisId,
+          xAxisId = defaultXAxisId,
+          yAxisId = defaultYAxisId,
           stackedData,
           data,
           connectNulls,
         } = series[seriesId];
 
-        const xAxisId = xAxisIdProp ?? xAxisKey;
-        const yAxisId = yAxisIdProp ?? yAxisKey;
-
         const xScale = getValueToPositionMapper(xAxis[xAxisId].scale);
         const yScale = yAxis[yAxisId].scale;
         const xData = xAxis[xAxisId].data;
 
-        const gradientUsed: [AxisId, 'x' | 'y'] | undefined =
-          (yAxis[yAxisId].colorScale && [yAxisId, 'y']) ||
-          (xAxis[xAxisId].colorScale && [xAxisId, 'x']) ||
+        const gradientId: string | undefined =
+          (yAxis[yAxisId].colorScale && getGradientId(yAxisId)) ||
+          (xAxis[xAxisId].colorScale && getGradientId(xAxisId)) ||
           undefined;
 
         if (process.env.NODE_ENV !== 'production') {
@@ -107,13 +116,13 @@ const useAggregatedData = () => {
         const d = linePath.curve(getCurveFactory(series[seriesId].curve))(d3Data) || '';
         return {
           ...series[seriesId],
-          gradientUsed,
+          gradientId,
           d,
           seriesId,
         };
       });
     });
-  }, [seriesData, axisData]);
+  }, [seriesData, xAxisIds, yAxisIds, xAxis, yAxis, getGradientId]);
 
   return allData;
 };
@@ -129,20 +138,20 @@ const useAggregatedData = () => {
  * - [LinePlot API](https://mui.com/x/api/charts/line-plot/)
  */
 function LinePlot(props: LinePlotProps) {
-  const { slots, slotProps, skipAnimation, onItemClick, ...other } = props;
+  const { slots, slotProps, skipAnimation: inSkipAnimation, onItemClick, ...other } = props;
+  const skipAnimation = useSkipAnimation(inSkipAnimation);
 
-  const getGradientId = useChartGradient();
   const completedData = useAggregatedData();
   return (
-    <g {...other}>
-      {completedData.map(({ d, seriesId, color, gradientUsed }) => {
+    <LinePlotRoot {...other}>
+      {completedData.map(({ d, seriesId, color, gradientId }) => {
         return (
           <LineElement
             key={seriesId}
             id={seriesId}
             d={d}
             color={color}
-            gradientId={gradientUsed && getGradientId(...gradientUsed)}
+            gradientId={gradientId}
             skipAnimation={skipAnimation}
             slots={slots}
             slotProps={slotProps}
@@ -150,7 +159,7 @@ function LinePlot(props: LinePlotProps) {
           />
         );
       })}
-    </g>
+    </LinePlotRoot>
   );
 }
 

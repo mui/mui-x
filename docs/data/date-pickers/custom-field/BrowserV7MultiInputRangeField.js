@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import useForkRef from '@mui/utils/useForkRef';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { styled } from '@mui/material/styles';
@@ -25,8 +24,6 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
   },
 );
 
-// This demo uses `BasePickersTextFieldProps` instead of `BaseMultiInputPickersTextFieldProps`,
-// That way you can reuse the same `BrowserTextField` for all your pickers, range or not.
 const BrowserTextField = React.forwardRef((props, ref) => {
   const {
     // Should be ignored
@@ -83,20 +80,12 @@ const BrowserTextField = React.forwardRef((props, ref) => {
 const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
   const {
     slotProps,
-    value,
-    defaultValue,
-    format,
-    onChange,
     readOnly,
-    disabled,
-    onError,
     shouldDisableDate,
     minDate,
     maxDate,
     disableFuture,
     disablePast,
-    selectedSections,
-    onSelectedSectionsChange,
     className,
     unstableStartFieldRef,
     unstableEndFieldRef,
@@ -105,31 +94,23 @@ const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
   const startTextFieldProps = useSlotProps({
     elementType: 'input',
     externalSlotProps: slotProps?.textField,
-    ownerState: { ...props, position: 'start' },
+    ownerState: { position: 'start' },
   });
 
   const endTextFieldProps = useSlotProps({
     elementType: 'input',
     externalSlotProps: slotProps?.textField,
-    ownerState: { ...props, position: 'end' },
+    ownerState: { position: 'end' },
   });
 
   const fieldResponse = useMultiInputDateRangeField({
     sharedProps: {
-      value,
-      defaultValue,
-      format,
-      onChange,
       readOnly,
-      disabled,
-      onError,
       shouldDisableDate,
       minDate,
       maxDate,
       disableFuture,
       disablePast,
-      selectedSections,
-      onSelectedSectionsChange,
       enableAccessibleFieldDOMStructure: true,
     },
     startTextFieldProps,
@@ -137,6 +118,21 @@ const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
     unstableStartFieldRef,
     unstableEndFieldRef,
   });
+
+  const {
+    // The multi input range field do not support clearable and onClear
+    onClear: onClearStartDate,
+    clearable: isStartDateClearable,
+    openPickerAriaLabel: openPickerStartDateAriaLabel,
+    ...startDateProps
+  } = fieldResponse.startDate;
+  const {
+    // The multi input range field do not support clearable and onClear
+    onClear: onClearEndDate,
+    clearable: isEndDateClearable,
+    openPickerAriaLabel: openPickerEndDateAriaLabel,
+    ...endDateProps
+  } = fieldResponse.endDate;
 
   return (
     <Stack
@@ -146,9 +142,9 @@ const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
       overflow="auto"
       className={className}
     >
-      <BrowserTextField {...fieldResponse.startDate} />
-      <span> — </span>
-      <BrowserTextField {...fieldResponse.endDate} />
+      <BrowserTextField {...startDateProps} />
+      <span> – </span>
+      <BrowserTextField {...endDateProps} />
     </Stack>
   );
 });

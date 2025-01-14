@@ -8,10 +8,7 @@ import { exportAs } from '../../../utils/exportAs';
 import { buildCSV } from './serializers/csvSerializer';
 import { getColumnsToExport, defaultGetRowsToExport } from './utils';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
-import {
-  GridExportDisplayOptions,
-  GridCsvExportMenuItem,
-} from '../../../components/toolbar/GridToolbarExport';
+import { GridExportDisplayOptions, GridCsvExportMenuItem } from '../../../components/toolbar';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 
 /**
@@ -22,7 +19,7 @@ import type { DataGridProcessedProps } from '../../../models/props/DataGridProps
  * @requires useGridParamsApi (method)
  */
 export const useGridCsvExport = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'ignoreValueFormatterDuringExport'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridCsvExport');

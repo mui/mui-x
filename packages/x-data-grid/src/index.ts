@@ -9,6 +9,7 @@ export * from './DataGrid';
 
 export * from './components';
 export * from './constants';
+export * from './constants/dataGridPropsDefaultValues';
 export * from './hooks';
 export * from './models';
 export * from './context';
@@ -16,7 +17,6 @@ export * from './colDef';
 export * from './utils';
 
 export type { DataGridProps, GridExperimentalFeatures } from './models/props/DataGridProps';
-export type { GridToolbarExportProps } from './components/toolbar/GridToolbarExport';
 export type { GridExportFormat, GridExportExtension } from './models/gridExport';
 
 export { GridColumnHeaders } from './components/GridColumnHeaders';

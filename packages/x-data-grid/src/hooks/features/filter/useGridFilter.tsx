@@ -59,7 +59,7 @@ const getVisibleRowsLookup: GridStrategyProcessor<'visibleRowsLookupCreation'> =
 };
 
 function getVisibleRowsLookupState(
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   state: GridStateCommunity,
 ) {
   return apiRef.current.applyStrategyProcessor('visibleRowsLookupCreation', {
@@ -78,7 +78,7 @@ function createMemoizedValues() {
  * @requires useGridRows (event)
  */
 export const useGridFilter = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'rows'
@@ -107,7 +107,7 @@ export const useGridFilter = (
 
   const updateFilteredRows = React.useCallback(() => {
     apiRef.current.setState((state) => {
-      const filterModel = gridFilterModelSelector(state, apiRef.current.instanceId);
+      const filterModel = gridFilterModelSelector(state, undefined, apiRef.current.instanceId);
       const filterState = apiRef.current.getFilterState(filterModel);
 
       const newState = {

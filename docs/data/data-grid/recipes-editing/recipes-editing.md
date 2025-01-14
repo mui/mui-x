@@ -14,7 +14,7 @@ To persist the changes, use <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">En
 ## Conditional validation
 
 When all cells in a row are in edit mode, you can validate fields by comparing their values against one another.
-To do this, start by adding the `preProcessEditCellProps` as explained in the [validation](#validation) section.
+To do this, start by adding the `preProcessEditCellProps` as explained in the [validation](/x/react-data-grid/editing/#validation) section.
 When the callback is called, it will have an additional `otherFieldsProps` param containing the props from the other fields in the same row.
 Use this param to check if the value from the current column is valid or not.
 Return the modified `props` containing the error as you would for cell editing.
@@ -52,7 +52,7 @@ The code above is already enough to display different options in the **Account**
 The only task left is to reset the account once the type is changed.
 This is needed because the previously selected account will not exist now in the options.
 To solve that, you can create a custom edit component, reusing the built-in one, and pass a function to the `onValueChange` prop.
-This function should call `apiRef.current.setEditCellValue` to reset the value of the other field.
+This function should call `apiRef.current.setEditCellValue()` to reset the value of the other field.
 
 ```tsx
 const CustomTypeEditComponent = (props: GridEditSingleSelectCellProps) => {
@@ -77,7 +77,7 @@ The **Account** column is automatically updated with the correct options.
 {{"demo": "LinkedFieldsRowEditing.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::warning
-The call to `apiRef.current.setEditCellValue` returns a promise that must be awaited.
+The call to `apiRef.current.setEditCellValue()` returns a promise that must be awaited.
 For instance, if the `singleSelect` column type is used, not awaiting will cause the other column to be rendered with a `value` that is not in the options.
 
 ```ts
@@ -93,7 +93,7 @@ const handleChange = async () => {
 :::
 
 A similar behavior can be reproduced with cell editing.
-Instead of `apiRef.current.setEditCellValue`, the `rows` prop must be updated or `apiRef.current.updateRows` be used.
+Instead of `apiRef.current.setEditCellValue()`, the `rows` prop must be updated or `apiRef.current.updateRows()` be used.
 Note that the `onCellEditStart` and `onCellEditStop` props also have to be used to revert the value of the cell changed, in case the user cancels the edit.
 
 {{"demo": "LinkedFieldsCellEditing.js", "bg": "inline", "defaultCodeOpen": false}}

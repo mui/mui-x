@@ -59,7 +59,7 @@ const theme = createTheme(
 </ThemeProvider>;
 ```
 
-Note that `createTheme` accepts any number of arguments.
+Note that `createTheme()` accepts any number of arguments.
 If you are already using the [translations of the core components](/material-ui/guides/localization/#locale-text), you can add `bgBG` as a new argument.
 The same import works for Data Grid Pro as it's an extension of Data Grid.
 
@@ -86,7 +86,7 @@ const theme = createTheme(
 </ThemeProvider>;
 ```
 
-If you want to pass language translations directly to the Data Grid without using `createTheme` and `ThemeProvider`, you can directly load the language translations from `@mui/x-data-grid/locales`.
+If you want to pass language translations directly to the Data Grid without using `createTheme()` and `ThemeProvider`, you can directly load the language translations from `@mui/x-data-grid/locales`.
 
 ```jsx
 import { DataGrid } from '@mui/x-data-grid';

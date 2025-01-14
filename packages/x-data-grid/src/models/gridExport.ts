@@ -53,7 +53,7 @@ export interface GridGetRowsToExportParams<Api extends GridApiCommon = GridApiCo
   /**
    * The API of the grid.
    */
-  apiRef: React.MutableRefObject<Api>;
+  apiRef: React.RefObject<Api>;
 }
 
 export interface GridCsvGetRowsToExportParams<Api extends GridApiCommon = GridApiCommunity>
@@ -149,7 +149,7 @@ export interface GridPrintExportOptions extends GridExportOptions {
   /**
    * Provide Print specific styles to the print window.
    */
-  pageStyle?: string | Function;
+  pageStyle?: string | (() => string);
   /**
    * Function that returns the list of row ids to export in the order they should be exported.
    * @param {GridPrintGetRowsToExportParams} params With all properties from [[GridPrintGetRowsToExportParams]].

@@ -2,14 +2,14 @@ import * as React from 'react';
 import { alpha, styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
+import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
 import { MUI_X_PRODUCTS } from './products';
 
 const CustomContent = styled('div')(({ theme }) => ({
   padding: theme.spacing(0.5, 1),
+  paddingLeft: `calc(${theme.spacing(1)} + var(--TreeView-itemChildrenIndentation) * var(--TreeView-itemDepth))`,
   borderRadius: theme.shape.borderRadius,
-  width: '100%',
   border: '1px solid',
   display: 'flex',
   '&:hover': {
@@ -34,7 +34,7 @@ const CustomContent = styled('div')(({ theme }) => ({
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   return (
-    <TreeItem2
+    <TreeItem
       {...props}
       ref={ref}
       slots={{

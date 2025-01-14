@@ -4,10 +4,10 @@ import Tooltip from '@mui/material/Tooltip';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
-import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
+import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
+import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
-import { TreeItem2LabelInput } from '@mui/x-tree-view/TreeItem2LabelInput';
+import { TreeItemLabelInput } from '@mui/x-tree-view/TreeItemLabelInput';
 import { MUI_X_PRODUCTS } from './products';
 
 const ERRORS = {
@@ -20,7 +20,7 @@ function CustomLabelInput(props) {
 
   return (
     <React.Fragment>
-      <TreeItem2LabelInput {...other} />
+      <TreeItemLabelInput {...other} />
       {error ? (
         <Tooltip title={ERRORS[error]}>
           <ErrorOutlineIcon color="error" />
@@ -34,9 +34,9 @@ function CustomLabelInput(props) {
   );
 }
 
-const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(props, ref) {
+const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   const [error, setError] = React.useState(null);
-  const { interactions } = useTreeItem2Utils({
+  const { interactions } = useTreeItemUtils({
     itemId: props.itemId,
     children: props.children,
   });
@@ -77,7 +77,7 @@ const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(props, ref) {
   };
 
   return (
-    <TreeItem2
+    <TreeItem
       {...props}
       ref={ref}
       slots={{ labelInput: CustomLabelInput }}
@@ -98,7 +98,7 @@ export default function Validation() {
     <Box sx={{ minHeight: 352, minWidth: 260 }}>
       <RichTreeView
         items={MUI_X_PRODUCTS}
-        slots={{ item: CustomTreeItem2 }}
+        slots={{ item: CustomTreeItem }}
         isItemEditable
         experimentalFeatures={{ labelEditing: true }}
         defaultExpandedItems={['grid', 'pickers']}

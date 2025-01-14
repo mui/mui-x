@@ -35,31 +35,38 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
     variant = 'standard',
     ...others
   } = props;
+
   const filterTimeout = useTimeout();
-  const [filterValueState, setFilterValueState] = React.useState<string>(item.value ?? '');
+  const [filterValueState, setFilterValueState] = React.useState<string | undefined>(
+    sanitizeFilterItemValue(item.value),
+  );
   const [applying, setIsApplying] = React.useState(false);
   const id = useId();
   const rootProps = useGridRootProps();
 
   const onFilterChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      const { value } = event.target;
-      setFilterValueState(String(value));
+      const value = sanitizeFilterItemValue(event.target.value);
 
+      setFilterValueState(value);
       setIsApplying(true);
       filterTimeout.start(rootProps.filterDebounceMs, () => {
-        const newItem = { ...item, value, fromInput: id! };
+        const newItem = {
+          ...item,
+          value: type === 'number' && !Number.isNaN(Number(value)) ? Number(value) : value,
+          fromInput: id!,
+        };
         applyValue(newItem);
         setIsApplying(false);
       });
     },
-    [id, applyValue, item, rootProps.filterDebounceMs, filterTimeout],
+    [filterTimeout, rootProps.filterDebounceMs, item, type, id, applyValue],
   );
 
   React.useEffect(() => {
     const itemPlusTag = item as ItemPlusTag;
-    if (itemPlusTag.fromInput !== id || item.value === undefined) {
-      setFilterValueState(String(item.value ?? ''));
+    if (itemPlusTag.fromInput !== id || item.value == null) {
+      setFilterValueState(sanitizeFilterItemValue(item.value));
     }
   }, [id, item]);
 
@@ -68,7 +75,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
       id={id}
       label={apiRef.current.getLocaleText('filterPanelInputLabel')}
       placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
-      value={filterValueState}
+      value={filterValueState ?? ''}
       onChange={onFilterChange}
       variant={variant}
       type={type || 'text'}
@@ -97,6 +104,14 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
       {...rootProps.slotProps?.baseTextField}
     />
   );
+}
+
+function sanitizeFilterItemValue(value: unknown) {
+  if (value == null || value === '') {
+    return undefined;
+  }
+
+  return String(value);
 }
 
 GridFilterInputValue.propTypes = {

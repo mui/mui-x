@@ -86,8 +86,13 @@ In the following demo, the columns panel is disabled, and access to columns `id`
 To show or hide specific columns in the column visibility panel, use the `slotProps.columnsManagement.getTogglableColumns` prop. It should return an array of column field names.
 
 ```tsx
-// stop `id`, `__row_group_by_columns_group__`, and `status` columns to be togglable
-const hiddenFields = ['id', '__row_group_by_columns_group__', 'status'];
+import {
+  DataGridPremium,
+  GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+} from '@mui/x-data-grid-premium';
+
+// stop `id`, GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, and `status` columns to be togglable
+const hiddenFields = ['id', GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, 'status'];
 
 const getTogglableColumns = (columns: GridColDef[]) => {
   return columns
@@ -95,7 +100,7 @@ const getTogglableColumns = (columns: GridColDef[]) => {
     .map((column) => column.field);
 };
 
-<DataGrid
+<DataGridPremium
   slots={{
     toolbar: GridToolbar,
   }}

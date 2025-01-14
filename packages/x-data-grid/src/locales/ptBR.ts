@@ -31,6 +31,18 @@ const ptBRGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Procurar',
   toolbarQuickFilterDeleteIconLabel: 'Limpar',
 
+  // Prompt toolbar field
+  toolbarPromptControlPlaceholder: 'Digite um prompt…',
+  toolbarPromptControlWithRecordingPlaceholder: 'Digite ou grave um prompt…',
+  toolbarPromptControlRecordingPlaceholder: 'Ouvindo o prompt…',
+  toolbarPromptControlLabel: 'Entrada de prompt',
+  toolbarPromptControlRecordButtonDefaultLabel: 'Gravar',
+  toolbarPromptControlRecordButtonActiveLabel: 'Parar gravação',
+  toolbarPromptControlSendActionLabel: 'Enviar',
+  toolbarPromptControlSendActionAriaLabel: 'Enviar prompt',
+  toolbarPromptControlErrorMessage:
+    'Ocorreu um erro ao processar a solicitação. Por favor, tente novamente com um prompt diferente.',
+
   // Export selector toolbar button text
   toolbarExport: 'Exportar',
   toolbarExportLabel: 'Exportar',
@@ -43,6 +55,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Nenhuma coluna',
   columnsManagementShowHideAllText: 'Mostrar/Ocultar Todas',
   columnsManagementReset: 'Redefinir',
+  columnsManagementDeleteIconLabel: 'Limpar',
 
   // Filter panel text
   filterPanelAddFilter: 'Adicionar filtro',
@@ -58,9 +71,9 @@ const ptBRGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'contém',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'não contém',
   filterOperatorEquals: 'é igual a',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'não é igual a',
   filterOperatorStartsWith: 'começa com',
   filterOperatorEndsWith: 'termina com',
   filterOperatorIs: 'é',
@@ -81,9 +94,9 @@ const ptBRGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Contém',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'Não contém',
   headerFilterOperatorEquals: 'Igual',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'Não é igual a',
   headerFilterOperatorStartsWith: 'Começa com',
   headerFilterOperatorEndsWith: 'Termina com',
   headerFilterOperatorIs: 'É',

@@ -1,11 +1,11 @@
-# Data Grid - Row spanning
+# Data Grid - Row spanning 🧪
 
 <p class="description">Span cells across several rows.</p>
 
 By default, each cell in a Data Grid takes up the height of one row.
 The row spanning feature makes it possible for a cell to fill multiple rows in a single column.
 
-To enable, pass the `unstable_rowSpanning` prop to the Data Grid.
+To enable, pass the `rowSpanning` prop to the Data Grid.
 The Data Grid will automatically merge consecutive cells with repeating values in the same column, as shown in the demo below—switch off the toggle button to see the actual rows:
 
 {{"demo": "RowSpanning.js", "bg": "inline", "defaultCodeOpen": false}}

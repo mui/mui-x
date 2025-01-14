@@ -11,9 +11,9 @@ export const isInternalTimeView = (
 
 export type Meridiem = 'am' | 'pm';
 
-export const getMeridiem = <TDate extends PickerValidDate>(
-  date: TDate | null,
-  utils: MuiPickersAdapter<TDate>,
+export const getMeridiem = (
+  date: PickerValidDate | null,
+  utils: MuiPickersAdapter,
 ): Meridiem | null => {
   if (!date) {
     return null;
@@ -33,29 +33,23 @@ export const convertValueToMeridiem = (value: number, meridiem: Meridiem | null,
   return value;
 };
 
-export const convertToMeridiem = <TDate extends PickerValidDate>(
-  time: TDate,
+export const convertToMeridiem = (
+  time: PickerValidDate,
   meridiem: Meridiem,
   ampm: boolean,
-  utils: MuiPickersAdapter<TDate>,
-) => {
+  utils: MuiPickersAdapter,
+): PickerValidDate => {
   const newHoursAmount = convertValueToMeridiem(utils.getHours(time), meridiem, ampm);
   return utils.setHours(time, newHoursAmount);
 };
 
-export const getSecondsInDay = <TDate extends PickerValidDate>(
-  date: TDate,
-  utils: MuiPickersAdapter<TDate>,
-) => {
+export const getSecondsInDay = (date: PickerValidDate, utils: MuiPickersAdapter) => {
   return utils.getHours(date) * 3600 + utils.getMinutes(date) * 60 + utils.getSeconds(date);
 };
 
 export const createIsAfterIgnoreDatePart =
-  <TDate extends PickerValidDate>(
-    disableIgnoringDatePartForTimeValidation: boolean,
-    utils: MuiPickersAdapter<TDate>,
-  ) =>
-  (dateLeft: TDate, dateRight: TDate) => {
+  (disableIgnoringDatePartForTimeValidation: boolean, utils: MuiPickersAdapter) =>
+  (dateLeft: PickerValidDate, dateRight: PickerValidDate) => {
     if (disableIgnoringDatePartForTimeValidation) {
       return utils.isAfter(dateLeft, dateRight);
     }
@@ -63,8 +57,8 @@ export const createIsAfterIgnoreDatePart =
     return getSecondsInDay(dateLeft, utils) > getSecondsInDay(dateRight, utils);
   };
 
-export const resolveTimeFormat = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
+export const resolveTimeFormat = (
+  utils: MuiPickersAdapter,
   { format, views, ampm }: { format?: string; views: readonly TimeView[]; ampm: boolean },
 ) => {
   if (format != null) {

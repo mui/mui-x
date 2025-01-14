@@ -42,7 +42,7 @@ You can browse the documentation, find an example close to your use case, and th
 
 - [Data Grid](/x/react-data-grid/#mit-license-free-forever)
 - [Date Pickers](/x/react-date-pickers/getting-started/#render-your-first-component)
-- [Charts](/x/react-charts/getting-started/#single-charts)
+- [Charts](/x/react-charts/getting-started/#self-contained-charts)
 - [Tree View](/x/react-tree-view/#simple-tree-view)
 
 #### Use starter templates
@@ -96,7 +96,8 @@ This includes issues introduced by external sources, like browser upgrades or ch
 
 | MUI X version | Release    | Supported                                                           |
 | ------------: | :--------- | :------------------------------------------------------------------ |
-|        ^7.0.0 | 2024-03-23 | ✅ Stable major (Continuous support)                                |
+|        ^8.0.0 | March 2025 | 🚧 Pre release (Continuous support)                                 |
+|        ^7.0.0 | 2024-03-23 | ✅ Current stable major (Continuous support)                        |
 |        ^6.0.0 | 2023-03-03 | ⚠️ Long-term support (Support for security issues and regressions). |
 |        ^5.0.0 | 2021-11-23 | ❌                                                                  |
 |        ^4.0.0 | 2021-09-28 | ❌                                                                  |

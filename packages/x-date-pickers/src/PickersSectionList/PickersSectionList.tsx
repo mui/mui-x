@@ -11,6 +11,7 @@ import {
   PickersSectionListClasses,
 } from './pickersSectionListClasses';
 import { PickersSectionListProps, PickersSectionElement } from './PickersSectionList.types';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 
 export const PickersSectionListRoot = styled('div', {
   name: 'MuiPickersSectionList',
@@ -43,9 +44,7 @@ export const PickersSectionListSectionContent = styled('span', {
   outline: 'none',
 });
 
-const useUtilityClasses = (ownerState: PickersSectionListProps) => {
-  const { classes } = ownerState;
-
+const useUtilityClasses = (classes: Partial<PickersSectionListClasses> | undefined) => {
   const slots = {
     root: ['root'],
     section: ['section'],
@@ -60,17 +59,9 @@ interface PickersSectionProps extends Pick<PickersSectionListProps, 'slots' | 's
   classes: PickersSectionListClasses;
 }
 
-/**
- * Demos:
- *
- * - [Custom field](https://mui.com/x/react-date-pickers/custom-field/)
- *
- * API:
- *
- * - [PickersSectionList API](https://mui.com/x/api/date-pickers/pickers-section-list/)
- */
 function PickersSection(props: PickersSectionProps) {
   const { slots, slotProps, element, classes } = props;
+  const { ownerState } = usePickerPrivateContext();
 
   const Section = slots?.section ?? PickersSectionListSection;
   const sectionProps = useSlotProps({
@@ -78,7 +69,7 @@ function PickersSection(props: PickersSectionProps) {
     externalSlotProps: slotProps?.section,
     externalForwardedProps: element.container,
     className: classes.section,
-    ownerState: {},
+    ownerState,
   });
 
   const SectionContent = slots?.sectionContent ?? PickersSectionListSectionContent;
@@ -90,7 +81,7 @@ function PickersSection(props: PickersSectionProps) {
       suppressContentEditableWarning: true,
     },
     className: classes.sectionContent,
-    ownerState: {},
+    ownerState,
   });
 
   const SectionSeparator = slots?.sectionSeparator ?? PickersSectionListSectionSeparator;
@@ -98,13 +89,13 @@ function PickersSection(props: PickersSectionProps) {
     elementType: SectionSeparator,
     externalSlotProps: slotProps?.sectionSeparator,
     externalForwardedProps: element.before,
-    ownerState: { position: 'before' },
+    ownerState: { ...ownerState, separatorPosition: 'before' },
   });
   const sectionSeparatorAfterProps = useSlotProps({
     elementType: SectionSeparator,
     externalSlotProps: slotProps?.sectionSeparator,
     externalForwardedProps: element.after,
-    ownerState: { position: 'after' },
+    ownerState: { ...ownerState, separatorPosition: 'after' },
   });
 
   return (
@@ -116,10 +107,41 @@ function PickersSection(props: PickersSectionProps) {
   );
 }
 
+PickersSection.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  classes: PropTypes.object.isRequired,
+  element: PropTypes.shape({
+    after: PropTypes.object.isRequired,
+    before: PropTypes.object.isRequired,
+    container: PropTypes.object.isRequired,
+    content: PropTypes.object.isRequired,
+  }).isRequired,
+  /**
+   * The props used for each component slot.
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   */
+  slots: PropTypes.object,
+} as any;
+
 type PickersSectionListComponent = ((
   props: PickersSectionListProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [Custom field](https://mui.com/x/react-date-pickers/custom-field/)
+ *
+ * API:
+ *
+ * - [PickersSectionList API](https://mui.com/x/api/date-pickers/pickers-section-list/)
+ */
 const PickersSectionList = React.forwardRef(function PickersSectionList(
   inProps: PickersSectionListProps,
   ref: React.Ref<HTMLDivElement>,
@@ -129,9 +151,10 @@ const PickersSectionList = React.forwardRef(function PickersSectionList(
     name: 'MuiPickersSectionList',
   });
 
-  const { slots, slotProps, elements, sectionListRef, ...other } = props;
+  const { slots, slotProps, elements, sectionListRef, classes: classesProp, ...other } = props;
 
-  const classes = useUtilityClasses(props);
+  const classes = useUtilityClasses(classesProp);
+  const { ownerState } = usePickerPrivateContext();
 
   const rootRef = React.useRef<HTMLDivElement>(null);
   const handleRootRef = useForkRef(ref, rootRef);
@@ -194,7 +217,7 @@ const PickersSectionList = React.forwardRef(function PickersSectionList(
       suppressContentEditableWarning: true,
     },
     className: classes.root,
-    ownerState: {},
+    ownerState,
   });
 
   return (

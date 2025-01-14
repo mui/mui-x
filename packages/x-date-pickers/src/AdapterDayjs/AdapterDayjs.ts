@@ -138,7 +138,7 @@ declare module '@mui/x-date-pickers/models' {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
+export class AdapterDayjs implements MuiPickersAdapter<string> {
   public isMUIAdapter = true;
 
   public isTimezoneCompatible = true;
@@ -277,6 +277,8 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     const timezone = this.getTimezone(value);
     if (timezone !== 'UTC') {
       const fixedValue = value.tz(this.cleanTimezone(timezone), true);
+      // TODO: Simplify the case when we raise the `dayjs` peer dep to 1.11.12 (https://github.com/iamkun/dayjs/releases/tag/v1.11.12)
+      /* istanbul ignore next */
       // @ts-ignore
       if (fixedValue.$offset === (value.$offset ?? 0)) {
         return value;
@@ -294,10 +296,10 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   public date = <T extends string | null | undefined>(
     value?: T,
     timezone: PickersTimezone = 'default',
-  ): DateBuilderReturnType<T, Dayjs> => {
-    type R = DateBuilderReturnType<T, Dayjs>;
+  ): DateBuilderReturnType<T> => {
+    type R = DateBuilderReturnType<T>;
     if (value === null) {
-      return <R>null;
+      return null as unknown as R;
     }
 
     let parsedValue: Dayjs;
@@ -310,10 +312,10 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     }
 
     if (this.locale === undefined) {
-      return <R>parsedValue;
+      return parsedValue as unknown as R;
     }
 
-    return <R>parsedValue.locale(this.locale);
+    return parsedValue.locale(this.locale) as unknown as R;
   };
 
   public getInvalidDate = () => defaultDayjs(new Date('Invalid date'));
@@ -412,7 +414,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     );
   };
 
-  public isValid = (value: Dayjs | null) => {
+  public isValid = (value: Dayjs | null): value is Dayjs => {
     if (value == null) {
       return false;
     }

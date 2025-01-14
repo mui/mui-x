@@ -1,6 +1,5 @@
 ---
 productId: x-tree-view
-title: Rich Tree View - Focus
 components: RichTreeView, TreeItem
 packageName: '@mui/x-tree-view'
 githubLabel: 'component: tree view'
@@ -41,7 +40,7 @@ apiRef.current.focusItem(
 
 :::info
 This method only works with items that are currently visible.
-Calling `apiRef.focusItem` on an item whose parent is collapsed will do nothing.
+Calling `apiRef.focusItem()` on an item whose parent is collapsed does nothing.
 :::
 
 {{"demo": "ApiMethodFocusItem.js"}}

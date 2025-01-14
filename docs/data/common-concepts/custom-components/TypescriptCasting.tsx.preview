@@ -3,12 +3,12 @@
   // Cast the custom component to the type expected by the X component
   slots={{
     calendarHeader:
-      CustomCalendarHeader as DateCalendarSlots<Dayjs>['calendarHeader'],
+      CustomCalendarHeader as DateCalendarSlots['calendarHeader'],
   }}
   slotProps={{
     calendarHeader: {
       displayWeekNumber,
       setDisplayWeekNumber,
-    } as DateCalendarSlotProps<Dayjs>['calendarHeader'],
+    } as DateCalendarSlotProps['calendarHeader'],
   }}
 />

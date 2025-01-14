@@ -7,6 +7,9 @@ import {
   areDatesEqual,
   getTodayDate,
   getDefaultReferenceDate,
+  PickerRangeValue,
+  PickerNonNullableRangeValue,
+  FieldRangeSection,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { splitDateRangeSections, removeLastSeparator } from './date-fields-utils';
@@ -14,19 +17,15 @@ import type {
   DateRangeValidationError,
   DateTimeRangeValidationError,
   TimeRangeValidationError,
-  RangeFieldSection,
-  DateRange,
   RangePosition,
 } from '../../models';
 
-export type RangePickerValueManager<
-  TValue = [any, any],
-  TDate extends PickerValidDate = any,
+type RangePickerValueManager<
   TError extends
     | DateRangeValidationError
     | TimeRangeValidationError
     | DateTimeRangeValidationError = any,
-> = PickerValueManager<TValue, TDate, TError>;
+> = PickerValueManager<PickerRangeValue, TError>;
 
 export const rangeValueManager: RangePickerValueManager = {
   emptyValue: [null, null],
@@ -35,32 +34,30 @@ export const rangeValueManager: RangePickerValueManager = {
     getTodayDate(utils, timezone, valueType),
   ],
   getInitialReferenceValue: ({ value, referenceDate: referenceDateProp, ...params }) => {
-    const shouldKeepStartDate = value[0] != null && params.utils.isValid(value[0]);
-    const shouldKeepEndDate = value[1] != null && params.utils.isValid(value[1]);
+    const shouldKeepStartDate = params.utils.isValid(value[0]);
+    const shouldKeepEndDate = params.utils.isValid(value[1]);
 
     if (shouldKeepStartDate && shouldKeepEndDate) {
-      return value;
+      return value as PickerNonNullableRangeValue;
     }
 
     const referenceDate = referenceDateProp ?? getDefaultReferenceDate(params);
 
     return [
-      shouldKeepStartDate ? value[0] : referenceDate,
-      shouldKeepEndDate ? value[1] : referenceDate,
+      shouldKeepStartDate ? value[0]! : referenceDate,
+      shouldKeepEndDate ? value[1]! : referenceDate,
     ];
   },
   cleanValue: (utils, value) =>
-    value.map((date) => replaceInvalidDateByNull(utils, date)) as DateRange<any>,
+    value.map((date) => replaceInvalidDateByNull(utils, date)) as PickerRangeValue,
   areValuesEqual: (utils, a, b) =>
     areDatesEqual(utils, a[0], b[0]) && areDatesEqual(utils, a[1], b[1]),
   isSameError: (a, b) => b !== null && a[1] === b[1] && a[0] === b[0],
   hasError: (error) => error[0] != null || error[1] != null,
   defaultErrorState: [null, null],
   getTimezone: (utils, value) => {
-    const timezoneStart =
-      value[0] == null || !utils.isValid(value[0]) ? null : utils.getTimezone(value[0]);
-    const timezoneEnd =
-      value[1] == null || !utils.isValid(value[1]) ? null : utils.getTimezone(value[1]);
+    const timezoneStart = utils.isValid(value[0]) ? utils.getTimezone(value[0]) : null;
+    const timezoneEnd = utils.isValid(value[1]) ? utils.getTimezone(value[1]) : null;
 
     if (timezoneStart != null && timezoneEnd != null && timezoneStart !== timezoneEnd) {
       throw new Error('MUI X: The timezone of the start and the end date should be the same.');
@@ -74,28 +71,28 @@ export const rangeValueManager: RangePickerValueManager = {
   ],
 };
 
-export const getRangeFieldValueManager = <TDate extends PickerValidDate>({
+export const getRangeFieldValueManager = ({
   dateSeparator = '–',
 }: {
   dateSeparator: string | undefined;
-}): FieldValueManager<DateRange<TDate>, TDate, RangeFieldSection> => ({
+}): FieldValueManager<PickerRangeValue> => ({
   updateReferenceValue: (utils, value, prevReferenceValue) => {
-    const shouldKeepStartDate = value[0] != null && utils.isValid(value[0]);
-    const shouldKeepEndDate = value[1] != null && utils.isValid(value[1]);
+    const shouldKeepStartDate = utils.isValid(value[0]);
+    const shouldKeepEndDate = utils.isValid(value[1]);
 
     if (!shouldKeepStartDate && !shouldKeepEndDate) {
       return prevReferenceValue;
     }
 
     if (shouldKeepStartDate && shouldKeepEndDate) {
-      return value;
+      return value as PickerNonNullableRangeValue;
     }
 
     if (shouldKeepStartDate) {
-      return [value[0], prevReferenceValue[0]];
+      return [value[0]!, prevReferenceValue[0]!];
     }
 
-    return [prevReferenceValue[1], value[1]];
+    return [prevReferenceValue[1]!, value[1]!];
   },
   getSectionsFromValue: (utils, [start, end], fallbackSections, getSectionsFromDate) => {
     const separatedFallbackSections =
@@ -104,8 +101,8 @@ export const getRangeFieldValueManager = <TDate extends PickerValidDate>({
         : splitDateRangeSections(fallbackSections);
 
     const getSections = (
-      newDate: any | null,
-      fallbackDateSections: RangeFieldSection[] | null,
+      newDate: PickerValidDate | null,
+      fallbackDateSections: FieldRangeSection[] | null,
       position: RangePosition,
     ) => {
       const shouldReUsePrevDateSections = !utils.isValid(newDate) && !!fallbackDateSections;
@@ -114,7 +111,7 @@ export const getRangeFieldValueManager = <TDate extends PickerValidDate>({
         return fallbackDateSections;
       }
 
-      const sections = getSectionsFromDate(newDate);
+      const sections = getSectionsFromDate(newDate!);
       return sections.map((section, sectionIndex) => {
         if (sectionIndex === sections.length - 1 && position === 'start') {
           return {
@@ -162,13 +159,15 @@ export const getRangeFieldValueManager = <TDate extends PickerValidDate>({
       }
 
       return parseDate(dateStr.trim(), referenceValue[index]!);
-    }) as DateRange<any>;
+    }) as PickerRangeValue;
   },
   getActiveDateManager: (utils, state, activeSection) => {
     const index = activeSection.dateName === 'start' ? 0 : 1;
 
-    const updateDateInRange = (newDate: TDate | null, prevDateRange: DateRange<TDate>) =>
-      (index === 0 ? [newDate, prevDateRange[1]] : [prevDateRange[0], newDate]) as DateRange<TDate>;
+    const updateDateInRange = (newDate: PickerValidDate | null, prevDateRange: PickerRangeValue) =>
+      (index === 0
+        ? [newDate, prevDateRange[1]]
+        : [prevDateRange[0], newDate]) as PickerNonNullableRangeValue;
 
     return {
       date: state.value[index],
@@ -183,10 +182,9 @@ export const getRangeFieldValueManager = <TDate extends PickerValidDate>({
       },
       getNewValuesFromNewActiveDate: (newActiveDate) => ({
         value: updateDateInRange(newActiveDate, state.value),
-        referenceValue:
-          newActiveDate == null || !utils.isValid(newActiveDate)
-            ? state.referenceValue
-            : updateDateInRange(newActiveDate, state.referenceValue),
+        referenceValue: !utils.isValid(newActiveDate)
+          ? state.referenceValue
+          : updateDateInRange(newActiveDate, state.referenceValue),
       }),
     };
   },

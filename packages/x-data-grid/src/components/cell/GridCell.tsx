@@ -9,6 +9,7 @@ import {
 } from '@mui/utils';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useRtl } from '@mui/system/RtlProvider';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import {
@@ -30,7 +31,6 @@ import { useGridSelector, objectShallowCompare } from '../../hooks/utils/useGrid
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
-import { MissingRowIdError } from '../../hooks/features/rows/useGridParamsApi';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../../utils/cellBorderUtils';
 import { GridPinnedColumnPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
@@ -53,7 +53,7 @@ export const gridPinnedColumnPositionLookup = {
   [PinnedPosition.VIRTUAL]: undefined,
 };
 
-export type GridCellProps = {
+export type GridCellProps = React.HTMLAttributes<HTMLDivElement> & {
   align: GridAlignment;
   className?: string;
   colIndex: number;
@@ -71,12 +71,19 @@ export type GridCellProps = {
   gridHasFiller: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
+  onMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
   onMouseDown?: React.MouseEventHandler<HTMLDivElement>;
+  onMouseLeave?: React.MouseEventHandler<HTMLDivElement>;
   onMouseUp?: React.MouseEventHandler<HTMLDivElement>;
+  onMouseOver?: React.MouseEventHandler<HTMLDivElement>;
+  onKeyUp?: React.KeyboardEventHandler<HTMLDivElement>;
   onKeyDown?: React.KeyboardEventHandler<HTMLDivElement>;
   onDragEnter?: React.DragEventHandler<HTMLDivElement>;
   onDragOver?: React.DragEventHandler<HTMLDivElement>;
-  [x: string]: any; // TODO v7: remove this - it breaks type safety
+  onFocus?: React.FocusEventHandler<Element>;
+  children?: React.ReactNode;
+  style?: React.CSSProperties;
+  [x: `data-${string}`]: string;
 };
 
 const EMPTY_CELL_PARAMS: GridCellParams<any, any, any, GridTreeNodeWithRender> = {
@@ -146,7 +153,7 @@ let warnedOnce = false;
 
 // TODO(v7): Removing the wrapper will break the docs performance visualization demo.
 
-const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCell(props, ref) {
+const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(props, ref) {
   const {
     column,
     rowId,
@@ -157,7 +164,6 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
     width,
     className,
     style: styleProp,
-    gridHasScrollX,
     colSpan,
     disableDragEvents,
     isNotVisible,
@@ -190,20 +196,19 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
       // This is required because `.getCellParams` tries to get the `state.rows.tree` entry
       // associated with `rowId`/`fieldId`, but this selector runs after the state has been
       // updated, while `rowId`/`fieldId` reference an entry in the old state.
-      try {
-        const result = apiRef.current.getCellParams<any, any, any, GridTreeNodeWithRender>(
-          rowId,
-          field,
-        );
-        result.api = apiRef.current;
-        return result;
-      } catch (error) {
-        if (error instanceof MissingRowIdError) {
-          return EMPTY_CELL_PARAMS;
-        }
-        throw error;
+      const row = apiRef.current.getRow(rowId);
+      if (!row) {
+        return EMPTY_CELL_PARAMS;
       }
+
+      const result = apiRef.current.getCellParams<any, any, any, GridTreeNodeWithRender>(
+        rowId,
+        field,
+      );
+      result.api = apiRef.current;
+      return result;
     },
+    undefined,
     objectShallowCompare,
   );
 
@@ -337,14 +342,15 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
         padding: 0,
         opacity: 0,
         width: 0,
+        height: 0,
         border: 0,
       };
     }
 
-    const cellStyle: React.CSSProperties = {
+    const cellStyle = {
       '--width': `${width}px`,
       ...styleProp,
-    };
+    } as React.CSSProperties;
 
     const isLeftPinned = pinnedPosition === PinnedPosition.LEFT;
     const isRightPinned = pinnedPosition === PinnedPosition.RIGHT;
@@ -362,6 +368,10 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
     if (rowSpan > 1) {
       cellStyle.height = `calc(var(--height) * ${rowSpan})`;
       cellStyle.zIndex = 5;
+
+      if (isLeftPinned || isRightPinned) {
+        cellStyle.zIndex = 6;
+      }
     }
 
     return cellStyle;
@@ -480,7 +490,6 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
 
   return (
     <div
-      ref={handleRef}
       className={clsx(classes.root, classNames, className)}
       role="gridcell"
       data-field={field}
@@ -501,6 +510,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
       {...draggableEventHandlers}
       {...other}
       onFocus={handleFocus}
+      ref={handleRef}
     >
       {children}
     </div>
@@ -513,7 +523,6 @@ GridCell.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   align: PropTypes.oneOf(['center', 'left', 'right']).isRequired,
-  className: PropTypes.string,
   colIndex: PropTypes.number.isRequired,
   colSpan: PropTypes.number,
   column: PropTypes.object.isRequired,
@@ -526,13 +535,6 @@ GridCell.propTypes = {
   }),
   gridHasFiller: PropTypes.bool.isRequired,
   isNotVisible: PropTypes.bool.isRequired,
-  onClick: PropTypes.func,
-  onDoubleClick: PropTypes.func,
-  onDragEnter: PropTypes.func,
-  onDragOver: PropTypes.func,
-  onKeyDown: PropTypes.func,
-  onMouseDown: PropTypes.func,
-  onMouseUp: PropTypes.func,
   pinnedOffset: PropTypes.number.isRequired,
   pinnedPosition: PropTypes.oneOf([0, 1, 2, 3]).isRequired,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,

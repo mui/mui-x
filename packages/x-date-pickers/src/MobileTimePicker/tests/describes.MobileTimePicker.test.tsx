@@ -13,6 +13,7 @@ import {
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
+import { PickerValue } from '@mui/x-date-pickers/internals';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<MobileTimePicker /> - Describes', () => {
@@ -28,10 +29,9 @@ describe('<MobileTimePicker /> - Describes', () => {
     clock,
     views: ['hours', 'minutes'],
     componentFamily: 'picker',
-    variant: 'mobile',
   }));
 
-  describeConformance(<MobileTimePicker enableAccessibleFieldDOMStructure />, () => ({
+  describeConformance(<MobileTimePicker />, () => ({
     classes: {} as any,
     render,
     muiName: 'MuiMobileTimePicker',
@@ -47,7 +47,7 @@ describe('<MobileTimePicker /> - Describes', () => {
     ],
   }));
 
-  describeValue(MobileTimePicker, () => ({
+  describeValue<PickerValue, 'picker'>(MobileTimePicker, () => ({
     render,
     componentFamily: 'picker',
     type: 'time',
@@ -70,12 +70,12 @@ describe('<MobileTimePicker /> - Describes', () => {
     },
     setNewValue: (value, { isOpened, applySameValue }) => {
       if (!isOpened) {
-        openPicker({ type: 'time', variant: 'mobile' });
+        openPicker({ type: 'time' });
       }
 
       const newValue = applySameValue
-        ? value
-        : adapterToUse.addMinutes(adapterToUse.addHours(value, 1), 5);
+        ? value!
+        : adapterToUse.addMinutes(adapterToUse.addHours(value!, 1), 5);
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       // change hours
       const hourClockEvent = getClockTouchEvent(

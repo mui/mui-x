@@ -11,6 +11,7 @@ import {
 import {
   GridPipeProcessor,
   GridRowsPartialUpdates,
+  GridStrategyGroup,
   GridStrategyProcessor,
   useGridRegisterPipeProcessor,
   useGridRegisterStrategyProcessor,
@@ -34,11 +35,10 @@ import {
 } from '../../../utils/tree/models';
 import { updateRowTree } from '../../../utils/tree/updateRowTree';
 import { getVisibleRowsLookup } from '../../../utils/tree/utils';
-
-const DATA_SOURCE_TREE_DATA_STRATEGY = 'dataSourceTreeData';
+import { TreeDataStrategy } from '../treeData/gridTreeDataUtils';
 
 export const useGridDataSourceTreeDataPreProcessors = (
-  privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
+  privateApiRef: React.RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     | 'treeData'
@@ -52,8 +52,8 @@ export const useGridDataSourceTreeDataPreProcessors = (
 ) => {
   const setStrategyAvailability = React.useCallback(() => {
     privateApiRef.current.setStrategyAvailability(
-      'rowTree',
-      DATA_SOURCE_TREE_DATA_STRATEGY,
+      GridStrategyGroup.RowTree,
+      TreeDataStrategy.DataSource,
       props.treeData && props.unstable_dataSource ? () => true : () => false,
     );
   }, [privateApiRef, props.treeData, props.unstable_dataSource]);
@@ -64,7 +64,7 @@ export const useGridDataSourceTreeDataPreProcessors = (
     let colDefOverride: GridGroupingColDefOverride | null | undefined;
     if (typeof groupingColDefProp === 'function') {
       const params: GridGroupingColDefOverrideParams = {
-        groupingName: DATA_SOURCE_TREE_DATA_STRATEGY,
+        groupingName: TreeDataStrategy.DataSource,
         fields: [],
       };
 
@@ -171,7 +171,7 @@ export const useGridDataSourceTreeDataPreProcessors = (
           nodes: params.updates.rows.map(getRowTreeBuilderNode),
           defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
           isGroupExpandedByDefault: props.isGroupExpandedByDefault,
-          groupingName: DATA_SOURCE_TREE_DATA_STRATEGY,
+          groupingName: TreeDataStrategy.DataSource,
           onDuplicatePath,
         });
       }
@@ -187,7 +187,7 @@ export const useGridDataSourceTreeDataPreProcessors = (
         previousTreeDepth: params.previousTreeDepths!,
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
         isGroupExpandedByDefault: props.isGroupExpandedByDefault,
-        groupingName: DATA_SOURCE_TREE_DATA_STRATEGY,
+        groupingName: TreeDataStrategy.DataSource,
       });
     },
     [
@@ -212,25 +212,20 @@ export const useGridDataSourceTreeDataPreProcessors = (
   useGridRegisterPipeProcessor(privateApiRef, 'hydrateColumns', updateGroupingColumn);
   useGridRegisterStrategyProcessor(
     privateApiRef,
-    DATA_SOURCE_TREE_DATA_STRATEGY,
+    TreeDataStrategy.DataSource,
     'rowTreeCreation',
     createRowTreeForTreeData,
   );
   useGridRegisterStrategyProcessor(
     privateApiRef,
-    DATA_SOURCE_TREE_DATA_STRATEGY,
+    TreeDataStrategy.DataSource,
     'filtering',
     filterRows,
   );
+  useGridRegisterStrategyProcessor(privateApiRef, TreeDataStrategy.DataSource, 'sorting', sortRows);
   useGridRegisterStrategyProcessor(
     privateApiRef,
-    DATA_SOURCE_TREE_DATA_STRATEGY,
-    'sorting',
-    sortRows,
-  );
-  useGridRegisterStrategyProcessor(
-    privateApiRef,
-    DATA_SOURCE_TREE_DATA_STRATEGY,
+    TreeDataStrategy.DataSource,
     'visibleRowsLookupCreation',
     getVisibleRowsLookup,
   );

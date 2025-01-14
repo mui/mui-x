@@ -14,7 +14,6 @@ import {
   gridRowGroupingNameSelector,
   gridRowTreeDepthsSelector,
   gridDataRowIdsSelector,
-  gridRowsDataRowIdToIdLookupSelector,
   gridRowMaximumTreeDepthSelector,
   gridRowGroupsToFetchSelector,
 } from './gridRowsSelector';
@@ -38,6 +37,7 @@ import {
   computeRowsUpdates,
 } from './gridRowsUtils';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
+import { GridStrategyGroup } from '../../core/strategyProcessing';
 
 export const rowsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'unstable_dataSource' | 'rows' | 'rowCount' | 'getRowId' | 'loading'>
@@ -63,7 +63,7 @@ export const rowsStateInitializer: GridStateInitializer<
 };
 
 export const useGridRows = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'rows'
@@ -359,7 +359,7 @@ export const useGridRows = (
       }
 
       apiRef.current.setState((state) => {
-        const group = gridRowTreeSelector(state, apiRef.current.instanceId)[
+        const group = gridRowTreeSelector(state, undefined, apiRef.current.instanceId)[
           GRID_ROOT_GROUP_ID
         ] as GridGroupNode;
         const allRows = group.children;
@@ -417,7 +417,6 @@ export const useGridRows = (
 
       const tree = { ...gridRowTreeSelector(apiRef) };
       const dataRowIdToModelLookup = { ...gridRowsLookupSelector(apiRef) };
-      const dataRowIdToIdLookup = { ...gridRowsDataRowIdToIdLookupSelector(apiRef) };
       const rootGroup = tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
       const rootGroupChildren = [...rootGroup.children];
       const seenIds = new Set<GridRowId>();
@@ -434,7 +433,6 @@ export const useGridRows = (
 
         if (!seenIds.has(removedRowId)) {
           delete dataRowIdToModelLookup[removedRowId];
-          delete dataRowIdToIdLookup[removedRowId];
           delete tree[removedRowId];
         }
 
@@ -446,7 +444,6 @@ export const useGridRows = (
           groupingKey: null,
         };
         dataRowIdToModelLookup[rowId] = rowModel;
-        dataRowIdToIdLookup[rowId] = rowId;
         tree[rowId] = rowTreeNodeConfig;
 
         seenIds.add(rowId);
@@ -458,21 +455,21 @@ export const useGridRows = (
       const dataRowIds = rootGroupChildren.filter((childId) => tree[childId]?.type === 'leaf');
 
       apiRef.current.caches.rows.dataRowIdToModelLookup = dataRowIdToModelLookup;
-      apiRef.current.caches.rows.dataRowIdToIdLookup = dataRowIdToIdLookup;
 
       apiRef.current.setState((state) => ({
         ...state,
         rows: {
           ...state.rows,
+          loading: props.loading,
+          totalRowCount: Math.max(props.rowCount || 0, rootGroupChildren.length),
           dataRowIdToModelLookup,
-          dataRowIdToIdLookup,
           dataRowIds,
           tree,
         },
       }));
       apiRef.current.publishEvent('rowsSet');
     },
-    [apiRef, props.signature, props.getRowId],
+    [apiRef, props.signature, props.getRowId, props.loading, props.rowCount],
   );
 
   const rowApi: GridRowApi = {
@@ -559,7 +556,10 @@ export const useGridRows = (
   >(() => {
     // `rowTreeCreation` is the only processor ran when `strategyAvailabilityChange` is fired.
     // All the other processors listen to `rowsSet` which will be published by the `groupRows` method below.
-    if (apiRef.current.getActiveStrategy('rowTree') !== gridRowGroupingNameSelector(apiRef)) {
+    if (
+      apiRef.current.getActiveStrategy(GridStrategyGroup.RowTree) !==
+      gridRowGroupingNameSelector(apiRef)
+    ) {
       groupRows();
     }
   }, [apiRef, groupRows]);
@@ -573,11 +573,10 @@ export const useGridRows = (
   const applyHydrateRowsProcessor = React.useCallback(() => {
     apiRef.current.setState((state) => {
       const response = apiRef.current.unstable_applyPipeProcessors('hydrateRows', {
-        tree: gridRowTreeSelector(state, apiRef.current.instanceId),
-        treeDepths: gridRowTreeDepthsSelector(state, apiRef.current.instanceId),
-        dataRowIds: gridDataRowIdsSelector(state, apiRef.current.instanceId),
-        dataRowIdToModelLookup: gridRowsLookupSelector(state, apiRef.current.instanceId),
-        dataRowIdToIdLookup: gridRowsDataRowIdToIdLookupSelector(state, apiRef.current.instanceId),
+        tree: gridRowTreeSelector(state, undefined, apiRef.current.instanceId),
+        treeDepths: gridRowTreeDepthsSelector(state, undefined, apiRef.current.instanceId),
+        dataRowIds: gridDataRowIdsSelector(state, undefined, apiRef.current.instanceId),
+        dataRowIdToModelLookup: gridRowsLookupSelector(state, undefined, apiRef.current.instanceId),
       });
 
       return {
@@ -621,8 +620,11 @@ export const useGridRows = (
       lastRowCount.current = props.rowCount;
     }
 
+    const currentRows = props.unstable_dataSource
+      ? Array.from(apiRef.current.getRowModels().values())
+      : props.rows;
     const areNewRowsAlreadyInState =
-      apiRef.current.caches.rows.rowsBeforePartialUpdates === props.rows;
+      apiRef.current.caches.rows.rowsBeforePartialUpdates === currentRows;
     const isNewLoadingAlreadyInState =
       apiRef.current.caches.rows.loadingPropBeforePartialUpdates === props.loading;
     const isNewRowCountAlreadyInState =
@@ -657,10 +659,10 @@ export const useGridRows = (
       }
     }
 
-    logger.debug(`Updating all rows, new length ${props.rows?.length}`);
+    logger.debug(`Updating all rows, new length ${currentRows?.length}`);
     throttledRowsChange({
       cache: createRowsInternalCache({
-        rows: props.rows,
+        rows: currentRows,
         getRowId: props.getRowId,
         loading: props.loading,
         rowCount: props.rowCount,
@@ -672,6 +674,7 @@ export const useGridRows = (
     props.rowCount,
     props.getRowId,
     props.loading,
+    props.unstable_dataSource,
     logger,
     throttledRowsChange,
     apiRef,

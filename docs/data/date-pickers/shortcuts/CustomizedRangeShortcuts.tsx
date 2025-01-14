@@ -1,10 +1,10 @@
 import * as React from 'react';
+import dayjs, { Dayjs } from 'dayjs';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
-import dayjs, { Dayjs } from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
@@ -13,6 +13,7 @@ import {
   PickersShortcutsProps,
 } from '@mui/x-date-pickers/PickersShortcuts';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
+import { useIsValidValue, usePickerContext } from '@mui/x-date-pickers/hooks';
 
 const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
   {
@@ -56,7 +57,9 @@ const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
 ];
 
 function CustomRangeShortcuts(props: PickersShortcutsProps<DateRange<Dayjs>>) {
-  const { items, onChange, isValid, changeImportance = 'accept' } = props;
+  const { items, changeImportance = 'accept' } = props;
+  const isValid = useIsValidValue<DateRange<Dayjs>>();
+  const { setValue } = usePickerContext<DateRange<Dayjs>>();
 
   if (items == null || items.length === 0) {
     return null;
@@ -68,7 +71,7 @@ function CustomRangeShortcuts(props: PickersShortcutsProps<DateRange<Dayjs>>) {
     return {
       label: item.label,
       onClick: () => {
-        onChange(newValue, changeImportance, item);
+        setValue(newValue, { changeImportance, shortcut: item });
       },
       disabled: !isValid(newValue),
     };

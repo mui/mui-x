@@ -4,6 +4,7 @@ import {
   unstable_composeClasses as composeClasses,
   unstable_useForkRef as useForkRef,
 } from '@mui/utils';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
@@ -29,7 +30,7 @@ interface TouchRippleActions {
   stop: (event: any, callback?: () => void) => void;
 }
 
-const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRenderCellParams>(
+const GridCellCheckboxForwardRef = forwardRef<HTMLInputElement, GridRenderCellParams>(
   function GridCellCheckboxRenderer(props, ref) {
     const {
       field,
@@ -99,28 +100,23 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
     }
 
     const label = apiRef.current.getLocaleText(
-      isChecked ? 'checkboxSelectionUnselectRow' : 'checkboxSelectionSelectRow',
+      isChecked && !isIndeterminate ? 'checkboxSelectionUnselectRow' : 'checkboxSelectionSelectRow',
     );
-
-    const checked =
-      rootProps.indeterminateCheckboxAction === 'select'
-        ? isChecked && !isIndeterminate
-        : isChecked;
 
     return (
       <rootProps.slots.baseCheckbox
-        ref={handleRef}
         tabIndex={tabIndex}
-        checked={checked}
+        checked={isChecked && !isIndeterminate}
         onChange={handleChange}
         className={classes.root}
-        inputProps={{ 'aria-label': label }}
+        inputProps={{ 'aria-label': label, name: 'select_row' }}
         onKeyDown={handleKeyDown}
         indeterminate={isIndeterminate}
         disabled={!isSelectable}
         touchRippleRef={rippleRef as any /* FIXME: typing error */}
         {...rootProps.slotProps?.baseCheckbox}
         {...other}
+        ref={handleRef}
       />
     );
   },

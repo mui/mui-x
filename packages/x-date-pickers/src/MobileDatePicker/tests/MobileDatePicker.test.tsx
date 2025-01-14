@@ -11,7 +11,6 @@ import {
   expectFieldValueV7,
   buildFieldInteractions,
   openPicker,
-  getFieldSectionsContainer,
 } from 'test/utils/pickers';
 
 describe('<MobileDatePicker />', () => {
@@ -25,12 +24,7 @@ describe('<MobileDatePicker />', () => {
   it('allows to change only year', () => {
     const onChangeMock = spy();
     render(
-      <MobileDatePicker
-        enableAccessibleFieldDOMStructure
-        open
-        value={adapterToUse.date('2019-01-01')}
-        onChange={onChangeMock}
-      />,
+      <MobileDatePicker open value={adapterToUse.date('2019-01-01')} onChange={onChangeMock} />,
     );
 
     fireEvent.click(screen.getByLabelText(/switch to year view/i));
@@ -43,7 +37,6 @@ describe('<MobileDatePicker />', () => {
   it('allows to select edge years from list', () => {
     render(
       <MobileDatePicker
-        enableAccessibleFieldDOMStructure
         open
         reduceAnimations
         openTo="year"
@@ -58,16 +51,14 @@ describe('<MobileDatePicker />', () => {
 
   it('prop `onMonthChange` – dispatches callback when months switching', () => {
     const onMonthChangeMock = spy();
-    render(
-      <MobileDatePicker enableAccessibleFieldDOMStructure open onMonthChange={onMonthChangeMock} />,
-    );
+    render(<MobileDatePicker open onMonthChange={onMonthChangeMock} />);
 
     fireEvent.click(screen.getByLabelText('Next month'));
     expect(onMonthChangeMock.callCount).to.equal(1);
   });
 
   it('prop `loading` – displays default loading indicator', () => {
-    render(<MobileDatePicker enableAccessibleFieldDOMStructure open loading />);
+    render(<MobileDatePicker open loading />);
 
     expect(screen.queryAllByTestId('day')).to.have.length(0);
     expect(screen.getByTestId('loading-progress')).toBeVisible();
@@ -76,7 +67,6 @@ describe('<MobileDatePicker />', () => {
   it('prop `renderLoading` – displays custom loading indicator', () => {
     render(
       <MobileDatePicker
-        enableAccessibleFieldDOMStructure
         loading
         renderLoading={() => <DayCalendarSkeleton data-testid="custom-loading" />}
         open
@@ -91,7 +81,6 @@ describe('<MobileDatePicker />', () => {
     it('should render custom toolbar component', () => {
       render(
         <MobileDatePicker
-          enableAccessibleFieldDOMStructure
           open
           slots={{
             toolbar: () => <div data-testid="custom-toolbar" />,
@@ -105,7 +94,6 @@ describe('<MobileDatePicker />', () => {
     it('should format toolbar according to `toolbarFormat` prop', () => {
       render(
         <MobileDatePicker
-          enableAccessibleFieldDOMStructure
           open
           defaultValue={adapterToUse.date('2018-01-01')}
           slotProps={{
@@ -120,13 +108,7 @@ describe('<MobileDatePicker />', () => {
     });
 
     it('should render the toolbar when `hidden` is `false`', () => {
-      render(
-        <MobileDatePicker
-          enableAccessibleFieldDOMStructure
-          open
-          slotProps={{ toolbar: { hidden: false } }}
-        />,
-      );
+      render(<MobileDatePicker open slotProps={{ toolbar: { hidden: false } }} />);
 
       expect(screen.getByTestId('picker-toolbar')).toBeVisible();
     });
@@ -136,7 +118,6 @@ describe('<MobileDatePicker />', () => {
     it('should render custom day', () => {
       render(
         <MobileDatePicker
-          enableAccessibleFieldDOMStructure
           open
           defaultValue={adapterToUse.date('2018-01-01')}
           slots={{
@@ -150,36 +131,18 @@ describe('<MobileDatePicker />', () => {
   });
 
   describe('picker state', () => {
-    it('should open when clicking the input', () => {
-      const onOpen = spy();
-
-      render(<MobileDatePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
-
-      fireEvent.click(getFieldSectionsContainer());
-
-      expect(onOpen.callCount).to.equal(1);
-      expect(screen.queryByRole('dialog')).toBeVisible();
-    });
-
     it('should call `onAccept` even if controlled', () => {
       const onAccept = spy();
 
       function ControlledMobileDatePicker(props) {
         const [value, setValue] = React.useState(null);
 
-        return (
-          <MobileDatePicker
-            enableAccessibleFieldDOMStructure
-            {...props}
-            value={value}
-            onChange={setValue}
-          />
-        );
+        return <MobileDatePicker {...props} value={value} onChange={setValue} />;
       }
 
       render(<ControlledMobileDatePicker onAccept={onAccept} />);
 
-      openPicker({ type: 'date', variant: 'mobile' });
+      openPicker({ type: 'date' });
 
       fireEvent.click(screen.getByText('15', { selector: 'button' }));
       fireEvent.click(screen.getByText('OK', { selector: 'button' }));
@@ -201,7 +164,7 @@ describe('<MobileDatePicker />', () => {
       expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
 
       // Open and Dismiss the picker
-      openPicker({ type: 'date', variant: 'mobile' });
+      openPicker({ type: 'date' });
       // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
       fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
       clock.runToLast();

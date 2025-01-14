@@ -30,7 +30,7 @@ describe('<DataGridPro /> - State', () => {
 
   it('should trigger on state change and pass the correct params', () => {
     let onStateParams;
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: React.RefObject<GridApi>;
 
     function Test() {
       apiRef = useGridApiRef();

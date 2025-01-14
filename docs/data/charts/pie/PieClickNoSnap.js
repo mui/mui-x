@@ -20,11 +20,9 @@ export default function PieClickNoSnap() {
       <Box sx={{ flexGrow: 1 }}>
         <PieChart
           series={series}
-          width={400}
+          width={300}
           height={300}
-          slotProps={{
-            legend: { hidden: true },
-          }}
+          hideLegend
           onItemClick={(event, d) => setItemData(d)}
         />{' '}
       </Box>

@@ -14,12 +14,12 @@ import type {
 import type { GridRowSelectionPropagation } from '../../../models/gridRowSelectionModel';
 
 export const ROW_SELECTION_PROPAGATION_DEFAULT: GridRowSelectionPropagation = {
-  parents: false,
-  descendants: false,
+  parents: true,
+  descendants: true,
 };
 
 function getGridRowGroupSelectableDescendants(
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.RefObject<GridApiCommunity>,
   groupId: GridRowId,
 ) {
   const rowTree = gridRowTreeSelector(apiRef);
@@ -87,8 +87,8 @@ export function getCheckboxPropsSelector(groupId: GridRowId, autoSelectParents: 
       }
       return {
         isIndeterminate:
-          (selectedDescendantsCount > 0 && selectedDescendantsCount < selectableDescendantsCount) ||
-          (selectedDescendantsCount === selectableDescendantsCount &&
+          selectedDescendantsCount > 0 &&
+          (selectedDescendantsCount < selectableDescendantsCount ||
             rowSelectionLookup[groupId] === undefined),
         isChecked: autoSelectParents
           ? selectedDescendantsCount > 0
@@ -148,7 +148,7 @@ const getFilteredRowNodeSiblings = (
 };
 
 export const findRowsToSelect = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   tree: GridRowTreeConfig,
   selectedRow: GridRowId,
   autoSelectDescendants: boolean,
@@ -208,7 +208,7 @@ export const findRowsToSelect = (
 };
 
 export const findRowsToDeselect = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   tree: GridRowTreeConfig,
   deselectedRow: GridRowId,
   autoSelectDescendants: boolean,

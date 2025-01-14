@@ -1,9 +1,6 @@
 import * as React from 'react';
 import { useRtl } from '@mui/system/RtlProvider';
 import PropTypes from 'prop-types';
-import MenuItem from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 import { GridPinnedColumnPosition, GridColumnMenuItemProps } from '@mui/x-data-grid';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -27,21 +24,21 @@ function GridColumnMenuPinningItem(props: GridColumnMenuItemProps) {
     onClick(event);
   };
   const pinToLeftMenuItem = (
-    <MenuItem onClick={pinColumn(GridPinnedColumnPosition.LEFT)}>
-      <ListItemIcon>
-        <rootProps.slots.columnMenuPinLeftIcon fontSize="small" />
-      </ListItemIcon>
-      <ListItemText>{apiRef.current.getLocaleText('pinToLeft')}</ListItemText>
-    </MenuItem>
+    <rootProps.slots.baseMenuItem
+      onClick={pinColumn(GridPinnedColumnPosition.LEFT)}
+      iconStart={<rootProps.slots.columnMenuPinLeftIcon fontSize="small" />}
+    >
+      {apiRef.current.getLocaleText('pinToLeft')}
+    </rootProps.slots.baseMenuItem>
   );
 
   const pinToRightMenuItem = (
-    <MenuItem onClick={pinColumn(GridPinnedColumnPosition.RIGHT)}>
-      <ListItemIcon>
-        <rootProps.slots.columnMenuPinRightIcon fontSize="small" />
-      </ListItemIcon>
-      <ListItemText>{apiRef.current.getLocaleText('pinToRight')}</ListItemText>
-    </MenuItem>
+    <rootProps.slots.baseMenuItem
+      onClick={pinColumn(GridPinnedColumnPosition.RIGHT)}
+      iconStart={<rootProps.slots.columnMenuPinRightIcon fontSize="small" />}
+    >
+      {apiRef.current.getLocaleText('pinToRight')}
+    </rootProps.slots.baseMenuItem>
   );
 
   if (!colDef) {
@@ -62,16 +59,15 @@ function GridColumnMenuPinningItem(props: GridColumnMenuItemProps) {
         : rootProps.slots.columnMenuPinRightIcon;
     return (
       <React.Fragment>
-        <MenuItem onClick={pinColumn(otherSide)}>
-          <ListItemIcon>
-            <Icon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>{apiRef.current.getLocaleText(label)}</ListItemText>
-        </MenuItem>
-        <MenuItem onClick={unpinColumn}>
-          <ListItemIcon />
-          <ListItemText>{apiRef.current.getLocaleText('unpin')}</ListItemText>
-        </MenuItem>
+        <rootProps.slots.baseMenuItem
+          onClick={pinColumn(otherSide)}
+          iconStart={<Icon fontSize="small" />}
+        >
+          {apiRef.current.getLocaleText(label)}
+        </rootProps.slots.baseMenuItem>
+        <rootProps.slots.baseMenuItem onClick={unpinColumn} iconStart="">
+          {apiRef.current.getLocaleText('unpin')}
+        </rootProps.slots.baseMenuItem>
       </React.Fragment>
     );
   }

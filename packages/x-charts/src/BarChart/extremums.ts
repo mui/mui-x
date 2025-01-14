@@ -1,4 +1,4 @@
-import { ExtremumGetter } from '../context/PluginProvider/ExtremumGetter.types';
+import { CartesianExtremumGetter } from '../internals/plugins/models/seriesConfig/extremumGetter.types';
 
 const createResult = (data: any, direction: 'x' | 'y') => {
   if (direction === 'x') {
@@ -7,7 +7,7 @@ const createResult = (data: any, direction: 'x' | 'y') => {
   return { x: null, y: data };
 };
 
-const getBaseExtremum: ExtremumGetter<'bar'> = (params) => {
+const getBaseExtremum: CartesianExtremumGetter<'bar'> = (params) => {
   const { axis, getFilters, isDefaultAxis } = params;
 
   const filter = getFilters?.({
@@ -22,13 +22,13 @@ const getBaseExtremum: ExtremumGetter<'bar'> = (params) => {
 };
 
 const getValueExtremum =
-  (direction: 'x' | 'y'): ExtremumGetter<'bar'> =>
+  (direction: 'x' | 'y'): CartesianExtremumGetter<'bar'> =>
   (params) => {
     const { series, axis, getFilters, isDefaultAxis } = params;
 
     return Object.keys(series)
       .filter((seriesId) => {
-        const yAxisId = series[seriesId].yAxisId ?? series[seriesId].yAxisKey;
+        const yAxisId = series[seriesId].yAxisId;
         return yAxisId === axis.id || (isDefaultAxis && yAxisId === undefined);
       })
       .reduce(
@@ -38,8 +38,8 @@ const getValueExtremum =
           const filter = getFilters?.({
             currentAxisId: axis.id,
             isDefaultAxis,
-            seriesXAxisId: series[seriesId].xAxisId ?? series[seriesId].xAxisKey,
-            seriesYAxisId: series[seriesId].yAxisId ?? series[seriesId].yAxisKey,
+            seriesXAxisId: series[seriesId].xAxisId,
+            seriesYAxisId: series[seriesId].yAxisId,
           });
 
           const [seriesMin, seriesMax] = stackedData?.reduce(
@@ -63,7 +63,7 @@ const getValueExtremum =
       );
   };
 
-export const getExtremumX: ExtremumGetter<'bar'> = (params) => {
+export const getExtremumX: CartesianExtremumGetter<'bar'> = (params) => {
   // Notice that bar should be all horizontal or all vertical.
   // Don't think it's a problem for now
   const isHorizontal = Object.keys(params.series).some(
@@ -75,7 +75,7 @@ export const getExtremumX: ExtremumGetter<'bar'> = (params) => {
   return getBaseExtremum(params);
 };
 
-export const getExtremumY: ExtremumGetter<'bar'> = (params) => {
+export const getExtremumY: CartesianExtremumGetter<'bar'> = (params) => {
   const isHorizontal = Object.keys(params.series).some(
     (seriesId) => params.series[seriesId].layout === 'horizontal',
   );

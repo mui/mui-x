@@ -12,7 +12,7 @@ import {
 describe('<SingleInputDateRangeField /> - Editing', () => {
   describeAdapters(`key: Delete`, SingleInputDateRangeField, ({ adapter, renderWithProps }) => {
     it('should clear all the sections when all sections are selected and all sections are completed', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
@@ -22,14 +22,18 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       view.selectSection('month');
 
       // Select all sections
-      fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
 
       fireEvent.keyDown(view.getSectionsContainer(), { key: 'Delete' });
       expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       view = renderWithProps({
         defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
         format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -40,14 +44,14 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       view.selectSection('month');
 
       // Select all sections
-      fireEvent.keyDown(input, { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
 
       fireEvent.keyDown(input, { key: 'Delete' });
       expectFieldValueV6(input, 'MMMM YYYY – MMMM YYYY');
     });
 
     it('should clear all the sections when all sections are selected and not all sections are completed', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -60,14 +64,18 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       expectFieldValueV7(view.getSectionsContainer(), 'January YYYY – MMMM YYYY');
 
       // Select all sections
-      fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
 
       fireEvent.keyDown(view.getSectionsContainer(), { key: 'Delete' });
       expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       view = renderWithProps({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
         enableAccessibleFieldDOMStructure: false,
@@ -83,14 +91,14 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       expectFieldValueV6(input, 'January YYYY – MMMM YYYY');
 
       // Select all sections
-      fireEvent.keyDown(input, { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
 
       fireEvent.keyDown(input, { key: 'Delete' });
       expectFieldValueV6(input, 'MMMM YYYY – MMMM YYYY');
     });
 
     it('should not call `onChange` when clearing all sections and both dates are already empty', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       const onChangeV7 = spy();
 
       let view = renderWithProps({
@@ -102,14 +110,18 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       view.selectSection('month');
 
       // Select all sections
-      fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
 
       fireEvent.keyDown(view.getSectionsContainer(), { key: 'Delete' });
       expect(onChangeV7.callCount).to.equal(0);
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       const onChangeV6 = spy();
 
       view = renderWithProps({
@@ -122,14 +134,14 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       view.selectSection('month');
 
       // Select all sections
-      fireEvent.keyDown(input, { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
 
       fireEvent.keyDown(input, { key: 'Delete' });
       expect(onChangeV6.callCount).to.equal(0);
     });
 
     it('should call `onChange` when clearing the first and last section of each date', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       const onChangeV7 = spy();
 
       let view = renderWithProps({
@@ -167,7 +179,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       const onChangeV6 = spy();
 
       view = renderWithProps({
@@ -206,7 +218,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
     });
 
     it('should not call `onChange` if the section is already empty', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       const onChangeV7 = spy();
 
       let view = renderWithProps({
@@ -226,7 +238,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       const onChangeV6 = spy();
 
       view = renderWithProps({
@@ -252,7 +264,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
     SingleInputDateRangeField,
     ({ adapter, renderWithProps }) => {
       it('should clear all the sections when all sections are selected and all sections are completed (Backspace)', () => {
-        // Test with v7 input
+        // Test with accessible DOM structure
         let view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
@@ -262,14 +274,18 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         view.selectSection('month');
 
         // Select all sections
-        fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+        fireEvent.keyDown(view.getActiveSection(0), {
+          key: 'a',
+          keyCode: 65,
+          ctrlKey: true,
+        });
 
         view.pressKey(null, '');
         expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
 
         view.unmount();
 
-        // Test with v6 input
+        // Test with non-accessible DOM structure
         view = renderWithProps({
           defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
           format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -280,14 +296,14 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         view.selectSection('month');
 
         // Select all sections
-        fireEvent.keyDown(input, { key: 'a', ctrlKey: true });
+        fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
 
         fireEvent.change(input, { target: { value: '' } });
         expectFieldValueV6(input, 'MMMM YYYY – MMMM YYYY');
       });
 
       it('should clear all the sections when all sections are selected and not all sections are completed (Backspace)', () => {
-        // Test with v7 input
+        // Test with accessible DOM structure
         let view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -300,14 +316,18 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         expectFieldValueV7(view.getSectionsContainer(), 'January YYYY – MMMM YYYY');
 
         // Select all sections
-        fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+        fireEvent.keyDown(view.getActiveSection(0), {
+          key: 'a',
+          keyCode: 65,
+          ctrlKey: true,
+        });
 
         view.pressKey(null, '');
         expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
 
         view.unmount();
 
-        // Test with v6 input
+        // Test with non-accessible DOM structure
         view = renderWithProps({
           format: `${adapter.formats.month} ${adapter.formats.year}`,
           enableAccessibleFieldDOMStructure: false,
@@ -323,14 +343,14 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         expectFieldValueV6(input, 'January YYYY – MMMM YYYY');
 
         // Select all sections
-        fireEvent.keyDown(input, { key: 'a', ctrlKey: true });
+        fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
 
         fireEvent.change(input, { target: { value: '' } });
         expectFieldValueV6(input, 'MMMM YYYY – MMMM YYYY');
       });
 
       it('should not call `onChange` when clearing all sections and both dates are already empty (Backspace)', () => {
-        // Test with v7 input
+        // Test with accessible DOM structure
         const onChangeV7 = spy();
 
         let view = renderWithProps({
@@ -342,14 +362,18 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         view.selectSection('month');
 
         // Select all sections
-        fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+        fireEvent.keyDown(view.getActiveSection(0), {
+          key: 'a',
+          keyCode: 65,
+          ctrlKey: true,
+        });
 
         view.pressKey(null, '');
         expect(onChangeV7.callCount).to.equal(0);
 
         view.unmount();
 
-        // Test with v6 input
+        // Test with non-accessible DOM structure
         const onChangeV6 = spy();
 
         view = renderWithProps({
@@ -362,14 +386,14 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         view.selectSection('month');
 
         // Select all sections
-        fireEvent.keyDown(input, { key: 'a', ctrlKey: true });
+        fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
 
         fireEvent.change(input, { target: { value: 'Delete' } });
         expect(onChangeV6.callCount).to.equal(0);
       });
 
       it('should call `onChange` when clearing the first and last section of each date (Backspace)', () => {
-        // Test with v7 input
+        // Test with accessible DOM structure
         const onChangeV7 = spy();
 
         let view = renderWithProps({
@@ -409,7 +433,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
         view.unmount();
 
-        // Test with v6 input
+        // Test with non-accessible DOM structure
         const onChangeV6 = spy();
 
         view = renderWithProps({
@@ -450,7 +474,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       it('should not call `onChange` if the section is already empty (Backspace)', () => {
-        // Test with v7 input
+        // Test with accessible DOM structure
         const onChangeV7 = spy();
 
         let view = renderWithProps({
@@ -470,7 +494,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
         view.unmount();
 
-        // Test with v6 input
+        // Test with non-accessible DOM structure
         const onChangeV6 = spy();
 
         view = renderWithProps({

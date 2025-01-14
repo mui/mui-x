@@ -1,7 +1,7 @@
 ---
 productId: x-tree-view
 title: Tree Item Customization
-components: SimpleTreeView, RichTreeView, TreeItem, TreeItem2
+components: SimpleTreeView, RichTreeView, TreeItem, TreeItemIcon, TreeItemProvider
 packageName: '@mui/x-tree-view'
 githubLabel: 'component: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
@@ -16,10 +16,12 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 Each Tree Item component is shaped by a series of composable slots.
 Hover over them in the demo below to see each slot.
 
-<!-- TBD which option is the best: interactive or image -->
-<!-- {{"demo": "CustomTreeItemDemo.js", "hideToolbar": true}} -->
-
-{{"component": "modules/components/TreeItem2Anatomy.js"}}
+<span class="only-light-mode" style="border: 1px solid rgb(232, 234, 238); border-radius:12px">
+  <img src="/static/x/tree-view-illustrations/tree-item-light.png" width="1632" height="644" alt="Tree Item anatomy" loading="lazy" style="display: block;">
+</span>
+<span class="only-dark-mode" style="border: 1px solid rgb(29, 33, 38); border-radius:12px">
+  <img src="/static/x/tree-view-illustrations/tree-item-dark.png" width="1632" height="644" alt="Tree Item anatomy" loading="lazy" style="display: block;">
+</span>
 
 ### Content
 
@@ -81,47 +83,11 @@ By default, a nested item is indented by `12px` from its parent item.
 {{"demo": "ItemChildrenIndentationProp.js"}}
 
 :::success
-This feature is compatible with both the `TreeItem` and `TreeItem2` components
-If you are using a custom Tree Item component, and you want to override the padding,
-then apply the following padding to your `groupTransition` element:
-
-```ts
-const CustomTreeItem2GroupTransition = styled(TreeItem2GroupTransition)(({ theme }) => ({
-  // ...other styles
-  paddingLeft: `var(--TreeView-itemChildrenIndentation)`,
-}
-```
-
-If you are using the `indentationAtItemLevel` prop, then instead apply the following padding to your `content` element:
-
-```ts
-const CustomTreeItem2Content = styled(TreeItem2Content)(({ theme }) => ({
-  // ...other styles
-  paddingLeft:
-      `calc(${theme.spacing(1)} + var(--TreeView-itemChildrenIndentation) * var(--TreeView-itemDepth))`,
-}
-```
-
-:::
-
-### Apply the nested item's indentation at the item level
-
-By default, the indentation of nested items is applied by the `groupTransition` slot of its parent (i.e.: the DOM element that wraps all the children of a given item).
-This approach is not compatible with upcoming features like the reordering of items using drag & drop.
-
-To apply the indentation at the item level (i.e.: have each item responsible for setting its own indentation using the `padding-left` CSS property on its `content` slot),
-you can use the `indentationAtItemLevel` experimental feature.
-It will become the default behavior in the next major version of the Tree View component.
-
-{{"demo": "IndentationAtItemLevel.js"}}
-
-:::success
-This feature is compatible with both the `TreeItem` and `TreeItem2` components and with the `itemChildrenIndentation` prop.
 If you are using a custom Tree Item component, and you want to override the padding,
 then apply the following padding to your `content` element:
 
 ```ts
-const CustomTreeItem2Content = styled(TreeItem2Content)(({ theme }) => ({
+const CustomTreeItemContent = styled(TreeItemContent)(({ theme }) => ({
   // ...other styles
   paddingLeft:
       `calc(${theme.spacing(1)} + var(--TreeView-itemChildrenIndentation) * var(--TreeView-itemDepth))`,
@@ -132,19 +98,19 @@ const CustomTreeItem2Content = styled(TreeItem2Content)(({ theme }) => ({
 
 ## Hooks
 
-### useTreeItem2
+### useTreeItem
 
-The `useTreeItem2` hook lets you manage and customize individual Tree Items.
+The `useTreeItem` hook lets you manage and customize individual Tree Items.
 You can use it to get the properties needed for all slots, the status of any given Item, or to tap into the interactive API of the Tree View.
 
 #### Slot properties
 
-The `useTreeItem2` hook gives you granular control over an Item's layout by providing resolvers to get the appropriate props for each slot.
+The `useTreeItem` hook gives you granular control over an Item's layout by providing resolvers to get the appropriate props for each slot.
 This makes it possible to build a fully custom layout for your Tree Items.
 
 The demo below shows how to get the props needed for each slot, and how to pass them correctly.
 
-{{"demo": "useTreeItem2HookProperties.js"}}
+{{"demo": "useTreeItemHookProperties.js"}}
 
 You can pass additional props to a slot—or override existing slots—by passing an object argument to the slot's props resolver, as shown below:
 
@@ -159,34 +125,41 @@ You can pass additional props to a slot—or override existing slots—by passin
 
 #### Item status
 
-The `useTreeItem2` hook also returns a `status` object that holds boolean values for each possible state of a Tree Item.
+The `useTreeItem` hook also returns a `status` object that holds boolean values for each possible state of a Tree Item.
 
 ```jsx
 const {
   status: { expanded, expandable, focused, selected, disabled, editable, editing },
-} = useTreeItem2(props);
+} = useTreeItem(props);
 ```
 
 You can use these statuses to apply custom styling to the item or conditionally render subcomponents.
 
-{{"demo": "useTreeItem2HookStatus.js"}}
+{{"demo": "useTreeItemHookStatus.js"}}
 
 #### Imperative API
 
 The `publicAPI` object provides a number of methods to programmatically interact with the Tree View.
-You can use the `useTreeItem2` hook to access the `publicAPI` object from within a Tree Item.
+You can use the `useTreeItem` hook to access the `publicAPI` object from within a Tree Item.
 
-{{"demo": "useTreeItem2HookPublicAPI.js"}}
+{{"demo": "useTreeItemHookPublicAPI.js"}}
 
 See the **Imperative API** section on each feature page to learn more about the public API methods available on the Tree View.
 
-### `useTreeItem2Utils`
+:::warning
+The `publicAPI` object should not be used in the render because the item won't necessarily re-render when the returned value is updated.
 
-The `useTreeItem2Utils` hook provides a set of interaction methods for implementing custom behaviors for the Tree View.
+If you want to access the item model, you can use the `useTreeItemModel` hook.
+See [Tree Item Customization—useTreeItemModel](/x/react-tree-view/tree-item-customization/#usetreeitemmodel) for more details.
+:::
+
+### `useTreeItemUtils`
+
+The `useTreeItemUtils` hook provides a set of interaction methods for implementing custom behaviors for the Tree View.
 It also returns the status of the Item.
 
 ```jsx
-const { interactions, status } = useTreeItem2Utils({
+const { interactions, status, publicAPI } = useTreeItemUtils({
   itemId: props.itemId,
   children: props.children,
 });
@@ -225,7 +198,7 @@ The demo below shows how to introduce a new element that expands and collapses t
 
 #### Label editing
 
-The `useTreeItem2Utils` hook provides the following interaction methods relevant to label editing behavior:
+The `useTreeItemUtils` hook provides the following interaction methods relevant to label editing behavior:
 
 ```jsx
 const {
@@ -234,10 +207,20 @@ const {
     handleCancelItemLabelEditing,
     handleSaveItemLabel,
   },
-} = useTreeItem2Utils({
+} = useTreeItemUtils({
   itemId: props.itemId,
   children: props.children,
 });
 ```
 
 See [Editing—enable editing using only icons](/x/react-tree-view/rich-tree-view/editing/#enable-editing-using-only-icons) for more details on customizing this behavior.
+
+### `useTreeItemModel`
+
+The `useTreeItemModel` hook lets you access the item model (the object passed to `props.items`):
+
+```jsx
+const item = useTreeItemModel(itemId);
+```
+
+{{"demo": "LabelSlot.js"}}

@@ -313,7 +313,7 @@ export const createColumnsState = ({
   initialState: GridColumnsInitialState | undefined;
   columnVisibilityModel?: GridColumnVisibilityModel;
   keepOnlyColumnsToUpsert: boolean;
-  apiRef: React.MutableRefObject<GridApiCommunity>;
+  apiRef: React.RefObject<GridApiCommunity>;
 }) => {
   const isInsideStateInitializer = !apiRef.current.state.columns;
 
@@ -415,7 +415,7 @@ export function getFirstNonSpannedColumnToRender({
   visibleRows,
 }: {
   firstColumnToRender: number;
-  apiRef: React.MutableRefObject<GridApiCommon>;
+  apiRef: React.RefObject<GridApiCommon>;
   firstRowToRender: number;
   lastRowToRender: number;
   visibleRows: GridRowEntry[];
@@ -439,17 +439,27 @@ export function getFirstNonSpannedColumnToRender({
 }
 
 export function getTotalHeaderHeight(
-  apiRef: React.MutableRefObject<GridApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'columnHeaderHeight' | 'headerFilterHeight'>,
+  apiRef: React.RefObject<GridApiCommunity>,
+  props: Pick<
+    DataGridProcessedProps,
+    'columnHeaderHeight' | 'headerFilterHeight' | 'unstable_listView' | 'columnGroupHeaderHeight'
+  >,
 ) {
+  if (props.unstable_listView) {
+    return 0;
+  }
+
   const densityFactor = gridDensityFactorSelector(apiRef);
   const maxDepth = gridColumnGroupsHeaderMaxDepthSelector(apiRef);
   const isHeaderFilteringEnabled = gridHeaderFilteringEnabledSelector(apiRef);
 
   const columnHeadersHeight = Math.floor(props.columnHeaderHeight * densityFactor);
+  const columnGroupHeadersHeight = Math.floor(
+    (props.columnGroupHeaderHeight ?? props.columnHeaderHeight) * densityFactor,
+  );
   const filterHeadersHeight = isHeaderFilteringEnabled
     ? Math.floor((props.headerFilterHeight ?? props.columnHeaderHeight) * densityFactor)
     : 0;
 
-  return columnHeadersHeight * (1 + (maxDepth ?? 0)) + filterHeadersHeight;
+  return columnHeadersHeight + columnGroupHeadersHeight * maxDepth + filterHeadersHeight;
 }

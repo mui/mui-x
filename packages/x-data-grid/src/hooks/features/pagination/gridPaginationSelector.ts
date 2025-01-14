@@ -8,6 +8,8 @@ import {
 import { gridRowMaximumTreeDepthSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
 import { getPageCount } from './gridPaginationUtils';
 
+const ALL_RESULTS_PAGE_VALUE = -1;
+
 /**
  * @category Pagination
  * @ignore - do not document.
@@ -92,10 +94,13 @@ export const gridPaginationRowRangeSelector = createSelectorMemoized(
       paginationModel.pageSize * paginationModel.page,
       visibleTopLevelRowCount - 1,
     );
-    const topLevelLastRowIndex = Math.min(
-      topLevelFirstRowIndex + paginationModel.pageSize - 1,
-      visibleTopLevelRowCount - 1,
-    );
+    const topLevelLastRowIndex =
+      paginationModel.pageSize === ALL_RESULTS_PAGE_VALUE
+        ? visibleTopLevelRowCount - 1
+        : Math.min(
+            topLevelFirstRowIndex + paginationModel.pageSize - 1,
+            visibleTopLevelRowCount - 1,
+          );
 
     // The range contains no element
     if (topLevelFirstRowIndex === -1 || topLevelLastRowIndex === -1) {

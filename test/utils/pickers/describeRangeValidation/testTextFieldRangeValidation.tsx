@@ -2,6 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { adapterToUse, getAllFieldInputRoot } from 'test/utils/pickers';
+import { describeSkipIf, testSkipIf } from 'test/utils/skipIf';
 import { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
 
 const testInvalidStatus = (expectedAnswer: boolean[], isSingleInput: boolean | undefined) => {
@@ -21,16 +22,11 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
 ) => {
   const { componentFamily, render, isSingleInput, withDate, withTime } = getOptions();
 
-  if (!['picker', 'field'].includes(componentFamily)) {
-    return;
-  }
-
-  describe('text field:', () => {
+  describeSkipIf(!['picker', 'field'].includes(componentFamily))('text field:', () => {
     it('should accept single day range', () => {
       const onErrorMock = spy();
       render(
         <ElementToTest
-          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
           value={[
             adapterToUse.date('2018-01-01T10:15:00'),
@@ -47,7 +43,6 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       render(
         <ElementToTest
-          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
           value={[adapterToUse.date('2018-01-02'), adapterToUse.date('2018-01-01')]}
         />,
@@ -58,15 +53,10 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, true], isSingleInput);
     });
 
-    it('should apply shouldDisableDate', function test() {
-      if (!withDate) {
-        return;
-      }
-
+    testSkipIf(!withDate)('should apply shouldDisableDate', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
           value={[adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')]}
           shouldDisableDate={(date) => adapterToUse.isAfter(date, adapterToUse.date('2018-03-10'))}
@@ -105,15 +95,10 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, false], isSingleInput);
     });
 
-    it('should apply shouldDisableDate specifically on end date', function test() {
-      if (!withDate) {
-        return;
-      }
-
+    testSkipIf(!withDate)('should apply shouldDisableDate specifically on end date', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
           value={[adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')]}
           shouldDisableDate={(date, position) =>
@@ -152,15 +137,10 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([false, false], isSingleInput);
     });
 
-    it('should apply shouldDisableDate specifically on start date', function test() {
-      if (!withDate) {
-        return;
-      }
-
+    testSkipIf(!withDate)('should apply shouldDisableDate specifically on start date', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
           value={[adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')]}
           shouldDisableDate={(date, position) =>
@@ -201,12 +181,12 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, false], isSingleInput);
     });
 
-    it('should apply disablePast', function test() {
+    it('should apply disablePast', () => {
       const onErrorMock = spy();
       let now;
       function WithFakeTimer(props) {
         now = adapterToUse.date();
-        return <ElementToTest enableAccessibleFieldDOMStructure value={[now, now]} {...props} />;
+        return <ElementToTest value={[now, now]} {...props} />;
       }
 
       const { setProps } = render(<WithFakeTimer disablePast onError={onErrorMock} />);
@@ -239,12 +219,12 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, true], isSingleInput);
     });
 
-    it('should apply disableFuture', function test() {
+    it('should apply disableFuture', () => {
       const onErrorMock = spy();
       let now;
       function WithFakeTimer(props) {
         now = adapterToUse.date();
-        return <ElementToTest enableAccessibleFieldDOMStructure value={[now, now]} {...props} />;
+        return <ElementToTest value={[now, now]} {...props} />;
       }
 
       const { setProps } = render(<WithFakeTimer disableFuture onError={onErrorMock} />);
@@ -278,15 +258,10 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, true], isSingleInput);
     });
 
-    it('should apply minDate', function test() {
-      if (!withDate) {
-        return;
-      }
-
+    testSkipIf(!withDate)('should apply minDate', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
           value={[adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')]}
           minDate={adapterToUse.date('2018-03-15')}
@@ -314,15 +289,10 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([false, false], isSingleInput);
     });
 
-    it('should apply minDate when only first field is filled', function test() {
-      if (!withDate) {
-        return;
-      }
-
+    testSkipIf(!withDate)('should apply minDate when only first field is filled', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
           value={[adapterToUse.date('2018-03-09'), null]}
           minDate={adapterToUse.date('2018-03-11')}
@@ -342,15 +312,10 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([false, false], isSingleInput);
     });
 
-    it('should apply minDate when only second field is filled', function test() {
-      if (!withDate) {
-        return;
-      }
-
+    testSkipIf(!withDate)('should apply minDate when only second field is filled', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
           value={[null, adapterToUse.date('2018-03-09')]}
           minDate={adapterToUse.date('2018-03-15')}
@@ -370,15 +335,10 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([false, false], isSingleInput);
     });
 
-    it('should apply maxDate', function test() {
-      if (!withDate) {
-        return;
-      }
-
+    testSkipIf(!withDate)('should apply maxDate', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
           value={[adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')]}
           maxDate={adapterToUse.date('2018-03-15')}
@@ -405,15 +365,10 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, true], isSingleInput);
     });
 
-    it('should apply minTime', function test() {
-      if (!withTime) {
-        return;
-      }
-
+    testSkipIf(!withTime)('should apply minTime', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
           value={[
             adapterToUse.date('2018-03-10T09:00:00'),
@@ -443,15 +398,10 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, null]);
       testInvalidStatus([false, false], isSingleInput);
     });
-    it('should ignore date when applying minTime', function test() {
-      if (!withTime) {
-        return;
-      }
-
+    testSkipIf(!withTime)('should ignore date when applying minTime', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
           value={[
             adapterToUse.date('2018-03-05T09:00:00'),
@@ -474,15 +424,10 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([false, false], isSingleInput);
     });
 
-    it('should apply minTime when only first field is filled', function test() {
-      if (!withTime) {
-        return;
-      }
-
+    testSkipIf(!withTime)('should apply minTime when only first field is filled', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
           value={[adapterToUse.date('2018-02-01T15:00:00'), null]}
           minTime={adapterToUse.date('2018-03-01T12:00:00')}
@@ -501,15 +446,10 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, false], isSingleInput);
     });
 
-    it('should apply minTime when only second field is filled', function test() {
-      if (!withTime) {
-        return;
-      }
-
+    testSkipIf(!withTime)('should apply minTime when only second field is filled', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
           value={[null, adapterToUse.date('2018-02-01T15:00:00')]}
           minTime={adapterToUse.date('2018-03-01T12:00:00')}
@@ -528,15 +468,10 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([false, true], isSingleInput);
     });
 
-    it('should apply maxTime', function test() {
-      if (!withTime) {
-        return;
-      }
-
+    testSkipIf(!withTime)('should apply maxTime', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
           value={[
             adapterToUse.date('2018-03-10T09:00:00'),
@@ -566,15 +501,10 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, true], isSingleInput);
     });
 
-    it('should ignore date when applying maxTime', function test() {
-      if (!withTime) {
-        return;
-      }
-
+    testSkipIf(!withTime)('should ignore date when applying maxTime', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
           value={[
             adapterToUse.date('2018-03-05T09:00:00'),
@@ -596,16 +526,11 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, true], isSingleInput);
     });
 
-    it('should apply maxDateTime', function test() {
-      if (!withDate || !withTime) {
-        // prop only available on DateTime pickers
-        return;
-      }
-
+    // prop only available on DateTime pickers
+    testSkipIf(!withDate || !withTime)('should apply maxDateTime', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
           value={[
             adapterToUse.date('2018-03-01T09:00:00'),
@@ -631,16 +556,10 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, true], isSingleInput);
     });
 
-    it('should apply minDateTime', function test() {
-      if (!withDate || !withTime) {
-        // prop only available on DateTime pickers
-        return;
-      }
-
+    testSkipIf(!withDate || !withTime)('should apply minDateTime', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
           value={[
             adapterToUse.date('2018-03-01T09:00:00'),

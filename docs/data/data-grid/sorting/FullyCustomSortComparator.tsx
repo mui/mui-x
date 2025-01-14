@@ -8,7 +8,7 @@ const dayInMonthComparator: GridComparatorFn<Date> = (v1, v2) =>
   v1.getDate() - v2.getDate();
 
 export default function FullyCustomSortComparator() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
@@ -33,6 +33,7 @@ export default function FullyCustomSortComparator() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
+        loading={loading}
         columns={columns}
         initialState={{
           ...data.initialState,

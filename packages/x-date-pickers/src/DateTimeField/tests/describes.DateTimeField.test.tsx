@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
+import { PickerValue } from '@mui/x-date-pickers/internals';
 import {
   adapterToUse,
   createPickerRenderer,
@@ -21,7 +22,7 @@ describe('<DateTimeField /> - Describes', () => {
     componentFamily: 'field',
   }));
 
-  describeConformance(<DateTimeField enableAccessibleFieldDOMStructure />, () => ({
+  describeConformance(<DateTimeField />, () => ({
     classes: {} as any,
     inheritComponent: PickersTextField,
     render,
@@ -30,7 +31,7 @@ describe('<DateTimeField /> - Describes', () => {
     skip: ['componentProp', 'componentsProp', 'themeVariants', 'themeStyleOverrides'],
   }));
 
-  describeValue(DateTimeField, () => ({
+  describeValue<PickerValue, 'field'>(DateTimeField, () => ({
     render,
     componentFamily: 'field',
     values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-02')],
@@ -53,7 +54,7 @@ describe('<DateTimeField /> - Describes', () => {
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
     setNewValue: (value, { selectSection, pressKey }) => {
-      const newValue = adapterToUse.addDays(value, 1);
+      const newValue = adapterToUse.addDays(value!, 1);
       selectSection('day');
       pressKey(undefined, 'ArrowUp');
 

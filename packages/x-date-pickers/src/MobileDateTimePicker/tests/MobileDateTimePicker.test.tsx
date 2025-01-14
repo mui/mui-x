@@ -8,8 +8,8 @@ import {
   createPickerRenderer,
   openPicker,
   getClockTouchEvent,
-  getFieldSectionsContainer,
 } from 'test/utils/pickers';
+import { hasTouchSupport, testSkipIf } from 'test/utils/skipIf';
 
 describe('<MobileDateTimePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -17,7 +17,6 @@ describe('<MobileDateTimePicker />', () => {
   it('should render date and time by default', () => {
     render(
       <MobileDateTimePicker
-        enableAccessibleFieldDOMStructure
         open
         slotProps={{ toolbar: { hidden: false } }}
         defaultValue={adapterToUse.date('2021-11-20T10:01:22')}
@@ -32,13 +31,7 @@ describe('<MobileDateTimePicker />', () => {
   });
 
   it('should render toolbar and tabs by default', () => {
-    render(
-      <MobileDateTimePicker
-        enableAccessibleFieldDOMStructure
-        open
-        value={adapterToUse.date('2021-11-20T10:01:22')}
-      />,
-    );
+    render(<MobileDateTimePicker open value={adapterToUse.date('2021-11-20T10:01:22')} />);
 
     expect(screen.queryByTestId('picker-toolbar-title')).not.to.equal(null);
     expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
@@ -47,7 +40,6 @@ describe('<MobileDateTimePicker />', () => {
   it('can render seconds on view', () => {
     render(
       <MobileDateTimePicker
-        enableAccessibleFieldDOMStructure
         open
         slotProps={{ toolbar: { hidden: false } }}
         openTo="seconds"
@@ -62,7 +54,6 @@ describe('<MobileDateTimePicker />', () => {
     it('should not render tabs when `hidden` is `true`', () => {
       render(
         <MobileDateTimePicker
-          enableAccessibleFieldDOMStructure
           open
           defaultValue={adapterToUse.date('2021-11-20T10:01:22')}
           slotProps={{
@@ -80,7 +71,6 @@ describe('<MobileDateTimePicker />', () => {
     it('should not render only toolbar when `hidden` is `true`', () => {
       render(
         <MobileDateTimePicker
-          enableAccessibleFieldDOMStructure
           open
           slotProps={{ toolbar: { hidden: true } }}
           defaultValue={adapterToUse.date('2021-11-20T10:01:22')}
@@ -93,22 +83,7 @@ describe('<MobileDateTimePicker />', () => {
   });
 
   describe('picker state', () => {
-    it('should open when clicking the input', () => {
-      const onOpen = spy();
-
-      render(<MobileDateTimePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
-
-      fireEvent.click(getFieldSectionsContainer());
-
-      expect(onOpen.callCount).to.equal(1);
-      expect(screen.queryByRole('dialog')).toBeVisible();
-    });
-
-    it('should call onChange when selecting each view', function test() {
-      if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
-        this.skip();
-      }
-
+    testSkipIf(!hasTouchSupport)('should call onChange when selecting each view', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -116,7 +91,6 @@ describe('<MobileDateTimePicker />', () => {
 
       render(
         <MobileDateTimePicker
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -125,7 +99,7 @@ describe('<MobileDateTimePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-time', variant: 'mobile' });
+      openPicker({ type: 'date-time' });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);

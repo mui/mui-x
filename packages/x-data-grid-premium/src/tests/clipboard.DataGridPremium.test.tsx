@@ -12,11 +12,12 @@ import { SinonSpy, spy, stub, SinonStub } from 'sinon';
 import { getCell, getColumnValues, sleep } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
+import { isJSDOM, describeSkipIf } from 'test/utils/skipIf';
 
 describe('<DataGridPremium /> - Clipboard', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
 
   function Test({
     rowLength = 4,
@@ -168,14 +169,8 @@ describe('<DataGridPremium /> - Clipboard', () => {
     });
   });
 
-  describe('paste', () => {
-    before(function beforeHook() {
-      if (/jsdom/.test(window.navigator.userAgent)) {
-        // These test are flaky in JSDOM
-        this.skip();
-      }
-    });
-
+  // These test are flaky in JSDOM
+  describeSkipIf(isJSDOM)('paste', () => {
     function paste(cell: HTMLElement, pasteText: string) {
       const pasteEvent = new Event('paste');
 
@@ -184,7 +179,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         getData: () => pasteText,
       };
 
-      fireEvent.keyDown(cell, { key: 'v', code: 'KeyV', keyCode: 86, ctrlKey: true }); // Ctrl+V
+      fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true }); // Ctrl+V
       document.activeElement!.dispatchEvent(pasteEvent);
     }
 
@@ -196,7 +191,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         apiRef.current.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
-        fireEvent.keyDown(cell, { key: 'v', code: 'KeyV', keyCode: 86, [key]: true }); // Ctrl+V
+        fireEvent.keyDown(cell, { key: 'v', keyCode: 86, [key]: true }); // Ctrl+V
         expect(listener.callCount).to.equal(0);
       });
     });
@@ -209,7 +204,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         apiRef.current.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
-        fireEvent.keyDown(cell, { key: 'v', code: 'KeyV', keyCode: 86, [key]: true }); // Ctrl+V
+        fireEvent.keyDown(cell, { key: 'v', keyCode: 86, [key]: true }); // Ctrl+V
         expect(listener.callCount).to.equal(0);
       });
     });

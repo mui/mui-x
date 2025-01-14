@@ -10,7 +10,6 @@ import {
   PickersLayoutRoot,
   PickersLayoutContentWrapper,
 } from '@mui/x-date-pickers/PickersLayout';
-import { TimeView } from '@mui/x-date-pickers/models';
 
 const StyledLayout = styled(PickersLayoutRoot)({
   overflow: 'auto',
@@ -31,12 +30,15 @@ const StyledLayout = styled(PickersLayoutRoot)({
   },
 });
 
-function CustomLayout(props: PickersLayoutProps<Dayjs | null, Dayjs, TimeView>) {
-  const { actionBar, content, toolbar } = usePickerLayout(props);
+function CustomLayout(props: PickersLayoutProps<Dayjs | null>) {
+  const { actionBar, content, toolbar, ownerState } = usePickerLayout(props);
   return (
-    <StyledLayout ownerState={props}>
+    <StyledLayout ownerState={ownerState}>
       {toolbar}
-      <PickersLayoutContentWrapper className={pickersLayoutClasses.contentWrapper}>
+      <PickersLayoutContentWrapper
+        className={pickersLayoutClasses.contentWrapper}
+        ownerState={ownerState}
+      >
         {content}
         {actionBar}
       </PickersLayoutContentWrapper>

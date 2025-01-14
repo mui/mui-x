@@ -10,6 +10,7 @@ import {
   formatFullTimeValue,
 } from 'test/utils/pickers';
 import { DigitalClock, digitalClockClasses as classes } from '@mui/x-date-pickers/DigitalClock';
+import { PickerValue } from '@mui/x-date-pickers/internals';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DigitalClock /> - Describes', () => {
@@ -20,7 +21,6 @@ describe('<DigitalClock /> - Describes', () => {
     clock,
     views: ['hours'],
     componentFamily: 'digital-clock',
-    variant: 'desktop',
   }));
 
   describeConformance(<DigitalClock />, () => ({
@@ -32,11 +32,10 @@ describe('<DigitalClock /> - Describes', () => {
     skip: ['componentProp', 'componentsProp', 'themeVariants'],
   }));
 
-  describeValue(DigitalClock, () => ({
+  describeValue<PickerValue, 'digital-clock'>(DigitalClock, () => ({
     render,
     componentFamily: 'digital-clock',
     type: 'time',
-    variant: 'desktop',
     defaultProps: {
       views: ['hours'],
     },
@@ -52,7 +51,7 @@ describe('<DigitalClock /> - Describes', () => {
       }
     },
     setNewValue: (value) => {
-      const newValue = adapterToUse.addMinutes(adapterToUse.addHours(value, 1), 30);
+      const newValue = adapterToUse.addMinutes(adapterToUse.addHours(value!, 1), 30);
       digitalClockHandler.setViewValue(adapterToUse, newValue);
 
       return newValue;
