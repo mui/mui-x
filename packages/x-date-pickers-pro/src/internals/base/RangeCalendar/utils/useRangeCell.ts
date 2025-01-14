@@ -6,7 +6,7 @@ import { BaseCalendarSection } from '@mui/x-date-pickers/internals/base/utils/ba
 import { RangeCalendarRootContext } from '../root/RangeCalendarRootContext';
 
 /**
- * Add support for drag&drop and preview to the cell components of the Range Calendar.
+ * Add support for drag and drop and hover preview to the cell components of the Range Calendar.
  */
 export function useRangeCell(parameters: useRangeCell.Parameters) {
   const { ctx, value, section } = parameters;
@@ -204,6 +204,9 @@ function resolveButtonElement(element: Element | null): HTMLButtonElement | null
 
   if (element.children.length) {
     const allButtons = element.querySelectorAll<HTMLButtonElement>('button:not(:disabled)');
+
+    // If there are several buttons inside the element,
+    // Then we the coordinates probably point between two cells and the element is probably a parent that we don't want to drop on.
     if (allButtons.length > 1) {
       return null;
     }

@@ -9,9 +9,8 @@ import { useRangeCell } from '../utils/useRangeCell';
 
 export function useRangeCalendarYearsCell(parameters: useRangeCalendarYearsCell.Parameters) {
   const { ctx, value } = parameters;
-  const rangeCellProps = useRangeCell({ ctx, value, section: 'year' });
-
   const { getYearsCellProps: getBaseYearsCellProps } = useBaseCalendarYearsCell(parameters);
+  const rangeCellProps = useRangeCell({ ctx, value, section: 'year' });
 
   const getYearsCellProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {

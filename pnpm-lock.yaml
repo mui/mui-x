@@ -1317,6 +1317,9 @@ importers:
       '@babel/runtime':
         specifier: ^7.26.0
         version: 7.26.0
+      '@base-ui-components/react':
+        specifier: 1.0.0-alpha.4
+        version: 1.0.0-alpha.4(@types/react@19.0.6)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.0.6)(react@19.0.0)

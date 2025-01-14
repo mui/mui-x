@@ -14,6 +14,9 @@ export interface RangeCalendarRootContext {
    * This is used to check if the user is dragging in event handlers without causing re-renders.
    */
   draggedSectionRef: React.RefObject<BaseCalendarSection | null>;
+  /**
+   * If `true`, the drag editing feature is disabled.
+   */
   disableDragEditing: boolean;
   selectDateFromDrag: (valueOrElement: PickerValidDate | HTMLElement) => void;
   startDragging: (position: RangePosition, section: BaseCalendarSection) => void;
@@ -21,8 +24,16 @@ export interface RangeCalendarRootContext {
   setDragTarget: (valueOrElement: PickerValidDate | HTMLElement) => void;
   emptyDragImgRef: React.RefObject<HTMLImageElement | null>;
   registerCell: (element: HTMLElement, value: PickerValidDate) => () => void;
+  /**
+   * The range that should be visually selected.
+   * When there is no ongoing dragging, it is equal to the current value.
+   * When there is ongoing dragging, it is equal to the value that would be selected if the user dropped the cell in its existing location.
+   */
   selectedRange: PickerRangeValue;
   setHoveredDate: (value: PickerValidDate | null, section: BaseCalendarSection) => void;
+  /**
+   * That range should would be selected if the user clicking on the currently hovered cell.
+   */
   previewRange: PickerRangeValue;
 }
 
