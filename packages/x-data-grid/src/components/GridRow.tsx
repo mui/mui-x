@@ -30,7 +30,6 @@ import { GridScrollbarFillerCell as ScrollbarFiller } from './GridScrollbarFille
 import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
 import { useGridConfiguration } from '../hooks/utils/useGridConfiguration';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
-import { gridVirtualizationColumnEnabledSelector } from '../hooks';
 
 export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   row: GridRowModel;
@@ -113,7 +112,6 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
   const gridHasFiller = dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width;
   const editing = apiRef.current.getRowMode(rowId) === GridRowModes.Edit;
   const editable = rootProps.editMode === GridEditModes.Row;
-  const hasColumnVirtualization = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
   const hasFocusCell = focusedColumnIndex !== undefined;
   const hasVirtualFocusCellLeft =
     hasFocusCell &&
@@ -399,16 +397,8 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
       ),
     );
   }
-  let firstColumnIndex;
-  let lastColumnIndex;
-  if (!rootProps.disableVirtualization && !hasColumnVirtualization) {
-    firstColumnIndex = 0;
-    lastColumnIndex = visibleColumns.length;
-  } else {
-    firstColumnIndex = renderContext.firstColumnIndex;
-    lastColumnIndex = renderContext.lastColumnIndex;
-  }
 
+  const { firstColumnIndex, lastColumnIndex } = renderContext;
   for (let i = firstColumnIndex; i < lastColumnIndex; i += 1) {
     const column = visibleColumns[i];
     const indexInSection = i - pinnedColumns.left.length;

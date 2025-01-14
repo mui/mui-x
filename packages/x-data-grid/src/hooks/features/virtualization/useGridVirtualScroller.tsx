@@ -127,7 +127,6 @@ export const useGridVirtualScroller = () => {
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const selectedRowsLookup = useGridSelector(apiRef, selectedIdsLookupSelector);
   const currentPage = useGridVisibleRows(apiRef, rootProps);
-  const gridRootRef = apiRef.current.rootElementRef;
   const mainRef = apiRef.current.mainElementRef;
   const scrollerRef = apiRef.current.virtualScrollerRef;
   const scrollbarVerticalRef = apiRef.current.virtualScrollbarVerticalRef;
@@ -135,6 +134,7 @@ export const useGridVirtualScroller = () => {
   const contentHeight = dimensions.contentSize.height;
   const columnsTotalWidth = dimensions.columnsTotalWidth;
   const hasColSpan = useGridSelector(apiRef, gridHasColSpanSelector);
+  const isRenderContextReady = React.useRef(false);
 
   const previousSize = React.useRef<{ width: number; height: number }>(null);
 
@@ -609,14 +609,12 @@ export const useGridVirtualScroller = () => {
   }, [apiRef, contentSize]);
 
   useEnhancedEffect(() => {
-    // TODO a scroll reset should not be necessary
-    if (enabledForColumns) {
-      scrollerRef.current!.scrollLeft = 0;
+    if (!isRenderContextReady.current) {
+      return;
     }
-    if (enabledForRows) {
-      scrollerRef.current!.scrollTop = 0;
-    }
-  }, [enabledForColumns, enabledForRows, gridRootRef, scrollerRef]);
+    // Recompute rendered columns when virtualization is toggled
+    apiRef.current.updateRenderContext?.();
+  }, [apiRef, enabledForColumns, enabledForRows]);
 
   useEnhancedEffect(() => {
     if (listView) {
@@ -635,6 +633,8 @@ export const useGridVirtualScroller = () => {
       left: scrollPosition.current.left,
       renderContext: initialRenderContext,
     });
+
+    isRenderContextReady.current = true;
   });
 
   apiRef.current.register('private', {
