@@ -1,7 +1,6 @@
 import * as React from 'react';
 import composeClasses from '@mui/utils/composeClasses';
 import Box from '@mui/material/Box';
-import { vars } from '@mui/x-data-grid/internals';
 import {
   useGridSelector,
   gridFilteredDescendantCountLookupSelector,
@@ -81,9 +80,9 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
           ? {
               ml: 0,
             }
-          : {
-              ml: `calc(var(--DataGrid-cellOffsetMultiplier) * var(--depth) * ${vars.spacing(1)})`,
-            },
+          : (theme) => ({
+              ml: `calc(var(--DataGrid-cellOffsetMultiplier) * var(--depth) * ${theme.spacing(1)})`,
+            }),
       ]}
       style={{ '--depth': rowNode.depth } as any}
     >
