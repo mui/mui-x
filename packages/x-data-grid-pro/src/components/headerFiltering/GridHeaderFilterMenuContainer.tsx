@@ -11,14 +11,14 @@ import { refType, unstable_useId as useId } from '@mui/utils';
 import { gridHeaderFilteringMenuSelector } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-const SX = { ml: 0.25 };
+const STYLE = { marginLeft: '2px' };
 
 function GridHeaderFilterMenuContainer(props: {
   operators: GridFilterOperator<any, any, any>[];
   field: GridColDef['field'];
   item: GridFilterItem;
   applyFilterChanges: (item: GridFilterItem) => void;
-  headerFilterMenuRef: React.MutableRefObject<HTMLButtonElement | null>;
+  headerFilterMenuRef: React.RefObject<HTMLButtonElement | null>;
   buttonRef: React.Ref<HTMLButtonElement>;
   disabled?: boolean;
   showClearItem?: boolean;
@@ -69,8 +69,8 @@ function GridHeaderFilterMenuContainer(props: {
         tabIndex={-1}
         size="small"
         onClick={handleClick}
+        style={STYLE}
         disabled={disabled}
-        sx={SX}
         {...rootProps.slotProps?.baseIconButton}
       >
         <rootProps.slots.baseBadge

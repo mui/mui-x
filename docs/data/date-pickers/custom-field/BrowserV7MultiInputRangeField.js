@@ -80,18 +80,12 @@ const BrowserTextField = React.forwardRef((props, ref) => {
 const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
   const {
     slotProps,
-    value,
-    format,
-    onChange,
     readOnly,
-    disabled,
     shouldDisableDate,
     minDate,
     maxDate,
     disableFuture,
     disablePast,
-    selectedSections,
-    onSelectedSectionsChange,
     className,
     unstableStartFieldRef,
     unstableEndFieldRef,
@@ -100,29 +94,23 @@ const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
   const startTextFieldProps = useSlotProps({
     elementType: 'input',
     externalSlotProps: slotProps?.textField,
-    ownerState: { ...props, position: 'start' },
+    ownerState: { position: 'start' },
   });
 
   const endTextFieldProps = useSlotProps({
     elementType: 'input',
     externalSlotProps: slotProps?.textField,
-    ownerState: { ...props, position: 'end' },
+    ownerState: { position: 'end' },
   });
 
   const fieldResponse = useMultiInputDateRangeField({
     sharedProps: {
-      value,
-      format,
-      onChange,
       readOnly,
-      disabled,
       shouldDisableDate,
       minDate,
       maxDate,
       disableFuture,
       disablePast,
-      selectedSections,
-      onSelectedSectionsChange,
       enableAccessibleFieldDOMStructure: true,
     },
     startTextFieldProps,
@@ -130,6 +118,21 @@ const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
     unstableStartFieldRef,
     unstableEndFieldRef,
   });
+
+  const {
+    // The multi input range field do not support clearable and onClear
+    onClear: onClearStartDate,
+    clearable: isStartDateClearable,
+    openPickerAriaLabel: openPickerStartDateAriaLabel,
+    ...startDateProps
+  } = fieldResponse.startDate;
+  const {
+    // The multi input range field do not support clearable and onClear
+    onClear: onClearEndDate,
+    clearable: isEndDateClearable,
+    openPickerAriaLabel: openPickerEndDateAriaLabel,
+    ...endDateProps
+  } = fieldResponse.endDate;
 
   return (
     <Stack
@@ -139,9 +142,9 @@ const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
       overflow="auto"
       className={className}
     >
-      <BrowserTextField {...fieldResponse.startDate} />
+      <BrowserTextField {...startDateProps} />
       <span> – </span>
-      <BrowserTextField {...fieldResponse.endDate} />
+      <BrowserTextField {...endDateProps} />
     </Stack>
   );
 });

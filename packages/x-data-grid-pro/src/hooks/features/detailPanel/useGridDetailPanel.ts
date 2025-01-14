@@ -48,7 +48,7 @@ export const detailPanelStateInitializer: GridStateInitializer<
 };
 
 function cacheContentAndHeight(
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: React.RefObject<GridApiPro>,
   getDetailPanelContent: DataGridProProcessedProps['getDetailPanelContent'],
   getDetailPanelHeight: DataGridProProcessedProps['getDetailPanelHeight'],
   previousHeightCache: GridDetailPanelState['heightCache'],
@@ -82,7 +82,7 @@ function cacheContentAndHeight(
 }
 
 export const useGridDetailPanel = (
-  apiRef: React.MutableRefObject<GridPrivateApiPro>,
+  apiRef: React.RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     | 'getDetailPanelContent'

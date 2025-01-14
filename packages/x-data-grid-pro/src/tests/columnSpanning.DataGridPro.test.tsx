@@ -85,7 +85,7 @@ describe('<DataGridPro /> - Column spanning', () => {
     ];
 
     it('should work after column reordering', () => {
-      let apiRef: React.MutableRefObject<GridApi>;
+      let apiRef: React.RefObject<GridApi>;
 
       function Test() {
         apiRef = useGridApiRef();
@@ -108,7 +108,7 @@ describe('<DataGridPro /> - Column spanning', () => {
   });
 
   it('should recalculate cells after column reordering', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: React.RefObject<GridApi>;
 
     function Test() {
       apiRef = useGridApiRef();
@@ -185,7 +185,7 @@ describe('<DataGridPro /> - Column spanning', () => {
       { field: 'rating' },
     ];
 
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: React.RefObject<GridApi>;
 
     function Test() {
       apiRef = useGridApiRef();

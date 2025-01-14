@@ -4,7 +4,19 @@ export type {
   PickersArrowSwitcherSlots,
   PickersArrowSwitcherSlotProps,
 } from './components/PickersArrowSwitcher';
+export {
+  PickerFieldUI,
+  PickerFieldUIContextProvider,
+  cleanFieldResponse,
+  useFieldTextFieldProps,
+} from './components/PickerFieldUI';
+export type {
+  ExportedPickerFieldUIProps,
+  PickerFieldUISlots,
+  PickerFieldUISlotProps,
+} from './components/PickerFieldUI';
 export { PickerProvider } from './components/PickerProvider';
+export type { PickerContextValue } from './components/PickerProvider';
 export { PickersModalDialog } from './components/PickersModalDialog';
 export type {
   PickersModalDialogSlots,
@@ -64,6 +76,7 @@ export type {
   FieldValueManager,
   FieldChangeHandler,
   FieldChangeHandlerContext,
+  PickerFieldPrivateContextValue,
 } from './hooks/useField';
 export { useFieldOwnerState } from './hooks/useFieldOwnerState';
 export type { MobileOnlyPickerProps } from './hooks/useMobilePicker';
@@ -103,11 +116,7 @@ export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-hel
 
 export type { RangePosition } from './models/pickers';
 export type { BaseSingleInputFieldProps, FieldRangeSection } from './models/fields';
-export type {
-  BasePickerProps,
-  BasePickerInputProps,
-  BaseNonStaticPickerProps,
-} from './models/props/basePickerProps';
+export type { BasePickerProps, BasePickerInputProps } from './models/props/basePickerProps';
 export type { BaseClockProps, DesktopOnlyTimePickerProps, AmPmProps } from './models/props/time';
 export type { ExportedBaseTabsProps } from './models/props/tabs';
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
@@ -134,7 +143,6 @@ export type {
   PickerValidValue,
 } from './models/value';
 
-export { convertFieldResponseIntoMuiTextFieldProps } from './utils/convertFieldResponseIntoMuiTextFieldProps';
 export {
   applyDefaultDate,
   replaceInvalidDateByNull,
