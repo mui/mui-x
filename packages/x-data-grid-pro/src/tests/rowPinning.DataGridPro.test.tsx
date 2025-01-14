@@ -677,7 +677,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
   });
 
-  it('should not be selectable', () => {
+  it('should not be selectable', async () => {
     let apiRef: React.RefObject<GridApi>;
 
     function TestCase() {
