@@ -828,7 +828,7 @@ describe('<DataGrid /> - Rows', () => {
           );
           const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
           virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
-          await act(() => virtualScroller.dispatchEvent(new Event('scroll')));
+          await act(async () => virtualScroller.dispatchEvent(new Event('scroll')));
 
           await user.click(screen.getByRole('button', { name: /next page/i }));
 
@@ -889,7 +889,7 @@ describe('<DataGrid /> - Rows', () => {
 
           const virtualScroller = grid('virtualScroller')!;
           virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
-          await act(() => virtualScroller.dispatchEvent(new Event('scroll')));
+          await act(async () => virtualScroller.dispatchEvent(new Event('scroll')));
 
           setProps({ pageSize: 10 });
           await user.click(screen.getByRole('button', { name: /next page/i }));
