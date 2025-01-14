@@ -1,7 +1,7 @@
 ---
 title: Charts - Legend
 productId: x-charts
-components: ChartsLegend, DefaultChartsLegend, ChartsText, ContinuousColorLegend, PiecewiseColorLegend, ChartsLabel, ChartsLabelMark, ChartsLabelGradient
+components: ChartsLegend, ChartsText, ContinuousColorLegend, PiecewiseColorLegend
 ---
 
 # Charts - Legend
@@ -18,7 +18,7 @@ In chart components, the legend links series with `label` properties and their c
 
 This section explains how to customize the legend using classes and properties.
 
-In order to fully customize the legend with custom components, see an example at the [HTML components docs](https://mui.com/x/react-charts/components/#html-components).
+In order to fully customize the legend with custom components, see an example at the [HTML components docs](/x/react-charts/components/#html-components).
 
 ### Dimensions
 
