@@ -32,18 +32,33 @@ export const isEndOfRange = (
   return isRangeValid(utils, range) && utils.isSameDay(day, range[1]!);
 };
 
-export function getDatePositionInRange(
-  utils: MuiPickersAdapter,
-  date: PickerValidDate,
-  range: PickerRangeValue,
-) {
+export function getDatePositionInRange({
+  utils,
+  date,
+  range,
+  section,
+}: {
+  utils: MuiPickersAdapter;
+  date: PickerValidDate;
+  range: PickerRangeValue;
+  section: 'year' | 'month' | 'day';
+}) {
   const [start, end] = range;
   if (start == null && end == null) {
     return { isSelected: false, isSelectionStart: false, isSelectionEnd: false };
   }
 
+  let comparisonFn: (a: PickerValidDate, b: PickerValidDate) => boolean;
+  if (section === 'year') {
+    comparisonFn = utils.isSameYear;
+  } else if (section === 'month') {
+    comparisonFn = utils.isSameMonth;
+  } else {
+    comparisonFn = utils.isSameDay;
+  }
+
   if (start == null) {
-    const isSelected = utils.isSameDay(date, end!);
+    const isSelected = comparisonFn(date, end!);
     return {
       isSelected,
       isSelectionStart: isSelected,
@@ -52,7 +67,7 @@ export function getDatePositionInRange(
   }
 
   if (end == null) {
-    const isSelected = utils.isSameDay(date, start!);
+    const isSelected = comparisonFn(date, start!);
     return {
       isSelected,
       isSelectionStart: isSelected,
@@ -70,7 +85,7 @@ export function getDatePositionInRange(
 
   return {
     isSelected: utils.isWithinRange(date, [start, end]),
-    isSelectionStart: utils.isSameDay(date, start),
-    isSelectionEnd: utils.isSameDay(date, end),
+    isSelectionStart: comparisonFn(date, start),
+    isSelectionEnd: comparisonFn(date, end),
   };
 }

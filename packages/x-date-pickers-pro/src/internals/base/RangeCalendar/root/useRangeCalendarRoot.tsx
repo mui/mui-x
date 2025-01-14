@@ -230,21 +230,21 @@ function useBuildRangeCalendarRootContext(parameters: UseRangeCalendarDragEditin
   } = parameters;
   const utils = useUtils();
 
-  // Range going for the start of the start day to the end of the end day.
+  // TODO: Add rounded range for month and year.
+  // Range going for the start of the first selected cell to the end of the last selected cell.
   // This makes sure that `isWithinRange` works with any time in the start and end day.
-  const valueDayRange = React.useMemo<PickerRangeValue>(
-    () => [
+  const valueRoundedRange = React.useMemo<PickerRangeValue>(() => {
+    return [
       !utils.isValid(value[0]) ? value[0] : utils.startOfDay(value[0]),
       !utils.isValid(value[1]) ? value[1] : utils.endOfDay(value[1]),
-    ],
-    [value, utils],
-  );
+    ];
+  }, [value, utils]);
 
   const [state, setState] = React.useState<{
-    isDragging: boolean;
+    draggedSection: 'day' | 'month' | 'year' | null;
     targetDate: PickerValidDate | null;
     hoveredDate: PickerValidDate | null;
-  }>({ isDragging: false, targetDate: null, hoveredDate: null });
+  }>({ draggedSection: null, targetDate: null, hoveredDate: null });
 
   const cellToDateMapRef = React.useRef(new Map<HTMLElement, PickerValidDate>());
   const registerCell = useEventCallback(
@@ -257,13 +257,18 @@ function useBuildRangeCalendarRootContext(parameters: UseRangeCalendarDragEditin
   );
 
   const selectedRange = React.useMemo<PickerRangeValue>(() => {
-    if (!valueDayRange[0] || !valueDayRange[1] || !state.targetDate || !state.isDragging) {
-      return valueDayRange;
+    if (
+      !valueRoundedRange[0] ||
+      !valueRoundedRange[1] ||
+      !state.targetDate ||
+      state.draggedSection == null
+    ) {
+      return valueRoundedRange;
     }
 
     const newRange = calculateRangeChange({
       utils,
-      range: valueDayRange,
+      range: valueRoundedRange,
       newDate: state.targetDate,
       rangePosition,
       allowRangeFlip: true,
@@ -271,15 +276,15 @@ function useBuildRangeCalendarRootContext(parameters: UseRangeCalendarDragEditin
     return newRange[0] !== null && newRange[1] !== null
       ? [utils.startOfDay(newRange[0]), utils.endOfDay(newRange[1])]
       : newRange;
-  }, [rangePosition, state.targetDate, state.isDragging, utils, valueDayRange]);
+  }, [rangePosition, state.targetDate, state.draggedSection, utils, valueRoundedRange]);
 
   const disableDragEditing = disableDragEditingProp || baseContext.disabled || baseContext.readOnly;
   const disableHoverPreview =
     disableHoverPreviewProp || baseContext.disabled || baseContext.readOnly;
 
-  const isDraggingRef = React.useRef(state.isDragging);
+  const draggedSectionRef = React.useRef(state.draggedSection);
   useEnhancedEffect(() => {
-    isDraggingRef.current = state.isDragging;
+    draggedSectionRef.current = state.draggedSection;
   });
 
   const emptyDragImgRef = React.useRef<HTMLImageElement | null>(null);
@@ -357,18 +362,18 @@ function useBuildRangeCalendarRootContext(parameters: UseRangeCalendarDragEditin
 
     return calculateRangePreview({
       utils,
-      range: valueDayRange,
+      range: valueRoundedRange,
       newDate: state.hoveredDate,
       rangePosition,
     });
-  }, [utils, rangePosition, state.hoveredDate, valueDayRange, disableHoverPreview]);
+  }, [utils, rangePosition, state.hoveredDate, valueRoundedRange, disableHoverPreview]);
 
   const context: RangeCalendarRootContext = {
     value,
     selectedRange,
     previewRange,
     disableDragEditing,
-    isDraggingRef,
+    draggedSectionRef,
     emptyDragImgRef,
     selectDateFromDrag,
     startDragging,

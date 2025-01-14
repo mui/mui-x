@@ -4,17 +4,16 @@ import * as React from 'react';
 import { BaseUIComponentProps } from '@mui/x-date-pickers/internals/base/base-utils/types';
 // eslint-disable-next-line no-restricted-imports
 import { useComponentRenderer } from '@mui/x-date-pickers/internals/base/base-utils/useComponentRenderer';
+import { useRangeCalendarMonthsCell } from './useRangeCalendarMonthsCell';
+import { useRangeCalendarMonthsCellWrapper } from './useRangeCalendarMonthsCellWrapper';
 // eslint-disable-next-line no-restricted-imports
-import { useBaseCalendarMonthsCell } from '@mui/x-date-pickers/internals/base/utils/base-calendar/months-cell/useBaseCalendarMonthsCell';
-// eslint-disable-next-line no-restricted-imports
-import { useBaseCalendarMonthsCellWrapper } from '@mui/x-date-pickers/internals/base/utils/base-calendar/months-cell/useBaseCalendarMonthsCellWrapper';
 
 const InnerRangeCalendarMonthsCell = React.forwardRef(function InnerRangeCalendarMonthsCell(
   props: InnerRangeCalendarMonthsCellProps,
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
   const { className, render, value, format, ctx, ...otherProps } = props;
-  const { getMonthsCellProps, isCurrent } = useBaseCalendarMonthsCell({ value, format, ctx });
+  const { getMonthsCellProps, isCurrent } = useRangeCalendarMonthsCell({ value, format, ctx });
 
   const state: RangeCalendarMonthsCell.State = React.useMemo(
     () => ({
@@ -44,7 +43,7 @@ const RangeCalendarMonthsCell = React.forwardRef(function RangeCalendarMonthsCel
   props: RangeCalendarMonthsCell.Props,
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
-  const { ref, ctx } = useBaseCalendarMonthsCellWrapper({ value: props.value, forwardedRef });
+  const { ref, ctx } = useRangeCalendarMonthsCellWrapper({ value: props.value, forwardedRef });
 
   return <MemoizedInnerRangeCalendarMonthsCell {...props} ref={ref} ctx={ctx} />;
 });
@@ -70,12 +69,12 @@ export namespace RangeCalendarMonthsCell {
   }
 
   export interface Props
-    extends Omit<useBaseCalendarMonthsCell.Parameters, 'ctx'>,
+    extends Omit<useRangeCalendarMonthsCell.Parameters, 'ctx'>,
       Omit<BaseUIComponentProps<'button', State>, 'value'> {}
 }
 
 interface InnerRangeCalendarMonthsCellProps
-  extends useBaseCalendarMonthsCell.Parameters,
+  extends useRangeCalendarMonthsCell.Parameters,
     Omit<BaseUIComponentProps<'button', RangeCalendarMonthsCell.State>, 'value'> {}
 
 export { RangeCalendarMonthsCell };

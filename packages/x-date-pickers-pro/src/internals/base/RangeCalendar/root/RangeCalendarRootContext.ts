@@ -8,10 +8,10 @@ export interface RangeCalendarRootContext {
    */
   value: PickerRangeValue;
   /**
-   * A ref containing `true` if the user is currently dragging.
+   * A ref containing the section being dragged.
    * This is used to check if the user is dragging in event handlers without causing re-renders.
    */
-  isDraggingRef: React.RefObject<boolean>;
+  draggedSectionRef: React.RefObject<'year' | 'month' | 'day' | null>;
   disableDragEditing: boolean;
   selectDateFromDrag: (valueOrElement: PickerValidDate | HTMLElement) => void;
   startDragging: (position: RangePosition) => void;
