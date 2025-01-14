@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { expect } from 'chai';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalaliV2';
@@ -66,8 +67,8 @@ vi.mock(
 );
 vi.mock(import('date-fns-jalali/locale/fa-IR'), () => import('date-fns-jalali-v2/locale/fa-IR'));
 vi.mock(
-  import('date-fns-jalali/_lib/format/longFormatters'),
-  () => import('date-fns-jalali-v2/_lib/format/longFormatters'),
+  'date-fns-jalali/_lib/format/longFormatters',
+  () => import('test/utils/pickers/longFormattersMock'),
 );
 
 describe('<AdapterDateFnsJalaliV2 />', () => {

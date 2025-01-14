@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV2';
 import { describeGregorianAdapter } from 'test/utils/pickers/describeGregorianAdapter';
 import { fr } from 'date-fns-v2/locale';
@@ -53,8 +55,8 @@ vi.mock(import('date-fns/startOfYear'), () => import('date-fns-v2/startOfYear'))
 vi.mock(import('date-fns/isWithinInterval'), () => import('date-fns-v2/isWithinInterval'));
 vi.mock(import('date-fns/locale/en-US'), () => import('date-fns-v2/locale/en-US'));
 vi.mock(
-  import('date-fns/_lib/format/longFormatters'),
-  () => import('date-fns-v2/_lib/format/longFormatters'),
+  'date-fns/_lib/format/longFormatters',
+  () => import('test/utils/pickers/longFormattersMock'),
 );
 
 describe('<AdapterDateFnsV2 />', () => {
