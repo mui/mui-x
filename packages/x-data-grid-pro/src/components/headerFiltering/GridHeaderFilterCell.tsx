@@ -30,7 +30,6 @@ import {
   gridHeaderFilteringEditFieldSelector,
   gridHeaderFilteringMenuSelector,
   isNavigationKey,
-  rtlFlipSide,
   attachPinnedStyle,
 } from '@mui/x-data-grid/internals';
 import { useRtl } from '@mui/system/RtlProvider';
@@ -306,19 +305,19 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
 
   const isFilterActive = isApplied || hasFocus;
 
-  const style = {
-    height,
-    width,
-    ...styleProp,
-  };
-
-  const pinnedSide = rtlFlipSide(pinnedPosition, isRtl);
-  attachPinnedStyle(style, pinnedSide, pinnedOffset);
-
   return (
     <div
       className={clsx(classes.root, headerClassName)}
-      style={style}
+      style={attachPinnedStyle(
+        {
+          height,
+          width,
+          ...styleProp,
+        },
+        isRtl,
+        pinnedPosition,
+        pinnedOffset,
+      )}
       role="columnheader"
       aria-colindex={colIndex + 1}
       aria-label={headerFilterComponent == null ? (colDef.headerName ?? colDef.field) : undefined}

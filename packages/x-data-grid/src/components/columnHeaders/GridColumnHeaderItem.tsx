@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses, unstable_useId as useId } from '@mui/utils';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useRtl } from '@mui/system/RtlProvider';
-import { rtlFlipSide } from '../../utils/rtlFlipSide';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
@@ -280,12 +279,10 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
 
   const label = colDef.headerName ?? colDef.field;
 
-  const style = React.useMemo(() => {
-    const styleProp = { ...props.style };
-    const pinnedSide = rtlFlipSide(pinnedPosition, isRtl);
-    attachPinnedStyle(styleProp, pinnedSide, pinnedOffset);
-    return styleProp;
-  }, [pinnedPosition, pinnedOffset, props.style, isRtl]);
+  const style = React.useMemo(
+    () => attachPinnedStyle({ ...props.style }, isRtl, pinnedPosition, pinnedOffset),
+    [pinnedPosition, pinnedOffset, props.style, isRtl],
+  );
 
   return (
     <GridGenericColumnHeaderItem

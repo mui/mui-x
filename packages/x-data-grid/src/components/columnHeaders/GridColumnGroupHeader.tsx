@@ -178,12 +178,10 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
       ? group.headerClassName(renderParams)
       : group.headerClassName;
 
-  const style = React.useMemo(() => {
-    const styleProp = { ...props.style };
-    const pinnedSide = rtlFlipSide(pinnedPosition, isRtl);
-    attachPinnedStyle(styleProp, pinnedSide, pinnedOffset);
-    return styleProp;
-  }, [pinnedPosition, pinnedOffset, props.style, isRtl]);
+  const style = React.useMemo(
+    () => attachPinnedStyle({ ...props.style }, isRtl, pinnedPosition, pinnedOffset),
+    [pinnedPosition, pinnedOffset, props.style, isRtl],
+  );
 
   return (
     <GridGenericColumnHeaderItem

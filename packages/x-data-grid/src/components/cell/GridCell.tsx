@@ -330,16 +330,18 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
       };
     }
 
-    const cellStyle = {
-      '--width': `${width}px`,
-      ...styleProp,
-    } as React.CSSProperties;
+    const cellStyle = attachPinnedStyle(
+      {
+        '--width': `${width}px`,
+        ...styleProp,
+      } as React.CSSProperties,
+      isRtl,
+      pinnedPosition,
+      pinnedOffset,
+    );
 
     const isLeftPinned = pinnedPosition === PinnedColumnPosition.LEFT;
     const isRightPinned = pinnedPosition === PinnedColumnPosition.RIGHT;
-
-    const pinnedSide = rtlFlipSide(pinnedPosition, isRtl);
-    attachPinnedStyle(cellStyle, pinnedSide, pinnedOffset);
 
     if (rowSpan > 1) {
       cellStyle.height = `calc(var(--height) * ${rowSpan})`;

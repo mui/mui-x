@@ -111,7 +111,8 @@ const GridSkeletonLoadingOverlay = forwardRef<HTMLDivElement, React.HTMLAttribut
           const scrollbarWidth = dimensions.hasScrollY ? dimensions.scrollbarSize : 0;
           const pinnedStyle = attachPinnedStyle(
             {},
-            pinnedSide,
+            isRtl,
+            pinnedPosition,
             getPinnedCellOffset(
               pinnedPosition,
               column.computedWidth,

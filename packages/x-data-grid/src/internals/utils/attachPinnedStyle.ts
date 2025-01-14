@@ -1,11 +1,16 @@
-export const attachPinnedStyle = (
+import { rtlFlipSide } from '../../utils/rtlFlipSide';
+import { PinnedColumnPosition } from '../constants';
+
+export function attachPinnedStyle(
   style: React.CSSProperties,
-  position: 'left' | 'right' | undefined,
+  isRtl: boolean,
+  pinnedPosition: PinnedColumnPosition | undefined,
   pinnedOffset?: number,
-) => {
-  if (!position || pinnedOffset === undefined) {
+) {
+  const side = rtlFlipSide(pinnedPosition, isRtl);
+  if (!side || pinnedOffset === undefined) {
     return style;
   }
-  style[position] = pinnedOffset;
+  style[side] = pinnedOffset;
   return style;
-};
+}
