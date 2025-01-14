@@ -116,7 +116,7 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 8px;
+  gap: 2px;
   overflow-y: auto;
 }
 
@@ -124,8 +124,7 @@
 .YearsGrid {
   padding: 12px;
   display: grid;
-  column-gap: 4px;
-  row-gap: 8px;
+  row-gap: 2px;
   overflow-y: auto;
   z-index: 1;
 }
@@ -229,15 +228,6 @@
   &:focus-visible::after {
     outline: 2px solid var(--button-focus-border-color);
   }
-}
-
-.DaysCell {
-  height: 36px;
-  width: 36px;
-
-  &[data-current]:not([data-selected]):not(:focus-visible)::after {
-    outline: 1px solid var(--cell-current-border-color);
-  }
 
   &:not([data-outside-month]):disabled {
     color: var(--cell-disabled-color);
@@ -266,7 +256,9 @@
     left: 0;
   }
 
-  &.RangeDaysCell {
+  &.RangeDaysCell,
+  &.RangeMonthsCell,
+  &.RangeYearsCell {
     &[data-selected]:not([data-selection-start])::before {
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
@@ -279,7 +271,17 @@
   }
 }
 
-.Root:not([data-empty]) .RangeDaysCell:not([data-outside-month])[data-previewed] {
+.DaysCell {
+  height: 36px;
+  width: 36px;
+
+  &[data-current]:not([data-selected]):not(:focus-visible)::after {
+    outline: 1px solid var(--cell-current-border-color);
+  }
+}
+
+.Root:not([data-empty]) .RangeDaysCell:not([data-outside-month])[data-previewed],
+.Root:not([data-empty]) .RangeMonthsCell[data-previewed] {
   &:not([data-preview-start]) {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;

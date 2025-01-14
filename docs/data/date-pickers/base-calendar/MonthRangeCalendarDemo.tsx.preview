@@ -1,0 +1,14 @@
+<RangeCalendar.Root monthPageSize={2} className={clsx(styles.Root)}>
+  <Header />
+  <RangeCalendar.MonthsGrid cellsPerRow={2} className={styles.MonthsGrid}>
+    {({ months }) =>
+      months.map((month) => (
+        <RangeCalendar.MonthsCell
+          value={month}
+          className={styles.MonthsCell}
+          key={month.toString()}
+        />
+      ))
+    }
+  </RangeCalendar.MonthsGrid>
+</RangeCalendar.Root>

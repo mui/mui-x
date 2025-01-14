@@ -213,6 +213,16 @@ The following demo shows a more advanced use case with lazy-loaded validation da
 
 {{"demo": "DayRangeCalendarAirbnbRecipe.js", "defaultCodeOpen": false}}
 
+## Month Range Calendar
+
+### Single visible year
+
+{{"demo": "MonthRangeCalendarDemo.js", "defaultCodeOpen": false}}
+
+### Multiple visible years
+
+TODO
+
 ## Date Range Calendar
 
 {{"demo": "DateRangeCalendarDemo.js", "defaultCodeOpen": false}}

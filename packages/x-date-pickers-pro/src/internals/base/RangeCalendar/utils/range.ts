@@ -47,7 +47,10 @@ export function getDatePositionInRange({
   }
 
   return {
-    isSelected: utils.isWithinRange(date, [start, end]),
+    isSelected: utils.isWithinRange(date, [
+      sectionMethods.startOf(start),
+      sectionMethods.endOf(end),
+    ]),
     isSelectionStart: sectionMethods.isSame(date, start),
     isSelectionEnd: sectionMethods.isSame(date, end),
   };

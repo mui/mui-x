@@ -11,8 +11,7 @@ export { RangeCalendarDaysCell as DaysCell } from './days-cell/RangeCalendarDays
 // // Months
 export { RangeCalendarMonthsList as MonthsList } from './months-list/RangeCalendarMonthsList';
 export { RangeCalendarMonthsGrid as MonthsGrid } from './months-grid/RangeCalendarMonthsGrid';
-// TODO: Uncomment when the component supports good range editing
-// export { RangeCalendarMonthsCell as MonthsCell } from './months-cell/RangeCalendarMonthsCell';
+export { RangeCalendarMonthsCell as MonthsCell } from './months-cell/RangeCalendarMonthsCell';
 
 // // Years
 export { RangeCalendarYearsList as YearsList } from './years-list/RangeCalendarYearsList';

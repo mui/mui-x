@@ -10,7 +10,7 @@ export function useRangeCalendarMonthsCellWrapper(
 ): useRangeCalendarMonthsCellWrapper.ReturnValue {
   const { value } = parameters;
   const { ref: baseRef, ctx: baseCtx } = useBaseCalendarMonthsCellWrapper(parameters);
-  const { cellRef, ctx: rangeCellCtx } = useRangeCellWrapper({ value, section: 'day' });
+  const { cellRef, ctx: rangeCellCtx } = useRangeCellWrapper({ value, section: 'month' });
   const ref = useForkRef(baseRef, cellRef);
 
   const ctx = React.useMemo<useRangeCalendarMonthsCell.Context>(
