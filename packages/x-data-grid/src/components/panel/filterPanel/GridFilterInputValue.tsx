@@ -2,19 +2,21 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_useId as useId } from '@mui/utils';
 import { useTimeout } from '../../../hooks/utils/useTimeout';
+import { TextFieldProps } from '../../../models/gridBaseSlots';
 import { GridFilterItem } from '../../../models/gridFilterItem';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
-export type GridTypeFilterInputValueProps = GridFilterInputValueProps & {
-  type?: 'text' | 'number' | 'date' | 'datetime-local';
-  clearButton?: React.ReactNode | null;
-  /**
-   * It is `true` if the filter either has a value or an operator with no value
-   * required is selected (for example `isEmpty`)
-   */
-  isFilterActive?: boolean;
-};
+export type GridTypeFilterInputValueProps = GridFilterInputValueProps &
+  TextFieldProps & {
+    type?: 'text' | 'number' | 'date' | 'datetime-local';
+    clearButton?: React.ReactNode | null;
+    /**
+     * It is `true` if the filter either has a value or an operator with no value
+     * required is selected (for example `isEmpty`)
+     */
+    isFilterActive?: boolean;
+  };
 
 type ItemPlusTag = GridFilterItem & { fromInput?: string };
 
@@ -33,10 +35,6 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
     variant = 'standard',
     ...others
   } = props;
-
-  if (InputProps) {
-    debugger;
-  }
 
   const filterTimeout = useTimeout();
   const [filterValueState, setFilterValueState] = React.useState<string | undefined>(

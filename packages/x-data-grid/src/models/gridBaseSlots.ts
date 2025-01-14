@@ -74,7 +74,7 @@ export type SkeletonProps = {
 // disabled={readOnly}
 
 export type TextFieldProps = {
-  autoComplete?: React.HTMLInputAutoCompleteAttribute;
+  autoComplete?: string;
   className?: string;
   color?: 'primary' | 'error';
   disabled?: boolean;

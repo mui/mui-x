@@ -38,7 +38,6 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     variant = 'standard',
     ...others
   } = props;
-  if ('InputLabelProps' in others) debugger;
   const [filterValueState, setFilterValueState] = React.useState<boolean | undefined>(
     sanitizeFilterItemValue(item.value),
   );
