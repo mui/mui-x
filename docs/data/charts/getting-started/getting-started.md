@@ -92,6 +92,16 @@ The outer margin space is where information like axes, titles, and legends are d
 
 See the [Styling documentation](/x/react-charts/styling/#placement) for complete details.
 
+## Server side rendering
+
+The chart support server side rendering under two conditions:
+
+1. The `width` and `height` props needs to be provided.
+2. The animation should be disabled with the `skipAnimation` prop.
+
+The first reason is because we can not compute the SVG dimensions on the server.
+And the second one is to avoid rendering the first frame of the initial animation.
+
 ## Axis management
 
 MUI X Charts take a flexible approach to axis management, with support for multiple axes and any combination of scales and ranges.
