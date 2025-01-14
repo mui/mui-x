@@ -99,7 +99,7 @@ The chart support server-side rendering under two conditions:
 1. The `width` and `height` props needs to be provided.
 2. The animation should be disabled with the `skipAnimation` prop.
 
-The reason is that it is not possible to compute the SVG dimensions on the server, and the `skipAnimation` ensures that the animation is not in an "empty" state when first rendering. 
+The reason is that it is not possible to compute the SVG dimensions on the server, and the `skipAnimation` ensures that the animation is not in an "empty" state when first rendering.
 
 ## Axis management
 
