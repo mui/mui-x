@@ -14,13 +14,13 @@ export interface RangeCalendarRootContext {
   draggedSectionRef: React.RefObject<'year' | 'month' | 'day' | null>;
   disableDragEditing: boolean;
   selectDateFromDrag: (valueOrElement: PickerValidDate | HTMLElement) => void;
-  startDragging: (position: RangePosition) => void;
+  startDragging: (position: RangePosition, section: 'year' | 'month' | 'day') => void;
   stopDragging: () => void;
   setDragTarget: (valueOrElement: PickerValidDate | HTMLElement) => void;
   emptyDragImgRef: React.RefObject<HTMLImageElement | null>;
   registerCell: (element: HTMLElement, value: PickerValidDate) => () => void;
   selectedRange: PickerRangeValue;
-  setHoveredDate: (value: PickerValidDate | null) => void;
+  setHoveredDate: (value: PickerValidDate | null, section: 'year' | 'month' | 'day') => void;
   previewRange: PickerRangeValue;
 }
 

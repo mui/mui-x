@@ -63,3 +63,24 @@ export function getCalendarSectionMethods(
   }
   return { isSame: utils.isSameDay, startOf: utils.startOfDay, endOf: utils.endOfDay };
 }
+
+/**
+ * Create a range going for the start of the first selected cell to the end of the last selected cell.
+ * This makes sure that `isWithinRange` works with any time in the start and end day.
+ */
+export function getRoundedRange({
+  utils,
+  range,
+  section,
+}: {
+  utils: MuiPickersAdapter;
+  range: PickerRangeValue;
+  section: 'day' | 'month' | 'year';
+}): PickerRangeValue {
+  const sectionMethods = getCalendarSectionMethods(utils, section);
+
+  return [
+    utils.isValid(range[0]) ? sectionMethods.startOf(range[0]) : null,
+    utils.isValid(range[1]) ? sectionMethods.endOf(range[1]) : null,
+  ];
+}

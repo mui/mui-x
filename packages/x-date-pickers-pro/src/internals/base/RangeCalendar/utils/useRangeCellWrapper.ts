@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { useUtils } from '@mui/x-date-pickers/internals';
-import { getDatePositionInRange } from '../../../utils/date-utils';
 import { useRangeCalendarRootContext } from '../root/RangeCalendarRootContext';
 import { useRangeCell } from './useRangeCell';
+import { getDatePositionInRange } from './date-range';
 
 /**
  * Add support for drag&drop and preview to the cell components of the Range Calendar.

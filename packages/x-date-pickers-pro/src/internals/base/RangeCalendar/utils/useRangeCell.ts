@@ -10,7 +10,7 @@ export function useRangeCell(parameters: useRangeCell.Parameters) {
   const { ctx, value, section } = parameters;
 
   const startDragging = () => {
-    ctx.startDragging(ctx.isSelectionStart ? 'start' : 'end');
+    ctx.startDragging(ctx.isSelectionStart ? 'start' : 'end', section);
   };
 
   const isDraggingCurrentSection = () => ctx.draggedSectionRef.current === section;
@@ -130,9 +130,9 @@ export function useRangeCell(parameters: useRangeCell.Parameters) {
    */
   const onMouseEnter = useEventCallback(() => {
     if (!ctx.isSelected) {
-      ctx.setHoveredDate(value);
+      ctx.setHoveredDate(value, section);
     } else {
-      ctx.setHoveredDate(null);
+      ctx.setHoveredDate(null, section);
     }
   });
 
