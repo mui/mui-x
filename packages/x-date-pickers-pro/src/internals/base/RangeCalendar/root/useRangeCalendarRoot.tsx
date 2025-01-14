@@ -165,7 +165,7 @@ export function useRangeCalendarRoot(parameters: useRangeCalendarRoot.Parameters
     }
   }
 
-  const { context } = useBuildRangeCalendarRootContext({
+  const context = useBuildRangeCalendarRootContext({
     baseContext,
     setValue,
     value,
@@ -217,7 +217,7 @@ export namespace useRangeCalendarRoot {
   }
 }
 
-function useBuildRangeCalendarRootContext(parameters: UseRangeCalendarDragEditingParameters) {
+function useBuildRangeCalendarRootContext(parameters: UseBuildRangeCalendarRootContextParameters) {
   const {
     value,
     setValue,
@@ -229,61 +229,27 @@ function useBuildRangeCalendarRootContext(parameters: UseRangeCalendarDragEditin
     disableDragEditing: disableDragEditingProp,
     disableHoverPreview: disableHoverPreviewProp,
   } = parameters;
+
+  const disableDragEditing = disableDragEditingProp || baseContext.disabled || baseContext.readOnly;
+  const disableHoverPreview =
+    disableHoverPreviewProp || baseContext.disabled || baseContext.readOnly;
+
   const utils = useUtils();
-
-  const [state, setState] = React.useState<{
-    draggedSection: BaseCalendarSection | null;
-    targetDate: PickerValidDate | null;
-    hoveredDate: { value: PickerValidDate; section: BaseCalendarSection } | null;
-  }>({ draggedSection: null, targetDate: null, hoveredDate: null });
-
   const cellToDateMapRef = React.useRef(new Map<HTMLElement, PickerValidDate>());
-  const registerCell = useEventCallback(
-    (element: HTMLElement, valueToRegister: PickerValidDate) => {
+  const [state, setState] = React.useState<UseBuildRangeCalendarRootContextState>({
+    draggedSection: null,
+    targetDate: null,
+    hoveredDate: null,
+  });
+
+  const registerCell: RangeCalendarRootContext['registerCell'] = useEventCallback(
+    (element, valueToRegister) => {
       cellToDateMapRef.current.set(element, valueToRegister);
       return () => {
         cellToDateMapRef.current.delete(element);
       };
     },
   );
-
-  const selectedRange = React.useMemo<PickerRangeValue>(() => {
-    if (!state.targetDate || state.draggedSection == null) {
-      return value;
-    }
-
-    const roundedRange = getRoundedRange({ utils, range: value, section: state.draggedSection });
-    if (roundedRange[0] == null || roundedRange[1] == null) {
-      return roundedRange;
-    }
-
-    const rangeAfterDragAndDrop = calculateRangeChange({
-      utils,
-      range: roundedRange,
-      newDate: state.targetDate,
-      rangePosition,
-      allowRangeFlip: true,
-    }).newRange;
-
-    return getRoundedRange({ utils, range: rangeAfterDragAndDrop, section: state.draggedSection });
-  }, [rangePosition, state.targetDate, state.draggedSection, utils, value]);
-
-  const disableDragEditing = disableDragEditingProp || baseContext.disabled || baseContext.readOnly;
-  const disableHoverPreview =
-    disableHoverPreviewProp || baseContext.disabled || baseContext.readOnly;
-
-  const draggedSectionRef = React.useRef(state.draggedSection);
-  useEnhancedEffect(() => {
-    draggedSectionRef.current = state.draggedSection;
-  });
-
-  const emptyDragImgRef = React.useRef<HTMLImageElement | null>(null);
-  React.useEffect(() => {
-    // Preload the image - required for Safari support: https://stackoverflow.com/a/40923520/3303436
-    emptyDragImgRef.current = document.createElement('img');
-    emptyDragImgRef.current.src =
-      'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-  }, []);
 
   const startDragging: RangeCalendarRootContext['startDragging'] = useEventCallback(
     (position, section) => {
@@ -292,33 +258,13 @@ function useBuildRangeCalendarRootContext(parameters: UseRangeCalendarDragEditin
     },
   );
 
-  const stopDragging = useEventCallback(() => {
+  const stopDragging: RangeCalendarRootContext['stopDragging'] = useEventCallback(() => {
     setState((prev) => ({
       ...prev,
       draggedSection: null,
       draggedDate: null,
       targetDate: null,
     }));
-  });
-
-  const handleSetDragTarget = useEventCallback((valueOrElement: PickerValidDate | HTMLElement) => {
-    const newTargetDate =
-      valueOrElement instanceof HTMLElement
-        ? cellToDateMapRef.current.get(valueOrElement)
-        : valueOrElement;
-
-    if (newTargetDate == null || utils.isEqual(newTargetDate, state.targetDate)) {
-      return;
-    }
-
-    setState((prev) => ({ ...prev, targetDate: newTargetDate }));
-
-    // TODO: Buggy
-    if (value[0] && utils.isBeforeDay(newTargetDate, value[0])) {
-      onRangePositionChange('start');
-    } else if (value[1] && utils.isAfterDay(newTargetDate, value[1])) {
-      onRangePositionChange('end');
-    }
   });
 
   const selectDateFromDrag: RangeCalendarRootContext['selectDateFromDrag'] = useEventCallback(
@@ -354,6 +300,49 @@ function useBuildRangeCalendarRootContext(parameters: UseRangeCalendarDragEditin
     },
   );
 
+  const setDragTarget: RangeCalendarRootContext['setDragTarget'] = useEventCallback(
+    (valueOrElement) => {
+      const newTargetDate =
+        valueOrElement instanceof HTMLElement
+          ? cellToDateMapRef.current.get(valueOrElement)
+          : valueOrElement;
+
+      if (newTargetDate == null || utils.isEqual(newTargetDate, state.targetDate)) {
+        return;
+      }
+
+      setState((prev) => ({ ...prev, targetDate: newTargetDate }));
+
+      // TODO: Buggy
+      if (value[0] && utils.isBeforeDay(newTargetDate, value[0])) {
+        onRangePositionChange('start');
+      } else if (value[1] && utils.isAfterDay(newTargetDate, value[1])) {
+        onRangePositionChange('end');
+      }
+    },
+  );
+
+  const selectedRange = React.useMemo<PickerRangeValue>(() => {
+    if (!state.targetDate || state.draggedSection == null) {
+      return value;
+    }
+
+    const roundedRange = getRoundedRange({ utils, range: value, section: state.draggedSection });
+    if (roundedRange[0] == null || roundedRange[1] == null) {
+      return roundedRange;
+    }
+
+    const rangeAfterDragAndDrop = calculateRangeChange({
+      utils,
+      range: roundedRange,
+      newDate: state.targetDate,
+      rangePosition,
+      allowRangeFlip: true,
+    }).newRange;
+
+    return getRoundedRange({ utils, range: rangeAfterDragAndDrop, section: state.draggedSection });
+  }, [rangePosition, state.targetDate, state.draggedSection, utils, value]);
+
   const previewRange = React.useMemo<PickerRangeValue>(() => {
     if (disableHoverPreview || state.hoveredDate == null) {
       return [null, null];
@@ -372,6 +361,19 @@ function useBuildRangeCalendarRootContext(parameters: UseRangeCalendarDragEditin
     });
   }, [utils, rangePosition, state.hoveredDate, value, disableHoverPreview]);
 
+  const emptyDragImgRef = React.useRef<HTMLImageElement | null>(null);
+  React.useEffect(() => {
+    // Preload the image - required for Safari support: https://stackoverflow.com/a/40923520/3303436
+    emptyDragImgRef.current = document.createElement('img');
+    emptyDragImgRef.current.src =
+      'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+  }, []);
+
+  const draggedSectionRef = React.useRef(state.draggedSection);
+  useEnhancedEffect(() => {
+    draggedSectionRef.current = state.draggedSection;
+  });
+
   const context: RangeCalendarRootContext = {
     value,
     selectedRange,
@@ -382,15 +384,15 @@ function useBuildRangeCalendarRootContext(parameters: UseRangeCalendarDragEditin
     selectDateFromDrag,
     startDragging,
     stopDragging,
-    setDragTarget: handleSetDragTarget,
+    setDragTarget,
     setHoveredDate,
     registerCell,
   };
 
-  return { context };
+  return context;
 }
 
-interface UseRangeCalendarDragEditingParameters {
+interface UseBuildRangeCalendarRootContextParameters {
   value: PickerRangeValue;
   referenceDate: PickerValidDate;
   setValue: useBaseCalendarRoot.ReturnValue<PickerRangeValue>['setValue'];
@@ -404,4 +406,10 @@ interface UseRangeCalendarDragEditingParameters {
   onRangePositionChange: (position: RangePosition) => void;
   rangePosition: RangePosition;
   disableHoverPreview: boolean;
+}
+
+interface UseBuildRangeCalendarRootContextState {
+  draggedSection: BaseCalendarSection | null;
+  targetDate: PickerValidDate | null;
+  hoveredDate: { value: PickerValidDate; section: BaseCalendarSection } | null;
 }
