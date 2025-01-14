@@ -193,7 +193,13 @@ describe('<DataGridPro /> - Column headers', () => {
 
         await user.click(await screen.findByLabelText('Menu'));
 
-        await screen.findByRole('menu');
+        await screen.findByRole(
+          'menu',
+          {},
+          {
+            timeout: 1000,
+          },
+        );
 
         await user.keyboard('[Escape]');
         await waitFor(() => {

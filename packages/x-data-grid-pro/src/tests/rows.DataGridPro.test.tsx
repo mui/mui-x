@@ -379,7 +379,7 @@ describe('<DataGridPro /> - Rows', () => {
       ];
       await act(() => apiRef.current.setRows(newRows));
 
-      await sleep(100);
+      await sleep(20);
 
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
 
