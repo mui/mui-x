@@ -42,10 +42,10 @@ function GridGroupingCriteriaCellIcon(props: GridGroupingCriteriaCellIconProps) 
   const classes = useUtilityClasses(rootProps);
   const { rowNode, id, field, descendantCount } = props;
 
-  const loadingSelector = (apiRef: React.RefObject<GridApiPremium>) =>
-    apiRef.current.state.dataSource.loading[id] ?? false;
-  const errorSelector = (apiRef: React.RefObject<GridApiPremium>) =>
-    apiRef.current.state.dataSource.errors[id];
+  const loadingSelector = (apiRefObject: React.RefObject<GridApiPremium>) =>
+    apiRefObject.current.state.dataSource.loading[id] ?? false;
+  const errorSelector = (apiRefObject: React.RefObject<GridApiPremium>) =>
+    apiRefObject.current.state.dataSource.errors[id];
   const isDataLoading = useGridSelector(apiRef, loadingSelector);
   const error = useGridSelector(apiRef, errorSelector);
 
@@ -98,8 +98,8 @@ export function GridDataSourceGroupingCriteriaCell(props: GridGroupingCriteriaCe
 
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
-  const rowSelector = (apiRef: React.RefObject<GridApiPremium>) =>
-    apiRef.current.state.rows.dataRowIdToModelLookup[id];
+  const rowSelector = (apiRefObject: React.RefObject<GridApiPremium>) =>
+    apiRefObject.current.state.rows.dataRowIdToModelLookup[id];
   const row = useGridSelector(apiRef, rowSelector);
   const classes = useUtilityClasses(rootProps);
 
