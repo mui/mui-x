@@ -43,6 +43,8 @@ const RangeCalendarRoot = React.forwardRef(function RangeCalendarRoot(
     disablePast,
     disableFuture,
     shouldDisableDate,
+    // Children
+    children,
     // Range position props
     rangePosition,
     defaultRangePosition,
@@ -70,6 +72,7 @@ const RangeCalendarRoot = React.forwardRef(function RangeCalendarRoot(
     defaultVisibleDate,
     onError,
     shouldDisableDate,
+    children,
     disablePast,
     disableFuture,
     minDate,
@@ -116,9 +119,7 @@ export namespace RangeCalendarRoot {
 
   export interface Props
     extends useRangeCalendarRoot.Parameters,
-      Omit<BaseUIComponentProps<'div', State>, 'value' | 'defaultValue' | 'onError'> {
-    children: React.ReactNode;
-  }
+      Omit<BaseUIComponentProps<'div', State>, 'value' | 'defaultValue' | 'onError' | 'children'> {}
 
   export interface ValueChangeHandlerContext
     extends useBaseCalendarRoot.ValueChangeHandlerContext<DateRangeValidationError> {}

@@ -9,8 +9,8 @@ import { useRangeCell } from '../utils/useRangeCell';
 
 export function useRangeCalendarMonthsCell(parameters: useRangeCalendarMonthsCell.Parameters) {
   const { ctx, value } = parameters;
-  const rangeCellProps = useRangeCell({ ctx, value, section: 'month' });
   const { getMonthsCellProps: getBaseMonthsCellProps } = useBaseCalendarMonthsCell(parameters);
+  const rangeCellProps = useRangeCell({ ctx, value, section: 'month' });
 
   const getMonthsCellProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {

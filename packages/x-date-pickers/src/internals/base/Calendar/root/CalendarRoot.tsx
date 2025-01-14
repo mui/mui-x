@@ -31,6 +31,8 @@ const CalendarRoot = React.forwardRef(function CalendarRoot(
     onVisibleDateChange,
     visibleDate,
     defaultVisibleDate,
+    // Children
+    children,
     // Validation props
     onError,
     minDate,
@@ -64,6 +66,7 @@ const CalendarRoot = React.forwardRef(function CalendarRoot(
     disableFuture,
     minDate,
     maxDate,
+    children,
   });
 
   const state: CalendarRoot.State = React.useMemo(() => ({ empty: isEmpty }), [isEmpty]);
@@ -89,9 +92,7 @@ export namespace CalendarRoot {
 
   export interface Props
     extends useCalendarRoot.Parameters,
-      Omit<BaseUIComponentProps<'div', State>, 'value' | 'defaultValue' | 'onError'> {
-    children: React.ReactNode;
-  }
+      Omit<BaseUIComponentProps<'div', State>, 'value' | 'defaultValue' | 'onError' | 'children'> {}
 
   export interface ValueChangeHandlerContext
     extends useBaseCalendarRoot.ValueChangeHandlerContext<DateValidationError> {}

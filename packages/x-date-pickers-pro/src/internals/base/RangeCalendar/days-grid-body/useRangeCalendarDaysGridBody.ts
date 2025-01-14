@@ -17,8 +17,9 @@ export function useRangeCalendarDaysGridBody(parameters: useRangeCalendarDaysGri
 
   const rootContext = useRangeCalendarRootContext();
 
+  // TODO: Add the same of year and month list and year.
   const onMouseLeave = useEventCallback(() => {
-    rootContext.setHoveredDate(null);
+    rootContext.setHoveredDate(null, 'day');
   });
 
   const getDaysGridBodyProps = React.useCallback(
