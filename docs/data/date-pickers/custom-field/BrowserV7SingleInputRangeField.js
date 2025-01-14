@@ -59,13 +59,12 @@ const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
     readOnly,
     focused,
     error,
-    InputProps: { ref: InputPropsRef, startAdornment, endAdornment } = {},
     // The rest can be passed to the root element
     ...other
   } = fieldResponse;
 
   const pickerContext = usePickerContext();
-  const handleRef = useForkRef(InputPropsRef, ref);
+  const handleRef = useForkRef(pickerContext.triggerRef, ref);
 
   return (
     <BrowserFieldRoot
@@ -75,7 +74,6 @@ const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
         minWidth: 300,
       }}
     >
-      {startAdornment}
       <BrowserFieldContent>
         <PickersSectionList
           elements={elements}
@@ -89,7 +87,6 @@ const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
           onKeyDown={onKeyDown}
         />
       </BrowserFieldContent>
-      {endAdornment}
       <InputAdornment position="end">
         <IconButton onClick={() => pickerContext.setOpen((prev) => !prev)}>
           <DateRangeIcon />

@@ -28,6 +28,7 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
     clock,
     componentFamily: 'picker',
     views: ['day'],
+    variant: 'desktop',
   }));
 
   describeConformance(<DesktopDateRangePicker />, () => ({

@@ -110,7 +110,7 @@ export interface UseEnrichedRangePickerFieldPropsParams<
     TEnableAccessibleFieldDOMStructure,
     TError
   >;
-  anchorRef?: React.Ref<HTMLDivElement>;
+  anchorRef?: React.Ref<HTMLElement>;
   currentView?: TView | null;
   initialView?: TView;
   startFieldRef: React.RefObject<FieldRef<PickerValue> | null>;
@@ -310,10 +310,7 @@ const useSingleInputFieldSlotProps = <
   rangePosition,
   onRangePositionChange,
   singleInputFieldRef,
-  pickerSlots,
-  pickerSlotProps,
   fieldProps,
-  anchorRef,
   currentView,
 }: UseEnrichedRangePickerFieldPropsParams<
   true,
@@ -380,32 +377,12 @@ const useSingleInputFieldSlotProps = <
     }
   };
 
-  const slots = {
-    ...fieldProps.slots,
-    textField: pickerSlots?.textField,
-    clearButton: pickerSlots?.clearButton,
-    clearIcon: pickerSlots?.clearIcon,
-  };
-
-  const slotProps = {
-    ...fieldProps.slotProps,
-    textField: pickerSlotProps?.textField,
-    clearButton: pickerSlotProps?.clearButton,
-    clearIcon: pickerSlotProps?.clearIcon,
-  };
-
   const enrichedFieldProps: ReturnType = {
     ...fieldProps,
-    slots,
-    slotProps,
     label,
     unstableFieldRef: handleFieldRef,
     onKeyDown: onSpaceOrEnter(openPicker, fieldProps.onKeyDown),
     onBlur,
-    InputProps: {
-      ref: anchorRef,
-      ...fieldProps?.InputProps,
-    },
     focused: contextValue.open ? true : undefined,
     ...(labelId != null && { id: labelId }),
     ...(variant === 'mobile' && { readOnly: true }),
