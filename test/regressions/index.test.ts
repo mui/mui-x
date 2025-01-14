@@ -30,7 +30,12 @@ const isConsoleWarningIgnored = (msg?: string) => {
 
   const isReactRouterFlagsError = msg?.includes('React Router Future Flag Warning');
 
-  if (isMuiV6Error || isReactRouterFlagsError) {
+  // We use the Tailwind CDN in iframed docs demos to isolate the library and avoid having to bundle it.
+  const isTailwindCdnWarning = msg?.includes(
+    'cdn.tailwindcss.com should not be used in production',
+  );
+
+  if (isMuiV6Error || isReactRouterFlagsError || isTailwindCdnWarning) {
     return true;
   }
   return false;
