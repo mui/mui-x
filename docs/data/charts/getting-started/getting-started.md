@@ -94,13 +94,12 @@ See the [Styling documentation](/x/react-charts/styling/#placement) for complete
 
 ## Server-side rendering
 
-The chart support server side rendering under two conditions:
+The chart support server-side rendering under two conditions:
 
 1. The `width` and `height` props needs to be provided.
 2. The animation should be disabled with the `skipAnimation` prop.
 
-The first reason is because we can not compute the SVG dimensions on the server.
-And the second one is to avoid rendering the first frame of the initial animation.
+The reason is that it is not possible to compute the SVG dimensions on the server, and the `skipAnimation` ensures that the animation is not in an "empty" state when first rendering. 
 
 ## Axis management
 
