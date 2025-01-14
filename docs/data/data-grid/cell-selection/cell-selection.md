@@ -24,7 +24,7 @@ Hold <kbd class="key">Cmd</kbd> (or <kbd class="key">Ctrl</kbd> on Windows) and 
 To select a range of cells, users can:
 
 - Click on a cell, drag the mouse over nearby cells, and then release.
-- Click on a cell, then hold <kbd class="key">Shift</kbd> and click on another cell; if a third cell is clicked then the selection will restart from the last clicked cell.
+- Click on a cell, then hold <kbd class="key">Shift</kbd> and click on another cell. If a third cell is clicked then the selection will restart from the last clicked cell.
 - Use the arrow keys to focus on a cell, then hold <kbd class="key">Shift</kbd> and navigate to another cell—if <kbd class="key">Shift</kbd> is released and pressed again then the selection will restart from the last focused cell.
 
 Try out the various actions to select cells in the demo below—you can toggle [row selection](/x/react-data-grid/row-selection/) on and off to see how these two selection features can work in parallel.
