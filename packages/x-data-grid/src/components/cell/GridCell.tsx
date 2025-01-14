@@ -197,7 +197,8 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
       // associated with `rowId`/`fieldId`, but this selector runs after the state has been
       // updated, while `rowId`/`fieldId` reference an entry in the old state.
       const row = apiRef.current.getRow(rowId);
-      if (!row) {
+      const rowNode = apiRef.current.getRowNode(rowId);
+      if (!row || !rowNode) {
         return EMPTY_CELL_PARAMS;
       }
 
