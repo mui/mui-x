@@ -6,7 +6,7 @@ import {
   GridRowId,
 } from '@mui/x-data-grid';
 import { createSelector } from '@mui/x-data-grid/internals';
-import { GridStatePro } from '../../../models/gridStatePro';
+import { GridApiPro } from '../../../models/gridApiPro';
 
 const computeStartEnd = (paginationModel: GridPaginationModel) => {
   const start = paginationModel.page * paginationModel.pageSize;
@@ -29,7 +29,8 @@ export const gridGetRowsParamsSelector = createSelector(
   },
 );
 
-export const gridDataSourceStateSelector = (state: GridStatePro) => state.dataSource;
+export const gridDataSourceStateSelector = (apiRef: React.RefObject<GridApiPro>) =>
+  apiRef.current.state.dataSource;
 
 export const gridDataSourceLoadingSelector = createSelector(
   gridDataSourceStateSelector,

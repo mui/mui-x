@@ -1,3 +1,4 @@
-import { GridStatePremium } from '../../../models/gridStatePremium';
+import { GridApiPremium } from '../../../models/gridApiPremium';
 
-export const gridCellSelectionStateSelector = (state: GridStatePremium) => state.cellSelection;
+export const gridCellSelectionStateSelector = (apiRef: React.RefObject<GridApiPremium>) =>
+  apiRef.current.state.cellSelection;

@@ -35,7 +35,7 @@ export const useGridPreferencesPanel = (
       }
 
       logger.debug('Hiding Preferences Panel');
-      const preferencePanelState = gridPreferencePanelStateSelector(state);
+      const preferencePanelState = gridPreferencePanelStateSelector(apiRef);
       apiRef.current.publishEvent('preferencePanelClose', {
         openedPanelValue: preferencePanelState.openedPanelValue,
       });
@@ -77,7 +77,7 @@ export const useGridPreferencesPanel = (
    */
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
     (prevState, context) => {
-      const preferencePanelToExport = gridPreferencePanelStateSelector(apiRef.current.state);
+      const preferencePanelToExport = gridPreferencePanelStateSelector(apiRef);
 
       const shouldExportPreferencePanel =
         // Always export if the `exportOnlyDirtyModels` property is not activated

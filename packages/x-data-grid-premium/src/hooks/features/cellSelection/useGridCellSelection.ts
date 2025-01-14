@@ -96,14 +96,14 @@ export const useGridCellSelection = (
       if (!props.cellSelection) {
         return false;
       }
-      const cellSelectionModel = gridCellSelectionStateSelector(apiRef.current.state);
+      const cellSelectionModel = gridCellSelectionStateSelector(apiRef);
       return cellSelectionModel[id] ? !!cellSelectionModel[id][field] : false;
     },
     [apiRef, props.cellSelection],
   );
 
   const getCellSelectionModel = React.useCallback(() => {
-    return gridCellSelectionStateSelector(apiRef.current.state);
+    return gridCellSelectionStateSelector(apiRef);
   }, [apiRef]);
 
   const setCellSelectionModel = React.useCallback<GridCellSelectionApi['setCellSelectionModel']>(
