@@ -4,7 +4,7 @@
 
 ## Customizing cells
 
-The Data Grid provides several methods to customize the rendered elements and values of a cell.
+The Data Grid provides several metgit bra to customize the rendered elements and values of a cell.
 Each of them has a different purpose and should be used in different situations.
 Here is a summary of their differences:
 
