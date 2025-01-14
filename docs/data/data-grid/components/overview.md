@@ -2,11 +2,17 @@
 
 <p class="description">Composable components that can be used to customize the Data Grid.</p>
 
-## Introduction
+## Overview
 
-By default, the `<DataGrid />` component includes all of the interfaces necessary for users to interact with the built-in features. Where more flexibility is needed over what gets rendered, the Data Grid package includes a set of highly customizable components.
+By default, the `<DataGrid />` component includes all of the interfaces necessary for users to interact with the built-in features. Where more flexibility is needed over what gets rendered, the Data Grid package includes a set of highly customizable components:
 
-### Composition
+- [Toolbar](/x/react-data-grid/components/toolbar/)
+- [Export](/x/react-data-grid/components/export/)
+- [Quick Filter](/x/react-data-grid/components/quick-filter/)
+- [Columns Panel](/x/react-data-grid/components/columns-panel/) 🚧
+- [Filter Panel](/x/react-data-grid/components/filter-panel/) 🚧
+
+## Composition
 
 The components are composable and consist of several parts. For example, `Toolbar.Root` and `Toolbar.Button` are parts of the [Toolbar component](/x/react-data-grid/components/toolbar/).
 
@@ -39,11 +45,11 @@ Any props you pass to these parts will be forwarded directly to their correspond
 <Toolbar.Root className="my-toolbar" aria-label="Grid toolbar" />
 ```
 
-### Customization
+## Customization
 
 The component parts are highly customizable, built to integrate with any design system, and any styling method.
 
-#### className
+### className
 
 The `className` prop can be used to apply styles:
 
@@ -59,7 +65,7 @@ Some components also provide internal state that can be used to conditionally ap
 />
 ```
 
-#### render
+### render
 
 The `render` prop can be used to override the element rendered by each grid component:
 
@@ -86,11 +92,3 @@ Some components also provide internal state that can be used to control what is 
   )}
 />
 ```
-
-## Available components
-
-- [Toolbar](/x/react-data-grid/components/toolbar/)
-- [Export](/x/react-data-grid/components/export/)
-- [Quick Filter](/x/react-data-grid/components/quick-filter/)
-- [Columns Panel](/x/react-data-grid/components/columns-panel/) 🚧
-- [Filter Panel](/x/react-data-grid/components/filter-panel/) 🚧
