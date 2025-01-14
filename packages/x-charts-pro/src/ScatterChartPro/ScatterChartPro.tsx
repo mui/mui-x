@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ScatterChartProps, ScatterPlot } from '@mui/x-charts/ScatterChart';
-import { ChartDataProvider, ZAxisContextProvider } from '@mui/x-charts/context';
+import { ChartDataProvider } from '@mui/x-charts/context';
 import { ChartsVoronoiHandler } from '@mui/x-charts/ChartsVoronoiHandler';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
@@ -39,7 +39,6 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   const {
     chartsWrapperProps,
     chartContainerProps,
-    zAxisProps,
     voronoiHandlerProps,
     chartsAxisProps,
     gridProps,
@@ -66,19 +65,17 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
       <ChartsWrapper {...chartsWrapperProps}>
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
-          <ZAxisContextProvider {...zAxisProps}>
-            {!props.disableVoronoi && <ChartsVoronoiHandler {...voronoiHandlerProps} />}
-            <ChartsAxis {...chartsAxisProps} />
-            <ChartsGrid {...gridProps} />
-            <g data-drawing-container>
-              {/* The `data-drawing-container` indicates that children are part of the drawing area. Ref: https://github.com/mui/mui-x/issues/13659 */}
-              <ScatterPlot {...scatterPlotProps} />
-            </g>
-            <ChartsOverlay {...overlayProps} />
-            <ChartsAxisHighlight {...axisHighlightProps} />
-            {!props.loading && <Tooltip {...props?.slotProps?.tooltip} trigger="item" />}
-            {children}
-          </ZAxisContextProvider>
+          {!props.disableVoronoi && <ChartsVoronoiHandler {...voronoiHandlerProps} />}
+          <ChartsAxis {...chartsAxisProps} />
+          <ChartsGrid {...gridProps} />
+          <g data-drawing-container>
+            {/* The `data-drawing-container` indicates that children are part of the drawing area. Ref: https://github.com/mui/mui-x/issues/13659 */}
+            <ScatterPlot {...scatterPlotProps} />
+          </g>
+          <ChartsOverlay {...overlayProps} />
+          <ChartsAxisHighlight {...axisHighlightProps} />
+          {!props.loading && <Tooltip {...props?.slotProps?.tooltip} trigger="item" />}
+          {children}
         </ChartsSurface>
       </ChartsWrapper>
     </ChartDataProvider>

@@ -1,7 +1,7 @@
 'use client';
 import { AxisDefaultized } from '../models/axis';
 import { ZAxisDefaultized } from '../models/z-axis';
-import { useZAxis } from '../hooks/useZAxis';
+import { useZAxes } from '../hooks/useZAxis';
 import { useXAxes, useYAxes } from '../hooks/useAxis';
 import { ColorLegendSelector } from './colorLegend.types';
 
@@ -14,7 +14,7 @@ export function useAxis({
 }: ColorLegendSelector): ZAxisDefaultized | AxisDefaultized {
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
-  const { zAxis, zAxisIds } = useZAxis();
+  const { zAxis, zAxisIds } = useZAxes();
 
   switch (axisDirection) {
     case 'x': {
