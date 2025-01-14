@@ -126,10 +126,6 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
           {...params}
           label={apiRef.current.getLocaleText('filterPanelInputLabel')}
           placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
-          InputLabelProps={{
-            ...params.InputLabelProps,
-            shrink: true,
-          }}
           inputRef={focusElementRef}
           type="singleSelect"
           {...TextFieldProps}

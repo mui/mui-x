@@ -22,7 +22,6 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
     helperText,
     size,
     variant = 'standard',
-    ...other
   } = props;
   const TextFieldProps = {
     color,
@@ -91,17 +90,12 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
           {...params}
           label={apiRef.current.getLocaleText('filterPanelInputLabel')}
           placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
-          InputLabelProps={{
-            ...params.InputLabelProps,
-            shrink: true,
-          }}
           inputRef={focusElementRef}
           type={type || 'text'}
           {...TextFieldProps}
           {...rootProps.slotProps?.baseTextField}
         />
       )}
-      {...other}
     />
   );
 }

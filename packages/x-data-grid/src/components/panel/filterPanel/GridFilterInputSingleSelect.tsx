@@ -1,9 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { TextFieldProps } from '@mui/material/TextField';
-import { SelectChangeEvent } from '@mui/material/Select';
 import { unstable_useId as useId } from '@mui/utils';
 import { styled } from '@mui/material/styles';
+import { SelectChangeEvent } from '@mui/material/Select';
+import { TextFieldProps } from '../../../models/gridBaseSlots';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { GridSingleSelectColDef } from '../../../models/colDef/gridColDef';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';

@@ -365,7 +365,6 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
             }
             disabled={isFilterReadOnly || isNoInputOperator}
             tabIndex={-1}
-            InputLabelProps={null}
             sx={
               colDef.type === 'date' || colDef.type === 'dateTime' || colDef.type === 'number'
                 ? emptyFieldSx

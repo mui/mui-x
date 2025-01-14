@@ -1,11 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { TextFieldProps } from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/utils';
 import { useTimeout } from '../../../hooks/utils/useTimeout';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { GridFilterItem } from '../../../models/gridFilterItem';
+import { TextFieldProps } from '../../../models/gridBaseSlots';
 
 export type GridFilterInputDateProps = GridFilterInputValueProps &
   TextFieldProps & {
@@ -95,9 +95,6 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
       onChange={onFilterChange}
       variant="standard"
       type={type || 'text'}
-      InputLabelProps={{
-        shrink: true,
-      }}
       inputRef={focusElementRef}
       InputProps={{
         ...(applying || clearButton

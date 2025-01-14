@@ -1,6 +1,7 @@
 import * as React from 'react';
 import MUIBadge from '@mui/material/Badge';
 import MUICheckbox from '@mui/material/Checkbox';
+import MUIChip from '@mui/material/Chip';
 import MUICircularProgress from '@mui/material/CircularProgress';
 import MUIDivider from '@mui/material/Divider';
 import MUILinearProgress from '@mui/material/LinearProgress';
@@ -17,7 +18,6 @@ import MUIInputAdornment from '@mui/material/InputAdornment';
 import MUITooltip from '@mui/material/Tooltip';
 import MUIPopper from '@mui/material/Popper';
 import MUIInputLabel from '@mui/material/InputLabel';
-import MUIChip from '@mui/material/Chip';
 import MUISkeleton from '@mui/material/Skeleton';
 import { GridColumnUnsortedIcon } from './icons/GridColumnUnsortedIcon';
 import {
@@ -129,4 +129,47 @@ function BaseMenuItem(props: GridSlotProps['baseMenuItem']) {
     <MUIListItemText key="2">{children}</MUIListItemText>,
     iconEnd && <MUIListItemIcon key="3">{iconEnd}</MUIListItemIcon>,
   ]);
+}
+
+function BaseTextField(props: GridSlotProps['baseTextField']) {
+  const {
+    // inputRef,
+    // id,
+    // label,
+    // placeholder,
+    // value,
+    type,
+    // color,
+    // error,
+    // helperText,
+    // variant,
+    disabled,
+    inputProps,
+    InputProps,
+    // onChange,
+    // onKeyDown,
+    // size,
+    // style,
+    tabIndex,
+    ...rest
+  } = props;
+
+  return (
+    <MUITextField
+      type={type}
+      {...rest}
+      InputProps={{
+        disabled,
+        inputProps: {
+          max: type === 'datetime-local' ? '9999-12-31T23:59' : '9999-12-31',
+          tabIndex,
+          ...inputProps,
+        },
+        ...InputProps,
+      }}
+      InputLabelProps={{
+        shrink: true,
+      }}
+    />
+  );
 }

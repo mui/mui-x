@@ -67,6 +67,40 @@ export type SkeletonProps = {
   height?: number | string;
 };
 
+// InputComponent
+// variant="outlined"
+// size="small"
+// focusElementRef={valueRef}
+// disabled={readOnly}
+
+export type TextFieldProps = {
+  autoComplete?: React.HTMLInputAutoCompleteAttribute;
+  className?: string;
+  color?: 'primary' | 'error';
+  disabled?: boolean;
+  error?: boolean;
+  fullWidth?: boolean;
+  helperText?: string | null;
+  id?: string;
+  InputProps?: {
+    disabled?: boolean;
+    endAdornment?: React.ReactNode;
+    startAdornment?: React.ReactNode;
+    inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
+  };
+  inputRef?: React.Ref<HTMLInputElement>;
+  label?: React.ReactNode;
+  onChange?: React.ChangeEventHandler;
+  onKeyDown?: React.KeyboardEventHandler;
+  placeholder?: string;
+  size?: 'small' | 'medium';
+  style?: React.CSSProperties;
+  tabIndex?: number;
+  type?: React.HTMLInputTypeAttribute;
+  value?: string;
+  variant?: 'standard' | 'outlined';
+};
+
 export type TooltipProps = {
   children: React.ReactElement<any, any>;
   enterDelay?: number;

@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { styled } from '@mui/material/styles';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { inputBaseClasses } from '@mui/material/InputBase';
+import { TextFieldProps } from '../../models/gridBaseSlots';
 import { vars } from '../../constants/cssVariables';
 import {
   gridColumnDefinitionsSelector,
@@ -391,7 +391,7 @@ const GridColumnsManagementHeader = styled('div', {
   padding: vars.spacing(1.5, 3),
 });
 
-const SearchInput = styled(TextField, {
+const SearchInput = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnsManagementSearchInput',
 })<{ ownerState: OwnerState }>({

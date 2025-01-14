@@ -1,10 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { TextFieldProps } from '@mui/material/TextField';
 import { refType, unstable_useId as useId } from '@mui/utils';
 import { styled } from '@mui/material/styles';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { TextFieldProps } from '../../../models/gridBaseSlots';
 
 export type GridFilterInputBooleanProps = GridFilterInputValueProps &
   TextFieldProps & {
@@ -36,9 +36,9 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     tabIndex,
     label: labelProp,
     variant = 'standard',
-    InputLabelProps,
     ...others
   } = props;
+  if ('InputLabelProps' in others) debugger;
   const [filterValueState, setFilterValueState] = React.useState<boolean | undefined>(
     sanitizeFilterItemValue(item.value),
   );
