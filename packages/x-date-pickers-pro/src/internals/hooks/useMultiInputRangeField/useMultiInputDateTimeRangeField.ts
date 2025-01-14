@@ -7,26 +7,23 @@ import {
   PickerValue,
   UseFieldResponse,
   useControlledValueWithTimezone,
-  useDefaultizedDateTimeField,
+  useFieldInternalPropsWithDefaults,
 } from '@mui/x-date-pickers/internals';
-import { DateTimeValidationError } from '@mui/x-date-pickers/models';
 import { useValidation } from '@mui/x-date-pickers/validation';
-import type {
-  UseMultiInputDateTimeRangeFieldParams,
-  UseMultiInputDateTimeRangeFieldProps,
-} from '../../../MultiInputDateTimeRangeField/MultiInputDateTimeRangeField.types';
-import { DateTimeRangeValidationError } from '../../../models';
+import { DateTimeValidationError } from '@mui/x-date-pickers/models';
+import { UseMultiInputDateTimeRangeFieldParams } from '../../../MultiInputDateTimeRangeField/MultiInputDateTimeRangeField.types';
 import { validateDateTimeRange } from '../../../validation';
 import { rangeValueManager } from '../../utils/valueManagers';
 import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.types';
-import { excludeProps } from './shared';
+import { DateTimeRangeValidationError } from '../../../models';
 import { useMultiInputFieldSelectedSections } from '../useMultiInputFieldSelectedSections';
+import { useDateTimeRangeManager } from '../../../managers';
 
 export const useMultiInputDateTimeRangeField = <
   TEnableAccessibleFieldDOMStructure extends boolean,
   TTextFieldSlotProps extends {},
 >({
-  sharedProps: inSharedProps,
+  sharedProps,
   startTextFieldProps,
   unstableStartFieldRef,
   endTextFieldProps,
@@ -35,10 +32,11 @@ export const useMultiInputDateTimeRangeField = <
   TEnableAccessibleFieldDOMStructure,
   TTextFieldSlotProps
 >): UseMultiInputRangeFieldResponse<TEnableAccessibleFieldDOMStructure, TTextFieldSlotProps> => {
-  const sharedProps = useDefaultizedDateTimeField<
-    UseMultiInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
-    typeof inSharedProps
-  >(inSharedProps);
+  const manager = useDateTimeRangeManager(sharedProps);
+  const sharedPropsWithDefaults = useFieldInternalPropsWithDefaults({
+    manager,
+    internalProps: sharedProps,
+  });
 
   const {
     value: valueProp,
@@ -55,10 +53,10 @@ export const useMultiInputDateTimeRangeField = <
     timezone: timezoneProp,
     enableAccessibleFieldDOMStructure,
     autoFocus,
-  } = sharedProps;
+  } = sharedPropsWithDefaults;
 
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
-    name: 'useMultiInputDateRangeField',
+    name: 'useMultiInputDateTimeRangeField',
     timezone: timezoneProp,
     value: valueProp,
     defaultValue,
@@ -68,11 +66,11 @@ export const useMultiInputDateTimeRangeField = <
   });
 
   const { validationError, getValidationErrorForNewValue } = useValidation({
-    props: sharedProps,
+    props: sharedPropsWithDefaults,
     value,
     timezone,
     validator: validateDateTimeRange,
-    onError: sharedProps.onError,
+    onError: sharedPropsWithDefaults.onError,
   });
 
   // TODO: Maybe export utility from `useField` instead of copy/pasting the logic
@@ -145,9 +143,8 @@ export const useMultiInputDateTimeRangeField = <
     typeof endFieldProps
   >(endFieldProps) as UseFieldResponse<TEnableAccessibleFieldDOMStructure, TTextFieldSlotProps>;
 
-  /* TODO: Undo this change when a clearable behavior for multiple input range fields is implemented */
   return {
-    startDate: excludeProps(startDateResponse, ['clearable', 'onClear']),
-    endDate: excludeProps(endDateResponse, ['clearable', 'onClear']),
+    startDate: startDateResponse,
+    endDate: endDateResponse,
   };
 };

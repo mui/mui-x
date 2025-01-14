@@ -304,7 +304,7 @@ export class AdapterMoment implements MuiPickersAdapter<string> {
       .join('');
   };
 
-  public isValid = (value: Moment | null) => {
+  public isValid = (value: Moment | null): value is Moment => {
     if (value == null) {
       return false;
     }

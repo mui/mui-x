@@ -143,6 +143,7 @@ npx @mui/x-codemod@next v8.0.0/charts/preset-safe <path|folder>
 The list includes these transformers
 
 - [`rename-legend-to-slots-legend`](#rename-legend-to-slots-legend)
+- [`replace-legend-direction-values`](#replace-legend-direction-values)
 - [`rename-responsive-chart-container`](#rename-responsive-chart-container)
 - [`rename-label-and-tick-font-size`](#rename-label-and-tick-font-size)
 
@@ -154,6 +155,21 @@ Renames legend props to the corresponding slotProps.
  <LineChart
 -  legend={{ hiden: true}}
 +  slotProps={{ legend: { hiden: true} }}
+ />
+```
+
+#### `replace-legend-direction-values`
+
+Replace `row` and `column` values by `horizontal` and `vertical` respectively.
+
+```diff
+ <BarChart
+    slotProps={{
+      legend: {
+-        direction: "row"
++        direction: "horizontal"
+      }
+    }}
  />
 ```
 
@@ -172,17 +188,15 @@ Renames `ResponsiveChartContainer` and `ResponsiveChartContainerPro` by `ChartCo
 +</ChartContainer>
 ```
 
-:::warning
-If you imported both `ResponsiveChartContainer` and `ChartContainer` in the same file, you might end up with duplicated import.
-Verify the git diff to remove the duplicate.
-
-```diff
- import { ChartContainer } from '@mui/x-charts/ChartContainer';
--import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
-+import { ChartContainer } from '@mui/x-charts/ChartContainer';
-```
-
-:::
+> [!WARNING]
+> If you imported both `ResponsiveChartContainer` and `ChartContainer` in the same file, you might end up with duplicated import.
+> Verify the git diff to remove the duplicate.
+>
+> ```diff
+>  import { ChartContainer } from '@mui/x-charts/ChartContainer';
+> -import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
+> +import { ChartContainer } from '@mui/x-charts/ChartContainer';
+> ```
 
 #### `rename-label-and-tick-font-size`
 
@@ -249,7 +263,38 @@ npx @mui/x-codemod@next v8.0.0/pickers/preset-safe <path|folder>
 
 The list includes these transformers
 
+- [`rename-adapter-date-fns-imports`](#rename-adapter-date-fns-imports)
 - [`rename-and-move-field-value-type`](#rename-and-move-field-value-type)
+
+#### `rename-adapter-date-fns-imports`
+
+> [!WARNING]
+> This codemod is not idempotent. Running it multiple times will rename the imports back and forth.
+> Usage of `AdapterDateFnsV3` would be replaced by `AdapterDateFns` and a subsequent run would rename it to `AdapterDateFnsV2`.
+
+- Renames `AdapterDateFns` and `AdapterDateFnsJalali` imports to `AdapterDateFnsV2` and `AdapterDateFnsJalaliV2` respectfully.
+
+  ```diff
+  -import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+  -import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
+  +import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV2';
+  +import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalaliV2';
+  ```
+
+- Renames `AdapterDateFnsV3` and `AdapterDateFnsJalaliV3` imports to `AdapterDateFns` and `AdapterDateFnsJalali` respectfully.
+
+  ```diff
+  -import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+  -import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalaliV3';
+  +import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+  +import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
+  ```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@next v8.0.0/pickers/rename-adapter-date-fns-imports <path>
+```
 
 #### `rename-and-move-field-value-type`
 

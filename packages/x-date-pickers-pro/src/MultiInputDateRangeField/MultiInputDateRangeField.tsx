@@ -12,10 +12,7 @@ import {
   unstable_generateUtilityClass as generateUtilityClass,
   unstable_generateUtilityClasses as generateUtilityClasses,
 } from '@mui/utils';
-import {
-  convertFieldResponseIntoMuiTextFieldProps,
-  useFieldOwnerState,
-} from '@mui/x-date-pickers/internals';
+import { cleanFieldResponse, useFieldOwnerState } from '@mui/x-date-pickers/internals';
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import {
@@ -116,30 +113,27 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
     className: clsx(className, classes.root),
   });
 
-  const TextField =
-    slots?.textField ??
-    (inProps.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
   const startTextFieldProps = useSlotProps<
-    typeof TextField,
+    typeof PickersTextField,
     MultiInputDateRangeFieldSlotProps['textField'],
     {},
     MultiInputDateRangeFieldProps<TEnableAccessibleFieldDOMStructure> & {
       position: RangePosition;
     }
   >({
-    elementType: TextField,
+    elementType: PickersTextField,
     externalSlotProps: slotProps?.textField,
     ownerState: { ...ownerState, position: 'start' },
   });
   const endTextFieldProps = useSlotProps<
-    typeof TextField,
+    typeof PickersTextField,
     MultiInputDateRangeFieldSlotProps['textField'],
     {},
     MultiInputDateRangeFieldProps<TEnableAccessibleFieldDOMStructure> & {
       position: RangePosition;
     }
   >({
-    elementType: TextField,
+    elementType: PickersTextField,
     externalSlotProps: slotProps?.textField,
     ownerState: { ...ownerState, position: 'end' },
   });
@@ -166,8 +160,14 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
     unstableEndFieldRef,
   });
 
-  const startDateProps = convertFieldResponseIntoMuiTextFieldProps(fieldResponse.startDate);
-  const endDateProps = convertFieldResponseIntoMuiTextFieldProps(fieldResponse.endDate);
+  const { textFieldProps: startDateProps } = cleanFieldResponse(fieldResponse.startDate);
+  const { textFieldProps: endDateProps } = cleanFieldResponse(fieldResponse.endDate);
+
+  const TextField =
+    slots?.textField ??
+    (fieldResponse.startDate.enableAccessibleFieldDOMStructure === false
+      ? MuiTextField
+      : PickersTextField);
 
   return (
     <Root {...rootProps}>

@@ -8,5 +8,5 @@ export type GridGroupingValueGetter<
   value: TValue,
   row: R,
   column: GridColDef<R>,
-  apiRef: React.MutableRefObject<GridApiPremium>,
+  apiRef: React.RefObject<GridApiPremium>,
 ) => GridKeyValue | null | undefined;

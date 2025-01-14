@@ -76,7 +76,7 @@ export interface PickersComponentsPropsList {
   MuiPickersFadeTransitionGroup: PickersFadeTransitionGroupProps;
   MuiPickersPopper: PickerPopperProps;
   MuiPickersSlideTransition: ExportedSlideTransitionProps;
-  MuiPickersToolbar: PickersToolbarProps<PickerValidValue>;
+  MuiPickersToolbar: PickersToolbarProps;
   MuiPickersToolbarButton: PickersToolbarButtonProps;
   MuiPickersToolbarText: ExportedPickersToolbarTextProps;
   MuiPickersLayout: PickersLayoutProps<PickerValidValue>;

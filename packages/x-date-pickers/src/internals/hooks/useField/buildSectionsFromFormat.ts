@@ -143,7 +143,7 @@ const createSection = ({
     ? hasLeadingZerosInFormat
     : sectionConfig.contentType === 'digit';
 
-  const isValidDate = date != null && utils.isValid(date);
+  const isValidDate = utils.isValid(date);
   let sectionValue = isValidDate ? utils.formatByString(date, token) : '';
   let maxLength: number | null = null;
 

@@ -25,7 +25,7 @@ export class MissingRowIdError extends Error {}
  * TODO: Impossible priority - useGridFocus also needs to be after useGridParamsApi
  */
 export function useGridParamsApi(
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'unstable_listView'>,
 ) {
   const getColumnHeaderParams = React.useCallback<GridParamsApi['getColumnHeaderParams']>(
