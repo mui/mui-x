@@ -15,8 +15,8 @@ import {
 import type { UseFieldStateReturnValue } from './useFieldState';
 import type { UseFieldCharacterEditingResponse } from './useFieldCharacterEditing';
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
-import { ExportedUseClearableFieldProps } from '../../../hooks/useClearableField';
 import { FormProps, InferNonNullablePickerValue, PickerValidValue } from '../../models';
+import type { ExportedPickerFieldUIProps } from '../../components/PickerFieldUI';
 
 export interface UseFieldParameters<
   TValue extends PickerValidValue,
@@ -128,9 +128,15 @@ export interface UseFieldInternalProps<
 }
 
 export interface UseFieldCommonAdditionalProps
-  extends Required<Pick<UseFieldInternalProps<any, any, any>, 'disabled' | 'readOnly'>> {}
+  extends Required<Pick<UseFieldInternalProps<any, any, any>, 'disabled' | 'readOnly'>> {
+  /**
+   * The aria label to set on the button that opens the picker.
+   */
+  openPickerAriaLabel: string;
+}
 
-export interface UseFieldCommonForwardedProps extends ExportedUseClearableFieldProps {
+export interface UseFieldCommonForwardedProps
+  extends Pick<ExportedPickerFieldUIProps, 'clearable' | 'onClear'> {
   onKeyDown?: React.KeyboardEventHandler;
   error?: boolean;
 }

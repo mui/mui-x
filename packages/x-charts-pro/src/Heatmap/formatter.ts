@@ -1,7 +1,7 @@
-import { SeriesFormatter, SeriesId } from '@mui/x-charts/internals';
+import { SeriesProcessor, SeriesId } from '@mui/x-charts/internals';
 import { DefaultizedHeatmapSeriesType } from '../models/seriesType/heatmap';
 
-const formatter: SeriesFormatter<'heatmap'> = (params) => {
+const formatter: SeriesProcessor<'heatmap'> = (params) => {
   const { series, seriesOrder } = params;
 
   const defaultizedSeries: Record<SeriesId, DefaultizedHeatmapSeriesType> = {};
@@ -10,6 +10,7 @@ const formatter: SeriesFormatter<'heatmap'> = (params) => {
       // Defaultize the data and the value formatter.
       valueFormatter: (v) => v[2].toString(),
       data: [],
+      labelMarkType: 'square',
       ...series[seriesId],
     };
   });

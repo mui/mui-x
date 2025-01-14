@@ -3,7 +3,7 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
 import { useValidation } from '../../../validation';
-import { useUtils } from '../useUtils';
+import { useLocalizationContext, useUtils } from '../useUtils';
 import {
   UseFieldParameters,
   UseFieldReturnValue,
@@ -20,6 +20,7 @@ import { useFieldCharacterEditing } from './useFieldCharacterEditing';
 import { useFieldV7TextField } from './useFieldV7TextField';
 import { useFieldV6TextField } from './useFieldV6TextField';
 import { PickerValidValue } from '../../models';
+import { useFieldInternalPropsWithDefaults } from './useFieldInternalPropsWithDefaults';
 
 export const useField = <
   TValue extends PickerValidValue,
@@ -292,9 +293,17 @@ export const useField = <
     clearable: Boolean(clearable && !areAllSectionsEmpty && !readOnly && !disabled),
   };
 
+  const localizationContext = useLocalizationContext();
+  const openPickerAriaLabel = React.useMemo(
+    () =>
+      manager.internal_getOpenPickerButtonAriaLabel({ ...localizationContext, value: state.value }),
+    [manager, state.value, localizationContext],
+  );
+
   const commonAdditionalProps: UseFieldCommonAdditionalProps = {
     disabled,
     readOnly,
+    openPickerAriaLabel,
   };
 
   return {

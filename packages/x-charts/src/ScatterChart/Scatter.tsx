@@ -12,8 +12,8 @@ import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
 import { D3Scale } from '../models/axis';
 import { useHighlighted } from '../context';
-import { useDrawingArea } from '../hooks/useDrawingArea';
 import { selectorChartsInteractionIsVoronoiEnabled } from '../internals/plugins/featurePlugins/useChartInteraction';
+import { useChartContext } from '../context/ChartProvider';
 
 export interface ScatterProps {
   series: DefaultizedScatterSeriesType;
@@ -46,8 +46,7 @@ export interface ScatterProps {
 function Scatter(props: ScatterProps) {
   const { series, xScale, yScale, color, colorGetter, markerSize, onItemClick } = props;
 
-  const drawingArea = useDrawingArea();
-
+  const { instance } = useChartContext();
   const store = useStore();
   const isVoronoiEnabled = useSelector(store, selectorChartsInteractionIsVoronoiEnabled);
 
@@ -73,7 +72,7 @@ function Scatter(props: ScatterProps) {
       const x = getXPosition(scatterPoint.x);
       const y = getYPosition(scatterPoint.y);
 
-      const isInRange = drawingArea.isPointInside({ x, y });
+      const isInRange = instance.isPointInside({ x, y });
 
       const pointCtx = { type: 'scatter' as const, seriesId: series.id, dataIndex: i };
 
@@ -100,7 +99,6 @@ function Scatter(props: ScatterProps) {
   }, [
     xScale,
     yScale,
-    drawingArea,
     series.data,
     series.id,
     isHighlighted,
@@ -108,6 +106,7 @@ function Scatter(props: ScatterProps) {
     getInteractionItemProps,
     colorGetter,
     color,
+    instance,
   ]);
 
   return (

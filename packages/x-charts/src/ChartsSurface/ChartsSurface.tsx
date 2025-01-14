@@ -5,9 +5,13 @@ import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import { useAxisEvents } from '../hooks/useAxisEvents';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
-import { useDrawingArea, useSvgRef } from '../hooks';
-import { useSize } from '../context/SizeProvider';
-import type { SizeContextState } from '../context/SizeProvider';
+import { useSvgRef } from '../hooks/useSvgRef';
+import { useSelector } from '../internals/store/useSelector';
+import { useStore } from '../internals/store/useStore';
+import {
+  selectorChartContainerSize,
+  selectorChartPropsSize,
+} from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.selectors';
 
 export interface ChartsSurfaceProps {
   className?: string;
@@ -26,7 +30,7 @@ export interface ChartsSurfaceProps {
 const ChartsSurfaceStyles = styled('svg', {
   name: 'MuiChartsSurface',
   slot: 'Root',
-})<{ ownerState: Partial<Pick<SizeContextState, 'width' | 'height'>> }>(({ ownerState }) => ({
+})<{ ownerState: { width?: number; height?: number } }>(({ ownerState }) => ({
   width: ownerState.width ?? '100%',
   height: ownerState.height ?? '100%',
   display: 'flex',
@@ -58,30 +62,23 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   inProps: ChartsSurfaceProps,
   ref: React.Ref<SVGSVGElement>,
 ) {
-  const { width, height, left, right, top, bottom } = useDrawingArea();
-  const { hasIntrinsicSize, svgRef: containerRef, inHeight, inWidth } = useSize();
+  const store = useStore();
+  const { width: svgWidth, height: svgHeight } = useSelector(store, selectorChartContainerSize);
+  const { width: propsWidth, height: propsHeight } = useSelector(store, selectorChartPropsSize);
   const svgRef = useSvgRef();
-  const handleRef = useForkRef(containerRef, svgRef, ref);
+  const handleRef = useForkRef(svgRef, ref);
   const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });
 
   const { children, disableAxisListener = false, className, title, desc, ...other } = themeProps;
 
-  const svgWidth = width + left + right;
-  const svgHeight = height + top + bottom;
-
-  const svgView = {
-    width: svgWidth,
-    height: svgHeight,
-    x: 0,
-    y: 0,
-  };
+  const hasIntrinsicSize = svgHeight > 0 && svgWidth > 0;
 
   useAxisEvents(disableAxisListener);
 
   return (
     <ChartsSurfaceStyles
-      ownerState={{ width: inWidth, height: inHeight }}
-      viewBox={`${svgView.x} ${svgView.y} ${svgView.width} ${svgView.height}`}
+      ownerState={{ width: propsWidth, height: propsHeight }}
+      viewBox={`${0} ${0} ${svgWidth} ${svgHeight}`}
       className={className}
       {...other}
       ref={handleRef}

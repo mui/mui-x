@@ -53,7 +53,7 @@ export interface GridGetRowsToExportParams<Api extends GridApiCommon = GridApiCo
   /**
    * The API of the grid.
    */
-  apiRef: React.MutableRefObject<Api>;
+  apiRef: React.RefObject<Api>;
 }
 
 export interface GridCsvGetRowsToExportParams<Api extends GridApiCommon = GridApiCommunity>
