@@ -2,6 +2,7 @@ export * from './useDrawingArea';
 export * from './useChartId';
 export * from './useScale';
 export * from './useAxis';
+export * from './useZAxis';
 export * from './useColorScale';
 export * from './useSvgRef';
 export {

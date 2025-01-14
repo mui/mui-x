@@ -1,7 +1,6 @@
 {
   "props": {
     "colors": { "type": { "name": "any" }, "default": "blueberryTwilightPalette" },
-    "dataset": { "type": { "name": "any" } },
     "height": { "type": { "name": "any" } },
     "highlightedItem": { "type": { "name": "any" } },
     "id": { "type": { "name": "any" } },
@@ -9,8 +8,7 @@
     "onHighlightChange": { "type": { "name": "any" } },
     "series": { "type": { "name": "any" } },
     "skipAnimation": { "type": { "name": "any" } },
-    "width": { "type": { "name": "any" } },
-    "zAxis": { "type": { "name": "any" } }
+    "width": { "type": { "name": "any" } }
   },
   "name": "ChartDataProvider",
   "imports": [
