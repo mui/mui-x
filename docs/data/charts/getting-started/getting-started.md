@@ -92,7 +92,7 @@ The outer margin space is where information like axes, titles, and legends are d
 
 See the [Styling documentation](/x/react-charts/styling/#placement) for complete details.
 
-## Server side rendering
+## Server-side rendering
 
 The chart support server side rendering under two conditions:
 
