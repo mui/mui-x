@@ -9,29 +9,23 @@ import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 
 function ButtonDateField(props: DatePickerFieldProps) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-  const { value, timezone, format } = internalProps;
   const { InputProps, slotProps, slots, ownerState, label, focused, name, ...other } =
     forwardedProps;
 
   const pickerContext = usePickerContext();
 
-  const parsedFormat = useParsedFormat(internalProps);
+  const parsedFormat = useParsedFormat();
   const { hasValidationError } = useValidation({
     validator: validateDate,
-    value,
-    timezone,
+    value: pickerContext.value,
+    timezone: pickerContext.timezone,
     props: internalProps,
   });
 
-  const handleTogglePicker = (event: React.UIEvent) => {
-    if (pickerContext.open) {
-      pickerContext.onClose(event);
-    } else {
-      pickerContext.onOpen(event);
-    }
-  };
-
-  const valueStr = value == null ? parsedFormat : value.format(format);
+  const valueStr =
+    pickerContext.value == null
+      ? parsedFormat
+      : pickerContext.value.format(pickerContext.fieldFormat);
 
   return (
     <Button
@@ -43,7 +37,7 @@ function ButtonDateField(props: DatePickerFieldProps) {
       fullWidth
       color={hasValidationError ? 'error' : 'primary'}
       ref={InputProps?.ref}
-      onClick={handleTogglePicker}
+      onClick={() => pickerContext.setOpen((prev) => !prev)}
     >
       {label ? `${label}: ${valueStr}` : valueStr}
     </Button>

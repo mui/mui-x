@@ -61,12 +61,12 @@ import {
   columnGroupsStateInitializer,
   useGridLazyLoader,
   useGridLazyLoaderPreProcessors,
+  useGridDataSourceLazyLoader,
   headerFilteringStateInitializer,
   useGridHeaderFiltering,
   virtualizationStateInitializer,
   useGridVirtualization,
   useGridDataSourceTreeDataPreProcessors,
-  useGridDataSource,
   dataSourceStateInitializer,
   useGridRowSpanning,
   rowSpanningStateInitializer,
@@ -75,6 +75,7 @@ import {
 } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
+import { useGridDataSourcePremium as useGridDataSource } from '../hooks/features/dataSource/useGridDataSourcePremium';
 // Premium-only features
 import {
   useGridAggregation,
@@ -95,7 +96,7 @@ import {
 import { useGridClipboardImport } from '../hooks/features/clipboard/useGridClipboardImport';
 
 export const useDataGridPremiumComponent = (
-  inputApiRef: React.MutableRefObject<GridApiPremium> | undefined,
+  inputApiRef: React.RefObject<GridApiPremium> | undefined,
   props: DataGridPremiumProcessedProps,
 ) => {
   const apiRef = useGridInitialization<GridPrivateApiPremium, GridApiPremium>(inputApiRef, props);
@@ -152,6 +153,7 @@ export const useDataGridPremiumComponent = (
   useGridRowGrouping(apiRef, props);
   useGridHeaderFiltering(apiRef, props);
   useGridTreeData(apiRef, props);
+  useGridDataSource(apiRef, props);
   useGridAggregation(apiRef, props);
   useGridKeyboardNavigation(apiRef, props);
   useGridRowSelection(apiRef, props);
@@ -180,6 +182,7 @@ export const useDataGridPremiumComponent = (
   useGridScroll(apiRef, props);
   useGridInfiniteLoader(apiRef, props);
   useGridLazyLoader(apiRef, props);
+  useGridDataSourceLazyLoader(apiRef, props);
   useGridColumnMenu(apiRef);
   useGridCsvExport(apiRef, props);
   useGridPrintExport(apiRef, props);
@@ -188,7 +191,6 @@ export const useDataGridPremiumComponent = (
   useGridDimensions(apiRef, props);
   useGridEvents(apiRef, props);
   useGridStatePersistence(apiRef);
-  useGridDataSource(apiRef, props);
   useGridVirtualization(apiRef, props);
   useGridListView(apiRef, props);
 

@@ -16,9 +16,14 @@ export default function StackBars() {
         { dataKey: 'treas', stack: 'equity' },
       ])}
       xAxis={[{ scaleType: 'band', dataKey: 'year' }]}
-      hideLegend
-      width={600}
-      height={350}
+      {...config}
     />
   );
 }
+
+const config = {
+  width: 600,
+  height: 350,
+  margin: { left: 70 },
+  hideLegend: true,
+};

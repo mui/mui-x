@@ -1,57 +1,61 @@
 'use client';
-import type { DrawingAreaProviderProps } from '../DrawingAreaProvider';
-import type { CartesianProviderProps } from '../CartesianProvider';
-import type { SeriesProviderProps } from '../SeriesProvider';
+import { useTheme } from '@mui/material/styles';
 import type { ZAxisContextProviderProps } from '../ZAxisContextProvider';
 import type { ChartDataProviderProps } from './ChartDataProvider';
 import { HighlightedProviderProps } from '../HighlightedProvider';
-import { useDefaultizeAxis } from './useDefaultizeAxis';
-import { PluginProviderProps } from '../PluginProvider';
 import { AnimationProviderProps } from '../AnimationProvider';
-import { SizeProviderProps } from '../SizeProvider';
+import { ChartProviderProps } from '../ChartProvider';
+import { ChartAnyPluginSignature, MergeSignaturesProperty } from '../../internals/plugins/models';
+import { ChartSeriesType } from '../../models/seriesType/config';
+import { ChartCorePluginSignatures } from '../../internals/plugins/corePlugins';
 
-export const useChartDataProviderProps = (props: ChartDataProviderProps) => {
+export const useChartDataProviderProps = <
+  TSignatures extends readonly ChartAnyPluginSignature[],
+  TSeries extends ChartSeriesType = ChartSeriesType,
+>(
+  props: ChartDataProviderProps<TSignatures, TSeries>,
+) => {
   const {
+    apiRef,
     width,
     height,
     series,
     margin,
-    xAxis,
-    yAxis,
     zAxis,
     colors,
     dataset,
     highlightedItem,
     onHighlightChange,
-    plugins,
     children,
     skipAnimation,
+    plugins,
+    seriesConfig,
+    ...other
   } = props;
 
-  const [defaultizedXAxis, defaultizedYAxis] = useDefaultizeAxis(xAxis, yAxis, dataset);
+  const theme = useTheme();
 
-  const drawingAreaProviderProps: Omit<DrawingAreaProviderProps, 'children'> = {
-    margin,
+  const chartProviderProps: Omit<ChartProviderProps<TSignatures, TSeries>, 'children'> = {
+    plugins,
+    seriesConfig,
+    pluginParams: {
+      apiRef,
+      width,
+      height,
+      margin,
+      dataset,
+      series,
+      colors,
+      theme: theme.palette.mode,
+      ...other,
+    } as unknown as MergeSignaturesProperty<
+      [...ChartCorePluginSignatures, ...TSignatures],
+      'params'
+    >,
   };
 
   const animationProviderProps: Omit<AnimationProviderProps, 'children'> = {
     skipAnimation,
-  };
-
-  const pluginProviderProps: Omit<PluginProviderProps, 'children'> = {
-    plugins,
-  };
-
-  const seriesProviderProps: Omit<SeriesProviderProps, 'children'> = {
-    series,
-    colors,
-    dataset,
-  };
-
-  const cartesianProviderProps: Omit<CartesianProviderProps, 'children'> = {
-    xAxis: defaultizedXAxis,
-    yAxis: defaultizedYAxis,
-    dataset,
   };
 
   const zAxisContextProps: Omit<ZAxisContextProviderProps, 'children'> = {
@@ -64,22 +68,11 @@ export const useChartDataProviderProps = (props: ChartDataProviderProps) => {
     onHighlightChange,
   };
 
-  const sizeProviderProps: Omit<SizeProviderProps, 'children'> = {
-    width,
-    height,
-  };
-
   return {
     children,
-    drawingAreaProviderProps,
-    seriesProviderProps,
-    cartesianProviderProps,
     zAxisContextProps,
     highlightedProviderProps,
-    pluginProviderProps,
     animationProviderProps,
-    xAxis: defaultizedXAxis,
-    yAxis: defaultizedYAxis,
-    sizeProviderProps,
+    chartProviderProps,
   };
 };

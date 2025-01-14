@@ -1,3 +1,5 @@
+import * as React from 'react';
+import { expect } from 'chai';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
@@ -9,14 +11,13 @@ import {
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
-import { expect } from 'chai';
-import * as React from 'react';
+import { PickerValue } from '@mui/x-date-pickers/internals';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DesktopDateTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  it('should respect the `localeText` prop', function test() {
+  it('should respect the `localeText` prop', () => {
     render(
       <DesktopDateTimePicker
         open
@@ -54,7 +55,7 @@ describe('<DesktopDateTimePicker /> - Describes', () => {
     ],
   }));
 
-  describeValue(DesktopDateTimePicker, () => ({
+  describeValue<PickerValue, 'picker'>(DesktopDateTimePicker, () => ({
     render,
     componentFamily: 'picker',
     type: 'date-time',

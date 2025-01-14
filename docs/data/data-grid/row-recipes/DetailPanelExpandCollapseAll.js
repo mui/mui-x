@@ -51,17 +51,23 @@ function CustomDetailPanelHeader() {
     gridDetailPanelExpandedRowsContentCacheSelector,
   );
 
-  const noDetailPanelsOpen = expandedRowIds.length === 0;
+  const noDetailPanelsOpen = expandedRowIds.size === 0;
 
   const expandOrCollapseAll = () => {
-    const dataRowIdToModelLookup = gridRowsLookupSelector(apiRef);
-    const allRowIdsWithDetailPanels = Object.keys(rowsWithDetailPanels).map((key) =>
-      apiRef.current.getRowId(dataRowIdToModelLookup[key]),
-    );
-
-    apiRef.current.setExpandedDetailPanels(
-      noDetailPanelsOpen ? allRowIdsWithDetailPanels : [],
-    );
+    if (noDetailPanelsOpen) {
+      const dataRowIdToModelLookup = gridRowsLookupSelector(apiRef);
+      const allRowIdsWithDetailPanels = new Set();
+      for (const key in rowsWithDetailPanels) {
+        if (rowsWithDetailPanels.hasOwnProperty(key)) {
+          allRowIdsWithDetailPanels.add(
+            apiRef.current.getRowId(dataRowIdToModelLookup[key]),
+          );
+        }
+      }
+      apiRef.current.setExpandedDetailPanels(allRowIdsWithDetailPanels);
+    } else {
+      apiRef.current.setExpandedDetailPanels(new Set());
+    }
   };
 
   const Icon = noDetailPanelsOpen ? UnfoldMoreIcon : UnfoldLessIcon;

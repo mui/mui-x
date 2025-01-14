@@ -5,12 +5,12 @@
     {
       "name": "getExpandedDetailPanels",
       "description": "Returns the rows whose detail panel is open.",
-      "type": "() => GridRowId[]"
+      "type": "() => Set<GridRowId>"
     },
     {
       "name": "setExpandedDetailPanels",
       "description": "Changes which rows to expand the detail panel.",
-      "type": "(ids: GridRowId[]) => void"
+      "type": "(ids: Set<GridRowId>) => void"
     },
     {
       "name": "toggleDetailPanel",

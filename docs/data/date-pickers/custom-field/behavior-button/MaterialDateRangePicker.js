@@ -14,7 +14,6 @@ import {
 
 function ButtonDateRangeField(props) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-  const { value, timezone, format } = internalProps;
   const {
     InputProps,
     slotProps,
@@ -27,25 +26,18 @@ function ButtonDateRangeField(props) {
   } = forwardedProps;
 
   const pickerContext = usePickerContext();
-
-  const parsedFormat = useParsedFormat(internalProps);
+  const parsedFormat = useParsedFormat();
   const { hasValidationError } = useValidation({
     validator: validateDateRange,
-    value,
-    timezone,
+    value: pickerContext.value,
+    timezone: pickerContext.timezone,
     props: internalProps,
   });
 
-  const handleTogglePicker = (event) => {
-    if (pickerContext.open) {
-      pickerContext.onClose(event);
-    } else {
-      pickerContext.onOpen(event);
-    }
-  };
-
-  const formattedValue = (value ?? [null, null])
-    .map((date) => (date == null ? parsedFormat : date.format(format)))
+  const formattedValue = pickerContext.value
+    .map((date) =>
+      date == null ? parsedFormat : date.format(pickerContext.fieldFormat),
+    )
     .join(' – ');
 
   return (
@@ -54,7 +46,7 @@ function ButtonDateRangeField(props) {
       variant="outlined"
       color={hasValidationError ? 'error' : 'primary'}
       ref={InputProps?.ref}
-      onClick={handleTogglePicker}
+      onClick={() => pickerContext.setOpen((prev) => !prev)}
     >
       {label ? `${label}: ${formattedValue}` : formattedValue}
     </Button>

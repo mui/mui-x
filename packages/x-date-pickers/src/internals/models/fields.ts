@@ -1,5 +1,4 @@
 import { SxProps } from '@mui/material/styles';
-import { MakeRequired } from '@mui/x-internals/types';
 import type {
   ExportedUseClearableFieldProps,
   UseClearableFieldSlotProps,
@@ -7,6 +6,12 @@ import type {
 } from '../../hooks/useClearableField';
 import type { FieldSection, PickerOwnerState } from '../../models';
 import type { UseFieldInternalProps } from '../hooks/useField';
+import { RangePosition } from './pickers';
+import { PickerValidValue } from './value';
+
+export interface FieldRangeSection extends FieldSection {
+  dateName: RangePosition;
+}
 
 export interface BaseForwardedSingleInputFieldProps extends ExportedUseClearableFieldProps {
   className: string | undefined;
@@ -39,26 +44,11 @@ export interface BaseForwardedSingleInputFieldProps extends ExportedUseClearable
  * Only contains what the MUI components are passing to the field, not what users can pass using the `props.slotProps.field`.
  */
 export type BaseSingleInputFieldProps<
-  TValue,
-  TSection extends FieldSection,
+  TValue extends PickerValidValue,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-> = MakeRequired<
-  Pick<
-    UseFieldInternalProps<TValue, TSection, TEnableAccessibleFieldDOMStructure, TError>,
-    | 'readOnly'
-    | 'disabled'
-    | 'format'
-    | 'formatDensity'
-    | 'enableAccessibleFieldDOMStructure'
-    | 'selectedSections'
-    | 'onSelectedSectionsChange'
-    | 'timezone'
-    | 'value'
-    | 'onChange'
-    | 'unstableFieldRef'
-    | 'autoFocus'
-  >,
-  'format' | 'value' | 'onChange' | 'timezone'
+> = Pick<
+  UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, TError>,
+  'readOnly' | 'unstableFieldRef' | 'autoFocus'
 > &
   BaseForwardedSingleInputFieldProps;

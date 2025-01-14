@@ -1,8 +1,7 @@
 import { SxProps } from '@mui/material/styles';
 import { SlotComponentProps } from '@mui/utils';
-import { MakeRequired } from '@mui/x-internals/types';
-import { UseFieldInternalProps } from '@mui/x-date-pickers/internals';
-import { FieldSection } from '@mui/x-date-pickers/models';
+import { PickerRangeValue, UseFieldInternalProps } from '@mui/x-date-pickers/internals';
+import { FieldOwnerState } from '@mui/x-date-pickers/models';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import type {
   MultiInputFieldRefs,
@@ -16,26 +15,11 @@ import type {
  * Only contains what the MUI components are passing to the field, not what users can pass using the `props.slotProps.field`.
  */
 export interface BaseMultiInputFieldProps<
-  TValue,
-  TSection extends FieldSection,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-> extends MakeRequired<
-      Pick<
-        UseFieldInternalProps<TValue, TSection, TEnableAccessibleFieldDOMStructure, TError>,
-        | 'readOnly'
-        | 'disabled'
-        | 'format'
-        | 'formatDensity'
-        | 'enableAccessibleFieldDOMStructure'
-        | 'selectedSections'
-        | 'onSelectedSectionsChange'
-        | 'timezone'
-        | 'autoFocus'
-        | 'value'
-        | 'onChange'
-      >,
-      'format' | 'value' | 'onChange' | 'timezone'
+> extends Pick<
+      UseFieldInternalProps<PickerRangeValue, TEnableAccessibleFieldDOMStructure, TError>,
+      'readOnly' | 'autoFocus'
     >,
     RangeFieldSeparatorProps,
     MultiInputFieldRefs {
@@ -47,15 +31,11 @@ export interface BaseMultiInputFieldProps<
     textField?: React.ElementType;
   };
   slotProps?: {
-    root?: SlotComponentProps<
-      React.ElementType<MultiInputFieldSlotRootProps>,
-      {},
-      Record<string, any>
-    >;
+    root?: SlotComponentProps<React.ElementType<MultiInputFieldSlotRootProps>, {}, FieldOwnerState>;
     textField?: SlotComponentProps<
       typeof PickersTextField,
       {},
-      { position?: RangePosition } & Record<string, any>
+      FieldOwnerState & { position?: RangePosition }
     >;
   };
 }

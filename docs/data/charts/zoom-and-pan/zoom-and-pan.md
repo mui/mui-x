@@ -41,21 +41,6 @@ The following options are available:
 
 {{"demo": "ZoomOptionsNoSnap.js", "hideToolbar": true, "bg": "playground"}}
 
-## Controlled zoom
-
-You can control the zoom state by setting the `zoom` and `onZoomChange` props.
-This way, you can control the zoom state from outside the chart.
-
-The `onZoomChange` prop is a function that receives the new zoom state.
-
-While the `zoom` prop is an array of objects that define the zoom state for each axis with zoom enabled.
-
-- **axisId**: The id of the axis to control.
-- **start**: The starting percentage of the axis range.
-- **end**: The ending percentage of the zoom range.
-
-{{"demo": "ZoomControlled.js"}}
-
 ## Zoom filtering
 
 You can make the zoom of an axis affect one or more axes extremums by setting the `zoom.filterMode` prop on the axis config.
@@ -66,3 +51,20 @@ You can make the zoom of an axis affect one or more axes extremums by setting th
 See how the secondary axis adapts to the visible part of the primary axis in the following example.
 
 {{"demo": "ZoomFilterMode.js"}}
+
+## External zoom management
+
+You can manage the zoom state by two means:
+
+- By defining an initial state with the `initialZoom` prop.
+- By imperatively set a zoom value with the `setZoomData` method of the public api.
+
+In addition, the `onZoomChange` prop is a function that receives the new zoom state.
+
+The `zoom` state is an array of objects that define the zoom state for each axis with zoom enabled.
+
+- **axisId**: The id of the axis to control.
+- **start**: The starting percentage of the axis range.
+- **end**: The ending percentage of the zoom range.
+
+{{"demo": "ZoomControlled.js"}}

@@ -99,7 +99,7 @@ try {
 }
 
 export const useGridVirtualScroller = () => {
-  const apiRef = useGridPrivateApiContext() as React.MutableRefObject<PrivateApiWithInfiniteLoader>;
+  const apiRef = useGridPrivateApiContext() as React.RefObject<PrivateApiWithInfiniteLoader>;
   const rootProps = useGridRootProps();
   const { unstable_listView: listView } = rootProps;
   const visibleColumns = useGridSelector(apiRef, () =>
@@ -136,6 +136,8 @@ export const useGridVirtualScroller = () => {
   const columnsTotalWidth = dimensions.columnsTotalWidth;
   const hasColSpan = useGridSelector(apiRef, gridHasColSpanSelector);
 
+  const previousSize = React.useRef<{ width: number; height: number }>(null);
+
   const mainRefCallback = React.useCallback(
     (node: HTMLDivElement | null) => {
       mainRef.current = node;
@@ -145,12 +147,16 @@ export const useGridVirtualScroller = () => {
       }
 
       const initialRect = node.getBoundingClientRect();
-      let lastSize = {
-        width: initialRect.width,
-        height: initialRect.height,
-      };
+      let lastSize = roundDimensions(initialRect);
 
-      apiRef.current.publishEvent('resize', lastSize);
+      if (
+        !previousSize.current ||
+        (lastSize.width !== previousSize.current.width &&
+          lastSize.height !== previousSize.current.height)
+      ) {
+        previousSize.current = lastSize;
+        apiRef.current.publishEvent('resize', lastSize);
+      }
 
       if (typeof ResizeObserver === 'undefined') {
         return undefined;
@@ -162,10 +168,7 @@ export const useGridVirtualScroller = () => {
           return;
         }
 
-        const newSize = {
-          width: entry.contentRect.width,
-          height: entry.contentRect.height,
-        };
+        const newSize = roundDimensions(entry.contentRect);
 
         if (newSize.width === lastSize.width && newSize.height === lastSize.height) {
           return;
@@ -267,9 +270,14 @@ export const useGridVirtualScroller = () => {
   );
 
   const triggerUpdateRenderContext = useEventCallback(() => {
+    const scroller = scrollerRef.current;
+    if (!scroller) {
+      return undefined;
+    }
+
     const newScroll = {
-      top: scrollerRef.current!.scrollTop,
-      left: scrollerRef.current!.scrollLeft,
+      top: scroller.scrollTop,
+      left: scroller.scrollLeft,
     };
 
     const dx = newScroll.left - scrollPosition.current.left;
@@ -668,7 +676,7 @@ export const useGridVirtualScroller = () => {
 type RenderContextInputs = {
   enabledForRows: boolean;
   enabledForColumns: boolean;
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>;
+  apiRef: React.RefObject<GridPrivateApiCommunity>;
   autoHeight: boolean;
   rowBufferPx: number;
   columnBufferPx: number;
@@ -690,7 +698,7 @@ type RenderContextInputs = {
 };
 
 function inputsSelector(
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   rootProps: ReturnType<typeof useGridRootProps>,
   enabledForRows: boolean,
   enabledForColumns: boolean,
@@ -1103,4 +1111,13 @@ function bufferForDirection(
       // eslint unable to figure out enum exhaustiveness
       throw new Error('unreachable');
   }
+}
+
+// Round to avoid issues with subpixel rendering
+// https://github.com/mui/mui-x/issues/15721
+function roundDimensions(dimensions: { width: number; height: number }) {
+  return {
+    width: Math.round(dimensions.width * 10) / 10,
+    height: Math.round(dimensions.height * 10) / 10,
+  };
 }

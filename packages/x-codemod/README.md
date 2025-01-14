@@ -66,23 +66,29 @@ A combination of all important transformers for migrating v7 to v8.
 It runs codemods for all MUI X packages (Data Grid, Date and Time Pickers, Tree View, and Charts).
 To run codemods for a specific package, refer to the respective section.
 
+<!-- #default-branch-switch -->
+
 ```bash
-npx @mui/x-codemod@latest v8.0.0/preset-safe <path|folder>
+npx @mui/x-codemod@next v8.0.0/preset-safe <path|folder>
 ```
 
 The corresponding sub-sections are listed below
 
 - [`preset-safe-for-tree-view`](#preset-safe-for-tree-view-v800)
 - [`preset-safe-for-charts`](#preset-safe-for-charts-v800)
+- [`preset-safe-for-data-grid`](#preset-safe-for-data-grid-v800)
+- [`preset-safe-for-pickers`](#preset-safe-for-pickers-v800)
 
 ### Tree View codemods
 
-#### `preset-safe` for tree view v8.0.0
+#### `preset-safe` for Tree View v8.0.0
 
-The `preset-safe` codemods for tree view.
+The `preset-safe` codemods for Tree View.
+
+<!-- #default-branch-switch -->
 
 ```bash
-npx @mui/x-codemod@latest v8.0.0/tree-view/preset-safe <path|folder>
+npx @mui/x-codemod@next v8.0.0/tree-view/preset-safe <path|folder>
 ```
 
 The list includes these transformers
@@ -101,13 +107,13 @@ Renames the Tree View component to Simple Tree View
 -import { TreeView } from '@mui/x-tree-view/TreeView';
 +import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 
-   return (
--    <TreeView>
-+    <SimpleTreeView>
-       <TreeItem itemId="1" label="First item" />
--    </TreeView>
-+    </SimpleTreeView>
-   );
+ return (
+-  <TreeView>
++  <SimpleTreeView>
+     <TreeItem itemId="1" label="First item" />
+-  </TreeView>
++  </SimpleTreeView>
+ );
 ```
 
 #### `rename-tree-item-2`
@@ -124,28 +130,47 @@ Renames the `TreeItem2` component to `TreeItem` (same for any subcomponents or u
 
 ### Charts codemods
 
-#### `preset-safe` for charts v8.0.0
+#### `preset-safe` for Charts v8.0.0
 
-The `preset-safe` codemods for charts.
+The `preset-safe` codemods for Charts.
+
+<!-- #default-branch-switch -->
 
 ```bash
-npx @mui/x-codemod@latest v8.0.0/charts/preset-safe <path|folder>
+npx @mui/x-codemod@next v8.0.0/charts/preset-safe <path|folder>
 ```
 
 The list includes these transformers
 
 - [`rename-legend-to-slots-legend`](#rename-legend-to-slots-legend)
+- [`replace-legend-direction-values`](#replace-legend-direction-values)
 - [`rename-responsive-chart-container`](#rename-responsive-chart-container)
+- [`rename-label-and-tick-font-size`](#rename-label-and-tick-font-size)
 
 #### `rename-legend-to-slots-legend`
 
 Renames legend props to the corresponding slotProps.
 
 ```diff
-  <LineChart
--   legend={{ hiden: true}}
-+   slotProps={{ legend: { hiden: true} }}
-  />
+ <LineChart
+-  legend={{ hiden: true}}
++  slotProps={{ legend: { hiden: true} }}
+ />
+```
+
+#### `replace-legend-direction-values`
+
+Replace `row` and `column` values by `horizontal` and `vertical` respectively.
+
+```diff
+ <BarChart
+    slotProps={{
+      legend: {
+-        direction: "row"
++        direction: "horizontal"
+      }
+    }}
+ />
 ```
 
 #### `rename-responsive-chart-container`
@@ -153,27 +178,145 @@ Renames legend props to the corresponding slotProps.
 Renames `ResponsiveChartContainer` and `ResponsiveChartContainerPro` by `ChartContainer` and `ChartContainerPro` which have the same behavior in v8.
 
 ```diff
-- import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
-+ import { ChartContainer } from '@mui/x-charts/ChartContainer';
+-import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
++import { ChartContainer } from '@mui/x-charts/ChartContainer';
 
-- <ResponsiveChartContainer>
-+ <ChartContainer>
+-<ResponsiveChartContainer>
++<ChartContainer>
    <BarPlot />
-- </ResponsiveChartContainer>
-+ </ChartContainer>
+-</ResponsiveChartContainer>
++</ChartContainer>
 ```
 
-:::warning
-If you imported both `ResponsiveChartContainer` and `ChartContainer` in the same file, you might end up with duplicated import.
-Verify the git diff to remove the duplicate.
+> [!WARNING]
+> If you imported both `ResponsiveChartContainer` and `ChartContainer` in the same file, you might end up with duplicated import.
+> Verify the git diff to remove the duplicate.
+>
+> ```diff
+>  import { ChartContainer } from '@mui/x-charts/ChartContainer';
+> -import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
+> +import { ChartContainer } from '@mui/x-charts/ChartContainer';
+> ```
+
+#### `rename-label-and-tick-font-size`
+
+Renames `labelFontSize` and `tickFontSize` props to the corresponding `xxxStyle` prop.
 
 ```diff
- import { ChartContainer } from '@mui/x-charts/ChartContainer';
-- import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
-+ import { ChartContainer } from '@mui/x-charts/ChartContainer';
+ <ChartsXAxis
+-  labelFontSize={18}
++  labelStyle={{
++    fontSize: 18
++  }}
+-  tickFontSize={20}
++  tickStyle={{
++    fontSize: 20
++  }}
+ />
 ```
 
-:::
+### Data Grid codemods
+
+#### `preset-safe` for Data Grid v8.0.0
+
+The `preset-safe` codemods for Data Grid.
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@next v8.0.0/data-grid/preset-safe <path|folder>
+```
+
+The list includes these transformers
+
+- [`remove-stabilized-v8-experimentalFeatures`](#remove-stabilized-v8-experimentalFeatures)
+
+#### `remove-stabilized-v8-experimentalFeatures`
+
+Remove feature flags for stabilized `experimentalFeatures`.
+
+```diff
+ <DataGridPremium
+-  experimentalFeatures={{
+-    ariaV8: true,
+-  }}
+ />
+```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@next v8.0.0/data-grid/remove-stabilized-experimentalFeatures <path>
+```
+
+### Pickers codemods
+
+#### `preset-safe` for Pickers v8.0.0
+
+The `preset-safe` codemods for Pickers.
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@next v8.0.0/pickers/preset-safe <path|folder>
+```
+
+The list includes these transformers
+
+- [`rename-adapter-date-fns-imports`](#rename-adapter-date-fns-imports)
+- [`rename-and-move-field-value-type`](#rename-and-move-field-value-type)
+
+#### `rename-adapter-date-fns-imports`
+
+> [!WARNING]
+> This codemod is not idempotent. Running it multiple times will rename the imports back and forth.
+> Usage of `AdapterDateFnsV3` would be replaced by `AdapterDateFns` and a subsequent run would rename it to `AdapterDateFnsV2`.
+
+- Renames `AdapterDateFns` and `AdapterDateFnsJalali` imports to `AdapterDateFnsV2` and `AdapterDateFnsJalaliV2` respectfully.
+
+  ```diff
+  -import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+  -import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
+  +import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV2';
+  +import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalaliV2';
+  ```
+
+- Renames `AdapterDateFnsV3` and `AdapterDateFnsJalaliV3` imports to `AdapterDateFns` and `AdapterDateFnsJalali` respectfully.
+
+  ```diff
+  -import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+  -import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalaliV3';
+  +import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+  +import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
+  ```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@next v8.0.0/pickers/rename-adapter-date-fns-imports <path>
+```
+
+#### `rename-and-move-field-value-type`
+
+Renames `FieldValueType` to `PickerValueType`.
+
+```diff
+-import { FieldValueType } from '@mui/x-date-pickers';
++import { PickerValueType } from '@mui/x-date-pickers';
+
+ interface MyComponentProps {
+-  valueType: FieldValueType;
++  valueType: PickerValueType;
+   foo: string;
+   bar: number;
+ }
+```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@next v8.0.0/pickers/rename-and-move-field-value-type <path>
+```
 
 ## v7.0.0
 
@@ -196,9 +339,9 @@ The corresponding sub-sections are listed below
 
 ### Pickers codemods
 
-#### `preset-safe` for pickers v7.0.0
+#### `preset-safe` for Pickers v7.0.0
 
-The `preset-safe` codemods for pickers.
+The `preset-safe` codemods for Pickers.
 
 ```bash
 npx @mui/x-codemod@latest v7.0.0/pickers/preset-safe <path|folder>
@@ -375,13 +518,13 @@ Renames the Tree View component to Simple Tree View
 -import { TreeView } from '@mui/x-tree-view/TreeView';
 +import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 
-   return (
--    <TreeView>
-+    <SimpleTreeView>
-       <TreeItem itemId="1" label="First item" />
--    </TreeView>
-+    </SimpleTreeView>
-   );
+ return (
+-  <TreeView>
++  <SimpleTreeView>
+     <TreeItem itemId="1" label="First item" />
+-  </TreeView>
++  </SimpleTreeView>
+ );
 ```
 
 #### `rename-use-tree-item`
@@ -497,9 +640,9 @@ The corresponding sub-sections are listed below
 
 ### Pickers codemods
 
-#### `preset-safe` for pickers v6.0.0
+#### `preset-safe` for Pickers v6.0.0
 
-The `preset-safe` codemods for pickers.
+The `preset-safe` codemods for Pickers.
 
 ```bash
 npx @mui/x-codemod@latest v6.0.0/pickers/preset-safe <path|folder>

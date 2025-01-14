@@ -6,7 +6,10 @@ import { useThemeProps } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { refType } from '@mui/utils';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
-import { convertFieldResponseIntoMuiTextFieldProps } from '@mui/x-date-pickers/internals';
+import {
+  convertFieldResponseIntoMuiTextFieldProps,
+  useFieldOwnerState,
+} from '@mui/x-date-pickers/internals';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import { SingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
 import { useSingleInputDateRangeField } from './useSingleInputDateRangeField';
@@ -40,13 +43,10 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
 
   const { slots, slotProps, InputProps, inputProps, ...other } = themeProps;
 
-  const ownerState = themeProps;
+  const ownerState = useFieldOwnerState(themeProps);
 
-  const TextField =
-    slots?.textField ??
-    (inProps.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
   const textFieldProps = useSlotProps({
-    elementType: TextField,
+    elementType: PickersTextField,
     externalSlotProps: slotProps?.textField,
     externalForwardedProps: other,
     ownerState,
@@ -70,6 +70,10 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
     slots,
     slotProps,
   });
+
+  const TextField =
+    slots?.textField ??
+    (fieldResponse.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
 
   return <TextField {...processedFieldProps} />;
 }) as DateRangeFieldComponent;

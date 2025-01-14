@@ -6,21 +6,16 @@ import {
 } from '@mui/x-date-pickers/internals';
 import {
   RangeOnlyPickerProps,
-  RangePickerAdditionalViewProps,
   UseRangePickerParams,
   UseRangePickerProps,
   UseRangePickerSlotProps,
   UseRangePickerSlots,
 } from '../models/useRangePicker';
 
-export interface UseDesktopRangePickerSlots<TView extends DateOrTimeViewWithMeridiem>
-  extends UseRangePickerSlots<TView>,
-    PickersPopperSlots {}
+export interface UseDesktopRangePickerSlots extends UseRangePickerSlots, PickersPopperSlots {}
 
-export interface UseDesktopRangePickerSlotProps<
-  TView extends DateOrTimeViewWithMeridiem,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends UseRangePickerSlotProps<TView, TEnableAccessibleFieldDOMStructure>,
+export interface UseDesktopRangePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+  extends UseRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
     PickersPopperSlotProps {}
 
 export interface DesktopRangeOnlyPickerProps extends RangeOnlyPickerProps {
@@ -34,26 +29,19 @@ export interface UseDesktopRangePickerProps<
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-  TExternalProps extends UsePickerViewsProps<any, TView, any, any>,
-> extends UseRangePickerProps<
-    TView,
-    TError,
-    TExternalProps,
-    DesktopRangePickerAdditionalViewProps
-  > {
+  TExternalProps extends UsePickerViewsProps<any, TView, any>,
+> extends UseRangePickerProps<TView, TError, TExternalProps> {
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots: UseDesktopRangePickerSlots<TView>;
+  slots: UseDesktopRangePickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseDesktopRangePickerSlotProps<TView, TEnableAccessibleFieldDOMStructure>;
+  slotProps?: UseDesktopRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
 }
-
-export interface DesktopRangePickerAdditionalViewProps extends RangePickerAdditionalViewProps {}
 
 export interface UseDesktopRangePickerParams<
   TView extends DateOrTimeViewWithMeridiem,
@@ -64,4 +52,4 @@ export interface UseDesktopRangePickerParams<
     any,
     TExternalProps
   >,
-> extends UseRangePickerParams<TView, TExternalProps, DesktopRangePickerAdditionalViewProps> {}
+> extends UseRangePickerParams<TView, TExternalProps> {}

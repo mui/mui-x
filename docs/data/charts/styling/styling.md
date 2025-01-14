@@ -164,3 +164,13 @@ Chart components accept the `sx` props.
 From here, you can target any subcomponents with its class name.
 
 {{"demo": "SxStyling.js"}}
+
+### Gradients and patterns
+
+It is possible to use gradients and patterns to fill the charts.
+This can be done by passing your gradient or pattern definition as children of the chart component.
+
+Note that the gradient or pattern defined that way is only usable for SVG.
+So a direct definition like `color: "url(#Pattern)'` would cause undefined colors in HTML elements.
+
+{{"demo": "GradientTooltip.js"}}

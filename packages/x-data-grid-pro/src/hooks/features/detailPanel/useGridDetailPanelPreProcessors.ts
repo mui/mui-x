@@ -10,7 +10,7 @@ import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { gridDetailPanelExpandedRowIdsSelector } from './gridDetailPanelSelector';
 
 export const useGridDetailPanelPreProcessors = (
-  privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
+  privateApiRef: React.RefObject<GridPrivateApiPro>,
   props: DataGridProProcessedProps,
 ) => {
   const addToggleColumn = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
@@ -50,7 +50,7 @@ export const useGridDetailPanelPreProcessors = (
       }
 
       const expandedRowIds = gridDetailPanelExpandedRowIdsSelector(privateApiRef.current.state);
-      if (!expandedRowIds.includes(id)) {
+      if (!expandedRowIds.has(id)) {
         return classes;
       }
 

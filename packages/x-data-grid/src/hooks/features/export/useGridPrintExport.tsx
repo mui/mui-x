@@ -61,7 +61,7 @@ function buildPrintWindow(title?: string): HTMLIFrameElement {
  * @requires useGridParamsApi (method)
  */
 export const useGridPrintExport = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'pagination' | 'columnHeaderHeight' | 'headerFilterHeight'>,
 ): void => {
   const hasRootReference = apiRef.current.rootElementRef.current !== null;
@@ -70,7 +70,7 @@ export const useGridPrintExport = (
   const previousGridState = React.useRef<GridInitialStateCommunity | null>(null);
   const previousColumnVisibility = React.useRef<{ [key: string]: boolean }>({});
   const previousRows = React.useRef<GridValidRowModel[]>([]);
-  const previousVirtualizationState = React.useRef<GridStateCommunity['virtualization']>();
+  const previousVirtualizationState = React.useRef<GridStateCommunity['virtualization']>(null);
 
   React.useEffect(() => {
     doc.current = ownerDocument(apiRef.current.rootElementRef!.current!);
