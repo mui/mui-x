@@ -10,6 +10,7 @@ import {
 import { ChartSeriesConfig } from '../../internals/plugins/models/seriesConfig';
 import { useChartCartesianAxis } from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useChartInteraction } from '../../internals/plugins/featurePlugins/useChartInteraction';
+import { useChartZAxis } from '../../internals/plugins/featurePlugins/useChartZAxis';
 import { plugin as barPlugin } from '../../BarChart/plugin';
 import { plugin as scatterPlugin } from '../../ScatterChart/plugin';
 import { plugin as linePlugin } from '../../LineChart/plugin';
@@ -25,12 +26,12 @@ export const defaultSeriesConfig: ChartSeriesConfig<'bar' | 'scatter' | 'line' |
 
 // For consistency with the v7, the cartesian axes are set by default.
 // To remove them, you can provide a `plugins` props.
-const defaultPlugins = [useChartCartesianAxis, useChartInteraction];
+const defaultPlugins = [useChartZAxis, useChartCartesianAxis, useChartInteraction];
 
 function ChartProvider<
-  TSignatures extends readonly ChartAnyPluginSignature[],
   TSeriesType extends ChartSeriesType,
->(props: ChartProviderProps<TSignatures, TSeriesType>) {
+  TSignatures extends readonly ChartAnyPluginSignature[],
+>(props: ChartProviderProps<TSeriesType, TSignatures>) {
   const {
     children,
     plugins = defaultPlugins as unknown as ConvertSignaturesIntoPlugins<TSignatures>,
@@ -38,7 +39,7 @@ function ChartProvider<
     seriesConfig = defaultSeriesConfig as ChartSeriesConfig<TSeriesType>,
   } = props;
 
-  const { contextValue } = useCharts<TSignatures, TSeriesType>(plugins, pluginParams, seriesConfig);
+  const { contextValue } = useCharts<TSeriesType, TSignatures>(plugins, pluginParams, seriesConfig);
 
   return <ChartContext.Provider value={contextValue}>{children}</ChartContext.Provider>;
 }
