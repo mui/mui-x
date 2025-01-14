@@ -41,7 +41,7 @@ export default function MonthRangeCalendarDemo() {
             months.map((month) => (
               <RangeCalendar.MonthsCell
                 value={month}
-                className={styles.MonthsCell}
+                className={clsx(styles.MonthsCell, styles.RangeMonthsCell)}
                 key={month.toString()}
               />
             ))

@@ -179,6 +179,10 @@ Using the `getItems` prop instead of manually providing a list of `<Calendar.Yea
 
 ## Day Range Calendar
 
+:::warning
+Work in progress, the drag and drop doesn't work well when swapping start and end date.
+:::
+
 ### Single visible month
 
 {{"demo": "DayRangeCalendarDemo.js", "defaultCodeOpen": false}}
@@ -207,6 +211,14 @@ It's due to the DOM structure and the user can easily reproduce the old behavior
 
 {{"demo": "DayRangeCalendarWithTwoMonthsDemo.js", "defaultCodeOpen": false}}
 
+### Disable preview
+
+```tsx
+<RangeCalendar.Root disableHoverPreview>{children}</RangeCalendar.Root>
+```
+
+{{"demo": "DayRangeCalendarWithoutPreviewDemo.js", "defaultCodeOpen": false}}
+
 ### Recipe: Booking UI
 
 The following demo shows a more advanced use case with lazy-loaded validation data:
@@ -214,6 +226,10 @@ The following demo shows a more advanced use case with lazy-loaded validation da
 {{"demo": "DayRangeCalendarAirbnbRecipe.js", "defaultCodeOpen": false}}
 
 ## Month Range Calendar
+
+:::warning
+Work in progress, this is probably quite buggy
+:::
 
 ### Single visible year
 

@@ -44,9 +44,9 @@ const RangeCalendarRoot = React.forwardRef(function RangeCalendarRoot(
     disableFuture,
     shouldDisableDate,
     // Range position props
-    rangePosition: rangePositionProp,
-    defaultRangePosition: defaultRangePositionProp,
-    onRangePositionChange: onRangePositionChangeProp,
+    rangePosition,
+    defaultRangePosition,
+    onRangePositionChange,
     availableRangePositions,
     // Other range-specific parameters
     disableDragEditing,
@@ -74,6 +74,11 @@ const RangeCalendarRoot = React.forwardRef(function RangeCalendarRoot(
     disableFuture,
     minDate,
     maxDate,
+    rangePosition,
+    defaultRangePosition,
+    onRangePositionChange,
+    disableDragEditing,
+    disableHoverPreview,
   });
 
   const state: RangeCalendarRoot.State = React.useMemo(
