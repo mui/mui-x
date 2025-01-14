@@ -9,7 +9,7 @@ import {
   DefaultizedPieValueType,
   PieItemIdentifier,
 } from '../models/seriesType/pie';
-import { defaultTransitionConfig } from './dataTransform/transition';
+import { getDefaultTransitionConfig } from './dataTransform/transition';
 import {
   AnimatedObject,
   ValueWithHighlight,
@@ -91,7 +91,7 @@ function PieArcPlot(props: PieArcPlotProps) {
     data,
   });
   const transition = useTransition<ValueWithHighlight, AnimatedObject>(transformedData, {
-    ...defaultTransitionConfig,
+    ...getDefaultTransitionConfig(skipAnimation),
     immediate: skipAnimation,
   });
 
