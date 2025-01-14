@@ -278,7 +278,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           tabIndex={tabIndex}
           pinnedPosition={pinnedPosition}
           pinnedOffset={pinnedOffset}
-          gridHasFiller={gridHasFiller}
           isLastUnpinned={isLastUnpinned}
           isSiblingFocused={isSiblingFocused}
           showLeftBorder={showLeftBorder}
