@@ -26,7 +26,7 @@ function CustomToolbar() {
 
 The custom toolbar can then be passed to the `toolbar` [slot](/x/react-data-grid/components/):
 
-```
+```tsx
 function App() {
   return <DataGrid slots={{ toolbar: CustomToolbar }} />;
 }

@@ -45,7 +45,7 @@ Renders the `baseButton` slot.
 
 The default elements can be replaced using the `render` prop. See [Grid components—Customization](/x/react-data-grid/components/overview/#customization).
 
-See the [Toolbar—Custom elements demo](/x/react-data-grid/toolbar/#custom-elements) for an example.
+See the [Toolbar—Custom elements demo](/x/react-data-grid/components/toolbar/#custom-elements) for an example.
 
 ## Accessibility
 
