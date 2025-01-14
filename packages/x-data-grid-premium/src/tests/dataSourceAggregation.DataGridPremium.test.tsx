@@ -100,7 +100,7 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
     const { user } = render(<TestDataSourceAggregation />);
     await user.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
     await waitFor(() => {
-      expect(screen.queryByLabelText('Aggregation')).not.to.equal(null);
+      expect(screen.getByLabelText('Aggregation')).not.to.equal(null);
     });
   });
 
@@ -108,7 +108,7 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
     const { user } = render(<TestDataSourceAggregation aggregationFunctions={{}} />);
     await user.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
     await waitFor(() => {
-      expect(screen.queryByLabelText('Aggregation')).to.equal(null);
+      expect(screen.getByLabelText('Aggregation')).to.equal(null);
     });
   });
 
