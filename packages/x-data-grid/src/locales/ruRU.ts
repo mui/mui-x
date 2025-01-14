@@ -94,9 +94,9 @@ const ruRUGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'содержит',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'не содержит',
   filterOperatorEquals: 'равен',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'не равен',
   filterOperatorStartsWith: 'начинается с',
   filterOperatorEndsWith: 'заканчивается на',
   filterOperatorIs: 'равен',
@@ -117,9 +117,9 @@ const ruRUGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'содержит',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'не содержит',
   headerFilterOperatorEquals: 'равен',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'не равен',
   headerFilterOperatorStartsWith: 'начинается с',
   headerFilterOperatorEndsWith: 'заканчивается на',
   headerFilterOperatorIs: 'равен',
