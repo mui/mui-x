@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  UseFieldResponse,
+  UseFieldReturnValue,
   FormProps,
   PickerValue,
   PickerRangeValue,
@@ -62,7 +62,7 @@ export type PickerRangeFieldSlotProps<TEnableAccessibleFieldDOMStructure extends
 export type BaseMultiInputPickersTextFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
 > = Omit<
-  UseFieldResponse<TEnableAccessibleFieldDOMStructure, MultiInputFieldSlotTextFieldProps>,
+  UseFieldReturnValue<TEnableAccessibleFieldDOMStructure, MultiInputFieldSlotTextFieldProps>,
   | 'slots'
   | 'slotProps'
   | 'clearable'

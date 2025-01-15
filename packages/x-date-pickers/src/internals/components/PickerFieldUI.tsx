@@ -12,15 +12,18 @@ import { useFieldOwnerState, UseFieldOwnerStateParameters } from '../hooks/useFi
 import { usePickerTranslations } from '../../hooks';
 import { ClearIcon as MuiClearIcon } from '../../icons';
 import { useNullablePickerContext } from '../hooks/useNullablePickerContext';
-import type { UseFieldResponse } from '../hooks/useField';
+import type { UseFieldReturnValue } from '../hooks/useField';
 import { PickersTextField, PickersTextFieldProps } from '../../PickersTextField';
 
 export const cleanFieldResponse = <
-  TFieldResponse extends UseFieldResponse<any, ExportedPickerFieldUIProps & { [key: string]: any }>,
+  TFieldReturnValue extends UseFieldReturnValue<
+    any,
+    ExportedPickerFieldUIProps & { [key: string]: any }
+  >,
 >({
   enableAccessibleFieldDOMStructure,
   ...fieldResponse
-}: TFieldResponse): ExportedPickerFieldUIProps & {
+}: TFieldReturnValue): ExportedPickerFieldUIProps & {
   openPickerAriaLabel: string;
   textFieldProps: TextFieldProps | PickersTextFieldProps;
 } => {
@@ -312,7 +315,7 @@ export interface PickerFieldUIProps {
   /**
    * Object returned by the `useField` hook or one of its wrapper (for example `useDateField`).
    */
-  fieldResponse: UseFieldResponse<any, any>;
+  fieldResponse: UseFieldReturnValue<any, any>;
   /**
    * The component to use to render the picker opening icon if none is provided in the picker's slots.
    */
