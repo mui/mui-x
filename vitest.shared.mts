@@ -12,6 +12,7 @@ export default defineConfig({
   },
   resolve: {
     alias: [
+      // Generates resolver aliases for all packages and their plans.
       ...[
         { lib: 'x-charts', plans: ['pro'] },
         { lib: 'x-date-pickers', plans: ['pro'] },
@@ -35,10 +36,12 @@ export default defineConfig({
         find: 'test/utils',
         replacement: new URL('./test/utils', import.meta.url).pathname,
       },
+      // TODO: move to charts only
       {
         find: '@mui/x-charts-vendor',
         replacement: new URL('./packages/x-charts-vendor/es', import.meta.url).pathname,
       },
+      // TODO: move to pickers only
       {
         find: 'moment/locale',
         replacement: 'moment/dist/locale',
@@ -47,7 +50,7 @@ export default defineConfig({
   },
   test: {
     globals: true,
-    setupFiles: ['test/setupVitest.ts'],
+    setupFiles: [new URL('test/setupVitest.ts', import.meta.url).pathname],
     // Required for some tests that contain early returns.
     // Should be removed once we migrate to vitest.
     passWithNoTests: true,
@@ -57,9 +60,6 @@ export default defineConfig({
       reportsDirectory: resolve(WORKSPACE_ROOT, 'coverage'),
       include: ['packages/*/src/**/*.ts', 'packages/*/src/**/*.tsx'],
       exclude: ['**/*.test.{js,ts,tsx}', '**/*.test/*'],
-    },
-    sequence: {
-      hooks: 'list',
     },
   },
 });
