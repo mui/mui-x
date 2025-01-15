@@ -26,6 +26,7 @@ const SHARED_FIELD_INTERNAL_PROP_NAMES = [
   'disabled',
   'readOnly',
   'dateSeparator',
+  'autoFocus',
 ] as const;
 
 type InternalPropNames<TValueType extends PickerValueType> =
@@ -39,7 +40,7 @@ type InternalPropNames<TValueType extends PickerValueType> =
  * - `internalProps` which are used by the various hooks called by the field component.
  * - `forwardedProps` which are passed to the underlying component.
  * Note that some forwarded props might be used by the hooks as well.
- * For instance, hooks like `useDateField` need props like `autoFocus` to know how to behave.
+ * For instance, hooks like `useDateField` need props like `onKeyDown` to merge the default even handler and the one provided by the application.
  * @template TProps, TValueType
  * @param {TProps} props The props received by the field component.
  * @param {TValueType} valueType The type of the field value ('date', 'time', or 'date-time').
