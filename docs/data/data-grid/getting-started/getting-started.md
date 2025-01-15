@@ -12,8 +12,8 @@ Run one of the following commands to install the MUI X Data Grid package that b
 
 :::success
 Not sure which package to choose?
+You can start with the Community version and upgrade to Pro or Premium at any time.
 Check out the [Feature showcase](/x/react-data-grid/demo/) for a list of features available in each package.
-You can upgrade from the Community version to Pro or Premium at any time.
 :::
 
 The Data Grid packages have a peer dependency on `@mui/material`.
@@ -51,8 +51,9 @@ yarn add @mui/material @emotion/react @emotion/styled
 Import the component that corresponds to the version you're using, along with the `GridRowsProp` and `GridColDef` utilities:
 
 ```js
-// Pro and Premium users: add `-pro` or `-premium` suffix to package name
 import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
+import { DataGridPro, GridRowsProp, GridColDef } from '@mui/x-data-grid-pro';
+import { DataGridPremium, GridRowsProp, GridColDef } from '@mui/x-data-grid-premium';
 ```
 
 ### Define rows
