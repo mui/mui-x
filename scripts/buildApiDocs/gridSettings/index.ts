@@ -62,17 +62,17 @@ export default dataGridApiPages;
     {
       name: 'data-grid',
       rootPath: path.join(process.cwd(), 'packages/x-data-grid'),
-      entryPointPath: ['src/index.ts'],
+      entryPointPath: 'src/index.ts',
     },
     {
       name: 'data-grid-pro',
       rootPath: path.join(process.cwd(), 'packages/x-data-grid-pro'),
-      entryPointPath: ['src/index.ts'],
+      entryPointPath: 'src/index.ts',
     },
     {
       name: 'data-grid-premium',
       rootPath: path.join(process.cwd(), 'packages/x-data-grid-premium'),
-      entryPointPath: ['src/index.ts'],
+      entryPointPath: 'src/index.ts',
     },
   ],
   getApiPages: () => findApiPages('docs/pages/x/api/data-grid'),

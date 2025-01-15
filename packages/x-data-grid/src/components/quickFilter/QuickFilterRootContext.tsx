@@ -21,7 +21,7 @@ export function useQuickFilterRootContext() {
 
   if (context === undefined) {
     throw new Error(
-      'MUI X: Missing context. Quick Filter parts must be placed within <Grid.QuickFilter.Root>.',
+      'MUI X: Missing context. Quick Filter parts must be placed within <QuickFilter.Root>.',
     );
   }
 

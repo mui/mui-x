@@ -15,9 +15,7 @@ export function useToolbarRootContext() {
   const context = React.useContext(ToolbarRootContext);
 
   if (context === undefined) {
-    throw new Error(
-      'MUI X: Missing context. Toolbar parts must be placed within <Grid.Toolbar.Root>.',
-    );
+    throw new Error('MUI X: Missing context. Toolbar parts must be placed within <Toolbar.Root>.');
   }
 
   return context;

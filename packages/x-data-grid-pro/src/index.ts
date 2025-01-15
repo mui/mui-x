@@ -36,6 +36,7 @@ export {
 export { GridColumnHeaders } from './components/GridColumnHeaders';
 export type { GridColumnHeadersProps } from './components/GridColumnHeaders';
 
+// Reexportable exports
 export type {
   GridGetRowsParams,
   GridGetRowsResponse,
@@ -49,7 +50,7 @@ export type {
   GridDataSourcePrivateApi,
 } from './hooks/features/dataSource/interfaces';
 
-// Components without premium features
+// Components without pro features
 export * as ColumnsPanel from '@mui/x-data-grid/components/columnsPanel/index.parts';
 export * as Export from '@mui/x-data-grid/components/export/index.parts';
 export * as FilterPanel from '@mui/x-data-grid/components/filterPanel/index.parts';
