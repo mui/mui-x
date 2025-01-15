@@ -87,7 +87,6 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
   const {
     className,
     classes: classesProp,
-    classes: inClasses,
     ampm,
     hidden,
     toolbarFormat,
