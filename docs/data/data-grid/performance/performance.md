@@ -7,11 +7,9 @@ This guide describes best practices for implementing your Data Grid to avoid com
 
 ## Maintain a stable reference when passing props
 
-As a general rule, all the non-primitive props should keep a stable reference between renders to avoid unnecessary re-renders.
-
+As a general rule, all non-primitive props should maintain a stable reference between renders to avoid unnecessary re-renders.
 This is especially important for the `columns` prop.
-The columns are designed to be definitions that never change once the component is mounted.
-Otherwise, you risk losing elements like column width or order.
+Columns are designed to be definitions that never change once the component is mounted; otherwise, you risk losing elements like column width or order.
 
 There are two ways to maintain a stable reference:
 
@@ -63,7 +61,7 @@ There are two ways to maintain a stable reference:
 
 ## Extract static objects and memoize root props
 
-The Data Grid component uses `React.memo` to optimize its performance, which means it and its subcomponents only re-render when their props change.
+The Data Grid component uses `React.memo` to optimize its performance, which means the Grid and its subcomponents only re-render when their props change.
 But it's very easy to cause unnecessary re-renders if the root props of your Data Grid aren't memoized.
 In the example below, the `slots` and `initialState` objects are re-created on every render, which means the Data Grid itself has no choice but to re-render as well.
 
@@ -103,8 +101,8 @@ function Component(props) {
 
 ## Visualizing the re-rendering process
 
-The Data Grid memoizes some of its subcomponents to avoid re-rendering more than needed.
-Below is a visualization that shows you which cells re-render in reaction to your interaction with the Grid.
+The Data Grid memoizes some of its subcomponents to avoid re-rendering more than necessary.
+Below is a visualization that shows you which cells re-render in response to your interactions with the Grid.
 
 {{"demo": "GridVisualization.js", "bg": "inline", "defaultCodeOpen": false}}
 
