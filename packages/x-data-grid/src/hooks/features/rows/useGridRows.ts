@@ -20,7 +20,7 @@ import {
 import { useTimeout } from '../../utils/useTimeout';
 import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
-import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
+import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridSortedRowIdsSelector } from '../sorting/gridSortingSelector';
 import { gridFilteredRowsLookupSelector } from '../filter/gridFilterSelector';
 import { GridRowsInternalCache } from './gridRowsInterfaces';
@@ -87,7 +87,7 @@ export const useGridRows = (
   }
 
   const logger = useGridLogger(apiRef, 'useGridRows');
-  const currentPage = useGridVisibleRows(apiRef, props);
+  const currentPage = getVisibleRows(apiRef);
 
   const lastUpdateMs = React.useRef(Date.now());
   const lastRowCount = React.useRef(props.rowCount);

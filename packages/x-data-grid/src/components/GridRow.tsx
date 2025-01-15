@@ -12,7 +12,7 @@ import { composeGridClasses } from '../utils/composeGridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { GridPinnedColumns } from '../hooks/features/columns';
 import type { GridStateColDef } from '../models/colDef/gridColDef';
-import type { GridRenderContext } from '../models/params/gridScrollParams';
+import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../utils/cellBorderUtils';
 import { gridColumnPositionsSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector, objectShallowCompare } from '../hooks/utils/useGridSelector';
 import { GridRowClassNameParams } from '../models/params/gridRowParams';
@@ -20,17 +20,14 @@ import { useGridVisibleRows } from '../hooks/utils/useGridVisibleRows';
 import { findParentElementFromClassName, isEventTargetInPortal } from '../utils/domUtils';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../colDef/gridCheckboxSelectionColDef';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../colDef/gridActionsColDef';
-import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../internals/constants';
-import type { GridDimensions } from '../hooks/features/dimensions';
+import { GRID_DETAIL_PANEL_TOGGLE_FIELD, PinnedColumnPosition } from '../internals/constants';
 import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSelector';
 import { gridRowMaximumTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
 import { gridEditRowsStateSelector } from '../hooks/features/editing/gridEditingSelectors';
-import { PinnedPosition, gridPinnedColumnPositionLookup } from './cell/GridCell';
 import { GridScrollbarFillerCell as ScrollbarFiller } from './GridScrollbarFillerCell';
 import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
 import { useGridConfiguration } from '../hooks/utils/useGridConfiguration';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
-import { gridVirtualizationColumnEnabledSelector } from '../hooks';
 
 export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   row: GridRowModel;
@@ -44,8 +41,9 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   rowHeight: number | 'auto';
   offsetTop: number | undefined;
   offsetLeft: number;
-  dimensions: GridDimensions;
-  renderContext: GridRenderContext;
+  columnsTotalWidth: number;
+  firstColumnIndex: number;
+  lastColumnIndex: number;
   visibleColumns: GridStateColDef[];
   pinnedColumns: GridPinnedColumns;
   /**
@@ -53,15 +51,12 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
    * If `null`, no cell in this row has focus.
    */
   focusedColumnIndex: number | undefined;
-  /**
-   * Determines which cell should be tabbable by having tabIndex=0.
-   * If `null`, no cell in this row is in the tab sequence.
-   */
-  tabbableCell: string | null;
   isFirstVisible: boolean;
   isLastVisible: boolean;
   isNotVisible: boolean;
   showBottomBorder: boolean;
+  scrollbarWidth: number;
+  gridHasFiller: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
@@ -82,14 +77,16 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     pinnedColumns,
     offsetTop,
     offsetLeft,
-    dimensions,
-    renderContext,
+    columnsTotalWidth,
+    firstColumnIndex,
+    lastColumnIndex,
     focusedColumnIndex,
     isFirstVisible,
     isLastVisible,
     isNotVisible,
     showBottomBorder,
-    tabbableCell,
+    scrollbarWidth,
+    gridHasFiller,
     onClick,
     onDoubleClick,
     onMouseEnter,
@@ -109,20 +106,17 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
   const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
   const handleRef = useForkRef(ref, refProp);
   const rowNode = apiRef.current.getRowNode(rowId);
-  const scrollbarWidth = dimensions.hasScrollY ? dimensions.scrollbarSize : 0;
-  const gridHasFiller = dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width;
   const editing = apiRef.current.getRowMode(rowId) === GridRowModes.Edit;
   const editable = rootProps.editMode === GridEditModes.Row;
-  const hasColumnVirtualization = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
   const hasFocusCell = focusedColumnIndex !== undefined;
   const hasVirtualFocusCellLeft =
     hasFocusCell &&
     focusedColumnIndex >= pinnedColumns.left.length &&
-    focusedColumnIndex < renderContext.firstColumnIndex;
+    focusedColumnIndex < firstColumnIndex;
   const hasVirtualFocusCellRight =
     hasFocusCell &&
     focusedColumnIndex < visibleColumns.length - pinnedColumns.right.length &&
-    focusedColumnIndex >= renderContext.lastColumnIndex;
+    focusedColumnIndex >= lastColumnIndex;
 
   const classes = composeGridClasses(rootProps.classes, {
     root: [
@@ -285,7 +279,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     indexInSection: number,
     indexRelativeToAllColumns: number,
     sectionLength: number,
-    pinnedPosition = PinnedPosition.NONE,
+    pinnedPosition = PinnedColumnPosition.NONE,
   ) => {
     const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
       rowId,
@@ -300,11 +294,12 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     const colSpan = cellColSpanInfo?.cellProps.colSpan ?? 1;
 
     const pinnedOffset = getPinnedCellOffset(
-      gridPinnedColumnPositionLookup[pinnedPosition],
+      pinnedPosition,
       column.computedWidth,
       indexRelativeToAllColumns,
       columnPositions,
-      dimensions,
+      columnsTotalWidth,
+      scrollbarWidth,
     );
 
     if (rowNode?.type === 'skeletonRow') {
@@ -332,7 +327,16 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
 
     const disableDragEvents = !(canReorderColumn || (isReorderCell && canReorderRow));
 
-    const cellIsNotVisible = pinnedPosition === PinnedPosition.VIRTUAL;
+    const cellIsNotVisible = pinnedPosition === PinnedColumnPosition.VIRTUAL;
+
+    const showLeftBorder = shouldCellShowLeftBorder(pinnedPosition, indexInSection);
+    const showRightBorder = shouldCellShowRightBorder(
+      pinnedPosition,
+      indexInSection,
+      sectionLength,
+      rootProps.showCellVerticalBorder,
+      gridHasFiller,
+    );
 
     return (
       <slots.cell
@@ -348,9 +352,8 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
         isNotVisible={cellIsNotVisible}
         pinnedOffset={pinnedOffset}
         pinnedPosition={pinnedPosition}
-        sectionIndex={indexInSection}
-        sectionLength={sectionLength}
-        gridHasFiller={gridHasFiller}
+        showLeftBorder={showLeftBorder}
+        showRightBorder={showRightBorder}
         {...slotProps?.cell}
       />
     );
@@ -369,7 +372,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
       i,
       indexRelativeToAllColumns,
       pinnedColumns.left.length,
-      PinnedPosition.LEFT,
+      PinnedColumnPosition.LEFT,
     );
   });
 
@@ -380,7 +383,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
       i,
       indexRelativeToAllColumns,
       pinnedColumns.right.length,
-      PinnedPosition.RIGHT,
+      PinnedColumnPosition.RIGHT,
     );
   });
 
@@ -395,18 +398,9 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
         focusedColumnIndex - pinnedColumns.left.length,
         focusedColumnIndex,
         middleColumnsLength,
-        PinnedPosition.VIRTUAL,
+        PinnedColumnPosition.VIRTUAL,
       ),
     );
-  }
-  let firstColumnIndex;
-  let lastColumnIndex;
-  if (!rootProps.disableVirtualization && !hasColumnVirtualization) {
-    firstColumnIndex = 0;
-    lastColumnIndex = visibleColumns.length;
-  } else {
-    firstColumnIndex = renderContext.firstColumnIndex;
-    lastColumnIndex = renderContext.lastColumnIndex;
   }
 
   for (let i = firstColumnIndex; i < lastColumnIndex; i += 1) {
@@ -427,7 +421,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
         focusedColumnIndex - pinnedColumns.left.length,
         focusedColumnIndex,
         middleColumnsLength,
-        PinnedPosition.VIRTUAL,
+        PinnedColumnPosition.VIRTUAL,
       ),
     );
   }
@@ -474,48 +468,14 @@ GridRow.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  dimensions: PropTypes.shape({
-    bottomContainerHeight: PropTypes.number.isRequired,
-    columnsTotalWidth: PropTypes.number.isRequired,
-    contentSize: PropTypes.shape({
-      height: PropTypes.number.isRequired,
-      width: PropTypes.number.isRequired,
-    }).isRequired,
-    groupHeaderHeight: PropTypes.number.isRequired,
-    hasScrollX: PropTypes.bool.isRequired,
-    hasScrollY: PropTypes.bool.isRequired,
-    headerFilterHeight: PropTypes.number.isRequired,
-    headerHeight: PropTypes.number.isRequired,
-    headersTotalHeight: PropTypes.number.isRequired,
-    isReady: PropTypes.bool.isRequired,
-    leftPinnedWidth: PropTypes.number.isRequired,
-    minimumSize: PropTypes.shape({
-      height: PropTypes.number.isRequired,
-      width: PropTypes.number.isRequired,
-    }).isRequired,
-    rightPinnedWidth: PropTypes.number.isRequired,
-    root: PropTypes.shape({
-      height: PropTypes.number.isRequired,
-      width: PropTypes.number.isRequired,
-    }).isRequired,
-    rowHeight: PropTypes.number.isRequired,
-    rowWidth: PropTypes.number.isRequired,
-    scrollbarSize: PropTypes.number.isRequired,
-    topContainerHeight: PropTypes.number.isRequired,
-    viewportInnerSize: PropTypes.shape({
-      height: PropTypes.number.isRequired,
-      width: PropTypes.number.isRequired,
-    }).isRequired,
-    viewportOuterSize: PropTypes.shape({
-      height: PropTypes.number.isRequired,
-      width: PropTypes.number.isRequired,
-    }).isRequired,
-  }).isRequired,
+  columnsTotalWidth: PropTypes.number.isRequired,
+  firstColumnIndex: PropTypes.number.isRequired,
   /**
    * Determines which cell has focus.
    * If `null`, no cell in this row has focus.
    */
   focusedColumnIndex: PropTypes.number,
+  gridHasFiller: PropTypes.bool.isRequired,
   /**
    * Index of the row in the whole sorted and filtered dataset.
    * If some rows above have expanded children, this index also take those children into account.
@@ -524,6 +484,7 @@ GridRow.propTypes = {
   isFirstVisible: PropTypes.bool.isRequired,
   isLastVisible: PropTypes.bool.isRequired,
   isNotVisible: PropTypes.bool.isRequired,
+  lastColumnIndex: PropTypes.number.isRequired,
   offsetLeft: PropTypes.number.isRequired,
   offsetTop: PropTypes.number,
   onClick: PropTypes.func,
@@ -531,22 +492,12 @@ GridRow.propTypes = {
   onMouseEnter: PropTypes.func,
   onMouseLeave: PropTypes.func,
   pinnedColumns: PropTypes.object.isRequired,
-  renderContext: PropTypes.shape({
-    firstColumnIndex: PropTypes.number.isRequired,
-    firstRowIndex: PropTypes.number.isRequired,
-    lastColumnIndex: PropTypes.number.isRequired,
-    lastRowIndex: PropTypes.number.isRequired,
-  }).isRequired,
   row: PropTypes.object.isRequired,
   rowHeight: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  scrollbarWidth: PropTypes.number.isRequired,
   selected: PropTypes.bool.isRequired,
   showBottomBorder: PropTypes.bool.isRequired,
-  /**
-   * Determines which cell should be tabbable by having tabIndex=0.
-   * If `null`, no cell in this row is in the tab sequence.
-   */
-  tabbableCell: PropTypes.string,
   visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
 } as any;
 
