@@ -44,9 +44,10 @@ See [Column definition—Rendering cells](/x/react-data-grid/column-definition/#
 
 Use the `valueGetter()` function to derive a cell's value from the row data.
 This is the the most performant way to customize the contents of a cell, and it does so without altering the row data itself.
+
 Common use cases include:
 
-- Transforming a value (for example, convert a decimal value to a percentage value)
+- Transforming a value (for example, converting a decimal value to a percentage value)
 - Deriving a value from multiple fields (for example, concatenating first name and last name)
 - Deriving a value from a nested field (for example, `user.address.city`)
 
@@ -57,6 +58,7 @@ See [Column definition—Value getter](/x/react-data-grid/column-definition/#val
 ### valueFormatter() function
 
 Use the `valueFormatter()` function to format a cell's value (without changing the underlying row data).
+
 Common use cases include:
 
 - Formatting a date to a custom display format
