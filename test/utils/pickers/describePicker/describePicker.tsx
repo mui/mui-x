@@ -56,11 +56,7 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
           />,
         );
 
-        const shouldRenderOpenPickerIcon = !hasNoView && variant !== 'mobile';
-
-        expect(queryAllByTestId('component-test')).to.have.length(
-          shouldRenderOpenPickerIcon ? 1 : 0,
-        );
+        expect(queryAllByTestId('component-test')).to.have.length(hasNoView ? 0 : 1);
       },
     );
   });

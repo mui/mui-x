@@ -9,6 +9,7 @@ import {
 } from '@mui/utils';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
+import { fastMemo } from '@mui/x-internals/fastMemo';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridRootStyles } from './GridRootStyles';
 import { useCSSVariablesClass } from '../../utils/css/themeManager';
@@ -19,6 +20,8 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { gridDensitySelector } from '../../hooks/features/density/densitySelector';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridDensity } from '../../models/gridDensity';
+import { GridHeader } from '../GridHeader';
+import { GridBody, GridFooterPlaceholder } from '../base';
 
 export interface GridRootProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -48,7 +51,7 @@ const useUtilityClasses = (ownerState: OwnerState, density: GridDensity) => {
 
 const GridRoot = forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(props, ref) {
   const rootProps = useGridRootProps();
-  const { className, ...other } = props;
+  const { className, children, ...other } = props;
   const apiRef = useGridPrivateApiContext();
   const density = useGridSelector(apiRef, gridDensitySelector);
   const rootElementRef = apiRef.current.rootElementRef;
@@ -75,7 +78,11 @@ const GridRoot = forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(pro
       ownerState={ownerState}
       {...other}
       ref={handleRef}
-    />
+    >
+      <GridHeader />
+      <GridBody>{children}</GridBody>
+      <GridFooterPlaceholder />
+    </GridRootStyles>
   );
 });
 
@@ -94,4 +101,5 @@ GridRoot.propTypes = {
   ]),
 } as any;
 
-export { GridRoot };
+const MemoizedGridRoot = fastMemo(GridRoot);
+export { MemoizedGridRoot as GridRoot };

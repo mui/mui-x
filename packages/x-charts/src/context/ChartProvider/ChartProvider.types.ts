@@ -9,6 +9,7 @@ import {
 import { ChartStore } from '../../internals/plugins/utils/ChartStore';
 import { ChartCorePluginSignatures } from '../../internals/plugins/corePlugins';
 import { ChartSeriesConfig } from '../../internals/plugins/models/seriesConfig';
+import { AllPluginSignatures } from '../../internals/plugins/allPlugins';
 import { UseChartBaseProps } from '../../internals/store/useCharts.types';
 import { ChartSeriesType } from '../../models/seriesType/config';
 
@@ -35,8 +36,8 @@ export type ChartContextValue<
 };
 
 export interface ChartProviderProps<
-  TSignatures extends readonly ChartAnyPluginSignature[],
   TSeries extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 > {
   /**
    * Array of plugins used to add features to the chart.

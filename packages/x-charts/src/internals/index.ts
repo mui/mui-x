@@ -17,6 +17,7 @@ export * from '../context/ChartDataProvider/useChartDataProviderProps';
 export * from './plugins/corePlugins/useChartId';
 export * from './plugins/corePlugins/useChartSeries';
 export * from './plugins/corePlugins/useChartDimensions';
+export * from './plugins/featurePlugins/useChartZAxis';
 export * from './plugins/featurePlugins/useChartCartesianAxis';
 export * from './plugins/featurePlugins/useChartInteraction';
 export * from './plugins/utils/selectors';
@@ -36,7 +37,6 @@ export * from './getScale';
 
 // contexts
 
-export * from '../context/ZAxisContextProvider';
 export * from '../context/AnimationProvider';
 export type * from '../context/context.types';
 export { getAxisExtremum } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtremum';
