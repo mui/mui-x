@@ -147,14 +147,6 @@ TimeRangePickerTabs.propTypes = {
    * @default `window.innerHeight < 667` for `DesktopTimeRangePicker` and `MobileTimeRangePicker`, `displayStaticWrapperAs === 'desktop'` for `StaticTimeRangePicker`
    */
   hidden: PropTypes.bool,
-  onRangePositionChange: PropTypes.func.isRequired,
-  /**
-   * Callback called when a tab is clicked.
-   * @template TView
-   * @param {TView} view The view to open
-   */
-  onViewChange: PropTypes.func.isRequired,
-  rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
@@ -168,10 +160,6 @@ TimeRangePickerTabs.propTypes = {
    * @default Time
    */
   timeIcon: PropTypes.node,
-  /**
-   * Currently visible picker view.
-   */
-  view: PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']).isRequired,
 } as any;
 
 export { TimeRangePickerTabs };

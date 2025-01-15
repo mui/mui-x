@@ -214,9 +214,9 @@ TimeRangePickerToolbarTimeElement.propTypes = {
   // ----------------------------------------------------------------------
   ampm: PropTypes.bool.isRequired,
   /**
-   * Callback called when a toolbar is clicked
+   * Callback fired on view change.
    * @template TView
-   * @param {TView} view The view to open
+   * @param {TView} view The new view.
    */
   onViewChange: PropTypes.func.isRequired,
   separatorClasses: PropTypes.string.isRequired,
@@ -229,7 +229,9 @@ TimeRangePickerToolbarTimeElement.propTypes = {
   utils: PropTypes.object.isRequired,
   value: PropTypes.object,
   /**
-   * Currently visible picker view.
+   * The visible view.
+   * Used when the component view is controlled.
+   * Must be a valid option from `views` list.
    */
   view: PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']),
   /**
@@ -344,15 +346,7 @@ TimeRangePickerToolbar.propTypes = {
    * @default `true` for Desktop, `false` for Mobile.
    */
   hidden: PropTypes.bool,
-  isLandscape: PropTypes.bool.isRequired,
-  onChange: PropTypes.func.isRequired,
   onRangePositionChange: PropTypes.func.isRequired,
-  /**
-   * Callback called when a toolbar is clicked
-   * @template TView
-   * @param {TView} view The view to open
-   */
-  onViewChange: PropTypes.func.isRequired,
   rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
@@ -369,16 +363,6 @@ TimeRangePickerToolbar.propTypes = {
    */
   toolbarPlaceholder: PropTypes.node,
   toolbarVariant: PropTypes.oneOf(['desktop', 'mobile']),
-  value: PropTypes.arrayOf(PropTypes.object).isRequired,
-  /**
-   * Currently visible picker view.
-   */
-  view: PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']).isRequired,
-  /**
-   * Available views.
-   */
-  views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']).isRequired)
-    .isRequired,
 } as any;
 
 export { TimeRangePickerToolbar };
