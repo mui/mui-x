@@ -1417,6 +1417,9 @@ importers:
       '@mui/utils':
         specifier: ^5.16.6 || ^6.0.0
         version: 5.16.14(@types/react@19.0.6)(react@19.0.0)
+      '@mui/x-internals':
+        specifier: workspace:*
+        version: link:../x-internals/build
     devDependencies:
       '@mui/internal-test-utils':
         specifier: ^1.0.26
