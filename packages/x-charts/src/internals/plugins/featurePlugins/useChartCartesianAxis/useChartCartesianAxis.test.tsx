@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { createRenderer, reactMajor } from '@mui/internal-test-utils';
+import { createRenderer } from '@mui/internal-test-utils';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { clearWarningsCache } from '@mui/x-internals/warning';
