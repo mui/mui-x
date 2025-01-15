@@ -19,6 +19,7 @@ const timeSensitiveSuites = [
   'DensitySelectorGrid',
   'DataGridOverlays',
   'PopularFeaturesDemo',
+  'ServerSideRowGroupingGroupExpansion',
 ];
 
 async function navigateToTest(page: Page, testName: string) {

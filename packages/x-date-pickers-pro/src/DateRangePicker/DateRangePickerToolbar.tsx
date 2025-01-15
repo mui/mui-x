@@ -85,7 +85,7 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar(
   const { value } = usePickerContext<PickerRangeValue>();
   const translations = usePickerTranslations();
   const ownerState = useToolbarOwnerState();
-  const { rangePosition, onRangePositionChange } = usePickerRangePositionContext();
+  const { rangePosition, setRangePosition } = usePickerRangePositionContext();
   const classes = useUtilityClasses(classesProp);
 
   // This can't be a default value when spreading because it breaks the API generation.
@@ -112,14 +112,14 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar(
           variant={value[0] == null ? 'h6' : 'h5'}
           value={formatDate(value[0], translations.start)}
           selected={rangePosition === 'start'}
-          onClick={() => onRangePositionChange('start')}
+          onClick={() => setRangePosition('start')}
         />
         <Typography variant="h5">&nbsp;{'–'}&nbsp;</Typography>
         <PickersToolbarButton
           variant={value[1] == null ? 'h6' : 'h5'}
           value={formatDate(value[1], translations.end)}
           selected={rangePosition === 'end'}
-          onClick={() => onRangePositionChange('end')}
+          onClick={() => setRangePosition('end')}
         />
       </DateRangePickerToolbarContainer>
     </DateRangePickerToolbarRoot>

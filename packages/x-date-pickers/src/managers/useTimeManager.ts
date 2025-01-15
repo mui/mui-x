@@ -74,7 +74,7 @@ export type UseTimeManagerReturnValue<TEnableAccessibleFieldDOMStructure extends
     TimeManagerFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>
   >;
 
-interface TimeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure extends boolean>
+export interface TimeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends MakeOptional<
       UseFieldInternalProps<PickerValue, TEnableAccessibleFieldDOMStructure, TimeValidationError>,
       'format'

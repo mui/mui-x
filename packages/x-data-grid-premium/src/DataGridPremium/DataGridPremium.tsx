@@ -2,14 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
-import {
-  GridBody,
-  GridFooterPlaceholder,
-  GridHeader,
-  GridRoot,
-  GridContextProvider,
-  GridValidRowModel,
-} from '@mui/x-data-grid-pro';
+import { GridRoot, GridContextProvider, GridValidRowModel } from '@mui/x-data-grid-pro';
 import {
   propValidatorsDataGrid,
   propValidatorsDataGridPro,
@@ -63,11 +56,7 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
         {...props.slotProps?.root}
         ref={ref}
       >
-        <GridHeader />
-        <GridBody>
-          <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />
-        </GridBody>
-        <GridFooterPlaceholder />
+        <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />
       </GridRoot>
     </GridContextProvider>
   );
