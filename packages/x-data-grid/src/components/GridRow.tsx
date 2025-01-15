@@ -403,7 +403,6 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     );
   }
 
-  const { firstColumnIndex, lastColumnIndex } = renderContext;
   for (let i = firstColumnIndex; i < lastColumnIndex; i += 1) {
     const column = visibleColumns[i];
     const indexInSection = i - pinnedColumns.left.length;
