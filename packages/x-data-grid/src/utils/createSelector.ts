@@ -119,7 +119,7 @@ export const createSelectorMemoized: CreateSelectorFunction = (...args: any) => 
     const cacheKey = apiRef.current.instanceId;
     const cacheArgsInit = cache.get(cacheKey);
     const cacheArgs = cacheArgsInit ?? new Map();
-    const cacheFn = cacheArgs?.get(args);
+    const cacheFn = cacheArgs.get(args);
 
     if (cacheArgs && cacheFn) {
       if (!argsEqual(cacheFn.selectorArgs, selectorArgs)) {
