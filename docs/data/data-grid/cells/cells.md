@@ -7,7 +7,7 @@
 The Data Grid provides several methods for customizing the rendered elements and values of a cell, including `renderCell()`, `valueGetter()`, and `valueFormatter()`.
 This document describes the key differences and specific use cases for each.
 
-### renderCell() function
+### renderCell()
 
 Use the `renderCell()` function to render any element inside of a cell.
 This is the only way to render a React component inside a cell, and also the only way to customize a cell's behavior—for example, by adding a click handler.
@@ -40,7 +40,7 @@ const columns: GridColDef[] = [
 
 See [Column definition—Rendering cells](/x/react-data-grid/column-definition/#rendering-cells) for more details.
 
-### valueGetter() function
+### valueGetter()
 
 Use the `valueGetter()` function to derive a cell's value from the row data.
 This is the the most performant way to customize the contents of a cell, and it does so without altering the row data itself.
@@ -55,7 +55,7 @@ This function is also used internally in the Data Grid to filter, sort, and rend
 
 See [Column definition—Value getter](/x/react-data-grid/column-definition/#value-getter) for more details.
 
-### valueFormatter() function
+### valueFormatter()
 
 Use the `valueFormatter()` function to format a cell's value (without changing the underlying row data).
 
