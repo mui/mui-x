@@ -55,8 +55,9 @@ export type UseDateRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure ex
     DateRangeManagerFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>
   >;
 
-interface DateRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends MakeOptional<
+export interface DateRangeManagerFieldInternalProps<
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends MakeOptional<
       UseFieldInternalProps<
         PickerRangeValue,
         TEnableAccessibleFieldDOMStructure,

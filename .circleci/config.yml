@@ -95,15 +95,6 @@ commands:
                 # See https://stackoverflow.com/a/73411601
                 command: corepack enable --install-directory ~/bin
 
-      - when:
-          condition:
-            not:
-              equal: [stable, << parameters.react-version >>]
-          steps:
-            - run:
-                name: Change pnpm setting to not install peer dependencies
-                command: pnpm config set auto-install-peers false --location project
-
       - run:
           name: View install environment
           command: |
