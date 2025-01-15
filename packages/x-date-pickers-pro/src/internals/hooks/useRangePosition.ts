@@ -26,7 +26,7 @@ export interface UseRangePositionProps {
 
 export interface UseRangePositionResponse {
   rangePosition: RangePosition;
-  onRangePositionChange: (newPosition: RangePosition) => void;
+  setRangePosition: (newPosition: RangePosition) => void;
 }
 
 export const useRangePosition = (
@@ -58,5 +58,5 @@ export const useRangePosition = (
     syncRangePositionWithSingleInputField(newRangePosition);
   });
 
-  return { rangePosition, onRangePositionChange: handleRangePositionChange };
+  return { rangePosition, setRangePosition: handleRangePositionChange };
 };

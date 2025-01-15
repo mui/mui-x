@@ -690,7 +690,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
   +const { rangePosition } = usePickerRangePositionContext();
 
   -const { onRangePositionChange } = props;
-  +const { onRangePositionChange } = usePickerRangePositionContext();
+  +const { setRangePosition } = usePickerRangePositionContext();
   ```
 
 ### Slot: `toolbar`
@@ -777,7 +777,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
   +const { rangePosition } = usePickerRangePositionContext();
 
   -const { onRangePositionChange } = props;
-  +const { onRangePositionChange } = usePickerRangePositionContext();
+  +const { setRangePosition } = usePickerRangePositionContext();
   ```
 
 ### Slot: `tabs`
@@ -807,7 +807,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
   +const { rangePosition } = usePickerRangePositionContext();
 
   -const { onRangePositionChange } = props;
-  +const { onRangePositionChange } = usePickerRangePositionContext();
+  +const { setRangePosition } = usePickerRangePositionContext();
   ```
 
 ### Slot: `actionBar`
