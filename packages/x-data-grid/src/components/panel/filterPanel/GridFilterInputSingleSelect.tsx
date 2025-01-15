@@ -73,7 +73,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     variant = 'standard',
     isFilterActive,
     clearButton,
-    InputLabelProps,
+    slotProps,
     ...others
   } = props;
   const filterValue = item.value ?? '';

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
 import { unstable_debounce as debounce } from '@mui/utils';
 import composeClasses from '@mui/utils/composeClasses';
@@ -11,6 +10,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridQuickFilterValuesSelector } from '../../hooks/features/filter';
+import { TextFieldProps } from '../../models/gridBaseSlots';
 import { GridFilterModel } from '../../models/gridFilterModel';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { isDeepEqual } from '../../utils/utils';
@@ -27,7 +27,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridToolbarQuickFilterRoot = styled(TextField, {
+const GridToolbarQuickFilterRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ToolbarQuickFilter',
   overridesResolver: (props, styles) => styles.toolbarQuickFilter,
@@ -84,6 +84,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
     quickFilterFormatter = defaultSearchValueFormatter,
     debounceMs = rootProps.filterDebounceMs,
     className,
+    slotProps,
     ...other
   } = props;
 
@@ -149,35 +150,38 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
       aria-label={apiRef.current.getLocaleText('toolbarQuickFilterLabel')}
       type="search"
       {...other}
-      InputProps={{
-        startAdornment: (
-          <rootProps.slots.baseInputAdornment position="start">
-            <rootProps.slots.quickFilterIcon fontSize="small" />
-          </rootProps.slots.baseInputAdornment>
-        ),
-        endAdornment: (
-          <rootProps.slots.baseInputAdornment position="end">
-            <rootProps.slots.baseIconButton
-              aria-label={apiRef.current.getLocaleText('toolbarQuickFilterDeleteIconLabel')}
-              size="small"
-              edge="end"
-              style={
-                searchValue
-                  ? {
-                      visibility: 'visible',
-                    }
-                  : {
-                      visibility: 'hidden',
-                    }
-              }
-              onClick={handleSearchReset}
-              {...rootProps.slotProps?.baseIconButton}
-            >
-              <rootProps.slots.quickFilterClearIcon fontSize="small" />
-            </rootProps.slots.baseIconButton>
-          </rootProps.slots.baseInputAdornment>
-        ),
-        ...other.InputProps,
+      slotProps={{
+        ...slotProps,
+        input: {
+          startAdornment: (
+            <rootProps.slots.baseInputAdornment position="start">
+              <rootProps.slots.quickFilterIcon fontSize="small" />
+            </rootProps.slots.baseInputAdornment>
+          ),
+          endAdornment: (
+            <rootProps.slots.baseInputAdornment position="end">
+              <rootProps.slots.baseIconButton
+                aria-label={apiRef.current.getLocaleText('toolbarQuickFilterDeleteIconLabel')}
+                size="small"
+                edge="end"
+                style={
+                  searchValue
+                    ? {
+                        visibility: 'visible',
+                      }
+                    : {
+                        visibility: 'hidden',
+                      }
+                }
+                onClick={handleSearchReset}
+                {...rootProps.slotProps?.baseIconButton}
+              >
+                <rootProps.slots.quickFilterClearIcon fontSize="small" />
+              </rootProps.slots.baseIconButton>
+            </rootProps.slots.baseInputAdornment>
+          ),
+          ...slotProps?.input,
+        },
       }}
       {...rootProps.slotProps?.baseTextField}
     />

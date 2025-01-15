@@ -21,5 +21,13 @@ export type GridFilterInputComponentProps<Api extends GridApiCommon = GridApiCom
   onBlur?: React.FocusEventHandler;
 } & Pick<
   TextFieldProps,
-  'color' | 'error' | 'helperText' | 'size' | 'variant' | 'disabled' | 'label' | 'placeholder' | 'tabIndex'
+  | 'color'
+  | 'error'
+  | 'helperText'
+  | 'size'
+  | 'variant'
+  | 'disabled'
+  | 'label'
+  | 'placeholder'
+  | 'tabIndex'
 >;

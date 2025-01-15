@@ -43,7 +43,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
     type,
     apiRef,
     focusElementRef,
-    InputProps,
+    slotProps,
     isFilterActive,
     clearButton,
     tabIndex,
@@ -90,22 +90,24 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
       variant="standard"
       type={type || 'text'}
       inputRef={focusElementRef}
-      InputProps={{
-        ...(applying || clearButton
-          ? {
-              endAdornment: applying ? (
-                <rootProps.slots.loadIcon fontSize="small" color="action" />
-              ) : (
-                clearButton
-              ),
-            }
-          : {}),
-        disabled,
-        ...InputProps,
-        inputProps: {
+      slotProps={{
+        input: {
+          ...(applying || clearButton
+            ? {
+                endAdornment: applying ? (
+                  <rootProps.slots.loadIcon fontSize="small" color="action" />
+                ) : (
+                  clearButton
+                ),
+              }
+            : {}),
+          disabled,
+          ...slotProps?.input,
+        },
+        htmlInput: {
           max: type === 'datetime-local' ? '9999-12-31T23:59' : '9999-12-31',
           tabIndex,
-          ...InputProps?.inputProps,
+          ...slotProps?.htmlInput,
         },
       }}
       {...other}

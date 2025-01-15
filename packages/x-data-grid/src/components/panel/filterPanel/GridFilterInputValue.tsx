@@ -24,8 +24,8 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
     tabIndex,
     disabled,
     isFilterActive,
+    slotProps,
     clearButton,
-    InputProps,
     variant = 'standard',
     ...others
   } = props;
@@ -73,21 +73,23 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
       onChange={onFilterChange}
       variant={variant}
       type={type || 'text'}
-      InputProps={{
-        ...(applying || clearButton
-          ? {
-              endAdornment: applying ? (
-                <rootProps.slots.loadIcon fontSize="small" color="action" />
-              ) : (
-                clearButton
-              ),
-            }
-          : {}),
-        disabled,
-        ...InputProps,
-        inputProps: {
+      slotProps={{
+        input: {
+          ...(applying || clearButton
+            ? {
+                endAdornment: applying ? (
+                  <rootProps.slots.loadIcon fontSize="small" color="action" />
+                ) : (
+                  clearButton
+                ),
+              }
+            : {}),
+          disabled,
+          ...slotProps?.input,
+        },
+        htmlInput: {
           tabIndex,
-          ...InputProps?.inputProps,
+          ...slotProps?.htmlInput,
         },
       }}
       inputRef={focusElementRef}

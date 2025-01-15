@@ -82,18 +82,20 @@ export type TextFieldProps = {
   fullWidth?: boolean;
   helperText?: string | null;
   id?: string;
-  InputProps?: {
-    disabled?: boolean;
-    endAdornment?: React.ReactNode;
-    startAdornment?: React.ReactNode;
-    inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
-  };
   inputRef?: React.Ref<HTMLInputElement>;
   label?: React.ReactNode;
   onChange?: React.ChangeEventHandler;
   onKeyDown?: React.KeyboardEventHandler;
   placeholder?: string;
   size?: 'small' | 'medium';
+  slotProps?: {
+    input?: {
+      disabled?: boolean;
+      endAdornment?: React.ReactNode;
+      startAdornment?: React.ReactNode;
+    };
+    htmlInput?: React.InputHTMLAttributes<HTMLInputElement>;
+  };
   style?: React.CSSProperties;
   tabIndex?: number;
   type?: React.HTMLInputTypeAttribute;
