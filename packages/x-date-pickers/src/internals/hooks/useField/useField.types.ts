@@ -126,7 +126,9 @@ export interface UseFieldInternalProps<
 }
 
 export interface UseFieldCommonAdditionalProps
-  extends Required<Pick<UseFieldInternalProps<any, any, any>, 'disabled' | 'readOnly'>> {
+  extends Required<
+    Pick<UseFieldInternalProps<any, any, any>, 'disabled' | 'readOnly' | 'autoFocus'>
+  > {
   /**
    * The aria label to set on the button that opens the picker.
    */
@@ -166,7 +168,6 @@ interface UseFieldV6AdditionalProps
 
 export interface UseFieldV7ForwardedProps {
   focused?: boolean;
-  autoFocus?: boolean;
   sectionListRef?: React.Ref<PickersSectionListRef>;
   onBlur?: () => void;
   onClick?: React.MouseEventHandler;
