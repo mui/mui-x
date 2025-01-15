@@ -14,7 +14,7 @@ import {
   ExportedPickersLayoutSlotProps,
 } from '@mui/x-date-pickers/PickersLayout';
 import { BaseRangeNonStaticPickerProps } from '../../models';
-import { UseRangePositionProps, UseRangePositionResponse } from '../useRangePosition';
+import { UseRangePositionProps } from '../useRangePosition';
 import { RangePickerFieldSlots, RangePickerFieldSlotProps } from '../useEnrichedRangePickerField';
 
 export interface UseRangePickerSlots
@@ -40,9 +40,6 @@ export interface UseRangePickerProps<
   TExternalProps extends UsePickerViewsProps<any, TView, any>,
 > extends RangeOnlyPickerProps,
     BasePickerProps<PickerRangeValue, TView, TError, TExternalProps> {}
-
-export interface RangePickerAdditionalViewProps
-  extends Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {}
 
 export interface UseRangePickerParams<
   TView extends DateOrTimeViewWithMeridiem,
