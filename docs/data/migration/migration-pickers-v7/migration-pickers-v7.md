@@ -1096,7 +1096,7 @@ This hook has been removed in favor of the new `useMultiInputRangeField` hook wi
 ```
 
 :::success
-The associated types have also been removed. — [Learn how to migrate them](/x/migration/migration-pickers-v7/#removed-types).
+The associated types have also been removed. [Learn how to migrate them](/x/migration/migration-pickers-v7/#removed-types).
 :::
 
 ### `usePickerContext`
