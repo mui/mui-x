@@ -354,7 +354,7 @@
   { "name": "GridFilterInputSingleSelect", "kind": "Function" },
   { "name": "GridFilterInputSingleSelectProps", "kind": "TypeAlias" },
   { "name": "GridFilterInputValue", "kind": "Function" },
-  { "name": "GridFilterInputValueProps", "kind": "TypeAlias" },
+  { "name": "GridFilterInputComponentProps", "kind": "TypeAlias" },
   { "name": "GridFilterItem", "kind": "Interface" },
   { "name": "GridFilterListIcon", "kind": "Variable" },
   { "name": "GridFilterModel", "kind": "Interface" },

@@ -3,6 +3,7 @@ import { GridFilterItem } from './gridFilterItem';
 import type { GridColDef } from './colDef/gridColDef';
 import type { GridValidRowModel } from './gridRows';
 import type { GridApiCommunity } from './api/gridApiCommunity';
+import type { GridFilterInputComponentProps } from './gridFilterInputComponent';
 
 type ApplyFilterFn<R extends GridValidRowModel = any, V = any, F = V> = (
   value: V,
@@ -21,7 +22,12 @@ export type GetApplyFilterFn<R extends GridValidRowModel = any, V = any, F = V> 
  * @demos
  *   - [Custom filter operator](/x/react-data-grid/filtering/customization/#create-a-custom-operator)
  */
-export interface GridFilterOperator<R extends GridValidRowModel = any, V = any, F = V> {
+export interface GridFilterOperator<
+  R extends GridValidRowModel = any,
+  V = any,
+  F = V,
+  I extends GridFilterInputComponentProps = GridFilterInputComponentProps,
+> {
   /**
    * The label of the filter operator.
    */
@@ -46,11 +52,11 @@ export interface GridFilterOperator<R extends GridValidRowModel = any, V = any, 
   /**
    * The input component to render in the filter panel for this filter operator.
    */
-  InputComponent?: React.JSXElementConstructor<any>;
+  InputComponent?: React.JSXElementConstructor<I>;
   /**
    * The props to pass to the input component in the filter panel for this filter operator.
    */
-  InputComponentProps?: Record<string, any>;
+  InputComponentProps?: I;
   /**
    * Converts the value of a filter item to a human-readable form.
    * @param {GridFilterItem['value']} value The filter item value.

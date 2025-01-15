@@ -4,7 +4,7 @@ import Autocomplete, { AutocompleteProps, createFilterOptions } from '@mui/mater
 import { unstable_useId as useId } from '@mui/utils';
 import { getValueOptions, isSingleSelectColDef } from './filterPanelUtils';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import { GridFilterInputValueProps } from './GridFilterInputValueProps';
+import { GridFilterInputComponentProps } from '../../../models/gridFilterInputComponent';
 import type { GridSingleSelectColDef, ValueOptions } from '../../../models/colDef/gridColDef';
 
 export interface GridFilterInputMultipleSingleSelectProps
@@ -21,7 +21,7 @@ export interface GridFilterInputMultipleSingleSelectProps
       | 'color'
       | 'getOptionLabel'
     >,
-    GridFilterInputValueProps {
+    GridFilterInputComponentProps {
   type?: 'singleSelect';
 }
 

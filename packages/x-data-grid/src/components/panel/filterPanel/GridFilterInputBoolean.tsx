@@ -2,19 +2,11 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { refType, unstable_useId as useId } from '@mui/utils';
 import { styled } from '@mui/material/styles';
-import { GridFilterInputValueProps } from './GridFilterInputValueProps';
+import { GridFilterInputComponentProps } from '../../../models/gridFilterInputComponent';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { TextFieldProps } from '../../../models/gridBaseSlots';
 
-export type GridFilterInputBooleanProps = GridFilterInputValueProps &
-  TextFieldProps & {
-    clearButton?: React.ReactNode | null;
-    /**
-     * It is `true` if the filter either has a value or an operator with no value
-     * required is selected (for example `isEmpty`)
-     */
-    isFilterActive?: boolean;
-  };
+export type GridFilterInputBooleanProps = GridFilterInputComponentProps & TextFieldProps;
 
 const BooleanOperatorContainer = styled('div')({
   display: 'flex',

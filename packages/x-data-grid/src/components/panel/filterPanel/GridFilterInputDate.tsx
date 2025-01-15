@@ -2,20 +2,14 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_useId as useId } from '@mui/utils';
 import { useTimeout } from '../../../hooks/utils/useTimeout';
-import { GridFilterInputValueProps } from './GridFilterInputValueProps';
+import { GridFilterInputComponentProps } from '../../../models/gridFilterInputComponent';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { GridFilterItem } from '../../../models/gridFilterItem';
 import { TextFieldProps } from '../../../models/gridBaseSlots';
 
-export type GridFilterInputDateProps = GridFilterInputValueProps &
+export type GridFilterInputDateProps = GridFilterInputComponentProps &
   TextFieldProps & {
     type?: 'date' | 'datetime-local';
-    clearButton?: React.ReactNode | null;
-    /**
-     * It is `true` if the filter either has a value or an operator with no value
-     * required is selected (for example `isEmpty`)
-     */
-    isFilterActive?: boolean;
   };
 
 function convertFilterItemValueToInputValue(

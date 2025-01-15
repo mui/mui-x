@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import {
-  GridFilterInputValueProps,
+  GridFilterInputComponentProps,
   DataGrid,
   GridFilterModel,
   GridFilterOperator,
@@ -11,7 +11,7 @@ import {
 import { useDemoData } from '@mui/x-data-grid-generator';
 import SyncIcon from '@mui/icons-material/Sync';
 
-function InputNumberInterval(props: GridFilterInputValueProps) {
+function InputNumberInterval(props: GridFilterInputComponentProps) {
   const rootProps = useGridRootProps();
   const { item, applyValue, focusElementRef = null } = props;
 

@@ -4,7 +4,7 @@ import { unstable_useId as useId } from '@mui/utils';
 import { styled } from '@mui/material/styles';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { TextFieldProps } from '../../../models/gridBaseSlots';
-import { GridFilterInputValueProps } from './GridFilterInputValueProps';
+import { GridFilterInputComponentProps } from '../../../models/gridFilterInputComponent';
 import { GridSingleSelectColDef } from '../../../models/colDef/gridColDef';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import {
@@ -55,14 +55,8 @@ const SingleSelectOperatorContainer = styled('div')({
   },
 });
 
-export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
+export type GridFilterInputSingleSelectProps = GridFilterInputComponentProps &
   TextFieldProps & {
-    clearButton?: React.ReactNode | null;
-    /**
-     * It is `true` if the filter either has a value or an operator with no value
-     * required is selected (for example `isEmpty`)
-     */
-    isFilterActive?: boolean;
     type?: 'singleSelect';
   };
 

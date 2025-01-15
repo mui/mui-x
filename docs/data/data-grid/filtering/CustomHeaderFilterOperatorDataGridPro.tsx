@@ -4,14 +4,14 @@ import Rating, { RatingProps } from '@mui/material/Rating';
 import {
   DataGridPro,
   getGridNumericOperators,
-  GridFilterInputValueProps,
+  GridFilterInputComponentProps,
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
 function RatingInputValue(
-  props: GridFilterInputValueProps & {
+  props: GridFilterInputComponentProps & {
     headerFilterMenu: React.ReactNode;
     clearButton: React.ReactNode;
   },

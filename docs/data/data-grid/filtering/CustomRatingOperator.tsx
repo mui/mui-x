@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Rating, { RatingProps } from '@mui/material/Rating';
 import {
-  GridFilterInputValueProps,
+  GridFilterInputComponentProps,
   DataGrid,
   GridFilterOperator,
   GridToolbarFilterButton,
@@ -17,7 +17,7 @@ function Toolbar() {
   );
 }
 
-function RatingInputValue(props: GridFilterInputValueProps) {
+function RatingInputValue(props: GridFilterInputComponentProps) {
   const { item, applyValue, focusElementRef } = props;
 
   const ratingRef: React.Ref<any> = React.useRef(null);
