@@ -508,7 +508,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       await user.click(menuIconButton);
       await user.click(screen.getByRole('menuitem', { name: 'Unpin' }));
       await waitFor(() => {
-      expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`)).to.equal(null);
+        expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`)).to.equal(null);
       });
     });
 
