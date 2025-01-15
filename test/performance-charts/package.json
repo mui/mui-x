@@ -9,6 +9,7 @@
   "devDependencies": {
     "@codspeed/vitest-plugin": "^4.0.0",
     "@emotion/react": "^11.14.0",
+    "@mui/x-internals": "workspace:*",
     "@mui/x-charts": "workspace:*",
     "@mui/x-charts-pro": "workspace:*",
     "@testing-library/jest-dom": "^6.6.3",
