@@ -11,10 +11,18 @@ export default function HeaderFilteringInlineClearDataGridPro() {
     visibleFields: VISIBLE_FIELDS,
   });
 
+  const columns = React.useMemo(() => {
+    return data.columns.map((col) => ({
+      ...col,
+      minWidth: 200,
+    }));
+  }, [data.columns]);
+
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
         {...data}
+        columns={columns}
         loading={loading}
         initialState={{
           ...data.initialState,

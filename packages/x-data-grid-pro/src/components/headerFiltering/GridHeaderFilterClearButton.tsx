@@ -6,8 +6,6 @@ type BaseIconButtonProps = GridSlotProps['baseIconButton'];
 
 interface GridHeaderFilterClearIconProps extends BaseIconButtonProps {}
 
-const STYLE = { marginLeft: '2px' };
-
 function GridHeaderFilterClearButton(props: GridHeaderFilterClearIconProps) {
   const rootProps = useGridRootProps();
   return (
@@ -15,7 +13,6 @@ function GridHeaderFilterClearButton(props: GridHeaderFilterClearIconProps) {
       tabIndex={-1}
       aria-label="Clear filter"
       size="small"
-      style={STYLE}
       {...rootProps.slotProps?.baseIconButton}
       {...props}
     >

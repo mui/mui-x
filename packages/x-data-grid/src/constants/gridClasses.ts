@@ -178,6 +178,10 @@ export interface GridClasses {
    */
   columnHeaderFilterInput: string;
   /**
+   * Styles applied to the header filter operator label element.
+   */
+  columnHeaderFilterOperatorLabel: string;
+  /**
    * Styles applied to the header checkbox cell element.
    */
   columnHeaderCheckbox: string;
@@ -737,6 +741,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnHeader--siblingFocused',
   'columnHeader--filter',
   'columnHeaderFilterInput',
+  'columnHeaderFilterOperatorLabel',
   'columnHeaderCheckbox',
   'columnHeaderDraggableContainer',
   'columnHeaderTitle',

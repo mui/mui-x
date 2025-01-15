@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import {
   unstable_useForkRef as useForkRef,
   unstable_composeClasses as composeClasses,
@@ -75,9 +75,10 @@ type OwnerState = DataGridProProcessedProps & {
 const StyledInputComponent = styled(GridFilterInputValue, {
   name: 'MuiDataGrid',
   slot: 'ColumnHeaderFilterInput',
-  overridesResolver: (props, styles) => styles.columnHeaderFilterInput,
 })(({ theme }) => ({
   flex: 1,
+  marginRight: theme.spacing(0.5),
+  marginBottom: theme.spacing(-0.25),
   '& input[type="number"], & input[type="date"], & input[type="datetime-local"]': {
     '&[value=""]:not(:focus)': {
       color: 'transparent',
@@ -91,6 +92,18 @@ const StyledInputComponent = styled(GridFilterInputValue, {
     paddingBottom: theme.spacing(0.5),
     height: 23,
   },
+}));
+
+const OperatorLabel = styled('span', {
+  name: 'MuiDataGrid',
+  slot: 'ColumnHeaderFilterOperatorLabel',
+})(({ theme }) => ({
+  flex: 1,
+  marginRight: theme.spacing(0.5),
+  color: theme.palette.text.secondary,
+  whiteSpace: 'nowrap',
+  textOverflow: 'ellipsis',
+  overflow: 'hidden',
 }));
 
 const useUtilityClasses = (ownerState: OwnerState) => {
@@ -110,6 +123,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       pinnedPosition === 'right' && 'columnHeader--pinnedRight',
     ],
     input: ['columnHeaderFilterInput'],
+    operatorLabel: ['columnHeaderFilterOperatorLabel'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -336,6 +350,25 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
   const isApplied = item?.value !== undefined || isNoInputOperator;
   const isFilterActive = isApplied || hasFocus;
 
+  const headerFilterMenu = (
+    <GridHeaderFilterMenuContainer
+      operators={filterOperators}
+      item={item}
+      field={colDef.field}
+      disabled={isFilterReadOnly}
+      applyFilterChanges={apiRef.current.upsertFilterItem}
+      headerFilterMenuRef={headerFilterMenuRef}
+      buttonRef={buttonRef}
+      showClearItem={!showClearIcon && isApplied}
+      clearFilterItem={clearFilterItem}
+    />
+  );
+
+  const clearButton =
+    showClearIcon && isApplied ? (
+      <GridHeaderFilterClearButton onClick={clearFilterItem} disabled={isFilterReadOnly} />
+    ) : null;
+
   return (
     <div
       className={clsx(classes.root, headerClassName)}
@@ -352,59 +385,54 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
       ref={handleRef}
     >
       {headerFilterComponent}
-      {InputComponent && headerFilterComponent === undefined ? (
-        <StyledInputComponent
-          as={InputComponent}
-          className={classes.input}
-          apiRef={apiRef}
-          item={item}
-          inputRef={inputRef}
-          applyValue={apiRef.current.upsertFilterItem}
-          onFocus={() => apiRef.current.startHeaderFilterEditMode(colDef.field)}
-          onBlur={(event: React.FocusEvent) => {
-            apiRef.current.stopHeaderFilterEditMode();
-            // Blurring an input element should reset focus state only if `relatedTarget` is not the header filter cell
-            if (!event.relatedTarget?.className.includes('columnHeader')) {
-              apiRef.current.setState((state) => ({
-                ...state,
-                focus: {
-                  cell: null,
-                  columnHeader: null,
-                  columnHeaderFilter: null,
-                  columnGroupHeader: null,
-                },
-              }));
-            }
-          }}
-          label={capitalize(label)}
-          placeholder=""
-          isFilterActive={isFilterActive}
-          variant="outlined"
-          size="small"
-          disabled={isFilterReadOnly || isNoInputOperator}
-          tabIndex={-1}
-          headerFilterMenu={
-            <GridHeaderFilterMenuContainer
-              operators={filterOperators}
+      {headerFilterComponent === undefined ? (
+        <React.Fragment>
+          {isNoInputOperator ? (
+            <React.Fragment>
+              <OperatorLabel className={classes.operatorLabel}>{label}</OperatorLabel>
+              {clearButton}
+              {headerFilterMenu}
+            </React.Fragment>
+          ) : null}
+          {InputComponent && !isNoInputOperator ? (
+            <StyledInputComponent
+              as={InputComponent}
+              className={classes.input}
+              apiRef={apiRef}
               item={item}
-              field={colDef.field}
-              disabled={isFilterReadOnly}
-              applyFilterChanges={apiRef.current.upsertFilterItem}
-              headerFilterMenuRef={headerFilterMenuRef}
-              buttonRef={buttonRef}
-              showClearItem={!showClearIcon && isApplied}
-              clearFilterItem={clearFilterItem}
+              inputRef={inputRef}
+              applyValue={apiRef.current.upsertFilterItem}
+              onFocus={() => apiRef.current.startHeaderFilterEditMode(colDef.field)}
+              onBlur={(event: React.FocusEvent) => {
+                apiRef.current.stopHeaderFilterEditMode();
+                // Blurring an input element should reset focus state only if `relatedTarget` is not the header filter cell
+                if (!event.relatedTarget?.className.includes('columnHeader')) {
+                  apiRef.current.setState((state) => ({
+                    ...state,
+                    focus: {
+                      cell: null,
+                      columnHeader: null,
+                      columnHeaderFilter: null,
+                      columnGroupHeader: null,
+                    },
+                  }));
+                }
+              }}
+              label={capitalize(label)}
+              placeholder=""
+              isFilterActive={isFilterActive}
+              variant="outlined"
+              size="small"
+              disabled={isFilterReadOnly || isNoInputOperator}
+              tabIndex={-1}
+              headerFilterMenu={headerFilterMenu}
+              clearButton={clearButton}
+              {...(isNoInputOperator ? { value: '' } : {})}
+              {...currentOperator?.InputComponentProps}
+              {...InputComponentProps}
             />
-          }
-          clearButton={
-            showClearIcon && isApplied ? (
-              <GridHeaderFilterClearButton onClick={clearFilterItem} disabled={isFilterReadOnly} />
-            ) : null
-          }
-          {...(isNoInputOperator ? { value: '' } : {})}
-          {...currentOperator?.InputComponentProps}
-          {...InputComponentProps}
-        />
+          ) : null}
+        </React.Fragment>
       ) : null}
     </div>
   );

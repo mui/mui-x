@@ -1449,6 +1449,12 @@
       "isGlobal": false
     },
     {
+      "key": "columnHeaderFilterOperatorLabel",
+      "className": "MuiDataGridPremium-columnHeaderFilterOperatorLabel",
+      "description": "Styles applied to the header filter operator label element.",
+      "isGlobal": false
+    },
+    {
       "key": "columnHeaderTitle",
       "className": "MuiDataGridPremium-columnHeaderTitle",
       "description": "Styles applied to the column header's title element;",

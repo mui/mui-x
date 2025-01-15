@@ -32,13 +32,21 @@ function RatingInputValue(
   };
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        width: '100%',
+      }}
+    >
       <Rating
         name="custom-rating-filter-operator"
         value={Number(item.value)}
         onChange={handleFilterChange}
         precision={0.5}
         ref={ratingRef}
+        sx={{ mr: 0.5 }}
       />
       {headerFilterMenu}
       {clearButton}
