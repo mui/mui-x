@@ -1675,9 +1675,6 @@ importers:
       '@mui/x-charts-pro':
         specifier: workspace:*
         version: link:../../packages/x-charts-pro/build
-      '@mui/x-internals':
-        specifier: workspace:*
-        version: link:../../packages/x-internals/build
       '@testing-library/jest-dom':
         specifier: ^6.6.3
         version: 6.6.3
