@@ -10,11 +10,11 @@ Run one of the following commands to install the MUI X Data Grid package that b
 
 {{"component": "modules/components/DataGridInstallationInstructions.js"}}
 
-::success
+:::success
 Not sure which package to choose?
-You can upgrade from the Community version to Pro or Premium at any time.
 Check out the [Feature showcase](/x/react-data-grid/demo/) for a list of features available in each package.
-::
+You can upgrade from the Community version to Pro or Premium at any time.
+:::
 
 The Data Grid packages have a peer dependency on `@mui/material`.
 If you're not already using it, install it with the following command:
