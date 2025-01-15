@@ -73,7 +73,7 @@ export const rowSelectionStateInitializer: GridStateInitializer<
  * @requires useGridKeyboardNavigation (`cellKeyDown` event must first be consumed by it)
  */
 export const useGridRowSelection = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'checkboxSelection'
@@ -534,13 +534,13 @@ export const useGridRowSelection = (
       const isMultipleSelectionDisabled =
         !checkboxSelection && !hasCtrlKey && !isKeyboardEvent(event);
       const resetSelection = !canHaveMultipleSelection || isMultipleSelectionDisabled;
+      const selectedRowsCount = apiRef.current.getSelectedRows().size;
 
-      const isSelected = apiRef.current.isRowSelected(id);
-
-      if (resetSelection) {
-        apiRef.current.selectRow(id, !isMultipleSelectionDisabled ? !isSelected : true, true);
+      if (canHaveMultipleSelection && selectedRowsCount > 1 && !hasCtrlKey) {
+        apiRef.current.selectRow(id, true, resetSelection);
       } else {
-        apiRef.current.selectRow(id, !isSelected, false);
+        const isSelected = apiRef.current.isRowSelected(id);
+        apiRef.current.selectRow(id, !isSelected, resetSelection);
       }
     },
     [apiRef, canHaveMultipleSelection, checkboxSelection],

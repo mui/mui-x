@@ -366,14 +366,6 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    */
   clipboardCopyCellDelimiter: string;
   /**
-   * The milliseconds delay to wait after measuring the row height before recalculating row positions.
-   * Setting it to a lower value could be useful when using dynamic row height,
-   * but might reduce performance when displaying a large number of rows.
-   * @default 166
-   * @deprecated
-   */
-  rowPositionsDebounceMs: number /* TODO(v8): remove this property */;
-  /**
    * If `true`, columns are autosized after the datagrid is mounted.
    * @default false
    */
@@ -387,7 +379,7 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    * If `true`, the Data Grid will auto span the cells over the rows having the same value.
    * @default false
    */
-  unstable_rowSpanning: boolean;
+  rowSpanning: boolean;
   /**
    * If `true`, the Data Grid enables column virtualization when `getRowHeight` is set to `() => 'auto'`.
    * By default, column virtualization is disabled when dynamic row height is enabled to measure the row height correctly.
@@ -406,12 +398,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   /**
    * The ref object that allows Data Grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
-  apiRef?: React.MutableRefObject<GridApiCommunity>;
-  /**
-   * Forwarded props for the Data Grid root element.
-   * @ignore - do not document.
-   */
-  forwardedProps?: Record<string, unknown>;
+  apiRef?: React.RefObject<GridApiCommunity>;
   /**
    * Signal to the underlying logic what version of the public component API
    * of the Data Grid is exposed [[GridSignature]].
@@ -855,7 +842,7 @@ export interface DataGridProSharedPropsWithDefaultValue {
    * - Deselecting a descendant of a selected parent deselects the parent automatically.
    *
    * Works with tree data and row grouping on the client-side only.
-   * @default { parents: false, descendants: false }
+   * @default { parents: true, descendants: true }
    */
   rowSelectionPropagation: GridRowSelectionPropagation;
   /**

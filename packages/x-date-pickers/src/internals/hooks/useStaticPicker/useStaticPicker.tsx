@@ -6,8 +6,7 @@ import { usePicker } from '../usePicker';
 import { PickerProvider } from '../../components/PickerProvider';
 import { PickersLayout } from '../../../PickersLayout';
 import { DIALOG_WIDTH } from '../../constants/dimensions';
-import { FieldSection, PickerValidDate } from '../../../models';
-import { DateOrTimeViewWithMeridiem } from '../../models';
+import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
 
 const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',
@@ -31,19 +30,11 @@ export const useStaticPicker = <
 }: UseStaticPickerParams<TView, TExternalProps>) => {
   const { localeText, slots, slotProps, className, sx, displayStaticWrapperAs, autoFocus } = props;
 
-  const { layoutProps, providerProps, renderCurrentView } = usePicker<
-    PickerValidDate | null,
-    TView,
-    FieldSection,
-    TExternalProps,
-    {}
-  >({
+  const { providerProps, renderCurrentView } = usePicker<PickerValue, TView, TExternalProps>({
     ...pickerParams,
     props,
     autoFocusView: autoFocus ?? false,
-    fieldRef: undefined,
     localeText,
-    additionalViewProps: {},
     variant: displayStaticWrapperAs,
   });
 
@@ -52,7 +43,6 @@ export const useStaticPicker = <
   const renderPicker = () => (
     <PickerProvider {...providerProps}>
       <Layout
-        {...layoutProps}
         {...slotProps?.layout}
         slots={slots}
         slotProps={slotProps}

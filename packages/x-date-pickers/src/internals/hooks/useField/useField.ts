@@ -3,7 +3,7 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
 import { useValidation } from '../../../validation';
-import { useUtils } from '../useUtils';
+import { useLocalizationContext, useUtils } from '../useUtils';
 import {
   UseFieldParams,
   UseFieldResponse,
@@ -17,28 +17,21 @@ import {
 import { adjustSectionValue, getSectionOrder } from './useField.utils';
 import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
-import { FieldSection } from '../../../models';
 import { useFieldV7TextField } from './useFieldV7TextField';
 import { useFieldV6TextField } from './useFieldV6TextField';
+import { PickerValidValue } from '../../models';
 
 export const useField = <
-  TValue,
-  TSection extends FieldSection,
+  TValue extends PickerValidValue,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TForwardedProps extends UseFieldCommonForwardedProps &
     UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
-  TInternalProps extends UseFieldInternalProps<
-    any,
-    any,
-    TEnableAccessibleFieldDOMStructure,
-    any
-  > & {
+  TInternalProps extends UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, any> & {
     minutesStep?: number;
   },
 >(
   params: UseFieldParams<
     TValue,
-    TSection,
     TEnableAccessibleFieldDOMStructure,
     TForwardedProps,
     TInternalProps
@@ -59,6 +52,7 @@ export const useField = <
     fieldValueManager,
     valueManager,
     validator,
+    getOpenPickerButtonAriaLabel: getOpenDialogAriaText,
   } = params;
 
   const isRtl = useRtl();
@@ -78,7 +72,7 @@ export const useField = <
     timezone,
   } = stateResponse;
 
-  const characterEditingResponse = useFieldCharacterEditing<TSection>({
+  const characterEditingResponse = useFieldCharacterEditing({
     sections: state.sections,
     updateSectionValue,
     sectionsValueBoundaries,
@@ -286,9 +280,16 @@ export const useField = <
     clearable: Boolean(clearable && !areAllSectionsEmpty && !readOnly && !disabled),
   };
 
+  const localizationContext = useLocalizationContext();
+  const openPickerAriaLabel = React.useMemo(
+    () => getOpenDialogAriaText({ ...localizationContext, value: state.value }),
+    [getOpenDialogAriaText, state.value, localizationContext],
+  );
+
   const commonAdditionalProps: UseFieldCommonAdditionalProps = {
     disabled,
     readOnly,
+    openPickerAriaLabel,
   };
 
   return {

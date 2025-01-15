@@ -5,9 +5,13 @@ import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import { useAxisEvents } from '../hooks/useAxisEvents';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
-import { useDrawingArea } from '../hooks/useDrawingArea';
 import { useSvgRef } from '../hooks/useSvgRef';
-import { useSize } from '../context/SizeProvider';
+import { useSelector } from '../internals/store/useSelector';
+import { useStore } from '../internals/store/useStore';
+import {
+  selectorChartContainerSize,
+  selectorChartPropsSize,
+} from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.selectors';
 
 export interface ChartsSurfaceProps {
   className?: string;
@@ -26,39 +30,55 @@ export interface ChartsSurfaceProps {
 const ChartsSurfaceStyles = styled('svg', {
   name: 'MuiChartsSurface',
   slot: 'Root',
-})(() => ({
+})<{ ownerState: { width?: number; height?: number } }>(({ ownerState }) => ({
+  width: ownerState.width ?? '100%',
+  height: ownerState.height ?? '100%',
+  display: 'flex',
+  position: 'relative',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  overflow: 'hidden',
   // This prevents default touch actions when using the svg on mobile devices.
   // For example, prevent page scroll & zoom.
   touchAction: 'none',
 }));
 
+/**
+ * It provides the drawing area for the chart elements.
+ * It is the root `<svg>` of all the chart elements.
+ *
+ * It also provides the `title` and `desc` elements for the chart.
+ *
+ * Demos:
+ *
+ * - [Composition](http://localhost:3001/x/react-charts/composition/)
+ *
+ * API:
+ *
+ * - [ChartsSurface API](https://mui.com/x/api/charts/charts-surface/)
+ */
 const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(function ChartsSurface(
   inProps: ChartsSurfaceProps,
   ref: React.Ref<SVGSVGElement>,
 ) {
-  const { width, height, left, right, top, bottom } = useDrawingArea();
-  const { hasIntrinsicSize } = useSize();
+  const store = useStore();
+  const { width: svgWidth, height: svgHeight } = useSelector(store, selectorChartContainerSize);
+  const { width: propsWidth, height: propsHeight } = useSelector(store, selectorChartPropsSize);
   const svgRef = useSvgRef();
   const handleRef = useForkRef(svgRef, ref);
   const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });
 
   const { children, disableAxisListener = false, className, title, desc, ...other } = themeProps;
 
-  const svgWidth = width + left + right;
-  const svgHeight = height + top + bottom;
-
-  const svgView = {
-    width: svgWidth,
-    height: svgHeight,
-    x: 0,
-    y: 0,
-  };
+  const hasIntrinsicSize = svgHeight > 0 && svgWidth > 0;
 
   useAxisEvents(disableAxisListener);
 
   return (
     <ChartsSurfaceStyles
-      viewBox={`${svgView.x} ${svgView.y} ${svgView.width} ${svgView.height}`}
+      ownerState={{ width: propsWidth, height: propsHeight }}
+      viewBox={`${0} ${0} ${svgWidth} ${svgHeight}`}
       className={className}
       {...other}
       ref={handleRef}

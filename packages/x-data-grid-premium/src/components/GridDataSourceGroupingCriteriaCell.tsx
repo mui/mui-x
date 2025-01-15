@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import Box from '@mui/material/Box';
-import CircularProgress from '@mui/material/CircularProgress';
-import { useGridPrivateApiContext } from '@mui/x-data-grid-pro/internals';
+import { vars, useGridPrivateApiContext } from '@mui/x-data-grid-pro/internals';
 import {
   useGridSelector,
   getDataGridUtilityClass,
@@ -39,7 +38,7 @@ interface GridGroupingCriteriaCellIconProps
 }
 
 function GridGroupingCriteriaCellIcon(props: GridGroupingCriteriaCellIconProps) {
-  const apiRef = useGridPrivateApiContext() as React.MutableRefObject<GridPrivateApiPremium>;
+  const apiRef = useGridPrivateApiContext() as React.RefObject<GridPrivateApiPremium>;
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
   const { rowNode, id, field, descendantCount } = props;
@@ -67,7 +66,7 @@ function GridGroupingCriteriaCellIcon(props: GridGroupingCriteriaCellIconProps) 
   if (isDataLoading) {
     return (
       <div className={classes.loadingContainer}>
-        <CircularProgress size="1rem" color="inherit" />
+        <rootProps.slots.baseCircularProgress size="1rem" color="inherit" />
       </div>
     );
   }
@@ -125,8 +124,7 @@ export function GridDataSourceGroupingCriteriaCell(props: GridGroupingCriteriaCe
         ml:
           rootProps.rowGroupingColumnMode === 'multiple'
             ? 0
-            : (theme) =>
-                `calc(var(--DataGrid-cellOffsetMultiplier) * ${theme.spacing(rowNode.depth)})`,
+            : `calc(var(--DataGrid-cellOffsetMultiplier) * ${vars.spacing(rowNode.depth)})`,
       }}
     >
       <div className={classes.toggle}>

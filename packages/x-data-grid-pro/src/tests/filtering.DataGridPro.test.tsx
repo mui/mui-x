@@ -1,3 +1,7 @@
+import * as React from 'react';
+import { createRenderer, fireEvent, screen, act, within, waitFor } from '@mui/internal-test-utils';
+import { expect } from 'chai';
+import { spy } from 'sinon';
 import {
   getDefaultGridFilterModel,
   GridApi,
@@ -16,21 +20,17 @@ import {
   gridClasses,
   GridColDef,
   getGridStringOperators,
+  GridFilterItem,
 } from '@mui/x-data-grid-pro';
-import { createRenderer, fireEvent, screen, act, within } from '@mui/internal-test-utils';
-import { expect } from 'chai';
-import * as React from 'react';
-import { spy } from 'sinon';
 import { getColumnHeaderCell, getColumnValues, getSelectInput, grid } from 'test/utils/helperFn';
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 const SUBMIT_FILTER_STROKE_TIME = DATA_GRID_PRO_PROPS_DEFAULT_VALUES.filterDebounceMs;
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Filter', () => {
   const { clock, render } = createRenderer({ clock: 'fake' });
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -659,10 +659,8 @@ describe('<DataGridPro /> - Filter', () => {
     });
   });
 
-  it('should not scroll the page when a filter is removed from the panel', function test() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
+  // Needs layout
+  testSkipIf(isJSDOM)('should not scroll the page when a filter is removed from the panel', () => {
     render(
       <div>
         {/* To simulate a page that needs to be scrolled to reach the grid. */}
@@ -693,40 +691,40 @@ describe('<DataGridPro /> - Filter', () => {
     expect(window.scrollY).to.equal(initialScrollPosition);
   });
 
-  it('should not scroll the page when opening the filter panel and the operator=isAnyOf', function test() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
-
-    render(
-      <div>
-        {/* To simulate a page that needs to be scrolled to reach the grid. */}
-        <div style={{ height: '100vh', width: '100vh' }} />
-        <TestCase
-          initialState={{
-            preferencePanel: {
-              open: true,
-              openedPanelValue: GridPreferencePanelsValue.filters,
-            },
-            filter: {
-              filterModel: {
-                logicOperator: GridLogicOperator.Or,
-                items: [{ id: 1, field: 'brand', operator: 'isAnyOf' }],
+  // Needs layout
+  testSkipIf(isJSDOM)(
+    'should not scroll the page when opening the filter panel and the operator=isAnyOf',
+    () => {
+      render(
+        <div>
+          {/* To simulate a page that needs to be scrolled to reach the grid. */}
+          <div style={{ height: '100vh', width: '100vh' }} />
+          <TestCase
+            initialState={{
+              preferencePanel: {
+                open: true,
+                openedPanelValue: GridPreferencePanelsValue.filters,
               },
-            },
-          }}
-        />
-      </div>,
-    );
+              filter: {
+                filterModel: {
+                  logicOperator: GridLogicOperator.Or,
+                  items: [{ id: 1, field: 'brand', operator: 'isAnyOf' }],
+                },
+              },
+            }}
+          />
+        </div>,
+      );
 
-    grid('root')!.scrollIntoView();
-    const initialScrollPosition = window.scrollY;
-    expect(initialScrollPosition).not.to.equal(0);
-    act(() => apiRef.current.hidePreferences());
-    clock.tick(100);
-    act(() => apiRef.current.showPreferences(GridPreferencePanelsValue.filters));
-    expect(window.scrollY).to.equal(initialScrollPosition);
-  });
+      grid('root')!.scrollIntoView();
+      const initialScrollPosition = window.scrollY;
+      expect(initialScrollPosition).not.to.equal(0);
+      act(() => apiRef.current.hidePreferences());
+      clock.tick(100);
+      act(() => apiRef.current.showPreferences(GridPreferencePanelsValue.filters));
+      expect(window.scrollY).to.equal(initialScrollPosition);
+    },
+  );
 
   describe('Server', () => {
     it('should refresh the filter panel when adding filters', async () => {
@@ -911,11 +909,8 @@ describe('<DataGridPro /> - Filter', () => {
     });
   });
 
-  it('should give a stable ID to the filter item used as placeholder', function test() {
-    if (isJSDOM) {
-      this.skip(); // It's not re-rendering the filter panel correctly
-    }
-
+  // It's not re-rendering the filter panel correctly
+  testSkipIf(isJSDOM)('should give a stable ID to the filter item used as placeholder', () => {
     const { rerender } = render(<TestCase slots={{ toolbar: GridToolbar }} />);
     const filtersButton = screen.getByRole('button', { name: /Filters/i });
     fireEvent.click(filtersButton);
@@ -1118,6 +1113,121 @@ describe('<DataGridPro /> - Filter', () => {
         );
       }).not.toErrorDev();
     });
+
+    it('should work correctly with boolean column type', () => {
+      const getRows = (item: Omit<GridFilterItem, 'field'>) => {
+        const { unmount } = render(
+          <TestCase
+            filterModel={{
+              items: [{ field: 'isPublished', ...item }],
+            }}
+            rows={[
+              {
+                id: 0,
+                isPublished: undefined,
+              },
+              {
+                id: 1,
+                isPublished: null,
+              },
+              {
+                id: 2,
+                isPublished: true,
+              },
+              {
+                id: 3,
+                isPublished: false,
+              },
+            ]}
+            columns={[
+              {
+                field: 'isPublished',
+                type: 'boolean',
+                // The boolean cell does not handle the formatted value, so we override it
+                renderCell: (params) => {
+                  const value = params.value as boolean | null | undefined;
+
+                  if (value === null) {
+                    return 'null';
+                  }
+
+                  if (value === undefined) {
+                    return 'undefined';
+                  }
+
+                  return value.toString();
+                },
+              },
+            ]}
+            headerFilters
+          />,
+        );
+        const values = getColumnValues(0);
+        unmount();
+        return values;
+      };
+      const ALL_ROWS = ['undefined', 'null', 'true', 'false'];
+      const TRUTHY_ROWS = ['true'];
+      const FALSY_ROWS = ['undefined', 'null', 'false'];
+
+      expect(getRows({ operator: 'is', value: 'true' })).to.deep.equal(TRUTHY_ROWS);
+      expect(getRows({ operator: 'is', value: true })).to.deep.equal(TRUTHY_ROWS);
+
+      expect(getRows({ operator: 'is', value: 'false' })).to.deep.equal(FALSY_ROWS);
+      expect(getRows({ operator: 'is', value: false })).to.deep.equal(FALSY_ROWS);
+
+      expect(getRows({ operator: 'is', value: '' })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'is', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'is', value: null })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'is', value: 'test' })).to.deep.equal(ALL_ROWS); // Ignores invalid values
+    });
+
+    it('should allow temporary invalid values while updating the number filter', async () => {
+      clock.restore();
+      const changeSpy = spy();
+      const { user } = render(
+        <TestCase
+          rows={[
+            { id: 1, amount: -10 },
+            { id: 2, amount: 10 },
+            { id: 3, amount: 100 },
+            { id: 4, amount: 1000 },
+          ]}
+          columns={[{ field: 'amount', type: 'number' }]}
+          headerFilters
+          onFilterModelChange={changeSpy}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['-10', '10', '100', '1,000']);
+
+      const filterCell = getColumnHeaderCell(0, 1);
+      await user.click(within(filterCell).getByLabelText('Operator'));
+      await user.click(screen.getByRole('menuitem', { name: 'Greater than' }));
+
+      const input = within(filterCell).getByLabelText('Greater than');
+      await user.click(input);
+      expect(input).toHaveFocus();
+
+      await user.keyboard('0');
+      await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['10', '100', '1,000']));
+      expect(changeSpy.lastCall.args[0].items[0].value).to.equal(0);
+
+      await user.keyboard('.');
+      await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['10', '100', '1,000']));
+      expect(changeSpy.lastCall.args[0].items[0].value).to.equal(0); // 0.
+
+      await user.keyboard('1');
+      await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['10', '100', '1,000']));
+      await waitFor(() => expect(changeSpy.lastCall.args[0].items[0].value).to.equal(0.1)); // 0.1
+
+      await user.keyboard('e');
+      await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['-10', '10', '100', '1,000']));
+      expect(changeSpy.lastCall.args[0].items[0].value).to.equal(undefined); // 0.1e
+
+      await user.keyboard('2');
+      await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['100', '1,000']));
+      expect(changeSpy.lastCall.args[0].items[0].value).to.equal(10); // 0.1e2
+    });
   });
 
   describe('Read-only filters', () => {
@@ -1159,7 +1269,7 @@ describe('<DataGridPro /> - Filter', () => {
       expect(getColumnValues(1)).to.deep.equal(['Puma']);
     });
 
-    it('should allow updating logic operator even from read-only filters', function test() {
+    it('should allow updating logic operator even from read-only filters', () => {
       const newModel = {
         items: [
           {

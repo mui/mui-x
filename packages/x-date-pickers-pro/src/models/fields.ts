@@ -1,12 +1,13 @@
 import * as React from 'react';
-import { UseFieldResponse, FormProps } from '@mui/x-date-pickers/internals';
-import { FieldRef, FieldSection, PickerFieldSlotProps } from '@mui/x-date-pickers/models';
-import { UseClearableFieldResponse } from '@mui/x-date-pickers/hooks';
-import { RangePosition } from './range';
+import {
+  UseFieldResponse,
+  FormProps,
+  PickerValue,
+  PickerRangeValue,
+} from '@mui/x-date-pickers/internals';
+import { FieldRef, PickerFieldSlotProps } from '@mui/x-date-pickers/models';
 
-export interface RangeFieldSection extends FieldSection {
-  dateName: RangePosition;
-}
+export type { FieldRangeSection } from '@mui/x-date-pickers/internals';
 
 export type FieldType = 'single-input' | 'multi-input';
 
@@ -35,8 +36,8 @@ export interface MultiInputFieldSlotRootProps {
 }
 
 export interface MultiInputFieldRefs {
-  unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
-  unstableEndFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
+  unstableStartFieldRef?: React.Ref<FieldRef<PickerValue>>;
+  unstableEndFieldRef?: React.Ref<FieldRef<PickerValue>>;
 }
 
 export interface RangeFieldSeparatorProps {
@@ -50,12 +51,9 @@ export interface RangeFieldSeparatorProps {
 /**
  * Props the `slotProps.field` of a range picker component can receive.
  */
-export type PickerRangeFieldSlotProps<
-  TValue,
-  TSection extends FieldSection,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> = PickerFieldSlotProps<TValue, TSection, TEnableAccessibleFieldDOMStructure> &
-  RangeFieldSeparatorProps;
+export type PickerRangeFieldSlotProps<TEnableAccessibleFieldDOMStructure extends boolean> =
+  PickerFieldSlotProps<PickerRangeValue, TEnableAccessibleFieldDOMStructure> &
+    RangeFieldSeparatorProps;
 
 /**
  * Props the text field receives when used with a multi input picker.
@@ -63,6 +61,13 @@ export type PickerRangeFieldSlotProps<
  */
 export type BaseMultiInputPickersTextFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
-> = UseClearableFieldResponse<
-  UseFieldResponse<TEnableAccessibleFieldDOMStructure, MultiInputFieldSlotTextFieldProps>
+> = Omit<
+  UseFieldResponse<TEnableAccessibleFieldDOMStructure, MultiInputFieldSlotTextFieldProps>,
+  | 'slots'
+  | 'slotProps'
+  | 'clearable'
+  | 'onClear'
+  | 'openPickerButtonPosition'
+  | 'clearButtonPosition'
+  | 'openPickerAriaLabel'
 >;

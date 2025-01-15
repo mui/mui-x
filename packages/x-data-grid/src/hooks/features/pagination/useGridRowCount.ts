@@ -18,7 +18,7 @@ import {
 } from './gridPaginationSelector';
 
 export const useGridRowCount = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     'rowCount' | 'initialState' | 'paginationMode' | 'onRowCountChange'

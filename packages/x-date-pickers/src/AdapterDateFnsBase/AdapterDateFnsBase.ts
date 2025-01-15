@@ -9,7 +9,7 @@ import {
 } from '../models';
 
 type DateFnsLocaleBase = {
-  formatLong?: {
+  formatLong: {
     date: (...args: Array<any>) => any;
     time: (...args: Array<any>) => any;
     dateTime: (...args: Array<any>) => any;

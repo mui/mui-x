@@ -43,10 +43,11 @@ export {
 } from '../hooks/features/rowPinning/useGridRowPinningPreProcessors';
 export { useGridLazyLoader } from '../hooks/features/lazyLoader/useGridLazyLoader';
 export { useGridLazyLoaderPreProcessors } from '../hooks/features/lazyLoader/useGridLazyLoaderPreProcessors';
+export { useGridDataSourceLazyLoader } from '../hooks/features/serverSideLazyLoader/useGridDataSourceLazyLoader';
 export {
-  useGridDataSource,
+  useGridDataSourceBase,
   dataSourceStateInitializer,
-} from '../hooks/features/dataSource/useGridDataSource';
+} from '../hooks/features/dataSource/useGridDataSourceBase';
 
 export type {
   GridExperimentalProFeatures,

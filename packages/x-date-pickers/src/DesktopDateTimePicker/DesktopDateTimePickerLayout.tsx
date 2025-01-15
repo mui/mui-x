@@ -9,20 +9,19 @@ import {
   pickersLayoutClasses,
   usePickerLayout,
 } from '../PickersLayout';
-import { DateOrTimeViewWithMeridiem } from '../internals/models/common';
 import { usePickerContext } from '../hooks/usePickerContext';
+import { PickerValidValue } from '../internals/models';
 
-type DesktopDateTimePickerLayoutComponent = (<TValue, TView extends DateOrTimeViewWithMeridiem>(
-  props: PickersLayoutProps<TValue, TView> & React.RefAttributes<HTMLDivElement>,
+type DesktopDateTimePickerLayoutComponent = (<TValue extends PickerValidValue>(
+  props: PickersLayoutProps<TValue> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
  * @ignore - internal component.
  */
 const DesktopDateTimePickerLayout = React.forwardRef(function DesktopDateTimePickerLayout<
-  TValue,
-  TView extends DateOrTimeViewWithMeridiem,
->(props: PickersLayoutProps<TValue, TView>, ref: React.Ref<HTMLDivElement>) {
+  TValue extends PickerValidValue,
+>(props: PickersLayoutProps<TValue>, ref: React.Ref<HTMLDivElement>) {
   const { toolbar, tabs, content, actionBar, shortcuts, ownerState } = usePickerLayout(props);
   const { orientation } = usePickerContext();
   const { sx, className, classes } = props;
@@ -68,17 +67,6 @@ DesktopDateTimePickerLayout.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
-  isValid: PropTypes.func.isRequired,
-  onAccept: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired,
-  onClear: PropTypes.func.isRequired,
-  onClose: PropTypes.func.isRequired,
-  onDismiss: PropTypes.func.isRequired,
-  onOpen: PropTypes.func.isRequired,
-  onSelectShortcut: PropTypes.func.isRequired,
-  onSetToday: PropTypes.func.isRequired,
-  onViewChange: PropTypes.func.isRequired,
   /**
    * The props used for each component slot.
    * @default {}
@@ -97,11 +85,6 @@ DesktopDateTimePickerLayout.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  value: PropTypes.any,
-  view: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
-  views: PropTypes.arrayOf(
-    PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']).isRequired,
-  ).isRequired,
 } as any;
 
 export { DesktopDateTimePickerLayout };

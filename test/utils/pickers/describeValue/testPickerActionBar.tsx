@@ -2,6 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { fireEvent, screen } from '@mui/internal-test-utils';
+import { PickerRangeValue } from '@mui/x-date-pickers/internals';
 import {
   adapterToUse,
   getExpectedOnChangeCount,
@@ -106,7 +107,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
           getExpectedOnChangeCount(componentFamily, pickerParams) + 1,
         );
         if (isRangeType) {
-          values[0].forEach((value, index) => {
+          (values[0] as PickerRangeValue).forEach((value, index) => {
             expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
           });
         } else {

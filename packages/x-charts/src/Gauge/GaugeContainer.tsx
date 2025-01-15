@@ -3,61 +3,27 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
-import { DrawingAreaProvider, DrawingAreaProviderProps } from '../context/DrawingAreaProvider';
 import { GaugeProvider, GaugeProviderProps } from './GaugeProvider';
-import { SizeProvider, useSize } from '../context/SizeProvider';
 import { ChartProvider } from '../context/ChartProvider';
+import { MergeSignaturesProperty } from '../internals/plugins/models';
+import { ChartCorePluginSignatures } from '../internals/plugins/corePlugins';
 
 export interface GaugeContainerProps
-  extends Omit<ChartsSurfaceProps, 'width' | 'height' | 'children'>,
-    Pick<DrawingAreaProviderProps, 'margin'>,
-    Omit<GaugeProviderProps, 'children'> {
-  /**
-   * The width of the chart in px. If not defined, it takes the width of the parent element.
-   */
-  width?: number;
-  /**
-   * The height of the chart in px. If not defined, it takes the height of the parent element.
-   */
-  height?: number;
+  extends Omit<ChartsSurfaceProps, 'children'>,
+    Omit<
+      MergeSignaturesProperty<ChartCorePluginSignatures, 'params'>,
+      'series' | 'dataset' | 'colors' | 'theme'
+    >,
+    Omit<GaugeProviderProps, 'children'>,
+    Omit<React.SVGProps<SVGSVGElement>, 'width' | 'height'> {
   children?: React.ReactNode;
 }
 
-const ResizableContainerRoot = styled('div', {
-  name: 'MuiGauge',
-  slot: 'Container',
-})<{ ownerState: Pick<GaugeContainerProps, 'width' | 'height'> }>(({ ownerState, theme }) => ({
-  width: ownerState.width ?? '100%',
-  height: ownerState.height ?? '100%',
-  display: 'flex',
-  position: 'relative',
-  flexGrow: 1,
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  overflow: 'hidden',
-  '&>svg': {
-    width: '100%',
-    height: '100%',
-  },
+const GStyled = styled('g')(({ theme }) => ({
   '& text': {
     fill: (theme.vars || theme).palette.text.primary,
   },
 }));
-
-function ResizableContainer(props: any) {
-  const { inHeight, inWidth, hasIntrinsicSize, containerRef } = useSize();
-
-  return (
-    <ResizableContainerRoot
-      {...props}
-      ownerState={{ width: inWidth, height: inHeight }}
-      ref={containerRef}
-    >
-      {hasIntrinsicSize && props.children}
-    </ResizableContainerRoot>
-  );
-}
 
 const GaugeContainer = React.forwardRef(function GaugeContainer(
   props: GaugeContainerProps,
@@ -84,41 +50,39 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(
   } = props;
 
   return (
-    <ChartProvider>
-      <SizeProvider width={inWidth} height={inHeight}>
-        <DrawingAreaProvider margin={{ left: 10, right: 10, top: 10, bottom: 10, ...margin }}>
-          <GaugeProvider
-            value={value}
-            valueMin={valueMin}
-            valueMax={valueMax}
-            startAngle={startAngle}
-            endAngle={endAngle}
-            outerRadius={outerRadius}
-            innerRadius={innerRadius}
-            cornerRadius={cornerRadius}
-            cx={cx}
-            cy={cy}
-          >
-            <ResizableContainer
-              role="meter"
-              aria-valuenow={value === null ? undefined : value}
-              aria-valuemin={valueMin}
-              aria-valuemax={valueMax}
-              {...other}
-            >
-              <ChartsSurface
-                title={title}
-                desc={desc}
-                disableAxisListener
-                aria-hidden="true"
-                ref={ref}
-              >
-                {children}
-              </ChartsSurface>
-            </ResizableContainer>
-          </GaugeProvider>
-        </DrawingAreaProvider>
-      </SizeProvider>
+    <ChartProvider
+      pluginParams={{
+        width: inWidth,
+        height: inHeight,
+        margin: { left: 10, right: 10, top: 10, bottom: 10, ...margin },
+      }}
+      plugins={[]}
+    >
+      <GaugeProvider
+        value={value}
+        valueMin={valueMin}
+        valueMax={valueMax}
+        startAngle={startAngle}
+        endAngle={endAngle}
+        outerRadius={outerRadius}
+        innerRadius={innerRadius}
+        cornerRadius={cornerRadius}
+        cx={cx}
+        cy={cy}
+      >
+        <ChartsSurface
+          title={title}
+          desc={desc}
+          role="meter"
+          aria-valuenow={value === null ? undefined : value}
+          aria-valuemin={valueMin}
+          aria-valuemax={valueMax}
+          {...other}
+          ref={ref}
+        >
+          <GStyled aria-hidden="true">{children}</GStyled>
+        </ChartsSurface>
+      </GaugeProvider>
     </ChartProvider>
   );
 });
@@ -165,6 +129,11 @@ GaugeContainer.propTypes = {
    */
   height: PropTypes.number,
   /**
+   * This prop is used to help implement the accessibility logic.
+   * If you don't provide this prop. It falls back to a randomly generated id.
+   */
+  id: PropTypes.string,
+  /**
    * The radius between circle center and the beginning of the arc.
    * Can be a number (in px) or a string with a percentage such as '50%'.
    * The '100%' is the maximal radius that fit into the drawing area.
@@ -175,7 +144,6 @@ GaugeContainer.propTypes = {
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
-   * @default object Depends on the charts type.
    */
   margin: PropTypes.shape({
     bottom: PropTypes.number,

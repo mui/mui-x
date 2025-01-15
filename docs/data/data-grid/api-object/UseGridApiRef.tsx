@@ -32,6 +32,7 @@ export default function UseGridApiRef() {
           pagination
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
+          pageSizeOptions={[10, 25, 50, 100]}
         />
       </Box>
     </Stack>

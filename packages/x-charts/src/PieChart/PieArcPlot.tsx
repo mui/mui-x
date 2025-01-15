@@ -9,7 +9,7 @@ import {
   DefaultizedPieValueType,
   PieItemIdentifier,
 } from '../models/seriesType/pie';
-import { defaultTransitionConfig } from './dataTransform/transition';
+import { getDefaultTransitionConfig } from './dataTransform/transition';
 import {
   AnimatedObject,
   ValueWithHighlight,
@@ -91,7 +91,7 @@ function PieArcPlot(props: PieArcPlotProps) {
     data,
   });
   const transition = useTransition<ValueWithHighlight, AnimatedObject>(transformedData, {
-    ...defaultTransitionConfig,
+    ...getDefaultTransitionConfig(skipAnimation),
     immediate: skipAnimation,
   });
 
@@ -110,10 +110,8 @@ function PieArcPlot(props: PieArcPlotProps) {
             endAngle,
             paddingAngle: pA,
             innerRadius: iR,
-            arcLabelRadius,
             outerRadius: oR,
             cornerRadius: cR,
-            ...style
           },
           item,
           _,
@@ -127,7 +125,6 @@ function PieArcPlot(props: PieArcPlotProps) {
               innerRadius={iR}
               outerRadius={oR}
               cornerRadius={cR}
-              style={style}
               id={id}
               color={item.color}
               dataIndex={index}
@@ -171,6 +168,7 @@ PieArcPlot.propTypes = {
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       index: PropTypes.number.isRequired,
       label: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+      labelMarkType: PropTypes.oneOf(['circle', 'line', 'square']),
       padAngle: PropTypes.number.isRequired,
       startAngle: PropTypes.number.isRequired,
       value: PropTypes.number.isRequired,

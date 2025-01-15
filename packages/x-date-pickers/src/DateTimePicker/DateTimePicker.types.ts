@@ -3,23 +3,27 @@ import {
   DesktopDateTimePickerSlots,
   DesktopDateTimePickerSlotProps,
 } from '../DesktopDateTimePicker';
-import { BaseSingleInputFieldProps, DateOrTimeViewWithMeridiem } from '../internals/models';
+import {
+  BaseSingleInputFieldProps,
+  DateOrTimeViewWithMeridiem,
+  PickerValue,
+} from '../internals/models';
 import {
   MobileDateTimePickerProps,
   MobileDateTimePickerSlots,
   MobileDateTimePickerSlotProps,
 } from '../MobileDateTimePicker';
-import { DateTimeValidationError, FieldSection, PickerValidDate } from '../models';
+import { DateTimeValidationError } from '../models';
 import { ValidateDateTimeProps } from '../validation';
 import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
 
 export interface DateTimePickerSlots
   extends DesktopDateTimePickerSlots,
-    MobileDateTimePickerSlots<DateOrTimeViewWithMeridiem> {}
+    MobileDateTimePickerSlots {}
 
 export interface DateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends DesktopDateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
-    MobileDateTimePickerSlotProps<DateOrTimeViewWithMeridiem, TEnableAccessibleFieldDOMStructure> {}
+    MobileDateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
 
 export interface DateTimePickerProps<TEnableAccessibleFieldDOMStructure extends boolean = true>
   extends DesktopDateTimePickerProps<TEnableAccessibleFieldDOMStructure>,
@@ -55,4 +59,4 @@ export interface DateTimePickerProps<TEnableAccessibleFieldDOMStructure extends 
  * Props the field can receive when used inside a date time picker (<DateTimePicker />, <DesktopDateTimePicker /> or <MobileDateTimePicker /> component).
  */
 export type DateTimePickerFieldProps = ValidateDateTimeProps &
-  BaseSingleInputFieldProps<PickerValidDate | null, FieldSection, false, DateTimeValidationError>;
+  BaseSingleInputFieldProps<PickerValue, false, DateTimeValidationError>;

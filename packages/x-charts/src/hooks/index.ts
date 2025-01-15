@@ -2,6 +2,7 @@ export * from './useDrawingArea';
 export * from './useChartId';
 export * from './useScale';
 export * from './useAxis';
+export * from './useZAxis';
 export * from './useColorScale';
 export * from './useSvgRef';
 export {
@@ -11,3 +12,5 @@ export {
   useBarSeries as unstable_useBarSeries,
   useScatterSeries as unstable_useScatterSeries,
 } from './useSeries';
+export * from './useLegend';
+export { useChartGradientId, useChartGradientIdObjectBound } from './useChartGradientId';

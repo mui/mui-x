@@ -21,16 +21,13 @@ import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
 
 export interface DesktopDateTimePickerSlots
   extends BaseDateTimePickerSlots,
-    MakeOptional<UseDesktopPickerSlots<DateOrTimeViewWithMeridiem>, 'field' | 'openPickerIcon'>,
+    MakeOptional<UseDesktopPickerSlots, 'field' | 'openPickerIcon'>,
     DigitalClockSlots,
     MultiSectionDigitalClockSlots {}
 
 export interface DesktopDateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends BaseDateTimePickerSlotProps,
-    ExportedUseDesktopPickerSlotProps<
-      DateOrTimeViewWithMeridiem,
-      TEnableAccessibleFieldDOMStructure
-    >,
+    ExportedUseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure>,
     DigitalClockSlotProps,
     MultiSectionDigitalClockSlotProps {}
 

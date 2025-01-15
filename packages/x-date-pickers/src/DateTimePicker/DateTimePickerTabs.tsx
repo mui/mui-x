@@ -13,8 +13,11 @@ import {
   DateTimePickerTabsClasses,
   getDateTimePickerTabsUtilityClass,
 } from './dateTimePickerTabsClasses';
-import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/tabs';
+import { ExportedBaseTabsProps } from '../internals/models/props/tabs';
 import { isDatePickerView } from '../internals/utils/date-utils';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
+import { PickerOwnerState } from '../models/pickers';
+import { usePickerContext } from '../hooks';
 
 type TabValue = 'date' | 'time';
 
@@ -34,7 +37,7 @@ const tabToView = (tab: TabValue): DateOrTimeViewWithMeridiem => {
   return 'hours';
 };
 
-export interface ExportedDateTimePickerTabsProps extends ExportedBaseTabsProps {
+export interface DateTimePickerTabsProps extends ExportedBaseTabsProps {
   /**
    * Toggles visibility of the tabs allowing view switching.
    * @default `window.innerHeight < 667` for `DesktopDateTimePicker` and `MobileDateTimePicker`, `displayStaticWrapperAs === 'desktop'` for `StaticDateTimePicker`
@@ -56,12 +59,7 @@ export interface ExportedDateTimePickerTabsProps extends ExportedBaseTabsProps {
   classes?: Partial<DateTimePickerTabsClasses>;
 }
 
-export interface DateTimePickerTabsProps
-  extends ExportedDateTimePickerTabsProps,
-    BaseTabsProps<DateOrTimeViewWithMeridiem> {}
-
-const useUtilityClasses = (ownerState: DateTimePickerTabsProps) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classes: Partial<DateTimePickerTabsClasses> | undefined) => {
   const slots = {
     root: ['root'],
   };
@@ -73,7 +71,7 @@ const DateTimePickerTabsRoot = styled(Tabs, {
   name: 'MuiDateTimePickerTabs',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: DateTimePickerTabsProps }>(({ theme }) => ({
+})<{ ownerState: PickerOwnerState }>(({ theme }) => ({
   boxShadow: `0 -1px 0 0 inset ${(theme.vars || theme).palette.divider}`,
   '&:last-child': {
     boxShadow: `0 1px 0 0 inset ${(theme.vars || theme).palette.divider}`,
@@ -98,19 +96,20 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePickerTabs' });
   const {
     dateIcon = <DateRangeIcon />,
-    onViewChange,
     timeIcon = <TimeIcon />,
-    view,
     hidden = typeof window === 'undefined' || window.innerHeight < 667,
     className,
+    classes: classesProp,
     sx,
   } = props;
 
   const translations = usePickerTranslations();
-  const classes = useUtilityClasses(props);
+  const { ownerState } = usePickerPrivateContext();
+  const { view, setView } = usePickerContext();
+  const classes = useUtilityClasses(classesProp);
 
   const handleChange = (event: React.SyntheticEvent, value: TabValue) => {
-    onViewChange(tabToView(value));
+    setView(tabToView(value));
   };
 
   if (hidden) {
@@ -119,9 +118,9 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
 
   return (
     <DateTimePickerTabsRoot
-      ownerState={props}
+      ownerState={ownerState}
       variant="fullWidth"
-      value={viewToTab(view)}
+      value={viewToTab(view!)}
       onChange={handleChange}
       className={clsx(className, classes.root)}
       sx={sx}
@@ -161,12 +160,6 @@ DateTimePickerTabs.propTypes = {
    */
   hidden: PropTypes.bool,
   /**
-   * Callback called when a tab is clicked.
-   * @template TView
-   * @param {TView} view The view to open
-   */
-  onViewChange: PropTypes.func.isRequired,
-  /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx: PropTypes.oneOfType([
@@ -179,11 +172,6 @@ DateTimePickerTabs.propTypes = {
    * @default Time
    */
   timeIcon: PropTypes.node,
-  /**
-   * Currently visible picker view.
-   */
-  view: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year'])
-    .isRequired,
 } as any;
 
 export { DateTimePickerTabs };

@@ -26,9 +26,9 @@ const components: Components<Theme> = {
       }),
     },
   },
-  MuiPickersMonth: {
+  MuiMonthCalendar: {
     styleOverrides: {
-      monthButton: ({ theme }) => ({
+      button: ({ theme }) => ({
         fontWeight: 400,
         fontSize: '0.875rem',
         borderRadius: theme.shape.borderRadius,
@@ -37,9 +37,9 @@ const components: Components<Theme> = {
       }),
     },
   },
-  MuiPickersYear: {
+  MuiYearCalendar: {
     styleOverrides: {
-      yearButton: ({ theme }) => ({
+      button: ({ theme }) => ({
         fontWeight: 400,
         fontSize: '0.875rem',
         borderRadius: theme.shape.borderRadius,
@@ -89,7 +89,7 @@ export default function MainDemo() {
       <Paper component="div" variant="outlined" sx={{ mb: 8 }}>
         <ThemeProvider theme={showCustomTheme ? customTheme : theme}>
           <Stack sx={{ p: 1, width: '100%' }} direction="row" spacing={1}>
-            <Stack spacing={1} className="left-panel" sx={{ flexGrow: 1 }}>
+            <Stack spacing={1} className="left-panel" sx={{ flexGrow: 1, minWidth: 0 }}>
               <Stack
                 spacing={1}
                 direction={isMobile ? 'column' : 'row'}

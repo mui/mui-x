@@ -18,38 +18,21 @@ import {
 
 function ButtonDateRangeField(props: DateRangePickerFieldProps) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-  const { value, timezone, format } = internalProps;
-  const {
-    InputProps,
-    slotProps,
-    slots,
-    ownerState,
-    label,
-    focused,
-    name,
-    ...other
-  } = forwardedProps;
+  const { ownerState, label, focused, name, ...other } = forwardedProps;
 
   const pickerContext = usePickerContext();
-
-  const parsedFormat = useParsedFormat(internalProps);
+  const parsedFormat = useParsedFormat();
   const { hasValidationError } = useValidation({
     validator: validateDateRange,
-    value,
-    timezone,
+    value: pickerContext.value,
+    timezone: pickerContext.timezone,
     props: internalProps,
   });
 
-  const handleTogglePicker = (event: React.UIEvent) => {
-    if (pickerContext.open) {
-      pickerContext.onClose(event);
-    } else {
-      pickerContext.onOpen(event);
-    }
-  };
-
-  const formattedValue = (value ?? [null, null])
-    .map((date: Dayjs) => (date == null ? parsedFormat : date.format(format)))
+  const formattedValue = pickerContext.value
+    .map((date: Dayjs) =>
+      date == null ? parsedFormat : date.format(pickerContext.fieldFormat),
+    )
     .join(' – ');
 
   return (
@@ -57,8 +40,8 @@ function ButtonDateRangeField(props: DateRangePickerFieldProps) {
       {...other}
       variant="outlined"
       color={hasValidationError ? 'error' : 'primary'}
-      ref={InputProps?.ref}
-      onClick={handleTogglePicker}
+      ref={pickerContext.triggerRef}
+      onClick={() => pickerContext.setOpen((prev) => !prev)}
     >
       {label ? `${label}: ${formattedValue}` : formattedValue}
     </Button>

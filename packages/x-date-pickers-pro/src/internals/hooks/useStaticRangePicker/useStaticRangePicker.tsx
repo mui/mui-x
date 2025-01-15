@@ -1,11 +1,10 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import { PickersLayout, PickersLayoutSlotProps } from '@mui/x-date-pickers/PickersLayout';
+import { PickersLayout } from '@mui/x-date-pickers/PickersLayout';
 import {
   usePicker,
   DIALOG_WIDTH,
-  ExportedBaseToolbarProps,
   DateOrTimeViewWithMeridiem,
   PickerProvider,
   PickerRangeValue,
@@ -14,8 +13,8 @@ import {
   UseStaticRangePickerParams,
   UseStaticRangePickerProps,
 } from './useStaticRangePicker.types';
-import { RangeFieldSection } from '../../../models';
 import { useRangePosition } from '../useRangePosition';
+import { PickerRangePositionContext } from '../../../hooks/usePickerRangePositionContext';
 
 const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',
@@ -37,56 +36,39 @@ export const useStaticRangePicker = <
 }: UseStaticRangePickerParams<TView, TExternalProps>) => {
   const { localeText, slots, slotProps, className, sx, displayStaticWrapperAs, autoFocus } = props;
 
-  const { rangePosition, onRangePositionChange } = useRangePosition(props);
+  const rangePositionResponse = useRangePosition(props);
 
-  const { layoutProps, providerProps, renderCurrentView } = usePicker<
-    PickerRangeValue,
-    TView,
-    RangeFieldSection,
-    TExternalProps,
-    {}
-  >({
+  const { providerProps, renderCurrentView } = usePicker<PickerRangeValue, TView, TExternalProps>({
     ...pickerParams,
     props,
     autoFocusView: autoFocus ?? false,
     fieldRef: undefined,
     localeText,
-    additionalViewProps: {
-      rangePosition,
-      onRangePositionChange,
-    },
     variant: displayStaticWrapperAs,
   });
 
   const Layout = slots?.layout ?? PickerStaticLayout;
-  const slotPropsForLayout: PickersLayoutSlotProps<PickerRangeValue, TView> = {
-    ...slotProps,
-    toolbar: {
-      ...slotProps?.toolbar,
-      rangePosition,
-      onRangePositionChange,
-    } as ExportedBaseToolbarProps,
-  };
 
   const renderPicker = () => (
-    <PickerProvider {...providerProps}>
-      <Layout
-        {...layoutProps}
-        {...slotProps?.layout}
-        slots={slots}
-        slotProps={slotPropsForLayout}
-        sx={[
-          ...(Array.isArray(sx) ? sx : [sx]),
-          ...(Array.isArray(slotProps?.layout?.sx)
-            ? slotProps!.layout!.sx
-            : [slotProps?.layout?.sx]),
-        ]}
-        className={clsx(className, slotProps?.layout?.className)}
-        ref={ref}
-      >
-        {renderCurrentView()}
-      </Layout>
-    </PickerProvider>
+    <PickerRangePositionContext.Provider value={rangePositionResponse}>
+      <PickerProvider {...providerProps}>
+        <Layout
+          {...slotProps?.layout}
+          slots={slots}
+          slotProps={slotProps}
+          sx={[
+            ...(Array.isArray(sx) ? sx : [sx]),
+            ...(Array.isArray(slotProps?.layout?.sx)
+              ? slotProps!.layout!.sx
+              : [slotProps?.layout?.sx]),
+          ]}
+          className={clsx(className, slotProps?.layout?.className)}
+          ref={ref}
+        >
+          {renderCurrentView()}
+        </Layout>
+      </PickerProvider>
+    </PickerRangePositionContext.Provider>
   );
 
   return { renderPicker };

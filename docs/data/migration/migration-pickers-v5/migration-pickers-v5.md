@@ -159,7 +159,7 @@ If you are using TypeScript, please make sure to add the [theme augmentation](/x
 
 The picker components no longer have a keyboard view to render the input inside the modal on mobile.
 
-- If your date is easier to edit with the keyboard (e.g: a birthdate), you can directly use the new field components:
+- If your date is easier to edit with the keyboard (for example a birthdate), you can directly use the new field components:
 
   ```diff
    function App() {
@@ -445,8 +445,8 @@ The `locale` prop of the `LocalizationProvider` component have been renamed `ada
 
 ## Component slots / component slot props
 
-All the props used to pass props to parts of the UI (e.g: pass a prop to the input) have been replaced by component slot props.
-All the props used to override parts of the UI (e.g: pass a custom day renderer) have been replaced by component slots.
+All the props used to pass props to parts of the UI (for example to pass a prop to the input) have been replaced by component slot props.
+All the props used to override parts of the UI (for example to pass a custom day renderer) have been replaced by component slots.
 
 You can find more information about this pattern in the [Base UI documentation](https://mui.com/base-ui/getting-started/usage/#shared-props).
 

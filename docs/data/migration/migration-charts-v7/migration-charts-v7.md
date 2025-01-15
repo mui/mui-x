@@ -19,6 +19,9 @@ In `package.json`, change the version of the charts package to `next`.
 ```diff
 -"@mui/x-charts": "^7.0.0",
 +"@mui/x-charts": "next",
+
+-"@mui/x-charts-pro": "^7.0.0",
++"@mui/x-charts-pro": "next",
 ```
 
 Using `next` ensures that it will always use the latest v8 pre-release version, but you can also use a fixed version, like `8.0.0-alpha.0`.
@@ -85,9 +88,28 @@ The `legend` prop of charts single components has been removed.
 To pass props to the legend, use the `slotProps.legend`.
 
 ```diff
-- <PieChart legend={{ ... }} />
-+ <PieChart slotProps={{ legend: { ... } }} />
+-<PieChart legend={{ ... }} />
++<PieChart slotProps={{ legend: { ... } }} />
 ```
+
+## Legend direction value change ✅
+
+The `direction` prop of the legend has been changed to accept `'vertical'` and `'horizontal'` instead of `'column'` and `'row'`.
+
+```diff
+ <PieChart
+   slotProps={{
+     legend: {
+-      direction: 'column'
++      direction: 'vertical'
+     }
+   }}
+ />
+```
+
+## The `getSeriesToDisplay` function was removed
+
+The `getSeriesToDisplay` function was removed in favor of the `useLegend` hook. You can check the [HTML Components example](/x/react-charts/components/#html-components) for usage information.
 
 ## Removing ResponsiveChartContainer ✅
 
@@ -95,16 +117,16 @@ The `ResponsiveChartContainer` has been removed.
 You can now use `ChartContainer` as a responsive container which works now exactly the same way.
 
 ```diff
-- import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
-- import { ResponsiveChartContainerPro } from '@mui/x-charts-pro/ResponsiveChartContainerPro';
-+ import { ChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
-+ import { ChartContainerPro } from '@mui/x-charts-pro/ResponsiveChartContainerPro';
+-import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
+-import { ResponsiveChartContainerPro } from '@mui/x-charts-pro/ResponsiveChartContainerPro';
++import { ChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
++import { ChartContainerPro } from '@mui/x-charts-pro/ResponsiveChartContainerPro';
 
-- <ResponsiveChartContainer>
-+ <ChartContainer>
+-<ResponsiveChartContainer>
++<ChartContainer>
    <BarPlot />
-- </ResponsiveChartContainer>
-+ </ChartContainer>
+-</ResponsiveChartContainer>
++</ChartContainer>
 ```
 
 ## New DOM structure for ChartContainer
@@ -119,9 +141,26 @@ The `<PieChart />` by error had the code to render axes.
 This code has been removed in v8, which implies removing the following props: `axisHighlight`, `topAxis`, `rightAxis`, `bottomAxis`, and `leftAxis`.
 
 This should not impact your code.
-If you used axes in a pie chart please open an issue, we would be curious to get more information about the use-case.
+If you used axes in a pie chart please open an issue, we would be curious to get more information about the use case.
 
 ## Remove `resolveSizeBeforeRender` prop
 
 The `resolveSizeBeforeRender` prop has been removed from all components.
 If you were using this prop, you can safely remove it.
+
+## Rename `labelFontSize` and `tickFontSize` props ✅
+
+The `labelFontSize` and `tickFontSize` props have been removed in favor of the style objects `labelStyle` and `tickStyle` respectively.
+
+```diff
+  <ChartsXAxis
+-   labelFontSize={18}
++   labelStyle={{
++     fontSize: 18
++   }}
+-   tickFontSize={20}
++   tickStyle={{
++     fontSize: 20
++   }}
+  />
+```

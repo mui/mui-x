@@ -5,9 +5,9 @@ import {
 } from '../DateCalendar';
 import { DayCalendarSkeletonProps } from '../DayCalendarSkeleton';
 import { ClockNumberProps, TimeClockProps, ClockPointerProps, ClockProps } from '../TimeClock';
-import { ExportedPickersMonthProps, MonthCalendarProps } from '../MonthCalendar';
+import { MonthCalendarProps } from '../MonthCalendar';
 import { PickersDayProps } from '../PickersDay';
-import { ExportedPickersYearProps, YearCalendarProps } from '../YearCalendar';
+import { YearCalendarProps } from '../YearCalendar';
 import { DateFieldProps } from '../DateField';
 import { LocalizationProviderProps } from '../LocalizationProvider';
 import { PickersLayoutProps } from '../PickersLayout';
@@ -17,7 +17,6 @@ import { PickerPopperProps } from '../internals/components/PickersPopper';
 import { PickersToolbarProps } from '../internals/components/PickersToolbar';
 import { PickersToolbarButtonProps } from '../internals/components/PickersToolbarButton';
 import { ExportedPickersToolbarTextProps } from '../internals/components/PickersToolbarText';
-import { DateOrTimeView } from '../models';
 
 import { DatePickerProps } from '../DatePicker';
 import { ExportedDatePickerToolbarProps } from '../DatePicker/DatePickerToolbar';
@@ -52,6 +51,7 @@ import {
   PickersFilledInputProps,
 } from '../PickersTextField';
 import { PickersSectionListProps } from '../PickersSectionList';
+import { PickerValidValue } from '../internals/models';
 
 export interface PickersComponentsPropsList {
   MuiClock: ClockProps;
@@ -74,14 +74,12 @@ export interface PickersComponentsPropsList {
   MuiPickersCalendarHeader: ExportedPickersCalendarHeaderProps;
   MuiPickersDay: PickersDayProps;
   MuiPickersFadeTransitionGroup: PickersFadeTransitionGroupProps;
-  MuiPickersMonth: ExportedPickersMonthProps;
   MuiPickersPopper: PickerPopperProps;
   MuiPickersSlideTransition: ExportedSlideTransitionProps;
-  MuiPickersToolbar: PickersToolbarProps<unknown, DateOrTimeView>;
+  MuiPickersToolbar: PickersToolbarProps;
   MuiPickersToolbarButton: PickersToolbarButtonProps;
   MuiPickersToolbarText: ExportedPickersToolbarTextProps;
-  MuiPickersLayout: PickersLayoutProps<unknown, DateOrTimeView>;
-  MuiPickersYear: ExportedPickersYearProps;
+  MuiPickersLayout: PickersLayoutProps<PickerValidValue>;
   MuiTimeClock: TimeClockProps;
   MuiTimeField: TimeFieldProps<any>;
   MuiTimePickerToolbar: ExportedTimePickerToolbarProps;

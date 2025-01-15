@@ -1,14 +1,16 @@
 import { SxProps } from '@mui/material/styles';
-import { MakeRequired } from '@mui/x-internals/types';
-import type {
-  ExportedUseClearableFieldProps,
-  UseClearableFieldSlotProps,
-  UseClearableFieldSlots,
-} from '../../hooks/useClearableField';
 import type { FieldSection, PickerOwnerState } from '../../models';
 import type { UseFieldInternalProps } from '../hooks/useField';
+import { RangePosition } from './pickers';
+import { PickerValidValue } from './value';
+import type { ExportedPickerFieldUIProps } from '../components/PickerFieldUI';
 
-export interface BaseForwardedSingleInputFieldProps extends ExportedUseClearableFieldProps {
+export interface FieldRangeSection extends FieldSection {
+  dateName: RangePosition;
+}
+
+export interface BaseForwardedSingleInputFieldProps
+  extends Pick<ExportedPickerFieldUIProps, 'clearable' | 'onClear'> {
   className: string | undefined;
   sx: SxProps<any> | undefined;
   label: React.ReactNode | undefined;
@@ -19,18 +21,6 @@ export interface BaseForwardedSingleInputFieldProps extends ExportedUseClearable
   onBlur?: React.FocusEventHandler;
   ref?: React.Ref<HTMLDivElement>;
   inputRef?: React.Ref<HTMLInputElement>;
-  InputProps?: {
-    ref?: React.Ref<any>;
-    endAdornment?: React.ReactNode;
-    startAdornment?: React.ReactNode;
-  };
-  inputProps?: {
-    'aria-label'?: string;
-  };
-  slots?: UseClearableFieldSlots;
-  slotProps?: UseClearableFieldSlotProps & {
-    textField?: {};
-  };
   ownerState: PickerOwnerState;
 }
 
@@ -39,26 +29,11 @@ export interface BaseForwardedSingleInputFieldProps extends ExportedUseClearable
  * Only contains what the MUI components are passing to the field, not what users can pass using the `props.slotProps.field`.
  */
 export type BaseSingleInputFieldProps<
-  TValue,
-  TSection extends FieldSection,
+  TValue extends PickerValidValue,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-> = MakeRequired<
-  Pick<
-    UseFieldInternalProps<TValue, TSection, TEnableAccessibleFieldDOMStructure, TError>,
-    | 'readOnly'
-    | 'disabled'
-    | 'format'
-    | 'formatDensity'
-    | 'enableAccessibleFieldDOMStructure'
-    | 'selectedSections'
-    | 'onSelectedSectionsChange'
-    | 'timezone'
-    | 'value'
-    | 'onChange'
-    | 'unstableFieldRef'
-    | 'autoFocus'
-  >,
-  'format' | 'value' | 'onChange' | 'timezone'
+> = Pick<
+  UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, TError>,
+  'readOnly' | 'unstableFieldRef' | 'autoFocus'
 > &
   BaseForwardedSingleInputFieldProps;

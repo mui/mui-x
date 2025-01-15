@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import {
   unstable_composeClasses as composeClasses,
   unstable_useId as useId,
@@ -7,7 +8,8 @@ import {
 } from '@mui/utils';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
-import clsx from 'clsx';
+import { forwardRef } from '@mui/x-internals/forwardRef';
+import { vars } from '../../../constants/cssVariables';
 import {
   gridFilterableColumnDefinitionsSelector,
   gridColumnLookupSelector,
@@ -144,29 +146,26 @@ const GridFilterFormRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterForm',
   overridesResolver: (props, styles) => styles.filterForm,
-})<{ ownerState: OwnerState }>(({ theme }) => ({
+})<{ ownerState: OwnerState }>({
   display: 'flex',
-  padding: theme.spacing(1),
-}));
+  gap: vars.spacing(1.5),
+});
 
 const FilterFormDeleteIcon = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormDeleteIcon',
   overridesResolver: (_, styles) => styles.filterFormDeleteIcon,
-})<{ ownerState: OwnerState }>(({ theme }) => ({
+})<{ ownerState: OwnerState }>({
   flexShrink: 0,
-  justifyContent: 'flex-end',
-  marginRight: theme.spacing(0.5),
-  marginBottom: theme.spacing(0.2),
-}));
+  justifyContent: 'center',
+});
 
 const FilterFormLogicOperatorInput = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormLogicOperatorInput',
   overridesResolver: (_, styles) => styles.filterFormLogicOperatorInput,
 })<{ ownerState: OwnerState }>({
-  minWidth: 55,
-  marginRight: 5,
+  minWidth: 75,
   justifyContent: 'end',
 });
 
@@ -203,7 +202,7 @@ const getColumnLabel = (col: GridColDef) => col.headerName || col.field;
 
 const collator = new Intl.Collator();
 
-const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
+const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
   function GridFilterForm(props, ref) {
     const {
       item,
@@ -418,14 +417,13 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
 
     return (
       <GridFilterFormRoot
-        ref={ref}
         className={classes.root}
         data-id={item.id}
         ownerState={rootProps}
         {...other}
+        ref={ref}
       >
         <FilterFormDeleteIcon
-          variant="standard"
           as={rootProps.slots.baseFormControl}
           {...baseFormControlProps}
           {...deleteIconProps}
@@ -448,7 +446,8 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           </rootProps.slots.baseIconButton>
         </FilterFormDeleteIcon>
         <FilterFormLogicOperatorInput
-          variant="standard"
+          variant="outlined"
+          size="small"
           as={rootProps.slots.baseFormControl}
           {...baseFormControlProps}
           {...logicOperatorInputProps}
@@ -500,7 +499,8 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           </rootProps.slots.baseSelect>
         </FilterFormLogicOperatorInput>
         <FilterFormColumnInput
-          variant="standard"
+          variant="outlined"
+          size="small"
           as={rootProps.slots.baseFormControl}
           {...baseFormControlProps}
           {...columnInputProps}
@@ -541,7 +541,8 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           </rootProps.slots.baseSelect>
         </FilterFormColumnInput>
         <FilterFormOperatorInput
-          variant="standard"
+          variant="outlined"
+          size="small"
           as={rootProps.slots.baseFormControl}
           {...baseFormControlProps}
           {...operatorInputProps}
@@ -586,7 +587,8 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           </rootProps.slots.baseSelect>
         </FilterFormOperatorInput>
         <FilterFormValueInput
-          variant="standard"
+          variant="outlined"
+          size="small"
           as={rootProps.slots.baseFormControl}
           {...baseFormControlProps}
           {...valueInputPropsOther}
@@ -599,6 +601,8 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
         >
           {currentOperator?.InputComponent ? (
             <currentOperator.InputComponent
+              variant="outlined"
+              size="small"
               apiRef={apiRef}
               item={item}
               applyValue={applyFilterChanges}
