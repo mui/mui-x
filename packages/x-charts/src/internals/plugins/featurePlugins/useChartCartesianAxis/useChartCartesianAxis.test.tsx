@@ -15,10 +15,10 @@ describe('useChartCartesianAxis', () => {
   // can't catch render errors in the browser for unknown reason
   // tried try-catch + error boundary + window onError preventDefault
   testSkipIf(!isJSDOM)('should throw an error when axis have duplicate ids', () => {
-    const errorMessage1 = 'MUI X: The following axis ids are duplicated: qwerty.';
-    const errorMessage2 = 'Please make sure that each axis has a unique id.';
-    const expectedError =
-      reactMajor < 19 ? [errorMessage1, errorMessage2] : `${errorMessage1}\n${errorMessage2}`;
+    const expectedError = [
+      'MUI X: The following axis ids are duplicated: qwerty.',
+      'Please make sure that each axis has a unique id.',
+    ].join('\n');
 
     expect(() =>
       render(
@@ -40,10 +40,10 @@ describe('useChartCartesianAxis', () => {
   testSkipIf(!isJSDOM)(
     'should throw an error when axis have duplicate ids across different directions (x,y)',
     () => {
-      const errorMessage1 = 'MUI X: The following axis ids are duplicated: qwerty.';
-      const errorMessage2 = 'Please make sure that each axis has a unique id.';
-      const expectedError =
-        reactMajor < 19 ? [errorMessage1, errorMessage2] : `${errorMessage1}\n${errorMessage2}`;
+      const expectedError = [
+        'MUI X: The following axis ids are duplicated: qwerty.',
+        'Please make sure that each axis has a unique id.',
+      ].join('\n');
 
       expect(() =>
         render(
