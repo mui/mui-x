@@ -14,6 +14,7 @@ import { getUnprocessedRange, isRowContextInitialized, getCellValue } from './gr
 import { GRID_CHECKBOX_SELECTION_FIELD } from '../../../colDef/gridCheckboxSelectionColDef';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { runIf } from '../../../utils/utils';
+import { gridPageSizeSelector } from '../pagination';
 
 export interface GridRowSpanningState {
   spannedCells: Record<GridRowId, Record<GridColDef['field'], number>>;
@@ -123,7 +124,7 @@ const computeRowSpanningState = (
       // Scan the next rows
       let relativeIndex = index + 1;
       while (
-        relativeIndex <= range.lastRowIndex &&
+        relativeIndex < rangeToProcess.lastRowIndex &&
         visibleRows[relativeIndex] &&
         getCellValue(visibleRows[relativeIndex].model, colDef, apiRef) === cellValue
       ) {
@@ -193,7 +194,11 @@ export const rowSpanningStateInitializer: GridStateInitializer = (state, props, 
   }
   const rangeToProcess = {
     firstRowIndex: 0,
-    lastRowIndex: Math.min(DEFAULT_ROWS_TO_PROCESS, Math.max(rowIds.length, 0)),
+    lastRowIndex: Math.min(
+      DEFAULT_ROWS_TO_PROCESS,
+      (props.pagination && gridPageSizeSelector(apiRef)) || DEFAULT_ROWS_TO_PROCESS,
+      Math.max(rowIds.length, 0),
+    ),
   };
   const rows = rowIds.map((id) => ({
     id,
@@ -225,11 +230,12 @@ export const useGridRowSpanning = (
   props: Pick<DataGridProcessedProps, 'rowSpanning' | 'pagination' | 'paginationMode'>,
 ): void => {
   const processedRange = useLazyRef<RowRange, void>(() => {
-    return Object.keys(apiRef.current.state.rowSpanning.spannedCells).length > 0
+    return apiRef.current.state.rowSpanning !== EMPTY_STATE
       ? {
           firstRowIndex: 0,
           lastRowIndex: Math.min(
             DEFAULT_ROWS_TO_PROCESS,
+            (props.pagination && gridPageSizeSelector(apiRef)) || DEFAULT_ROWS_TO_PROCESS,
             Math.max(apiRef.current.state.rows.dataRowIds.length, 0),
           ),
         }
