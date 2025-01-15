@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { TransitionGroup } from 'react-transition-group';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+
 import { useRtl } from '@mui/system/RtlProvider';
 import Fade from '@mui/material/Fade';
 import IconButton from '@mui/material/IconButton';
+import ButtonBase from '@mui/material/ButtonBase';
 import { styled, alpha, useTheme } from '@mui/material/styles';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -19,11 +21,32 @@ import {
 } from '@mui/x-date-pickers/internals/base/Calendar';
 import useId from '@mui/utils/useId';
 import Typography from '@mui/material/Typography';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 
-export const DIALOG_WIDTH = 320;
-export const MAX_CALENDAR_HEIGHT = 280;
+const DIALOG_WIDTH = 320;
+const MAX_CALENDAR_HEIGHT = 280;
+const DAY_MARGIN = 2;
+const DAY_SIZE = 36;
+const VIEW_HEIGHT = 336;
+const WEEKS_CONTAINER_HEIGHT = (DAY_SIZE + DAY_MARGIN * 2) * 6;
+const DEFAULT_VIEWS = { year: true, month: false, day: true };
 
-const CalendarHeaderRoot = styled('div')({
+const Root = styled(Calendar.Root)({
+  overflow: 'hidden',
+  width: DIALOG_WIDTH,
+  maxHeight: VIEW_HEIGHT,
+  display: 'flex',
+  flexDirection: 'column',
+  margin: '0 auto',
+  height: VIEW_HEIGHT,
+});
+
+const Content = styled(TransitionGroup)({
+  display: 'block',
+  position: 'relative',
+});
+
+const HeaderRoot = styled('div')({
   display: 'flex',
   alignItems: 'center',
   marginTop: 12,
@@ -35,7 +58,7 @@ const CalendarHeaderRoot = styled('div')({
   minHeight: 40,
 });
 
-const CalendarHeaderLabelContainer = styled('div')(({ theme }) => ({
+const HeaderLabelContainer = styled('div')(({ theme }) => ({
   display: 'flex',
   overflow: 'hidden',
   alignItems: 'center',
@@ -45,20 +68,20 @@ const CalendarHeaderLabelContainer = styled('div')(({ theme }) => ({
   fontWeight: theme.typography.fontWeightMedium,
 }));
 
-const CalendarHeaderLabelContent = styled(TransitionGroup)({
+const HeaderLabelContent = styled(TransitionGroup)({
   display: 'block',
   position: 'relative',
 });
 
-const CalendarHeaderLabel = styled('div')({
+const HeaderLabel = styled('div')({
   marginRight: 6,
 });
 
-const CalendarHeaderSwitchViewButton = styled(IconButton)({
+const HeaderSwitchViewButton = styled(IconButton)({
   marginRight: 'auto',
 });
 
-const CalendarHeaderSwitchViewIcon = styled(ArrowDropDownIcon)(({ theme }) => ({
+const HeaderSwitchViewIcon = styled(ArrowDropDownIcon)(({ theme }) => ({
   willChange: 'transform',
   transition: theme.transitions.create('transform'),
   transform: 'rotate(0deg)',
@@ -67,17 +90,11 @@ const CalendarHeaderSwitchViewIcon = styled(ArrowDropDownIcon)(({ theme }) => ({
   },
 }));
 
-const CalendarHeaderNavigation = styled('div')({
+const HeaderNavigation = styled('div')({
   display: 'flex',
 });
 
-const CalendarHeaderNavigationButton = styled(IconButton)({
-  '&[data-hidden]': {
-    visibility: 'hidden',
-  },
-});
-
-const CalendarHeaderNavigationSpacier = styled('div')(({ theme }) => ({
+const NavigationSpacier = styled('div')(({ theme }) => ({
   width: theme.spacing(3),
 }));
 
@@ -181,13 +198,13 @@ const MonthsCell = styled(Calendar.MonthsCell)(({ theme }) => ({
   },
 }));
 
-const CalendarDaysGridHeader = styled(Calendar.DaysGridHeader)({
+const DaysGridHeader = styled(Calendar.DaysGridHeader)({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
 });
 
-const CalendarDaysGridWeekNumberHeaderCell = styled(Typography)(({ theme }) => ({
+const DaysGridWeekNumberHeaderCell = styled(Typography)(({ theme }) => ({
   width: 36,
   height: 40,
   margin: '0 2px',
@@ -198,7 +215,7 @@ const CalendarDaysGridWeekNumberHeaderCell = styled(Typography)(({ theme }) => (
   color: theme.palette.text.disabled,
 }));
 
-const CalendarDaysGridHeaderCell = styled(Typography)(({ theme }) => ({
+const DaysGridHeaderCell = styled(Typography)(({ theme }) => ({
   width: 36,
   height: 40,
   margin: '0 2px',
@@ -207,6 +224,127 @@ const CalendarDaysGridHeaderCell = styled(Typography)(({ theme }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   color: (theme.vars || theme).palette.text.secondary,
+}));
+
+const DaysGridBodyContainer = styled(TransitionGroup)(({ theme }) => {
+  const slideTransition = theme.transitions.create('transform', {
+    duration: theme.transitions.duration.complex,
+    easing: 'cubic-bezier(0.35, 0.8, 0.4, 1)',
+  });
+  return {
+    minHeight: WEEKS_CONTAINER_HEIGHT,
+    display: 'block',
+    position: 'relative',
+    overflow: 'hidden',
+    '& > *': {
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      left: 0,
+    },
+    '& .day-grid-enter-left': {
+      willChange: 'transform',
+      transform: 'translate(100%)',
+      zIndex: 1,
+    },
+    '& .day-grid-enter-right': {
+      willChange: 'transform',
+      transform: 'translate(-100%)',
+      zIndex: 1,
+    },
+    '& .day-grid-enter-active': {
+      transform: 'translate(0%)',
+      transition: slideTransition,
+    },
+    '& .day-grid-exit': {
+      transform: 'translate(0%)',
+    },
+    '& .day-grid-exit-active-left': {
+      willChange: 'transform',
+      transform: 'translate(-100%)',
+      transition: slideTransition,
+      zIndex: 0,
+    },
+    '& .day-grid-exit-active-right': {
+      willChange: 'transform',
+      transform: 'translate(100%)',
+      transition: slideTransition,
+      zIndex: 0,
+    },
+  };
+});
+
+const DaysGridBody = styled(Calendar.DaysGridBody)({ overflow: 'hidden' });
+
+const DaysWeekRow = styled(Calendar.DaysWeekRow)({
+  margin: `${DAY_MARGIN}px 0`,
+  display: 'flex',
+  justifyContent: 'center',
+});
+
+const DaysGridWeekNumberCell = styled(Typography)(({ theme }) => ({
+  ...theme.typography.caption,
+  width: DAY_SIZE,
+  height: DAY_SIZE,
+  padding: 0,
+  margin: `0 ${DAY_MARGIN}px`,
+  color: theme.palette.text.disabled,
+  fontSize: '0.75rem',
+  alignItems: 'center',
+  justifyContent: 'center',
+  display: 'inline-flex',
+}));
+
+const DaysCell = styled(ButtonBase)(({ theme }) => ({
+  ...theme.typography.caption,
+  width: DAY_SIZE,
+  height: DAY_SIZE,
+  borderRadius: '50%',
+  padding: 0,
+  // explicitly setting to `transparent` to avoid potentially getting impacted by change from the overridden component
+  backgroundColor: 'transparent',
+  transition: theme.transitions.create('background-color', {
+    duration: theme.transitions.duration.short,
+  }),
+  color: (theme.vars || theme).palette.text.primary,
+  '@media (pointer: fine)': {
+    '&:hover': {
+      backgroundColor: theme.vars
+        ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.hoverOpacity})`
+        : alpha(theme.palette.primary.main, theme.palette.action.hoverOpacity),
+    },
+  },
+  '&:focus': {
+    backgroundColor: theme.vars
+      ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.focusOpacity})`
+      : alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
+    '&[data-selected]': {
+      willChange: 'background-color',
+      backgroundColor: (theme.vars || theme).palette.primary.dark,
+    },
+  },
+  '&[data-selected]': {
+    color: (theme.vars || theme).palette.primary.contrastText,
+    backgroundColor: (theme.vars || theme).palette.primary.main,
+    fontWeight: theme.typography.fontWeightMedium,
+    '&:hover': {
+      willChange: 'background-color',
+      backgroundColor: (theme.vars || theme).palette.primary.dark,
+    },
+  },
+  '&[data-disabled]:not([data-selected])': {
+    color: (theme.vars || theme).palette.text.disabled,
+  },
+  '&[data-disabled][data-selected]': {
+    opacity: 0.6,
+  },
+  '&[data-outside-month]': {
+    color: (theme.vars || theme).palette.text.secondary,
+    pointerEvents: 'none',
+  },
+  '&[data-current]:not([data-selected])': {
+    border: `1px solid ${(theme.vars || theme).palette.text.secondary}`,
+  },
 }));
 
 function CalendarHeader(props) {
@@ -227,6 +365,8 @@ function CalendarHeader(props) {
       onViewChange('year');
     } else if (view === 'day' && views.month) {
       onViewChange('month');
+    } else if (view === 'day' && views.year) {
+      onViewChange('year');
     }
   };
 
@@ -239,14 +379,14 @@ function CalendarHeader(props) {
   const label = visibleDate.format('MMMM YYYY');
 
   return (
-    <CalendarHeaderRoot>
-      <CalendarHeaderLabelContainer
+    <HeaderRoot>
+      <HeaderLabelContainer
         role="presentation"
         onClick={handleToggleView}
         // putting this on the label item element below breaks when using transition
         aria-live="polite"
       >
-        <CalendarHeaderLabelContent>
+        <HeaderLabelContent>
           <Fade
             appear={false}
             mountOnEnter
@@ -258,29 +398,26 @@ function CalendarHeader(props) {
               exit: 0,
             }}
           >
-            <CalendarHeaderLabel
-              id={labelId}
-              data-testid="calendar-month-and-year-text"
-            >
+            <HeaderLabel id={labelId} data-testid="calendar-month-and-year-text">
               {label}
-            </CalendarHeaderLabel>
+            </HeaderLabel>
           </Fade>
-        </CalendarHeaderLabelContent>
+        </HeaderLabelContent>
         {viewCount > 1 && !disabled && (
-          <CalendarHeaderSwitchViewButton
+          <HeaderSwitchViewButton
             size="small"
             aria-label={translations.calendarViewSwitchingButtonAriaLabel(view)}
           >
-            <CalendarHeaderSwitchViewIcon data-view={view} />
-          </CalendarHeaderSwitchViewButton>
+            <HeaderSwitchViewIcon data-view={view} />
+          </HeaderSwitchViewButton>
         )}
-      </CalendarHeaderLabelContainer>
+      </HeaderLabelContainer>
       <Fade in={view === 'day'}>
-        <CalendarHeaderNavigation>
+        <HeaderNavigation>
           <Calendar.SetVisibleMonth
             target="previous"
             render={
-              <CalendarHeaderNavigationButton
+              <IconButton
                 size="medium"
                 title={translations.previousMonth}
                 aria-label={translations.previousMonth}
@@ -294,11 +431,11 @@ function CalendarHeader(props) {
               <ArrowLeftIcon fontSize="inherit" />
             )}
           </Calendar.SetVisibleMonth>
-          <CalendarHeaderNavigationSpacier />
+          <NavigationSpacier />
           <Calendar.SetVisibleMonth
             target="next"
             render={
-              <CalendarHeaderNavigationButton
+              <IconButton
                 size="medium"
                 title={translations.nextMonth}
                 aria-label={translations.nextMonth}
@@ -312,32 +449,129 @@ function CalendarHeader(props) {
               <ArrowRightIcon fontSize="inherit" />
             )}
           </Calendar.SetVisibleMonth>
-        </CalendarHeaderNavigation>
+        </HeaderNavigation>
       </Fade>
-    </CalendarHeaderRoot>
+    </HeaderRoot>
   );
 }
 
-const DEFAULT_VIEWS = { year: true, month: false, day: true };
-
-function DateCalendar(props) {
-  const { views = DEFAULT_VIEWS, openTo, displayWeekNumber } = props;
-  const [view, setView] = React.useState(() =>
-    openTo != null && views[openTo] ? openTo : 'day',
-  );
+function DayCalendar(props) {
+  const { displayWeekNumber } = props;
   const translations = usePickerTranslations();
-  const id = useId();
-  const gridLabelId = `${id}-grid-label`;
+  const theme = useTheme();
+  const { visibleDate } = useCalendarContext();
+
+  // We need a new ref whenever the `key` of the transition changes: https://reactcommunity.org/react-transition-group/transition/#Transition-prop-nodeRef.
+  const transitionKey = visibleDate.format('MMMM YYYY');
+  const daysGridBodyNodeRef = React.useMemo(
+    () => React.createRef(),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [transitionKey],
+  );
+
+  const prevVisibleDate = React.useRef(visibleDate);
+  const slideDirection = prevVisibleDate.current.isBefore(visibleDate)
+    ? 'left'
+    : 'right';
+
+  useEnhancedEffect(() => {
+    prevVisibleDate.current = visibleDate;
+  }, [visibleDate]);
+
+  const dayGridTransitionClasses = {
+    exit: 'day-grid-exit',
+    enterActive: 'day-grid-enter-active',
+    enter: `day-grid-enter-${slideDirection}`,
+    exitActive: `day-grid-exit-active-${slideDirection}`,
+  };
 
   return (
-    <Calendar.Root>
-      <CalendarHeader
-        view={view}
-        views={views}
-        onViewChange={setView}
-        labelId={gridLabelId}
-      />
-      <div className="transition">
+    <Calendar.DaysGrid>
+      <DaysGridHeader>
+        {({ days }) => (
+          <React.Fragment>
+            {displayWeekNumber && (
+              <DaysGridWeekNumberHeaderCell
+                variant="caption"
+                role="columnheader"
+                aria-label={translations.calendarWeekNumberHeaderLabel}
+              >
+                {translations.calendarWeekNumberHeaderText}
+              </DaysGridWeekNumberHeaderCell>
+            )}
+            {days.map((day) => (
+              <Calendar.DaysGridHeaderCell
+                value={day}
+                key={day.toString()}
+                render={<DaysGridHeaderCell variant="caption" />}
+              />
+            ))}
+          </React.Fragment>
+        )}
+      </DaysGridHeader>
+      <DaysGridBodyContainer
+        childFactory={(element) =>
+          React.cloneElement(element, {
+            classNames: dayGridTransitionClasses,
+          })
+        }
+        role="presentation"
+      >
+        <CSSTransition
+          mountOnEnter
+          unmountOnExit
+          key={transitionKey}
+          timeout={theme.transitions.duration.complex}
+          nodeRef={daysGridBodyNodeRef}
+        >
+          <DaysGridBody ref={daysGridBodyNodeRef}>
+            {({ weeks }) =>
+              weeks.map((week) => (
+                <DaysWeekRow value={week} key={weeks.toString()}>
+                  {({ days }) => (
+                    <React.Fragment>
+                      {displayWeekNumber && (
+                        <DaysGridWeekNumberCell
+                          role="rowheader"
+                          aria-label={translations.calendarWeekNumberAriaLabelText(
+                            days[0].week(),
+                          )}
+                        >
+                          {translations.calendarWeekNumberText(days[0].week())}
+                        </DaysGridWeekNumberCell>
+                      )}
+                      {days.map((day) => (
+                        <Calendar.DaysCell value={day} render={<DaysCell />} />
+                      ))}
+                    </React.Fragment>
+                  )}
+                </DaysWeekRow>
+              ))
+            }
+          </DaysGridBody>
+        </CSSTransition>
+      </DaysGridBodyContainer>
+    </Calendar.DaysGrid>
+  );
+}
+
+function CalendarContent(props) {
+  const { view, displayWeekNumber } = props;
+  const theme = useTheme();
+
+  return (
+    <Content>
+      <Fade
+        appear={false}
+        mountOnEnter
+        unmountOnExit
+        key={view}
+        timeout={{
+          appear: theme.transitions.duration.enteringScreen,
+          enter: theme.transitions.duration.enteringScreen,
+          exit: 0,
+        }}
+      >
         <div>
           {view === 'year' && (
             <YearsGrid cellsPerRow={3}>
@@ -355,35 +589,31 @@ function DateCalendar(props) {
               }
             </MonthsGrid>
           )}
-          {view === 'day' && (
-            <Calendar.DaysGrid>
-              <CalendarDaysGridHeader>
-                {({ days }) => (
-                  <React.Fragment>
-                    {displayWeekNumber && (
-                      <CalendarDaysGridWeekNumberHeaderCell
-                        variant="caption"
-                        role="columnheader"
-                        aria-label={translations.calendarWeekNumberHeaderLabel}
-                      >
-                        {translations.calendarWeekNumberHeaderText}
-                      </CalendarDaysGridWeekNumberHeaderCell>
-                    )}
-                    {days.map((day) => (
-                      <Calendar.DaysGridHeaderCell
-                        value={day}
-                        key={day.toString()}
-                        render={<CalendarDaysGridHeaderCell variant="caption" />}
-                      />
-                    ))}
-                  </React.Fragment>
-                )}
-              </CalendarDaysGridHeader>
-            </Calendar.DaysGrid>
-          )}
+          {view === 'day' && <DayCalendar displayWeekNumber={displayWeekNumber} />}
         </div>
-      </div>
-    </Calendar.Root>
+      </Fade>
+    </Content>
+  );
+}
+
+function DateCalendar(props) {
+  const { views = DEFAULT_VIEWS, openTo, displayWeekNumber = false } = props;
+  const [view, setView] = React.useState(() =>
+    openTo != null && views[openTo] ? openTo : 'day',
+  );
+  const id = useId();
+  const gridLabelId = `${id}-grid-label`;
+
+  return (
+    <Root>
+      <CalendarHeader
+        view={view}
+        views={views}
+        onViewChange={setView}
+        labelId={gridLabelId}
+      />
+      <CalendarContent view={view} displayWeekNumber={displayWeekNumber} />
+    </Root>
   );
 }
 

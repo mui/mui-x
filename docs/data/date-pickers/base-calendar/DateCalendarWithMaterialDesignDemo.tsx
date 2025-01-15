@@ -21,6 +21,7 @@ import {
 } from '@mui/x-date-pickers/internals/base/Calendar';
 import useId from '@mui/utils/useId';
 import Typography from '@mui/material/Typography';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 
 const DIALOG_WIDTH = 320;
 const MAX_CALENDAR_HEIGHT = 280;
@@ -236,19 +237,19 @@ const DaysGridBodyContainer = styled(TransitionGroup)<TransitionGroupProps>(({
     minHeight: WEEKS_CONTAINER_HEIGHT,
     display: 'block',
     position: 'relative',
-    overflowX: 'hidden',
+    overflow: 'hidden',
     '& > *': {
       position: 'absolute',
       top: 0,
       right: 0,
       left: 0,
     },
-    '& .day-grid-enter[data-direction="left"]': {
+    '& .day-grid-enter-left': {
       willChange: 'transform',
       transform: 'translate(100%)',
       zIndex: 1,
     },
-    '& .day-grid-enter[data-direction="right"]': {
+    '& .day-grid-enter-right': {
       willChange: 'transform',
       transform: 'translate(-100%)',
       zIndex: 1,
@@ -260,13 +261,13 @@ const DaysGridBodyContainer = styled(TransitionGroup)<TransitionGroupProps>(({
     '& .day-grid-exit': {
       transform: 'translate(0%)',
     },
-    '& .day-grid-exit-active[data-direction="left"]': {
+    '& .day-grid-exit-active-left': {
       willChange: 'transform',
       transform: 'translate(-100%)',
       transition: slideTransition,
       zIndex: 0,
     },
-    '& .day-grid-exit-active[data-direction="right"]': {
+    '& .day-grid-exit-active-right': {
       willChange: 'transform',
       transform: 'translate(100%)',
       transition: slideTransition,
@@ -339,8 +340,9 @@ const DaysCell = styled(ButtonBase)(({ theme }) => ({
   '&[data-disabled][data-selected]': {
     opacity: 0.6,
   },
-  '&[data-outside-month': {
+  '&[data-outside-month]': {
     color: (theme.vars || theme).palette.text.secondary,
+    pointerEvents: 'none',
   },
   '&[data-current]:not([data-selected])': {
     border: `1px solid ${(theme.vars || theme).palette.text.secondary}`,
@@ -474,15 +476,20 @@ function DayCalendar(props: { displayWeekNumber: boolean }) {
     [transitionKey],
   );
 
-  const slideDirection = 'left';
+  const prevVisibleDate = React.useRef(visibleDate);
+  const slideDirection = prevVisibleDate.current.isBefore(visibleDate) ? 'left' : 'right';
+
+  useEnhancedEffect(() => {
+    prevVisibleDate.current = visibleDate;
+    }, [visibleDate])
+
+
   const dayGridTransitionClasses = {
     exit: 'day-grid-exit',
     enterActive: 'day-grid-enter-active',
     enter: `day-grid-enter-${slideDirection}`,
     exitActive: `day-grid-exit-active-${slideDirection}`,
   };
-
-  const handleMonthSwitchingAnimationEnd = React.useCallback(() => {}, []);
 
   return (
     <Calendar.DaysGrid>
@@ -521,7 +528,6 @@ function DayCalendar(props: { displayWeekNumber: boolean }) {
           unmountOnExit
           key={transitionKey}
           timeout={theme.transitions.duration.complex}
-          onExited={handleMonthSwitchingAnimationEnd}
           nodeRef={daysGridBodyNodeRef}
         >
           <DaysGridBody ref={daysGridBodyNodeRef}>
@@ -534,10 +540,10 @@ function DayCalendar(props: { displayWeekNumber: boolean }) {
                         <DaysGridWeekNumberCell
                           role="rowheader"
                           aria-label={translations.calendarWeekNumberAriaLabelText(
-                            week[0].week(),
+                            days[0].week(),
                           )}
                         >
-                          {translations.calendarWeekNumberText(week[0].week())}
+                          {translations.calendarWeekNumberText(days[0].week())}
                         </DaysGridWeekNumberCell>
                       )}
                       {days.map((day) => (
