@@ -237,13 +237,17 @@ Using the `getItems` prop instead of manually providing a list of `<Calendar.Yea
 
 ## Full Date Calendar
 
-### MD2-ish layout
+### MD2-ish header
 
 {{"demo": "DateCalendarMD2Demo.js", "defaultCodeOpen": false}}
 
-### MD3-ish layout
+### MD3-ish header
 
 {{"demo": "DateCalendarDemo.js", "defaultCodeOpen": false}}
+
+### Recipe: Material Design 2
+
+{{"demo": "DateCalendarWithMaterialDesignDemo.js", "defaultCodeOpen": false}}
 
 ## Day Range Calendar
 

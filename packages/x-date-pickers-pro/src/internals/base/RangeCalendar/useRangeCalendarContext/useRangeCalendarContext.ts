@@ -7,5 +7,6 @@ export function useRangeCalendarContext() {
 
   return {
     visibleDate: baseRootContext.visibleDate,
+    disabled: baseRootContext.disabled,
   };
 }
