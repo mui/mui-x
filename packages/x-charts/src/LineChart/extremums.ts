@@ -1,6 +1,9 @@
-import { ExtremumGetter, ExtremumFilter } from '../context/PluginProvider/ExtremumGetter.types';
+import {
+  CartesianExtremumFilter,
+  CartesianExtremumGetter,
+} from '../internals/plugins/models/seriesConfig/extremumGetter.types';
 
-export const getExtremumX: ExtremumGetter<'line'> = (params) => {
+export const getExtremumX: CartesianExtremumGetter<'line'> = (params) => {
   const { axis } = params;
 
   const minX = Math.min(...(axis.data ?? []));
@@ -14,7 +17,7 @@ function getSeriesExtremums(
   getValues: GetValues,
   data: (number | null)[],
   stackedData: [number, number][],
-  filter?: ExtremumFilter,
+  filter?: CartesianExtremumFilter,
 ): [number, number] {
   return stackedData.reduce<[number, number]>(
     (seriesAcc, stackedValue, index) => {
@@ -35,7 +38,7 @@ function getSeriesExtremums(
   );
 }
 
-export const getExtremumY: ExtremumGetter<'line'> = (params) => {
+export const getExtremumY: CartesianExtremumGetter<'line'> = (params) => {
   const { series, axis, isDefaultAxis, getFilters } = params;
 
   return Object.keys(series)

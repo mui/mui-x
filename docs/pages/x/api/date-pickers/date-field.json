@@ -2,6 +2,10 @@
   "props": {
     "autoFocus": { "type": { "name": "bool" }, "default": "false" },
     "clearable": { "type": { "name": "bool" }, "default": "false" },
+    "clearButtonPosition": {
+      "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
+      "default": "'end'"
+    },
     "color": {
       "type": {
         "name": "enum",
@@ -60,6 +64,10 @@
         "type": "function(newValue: FieldSelectedSections) => void",
         "describedArgs": ["newValue"]
       }
+    },
+    "openPickerButtonPosition": {
+      "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
+      "default": "'end'"
     },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "referenceDate": {

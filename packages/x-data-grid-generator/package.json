@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-generator",
-  "version": "8.0.0-alpha.6",
+  "version": "8.0.0-alpha.7",
   "description": "Generate fake data for demo purposes only.",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -40,9 +40,11 @@
     "lru-cache": "^11.0.2"
   },
   "devDependencies": {
-    "@mui/icons-material": "^5.16.13",
-    "@mui/material": "^5.16.13",
+    "@mui/icons-material": "^5.16.14",
+    "@mui/material": "^5.16.14",
     "@types/chance": "^1.1.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "rimraf": "^6.0.1"
   },
   "peerDependencies": {

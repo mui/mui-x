@@ -7,6 +7,7 @@ import {
 } from '../filter/gridFilterSelector';
 import { gridRowMaximumTreeDepthSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
 import { getPageCount } from './gridPaginationUtils';
+import { GridValidRowModel } from '../../../models/gridRows';
 
 const ALL_RESULTS_PAGE_VALUE = -1;
 
@@ -15,6 +16,15 @@ const ALL_RESULTS_PAGE_VALUE = -1;
  * @ignore - do not document.
  */
 export const gridPaginationSelector = (state: GridStateCommunity) => state.pagination;
+
+/**
+ * @category Pagination
+ * @ignore - do not document.
+ */
+export const gridPaginationEnabledClientSideSelector = createSelector(
+  gridPaginationSelector,
+  (pagination) => pagination.enabled && pagination.paginationMode === 'client',
+);
 
 /**
  * Get the pagination model
@@ -77,18 +87,24 @@ export const gridPageCountSelector = createSelector(
  * @category Pagination
  */
 export const gridPaginationRowRangeSelector = createSelectorMemoized(
+  gridPaginationEnabledClientSideSelector,
   gridPaginationModelSelector,
   gridRowTreeSelector,
   gridRowMaximumTreeDepthSelector,
   gridExpandedSortedRowEntriesSelector,
   gridFilteredSortedTopLevelRowEntriesSelector,
   (
+    clientSidePaginationEnabled,
     paginationModel,
     rowTree,
     rowTreeDepth,
     visibleSortedRowEntries,
     visibleSortedTopLevelRowEntries,
   ) => {
+    if (!clientSidePaginationEnabled) {
+      return null;
+    }
+
     const visibleTopLevelRowCount = visibleSortedTopLevelRowEntries.length;
     const topLevelFirstRowIndex = Math.min(
       paginationModel.pageSize * paginationModel.page,
@@ -179,5 +195,44 @@ export const gridPaginatedVisibleSortedGridRowIdsSelector = createSelectorMemoiz
       paginationRange.firstRowIndex,
       paginationRange.lastRowIndex + 1,
     );
+  },
+);
+
+/**
+ * Get the rows, range and rowIndex lookup map after filtering and sorting.
+ * Does not contain the collapsed children.
+ * @category Pagination
+ */
+export const gridVisibleRowsSelector = createSelectorMemoized(
+  gridPaginationEnabledClientSideSelector,
+  gridPaginationRowRangeSelector,
+  gridPaginatedVisibleSortedGridRowEntriesSelector,
+  gridExpandedSortedRowEntriesSelector,
+  (clientPaginationEnabled, paginationRowRange, paginationRows, expandedSortedRowEntries) => {
+    if (clientPaginationEnabled) {
+      return {
+        rows: paginationRows,
+        range: paginationRowRange,
+        rowToIndexMap: paginationRows.reduce((lookup, row, index) => {
+          lookup.set(row.model, index);
+          return lookup;
+        }, new Map<GridValidRowModel, number>()),
+      };
+    }
+
+    return {
+      rows: expandedSortedRowEntries,
+      range:
+        expandedSortedRowEntries.length === 0
+          ? null
+          : {
+              firstRowIndex: 0,
+              lastRowIndex: expandedSortedRowEntries.length - 1,
+            },
+      rowToIndexMap: expandedSortedRowEntries.reduce((lookup, row, index) => {
+        lookup.set(row.model, index);
+        return lookup;
+      }, new Map<GridValidRowModel, number>()),
+    };
   },
 );

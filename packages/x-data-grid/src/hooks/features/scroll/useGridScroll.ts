@@ -53,7 +53,7 @@ function scrollIntoView(dimensions: {
  * @requires useGridColumnSpanning (method)
  */
 export const useGridScroll = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'pagination' | 'unstable_listView'>,
 ): void => {
   const isRtl = useRtl();

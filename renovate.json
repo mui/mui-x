@@ -116,6 +116,11 @@
     {
       "groupName": "Vite & Vitest",
       "matchPackageNames": ["@vitejs/**", "/vitest/"]
+    },
+    {
+      "groupName": "date-fns-v2",
+      "matchPackageNames": ["date-fns-v2"],
+      "allowedVersions": "< 3.0.0"
     }
   ],
   "postUpdateOptions": ["pnpmDedupe"],

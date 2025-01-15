@@ -35,7 +35,7 @@ describe('<DataGrid /> - Quick filter', () => {
     columns: [{ field: 'brand' }],
   };
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
 
   function TestCase(props: Partial<DataGridProps>) {
     apiRef = useGridApiRef();
