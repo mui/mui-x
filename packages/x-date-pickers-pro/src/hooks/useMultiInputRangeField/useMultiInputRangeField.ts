@@ -195,4 +195,5 @@ interface UseMultiInputRangeFieldReturnValue<
     UseFieldResponse<PickerManagerEnableAccessibleFieldDOMStructure<TManager>, TForwardedProps>,
     'clearable' | 'onClear'
   >;
+  enableAccessibleFieldDOMStructure: PickerManagerEnableAccessibleFieldDOMStructure<TManager>;
 }

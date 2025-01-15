@@ -83,9 +83,7 @@ export function createMultiInputRangeField<TManager extends PickerAnyRangeManage
       elementType: Root,
       externalSlotProps: slotProps?.root,
       externalForwardedProps: otherForwardedProps,
-      additionalProps: {
-        ref,
-      },
+      additionalProps: { ref },
       ownerState,
       className: clsx(className, classes.root),
     });
