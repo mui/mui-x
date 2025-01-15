@@ -65,6 +65,6 @@ Common use cases include:
 - Formatting a decimal value to a percentage and appending a `%` sign
 - Formatting a boolean value to `Yes` or `No`
 
-This function only impacts rendering, _not_ internal calculations like filtering or sorting.
+Unlike `valueGetter()`, this function only impacts rendering—_not_ internal calculations like filtering or sorting.
 
 See [Column definition—value formatter](/x/react-data-grid/column-definition/#value-formatter) for more details.
