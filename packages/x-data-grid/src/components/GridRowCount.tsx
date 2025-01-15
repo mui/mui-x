@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled, SxProps, Theme } from '@mui/system';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { vars } from '../constants/cssVariables';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../constants/gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -36,11 +35,11 @@ const GridRowCountRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'RowCount',
   overridesResolver: (props, styles) => styles.rowCount,
-})<{ ownerState: OwnerState }>({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   alignItems: 'center',
   display: 'flex',
-  margin: vars.spacing(0, 2),
-});
+  margin: theme.spacing(0, 2),
+}));
 
 const GridRowCount = forwardRef<HTMLDivElement, GridRowCountProps>(
   function GridRowCount(props, ref) {

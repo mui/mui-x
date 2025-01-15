@@ -2,24 +2,13 @@ import {
   ExportedPickerFieldUIProps,
   PickerFieldUISlots,
   PickerFieldUISlotProps,
-  PickerRangeValue,
-  UseFieldInternalProps,
 } from '@mui/x-date-pickers/internals';
 import { BuiltInFieldTextFieldProps } from '@mui/x-date-pickers/models';
-import { UseTimeRangeFieldProps } from '../internals/models';
-import { TimeRangeValidationError } from '../models';
+import { TimeRangeManagerFieldInternalProps } from '../managers/useTimeRangeManager';
 
 export interface UseSingleInputTimeRangeFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends UseTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
-    Pick<
-      UseFieldInternalProps<
-        PickerRangeValue,
-        TEnableAccessibleFieldDOMStructure,
-        TimeRangeValidationError
-      >,
-      'unstableFieldRef'
-    >,
+> extends TimeRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
     // TODO v8: Remove once the range fields open with a button.
     Omit<ExportedPickerFieldUIProps, 'openPickerButtonPosition'> {}
 
