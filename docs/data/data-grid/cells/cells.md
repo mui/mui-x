@@ -4,20 +4,17 @@
 
 ## Customizing cells
 
-The Data Grid provides several metgit bra to customize the rendered elements and values of a cell.
-Each of them has a different purpose and should be used in different situations.
-Here is a summary of their differences:
+The Data Grid provides several methods for customizing the rendered elements and values of a cell, including `renderCell()`, `valueGetter()`, and `valueFormatter()`.
+This document describes the key differences and specific use cases for each.
 
 ### renderCell() function
 
-The `renderCell()` function is the most powerful way to customize the content of a cell.
-It allows you to render anything you want inside the cell.
-It is the only way to render a React component inside a cell.
-It is also the only way to customize the cell's behavior (for instance, add a click handler).
-It is the most flexible way to customize a cell, but it is also the most expensive one.
-It should be used only when the other options are not enough.
+The `renderCell()` function gives you the most flexibility by letting you render any element inside of a cell.
+This is the only way to render a React component inside a cell, and also the only way to customize a cell's behavior—for example, by adding a click handler.
 
-Here's an example for a cell that displays a button:
+Though powerful, it's also expensive, so it should only be used as a last resort when there are no other means for implementing a specific use case.
+
+Here's an example of a cell that uses `renderCell()` to render a button:
 
 ```tsx
 const columns: GridColDef[] = [
@@ -41,7 +38,7 @@ const columns: GridColDef[] = [
 ];
 ```
 
-See more about the `renderCell` function in [Column definition—rendering cells](/x/react-data-grid/column-definition/#rendering-cells).
+See [Column definition—rendering cells](/x/react-data-grid/column-definition/#rendering-cells) for more details.
 
 ### valueGetter() function
 
