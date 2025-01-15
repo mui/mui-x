@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled, SxProps, Theme } from '@mui/system';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { vars } from '../constants/cssVariables';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../constants/gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -35,19 +34,19 @@ const GridSelectedRowCountRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'SelectedRowCount',
   overridesResolver: (props, styles) => styles.selectedRowCount,
-})<{ ownerState: OwnerState }>({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   alignItems: 'center',
   display: 'flex',
-  margin: vars.spacing(0, 2),
+  margin: theme.spacing(0, 2),
   visibility: 'hidden',
   width: 0,
   height: 0,
-  [vars.breakpoints.up('sm')]: {
+  [theme.breakpoints.up('sm')]: {
     visibility: 'visible',
     width: 'auto',
     height: 'auto',
   },
-});
+}));
 
 const GridSelectedRowCount = forwardRef<HTMLDivElement, GridSelectedRowCountProps>(
   function GridSelectedRowCount(props, ref) {
