@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { MakeOptional } from '@mui/x-internals/types';
+import { MakeRequired } from '@mui/x-internals/types';
 import { MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   PickersToolbar,
@@ -21,19 +21,26 @@ import {
   pickersToolbarTextClasses,
   PickerRangeValue,
   MULTI_SECTION_CLOCK_SECTION_WIDTH,
+  UseViewsOptions,
+  useToolbarOwnerState,
+  PickerToolbarOwnerState,
 } from '@mui/x-date-pickers/internals';
-import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
+import { usePickerContext, usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import {
   TimeRangePickerToolbarClasses,
   getTimeRangePickerToolbarUtilityClass,
 } from './timeRangePickerToolbarClasses';
+import { usePickerRangePositionContext } from '../hooks';
 
-const useUtilityClasses = (ownerState: TimeRangePickerToolbarProps) => {
-  const { classes, toolbarVariant } = ownerState;
+const useUtilityClasses = (
+  classes: Partial<TimeRangePickerToolbarClasses> | undefined,
+  ownerState: PickerToolbarOwnerState,
+) => {
+  const { pickerVariant } = ownerState;
   const slots = {
     root: ['root'],
-    container: ['container', toolbarVariant],
+    container: ['container', pickerVariant],
     separator: ['separator'],
     timeContainer: ['timeContainer'],
   };
@@ -42,7 +49,7 @@ const useUtilityClasses = (ownerState: TimeRangePickerToolbarProps) => {
 };
 
 export interface TimeRangePickerToolbarProps
-  extends Omit<BaseToolbarProps<PickerRangeValue, TimeViewWithMeridiem>, 'toolbarFormat'>,
+  extends Omit<BaseToolbarProps, 'toolbarFormat'>,
     Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'>,
     ExportedTimeRangePickerToolbarProps {
   ampm: boolean;
@@ -61,7 +68,7 @@ const TimeRangePickerToolbarRoot = styled(PickersToolbar, {
   name: 'MuiTimeRangePickerToolbar',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: TimeRangePickerToolbarProps }>(({ theme }) => ({
+})<{ ownerState: PickerToolbarOwnerState }>(({ theme }) => ({
   borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
   padding: '12px 0px 8px 0px',
   [`& .${pickersToolbarClasses.content} .${pickersToolbarTextClasses.selected}`]: {
@@ -117,17 +124,21 @@ const TimeRangePickerToolbarSeparator = styled(PickersToolbarText, {
   cursor: 'default',
 });
 
-type TimeRangePickerToolbarTimeElementProps = MakeOptional<
-  Pick<
-    TimeRangePickerToolbarProps,
-    'ampm' | 'views' | 'onViewChange' | 'view' | 'toolbarPlaceholder' | 'toolbarVariant'
-  >,
-  'view'
-> & {
-  value: PickerValidDate | null;
-  utils: MuiPickersAdapter<any>;
-  separatorClasses: string;
-};
+type TimeRangePickerToolbarTimeElementProps = Pick<
+  TimeRangePickerToolbarProps,
+  'ampm' | 'toolbarPlaceholder' | 'toolbarVariant'
+> &
+  MakeRequired<
+    Pick<
+      UseViewsOptions<PickerRangeValue, TimeViewWithMeridiem>,
+      'view' | 'views' | 'onViewChange'
+    >,
+    'onViewChange'
+  > & {
+    value: PickerValidDate | null;
+    utils: MuiPickersAdapter<any>;
+    separatorClasses: string;
+  };
 
 function TimeRangePickerToolbarTimeElement(props: TimeRangePickerToolbarTimeElementProps) {
   const {
@@ -236,32 +247,32 @@ const TimeRangePickerToolbar = React.forwardRef(function TimeRangePickerToolbar(
   const props = useThemeProps({ props: inProps, name: 'MuiTimeRangePickerToolbar' });
 
   const {
-    value: [start, end],
-    rangePosition,
-    onRangePositionChange,
     className,
     ampm,
-    views,
     toolbarVariant = 'mobile',
     toolbarPlaceholder = '--',
-    onViewChange,
-    view,
+    classes: classesProp,
     ...other
   } = props;
 
+  const { value, view, setView, views } = usePickerContext<
+    PickerRangeValue,
+    TimeViewWithMeridiem
+  >();
   const translations = usePickerTranslations();
-
-  const ownerState = props;
-  const classes = useUtilityClasses(ownerState);
+  const ownerState = useToolbarOwnerState();
+  const { rangePosition, onRangePositionChange } = usePickerRangePositionContext();
+  const classes = useUtilityClasses(classesProp, ownerState);
+  const [start, end] = value;
 
   const handleStartRangeViewChange = React.useCallback(
     (newView: TimeViewWithMeridiem) => {
       if (rangePosition !== 'start') {
         onRangePositionChange('start');
       }
-      onViewChange(newView);
+      setView(newView);
     },
-    [onRangePositionChange, onViewChange, rangePosition],
+    [onRangePositionChange, setView, rangePosition],
   );
 
   const handleEndRangeViewChange = React.useCallback(
@@ -269,10 +280,14 @@ const TimeRangePickerToolbar = React.forwardRef(function TimeRangePickerToolbar(
       if (rangePosition !== 'end') {
         onRangePositionChange('end');
       }
-      onViewChange(newView);
+      setView(newView);
     },
-    [onRangePositionChange, onViewChange, rangePosition],
+    [onRangePositionChange, setView, rangePosition],
   );
+
+  if (!view) {
+    return null;
+  }
 
   return (
     <TimeRangePickerToolbarRoot

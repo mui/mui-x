@@ -1,5 +1,4 @@
 import { MakeOptional } from '@mui/x-internals/types';
-import { TimeViewWithMeridiem } from '@mui/x-date-pickers/internals';
 import {
   UseMobileRangePickerSlots,
   UseMobileRangePickerSlotProps,
@@ -13,14 +12,11 @@ import {
 
 export interface MobileTimeRangePickerSlots
   extends BaseTimeRangePickerSlots,
-    MakeOptional<UseMobileRangePickerSlots<TimeViewWithMeridiem>, 'field'> {}
+    MakeOptional<UseMobileRangePickerSlots, 'field'> {}
 
 export interface MobileTimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends BaseTimeRangePickerSlotProps,
-    Omit<
-      UseMobileRangePickerSlotProps<TimeViewWithMeridiem, TEnableAccessibleFieldDOMStructure>,
-      'tabs' | 'toolbar'
-    > {}
+    Omit<UseMobileRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>, 'tabs' | 'toolbar'> {}
 
 export interface MobileTimeRangePickerProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends BaseTimeRangePickerProps,

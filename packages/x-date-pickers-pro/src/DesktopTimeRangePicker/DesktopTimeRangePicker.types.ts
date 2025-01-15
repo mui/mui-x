@@ -1,6 +1,6 @@
 import { MakeOptional } from '@mui/x-internals/types';
 import { TimeView } from '@mui/x-date-pickers/models';
-import { DesktopOnlyTimePickerProps, TimeViewWithMeridiem } from '@mui/x-date-pickers/internals';
+import { DesktopOnlyTimePickerProps } from '@mui/x-date-pickers/internals';
 import {
   UseDesktopRangePickerSlots,
   UseDesktopRangePickerSlotProps,
@@ -14,14 +14,11 @@ import {
 
 export interface DesktopTimeRangePickerSlots
   extends BaseTimeRangePickerSlots,
-    MakeOptional<UseDesktopRangePickerSlots<TimeViewWithMeridiem>, 'field'> {}
+    MakeOptional<UseDesktopRangePickerSlots, 'field'> {}
 
 export interface DesktopTimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends BaseTimeRangePickerSlotProps,
-    Omit<
-      UseDesktopRangePickerSlotProps<TimeViewWithMeridiem, TEnableAccessibleFieldDOMStructure>,
-      'tabs' | 'toolbar'
-    > {}
+    Omit<UseDesktopRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>, 'tabs' | 'toolbar'> {}
 
 export interface DesktopTimeRangePickerProps<
   TEnableAccessibleFieldDOMStructure extends boolean = true,

@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { DefaultizedProps } from '@mui/x-internals/types';
 import {
   DIALOG_WIDTH,
   PickerRangeValue,
-  PickerViewsRendererProps,
+  PickerRendererInterceptorProps,
+  PickerViewRendererLookup,
   resolveTimeFormat,
   TimeViewWithMeridiem,
   useUtils,
@@ -25,38 +25,19 @@ import {
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { MobileTimeRangePickerProps } from './MobileTimeRangePicker.types';
-import {
-  TimeRangePickerRenderers,
-  useTimeRangePickerDefaultizedProps,
-} from '../TimeRangePicker/shared';
+import { useTimeRangePickerDefaultizedProps } from '../TimeRangePicker/shared';
 import { MultiInputTimeRangeField } from '../MultiInputTimeRangeField';
-import {
-  useMobileRangePicker,
-  UseMobileRangePickerProps,
-} from '../internals/hooks/useMobileRangePicker';
+import { useMobileRangePicker } from '../internals/hooks/useMobileRangePicker';
 import { validateTimeRange } from '../validation/validateTimeRange';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { TimeRangePickerTimeWrapper } from '../TimeRangePicker/TimeRangePickerTimeWrapper';
 
-const rendererInterceptor = function rendererInterceptor<
-  TEnableAccessibleFieldDOMStructure extends boolean,
->(
-  inViewRenderers: TimeRangePickerRenderers<TimeViewWithMeridiem, any>,
-  popperView: TimeViewWithMeridiem,
-  rendererProps: PickerViewsRendererProps<
-    PickerRangeValue,
-    TimeViewWithMeridiem,
-    DefaultizedProps<
-      UseMobileRangePickerProps<TimeViewWithMeridiem, TEnableAccessibleFieldDOMStructure, any, any>,
-      'rangePosition' | 'onRangePositionChange' | 'openTo'
-    >,
-    {}
-  >,
+const rendererInterceptor = function rendererInterceptor(
+  props: PickerRendererInterceptorProps<PickerRangeValue, TimeViewWithMeridiem, any>,
 ) {
-  const { rangePosition, ...otherRendererProps } = rendererProps;
+  const { viewRenderers, popperView, rendererProps } = props;
   const finalProps = {
-    ...otherRendererProps,
-    rangePosition,
+    ...rendererProps,
     focusedView: null,
     sx: [
       {
@@ -82,7 +63,7 @@ const rendererInterceptor = function rendererInterceptor<
       },
     ],
   };
-  const viewRenderer = inViewRenderers[popperView];
+  const viewRenderer = viewRenderers[popperView];
   if (!viewRenderer) {
     return null;
   }
@@ -111,7 +92,7 @@ const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker<
     ? renderDigitalClockTimeView
     : renderMultiSectionDigitalClockTimeView;
 
-  const viewRenderers: TimeRangePickerRenderers<TimeViewWithMeridiem, any> = {
+  const viewRenderers: PickerViewRendererLookup<any, TimeViewWithMeridiem, any> = {
     hours: renderTimeView,
     minutes: renderTimeView,
     seconds: renderTimeView,

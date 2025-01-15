@@ -7,18 +7,14 @@ import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { TimeIcon } from '@mui/x-date-pickers/icons';
-import {
-  BaseTabsProps,
-  ExportedBaseTabsProps,
-  TimeViewWithMeridiem,
-} from '@mui/x-date-pickers/internals';
-import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
+import { ExportedBaseTabsProps } from '@mui/x-date-pickers/internals';
+import { usePickerContext, usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import {
   TimeRangePickerTabsClasses,
   getTimeRangePickerTabsUtilityClass,
 } from './timeRangePickerTabsClasses';
 import { RangePosition } from '../models';
-import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
+import { usePickerRangePositionContext } from '../hooks';
 
 export interface ExportedTimeRangePickerTabsProps extends ExportedBaseTabsProps {
   /**
@@ -37,13 +33,9 @@ export interface ExportedTimeRangePickerTabsProps extends ExportedBaseTabsProps 
   classes?: Partial<TimeRangePickerTabsClasses>;
 }
 
-export interface TimeRangePickerTabsProps
-  extends ExportedTimeRangePickerTabsProps,
-    BaseTabsProps<TimeViewWithMeridiem>,
-    Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {}
+export interface TimeRangePickerTabsProps extends ExportedTimeRangePickerTabsProps {}
 
-const useUtilityClasses = (ownerState: TimeRangePickerTabsProps) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classes: Partial<TimeRangePickerTabsClasses> | undefined) => {
   const slots = {
     root: ['root'],
     tab: ['tab'],
@@ -56,7 +48,7 @@ const TimeRangePickerTabsRoot = styled(Tabs, {
   name: 'MuiTimeRangePickerTabs',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: TimeRangePickerTabsProps }>(({ theme }) => ({
+})(({ theme }) => ({
   boxShadow: `0 -1px 0 0 inset ${(theme.vars || theme).palette.divider}`,
   '&:last-child': {
     boxShadow: `0 1px 0 0 inset ${(theme.vars || theme).palette.divider}`,
@@ -89,25 +81,24 @@ const TimeRangePickerTab = styled(Tab, {
 const TimeRangePickerTabs = function TimeRangePickerTabs(inProps: TimeRangePickerTabsProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiTimeRangePickerTabs' });
   const {
-    view,
-    onViewChange,
     timeIcon = <TimeIcon />,
-    rangePosition,
-    onRangePositionChange,
     hidden = typeof window === 'undefined' || window.innerHeight < 667,
     className,
     sx,
+    classes: classesProp,
   } = props;
 
   const translations = usePickerTranslations();
-  const classes = useUtilityClasses(props);
+  const { view, setView } = usePickerContext();
+  const { rangePosition, onRangePositionChange } = usePickerRangePositionContext();
+  const classes = useUtilityClasses(classesProp);
 
   const handleChange = (event: React.SyntheticEvent, value: RangePosition) => {
     if (rangePosition !== value) {
       onRangePositionChange(value);
     }
     if (view !== 'hours') {
-      onViewChange('hours');
+      setView('hours');
     }
   };
 
@@ -117,7 +108,6 @@ const TimeRangePickerTabs = function TimeRangePickerTabs(inProps: TimeRangePicke
 
   return (
     <TimeRangePickerTabsRoot
-      ownerState={props}
       variant="fullWidth"
       value={rangePosition}
       onChange={handleChange}

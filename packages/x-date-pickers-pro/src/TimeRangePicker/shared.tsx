@@ -15,6 +15,7 @@ import {
   resolveTimeViewsResponse,
   UseViewsOptions,
   PickerRangeValue,
+  PickerValue,
 } from '@mui/x-date-pickers/internals';
 import { TimeClockSlots, TimeClockSlotProps } from '@mui/x-date-pickers/TimeClock';
 import { DigitalClockSlots, DigitalClockSlotProps } from '@mui/x-date-pickers/DigitalClock';
@@ -65,16 +66,12 @@ export interface BaseTimeRangePickerSlotProps
   toolbar?: ExportedTimeRangePickerToolbarProps;
 }
 
-export type TimeRangePickerRenderers<
-  TView extends TimeViewWithMeridiem,
-  TAdditionalProps extends {} = {},
-> = PickerViewRendererLookup<
-  PickerRangeValue,
-  TView,
+export type TimeRangePickerRenderers = PickerViewRendererLookup<
+  PickerValue,
+  TimeViewWithMeridiem,
   TimeViewRendererProps<TimeViewWithMeridiem, BaseClockProps<TimeViewWithMeridiem>> & {
-    view: TView;
-  },
-  TAdditionalProps
+    view: TimeViewWithMeridiem;
+  }
 >;
 
 export interface BaseTimeRangePickerProps
@@ -99,7 +96,7 @@ export interface BaseTimeRangePickerProps
    * If `null`, the section will only have field editing.
    * If `undefined`, internally defined view will be the used.
    */
-  viewRenderers?: TimeRangePickerRenderers<TimeViewWithMeridiem>;
+  viewRenderers?: TimeRangePickerRenderers;
   /**
    * Amount of time options below or at which the single column time renderer is used.
    * @default 24

@@ -2,13 +2,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
-import { DefaultizedProps } from '@mui/x-internals/types';
 import {
   TimeViewWithMeridiem,
   useUtils,
   resolveTimeFormat,
-  PickerViewsRendererProps,
   PickerRangeValue,
+  PickerRendererInterceptorProps,
+  PickerViewRendererLookup,
 } from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import {
@@ -25,46 +25,20 @@ import {
 } from '@mui/x-date-pickers/timeViewRenderers';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopTimeRangePickerProps } from './DesktopTimeRangePicker.types';
-import {
-  TimeRangePickerRenderers,
-  useTimeRangePickerDefaultizedProps,
-} from '../TimeRangePicker/shared';
+import { useTimeRangePickerDefaultizedProps } from '../TimeRangePicker/shared';
 import { MultiInputTimeRangeField } from '../MultiInputTimeRangeField';
-import {
-  useDesktopRangePicker,
-  UseDesktopRangePickerProps,
-} from '../internals/hooks/useDesktopRangePicker';
+import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker';
 import { validateTimeRange } from '../validation/validateTimeRange';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { TimeRangePickerTimeWrapper } from '../TimeRangePicker/TimeRangePickerTimeWrapper';
 
-const rendererInterceptor = function rendererInterceptor<
-  TEnableAccessibleFieldDOMStructure extends boolean,
->(
-  inViewRenderers: TimeRangePickerRenderers<TimeViewWithMeridiem, any>,
-  popperView: TimeViewWithMeridiem,
-  rendererProps: PickerViewsRendererProps<
-    PickerRangeValue,
-    TimeViewWithMeridiem,
-    DefaultizedProps<
-      Omit<
-        UseDesktopRangePickerProps<
-          TimeViewWithMeridiem,
-          TEnableAccessibleFieldDOMStructure,
-          any,
-          any
-        >,
-        'onChange' | 'sx' | 'className'
-      >,
-      'rangePosition' | 'onRangePositionChange' | 'openTo'
-    >,
-    {}
-  >,
+const rendererInterceptor = function RendererInterceptor(
+  props: PickerRendererInterceptorProps<PickerRangeValue, TimeViewWithMeridiem, any>,
 ) {
-  const { openTo, rangePosition, focusedView, ...otherProps } = rendererProps;
+  const { viewRenderers, popperView, rendererProps } = props;
+  const { openTo, ...otherProps } = rendererProps;
   const finalProps = {
     ...otherProps,
-    rangePosition,
     focusedView: null,
     sx: [
       {
@@ -78,11 +52,10 @@ const rendererInterceptor = function rendererInterceptor<
       },
     ],
   };
-  const viewRenderer = inViewRenderers[popperView];
+  const viewRenderer = viewRenderers[popperView];
   return (
     <TimeRangePickerTimeWrapper
       {...finalProps}
-      rangePosition={rangePosition}
       view={popperView}
       viewRenderer={viewRenderer}
       sx={[{ gridColumn: '1 / 3' }, ...finalProps.sx]}
@@ -112,7 +85,7 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
     ? renderDigitalClockTimeView
     : renderMultiSectionDigitalClockTimeView;
 
-  const viewRenderers: TimeRangePickerRenderers<TimeViewWithMeridiem, any> = {
+  const viewRenderers: PickerViewRendererLookup<any, TimeViewWithMeridiem, any> = {
     hours: renderTimeRangeView,
     minutes: renderTimeRangeView,
     seconds: renderTimeRangeView,
