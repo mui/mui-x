@@ -47,9 +47,7 @@ The Premium plan includes all Pro features as well as more advanced features for
 Premium features are denoted by the golden cube icon (<span class="plan-premium"></span>) throughout the documentation.
 
 The demo below groups rows by commodity name, and uses an aggregation function to calculate the sum of quantities for each group and in total (displayed in a summary row).
-
 You can experiment with grouping other columns in the column header menus.
-
 You can also try exporting to Excel, and copying and pasting data to and from Excel tables.
 
 {{"demo": "DataGridPremiumDemo.js", "defaultCodeOpen": false, "disableAd": true, "bg": "inline"}}
