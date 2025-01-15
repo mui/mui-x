@@ -114,6 +114,12 @@ export type { ExportedUseViewsOptions, UseViewsOptions } from './hooks/useViews'
 export { useViews } from './hooks/useViews';
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';
 
+export type {
+  PickerAnyManager,
+  PickerManagerFieldInternalProps,
+  PickerManagerEnableAccessibleFieldDOMStructure,
+  PickerManagerError,
+} from './models/manager';
 export type { RangePosition } from './models/pickers';
 export type { BaseSingleInputFieldProps, FieldRangeSection } from './models/fields';
 export type { BasePickerProps, BasePickerInputProps } from './models/props/basePickerProps';

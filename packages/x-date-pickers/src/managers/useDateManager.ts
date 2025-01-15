@@ -74,7 +74,7 @@ export type UseDateManagerReturnValue<TEnableAccessibleFieldDOMStructure extends
     DateManagerFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>
   >;
 
-interface DateManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure extends boolean>
+export interface DateManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends MakeOptional<
       UseFieldInternalProps<PickerValue, TEnableAccessibleFieldDOMStructure, DateValidationError>,
       'format'
