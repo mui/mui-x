@@ -31,6 +31,9 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
         return false;
       }
 
+      const apiRefWithNewState = apiRef;
+      apiRefWithNewState.current.state = newState;
+
       let ignoreSetState = false;
 
       // Apply the control state constraints
@@ -38,15 +41,7 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
       Object.keys(controlStateMapRef.current).forEach((stateId) => {
         const controlState = controlStateMapRef.current[stateId];
         const oldSubState = controlState.stateSelector(apiRef);
-
-        const newSubState = controlState.stateSelector({
-          apiRef: {
-            current: {
-              ...apiRef.current,
-              state: newState,
-            },
-          },
-        });
+        const newSubState = controlState.stateSelector(apiRefWithNewState);
 
         if (newSubState === oldSubState) {
           return;
@@ -86,14 +81,7 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
       if (updatedControlStateIds.length === 1) {
         const { stateId, hasPropChanged } = updatedControlStateIds[0];
         const controlState = controlStateMapRef.current[stateId];
-        const model = controlState.stateSelector({
-          apiRef: {
-            current: {
-              ...apiRef.current,
-              state: newState,
-            },
-          },
-        });
+        const model = controlState.stateSelector(apiRefWithNewState);
 
         if (controlState.propOnChange && hasPropChanged) {
           controlState.propOnChange(model, {
