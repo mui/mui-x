@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { GridBody, GridFooterPlaceholder, GridHeader, GridRoot } from '../components';
+import { GridRoot } from '../components';
 import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
 import { DataGridProcessedProps, DataGridProps } from '../models/props/DataGridProps';
@@ -61,11 +61,7 @@ const DataGridRaw = forwardRef(function DataGrid<R extends GridValidRowModel>(
         sx={props.sx}
         {...props.slotProps?.root}
         ref={ref}
-      >
-        <GridHeader />
-        <GridBody />
-        <GridFooterPlaceholder />
-      </GridRoot>
+      />
     </GridContextProvider>
   );
 });
