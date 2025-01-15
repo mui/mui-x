@@ -22,7 +22,7 @@ describe('useSeries', () => {
     const errorMessage2 =
       'It looks like you rendered your component outside of a ChartDataProvider.';
     const errorMessage3 = 'The above error occurred in the <UseSeries> component:';
-    const expextedError =
+    const expectedError =
       reactMajor < 19
         ? [errorMessage1, errorMessage2, errorMessage3]
         : [errorMessage1, errorMessage2].join('\n');
@@ -33,7 +33,7 @@ describe('useSeries', () => {
           <UseSeries />
         </ErrorBoundary>,
       ),
-    ).toErrorDev(expextedError);
+    ).toErrorDev(expectedError);
 
     expect((errorRef.current as any).errors).to.have.length(1);
     expect((errorRef.current as any).errors[0].toString()).to.include(errorMessage1);

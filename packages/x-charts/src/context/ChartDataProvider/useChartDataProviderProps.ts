@@ -1,6 +1,5 @@
 'use client';
 import { useTheme } from '@mui/material/styles';
-import type { ZAxisContextProviderProps } from '../ZAxisContextProvider';
 import type { ChartDataProviderProps } from './ChartDataProvider';
 import { HighlightedProviderProps } from '../HighlightedProvider';
 import { AnimationProviderProps } from '../AnimationProvider';
@@ -8,12 +7,13 @@ import { ChartProviderProps } from '../ChartProvider';
 import { ChartAnyPluginSignature, MergeSignaturesProperty } from '../../internals/plugins/models';
 import { ChartSeriesType } from '../../models/seriesType/config';
 import { ChartCorePluginSignatures } from '../../internals/plugins/corePlugins';
+import { AllPluginSignatures } from '../../internals/plugins/allPlugins';
 
 export const useChartDataProviderProps = <
-  TSignatures extends readonly ChartAnyPluginSignature[],
   TSeries extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 >(
-  props: ChartDataProviderProps<TSignatures, TSeries>,
+  props: ChartDataProviderProps<TSeries, TSignatures>,
 ) => {
   const {
     apiRef,
@@ -21,7 +21,6 @@ export const useChartDataProviderProps = <
     height,
     series,
     margin,
-    zAxis,
     colors,
     dataset,
     highlightedItem,
@@ -35,7 +34,7 @@ export const useChartDataProviderProps = <
 
   const theme = useTheme();
 
-  const chartProviderProps: Omit<ChartProviderProps<TSignatures, TSeries>, 'children'> = {
+  const chartProviderProps: Omit<ChartProviderProps<TSeries, TSignatures>, 'children'> = {
     plugins,
     seriesConfig,
     pluginParams: {
@@ -58,11 +57,6 @@ export const useChartDataProviderProps = <
     skipAnimation,
   };
 
-  const zAxisContextProps: Omit<ZAxisContextProviderProps, 'children'> = {
-    zAxis,
-    dataset,
-  };
-
   const highlightedProviderProps: Omit<HighlightedProviderProps, 'children'> = {
     highlightedItem,
     onHighlightChange,
@@ -70,7 +64,6 @@ export const useChartDataProviderProps = <
 
   return {
     children,
-    zAxisContextProps,
     highlightedProviderProps,
     animationProviderProps,
     chartProviderProps,

@@ -10,6 +10,7 @@ import {
   PickerProvider,
   PickerRangeValue,
   PickerValue,
+  PickerFieldUIContextProvider,
 } from '@mui/x-date-pickers/internals';
 import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import { FieldRef, InferError } from '@mui/x-date-pickers/models';
@@ -90,8 +91,10 @@ export const useMobileRangePicker = <
     localeText,
   });
 
-  const Field = slots.field;
+  // Temporary hack to hide the opening button on the range pickers until we have migrate them to the new opening logic.
+  providerProps.contextValue.triggerStatus = 'hidden';
 
+  const Field = slots.field;
   const fieldProps: RangePickerPropsForFieldSlot<
     boolean,
     TEnableAccessibleFieldDOMStructure,
@@ -184,14 +187,16 @@ export const useMobileRangePicker = <
         ...enrichedFieldResponse.fieldPrivateContextValue,
       }}
     >
-      <PickerRangePositionContext.Provider value={rangePositionResponse}>
-        <Field {...enrichedFieldResponse.fieldProps} />
-        <PickersModalDialog slots={slots} slotProps={slotProps}>
-          <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
-            {renderCurrentView()}
-          </Layout>
-        </PickersModalDialog>
-      </PickerRangePositionContext.Provider>
+      <PickerFieldUIContextProvider slots={slots} slotProps={slotProps}>
+        <PickerRangePositionContext.Provider value={rangePositionResponse}>
+          <Field {...enrichedFieldResponse.fieldProps} />
+          <PickersModalDialog slots={slots} slotProps={slotProps}>
+            <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
+              {renderCurrentView()}
+            </Layout>
+          </PickersModalDialog>
+        </PickerRangePositionContext.Provider>
+      </PickerFieldUIContextProvider>
     </PickerProvider>
   );
 

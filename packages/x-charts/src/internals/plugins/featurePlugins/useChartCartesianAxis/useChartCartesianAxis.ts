@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { warnOnce } from '@mui/x-internals/warning';
 import { ChartPlugin } from '../../models';
 import { ChartSeriesType } from '../../../../models/seriesType/config';
 import { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
@@ -13,6 +14,22 @@ export const useChartCartesianAxis: ChartPlugin<
   UseChartCartesianAxisSignature<ChartSeriesType>
 > = ({ params, store, seriesConfig }) => {
   const { xAxis, yAxis, dataset } = params;
+
+  if (process.env.NODE_ENV !== 'production') {
+    const ids = [...(xAxis ?? []), ...(yAxis ?? [])]
+      .filter((axis) => axis.id)
+      .map((axis) => axis.id);
+    const duplicates = new Set(ids.filter((id, index) => ids.indexOf(id) !== index));
+    if (duplicates.size > 0) {
+      warnOnce(
+        [
+          `MUI X: The following axis ids are duplicated: ${Array.from(duplicates).join(', ')}.`,
+          `Please make sure that each axis has a unique id.`,
+        ].join('\n'),
+        'error',
+      );
+    }
+  }
 
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const formattedSeries = useSelector(store, selectorChartSeriesState);

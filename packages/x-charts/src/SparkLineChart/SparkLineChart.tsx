@@ -5,7 +5,7 @@ import { MakeOptional } from '@mui/x-internals/types';
 import { BarPlot } from '../BarChart';
 import { LinePlot, AreaPlot, LineHighlightPlot } from '../LineChart';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
-import { DEFAULT_X_AXIS_KEY } from '../constants';
+import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { ChartsTooltip } from '../ChartsTooltip';
 import { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
@@ -187,7 +187,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
       ]}
       yAxis={[
         {
-          id: DEFAULT_X_AXIS_KEY,
+          id: DEFAULT_Y_AXIS_KEY,
           ...yAxis,
         },
       ]}
