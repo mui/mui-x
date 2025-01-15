@@ -11,7 +11,6 @@ export type { GridPinnedRowsProps } from '../components/GridPinnedRows';
 export { GridHeaders } from '../components/GridHeaders';
 export { GridBaseColumnHeaders } from '../components/columnHeaders/GridBaseColumnHeaders';
 export { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
-export { vars } from '../constants/cssVariables';
 
 export { getGridFilter } from '../components/panel/filterPanel/GridFilterPanel';
 export { getValueOptions } from '../components/panel/filterPanel/filterPanelUtils';
@@ -155,6 +154,7 @@ export type * from '../models/props/DataGridProps';
 export type * from '../models/gridDataSource';
 export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/export/utils';
 export * from '../utils/createControllablePromise';
+export * from '../utils/rtlFlipSide';
 export { createSelector, createSelectorMemoized } from '../utils/createSelector';
 export { gridRowGroupsToFetchSelector } from '../hooks/features/rows/gridRowsSelector';
 export {

@@ -92,8 +92,9 @@ export type UseDateTimeManagerReturnValue<TEnableAccessibleFieldDOMStructure ext
     DateTimeManagerFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>
   >;
 
-interface DateTimeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends MakeOptional<
+export interface DateTimeManagerFieldInternalProps<
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends MakeOptional<
       UseFieldInternalProps<
         PickerValue,
         TEnableAccessibleFieldDOMStructure,

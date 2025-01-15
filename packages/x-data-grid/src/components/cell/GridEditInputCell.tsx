@@ -7,7 +7,6 @@ import {
 import { styled } from '@mui/material/styles';
 import InputBase, { InputBaseProps } from '@mui/material/InputBase';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { vars } from '../../constants/cssVariables';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -29,14 +28,15 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridEditInputCellRoot = styled(InputBase, {
   name: 'MuiDataGrid',
   slot: 'EditInputCell',
-})<{ ownerState: OwnerState }>({
-  ...vars.typography.body,
+  overridesResolver: (props, styles) => styles.editInputCell,
+})<{ ownerState: OwnerState }>(({ theme }) => ({
+  ...theme.typography.body2,
   padding: '1px 0',
   '& input': {
     padding: '0 16px',
     height: '100%',
   },
-});
+}));
 
 export interface GridEditInputCellProps
   extends GridRenderEditCellParams,

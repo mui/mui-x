@@ -47,6 +47,7 @@ export const useField = <
       enableAccessibleFieldDOMStructure = true,
       disabled = false,
       readOnly = false,
+      autoFocus = false,
     },
     forwardedProps: { onKeyDown, error, clearable, onClear },
     fieldValueManager,
@@ -289,6 +290,7 @@ export const useField = <
   const commonAdditionalProps: UseFieldCommonAdditionalProps = {
     disabled,
     readOnly,
+    autoFocus,
     openPickerAriaLabel,
   };
 
