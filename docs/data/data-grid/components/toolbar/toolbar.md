@@ -14,7 +14,7 @@ githubLabel: 'component: data grid'
 
 The demo below shows the default toolbar configuration.
 
-To extend the default toolbar, you can use copy the code below and customize it to your needs.
+To extend the default toolbar, the code in the demo below can be copied and customized to your needs.
 
 {{"demo": "GridToolbar.js", "bg": "inline", "defaultCodeOpen": false}}
 
