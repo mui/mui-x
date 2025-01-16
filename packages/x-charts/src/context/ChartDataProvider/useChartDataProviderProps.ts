@@ -1,7 +1,6 @@
 'use client';
 import { useTheme } from '@mui/material/styles';
 import type { ChartDataProviderProps } from './ChartDataProvider';
-import { HighlightedProviderProps } from '../HighlightedProvider';
 import { AnimationProviderProps } from '../AnimationProvider';
 import { ChartProviderProps } from '../ChartProvider';
 import { ChartAnyPluginSignature, MergeSignaturesProperty } from '../../internals/plugins/models';
@@ -23,8 +22,6 @@ export const useChartDataProviderProps = <
     margin,
     colors,
     dataset,
-    highlightedItem,
-    onHighlightChange,
     children,
     skipAnimation,
     plugins,
@@ -57,14 +54,8 @@ export const useChartDataProviderProps = <
     skipAnimation,
   };
 
-  const highlightedProviderProps: Omit<HighlightedProviderProps, 'children'> = {
-    highlightedItem,
-    onHighlightChange,
-  };
-
   return {
     children,
-    highlightedProviderProps,
     animationProviderProps,
     chartProviderProps,
   };
