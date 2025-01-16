@@ -5,11 +5,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 7.24.0
 
-<!-- generated comparing v7.23.6..v7.x -->
-
 _Jan 16, 2025_
 
-We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
 - 🔄 Data Grid [Scroll restoration](https://next.mui.com/x/react-data-grid/scrolling/#scroll-restoration)
 - 🐞 Bugfixes
@@ -46,7 +44,7 @@ Same changes as in `@mui/x-data-grid-pro@7.24.0`.
 
 #### `@mui/x-date-pickers@7.24.0`
 
-No changes since `@mui/x-date-pickers@v7.23.6`.
+Internal changes.
 
 #### `@mui/x-date-pickers-pro@7.24.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -56,7 +54,7 @@ Same changes as in `@mui/x-date-pickers@7.24.0`.
 
 #### `@mui/x-charts@7.24.0`
 
-No changes since `@mui/x-charts@v7.23.6`.
+Internal changes.
 
 #### `@mui/x-charts-pro@7.24.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -66,7 +64,7 @@ Same changes as in `@mui/x-charts@7.24.0`.
 
 #### `@mui/x-tree-view@7.24.0`
 
-No changes since `@mui/x-tree-view-pro@v7.23.6`.
+Internal changes.
 
 #### `@mui/x-tree-view-pro@7.24.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -81,7 +79,7 @@ Same changes as in `@mui/x-tree-view@7.24.0`.
 
 - [core] Type all references as `RefObject` (#16125) @arminmeh
 - [code-infra] Refactor `react` and `react-dom` definitions to simplify dep resolving (#16214) @LukasTy
-- [infra] Cherry-pick of #16184 (#16188) @michelengelen
+- [infra] Improve cherry-pick action target list (#16188) @michelengelen
 - [test] Fix flaky column pinning unit test (#16209) @cherniavskii
 
 ## 7.23.6
