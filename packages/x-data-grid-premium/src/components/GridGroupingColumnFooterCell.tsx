@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { vars } from '@mui/x-data-grid/internals';
 import { GridRenderCellParams } from '@mui/x-data-grid-pro';
 import { SxProps, Theme } from '@mui/system';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -14,7 +13,8 @@ function GridGroupingColumnFooterCell(props: GridRenderCellParams) {
   } else if (rootProps.rowGroupingColumnMode === 'multiple') {
     sx.ml = 2;
   } else {
-    sx.ml = `calc(var(--DataGrid-cellOffsetMultiplier) * ${vars.spacing(props.rowNode.depth)})`;
+    sx.ml = (theme) =>
+      `calc(var(--DataGrid-cellOffsetMultiplier) * ${theme.spacing(props.rowNode.depth)})`;
   }
 
   return <GridFooterCell sx={sx} {...props} />;
