@@ -50,7 +50,7 @@ const useUtilityClasses = (
 
 export interface TimeRangePickerToolbarProps
   extends Omit<BaseToolbarProps, 'toolbarFormat'>,
-    Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'>,
+    UseRangePositionResponse,
     ExportedTimeRangePickerToolbarProps {
   ampm: boolean;
 }
@@ -256,27 +256,27 @@ const TimeRangePickerToolbar = React.forwardRef(function TimeRangePickerToolbar(
   >();
   const translations = usePickerTranslations();
   const ownerState = useToolbarOwnerState();
-  const { rangePosition, onRangePositionChange } = usePickerRangePositionContext();
+  const { rangePosition, setRangePosition } = usePickerRangePositionContext();
   const classes = useUtilityClasses(classesProp, ownerState);
 
   const handleStartRangeViewChange = React.useCallback(
     (newView: TimeViewWithMeridiem) => {
       if (rangePosition !== 'start') {
-        onRangePositionChange('start');
+        setRangePosition('start');
       }
       setView(newView);
     },
-    [onRangePositionChange, setView, rangePosition],
+    [setRangePosition, setView, rangePosition],
   );
 
   const handleEndRangeViewChange = React.useCallback(
     (newView: TimeViewWithMeridiem) => {
       if (rangePosition !== 'end') {
-        onRangePositionChange('end');
+        setRangePosition('end');
       }
       setView(newView);
     },
-    [onRangePositionChange, setView, rangePosition],
+    [setRangePosition, setView, rangePosition],
   );
 
   if (!view) {

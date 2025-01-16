@@ -50,7 +50,7 @@ function TimeRangePickerTimeWrapper<
   const { viewRenderer, value, onChange, defaultValue, onViewChange, views, className, ...other } =
     props;
 
-  const { rangePosition, onRangePositionChange } = usePickerRangePositionContext();
+  const { rangePosition, setRangePosition } = usePickerRangePositionContext();
 
   if (!viewRenderer) {
     return null;
@@ -75,7 +75,7 @@ function TimeRangePickerTimeWrapper<
     });
     const isFullRangeSelected = rangePosition === 'end' && isRangeValid(utils, newRange);
     if (selectionState === 'finish') {
-      onRangePositionChange?.(rangePosition === 'start' ? 'end' : 'start');
+      setRangePosition(rangePosition === 'start' ? 'end' : 'start');
       onViewChange?.(views[0]);
     }
     onChange(newRange, isFullRangeSelected ? 'finish' : 'partial', selectedView);

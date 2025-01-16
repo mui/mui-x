@@ -90,12 +90,12 @@ const TimeRangePickerTabs = function TimeRangePickerTabs(inProps: TimeRangePicke
 
   const translations = usePickerTranslations();
   const { view, setView } = usePickerContext();
-  const { rangePosition, onRangePositionChange } = usePickerRangePositionContext();
+  const { rangePosition, setRangePosition } = usePickerRangePositionContext();
   const classes = useUtilityClasses(classesProp);
 
   const handleChange = (event: React.SyntheticEvent, value: RangePosition) => {
     if (rangePosition !== value) {
-      onRangePositionChange(value);
+      setRangePosition(value);
     }
     if (view !== 'hours') {
       setView('hours');
