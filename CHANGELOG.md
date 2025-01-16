@@ -16,6 +16,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
   <img width="100%" alt="Data Grid Header filters" src="https://github.com/user-attachments/assets/74a50cd9-7a55-41fc-a2b8-f8a0d5b9120e" />
 
 - 🔄 Data Grid [Scroll restoration](https://next.mui.com/x/react-data-grid/scrolling/#scroll-restoration)
+- 📊 Charts support server-side rendering under [some conditions](https://next.mui.com/x/react-charts/getting-started/#server-side-rendering)
 - 🐞 Bugfixes
 
 Special thanks go out to the community contributors who have helped make this release possible:
@@ -29,7 +30,7 @@ Following are all team members who have contributed to this release:
 
 #### Breaking changes
 
-- The clear button in header filter cells has moved to the header filter menu. Use `slotProps={{ headerFilterCell: { showClearIcon: true } }}` to restore the clear button in the cell.
+- The clear button in header filter cells has been moved to the header filter menu. Use `slotProps={{ headerFilterCell: { showClearIcon: true } }}` to restore the clear button in the cell.
 
 #### `@mui/x-data-grid@8.0.0-alpha.8`
 
@@ -50,6 +51,12 @@ Same changes as in `@mui/x-data-grid@8.0.0-alpha.8`, plus:
 Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.8`.
 
 ### Date and Time Pickers
+
+#### Breaking changes
+
+- The field is now editable if rendered inside a mobile Picker — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#field-editing-on-mobile-pickers)
+- The `useMultiInputDateRangeField`, `useMultiInputTimeRangeField`, and `useMultiInputDateTimeRangeField` hooks have been removed in favor of the new `useMultiInputRangeField` hook — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#usemultiinputdaterangefield)
+- The component passed to the `field` slot no longer receives the `value`, `onChange`, `timezone`, `format`, `disabled`, `formatDensity`, `enableAccessibleFieldDOMStructure`, `selectedSections` and `onSelectedSectionsChange` props — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#slot-field)
 
 #### `@mui/x-date-pickers@8.0.0-alpha.8`
 
@@ -79,7 +86,6 @@ Same changes as in `@mui/x-date-pickers@8.0.0-alpha.8`.
 - [charts] Replace tooltip mark with style (#16117) @JCQuintas
 - [charts] Support `rtl` for gradient legend (#16115) @JCQuintas
 - [charts] Use plugin system for series and axes (#15865) @alexfauquette
-- [charts][docs] Fix wrong props warnings (#16119) @JCQuintas
 
 #### `@mui/x-charts-pro@8.0.0-alpha.8` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -103,6 +109,7 @@ Same changes as in `@mui/x-tree-view@8.0.0-alpha.8`.
 - [docs] Fix demo rendering issue on Codesandbox (#16118) @arminmeh
 - [docs] Remove broken links (#16167) @alexfauquette
 - [docs] Split the Data Grid editing page (#14931) @MBilalShafi
+- [docs] Fix wrong props warnings (#16119) @JCQuintas
 
 ### Core
 
