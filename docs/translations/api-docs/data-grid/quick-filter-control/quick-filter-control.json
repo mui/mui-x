@@ -1,5 +1,5 @@
 {
-  "componentDescription": "",
+  "componentDescription": "A component that takes user input and filters row data.\nIt renders the `baseTextField` slot.",
   "propDescriptions": {
     "autoComplete": {
       "description": "This prop helps users to fill forms faster, especially on mobile devices. The name can be confusing, as it&#39;s more like an autofill. You can learn more about it <a href=\"https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofill\">following the specification</a>."

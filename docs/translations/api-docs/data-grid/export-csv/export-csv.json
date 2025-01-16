@@ -1,5 +1,5 @@
 {
-  "componentDescription": "",
+  "componentDescription": "A button that triggers a CSV export.\nIt renders the `baseButton` slot.",
   "propDescriptions": {
     "action": {
       "description": "A ref for imperative actions. It currently only supports <code>focusVisible()</code> action."

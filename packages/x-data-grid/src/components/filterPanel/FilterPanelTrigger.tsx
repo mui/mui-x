@@ -36,6 +36,9 @@ export type FilterPanelTriggerProps = Omit<GridSlotProps['baseButton'], 'classNa
 };
 
 /**
+ * A button that opens/closes the filter panel.
+ * It renders the `baseButton` slot.
+ *
  * Demos:
  *
  * - [Filter Panel](https://mui.com/x/react-data-grid/components/filter-panel/)

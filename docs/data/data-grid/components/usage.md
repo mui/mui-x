@@ -2,7 +2,7 @@
 
 <p class="description">Composable components that can be used to customize the Data Grid.</p>
 
-## Overview
+## Introduction
 
 By default, the `<DataGrid />` component includes all of the interfaces necessary for users to interact with the built-in features. Where more flexibility is needed over what gets rendered, the Data Grid package includes a set of highly customizable components:
 

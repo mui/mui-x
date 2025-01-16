@@ -28,40 +28,32 @@ import { Export } from '@mui/x-data-grid';
 
 ### Print
 
-A button that triggers a print export.
-
-Renders the `baseButton` slot.
+`Print` is a button that triggers a print export.
+It renders the `baseButton` slot.
 
 ### Csv
 
-A button that triggers a CSV export.
+`Csv` is a button that triggers a CSV export.
+It renders the `baseButton` slot.
 
-Renders the `baseButton` slot.
+### Excel
 
-### Excel [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+`Excel` is a button that triggers an Excel export.
+It renders the `baseButton` slot.
 
-A button that triggers an Excel export.
+## Toolbar export menu
 
-Renders the `baseButton` slot.
-
-## Recipes
-
-Below are some ways the Export component can be used.
-
-### Toolbar export menu
-
-Display export options within a menu on the toolbar.
+The demo below shows how to display export options within a menu on the toolbar.
 
 {{"demo": "GridExportMenu.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Custom elements
 
-The default elements can be replaced using the `render` prop. See [Grid components—Customization](/x/react-data-grid/components/overview/#customization).
-
-See the [Toolbar—Custom elements demo](/x/react-data-grid/components/toolbar/#custom-elements) for an example.
+Use the `render` prop to replace default elements.
+See [Components—Usage](/x/react-data-grid/components/usage/#customization) for more details, and [Toolbar—Custom elements demo](/x/react-data-grid/components/toolbar/#custom-elements) for an example of custom Export buttons.
 
 ## Accessibility
 
 ### ARIA
 
-- The element rendered by the `<Export.Print />`, `<Export.Csv />` and `<Export.Excel />` components should have a text label, or an `aria-label` attribute set.
+You must apply a text label or an `aria-label` attribute to the `<Export.Print />`, `<Export.Csv />` and `<Export.Excel />` components.

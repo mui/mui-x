@@ -20,6 +20,9 @@ export type ExportExcelProps = GridSlotProps['baseButton'] & {
 };
 
 /**
+ * A button that triggers an Excel export.
+ * It renders the `baseButton` slot.
+ *
  * Demos:
  *
  * - [Export](https://mui.com/x/react-data-grid/components/export/)

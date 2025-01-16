@@ -19,6 +19,9 @@ export type QuickFilterControlProps = Omit<GridSlotProps['baseTextField'], 'clas
 };
 
 /**
+ * A component that takes user input and filters row data.
+ * It renders the `baseTextField` slot.
+ *
  * Demos:
  *
  * - [Quick Filter](https://mui.com/x/react-data-grid/components/quick-filter/)

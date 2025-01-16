@@ -18,6 +18,9 @@ export type QuickFilterClearProps = Omit<GridSlotProps['baseIconButton'], 'class
 };
 
 /**
+ * A button that resets the filter value.
+ * It renders the `baseIconButton` slot.
+ *
  * Demos:
  *
  * - [Quick Filter](https://mui.com/x/react-data-grid/components/quick-filter/)

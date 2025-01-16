@@ -31,6 +31,9 @@ export type ColumnsPanelTriggerProps = Omit<GridSlotProps['baseButton'], 'classN
 };
 
 /**
+ * A button that opens/closes the columns panel.
+ * It renders the `baseButton` slot.
+ *
  * Demos:
  *
  * - [Columns Panel](https://mui.com/x/react-data-grid/components/columns-panel/)

@@ -1,5 +1,5 @@
 {
-  "componentDescription": "",
+  "componentDescription": "The top level Quick Filter component that provides context to child components.\nIt does not render any DOM elements.",
   "propDescriptions": {
     "debounceMs": { "description": "The debounce time in milliseconds." },
     "formatter": {

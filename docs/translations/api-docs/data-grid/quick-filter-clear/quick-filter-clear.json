@@ -1,5 +1,5 @@
 {
-  "componentDescription": "",
+  "componentDescription": "A button that resets the filter value.\nIt renders the `baseIconButton` slot.",
   "propDescriptions": {
     "action": {
       "description": "A ref for imperative actions. It currently only supports <code>focusVisible()</code> action."

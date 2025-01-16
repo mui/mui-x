@@ -13,11 +13,12 @@ githubLabel: 'component: data grid'
 :::warning
 This component is incomplete.
 
-Currently, the only part available for the Filter Panel component is the Trigger. In future, this component will allow you to extend the Data Grid's filter panel.
+Currently, the Trigger is the only composable part of the Filter Panel available.
+Future versions of the Filter Panel component will make it possible to compose each of its parts to create a custom filter panel.
 
-In the meantime, see the following:
-
-- [Filter customization—Custom filter panel](/x/react-data-grid/filtering/customization/#custom-filter-panel)
+In the meantime, it's still possible to deeply customize the panel's subcomponents using custom slots.
+See [Filter customization—Custom filter panel](/x/react-data-grid/filtering/customization/#custom-filter-panel)
+for more details.
 
 :::
 
@@ -37,18 +38,16 @@ import { FilterPanel } from '@mui/x-data-grid';
 
 ### Trigger
 
-A button that opens the filter panel.
-
-Renders the `baseButton` slot.
+`Trigger` is a button that opens/closes the filter panel.
+It renders the `baseButton` slot.
 
 ## Custom elements
 
-The default elements can be replaced using the `render` prop. See [Grid components—Customization](/x/react-data-grid/components/overview/#customization).
-
-See the [Toolbar—Custom elements demo](/x/react-data-grid/components/toolbar/#custom-elements) for an example.
+Use the `render` prop to replace default elements.
+See [Components—Usage](/x/react-data-grid/components/usage/#customization) for more details, and [Toolbar—Custom elements demo](/x/react-data-grid/components/toolbar/#custom-elements) for an example of a custom Filter Panel Trigger.
 
 ## Accessibility
 
 ### ARIA
 
-- The element rendered by the `<FilterPanel.Trigger />` component should have a text label, or an `aria-label` attribute set.
+You must apply a text label or an `aria-label` attribute to the `<FilterPanel.Trigger />`.

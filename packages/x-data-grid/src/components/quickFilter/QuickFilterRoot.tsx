@@ -36,6 +36,9 @@ const DEFAULT_PARSER = (searchText: string) => searchText.split(' ').filter((wor
 const DEFAULT_FORMATTER = (values: string[]) => values.join(' ');
 
 /**
+ * The top level Quick Filter component that provides context to child components.
+ * It does not render any DOM elements.
+ *
  * Demos:
  *
  * - [Quick Filter](https://mui.com/x/react-data-grid/components/quick-filter/)

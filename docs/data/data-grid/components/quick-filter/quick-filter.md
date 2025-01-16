@@ -29,33 +29,30 @@ import { QuickFilter } from '@mui/x-data-grid';
 
 ### Root
 
-The top level component that provides context to child components.
-
-Does not render any DOM elements.
+`Root` is the top level component that provides context to child components.
+It does not render any DOM elements.
 
 ### Control
 
-A control that takes user input.
-
-Renders the `baseTextField` slot.
+`Control` takes user input and filters row data.
+It renders the `baseTextField` slot.
 
 ### Clear
 
-A button to reset the filter value.
-
-Renders the `baseIconButton` slot.
+`Clear` is a button that resets the filter value.
+It renders the `baseIconButton` slot.
 
 ## Custom elements
 
-The default elements can be replaced using the `render` prop. See [Grid components—Customization](/x/react-data-grid/components/overview/#customization).
-
-See the [Toolbar—Custom elements demo](/x/react-data-grid/components/toolbar/#custom-elements) for an example.
+Use the `render` prop to replace default elements.
+See [Components—Usage](/x/react-data-grid/components/usage/#customization) for more details, and [Toolbar—Custom elements demo](/x/react-data-grid/components/toolbar/#custom-elements) for an example of a custom Quick Filter.
 
 ## Accessibility
 
 ### ARIA
 
-- The element rendered by the `<QuickFilter.Control />` component should have a `<label />` with a `for` attribute set to the `id` of the control, or an `aria-label` attribute set for screen readers.
+- You must render a `<label />` with a `for` attribute set to the `id` of `<QuickFilter.Control />`, or apply an `aria-label` attribute to the `<QuickFilter.Control />`.
+- You must apply a text label or an `aria-label` attribute to the `<QuickFilter.Clear />`.
 
 ### Keyboard
 

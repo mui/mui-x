@@ -16,6 +16,9 @@ export type ToolbarButtonProps = GridSlotProps['baseIconButton'] & {
 };
 
 /**
+ * A button that can be used to perform actions from the toolbar.
+ * It renders the `baseIconButton` slot.
+ *
  * Demos:
  *
  * - [Toolbar](https://mui.com/x/react-data-grid/components/toolbar/)

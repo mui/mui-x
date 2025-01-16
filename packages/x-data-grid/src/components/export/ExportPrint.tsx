@@ -21,6 +21,9 @@ export type ExportPrintProps = GridSlotProps['baseButton'] & {
 };
 
 /**
+ * A button that triggers a print export.
+ * It renders the `baseButton` slot.
+ *
  * Demos:
  *
  * - [Export](https://mui.com/x/react-data-grid/components/export/)

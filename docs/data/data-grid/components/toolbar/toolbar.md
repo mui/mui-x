@@ -30,15 +30,13 @@ import { Toolbar } from '@mui/x-data-grid';
 
 ### Root
 
-The top level component that provides context to child components.
-
-Renders a styled `<div />` element.
+`Root` is the top level component that provides context to child components.
+It renders a styled `<div />` element.
 
 ### Button
 
-A button that can be used to perform actions from the toolbar.
-
-Renders the `baseIconButton` slot.
+`Button` is a button that can be used to perform actions from the toolbar.
+It renders the `baseIconButton` slot.
 
 ## Recipes
 
@@ -46,19 +44,19 @@ Below are some ways the Toolbar component can be used.
 
 ### Settings menu
 
-Allow users to customize the data grid appearance from the toolbar.
+The demo below shows how to display an appearance settings menu on the toolbar. It uses local storage to persist the user's selections.
 
 {{"demo": "GridToolbarSettingsMenu.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Filter bar
 
-Show active filter chips in the toolbar.
+The demo below shows how to display active filter chips on the toolbar.
 
 {{"demo": "GridToolbarFilterBar.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Custom elements
+### Custom elements
 
-The default elements can be replaced using the `render` prop. See [Grid components—Customization](/x/react-data-grid/components/overview/#customization).
+Use the `render` prop to replace default elements. See [Components—Usage](/x/react-data-grid/components/usage/#customization) for more details.
 
 The demo below shows how to replace the default elements with custom ones, styled with Tailwind CSS.
 
@@ -74,11 +72,11 @@ The component follows the WAI-ARIA authoring practices.
 
 - The element rendered by the `<Toolbar.Root />` component has the `toolbar` role.
 - The element rendered by the `<Toolbar.Root />` component has `aria-orientation` set to `horizontal`.
+- You must apply a text label or an `aria-label` attribute to the `<Toolbar.Button />`.
 
 ### Keyboard
 
 The Toolbar component supports keyboard navigation.
-
 It implements the roving tabindex pattern.
 
 |                                                    Keys | Description                              |

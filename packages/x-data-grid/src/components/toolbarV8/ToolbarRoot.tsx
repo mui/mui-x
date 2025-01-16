@@ -43,6 +43,9 @@ const Toolbar = styled('div', {
 });
 
 /**
+ * The top level Toolbar component that provides context to child components.
+ * It renders a styled `<div />` element.
+ *
  * Demos:
  *
  * - [Toolbar](https://mui.com/x/react-data-grid/components/toolbar/)

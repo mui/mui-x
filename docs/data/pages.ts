@@ -175,7 +175,7 @@ const pages: MuiPage[] = [
         subheader: 'Components',
         newFeature: true,
         children: [
-          { pathname: '/x/react-data-grid/components/overview', title: 'Overview' },
+          { pathname: '/x/react-data-grid/components/usage', title: 'Usage' },
           { pathname: '/x/react-data-grid/components/toolbar', title: 'Toolbar' },
           { pathname: '/x/react-data-grid/components/export', title: 'Export' },
           { pathname: '/x/react-data-grid/components/quick-filter', title: 'Quick Filter' },
