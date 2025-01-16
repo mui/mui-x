@@ -117,7 +117,7 @@ The demo below shows the sum aggregation in the footer of each group but not in 
 When working with [tree data](/x/react-data-grid/tree-data/), aggregated values can be displayed in the footer and in grouping rows.
 
 :::info
-If an aggregated value is displayed in a grouping row, it always takes precedent over any existing row data.
+If an aggregated value is displayed in a grouping row, it always takes precedence over any existing row data.
 This means that even if the dataset explicitly provides group values, they will be ignored in favor of the aggregated values calculated by the Data Grid.
 :::
 
