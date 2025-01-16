@@ -26,7 +26,6 @@ import {
   PickerToolbarOwnerState,
 } from '@mui/x-date-pickers/internals';
 import { usePickerContext, usePickerTranslations } from '@mui/x-date-pickers/hooks';
-import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import {
   TimeRangePickerToolbarClasses,
   getTimeRangePickerToolbarUtilityClass,
@@ -50,7 +49,6 @@ const useUtilityClasses = (
 
 export interface TimeRangePickerToolbarProps
   extends Omit<BaseToolbarProps, 'toolbarFormat'>,
-    UseRangePositionResponse,
     ExportedTimeRangePickerToolbarProps {
   ampm: boolean;
 }
@@ -338,8 +336,6 @@ TimeRangePickerToolbar.propTypes = {
    * @default `true` for Desktop, `false` for Mobile.
    */
   hidden: PropTypes.bool,
-  onRangePositionChange: PropTypes.func.isRequired,
-  rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
