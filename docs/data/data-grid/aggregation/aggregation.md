@@ -121,7 +121,7 @@ If an aggregated value is displayed in a grouping row, it always takes precedenc
 This means that even if the dataset explicitly provides group values, they will be ignored in favor of the aggregated values calculated by the Data Grid.
 :::
 
-In the demo below, the max value of the **Last modification** column is displayed in the footer, and the sums of the **Size** column values are displayed in both the grouping rows and the footer:
+In the demo below, the max values of the **Last modification** column and the sums of the **Size** column values are displayed in both the grouping rows and the footer:
 
 {{"demo": "AggregationTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
 
