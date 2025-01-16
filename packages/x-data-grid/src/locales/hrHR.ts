@@ -120,6 +120,7 @@ const hrHRGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Veće ili jednako',
   'headerFilterOperator<': 'Manje od',
   'headerFilterOperator<=': 'Manje od ili jednako',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'bilo koji',

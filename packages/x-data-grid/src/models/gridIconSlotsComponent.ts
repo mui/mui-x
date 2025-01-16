@@ -179,4 +179,9 @@ export interface GridIconSlotsComponent {
    * @default GridDragIcon
    */
   columnReorderIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon displayed to indicate that a menu item is selected.
+   * @default GridCheckIcon
+   */
+  menuItemCheckIcon: React.JSXElementConstructor<any>;
 }
