@@ -2,20 +2,15 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import type {} from '../typeOverloads';
-import { Watermark } from '@mui/x-license/Watermark';
-import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
 import { ChartsSurface, ChartsSurfaceProps } from '@mui/x-charts/ChartsSurface';
-import { ChartDataProvider, ChartDataProviderProps } from '@mui/x-charts/context';
 import { ChartSeriesType } from '@mui/x-charts/internals';
-import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import { useChartContainerProProps } from './useChartContainerProProps';
 import { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { ChartDataProviderPro, ChartDataProviderProProps } from '../ChartDataProviderPro';
 
 export interface ChartContainerProProps<TSeries extends ChartSeriesType = ChartSeriesType>
-  extends ChartDataProviderProps<TSeries, AllPluginSignatures<TSeries>>,
+  extends ChartDataProviderProProps<TSeries, AllPluginSignatures<TSeries>>,
     ChartsSurfaceProps {}
-
-const releaseInfo = getReleaseInfo();
 
 /**
  * It sets up the data providers as well as the `<svg>` for the chart.
@@ -47,19 +42,12 @@ const ChartContainerPro = React.forwardRef(function ChartContainerProInner<
   const { chartDataProviderProProps, children, chartsSurfaceProps } =
     useChartContainerProProps<TSeries>(props, ref);
 
-  useLicenseVerifier('x-charts-pro', releaseInfo);
-
   return (
-    <ChartDataProvider<TSeries, AllPluginSignatures<TSeries>> {...chartDataProviderProProps}>
+    <ChartDataProviderPro<TSeries> {...chartDataProviderProProps}>
       <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
-      <Watermark packageName="x-charts-pro" releaseInfo={releaseInfo} />
-    </ChartDataProvider>
+    </ChartDataProviderPro>
   );
-}) as <TSeries extends ChartSeriesType = ChartSeriesType>(
-  props: ChartContainerProProps<TSeries> & { ref?: React.ForwardedRef<SVGSVGElement> },
-) => React.JSX.Element;
-
-// @ts-ignore
+});
 
 ChartContainerPro.propTypes = {
   // ----------------------------- Warning --------------------------------
