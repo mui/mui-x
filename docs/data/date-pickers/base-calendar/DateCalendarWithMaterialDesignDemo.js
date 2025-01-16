@@ -301,6 +301,7 @@ const DaysCell = styled(ButtonBase)(({ theme }) => ({
   height: DAY_SIZE,
   borderRadius: '50%',
   padding: 0,
+  margin: `0 ${DAY_MARGIN}px`,
   // explicitly setting to `transparent` to avoid potentially getting impacted by change from the overridden component
   backgroundColor: 'transparent',
   transition: theme.transitions.create('background-color', {

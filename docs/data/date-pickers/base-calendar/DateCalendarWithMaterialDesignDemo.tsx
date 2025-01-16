@@ -22,6 +22,7 @@ import {
 import useId from '@mui/utils/useId';
 import Typography from '@mui/material/Typography';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { boxSizing } from '@mui/system';
 
 const DIALOG_WIDTH = 320;
 const MAX_CALENDAR_HEIGHT = 280;
@@ -303,6 +304,8 @@ const DaysCell = styled(ButtonBase)(({ theme }) => ({
   height: DAY_SIZE,
   borderRadius: '50%',
   padding: 0,
+  margin: `0 ${DAY_MARGIN}px`,
+
   // explicitly setting to `transparent` to avoid potentially getting impacted by change from the overridden component
   backgroundColor: 'transparent',
   transition: theme.transitions.create('background-color', {
@@ -477,12 +480,13 @@ function DayCalendar(props: { displayWeekNumber: boolean }) {
   );
 
   const prevVisibleDate = React.useRef(visibleDate);
-  const slideDirection = prevVisibleDate.current.isBefore(visibleDate) ? 'left' : 'right';
+  const slideDirection = prevVisibleDate.current.isBefore(visibleDate)
+    ? 'left'
+    : 'right';
 
   useEnhancedEffect(() => {
     prevVisibleDate.current = visibleDate;
-    }, [visibleDate])
-
+  }, [visibleDate]);
 
   const dayGridTransitionClasses = {
     exit: 'day-grid-exit',
