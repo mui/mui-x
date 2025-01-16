@@ -113,6 +113,7 @@ const isISGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Stærra en eða jafnt og',
   'headerFilterOperator<': 'Minna en',
   'headerFilterOperator<=': 'Minna en eða jafnt og',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'hvað sem er',

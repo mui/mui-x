@@ -137,6 +137,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'больше или равно',
   'headerFilterOperator<': 'меньше чем',
   'headerFilterOperator<=': 'меньше или равно',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'любой',
