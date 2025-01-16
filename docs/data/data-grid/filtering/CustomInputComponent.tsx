@@ -3,12 +3,12 @@ import Box from '@mui/material/Box';
 import Rating, { RatingProps } from '@mui/material/Rating';
 import {
   DataGrid,
-  GridFilterInputComponentProps,
+  GridFilterInputValueProps,
   getGridNumericOperators,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-function RatingInputValue(props: GridFilterInputComponentProps) {
+function RatingInputValue(props: GridFilterInputValueProps) {
   const { item, applyValue, focusElementRef } = props;
 
   const ratingRef: React.Ref<any> = React.useRef(null);

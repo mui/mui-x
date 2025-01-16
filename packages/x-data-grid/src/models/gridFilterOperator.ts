@@ -3,7 +3,7 @@ import { GridFilterItem } from './gridFilterItem';
 import type { GridColDef } from './colDef/gridColDef';
 import type { GridValidRowModel } from './gridRows';
 import type { GridApiCommunity } from './api/gridApiCommunity';
-import type { GridFilterInputComponentProps } from './gridFilterInputComponent';
+import type { GridFilterInputValueProps } from './gridFilterInputComponent';
 
 type ApplyFilterFn<R extends GridValidRowModel = any, V = any, F = V> = (
   value: V,
@@ -26,7 +26,7 @@ export interface GridFilterOperator<
   R extends GridValidRowModel = any,
   V = any,
   F = V,
-  I extends GridFilterInputComponentProps = GridFilterInputComponentProps,
+  I extends GridFilterInputValueProps = GridFilterInputValueProps,
 > {
   /**
    * The label of the filter operator.

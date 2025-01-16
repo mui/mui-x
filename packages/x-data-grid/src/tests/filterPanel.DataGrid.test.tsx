@@ -5,7 +5,7 @@ import {
   DataGrid,
   DataGridProps,
   GridFilterInputValue,
-  GridFilterInputComponentProps,
+  GridFilterInputValueProps,
   GridFilterOperator,
   GridPreferencePanelsValue,
 } from '@mui/x-data-grid';
@@ -28,7 +28,7 @@ function deleteFilterForm() {
   fireEvent.click(screen.getByRole('button', { name: 'Delete' }));
 }
 
-function CustomInputValue(props: GridFilterInputComponentProps) {
+function CustomInputValue(props: GridFilterInputValueProps) {
   const { item, applyValue } = props;
 
   const handleFilterChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {

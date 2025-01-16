@@ -4,7 +4,7 @@ import { GridFilterItem } from './gridFilterItem';
 import type { GridApiCommon } from './api/gridApiCommon';
 import type { GridApiCommunity } from './api/gridApiCommunity';
 
-export type GridFilterInputComponentProps<Api extends GridApiCommon = GridApiCommunity> = {
+export type GridFilterInputValueProps<Api extends GridApiCommon = GridApiCommunity> = {
   item: GridFilterItem;
   applyValue: (value: GridFilterItem) => void;
   // Is any because if typed as GridApiRef a dep cycle occurs. Same happens if ApiContext is used.

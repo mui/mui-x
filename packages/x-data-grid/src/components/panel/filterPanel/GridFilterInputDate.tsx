@@ -2,12 +2,12 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_useId as useId } from '@mui/utils';
 import { useTimeout } from '../../../hooks/utils/useTimeout';
-import { GridFilterInputComponentProps } from '../../../models/gridFilterInputComponent';
+import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { GridFilterItem } from '../../../models/gridFilterItem';
 import { TextFieldProps } from '../../../models/gridBaseSlots';
 
-export type GridFilterInputDateProps = GridFilterInputComponentProps &
+export type GridFilterInputDateProps = GridFilterInputValueProps &
   TextFieldProps & {
     type?: 'date' | 'datetime-local';
   };

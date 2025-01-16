@@ -8,7 +8,7 @@ import {
   GRID_DATE_COL_DEF,
   GRID_DATETIME_COL_DEF,
   GridColTypeDef,
-  GridFilterInputComponentProps,
+  GridFilterInputValueProps,
   getGridDateOperators,
 } from '@mui/x-data-grid';
 import {
@@ -92,7 +92,7 @@ function GridEditDateCell({
 }
 
 function GridFilterDateInput(
-  props: GridFilterInputComponentProps & { showTime?: boolean },
+  props: GridFilterInputValueProps & { showTime?: boolean },
 ) {
   const { item, showTime, applyValue, apiRef } = props;
 

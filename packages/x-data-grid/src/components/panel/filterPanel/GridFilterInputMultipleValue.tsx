@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import Autocomplete, { AutocompleteProps } from '@mui/material/Autocomplete';
 import { unstable_useId as useId } from '@mui/utils';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import { GridFilterInputComponentProps } from '../../../models/gridFilterInputComponent';
+import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
 
 export type GridFilterInputMultipleValueProps = {
   type?: 'text' | 'number' | 'date' | 'datetime-local';
-} & GridFilterInputComponentProps &
+} & GridFilterInputValueProps &
   Omit<AutocompleteProps<string, true, false, true>, 'options' | 'renderInput'>;
 
 function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) {

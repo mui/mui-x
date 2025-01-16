@@ -4,10 +4,10 @@ import { unstable_useId as useId } from '@mui/utils';
 import { useTimeout } from '../../../hooks/utils/useTimeout';
 import { TextFieldProps } from '../../../models/gridBaseSlots';
 import { GridFilterItem } from '../../../models/gridFilterItem';
-import { GridFilterInputComponentProps } from '../../../models/gridFilterInputComponent';
+import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
-export type GridTypeFilterInputValueProps = GridFilterInputComponentProps &
+export type GridTypeFilterInputValueProps = GridFilterInputValueProps &
   TextFieldProps & {
     type?: 'text' | 'number' | 'date' | 'datetime-local';
   };

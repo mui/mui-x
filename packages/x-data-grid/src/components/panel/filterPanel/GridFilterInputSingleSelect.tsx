@@ -4,7 +4,7 @@ import { unstable_useId as useId } from '@mui/utils';
 import { styled } from '@mui/material/styles';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { TextFieldProps } from '../../../models/gridBaseSlots';
-import { GridFilterInputComponentProps } from '../../../models/gridFilterInputComponent';
+import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
 import { GridSingleSelectColDef } from '../../../models/colDef/gridColDef';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import {
@@ -55,7 +55,7 @@ const SingleSelectOperatorContainer = styled('div')({
   },
 });
 
-export type GridFilterInputSingleSelectProps = GridFilterInputComponentProps &
+export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
   TextFieldProps & {
     type?: 'singleSelect';
   };

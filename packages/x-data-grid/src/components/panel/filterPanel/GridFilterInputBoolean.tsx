@@ -2,11 +2,11 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { refType, unstable_useId as useId } from '@mui/utils';
 import { styled } from '@mui/material/styles';
-import { GridFilterInputComponentProps } from '../../../models/gridFilterInputComponent';
+import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { TextFieldProps } from '../../../models/gridBaseSlots';
 
-export type GridFilterInputBooleanProps = GridFilterInputComponentProps & TextFieldProps;
+export type GridFilterInputBooleanProps = GridFilterInputValueProps & TextFieldProps;
 
 const BooleanOperatorContainer = styled('div')({
   display: 'flex',
