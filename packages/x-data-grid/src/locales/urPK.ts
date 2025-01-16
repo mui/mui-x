@@ -113,6 +113,7 @@ const urPKGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'ذیادہ یا برابر ہے',
   'headerFilterOperator<': 'کم ہے',
   'headerFilterOperator<=': 'کم یا برابر ہے',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'کوئی بھی',

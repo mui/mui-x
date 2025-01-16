@@ -2,12 +2,12 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { TextFieldProps } from '@mui/material/TextField';
 import { refType, unstable_useId as useId } from '@mui/utils';
-import { styled } from '@mui/material/styles';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
 export type GridFilterInputBooleanProps = GridFilterInputValueProps &
   TextFieldProps & {
+    headerFilterMenu?: React.ReactNode;
     clearButton?: React.ReactNode | null;
     /**
      * It is `true` if the filter either has a value or an operator with no value
@@ -16,15 +16,6 @@ export type GridFilterInputBooleanProps = GridFilterInputValueProps &
     isFilterActive?: boolean;
   };
 
-const BooleanOperatorContainer = styled('div')({
-  display: 'flex',
-  alignItems: 'center',
-  width: '100%',
-  [`& button`]: {
-    margin: 'auto 0px 5px 5px',
-  },
-});
-
 function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
   const {
     item,
@@ -32,11 +23,14 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     apiRef,
     focusElementRef,
     isFilterActive,
+    headerFilterMenu,
     clearButton,
     tabIndex,
     label: labelProp,
-    variant = 'standard',
+    variant = 'outlined',
+    InputProps,
     InputLabelProps,
+    sx,
     ...others
   } = props;
   const [filterValueState, setFilterValueState] = React.useState<boolean | undefined>(
@@ -69,8 +63,8 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
   const label = labelProp ?? apiRef.current.getLocaleText('filterPanelInputLabel');
 
   return (
-    <BooleanOperatorContainer>
-      <rootProps.slots.baseFormControl fullWidth>
+    <React.Fragment>
+      <rootProps.slots.baseFormControl fullWidth sx={sx}>
         <rootProps.slots.baseInputLabel
           {...rootProps.slotProps?.baseInputLabel}
           id={labelId}
@@ -89,11 +83,15 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
           notched={variant === 'outlined' ? true : undefined}
           native={isSelectNative}
           displayEmpty
-          inputProps={{ ref: focusElementRef, tabIndex }}
+          inputProps={{
+            ref: focusElementRef,
+            tabIndex,
+            ...InputProps?.inputProps,
+          }}
+          {...baseSelectProps}
           {
             ...(others as any) /* FIXME: typing error */
           }
-          {...baseSelectProps}
         >
           <rootProps.slots.baseSelectOption
             {...baseSelectOptionProps}
@@ -118,8 +116,9 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
           </rootProps.slots.baseSelectOption>
         </rootProps.slots.baseSelect>
       </rootProps.slots.baseFormControl>
+      {headerFilterMenu}
       {clearButton}
-    </BooleanOperatorContainer>
+    </React.Fragment>
   );
 }
 
@@ -144,6 +143,7 @@ GridFilterInputBoolean.propTypes = {
   applyValue: PropTypes.func.isRequired,
   clearButton: PropTypes.node,
   focusElementRef: refType,
+  headerFilterMenu: PropTypes.node,
   /**
    * It is `true` if the filter either has a value or an operator with no value
    * required is selected (for example `isEmpty`)

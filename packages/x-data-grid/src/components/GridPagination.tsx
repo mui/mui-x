@@ -7,7 +7,6 @@ import TablePagination, {
   LabelDisplayedRowsArgs,
 } from '@mui/material/TablePagination';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { vars } from '../constants/cssVariables';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -17,22 +16,22 @@ import {
   gridPageCountSelector,
 } from '../hooks/features/pagination/gridPaginationSelector';
 
-const GridPaginationRoot = styled(TablePagination)({
+const GridPaginationRoot = styled(TablePagination)(({ theme }) => ({
   maxHeight: 'calc(100% + 1px)', // border width
   flexGrow: 1,
   [`& .${tablePaginationClasses.selectLabel}`]: {
     display: 'none',
-    [vars.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
   },
   [`& .${tablePaginationClasses.input}`]: {
     display: 'none',
-    [vars.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('sm')]: {
       display: 'inline-flex',
     },
   },
-}) as typeof TablePagination;
+})) as typeof TablePagination;
 
 export type WrappedLabelDisplayedRows = (
   args: LabelDisplayedRowsArgs & { estimated?: number },

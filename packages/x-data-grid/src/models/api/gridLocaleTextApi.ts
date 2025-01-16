@@ -123,6 +123,7 @@ export interface GridLocaleText {
   'headerFilterOperator>=': string;
   'headerFilterOperator<': string;
   'headerFilterOperator<=': string;
+  headerFilterClear: string;
 
   // Filter values text
   filterValueAny: string;

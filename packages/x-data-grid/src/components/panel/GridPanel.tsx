@@ -7,8 +7,6 @@ import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { vars } from '../../constants/cssVariables';
-import { useCSSVariablesClass } from '../../utils/css/themeManager';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -40,22 +38,22 @@ const GridPanelRoot = styled(Popper, {
   name: 'MuiDataGrid',
   slot: 'Panel',
   overridesResolver: (props, styles) => styles.panel,
-})<{ ownerState: OwnerState }>({
-  zIndex: vars.zIndex.panel,
-});
+})<{ ownerState: OwnerState }>(({ theme }) => ({
+  zIndex: theme.zIndex.modal,
+}));
 
 const GridPaperRoot = styled(Paper, {
   name: 'MuiDataGrid',
   slot: 'Paper',
   overridesResolver: (props, styles) => styles.paper,
-})<{ ownerState: OwnerState }>({
-  backgroundColor: vars.colors.background.overlay,
+})<{ ownerState: OwnerState }>(({ theme }) => ({
+  backgroundColor: (theme.vars || theme).palette.background.paper,
   minWidth: 300,
   maxHeight: 450,
   display: 'flex',
-  maxWidth: `calc(100vw - ${vars.spacing(0.5)})`,
+  maxWidth: `calc(100vw - ${theme.spacing(0.5)})`,
   overflow: 'auto',
-});
+}));
 
 const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
   const { children, className, classes: classesProp, ...other } = props;
@@ -63,7 +61,6 @@ const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
   const rootProps = useGridRootProps();
   const classes = gridPanelClasses;
   const [isPlaced, setIsPlaced] = React.useState(false);
-  const variablesClass = useCSSVariablesClass();
 
   const handleClickAway = React.useCallback(() => {
     apiRef.current.hidePreferences();
@@ -121,7 +118,7 @@ const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
   return (
     <GridPanelRoot
       placement="bottom-start"
-      className={clsx(classes.panel, className, variablesClass)}
+      className={clsx(classes.panel, className)}
       ownerState={rootProps}
       anchorEl={anchorEl}
       modifiers={modifiers}
