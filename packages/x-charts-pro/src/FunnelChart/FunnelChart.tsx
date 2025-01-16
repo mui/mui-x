@@ -14,9 +14,15 @@ import {
   ChartsTooltipSlotProps,
   ChartsTooltipSlots,
 } from '@mui/x-charts/ChartsTooltip';
-import { ChartsAxisSlotProps, ChartsAxisSlots, ChartSeriesConfig } from '@mui/x-charts/internals';
+import {
+  ChartsAxisSlotProps,
+  ChartsAxisSlots,
+  ChartSeriesConfig,
+  ChartsWrapper,
+} from '@mui/x-charts/internals';
 import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '@mui/x-charts/ChartsLegend';
 import { MakeOptional } from '@mui/x-internals/types';
+import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { FunnelPlot, FunnelPlotProps, FunnelPlotSlotProps, FunnelPlotSlots } from './FunnelPlot';
 import { FunnelSeriesType } from './funnel.types';
 import { useFunnelChartProps } from './useFunnelChartProps';
@@ -47,6 +53,11 @@ export interface FunnelChartProps
    */
   series: MakeOptional<FunnelSeriesType, 'type'>[];
   /**
+   * If `true`, the legend is not rendered.
+   * @default false
+   */
+  hideLegend?: boolean;
+  /**
    * Overridable component slots.
    * @default {}
    */
@@ -71,18 +82,32 @@ const FunnelChart = React.forwardRef(function FunnelChart(
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiFunnelChart' });
 
-  const { chartContainerProps, funnelPlotProps, overlayProps, legendProps, children } =
-    useFunnelChartProps(props);
+  const {
+    chartContainerProps,
+    funnelPlotProps,
+    overlayProps,
+    legendProps,
+    clipPathGroupProps,
+    clipPathProps,
+    // chartsWrapperProps,
+    children,
+  } = useFunnelChartProps(props);
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
 
   return (
     <ChartContainerPro<'funnel'> ref={ref} {...chartContainerProps} seriesConfig={seriesConfig}>
-      <ChartsOverlay {...overlayProps} />
-      <FunnelPlot {...funnelPlotProps} />
-      <ChartsLegend {...legendProps} />
+      {/* <ChartsWrapper {...chartsWrapperProps}> */}
+      {!props.hideLegend && <ChartsLegend {...legendProps} />}
+      <g {...clipPathGroupProps}>
+        <FunnelPlot {...funnelPlotProps} />
+        <ChartsOverlay {...overlayProps} />
+        {/* <ChartsAxisHighlight {...axisHighlightProps} /> */}
+      </g>
       {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
+      <ChartsClipPath {...clipPathProps} />
       {children}
+      {/* </ChartsWrapper> */}
     </ChartContainerPro>
   );
 });

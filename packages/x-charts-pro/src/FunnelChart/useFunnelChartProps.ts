@@ -3,6 +3,9 @@ import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '@mui/x-charts/constants'
 import { ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import { ChartsLegendSlotExtension } from '@mui/x-charts/ChartsLegend';
+import useId from '@mui/utils/useId';
+import { ChartsClipPathProps } from '@mui/x-charts/ChartsClipPath';
+import { ChartsWrapperProps } from '@mui/x-charts/internals';
 import { FunnelPlotProps } from './FunnelPlot';
 import type { FunnelChartProps } from './FunnelChart';
 import { ChartContainerProProps } from '../ChartContainerPro';
@@ -42,6 +45,9 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     funnelLabel,
     ...rest
   } = props;
+
+  const id = useId();
+  const clipPathId = `${id}-clip-path`;
 
   const hasHorizontalSeries =
     layout === 'horizontal' ||
@@ -115,12 +121,29 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     slotProps,
   };
 
+  const clipPathGroupProps = {
+    clipPath: `url(#${clipPathId})`,
+  };
+
+  const clipPathProps: ChartsClipPathProps = {
+    id: clipPathId,
+  };
+
+  const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {
+    sx,
+    legendPosition: props.slotProps?.legend?.position,
+    legendDirection: props.slotProps?.legend?.direction,
+  };
+
   return {
     chartContainerProps,
     funnelPlotProps,
     overlayProps,
     chartsAxisProps,
     legendProps,
+    clipPathGroupProps,
+    clipPathProps,
+    chartsWrapperProps,
     children,
   };
 };
