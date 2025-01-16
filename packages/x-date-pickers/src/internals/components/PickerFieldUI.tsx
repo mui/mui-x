@@ -6,7 +6,7 @@ import MuiIconButton, { IconButtonProps } from '@mui/material/IconButton';
 import MuiInputAdornment, { InputAdornmentProps } from '@mui/material/InputAdornment';
 import { SvgIconProps } from '@mui/material/SvgIcon';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { MakeOptional, SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { FieldOwnerState } from '../../models';
 import { useFieldOwnerState, UseFieldOwnerStateParameters } from '../hooks/useFieldOwnerState';
 import { usePickerTranslations } from '../../hooks';
@@ -16,7 +16,10 @@ import type { UseFieldResponse } from '../hooks/useField';
 import { PickersTextField, PickersTextFieldProps } from '../../PickersTextField';
 
 export const cleanFieldResponse = <
-  TFieldResponse extends UseFieldResponse<any, ExportedPickerFieldUIProps & { [key: string]: any }>,
+  TFieldResponse extends MakeOptional<
+    UseFieldResponse<any, ExportedPickerFieldUIProps & { [key: string]: any }>,
+    'onClear' | 'clearable'
+  >,
 >({
   enableAccessibleFieldDOMStructure,
   ...fieldResponse

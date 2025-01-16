@@ -265,7 +265,7 @@ function BarPlot(props: BarPlotProps) {
 
   const transition = useTransition(completedData, {
     keys: (bar) => `${bar.seriesId}-${bar.dataIndex}`,
-    from: leaveStyle,
+    from: skipAnimation ? undefined : leaveStyle,
     leave: leaveStyle,
     enter: enterStyle,
     update: enterStyle,
@@ -274,7 +274,7 @@ function BarPlot(props: BarPlotProps) {
 
   const maskTransition = useTransition(withoutBorderRadius ? [] : masksData, {
     keys: (v) => v.id,
-    from: leaveStyle,
+    from: skipAnimation ? undefined : leaveStyle,
     leave: leaveStyle,
     enter: enterStyle,
     update: enterStyle,
