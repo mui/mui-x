@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { styled } from '@mui/material/styles';
 import {
   unstable_useForkRef as useForkRef,
   unstable_composeClasses as composeClasses,
@@ -22,6 +23,7 @@ import {
   GridFilterInputSingleSelect,
   gridFilterModelSelector,
   gridFilterableColumnLookupSelector,
+  gridClasses,
 } from '@mui/x-data-grid';
 import {
   PinnedColumnPosition,
@@ -34,6 +36,7 @@ import {
 } from '@mui/x-data-grid/internals';
 import { useRtl } from '@mui/system/RtlProvider';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import { inputBaseClasses } from '@mui/material/InputBase';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import { GridHeaderFilterMenuContainer } from './GridHeaderFilterMenuContainer';
@@ -69,12 +72,47 @@ type OwnerState = DataGridProProcessedProps & {
   showLeftBorder: boolean;
 };
 
+const StyledInputComponent = styled(GridFilterInputValue, {
+  name: 'MuiDataGrid',
+  slot: 'ColumnHeaderFilterInput',
+})(({ theme }) => ({
+  flex: 1,
+  marginRight: theme.spacing(0.5),
+  marginBottom: theme.spacing(-0.25),
+  '& input[type="number"], & input[type="date"], & input[type="datetime-local"]': {
+    '&[value=""]:not(:focus)': {
+      color: 'transparent',
+    },
+  },
+  [`& .${inputBaseClasses.input}`]: {
+    fontSize: '14px',
+  },
+  [`.${gridClasses['root--densityCompact']} & .${inputBaseClasses.input}`]: {
+    paddingTop: theme.spacing(0.5),
+    paddingBottom: theme.spacing(0.5),
+    height: 23,
+  },
+}));
+
+const OperatorLabel = styled('span', {
+  name: 'MuiDataGrid',
+  slot: 'ColumnHeaderFilterOperatorLabel',
+})(({ theme }) => ({
+  flex: 1,
+  marginRight: theme.spacing(0.5),
+  color: theme.palette.text.secondary,
+  whiteSpace: 'nowrap',
+  textOverflow: 'ellipsis',
+  overflow: 'hidden',
+}));
+
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { colDef, classes, showRightBorder, showLeftBorder, pinnedPosition } = ownerState;
 
   const slots = {
     root: [
       'columnHeader',
+      'columnHeader--filter',
       colDef.headerAlign === 'left' && 'columnHeader--alignLeft',
       colDef.headerAlign === 'center' && 'columnHeader--alignCenter',
       colDef.headerAlign === 'right' && 'columnHeader--alignRight',
@@ -84,24 +122,25 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       pinnedPosition === PinnedColumnPosition.LEFT && 'columnHeader--pinnedLeft',
       pinnedPosition === PinnedColumnPosition.RIGHT && 'columnHeader--pinnedRight',
     ],
+    input: ['columnHeaderFilterInput'],
+    operatorLabel: ['columnHeaderFilterOperatorLabel'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const emptyFieldSx = {
-  [`& input[value=""]:not(:focus)`]: { color: 'transparent' },
-};
-const defaultInputComponents: { [key in GridColType]: React.JSXElementConstructor<any> | null } = {
-  string: GridFilterInputValue,
-  number: GridFilterInputValue,
-  date: GridFilterInputDate,
-  dateTime: GridFilterInputDate,
-  boolean: GridFilterInputBoolean,
-  singleSelect: GridFilterInputSingleSelect,
-  actions: null,
-  custom: null,
-};
+const DEFAULT_INPUT_COMPONENTS: { [key in GridColType]: React.JSXElementConstructor<any> | null } =
+  {
+    string: GridFilterInputValue,
+    number: GridFilterInputValue,
+    date: GridFilterInputDate,
+    dateTime: GridFilterInputDate,
+    boolean: GridFilterInputBoolean,
+    singleSelect: GridFilterInputSingleSelect,
+    actions: null,
+    custom: null,
+  };
+
 const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProps>((props, ref) => {
   const {
     colIndex,
@@ -113,7 +152,7 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
     item,
     headerFilterMenuRef,
     InputComponentProps,
-    showClearIcon = true,
+    showClearIcon = false,
     pinnedPosition,
     pinnedOffset,
     style: styleProp,
@@ -163,7 +202,7 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
 
   const InputComponent =
     colDef.filterable || isFilterReadOnly
-      ? (currentOperator.InputComponent ?? defaultInputComponents[colDef.type as GridColType])
+      ? (currentOperator.InputComponent ?? DEFAULT_INPUT_COMPONENTS[colDef.type as GridColType])
       : null;
 
   const clearFilterItem = React.useCallback(() => {
@@ -293,17 +332,34 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
 
   const classes = useUtilityClasses(ownerState as OwnerState);
 
-  const isNoInputOperator = currentOperator.requiresFilterValue === false;
-
-  const isApplied = item?.value !== undefined || isNoInputOperator;
-
   const label =
     currentOperator.headerLabel ??
     apiRef.current.getLocaleText(
       `headerFilterOperator${capitalize(item.operator)}` as 'headerFilterOperatorContains',
     );
 
+  const isNoInputOperator = currentOperator.requiresFilterValue === false;
+  const isApplied = item?.value !== undefined || isNoInputOperator;
   const isFilterActive = isApplied || hasFocus;
+
+  const headerFilterMenu = (
+    <GridHeaderFilterMenuContainer
+      operators={filterOperators}
+      item={item}
+      field={colDef.field}
+      disabled={isFilterReadOnly}
+      applyFilterChanges={apiRef.current.upsertFilterItem}
+      headerFilterMenuRef={headerFilterMenuRef}
+      buttonRef={buttonRef}
+      showClearItem={!showClearIcon && isApplied}
+      clearFilterItem={clearFilterItem}
+    />
+  );
+
+  const clearButton =
+    showClearIcon && isApplied ? (
+      <GridHeaderFilterClearButton onClick={clearFilterItem} disabled={isFilterReadOnly} />
+    ) : null;
 
   return (
     <div
@@ -326,61 +382,53 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
       ref={handleRef}
     >
       {headerFilterComponent}
-      {InputComponent && headerFilterComponent === undefined ? (
+      {headerFilterComponent === undefined ? (
         <React.Fragment>
-          <InputComponent
-            apiRef={apiRef}
-            item={item}
-            inputRef={inputRef}
-            applyValue={apiRef.current.upsertFilterItem}
-            onFocus={() => apiRef.current.startHeaderFilterEditMode(colDef.field)}
-            onBlur={(event: React.FocusEvent) => {
-              apiRef.current.stopHeaderFilterEditMode();
-              // Blurring an input element should reset focus state only if `relatedTarget` is not the header filter cell
-              if (!event.relatedTarget?.className.includes('columnHeader')) {
-                apiRef.current.setState((state) => ({
-                  ...state,
-                  focus: {
-                    cell: null,
-                    columnHeader: null,
-                    columnHeaderFilter: null,
-                    columnGroupHeader: null,
-                  },
-                }));
-              }
-            }}
-            label={capitalize(label)}
-            placeholder=""
-            isFilterActive={isFilterActive}
-            clearButton={
-              showClearIcon && isApplied ? (
-                <GridHeaderFilterClearButton
-                  onClick={clearFilterItem}
-                  disabled={isFilterReadOnly}
-                />
-              ) : null
-            }
-            disabled={isFilterReadOnly || isNoInputOperator}
-            tabIndex={-1}
-            InputLabelProps={null}
-            sx={
-              colDef.type === 'date' || colDef.type === 'dateTime' || colDef.type === 'number'
-                ? emptyFieldSx
-                : undefined
-            }
-            {...(isNoInputOperator ? { value: '' } : {})}
-            {...currentOperator?.InputComponentProps}
-            {...InputComponentProps}
-          />
-          <GridHeaderFilterMenuContainer
-            operators={filterOperators!}
-            item={item}
-            field={colDef.field}
-            disabled={isFilterReadOnly}
-            applyFilterChanges={apiRef.current.upsertFilterItem}
-            headerFilterMenuRef={headerFilterMenuRef}
-            buttonRef={buttonRef}
-          />
+          {isNoInputOperator ? (
+            <React.Fragment>
+              <OperatorLabel className={classes.operatorLabel}>{label}</OperatorLabel>
+              {clearButton}
+              {headerFilterMenu}
+            </React.Fragment>
+          ) : null}
+          {InputComponent && !isNoInputOperator ? (
+            <StyledInputComponent
+              as={InputComponent}
+              className={classes.input}
+              apiRef={apiRef}
+              item={item}
+              inputRef={inputRef}
+              applyValue={apiRef.current.upsertFilterItem}
+              onFocus={() => apiRef.current.startHeaderFilterEditMode(colDef.field)}
+              onBlur={(event: React.FocusEvent) => {
+                apiRef.current.stopHeaderFilterEditMode();
+                // Blurring an input element should reset focus state only if `relatedTarget` is not the header filter cell
+                if (!event.relatedTarget?.className.includes('columnHeader')) {
+                  apiRef.current.setState((state) => ({
+                    ...state,
+                    focus: {
+                      cell: null,
+                      columnHeader: null,
+                      columnHeaderFilter: null,
+                      columnGroupHeader: null,
+                    },
+                  }));
+                }
+              }}
+              label={capitalize(label)}
+              placeholder=""
+              isFilterActive={isFilterActive}
+              variant="outlined"
+              size="small"
+              disabled={isFilterReadOnly || isNoInputOperator}
+              tabIndex={-1}
+              headerFilterMenu={headerFilterMenu}
+              clearButton={clearButton}
+              {...(isNoInputOperator ? { value: '' } : {})}
+              {...currentOperator?.InputComponentProps}
+              {...InputComponentProps}
+            />
+          ) : null}
         </React.Fragment>
       ) : null}
     </div>

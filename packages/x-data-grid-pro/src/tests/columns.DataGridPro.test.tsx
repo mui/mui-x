@@ -271,6 +271,62 @@ describe('<DataGridPro /> - Columns', () => {
       expect(pinnedHeaderCell.getBoundingClientRect().right).to.equal(pinnedRightPosition);
     });
 
+    // https://github.com/mui/mui-x/issues/15755
+    it('should keep right-pinned column group aligned with its pinned children', () => {
+      render(
+        <Test
+          rows={[
+            { id: 1, brand: 'Nike', category: 'Shoes' },
+            { id: 2, brand: 'Adidas', category: 'Shoes' },
+            { id: 3, brand: 'Puma', category: 'Shoes' },
+          ]}
+          columns={[
+            { field: 'id', width: 50 },
+            { field: 'brand', width: 50 },
+            { field: 'category', width: 50 },
+          ]}
+          initialState={{ pinnedColumns: { right: ['brand', 'category'] } }}
+          columnGroupingModel={[
+            {
+              groupId: 'group1',
+              children: [{ field: 'brand' }, { field: 'category' }],
+            },
+          ]}
+        />,
+      );
+
+      const lastColumnSeparator = document.querySelector(
+        `[role="columnheader"][data-field="category"] .${gridClasses['columnSeparator--resizable']}`,
+      )!;
+
+      // resize the last column to the left
+      fireEvent.mouseDown(lastColumnSeparator, { clientX: 150 });
+      fireEvent.mouseMove(lastColumnSeparator, { clientX: 100, buttons: 1 });
+
+      const rightPinnedColumns = [
+        document.querySelector<HTMLElement>('[role="columnheader"][data-field="brand"]')!,
+        document.querySelector<HTMLElement>('[role="columnheader"][data-field="category"]')!,
+      ];
+
+      const rightPinnedHeadersTotalWidth = rightPinnedColumns.reduce(
+        (acc, column) => acc + column.offsetWidth,
+        0,
+      );
+
+      const rightPinnedColumnGroup = document.querySelector<HTMLElement>(
+        '[role="columnheader"][data-fields="|-brand-|-category-|"]',
+      )!;
+
+      expect(rightPinnedColumnGroup.offsetWidth).to.equal(
+        rightPinnedHeadersTotalWidth,
+        'offsetWidth',
+      );
+      expect(rightPinnedColumnGroup.offsetLeft).to.equal(
+        rightPinnedColumns[0].offsetLeft,
+        'offsetLeft',
+      );
+    });
+
     // https://github.com/mui/mui-x/issues/13548
     it('should fill remaining horizontal space in a row with an empty cell', () => {
       render(<Test columns={[{ field: 'id', width: 100 }]} />);

@@ -1040,6 +1040,12 @@
       "class": null
     },
     {
+      "name": "menuItemCheckIcon",
+      "description": "Icon displayed to indicate that a menu item is selected.",
+      "default": "GridCheckIcon",
+      "class": null
+    },
+    {
       "name": "columnMenuPinLeftIcon",
       "description": "Icon displayed in column menu for left pinning",
       "default": "GridPushPinLeftIcon",
@@ -1264,6 +1270,12 @@
       "isGlobal": false
     },
     {
+      "key": "columnHeader--filter",
+      "className": "MuiDataGridPro-columnHeader--filter",
+      "description": "Styles applied to the header filter cell.",
+      "isGlobal": false
+    },
+    {
       "key": "columnHeader--filtered",
       "className": "MuiDataGridPro-columnHeader--filtered",
       "description": "Styles applied to the column header if the column has a filter applied to it.",
@@ -1333,6 +1345,18 @@
       "key": "columnHeaderDraggableContainer",
       "className": "MuiDataGridPro-columnHeaderDraggableContainer",
       "description": "Styles applied to the column header's draggable container element.",
+      "isGlobal": false
+    },
+    {
+      "key": "columnHeaderFilterInput",
+      "className": "MuiDataGridPro-columnHeaderFilterInput",
+      "description": "Styles applied to the header filter input element.",
+      "isGlobal": false
+    },
+    {
+      "key": "columnHeaderFilterOperatorLabel",
+      "className": "MuiDataGridPro-columnHeaderFilterOperatorLabel",
+      "description": "Styles applied to the header filter operator label element.",
       "isGlobal": false
     },
     {
