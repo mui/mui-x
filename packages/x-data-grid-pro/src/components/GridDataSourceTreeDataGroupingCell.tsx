@@ -52,8 +52,8 @@ function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) 
   const classes = useUtilityClasses(rootProps);
   const { rowNode, id, field, descendantCount } = props;
 
-  const isDataLoading = useGridSelector(apiRef, gridDataSourceLoadingIdSelector);
-  const error = useGridSelector(apiRef, gridDataSourceErrorSelector);
+  const isDataLoading = useGridSelector(apiRef, gridDataSourceLoadingIdSelector, id);
+  const error = useGridSelector(apiRef, gridDataSourceErrorSelector, id);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!rowNode.childrenExpanded) {
