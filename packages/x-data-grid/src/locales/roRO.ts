@@ -114,6 +114,7 @@ const roROGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Mai mare sau egal cu',
   'headerFilterOperator<': 'Mai mic decât',
   'headerFilterOperator<=': 'Mai mic sau egal cu',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'Aleatoriu',
