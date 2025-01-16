@@ -102,6 +102,7 @@ Same changes as in `@mui/x-tree-view@8.0.0-alpha.8`.
 - [docs] Copyedit the Data Grid cell selection page (#16099) @samuelsycamore
 - [docs] Fix demo rendering issue on Codesandbox (#16118) @arminmeh
 - [docs] Remove broken links (#16167) @alexfauquette
+- [docs] Split the Data Grid editing page (#14931) @MBilalShafi
 
 ### Core
 
