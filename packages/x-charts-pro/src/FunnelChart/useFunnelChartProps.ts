@@ -49,7 +49,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
 
   const defaultBandAxisConfig = {
     scaleType: 'band',
-    categoryGapRatio: 0.01,
+    categoryGapRatio: 0,
     data: Array.from(
       { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
       (_, index) => index,
@@ -61,8 +61,6 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     series: series.map((s) => ({
       type: 'funnel' as const,
       ...s,
-      valueFormatter: s.valueFormatter ?? ((item) => item.value.toLocaleString()),
-      layout: hasHorizontalSeries ? ('horizontal' as const) : ('vertical' as const),
     })),
     width,
     height,

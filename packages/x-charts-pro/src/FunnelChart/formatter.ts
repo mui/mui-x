@@ -5,7 +5,6 @@ import {
   DatasetElementType,
   SeriesId,
   getStackingGroups,
-  defaultizeValueFormatter,
   ChartSeriesDefaultized,
 } from '@mui/x-charts/internals';
 import { warnOnce } from '@mui/x-internals/warning';
@@ -78,7 +77,9 @@ const formatter: SeriesProcessor<'funnel'> = (params, dataset) => {
     ids.forEach((id) => {
       const dataKey = series[id].dataKey;
       completedSeries[id] = {
+        labelMarkType: 'square',
         layout: isHorizontal ? 'horizontal' : 'vertical',
+        valueFormatter: (item) => (item == null ? '' : item.value.toLocaleString()),
         ...series[id],
         data: dataKey
           ? dataset!.map((data) => {
@@ -96,8 +97,7 @@ const formatter: SeriesProcessor<'funnel'> = (params, dataset) => {
             })
           : series[id].data!,
         stackedData: [],
-        // TODO: fix type
-      } as any;
+      };
     });
 
     ids.forEach((id, index) => {
@@ -163,7 +163,7 @@ const formatter: SeriesProcessor<'funnel'> = (params, dataset) => {
   return {
     seriesOrder,
     stackingGroups,
-    series: defaultizeValueFormatter(completedSeries, (v) => (v == null ? '' : v.toLocaleString())),
+    series: completedSeries,
   };
 };
 
