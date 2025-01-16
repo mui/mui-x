@@ -71,6 +71,8 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
       columns: mockServer.columns,
       initialState: { pagination: { paginationModel: { page: 0, pageSize: 10 } } },
       disableVirtualization: true,
+      pagination: true,
+      pageSizeOptions: [10],
     };
 
     return (
