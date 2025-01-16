@@ -98,7 +98,10 @@ Below are described the steps you need to make to migrate from v7 to v8.
 ### Other exports
 
 - `ariaV8` experimental flag is removed. It's now the default behavior.
-- Sub-components that are in a React Portal must now be wrapped with `GridPortalWrapper`
+
+### Filtering
+
+- The clear button in header filter cells has moved to the header filter menu. Use `slotProps={{ headerFilterCell: { showClearIcon: true } }}` to restore the clear button in the cell.
 
 <!-- ### Editing
 
