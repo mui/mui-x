@@ -5,6 +5,7 @@ export * from './useAxis';
 export * from './useZAxis';
 export * from './useColorScale';
 export * from './useSvgRef';
+export * from './useItemHighlighted';
 export {
   useSeries as unstable_useSeries,
   usePieSeries as unstable_usePieSeries,

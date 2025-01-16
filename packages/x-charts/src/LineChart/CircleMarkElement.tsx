@@ -5,7 +5,7 @@ import { useTheme } from '@mui/material/styles';
 import { warnOnce } from '@mui/x-internals/warning';
 import { animated, useSpring } from '@react-spring/web';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { useItemHighlighted } from '../context';
+import { useItemHighlighted } from '../hooks/useItemHighlighted';
 import { MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
 import { useSelector } from '../internals/store/useSelector';
 import { selectorChartsInteractionXAxis } from '../internals/plugins/featurePlugins/useChartInteraction';

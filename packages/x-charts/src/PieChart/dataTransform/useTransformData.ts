@@ -5,7 +5,7 @@ import {
   DefaultizedPieSeriesType,
   DefaultizedPieValueType,
 } from '../../models/seriesType/pie';
-import { useHighlighted } from '../../context';
+import { useHighlightStateGetter } from '../../internals/plugins/featurePlugins/useChartHighlight/useHighlightStateGetter';
 
 export interface AnimatedObject {
   innerRadius: number;
@@ -41,7 +41,7 @@ export function useTransformData(
     cornerRadius: baseCornerRadius = 0,
   } = series;
 
-  const { isFaded: isItemFaded, isHighlighted: isItemHighlighted } = useHighlighted();
+  const { isFaded: isItemFaded, isHighlighted: isItemHighlighted } = useHighlightStateGetter();
 
   const dataWithHighlight: ValueWithHighlight[] = React.useMemo(
     () =>
