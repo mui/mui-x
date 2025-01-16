@@ -88,13 +88,13 @@ describe('useGridComponentRenderer', () => {
     render(
       <TestComponent
         data-testid="rendered-element"
-        style={{ color: 'red' }}
-        render={<div style={{ backgroundColor: 'blue' }} />}
+        style={{ color: 'blue', outline: '1px solid red' }}
+        render={<div style={{ backgroundColor: 'blue', outline: 'blue solid 1px' }} />}
       />,
     );
     expect(screen.getByTestId('rendered-element')).to.have.attribute(
       'style',
-      'background-color: blue; color: red;',
+      'color: blue; outline: blue solid 1px; background-color: blue;',
     );
   });
 
@@ -113,12 +113,13 @@ describe('useGridComponentRenderer', () => {
     render(
       <TestComponentWithSxProp
         data-testid="rendered-element"
-        sx={{ color: 'red' }}
-        render={<Box sx={{ backgroundColor: 'blue' }} />}
+        sx={{ color: 'blue', outline: '1px solid red' }}
+        render={<Box sx={{ backgroundColor: 'blue', outline: 'blue solid 1px' }} />}
       />,
     );
     const computedStyle = window.getComputedStyle(screen.getByTestId('rendered-element'));
-    expect(computedStyle.color).to.equal('rgb(255, 0, 0)');
+    expect(computedStyle.color).to.equal('rgb(0, 0, 255)');
     expect(computedStyle.backgroundColor).to.equal('rgb(0, 0, 255)');
+    expect(computedStyle.outline).to.equal('rgb(0, 0, 255) solid 1px');
   });
 });

@@ -34,19 +34,22 @@ export function useGridComponentRenderer<
   }
 
   if (render) {
-    const className = clsx(render.props.className, props.className);
-    const style = { ...render.props.style, ...props.style };
-    const sx = mergeSx((render.props as any).sx, (props as any).sx);
-    return React.cloneElement(render, { ...props, className, style, sx });
+    if (render.props.className) {
+      props.className = clsx(render.props.className, props.className);
+    }
+    if (render.props.style || props.style) {
+      props.style = { ...props.style, ...render.props.style };
+    }
+    if ((render.props as any).sx || (props as any).sx) {
+      (props as any).sx = mergeSx((props as any).sx, (render.props as any).sx);
+    }
+    return React.cloneElement(render, props);
   }
 
   return React.createElement(defaultElement, props);
 }
 
-function mergeSx(sx1: SxProps | undefined, sx2: SxProps | undefined) {
-  if (!sx1 && !sx2) {
-    return undefined;
-  }
+function mergeSx(sx1: SxProps, sx2: SxProps) {
   if (!sx1 || !sx2) {
     return sx1 || sx2;
   }
