@@ -247,6 +247,12 @@ Using the `getItems` prop instead of manually providing a list of `<Calendar.Yea
 
 ### Recipe: Material Design 2
 
+This is a reproduction of the Date Calendar component, with the following simplification:
+- The order of the views is not overridable
+- Some props are not implemented (`reduceAnimations`, `disableDayMargin`, ...)
+
+This shows how light the Material layer would be once we have the Base UI X primitives.
+
 {{"demo": "DateCalendarWithMaterialDesignDemo.js", "defaultCodeOpen": false}}
 
 ## Day Range Calendar
