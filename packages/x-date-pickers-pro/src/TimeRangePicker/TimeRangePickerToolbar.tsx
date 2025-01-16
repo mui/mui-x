@@ -53,7 +53,6 @@ export interface TimeRangePickerToolbarProps
     Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'>,
     ExportedTimeRangePickerToolbarProps {
   ampm: boolean;
-  toolbarVariant?: PickerVariant;
 }
 
 export interface ExportedTimeRangePickerToolbarProps
@@ -83,21 +82,21 @@ const TimeRangePickerToolbarRoot = styled(PickersToolbar, {
 const TimeRangePickerToolbarContainer = styled('div', {
   name: 'MuiTimeRangePickerToolbar',
   slot: 'Container',
-  shouldForwardProp: (prop) => prop !== 'toolbarVariant',
+  shouldForwardProp: (prop) => prop !== 'pickerVariant',
   overridesResolver: (_, styles) => styles.container,
-})<{ toolbarVariant: PickerVariant }>({
+})<{ pickerVariant: PickerVariant }>({
   display: 'flex',
   flex: 1,
   variants: [
     {
-      props: { toolbarVariant: 'mobile' },
+      props: { pickerVariant: 'mobile' },
       style: {
         flexDirection: 'column',
         rowGap: 8,
       },
     },
     {
-      props: { toolbarVariant: 'desktop' },
+      props: { pickerVariant: 'desktop' },
       style: {
         flexDirection: 'row',
         gap: 1,
@@ -126,7 +125,7 @@ const TimeRangePickerToolbarSeparator = styled(PickersToolbarText, {
 
 type TimeRangePickerToolbarTimeElementProps = Pick<
   TimeRangePickerToolbarProps,
-  'ampm' | 'toolbarPlaceholder' | 'toolbarVariant'
+  'ampm' | 'toolbarPlaceholder'
 > &
   MakeRequired<
     Pick<
@@ -138,6 +137,7 @@ type TimeRangePickerToolbarTimeElementProps = Pick<
     value: PickerValidDate | null;
     utils: MuiPickersAdapter<any>;
     separatorClasses: string;
+    pickerVariant: PickerVariant;
   };
 
 function TimeRangePickerToolbarTimeElement(props: TimeRangePickerToolbarTimeElementProps) {
@@ -150,13 +150,13 @@ function TimeRangePickerToolbarTimeElement(props: TimeRangePickerToolbarTimeElem
     utils,
     separatorClasses,
     toolbarPlaceholder,
-    toolbarVariant,
+    pickerVariant,
   } = props;
 
   const formatHours = (time: PickerValidDate) =>
     ampm ? utils.format(time, 'hours12h') : utils.format(time, 'hours24h');
   const meridiemMode = getMeridiem(value, utils);
-  const sectionWidth = toolbarVariant === 'desktop' ? MULTI_SECTION_CLOCK_SECTION_WIDTH : '100%';
+  const sectionWidth = pickerVariant === 'desktop' ? MULTI_SECTION_CLOCK_SECTION_WIDTH : '100%';
 
   return (
     <TimeRangePickerToolbarTimeContainer>
@@ -219,13 +219,13 @@ TimeRangePickerToolbarTimeElement.propTypes = {
    * @param {TView} view The new view.
    */
   onViewChange: PropTypes.func.isRequired,
+  pickerVariant: PropTypes.oneOf(['desktop', 'mobile']).isRequired,
   separatorClasses: PropTypes.string.isRequired,
   /**
    * Toolbar value placeholder—it is displayed when the value is empty.
    * @default "––"
    */
   toolbarPlaceholder: PropTypes.node,
-  toolbarVariant: PropTypes.oneOf(['desktop', 'mobile']),
   utils: PropTypes.object.isRequired,
   value: PropTypes.object,
   /**
@@ -248,14 +248,7 @@ const TimeRangePickerToolbar = React.forwardRef(function TimeRangePickerToolbar(
   const utils = useUtils();
   const props = useThemeProps({ props: inProps, name: 'MuiTimeRangePickerToolbar' });
 
-  const {
-    className,
-    ampm,
-    toolbarVariant = 'mobile',
-    toolbarPlaceholder = '--',
-    classes: classesProp,
-    ...other
-  } = props;
+  const { className, ampm, toolbarPlaceholder = '--', classes: classesProp, ...other } = props;
 
   const { value, view, setView, views } = usePickerContext<
     PickerRangeValue,
@@ -301,7 +294,7 @@ const TimeRangePickerToolbar = React.forwardRef(function TimeRangePickerToolbar(
     >
       <TimeRangePickerToolbarContainer
         className={classes.container}
-        toolbarVariant={toolbarVariant}
+        pickerVariant={ownerState.pickerVariant}
       >
         <TimeRangePickerToolbarTimeElement
           view={rangePosition === 'start' ? view : undefined}
@@ -312,7 +305,7 @@ const TimeRangePickerToolbar = React.forwardRef(function TimeRangePickerToolbar(
           utils={utils}
           separatorClasses={classes.separator}
           toolbarPlaceholder={toolbarPlaceholder}
-          toolbarVariant={toolbarVariant}
+          pickerVariant={ownerState.pickerVariant}
         />
         <TimeRangePickerToolbarTimeElement
           view={rangePosition === 'end' ? view : undefined}
@@ -323,7 +316,7 @@ const TimeRangePickerToolbar = React.forwardRef(function TimeRangePickerToolbar(
           utils={utils}
           separatorClasses={classes.separator}
           toolbarPlaceholder={toolbarPlaceholder}
-          toolbarVariant={toolbarVariant}
+          pickerVariant={ownerState.pickerVariant}
         />
       </TimeRangePickerToolbarContainer>
     </TimeRangePickerToolbarRoot>
@@ -362,7 +355,6 @@ TimeRangePickerToolbar.propTypes = {
    * @default "––"
    */
   toolbarPlaceholder: PropTypes.node,
-  toolbarVariant: PropTypes.oneOf(['desktop', 'mobile']),
 } as any;
 
 export { TimeRangePickerToolbar };
