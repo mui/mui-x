@@ -598,15 +598,33 @@ function CalendarContent(props) {
 }
 
 function DateCalendar(props) {
-  const { views = DEFAULT_VIEWS, openTo, displayWeekNumber = false } = props;
+  const {
+    views = DEFAULT_VIEWS,
+    openTo,
+    displayWeekNumber = false,
+    onValueChange,
+    ...other
+  } = props;
   const [view, setView] = React.useState(() =>
     openTo != null && views[openTo] ? openTo : 'day',
   );
   const id = useId();
   const gridLabelId = `${id}-grid-label`;
 
+  const handleValueChange = React.useCallback(
+    (value, ctx) => {
+      onValueChange?.(value, ctx);
+      if (ctx.section === 'year' && views.month) {
+        setView('month');
+      } else if (ctx.section !== 'day' && views.day) {
+        setView('day');
+      }
+    },
+    [onValueChange],
+  );
+
   return (
-    <Root>
+    <Root onValueChange={handleValueChange} {...other}>
       <CalendarHeader
         view={view}
         views={views}

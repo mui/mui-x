@@ -23,6 +23,7 @@ import useId from '@mui/utils/useId';
 import Typography from '@mui/material/Typography';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { boxSizing } from '@mui/system';
+import { Dayjs } from 'dayjs';
 
 const DIALOG_WIDTH = 320;
 const MAX_CALENDAR_HEIGHT = 280;
@@ -610,15 +611,33 @@ function CalendarContent(props: {
 }
 
 function DateCalendar(props: DateCalendarProps) {
-  const { views = DEFAULT_VIEWS, openTo, displayWeekNumber = false } = props;
+  const {
+    views = DEFAULT_VIEWS,
+    openTo,
+    displayWeekNumber = false,
+    onValueChange,
+    ...other
+  } = props;
   const [view, setView] = React.useState<DateCalendarView>(() =>
     openTo != null && views[openTo] ? openTo! : 'day',
   );
   const id = useId();
   const gridLabelId = `${id}-grid-label`;
 
+  const handleValueChange = React.useCallback(
+    (value: Dayjs, ctx: Calendar.Root.ValueChangeHandlerContext) => {
+      onValueChange?.(value, ctx);
+      if (ctx.section === 'year' && views.month) {
+        setView('month');
+      } else if (ctx.section !== 'day' && views.day) {
+        setView('day');
+      }
+    },
+    [onValueChange],
+  );
+
   return (
-    <Root>
+    <Root onValueChange={handleValueChange} {...other}>
       <CalendarHeader
         view={view}
         views={views}
@@ -632,7 +651,7 @@ function DateCalendar(props: DateCalendarProps) {
 
 type DateCalendarView = 'day' | 'month' | 'year';
 
-interface DateCalendarProps {
+interface DateCalendarProps extends Omit<Calendar.Root.Props, 'children'> {
   views?: Record<DateCalendarView, boolean>;
   openTo?: DateCalendarView;
   displayWeekNumber?: boolean;
