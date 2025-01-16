@@ -70,7 +70,7 @@ const TimeRangePickerToolbarRoot = styled(PickersToolbar, {
 })<{ ownerState: PickerToolbarOwnerState }>(({ theme }) => ({
   borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
   padding: '12px 0px 8px 0px',
-  [`& .${pickersToolbarClasses.content} .${pickersToolbarTextClasses.selected}`]: {
+  [`& .${pickersToolbarClasses.content} .${pickersToolbarTextClasses.root}[data-selected]`]: {
     color: (theme.vars || theme).palette.primary.main,
     fontWeight: theme.typography.fontWeightBold,
   },
@@ -245,8 +245,8 @@ const TimeRangePickerToolbar = React.forwardRef(function TimeRangePickerToolbar(
   inProps: TimeRangePickerToolbarProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const utils = useUtils();
   const props = useThemeProps({ props: inProps, name: 'MuiTimeRangePickerToolbar' });
+  const utils = useUtils();
 
   const { className, ampm, toolbarPlaceholder = '--', classes: classesProp, ...other } = props;
 
@@ -258,7 +258,6 @@ const TimeRangePickerToolbar = React.forwardRef(function TimeRangePickerToolbar(
   const ownerState = useToolbarOwnerState();
   const { rangePosition, onRangePositionChange } = usePickerRangePositionContext();
   const classes = useUtilityClasses(classesProp, ownerState);
-  const [start, end] = value;
 
   const handleStartRangeViewChange = React.useCallback(
     (newView: TimeViewWithMeridiem) => {
@@ -299,7 +298,7 @@ const TimeRangePickerToolbar = React.forwardRef(function TimeRangePickerToolbar(
         <TimeRangePickerToolbarTimeElement
           view={rangePosition === 'start' ? view : undefined}
           views={views}
-          value={start}
+          value={value[0]}
           onViewChange={handleStartRangeViewChange}
           ampm={ampm}
           utils={utils}
@@ -310,7 +309,7 @@ const TimeRangePickerToolbar = React.forwardRef(function TimeRangePickerToolbar(
         <TimeRangePickerToolbarTimeElement
           view={rangePosition === 'end' ? view : undefined}
           views={views}
-          value={end}
+          value={value[1]}
           onViewChange={handleEndRangeViewChange}
           ampm={ampm}
           utils={utils}
