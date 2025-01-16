@@ -1,9 +1,15 @@
 import * as React from 'react';
+import { Dayjs } from 'dayjs';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { TransitionGroupProps } from 'react-transition-group/TransitionGroup';
 import { useRtl } from '@mui/system/RtlProvider';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import useEventCallback from '@mui/utils/useEventCallback';
+import useId from '@mui/utils/useId';
+import useControlled from '@mui/utils/useControlled';
 import Fade from '@mui/material/Fade';
 import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 import ButtonBase from '@mui/material/ButtonBase';
 import { styled, alpha, useTheme } from '@mui/material/styles';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -19,11 +25,6 @@ import {
   Calendar,
   useCalendarContext,
 } from '@mui/x-date-pickers/internals/base/Calendar';
-import useId from '@mui/utils/useId';
-import Typography from '@mui/material/Typography';
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { boxSizing } from '@mui/system';
-import { Dayjs } from 'dayjs';
 
 const DIALOG_WIDTH = 320;
 const MAX_CALENDAR_HEIGHT = 280;
@@ -356,7 +357,7 @@ const DaysCell = styled(ButtonBase)(({ theme }) => ({
 function CalendarHeader(props: {
   view: DateCalendarView;
   onViewChange: (view: DateCalendarView) => void;
-  views: Record<DateCalendarView, boolean>;
+  views: { [key in DateCalendarView]?: boolean };
   labelId: string;
 }) {
   const { view, onViewChange, views, labelId } = props;
@@ -489,6 +490,7 @@ function DayCalendar(props: { displayWeekNumber: boolean }) {
     prevVisibleDate.current = visibleDate;
   }, [visibleDate]);
 
+  // TODO: Try to move slide direction to a data-direction attribute
   const dayGridTransitionClasses = {
     exit: 'day-grid-exit',
     enterActive: 'day-grid-enter-active',
@@ -613,27 +615,38 @@ function CalendarContent(props: {
 function DateCalendar(props: DateCalendarProps) {
   const {
     views = DEFAULT_VIEWS,
-    openTo,
+    defaultView = getDefaultView(views),
+    view: viewProp,
+    onViewChange,
     displayWeekNumber = false,
     onValueChange,
     ...other
   } = props;
-  const [view, setView] = React.useState<DateCalendarView>(() =>
-    openTo != null && views[openTo] ? openTo! : 'day',
-  );
+
+  const [view, setView] = useControlled({
+    name: 'DateCalendar',
+    state: 'view',
+    default: defaultView,
+    controlled: viewProp,
+  });
+
   const id = useId();
   const gridLabelId = `${id}-grid-label`;
 
-  const handleValueChange = React.useCallback(
+  const handleViewChange = useEventCallback((newView: DateCalendarView) => {
+    setView(newView);
+    onViewChange?.(newView);
+  });
+
+  const handleValueChange = useEventCallback(
     (value: Dayjs, ctx: Calendar.Root.ValueChangeHandlerContext) => {
       onValueChange?.(value, ctx);
       if (ctx.section === 'year' && views.month) {
-        setView('month');
+        handleViewChange('month');
       } else if (ctx.section !== 'day' && views.day) {
-        setView('day');
+        handleViewChange('day');
       }
     },
-    [onValueChange],
   );
 
   return (
@@ -641,7 +654,7 @@ function DateCalendar(props: DateCalendarProps) {
       <CalendarHeader
         view={view}
         views={views}
-        onViewChange={setView}
+        onViewChange={handleViewChange}
         labelId={gridLabelId}
       />
       <CalendarContent view={view} displayWeekNumber={displayWeekNumber} />
@@ -652,9 +665,22 @@ function DateCalendar(props: DateCalendarProps) {
 type DateCalendarView = 'day' | 'month' | 'year';
 
 interface DateCalendarProps extends Omit<Calendar.Root.Props, 'children'> {
-  views?: Record<DateCalendarView, boolean>;
-  openTo?: DateCalendarView;
+  views?: { [key in DateCalendarView]?: boolean };
+  view?: DateCalendarView;
+  onViewChange?: (view: DateCalendarView) => void;
+  defaultView?: DateCalendarView;
   displayWeekNumber?: boolean;
+  //TODO: Add reduceAnimations prop
+}
+
+function getDefaultView(views: { [key in DateCalendarView]?: boolean }) {
+  if (views.day) {
+    return 'day';
+  }
+  if (views.month) {
+    return 'month';
+  }
+  return 'year';
 }
 
 export default function DateCalendarWithMaterialDesignDemo() {

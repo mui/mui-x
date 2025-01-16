@@ -1,9 +1,15 @@
 import * as React from 'react';
+
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import { useRtl } from '@mui/system/RtlProvider';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import useEventCallback from '@mui/utils/useEventCallback';
+import useId from '@mui/utils/useId';
+import useControlled from '@mui/utils/useControlled';
 import Fade from '@mui/material/Fade';
 import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 import ButtonBase from '@mui/material/ButtonBase';
 import { styled, alpha, useTheme } from '@mui/material/styles';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -19,9 +25,6 @@ import {
   Calendar,
   useCalendarContext,
 } from '@mui/x-date-pickers/internals/base/Calendar';
-import useId from '@mui/utils/useId';
-import Typography from '@mui/material/Typography';
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 
 const DIALOG_WIDTH = 320;
 const MAX_CALENDAR_HEIGHT = 280;
@@ -479,6 +482,7 @@ function DayCalendar(props) {
     prevVisibleDate.current = visibleDate;
   }, [visibleDate]);
 
+  // TODO: Try to move slide direction to a data-direction attribute
   const dayGridTransitionClasses = {
     exit: 'day-grid-exit',
     enterActive: 'day-grid-enter-active',
@@ -600,40 +604,59 @@ function CalendarContent(props) {
 function DateCalendar(props) {
   const {
     views = DEFAULT_VIEWS,
-    openTo,
+    defaultView = getDefaultView(views),
+    view: viewProp,
+    onViewChange,
     displayWeekNumber = false,
     onValueChange,
     ...other
   } = props;
-  const [view, setView] = React.useState(() =>
-    openTo != null && views[openTo] ? openTo : 'day',
-  );
+
+  const [view, setView] = useControlled({
+    name: 'DateCalendar',
+    state: 'view',
+    default: defaultView,
+    controlled: viewProp,
+  });
+
   const id = useId();
   const gridLabelId = `${id}-grid-label`;
 
-  const handleValueChange = React.useCallback(
-    (value, ctx) => {
-      onValueChange?.(value, ctx);
-      if (ctx.section === 'year' && views.month) {
-        setView('month');
-      } else if (ctx.section !== 'day' && views.day) {
-        setView('day');
-      }
-    },
-    [onValueChange],
-  );
+  const handleViewChange = useEventCallback((newView) => {
+    setView(newView);
+    onViewChange?.(newView);
+  });
+
+  const handleValueChange = useEventCallback((value, ctx) => {
+    onValueChange?.(value, ctx);
+    if (ctx.section === 'year' && views.month) {
+      handleViewChange('month');
+    } else if (ctx.section !== 'day' && views.day) {
+      handleViewChange('day');
+    }
+  });
 
   return (
     <Root onValueChange={handleValueChange} {...other}>
       <CalendarHeader
         view={view}
         views={views}
-        onViewChange={setView}
+        onViewChange={handleViewChange}
         labelId={gridLabelId}
       />
       <CalendarContent view={view} displayWeekNumber={displayWeekNumber} />
     </Root>
   );
+}
+
+function getDefaultView(views) {
+  if (views.day) {
+    return 'day';
+  }
+  if (views.month) {
+    return 'month';
+  }
+  return 'year';
 }
 
 export default function DateCalendarWithMaterialDesignDemo() {
