@@ -10,6 +10,7 @@ import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 export type GridTypeFilterInputValueProps = GridFilterInputValueProps &
   TextFieldProps & {
     type?: 'text' | 'number' | 'date' | 'datetime-local';
+    headerFilterMenu?: React.ReactNode;
     clearButton?: React.ReactNode | null;
     /**
      * It is `true` if the filter either has a value or an operator with no value
@@ -31,8 +32,9 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
     disabled,
     isFilterActive,
     clearButton,
+    headerFilterMenu,
     InputProps,
-    variant = 'standard',
+    variant = 'outlined',
     ...others
   } = props;
 
@@ -71,38 +73,38 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
   }, [id, item]);
 
   return (
-    <rootProps.slots.baseTextField
-      id={id}
-      label={apiRef.current.getLocaleText('filterPanelInputLabel')}
-      placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
-      value={filterValueState ?? ''}
-      onChange={onFilterChange}
-      variant={variant}
-      type={type || 'text'}
-      InputProps={{
-        ...(applying || clearButton
-          ? {
-              endAdornment: applying ? (
-                <rootProps.slots.loadIcon fontSize="small" color="action" />
-              ) : (
-                clearButton
-              ),
-            }
-          : {}),
-        disabled,
-        ...InputProps,
-        inputProps: {
-          tabIndex,
-          ...InputProps?.inputProps,
-        },
-      }}
-      InputLabelProps={{
-        shrink: true,
-      }}
-      inputRef={focusElementRef}
-      {...others}
-      {...rootProps.slotProps?.baseTextField}
-    />
+    <React.Fragment>
+      <rootProps.slots.baseTextField
+        id={id}
+        label={apiRef.current.getLocaleText('filterPanelInputLabel')}
+        placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
+        value={filterValueState ?? ''}
+        onChange={onFilterChange}
+        variant={variant}
+        type={type || 'text'}
+        disabled={disabled}
+        InputProps={{
+          endAdornment: applying ? (
+            <rootProps.slots.baseInputAdornment position="end">
+              <rootProps.slots.loadIcon fontSize="small" color="action" />
+            </rootProps.slots.baseInputAdornment>
+          ) : null,
+          ...InputProps,
+          inputProps: {
+            tabIndex,
+            ...InputProps?.inputProps,
+          },
+        }}
+        InputLabelProps={{
+          shrink: true,
+        }}
+        inputRef={focusElementRef}
+        {...rootProps.slotProps?.baseTextField}
+        {...others}
+      />
+      {headerFilterMenu}
+      {clearButton}
+    </React.Fragment>
   );
 }
 
@@ -128,6 +130,7 @@ GridFilterInputValue.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  headerFilterMenu: PropTypes.node,
   /**
    * It is `true` if the filter either has a value or an operator with no value
    * required is selected (for example `isEmpty`)
