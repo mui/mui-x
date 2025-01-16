@@ -51,7 +51,7 @@ Common use cases include:
 - Deriving a value from multiple fields (for example, concatenating first name and last name)
 - Deriving a value from a nested field (for example, `user.address.city`)
 
-This function is also used internally in the Data Grid to filter, sort, and render (if `renderCell` or `valueFormatter` are not provided).
+This function is also used internally in the Data Grid to filter, sort, and render (if `renderCell()` or `valueFormatter()` are not provided).
 
 See [Column definition—Value getter](/x/react-data-grid/column-definition/#value-getter) for more details.
 
