@@ -26,7 +26,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
     isFilterActive,
     slotProps,
     clearButton,
-    variant = 'standard',
+    headerFilterMenu,
     ...others
   } = props;
 
@@ -65,37 +65,39 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
   }, [id, item]);
 
   return (
-    <rootProps.slots.baseTextField
-      id={id}
-      label={apiRef.current.getLocaleText('filterPanelInputLabel')}
-      placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
-      value={filterValueState ?? ''}
-      onChange={onFilterChange}
-      variant={variant}
-      type={type || 'text'}
-      slotProps={{
-        input: {
-          ...(applying || clearButton
-            ? {
-                endAdornment: applying ? (
-                  <rootProps.slots.loadIcon fontSize="small" color="action" />
-                ) : (
-                  clearButton
-                ),
-              }
-            : {}),
-          disabled,
-          ...slotProps?.input,
-        },
-        htmlInput: {
-          tabIndex,
-          ...slotProps?.htmlInput,
-        },
-      }}
-      inputRef={focusElementRef}
-      {...others}
-      {...rootProps.slotProps?.baseTextField}
-    />
+    <React.Fragment>
+      <rootProps.slots.baseTextField
+        id={id}
+        label={apiRef.current.getLocaleText('filterPanelInputLabel')}
+        placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
+        value={filterValueState ?? ''}
+        onChange={onFilterChange}
+        type={type || 'text'}
+        disabled={disabled}
+        slotProps={{
+          input: {
+            endAdornment: applying ? (
+              <rootProps.slots.baseInputAdornment position="end">
+                <rootProps.slots.loadIcon fontSize="small" color="action" />
+              </rootProps.slots.baseInputAdornment>
+            ) : null,
+            ...slotProps?.input,
+          },
+          inputLabel: {
+            shrink: true,
+          },
+          htmlInput: {
+            tabIndex,
+            ...slotProps?.htmlInput,
+          },
+        }}
+        inputRef={focusElementRef}
+        {...rootProps.slotProps?.baseTextField}
+        {...others}
+      />
+      {headerFilterMenu}
+      {clearButton}
+    </React.Fragment>
   );
 }
 
@@ -121,6 +123,7 @@ GridFilterInputValue.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  headerFilterMenu: PropTypes.node,
   /**
    * It is `true` if the filter either has a value or an operator with no value
    * required is selected (for example `isEmpty`)

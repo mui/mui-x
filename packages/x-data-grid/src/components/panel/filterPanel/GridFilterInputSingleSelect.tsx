@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_useId as useId } from '@mui/utils';
-import { styled } from '@mui/material/styles';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { TextFieldProps } from '../../../models/gridBaseSlots';
 import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
@@ -46,15 +45,6 @@ const renderSingleSelectOptions = ({
   });
 };
 
-const SingleSelectOperatorContainer = styled('div')({
-  display: 'flex',
-  alignItems: 'flex-end',
-  width: '100%',
-  [`& button`]: {
-    margin: 'auto 0px 5px 5px',
-  },
-});
-
 export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
   TextFieldProps & {
     type?: 'singleSelect';
@@ -70,10 +60,14 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     placeholder,
     tabIndex,
     label: labelProp,
-    variant = 'standard',
+    variant = 'outlined',
     isFilterActive,
     clearButton,
+    headerFilterMenu,
     slotProps,
+    InputProps,
+    InputLabelProps,
+    sx,
     ...others
   } = props;
   const filterValue = item.value ?? '';
@@ -116,8 +110,8 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   const label = labelProp ?? apiRef.current.getLocaleText('filterPanelInputLabel');
 
   return (
-    <SingleSelectOperatorContainer>
-      <rootProps.slots.baseFormControl fullWidth>
+    <React.Fragment>
+      <rootProps.slots.baseFormControl fullWidth sx={sx}>
         <rootProps.slots.baseInputLabel
           {...rootProps.slotProps?.baseInputLabel}
           id={labelId}
@@ -139,13 +133,14 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
             tabIndex,
             ref: focusElementRef,
             placeholder: placeholder ?? apiRef.current.getLocaleText('filterPanelInputPlaceholder'),
+            ...InputProps?.inputProps,
           }}
           native={isSelectNative}
           notched={variant === 'outlined' ? true : undefined}
+          {...rootProps.slotProps?.baseSelect}
           {
             ...(others as any) /* FIXME: typing error */
           }
-          {...rootProps.slotProps?.baseSelect}
         >
           {renderSingleSelectOptions({
             column: resolvedColumn,
@@ -157,8 +152,9 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
           })}
         </rootProps.slots.baseSelect>
       </rootProps.slots.baseFormControl>
+      {headerFilterMenu}
       {clearButton}
-    </SingleSelectOperatorContainer>
+    </React.Fragment>
   );
 }
 
@@ -176,6 +172,7 @@ GridFilterInputSingleSelect.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  headerFilterMenu: PropTypes.node,
   /**
    * It is `true` if the filter either has a value or an operator with no value
    * required is selected (for example `isEmpty`)

@@ -45,6 +45,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
     focusElementRef,
     slotProps,
     isFilterActive,
+    headerFilterMenu,
     clearButton,
     tabIndex,
     disabled,
@@ -80,39 +81,40 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
   }, [item.value, type]);
 
   return (
-    <rootProps.slots.baseTextField
-      fullWidth
-      id={id}
-      label={apiRef.current.getLocaleText('filterPanelInputLabel')}
-      placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
-      value={filterValueState}
-      onChange={onFilterChange}
-      variant="standard"
-      type={type || 'text'}
-      inputRef={focusElementRef}
-      slotProps={{
-        input: {
-          ...(applying || clearButton
-            ? {
-                endAdornment: applying ? (
-                  <rootProps.slots.loadIcon fontSize="small" color="action" />
-                ) : (
-                  clearButton
-                ),
-              }
-            : {}),
-          disabled,
-          ...slotProps?.input,
-        },
-        htmlInput: {
-          max: type === 'datetime-local' ? '9999-12-31T23:59' : '9999-12-31',
-          tabIndex,
-          ...slotProps?.htmlInput,
-        },
-      }}
-      {...other}
-      {...rootProps.slotProps?.baseTextField}
-    />
+    <React.Fragment>
+      <rootProps.slots.baseTextField
+        fullWidth
+        id={id}
+        label={apiRef.current.getLocaleText('filterPanelInputLabel')}
+        placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
+        value={filterValueState}
+        onChange={onFilterChange}
+        variant="standard"
+        type={type || 'text'}
+        disabled={disabled}
+        InputLabelProps={{
+          shrink: true,
+        }}
+        inputRef={focusElementRef}
+        slotProps={{
+          input: {
+            endAdornment: applying ? (
+              <rootProps.slots.loadIcon fontSize="small" color="action" />
+            ) : null,
+            ...slotProps?.input,
+          },
+          htmlInput: {
+            max: type === 'datetime-local' ? '9999-12-31T23:59' : '9999-12-31',
+            tabIndex,
+            ...slotProps?.htmlInput,
+          },
+        }}
+        {...rootProps.slotProps?.baseTextField}
+        {...other}
+      />
+      {headerFilterMenu}
+      {clearButton}
+    </React.Fragment>
   );
 }
 
@@ -130,6 +132,7 @@ GridFilterInputDate.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  headerFilterMenu: PropTypes.node,
   /**
    * It is `true` if the filter either has a value or an operator with no value
    * required is selected (for example `isEmpty`)

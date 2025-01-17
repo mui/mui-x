@@ -11,6 +11,7 @@ export type GridFilterInputValueProps<Api extends GridApiCommon = GridApiCommuni
   apiRef: React.RefObject<Api>;
   inputRef?: React.Ref<any>;
   focusElementRef?: React.Ref<any>;
+  headerFilterMenu?: React.ReactNode;
   clearButton?: React.ReactNode | null;
   /**
    * It is `true` if the filter either has a value or an operator with no value

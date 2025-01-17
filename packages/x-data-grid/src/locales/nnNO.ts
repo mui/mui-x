@@ -113,6 +113,7 @@ const nnNOGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Større enn eller lik',
   'headerFilterOperator<': 'Mindre enn',
   'headerFilterOperator<=': 'Mindre enn eller lik',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'nokon',

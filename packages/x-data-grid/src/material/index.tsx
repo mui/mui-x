@@ -88,6 +88,7 @@ const iconSlots: GridIconSlotsComponent = {
   filterPanelAddIcon: GridAddIcon,
   filterPanelRemoveAllIcon: GridDeleteForeverIcon,
   columnReorderIcon: GridDragIcon,
+  menuItemCheckIcon: GridCheckIcon,
 };
 
 const baseSlots: GridBaseSlots = {
