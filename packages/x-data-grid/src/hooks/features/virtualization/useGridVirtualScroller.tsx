@@ -48,6 +48,7 @@ import { gridListColumnSelector } from '../listView/gridListViewSelectors';
 import { minimalContentHeight } from '../rows/gridRowsUtils';
 import { EMPTY_PINNED_COLUMN_FIELDS, GridPinnedColumns } from '../columns';
 import { gridFocusedVirtualCellSelector } from './gridFocusedVirtualCellSelector';
+import { roundToDecimalPlaces } from '../../../utils/roundToDecimalPlaces';
 
 const MINIMUM_COLUMN_WIDTH = 50;
 
@@ -144,7 +145,10 @@ export const useGridVirtualScroller = () => {
       }
 
       const initialRect = node.getBoundingClientRect();
-      let lastSize = roundDimensions(initialRect);
+      let lastSize = {
+        width: roundToDecimalPlaces(initialRect.width, 1),
+        height: roundToDecimalPlaces(initialRect.height, 1),
+      };
 
       if (
         !previousSize.current ||
@@ -165,7 +169,10 @@ export const useGridVirtualScroller = () => {
           return;
         }
 
-        const newSize = roundDimensions(entry.contentRect);
+        const newSize = {
+          width: roundToDecimalPlaces(entry.contentRect.width, 1),
+          height: roundToDecimalPlaces(entry.contentRect.height, 1),
+        };
 
         if (newSize.width === lastSize.width && newSize.height === lastSize.height) {
           return;
@@ -1160,13 +1167,4 @@ function bufferForDirection(
       // eslint unable to figure out enum exhaustiveness
       throw new Error('unreachable');
   }
-}
-
-// Round to avoid issues with subpixel rendering
-// https://github.com/mui/mui-x/issues/15721
-function roundDimensions(dimensions: { width: number; height: number }) {
-  return {
-    width: Math.round(dimensions.width * 10) / 10,
-    height: Math.round(dimensions.height * 10) / 10,
-  };
 }
