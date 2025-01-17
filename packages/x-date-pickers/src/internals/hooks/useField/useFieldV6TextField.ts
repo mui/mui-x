@@ -333,6 +333,10 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
     const valueStr = shouldUseEventData ? eventData : targetValue;
     const cleanValueStr = cleanString(valueStr);
 
+    if (parsedSelectedSections === 'all') {
+      setSelectedSections(activeSectionIndex);
+    }
+
     // If no section is selected or eventData should be used, we just try to parse the new value
     // This line is mostly triggered by imperative code / application tests.
     if (activeSectionIndex == null || shouldUseEventData) {
