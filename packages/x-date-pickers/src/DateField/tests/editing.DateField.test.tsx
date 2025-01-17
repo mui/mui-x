@@ -7,6 +7,7 @@ import {
   getTextbox,
   describeAdapters,
   expectFieldValueV6,
+  getCleanedSelectedContent,
 } from 'test/utils/pickers';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { testSkipIf } from 'test/utils/skipIf';
@@ -1051,12 +1052,47 @@ describe('<DateField /> - Editing', () => {
         keyStrokes: [{ value: '1', expected: '2022' }],
       });
     });
+
+    it('should reset the select "all" state when typing a digit', () => {
+      // Test with accessible DOM structure
+      let view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+
+      view.selectSection('month');
+      // select all sections
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
+      expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
+
+      view.pressKey(null, '1');
+      expect(getCleanedSelectedContent()).to.equal('01');
+
+      view.unmount();
+
+      // Test with non-accessible DOM structure
+      view = renderWithProps({ enableAccessibleFieldDOMStructure: false });
+
+      view.selectSection('month');
+      const input = getTextbox();
+      // select all sections
+      fireEvent.keyDown(input, {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
+      expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
+
+      fireEvent.change(input, { target: { value: '1/DD/YYYY' } });
+      expect(getCleanedSelectedContent()).to.equal('01');
+    });
   });
 
   describeAdapters(
     'Letter editing',
     DateField,
-    ({ adapter, testFieldChange, testFieldKeyPress }) => {
+    ({ adapter, testFieldChange, testFieldKeyPress, renderWithProps }) => {
       it('should select the first matching month with no previous query and no value is provided (letter format)', () => {
         testFieldChange({
           format: adapter.formats.month,
@@ -1136,6 +1172,41 @@ describe('<DateField /> - Editing', () => {
           key: 'd',
           expectedValue: 'June',
         });
+      });
+
+      it('should reset the select "all" state when typing a letter', () => {
+        // Test with accessible DOM structure
+        let view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+
+        view.selectSection('month');
+        // select all sections
+        fireEvent.keyDown(view.getActiveSection(0), {
+          key: 'a',
+          keyCode: 65,
+          ctrlKey: true,
+        });
+        expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
+
+        view.pressKey(null, 'j');
+        expect(getCleanedSelectedContent()).to.equal(adapter.lib === 'luxon' ? '1' : '01');
+
+        view.unmount();
+
+        // Test with non-accessible DOM structure
+        view = renderWithProps({ enableAccessibleFieldDOMStructure: false });
+
+        view.selectSection('month');
+        const input = getTextbox();
+        // select all sections
+        fireEvent.keyDown(input, {
+          key: 'a',
+          keyCode: 65,
+          ctrlKey: true,
+        });
+        expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
+
+        fireEvent.change(input, { target: { value: 'j/DD/YYYY' } });
+        expect(getCleanedSelectedContent()).to.equal(adapter.lib === 'luxon' ? '1' : '01');
       });
     },
   );
