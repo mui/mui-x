@@ -22,10 +22,10 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { useLineChartProps, ChartsWrapper } from '@mui/x-charts/internals';
-import { ChartDataProvider } from '@mui/x-charts/context';
 import { ChartContainerProProps } from '../ChartContainerPro';
 import { useIsZoomInteracting } from '../hooks/zoom';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
+import { ChartDataProviderPro } from '../ChartDataProviderPro';
 
 function AreaPlotZoom(props: AreaPlotProps) {
   const isInteracting = useIsZoomInteracting();
@@ -170,19 +170,14 @@ const LineChartPro = React.forwardRef(function LineChartPro(
     children,
   } = useLineChartProps(other);
   const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps(
-    { ...chartContainerProps, apiRef },
+    { ...chartContainerProps, initialZoom, onZoomChange, apiRef },
     ref,
   );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
 
   return (
-    <ChartDataProvider
-      {...chartDataProviderProProps}
-      apiRef={apiRef}
-      initialZoom={initialZoom}
-      onZoomChange={onZoomChange}
-    >
+    <ChartDataProviderPro {...chartDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps}>
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
@@ -205,7 +200,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(
           {children}
         </ChartsSurface>
       </ChartsWrapper>
-    </ChartDataProvider>
+    </ChartDataProviderPro>
   );
 });
 
