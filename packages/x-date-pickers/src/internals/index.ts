@@ -4,6 +4,17 @@ export type {
   PickersArrowSwitcherSlots,
   PickersArrowSwitcherSlotProps,
 } from './components/PickersArrowSwitcher';
+export {
+  PickerFieldUI,
+  PickerFieldUIContextProvider,
+  cleanFieldResponse,
+  useFieldTextFieldProps,
+} from './components/PickerFieldUI';
+export type {
+  ExportedPickerFieldUIProps,
+  PickerFieldUISlots,
+  PickerFieldUISlotProps,
+} from './components/PickerFieldUI';
 export { PickerProvider } from './components/PickerProvider';
 export type { PickerContextValue } from './components/PickerProvider';
 export { PickersModalDialog } from './components/PickersModalDialog';
@@ -103,6 +114,12 @@ export type { ExportedUseViewsOptions, UseViewsOptions } from './hooks/useViews'
 export { useViews } from './hooks/useViews';
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';
 
+export type {
+  PickerAnyManager,
+  PickerManagerFieldInternalProps,
+  PickerManagerEnableAccessibleFieldDOMStructure,
+  PickerManagerError,
+} from './models/manager';
 export type { RangePosition } from './models/pickers';
 export type { BaseSingleInputFieldProps, FieldRangeSection } from './models/fields';
 export type { BasePickerProps, BasePickerInputProps } from './models/props/basePickerProps';
@@ -132,7 +149,6 @@ export type {
   PickerValidValue,
 } from './models/value';
 
-export { convertFieldResponseIntoMuiTextFieldProps } from './utils/convertFieldResponseIntoMuiTextFieldProps';
 export {
   applyDefaultDate,
   replaceInvalidDateByNull,

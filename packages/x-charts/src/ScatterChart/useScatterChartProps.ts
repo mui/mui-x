@@ -6,7 +6,6 @@ import { ChartsLegendSlotExtension } from '../ChartsLegend';
 import { ChartsOverlayProps } from '../ChartsOverlay';
 import type { ChartsVoronoiHandlerProps } from '../ChartsVoronoiHandler';
 import { ChartContainerProps } from '../ChartContainer';
-import { ZAxisContextProviderProps } from '../context';
 import type { ScatterChartProps } from './ScatterChart';
 import type { ScatterPlotProps } from './ScatterPlot';
 import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
@@ -59,13 +58,12 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     colors,
     xAxis,
     yAxis,
+    zAxis,
     highlightedItem,
     onHighlightChange,
     className,
   };
-  const zAxisProps: Omit<ZAxisContextProviderProps, 'children'> = {
-    zAxis,
-  };
+
   const voronoiHandlerProps: ChartsVoronoiHandlerProps = {
     voronoiMaxRadius,
     onItemClick: onItemClick as ChartsVoronoiHandlerProps['onItemClick'],
@@ -116,7 +114,6 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
   return {
     chartsWrapperProps,
     chartContainerProps,
-    zAxisProps,
     voronoiHandlerProps,
     chartsAxisProps,
     gridProps,

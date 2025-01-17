@@ -7,6 +7,9 @@
     "clearable": {
       "description": "If <code>true</code>, a clear button will be shown in the field allowing value clearing."
     },
+    "clearButtonPosition": {
+      "description": "The position at which the clear button is placed. If the field is not clearable, the button is not rendered."
+    },
     "color": {
       "description": "The color of the component. It supports both default and custom theme colors, which can be added as shown in the <a href=\"https://mui.com/material-ui/customization/palette/#custom-colors\">palette customization guide</a>."
     },

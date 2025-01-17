@@ -110,7 +110,7 @@ export interface UseEnrichedRangePickerFieldPropsParams<
     TEnableAccessibleFieldDOMStructure,
     TError
   >;
-  anchorRef?: React.Ref<HTMLDivElement>;
+  anchorRef?: React.Ref<HTMLElement>;
   currentView?: TView | null;
   initialView?: TView;
   startFieldRef: React.RefObject<FieldRef<PickerValue> | null>;
@@ -130,7 +130,7 @@ const useMultiInputFieldSlotProps = <
   disableOpenPicker,
   onBlur,
   rangePosition,
-  onRangePositionChange,
+  setRangePosition,
   localeText: inLocaleText,
   pickerSlotProps,
   pickerSlots,
@@ -177,7 +177,7 @@ const useMultiInputFieldSlotProps = <
 
   const openRangeStartSelection: React.UIEventHandler = (event) => {
     event.stopPropagation();
-    onRangePositionChange('start');
+    setRangePosition('start');
     if (!readOnly && !disableOpenPicker) {
       event.preventDefault();
       contextValue.setOpen(true);
@@ -186,7 +186,7 @@ const useMultiInputFieldSlotProps = <
 
   const openRangeEndSelection: React.UIEventHandler = (event) => {
     event.stopPropagation();
-    onRangePositionChange('end');
+    setRangePosition('end');
     if (!readOnly && !disableOpenPicker) {
       event.preventDefault();
       contextValue.setOpen(true);
@@ -195,7 +195,7 @@ const useMultiInputFieldSlotProps = <
 
   const handleFocusStart = () => {
     if (contextValue.open) {
-      onRangePositionChange('start');
+      setRangePosition('start');
       if (previousRangePosition.current !== 'start' && initialView) {
         contextValue.setView?.(initialView);
       }
@@ -204,7 +204,7 @@ const useMultiInputFieldSlotProps = <
 
   const handleFocusEnd = () => {
     if (contextValue.open) {
-      onRangePositionChange('end');
+      setRangePosition('end');
       if (previousRangePosition.current !== 'end' && initialView) {
         contextValue.setView?.(initialView);
       }
@@ -308,12 +308,9 @@ const useSingleInputFieldSlotProps = <
   label,
   onBlur,
   rangePosition,
-  onRangePositionChange,
+  setRangePosition,
   singleInputFieldRef,
-  pickerSlots,
-  pickerSlotProps,
   fieldProps,
-  anchorRef,
   currentView,
 }: UseEnrichedRangePickerFieldPropsParams<
   true,
@@ -360,7 +357,7 @@ const useSingleInputFieldSlotProps = <
       activeSectionIndex == null || activeSectionIndex < sections.length / 2 ? 'start' : 'end';
 
     if (domRangePosition != null && domRangePosition !== rangePosition) {
-      onRangePositionChange(domRangePosition);
+      setRangePosition(domRangePosition);
     }
   };
 
@@ -380,32 +377,12 @@ const useSingleInputFieldSlotProps = <
     }
   };
 
-  const slots = {
-    ...fieldProps.slots,
-    textField: pickerSlots?.textField,
-    clearButton: pickerSlots?.clearButton,
-    clearIcon: pickerSlots?.clearIcon,
-  };
-
-  const slotProps = {
-    ...fieldProps.slotProps,
-    textField: pickerSlotProps?.textField,
-    clearButton: pickerSlotProps?.clearButton,
-    clearIcon: pickerSlotProps?.clearIcon,
-  };
-
   const enrichedFieldProps: ReturnType = {
     ...fieldProps,
-    slots,
-    slotProps,
     label,
     unstableFieldRef: handleFieldRef,
     onKeyDown: onSpaceOrEnter(openPicker, fieldProps.onKeyDown),
     onBlur,
-    InputProps: {
-      ref: anchorRef,
-      ...fieldProps?.InputProps,
-    },
     focused: contextValue.open ? true : undefined,
     ...(labelId != null && { id: labelId }),
     ...(variant === 'mobile' && { readOnly: true }),

@@ -28,10 +28,9 @@ import {
   ChartsVoronoiHandlerProps,
 } from '../ChartsVoronoiHandler/ChartsVoronoiHandler';
 import { ChartsGrid, ChartsGridProps } from '../ChartsGrid';
-import { ZAxisContextProvider, ZAxisContextProviderProps } from '../context/ZAxisContextProvider';
 import { useScatterChartProps } from './useScatterChartProps';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
-import { ChartDataProvider } from '../context';
+import { ChartDataProvider } from '../ChartDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../internals/components/ChartsWrapper';
 
@@ -50,7 +49,6 @@ export interface ScatterChartSlotProps
 
 export interface ScatterChartProps
   extends Omit<ChartContainerProps, 'series' | 'plugins'>,
-    Omit<ZAxisContextProviderProps, 'children' | 'dataset'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     Omit<ChartsVoronoiHandlerProps, 'onItemClick'> {
@@ -114,7 +112,6 @@ const ScatterChart = React.forwardRef(function ScatterChart(
   const {
     chartsWrapperProps,
     chartContainerProps,
-    zAxisProps,
     voronoiHandlerProps,
     chartsAxisProps,
     gridProps,
@@ -136,19 +133,17 @@ const ScatterChart = React.forwardRef(function ScatterChart(
       <ChartsWrapper {...chartsWrapperProps}>
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
-          <ZAxisContextProvider {...zAxisProps}>
-            {!props.disableVoronoi && <ChartsVoronoiHandler {...voronoiHandlerProps} />}
-            <ChartsAxis {...chartsAxisProps} />
-            <ChartsGrid {...gridProps} />
-            <g data-drawing-container>
-              {/* The `data-drawing-container` indicates that children are part of the drawing area. Ref: https://github.com/mui/mui-x/issues/13659 */}
-              <ScatterPlot {...scatterPlotProps} />
-            </g>
-            <ChartsOverlay {...overlayProps} />
-            <ChartsAxisHighlight {...axisHighlightProps} />
-            {!props.loading && <Tooltip trigger="item" {...props.slotProps?.tooltip} />}
-            {children}
-          </ZAxisContextProvider>
+          {!props.disableVoronoi && <ChartsVoronoiHandler {...voronoiHandlerProps} />}
+          <ChartsAxis {...chartsAxisProps} />
+          <ChartsGrid {...gridProps} />
+          <g data-drawing-container>
+            {/* The `data-drawing-container` indicates that children are part of the drawing area. Ref: https://github.com/mui/mui-x/issues/13659 */}
+            <ScatterPlot {...scatterPlotProps} />
+          </g>
+          <ChartsOverlay {...overlayProps} />
+          <ChartsAxisHighlight {...axisHighlightProps} />
+          {!props.loading && <Tooltip trigger="item" {...props.slotProps?.tooltip} />}
+          {children}
         </ChartsSurface>
       </ChartsWrapper>
     </ChartDataProvider>

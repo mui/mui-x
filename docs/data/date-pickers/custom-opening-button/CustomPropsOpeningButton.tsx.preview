@@ -6,7 +6,7 @@
     },
     // Targets the `InputAdornment` component.
     inputAdornment: {
-      position: 'start',
+      component: 'span',
     },
   }}
 />
