@@ -67,6 +67,11 @@ export interface LineSeriesType
    */
   curve?: CurveType;
   /**
+   * If `true`, step curve starts and end at the first and last point.
+   * By default the line is extended to fill the space before and after.
+   */
+  strictStepCurve?: boolean;
+  /**
    * Define which items of the series should display a mark.
    * If can be a boolean that applies to all items.
    * Or a callback that gets some item properties and returns true if the item should be displayed.
