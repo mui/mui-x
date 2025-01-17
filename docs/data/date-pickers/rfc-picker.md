@@ -11,6 +11,10 @@ title: DX - Picker
 This page extends the initial proposal made in [#14718](https://github.com/mui/mui-x/issues/14718)
 :::
 
+:::success
+We might need a `RangePicker.*` component that would expose additional tools like the range position.
+:::
+
 ## Usage in a Popover
 
 ### Without Material UI
@@ -191,10 +195,18 @@ If the library does not provide any higher level utilities to create a responsiv
 import { useDateManager } from '@base-ui-components/react-x-date-pickers/managers';
 import { useMediaQuery } from '@base-ui-components/react-utils/useMediaQuery'; // not sure how the util package will be named
 import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
-import { Popover } from '@base-ui-components/react/popover';picker
-      ) : (
-        <Dialog.Trigger>📅</Dialog.Trigger>
-      )}
+import { Popover } from '@base-ui-components/react/popover';
+
+function DatePicker(props) {
+  const isDesktop = useMediaQuery('@media (pointer: fine)');
+
+  const field = (
+    <PickerField.Root>
+      {/** See field documentation **/}
+      {isDesktop
+        ? <Popover.Triggler>📅</Popover.Trigger>
+        : <Dialog.Trigger>📅</Dialog.Trigger>
+      }
     </PickerField.Root>
   );
 
@@ -229,7 +241,7 @@ import { Popover } from '@base-ui-components/react/popover';picker
   );
 }
 
-<DatePicker value={value} onChange={setValue}>
+<DatePicker value={value} onValueChange={setValue}>
 ```
 
 ### With Material UI
@@ -242,42 +254,11 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 <DatePicker value={value} onChange={setValue} />;
 ```
 
-## Static usage
-
-### Without Material UI
-
-The user can use the `<Picker.StaticRoot />` component to create a static picker.
-Most of the time, the user can use directly components such as `Calendar.*`, but the static picker can be useful in the following scenarios:
-
-- several view components are used together (the main use case is to create a Date Time Picker). The static picker will make sure the value is correctly handled between those components.
-- the user wants to add UI elements like a shortcut panel using utility components like `<Picker.SetValue />`.
-
-```tsx
-import { useDateManager } from '@base-ui-components/react-x-date-pickers/managers';
-import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
-
-function StaticDatePicker(props) {
-  const manager = useDateManager();
-
-  return (
-    <Picker.StaticRoot manager={manager} {...props}>
-      <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
-    </Picker.StaticRoot>
-  );
-}
-
-<StaticDatePicker value={value} onChange={setValue} />;
-```
-
-### With Material UI
-
-TODO
-
 ## Usage with date and time
 
 ### Without Material UI
 
-The user can use both the `Calendar.*` and the `DigitalClock.*` components together to render the date and the time picking UI side by side:
+The user can use both the `Calendar.*` and the `DigitalClock.*` components together to render the date and the time picking UI side by side.
 
 ```tsx
 import { Popover } from '@base-ui-components/react/popover';
@@ -285,34 +266,45 @@ import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
 import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 import { DigitalClock } from '@base-ui-components/react-x-date-pickers/digital-clock';
 
-<Popover.Popup>
-  <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
-  <DigitalClock.Root>{/** See digital clock documentation */}</DigitalClock.Root>
-</Popover.Popup>;
+function PickerView() {
+  const [activeSection, setActiveSection] = React.useState('day');
+
+  return (
+    <Popover.Popup>
+      <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
+      <DigitalClock.Root>{/** See digital clock documentation */}</DigitalClock.Root>
+    </Popover.Popup>
+  );
+}
 ```
 
-If the user wants to set the UI to select the date, then the time, he can conditionally render the view component based on the active section:
+:::success
+One big things to still clarify here is how we can provide the right tools for focus management without adding a view management system into our components.
+:::
+
+If the user wants to set the UI to select the date, then the time, he can conditionally render the view component based on some external state:
 
 ```tsx
 import { Popover } from '@base-ui-components/react/popover';
 import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
 import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 import { DigitalClock } from '@base-ui-components/react-x-date-pickers/digital-clock';
-import { isDateSection } from '@base-ui-components/react-x-date-pickers/utils';
 
-<Popover.Popup>
-  <Picker.ContextValue>
-    {({ activeSection }) =>
-      isDateSection(activeSection) ? (
+function PickerView() {
+  const [activeSection, setActiveSection] = React.useState('day');
+
+  return (
+    <Popover.Popup>
+      {['day', 'month', 'year'].includes(activeSection) ? (
         <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
       ) : (
         <DigitalClock.Root>
           {/** See digital clock documentation */}
         </DigitalClock.Root>
-      )
-    }
-  </Picker.ContextValue>
-</Popover.Popup>;
+      )}
+    </Popover.Popup>
+  );
+}
 ```
 
 ### With Material UI
@@ -349,14 +341,14 @@ TODO
 
 ### Without Material UI
 
-The user can use the `<Picker.FormattedDate />` component to create a toolbar for its picker:
+The user can use the the `usePickerContext()` hook to access to information like the current value and create a toolbar above the view content:
 
 ```tsx
 import { Popover } from '@base-ui-components/react/popover';
 import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
 import { usePickerContext } from '@base-ui-components/react-x-date-pickers/hooks';
 
-function PickerToolbar() {
+function PickerView() {
   const { value } = usePickerContext();
 
   return (
@@ -368,25 +360,26 @@ function PickerToolbar() {
 }
 ```
 
-The toolbar can also be used to switch between sections thanks to the `<Picker.SetActiveSection />` component:
+This toolbar can also be used to switch between sections if the parent component has a state to decide which one is currently rendered:
 
 ```tsx
 import { Popover } from '@base-ui-components/react/popover';
 import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
 import { usePickerContext } from '@base-ui-components/react-x-date-pickers/hooks';
 
-function PickerToolbar() {
+function PickerView() {
+  const [activeSection, setActiveSection] = React.useState('day');
   const { value } = usePickerContext();
 
   return (
     <Popover.Popup>
       <div>
-        <Picker.SetActiveSection target="year">
+        <button onClick={() => setActiveSection('year')}>
           {value.format('YYYY')}
-        </Picker.SetActiveSection>
-        <Picker.SetActiveSection target="day">
+        </button>
+        <button onClick={() => setActiveSection('days')}>
           {value.format('DD MMMM')}
-        </Picker.SetActiveSection>
+        </button>
       </div>
       <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
     </Popover.Popup>
@@ -402,7 +395,7 @@ TODO
 
 ### Without Material UI
 
-The user can use the `<Picker.SetActiveSection />` component in combination with any Tabs / Tab components.
+The user can also build a `Tabs` component using the same tools and the toolbar:
 
 The example below uses the `Tabs` component from Base UI as an example:
 
@@ -410,31 +403,26 @@ The example below uses the `Tabs` component from Base UI as an example:
 import { Tabs } from '@base-ui-components/react/tabs';
 import { Popover } from '@base-ui-components/react/popover';
 import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
-import { isDateSection } from '@base-ui-components/react-x-date-pickers/utils';
 
-<Popover.Popup>
-  <Picker.ContextValue>
-    {({ activeSection }) => (
-      <Tabs.Root value={isDateSection(activeSection) ? 'date' : 'time'}>
+functon PickerViews() {
+  const [activeSection, setActiveSection] = React.useState('day');
+
+  return (
+    <Popover.Popup>
+      <Tabs.Root value={['year', 'month', 'day'].includes(activeSection) ? 'date' : 'time'}>
         <Tabs.List>
-          <Tabs.Tab
-            value="date"
-            render={(props) => <Picker.SetActiveSection {...props} target="day" />}
-          >
+          <Tabs.Tab value="date" onClick={() => onActiveSectionChange('day')}>
             Date
           </Tabs.Tab>
-          <Tabs.Tab
-            value="time"
-            render={(props) => <Picker.SetActiveSection {...props} target="hours" />}
-          >
+          <Tabs.Tab value="time" onClick={() => onActiveSectionChange('hours')}>
             Time
           </Tabs.Tab>
         </Tabs.List>
       </Tabs.Root>
-    )}
-  </Picker.ContextValue>
-  <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
-</Popover.Popup>;
+      <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
+    </Popover.Popup>
+  )
+}
 ```
 
 ### With Material UI
@@ -526,13 +514,13 @@ It expects a function as its children, which receives the context value as a par
 
 - `children`: `(contextValue: PickerContextValue) => React.ReactNode`
 
-- **Value props**: `value`, `defaultValue`, `referenceDate`, `onChange`, `onError` and `timezone`.
+- **Value props**: `value`, `defaultValue`, `referenceDate`, `onValueChange`, `onError` and `timezone`.
 
   Same typing and behavior as today.
 
 - **Validation props**: list based on the `manager` prop
 
-  For `useDateManager()` it would be `maxDate`, `minDate`, `disableFuture`, `disablePast`, `shouldDisableDate`, `shouldDisableMonth`, `shouldDisableYear`.
+  For `useDateManager()` it would be `maxDate`, `minDate`, `disableFuture`, `disablePast`, `isDateInvalid`, `isMonthInvalid`, `isYearInvalid`.
 
   Same typing and behavior as today.
 
@@ -543,48 +531,6 @@ It expects a function as its children, which receives the context value as a par
 - **Open props**: `open`, `onOpenChange`
 
   The `onOpenChange` replaces the `onOpen` and `onClose` props in the current implementation
-
-### `Picker.StaticRoot`
-
-#### Props
-
-Top level component that wraps the other components when there is not field UI but only views.
-
-- `manager`: `PickerManager` - **required**
-
-  :::success
-  See [#15395](https://github.com/mui/mui-x/issues/15395) for context.
-  :::
-
-- `children`: `(contextValue: PickerContextValue) => React.ReactNode`
-
-- **Value props**: `value`, `defaultValue`, `referenceDate`, `onChange`, `onError` and `timezone`.
-
-  Same typing and behavior as today.
-
-- **Validation props**: list based on the `manager` prop
-
-  For `useDateManager()` it would be `maxDate`, `minDate`, `disableFuture`, `disablePast`, `shouldDisableDate`, `shouldDisableMonth`, `shouldDisableYear`.
-
-  Same typing and behavior as today.
-
-- **Form props**: `disabled`, `readOnly`.
-
-  Same typing and behavior as today.
-
-### `Picker.ContextValue`
-
-Utility component to access the picker public context.
-Doesn't render a DOM node (it does not have a `render` prop either).
-
-:::success
-The user can also use `usePickerContext()`, but a component allows to not create a dedicated component to access things close from `<Picker.Root />`
-We should probably start without it and add it if we feel the need.
-:::
-
-#### Props
-
-- `children`: `(contextValue: PickerContextValue) => React.ReactNode`
 
 ### `Picker.SetValue`
 
@@ -631,19 +577,3 @@ Renders a button to cancel the current value.
 #### Usages in the styled version
 
 - The Button of `<PickersActionBar />` that cancels the value
-
-### `Picker.SetActiveSection`
-
-Renders a button to set the active section.
-
-#### Usages in the styled version
-
-- The Tab in `<DateTimePickerTabs />`
-
-- The Tab in `<DateTimeRangePickerTabs />` (might require manually using `usePickerContext` to make the range position change work)
-
-#### Props
-
-- Extends `React.HTMLAttributes<HTMLButtonELement>`
-
-- `target`: `PickerSectionType` (current `FieldSectionType` that would be renamed) - **required**
