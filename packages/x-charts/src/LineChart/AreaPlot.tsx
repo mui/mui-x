@@ -3,7 +3,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { area as d3Area } from '@mui/x-charts-vendor/d3-shape';
-import { useCartesianContext } from '../context/CartesianProvider';
 import {
   AreaElement,
   areaElementClasses,
@@ -15,10 +14,10 @@ import { getValueToPositionMapper } from '../hooks/useScale';
 import getCurveFactory from '../internals/getCurve';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { LineItemIdentifier } from '../models/seriesType/line';
-import { useChartGradient } from '../internals/components/ChartsAxesGradients';
 import { useLineSeries } from '../hooks/useSeries';
-import { AxisId } from '../models/axis';
 import { useSkipAnimation } from '../context/AnimationProvider';
+import { useChartGradientIdBuilder } from '../hooks/useChartGradientId';
+import { useXAxes, useYAxes } from '../hooks/useAxis';
 
 export interface AreaPlotSlots extends AreaElementSlots {}
 
@@ -50,7 +49,9 @@ const AreaPlotRoot = styled('g', {
 
 const useAggregatedData = () => {
   const seriesData = useLineSeries();
-  const axisData = useCartesianContext();
+  const { xAxis, xAxisIds } = useXAxes();
+  const { yAxis, yAxisIds } = useYAxes();
+  const getGradientId = useChartGradientIdBuilder();
 
   // This memo prevents odd line chart behavior when hydrating.
   const allData = React.useMemo(() => {
@@ -59,7 +60,7 @@ const useAggregatedData = () => {
     }
 
     const { series, stackingGroups } = seriesData;
-    const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
+
     const defaultXAxisId = xAxisIds[0];
     const defaultYAxisId = yAxisIds[0];
 
@@ -80,9 +81,9 @@ const useAggregatedData = () => {
           const yScale = yAxis[yAxisId].scale;
           const xData = xAxis[xAxisId].data;
 
-          const gradientUsed: [AxisId, 'x' | 'y'] | undefined =
-            (yAxis[yAxisId].colorScale && [yAxisId, 'y']) ||
-            (xAxis[xAxisId].colorScale && [xAxisId, 'x']) ||
+          const gradientId: string | undefined =
+            (yAxis[yAxisId].colorScale && getGradientId(yAxisId)) ||
+            (xAxis[xAxisId].colorScale && getGradientId(xAxisId)) ||
             undefined;
 
           if (process.env.NODE_ENV !== 'production') {
@@ -136,13 +137,13 @@ const useAggregatedData = () => {
           const d = areaPath.curve(curve)(d3Data) || '';
           return {
             ...series[seriesId],
-            gradientUsed,
+            gradientId,
             d,
             seriesId,
           };
         });
     });
-  }, [seriesData, axisData]);
+  }, [seriesData, xAxisIds, yAxisIds, xAxis, yAxis, getGradientId]);
 
   return allData;
 };
@@ -162,20 +163,19 @@ function AreaPlot(props: AreaPlotProps) {
   const { slots, slotProps, onItemClick, skipAnimation: inSkipAnimation, ...other } = props;
   const skipAnimation = useSkipAnimation(inSkipAnimation);
 
-  const getGradientId = useChartGradient();
   const completedData = useAggregatedData();
 
   return (
     <AreaPlotRoot {...other}>
       {completedData.map(
-        ({ d, seriesId, color, area, gradientUsed }) =>
+        ({ d, seriesId, color, area, gradientId }) =>
           !!area && (
             <AreaElement
               key={seriesId}
               id={seriesId}
               d={d}
               color={color}
-              gradientId={gradientUsed && getGradientId(...gradientUsed)}
+              gradientId={gradientId}
               slots={slots}
               slotProps={slotProps}
               onClick={onItemClick && ((event) => onItemClick(event, { type: 'line', seriesId }))}

@@ -1,12 +1,17 @@
 'use client';
-import * as React from 'react';
-import { DrawingAreaContext, DrawingAreaState } from '../context/DrawingAreaProvider';
+import { useStore } from '../internals/store/useStore';
+import { useSelector } from '../internals/store/useSelector';
+import { selectorChartDrawingArea } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.selectors';
 
-export function useDrawingArea(): DrawingAreaState {
-  const { left, top, width, height, bottom, right, isPointInside } =
-    React.useContext(DrawingAreaContext);
-  return React.useMemo(
-    () => ({ left, top, width, height, bottom, right, isPointInside }),
-    [height, left, top, width, bottom, right, isPointInside],
-  );
+export type ChartDrawingArea = {
+  top: number;
+  left: number;
+  right: number;
+  bottom: number;
+  width: number;
+  height: number;
+};
+export function useDrawingArea() {
+  const store = useStore();
+  return useSelector(store, selectorChartDrawingArea);
 }

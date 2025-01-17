@@ -46,10 +46,10 @@ Learn more about the _Controlled and uncontrolled_ pattern in the [React documen
 The component is available in four variants:
 
 - The `DesktopDatePicker` component which works best for mouse devices and large screens.
-  It renders the views inside a popover and allows editing values directly inside the field.
+  It renders the views inside a popover and a field for keyboard editing.
 
 - The `MobileDatePicker` component which works best for touch devices and small screens.
-  It renders the view inside a modal and does not allow editing values directly inside the field.
+  It renders the view inside a modal and a field for keyboard editing.
 
 - The `DatePicker` component which renders `DesktopDatePicker` or `MobileDatePicker` depending on the device it runs on.
 
@@ -123,12 +123,6 @@ You can enable the clearable behavior:
 
 :::info
 See [Field components—Clearable behavior](/x/react-date-pickers/fields/#clearable-behavior) for more details.
-:::
-
-:::warning
-The clearable prop is not supported yet by the mobile Picker variants.
-
-See discussion [in this GitHub issue](https://github.com/mui/mui-x/issues/10842#issuecomment-1951887408) for more information.
 :::
 
 ## Localization

@@ -26,7 +26,7 @@ import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 describe('<DataGridPro /> - Detail panel', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
 
   function TestCase({ nbRows = 20, ...other }: Partial<DataGridProProps> & { nbRows?: number }) {
     apiRef = useGridApiRef();

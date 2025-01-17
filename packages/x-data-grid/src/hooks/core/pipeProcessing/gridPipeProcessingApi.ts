@@ -20,7 +20,7 @@ import {
 import { GridRowEntry, GridRowId } from '../../../models/gridRows';
 import { GridHydrateRowsValue } from '../../features/rows/gridRowsInterfaces';
 import { GridPreferencePanelsValue } from '../../features/preferencesPanel';
-import { GridGetRowsParams } from '../../../models/gridDataSource';
+import { GridGetRowsParams, GridGetRowsResponse } from '../../../models/gridDataSource';
 import { HeightEntry } from '../../features/rows/gridRowsMetaInterfaces';
 
 export type GridPipeProcessorGroup = keyof GridPipeProcessingLookup;
@@ -68,6 +68,11 @@ export interface GridPipeProcessingLookup {
     context: { event: React.KeyboardEvent; cellParams: GridCellParams; editMode: GridEditMode };
   };
   isColumnPinned: { value: GridPinnedColumnPosition | false; context: string };
+  processDataSourceRows: {
+    value: { params: GridGetRowsParams; response: GridGetRowsResponse };
+    // `true` if the row hydration should be re-applied
+    context: boolean;
+  };
 }
 
 export type GridPipeProcessor<P extends GridPipeProcessorGroup> = (

@@ -6,7 +6,7 @@ const isDevEnvironment = process.env.NODE_ENV === 'development';
 const noop = () => {};
 
 export function useResizeObserver(
-  ref: React.MutableRefObject<HTMLElement | undefined | null>,
+  ref: React.RefObject<HTMLElement | undefined | null>,
   fn: (entries: ResizeObserverEntry[]) => void,
   enabled?: boolean,
 ) {

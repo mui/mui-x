@@ -8,7 +8,7 @@ import {
   DefaultizedPieValueType,
   PieSeriesType,
 } from '../models/seriesType/pie';
-import { defaultLabelTransitionConfig } from './dataTransform/transition';
+import { getDefaultLabelTransitionConfig } from './dataTransform/transition';
 import {
   AnimatedObject,
   ValueWithHighlight,
@@ -121,7 +121,7 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
     data,
   });
   const transition = useTransition<ValueWithHighlight, AnimatedObject>(transformedData, {
-    ...defaultLabelTransitionConfig,
+    ...getDefaultLabelTransitionConfig(skipAnimation),
     immediate: skipAnimation,
   });
 
@@ -206,6 +206,7 @@ PieArcLabelPlot.propTypes = {
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       index: PropTypes.number.isRequired,
       label: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+      labelMarkType: PropTypes.oneOf(['circle', 'line', 'square']),
       padAngle: PropTypes.number.isRequired,
       startAngle: PropTypes.number.isRequired,
       value: PropTypes.number.isRequired,

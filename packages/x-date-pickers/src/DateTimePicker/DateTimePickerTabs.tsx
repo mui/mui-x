@@ -105,11 +105,11 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
 
   const translations = usePickerTranslations();
   const { ownerState } = usePickerPrivateContext();
-  const { view, onViewChange } = usePickerContext();
+  const { view, setView } = usePickerContext();
   const classes = useUtilityClasses(classesProp);
 
   const handleChange = (event: React.SyntheticEvent, value: TabValue) => {
-    onViewChange(tabToView(value));
+    setView(tabToView(value));
   };
 
   if (hidden) {
