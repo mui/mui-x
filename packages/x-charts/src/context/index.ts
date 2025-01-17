@@ -1,4 +1,4 @@
-export {
+export type {
   HighlightScope,
   FadeOptions,
   HighlightItemData,
