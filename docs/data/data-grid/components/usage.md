@@ -38,7 +38,7 @@ function App() {
 }
 ```
 
-Any props you pass to these parts will be forwarded directly to their corresponding HTML element. For example:
+Any props passed to these parts will be forwarded directly to their corresponding HTML element. For example:
 
 ```tsx
 // This will render a <div /> element with the class and aria-label attributes

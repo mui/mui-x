@@ -41,7 +41,11 @@ It renders the `baseButton` slot.
 `Excel` is a button that triggers an Excel export.
 It renders the `baseButton` slot.
 
-## Toolbar export menu
+## Recipes
+
+Below are some ways the Export components can be used.
+
+### Toolbar export menu
 
 The demo below shows how to display export options within a menu on the toolbar.
 
