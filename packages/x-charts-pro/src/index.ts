@@ -25,6 +25,8 @@ export * from '@mui/x-charts/ScatterChart';
 export * from '@mui/x-charts/SparkLineChart';
 export * from '@mui/x-charts/Gauge';
 export * from '@mui/x-charts/ChartsSurface';
+export * from '@mui/x-charts/ChartDataProvider';
+export * from '@mui/x-charts/ChartsLabel';
 
 // Pro components
 export * from './Heatmap';
