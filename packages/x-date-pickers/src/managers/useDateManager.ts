@@ -34,6 +34,10 @@ export function useDateManager<TEnableAccessibleFieldDOMStructure extends boolea
         ...internalProps,
         ...getDateFieldInternalPropsDefaults({ defaultDates, utils, internalProps }),
       }),
+      internal_getOpenPickerButtonAriaLabel: ({ value, utils, localeText }) => {
+        const formattedValue = utils.isValid(value) ? utils.format(value, 'fullDate') : null;
+        return localeText.openDatePickerDialogue(formattedValue);
+      },
     }),
     [enableAccessibleFieldDOMStructure],
   );
@@ -70,7 +74,7 @@ export type UseDateManagerReturnValue<TEnableAccessibleFieldDOMStructure extends
     DateManagerFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>
   >;
 
-interface DateManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure extends boolean>
+export interface DateManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends MakeOptional<
       UseFieldInternalProps<PickerValue, TEnableAccessibleFieldDOMStructure, DateValidationError>,
       'format'

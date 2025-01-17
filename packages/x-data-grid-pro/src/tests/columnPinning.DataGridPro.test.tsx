@@ -12,7 +12,14 @@ import {
   GridColDef,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
-import { createRenderer, fireEvent, screen, createEvent, act } from '@mui/internal-test-utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  createEvent,
+  act,
+  waitFor,
+} from '@mui/internal-test-utils';
 import {
   $,
   $$,
@@ -40,7 +47,7 @@ function createDragOverEvent(target: ChildNode) {
 describe('<DataGridPro /> - Column pinning', () => {
   const { render, clock } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
 
   function TestCase({ nbCols = 20, ...other }: Partial<DataGridProProps> & { nbCols?: number }) {
     apiRef = useGridApiRef();
@@ -500,7 +507,9 @@ describe('<DataGridPro /> - Column pinning', () => {
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
       await user.click(menuIconButton);
       await user.click(screen.getByRole('menuitem', { name: 'Unpin' }));
-      expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`)).to.equal(null);
+      await waitFor(() => {
+        expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`)).to.equal(null);
+      });
     });
 
     describe('with fake timers', () => {

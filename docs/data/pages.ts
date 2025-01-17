@@ -74,7 +74,10 @@ const pages: MuiPage[] = [
             title: 'Editing',
             children: [
               { pathname: '/x/react-data-grid/editing', title: 'Overview' },
-              { pathname: '/x/react-data-grid/recipes-editing', title: 'Recipes' },
+              { pathname: '/x/react-data-grid/editing/persistence' },
+              { pathname: '/x/react-data-grid/editing/custom-edit-component' },
+              { pathname: '/x/react-data-grid/editing/editing-events' },
+              { pathname: '/x/react-data-grid/recipes-editing' },
             ],
           },
           { pathname: '/x/react-data-grid/sorting' },
@@ -164,7 +167,7 @@ const pages: MuiPage[] = [
               {
                 pathname: '/x/react-data-grid/server-side-data/aggregation',
                 plan: 'premium',
-                planned: true,
+                unstable: true,
               },
             ],
           },
@@ -233,6 +236,10 @@ const pages: MuiPage[] = [
               {
                 pathname: '/x/api/data-grid/grid-aggregation-function',
                 title: 'GridAggregationFunction',
+              },
+              {
+                pathname: '/x/api/data-grid/grid-aggregation-function-data-source',
+                title: 'GridAggregationFunctionDataSource',
               },
               {
                 pathname: '/x/api/data-grid/grid-csv-export-options',

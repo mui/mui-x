@@ -49,7 +49,7 @@ import { GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 import { getDefaultCellValue } from './utils';
 
 export const useGridRowEditing = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'editMode'
@@ -550,7 +550,7 @@ export const useGridRowEditing = (
               [
                 'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
                 'To handle the error pass a callback to the `onProcessRowUpdateError` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
-                'For more detail, see https://mui.com/x/react-data-grid/editing/#server-side-persistence.',
+                'For more detail, see https://mui.com/x/react-data-grid/editing/persistence/.',
               ],
               'error',
             );

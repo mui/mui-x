@@ -61,7 +61,7 @@ function buildPrintWindow(title?: string): HTMLIFrameElement {
  * @requires useGridParamsApi (method)
  */
 export const useGridPrintExport = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'pagination' | 'columnHeaderHeight' | 'headerFilterHeight'>,
 ): void => {
   const hasRootReference = apiRef.current.rootElementRef.current !== null;

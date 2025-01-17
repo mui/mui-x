@@ -26,6 +26,9 @@
     "innerRadius": {
       "description": "The radius between circle center and the beginning of the arc.<br />Can be a number (in px) or a string with a percentage such as &#39;50%&#39;.<br />The &#39;100%&#39; is the maximal radius that fit into the drawing area."
     },
+    "labelMarkType": {
+      "description": "Defines the mark type for the series.<br /><br />There is a default mark type for each series type.<br /><br />It allows custom values which will be passed to the mark component if it was customized."
+    },
     "outerRadius": {
       "description": "The radius between circle center and the end of the arc.<br />Can be a number (in px) or a string with a percentage such as &#39;50%&#39;.<br />The &#39;100%&#39; is the maximal radius that fit into the drawing area."
     },
