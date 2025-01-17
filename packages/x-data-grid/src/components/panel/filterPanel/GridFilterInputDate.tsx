@@ -89,14 +89,11 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
         placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
         value={filterValueState}
         onChange={onFilterChange}
-        variant="standard"
         type={type || 'text'}
         disabled={disabled}
-        InputLabelProps={{
-          shrink: true,
-        }}
         inputRef={focusElementRef}
         slotProps={{
+          ...slotProps,
           input: {
             endAdornment: applying ? (
               <rootProps.slots.loadIcon fontSize="small" color="action" />

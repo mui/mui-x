@@ -83,9 +83,6 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
             ) : null,
             ...slotProps?.input,
           },
-          inputLabel: {
-            shrink: true,
-          },
           htmlInput: {
             tabIndex,
             ...slotProps?.htmlInput,

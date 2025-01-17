@@ -141,7 +141,6 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
     <GridToolbarQuickFilterRoot
       as={rootProps.slots.baseTextField}
       ownerState={rootProps}
-      variant="outlined"
       size="small"
       value={searchValue}
       onChange={handleSearchValueChange}

@@ -99,7 +99,7 @@ const baseSlots: GridBaseSlots = {
   baseLinearProgress: MUILinearProgress,
   baseMenuList: MUIMenuList,
   baseMenuItem: BaseMenuItem,
-  baseTextField: MUITextField,
+  baseTextField: BaseTextField,
   baseFormControl: MUIFormControl,
   baseSelect: MUISelect,
   baseButton: MUIButton,
@@ -139,35 +139,24 @@ function BaseTextField(props: GridSlotProps['baseTextField']) {
     // label,
     // placeholder,
     // value,
-    type,
+    // type,
     // color,
     // error,
     // helperText,
     // variant,
-    disabled,
-    inputProps,
-    InputProps,
+    // disabled,
     // onChange,
     // onKeyDown,
     // size,
     // style,
-    tabIndex,
+    // tabIndex,
     ...rest
   } = props;
 
   return (
     <MUITextField
-      type={type}
+      variant='outlined'
       {...rest}
-      InputProps={{
-        disabled,
-        inputProps: {
-          max: type === 'datetime-local' ? '9999-12-31T23:59' : '9999-12-31',
-          tabIndex,
-          ...inputProps,
-        },
-        ...InputProps,
-      }}
       InputLabelProps={{
         shrink: true,
       }}

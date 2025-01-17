@@ -600,7 +600,6 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
         >
           {currentOperator?.InputComponent ? (
             <currentOperator.InputComponent
-              variant="outlined"
               size="small"
               apiRef={apiRef}
               item={item}
