@@ -152,7 +152,7 @@ If you were using this prop, you can safely remove it.
 
 The `useHighlighted` hook that gave access to the internal highlight state has been removed.
 
-To know if your item is highlighted, we recommend using `useItemHighlighted` hook:
+To know if your item is highlighted, it is recommended to use the `useItemHighlighted` hook instead:
 
 ```jsx
 const { isFaded, isHighlighted } = useItemHighlighted({
