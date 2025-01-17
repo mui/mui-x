@@ -60,7 +60,7 @@ To apply aggregation programmatically on non-aggregable columns (columns with `a
 
 - Pass `aggregation.model` to the `initialState` prop. This initializes aggregation with the provided model.
 - Provide the `aggregationModel` prop. This controls aggregation with the provided model.
-- Call the API method `setAggregationModel()`. This sets the aggregation with the provided model.
+- Call the API method `setAggregationModel()`. This applies an aggregation with the provided model.
 
 In the following demo, even though the **Year** column is not aggregable, it's still aggregated in read-only mode by providing an initial aggregation model as described above.
 
