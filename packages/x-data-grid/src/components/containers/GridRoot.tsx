@@ -12,7 +12,6 @@ import { Theme } from '@mui/material/styles';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridRootStyles } from './GridRootStyles';
-import { useCSSVariablesClass } from '../../utils/css/themeManager';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -60,7 +59,6 @@ const GridRoot = forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(pro
   const ownerState = rootProps;
 
   const classes = useUtilityClasses(ownerState, density);
-  const variablesClass = useCSSVariablesClass();
 
   // Our implementation of <NoSsr />
   const [mountedState, setMountedState] = React.useState(false);
@@ -74,7 +72,7 @@ const GridRoot = forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(pro
 
   return (
     <GridRootStyles
-      className={clsx(classes.root, className, variablesClass)}
+      className={clsx(classes.root, className)}
       ownerState={ownerState}
       {...other}
       ref={handleRef}
