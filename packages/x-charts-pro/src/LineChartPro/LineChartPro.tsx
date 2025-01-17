@@ -29,7 +29,7 @@ import { ChartDataProviderPro } from '../ChartDataProviderPro';
 
 function AreaPlotZoom(props: AreaPlotProps) {
   const isInteracting = useIsZoomInteracting();
-  return <AreaPlot {...props} skipAnimation={isInteracting || undefined} />;
+  return <AreaPlot {...props} skipAnimation={isInteracting || props.skipAnimation} />;
 }
 
 AreaPlotZoom.propTypes = {
@@ -62,7 +62,7 @@ AreaPlotZoom.propTypes = {
 
 function LinePlotZoom(props: LinePlotProps) {
   const isInteracting = useIsZoomInteracting();
-  return <LinePlot {...props} skipAnimation={isInteracting || undefined} />;
+  return <LinePlot {...props} skipAnimation={isInteracting || props.skipAnimation} />;
 }
 
 LinePlotZoom.propTypes = {
