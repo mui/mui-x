@@ -993,7 +993,7 @@ describe('<DataGridPro /> - Filter', () => {
       expect(getColumnValues(0)).to.deep.equal([]);
     });
 
-    it('should allow to clear the filter by clear button', () => {
+    it('should allow to clear the filter from operator menu', () => {
       render(
         <TestCase
           initialState={{
@@ -1010,6 +1010,39 @@ describe('<DataGridPro /> - Filter', () => {
             },
           }}
           headerFilters
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
+      const filterCell = getColumnHeaderCell(0, 1);
+      fireEvent.click(filterCell);
+      fireEvent.click(within(filterCell).getByLabelText('Operator'));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Clear filter' }));
+      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    });
+
+    it('should allow to clear the filter with clear button', () => {
+      render(
+        <TestCase
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [
+                  {
+                    field: 'brand',
+                    operator: 'contains',
+                    value: 'a',
+                  },
+                ],
+              },
+            },
+          }}
+          headerFilters
+          slotProps={{
+            headerFilterCell: {
+              showClearIcon: true,
+            },
+          }}
         />,
       );
 

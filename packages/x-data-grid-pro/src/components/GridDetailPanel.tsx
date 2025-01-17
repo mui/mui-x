@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { GridRowId } from '@mui/x-data-grid';
-import { vars } from '@mui/x-data-grid/internals';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
@@ -13,12 +12,12 @@ const DetailPanel = styled('div', {
   name: 'MuiDataGrid',
   slot: 'DetailPanel',
   overridesResolver: (props, styles) => styles.detailPanel,
-})<{ ownerState: OwnerState }>({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   width:
     'calc(var(--DataGrid-rowWidth) - var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize))',
-  backgroundColor: vars.colors.background.base,
+  backgroundColor: (theme.vars || theme).palette.background.default,
   overflow: 'auto',
-});
+}));
 
 interface GridDetailPanelProps
   extends Pick<React.HTMLAttributes<HTMLDivElement>, 'className' | 'children'> {

@@ -9,7 +9,6 @@ import {
 import { ButtonProps } from '@mui/material/Button';
 import { TooltipProps } from '@mui/material/Tooltip';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { vars } from '../../constants/cssVariables';
 import { BadgeProps } from '../../models/gridBaseSlots';
 import { gridColumnLookupSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
@@ -39,10 +38,10 @@ const GridToolbarFilterListRoot = styled('ul', {
   name: 'MuiDataGrid',
   slot: 'ToolbarFilterList',
   overridesResolver: (_props, styles) => styles.toolbarFilterList,
-})<{ ownerState: OwnerState }>({
-  margin: vars.spacing(1, 1, 0.5),
-  padding: vars.spacing(0, 1),
-});
+})<{ ownerState: OwnerState }>(({ theme }) => ({
+  margin: theme.spacing(1, 1, 0.5),
+  padding: theme.spacing(0, 1),
+}));
 
 // FIXME(v8:romgrk): override slotProps
 export interface GridToolbarFilterButtonProps {
