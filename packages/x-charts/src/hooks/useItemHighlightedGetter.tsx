@@ -1,3 +1,4 @@
+'use client';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import {
