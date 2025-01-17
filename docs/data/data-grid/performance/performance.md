@@ -79,7 +79,7 @@ function Component(props) {
 }
 ```
 
-An easy way to prevent re-renders is to extract any and all objects that can be static, and to memoize any and all objects that depends other objects.
+One way to prevent re-renders is to extract any objects that can be static, and to memoize any objects that depend on other objects.
 This applies to any prop that's an object or a function.
 
 ```tsx
