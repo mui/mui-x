@@ -12,6 +12,10 @@ export interface ChartContainerProProps<TSeries extends ChartSeriesType = ChartS
   extends ChartDataProviderProProps<TSeries, AllPluginSignatures<TSeries>>,
     ChartsSurfaceProps {}
 
+type ChartContainerProComponent = <TSeries extends ChartSeriesType = ChartSeriesType>(
+  props: ChartContainerProProps<TSeries> & { ref?: React.ForwardedRef<SVGSVGElement> },
+) => React.JSX.Element;
+
 /**
  * It sets up the data providers as well as the `<svg>` for the chart.
  *
@@ -43,12 +47,13 @@ const ChartContainerPro = React.forwardRef(function ChartContainerProInner<
     useChartContainerProProps<TSeries>(props, ref);
 
   return (
-    <ChartDataProviderPro<TSeries> {...chartDataProviderProProps}>
+    <ChartDataProviderPro {...chartDataProviderProProps}>
       <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
     </ChartDataProviderPro>
   );
-});
+}) as unknown as ChartContainerProComponent;
 
+// @ts-expect-error the type coercion breaks the prop types
 ChartContainerPro.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
