@@ -5,19 +5,13 @@ import type { ChartDataProviderProProps } from './ChartDataProviderPro';
 export const useChartDataProviderProProps = <TSeries extends ChartSeriesType = ChartSeriesType>(
   props: ChartDataProviderProProps<TSeries>,
 ) => {
-  const { children, initialZoom, onZoomChange, ...other } = props;
-
-  const { animationProviderProps, chartProviderProps, highlightedProviderProps } =
-    useChartDataProviderProps(other);
+  const { animationProviderProps, chartProviderProps, highlightedProviderProps, children } =
+    useChartDataProviderProps(props);
 
   return {
     children,
     highlightedProviderProps,
     animationProviderProps,
-    chartProviderProps: {
-      ...chartProviderProps,
-      initialZoom,
-      onZoomChange,
-    },
+    chartProviderProps,
   };
 };
