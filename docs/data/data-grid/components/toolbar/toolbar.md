@@ -56,7 +56,7 @@ The demo below shows how to display active filter chips on the toolbar.
 
 ### Custom elements
 
-Use the `render` prop to replace default elements. See [Components—Usage](/x/react-data-grid/components/usage/#customization) for more details.
+Use the `render` prop to replace default elements. See [Components usage—Customization](/x/react-data-grid/components/usage/#customization) for more details.
 
 The demo below shows how to replace the default elements with custom ones, styled with Tailwind CSS.
 

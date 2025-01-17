@@ -1,6 +1,6 @@
-# Data Grid - Components
+# Data Grid - Components usage
 
-<p class="description">Composable components that can be used to customize the Data Grid.</p>
+<p class="description">Learn how to customize the Data Grid with composable components.</p>
 
 ## Introduction
 

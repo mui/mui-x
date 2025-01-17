@@ -45,7 +45,7 @@ It renders the `baseIconButton` slot.
 ## Custom elements
 
 Use the `render` prop to replace default elements.
-See [Components—Usage](/x/react-data-grid/components/usage/#customization) for more details, and [Toolbar—Custom elements demo](/x/react-data-grid/components/toolbar/#custom-elements) for an example of a custom Quick Filter.
+See [Components usage—Customization](/x/react-data-grid/components/usage/#customization) for more details, and [Toolbar—Custom elements demo](/x/react-data-grid/components/toolbar/#custom-elements) for an example of a custom Quick Filter.
 
 ## Accessibility
 

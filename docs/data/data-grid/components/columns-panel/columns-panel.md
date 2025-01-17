@@ -43,7 +43,7 @@ It renders the `baseButton` slot.
 ## Custom elements
 
 Use the `render` prop to replace default elements.
-See [Components—Usage](/x/react-data-grid/components/usage/#customization) for more details, and [Toolbar—Custom elements demo](/x/react-data-grid/components/toolbar/#custom-elements) for an example of a custom Columns Panel Trigger.
+See [Components usage—Customization](/x/react-data-grid/components/usage/#customization) for more details, and [Toolbar—Custom elements demo](/x/react-data-grid/components/toolbar/#custom-elements) for an example of a custom Columns Panel Trigger.
 
 ## Accessibility
 
