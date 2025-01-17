@@ -1,36 +1,11 @@
 {
   "props": {
-    "series": {
-      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
-      "required": true
-    },
-    "axisHighlight": {
-      "type": {
-        "name": "shape",
-        "description": "{ x?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none', y?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none' }"
-      },
-      "default": "{ x: 'none', y: 'none' }",
-      "seeMoreLink": {
-        "url": "https://mui.com/x/react-charts/highlighting/",
-        "text": "highlighting docs"
-      }
-    },
-    "bottomAxis": {
-      "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
-      "default": "xAxisIds[0] The id of the first provided axis"
-    },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "blueberryTwilightPalette"
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
-    "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
-    "disableVoronoi": { "type": { "name": "bool" }, "default": "false" },
-    "grid": {
-      "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
-    },
     "height": { "type": { "name": "number" } },
-    "hideLegend": { "type": { "name": "bool" } },
     "highlightedItem": {
       "type": {
         "name": "shape",
@@ -44,11 +19,6 @@
         "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, end: number, start: number }&gt;"
       }
     },
-    "leftAxis": {
-      "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
-      "default": "yAxisIds[0] The id of the first provided axis"
-    },
-    "loading": { "type": { "name": "bool" }, "default": "false" },
     "margin": {
       "type": {
         "name": "shape",
@@ -62,13 +32,6 @@
         "describedArgs": ["highlightedItem"]
       }
     },
-    "onItemClick": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(event: MouseEvent, scatterItemIdentifier: ScatterItemIdentifier) => void",
-        "describedArgs": ["event", "scatterItemIdentifier"]
-      }
-    },
     "onZoomChange": {
       "type": { "name": "func" },
       "signature": {
@@ -76,22 +39,8 @@
         "describedArgs": ["zoomData"]
       }
     },
-    "rightAxis": {
-      "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
-      "default": "null"
-    },
+    "series": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "skipAnimation": { "type": { "name": "bool" } },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "additionalInfo": { "slotsApi": true }
-    },
-    "topAxis": {
-      "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
-      "default": "null"
-    },
-    "voronoiMaxRadius": { "type": { "name": "number" } },
     "width": { "type": { "name": "number" } },
     "xAxis": {
       "type": {
@@ -112,17 +61,18 @@
       }
     }
   },
-  "name": "ScatterChartPro",
+  "name": "ChartDataProviderPro",
   "imports": [
-    "import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';",
-    "import { ScatterChartPro } from '@mui/x-charts-pro';"
+    "import { ChartDataProviderPro } from '@mui/x-charts-pro/ChartDataProviderPro';",
+    "import { ChartDataProviderPro } from '@mui/x-charts-pro';"
   ],
   "classes": [],
-  "spread": true,
-  "themeDefaultProps": null,
-  "muiName": "MuiScatterChartPro",
-  "filename": "/packages/x-charts-pro/src/ScatterChartPro/ScatterChartPro.tsx",
+  "spread": false,
+  "themeDefaultProps": false,
+  "muiName": "MuiChartDataProviderPro",
+  "forwardsRefTo": "SVGSVGElement",
+  "filename": "/packages/x-charts-pro/src/ChartDataProviderPro/ChartDataProviderPro.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li>\n<li><a href=\"/x/react-charts/zoom-and-pan/\">Charts - Zooming and panning <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/composition/\">Chart composition</a></li></ul>",
   "cssComponent": false
 }
