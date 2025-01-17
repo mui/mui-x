@@ -25,7 +25,6 @@ export type GridFilterInputValueProps<Api extends GridApiCommon = GridApiCommuni
   | 'error'
   | 'helperText'
   | 'size'
-  | 'variant'
   | 'disabled'
   | 'label'
   | 'placeholder'

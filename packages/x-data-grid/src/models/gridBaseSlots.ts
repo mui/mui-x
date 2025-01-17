@@ -100,7 +100,6 @@ export type TextFieldProps = {
   tabIndex?: number;
   type?: React.HTMLInputTypeAttribute;
   value?: string;
-  variant?: 'standard' | 'outlined';
 };
 
 export type TooltipProps = {

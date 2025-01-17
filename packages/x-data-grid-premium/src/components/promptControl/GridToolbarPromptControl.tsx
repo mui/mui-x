@@ -215,7 +215,6 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
   return (
     <GridToolbarPromptControlRoot ownerState={rootProps} className={classes.root}>
       <rootProps.slots.baseTextField
-        variant="outlined"
         placeholder={
           isRecording
             ? apiRef.current.getLocaleText('toolbarPromptControlRecordingPlaceholder')
