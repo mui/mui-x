@@ -113,6 +113,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Is groter dan of gelijk aan',
   'headerFilterOperator<': 'Is kleiner dan',
   'headerFilterOperator<=': 'Is kleiner dan of gelijk aan',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'alles',

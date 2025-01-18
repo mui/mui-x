@@ -18,7 +18,7 @@ describe('<DataGridPro /> - Export', () => {
     autoHeight: isJSDOM,
   };
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
 
   const columns: GridColDef[] = [{ field: 'id' }, { field: 'brand', headerName: 'Brand' }];
 

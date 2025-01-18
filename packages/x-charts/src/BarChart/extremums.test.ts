@@ -1,11 +1,11 @@
 import { expect } from 'chai';
 import { getExtremumX } from './extremums';
-import { ExtremumGetter } from '../context/PluginProvider';
+import { CartesianExtremumGetter } from '../internals/plugins/models';
 
 const buildData = (
   data: number[],
   layout: 'vertical' | 'horizontal' = 'vertical',
-): Parameters<ExtremumGetter<'bar'>>[0] => {
+): Parameters<CartesianExtremumGetter<'bar'>>[0] => {
   return {
     series: {
       id1: {

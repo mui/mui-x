@@ -1,0 +1,7 @@
+<DataGridPremium
+  apiRef={apiRef}
+  columns={columns}
+  unstable_dataSource={dataSource}
+  initialState={initialState}
+  aggregationFunctions={aggregationFunctions}
+/>

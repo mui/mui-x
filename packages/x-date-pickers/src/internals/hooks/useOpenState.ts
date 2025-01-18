@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useEventCallback from '@mui/utils/useEventCallback';
 
 export interface OpenStateProps {
   open?: boolean;
@@ -22,23 +23,20 @@ export const useOpenState = ({ open, onOpen, onClose }: OpenStateProps) => {
     }
   }, [isControllingOpenProp, open]);
 
-  const setOpen = React.useCallback(
-    (action: React.SetStateAction<boolean>) => {
-      const newOpen = typeof action === 'function' ? action(openState) : action;
-      if (!isControllingOpenProp) {
-        setOpenState(newOpen);
-      }
+  const setOpen = useEventCallback((action: React.SetStateAction<boolean>) => {
+    const newOpen = typeof action === 'function' ? action(openState) : action;
+    if (!isControllingOpenProp) {
+      setOpenState(newOpen);
+    }
 
-      if (newOpen && onOpen) {
-        onOpen();
-      }
+    if (newOpen && onOpen) {
+      onOpen();
+    }
 
-      if (!newOpen && onClose) {
-        onClose();
-      }
-    },
-    [isControllingOpenProp, onOpen, onClose, openState],
-  );
+    if (!newOpen && onClose) {
+      onClose();
+    }
+  });
 
   return { open: openState, setOpen };
 };

@@ -9,14 +9,13 @@ import {
   ChartsTooltipTable,
   ChartsTooltipRow,
   ChartsTooltipCell,
-  ChartsTooltipMark,
   useItemTooltip,
   ChartsTooltipContainerProps,
   getChartsTooltipUtilityClass,
   ChartsTooltipContainer,
 } from '@mui/x-charts/ChartsTooltip';
 import { useXAxis, useYAxis } from '@mui/x-charts/hooks';
-import { getLabel } from '@mui/x-charts/internals';
+import { getLabel, ChartsLabelMark } from '@mui/x-charts/internals';
 import { useHeatmapSeries } from '../hooks/useSeries';
 
 export interface HeatmapTooltipProps
@@ -56,7 +55,7 @@ function DefaultHeatmapTooltipContent(props: Pick<HeatmapTooltipProps, 'classes'
   const { series, seriesOrder } = heatmapSeries;
   const seriesId = seriesOrder[0];
 
-  const { color, value, identifier } = tooltipData;
+  const { color, value, identifier, markType } = tooltipData;
 
   const [xIndex, yIndex] = value;
 
@@ -85,7 +84,7 @@ function DefaultHeatmapTooltipContent(props: Pick<HeatmapTooltipProps, 'classes'
         <tbody>
           <ChartsTooltipRow className={classes?.row}>
             <ChartsTooltipCell className={clsx(classes?.markCell, classes?.cell)}>
-              <ChartsTooltipMark color={color} className={classes?.mark} />
+              <ChartsLabelMark type={markType} color={color} className={classes?.mark} />
             </ChartsTooltipCell>
             <ChartsTooltipCell className={clsx(classes?.labelCell, classes?.cell)}>
               {seriesLabel}

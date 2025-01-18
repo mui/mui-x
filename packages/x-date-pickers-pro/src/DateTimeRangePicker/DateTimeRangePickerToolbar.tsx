@@ -99,13 +99,13 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
     ...other
   } = props;
 
-  const { value, setValue, disabled, readOnly, view, onViewChange, views } = usePickerContext<
+  const { value, setValue, disabled, readOnly, view, setView, views } = usePickerContext<
     PickerRangeValue,
     DateTimeRangeViews
   >();
   const translations = usePickerTranslations();
   const ownerState = useToolbarOwnerState();
-  const { rangePosition, onRangePositionChange } = usePickerRangePositionContext();
+  const { rangePosition, setRangePosition } = usePickerRangePositionContext();
   const classes = useUtilityClasses(classesProp);
 
   const commonToolbarProps = {
@@ -127,10 +127,10 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
         rangePosition,
         allowRangeFlip: true,
       });
-      onRangePositionChange(nextSelection);
+      setRangePosition(nextSelection);
       setValue(newRange, { changeImportance: 'set' });
     },
-    [setValue, onRangePositionChange, value, rangePosition, utils],
+    [setValue, setRangePosition, value, rangePosition, utils],
   );
 
   const startOverrides = React.useMemo(() => {
@@ -139,19 +139,19 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
         return;
       }
       if (rangePosition !== 'start') {
-        onRangePositionChange('start');
+        setRangePosition('start');
       }
-      onViewChange(newView);
+      setView(newView);
     };
 
     return {
       value: value[0],
       setValue: wrappedSetValue,
       forceDesktopVariant: true,
-      onViewChange: handleStartRangeViewChange,
+      setView: handleStartRangeViewChange,
       view: rangePosition === 'start' ? view : null,
     };
-  }, [value, wrappedSetValue, rangePosition, view, onRangePositionChange, onViewChange]);
+  }, [value, wrappedSetValue, rangePosition, view, setRangePosition, setView]);
 
   const endOverrides = React.useMemo(() => {
     const handleEndRangeViewChange = (newView: DateOrTimeViewWithMeridiem) => {
@@ -159,19 +159,19 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
         return;
       }
       if (rangePosition !== 'end') {
-        onRangePositionChange('end');
+        setRangePosition('end');
       }
-      onViewChange(newView);
+      setView(newView);
     };
 
     return {
       value: value[1],
       setValue: wrappedSetValue,
       forceDesktopVariant: true,
-      onViewChange: handleEndRangeViewChange,
+      setView: handleEndRangeViewChange,
       view: rangePosition === 'end' ? view : null,
     };
-  }, [value, wrappedSetValue, rangePosition, view, onRangePositionChange, onViewChange]);
+  }, [value, wrappedSetValue, rangePosition, view, setRangePosition, setView]);
 
   if (hidden) {
     return null;

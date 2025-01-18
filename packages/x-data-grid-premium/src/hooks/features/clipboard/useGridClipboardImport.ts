@@ -89,7 +89,7 @@ class CellValueUpdater {
   updateRow: (row: GridRowModel) => void;
 
   options: {
-    apiRef: React.MutableRefObject<GridPrivateApiPremium>;
+    apiRef: React.RefObject<GridPrivateApiPremium>;
     processRowUpdate: DataGridPremiumProcessedProps['processRowUpdate'];
     onProcessRowUpdateError: DataGridPremiumProcessedProps['onProcessRowUpdateError'];
     getRowId: DataGridPremiumProcessedProps['getRowId'];
@@ -171,7 +171,7 @@ class CellValueUpdater {
               [
                 'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
                 'To handle the error pass a callback to the `onProcessRowUpdateError` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
-                'For more detail, see https://mui.com/x/react-data-grid/editing/#server-side-persistence.',
+                'For more detail, see https://mui.com/x/react-data-grid/editing/persistence/.',
               ],
               'error',
             );
@@ -212,7 +212,7 @@ function defaultPasteResolver({
   paginationMode,
 }: {
   pastedData: string[][];
-  apiRef: React.MutableRefObject<GridApiPremium>;
+  apiRef: React.RefObject<GridApiPremium>;
   updateCell: CellValueUpdater['updateCell'];
   pagination: DataGridPremiumProcessedProps['pagination'];
   paginationMode: DataGridPremiumProcessedProps['paginationMode'];
@@ -321,7 +321,7 @@ function defaultPasteResolver({
 }
 
 export const useGridClipboardImport = (
-  apiRef: React.MutableRefObject<GridPrivateApiPremium>,
+  apiRef: React.RefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
     | 'pagination'

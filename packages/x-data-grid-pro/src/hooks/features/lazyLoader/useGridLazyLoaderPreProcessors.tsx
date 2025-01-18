@@ -9,7 +9,7 @@ export const GRID_SKELETON_ROW_ROOT_ID = 'auto-generated-skeleton-row-root';
 const getSkeletonRowId = (index: number) => `${GRID_SKELETON_ROW_ROOT_ID}-${index}`;
 
 export const useGridLazyLoaderPreProcessors = (
-  privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
+  privateApiRef: React.RefObject<GridPrivateApiPro>,
   props: Pick<DataGridProProcessedProps, 'rowCount' | 'rowsLoadingMode' | 'experimentalFeatures'>,
 ) => {
   const addSkeletonRows = React.useCallback<GridPipeProcessor<'hydrateRows'>>(
