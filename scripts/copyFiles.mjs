@@ -3,19 +3,10 @@
 /* eslint-disable no-console */
 import path from 'path';
 import fse from 'fs-extra';
-import {
-  includeFileInBuild,
-  createModulePackages,
-  typescriptCopy,
-  cjsCopy,
-  createPackageFile,
-} from '@mui/monorepo/scripts/copyFilesUtils.mjs';
-
-const usePackageExports = process.env.MUI_USE_PACKAGE_EXPORTS === 'true';
+import { includeFileInBuild, createPackageFile } from '@mui/monorepo/scripts/copyFilesUtils.mjs';
 
 const packagePath = process.cwd();
 const buildPath = path.join(packagePath, './build');
-const srcPath = path.join(packagePath, './src');
 
 async function prepend(file, string) {
   const data = await fse.readFile(file, 'utf8');
@@ -36,11 +27,8 @@ async function addLicense(packageData) {
   await Promise.all(
     [
       './index.js',
-      './index.mjs',
-      './index.modern.mjs',
       './esm/index.js',
       './modern/index.js',
-      './node/index.js',
       './umd/material-ui.development.js',
       './umd/material-ui.production.min.js',
     ].map(async (file) => {
@@ -71,15 +59,6 @@ async function run() {
     await Promise.all(filesToCopy.map((file) => includeFileInBuild(file)));
 
     await addLicense(packageData);
-
-    // TypeScript
-    await typescriptCopy({ from: srcPath, to: buildPath });
-    // cjs
-    await cjsCopy({ from: srcPath, to: buildPath });
-
-    if (!usePackageExports) {
-      await createModulePackages({ from: srcPath, to: buildPath });
-    }
   } catch (err) {
     console.error(err);
     process.exit(1);
