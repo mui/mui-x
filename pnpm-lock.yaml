@@ -198,8 +198,8 @@ importers:
         specifier: ^4.5.0
         version: 4.5.0
       chai-dom:
-        specifier: ^1.12.0
-        version: 1.12.0(chai@4.5.0)
+        specifier: ^1.12.1
+        version: 1.12.1(chai@4.5.0)
       compression-webpack-plugin:
         specifier: ^11.1.0
         version: 11.1.0(webpack@5.97.1)
@@ -5052,8 +5052,8 @@ packages:
   caniuse-lite@1.0.30001690:
     resolution: {integrity: sha512-5ExiE3qQN6oF8Clf8ifIDcMRCRE/dMGcETG/XGMD8/XiXm6HXQgQTh1yZYLXXpSOsEUlJm1Xr7kGULZTuGtP/w==}
 
-  chai-dom@1.12.0:
-    resolution: {integrity: sha512-pLP8h6IBR8z1AdeQ+EMcJ7dXPdsax/1Q7gdGZjsnAmSBl3/gItQUYSCo32br1qOy4SlcBjvqId7ilAf3uJ2K1w==}
+  chai-dom@1.12.1:
+    resolution: {integrity: sha512-tvz+D0PJue2VHXRec3udgP/OeeXBiePU3VH6JhEnHQJYzvNzR2nUvEykA9dXVS76JvaUENSOYH8Ufr0kZSnlCQ==}
     engines: {node: '>= 0.12.0'}
     peerDependencies:
       chai: '>= 3'
@@ -12179,7 +12179,7 @@ snapshots:
       '@testing-library/react': 16.1.0(@testing-library/dom@10.4.0)(@types/react-dom@19.0.3(@types/react@19.0.6))(@types/react@19.0.6)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@testing-library/user-event': 14.5.2(@testing-library/dom@10.4.0)
       chai: 4.5.0
-      chai-dom: 1.12.0(chai@4.5.0)
+      chai-dom: 1.12.1(chai@4.5.0)
       dom-accessibility-api: 0.7.0
       format-util: 1.0.5
       fs-extra: 11.2.0
@@ -14407,7 +14407,7 @@ snapshots:
 
   caniuse-lite@1.0.30001690: {}
 
-  chai-dom@1.12.0(chai@4.5.0):
+  chai-dom@1.12.1(chai@4.5.0):
     dependencies:
       chai: 4.5.0
 
