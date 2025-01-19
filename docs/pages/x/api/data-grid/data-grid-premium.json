@@ -1767,12 +1767,6 @@
       "isGlobal": false
     },
     {
-      "key": "pinnedRowsRenderZone",
-      "className": "MuiDataGridPremium-pinnedRowsRenderZone",
-      "description": "Styles applied to pinned rows render zones.",
-      "isGlobal": false
-    },
-    {
       "key": "root",
       "className": "MuiDataGridPremium-root",
       "description": "Styles applied to the root element.",

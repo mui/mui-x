@@ -683,10 +683,6 @@ export interface GridClasses {
    * Styles applied to the bottom pinned rows container.
    */
   'pinnedRows--bottom': string;
-  /**
-   * Styles applied to pinned rows render zones.
-   */
-  pinnedRowsRenderZone: string;
 }
 
 export type GridClassKey = keyof GridClasses;
@@ -863,5 +859,4 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'pinnedRows',
   'pinnedRows--top',
   'pinnedRows--bottom',
-  'pinnedRowsRenderZone',
 ]);

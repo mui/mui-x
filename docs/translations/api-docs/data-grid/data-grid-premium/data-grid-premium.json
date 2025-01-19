@@ -1097,10 +1097,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the top pinned rows container"
     },
-    "pinnedRowsRenderZone": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "pinned rows render zones"
-    },
     "root": { "description": "Styles applied to the root element." },
     "root--densityComfortable": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
