@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { ChartsSurfaceProps } from '../ChartsSurface';
-import { ChartDataProviderProps } from '../context/ChartDataProvider';
+import { ChartDataProviderProps } from '../ChartDataProvider';
 import type { ChartContainerProps } from './ChartContainer';
 import { ChartSeriesType } from '../models/seriesType/config';
 import { ALL_PLUGINS, AllPluginSignatures, AllPluginsType } from '../internals/plugins/allPlugins';

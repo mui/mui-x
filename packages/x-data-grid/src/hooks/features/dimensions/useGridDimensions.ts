@@ -34,6 +34,7 @@ import {
 import { getTotalHeaderHeight } from '../columns/gridColumnsUtils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../../constants/dataGridPropsDefaultValues';
+import { isJSDOM } from '../../../utils/isJSDOM';
 
 type RootProps = Pick<
   DataGridProcessedProps,
@@ -327,10 +328,6 @@ export function useGridDimensions(
   const handleResize = React.useCallback<GridEventListener<'resize'>>(
     (size) => {
       rootDimensionsRef.current = size;
-
-      // jsdom has no layout capabilities
-      const isJSDOM = /jsdom|HappyDOM/.test(window.navigator.userAgent);
-
       if (size.height === 0 && !errorShown.current && !props.autoHeight && !isJSDOM) {
         logger.error(
           [

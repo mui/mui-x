@@ -46,7 +46,6 @@ export const useGridColumnMenu = (apiRef: React.RefObject<GridPrivateApiCommunit
           };
         });
         apiRef.current.hidePreferences();
-        apiRef.current.forceUpdate();
       }
     },
     [apiRef, logger],
@@ -93,7 +92,6 @@ export const useGridColumnMenu = (apiRef: React.RefObject<GridPrivateApiCommunit
           columnMenu: newState,
         };
       });
-      apiRef.current.forceUpdate();
     }
   }, [apiRef, logger]);
 
