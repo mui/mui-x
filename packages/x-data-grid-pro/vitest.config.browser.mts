@@ -7,10 +7,6 @@ export default mergeConfig(sharedConfig, {
     name: `browser/${packageJson.name.split('/')[1]}`,
     browser: {
       enabled: true,
-      name: 'chromium',
-      provider: 'playwright',
-      headless: true,
-      screenshotFailures: false,
       // https://playwright.dev
       providerOptions: {
         launch: {
