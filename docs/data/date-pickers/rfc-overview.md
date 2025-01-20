@@ -85,7 +85,3 @@ All the components displayed in the pages below are following the Base UI DX whi
     background-color: green;
   }
   ```
-
-## Lifecycle of the components
-
-- The concept of _view_ is removed in favor of a concept of _active section_ that is shared with the field and make no assumption about how those sections are rendered.
