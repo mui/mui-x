@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { ChartSeriesType } from '../models/seriesType/config';
-import { ChartDataProvider, ChartDataProviderProps } from '../context/ChartDataProvider';
+import { ChartDataProvider, ChartDataProviderProps } from '../ChartDataProvider';
 import { useChartContainerProps } from './useChartContainerProps';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
 import { AllPluginSignatures } from '../internals/plugins/allPlugins';
@@ -18,7 +18,7 @@ export interface ChartContainerProps<SeriesType extends ChartSeriesType = ChartS
  *
  * Demos:
  *
- * - [Composition](http://localhost:3001/x/react-charts/composition/)
+ * - [Composition](https://mui.com/x/api/charts/composition/)
  *
  * API:
  *
