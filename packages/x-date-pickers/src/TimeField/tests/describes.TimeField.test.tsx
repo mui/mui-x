@@ -14,11 +14,10 @@ import { describeConformance } from 'test/utils/describeConformance';
 import { PickerValue } from '@mui/x-date-pickers/internals';
 
 describe('<TimeField /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer({ clock: 'fake' });
 
   describeValidation(TimeField, () => ({
     render,
-    clock,
     views: ['hours', 'minutes'],
     componentFamily: 'field',
   }));
@@ -37,7 +36,6 @@ describe('<TimeField /> - Describes', () => {
     componentFamily: 'field',
     values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-02')],
     emptyValue: null,
-    clock,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       const fieldRoot = getFieldInputRoot();

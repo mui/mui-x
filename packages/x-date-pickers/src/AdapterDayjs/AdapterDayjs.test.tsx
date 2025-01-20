@@ -135,7 +135,7 @@ describe('<AdapterDayjs />', () => {
       const localeObject = localeKey === 'undefined' ? undefined : { code: localeKey };
 
       describe(`test with the ${localeName} locale`, () => {
-        const { render, clock, adapter } = createPickerRenderer({
+        const { render, adapter } = createPickerRenderer({
           clock: 'fake',
           adapterName: 'dayjs',
           locale: localeObject,
@@ -143,7 +143,6 @@ describe('<AdapterDayjs />', () => {
 
         const { renderWithProps } = buildFieldInteractions({
           render,
-          clock,
           Component: DateTimeField,
         });
 

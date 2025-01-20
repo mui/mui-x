@@ -13,11 +13,10 @@ import {
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DateCalendar /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer({ clock: 'fake' });
 
   describeValidation(DateCalendar, () => ({
     render,
-    clock,
     views: ['year', 'month', 'day'],
     componentFamily: 'calendar',
   }));

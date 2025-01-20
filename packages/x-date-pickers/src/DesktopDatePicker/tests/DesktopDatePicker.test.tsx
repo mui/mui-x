@@ -80,7 +80,7 @@ describe('<DesktopDatePicker />', () => {
       expect(handleViewChange.lastCall.firstArg).to.equal('month');
     });
 
-    it('should go to the relevant `view` when `views` prop changes', () => {
+    it('should go to the relevant `view` when `views` prop changes', async () => {
       const { setProps } = render(
         <DesktopDatePicker defaultValue={adapterToUse.date('2018-01-01')} views={['year']} />,
       );
@@ -95,7 +95,7 @@ describe('<DesktopDatePicker />', () => {
       setProps({ views: ['month', 'year'] });
       openPicker({ type: 'date' });
       // wait for all pending changes to be flushed
-      clock.runToLast();
+      await clock.runToLast();
 
       // should have changed the open view
       expect(screen.getByRole('radio', { checked: true, name: 'January' })).not.to.equal(null);
@@ -111,7 +111,7 @@ describe('<DesktopDatePicker />', () => {
       expect(document.activeElement).to.have.text('5');
     });
 
-    it('should go to the relevant `view` when `view` prop changes', () => {
+    it('should go to the relevant `view` when `view` prop changes', async () => {
       const { setProps } = render(
         <DesktopDatePicker
           defaultValue={adapterToUse.date('2018-01-01')}
@@ -130,7 +130,7 @@ describe('<DesktopDatePicker />', () => {
       setProps({ view: 'year' });
       openPicker({ type: 'date' });
       // wait for all pending changes to be flushed
-      clock.runToLast();
+      await clock.runToLast();
 
       // should have changed the open view
       expect(screen.getByRole('radio', { checked: true, name: '2018' })).not.to.equal(null);

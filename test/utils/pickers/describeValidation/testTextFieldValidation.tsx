@@ -5,6 +5,7 @@ import { TimeView } from '@mui/x-date-pickers/models';
 import { adapterToUse, getFieldInputRoot } from 'test/utils/pickers';
 import { describeSkipIf, testSkipIf } from 'test/utils/skipIf';
 import { DescribeValidationTestSuite } from './describeValidation.types';
+import { createFakeClock } from '../../createFakeClock';
 
 export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTest, getOptions) => {
   const { componentFamily, render, withDate, withTime } = getOptions();
@@ -137,33 +138,37 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
     });
 
-    testSkipIf(!withDate)('should apply disablePast', () => {
-      let now;
-      function WithFakeTimer(props: any) {
-        now = adapterToUse.date();
-        return <ElementToTest value={now} {...props} />;
-      }
+    describeSkipIf(!withDate)('with fake timers', () => {
+      createFakeClock('fake');
 
-      const onErrorMock = spy();
-      const { setProps } = render(<WithFakeTimer disablePast onError={onErrorMock} />);
+      it('should apply disablePast', () => {
+        let now;
+        function WithFakeTimer(props: any) {
+          now = adapterToUse.date();
+          return <ElementToTest value={now} {...props} />;
+        }
 
-      const tomorrow = adapterToUse.addDays(now, 1);
-      const yesterday = adapterToUse.addDays(now, -1);
+        const onErrorMock = spy();
+        const { setProps } = render(<WithFakeTimer disablePast onError={onErrorMock} />);
 
-      expect(onErrorMock.callCount).to.equal(0);
-      expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
+        const tomorrow = adapterToUse.addDays(now, 1);
+        const yesterday = adapterToUse.addDays(now, -1);
 
-      setProps({ value: yesterday });
+        expect(onErrorMock.callCount).to.equal(0);
+        expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
 
-      expect(onErrorMock.callCount).to.equal(1);
-      expect(onErrorMock.lastCall.args[0]).to.equal('disablePast');
-      expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
+        setProps({ value: yesterday });
 
-      setProps({ value: tomorrow });
+        expect(onErrorMock.callCount).to.equal(1);
+        expect(onErrorMock.lastCall.args[0]).to.equal('disablePast');
+        expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
 
-      expect(onErrorMock.callCount).to.equal(2);
-      expect(onErrorMock.lastCall.args[0]).to.equal(null);
-      expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
+        setProps({ value: tomorrow });
+
+        expect(onErrorMock.callCount).to.equal(2);
+        expect(onErrorMock.lastCall.args[0]).to.equal(null);
+        expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
+      });
     });
 
     testSkipIf(!withDate)('should apply disableFuture', () => {

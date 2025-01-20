@@ -14,11 +14,10 @@ import { PickerValue } from '@mui/x-date-pickers/internals';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DigitalClock /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer({ clock: 'fake' });
 
   describeValidation(DigitalClock, () => ({
     render,
-    clock,
     views: ['hours'],
     componentFamily: 'digital-clock',
   }));
@@ -41,7 +40,6 @@ describe('<DigitalClock /> - Describes', () => {
     },
     values: [adapterToUse.date('2018-01-01T15:30:00'), adapterToUse.date('2018-01-01T17:00:00')],
     emptyValue: null,
-    clock,
     assertRenderedValue: (expectedValue: any) => {
       const selectedItem = screen.queryByRole('option', { selected: true });
       if (!expectedValue) {

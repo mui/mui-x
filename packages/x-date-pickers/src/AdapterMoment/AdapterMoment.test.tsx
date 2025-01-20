@@ -153,7 +153,7 @@ describe('<AdapterMoment />', () => {
       const localeObject = { code: localeKey };
 
       describe(`test with the locale "${localeKey}"`, () => {
-        const { render, clock, adapter } = createPickerRenderer({
+        const { render, adapter } = createPickerRenderer({
           clock: 'fake',
           adapterName: 'moment',
           locale: localeObject,
@@ -161,7 +161,6 @@ describe('<AdapterMoment />', () => {
 
         const { renderWithProps } = buildFieldInteractions({
           render,
-          clock,
           Component: DateTimeField,
         });
 

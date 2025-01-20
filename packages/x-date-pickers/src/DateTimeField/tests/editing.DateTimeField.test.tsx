@@ -10,13 +10,12 @@ import {
 } from 'test/utils/pickers';
 
 describe('<DateTimeField /> - Editing', () => {
-  const { render, clock } = createPickerRenderer({
+  const { render } = createPickerRenderer({
     clock: 'fake',
     clockConfig: new Date(2012, 4, 3, 14, 30, 15, 743),
   });
 
   const { renderWithProps } = buildFieldInteractions({
-    clock,
     render,
     Component: DateTimeField,
   });

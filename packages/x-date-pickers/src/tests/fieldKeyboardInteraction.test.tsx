@@ -57,7 +57,7 @@ const adapterToTest = [
 ] as const;
 
 describe(`RTL - test arrows navigation`, () => {
-  const { render, clock, adapter } = createPickerRenderer({
+  const { render, adapter } = createPickerRenderer({
     clock: 'fake',
     adapterName: 'moment-jalaali',
   });
@@ -70,7 +70,7 @@ describe(`RTL - test arrows navigation`, () => {
     moment.locale('en');
   });
 
-  const { renderWithProps } = buildFieldInteractions({ clock, render, Component: DateTimeField });
+  const { renderWithProps } = buildFieldInteractions({ render, Component: DateTimeField });
 
   it('should move selected section to the next section respecting RTL order in empty field', () => {
     const expectedValues = ['hh', 'mm', 'YYYY', 'MM', 'DD', 'DD'];
@@ -209,7 +209,7 @@ describe(`RTL - test arrows navigation`, () => {
 
 adapterToTest.forEach((adapterName) => {
   describe(`test keyboard interaction with ${adapterName} adapter`, () => {
-    const { render, clock, adapter } = createPickerRenderer({
+    const { render, adapter } = createPickerRenderer({
       clock: 'fake',
       adapterName,
     });
@@ -228,7 +228,7 @@ adapterToTest.forEach((adapterName) => {
       }
     });
 
-    const { renderWithProps } = buildFieldInteractions({ clock, render, Component: DateTimeField });
+    const { renderWithProps } = buildFieldInteractions({ render, Component: DateTimeField });
 
     const cleanValueStr = (
       valueStr: string,

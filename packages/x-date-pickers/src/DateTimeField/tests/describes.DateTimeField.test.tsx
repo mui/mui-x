@@ -13,11 +13,10 @@ import {
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DateTimeField /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer({ clock: 'fake' });
 
   describeValidation(DateTimeField, () => ({
     render,
-    clock,
     views: ['year', 'month', 'day', 'hours', 'minutes'],
     componentFamily: 'field',
   }));
@@ -36,7 +35,6 @@ describe('<DateTimeField /> - Describes', () => {
     componentFamily: 'field',
     values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-02')],
     emptyValue: null,
-    clock,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       const fieldRoot = getFieldInputRoot();

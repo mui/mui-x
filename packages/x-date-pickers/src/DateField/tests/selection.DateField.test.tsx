@@ -14,7 +14,7 @@ import {
 
 describe('<DateField /> - Selection', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
-  const { renderWithProps } = buildFieldInteractions({ clock, render, Component: DateField });
+  const { renderWithProps } = buildFieldInteractions({ render, Component: DateField });
 
   describe('Focus', () => {
     it('should select 1st section (v7) / all sections (v6) on mount focus (`autoFocus = true`)', () => {
@@ -56,7 +56,7 @@ describe('<DateField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('- YYYY');
     });
 
-    it('should select all on <Tab> focus (v6 only)', () => {
+    it('should select all on <Tab> focus (v6 only)', async () => {
       // Test with non-accessible DOM structure
       renderWithProps({ enableAccessibleFieldDOMStructure: false });
       const input = getTextbox();
@@ -65,14 +65,14 @@ describe('<DateField /> - Selection', () => {
       act(() => {
         input.focus();
       });
-      clock.runToLast();
+      await clock.runToLast();
       input.select();
 
       expectFieldValueV6(input, 'MM/DD/YYYY');
       expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
     });
 
-    it('should select all on <Tab> focus with start separator (v6 only)', () => {
+    it('should select all on <Tab> focus with start separator (v6 only)', async () => {
       // Test with non-accessible DOM structure
       renderWithProps({
         enableAccessibleFieldDOMStructure: false,
@@ -84,14 +84,14 @@ describe('<DateField /> - Selection', () => {
       act(() => {
         input.focus();
       });
-      clock.runToLast();
+      await clock.runToLast();
       input.select();
 
       expectFieldValueV6(input, '- YYYY');
       expect(getCleanedSelectedContent()).to.equal('- YYYY');
     });
 
-    it('should select day on mobile (v6 only)', () => {
+    it('should select day on mobile (v6 only)', async () => {
       // Test with non-accessible DOM structure
       renderWithProps({ enableAccessibleFieldDOMStructure: false });
 
@@ -100,7 +100,7 @@ describe('<DateField /> - Selection', () => {
       act(() => {
         input.focus();
       });
-      clock.runToLast();
+      await clock.runToLast();
       expectFieldValueV6(input, 'MM/DD/YYYY');
 
       input.setSelectionRange(3, 5);

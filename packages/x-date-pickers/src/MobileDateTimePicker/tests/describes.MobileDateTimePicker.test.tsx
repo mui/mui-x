@@ -16,16 +16,12 @@ import { PickerValue } from '@mui/x-date-pickers/internals';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<MobileDateTimePicker /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({
-    clock: 'fake',
-    clockConfig: new Date(2018, 2, 12, 8, 16, 0),
-  });
+  const { render } = createPickerRenderer();
 
   describePicker(MobileDateTimePicker, { render, fieldType: 'single-input', variant: 'mobile' });
 
   describeValidation(MobileDateTimePicker, () => ({
     render,
-    clock,
     views: ['year', 'day', 'hours', 'minutes'],
     componentFamily: 'picker',
   }));
@@ -51,7 +47,6 @@ describe('<MobileDateTimePicker /> - Describes', () => {
     componentFamily: 'picker',
     type: 'date-time',
     variant: 'mobile',
-    clock,
     values: [adapterToUse.date('2018-01-01T11:30:00'), adapterToUse.date('2018-01-02T12:35:00')],
     emptyValue: null,
     assertRenderedValue: (expectedValue: any) => {
@@ -103,7 +98,7 @@ describe('<MobileDateTimePicker /> - Describes', () => {
       // Close the picker
       if (!isOpened) {
         // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
-        await user.keyboard('[Escape]');
+        fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
       } else {
         // return to the date view in case we'd like to repeat the selection process
         fireEvent.click(screen.getByRole('tab', { name: 'pick date' }));

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { act, fireEvent } from '@mui/internal-test-utils';
+import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import {
   expectFieldValueV7,
   getTextbox,
@@ -2269,7 +2269,7 @@ describe('<DateField /> - Editing', () => {
     },
   );
 
-  describeAdapters('Editing from the outside', DateField, ({ adapter, renderWithProps, clock }) => {
+  describeAdapters('Editing from the outside', DateField, ({ adapter, renderWithProps }) => {
     it('should be able to reset the value from the outside', () => {
       // Test with accessible DOM structure
       let view = renderWithProps({
@@ -2299,49 +2299,52 @@ describe('<DateField /> - Editing', () => {
       expectFieldValueV6(input, 'MM/DD/YYYY');
     });
 
-    it('should reset the input query state on an unfocused field', () => {
-      // Test with accessible DOM structure
-      let view = renderWithProps({ enableAccessibleFieldDOMStructure: true, value: null });
-
-      view.selectSection('month');
-
-      view.pressKey(0, '1');
-      expectFieldValueV7(view.getSectionsContainer(), '01/DD/YYYY');
-
-      view.pressKey(0, '1');
-      expectFieldValueV7(view.getSectionsContainer(), '11/DD/YYYY');
-
-      view.pressKey(1, '2');
-      view.pressKey(1, '5');
-      expectFieldValueV7(view.getSectionsContainer(), '11/25/YYYY');
-
-      view.pressKey(2, '2');
-      view.pressKey(2, '0');
-      expectFieldValueV7(view.getSectionsContainer(), '11/25/0020');
-
-      act(() => {
-        view.getSectionsContainer().blur();
+    it('should reset the input query state on an unfocused field with accessible DOM structure', async () => {
+      const { user, getSectionsContainer, setProps } = renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        value: null,
       });
 
-      clock.runToLast();
+      await user.click(screen.getByLabelText('Month'));
 
-      view.setProps({ value: adapter.date('2022-11-23') });
-      expectFieldValueV7(view.getSectionsContainer(), '11/23/2022');
+      await user.keyboard('1');
+      expectFieldValueV7(getSectionsContainer(), '01/DD/YYYY');
 
-      view.selectSection('year');
+      await user.keyboard('1');
+      expectFieldValueV7(getSectionsContainer(), '11/DD/YYYY');
 
-      view.pressKey(2, '2');
-      expectFieldValueV7(view.getSectionsContainer(), '11/23/0002');
-      view.pressKey(2, '1');
-      expectFieldValueV7(view.getSectionsContainer(), '11/23/0021');
+      await user.keyboard('2');
+      await user.keyboard('5');
+      expectFieldValueV7(getSectionsContainer(), '11/25/YYYY');
 
-      view.unmount();
+      await user.keyboard('2');
+      await user.keyboard('0');
+      expectFieldValueV7(getSectionsContainer(), '11/25/0020');
 
-      // Test with non-accessible DOM structure
-      view = renderWithProps({ enableAccessibleFieldDOMStructure: false, value: null });
+      act(() => {
+        getSectionsContainer().blur();
+      });
+
+      setProps({ value: adapter.date('2022-11-23') });
+      expectFieldValueV7(getSectionsContainer(), '11/23/2022');
+
+      await user.tab();
+      await user.click(screen.getByLabelText('Year'));
+
+      await user.keyboard('3');
+      expectFieldValueV7(getSectionsContainer(), '11/23/0003');
+      await user.keyboard('1');
+      expectFieldValueV7(getSectionsContainer(), '11/23/0031');
+    });
+
+    it('should reset the input query state on an unfocused field with non-accessible DOM structure', async () => {
+      const { setProps, selectSection } = renderWithProps({
+        enableAccessibleFieldDOMStructure: false,
+        value: null,
+      });
 
       const input = getTextbox();
-      view.selectSection('month');
+      selectSection('month');
 
       fireEvent.change(input, { target: { value: '1/DD/YYYY' } }); // Press "1"
       expectFieldValueV6(input, '01/DD/YYYY');
@@ -2361,7 +2364,7 @@ describe('<DateField /> - Editing', () => {
         input.blur();
       });
 
-      view.setProps({ value: adapter.date('2022-11-23') });
+      setProps({ value: adapter.date('2022-11-23') });
       expectFieldValueV6(input, '11/23/2022');
 
       fireEvent.mouseDown(input);

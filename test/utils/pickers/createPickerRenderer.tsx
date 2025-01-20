@@ -23,7 +23,10 @@ export function createPickerRenderer({
   const { render: clientRender } = createRenderer({
     ...createRendererOptions,
   });
-  const fakeClock = createFakeClock(clock ?? 'real', clockConfig, clockOptions);
+  const fakeClock =
+    clock === 'fake' || clockConfig
+      ? createFakeClock(clock ?? 'real', clockConfig, clockOptions)
+      : undefined;
 
   let adapterLocale = [
     'date-fns',

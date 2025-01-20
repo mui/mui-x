@@ -14,13 +14,12 @@ import { PickerValue } from '@mui/x-date-pickers/internals';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DesktopDatePicker /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describePicker(DesktopDatePicker, { render, fieldType: 'single-input', variant: 'desktop' });
 
   describeValidation(DesktopDatePicker, () => ({
     render,
-    clock,
     views: ['year', 'month', 'day'],
     componentFamily: 'picker',
   }));

@@ -94,7 +94,7 @@ describe('<AdapterLuxon />', () => {
       const localeObject = localeKey === 'undefined' ? undefined : { code: localeKey };
 
       describe(`test with the ${localeName} locale`, () => {
-        const { render, clock, adapter } = createPickerRenderer({
+        const { render, adapter } = createPickerRenderer({
           clock: 'fake',
           adapterName: 'luxon',
           locale: localeObject,
@@ -102,7 +102,6 @@ describe('<AdapterLuxon />', () => {
 
         const { renderWithProps } = buildFieldInteractions({
           render,
-          clock,
           Component: DateTimeField,
         });
 
@@ -150,7 +149,7 @@ describe('<AdapterLuxon />', () => {
       const localeObject = localeKey === 'undefined' ? undefined : { code: localeKey };
 
       describe(`test with the ${localeName} locale`, () => {
-        const { render, adapter, clock } = createPickerRenderer({
+        const { render, adapter } = createPickerRenderer({
           clock: 'fake',
           adapterName: 'luxon',
           locale: localeObject,
@@ -158,7 +157,6 @@ describe('<AdapterLuxon />', () => {
 
         const { renderWithProps } = buildFieldInteractions({
           render,
-          clock,
           Component: DateTimeField,
         });
 

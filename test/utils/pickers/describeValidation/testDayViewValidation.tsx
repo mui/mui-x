@@ -6,7 +6,7 @@ import { describeSkipIf, testSkipIf } from 'test/utils/skipIf';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
 export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest, getOptions) => {
-  const { componentFamily, views, render, clock, withDate, withTime } = getOptions();
+  const { componentFamily, views, render, withDate, withTime } = getOptions();
 
   describeSkipIf(componentFamily === 'field' || !views.includes('day'))('day view:', () => {
     const defaultProps = {
@@ -48,7 +48,6 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
       expect(screen.getByRole('gridcell', { name: '30' })).to.have.attribute('disabled');
 
       setProps({ value: adapterToUse.date('2019-01-01') });
-      clock.runToLast();
 
       expect(screen.getByRole('gridcell', { name: '1' })).not.to.have.attribute('disabled');
       expect(screen.getByRole('gridcell', { name: '15' })).not.to.have.attribute('disabled');
@@ -69,7 +68,6 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
       expect(screen.getByRole('gridcell', { name: '30' })).to.have.attribute('disabled');
 
       setProps({ value: adapterToUse.date('2018-02-01') });
-      clock.runToLast();
 
       expect(screen.getByRole('gridcell', { name: '1' })).not.to.have.attribute('disabled');
       expect(screen.getByRole('gridcell', { name: '15' })).not.to.have.attribute('disabled');
@@ -93,7 +91,6 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
 
       if (!adapterToUse.isSameMonth(now, tomorrow)) {
         setProps({ value: tomorrow });
-        clock.runToLast();
       }
       expect(
         screen.getByRole('gridcell', { name: adapterToUse.format(tomorrow, 'dayOfMonth') }),
@@ -101,7 +98,6 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
 
       if (!adapterToUse.isSameMonth(yesterday, tomorrow)) {
         setProps({ value: yesterday });
-        clock.runToLast();
       }
       expect(
         screen.getByRole('gridcell', { name: adapterToUse.format(yesterday, 'dayOfMonth') }),
@@ -125,7 +121,6 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
 
       if (!adapterToUse.isSameMonth(now, tomorrow)) {
         setProps({ value: tomorrow });
-        clock.runToLast();
       }
       expect(
         screen.getByRole('gridcell', { name: adapterToUse.format(tomorrow, 'dayOfMonth') }),
@@ -133,7 +128,6 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
 
       if (!adapterToUse.isSameMonth(yesterday, tomorrow)) {
         setProps({ value: yesterday });
-        clock.runToLast();
       }
       expect(
         screen.getByRole('gridcell', { name: adapterToUse.format(yesterday, 'dayOfMonth') }),

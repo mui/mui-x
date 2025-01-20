@@ -12,11 +12,10 @@ import { PickerValue } from '@mui/x-date-pickers/internals';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<MonthCalendar /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer({ clock: 'fake' });
 
   describeValidation(MonthCalendar, () => ({
     render,
-    clock,
     views: ['month'],
     componentFamily: 'calendar',
   }));
@@ -35,7 +34,6 @@ describe('<MonthCalendar /> - Describes', () => {
     componentFamily: 'calendar',
     values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-02-01')],
     emptyValue: null,
-    clock,
     assertRenderedValue: (expectedValue: any) => {
       const activeMonth = screen
         .queryAllByRole('radio')

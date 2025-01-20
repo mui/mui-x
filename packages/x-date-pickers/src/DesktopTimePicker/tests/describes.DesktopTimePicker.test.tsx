@@ -15,7 +15,7 @@ import { PickerValue } from '@mui/x-date-pickers/internals';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DesktopTimePicker /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describePicker(DesktopTimePicker, {
     render,
@@ -25,7 +25,6 @@ describe('<DesktopTimePicker /> - Describes', () => {
 
   describeValidation(DesktopTimePicker, () => ({
     render,
-    clock,
     views: ['hours', 'minutes'],
     componentFamily: 'picker',
   }));
@@ -53,7 +52,6 @@ describe('<DesktopTimePicker /> - Describes', () => {
     variant: 'desktop',
     values: [adapterToUse.date('2018-01-01T11:30:00'), adapterToUse.date('2018-01-01T12:35:00')],
     emptyValue: null,
-    clock,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       const fieldRoot = getFieldInputRoot();

@@ -16,11 +16,10 @@ import { formatMeridiem, PickerValue } from '@mui/x-date-pickers/internals';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<MultiSectionDigitalClock /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer({ clock: 'fake' });
 
   describeValidation(MultiSectionDigitalClock, () => ({
     render,
-    clock,
     views: ['hours', 'minutes'],
     componentFamily: 'multi-section-digital-clock',
   }));
@@ -40,7 +39,6 @@ describe('<MultiSectionDigitalClock /> - Describes', () => {
     type: 'time',
     values: [adapterToUse.date('2018-01-01T11:30:00'), adapterToUse.date('2018-01-01T12:35:00')],
     emptyValue: null,
-    clock,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       const selectedItems = screen.queryAllByRole('option', { selected: true });

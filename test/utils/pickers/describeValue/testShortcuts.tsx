@@ -4,6 +4,7 @@ import { spy } from 'sinon';
 import { expectPickerChangeHandlerValue } from 'test/utils/pickers';
 import { fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { DescribeValueTestSuite } from './describeValue.types';
+import { describeSkipIf } from '../../skipIf';
 
 export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTest, options) => {
   const {
@@ -16,11 +17,7 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
     ...pickerParams
   } = options;
 
-  if (componentFamily !== 'picker') {
-    return;
-  }
-
-  describe('Picker shortcuts', () => {
+  describeSkipIf(componentFamily !== 'picker')('Picker shortcuts', () => {
     it('should call onClose, onChange and onAccept when picking a shortcut without explicit changeImportance', async () => {
       const onChange = spy();
       const onAccept = spy();
