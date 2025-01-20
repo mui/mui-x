@@ -1,4 +1,4 @@
-import { mergeConfig, defineProject } from 'vitest/config';
+import { mergeConfig } from 'vitest/config';
 import filterReplacePlugin from 'vite-plugin-filter-replace';
 import sharedConfig from '../../vitest.shared.mts';
 import packageJson from './package.json';
@@ -23,13 +23,10 @@ export const filterReplace = filterReplacePlugin(
   { enforce: 'pre' },
 );
 
-export default mergeConfig(
-  sharedConfig,
-  defineProject({
-    plugins: [filterReplace],
-    test: {
-      name: `jsdom/${packageJson.name.split('/')[1]}`,
-      environment: 'jsdom',
-    },
-  }),
-);
+export default mergeConfig(sharedConfig, {
+  plugins: [filterReplace],
+  test: {
+    name: `jsdom/${packageJson.name.split('/')[1]}`,
+    environment: 'jsdom',
+  },
+});

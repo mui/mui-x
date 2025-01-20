@@ -434,6 +434,22 @@ workflows:
           <<: *default-context
           requires:
             - checkout
+      - test_unit_charts:
+          <<: *default-context
+          requires:
+            - checkout
+      - test_unit_date_pickers:
+          <<: *default-context
+          requires:
+            - checkout
+      - test_unit_data_grid:
+          <<: *default-context
+          requires:
+            - checkout
+      - test_unit_tree_view:
+          <<: *default-context
+          requires:
+            - checkout
       - test_lint:
           <<: *default-context
           requires:
