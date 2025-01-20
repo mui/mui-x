@@ -29,7 +29,7 @@ import { ChartDataProviderPro } from '../ChartDataProviderPro';
 
 function AreaPlotZoom(props: AreaPlotProps) {
   const isInteracting = useIsZoomInteracting();
-  return <AreaPlot {...props} skipAnimation={isInteracting || undefined} />;
+  return <AreaPlot {...props} skipAnimation={isInteracting || props.skipAnimation} />;
 }
 
 AreaPlotZoom.propTypes = {
@@ -62,7 +62,7 @@ AreaPlotZoom.propTypes = {
 
 function LinePlotZoom(props: LinePlotProps) {
   const isInteracting = useIsZoomInteracting();
-  return <LinePlot {...props} skipAnimation={isInteracting || undefined} />;
+  return <LinePlot {...props} skipAnimation={isInteracting || props.skipAnimation} />;
 }
 
 LinePlotZoom.propTypes = {
@@ -103,12 +103,6 @@ MarkPlotZoom.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  /**
-   * If `true` the mark element will only be able to render circle.
-   * Giving fewer customization options, but saving around 40ms per 1.000 marks.
-   * @default false
-   */
-  experimentalRendering: PropTypes.bool,
   /**
    * Callback fired when a line mark item is clicked.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
@@ -251,10 +245,6 @@ LineChartPro.propTypes = {
    * If `true`, render the line highlight item.
    */
   disableLineItemHighlight: PropTypes.bool,
-  /**
-   * If `true` marks will render `<circle />` instead of `<path />` and drop theme override for faster rendering.
-   */
-  experimentalMarkRendering: PropTypes.bool,
   /**
    * Option to display a cartesian grid in the background.
    */

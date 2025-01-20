@@ -21,7 +21,7 @@ import { ChartDataProviderPro } from '../ChartDataProviderPro';
 function BarChartPlotZoom(props: BarPlotProps) {
   const isInteracting = useIsZoomInteracting();
 
-  return <BarPlot {...props} skipAnimation={isInteracting || undefined} />;
+  return <BarPlot {...props} skipAnimation={isInteracting || props.skipAnimation} />;
 }
 
 BarChartPlotZoom.propTypes = {
