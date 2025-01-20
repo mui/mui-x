@@ -5,12 +5,9 @@ import packageJson from './package.json';
 export default mergeConfig(sharedConfig, {
   test: {
     name: `browser/${packageJson.name.split('/')[1]}`,
+    environment: 'browser',
     browser: {
       enabled: true,
-      name: 'chromium',
-      provider: 'playwright',
-      headless: true,
-      screenshotFailures: false,
     },
   },
 });

@@ -7,6 +7,10 @@ const WORKSPACE_ROOT = resolve(CURRENT_DIR, './');
 
 export default defineConfig({
   test: {
+    workspace: [
+      'packages/*/vitest.config.{jsdom,browser}.mts',
+      'docs/vitest.config.{jsdom,browser}.mts',
+    ],
     coverage: {
       provider: 'istanbul',
       reporter: [['text', { maxCols: 200 }], 'lcov'],

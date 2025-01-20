@@ -54,6 +54,16 @@ export default defineConfig({
     // Required for some tests that contain early returns.
     // Should be removed once we migrate to vitest.
     passWithNoTests: true,
+    browser: {
+      provider: 'playwright',
+      headless: true,
+      screenshotFailures: false,
+      instances: [
+        {
+          browser: 'chromium',
+        },
+      ],
+    },
     coverage: {
       provider: 'istanbul',
       reporter: [['text', { maxCols: 200 }], 'lcov'],
