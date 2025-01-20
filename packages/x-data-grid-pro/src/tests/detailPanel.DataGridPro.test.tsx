@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import {
   DataGridPro,
   GridApi,
@@ -26,7 +27,7 @@ import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 describe('<DataGridPro /> - Detail panel', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: ApiRef<GridApi>;
 
   function TestCase({ nbRows = 20, ...other }: Partial<DataGridProProps> & { nbRows?: number }) {
     apiRef = useGridApiRef();

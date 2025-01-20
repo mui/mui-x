@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import { gridClasses } from '@mui/x-data-grid';
 import { useGridRegisterPipeProcessor, GridPipeProcessor } from '@mui/x-data-grid/internals';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -10,7 +11,7 @@ import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { gridDetailPanelExpandedRowIdsSelector } from './gridDetailPanelSelector';
 
 export const useGridDetailPanelPreProcessors = (
-  privateApiRef: React.RefObject<GridPrivateApiPro>,
+  privateApiRef: ApiRef<GridPrivateApiPro>,
   props: DataGridProProcessedProps,
 ) => {
   const addToggleColumn = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(

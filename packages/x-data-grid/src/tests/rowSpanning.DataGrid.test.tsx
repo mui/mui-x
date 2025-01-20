@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
@@ -9,7 +10,7 @@ import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 describe('<DataGrid /> - Row spanning', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: ApiRef<GridApi>;
   const baselineProps: DataGridProps = {
     rowSpanning: true,
     columns: [

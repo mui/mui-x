@@ -1,3 +1,4 @@
+import { ApiRef } from '@mui/x-internals/apiRef';
 import {
   GridRowId,
   GridRowTreeConfig,
@@ -17,7 +18,7 @@ interface FilterRowTreeFromTreeDataParams {
   disableChildrenFiltering: boolean;
   isRowMatchingFilters: GridAggregatedFilterItemApplier | null;
   filterModel: GridFilterModel;
-  apiRef: React.RefObject<GridPrivateApiPro>;
+  apiRef: ApiRef<GridPrivateApiPro>;
 }
 
 export enum TreeDataStrategy {

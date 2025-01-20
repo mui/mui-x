@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import type { GridRenderContext } from '../../../models';
 import type { GridValidRowModel } from '../../../models/gridRows';
 import type { GridColDef } from '../../../models/colDef';
@@ -50,7 +50,7 @@ export function isRowRangeUpdated(range1: RowRange, range2: RowRange) {
 export const getCellValue = (
   row: GridValidRowModel,
   colDef: GridColDef,
-  apiRef: React.RefObject<GridApiCommunity>,
+  apiRef: ApiRef<GridApiCommunity>,
 ) => {
   if (!row) {
     return null;

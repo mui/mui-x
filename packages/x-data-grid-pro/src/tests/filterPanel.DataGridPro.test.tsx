@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import {
   DataGridPro,
   DataGridProProps,
@@ -21,7 +22,7 @@ describe('<DataGrid /> - Filter panel', () => {
     columns: [{ field: 'brand' }],
   };
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: ApiRef<GridApi>;
 
   function TestCase(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();

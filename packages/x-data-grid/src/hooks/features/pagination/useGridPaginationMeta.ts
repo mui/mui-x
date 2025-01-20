@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPaginationMetaApi } from './gridPaginationInterfaces';
@@ -7,7 +8,7 @@ import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipe
 import { gridPaginationMetaSelector } from './gridPaginationSelector';
 
 export const useGridPaginationMeta = (
-  apiRef: React.RefObject<GridPrivateApiCommunity>,
+  apiRef: ApiRef<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     'paginationMeta' | 'initialState' | 'paginationMode' | 'onPaginationMetaChange'

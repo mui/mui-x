@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import {
   useGridApiEventHandler as addEventHandler,
   useGridApiMethod,
@@ -10,7 +10,7 @@ import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { useGridDataSourceBase } from './useGridDataSourceBase';
 
 export const useGridDataSourcePro = (
-  apiRef: React.RefObject<GridPrivateApiPro>,
+  apiRef: ApiRef<GridPrivateApiPro>,
   props: DataGridProProcessedProps,
 ) => {
   const { api, strategyProcessor, events } = useGridDataSourceBase(apiRef, props);

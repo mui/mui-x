@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import {
   gridColumnLookupSelector,
   useGridApiEventHandler,
@@ -38,7 +39,7 @@ export const aggregationStateInitializer: GridStateInitializer<
 };
 
 export const useGridAggregation = (
-  apiRef: React.RefObject<GridPrivateApiPremium>,
+  apiRef: ApiRef<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
     | 'onAggregationModelChange'

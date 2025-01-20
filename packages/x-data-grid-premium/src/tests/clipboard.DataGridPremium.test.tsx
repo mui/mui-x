@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import {
   GridApi,
   useGridApiRef,
@@ -17,7 +18,7 @@ import { isJSDOM, describeSkipIf } from 'test/utils/skipIf';
 describe('<DataGridPremium /> - Clipboard', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: ApiRef<GridApi>;
 
   function Test({
     rowLength = 4,

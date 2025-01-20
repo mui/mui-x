@@ -2,6 +2,7 @@ import * as React from 'react';
 import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import {
   DataGridProProps,
   useGridApiRef,
@@ -19,7 +20,7 @@ import { describeSkipIf, testSkipIf, isJSDOM } from 'test/utils/skipIf';
 describe('<DataGridPro /> - Columns', () => {
   const { clock, render } = createRenderer({ clock: 'fake' });
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: ApiRef<GridApi>;
 
   const baselineProps = {
     autoHeight: isJSDOM,

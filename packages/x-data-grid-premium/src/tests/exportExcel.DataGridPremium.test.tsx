@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import {
   GridColDef,
   useGridApiRef,
@@ -19,7 +20,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGridPremium /> - Export Excel', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: ApiRef<GridApi>;
 
   const columns: GridColDef[] = [{ field: 'id' }, { field: 'brand', headerName: 'Brand' }];
   const rows = [

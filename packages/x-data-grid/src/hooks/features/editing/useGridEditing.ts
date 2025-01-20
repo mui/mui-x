@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import {
   GridEditingApi,
@@ -22,7 +23,7 @@ export const editingStateInitializer: GridStateInitializer = (state) => ({
 });
 
 export const useGridEditing = (
-  apiRef: React.RefObject<GridPrivateApiCommunity>,
+  apiRef: ApiRef<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'isCellEditable' | 'editMode' | 'processRowUpdate'>,
 ) => {
   useGridCellEditing(apiRef, props);

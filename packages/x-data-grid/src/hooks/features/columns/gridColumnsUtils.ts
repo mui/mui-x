@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import resolveProps from '@mui/utils/resolveProps';
 import {
   GridColumnLookup,
@@ -313,7 +313,7 @@ export const createColumnsState = ({
   initialState: GridColumnsInitialState | undefined;
   columnVisibilityModel?: GridColumnVisibilityModel;
   keepOnlyColumnsToUpsert: boolean;
-  apiRef: React.RefObject<GridApiCommunity>;
+  apiRef: ApiRef<GridApiCommunity>;
 }) => {
   const isInsideStateInitializer = !apiRef.current.state.columns;
 
@@ -415,7 +415,7 @@ export function getFirstNonSpannedColumnToRender({
   visibleRows,
 }: {
   firstColumnToRender: number;
-  apiRef: React.RefObject<GridApiCommon>;
+  apiRef: ApiRef<GridApiCommon>;
   firstRowToRender: number;
   lastRowToRender: number;
   visibleRows: GridRowEntry[];
@@ -439,7 +439,7 @@ export function getFirstNonSpannedColumnToRender({
 }
 
 export function getTotalHeaderHeight(
-  apiRef: React.RefObject<GridApiCommunity>,
+  apiRef: ApiRef<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     'columnHeaderHeight' | 'headerFilterHeight' | 'unstable_listView' | 'columnGroupHeaderHeight'

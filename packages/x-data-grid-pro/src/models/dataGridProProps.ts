@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import {
   GridEventListener,
   GridCallbackDetails,
@@ -186,7 +187,7 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
   /**
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
-  apiRef?: React.RefObject<GridApiPro>;
+  apiRef?: ApiRef<GridApiPro>;
   /**
    * The initial state of the DataGridPro.
    * The data in it will be set in the state on initialization but will not be controlled.

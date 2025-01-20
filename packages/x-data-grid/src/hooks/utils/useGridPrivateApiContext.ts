@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 import { GridPrivateApiCommunity } from '../../models/api/gridApiCommunity';
 
@@ -10,7 +11,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 export function useGridPrivateApiContext<
   PrivateApi extends GridPrivateApiCommon = GridPrivateApiCommunity,
->(): React.RefObject<PrivateApi> {
+>(): ApiRef<PrivateApi> {
   const privateApiRef = React.useContext(GridPrivateApiContext);
 
   if (privateApiRef === undefined) {
@@ -23,5 +24,5 @@ export function useGridPrivateApiContext<
     );
   }
 
-  return privateApiRef as React.RefObject<PrivateApi>;
+  return privateApiRef as ApiRef<PrivateApi>;
 }

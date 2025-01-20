@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { createRenderer, waitFor, screen, within } from '@mui/internal-test-utils';
 import { expect } from 'chai';
@@ -20,7 +21,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGridPremium /> - Data source aggregation', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: ApiRef<GridApi>;
   let getRowsSpy: SinonSpy;
   let mockServer: ReturnType<typeof useMockServer>;
 

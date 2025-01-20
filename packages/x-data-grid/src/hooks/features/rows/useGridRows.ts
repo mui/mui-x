@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -63,7 +64,7 @@ export const rowsStateInitializer: GridStateInitializer<
 };
 
 export const useGridRows = (
-  apiRef: React.RefObject<GridPrivateApiCommunity>,
+  apiRef: ApiRef<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'rows'

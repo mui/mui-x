@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiOptionHandler, useGridNativeEventListener } from '../../utils';
 import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
@@ -59,7 +60,7 @@ function hasNativeSelection(element: HTMLInputElement) {
  * @requires useGridSelection (method)
  */
 export const useGridClipboard = (
-  apiRef: React.RefObject<GridPrivateApiCommunity>,
+  apiRef: ApiRef<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     'ignoreValueFormatterDuringExport' | 'onClipboardCopy' | 'clipboardCopyCellDelimiter'

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import { createSelector } from './createSelector';
 import { GridStateCommunity } from '../models/gridStateCommunity';
 import { GridApiCommunity } from '../models/api/gridApiCommunity';
@@ -28,7 +28,7 @@ createSelector(
 createSelector(
   (state: GridStateCommunity) => state.columns.orderedFields,
   (fields) => fields,
-)({} as React.RefObject<GridApiCommunity>);
+)({} as ApiRef<GridApiCommunity>);
 
 createSelector(
   (state: GridStateCommunity) => state.columns.orderedFields,

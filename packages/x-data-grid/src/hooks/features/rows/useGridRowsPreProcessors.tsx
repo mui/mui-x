@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridGroupNode, GridRowId, GridRowTreeConfig } from '../../../models';
 import {
@@ -93,7 +93,7 @@ const flatRowTreeCreationMethod: GridStrategyProcessor<'rowTreeCreation'> = (par
   return updateFlatRowTree({ previousTree: params.previousTree!, actions: params.updates.actions });
 };
 
-export const useGridRowsPreProcessors = (apiRef: React.RefObject<GridPrivateApiCommunity>) => {
+export const useGridRowsPreProcessors = (apiRef: ApiRef<GridPrivateApiCommunity>) => {
   useGridRegisterStrategyProcessor(
     apiRef,
     GRID_DEFAULT_STRATEGY,

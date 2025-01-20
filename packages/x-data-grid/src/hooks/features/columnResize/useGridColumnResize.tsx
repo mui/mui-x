@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import {
   unstable_ownerDocument as ownerDocument,
   unstable_useEventCallback as useEventCallback,
@@ -132,7 +133,7 @@ function preventClick(event: MouseEvent) {
  * Checker that returns a promise that resolves when the column virtualization
  * is disabled.
  */
-function useColumnVirtualizationDisabled(apiRef: React.RefObject<GridPrivateApiCommunity>) {
+function useColumnVirtualizationDisabled(apiRef: ApiRef<GridPrivateApiCommunity>) {
   const promise = React.useRef<ControllablePromise>(undefined);
   const selector = () => gridVirtualizationColumnEnabledSelector(apiRef);
   const value = useGridSelector(apiRef, selector);
@@ -184,7 +185,7 @@ function excludeOutliers(inputValues: number[], factor: number) {
 }
 
 function extractColumnWidths(
-  apiRef: React.RefObject<GridPrivateApiCommunity>,
+  apiRef: ApiRef<GridPrivateApiCommunity>,
   options: AutosizeOptionsRequired,
   columns: GridStateColDef[],
 ) {
@@ -270,7 +271,7 @@ function createResizeRefs() {
  * TODO: improve experience for last column
  */
 export const useGridColumnResize = (
-  apiRef: React.RefObject<GridPrivateApiCommunity>,
+  apiRef: ApiRef<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'autosizeOptions'

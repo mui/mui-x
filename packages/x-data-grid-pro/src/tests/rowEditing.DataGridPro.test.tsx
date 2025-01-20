@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import {
   GridApi,
   DataGridProProps,
@@ -20,7 +21,7 @@ import { fireUserEvent } from 'test/utils/fireUserEvent';
 describe('<DataGridPro /> - Row editing', () => {
   const { render, clock } = createRenderer();
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: ApiRef<GridApi>;
 
   const defaultData = getBasicGridData(4, 4);
 

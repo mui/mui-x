@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import {
   useGridApiEventHandler,
   useGridSelector,
@@ -21,7 +22,7 @@ import { findSkeletonRowsSection } from './utils';
  * @requires useGridScroll (method
  */
 export const useGridLazyLoader = (
-  privateApiRef: React.RefObject<GridPrivateApiPro>,
+  privateApiRef: ApiRef<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     'onFetchRows' | 'rowsLoadingMode' | 'pagination' | 'paginationMode' | 'experimentalFeatures'

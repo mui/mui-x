@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridHeaderFilteringState } from '../../../models/gridHeaderFilteringModel';
@@ -24,7 +25,7 @@ export const headerFilteringStateInitializer: GridStateInitializer = (
 });
 
 export const useGridHeaderFiltering = (
-  apiRef: React.RefObject<GridPrivateApiCommunity>,
+  apiRef: ApiRef<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'signature' | 'headerFilters'>,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridHeaderFiltering');

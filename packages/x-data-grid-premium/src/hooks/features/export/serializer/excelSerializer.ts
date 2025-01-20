@@ -1,4 +1,5 @@
 import type * as Excel from 'exceljs';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import {
   GridRowId,
   GridColDef,
@@ -66,7 +67,7 @@ interface SerializedRow {
 export const serializeRowUnsafe = (
   id: GridRowId,
   columns: GridStateColDef[],
-  apiRef: React.RefObject<GridPrivateApiPremium>,
+  apiRef: ApiRef<GridPrivateApiPremium>,
   defaultValueOptionsFormulae: { [field: string]: { address: string } },
   options: Pick<BuildExcelOptions, 'escapeFormulas'>,
 ): SerializedRow => {
@@ -403,7 +404,7 @@ interface BuildExcelOptions
 
 export async function buildExcel(
   options: BuildExcelOptions,
-  apiRef: React.RefObject<GridPrivateApiPremium>,
+  apiRef: ApiRef<GridPrivateApiPremium>,
 ): Promise<Excel.Workbook> {
   const {
     columns,

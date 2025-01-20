@@ -2,6 +2,7 @@ import * as React from 'react';
 import { createRenderer, fireEvent, screen, act, within, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import {
   getDefaultGridFilterModel,
   GridApi,
@@ -30,7 +31,7 @@ const SUBMIT_FILTER_STROKE_TIME = DATA_GRID_PRO_PROPS_DEFAULT_VALUES.filterDebou
 describe('<DataGridPro /> - Filter', () => {
   const { clock, render } = createRenderer({ clock: 'fake' });
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: ApiRef<GridApi>;
 
   const baselineProps = {
     autoHeight: isJSDOM,

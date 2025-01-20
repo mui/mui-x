@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -17,7 +18,7 @@ export const densityStateInitializer: GridStateInitializer<
 });
 
 export const useGridDensity = (
-  apiRef: React.RefObject<GridPrivateApiCommunity>,
+  apiRef: ApiRef<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'density' | 'onDensityChange' | 'initialState'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useDensity');

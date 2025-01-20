@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import { GridPrivateApiCommon } from '../../../models/api/gridApiCommon';
 import {
   GridStrategyProcessor,
@@ -62,7 +63,7 @@ type UntypedStrategyProcessors = {
  * Each processor name is part of a strategy group which can only have one active strategy at the time.
  * There are two active groups named `rowTree` and `dataSource`.
  */
-export const useGridStrategyProcessing = (apiRef: React.RefObject<GridPrivateApiCommon>) => {
+export const useGridStrategyProcessing = (apiRef: ApiRef<GridPrivateApiCommon>) => {
   const availableStrategies = React.useRef(
     new Map<string, { group: GridStrategyGroupValue; isAvailable: () => boolean }>(),
   );

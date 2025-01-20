@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import { unstable_ownerDocument as ownerDocument } from '@mui/utils';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridPrintExportApi } from '../../../models/api/gridPrintExportApi';
@@ -61,7 +62,7 @@ function buildPrintWindow(title?: string): HTMLIFrameElement {
  * @requires useGridParamsApi (method)
  */
 export const useGridPrintExport = (
-  apiRef: React.RefObject<GridPrivateApiCommunity>,
+  apiRef: ApiRef<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'pagination' | 'columnHeaderHeight' | 'headerFilterHeight'>,
 ): void => {
   const hasRootReference = apiRef.current.rootElementRef.current !== null;

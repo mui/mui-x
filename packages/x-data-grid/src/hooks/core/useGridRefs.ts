@@ -1,8 +1,9 @@
 import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import type { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 
 export const useGridRefs = <PrivateApi extends GridPrivateApiCommon>(
-  apiRef: React.RefObject<PrivateApi>,
+  apiRef: ApiRef<PrivateApi>,
 ) => {
   const rootElementRef = React.useRef<HTMLDivElement>(null);
   const mainElementRef = React.useRef<HTMLDivElement>(null);

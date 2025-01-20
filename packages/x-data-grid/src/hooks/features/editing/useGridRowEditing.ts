@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import {
   unstable_useEventCallback as useEventCallback,
   unstable_useEnhancedEffect as useEnhancedEffect,
@@ -49,7 +50,7 @@ import { GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 import { getDefaultCellValue } from './utils';
 
 export const useGridRowEditing = (
-  apiRef: React.RefObject<GridPrivateApiCommunity>,
+  apiRef: ApiRef<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'editMode'

@@ -1,3 +1,4 @@
+import { ApiRef } from '@mui/x-internals/apiRef';
 import { createRenderer, fireEvent, screen, act, reactMajor } from '@mui/internal-test-utils';
 import {
   getCell,
@@ -61,7 +62,7 @@ const baselineProps: DataGridProProps = {
 describe('<DataGridPro /> - Tree data', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: ApiRef<GridApi>;
 
   function Test(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();

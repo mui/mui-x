@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -18,7 +19,7 @@ import {
 } from './gridPaginationSelector';
 
 export const useGridRowCount = (
-  apiRef: React.RefObject<GridPrivateApiCommunity>,
+  apiRef: ApiRef<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     'rowCount' | 'initialState' | 'paginationMode' | 'onRowCountChange'

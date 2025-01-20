@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import {
   GridRowId,
   GridRowTreeConfig,
@@ -54,7 +54,7 @@ interface FilterRowTreeFromTreeDataParams {
   rowTree: GridRowTreeConfig;
   isRowMatchingFilters: GridAggregatedFilterItemApplier | null;
   filterModel: GridFilterModel;
-  apiRef: React.RefObject<GridPrivateApiPremium>;
+  apiRef: ApiRef<GridPrivateApiPremium>;
 }
 
 /**
@@ -196,7 +196,7 @@ export const mergeStateWithRowGroupingModel =
   });
 
 export const setStrategyAvailability = (
-  privateApiRef: React.RefObject<GridPrivateApiPremium>,
+  privateApiRef: ApiRef<GridPrivateApiPremium>,
   disableRowGrouping: boolean,
   dataSource?: GridDataSource,
 ) => {
@@ -224,7 +224,7 @@ export const getCellGroupingCriteria = ({
   row: GridRowModel;
   colDef: GridColDef;
   groupingRule: GridGroupingRule;
-  apiRef: React.RefObject<GridPrivateApiPremium>;
+  apiRef: ApiRef<GridPrivateApiPremium>;
 }) => {
   let key: GridKeyValue | null | undefined;
   if (groupingRule.groupingValueGetter) {

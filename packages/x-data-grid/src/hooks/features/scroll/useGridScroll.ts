@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import { useRtl } from '@mui/system/RtlProvider';
 import { GridCellIndexCoordinates } from '../../../models/gridCell';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -53,7 +54,7 @@ function scrollIntoView(dimensions: {
  * @requires useGridColumnSpanning (method)
  */
 export const useGridScroll = (
-  apiRef: React.RefObject<GridPrivateApiCommunity>,
+  apiRef: ApiRef<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'pagination' | 'unstable_listView'>,
 ): void => {
   const isRtl = useRtl();

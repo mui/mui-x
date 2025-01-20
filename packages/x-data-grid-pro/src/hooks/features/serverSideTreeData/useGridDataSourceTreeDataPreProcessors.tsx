@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import {
   gridRowTreeSelector,
   useFirstRender,
@@ -38,7 +39,7 @@ import { getVisibleRowsLookup } from '../../../utils/tree/utils';
 import { TreeDataStrategy } from '../treeData/gridTreeDataUtils';
 
 export const useGridDataSourceTreeDataPreProcessors = (
-  privateApiRef: React.RefObject<GridPrivateApiPro>,
+  privateApiRef: ApiRef<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     | 'treeData'

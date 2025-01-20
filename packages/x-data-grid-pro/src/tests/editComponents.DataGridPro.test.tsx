@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import {
   GridApi,
   DataGridProProps,
@@ -41,7 +42,7 @@ const generateDate = (
 describe('<DataGridPro /> - Edit components', () => {
   const { render, clock } = createRenderer();
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: ApiRef<GridApi>;
 
   const defaultData: Pick<DataGridProProps, 'rows' | 'columns'> = { columns: [], rows: [] };
 

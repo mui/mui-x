@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import {
   GridColDef,
   GridRowId,
@@ -89,7 +90,7 @@ class CellValueUpdater {
   updateRow: (row: GridRowModel) => void;
 
   options: {
-    apiRef: React.RefObject<GridPrivateApiPremium>;
+    apiRef: ApiRef<GridPrivateApiPremium>;
     processRowUpdate: DataGridPremiumProcessedProps['processRowUpdate'];
     onProcessRowUpdateError: DataGridPremiumProcessedProps['onProcessRowUpdateError'];
     getRowId: DataGridPremiumProcessedProps['getRowId'];
@@ -212,7 +213,7 @@ function defaultPasteResolver({
   paginationMode,
 }: {
   pastedData: string[][];
-  apiRef: React.RefObject<GridApiPremium>;
+  apiRef: ApiRef<GridApiPremium>;
   updateCell: CellValueUpdater['updateCell'];
   pagination: DataGridPremiumProcessedProps['pagination'];
   paginationMode: DataGridPremiumProcessedProps['paginationMode'];
@@ -321,7 +322,7 @@ function defaultPasteResolver({
 }
 
 export const useGridClipboardImport = (
-  apiRef: React.RefObject<GridPrivateApiPremium>,
+  apiRef: ApiRef<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
     | 'pagination'

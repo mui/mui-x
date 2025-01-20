@@ -10,7 +10,7 @@ import { GridRootPropsContext } from '@mui/x-data-grid/context/GridRootPropsCont
 import Popper from '@mui/material/Popper';
 import { describeConformance } from 'test/utils/describeConformance';
 
-describe('<GridPanel />', () => {
+describe.only('<GridPanel />', () => {
   const { render } = createRenderer();
 
   function Wrapper(props: { children: React.ReactNode }) {

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
 import { createRenderer, screen, act, reactMajor, fireEvent } from '@mui/internal-test-utils';
 import {
@@ -29,7 +30,7 @@ function getSelectedRowIds() {
 describe('<DataGridPro /> - Row selection', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: ApiRef<GridApi>;
 
   function TestDataGridSelection({
     rowLength = 4,

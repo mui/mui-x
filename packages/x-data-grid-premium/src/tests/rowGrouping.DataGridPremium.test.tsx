@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import {
   createRenderer,
   fireEvent,
@@ -78,7 +79,7 @@ const baselineProps: BaselineProps = {
 describe('<DataGridPremium /> - Row grouping', () => {
   const { render, clock } = createRenderer();
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: ApiRef<GridApi>;
 
   function Test(props: Partial<DataGridPremiumProps>) {
     apiRef = useGridApiRef();

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import { useGridApiEventHandler, GridEventListener } from '@mui/x-data-grid';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -6,7 +7,7 @@ import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GRID_TREE_DATA_GROUPING_FIELD } from './gridTreeDataGroupColDef';
 
 export const useGridTreeData = (
-  apiRef: React.RefObject<GridApiPro>,
+  apiRef: ApiRef<GridApiPro>,
   props: Pick<DataGridProProcessedProps, 'unstable_dataSource'>,
 ) => {
   /**

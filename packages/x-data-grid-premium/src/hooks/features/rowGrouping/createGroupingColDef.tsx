@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ApiRef } from '@mui/x-internals/apiRef';
 import {
   GRID_STRING_COL_DEF,
   GridColDef,
@@ -264,7 +265,7 @@ export const createGroupingColDefForOneGroupingCriteria = ({
 };
 
 interface CreateGroupingColDefSeveralCriteriaParams {
-  apiRef: React.RefObject<GridApiPremium>;
+  apiRef: ApiRef<GridApiPremium>;
   columnsLookup: GridColumnRawLookup;
   /**
    * The fields from which we are grouping the rows.
