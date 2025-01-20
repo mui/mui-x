@@ -160,6 +160,8 @@ const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterB
             </rootProps.slots.baseBadge>
           }
           onClick={toggleFilter}
+          onMouseUpCapture={(event) => event.stopPropagation()}
+          onTouchEndCapture={(event) => event.stopPropagation()}
           {...rootProps.slotProps?.baseButton}
           {...buttonProps}
           ref={ref}
