@@ -161,10 +161,7 @@ const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterB
           }
           onClick={toggleFilter}
           onPointerUp={(event) => {
-            if (
-              preferencePanel.open &&
-              preferencePanel.openedPanelValue === GridPreferencePanelsValue.filters
-            ) {
+            if (preferencePanel.open) {
               event.stopPropagation();
             }
           }}

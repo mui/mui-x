@@ -71,10 +71,7 @@ const GridToolbarColumnsButton = forwardRef<HTMLButtonElement, GridToolbarColumn
           startIcon={<rootProps.slots.columnSelectorIcon />}
           onClick={showColumns}
           onPointerUp={(event) => {
-            if (
-              preferencePanel.open &&
-              preferencePanel.openedPanelValue === GridPreferencePanelsValue.columns
-            ) {
+            if (preferencePanel.open) {
               event.stopPropagation();
             }
           }}
