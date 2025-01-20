@@ -20,7 +20,7 @@ import { fireUserEvent } from 'test/utils/fireUserEvent';
 describe('<DataGridPro /> - Row editing', () => {
   const { render, clock } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
 
   const defaultData = getBasicGridData(4, 4);
 

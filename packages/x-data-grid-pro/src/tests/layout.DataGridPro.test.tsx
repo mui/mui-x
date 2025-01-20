@@ -78,7 +78,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Layout', () => {
 
   describe('columns width', () => {
     it('should resize flex: 1 column when changing column visibility to avoid exceeding grid width (apiRef setColumnVisibility method call)', () => {
-      let apiRef: React.MutableRefObject<GridApi>;
+      let apiRef: React.RefObject<GridApi>;
 
       function TestCase(props: Omit<DataGridProProps, 'apiRef'>) {
         apiRef = useGridApiRef();
@@ -139,18 +139,17 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Layout', () => {
 
   it('should work with `headerFilterHeight` prop', () => {
     render(
-      <div style={{ width: 300, height: 300 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', width: 300 }}>
         <DataGridPro
           {...baselineProps}
-          autoHeight
           headerFilters
           columnHeaderHeight={20}
-          headerFilterHeight={32}
+          headerFilterHeight={60}
           rowHeight={20}
         />
       </div>,
     );
-    expect(grid('main')!.clientHeight).to.equal(baselineProps.rows.length * 20 + 20 + 32);
+    expect(grid('main')!.clientHeight).to.equal(baselineProps.rows.length * 20 + 20 + 60);
   });
 
   it('should support translations in the theme', () => {

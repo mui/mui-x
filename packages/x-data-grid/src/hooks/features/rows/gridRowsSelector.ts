@@ -51,10 +51,10 @@ export const gridRowMaximumTreeDepthSelector = createSelectorMemoized(
     }
 
     return (
-      entries
+      (entries
         .filter(([, nodeCount]) => nodeCount > 0)
         .map(([depth]) => Number(depth))
-        .sort((a, b) => b - a)[0] + 1
+        .sort((a, b) => b - a)[0] ?? 0) + 1
     );
   },
 );

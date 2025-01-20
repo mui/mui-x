@@ -13,7 +13,7 @@ import { DateOrTimeViewWithMeridiem, PickerValidValue, PickerValue } from '../in
 export const usePickerActionsContext = <
   TValue extends PickerValidValue = PickerValue,
   TView extends DateOrTimeViewWithMeridiem = DateOrTimeViewWithMeridiem,
-  TError = string,
+  TError = string | null,
 >() => {
   const value = React.useContext(PickerActionsContext) as PickerActionsContextValue<
     TValue,

@@ -283,6 +283,43 @@ describe('<DateField /> - Selection', () => {
       fireEvent.keyDown(input, { key: 'ArrowRight' });
       expect(getCleanedSelectedContent()).to.equal('YYYY');
     });
+
+    it('should select the next section when editing after all the sections were selected', () => {
+      // Test with accessible DOM structure
+      let view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+      view.selectSection('month');
+
+      // Select all sections
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
+      expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
+
+      fireEvent.keyDown(view.getSectionsContainer(), { key: 'ArrowDown' });
+      expect(getCleanedSelectedContent()).to.equal('12');
+
+      fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowRight' });
+      expect(getCleanedSelectedContent()).to.equal('DD');
+
+      view.unmount();
+
+      // Test with non-accessible DOM structure
+      view = renderWithProps({ enableAccessibleFieldDOMStructure: false });
+      const input = getTextbox();
+      view.selectSection('month');
+
+      // Select all sections
+      fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
+      expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
+
+      fireEvent.keyDown(input, { key: 'ArrowDown' });
+      expect(getCleanedSelectedContent()).to.equal('12');
+
+      fireEvent.keyDown(input, { key: 'ArrowRight' });
+      expect(getCleanedSelectedContent()).to.equal('DD');
+    });
   });
 
   describe('key: ArrowLeft', () => {
