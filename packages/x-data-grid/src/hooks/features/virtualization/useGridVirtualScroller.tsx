@@ -796,6 +796,13 @@ function computeRenderContext(
     lastColumnIndex: inputs.visibleColumns.length,
   };
 
+  if (inputs.listView) {
+    return {
+      ...renderContext,
+      lastColumnIndex: 1,
+    };
+  }
+
   const { top, left } = scrollPosition;
   const realLeft = Math.abs(left) + inputs.leftPinnedWidth;
 

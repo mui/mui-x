@@ -1,4 +1,5 @@
 import { GridColDef } from '../colDef';
+import { GridStateColDef } from '../colDef/gridColDef';
 import { GridCellMode } from '../gridCell';
 import { GridValidRowModel, GridRowId, GridTreeNode, GridRowModel } from '../gridRows';
 import { GridCellParams } from '../params/gridCellParams';
@@ -85,11 +86,20 @@ export interface GridParamsApi {
 
 export interface GridParamsPrivateApi {
   /**
+   * @typedef {Object} CellParamsOverrides
+   * @property {GridCellMode} cellMode - The mode of the cell.
+   * @property {GridStateColDef} colDef - The column definition.
+   * @property {boolean} hasFocus - Indicates if the cell is in focus.
+   * @property {GridTreeNode} rowNode - The node of the row that the current cell belongs to.
+   * @property {0|-1} tabIndex - The tabIndex value.
+   */
+
+  /**
    * Used internally to render the cell based on existing row data provided by the GridRow.
    * @param {GridRowId} id The id of the row.
    * @param {string} field The column field.
    * @param {GridValidRowModel} row The row model.
-   * @param {GridTreeNode} rowNode The row node.
+   * @param {CellParamsOverrides} cellParams The cell params.
    * @returns {GridCellParams} The cell params.
    */
   getCellParamsForRow: <
@@ -103,11 +113,13 @@ export interface GridParamsPrivateApi {
     row: R,
     {
       cellMode,
+      colDef,
       hasFocus,
       rowNode,
       tabIndex,
     }: {
       cellMode: GridCellMode;
+      colDef: GridStateColDef;
       hasFocus: boolean;
       rowNode: N;
       tabIndex: 0 | -1;

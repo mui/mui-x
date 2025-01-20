@@ -25,7 +25,7 @@ import {
   FocusElement,
   GridCellParams,
 } from '../../models/params/gridCellParams';
-import { GridColDef, GridAlignment } from '../../models/colDef/gridColDef';
+import { GridAlignment, GridStateColDef } from '../../models/colDef/gridColDef';
 import { GridRowModel, GridTreeNode, GridTreeNodeWithRender } from '../../models/gridRows';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -55,7 +55,7 @@ export type GridCellProps = React.HTMLAttributes<HTMLDivElement> & {
   align: GridAlignment;
   className?: string;
   colIndex: number;
-  column: GridColDef;
+  column: GridStateColDef;
   row: GridRowModel;
   rowId: GridRowId;
   rowNode: GridTreeNode;
@@ -180,6 +180,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     any,
     GridTreeNodeWithRender
   >(rowId, field, row, {
+    colDef: column,
     cellMode,
     rowNode: rowNode as GridTreeNodeWithRender,
     tabIndex: useGridSelector(apiRef, () => {
