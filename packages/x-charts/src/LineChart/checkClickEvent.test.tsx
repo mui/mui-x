@@ -96,7 +96,7 @@ describe('LineChart - click event', () => {
           onMarkClick={() => {}}
         />,
       );
-      const marks = document.querySelectorAll<HTMLElement>('path.MuiMarkElement-root');
+      const marks = document.querySelectorAll<HTMLElement>('.MuiMarkElement-root');
 
       expect(Array.from(marks).map((mark) => mark.getAttribute('cursor'))).to.deep.equal([
         'pointer',
@@ -132,7 +132,7 @@ describe('LineChart - click event', () => {
         </div>,
       );
 
-      const marks = document.querySelectorAll<HTMLElement>('path.MuiMarkElement-root');
+      const marks = document.querySelectorAll<HTMLElement>('.MuiMarkElement-root');
 
       fireEvent.click(marks[0]);
       expect(onMarkClick.lastCall.args[1]).to.deep.equal({

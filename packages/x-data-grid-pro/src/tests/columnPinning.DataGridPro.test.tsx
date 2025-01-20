@@ -12,7 +12,14 @@ import {
   GridColDef,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
-import { createRenderer, fireEvent, screen, createEvent, act } from '@mui/internal-test-utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  createEvent,
+  act,
+  waitFor,
+} from '@mui/internal-test-utils';
 import {
   $,
   $$,
@@ -462,7 +469,9 @@ describe('<DataGridPro /> - Column pinning', () => {
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
       await user.click(menuIconButton);
       await user.click(screen.getByRole('menuitem', { name: 'Pin to left' }));
-      expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`)).not.to.equal(null);
+      await waitFor(() => {
+        expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`)).not.to.equal(null);
+      });
     });
 
     it('should pin the column to the right when clicking the "Pin to right" pinning button', async () => {
@@ -471,7 +480,9 @@ describe('<DataGridPro /> - Column pinning', () => {
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
       await user.click(menuIconButton);
       await user.click(screen.getByRole('menuitem', { name: 'Pin to right' }));
-      expect($(`.${gridClasses['cell--pinnedRight']}[data-field="id"]`)).not.to.equal(null);
+      await waitFor(() => {
+        expect($(`.${gridClasses['cell--pinnedRight']}[data-field="id"]`)).not.to.equal(null);
+      });
     });
 
     it('should allow to invert the side when clicking on "Pin to right" pinning button on a left pinned column', async () => {
@@ -480,7 +491,9 @@ describe('<DataGridPro /> - Column pinning', () => {
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
       await user.click(menuIconButton);
       await user.click(screen.getByRole('menuitem', { name: 'Pin to right' }));
-      expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`)).to.equal(null);
+      await waitFor(() => {
+        expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`)).to.equal(null);
+      });
       expect($(`.${gridClasses['cell--pinnedRight']}[data-field="id"]`)).not.to.equal(null);
     });
 
@@ -490,7 +503,9 @@ describe('<DataGridPro /> - Column pinning', () => {
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
       await user.click(menuIconButton);
       await user.click(screen.getByRole('menuitem', { name: 'Pin to left' }));
-      expect($(`.${gridClasses['cell--pinnedRight']}[data-field="id"]`)).to.equal(null);
+      await waitFor(() => {
+        expect($(`.${gridClasses['cell--pinnedRight']}[data-field="id"]`)).to.equal(null);
+      });
       expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`)).not.to.equal(null);
     });
 
@@ -500,7 +515,9 @@ describe('<DataGridPro /> - Column pinning', () => {
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
       await user.click(menuIconButton);
       await user.click(screen.getByRole('menuitem', { name: 'Unpin' }));
-      expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`)).to.equal(null);
+      await waitFor(() => {
+        expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`)).to.equal(null);
+      });
     });
 
     describe('with fake timers', () => {

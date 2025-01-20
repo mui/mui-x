@@ -139,11 +139,12 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
     useOnMount(() => {
       const scroller = apiRef.current.virtualScrollerRef.current!;
       const scrollbar = scrollbarRef.current!;
-      scroller.addEventListener('scroll', onScrollerScroll, { capture: true });
-      scrollbar.addEventListener('scroll', onScrollbarScroll, { capture: true });
+      const options = { capture: true, passive: true };
+      scroller.addEventListener('scroll', onScrollerScroll, options);
+      scrollbar.addEventListener('scroll', onScrollbarScroll, options);
       return () => {
-        scroller.removeEventListener('scroll', onScrollerScroll, { capture: true });
-        scrollbar.removeEventListener('scroll', onScrollbarScroll, { capture: true });
+        scroller.removeEventListener('scroll', onScrollerScroll, options);
+        scrollbar.removeEventListener('scroll', onScrollbarScroll, options);
       };
     });
 

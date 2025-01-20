@@ -11,7 +11,7 @@ export { useScatterChartProps } from '../ScatterChart/useScatterChartProps';
 export { useLineChartProps } from '../LineChart/useLineChartProps';
 export { useBarChartProps } from '../BarChart/useBarChartProps';
 export * from '../ChartContainer/useChartContainerProps';
-export * from '../context/ChartDataProvider/useChartDataProviderProps';
+export * from '../ChartDataProvider/useChartDataProviderProps';
 
 // plugins
 export * from './plugins/corePlugins/useChartId';
@@ -40,7 +40,6 @@ export * from './getScale';
 export * from '../context/AnimationProvider';
 export type * from '../context/context.types';
 export { getAxisExtremum } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtremum';
-export * from '../context/ChartDataProvider';
 export * from '../context/ChartProvider';
 
 // series configuration
