@@ -172,6 +172,42 @@ jobs:
             chmod +x codecov
             ./codecov -t ${CODECOV_TOKEN} -Z -F "$REACT_VERSION-jsdom"
 
+  test_unit_charts:
+    <<: *default-job
+    steps:
+      - checkout
+      - install_js
+      - run:
+          name: Tests fake browser (vitest-charts)
+          command: pnpm vitest --reporter dot --project "jsdom/x-charts*" --coverage
+
+  test_unit_date_pickers:
+    <<: *default-job
+    steps:
+      - checkout
+      - install_js
+      - run:
+          name: Tests fake browser (vitest-date-pickers)
+          command: pnpm vitest --reporter dot --project "jsdom/x-date-pickers*" --coverage
+
+  test_unit_data_grid:
+    <<: *default-job
+    steps:
+      - checkout
+      - install_js
+      - run:
+          name: Tests fake browser (vitest-data-grid)
+          command: pnpm vitest --reporter dot --project "jsdom/x-data-grid*" --coverage
+
+  test_unit_tree_view:
+    <<: *default-job
+    steps:
+      - checkout
+      - install_js
+      - run:
+          name: Tests fake browser (vitest-tree-view)
+          command: pnpm vitest --reporter dot --project "jsdom/x-tree-view*" --coverage
+
   test_unit_vitest:
     <<: *default-job
     steps:
