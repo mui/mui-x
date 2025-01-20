@@ -39,7 +39,7 @@ const gridVisibleRowsWithPinnedRowsSelector = createSelectorMemoized(
   gridVisibleRowsSelector,
   gridPinnedRowsSelector,
   (visibleRows, pinnedRows) => {
-    return [...(pinnedRows.top || []), ...visibleRows.rows, ...(pinnedRows.bottom || [])];
+    return (pinnedRows.top || []).concat(visibleRows.rows, pinnedRows.bottom || []);
   },
 );
 
