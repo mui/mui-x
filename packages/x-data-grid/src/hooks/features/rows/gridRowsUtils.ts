@@ -132,7 +132,7 @@ export const getRowsStateFromCache = ({
   GridRowTreeCreationParams,
   'previousTree' | 'previousTreeDepths' | 'previousGroupsToFetch'
 > & {
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>;
+  apiRef: React.RefObject<GridPrivateApiCommunity>;
   rowCountProp: number | undefined;
   loadingProp: boolean | undefined;
 }): GridRowsState => {
@@ -370,7 +370,7 @@ export const updateCacheWithNewRows = ({
   };
 };
 
-export function calculatePinnedRowsHeight(apiRef: React.MutableRefObject<GridApiCommunity>) {
+export function calculatePinnedRowsHeight(apiRef: React.RefObject<GridApiCommunity>) {
   const pinnedRows = gridPinnedRowsSelector(apiRef);
   const topPinnedRowsHeight =
     pinnedRows?.top?.reduce((acc, value) => {
@@ -393,7 +393,7 @@ export function calculatePinnedRowsHeight(apiRef: React.MutableRefObject<GridApi
 export const minimalContentHeight = 'var(--DataGrid-overlayHeight, calc(var(--height) * 2))';
 
 export function computeRowsUpdates(
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.RefObject<GridApiCommunity>,
   updates: GridRowModelUpdate[],
   getRowId: DataGridProcessedProps['getRowId'],
 ) {

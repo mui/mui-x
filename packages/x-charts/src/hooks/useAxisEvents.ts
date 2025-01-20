@@ -1,22 +1,23 @@
 'use client';
 import * as React from 'react';
-import { useCartesianContext } from '../context/CartesianProvider';
 import { isBandScale } from '../internals/isBandScale';
 import { AxisDefaultized } from '../models/axis';
 import { getSVGPoint } from '../internals/getSVGPoint';
 import { useSvgRef } from './useSvgRef';
-import { useDrawingArea } from './useDrawingArea';
 import { useStore } from '../internals/store/useStore';
+import { useChartContext } from '../context/ChartProvider';
+import { useXAxes, useYAxes } from './useAxis';
 
 function getAsANumber(value: number | Date) {
   return value instanceof Date ? value.getTime() : value;
 }
 export const useAxisEvents = (disableAxisListener: boolean) => {
   const svgRef = useSvgRef();
-  const drawingArea = useDrawingArea();
-  const { xAxis, yAxis, xAxisIds, yAxisIds } = useCartesianContext();
+  const { instance } = useChartContext();
+  const { xAxis, xAxisIds } = useXAxes();
+  const { yAxis, yAxisIds } = useYAxes();
 
-  const store = useStore(disableAxisListener);
+  const store = useStore();
 
   const usedXAxis = xAxisIds[0];
   const usedYAxis = yAxisIds[0];
@@ -115,7 +116,7 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
       mousePosition.current.x = svgPoint.x;
       mousePosition.current.y = svgPoint.y;
 
-      if (!drawingArea.isPointInside(svgPoint, { targetElement: event.target as SVGElement })) {
+      if (!instance.isPointInside(svgPoint, { targetElement: event.target as SVGElement })) {
         if (mousePosition.current.isInChart) {
           store.update((prev) => ({
             ...prev,
@@ -172,5 +173,5 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
       element.removeEventListener('pointercancel', handleOut);
       element.removeEventListener('pointerleave', handleOut);
     };
-  }, [svgRef, store, usedYAxis, yAxis, usedXAxis, xAxis, disableAxisListener, drawingArea]);
+  }, [svgRef, store, usedYAxis, yAxis, usedXAxis, xAxis, disableAxisListener, instance]);
 };

@@ -85,7 +85,7 @@ const FULL_INITIAL_STATE: GridInitialState = {
 describe('<DataGridPro /> - State persistence', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
 
   function TestCase(props: Omit<DataGridProProps, 'rows' | 'columns' | 'apiRef'>) {
     apiRef = useGridApiRef();

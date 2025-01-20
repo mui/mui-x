@@ -33,7 +33,7 @@ import {
 } from '../ChartsOverlay';
 import { useLineChartProps } from './useLineChartProps';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
-import { ChartDataProvider } from '../context';
+import { ChartDataProvider } from '../ChartDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../internals/components/ChartsWrapper';
 
@@ -111,10 +111,6 @@ export interface LineChartProps
    * @default false
    */
   skipAnimation?: boolean;
-  /**
-   * If `true` marks will render `<circle />` instead of `<path />` and drop theme override for faster rendering.
-   */
-  experimentalMarkRendering?: boolean;
 }
 
 /**
@@ -189,6 +185,9 @@ LineChart.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  apiRef: PropTypes.shape({
+    current: PropTypes.object,
+  }),
   /**
    * The configuration of axes highlight.
    * @see See {@link https://mui.com/x/react-charts/highlighting/ highlighting docs} for more details.
@@ -227,10 +226,6 @@ LineChart.propTypes = {
    */
   disableLineItemHighlight: PropTypes.bool,
   /**
-   * If `true` marks will render `<circle />` instead of `<path />` and drop theme override for faster rendering.
-   */
-  experimentalMarkRendering: PropTypes.bool,
-  /**
    * Option to display a cartesian grid in the background.
    */
   grid: PropTypes.shape({
@@ -253,6 +248,11 @@ LineChart.propTypes = {
     seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   }),
   /**
+   * This prop is used to help implement the accessibility logic.
+   * If you don't provide this prop. It falls back to a randomly generated id.
+   */
+  id: PropTypes.string,
+  /**
    * Indicate which axis to display the left of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
    * @default yAxisIds[0] The id of the first provided axis
@@ -267,7 +267,6 @@ LineChart.propTypes = {
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
-   * @default object Depends on the charts type.
    */
   margin: PropTypes.shape({
     bottom: PropTypes.number,
@@ -331,6 +330,7 @@ LineChart.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
   /**
    * Indicate which axis to display the top of the charts.

@@ -19,7 +19,7 @@ export interface UseTreeViewParameters<
 }
 
 export interface UseTreeViewBaseProps<TSignatures extends readonly TreeViewAnyPluginSignature[]> {
-  apiRef: React.MutableRefObject<TreeViewPublicAPI<TSignatures> | undefined> | undefined;
+  apiRef: React.RefObject<TreeViewPublicAPI<TSignatures> | undefined> | undefined;
   slots: MergeSignaturesProperty<TSignatures, 'slots'>;
   slotProps: MergeSignaturesProperty<TSignatures, 'slotProps'>;
   experimentalFeatures: TreeViewExperimentalFeatures<TSignatures>;
