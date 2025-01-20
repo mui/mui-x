@@ -7,8 +7,8 @@ settings:
 overrides:
   react-is: ^19.0.0
   '@types/node': ^20.17.14
-  '@mui/internal-markdown': https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/internal-markdown
-  '@mui/docs': https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/docs
+  '@mui/internal-markdown': https://pkg.csb.dev/mui/material-ui/commit/4bab15d6/@mui/internal-markdown
+  '@mui/docs': https://pkg.csb.dev/mui/material-ui/commit/4bab15d6/@mui/docs
 
 patchedDependencies:
   babel-plugin-replace-imports@1.0.2:
@@ -92,8 +92,8 @@ importers:
         specifier: 1.0.20
         version: 1.0.20(@babel/core@7.26.0)
       '@mui/internal-markdown':
-        specifier: https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/internal-markdown
-        version: https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/internal-markdown
+        specifier: https://pkg.csb.dev/mui/material-ui/commit/4bab15d6/@mui/internal-markdown
+        version: https://pkg.csb.dev/mui/material-ui/commit/4bab15d6/@mui/internal-markdown
       '@mui/internal-test-utils':
         specifier: ^1.0.26
         version: 1.0.26(@babel/core@7.26.0)(@types/react-dom@19.0.3(@types/react@19.0.7))(@types/react@19.0.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -101,8 +101,8 @@ importers:
         specifier: ^5.16.14
         version: 5.16.14(@emotion/react@11.14.0(@types/react@19.0.7)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.7)(react@19.0.0))(@types/react@19.0.7)(react@19.0.0))(@types/react@19.0.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#6619f7c9797cfa7775c53e038b17d2e818262f16
-        version: https://codeload.github.com/mui/material-ui/tar.gz/6619f7c9797cfa7775c53e038b17d2e818262f16(encoding@0.1.13)
+        specifier: github:mui/material-ui#4bab15d69e8d5b2608ce2963a29b18e2706550c2
+        version: https://codeload.github.com/mui/material-ui/tar.gz/4bab15d69e8d5b2608ce2963a29b18e2706550c2(encoding@0.1.13)
       '@mui/utils':
         specifier: ^5.16.14
         version: 5.16.14(@types/react@19.0.7)(react@19.0.0)
@@ -428,8 +428,8 @@ importers:
         specifier: ^11.14.0
         version: 11.14.0(@emotion/react@11.14.0(@types/react@19.0.7)(react@19.0.0))(@types/react@19.0.7)(react@19.0.0)
       '@mui/docs':
-        specifier: https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/docs
-        version: https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/docs(2odpnqga3w434l53hyc2wwanyq)
+        specifier: https://pkg.csb.dev/mui/material-ui/commit/4bab15d6/@mui/docs
+        version: https://pkg.csb.dev/mui/material-ui/commit/4bab15d6/@mui/docs(2odpnqga3w434l53hyc2wwanyq)
       '@mui/icons-material':
         specifier: ^5.16.14
         version: 5.16.14(@mui/material@5.16.14(@emotion/react@11.14.0(@types/react@19.0.7)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.7)(react@19.0.0))(@types/react@19.0.7)(react@19.0.0))(@types/react@19.0.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@types/react@19.0.7)(react@19.0.0)
@@ -3118,9 +3118,9 @@ packages:
   '@mui/core-downloads-tracker@5.16.14':
     resolution: {integrity: sha512-sbjXW+BBSvmzn61XyTMun899E7nGPTXwqD9drm1jBUAvWEhJpPFIRxwQQiATWZnd9rvdxtnhhdsDxEGWI0jxqA==}
 
-  '@mui/docs@https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/docs':
-    resolution: {tarball: https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/docs}
-    version: 6.3.1
+  '@mui/docs@https://pkg.csb.dev/mui/material-ui/commit/4bab15d6/@mui/docs':
+    resolution: {tarball: https://pkg.csb.dev/mui/material-ui/commit/4bab15d6/@mui/docs}
+    version: 6.4.0
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@mui/base': '*'
@@ -3155,9 +3155,9 @@ packages:
   '@mui/internal-docs-utils@1.0.16':
     resolution: {integrity: sha512-GEq4dG9+10WGlQVrmXUfCWNe1FiWoMr2KXbgn2/00Da5hdvp4nIa3PXYYZF08Wh+FtnBbLHKGkPmZ7iw9WKtjQ==}
 
-  '@mui/internal-markdown@https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/internal-markdown':
-    resolution: {tarball: https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/internal-markdown}
-    version: 1.0.24
+  '@mui/internal-markdown@https://pkg.csb.dev/mui/material-ui/commit/4bab15d6/@mui/internal-markdown':
+    resolution: {tarball: https://pkg.csb.dev/mui/material-ui/commit/4bab15d6/@mui/internal-markdown}
+    version: 1.0.25
 
   '@mui/internal-scripts@1.0.33':
     resolution: {integrity: sha512-brWhduXmwbqHPb6wI67vjq4T+pEwgD0dI3z8r37vyBPWlpOWTiD6WRD/RkX5GYZ47LaLLLGvV4ctJEP5R4rOGg==}
@@ -3238,10 +3238,10 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/6619f7c9797cfa7775c53e038b17d2e818262f16':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/6619f7c9797cfa7775c53e038b17d2e818262f16}
-    version: 6.3.1
-    engines: {pnpm: 9.15.2}
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/4bab15d69e8d5b2608ce2963a29b18e2706550c2':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/4bab15d69e8d5b2608ce2963a29b18e2706550c2}
+    version: 6.4.0
+    engines: {pnpm: 9.15.4}
 
   '@mui/private-theming@5.16.14':
     resolution: {integrity: sha512-12t7NKzvYi819IO5IapW2BcR33wP/KAVrU8d7gLhGHoAmhDxyXlRoKiRij3TOD8+uzk0B6R9wHUNKi4baJcRNg==}
@@ -12127,12 +12127,12 @@ snapshots:
 
   '@mui/core-downloads-tracker@5.16.14': {}
 
-  '@mui/docs@https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/docs(2odpnqga3w434l53hyc2wwanyq)':
+  '@mui/docs@https://pkg.csb.dev/mui/material-ui/commit/4bab15d6/@mui/docs(2odpnqga3w434l53hyc2wwanyq)':
     dependencies:
       '@babel/runtime': 7.26.0
       '@mui/base': 5.0.0-beta.40-0(@types/react@19.0.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mui/icons-material': 5.16.14(@mui/material@5.16.14(@emotion/react@11.14.0(@types/react@19.0.7)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.7)(react@19.0.0))(@types/react@19.0.7)(react@19.0.0))(@types/react@19.0.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@types/react@19.0.7)(react@19.0.0)
-      '@mui/internal-markdown': https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/internal-markdown
+      '@mui/internal-markdown': https://pkg.csb.dev/mui/material-ui/commit/4bab15d6/@mui/internal-markdown
       '@mui/material': 5.16.14(@emotion/react@11.14.0(@types/react@19.0.7)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.7)(react@19.0.0))(@types/react@19.0.7)(react@19.0.0))(@types/react@19.0.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mui/system': 5.16.14(@emotion/react@11.14.0(@types/react@19.0.7)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.7)(react@19.0.0))(@types/react@19.0.7)(react@19.0.0))(@types/react@19.0.7)(react@19.0.0)
       chai: 5.1.2
@@ -12164,7 +12164,7 @@ snapshots:
       rimraf: 6.0.1
       typescript: 5.7.3
 
-  '@mui/internal-markdown@https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/internal-markdown':
+  '@mui/internal-markdown@https://pkg.csb.dev/mui/material-ui/commit/4bab15d6/@mui/internal-markdown':
     dependencies:
       '@babel/runtime': 7.26.0
       lodash: 4.17.21
@@ -12285,7 +12285,7 @@ snapshots:
       '@emotion/styled': 11.14.0(@emotion/react@11.14.0(@types/react@19.0.7)(react@19.0.0))(@types/react@19.0.7)(react@19.0.0)
       '@types/react': 19.0.7
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/6619f7c9797cfa7775c53e038b17d2e818262f16(encoding@0.1.13)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/4bab15d69e8d5b2608ce2963a29b18e2706550c2(encoding@0.1.13)':
     dependencies:
       '@googleapis/sheets': 9.3.1(encoding@0.1.13)
       '@netlify/functions': 3.0.0

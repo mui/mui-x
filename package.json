@@ -95,7 +95,7 @@
     "@mui/internal-markdown": "^1.0.25",
     "@mui/internal-test-utils": "^1.0.26",
     "@mui/material": "^5.16.14",
-    "@mui/monorepo": "github:mui/material-ui#6619f7c9797cfa7775c53e038b17d2e818262f16",
+    "@mui/monorepo": "github:mui/material-ui#4bab15d69e8d5b2608ce2963a29b18e2706550c2",
     "@mui/utils": "^5.16.14",
     "@next/eslint-plugin-next": "15.1.5",
     "@octokit/plugin-retry": "^7.1.3",
@@ -199,8 +199,8 @@
   "resolutions": {
     "react-is": "^19.0.0",
     "@types/node": "^20.17.14",
-    "@mui/internal-markdown": "https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/internal-markdown",
-    "@mui/docs": "https://pkg.csb.dev/mui/material-ui/commit/6619f7c9/@mui/docs"
+    "@mui/internal-markdown": "https://pkg.csb.dev/mui/material-ui/commit/4bab15d6/@mui/internal-markdown",
+    "@mui/docs": "https://pkg.csb.dev/mui/material-ui/commit/4bab15d6/@mui/docs"
   },
   "packageManager": "pnpm@9.15.4",
   "engines": {
