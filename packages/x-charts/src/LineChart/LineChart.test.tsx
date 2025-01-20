@@ -23,6 +23,7 @@ describe('<LineChart />', () => {
         'themeStyleOverrides',
         'themeVariants',
         'themeCustomPalette',
+        'themeDefaultProps',
       ],
     }),
   );

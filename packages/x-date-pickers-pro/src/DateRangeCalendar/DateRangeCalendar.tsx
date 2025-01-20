@@ -243,15 +243,15 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
   const now = useNow(timezone);
   const id = useId();
 
-  const { rangePosition, onRangePositionChange } = useRangePosition({
+  const { rangePosition, setRangePosition } = useRangePosition({
     rangePosition: rangePositionProp ?? rangePositionContext?.rangePosition,
     defaultRangePosition: defaultRangePositionProp,
-    onRangePositionChange: onRangePositionChangeProp ?? rangePositionContext?.onRangePositionChange,
+    onRangePositionChange: onRangePositionChangeProp ?? rangePositionContext?.setRangePosition,
   });
 
   const handleDatePositionChange = useEventCallback((position: RangePosition) => {
     if (rangePosition !== position) {
-      onRangePositionChange(position);
+      setRangePosition(position);
     }
   });
 
@@ -273,7 +273,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
 
       const isNextSectionAvailable = availableRangePositions.includes(nextSelection);
       if (isNextSectionAvailable) {
-        onRangePositionChange(nextSelection);
+        setRangePosition(nextSelection);
       }
 
       const isFullRangeSelected = rangePosition === 'end' && isRangeValid(utils, newRange);

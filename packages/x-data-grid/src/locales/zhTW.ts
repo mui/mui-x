@@ -112,6 +112,7 @@ const zhTWGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': '大於或等於',
   'headerFilterOperator<': '小於',
   'headerFilterOperator<=': '小於或等於',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: '任何值',

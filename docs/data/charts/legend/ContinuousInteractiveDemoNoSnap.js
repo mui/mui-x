@@ -1,3 +1,4 @@
+// @ts-check
 import * as React from 'react';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { interpolateRdYlBu } from 'd3-scale-chromatic';
@@ -14,121 +15,113 @@ export default function ContinuousInteractiveDemoNoSnap() {
         {
           propName: 'direction',
           knob: 'select',
-          defaultValue: 'row',
-          options: ['row', 'column'],
+          defaultValue: 'horizontal',
+          options: ['horizontal', 'vertical'],
+        },
+        {
+          propName: 'labelPosition',
+          knob: 'select',
+          defaultValue: 'end',
+          options: ['start', 'end', 'extremes'],
         },
         {
           propName: 'length',
           knob: 'number',
           defaultValue: 50,
           min: 10,
-          max: 80,
         },
         {
           propName: 'thickness',
           knob: 'number',
-          defaultValue: 5,
+          defaultValue: 12,
           min: 1,
           max: 20,
         },
         {
-          propName: 'align',
-          knob: 'select',
-          defaultValue: 'middle',
-          options: ['start', 'middle', 'end'],
-        },
-        {
-          propName: 'fontSize',
-          knob: 'number',
-          defaultValue: 10,
-          min: 8,
-          max: 20,
+          propName: 'reverse',
+          knob: 'switch',
+          defaultValue: false,
         },
       ]}
-      renderDemo={(props) => (
-        <div style={{ width: '100%' }}>
-          <LineChart
-            dataset={dataset}
-            series={[
-              {
-                label: 'Global temperature anomaly relative to 1961-1990',
-                dataKey: 'anomaly',
-                showMark: false,
-                valueFormatter: (value) => `${value?.toFixed(2)}°`,
+      renderDemo={(
+        /** @type {{ direction: "horizontal" | "vertical"; length: number; thickness: number;  labelPosition:  'start' | 'end' | 'extremes'; reverse: boolean; }} */
+        props,
+      ) => (
+        <LineChart
+          dataset={dataset}
+          series={[
+            {
+              label: 'Global temperature anomaly relative to 1961-1990',
+              dataKey: 'anomaly',
+              showMark: false,
+              valueFormatter: (value) => `${value?.toFixed(2)}°`,
+            },
+          ]}
+          xAxis={[
+            {
+              scaleType: 'time',
+              dataKey: 'year',
+              disableLine: true,
+              valueFormatter: (value) => value.getFullYear().toString(),
+            },
+          ]}
+          yAxis={[
+            {
+              disableLine: true,
+              disableTicks: true,
+              valueFormatter: (value) => `${value}°`,
+              colorMap: {
+                type: 'continuous',
+                min: -0.5,
+                max: 1.5,
+                color: (t) => interpolateRdYlBu(1 - t),
               },
-            ]}
-            xAxis={[
-              {
-                scaleType: 'time',
-                dataKey: 'year',
-                disableLine: true,
-                valueFormatter: (value) => value.getFullYear().toString(),
+            },
+          ]}
+          grid={{ horizontal: true }}
+          height={300}
+          margin={{ top: 20, right: 20 }}
+          slots={{ legend: ContinuousColorLegend }}
+          slotProps={{
+            legend: {
+              axisDirection: 'y',
+              direction: props.direction,
+              thickness: props.thickness,
+              labelPosition: props.labelPosition,
+              reverse: props.reverse,
+              sx: {
+                [props.direction === 'horizontal' ? 'width' : 'height']:
+                  `${props.length}${props.direction === 'horizontal' ? '%' : 'px'}`,
               },
-            ]}
-            yAxis={[
-              {
-                disableLine: true,
-                disableTicks: true,
-                valueFormatter: (value) => `${value}°`,
-                colorMap: {
-                  type: 'continuous',
-                  min: -0.5,
-                  max: 1.5,
-                  color: (t) => interpolateRdYlBu(1 - t),
-                },
-              },
-            ]}
-            grid={{ horizontal: true }}
-            height={300}
-            margin={{
-              top: props.direction === 'row' ? 50 : 20,
-              right: props.direction === 'row' ? 20 : 50,
-            }}
-            hideLegend
-          >
-            <ChartsReferenceLine y={0} />
-            <ContinuousColorLegend
-              axisDirection="y"
-              position={
-                props.direction === 'row'
-                  ? { vertical: 'top', horizontal: 'middle' }
-                  : { vertical: 'middle', horizontal: 'right' }
-              }
-              direction={props.direction}
-              length={`${props.length}%`}
-              thickness={props.thickness}
-              align={props.align}
-              labelStyle={{ fontSize: props.fontSize }}
-            />
-          </LineChart>
-        </div>
+            },
+          }}
+        >
+          <ChartsReferenceLine y={0} />
+        </LineChart>
       )}
-      getCode={({ props }) => {
-        return [
-          `import { LineChart } from '@mui/x-charts/LineChart';`,
-          `import { ContinuousColorLegend } from '@mui/x-charts/ChartsLegend';`,
-          '',
-          `<LineChart`,
-          `  margin={{ top: ${props.direction === 'row' ? 50 : 20}, right: ${
-            props.direction === 'row' ? 20 : 50
-          } }}`,
-          '  {/** ... */}',
-          '>',
-          `  <ContinuousColorLegend`,
-          `      axisDirection="x"`,
-          `      position={${
-            props.direction === 'row'
-              ? `{ vertical: 'top', horizontal: 'middle' }`
-              : `{ vertical: 'middle', horizontal: 'right' }`
-          }}`,
-          `      direction="${props.direction}"`,
-          `      length="${props.length}%"`,
-          `      thickness={${props.thickness}}`,
-          `      align="${props.align}"`,
-          `      labelStyle={{ fontSize: ${props.fontSize} }}`,
-          `    />`,
-          '</LineChart>',
-        ].join('\n');
+      getCode={(
+        /** @type {{props: { direction: "horizontal" | "vertical"; length: number; thickness: number;  labelPosition:  'start' | 'end' | 'extremes'; reverse: boolean; }}} */
+        { props },
+      ) => {
+        return `
+import { ContinuousColorLegend } from '@mui/x-charts/ChartsLegend';
+
+<LineChart
+  {/** ... */}
+  margin={{ top: 20, right: 20 }}
+  slots={{ legend: ContinuousColorLegend }}
+  slotProps={{
+    legend: {
+      axisDirection: 'y',
+      direction: '${props.direction}',
+      thickness: ${props.thickness},
+      labelPosition: '${props.labelPosition}',
+      reverse: ${props.reverse},
+      sx: { ${props.direction === 'horizontal' ? 'width' : 'height'}: '${props.length}${props.direction === 'horizontal' ? '%' : 'px'}' },
+    },
+  }}
+/>
+`;
       }}
     />
   );

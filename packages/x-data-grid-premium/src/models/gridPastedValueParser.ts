@@ -9,5 +9,5 @@ export type GridPastedValueParser<
   value: string,
   row: R,
   column: GridColDef<R, V, F>,
-  apiRef: React.MutableRefObject<GridApiPremium>,
+  apiRef: React.RefObject<GridApiPremium>,
 ) => V | undefined;

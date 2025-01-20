@@ -74,7 +74,7 @@ function createPrivateAPI<PrivateApi extends GridPrivateApiCommon, Api extends G
 }
 
 function createPublicAPI<PrivateApi extends GridPrivateApiCommon, Api extends GridApiCommon>(
-  privateApiRef: React.MutableRefObject<PrivateApi>,
+  privateApiRef: React.RefObject<PrivateApi>,
 ): Api {
   const publicApi = {
     get state() {

@@ -17,7 +17,7 @@ interface FilterRowTreeFromTreeDataParams {
   disableChildrenFiltering: boolean;
   isRowMatchingFilters: GridAggregatedFilterItemApplier | null;
   filterModel: GridFilterModel;
-  apiRef: React.MutableRefObject<GridPrivateApiPro>;
+  apiRef: React.RefObject<GridPrivateApiPro>;
 }
 
 export enum TreeDataStrategy {

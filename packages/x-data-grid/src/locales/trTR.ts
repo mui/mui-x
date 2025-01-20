@@ -113,6 +113,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Büyük veya eşit',
   'headerFilterOperator<': 'Küçüktür',
   'headerFilterOperator<=': 'Küçük veya eşit',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'herhangi',

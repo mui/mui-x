@@ -51,7 +51,7 @@ function DateTimeRangePickerTimeWrapper<
   const { viewRenderer, value, onChange, defaultValue, onViewChange, views, className, ...other } =
     props;
 
-  const { rangePosition, onRangePositionChange } = usePickerRangePositionContext();
+  const { rangePosition, setRangePosition } = usePickerRangePositionContext();
 
   if (!viewRenderer) {
     return null;
@@ -79,7 +79,7 @@ function DateTimeRangePickerTimeWrapper<
     // reset view to the first time view and swap range position after selecting the last time view (start or end position)
     if (selectedView === timeViews[timeViews.length - 1] && onViewChange) {
       onViewChange(views[0]);
-      onRangePositionChange(rangePosition === 'start' ? 'end' : 'start');
+      setRangePosition(rangePosition === 'start' ? 'end' : 'start');
     }
     onChange(newRange, isFullRangeSelected ? 'finish' : 'partial', selectedView);
   };

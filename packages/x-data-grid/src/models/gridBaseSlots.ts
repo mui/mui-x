@@ -66,3 +66,9 @@ export type SkeletonProps = {
   width?: number | string;
   height?: number | string;
 };
+
+export type TooltipProps = {
+  children: React.ReactElement<any, any>;
+  enterDelay?: number;
+  title: React.ReactNode;
+};
