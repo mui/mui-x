@@ -47,6 +47,7 @@ import { gridRowSpanningHiddenCellsOriginMapSelector } from '../rows/gridRowSpan
 import { gridListColumnSelector } from '../listView/gridListViewSelectors';
 import { minimalContentHeight } from '../rows/gridRowsUtils';
 import { gridFocusedVirtualCellSelector } from './gridFocusedVirtualCellSelector';
+import { isJSDOM } from '../../../utils/isJSDOM';
 
 const MINIMUM_COLUMN_WIDTH = 50;
 
@@ -87,15 +88,6 @@ const createScrollCache = (
   ),
 });
 type ScrollCache = ReturnType<typeof createScrollCache>;
-
-let isJSDOM = false;
-try {
-  if (typeof window !== 'undefined') {
-    isJSDOM = /jsdom|HappyDOM/.test(window.navigator.userAgent);
-  }
-} catch (_) {
-  /* ignore */
-}
 
 export const useGridVirtualScroller = () => {
   const apiRef = useGridPrivateApiContext() as React.RefObject<PrivateApiWithInfiniteLoader>;

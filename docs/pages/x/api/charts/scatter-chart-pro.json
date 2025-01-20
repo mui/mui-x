@@ -118,6 +118,8 @@
     "import { ScatterChartPro } from '@mui/x-charts-pro';"
   ],
   "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
   "muiName": "MuiScatterChartPro",
   "filename": "/packages/x-charts-pro/src/ScatterChartPro/ScatterChartPro.tsx",
   "inheritance": null,

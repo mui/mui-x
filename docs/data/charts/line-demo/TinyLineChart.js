@@ -32,7 +32,7 @@ export default function TinyLineChart() {
         },
         [`& .${markElementClasses.root}`]: {
           stroke: '#8884d8',
-          scale: '0.6',
+          r: 4, // Modify the circle radius
           fill: '#fff',
           strokeWidth: 2,
         },

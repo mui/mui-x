@@ -24,42 +24,27 @@ export const useGridPreferencesPanel = (
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridPreferencesPanel');
 
-  const hideTimeout = React.useRef<ReturnType<typeof setTimeout>>(undefined);
-  const immediateTimeout = React.useRef<ReturnType<typeof setTimeout>>(undefined);
-
   /**
    * API METHODS
    */
   const hidePreferences = React.useCallback(() => {
-    logger.debug('Hiding Preferences Panel');
-    const preferencePanelState = gridPreferencePanelStateSelector(apiRef.current.state);
-    if (preferencePanelState.openedPanelValue) {
+    apiRef.current.setState((state) => {
+      if (!state.preferencePanel.open) {
+        return state;
+      }
+
+      logger.debug('Hiding Preferences Panel');
+      const preferencePanelState = gridPreferencePanelStateSelector(state);
       apiRef.current.publishEvent('preferencePanelClose', {
         openedPanelValue: preferencePanelState.openedPanelValue,
       });
-    }
-    apiRef.current.setState((state) => ({ ...state, preferencePanel: { open: false } }));
-    apiRef.current.forceUpdate();
+      return { ...state, preferencePanel: { open: false } };
+    });
   }, [apiRef, logger]);
-
-  // This is to prevent the preferences from closing when you open a select box or another panel,
-  // The issue is in MUI core V4 => Fixed in V5
-  const doNotHidePanel = React.useCallback(() => {
-    immediateTimeout.current = setTimeout(() => clearTimeout(hideTimeout.current), 0);
-  }, []);
-
-  // This is a hack for the issue with Core V4, by delaying hiding the panel on the clickAwayListener,
-  // we can cancel the action if the trigger element still need the panel...
-  const hidePreferencesDelayed = React.useCallback<
-    GridPreferencesPanelApi['hidePreferences']
-  >(() => {
-    hideTimeout.current = setTimeout(hidePreferences, 100);
-  }, [hidePreferences]);
 
   const showPreferences = React.useCallback<GridPreferencesPanelApi['showPreferences']>(
     (newValue, panelId, labelId) => {
       logger.debug('Opening Preferences Panel');
-      doNotHidePanel();
       apiRef.current.setState((state) => ({
         ...state,
         preferencePanel: {
@@ -73,16 +58,15 @@ export const useGridPreferencesPanel = (
       apiRef.current.publishEvent('preferencePanelOpen', {
         openedPanelValue: newValue,
       });
-      apiRef.current.forceUpdate();
     },
-    [logger, doNotHidePanel, apiRef],
+    [logger, apiRef],
   );
 
   useGridApiMethod(
     apiRef,
     {
       showPreferences,
-      hidePreferences: hidePreferencesDelayed,
+      hidePreferences,
     },
     'public',
   );
@@ -131,14 +115,4 @@ export const useGridPreferencesPanel = (
 
   useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
   useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
-
-  /**
-   * EFFECTS
-   */
-  React.useEffect(() => {
-    return () => {
-      clearTimeout(hideTimeout.current);
-      clearTimeout(immediateTimeout.current);
-    };
-  }, []);
 };
