@@ -172,15 +172,6 @@ jobs:
             chmod +x codecov
             ./codecov -t ${CODECOV_TOKEN} -Z -F "$REACT_VERSION-jsdom"
 
-  test_unit_charts:
-    <<: *default-job
-    steps:
-      - checkout
-      - install_js
-      - run:
-          name: Tests fake browser (vitest-charts)
-          command: pnpm vitest --reporter dot --project "jsdom/x-charts*" --coverage
-
   test_unit_date_pickers:
     <<: *default-job
     steps:
@@ -188,7 +179,16 @@ jobs:
       - install_js
       - run:
           name: Tests fake browser (vitest-date-pickers)
-          command: pnpm vitest --reporter dot --project "jsdom/x-date-pickers*" --coverage
+          command: pnpm vitest --project "jsdom/x-date-pickers" --coverage
+
+  test_unit_date_pickers_pro:
+    <<: *default-job
+    steps:
+      - checkout
+      - install_js
+      - run:
+          name: Tests fake browser (vitest-date-pickers-pro)
+          command: pnpm vitest --project "jsdom/x-date-pickers-pro" --coverage
 
   test_unit_data_grid:
     <<: *default-job
@@ -197,16 +197,25 @@ jobs:
       - install_js
       - run:
           name: Tests fake browser (vitest-data-grid)
-          command: pnpm vitest --reporter dot --project "jsdom/x-data-grid*" --coverage
+          command: pnpm vitest --project "jsdom/x-data-grid" --coverage
 
-  test_unit_tree_view:
+  test_unit_data_grid_pro:
     <<: *default-job
     steps:
       - checkout
       - install_js
       - run:
-          name: Tests fake browser (vitest-tree-view)
-          command: pnpm vitest --reporter dot --project "jsdom/x-tree-view*" --coverage
+          name: Tests fake browser (vitest-data-grid-pro)
+          command: pnpm vitest --project "jsdom/x-data-grid-pro" --coverage
+
+  test_unit_data_grid_premium:
+    <<: *default-job
+    steps:
+      - checkout
+      - install_js
+      - run:
+          name: Tests fake browser (vitest-data-grid-premium)
+          command: pnpm vitest --project "jsdom/x-data-grid-premium" --coverage
 
   test_unit_vitest:
     <<: *default-job
@@ -215,7 +224,7 @@ jobs:
       - install_js
       - run:
           name: Tests fake browser (vitest)
-          command: pnpm vitest --reporter dot --project "jsdom/*" --coverage
+          command: pnpm vitest --project "jsdom/*" --coverage
       - run:
           name: Check coverage generated
           command: |
@@ -343,7 +352,7 @@ jobs:
           browsers: true
       - run:
           name: Tests real browsers (vitest)
-          command: pnpm vitest --reporter dot --project "browser/*" --coverage
+          command: pnpm vitest --project "browser/*" --coverage
       - run:
           name: Check coverage generated
           command: |
@@ -434,11 +443,11 @@ workflows:
           <<: *default-context
           requires:
             - checkout
-      - test_unit_charts:
+      - test_unit_date_pickers:
           <<: *default-context
           requires:
             - checkout
-      - test_unit_date_pickers:
+      - test_unit_date_pickers_pro:
           <<: *default-context
           requires:
             - checkout
@@ -446,7 +455,11 @@ workflows:
           <<: *default-context
           requires:
             - checkout
-      - test_unit_tree_view:
+      - test_unit_data_grid_pro:
+          <<: *default-context
+          requires:
+            - checkout
+      - test_unit_data_grid_premium:
           <<: *default-context
           requires:
             - checkout
