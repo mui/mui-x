@@ -11,7 +11,7 @@ function read(fileName) {
 const TEST_FILES = ['nested-imports', 'root-imports'];
 
 describe('v8.0.0/charts', () => {
-  describe('rename-responsive-chart-container.test', () => {
+  describe('rename-responsive-chart-container', () => {
     TEST_FILES.forEach((testFile) => {
       const actualPath = `./actual-${testFile}.spec.tsx`;
       const expectedPath = `./expected-${testFile}.spec.tsx`;
