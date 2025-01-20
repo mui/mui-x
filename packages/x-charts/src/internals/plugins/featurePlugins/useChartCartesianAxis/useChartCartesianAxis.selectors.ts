@@ -44,10 +44,7 @@ const selectorChartZoomMap = createSelector(
   (zoom) => zoom?.zoomData && createZoomMap(zoom?.zoomData),
 );
 
-const selectorChartZoomOptionsLookup = createSelector(
-  selectorChartZoomState,
-  (zoom) => zoom?.optionsLookup,
-);
+const selectorChartZoomOptionsLookup = createSelector(selectorChartZoomState, () => undefined);
 
 const selectorChartXFilter = createSelector(
   [
@@ -96,6 +93,7 @@ const selectorChartZoomAxisFilters = createSelector(
     }
 
     const xFilters = xAxis.reduce<ZoomAxisFilters>((acc, axis, index) => {
+      // @ts-expect-error The type is defined in the pro package
       const filter = xMapper(axis, index);
       if (filter !== null) {
         acc[axis.id] = filter;
@@ -104,6 +102,7 @@ const selectorChartZoomAxisFilters = createSelector(
     }, {});
 
     const yFilters = yAxis.reduce<ZoomAxisFilters>((acc, axis, index) => {
+      // @ts-expect-error The type is defined in the pro package
       const filter = yMapper(axis, index);
       if (filter !== null) {
         acc[axis.id] = filter;
