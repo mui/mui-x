@@ -16,7 +16,7 @@ export default defineConfig({
       reporter: [['text', { maxCols: 200 }], 'lcov'],
       reportsDirectory: resolve(WORKSPACE_ROOT, 'coverage'),
       include: ['packages/*/src/**/*.ts', 'packages/*/src/**/*.tsx'],
-      exclude: ['**/*.test.{js,ts,tsx}', '**/*.test/*'],
+      exclude: ['**/*.{test,spec}.{js,ts,tsx}', '**/*.test/*'],
     },
   },
 });
