@@ -148,6 +148,15 @@ If you used axes in a pie chart please open an issue, we would be curious to get
 The `resolveSizeBeforeRender` prop has been removed from all components.
 If you were using this prop, you can safely remove it.
 
+## Remove `experimentalMarkRendering` prop ✅
+
+The `experimentalMarkRendering` prop has been removed from the LineChart component.
+The line mark are now `<circle />` element by default.
+And you can chose another shape by adding a `shape` property to your line series.
+
+The codemod only removes the `experimentalMarkRendering` prop.
+If you relied on the fact that marks were `path` elements, you need to update your logic.
+
 ## Replacing `useHighlighted` by `useItemHighlighted` and `useItemHighlightedGetter`
 
 The `useHighlighted` hook that gave access to the internal highlight state has been removed.

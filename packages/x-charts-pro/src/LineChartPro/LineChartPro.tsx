@@ -104,12 +104,6 @@ MarkPlotZoom.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * If `true` the mark element will only be able to render circle.
-   * Giving fewer customization options, but saving around 40ms per 1.000 marks.
-   * @default false
-   */
-  experimentalRendering: PropTypes.bool,
-  /**
    * Callback fired when a line mark item is clicked.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
    * @param {LineItemIdentifier} lineItemIdentifier The line mark item identifier.
@@ -256,10 +250,6 @@ LineChartPro.propTypes = {
    * If `true`, render the line highlight item.
    */
   disableLineItemHighlight: PropTypes.bool,
-  /**
-   * If `true` marks will render `<circle />` instead of `<path />` and drop theme override for faster rendering.
-   */
-  experimentalMarkRendering: PropTypes.bool,
   /**
    * Option to display a cartesian grid in the background.
    */
