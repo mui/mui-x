@@ -12,14 +12,7 @@ import {
   GridColDef,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
-import {
-  createRenderer,
-  fireEvent,
-  screen,
-  createEvent,
-  act,
-  waitFor,
-} from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, createEvent, act } from '@mui/internal-test-utils';
 import {
   $,
   $$,
@@ -507,9 +500,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
       await user.click(menuIconButton);
       await user.click(screen.getByRole('menuitem', { name: 'Unpin' }));
-      await waitFor(() => {
-        expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`)).to.equal(null);
-      });
+      expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`)).to.equal(null);
     });
 
     describe('with fake timers', () => {

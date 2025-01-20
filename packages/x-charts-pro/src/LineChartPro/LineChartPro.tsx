@@ -22,14 +22,14 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { useLineChartProps, ChartsWrapper } from '@mui/x-charts/internals';
-import { ChartDataProvider } from '@mui/x-charts/context';
 import { ChartContainerProProps } from '../ChartContainerPro';
 import { useIsZoomInteracting } from '../hooks/zoom';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
+import { ChartDataProviderPro } from '../ChartDataProviderPro';
 
 function AreaPlotZoom(props: AreaPlotProps) {
   const isInteracting = useIsZoomInteracting();
-  return <AreaPlot {...props} skipAnimation={isInteracting || undefined} />;
+  return <AreaPlot {...props} skipAnimation={isInteracting || props.skipAnimation} />;
 }
 
 AreaPlotZoom.propTypes = {
@@ -62,7 +62,7 @@ AreaPlotZoom.propTypes = {
 
 function LinePlotZoom(props: LinePlotProps) {
   const isInteracting = useIsZoomInteracting();
-  return <LinePlot {...props} skipAnimation={isInteracting || undefined} />;
+  return <LinePlot {...props} skipAnimation={isInteracting || props.skipAnimation} />;
 }
 
 LinePlotZoom.propTypes = {
@@ -103,12 +103,6 @@ MarkPlotZoom.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  /**
-   * If `true` the mark element will only be able to render circle.
-   * Giving fewer customization options, but saving around 40ms per 1.000 marks.
-   * @default false
-   */
-  experimentalRendering: PropTypes.bool,
   /**
    * Callback fired when a line mark item is clicked.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
@@ -170,19 +164,14 @@ const LineChartPro = React.forwardRef(function LineChartPro(
     children,
   } = useLineChartProps(other);
   const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps(
-    { ...chartContainerProps, apiRef },
+    { ...chartContainerProps, initialZoom, onZoomChange, apiRef },
     ref,
   );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
 
   return (
-    <ChartDataProvider
-      {...chartDataProviderProProps}
-      apiRef={apiRef}
-      initialZoom={initialZoom}
-      onZoomChange={onZoomChange}
-    >
+    <ChartDataProviderPro {...chartDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps}>
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
@@ -205,7 +194,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(
           {children}
         </ChartsSurface>
       </ChartsWrapper>
-    </ChartDataProvider>
+    </ChartDataProviderPro>
   );
 });
 
@@ -256,10 +245,6 @@ LineChartPro.propTypes = {
    * If `true`, render the line highlight item.
    */
   disableLineItemHighlight: PropTypes.bool,
-  /**
-   * If `true` marks will render `<circle />` instead of `<path />` and drop theme override for faster rendering.
-   */
-  experimentalMarkRendering: PropTypes.bool,
   /**
    * Option to display a cartesian grid in the background.
    */

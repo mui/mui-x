@@ -232,6 +232,9 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
     } else if (keyPressed.length > 1) {
       updateValueFromValueStr(keyPressed);
     } else {
+      if (parsedSelectedSections === 'all') {
+        setSelectedSections(0);
+      }
       applyCharacterEditing({
         keyPressed,
         sectionIndex: 0,
