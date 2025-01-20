@@ -58,11 +58,6 @@ export default defineConfig({
       provider: 'playwright',
       headless: true,
       screenshotFailures: false,
-      instances: [
-        {
-          browser: 'chromium',
-        },
-      ],
     },
     coverage: {
       provider: 'istanbul',

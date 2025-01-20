@@ -8,6 +8,7 @@ export default mergeConfig(sharedConfig, {
     environment: 'browser',
     browser: {
       enabled: true,
+      name: 'chromium',
     },
   },
 });
