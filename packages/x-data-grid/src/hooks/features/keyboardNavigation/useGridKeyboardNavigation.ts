@@ -16,7 +16,6 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridExpandedSortedRowEntriesSelector } from '../filter/gridFilterSelector';
-import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../colDef/gridCheckboxSelectionColDef';
 import { gridClasses } from '../../../constants/gridClasses';
 import { GridCellModes } from '../../../models/gridEditRowModel';
@@ -30,13 +29,19 @@ import {
 } from '../headerFiltering/gridHeaderFilteringSelectors';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { isEventTargetInPortal } from '../../../utils/domUtils';
-import {
-  enrichPageRowsWithPinnedRows,
-  getLeftColumnIndex,
-  getRightColumnIndex,
-  findNonRowSpannedCell,
-} from './utils';
+import { getLeftColumnIndex, getRightColumnIndex, findNonRowSpannedCell } from './utils';
 import { gridListColumnSelector } from '../listView/gridListViewSelectors';
+import { createSelectorMemoized } from '../../../utils/createSelector';
+import { gridVisibleRowsSelector } from '../pagination';
+import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
+
+const gridVisibleRowsWithPinnedRowsSelector = createSelectorMemoized(
+  gridVisibleRowsSelector,
+  gridPinnedRowsSelector,
+  (visibleRows, pinnedRows) => {
+    return [...(pinnedRows.top || []), ...visibleRows.rows, ...(pinnedRows.bottom || [])];
+  },
+);
 
 /**
  * @requires useGridSorting (method) - can be after
@@ -65,8 +70,7 @@ export const useGridKeyboardNavigation = (
   const listView = props.unstable_listView;
 
   const getCurrentPageRows = React.useCallback(() => {
-    const initialCurrentPageRows = getVisibleRows(apiRef).rows;
-    return enrichPageRowsWithPinnedRows(apiRef, initialCurrentPageRows);
+    return gridVisibleRowsWithPinnedRowsSelector(apiRef);
   }, [apiRef]);
 
   const headerFilteringEnabled = props.signature !== 'DataGrid' && props.headerFilters;
