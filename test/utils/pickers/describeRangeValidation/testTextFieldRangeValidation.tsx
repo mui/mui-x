@@ -4,6 +4,7 @@ import { spy } from 'sinon';
 import { adapterToUse, getAllFieldInputRoot } from 'test/utils/pickers';
 import { describeSkipIf, testSkipIf } from 'test/utils/skipIf';
 import { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
+import { createFakeClock } from '../../createFakeClock';
 
 const testInvalidStatus = (expectedAnswer: boolean[], isSingleInput: boolean | undefined) => {
   const answers = isSingleInput ? [expectedAnswer[0] || expectedAnswer[1]] : expectedAnswer;
@@ -59,7 +60,9 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         <ElementToTest
           onError={onErrorMock}
           value={[adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')]}
-          shouldDisableDate={(date) => adapterToUse.isAfter(date, adapterToUse.date('2018-03-10'))}
+          shouldDisableDate={(date: any) =>
+            adapterToUse.isAfter(date, adapterToUse.date('2018-03-10'))
+          }
         />,
       );
 
@@ -87,7 +90,8 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
 
       setProps({
         value: [adapterToUse.date('2018-03-12'), adapterToUse.date('2018-03-13')],
-        shouldDisableDate: (date) => adapterToUse.isBefore(date, adapterToUse.date('2018-03-13')),
+        shouldDisableDate: (date: any) =>
+          adapterToUse.isBefore(date, adapterToUse.date('2018-03-13')),
       });
 
       expect(onErrorMock.callCount).to.equal(3);
@@ -101,7 +105,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         <ElementToTest
           onError={onErrorMock}
           value={[adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')]}
-          shouldDisableDate={(date, position) =>
+          shouldDisableDate={(date: any, position: any) =>
             position === 'end' ? adapterToUse.isAfter(date, adapterToUse.date('2018-03-10')) : false
           }
         />,
@@ -128,7 +132,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
 
       setProps({
         value: [adapterToUse.date('2018-03-12'), adapterToUse.date('2018-03-13')],
-        shouldDisableDate: (date, position) =>
+        shouldDisableDate: (date: any, position: any) =>
           position === 'end' ? adapterToUse.isBefore(date, adapterToUse.date('2018-03-13')) : false,
       });
 
@@ -143,7 +147,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         <ElementToTest
           onError={onErrorMock}
           value={[adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')]}
-          shouldDisableDate={(date, position) =>
+          shouldDisableDate={(date: any, position: any) =>
             position === 'start'
               ? adapterToUse.isAfter(date, adapterToUse.date('2018-03-10'))
               : false
@@ -171,7 +175,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, false], isSingleInput);
 
       setProps({
-        shouldDisableDate: (date, position) =>
+        shouldDisableDate: (date: any, position: any) =>
           position === 'start'
             ? adapterToUse.isBefore(date, adapterToUse.date('2018-03-13'))
             : false,
@@ -181,48 +185,52 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, false], isSingleInput);
     });
 
-    it('should apply disablePast', () => {
-      const onErrorMock = spy();
-      let now;
-      function WithFakeTimer(props) {
-        now = adapterToUse.date();
-        return <ElementToTest value={[now, now]} {...props} />;
-      }
+    describe('with fake timer', () => {
+      createFakeClock('fake', new Date(2018, 0, 1));
 
-      const { setProps } = render(<WithFakeTimer disablePast onError={onErrorMock} />);
+      it('should apply disablePast', () => {
+        const onErrorMock = spy();
+        let now;
+        function WithFakeTimer(props: any) {
+          now = adapterToUse.date();
+          return <ElementToTest value={[now, now]} {...props} />;
+        }
 
-      let past: null | typeof now = null;
-      if (withDate) {
-        past = adapterToUse.addDays(now, -1);
-      } else if (adapterToUse.isSameDay(adapterToUse.addHours(now, -1), now)) {
-        past = adapterToUse.addHours(now, -1);
-      }
+        const { setProps } = render(<WithFakeTimer disablePast onError={onErrorMock} />);
 
-      if (past === null) {
-        return;
-      }
+        let past: null | typeof now = null;
+        if (withDate) {
+          past = adapterToUse.addDays(now, -1);
+        } else if (adapterToUse.isSameDay(adapterToUse.addHours(now, -1), now)) {
+          past = adapterToUse.addHours(now, -1);
+        }
 
-      setProps({
-        value: [past, now],
+        if (past === null) {
+          return;
+        }
+
+        setProps({
+          value: [past, now],
+        });
+
+        expect(onErrorMock.callCount).to.equal(1);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal(['disablePast', null]);
+        testInvalidStatus([true, false], isSingleInput);
+
+        setProps({
+          value: [past, past],
+        });
+
+        expect(onErrorMock.callCount).to.equal(2);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal(['disablePast', 'disablePast']);
+        testInvalidStatus([true, true], isSingleInput);
       });
-
-      expect(onErrorMock.callCount).to.equal(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['disablePast', null]);
-      testInvalidStatus([true, false], isSingleInput);
-
-      setProps({
-        value: [past, past],
-      });
-
-      expect(onErrorMock.callCount).to.equal(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['disablePast', 'disablePast']);
-      testInvalidStatus([true, true], isSingleInput);
     });
 
     it('should apply disableFuture', () => {
       const onErrorMock = spy();
       let now;
-      function WithFakeTimer(props) {
+      function WithFakeTimer(props: any) {
         now = adapterToUse.date();
         return <ElementToTest value={[now, now]} {...props} />;
       }

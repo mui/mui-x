@@ -352,7 +352,7 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose when clicking outside of the picker without prior change', () => {
+    it('should call onClose when clicking outside of the picker without prior change', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -370,18 +370,18 @@ describe('<DesktopDateRangePicker />', () => {
       const input = document.getElementById('test-id')!;
 
       fireEvent.mouseDown(input);
-      act(() => {
+      await act(async () => {
         input.focus();
       });
       fireEvent.mouseUp(input);
-      clock.runToLast();
+      await clock.runToLast();
 
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
+    it('should call onClose and onAccept with the live value when clicking outside of the picker', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -406,18 +406,18 @@ describe('<DesktopDateRangePicker />', () => {
 
       // Change the start date (already tested)
       fireEvent.click(getPickerDay('3'));
-      clock.runToLast();
+      await clock.runToLast();
 
       // Dismiss the picker
       const input = document.getElementById('test-id')!;
 
       fireEvent.mouseDown(input);
-      act(() => {
+      await act(async () => {
         input.focus();
       });
       fireEvent.mouseUp(input);
 
-      clock.runToLast();
+      await clock.runToLast();
 
       expect(onChange.callCount).to.equal(1); // Start date change
       expect(onAccept.callCount).to.equal(1);
@@ -443,7 +443,7 @@ describe('<DesktopDateRangePicker />', () => {
     // test:unit does not call `blur` when focusing another element.
     testSkipIf(isJSDOM)(
       'should call onClose when blur the current field without prior change',
-      () => {
+      async () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();
@@ -460,8 +460,8 @@ describe('<DesktopDateRangePicker />', () => {
         openPicker({ type: 'date-range', initialFocus: 'start' });
         expect(screen.getByRole('tooltip')).toBeVisible();
 
-        act(() => document.querySelector<HTMLButtonElement>('#test')!.focus());
-        clock.runToLast();
+        await act(async () => document.querySelector<HTMLButtonElement>('#test')!.focus());
+        await clock.runToLast();
 
         expect(onChange.callCount).to.equal(0);
         expect(onAccept.callCount).to.equal(0);
@@ -469,7 +469,7 @@ describe('<DesktopDateRangePicker />', () => {
       },
     );
 
-    it('should call onClose and onAccept when blur the current field', () => {
+    it('should call onClose and onAccept when blur the current field', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -495,12 +495,12 @@ describe('<DesktopDateRangePicker />', () => {
 
       // Change the start date (already tested)
       fireEvent.click(getPickerDay('3'));
-      clock.runToLast();
+      await clock.runToLast();
 
-      act(() => {
+      await act(async () => {
         document.querySelector<HTMLButtonElement>('#test')!.focus();
       });
-      clock.runToLast();
+      await clock.runToLast();
 
       expect(onChange.callCount).to.equal(1); // Start date change
       expect(onAccept.callCount).to.equal(1);

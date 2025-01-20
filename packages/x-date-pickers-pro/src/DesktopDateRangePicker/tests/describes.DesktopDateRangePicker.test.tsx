@@ -16,16 +16,12 @@ import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-picke
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DesktopDateRangePicker /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({
-    clock: 'fake',
-    clockConfig: new Date(2018, 0, 1, 0, 0, 0, 0),
-  });
+  const { render } = createPickerRenderer();
 
   describePicker(DesktopDateRangePicker, { render, fieldType: 'multi-input', variant: 'desktop' });
 
   describeRangeValidation(DesktopDateRangePicker, () => ({
     render,
-    clock,
     componentFamily: 'picker',
     views: ['day'],
     variant: 'desktop',
@@ -53,7 +49,6 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
     type: 'date-range',
     variant: 'desktop',
     initialFocus: 'start',
-    clock,
     values: [
       // initial start and end dates
       [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-04')],
@@ -74,8 +69,9 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
         : 'MM/DD/YYYY';
       expectFieldValueV7(endSectionsContainer, expectedEndValueStr);
     },
-    setNewValue: (
+    setNewValue: async (
       value,
+      _,
       { isOpened, applySameValue, setEndDate = false, selectSection, pressKey },
     ) => {
       let newValue: PickerNonNullableRangeValue;
@@ -113,7 +109,6 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
     defaultProps: {
       slots: { field: SingleInputDateRangeField },
     },
-    clock,
     values: [
       // initial start and end dates
       [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-04')],
@@ -136,8 +131,9 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (
+    setNewValue: async (
       value,
+      _,
       { isOpened, applySameValue, setEndDate = false, selectSection, pressKey },
     ) => {
       let newValue: PickerNonNullableRangeValue;

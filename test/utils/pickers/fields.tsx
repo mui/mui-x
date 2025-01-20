@@ -12,8 +12,6 @@ import { expectFieldValueV7, expectFieldValueV6 } from './assertions';
 export const getTextbox = (): HTMLInputElement => screen.getByRole('textbox');
 
 interface BuildFieldInteractionsParams<P extends {}> {
-  // TODO: Export `Clock` from monorepo
-  clock: ReturnType<typeof createRenderer>['clock'];
   render: ReturnType<typeof createRenderer>['render'];
   Component: React.FunctionComponent<P>;
 }
@@ -80,8 +78,6 @@ const RTL_THEME = createTheme({
 });
 
 export const buildFieldInteractions = <P extends {}>({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  clock,
   render,
   Component,
 }: BuildFieldInteractionsParams<P>): BuildFieldInteractionsResponse<P> => {

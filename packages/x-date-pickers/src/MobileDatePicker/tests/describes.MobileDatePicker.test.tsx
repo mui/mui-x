@@ -59,7 +59,7 @@ describe('<MobileDatePicker /> - Describes', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue }) => {
+    setNewValue: async (value, user, { isOpened, applySameValue }) => {
       if (!isOpened) {
         openPicker({ type: 'date' });
       }
@@ -72,8 +72,7 @@ describe('<MobileDatePicker /> - Describes', () => {
       // Close the picker to return to the initial state
       if (!isOpened) {
         // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
-        clock.runToLast();
+        await user.keyboard('[Escape]');
       }
 
       return newValue;

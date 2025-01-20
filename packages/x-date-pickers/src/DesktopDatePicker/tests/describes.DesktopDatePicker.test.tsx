@@ -48,7 +48,6 @@ describe('<DesktopDatePicker /> - Describes', () => {
     variant: 'desktop',
     values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-02')],
     emptyValue: null,
-    clock,
     assertRenderedValue: (expectedValue: any) => {
       const fieldRoot = getFieldInputRoot();
 
@@ -58,7 +57,7 @@ describe('<DesktopDatePicker /> - Describes', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue, selectSection, pressKey }) => {
+    setNewValue: async (value, _, { isOpened, applySameValue, selectSection, pressKey }) => {
       const newValue = applySameValue ? value! : adapterToUse.addDays(value!, 1);
 
       if (isOpened) {

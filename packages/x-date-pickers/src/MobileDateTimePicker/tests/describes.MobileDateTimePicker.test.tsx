@@ -70,7 +70,7 @@ describe('<MobileDateTimePicker /> - Describes', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue }) => {
+    setNewValue: async (value, user, { isOpened, applySameValue }) => {
       if (!isOpened) {
         openPicker({ type: 'date-time' });
       }
@@ -103,8 +103,7 @@ describe('<MobileDateTimePicker /> - Describes', () => {
       // Close the picker
       if (!isOpened) {
         // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
-        clock.runToLast();
+        await user.keyboard('[Escape]');
       } else {
         // return to the date view in case we'd like to repeat the selection process
         fireEvent.click(screen.getByRole('tab', { name: 'pick date' }));

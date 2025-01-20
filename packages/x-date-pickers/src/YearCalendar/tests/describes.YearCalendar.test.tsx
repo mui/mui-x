@@ -50,7 +50,7 @@ describe('<YearCalendar /> - Describes', () => {
         expect(activeYear).to.have.attribute('aria-checked', 'true');
       }
     },
-    setNewValue: (value) => {
+    setNewValue: async (value) => {
       const newValue = adapterToUse.addYears(value!, 1);
       fireEvent.click(
         screen.getByRole('radio', { name: adapterToUse.getYear(newValue).toString() }),

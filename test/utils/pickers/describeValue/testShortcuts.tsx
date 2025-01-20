@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { expectPickerChangeHandlerValue } from 'test/utils/pickers';
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { DescribeValueTestSuite } from './describeValue.types';
 
 export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTest, options) => {
@@ -21,7 +21,7 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
   }
 
   describe('Picker shortcuts', () => {
-    it('should call onClose, onChange and onAccept when picking a shortcut without explicit changeImportance', () => {
+    it('should call onClose, onChange and onAccept when picking a shortcut without explicit changeImportance', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -46,6 +46,10 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
           }}
         />,
       );
+
+      await waitFor(() => {
+        screen.findByRole('button', { name: 'Test shortcut' });
+      });
 
       const shortcut = screen.getByRole('button', { name: 'Test shortcut' });
       fireEvent.click(shortcut);
