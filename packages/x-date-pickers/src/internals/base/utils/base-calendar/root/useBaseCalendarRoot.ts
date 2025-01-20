@@ -51,7 +51,7 @@ export function useBaseCalendarRoot<
     manager,
     calendarValueManager: {
       getDateToUseForReferenceDate,
-      getNewValueFromNewSelectedDate,
+      onSelectDate,
       getCurrentDateFromValue,
       getSelectedDatesFromValue,
     },
@@ -174,16 +174,12 @@ export function useBaseCalendarRoot<
 
   const selectDate = useEventCallback<BaseCalendarRootContext['selectDate']>(
     (selectedDate: PickerValidDate, options) => {
-      const response = getNewValueFromNewSelectedDate({
+      onSelectDate({
+        setValue,
         prevValue: value,
         selectedDate,
         referenceDate,
         section: options.section,
-      });
-
-      return setValue(response.value, {
-        section: options.section,
-        changeImportance: response.changeImportance,
       });
     },
   );
@@ -367,12 +363,9 @@ export namespace useBaseCalendarRoot {
     getDateToUseForReferenceDate: (value: TValue) => PickerValidDate | null;
     /**
      * TODO: Write description.
-     * @param {GetNewValueFromNewSelectedDateParameters} parameters The parameters to get the new value from the new selected date.
-     * @returns {GetNewValueFromNewSelectedDateReturnValue<TValue>} The new value and its change importance.
+     * @param {OnSelectDateParameters} parameters The parameters to get the new value from the new selected date.
      */
-    getNewValueFromNewSelectedDate: (
-      parameters: GetNewValueFromNewSelectedDateParameters<TValue>,
-    ) => GetNewValueFromNewSelectedDateReturnValue<TValue>;
+    onSelectDate: (parameters: OnSelectDateParameters<TValue>) => void;
     /**
      * TODO: Write description.
      * @param {TValue} value The current value.
@@ -387,7 +380,11 @@ export namespace useBaseCalendarRoot {
     getSelectedDatesFromValue: (value: TValue) => PickerValidDate[];
   }
 
-  export interface GetNewValueFromNewSelectedDateParameters<TValue extends PickerValidValue> {
+  export interface OnSelectDateParameters<TValue extends PickerValidValue> {
+    setValue: (
+      value: TValue,
+      options: { section: BaseCalendarSection; changeImportance: 'set' | 'accept' },
+    ) => void;
     /**
      * The value before the change.
      */
@@ -404,17 +401,6 @@ export namespace useBaseCalendarRoot {
      * The section handled by the UI that triggered the change.
      */
     section: BaseCalendarSection;
-  }
-
-  export interface GetNewValueFromNewSelectedDateReturnValue<TValue extends PickerValidValue> {
-    /**
-     * The new value.
-     */
-    value: TValue;
-    /**
-     * The importance of the change.
-     */
-    changeImportance: PickerChangeImportance;
   }
 }
 

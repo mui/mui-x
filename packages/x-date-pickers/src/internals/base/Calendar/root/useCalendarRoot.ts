@@ -13,10 +13,11 @@ import {
 
 const calendarValueManager: useBaseCalendarRoot.ValueManager<PickerValue> = {
   getDateToUseForReferenceDate: (value) => value,
-  getNewValueFromNewSelectedDate: ({ selectedDate }) => ({
-    value: selectedDate,
-    changeImportance: 'accept',
-  }),
+  onSelectDate: ({ setValue, selectedDate, section }) =>
+    setValue(selectedDate, {
+      changeImportance: 'accept',
+      section,
+    }),
   getCurrentDateFromValue: (value) => value,
   getSelectedDatesFromValue: (value) => (value == null ? [] : [value]),
 };

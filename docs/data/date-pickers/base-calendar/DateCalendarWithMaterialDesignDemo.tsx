@@ -451,7 +451,7 @@ function CalendarHeader(props: {
                 size="medium"
                 title={translations.nextMonth}
                 aria-label={translations.nextMonth}
-                edge="end"
+                edge="start"
               />
             }
           >
@@ -670,7 +670,7 @@ interface DateCalendarProps extends Omit<Calendar.Root.Props, 'children'> {
   onViewChange?: (view: DateCalendarView) => void;
   defaultView?: DateCalendarView;
   displayWeekNumber?: boolean;
-  //TODO: Add reduceAnimations prop
+  // TODO: Add reduceAnimations prop
 }
 
 function getDefaultView(views: { [key in DateCalendarView]?: boolean }) {

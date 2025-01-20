@@ -6,6 +6,7 @@ import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { ValidateDateProps } from '@mui/x-date-pickers/validation';
 import {
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
+  mergeDateAndTime,
   PickerRangeValue,
   RangePosition,
   useUtils,
@@ -104,39 +105,48 @@ export function useRangeCalendarRoot(parameters: useRangeCalendarRoot.Parameters
     [baseDateValidationProps, shouldDisableDate],
   );
 
-  // TODO: Clean this part of the code which is hard to follow.
-  const getNewValueFromNewSelectedDate = useEventCallback(
+  const handleSelectDate = useEventCallback(
     ({
+      setValue,
       prevValue,
       selectedDate,
       referenceDate,
       allowRangeFlip,
       section,
-    }: useBaseCalendarRoot.GetNewValueFromNewSelectedDateParameters<PickerRangeValue> & {
+    }: useBaseCalendarRoot.OnSelectDateParameters<PickerRangeValue> & {
       allowRangeFlip?: boolean;
-    }): useBaseCalendarRoot.GetNewValueFromNewSelectedDateReturnValue<PickerRangeValue> => {
+    }) => {
+      let cleanSelectedDate = selectedDate;
+      // If there is a date already selected, then we want to keep its time
+      // Otherwise, we want to use the reference date's time
+      if (prevValue[0] && rangePosition === 'start') {
+        cleanSelectedDate = mergeDateAndTime(utils, selectedDate, prevValue[0]);
+      } else if (prevValue[1] && rangePosition === 'end') {
+        cleanSelectedDate = mergeDateAndTime(utils, selectedDate, prevValue[1]);
+      } else {
+        cleanSelectedDate = mergeDateAndTime(utils, selectedDate, referenceDate);
+      }
+
       const changes = applySelectedDateOnRange({
-        selectedDate,
+        selectedDate: cleanSelectedDate,
         utils,
         range: prevValue,
-        position: rangePosition,
+        rangePosition,
         allowRangeFlip: allowRangeFlip ?? false,
-        shouldMergeDateAndTime: true,
-        referenceDate,
         section,
       });
 
-      const isNextSectionAvailable = availableRangePositions.includes(changes.position);
+      const isNextSectionAvailable = availableRangePositions.includes(changes.rangePosition);
       if (isNextSectionAvailable) {
-        handleRangePositionChange(changes.position);
+        handleRangePositionChange(changes.rangePosition);
       }
 
       const isFullRangeSelected = rangePosition === 'end' && isRangeValid(utils, changes.range);
 
-      return {
-        value: changes.range,
+      setValue(changes.range, {
+        section,
         changeImportance: isFullRangeSelected || !isNextSectionAvailable ? 'set' : 'accept',
-      };
+      });
     },
   );
 
@@ -146,10 +156,10 @@ export function useRangeCalendarRoot(parameters: useRangeCalendarRoot.Parameters
     return {
       getDateToUseForReferenceDate: (value) => value[0] ?? value[1],
       getCurrentDateFromValue: (value) => (rangePosition === 'start' ? value[0] : value[1]),
-      getNewValueFromNewSelectedDate,
+      onSelectDate: handleSelectDate,
       getSelectedDatesFromValue: (value) => value.filter((date) => date != null),
     };
-  }, [rangePosition, getNewValueFromNewSelectedDate]);
+  }, [rangePosition, handleSelectDate]);
 
   const {
     value,
@@ -181,14 +191,20 @@ export function useRangeCalendarRoot(parameters: useRangeCalendarRoot.Parameters
 
   const context = useBuildRangeCalendarRootContext({
     baseContext,
-    setValue,
     value,
-    referenceDate,
     onRangePositionChange: handleRangePositionChange,
     rangePosition,
     disableDragEditing,
     disableHoverPreview,
-    getNewValueFromNewSelectedDate,
+    onSelectDateFromDrag: (selectedDate, section) =>
+      handleSelectDate({
+        section,
+        setValue,
+        referenceDate,
+        selectedDate,
+        prevValue: value,
+        allowRangeFlip: true,
+      }),
   });
 
   const getRootProps = React.useCallback(
