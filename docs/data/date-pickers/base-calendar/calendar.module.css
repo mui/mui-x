@@ -231,7 +231,7 @@
     right: 2px;
   }
 
-  &:focus-visible::after {
+  &:not([data-outside-month]):focus-visible::after {
     outline: 2px solid var(--button-focus-border-color);
   }
 

@@ -43,8 +43,10 @@ export function useBaseCalendarDaysCellWrapper(
   }, [baseRootContext.disabled, isInvalid]);
 
   const isTabbable = React.useMemo(
-    () => baseDaysGridContext.tabbableDays.some((day) => utils.isSameDay(day, value)),
-    [utils, baseDaysGridContext.tabbableDays, value],
+    () =>
+      !isOutsideCurrentMonth &&
+      baseDaysGridContext.tabbableDays.some((day) => utils.isSameDay(day, value)),
+    [utils, isOutsideCurrentMonth, baseDaysGridContext.tabbableDays, value],
   );
 
   const ctx = React.useMemo<useBaseCalendarDaysCell.Context>(

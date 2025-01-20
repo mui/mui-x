@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useMediaQuery } from '@base-ui-components/react/unstable-use-media-query';
 import useEventCallback from '@mui/utils/useEventCallback';
+import useControlled from '@mui/utils/useControlled';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { ValidateDateProps } from '@mui/x-date-pickers/validation';
 import {
@@ -25,7 +26,7 @@ import {
   ExportedValidateDateRangeProps,
 } from '../../../../validation/validateDateRange';
 import { isRangeValid } from '../../../utils/date-utils';
-import { useRangePosition, UseRangePositionProps } from '../../../hooks/useRangePosition';
+import { UseRangePositionProps } from '../../../hooks/useRangePosition';
 import { applySelectedDateOnRange } from '../utils/range';
 import { useBuildRangeCalendarRootContext } from './useBuildRangeCalendarRootContext';
 
@@ -49,8 +50,8 @@ export function useRangeCalendarRoot(parameters: useRangeCalendarRoot.Parameters
     children: childrenProp,
     // Range position props
     rangePosition: rangePositionProp,
-    defaultRangePosition: defaultRangePositionProp,
-    onRangePositionChange: onRangePositionChangeProp,
+    defaultRangePosition,
+    onRangePositionChange,
     availableRangePositions = DEFAULT_AVAILABLE_RANGE_POSITIONS,
     // Other range-specific parameters
     disableDragEditing = false,
@@ -60,10 +61,16 @@ export function useRangeCalendarRoot(parameters: useRangeCalendarRoot.Parameters
   } = parameters;
 
   // TODO: Add support for range position from the context when implementing the Picker Base UI X component.
-  const { rangePosition, onRangePositionChange } = useRangePosition({
-    rangePosition: rangePositionProp,
-    defaultRangePosition: defaultRangePositionProp,
-    onRangePositionChange: onRangePositionChangeProp,
+  const [rangePosition, setRangePosition] = useControlled({
+    name: 'useRangeCalendarRoot',
+    state: 'rangePosition',
+    controlled: rangePositionProp,
+    default: defaultRangePosition ?? 'start',
+  });
+
+  const handleRangePositionChange = useEventCallback((newRangePosition: RangePosition) => {
+    onRangePositionChange?.(newRangePosition);
+    setRangePosition(newRangePosition);
   });
 
   const baseDateValidationProps = useAddDefaultsToBaseDateValidationProps({
@@ -121,7 +128,7 @@ export function useRangeCalendarRoot(parameters: useRangeCalendarRoot.Parameters
 
       const isNextSectionAvailable = availableRangePositions.includes(changes.position);
       if (isNextSectionAvailable) {
-        onRangePositionChange(changes.position);
+        handleRangePositionChange(changes.position);
       }
 
       const isFullRangeSelected = rangePosition === 'end' && isRangeValid(utils, changes.range);
@@ -177,7 +184,7 @@ export function useRangeCalendarRoot(parameters: useRangeCalendarRoot.Parameters
     setValue,
     value,
     referenceDate,
-    onRangePositionChange,
+    onRangePositionChange: handleRangePositionChange,
     rangePosition,
     disableDragEditing,
     disableHoverPreview,
