@@ -33,9 +33,7 @@ export const useDesktopPicker = <
   const {
     slots,
     slotProps: innerSlotProps,
-    className,
     sx,
-    name,
     label,
     inputRef,
     readOnly,

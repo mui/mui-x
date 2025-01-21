@@ -49,7 +49,7 @@ function AutocompleteField(props: AutocompleteFieldProps) {
           <TextField
             {...params}
             error={hasValidationError}
-            label={label}
+            label={pickerContext.fieldLabel}
             name={pickerContext.fieldName}
             InputProps={{
               ...params.InputProps,

@@ -33,9 +33,7 @@ export const useMobilePicker = <
   const {
     slots,
     slotProps: innerSlotProps,
-    className,
     sx,
-    name,
     label,
     inputRef,
     readOnly,

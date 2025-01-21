@@ -87,8 +87,6 @@ export const cleanFieldResponse = <
 const PickerFieldUIContext = React.createContext<PickerFieldUIContextValue>({
   slots: {},
   slotProps: {},
-  sx: undefined,
-  label: undefined,
   inputRef: undefined,
 });
 
@@ -387,9 +385,7 @@ interface FieldInputAdornmentOwnerState extends FieldOwnerState {
 }
 
 interface PickerFieldUIContextValue {
-  sx: SxProps<Theme> | undefined;
   inputRef: React.Ref<HTMLInputElement> | undefined;
-  label: React.ReactNode | undefined;
   slots: PickerFieldUISlotsFromContext;
   slotProps: PickerFieldUISlotPropsFromContext;
 }
@@ -437,11 +433,11 @@ export function useFieldTextFieldProps<
     externalForwardedProps: otherExternalForwardedProps,
     additionalProps: {
       ref,
-      sx: pickerFieldUIContext.sx,
-      label: pickerFieldUIContext.label,
-      inputRef: pickerFieldUIContext.inputRef,
+      sx: pickerContext?.fieldSx,
+      label: pickerContext?.fieldLabel,
       name: pickerContext?.fieldName,
       className: pickerContext?.fieldClassName,
+      inputRef: pickerFieldUIContext.inputRef,
     },
     ownerState,
   }) as any as TProps;
@@ -468,12 +464,10 @@ interface UseFieldTextFieldPropsParameters {
 }
 
 export function PickerFieldUIContextProvider(props: PickerFieldUIContextProviderProps) {
-  const { slots = {}, slotProps = {}, sx, label, inputRef, children } = props;
+  const { slots = {}, slotProps = {}, inputRef, children } = props;
 
   const contextValue = React.useMemo<PickerFieldUIContextValue>(
     () => ({
-      sx,
-      label,
       inputRef,
       slots: {
         openPickerButton: slots.openPickerButton,
@@ -493,8 +487,6 @@ export function PickerFieldUIContextProvider(props: PickerFieldUIContextProvider
       },
     }),
     [
-      sx,
-      label,
       inputRef,
       slots.openPickerButton,
       slots.openPickerIcon,
@@ -516,9 +508,9 @@ export function PickerFieldUIContextProvider(props: PickerFieldUIContextProvider
   );
 }
 
-interface PickerFieldUIContextProviderProps
-  extends Omit<PickerFieldUIContextValue, 'slots' | 'slotProps'> {
+interface PickerFieldUIContextProviderProps {
   children: React.ReactNode;
+  inputRef: React.Ref<HTMLInputElement> | undefined;
   slots: PickerFieldUISlotsFromContext | undefined;
   slotProps: PickerFieldUISlotPropsFromContext | undefined;
 }

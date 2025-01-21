@@ -131,6 +131,8 @@ export function usePickerProvider<
       fieldFormat: props.format ?? '',
       fieldClassName: props.className,
       fieldName: props.name,
+      fieldLabel: props.label,
+      fieldSx: props.sx,
     }),
     [
       paramsFromUsePickerValue.contextValue,
@@ -142,6 +144,8 @@ export function usePickerProvider<
       props.format,
       props.className,
       props.name,
+      props.label,
+      props.sx,
       triggerRef,
       triggerStatus,
     ],
@@ -160,7 +164,7 @@ export function usePickerProvider<
     [paramsFromUsePickerValue.actionsContextValue, paramsFromUsePickerViews.actionsContextValue],
   );
 
-  const fieldPrivateContextValue = React.useMemo(
+  const fieldPrivateContextValue = React.useMemo<PickerFieldPrivateContextValue>(
     () => ({
       formatDensity: props.formatDensity,
       enableAccessibleFieldDOMStructure: props.enableAccessibleFieldDOMStructure,
@@ -190,9 +194,7 @@ export interface UsePickerProviderParameters<
   TView extends DateOrTimeViewWithMeridiem,
   TError,
 > extends Pick<PickerProviderProps<TValue>, 'localeText'> {
-  props: UsePickerProps<TValue, any, any, any> &
-    UsePickerProviderNonStaticProps &
-    UsePickerProviderNonRangeNonStaticPickerProps;
+  props: UsePickerProps<TValue, any, any, any> & UsePickerProviderNonStaticProps;
   valueManager: PickerValueManager<TValue, any>;
   variant: PickerVariant;
   paramsFromUsePickerValue: UsePickerValueProviderParams<TValue, TError>;
@@ -228,13 +230,6 @@ export interface UsePickerProviderNonStaticProps extends PickerFieldPrivateConte
    * @default false
    */
   disableOpenPicker?: boolean;
-}
-
-/**
- * Props common to all non-range non-static pickers.
- * These props are handled by the headless wrappers.
- */
-export interface UsePickerProviderNonRangeNonStaticPickerProps {
   /**
    * The label content.
    */

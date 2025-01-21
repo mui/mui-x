@@ -46,11 +46,9 @@ export const useDesktopRangePicker = <
   const {
     slots,
     slotProps,
-    className,
     sx,
     label,
     inputRef,
-    name,
     readOnly,
     autoFocus,
     disableOpenPicker,

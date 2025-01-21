@@ -16,10 +16,7 @@ import {
   PickerFieldUISlotsFromContext,
   PickerFieldUISlotPropsFromContext,
 } from '../../components/PickerFieldUI';
-import {
-  UsePickerProviderNonRangeNonStaticPickerProps,
-  UsePickerProviderNonStaticProps,
-} from '../usePicker/usePickerProvider';
+import { UsePickerProviderNonStaticProps } from '../usePicker/usePickerProvider';
 
 export interface UseDesktopPickerSlots
   extends Pick<

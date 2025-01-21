@@ -15,10 +15,7 @@ import {
 import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue.types';
 import { UsePickerViewsProps } from '../usePicker/usePickerViews';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
-import {
-  UsePickerProviderNonRangeNonStaticPickerProps,
-  UsePickerProviderNonStaticProps,
-} from '../usePicker/usePickerProvider';
+import { UsePickerProviderNonStaticProps } from '../usePicker/usePickerProvider';
 import {
   PickerFieldUISlotsFromContext,
   PickerFieldUISlotPropsFromContext,
@@ -52,8 +49,7 @@ export interface UseMobilePickerSlotProps<TEnableAccessibleFieldDOMStructure ext
 
 export interface MobileOnlyPickerProps
   extends UsePickerValueNonStaticProps,
-    UsePickerProviderNonStaticProps,
-    UsePickerProviderNonRangeNonStaticPickerProps {}
+    UsePickerProviderNonStaticProps {}
 
 export interface UseMobilePickerProps<
   TView extends DateOrTimeViewWithMeridiem,

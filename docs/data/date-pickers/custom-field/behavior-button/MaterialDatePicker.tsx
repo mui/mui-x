@@ -41,7 +41,9 @@ function ButtonDateField(props: DatePickerFieldProps) {
       className={pickerContext.fieldClassName}
       onClick={() => pickerContext.setOpen((prev) => !prev)}
     >
-      {label ? `${label}: ${valueStr}` : valueStr}
+      {pickerContext.fieldLabel
+        ? `${pickerContext.fieldLabel}: ${valueStr}`
+        : valueStr}
     </Button>
   );
 }
