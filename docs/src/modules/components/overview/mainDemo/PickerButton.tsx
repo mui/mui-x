@@ -32,10 +32,14 @@ function ButtonDateField(props: DatePickerFieldProps) {
       variant="outlined"
       size="small"
       startIcon={<CalendarTodayRoundedIcon fontSize="small" />}
-      sx={{ minWidth: 'fit-content' }}
+      sx={[
+        { minWidth: 'fit-content' },
+        ...(Array.isArray(pickerContext.fieldSx) ? pickerContext.fieldSx : [pickerContext.fieldSx]),
+      ]}
       fullWidth
       color={hasValidationError ? 'error' : 'primary'}
       ref={pickerContext.triggerRef}
+      className={pickerContext.fieldClassName}
       onClick={() => pickerContext.setOpen((prev) => !prev)}
     >
       {pickerContext.fieldLabel ? `${pickerContext.fieldLabel}: ${valueStr}` : valueStr}
