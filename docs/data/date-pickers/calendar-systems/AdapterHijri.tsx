@@ -28,7 +28,7 @@ const cacheRtl = createCache({
 
 function ButtonDateTimeField(props: DateTimePickerFieldProps) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-  const { ownerState, label, focused, name, ...other } = forwardedProps;
+  const { ownerState, focused, ...other } = forwardedProps;
 
   const pickerContext = usePickerContext();
   const parsedFormat = useParsedFormat();
