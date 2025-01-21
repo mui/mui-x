@@ -83,4 +83,5 @@ export interface PickerFieldPrivateContextValue
     | 'enableAccessibleFieldDOMStructure'
     | 'selectedSections'
     | 'onSelectedSectionsChange'
+    | 'inputRef'
   > {}

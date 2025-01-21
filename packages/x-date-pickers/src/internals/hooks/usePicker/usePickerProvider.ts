@@ -129,6 +129,8 @@ export function usePickerProvider<
       triggerRef,
       triggerStatus,
       fieldFormat: props.format ?? '',
+      fieldClassName: props.className,
+      fieldName: props.name,
     }),
     [
       paramsFromUsePickerValue.contextValue,
@@ -137,9 +139,11 @@ export function usePickerProvider<
       orientation,
       props.disabled,
       props.readOnly,
+      props.format,
+      props.className,
+      props.name,
       triggerRef,
       triggerStatus,
-      props.format,
     ],
   );
 
@@ -186,7 +190,9 @@ export interface UsePickerProviderParameters<
   TView extends DateOrTimeViewWithMeridiem,
   TError,
 > extends Pick<PickerProviderProps<TValue>, 'localeText'> {
-  props: UsePickerProps<TValue, any, any, any> & UsePickerProviderNonStaticProps;
+  props: UsePickerProps<TValue, any, any, any> &
+    UsePickerProviderNonStaticProps &
+    UsePickerProviderNonRangeNonStaticPickerProps;
   valueManager: PickerValueManager<TValue, any>;
   variant: PickerVariant;
   paramsFromUsePickerValue: UsePickerValueProviderParams<TValue, TError>;
@@ -222,4 +228,23 @@ export interface UsePickerProviderNonStaticProps extends PickerFieldPrivateConte
    * @default false
    */
   disableOpenPicker?: boolean;
+}
+
+/**
+ * Props common to all non-range non-static pickers.
+ * These props are handled by the headless wrappers.
+ */
+export interface UsePickerProviderNonRangeNonStaticPickerProps {
+  /**
+   * The label content.
+   */
+  label?: React.ReactNode;
+  /**
+   * Pass a ref to the `input` element.
+   */
+  inputRef?: React.Ref<HTMLInputElement>;
+  /**
+   * Name attribute used by the `input` element in the Field.
+   */
+  name?: string;
 }

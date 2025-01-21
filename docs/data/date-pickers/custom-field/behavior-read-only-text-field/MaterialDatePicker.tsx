@@ -44,6 +44,8 @@ function ReadOnlyDateField(props: DatePickerFieldProps) {
       }}
       error={hasValidationError}
       onClick={() => pickerContext.setOpen((prev) => !prev)}
+      name={pickerContext.fieldName}
+      className={pickerContext.fieldClassName}
     />
   );
 }

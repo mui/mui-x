@@ -40,22 +40,3 @@ export interface BasePickerInputProps<
     MakeOptional<BasePickerProps<TValue, TView, TError, any>, 'openTo' | 'views'>,
     'viewRenderers'
   > {}
-
-/**
- * Props common to all non-range non-static pickers.
- * These props are handled by the headless wrappers.
- */
-export interface BaseNonRangeNonStaticPickerProps {
-  /**
-   * The label content.
-   */
-  label?: React.ReactNode;
-  /**
-   * Pass a ref to the `input` element.
-   */
-  inputRef?: React.Ref<HTMLInputElement>;
-  /**
-   * Name attribute used by the `input` element in the Field.
-   */
-  name?: string;
-}

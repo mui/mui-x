@@ -16,7 +16,7 @@ import {
 
 function ButtonDateField(props: DatePickerFieldProps) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-  const { ownerState, label, focused, name, ...other } = forwardedProps;
+  const { ownerState, focused, ...other } = forwardedProps;
 
   const pickerContext = usePickerContext();
   const parsedFormat = useParsedFormat();
@@ -38,6 +38,7 @@ function ButtonDateField(props: DatePickerFieldProps) {
       variant="outlined"
       color={hasValidationError ? 'error' : 'primary'}
       ref={pickerContext.triggerRef}
+      className={pickerContext.fieldClassName}
       onClick={() => pickerContext.setOpen((prev) => !prev)}
     >
       {label ? `${label}: ${valueStr}` : valueStr}

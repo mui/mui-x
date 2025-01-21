@@ -184,10 +184,8 @@ export const useMobileRangePicker = <
         slots={slots}
         slotProps={slotProps}
         sx={sx}
-        name={name}
         label={label}
         inputRef={inputRef}
-        className={className}
       >
         <PickerRangePositionContext.Provider value={rangePositionResponse}>
           <Field {...enrichedFieldResponse.fieldProps} />

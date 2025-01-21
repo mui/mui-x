@@ -112,10 +112,8 @@ export const useDesktopPicker = <
         slots={slots}
         slotProps={slotProps}
         sx={sx}
-        name={name}
         label={label}
         inputRef={inputRef}
-        className={className}
       >
         <Field {...fieldProps} unstableFieldRef={handleFieldRef} />
         <PickersPopper

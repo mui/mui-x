@@ -24,14 +24,7 @@ interface AutocompleteFieldProps extends DatePickerFieldProps {
 function AutocompleteField(props: AutocompleteFieldProps) {
   const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
   const { timezone, value, setValue } = usePickerContext();
-  const {
-    ownerState,
-    label,
-    focused,
-    name,
-    options = [],
-    ...other
-  } = forwardedProps;
+  const { ownerState, focused, options = [], ...other } = forwardedProps;
 
   const pickerContext = usePickerContext();
 
@@ -47,6 +40,7 @@ function AutocompleteField(props: AutocompleteFieldProps) {
       {...other}
       options={options}
       ref={pickerContext.triggerRef}
+      className={pickerContext.fieldClassName}
       sx={{ minWidth: 250 }}
       renderInput={(params) => {
         const endAdornment = params.InputProps
@@ -56,6 +50,7 @@ function AutocompleteField(props: AutocompleteFieldProps) {
             {...params}
             error={hasValidationError}
             label={label}
+            name={pickerContext.fieldName}
             InputProps={{
               ...params.InputProps,
               endAdornment: React.cloneElement(endAdornment, {

@@ -1,9 +1,6 @@
 import * as React from 'react';
 import { MakeRequired, SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import {
-  BasePickerProps,
-  BaseNonRangeNonStaticPickerProps,
-} from '../../models/props/basePickerProps';
+import { BasePickerProps } from '../../models/props/basePickerProps';
 import {
   PickersModalDialogSlots,
   PickersModalDialogSlotProps,
@@ -18,7 +15,10 @@ import {
 import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue.types';
 import { UsePickerViewsProps } from '../usePicker/usePickerViews';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
-import { UsePickerProviderNonStaticProps } from '../usePicker/usePickerProvider';
+import {
+  UsePickerProviderNonRangeNonStaticPickerProps,
+  UsePickerProviderNonStaticProps,
+} from '../usePicker/usePickerProvider';
 import {
   PickerFieldUISlotsFromContext,
   PickerFieldUISlotPropsFromContext,
@@ -51,9 +51,9 @@ export interface UseMobilePickerSlotProps<TEnableAccessibleFieldDOMStructure ext
     Pick<PickersLayoutSlotProps<PickerValue>, 'toolbar'> {}
 
 export interface MobileOnlyPickerProps
-  extends BaseNonRangeNonStaticPickerProps,
-    UsePickerValueNonStaticProps,
-    UsePickerProviderNonStaticProps {}
+  extends UsePickerValueNonStaticProps,
+    UsePickerProviderNonStaticProps,
+    UsePickerProviderNonRangeNonStaticPickerProps {}
 
 export interface UseMobilePickerProps<
   TView extends DateOrTimeViewWithMeridiem,

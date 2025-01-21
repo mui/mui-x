@@ -111,10 +111,8 @@ export const useMobilePicker = <
         slots={slots}
         slotProps={slotProps}
         sx={sx}
-        name={name}
         label={label}
         inputRef={inputRef}
-        className={className}
       >
         <Field {...fieldProps} unstableFieldRef={handleFieldRef} />
         <PickersModalDialog slots={slots} slotProps={slotProps}>

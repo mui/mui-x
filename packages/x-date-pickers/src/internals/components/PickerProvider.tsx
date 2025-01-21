@@ -138,6 +138,20 @@ export interface PickerContextValue<
    * Is always equal to an empty string if the component you are accessing the context from is not wrapped by a picker.
    */
   fieldFormat: string;
+  /**
+   * Class name that should be applied to the field.
+   * Is equal to `props.className` on the picker component if defined.
+   * Is equal to undefined if the picker does not have a field (static pickers).
+   * Is always equal to undefined if the component you are accessing the context from is not wrapped by a picker.
+   */
+  fieldClassName: string | undefined;
+  /**
+   * Name that should be applied to the <input /> element of the field.
+   * Is equal to `props.name` on the picker component if defined.
+   * Is equal to undefined if the picker does not have a field (static pickers).
+   * Is always equal to undefined if the component you are accessing the context from is not wrapped by a picker.
+   */
+  fieldName: string | undefined;
 }
 
 export interface PickerActionsContextValue<
