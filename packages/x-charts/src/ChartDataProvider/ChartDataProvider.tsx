@@ -2,12 +2,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useChartDataProviderProps } from './useChartDataProviderProps';
-import { AnimationProvider, AnimationProviderProps } from '../AnimationProvider';
-import { HighlightedProvider, HighlightedProviderProps } from '../HighlightedProvider';
-import { ChartProvider, ChartProviderProps } from '../ChartProvider';
-import { ChartSeriesType } from '../../models/seriesType/config';
-import { ChartAnyPluginSignature } from '../../internals/plugins/models/plugin';
-import { AllPluginSignatures } from '../../internals/plugins/allPlugins';
+import { AnimationProvider, AnimationProviderProps } from '../context/AnimationProvider';
+import { HighlightedProvider, HighlightedProviderProps } from '../context/HighlightedProvider';
+import { ChartProvider, ChartProviderProps } from '../context/ChartProvider';
+import { ChartSeriesType } from '../models/seriesType/config';
+import { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
+import { AllPluginSignatures } from '../internals/plugins/allPlugins';
 
 export type ChartDataProviderProps<
   TSeries extends ChartSeriesType = ChartSeriesType,
@@ -29,7 +29,7 @@ export type ChartDataProviderProps<
  *
  * Demos:
  *
- * - [Composition](http://localhost:3001/x/react-charts/composition/)
+ * - [Composition](https://mui.com/x/api/charts/composition/)
  *
  * API:
  *
