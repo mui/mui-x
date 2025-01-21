@@ -5,8 +5,26 @@ import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingTreeView 
 import { unstable_cleanupDOM as unstable_cleanupDOMCharts } from '@mui/x-charts/internals';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import { generateTestLicenseKey, setupTestLicenseKey } from './testLicense';
+import * as ReactTransitionGroup from 'react-transition-group';
+import React from 'react';
 
 export function createXMochaHooks(coreMochaHooks = {}) {
+  const OriginalTransition = ReactTransitionGroup.Transition;
+  const OriginalCSSTransition = ReactTransitionGroup.CSSTransition;
+  const FakeTransition = (props) => {
+    return props.in ? (
+      <OriginalTransition {...props} timeout={0} appear={false} enter={false} exit={false} />
+    ) : null;
+  };
+  const FakeCSSTransition = (props) => {
+    return props.in ? (
+      <OriginalCSSTransition {...props} timeout={0} appear={false} enter={false} exit={false} />
+    ) : null;
+  };
+
+  ReactTransitionGroup.Transition = FakeTransition;
+  ReactTransitionGroup.CSSTransition = FakeCSSTransition;
+
   const mochaHooks = {
     beforeAll: [...(coreMochaHooks.beforeAll ?? [])],
     afterAll: [...(coreMochaHooks.afterAll ?? [])],
