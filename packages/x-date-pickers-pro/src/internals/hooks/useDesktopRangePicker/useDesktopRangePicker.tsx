@@ -175,13 +175,7 @@ export const useDesktopRangePicker = <
         ...enrichedFieldResponse.fieldPrivateContextValue,
       }}
     >
-      <PickerFieldUIContextProvider
-        slots={slots}
-        slotProps={slotProps}
-        sx={sx}
-        label={label}
-        inputRef={inputRef}
-      >
+      <PickerFieldUIContextProvider slots={slots} slotProps={slotProps} inputRef={inputRef}>
         <PickerRangePositionContext.Provider value={rangePositionResponse}>
           <Field {...enrichedFieldResponse.fieldProps} />
           <PickersPopper

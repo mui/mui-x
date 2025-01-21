@@ -447,7 +447,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
    }
   ```
 
-- The component passed to the `field` slot no longer receives the `value`, `onChange`, `timezone`, `format` and `disabled` props.
+- The component passed to the `field` slot no longer receives the `value`, `onChange`, `timezone`, `format`, `disabled`, `className`, `sx`, `label` and `name` props.
   You can use the `usePickerContext` hook instead:
 
   ```diff
@@ -470,13 +470,25 @@ If the updated values do not fit your use case, you can [override them](/x/react
 
   -const { disabled } = props;
   +const { disabled } = usePickerContext();
+
+  -const { className } = props;
+  +const { fieldClassName } = usePickerContext();
+
+  -const { sx } = props;
+  +const { fieldSx } = usePickerContext();
+
+  -const { label } = props;
+  +const { fieldLabel } = usePickerContext();
+
+  -const { name } = props;
+  +const { fieldName } = usePickerContext();
   ```
 
   :::success
   If you are using a hook like `useDateField`, you don't have to do anything, the values from the context are automatically applied.
   :::
 
-- The component passed to the `field` slot no longer receives the `formatDensity`, `enableAccessibleFieldDOMStructure`, `selectedSections` and `onSelectedSectionsChange` props.
+- The component passed to the `field` slot no longer receives the `formatDensity`, `enableAccessibleFieldDOMStructure`, `selectedSections`, `onSelectedSectionsChange` and `inputRef` props.
   These props, formerly mirroring the picker's props, are no longer exposed.
   You can manually pass them using `slotProps.field` to keep the same behavior:
 
@@ -486,12 +498,14 @@ If the updated values do not fit your use case, you can [override them](/x/react
      formatDensity='spacious'
      selectedSections={selectedSections}
      onSelectedSectionsChange={onSelectedSectionsChange}
+     inputRef={inputRef}
   +  slotProps={{
        field: {
          enableAccessibleFieldDOMStructure: false,
          formatDensity: 'spacious',
          selectedSections,
          onSelectedSectionsChange,
+         inputRef,
        },
      }}
    />
@@ -503,6 +517,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
   - `enableAccessibleFieldDOMStructure`: `true`
   - `selectedSections`: `undefined`
   - `onSelectedSectionsChange`: `undefined`
+  - `inputRef`: `undefined`
 
   :::success
   If you are using a hook like `useDateField`, you don't have to do anything, the value from the context are automatically applied.

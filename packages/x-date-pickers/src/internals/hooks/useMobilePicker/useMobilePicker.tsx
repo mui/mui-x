@@ -105,13 +105,7 @@ export const useMobilePicker = <
 
   const renderPicker = () => (
     <PickerProvider {...providerProps}>
-      <PickerFieldUIContextProvider
-        slots={slots}
-        slotProps={slotProps}
-        sx={sx}
-        label={label}
-        inputRef={inputRef}
-      >
+      <PickerFieldUIContextProvider slots={slots} slotProps={slotProps} inputRef={inputRef}>
         <Field {...fieldProps} unstableFieldRef={handleFieldRef} />
         <PickersModalDialog slots={slots} slotProps={slotProps}>
           <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>

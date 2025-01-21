@@ -106,13 +106,7 @@ export const useDesktopPicker = <
 
   const renderPicker = () => (
     <PickerProvider {...providerProps}>
-      <PickerFieldUIContextProvider
-        slots={slots}
-        slotProps={slotProps}
-        sx={sx}
-        label={label}
-        inputRef={inputRef}
-      >
+      <PickerFieldUIContextProvider slots={slots} slotProps={slotProps} inputRef={inputRef}>
         <Field {...fieldProps} unstableFieldRef={handleFieldRef} />
         <PickersPopper
           role="dialog"
