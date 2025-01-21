@@ -75,13 +75,8 @@ export const useMobilePicker = <
       autoFocus: autoFocus && !props.open,
 
       // Forwarded props
-      className,
-      sx,
-      label,
-      name,
       focused: providerProps.contextValue.open ? true : undefined,
       ...(isToolbarHidden && { id: labelId }),
-      ...(!!inputRef && { inputRef }),
     },
     ownerState,
   });
@@ -112,7 +107,15 @@ export const useMobilePicker = <
 
   const renderPicker = () => (
     <PickerProvider {...providerProps}>
-      <PickerFieldUIContextProvider slots={slots} slotProps={slotProps}>
+      <PickerFieldUIContextProvider
+        slots={slots}
+        slotProps={slotProps}
+        sx={sx}
+        name={name}
+        label={label}
+        inputRef={inputRef}
+        className={className}
+      >
         <Field {...fieldProps} unstableFieldRef={handleFieldRef} />
         <PickersModalDialog slots={slots} slotProps={slotProps}>
           <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>

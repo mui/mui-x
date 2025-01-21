@@ -132,11 +132,7 @@ export const useDesktopRangePicker = <
       autoFocus: autoFocus && !props.open,
 
       // Forwarded props
-      className,
-      sx,
       ref: fieldContainerRef,
-      ...(fieldType === 'single-input' && !!inputRef && { inputRef }),
-      ...(fieldType === 'single-input' && { name }),
     },
     ownerState,
   });
@@ -153,7 +149,6 @@ export const useDesktopRangePicker = <
     fieldPrivateContextValue: providerProps.fieldPrivateContextValue,
     readOnly,
     disableOpenPicker,
-    label,
     localeText,
     onBlur: handleBlur,
     pickerSlotProps: slotProps,
@@ -182,7 +177,15 @@ export const useDesktopRangePicker = <
         ...enrichedFieldResponse.fieldPrivateContextValue,
       }}
     >
-      <PickerFieldUIContextProvider slots={slots} slotProps={slotProps}>
+      <PickerFieldUIContextProvider
+        slots={slots}
+        slotProps={slotProps}
+        sx={sx}
+        name={name}
+        label={label}
+        inputRef={inputRef}
+        className={className}
+      >
         <PickerRangePositionContext.Provider value={rangePositionResponse}>
           <Field {...enrichedFieldResponse.fieldProps} />
           <PickersPopper

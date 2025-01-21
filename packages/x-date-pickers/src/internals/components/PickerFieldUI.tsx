@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { Theme } from '@mui/material/styles';
+import { SxProps } from '@mui/system';
 import useEventCallback from '@mui/utils/useEventCallback';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import MuiTextField, { TextFieldProps } from '@mui/material/TextField';
@@ -85,6 +87,11 @@ export const cleanFieldResponse = <
 const PickerFieldUIContext = React.createContext<PickerFieldUIContextValue>({
   slots: {},
   slotProps: {},
+  sx: undefined,
+  name: undefined,
+  label: undefined,
+  inputRef: undefined,
+  className: undefined,
 });
 
 /**
@@ -382,6 +389,11 @@ interface FieldInputAdornmentOwnerState extends FieldOwnerState {
 }
 
 interface PickerFieldUIContextValue {
+  sx: SxProps<Theme> | undefined;
+  className: string | undefined;
+  inputRef: React.Ref<HTMLInputElement> | undefined;
+  name: string | undefined;
+  label: React.ReactNode | undefined;
   slots: PickerFieldUISlotsFromContext;
   slotProps: PickerFieldUISlotPropsFromContext;
 }
@@ -428,6 +440,11 @@ export function useFieldTextFieldProps<
     externalForwardedProps: otherExternalForwardedProps,
     additionalProps: {
       ref,
+      sx: pickerFieldUIContext.sx,
+      name: pickerFieldUIContext.name,
+      label: pickerFieldUIContext.label,
+      inputRef: pickerFieldUIContext.inputRef,
+      className: pickerFieldUIContext.className,
     },
     ownerState,
   }) as any as TProps;
@@ -454,10 +471,15 @@ interface UseFieldTextFieldPropsParameters {
 }
 
 export function PickerFieldUIContextProvider(props: PickerFieldUIContextProviderProps) {
-  const { slots = {}, slotProps = {}, children } = props;
+  const { slots = {}, slotProps = {}, sx, name, label, className, inputRef, children } = props;
 
   const contextValue = React.useMemo<PickerFieldUIContextValue>(
     () => ({
+      sx,
+      name,
+      label,
+      inputRef,
+      className,
       slots: {
         openPickerButton: slots.openPickerButton,
         openPickerIcon: slots.openPickerIcon,
@@ -476,6 +498,11 @@ export function PickerFieldUIContextProvider(props: PickerFieldUIContextProvider
       },
     }),
     [
+      sx,
+      name,
+      label,
+      inputRef,
+      className,
       slots.openPickerButton,
       slots.openPickerIcon,
       slots.textField,
@@ -496,7 +523,8 @@ export function PickerFieldUIContextProvider(props: PickerFieldUIContextProvider
   );
 }
 
-interface PickerFieldUIContextProviderProps {
+interface PickerFieldUIContextProviderProps
+  extends Omit<PickerFieldUIContextValue, 'slots' | 'slotProps'> {
   children: React.ReactNode;
   slots: PickerFieldUISlotsFromContext | undefined;
   slotProps: PickerFieldUISlotPropsFromContext | undefined;

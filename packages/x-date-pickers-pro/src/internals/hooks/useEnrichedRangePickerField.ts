@@ -101,7 +101,6 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   labelId?: string;
   disableOpenPicker?: boolean;
   onBlur?: () => void;
-  label?: React.ReactNode;
   localeText: PickersInputLocaleText | undefined;
   pickerSlotProps: RangePickerFieldSlotProps<TEnableAccessibleFieldDOMStructure> | undefined;
   pickerSlots: RangePickerFieldSlots | undefined;
@@ -305,7 +304,6 @@ const useSingleInputFieldSlotProps = <
   readOnly,
   labelId,
   disableOpenPicker,
-  label,
   onBlur,
   rangePosition,
   setRangePosition,
@@ -379,7 +377,6 @@ const useSingleInputFieldSlotProps = <
 
   const enrichedFieldProps: ReturnType = {
     ...fieldProps,
-    label,
     unstableFieldRef: handleFieldRef,
     onKeyDown: onSpaceOrEnter(openPicker, fieldProps.onKeyDown),
     onBlur,

@@ -76,13 +76,8 @@ export const useDesktopPicker = <
       autoFocus: autoFocus && !props.open,
 
       // Forwarded props
-      className,
-      sx,
-      label,
-      name,
       focused: providerProps.contextValue.open ? true : undefined,
       ...(isToolbarHidden && { id: labelId }),
-      ...(!!inputRef && { inputRef }),
     },
     ownerState,
   });
@@ -113,7 +108,15 @@ export const useDesktopPicker = <
 
   const renderPicker = () => (
     <PickerProvider {...providerProps}>
-      <PickerFieldUIContextProvider slots={slots} slotProps={slotProps}>
+      <PickerFieldUIContextProvider
+        slots={slots}
+        slotProps={slotProps}
+        sx={sx}
+        name={name}
+        label={label}
+        inputRef={inputRef}
+        className={className}
+      >
         <Field {...fieldProps} unstableFieldRef={handleFieldRef} />
         <PickersPopper
           role="dialog"

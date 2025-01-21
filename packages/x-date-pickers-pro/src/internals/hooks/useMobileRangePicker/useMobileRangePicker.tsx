@@ -105,12 +105,6 @@ export const useMobileRangePicker = <
     additionalProps: {
       // Internal props
       readOnly: readOnly ?? true,
-
-      // Forwarded props
-      className,
-      sx,
-      ...(fieldType === 'single-input' && !!inputRef && { inputRef }),
-      ...(fieldType === 'single-input' && { name }),
     },
     ownerState,
   });
@@ -130,7 +124,6 @@ export const useMobileRangePicker = <
     readOnly,
     labelId,
     disableOpenPicker,
-    label,
     localeText,
     pickerSlots: slots,
     pickerSlotProps: innerSlotProps,
@@ -187,7 +180,15 @@ export const useMobileRangePicker = <
         ...enrichedFieldResponse.fieldPrivateContextValue,
       }}
     >
-      <PickerFieldUIContextProvider slots={slots} slotProps={slotProps}>
+      <PickerFieldUIContextProvider
+        slots={slots}
+        slotProps={slotProps}
+        sx={sx}
+        name={name}
+        label={label}
+        inputRef={inputRef}
+        className={className}
+      >
         <PickerRangePositionContext.Provider value={rangePositionResponse}>
           <Field {...enrichedFieldResponse.fieldProps} />
           <PickersModalDialog slots={slots} slotProps={slotProps}>
