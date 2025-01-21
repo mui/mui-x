@@ -127,9 +127,16 @@ export const useGridVirtualScroller = () => {
 
   const previousSize = React.useRef<{ width: number; height: number }>(null);
 
+  const observerRef = React.useRef<ResizeObserver | null>(null);
   const mainRefCallback = React.useCallback(
     (node: HTMLDivElement | null) => {
       mainRef.current = node;
+
+      // Cleanup for React 18 that calls the ref callback with null when unmounting
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+        observerRef.current = null;
+      }
 
       if (!node) {
         return undefined;
@@ -167,12 +174,14 @@ export const useGridVirtualScroller = () => {
         lastSize = newSize;
       });
 
+      observerRef.current = observer;
       observer.observe(node);
 
       if (reactMajor >= 19) {
         return () => {
           mainRef.current = null;
           observer.disconnect();
+          observerRef.current = null;
         };
       }
       return undefined;
