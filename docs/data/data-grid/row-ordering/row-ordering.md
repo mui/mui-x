@@ -77,7 +77,7 @@ This approach can also be used to change the location of the toggle column.
 For now, row reordering is disabled if sorting is applied to the Data Grid.
 :::
 
-## Reordering rows 🚧
+## Reordering with tree data and grouping 🚧
 
 :::warning
 This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/4821) to help us prioritize it.
