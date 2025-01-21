@@ -17,7 +17,7 @@ import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Typography from '@mui/joy/Typography';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { useSplitFieldProps, usePickerContext } from '@mui/x-date-pickers/hooks';
+import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import {
   DateRangePicker,
@@ -34,6 +34,7 @@ import {
 const joyTheme = extendJoyTheme();
 
 interface JoyFieldProps extends InputProps {
+  label?: React.ReactNode;
   inputRef?: React.Ref<HTMLInputElement>;
   enableAccessibleFieldDOMStructure?: boolean;
   InputProps?: {
@@ -55,6 +56,7 @@ const JoyField = React.forwardRef(
 
       disabled,
       id,
+      label,
       InputProps: { ref: containerRef, startAdornment, endAdornment } = {},
       endDecorator,
       startDecorator,
@@ -63,11 +65,9 @@ const JoyField = React.forwardRef(
       ...other
     } = props;
 
-    const pickerContext = usePickerContext();
-
     return (
       <FormControl disabled={disabled} id={id} ref={ref}>
-        <FormLabel>{pickerContext.fieldLabel}</FormLabel>
+        <FormLabel>{label}</FormLabel>
         <Input
           ref={ref}
           disabled={disabled}
