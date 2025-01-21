@@ -82,21 +82,21 @@ The demo below uses [`renderHeaderGroup`](/x/react-data-grid/column-groups/#cust
 
 ## Manage group visibility 🚧
 
-The column group should allow to switch between an extended/collapsed view which hide/show some columns.
-
 :::warning
 This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/6651) to help us prioritize it.
 Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
 :::
 
-## Column group ordering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🚧
+With this feature, end users would be able to expand and collapse grouped columns to toggle their visibility.
 
-Users could drag and drop group header to move all the group children at once, [like they can already do it with normal columns](/x/react-data-grid/column-ordering/).
+## Column group ordering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🚧
 
 :::warning
 This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/9448) to help us prioritize it.
 Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
 :::
+
+With this feature, end users would be able to drag and drop grouped headers to move all grouped children at once (which is [already possible for normal columns](/x/react-data-grid/column-ordering/)).
 
 ## API
 
