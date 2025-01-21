@@ -54,8 +54,7 @@ export interface UseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure ex
 
 export interface DesktopOnlyPickerProps
   extends UsePickerValueNonStaticProps,
-    UsePickerProviderNonStaticProps,
-    UsePickerProviderNonRangeNonStaticPickerProps {
+    UsePickerProviderNonStaticProps {
   /**
    * If `true`, the `input` element is focused during the first mount.
    * @default false

@@ -43,7 +43,9 @@ function ButtonDateRangeField(props: DateRangePickerFieldProps) {
       ref={pickerContext.triggerRef}
       onClick={() => pickerContext.setOpen((prev) => !prev)}
     >
-      {label ? `${label}: ${formattedValue}` : formattedValue}
+      {pickerContext.fieldLabel
+        ? `${pickerContext.fieldLabel}: ${formattedValue}`
+        : formattedValue}
     </Button>
   );
 }
