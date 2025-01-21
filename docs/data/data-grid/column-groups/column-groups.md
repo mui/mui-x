@@ -85,11 +85,8 @@ The demo below uses [`renderHeaderGroup`](/x/react-data-grid/column-groups/#cust
 The column group should allow to switch between an extended/collapsed view which hide/show some columns.
 
 :::warning
-This feature isn't implemented yet. It's coming.
-
-👍 Upvote [issue #6651](https://github.com/mui/mui-x/issues/6651) if you want to see it land faster.
-
-Don't hesitate to leave a comment on the same issue to influence what gets built. Especially if you already have a use case for this component, or if you are facing a pain point with your current solution.
+This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/6651) to help us prioritize it.
+Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
 :::
 
 ## Column group ordering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🚧
@@ -97,11 +94,8 @@ Don't hesitate to leave a comment on the same issue to influence what gets built
 Users could drag and drop group header to move all the group children at once, [like they can already do it with normal columns](/x/react-data-grid/column-ordering/).
 
 :::warning
-This feature isn't implemented yet. It's coming.
-
-👍 Upvote [issue #9448](https://github.com/mui/mui-x/issues/9448) if you want to see it land faster.
-
-Don't hesitate to leave a comment on the same issue to influence what gets built. Especially if you already have a use case for this component, or if you are facing a pain point with your current solution.
+This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/9448) to help us prioritize it.
+Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
 :::
 
 ## API
