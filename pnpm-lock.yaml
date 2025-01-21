@@ -712,7 +712,7 @@ importers:
         specifier: ^7.18.0
         version: 7.18.0(eslint@8.57.1)(typescript@5.7.3)
 
-packages/rsc-builder:
+  packages/rsc-builder:
     dependencies:
       fs-extra:
         specifier: ^11.3.0
