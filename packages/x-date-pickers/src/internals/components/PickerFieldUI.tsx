@@ -1,6 +1,4 @@
 import * as React from 'react';
-import { Theme } from '@mui/material/styles';
-import { SxProps } from '@mui/system';
 import useEventCallback from '@mui/utils/useEventCallback';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import MuiTextField, { TextFieldProps } from '@mui/material/TextField';

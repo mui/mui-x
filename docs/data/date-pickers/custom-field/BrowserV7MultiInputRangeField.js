@@ -43,8 +43,6 @@ const BrowserTextField = React.forwardRef((props, ref) => {
     // Can be passed to a hidden <input /> element
     onChange,
     value,
-    // Can be used to render a custom label
-    label,
     // Can be used to style the component
     areAllSectionsEmpty,
     disabled,

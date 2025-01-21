@@ -39,8 +39,6 @@ const JoyDateField = React.forwardRef((props, ref) => {
     // Can be passed to the button that clears the value
     onClear,
     clearable,
-    // Can be used to render a custom label
-    label,
     // Can be used to style the component
     disabled,
     readOnly,
@@ -56,7 +54,7 @@ const JoyDateField = React.forwardRef((props, ref) => {
 
   return (
     <FormControl disabled={disabled} id={id} ref={ref}>
-      <FormLabel>{label}</FormLabel>
+      <FormLabel>{pickerContext.fieldLabel}</FormLabel>
       <Input
         ref={pickerContext.triggerRef}
         disabled={disabled}

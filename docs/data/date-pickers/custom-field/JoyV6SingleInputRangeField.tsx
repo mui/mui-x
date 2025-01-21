@@ -50,7 +50,6 @@ const JoySingleInputDateRangeField = React.forwardRef(
 
       disabled,
       id,
-      label,
       inputRef,
       ...other
     } = fieldResponse;
@@ -66,7 +65,7 @@ const JoySingleInputDateRangeField = React.forwardRef(
           minWidth: 300,
         }}
       >
-        <FormLabel>{label}</FormLabel>
+        <FormLabel>{pickerContext.fieldLabel}</FormLabel>
         <Input
           ref={pickerContext.triggerRef}
           disabled={disabled}

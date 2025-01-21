@@ -63,9 +63,6 @@ const BrowserTextField = React.forwardRef(
       onChange,
       value,
 
-      // Can be used to render a custom label
-      label,
-
       // Can be used to style the component
       areAllSectionsEmpty,
       disabled,

@@ -23,6 +23,8 @@ import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { useDateRangeManager } from '@mui/x-date-pickers-pro/managers';
 import { unstable_useMultiInputRangeField as useMultiInputRangeField } from '@mui/x-date-pickers-pro/hooks';
 
+import { usePickerContext } from '@mui/x-date-pickers/hooks';
+
 const joyTheme = extendJoyTheme();
 
 const JoyField = React.forwardRef((props, ref) => {
@@ -31,7 +33,6 @@ const JoyField = React.forwardRef((props, ref) => {
     enableAccessibleFieldDOMStructure,
     disabled,
     id,
-    label,
     InputProps: { ref: containerRef, startAdornment, endAdornment } = {},
     endDecorator,
     startDecorator,
@@ -40,9 +41,11 @@ const JoyField = React.forwardRef((props, ref) => {
     ...other
   } = props;
 
+  const pickerContext = usePickerContext();
+
   return (
     <FormControl disabled={disabled} id={id} ref={ref}>
-      <FormLabel>{label}</FormLabel>
+      <FormLabel>{pickerContext.fieldLabel}</FormLabel>
       <Input
         ref={ref}
         disabled={disabled}

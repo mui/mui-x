@@ -30,11 +30,11 @@ import {
   MultiInputFieldRefs,
   MultiInputFieldSlotTextFieldProps,
 } from '@mui/x-date-pickers-pro/models';
+import { usePickerContext } from '@mui/x-date-pickers/hooks';
 
 const joyTheme = extendJoyTheme();
 
 interface JoyFieldProps extends InputProps {
-  label?: React.ReactNode;
   inputRef?: React.Ref<HTMLInputElement>;
   enableAccessibleFieldDOMStructure?: boolean;
   InputProps?: {
@@ -56,7 +56,6 @@ const JoyField = React.forwardRef(
 
       disabled,
       id,
-      label,
       InputProps: { ref: containerRef, startAdornment, endAdornment } = {},
       endDecorator,
       startDecorator,
@@ -65,9 +64,11 @@ const JoyField = React.forwardRef(
       ...other
     } = props;
 
+    const pickerContext = usePickerContext();
+
     return (
       <FormControl disabled={disabled} id={id} ref={ref}>
-        <FormLabel>{label}</FormLabel>
+        <FormLabel>{pickerContext.fieldLabel}</FormLabel>
         <Input
           ref={ref}
           disabled={disabled}

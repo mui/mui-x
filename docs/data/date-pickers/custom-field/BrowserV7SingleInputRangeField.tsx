@@ -67,9 +67,6 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
       onClear,
       clearable,
 
-      // Can be used to render a custom label
-      label,
-
       // Can be used to style the component
       areAllSectionsEmpty,
       disabled,
