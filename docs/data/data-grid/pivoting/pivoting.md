@@ -11,7 +11,7 @@ This feature isn't available yet, but it is planned—you can 👍 upvote [this 
 Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
 :::
 
-Pivoting turns a column into a row, transforming its values into new columns.
+Pivoting would make it possible for users to turn a column into a row, transforming the column's values into new columns.
 
 ## API
 
