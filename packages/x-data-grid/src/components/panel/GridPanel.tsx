@@ -125,7 +125,7 @@ const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
       {...other}
       ref={ref}
     >
-      <ClickAwayListener mouseEvent="onMouseUp" onClickAway={handleClickAway}>
+      <ClickAwayListener mouseEvent="onPointerUp" touchEvent={false} onClickAway={handleClickAway}>
         <GridPaperRoot
           className={classes.paper}
           ownerState={rootProps}
