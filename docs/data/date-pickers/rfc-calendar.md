@@ -21,11 +21,11 @@ The user can use the `<Calendar.DaysGrid />`, `<Calendar.DaysGridHeader />`, `<C
 import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
 <Calendar.Root value={value} onValueChange={setValue}>
-  {({ visibleMonth }) => (
+  {({ visibleDate }) => (
     <React.Fragment>
       <header>
         <Calendar.SetVisibleMonth target="previous">◀</Calendar.SetVisibleMonth>
-        {visibleMonth.format('MMMM YYYY')}
+        {visibleDate.format('MMMM YYYY')}
         <Calendar.SetVisibleMonth target="next">▶</Calendar.SetVisibleMonth>
       </header>
       <Calendar.DaysGrid>
@@ -81,11 +81,11 @@ The user can use the `<Calendar.MonthsList />` and `<Calendar.MonthsCell />` com
 import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
 <Calendar.Root value={value} onValueChange={setValue}>
-  {({ visibleMonth }) => (
+  {({ visibleDate }) => (
     <React.Fragment>
       <header>
         <Calendar.SetVisibleYear target="previous">◀</Calendar.SetVisibleYear>
-        {visibleMonth.format('YYYY')}
+        {visibleDate.format('YYYY')}
         <Calendar.SetVisibleYear target="next">▶</Calendar.SetVisibleYear>
       </header>
       <Calendar.MonthsList>
@@ -108,11 +108,11 @@ The user can use the `<Calendar.MonthsGrid />` and `<Calendar.MonthsCell />` com
 import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
 <Calendar.Root value={value} onValueChange={setValue}>
-  {({ visibleMonth }) => (
+  {({ visibleDate }) => (
     <React.Fragment>
       <header>
         <Calendar.SetVisibleYear target="previous">◀</Calendar.SetVisibleYear>
-        {visibleMonth.format('YYYY')}
+        {visibleDate.format('YYYY')}
         <Calendar.SetVisibleYear target="next">▶</Calendar.SetVisibleYear>
       </header>
       <Calendar.MonthsGrid cellsPerRow={2}>
@@ -302,12 +302,12 @@ The user can use the `<Calendar.SetVisibleMonth />` to build basically any kind 
 import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
 function CalendarHeader() {
-  const { visibleMonth } = useCalendarContext();
+  const { visibleDate } = useCalendarContext();
 
   return (
     <header>
       <Calendar.SetVisibleMonth target="previous">◀</Calendar.SetVisibleMonth>
-      {visibleMonth.format('MMMM YYYY')}
+      {visibleDate.format('MMMM YYYY')}
       <Calendar.SetVisibleMonth target="next">▶</Calendar.SetVisibleMonth>
     </header>
   );
@@ -327,7 +327,7 @@ function CalendarHeader(props: {
   onActiveSectionChange: (activeSection: 'day' | 'month' | 'year') => void;
 }) {
   const { activeSection, onActiveSectionChange } = props;
-  const { visibleMonth } = useCalendarContext();
+  const { visibleDate } = useCalendarContext();
 
   return (
     <header>
@@ -336,7 +336,7 @@ function CalendarHeader(props: {
           onActiveSectionChange(activeSection === 'year' ? 'month' : 'year')
         }
       >
-        {visibleMonth.format('MMMM YYYY')}
+        {visibleDate.format('MMMM YYYY')}
         {activeSection === 'year' ? '▲' : '▼'}
       </div>
       {activeSection === 'day' && (
@@ -379,7 +379,7 @@ function CalendarHeader(props: {
   onActiveSectionChange: (activeSection: 'day' | 'month' | 'year') => void;
 }) {
   const { activeSection, onActiveSectionChange } = props;
-  const { visibleMonth } = useCalendarContext();
+  const { visibleDate } = useCalendarContext();
 
   return (
     <header>
@@ -388,12 +388,12 @@ function CalendarHeader(props: {
           <Calendar.SetVisibleMonth target="previous">◀</Calendar.SetVisibleMonth>
         )}
         <button
-          onClick={() =>
+          onClick={() => 
             onActiveSectionChange(activeSection === 'year' ? 'day' : 'year')
           }
           disabled={activeSection === 'month'}
         >
-          {visibleMonth.format('MMMM')}
+          {visibleDate.format('MMMM')}
         </button>
         {activeSection === 'day' && (
           <Calendar.SetVisibleMonth target="next">▶</Calendar.SetVisibleMonth>
@@ -409,7 +409,7 @@ function CalendarHeader(props: {
           }
           disabled={activeSection === 'year'}
         >
-          {visibleMonth.format('YYYY')}
+          {visibleDate.format('YYYY')}
         </button>
         {activeSection === 'day' && (
           <Calendar.SetVisibleYear target="next">▶</Calendar.SetVisibleYear>
@@ -463,12 +463,12 @@ The `<CustomCalendarHeader />` component can be built in a few different ways:
    import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
    function CustomCalendarHeader() {
-     const { visibleMonth } = useCalendarContext();
+     const { visibleDate } = useCalendarContext();
 
      return (
        <header>
          <Calendar.SetVisibleMonth target="previous">◀</Calendar.SetVisibleMonth>
-         {visibleMonth.format('MMMM YYYY')}
+         {visibleDate.format('MMMM YYYY')}
          <Calendar.SetVisibleMonth target="next">▶</Calendar.SetVisibleMonth>
        </header>
      );
@@ -611,15 +611,15 @@ If the prop receives a number, it will move by the amount of month both for `<Ca
 import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
 function CalendarHeader() {
-  const { visibleMonth } = useCalendarContext();
+  const { visibleDate } = useCalendarContext();
 
   return (
     <Calendar.Root monthPageSize={2}>
       <header>
         <Calendar.SetVisibleMonth target="previous">◀</Calendar.SetVisibleMonth>
-        {visibleMonth.format('MMMM YYYY')}
+        {visibleDate.format('MMMM YYYY')}
         {' – '}
-        {visibleMonth.add(1, 'month').format('MMMM YYYY')}
+        {visibleDate.add(1, 'month').format('MMMM YYYY')}
         <Calendar.SetVisibleMonth target="next">▶</Calendar.SetVisibleMonth>
       </header>
       <CalendarGrid offset={0} />
@@ -635,15 +635,15 @@ But the user can also distinguish both behaviors by providing an object:
 import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
 function CalendarHeader() {
-  const { visibleMonth } = useCalendarContext();
+  const { visibleDate } = useCalendarContext();
 
   return (
     <Calendar.Root monthPageSize={{ keyboard: 2, button: 1 }}>
       <header>
         <Calendar.SetVisibleMonth target="previous">◀</Calendar.SetVisibleMonth>
-        {visibleMonth.format('MMMM YYYY')}
+        {visibleDate.format('MMMM YYYY')}
         {' – '}
-        {visibleMonth.add(1, 'month').format('MMMM YYYY')}
+        {visibleDate.add(1, 'month').format('MMMM YYYY')}
         <Calendar.SetVisibleMonth target="next">▶</Calendar.SetVisibleMonth>
       </header>
       <CalendarGrid offset={0} />
