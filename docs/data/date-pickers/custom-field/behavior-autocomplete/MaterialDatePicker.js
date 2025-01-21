@@ -30,7 +30,12 @@ function AutocompleteField(props) {
       options={options}
       ref={pickerContext.triggerRef}
       className={pickerContext.fieldClassName}
-      sx={{ minWidth: 250 }}
+      sx={[
+        { minWidth: 250 },
+        ...(Array.isArray(pickerContext.fieldSx)
+          ? pickerContext.fieldSx
+          : [pickerContext.fieldSx]),
+      ]}
       renderInput={(params) => {
         const endAdornment = params.InputProps.endAdornment;
         return (

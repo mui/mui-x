@@ -49,6 +49,8 @@ function ButtonDateTimeField(props: DateTimePickerFieldProps) {
       {...other}
       variant="outlined"
       color={hasValidationError ? 'error' : 'primary'}
+      className={pickerContext.fieldClassName}
+      sx={pickerContext.fieldSx}
       ref={pickerContext.triggerRef}
       onClick={() => pickerContext.setOpen((prev) => !prev)}
     >

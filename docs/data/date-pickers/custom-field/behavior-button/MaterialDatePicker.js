@@ -35,6 +35,7 @@ function ButtonDateField(props) {
       color={hasValidationError ? 'error' : 'primary'}
       ref={pickerContext.triggerRef}
       className={pickerContext.fieldClassName}
+      sx={pickerContext.fieldSx}
       onClick={() => pickerContext.setOpen((prev) => !prev)}
     >
       {pickerContext.fieldLabel

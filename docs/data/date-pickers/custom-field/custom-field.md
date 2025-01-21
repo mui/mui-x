@@ -173,7 +173,7 @@ Unlike the field components exposed by `@mui/x-date-pickers` and `@mui/x-date-pi
 Each Picker component exposes an interface describing the props it passes to its field.
 You can import it from the same endpoint as the Picker component and use it to type the props of your field:
 
-```tsx
+```ts
 import { DatePickerFieldProps } from '@mui/x-date-pickers/DatePicker';
 import { DateRangePickerFieldProps } from '@mui/x-date-pickers-pro/DateRangePicker';
 
@@ -200,7 +200,7 @@ function CustomDateRangeField(props: DateRangePickerFieldProps) {
 
 You can use the `useValidation` hook to check if the current value passed to your field is valid or not:
 
-```ts
+```js
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 
 const {
@@ -256,12 +256,30 @@ const parsedFormat = useParsedFormat();
 const parsedFormat = useParsedFormat({ format: 'MM/DD/YYYY' });
 ```
 
+### Props forwarded by the picker
+
+The picker receives some commonly used props that are forwarded directly to the field component.
+If you are using any of those props in one of your picker, make sure to pass them to your field using the `usePickerContext` hook:
+
+```js
+const { fieldName, fieldClassName, fieldSx, fieldLabel } = usePickerContext();
+
+return (
+  <TextField
+    name={fieldName}
+    className={fieldClassName}
+    sx={fieldSx}
+    label={fieldLabel}
+  />
+);
+```
+
 ### Spread props to the DOM
 
 The field receives a lot of props that cannot be forwarded to the DOM element without warnings.
 You can use the `useSplitFieldProps` hook to get the props that can be forwarded safely to the DOM:
 
-```tsx
+```jsx
 const { internalProps, forwardedProps } = useSplitFieldProps(
   // The props received by the field component
   props,
@@ -274,26 +292,11 @@ return (
 )
 ```
 
-:::success
-The `forwardedProps` contains the `sx` which is specific to MUI.
-You can omit it if the component your are forwarding the props to does not support this concept:
-
-```jsx
-const { sx, ...other } = props;
-const { internalProps, forwardedProps } = useSplitFieldProps(other, 'date');
-
-return (
-  <input {...forwardedProps} value={inputValue} onChange={handleChange}>
-)
-```
-
-:::
-
 ### Pass the field to the Picker
 
 You can pass your custom field to your Picker using the `field` slot:
 
-```tsx
+```jsx
 function DatePickerWithCustomField() {
   return (
     <DatePicker slots={{ field: CustomDateField }}>
