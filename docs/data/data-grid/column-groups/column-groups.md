@@ -87,7 +87,7 @@ This feature isn't available yet, but it is planned—you can 👍 upvote [this 
 Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
 :::
 
-With this feature, end users would be able to expand and collapse grouped columns to toggle their visibility.
+With this feature, users would be able to expand and collapse grouped columns to toggle their visibility.
 
 ## Column group ordering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🚧
 
@@ -96,7 +96,7 @@ This feature isn't available yet, but it is planned—you can 👍 upvote [this 
 Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
 :::
 
-With this feature, end users would be able to drag and drop grouped headers to move all grouped children at once (which is [already possible for normal columns](/x/react-data-grid/column-ordering/)).
+With this feature, users would be able to drag and drop grouped headers to move all grouped children at once (which is [already possible for normal columns](/x/react-data-grid/column-ordering/)).
 
 ## API
 

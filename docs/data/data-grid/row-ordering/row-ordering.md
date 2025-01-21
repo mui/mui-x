@@ -84,7 +84,7 @@ This feature isn't available yet, but it is planned—you can 👍 upvote [this 
 Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
 :::
 
-With this feature, end users would be able to reorder rows in use cases that also involve tree data and/or row grouping.
+With this feature, users would be able to reorder rows in use cases that also involve tree data and/or row grouping.
 
 ## API
 

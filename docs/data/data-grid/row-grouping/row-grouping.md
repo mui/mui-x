@@ -391,7 +391,7 @@ This feature isn't available yet, but it is planned—you can 👍 upvote [this 
 Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
 :::
 
-With the row group panel, end users would be able to control which columns are used for grouping by dragging them inside the panel.
+With the row group panel, users would be able to control which columns are used for grouping by dragging them inside the panel.
 
 ## Full example
 
