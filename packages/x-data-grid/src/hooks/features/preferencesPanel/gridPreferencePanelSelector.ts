@@ -1,10 +1,10 @@
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
-import { createSelector } from '../../../utils/createSelector';
+import { createSelectorV8 } from '../../../utils/createSelector';
 
 export const gridPreferencePanelStateSelector = (state: GridStateCommunity) =>
   state.preferencePanel;
 
-export const gridPreferencePanelSelectorWithLabel = createSelector(
+export const gridPreferencePanelSelectorWithLabel = createSelectorV8(
   gridPreferencePanelStateSelector,
   (panel, labelId: string) => {
     if (panel.open && panel.labelId === labelId) {
