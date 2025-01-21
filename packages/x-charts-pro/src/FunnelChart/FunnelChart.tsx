@@ -23,11 +23,14 @@ import {
 import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '@mui/x-charts/ChartsLegend';
 import { MakeOptional } from '@mui/x-internals/types';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
+import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { FunnelPlot, FunnelPlotProps, FunnelPlotSlotProps, FunnelPlotSlots } from './FunnelPlot';
 import { FunnelSeriesType } from './funnel.types';
 import { useFunnelChartProps } from './useFunnelChartProps';
-import { ChartContainerPro, ChartContainerProProps } from '../ChartContainerPro';
+import { ChartContainerProProps } from '../ChartContainerPro';
 import { plugin as funnelPlugin } from './plugin';
+import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
+import { ChartDataProviderPro } from '../ChartDataProviderPro';
 
 export interface FunnelChartSlots
   extends ChartsAxisSlots,
@@ -77,10 +80,10 @@ export interface FunnelChartProps
 const seriesConfig: ChartSeriesConfig<'funnel'> = { funnel: funnelPlugin };
 
 const FunnelChart = React.forwardRef(function FunnelChart(
-  inProps: FunnelChartProps,
+  props: FunnelChartProps,
   ref: React.Ref<SVGSVGElement>,
 ) {
-  const props = useThemeProps({ props: inProps, name: 'MuiFunnelChart' });
+  const { apiRef, ...themedProps } = useThemeProps({ props, name: 'MuiFunnelChart' });
 
   const {
     chartContainerProps,
@@ -89,26 +92,32 @@ const FunnelChart = React.forwardRef(function FunnelChart(
     legendProps,
     clipPathGroupProps,
     clipPathProps,
-    // chartsWrapperProps,
+    chartsWrapperProps,
     children,
-  } = useFunnelChartProps(props);
+  } = useFunnelChartProps(themedProps);
+  const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps(
+    { ...chartContainerProps, apiRef },
+    ref,
+  );
 
-  const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
+  const Tooltip = themedProps.slots?.tooltip ?? ChartsTooltip;
 
   return (
-    <ChartContainerPro<'funnel'> ref={ref} {...chartContainerProps} seriesConfig={seriesConfig}>
-      {/* <ChartsWrapper {...chartsWrapperProps}> */}
-      {!props.hideLegend && <ChartsLegend {...legendProps} />}
-      <g {...clipPathGroupProps}>
-        <FunnelPlot {...funnelPlotProps} />
-        <ChartsOverlay {...overlayProps} />
-        {/* <ChartsAxisHighlight {...axisHighlightProps} /> */}
-      </g>
-      {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
-      <ChartsClipPath {...clipPathProps} />
-      {children}
-      {/* </ChartsWrapper> */}
-    </ChartContainerPro>
+    <ChartDataProviderPro {...chartDataProviderProProps} seriesConfig={seriesConfig}>
+      <ChartsWrapper {...chartsWrapperProps}>
+        {!themedProps.hideLegend && <ChartsLegend {...legendProps} />}
+        <ChartsSurface {...chartsSurfaceProps}>
+          <g {...clipPathGroupProps}>
+            <FunnelPlot {...funnelPlotProps} />
+            <ChartsOverlay {...overlayProps} />
+            {/* <ChartsAxisHighlight {...axisHighlightProps} /> */}
+          </g>
+          {!themedProps.loading && <Tooltip {...themedProps.slotProps?.tooltip} />}
+          <ChartsClipPath {...clipPathProps} />
+          {children}
+        </ChartsSurface>
+      </ChartsWrapper>
+    </ChartDataProviderPro>
   );
 });
 

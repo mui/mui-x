@@ -9,6 +9,7 @@ import { LegendGetter } from '../internals/plugins/models/seriesConfig/seriesPro
 import { useSeries } from './useSeries';
 import type { LegendItemParams } from '../ChartsLegend';
 
+// TODO: move this to be configurable?
 const legendGetter: { [T in ChartSeriesType]?: LegendGetter<T> } = {
   bar: getBarLegend,
   scatter: getScatterLegend,

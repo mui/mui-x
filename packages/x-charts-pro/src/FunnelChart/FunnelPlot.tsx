@@ -274,19 +274,20 @@ const useAggregatedData = (funnelLabel: FunnelPlotProps['funnelLabel']) => {
 
         const valueFormatter = series[seriesId].valueFormatter;
 
-        const baseScaleConfig = (
-          isHorizontal ? xAxis[xAxisId] : yAxis[yAxisId]
-        ) as AxisDefaultized<'band'>;
+        const baseScaleConfig = isHorizontal ? xAxis[xAxisId] : yAxis[yAxisId];
 
         const isXAxisBand = xAxis[xAxisId].scaleType === 'band';
         const isYAxisBand = yAxis[yAxisId].scaleType === 'band';
 
-        const bandWidth = ((isXAxisBand || isYAxisBand) && baseScaleConfig.scale.bandwidth()) || 0;
+        const bandWidth =
+          ((isXAxisBand || isYAxisBand) &&
+            (baseScaleConfig as AxisDefaultized<'band'>).scale?.bandwidth()) ||
+          0;
 
         const xScale = xAxis[xAxisId].scale;
         const yScale = yAxis[yAxisId].scale;
 
-        // TODO: fix type, type is correct, but need to be inferred
+        // TODO: fix type, current code is correct, but need to be inferred
         const { stackedData } = series[seriesId] as unknown as {
           stackedData: FunnelStackedData[][];
         };
