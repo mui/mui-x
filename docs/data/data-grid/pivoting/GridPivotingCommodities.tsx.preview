@@ -6,5 +6,6 @@
     slots={{ toolbar: GridToolbar }}
     pivotParams={pivotParams}
     loading={loading}
+    columnGroupHeaderHeight={36}
   />
 </div>

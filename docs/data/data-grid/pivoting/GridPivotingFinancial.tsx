@@ -156,6 +156,7 @@ export default function GridPivotingFinancial() {
           slots={{ toolbar: GridToolbar }}
           pivotParams={pivotParams}
           cellSelection
+          columnGroupHeaderHeight={36}
         />
       </div>
     </div>

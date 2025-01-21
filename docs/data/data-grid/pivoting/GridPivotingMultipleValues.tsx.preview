@@ -3,4 +3,5 @@
   columns={initialColumns}
   pivotParams={pivotParams}
   apiRef={apiRef}
+  columnGroupHeaderHeight={36}
 />

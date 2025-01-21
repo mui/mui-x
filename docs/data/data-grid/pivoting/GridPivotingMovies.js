@@ -53,6 +53,7 @@ export default function GridPivotingMovies() {
           apiRef={apiRef}
           autoHeight={isPivotMode}
           slots={{ toolbar: GridToolbar }}
+          columnGroupHeaderHeight={36}
           sx={{
             '& .MuiDataGrid-columnHeader--filledGroup': {
               '& .MuiDataGrid-columnHeaderTitleContainer': {

@@ -43,6 +43,7 @@ export default function GridPivotingCommodities() {
           slots={{ toolbar: GridToolbar }}
           pivotParams={pivotParams}
           loading={loading}
+          columnGroupHeaderHeight={36}
         />
       </div>
     </div>

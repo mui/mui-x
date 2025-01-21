@@ -66,6 +66,7 @@ export default function GridPivotingMultipleValues() {
         columns={initialColumns}
         pivotParams={pivotParams}
         apiRef={apiRef}
+        columnGroupHeaderHeight={36}
       />
     </div>
   );
