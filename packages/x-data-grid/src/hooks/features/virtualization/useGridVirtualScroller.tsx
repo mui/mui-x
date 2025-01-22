@@ -266,7 +266,9 @@ export const useGridVirtualScroller = () => {
     // Clamp the scroll position to the viewport to avoid re-calculating the render context for scroll bounce
     const newScroll = {
       top: clamp(scroller.scrollTop, 0, maxScrollTop),
-      left: clamp(scroller.scrollLeft, 0, maxScrollLeft),
+      left: isRtl
+        ? clamp(scroller.scrollLeft, -maxScrollLeft, 0)
+        : clamp(scroller.scrollLeft, 0, maxScrollLeft),
     };
 
     const dx = newScroll.left - scrollPosition.current.left;
