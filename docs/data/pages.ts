@@ -264,7 +264,7 @@ const pages: MuiPage[] = [
     title: 'Date and Time Pickers',
     children: [
       { pathname: '/x/react-date-pickers', title: 'Overview' },
-      { pathname: '/x/react-date-pickers/getting-started' },
+      { pathname: '/x/react-date-pickers/getting-started', title: 'Quickstart' },
       { pathname: '/x/react-date-pickers/base-concepts' },
       { pathname: '/x/react-date-pickers/faq', title: 'FAQs' },
       {
@@ -421,7 +421,7 @@ const pages: MuiPage[] = [
     title: 'Charts',
     children: [
       { pathname: '/x/react-charts', title: 'Overview' },
-      { pathname: '/x/react-charts/getting-started' },
+      { pathname: '/x/react-charts/getting-started', title: 'Quickstart' },
       {
         pathname: '/x/react-chart-components',
         subheader: 'Components',
@@ -533,7 +533,7 @@ const pages: MuiPage[] = [
     title: 'Tree View',
     children: [
       { pathname: '/x/react-tree-view', title: 'Overview' },
-      { pathname: '/x/react-tree-view/getting-started' },
+      { pathname: '/x/react-tree-view/getting-started', title: 'Quickstart' },
       {
         pathname: '/x/react-tree-view/simple-tree-view',
         subheader: 'Simple Tree View',
