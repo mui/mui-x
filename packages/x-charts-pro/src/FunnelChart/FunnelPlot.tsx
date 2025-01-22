@@ -53,6 +53,21 @@ export interface FunnelPlotProps {
           horizontal?: 'left' | 'center' | 'right';
         };
         /**
+         * The text anchor of the label. Affects the horizontal alignment of the text.
+         */
+        textAnchor?: 'start' | 'middle' | 'end';
+        /**
+         * The dominant baseline of the label. Affects the vertical alignment of the text.
+         */
+        dominantBaseline?:
+          | 'auto'
+          | 'baseline'
+          | 'hanging'
+          | 'middle'
+          | 'central'
+          | 'text-after-edge'
+          | 'text-before-edge';
+        /**
          * The margin of the label.
          * @default 0
          */
@@ -263,28 +278,39 @@ const positionLabel = ({
 const alignLabel = ({
   vertical = 'middle',
   horizontal = 'center',
+  textAnchor,
+  dominantBaseline,
 }: {
   vertical?: 'top' | 'middle' | 'bottom';
   horizontal?: 'left' | 'center' | 'right';
+  textAnchor?: 'start' | 'middle' | 'end';
+  dominantBaseline?:
+    | 'auto'
+    | 'baseline'
+    | 'hanging'
+    | 'middle'
+    | 'central'
+    | 'text-after-edge'
+    | 'text-before-edge';
 }) => {
-  let textAnchor = 'middle';
-  let dominantBaseline = 'central';
+  let anchor = 'middle';
+  let baseline = 'central';
 
   if (vertical === 'top') {
-    dominantBaseline = 'hanging';
+    baseline = 'hanging';
   } else if (vertical === 'bottom') {
-    dominantBaseline = 'baseline';
+    baseline = 'baseline';
   }
 
   if (horizontal === 'left') {
-    textAnchor = 'start';
+    anchor = 'start';
   } else if (horizontal === 'right') {
-    textAnchor = 'end';
+    anchor = 'end';
   }
 
   return {
-    textAnchor,
-    dominantBaseline,
+    textAnchor: textAnchor ?? anchor,
+    dominantBaseline: dominantBaseline ?? baseline,
   };
 };
 
@@ -391,6 +417,8 @@ const useAggregatedData = (funnelLabel: FunnelPlotProps['funnelLabel']) => {
               ...alignLabel({
                 vertical: funnelLabel?.position?.vertical,
                 horizontal: funnelLabel?.position?.horizontal,
+                textAnchor: funnelLabel?.textAnchor,
+                dominantBaseline: funnelLabel?.dominantBaseline,
               }),
               value: valueFormatter
                 ? valueFormatter(series[seriesId].data[dataIndex], { dataIndex })
