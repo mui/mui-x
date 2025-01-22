@@ -11,14 +11,18 @@ import { generateTestLicenseKey, setupTestLicenseKey } from './testLicense';
 export function createXMochaHooks(coreMochaHooks = {}) {
   const OriginalTransition = ReactTransitionGroup.Transition;
   const OriginalCSSTransition = ReactTransitionGroup.CSSTransition;
-  const FakeTransition = (props) => {
+  function FakeTransition(props) {
     return <OriginalTransition {...props} timeout={0} appear={false} enter={false} exit={false} />;
   };
-  const FakeCSSTransition = (props) => {
-    return <OriginalCSSTransition {...props} timeout={0} appear={false} enter={false} exit={false} />
+  function FakeCSSTransition(props) {
+    return (
+      <OriginalCSSTransition {...props} timeout={0} appear={false} enter={false} exit={false} />
+    );
   };
 
+  // eslint-disable-next-line no-import-assign
   ReactTransitionGroup.Transition = FakeTransition;
+  // eslint-disable-next-line no-import-assign
   ReactTransitionGroup.CSSTransition = FakeCSSTransition;
 
   const mochaHooks = {

@@ -5,7 +5,6 @@ import {
   screen,
   act,
   ErrorBoundary,
-  waitFor,
   reactMajor,
 } from '@mui/internal-test-utils';
 import clsx from 'clsx';
@@ -747,12 +746,12 @@ describe('<DataGrid /> - Rows', () => {
         );
         const virtualScroller = grid('virtualScroller')!;
 
-        expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 52 + 52),
-          (virtualScroller.scrollTop = 101); // Scroll to measure the 2nd cell
+        expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 52 + 52);
+        virtualScroller.scrollTop = 101; // Scroll to measure the 2nd cell
         virtualScroller.dispatchEvent(new Event('scroll'));
 
-        expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 101 + 52),
-          (virtualScroller.scrollTop = 10e6); // Scroll to measure all cells
+        expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 101 + 52);
+        virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
         virtualScroller.dispatchEvent(new Event('scroll'));
 
         expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 101 + 101);
