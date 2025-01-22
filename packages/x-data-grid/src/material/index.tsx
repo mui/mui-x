@@ -144,6 +144,7 @@ function BaseTextField(props: GridSlotProps['baseTextField']) {
       InputProps={slotProps?.input}
       InputLabelProps={{
         shrink: true,
+        ...(slotProps as any)?.inputLabel,
       }}
     />
   );
