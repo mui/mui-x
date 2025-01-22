@@ -164,7 +164,7 @@ const Heatmap = React.forwardRef(function Heatmap(
   const Tooltip = props.slots?.tooltip ?? HeatmapTooltip;
 
   return (
-    <ChartContainerPro<'heatmap'>
+    <ChartContainerPro
       ref={ref}
       seriesConfig={seriesConfig}
       series={series.map((s) => ({

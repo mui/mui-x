@@ -1,11 +1,11 @@
 'use client';
 import {
-  ChartDataProviderProps,
   ChartSeriesType,
   useChartContainerProps,
   UseChartContainerPropsReturnValue,
 } from '@mui/x-charts/internals';
 import * as React from 'react';
+import { ChartDataProviderProps } from '@mui/x-charts/ChartDataProvider';
 import type { ChartContainerProProps } from './ChartContainerPro';
 import { ALL_PLUGINS, AllPluginsType, AllPluginSignatures } from '../internals/plugins/allPlugins';
 

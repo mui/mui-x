@@ -128,6 +128,8 @@
     "import { BarChartPro } from '@mui/x-charts-pro';"
   ],
   "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
   "muiName": "MuiBarChartPro",
   "filename": "/packages/x-charts-pro/src/BarChartPro/BarChartPro.tsx",
   "inheritance": null,

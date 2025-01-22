@@ -37,7 +37,6 @@ import LazyLoadingGrid from '../row-updates/LazyLoadingGrid';
 import BasicGroupingDemo from '../column-groups/BasicGroupingDemo';
 import EditingWithDatePickers from '../custom-columns/EditingWithDatePickers';
 import CellSelectionGrid from '../cell-selection/CellSelectionRangeStyling';
-import AddNewColumnMenuGrid from '../column-menu/AddNewColumnMenuGrid';
 import HeaderFilteringDataGridPro from '../filtering/HeaderFilteringDataGridPro';
 import ClipboardPaste from '../clipboard/ClipboardPaste';
 
@@ -56,7 +55,7 @@ export const featuresSet: Row[] = [
   {
     id: 1,
     name: 'Master detail',
-    description: 'A parent row with a collapsible child panel',
+    description: 'A parent row with a collapsible child panel.',
     plan: 'Pro',
     detailPage: '/master-detail/',
     demo: <BasicDetailPanels />,
@@ -65,8 +64,7 @@ export const featuresSet: Row[] = [
   {
     id: 2,
     name: 'Inline editing',
-    description:
-      'Edit your data inside the cells by double-clicking or pressing Enter',
+    description: 'Edit data inside cells by double-clicking or pressing Enter.',
     plan: 'Community',
     detailPage: '/editing/',
     demo: <EditingWithDatePickers />,
@@ -74,18 +72,17 @@ export const featuresSet: Row[] = [
   },
   {
     id: 3,
-    name: 'Column groups',
-    description: 'Group columns in a multi-level hierarchy',
+    name: 'Column grouping',
+    description: 'Group columns in a multi-level hierarchy.',
     plan: 'Community',
     detailPage: '/column-groups/',
-    newBadge: true,
     demo: <BasicGroupingDemo />,
     linkToCode: '/column-groups/#system-BasicGroupingDemo.tsx',
   },
   {
     id: 4,
     name: 'Lazy loading',
-    description: 'Easily paginate your rows and only fetch what you need',
+    description: 'Paginate rows and only fetch what you need.',
     plan: 'Pro',
     detailPage: '/pagination/',
     demo: <LazyLoadingGrid />,
@@ -95,7 +92,7 @@ export const featuresSet: Row[] = [
     id: 5,
     name: 'Save and restore state',
     description:
-      'Save and restore internal state and configurations like active filters and sorting',
+      'Save and restore internal state and configurations like active filters and sorting.',
     plan: 'Community',
     detailPage: '/state/#save-and-restore-the-state',
     demo: <RestoreStateInitialState />,
@@ -104,7 +101,7 @@ export const featuresSet: Row[] = [
   {
     id: 6,
     name: 'Row grouping',
-    description: 'Group rows with repeating column values',
+    description: 'Group rows with repeating column values.',
     plan: 'Premium',
     detailPage: '/row-grouping/',
     demo: <RowGroupingInitialState />,
@@ -113,8 +110,7 @@ export const featuresSet: Row[] = [
   {
     id: 7,
     name: 'Excel export',
-    description:
-      'Easily export the rows in various file formats such as CSV, PDF or Excel',
+    description: 'Export rows in various file formats such as CSV, PDF or Excel.',
     plan: 'Premium',
     detailPage: '/export/#excel-export',
     demo: <ExcelExport />,
@@ -123,7 +119,7 @@ export const featuresSet: Row[] = [
   {
     id: 8,
     name: 'Quick filter',
-    description: 'Use a single text input to filter multiple fields',
+    description: 'Use a single text input to filter multiple fields.',
     plan: 'Community',
     detailPage: '/filtering/quick-filter/',
     demo: <QuickFilteringGrid />,
@@ -131,8 +127,8 @@ export const featuresSet: Row[] = [
   },
   {
     id: 9,
-    name: 'Row reorder',
-    description: 'Drag and drop to reorder your data',
+    name: 'Row reordering',
+    description: 'Drag and drop to reorder data.',
     plan: 'Pro',
     detailPage: '/row-ordering/',
     demo: <RowOrderingGrid />,
@@ -141,7 +137,7 @@ export const featuresSet: Row[] = [
   {
     id: 10,
     name: 'Column Pinning',
-    description: 'Pin your columns to the left or right',
+    description: 'Pin columns to the left or right.',
     plan: 'Pro',
     detailPage: '/column-pinning/',
     demo: <BasicColumnPinning />,
@@ -150,7 +146,7 @@ export const featuresSet: Row[] = [
   {
     id: 11,
     name: 'Row pinning',
-    description: 'Pin your rows up or down',
+    description: 'Pin rows to the top or bottom of the Grid.',
     plan: 'Pro',
     detailPage: '/row-pinning/',
     demo: <RowPinningWithPagination />,
@@ -159,7 +155,7 @@ export const featuresSet: Row[] = [
   {
     id: 12,
     name: 'Aggregation and Summary rows',
-    description: 'Set summary footer rows or inline summaries with row grouping',
+    description: 'Set summary footer rows or inline summaries with row grouping.',
     plan: 'Premium',
     detailPage: '/aggregation/',
     demo: <AggregationRowGrouping />,
@@ -168,8 +164,7 @@ export const featuresSet: Row[] = [
   {
     id: 13,
     name: 'Column visibility',
-    description:
-      'Display different columns in different use cases by defining which columns are visible',
+    description: 'Display different columns for different use cases.',
     plan: 'Community',
     detailPage: '/column-visibility/',
     demo: <ColumnSelectorGrid />,
@@ -178,7 +173,7 @@ export const featuresSet: Row[] = [
   {
     id: 14,
     name: 'Column virtualization',
-    description: 'High performance support for thousands of columns',
+    description: 'High-performance support for thousands of columns.',
     plan: 'Community',
     detailPage: '/virtualization/#column-virtualization',
     demo: <ColumnVirtualizationGrid />,
@@ -187,7 +182,7 @@ export const featuresSet: Row[] = [
   {
     id: 15,
     name: 'Row virtualization',
-    description: 'High performance support for vast volume of data',
+    description: 'High-performance support for large volumes of data.',
     plan: 'Pro',
     detailPage: '/virtualization/#row-virtualization',
     demo: <FullFeaturedDemo />,
@@ -195,7 +190,7 @@ export const featuresSet: Row[] = [
   {
     id: 16,
     name: 'Tree data',
-    description: 'Support rows with parent / child relationship',
+    description: 'Support rows with a parent/child relationship.',
     plan: 'Pro',
     detailPage: '/tree-data/',
     demo: <TreeDataFullExample />,
@@ -205,44 +200,31 @@ export const featuresSet: Row[] = [
     id: 17,
     name: 'Cell selection',
     description:
-      'Allow users to select individual and multiple cells with mouse dragging and/or keyboard (using shift key)',
+      'Select one or more cells by dragging the mouse or using the Shift key.',
     plan: 'Premium',
     detailPage: '/cell-selection/',
     demo: <CellSelectionGrid />,
     linkToCode: '/cell-selection/#system-CellSelectionGrid.tsx',
-    newBadge: true,
   },
   {
     id: 18,
-    name: 'Column menu',
-    description: 'More customization and improved design on v6',
-    plan: 'Community',
-    detailPage: '/column-menu/',
-    demo: <AddNewColumnMenuGrid />,
-    linkToCode: '/column-menu/#system-AddNewColumnMenuGrid.tsx',
-    newBadge: true,
-  },
-  {
-    id: 19,
     name: 'Clipboard paste',
     description:
-      'Copy and paste the selected cells and rows using the copy/paste keyboard shortcuts.',
+      'Copy and paste selected cells and rows using standard keyboard shortcuts.',
     plan: 'Premium',
     detailPage: '/clipboard/#clipboard-paste',
     demo: <ClipboardPaste />,
     linkToCode: '/clipboard/#system-ClipboardPaste.tsx',
-    newBadge: true,
   },
   {
-    id: 20,
+    id: 19,
     name: 'Header filters',
     description:
-      'Quickly accessible and customizable header filters to filter the data',
+      'Quickly accessible and customizable header filters to filter the data.',
     plan: 'Pro',
     detailPage: '/filtering/#header-filters',
     demo: <HeaderFilteringDataGridPro />,
     linkToCode: '/filtering/header-filters/#system-HeaderFilteringDataGridPro.tsx',
-    newBadge: true,
   },
 ];
 
@@ -434,7 +416,7 @@ const columns: GridColDef[] = [
   },
   {
     field: 'description',
-    headerName: 'Brief description',
+    headerName: 'Description',
     groupable: false,
     flex: 0.5,
     minWidth: 120,

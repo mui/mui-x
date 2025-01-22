@@ -175,6 +175,14 @@ Different series could even have different interpolations.
 
 {{"demo": "InterpolationDemoNoSnap.js", "hideToolbar": true}}
 
+#### Expanding steps
+
+To simplify the composition of line and chart, the step interpolations (when `curve` property is `'step'`, `'stepBefore'`, or `'stepAfter'`) expand to cover the full band width.
+
+You can disable this behavior with `strictStepCurve` series property.
+
+{{"demo": "ExpandingStep.js"}}
+
 ### Baseline
 
 The area chart draws a `baseline` on the Y axis `0`.

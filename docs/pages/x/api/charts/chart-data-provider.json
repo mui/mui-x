@@ -12,7 +12,7 @@
   },
   "name": "ChartDataProvider",
   "imports": [
-    "import { ChartDataProvider } from '@mui/x-charts/context';",
+    "import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';",
     "import { ChartDataProvider } from '@mui/x-charts';",
     "import { ChartDataProvider } from '@mui/x-charts-pro';"
   ],
@@ -21,7 +21,7 @@
   "themeDefaultProps": false,
   "muiName": "MuiChartDataProvider",
   "forwardsRefTo": "SVGSVGElement",
-  "filename": "/packages/x-charts/src/context/ChartDataProvider/ChartDataProvider.tsx",
+  "filename": "/packages/x-charts/src/ChartDataProvider/ChartDataProvider.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-charts/composition/\">Chart composition</a></li></ul>",
   "cssComponent": false

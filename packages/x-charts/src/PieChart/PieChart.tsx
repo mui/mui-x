@@ -17,7 +17,7 @@ import {
   ChartsOverlaySlots,
 } from '../ChartsOverlay';
 import { ChartsSurface } from '../ChartsSurface';
-import { ChartDataProvider } from '../context';
+import { ChartDataProvider } from '../ChartDataProvider';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
 import { ChartsWrapper } from '../internals/components/ChartsWrapper';
 
