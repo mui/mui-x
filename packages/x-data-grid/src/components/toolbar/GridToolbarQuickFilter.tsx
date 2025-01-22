@@ -154,7 +154,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
       type="search"
       {...other}
       slotProps={{
-        ...slotProps?.root,
+        ...slotProps?.root.slotProps,
         input: {
           startAdornment: (
             <rootProps.slots.baseInputAdornment position="start">
