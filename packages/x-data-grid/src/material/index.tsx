@@ -133,6 +133,8 @@ function BaseMenuItem(props: GridSlotProps['baseMenuItem']) {
 }
 
 function BaseTextField(props: GridSlotProps['baseTextField']) {
+  // MaterialUI v5 doesn't support slotProps, until we drop v5 support we need to
+  // translate the pattern.
   const { slotProps, ...rest } = props;
   return (
     <MUITextField
