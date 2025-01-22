@@ -28,7 +28,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
     headerFilterMenu,
     ...others
   } = props;
-  const rootSlotProps = slotProps?.root.slotProps;
+  const textFieldProps = slotProps?.root;
 
   const filterTimeout = useTimeout();
   const [filterValueState, setFilterValueState] = React.useState<string | undefined>(
@@ -75,23 +75,24 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
         type={type || 'text'}
         disabled={disabled}
         slotProps={{
-          ...rootSlotProps,
+          ...textFieldProps?.slotProps,
           input: {
             endAdornment: applying ? (
               <rootProps.slots.baseInputAdornment position="end">
                 <rootProps.slots.loadIcon fontSize="small" color="action" />
               </rootProps.slots.baseInputAdornment>
             ) : null,
-            ...rootSlotProps?.input,
+            ...textFieldProps?.slotProps?.input,
           },
           htmlInput: {
             tabIndex,
-            ...rootSlotProps?.htmlInput,
+            ...textFieldProps?.slotProps?.htmlInput,
           },
         }}
         inputRef={focusElementRef}
         {...rootProps.slotProps?.baseTextField}
         {...others}
+        {...textFieldProps}
       />
       {headerFilterMenu}
       {clearButton}
