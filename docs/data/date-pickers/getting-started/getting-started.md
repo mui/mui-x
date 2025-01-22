@@ -9,7 +9,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepick
 
 # Date and Time Pickers - Quickstart
 
-<p class="description">Install the Date and Time Pickers package and set up your date library to start building.</p>
+<p class="description">Install the MUI X Date and Time Pickers package and set up your date library to start building.</p>
 
 ## Installation
 
@@ -65,11 +65,15 @@ yarn add @mui/material @emotion/react @emotion/styled
 
 ## Rendering a Date Picker
 
+Import a Date Picker component:
+
+```js
+import { DatePicker } from '@mui/x-date-pickers';
+```
+
 ### Set up date library adapter
 
-To integrate your chosen date library with the Date and Time Pickers, you'll need to plug the corresponding adapter into a `LocalizationProvider` that wraps your Picker components.
-
-Adapters are provided for each of the supported libraries, and all are exported by both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`—for example,`AdapterDayjs`, which is used throughout this documentation for [Day.js](https://day.js.org/) integration:
+Adapters are provided for each of the supported date libraries, and all are exported by both the Community and Pro versions—for example,`AdapterDayjs`, which is used throughout this documentation for [Day.js](https://day.js.org/) integration:
 
 ```tsx
 // Pro users: add `-pro` suffix to package name
@@ -78,7 +82,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 ### Set up Localization Provider
 
-The `LocalizationProvider` component is exported by both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`:
+To integrate your chosen date library with the Date and Time Pickers, you must plug the corresponding adapter into a Localization Provider that wraps your Picker components.
+
+The Localization Provider is exported by both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`:
 
 ```tsx
 // Pro users: add `-pro` suffix to package name
@@ -86,9 +92,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 ```
 
 :::warning
-For practical purposes, each demo in the documentation has its own `LocalizationProvider` wrapper.
+For practical purposes, each demo in the documentation has its own Localization Provider wrapper.
 **We _do not_ recommend reproducing this pattern as-is.**
-For almost all use cases, you should wrap your entire app with a single `LocalizationProvider` to avoid repeating boilerplate code in multiple places.
+For almost all use cases, you should wrap your entire app with a single Localization Provider to avoid repeating boilerplate code in multiple places.
 :::
 
 {{"component": "modules/components/PickersRenderingInstructions.js"}}
@@ -99,7 +105,7 @@ To use the Date and Time Pickers with a custom locale, see [Date and format loca
 
 ### Render the component
 
-To confirm that everything is set up correctly, try rendering a basic Date Picker component:
+With the components, adapters, and providers properly configured, you're now ready to render a Date Picker as shown below:
 
 {{"demo": "FirstComponent.js"}}
 

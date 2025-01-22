@@ -123,6 +123,8 @@ export default function App() {
 
 ## TypeScript
 
+### Theme augmentation
+
 To benefit from [CSS overrides](/material-ui/customization/theme-components/#theme-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#theme-default-props) with the theme, TypeScript users must import the following types.
 These types use module augmentation to extend the default theme structure.
 
