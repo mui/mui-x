@@ -256,9 +256,17 @@ export const useGridVirtualScroller = () => {
       return undefined;
     }
 
+    const maxScrollTop = Math.round(
+      dimensions.minimumSize.height - dimensions.viewportOuterSize.height,
+    );
+    const maxScrollLeft = Math.round(
+      dimensions.minimumSize.width - dimensions.viewportOuterSize.width,
+    );
+
+    // Clamp the scroll position to the viewport to avoid re-calculating the render context for scroll bounce
     const newScroll = {
-      top: scroller.scrollTop,
-      left: scroller.scrollLeft,
+      top: clamp(scroller.scrollTop, 0, maxScrollTop),
+      left: clamp(scroller.scrollLeft, 0, maxScrollLeft),
     };
 
     const dx = newScroll.left - scrollPosition.current.left;
@@ -334,34 +342,17 @@ export const useGridVirtualScroller = () => {
     updateRenderContext(nextRenderContext);
   };
 
-  const handleScroll = useEventCallback((event: React.UIEvent) => {
+  const handleScroll = useEventCallback(() => {
     if (ignoreNextScrollEvent.current) {
       ignoreNextScrollEvent.current = false;
       return;
     }
 
-    const { scrollTop, scrollLeft } = event.currentTarget;
-
-    // On iOS and macOS, negative offsets are possible when swiping past the start
-    if (scrollTop < 0) {
-      return;
-    }
-    if (!isRtl) {
-      if (scrollLeft < 0) {
-        return;
-      }
-    }
-    if (isRtl) {
-      if (scrollLeft > 0) {
-        return;
-      }
-    }
-
     const nextRenderContext = triggerUpdateRenderContext();
 
     apiRef.current.publishEvent('scrollPositionChange', {
-      top: scrollTop,
-      left: scrollLeft,
+      top: scrollPosition.current.top,
+      left: scrollPosition.current.left,
       renderContext: nextRenderContext,
     });
   });
@@ -709,8 +700,16 @@ export const useGridVirtualScroller = () => {
       ref: onContentSizeApplied,
     }),
     getRenderZoneProps: () => ({ role: 'rowgroup' }),
-    getScrollbarVerticalProps: () => ({ ref: scrollbarVerticalRef, role: 'presentation' }),
-    getScrollbarHorizontalProps: () => ({ ref: scrollbarHorizontalRef, role: 'presentation' }),
+    getScrollbarVerticalProps: () => ({
+      ref: scrollbarVerticalRef,
+      role: 'presentation',
+      scrollPosition,
+    }),
+    getScrollbarHorizontalProps: () => ({
+      ref: scrollbarHorizontalRef,
+      role: 'presentation',
+      scrollPosition,
+    }),
   };
 };
 
