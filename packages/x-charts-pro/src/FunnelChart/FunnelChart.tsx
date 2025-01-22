@@ -2,7 +2,7 @@
 import { useThemeProps } from '@mui/material/styles';
 import * as React from 'react';
 
-import { ChartsAxis, ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
+import { ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import {
   ChartsOverlay,
   ChartsOverlayProps,
@@ -94,7 +94,6 @@ const FunnelChart = React.forwardRef(function FunnelChart(
     clipPathProps,
     chartsWrapperProps,
     children,
-    chartsAxisProps,
   } = useFunnelChartProps(themedProps);
   const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps(
     { ...chartContainerProps, apiRef },
@@ -115,7 +114,6 @@ const FunnelChart = React.forwardRef(function FunnelChart(
           </g>
           {!themedProps.loading && <Tooltip {...themedProps.slotProps?.tooltip} />}
           <ChartsClipPath {...clipPathProps} />
-          <ChartsAxis {...chartsAxisProps} />
           {children}
         </ChartsSurface>
       </ChartsWrapper>
