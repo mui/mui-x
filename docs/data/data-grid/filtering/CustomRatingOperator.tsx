@@ -54,7 +54,7 @@ function RatingInputValue(props: GridFilterInputValueProps) {
   );
 }
 
-const ratingOnlyOperators: GridFilterOperator<any, number>[] = [
+const ratingOnlyOperators: GridFilterOperator<any, number, any, any>[] = [
   {
     label: 'Above',
     value: 'above',

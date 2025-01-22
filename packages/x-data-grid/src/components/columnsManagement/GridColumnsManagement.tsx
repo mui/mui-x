@@ -227,7 +227,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
           inputRef={searchInputRef}
           className={classes.searchInput}
           value={searchValue}
-          onChange={handleSearchValueChange}
+          onChange={handleSearchValueChange as any}
           size="small"
           type="search"
           slotProps={{

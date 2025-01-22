@@ -6,7 +6,6 @@ import type { CircularProgressProps as MUICircularProgressProps } from '@mui/mat
 import type { LinearProgressProps as MUILinearProgressProps } from '@mui/material/LinearProgress';
 import type { MenuListProps } from '@mui/material/MenuList';
 import type { MenuItemProps as MUIMenuItemProps } from '@mui/material/MenuItem';
-import type { TextFieldProps as MUITextFieldProps } from '@mui/material/TextField';
 import type { FormControlProps } from '@mui/material/FormControl';
 import type { SelectProps } from '@mui/material/Select';
 import type { SwitchProps } from '@mui/material/Switch';
@@ -128,7 +127,6 @@ interface MaterialSlotProps {
   baseCircularProgress: MUICircularProgressProps;
   baseMenuItem: MUIMenuItemProps;
   baseTooltip: MUITooltipProps;
-  // baseTextField: MUITextFieldProps;
 }
 
 interface ElementSlotProps {

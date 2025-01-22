@@ -67,12 +67,6 @@ export type SkeletonProps = {
   height?: number | string;
 };
 
-// InputComponent
-// variant="outlined"
-// size="small"
-// focusElementRef={valueRef}
-// disabled={readOnly}
-
 export type TextFieldProps = {
   autoComplete?: string;
   className?: string;
