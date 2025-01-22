@@ -41,9 +41,9 @@ You can browse the documentation, find an example close to your use case, and th
 </a>
 
 - [Data Grid](/x/react-data-grid/#community-version)
-- [Date Pickers](/x/react-date-pickers/getting-started/#render-your-first-component)
+- [Date Pickers](/x/react-date-pickers/getting-started/#render-the-date-picker)
 - [Charts](/x/react-charts/getting-started/#self-contained-charts)
-- [Tree View](/x/react-tree-view/#simple-tree-view)
+- [Tree View](/x/react-tree-view/#overview)
 
 #### Use starter templates
 
