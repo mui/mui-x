@@ -260,7 +260,12 @@ export const useGridVirtualScroller = () => {
       dimensions.minimumSize.height - dimensions.viewportOuterSize.height,
     );
     const maxScrollLeft = Math.ceil(
-      dimensions.minimumSize.width - dimensions.viewportOuterSize.width,
+      dimensions.minimumSize.width -
+        // TODO: remove remove pinned columns once the below gets merged:
+        // https://github.com/mui/mui-x/pull/15627
+        (dimensions.viewportInnerSize.width +
+          dimensions.leftPinnedWidth +
+          dimensions.rightPinnedWidth),
     );
 
     // Clamp the scroll position to the viewport to avoid re-calculating the render context for scroll bounce
