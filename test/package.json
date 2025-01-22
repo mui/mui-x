@@ -34,6 +34,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^6.28.2",
+    "react-transition-group": "^4.4.5",
     "semver": "^7.6.3",
     "stylis": "^4.3.5",
     "stylis-plugin-rtl": "^2.1.1"

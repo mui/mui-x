@@ -1651,6 +1651,9 @@ importers:
       react-router-dom:
         specifier: ^6.28.2
         version: 6.28.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      react-transition-group:
+        specifier: ^4.4.5
+        version: 4.4.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       semver:
         specifier: ^7.6.3
         version: 7.6.3
