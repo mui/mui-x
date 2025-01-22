@@ -7,7 +7,7 @@ import { LicenseInfo, generateLicense } from '@mui/x-license';
 import { options } from '../utils/options';
 
 describe('ScatterChartPro', () => {
-  const dataLength = 50;
+  const dataLength = 25;
   const data = Array.from({ length: dataLength }).map((_, i) => ({
     id: i,
     x: i,
