@@ -228,38 +228,39 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
           className={classes.searchInput}
           value={searchValue}
           onChange={handleSearchValueChange}
-          variant="outlined"
           size="small"
           type="search"
-          InputProps={{
-            startAdornment: (
-              <rootProps.slots.baseInputAdornment position="start">
-                <rootProps.slots.quickFilterIcon />
-              </rootProps.slots.baseInputAdornment>
-            ),
-            endAdornment: (
-              <rootProps.slots.baseIconButton
-                aria-label={apiRef.current.getLocaleText('columnsManagementDeleteIconLabel')}
-                size="small"
-                style={
-                  searchValue
-                    ? {
-                        visibility: 'visible',
-                      }
-                    : {
-                        visibility: 'hidden',
-                      }
-                }
-                tabIndex={-1}
-                onClick={handleSearchReset}
-                {...rootProps.slotProps?.baseIconButton}
-              >
-                <rootProps.slots.quickFilterClearIcon fontSize="small" />
-              </rootProps.slots.baseIconButton>
-            ),
-          }}
-          inputProps={{
-            'aria-label': apiRef.current.getLocaleText('columnsManagementSearchTitle'),
+          slotProps={{
+            input: {
+              startAdornment: (
+                <rootProps.slots.baseInputAdornment position="start">
+                  <rootProps.slots.quickFilterIcon />
+                </rootProps.slots.baseInputAdornment>
+              ),
+              endAdornment: (
+                <rootProps.slots.baseIconButton
+                  aria-label={apiRef.current.getLocaleText('columnsManagementDeleteIconLabel')}
+                  size="small"
+                  style={
+                    searchValue
+                      ? {
+                          visibility: 'visible',
+                        }
+                      : {
+                          visibility: 'hidden',
+                        }
+                  }
+                  tabIndex={-1}
+                  onClick={handleSearchReset}
+                  {...rootProps.slotProps?.baseIconButton}
+                >
+                  <rootProps.slots.quickFilterClearIcon fontSize="small" />
+                </rootProps.slots.baseIconButton>
+              ),
+            },
+            htmlInput: {
+              'aria-label': apiRef.current.getLocaleText('columnsManagementSearchTitle'),
+            },
           }}
           autoComplete="off"
           fullWidth
