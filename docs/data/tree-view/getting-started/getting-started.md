@@ -1,6 +1,6 @@
 ---
 productId: x-tree-view
-title: Tree View - Getting started
+title: Tree View - Quickstart
 components: SimpleTreeView, RichTreeView, TreeItem, TreeView
 packageName: '@mui/x-tree-view'
 githubLabel: 'component: tree view'
@@ -9,7 +9,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 # Tree View - Quickstart
 
-<p class="description">Get started with the Tree View. Install the package, configure your application and start using the components.</p>
+<p class="description">Install the MUI X Tree View package and start building.</p>
 
 ## Installation
 
@@ -68,6 +68,7 @@ As this package continues to mature, more advanced features and functionality wi
 ### Simple Tree View
 
 ```jsx
+// Pro users: add `-pro` suffix to package name
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 ```
 
@@ -79,6 +80,7 @@ This is the recommended version for hardcoded items.
 ### Rich Tree View
 
 ```jsx
+// Pro users: add `-pro` suffix to package name
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 ```
 

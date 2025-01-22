@@ -65,13 +65,13 @@ yarn add @mui/material @emotion/react @emotion/styled
 
 ## Rendering a Date Picker
 
-Import a Date Picker component:
+Import a Date Picker component and the Localization Provider:
 
 ```js
-import { DatePicker } from '@mui/x-date-pickers';
+// Pro users: add `-pro` suffix to package name
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 ```
-
-### Set up date library adapter
 
 Adapters are provided for each of the supported date libraries, and all are exported by both the Community and Pro versions—for example,`AdapterDayjs`, which is used throughout this documentation for [Day.js](https://day.js.org/) integration:
 
@@ -80,16 +80,11 @@ Adapters are provided for each of the supported date libraries, and all are expo
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 ```
 
-### Set up Localization Provider
+### Integrate provider and adapter
 
-To integrate your chosen date library with the Date and Time Pickers, you must plug the corresponding adapter into a Localization Provider that wraps your Picker components.
+To integrate your chosen date library with the Date and Time Pickers, wrap your app with the Localization Provider and pass the adapter to the Provider's `dateAdapter` prop as shown below:
 
-The Localization Provider is exported by both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`:
-
-```tsx
-// Pro users: add `-pro` suffix to package name
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-```
+{{"component": "modules/components/PickersRenderingInstructions.js"}}
 
 :::warning
 For practical purposes, each demo in the documentation has its own Localization Provider wrapper.
@@ -97,15 +92,28 @@ For practical purposes, each demo in the documentation has its own Localization 
 For almost all use cases, you should wrap your entire app with a single Localization Provider to avoid repeating boilerplate code in multiple places.
 :::
 
-{{"component": "modules/components/PickersRenderingInstructions.js"}}
-
 :::info
 To use the Date and Time Pickers with a custom locale, see [Date and format localization](/x/react-date-pickers/adapters-locale/).
 :::
 
 ### Render the component
 
-With the components, adapters, and providers properly configured, you're now ready to render a Date Picker as shown below:
+With the component, adapter, and provider properly configured, you're now ready to render a Date Picker as shown below:
+
+```tsx
+import * as React from 'react';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
+export default function App() {
+  return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DatePicker />
+    </LocalizationProvider>
+  );
+}
+```
 
 {{"demo": "FirstComponent.js"}}
 
