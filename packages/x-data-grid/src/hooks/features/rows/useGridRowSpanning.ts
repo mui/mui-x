@@ -124,7 +124,7 @@ const computeRowSpanningState = (
       // Scan the next rows
       let relativeIndex = index + 1;
       while (
-        relativeIndex < rangeToProcess.lastRowIndex &&
+        relativeIndex <= range.lastRowIndex &&
         visibleRows[relativeIndex] &&
         getCellValue(visibleRows[relativeIndex].model, colDef, apiRef) === cellValue
       ) {
