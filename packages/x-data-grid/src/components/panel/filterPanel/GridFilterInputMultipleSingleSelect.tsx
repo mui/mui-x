@@ -5,49 +5,17 @@ import { unstable_useId as useId } from '@mui/utils';
 import { getValueOptions, isSingleSelectColDef } from './filterPanelUtils';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
+import { TextFieldProps } from '../../../models/gridBaseSlots';
 import type { GridSingleSelectColDef, ValueOptions } from '../../../models/colDef/gridColDef';
 
-export interface GridFilterInputMultipleSingleSelectProps
-  extends Omit<
-      AutocompleteProps<ValueOptions, true, false, true>,
-      | 'options'
-      | 'renderInput'
-      | 'onChange'
-      | 'value'
-      | 'id'
-      | 'filterOptions'
-      | 'isOptionEqualToValue'
-      | 'multiple'
-      | 'color'
-      | 'getOptionLabel'
-    >,
-    GridFilterInputValueProps {
+export type GridFilterInputMultipleSingleSelectProps = GridFilterInputValueProps<TextFieldProps> & {
   type?: 'singleSelect';
-}
+};
 
 const filter = createFilterOptions<any>();
 
 function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingleSelectProps) {
-  const {
-    item,
-    applyValue,
-    type,
-    apiRef,
-    focusElementRef,
-    color,
-    error,
-    helperText,
-    size,
-    variant = 'outlined',
-    ...other
-  } = props;
-  const TextFieldProps = {
-    color,
-    error,
-    helperText,
-    size,
-    variant,
-  };
+  const { item, applyValue, type, apiRef, focusElementRef, slotProps, ...other } = props;
 
   const id = useId();
   const rootProps = useGridRootProps();
@@ -128,7 +96,7 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
           placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
           inputRef={focusElementRef}
           type="singleSelect"
-          {...TextFieldProps}
+          {...slotProps?.root}
           {...rootProps.slotProps?.baseTextField}
         />
       )}

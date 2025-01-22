@@ -7,10 +7,9 @@ import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { GridFilterItem } from '../../../models/gridFilterItem';
 import { TextFieldProps } from '../../../models/gridBaseSlots';
 
-export type GridFilterInputDateProps = GridFilterInputValueProps &
-  TextFieldProps & {
-    type?: 'date' | 'datetime-local';
-  };
+export type GridFilterInputDateProps = GridFilterInputValueProps<TextFieldProps> & {
+  type?: 'date' | 'datetime-local';
+};
 
 function convertFilterItemValueToInputValue(
   itemValue: GridFilterItem['value'],
@@ -51,6 +50,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
     disabled,
     ...other
   } = props;
+  const rootSlotProps = slotProps?.root.slotProps;
   const filterTimeout = useTimeout();
   const [filterValueState, setFilterValueState] = React.useState(() =>
     convertFilterItemValueToInputValue(item.value, type),
@@ -93,17 +93,17 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
         disabled={disabled}
         inputRef={focusElementRef}
         slotProps={{
-          ...slotProps,
+          ...rootSlotProps,
           input: {
             endAdornment: applying ? (
               <rootProps.slots.loadIcon fontSize="small" color="action" />
             ) : null,
-            ...slotProps?.input,
+            ...rootSlotProps?.input,
           },
           htmlInput: {
             max: type === 'datetime-local' ? '9999-12-31T23:59' : '9999-12-31',
             tabIndex,
-            ...slotProps?.htmlInput,
+            ...rootSlotProps?.htmlInput,
           },
         }}
         {...rootProps.slotProps?.baseTextField}

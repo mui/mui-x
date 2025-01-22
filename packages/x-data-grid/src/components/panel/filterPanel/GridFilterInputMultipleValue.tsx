@@ -3,33 +3,15 @@ import PropTypes from 'prop-types';
 import Autocomplete, { AutocompleteProps } from '@mui/material/Autocomplete';
 import { unstable_useId as useId } from '@mui/utils';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { TextFieldProps } from '../../../models/gridBaseSlots';
 import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
 
-export type GridFilterInputMultipleValueProps = {
+export type GridFilterInputMultipleValueProps = GridFilterInputValueProps<TextFieldProps> & {
   type?: 'text' | 'number' | 'date' | 'datetime-local';
-} & GridFilterInputValueProps &
-  Omit<AutocompleteProps<string, true, false, true>, 'options' | 'renderInput'>;
+};
 
 function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) {
-  const {
-    item,
-    applyValue,
-    type,
-    apiRef,
-    focusElementRef,
-    color,
-    error,
-    helperText,
-    size,
-    variant = 'outlined',
-  } = props;
-  const TextFieldProps = {
-    color,
-    error,
-    helperText,
-    size,
-    variant,
-  };
+  const { item, applyValue, type, apiRef, focusElementRef, slotProps } = props;
 
   const [filterValueState, setFilterValueState] = React.useState(item.value || []);
   const id = useId();
@@ -92,7 +74,7 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
           placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
           inputRef={focusElementRef}
           type={type || 'text'}
-          {...TextFieldProps}
+          {...slotProps?.root}
           {...rootProps.slotProps?.baseTextField}
         />
       )}

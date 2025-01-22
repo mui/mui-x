@@ -45,10 +45,9 @@ const renderSingleSelectOptions = ({
   });
 };
 
-export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
-  TextFieldProps & {
-    type?: 'singleSelect';
-  };
+export type GridFilterInputSingleSelectProps = GridFilterInputValueProps<TextFieldProps> & {
+  type?: 'singleSelect';
+};
 
 function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   const {
@@ -57,17 +56,11 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     type,
     apiRef,
     focusElementRef,
-    placeholder,
     tabIndex,
-    label: labelProp,
-    variant = 'outlined',
     isFilterActive,
     clearButton,
     headerFilterMenu,
     slotProps,
-    InputProps,
-    InputLabelProps,
-    sx,
     ...others
   } = props;
   const filterValue = item.value ?? '';
@@ -107,17 +100,17 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     return null;
   }
 
-  const label = labelProp ?? apiRef.current.getLocaleText('filterPanelInputLabel');
+  const label = slotProps?.root.label ?? apiRef.current.getLocaleText('filterPanelInputLabel');
 
   return (
     <React.Fragment>
-      <rootProps.slots.baseFormControl fullWidth sx={sx}>
+      <rootProps.slots.baseFormControl fullWidth>
         <rootProps.slots.baseInputLabel
           {...rootProps.slotProps?.baseInputLabel}
           id={labelId}
           htmlFor={id}
           shrink
-          variant={variant}
+          variant="outlined"
         >
           {label}
         </rootProps.slots.baseInputLabel>
@@ -127,16 +120,18 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
           labelId={labelId}
           value={filterValue}
           onChange={onFilterChange}
-          variant={variant}
+          variant="outlined"
           type={type || 'text'}
           inputProps={{
             tabIndex,
             ref: focusElementRef,
-            placeholder: placeholder ?? apiRef.current.getLocaleText('filterPanelInputPlaceholder'),
-            ...InputProps?.inputProps,
+            placeholder:
+              slotProps?.root.placeholder ??
+              apiRef.current.getLocaleText('filterPanelInputPlaceholder'),
+            ...slotProps?.root.slotProps?.htmlInput,
           }}
           native={isSelectNative}
-          notched={variant === 'outlined' ? true : undefined}
+          notched
           {...rootProps.slotProps?.baseSelect}
           {
             ...(others as any) /* FIXME: typing error */

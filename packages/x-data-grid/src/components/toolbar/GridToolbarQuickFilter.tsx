@@ -49,7 +49,8 @@ const defaultSearchValueParser = (searchText: string) =>
 
 const defaultSearchValueFormatter = (values: string[]) => values.join(' ');
 
-export type GridToolbarQuickFilterProps = TextFieldProps & {
+export type GridToolbarQuickFilterProps = {
+  className?: string;
   /**
    * Function responsible for parsing text input in an array of independent values for quick filtering.
    * @param {string} input The value entered by the user
@@ -71,6 +72,9 @@ export type GridToolbarQuickFilterProps = TextFieldProps & {
    * @default 150
    */
   debounceMs?: number;
+  slotProps?: {
+    root: TextFieldProps;
+  };
 };
 
 function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
@@ -150,7 +154,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
       type="search"
       {...other}
       slotProps={{
-        ...slotProps,
+        ...slotProps?.root,
         input: {
           startAdornment: (
             <rootProps.slots.baseInputAdornment position="start">
@@ -179,7 +183,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
               </rootProps.slots.baseIconButton>
             </rootProps.slots.baseInputAdornment>
           ),
-          ...slotProps?.input,
+          ...slotProps?.root.slotProps?.input,
         },
       }}
       {...rootProps.slotProps?.baseTextField}

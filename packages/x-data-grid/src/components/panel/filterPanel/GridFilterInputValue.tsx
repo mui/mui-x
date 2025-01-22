@@ -7,10 +7,9 @@ import { GridFilterItem } from '../../../models/gridFilterItem';
 import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
-export type GridTypeFilterInputValueProps = GridFilterInputValueProps &
-  TextFieldProps & {
-    type?: 'text' | 'number' | 'date' | 'datetime-local';
-  };
+export type GridTypeFilterInputValueProps = GridFilterInputValueProps<TextFieldProps> & {
+  type?: 'text' | 'number' | 'date' | 'datetime-local';
+};
 
 type ItemPlusTag = GridFilterItem & { fromInput?: string };
 
@@ -29,6 +28,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
     headerFilterMenu,
     ...others
   } = props;
+  const rootSlotProps = slotProps?.root.slotProps;
 
   const filterTimeout = useTimeout();
   const [filterValueState, setFilterValueState] = React.useState<string | undefined>(
@@ -75,17 +75,18 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
         type={type || 'text'}
         disabled={disabled}
         slotProps={{
+          ...rootSlotProps,
           input: {
             endAdornment: applying ? (
               <rootProps.slots.baseInputAdornment position="end">
                 <rootProps.slots.loadIcon fontSize="small" color="action" />
               </rootProps.slots.baseInputAdornment>
             ) : null,
-            ...slotProps?.input,
+            ...rootSlotProps?.input,
           },
           htmlInput: {
             tabIndex,
-            ...slotProps?.htmlInput,
+            ...rootSlotProps?.htmlInput,
           },
         }}
         inputRef={focusElementRef}

@@ -133,30 +133,10 @@ function BaseMenuItem(props: GridSlotProps['baseMenuItem']) {
 }
 
 function BaseTextField(props: GridSlotProps['baseTextField']) {
-  const {
-    // inputRef,
-    // id,
-    // label,
-    // placeholder,
-    // value,
-    // type,
-    // color,
-    // error,
-    // helperText,
-    // variant,
-    // disabled,
-    // onChange,
-    // onKeyDown,
-    // size,
-    // style,
-    // tabIndex,
-    ...rest
-  } = props;
-
   return (
     <MUITextField
-      variant='outlined'
-      {...rest}
+      variant="outlined"
+      {...props}
       InputLabelProps={{
         shrink: true,
       }}

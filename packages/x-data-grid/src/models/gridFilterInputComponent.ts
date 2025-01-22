@@ -1,10 +1,18 @@
 import * as React from 'react';
-import { TextFieldProps } from './gridBaseSlots';
 import { GridFilterItem } from './gridFilterItem';
 import type { GridApiCommon } from './api/gridApiCommon';
 import type { GridApiCommunity } from './api/gridApiCommunity';
 
-export type GridFilterInputValueProps<Api extends GridApiCommon = GridApiCommunity> = {
+type BaseRootProps = {
+  size?: 'small' | 'medium';
+  label?: React.ReactNode;
+  placeholder?: string;
+};
+
+export type GridFilterInputValueProps<
+  T extends BaseRootProps = BaseRootProps,
+  Api extends GridApiCommon = GridApiCommunity,
+> = {
   item: GridFilterItem;
   applyValue: (value: GridFilterItem) => void;
   // Is any because if typed as GridApiRef a dep cycle occurs. Same happens if ApiContext is used.
@@ -20,14 +28,12 @@ export type GridFilterInputValueProps<Api extends GridApiCommon = GridApiCommuni
   isFilterActive?: boolean;
   onFocus?: React.FocusEventHandler;
   onBlur?: React.FocusEventHandler;
-} & Pick<
-  TextFieldProps,
-  | 'color'
-  | 'error'
-  | 'helperText'
-  | 'size'
-  | 'disabled'
-  | 'label'
-  | 'placeholder'
-  | 'tabIndex'
->;
+
+  tabIndex?: number;
+  disabled?: boolean;
+  className?: string;
+
+  slotProps?: {
+    root: T;
+  };
+};

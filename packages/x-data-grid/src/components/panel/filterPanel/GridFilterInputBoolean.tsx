@@ -5,7 +5,7 @@ import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { TextFieldProps } from '../../../models/gridBaseSlots';
 import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
 
-export type GridFilterInputBooleanProps = GridFilterInputValueProps & TextFieldProps;
+export type GridFilterInputBooleanProps = GridFilterInputValueProps<TextFieldProps>;
 
 function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
   const {
@@ -17,11 +17,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     headerFilterMenu,
     clearButton,
     tabIndex,
-    label: labelProp,
-    variant = 'outlined',
-    InputProps,
-    InputLabelProps,
-    sx,
+    slotProps,
     ...others
   } = props;
   const [filterValueState, setFilterValueState] = React.useState<boolean | undefined>(
@@ -51,16 +47,17 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     setFilterValueState(sanitizeFilterItemValue(item.value));
   }, [item.value]);
 
-  const label = labelProp ?? apiRef.current.getLocaleText('filterPanelInputLabel');
+  const label = slotProps?.root.label ?? apiRef.current.getLocaleText('filterPanelInputLabel');
+  const rootSlotProps = slotProps?.root.slotProps;
 
   return (
     <React.Fragment>
-      <rootProps.slots.baseFormControl fullWidth sx={sx}>
+      <rootProps.slots.baseFormControl fullWidth>
         <rootProps.slots.baseInputLabel
           {...rootProps.slotProps?.baseInputLabel}
           id={labelId}
           shrink
-          variant={variant}
+          variant="outlined"
         >
           {label}
         </rootProps.slots.baseInputLabel>
@@ -70,14 +67,14 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
           label={label}
           value={filterValueState === undefined ? '' : String(filterValueState)}
           onChange={onFilterChange}
-          variant={variant}
-          notched={variant === 'outlined' ? true : undefined}
+          variant="outlined"
+          notched
           native={isSelectNative}
           displayEmpty
           inputProps={{
             ref: focusElementRef,
             tabIndex,
-            ...InputProps?.inputProps,
+            ...rootSlotProps?.htmlInput,
           }}
           {...baseSelectProps}
           {

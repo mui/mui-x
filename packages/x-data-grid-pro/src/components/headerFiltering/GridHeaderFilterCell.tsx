@@ -28,6 +28,7 @@ import {
 import {
   PinnedColumnPosition,
   GridStateColDef,
+  GridFilterInputValueProps,
   useGridPrivateApiContext,
   gridHeaderFilteringEditFieldSelector,
   gridHeaderFilteringMenuSelector,
@@ -129,17 +130,18 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const DEFAULT_INPUT_COMPONENTS: { [key in GridColType]: React.JSXElementConstructor<any> | null } =
-  {
-    string: GridFilterInputValue,
-    number: GridFilterInputValue,
-    date: GridFilterInputDate,
-    dateTime: GridFilterInputDate,
-    boolean: GridFilterInputBoolean,
-    singleSelect: GridFilterInputSingleSelect,
-    actions: null,
-    custom: null,
-  };
+const DEFAULT_INPUT_COMPONENTS: {
+  [key in GridColType]: React.JSXElementConstructor<GridFilterInputValueProps> | null;
+} = {
+  string: GridFilterInputValue,
+  number: GridFilterInputValue,
+  date: GridFilterInputDate,
+  dateTime: GridFilterInputDate,
+  boolean: GridFilterInputBoolean,
+  singleSelect: GridFilterInputSingleSelect,
+  actions: null,
+  custom: null,
+};
 
 const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProps>((props, ref) => {
   const {
@@ -415,15 +417,18 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
                   }));
                 }
               }}
-              label={capitalize(label)}
-              placeholder=""
               isFilterActive={isFilterActive}
-              variant="outlined"
-              size="small"
-              disabled={isFilterReadOnly || isNoInputOperator}
-              tabIndex={-1}
               headerFilterMenu={headerFilterMenu}
               clearButton={clearButton}
+              disabled={isFilterReadOnly || isNoInputOperator}
+              tabIndex={-1}
+              slotProps={{
+                root: {
+                  size: 'small',
+                  label: capitalize(label),
+                  placeholder: '',
+                } as any,
+              }}
               {...(isNoInputOperator ? { value: '' } : {})}
               {...currentOperator?.InputComponentProps}
               {...InputComponentProps}
