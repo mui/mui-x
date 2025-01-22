@@ -8,36 +8,19 @@ packageName: '@mui/x-tree-view'
 
 # MUI X Tree View
 
-<p class="description">The Tree View component lets users navigate hierarchical lists of data with nested levels that can be expanded and collapsed.</p>
+<p class="description">The Tree View lets users navigate hierarchical lists of data with nested levels that can be expanded and collapsed.</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader"}}
 
-## Available components
+## Overview
 
-The MUI X Tree View package exposes two different versions of the component:
+The MUI X Tree View provides all of the functionality necessary to build a hierarchical list of expandable and collapsible items.
 
-### Simple Tree View
+The demo below shows how to render a Simple Tree View—try clicking on an item to see how it expands and collapses:
 
-```jsx
-import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-```
+{{"demo": "TreeViewOverviewDemo.js", "defaultCodeOpen": true}}
 
-The simple version of the Tree View component receives its items as JSX children.
-This is the recommended version for hardcoded items.
+## Using this documentation
 
-{{"demo": "BasicSimpleTreeView.js"}}
-
-### Rich Tree View
-
-```jsx
-import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-```
-
-The rich version of the Tree View component receives its items dynamically from an external data source.
-This is the recommended version for larger trees, as well as those that require more advanced features like editing and virtualization.
-
-{{"demo": "BasicRichTreeView.js"}}
-
-:::info
-At the moment, the Simple and Rich Tree Views are similar in terms of feature support. But as the component grows, you can expect to see the more advanced ones appear primarily on the Rich Tree View.
-:::
+Although the Simple and Rich Tree View share many of the same features, each version's implementation of those features differs enough that they warrant their own separate docs in most cases.
+Other features, such as accessibility, work the same in both versions and are documented in the main features section of the navigation bar.
