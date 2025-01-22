@@ -33,11 +33,11 @@ const DateRangeIcon = createSvgIcon(
 const joyTheme = extendJoyTheme();
 
 type JoySingleInputDateRangeFieldComponent = ((
-  props: DateRangePickerFieldProps<false> & React.RefAttributes<HTMLDivElement>,
+  props: DateRangePickerFieldProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { fieldType?: FieldType };
 
 const JoySingleInputDateRangeField = React.forwardRef(
-  (props: DateRangePickerFieldProps<false>, ref: React.Ref<HTMLDivElement>) => {
+  (props: DateRangePickerFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const fieldResponse = useSingleInputDateRangeField<false, typeof props>(props);
 
     const {

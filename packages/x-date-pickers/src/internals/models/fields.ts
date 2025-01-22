@@ -13,19 +13,14 @@ export interface BaseForwardedSingleInputFieldProps {
   onKeyDown?: React.KeyboardEventHandler;
   onBlur?: React.FocusEventHandler;
   ref?: React.Ref<HTMLDivElement>;
-  ownerState: PickerOwnerState;
 }
 
 /**
  * Props the single input field can receive when used inside a picker.
  * Only contains what the MUI components are passing to the field, not what users can pass using the `props.slotProps.field`.
  */
-export type BaseSingleInputFieldProps<
-  TValue extends PickerValidValue,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TError,
-> = Pick<
-  UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, TError>,
+export type BaseSingleInputFieldProps<TValue extends PickerValidValue> = Pick<
+  UseFieldInternalProps<TValue, boolean, any>,
   'readOnly' | 'unstableFieldRef' | 'autoFocus'
 > &
   BaseForwardedSingleInputFieldProps;

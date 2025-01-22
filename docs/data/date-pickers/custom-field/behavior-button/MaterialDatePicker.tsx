@@ -16,7 +16,7 @@ import {
 
 function ButtonDateField(props: DatePickerFieldProps) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-  const { ownerState, focused, ...other } = forwardedProps;
+  const { focused, ...other } = forwardedProps;
 
   const pickerContext = usePickerContext();
   const parsedFormat = useParsedFormat();

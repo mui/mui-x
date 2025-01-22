@@ -33,7 +33,7 @@ const CalendarIcon = createSvgIcon(
 const joyTheme = extendJoyTheme();
 
 const JoyDateField = React.forwardRef(
-  (props: DatePickerFieldProps<false>, ref: React.Ref<HTMLDivElement>) => {
+  (props: DatePickerFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const fieldResponse = useDateField<false, typeof props>(props);
 
     const {

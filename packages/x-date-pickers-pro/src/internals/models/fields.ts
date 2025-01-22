@@ -12,13 +12,8 @@ import type {
  * Props the multi input field can receive when used inside a picker.
  * Only contains what the MUI components are passing to the field, not what users can pass using the `props.slotProps.field`.
  */
-export interface BaseMultiInputFieldProps<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TError,
-> extends Pick<
-      UseFieldInternalProps<PickerRangeValue, TEnableAccessibleFieldDOMStructure, TError>,
-      'readOnly' | 'autoFocus'
-    >,
+export interface BaseMultiInputFieldProps
+  extends Pick<UseFieldInternalProps<PickerRangeValue, boolean, unknown>, 'readOnly' | 'autoFocus'>,
     MultiInputFieldRefs {
   slots?: {
     root?: React.ElementType;

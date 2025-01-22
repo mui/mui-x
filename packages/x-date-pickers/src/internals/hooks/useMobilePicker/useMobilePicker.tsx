@@ -6,7 +6,7 @@ import { PickersModalDialog } from '../../components/PickersModalDialog';
 import { UseMobilePickerParams, UseMobilePickerProps } from './useMobilePicker.types';
 import { usePicker } from '../usePicker';
 import { PickersLayout } from '../../../PickersLayout';
-import { FieldRef, InferError } from '../../../models';
+import { FieldRef } from '../../../models';
 import { BaseSingleInputFieldProps, DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
 import { PickerProvider } from '../../components/PickerProvider';
 import { PickerFieldUIContextProvider } from '../../components/PickerFieldUI';
@@ -59,11 +59,7 @@ export const useMobilePicker = <
   });
 
   const Field = slots.field;
-  const fieldProps: BaseSingleInputFieldProps<
-    PickerValue,
-    TEnableAccessibleFieldDOMStructure,
-    InferError<TExternalProps>
-  > = useSlotProps({
+  const { ownerState: fieldOwnerState, ...fieldProps } = useSlotProps({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
     additionalProps: {
@@ -100,7 +96,8 @@ export const useMobilePicker = <
     },
   };
 
-  const handleFieldRef = useForkRef(fieldRef, fieldProps.unstableFieldRef);
+  // TODO: This `as any` will go away once the field ref is handled by the context.
+  const handleFieldRef = useForkRef(fieldRef, (fieldProps as any).unstableFieldRef);
 
   const renderPicker = () => (
     <PickerProvider {...providerProps}>

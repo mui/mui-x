@@ -9,7 +9,7 @@ import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 
 function ButtonDateField(props: DatePickerFieldProps) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-  const { ownerState, focused, ...other } = forwardedProps;
+  const { focused, ...other } = forwardedProps;
 
   const pickerContext = usePickerContext();
 

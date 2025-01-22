@@ -258,18 +258,23 @@ const parsedFormat = useParsedFormat({ format: 'MM/DD/YYYY' });
 
 ### Props forwarded by the picker
 
-The picker receives some commonly used props that are forwarded directly to the field component.
-If you are using any of those props in one of your picker, make sure to pass them to your field using the `usePickerContext` hook:
+The picker can receive some commonly used props that should be forwarded to the field DOM elements:
 
-```js
-const { fieldName, fieldClassName, fieldSx, fieldLabel } = usePickerContext();
+```jsx
+<DatePicker label="Birth date" name="birthdate" className="date-picker" sx={{ borderColor: 'red'}}>
+```
+
+If you are using any of those props in one of your picker, make sure to retrieve them in your field using the `usePickerContext` hook:
+
+```jsx
+const { fieldLabel, fieldName, fieldClassName, fieldSx } = usePickerContext();
 
 return (
   <TextField
+    label={fieldLabel}
     name={fieldName}
     className={fieldClassName}
     sx={fieldSx}
-    label={fieldLabel}
   />
 );
 ```
@@ -287,9 +292,7 @@ const { internalProps, forwardedProps } = useSplitFieldProps(
   'date',
 );
 
-return (
-  <TextField {...forwardedProps} value={inputValue} onChange={handleChange}>
-)
+return <TextField {...forwardedProps}>;
 ```
 
 ### Pass the field to the Picker
@@ -298,18 +301,13 @@ You can pass your custom field to your Picker using the `field` slot:
 
 ```jsx
 function DatePickerWithCustomField() {
-  return (
-    <DatePicker slots={{ field: CustomDateField }}>
-  )
+  return <DatePicker slots={{ field: CustomDateField }}>;
 }
 
 // Also works with the other variants of the component
 function DesktopDatePickerWithCustomField() {
-  return (
-    <DesktopDatePicker slots={{ field: CustomDateField }}>
-  )
+  return <DesktopDatePicker slots={{ field: CustomDateField }}>
 }
-
 ```
 
 ### Full custom example
