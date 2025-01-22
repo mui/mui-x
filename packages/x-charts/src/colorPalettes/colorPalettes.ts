@@ -7,7 +7,6 @@ export const blueberryTwilightPaletteLight = [
   '#B800D8',
   '#60009B',
   '#2731C8',
-  '#03008D',
 ];
 export const blueberryTwilightPaletteDark = [
   '#02B2AF',

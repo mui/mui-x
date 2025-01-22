@@ -99,7 +99,6 @@ const defaultColorMap = interpolateRgbBasis([
   '#4eb3d3',
   '#2b8cbe',
   '#0868ac',
-  '#084081',
 ]);
 
 const seriesConfig: ChartSeriesConfig<'heatmap'> = { heatmap: heatmapPlugin };
