@@ -39,9 +39,9 @@ yarn add @mui/material @emotion/react @emotion/styled
 
 </codeblock>
 
-<!-- #react-peer-version -->
-
 #### React
+
+<!-- #react-peer-version -->
 
 [`react`](https://www.npmjs.com/package/react) and [`react-dom`](https://www.npmjs.com/package/react-dom) are also peer dependencies:
 
@@ -52,7 +52,7 @@ yarn add @mui/material @emotion/react @emotion/styled
 },
 ```
 
-## Quickstart
+## Rendering a Data Grid
 
 Import the component that corresponds to the version you're using, along with the `GridRowsProp` and `GridColDef` utilities:
 
@@ -91,7 +91,7 @@ const columns: GridColDef[] = [
 ];
 ```
 
-### Render the Data Grid
+### Render the component
 
 With the component and utilites imported, and rows and columns defined, you're now ready to render the Data Grid as shown below:
 

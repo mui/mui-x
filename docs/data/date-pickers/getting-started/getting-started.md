@@ -63,26 +63,26 @@ yarn add @mui/material @emotion/react @emotion/styled
 },
 ```
 
-## Quickstart
+## Rendering a Date Picker
 
-### Date library adapter setup
+### Set up date library adapter
 
 To integrate your chosen date library with the Date and Time Pickers, you'll need to plug the corresponding adapter into a `LocalizationProvider` that wraps your Picker components.
 
 Adapters are provided for each of the supported libraries, and all are exported by both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`—for example,`AdapterDayjs`, which is used throughout this documentation for [Day.js](https://day.js.org/) integration:
 
 ```tsx
+// Pro users: add `-pro` suffix to package name
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 ```
 
-### Localization Provider
+### Set up Localization Provider
 
 The `LocalizationProvider` component is exported by both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`:
 
 ```tsx
+// Pro users: add `-pro` suffix to package name
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { LocalizationProvider } from '@mui/x-date-pickers-pro/LocalizationProvider';
 ```
 
 :::warning
@@ -97,7 +97,7 @@ For almost all use cases, you should wrap your entire app with a single `Localiz
 To use the Date and Time Pickers with a custom locale, see [Date and format localization](/x/react-date-pickers/adapters-locale/).
 :::
 
-### Render the Date Picker
+### Render the component
 
 To confirm that everything is set up correctly, try rendering a basic Date Picker component:
 

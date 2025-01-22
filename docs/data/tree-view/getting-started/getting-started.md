@@ -19,6 +19,10 @@ Run one of the following commands to install the free Community version or the p
 
 {{"component": "modules/components/TreeViewInstallationInstructions.js"}}
 
+### Peer dependencies
+
+#### Material UI
+
 The Tree View packages have a peer dependency on `@mui/material`.
 If you're not already using it, install it with the following command:
 
@@ -37,6 +41,8 @@ yarn add @mui/material @emotion/react @emotion/styled
 ```
 
 </codeblock>
+
+#### React
 
 <!-- #react-peer-version -->
 
@@ -88,6 +94,8 @@ The component includes many built-in [accessibility features](/x/react-tree-view
 
 ## TypeScript
 
+### Theme augmentation
+
 To benefit from [CSS overrides](/material-ui/customization/theme-components/#theme-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#theme-default-props) with the theme, TypeScript users must import the following types.
 These types use module augmentation to extend the default theme structure.
 
@@ -109,3 +117,8 @@ const theme = createTheme({
   },
 });
 ```
+
+## Using this documentation
+
+Although the Simple and Rich Tree View share many of the same features, each version's implementation of those features differs enough that they warrant their own separate docs in most cases.
+Other features, such as accessibility, work the same in both versions and are documented in the main features section of the navigation bar.

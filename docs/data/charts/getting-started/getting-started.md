@@ -87,7 +87,7 @@ The demo below shows how to use composition to create a custom Chart that combin
 
 {{"demo": "Combining.js"}}
 
-## Chart layouts
+### Chart layouts
 
 The layout of a Chart is defined by two main spaces: the plot area, and the outer margins.
 
@@ -98,7 +98,7 @@ The outer margin space is where information like axes, titles, and legends are d
 
 See the [Styling documentation](/x/react-charts/styling/#placement) for complete details.
 
-## Server-side rendering
+### Server-side rendering
 
 The chart support server-side rendering under two conditions:
 
@@ -107,7 +107,7 @@ The chart support server-side rendering under two conditions:
 
 The reason is that it is not possible to compute the SVG dimensions on the server, and the `skipAnimation` ensures that the animation is not in an "empty" state when first rendering.
 
-## Axis management
+### Axis management
 
 MUI X Charts take a flexible approach to axis management, with support for multiple axes and any combination of scales and ranges.
 
