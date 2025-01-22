@@ -95,6 +95,11 @@ const datePickersApiPages: MuiPage[] = [
     title: 'DesktopTimePicker',
   },
   {
+    pathname: '/x/api/date-pickers/desktop-time-range-picker',
+    title: 'DesktopTimeRangePicker',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/date-pickers/digital-clock',
     title: 'DigitalClock',
   },
@@ -123,6 +128,11 @@ const datePickersApiPages: MuiPage[] = [
   {
     pathname: '/x/api/date-pickers/mobile-time-picker',
     title: 'MobileTimePicker',
+  },
+  {
+    pathname: '/x/api/date-pickers/mobile-time-range-picker',
+    title: 'MobileTimeRangePicker',
+    plan: 'pro',
   },
   {
     pathname: '/x/api/date-pickers/month-calendar',
@@ -227,6 +237,21 @@ const datePickersApiPages: MuiPage[] = [
   {
     pathname: '/x/api/date-pickers/time-picker-toolbar',
     title: 'TimePickerToolbar',
+  },
+  {
+    pathname: '/x/api/date-pickers/time-range-picker',
+    title: 'TimeRangePicker',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/date-pickers/time-range-picker-tabs',
+    title: 'TimeRangePickerTabs',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/date-pickers/time-range-picker-toolbar',
+    title: 'TimeRangePickerToolbar',
+    plan: 'pro',
   },
   {
     pathname: '/x/api/date-pickers/year-calendar',

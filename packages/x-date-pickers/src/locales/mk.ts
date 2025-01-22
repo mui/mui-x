@@ -35,6 +35,7 @@ const mkPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Избери датум и време',
   timePickerToolbarTitle: 'Избери време',
   dateRangePickerToolbarTitle: 'Избери временски опсег',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>

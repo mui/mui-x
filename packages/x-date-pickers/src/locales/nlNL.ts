@@ -41,6 +41,7 @@ const nlNLPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Selecteer datum & tijd',
   timePickerToolbarTitle: 'Selecteer tijd',
   dateRangePickerToolbarTitle: 'Selecteer datumbereik',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>

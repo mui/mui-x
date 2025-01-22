@@ -41,6 +41,7 @@ const euPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Data eta ordua aukeratu',
   timePickerToolbarTitle: 'Ordua aukeratu',
   dateRangePickerToolbarTitle: 'Data tartea aukeratu',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>

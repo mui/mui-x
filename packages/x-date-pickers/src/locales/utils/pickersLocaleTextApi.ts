@@ -22,6 +22,11 @@ export interface PickersComponentSpecificLocaleText {
    * Will be overridden by the `toolbarTitle` translation key passed directly on the picker.
    */
   dateRangePickerToolbarTitle: string;
+  /**
+   * Title displayed in the toolbar of the `TimeRangePicker` and its variants.
+   * Will be overridden by the `toolbarTitle` translation key passed directly on the picker.
+   */
+  timeRangePickerToolbarTitle: string;
 }
 
 export interface PickersComponentAgnosticLocaleText {

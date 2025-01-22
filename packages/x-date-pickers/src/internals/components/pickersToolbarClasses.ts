@@ -6,6 +6,8 @@ import {
 export interface PickersToolbarClasses {
   /** Styles applied to the root element. */
   root: string;
+  /** Styles applied to the title element. */
+  title: string;
   /** Styles applied to the content element. */
   content: string;
 }
@@ -18,5 +20,6 @@ export function getPickersToolbarUtilityClass(slot: string) {
 
 export const pickersToolbarClasses = generateUtilityClasses('MuiPickersToolbar', [
   'root',
+  'title',
   'content',
 ]);

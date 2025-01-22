@@ -260,7 +260,7 @@ const useMultiInputFieldSlotProps = <
       return {
         ...(labelId != null && { id: `${labelId}-${ownerState.position!}` }),
         ...textFieldProps,
-        ...resolveComponentProps(pickerSlotProps?.textField, ownerState),
+        ...resolvedComponentProps,
         InputProps,
       };
     },
