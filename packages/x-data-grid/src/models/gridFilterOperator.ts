@@ -56,7 +56,7 @@ export interface GridFilterOperator<
   /**
    * The props to pass to the input component in the filter panel for this filter operator.
    */
-  InputComponentProps?: I;
+  InputComponentProps?: Partial<I>;
   /**
    * Converts the value of a filter item to a human-readable form.
    * @param {GridFilterItem['value']} value The filter item value.

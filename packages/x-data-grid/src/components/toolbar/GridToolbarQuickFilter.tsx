@@ -147,7 +147,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
       ownerState={rootProps}
       size="small"
       value={searchValue}
-      onChange={handleSearchValueChange}
+      onChange={handleSearchValueChange as any}
       className={clsx(classes.root, className)}
       placeholder={apiRef.current.getLocaleText('toolbarQuickFilterPlaceholder')}
       aria-label={apiRef.current.getLocaleText('toolbarQuickFilterLabel')}

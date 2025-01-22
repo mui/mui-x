@@ -1,4 +1,7 @@
-import { GridFilterInputValue } from '../components/panel/filterPanel/GridFilterInputValue';
+import {
+  GridFilterInputValue,
+  GridTypeFilterInputValueProps,
+} from '../components/panel/filterPanel/GridFilterInputValue';
 import { GridFilterInputMultipleValue } from '../components/panel/filterPanel/GridFilterInputMultipleValue';
 import { GridFilterOperator } from '../models/gridFilterOperator';
 import type { GetApplyQuickFilterFn } from '../models/colDef/gridColDef';
@@ -26,7 +29,8 @@ export const getGridNumericQuickFilterFn: GetApplyQuickFilterFn<any, number | st
 export const getGridNumericOperators = (): GridFilterOperator<
   any,
   number | string | null,
-  any
+  any,
+  GridTypeFilterInputValueProps
 >[] => [
   {
     value: '=',
