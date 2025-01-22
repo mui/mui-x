@@ -16,6 +16,10 @@ You can start with the Community version and upgrade to Pro or Premium at any ti
 Check out the [Feature showcase](/x/react-data-grid/demo/) for a list of features available in each package.
 :::
 
+### Peer dependencies
+
+#### Material UI
+
 The Data Grid packages have a peer dependency on `@mui/material`.
 If you're not already using it, install it with the following command:
 
@@ -36,6 +40,8 @@ yarn add @mui/material @emotion/react @emotion/styled
 </codeblock>
 
 <!-- #react-peer-version -->
+
+#### React
 
 [`react`](https://www.npmjs.com/package/react) and [`react-dom`](https://www.npmjs.com/package/react-dom) are also peer dependencies:
 

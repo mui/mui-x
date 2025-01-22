@@ -1,13 +1,13 @@
 ---
 productId: x-date-pickers
-title: Date and Time Pickers - Getting started
+title: Date and Time Pickers - Quickstart
 packageName: '@mui/x-date-pickers'
 githubLabel: 'component: pickers'
 materialDesign: https://m2.material.io/components/date-pickers
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/
 ---
 
-# Date and Time Pickers - Getting started
+# Date and Time Pickers - Quickstart
 
 <p class="description">Install the Date and Time Pickers package and set up your date library to start building.</p>
 
@@ -63,7 +63,9 @@ yarn add @mui/material @emotion/react @emotion/styled
 },
 ```
 
-## Date library adapter setup
+## Quickstart
+
+### Date library adapter setup
 
 To integrate your chosen date library with the Date and Time Pickers, you'll need to plug the corresponding adapter into a `LocalizationProvider` that wraps your Picker components.
 
@@ -74,7 +76,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 ```
 
-### LocalizationProvider
+### Localization Provider
 
 The `LocalizationProvider` component is exported by both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`:
 
@@ -95,8 +97,68 @@ For almost all use cases, you should wrap your entire app with a single `Localiz
 To use the Date and Time Pickers with a custom locale, see [Date and format localization](/x/react-date-pickers/adapters-locale/).
 :::
 
-## Render your first component
+### Render the Date Picker
 
 To confirm that everything is set up correctly, try rendering a basic Date Picker component:
 
 {{"demo": "FirstComponent.js"}}
+
+## TypeScript
+
+### Theme augmentation
+
+To benefit from [CSS overrides](/material-ui/customization/theme-components/#theme-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#theme-default-props) with the theme, TypeScript users must import the following types.
+These types use module augmentation to extend the default theme structure.
+
+```tsx
+// Pro users: add `-pro` suffix to package name
+import type {} from '@mui/x-date-pickers/themeAugmentation';
+
+const theme = createTheme({
+  components: {
+    MuiDatePicker: {
+      defaultProps: {
+        displayWeekNumber: true,
+      },
+    },
+    MuiDateRangeCalendar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#f0f0f0',
+        },
+      },
+    },
+  },
+});
+```
+
+### Date and time types
+
+The Date and Time Pickers components are compatible with several date libraries
+that use different formats to represent their dates
+(`Date` object for `date-fns`, `daysjs.Dayjs` object for `days-js`, etc.).
+To correctly type all the props that are date-related, the adapters override a global type named `PickerValidDate`
+to allow the usage of their own date format.
+This allows TypeScript to throw an error if you try to pass `value={new Date()}` to a component using `AdapterDayjs` for instance.
+
+If you are not sure your adapter is set up correctly to infer the type of date-related props, you can import the `PickerValidDate` type and check its current value.
+
+If its equal to the format used by your date library, then you don't have to do anything:
+
+<img src="/static/x/date-pickers/picker-valid-date-configured.png" alt="PickerValidDate correctly configured" />
+
+If it's equal to `any`, you can fix it by manually importing the adapter in some file of your project as show below:
+
+<img src="/static/x/date-pickers/picker-valid-date-not-configured.png" alt="PickerValidDate not correctly configured" />
+
+```ts
+// Replace `AdapterDayjs` with the adapter you are using.
+import type {} from '@mui/x-date-pickers/AdapterDayjs';
+```
+
+:::info
+Before version 7.19.0, TypeScript was throwing an error such as `DesktopDatePickerProps<Date> error Type 'Date' does not satisfy the constraint 'never'`
+when you were not importing the adapter in the same TypeScript project as the rest of your codebase.
+
+The fix described above should also solve the problem.
+:::

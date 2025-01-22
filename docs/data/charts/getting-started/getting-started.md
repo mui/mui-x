@@ -4,7 +4,7 @@ githubLabel: 'component: charts'
 packageName: '@mui/x-charts'
 ---
 
-# Charts - Getting started
+# Charts - Quickstart
 
 <p class="description">Install the MUI X Charts package to start building React data visualization components.</p>
 
@@ -15,6 +15,10 @@ Run one of the following commands to install the free Community version or the p
 <!-- #default-branch-switch -->
 
 {{"component": "modules/components/ChartsInstallationInstructions.js"}}
+
+### Peer dependencies
+
+#### Material UI
 
 The Charts packages have a peer dependency on `@mui/material`.
 If you're not already using it, install it with the following command:
@@ -34,6 +38,8 @@ yarn add @mui/material @emotion/react @emotion/styled
 ```
 
 </codeblock>
+
+#### React
 
 <!-- #react-peer-version -->
 
@@ -108,6 +114,8 @@ MUI X Charts take a flexible approach to axis management, with support for mult
 See the [Axis documentation](/x/react-charts/axis/) for complete details.
 
 ## TypeScript
+
+### Theme augmentation
 
 To benefit from [CSS overrides](/material-ui/customization/theme-components/#theme-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#theme-default-props) with the theme, TypeScript users must import the following types.
 These types use module augmentation to extend the default theme structure.

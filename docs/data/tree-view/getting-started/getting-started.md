@@ -1,13 +1,13 @@
 ---
 productId: x-tree-view
-title: Tree View - Getting started
+title: Tree View - Quickstart
 components: SimpleTreeView, RichTreeView, TreeItem
 packageName: '@mui/x-tree-view'
 githubLabel: 'component: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 ---
 
-# Tree View - Getting Started
+# Tree View - Quickstart
 
 <p class="description">Get started with the Tree View. Install the package, configure your application and start using the components.</p>
 
@@ -18,6 +18,10 @@ Using your favorite package manager, install `@mui/x-tree-view-pro` for the comm
 <!-- #default-branch-switch -->
 
 {{"component": "modules/components/TreeViewInstallationInstructions.js"}}
+
+### Peer dependencies
+
+#### Material UI
 
 The Tree View package has a peer dependency on `@mui/material`.
 If you are not already using it in your project, you can install it with:
@@ -38,6 +42,8 @@ yarn add @mui/material @emotion/react @emotion/styled
 
 </codeblock>
 
+#### React
+
 <!-- #react-peer-version -->
 
 Please note that [react](https://www.npmjs.com/package/react) and [react-dom](https://www.npmjs.com/package/react-dom) are peer dependencies too:
@@ -49,32 +55,7 @@ Please note that [react](https://www.npmjs.com/package/react) and [react-dom](ht
 },
 ```
 
-### Style engine
-
-Material UI is using [Emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
-
-<codeblock storageKey="package-manager">
-```bash npm
-npm install @mui/styled-engine-sc styled-components
-```
-
-```bash pnpm
-pnpm add @mui/styled-engine-sc styled-components
-```
-
-```bash yarn
-yarn add @mui/styled-engine-sc styled-components
-```
-
-</codeblock>
-
-Take a look at the [Styled engine guide](/material-ui/integrations/styled-components/) for more information about how to configure `styled-components` as the style engine.
-
-## Render your first component
-
-To make sure that everything is set up correctly, try rendering a Simple Tree View component:
-
-{{"demo": "FirstComponent.js"}}
+## Quickstart
 
 ## Accessibility
 
@@ -82,11 +63,17 @@ To make sure that everything is set up correctly, try rendering a Simple Tree Vi
 
 The component follows the WAI-ARIA authoring practices.
 
-To have an accessible Tree View you must use `aria-labelledby`
-or `aria-label` to reference or provide a label on the TreeView,
-otherwise, screen readers will announce it as "tree", making it hard to understand the context of a specific tree item.
+To have an accessible Tree View you must use `aria-labelledby` or `aria-label` to reference or provide a label on the TreeView, otherwise, screen readers will announce it as "tree", making it hard to understand the context of a specific tree item.
+
+## Render the Tree View
+
+To make sure that everything is set up correctly, try rendering a Simple Tree View component:
+
+{{"demo": "FirstComponent.js"}}
 
 ## TypeScript
+
+### Theme augmentation
 
 In order to benefit from the [CSS overrides](/material-ui/customization/theme-components/#theme-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#theme-default-props) with the theme, TypeScript users need to import the following types.
 Internally, it uses module augmentation to extend the default theme structure.
