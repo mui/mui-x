@@ -49,10 +49,6 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
   const id = useId();
   const clipPathId = `${id}-clip-path`;
 
-  const hasHorizontalSeries =
-    layout === 'horizontal' ||
-    (layout === undefined && series.some((item) => item.layout === 'horizontal'));
-
   const defaultBandAxisConfig = {
     scaleType: 'band',
     categoryGapRatio: 0,
@@ -60,6 +56,11 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
       { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
       (_, index) => index,
     ),
+  } as const;
+
+  const defaultOtherAxisConfig = {
+    scaleType: 'linear',
+    domainLimit: 'strict',
   } as const;
 
   const chartContainerProps: ChartContainerProProps<'funnel'> = {
@@ -74,18 +75,14 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     colors,
     dataset,
     // TODO: Remove default band and allow items height to adapt to the chart height
-    xAxis:
-      xAxis?.map((axis) => ({
-        ...(axis?.scaleType === 'band' ? defaultBandAxisConfig : {}),
-        ...axis,
-      })) ??
-      (hasHorizontalSeries ? [{ id: DEFAULT_X_AXIS_KEY, ...defaultBandAxisConfig }] : undefined),
-    yAxis:
-      yAxis?.map((axis) => ({
-        ...(axis?.scaleType === 'band' ? defaultBandAxisConfig : {}),
-        ...axis,
-      })) ??
-      (hasHorizontalSeries ? undefined : [{ id: DEFAULT_Y_AXIS_KEY, ...defaultBandAxisConfig }]),
+    xAxis: xAxis?.map((axis) => ({
+      ...(axis?.scaleType === 'band' ? defaultBandAxisConfig : defaultOtherAxisConfig),
+      ...axis,
+    })) ?? [{ id: DEFAULT_X_AXIS_KEY, ...defaultOtherAxisConfig }],
+    yAxis: yAxis?.map((axis) => ({
+      ...(axis?.scaleType === 'band' ? defaultBandAxisConfig : defaultOtherAxisConfig),
+      ...axis,
+    })) ?? [{ id: DEFAULT_Y_AXIS_KEY, ...defaultOtherAxisConfig }],
     sx,
     highlightedItem,
     onHighlightChange,

@@ -81,4 +81,5 @@ export interface DefaultizedFunnelSeriesType
 
 export type FunnelStackedData = Record<'x' | 'y', number> & {
   useBandWidth: boolean;
+  stackOffset: number;
 };

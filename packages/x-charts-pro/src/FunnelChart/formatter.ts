@@ -16,21 +16,22 @@ const createPoint = ({
   other,
   inverse,
   useBandWidth,
+  stackOffset,
 }: {
   main: number;
   other: number;
   inverse: boolean;
   useBandWidth: boolean;
-}) => (inverse ? { x: other, y: main, useBandWidth } : { x: main, y: other, useBandWidth });
+  stackOffset: number;
+}) =>
+  inverse
+    ? { x: other, y: main, useBandWidth, stackOffset }
+    : { x: main, y: other, useBandWidth, stackOffset };
 
 const formatter: SeriesProcessor<'funnel'> = (params, dataset) => {
   const { seriesOrder, series } = params;
   const stackingGroups = getStackingGroups({
     ...params,
-    defaultStrategy: {
-      stackOrder: 'reverse',
-      stackOffset: 'none',
-    },
   });
 
   // Create a data set with format adapted to d3
@@ -101,11 +102,17 @@ const formatter: SeriesProcessor<'funnel'> = (params, dataset) => {
     });
 
     ids.forEach((id, index) => {
+      const stackOffsets = completedSeries[id].data
+        .toReversed()
+        .map((_, i, array) => array.slice(0, i).reduce((acc, item) => acc + item.value, 0))
+        .toReversed();
+
       completedSeries[id].stackedData = completedSeries[id].data.map((item, dataIndex, array) => {
         const currentMaxMain = item.value ?? 0;
         const nextDataIndex = dataIndex === array.length - 1 ? dataIndex : dataIndex + 1;
         const nextMaxMain = array[nextDataIndex].value ?? 0;
         const [nextMaxOther, currentMaxOther] = stackedSeries[index][dataIndex];
+        const stackOffset = stackOffsets[dataIndex];
 
         return [
           // Top right (vertical) or Top left (horizontal)
@@ -114,6 +121,7 @@ const formatter: SeriesProcessor<'funnel'> = (params, dataset) => {
             other: currentMaxOther,
             inverse: isHorizontal,
             useBandWidth: false,
+            stackOffset,
           }),
           // Middle right
           // {
@@ -130,6 +138,7 @@ const formatter: SeriesProcessor<'funnel'> = (params, dataset) => {
             other: nextMaxOther,
             inverse: isHorizontal,
             useBandWidth: true,
+            stackOffset,
           }),
           // Bottom left (vertical) or Bottom right (horizontal)
           createPoint({
@@ -137,6 +146,7 @@ const formatter: SeriesProcessor<'funnel'> = (params, dataset) => {
             other: nextMaxOther,
             inverse: isHorizontal,
             useBandWidth: true,
+            stackOffset,
           }),
           // Middle left
           // {
@@ -153,6 +163,7 @@ const formatter: SeriesProcessor<'funnel'> = (params, dataset) => {
             other: currentMaxOther,
             inverse: isHorizontal,
             useBandWidth: false,
+            stackOffset,
           }),
         ];
         // TODO: fix type
