@@ -256,10 +256,10 @@ export const useGridVirtualScroller = () => {
       return undefined;
     }
 
-    const maxScrollTop = Math.round(
+    const maxScrollTop = Math.ceil(
       dimensions.minimumSize.height - dimensions.viewportOuterSize.height,
     );
-    const maxScrollLeft = Math.round(
+    const maxScrollLeft = Math.ceil(
       dimensions.minimumSize.width - dimensions.viewportOuterSize.width,
     );
 
