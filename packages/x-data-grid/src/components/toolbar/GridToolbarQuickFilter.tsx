@@ -196,6 +196,7 @@ GridToolbarQuickFilter.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  className: PropTypes.string,
   /**
    * The debounce time in milliseconds.
    * @default 150
@@ -217,6 +218,7 @@ GridToolbarQuickFilter.propTypes = {
    *   .filter((word) => word !== '')
    */
   quickFilterParser: PropTypes.func,
+  slotProps: PropTypes.object,
 } as any;
 
 /**

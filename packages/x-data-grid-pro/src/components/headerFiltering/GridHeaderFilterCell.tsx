@@ -456,7 +456,39 @@ GridHeaderFilterCell.propTypes = {
     current: PropTypes.object,
   }).isRequired,
   height: PropTypes.number.isRequired,
-  InputComponentProps: PropTypes.object,
+  InputComponentProps: PropTypes.shape({
+    apiRef: PropTypes.shape({
+      current: PropTypes.object.isRequired,
+    }),
+    applyValue: PropTypes.func,
+    className: PropTypes.string,
+    clearButton: PropTypes.node,
+    disabled: PropTypes.bool,
+    focusElementRef: PropTypes.oneOfType([
+      PropTypes.func,
+      PropTypes.shape({
+        current: PropTypes.any.isRequired,
+      }),
+    ]),
+    headerFilterMenu: PropTypes.node,
+    inputRef: PropTypes.oneOfType([
+      PropTypes.func,
+      PropTypes.shape({
+        current: PropTypes.any.isRequired,
+      }),
+    ]),
+    isFilterActive: PropTypes.bool,
+    item: PropTypes.shape({
+      field: PropTypes.string.isRequired,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      operator: PropTypes.string.isRequired,
+      value: PropTypes.any,
+    }),
+    onBlur: PropTypes.func,
+    onFocus: PropTypes.func,
+    slotProps: PropTypes.object,
+    tabIndex: PropTypes.number,
+  }),
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

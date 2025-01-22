@@ -129,9 +129,17 @@ GridFilterInputBoolean.propTypes = {
     current: PropTypes.object.isRequired,
   }).isRequired,
   applyValue: PropTypes.func.isRequired,
+  className: PropTypes.string,
   clearButton: PropTypes.node,
+  disabled: PropTypes.bool,
   focusElementRef: refType,
   headerFilterMenu: PropTypes.node,
+  inputRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.any.isRequired,
+    }),
+  ]),
   /**
    * It is `true` if the filter either has a value or an operator with no value
    * required is selected (for example `isEmpty`)
@@ -143,6 +151,10 @@ GridFilterInputBoolean.propTypes = {
     operator: PropTypes.string.isRequired,
     value: PropTypes.any,
   }).isRequired,
+  onBlur: PropTypes.func,
+  onFocus: PropTypes.func,
+  slotProps: PropTypes.object,
+  tabIndex: PropTypes.number,
 } as any;
 
 export { GridFilterInputBoolean };

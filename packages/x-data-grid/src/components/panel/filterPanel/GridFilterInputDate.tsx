@@ -124,12 +124,20 @@ GridFilterInputDate.propTypes = {
     current: PropTypes.object.isRequired,
   }).isRequired,
   applyValue: PropTypes.func.isRequired,
+  className: PropTypes.string,
   clearButton: PropTypes.node,
+  disabled: PropTypes.bool,
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,
     PropTypes.object,
   ]),
   headerFilterMenu: PropTypes.node,
+  inputRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.any.isRequired,
+    }),
+  ]),
   /**
    * It is `true` if the filter either has a value or an operator with no value
    * required is selected (for example `isEmpty`)
@@ -141,6 +149,11 @@ GridFilterInputDate.propTypes = {
     operator: PropTypes.string.isRequired,
     value: PropTypes.any,
   }).isRequired,
+  onBlur: PropTypes.func,
+  onFocus: PropTypes.func,
+  slotProps: PropTypes.object,
+  tabIndex: PropTypes.number,
+  type: PropTypes.oneOf(['date', 'datetime-local']),
 } as any;
 
 export { GridFilterInputDate };
