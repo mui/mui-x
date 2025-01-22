@@ -18,7 +18,7 @@ Check out the [Feature showcase](/x/react-data-grid/demo/) for a list of feature
 
 ### Peer dependencies
 
-#### Material UI
+#### Material UI
 
 The Data Grid packages have a peer dependency on `@mui/material`.
 If you're not already using it, install it with the following command:

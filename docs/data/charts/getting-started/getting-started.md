@@ -18,7 +18,7 @@ Run one of the following commands to install the free Community version or the p
 
 ### Peer dependencies
 
-#### Material UI
+#### Material UI
 
 The Charts packages have a peer dependency on `@mui/material`.
 If you're not already using it, install it with the following command:

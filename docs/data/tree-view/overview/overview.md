@@ -14,7 +14,7 @@ packageName: '@mui/x-tree-view'
 
 ## Overview
 
-The MUI X Tree View provides all of the functionality necessary to build a hierarchical list of expandable and collapsible items.
+The MUI X Tree View provides all of the functionality necessary to build a hierarchical list of expandable and collapsible items.
 
 The demo below shows how to render a Simple Tree View—try clicking on an item to see how it expands and collapses:
 
