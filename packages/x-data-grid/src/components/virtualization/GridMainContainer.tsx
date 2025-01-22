@@ -20,6 +20,7 @@ const Element = styled('div', {
   overridesResolver: (props, styles) => styles.main,
 })<{ ownerState: OwnerState }>({
   flexGrow: 1,
+  flexShrink: 0,
   position: 'relative',
   overflow: 'hidden',
   display: 'flex',
