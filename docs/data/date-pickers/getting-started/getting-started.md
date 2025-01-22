@@ -148,16 +148,13 @@ const theme = createTheme({
 
 ### Date and time types
 
-The Date and Time Pickers components are compatible with several date libraries
-that use different formats to represent their dates
-(`Date` object for `date-fns`, `daysjs.Dayjs` object for `days-js`, etc.).
-To correctly type all the props that are date-related, the adapters override a global type named `PickerValidDate`
-to allow the usage of their own date format.
+The Date and Time Pickers are compatible with several date libraries that use different formats to represent their dates (`Date` object for `date-fns`, `daysjs.Dayjs` object for `days-js`, etc.).
+To correctly type all the props that are date-related, the adapters override a global type named `PickerValidDate` to allow the usage of their own date format.
 This allows TypeScript to throw an error if you try to pass `value={new Date()}` to a component using `AdapterDayjs` for instance.
 
-If you are not sure your adapter is set up correctly to infer the type of date-related props, you can import the `PickerValidDate` type and check its current value.
+If you're not sure your adapter is set up correctly to infer the type of date-related props, you can import the `PickerValidDate` type and check its current value.
 
-If its equal to the format used by your date library, then you don't have to do anything:
+If it's equal to the format used by your date library, then you don't have to do anything:
 
 <img src="/static/x/date-pickers/picker-valid-date-configured.png" alt="PickerValidDate correctly configured" />
 
