@@ -9,7 +9,7 @@ function read(fileName) {
 }
 
 describe('v8.0.0/charts', () => {
-  describe('replace-legend-direction-values.test', () => {
+  describe('replace-legend-position-values.test', () => {
     const actualPath = `./actual.spec.tsx`;
     const expectedPath = `./expected.spec.tsx`;
 
