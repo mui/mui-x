@@ -108,6 +108,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
         }}
         {...rootProps.slotProps?.baseTextField}
         {...other}
+        {...slotProps?.root}
       />
       {headerFilterMenu}
       {clearButton}

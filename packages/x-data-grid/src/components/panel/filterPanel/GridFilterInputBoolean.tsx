@@ -80,6 +80,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
           {
             ...(others as any) /* FIXME: typing error */
           }
+          {...slotProps?.root}
         >
           <rootProps.slots.baseSelectOption
             {...baseSelectOptionProps}

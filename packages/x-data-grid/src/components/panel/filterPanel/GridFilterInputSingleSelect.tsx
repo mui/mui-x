@@ -136,6 +136,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
           {
             ...(others as any) /* FIXME: typing error */
           }
+          {...slotProps?.root}
         >
           {renderSingleSelectOptions({
             column: resolvedColumn,
