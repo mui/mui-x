@@ -32,7 +32,6 @@ declare module '@mui/x-charts/internals' {
       seriesProp: FunnelSeriesType;
       itemIdentifier: FunnelItemIdentifier;
       valueType: number | null;
-      canBeStacked: true;
       cartesian: true;
     };
   }

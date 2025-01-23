@@ -2,7 +2,6 @@ import { ChartsLabelMarkProps } from '@mui/x-charts/ChartsLabel';
 import {
   CommonSeriesType,
   CartesianSeriesType,
-  StackableSeriesType,
   CommonDefaultizedProps,
   SeriesId,
 } from '@mui/x-charts/internals';
@@ -37,8 +36,7 @@ export type FunnelValueType = {
 
 export interface FunnelSeriesType<TData = FunnelValueType>
   extends Omit<CommonSeriesType<TData>, 'color'>,
-    CartesianSeriesType,
-    StackableSeriesType {
+    CartesianSeriesType {
   type: 'funnel';
   /**
    * Data associated to the funnel section.
@@ -77,9 +75,11 @@ export type FunnelItemIdentifier = {
 };
 
 export interface DefaultizedFunnelSeriesType
-  extends DefaultizedProps<FunnelSeriesType, CommonDefaultizedProps | 'layout'> {}
+  extends DefaultizedProps<FunnelSeriesType, CommonDefaultizedProps | 'layout'> {
+  dataPoints: FunnelDataPoints[][];
+}
 
-export type FunnelStackedData = Record<'x' | 'y', number> & {
+export type FunnelDataPoints = Record<'x' | 'y', number> & {
   useBandWidth: boolean;
   stackOffset: number;
 };

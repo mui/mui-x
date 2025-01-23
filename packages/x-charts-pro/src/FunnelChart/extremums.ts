@@ -1,5 +1,4 @@
 import { CartesianExtremumGetter } from '@mui/x-charts/internals';
-import { FunnelStackedData } from './funnel.types';
 
 const getValueExtremum = (
   direction: 'x' | 'y',
@@ -15,7 +14,7 @@ const getValueExtremum = (
         (acc, seriesId) => {
           const yAxisId = series[seriesId].yAxisId;
           const xAxisId = series[seriesId].xAxisId;
-          const { stackedData } = series[seriesId];
+          const { dataPoints } = series[seriesId];
 
           if (
             yAxisId !== axis.id &&
@@ -32,8 +31,7 @@ const getValueExtremum = (
             (!isHorizontal && direction === 'x') ||
             (isHorizontal && direction === 'y')
           ) {
-            // TODO: fix type inference
-            const [seriesMin, seriesMax] = (stackedData as unknown as FunnelStackedData[][])
+            const [seriesMin, seriesMax] = dataPoints
               .map((v) => v.map((t) => t[direction]))
               ?.reduce(
                 (seriesAcc, values) => {
@@ -45,12 +43,12 @@ const getValueExtremum = (
             return [Math.min(seriesMin, acc[0]), Math.max(seriesMax, acc[1])];
           }
 
-          const seriesMin = (stackedData as unknown as FunnelStackedData[][])
+          const seriesMin = dataPoints
             .flatMap((v) =>
               v.map((t) => t[direction]).reduce((min, value) => Math.min(value, min), Infinity),
             )
             .reduce((sumAcc, value) => sumAcc + value, 0);
-          const seriesMax = (stackedData as unknown as FunnelStackedData[][])
+          const seriesMax = dataPoints
             .flatMap((v) =>
               v.map((t) => t[direction]).reduce((max, value) => Math.max(value, max), -Infinity),
             )

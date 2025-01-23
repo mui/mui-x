@@ -3,7 +3,7 @@ import * as React from 'react';
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
 import { getCurveFactory, AxisDefaultized, cartesianSeriesTypes } from '@mui/x-charts/internals';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
-import { FunnelItemIdentifier, FunnelStackedData } from './funnel.types';
+import { FunnelItemIdentifier, FunnelDataPoints } from './funnel.types';
 import { FunnelElement } from './FunnelElement';
 import { FunnelLabel } from './FunnelLabel';
 import { useFunnelSeries } from '../hooks/useSeries';
@@ -112,7 +112,7 @@ const positionLabel = ({
     useBand?: boolean,
   ) => number | undefined;
   isHorizontal: boolean;
-  values: FunnelStackedData[];
+  values: FunnelDataPoints[];
   dataIndex: number;
   baseScaleData: number[];
 }) => {
@@ -324,108 +324,92 @@ const useAggregatedData = (funnelLabel: FunnelPlotProps['funnelLabel']) => {
       return [];
     }
 
-    const { series, stackingGroups } = seriesData;
+    const { series, seriesOrder } = seriesData;
     const defaultXAxisId = xAxisIds[0];
     const defaultYAxisId = yAxisIds[0];
 
     const isHorizontal = Object.values(series).some((s) => s.layout === 'horizontal');
 
-    const result = stackingGroups.map(({ ids: groupIds }) => {
-      return groupIds.map((seriesId) => {
-        const xAxisId = series[seriesId].xAxisId ?? defaultXAxisId;
-        const yAxisId = series[seriesId].yAxisId ?? defaultYAxisId;
+    const result = seriesOrder.map((seriesId) => {
+      const currentSeries = series[seriesId];
+      const xAxisId = currentSeries.xAxisId ?? defaultXAxisId;
+      const yAxisId = currentSeries.yAxisId ?? defaultYAxisId;
 
-        const valueFormatter = series[seriesId].valueFormatter;
+      const valueFormatter = currentSeries.valueFormatter;
 
-        const baseScaleConfig = isHorizontal ? xAxis[xAxisId] : yAxis[yAxisId];
+      const baseScaleConfig = isHorizontal ? xAxis[xAxisId] : yAxis[yAxisId];
 
-        const isXAxisBand = xAxis[xAxisId].scaleType === 'band';
-        const isYAxisBand = yAxis[yAxisId].scaleType === 'band';
+      const isXAxisBand = xAxis[xAxisId].scaleType === 'band';
+      const isYAxisBand = yAxis[yAxisId].scaleType === 'band';
 
-        const bandWidth =
-          ((isXAxisBand || isYAxisBand) &&
-            (baseScaleConfig as AxisDefaultized<'band'>).scale?.bandwidth()) ||
-          0;
+      const bandWidth =
+        ((isXAxisBand || isYAxisBand) &&
+          (baseScaleConfig as AxisDefaultized<'band'>).scale?.bandwidth()) ||
+        0;
 
-        const xScale = xAxis[xAxisId].scale;
-        const yScale = yAxis[yAxisId].scale;
+      const xScale = xAxis[xAxisId].scale;
+      const yScale = yAxis[yAxisId].scale;
 
-        // TODO: fix type, current code is correct, but need to be inferred
-        const { stackedData } = series[seriesId] as unknown as {
-          stackedData: FunnelStackedData[][];
+      const curve = getCurveFactory(currentSeries.curve ?? 'linear');
+
+      const xPosition = (v: number, bandIndex: number, stackOffset?: number, useBand?: boolean) => {
+        if (isXAxisBand) {
+          const value = xScale(bandIndex);
+          return useBand ? value! + bandWidth : value!;
+        }
+        return xScale(isHorizontal ? v + (stackOffset || 0) : v)!;
+      };
+
+      const yPosition = (v: number, bandIndex: number, stackOffset?: number, useBand?: boolean) => {
+        if (isYAxisBand) {
+          const value = yScale(bandIndex);
+          return useBand ? value! + bandWidth : value!;
+        }
+        return yScale(isHorizontal ? v : v + (stackOffset || 0))!;
+      };
+
+      return currentSeries.dataPoints.map((values, dataIndex) => {
+        const color = currentSeries.data[dataIndex].color!;
+        const id = `${seriesId}-${dataIndex}`;
+
+        const line = d3Line<FunnelDataPoints>()
+          .x((d) =>
+            xPosition(d.x, baseScaleConfig.data?.[dataIndex], d.stackOffset, d.useBandWidth),
+          )
+          .y((d) =>
+            yPosition(d.y, baseScaleConfig.data?.[dataIndex], d.stackOffset, d.useBandWidth),
+          )
+          .curve(curve);
+
+        return {
+          d: line(values)!,
+          color,
+          id,
+          seriesId,
+          dataIndex,
+          label: funnelLabel !== false && {
+            ...positionLabel({
+              vertical: funnelLabel?.position?.vertical,
+              horizontal: funnelLabel?.position?.horizontal,
+              margin: funnelLabel?.margin,
+              xPosition,
+              yPosition,
+              isHorizontal,
+              values,
+              dataIndex,
+              baseScaleData: baseScaleConfig.data ?? [],
+            }),
+            ...alignLabel({
+              vertical: funnelLabel?.position?.vertical,
+              horizontal: funnelLabel?.position?.horizontal,
+              textAnchor: funnelLabel?.textAnchor,
+              dominantBaseline: funnelLabel?.dominantBaseline,
+            }),
+            value: valueFormatter
+              ? valueFormatter(currentSeries.data[dataIndex], { dataIndex })
+              : currentSeries.data[dataIndex].value?.toLocaleString(),
+          },
         };
-
-        const curve = getCurveFactory(series[seriesId].curve ?? 'linear');
-
-        const xPosition = (
-          v: number,
-          bandIndex: number,
-          stackOffset?: number,
-          useBand?: boolean,
-        ) => {
-          if (isXAxisBand) {
-            const value = xScale(bandIndex);
-            return useBand ? value! + bandWidth : value!;
-          }
-          return xScale(isHorizontal ? v + (stackOffset || 0) : v)!;
-        };
-
-        const yPosition = (
-          v: number,
-          bandIndex: number,
-          stackOffset?: number,
-          useBand?: boolean,
-        ) => {
-          if (isYAxisBand) {
-            const value = yScale(bandIndex);
-            return useBand ? value! + bandWidth : value!;
-          }
-          return yScale(isHorizontal ? v : v + (stackOffset || 0))!;
-        };
-
-        return stackedData.map((values, dataIndex) => {
-          const color = series[seriesId].data[dataIndex].color!;
-          const id = `${seriesId}-${dataIndex}`;
-
-          const line = d3Line<FunnelStackedData>()
-            .x((d) =>
-              xPosition(d.x, baseScaleConfig.data?.[dataIndex], d.stackOffset, d.useBandWidth),
-            )
-            .y((d) =>
-              yPosition(d.y, baseScaleConfig.data?.[dataIndex], d.stackOffset, d.useBandWidth),
-            )
-            .curve(curve);
-
-          return {
-            d: line(values)!,
-            color,
-            id,
-            seriesId,
-            dataIndex,
-            label: funnelLabel !== false && {
-              ...positionLabel({
-                vertical: funnelLabel?.position?.vertical,
-                horizontal: funnelLabel?.position?.horizontal,
-                margin: funnelLabel?.margin,
-                xPosition,
-                yPosition,
-                isHorizontal,
-                values,
-                dataIndex,
-                baseScaleData: baseScaleConfig.data ?? [],
-              }),
-              ...alignLabel({
-                vertical: funnelLabel?.position?.vertical,
-                horizontal: funnelLabel?.position?.horizontal,
-                textAnchor: funnelLabel?.textAnchor,
-                dominantBaseline: funnelLabel?.dominantBaseline,
-              }),
-              value: valueFormatter
-                ? valueFormatter(series[seriesId].data[dataIndex], { dataIndex })
-                : series[seriesId].data[dataIndex].value?.toLocaleString(),
-            },
-          };
-        });
       });
     });
 

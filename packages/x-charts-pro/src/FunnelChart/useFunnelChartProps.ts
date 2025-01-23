@@ -74,7 +74,6 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     margin,
     colors,
     dataset,
-    // TODO: Remove default band and allow items height to adapt to the chart height
     xAxis: xAxis?.map((axis) => ({
       ...(axis?.scaleType === 'band' ? defaultBandAxisConfig : defaultOtherAxisConfig),
       ...axis,

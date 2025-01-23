@@ -1,12 +1,4 @@
-import { stack as d3Stack } from '@mui/x-charts-vendor/d3-shape';
-import {
-  DatasetType,
-  SeriesProcessor,
-  DatasetElementType,
-  SeriesId,
-  getStackingGroups,
-  ChartSeriesDefaultized,
-} from '@mui/x-charts/internals';
+import { DatasetType, SeriesProcessor, ChartSeriesDefaultized } from '@mui/x-charts/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 
 type FunnelDataset = DatasetType<number>;
@@ -30,9 +22,6 @@ const createPoint = ({
 
 const formatter: SeriesProcessor<'funnel'> = (params, dataset) => {
   const { seriesOrder, series } = params;
-  const stackingGroups = getStackingGroups({
-    ...params,
-  });
 
   // Create a data set with format adapted to d3
   const d3Dataset: FunnelDataset = (dataset as FunnelDataset) ?? [];
@@ -58,60 +47,48 @@ const formatter: SeriesProcessor<'funnel'> = (params, dataset) => {
 
   const completedSeries: Record<string, ChartSeriesDefaultized<'funnel'>> = {};
 
-  stackingGroups.forEach((stackingGroup) => {
-    const { ids, stackingOffset, stackingOrder } = stackingGroup;
-    // Get stacked values, and derive the domain
-    const stackedSeries = d3Stack<any, DatasetElementType<number | null>, SeriesId>()
-      .keys(
-        ids.map((id) => {
-          // Use dataKey if needed and available
-          const dataKey = series[id].dataKey;
-          return series[id].data === undefined && dataKey !== undefined ? dataKey : id;
-        }),
-      )
-      .value((d, key) => d[key] ?? 0) // defaultize null value to 0
-      .order(stackingOrder)
-      .offset(stackingOffset)(d3Dataset);
+  seriesOrder.forEach((seriesId) => {
+    const currentSeries = series[seriesId];
+    // Use dataKey if needed and available
+    const dataKey = currentSeries.dataKey;
 
-    const isHorizontal = ids.some((id) => series[id].layout === 'horizontal');
+    const isHorizontal = currentSeries.layout === 'horizontal';
 
-    ids.forEach((id) => {
-      const dataKey = series[id].dataKey;
-      completedSeries[id] = {
-        labelMarkType: 'square',
-        layout: isHorizontal ? 'horizontal' : 'vertical',
-        valueFormatter: (item) => (item == null ? '' : item.value.toLocaleString()),
-        ...series[id],
-        data: dataKey
-          ? dataset!.map((data, i) => {
-              const value = data[dataKey];
-              if (typeof value !== 'number') {
-                if (process.env.NODE_ENV !== 'production') {
-                  warnOnce([
-                    `MUI X: your dataset key "${dataKey}" is used for plotting funnels, but contains nonnumerical elements.`,
-                    'Funnel plots only support number values.',
-                  ]);
-                }
-                return { id: `${id}-funnel-item-${i}`, value: 0 };
+    completedSeries[seriesId] = {
+      labelMarkType: 'square',
+      layout: isHorizontal ? 'horizontal' : 'vertical',
+      valueFormatter: (item) => (item == null ? '' : item.value.toLocaleString()),
+      ...currentSeries,
+      data: dataKey
+        ? dataset!.map((data, i) => {
+            const value = data[dataKey];
+            if (typeof value !== 'number') {
+              if (process.env.NODE_ENV !== 'production') {
+                warnOnce([
+                  `MUI X: your dataset key "${dataKey}" is used for plotting funnels, but contains nonnumerical elements.`,
+                  'Funnel plots only support number values.',
+                ]);
               }
-              return { id: `${id}-funnel-item-${i}`, value };
-            })
-          : series[id].data!.map((v, i) => ({ id: `${id}-funnel-item-${v.id ?? i}`, ...v })),
-        stackedData: [],
-      };
-    });
+              return { id: `${seriesId}-funnel-item-${i}`, value: 0 };
+            }
+            return { id: `${seriesId}-funnel-item-${i}`, value };
+          })
+        : currentSeries.data!.map((v, i) => ({ id: `${seriesId}-funnel-item-${v.id ?? i}`, ...v })),
+      dataPoints: [],
+    };
 
-    ids.forEach((id, index) => {
-      const stackOffsets = completedSeries[id].data
-        .toReversed()
-        .map((_, i, array) => array.slice(0, i).reduce((acc, item) => acc + item.value, 0))
-        .toReversed();
+    const stackOffsets = completedSeries[seriesId].data
+      .toReversed()
+      .map((_, i, array) => array.slice(0, i).reduce((acc, item) => acc + item.value, 0))
+      .toReversed();
 
-      completedSeries[id].stackedData = completedSeries[id].data.map((item, dataIndex, array) => {
+    completedSeries[seriesId].dataPoints = completedSeries[seriesId].data.map(
+      (item, dataIndex, array) => {
         const currentMaxMain = item.value ?? 0;
         const nextDataIndex = dataIndex === array.length - 1 ? dataIndex : dataIndex + 1;
         const nextMaxMain = array[nextDataIndex].value ?? 0;
-        const [nextMaxOther, currentMaxOther] = stackedSeries[index][dataIndex];
+        const nextMaxOther = 0;
+        const currentMaxOther = completedSeries[seriesId].data[dataIndex].value;
         const stackOffset = stackOffsets[dataIndex];
 
         return [
@@ -166,14 +143,12 @@ const formatter: SeriesProcessor<'funnel'> = (params, dataset) => {
             stackOffset,
           }),
         ];
-        // TODO: fix type
-      }) as any;
-    });
+      },
+    );
   });
 
   return {
     seriesOrder,
-    stackingGroups,
     series: completedSeries,
   };
 };
