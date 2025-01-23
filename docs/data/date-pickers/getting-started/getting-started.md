@@ -13,7 +13,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepick
 
 ## Installation
 
-Install the base package (which can either be the free Community version or the paid Pro version) along with a required third-party date library.
+Install the Date Pickers package that best suits your needs—Community or Pro—along with a required third-party date library.
 The Pickers currently support [Day.js](https://day.js.org/), [date-fns](https://date-fns.org/), [Luxon](https://moment.github.io/luxon/#/), and [Moment.js](https://momentjs.com/).
 
 Choose your packages and manager through the toggles below, then run the commands as provided to install:
@@ -24,7 +24,7 @@ Choose your packages and manager through the toggles below, then run the command
 
 :::success
 Not sure which date library to choose?
-If you're starting from scratch with no other date libraries in your app, we recommend Day.js because of its small bundle size.
+If you're starting from scratch with no other date libraries in your app, we recommend [Day.js](https://day.js.org/) because of its small bundle size.
 :::
 
 ### Peer dependencies
@@ -32,7 +32,7 @@ If you're starting from scratch with no other date libraries in your app, we rec
 #### Material UI
 
 The Date and Time Pickers have a peer dependency on `@mui/material`.
-If you're not already using it, install it with the following command:
+If you're not already using it, install it now:
 
 <codeblock storageKey="package-manager">
 
@@ -73,7 +73,9 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 ```
 
-Adapters are provided for each of the supported date libraries, and all are exported by both the Community and Pro versions—for example,`AdapterDayjs`, which is used throughout this documentation for [Day.js](https://day.js.org/) integration:
+Next, import the adapter that corresponds to your chosen date library.
+Adapters are provided for all supported libraries in both versions of the package.
+The snippet below imports `AdapterDayjs`, which is used throughout this documentation for Day.js integration.
 
 ```tsx
 // Pro users: add `-pro` suffix to package name
@@ -82,7 +84,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 ### Integrate provider and adapter
 
-To integrate your chosen date library with the Date and Time Pickers, wrap your app with the Localization Provider and pass the adapter to the Provider's `dateAdapter` prop as shown below:
+To integrate your chosen date library with the Date Pickers, wrap your app with the Localization Provider and pass the adapter to the Provider's `dateAdapter` prop as shown below:
 
 {{"component": "modules/components/PickersRenderingInstructions.js"}}
 
@@ -148,28 +150,31 @@ const theme = createTheme({
 
 ### Date and time types
 
-The Date and Time Pickers are compatible with several date libraries that use different formats to represent their dates (`Date` object for `date-fns`, `daysjs.Dayjs` object for `days-js`, etc.).
-To correctly type all the props that are date-related, the adapters override a global type named `PickerValidDate` to allow the usage of their own date format.
-This allows TypeScript to throw an error if you try to pass `value={new Date()}` to a component using `AdapterDayjs` for instance.
+The Date and Time Pickers are compatible with several date libraries that each use different formats to represent their dates.
+To correctly type all date-related props, the adapters override a global type named `PickerValidDate` to allow for the formatting of their corresponding libraries.
+As a result, TypeScript will throw an error if you try to pass the wrong kind of value to the date library.
 
-If you're not sure your adapter is set up correctly to infer the type of date-related props, you can import the `PickerValidDate` type and check its current value.
-
-If it's equal to the format used by your date library, then you don't have to do anything:
+To determine whether your adapter is set up correctly, you can import the `PickerValidDate` type from `@mui/x-date-pickers/models` and check its current value.
+If the type matches your chosen date library then it's correctly configured:
 
 <img src="/static/x/date-pickers/picker-valid-date-configured.png" alt="PickerValidDate correctly configured" />
 
-If it's equal to `any`, you can fix it by manually importing the adapter in some file of your project as show below:
-
-<img src="/static/x/date-pickers/picker-valid-date-not-configured.png" alt="PickerValidDate not correctly configured" />
+If the type is `any`, you can fix this by manually importing the adapter's types directly into your project as shown below:
 
 ```ts
-// Replace `AdapterDayjs` with the adapter you are using.
+// replace `AdapterDayjs` with the adapter you're using
 import type {} from '@mui/x-date-pickers/AdapterDayjs';
 ```
 
 :::info
-Before version 7.19.0, TypeScript was throwing an error such as `DesktopDatePickerProps<Date> error Type 'Date' does not satisfy the constraint 'never'`
-when you were not importing the adapter in the same TypeScript project as the rest of your codebase.
-
-The fix described above should also solve the problem.
+Before version 7.19.0, TypeScript would throw the following error if you didn't import the adapter in the same TypeScript project as the rest of your codebase: `DesktopDatePickerProps<Date> error Type 'Date' does not satisfy the constraint 'never'`.
+The solution described above should resolve this.
 :::
+
+## Using this documentation
+
+## Demo Container and Demo Item
+
+`<DemoContainer />` is an internal component used with `<DemoItem />` to display multiple components with a consistent layout throughout the demos.
+This helps avoid the repeated use of layout components, such as `<Box />` or `<Stack />`, which would otherwise add irrelevant clutter to demos meant to illustrate specific features.
+**You should never use these components in your application.**
