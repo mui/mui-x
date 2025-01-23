@@ -1,17 +1,24 @@
 import * as React from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 import { DataGridPremium } from '@mui/x-data-grid-premium';
+import Stack from '@mui/material/Stack';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import ToggleButton from '@mui/material/ToggleButton';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
 
-const theme = createTheme({
-  mixins: {
-    MuiDataGrid: {
-      background: '#fafaf9',
-      pinnedBackground: '#f5f5f4',
-      headerBackground: '#eeedec',
+const getTheme = (mode) =>
+  createTheme({
+    palette: {
+      mode,
+      DataGrid: {
+        bg: mode === 'light' ? '#f8fafc' : '#020617',
+        pinnedBg: mode === 'light' ? '#f1f5f9' : '#0f172a',
+        headerBg: mode === 'light' ? '#e2e8f0' : '#1e293b',
+      },
     },
-  },
-});
+  });
 
 const columns = [
   { field: 'id', headerName: 'ID', width: 90 },
@@ -57,8 +64,26 @@ const rows = [
 ];
 
 export default function BackgroundColorsGrid() {
+  const [mode, setMode] = React.useState('light');
+  const theme = React.useMemo(() => getTheme(mode), [mode]);
+
   return (
-    <div style={{ height: 400, width: '100%' }}>
+    <Stack direction="column" gap={1} style={{ width: '100%', height: 400 }}>
+      <ToggleButtonGroup
+        size="small"
+        color="primary"
+        value={mode}
+        onChange={(event, value) => setMode(value === null ? mode : value)}
+        exclusive
+      >
+        <ToggleButton value="light" aria-label="Light mode" sx={{ gap: 1 }}>
+          <LightModeIcon fontSize="small" /> Light
+        </ToggleButton>
+        <ToggleButton value="dark" aria-label="Dark mode" sx={{ gap: 1 }}>
+          <DarkModeIcon fontSize="small" /> Dark
+        </ToggleButton>
+      </ToggleButtonGroup>
+
       <ThemeProvider theme={theme}>
         <DataGridPremium
           rows={rows}
@@ -78,6 +103,6 @@ export default function BackgroundColorsGrid() {
           }}
         />
       </ThemeProvider>
-    </div>
+    </Stack>
   );
 }

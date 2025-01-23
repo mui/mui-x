@@ -127,18 +127,20 @@ import { createTheme } from '@mui/material/styles';
 import type {} from '@mui/x-data-grid/themeAugmentation';
 
 const theme = createTheme({
-  mixins: {
-    MuiDataGrid: {
+  palette: {
+    DataGrid: {
       // Container background
-      background: '#fafaf9',
+      bg: '#fafaf9',
       // Pinned rows and columns background
-      pinnedBackground: '#f5f5f4',
+      pinnedBg: '#f5f5f4',
       // Column header background
-      headerBackground: '#eeedec',
+      headerBg: '#eeedec',
     },
   },
 });
 ```
+
+See the demo below for a working example of the above configuration that also supports dark mode.
 
 {{"demo": "BackgroundColorsGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 

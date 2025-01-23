@@ -146,12 +146,9 @@ export const GridRootStyles = styled('div', {
   const borderColor = getBorderColor(t);
   const radius = t.shape.borderRadius;
 
-  const background =
-    t.mixins.MuiDataGrid?.background ??
-    t.vars?.palette.background.default ??
-    t.palette.background.default;
-  const headerBackground = t.mixins.MuiDataGrid?.headerBackground ?? background;
-  const pinnedBackground = t.mixins.MuiDataGrid?.pinnedBackground ?? background;
+  const background = (t.vars || t).palette.DataGrid?.bg ?? (t.vars || t).palette.background.default;
+  const headerBackground = (t.vars || t).palette.DataGrid?.headerBg ?? background;
+  const pinnedBackground = (t.vars || t).palette.DataGrid?.pinnedBg ?? background;
 
   const overlayBackground = t.vars
     ? `rgba(${t.vars.palette.background.defaultChannel} / ${t.vars.palette.action.disabledOpacity})`

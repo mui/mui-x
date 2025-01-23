@@ -7,11 +7,17 @@ export interface DataGridComponentNameToClassKey {
 declare module '@mui/material/styles' {
   interface ComponentNameToClassKey extends DataGridComponentNameToClassKey {}
 
-  interface Mixins {
-    MuiDataGrid?: {
-      background?: string;
-      headerBackground?: string;
-      pinnedBackground?: string;
-    };
+  interface PaletteDataGrid {
+    bg?: string;
+    headerBg?: string;
+    pinnedBg?: string;
+  }
+
+  interface CssVarsPalette {
+    DataGrid: PaletteDataGrid;
+  }
+
+  interface PaletteOptions {
+    DataGrid?: PaletteDataGrid;
   }
 }
