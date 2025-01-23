@@ -48,8 +48,7 @@ describe('<DataGridPro /> - Data source', () => {
           const urlParams = new URLSearchParams({
             filterModel: JSON.stringify(params.filterModel),
             sortModel: JSON.stringify(params.sortModel),
-            start: `${params.start}`,
-            end: `${params.end}`,
+            paginationModel: JSON.stringify(params.paginationModel),
           });
 
           const getRowsResponse = await fetchRows(
@@ -95,33 +94,39 @@ describe('<DataGridPro /> - Data source', () => {
   });
 
   it('should re-fetch the data on filter change', async () => {
-    const { setProps } = render(<TestDataSource />);
+    render(<TestDataSource />);
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
-    setProps({ filterModel: { items: [{ field: 'name', value: 'John', operator: 'contains' }] } });
+    act(() => {
+      apiRef.current.setFilterModel({ items: [{ field: 'name', value: 'John', operator: 'contains' }] });
+    });
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
     });
   });
 
   it('should re-fetch the data on sort change', async () => {
-    const { setProps } = render(<TestDataSource />);
+    render(<TestDataSource />);
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
-    setProps({ sortModel: [{ field: 'name', sort: 'asc' }] });
+    act(() => {
+      apiRef.current.setSortModel([{ field: 'name', sort: 'asc' }]);
+    });
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
     });
   });
 
   it('should re-fetch the data on pagination change', async () => {
-    const { setProps } = render(<TestDataSource />);
+    render(<TestDataSource />);
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
-    setProps({ paginationModel: { page: 1, pageSize: 10 } });
+    act(() => {
+      apiRef.current.setPage(1);
+    });
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
     });
