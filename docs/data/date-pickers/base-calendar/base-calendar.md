@@ -256,6 +256,14 @@ This shows how light the Material layer would be once we have the Base UI X prim
 
 {{"demo": "DateCalendarWithMaterialDesignDemo.js", "defaultCodeOpen": false}}
 
+### Recipe: Year accordion
+
+:::warning
+Work in progress
+:::
+
+{{"demo": "DateCalendarWithYearAccordionDemo.js", "defaultCodeOpen": false}}
+
 ## Day Range Calendar
 
 :::warning

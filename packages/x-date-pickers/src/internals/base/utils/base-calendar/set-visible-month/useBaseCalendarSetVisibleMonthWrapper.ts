@@ -27,7 +27,10 @@ export function useBaseCalendarSetVisibleMonthWrapper(
       return utils.addMonths(baseRootContext.visibleDate, baseRootContext.monthPageSize);
     }
 
-    return utils.setMonth(baseRootContext.visibleDate, utils.getMonth(target));
+    return utils.setYear(
+      utils.setMonth(baseRootContext.visibleDate, utils.getMonth(target)),
+      utils.getYear(target),
+    );
   }, [baseRootContext.visibleDate, baseRootContext.monthPageSize, utils, target]);
 
   const isDisabled = React.useMemo(() => {

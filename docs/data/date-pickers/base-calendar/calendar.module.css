@@ -330,6 +330,37 @@
   pointer-events: none;
 }
 
+.YearAccordionRoot {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  position: relative;
+}
+
+.YearAccordionTrigger {
+  border: none;
+  user-select: none;
+  background-color: transparent;
+  text-align: center;
+  cursor: pointer;
+  justify-self: flex-end;
+  text-align: left;
+  font-size: 1rem;
+  flex: 0 0 32px;
+  padding: 0 32px;
+}
+
+.YearAccordionPanel {
+  min-height: 144px;
+  padding: 0 0 24px 0;
+}
+.YearAccordionSeparator {
+  background-color: var(--days-grid-separator-bg-color);
+  margin: 0 6px;
+  flex: 0 0 1px;
+}
+
 :global(.mode-dark) .Root {
   --button-hover-bg-color: #075985;
   --days-grid-separator-bg-color: #4b5563;

@@ -443,7 +443,7 @@ function CalendarHeader(props) {
                 size="medium"
                 title={translations.nextMonth}
                 aria-label={translations.nextMonth}
-                edge="end"
+                edge="start"
               />
             }
           >
