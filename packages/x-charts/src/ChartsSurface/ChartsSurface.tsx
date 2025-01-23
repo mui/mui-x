@@ -90,12 +90,6 @@ ChartsSurface.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
   desc: PropTypes.string,
-  /**
-   * If `true`, the charts will not listen to the mouse move event.
-   * It might break interactive features, but will improve performance.
-   * @default false
-   */
-  disableAxisListener: PropTypes.bool,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

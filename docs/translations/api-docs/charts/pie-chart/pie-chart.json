@@ -5,9 +5,6 @@
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
     },
-    "disableAxisListener": {
-      "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
-    },
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
@@ -37,12 +34,6 @@
     "slots": { "description": "Overridable component slots." },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
-    },
-    "xAxis": {
-      "description": "The configuration of the x-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
-    },
-    "yAxis": {
-      "description": "The configuration of the y-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
     }
   },
   "classDescriptions": {},
