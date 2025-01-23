@@ -21,9 +21,9 @@ packageName: '@mui/x-date-pickers'
     <Calendar.DaysGridBody>
       {({ weeks }) =>
         weeks.map((week) => (
-          <Calendar.DaysWeekRow value={week}>
+          <Calendar.DaysGridRow value={week}>
             {({ days }) => days.map((day) => <Calendar.DaysCell value={day} />)}
-          </Calendar.DaysWeekRow>
+          </Calendar.DaysGridRow>
         ))
       }
     </Calendar.DaysGridBody>
@@ -142,10 +142,10 @@ For now, the validation behaviors are exactly the same as on `<DateCalendar />`:
    </Calendar.DaysGridHeader>
    ```
 
-2. Add a custom cell in `<Calendar.DaysWeekRow />`
+2. Add a custom cell in `<Calendar.DaysGridRow />`
 
    ```tsx
-   <Calendar.DaysWeekRow value={week}>
+   <Calendar.DaysGridRow value={week}>
      {({ days }) => (
        <React.Fragment>
          <span role="rowheader" aria-label={`Week ${days[0].week()}`}>
@@ -154,7 +154,7 @@ For now, the validation behaviors are exactly the same as on `<DateCalendar />`:
          {/** Day cells */}
        </React.Fragment>
      )}
-   </Calendar.DaysWeekRow>
+   </Calendar.DaysGridRow>
    ```
 
 {{"demo": "DayCalendarWithWeekNumberDemo.js", "defaultCodeOpen": false}}

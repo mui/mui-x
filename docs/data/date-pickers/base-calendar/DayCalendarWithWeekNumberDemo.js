@@ -55,10 +55,10 @@ function DayCalendar(props) {
               <Calendar.DaysGridBody className={styles.DaysGridBody}>
                 {({ weeks }) =>
                   weeks.map((week) => (
-                    <Calendar.DaysWeekRow
+                    <Calendar.DaysGridRow
                       value={week}
                       key={week.toString()}
-                      className={styles.DaysWeekRow}
+                      className={styles.DaysGridRow}
                     >
                       {({ days }) => (
                         <React.Fragment>
@@ -78,7 +78,7 @@ function DayCalendar(props) {
                           ))}
                         </React.Fragment>
                       )}
-                    </Calendar.DaysWeekRow>
+                    </Calendar.DaysGridRow>
                   ))
                 }
               </Calendar.DaysGridBody>

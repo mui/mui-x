@@ -123,10 +123,10 @@ function DaysGrid(props: { offset: 0 | 1 }) {
       <RangeCalendar.DaysGridBody className={styles.DaysGridBody}>
         {({ weeks }) =>
           weeks.map((week) => (
-            <RangeCalendar.DaysWeekRow
+            <RangeCalendar.DaysGridRow
               value={week}
               key={week.toString()}
-              className={styles.DaysWeekRow}
+              className={styles.DaysGridRow}
             >
               {({ days }) =>
                 days.map((day) => (
@@ -139,7 +139,7 @@ function DaysGrid(props: { offset: 0 | 1 }) {
                   />
                 ))
               }
-            </RangeCalendar.DaysWeekRow>
+            </RangeCalendar.DaysGridRow>
           ))
         }
       </RangeCalendar.DaysGridBody>

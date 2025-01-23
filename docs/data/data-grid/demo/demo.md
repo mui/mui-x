@@ -1,10 +1,9 @@
-# Data Grid Demo
+# Data Grid feature showcase
 
-<p class="description">Explore all of the Data Grid features and understand which plan they're available in.</p>
+<p class="description">Explore all of the available features in each of the Data Grid packages.</p>
 
-:::info
-Note that this demo itself uses the Data Grid with features such as filtering, sorting, and grouping!
-:::
+The demo below uses the Data Grid to list all available features in the Community, Pro, and Premium packages.
+Check it out to help determine which package is best for you, and see features like filtering, sorting, and grouping in action.
 
 {{"demo": "PopularFeaturesDemo.js", "defaultCodeOpen": false, "bg": "inline", "hideToolbar": true}}
 

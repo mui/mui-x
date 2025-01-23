@@ -151,10 +151,10 @@ export default function DateRangeCalendarDemo() {
             <RangeCalendar.DaysGridBody className={styles.DaysGridBody}>
               {({ weeks }) =>
                 weeks.map((week) => (
-                  <RangeCalendar.DaysWeekRow
+                  <RangeCalendar.DaysGridRow
                     value={week}
                     key={week.toString()}
-                    className={styles.DaysWeekRow}
+                    className={styles.DaysGridRow}
                   >
                     {({ days }) =>
                       days.map((day) => (
@@ -165,7 +165,7 @@ export default function DateRangeCalendarDemo() {
                         />
                       ))
                     }
-                  </RangeCalendar.DaysWeekRow>
+                  </RangeCalendar.DaysGridRow>
                 ))
               }
             </RangeCalendar.DaysGridBody>

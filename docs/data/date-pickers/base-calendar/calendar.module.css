@@ -168,7 +168,7 @@
   gap: 2px;
 }
 
-.DaysWeekRow,
+.DaysGridRow,
 .DaysGridHeader {
   display: flex;
   justify-content: center;

@@ -114,10 +114,10 @@ export default function DateCalendarMD2Demo() {
             <Calendar.DaysGridBody className={styles.DaysGridBody}>
               {({ weeks }) =>
                 weeks.map((week) => (
-                  <Calendar.DaysWeekRow
+                  <Calendar.DaysGridRow
                     value={week}
                     key={week.toString()}
-                    className={styles.DaysWeekRow}
+                    className={styles.DaysGridRow}
                   >
                     {({ days }) =>
                       days.map((day) => (
@@ -128,7 +128,7 @@ export default function DateCalendarMD2Demo() {
                         />
                       ))
                     }
-                  </Calendar.DaysWeekRow>
+                  </Calendar.DaysGridRow>
                 ))
               }
             </Calendar.DaysGridBody>

@@ -279,7 +279,7 @@ const DaysGridBodyContainer = styled(TransitionGroup)(({ theme }) => {
 
 const DaysGridBody = styled(Calendar.DaysGridBody)({ overflow: 'hidden' });
 
-const DaysWeekRow = styled(Calendar.DaysWeekRow)({
+const DaysGridRow = styled(Calendar.DaysGridRow)({
   margin: `${DAY_MARGIN}px 0`,
   display: 'flex',
   justifyContent: 'center',
@@ -532,7 +532,7 @@ function DayCalendar(props) {
           <DaysGridBody ref={daysGridBodyNodeRef}>
             {({ weeks }) =>
               weeks.map((week) => (
-                <DaysWeekRow value={week} key={weeks.toString()}>
+                <DaysGridRow value={week} key={weeks.toString()}>
                   {({ days }) => (
                     <React.Fragment>
                       {displayWeekNumber && (
@@ -550,7 +550,7 @@ function DayCalendar(props) {
                       ))}
                     </React.Fragment>
                   )}
-                </DaysWeekRow>
+                </DaysGridRow>
               ))
             }
           </DaysGridBody>
