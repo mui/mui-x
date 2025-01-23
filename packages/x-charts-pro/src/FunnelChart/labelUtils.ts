@@ -1,5 +1,10 @@
 import { FunnelDataPoints, FunnelLabelOptions } from './funnel.types';
 
+/**
+ * It tries to keep the label inside the bounds of the section based on the position.
+ *
+ * @returns The text anchor and dominant baseline of the label.
+ */
 export const alignLabel = ({
   position,
   textAnchor,
@@ -28,6 +33,14 @@ export const alignLabel = ({
   };
 };
 
+/**
+ * This function calculates the position of the label based on the position and margin.
+ *
+ * It is quite complex, because it needs to calculate the position based on the position of the points of a rectangle.
+ * And we are manually calculating each possible position of the label.
+ *
+ * @returns The x and y position of the label.
+ */
 export const positionLabel = ({
   position,
   margin,
@@ -61,9 +74,6 @@ export const positionLabel = ({
   let x: number | undefined = 0;
   let y: number | undefined = 0;
 
-  // TODO: should we provide these to the user when they override the label?
-  // We can optimize this by only calculating the necessary values
-  // And simplifying the if/else mess :)
   let minTop: number = 0;
   let maxTop: number = 0;
   let minBottom: number = 0;
