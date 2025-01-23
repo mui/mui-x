@@ -16,14 +16,20 @@ export function createXMochaHooks(coreMochaHooks = {}) {
     afterEach: [...(coreMochaHooks.afterEach ?? [])],
   };
 
-  let licenseKey, transitionStub, cssTransitionStub;
+  let licenseKey;
+  let transitionStub;
+  let cssTransitionStub;
 
   mochaHooks.beforeAll.push(function func() {
     licenseKey = generateTestLicenseKey();
 
-    function FakeTransition({ children }) { return <React.Fragment>{children}</React.Fragment>; };
+    // eslint-disable-next-line react/prop-types
+    function FakeTransition({ children }) {
+      return <React.Fragment>{children}</React.Fragment>;
+    }
 
     function FakeCSSTransition(props) {
+      // eslint-disable-next-line react/prop-types
       return props.in ? <FakeTransition>{props.children}</FakeTransition> : null;
     }
 

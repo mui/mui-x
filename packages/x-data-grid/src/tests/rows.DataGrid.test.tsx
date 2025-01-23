@@ -31,7 +31,6 @@ import {
   getRow,
   getActiveCell,
   getCell,
-  microtasks,
   $$,
 } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
@@ -40,7 +39,7 @@ import { testSkipIf, isJSDOM, describeSkipIf } from 'test/utils/skipIf';
 
 import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/densitySelector';
 
-describe.only('<DataGrid /> - Rows', () => {
+describe('<DataGrid /> - Rows', () => {
   const { render } = createRenderer();
 
   let apiRef: React.RefObject<GridApi>;
