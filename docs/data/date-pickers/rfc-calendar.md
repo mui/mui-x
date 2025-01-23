@@ -15,7 +15,7 @@ This page extends the initial proposal made in [#15598](https://github.com/mui/m
 
 ### Without Material UI
 
-The user can use the `<Calendar.DaysGrid />`, `<Calendar.DaysGridHeader />`, `<Calendar.DaysGridHeaderCell />`, `<Calendar.DaysGridBody />`, `<Calendar.DaysWeekRow />` and `<Calendar.DaysCell />` components to create a grid of days:
+The user can use the `<Calendar.DaysGrid />`, `<Calendar.DaysGridHeader />`, `<Calendar.DaysGridHeaderCell />`, `<Calendar.DaysGridBody />`, `<Calendar.DaysGridRow />` and `<Calendar.DaysCell />` components to create a grid of days:
 
 ```tsx
 import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
@@ -39,13 +39,13 @@ import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
         <Calendar.DaysGridBody>
           {({ weeks }) =>
             weeks.map((week) => (
-              <Calendar.DaysWeekRow value={week}>
+              <Calendar.DaysGridRow value={week}>
                 {({ days }) =>
                   days.map((day) => (
                     <Calendar.DaysCell value={day} key={day.toString()} />
                   ))
                 }
-              </Calendar.DaysWeekRow>
+              </Calendar.DaysGridRow>
             ))
           }
         </Calendar.DaysGridBody>
@@ -237,13 +237,13 @@ function DateCalendar() {
           <Calendar.DaysGridBody>
             {({ weeks }) =>
               weeks.map((week) => (
-                <Calendar.DaysWeekRow value={week} key={week.toString()}>
+                <Calendar.DaysGridRow value={week} key={week.toString()}>
                   {({ days }) =>
                     days.map((day) => (
                       <Calendar.DaysCell value={day} key={day.toString()} />
                     ))
                   }
-                </Calendar.DaysWeekRow>
+                </Calendar.DaysGridRow>
               ))
             }
           </Calendar.DaysGridBody>
@@ -612,13 +612,13 @@ function CalendarGrid({ offset }) {
       <Calendar.DaysGridBody>
         {({ weeks }) =>
           weeks.map((week) => (
-            <Calendar.DaysWeekRow value={week} key={week.toString()}>
+            <Calendar.DaysGridRow value={week} key={week.toString()}>
               {({ days }) =>
                 days.map((day) => (
                   <Calendar.DaysCell value={day} key={day.toString()} />
                 ))
               }
-            </Calendar.DaysWeekRow>
+            </Calendar.DaysGridRow>
           ))
         }
       </Calendar.DaysGridBody>
@@ -722,7 +722,7 @@ The user can add custom elements to add the week number to the grid:
   <Calendar.DaysGridBody>
     {({ weeks }) =>
       weeks.map((week) => (
-        <Calendar.DaysWeekRow value={week} key={week.toString()}>
+        <Calendar.DaysGridRow value={week} key={week.toString()}>
           {({ days }) => (
             <React.Fragment>
               <span role="rowheader" aria-label={`Week ${days[0].week()}`}>
@@ -733,7 +733,7 @@ The user can add custom elements to add the week number to the grid:
               ))}
             </React.Fragment>
           )}
-        </Calendar.DaysWeekRow>
+        </Calendar.DaysGridRow>
       ))
     }
   </Calendar.DaysGridBody>
@@ -876,7 +876,7 @@ It expects a function as its children, which receives the list of weeks to rende
 ```tsx
 <Calendar.DaysGridBody>
   {({ weeks }) =>
-    weeks.map((week) => <Calendar.DaysWeekRow value={week} key={week.toString()} />)
+    weeks.map((week) => <Calendar.DaysGridRow value={week} key={week.toString()} />)
   }
 </Calendar.DaysGridBody>
 ```
@@ -887,18 +887,18 @@ It expects a function as its children, which receives the list of weeks to rende
 
 - `children`: `(params: { weeks: PickerValidDate[] }) => React.ReactNode`
 
-### `Calendar.DaysWeekRow`
+### `Calendar.DaysGridRow`
 
 Renders the content all the days in a week.
 
 It expects a function as its children, which receives the list of days to render and the week number as a parameter:
 
 ```tsx
-<Calendar.DaysWeekRow>
+<Calendar.DaysGridRow>
   {({ days }) =>
     days.map((day) => <Calendar.DaysCell value={day} key={day.toString()} />)
   }
-</Calendar.DaysWeekRow>
+</Calendar.DaysGridRow>
 ```
 
 #### Props
