@@ -3,11 +3,11 @@ import useForkRef from '@mui/utils/useForkRef';
 import { useCompositeListItem } from '../../../composite/list/useCompositeListItem';
 import { useBaseCalendarDaysGridBodyContext } from '../days-grid-body/BaseCalendarDaysGridBodyContext';
 import { useBaseCalendarDaysGridContext } from '../days-grid/BaseCalendarDaysGridContext';
-import type { useBaseCalendarDaysWeekRow } from './useBaseCalendarDaysWeekRow';
+import type { useBaseCalendarDaysGridRow } from './useBaseCalendarDaysGridRow';
 
-export function useBaseCalendarDaysWeekRowWrapper(
-  parameters: useBaseCalendarDaysWeekRowWrapper.Parameters,
-): useBaseCalendarDaysWeekRowWrapper.ReturnValue {
+export function useBaseCalendarDaysGridRowWrapper(
+  parameters: useBaseCalendarDaysGridRowWrapper.Parameters,
+): useBaseCalendarDaysGridRowWrapper.ReturnValue {
   const { forwardedRef, value } = parameters;
   const baseDaysGridContext = useBaseCalendarDaysGridContext();
   const baseDaysGridBodyContext = useBaseCalendarDaysGridBodyContext();
@@ -32,8 +32,8 @@ export function useBaseCalendarDaysWeekRowWrapper(
   return { ref: mergedRef, ctx };
 }
 
-export namespace useBaseCalendarDaysWeekRowWrapper {
-  export interface Parameters extends Pick<useBaseCalendarDaysWeekRow.Parameters, 'value'> {
+export namespace useBaseCalendarDaysGridRowWrapper {
+  export interface Parameters extends Pick<useBaseCalendarDaysGridRow.Parameters, 'value'> {
     /**
      * The ref forwarded by the parent component.
      */
@@ -48,6 +48,6 @@ export namespace useBaseCalendarDaysWeekRowWrapper {
     /**
      * The memoized context to forward to the memoized component so that it does not need to subscribe to any context.
      */
-    ctx: useBaseCalendarDaysWeekRow.Context;
+    ctx: useBaseCalendarDaysGridRow.Context;
   }
 }

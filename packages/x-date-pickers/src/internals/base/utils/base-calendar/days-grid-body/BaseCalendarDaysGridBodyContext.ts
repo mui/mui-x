@@ -21,7 +21,7 @@ export function useBaseCalendarDaysGridBodyContext() {
     throw new Error(
       [
         'Base UI X: BaseCalendarDaysGridBodyContext is missing.',
-        '<Calendar.DaysWeekRow /> must be placed within <Calendar.DaysGridBody /> and <RangeCalendar.DaysWeekRow /> must be placed within <RangeCalendar.DaysGridBody />.',
+        '<Calendar.DaysGridRow /> must be placed within <Calendar.DaysGridBody /> and <RangeCalendar.DaysGridRow /> must be placed within <RangeCalendar.DaysGridBody />.',
       ].join('\n'),
     );
   }

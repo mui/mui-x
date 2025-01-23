@@ -4,12 +4,12 @@ import { GenericHTMLProps } from '../../../base-utils/types';
 import { mergeReactProps } from '../../../base-utils/mergeReactProps';
 import { BaseCalendarDaysGridBodyContext } from '../days-grid-body/BaseCalendarDaysGridBodyContext';
 
-export function useBaseCalendarDaysWeekRow(parameters: useBaseCalendarDaysWeekRow.Parameters) {
+export function useBaseCalendarDaysGridRow(parameters: useBaseCalendarDaysGridRow.Parameters) {
   const { children, ctx } = parameters;
   const ref = React.useRef(null);
   const cellRefs = React.useRef<(HTMLElement | null)[]>([]);
 
-  const getDaysWeekRowProps = React.useCallback(
+  const getDaysGridRowProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
       return mergeReactProps(externalProps, {
         ref,
@@ -26,10 +26,10 @@ export function useBaseCalendarDaysWeekRow(parameters: useBaseCalendarDaysWeekRo
     return registerWeekRowCells(ref, cellRefs);
   }, [registerWeekRowCells]);
 
-  return React.useMemo(() => ({ getDaysWeekRowProps, cellRefs }), [getDaysWeekRowProps, cellRefs]);
+  return React.useMemo(() => ({ getDaysGridRowProps, cellRefs }), [getDaysGridRowProps, cellRefs]);
 }
 
-export namespace useBaseCalendarDaysWeekRow {
+export namespace useBaseCalendarDaysGridRow {
   export interface Parameters {
     /**
      * The date object representing the week.
