@@ -40,7 +40,7 @@ import { testSkipIf, isJSDOM, describeSkipIf } from 'test/utils/skipIf';
 
 import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/densitySelector';
 
-describe('<DataGrid /> - Rows', () => {
+describe.only('<DataGrid /> - Rows', () => {
   const { render } = createRenderer();
 
   let apiRef: React.RefObject<GridApi>;
@@ -276,13 +276,15 @@ describe('<DataGrid /> - Rows', () => {
     });
 
     it('should show in a menu the actions marked as showInMenu', async () => {
-      render(<TestCase getActions={() => [<GridActionsCellItem label="print" showInMenu />]} />);
+      const { user } = render(
+        <TestCase getActions={() => [<GridActionsCellItem label="print" showInMenu />]} />,
+      );
       expect(screen.queryByText('print')).to.equal(null);
-      fireEvent.click(screen.getByRole('menuitem', { name: 'more' }));
+      await user.click(screen.getByRole('menuitem', { name: 'more' }));
       expect(screen.queryByText('print')).not.to.equal(null);
     });
 
-    it('should not select the row when clicking in an action', async () => {
+    it('should not select the row when clicking in an action', () => {
       render(
         <TestCase getActions={() => [<GridActionsCellItem icon={<span />} label="print" />]} />,
       );
@@ -292,25 +294,25 @@ describe('<DataGrid /> - Rows', () => {
     });
 
     it('should not select the row when clicking in a menu action', async () => {
-      render(
+      const { user } = render(
         <TestCase
           getActions={() => [<GridActionsCellItem icon={<span />} label="print" showInMenu />]}
         />,
       );
       expect(getRow(0)).not.to.have.class('Mui-selected');
-      fireEvent.click(screen.getByRole('menuitem', { name: 'more' }));
+      await user.click(screen.getByRole('menuitem', { name: 'more' }));
       expect(screen.queryByText('print')).not.to.equal(null);
 
-      fireEvent.click(screen.getByText('print'));
+      await user.click(screen.getByText('print'));
       expect(getRow(0)).not.to.have.class('Mui-selected');
-
-      await microtasks();
     });
 
     it('should not select the row when opening the menu', async () => {
-      render(<TestCase getActions={() => [<GridActionsCellItem label="print" showInMenu />]} />);
+      const { user } = render(
+        <TestCase getActions={() => [<GridActionsCellItem label="print" showInMenu />]} />,
+      );
       expect(getRow(0)).not.to.have.class('Mui-selected');
-      fireEvent.click(screen.getByRole('menuitem', { name: 'more' }));
+      await user.click(screen.getByRole('menuitem', { name: 'more' }));
       expect(getRow(0)).not.to.have.class('Mui-selected');
     });
 
@@ -349,7 +351,7 @@ describe('<DataGrid /> - Rows', () => {
     });
 
     it('should focus the first item when opening the menu', async () => {
-      render(
+      const { user } = render(
         <TestCase
           getActions={() => [
             <GridActionsCellItem icon={<span />} label="print" showInMenu />,
@@ -358,7 +360,7 @@ describe('<DataGrid /> - Rows', () => {
         />,
       );
       const moreButton = screen.getByRole('menuitem', { name: 'more' });
-      fireUserEvent.mousePress(moreButton);
+      await user.click(moreButton);
 
       const printButton = screen.queryByRole('menuitem', { name: 'print' });
       expect(printButton).toHaveFocus();
@@ -617,7 +619,7 @@ describe('<DataGrid /> - Rows', () => {
         );
       }
 
-      it('should measure all rows and update the content size', async () => {
+      it('should measure all rows and update the content size', () => {
         const border = 1;
         const contentHeight = 100;
         render(<TestCase getBioContentHeight={() => contentHeight} getRowHeight={() => 'auto'} />);
@@ -631,7 +633,7 @@ describe('<DataGrid /> - Rows', () => {
         expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
       });
 
-      it('should use the default row height to calculate the content size when the row has not been measured yet', async () => {
+      it('should use the default row height to calculate the content size when the row has not been measured yet', () => {
         const columnHeaderHeight = 50;
         const border = 1;
         const defaultRowHeight = 52;
@@ -658,7 +660,7 @@ describe('<DataGrid /> - Rows', () => {
         expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
       });
 
-      it('should use the value from getEstimatedRowHeight to estimate the content size', async () => {
+      it('should use the value from getEstimatedRowHeight to estimate the content size', () => {
         const columnHeaderHeight = 50;
         const border = 1;
         const measuredRowHeight = 100;
@@ -685,7 +687,7 @@ describe('<DataGrid /> - Rows', () => {
         expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
       });
 
-      it('should recalculate the content size when the rows prop changes', async () => {
+      it('should recalculate the content size when the rows prop changes', () => {
         const { setProps } = render(
           <TestCase
             getBioContentHeight={(row) => (row.expanded ? 200 : 100)}
@@ -732,7 +734,7 @@ describe('<DataGrid /> - Rows', () => {
         expect($$(`.${gridClasses.cell}:not(.${gridClasses.cellEmpty})`)).to.have.length(2);
       });
 
-      it('should measure rows while scrolling', async () => {
+      it('should measure rows while scrolling', () => {
         const columnHeaderHeight = 50;
         const border = 1;
         render(
@@ -757,7 +759,7 @@ describe('<DataGrid /> - Rows', () => {
         expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 101 + 101);
       });
 
-      it('should allow to mix rows with dynamic row height and default row height', async () => {
+      it('should allow to mix rows with dynamic row height and default row height', () => {
         const columnHeaderHeight = 50;
         const densityFactor = 1.3;
         const rowHeight = 52;
@@ -788,7 +790,7 @@ describe('<DataGrid /> - Rows', () => {
       const { userAgent } = window.navigator;
       testSkipIf(!userAgent.includes('Headless') || /edg/i.test(userAgent))(
         'should position correctly the render zone when the 2nd page has less rows than the 1st page',
-        async () => {
+        () => {
           const data = getBasicGridData(120, 3);
           const columnHeaderHeight = 50;
           const measuredRowHeight = 100;
@@ -813,7 +815,7 @@ describe('<DataGrid /> - Rows', () => {
         },
       );
 
-      it('should position correctly the render zone when changing pageSize to a lower value', async () => {
+      it('should position correctly the render zone when changing pageSize to a lower value', () => {
         const data = getBasicGridData(120, 3);
         const columnHeaderHeight = 50;
         const measuredRowHeight = 100;
@@ -840,7 +842,7 @@ describe('<DataGrid /> - Rows', () => {
       // In Chrome non-headless and Edge this test is flaky
       testSkipIf(!userAgent.includes('Headless') || /edg/i.test(userAgent))(
         'should position correctly the render zone when changing pageSize to a lower value and moving to next page',
-        async () => {
+        () => {
           const data = getBasicGridData(120, 3);
           const columnHeaderHeight = 50;
           const measuredRowHeight = 100;
@@ -1083,7 +1085,7 @@ describe('<DataGrid /> - Rows', () => {
   // needs virtualization
   testSkipIf(isJSDOM)(
     'should set proper `data-rowindex` and `aria-rowindex` when focused row is out of the viewport',
-    async () => {
+    () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid

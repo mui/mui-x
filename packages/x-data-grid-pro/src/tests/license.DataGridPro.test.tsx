@@ -7,7 +7,7 @@ import { LicenseInfo } from '@mui/x-license';
 describe('<DataGridPro /> - License', () => {
   const { render } = createRenderer();
 
-  it('should render watermark when the license is missing', async () => {
+  it('should render watermark when the license is missing', () => {
     LicenseInfo.setLicenseKey('');
 
     expect(() => render(<DataGridPro columns={[]} rows={[]} autoHeight />)).toErrorDev([

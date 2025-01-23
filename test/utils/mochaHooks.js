@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { config } from 'react-transition-group';
-import sinon from 'sinon';
+import * as ReactTransitionGroup from 'react-transition-group';
+import { stub, restore } from 'sinon';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGrid } from '@mui/x-data-grid';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGridPro } from '@mui/x-data-grid-pro';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingTreeView } from '@mui/x-tree-view';
@@ -9,10 +9,6 @@ import { clearWarningsCache } from '@mui/x-internals/warning';
 import { generateTestLicenseKey, setupTestLicenseKey } from './testLicense';
 
 export function createXMochaHooks(coreMochaHooks = {}) {
-  // disable "react-transition-group" transitions
-  // https://reactcommunity.org/react-transition-group/testing/
-  config.disabled = true;
-
   const mochaHooks = {
     beforeAll: [...(coreMochaHooks.beforeAll ?? [])],
     afterAll: [...(coreMochaHooks.afterAll ?? [])],
@@ -20,10 +16,19 @@ export function createXMochaHooks(coreMochaHooks = {}) {
     afterEach: [...(coreMochaHooks.afterEach ?? [])],
   };
 
-  let licenseKey;
+  let licenseKey, transitionStub, cssTransitionStub;
 
   mochaHooks.beforeAll.push(function func() {
     licenseKey = generateTestLicenseKey();
+
+    function FakeTransition({ children }) { return <React.Fragment>{children}</React.Fragment>; };
+
+    function FakeCSSTransition(props) {
+      return props.in ? <FakeTransition>{props.children}</FakeTransition> : null;
+    }
+
+    transitionStub = stub(ReactTransitionGroup, 'Transition').callsFake(FakeTransition);
+    cssTransitionStub = stub(ReactTransitionGroup, 'CSSTransition').callsFake(FakeCSSTransition);
   });
 
   mochaHooks.beforeEach.push(function setupLicenseKey() {
@@ -38,10 +43,15 @@ export function createXMochaHooks(coreMochaHooks = {}) {
 
     // Restore Sinon default sandbox to avoid memory leak
     // See https://github.com/sinonjs/sinon/issues/1866
-    sinon.restore();
+    restore();
   });
 
   mochaHooks.afterEach.push(clearWarningsCache);
+
+  mochaHooks.afterAll.push(function restoreTransition() {
+    transitionStub.restore();
+    cssTransitionStub.restore();
+  });
 
   return mochaHooks;
 }
