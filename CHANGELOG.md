@@ -5,6 +5,88 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v8.0.0-alpha.9
+
+_Jan 24, 2025_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Persian (fa-IR) and Urdu (ur-PK) locales on the Data Grid
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@AxharKhan, @lauri865, @mapache-salvaje, @mostafaRoosta74.
+
+Following are all team members who have contributed to this release:
+@alexfauquette, @cherniavskii, @Janpot, @JCQuintas, @LukasTy.
+
+### Data Grid
+
+#### `@mui/x-data-grid@v8.0.0-alpha.9`
+
+- [DataGrid] Fix toggling preference panel from toolbar (#16274) @lauri865
+- [DataGrid] Only try to mount filter button if there are filters present (#16267) @lauri865
+- [l10n] Improve Persian (fa-IR) locale (#16312) @mostafaRoosta74
+- [l10n] Improve Urdu (ur-PK) locale (#16295) @AxharKhan
+
+#### `@mui/x-data-grid-pro@v8.0.0-alpha.9` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@v8.0.0-alpha.9`.
+
+#### `@mui/x-data-grid-premium@v8.0.0-alpha.9` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@v8.0.0-alpha.9`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@v8.0.0-alpha.9`
+
+- [fields] Reset `all` selected state on section edit (#16223) @LukasTy
+
+#### `@mui/x-date-pickers-pro@v8.0.0-alpha.9` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@v8.0.0-alpha.9`.
+
+### Charts
+
+#### `@mui/x-charts@v8.0.0-alpha.9`
+
+- [charts] Expand line with step interpolation (#16229) @alexfauquette
+- [charts] Fix hydration missmatch (#16261) @alexfauquette
+- [charts] Fix zoom option reactivity (#16262) @alexfauquette
+- [charts] Move legend getter to series config (#16307) @alexfauquette
+- [charts] Use `<circle />` instead of `<path />` for line marks by default (#15220) @alexfauquette
+
+#### `@mui/x-charts-pro@v8.0.0-alpha.9` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@v8.0.0-alpha.9`, plus:
+
+- [charts-pro] Fix `pro` components watermark (#16222) @JCQuintas
+
+### Tree View
+
+#### `@mui/x-tree-view@v8.0.0-alpha.9`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@v8.0.0-alpha.9` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@v8.0.0-alpha.9`.
+
+### Docs
+
+- [docs] Fix `domainLimit` definition (#16270) @alexfauquette
+- [docs] Fix tiny line chart breaking change (#16268) @alexfauquette
+- [docs] Revise planned feature callouts and descriptions (#16290) @mapache-salvaje
+- [docs] Copyedit the Aggregation doc (#16200) @mapache-salvaje
+- [docs] Revise the Data Grid getting started docs (#15757) @mapache-salvaje
+- [code-infra] Add 'use client' directive (#16273) @Janpot
+- [code-infra] Allow dispatch of manual cherry-pick workflow (#16299) @JCQuintas
+- [code-infra] Update changelog script (#16218) @cherniavskii
+- [test] Fix flaky column pinning tests (#16219) @cherniavskii
+- [test] Fix flaky tests (#16257) @lauri865
+
 ## 8.0.0-alpha.8
 
 _Jan 16, 2025_
