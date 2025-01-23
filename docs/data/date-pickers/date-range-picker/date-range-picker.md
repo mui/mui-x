@@ -114,12 +114,9 @@ See the [Validation](/x/react-date-pickers/validation/) documentation page for m
 
 ## Month Range Picker 🚧
 
-The Month Range Picker allows setting a range of months.
-
 :::warning
-This feature isn't implemented yet. It's coming.
-
-👍 Upvote [issue #4995](https://github.com/mui/mui-x/issues/4995) if you want to see it land faster.
-
-Don't hesitate to leave a comment on the same issue to influence what gets built. Especially if you already have a use case for this component, or if you are facing a pain point with your current solution.
+This component isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/4995) to help us prioritize it.
+Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
 :::
+
+The Month Range Picker would let users select a range of months.
