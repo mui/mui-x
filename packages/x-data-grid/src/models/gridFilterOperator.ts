@@ -26,7 +26,7 @@ export interface GridFilterOperator<
   R extends GridValidRowModel = any,
   V = any,
   F = V,
-  I extends GridFilterInputValueProps = GridFilterInputValueProps,
+  I extends GridFilterInputValueProps<any> = GridFilterInputValueProps,
 > {
   /**
    * The label of the filter operator.

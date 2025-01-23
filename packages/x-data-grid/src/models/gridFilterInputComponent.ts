@@ -3,14 +3,14 @@ import { GridFilterItem } from './gridFilterItem';
 import type { GridApiCommon } from './api/gridApiCommon';
 import type { GridApiCommunity } from './api/gridApiCommunity';
 
-type BaseRootProps = {
+export type GridFilterInputSlotProps = {
   size?: 'small' | 'medium';
   label?: React.ReactNode;
   placeholder?: string;
 };
 
 export type GridFilterInputValueProps<
-  T extends BaseRootProps = BaseRootProps,
+  T extends GridFilterInputSlotProps = GridFilterInputSlotProps,
   Api extends GridApiCommon = GridApiCommunity,
 > = {
   item: GridFilterItem;
