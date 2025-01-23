@@ -68,7 +68,6 @@ yarn add @mui/material @emotion/react @emotion/styled
 Import a Date Picker component and the Localization Provider:
 
 ```js
-// Pro users: add `-pro` suffix to package name
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 ```
@@ -78,7 +77,6 @@ Adapters are provided for all supported libraries in both versions of the packag
 The snippet below imports `AdapterDayjs`, which is used throughout this documentation for Day.js integration.
 
 ```tsx
-// Pro users: add `-pro` suffix to package name
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 ```
 

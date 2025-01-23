@@ -13,7 +13,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 ## Installation
 
-Run one of the following commands to install the free Community version or the paid Pro version of the MUI X Tree View:
+Install the Tree View package that best suits your needs—Community or Pro:
 
 <!-- #default-branch-switch -->
 
@@ -24,7 +24,7 @@ Run one of the following commands to install the free Community version or the p
 #### Material UI
 
 The Tree View packages have a peer dependency on `@mui/material`.
-If you're not already using it, install it with the following command:
+If you're not already using it, install it now:
 
 <codeblock storageKey="package-manager">
 
@@ -50,8 +50,8 @@ yarn add @mui/material @emotion/react @emotion/styled
 
 ```json
 "peerDependencies": {
-  "react": "^17.0.0 || ^18.0.0",
-  "react-dom": "^17.0.0 || ^18.0.0"
+  "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+  "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
 },
 ```
 
@@ -68,7 +68,6 @@ As this package continues to mature, more advanced features and functionality wi
 ### Simple Tree View
 
 ```jsx
-// Pro users: add `-pro` suffix to package name
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 ```
 
@@ -80,7 +79,6 @@ This is the recommended version for hardcoded items.
 ### Rich Tree View
 
 ```jsx
-// Pro users: add `-pro` suffix to package name
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 ```
 
@@ -102,10 +100,8 @@ To benefit from [CSS overrides](/material-ui/customization/theme-components/#the
 These types use module augmentation to extend the default theme structure.
 
 ```tsx
-// only one import is necessary,
-// from the version you're currently using.
+// Pro users: add `-pro` suffix to package name
 import type {} from '@mui/x-tree-view/themeAugmentation';
-import type {} from '@mui/x-tree-view-pro/themeAugmentation';
 
 const theme = createTheme({
   components: {
