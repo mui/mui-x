@@ -173,6 +173,24 @@ Replace `row` and `column` values by `horizontal` and `vertical` respectively.
  />
 ```
 
+#### `replace-legend-position-values`
+
+Replace `"left" | "middle" | "right"` values `"start" | "center" | "end"` respectively.
+This is to align with the CSS values and reflect the RTL ability of the components.
+
+```diff
+ <BarChart
+    slotProps={{
+      legend: {
+        position: {
+-          horizontal: "left",
++          horizontal: "start",
+        }
+      }
+    }}
+ />
+```
+
 #### `rename-responsive-chart-container`
 
 Renames `ResponsiveChartContainer` and `ResponsiveChartContainerPro` by `ChartContainer` and `ChartContainerPro` which have the same behavior in v8.

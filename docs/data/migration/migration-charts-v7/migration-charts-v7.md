@@ -107,6 +107,24 @@ The `direction` prop of the legend has been changed to accept `'vertical'` and `
  />
 ```
 
+#### Legend position value change ✅
+
+Replace `"left" | "middle" | "right"` values `"start" | "center" | "end"` respectively.
+This is to align with the CSS values and reflect the RTL ability of the components.
+
+```diff
+ <BarChart
+    slotProps={{
+      legend: {
+        position: {
+-          horizontal: "left",
++          horizontal: "start",
+        }
+      }
+    }}
+ />
+```
+
 ## The `getSeriesToDisplay` function was removed
 
 The `getSeriesToDisplay` function was removed in favor of the `useLegend` hook. You can check the [HTML Components example](/x/react-charts/components/#html-components) for usage information.
