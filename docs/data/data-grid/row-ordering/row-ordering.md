@@ -77,25 +77,14 @@ This approach can also be used to change the location of the toggle column.
 For now, row reordering is disabled if sorting is applied to the Data Grid.
 :::
 
-## Reordering rows with row grouping 🚧
+## Reordering with tree data and grouping 🚧
 
 :::warning
-This feature isn't implemented yet. It's coming.
-
-👍 Upvote [issue #4821](https://github.com/mui/mui-x/issues/4821) if you want to see it land faster.
-
-Don't hesitate to leave a comment on the same issue to influence what gets built. Especially if you already have a use case for this component, or if you are facing a pain point with your current solution.
+This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/4821) to help us prioritize it.
+Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
 :::
 
-## Reordering rows with tree data 🚧
-
-:::warning
-This feature isn't implemented yet. It's coming.
-
-👍 Upvote [issue #4821](https://github.com/mui/mui-x/issues/4821) if you want to see it land faster.
-
-Don't hesitate to leave a comment on the same issue to influence what gets built. Especially if you already have a use case for this component, or if you are facing a pain point with your current solution.
-:::
+With this feature, users would be able to reorder rows in use cases that also involve tree data and/or row grouping.
 
 ## API
 
