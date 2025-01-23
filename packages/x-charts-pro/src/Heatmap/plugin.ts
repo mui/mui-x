@@ -6,6 +6,7 @@ import getColor from './getColor';
 export const plugin: ChartSeriesTypeConfig<'heatmap'> = {
   seriesProcessor: formatter,
   colorProcessor: getColor,
+  legendGetter: () => [],
   xExtremumGetter: getBaseExtremum,
   yExtremumGetter: getBaseExtremum,
 };
