@@ -113,6 +113,8 @@
   { "name": "ChartsTooltipPaper", "kind": "Variable" },
   { "name": "ChartsTooltipProps", "kind": "Interface" },
   { "name": "ChartsTooltipRow", "kind": "Variable" },
+  { "name": "ChartsTooltipSlotProps", "kind": "Interface" },
+  { "name": "ChartsTooltipSlots", "kind": "Interface" },
   { "name": "ChartsTooltipTable", "kind": "Variable" },
   { "name": "ChartsVoronoiHandler", "kind": "Function" },
   { "name": "ChartsVoronoiHandlerProps", "kind": "TypeAlias" },
