@@ -83,7 +83,7 @@ const formatter: SeriesProcessor<'funnel'> = (params, dataset) => {
         valueFormatter: (item) => (item == null ? '' : item.value.toLocaleString()),
         ...series[id],
         data: dataKey
-          ? dataset!.map((data) => {
+          ? dataset!.map((data, i) => {
               const value = data[dataKey];
               if (typeof value !== 'number') {
                 if (process.env.NODE_ENV !== 'production') {
@@ -92,11 +92,11 @@ const formatter: SeriesProcessor<'funnel'> = (params, dataset) => {
                     'Funnel plots only support number values.',
                   ]);
                 }
-                return { value: 0 };
+                return { id: `${id}-funnel-item-${i}`, value: 0 };
               }
-              return { value };
+              return { id: `${id}-funnel-item-${i}`, value };
             })
-          : series[id].data!,
+          : series[id].data!.map((v, i) => ({ id: `${id}-funnel-item-${v.id ?? i}`, ...v })),
         stackedData: [],
       };
     });

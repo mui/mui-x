@@ -20,6 +20,7 @@ const legendGetter: LegendGetter<'funnel'> = (params) => {
         label: formattedLabel,
       });
     });
+
     return acc;
   }, [] as LegendItemParams[]);
 };
