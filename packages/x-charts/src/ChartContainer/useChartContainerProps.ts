@@ -25,6 +25,7 @@ export const useChartContainerProps = <TSeries extends ChartSeriesType = ChartSe
     colors,
     dataset,
     desc,
+    onAxisClick,
     disableAxisListener,
     highlightedItem,
     onHighlightChange,
@@ -42,7 +43,6 @@ export const useChartContainerProps = <TSeries extends ChartSeriesType = ChartSe
     title,
     desc,
     sx,
-    disableAxisListener,
     ref,
     ...other,
   };
@@ -57,6 +57,7 @@ export const useChartContainerProps = <TSeries extends ChartSeriesType = ChartSe
     dataset,
     highlightedItem,
     onHighlightChange,
+    onAxisClick,
     xAxis,
     yAxis,
     zAxis,
@@ -65,6 +66,7 @@ export const useChartContainerProps = <TSeries extends ChartSeriesType = ChartSe
     height,
     seriesConfig,
     plugins: ALL_PLUGINS as unknown as AllPluginsType<TSeries>,
+    disableAxisListener,
   };
 
   return {
