@@ -162,7 +162,7 @@ Notice that the `onAxisClick` will handle both bar and line series if you mix th
 <ChartContainer onAxisClick={onAxisClick}>
   {/* ... */}
   <BarPlot onItemClick={onItemClick} />
-</ChartContainer>;
+</ChartContainer>
 ```
 
 ## Animation

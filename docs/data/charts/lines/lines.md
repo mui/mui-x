@@ -129,7 +129,7 @@ Notice that the `onAxisClick` will handle both bar and line series if you mix th
   {/* ... */}
   <LinePlot onItemClick={onLineClick} />
   <AreaPlot onItemClick={onAreaClick} />
-</ChartContainer>;
+</ChartContainer>
 ```
 
 ## Styling
