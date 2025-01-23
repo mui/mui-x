@@ -99,7 +99,9 @@ describe('<DataGridPro /> - Data source', () => {
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
     act(() => {
-      apiRef.current.setFilterModel({ items: [{ field: 'name', value: 'John', operator: 'contains' }] });
+      apiRef.current.setFilterModel({
+        items: [{ field: 'name', value: 'John', operator: 'contains' }],
+      });
     });
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
