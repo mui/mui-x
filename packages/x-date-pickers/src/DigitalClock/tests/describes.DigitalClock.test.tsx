@@ -21,7 +21,6 @@ describe('<DigitalClock /> - Describes', () => {
     clock,
     views: ['hours'],
     componentFamily: 'digital-clock',
-    variant: 'desktop',
   }));
 
   describeConformance(<DigitalClock />, () => ({
@@ -37,7 +36,6 @@ describe('<DigitalClock /> - Describes', () => {
     render,
     componentFamily: 'digital-clock',
     type: 'time',
-    variant: 'desktop',
     defaultProps: {
       views: ['hours'],
     },

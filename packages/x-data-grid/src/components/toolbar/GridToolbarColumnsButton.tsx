@@ -70,6 +70,11 @@ const GridToolbarColumnsButton = forwardRef<HTMLButtonElement, GridToolbarColumn
           aria-controls={isOpen ? columnPanelId : undefined}
           startIcon={<rootProps.slots.columnSelectorIcon />}
           onClick={showColumns}
+          onPointerUp={(event) => {
+            if (preferencePanel.open) {
+              event.stopPropagation();
+            }
+          }}
           {...rootProps.slotProps?.baseButton}
           {...buttonProps}
           ref={ref}

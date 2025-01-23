@@ -479,7 +479,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
   // Needs layouting
   testSkipIf(isJSDOM)('should work with variable row height', () => {
-    let apiRef!: React.MutableRefObject<GridApi>;
+    let apiRef!: React.RefObject<GridApi>;
     function TestCase() {
       apiRef = useGridApiRef();
       return (
@@ -510,7 +510,7 @@ describe('<DataGridPro /> - Row pinning', () => {
   testSkipIf(isJSDOM)('should always update on `rowHeight` change', async () => {
     const defaultRowHeight = 52;
 
-    let apiRef!: React.MutableRefObject<GridApi>;
+    let apiRef!: React.RefObject<GridApi>;
     function TestCase({ rowHeight }: { rowHeight?: number }) {
       apiRef = useGridApiRef();
       return (
@@ -679,7 +679,7 @@ describe('<DataGridPro /> - Row pinning', () => {
   });
 
   it('should not be selectable', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: React.RefObject<GridApi>;
 
     function TestCase() {
       apiRef = useGridApiRef();
@@ -700,7 +700,7 @@ describe('<DataGridPro /> - Row pinning', () => {
   });
 
   it('should export pinned rows to CSV', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: React.RefObject<GridApi>;
 
     function TestCase() {
       apiRef = useGridApiRef();
@@ -812,7 +812,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
   it('should support `updateRows`', async () => {
     const columns: GridColDef[] = [{ field: 'id' }, { field: 'name', editable: true }];
-    let apiRef!: React.MutableRefObject<GridApi>;
+    let apiRef!: React.RefObject<GridApi>;
     function TestCase() {
       apiRef = useGridApiRef();
       return (

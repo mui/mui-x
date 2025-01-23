@@ -21,13 +21,13 @@ The user can use the `<Calendar.DaysGrid />`, `<Calendar.DaysGridHeader />`, `<C
 import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
 <Calendar.Root value={value} onValueChange={setValue}>
-  {({ visibleMonth }) => (
+  {({ visibleDate }) => (
     <React.Fragment>
-      <div>
+      <header>
         <Calendar.SetVisibleMonth target="previous">◀</Calendar.SetVisibleMonth>
-        {visibleMonth.format('MMMM YYYY')}
+        {visibleDate.format('MMMM YYYY')}
         <Calendar.SetVisibleMonth target="next">▶</Calendar.SetVisibleMonth>
-      </div>
+      </header>
       <Calendar.DaysGrid>
         <Calendar.DaysGridHeader>
           {({ days }) =>
@@ -81,13 +81,13 @@ The user can use the `<Calendar.MonthsList />` and `<Calendar.MonthsCell />` com
 import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
 <Calendar.Root value={value} onValueChange={setValue}>
-  {({ visibleMonth }) => (
+  {({ visibleDate }) => (
     <React.Fragment>
-      <div>
+      <header>
         <Calendar.SetVisibleYear target="previous">◀</Calendar.SetVisibleYear>
-        {visibleMonth.format('YYYY')}
+        {visibleDate.format('YYYY')}
         <Calendar.SetVisibleYear target="next">▶</Calendar.SetVisibleYear>
-      </div>
+      </header>
       <Calendar.MonthsList>
         {({ months }) =>
           months.map((month) => (
@@ -108,13 +108,13 @@ The user can use the `<Calendar.MonthsGrid />` and `<Calendar.MonthsCell />` com
 import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
 <Calendar.Root value={value} onValueChange={setValue}>
-  {({ visibleMonth }) => (
+  {({ visibleDate }) => (
     <React.Fragment>
-      <div>
+      <header>
         <Calendar.SetVisibleYear target="previous">◀</Calendar.SetVisibleYear>
-        {visibleMonth.format('YYYY')}
+        {visibleDate.format('YYYY')}
         <Calendar.SetVisibleYear target="next">▶</Calendar.SetVisibleYear>
-      </div>
+      </header>
       <Calendar.MonthsGrid cellsPerRow={2}>
         {({ months }) =>
           months.map((month) => (
@@ -224,7 +224,7 @@ function DateCalendar() {
 
   return (
     <Calendar.Root value={value} onValueChange={handleValueChange}>
-      <div>{/** See calendar header documentation */}</div>
+      <header>{/** See calendar header documentation */}</header>
       {activeSection === 'day' && (
         <Calendar.DaysGrid>
           <Calendar.DaysGridHeader>
@@ -302,14 +302,14 @@ The user can use the `<Calendar.SetVisibleMonth />` to build basically any kind 
 import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
 function CalendarHeader() {
-  const { visibleMonth } = useCalendarContext();
+  const { visibleDate } = useCalendarContext();
 
   return (
-    <div>
+    <header>
       <Calendar.SetVisibleMonth target="previous">◀</Calendar.SetVisibleMonth>
-      {visibleMonth.format('MMMM YYYY')}
+      {visibleDate.format('MMMM YYYY')}
       <Calendar.SetVisibleMonth target="next">▶</Calendar.SetVisibleMonth>
-    </div>
+    </header>
   );
 }
 ```
@@ -327,16 +327,16 @@ function CalendarHeader(props: {
   onActiveSectionChange: (activeSection: 'day' | 'month' | 'year') => void;
 }) {
   const { activeSection, onActiveSectionChange } = props;
-  const { visibleMonth } = useCalendarContext();
+  const { visibleDate } = useCalendarContext();
 
   return (
-    <div>
+    <header>
       <div
         onClick={() =>
           onActiveSectionChange(activeSection === 'year' ? 'month' : 'year')
         }
       >
-        {visibleMonth.format('MMMM YYYY')}
+        {visibleDate.format('MMMM YYYY')}
         {activeSection === 'year' ? '▲' : '▼'}
       </div>
       {activeSection === 'day' && (
@@ -345,7 +345,7 @@ function CalendarHeader(props: {
           <Calendar.SetVisibleMonth target="next">▶</Calendar.SetVisibleMonth>
         </div>
       )}
-    </div>
+    </header>
   );
 }
 ```
@@ -379,21 +379,21 @@ function CalendarHeader(props: {
   onActiveSectionChange: (activeSection: 'day' | 'month' | 'year') => void;
 }) {
   const { activeSection, onActiveSectionChange } = props;
-  const { visibleMonth } = useCalendarContext();
+  const { visibleDate } = useCalendarContext();
 
   return (
-    <div>
+    <header>
       <div>
         {activeSection === 'day' && (
           <Calendar.SetVisibleMonth target="previous">◀</Calendar.SetVisibleMonth>
         )}
         <button
-          onClick={() =>
+          onClick={() => 
             onActiveSectionChange(activeSection === 'year' ? 'day' : 'year')
           }
           disabled={activeSection === 'month'}
         >
-          {visibleMonth.format('MMMM')}
+          {visibleDate.format('MMMM')}
         </button>
         {activeSection === 'day' && (
           <Calendar.SetVisibleMonth target="next">▶</Calendar.SetVisibleMonth>
@@ -409,55 +409,13 @@ function CalendarHeader(props: {
           }
           disabled={activeSection === 'year'}
         >
-          {visibleMonth.format('YYYY')}
+          {visibleDate.format('YYYY')}
         </button>
         {activeSection === 'day' && (
           <Calendar.SetVisibleYear target="next">▶</Calendar.SetVisibleYear>
         )}
       </div>
-    </div>
-  );
-}
-```
-
-#### Header with dropdown for months and years
-
-The user can create a custom header where the month and the year editing is done through a menu, while the day calendar is always visible below:
-
-```tsx
-import { Menu } from '@base-ui-components/react/menu';
-import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
-
-function CalendarHeader() {
-  const { visibleMonth, activeSection } = useCalendarContext();
-
-  return (
-    <div>
-      <Menu.Root>
-        <Menu.Trigger>{visibleMonth.format('MMMM')}</Menu.Trigger>
-        <Menu.Positioner>
-          <Calendar.MonthsList alwaysVisible render={<Menu.Popup />}>
-            {({ months }) =>
-              months.map((month) => (
-                <Calendar.MonthsCell value={month} key={month.toString()} />
-              ))
-            }
-          </Calendar.MonthsList>
-        </Menu.Positioner>
-      </Menu.Root>
-      <Menu.Root>
-        <Menu.Trigger>{visibleMonth.format('YYYY')}</Menu.Trigger>
-        <Menu.Positioner>
-          <Calendar.YearsList alwaysVisible render={<Menu.Popup />}>
-            {({ years }) =>
-              years.map((year) => (
-                <Calendar.MonthsCell value={year} key={year.toString()} />
-              ))
-            }
-          </Calendar.YearsList>
-        </Menu.Positioner>
-      </Menu.Root>
-    </div>
+    </header>
   );
 }
 ```
@@ -486,7 +444,7 @@ The `<CustomCalendarHeader />` component can be built in a few different ways:
    function CustomCalendarHeader() {
      const { currentMonth } = useCalendarContext();
 
-     return <div>{currentMonth.format('MMMM YYYY')}</div>;
+     return <header>{currentMonth.format('MMMM YYYY')}</header>;
    }
    ```
 
@@ -505,14 +463,14 @@ The `<CustomCalendarHeader />` component can be built in a few different ways:
    import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
    function CustomCalendarHeader() {
-     const { visibleMonth } = useCalendarContext();
+     const { visibleDate } = useCalendarContext();
 
      return (
-       <div>
+       <header>
          <Calendar.SetVisibleMonth target="previous">◀</Calendar.SetVisibleMonth>
-         {visibleMonth.format('MMMM YYYY')}
+         {visibleDate.format('MMMM YYYY')}
          <Calendar.SetVisibleMonth target="next">▶</Calendar.SetVisibleMonth>
-       </div>
+       </header>
      );
    }
    ```
@@ -627,7 +585,7 @@ function CalendarGrid({ offset }) {
 }
 
 <Calendar.Root value={value} onValueChange={setValue}>
-  <div>{/** See demo below for the navigation with multiple months */}</div>
+  <header>{/** See demo below for the navigation with multiple months */}</header>
   <div>
     <CalendarGrid offset={0} />
     <CalendarGrid offset={1} />
@@ -653,17 +611,17 @@ If the prop receives a number, it will move by the amount of month both for `<Ca
 import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
 function CalendarHeader() {
-  const { visibleMonth } = useCalendarContext();
+  const { visibleDate } = useCalendarContext();
 
   return (
     <Calendar.Root monthPageSize={2}>
-      <div>
+      <header>
         <Calendar.SetVisibleMonth target="previous">◀</Calendar.SetVisibleMonth>
-        {visibleMonth.format('MMMM YYYY')}
+        {visibleDate.format('MMMM YYYY')}
         {' – '}
-        {visibleMonth.add(1, 'month').format('MMMM YYYY')}
+        {visibleDate.add(1, 'month').format('MMMM YYYY')}
         <Calendar.SetVisibleMonth target="next">▶</Calendar.SetVisibleMonth>
-      </div>
+      </header>
       <CalendarGrid offset={0} />
       <CalendarGrid offset={1} />
     </Calendar.Root>
@@ -677,17 +635,17 @@ But the user can also distinguish both behaviors by providing an object:
 import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
 function CalendarHeader() {
-  const { visibleMonth } = useCalendarContext();
+  const { visibleDate } = useCalendarContext();
 
   return (
     <Calendar.Root monthPageSize={{ keyboard: 2, button: 1 }}>
-      <div>
+      <header>
         <Calendar.SetVisibleMonth target="previous">◀</Calendar.SetVisibleMonth>
-        {visibleMonth.format('MMMM YYYY')}
+        {visibleDate.format('MMMM YYYY')}
         {' – '}
-        {visibleMonth.add(1, 'month').format('MMMM YYYY')}
+        {visibleDate.add(1, 'month').format('MMMM YYYY')}
         <Calendar.SetVisibleMonth target="next">▶</Calendar.SetVisibleMonth>
-      </div>
+      </header>
       <CalendarGrid offset={0} />
       <CalendarGrid offset={1} />
     </Calendar.Root>
@@ -768,7 +726,7 @@ Top level component that wraps the other components.
 
   Same typing and behavior as today (just `onChange` becomes `onValueChange`)
 
-- **Validation props**: `maxDate`, `minDate`, `disableFuture`, `disablePast`, `shouldDisableDate`, `shouldDisableMonth`, `shouldDisableYear`.
+- **Validation props**: `maxDate`, `minDate`, `disableFuture`, `disablePast`, `isDateInvalid`, `isMonthInvalid` and `isYearInvalid` (equivalent of the current `shouldDisableDate`, `shouldDisableMonth` and `shouldDisableYear`).
 
   Same typing and behavior as today.
 

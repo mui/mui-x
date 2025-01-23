@@ -14,7 +14,7 @@ title: DX - Digital Clock
 The user can use the `<DigitalClock.HourOptions />` and `<DigitalClock.MinuteOptions />` components to list all the time options with one column per section:
 
 ```tsx
-<DigitalClock.Root value={value} onChange={setValue}>
+<DigitalClock.Root value={value} onValueChange={setValue}>
   <DigitalClock.HourOptions>
     {({ hours }) =>
       hours.map((hour) => <DigitalClock.Option value={hour} key={hour.toString()} />)
@@ -42,7 +42,7 @@ The user can use the `<DigitalClock.MeridiemOptions />` component to add a colum
 It should be used in combination with the `<DigitalClock.HoursWithMeridiemOptions />` component:
 
 ```tsx
-<DigitalClock.Root value={value} onChange={setValue}>
+<DigitalClock.Root value={value} onValueChange={setValue}>
   <DigitalClock.HoursWithMeridiemOptions>
     {({ hours }) =>
       hours.map((hour) => <DigitalClock.Option value={hour} key={hour.toString()} />)
@@ -64,6 +64,11 @@ It should be used in combination with the `<DigitalClock.HoursWithMeridiemOption
   </DigitalClock.MeridiemOptions>
 </DigitalClock.Root>
 ```
+
+:::success
+We could also skip `<DigitalClock.HoursWithMeridiemOptions />` and instead add a `ampm` prop on `<DigitalClock.HoursOptions />`.
+But I like the idea of having two distinct components that could host different props in the future.
+:::
 
 ### With Material UI
 
@@ -132,7 +137,7 @@ TODO
 The user can use the `<DigitalClock.SecondOptions />` component to add a column to edit this section:
 
 ```tsx
-<DigitalClock.Root value={value} onChange={setValue}>
+<DigitalClock.Root value={value} onValueChange={setValue}>
   <DigitalClock.HourOptions>
     {({ hours }) =>
       hours.map((hour) => <DigitalClock.Option value={hour} key={hour.toString()} />)
@@ -152,13 +157,6 @@ The user can use the `<DigitalClock.SecondOptions />` component to add a column 
       ))
     }
   </DigitalClock.SecondOptions>
-  <DigitalClock.MeridiemOptions>
-    {({ meridiems }) =>
-      meridiems.map((meridiem) => (
-        <DigitalClock.Option value={meridiem} key={meridiem.toString()} />
-      ))
-    }
-  </DigitalClock.MeridiemOptions>
 </DigitalClock.Root>
 ```
 
@@ -171,10 +169,10 @@ TODO
 ### Without Material UI
 
 The `<DigitalClock.Hours />`, `<DigitalClock.HoursWithMeridiem />`, `<DigitalClock.Minutes />` and `<DigitalClock.Seconds />` components take a `step` prop that allow to customize the step between two consecutive options.
-By default, the step is of `1` for the hours and 5 for the minutes and seconds:
+By default, the step is of `1` for the hours and `5` for the minutes and seconds:
 
 ```tsx
-<DigitalClock.Root value={value} onChange={setValue}>
+<DigitalClock.Root value={value} onValueChange={setValue}>
   <DigitalClock.HourOptions>
     {({ hours }) =>
       hours.map((hour) => <DigitalClock.Option value={hour} key={hour.toString()} />)
@@ -191,7 +189,7 @@ By default, the step is of `1` for the hours and 5 for the minutes and seconds:
 ```
 
 ```tsx
-<DigitalClock.Root value={value} onChange={setValue}>
+<DigitalClock.Root value={value} onValueChange={setValue}>
   <DigitalClock.HourOptions>
     {({ hours }) =>
       hours.map((hour) => <DigitalClock.Option value={hour} key={hour.toString()} />)
@@ -226,7 +224,7 @@ By default, the `<DigitalClock.Option />` uses a default format provided by its 
 The user can override this format using the `format` prop:
 
 ```tsx
-<DigitalClock.Root value={value} onChange={setValue}>
+<DigitalClock.Root value={value} onValueChange={setValue}>
   <DigitalClock.HourOptions>
     {({ hours }) =>
       hours.map((hour) => (
@@ -252,7 +250,7 @@ TODO
 The user can use the `<DigitalClock.Options />` component to manually list options:
 
 ```tsx
-<DigitalClock.Root value={value} onChange={setValue}>
+<DigitalClock.Root value={value} onValueChange={setValue}>
   <DigitalClock.Options>
     <DigitalClock.Option value={dayjs('2025-01-01T15:30')} />
     <DigitalClock.Option value={dayjs('2025-01-01T17:30')} />
@@ -260,6 +258,23 @@ The user can use the `<DigitalClock.Options />` component to manually list optio
   </DigitalClock.Options>
 </DigitalClock.Root>
 ```
+
+:::succcess
+Do we think it would be interesting to have a component for single-section but where we own the list generation?
+Something like:
+
+```tsx
+<DigitalClock.Root value={value} onValueChange={setValue}>
+  <DigitalClock.Options step="5 minutes">
+    {' '}
+    // Very unclear DX for the `step` prop
+    {({ option }) => <DigitalClock.Option value={option} key={option.toString()} />}
+  </DigitalClock.Options>
+</DigitalClock.Root>
+```
+
+I think it's not a requirement for an MVP.
+:::
 
 ### With Material UI
 
@@ -275,11 +290,11 @@ Top level component that wraps the other components.
 
 - Extends `React.HTMLAttributes<HTMLDivElement>`
 
-- **Value props**: `value`, `defaultValue`, `referenceDate`, `onChange`, `onError` and `timezone`.
+- **Value props**: `value`, `defaultValue`, `referenceDate`, `onValueChange`, `onError` and `timezone`.
 
   Same typing and behavior as today.
 
-- **Validation props**: `maxTime`, `minTime`, `disableFuture`, `disablePast`, `shouldDisableTime`.
+- **Validation props**: `maxTime`, `minTime`, `disableFuture`, `disablePast`, `isTimeInvalid` (equivalent of the current `shouldDisableTime`).
 
   Same typing and behavior as today.
 

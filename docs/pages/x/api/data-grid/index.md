@@ -26,6 +26,7 @@
 - [GridRowParams](/x/api/data-grid/grid-row-params/)
 - [GridRowSpacingParams](/x/api/data-grid/grid-row-spacing-params/)
 - [GridAggregationFunction](/x/api/data-grid/grid-aggregation-function/)
+- [GridAggregationFunctionDataSource](/x/api/data-grid/grid-aggregation-function-data-source/)
 - [GridCsvExportOptions](/x/api/data-grid/grid-csv-export-options/)
 - [GridPrintExportOptions](/x/api/data-grid/grid-print-export-options/)
 - [GridExcelExportOptions](/x/api/data-grid/grid-excel-export-options/)

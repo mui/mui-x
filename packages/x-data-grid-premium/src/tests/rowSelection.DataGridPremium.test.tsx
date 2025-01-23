@@ -47,7 +47,7 @@ describe('<DataGridPremium /> - Row selection', () => {
   const { render } = createRenderer();
 
   describe('props: rowSelectionPropagation = { descendants: true, parents: true }', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: React.RefObject<GridApi>;
 
     function Test(props: Partial<DataGridPremiumProps>) {
       apiRef = useGridApiRef();
