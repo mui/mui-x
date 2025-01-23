@@ -7,7 +7,7 @@ import { UseMobilePickerParams, UseMobilePickerProps } from './useMobilePicker.t
 import { usePicker } from '../usePicker';
 import { PickersLayout } from '../../../PickersLayout';
 import { FieldRef } from '../../../models';
-import { BaseSingleInputFieldProps, DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
+import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
 import { PickerProvider } from '../../components/PickerProvider';
 import { PickerFieldUIContextProvider } from '../../components/PickerFieldUI';
 

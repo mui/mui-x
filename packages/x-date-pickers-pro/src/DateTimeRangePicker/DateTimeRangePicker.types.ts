@@ -9,7 +9,6 @@ import {
   MobileDateTimeRangePickerSlots,
   MobileDateTimeRangePickerSlotProps,
 } from '../MobileDateTimeRangePicker';
-import { DateTimeRangeValidationError } from '../models';
 import type { ValidateDateTimeRangeProps } from '../validation';
 
 export interface DateTimeRangePickerSlots

@@ -1,4 +1,4 @@
-import type { FieldSection, PickerOwnerState } from '../../models';
+import type { FieldSection } from '../../models';
 import type { UseFieldInternalProps } from '../hooks/useField';
 import { RangePosition } from './pickers';
 import { PickerValidValue } from './value';
