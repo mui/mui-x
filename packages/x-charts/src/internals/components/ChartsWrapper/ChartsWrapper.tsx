@@ -1,17 +1,18 @@
 import * as React from 'react';
 import { styled, SxProps, Theme } from '@mui/material/styles';
-import { Direction, LegendPosition } from '../../../ChartsLegend';
+import { Direction } from '../../../ChartsLegend';
+import { Position } from '../../../models';
 
 export interface ChartsWrapperProps {
   // eslint-disable-next-line react/no-unused-prop-types
-  legendPosition?: LegendPosition;
+  legendPosition?: Position;
   // eslint-disable-next-line react/no-unused-prop-types
   legendDirection?: Direction;
   children: React.ReactNode;
   sx?: SxProps<Theme>;
 }
 
-const getDirection = (direction?: Direction, position?: LegendPosition) => {
+const getDirection = (direction?: Direction, position?: Position) => {
   if (direction === 'vertical') {
     if (position?.horizontal === 'left') {
       return 'row';
@@ -27,7 +28,7 @@ const getDirection = (direction?: Direction, position?: LegendPosition) => {
   return 'column';
 };
 
-const getAlign = (direction?: Direction, position?: LegendPosition) => {
+const getAlign = (direction?: Direction, position?: Position) => {
   if (direction === 'vertical') {
     if (position?.vertical === 'top') {
       return 'flex-start';
