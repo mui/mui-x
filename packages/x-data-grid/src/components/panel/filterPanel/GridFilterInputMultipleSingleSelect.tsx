@@ -5,10 +5,11 @@ import { unstable_useId as useId } from '@mui/utils';
 import { getValueOptions, isSingleSelectColDef } from './filterPanelUtils';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
-import { TextFieldProps } from '../../../models/gridBaseSlots';
 import type { GridSingleSelectColDef, ValueOptions } from '../../../models/colDef/gridColDef';
 
-export type GridFilterInputMultipleSingleSelectProps = GridFilterInputValueProps<TextFieldProps> & {
+export type GridFilterInputMultipleSingleSelectProps = GridFilterInputValueProps<
+  Omit<AutocompleteProps<ValueOptions, true, false, true>, 'options' | 'renderInput'>
+> & {
   type?: 'singleSelect';
 };
 
@@ -89,18 +90,26 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
           );
         })
       }
-      renderInput={(params) => (
-        <rootProps.slots.baseTextField
-          {...params}
-          label={apiRef.current.getLocaleText('filterPanelInputLabel')}
-          placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
-          inputRef={focusElementRef}
-          type="singleSelect"
-          {...slotProps?.root}
-          {...rootProps.slotProps?.baseTextField}
-        />
-      )}
+      renderInput={(params) => {
+        const { inputProps, InputProps, InputLabelProps, ...rest } = params;
+        return (
+          <rootProps.slots.baseTextField
+            {...rest}
+            label={apiRef.current.getLocaleText('filterPanelInputLabel')}
+            placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
+            inputRef={focusElementRef}
+            type={type || 'text'}
+            slotProps={{
+              input: InputProps,
+              inputLabel: InputLabelProps,
+              htmlInput: inputProps,
+            }}
+            {...rootProps.slotProps?.baseTextField}
+          />
+        );
+      }}
       {...other}
+      {...slotProps?.root}
     />
   );
 }
