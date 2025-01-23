@@ -163,7 +163,7 @@ export const useGridDetailPanel = (
   );
 
   const getExpandedDetailPanels = React.useCallback<GridDetailPanelApi['getExpandedDetailPanels']>(
-    () => gridDetailPanelExpandedRowIdsSelector(apiRef.current.state),
+    () => gridDetailPanelExpandedRowIdsSelector(apiRef),
     [apiRef],
   );
 
@@ -225,7 +225,7 @@ export const useGridDetailPanel = (
 
   React.useEffect(() => {
     if (props.detailPanelExpandedRowIds) {
-      const currentModel = gridDetailPanelExpandedRowIdsSelector(apiRef.current.state);
+      const currentModel = gridDetailPanelExpandedRowIdsSelector(apiRef);
       if (currentModel !== props.detailPanelExpandedRowIds) {
         apiRef.current.setExpandedDetailPanels(props.detailPanelExpandedRowIds);
       }

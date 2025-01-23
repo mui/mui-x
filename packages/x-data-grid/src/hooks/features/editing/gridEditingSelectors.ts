@@ -1,6 +1,7 @@
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 
 /**
  * Select the row editing state.
  */
-export const gridEditRowsStateSelector = (state: GridStateCommunity) => state.editRows;
+export const gridEditRowsStateSelector = (apiRef: React.RefObject<GridApiCommunity>) =>
+  apiRef.current.state.editRows;

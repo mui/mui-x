@@ -25,7 +25,7 @@ export const GRID_DETAIL_PANEL_TOGGLE_COL_DEF: GridColDef = {
   valueGetter: (value, row, column, apiRef) => {
     const rowId = apiRef.current.getRowId(row);
     const expandedRowIds = gridDetailPanelExpandedRowIdsSelector(
-      (apiRef.current as GridApiPro).state,
+      apiRef as React.RefObject<GridApiPro>,
     );
     return expandedRowIds.has(rowId);
   },

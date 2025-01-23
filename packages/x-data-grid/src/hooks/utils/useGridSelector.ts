@@ -5,29 +5,10 @@ import type { GridApiCommon } from '../../models/api/gridApiCommon';
 import type { OutputSelector } from '../../utils/createSelector';
 import { useLazyRef } from './useLazyRef';
 import { useOnMount } from './useOnMount';
-import type { GridCoreApi } from '../../models/api/gridCoreApi';
 
-function isOutputSelector<Api extends GridApiCommon, Args, T>(
-  selector: any,
-): selector is OutputSelector<Api['state'], Args, T> {
-  return selector.acceptsApiRef;
-}
-
-type Selector<Api extends GridApiCommon, Args, T> =
-  | ((state: Api['state']) => T)
-  | OutputSelector<Api['state'], Args, T>;
-
-function applySelector<Api extends GridApiCommon, Args, T>(
-  apiRef: React.RefObject<Api>,
-  selector: Selector<Api, Args, T>,
-  args: Args,
-  instanceId: GridCoreApi['instanceId'],
-) {
-  if (isOutputSelector(selector)) {
-    return selector(apiRef, args);
-  }
-  return selector(apiRef.current.state, args, instanceId);
-}
+type Selector<ApiRef extends React.RefObject<GridApiCommon>, Args, T> =
+  | ((apiRef: ApiRef) => T)
+  | OutputSelector<ApiRef, Args, T>;
 
 const defaultCompare = Object.is;
 export const objectShallowCompare = fastObjectShallowCompare as (a: unknown, b: unknown) => boolean;
@@ -51,9 +32,9 @@ export const argsEqual = (prev: any, curr: any) => {
 
 const createRefs = () => ({ state: null, equals: null, selector: null, args: null }) as any;
 
-export const useGridSelector = <Api extends GridApiCommon, Args, T>(
-  apiRef: React.RefObject<Api>,
-  selector: Selector<Api, Args, T>,
+export const useGridSelector = <ApiRef extends React.RefObject<GridApiCommon>, Args, T>(
+  apiRef: ApiRef,
+  selector: Selector<ApiRef, Args, T>,
   args: Args = undefined as Args,
   equals: <U = T>(a: U, b: U) => boolean = defaultCompare,
 ) => {
@@ -79,7 +60,7 @@ export const useGridSelector = <Api extends GridApiCommon, Args, T>(
 
   const [state, setState] = React.useState<T>(
     // We don't use an initialization function to avoid allocations
-    (didInit ? null : applySelector(apiRef, selector, args, apiRef.current.instanceId)) as T,
+    (didInit ? null : selector(apiRef, args)) as T,
   );
 
   refs.current.state = state;
@@ -89,12 +70,7 @@ export const useGridSelector = <Api extends GridApiCommon, Args, T>(
   refs.current.args = args;
 
   if (didInit && !argsEqual(prevArgs, args)) {
-    const newState = applySelector(
-      apiRef,
-      refs.current.selector,
-      refs.current.args,
-      apiRef.current.instanceId,
-    ) as T;
+    const newState = refs.current.selector(apiRef, refs.current.args) as T;
     if (!refs.current.equals(refs.current.state, newState)) {
       refs.current.state = newState;
       setState(newState);
@@ -103,12 +79,7 @@ export const useGridSelector = <Api extends GridApiCommon, Args, T>(
 
   useOnMount(() => {
     return apiRef.current.store.subscribe(() => {
-      const newState = applySelector(
-        apiRef,
-        refs.current.selector,
-        refs.current.args,
-        apiRef.current.instanceId,
-      ) as T;
+      const newState = refs.current.selector(apiRef, refs.current.args) as T;
       if (!refs.current.equals(refs.current.state, newState)) {
         refs.current.state = newState;
         setState(newState);

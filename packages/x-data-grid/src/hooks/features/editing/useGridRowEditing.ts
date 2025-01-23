@@ -104,7 +104,7 @@ export const useGridRowEditing = (
 
   const hasFieldsWithErrors = React.useCallback(
     (rowId: GridRowId) => {
-      const editingState = gridEditRowsStateSelector(apiRef.current.state);
+      const editingState = gridEditRowsStateSelector(apiRef);
       return Object.values(editingState[rowId]).some((fieldProps) => fieldProps.error);
     },
     [apiRef],
@@ -330,7 +330,7 @@ export const useGridRowEditing = (
       if (props.editMode === GridEditModes.Cell) {
         return GridRowModes.View;
       }
-      const editingState = gridEditRowsStateSelector(apiRef.current.state);
+      const editingState = gridEditRowsStateSelector(apiRef);
       const isEditing = editingState[id] && Object.keys(editingState[id]).length > 0;
       return isEditing ? GridRowModes.Edit : GridRowModes.View;
     },
@@ -474,7 +474,7 @@ export const useGridRowEditing = (
           ).then((processedProps) => {
             // Check if still in edit mode before updating
             if (apiRef.current.getRowMode(id) === GridRowModes.Edit) {
-              const editingState = gridEditRowsStateSelector(apiRef.current.state);
+              const editingState = gridEditRowsStateSelector(apiRef);
               updateOrDeleteFieldState(id, field, {
                 ...processedProps,
                 value: editingState[id][field].value,
@@ -516,7 +516,7 @@ export const useGridRowEditing = (
         return;
       }
 
-      const editingState = gridEditRowsStateSelector(apiRef.current.state);
+      const editingState = gridEditRowsStateSelector(apiRef);
       const row = apiRef.current.getRow(id)!;
 
       const isSomeFieldProcessingProps = Object.values(editingState[id]).some(
@@ -590,7 +590,7 @@ export const useGridRowEditing = (
         parsedValue = column.valueParser(value, row, column, apiRef);
       }
 
-      let editingState = gridEditRowsStateSelector(apiRef.current.state);
+      let editingState = gridEditRowsStateSelector(apiRef);
       let newProps: GridEditCellProps = {
         ...editingState[id][field],
         value: parsedValue,
@@ -628,7 +628,7 @@ export const useGridRowEditing = (
               return;
             }
 
-            editingState = gridEditRowsStateSelector(apiRef.current.state);
+            editingState = gridEditRowsStateSelector(apiRef);
             processedProps = { ...processedProps, isProcessingProps: false };
             // We don't reuse the value from the props pre-processing because when the
             // promise resolves it may be already outdated. The only exception to this rule
@@ -655,7 +655,7 @@ export const useGridRowEditing = (
           fieldProps = { ...fieldProps, isProcessingProps: true };
           updateOrDeleteFieldState(id, thisField, fieldProps);
 
-          editingState = gridEditRowsStateSelector(apiRef.current.state);
+          editingState = gridEditRowsStateSelector(apiRef);
           const { [thisField]: ignoredField, ...otherFieldsProps } = editingState[id];
 
           const promise = Promise.resolve(
@@ -683,7 +683,7 @@ export const useGridRowEditing = (
 
         Promise.all(promises).then(() => {
           if (apiRef.current.getRowMode(id) === GridRowModes.Edit) {
-            editingState = gridEditRowsStateSelector(apiRef.current.state);
+            editingState = gridEditRowsStateSelector(apiRef);
             resolve(!editingState[id][field].error);
           } else {
             resolve(false);
@@ -698,7 +698,7 @@ export const useGridRowEditing = (
     GridRowEditingPrivateApi['getRowWithUpdatedValuesFromRowEditing']
   >(
     (id) => {
-      const editingState = gridEditRowsStateSelector(apiRef.current.state);
+      const editingState = gridEditRowsStateSelector(apiRef);
       const row = apiRef.current.getRow(id);
 
       if (!editingState[id]) {

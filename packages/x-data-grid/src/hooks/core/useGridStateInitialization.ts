@@ -14,7 +14,7 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
   const [, rawForceUpdate] = React.useState<PrivateApi['state']>();
 
   const registerControlState = React.useCallback<
-    GridStatePrivateApi<PrivateApi['state']>['registerControlState']
+    GridStatePrivateApi<React.RefObject<PrivateApi>>['registerControlState']
   >((controlStateItem) => {
     controlStateMapRef.current[controlStateItem.stateId] = controlStateItem;
   }, []);
@@ -32,23 +32,18 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
         return false;
       }
 
+      const apiRefWithNewState = apiRef;
+      apiRefWithNewState.current.state = newState;
+
       let ignoreSetState = false;
 
       // Apply the control state constraints
       const updatedControlStateIds: { stateId: string; hasPropChanged: boolean }[] = [];
       Object.keys(controlStateMapRef.current).forEach((stateId) => {
         const controlState = controlStateMapRef.current[stateId];
-        const oldSubState = controlState.stateSelector(
-          apiRef.current.state,
-          undefined,
-          apiRef.current.instanceId,
-        );
+        const oldSubState = controlState.stateSelector(apiRef);
+        const newSubState = controlState.stateSelector(apiRefWithNewState);
 
-        const newSubState = controlState.stateSelector(
-          newState,
-          undefined,
-          apiRef.current.instanceId,
-        );
         if (newSubState === oldSubState) {
           return;
         }
@@ -87,7 +82,7 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
       if (updatedControlStateIds.length === 1) {
         const { stateId, hasPropChanged } = updatedControlStateIds[0];
         const controlState = controlStateMapRef.current[stateId];
-        const model = controlState.stateSelector(newState, undefined, apiRef.current.instanceId);
+        const model = controlState.stateSelector(apiRefWithNewState);
 
         if (controlState.propOnChange && hasPropChanged) {
           controlState.propOnChange(model, {
@@ -107,7 +102,7 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
   );
 
   const updateControlState = React.useCallback<
-    GridStatePrivateApi<PrivateApi['state']>['updateControlState']
+    GridStatePrivateApi<React.RefObject<PrivateApi>>['updateControlState']
   >(
     (key, state, reason) => {
       return apiRef.current.setState((previousState: PrivateApi['state']) => {
@@ -124,7 +119,7 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
     forceUpdate,
   };
 
-  const privateStateApi: GridStatePrivateApi<PrivateApi['state']> = {
+  const privateStateApi: GridStatePrivateApi<React.RefObject<PrivateApi>> = {
     updateControlState,
     registerControlState,
   };

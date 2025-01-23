@@ -11,8 +11,7 @@ import {
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
-import { GridPrivateApiPremium } from '../models/gridApiPremium';
-import { GridStatePremium } from '../models/gridStatePremium';
+import { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
 
 type OwnerState = DataGridPremiumProcessedProps;
 
@@ -43,8 +42,10 @@ function GridGroupingCriteriaCellIcon(props: GridGroupingCriteriaCellIconProps) 
   const classes = useUtilityClasses(rootProps);
   const { rowNode, id, field, descendantCount } = props;
 
-  const loadingSelector = (state: GridStatePremium) => state.dataSource.loading[id] ?? false;
-  const errorSelector = (state: GridStatePremium) => state.dataSource.errors[id];
+  const loadingSelector = (apiRefObject: React.RefObject<GridApiPremium>) =>
+    apiRefObject.current.state.dataSource.loading[id] ?? false;
+  const errorSelector = (apiRefObject: React.RefObject<GridApiPremium>) =>
+    apiRefObject.current.state.dataSource.errors[id];
   const isDataLoading = useGridSelector(apiRef, loadingSelector);
   const error = useGridSelector(apiRef, errorSelector);
 
@@ -97,7 +98,8 @@ export function GridDataSourceGroupingCriteriaCell(props: GridGroupingCriteriaCe
 
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
-  const rowSelector = (state: GridStatePremium) => state.rows.dataRowIdToModelLookup[id];
+  const rowSelector = (apiRefObject: React.RefObject<GridApiPremium>) =>
+    apiRefObject.current.state.rows.dataRowIdToModelLookup[id];
   const row = useGridSelector(apiRef, rowSelector);
   const classes = useUtilityClasses(rootProps);
 

@@ -10,8 +10,7 @@ import {
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
-import { GridPrivateApiPro } from '../models/gridApiPro';
-import { GridStatePro } from '../models/gridStatePro';
+import { GridApiPro, GridPrivateApiPro } from '../models/gridApiPro';
 import {
   gridDataSourceErrorSelector,
   gridDataSourceLoadingIdSelector,
@@ -103,7 +102,8 @@ export function GridDataSourceTreeDataGroupingCell(props: GridTreeDataGroupingCe
 
   const rootProps = useGridRootProps();
   const apiRef = useGridPrivateApiContext();
-  const rowSelector = (state: GridStatePro) => state.rows.dataRowIdToModelLookup[id];
+  const rowSelector = (apiRefObject: React.RefObject<GridApiPro>) =>
+    apiRefObject.current.state.rows.dataRowIdToModelLookup[id];
   const row = useGridSelector(apiRef, rowSelector);
   const classes = useUtilityClasses(rootProps);
 

@@ -1,3 +1,4 @@
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 
-export const gridDimensionsSelector = (state: GridStateCommunity) => state.dimensions;
+export const gridDimensionsSelector = (apiRef: React.RefObject<GridApiCommunity>) =>
+  apiRef.current.state.dimensions;

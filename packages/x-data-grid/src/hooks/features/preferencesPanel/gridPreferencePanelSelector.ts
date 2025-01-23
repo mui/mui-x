@@ -1,8 +1,8 @@
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { createSelector } from '../../../utils/createSelector';
 
-export const gridPreferencePanelStateSelector = (state: GridStateCommunity) =>
-  state.preferencePanel;
+export const gridPreferencePanelStateSelector = (apiRef: React.RefObject<GridApiCommunity>) =>
+  apiRef.current.state.preferencePanel;
 
 export const gridPreferencePanelSelectorWithLabel = createSelector(
   gridPreferencePanelStateSelector,
