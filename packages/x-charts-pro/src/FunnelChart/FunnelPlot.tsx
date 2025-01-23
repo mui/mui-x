@@ -7,6 +7,7 @@ import { FunnelItemIdentifier, FunnelDataPoints } from './funnel.types';
 import { FunnelElement } from './FunnelElement';
 import { FunnelLabel } from './FunnelLabel';
 import { useFunnelSeries } from '../hooks/useSeries';
+import { alignLabel, positionLabel } from './labelUtils';
 
 cartesianSeriesTypes.addType('funnel');
 
@@ -30,50 +31,6 @@ export interface FunnelPlotProps {
     funnelItemIdentifier: FunnelItemIdentifier,
   ) => void;
   /**
-   * The label configuration for the funnel plot.
-   * Allows to customize the position and margin of the label.
-   */
-  // TODO: unsure how to handle this prop, eg: barLabel accepts 'value' or function, but it has no configuration for position and margin
-  // Should we provide a function here as well and the positioning on another prop? Or should we provide a way for user to position stuff using hooks and custom components?
-  funnelLabel?:
-    | false
-    | {
-        /**
-         * The position of the label.
-         * @default { vertical: 'middle', horizontal: 'center' }
-         */
-        position?: {
-          /**
-           * The vertical position of the label.
-           */
-          vertical?: 'top' | 'middle' | 'bottom';
-          /**
-           * The horizontal position of the label.
-           */
-          horizontal?: 'left' | 'center' | 'right';
-        };
-        /**
-         * The text anchor of the label. Affects the horizontal alignment of the text.
-         */
-        textAnchor?: 'start' | 'middle' | 'end';
-        /**
-         * The dominant baseline of the label. Affects the vertical alignment of the text.
-         */
-        dominantBaseline?:
-          | 'auto'
-          | 'baseline'
-          | 'hanging'
-          | 'middle'
-          | 'central'
-          | 'text-after-edge'
-          | 'text-before-edge';
-        /**
-         * The margin of the label.
-         * @default 0
-         */
-        margin?: number | { top?: number; right?: number; bottom?: number; left?: number };
-      };
-  /**
    * The props used for each component slot.
    * @default {}
    */
@@ -85,236 +42,7 @@ export interface FunnelPlotProps {
   slots?: FunnelPlotSlots;
 }
 
-const positionLabel = ({
-  vertical = 'middle',
-  horizontal = 'center',
-  margin,
-  xPosition,
-  yPosition,
-  isHorizontal,
-  values,
-  dataIndex,
-  baseScaleData,
-}: {
-  vertical?: 'top' | 'middle' | 'bottom';
-  horizontal?: 'left' | 'center' | 'right';
-  margin?: number | { top?: number; right?: number; bottom?: number; left?: number };
-  xPosition: (
-    value: number,
-    bandIndex: number,
-    stackOffset?: number,
-    useBand?: boolean,
-  ) => number | undefined;
-  yPosition: (
-    value: number,
-    bandIndex: number,
-    stackOffset?: number,
-    useBand?: boolean,
-  ) => number | undefined;
-  isHorizontal: boolean;
-  values: FunnelDataPoints[];
-  dataIndex: number;
-  baseScaleData: number[];
-}) => {
-  let x: number | undefined = 0;
-  let y: number | undefined = 0;
-
-  // TODO: should we provide these to the user when they override the label?
-  // We can optimize this by only calculating the necessary values
-  // And simplifying the if/else mess :)
-  let minTop: number = 0;
-  let maxTop: number = 0;
-  let minBottom: number = 0;
-  let maxBottom: number = 0;
-  let minLeft: number = 0;
-  let maxLeft: number = 0;
-  let minRight: number = 0;
-  let maxRight: number = 0;
-  let center: number = 0;
-  let leftCenter: number = 0;
-  let rightCenter: number = 0;
-  let middle: number = 0;
-  let topMiddle: number = 0;
-  let bottomMiddle: number = 0;
-
-  const mt = typeof margin === 'number' ? margin : (margin?.top ?? 0);
-  const mr = typeof margin === 'number' ? margin : (margin?.right ?? 0);
-  const mb = typeof margin === 'number' ? margin : (margin?.bottom ?? 0);
-  const ml = typeof margin === 'number' ? margin : (margin?.left ?? 0);
-
-  const stackOffset = values[0].stackOffset;
-
-  if (isHorizontal) {
-    maxTop = yPosition(values[0].y, baseScaleData[dataIndex], stackOffset)! + mt;
-    minTop = yPosition(values[1].y, baseScaleData[dataIndex], stackOffset)! + mt;
-    minBottom = yPosition(values[2].y, baseScaleData[dataIndex], stackOffset)! - mb;
-    maxBottom = yPosition(values[3].y, baseScaleData[dataIndex], stackOffset)! - mb;
-    minRight = 0;
-    maxRight =
-      xPosition(Math.min(...values.map((v) => v.x)), baseScaleData[dataIndex], stackOffset, true)! -
-      mr;
-    minLeft = 0;
-    maxLeft =
-      xPosition(Math.max(...values.map((v) => v.x)), baseScaleData[dataIndex], stackOffset)! + ml;
-    center = maxRight - (maxRight - maxLeft) / 2;
-    leftCenter = 0;
-    rightCenter = 0;
-    middle = yPosition(0, baseScaleData[dataIndex], stackOffset)!;
-    topMiddle =
-      yPosition(
-        values[0].y - (values[0].y - values[1].y) / 2,
-        baseScaleData[dataIndex],
-        stackOffset,
-      )! + mt;
-    bottomMiddle =
-      yPosition(
-        values[3].y - (values[3].y - values[2].y) / 2,
-        baseScaleData[dataIndex],
-        stackOffset,
-      )! - mb;
-  } else {
-    minTop = 0;
-    maxTop =
-      yPosition(Math.max(...values.map((v) => v.y)), baseScaleData[dataIndex], stackOffset)! + mt;
-    minBottom = 0;
-    maxBottom =
-      yPosition(Math.min(...values.map((v) => v.y)), baseScaleData[dataIndex], stackOffset, true)! -
-      mb;
-    maxRight = xPosition(values[0].x, baseScaleData[dataIndex], stackOffset)! - mr;
-    minRight = xPosition(values[1].x, baseScaleData[dataIndex], stackOffset)! - mr;
-    minLeft = xPosition(values[2].x, baseScaleData[dataIndex], stackOffset)! + ml;
-    maxLeft = xPosition(values[3].x, baseScaleData[dataIndex], stackOffset)! + ml;
-    center = xPosition(0, baseScaleData[dataIndex], stackOffset)!;
-    rightCenter =
-      xPosition(
-        values[0].x - (values[0].x - values[1].x) / 2,
-        baseScaleData[dataIndex],
-        stackOffset,
-      )! - mr;
-    leftCenter =
-      xPosition(
-        values[3].x - (values[3].x - values[2].x) / 2,
-        baseScaleData[dataIndex],
-        stackOffset,
-      )! + ml;
-    middle = yPosition(
-      values[0].y - (values[0].y - values[1].y) / 2,
-      baseScaleData[dataIndex],
-      stackOffset,
-    )!;
-    middle = maxTop - (maxTop - maxBottom) / 2;
-    topMiddle = 0;
-    bottomMiddle = 0;
-  }
-
-  if (isHorizontal) {
-    if (horizontal === 'center') {
-      x = center;
-      if (vertical === 'top') {
-        y = topMiddle;
-      } else if (vertical === 'middle') {
-        y = middle;
-      } else if (vertical === 'bottom') {
-        y = bottomMiddle;
-      }
-    } else if (horizontal === 'left') {
-      x = maxLeft;
-      if (vertical === 'top') {
-        y = maxTop;
-      } else if (vertical === 'middle') {
-        y = middle;
-      } else if (vertical === 'bottom') {
-        y = maxBottom;
-      }
-    } else if (horizontal === 'right') {
-      x = maxRight;
-      if (vertical === 'top') {
-        y = minTop;
-      } else if (vertical === 'middle') {
-        y = middle;
-      } else if (vertical === 'bottom') {
-        y = minBottom;
-      }
-    }
-  }
-
-  if (!isHorizontal) {
-    if (vertical === 'middle') {
-      y = middle;
-      if (horizontal === 'left') {
-        x = leftCenter;
-      } else if (horizontal === 'center') {
-        x = center;
-      } else if (horizontal === 'right') {
-        x = rightCenter;
-      }
-    } else if (vertical === 'top') {
-      y = maxTop;
-      if (horizontal === 'left') {
-        x = maxLeft;
-      } else if (horizontal === 'center') {
-        x = center;
-      } else if (horizontal === 'right') {
-        x = maxRight;
-      }
-    } else if (vertical === 'bottom') {
-      y = maxBottom;
-      if (horizontal === 'left') {
-        x = minLeft;
-      } else if (horizontal === 'center') {
-        x = center;
-      } else if (horizontal === 'right') {
-        x = minRight;
-      }
-    }
-  }
-
-  return {
-    x,
-    y,
-  };
-};
-
-const alignLabel = ({
-  vertical = 'middle',
-  horizontal = 'center',
-  textAnchor,
-  dominantBaseline,
-}: {
-  vertical?: 'top' | 'middle' | 'bottom';
-  horizontal?: 'left' | 'center' | 'right';
-  textAnchor?: 'start' | 'middle' | 'end';
-  dominantBaseline?:
-    | 'auto'
-    | 'baseline'
-    | 'hanging'
-    | 'middle'
-    | 'central'
-    | 'text-after-edge'
-    | 'text-before-edge';
-}) => {
-  let anchor = 'middle';
-  let baseline = 'central';
-
-  if (vertical === 'top') {
-    baseline = 'hanging';
-  } else if (vertical === 'bottom') {
-    baseline = 'baseline';
-  }
-
-  if (horizontal === 'left') {
-    anchor = 'start';
-  } else if (horizontal === 'right') {
-    anchor = 'end';
-  }
-
-  return {
-    textAnchor: textAnchor ?? anchor,
-    dominantBaseline: dominantBaseline ?? baseline,
-  };
-};
-
-const useAggregatedData = (funnelLabel: FunnelPlotProps['funnelLabel']) => {
+const useAggregatedData = () => {
   const seriesData = useFunnelSeries();
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
@@ -371,6 +99,14 @@ const useAggregatedData = (funnelLabel: FunnelPlotProps['funnelLabel']) => {
       return currentSeries.dataPoints.map((values, dataIndex) => {
         const color = currentSeries.data[dataIndex].color!;
         const id = `${seriesId}-${dataIndex}`;
+        const sectionLabel =
+          typeof currentSeries.sectionLabel === 'function'
+            ? currentSeries.sectionLabel({
+                dataIndex,
+                seriesId,
+                value: currentSeries.data[dataIndex].value,
+              })
+            : currentSeries.sectionLabel;
 
         const line = d3Line<FunnelDataPoints>()
           .x((d) =>
@@ -387,11 +123,9 @@ const useAggregatedData = (funnelLabel: FunnelPlotProps['funnelLabel']) => {
           id,
           seriesId,
           dataIndex,
-          label: funnelLabel !== false && {
+          label: sectionLabel !== false && {
             ...positionLabel({
-              vertical: funnelLabel?.position?.vertical,
-              horizontal: funnelLabel?.position?.horizontal,
-              margin: funnelLabel?.margin,
+              ...sectionLabel,
               xPosition,
               yPosition,
               isHorizontal,
@@ -399,12 +133,7 @@ const useAggregatedData = (funnelLabel: FunnelPlotProps['funnelLabel']) => {
               dataIndex,
               baseScaleData: baseScaleConfig.data ?? [],
             }),
-            ...alignLabel({
-              vertical: funnelLabel?.position?.vertical,
-              horizontal: funnelLabel?.position?.horizontal,
-              textAnchor: funnelLabel?.textAnchor,
-              dominantBaseline: funnelLabel?.dominantBaseline,
-            }),
+            ...alignLabel(sectionLabel ?? {}),
             value: valueFormatter
               ? valueFormatter(currentSeries.data[dataIndex], { dataIndex })
               : currentSeries.data[dataIndex].value?.toLocaleString(),
@@ -414,15 +143,15 @@ const useAggregatedData = (funnelLabel: FunnelPlotProps['funnelLabel']) => {
     });
 
     return result.flatMap((v) => v.toReversed().flat());
-  }, [seriesData, xAxis, xAxisIds, yAxis, yAxisIds, funnelLabel]);
+  }, [seriesData, xAxis, xAxisIds, yAxis, yAxisIds]);
 
   return allData;
 };
 
 function FunnelPlot(props: FunnelPlotProps) {
-  const { skipAnimation, onItemClick, funnelLabel, ...other } = props;
+  const { skipAnimation, onItemClick, ...other } = props;
 
-  const data = useAggregatedData(funnelLabel);
+  const data = useAggregatedData();
 
   return (
     <React.Fragment>
