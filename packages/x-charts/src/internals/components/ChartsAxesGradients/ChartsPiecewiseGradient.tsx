@@ -13,6 +13,10 @@ type ChartsPiecewiseGradientProps = {
 export default function ChartsPiecewiseGradient(props: ChartsPiecewiseGradientProps) {
   const { isReversed, gradientId, size, direction, scale, colorMap } = props;
 
+  if (size <= 0) {
+    return null;
+  }
+
   return (
     <linearGradient
       id={gradientId}
