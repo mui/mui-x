@@ -250,30 +250,34 @@ export const useGridVirtualScroller = () => {
     [apiRef, dimensions.isReady],
   );
 
-  const triggerUpdateRenderContext = useEventCallback(() => {
+  const triggerUpdateRenderContext = useEventCallback((scroll?: ScrollPosition) => {
     const scroller = scrollerRef.current;
     if (!scroller) {
       return undefined;
     }
 
-    const maxScrollTop = Math.ceil(
-      dimensions.minimumSize.height - dimensions.viewportOuterSize.height,
+    const maxScrollTop = Math.max(
+      0,
+      Math.ceil(dimensions.minimumSize.height - dimensions.viewportOuterSize.height),
     );
-    const maxScrollLeft = Math.ceil(
-      dimensions.minimumSize.width -
-        // TODO: remove remove pinned columns once the below gets merged:
-        // https://github.com/mui/mui-x/pull/15627
-        (dimensions.viewportInnerSize.width +
-          dimensions.leftPinnedWidth +
-          dimensions.rightPinnedWidth),
+    const maxScrollLeft = Math.max(
+      0,
+      Math.ceil(
+        dimensions.minimumSize.width -
+          // TODO: remove remove pinned columns once the below gets merged:
+          // https://github.com/mui/mui-x/pull/15627
+          (dimensions.viewportInnerSize.width +
+            dimensions.leftPinnedWidth +
+            dimensions.rightPinnedWidth),
+      ),
     );
 
     // Clamp the scroll position to the viewport to avoid re-calculating the render context for scroll bounce
     const newScroll = {
-      top: clamp(scroller.scrollTop, 0, maxScrollTop),
+      top: clamp(scroll?.top ?? scroller.scrollTop, 0, maxScrollTop),
       left: isRtl
-        ? clamp(scroller.scrollLeft, -maxScrollLeft, 0)
-        : clamp(scroller.scrollLeft, 0, maxScrollLeft),
+        ? clamp(scroll?.left ?? scroller.scrollLeft, -maxScrollLeft, 0)
+        : clamp(scroll?.left ?? scroller.scrollLeft, 0, maxScrollLeft),
     };
 
     const dx = newScroll.left - scrollPosition.current.left;
@@ -336,7 +340,7 @@ export const useGridVirtualScroller = () => {
       updateRenderContext(nextRenderContext);
     });
 
-    scrollTimeout.start(1000, triggerUpdateRenderContext);
+    scrollTimeout.start(1000, () => triggerUpdateRenderContext(scrollPosition.current));
 
     return nextRenderContext;
   });
@@ -349,13 +353,13 @@ export const useGridVirtualScroller = () => {
     updateRenderContext(nextRenderContext);
   };
 
-  const handleScroll = useEventCallback(() => {
-    if (ignoreNextScrollEvent.current) {
+  const handleScroll = useEventCallback((_, scroll?: ScrollPosition) => {
+    if (ignoreNextScrollEvent.current && !scroll) {
       ignoreNextScrollEvent.current = false;
       return;
     }
 
-    const nextRenderContext = triggerUpdateRenderContext();
+    const nextRenderContext = triggerUpdateRenderContext(scroll);
 
     apiRef.current.publishEvent('scrollPositionChange', {
       top: scrollPosition.current.top,
@@ -585,8 +589,11 @@ export const useGridVirtualScroller = () => {
     return size;
   }, [columnsTotalWidth, contentHeight, needsHorizontalScrollbar]);
 
+  const scrollerContentRef = React.useRef<HTMLDivElement | null>(null);
   const onContentSizeApplied = React.useCallback(
     (node: HTMLDivElement | null) => {
+      scrollerContentRef.current = node;
+
       if (!node) {
         return;
       }
@@ -682,6 +689,334 @@ export const useGridVirtualScroller = () => {
   useGridApiEventHandler(apiRef, 'columnsChange', forceUpdateRenderContext);
   useGridApiEventHandler(apiRef, 'filteredRowsSet', forceUpdateRenderContext);
   useGridApiEventHandler(apiRef, 'rowExpansionChange', forceUpdateRenderContext);
+
+  React.useEffect(() => {
+    const scroller = scrollerRef.current;
+    const scrollerContent = scrollerContentRef.current;
+    const topContainer = scroller?.querySelector('.MuiDataGrid-topContainer') as HTMLElement | null;
+    if (!scroller || !scrollerContent || !topContainer) {
+      return undefined;
+    }
+
+    const getMaxScrollTop = () => {
+      const dimensions = gridDimensionsSelector(apiRef.current.state);
+      return Math.max(
+        0,
+        Math.ceil(dimensions.minimumSize.height - dimensions.viewportOuterSize.height),
+      );
+    };
+
+    const getMaxScrollLeft = () => {
+      const dimensions = gridDimensionsSelector(apiRef.current.state);
+      return Math.max(
+        0,
+        Math.ceil(
+          dimensions.minimumSize.width -
+            (dimensions.viewportInnerSize.width +
+              dimensions.leftPinnedWidth +
+              dimensions.rightPinnedWidth),
+        ),
+      );
+    };
+
+    const hasScrollY = () => {
+      return gridDimensionsSelector(apiRef.current.state).hasScrollY;
+    };
+
+    const hasScrollX = () => {
+      return gridDimensionsSelector(apiRef.current.state).hasScrollX;
+    };
+
+    const momentumThreshold = 300; // milliseconds
+    const momentumOffsetThreshold = 15; // pixels
+
+    let direction: 'vertical' | 'horizontal' | null = null;
+    let isTouchScrollEnabled = false;
+    let maxScrollTop = getMaxScrollTop();
+    let maxScrollLeft = getMaxScrollLeft();
+    let offsetY = scrollPosition.current.top * -1;
+    let offsetX = scrollPosition.current.left * -1;
+    let isScrolling = false;
+    let duration = 0;
+    let startY = 0;
+    let startX = 0;
+    let startOffsetY = offsetY;
+    let startOffsetX = offsetX;
+    let momentumStartY = offsetY;
+    let momentumStartX = offsetX;
+    let startTime = 0;
+    let updateInterval: number | null = null;
+
+    const getComputedOffset = () => {
+      const matrix = window
+        .getComputedStyle(scrollerContentRef.current!)
+        .getPropertyValue('transform');
+      if (matrix === 'none') {
+        return {};
+      }
+      return {
+        top: parseInt(matrix.split(',')[5]),
+        left: parseInt(matrix.split(',')[4]),
+      };
+    };
+
+    const updateRenderContext = () => {
+      scrollPosition.current = { top: offsetY * -1, left: offsetX * -1 };
+      handleScroll(undefined, scrollPosition.current);
+    };
+
+    const stop = () => {
+      direction = null;
+      duration = 0;
+
+      if (updateInterval) {
+        clearInterval(updateInterval);
+        updateInterval = null;
+      }
+
+      const { top, left } = getComputedOffset();
+      let shouldUpdate = false;
+      if (top !== undefined && top !== offsetY) {
+        offsetY = top;
+        shouldUpdate = true;
+      }
+
+      if (left !== undefined && left !== offsetX) {
+        offsetX = left;
+        shouldUpdate = true;
+      }
+
+      if (!isTouchScrollEnabled) {
+        return;
+      }
+
+      if (shouldUpdate) {
+        updateRenderContext();
+        applyScroll();
+      }
+    };
+
+    const applyScroll = () => {
+      scrollerContent.style.transform = `translate3d(${offsetX}px, ${offsetY}px, 0)`;
+      scrollerContent.style.transitionDuration = `${duration}ms`;
+      scrollerContent.style.transitionTimingFunction = 'cubic-bezier(0, 0, 0.2, 1)';
+
+      topContainer.style.transform = `translate3d(${offsetX}px, 0, 0)`;
+      topContainer.style.transitionDuration = `${duration}ms`;
+      topContainer.style.transitionTimingFunction = 'cubic-bezier(0, 0, 0.2, 1)';
+    };
+
+    const handleTouchStart = (event: TouchEvent) => {
+      stop();
+
+      if (!hasScrollY() && !hasScrollX()) {
+        return;
+      }
+
+      if (event.touches.length !== 1) {
+        return;
+      }
+
+      if (!isTouchScrollEnabled) {
+        isTouchScrollEnabled = true;
+        offsetX = scrollPosition.current.left * -1;
+        offsetY = scrollPosition.current.top * -1;
+
+        if (scroller.scrollTop !== 0 || scroller.scrollLeft !== 0) {
+          scroller.scrollTop = 0;
+          scroller.scrollLeft = 0;
+        }
+      }
+
+      maxScrollTop = getMaxScrollTop();
+      maxScrollLeft = getMaxScrollLeft();
+      isScrolling = true;
+      startY = event.touches[0].pageY;
+      startX = event.touches[0].pageX;
+      startTime = Date.now();
+      isScrolling = true;
+
+      momentumStartY = offsetY;
+      momentumStartX = offsetX;
+      startOffsetY = offsetY;
+      startOffsetX = offsetX;
+
+      applyScroll();
+    };
+
+    const handleTouchMove = (event: TouchEvent) => {
+      if (!isScrolling) {
+        return;
+      }
+
+      const touch = event.touches[0];
+      const dy = touch.pageY - startY;
+      const dx = touch.pageX - startX;
+
+      if (!direction) {
+        direction = Math.abs(dy) > Math.abs(dx) ? 'vertical' : 'horizontal';
+      }
+
+      if (
+        (direction === 'vertical' && !hasScrollY()) ||
+        (direction === 'horizontal' && !hasScrollX())
+      ) {
+        isScrolling = false;
+        return;
+      }
+
+      event.preventDefault();
+
+      if (direction === 'vertical') {
+        offsetY = clamp(startOffsetY + dy, -maxScrollTop, 0);
+      } else if (direction === 'horizontal') {
+        offsetX = clamp(startOffsetX + dx, -maxScrollLeft, 0);
+      }
+
+      const now = Date.now();
+      if (now - startTime > momentumThreshold) {
+        if (direction === 'vertical') {
+          momentumStartY = offsetY;
+        } else if (direction === 'horizontal') {
+          momentumStartX = offsetX;
+        }
+        startTime = now;
+      }
+
+      applyScroll();
+      updateRenderContext();
+    };
+
+    const momentum = (current: number, start: number, duration: number) => {
+      const deceleration = 0.002;
+
+      const distance = current - start;
+      const speed = (1 * Math.abs(distance)) / duration;
+
+      let destination = Math.round(current + (speed / deceleration) * Math.sign(distance));
+
+      if (direction === 'vertical') {
+        destination = clamp(destination, -maxScrollTop, 0);
+      } else if (direction === 'horizontal') {
+        destination = clamp(destination, -maxScrollLeft, 0);
+      }
+
+      const dynamicDuration = clamp(Math.abs(destination - current) / (speed * 0.5), 300, 1000);
+
+      return {
+        destination,
+        duration: dynamicDuration,
+      };
+    };
+
+    const handleTouchEnd = (event: TouchEvent) => {
+      if (!isScrolling) {
+        return;
+      }
+      isScrolling = false;
+
+      const dy = Math.abs(offsetY - momentumStartY);
+      const dx = Math.abs(offsetX - momentumStartX);
+      const delta = Date.now() - startTime;
+
+      if (
+        (delta < momentumThreshold && direction === 'vertical' && dy > momentumOffsetThreshold) ||
+        (direction === 'horizontal' && dx > momentumOffsetThreshold)
+      ) {
+        if (direction === 'vertical') {
+          const m = momentum(offsetY, momentumStartY, delta);
+          if (offsetY === m.destination) {
+            return;
+          }
+          offsetY = m.destination;
+          duration = m.duration;
+        } else if (direction === 'horizontal') {
+          const m = momentum(offsetX, momentumStartX, delta);
+          if (offsetX === m.destination) {
+            return;
+          }
+          offsetX = m.destination;
+          duration = m.duration;
+        }
+
+        applyScroll();
+
+        updateInterval = window.setInterval(() => {
+          const { top, left } = getComputedOffset();
+          if (top === undefined || left === undefined || (top === offsetY && left === offsetX)) {
+            stop();
+            return;
+          }
+
+          console.log('top', top, 'left', left);
+
+          if (direction === 'vertical' && top !== offsetY) {
+            scrollPosition.current = { top: top * -1, left: left * -1 };
+            handleScroll(undefined, scrollPosition.current);
+          } else if (direction === 'horizontal' && left !== offsetX) {
+            scrollPosition.current = { top: top * -1, left: left * -1 };
+            handleScroll(undefined, scrollPosition.current);
+          }
+        }, 1000 / 30);
+      }
+    };
+
+    const onTransitionEnd = () => {
+      stop();
+    };
+
+    const handleWheel = (event: WheelEvent) => {
+      if (isTouchScrollEnabled) {
+        isTouchScrollEnabled = false;
+        stop();
+
+        scrollPosition.current = { top: offsetY * -1, left: offsetX * -1 };
+
+        scroller.scrollTop = scrollPosition.current.top;
+        scroller.scrollLeft = scrollPosition.current.left;
+
+        scrollerContent.style.transform = '';
+        scrollerContent.style.transitionDuration = '';
+        scrollerContent.style.transitionTimingFunction = '';
+      }
+    };
+
+    const interceptScroll = (event: Event) => {
+      if (isTouchScrollEnabled) {
+        event.preventDefault();
+        event.stopPropagation();
+        const { scrollTop, scrollLeft } = scroller;
+        offsetY = scrollTop * -1;
+        offsetX = scrollLeft * -1;
+        scrollPosition.current = { top: scrollTop, left: scrollLeft };
+
+        applyScroll();
+        updateRenderContext();
+      }
+    };
+
+    scroller.addEventListener('touchstart', handleTouchStart);
+    scroller.addEventListener('touchmove', handleTouchMove, { passive: false });
+    scroller.addEventListener('touchend', handleTouchEnd);
+    scroller.addEventListener('wheel', handleWheel);
+    scroller.addEventListener('scroll', interceptScroll, {
+      capture: true,
+      passive: false,
+    });
+
+    scrollerContent.addEventListener('transitionend', onTransitionEnd);
+
+    return () => {
+      scroller.removeEventListener('touchstart', handleTouchStart);
+      scroller.removeEventListener('touchmove', handleTouchMove);
+      scroller.removeEventListener('touchend', handleTouchEnd);
+      scroller.removeEventListener('wheel', handleWheel);
+      scroller.removeEventListener('scroll', interceptScroll, {
+        capture: true,
+      });
+      scrollerContent.removeEventListener('transitionend', onTransitionEnd);
+    };
+  }, []);
 
   return {
     renderContext,
