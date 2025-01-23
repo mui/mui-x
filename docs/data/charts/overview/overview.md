@@ -25,13 +25,6 @@ They also have access to all [MUI System](https://mui.com/system/getting-starte
 
 {{"component": "modules/components/ChartComponentsGrid.js"}}
 
-## Using this documentation
-
-Each Chart type has two accompanying documents:
-
-1. **Overview** – a general description of built-in features
-2. **Demo** – a collection of custom examples
-
 ## Supported features
 
 Features shared across Chart components such as axes and legends are described in standalone documents:

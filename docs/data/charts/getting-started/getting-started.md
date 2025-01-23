@@ -10,7 +10,7 @@ packageName: '@mui/x-charts'
 
 ## Installation
 
-Run one of the following commands to install the free Community version or the paid Pro version of the MUI X Charts:
+Install the Charts package that best suits your needs—Community or Pro:
 
 <!-- #default-branch-switch -->
 
@@ -21,7 +21,7 @@ Run one of the following commands to install the free Community version or the p
 #### Material UI
 
 The Charts packages have a peer dependency on `@mui/material`.
-If you're not already using it, install it with the following command:
+If you're not already using it, install it now:
 
 <codeblock storageKey="package-manager">
 
@@ -54,7 +54,7 @@ yarn add @mui/material @emotion/react @emotion/styled
 
 ### Usage with D3
 
-To help folks using CommonJS, the `@mui/x-charts` package uses a vendored package named `@mui/x-charts-vendor` to access D3 libraries.
+To help folks using CommonJS, the Charts package uses a vendored package named `@mui/x-charts-vendor` to access D3 libraries.
 You can import D3 functions from `@mui/x-charts-vendor/d3-scale`.
 
 ## Rendering Charts
@@ -100,12 +100,10 @@ See the [Styling documentation](/x/react-charts/styling/#placement) for complete
 
 ### Server-side rendering
 
-The chart support server-side rendering under two conditions:
+Charts support server-side rendering under two conditions:
 
-1. The `width` and `height` props needs to be provided.
-2. The animation should be disabled with the `skipAnimation` prop.
-
-The reason is that it is not possible to compute the SVG dimensions on the server, and the `skipAnimation` ensures that the animation is not in an "empty" state when first rendering.
+1. `width` and `height` props must be provided – it's not possible to compute the SVG dimensions on the server
+2. Animations must be disabled with the `skipAnimation` prop – otherwise the animation will be in an empty state on first render
 
 ### Axis management
 
@@ -121,10 +119,8 @@ To benefit from [CSS overrides](/material-ui/customization/theme-components/#the
 These types use module augmentation to extend the default theme structure.
 
 ```tsx
-// only one import is necessary,
-// from the version you're currently using.
+// Pro users: add `-pro` suffix to package name
 import type {} from '@mui/x-charts/themeAugmentation';
-import type {} from '@mui/x-charts-pro/themeAugmentation';
 
 const theme = createTheme({
   components: {
@@ -138,3 +134,10 @@ const theme = createTheme({
   },
 });
 ```
+
+## Using this documentation
+
+Most Chart components have two accompanying documents:
+
+1. **Overview** – a general description of built-in features
+2. **Demo** – a collection of custom examples

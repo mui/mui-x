@@ -266,7 +266,6 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-date-pickers', title: 'Overview' },
       { pathname: '/x/react-date-pickers/getting-started', title: 'Quickstart' },
       { pathname: '/x/react-date-pickers/base-concepts' },
-      { pathname: '/x/react-date-pickers/faq', title: 'FAQs' },
       {
         pathname: '/x/react-date-pickers-components',
         subheader: 'Components',
