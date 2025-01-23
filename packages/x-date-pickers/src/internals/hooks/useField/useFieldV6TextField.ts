@@ -76,8 +76,8 @@ export const addPositionPropertiesToSections = <TSection extends FieldSection>(
 
 export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
   const isRtl = useRtl();
-  const focusTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
-  const selectionSyncTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
+  const focusTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined);
+  const selectionSyncTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const {
     forwardedProps: {
@@ -331,6 +331,10 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
     const shouldUseEventData = eventData && eventData.length > 1;
     const valueStr = shouldUseEventData ? eventData : targetValue;
     const cleanValueStr = cleanString(valueStr);
+
+    if (parsedSelectedSections === 'all') {
+      setSelectedSections(activeSectionIndex);
+    }
 
     // If no section is selected or eventData should be used, we just try to parse the new value
     // This line is mostly triggered by imperative code / application tests.

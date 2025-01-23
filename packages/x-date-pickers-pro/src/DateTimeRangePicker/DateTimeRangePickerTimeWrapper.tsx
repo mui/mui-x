@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
   PickerSelectionState,
   PickerViewRenderer,
@@ -50,10 +49,7 @@ function DateTimeRangePickerTimeWrapper<
     Omit<BaseClockProps<TDate, TView>, 'value' | 'defaultValue' | 'onChange'>,
     'views'
   >,
->(
-  props: DateTimeRangePickerTimeWrapperProps<TDate, TView, TComponentProps>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+>(props: DateTimeRangePickerTimeWrapperProps<TDate, TView, TComponentProps>) {
   const utils = useUtils<TDate>();
 
   const {
@@ -102,7 +98,6 @@ function DateTimeRangePickerTimeWrapper<
 
   return viewRenderer({
     ...other,
-    ref,
     views,
     onViewChange,
     value: currentValue,

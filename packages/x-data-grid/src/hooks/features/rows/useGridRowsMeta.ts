@@ -41,7 +41,7 @@ export const rowsMetaStateInitializer: GridStateInitializer = (state, props, api
  * @requires useGridPage (method)
  */
 export const useGridRowsMeta = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'getRowHeight'

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import {
   GridToolbarContainer,
   GridToolbarContainerProps,
@@ -23,47 +24,45 @@ export interface GridToolbarProps extends GridToolbarContainerProps, GridToolbar
   quickFilterProps?: GridToolbarQuickFilterProps;
 }
 
-const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarProps>(
-  function GridToolbar(props, ref) {
-    // TODO v7: think about where export option should be passed.
-    // from slotProps={{ toolbarExport: { ...exportOption } }} seems to be more appropriate
-    const {
-      className,
-      csvOptions,
-      printOptions,
-      excelOptions,
-      showQuickFilter = false,
-      quickFilterProps = {},
-      ...other
-    } = props as typeof props & { excelOptions: any };
-    const rootProps = useGridRootProps();
+const GridToolbar = forwardRef<HTMLDivElement, GridToolbarProps>(function GridToolbar(props, ref) {
+  // TODO v7: think about where export option should be passed.
+  // from slotProps={{ toolbarExport: { ...exportOption } }} seems to be more appropriate
+  const {
+    className,
+    csvOptions,
+    printOptions,
+    excelOptions,
+    showQuickFilter = false,
+    quickFilterProps = {},
+    ...other
+  } = props as typeof props & { excelOptions: any };
+  const rootProps = useGridRootProps();
 
-    if (
-      rootProps.disableColumnFilter &&
-      rootProps.disableColumnSelector &&
-      rootProps.disableDensitySelector &&
-      !showQuickFilter
-    ) {
-      return null;
-    }
+  if (
+    rootProps.disableColumnFilter &&
+    rootProps.disableColumnSelector &&
+    rootProps.disableDensitySelector &&
+    !showQuickFilter
+  ) {
+    return null;
+  }
 
-    return (
-      <GridToolbarContainer ref={ref} {...other}>
-        <GridToolbarColumnsButton />
-        <GridToolbarFilterButton />
-        <GridToolbarDensitySelector />
-        <GridToolbarExport
-          csvOptions={csvOptions}
-          printOptions={printOptions}
-          // @ts-ignore
-          excelOptions={excelOptions}
-        />
-        <div style={{ flex: 1 }} />
-        {showQuickFilter && <GridToolbarQuickFilter {...quickFilterProps} />}
-      </GridToolbarContainer>
-    );
-  },
-);
+  return (
+    <GridToolbarContainer {...other} ref={ref}>
+      <GridToolbarColumnsButton />
+      <GridToolbarFilterButton />
+      <GridToolbarDensitySelector />
+      <GridToolbarExport
+        csvOptions={csvOptions}
+        printOptions={printOptions}
+        // @ts-ignore
+        excelOptions={excelOptions}
+      />
+      <div style={{ flex: 1 }} />
+      {showQuickFilter && <GridToolbarQuickFilter {...quickFilterProps} />}
+    </GridToolbarContainer>
+  );
+});
 
 GridToolbar.propTypes = {
   // ----------------------------- Warning --------------------------------

@@ -60,6 +60,7 @@ function AnimatedLine(props: AnimatedLineProps) {
   return (
     <AppearingMask skipAnimation={skipAnimation} id={`${ownerState.id}-line-clip`}>
       {transitionChange((style, interpolator) => (
+        // @ts-expect-error
         <LineElementPath {...other} ownerState={ownerState} d={style.value.to(interpolator)} />
       ))}
     </AppearingMask>

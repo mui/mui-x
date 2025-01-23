@@ -21,7 +21,7 @@ export type TreeViewContextValue<
   Partial<MergeSignaturesProperty<TOptionalSignatures, 'contextValue'>> & {
     instance: TreeViewInstance<TSignatures, TOptionalSignatures>;
     publicAPI: TreeViewPublicAPI<TSignatures, TOptionalSignatures>;
-    rootRef: React.RefObject<HTMLUListElement>;
+    rootRef: React.RefObject<HTMLUListElement | null>;
     wrapItem: TreeItemWrapper<TSignatures>;
     wrapRoot: TreeRootWrapper<TSignatures>;
     runItemPlugins: TreeViewItemPluginsRunner;

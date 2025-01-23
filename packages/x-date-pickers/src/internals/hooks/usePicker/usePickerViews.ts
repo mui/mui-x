@@ -122,7 +122,7 @@ export interface UsePickerViewParams<
   propsFromPickerValue: UsePickerValueViewsResponse<TValue>;
   additionalViewProps: TAdditionalProps;
   autoFocusView: boolean;
-  fieldRef: React.RefObject<FieldRef<TSection>> | undefined;
+  fieldRef?: React.RefObject<FieldRef<TSection> | null>;
   /**
    * A function that intercepts the regular picker rendering.
    * Can be used to consume the provided `viewRenderers` and render a custom component wrapping them.

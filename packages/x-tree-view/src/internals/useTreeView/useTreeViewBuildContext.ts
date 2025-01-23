@@ -21,7 +21,7 @@ export const useTreeViewBuildContext = <TSignatures extends readonly TreeViewAny
   plugins: ConvertSignaturesIntoPlugins<readonly [...TreeViewCorePluginSignatures, ...TSignatures]>;
   instance: TreeViewInstance<TSignatures>;
   publicAPI: TreeViewPublicAPI<TSignatures>;
-  rootRef: React.RefObject<HTMLUListElement>;
+  rootRef: React.RefObject<HTMLUListElement | null>;
 }): TreeViewContextValue<TSignatures> => {
   const runItemPlugins: TreeViewItemPluginsRunner = (itemPluginProps) => {
     let finalRootRef: React.RefCallback<HTMLLIElement> | null = null;

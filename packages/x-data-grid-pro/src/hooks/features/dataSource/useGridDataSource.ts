@@ -43,7 +43,7 @@ export const dataSourceStateInitializer: GridStateInitializer = (state) => {
 };
 
 export const useGridDataSource = (
-  apiRef: React.MutableRefObject<GridPrivateApiPro>,
+  apiRef: React.RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     | 'unstable_dataSource'

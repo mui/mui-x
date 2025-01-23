@@ -12,7 +12,7 @@ export function ItemTooltipFixedY() {
   const svgRef = useSvgRef(); // Get the ref of the <svg/> component.
   const drawingArea = useDrawingArea(); // Get the dimensions of the chart inside the <svg/>.
 
-  if (!tooltipData || !mousePosition) {
+  if (!tooltipData || !mousePosition || !svgRef.current) {
     // No data to display
     return null;
   }

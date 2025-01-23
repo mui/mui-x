@@ -10,5 +10,6 @@
   height={200}
   width={400}
   slots={{ line: CustomAnimatedLine }}
-  slotProps={{ line: { limit: 5, sxAfter: { strokeDasharray: '10 5' } } as any }}
+  slotProps={{ line: { limit: 5 } as any }}
+  sx={{ '& .line-after path': { strokeDasharray: '10 5' } }}
 />

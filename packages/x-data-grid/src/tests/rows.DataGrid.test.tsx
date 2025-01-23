@@ -22,6 +22,7 @@ import {
   GridRenderCellParams,
   useGridApiRef,
   GridApi,
+  gridClasses,
 } from '@mui/x-data-grid';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import {
@@ -32,6 +33,7 @@ import {
   getActiveCell,
   getCell,
   microtasks,
+  $$,
 } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import Dialog from '@mui/material/Dialog';
@@ -43,7 +45,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGrid /> - Rows', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -425,8 +427,8 @@ describe('<DataGrid /> - Rows', () => {
       expect(deleteButton).toHaveFocus();
     });
 
-    it('should set the correct tabIndex to the focused button', () => {
-      render(
+    it('should set the correct tabIndex to the focused button', async () => {
+      const { user } = render(
         <TestCase
           getActions={() => [
             <GridActionsCellItem icon={<span />} label="print" />,
@@ -436,9 +438,11 @@ describe('<DataGrid /> - Rows', () => {
       );
       const firstCell = getCell(0, 0);
       const secondCell = getCell(0, 1);
-      firstCell.focus();
+      act(() => {
+        firstCell.focus();
+      });
 
-      fireEvent.keyDown(firstCell, { key: 'ArrowRight' });
+      await user.keyboard('{ArrowRight}');
       expect(secondCell).to.have.property('tabIndex', -1);
 
       const printButton = screen.getByRole('menuitem', { name: 'print' });
@@ -446,7 +450,10 @@ describe('<DataGrid /> - Rows', () => {
       expect(printButton).to.have.property('tabIndex', 0);
       expect(menuButton).to.have.property('tabIndex', -1);
 
-      fireEvent.keyDown(printButton, { key: 'ArrowRight' });
+      act(() => {
+        printButton.focus();
+      });
+      await user.keyboard('{ArrowRight}');
       expect(printButton).to.have.property('tabIndex', -1);
       expect(menuButton).to.have.property('tabIndex', 0);
     });
@@ -751,7 +758,7 @@ describe('<DataGrid /> - Rows', () => {
             width={100}
           />,
         );
-        expect(document.querySelectorAll('.MuiDataGrid-cell')).to.have.length(2);
+        expect($$(`.${gridClasses.cell}:not(.${gridClasses.cellEmpty})`)).to.have.length(2);
       });
 
       it('should measure rows while scrolling', async () => {

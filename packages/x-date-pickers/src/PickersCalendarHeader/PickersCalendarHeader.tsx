@@ -250,7 +250,7 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<
           </SwitchViewButton>
         )}
       </PickersCalendarHeaderLabelContainer>
-      <Fade in={view === 'day'}>
+      <Fade in={view === 'day'} appear={!reduceAnimations} enter={!reduceAnimations}>
         <PickersArrowSwitcher
           slots={slots}
           slotProps={slotProps}

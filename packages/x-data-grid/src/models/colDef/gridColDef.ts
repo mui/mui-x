@@ -32,13 +32,13 @@ export type GridApplyQuickFilter<R extends GridValidRowModel = GridValidRowModel
   value: V,
   row: R,
   column: GridColDef,
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.RefObject<GridApiCommunity>,
 ) => boolean;
 
 export type GetApplyQuickFilterFn<R extends GridValidRowModel = GridValidRowModel, V = any> = (
   value: any,
   colDef: GridStateColDef<R, V>,
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.RefObject<GridApiCommunity>,
 ) => null | GridApplyQuickFilter<R, V>;
 
 export type GridValueGetter<
@@ -50,7 +50,7 @@ export type GridValueGetter<
   value: TValue,
   row: R,
   column: GridColDef<R, V, F>,
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.RefObject<GridApiCommunity>,
 ) => V;
 
 export type GridValueFormatter<
@@ -62,28 +62,28 @@ export type GridValueFormatter<
   value: TValue,
   row: R,
   column: GridColDef<R, V, F>,
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.RefObject<GridApiCommunity>,
 ) => F;
 
 export type GridValueSetter<R extends GridValidRowModel = GridValidRowModel, V = any, F = V> = (
   value: V,
   row: R,
   column: GridColDef<R, V, F>,
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.RefObject<GridApiCommunity>,
 ) => R;
 
 export type GridValueParser<R extends GridValidRowModel = GridValidRowModel, V = any, F = V> = (
   value: F | undefined,
   row: R | undefined,
   column: GridColDef<R, V, F>,
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.RefObject<GridApiCommunity>,
 ) => V;
 
 export type GridColSpanFn<R extends GridValidRowModel = GridValidRowModel, V = any, F = V> = (
   value: V,
   row: R,
   column: GridColDef<R, V, F>,
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.RefObject<GridApiCommunity>,
 ) => number | undefined;
 
 /**
@@ -274,7 +274,7 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
    * This function can return `null` to skip filtering for this value and column.
    * @param {any} value The value with which we want to filter the column.
    * @param {GridStateColDef} colDef The column from which we want to filter the rows.
-   * @param {React.MutableRefObject<GridApiCommunity>} apiRef Deprecated: The API of the grid.
+   * @param {React.RefObject<GridApiCommunity>} apiRef Deprecated: The API of the grid.
    * @returns {null | GridApplyQuickFilter} The function to call to check if a row pass this filter value or not.
    */
   getApplyQuickFilterFn?: GetApplyQuickFilterFn<R, V>;

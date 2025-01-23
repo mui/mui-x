@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid",
-  "version": "7.23.3",
+  "version": "7.24.0",
   "description": "The Community plan edition of the Data Grid components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -71,12 +71,14 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.17",
-    "@mui/joy": "^5.0.0-beta.48",
-    "@mui/material": "^5.16.7",
-    "@mui/system": "^5.16.7",
-    "@mui/types": "^7.2.15",
+    "@mui/internal-test-utils": "^1.0.24",
+    "@mui/joy": "^5.0.0-beta.51",
+    "@mui/material": "^5.16.13",
+    "@mui/system": "^5.16.13",
+    "@mui/types": "^7.2.20",
     "@types/prop-types": "^15.7.13",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "rimraf": "^6.0.1"
   },
   "engines": {

@@ -4,6 +4,7 @@ import { unstable_useId as useId, unstable_useForkRef as useForkRef } from '@mui
 import MenuList from '@mui/material/MenuList';
 import { ButtonProps } from '@mui/material/Button';
 import { TooltipProps } from '@mui/material/Tooltip';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { isHideMenuKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridMenu } from '../menu/GridMenu';
@@ -18,7 +19,7 @@ interface GridToolbarExportContainerProps {
   slotProps?: { button?: Partial<ButtonProps>; tooltip?: Partial<TooltipProps> };
 }
 
-const GridToolbarExportContainer = React.forwardRef<
+const GridToolbarExportContainer = forwardRef<
   HTMLButtonElement,
   React.PropsWithChildren<GridToolbarExportContainerProps>
 >(function GridToolbarExportContainer(props, ref) {
@@ -64,7 +65,6 @@ const GridToolbarExportContainer = React.forwardRef<
         {...tooltipProps}
       >
         <rootProps.slots.baseButton
-          ref={handleRef}
           size="small"
           startIcon={<rootProps.slots.exportIcon />}
           aria-expanded={open}
@@ -75,6 +75,7 @@ const GridToolbarExportContainer = React.forwardRef<
           onClick={handleMenuOpen}
           {...rootProps.slotProps?.baseButton}
           {...buttonProps}
+          ref={handleRef}
         >
           {apiRef.current.getLocaleText('toolbarExport')}
         </rootProps.slots.baseButton>

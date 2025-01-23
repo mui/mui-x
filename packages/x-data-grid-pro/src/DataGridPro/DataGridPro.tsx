@@ -2,15 +2,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
-import {
-  GridBody,
-  GridFooterPlaceholder,
-  GridHeader,
-  GridRoot,
-  GridContextProvider,
-  GridValidRowModel,
-} from '@mui/x-data-grid';
+import { GridRoot, GridContextProvider, GridValidRowModel } from '@mui/x-data-grid';
 import { validateProps } from '@mui/x-data-grid/internals';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import { DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
@@ -29,7 +23,7 @@ const configuration = {
 };
 const releaseInfo = getReleaseInfo();
 
-const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValidRowModel>(
+const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowModel>(
   inProps: DataGridProProps<R>,
   ref: React.Ref<HTMLDivElement>,
 ) {
@@ -46,15 +40,11 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
         className={props.className}
         style={props.style}
         sx={props.sx}
-        ref={ref}
         {...props.forwardedProps}
         {...props.slotProps?.root}
+        ref={ref}
       >
-        <GridHeader />
-        <GridBody>
-          <Watermark packageName="x-data-grid-pro" releaseInfo={releaseInfo} />
-        </GridBody>
-        <GridFooterPlaceholder />
+        <Watermark packageName="x-data-grid-pro" releaseInfo={releaseInfo} />
       </GridRoot>
     </GridContextProvider>
   );

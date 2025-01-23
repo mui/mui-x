@@ -9,6 +9,8 @@ import {
 } from '@mui/utils';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
+import { fastMemo } from '@mui/x-internals/fastMemo';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridRootStyles } from './GridRootStyles';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
@@ -17,6 +19,8 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { gridDensitySelector } from '../../hooks/features/density/densitySelector';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridDensity } from '../../models/gridDensity';
+import { GridHeader } from '../GridHeader';
+import { GridBody, GridFooterPlaceholder } from '../base';
 
 export interface GridRootProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -44,9 +48,9 @@ const useUtilityClasses = (ownerState: OwnerState, density: GridDensity) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(props, ref) {
+const GridRoot = forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(props, ref) {
   const rootProps = useGridRootProps();
-  const { className, ...other } = props;
+  const { className, children, ...other } = props;
   const apiRef = useGridPrivateApiContext();
   const density = useGridSelector(apiRef, gridDensitySelector);
   const rootElementRef = apiRef.current.rootElementRef;
@@ -68,11 +72,15 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
 
   return (
     <GridRootStyles
-      ref={handleRef}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
       {...other}
-    />
+      ref={handleRef}
+    >
+      <GridHeader />
+      <GridBody>{children}</GridBody>
+      <GridFooterPlaceholder />
+    </GridRootStyles>
   );
 });
 
@@ -91,4 +99,5 @@ GridRoot.propTypes = {
   ]),
 } as any;
 
-export { GridRoot };
+const MemoizedGridRoot = fastMemo(GridRoot);
+export { MemoizedGridRoot as GridRoot };

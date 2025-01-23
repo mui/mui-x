@@ -28,7 +28,7 @@ createSelector(
 createSelector(
   (state: GridStateCommunity) => state.columns.orderedFields,
   (fields) => fields,
-)({} as React.MutableRefObject<GridApiCommunity>);
+)({} as React.RefObject<GridApiCommunity>);
 
 createSelector(
   (state: GridStateCommunity) => state.columns.orderedFields,
