@@ -5,6 +5,7 @@ import { ChartDataProviderProps } from '../ChartDataProvider';
 import type { ChartContainerProps } from './ChartContainer';
 import { ChartSeriesType } from '../models/seriesType/config';
 import { ALL_PLUGINS, AllPluginSignatures, AllPluginsType } from '../internals/plugins/allPlugins';
+import { ChartAnyPluginSignature } from '../internals/plugins/models';
 
 export type UseChartContainerPropsReturnValue<TSeries extends ChartSeriesType> = {
   chartDataProviderProps: ChartDataProviderProps<TSeries, AllPluginSignatures<TSeries>>;
@@ -12,8 +13,11 @@ export type UseChartContainerPropsReturnValue<TSeries extends ChartSeriesType> =
   children: React.ReactNode;
 };
 
-export const useChartContainerProps = <TSeries extends ChartSeriesType = ChartSeriesType>(
-  props: ChartContainerProps<TSeries>,
+export const useChartContainerProps = <
+  TSeries extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+>(
+  props: ChartContainerProps<TSeries, TSignatures>,
   ref: React.Ref<SVGSVGElement>,
 ): UseChartContainerPropsReturnValue<TSeries> => {
   const {
@@ -36,8 +40,9 @@ export const useChartContainerProps = <TSeries extends ChartSeriesType = ChartSe
     zAxis,
     skipAnimation,
     seriesConfig,
+    plugins,
     ...other
-  } = props;
+  } = props as ChartContainerProps<TSeries, AllPluginSignatures<TSeries>>;
 
   const chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> } = {
     title,
@@ -65,7 +70,7 @@ export const useChartContainerProps = <TSeries extends ChartSeriesType = ChartSe
     width,
     height,
     seriesConfig,
-    plugins: ALL_PLUGINS as unknown as AllPluginsType<TSeries>,
+    plugins: plugins ?? (ALL_PLUGINS as unknown as AllPluginsType<TSeries>),
     disableAxisListener,
   };
 

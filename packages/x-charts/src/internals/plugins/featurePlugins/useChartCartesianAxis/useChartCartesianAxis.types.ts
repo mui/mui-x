@@ -8,16 +8,11 @@ import {
   ChartsYAxisProps,
   AxisId,
   AxisConfig,
+  ChartsAxisData,
 } from '../../../../models/axis';
 import { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
 import { ZoomData, ZoomOptions } from './zoom.types';
 import { UseChartInteractionSignature } from '../useChartInteraction';
-
-export type ChartsAxisData = {
-  dataIndex: number;
-  axisValue?: number | Date | string;
-  seriesValues: Record<string, number | null | undefined>;
-};
 
 export type DefaultizedAxisConfig<AxisProps> = {
   [axisId: AxisId]: AxisDefaultized<ScaleName, any, AxisProps>;
@@ -55,6 +50,9 @@ export interface UseChartCartesianAxisParameters {
    * An array of [[AxisConfig]] objects.
    */
   yAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[];
+  /**
+   * An array of objects that can be used to populate series and axes data using their `dataKey` property.
+   */
   dataset?: DatasetType;
   /**
    * The function called for onClick events.

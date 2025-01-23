@@ -173,10 +173,13 @@ export const useChartCartesianAxis: ChartPlugin<
           : interactionAxis.y && interactionAxis.y.index;
       }
 
-      if (dataIndex == null) {
+      const USED_AXIS_ID = isXaxis ? xAxisIds[0] : yAxisIds[0];
+      if (dataIndex == null || dataIndex === -1) {
         return;
       }
-      const USED_AXIS_ID = isXaxis ? xAxisIds[0] : yAxisIds[0];
+
+      // The .data exist because otherwise the dataIndex would be null or -1.
+      const axisValue = (isXaxis ? xAxisWithScale : yAxisWithScale)[USED_AXIS_ID].data![dataIndex];
 
       const seriesValues: Record<string, number | null | undefined> = {};
 
@@ -195,7 +198,7 @@ export const useChartCartesianAxis: ChartPlugin<
             }
           });
         });
-      const axisValue = (isXaxis ? xAxisWithScale : yAxisWithScale)[USED_AXIS_ID].data?.[dataIndex];
+
       params.onAxisClick?.(event, { dataIndex, axisValue, seriesValues });
     };
 
