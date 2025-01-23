@@ -6,7 +6,7 @@ import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { options } from '../utils/options';
 
 describe('ScatterChart', () => {
-  const dataLength = 1_000;
+  const dataLength = 800;
   const data = Array.from({ length: dataLength }).map((_, i) => ({
     id: i,
     x: i,
