@@ -88,6 +88,7 @@ export type TextFieldProps = {
       endAdornment?: React.ReactNode;
       startAdornment?: React.ReactNode;
     };
+    inputLabel?: {};
     htmlInput?: React.InputHTMLAttributes<HTMLInputElement>;
   };
   style?: React.CSSProperties;

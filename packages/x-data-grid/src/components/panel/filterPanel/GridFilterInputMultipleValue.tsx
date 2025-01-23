@@ -6,7 +6,9 @@ import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { TextFieldProps } from '../../../models/gridBaseSlots';
 import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
 
-export type GridFilterInputMultipleValueProps = GridFilterInputValueProps<TextFieldProps> & {
+export type GridFilterInputMultipleValueProps = GridFilterInputValueProps<
+  Omit<AutocompleteProps<string, true, false, true>, 'options' | 'renderInput'>
+> & {
   type?: 'text' | 'number' | 'date' | 'datetime-local';
 };
 
@@ -52,7 +54,7 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
       }}
       id={id}
       value={filterValueState}
-      onChange={handleChange}
+      onChange={handleChange as any}
       renderTags={(value, getTagProps) =>
         value.map((option, index) => {
           const { key, ...tagProps } = getTagProps({ index });
@@ -67,17 +69,25 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
           );
         })
       }
-      renderInput={(params) => (
-        <rootProps.slots.baseTextField
-          {...params}
-          label={apiRef.current.getLocaleText('filterPanelInputLabel')}
-          placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
-          inputRef={focusElementRef}
-          type={type || 'text'}
-          {...slotProps?.root}
-          {...rootProps.slotProps?.baseTextField}
-        />
-      )}
+      renderInput={(params) => {
+        const { inputProps, InputProps, InputLabelProps, ...rest } = params;
+        return (
+          <rootProps.slots.baseTextField
+            {...rest}
+            label={apiRef.current.getLocaleText('filterPanelInputLabel')}
+            placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
+            inputRef={focusElementRef}
+            type={type || 'text'}
+            slotProps={{
+              input: InputProps,
+              inputLabel: InputLabelProps,
+              htmlInput: inputProps,
+            }}
+            {...rootProps.slotProps?.baseTextField}
+          />
+        );
+      }}
+      {...slotProps?.root}
     />
   );
 }
