@@ -264,7 +264,7 @@ describe('<DataGrid /> - Pagination', () => {
     });
 
     it('should throw if pageSize exceeds 100', () => {
-      let apiRef: React.MutableRefObject<GridApi>;
+      let apiRef: React.RefObject<GridApi>;
       function TestCase() {
         apiRef = useGridApiRef();
         return (

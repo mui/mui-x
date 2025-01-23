@@ -84,7 +84,7 @@ describe('<DataGridPro /> - Layout', () => {
 
   describe('columns width', () => {
     it('should resize flex: 1 column when changing column visibility to avoid exceeding grid width (apiRef setColumnVisibility method call)', () => {
-      let apiRef: React.MutableRefObject<GridApi>;
+      let apiRef: React.RefObject<GridApi>;
 
       function TestCase(props: Omit<DataGridProProps, 'apiRef'>) {
         apiRef = useGridApiRef();

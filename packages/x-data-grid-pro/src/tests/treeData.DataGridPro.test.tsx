@@ -61,7 +61,7 @@ const baselineProps: DataGridProProps = {
 describe('<DataGridPro /> - Tree data', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: React.RefObject<GridApi>;
 
   function Test(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();

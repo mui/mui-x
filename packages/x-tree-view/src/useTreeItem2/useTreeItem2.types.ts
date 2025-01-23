@@ -102,7 +102,7 @@ export interface UseTreeItem2CheckboxSlotOwnProps {
   checked: boolean;
   onChange: TreeViewCancellableEventHandler<React.ChangeEvent<HTMLInputElement>>;
   disabled: boolean;
-  ref: React.RefObject<HTMLButtonElement>;
+  ref: React.RefObject<HTMLButtonElement | null>;
   tabIndex: -1;
 }
 

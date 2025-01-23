@@ -21,7 +21,7 @@ export interface ExportedSlideTransitionProps {
 export interface SlideTransitionProps
   extends Omit<CSSTransitionProps, 'timeout'>,
     ExportedSlideTransitionProps {
-  children: React.ReactElement;
+  children: React.ReactElement<any>;
   className?: string;
   reduceAnimations: boolean;
   slideDirection: SlideDirection;
@@ -137,7 +137,7 @@ export function PickersSlideTransition(inProps: SlideTransitionProps) {
   return (
     <PickersSlideTransitionRoot
       className={clsx(classes.root, className)}
-      childFactory={(element: React.ReactElement) =>
+      childFactory={(element: React.ReactElement<any>) =>
         React.cloneElement(element, {
           classNames: transitionClasses,
         })

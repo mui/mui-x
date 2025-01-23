@@ -194,6 +194,11 @@ export const useField = <
           break;
         }
 
+        // if all sections are selected, mark the currently editing one as selected
+        if (parsedSelectedSections === 'all') {
+          setSelectedSections(activeSectionIndex);
+        }
+
         const activeSection = state.sections[activeSectionIndex];
         const activeDateManager = fieldValueManager.getActiveDateManager(
           utils,

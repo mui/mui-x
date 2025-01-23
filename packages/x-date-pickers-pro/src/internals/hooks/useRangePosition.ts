@@ -30,7 +30,7 @@ export interface UseRangePositionResponse {
 
 export const useRangePosition = (
   props: UseRangePositionProps,
-  singleInputFieldRef?: React.RefObject<FieldRef<RangeFieldSection>>,
+  singleInputFieldRef?: React.RefObject<FieldRef<RangeFieldSection> | null>,
 ): UseRangePositionResponse => {
   const [rangePosition, setRangePosition] = useControlled({
     name: 'useRangePosition',

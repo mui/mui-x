@@ -23,7 +23,7 @@ export interface SimpleTreeViewSlotProps extends SimpleTreeViewPluginSlotProps {
   root?: SlotComponentProps<'ul', {}, {}>;
 }
 
-export type SimpleTreeViewApiRef = React.MutableRefObject<
+export type SimpleTreeViewApiRef = React.RefObject<
   TreeViewPublicAPI<SimpleTreeViewPluginSignatures> | undefined
 >;
 

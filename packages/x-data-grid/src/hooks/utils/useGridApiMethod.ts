@@ -12,7 +12,7 @@ export function useGridApiMethod<
   PrivateOnlyApi extends Omit<PrivateApi, keyof PublicApi>,
   V extends 'public' | 'private',
   T extends V extends 'public' ? Partial<PublicApi> : Partial<PrivateOnlyApi>,
->(privateApiRef: React.MutableRefObject<PrivateApi>, apiMethods: T, visibility: V) {
+>(privateApiRef: React.RefObject<PrivateApi>, apiMethods: T, visibility: V) {
   const isFirstRender = React.useRef(true);
 
   useEnhancedEffect(() => {

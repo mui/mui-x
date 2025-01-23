@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-license",
-  "version": "7.23.2",
+  "version": "7.24.0",
   "description": "MUI X License verification",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -35,13 +35,16 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.25.7",
-    "@mui/utils": "^5.16.6 || ^6.0.0"
+    "@mui/utils": "^5.16.6 || ^6.0.0",
+    "@mui/x-internals": "workspace:*"
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.17",
+    "@mui/internal-test-utils": "^1.0.24",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "rimraf": "^6.0.1"
   },
   "engines": {

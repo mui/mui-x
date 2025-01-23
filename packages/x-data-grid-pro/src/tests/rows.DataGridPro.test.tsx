@@ -74,7 +74,7 @@ describe('<DataGridPro /> - Rows', () => {
     });
 
     it('should allow to switch between cell mode', () => {
-      let apiRef: React.MutableRefObject<GridApi>;
+      let apiRef: React.RefObject<GridApi>;
       const editableProps = { ...baselineProps };
       editableProps.columns = editableProps.columns.map((col) => ({ ...col, editable: true }));
       const getRowId: DataGridProProps['getRowId'] = (row) => `${row.clientId}`;
@@ -103,7 +103,7 @@ describe('<DataGridPro /> - Rows', () => {
 
     it('should not clone the row', () => {
       const getRowId: DataGridProProps['getRowId'] = (row) => `${row.clientId}`;
-      let apiRef: React.MutableRefObject<GridApi>;
+      let apiRef: React.RefObject<GridApi>;
       function Test() {
         apiRef = useGridApiRef();
         return (
@@ -165,7 +165,7 @@ describe('<DataGridPro /> - Rows', () => {
       };
     });
 
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: React.RefObject<GridApi>;
 
     function TestCase(props: Partial<DataGridProProps>) {
       apiRef = useGridApiRef();
@@ -341,7 +341,7 @@ describe('<DataGridPro /> - Rows', () => {
       };
     });
 
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: React.RefObject<GridApi>;
 
     function TestCase(props: Partial<DataGridProProps>) {
       apiRef = useGridApiRef();
@@ -404,7 +404,7 @@ describe('<DataGridPro /> - Rows', () => {
       }
     });
 
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: React.RefObject<GridApi>;
     function TestCaseVirtualization(
       props: Partial<DataGridProProps> & {
         nbRows?: number;
@@ -686,7 +686,7 @@ describe('<DataGridPro /> - Rows', () => {
   });
 
   describe('no virtualization', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: React.RefObject<GridApi>;
 
     function TestCase(props: Partial<DataGridProProps> & { nbRows?: number; nbCols?: number }) {
       apiRef = useGridApiRef();
@@ -727,7 +727,7 @@ describe('<DataGridPro /> - Rows', () => {
   });
 
   describe('Cell focus', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: React.RefObject<GridApi>;
 
     function TestCase(props: Partial<DataGridProProps>) {
       apiRef = useGridApiRef();

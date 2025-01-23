@@ -38,7 +38,7 @@ export interface RichTreeViewProSlotProps<R extends {}, Multiple extends boolean
   item?: SlotComponentProps<typeof TreeItem, {}, RichTreeViewItemProSlotOwnerState>;
 }
 
-export type RichTreeViewProApiRef = React.MutableRefObject<
+export type RichTreeViewProApiRef = React.RefObject<
   TreeViewPublicAPI<RichTreeViewProPluginSignatures> | undefined
 >;
 

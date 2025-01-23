@@ -20,7 +20,7 @@ type GridCreateSelectorFunction = ReturnType<typeof reselectCreateSelector> & {
 
 // TODO v8: Remove this type
 export interface OutputSelector<State, Result> {
-  (apiRef: React.MutableRefObject<{ state: State; instanceId: GridCoreApi['instanceId'] }>): Result;
+  (apiRef: React.RefObject<{ state: State; instanceId: GridCoreApi['instanceId'] }>): Result;
   (state: State, instanceId: GridCoreApi['instanceId']): Result;
   acceptsApiRef: boolean;
 }
@@ -28,7 +28,7 @@ export interface OutputSelector<State, Result> {
 // TODO v8: Rename this type to `OutputSelector`
 export interface OutputSelectorV8<State, Args, Result> {
   (
-    apiRef: React.MutableRefObject<{ state: State; instanceId: GridCoreApi['instanceId'] }>,
+    apiRef: React.RefObject<{ state: State; instanceId: GridCoreApi['instanceId'] }>,
     args?: Args,
   ): Result;
   (state: State, instanceId: GridCoreApi['instanceId']): Result;

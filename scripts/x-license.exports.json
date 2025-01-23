@@ -20,5 +20,5 @@
   { "name": "Unstable_LicenseInfoProviderProps", "kind": "Interface" },
   { "name": "useLicenseVerifier", "kind": "Function" },
   { "name": "verifyLicense", "kind": "Function" },
-  { "name": "Watermark", "kind": "Function" }
+  { "name": "Watermark", "kind": "Variable" }
 ]

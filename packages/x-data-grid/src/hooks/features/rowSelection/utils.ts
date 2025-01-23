@@ -19,7 +19,7 @@ export const ROW_SELECTION_PROPAGATION_DEFAULT: GridRowSelectionPropagation = {
 };
 
 function getGridRowGroupSelectableDescendants(
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.RefObject<GridApiCommunity>,
   groupId: GridRowId,
 ) {
   const rowTree = gridRowTreeSelector(apiRef);
@@ -148,7 +148,7 @@ const getFilteredRowNodeSiblings = (
 };
 
 export const findRowsToSelect = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   tree: GridRowTreeConfig,
   selectedRow: GridRowId,
   autoSelectDescendants: boolean,
@@ -208,7 +208,7 @@ export const findRowsToSelect = (
 };
 
 export const findRowsToDeselect = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
   tree: GridRowTreeConfig,
   deselectedRow: GridRowId,
   autoSelectDescendants: boolean,

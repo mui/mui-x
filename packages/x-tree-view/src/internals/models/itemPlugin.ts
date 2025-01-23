@@ -9,8 +9,8 @@ import type {
 import type { UseTreeItem2Interactions } from '../../hooks/useTreeItem2Utils/useTreeItem2Utils';
 
 export interface TreeViewItemPluginSlotPropsEnhancerParams {
-  rootRefObject: React.MutableRefObject<HTMLLIElement | null>;
-  contentRefObject: React.MutableRefObject<HTMLDivElement | null>;
+  rootRefObject: React.RefObject<HTMLLIElement | null>;
+  contentRefObject: React.RefObject<HTMLDivElement | null>;
   externalEventHandlers: EventHandlers;
   // TODO v9: Remove "Pick" once the old TreeItem is removed.
   interactions: Pick<

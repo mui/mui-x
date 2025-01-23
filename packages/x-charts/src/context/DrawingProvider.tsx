@@ -7,7 +7,7 @@ import { Initializable } from './context.types';
 
 export interface DrawingProviderProps extends LayoutConfig {
   children: React.ReactNode;
-  svgRef: React.RefObject<SVGSVGElement>;
+  svgRef: React.RefObject<SVGSVGElement | null>;
 }
 
 /**
@@ -79,7 +79,7 @@ if (process.env.NODE_ENV !== 'production') {
   DrawingContext.displayName = 'DrawingContext';
 }
 
-export type SvgContextState = React.RefObject<SVGSVGElement>;
+export type SvgContextState = React.RefObject<SVGSVGElement | null>;
 
 export const SvgContext = React.createContext<Initializable<SvgContextState>>({
   isInitialized: false,

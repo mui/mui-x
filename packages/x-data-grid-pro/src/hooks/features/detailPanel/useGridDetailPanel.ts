@@ -45,7 +45,7 @@ export const detailPanelStateInitializer: GridStateInitializer<
 };
 
 function cacheContentAndHeight(
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: React.RefObject<GridApiPro>,
   getDetailPanelContent: DataGridProProcessedProps['getDetailPanelContent'],
   getDetailPanelHeight: DataGridProProcessedProps['getDetailPanelHeight'],
   previousHeightCache: GridDetailPanelState['heightCache'],
@@ -81,7 +81,7 @@ function cacheContentAndHeight(
 }
 
 export const useGridDetailPanel = (
-  apiRef: React.MutableRefObject<GridPrivateApiPro>,
+  apiRef: React.RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     | 'getDetailPanelContent'
@@ -260,9 +260,9 @@ export const useGridDetailPanel = (
   useGridApiEventHandler(apiRef, 'sortedRowsSet', updateCachesAndForceUpdate);
 
   const previousGetDetailPanelContentProp =
-    React.useRef<DataGridProProcessedProps['getDetailPanelContent']>();
+    React.useRef<DataGridProProcessedProps['getDetailPanelContent']>(null);
   const previousGetDetailPanelHeightProp =
-    React.useRef<DataGridProProcessedProps['getDetailPanelHeight']>();
+    React.useRef<DataGridProProcessedProps['getDetailPanelHeight']>(null);
 
   const updateCachesIfNeeded = React.useCallback(() => {
     if (
