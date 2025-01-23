@@ -388,7 +388,7 @@ function CalendarHeader(props: {
           <Calendar.SetVisibleMonth target="previous">◀</Calendar.SetVisibleMonth>
         )}
         <button
-          onClick={() => 
+          onClick={() =>
             onActiveSectionChange(activeSection === 'year' ? 'day' : 'year')
           }
           disabled={activeSection === 'month'}
