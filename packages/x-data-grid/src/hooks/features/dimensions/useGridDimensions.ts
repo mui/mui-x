@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ApiRef } from '@mui/x-internals/apiRef';
+import { RefObject } from '@mui/x-internals/types';
 import {
   unstable_ownerDocument as ownerDocument,
   unstable_useEnhancedEffect as useEnhancedEffect,
@@ -87,7 +87,7 @@ export const dimensionsStateInitializer: GridStateInitializer<RootProps> = (stat
   };
 };
 
-export function useGridDimensions(apiRef: ApiRef<GridPrivateApiCommunity>, props: RootProps) {
+export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, props: RootProps) {
   const logger = useGridLogger(apiRef, 'useResizeContainer');
   const errorShown = React.useRef(false);
   const rootDimensionsRef = React.useRef(EMPTY_SIZE);

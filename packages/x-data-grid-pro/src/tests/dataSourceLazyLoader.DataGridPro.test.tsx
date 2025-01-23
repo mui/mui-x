@@ -3,7 +3,7 @@ import { useMockServer } from '@mui/x-data-grid-generator';
 import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import { getRow } from 'test/utils/helperFn';
 import { expect } from 'chai';
-import { ApiRef } from '@mui/x-internals/apiRef';
+import { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
   DataGridProProps,
@@ -22,7 +22,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
   const defaultTransformGetRowsResponse = (response: GridGetRowsResponse) => response;
 
   let transformGetRowsResponse: (response: GridGetRowsResponse) => GridGetRowsResponse;
-  let apiRef: ApiRef<GridApi>;
+  let apiRef: RefObject<GridApi>;
   let fetchRowsSpy: SinonSpy;
   let mockServer: ReturnType<typeof useMockServer>;
 

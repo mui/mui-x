@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ApiRef } from '@mui/x-internals/apiRef';
+import { RefObject } from '@mui/x-internals/types';
 import composeClasses from '@mui/utils/composeClasses';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
@@ -24,7 +24,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 export const useGridRowSelectionPreProcessors = (
-  apiRef: ApiRef<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: DataGridProcessedProps,
 ) => {
   const ownerState = { classes: props.classes };

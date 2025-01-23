@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ApiRef } from '@mui/x-internals/apiRef';
+import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, act, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import {
@@ -36,7 +36,7 @@ describe('<DataGrid /> - Quick filter', () => {
     columns: [{ field: 'brand' }],
   };
 
-  let apiRef: ApiRef<GridApi>;
+  let apiRef: RefObject<GridApi>;
 
   function TestCase(props: Partial<DataGridProps>) {
     apiRef = useGridApiRef();

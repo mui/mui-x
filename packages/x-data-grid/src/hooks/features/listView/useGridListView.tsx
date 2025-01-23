@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ApiRef } from '@mui/x-internals/apiRef';
+import { RefObject } from '@mui/x-internals/types';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { GridListColDef } from '../../../models/colDef/gridColDef';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
@@ -21,7 +21,7 @@ export const listViewStateInitializer: GridStateInitializer<
 });
 
 export function useGridListView(
-  apiRef: ApiRef<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'unstable_listView' | 'unstable_listColumn'>,
 ) {
   /*
@@ -84,6 +84,6 @@ export function useGridListView(
   }, [props.unstable_listView, props.unstable_listColumn]);
 }
 
-function getListColumnWidth(apiRef: ApiRef<GridPrivateApiCommunity>) {
+function getListColumnWidth(apiRef: RefObject<GridPrivateApiCommunity>) {
   return gridDimensionsSelector(apiRef.current.state).viewportInnerSize.width;
 }

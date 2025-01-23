@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ApiRef } from '@mui/x-internals/apiRef';
+import { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPremium,
   DataGridPremiumProps,
@@ -51,7 +51,7 @@ const FULL_INITIAL_STATE: GridInitialState = {
 describe('<DataGridPremium /> - State persistence', () => {
   const { render } = createRenderer();
 
-  let apiRef: ApiRef<GridApi>;
+  let apiRef: RefObject<GridApi>;
 
   function TestCase(props: Omit<DataGridPremiumProps, 'rows' | 'columns' | 'apiRef'>) {
     apiRef = useGridApiRef();

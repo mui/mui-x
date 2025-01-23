@@ -5,7 +5,7 @@ import {
   GridApi,
   DataGridProProps,
 } from '@mui/x-data-grid-pro';
-import { ApiRef } from '@mui/x-internals/apiRef';
+import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import * as React from 'react';
@@ -19,7 +19,7 @@ describe('<DataGridPro /> - Export', () => {
     autoHeight: isJSDOM,
   };
 
-  let apiRef: ApiRef<GridApi>;
+  let apiRef: RefObject<GridApi>;
 
   const columns: GridColDef[] = [{ field: 'id' }, { field: 'brand', headerName: 'Brand' }];
 

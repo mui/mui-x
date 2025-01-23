@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ApiRef } from '@mui/x-internals/apiRef';
+import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import {
@@ -91,7 +91,7 @@ describe('<DataGrid /> - Sorting', () => {
   });
 
   it('should allow sorting using `apiRef` for unsortable columns', () => {
-    let apiRef: ApiRef<GridApi>;
+    let apiRef: RefObject<GridApi>;
     function TestCase() {
       apiRef = useGridApiRef();
       const cols = [{ field: 'id', sortable: false }];
@@ -121,7 +121,7 @@ describe('<DataGrid /> - Sorting', () => {
   });
 
   it('should allow clearing the current sorting using `sortColumn` idempotently', async () => {
-    let apiRef: ApiRef<GridApi>;
+    let apiRef: RefObject<GridApi>;
     function TestCase() {
       apiRef = useGridApiRef();
       const cols = [{ field: 'id' }];
@@ -153,7 +153,7 @@ describe('<DataGrid /> - Sorting', () => {
 
   // See https://github.com/mui/mui-x/issues/12271
   it('should not keep the sort item with `item.sort = null`', () => {
-    let apiRef: ApiRef<GridApi>;
+    let apiRef: RefObject<GridApi>;
     const onSortModelChange = spy();
     function TestCase() {
       apiRef = useGridApiRef();
@@ -668,7 +668,7 @@ describe('<DataGrid /> - Sorting', () => {
   });
 
   it('should apply the sortModel prop correctly on GridApiRef update row data', () => {
-    let apiRef: ApiRef<GridApi>;
+    let apiRef: RefObject<GridApi>;
     function TestCase() {
       apiRef = useGridApiRef();
 

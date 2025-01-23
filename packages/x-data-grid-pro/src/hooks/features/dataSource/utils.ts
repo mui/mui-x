@@ -1,4 +1,4 @@
-import { ApiRef } from '@mui/x-internals/apiRef';
+import { RefObject } from '@mui/x-internals/types';
 import { GridRowId } from '@mui/x-data-grid';
 import { GridGetRowsParams, GridGetRowsResponse } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models';
@@ -40,7 +40,7 @@ export class NestedDataManager {
   private maxConcurrentRequests: number;
 
   constructor(
-    privateApiRef: ApiRef<GridPrivateApiPro>,
+    privateApiRef: RefObject<GridPrivateApiPro>,
     maxConcurrentRequests = MAX_CONCURRENT_REQUESTS,
   ) {
     this.api = privateApiRef.current;

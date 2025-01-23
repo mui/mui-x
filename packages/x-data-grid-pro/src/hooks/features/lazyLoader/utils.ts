@@ -1,4 +1,4 @@
-import { ApiRef } from '@mui/x-internals/apiRef';
+import { RefObject } from '@mui/x-internals/types';
 import { GridRowEntry } from '@mui/x-data-grid';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 
@@ -7,7 +7,7 @@ export const findSkeletonRowsSection = ({
   visibleRows,
   range,
 }: {
-  apiRef: ApiRef<GridPrivateApiPro>;
+  apiRef: RefObject<GridPrivateApiPro>;
   visibleRows: GridRowEntry[];
   range: { firstRowIndex: number; lastRowIndex: number };
 }) => {

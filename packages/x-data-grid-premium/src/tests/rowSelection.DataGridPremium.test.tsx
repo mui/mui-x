@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ApiRef } from '@mui/x-internals/apiRef';
+import { RefObject } from '@mui/x-internals/types';
 import { act, createRenderer, fireEvent } from '@mui/internal-test-utils';
 import { getCell } from 'test/utils/helperFn';
 import { spy } from 'sinon';
@@ -48,7 +48,7 @@ describe('<DataGridPremium /> - Row selection', () => {
   const { render } = createRenderer();
 
   describe('props: rowSelectionPropagation = { descendants: true, parents: true }', () => {
-    let apiRef: ApiRef<GridApi>;
+    let apiRef: RefObject<GridApi>;
 
     function Test(props: Partial<DataGridPremiumProps>) {
       apiRef = useGridApiRef();

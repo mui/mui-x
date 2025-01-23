@@ -1,4 +1,4 @@
-import { ApiRef } from '@mui/x-internals/apiRef';
+import { RefObject } from '@mui/x-internals/types';
 import { GridSignature } from '../../utils/useGridApiEventHandler';
 import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
 import { gridFilteredRowsLookupSelector } from '../filter/gridFilterSelector';
@@ -20,7 +20,7 @@ export const ROW_SELECTION_PROPAGATION_DEFAULT: GridRowSelectionPropagation = {
 };
 
 function getGridRowGroupSelectableDescendants(
-  apiRef: ApiRef<GridApiCommunity>,
+  apiRef: RefObject<GridApiCommunity>,
   groupId: GridRowId,
 ) {
   const rowTree = gridRowTreeSelector(apiRef);
@@ -149,7 +149,7 @@ const getFilteredRowNodeSiblings = (
 };
 
 export const findRowsToSelect = (
-  apiRef: ApiRef<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   tree: GridRowTreeConfig,
   selectedRow: GridRowId,
   autoSelectDescendants: boolean,
@@ -209,7 +209,7 @@ export const findRowsToSelect = (
 };
 
 export const findRowsToDeselect = (
-  apiRef: ApiRef<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   tree: GridRowTreeConfig,
   deselectedRow: GridRowId,
   autoSelectDescendants: boolean,

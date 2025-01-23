@@ -1,4 +1,4 @@
-import { ApiRef } from '@mui/x-internals/apiRef';
+import { RefObject } from '@mui/x-internals/types';
 import { GridRowId } from './gridRows';
 import type { GridApiCommon } from './api';
 import type { GridApiCommunity } from './api/gridApiCommunity';
@@ -53,7 +53,7 @@ export interface GridGetRowsToExportParams<Api extends GridApiCommon = GridApiCo
   /**
    * The API of the grid.
    */
-  apiRef: ApiRef<Api>;
+  apiRef: RefObject<Api>;
 }
 
 export interface GridCsvGetRowsToExportParams<Api extends GridApiCommon = GridApiCommunity>

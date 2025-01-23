@@ -1,4 +1,4 @@
-import { ApiRef } from '@mui/x-internals/apiRef';
+import { RefObject } from '@mui/x-internals/types';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { GridApiCommunity, GridPrivateApiCommunity } from '../models/api/gridApiCommunity';
 import { useGridInitialization } from '../hooks/core/useGridInitialization';
@@ -64,7 +64,7 @@ import {
 } from '../hooks/features/listView/useGridListView';
 
 export const useDataGridComponent = (
-  inputApiRef: ApiRef<GridApiCommunity> | undefined,
+  inputApiRef: RefObject<GridApiCommunity> | undefined,
   props: DataGridProcessedProps,
 ) => {
   const apiRef = useGridInitialization<GridPrivateApiCommunity, GridApiCommunity>(

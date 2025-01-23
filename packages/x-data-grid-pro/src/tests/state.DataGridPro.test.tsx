@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
 import { getColumnValues } from 'test/utils/helperFn';
 import { expect } from 'chai';
-import { ApiRef } from '@mui/x-internals/apiRef';
+import { RefObject } from '@mui/x-internals/types';
 import { DataGridPro, useGridApiRef, GridApi, DataGridProProps } from '@mui/x-data-grid-pro';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -31,7 +31,7 @@ describe('<DataGridPro /> - State', () => {
 
   it('should trigger on state change and pass the correct params', () => {
     let onStateParams;
-    let apiRef: ApiRef<GridApi>;
+    let apiRef: RefObject<GridApi>;
 
     function Test() {
       apiRef = useGridApiRef();

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ApiRef } from '@mui/x-internals/apiRef';
+import { RefObject } from '@mui/x-internals/types';
 import { isFunction } from '../../utils/utils';
 import { useGridLogger } from './useGridLogger';
 import { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
@@ -8,7 +8,7 @@ export const useGridNativeEventListener = <
   PrivateApi extends GridPrivateApiCommon,
   K extends keyof HTMLElementEventMap,
 >(
-  apiRef: ApiRef<PrivateApi>,
+  apiRef: RefObject<PrivateApi>,
   ref: React.RefObject<HTMLDivElement | null> | (() => HTMLElement | undefined | null),
   eventName: K,
   handler?: (event: HTMLElementEventMap[K]) => any,

@@ -1,4 +1,4 @@
-import { ApiRef } from '@mui/x-internals/apiRef';
+import { RefObject } from '@mui/x-internals/types';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { gridColumnDefinitionsSelector, gridVisibleColumnDefinitionsSelector } from '../columns';
 import { GridExportOptions, GridCsvGetRowsToExportParams } from '../../../models/gridExport';
@@ -11,7 +11,7 @@ interface GridGetColumnsToExportParams {
   /**
    * The API of the grid.
    */
-  apiRef: ApiRef<GridApiCommunity>;
+  apiRef: RefObject<GridApiCommunity>;
   options: GridExportOptions;
 }
 

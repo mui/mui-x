@@ -1,4 +1,4 @@
-import { ApiRef } from '@mui/x-internals/apiRef';
+import { RefObject } from '@mui/x-internals/types';
 import {
   gridColumnLookupSelector,
   gridFilteredRowsLookupSelector,
@@ -22,7 +22,7 @@ import { gridAggregationModelSelector } from './gridAggregationSelectors';
 
 const getGroupAggregatedValue = (
   groupId: GridRowId,
-  apiRef: ApiRef<GridPrivateApiPremium>,
+  apiRef: RefObject<GridPrivateApiPremium>,
   aggregationRowsScope: DataGridPremiumProcessedProps['aggregationRowsScope'],
   aggregatedFields: string[],
   aggregationRules: GridAggregationRules,
@@ -98,7 +98,7 @@ const getGroupAggregatedValue = (
 
 const getGroupAggregatedValueDataSource = (
   groupId: GridRowId,
-  apiRef: ApiRef<GridPrivateApiPremium>,
+  apiRef: RefObject<GridPrivateApiPremium>,
   aggregatedFields: string[],
   position: GridAggregationPosition,
 ) => {
@@ -123,7 +123,7 @@ export const createAggregationLookup = ({
   getAggregationPosition,
   isDataSource,
 }: {
-  apiRef: ApiRef<GridPrivateApiPremium>;
+  apiRef: RefObject<GridPrivateApiPremium>;
   aggregationFunctions:
     | Record<string, GridAggregationFunction>
     | Record<string, GridAggregationFunctionDataSource>;

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ApiRef } from '@mui/x-internals/apiRef';
+import { RefObject } from '@mui/x-internals/types';
 import { styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import useEventCallback from '@mui/utils/useEventCallback';
@@ -47,7 +47,7 @@ const GridToolbarPromptControlRoot = styled('div', {
   flexDirection: 'row',
 });
 
-function sampleData(apiRef: ApiRef<GridApiPremium>) {
+function sampleData(apiRef: RefObject<GridApiPremium>) {
   const columns = gridColumnDefinitionsSelector(apiRef);
   const rows = Object.values(gridRowsLookupSelector(apiRef));
   const columnExamples: Record<string, any[]> = {};
@@ -65,7 +65,7 @@ function sampleData(apiRef: ApiRef<GridApiPremium>) {
   return columnExamples;
 }
 
-function generateContext(apiRef: ApiRef<GridApiPremium>, examples?: Record<string, any[]>) {
+function generateContext(apiRef: RefObject<GridApiPremium>, examples?: Record<string, any[]>) {
   const columns = gridColumnDefinitionsSelector(apiRef);
   const columnsContext = columns.map((column) => ({
     field: column.field,

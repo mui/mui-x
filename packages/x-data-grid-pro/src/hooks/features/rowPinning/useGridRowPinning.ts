@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ApiRef } from '@mui/x-internals/apiRef';
+import { RefObject } from '@mui/x-internals/types';
 import { useGridApiMethod } from '@mui/x-data-grid';
 import { getRowIdFromRowModel, GridStateInitializer } from '@mui/x-data-grid/internals';
 
@@ -57,7 +57,7 @@ export const rowPinningStateInitializer: GridStateInitializer<
 };
 
 export const useGridRowPinning = (
-  apiRef: ApiRef<GridPrivateApiPro>,
+  apiRef: RefObject<GridPrivateApiPro>,
   props: Pick<DataGridProProcessedProps, 'pinnedRows' | 'getRowId'>,
 ): void => {
   const setPinnedRows = React.useCallback<GridRowPinningApi['unstable_setPinnedRows']>(

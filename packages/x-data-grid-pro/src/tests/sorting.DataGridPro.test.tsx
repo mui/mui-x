@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ApiRef } from '@mui/x-internals/apiRef';
+import { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
   DataGridProProps,
@@ -39,7 +39,7 @@ describe('<DataGridPro /> - Sorting', () => {
 
   const { render } = createRenderer({ clock: 'fake' });
 
-  let apiRef: ApiRef<GridApi>;
+  let apiRef: RefObject<GridApi>;
 
   function TestCase(props: Partial<DataGridProProps>) {
     const { rows, ...other } = props;

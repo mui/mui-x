@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ApiRef } from '@mui/x-internals/apiRef';
+import { RefObject } from '@mui/x-internals/types';
 import { EventListenerOptions } from '@mui/x-internals/EventManager';
 import { GridEventListener, GridEvents } from '../../models/events';
 import { UnregisterToken, CleanupTracking } from '../../utils/cleanupTracking/CleanupTracking';
@@ -30,7 +30,7 @@ export function createUseGridApiEventHandler(registryContainer: RegistryContaine
   let cleanupTokensCounter = 0;
 
   return function useGridApiEventHandler<Api extends GridApiCommon, E extends GridEvents>(
-    apiRef: ApiRef<Api>,
+    apiRef: RefObject<Api>,
     eventName: E,
     handler?: GridEventListener<E>,
     options?: EventListenerOptions,
@@ -119,7 +119,7 @@ export const useGridApiEventHandler = createUseGridApiEventHandler(registryConta
 const optionsSubscriberOptions: EventListenerOptions = { isFirst: true };
 
 export function useGridApiOptionHandler<Api extends GridApiCommon, E extends GridEvents>(
-  apiRef: ApiRef<Api>,
+  apiRef: RefObject<Api>,
   eventName: E,
   handler?: GridEventListener<E>,
 ) {

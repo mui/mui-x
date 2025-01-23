@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ApiRef } from '@mui/x-internals/apiRef';
+import { RefObject } from '@mui/x-internals/types';
 import {
   useGridApiEventHandler as addEventHandler,
   useGridApiMethod,
@@ -29,7 +29,7 @@ const options = {
 };
 
 export const useGridDataSourcePremium = (
-  apiRef: ApiRef<GridPrivateApiPremium>,
+  apiRef: RefObject<GridPrivateApiPremium>,
   props: DataGridPremiumProcessedProps,
 ) => {
   const { api, strategyProcessor, events } = useGridDataSourceBase<GridPrivateApiPremium>(

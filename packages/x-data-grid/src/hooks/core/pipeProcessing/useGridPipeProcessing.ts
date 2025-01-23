@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ApiRef } from '@mui/x-internals/apiRef';
+import { RefObject } from '@mui/x-internals/types';
 import { GridPrivateApiCommon } from '../../../models/api/gridApiCommon';
 import {
   GridPipeProcessingApi,
@@ -50,7 +50,7 @@ type GroupCache = {
  *   * a processor is registered.
  *   * `apiRef.current.requestPipeProcessorsApplication` is called for the given group.
  */
-export const useGridPipeProcessing = (apiRef: ApiRef<GridPrivateApiCommon>) => {
+export const useGridPipeProcessing = (apiRef: RefObject<GridPrivateApiCommon>) => {
   const cache = React.useRef<Cache>({});
 
   const isRunning = React.useRef(false);

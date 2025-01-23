@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ApiRef } from '@mui/x-internals/apiRef';
+import { RefObject } from '@mui/x-internals/types';
 import {
   GridApi,
   GridColumnVisibilityModel,
@@ -37,7 +37,7 @@ const updateColumnVisibilityModel = (
  */
 export const useKeepGroupedColumnsHidden = (
   props: {
-    apiRef: ApiRef<GridApi>;
+    apiRef: RefObject<GridApi>;
   } & Pick<DataGridPremiumProps, 'initialState' | 'rowGroupingModel'>,
 ) => {
   const initialProps = React.useRef(props);

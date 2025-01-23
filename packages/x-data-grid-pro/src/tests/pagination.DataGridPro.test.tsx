@@ -1,7 +1,7 @@
 import { createRenderer, act } from '@mui/internal-test-utils';
 import { getColumnValues } from 'test/utils/helperFn';
 import * as React from 'react';
-import { ApiRef } from '@mui/x-internals/apiRef';
+import { RefObject } from '@mui/x-internals/types';
 import { expect } from 'chai';
 import { DataGridPro, GridApi, useGridApiRef } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
@@ -12,7 +12,7 @@ describe('<DataGridPro /> - Pagination', () => {
 
   describe('setPage', () => {
     it('should apply valid value', () => {
-      let apiRef: ApiRef<GridApi>;
+      let apiRef: RefObject<GridApi>;
 
       function GridTest() {
         const basicData = useBasicDemoData(20, 2);
@@ -41,7 +41,7 @@ describe('<DataGridPro /> - Pagination', () => {
     });
 
     it('should apply last page if trying to go to a non-existing page', () => {
-      let apiRef: ApiRef<GridApi>;
+      let apiRef: RefObject<GridApi>;
       function GridTest() {
         const basicData = useBasicDemoData(20, 2);
         apiRef = useGridApiRef();
@@ -71,7 +71,7 @@ describe('<DataGridPro /> - Pagination', () => {
 
   describe('setPageSize', () => {
     it('should apply value', () => {
-      let apiRef: ApiRef<GridApiPro>;
+      let apiRef: RefObject<GridApiPro>;
       function GridTest() {
         const basicData = useBasicDemoData(20, 2);
         apiRef = useGridApiRef();
