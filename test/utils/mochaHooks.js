@@ -1,6 +1,5 @@
-import * as React from 'react';
-import * as ReactTransitionGroup from 'react-transition-group';
-import { stub, restore } from 'sinon';
+import { config } from 'react-transition-group';
+import { restore } from 'sinon';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGrid } from '@mui/x-data-grid';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGridPro } from '@mui/x-data-grid-pro';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingTreeView } from '@mui/x-tree-view';
@@ -17,24 +16,12 @@ export function createXMochaHooks(coreMochaHooks = {}) {
   };
 
   let licenseKey;
-  let transitionStub;
-  let cssTransitionStub;
 
   mochaHooks.beforeAll.push(function func() {
+    // disable "react-transition-group" transitions
+    // https://reactcommunity.org/react-transition-group/testing/
+    config.disabled = true;
     licenseKey = generateTestLicenseKey();
-
-    // eslint-disable-next-line react/prop-types
-    function FakeTransition({ children }) {
-      return <React.Fragment>{children}</React.Fragment>;
-    }
-
-    function FakeCSSTransition(props) {
-      // eslint-disable-next-line react/prop-types
-      return props.in ? <FakeTransition>{props.children}</FakeTransition> : null;
-    }
-
-    transitionStub = stub(ReactTransitionGroup, 'Transition').callsFake(FakeTransition);
-    cssTransitionStub = stub(ReactTransitionGroup, 'CSSTransition').callsFake(FakeCSSTransition);
   });
 
   mochaHooks.beforeEach.push(function setupLicenseKey() {
@@ -55,8 +42,7 @@ export function createXMochaHooks(coreMochaHooks = {}) {
   mochaHooks.afterEach.push(clearWarningsCache);
 
   mochaHooks.afterAll.push(function restoreTransition() {
-    transitionStub.restore();
-    cssTransitionStub.restore();
+    config.disabled = false;
   });
 
   return mochaHooks;
