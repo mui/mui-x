@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
+import { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
   GridApi,
@@ -40,7 +41,7 @@ function createDragOverEvent(target: ChildNode) {
 describe('<DataGridPro /> - Column pinning', () => {
   const { render, clock } = createRenderer();
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: RefObject<GridApi>;
 
   function TestCase({ nbCols = 20, ...other }: Partial<DataGridProProps> & { nbCols?: number }) {
     apiRef = useGridApiRef();

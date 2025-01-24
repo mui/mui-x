@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { EventManager } from '@mui/x-internals/EventManager';
 import { Store } from '../../utils/Store';
 import { useGridApiMethod } from '../utils/useGridApiMethod';
@@ -23,7 +24,7 @@ export function unwrapPrivateAPI<
 let globalId = 0;
 
 function createPrivateAPI<PrivateApi extends GridPrivateApiCommon, Api extends GridApiCommon>(
-  publicApiRef: React.RefObject<Api>,
+  publicApiRef: RefObject<Api>,
 ): PrivateApi {
   const existingPrivateApi = (publicApiRef.current as any)?.[SYMBOL_API_PRIVATE];
   if (existingPrivateApi) {
@@ -74,7 +75,7 @@ function createPrivateAPI<PrivateApi extends GridPrivateApiCommon, Api extends G
 }
 
 function createPublicAPI<PrivateApi extends GridPrivateApiCommon, Api extends GridApiCommon>(
-  privateApiRef: React.RefObject<PrivateApi>,
+  privateApiRef: RefObject<PrivateApi>,
 ): Api {
   const publicApi = {
     get state() {
@@ -96,11 +97,11 @@ export function useGridApiInitialization<
   PrivateApi extends GridPrivateApiCommon,
   Api extends GridApiCommon,
 >(
-  inputApiRef: React.RefObject<Api> | undefined,
+  inputApiRef: RefObject<Api> | undefined,
   props: Pick<DataGridProcessedProps, 'signature'>,
-): React.RefObject<PrivateApi> {
-  const publicApiRef = React.useRef<Api>(null) as React.RefObject<Api>;
-  const privateApiRef = React.useRef<PrivateApi>(null) as React.RefObject<PrivateApi>;
+): RefObject<PrivateApi> {
+  const publicApiRef = React.useRef<Api>(null) as RefObject<Api>;
+  const privateApiRef = React.useRef<PrivateApi>(null) as RefObject<PrivateApi>;
 
   if (!privateApiRef.current) {
     privateApiRef.current = createPrivateAPI(publicApiRef);

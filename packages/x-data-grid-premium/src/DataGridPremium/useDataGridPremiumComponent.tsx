@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   useGridInitialization,
   useGridInitializeState,
@@ -96,7 +96,7 @@ import {
 import { useGridClipboardImport } from '../hooks/features/clipboard/useGridClipboardImport';
 
 export const useDataGridPremiumComponent = (
-  inputApiRef: React.RefObject<GridApiPremium> | undefined,
+  inputApiRef: RefObject<GridApiPremium> | undefined,
   props: DataGridPremiumProcessedProps,
 ) => {
   const apiRef = useGridInitialization<GridPrivateApiPremium, GridApiPremium>(inputApiRef, props);

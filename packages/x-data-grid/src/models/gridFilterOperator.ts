@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridFilterItem } from './gridFilterItem';
 import type { GridColDef } from './colDef/gridColDef';
 import type { GridValidRowModel } from './gridRows';
@@ -9,7 +10,7 @@ type ApplyFilterFn<R extends GridValidRowModel = any, V = any, F = V> = (
   value: V,
   row: R,
   column: GridColDef<R, V, F>,
-  apiRef: React.RefObject<GridApiCommunity>,
+  apiRef: RefObject<GridApiCommunity>,
 ) => boolean;
 
 export type GetApplyFilterFn<R extends GridValidRowModel = any, V = any, F = V> = (
