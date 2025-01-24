@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { stub, SinonStub, spy } from 'sinon';
 import { expect } from 'chai';
+import { RefObject } from '@mui/x-internals/types';
 import { spyApi, getCell, grid } from 'test/utils/helperFn';
 import { createRenderer, fireEvent, act, screen } from '@mui/internal-test-utils';
 import {
@@ -17,7 +18,7 @@ import { isJSDOM, describeSkipIf } from 'test/utils/skipIf';
 describe('<DataGridPremium /> - Cell selection', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: RefObject<GridApi>;
 
   function TestDataGridSelection({
     rowLength = 4,

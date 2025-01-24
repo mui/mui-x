@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
+import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
 import {
   DataGrid,
@@ -898,7 +899,7 @@ describe('<DataGrid /> - Row selection', () => {
     });
 
     it('should throw if rowSelectionModel contains more than 1 row', () => {
-      let apiRef: React.RefObject<GridApi>;
+      let apiRef: RefObject<GridApi>;
       function ControlCase() {
         apiRef = useGridApiRef();
         return <TestDataGridSelection apiRef={apiRef} />;
@@ -911,7 +912,7 @@ describe('<DataGrid /> - Row selection', () => {
     });
 
     it('should not throw if rowSelectionModel contains more than 1 item with checkbox selection', () => {
-      let apiRef: React.RefObject<GridApi>;
+      let apiRef: RefObject<GridApi>;
       function ControlCase() {
         apiRef = useGridApiRef();
         return <TestDataGridSelection apiRef={apiRef} checkboxSelection />;
