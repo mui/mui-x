@@ -59,6 +59,7 @@ And you can chose another shape by adding a `shape` property to your line series
 
 The codemod only removes the `experimentalMarkRendering` prop.
 If you relied on the fact that marks were `path` elements, you need to update your logic.
+
 #### `@mui/x-charts@v8.0.0-alpha.9`
 
 - [charts] Expand line with step interpolation (#16229) @alexfauquette
