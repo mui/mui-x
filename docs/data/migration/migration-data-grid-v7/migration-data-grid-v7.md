@@ -112,7 +112,7 @@ Below are described the steps you need to make to migrate from v7 to v8.
   - `pinnedBg`: Sets pinned rows and columns background color (previously named `pinnedBackground`)
 
   ```diff
-  const theme = createTheme({
+   const theme = createTheme({
   -  mixins: {
   -    MuiDataGrid: {
   -      containerBackground: '#f8fafc',
@@ -126,7 +126,7 @@ Below are described the steps you need to make to migrate from v7 to v8.
   +      pinnedBg: '#f1f5f9',
   +    },
   +  },
-  });
+   });
   ```
 
 <!-- ### Editing
