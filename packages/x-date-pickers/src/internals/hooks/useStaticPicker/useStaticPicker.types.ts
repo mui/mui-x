@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
@@ -57,8 +56,4 @@ export interface UseStaticPickerParams<
     'valueManager' | 'valueType' | 'validator' | 'ref'
   > {
   props: TExternalProps;
-  /**
-   * Ref to pass to the root element
-   */
-  ref?: React.Ref<HTMLDivElement>;
 }

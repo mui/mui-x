@@ -26,7 +26,6 @@ export const useStaticPicker = <
   TExternalProps extends UseStaticPickerProps<TView, any, TExternalProps>,
 >({
   props,
-  ref,
   ...pickerParams
 }: UseStaticPickerParams<TView, TExternalProps>) => {
   const { localeText, slots, slotProps, displayStaticWrapperAs, autoFocus } = props;
@@ -49,7 +48,7 @@ export const useStaticPicker = <
         slotProps={slotProps}
         sx={mergeSx(providerProps.contextValue.rootSx, slotProps?.layout?.sx)}
         className={clsx(providerProps.contextValue.rootClassName, slotProps?.layout?.className)}
-        ref={ref}
+        ref={providerProps.contextValue.rootRef}
       >
         {renderCurrentView()}
       </Layout>
