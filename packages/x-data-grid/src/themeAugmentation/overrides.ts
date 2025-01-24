@@ -18,6 +18,6 @@ declare module '@mui/material/styles' {
   }
 
   interface PaletteOptions {
-    DataGrid?: PaletteDataGrid;
+    DataGrid?: Partial<PaletteDataGrid>;
   }
 }
