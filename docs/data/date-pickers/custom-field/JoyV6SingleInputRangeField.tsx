@@ -22,7 +22,6 @@ import {
   DateRangePickerProps,
 } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { unstable_useSingleInputDateRangeField as useSingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
-import { FieldType } from '@mui/x-date-pickers-pro/models';
 import { usePickerContext } from '@mui/x-date-pickers/hooks';
 
 const DateRangeIcon = createSvgIcon(
@@ -31,10 +30,6 @@ const DateRangeIcon = createSvgIcon(
 );
 
 const joyTheme = extendJoyTheme();
-
-type JoySingleInputDateRangeFieldComponent = ((
-  props: DateRangePickerFieldProps & React.RefAttributes<HTMLDivElement>,
-) => React.JSX.Element) & { fieldType?: FieldType };
 
 function JoySingleInputDateRangeField(props: DateRangePickerFieldProps) {
   const fieldResponse = useSingleInputDateRangeField<false, typeof props>(props);

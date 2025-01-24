@@ -13,7 +13,6 @@ import {
 } from '@mui/x-date-pickers/DatePicker';
 import { usePickerContext, useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
-import { useForkRef } from '@mui/material';
 
 interface AutocompleteFieldProps extends DatePickerFieldProps {
   /**
