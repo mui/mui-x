@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
-import { createRenderer, waitFor, fireEvent, within, act, screen } from '@mui/internal-test-utils';
+import { act, createRenderer, waitFor, within } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import {
   DataGridPro,
@@ -13,9 +13,8 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { SinonSpy, spy } from 'sinon';
-import { raf } from 'test/utils/helperFn';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { getCell } from 'test/utils/helperFn';
+import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 const dataSetOptions = {
   dataSet: 'Employee' as const,
@@ -27,7 +26,8 @@ const pageSizeOptions = [5, 10, 50];
 
 const serverOptions = { minDelay: 0, maxDelay: 0, verbose: false };
 
-describe('<DataGridPro /> - Data source tree data', () => {
+// Needs layout
+describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   const { render } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
@@ -82,12 +82,6 @@ describe('<DataGridPro /> - Data source tree data', () => {
     );
   }
 
-  beforeEach(function beforeTest() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
-  });
-
   it('should fetch the data on initial render', async () => {
     render(<TestDataSource />);
     await waitFor(() => {
@@ -101,10 +95,8 @@ describe('<DataGridPro /> - Data source tree data', () => {
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
     act(() => {
-      apiRef.current.setFilterModel({
-        items: [{ field: 'name', value: 'John', operator: 'contains' }],
-      });
-    });
+      apiRef.current.setFilterModel({ items: [{ field: 'name', value: 'John', operator: 'contains' }] });
+    })
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
     });
@@ -129,7 +121,7 @@ describe('<DataGridPro /> - Data source tree data', () => {
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
     act(() => {
-      apiRef.current.setPage(1);
+      apiRef.current.setPaginationModel({ page: 1, pageSize: 10 });
     });
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
@@ -137,17 +129,16 @@ describe('<DataGridPro /> - Data source tree data', () => {
   });
 
   it('should fetch nested data when clicking on a dropdown', async () => {
-    render(<TestDataSource />);
+    const { user } = render(<TestDataSource />);
 
+    expect(fetchRowsSpy.callCount).to.equal(1);
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(Object.keys(apiRef.current.state.rows.tree).length).to.equal(10 + 1);
     });
-    await raf();
-    expect(Object.keys(apiRef.current.state.rows.tree).length).to.equal(10 + 1);
-    const dataRow1 = await screen.findByText((_, el) => el?.getAttribute('data-rowindex') === '0');
 
-    const cell11 = within(dataRow1).getAllByRole('gridcell')[0];
-    fireEvent.click(within(cell11).getByRole('button'));
+    const cell11 = getCell(0, 0);
+    await user.click(within(cell11).getByRole('button'));
+
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
     });
@@ -160,27 +151,21 @@ describe('<DataGridPro /> - Data source tree data', () => {
 
   it('should fetch nested data when calling API method `unstable_dataSource.fetchRows`', async () => {
     render(<TestDataSource />);
+    expect(fetchRowsSpy.callCount).to.equal(1);
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(Object.keys(apiRef.current.state.rows.tree).length).to.equal(10 + 1);
     });
-    await raf();
 
-    const tree = apiRef.current.state.rows.tree;
-    expect(Object.keys(tree).length).to.equal(10 + 1);
-    const dataRow1 = await screen.findByText((_, el) => el?.getAttribute('data-rowindex') === '0');
-
-    const cell11 = within(dataRow1).getAllByRole('gridcell')[0];
-    const firstChildId = (tree[GRID_ROOT_GROUP_ID] as GridGroupNode).children[0];
-    act(() => {
-      apiRef.current.unstable_dataSource.fetchRows(firstChildId);
-    });
-    await raf();
+    const firstChildId = (apiRef.current.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
+      .children[0];
+    apiRef.current.unstable_dataSource.fetchRows(firstChildId);
 
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
     });
 
+    const cell11 = getCell(0, 0);
     const cell11ChildrenCount = Number(cell11.innerText.split('(')[1].split(')')[0]);
     expect(Object.keys(apiRef.current.state.rows.tree).length).to.equal(
       10 + 1 + cell11ChildrenCount,
@@ -190,22 +175,19 @@ describe('<DataGridPro /> - Data source tree data', () => {
   it('should lazily fetch nested data when using `defaultGroupingExpansionDepth`', async () => {
     render(<TestDataSource defaultGroupingExpansionDepth={1} />);
 
-    // Initial fetch
+    expect(fetchRowsSpy.callCount).to.equal(1);
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(apiRef.current.state.rows.groupsToFetch?.length).to.be.greaterThan(0);
     });
-
-    const groupsToFetch = apiRef.current.state.rows.groupsToFetch;
-    expect(groupsToFetch?.length).to.be.greaterThan(0);
-
-    const tree = apiRef.current.state.rows.tree;
 
     // All the group nodes belonging to the grid root group should be there for fetching
-    (tree[GRID_ROOT_GROUP_ID] as GridGroupNode).children.forEach((child) => {
-      const node = tree[child];
-      if (node.type === 'group') {
-        expect(groupsToFetch).to.include(child);
-      }
-    });
+    (apiRef.current.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode).children.forEach(
+      (child) => {
+        const node = apiRef.current.state.rows.tree[child];
+        if (node.type === 'group') {
+          expect(apiRef.current.state.rows.groupsToFetch).to.include(child);
+        }
+      },
+    );
   });
 });
