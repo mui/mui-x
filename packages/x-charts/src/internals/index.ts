@@ -36,6 +36,7 @@ export { unstable_cleanupDOM } from './domUtils';
 export * from './getScale';
 export * from './stackSeries';
 export * from './getCurve';
+export * from './calculateMargins';
 
 // contexts
 
