@@ -46,6 +46,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
 
     const originalFetchRows = mockServer.fetchRows;
     const fetchRows = React.useMemo<typeof originalFetchRows>(() => {
+      fetchRowsSpy.resetHistory();
       fetchRowsSpy.callsFake(originalFetchRows);
       return (...args) => fetchRowsSpy(...args);
     }, [originalFetchRows]);
@@ -92,11 +93,6 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     );
   }
 
-  // eslint-disable-next-line mocha/no-top-level-hooks
-  beforeEach(() => {
-    fetchRowsSpy?.reset();
-  });
-
   it('should fetch the data on initial render', async () => {
     render(<TestDataSource />);
     await waitFor(() => {
@@ -105,24 +101,22 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   });
 
   it('should re-fetch the data on filter change', async () => {
-    render(<TestDataSource />);
+    const { setProps } = render(<TestDataSource />);
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
-    apiRef.current.setFilterModel({
-      items: [{ field: 'name', value: 'John', operator: 'contains' }],
-    });
+    setProps({ filterModel: { items: [{ field: 'name', value: 'John', operator: 'contains' }] } });
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
     });
   });
 
   it('should re-fetch the data on sort change', async () => {
-    render(<TestDataSource />);
+    const { setProps } = render(<TestDataSource />);
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
-    apiRef.current.sortColumn('name', 'asc');
+    setProps({ sortModel: [{ field: 'name', sort: 'asc' }] });
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
     });
