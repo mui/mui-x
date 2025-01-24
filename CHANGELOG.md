@@ -9,7 +9,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Jan 24, 2025_
 
-We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
 - 🌍 Improve Persian (fa-IR) and Urdu (ur-PK) locales on the Data Grid
 - 📚 Documentation improvements
@@ -19,7 +19,7 @@ Special thanks go out to the community contributors who have helped make this re
 @AxharKhan, @lauri865, @mapache-salvaje, @mostafaRoosta74.
 
 Following are all team members who have contributed to this release:
-@alexfauquette, @cherniavskii, @Janpot, @JCQuintas, @LukasTy.
+@alexfauquette, @cherniavskii, @Janpot, @JCQuintas, @LukasTy, @arminmeh.
 
 ### Data Grid
 
@@ -27,6 +27,7 @@ Following are all team members who have contributed to this release:
 
 - [DataGrid] Fix toggling preference panel from toolbar (#16274) @lauri865
 - [DataGrid] Only try to mount filter button if there are filters present (#16267) @lauri865
+- [DataGrid] Revert `apiRef` to be `MutableRefObject` for React versions < 19 (#16279) @arminmeh 
 - [l10n] Improve Persian (fa-IR) locale (#16312) @mostafaRoosta74
 - [l10n] Improve Urdu (ur-PK) locale (#16295) @AxharKhan
 
@@ -50,6 +51,14 @@ Same changes as in `@mui/x-date-pickers@v8.0.0-alpha.9`.
 
 ### Charts
 
+#### Breaking Changes
+
+The `experimentalMarkRendering` prop has been removed from the LineChart component.
+The line mark are now `<circle />` element by default.
+And you can chose another shape by adding a `shape` property to your line series.
+
+The codemod only removes the `experimentalMarkRendering` prop.
+If you relied on the fact that marks were `path` elements, you need to update your logic.
 #### `@mui/x-charts@v8.0.0-alpha.9`
 
 - [charts] Expand line with step interpolation (#16229) @alexfauquette
