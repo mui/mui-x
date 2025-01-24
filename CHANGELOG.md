@@ -1209,6 +1209,347 @@ Same changes as in `@mui/x-charts@8.0.0-alpha.0`.
 - [release] v8 preparation (#15054) @michelengelen
 - [test] Fix advanced list view regression test snapshot (#15260) @KenanYusuf
 
+## 7.24.1
+
+_Jan 24, 2025_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+- 🌍 Improve Persian (fa-IR) locale on the Data Grid
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@mostafaRoosta74, @lauri865.
+
+Following are all team members who have contributed to this release:
+@alexfauquette, @JCQuintas, @cherniavskii, @LukasTy, @arminmeh.
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.24.1`
+
+- [DataGrid] Fix toggling preference panel from toolbar (#16276) @lauri865
+- [DataGrid] Only try to mount filter button if there are filters present (#16269) @lauri865
+- [DataGrid] Revert `apiRef` to be `MutableRefObject` for React versions < 19 (#16320) @arminmeh
+- [l10n] Improve Persian (fa-IR) locale (#15964) @mostafaRoosta74
+
+#### `@mui/x-data-grid-pro@7.24.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.24.1`.
+
+#### `@mui/x-data-grid-premium@7.24.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.24.1`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.24.1`
+
+- [fields] Reset `all` selected state on section edit (#16232) @LukasTy
+
+#### `@mui/x-date-pickers-pro@7.24.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.24.1`.
+
+### Charts
+
+#### `@mui/x-charts@7.24.1`
+
+- [charts] Handle case where gradient stop `offset` could be `Infinite` (@JCQuintas) (#16309) @JCQuintas
+
+#### `@mui/x-charts-pro@7.24.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@7.24.1`.
+
+### Tree View
+
+#### `@mui/x-tree-view@7.24.1`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@7.24.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@7.24.1`.
+
+### Docs
+
+- [docs] Fix `domainLimit` definition (#16271) @alexfauquette
+
+### Core
+
+- [core] Make `@mui/x-internals` a dependency of `@mui/x-license` (#16265) @alexfauquette
+- [test] Fix flaky column pinning tests (#16228) @cherniavskii
+- [test] Fix flaky tests (#16264) @lauri865
+
+## 7.24.0
+
+_Jan 17, 2025_
+
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- 🔄 Data Grid [Scroll restoration](https://next.mui.com/x/react-data-grid/scrolling/#scroll-restoration)
+- 🐞 Bugfixes
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@lauri865, @AxharKhan.
+Following are all team members who have contributed to this release:
+@KenanYusuf, @arminmeh, @cherniavskii, @michelengelen, @samuelsycamore, @LukasTy.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.24.0`
+
+- [DataGrid] Fix resizing right pinned column (#16193) @KenanYusuf
+- [DataGrid] Improve scrollbar deadzone with overlay scrollbars (#16212) @lauri865
+- [DataGrid] Scroll restoration (#16208) @lauri865
+- [DataGrid] Fix row, cell and header memoizations (#16195) @lauri865
+- [l10n] Improve Urdu (ur-PK) locale (#16081) @AxharKhan
+
+#### `@mui/x-data-grid-pro@7.24.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.24.0`, plus:
+
+- [DataGridPro] Add test for column pinning with disabled column virtualization (#16196) @cherniavskii
+- [DataGridPro] Fix width of right-pinned column group during resize (#16207) @cherniavskii
+
+#### `@mui/x-data-grid-premium@7.24.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.24.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.24.0`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@7.24.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.24.0`.
+
+### Charts
+
+#### `@mui/x-charts@7.24.0`
+
+Internal changes.
+
+#### `@mui/x-charts-pro@7.24.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@7.24.0`.
+
+### Tree View
+
+#### `@mui/x-tree-view@7.24.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@7.24.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@7.24.0`.
+
+### Docs
+
+- [docs] Copyedit the Data Grid cell selection page (#16213) @samuelsycamore
+- [docs] Fix demo rendering issue on Codesandbox (#16129) @arminmeh
+
+### Core
+
+- [core] Type all references as `RefObject` (#16125) @arminmeh
+- [code-infra] Refactor `react` and `react-dom` definitions to simplify dep resolving (#16214) @LukasTy
+- [infra] Improve cherry-pick action target list (#16188) @michelengelen
+- [test] Fix flaky column pinning unit test (#16209) @cherniavskii
+
+## 7.23.6
+
+_Jan 9, 2025_
+
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Add Chinese (Taiwan) (zh-TW) locale on the Date and Time Pickers
+- 🌍 Improve Norwegian (nb-NO) locale on the Date and Time Pickers
+- 🌍 Improve Dutch (nl-NL) locale on the Data Grid
+- 🐞 Bugfixes
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@josteinjhauge, @derek-0000, @nusr, @k-rajat19, @tomashauser.
+Following are all team members who have contributed to this release:
+@flaviendelangle, @LukasTy, @MBilalShafi, @arminmeh, @oliviertassinari, @cherniavskii.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.23.6`
+
+- [DataGrid] Improve React 19 support (#16048) @LukasTy
+- [DataGrid] Add `name` attribute to selection checkboxes (#16041) @derek-0000
+- [DataGrid] Fix number filter field formatting values while typing (#16068) @arminmeh
+- [DataGrid] Fix select all checkbox state reset with server side data (#16039) @MBilalShafi
+
+#### `@mui/x-data-grid-pro@7.23.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.23.6`.
+
+#### `@mui/x-data-grid-premium@7.23.6` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.23.6`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.23.6`
+
+- [pickers] Improve React 19 support (#16048) @LukasTy
+- [l10n] Add Chinese (Taiwan) (zh-TW) locale (#16057) @nusr
+- [l10n] Improve Norwegian (nb-NO) locale (#16083) @josteinjhauge
+- [pickers] Support `date-fns-jalali` v4 (#16013) @LukasTy
+
+#### `@mui/x-date-pickers-pro@7.23.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.23.6`.
+
+### Charts
+
+#### `@mui/x-charts@7.23.6`
+
+- [charts] Improve React 19 support (#16048) @LukasTy
+- [charts] Fix 301 redirection in the API documentation @oliviertassinari
+
+#### `@mui/x-charts-pro@7.23.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@7.23.6`.
+
+### Tree View
+
+#### `@mui/x-tree-view@7.23.6`
+
+- [TreeView] Improve React 19 support (#16048) @LukasTy
+
+#### `@mui/x-tree-view-pro@7.23.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@7.23.6`.
+
+### Docs
+
+- [docs] Fix `EditingWithDatePickers` demo (#16047) @k-rajat19
+- [docs] Fix doc warning for automatic children selection on tree view (#16037) @flaviendelangle
+- [docs] Fix non-existing "adapter" property of `LocalizationProvider` (#16088) @tomashauser
+
+### Core
+
+- [core] Clarify the release strategy (#16012) @MBilalShafi
+- [core] Update the `release:version` docs (#16040) @cherniavskii
+
+## 7.23.5
+
+_Dec 27, 2024_
+
+Here are some highlights ✨:
+
+- 🐞 Fix version mismatch issue in Data Grid codesandbox/stackblitz demos
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.23.5`
+
+No changes since `@mui/x-data-grid@v7.23.4`.
+
+#### `@mui/x-data-grid-pro@7.23.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.23.5`.
+
+#### `@mui/x-data-grid-premium@7.23.5` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.23.5`.
+
+## 7.23.4
+
+_Dec 27, 2024_
+
+We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Dutch (nl-NL) locale on the Data Grid
+- 🐞 Bugfixes
+
+Special thanks go out to the community contributor who has helped make this release possible:
+@JoepVerkoelen.
+Following are all team members who have contributed to this release:
+@arminmeh, @oliviertassinari.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.23.4`
+
+- [DataGrid] Fix header filters showing clear button while empty (#15990) @k-rajat19
+- [DataGrid] Replace `forwardRef` with a shim for forward compatibility (#15984) @lauri865
+- [l10n] Improve Dutch (nl-NL) locale (#15920) @JoepVerkoelen
+
+#### `@mui/x-data-grid-pro@7.23.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.23.4`.
+
+#### `@mui/x-data-grid-premium@7.23.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.23.4`, plus:
+
+- [DataGridPremium] Fix column pinning with checkbox selection and row grouping (#15949) @k-rajat19
+
+### Docs
+
+- [docs] Fix outdated link to handbook (#15855) @oliviertassinari
+
+## 7.23.3
+
+_Dec 19, 2024_
+
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Korean (ko-KR) locale on the Data Grid
+- 🐞 Bugfixes
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@k-rajat19, @good-jinu.
+Following are all team members who have contributed to this release:
+@KenanYusuf, @MBilalShafi, @arminmeh, @flaviendelangle.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.23.3`
+
+- [DataGrid] Allow passing custom props to `.main` element (#15919) @MBilalShafi
+- [DataGrid] Consider `columnGroupHeaderHeight` prop in `getTotalHeaderHeight` method (#15927) @k-rajat19
+- [DataGrid] Deprecate `indeterminateCheckboxAction` prop (#15862) @MBilalShafi
+- [DataGrid] Fix `aria-label` value for group checkboxes (#15861) @MBilalShafi
+- [DataGrid] Fix autosizing with virtualized columns (#15929) @k-rajat19
+- [DataGrid] Round dimensions to avoid subpixel rendering error (#15873) @KenanYusuf
+- [DataGrid] Toggle menu on click in `<GridActionsCell />` (#15871) @k-rajat19
+- [DataGrid] Trigger row spanning computation on rows update (#15872) @MBilalShafi
+- [l10n] Improve Korean (ko-KR) locale (#15906) @good-jinu
+
+#### `@mui/x-data-grid-pro@7.23.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.23.3`.
+
+#### `@mui/x-data-grid-premium@7.23.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.23.3`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.23.3`
+
+- [pickers] Add verification to disable skipped hours in spring forward DST (#15918) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@7.23.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.23.3`.
+
 ## 7.23.2
 
 _Dec 12, 2024_
