@@ -171,7 +171,7 @@ The solution described above should resolve this.
 
 ## Using this documentation
 
-## Demo Container and Demo Item
+### Demo Container and Demo Item
 
 `<DemoContainer />` is an internal component used with `<DemoItem />` to display multiple components with a consistent layout throughout the demos.
 This helps avoid the repeated use of layout components, such as `<Box />` or `<Stack />`, which would otherwise add irrelevant clutter to demos meant to illustrate specific features.
