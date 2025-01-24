@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
 import { GridRowEventLookup } from '../models/events';
 import { GridRowId, GridRowModel } from '../models/gridRows';
 import { GridEditModes, GridCellModes } from '../models/gridEditRowModel';
@@ -40,7 +41,7 @@ const isRowReorderingEnabledSelector = createSelector(
     if (!rowReordering) {
       return false;
     }
-    const isEditingRows = Object.keys(editRows).length > 0;
+    const isEditingRows = !isObjectEmpty(editRows);
     return !isEditingRows;
   },
 );
