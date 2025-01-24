@@ -65,6 +65,10 @@ More complex visualization (such as combining Bar and Line Charts on a single pl
 
 ### Self-contained Charts
 
+```tsx
+import { BarChart } from '@mui/x-charts/BarChart';
+```
+
 Self-contained Chart components are imported and rendered as a single React component (such as `<BarChart />` or `<LineChart />`) which contains all of the necessary subcomponents.
 
 These components require a `series` prop describing the data to render, as well as a numerical value (rendered in pixels) for the `height` prop.

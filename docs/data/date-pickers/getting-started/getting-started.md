@@ -88,12 +88,6 @@ To integrate your chosen date library with the Date Pickers, wrap your app with 
 
 {{"component": "modules/components/PickersRenderingInstructions.js"}}
 
-:::warning
-For practical purposes, each demo in the documentation has its own Localization Provider wrapper.
-**We _do not_ recommend reproducing this pattern as-is.**
-For almost all use cases, you should wrap your entire app with a single Localization Provider to avoid repeating boilerplate code in multiple places.
-:::
-
 :::info
 To use the Date and Time Pickers with a custom locale, see [Date and format localization](/x/react-date-pickers/adapters-locale/).
 :::
@@ -173,8 +167,14 @@ The solution described above should resolve this.
 
 ## Using this documentation
 
+### Localization Provider
+
+For practical purposes, each demo in this documentation has its own Localization Provider wrapper.
+**We _do not_ recommend reproducing this pattern as-is.**
+For almost all use cases, you should wrap your entire app with a single Localization Provider to avoid repeating boilerplate code in multiple places.
+
 ### Demo Container and Demo Item
 
 Throughout this documentation, the internal components `<DemoContainer />` and `<DemoItem />` are used in demos to display multiple components with a consistent layout.
-This helps avoid the repeated use of layout components such as `<Box />` or `<Stack />`, which would otherwise add irrelevant clutter to demos meant to illustrate specific features.
 **You should never use these components in your application.**
+This helps avoid the repeated use of layout components such as `<Box />` or `<Stack />`, which would otherwise add irrelevant clutter to demos meant to illustrate specific features.
