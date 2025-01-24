@@ -17,7 +17,7 @@ describe('<GridPanel />', () => {
     // mock rootProps
     const rootProps = React.useMemo(() => ({}), []);
     const apiRef = useGridApiRef();
-    apiRef.current.rootElementRef = {
+    apiRef.current!.rootElementRef = {
       // @ts-ignore
       current: document.body,
     };
