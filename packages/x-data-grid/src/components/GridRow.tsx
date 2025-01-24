@@ -34,7 +34,7 @@ import { useGridConfiguration } from '../hooks/utils/useGridConfiguration';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { createSelector } from '../utils/createSelector';
 
-const gridIsRowReorderingEnabledSelector = createSelector(
+const isRowReorderingEnabledSelector = createSelector(
   gridEditRowsStateSelector,
   (editRows, rowReordering: boolean) => {
     if (!rowReordering) {
@@ -122,7 +122,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
   const rowReordering = (rootProps as any).rowReordering as boolean;
   const isRowReorderingEnabled = useGridSelector(
     apiRef,
-    gridIsRowReorderingEnabledSelector,
+    isRowReorderingEnabledSelector,
     rowReordering,
   );
   const handleRef = useForkRef(ref, refProp);
