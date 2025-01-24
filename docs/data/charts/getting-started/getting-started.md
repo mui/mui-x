@@ -54,13 +54,14 @@ yarn add @mui/material @emotion/react @emotion/styled
 
 ### Usage with D3
 
-To help folks using CommonJS, the Charts package uses a vendored package named `@mui/x-charts-vendor` to access D3 libraries.
+For those using CommonJS, the MUI X Charts provide a vendored package named to access D3 libraries.
 You can import D3 functions from `@mui/x-charts-vendor/d3-scale`.
 
 ## Rendering Charts
 
 MUI X Charts can be rendered as _self-contained_ or _composable_ components.
-[Self-contained components](#self-contained-charts) are simpler to get started with and are recommended for most common use cases; more complex visualization (such as combining Bar and Line Charts on a single plot) requires [custom composition](#composable-charts).
+[Self-contained components](#self-contained-charts) are simpler to get started with and are recommended for most common use cases.
+More complex visualization (such as combining Bar and Line Charts on a single plot) requires [custom composition](#composable-charts).
 
 ### Self-contained Charts
 
@@ -92,7 +93,7 @@ The demo below shows how to use composition to create a custom Chart that combin
 The layout of a Chart is defined by two main spaces: the plot area, and the outer margins.
 
 The `width` and `height` props define the dimensions of the SVG which is the root of the chart.
-Within this SVG, the plot area (or drawing area) serves as the canvas for data visualization, where the lines, bars or other visual elements are rendered.
+Within this SVG, the plot area (or drawing area) serves as the canvas for data visualization, where the lines, bars, or other visual elements are rendered.
 The size of the plot area is determined by the `margin = {top, bottom, left, right}` object which defines its outer margins inside the SVG.
 The outer margin space is where information like axes, titles, and legends are displayed.
 
@@ -102,13 +103,12 @@ See the [Styling documentation](/x/react-charts/styling/#placement) for complete
 
 Charts support server-side rendering under two conditions:
 
-1. `width` and `height` props must be provided – it's not possible to compute the SVG dimensions on the server
-2. Animations must be disabled with the `skipAnimation` prop – otherwise the animation will be in an empty state on first render
+1. `width` and `height` props must be provided – it's not possible to compute the SVG dimensions on the server.
+2. Animations must be disabled with the `skipAnimation` prop – otherwise the animation will be in an empty state on first render.
 
 ### Axis management
 
 MUI X Charts take a flexible approach to axis management, with support for multiple axes and any combination of scales and ranges.
-
 See the [Axis documentation](/x/react-charts/axis/) for complete details.
 
 ## TypeScript
