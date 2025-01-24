@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   useGridApiEventHandler,
   useGridSelector,
@@ -19,7 +20,7 @@ function findSkeletonRowsSection({
   visibleRows,
   range,
 }: {
-  apiRef: React.RefObject<GridPrivateApiPro>;
+  apiRef: RefObject<GridPrivateApiPro>;
   visibleRows: GridRowEntry[];
   range: { firstRowIndex: number; lastRowIndex: number };
 }) {
@@ -65,7 +66,7 @@ function findSkeletonRowsSection({
  * @requires useGridScroll (method
  */
 export const useGridLazyLoader = (
-  privateApiRef: React.RefObject<GridPrivateApiPro>,
+  privateApiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     'onFetchRows' | 'rowsLoadingMode' | 'pagination' | 'paginationMode' | 'experimentalFeatures'

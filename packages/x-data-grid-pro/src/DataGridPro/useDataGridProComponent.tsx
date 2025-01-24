@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   useGridInitialization,
   useGridInitializeState,
@@ -88,7 +88,7 @@ import {
 } from '../hooks/features/dataSource/useGridDataSource';
 
 export const useDataGridProComponent = (
-  inputApiRef: React.RefObject<GridApiPro> | undefined,
+  inputApiRef: RefObject<GridApiPro> | undefined,
   props: DataGridProProcessedProps,
 ) => {
   const apiRef = useGridInitialization<GridPrivateApiPro, GridApiPro>(inputApiRef, props);

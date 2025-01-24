@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   createRenderer,
   screen,
@@ -707,7 +708,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
         const columnHeaderHeight = 40;
         const rowHeight = 30;
 
-        let apiRef!: React.RefObject<GridApi>;
+        let apiRef!: RefObject<GridApi>;
         function Test() {
           apiRef = useGridApiRef();
           return (
@@ -812,7 +813,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
       const columnHeaderHeight = 40;
       const height = 300;
       const border = 1;
-      let apiRef!: React.RefObject<GridApi>;
+      let apiRef!: RefObject<GridApi>;
       function Test() {
         apiRef = useGridApiRef();
         return (

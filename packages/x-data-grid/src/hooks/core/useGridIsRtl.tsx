@@ -1,8 +1,9 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { useRtl } from '@mui/system/RtlProvider';
 import { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 
-export const useGridIsRtl = (apiRef: React.RefObject<GridPrivateApiCommon>): void => {
+export const useGridIsRtl = (apiRef: RefObject<GridPrivateApiCommon>): void => {
   const isRtl = useRtl();
 
   if (apiRef.current.state.isRtl === undefined) {

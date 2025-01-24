@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -39,7 +40,7 @@ interface GridGroupingCriteriaCellIconProps
 }
 
 function GridGroupingCriteriaCellIcon(props: GridGroupingCriteriaCellIconProps) {
-  const apiRef = useGridPrivateApiContext() as React.RefObject<GridPrivateApiPremium>;
+  const apiRef = useGridPrivateApiContext() as RefObject<GridPrivateApiPremium>;
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
   const { rowNode, id, field, descendantCount } = props;

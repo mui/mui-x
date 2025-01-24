@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { getColumnHeaderCell, getColumnValues, getRow } from 'test/utils/helperFn';
 import { expect } from 'chai';
@@ -38,7 +39,7 @@ describe('<DataGridPro /> - Lazy loader', () => {
     columns: [{ field: 'id' }, { field: 'first' }],
   };
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: RefObject<GridApi>;
 
   function TestLazyLoader(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();

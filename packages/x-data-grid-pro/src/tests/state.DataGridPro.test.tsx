@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
 import { getColumnValues } from 'test/utils/helperFn';
 import { expect } from 'chai';
@@ -30,7 +31,7 @@ describe('<DataGridPro /> - State', () => {
 
   it('should trigger on state change and pass the correct params', () => {
     let onStateParams;
-    let apiRef: React.RefObject<GridApi>;
+    let apiRef: RefObject<GridApi>;
 
     function Test() {
       apiRef = useGridApiRef();

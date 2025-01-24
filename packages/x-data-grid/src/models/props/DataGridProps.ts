@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { CommonProps } from '@mui/material/OverridableComponent';
@@ -415,7 +416,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   /**
    * The ref object that allows Data Grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
-  apiRef?: React.RefObject<GridApiCommunity>;
+  apiRef?: RefObject<GridApiCommunity>;
   /**
    * Forwarded props for the Data Grid root element.
    * @ignore - do not document.
