@@ -1,11 +1,10 @@
 import * as React from 'react';
-import useForkRef from '@mui/utils/useForkRef';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
+import { usePickerContext, useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { useDateRangeManager } from '@mui/x-date-pickers-pro/managers';
 import { unstable_useMultiInputRangeField as useMultiInputRangeField } from '@mui/x-date-pickers-pro/hooks';
@@ -26,7 +25,7 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
   },
 );
 
-const BrowserTextField = React.forwardRef((props, ref) => {
+function BrowserTextField(props) {
   const {
     // Should be ignored
     enableAccessibleFieldDOMStructure,
@@ -49,15 +48,13 @@ const BrowserTextField = React.forwardRef((props, ref) => {
     readOnly,
     focused,
     error,
-    InputProps: { ref: InputPropsRef, startAdornment, endAdornment } = {},
+    InputProps: { ref, startAdornment, endAdornment } = {},
     // The rest can be passed to the root element
     ...other
   } = props;
 
-  const handleRef = useForkRef(InputPropsRef, ref);
-
   return (
-    <BrowserFieldRoot ref={handleRef} {...other}>
+    <BrowserFieldRoot {...other} ref={ref}>
       {startAdornment}
       <BrowserFieldContent>
         <PickersSectionList
@@ -75,9 +72,10 @@ const BrowserTextField = React.forwardRef((props, ref) => {
       {endAdornment}
     </BrowserFieldRoot>
   );
-});
+}
 
-const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
+function BrowserMultiInputDateRangeField(props) {
+  const pickerContext = usePickerContext();
   const manager = useDateRangeManager();
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
   const { slotProps, ...otherForwardedProps } = forwardedProps;
@@ -103,7 +101,7 @@ const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
 
   return (
     <Stack
-      ref={ref}
+      ref={pickerContext.rootRef}
       spacing={2}
       direction="row"
       overflow="auto"
@@ -114,17 +112,16 @@ const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
       <BrowserTextField {...fieldResponse.endDate} />
     </Stack>
   );
-});
+}
 
-const BrowserDateRangePicker = React.forwardRef((props, ref) => {
+function BrowserDateRangePicker(props) {
   return (
     <DateRangePicker
-      ref={ref}
       {...props}
       slots={{ ...props.slots, field: BrowserMultiInputDateRangeField }}
     />
   );
-});
+}
 
 export default function BrowserV7MultiInputRangeField() {
   return (

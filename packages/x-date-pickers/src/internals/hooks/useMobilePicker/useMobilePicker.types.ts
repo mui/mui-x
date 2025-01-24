@@ -81,7 +81,7 @@ export interface UseMobilePickerParams<
   >,
 > extends Pick<
     UsePickerParams<PickerValue, TView, TExternalProps>,
-    'valueManager' | 'valueType' | 'validator'
+    'valueManager' | 'valueType' | 'validator' | 'ref'
   > {
   props: TExternalProps;
 }

@@ -92,7 +92,7 @@ export interface UseDesktopPickerParams<
   >,
 > extends Pick<
     UsePickerParams<PickerValue, TView, TExternalProps>,
-    'valueManager' | 'valueType' | 'validator' | 'rendererInterceptor'
+    'valueManager' | 'valueType' | 'validator' | 'rendererInterceptor' | 'ref'
   > {
   props: TExternalProps;
 }

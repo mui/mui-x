@@ -69,6 +69,7 @@ export function usePickerProvider<
   parameters: UsePickerProviderParameters<TValue, TView, TError>,
 ): UsePickerProviderReturnValue<TValue> {
   const {
+    ref,
     props,
     valueManager,
     localeText,
@@ -129,14 +130,16 @@ export function usePickerProvider<
       triggerRef,
       triggerStatus,
       fieldFormat: props.format ?? '',
-      fieldClassName: props.className,
-      fieldName: props.name,
-      fieldLabel: props.label,
-      fieldSx: props.sx,
+      name: props.name,
+      label: props.label,
+      rootSx: props.sx,
+      rootRef: ref,
+      rootClassName: props.className,
     }),
     [
       paramsFromUsePickerValue.contextValue,
       paramsFromUsePickerViews.contextValue,
+      ref,
       variant,
       orientation,
       props.disabled,
@@ -194,6 +197,7 @@ export interface UsePickerProviderParameters<
   TView extends DateOrTimeViewWithMeridiem,
   TError,
 > extends Pick<PickerProviderProps<TValue>, 'localeText'> {
+  ref: React.ForwardedRef<HTMLDivElement> | undefined;
   props: UsePickerProps<TValue, any, any, any> & UsePickerProviderNonStaticProps;
   valueManager: PickerValueManager<TValue, any>;
   variant: PickerVariant;

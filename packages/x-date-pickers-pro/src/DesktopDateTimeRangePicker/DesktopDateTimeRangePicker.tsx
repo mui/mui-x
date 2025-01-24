@@ -153,7 +153,6 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
       field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
-        ref,
       }),
       tabs: {
         hidden: true,
@@ -171,6 +170,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
     TEnableAccessibleFieldDOMStructure,
     typeof props
   >({
+    ref,
     props,
     valueManager: rangeValueManager,
     valueType: 'date-time',

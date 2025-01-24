@@ -28,7 +28,7 @@ const CalendarIcon = createSvgIcon(
 
 const joyTheme = extendJoyTheme();
 
-const JoyDateField = React.forwardRef((props, ref) => {
+function JoyDateField(props) {
   const fieldResponse = useDateField(props);
 
   const {
@@ -53,10 +53,9 @@ const JoyDateField = React.forwardRef((props, ref) => {
   const pickerContext = usePickerContext();
 
   return (
-    <FormControl disabled={disabled} id={id} ref={ref}>
-      <FormLabel>{pickerContext.fieldLabel}</FormLabel>
+    <FormControl disabled={disabled} id={id} ref={pickerContext.rootRef}>
+      <FormLabel>{pickerContext.label}</FormLabel>
       <Input
-        ref={pickerContext.triggerRef}
         disabled={disabled}
         endDecorator={
           <IconButton
@@ -70,21 +69,21 @@ const JoyDateField = React.forwardRef((props, ref) => {
           input: { ref: inputRef },
         }}
         {...other}
+        ref={pickerContext.triggerRef}
       />
     </FormControl>
   );
-});
+}
 
-const JoyDatePicker = React.forwardRef((props, ref) => {
+function JoyDatePicker(props) {
   return (
     <DatePicker
-      ref={ref}
       {...props}
       enableAccessibleFieldDOMStructure={false}
       slots={{ ...props.slots, field: JoyDateField }}
     />
   );
-});
+}
 
 /**
  * This component is for syncing the theme mode of this demo with the MUI docs mode.

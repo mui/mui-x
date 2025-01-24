@@ -28,7 +28,7 @@ const DateRangeIcon = createSvgIcon(
 
 const joyTheme = extendJoyTheme();
 
-const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
+function JoySingleInputDateRangeField(props) {
   const fieldResponse = useSingleInputDateRangeField(props);
 
   const {
@@ -49,37 +49,36 @@ const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
     <FormControl
       disabled={disabled}
       id={id}
-      ref={ref}
+      ref={pickerContext.rootRef}
       style={{
         minWidth: 300,
       }}
     >
-      <FormLabel>{pickerContext.fieldLabel}</FormLabel>
+      <FormLabel>{pickerContext.label}</FormLabel>
       <Input
-        ref={pickerContext.triggerRef}
         disabled={disabled}
         endDecorator={<DateRangeIcon size="md" />}
         slotProps={{
           input: { ref: inputRef },
         }}
         {...other}
+        ref={pickerContext.triggerRef}
       />
     </FormControl>
   );
-});
+}
 
 JoySingleInputDateRangeField.fieldType = 'single-input';
 
-const JoySingleInputDateRangePicker = React.forwardRef((props, ref) => {
+function JoySingleInputDateRangePicker(props) {
   return (
     <DateRangePicker
       {...props}
-      ref={ref}
       enableAccessibleFieldDOMStructure={false}
       slots={{ ...props.slots, field: JoySingleInputDateRangeField }}
     />
   );
-});
+}
 
 /**
  * This component is for syncing the theme mode of this demo with the MUI docs mode.

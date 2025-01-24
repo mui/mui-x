@@ -164,6 +164,7 @@ export {
   executeInTheNextEventLoopTick,
   getActiveElement,
   onSpaceOrEnter,
+  mergeSx,
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
 } from './utils/utils';
 export { useDefaultReduceAnimations } from './hooks/useDefaultReduceAnimations';

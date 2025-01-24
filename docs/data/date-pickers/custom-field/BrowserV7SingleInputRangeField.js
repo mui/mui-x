@@ -29,7 +29,7 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
   },
 );
 
-const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
+function BrowserSingleInputDateRangeField(props) {
   const fieldResponse = useSingleInputDateRangeField(props);
 
   const {
@@ -62,12 +62,12 @@ const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
   } = fieldResponse;
 
   const pickerContext = usePickerContext();
-  const handleRef = useForkRef(pickerContext.triggerRef, ref);
+  const handleRef = useForkRef(pickerContext.triggerRef, pickerContext.rootRef);
 
   return (
     <BrowserFieldRoot
-      ref={handleRef}
       {...other}
+      ref={handleRef}
       style={{
         minWidth: 300,
       }}
@@ -92,19 +92,18 @@ const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
       </InputAdornment>
     </BrowserFieldRoot>
   );
-});
+}
 
 BrowserSingleInputDateRangeField.fieldType = 'single-input';
 
-const BrowserSingleInputDateRangePicker = React.forwardRef((props, ref) => {
+function BrowserSingleInputDateRangePicker(props) {
   return (
     <DateRangePicker
-      ref={ref}
       {...props}
       slots={{ ...props.slots, field: BrowserSingleInputDateRangeField }}
     />
   );
-});
+}
 
 export default function BrowserV7SingleInputRangeField() {
   return (

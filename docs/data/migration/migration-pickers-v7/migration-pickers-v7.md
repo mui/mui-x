@@ -472,16 +472,16 @@ If the updated values do not fit your use case, you can [override them](/x/react
   +const { disabled } = usePickerContext();
 
   -const { className } = props;
-  +const { fieldClassName } = usePickerContext();
+  +const { rootClassName } = usePickerContext();
 
   -const { sx } = props;
-  +const { fieldSx } = usePickerContext();
+  +const { rootSx } = usePickerContext();
 
   -const { label } = props;
-  +const { fieldLabel } = usePickerContext();
+  +const { label } = usePickerContext();
 
   -const { name } = props;
-  +const { fieldName } = usePickerContext();
+  +const { name } = usePickerContext();
   ```
 
   :::success

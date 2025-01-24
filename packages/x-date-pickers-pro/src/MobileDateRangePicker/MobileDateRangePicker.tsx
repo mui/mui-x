@@ -68,7 +68,6 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
       field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
-        ref,
       }),
       toolbar: {
         hidden: false,
@@ -82,6 +81,7 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
     TEnableAccessibleFieldDOMStructure,
     typeof props
   >({
+    ref,
     props,
     valueManager: rangeValueManager,
     valueType: 'date',

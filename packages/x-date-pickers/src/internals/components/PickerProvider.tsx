@@ -142,33 +142,40 @@ export interface PickerContextValue<
    */
   fieldFormat: string;
   /**
-   * Name that should be applied to the <input /> element of the field.
-   * Is equal to `props.name` on the picker component if defined.
-   * Is equal to undefined if the picker does not have a field (static pickers).
+   * Name that should be applied to the <input /> element if the picker contains one.
+   * If the picker has a field, it should probably be applied to its input element.
+   * Is equal to `props.name` on the picker component if defined (the prop does not exist on static pickers).
    * Is always equal to undefined if the component you are accessing the context from is not wrapped by a picker.
    */
-  fieldName: string | undefined;
+  name: string | undefined;
   /**
-   * Label that should be applied to the field.
-   * Is equal to `props.label` on the picker component if defined.
-   * Is equal to undefined if the picker does not have a field (static pickers).
+   * Label that should be rendered by the picker.
+   * If the picker has a field, it should probably be rendered in it.
+   * Is equal to `props.label` on the picker component if defined (the prop does not exist on static pickers).
    * Is always equal to undefined if the component you are accessing the context from is not wrapped by a picker.
    */
-  fieldLabel: React.ReactNode | undefined;
+  label: React.ReactNode | undefined;
   /**
-   * Class name that should be applied to the field.
+   * Class name that should be applied to the root element.
+   * If the picker has a field, it should be applied to field root element, otherwise to the layout root element.
    * Is equal to `props.className` on the picker component if defined.
-   * Is equal to undefined if the picker does not have a field (static pickers).
    * Is always equal to undefined if the component you are accessing the context from is not wrapped by a picker.
    */
-  fieldClassName: string | undefined;
+  rootClassName: string | undefined;
   /**
-   * MUI style prop that should be applied to the field.
+   * MUI style prop that should be applied to the root element.
+   * If the picker has a field, it should be applied to field root element, otherwise to the layout root element.
    * Is equal to `props.sx` on the picker component if defined.
-   * Is equal to undefined if the picker does not have a field (static pickers).
    * Is always equal to undefined if the component you are accessing the context from is not wrapped by a picker.
    */
-  fieldSx: SxProps<Theme> | undefined;
+  rootSx: SxProps<Theme> | undefined;
+  /**
+   * Ref that should be attached to the root element.
+   * If the picker has a field, it should be attached to field root element, otherwise to the layout root element.
+   * Is equal to the ref passed to the picker component if defined.
+   * Is always equal to undefined if the component you are accessing the context from is not wrapped by a picker.
+   */
+  rootRef: React.ForwardedRef<HTMLDivElement> | undefined;
 }
 
 export interface PickerActionsContextValue<

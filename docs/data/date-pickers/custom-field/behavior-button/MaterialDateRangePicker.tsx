@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Dayjs } from 'dayjs';
+import useForkRef from '@mui/utils/useForkRef';
 import Button from '@mui/material/Button';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -21,6 +22,7 @@ function ButtonDateRangeField(props: DateRangePickerFieldProps) {
   const { focused, ...other } = forwardedProps;
 
   const pickerContext = usePickerContext();
+  const handleRef = useForkRef(pickerContext.triggerRef, pickerContext.rootRef);
   const parsedFormat = useParsedFormat();
   const { hasValidationError } = useValidation({
     validator: validateDateRange,
@@ -40,13 +42,13 @@ function ButtonDateRangeField(props: DateRangePickerFieldProps) {
       {...other}
       variant="outlined"
       color={hasValidationError ? 'error' : 'primary'}
-      ref={pickerContext.triggerRef}
-      className={pickerContext.fieldClassName}
-      sx={pickerContext.fieldSx}
+      ref={handleRef}
+      className={pickerContext.rootClassName}
+      sx={pickerContext.rootSx}
       onClick={() => pickerContext.setOpen((prev) => !prev)}
     >
-      {pickerContext.fieldLabel
-        ? `${pickerContext.fieldLabel}: ${formattedValue}`
+      {pickerContext.label
+        ? `${pickerContext.label}: ${formattedValue}`
         : formattedValue}
     </Button>
   );

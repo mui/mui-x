@@ -158,7 +158,6 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
       field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
-        ref,
       }),
       tabs: {
         hidden: false,
@@ -176,6 +175,7 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
     TEnableAccessibleFieldDOMStructure,
     typeof props
   >({
+    ref,
     props,
     valueManager: rangeValueManager,
     valueType: 'date-time',

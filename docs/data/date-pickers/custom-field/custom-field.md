@@ -267,14 +267,15 @@ The picker can receive some commonly used props that should be forwarded to the 
 If you are using any of those props in one of your picker, make sure to retrieve them in your field using the `usePickerContext` hook:
 
 ```jsx
-const { fieldLabel, fieldName, fieldClassName, fieldSx } = usePickerContext();
+const { label, name, rootClassName, rootSx, rootRef } = usePickerContext();
 
 return (
   <TextField
-    label={fieldLabel}
-    name={fieldName}
-    className={fieldClassName}
-    sx={fieldSx}
+    label={label}
+    name={name}
+    className={rootClassName}
+    sx={rootSx}
+    ref={rootRef}
   />
 );
 ```

@@ -28,7 +28,8 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
   },
 );
 
-const BrowserDateField = React.forwardRef((props, ref) => {
+function BrowserDateField(props) {
+  console.log('AA', props);
   const fieldResponse = useDateField(props);
 
   const {
@@ -63,10 +64,10 @@ const BrowserDateField = React.forwardRef((props, ref) => {
   } = fieldResponse;
 
   const pickerContext = usePickerContext();
-  const handleRef = useForkRef(pickerContext.triggerRef, ref);
+  const handleRef = useForkRef(pickerContext.triggerRef, pickerContext.rootRef);
 
   return (
-    <BrowserFieldRoot ref={handleRef} {...other}>
+    <BrowserFieldRoot {...other} ref={handleRef}>
       <BrowserFieldContent>
         <PickersSectionList
           elements={elements}
@@ -89,17 +90,13 @@ const BrowserDateField = React.forwardRef((props, ref) => {
       </IconButton>
     </BrowserFieldRoot>
   );
-});
+}
 
-const BrowserDatePicker = React.forwardRef((props, ref) => {
+function BrowserDatePicker(props) {
   return (
-    <DatePicker
-      ref={ref}
-      {...props}
-      slots={{ field: BrowserDateField, ...props.slots }}
-    />
+    <DatePicker {...props} slots={{ field: BrowserDateField, ...props.slots }} />
   );
-});
+}
 
 export default function BrowserV7Field() {
   return (
