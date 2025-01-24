@@ -27,7 +27,7 @@ Following are all team members who have contributed to this release:
 
 - [DataGrid] Fix toggling preference panel from toolbar (#16274) @lauri865
 - [DataGrid] Only try to mount filter button if there are filters present (#16267) @lauri865
-- [DataGrid] Revert `apiRef` to be `MutableRefObject` for React versions < 19 (#16279) @arminmeh 
+- [DataGrid] Revert `apiRef` to be `MutableRefObject` for React versions < 19 (#16279) @arminmeh
 - [l10n] Improve Persian (fa-IR) locale (#16312) @mostafaRoosta74
 - [l10n] Improve Urdu (ur-PK) locale (#16295) @AxharKhan
 
