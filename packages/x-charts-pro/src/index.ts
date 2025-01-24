@@ -25,10 +25,13 @@ export * from '@mui/x-charts/ScatterChart';
 export * from '@mui/x-charts/SparkLineChart';
 export * from '@mui/x-charts/Gauge';
 export * from '@mui/x-charts/ChartsSurface';
+export * from '@mui/x-charts/ChartDataProvider';
+export * from '@mui/x-charts/ChartsLabel';
 
 // Pro components
 export * from './Heatmap';
 export * from './ChartContainerPro';
+export * from './ChartDataProviderPro';
 export * from './ScatterChartPro';
 export * from './BarChartPro';
 export * from './LineChartPro';

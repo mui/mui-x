@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { createRenderer, waitFor, within } from '@mui/internal-test-utils';
 import { expect } from 'chai';
+import { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
   DataGridProProps,
@@ -30,7 +31,7 @@ const serverOptions = { minDelay: 0, maxDelay: 0, verbose: false };
 describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: RefObject<GridApi>;
   let fetchRowsSpy: SinonSpy;
   let mockServer: ReturnType<typeof useMockServer>;
 
