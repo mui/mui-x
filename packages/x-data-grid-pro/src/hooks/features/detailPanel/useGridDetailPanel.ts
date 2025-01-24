@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   GridEventListener,
   GridRowId,
@@ -45,7 +46,7 @@ export const detailPanelStateInitializer: GridStateInitializer<
 };
 
 function cacheContentAndHeight(
-  apiRef: React.RefObject<GridApiPro>,
+  apiRef: RefObject<GridApiPro>,
   getDetailPanelContent: DataGridProProcessedProps['getDetailPanelContent'],
   getDetailPanelHeight: DataGridProProcessedProps['getDetailPanelHeight'],
   previousHeightCache: GridDetailPanelState['heightCache'],
@@ -81,7 +82,7 @@ function cacheContentAndHeight(
 }
 
 export const useGridDetailPanel = (
-  apiRef: React.RefObject<GridPrivateApiPro>,
+  apiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     | 'getDetailPanelContent'

@@ -1,3 +1,4 @@
+import { RefObject } from '@mui/x-internals/types';
 import {
   GridColDef,
   useGridApiRef,
@@ -18,7 +19,7 @@ describe('<DataGridPro /> - Export', () => {
     autoHeight: isJSDOM,
   };
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: RefObject<GridApi>;
 
   const columns: GridColDef[] = [{ field: 'id' }, { field: 'brand', headerName: 'Brand' }];
 

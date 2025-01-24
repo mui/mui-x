@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { gridFilteredSortedRowIdsSelector } from '../filter/gridFilterSelector';
 import { GridColDef, GridRowEntry, GridRowId } from '../../../models';
 import { gridRowSpanningHiddenCellsSelector } from '../rows/gridRowSpanningSelectors';
@@ -6,7 +6,7 @@ import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
 
 export function enrichPageRowsWithPinnedRows(
-  apiRef: React.RefObject<GridApiCommunity>,
+  apiRef: RefObject<GridApiCommunity>,
   rows: GridRowEntry[],
 ) {
   const pinnedRows = gridPinnedRowsSelector(apiRef) || {};
@@ -61,7 +61,7 @@ export const getRightColumnIndex = ({
 };
 
 export function findNonRowSpannedCell(
-  apiRef: React.RefObject<GridApiCommunity>,
+  apiRef: RefObject<GridApiCommunity>,
   rowId: GridRowId,
   field: GridColDef['field'],
   rowSpanScanDirection: 'up' | 'down',
