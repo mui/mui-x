@@ -114,7 +114,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': '大于或等于',
   'headerFilterOperator<': '小于',
   'headerFilterOperator<=': '小于或等于',
-  // headerFilterClear: 'Clear filter',
+  headerFilterClear: '清除筛选',
 
   // Filter values text
   filterValueAny: '任何',
