@@ -747,10 +747,7 @@ export const useGridColumnResize = (
             0,
           );
           const dimensions = apiRef.current.getRootDimensions();
-          const availableWidth =
-            dimensions.viewportInnerSize.width -
-            dimensions.leftPinnedWidth -
-            dimensions.rightPinnedWidth;
+          const availableWidth = dimensions.viewportInnerSize.width;
           const remainingWidth = availableWidth - totalWidth;
 
           if (remainingWidth > 0) {
