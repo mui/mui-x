@@ -63,7 +63,7 @@ If you relied on the fact that marks were `path` elements, you need to update yo
 #### `@mui/x-charts@v8.0.0-alpha.9`
 
 - [charts] Expand line with step interpolation (#16229) @alexfauquette
-- [charts] Fix hydration missmatch (#16261) @alexfauquette
+- [charts] Fix hydration mismatch (#16261) @alexfauquette
 - [charts] Fix zoom option reactivity (#16262) @alexfauquette
 - [charts] Move legend getter to series config (#16307) @alexfauquette
 - [charts] Use `<circle />` instead of `<path />` for line marks by default (#15220) @alexfauquette
