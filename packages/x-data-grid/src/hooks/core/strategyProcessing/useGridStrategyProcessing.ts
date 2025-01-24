@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridPrivateApiCommon } from '../../../models/api/gridApiCommon';
 import {
   GridStrategyProcessor,
@@ -64,7 +65,7 @@ type UntypedStrategyProcessors = {
  * - sorting algorithm.
  * - filtering algorithm.
  */
-export const useGridStrategyProcessing = (apiRef: React.RefObject<GridPrivateApiCommon>) => {
+export const useGridStrategyProcessing = (apiRef: RefObject<GridPrivateApiCommon>) => {
   const availableStrategies = React.useRef(
     new Map<string, { group: GridStrategyGroup; isAvailable: () => boolean }>(),
   );

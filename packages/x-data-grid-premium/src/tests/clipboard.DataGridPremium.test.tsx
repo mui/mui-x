@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   GridApi,
   useGridApiRef,
@@ -16,7 +17,7 @@ import { getBasicGridData } from '@mui/x-data-grid-generator';
 describe('<DataGridPremium /> - Clipboard', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: RefObject<GridApi>;
 
   function Test({
     rowLength = 4,

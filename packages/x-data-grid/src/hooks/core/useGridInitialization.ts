@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import type { GridApiCommon, GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRefs } from './useGridRefs';
@@ -17,7 +17,7 @@ export const useGridInitialization = <
   PrivateApi extends GridPrivateApiCommon,
   Api extends GridApiCommon,
 >(
-  inputApiRef: React.RefObject<Api> | undefined,
+  inputApiRef: RefObject<Api> | undefined,
   props: DataGridProcessedProps,
 ) => {
   const privateApiRef = useGridApiInitialization<PrivateApi, Api>(inputApiRef, props);

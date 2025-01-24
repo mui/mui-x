@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { DataGrid, useGridApiRef, DataGridProps, GridApi } from '@mui/x-data-grid';
@@ -9,7 +10,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGrid /> - Row spanning', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: RefObject<GridApi>;
   const baselineProps: DataGridProps = {
     unstable_rowSpanning: true,
     columns: [
