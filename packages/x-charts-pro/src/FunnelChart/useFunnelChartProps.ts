@@ -6,6 +6,7 @@ import { ChartsLegendSlotExtension } from '@mui/x-charts/ChartsLegend';
 import useId from '@mui/utils/useId';
 import { ChartsClipPathProps } from '@mui/x-charts/ChartsClipPath';
 import { ChartsWrapperProps, calculateMargins } from '@mui/x-charts/internals';
+import { ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
 import { FunnelPlotProps } from './FunnelPlot';
 import type { FunnelChartProps } from './FunnelChart';
 import { ChartContainerProProps } from '../ChartContainerPro';
@@ -43,6 +44,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     onHighlightChange,
     className,
     hideLegend,
+    axisHighlight,
     ...rest
   } = props;
 
@@ -87,7 +89,6 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     sx,
     highlightedItem,
     onHighlightChange,
-    disableAxisListener: true,
     className,
   };
 
@@ -132,6 +133,10 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     legendDirection: props.slotProps?.legend?.direction,
   };
 
+  const axisHighlightProps: ChartsAxisHighlightProps = {
+    ...axisHighlight,
+  };
+
   return {
     chartContainerProps,
     funnelPlotProps,
@@ -141,6 +146,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     clipPathGroupProps,
     clipPathProps,
     chartsWrapperProps,
+    axisHighlightProps,
     children,
   };
 };

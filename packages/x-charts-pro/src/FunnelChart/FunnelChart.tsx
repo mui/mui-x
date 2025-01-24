@@ -24,6 +24,7 @@ import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '@mui/x-c
 import { MakeOptional } from '@mui/x-internals/types';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
 import { FunnelPlot, FunnelPlotProps, FunnelPlotSlotProps, FunnelPlotSlots } from './FunnelPlot';
 import { FunnelSeriesType } from './funnel.types';
 import { useFunnelChartProps } from './useFunnelChartProps';
@@ -61,6 +62,14 @@ export interface FunnelChartProps
    */
   hideLegend?: boolean;
   /**
+   * The configuration of axes highlight.
+   * Default is set to 'band' in the bar direction.
+   * Depends on `layout` prop.
+   * @see See {@link https://mui.com/x/react-charts/highlighting/ highlighting docs} for more details.
+   *
+   */
+  axisHighlight?: ChartsAxisHighlightProps;
+  /**
    * Overridable component slots.
    * @default {}
    */
@@ -93,6 +102,7 @@ const FunnelChart = React.forwardRef(function FunnelChart(
     clipPathGroupProps,
     clipPathProps,
     chartsWrapperProps,
+    axisHighlightProps,
     children,
   } = useFunnelChartProps(themedProps);
   const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps(
@@ -110,9 +120,9 @@ const FunnelChart = React.forwardRef(function FunnelChart(
           <g {...clipPathGroupProps}>
             <FunnelPlot {...funnelPlotProps} />
             <ChartsOverlay {...overlayProps} />
-            {/* <ChartsAxisHighlight {...axisHighlightProps} /> */}
+            <ChartsAxisHighlight {...axisHighlightProps} />
           </g>
-          {!themedProps.loading && <Tooltip {...themedProps.slotProps?.tooltip} />}
+          {!themedProps.loading && <Tooltip {...themedProps.slotProps?.tooltip} trigger="item" />}
           <ChartsClipPath {...clipPathProps} />
           {children}
         </ChartsSurface>

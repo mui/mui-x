@@ -295,6 +295,7 @@ export default function ChartDemoPropsForm<T extends string>({
                     const checked = String(resolvedValue) === value;
                     return (
                       <FormControlLabel
+                        key={value}
                         control={<Radio size="small" />}
                         // variant={checked ? 'solid' : 'outlined'}
                         color={checked ? 'primary' : 'info'}
