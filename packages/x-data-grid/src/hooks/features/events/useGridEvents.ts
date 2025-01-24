@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiOptionHandler } from '../../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -8,7 +8,7 @@ import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
  * @requires useGridColumns (event) - can be after, async only
  */
 export function useGridEvents(
-  apiRef: React.RefObject<GridApiCommunity>,
+  apiRef: RefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'onColumnHeaderClick'

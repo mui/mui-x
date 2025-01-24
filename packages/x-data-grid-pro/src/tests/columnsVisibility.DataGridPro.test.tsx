@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
+import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, act, screen } from '@mui/internal-test-utils';
 import {
   DataGridPro,
@@ -24,7 +25,7 @@ const columns: GridColDef[] = [{ field: 'id' }, { field: 'idBis' }];
 describe('<DataGridPro /> - Columns visibility', () => {
   const { render } = createRenderer({ clock: 'fake' });
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: RefObject<GridApi>;
 
   function TestDataGridPro(
     props: Omit<DataGridProProps, 'columns' | 'rows' | 'apiRef'> &
