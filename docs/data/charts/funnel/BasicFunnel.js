@@ -8,7 +8,7 @@ export default function BasicFunnel() {
       <FunnelChart
         series={[
           {
-            data: [{ value: 200 }, { value: 150 }, { value: 100 }, { value: 50 }],
+            data: [{ value: 200 }, { value: 180 }, { value: 90 }, { value: 50 }],
           },
         ]}
         height={300}
