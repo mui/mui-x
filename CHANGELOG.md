@@ -5,7 +5,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## v8.0.0-alpha.9
+## 8.0.0-alpha.9
 
 _Jan 24, 2025_
 
@@ -749,7 +749,7 @@ Same changes as in `@mui/x-tree-view@8.0.0-alpha.3`.
 - [code-infra] Playwright 1.49 (#15493) @JCQuintas
 - [test] Force hover in headless Chrome (#15710) @cherniavskii
 
-## v8.0.0-alpha.2
+## 8.0.0-alpha.2
 
 _Nov 29, 2024_
 
@@ -876,7 +876,7 @@ Same changes as in `@mui/x-tree-view@v8.0.0-alpha.2`.
 - [core] Remove dead translation key (#15566) @oliviertassinari
 - [code-infra] Auto-merge `@types/node` bumps (#15591) @LukasTy
 
-## v8.0.0-alpha.1
+## 8.0.0-alpha.1
 
 _Nov 22, 2024_
 
@@ -1450,7 +1450,7 @@ Same changes as in `@mui/x-tree-view@7.23.0`.
 
 - [core] Update @mui/monorepo (#15574) @oliviertassinari
 
-## v7.22.3
+## 7.22.3
 
 _Nov 21, 2024_
 
