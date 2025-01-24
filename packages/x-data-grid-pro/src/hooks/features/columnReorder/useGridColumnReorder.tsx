@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import composeClasses from '@mui/utils/composeClasses';
 import { useRtl } from '@mui/system/RtlProvider';
 import {
@@ -54,7 +55,7 @@ export const columnReorderStateInitializer: GridStateInitializer = (state) => ({
  * @requires useGridColumns (method)
  */
 export const useGridColumnReorder = (
-  apiRef: React.RefObject<GridPrivateApiPro>,
+  apiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     | 'disableColumnReorder'

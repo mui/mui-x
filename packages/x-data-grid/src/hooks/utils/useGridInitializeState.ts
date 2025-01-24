@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 import { GridPrivateApiCommunity } from '../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -13,7 +14,7 @@ export type GridStateInitializer<
 > = (
   state: DeepPartial<PrivateApi['state']>,
   props: P,
-  privateApiRef: React.RefObject<PrivateApi>,
+  privateApiRef: RefObject<PrivateApi>,
 ) => DeepPartial<PrivateApi['state']>;
 
 export const useGridInitializeState = <
@@ -21,7 +22,7 @@ export const useGridInitializeState = <
   PrivateApi extends GridPrivateApiCommon = GridPrivateApiCommunity,
 >(
   initializer: GridStateInitializer<P, PrivateApi>,
-  privateApiRef: React.RefObject<PrivateApi>,
+  privateApiRef: RefObject<PrivateApi>,
   props: P,
 ) => {
   const isInitialized = React.useRef(false);

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   useGridLogger,
@@ -54,7 +55,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
  * @requires useGridRows (method)
  */
 export const useGridRowReorder = (
-  apiRef: React.RefObject<GridPrivateApiPro>,
+  apiRef: RefObject<GridPrivateApiPro>,
   props: Pick<DataGridProProcessedProps, 'rowReordering' | 'onRowOrderChange' | 'classes'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridRowReorder');
