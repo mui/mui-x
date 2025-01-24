@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Jan 24, 2025_
 
-We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
 - 🌍 Improve Persian (fa-IR) locale on the Data Grid
@@ -15,7 +15,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 Special thanks go out to the community contributors who have helped make this release possible:
 @mostafaRoosta74, @lauri865.
 Following are all team members who have contributed to this release:
-@alexfauquette, @JCQuintas, @cherniavskii, @LukasTy.
+@alexfauquette, @JCQuintas, @cherniavskii, @LukasTy, @arminmeh.
 
 ### Data Grid
 
@@ -23,6 +23,7 @@ Following are all team members who have contributed to this release:
 
 - [DataGrid] Fix toggling preference panel from toolbar (#16276) @lauri865
 - [DataGrid] Only try to mount filter button if there are filters present (#16269) @lauri865
+- [DataGrid] Revert `apiRef` to be `MutableRefObject` for React versions < 19 (#16320) @arminmeh
 - [l10n] Improve Persian (fa-IR) locale (#15964) @mostafaRoosta74
 
 #### `@mui/x-data-grid-pro@7.24.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
