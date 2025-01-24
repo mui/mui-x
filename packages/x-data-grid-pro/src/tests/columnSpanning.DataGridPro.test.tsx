@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
+import { RefObject } from '@mui/x-internals/types';
 import { DataGridPro, GridApi, useGridApiRef, GridColDef, gridClasses } from '@mui/x-data-grid-pro';
 import { getActiveCell, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
@@ -85,7 +86,7 @@ describe('<DataGridPro /> - Column spanning', () => {
     ];
 
     it('should work after column reordering', () => {
-      let apiRef: React.RefObject<GridApi>;
+      let apiRef: RefObject<GridApi>;
 
       function Test() {
         apiRef = useGridApiRef();
@@ -108,7 +109,7 @@ describe('<DataGridPro /> - Column spanning', () => {
   });
 
   it('should recalculate cells after column reordering', () => {
-    let apiRef: React.RefObject<GridApi>;
+    let apiRef: RefObject<GridApi>;
 
     function Test() {
       apiRef = useGridApiRef();
@@ -185,7 +186,7 @@ describe('<DataGridPro /> - Column spanning', () => {
       { field: 'rating' },
     ];
 
-    let apiRef: React.RefObject<GridApi>;
+    let apiRef: RefObject<GridApi>;
 
     function Test() {
       apiRef = useGridApiRef();
