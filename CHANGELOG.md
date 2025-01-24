@@ -53,7 +53,7 @@ Same changes as in `@mui/x-date-pickers@v8.0.0-alpha.9`.
 
 #### Breaking Changes
 
-The `experimentalMarkRendering` prop has been removed from the LineChart component.
+The `experimentalMarkRendering` prop has been removed from the `LineChart` component.
 The line mark are now `<circle />` element by default.
 And you can chose another shape by adding a `shape` property to your line series.
 
