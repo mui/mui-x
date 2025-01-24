@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { createRenderer, waitFor, within } from '@mui/internal-test-utils';
 import { expect } from 'chai';
+import { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
   DataGridProProps,
@@ -14,8 +15,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { SinonSpy, spy } from 'sinon';
 import { getCell } from 'test/utils/helperFn';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 const dataSetOptions = {
   dataSet: 'Employee' as const,
@@ -27,10 +27,11 @@ const pageSizeOptions = [5, 10, 50];
 
 const serverOptions = { minDelay: 0, maxDelay: 0, verbose: false };
 
-describe('<DataGridPro /> - Data source tree data', () => {
+// Needs layout
+describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: RefObject<GridApi>;
   let fetchRowsSpy: SinonSpy;
   let mockServer: ReturnType<typeof useMockServer>;
 
@@ -81,12 +82,6 @@ describe('<DataGridPro /> - Data source tree data', () => {
       </div>
     );
   }
-
-  beforeEach(function beforeTest() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
-  });
 
   it('should fetch the data on initial render', async () => {
     render(<TestDataSource />);

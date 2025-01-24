@@ -70,8 +70,15 @@ export const gridFilteredDescendantCountLookupSelector = createSelector(
 export const gridExpandedSortedRowEntriesSelector = createSelectorMemoized(
   gridVisibleRowsLookupSelector,
   gridSortedRowEntriesSelector,
-  (visibleRowsLookup, sortedRows) =>
-    sortedRows.filter((row) => visibleRowsLookup[row.id] !== false),
+  gridRowMaximumTreeDepthSelector,
+  gridFilterModelSelector,
+  gridQuickFilterValuesSelector,
+  (visibleRowsLookup, sortedRows, maxDepth, filterModel, quickFilterValues) => {
+    if (maxDepth < 2 && !filterModel.items.length && !quickFilterValues?.length) {
+      return sortedRows;
+    }
+    return sortedRows.filter((row) => visibleRowsLookup[row.id] !== false);
+  },
 );
 
 /**

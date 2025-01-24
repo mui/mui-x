@@ -6,10 +6,7 @@
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
       "default": "1"
     },
-    "closeOnSelect": {
-      "type": { "name": "bool" },
-      "default": "`true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
-    },
+    "closeOnSelect": { "type": { "name": "bool" }, "default": "false" },
     "currentMonthCalendarPosition": {
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
       "default": "1"

@@ -3,7 +3,7 @@ import { ChartSeriesDefaultized } from '../models/seriesType/config';
 import { ChartsPieSorting, PieValueType } from '../models/seriesType/pie';
 import { SeriesId } from '../models/seriesType/common';
 import { getLabel } from '../internals/getLabel';
-import { SeriesFormatter } from '../context/PluginProvider/SeriesFormatter.types';
+import { SeriesProcessor } from '../internals/plugins/models';
 
 const getSortingComparator = (comparator: ChartsPieSorting = 'none') => {
   if (typeof comparator === 'function') {
@@ -21,7 +21,7 @@ const getSortingComparator = (comparator: ChartsPieSorting = 'none') => {
   }
 };
 
-const formatter: SeriesFormatter<'pie'> = (params) => {
+const formatter: SeriesProcessor<'pie'> = (params) => {
   const { seriesOrder, series } = params;
 
   const defaultizedSeries: Record<SeriesId, ChartSeriesDefaultized<'pie'>> = {};
@@ -34,6 +34,7 @@ const formatter: SeriesFormatter<'pie'> = (params) => {
       series[seriesId].data.map((piePoint) => piePoint.value),
     );
     defaultizedSeries[seriesId] = {
+      labelMarkType: 'circle',
       valueFormatter: (item: PieValueType) => item.value.toLocaleString(),
       ...series[seriesId],
       data: series[seriesId].data
@@ -43,6 +44,7 @@ const formatter: SeriesFormatter<'pie'> = (params) => {
           ...arcs[index],
         }))
         .map((item, index) => ({
+          labelMarkType: 'circle',
           ...item,
           formattedValue:
             series[seriesId].valueFormatter?.(

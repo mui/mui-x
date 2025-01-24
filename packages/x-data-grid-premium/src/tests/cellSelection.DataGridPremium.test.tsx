@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { stub, SinonStub, spy } from 'sinon';
 import { expect } from 'chai';
+import { RefObject } from '@mui/x-internals/types';
 import { spyApi, getCell, grid } from 'test/utils/helperFn';
 import { createRenderer, fireEvent, act, screen } from '@mui/internal-test-utils';
 import {
@@ -12,11 +13,12 @@ import {
 } from '@mui/x-data-grid-premium';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
+import { isJSDOM, describeSkipIf } from 'test/utils/skipIf';
 
 describe('<DataGridPremium /> - Cell selection', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: RefObject<GridApi>;
 
   function TestDataGridSelection({
     rowLength = 4,
@@ -364,14 +366,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
     });
   });
 
-  describe('Auto-scroll', () => {
-    before(function beforeHook() {
-      if (/jsdom/.test(window.navigator.userAgent)) {
-        // Need layouting
-        this.skip();
-      }
-    });
-
+  describeSkipIf(isJSDOM)('Auto-scroll', () => {
     it('should auto-scroll when the mouse approaches the bottom edge', () => {
       stub(window, 'requestAnimationFrame').callsFake(() => 0);
 

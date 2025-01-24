@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
+import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
 import {
   DataGrid,
@@ -23,8 +24,7 @@ import {
   grid,
 } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 function getSelectedRowIds() {
   const hasCheckbox = !!document.querySelector('input[type="checkbox"]');
@@ -397,10 +397,7 @@ describe('<DataGrid /> - Row selection', () => {
       expect(input2.checked).to.equal(true);
     });
 
-    it('should remove the selection from rows that are filtered out', async function test() {
-      if (isJSDOM) {
-        this.skip();
-      }
+    testSkipIf(isJSDOM)('should remove the selection from rows that are filtered out', async () => {
       render(
         <TestDataGridSelection
           checkboxSelection
@@ -556,26 +553,27 @@ describe('<DataGrid /> - Row selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([1, 2]);
     });
 
-    it('should not jump during scroll while the focus is on the checkbox', async function test() {
-      if (isJSDOM) {
-        this.skip(); // HTMLElement.focus() only scrolls to the element on a real browser
-      }
-      const data = getBasicGridData(20, 1);
-      const { user } = render(
-        <TestDataGridSelection {...data} rowHeight={50} checkboxSelection hideFooter />,
-      );
-      const checkboxes = screen.queryAllByRole('checkbox', { name: /select row/i });
-      await user.click(checkboxes[0]);
-      expect(checkboxes[0]).toHaveFocus();
+    // HTMLElement.focus() only scrolls to the element on a real browser
+    testSkipIf(isJSDOM)(
+      'should not jump during scroll while the focus is on the checkbox',
+      async () => {
+        const data = getBasicGridData(20, 1);
+        const { user } = render(
+          <TestDataGridSelection {...data} rowHeight={50} checkboxSelection hideFooter />,
+        );
+        const checkboxes = screen.queryAllByRole('checkbox', { name: /select row/i });
+        await user.click(checkboxes[0]);
+        expect(checkboxes[0]).toHaveFocus();
 
-      await user.keyboard('{ArrowDown}');
-      await user.keyboard('{ArrowDown}');
-      await user.keyboard('{ArrowDown}');
-      const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-      virtualScroller.scrollTop = 250; // Scroll 5 rows
-      virtualScroller.dispatchEvent(new Event('scroll'));
-      expect(virtualScroller.scrollTop).to.equal(250);
-    });
+        await user.keyboard('{ArrowDown}');
+        await user.keyboard('{ArrowDown}');
+        await user.keyboard('{ArrowDown}');
+        const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+        virtualScroller.scrollTop = 250; // Scroll 5 rows
+        virtualScroller.dispatchEvent(new Event('scroll'));
+        expect(virtualScroller.scrollTop).to.equal(250);
+      },
+    );
 
     it('should set tabindex=0 on the checkbox when the it receives focus', async () => {
       const { user } = render(<TestDataGridSelection checkboxSelection />);
@@ -615,13 +613,9 @@ describe('<DataGrid /> - Row selection', () => {
     // Skip on everything as this is failing on all environments on ubuntu/CI
     //   describe('ripple', () => {
     //     clock.withFakeTimers();
-
-    //     it('should keep only one ripple visible when navigating between checkboxes', async function test() {
-    //       if (isJSDOM) {
-    //         // JSDOM doesn't fire "blur" when .focus is called in another element
-    //         // FIXME Firefox doesn't show any ripple
-    //         this.skip();
-    //       }
+    //     // JSDOM doesn't fire "blur" when .focus is called in another element
+    //     // FIXME Firefox doesn't show any ripple
+    //     testSkipIf(isJSDOM)('should keep only one ripple visible when navigating between checkboxes', async () => {
     //       render(<TestDataGridSelection checkboxSelection />);
     //       const cell = getCell(1, 1);
     //       fireUserEvent.mousePress(cell);
@@ -905,7 +899,7 @@ describe('<DataGrid /> - Row selection', () => {
     });
 
     it('should throw if rowSelectionModel contains more than 1 row', () => {
-      let apiRef: React.MutableRefObject<GridApi>;
+      let apiRef: RefObject<GridApi>;
       function ControlCase() {
         apiRef = useGridApiRef();
         return <TestDataGridSelection apiRef={apiRef} />;
@@ -918,7 +912,7 @@ describe('<DataGrid /> - Row selection', () => {
     });
 
     it('should not throw if rowSelectionModel contains more than 1 item with checkbox selection', () => {
-      let apiRef: React.MutableRefObject<GridApi>;
+      let apiRef: RefObject<GridApi>;
       function ControlCase() {
         apiRef = useGridApiRef();
         return <TestDataGridSelection apiRef={apiRef} checkboxSelection />;

@@ -19,6 +19,7 @@ const timeSensitiveSuites = [
   'DensitySelectorGrid',
   'DataGridOverlays',
   'PopularFeaturesDemo',
+  'ServerSideRowGroupingGroupExpansion',
 ];
 
 const isConsoleWarningIgnored = (msg?: string) => {
