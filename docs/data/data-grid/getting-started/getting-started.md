@@ -54,7 +54,9 @@ yarn add @mui/material @emotion/react @emotion/styled
 
 ## Rendering a Data Grid
 
-Import the component that corresponds to the version you're using, along with the `GridRowsProp` and `GridColDef` utilities:
+### Import the component
+
+Import the Data Grid component that corresponds to the version you're using, along with the `GridRowsProp` and `GridColDef` utilities:
 
 ```js
 // choose one
