@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, screen, within, act, fireEvent } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { getCell, getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
@@ -46,7 +47,7 @@ const baselineProps: DataGridPremiumProps = {
 describe('<DataGridPremium /> - Aggregation', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: RefObject<GridApi>;
 
   function Test(props: Partial<DataGridPremiumProps>) {
     apiRef = useGridApiRef();
