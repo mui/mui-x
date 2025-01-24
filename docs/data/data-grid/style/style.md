@@ -120,7 +120,7 @@ The following demo illustrates how this can be achieved.
 
 By default, the Data Grid uses the Material UI `theme.palette.background.default` color for the background color of the grid container, the column headers, and the pinned rows and columns.
 
-You can override the various background colors with the following configuration:
+The various background colors can be overridden with the following configuration:
 
 ```tsx
 import { createTheme } from '@mui/material/styles';
@@ -130,17 +130,47 @@ const theme = createTheme({
   palette: {
     DataGrid: {
       // Container background
-      bg: '#fafaf9',
+      bg: '#f8fafc',
       // Pinned rows and columns background
-      pinnedBg: '#f5f5f4',
+      pinnedBg: '#f1f5f9',
       // Column header background
-      headerBg: '#eeedec',
+      headerBg: '#eaeff5',
     },
   },
 });
 ```
 
-See the demo below for a working example of the above configuration that also supports dark mode.
+Material UI v6 users can use the `colorSchemes` property to specify different colors for light and dark mode:
+
+```tsx
+import { createTheme } from '@mui/material/styles';
+import type {} from '@mui/x-data-grid/themeAugmentation';
+
+const theme = createTheme({
+  colorSchemes: {
+    light: {
+      palette: {
+        DataGrid: {
+          bg: '#f8fafc',
+          pinnedBg: '#f1f5f9',
+          headerBg: '#eaeff5',
+        },
+      },
+    },
+    dark: {
+      palette: {
+        DataGrid: {
+          bg: '#334155',
+          pinnedBg: '#293548',
+          headerBg: '#1e293b',
+        },
+      },
+    },
+  },
+});
+```
+
+Material UI v5 supports specifying different colors for light and dark mode with two different themes, as shown in the demo below.
 
 {{"demo": "BackgroundColorsGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 

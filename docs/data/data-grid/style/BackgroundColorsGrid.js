@@ -13,9 +13,9 @@ const getTheme = (mode) =>
     palette: {
       mode,
       DataGrid: {
-        bg: mode === 'light' ? '#f8fafc' : '#020617',
-        pinnedBg: mode === 'light' ? '#f1f5f9' : '#0f172a',
-        headerBg: mode === 'light' ? '#e2e8f0' : '#1e293b',
+        bg: mode === 'light' ? '#f8fafc' : '#334155',
+        pinnedBg: mode === 'light' ? '#f1f5f9' : '#293548',
+        headerBg: mode === 'light' ? '#eaeff5' : '#1e293b',
       },
     },
   });

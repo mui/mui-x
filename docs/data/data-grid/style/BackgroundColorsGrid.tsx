@@ -8,16 +8,16 @@ import ToggleButton from '@mui/material/ToggleButton';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 
-type Mode = 'light' | 'dark';
+type PaletteMode = 'light' | 'dark';
 
-const getTheme = (mode: Mode) =>
+const getTheme = (mode: PaletteMode) =>
   createTheme({
     palette: {
       mode,
       DataGrid: {
-        bg: mode === 'light' ? '#f8fafc' : '#020617',
-        pinnedBg: mode === 'light' ? '#f1f5f9' : '#0f172a',
-        headerBg: mode === 'light' ? '#e2e8f0' : '#1e293b',
+        bg: mode === 'light' ? '#f8fafc' : '#334155',
+        pinnedBg: mode === 'light' ? '#f1f5f9' : '#293548',
+        headerBg: mode === 'light' ? '#eaeff5' : '#1e293b',
       },
     },
   });
@@ -66,7 +66,7 @@ const rows = [
 ];
 
 export default function BackgroundColorsGrid() {
-  const [mode, setMode] = React.useState<Mode>('light');
+  const [mode, setMode] = React.useState<PaletteMode>('light');
   const theme = React.useMemo(() => getTheme(mode), [mode]);
 
   return (
