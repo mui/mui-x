@@ -1,1 +1,8 @@
-<FunnelChart series={data} height={300} />
+<FunnelChart
+  series={[
+    {
+      data: [{ value: 200 }, { value: 150 }, { value: 100 }, { value: 50 }],
+    },
+  ]}
+  height={300}
+/>
