@@ -5,10 +5,7 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 
 const settings = {
-  valueFormatter: (value) => `${value}%`,
   height: 200,
-  showTooltip: true,
-  showHighlight: true,
   series: [{ data: [60, -15, 66, 68, 87, 82, 83, 85, 92, 75, 76, 50, 91] }],
   margin: { top: 10, bottom: 20 },
 };

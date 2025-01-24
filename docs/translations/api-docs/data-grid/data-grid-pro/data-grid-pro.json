@@ -774,6 +774,10 @@
       "nodeName": "the column group header cell",
       "conditions": "not empty"
     },
+    "columnHeader--filter": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the header filter cell"
+    },
     "columnHeader--filtered": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the column header",
@@ -816,6 +820,14 @@
     "columnHeaderDraggableContainer": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header&#39;s draggable container element"
+    },
+    "columnHeaderFilterInput": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the header filter input element"
+    },
+    "columnHeaderFilterOperatorLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the header filter operator label element"
     },
     "columnHeaderTitle": {
       "description": "Styles applied to the column header&#39;s title element;"
@@ -1259,6 +1271,7 @@
     "headerFilterMenu": "Component responsible for showing menu in Header filter row",
     "loadIcon": "Icon displayed on the input while processing.",
     "loadingOverlay": "Loading overlay component rendered when the grid is in a loading state.",
+    "menuItemCheckIcon": "Icon displayed to indicate that a menu item is selected.",
     "moreActionsIcon": "Icon displayed on the <code>actions</code> column type to open the menu.",
     "noResultsOverlay": "No results overlay component rendered when the grid has no results after filtering.",
     "noRowsOverlay": "No rows overlay component rendered when the grid has no rows.",

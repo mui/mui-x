@@ -2,7 +2,7 @@
 title: React Chart composition
 productId: x-charts
 githubLabel: 'component: charts'
-components: ChartContainer, ChartContainerPro, ChartsGrid, ChartDataProvider, ChartsSurface
+components: ChartContainer, ChartContainerPro, ChartsGrid, ChartDataProvider, ChartDataProviderPro, ChartsSurface
 packageName: '@mui/x-charts'
 ---
 

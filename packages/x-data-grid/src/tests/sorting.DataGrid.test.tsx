@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import {
@@ -90,7 +91,7 @@ describe('<DataGrid /> - Sorting', () => {
   });
 
   it('should allow sorting using `apiRef` for unsortable columns', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: RefObject<GridApi>;
     function TestCase() {
       apiRef = useGridApiRef();
       const cols = [{ field: 'id', sortable: false }];
@@ -119,8 +120,8 @@ describe('<DataGrid /> - Sorting', () => {
     expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
   });
 
-  it('should allow clearing the current sorting using `sortColumn` idempotently', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
+  it('should allow clearing the current sorting using `sortColumn` idempotently', async () => {
+    let apiRef: RefObject<GridApi>;
     function TestCase() {
       apiRef = useGridApiRef();
       const cols = [{ field: 'id' }];
@@ -133,26 +134,26 @@ describe('<DataGrid /> - Sorting', () => {
       );
     }
 
-    render(<TestCase />);
+    const { user } = render(<TestCase />);
     expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
     const header = getColumnHeaderCell(0);
 
     // Trigger a sort using the header
-    fireEvent.click(header);
+    await user.click(header);
     expect(getColumnValues(0)).to.deep.equal(['0', '5', '10']);
 
     // Clear the value using `apiRef`
-    act(() => apiRef.current.sortColumn('id', null));
+    await act(() => apiRef.current.sortColumn('id', null));
     expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
 
     // Check the behavior is idempotent
-    act(() => apiRef.current.sortColumn('id', null));
+    await act(() => apiRef.current.sortColumn('id', null));
     expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
   });
 
   // See https://github.com/mui/mui-x/issues/12271
   it('should not keep the sort item with `item.sort = null`', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: RefObject<GridApi>;
     const onSortModelChange = spy();
     function TestCase() {
       apiRef = useGridApiRef();
@@ -667,7 +668,7 @@ describe('<DataGrid /> - Sorting', () => {
   });
 
   it('should apply the sortModel prop correctly on GridApiRef update row data', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: RefObject<GridApi>;
     function TestCase() {
       apiRef = useGridApiRef();
 

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
+import { RefObject } from '@mui/x-internals/types';
 import {
   $,
   $$,
@@ -25,8 +26,7 @@ import {
   GridValidRowModel,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 interface BaselineProps extends DataGridProProps {
   rows: GridValidRowModel[];
@@ -74,7 +74,7 @@ describe('<DataGridPro /> - Rows', () => {
     });
 
     it('should allow to switch between cell mode', () => {
-      let apiRef: React.MutableRefObject<GridApi>;
+      let apiRef: RefObject<GridApi>;
       const editableProps = { ...baselineProps };
       editableProps.columns = editableProps.columns.map((col) => ({ ...col, editable: true }));
       const getRowId: DataGridProProps['getRowId'] = (row) => `${row.clientId}`;
@@ -103,7 +103,7 @@ describe('<DataGridPro /> - Rows', () => {
 
     it('should not clone the row', () => {
       const getRowId: DataGridProProps['getRowId'] = (row) => `${row.clientId}`;
-      let apiRef: React.MutableRefObject<GridApi>;
+      let apiRef: RefObject<GridApi>;
       function Test() {
         apiRef = useGridApiRef();
         return (
@@ -165,7 +165,7 @@ describe('<DataGridPro /> - Rows', () => {
       };
     });
 
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: RefObject<GridApi>;
 
     function TestCase(props: Partial<DataGridProProps>) {
       apiRef = useGridApiRef();
@@ -341,7 +341,7 @@ describe('<DataGridPro /> - Rows', () => {
       };
     });
 
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: RefObject<GridApi>;
 
     function TestCase(props: Partial<DataGridProProps>) {
       apiRef = useGridApiRef();
@@ -396,15 +396,9 @@ describe('<DataGridPro /> - Rows', () => {
     });
   });
 
-  describe('virtualization', () => {
-    before(function beforeHook() {
-      if (isJSDOM) {
-        // Need layouting
-        this.skip();
-      }
-    });
-
-    let apiRef: React.MutableRefObject<GridApi>;
+  // Need layouting
+  describeSkipIf(isJSDOM)('virtualization', () => {
+    let apiRef: RefObject<GridApi>;
     function TestCaseVirtualization(
       props: Partial<DataGridProProps> & {
         nbRows?: number;
@@ -686,7 +680,7 @@ describe('<DataGridPro /> - Rows', () => {
   });
 
   describe('no virtualization', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: RefObject<GridApi>;
 
     function TestCase(props: Partial<DataGridProProps> & { nbRows?: number; nbCols?: number }) {
       apiRef = useGridApiRef();
@@ -727,7 +721,7 @@ describe('<DataGridPro /> - Rows', () => {
   });
 
   describe('Cell focus', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: RefObject<GridApi>;
 
     function TestCase(props: Partial<DataGridProProps>) {
       apiRef = useGridApiRef();

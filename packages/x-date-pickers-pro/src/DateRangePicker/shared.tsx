@@ -58,7 +58,7 @@ export interface BaseDateRangePickerProps
    * If `undefined`, internally defined view will be used.
    */
   viewRenderers?: Partial<
-    PickerViewRendererLookup<PickerRangeValue, 'day', DateRangeViewRendererProps<'day'>, {}>
+    PickerViewRendererLookup<PickerRangeValue, 'day', DateRangeViewRendererProps<'day'>>
   >;
 }
 

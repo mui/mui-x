@@ -1,28 +1,36 @@
 'use client';
-import { useChartContainerProps, UseChartContainerPropsReturnValue } from '@mui/x-charts/internals';
-import * as React from 'react';
-import type { ChartDataProviderProProps } from '../context/ChartDataProviderPro';
-import type { ChartContainerProProps } from './ChartContainerPro';
-
-export type UseChartContainerProPropsReturnValue = Omit<
+import {
+  ChartSeriesType,
+  useChartContainerProps,
   UseChartContainerPropsReturnValue,
-  'chartDataProviderProps'
+} from '@mui/x-charts/internals';
+import * as React from 'react';
+import { ChartDataProviderProps } from '@mui/x-charts/ChartDataProvider';
+import type { ChartContainerProProps } from './ChartContainerPro';
+import { ALL_PLUGINS, AllPluginsType, AllPluginSignatures } from '../internals/plugins/allPlugins';
+
+export type UseChartContainerProPropsReturnValue<TSeries extends ChartSeriesType> = Pick<
+  UseChartContainerPropsReturnValue<TSeries>,
+  'chartsSurfaceProps' | 'children'
 > & {
-  chartDataProviderProProps: ChartDataProviderProProps;
+  chartDataProviderProProps: ChartDataProviderProps<TSeries, AllPluginSignatures<TSeries>>;
 };
 
-export const useChartContainerProProps = (
-  props: ChartContainerProProps,
+export const useChartContainerProProps = <TSeries extends ChartSeriesType = ChartSeriesType>(
+  props: ChartContainerProProps<TSeries>,
   ref: React.Ref<SVGSVGElement>,
-): UseChartContainerProPropsReturnValue => {
-  const { zoom, onZoomChange, ...baseProps } = props;
+): UseChartContainerProPropsReturnValue<TSeries> => {
+  const { initialZoom, onZoomChange, plugins, apiRef, ...baseProps } = props;
 
-  const chartDataProviderProProps: Pick<ChartDataProviderProProps, 'zoom' | 'onZoomChange'> = {
-    zoom,
+  const chartDataProviderProProps: Pick<
+    ChartDataProviderProps<TSeries, AllPluginSignatures<TSeries>>,
+    'initialZoom' | 'onZoomChange'
+  > = {
+    initialZoom,
     onZoomChange,
   };
 
-  const { chartDataProviderProps, chartsSurfaceProps, children } = useChartContainerProps(
+  const { chartDataProviderProps, chartsSurfaceProps, children } = useChartContainerProps<TSeries>(
     baseProps,
     ref,
   );
@@ -31,6 +39,8 @@ export const useChartContainerProProps = (
     chartDataProviderProProps: {
       ...chartDataProviderProps,
       ...chartDataProviderProProps,
+      apiRef,
+      plugins: plugins ?? (ALL_PLUGINS as unknown as AllPluginsType<TSeries>),
     },
     chartsSurfaceProps,
     children,

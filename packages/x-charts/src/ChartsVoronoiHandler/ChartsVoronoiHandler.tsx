@@ -3,15 +3,17 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Delaunay } from '@mui/x-charts-vendor/d3-delaunay';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { useCartesianContext } from '../context/CartesianProvider';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { useStore } from '../internals/store/useStore';
 import { getSVGPoint } from '../internals/getSVGPoint';
 import { ScatterItemIdentifier } from '../models';
 import { SeriesId } from '../models/seriesType/common';
-import { useDrawingArea, useSvgRef } from '../hooks';
-import { useHighlighted } from '../context';
+import { useHighlighted } from '../context/HighlightedProvider';
 import { useScatterSeries } from '../hooks/useSeries';
+import { useChartContext } from '../context/ChartProvider/useChartContext';
+import { useDrawingArea } from '../hooks/useDrawingArea';
+import { useSvgRef } from '../hooks/useSvgRef';
+import { useXAxes, useYAxes } from '../hooks';
 
 export type ChartsVoronoiHandlerProps = {
   /**
@@ -33,7 +35,10 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
   const { voronoiMaxRadius, onItemClick } = props;
   const svgRef = useSvgRef();
   const drawingArea = useDrawingArea();
-  const { xAxis, yAxis, xAxisIds, yAxisIds } = useCartesianContext();
+  const { instance } = useChartContext();
+
+  const { xAxis, xAxisIds } = useXAxes();
+  const { yAxis, yAxisIds } = useYAxes();
 
   const store = useStore();
 
@@ -84,7 +89,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
         const pointX = getXPosition(x);
         const pointY = getYPosition(y);
 
-        if (!drawingArea.isPointInside({ x: pointX, y: pointY })) {
+        if (!instance.isPointInside({ x: pointX, y: pointY })) {
           // If the point is not displayed we move them to a trash coordinate.
           // This avoids managing index mapping before/after filtering.
           // The trash point is far enough such that any point in the drawing area will be closer to the mouse than the trash coordinate.
@@ -104,7 +109,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
 
     delauneyRef.current = new Delaunay(points);
     lastFind.current = undefined;
-  }, [defaultXAxisId, defaultYAxisId, series, seriesOrder, xAxis, yAxis, drawingArea]);
+  }, [defaultXAxisId, defaultYAxisId, series, seriesOrder, xAxis, yAxis, drawingArea, instance]);
 
   React.useEffect(() => {
     if (svgRef.current === null) {
@@ -122,7 +127,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
       // Get mouse coordinate in global SVG space
       const svgPoint = getSVGPoint(element, event);
 
-      if (!drawingArea.isPointInside(svgPoint)) {
+      if (!instance.isPointInside(svgPoint)) {
         lastFind.current = undefined;
         return 'outside-chart';
       }
@@ -234,6 +239,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
     clearHighlighted,
     drawingArea,
     store,
+    instance,
   ]);
 
   // eslint-disable-next-line react/jsx-no-useless-fragment

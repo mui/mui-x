@@ -112,6 +112,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'По-голямо или равно на',
   'headerFilterOperator<': 'По-малко от',
   'headerFilterOperator<=': 'По-малко или равно на',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'всякакви',

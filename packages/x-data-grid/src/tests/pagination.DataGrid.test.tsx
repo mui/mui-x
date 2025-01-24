@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { spy, stub, SinonStub, SinonSpy } from 'sinon';
 import { expect } from 'chai';
 import { createRenderer, fireEvent, reactMajor, screen, waitFor } from '@mui/internal-test-utils';
@@ -14,8 +15,7 @@ import {
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { isJSDOM, describeSkipIf } from 'test/utils/skipIf';
 
 describe('<DataGrid /> - Pagination', () => {
   const { render } = createRenderer();
@@ -32,14 +32,8 @@ describe('<DataGrid /> - Pagination', () => {
     );
   }
 
-  describe('prop: paginationModel and onPaginationModelChange', () => {
-    before(function beforeHook() {
-      if (isJSDOM) {
-        // Need layouting
-        this.skip();
-      }
-    });
-
+  // Need layouting
+  describeSkipIf(isJSDOM)('prop: paginationModel and onPaginationModelChange', () => {
     it('should display the rows of page given in props', () => {
       render(<BaselineTestCase paginationModel={{ page: 1, pageSize: 1 }} pageSizeOptions={[1]} />);
       expect(getColumnValues(0)).to.deep.equal(['1']);
@@ -264,7 +258,7 @@ describe('<DataGrid /> - Pagination', () => {
     });
 
     it('should throw if pageSize exceeds 100', () => {
-      let apiRef: React.MutableRefObject<GridApi>;
+      let apiRef: RefObject<GridApi>;
       function TestCase() {
         apiRef = useGridApiRef();
         return (
@@ -392,14 +386,8 @@ describe('<DataGrid /> - Pagination', () => {
     });
   });
 
-  describe('prop: autoPageSize', () => {
-    before(function beforeHook() {
-      if (isJSDOM) {
-        // Need layouting
-        this.skip();
-      }
-    });
-
+  // Need layout
+  describeSkipIf(isJSDOM)('prop: autoPageSize', () => {
     function TestCaseAutoPageSize(
       props: Omit<DataGridProps, 'rows' | 'columns'> & { height: number; nbRows: number },
     ) {
@@ -639,14 +627,8 @@ describe('<DataGrid /> - Pagination', () => {
     expect(getCell(1, 0)).to.have.attr('tabindex', '0');
   });
 
-  describe('prop: initialState.pagination', () => {
-    before(function beforeHook() {
-      if (isJSDOM) {
-        // Need layouting
-        this.skip();
-      }
-    });
-
+  // Need layout
+  describeSkipIf(isJSDOM)('prop: initialState.pagination', () => {
     it('should allow to initialize the paginationModel', () => {
       render(
         <BaselineTestCase

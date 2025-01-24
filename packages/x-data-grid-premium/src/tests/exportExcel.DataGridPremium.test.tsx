@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   GridColDef,
   useGridApiRef,
@@ -19,7 +20,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGridPremium /> - Export Excel', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: RefObject<GridApi>;
 
   const columns: GridColDef[] = [{ field: 'id' }, { field: 'brand', headerName: 'Brand' }];
   const rows = [
@@ -221,7 +222,10 @@ describe('<DataGridPremium /> - Export Excel', () => {
       }
       render(<Test />);
 
-      const workbook = await apiRef.current.getDataAsExcel();
+      let workbook: Excel.Workbook | null = null;
+      await act(async () => {
+        workbook = await apiRef.current.getDataAsExcel();
+      });
       const worksheet = workbook!.worksheets[0];
 
       // 1-based index + 1 for column header row

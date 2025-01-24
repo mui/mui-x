@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled, SxProps, Theme } from '@mui/material/styles';
 import clsx from 'clsx';
+import { useRtl } from '@mui/system/RtlProvider';
 import {
   ChartsLabelGradientClasses,
   useUtilityClasses,
@@ -13,26 +14,28 @@ import { consumeThemeProps } from '../internals/consumeThemeProps';
 export interface ChartsLabelGradientProps {
   /**
    * A unique identifier for the gradient.
-   *
    * The `gradientId` will be used as `fill="url(#gradientId)"`.
    */
   gradientId: string;
   /**
    * The direction of the gradient.
-   *
-   * @default 'row'
+   * @default 'horizontal'
    */
-  direction?: 'column' | 'row';
+  direction?: 'vertical' | 'horizontal';
   /**
    * If `true`, the gradient will be reversed.
    */
   reverse?: boolean;
   /**
    * If provided, the gradient will be rotated by 90deg.
-   *
    * Useful for linear gradients that are not in the correct orientation.
    */
   rotate?: boolean;
+  /**
+   * The thickness of the gradient
+   * @default 12
+   */
+  thickness?: number;
   /**
    * Override or extend the styles applied to the component.
    */
@@ -41,28 +44,32 @@ export interface ChartsLabelGradientProps {
   sx?: SxProps<Theme>;
 }
 
-const getRotation = (direction?: 'column' | 'row', reverse?: boolean, rotate?: boolean) => {
-  if (!rotate && reverse) {
-    return direction === 'column' ? 90 : 180;
+const getRotation = (
+  direction?: 'vertical' | 'horizontal',
+  reverse?: boolean,
+  rotate?: boolean,
+  isRtl?: boolean,
+) => {
+  const angle = (direction === 'vertical' ? -90 : 0) + (rotate ? 90 : 0) + (reverse ? 180 : 0);
+
+  if (isRtl && direction !== 'vertical') {
+    return angle + 180;
   }
 
-  if (rotate && !reverse) {
-    return direction === 'column' ? 0 : 90;
-  }
-
-  if (rotate && reverse) {
-    return direction === 'column' ? 180 : -90;
-  }
-
-  return direction === 'column' ? -90 : 0;
+  return angle;
 };
 
 const Root = styled('div', {
   name: 'MuiChartsLabelGradient',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: ChartsLabelGradientProps }>(({ ownerState }) => {
-  const rotation = getRotation(ownerState.direction, ownerState.reverse, ownerState.rotate);
+})<{ ownerState: ChartsLabelGradientProps & { isRtl: boolean } }>(({ ownerState }) => {
+  const rotation = getRotation(
+    ownerState.direction,
+    ownerState.reverse,
+    ownerState.rotate,
+    ownerState.isRtl,
+  );
 
   return {
     display: 'flex',
@@ -72,17 +79,17 @@ const Root = styled('div', {
       borderRadius: 2,
       overflow: 'hidden',
     },
-    [`&.${labelGradientClasses.row}`]: {
+    [`&.${labelGradientClasses.horizontal}`]: {
       width: '100%',
       [`.${labelGradientClasses.mask}`]: {
-        height: 12,
+        height: ownerState.thickness,
         width: '100%',
       },
     },
-    [`&.${labelGradientClasses.column}`]: {
+    [`&.${labelGradientClasses.vertical}`]: {
       height: '100%',
       [`.${labelGradientClasses.mask}`]: {
-        width: 12,
+        width: ownerState.thickness,
         height: '100%',
         '> svg': {
           height: '100%',
@@ -97,32 +104,34 @@ const Root = styled('div', {
 });
 
 /**
- * @ignore - internal component.
- *
  * Generates the label Gradient for the tooltip and legend.
+ * @ignore - internal component.
  */
 const ChartsLabelGradient = consumeThemeProps(
   'MuiChartsLabelGradient',
   {
     defaultProps: {
-      direction: 'row',
+      direction: 'horizontal',
+      thickness: 12,
     },
     classesResolver: useUtilityClasses,
   },
   function ChartsLabelGradient(props: ChartsLabelGradientProps, ref: React.Ref<HTMLDivElement>) {
-    const { gradientId, direction, classes, className, ...other } = props;
+    const { gradientId, direction, classes, className, rotate, reverse, thickness, ...other } =
+      props;
+    const isRtl = useRtl();
 
     return (
       <Root
         className={clsx(classes?.root, className)}
-        ownerState={props}
+        ownerState={{ ...props, isRtl }}
         aria-hidden="true"
         ref={ref}
         {...other}
       >
         <div className={classes?.mask}>
           <svg viewBox="0 0 24 24">
-            <rect width="24" height="24" fill={`url(#${gradientId})`} />
+            <rect className={classes?.fill} width="24" height="24" fill={`url(#${gradientId})`} />
           </svg>
         </div>
       </Root>
@@ -141,13 +150,11 @@ ChartsLabelGradient.propTypes = {
   classes: PropTypes.object,
   /**
    * The direction of the gradient.
-   *
-   * @default 'row'
+   * @default 'horizontal'
    */
-  direction: PropTypes.oneOf(['column', 'row']),
+  direction: PropTypes.oneOf(['vertical', 'horizontal']),
   /**
    * A unique identifier for the gradient.
-   *
    * The `gradientId` will be used as `fill="url(#gradientId)"`.
    */
   gradientId: PropTypes.string.isRequired,
@@ -157,10 +164,14 @@ ChartsLabelGradient.propTypes = {
   reverse: PropTypes.bool,
   /**
    * If provided, the gradient will be rotated by 90deg.
-   *
    * Useful for linear gradients that are not in the correct orientation.
    */
   rotate: PropTypes.bool,
+  /**
+   * The thickness of the gradient
+   * @default 12
+   */
+  thickness: PropTypes.number,
 } as any;
 
 export { ChartsLabelGradient };

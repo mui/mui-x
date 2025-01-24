@@ -35,7 +35,7 @@ describe('<DesktopDateTimePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-time', variant: 'desktop' });
+      openPicker({ type: 'date-time' });
 
       // Select year
       fireEvent.click(screen.getByRole('radio', { name: '2025' }));
@@ -56,6 +56,12 @@ describe('<DesktopDateTimePicker />', () => {
       // Change the meridiem (same value)
       fireEvent.click(screen.getByRole('option', { name: 'AM' }));
       expect(onChange.callCount).to.equal(1); // Don't call onChange again since the value did not change
+      // closeOnSelect false by default
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+
+      // Click on 'accept' action to close the picker
+      fireEvent.click(screen.getByText(/ok/i));
       expect(onAccept.callCount).to.equal(1);
       expect(onClose.callCount).to.equal(1);
     });
@@ -75,7 +81,7 @@ describe('<DesktopDateTimePicker />', () => {
       />,
     );
 
-    openPicker({ type: 'date-time', variant: 'desktop' });
+    openPicker({ type: 'date-time' });
 
     // Change the date multiple times to check that picker doesn't close after cycling through all views internally
     fireEvent.click(screen.getByRole('gridcell', { name: '2' }));
@@ -99,6 +105,12 @@ describe('<DesktopDateTimePicker />', () => {
     // Change the meridiem
     fireEvent.click(screen.getByRole('option', { name: 'PM' }));
     expect(onChange.callCount).to.equal(8);
+    // closeOnSelect false by default
+    expect(onAccept.callCount).to.equal(0);
+    expect(onClose.callCount).to.equal(0);
+
+    // Click on 'accept' action to close the picker
+    fireEvent.click(screen.getByText(/ok/i));
     expect(onAccept.callCount).to.equal(1);
     expect(onClose.callCount).to.equal(1);
   });
@@ -123,6 +135,10 @@ describe('<DesktopDateTimePicker />', () => {
 
       expect(onChange.callCount).to.equal(2);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 2, 3, 0, 0));
+      expect(onAccept.callCount).to.equal(0); // onAccept false by default
+
+      // Click on 'accept' action to close the picker
+      fireEvent.click(screen.getByText(/ok/i));
       expect(onAccept.callCount).to.equal(1);
     });
 
@@ -144,6 +160,10 @@ describe('<DesktopDateTimePicker />', () => {
 
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 3, 0, 0));
+      expect(onAccept.callCount).to.equal(0); // onAccept false by default
+
+      // Click on 'accept' action to close the picker
+      fireEvent.click(screen.getByText(/ok/i));
       expect(onAccept.callCount).to.equal(1);
     });
   });

@@ -1,1 +1,0 @@
-export { AdapterDateFns } from './AdapterDateFnsV3';

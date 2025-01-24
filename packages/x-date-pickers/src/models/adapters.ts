@@ -243,7 +243,7 @@ export interface MuiPickersAdapter<TLocale = any> {
    * @param {PickerValidDate | null} value The value to test.
    * @returns {boolean} `true` if the value is a valid date according to the date library.
    */
-  isValid(value: PickerValidDate | null): boolean;
+  isValid(value: PickerValidDate | null): value is PickerValidDate;
   /**
    * Format a date using an adapter format string (see the `AdapterFormats` interface)
    * @param {PickerValidDate} value The date to format.

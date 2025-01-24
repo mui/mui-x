@@ -34,8 +34,8 @@ export const rangeValueManager: RangePickerValueManager = {
     getTodayDate(utils, timezone, valueType),
   ],
   getInitialReferenceValue: ({ value, referenceDate: referenceDateProp, ...params }) => {
-    const shouldKeepStartDate = value[0] != null && params.utils.isValid(value[0]);
-    const shouldKeepEndDate = value[1] != null && params.utils.isValid(value[1]);
+    const shouldKeepStartDate = params.utils.isValid(value[0]);
+    const shouldKeepEndDate = params.utils.isValid(value[1]);
 
     if (shouldKeepStartDate && shouldKeepEndDate) {
       return value as PickerNonNullableRangeValue;
@@ -56,10 +56,8 @@ export const rangeValueManager: RangePickerValueManager = {
   hasError: (error) => error[0] != null || error[1] != null,
   defaultErrorState: [null, null],
   getTimezone: (utils, value) => {
-    const timezoneStart =
-      value[0] == null || !utils.isValid(value[0]) ? null : utils.getTimezone(value[0]);
-    const timezoneEnd =
-      value[1] == null || !utils.isValid(value[1]) ? null : utils.getTimezone(value[1]);
+    const timezoneStart = utils.isValid(value[0]) ? utils.getTimezone(value[0]) : null;
+    const timezoneEnd = utils.isValid(value[1]) ? utils.getTimezone(value[1]) : null;
 
     if (timezoneStart != null && timezoneEnd != null && timezoneStart !== timezoneEnd) {
       throw new Error('MUI X: The timezone of the start and the end date should be the same.');
@@ -79,8 +77,8 @@ export const getRangeFieldValueManager = ({
   dateSeparator: string | undefined;
 }): FieldValueManager<PickerRangeValue> => ({
   updateReferenceValue: (utils, value, prevReferenceValue) => {
-    const shouldKeepStartDate = value[0] != null && utils.isValid(value[0]);
-    const shouldKeepEndDate = value[1] != null && utils.isValid(value[1]);
+    const shouldKeepStartDate = utils.isValid(value[0]);
+    const shouldKeepEndDate = utils.isValid(value[1]);
 
     if (!shouldKeepStartDate && !shouldKeepEndDate) {
       return prevReferenceValue;
@@ -184,10 +182,9 @@ export const getRangeFieldValueManager = ({
       },
       getNewValuesFromNewActiveDate: (newActiveDate) => ({
         value: updateDateInRange(newActiveDate, state.value),
-        referenceValue:
-          newActiveDate == null || !utils.isValid(newActiveDate)
-            ? state.referenceValue
-            : updateDateInRange(newActiveDate, state.referenceValue),
+        referenceValue: !utils.isValid(newActiveDate)
+          ? state.referenceValue
+          : updateDateInRange(newActiveDate, state.referenceValue),
       }),
     };
   },

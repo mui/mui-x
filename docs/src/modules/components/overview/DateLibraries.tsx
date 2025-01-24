@@ -101,7 +101,7 @@ export default function DateLibraries() {
           <HighlightedCode
             sx={{ width: '100%', maxWidth: '600px' }}
             code={[
-              `<LocalizationProvider adapter={${dateLibraries[selectedLibrary].adapter}}>`,
+              `<LocalizationProvider dateAdapter={${dateLibraries[selectedLibrary].adapter}}>`,
               `  <DatePicker defaultValue={${dateLibraries[selectedLibrary].value}} />`,
               `</LocalizationProvider>`,
             ].join('\n')}

@@ -16,7 +16,7 @@ import {
 import MenuItem from '@mui/material/MenuItem';
 import { ButtonProps } from '@mui/material/Button';
 
-const getJson = (apiRef: React.MutableRefObject<GridApi>) => {
+const getJson = (apiRef: React.RefObject<GridApi>) => {
   // Select rows and columns
   const filteredSortedRowIds = gridFilteredSortedRowIdsSelector(apiRef);
   const visibleColumnsField = gridVisibleColumnFieldsSelector(apiRef);

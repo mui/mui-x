@@ -1,12 +1,12 @@
 'use client';
-import { useCartesianContext } from '../context/CartesianProvider';
 import { AxisScaleComputedConfig, ScaleName } from '../models/axis';
-import { useZAxis } from './useZAxis';
+import { useXAxes, useYAxes } from './useAxis';
+import { useZAxes } from './useZAxis';
 
 export function useXColorScale<S extends ScaleName>(
   identifier?: number | string,
 ): AxisScaleComputedConfig[S]['colorScale'] | undefined {
-  const { xAxis, xAxisIds } = useCartesianContext();
+  const { xAxis, xAxisIds } = useXAxes();
 
   const id = typeof identifier === 'string' ? identifier : xAxisIds[identifier ?? 0];
 
@@ -16,7 +16,7 @@ export function useXColorScale<S extends ScaleName>(
 export function useYColorScale<S extends ScaleName>(
   identifier?: number | string,
 ): AxisScaleComputedConfig[S]['colorScale'] | undefined {
-  const { yAxis, yAxisIds } = useCartesianContext();
+  const { yAxis, yAxisIds } = useYAxes();
 
   const id = typeof identifier === 'string' ? identifier : yAxisIds[identifier ?? 0];
 
@@ -26,7 +26,7 @@ export function useYColorScale<S extends ScaleName>(
 export function useZColorScale<S extends ScaleName>(
   identifier?: number | string,
 ): AxisScaleComputedConfig[S]['colorScale'] | undefined {
-  const { zAxis, zAxisIds } = useZAxis();
+  const { zAxis, zAxisIds } = useZAxes();
 
   const id = typeof identifier === 'string' ? identifier : zAxisIds[identifier ?? 0];
 

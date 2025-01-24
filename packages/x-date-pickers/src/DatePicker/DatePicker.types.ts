@@ -42,6 +42,11 @@ export interface DatePickerProps<TEnableAccessibleFieldDOMStructure extends bool
    * @default 4 on desktop, 3 on mobile
    */
   yearsPerRow?: 3 | 4;
+  /**
+   * If `true`, the Picker will close after submitting the full date.
+   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   */
+  closeOnSelect?: boolean;
 }
 
 /**

@@ -99,6 +99,10 @@ Below are described the steps you need to make to migrate from v7 to v8.
 
 - `ariaV8` experimental flag is removed. It's now the default behavior.
 
+### Filtering
+
+- The clear button in header filter cells has moved to the header filter menu. Use `slotProps={{ headerFilterCell: { showClearIcon: true } }}` to restore the clear button in the cell.
+
 <!-- ### Editing
 
 TBD

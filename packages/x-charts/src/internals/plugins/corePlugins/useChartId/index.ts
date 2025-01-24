@@ -4,3 +4,4 @@ export type {
   UseChartIdParameters,
   UseChartIdDefaultizedParameters,
 } from './useChartId.types';
+export * from './useChartId.selectors';

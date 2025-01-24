@@ -3,8 +3,7 @@ import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { gridClasses, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Column headers', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
@@ -31,10 +30,8 @@ describe('<DataGridPro /> - Column headers', () => {
     ],
   };
 
-  it('should not scroll the column headers when a column is focused', function test() {
-    if (isJSDOM) {
-      this.skip(); // JSDOM version of .focus() doesn't scroll
-    }
+  // JSDOM version of .focus() doesn't scroll
+  testSkipIf(isJSDOM)('should not scroll the column headers when a column is focused', () => {
     render(
       <div style={{ width: 102, height: 500 }}>
         <DataGridPro

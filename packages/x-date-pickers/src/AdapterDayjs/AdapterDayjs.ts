@@ -414,7 +414,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
     );
   };
 
-  public isValid = (value: Dayjs | null) => {
+  public isValid = (value: Dayjs | null): value is Dayjs => {
     if (value == null) {
       return false;
     }

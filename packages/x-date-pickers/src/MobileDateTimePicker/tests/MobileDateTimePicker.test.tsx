@@ -8,8 +8,8 @@ import {
   createPickerRenderer,
   openPicker,
   getClockTouchEvent,
-  getFieldSectionsContainer,
 } from 'test/utils/pickers';
+import { hasTouchSupport, testSkipIf } from 'test/utils/skipIf';
 
 describe('<MobileDateTimePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -83,22 +83,7 @@ describe('<MobileDateTimePicker />', () => {
   });
 
   describe('picker state', () => {
-    it('should open when clicking the input', () => {
-      const onOpen = spy();
-
-      render(<MobileDateTimePicker onOpen={onOpen} />);
-
-      fireEvent.click(getFieldSectionsContainer());
-
-      expect(onOpen.callCount).to.equal(1);
-      expect(screen.queryByRole('dialog')).toBeVisible();
-    });
-
-    it('should call onChange when selecting each view', function test() {
-      if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
-        this.skip();
-      }
-
+    testSkipIf(!hasTouchSupport)('should call onChange when selecting each view', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -114,7 +99,7 @@ describe('<MobileDateTimePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-time', variant: 'mobile' });
+      openPicker({ type: 'date-time' });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);

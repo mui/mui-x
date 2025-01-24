@@ -13,6 +13,10 @@ type ChartsPiecewiseGradientProps = {
 export default function ChartsPiecewiseGradient(props: ChartsPiecewiseGradientProps) {
   const { isReversed, gradientId, size, direction, scale, colorMap } = props;
 
+  if (size <= 0) {
+    return null;
+  }
+
   return (
     <linearGradient
       id={gradientId}
@@ -30,6 +34,10 @@ export default function ChartsPiecewiseGradient(props: ChartsPiecewiseGradientPr
           return null;
         }
         const offset = isReversed ? 1 - x / size : x / size;
+
+        if (Number.isNaN(offset)) {
+          return null;
+        }
 
         return (
           <React.Fragment key={threshold.toString() + index}>

@@ -13,7 +13,9 @@ export interface PickersActionBarProps extends DialogActionsProps {
   /**
    * Ordered array of actions to display.
    * If empty, does not display that action bar.
-   * @default `['cancel', 'accept']` for mobile and `[]` for desktop
+   * @default
+   * - `[]` for Desktop Date Picker and Desktop Date Range Picker
+   * - `['cancel', 'accept']` for all other Pickers
    */
   actions?: PickersActionBarAction[];
 }
@@ -34,7 +36,7 @@ const PickersActionBarRoot = styled(DialogActions, {
  *
  * - [PickersActionBar API](https://mui.com/x/api/date-pickers/pickers-action-bar/)
  */
-function PickersActionBar(props: PickersActionBarProps) {
+function PickersActionBarComponent(props: PickersActionBarProps) {
   const { actions, ...other } = props;
 
   const translations = usePickerTranslations();
@@ -83,7 +85,7 @@ function PickersActionBar(props: PickersActionBarProps) {
   return <PickersActionBarRoot {...other}>{buttons}</PickersActionBarRoot>;
 }
 
-PickersActionBar.propTypes = {
+PickersActionBarComponent.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -91,7 +93,9 @@ PickersActionBar.propTypes = {
   /**
    * Ordered array of actions to display.
    * If empty, does not display that action bar.
-   * @default `['cancel', 'accept']` for mobile and `[]` for desktop
+   * @default
+   * - `[]` for Desktop Date Picker and Desktop Date Range Picker
+   * - `['cancel', 'accept']` for all other Pickers
    */
   actions: PropTypes.arrayOf(PropTypes.oneOf(['accept', 'cancel', 'clear', 'today']).isRequired),
   /**
@@ -108,5 +112,7 @@ PickersActionBar.propTypes = {
     PropTypes.object,
   ]),
 } as any;
+
+const PickersActionBar = React.memo(PickersActionBarComponent);
 
 export { PickersActionBar };

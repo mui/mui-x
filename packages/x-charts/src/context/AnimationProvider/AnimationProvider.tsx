@@ -15,7 +15,7 @@ function AnimationProvider(props: AnimationProviderProps) {
   // We use the value of `isAnimationDisabledEnvironment` as the initial value of `skipAnimation` to avoid
   // re-rendering the component on environments where matchMedia is not supported, hence skipAnimation will always be true.
   const [skipAnimation, setSkipAnimation] = React.useState<true | undefined>(
-    isAnimationDisabledEnvironment || undefined,
+    process.env.NODE_ENV === 'test' ? isAnimationDisabledEnvironment || undefined : undefined,
   );
 
   useIsomorphicLayoutEffect(() => {

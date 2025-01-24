@@ -19,6 +19,7 @@ const timeSensitiveSuites = [
   'DensitySelectorGrid',
   'DataGridOverlays',
   'PopularFeaturesDemo',
+  'ServerSideRowGroupingGroupExpansion',
 ];
 
 const isConsoleWarningIgnored = (msg?: string) => {
@@ -78,7 +79,7 @@ async function main() {
   await page.goto(`${baseUrl}#no-dev`, { waitUntil: 'networkidle' });
 
   // Simulate portrait mode for date pickers.
-  // See `useIsLandscape`.
+  // See `usePickerOrientation`.
   await page.evaluate(() => {
     Object.defineProperty(window.screen.orientation, 'angle', {
       get() {

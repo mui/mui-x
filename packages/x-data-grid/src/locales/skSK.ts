@@ -120,6 +120,7 @@ const skSKGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Väčší ako alebo rovný',
   'headerFilterOperator<': 'Menší ako',
   'headerFilterOperator<=': 'Menší ako alebo rovný',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'akýkoľvek',

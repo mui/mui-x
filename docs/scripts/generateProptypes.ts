@@ -75,6 +75,8 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
         'leftAxis',
         'rightAxis',
         'plugins',
+        'seriesConfig',
+        'manager',
       ];
       if (propsToNotResolve.includes(name)) {
         return false;
@@ -115,6 +117,9 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
       },
       shouldInclude: ({ component, prop }) => {
         if (['children', 'state'].includes(prop.name) && component.name.startsWith('DataGrid')) {
+          return false;
+        }
+        if (['plugins', 'seriesConfig'].includes(prop.name) && component.name.includes('Chart')) {
           return false;
         }
         let shouldExclude = false;

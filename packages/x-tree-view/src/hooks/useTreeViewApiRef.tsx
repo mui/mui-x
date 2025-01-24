@@ -8,5 +8,4 @@ import { RichTreeViewPluginSignatures } from '../RichTreeView/RichTreeView.plugi
  */
 export const useTreeViewApiRef = <
   TSignatures extends readonly TreeViewAnyPluginSignature[] = RichTreeViewPluginSignatures,
->() =>
-  React.useRef(undefined) as React.MutableRefObject<TreeViewPublicAPI<TSignatures> | undefined>;
+>() => React.useRef(undefined) as React.RefObject<TreeViewPublicAPI<TSignatures> | undefined>;

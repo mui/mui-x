@@ -1,20 +1,23 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { IconButtonProps } from '@mui/material/IconButton';
-import { MenuItemProps } from '@mui/material/MenuItem';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import { GridSlotProps } from '../../models/gridSlotsComponentsProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 interface GridActionsCellItemCommonProps {
   label: string;
-  icon?: React.ReactElement;
+  icon?: React.ReactElement<any>;
   /** from https://mui.com/material-ui/api/button-base/#ButtonBase-prop-component */
   component?: React.ElementType;
 }
 
+// FIXME(v8:romgrk): Make parametric
 export type GridActionsCellItemProps = GridActionsCellItemCommonProps &
   (
-    | ({ showInMenu?: false; icon: React.ReactElement } & Omit<IconButtonProps, 'component'>)
+    | ({ showInMenu?: false; icon: React.ReactElement<any> } & Omit<
+        GridSlotProps['baseIconButton'],
+        'component'
+      >)
     | ({
         showInMenu: true;
         /**
@@ -23,7 +26,7 @@ export type GridActionsCellItemProps = GridActionsCellItemCommonProps &
          */
         closeMenuOnClick?: boolean;
         closeMenu?: () => void;
-      } & Omit<MenuItemProps, 'component'>)
+      } & Omit<GridSlotProps['baseMenuItem'], 'component'>)
   );
 
 const GridActionsCellItem = forwardRef<HTMLElement, GridActionsCellItemProps>((props, ref) => {
@@ -44,7 +47,7 @@ const GridActionsCellItem = forwardRef<HTMLElement, GridActionsCellItemProps>((p
         {...other}
         onClick={handleClick}
         {...rootProps.slotProps?.baseIconButton}
-        ref={ref as React.MutableRefObject<HTMLButtonElement>}
+        ref={ref as React.RefObject<HTMLButtonElement>}
       >
         {React.cloneElement(icon!, { fontSize: 'small' })}
       </rootProps.slots.baseIconButton>

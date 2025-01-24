@@ -113,6 +113,7 @@ const heILGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'גדול שווה ל-',
   'headerFilterOperator<': 'קטן מ-',
   'headerFilterOperator<=': 'קטן שווה ל-',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'כל ערך',

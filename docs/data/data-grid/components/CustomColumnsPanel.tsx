@@ -43,7 +43,7 @@ function ColumnGroup({
 }: {
   group: GridColumnGroup;
   columnLookup: GridColumnLookup;
-  apiRef: React.MutableRefObject<GridApi>;
+  apiRef: React.RefObject<GridApi>;
   columnVisibilityModel: GridColumnVisibilityModel;
 }) {
   const leaves = React.useMemo(() => {

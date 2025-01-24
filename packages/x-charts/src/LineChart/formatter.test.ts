@@ -1,9 +1,9 @@
 import { expect } from 'chai';
 import lineFormatter from './formatter';
-import { SeriesFormatterParams } from '../context/PluginProvider';
+import { SeriesProcessorParams } from '../internals/plugins/models';
 
 const seriesOrder = ['id1'];
-const seriesDataset: SeriesFormatterParams<'line'>['series'] = {
+const seriesDataset: SeriesProcessorParams<'line'>['series'] = {
   id1: {
     // useless info
     type: 'line',

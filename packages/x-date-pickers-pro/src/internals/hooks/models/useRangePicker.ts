@@ -3,7 +3,6 @@ import {
   BasePickerProps,
   ExportedBaseToolbarProps,
   UsePickerViewsProps,
-  BaseNonStaticPickerProps,
   UsePickerValueNonStaticProps,
   UsePickerProviderNonStaticProps,
   DateOrTimeViewWithMeridiem,
@@ -15,11 +14,8 @@ import {
   ExportedPickersLayoutSlotProps,
 } from '@mui/x-date-pickers/PickersLayout';
 import { BaseRangeNonStaticPickerProps } from '../../models';
-import { UseRangePositionProps, UseRangePositionResponse } from '../useRangePosition';
-import {
-  RangePickerFieldSlots,
-  RangePickerFieldSlotProps,
-} from '../useEnrichedRangePickerFieldProps';
+import { UseRangePositionProps } from '../useRangePosition';
+import { RangePickerFieldSlots, RangePickerFieldSlotProps } from '../useEnrichedRangePickerField';
 
 export interface UseRangePickerSlots
   extends ExportedPickersLayoutSlots<PickerRangeValue>,
@@ -33,8 +29,7 @@ export interface UseRangePickerSlotProps<TEnableAccessibleFieldDOMStructure exte
 }
 
 export interface RangeOnlyPickerProps
-  extends BaseNonStaticPickerProps,
-    UsePickerValueNonStaticProps,
+  extends UsePickerValueNonStaticProps,
     UsePickerProviderNonStaticProps,
     BaseRangeNonStaticPickerProps,
     UseRangePositionProps {}
@@ -42,20 +37,15 @@ export interface RangeOnlyPickerProps
 export interface UseRangePickerProps<
   TView extends DateOrTimeViewWithMeridiem,
   TError,
-  TExternalProps extends UsePickerViewsProps<any, TView, any, any>,
-  TAdditionalViewProps extends {},
+  TExternalProps extends UsePickerViewsProps<any, TView, any>,
 > extends RangeOnlyPickerProps,
-    BasePickerProps<PickerRangeValue, TView, TError, TExternalProps, TAdditionalViewProps> {}
-
-export interface RangePickerAdditionalViewProps
-  extends Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {}
+    BasePickerProps<PickerRangeValue, TView, TError, TExternalProps> {}
 
 export interface UseRangePickerParams<
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UseRangePickerProps<TView, any, TExternalProps, TAdditionalViewProps>,
-  TAdditionalViewProps extends {},
+  TExternalProps extends UseRangePickerProps<TView, any, TExternalProps>,
 > extends Pick<
-    UsePickerParams<PickerRangeValue, TView, TExternalProps, TAdditionalViewProps>,
+    UsePickerParams<PickerRangeValue, TView, TExternalProps>,
     'valueManager' | 'valueType' | 'validator' | 'rendererInterceptor'
   > {
   props: TExternalProps;

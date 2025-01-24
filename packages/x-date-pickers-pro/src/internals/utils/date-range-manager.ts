@@ -31,7 +31,8 @@ export function calculateRangeChange({
   shouldMergeDateAndTime = false,
   referenceDate,
 }: CalculateRangeChangeOptions): CalculateRangeChangeResponse {
-  const [start, end] = range;
+  const start = !utils.isValid(range[0]) ? null : range[0];
+  const end = !utils.isValid(range[1]) ? null : range[1];
 
   if (shouldMergeDateAndTime && selectedDate) {
     // If there is a date already selected, then we want to keep its time

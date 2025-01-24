@@ -28,11 +28,11 @@ export function CustomAxisTooltip() {
           },
         },
         tbody: {
-          'tr:first-child': { td: { paddingTop: 1.5 } },
-          'tr:last-child': { td: { paddingBottom: 1.5 } },
+          'tr:first-of-type': { td: { paddingTop: 1.5 } },
+          'tr:last-of-type': { td: { paddingBottom: 1.5 } },
           tr: {
-            'td:first-child': { paddingLeft: 1.5 },
-            'td:last-child': { paddingRight: 1.5 },
+            'td:first-of-type': { paddingLeft: 1.5 },
+            'td:last-of-type': { paddingRight: 1.5 },
             td: {
               paddingRight: '7px',
               paddingBottom: '10px',

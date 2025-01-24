@@ -32,7 +32,7 @@ function AnimatedLine(props: AnimatedLineProps) {
   const stringInterpolator = useStringInterpolator(d);
 
   const transitionChange = useTransition([stringInterpolator], {
-    from: { value: 0 },
+    from: skipAnimation ? undefined : { value: 0 },
     to: { value: 1 },
     enter: { value: 1 },
     reset: false,
@@ -43,6 +43,7 @@ function AnimatedLine(props: AnimatedLineProps) {
     <AppearingMask skipAnimation={skipAnimation} id={`${ownerState.id}-line-clip`}>
       {transitionChange((style, interpolator) => (
         <animated.path
+          // @ts-expect-error
           d={style.value.to(interpolator)}
           stroke={ownerState.gradientId ? `url(#${ownerState.gradientId})` : ownerState.color}
           strokeWidth={2}

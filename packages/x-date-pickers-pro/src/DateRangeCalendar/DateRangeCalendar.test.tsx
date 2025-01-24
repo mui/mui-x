@@ -15,6 +15,7 @@ import {
 } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { describeConformance } from 'test/utils/describeConformance';
+import { testSkipIf } from 'test/utils/skipIf';
 import { RangePosition } from '../models';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
@@ -177,30 +178,30 @@ describe('<DateRangeCalendar />', () => {
         expect(onChange.callCount).to.equal(0);
       });
 
-      it('should not emit "onChange" when touch dragging is ended where it was started', function test() {
-        if (!document.elementFromPoint) {
-          this.skip();
-        }
-        const onChange = spy();
-        render(
-          <DateRangeCalendar
-            onChange={onChange}
-            defaultValue={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-10')]}
-          />,
-        );
+      testSkipIf(!document.elementFromPoint)(
+        'should not emit "onChange" when touch dragging is ended where it was started',
+        () => {
+          const onChange = spy();
+          render(
+            <DateRangeCalendar
+              onChange={onChange}
+              defaultValue={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-10')]}
+            />,
+          );
 
-        const startDay = screen.getByRole('gridcell', { name: '1', selected: true });
-        expect(onChange.callCount).to.equal(0);
+          const startDay = screen.getByRole('gridcell', { name: '1', selected: true });
+          expect(onChange.callCount).to.equal(0);
 
-        executeDateTouchDrag(
-          startDay,
-          rangeCalendarDayTouches['2018-01-01'],
-          rangeCalendarDayTouches['2018-01-02'],
-          rangeCalendarDayTouches['2018-01-01'],
-        );
+          executeDateTouchDrag(
+            startDay,
+            rangeCalendarDayTouches['2018-01-01'],
+            rangeCalendarDayTouches['2018-01-02'],
+            rangeCalendarDayTouches['2018-01-01'],
+          );
 
-        expect(onChange.callCount).to.equal(0);
-      });
+          expect(onChange.callCount).to.equal(0);
+        },
+      );
 
       it('should emit "onChange" when dragging end date', () => {
         const onChange = spy();
@@ -245,50 +246,50 @@ describe('<DateRangeCalendar />', () => {
         expect(document.activeElement).toHaveAccessibleName('2');
       });
 
-      it('should emit "onChange" when touch dragging end date', function test() {
-        if (!document.elementFromPoint) {
-          this.skip();
-        }
-        const onChange = spy();
-        const initialValue: [any, any] = [
-          adapterToUse.date('2018-01-02'),
-          adapterToUse.date('2018-01-11'),
-        ];
-        render(<DateRangeCalendar onChange={onChange} defaultValue={initialValue} />);
+      testSkipIf(!document.elementFromPoint)(
+        'should emit "onChange" when touch dragging end date',
+        () => {
+          const onChange = spy();
+          const initialValue: [any, any] = [
+            adapterToUse.date('2018-01-02'),
+            adapterToUse.date('2018-01-11'),
+          ];
+          render(<DateRangeCalendar onChange={onChange} defaultValue={initialValue} />);
 
-        // test range reduction
-        executeDateTouchDrag(
-          getPickerDay('11'),
-          rangeCalendarDayTouches['2018-01-11'],
-          rangeCalendarDayTouches['2018-01-10'],
-        );
+          // test range reduction
+          executeDateTouchDrag(
+            getPickerDay('11'),
+            rangeCalendarDayTouches['2018-01-11'],
+            rangeCalendarDayTouches['2018-01-10'],
+          );
 
-        expect(onChange.callCount).to.equal(1);
-        expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
-        expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 10));
+          expect(onChange.callCount).to.equal(1);
+          expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
+          expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 10));
 
-        // test range expansion
-        executeDateTouchDrag(
-          getPickerDay('10'),
-          rangeCalendarDayTouches['2018-01-10'],
-          rangeCalendarDayTouches['2018-01-11'],
-        );
+          // test range expansion
+          executeDateTouchDrag(
+            getPickerDay('10'),
+            rangeCalendarDayTouches['2018-01-10'],
+            rangeCalendarDayTouches['2018-01-11'],
+          );
 
-        expect(onChange.callCount).to.equal(2);
-        expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
-        expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
+          expect(onChange.callCount).to.equal(2);
+          expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
+          expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
 
-        // test range flip
-        executeDateTouchDrag(
-          getPickerDay('11'),
-          rangeCalendarDayTouches['2018-01-11'],
-          rangeCalendarDayTouches['2018-01-01'],
-        );
+          // test range flip
+          executeDateTouchDrag(
+            getPickerDay('11'),
+            rangeCalendarDayTouches['2018-01-11'],
+            rangeCalendarDayTouches['2018-01-01'],
+          );
 
-        expect(onChange.callCount).to.equal(3);
-        expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 1));
-        expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[0]);
-      });
+          expect(onChange.callCount).to.equal(3);
+          expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 1));
+          expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[0]);
+        },
+      );
 
       it('should emit "onChange" when dragging start date', () => {
         const onChange = spy();
@@ -323,50 +324,50 @@ describe('<DateRangeCalendar />', () => {
         expect(document.activeElement).toHaveAccessibleName('22');
       });
 
-      it('should emit "onChange" when touch dragging start date', function test() {
-        if (!document.elementFromPoint) {
-          this.skip();
-        }
-        const onChange = spy();
-        const initialValue: [any, any] = [
-          adapterToUse.date('2018-01-01'),
-          adapterToUse.date('2018-01-10'),
-        ];
-        render(<DateRangeCalendar onChange={onChange} defaultValue={initialValue} />);
+      testSkipIf(!document.elementFromPoint)(
+        'should emit "onChange" when touch dragging start date',
+        () => {
+          const onChange = spy();
+          const initialValue: [any, any] = [
+            adapterToUse.date('2018-01-01'),
+            adapterToUse.date('2018-01-10'),
+          ];
+          render(<DateRangeCalendar onChange={onChange} defaultValue={initialValue} />);
 
-        // test range reduction
-        executeDateTouchDrag(
-          getPickerDay('1'),
-          rangeCalendarDayTouches['2018-01-01'],
-          rangeCalendarDayTouches['2018-01-02'],
-        );
+          // test range reduction
+          executeDateTouchDrag(
+            getPickerDay('1'),
+            rangeCalendarDayTouches['2018-01-01'],
+            rangeCalendarDayTouches['2018-01-02'],
+          );
 
-        expect(onChange.callCount).to.equal(1);
-        expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 2));
-        expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
+          expect(onChange.callCount).to.equal(1);
+          expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 2));
+          expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
 
-        // test range expansion
-        executeDateTouchDrag(
-          getPickerDay('2'),
-          rangeCalendarDayTouches['2018-01-02'],
-          rangeCalendarDayTouches['2018-01-01'],
-        );
+          // test range expansion
+          executeDateTouchDrag(
+            getPickerDay('2'),
+            rangeCalendarDayTouches['2018-01-02'],
+            rangeCalendarDayTouches['2018-01-01'],
+          );
 
-        expect(onChange.callCount).to.equal(2);
-        expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
-        expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
+          expect(onChange.callCount).to.equal(2);
+          expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
+          expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
 
-        // test range flip
-        executeDateTouchDrag(
-          getPickerDay('1'),
-          rangeCalendarDayTouches['2018-01-01'],
-          rangeCalendarDayTouches['2018-01-11'],
-        );
+          // test range flip
+          executeDateTouchDrag(
+            getPickerDay('1'),
+            rangeCalendarDayTouches['2018-01-01'],
+            rangeCalendarDayTouches['2018-01-11'],
+          );
 
-        expect(onChange.callCount).to.equal(3);
-        expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[1]);
-        expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 11));
-      });
+          expect(onChange.callCount).to.equal(3);
+          expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[1]);
+          expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 11));
+        },
+      );
 
       it('should dynamically update "shouldDisableDate" when flip dragging', () => {
         const initialValue: [any, any] = [
@@ -398,39 +399,39 @@ describe('<DateRangeCalendar />', () => {
         ).to.have.lengthOf(10);
       });
 
-      it('should dynamically update "shouldDisableDate" when flip touch dragging', function test() {
-        if (!document.elementFromPoint) {
-          this.skip();
-        }
-        const initialValue: [any, any] = [
-          adapterToUse.date('2018-01-01'),
-          adapterToUse.date('2018-01-07'),
-        ];
-        render(
-          <DateRangeCalendar
-            defaultValue={initialValue}
-            shouldDisableDate={dynamicShouldDisableDate}
-            calendars={1}
-          />,
-        );
+      testSkipIf(!document.elementFromPoint)(
+        'should dynamically update "shouldDisableDate" when flip touch dragging',
+        () => {
+          const initialValue: [any, any] = [
+            adapterToUse.date('2018-01-01'),
+            adapterToUse.date('2018-01-07'),
+          ];
+          render(
+            <DateRangeCalendar
+              defaultValue={initialValue}
+              shouldDisableDate={dynamicShouldDisableDate}
+              calendars={1}
+            />,
+          );
 
-        expect(screen.getByRole('gridcell', { name: '5' })).to.have.attribute('disabled');
-        expect(
-          screen.getAllByRole<HTMLButtonElement>('gridcell').filter((c) => c.disabled),
-        ).to.have.lengthOf(6);
-        // flip date range
-        executeDateTouchDragWithoutEnd(
-          screen.getByRole('gridcell', { name: '1' }),
-          rangeCalendarDayTouches['2018-01-01'],
-          rangeCalendarDayTouches['2018-01-09'],
-          rangeCalendarDayTouches['2018-01-10'],
-        );
+          expect(screen.getByRole('gridcell', { name: '5' })).to.have.attribute('disabled');
+          expect(
+            screen.getAllByRole<HTMLButtonElement>('gridcell').filter((c) => c.disabled),
+          ).to.have.lengthOf(6);
+          // flip date range
+          executeDateTouchDragWithoutEnd(
+            screen.getByRole('gridcell', { name: '1' }),
+            rangeCalendarDayTouches['2018-01-01'],
+            rangeCalendarDayTouches['2018-01-09'],
+            rangeCalendarDayTouches['2018-01-10'],
+          );
 
-        expect(screen.getByRole('gridcell', { name: '9' })).to.have.attribute('disabled');
-        expect(
-          screen.getAllByRole<HTMLButtonElement>('gridcell').filter((c) => c.disabled),
-        ).to.have.lengthOf(10);
-      });
+          expect(screen.getByRole('gridcell', { name: '9' })).to.have.attribute('disabled');
+          expect(
+            screen.getAllByRole<HTMLButtonElement>('gridcell').filter((c) => c.disabled),
+          ).to.have.lengthOf(10);
+        },
+      );
     });
   });
 

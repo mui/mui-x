@@ -9,8 +9,9 @@ import { GridFilterItem } from '../../../models/gridFilterItem';
 
 export type GridFilterInputDateProps = GridFilterInputValueProps &
   TextFieldProps & {
-    type?: 'date' | 'datetime-local';
+    headerFilterMenu?: React.ReactNode;
     clearButton?: React.ReactNode | null;
+    type?: 'date' | 'datetime-local';
     /**
      * It is `true` if the filter either has a value or an operator with no value
      * required is selected (for example `isEmpty`)
@@ -51,6 +52,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
     focusElementRef,
     InputProps,
     isFilterActive,
+    headerFilterMenu,
     clearButton,
     tabIndex,
     disabled,
@@ -86,40 +88,38 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
   }, [item.value, type]);
 
   return (
-    <rootProps.slots.baseTextField
-      fullWidth
-      id={id}
-      label={apiRef.current.getLocaleText('filterPanelInputLabel')}
-      placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
-      value={filterValueState}
-      onChange={onFilterChange}
-      variant="standard"
-      type={type || 'text'}
-      InputLabelProps={{
-        shrink: true,
-      }}
-      inputRef={focusElementRef}
-      InputProps={{
-        ...(applying || clearButton
-          ? {
-              endAdornment: applying ? (
-                <rootProps.slots.loadIcon fontSize="small" color="action" />
-              ) : (
-                clearButton
-              ),
-            }
-          : {}),
-        disabled,
-        ...InputProps,
-        inputProps: {
-          max: type === 'datetime-local' ? '9999-12-31T23:59' : '9999-12-31',
-          tabIndex,
-          ...InputProps?.inputProps,
-        },
-      }}
-      {...other}
-      {...rootProps.slotProps?.baseTextField}
-    />
+    <React.Fragment>
+      <rootProps.slots.baseTextField
+        fullWidth
+        id={id}
+        label={apiRef.current.getLocaleText('filterPanelInputLabel')}
+        placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
+        value={filterValueState}
+        onChange={onFilterChange}
+        variant="standard"
+        type={type || 'text'}
+        disabled={disabled}
+        InputLabelProps={{
+          shrink: true,
+        }}
+        inputRef={focusElementRef}
+        InputProps={{
+          endAdornment: applying ? (
+            <rootProps.slots.loadIcon fontSize="small" color="action" />
+          ) : null,
+          ...InputProps,
+          inputProps: {
+            max: type === 'datetime-local' ? '9999-12-31T23:59' : '9999-12-31',
+            tabIndex,
+            ...InputProps?.inputProps,
+          },
+        }}
+        {...rootProps.slotProps?.baseTextField}
+        {...other}
+      />
+      {headerFilterMenu}
+      {clearButton}
+    </React.Fragment>
   );
 }
 
@@ -137,6 +137,7 @@ GridFilterInputDate.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  headerFilterMenu: PropTypes.node,
   /**
    * It is `true` if the filter either has a value or an operator with no value
    * required is selected (for example `isEmpty`)

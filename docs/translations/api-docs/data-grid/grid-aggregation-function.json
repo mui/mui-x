@@ -11,13 +11,13 @@
       "description": "Function that allows to transform the value of the cell passed to the aggregation function applier.<br />Useful for aggregating data from multiple row fields."
     },
     "hasCellUnit": {
-      "description": "Indicates if the aggregated value have the same unit as the cells used to generate it.<br />It can be used to apply a custom cell renderer only if the aggregated value has the same unit."
+      "description": "Indicates if the aggregated value has the same unit as the cells used to generate it.<br />It can be used to apply a custom cell renderer only if the aggregated value has the same unit."
     },
     "label": {
-      "description": "Label of the aggregation function.<br />Will be used to add a label on the footer of the grouping column when this aggregation function is the only one being used."
+      "description": "Label of the aggregation function.<br />Used for adding a label to the footer of the grouping column when this aggregation function is the only one being used."
     },
     "valueFormatter": {
-      "description": "Function that allows to apply a formatter to the aggregated value.<br />If not defined, the grid will use the formatter of the column."
+      "description": "Function for applying a formatter to the aggregated value.<br />If not defined, the grid uses the formatter of the column."
     }
   }
 }

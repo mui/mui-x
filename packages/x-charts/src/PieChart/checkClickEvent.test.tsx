@@ -13,7 +13,7 @@ describe('PieChart - click event', () => {
   const { render } = createRenderer();
 
   describe('onItemClick', () => {
-    it('should add cursor="pointer" to bar elements', function test() {
+    it('should add cursor="pointer" to bar elements', () => {
       render(
         <PieChart
           {...config}
@@ -37,7 +37,7 @@ describe('PieChart - click event', () => {
       ]);
     });
 
-    it('should provide the right context as second argument', function test() {
+    it('should provide the right context as second argument', () => {
       const onItemClick = spy();
       render(
         <PieChart

@@ -45,18 +45,18 @@ We support `date-fns` package v2.x, v3.x, and v4.x major versions.
 
 A single adapter cannot work for all `date-fns` versions, because the way functions are exported has been changed in v3.x.
 
-To use `date-fns` v3.x or v4.x, you need to import the adapter from `@mui/x-date-pickers/AdapterDateFnsV3` instead of `@mui/x-date-pickers/AdapterDateFns`.
+To use `date-fns` v2.x, you need to import the adapter from `@mui/x-date-pickers/AdapterDateFnsV2` instead of `@mui/x-date-pickers/AdapterDateFns`.
 :::
 
 ```tsx
-// with date-fns v2.x
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 // with date-fns v3.x or v4.x
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 // with date-fns v2.x
-import de from 'date-fns/locale/de';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV2';
 // with date-fns v3.x or v4.x
 import { de } from 'date-fns/locale/de';
+// with date-fns v2.x
+import de from 'date-fns/locale/de';
 
 <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={de}>
   {children}
@@ -303,10 +303,10 @@ For `date-fns`, override the `options.weekStartsOn` of the used locale:
 
 ```ts
 import { Locale } from 'date-fns';
+// with date-fns v3.x or v4.x
+import { enUS } from 'date-fns/locale/en-US';
 // with date-fns v2.x
 import enUS from 'date-fns/locale/en-US';
-// with date-fns v3.x
-import { enUS } from 'date-fns/locale/en-US';
 
 const customEnLocale: Locale = {
   ...enUS,

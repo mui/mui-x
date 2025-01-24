@@ -1,11 +1,14 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import { styled } from '@mui/material/styles';
+import IconButton from '@mui/material/IconButton';
+import { CalendarIcon } from '@mui/x-date-pickers/icons';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
+import { usePickerContext } from '@mui/x-date-pickers/hooks';
 
 const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
   display: 'flex',
@@ -41,6 +44,8 @@ const BrowserDateField = React.forwardRef((props, ref) => {
     onInput,
     onPaste,
     onKeyDown,
+    // Should be passed to the button that opens the picker
+    openPickerAriaLabel,
     // Can be passed to a hidden <input /> element
     onChange,
     value,
@@ -55,16 +60,15 @@ const BrowserDateField = React.forwardRef((props, ref) => {
     readOnly,
     focused,
     error,
-    InputProps: { ref: InputPropsRef, startAdornment, endAdornment } = {},
     // The rest can be passed to the root element
     ...other
   } = fieldResponse;
 
-  const handleRef = useForkRef(InputPropsRef, ref);
+  const pickerContext = usePickerContext();
+  const handleRef = useForkRef(pickerContext.triggerRef, ref);
 
   return (
     <BrowserFieldRoot ref={handleRef} {...other}>
-      {startAdornment}
       <BrowserFieldContent>
         <PickersSectionList
           elements={elements}
@@ -78,7 +82,13 @@ const BrowserDateField = React.forwardRef((props, ref) => {
           onKeyDown={onKeyDown}
         />
       </BrowserFieldContent>
-      {endAdornment}
+      <IconButton
+        onClick={() => pickerContext.setOpen((prev) => !prev)}
+        sx={{ marginLeft: 1.5 }}
+        aria-label={openPickerAriaLabel}
+      >
+        <CalendarIcon />
+      </IconButton>
     </BrowserFieldRoot>
   );
 });

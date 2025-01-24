@@ -112,6 +112,7 @@ const huHUGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Nagyobb vagy egyenlő',
   'headerFilterOperator<': 'Kisebb mint',
   'headerFilterOperator<=': 'Kisebb vagy egyenlő',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'bármilyen',

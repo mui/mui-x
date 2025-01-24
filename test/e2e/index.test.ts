@@ -13,7 +13,6 @@ import {
   WebError,
   Locator,
 } from '@playwright/test';
-import { pickersTextFieldClasses } from '@mui/x-date-pickers/PickersTextField';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
 
 function sleep(timeoutMS: number): Promise<void> {
@@ -799,19 +798,13 @@ async function initializeEnvironment(
         it('should allow selecting a value', async () => {
           await renderFixture('DatePicker/BasicMobileDatePicker');
 
-          // Old selector: await page.getByRole('textbox').click({ position: { x: 10, y: 2 } });
-          await page
-            .locator(`.${pickersTextFieldClasses.root}`)
-            .click({ position: { x: 10, y: 2 } });
+          await page.getByRole('button').click();
           await page.getByRole('gridcell', { name: '11' }).click();
           await page.getByRole('button', { name: 'OK' }).click();
 
-          await waitFor(async () => {
-            // assert that the dialog has been closed and the focused element is the input
-            expect(await page.evaluate(() => document.activeElement?.className)).to.contain(
-              pickersSectionListClasses.sectionContent,
-            );
-          });
+          // assert that the dialog closes after selection is complete
+          // could run into race condition otherwise
+          await page.waitForSelector('[role="dialog"]', { state: 'detached' });
           expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
             '04/11/2022',
           );
@@ -824,7 +817,7 @@ async function initializeEnvironment(
 
           const input = page.getByRole('textbox');
 
-          await input.click({ position: { x: 10, y: 2 } });
+          await page.getByRole('button').click();
           await page.getByRole('button', { name: 'Clear' }).click();
 
           await input.blur();
@@ -845,8 +838,8 @@ async function initializeEnvironment(
         await page.getByRole('option', { name: '30 minutes' }).click();
         await page.getByRole('option', { name: 'PM' }).click();
 
-        // assert that the dialog closes after selection is complete
-        // could run into race condition otherwise
+        // dialog closes after user actively closes it
+        await page.keyboard.press('Escape');
         await page.waitForSelector('[role="dialog"]', { state: 'detached' });
         expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
           '04/11/2022 03:30 PM',
@@ -896,8 +889,14 @@ async function initializeEnvironment(
         await page.keyboard.press('ArrowDown');
         await page.keyboard.press('Enter');
 
-        // assert that the dialog closes after selection is complete
-        // could run into race condition otherwise
+        // check that the picker has not been closed
+        await page.waitForSelector('[role="dialog"]', { state: 'visible' });
+
+        // Click 'OK' button to close dialog
+        await page.keyboard.press('Tab'); // move focus to 'cancel' action
+        await page.keyboard.press('Tab'); // move focus to 'accept' action
+        await page.keyboard.press('Enter');
+
         await page.waitForSelector('[role="dialog"]', { state: 'detached' });
         expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
           '04/21/2022 02:05 PM',

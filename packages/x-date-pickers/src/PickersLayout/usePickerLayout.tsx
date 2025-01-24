@@ -12,9 +12,7 @@ import { PickerValidValue } from '../internals/models';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { usePickerContext } from '../hooks';
 
-function toolbarHasView<TValue extends PickerValidValue>(
-  toolbarProps: BaseToolbarProps<TValue> | any,
-): toolbarProps is BaseToolbarProps<TValue> {
+function toolbarHasView(toolbarProps: BaseToolbarProps | any): toolbarProps is BaseToolbarProps {
   return toolbarProps.view !== null;
 }
 
@@ -44,23 +42,10 @@ const usePickerLayout = <TValue extends PickerValidValue>(
   props: PickersLayoutProps<TValue>,
 ): UsePickerLayoutResponse<TValue> => {
   const { ownerState: pickerOwnerState } = usePickerPrivateContext();
-  const { variant, orientation, view } = usePickerContext();
+  const { view } = usePickerContext();
   const isRtl = useRtl();
 
-  const {
-    value,
-    onChange,
-    onSelectShortcut,
-    isValid,
-    children,
-    slots,
-    slotProps,
-    classes: classesProp,
-    // TODO: Remove this "as" hack. It get introduced to mark `value` prop in PickersLayoutProps as not required.
-    // The true type should be
-    // - For pickers value: PickerValidDate | null
-    // - For range pickers value: [PickerValidDate | null, PickerValidDate | null]
-  } = props;
+  const { children, slots, slotProps, classes: classesProp } = props;
 
   const ownerState = React.useMemo<PickerLayoutOwnerState>(
     () => ({ ...pickerOwnerState, layoutDirection: isRtl ? 'rtl' : 'ltr' }),
@@ -70,11 +55,15 @@ const usePickerLayout = <TValue extends PickerValidValue>(
 
   // Action bar
   const ActionBar = slots?.actionBar ?? PickersActionBar;
-  const actionBarProps = useSlotProps({
+  const {
+    // PickersActionBar does not use it and providing it breaks memoization
+    ownerState: destructuredOwnerState,
+    ...actionBarProps
+  } = useSlotProps({
     elementType: ActionBar,
     externalSlotProps: slotProps?.actionBar,
     additionalProps: {
-      actions: variant === 'desktop' ? [] : (['cancel', 'accept'] as PickersActionBarAction[]),
+      actions: ['cancel', 'accept'] as PickersActionBarAction[],
     },
     className: classes.actionBar,
     ownerState,
@@ -86,11 +75,6 @@ const usePickerLayout = <TValue extends PickerValidValue>(
   const toolbarProps = useSlotProps({
     elementType: Toolbar!,
     externalSlotProps: slotProps?.toolbar,
-    additionalProps: {
-      isLandscape: orientation === 'landscape', // Will be removed in a follow up PR?
-      onChange,
-      value,
-    },
     className: classes.toolbar,
     ownerState,
   });
@@ -108,11 +92,6 @@ const usePickerLayout = <TValue extends PickerValidValue>(
   const shortcutsProps = useSlotProps({
     elementType: Shortcuts!,
     externalSlotProps: slotProps?.shortcuts,
-    additionalProps: {
-      isValid,
-      isLandscape: orientation === 'landscape', // Will be removed in a follow up PR?
-      onChange: onSelectShortcut,
-    },
     className: classes.shortcuts,
     ownerState,
   });

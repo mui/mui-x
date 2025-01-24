@@ -94,14 +94,11 @@ The demo below serves as a showcase of the behavior described above, and is not 
 ## Nested lazy loading 🚧
 
 :::warning
-This feature isn't implemented yet. It's coming.
-
-👍 Upvote [issue #14527](https://github.com/mui/mui-x/issues/14527) if you want to see it land faster.
-
-Don't hesitate to leave a comment on the issue to help influence what gets built—especially if you already have a use case for this feature, or if you're facing a specific pain point with your current solution.
+This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/14527) to help us prioritize it.
+Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
 :::
 
-When completed, it will be possible to use the `unstable_lazyLoading` flag in combination with [tree data](/x/react-data-grid/server-side-data/tree-data/) and [row grouping](/x/react-data-grid/server-side-data/row-grouping/).
+With this feature, you would be able to use the `unstable_lazyLoading` flag in use cases that also involve tree data and/or row grouping.
 
 ## Error handling
 

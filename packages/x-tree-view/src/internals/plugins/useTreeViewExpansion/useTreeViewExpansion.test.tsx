@@ -205,7 +205,7 @@ describeTreeView<[UseTreeViewExpansionSignature]>('useTreeViewExpansion plugin',
       expect(view.isItemExpanded('1')).to.equal(true);
     });
 
-    it('should be able to limit the expansion to the icon', function test() {
+    it('should be able to limit the expansion to the icon', () => {
       const CustomTreeItem = React.forwardRef(function MyTreeItem(
         props: TreeItemProps,
         ref: React.Ref<HTMLLIElement>,
