@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider, Outlet, NavLink } from 'react-router';
+import { createBrowserRouter, RouterProvider, Outlet, NavLink, useNavigate } from 'react-router';
 import TestViewer from 'test/regressions/TestViewer';
 import { useFakeTimers } from 'sinon';
 import { Globals } from '@react-spring/web';
@@ -11,6 +11,20 @@ setupTestLicenseKey();
 Globals.assign({
   skipAnimation: true,
 });
+
+declare global {
+  interface Window {
+    muiFixture: {
+      navigate: ReturnType<typeof useNavigate>;
+    };
+  }
+}
+
+window.muiFixture = {
+  navigate: () => {
+    throw new Error(`muiFixture.navigate is not ready`);
+  },
+};
 
 const blacklist = [
   /^docs-(.*)(?<=NoSnap)\.png$/, // Excludes demos that we don't want
@@ -135,56 +149,68 @@ const suiteTestsMap = tests.reduce(
   {} as Record<string, Test[]>,
 );
 
-function Root() {
-  function computeIsDev() {
-    if (window.location.hash === '#dev') {
-      return true;
-    }
-    if (window.location.hash === '#no-dev') {
-      return false;
-    }
-    return process.env.NODE_ENV === 'development';
-  }
-  const [isDev, setDev] = React.useState(computeIsDev);
-  React.useEffect(() => {
-    function handleHashChange() {
-      setDev(computeIsDev());
-    }
-    window.addEventListener('hashchange', handleHashChange);
-
+function useHash() {
+  const subscribe = React.useCallback((callback: any) => {
+    window.addEventListener('hashchange', callback);
     return () => {
-      window.removeEventListener('hashchange', handleHashChange);
+      window.removeEventListener('hashchange', callback);
     };
   }, []);
+  const getSnapshot = React.useCallback(() => window.location.hash, []);
+  const getServerSnapshot = React.useCallback(() => '', []);
+  return React.useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+}
 
-  function computePath(test: Test) {
-    return `/${test.suite}/${test.name}`;
+function computeIsDev(hash: string) {
+  if (hash === '#dev') {
+    return true;
   }
+  if (hash === '#no-dev') {
+    return false;
+  }
+  return process.env.NODE_ENV === 'development';
+}
+
+function computePath(test: Test) {
+  return `/${test.suite}/${test.name}`;
+}
+
+function Root() {
+  const hash = useHash();
+  const isDev = computeIsDev(hash);
+
+  const navigate = useNavigate();
+  React.useEffect(() => {
+    window.muiFixture.navigate = navigate;
+  }, [navigate]);
+
   return (
     <React.Fragment>
       <Outlet />
-      <div hidden={!isDev}>
-        <p>
-          Devtools can be enabled by appending <code>#dev</code> in the address bar or disabled by
-          appending <code>#no-dev</code>.
-        </p>
-        <a href="#no-dev">Hide devtools</a>
-        <details>
-          <summary id="my-test-summary">nav for all tests</summary>
-          <nav id="tests">
-            <ol>
-              {tests.map((test) => {
-                const path = computePath(test);
-                return (
-                  <li key={path}>
-                    <NavLink to={path}>{path}</NavLink>
-                  </li>
-                );
-              })}
-            </ol>
-          </nav>
-        </details>
-      </div>
+      {isDev ? (
+        <div>
+          <p>
+            Devtools can be enabled by appending <code>#dev</code> in the address bar or disabled by
+            appending <code>#no-dev</code>.
+          </p>
+          <a href="#no-dev">Hide devtools</a>
+          <details>
+            <summary id="my-test-summary">nav for all tests</summary>
+            <nav id="tests">
+              <ol>
+                {tests.map((test) => {
+                  const path = computePath(test);
+                  return (
+                    <li key={path}>
+                      <NavLink to={path}>{path}</NavLink>
+                    </li>
+                  );
+                })}
+              </ol>
+            </nav>
+          </details>
+        </div>
+      ) : null}
     </React.Fragment>
   );
 }
@@ -202,7 +228,7 @@ function App() {
           children: suiteTestsMap[suite].map((test) => ({
             path: test.name,
             element: (
-              <TestViewer isDataGridTest={isDataGridTest}>
+              <TestViewer isDataGridTest={isDataGridTest} path={computePath(test)}>
                 <test.case />
               </TestViewer>
             ),

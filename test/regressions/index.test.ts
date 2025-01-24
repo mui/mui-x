@@ -78,7 +78,7 @@ async function main() {
 
   // Wait for all requests to finish.
   // This should load shared resources such as fonts.
-  await page.goto(`${baseUrl}#no-dev`, { waitUntil: 'networkidle' });
+  await page.goto(`${baseUrl}#dev`, { waitUntil: 'networkidle' });
 
   // Simulate portrait mode for date pickers.
   // See `usePickerOrientation`.
@@ -90,23 +90,21 @@ async function main() {
     });
   });
 
-  const routes = await page.$$eval('#tests a', (links) => {
+  let routes = await page.$$eval('#tests a', (links) => {
     return links.map((link) => {
       return (link as HTMLAnchorElement).href;
     });
   });
+  routes = routes.map((route) => route.replace(baseUrl, ''));
 
   // prepare screenshots
   await fse.emptyDir(screenshotDir);
 
-  async function navigateToTest(testIndex: number) {
+  async function navigateToTest(route: string) {
     // Use client-side routing which is much faster than full page navigation via page.goto().
-    // Could become an issue with test isolation.
-    // If tests are flaky due to global pollution switch to page.goto(route);
-    // puppeteers built-in click() times out
-    return page.$eval(`#tests li:nth-of-type(${testIndex}) a`, (link) => {
-      (link as HTMLAnchorElement).click();
-    });
+    return page.evaluate((_route) => {
+      window.muiFixture.navigate(`${_route}#no-dev`);
+    }, route);
   }
 
   describe('visual regressions', () => {
@@ -123,10 +121,8 @@ async function main() {
       expect(msg).to.equal(undefined);
     });
 
-    routes.forEach((route, index) => {
-      const pathURL = route.replace(baseUrl, '');
-
-      it(`creates screenshots of ${pathURL}`, async function test() {
+    routes.forEach((route) => {
+      it(`creates screenshots of ${route}`, async function test() {
         // Move cursor offscreen to not trigger unwanted hover effects.
         // This needs to be done before the navigation to avoid hover and mouse enter/leave effects.
         await page.mouse.move(0, 0);
@@ -136,25 +132,25 @@ async function main() {
           this.timeout(0);
         }
 
-        if (pathURL === '/docs-components-data-grid-overview/DataGridProDemo') {
+        if (route === '/docs-components-data-grid-overview/DataGridProDemo') {
           this.timeout(6000);
         }
 
         try {
-          await navigateToTest(index + 1);
+          await navigateToTest(route);
         } catch (error) {
           // When one demo crashes, the page becomes empty and there are no links to demos,
           // so navigation to the next demo throws an error.
           // Reloading the page fixes this.
           await page.reload();
-          await navigateToTest(index + 1);
+          await navigateToTest(route);
         }
 
-        const screenshotPath = path.resolve(screenshotDir, `${route.replace(baseUrl, '.')}.png`);
+        const screenshotPath = path.resolve(screenshotDir, `.${route}.png`);
         await fse.ensureDir(path.dirname(screenshotPath));
 
         const testcase = await page.waitForSelector(
-          '[data-testid="testcase"]:not([aria-busy="true"])',
+          `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
         );
 
         const images = await page.evaluate(() => document.querySelectorAll('img'));
@@ -173,12 +169,12 @@ async function main() {
           });
         }
 
-        if (/^\/docs-charts-.*/.test(pathURL)) {
+        if (/^\/docs-charts-.*/.test(route)) {
           // Run one tick of the clock to get the final animation state
           await sleep(10);
         }
 
-        if (timeSensitiveSuites.some((suite) => pathURL.includes(suite))) {
+        if (timeSensitiveSuites.some((suite) => route.includes(suite))) {
           await sleep(100);
         }
 
@@ -188,7 +184,7 @@ async function main() {
         await testcase.screenshot({ path: screenshotPath, type: 'png' });
       });
 
-      it(`should have no errors rendering ${pathURL}`, () => {
+      it(`should have no errors rendering ${route}`, () => {
         const msg = errorConsole;
         errorConsole = undefined;
         if (isConsoleWarningIgnored(msg)) {
@@ -199,20 +195,14 @@ async function main() {
     });
 
     it('should position the headers matching the columns', async () => {
-      const route = `${baseUrl}/docs-data-grid-virtualization/ColumnVirtualizationGrid`;
-      const screenshotPath = path.resolve(
-        screenshotDir,
-        `${route.replace(baseUrl, '.')}ScrollLeft400px.png`,
-      );
+      const route = '/docs-data-grid-virtualization/ColumnVirtualizationGrid';
+      const screenshotPath = path.resolve(screenshotDir, `.${route}ScrollLeft400px.png`);
       await fse.ensureDir(path.dirname(screenshotPath));
 
-      const testcaseIndex = routes.indexOf(route);
-      await page.$eval(`#tests li:nth-of-type(${testcaseIndex + 1}) a`, (link) => {
-        (link as HTMLAnchorElement).click();
-      });
+      await navigateToTest(route);
 
       const testcase = await page.waitForSelector(
-        '[data-testid="testcase"]:not([aria-busy="true"])',
+        `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
       );
 
       await page.evaluate(() => {
@@ -232,14 +222,11 @@ async function main() {
     it('should take a screenshot of the print preview', async function test() {
       this.timeout(20000);
 
-      const route = `${baseUrl}/docs-data-grid-export/ExportDefaultToolbar`;
-      const screenshotPath = path.resolve(screenshotDir, `${route.replace(baseUrl, '.')}Print.png`);
+      const route = '/docs-data-grid-export/ExportDefaultToolbar';
+      const screenshotPath = path.resolve(screenshotDir, `.${route}Print.png`);
       await fse.ensureDir(path.dirname(screenshotPath));
 
-      const testcaseIndex = routes.indexOf(route);
-      await page.$eval(`#tests li:nth-of-type(${testcaseIndex + 1}) a`, (link) => {
-        (link as HTMLAnchorElement).click();
-      });
+      await navigateToTest(route);
 
       // Click the export button in the toolbar.
       await page.getByRole('button', { name: 'Export' }).click();
