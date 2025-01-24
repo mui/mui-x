@@ -712,22 +712,6 @@ importers:
         specifier: ^7.18.0
         version: 7.18.0(eslint@8.57.1)(typescript@5.7.3)
 
-  packages/rsc-builder:
-    dependencies:
-      fs-extra:
-        specifier: ^11.3.0
-        version: 11.3.0
-      yargs:
-        specifier: ^17.7.2
-        version: 17.7.2
-    devDependencies:
-      '@types/mocha':
-        specifier: ^10.0.10
-        version: 10.0.10
-      '@types/node':
-        specifier: ^20.17.14
-        version: 20.17.14
-
   packages/x-charts:
     dependencies:
       '@babel/runtime':

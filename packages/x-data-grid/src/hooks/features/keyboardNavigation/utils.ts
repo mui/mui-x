@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { gridFilteredSortedRowIdsSelector } from '../filter/gridFilterSelector';
 import { GridColDef, GridRowId } from '../../../models';
 import { gridRowSpanningHiddenCellsSelector } from '../rows/gridRowSpanningSelectors';
@@ -51,7 +51,7 @@ export const getRightColumnIndex = ({
 };
 
 export function findNonRowSpannedCell(
-  apiRef: React.RefObject<GridApiCommunity>,
+  apiRef: RefObject<GridApiCommunity>,
   rowId: GridRowId,
   field: GridColDef['field'],
   rowSpanScanDirection: 'up' | 'down',

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { throttle } from '@mui/x-internals/throttle';
 import {
   useGridApiEventHandler,
@@ -47,7 +48,7 @@ const getSkeletonRowId = (index: number) => `${GRID_SKELETON_ROW_ROOT_ID}-${inde
  * @requires useGridScroll (method
  */
 export const useGridDataSourceLazyLoader = (
-  privateApiRef: React.RefObject<GridPrivateApiPro>,
+  privateApiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     | 'pagination'

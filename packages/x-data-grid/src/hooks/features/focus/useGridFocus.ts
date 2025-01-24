@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   unstable_ownerDocument as ownerDocument,
   unstable_useEventCallback as useEventcallback,
@@ -37,7 +38,7 @@ export const focusStateInitializer: GridStateInitializer = (state) => ({
  * @requires useGridEditing (event)
  */
 export const useGridFocus = (
-  apiRef: React.RefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFocus');

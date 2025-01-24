@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { useRtl } from '@mui/system/RtlProvider';
 import {
   GRID_TREE_DATA_GROUPING_FIELD,
@@ -53,7 +54,7 @@ const gridVisibleRowsWithPinnedRowsSelector = createSelectorMemoized(
  * @requires useGridColumnSpanning (method) - can be after
  */
 export const useGridKeyboardNavigation = (
-  apiRef: React.RefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'pagination'

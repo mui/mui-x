@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { expect } from 'chai';
 import { createSelectorMemoized, OutputSelector } from './createSelector';
 import { GridStateCommunity } from '../models/gridStateCommunity';
@@ -55,10 +55,10 @@ describe('createSelector', () => {
       >;
       const apiRef1 = {
         current: { state: {}, instanceId: { id: 0 } },
-      } as React.RefObject<GridApiCommunity>;
+      } as RefObject<GridApiCommunity>;
       const apiRef2 = {
         current: { state: {}, instanceId: { id: 1 } },
-      } as React.RefObject<GridApiCommunity>;
+      } as RefObject<GridApiCommunity>;
       expect(selector(apiRef1)).not.to.equal(selector(apiRef2));
     });
 
@@ -70,10 +70,10 @@ describe('createSelector', () => {
       >;
       const apiRef1 = {
         current: { state: {}, instanceId: { id: 0 } },
-      } as React.RefObject<GridApiCommunity>;
+      } as RefObject<GridApiCommunity>;
       const apiRef2 = {
         current: { state: {}, instanceId: { id: 1 } },
-      } as React.RefObject<GridApiCommunity>;
+      } as RefObject<GridApiCommunity>;
       const value1 = selector(apiRef1);
       selector(apiRef2);
       const value2 = selector(apiRef1);

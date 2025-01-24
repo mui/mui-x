@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   GridPipeProcessor,
   useGridRegisterPipeProcessor,
@@ -8,7 +9,7 @@ import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 
 export const useGridColumnPinningPreProcessors = (
-  apiRef: React.RefObject<GridPrivateApiPro>,
+  apiRef: RefObject<GridPrivateApiPro>,
   props: DataGridProProcessedProps,
 ) => {
   const { disableColumnPinning } = props;

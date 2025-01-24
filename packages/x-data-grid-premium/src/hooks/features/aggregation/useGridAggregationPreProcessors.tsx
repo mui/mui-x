@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { gridColumnLookupSelector } from '@mui/x-data-grid-pro';
 import {
   GridPipeProcessor,
@@ -22,7 +23,7 @@ import { GridInitialStatePremium } from '../../../models/gridStatePremium';
 import { GridAggregationRules } from './gridAggregationInterfaces';
 
 export const useGridAggregationPreProcessors = (
-  apiRef: React.RefObject<GridPrivateApiPremium>,
+  apiRef: RefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
     | 'aggregationFunctions'

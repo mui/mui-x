@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
+import { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
   GridToolbar,
@@ -16,7 +17,7 @@ describe('<DataGridPro /> - Print export', () => {
 
   const NB_ROWS = 2;
   const defaultData = getBasicGridData(NB_ROWS, 2);
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: RefObject<GridApi>;
 
   const baselineProps = {
     ...defaultData,

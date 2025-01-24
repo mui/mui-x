@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import { RefObject } from '@mui/x-internals/types';
 import {
   unstable_useEnhancedEffect as useEnhancedEffect,
   unstable_useEventCallback as useEventCallback,
@@ -92,7 +93,7 @@ const createScrollCache = (
 type ScrollCache = ReturnType<typeof createScrollCache>;
 
 export const useGridVirtualScroller = () => {
-  const apiRef = useGridPrivateApiContext() as React.RefObject<PrivateApiWithInfiniteLoader>;
+  const apiRef = useGridPrivateApiContext() as RefObject<PrivateApiWithInfiniteLoader>;
   const rootProps = useGridRootProps();
   const { unstable_listView: listView } = rootProps;
   const visibleColumns = useGridSelector(apiRef, () =>
@@ -724,7 +725,7 @@ export const useGridVirtualScroller = () => {
 type RenderContextInputs = {
   enabledForRows: boolean;
   enabledForColumns: boolean;
-  apiRef: React.RefObject<GridPrivateApiCommunity>;
+  apiRef: RefObject<GridPrivateApiCommunity>;
   autoHeight: boolean;
   rowBufferPx: number;
   columnBufferPx: number;
@@ -746,7 +747,7 @@ type RenderContextInputs = {
 };
 
 function inputsSelector(
-  apiRef: React.RefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   rootProps: ReturnType<typeof useGridRootProps>,
   enabledForRows: boolean,
   enabledForColumns: boolean,

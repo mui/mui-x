@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import {
@@ -52,7 +53,7 @@ describe('<DataGridPro /> - Events params', () => {
     ],
   };
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: RefObject<GridApi>;
 
   function TestEvents(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();

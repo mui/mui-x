@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { ResizeObserver } from '../../../utils/ResizeObserver';
@@ -42,7 +43,7 @@ export const rowsMetaStateInitializer: GridStateInitializer = (state, props, api
  * @requires useGridPage (method)
  */
 export const useGridRowsMeta = (
-  apiRef: React.RefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'getRowHeight'

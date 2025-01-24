@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { lruMemoize, createSelectorCreator, Selector, SelectorResultArray } from 'reselect';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { GridCoreApi } from '../models/api/gridCoreApi';
@@ -19,10 +19,7 @@ type GridCreateSelectorFunction = ReturnType<typeof reselectCreateSelector> & {
 };
 
 export interface OutputSelector<State, Args, Result> {
-  (
-    apiRef: React.RefObject<{ state: State; instanceId: GridCoreApi['instanceId'] }>,
-    args?: Args,
-  ): Result;
+  (apiRef: RefObject<{ state: State; instanceId: GridCoreApi['instanceId'] }>, args?: Args): Result;
   (state: State, args?: Args, instanceId?: GridCoreApi['instanceId']): Result;
   acceptsApiRef: boolean;
 }
