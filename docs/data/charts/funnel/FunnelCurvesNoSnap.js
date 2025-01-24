@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import Stack from '@mui/material/Stack';
-import { populationByEducationLevelPercentage } from './populationByEducationLevel';
+import { populationByEducationLevelPercentageSeries } from './populationByEducationLevel';
 
 const curveTypes = [
   'bumpY',
@@ -40,26 +40,22 @@ export default function FunnelCurvesNoSnap() {
               {
                 curve: props.curveType,
                 layout: 'vertical',
-                valueFormatter: (item) => `${item.value}%`,
-                data: Object.values(populationByEducationLevelPercentage).map(
-                  (value) => ({ value }),
-                ),
+                ...populationByEducationLevelPercentageSeries,
               },
             ]}
             height={300}
+            slotProps={{ legend: { direction: 'vertical' } }}
           />
           <FunnelChart
             series={[
               {
                 curve: props.curveType,
                 layout: 'horizontal',
-                valueFormatter: (item) => `${item.value}%`,
-                data: Object.values(populationByEducationLevelPercentage).map(
-                  (value) => ({ value }),
-                ),
+                ...populationByEducationLevelPercentageSeries,
               },
             ]}
             height={300}
+            slotProps={{ legend: { direction: 'vertical' } }}
           />
         </Stack>
       )}

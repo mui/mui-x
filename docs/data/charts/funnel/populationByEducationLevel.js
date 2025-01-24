@@ -35,7 +35,7 @@ const formattedData = Object.fromEntries(
   Object.entries(fullData).map(([key, value]) => [key, formatter(value)]),
 );
 
-export const populationByEducationLevelPercentage = {
+const populationByEducationLevelPercentage = {
   total: 100,
   primary: parseNumber(
     formattedData.primary +
@@ -52,4 +52,56 @@ export const populationByEducationLevelPercentage = {
     formattedData.upperSecondary + formattedData.postSecondary,
   ),
   postSecondary: parseNumber(formattedData.postSecondary),
+};
+
+export const populationByEducationLevelPercentageSeries = {
+  label: 'World population by education level',
+  valueFormatter: (item) => `${item.value}%`,
+  data: [
+    {
+      value: populationByEducationLevelPercentage.total,
+    },
+    {
+      value: populationByEducationLevelPercentage.primary,
+    },
+    {
+      value: populationByEducationLevelPercentage.lowerSecondary,
+    },
+    {
+      value: populationByEducationLevelPercentage.upperSecondary,
+    },
+    {
+      value: populationByEducationLevelPercentage.postSecondary,
+    },
+  ],
+};
+
+const labels = [
+  'Total population',
+  'Primary education',
+  'Lower secondary education',
+  'Upper secondary education',
+  'Post secondary education',
+];
+
+const labelData = (data) => {
+  return data.map((item, i) => ({ ...item, label: labels[i] }));
+};
+
+export const populationByEducationLevelPercentageSeriesLabeled = {
+  ...populationByEducationLevelPercentageSeries,
+  data: labelData(populationByEducationLevelPercentageSeries.data),
+};
+
+export const populationByEducationLevelAbsolute = {
+  total: populationTotal,
+  primary:
+    fullData.primary +
+    fullData.lowerSecondary +
+    fullData.upperSecondary +
+    fullData.postSecondary,
+  lowerSecondary:
+    fullData.lowerSecondary + fullData.upperSecondary + fullData.postSecondary,
+  upperSecondary: fullData.upperSecondary + fullData.postSecondary,
+  postSecondary: fullData.postSecondary,
 };
