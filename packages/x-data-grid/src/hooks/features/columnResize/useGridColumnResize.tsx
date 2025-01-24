@@ -745,11 +745,11 @@ export const useGridColumnResize = (
               total + (widthByField[column.field] ?? column.computedWidth ?? column.width),
             0,
           );
-          const rootDimensions = apiRef.current.getRootDimensions();
+          const dimensions = apiRef.current.getRootDimensions();
           const availableWidth =
-            rootDimensions.viewportInnerSize.width -
-            rootDimensions.leftPinnedWidth -
-            rootDimensions.rightPinnedWidth;
+            dimensions.viewportInnerSize.width -
+            dimensions.leftPinnedWidth -
+            dimensions.rightPinnedWidth;
           const remainingWidth = availableWidth - totalWidth;
 
           if (remainingWidth > 0) {
