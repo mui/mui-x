@@ -7,6 +7,7 @@ export const plugin: ChartSeriesTypeConfig<'heatmap'> = {
   seriesProcessor: formatter,
   colorProcessor: getColor,
   legendGetter: () => [],
+  tooltipGetter: () => null,
   xExtremumGetter: getBaseExtremum,
   yExtremumGetter: getBaseExtremum,
 };
