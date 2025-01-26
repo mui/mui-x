@@ -111,11 +111,6 @@ export const dimensionsStateInitializer: GridStateInitializer<RootProps> = (
   const dimensions = EMPTY_DIMENSIONS;
 
   const density = gridDensityFactorSelector(apiRef);
-  const validRowHeight = getValidRowHeight(
-    props.rowHeight,
-    DATA_GRID_PROPS_DEFAULT_VALUES.rowHeight,
-    rowHeightWarning,
-  );
 
   return {
     ...state,

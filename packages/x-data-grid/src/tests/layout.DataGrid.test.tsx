@@ -1261,11 +1261,10 @@ describe('<DataGrid /> - Layout & warnings', () => {
             />
           </div>,
         );
-      }).toErrorDev(
-        Array(3).fill(
-          'Encountered two children with the same key, `id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.',
-        ),
-      );
+      }).toErrorDev([
+        'Encountered two children with the same key, `id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.',
+        'Encountered two children with the same key, `id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.',
+      ]);
     },
   );
 

@@ -336,7 +336,11 @@ export const useGridVirtualScroller = () => {
   });
 
   const forceUpdateRenderContext = () => {
-    if (!gridDimensionsSelector(apiRef.current.state).isReady) {
+    // skip update if dimensions are not ready and virtualization is enabled
+    if (
+      !gridDimensionsSelector(apiRef.current.state).isReady &&
+      (enabledForRows || enabledForColumns)
+    ) {
       return;
     }
     const inputs = inputsSelector(apiRef, rootProps, enabledForRows, enabledForColumns);
@@ -625,11 +629,11 @@ export const useGridVirtualScroller = () => {
     }
   }, [listView, scrollerRef]);
 
-  useRunOnce(outerSize.width !== 0, () => {
+  useRunOnce(renderContext !== EMPTY_RENDER_CONTEXT, () => {
     apiRef.current.publishEvent('scrollPositionChange', {
       top: scrollPosition.current.top,
       left: scrollPosition.current.left,
-      renderContext: gridRenderContextSelector(apiRef.current.state),
+      renderContext,
     });
 
     isRenderContextReady.current = true;
