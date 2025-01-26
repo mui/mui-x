@@ -246,8 +246,14 @@ export const useGridVirtualScroller = () => {
       });
 
       if (didRowsIntervalChange) {
+        const isInitialRender = previousRowContext.current === EMPTY_RENDER_CONTEXT;
+        // The lazy-loading hook is listening to `renderedRowsIntervalChange`,
+        // but only does something if we already have a render context, because
+        // otherwise we would call an update directly on mount
+        if (!isInitialRender) {
+          apiRef.current.publishEvent('renderedRowsIntervalChange', nextRenderContext);
+        }
         previousRowContext.current = nextRenderContext;
-        apiRef.current.publishEvent('renderedRowsIntervalChange', nextRenderContext);
       }
 
       previousContextScrollPosition.current = scrollPosition.current;
