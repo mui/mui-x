@@ -4,8 +4,8 @@ import {
   unstable_ownerDocument as ownerDocument,
   unstable_useEnhancedEffect as useEnhancedEffect,
   unstable_useEventCallback as useEventCallback,
+  unstable_debounce as debounce,
 } from '@mui/utils';
-import { throttle } from '@mui/x-internals/throttle';
 import { GridEventListener } from '../../../models/events';
 import { ElementSize } from '../../../models';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -118,7 +118,7 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
 
   const [savedSize, setSavedSize] = React.useState<ElementSize>();
   const debouncedSetSavedSize = React.useMemo(
-    () => throttle(setSavedSize, props.resizeThrottleMs),
+    () => debounce(setSavedSize, props.resizeThrottleMs),
     [props.resizeThrottleMs],
   );
   React.useEffect(() => debouncedSetSavedSize.clear, [debouncedSetSavedSize]);

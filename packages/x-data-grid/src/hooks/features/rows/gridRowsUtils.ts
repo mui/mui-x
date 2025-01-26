@@ -369,26 +369,6 @@ export const updateCacheWithNewRows = ({
   };
 };
 
-export function calculatePinnedRowsHeight(apiRef: RefObject<GridApiCommunity>) {
-  const pinnedRows = gridPinnedRowsSelector(apiRef);
-  const topPinnedRowsHeight =
-    pinnedRows?.top?.reduce((acc, value) => {
-      acc += apiRef.current.unstable_getRowHeight(value.id);
-      return acc;
-    }, 0) || 0;
-
-  const bottomPinnedRowsHeight =
-    pinnedRows?.bottom?.reduce((acc, value) => {
-      acc += apiRef.current.unstable_getRowHeight(value.id);
-      return acc;
-    }, 0) || 0;
-
-  return {
-    top: topPinnedRowsHeight,
-    bottom: bottomPinnedRowsHeight,
-  };
-}
-
 export const minimalContentHeight = 'var(--DataGrid-overlayHeight, calc(var(--height) * 2))';
 
 export function computeRowsUpdates(
