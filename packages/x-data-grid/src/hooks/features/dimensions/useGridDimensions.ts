@@ -98,14 +98,8 @@ const getStaticDimensions = (
     ),
     columnsTotalWidth: roundToDecimalPlaces(gridColumnsTotalWidthSelector(apiRef), 1),
     headersTotalHeight: getTotalHeaderHeight(apiRef, props),
-    leftPinnedWidth: gridVisiblePinnedColumnDefinitionsSelector(apiRef).left.reduce(
-      (w, col) => w + col.computedWidth,
-      0,
-    ),
-    rightPinnedWidth: gridVisiblePinnedColumnDefinitionsSelector(apiRef).right.reduce(
-      (w, col) => w + col.computedWidth,
-      0,
-    ),
+    leftPinnedWidth: pinnedColumnns.left.reduce((w, col) => w + col.computedWidth, 0),
+    rightPinnedWidth: pinnedColumnns.right.reduce((w, col) => w + col.computedWidth, 0),
   };
 };
 
