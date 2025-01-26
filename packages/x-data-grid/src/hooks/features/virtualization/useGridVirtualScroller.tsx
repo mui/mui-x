@@ -695,7 +695,6 @@ export const useGridVirtualScroller = () => {
   useGridApiOptionHandler(apiRef, 'sortedRowsSet', forceUpdateRenderContext);
   useGridApiOptionHandler(apiRef, 'paginationModelChange', forceUpdateRenderContext);
   useGridApiOptionHandler(apiRef, 'columnsChange', forceUpdateRenderContext);
-  useGridApiOptionHandler(apiRef, 'rowExpansionChange', forceUpdateRenderContext);
 
   return {
     renderContext,
