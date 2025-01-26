@@ -336,7 +336,7 @@ export const useGridVirtualScroller = () => {
   });
 
   const forceUpdateRenderContext = () => {
-    if (!gridDimensionsSelector(apiRef.current.state).isReady) {
+    if (!gridDimensionsSelector(apiRef.current.state).isReady || !isRenderContextReady.current) {
       return;
     }
     const inputs = inputsSelector(apiRef, rootProps, enabledForRows, enabledForColumns);
@@ -626,6 +626,17 @@ export const useGridVirtualScroller = () => {
   }, [listView, scrollerRef]);
 
   useRunOnce(outerSize.width !== 0, () => {
+    const inputs = inputsSelector(apiRef, rootProps, enabledForRows, enabledForColumns);
+
+    const initialRenderContext = computeRenderContext(inputs, scrollPosition.current, scrollCache);
+    updateRenderContext(initialRenderContext);
+
+    apiRef.current.publishEvent('scrollPositionChange', {
+      top: scrollPosition.current.top,
+      left: scrollPosition.current.left,
+      renderContext: initialRenderContext,
+    });
+
     isRenderContextReady.current = true;
 
     if (rootProps.initialState?.scroll && scrollerRef.current) {
