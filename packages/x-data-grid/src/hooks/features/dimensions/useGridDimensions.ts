@@ -75,12 +75,65 @@ const EMPTY_DIMENSIONS: GridDimensions = {
   bottomContainerHeight: 0,
 };
 
-export const dimensionsStateInitializer: GridStateInitializer<RootProps> = (state) => {
+const getStaticDimensions = (
+  props: RootProps,
+  apiRef: RefObject<GridPrivateApiCommunity>,
+  density: number,
+  pinnedColumnns: ReturnType<typeof gridVisiblePinnedColumnDefinitionsSelector>,
+) => {
+  const validRowHeight = getValidRowHeight(
+    props.rowHeight,
+    DATA_GRID_PROPS_DEFAULT_VALUES.rowHeight,
+    rowHeightWarning,
+  );
+
+  return {
+    rowHeight: Math.floor(validRowHeight * density),
+    headerHeight: Math.floor(props.columnHeaderHeight * density),
+    groupHeaderHeight: Math.floor(
+      (props.columnGroupHeaderHeight ?? props.columnHeaderHeight) * density,
+    ),
+    headerFilterHeight: Math.floor(
+      (props.headerFilterHeight ?? props.columnHeaderHeight) * density,
+    ),
+    columnsTotalWidth: roundToDecimalPlaces(gridColumnsTotalWidthSelector(apiRef), 1),
+    headersTotalHeight: getTotalHeaderHeight(apiRef, props),
+    leftPinnedWidth: gridVisiblePinnedColumnDefinitionsSelector(apiRef).left.reduce(
+      (w, col) => w + col.computedWidth,
+      0,
+    ),
+    rightPinnedWidth: gridVisiblePinnedColumnDefinitionsSelector(apiRef).right.reduce(
+      (w, col) => w + col.computedWidth,
+      0,
+    ),
+  };
+};
+
+export const dimensionsStateInitializer: GridStateInitializer<RootProps> = (
+  state,
+  props,
+  apiRef,
+) => {
   const dimensions = EMPTY_DIMENSIONS;
+
+  const density = gridDensityFactorSelector(apiRef);
+  const validRowHeight = getValidRowHeight(
+    props.rowHeight,
+    DATA_GRID_PROPS_DEFAULT_VALUES.rowHeight,
+    rowHeightWarning,
+  );
 
   return {
     ...state,
-    dimensions,
+    dimensions: {
+      ...dimensions,
+      ...getStaticDimensions(
+        props,
+        apiRef,
+        density,
+        gridVisiblePinnedColumnDefinitionsSelector(apiRef),
+      ),
+    },
   };
 };
 
@@ -93,28 +146,17 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
   const isFirstSizing = React.useRef(true);
-  const validRowHeight = React.useMemo(
-    () =>
-      getValidRowHeight(
-        props.rowHeight,
-        DATA_GRID_PROPS_DEFAULT_VALUES.rowHeight,
-        rowHeightWarning,
-      ),
-    [props.rowHeight],
-  );
-  const rowHeight = Math.floor(validRowHeight * densityFactor);
-  const headerHeight = Math.floor(props.columnHeaderHeight * densityFactor);
-  const groupHeaderHeight = Math.floor(
-    (props.columnGroupHeaderHeight ?? props.columnHeaderHeight) * densityFactor,
-  );
-  const headerFilterHeight = Math.floor(
-    (props.headerFilterHeight ?? props.columnHeaderHeight) * densityFactor,
-  );
-  const columnsTotalWidth = roundToDecimalPlaces(gridColumnsTotalWidthSelector(apiRef), 1);
-  const headersTotalHeight = getTotalHeaderHeight(apiRef, props);
 
-  const leftPinnedWidth = pinnedColumns.left.reduce((w, col) => w + col.computedWidth, 0);
-  const rightPinnedWidth = pinnedColumns.right.reduce((w, col) => w + col.computedWidth, 0);
+  const {
+    rowHeight,
+    headerHeight,
+    groupHeaderHeight,
+    headerFilterHeight,
+    columnsTotalWidth,
+    headersTotalHeight,
+    leftPinnedWidth,
+    rightPinnedWidth,
+  } = getStaticDimensions(props, apiRef, densityFactor, pinnedColumns);
 
   const [savedSize, setSavedSize] = React.useState<ElementSize>();
   const debouncedSetSavedSize = React.useMemo(
