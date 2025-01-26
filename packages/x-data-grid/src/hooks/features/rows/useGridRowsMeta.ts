@@ -17,7 +17,7 @@ import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridSortModelSelector } from '../sorting/gridSortingSelector';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
-import { gridPinnedRowsSelector } from './gridRowsSelector';
+import { gridPinnedRowsSelector, gridRowCountSelector } from './gridRowsSelector';
 import { gridDimensionsSelector } from '../dimensions/gridDimensionsSelectors';
 import { getValidRowHeight, getRowHeightWarning } from './gridRowsUtils';
 import type { HeightEntry } from './gridRowsMetaInterfaces';
@@ -29,11 +29,19 @@ export const rowsMetaStateInitializer: GridStateInitializer = (state, props, api
     heights: new Map(),
   };
 
+  const baseRowHeight = gridDimensionsSelector(apiRef.current.state).rowHeight;
+  const dataRowCount = gridRowCountSelector(apiRef.current.state);
+  const pagination = gridPaginationSelector(apiRef.current.state);
+  const rowCount = Math.min(
+    pagination.enabled ? pagination.paginationModel.pageSize : dataRowCount,
+    dataRowCount,
+  );
+
   return {
     ...state,
     rowsMeta: {
-      currentPageTotalHeight: 0,
-      positions: [],
+      currentPageTotalHeight: rowCount * baseRowHeight,
+      positions: Array.from({ length: rowCount }, (_, i) => i * baseRowHeight),
       pinnedTopRowsTotalHeight: 0,
       pinnedBottomRowsTotalHeight: 0,
     },

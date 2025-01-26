@@ -33,6 +33,7 @@ import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../../constants/dataGridPropsDefaultValues';
 import { roundToDecimalPlaces } from '../../../utils/roundToDecimalPlaces';
 import { isJSDOM } from '../../../utils/isJSDOM';
+import { isDeepEqual } from '../../../utils/utils';
 
 type RootProps = Pick<
   DataGridProcessedProps,
@@ -291,6 +292,11 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     };
 
     const prevDimensions = apiRef.current.state.dimensions;
+
+    if (isDeepEqual(prevDimensions as any, newDimensions)) {
+      return;
+    }
+
     setDimensions(newDimensions);
 
     if (!areElementSizesEqual(newDimensions.viewportInnerSize, prevDimensions.viewportInnerSize)) {
@@ -329,7 +335,7 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
   useGridApiMethod(apiRef, apiPrivate, 'private');
 
   useEnhancedEffect(() => {
-    if (savedSize) {
+    if (!isFirstSizing.current) {
       updateDimensions();
       apiRef.current.publishEvent('debouncedResize', rootDimensionsRef.current!);
     }
@@ -355,7 +361,22 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     set('--DataGrid-topContainerHeight', `${dimensionsState.topContainerHeight}px`);
     set('--DataGrid-bottomContainerHeight', `${dimensionsState.bottomContainerHeight}px`);
     set('--height', `${dimensionsState.rowHeight}px`);
-  }, [root, dimensionsState]);
+  }, [
+    root,
+    dimensionsState.viewportOuterSize.width,
+    dimensionsState.hasScrollX,
+    dimensionsState.hasScrollY,
+    dimensionsState.scrollbarSize,
+    dimensionsState.rowWidth,
+    dimensionsState.columnsTotalWidth,
+    dimensionsState.leftPinnedWidth,
+    dimensionsState.rightPinnedWidth,
+    dimensionsState.headerHeight,
+    dimensionsState.headersTotalHeight,
+    dimensionsState.topContainerHeight,
+    dimensionsState.bottomContainerHeight,
+    dimensionsState.rowHeight,
+  ]);
 
   const handleResize = React.useCallback<GridEventListener<'resize'>>(
     (size) => {
@@ -387,19 +408,16 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
 
       if (isFirstSizing.current) {
         // We want to initialize the grid dimensions as soon as possible to avoid flickering
-        setSavedSize(size);
         isFirstSizing.current = false;
+        updateDimensions();
         return;
       }
 
       debouncedSetSavedSize(size);
     },
-    [props.autoHeight, debouncedSetSavedSize, logger],
+    [updateDimensions, props.autoHeight, debouncedSetSavedSize, logger],
   );
 
-  useGridApiOptionHandler(apiRef, 'sortedRowsSet', updateDimensions);
-  useGridApiOptionHandler(apiRef, 'paginationModelChange', updateDimensions);
-  useGridApiOptionHandler(apiRef, 'columnsChange', updateDimensions);
   useGridApiEventHandler(apiRef, 'resize', handleResize);
   useGridApiOptionHandler(apiRef, 'debouncedResize', props.onResize);
 }

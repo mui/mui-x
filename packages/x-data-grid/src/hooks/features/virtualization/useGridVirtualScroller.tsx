@@ -24,7 +24,7 @@ import { gridDimensionsSelector } from '../dimensions/gridDimensionsSelectors';
 import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
 import { GridPinnedRowsPosition } from '../rows/gridRowsInterfaces';
 import { useGridVisibleRows, getVisibleRows } from '../../utils/useGridVisibleRows';
-import { useGridApiEventHandler } from '../../utils';
+import { useGridApiOptionHandler } from '../../utils';
 import * as platform from '../../../utils/platform';
 import { clamp, range } from '../../../utils/utils';
 import {
@@ -692,9 +692,10 @@ export const useGridVirtualScroller = () => {
     updateRenderContext: forceUpdateRenderContext,
   });
 
-  useGridApiEventHandler(apiRef, 'columnsChange', forceUpdateRenderContext);
-  useGridApiEventHandler(apiRef, 'filteredRowsSet', forceUpdateRenderContext);
-  useGridApiEventHandler(apiRef, 'rowExpansionChange', forceUpdateRenderContext);
+  useGridApiOptionHandler(apiRef, 'sortedRowsSet', forceUpdateRenderContext);
+  useGridApiOptionHandler(apiRef, 'paginationModelChange', forceUpdateRenderContext);
+  useGridApiOptionHandler(apiRef, 'columnsChange', forceUpdateRenderContext);
+  useGridApiOptionHandler(apiRef, 'rowExpansionChange', forceUpdateRenderContext);
 
   return {
     renderContext,
