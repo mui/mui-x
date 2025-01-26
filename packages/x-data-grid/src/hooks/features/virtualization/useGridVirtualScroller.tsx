@@ -336,7 +336,7 @@ export const useGridVirtualScroller = () => {
   });
 
   const forceUpdateRenderContext = () => {
-    if (!gridDimensionsSelector(apiRef.current.state).isReady || !isRenderContextReady.current) {
+    if (!gridDimensionsSelector(apiRef.current.state).isReady) {
       return;
     }
     const inputs = inputsSelector(apiRef, rootProps, enabledForRows, enabledForColumns);
