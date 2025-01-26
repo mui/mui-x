@@ -26,22 +26,34 @@ describe('<DataGrid />', () => {
     ],
   };
 
-  it('should accept aria & data attributes props', () => {
-    const gridRef = React.createRef<HTMLDivElement>();
+  it('should accept aria & data attributes props using `slotProps`', () => {
+    const rootRef = React.createRef<HTMLDivElement>();
     render(
       <div style={{ width: 300, height: 500 }}>
         <DataGrid
           {...baselineProps}
-          ref={gridRef}
+          ref={rootRef}
           columns={[{ field: 'brand' }]}
-          data-custom-id="grid-1"
-          aria-label="Grid one"
+          slotProps={{
+            main: {
+              'data-custom-id': 'grid-1',
+              'aria-label': 'Grid one',
+            },
+            root: {
+              'data-custom-id': 'root-1',
+              'aria-label': 'Root one',
+            },
+          }}
         />
       </div>,
     );
 
-    expect(document.querySelector('[data-custom-id="grid-1"]')).to.equal(gridRef.current);
-    expect(document.querySelector('[aria-label="Grid one"]')).to.equal(gridRef.current);
+    expect(document.querySelector('[data-custom-id="root-1"]')).to.equal(rootRef.current);
+    expect(document.querySelector('[aria-label="Root one"]')).to.equal(rootRef.current);
+
+    const mainElement = document.querySelector('[role="grid"]');
+    expect(document.querySelector('[data-custom-id="grid-1"]')).to.equal(mainElement);
+    expect(document.querySelector('[aria-label="Grid one"]')).to.equal(mainElement);
   });
 
   it('should not fail when row have IDs match Object prototype keys (constructor, hasOwnProperty, etc)', () => {

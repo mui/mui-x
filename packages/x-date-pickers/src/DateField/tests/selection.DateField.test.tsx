@@ -1,6 +1,7 @@
+import * as React from 'react';
 import { expect } from 'chai';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { act, fireEvent } from '@mui/internal-test-utils';
+import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   expectFieldValueV7,
@@ -282,6 +283,43 @@ describe('<DateField /> - Selection', () => {
       fireEvent.keyDown(input, { key: 'ArrowRight' });
       expect(getCleanedSelectedContent()).to.equal('YYYY');
     });
+
+    it('should select the next section when editing after all the sections were selected', () => {
+      // Test with accessible DOM structure
+      let view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+      view.selectSection('month');
+
+      // Select all sections
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
+      expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
+
+      fireEvent.keyDown(view.getSectionsContainer(), { key: 'ArrowDown' });
+      expect(getCleanedSelectedContent()).to.equal('12');
+
+      fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowRight' });
+      expect(getCleanedSelectedContent()).to.equal('DD');
+
+      view.unmount();
+
+      // Test with non-accessible DOM structure
+      view = renderWithProps({ enableAccessibleFieldDOMStructure: false });
+      const input = getTextbox();
+      view.selectSection('month');
+
+      // Select all sections
+      fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
+      expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
+
+      fireEvent.keyDown(input, { key: 'ArrowDown' });
+      expect(getCleanedSelectedContent()).to.equal('12');
+
+      fireEvent.keyDown(input, { key: 'ArrowRight' });
+      expect(getCleanedSelectedContent()).to.equal('DD');
+    });
   });
 
   describe('key: ArrowLeft', () => {
@@ -349,6 +387,23 @@ describe('<DateField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
 
       fireEvent.keyDown(input, { key: 'ArrowLeft' });
+      expect(getCleanedSelectedContent()).to.equal('MM');
+    });
+
+    it('should select the first section when `inputRef.current` is focused', () => {
+      function TestCase() {
+        const inputRef = React.useRef<HTMLInputElement>(null);
+        return (
+          <React.Fragment>
+            <DateField inputRef={inputRef} />
+            <button onClick={() => inputRef.current?.focus()}>Focus input</button>
+          </React.Fragment>
+        );
+      }
+      render(<TestCase />);
+
+      fireEvent.click(screen.getByRole('button', { name: 'Focus input' }));
+
       expect(getCleanedSelectedContent()).to.equal('MM');
     });
   });

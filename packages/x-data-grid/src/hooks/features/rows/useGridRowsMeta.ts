@@ -1,6 +1,7 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { ResizeObserver } from '../../../utils/ResizeObserver';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowsMetaApi, GridRowsMetaPrivateApi } from '../../../models/api/gridRowsMetaApi';
@@ -33,6 +34,8 @@ export const rowsMetaStateInitializer: GridStateInitializer = (state, props, api
     rowsMeta: {
       currentPageTotalHeight: 0,
       positions: [],
+      pinnedTopRowsTotalHeight: 0,
+      pinnedBottomRowsTotalHeight: 0,
     },
   };
 };
@@ -42,7 +45,7 @@ export const rowsMetaStateInitializer: GridStateInitializer = (state, props, api
  * @requires useGridPage (method)
  */
 export const useGridRowsMeta = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'getRowHeight'
@@ -145,7 +148,7 @@ export const useGridRowsMeta = (
     },
     [
       apiRef,
-      currentPage.rows.length,
+      currentPage.rows,
       getRowHeightProp,
       getEstimatedRowHeight,
       rowHeight,

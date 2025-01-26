@@ -5,6 +5,7 @@ import {
   unstable_useForkRef as useForkRef,
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useOnMount } from '../../hooks/utils/useOnMount';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { gridDimensionsSelector, useGridSelector } from '../../hooks';
@@ -31,6 +32,9 @@ const Scrollbar = styled('div')({
   position: 'absolute',
   display: 'inline-block',
   zIndex: 6,
+  '&:hover': {
+    zIndex: 7,
+  },
   // In macOS Safari and Gnome Web, scrollbars are overlaid and don't affect the layout. So we consider
   // their size to be 0px throughout all the calculations, but the floating scrollbar container does need
   // to appear and have a real size. We set it to 14px because it seems like an acceptable value and we
@@ -66,7 +70,7 @@ const ScrollbarHorizontal = styled(Scrollbar)({
   bottom: '0px',
 });
 
-const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollbarProps>(
+const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProps>(
   function GridVirtualScrollbar(props, ref) {
     const apiRef = useGridPrivateApiContext();
     const rootProps = useGridRootProps();
@@ -135,11 +139,12 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
     useOnMount(() => {
       const scroller = apiRef.current.virtualScrollerRef.current!;
       const scrollbar = scrollbarRef.current!;
-      scroller.addEventListener('scroll', onScrollerScroll, { capture: true });
-      scrollbar.addEventListener('scroll', onScrollbarScroll, { capture: true });
+      const options = { capture: true, passive: true };
+      scroller.addEventListener('scroll', onScrollerScroll, options);
+      scrollbar.addEventListener('scroll', onScrollbarScroll, options);
       return () => {
-        scroller.removeEventListener('scroll', onScrollerScroll, { capture: true });
-        scrollbar.removeEventListener('scroll', onScrollbarScroll, { capture: true });
+        scroller.removeEventListener('scroll', onScrollerScroll, options);
+        scrollbar.removeEventListener('scroll', onScrollbarScroll, options);
       };
     });
 

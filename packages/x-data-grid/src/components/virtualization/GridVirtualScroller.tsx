@@ -113,10 +113,10 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
           <rootProps.slots.pinnedRows position="bottom" virtualScroller={virtualScroller} />
         </BottomContainer>
       </Scroller>
-      {dimensions.hasScrollY && <Scrollbar position="vertical" {...getScrollbarVerticalProps()} />}
       {dimensions.hasScrollX && !rootProps.unstable_listView && (
         <Scrollbar position="horizontal" {...getScrollbarHorizontalProps()} />
       )}
+      {dimensions.hasScrollY && <Scrollbar position="vertical" {...getScrollbarVerticalProps()} />}
       {props.children}
     </Container>
   );

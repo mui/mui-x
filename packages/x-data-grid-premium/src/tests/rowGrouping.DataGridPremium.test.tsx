@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   createRenderer,
   fireEvent,
@@ -78,7 +79,7 @@ const baselineProps: BaselineProps = {
 describe('<DataGridPremium /> - Row grouping', () => {
   const { render, clock } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: RefObject<GridApi>;
 
   function Test(props: Partial<DataGridPremiumProps>) {
     apiRef = useGridApiRef();
@@ -167,6 +168,32 @@ describe('<DataGridPremium /> - Row grouping', () => {
         />,
       );
       expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', 'Cat B (2)', '', '']);
+    });
+
+    it('should display the value from the `valueOptions` for `singleSelect` column type', () => {
+      render(
+        <Test
+          columns={[
+            {
+              field: 'category',
+              type: 'singleSelect',
+              valueOptions: [
+                { value: 'category1', label: 'categoryLabel1' },
+                { value: 'category2', label: 'categoryLabel2' },
+              ],
+            },
+          ]}
+          rows={[
+            { id: 1, category: 'category1' },
+            { id: 2, category: 'category1' },
+            { id: 3, category: 'category1' },
+            { id: 4, category: 'category2' },
+            { id: 5, category: 'category2' },
+          ]}
+          initialState={{ rowGrouping: { model: ['category'] } }}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['categoryLabel1 (3)', 'categoryLabel2 (2)']);
     });
 
     it('should display icon on auto-generated row', () => {
@@ -2603,6 +2630,58 @@ describe('<DataGridPremium /> - Row grouping', () => {
 
       fireEvent.click(getCell(0, 0).querySelector('button')!);
       expect(onFilteredRowsSet.callCount).to.equal(0);
+    });
+  });
+
+  describe('column pinning', () => {
+    it('should keep the checkbox selection column position after column is unpinned when groupingColumnMode = "single"', () => {
+      const { setProps } = render(
+        <Test
+          checkboxSelection
+          initialState={{ rowGrouping: { model: ['category1'] } }}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      const initialColumnOrder = ['', 'category1', 'id', 'category1', 'category2'];
+      expect(getColumnHeadersTextContent()).to.deep.equal(initialColumnOrder);
+      setProps({ pinnedColumns: { left: ['id'] } });
+      expect(getColumnHeadersTextContent()).to.deep.equal([
+        'id',
+        '',
+        'category1',
+        'category1',
+        'category2',
+      ]);
+      setProps({ pinnedColumns: { left: [] } });
+      expect(getColumnHeadersTextContent()).to.deep.equal(initialColumnOrder);
+    });
+
+    it('should keep the checkbox selection column position after column is unpinned when groupingColumnMode = "multiple"', () => {
+      const { setProps } = render(
+        <Test
+          checkboxSelection
+          initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
+          rowGroupingColumnMode="multiple"
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      const initialColumnOrder = ['', 'category1', 'category2', 'id', 'category1', 'category2'];
+      expect(getColumnHeadersTextContent()).to.deep.equal(initialColumnOrder);
+      setProps({
+        pinnedColumns: {
+          left: ['__row_group_by_columns_group_category2__', 'id'],
+        },
+      });
+      expect(getColumnHeadersTextContent()).to.deep.equal([
+        'category2',
+        'id',
+        '',
+        'category1',
+        'category1',
+        'category2',
+      ]);
+      setProps({ pinnedColumns: { left: [] } });
+      expect(getColumnHeadersTextContent()).to.deep.equal(initialColumnOrder);
     });
   });
 

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { createRenderer, act } from '@mui/internal-test-utils';
+import { RefObject } from '@mui/x-internals/types';
+import { createRenderer, act, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import {
   DataGridPremium as DataGrid,
@@ -35,7 +36,7 @@ describe('<DataGrid /> - Quick filter', () => {
     columns: [{ field: 'brand' }],
   };
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: RefObject<GridApi>;
 
   function TestCase(props: Partial<DataGridProps>) {
     apiRef = useGridApiRef();
@@ -63,7 +64,7 @@ describe('<DataGrid /> - Quick filter', () => {
   }
 
   // https://github.com/mui/mui-x/issues/9677
-  it('should not fail when adding a grouping criterion', () => {
+  it('should not fail when adding a grouping criterion', async () => {
     const { setProps } = render(
       <TestCase
         rows={[
@@ -94,7 +95,7 @@ describe('<DataGrid /> - Quick filter', () => {
       />,
     );
 
-    act(() => apiRef.current.addRowGroupingCriteria('year'));
+    await act(() => apiRef.current.addRowGroupingCriteria('year'));
 
     setProps({
       filterModel: {
@@ -103,6 +104,6 @@ describe('<DataGrid /> - Quick filter', () => {
       },
     });
 
-    expect(getColumnValues(0)).to.deep.equal(['20th Century Fox (1)', '']);
+    await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['20th Century Fox (1)', '']));
   });
 });

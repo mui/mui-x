@@ -92,6 +92,25 @@ To pass props to the legend, use the `slotProps.legend`.
 +<PieChart slotProps={{ legend: { ... } }} />
 ```
 
+## Legend direction value change ✅
+
+The `direction` prop of the legend has been changed to accept `'vertical'` and `'horizontal'` instead of `'column'` and `'row'`.
+
+```diff
+ <PieChart
+   slotProps={{
+     legend: {
+-      direction: 'column'
++      direction: 'vertical'
+     }
+   }}
+ />
+```
+
+## The `getSeriesToDisplay` function was removed
+
+The `getSeriesToDisplay` function was removed in favor of the `useLegend` hook. You can check the [HTML Components example](/x/react-charts/components/#html-components) for usage information.
+
 ## Removing ResponsiveChartContainer ✅
 
 The `ResponsiveChartContainer` has been removed.
@@ -122,12 +141,21 @@ The `<PieChart />` by error had the code to render axes.
 This code has been removed in v8, which implies removing the following props: `axisHighlight`, `topAxis`, `rightAxis`, `bottomAxis`, and `leftAxis`.
 
 This should not impact your code.
-If you used axes in a pie chart please open an issue, we would be curious to get more information about the use-case.
+If you used axes in a pie chart please open an issue, we would be curious to get more information about the use case.
 
 ## Remove `resolveSizeBeforeRender` prop
 
 The `resolveSizeBeforeRender` prop has been removed from all components.
 If you were using this prop, you can safely remove it.
+
+## Remove `experimentalMarkRendering` prop ✅
+
+The `experimentalMarkRendering` prop has been removed from the LineChart component.
+The line mark are now `<circle />` element by default.
+And you can chose another shape by adding a `shape` property to your line series.
+
+The codemod only removes the `experimentalMarkRendering` prop.
+If you relied on the fact that marks were `path` elements, you need to update your logic.
 
 ## Rename `labelFontSize` and `tickFontSize` props ✅
 

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { GridPanelWrapper, GridPanelWrapperProps } from './GridPanelWrapper';
-import { GridColumnsManagement } from '../columnsManagement';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export interface GridColumnsPanelProps extends GridPanelWrapperProps {}
@@ -10,7 +9,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
   const rootProps = useGridRootProps();
   return (
     <GridPanelWrapper {...props}>
-      <GridColumnsManagement {...rootProps.slotProps?.columnsManagement} />
+      <rootProps.slots.columnsManagement {...rootProps.slotProps?.columnsManagement} />
     </GridPanelWrapper>
   );
 }

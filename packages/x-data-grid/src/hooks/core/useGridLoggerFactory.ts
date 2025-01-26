@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { Logger } from '../../models';
 import { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -43,7 +44,7 @@ function getAppender(name: string, logLevel: string, appender: Logger = console)
 }
 
 export const useGridLoggerFactory = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommon>,
+  apiRef: RefObject<GridPrivateApiCommon>,
   props: Pick<DataGridProcessedProps, 'logger' | 'logLevel'>,
 ) => {
   const getLogger = React.useCallback<GridLoggerApi['getLogger']>(

@@ -11,18 +11,18 @@ import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internal
 import { useViews } from '../internals/hooks/useViews';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
-import { PickerValidDate, TimeView } from '../models';
+import { PickerOwnerState, PickerValidDate, TimeView } from '../models';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
-import { getTimeClockUtilityClass } from './timeClockClasses';
+import { getTimeClockUtilityClass, TimeClockClasses } from './timeClockClasses';
 import { Clock, ClockProps } from './Clock';
 import { TimeClockProps } from './TimeClock.types';
 import { getHourNumbers, getMinutesNumbers } from './ClockNumbers';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 
-const useUtilityClasses = (ownerState: TimeClockProps<any>) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classes: Partial<TimeClockClasses> | undefined) => {
   const slots = {
     root: ['root'],
     arrowSwitcher: ['arrowSwitcher'],
@@ -35,7 +35,7 @@ const TimeClockRoot = styled(PickerViewRoot, {
   name: 'MuiTimeClock',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: TimeClockProps<any> }>({
+})<{ ownerState: PickerOwnerState }>({
   display: 'flex',
   flexDirection: 'column',
   position: 'relative',
@@ -45,7 +45,7 @@ const TimeClockArrowSwitcher = styled(PickersArrowSwitcher, {
   name: 'MuiTimeClock',
   slot: 'ArrowSwitcher',
   overridesResolver: (props, styles) => styles.arrowSwitcher,
-})<{ ownerState: TimeClockProps<any> }>({
+})<{ ownerState: PickerOwnerState }>({
   position: 'absolute',
   right: 12,
   top: 15,
@@ -103,6 +103,7 @@ export const TimeClock = React.forwardRef(function TimeClock(
     focusedView,
     onFocusedViewChange,
     className,
+    classes: classesProp,
     disabled,
     readOnly,
     timezone: timezoneProp,
@@ -129,6 +130,8 @@ export const TimeClock = React.forwardRef(function TimeClock(
 
   const translations = usePickerTranslations();
   const now = useNow(timezone);
+  const selectedId = useId();
+  const { ownerState } = usePickerPrivateContext();
 
   const { view, setView, previousView, nextView, setValueAndGoToNextView } = useViews({
     view: inView,
@@ -209,6 +212,11 @@ export const TimeClock = React.forwardRef(function TimeClock(
         case 'hours': {
           const valueWithMeridiem = convertValueToMeridiem(rawValue, meridiemMode, ampm);
           const dateWithNewHours = utils.setHours(valueOrReferenceDate, valueWithMeridiem);
+
+          if (utils.getHours(dateWithNewHours) !== valueWithMeridiem) {
+            return true;
+          }
+
           const start = utils.setSeconds(utils.setMinutes(dateWithNewHours, 0), 0);
           const end = utils.setSeconds(utils.setMinutes(dateWithNewHours, 59), 59);
 
@@ -252,9 +260,9 @@ export const TimeClock = React.forwardRef(function TimeClock(
     ],
   );
 
-  const selectedId = useId();
-
-  const viewProps = React.useMemo<Pick<ClockProps, 'onChange' | 'viewValue' | 'children'>>(() => {
+  const viewProps = React.useMemo<
+    Pick<ClockProps, 'onChange' | 'viewValue' | 'viewRange' | 'children'>
+  >(() => {
     switch (view) {
       case 'hours': {
         const handleHoursChange = (hourValue: number, isFinish?: PickerSelectionState) => {
@@ -266,9 +274,22 @@ export const TimeClock = React.forwardRef(function TimeClock(
           );
         };
 
+        const viewValue = utils.getHours(valueOrReferenceDate);
+
+        let viewRange: [number, number];
+        if (ampm) {
+          if (viewValue > 12) {
+            viewRange = [12, 23];
+          } else {
+            viewRange = [0, 11];
+          }
+        } else {
+          viewRange = [0, 23];
+        }
+
         return {
           onChange: handleHoursChange,
-          viewValue: utils.getHours(valueOrReferenceDate),
+          viewValue,
           children: getHourNumbers({
             value,
             utils,
@@ -278,6 +299,7 @@ export const TimeClock = React.forwardRef(function TimeClock(
             isDisabled: (hourValue) => disabled || isTimeDisabled(hourValue, 'hours'),
             selectedId,
           }),
+          viewRange,
         };
       }
 
@@ -302,6 +324,7 @@ export const TimeClock = React.forwardRef(function TimeClock(
             isDisabled: (minuteValue) => disabled || isTimeDisabled(minuteValue, 'minutes'),
             selectedId,
           }),
+          viewRange: [0, 59],
         };
       }
 
@@ -326,6 +349,7 @@ export const TimeClock = React.forwardRef(function TimeClock(
             isDisabled: (secondValue) => disabled || isTimeDisabled(secondValue, 'seconds'),
             selectedId,
           }),
+          viewRange: [0, 59],
         };
       }
 
@@ -348,8 +372,7 @@ export const TimeClock = React.forwardRef(function TimeClock(
     disabled,
   ]);
 
-  const ownerState = props;
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(classesProp);
 
   return (
     <TimeClockRoot

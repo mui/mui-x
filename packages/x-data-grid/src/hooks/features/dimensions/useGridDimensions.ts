@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   unstable_ownerDocument as ownerDocument,
   unstable_useEnhancedEffect as useEnhancedEffect,
@@ -30,6 +31,8 @@ import { getValidRowHeight, rowHeightWarning } from '../rows/gridRowsUtils';
 import { getTotalHeaderHeight } from '../columns/gridColumnsUtils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../../constants/dataGridPropsDefaultValues';
+import { roundToDecimalPlaces } from '../../../utils/roundToDecimalPlaces';
+import { isJSDOM } from '../../../utils/isJSDOM';
 
 type RootProps = Pick<
   DataGridProcessedProps,
@@ -81,10 +84,7 @@ export const dimensionsStateInitializer: GridStateInitializer<RootProps> = (stat
   };
 };
 
-export function useGridDimensions(
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-  props: RootProps,
-) {
+export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, props: RootProps) {
   const logger = useGridLogger(apiRef, 'useResizeContainer');
   const errorShown = React.useRef(false);
   const rootDimensionsRef = React.useRef(EMPTY_SIZE);
@@ -110,7 +110,7 @@ export function useGridDimensions(
   const headerFilterHeight = Math.floor(
     (props.headerFilterHeight ?? props.columnHeaderHeight) * densityFactor,
   );
-  const columnsTotalWidth = roundToDecimalPlaces(gridColumnsTotalWidthSelector(apiRef), 6);
+  const columnsTotalWidth = roundToDecimalPlaces(gridColumnsTotalWidthSelector(apiRef), 1);
   const headersTotalHeight = getTotalHeaderHeight(apiRef, props);
 
   const leftPinnedWidth = pinnedColumns.left.reduce((w, col) => w + col.computedWidth, 0);
@@ -157,17 +157,18 @@ export function useGridDimensions(
   }, [apiRef, props.pagination, props.paginationMode, props.getRowHeight, rowHeight]);
 
   const updateDimensions = React.useCallback(() => {
+    // All the floating point dimensions should be rounded to .1 decimal places to avoid subpixel rendering issues
+    // https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
+    // https://github.com/mui/mui-x/issues/15721
     const rootElement = apiRef.current.rootElementRef.current;
 
     const scrollbarSize = measureScrollbarSize(rootElement, props.scrollbarSize);
 
-    const topContainerHeight = headersTotalHeight + (rowsMeta.pinnedTopRowsTotalHeight ?? 0);
-    const bottomContainerHeight = rowsMeta.pinnedBottomRowsTotalHeight ?? 0;
-
-    const nonPinnedColumnsTotalWidth = columnsTotalWidth - leftPinnedWidth - rightPinnedWidth;
+    const topContainerHeight = headersTotalHeight + rowsMeta.pinnedTopRowsTotalHeight;
+    const bottomContainerHeight = rowsMeta.pinnedBottomRowsTotalHeight;
 
     const contentSize = {
-      width: roundToDecimalPlaces(nonPinnedColumnsTotalWidth, 1),
+      width: columnsTotalWidth,
       height: roundToDecimalPlaces(rowsMeta.currentPageTotalHeight, 1),
     };
 
@@ -194,7 +195,7 @@ export function useGridDimensions(
         height: rootDimensionsRef.current.height,
       };
       viewportInnerSize = {
-        width: Math.max(0, viewportOuterSize.width - leftPinnedWidth - rightPinnedWidth),
+        width: Math.max(0, viewportOuterSize.width),
         height: Math.max(0, viewportOuterSize.height - topContainerHeight - bottomContainerHeight),
       };
 
@@ -330,10 +331,6 @@ export function useGridDimensions(
   const handleResize = React.useCallback<GridEventListener<'resize'>>(
     (size) => {
       rootDimensionsRef.current = size;
-
-      // jsdom has no layout capabilities
-      const isJSDOM = /jsdom|HappyDOM/.test(window.navigator.userAgent);
-
       if (size.height === 0 && !errorShown.current && !props.autoHeight && !isJSDOM) {
         logger.error(
           [
@@ -413,12 +410,6 @@ function measureScrollbarSize(rootElement: Element | null, scrollbarSize: number
   scrollbarSizeCache.set(rootElement, size);
 
   return size;
-}
-
-// Get rid of floating point imprecision errors
-// https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
-function roundToDecimalPlaces(value: number, decimals: number) {
-  return Math.round(value * 10 ** decimals) / 10 ** decimals;
 }
 
 function areElementSizesEqual(a: ElementSize, b: ElementSize) {

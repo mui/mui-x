@@ -14,7 +14,13 @@ function sleep(timeoutMS: number | undefined) {
 const isMaterialUIv6 = materialPackageJson.version.startsWith('6.');
 
 // Tests that need a longer timeout.
-const timeSensitiveSuites = ['ColumnAutosizingAsync', 'DensitySelectorGrid'];
+const timeSensitiveSuites = [
+  'ColumnAutosizingAsync',
+  'DensitySelectorGrid',
+  'DataGridOverlays',
+  'PopularFeaturesDemo',
+  'ServerSideRowGroupingGroupExpansion',
+];
 
 const isConsoleWarningIgnored = (msg?: string) => {
   const isMuiV6Error =
@@ -73,7 +79,7 @@ async function main() {
   await page.goto(`${baseUrl}#no-dev`, { waitUntil: 'networkidle' });
 
   // Simulate portrait mode for date pickers.
-  // See `useIsLandscape`.
+  // See `usePickerOrientation`.
   await page.evaluate(() => {
     Object.defineProperty(window.screen.orientation, 'angle', {
       get() {

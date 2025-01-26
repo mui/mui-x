@@ -10,6 +10,7 @@ import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 export type GridTypeFilterInputValueProps = GridFilterInputValueProps &
   TextFieldProps & {
     type?: 'text' | 'number' | 'date' | 'datetime-local';
+    headerFilterMenu?: React.ReactNode;
     clearButton?: React.ReactNode | null;
     /**
      * It is `true` if the filter either has a value or an operator with no value
@@ -31,26 +32,30 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
     disabled,
     isFilterActive,
     clearButton,
+    headerFilterMenu,
     InputProps,
-    variant = 'standard',
+    variant = 'outlined',
     ...others
   } = props;
+
   const filterTimeout = useTimeout();
-  const [filterValueState, setFilterValueState] = React.useState<string>(item.value ?? '');
+  const [filterValueState, setFilterValueState] = React.useState<string | undefined>(
+    sanitizeFilterItemValue(item.value),
+  );
   const [applying, setIsApplying] = React.useState(false);
   const id = useId();
   const rootProps = useGridRootProps();
 
   const onFilterChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      const { value } = event.target;
-      setFilterValueState(String(value));
+      const value = sanitizeFilterItemValue(event.target.value);
 
+      setFilterValueState(value);
       setIsApplying(true);
       filterTimeout.start(rootProps.filterDebounceMs, () => {
         const newItem = {
           ...item,
-          value: type === 'number' ? Number(value) : value,
+          value: type === 'number' && !Number.isNaN(Number(value)) ? Number(value) : value,
           fromInput: id!,
         };
         applyValue(newItem);
@@ -62,45 +67,53 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
 
   React.useEffect(() => {
     const itemPlusTag = item as ItemPlusTag;
-    if (itemPlusTag.fromInput !== id || item.value === undefined) {
-      setFilterValueState(String(item.value ?? ''));
+    if (itemPlusTag.fromInput !== id || item.value == null) {
+      setFilterValueState(sanitizeFilterItemValue(item.value));
     }
   }, [id, item]);
 
   return (
-    <rootProps.slots.baseTextField
-      id={id}
-      label={apiRef.current.getLocaleText('filterPanelInputLabel')}
-      placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
-      value={filterValueState}
-      onChange={onFilterChange}
-      variant={variant}
-      type={type || 'text'}
-      InputProps={{
-        ...(applying || clearButton
-          ? {
-              endAdornment: applying ? (
-                <rootProps.slots.loadIcon fontSize="small" color="action" />
-              ) : (
-                clearButton
-              ),
-            }
-          : {}),
-        disabled,
-        ...InputProps,
-        inputProps: {
-          tabIndex,
-          ...InputProps?.inputProps,
-        },
-      }}
-      InputLabelProps={{
-        shrink: true,
-      }}
-      inputRef={focusElementRef}
-      {...others}
-      {...rootProps.slotProps?.baseTextField}
-    />
+    <React.Fragment>
+      <rootProps.slots.baseTextField
+        id={id}
+        label={apiRef.current.getLocaleText('filterPanelInputLabel')}
+        placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
+        value={filterValueState ?? ''}
+        onChange={onFilterChange}
+        variant={variant}
+        type={type || 'text'}
+        disabled={disabled}
+        InputProps={{
+          endAdornment: applying ? (
+            <rootProps.slots.baseInputAdornment position="end">
+              <rootProps.slots.loadIcon fontSize="small" color="action" />
+            </rootProps.slots.baseInputAdornment>
+          ) : null,
+          ...InputProps,
+          inputProps: {
+            tabIndex,
+            ...InputProps?.inputProps,
+          },
+        }}
+        InputLabelProps={{
+          shrink: true,
+        }}
+        inputRef={focusElementRef}
+        {...rootProps.slotProps?.baseTextField}
+        {...others}
+      />
+      {headerFilterMenu}
+      {clearButton}
+    </React.Fragment>
   );
+}
+
+function sanitizeFilterItemValue(value: unknown) {
+  if (value == null || value === '') {
+    return undefined;
+  }
+
+  return String(value);
 }
 
 GridFilterInputValue.propTypes = {
@@ -117,6 +130,7 @@ GridFilterInputValue.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  headerFilterMenu: PropTypes.node,
   /**
    * It is `true` if the filter either has a value or an operator with no value
    * required is selected (for example `isEmpty`)

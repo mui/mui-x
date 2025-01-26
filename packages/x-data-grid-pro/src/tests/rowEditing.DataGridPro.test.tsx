@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
+import { RefObject } from '@mui/x-internals/types';
 import {
   GridApi,
   DataGridProProps,
@@ -20,7 +21,7 @@ import { fireUserEvent } from 'test/utils/fireUserEvent';
 describe('<DataGridPro /> - Row editing', () => {
   const { render, clock } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: RefObject<GridApi>;
 
   const defaultData = getBasicGridData(4, 4);
 
@@ -1241,13 +1242,13 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(listener.lastCall.args[0].reason).to.equal('shiftTabKeyDown');
       });
 
-      it('should call stopRowEditMode with ignoreModifications=false and cellToFocusAfter=right', () => {
-        render(<TestCase />);
+      it('should call stopRowEditMode with ignoreModifications=false and cellToFocusAfter=right', async () => {
+        const { user } = render(<TestCase />);
         const spiedStopRowEditMode = spyApi(apiRef.current, 'stopRowEditMode');
         const cell = getCell(0, 2);
-        fireUserEvent.mousePress(cell);
-        fireEvent.doubleClick(cell);
-        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Tab' });
+        await user.click(cell);
+        await user.dblClick(cell);
+        await user.keyboard('{Tab}');
         expect(spiedStopRowEditMode.callCount).to.equal(1);
         expect(spiedStopRowEditMode.lastCall.args[0]).to.deep.equal({
           id: 0,
@@ -1500,7 +1501,12 @@ describe('<DataGridPro /> - Row editing', () => {
       }, [hasFocus, inputRef]);
       return (
         <Portal>
-          <input ref={(ref) => setInputRef(ref)} data-testid="input" />
+          <input
+            ref={(ref) => {
+              setInputRef(ref);
+            }}
+            data-testid="input"
+          />
         </Portal>
       );
     }

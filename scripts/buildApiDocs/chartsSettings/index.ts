@@ -68,7 +68,6 @@ export default chartsApiPages;
       'x-charts/src/ChartsOverlay/ChartsOverlay.tsx',
       'x-charts/src/ChartsOverlay/ChartsNoDataOverlay.tsx',
       'x-charts/src/ChartsOverlay/ChartsLoadingOverlay.tsx',
-      'x-charts/src/ChartsLegend/LegendPerItem.tsx',
       'x-charts/src/LineChart/CircleMarkElement.tsx',
       'x-charts/src/BarChart/AnimatedBarElement.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));

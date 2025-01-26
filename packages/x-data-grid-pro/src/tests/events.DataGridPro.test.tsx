@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import {
@@ -17,8 +18,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { getCell, getColumnHeaderCell } from 'test/utils/helperFn';
 import { spy } from 'sinon';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Events params', () => {
   const { render, clock } = createRenderer();
@@ -53,7 +53,7 @@ describe('<DataGridPro /> - Events params', () => {
     ],
   };
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: RefObject<GridApi>;
 
   function TestEvents(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
@@ -329,32 +329,33 @@ describe('<DataGridPro /> - Events params', () => {
     });
   });
 
-  it('lazy loaded grid should load the rest of the rows when mounted when virtualization is disabled', function test() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
-    const handleFetchRows = spy();
-    render(
-      <TestEvents
-        onFetchRows={handleFetchRows}
-        sortingMode="server"
-        filterMode="server"
-        rowsLoadingMode="server"
-        paginationMode="server"
-        rowCount={50}
-      />,
-    );
-    expect(handleFetchRows.callCount).to.equal(1);
-    expect(handleFetchRows.lastCall.firstArg).to.contain({
-      firstRowToRender: 3,
-      lastRowToRender: 50,
-    });
-  });
+  // Needs layout
+  testSkipIf(isJSDOM)(
+    'lazy loaded grid should load the rest of the rows when mounted when virtualization is disabled',
+    function test() {
+      if (isJSDOM) {
+        this.skip(); // Needs layout
+      }
+      const handleFetchRows = spy();
+      render(
+        <TestEvents
+          onFetchRows={handleFetchRows}
+          sortingMode="server"
+          filterMode="server"
+          rowsLoadingMode="server"
+          paginationMode="server"
+          rowCount={50}
+        />,
+      );
+      expect(handleFetchRows.callCount).to.equal(1);
+      expect(handleFetchRows.lastCall.firstArg).to.contain({
+        firstRowToRender: 3,
+        lastRowToRender: 50,
+      });
+    },
+  );
 
-  it('publishing renderedRowsIntervalChange should call onFetchRows callback when rows lazy loading is enabled', function test() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
+  it('publishing renderedRowsIntervalChange should call onFetchRows callback when rows lazy loading is enabled', () => {
     const handleFetchRows = spy();
     render(
       <TestEvents

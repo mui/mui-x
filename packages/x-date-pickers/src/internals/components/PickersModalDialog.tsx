@@ -6,7 +6,8 @@ import { PaperProps as MuiPaperProps } from '@mui/material/Paper';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
 import { styled } from '@mui/material/styles';
 import { DIALOG_WIDTH } from '../constants/dimensions';
-import { UsePickerValueActions } from '../hooks/usePicker/usePickerValue.types';
+import { usePickerContext } from '../../hooks';
+import { usePickerPrivateContext } from '../hooks/usePickerPrivateContext';
 
 export interface PickersModalDialogSlots {
   /**
@@ -41,7 +42,7 @@ export interface PickersModalDialogSlotProps {
   mobileTransition?: Partial<MuiTransitionProps>;
 }
 
-export interface PickersModalDialogProps extends UsePickerValueActions {
+export interface PickersModalDialogProps {
   /**
    * Overridable component slots.
    * @default {}
@@ -52,7 +53,6 @@ export interface PickersModalDialogProps extends UsePickerValueActions {
    * @default {}
    */
   slotProps?: PickersModalDialogSlotProps;
-  open: boolean;
 }
 
 const PickersModalDialogRoot = styled(MuiDialog)({
@@ -72,7 +72,10 @@ const PickersModalDialogContent = styled(DialogContent)({
 });
 
 export function PickersModalDialog(props: React.PropsWithChildren<PickersModalDialogProps>) {
-  const { children, onDismiss, open, slots, slotProps } = props;
+  const { children, slots, slotProps } = props;
+
+  const { open } = usePickerContext();
+  const { dismissViews } = usePickerPrivateContext();
 
   const Dialog = slots?.dialog ?? PickersModalDialogRoot;
   const Transition = slots?.mobileTransition ?? Fade;
@@ -80,7 +83,7 @@ export function PickersModalDialog(props: React.PropsWithChildren<PickersModalDi
   return (
     <Dialog
       open={open}
-      onClose={onDismiss}
+      onClose={dismissViews}
       {...slotProps?.dialog}
       TransitionComponent={Transition}
       TransitionProps={slotProps?.mobileTransition}

@@ -2,20 +2,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
-import {
-  GridBody,
-  GridFooterPlaceholder,
-  GridHeader,
-  GridRoot,
-  GridContextProvider,
-  GridValidRowModel,
-} from '@mui/x-data-grid-pro';
+import { GridRoot, GridContextProvider, GridValidRowModel } from '@mui/x-data-grid-pro';
 import {
   propValidatorsDataGrid,
   propValidatorsDataGridPro,
   PropValidator,
   validateProps,
 } from '@mui/x-data-grid-pro/internals';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useDataGridPremiumComponent } from './useDataGridPremiumComponent';
 import {
   DataGridPremiumProcessedProps,
@@ -42,7 +36,7 @@ if (process.env.NODE_ENV !== 'production') {
   dataGridPremiumPropValidators = [...propValidatorsDataGrid, ...propValidatorsDataGridPro];
 }
 
-const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends GridValidRowModel>(
+const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridValidRowModel>(
   inProps: DataGridPremiumProps<R>,
   ref: React.Ref<HTMLDivElement>,
 ) {
@@ -59,14 +53,10 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
         className={props.className}
         style={props.style}
         sx={props.sx}
+        {...props.slotProps?.root}
         ref={ref}
-        {...props.forwardedProps}
       >
-        <GridHeader />
-        <GridBody>
-          <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />
-        </GridBody>
-        <GridFooterPlaceholder />
+        <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />
       </GridRoot>
     </GridContextProvider>
   );
@@ -79,7 +69,7 @@ DataGridPremiumRaw.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * Aggregation functions available on the grid.
-   * @default GRID_AGGREGATION_FUNCTIONS
+   * @default GRID_AGGREGATION_FUNCTIONS when `unstable_dataSource` is not provided, `{}` when `unstable_dataSource` is provided
    */
   aggregationFunctions: PropTypes.object,
   /**
@@ -132,6 +122,7 @@ DataGridPremiumRaw.propTypes = {
    */
   autosizeOptions: PropTypes.shape({
     columns: PropTypes.arrayOf(PropTypes.string),
+    disableColumnVirtualization: PropTypes.bool,
     expand: PropTypes.bool,
     includeHeaders: PropTypes.bool,
     includeOutliers: PropTypes.bool,
@@ -209,9 +200,7 @@ DataGridPremiumRaw.propTypes = {
   /**
    * The row ids to show the detail panel.
    */
-  detailPanelExpandedRowIds: PropTypes.arrayOf(
-    PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  ),
+  detailPanelExpandedRowIds: PropTypes /* @typescript-to-proptypes-ignore */.instanceOf(Set),
   /**
    * If `true`, aggregation is disabled.
    * @default false
@@ -359,11 +348,6 @@ DataGridPremiumRaw.propTypes = {
     quickFilterLogicOperator: PropTypes.oneOf(['and', 'or']),
     quickFilterValues: PropTypes.array,
   }),
-  /**
-   * Forwarded props for the Data Grid root element.
-   * @ignore - do not document.
-   */
-  forwardedProps: PropTypes.object,
   /**
    * Determines the position of an aggregated value.
    * @param {GridGroupNode} groupNode The current group.
@@ -1005,6 +989,11 @@ DataGridPremiumRaw.propTypes = {
    */
   rowSpacingType: PropTypes.oneOf(['border', 'margin']),
   /**
+   * If `true`, the Data Grid will auto span the cells over the rows having the same value.
+   * @default false
+   */
+  rowSpanning: PropTypes.bool,
+  /**
    * Override the height/width of the Data Grid inner scrollbar.
    */
   scrollbarSize: PropTypes.number,
@@ -1080,6 +1069,7 @@ DataGridPremiumRaw.propTypes = {
    */
   treeData: PropTypes.bool,
   unstable_dataSource: PropTypes.shape({
+    getAggregatedValue: PropTypes.func,
     getChildrenCount: PropTypes.func,
     getGroupKey: PropTypes.func,
     getRows: PropTypes.func.isRequired,
@@ -1118,11 +1108,6 @@ DataGridPremiumRaw.propTypes = {
    */
   unstable_listView: PropTypes.bool,
   unstable_onDataSourceError: PropTypes.func,
-  /**
-   * If `true`, the Data Grid will auto span the cells over the rows having the same value.
-   * @default false
-   */
-  unstable_rowSpanning: PropTypes.bool,
   /**
    * If `true`, the Data Grid enables column virtualization when `getRowHeight` is set to `() => 'auto'`.
    * By default, column virtualization is disabled when dynamic row height is enabled to measure the row height correctly.

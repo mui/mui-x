@@ -71,10 +71,28 @@
   ],
   "classes": [
     {
+      "key": "button",
+      "className": "MuiMonthCalendar-button",
+      "description": "Styles applied to the button element that represents a single month",
+      "isGlobal": false
+    },
+    {
+      "key": "disabled",
+      "className": "Mui-disabled",
+      "description": "Styles applied to a disabled button element.",
+      "isGlobal": true
+    },
+    {
       "key": "root",
       "className": "MuiMonthCalendar-root",
       "description": "Styles applied to the root element.",
       "isGlobal": false
+    },
+    {
+      "key": "selected",
+      "className": "Mui-selected",
+      "description": "Styles applied to a selected button element.",
+      "isGlobal": true
     }
   ],
   "spread": true,

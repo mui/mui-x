@@ -8,6 +8,7 @@ import {
   Unstable_LicenseInfoProvider as LicenseInfoProvider,
   MuiCommercialPackageName,
 } from '@mui/x-license';
+import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 import { sharedLicenseStatuses } from './useLicenseVerifier';
 import { generateReleaseInfo } from '../verifyLicense';
 
@@ -20,16 +21,13 @@ function TestComponent(props: { packageName?: MuiCommercialPackageName }) {
   return <div data-testid="status">Status: {licenseStatus.status}</div>;
 }
 
-describe('useLicenseVerifier', function test() {
-  // Can't change the process.env.NODE_ENV in Karma
-  if (!/jsdom/.test(window.navigator.userAgent)) {
-    return;
-  }
-
+// Can't change the process.env.NODE_ENV in Karma
+describeSkipIf(!isJSDOM)('useLicenseVerifier', function test() {
   const { render } = createRenderer();
 
   let env: any;
 
+  // eslint-disable-next-line mocha/no-top-level-hooks
   beforeEach(() => {
     env = process.env.NODE_ENV;
     // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
@@ -37,6 +35,7 @@ describe('useLicenseVerifier', function test() {
     process.env['NODE_' + 'ENV'] = 'test';
   });
 
+  // eslint-disable-next-line mocha/no-top-level-hooks
   afterEach(() => {
     // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
     // eslint-disable-next-line no-useless-concat

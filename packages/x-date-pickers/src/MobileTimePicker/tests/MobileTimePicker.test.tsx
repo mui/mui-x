@@ -8,24 +8,13 @@ import {
   adapterToUse,
   openPicker,
   getClockTouchEvent,
-  getFieldSectionsContainer,
 } from 'test/utils/pickers';
+import { testSkipIf, hasTouchSupport } from 'test/utils/skipIf';
 
 describe('<MobileTimePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
 
   describe('picker state', () => {
-    it('should open when clicking the input', () => {
-      const onOpen = spy();
-
-      render(<MobileTimePicker onOpen={onOpen} />);
-
-      fireEvent.click(getFieldSectionsContainer());
-
-      expect(onOpen.callCount).to.equal(1);
-      expect(screen.queryByRole('dialog')).toBeVisible();
-    });
-
     it('should fire a change event when meridiem changes', () => {
       const handleChange = spy();
       render(
@@ -45,11 +34,7 @@ describe('<MobileTimePicker />', () => {
       expect(handleChange.firstCall.args[0]).toEqualDateTime(new Date(2019, 0, 1, 16, 20));
     });
 
-    it('should call onChange when selecting each view', function test() {
-      if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
-        this.skip();
-      }
-
+    testSkipIf(!hasTouchSupport)('should call onChange when selecting each view', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -64,7 +49,7 @@ describe('<MobileTimePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'time', variant: 'mobile' });
+      openPicker({ type: 'time' });
 
       // Change the hours
       const hourClockEvent = getClockTouchEvent(11, '12hours');

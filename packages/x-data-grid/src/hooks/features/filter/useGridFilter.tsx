@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { lruMemoize } from 'reselect';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { GridEventListener } from '../../../models/events';
@@ -59,7 +60,7 @@ const getVisibleRowsLookup: GridStrategyProcessor<'visibleRowsLookupCreation'> =
 };
 
 function getVisibleRowsLookupState(
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   state: GridStateCommunity,
 ) {
   return apiRef.current.applyStrategyProcessor('visibleRowsLookupCreation', {
@@ -78,7 +79,7 @@ function createMemoizedValues() {
  * @requires useGridRows (event)
  */
 export const useGridFilter = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'rows'
@@ -107,7 +108,7 @@ export const useGridFilter = (
 
   const updateFilteredRows = React.useCallback(() => {
     apiRef.current.setState((state) => {
-      const filterModel = gridFilterModelSelector(state, apiRef.current.instanceId);
+      const filterModel = gridFilterModelSelector(state, undefined, apiRef.current.instanceId);
       const filterState = apiRef.current.getFilterState(filterModel);
 
       const newState = {

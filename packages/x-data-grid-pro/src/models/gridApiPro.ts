@@ -11,9 +11,11 @@ import type {
   GridDetailPanelApi,
   GridRowPinningApi,
   GridDetailPanelPrivateApi,
+} from '../hooks';
+import type {
   GridDataSourceApi,
   GridDataSourcePrivateApi,
-} from '../hooks';
+} from '../hooks/features/dataSource/interfaces';
 import type { DataGridProProcessedProps } from './dataGridProProps';
 
 /**

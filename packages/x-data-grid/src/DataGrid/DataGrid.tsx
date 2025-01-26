@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { GridBody, GridFooterPlaceholder, GridHeader, GridRoot } from '../components';
+import { forwardRef } from '@mui/x-internals/forwardRef';
+import { GridRoot } from '../components';
 import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
 import { DataGridProcessedProps, DataGridProps } from '../models/props/DataGridProps';
@@ -42,7 +43,7 @@ if (process.env.NODE_ENV !== 'production') {
   ];
 }
 
-const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowModel>(
+const DataGridRaw = forwardRef(function DataGrid<R extends GridValidRowModel>(
   inProps: DataGridProps<R>,
   ref: React.Ref<HTMLDivElement>,
 ) {
@@ -58,13 +59,9 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
         className={props.className}
         style={props.style}
         sx={props.sx}
+        {...props.slotProps?.root}
         ref={ref}
-        {...props.forwardedProps}
-      >
-        <GridHeader />
-        <GridBody />
-        <GridFooterPlaceholder />
-      </GridRoot>
+      />
     </GridContextProvider>
   );
 });
@@ -129,6 +126,7 @@ DataGridRaw.propTypes = {
    */
   autosizeOptions: PropTypes.shape({
     columns: PropTypes.arrayOf(PropTypes.string),
+    disableColumnVirtualization: PropTypes.bool,
     expand: PropTypes.bool,
     includeHeaders: PropTypes.bool,
     includeOutliers: PropTypes.bool,
@@ -284,11 +282,6 @@ DataGridRaw.propTypes = {
     quickFilterLogicOperator: PropTypes.oneOf(['and', 'or']),
     quickFilterValues: PropTypes.array,
   }),
-  /**
-   * Forwarded props for the Data Grid root element.
-   * @ignore - do not document.
-   */
-  forwardedProps: PropTypes.object,
   /**
    * Function that applies CSS classes dynamically on cells.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
@@ -750,6 +743,11 @@ DataGridRaw.propTypes = {
    */
   rowSpacingType: PropTypes.oneOf(['border', 'margin']),
   /**
+   * If `true`, the Data Grid will auto span the cells over the rows having the same value.
+   * @default false
+   */
+  rowSpanning: PropTypes.bool,
+  /**
    * Override the height/width of the Data Grid inner scrollbar.
    */
   scrollbarSize: PropTypes.number,
@@ -800,11 +798,6 @@ DataGridRaw.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * If `true`, the Data Grid will auto span the cells over the rows having the same value.
-   * @default false
-   */
-  unstable_rowSpanning: PropTypes.bool,
   /**
    * If `true`, the Data Grid enables column virtualization when `getRowHeight` is set to `() => 'auto'`.
    * By default, column virtualization is disabled when dynamic row height is enabled to measure the row height correctly.

@@ -7,13 +7,13 @@ import clsx from 'clsx';
 import { ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
 import {
   ChartsTooltipCell,
-  ChartsTooltipMark,
   ChartsTooltipPaper,
   ChartsTooltipRow,
   ChartsTooltipTable,
 } from './ChartsTooltipTable';
 import { useAxisTooltip } from './useAxisTooltip';
 import { useXAxis, useYAxis } from '../hooks';
+import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
 
 export interface ChartsAxisTooltipContentProps {
   /**
@@ -25,17 +25,17 @@ export interface ChartsAxisTooltipContentProps {
 
 function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
   const { classes: propClasses, sx } = props;
-  const tootlipData = useAxisTooltip();
+  const tooltipData = useAxisTooltip();
   const xAxis = useXAxis();
   const yAxis = useYAxis();
 
   const classes = useUtilityClasses(propClasses);
 
-  if (tootlipData === null) {
+  if (tooltipData === null) {
     return null;
   }
 
-  const { axisDirection, axisValue, axisFormattedValue, seriesItems } = tootlipData;
+  const { axisDirection, axisValue, axisFormattedValue, seriesItems } = tooltipData;
 
   const axis = axisDirection === 'x' ? xAxis : yAxis;
 
@@ -44,8 +44,8 @@ function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
       <ChartsTooltipTable className={classes.table}>
         {axisValue != null && !axis.hideTooltip && (
           <thead>
-            <ChartsTooltipRow>
-              <ChartsTooltipCell colSpan={3}>
+            <ChartsTooltipRow className={classes.row}>
+              <ChartsTooltipCell colSpan={3} className={clsx(classes.cell, classes.axisValueCell)}>
                 <Typography>{axisFormattedValue}</Typography>
               </ChartsTooltipCell>
             </ChartsTooltipRow>
@@ -53,14 +53,16 @@ function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
         )}
 
         <tbody>
-          {seriesItems.map(({ seriesId, color, formattedValue, formattedLabel }) => {
+          {seriesItems.map(({ seriesId, color, formattedValue, formattedLabel, markType }) => {
             if (formattedValue == null) {
               return null;
             }
             return (
               <ChartsTooltipRow key={seriesId} className={classes.row}>
                 <ChartsTooltipCell className={clsx(classes.markCell, classes.cell)}>
-                  {color && <ChartsTooltipMark color={color} className={classes.mark} />}
+                  {color && (
+                    <ChartsLabelMark type={markType} color={color} className={classes.mark} />
+                  )}
                 </ChartsTooltipCell>
                 <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)}>
                   {formattedLabel ? <Typography>{formattedLabel}</Typography> : null}
