@@ -102,6 +102,7 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
     await waitFor(() => {
       expect(getRowsSpy.callCount).to.be.greaterThan(0);
     });
+    await getRowsSpy.lastCall.returnValue;
     await user.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
     expect(screen.queryByLabelText('Aggregation')).not.to.equal(null);
   });
