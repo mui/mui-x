@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { createRenderer, waitFor, screen, within } from '@mui/internal-test-utils';
 import { expect } from 'chai';
@@ -20,7 +21,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGridPremium /> - Data source aggregation', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: RefObject<GridApi>;
   let getRowsSpy: SinonSpy;
   let mockServer: ReturnType<typeof useMockServer>;
 
@@ -98,12 +99,18 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
 
   it('should show aggregation option in the column menu', async () => {
     const { user } = render(<TestDataSourceAggregation />);
+    await waitFor(() => {
+      expect(getRowsSpy.callCount).to.be.greaterThan(0);
+    });
     await user.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
     expect(screen.queryByLabelText('Aggregation')).not.to.equal(null);
   });
 
   it('should not show aggregation option in the column menu when no aggregation function is defined', async () => {
     const { user } = render(<TestDataSourceAggregation aggregationFunctions={{}} />);
+    await waitFor(() => {
+      expect(getRowsSpy.callCount).to.be.greaterThan(0);
+    });
     await user.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
     expect(screen.queryByLabelText('Aggregation')).to.equal(null);
   });

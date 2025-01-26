@@ -1,5 +1,5 @@
 {
-  "version": "8.0.0-alpha.8",
+  "version": "8.0.0-alpha.9",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -29,7 +29,6 @@
     "prettier:all": "prettier --write . --ignore-path .eslintignore",
     "prettier:check": "prettier --check . --ignore-path .eslintignore",
     "proptypes": "cross-env BABEL_ENV=development babel-node -i \"/node_modules/(?!@mui)/\" -x .ts,.tsx,.js ./docs/scripts/generateProptypes.ts",
-    "rsc:build": "tsx ./packages/rsc-builder/buildRsc.ts",
     "size:snapshot": "node --max-old-space-size=2048 ./scripts/sizeSnapshot/create",
     "size:why": "pnpm size:snapshot --analyze --accurateBundles",
     "tc": "node test/cli.js",
@@ -97,7 +96,7 @@
     "@mui/material": "^5.16.14",
     "@mui/monorepo": "github:mui/material-ui#c4f898d3b624b1248245b43dcd1fe035a66b08d5",
     "@mui/utils": "^5.16.14",
-    "@next/eslint-plugin-next": "15.1.5",
+    "@next/eslint-plugin-next": "15.1.6",
     "@octokit/plugin-retry": "^7.1.3",
     "@octokit/rest": "^21.1.0",
     "@playwright/test": "^1.49.1",
@@ -143,7 +142,7 @@
     "eslint-import-resolver-webpack": "^0.13.10",
     "eslint-plugin-filenames": "^1.3.2",
     "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-jsdoc": "^50.6.2",
+    "eslint-plugin-jsdoc": "^50.6.3",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-material-ui": "workspace:^",
     "eslint-plugin-mocha": "^10.5.0",

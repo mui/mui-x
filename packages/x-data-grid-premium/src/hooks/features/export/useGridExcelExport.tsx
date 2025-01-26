@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   useGridApiMethod,
   useGridLogger,
@@ -36,7 +37,7 @@ import { GridExcelExportMenuItem } from '../../../components';
  * @requires useGridParamsApi (method)
  */
 export const useGridExcelExport = (
-  apiRef: React.RefObject<GridPrivateApiPremium>,
+  apiRef: RefObject<GridPrivateApiPremium>,
   props: DataGridPremiumProps,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridExcelExport');
