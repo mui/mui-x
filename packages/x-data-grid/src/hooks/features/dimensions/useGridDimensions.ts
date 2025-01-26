@@ -366,14 +366,8 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     [props.autoHeight, debouncedSetSavedSize, logger],
   );
 
-  const handlePaginationModelChange = React.useCallback(() => {
-    updateDimensions();
-    // Update render context directly, since we're not immediately dependent on the dimensions
-    apiRef.current.updateRenderContext?.();
-  }, [apiRef, updateDimensions]);
-
   useGridApiOptionHandler(apiRef, 'sortedRowsSet', updateDimensions);
-  useGridApiOptionHandler(apiRef, 'paginationModelChange', handlePaginationModelChange);
+  useGridApiOptionHandler(apiRef, 'paginationModelChange', updateDimensions);
   useGridApiOptionHandler(apiRef, 'columnsChange', updateDimensions);
   useGridApiEventHandler(apiRef, 'resize', handleResize);
   useGridApiOptionHandler(apiRef, 'debouncedResize', props.onResize);
