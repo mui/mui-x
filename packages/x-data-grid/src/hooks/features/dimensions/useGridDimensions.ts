@@ -157,6 +157,9 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
   }, [apiRef, props.pagination, props.paginationMode, props.getRowHeight, rowHeight]);
 
   const updateDimensions = React.useCallback(() => {
+    if (isFirstSizing.current) {
+      return;
+    }
     // All the floating point dimensions should be rounded to .1 decimal places to avoid subpixel rendering issues
     // https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
     // https://github.com/mui/mui-x/issues/15721
@@ -262,6 +265,8 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     if (!areElementSizesEqual(newDimensions.viewportInnerSize, prevDimensions.viewportInnerSize)) {
       apiRef.current.publishEvent('viewportInnerSizeChange', newDimensions.viewportInnerSize);
     }
+
+    apiRef.current.updateRenderContext?.();
   }, [
     apiRef,
     setDimensions,
@@ -298,13 +303,6 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
       apiRef.current.publishEvent('debouncedResize', rootDimensionsRef.current!);
     }
   }, [apiRef, savedSize, updateDimensions]);
-
-  useEnhancedEffect(() => {
-    if (!dimensionsState.isReady) {
-      return;
-    }
-    apiRef.current.updateRenderContext?.();
-  }, [apiRef, dimensionsState]);
 
   const root = apiRef.current.rootElementRef.current;
   useEnhancedEffect(() => {

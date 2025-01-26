@@ -245,17 +245,14 @@ export const useGridVirtualScroller = () => {
         };
       });
 
-      // The lazy-loading hook is listening to `renderedRowsIntervalChange`,
-      // but only does something if the dimensions are also available.
-      // So we wait until we have valid dimensions before publishing the first event.
-      if (dimensions.isReady && didRowsIntervalChange) {
+      if (didRowsIntervalChange) {
         previousRowContext.current = nextRenderContext;
         apiRef.current.publishEvent('renderedRowsIntervalChange', nextRenderContext);
       }
 
       previousContextScrollPosition.current = scrollPosition.current;
     },
-    [apiRef, dimensions.isReady],
+    [apiRef],
   );
 
   const triggerUpdateRenderContext = useEventCallback(() => {
@@ -335,6 +332,9 @@ export const useGridVirtualScroller = () => {
   });
 
   const forceUpdateRenderContext = () => {
+    if (!gridDimensionsSelector(apiRef.current.state).isReady) {
+      return;
+    }
     const inputs = inputsSelector(apiRef, rootProps, enabledForRows, enabledForColumns);
     const nextRenderContext = computeRenderContext(inputs, scrollPosition.current, scrollCache);
     // Reset the frozen context when the render context changes, see the illustration in https://github.com/mui/mui-x/pull/12353
