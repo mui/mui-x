@@ -132,8 +132,8 @@ export const useDataGridProComponent = (
   useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
   useGridInitializeState(virtualizationStateInitializer, apiRef, props);
   useGridInitializeState(dataSourceStateInitializer, apiRef, props);
-  useGridInitializeState(listViewStateInitializer, apiRef, props);
   useGridInitializeState(dimensionsStateInitializer, apiRef, props);
+  useGridInitializeState(listViewStateInitializer, apiRef, props);
 
   useGridHeaderFiltering(apiRef, props);
   useGridTreeData(apiRef, props);

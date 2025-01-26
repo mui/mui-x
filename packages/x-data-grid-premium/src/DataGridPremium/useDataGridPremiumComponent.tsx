@@ -147,8 +147,8 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
   useGridInitializeState(virtualizationStateInitializer, apiRef, props);
   useGridInitializeState(dataSourceStateInitializer, apiRef, props);
-  useGridInitializeState(listViewStateInitializer, apiRef, props);
   useGridInitializeState(dimensionsStateInitializer, apiRef, props);
+  useGridInitializeState(listViewStateInitializer, apiRef, props);
 
   useGridRowGrouping(apiRef, props);
   useGridHeaderFiltering(apiRef, props);
