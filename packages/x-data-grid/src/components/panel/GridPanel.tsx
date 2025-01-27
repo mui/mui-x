@@ -19,7 +19,9 @@ export interface GridPanelClasses {
   paper: string;
 }
 
-export interface GridPanelProps extends Partial<React.ComponentProps<typeof GridPanelRoot>> {
+export interface GridPanelProps
+  extends Partial<Omit<React.ComponentProps<typeof GridPanelRoot>, 'ref'>> {
+  ref?: React.Ref<HTMLElement>;
   children?: React.ReactNode;
   /**
    * Override or extend the styles applied to the component.
