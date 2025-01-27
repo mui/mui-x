@@ -2,6 +2,7 @@ import * as React from 'react';
 import { createRenderer, EventType, fireEvent } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
+import { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
   gridClasses,
@@ -15,7 +16,7 @@ import { getCell, getRow } from 'test/utils/helperFn';
 describe('<DataGridPro/> - Components', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: RefObject<GridApi>;
 
   function TestCase(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
