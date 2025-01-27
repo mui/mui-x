@@ -16,7 +16,7 @@ import { getCell, getRow } from 'test/utils/helperFn';
 describe('<DataGridPro/> - Components', () => {
   const { render } = createRenderer();
 
-  let apiRef: RefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   function TestCase(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
@@ -56,7 +56,7 @@ describe('<DataGridPro/> - Components', () => {
         const propHandler = spy();
         const eventHandler = spy();
         render(<TestCase slotProps={{ cell: { [prop as any]: propHandler } }} />);
-        apiRef!.current.subscribeEvent(event, eventHandler);
+        apiRef.current?.subscribeEvent(event, eventHandler);
 
         expect(propHandler.callCount).to.equal(0);
         expect(eventHandler.callCount).to.equal(0);
@@ -82,7 +82,7 @@ describe('<DataGridPro/> - Components', () => {
       const propHandler = spy();
       const eventHandler = spy();
       const { user } = render(<TestCase slotProps={{ cell: { onKeyDown: propHandler } }} />);
-      apiRef!.current.subscribeEvent('cellKeyDown', eventHandler);
+      apiRef.current?.subscribeEvent('cellKeyDown', eventHandler);
 
       expect(propHandler.callCount).to.equal(0);
       expect(eventHandler.callCount).to.equal(0);
@@ -105,7 +105,7 @@ describe('<DataGridPro/> - Components', () => {
         const propHandler = spy();
         const eventHandler = spy();
         render(<TestCase slotProps={{ row: { [prop as any]: propHandler } }} />);
-        apiRef!.current.subscribeEvent(event, eventHandler);
+        apiRef.current?.subscribeEvent(event, eventHandler);
 
         expect(propHandler.callCount).to.equal(0);
         expect(eventHandler.callCount).to.equal(0);

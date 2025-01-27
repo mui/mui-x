@@ -31,7 +31,7 @@ const serverOptions = { minDelay: 0, maxDelay: 0, verbose: false };
 describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   const { render } = createRenderer();
 
-  let apiRef: RefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
   let fetchRowsSpy: SinonSpy;
   let mockServer: ReturnType<typeof useMockServer>;
 
@@ -126,9 +126,13 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   it('should fetch nested data when clicking on a dropdown', async () => {
     const { user } = render(<TestDataSource />);
 
+    if (!apiRef.current?.state) {
+      throw new Error('apiRef.current.state is not defined');
+    }
+
     expect(fetchRowsSpy.callCount).to.equal(1);
     await waitFor(() => {
-      expect(Object.keys(apiRef.current.state.rows.tree).length).to.equal(10 + 1);
+      expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
     });
 
     const cell11 = getCell(0, 0);
@@ -146,15 +150,20 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
 
   it('should fetch nested data when calling API method `unstable_dataSource.fetchRows`', async () => {
     render(<TestDataSource />);
+
+    if (!apiRef.current?.state) {
+      throw new Error('apiRef.current.state is not defined');
+    }
+
     expect(fetchRowsSpy.callCount).to.equal(1);
 
     await waitFor(() => {
-      expect(Object.keys(apiRef.current.state.rows.tree).length).to.equal(10 + 1);
+      expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
     });
 
     const firstChildId = (apiRef.current.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
       .children[0];
-    apiRef.current.unstable_dataSource.fetchRows(firstChildId);
+    apiRef.current?.unstable_dataSource.fetchRows(firstChildId);
 
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
@@ -170,17 +179,21 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   it('should lazily fetch nested data when using `defaultGroupingExpansionDepth`', async () => {
     render(<TestDataSource defaultGroupingExpansionDepth={1} />);
 
+    if (!apiRef.current?.state) {
+      throw new Error('apiRef.current.state is not defined');
+    }
+
     expect(fetchRowsSpy.callCount).to.equal(1);
     await waitFor(() => {
-      expect(apiRef.current.state.rows.groupsToFetch?.length).to.be.greaterThan(0);
+      expect(apiRef.current!.state.rows.groupsToFetch?.length).to.be.greaterThan(0);
     });
 
     // All the group nodes belonging to the grid root group should be there for fetching
     (apiRef.current.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode).children.forEach(
       (child) => {
-        const node = apiRef.current.state.rows.tree[child];
-        if (node.type === 'group') {
-          expect(apiRef.current.state.rows.groupsToFetch).to.include(child);
+        const node = apiRef.current?.state.rows.tree[child];
+        if (node?.type === 'group') {
+          expect(apiRef.current?.state.rows.groupsToFetch).to.include(child);
         }
       },
     );
