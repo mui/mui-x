@@ -6,7 +6,7 @@ import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSele
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridRenderContextSelector } from '../virtualization/gridVirtualizationSelectors';
 import { useGridSelector } from '../../utils/useGridSelector';
-import { gridRowTreeSelector } from './gridRowsSelector';
+import { gridRowTreeSelector, gridDataRowIdsSelector } from './gridRowsSelector';
 import type { GridColDef } from '../../../models/colDef';
 import type { GridRowId, GridValidRowModel, GridRowEntry } from '../../../models/gridRows';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -19,6 +19,8 @@ import {
   getCellValue,
 } from './gridRowSpanningUtils';
 import { GRID_CHECKBOX_SELECTION_FIELD } from '../../../colDef/gridCheckboxSelectionColDef';
+import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { gridPageSizeSelector } from '../pagination';
 
 export interface GridRowSpanningState {
   spannedCells: Record<GridRowId, Record<GridColDef['field'], number>>;
@@ -160,67 +162,88 @@ const computeRowSpanningState = (
   return { spannedCells, hiddenCells, hiddenCellOriginMap, processedRange };
 };
 
+const getInitialRangeToProcess = (
+  props: Pick<DataGridProcessedProps, 'pagination'>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
+) => {
+  const rowCount = gridDataRowIdsSelector(apiRef).length;
+
+  if (props.pagination) {
+    const pageSize = gridPageSizeSelector(apiRef);
+    let paginationLastRowIndex = DEFAULT_ROWS_TO_PROCESS;
+    if (pageSize > 0) {
+      paginationLastRowIndex = pageSize - 1;
+    }
+    return {
+      firstRowIndex: 0,
+      lastRowIndex: Math.min(paginationLastRowIndex, rowCount),
+    };
+  }
+
+  return {
+    firstRowIndex: 0,
+    lastRowIndex: Math.min(DEFAULT_ROWS_TO_PROCESS, rowCount),
+  };
+};
+
 /**
  * @requires columnsStateInitializer (method) - should be initialized before
  * @requires rowsStateInitializer (method) - should be initialized before
  * @requires filterStateInitializer (method) - should be initialized before
  */
 export const rowSpanningStateInitializer: GridStateInitializer = (state, props, apiRef) => {
-  if (props.unstable_rowSpanning) {
-    const rowIds = state.rows!.dataRowIds || [];
-    const orderedFields = state.columns!.orderedFields || [];
-    const dataRowIdToModelLookup = state.rows!.dataRowIdToModelLookup;
-    const columnsLookup = state.columns!.lookup;
-    const isFilteringPending =
-      Boolean(state.filter!.filterModel!.items!.length) ||
-      Boolean(state.filter!.filterModel!.quickFilterValues?.length);
-
-    if (
-      !rowIds.length ||
-      !orderedFields.length ||
-      !dataRowIdToModelLookup ||
-      !columnsLookup ||
-      isFilteringPending
-    ) {
-      return {
-        ...state,
-        rowSpanning: EMPTY_STATE,
-      };
-    }
-    const rangeToProcess = {
-      firstRowIndex: 0,
-      lastRowIndex: Math.min(DEFAULT_ROWS_TO_PROCESS, Math.max(rowIds.length, 0)),
-    };
-    const rows = rowIds.map((id) => ({
-      id,
-      model: dataRowIdToModelLookup[id!],
-    })) as GridRowEntry<GridValidRowModel>[];
-    const colDefs = orderedFields.map((field) => columnsLookup[field!]) as GridColDef[];
-    const { spannedCells, hiddenCells, hiddenCellOriginMap } = computeRowSpanningState(
-      apiRef,
-      colDefs,
-      rows,
-      rangeToProcess,
-      rangeToProcess,
-      true,
-      EMPTY_RANGE,
-    );
-
+  if (!props.unstable_rowSpanning) {
     return {
       ...state,
-      rowSpanning: {
-        spannedCells,
-        hiddenCells,
-        hiddenCellOriginMap,
-      },
+      rowSpanning: EMPTY_STATE,
     };
   }
+
+  const rowIds = state.rows!.dataRowIds || [];
+  const orderedFields = state.columns!.orderedFields || [];
+  const dataRowIdToModelLookup = state.rows!.dataRowIdToModelLookup;
+  const columnsLookup = state.columns!.lookup;
+  const isFilteringPending =
+    Boolean(state.filter!.filterModel!.items!.length) ||
+    Boolean(state.filter!.filterModel!.quickFilterValues?.length);
+
+  if (
+    !rowIds.length ||
+    !orderedFields.length ||
+    !dataRowIdToModelLookup ||
+    !columnsLookup ||
+    isFilteringPending
+  ) {
+    return {
+      ...state,
+      rowSpanning: EMPTY_STATE,
+    };
+  }
+  const rangeToProcess = getInitialRangeToProcess(props, apiRef);
+  const rows = rowIds.map((id) => ({
+    id,
+    model: dataRowIdToModelLookup[id!],
+  })) as GridRowEntry<GridValidRowModel>[];
+  const colDefs = orderedFields.map((field) => columnsLookup[field!]) as GridColDef[];
+  const { spannedCells, hiddenCells, hiddenCellOriginMap } = computeRowSpanningState(
+    apiRef,
+    colDefs,
+    rows,
+    rangeToProcess,
+    rangeToProcess,
+    true,
+    EMPTY_RANGE,
+  );
+
   return {
     ...state,
-    rowSpanning: EMPTY_STATE,
+    rowSpanning: {
+      spannedCells,
+      hiddenCells,
+      hiddenCellOriginMap,
+    },
   };
 };
-
 export const useGridRowSpanning = (
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'unstable_rowSpanning' | 'pagination' | 'paginationMode'>,
@@ -230,14 +253,8 @@ export const useGridRowSpanning = (
   const colDefs = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const tree = useGridSelector(apiRef, gridRowTreeSelector);
   const processedRange = useLazyRef<RowRange, void>(() => {
-    return Object.keys(apiRef.current.state.rowSpanning.spannedCells).length > 0
-      ? {
-          firstRowIndex: 0,
-          lastRowIndex: Math.min(
-            DEFAULT_ROWS_TO_PROCESS,
-            Math.max(apiRef.current.state.rows.dataRowIds.length, 0),
-          ),
-        }
+    return apiRef.current.state.rowSpanning !== EMPTY_STATE
+      ? getInitialRangeToProcess(props, apiRef)
       : EMPTY_RANGE;
   });
   const lastRange = React.useRef<RowRange>(EMPTY_RANGE);
