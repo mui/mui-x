@@ -3,8 +3,9 @@ import { RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../internals/constants';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
-import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
+import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridRenderContextSelector } from '../virtualization/gridVirtualizationSelectors';
+import { GridRenderContext } from '../../../models';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { gridRowTreeSelector, gridDataRowIdsSelector } from './gridRowsSelector';
 import type { GridColDef } from '../../../models/colDef';
@@ -12,13 +13,10 @@ import type { GridRowId, GridValidRowModel, GridRowEntry } from '../../../models
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
-import {
-  getUnprocessedRange,
-  isRowRangeUpdated,
-  isRowContextInitialized,
-  getCellValue,
-} from './gridRowSpanningUtils';
+import { getUnprocessedRange, isRowContextInitialized, getCellValue } from './gridRowSpanningUtils';
 import { GRID_CHECKBOX_SELECTION_FIELD } from '../../../colDef/gridCheckboxSelectionColDef';
+import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { runIf } from '../../../utils/utils';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { gridPageSizeSelector } from '../pagination';
 
@@ -97,9 +95,10 @@ const computeRowSpanningState = (
       const backwardsHiddenCells: number[] = [];
       if (index === rangeToProcess.firstRowIndex) {
         let prevIndex = index - 1;
-        const prevRowEntry = visibleRows[prevIndex];
+        let prevRowEntry = visibleRows[prevIndex];
         while (
           prevIndex >= range.firstRowIndex &&
+          prevRowEntry &&
           getCellValue(prevRowEntry.model, colDef, apiRef) === cellValue
         ) {
           const currentRow = visibleRows[prevIndex + 1];
@@ -113,6 +112,8 @@ const computeRowSpanningState = (
           spannedRowId = prevRowEntry.id;
           spannedRowIndex = prevIndex;
           prevIndex -= 1;
+
+          prevRowEntry = visibleRows[prevIndex];
         }
       }
 
@@ -248,16 +249,11 @@ export const useGridRowSpanning = (
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'unstable_rowSpanning' | 'pagination' | 'paginationMode'>,
 ): void => {
-  const { range, rows: visibleRows } = useGridVisibleRows(apiRef, props);
-  const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
-  const colDefs = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
-  const tree = useGridSelector(apiRef, gridRowTreeSelector);
   const processedRange = useLazyRef<RowRange, void>(() => {
     return apiRef.current.state.rowSpanning !== EMPTY_STATE
       ? getInitialRangeToProcess(props, apiRef)
       : EMPTY_RANGE;
   });
-  const lastRange = React.useRef<RowRange>(EMPTY_RANGE);
 
   const updateRowSpanningState = React.useCallback(
     // A reset needs to occur when:
@@ -294,6 +290,7 @@ export const useGridRowSpanning = (
         return;
       }
 
+      const colDefs = gridVisibleColumnDefinitionsSelector(apiRef);
       const {
         spannedCells,
         hiddenCells,
@@ -324,8 +321,9 @@ export const useGridRowSpanning = (
         resetState ||
         newSpannedCellsCount !== currentSpannedCellsCount ||
         newHiddenCellsCount !== currentHiddenCellsCount;
+      const hasNoSpannedCells = newSpannedCellsCount === 0 && currentSpannedCellsCount === 0;
 
-      if (!shouldUpdateState) {
+      if (!shouldUpdateState || hasNoSpannedCells) {
         return;
       }
 
@@ -351,32 +349,46 @@ export const useGridRowSpanning = (
     ],
   );
 
-  const prevRenderContext = React.useRef(renderContext);
-  const isFirstRender = React.useRef(true);
-  const shouldResetState = React.useRef(false);
-  const previousTree = React.useRef(tree);
+  // Reset events trigger a full re-computation of the row spanning state:
+  // - The `unstable_rowSpanning` prop is updated (feature flag)
+  // - The filtering is applied
+  // - The sorting is applied
+  // - The `paginationModel` is updated
+  // - The rows are updated
+  const resetRowSpanningState = React.useCallback(() => {
+    const renderContext = gridRenderContextSelector(apiRef);
+    if (!isRowContextInitialized(renderContext)) {
+      return;
+    }
+    updateRowSpanningState(renderContext, true);
+  }, [apiRef, updateRowSpanningState]);
+
+  useGridApiEventHandler(
+    apiRef,
+    'renderedRowsIntervalChange',
+    runIf(props.rowSpanning, updateRowSpanningState),
+  );
+
+  useGridApiEventHandler(apiRef, 'sortedRowsSet', runIf(props.rowSpanning, resetRowSpanningState));
+  useGridApiEventHandler(
+    apiRef,
+    'paginationModelChange',
+    runIf(props.rowSpanning, resetRowSpanningState),
+  );
+  useGridApiEventHandler(
+    apiRef,
+    'filteredRowsSet',
+    runIf(props.rowSpanning, resetRowSpanningState),
+  );
+  useGridApiEventHandler(apiRef, 'columnsChange', runIf(props.rowSpanning, resetRowSpanningState));
+
   React.useEffect(() => {
-    const firstRender = isFirstRender.current;
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-    }
-    if (tree !== previousTree.current) {
-      previousTree.current = tree;
-      updateRowSpanningState(true);
-      return;
-    }
-    if (range && lastRange.current && isRowRangeUpdated(range, lastRange.current)) {
-      lastRange.current = range;
-      shouldResetState.current = true;
-    }
-    if (!firstRender && prevRenderContext.current !== renderContext) {
-      if (isRowRangeUpdated(prevRenderContext.current, renderContext)) {
-        updateRowSpanningState(shouldResetState.current);
-        shouldResetState.current = false;
+    if (!props.rowSpanning) {
+      if (apiRef.current.state.rowSpanning !== EMPTY_STATE) {
+        apiRef.current.setState((state) => ({ ...state, rowSpanning: EMPTY_STATE }));
       }
-      prevRenderContext.current = renderContext;
-      return;
+    } else if (apiRef.current.state.rowSpanning === EMPTY_STATE) {
+      resetRowSpanningState();
     }
-    updateRowSpanningState();
-  }, [updateRowSpanningState, renderContext, range, lastRange, tree]);
+  }, [apiRef, resetRowSpanningState, props.rowSpanning]);
 };

@@ -9,12 +9,25 @@ import {
   useGridSelector,
   GridRowId,
 } from '@mui/x-data-grid';
-import { gridRowGroupsToFetchSelector, GridStateInitializer } from '@mui/x-data-grid/internals';
+import {
+  GridGetRowsResponse,
+  gridRowGroupsToFetchSelector,
+  GridStateInitializer,
+  GridStrategyGroup,
+  GridStrategyProcessor,
+  useGridRegisterStrategyProcessor,
+  runIf,
+} from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { gridGetRowsParamsSelector, gridDataSourceErrorsSelector } from './gridDataSourceSelector';
 import { GridDataSourceApi, GridDataSourceApiBase, GridDataSourcePrivateApi } from './interfaces';
-import { runIfServerMode, NestedDataManager, RequestStatus } from './utils';
+import {
+  CacheChunkManager,
+  DataSourceRowsUpdateStrategy,
+  NestedDataManager,
+  RequestStatus,
+} from './utils';
 import { GridDataSourceCache } from '../../../models';
 import { GridDataSourceCacheDefault } from './cache';
 
