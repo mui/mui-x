@@ -76,34 +76,6 @@ const EMPTY_DIMENSIONS: GridDimensions = {
   bottomContainerHeight: 0,
 };
 
-const getStaticDimensions = (
-  props: RootProps,
-  apiRef: RefObject<GridPrivateApiCommunity>,
-  density: number,
-  pinnedColumnns: ReturnType<typeof gridVisiblePinnedColumnDefinitionsSelector>,
-) => {
-  const validRowHeight = getValidRowHeight(
-    props.rowHeight,
-    DATA_GRID_PROPS_DEFAULT_VALUES.rowHeight,
-    rowHeightWarning,
-  );
-
-  return {
-    rowHeight: Math.floor(validRowHeight * density),
-    headerHeight: Math.floor(props.columnHeaderHeight * density),
-    groupHeaderHeight: Math.floor(
-      (props.columnGroupHeaderHeight ?? props.columnHeaderHeight) * density,
-    ),
-    headerFilterHeight: Math.floor(
-      (props.headerFilterHeight ?? props.columnHeaderHeight) * density,
-    ),
-    columnsTotalWidth: roundToDecimalPlaces(gridColumnsTotalWidthSelector(apiRef), 1),
-    headersTotalHeight: getTotalHeaderHeight(apiRef, props),
-    leftPinnedWidth: pinnedColumnns.left.reduce((w, col) => w + col.computedWidth, 0),
-    rightPinnedWidth: pinnedColumnns.right.reduce((w, col) => w + col.computedWidth, 0),
-  };
-};
-
 export const dimensionsStateInitializer: GridStateInitializer<RootProps> = (
   state,
   props,
@@ -423,6 +395,34 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
 
   useGridApiEventHandler(apiRef, 'resize', handleResize);
   useGridApiOptionHandler(apiRef, 'debouncedResize', props.onResize);
+}
+
+function getStaticDimensions(
+  props: RootProps,
+  apiRef: RefObject<GridPrivateApiCommunity>,
+  density: number,
+  pinnedColumnns: ReturnType<typeof gridVisiblePinnedColumnDefinitionsSelector>,
+) {
+  const validRowHeight = getValidRowHeight(
+    props.rowHeight,
+    DATA_GRID_PROPS_DEFAULT_VALUES.rowHeight,
+    rowHeightWarning,
+  );
+
+  return {
+    rowHeight: Math.floor(validRowHeight * density),
+    headerHeight: Math.floor(props.columnHeaderHeight * density),
+    groupHeaderHeight: Math.floor(
+      (props.columnGroupHeaderHeight ?? props.columnHeaderHeight) * density,
+    ),
+    headerFilterHeight: Math.floor(
+      (props.headerFilterHeight ?? props.columnHeaderHeight) * density,
+    ),
+    columnsTotalWidth: roundToDecimalPlaces(gridColumnsTotalWidthSelector(apiRef), 1),
+    headersTotalHeight: getTotalHeaderHeight(apiRef, props),
+    leftPinnedWidth: pinnedColumnns.left.reduce((w, col) => w + col.computedWidth, 0),
+    rightPinnedWidth: pinnedColumnns.right.reduce((w, col) => w + col.computedWidth, 0),
+  };
 }
 
 const scrollbarSizeCache = new WeakMap<Element, number>();
