@@ -71,11 +71,8 @@ export const gridFilteredDescendantCountLookupSelector = createSelector(
 export const gridExpandedSortedRowEntriesSelector = createSelectorMemoized(
   gridVisibleRowsLookupSelector,
   gridSortedRowEntriesSelector,
-  gridRowMaximumTreeDepthSelector,
-  gridFilterModelSelector,
-  gridQuickFilterValuesSelector,
-  (visibleRowsLookup, sortedRows, maxDepth, filterModel, quickFilterValues) => {
-    if (maxDepth < 2 && !filterModel.items.length && !quickFilterValues?.length) {
+  (visibleRowsLookup, sortedRows) => {
+    if (isObjectEmpty(visibleRowsLookup)) {
       return sortedRows;
     }
     return sortedRows.filter((row) => visibleRowsLookup[row.id] !== false);

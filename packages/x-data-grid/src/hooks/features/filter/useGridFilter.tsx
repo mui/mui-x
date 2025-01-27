@@ -454,7 +454,9 @@ export const useGridFilter = (
           filterCache,
         );
 
-        filteredRowsLookup[id] = isRowPassing;
+        if (!isRowPassing) {
+          filteredRowsLookup[id] = isRowPassing;
+        }
       }
 
       const footerId = 'auto-generated-group-footer-root';
