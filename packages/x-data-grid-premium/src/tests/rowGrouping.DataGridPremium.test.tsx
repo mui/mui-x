@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { config } from 'react-transition-group';
 import {
   createRenderer,
   fireEvent,
@@ -1775,6 +1776,10 @@ describe('<DataGridPremium /> - Row grouping', () => {
     });
 
     it('should add a "Stop grouping {field}" menu item for each grouping criteria on the grouping column when prop.rowGroupingColumnMode = "single"', () => {
+      const restoreDisabledConfig = config.disabled;
+      // enable `react-transition-group` transitions for this test
+      config.disabled = false;
+
       render(
         <Test
           columns={[
@@ -1809,6 +1814,9 @@ describe('<DataGridPremium /> - Row grouping', () => {
       });
       fireEvent.click(menuItemCategory2);
       expect(apiRef.current.state.rowGrouping.model).to.deep.equal([]);
+
+      // restore previous config
+      config.disabled = restoreDisabledConfig;
     });
 
     it('should add a "Stop grouping {field}" menu item for each grouping criteria with colDef.groupable = false but it should be disabled', () => {
