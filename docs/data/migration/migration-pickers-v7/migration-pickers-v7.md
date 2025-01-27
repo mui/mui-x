@@ -1589,6 +1589,39 @@ If you were using them, you need to replace them with the following code:
     +  extends BaseMultiInputPickersTextFieldProps<true> {}
     ```
 
+## Theme breaking change
+
+### `MuiPickersPopper`
+
+The theme entry have been renamed to have a coherent `Picker` / `Pickers` prefix:
+
+```diff
+ const theme = createTheme({
+   components: {
+-    MuiPickersPopper: {
++    MuiPickerPopper: {
+       styleOverrides: {},
+     },
+   },
+ });
+```
+
+The props that can be overridden have also been limited to the one that did not cause any bugs:
+
+```tsx
+const theme = createTheme({
+  components: {
+    MuiPickerPopper: {
+      defaultProps: {
+        // Those are now the props with support for theme default props
+        position: "bottom"
+        classes: { root: "custom-root-class}
+      },
+    },
+  },
+});
+```
+
 ## ✅ Rename `date-fns` adapter imports
 
 :::warning

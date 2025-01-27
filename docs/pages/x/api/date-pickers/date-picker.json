@@ -232,7 +232,7 @@
     {
       "name": "desktopPaper",
       "description": "Custom component for the paper rendered inside the desktop picker's Popper.",
-      "default": "PickersPopperPaper",
+      "default": "PickerPopperPaper",
       "class": null
     },
     {

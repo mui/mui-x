@@ -57,11 +57,6 @@ export interface UsePickerViewsBaseProps<
    */
   viewRenderers: PickerViewRendererLookup<TValue, TView, TExternalProps>;
   /**
-   * If `true`, disable heavy animations.
-   * @default `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13
-   */
-  reduceAnimations?: boolean;
-  /**
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
    */
@@ -114,7 +109,6 @@ export interface PickerRendererInterceptorProps<
 
 export interface UsePickerViewsResponse<TView extends DateOrTimeViewWithMeridiem> {
   renderCurrentView: () => React.ReactNode;
-  shouldRestoreFocus: () => boolean;
   provider: UsePickerViewsProviderParams<TView>;
 }
 
@@ -139,11 +133,24 @@ export interface UsePickerViewsContextValue<TView extends DateOrTimeViewWithMeri
   view: TView | null;
 }
 
+export interface UsePickerViewsPrivateContextValue {
+  /**
+   * Whether one of the view has an UI (it has a view renderer associated).
+   */
+  hasUIView: boolean;
+  /**
+   * Check whether the current view has an UI.
+   * @returns {boolean} Whether the current view has an UI.
+   */
+  doesTheCurrentViewHasAnUI: () => boolean;
+}
+
 export interface UsePickerViewsProviderParams<TView extends DateOrTimeViewWithMeridiem> {
   hasUIView: boolean;
   views: readonly TView[];
   contextValue: UsePickerViewsContextValue<TView>;
   actionsContextValue: UsePickerViewsActionsContextValue<TView>;
+  privateContextValue: UsePickerViewsPrivateContextValue;
 }
 
 /**
@@ -212,7 +219,7 @@ export const usePickerViews = <
   );
 
   const currentViewMode = viewModeLookup[view];
-  const shouldRestoreFocus = useEventCallback(() => currentViewMode === 'UI');
+  const doesTheCurrentViewHasAnUI = useEventCallback(() => currentViewMode === 'UI');
 
   const [popperView, setPopperView] = React.useState<TView | null>(
     currentViewMode === 'UI' ? view : null,
@@ -275,15 +282,20 @@ export const usePickerViews = <
     [actionsContextValue, views, popperView],
   );
 
+  const privateContextValue = React.useMemo<UsePickerViewsPrivateContextValue>(
+    () => ({ hasUIView, doesTheCurrentViewHasAnUI }),
+    [hasUIView, doesTheCurrentViewHasAnUI],
+  );
+
   const providerParams: UsePickerViewsProviderParams<TView> = {
     hasUIView,
     views,
     contextValue,
     actionsContextValue,
+    privateContextValue,
   };
 
   return {
-    shouldRestoreFocus,
     provider: providerParams,
     renderCurrentView: () => {
       if (popperView == null) {
