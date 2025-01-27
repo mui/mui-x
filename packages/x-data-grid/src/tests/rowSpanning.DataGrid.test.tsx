@@ -4,6 +4,7 @@ import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { DataGrid, useGridApiRef, DataGridProps, GridApi } from '@mui/x-data-grid';
 import { getCell, getActiveCell } from 'test/utils/helperFn';
+import { spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -250,11 +251,12 @@ describe('<DataGrid /> - Row spanning', () => {
 
   describe('rows update', () => {
     it('should update the row spanning state when the rows are updated', () => {
+      const rowSpanValueGetter = spy((value) => value);
       let rowSpanningStateUpdates = 0;
       let spannedCells = {};
       render(
         <TestDataGrid
-          columns={[{ field: 'code' }]}
+          columns={[{ field: 'code', rowSpanValueGetter }]}
           rows={[{ id: 1, code: 'A101' }]}
           onStateChange={(newState) => {
             const newSpannedCells = newState.rowSpanning.spannedCells;
