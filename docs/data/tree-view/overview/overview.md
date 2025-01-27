@@ -15,7 +15,31 @@ packageName: '@mui/x-tree-view'
 ## Overview
 
 The MUI X Tree View provides all of the functionality necessary to build a hierarchical list of expandable and collapsible items.
+The Tree View's theming features are designed to be frictionless when integrating with Material UI and other MUI X components, but it can also stand on its own and be customized to meet the needs of any design system.
+
+The Tree View is **open-core**: The Community version is MIT-licensed and free forever, while more advanced features require a Pro commercial license.
 
 The demo below shows how to render a Simple Tree View—try clicking on an item to see how it expands and collapses:
 
 {{"demo": "TreeViewOverviewDemo.js", "defaultCodeOpen": true}}
+
+## Community version (free forever)
+
+```js
+import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
+import { TreeItem } from '@mui/x-tree-view/TreeItem';
+```
+
+```js
+import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
+import { TreeViewBaseItem } from '@mui/x-tree-view/models';
+```
+
+## Pro version [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+```js
+import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
+import { TreeViewBaseItem } from '@mui/x-tree-view/models';
+```
+
+Pro features are denoted by the blue cube icon (<span class="plan-pro"></span>) throughout the documentation.
