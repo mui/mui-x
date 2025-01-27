@@ -56,8 +56,9 @@ import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
     slotProps={{
       legend: {
         direction: "vertical",
-        position: { 
-          vertical: 'top', 
+
+        position: {
+          vertical: 'top',
           horizontal: "center"
         }
       }
