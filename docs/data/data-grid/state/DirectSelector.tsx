@@ -23,7 +23,7 @@ export default function DirectSelector() {
       return;
     }
 
-    apiRef.current.selectRow(
+    apiRef.current?.selectRow(
       visibleRows[0],
       !apiRef.current.isRowSelected(visibleRows[0]),
     );

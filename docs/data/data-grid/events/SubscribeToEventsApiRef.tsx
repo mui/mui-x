@@ -16,7 +16,7 @@ export default function SubscribeToEventsApiRef() {
     };
 
     // The `subscribeEvent` method will automatically unsubscribe in the cleanup function of the `useEffect`.
-    return apiRef.current.subscribeEvent('rowClick', handleRowClick);
+    return apiRef.current?.subscribeEvent('rowClick', handleRowClick);
   }, [apiRef]);
 
   return (
