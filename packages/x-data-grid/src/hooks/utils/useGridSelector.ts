@@ -52,6 +52,8 @@ export const argsEqual = (prev: any, curr: any) => {
 
 const createRefs = () => ({ state: null, equals: null, selector: null, args: null }) as any;
 
+const EMPTY = [] as unknown[];
+
 export const useGridSelector = <Api extends GridApiCommon, Args, T>(
   apiRef: RefObject<Api>,
   selector: Selector<Api, Args, T>,
@@ -115,7 +117,8 @@ export const useGridSelector = <Api extends GridApiCommon, Args, T>(
         setState(newState);
       }
     });
-  }, [apiRef, refs]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, EMPTY);
 
   return state;
 };
