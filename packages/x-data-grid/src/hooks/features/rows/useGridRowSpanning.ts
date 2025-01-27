@@ -6,8 +6,6 @@ import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSele
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridRenderContextSelector } from '../virtualization/gridVirtualizationSelectors';
 import { GridRenderContext } from '../../../models';
-import { useGridSelector } from '../../utils/useGridSelector';
-import { gridRowTreeSelector, gridDataRowIdsSelector } from './gridRowsSelector';
 import type { GridColDef } from '../../../models/colDef';
 import type { GridRowId, GridValidRowModel, GridRowEntry } from '../../../models/gridRows';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -17,8 +15,8 @@ import { getUnprocessedRange, isRowContextInitialized, getCellValue } from './gr
 import { GRID_CHECKBOX_SELECTION_FIELD } from '../../../colDef/gridCheckboxSelectionColDef';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { runIf } from '../../../utils/utils';
-import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { gridPageSizeSelector } from '../pagination';
+import { gridDataRowIdsSelector } from './gridRowsSelector';
 
 export interface GridRowSpanningState {
   spannedCells: Record<GridRowId, Record<GridColDef['field'], number>>;
@@ -262,14 +260,11 @@ export const useGridRowSpanning = (
     // - The sorting is applied
     // - The `paginationModel` is updated
     // - The rows are updated
-    (resetState: boolean = true) => {
-      if (!props.unstable_rowSpanning) {
-        if (apiRef.current.state.rowSpanning !== EMPTY_STATE) {
-          apiRef.current.setState((state) => ({ ...state, rowSpanning: EMPTY_STATE }));
-        }
-        return;
-      }
-
+    (renderContext: GridRenderContext, resetState: boolean = true) => {
+      const { range, rows: visibleRows } = getVisibleRows(apiRef, {
+        pagination: props.pagination,
+        paginationMode: props.paginationMode,
+      });
       if (range === null || !isRowContextInitialized(renderContext)) {
         return;
       }
@@ -338,15 +333,7 @@ export const useGridRowSpanning = (
         };
       });
     },
-    [
-      apiRef,
-      props.unstable_rowSpanning,
-      range,
-      renderContext,
-      visibleRows,
-      colDefs,
-      processedRange,
-    ],
+    [apiRef, processedRange, props.pagination, props.paginationMode],
   );
 
   // Reset events trigger a full re-computation of the row spanning state:
@@ -366,29 +353,37 @@ export const useGridRowSpanning = (
   useGridApiEventHandler(
     apiRef,
     'renderedRowsIntervalChange',
-    runIf(props.rowSpanning, updateRowSpanningState),
+    runIf(props.unstable_rowSpanning, updateRowSpanningState),
   );
 
-  useGridApiEventHandler(apiRef, 'sortedRowsSet', runIf(props.rowSpanning, resetRowSpanningState));
+  useGridApiEventHandler(
+    apiRef,
+    'sortedRowsSet',
+    runIf(props.unstable_rowSpanning, resetRowSpanningState),
+  );
   useGridApiEventHandler(
     apiRef,
     'paginationModelChange',
-    runIf(props.rowSpanning, resetRowSpanningState),
+    runIf(props.unstable_rowSpanning, resetRowSpanningState),
   );
   useGridApiEventHandler(
     apiRef,
     'filteredRowsSet',
-    runIf(props.rowSpanning, resetRowSpanningState),
+    runIf(props.unstable_rowSpanning, resetRowSpanningState),
   );
-  useGridApiEventHandler(apiRef, 'columnsChange', runIf(props.rowSpanning, resetRowSpanningState));
+  useGridApiEventHandler(
+    apiRef,
+    'columnsChange',
+    runIf(props.unstable_rowSpanning, resetRowSpanningState),
+  );
 
   React.useEffect(() => {
-    if (!props.rowSpanning) {
+    if (!props.unstable_rowSpanning) {
       if (apiRef.current.state.rowSpanning !== EMPTY_STATE) {
         apiRef.current.setState((state) => ({ ...state, rowSpanning: EMPTY_STATE }));
       }
     } else if (apiRef.current.state.rowSpanning === EMPTY_STATE) {
       resetRowSpanningState();
     }
-  }, [apiRef, resetRowSpanningState, props.rowSpanning]);
+  }, [apiRef, resetRowSpanningState, props.unstable_rowSpanning]);
 };
