@@ -16,7 +16,8 @@ import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
       tooltip: { trigger: 'axis' },
       legend: { hidden: true }
     }} />
-  <ChartContainer>
+  <ChartContainer onAxisClick={onAxisClickHandler}>
+
     <BarPlot />
   </ChartContainer>
   <ChartsXAxis

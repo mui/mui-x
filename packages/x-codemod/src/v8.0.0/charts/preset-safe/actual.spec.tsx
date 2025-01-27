@@ -3,6 +3,7 @@ import * as React from 'react';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { BarPlot, BarChart } from '@mui/x-charts/BarChart';
 import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
+import { ChartsOnAxisClickHandler } from '@mui/x-charts/ChartsOnAxisClickHandler';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 
 // prettier-ignore
@@ -10,6 +11,7 @@ import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
   <PieChart legend={{ hidden: true }} />
   <PieChart legend={{ hidden: true }} slotProps={{ tooltip: { trigger: 'axis' } }} />
   <ResponsiveChartContainer>
+    <ChartsOnAxisClickHandler onAxisClick={onAxisClickHandler} />
     <BarPlot />
   </ResponsiveChartContainer>
   <ChartsXAxis labelFontSize={18} tickFontSize={20} />
