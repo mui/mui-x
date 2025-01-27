@@ -27,20 +27,7 @@ const configuration = {
 let propValidators: PropValidator<DataGridProcessedProps>[];
 
 if (process.env.NODE_ENV !== 'production') {
-  propValidators = [
-    ...propValidatorsDataGrid,
-    // Only validate in MIT version
-    (props) =>
-      (props.columns &&
-        props.columns.some((column) => column.resizable) &&
-        [
-          `MUI X: \`column.resizable = true\` is not a valid prop.`,
-          'Column resizing is not available in the MIT version.',
-          '',
-          'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
-        ].join('\n')) ||
-      undefined,
-  ];
+  propValidators = propValidatorsDataGrid;
 }
 
 const DataGridRaw = forwardRef(function DataGrid<R extends GridValidRowModel>(
