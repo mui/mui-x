@@ -16,7 +16,7 @@ export default function MultiFilteringPanelSnap() {
   const apiRef = useGridApiRef();
 
   useEnhancedEffect(() => {
-    apiRef.current.showFilterPanel();
+    apiRef.current?.showFilterPanel();
   }, [apiRef]);
 
   return (
