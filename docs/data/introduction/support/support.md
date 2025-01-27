@@ -40,7 +40,7 @@ You can browse the documentation, find an example close to your use case, and th
 </span>
 </a>
 
-- [Data Grid](/x/react-data-grid/#community-version)
+- [Data Grid](/x/react-data-grid/#community-version-free-forever)
 - [Date Pickers](/x/react-date-pickers/quickstart/#render-the-component)
 - [Charts](/x/react-charts/quickstart/#self-contained-charts)
 - [Tree View](/x/react-tree-view/)
