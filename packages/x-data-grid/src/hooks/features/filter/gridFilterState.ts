@@ -5,6 +5,12 @@ import { GridRowId, GridValidRowModel } from '../../../models/gridRows';
 export type GridFilterItemResult = { [key: Required<GridFilterItem>['id']]: boolean };
 export type GridQuickFilterValueResult = { [key: string]: boolean };
 
+export const defaultGridFilterLookup = {
+  filteredRowsLookup: {},
+  filteredChildrenCountLookup: {},
+  filteredDescendantCountLookup: {},
+};
+
 export const getDefaultGridFilterModel: () => GridFilterModel = () => ({
   items: [],
   logicOperator: GridLogicOperator.And,
