@@ -53,8 +53,11 @@ import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
   <BarChart
     slotProps={{
       legend: {
-        position: { vertical: 'top', horizontal: 'middle' },
-        direction: "vertical"
+        direction: "vertical",
+        position: { 
+          vertical: 'top', 
+          horizontal: "center"
+        }
       }
     }} />
   <BarChart

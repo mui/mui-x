@@ -28,7 +28,7 @@ import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
   <BarChart slotProps={{ legend: { direction: 'row' } }} />
   <BarChart slotProps={{ legend: { direction: 'column', position: { vertical: 'top', horizontal: 'middle' } } }} />
   <BarChart slotProps={{ legend: { direction: 'wrong' } }} />
-  <BarChart slotProps={{ legend: { position: { vertical: 'middle', horizontal: 'left' } } }} />
+  <BarChart legend={{ legend: { position: { vertical: 'middle', horizontal: 'left' } } }} />
   <BarChart slotProps={{ legend: { position: { vertical: 'top', horizontal: 'middle' } } }} />
   <BarChart slotProps={{ legend: { position: { vertical: 'bottom', horizontal: 'right' } } }} />
   <BarChart slotProps={{ legend: { position: { vertical: 'wrong', horizontal: 'wrong' } } }} />
