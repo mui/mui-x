@@ -5,6 +5,7 @@ import { BarPlot, BarChart } from '@mui/x-charts/BarChart';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
+import { Position } from '@mui/x-charts/models';
 
 // prettier-ignore
 <div>

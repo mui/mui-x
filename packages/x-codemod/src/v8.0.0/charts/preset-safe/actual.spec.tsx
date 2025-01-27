@@ -5,6 +5,7 @@ import { BarPlot, BarChart } from '@mui/x-charts/BarChart';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
+import { LegendPosition } from '@mui/x-charts/ChartsLegend';
 
 // prettier-ignore
 <div>

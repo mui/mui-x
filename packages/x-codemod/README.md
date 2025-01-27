@@ -206,6 +206,15 @@ Renames `ResponsiveChartContainer` and `ResponsiveChartContainerPro` by `ChartCo
 +</ChartContainer>
 ```
 
+#### `rename-legend-position-type`
+
+Renames `LegendPosition` to `Position`.
+
+```diff
+-import { LegendPosition } from '@mui/x-charts/ChartsLegend';
++import { Position } from '@mui/x-charts/models';
+```
+
 > [!WARNING]
 > If you imported both `ResponsiveChartContainer` and `ChartContainer` in the same file, you might end up with duplicated import.
 > Verify the git diff to remove the duplicate.

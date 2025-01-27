@@ -125,6 +125,15 @@ This is to align with the CSS values and reflect the RTL ability of the legend c
  />
 ```
 
+#### Rename `LegendPosition` type to `Position` ✅
+
+Renames `LegendPosition` to `Position`.
+
+```diff
+-import { LegendPosition } from '@mui/x-charts/ChartsLegend';
++import { Position } from '@mui/x-charts/models';
+```
+
 ## The `getSeriesToDisplay` function was removed
 
 The `getSeriesToDisplay` function was removed in favor of the `useLegend` hook. You can check the [HTML Components example](/x/react-charts/components/#html-components) for usage information.
