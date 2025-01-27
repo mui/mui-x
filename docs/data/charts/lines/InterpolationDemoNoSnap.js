@@ -1,3 +1,5 @@
+// @ts-check
+
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -6,19 +8,23 @@ import { LineChart } from '@mui/x-charts/LineChart';
 
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
 
+/**
+ * @type {import('@mui/x-charts/models').CurveType[]}
+ */
 const curveTypes = [
-  'catmullRom',
   'linear',
+  'catmullRom',
   'monotoneX',
   'monotoneY',
   'natural',
   'step',
   'stepBefore',
   'stepAfter',
-  'bumpY',
-  'bumpX',
 ];
 
+/**
+ * @param {import('@mui/x-charts/models').CurveType} curveType
+ */
 function getExample(curveType) {
   return `<LineChart
   series={[
@@ -28,8 +34,9 @@ function getExample(curveType) {
   {/* ... */}
 />`;
 }
+
 export default function InterpolationDemoNoSnap() {
-  const [curveType, setCurveType] = React.useState('linear');
+  const [curveType, setCurveType] = React.useState(curveTypes[0]);
 
   return (
     <Box sx={{ p: 2, width: 1, maxWidth: 600 }}>
@@ -38,6 +45,7 @@ export default function InterpolationDemoNoSnap() {
         label="interpolation method"
         value={curveType}
         sx={{ minWidth: 200, mb: 2 }}
+        // @ts-expect-error
         onChange={(event) => setCurveType(event.target.value)}
       >
         {curveTypes.map((curve) => (
