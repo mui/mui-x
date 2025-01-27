@@ -148,7 +148,7 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
     useOnMount(() => {
       const scroller = apiRef.current.virtualScrollerRef.current!;
       const scrollbar = scrollbarRef.current!;
-      const options = { passive: true };
+      const options: AddEventListenerOptions = { passive: true };
       scroller.addEventListener('scroll', onScrollerScroll, options);
       scrollbar.addEventListener('scroll', onScrollbarScroll, options);
       return () => {
