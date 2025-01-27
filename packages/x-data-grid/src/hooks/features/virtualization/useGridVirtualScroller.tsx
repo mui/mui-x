@@ -47,7 +47,9 @@ import { EMPTY_RENDER_CONTEXT } from './useGridVirtualization';
 import { gridRowSpanningHiddenCellsOriginMapSelector } from '../rows/gridRowSpanningSelectors';
 import { gridListColumnSelector } from '../listView/gridListViewSelectors';
 import { minimalContentHeight } from '../rows/gridRowsUtils';
+import { EMPTY_PINNED_COLUMN_FIELDS, GridPinnedColumns } from '../columns';
 import { gridFocusedVirtualCellSelector } from './gridFocusedVirtualCellSelector';
+import { roundToDecimalPlaces } from '../../../utils/roundToDecimalPlaces';
 import { isJSDOM } from '../../../utils/isJSDOM';
 
 const MINIMUM_COLUMN_WIDTH = 50;
@@ -105,18 +107,17 @@ export const useGridVirtualScroller = () => {
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
   const outerSize = dimensions.viewportOuterSize;
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
-  const pinnedColumnDefinitions = useGridSelector(
-    apiRef,
-    gridVisiblePinnedColumnDefinitionsSelector,
-  );
-  const pinnedColumns = listView ? { left: [], right: [] } : pinnedColumnDefinitions;
+  const pinnedColumnDefinitions = gridVisiblePinnedColumnDefinitionsSelector(apiRef);
+  const pinnedColumns = listView
+    ? (EMPTY_PINNED_COLUMN_FIELDS as unknown as GridPinnedColumns)
+    : pinnedColumnDefinitions;
   const hasBottomPinnedRows = pinnedRows.bottom.length > 0;
   const [panels, setPanels] = React.useState(EMPTY_DETAIL_PANELS);
 
   const isRtl = useRtl();
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const selectedRowsLookup = useGridSelector(apiRef, selectedIdsLookupSelector);
-  const currentPage = useGridVisibleRows(apiRef, rootProps);
+  const currentPage = useGridVisibleRows(apiRef);
   const mainRef = apiRef.current.mainElementRef;
   const scrollerRef = apiRef.current.virtualScrollerRef;
   const scrollbarVerticalRef = apiRef.current.virtualScrollbarVerticalRef;
@@ -137,7 +138,10 @@ export const useGridVirtualScroller = () => {
       }
 
       const initialRect = node.getBoundingClientRect();
-      let lastSize = roundDimensions(initialRect);
+      let lastSize = {
+        width: roundToDecimalPlaces(initialRect.width, 1),
+        height: roundToDecimalPlaces(initialRect.height, 1),
+      };
 
       if (
         !previousSize.current ||
@@ -158,7 +162,10 @@ export const useGridVirtualScroller = () => {
           return;
         }
 
-        const newSize = roundDimensions(entry.contentRect);
+        const newSize = {
+          width: roundToDecimalPlaces(entry.contentRect.width, 1),
+          height: roundToDecimalPlaces(entry.contentRect.height, 1),
+        };
 
         if (newSize.width === lastSize.width && newSize.height === lastSize.height) {
           return;
@@ -790,6 +797,13 @@ function computeRenderContext(
     lastColumnIndex: inputs.visibleColumns.length,
   };
 
+  if (inputs.listView) {
+    return {
+      ...renderContext,
+      lastColumnIndex: 1,
+    };
+  }
+
   const { top, left } = scrollPosition;
   const realLeft = Math.abs(left) + inputs.leftPinnedWidth;
 
@@ -1153,13 +1167,4 @@ function bufferForDirection(
       // eslint unable to figure out enum exhaustiveness
       throw new Error('unreachable');
   }
-}
-
-// Round to avoid issues with subpixel rendering
-// https://github.com/mui/mui-x/issues/15721
-function roundDimensions(dimensions: { width: number; height: number }) {
-  return {
-    width: Math.round(dimensions.width * 10) / 10,
-    height: Math.round(dimensions.height * 10) / 10,
-  };
 }

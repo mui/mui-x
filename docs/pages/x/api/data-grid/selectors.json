@@ -147,6 +147,12 @@
     "supportsApiRef": false
   },
   {
+    "name": "gridEditCellStateSelector",
+    "returnType": "GridEditCellProps<any>",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridEditRowsStateSelector",
     "returnType": "GridEditingState",
     "description": "Select the row editing state.",
@@ -404,6 +410,12 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridRowIsEditingSelector",
+    "returnType": "boolean",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridRowMaximumTreeDepthSelector",
     "returnType": "number",
     "description": "",
@@ -554,7 +566,7 @@
   },
   {
     "name": "gridVisibleRowsSelector",
-    "returnType": "{ rows: GridRowEntry<GridValidRowModel>[]; range: { firstRowIndex: number; lastRowIndex: number } | null; rowToIndexMap: Map<GridValidRowModel, number> }",
+    "returnType": "{ rows: GridRowEntry<GridValidRowModel>[]; range: { firstRowIndex: number; lastRowIndex: number } | null; rowIdToIndexMap: Map<GridRowId, number> }",
     "category": "Pagination",
     "description": "Get the rows, range and rowIndex lookup map after filtering and sorting.\nDoes not contain the collapsed children.",
     "supportsApiRef": true

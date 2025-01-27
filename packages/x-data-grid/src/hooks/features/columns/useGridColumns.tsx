@@ -392,11 +392,17 @@ export function useGridColumns(
    */
 
   const prevInnerWidth = React.useRef<number | null>(null);
-  const handleGridSizeChange: GridEventListener<'viewportInnerSizeChange'> = (
-    viewportInnerSize,
-  ) => {
-    if (prevInnerWidth.current !== viewportInnerSize.width) {
-      prevInnerWidth.current = viewportInnerSize.width;
+  const handleGridSizeChange: GridEventListener<'viewportInnerSizeChange'> = (size) => {
+    if (prevInnerWidth.current !== size.width) {
+      prevInnerWidth.current = size.width;
+
+      const hasFlexColumns = gridVisibleColumnDefinitionsSelector(apiRef).some(
+        (col) => col.flex && col.flex > 0,
+      );
+      if (!hasFlexColumns) {
+        return;
+      }
+
       setGridColumnsState(
         hydrateColumnsWidth(
           gridColumnsStateSelector(apiRef.current.state),

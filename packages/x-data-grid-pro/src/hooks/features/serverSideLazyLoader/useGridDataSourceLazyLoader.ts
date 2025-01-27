@@ -235,12 +235,12 @@ export const useGridDataSourceLazyLoader = (
       const newLoadingTrigger =
         rowCount === -1 ? LoadingTrigger.SCROLL_END : LoadingTrigger.VIEWPORT;
 
-      if (loadingTrigger.current !== newLoadingTrigger) {
-        loadingTrigger.current = newLoadingTrigger;
-      }
-
       if (loadingTrigger.current !== null) {
         ensureValidRowCount(loadingTrigger.current, newLoadingTrigger);
+      }
+
+      if (loadingTrigger.current !== newLoadingTrigger) {
+        loadingTrigger.current = newLoadingTrigger;
       }
     },
     [ensureValidRowCount],

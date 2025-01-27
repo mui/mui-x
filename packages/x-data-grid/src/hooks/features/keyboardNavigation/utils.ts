@@ -1,18 +1,8 @@
 import { RefObject } from '@mui/x-internals/types';
 import { gridFilteredSortedRowIdsSelector } from '../filter/gridFilterSelector';
-import { GridColDef, GridRowEntry, GridRowId } from '../../../models';
+import { GridColDef, GridRowId } from '../../../models';
 import { gridRowSpanningHiddenCellsSelector } from '../rows/gridRowSpanningSelectors';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
-import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
-
-export function enrichPageRowsWithPinnedRows(
-  apiRef: RefObject<GridApiCommunity>,
-  rows: GridRowEntry[],
-) {
-  const pinnedRows = gridPinnedRowsSelector(apiRef) || {};
-
-  return [...(pinnedRows.top || []), ...rows, ...(pinnedRows.bottom || [])];
-}
 
 export const getLeftColumnIndex = ({
   currentColIndex,
