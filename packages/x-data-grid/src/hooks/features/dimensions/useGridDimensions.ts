@@ -428,13 +428,13 @@ function measureScrollbarSize(rootElement: Element | null, scrollbarSize: number
     return scrollbarSize;
   }
 
-  const cachedSize = scrollbarSizeCache.get(rootElement!);
-  if (cachedSize !== undefined) {
-    return cachedSize;
-  }
-
   if (rootElement === null) {
     return 0;
+  }
+
+  const cachedSize = scrollbarSizeCache.get(rootElement);
+  if (cachedSize !== undefined) {
+    return cachedSize;
   }
 
   const doc = ownerDocument(rootElement);
