@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -19,7 +20,7 @@ export const preferencePanelStateInitializer: GridStateInitializer<
  * TODO: Add a single `setPreferencePanel` method to avoid multiple `setState`
  */
 export const useGridPreferencesPanel = (
-  apiRef: React.RefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'initialState'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridPreferencesPanel');

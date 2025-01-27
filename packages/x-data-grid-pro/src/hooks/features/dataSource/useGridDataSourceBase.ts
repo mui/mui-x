@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
 import {
   GridDataSourceGroupNode,
@@ -57,7 +58,7 @@ export const dataSourceStateInitializer: GridStateInitializer = (state) => {
 };
 
 export const useGridDataSourceBase = <Api extends GridPrivateApiPro>(
-  apiRef: React.RefObject<Api>,
+  apiRef: RefObject<Api>,
   props: Pick<
     DataGridProProcessedProps,
     | 'unstable_dataSource'
