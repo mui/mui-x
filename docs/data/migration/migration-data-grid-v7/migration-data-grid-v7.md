@@ -71,6 +71,17 @@ Below are described the steps you need to make to migrate from v7 to v8.
    />
   ```
 
+- Return type of the `useGridApiRef()` hook and the type of `apiRef` prop are updated to explicitly include the possibilty of `null`. In addition to this, `useGridApiRef()` returns a reference that is initialized with `null` instead of `{}`.
+
+  Only the initial value and the type are updated. Logic that initializes the API and its availability remained the same, which means that if you could access API in a particular line of your code before, you are able to access it as well after this change.
+
+  Depending on the context in which the API is being used, you can decide what is the best way to deal with `null` value. Some options are:
+
+  - Use optional chaining
+  - Use non-null assertion operator if you are sure your code is always executed when the `apiRef` is not `null`
+  - Return early if `apiRef` is `null`
+  - Throw an error if `apiRef` is `null`
+
 ### Localization
 
 - If `estimatedRowCount` is used, the text provided to the [Table Pagination](/material-ui/api/table-pagination/) component from the Material UI library is updated and requires additional translations. Check the example at the end of [Index-based pagination section](/x/react-data-grid/pagination/#index-based-pagination).

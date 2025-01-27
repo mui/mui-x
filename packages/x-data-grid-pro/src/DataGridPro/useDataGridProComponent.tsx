@@ -89,7 +89,7 @@ import {
 import { useGridDataSourceLazyLoader } from '../hooks/features/serverSideLazyLoader/useGridDataSourceLazyLoader';
 
 export const useDataGridProComponent = (
-  inputApiRef: RefObject<GridApiPro> | undefined,
+  inputApiRef: RefObject<GridApiPro | null> | undefined,
   props: DataGridProProcessedProps,
 ) => {
   const apiRef = useGridInitialization<GridPrivateApiPro, GridApiPro>(inputApiRef, props);

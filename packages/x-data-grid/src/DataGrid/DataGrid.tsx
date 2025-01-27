@@ -91,7 +91,7 @@ DataGridRaw.propTypes = {
    * The ref object that allows Data Grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef: PropTypes.shape({
-    current: PropTypes.object.isRequired,
+    current: PropTypes.object,
   }),
   /**
    * The label of the Data Grid.
