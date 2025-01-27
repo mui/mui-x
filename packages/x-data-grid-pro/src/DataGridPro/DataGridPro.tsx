@@ -977,6 +977,9 @@ DataGridProRaw.propTypes = {
     getRows: PropTypes.func.isRequired,
     updateRow: PropTypes.func,
   }),
+  /**
+   * Data source cache object.
+   */
   unstable_dataSourceCache: PropTypes.shape({
     clear: PropTypes.func.isRequired,
     get: PropTypes.func.isRequired,
@@ -1009,6 +1012,11 @@ DataGridProRaw.propTypes = {
    * Use in combination with `unstable_listColumn`.
    */
   unstable_listView: PropTypes.bool,
+  /**
+   * Callback fired when the data source request fails.
+   * @param {Error} error The error object.
+   * @param {GridGetRowsParams} params With all properties from [[GridGetRowsParams]].
+   */
   unstable_onDataSourceError: PropTypes.func,
   /**
    * If `true`, the Data Grid enables column virtualization when `getRowHeight` is set to `() => 'auto'`.
