@@ -534,7 +534,6 @@ export const useGridVirtualScroller = () => {
           rowId={id}
           index={rowIndex}
           selected={isSelected}
-          offsetTop={params.rows ? undefined : rowsMeta.positions[rowIndexInPage]}
           offsetLeft={offsetLeft}
           columnsTotalWidth={dimensions.columnsTotalWidth}
           rowHeight={baseRowHeight}
