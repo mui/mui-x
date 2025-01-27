@@ -124,11 +124,18 @@ export interface UsePickerViewsActionsContextValue<TView extends DateOrTimeViewW
 export interface UsePickerViewsContextValue<TView extends DateOrTimeViewWithMeridiem>
   extends UsePickerViewsActionsContextValue<TView> {
   /**
-   * Available views.
+   * The views that the picker must render.
+   * It is equal to the picker `views` prop if defined.
+   * Otherwise, a default set of views is provided based on the component you are using:
+   * - Date Pickers: ['year', 'day']
+   * - Time Pickers: ['hours', 'minutes']
+   * - Date Time Pickers: ['year', 'day', 'hours', 'minutes']
+   * - Date Range Pickers: ['day']
+   * - Date Time Range Pickers: ['day', 'hours', 'minutes']
    */
   views: readonly TView[];
   /**
-   * View currently rendered.
+   * The view currently rendered.
    */
   view: TView | null;
 }
