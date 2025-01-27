@@ -2,7 +2,7 @@ import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import useForkRef from '@mui/utils/useForkRef';
 import useId from '@mui/utils/useId';
-import { PickersPopper } from '../../components/PickersPopper';
+import { PickerPopper } from '../../components/PickerPopper/PickerPopper';
 import { UseDesktopPickerParams, UseDesktopPickerProps } from './useDesktopPicker.types';
 import { usePicker } from '../usePicker';
 import { PickersLayout } from '../../../PickersLayout';
@@ -41,7 +41,6 @@ export const useDesktopPicker = <
     readOnly,
     autoFocus,
     localeText,
-    reduceAnimations,
   } = props;
 
   const fieldRef = React.useRef<FieldRef<PickerValue>>(null);
@@ -49,7 +48,7 @@ export const useDesktopPicker = <
   const labelId = useId();
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
 
-  const { providerProps, renderCurrentView, shouldRestoreFocus, ownerState } = usePicker<
+  const { providerProps, renderCurrentView, ownerState } = usePicker<
     PickerValue,
     TView,
     TExternalProps
@@ -115,19 +114,11 @@ export const useDesktopPicker = <
     <PickerProvider {...providerProps}>
       <PickerFieldUIContextProvider slots={slots} slotProps={slotProps}>
         <Field {...fieldProps} unstableFieldRef={handleFieldRef} />
-        <PickersPopper
-          role="dialog"
-          placement="bottom-start"
-          anchorEl={providerProps.contextValue.triggerRef!.current}
-          slots={slots}
-          slotProps={slotProps}
-          shouldRestoreFocus={shouldRestoreFocus}
-          reduceAnimations={reduceAnimations}
-        >
+        <PickerPopper role="dialog" slots={slots} slotProps={slotProps}>
           <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
             {renderCurrentView()}
           </Layout>
-        </PickersPopper>
+        </PickerPopper>
       </PickerFieldUIContextProvider>
     </PickerProvider>
   );

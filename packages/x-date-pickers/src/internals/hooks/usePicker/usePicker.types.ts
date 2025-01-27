@@ -6,7 +6,6 @@ import {
 import {
   UsePickerViewsProps,
   UsePickerViewParams,
-  UsePickerViewsResponse,
   UsePickerViewsBaseProps,
 } from './usePickerViews';
 import { InferError, PickerOwnerState } from '../../../models';
@@ -57,10 +56,8 @@ export interface UsePickerParams<
   props: TExternalProps;
 }
 
-export interface UsePickerResponse<
-  TValue extends PickerValidValue,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends Pick<UsePickerViewsResponse<TView>, 'shouldRestoreFocus' | 'renderCurrentView'> {
+export interface UsePickerReturnValue<TValue extends PickerValidValue> {
   ownerState: PickerOwnerState;
+  renderCurrentView: () => React.ReactNode;
   providerProps: UsePickerProviderReturnValue<TValue>;
 }

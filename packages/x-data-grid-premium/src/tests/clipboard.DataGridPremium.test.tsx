@@ -18,7 +18,7 @@ import { isJSDOM, describeSkipIf } from 'test/utils/skipIf';
 describe('<DataGridPremium /> - Clipboard', () => {
   const { render } = createRenderer();
 
-  let apiRef: RefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   function Test({
     rowLength = 4,
@@ -189,7 +189,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         render(<Test />);
 
         const listener = spy();
-        apiRef.current.subscribeEvent('cellEditStart', listener);
+        apiRef.current?.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'v', keyCode: 86, [key]: true }); // Ctrl+V
@@ -202,7 +202,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         render(<Test editMode="row" />);
 
         const listener = spy();
-        apiRef.current.subscribeEvent('rowEditStart', listener);
+        apiRef.current?.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'v', keyCode: 86, [key]: true }); // Ctrl+V

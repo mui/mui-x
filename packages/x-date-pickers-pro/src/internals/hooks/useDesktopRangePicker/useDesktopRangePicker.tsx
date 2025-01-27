@@ -6,7 +6,7 @@ import {
   executeInTheNextEventLoopTick,
   getActiveElement,
   usePicker,
-  PickersPopper,
+  PickerPopper,
   DateOrTimeViewWithMeridiem,
   PickerProvider,
   PickerValue,
@@ -55,7 +55,6 @@ export const useDesktopRangePicker = <
     autoFocus,
     disableOpenPicker,
     localeText,
-    reduceAnimations,
   } = props;
 
   const fieldContainerRef = React.useRef<HTMLDivElement>(null);
@@ -80,7 +79,7 @@ export const useDesktopRangePicker = <
     fieldRef = endFieldRef;
   }
 
-  const { providerProps, renderCurrentView, shouldRestoreFocus, ownerState } = usePicker<
+  const { providerProps, renderCurrentView, ownerState } = usePicker<
     PickerRangeValue,
     TView,
     TExternalProps
@@ -185,21 +184,17 @@ export const useDesktopRangePicker = <
       <PickerFieldUIContextProvider slots={slots} slotProps={slotProps}>
         <PickerRangePositionContext.Provider value={rangePositionResponse}>
           <Field {...enrichedFieldResponse.fieldProps} />
-          <PickersPopper
+          <PickerPopper
             role="tooltip"
-            placement="bottom-start"
             containerRef={popperRef}
-            anchorEl={providerProps.contextValue.triggerRef.current}
             onBlur={handleBlur}
             slots={slots}
             slotProps={slotProps}
-            shouldRestoreFocus={shouldRestoreFocus}
-            reduceAnimations={reduceAnimations}
           >
             <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
               {renderCurrentView()}
             </Layout>
-          </PickersPopper>
+          </PickerPopper>
         </PickerRangePositionContext.Provider>
       </PickerFieldUIContextProvider>
     </PickerProvider>
