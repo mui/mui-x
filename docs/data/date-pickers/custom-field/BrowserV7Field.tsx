@@ -33,7 +33,6 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
 );
 
 function BrowserDateField(props: DatePickerFieldProps) {
-  console.log('AA', props);
   const fieldResponse = useDateField<true, typeof props>(props);
 
   const {

@@ -29,7 +29,6 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
 );
 
 function BrowserDateField(props) {
-  console.log('AA', props);
   const fieldResponse = useDateField(props);
 
   const {
