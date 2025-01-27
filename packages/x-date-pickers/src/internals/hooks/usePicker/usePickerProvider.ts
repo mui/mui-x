@@ -19,6 +19,7 @@ import { useUtils } from '../useUtils';
 import { arrayIncludes } from '../../utils/utils';
 import { UsePickerViewsProviderParams } from './usePickerViews';
 import { PickerFieldPrivateContextValue } from '../useField/useFieldInternalPropsWithDefaults';
+import { useReduceAnimations } from '../useReduceAnimations';
 
 function getOrientation(): PickerOrientation {
   if (typeof window === 'undefined') {
@@ -80,6 +81,8 @@ export function usePickerProvider<
 
   const utils = useUtils();
   const orientation = usePickerOrientation(paramsFromUsePickerViews.views, props.orientation);
+  const reduceAnimations = useReduceAnimations(props.reduceAnimations);
+
   const triggerRef = React.useRef<HTMLElement>(null);
 
   const ownerState = React.useMemo<PickerOwnerState>(
@@ -127,6 +130,7 @@ export function usePickerProvider<
       readOnly: props.readOnly ?? false,
       variant,
       orientation,
+      reduceAnimations,
       triggerRef,
       triggerStatus,
       fieldFormat: props.format ?? '',
@@ -142,6 +146,7 @@ export function usePickerProvider<
       ref,
       variant,
       orientation,
+      reduceAnimations,
       props.disabled,
       props.readOnly,
       props.format,
@@ -155,8 +160,16 @@ export function usePickerProvider<
   );
 
   const privateContextValue = React.useMemo<PickerPrivateContextValue>(
-    () => ({ ...paramsFromUsePickerValue.privateContextValue, ownerState }),
-    [paramsFromUsePickerValue, ownerState],
+    () => ({
+      ...paramsFromUsePickerValue.privateContextValue,
+      ...paramsFromUsePickerViews.privateContextValue,
+      ownerState,
+    }),
+    [
+      paramsFromUsePickerValue.privateContextValue,
+      paramsFromUsePickerViews.privateContextValue,
+      ownerState,
+    ],
   );
 
   const actionsContextValue = React.useMemo(
@@ -217,6 +230,11 @@ export interface UsePickerProviderProps extends FormProps {
    * Force rendering in particular orientation.
    */
   orientation?: PickerOrientation;
+  /**
+   * If `true`, disable heavy animations.
+   * @default `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13
+   */
+  reduceAnimations?: boolean;
 }
 
 /**
