@@ -35,6 +35,7 @@ import {
 import { getTotalHeaderHeight } from '../columns/gridColumnsUtils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../../constants/dataGridPropsDefaultValues';
+import { roundToDecimalPlaces } from '../../../utils/roundToDecimalPlaces';
 import { isJSDOM } from '../../../utils/isJSDOM';
 
 type RootProps = Pick<
@@ -112,7 +113,7 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
   const headerFilterHeight = Math.floor(
     (props.headerFilterHeight ?? props.columnHeaderHeight) * densityFactor,
   );
-  const columnsTotalWidth = roundToDecimalPlaces(gridColumnsTotalWidthSelector(apiRef), 6);
+  const columnsTotalWidth = roundToDecimalPlaces(gridColumnsTotalWidthSelector(apiRef), 1);
   const headersTotalHeight = getTotalHeaderHeight(apiRef, props);
 
   const leftPinnedWidth = pinnedColumns.left.reduce((w, col) => w + col.computedWidth, 0);
@@ -159,6 +160,9 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
   }, [apiRef, props.pagination, props.paginationMode, props.getRowHeight, rowHeight]);
 
   const updateDimensions = React.useCallback(() => {
+    // All the floating point dimensions should be rounded to .1 decimal places to avoid subpixel rendering issues
+    // https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
+    // https://github.com/mui/mui-x/issues/15721
     const rootElement = apiRef.current.rootElementRef.current;
     const pinnedRowsHeight = calculatePinnedRowsHeight(apiRef);
 
@@ -167,11 +171,9 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     const topContainerHeight = headersTotalHeight + pinnedRowsHeight.top;
     const bottomContainerHeight = pinnedRowsHeight.bottom;
 
-    const nonPinnedColumnsTotalWidth = columnsTotalWidth - leftPinnedWidth - rightPinnedWidth;
-
     const contentSize = {
-      width: nonPinnedColumnsTotalWidth,
-      height: rowsMeta.currentPageTotalHeight,
+      width: columnsTotalWidth,
+      height: roundToDecimalPlaces(rowsMeta.currentPageTotalHeight, 1),
     };
 
     let viewportOuterSize: ElementSize;
@@ -197,7 +199,7 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
         height: rootDimensionsRef.current.height,
       };
       viewportInnerSize = {
-        width: Math.max(0, viewportOuterSize.width - leftPinnedWidth - rightPinnedWidth),
+        width: Math.max(0, viewportOuterSize.width),
         height: Math.max(0, viewportOuterSize.height - topContainerHeight - bottomContainerHeight),
       };
 
@@ -396,12 +398,6 @@ function measureScrollbarSize(
   const size = scrollDiv.offsetWidth - scrollDiv.clientWidth;
   rootElement.removeChild(scrollDiv);
   return size;
-}
-
-// Get rid of floating point imprecision errors
-// https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
-function roundToDecimalPlaces(value: number, decimals: number) {
-  return Math.round(value * 10 ** decimals) / 10 ** decimals;
 }
 
 function areElementSizesEqual(a: ElementSize, b: ElementSize) {

@@ -48,7 +48,7 @@ describe('<DataGridPremium /> - Row selection', () => {
   const { render } = createRenderer();
 
   describe('props: rowSelectionPropagation = { descendants: true, parents: true }', () => {
-    let apiRef: RefObject<GridApi>;
+    let apiRef: RefObject<GridApi | null>;
 
     function Test(props: Partial<DataGridPremiumProps>) {
       apiRef = useGridApiRef();
@@ -87,7 +87,7 @@ describe('<DataGridPremium /> - Row selection', () => {
       render(<Test />);
 
       fireEvent.click(getCell(1, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([
         'auto-generated-row-category1/Cat B',
         3,
         4,
@@ -98,13 +98,13 @@ describe('<DataGridPremium /> - Row selection', () => {
       render(<Test />);
 
       fireEvent.click(getCell(1, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([
         'auto-generated-row-category1/Cat B',
         3,
         4,
       ]);
       fireEvent.click(getCell(1, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows().size).to.equal(0);
+      expect(apiRef.current?.getSelectedRows().size).to.equal(0);
     });
 
     it('should auto select the parent if all the children are selected', () => {
@@ -113,7 +113,7 @@ describe('<DataGridPremium /> - Row selection', () => {
       fireEvent.click(getCell(1, 0).querySelector('input')!);
       fireEvent.click(getCell(2, 0).querySelector('input')!);
       fireEvent.click(getCell(3, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([
         0,
         1,
         2,
@@ -127,14 +127,14 @@ describe('<DataGridPremium /> - Row selection', () => {
       await user.click(getCell(1, 0).querySelector('input')!);
       await user.click(getCell(2, 0).querySelector('input')!);
       await user.click(getCell(3, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([
         0,
         1,
         2,
         'auto-generated-row-category1/Cat A',
       ]);
       await user.click(getCell(2, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([0, 2]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([0, 2]);
     });
 
     // Context: https://github.com/mui/mui-x/issues/15206
@@ -145,14 +145,14 @@ describe('<DataGridPremium /> - Row selection', () => {
       const expectedCount = 3;
 
       fireEvent.click(getCell(1, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows()).to.have.keys(expectedKeys);
-      expect(apiRef.current.state.rowSelection.length).to.equal(expectedCount);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys(expectedKeys);
+      expect(apiRef.current?.state.rowSelection.length).to.equal(expectedCount);
 
       act(() => {
-        apiRef.current.updateRows([...rows]);
+        apiRef.current?.updateRows([...rows]);
       });
-      expect(apiRef.current.getSelectedRows()).to.have.keys(expectedKeys);
-      expect(apiRef.current.state.rowSelection.length).to.equal(expectedCount);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys(expectedKeys);
+      expect(apiRef.current?.state.rowSelection.length).to.equal(expectedCount);
     });
 
     it('should select all the children when selecting an indeterminate parent', () => {
@@ -161,7 +161,7 @@ describe('<DataGridPremium /> - Row selection', () => {
       fireEvent.click(getCell(2, 0).querySelector('input')!);
       expect(getCell(0, 0).querySelector('input')!).to.have.attr('data-indeterminate', 'true');
       fireEvent.click(getCell(0, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([
         0,
         1,
         2,
