@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
+import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, createEvent, act } from '@mui/internal-test-utils';
 import {
   getColumnHeadersTextContent,
@@ -51,7 +52,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
   };
 
   it('resizing after columns reorder should respect the new columns order', async () => {
-    let apiRef: React.RefObject<GridApi>;
+    let apiRef: RefObject<GridApi>;
 
     function TestCase(props: { width: number }) {
       const { width } = props;
@@ -73,7 +74,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
   });
 
   it('should not reset the column order when a prop change', async () => {
-    let apiRef: React.RefObject<GridApi>;
+    let apiRef: RefObject<GridApi>;
     const rows = [{ id: 0, brand: 'Nike' }];
     const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
 
@@ -96,7 +97,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
   });
 
   it('should allow to reorder columns by dropping outside the header row', () => {
-    let apiRef: React.RefObject<GridApi>;
+    let apiRef: RefObject<GridApi>;
     const rows = [{ id: 0, brand: 'Nike' }];
     const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
 
@@ -127,7 +128,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
   });
 
   it('should cancel the reordering when dropping the column outside the grid', () => {
-    let apiRef: React.RefObject<GridApi>;
+    let apiRef: RefObject<GridApi>;
     const rows = [{ id: 0, brand: 'Nike' }];
     const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
 
@@ -158,7 +159,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
   });
 
   it('should keep the order of the columns when dragStart is fired and disableColumnReorder=true', () => {
-    let apiRef: React.RefObject<GridApi>;
+    let apiRef: RefObject<GridApi>;
     const rows = [{ id: 0, brand: 'Nike' }];
     const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
 
@@ -181,7 +182,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
   });
 
   it('should keep the order of the columns when dragEnd is fired and disableColumnReorder=true', () => {
-    let apiRef: React.RefObject<GridApi>;
+    let apiRef: RefObject<GridApi>;
     const rows = [{ id: 0, brand: 'Nike' }];
     const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
 
@@ -205,7 +206,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
 
   it('should call onColumnOrderChange after the column has been reordered', () => {
     const onColumnOrderChange = spy();
-    let apiRef: React.RefObject<GridApi>;
+    let apiRef: RefObject<GridApi>;
     function Test() {
       apiRef = useGridApiRef();
       const data = useBasicDemoData(1, 3);
@@ -239,7 +240,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
 
   describe('column - disableReorder', () => {
     it('should not allow to start dragging a column with disableReorder=true', () => {
-      let apiRef: React.RefObject<GridApi>;
+      let apiRef: RefObject<GridApi>;
       const rows = [{ id: 0, brand: 'Nike' }];
       const columns = [
         { field: 'brand' },
@@ -278,7 +279,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     });
 
     it('should not allow to drag left of first visible column if it has disableReorder=true', () => {
-      let apiRef: React.RefObject<GridApi>;
+      let apiRef: RefObject<GridApi>;
       const rows = [{ id: 0, brand: 'Nike' }];
       const columns = [
         { field: 'brand', disableReorder: true },
@@ -313,7 +314,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     });
 
     it('should not allow to drag right of last visible column if it has disableReorder=true', () => {
-      let apiRef: React.RefObject<GridApi>;
+      let apiRef: RefObject<GridApi>;
       const rows = [{ id: 0, brand: 'Nike' }];
       const columns = [
         { field: 'brand' },
@@ -385,7 +386,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     const handleDragEnter = spy();
     const handleDragOver = spy();
     const handleDragEnd = spy();
-    let apiRef: React.RefObject<GridApi>;
+    let apiRef: RefObject<GridApi>;
     function Test() {
       apiRef = useGridApiRef();
       const data = useBasicDemoData(3, 3);

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   useGridSelector,
   gridVisibleColumnDefinitionsSelector,
@@ -47,7 +48,7 @@ export const columnPinningStateInitializer: GridStateInitializer<
 };
 
 export const useGridColumnPinning = (
-  apiRef: React.RefObject<GridPrivateApiPro>,
+  apiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     | 'disableColumnPinning'
@@ -233,7 +234,7 @@ export const useGridColumnPinning = (
   const setPinnedColumns = React.useCallback<GridColumnPinningApi['setPinnedColumns']>(
     (newPinnedColumns) => {
       setState(apiRef, newPinnedColumns);
-      apiRef.current.forceUpdate();
+      apiRef.current.requestPipeProcessorsApplication('hydrateColumns');
     },
     [apiRef],
   );
@@ -336,7 +337,7 @@ export const useGridColumnPinning = (
   }, [apiRef, props.pinnedColumns]);
 };
 
-function setState(apiRef: React.RefObject<GridPrivateApiPro>, model: GridPinnedColumnFields) {
+function setState(apiRef: RefObject<GridPrivateApiPro>, model: GridPinnedColumnFields) {
   apiRef.current.setState((state) => ({
     ...state,
     pinnedColumns: model,

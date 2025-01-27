@@ -1,4 +1,4 @@
-import { SeriesProcessor } from './seriesProcessor.types';
+import { LegendGetter, SeriesProcessor } from './seriesProcessor.types';
 import { CartesianChartSeriesType, ChartSeriesType } from '../../../../models/seriesType/config';
 import { ColorProcessor } from './colorProcessor.types';
 import { CartesianExtremumGetter } from './extremumGetter.types';
@@ -6,6 +6,7 @@ import { CartesianExtremumGetter } from './extremumGetter.types';
 export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
   seriesProcessor: SeriesProcessor<TSeriesType>;
   colorProcessor: ColorProcessor<TSeriesType>;
+  legendGetter: LegendGetter<TSeriesType>;
   // rotationExtremumGetters: ExtremumGettersConfig<Key>;
   // radiusExtremumGetters: ExtremumGettersConfig<Key>;
 } & (TSeriesType extends CartesianChartSeriesType
