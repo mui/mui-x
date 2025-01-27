@@ -423,7 +423,11 @@ export const useGridFilter = (
 
   const flatFilteringMethod = React.useCallback<GridStrategyProcessor<'filtering'>>(
     (params) => {
-      if (props.filterMode !== 'client' || !params.isRowMatchingFilters) {
+      if (
+        props.filterMode !== 'client' ||
+        !params.isRowMatchingFilters ||
+        (!params.filterModel.items.length && !params.filterModel.quickFilterValues?.length)
+      ) {
         return {
           filteredRowsLookup: {},
           filteredChildrenCountLookup: {},

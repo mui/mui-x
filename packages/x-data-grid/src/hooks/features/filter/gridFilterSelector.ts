@@ -5,6 +5,7 @@ import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { gridSortedRowEntriesSelector } from '../sorting/gridSortingSelector';
 import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
 import { gridRowMaximumTreeDepthSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
+import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
 
 /**
  * @category Filtering
@@ -100,7 +101,9 @@ export const gridFilteredSortedRowEntriesSelector = createSelectorMemoized(
   gridFilteredRowsLookupSelector,
   gridSortedRowEntriesSelector,
   (filteredRowsLookup, sortedRows) =>
-    sortedRows.filter((row) => filteredRowsLookup[row.id] !== false),
+    isObjectEmpty(filteredRowsLookup)
+      ? sortedRows
+      : sortedRows.filter((row) => filteredRowsLookup[row.id] !== false),
 );
 
 /**

@@ -39,6 +39,7 @@ import {
 } from './gridRowsUtils';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 import { GridStrategyGroup } from '../../core/strategyProcessing';
+import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
 
 export const rowsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'unstable_dataSource' | 'rows' | 'rowCount' | 'getRowId' | 'loading'>
@@ -329,7 +330,9 @@ export const useGridRows = (
 
       if (applyFiltering) {
         const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
-        children = children.filter((childId) => filteredRowsLookup[childId] !== false);
+        children = isObjectEmpty(filteredRowsLookup)
+          ? children
+          : children.filter((childId) => filteredRowsLookup[childId] !== false);
       }
 
       return children;
