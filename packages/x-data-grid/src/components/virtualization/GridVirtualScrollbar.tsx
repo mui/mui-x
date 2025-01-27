@@ -152,8 +152,8 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
       scroller.addEventListener('scroll', onScrollerScroll, options);
       scrollbar.addEventListener('scroll', onScrollbarScroll, options);
       return () => {
-        scroller.removeEventListener('scroll', onScrollerScroll, options as any);
-        scrollbar.removeEventListener('scroll', onScrollbarScroll, options as any);
+        scroller.removeEventListener('scroll', onScrollerScroll, options);
+        scrollbar.removeEventListener('scroll', onScrollbarScroll, options);
       };
     });
 
