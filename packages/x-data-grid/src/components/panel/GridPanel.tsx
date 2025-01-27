@@ -3,13 +3,12 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { unstable_generateUtilityClasses as generateUtilityClasses } from '@mui/utils';
-import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Paper from '@mui/material/Paper';
-import Popper from '@mui/material/Popper';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { GridBaseSlots } from '../../models/gridSlotsComponent';
 
 type OwnerState = DataGridProcessedProps;
 
@@ -34,10 +33,9 @@ export const gridPanelClasses = generateUtilityClasses<keyof GridPanelClasses>('
   'paper',
 ]);
 
-const GridPanelRoot = styled(Popper, {
+const GridPanelRoot = styled('div' as unknown as GridBaseSlots['basePopper'], {
   name: 'MuiDataGrid',
   slot: 'Panel',
-  overridesResolver: (props, styles) => styles.panel,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   zIndex: theme.zIndex.modal,
 }));
@@ -45,7 +43,6 @@ const GridPanelRoot = styled(Popper, {
 const GridPaperRoot = styled(Paper, {
   name: 'MuiDataGrid',
   slot: 'Paper',
-  overridesResolver: (props, styles) => styles.paper,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   backgroundColor: (theme.vars || theme).palette.background.paper,
   minWidth: 300,
@@ -75,30 +72,6 @@ const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
     [apiRef],
   );
 
-  const modifiers = React.useMemo(
-    () => [
-      {
-        name: 'flip',
-        enabled: true,
-        options: {
-          rootBoundary: 'document',
-        },
-      },
-      {
-        name: 'isPlaced',
-        enabled: true,
-        phase: 'main' as const,
-        fn: () => {
-          setIsPlaced(true);
-        },
-        effect: () => () => {
-          setIsPlaced(false);
-        },
-      },
-    ],
-    [],
-  );
-
   const [anchorEl, setAnchorEl] = React.useState<Element | null>(null);
 
   React.useEffect(() => {
@@ -117,24 +90,28 @@ const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
 
   return (
     <GridPanelRoot
+      as={rootProps.slots.basePopper}
+      ownerState={rootProps}
       placement="bottom-start"
       className={clsx(classes.panel, className)}
-      ownerState={rootProps}
-      anchorEl={anchorEl}
-      modifiers={modifiers}
+      target={anchorEl}
+      flip
+      onDidMount={() => setIsPlaced(true)}
+      onDidUnmount={() => setIsPlaced(false)}
+      onClickAway={handleClickAway}
+      clickAwayMouseEvent="onPointerUp"
+      clickAwayTouchEvent={false}
       {...other}
       ref={ref}
     >
-      <ClickAwayListener mouseEvent="onPointerUp" touchEvent={false} onClickAway={handleClickAway}>
-        <GridPaperRoot
-          className={classes.paper}
-          ownerState={rootProps}
-          elevation={8}
-          onKeyDown={handleKeyDown}
-        >
-          {isPlaced && children}
-        </GridPaperRoot>
-      </ClickAwayListener>
+      <GridPaperRoot
+        className={classes.paper}
+        ownerState={rootProps}
+        elevation={8}
+        onKeyDown={handleKeyDown}
+      >
+        {isPlaced && children}
+      </GridPaperRoot>
     </GridPanelRoot>
   );
 });

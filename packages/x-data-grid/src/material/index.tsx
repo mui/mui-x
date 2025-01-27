@@ -16,6 +16,9 @@ import MUIIconButton from '@mui/material/IconButton';
 import MUIInputAdornment from '@mui/material/InputAdornment';
 import MUITooltip from '@mui/material/Tooltip';
 import MUIPopper from '@mui/material/Popper';
+import MUIClickAwayListener from '@mui/material/ClickAwayListener';
+import MUIGrow from '@mui/material/Grow';
+import MUIPaper from '@mui/material/Paper';
 import MUIInputLabel from '@mui/material/InputLabel';
 import MUIChip from '@mui/material/Chip';
 import MUISkeleton from '@mui/material/Skeleton';
@@ -51,6 +54,7 @@ import type { GridIconSlotsComponent } from '../models';
 import type { GridBaseSlots } from '../models/gridSlotsComponent';
 import type { GridSlotProps } from '../models/gridSlotsComponentsProps';
 import MUISelectOption from './components/MUISelectOption';
+import type { PopperProps } from '../models/gridBaseSlots';
 
 const iconSlots: GridIconSlotsComponent = {
   booleanCellTrueIcon: GridCheckIcon,
@@ -106,7 +110,7 @@ const baseSlots: GridBaseSlots = {
   baseIconButton: MUIIconButton,
   baseInputAdornment: MUIInputAdornment,
   baseTooltip: MUITooltip,
-  basePopper: MUIPopper,
+  basePopper: BasePopper,
   baseInputLabel: MUIInputLabel,
   baseSelectOption: MUISelectOption,
   baseSkeleton: MUISkeleton,
@@ -130,4 +134,95 @@ function BaseMenuItem(props: GridSlotProps['baseMenuItem']) {
     <MUIListItemText key="2">{children}</MUIListItemText>,
     iconEnd && <MUIListItemIcon key="3">{iconEnd}</MUIListItemIcon>,
   ]);
+}
+
+const transformOrigin = {
+  'bottom-start': 'top left',
+  'bottom-end': 'top right',
+};
+
+function BasePopper(props: GridSlotProps['basePopper']) {
+  const { flip, onDidMount, onDidUnmount } = props;
+  const modifiers = React.useMemo(() => {
+    const result = [];
+    if (flip) {
+      result.push({
+        name: 'flip',
+        enabled: true,
+        options: {
+          rootBoundary: 'document',
+        },
+      });
+    }
+    if (onDidMount || onDidUnmount) {
+      result.push({
+        name: 'isPlaced',
+        enabled: true,
+        phase: 'main' as const,
+        fn: () => {
+          onDidMount?.();
+        },
+        effect: () => () => {
+          onDidUnmount?.(false);
+        },
+      });
+    }
+    return result;
+  }, [flip, onDidMount, onDidUnmount]);
+
+  let content: any;
+  if (!props.transition) {
+    content = clickAwayWrapper(props, props.children);
+  } else {
+    const handleExited = (popperOnExited: (() => void) | undefined) => (node: HTMLElement) => {
+      if (popperOnExited) {
+        popperOnExited();
+      }
+
+      if (props.onExited) {
+        props.onExited(node);
+      }
+    };
+
+    content = ({ TransitionProps, placement }: any) =>
+      clickAwayWrapper(
+        props,
+        <MUIGrow
+          {...TransitionProps}
+          style={{ transformOrigin: transformOrigin[placement as keyof typeof transformOrigin] }}
+          onExited={handleExited(TransitionProps?.onExited)}
+        >
+          <MUIPaper>{props.children}</MUIPaper>
+        </MUIGrow>,
+      );
+  }
+
+  return (
+    <MUIPopper
+      id={props.id}
+      className={props.className}
+      open={props.open}
+      anchorEl={props.target as any}
+      transition={props.transition}
+      placement={props.placement}
+      modifiers={modifiers}
+    >
+      {content}
+    </MUIPopper>
+  );
+}
+
+function clickAwayWrapper(props: PopperProps, content: any) {
+  if (props.onClickAway === undefined) {
+    return content;
+  }
+  return (
+    <MUIClickAwayListener
+      onClickAway={props.onClickAway as any}
+      touchEvent={props.clickAwayTouchEvent}
+      mouseEvent={props.clickAwayMouseEvent}
+    >
+      {content}
+    </MUIClickAwayListener>
+  );
 }

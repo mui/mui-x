@@ -14,7 +14,6 @@ import type { IconButtonProps as MUIIconButtonProps } from '@mui/material/IconBu
 import type { InputAdornmentProps } from '@mui/material/InputAdornment';
 import type { TooltipProps as MUITooltipProps } from '@mui/material/Tooltip';
 import type { InputLabelProps } from '@mui/material/InputLabel';
-import type { PopperProps } from '@mui/material/Popper';
 import type { TablePaginationProps } from '@mui/material/TablePagination';
 import type { ChipProps } from '@mui/material/Chip';
 import type { GridToolbarProps } from '../components/toolbar/GridToolbar';
@@ -43,6 +42,7 @@ import type {
   IconButtonProps,
   LinearProgressProps,
   MenuItemProps,
+  PopperProps,
   SkeletonProps,
   TooltipProps,
 } from './gridBaseSlots';
