@@ -5,16 +5,12 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridRoot } from '../components';
 import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
-import { DataGridProcessedProps, DataGridProps } from '../models/props/DataGridProps';
+import { DataGridProps } from '../models/props/DataGridProps';
 import { GridContextProvider } from '../context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
 import { useDataGridProps } from './useDataGridProps';
 import { GridValidRowModel } from '../models/gridRows';
-import {
-  PropValidator,
-  propValidatorsDataGrid,
-  validateProps,
-} from '../internals/utils/propValidation';
+import { propValidatorsDataGrid, validateProps } from '../internals/utils/propValidation';
 
 export type { GridSlotsComponent as GridSlots } from '../models';
 
@@ -24,11 +20,6 @@ const configuration = {
     useGridRowAriaAttributes,
   },
 };
-let propValidators: PropValidator<DataGridProcessedProps>[];
-
-if (process.env.NODE_ENV !== 'production') {
-  propValidators = propValidatorsDataGrid;
-}
 
 const DataGridRaw = forwardRef(function DataGrid<R extends GridValidRowModel>(
   inProps: DataGridProps<R>,
@@ -38,7 +29,7 @@ const DataGridRaw = forwardRef(function DataGrid<R extends GridValidRowModel>(
   const privateApiRef = useDataGridComponent(props.apiRef, props);
 
   if (process.env.NODE_ENV !== 'production') {
-    validateProps(props, propValidators);
+    validateProps(props, propValidatorsDataGrid);
   }
   return (
     <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
