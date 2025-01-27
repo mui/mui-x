@@ -2,19 +2,19 @@ import { getLabel } from '../internals/getLabel';
 import type { TooltipGetter } from '../internals/plugins/models';
 
 const tooltipGetter: TooltipGetter<'scatter'> = (params) => {
-  const { series, getColor, item } = params;
+  const { series, getColor, identifier } = params;
 
-  if (!item || item.dataIndex === undefined) {
+  if (!identifier || identifier.dataIndex === undefined) {
     return null;
   }
 
   const label = getLabel(series.label, 'tooltip');
-  const value = series.data[item.dataIndex];
-  const formattedValue = series.valueFormatter(value as any, { dataIndex: item.dataIndex });
+  const value = series.data[identifier.dataIndex];
+  const formattedValue = series.valueFormatter(value as any, { dataIndex: identifier.dataIndex });
 
   return {
-    identifier: item,
-    color: getColor(item.dataIndex),
+    identifier,
+    color: getColor(identifier.dataIndex),
     label,
     value,
     formattedValue,

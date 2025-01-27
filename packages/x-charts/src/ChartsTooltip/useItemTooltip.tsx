@@ -28,7 +28,7 @@ export type UseItemTooltipReturnValue<T extends ChartSeriesType> = ItemTooltip<T
 
 export function useItemTooltip<T extends ChartSeriesType>(): UseItemTooltipReturnValue<T> | null {
   const store = useStore();
-  const item = useSelector(store, selectorChartsInteractionItem);
+  const identifier = useSelector(store, selectorChartsInteractionItem);
   const seriesConfig = useSelector(store, selectorChartSeriesConfig);
 
   const series = useSeries();
@@ -41,11 +41,13 @@ export function useItemTooltip<T extends ChartSeriesType>(): UseItemTooltipRetur
   const yAxisId = (series as any).yAxisId ?? yAxisIds[0];
   const zAxisId = (series as any).zAxisId ?? zAxisIds[0];
 
-  if (!item || item.dataIndex === undefined) {
+  if (!identifier || identifier.dataIndex === undefined) {
     return null;
   }
 
-  const itemSeries = series[item.type]!.series[item.seriesId] as ChartSeriesDefaultized<T>;
+  const itemSeries = series[identifier.type]!.series[
+    identifier.seriesId
+  ] as ChartSeriesDefaultized<T>;
   const getColor =
     seriesConfig[itemSeries.type].colorProcessor?.(
       itemSeries as any,
@@ -57,6 +59,6 @@ export function useItemTooltip<T extends ChartSeriesType>(): UseItemTooltipRetur
   return (seriesConfig[itemSeries.type].tooltipGetter as unknown as TooltipGetter<T>)({
     series: itemSeries,
     getColor,
-    item,
+    identifier,
   });
 }
