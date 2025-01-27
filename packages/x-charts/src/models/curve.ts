@@ -4,8 +4,6 @@
  * [line interpolation](https://mui.com/x/react-charts/lines/#interpolation).
  */
 export type CurveType =
-  | 'bumpY'
-  | 'bumpX'
   | 'catmullRom'
   | 'linear'
   | 'monotoneX'
@@ -13,4 +11,6 @@ export type CurveType =
   | 'natural'
   | 'step'
   | 'stepBefore'
-  | 'stepAfter';
+  | 'stepAfter'
+  | 'bumpY'
+  | 'bumpX';

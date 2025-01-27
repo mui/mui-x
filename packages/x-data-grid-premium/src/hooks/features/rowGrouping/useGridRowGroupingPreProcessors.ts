@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   gridColumnLookupSelector,
   GridRowId,
@@ -40,7 +41,7 @@ import {
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 
 export const useGridRowGroupingPreProcessors = (
-  apiRef: React.RefObject<GridPrivateApiPremium>,
+  apiRef: RefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
     | 'disableRowGrouping'
