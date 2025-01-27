@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { GridPrivateApiCommon } from '../../../models/api/gridApiCommon';
 import { GridStrategyProcessorName, GridStrategyProcessor } from './gridStrategyProcessingApi';
@@ -7,7 +8,7 @@ export const useGridRegisterStrategyProcessor = <
   Api extends GridPrivateApiCommon,
   G extends GridStrategyProcessorName,
 >(
-  apiRef: React.RefObject<Api>,
+  apiRef: RefObject<Api>,
   strategyName: string,
   group: G,
   processor: GridStrategyProcessor<G>,

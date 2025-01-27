@@ -168,12 +168,20 @@ For now, ordinal config is not supported for line chart.
 ### Interpolation
 
 The interpolation between data points can be customized by the `curve` property.
-This property expects one of the following string values, corresponding to the interpolation method: `'catmullRom'`, `'linear'`, `'monotoneX'`, `'monotoneY'`, `'natural'`, `'step'`, `'stepBefore'`, `'stepAfter'`.
+This property expects one of the following string values, corresponding to the interpolation method: `'catmullRom'`, `'linear'`, `'monotoneX'`, `'monotoneY'`, `'natural'`, `'step'`, `'stepBefore'`, `'stepAfter'`, `'bumpX'` and `'bumpY'`.
 
 This series property adds the option to control the interpolation of a series.
 Different series could even have different interpolations.
 
 {{"demo": "InterpolationDemoNoSnap.js", "hideToolbar": true}}
+
+#### Expanding steps
+
+To simplify the composition of line and chart, the step interpolations (when `curve` property is `'step'`, `'stepBefore'`, or `'stepAfter'`) expand to cover the full band width.
+
+You can disable this behavior with `strictStepCurve` series property.
+
+{{"demo": "ExpandingStep.js"}}
 
 ### Baseline
 

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import ownerDocument from '@mui/utils/ownerDocument';
 import useEventCallback from '@mui/utils/useEventCallback';
 import {
@@ -49,7 +50,7 @@ const AUTO_SCROLL_SENSITIVITY = 50; // The distance from the edge to start scrol
 const AUTO_SCROLL_SPEED = 20; // The speed to scroll once the mouse enters the sensitivity area
 
 export const useGridCellSelection = (
-  apiRef: React.RefObject<GridPrivateApiPremium>,
+  apiRef: RefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
     | 'cellSelection'

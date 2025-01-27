@@ -120,6 +120,8 @@
     "import { LineChartPro } from '@mui/x-charts-pro';"
   ],
   "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
   "muiName": "MuiLineChartPro",
   "filename": "/packages/x-charts-pro/src/LineChartPro/LineChartPro.tsx",
   "inheritance": null,

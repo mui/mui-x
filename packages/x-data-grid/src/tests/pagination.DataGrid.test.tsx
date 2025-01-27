@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { spy, stub, SinonStub, SinonSpy } from 'sinon';
 import { expect } from 'chai';
 import { createRenderer, fireEvent, reactMajor, screen, waitFor } from '@mui/internal-test-utils';
@@ -257,7 +258,7 @@ describe('<DataGrid /> - Pagination', () => {
     });
 
     it('should throw if pageSize exceeds 100', () => {
-      let apiRef: React.RefObject<GridApi>;
+      let apiRef: RefObject<GridApi>;
       function TestCase() {
         apiRef = useGridApiRef();
         return (
