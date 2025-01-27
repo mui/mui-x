@@ -7,16 +7,7 @@ import {
   SeriesId,
   StackableSeriesType,
 } from './common';
-
-export type CurveType =
-  | 'catmullRom'
-  | 'linear'
-  | 'monotoneX'
-  | 'monotoneY'
-  | 'natural'
-  | 'step'
-  | 'stepBefore'
-  | 'stepAfter';
+import { CurveType } from '../curve';
 
 export interface ShowMarkParams<AxisValue = number | Date> {
   /**

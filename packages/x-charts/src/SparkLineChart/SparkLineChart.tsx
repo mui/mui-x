@@ -246,6 +246,8 @@ SparkLineChart.propTypes = {
    * @default 'linear'
    */
   curve: PropTypes.oneOf([
+    'bumpX',
+    'bumpY',
     'catmullRom',
     'linear',
     'monotoneX',
