@@ -40,15 +40,7 @@ export const useDesktopRangePicker = <
 }: UseDesktopRangePickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
-  const {
-    slots,
-    slotProps,
-    inputRef,
-    readOnly,
-    autoFocus,
-    disableOpenPicker,
-    localeText,
-  } = props;
+  const { slots, slotProps, inputRef, readOnly, autoFocus, disableOpenPicker, localeText } = props;
 
   const fieldContainerRef = React.useRef<HTMLDivElement>(null);
   const popperRef = React.useRef<HTMLDivElement>(null);
