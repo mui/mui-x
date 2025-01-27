@@ -7,6 +7,7 @@ import {
   act,
   ErrorBoundary,
   reactMajor,
+  waitFor,
 } from '@mui/internal-test-utils';
 import clsx from 'clsx';
 import { expect } from 'chai';
@@ -331,7 +332,9 @@ describe('<DataGrid /> - Rows', () => {
 
       const more2 = screen.getAllByRole('menuitem', { name: 'more' })[1];
       await user.click(more2);
-      expect(screen.queryAllByRole('menu')).to.have.length(2 + 1);
+      await waitFor(() => {
+        expect(screen.queryAllByRole('menu')).to.have.length(2 + 1);
+      });
     });
 
     it('should allow to move focus to another cell with the arrow keys', () => {
@@ -619,7 +622,7 @@ describe('<DataGrid /> - Rows', () => {
         );
       }
 
-      it('should measure all rows and update the content size', () => {
+      it('should measure all rows and update the content size', async () => {
         const border = 1;
         const contentHeight = 100;
         render(<TestCase getBioContentHeight={() => contentHeight} getRowHeight={() => 'auto'} />);
@@ -628,12 +631,14 @@ describe('<DataGrid /> - Rows', () => {
         );
         const expectedHeight = baselineProps.rows.length * (contentHeight + border);
 
-        expect(virtualScrollerContent).toHaveComputedStyle({ height: `${expectedHeight}px` });
+        await waitFor(() => {
+          expect(virtualScrollerContent).toHaveComputedStyle({ height: `${expectedHeight}px` });
+        });
 
         expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
       });
 
-      it('should use the default row height to calculate the content size when the row has not been measured yet', () => {
+      it('should use the default row height to calculate the content size when the row has not been measured yet', async () => {
         const columnHeaderHeight = 50;
         const border = 1;
         const defaultRowHeight = 52;
@@ -655,12 +660,14 @@ describe('<DataGrid /> - Rows', () => {
           border + // Measured rows also include the border
           (baselineProps.rows.length - 1) * defaultRowHeight;
 
-        expect(virtualScrollerContent).toHaveComputedStyle({ height: `${expectedHeight}px` });
+        await waitFor(() => {
+          expect(virtualScrollerContent).toHaveComputedStyle({ height: `${expectedHeight}px` });
+        });
 
         expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
       });
 
-      it('should use the value from getEstimatedRowHeight to estimate the content size', () => {
+      it('should use the value from getEstimatedRowHeight to estimate the content size', async () => {
         const columnHeaderHeight = 50;
         const border = 1;
         const measuredRowHeight = 100;
@@ -682,12 +689,14 @@ describe('<DataGrid /> - Rows', () => {
         const expectedHeight =
           firstRowHeight + (baselineProps.rows.length - 1) * estimatedRowHeight;
 
-        expect(virtualScrollerContent).toHaveComputedStyle({ height: `${expectedHeight}px` });
+        await waitFor(() => {
+          expect(virtualScrollerContent).toHaveComputedStyle({ height: `${expectedHeight}px` });
+        });
 
         expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
       });
 
-      it('should recalculate the content size when the rows prop changes', () => {
+      it('should recalculate the content size when the rows prop changes', async () => {
         const { setProps } = render(
           <TestCase
             getBioContentHeight={(row) => (row.expanded ? 200 : 100)}
@@ -700,10 +709,15 @@ describe('<DataGrid /> - Rows', () => {
           '.MuiDataGrid-virtualScrollerContent',
         );
 
-        expect(virtualScrollerContent).toHaveComputedStyle({ height: '101px' });
+        await waitFor(() => {
+          expect(virtualScrollerContent).toHaveComputedStyle({ height: '101px' });
+        });
         expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
         setProps({ rows: [{ clientId: 'c1', expanded: true }] });
-        expect(virtualScrollerContent).toHaveComputedStyle({ height: '201px' });
+
+        await waitFor(() => {
+          expect(virtualScrollerContent).toHaveComputedStyle({ height: '201px' });
+        });
 
         expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
       });
@@ -734,7 +748,7 @@ describe('<DataGrid /> - Rows', () => {
         expect($$(`.${gridClasses.cell}:not(.${gridClasses.cellEmpty})`)).to.have.length(2);
       });
 
-      it('should measure rows while scrolling', () => {
+      it('should measure rows while scrolling', async () => {
         const columnHeaderHeight = 50;
         const border = 1;
         render(
@@ -748,18 +762,24 @@ describe('<DataGrid /> - Rows', () => {
         );
         const virtualScroller = grid('virtualScroller')!;
 
-        expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 52 + 52);
+        await waitFor(() => {
+          expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 52 + 52);
+        });
         virtualScroller.scrollTop = 101; // Scroll to measure the 2nd cell
         virtualScroller.dispatchEvent(new Event('scroll'));
 
-        expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 101 + 52);
+        await waitFor(() => {
+          expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 101 + 52);
+        });
         virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
         virtualScroller.dispatchEvent(new Event('scroll'));
 
-        expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 101 + 101);
+        await waitFor(() => {
+          expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 101 + 101);
+        });
       });
 
-      it('should allow to mix rows with dynamic row height and default row height', () => {
+      it('should allow to mix rows with dynamic row height and default row height', async () => {
         const columnHeaderHeight = 50;
         const densityFactor = 1.3;
         const rowHeight = 52;
@@ -780,8 +800,10 @@ describe('<DataGrid /> - Rows', () => {
           '.MuiDataGrid-virtualScrollerContent',
         )!;
 
-        expect(virtualScrollerContent).toHaveComputedStyle({
-          height: `${Math.floor(expectedHeight)}px`,
+        await waitFor(() => {
+          expect(virtualScrollerContent).toHaveComputedStyle({
+            height: `${Math.floor(expectedHeight)}px`,
+          });
         });
         expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
       });
@@ -790,7 +812,7 @@ describe('<DataGrid /> - Rows', () => {
       const { userAgent } = window.navigator;
       testSkipIf(!userAgent.includes('Headless') || /edg/i.test(userAgent))(
         'should position correctly the render zone when the 2nd page has less rows than the 1st page',
-        () => {
+        async () => {
           const data = getBasicGridData(120, 3);
           const columnHeaderHeight = 50;
           const measuredRowHeight = 100;
@@ -811,7 +833,9 @@ describe('<DataGrid /> - Rows', () => {
 
           fireEvent.click(screen.getByRole('button', { name: /next page/i }));
 
-          expect(gridOffsetTop()).to.equal(0);
+          await waitFor(() => {
+            expect(gridOffsetTop()).to.equal(0);
+          });
         },
       );
 
@@ -842,7 +866,7 @@ describe('<DataGrid /> - Rows', () => {
       // In Chrome non-headless and Edge this test is flaky
       testSkipIf(!userAgent.includes('Headless') || /edg/i.test(userAgent))(
         'should position correctly the render zone when changing pageSize to a lower value and moving to next page',
-        () => {
+        async () => {
           const data = getBasicGridData(120, 3);
           const columnHeaderHeight = 50;
           const measuredRowHeight = 100;
@@ -871,7 +895,9 @@ describe('<DataGrid /> - Rows', () => {
           setProps({ pageSize: 10 });
           fireEvent.click(screen.getByRole('button', { name: /next page/i }));
 
-          expect(gridOffsetTop()).to.equal(0);
+          await waitFor(() => {
+            expect(gridOffsetTop()).to.equal(0);
+          });
         },
       );
     });
