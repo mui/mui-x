@@ -118,7 +118,7 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
 
   const forceUpdate = React.useCallback(() => {
     // @deprecated - do nothing
-  }, [apiRef]);
+  }, []);
 
   const publicStateApi: Omit<GridStateApi<PrivateApi['state']>, 'state'> = {
     setState,
