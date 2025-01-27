@@ -21,14 +21,13 @@ import { GridVirtualScrollerRenderZone as RenderZone } from './GridVirtualScroll
 import { GridVirtualScrollbar as Scrollbar } from './GridVirtualScrollbar';
 import { GridLoadingOverlayVariant } from '../GridLoadingOverlay';
 
-type OwnerState = DataGridProcessedProps;
+type OwnerState = Pick<DataGridProcessedProps, 'classes'> & {
+  dimensions: GridDimensions;
+  loadingOverlayVariant: GridLoadingOverlayVariant | null;
+};
 
-const useUtilityClasses = (
-  ownerState: OwnerState,
-  dimensions: GridDimensions,
-  loadingOverlayVariant: GridLoadingOverlayVariant | null,
-) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes, dimensions, loadingOverlayVariant } = ownerState;
   const slots = {
     root: [
       'main',
@@ -44,7 +43,13 @@ const useUtilityClasses = (
 const Scroller = styled('div', {
   name: 'MuiDataGrid',
   slot: 'VirtualScroller',
-  overridesResolver: (props, styles) => styles.virtualScroller,
+  overridesResolver: (props, styles) => {
+    const { ownerState } = props;
+    return [
+      styles.virtualScroller,
+      ownerState.dimensions.hasScrollX && styles['virtualScroller--hasScrollX'],
+    ];
+  },
 })<{ ownerState: OwnerState }>({
   position: 'relative',
   height: '100%',
@@ -74,7 +79,12 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   const rootProps = useGridRootProps();
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
   const overlaysProps = useGridOverlays();
-  const classes = useUtilityClasses(rootProps, dimensions, overlaysProps.loadingOverlayVariant);
+  const ownerState = {
+    classes: rootProps.classes,
+    dimensions,
+    loadingOverlayVariant: overlaysProps.loadingOverlayVariant,
+  };
+  const classes = useUtilityClasses(ownerState);
 
   const virtualScroller = useGridVirtualScroller();
   const {
@@ -90,10 +100,10 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   const rows = getRows();
 
   return (
-    <Container className={classes.root} {...getContainerProps()}>
+    <Container className={classes.root} {...getContainerProps()} ownerState={ownerState}>
       <GridScrollArea scrollDirection="left" />
       <GridScrollArea scrollDirection="right" />
-      <Scroller className={classes.scroller} {...getScrollerProps()} ownerState={rootProps}>
+      <Scroller className={classes.scroller} {...getScrollerProps()} ownerState={ownerState}>
         <TopContainer>
           {!rootProps.unstable_listView && <GridHeaders />}
           <rootProps.slots.pinnedRows position="top" virtualScroller={virtualScroller} />
