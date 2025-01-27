@@ -107,9 +107,9 @@ Below are described the steps you need to make to migrate from v7 to v8.
 
 - The Data Grid now has a default background color, and its customization has moved from `theme.mixins.MuiDataGrid` to `theme.palette.DataGrid` with the following properties:
 
-  - `bg`: Sets the entire grid's background color (new property)
-  - `headerBg`: Sets the header background color (previously named `containerBackground`)
-  - `pinnedBg`: Sets pinned rows and columns background color (previously named `pinnedBackground`)
+  - `bg`: Sets the background color of the entire grid (new property)
+  - `headerBg`: Sets the background color of the header (previously named `containerBackground`)
+  - `pinnedBg`: Sets the background color of pinned rows and columns (previously named `pinnedBackground`)
 
   ```diff
    const theme = createTheme({

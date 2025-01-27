@@ -116,11 +116,11 @@ The following demo illustrates how this can be achieved.
 
 {{"demo": "StripedGrid.js", "bg": "inline"}}
 
-## Theme container, header and pinned sections
+## Container, header, and pinned sections
 
 By default, the Data Grid uses the Material UI `theme.palette.background.default` color for the background color of the grid container, the column headers, and the pinned rows and columns.
 
-The various background colors can be overridden with the following configuration:
+You can override these background colors with the following theme configuration:
 
 ```tsx
 import { createTheme } from '@mui/material/styles';
@@ -139,6 +139,8 @@ const theme = createTheme({
   },
 });
 ```
+
+### Light and dark mode in Material UI v6
 
 Material UI v6 users can use the `colorSchemes` property to specify different colors for light and dark mode:
 
@@ -169,6 +171,8 @@ const theme = createTheme({
   },
 });
 ```
+
+### Light and dark mode in Material UI v5
 
 Material UI v5 supports specifying different colors for light and dark mode with two different themes, as shown in the demo below.
 
