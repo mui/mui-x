@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   createRenderer,
   fireEvent,
@@ -44,7 +45,7 @@ import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/densitySelecto
 describe('<DataGrid /> - Rows', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: RefObject<GridApi>;
 
   const baselineProps = {
     autoHeight: isJSDOM,

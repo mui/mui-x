@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   unstable_useEventCallback as useEventCallback,
   unstable_useEnhancedEffect as useEnhancedEffect,
@@ -43,7 +44,7 @@ import { getDefaultCellValue } from './utils';
 import { GridUpdateRowParams } from '../../../models/gridDataSource';
 
 export const useGridCellEditing = (
-  apiRef: React.RefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'editMode'
@@ -477,7 +478,7 @@ export const useGridCellEditing = (
               [
                 'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
                 'To handle the error pass a callback to the `onProcessRowUpdateError` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
-                'For more detail, see https://mui.com/x/react-data-grid/editing/#server-side-persistence.',
+                'For more detail, see https://mui.com/x/react-data-grid/editing/persistence/.',
               ],
               'error',
             );
@@ -608,7 +609,7 @@ export const useGridCellEditing = (
     Object.entries(cellModesModel).forEach(([id, fields]) => {
       Object.entries(fields).forEach(([field, params]) => {
         const prevMode = copyOfPrevCellModes[id]?.[field]?.mode || GridCellModes.View;
-        const originalId = apiRef.current.getRowId(rowsLookup[id]) ?? id;
+        const originalId = rowsLookup[id] ? apiRef.current.getRowId(rowsLookup[id]) : id;
         if (params.mode === GridCellModes.Edit && prevMode === GridCellModes.View) {
           updateStateToStartCellEditMode({ id: originalId, field, ...params });
         } else if (params.mode === GridCellModes.View && prevMode === GridCellModes.Edit) {
