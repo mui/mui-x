@@ -4,6 +4,7 @@ import {
   GridDataSource,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
+  GridGetRowsResponse,
 } from '@mui/x-data-grid-premium';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import Snackbar from '@mui/material/Snackbar';
@@ -18,7 +19,7 @@ export default function ServerSideRowGroupingErrorHandling() {
   const [childrenError, setChildrenError] = React.useState<string>();
   const [shouldRequestsFail, setShouldRequestsFail] = React.useState(false);
 
-  const { fetchRows, columns } = useMockServer(
+  const { fetchRows, columns } = useMockServer<GridGetRowsResponse>(
     {
       rowGrouping: true,
     },

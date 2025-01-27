@@ -146,7 +146,6 @@ const pages: MuiPage[] = [
               {
                 pathname: '/x/react-data-grid/server-side-data',
                 title: 'Overview',
-                plan: 'pro',
                 unstable: true,
               },
               {

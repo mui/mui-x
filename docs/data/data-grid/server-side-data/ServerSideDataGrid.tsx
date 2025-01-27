@@ -1,12 +1,13 @@
 import * as React from 'react';
-import { DataGridPro, GridDataSource } from '@mui/x-data-grid-pro';
+import { DataGrid, GridDataSource } from '@mui/x-data-grid';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
 export default function ServerSideDataGrid() {
-  const { columns, initialState, fetchRows } = useMockServer(
-    {},
-    { useCursorPagination: false },
-  );
+  const {
+    columns,
+    initialState: initState,
+    fetchRows,
+  } = useMockServer({}, { useCursorPagination: false });
 
   const dataSource: GridDataSource = React.useMemo(
     () => ({
@@ -28,24 +29,24 @@ export default function ServerSideDataGrid() {
     [fetchRows],
   );
 
-  const initialStateWithPagination = React.useMemo(
+  const initialState = React.useMemo(
     () => ({
-      ...initialState,
+      ...initState,
       pagination: {
         paginationModel: { pageSize: 10, page: 0 },
         rowCount: 0,
       },
     }),
-    [initialState],
+    [initState],
   );
 
   return (
     <div style={{ width: '100%', height: 400 }}>
-      <DataGridPro
+      <DataGrid
         columns={columns}
         unstable_dataSource={dataSource}
         pagination
-        initialState={initialStateWithPagination}
+        initialState={initialState}
         pageSizeOptions={[10, 20, 50]}
       />
     </div>

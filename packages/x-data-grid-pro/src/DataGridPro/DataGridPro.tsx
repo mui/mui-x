@@ -968,6 +968,9 @@ DataGridProRaw.propTypes = {
    * @default false
    */
   treeData: PropTypes.bool,
+  /**
+   * The data source of the Data Grid Pro.
+   */
   unstable_dataSource: PropTypes.shape({
     getChildrenCount: PropTypes.func,
     getGroupKey: PropTypes.func,

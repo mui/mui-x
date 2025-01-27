@@ -8,7 +8,7 @@ import {
   DataGridPremiumProps,
   GridApi,
   GridDataSource,
-  GridGetRowsParams,
+  GridGetRowsResponse,
   useGridApiRef,
   GRID_AGGREGATION_ROOT_FOOTER_ROW_ID,
   GRID_ROOT_GROUP_ID,
@@ -41,7 +41,7 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
 
     const dataSource: GridDataSource = React.useMemo(
       () => ({
-        getRows: async (params: GridGetRowsParams) => {
+        getRows: async (params) => {
           const urlParams = new URLSearchParams({
             filterModel: JSON.stringify(params.filterModel),
             sortModel: JSON.stringify(params.sortModel),
@@ -49,9 +49,9 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
             aggregationModel: JSON.stringify(params.aggregationModel),
           });
 
-          const getRowsResponse = await fetchRows(
+          const getRowsResponse = (await fetchRows(
             `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
-          );
+          )) as GridGetRowsResponse;
 
           return {
             rows: getRowsResponse.rows,

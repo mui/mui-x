@@ -4,6 +4,7 @@ import {
   useKeepGroupedColumnsHidden,
   useGridApiRef,
   GridDataSource,
+  GridGetRowsResponse,
 } from '@mui/x-data-grid-premium';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
@@ -21,7 +22,7 @@ export default function ServerSideDataGridAggregationRowGrouping() {
     columns,
     initialState: initState,
     fetchRows,
-  } = useMockServer({ rowGrouping: true });
+  } = useMockServer<GridGetRowsResponse>({ rowGrouping: true });
 
   const dataSource: GridDataSource = React.useMemo(
     () => ({

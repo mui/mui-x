@@ -4,15 +4,15 @@ import { act, createRenderer, waitFor, screen, within } from '@mui/internal-test
 import { expect } from 'chai';
 import { RefObject } from '@mui/x-internals/types';
 import {
-  DataGridPro,
-  DataGridProProps,
+  DataGrid,
+  DataGridProps,
   GridApi,
   GridDataSource,
   GridDataSourceCache,
   GridGetRowsParams,
   GridGetRowsResponse,
   useGridApiRef,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid';
 import { SinonSpy, spy } from 'sinon';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 import { getKeyDefault } from '../hooks/features/dataSource/cache';
@@ -26,14 +26,14 @@ const testCache: GridDataSourceCache = {
 };
 
 // Needs layout
-describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
+describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
   const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi>;
   let fetchRowsSpy: SinonSpy;
   let mockServer: ReturnType<typeof useMockServer>;
 
-  function TestDataSource(props: Partial<DataGridProProps> & { shouldRequestsFail?: boolean }) {
+  function TestDataSource(props: Partial<DataGridProps> & { shouldRequestsFail?: boolean }) {
     apiRef = useGridApiRef();
     const { shouldRequestsFail = false, ...rest } = props;
     mockServer = useMockServer(
@@ -72,13 +72,12 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
       columns: mockServer.columns,
       initialState: { pagination: { paginationModel: { page: 0, pageSize: 10 } } },
       disableVirtualization: true,
-      pagination: true,
       pageSizeOptions: [10],
     };
 
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGridPro apiRef={apiRef} {...baselineProps} {...rest} />
+        <DataGrid apiRef={apiRef} {...baselineProps} {...rest} />
       </div>
     );
   }

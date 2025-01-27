@@ -596,6 +596,7 @@
     "treeData": {
       "description": "If <code>true</code>, the rows will be gathered in a tree structure according to the <code>getTreeDataPath</code> prop."
     },
+    "unstable_dataSource": { "description": "The data source of the Data Grid Pro." },
     "unstable_lazyLoading": {
       "description": "Used together with <code>unstable_dataSource</code> to enable lazy loading. If enabled, the grid stops adding <code>paginationModel</code> to the data requests (<code>getRows</code>) and starts sending <code>start</code> and <code>end</code> values depending on the loading mode and the scroll position."
     },

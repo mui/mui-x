@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { DataGridPremium, GridDataSource } from '@mui/x-data-grid-premium';
+import {
+  DataGridPremium,
+  GridDataSource,
+  GridGetRowsResponse,
+} from '@mui/x-data-grid-premium';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
 const aggregationFunctions = {
@@ -15,7 +19,7 @@ export default function ServerSideDataGridAggregationLazyLoading() {
     columns,
     initialState: initState,
     fetchRows,
-  } = useMockServer({}, { useCursorPagination: false });
+  } = useMockServer<GridGetRowsResponse>({}, { useCursorPagination: false });
 
   const dataSource: GridDataSource = React.useMemo(
     () => ({
