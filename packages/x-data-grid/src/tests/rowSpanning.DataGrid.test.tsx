@@ -117,7 +117,7 @@ describe('<DataGrid /> - Row spanning', () => {
     render(<TestDataGrid />);
     const rowsWithSpannedCells = Object.keys(apiRef.current.state.rowSpanning.spannedCells);
     expect(rowsWithSpannedCells.length).to.equal(1);
-    const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows('4');
+    const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(4);
     expect(rowIndex).to.equal(3);
     const spanValue = apiRef.current.state.rowSpanning.spannedCells['4'];
     expect(spanValue).to.deep.equal({ code: 3, totalPrice: 3 });
@@ -134,7 +134,7 @@ describe('<DataGrid /> - Row spanning', () => {
       );
       const rowsWithSpannedCells = Object.keys(apiRef.current.state.rowSpanning.spannedCells);
       expect(rowsWithSpannedCells.length).to.equal(1);
-      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows('4');
+      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(4);
       expect(rowIndex).to.equal(1);
       const spanValue = apiRef.current.state.rowSpanning.spannedCells['4'];
       expect(spanValue).to.deep.equal({ code: 3, totalPrice: 3 });
@@ -146,7 +146,7 @@ describe('<DataGrid /> - Row spanning', () => {
       render(<TestDataGrid sortModel={[{ field: 'code', sort: 'desc' }]} />);
       const rowsWithSpannedCells = Object.keys(apiRef.current.state.rowSpanning.spannedCells);
       expect(rowsWithSpannedCells.length).to.equal(1);
-      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows('4');
+      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(4);
       expect(rowIndex).to.equal(1);
       const spanValue = apiRef.current.state.rowSpanning.spannedCells['4'];
       expect(spanValue).to.deep.equal({ code: 3, totalPrice: 3 });
@@ -170,7 +170,7 @@ describe('<DataGrid /> - Row spanning', () => {
       );
       const rowsWithSpannedCells = Object.keys(apiRef.current.state.rowSpanning.spannedCells);
       expect(rowsWithSpannedCells.length).to.equal(1);
-      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows('5');
+      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(5);
       expect(rowIndex).to.equal(0);
       const spanValue = apiRef.current.state.rowSpanning.spannedCells['5'];
       expect(spanValue).to.deep.equal({ code: 2, totalPrice: 2 });
@@ -188,7 +188,7 @@ describe('<DataGrid /> - Row spanning', () => {
       );
       const rowsWithSpannedCells = Object.keys(apiRef.current.state.rowSpanning.spannedCells);
       expect(rowsWithSpannedCells.length).to.equal(1);
-      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows('5');
+      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(5);
       expect(rowIndex).to.equal(0);
       const spanValue = apiRef.current.state.rowSpanning.spannedCells['5'];
       expect(spanValue).to.deep.equal({ code: 2, totalPrice: 2 });
