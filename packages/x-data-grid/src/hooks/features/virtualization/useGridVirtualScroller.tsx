@@ -115,7 +115,6 @@ export const useGridVirtualScroller = () => {
   const [panels, setPanels] = React.useState(EMPTY_DETAIL_PANELS);
 
   const isRtl = useRtl();
-  const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const selectedRowsLookup = useGridSelector(apiRef, selectedIdsLookupSelector);
   const currentPage = useGridVisibleRows(apiRef);
   const mainRef = apiRef.current.mainElementRef;
@@ -544,7 +543,6 @@ export const useGridVirtualScroller = () => {
           rowId={id}
           index={rowIndex}
           selected={isSelected}
-          offsetTop={params.rows ? undefined : rowsMeta.positions[rowIndexInPage]}
           offsetLeft={offsetLeft}
           columnsTotalWidth={dimensions.columnsTotalWidth}
           rowHeight={baseRowHeight}
