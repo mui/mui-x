@@ -12,6 +12,11 @@ export interface UseChartInteractionInstance {
    */
   setItemInteraction: (newItem: ChartItemIdentifier<ChartSeriesType>) => void;
   /**
+   * Remove item interaction if the current if the provided item is still the one interacting.
+   * @param {ChartItemIdentifier} itemToRemove The identifier of the item.
+   */
+  removeItemInteraction: (itemToRemove: ChartItemIdentifier<ChartSeriesType>) => void;
+  /**
    * Set the new axis the user is interacting with.
    * @param {Partial<AxisInteractionData>} newAxis The new axis identifier.
    */

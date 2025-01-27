@@ -1,10 +1,12 @@
 import { expect } from 'chai';
 import { createIsFaded } from './createIsFaded';
 
+const seriesId = 'id1';
+const dataIndex = 1;
+
 const itemData = {
-  seriesId: '1s',
-  dataIndex: 1,
-  value: '1v',
+  seriesId,
+  dataIndex,
 };
 
 describe('createIsFaded', () => {
@@ -20,7 +22,7 @@ describe('createIsFaded', () => {
     });
 
     it('should return false when input series is different than highlighted', () => {
-      expect(isFadedSameSeries({ ...itemData, seriesId: '2' })).to.equal(false);
+      expect(isFadedSameSeries({ ...itemData, seriesId: 'id2' })).to.equal(false);
     });
   });
 
@@ -36,7 +38,7 @@ describe('createIsFaded', () => {
     });
 
     it('should return true when series is different than highlighted', () => {
-      expect(isFadedGlobal({ ...itemData, seriesId: '2' })).to.equal(true);
+      expect(isFadedGlobal({ ...itemData, seriesId: 'id2' })).to.equal(true);
     });
   });
 

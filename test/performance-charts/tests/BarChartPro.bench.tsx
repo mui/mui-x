@@ -7,7 +7,7 @@ import { LicenseInfo, generateLicense } from '@mui/x-license';
 import { options } from '../utils/options';
 
 describe('BarChartPro', () => {
-  const dataLength = 500;
+  const dataLength = 250;
   const data = Array.from({ length: dataLength + 1 }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,

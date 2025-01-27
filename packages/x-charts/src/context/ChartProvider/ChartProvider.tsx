@@ -11,6 +11,7 @@ import { ChartSeriesConfig } from '../../internals/plugins/models/seriesConfig';
 import { useChartCartesianAxis } from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useChartInteraction } from '../../internals/plugins/featurePlugins/useChartInteraction';
 import { useChartZAxis } from '../../internals/plugins/featurePlugins/useChartZAxis';
+import { useChartHighlight } from '../../internals/plugins/featurePlugins/useChartHighlight/useChartHighlight';
 import { plugin as barPlugin } from '../../BarChart/plugin';
 import { plugin as scatterPlugin } from '../../ScatterChart/plugin';
 import { plugin as linePlugin } from '../../LineChart/plugin';
@@ -26,7 +27,12 @@ export const defaultSeriesConfig: ChartSeriesConfig<'bar' | 'scatter' | 'line' |
 
 // For consistency with the v7, the cartesian axes are set by default.
 // To remove them, you can provide a `plugins` props.
-const defaultPlugins = [useChartZAxis, useChartCartesianAxis, useChartInteraction];
+const defaultPlugins = [
+  useChartZAxis,
+  useChartCartesianAxis,
+  useChartInteraction,
+  useChartHighlight,
+];
 
 function ChartProvider<
   TSeriesType extends ChartSeriesType,

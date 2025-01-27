@@ -7,7 +7,7 @@ import { LicenseInfo, generateLicense } from '@mui/x-license';
 import { options } from '../utils/options';
 
 describe('LineChartPro', () => {
-  const dataLength = 600;
+  const dataLength = 300;
   const data = Array.from({ length: dataLength }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,

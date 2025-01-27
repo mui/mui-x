@@ -25,7 +25,7 @@
     },
     "hideLegend": { "description": "If <code>true</code>, the legend is not rendered." },
     "highlightedItem": {
-      "description": "The item currently highlighted. Turns highlighting into a controlled prop."
+      "description": "The highlighted item. Used when the highlight is controlled."
     },
     "id": {
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."

@@ -4,6 +4,8 @@ import {
   useChartCartesianAxis,
   UseChartCartesianAxisSignature,
 } from './featurePlugins/useChartCartesianAxis';
+import { UseChartHighlightSignature } from './featurePlugins/useChartHighlight';
+import { useChartHighlight } from './featurePlugins/useChartHighlight/useChartHighlight';
 import {
   useChartInteraction,
   UseChartInteractionSignature,
@@ -15,9 +17,15 @@ export type AllPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesTyp
   UseChartZAxisSignature,
   UseChartCartesianAxisSignature<TSeries>,
   UseChartInteractionSignature,
+  UseChartHighlightSignature,
 ];
 
 export type AllPluginsType<TSeries extends ChartSeriesType = ChartSeriesType> =
   ConvertSignaturesIntoPlugins<AllPluginSignatures<TSeries>>;
 
-export const ALL_PLUGINS = [useChartZAxis, useChartCartesianAxis, useChartInteraction];
+export const ALL_PLUGINS = [
+  useChartZAxis,
+  useChartCartesianAxis,
+  useChartInteraction,
+  useChartHighlight,
+];

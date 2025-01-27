@@ -2,10 +2,8 @@
   "props": {
     "colors": { "type": { "name": "any" }, "default": "blueberryTwilightPalette" },
     "height": { "type": { "name": "any" } },
-    "highlightedItem": { "type": { "name": "any" } },
     "id": { "type": { "name": "any" } },
     "margin": { "type": { "name": "any" } },
-    "onHighlightChange": { "type": { "name": "any" } },
     "series": { "type": { "name": "any" } },
     "skipAnimation": { "type": { "name": "any" } },
     "width": { "type": { "name": "any" } }

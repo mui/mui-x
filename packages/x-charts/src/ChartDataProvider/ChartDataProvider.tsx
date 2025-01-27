@@ -3,7 +3,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useChartDataProviderProps } from './useChartDataProviderProps';
 import { AnimationProvider, AnimationProviderProps } from '../context/AnimationProvider';
-import { HighlightedProvider, HighlightedProviderProps } from '../context/HighlightedProvider';
 import { ChartProvider, ChartProviderProps } from '../context/ChartProvider';
 import { ChartSeriesType } from '../models/seriesType/config';
 import { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
@@ -13,9 +12,7 @@ export type ChartDataProviderProps<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 > = Omit<
-  HighlightedProviderProps &
-    AnimationProviderProps &
-    ChartProviderProps<TSeries, TSignatures>['pluginParams'],
+  AnimationProviderProps & ChartProviderProps<TSeries, TSignatures>['pluginParams'],
   'children'
 > &
   Pick<ChartProviderProps<TSeries, TSignatures>, 'seriesConfig' | 'plugins'> & {
@@ -53,14 +50,11 @@ function ChartDataProvider<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 >(props: ChartDataProviderProps<TSeries, TSignatures>) {
-  const { children, highlightedProviderProps, animationProviderProps, chartProviderProps } =
-    useChartDataProviderProps(props);
+  const { children, animationProviderProps, chartProviderProps } = useChartDataProviderProps(props);
 
   return (
     <ChartProvider<TSeries, TSignatures> {...chartProviderProps}>
-      <HighlightedProvider {...highlightedProviderProps}>
-        <AnimationProvider {...animationProviderProps}>{children}</AnimationProvider>
-      </HighlightedProvider>
+      <AnimationProvider {...animationProviderProps}>{children}</AnimationProvider>
     </ChartProvider>
   );
 }
@@ -83,10 +77,6 @@ ChartDataProvider.propTypes = {
    */
   height: PropTypes.any,
   /**
-   * The item currently highlighted. Turns highlighting into a controlled prop.
-   */
-  highlightedItem: PropTypes.any,
-  /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
@@ -97,12 +87,6 @@ ChartDataProvider.propTypes = {
    * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
    */
   margin: PropTypes.any,
-  /**
-   * The callback fired when the highlighted item changes.
-   *
-   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
-   */
-  onHighlightChange: PropTypes.any,
   /**
    * The array of series to display.
    * Each type of series has its own specificity.

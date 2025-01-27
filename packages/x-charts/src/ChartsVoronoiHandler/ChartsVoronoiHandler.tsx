@@ -8,12 +8,12 @@ import { useStore } from '../internals/store/useStore';
 import { getSVGPoint } from '../internals/getSVGPoint';
 import { ScatterItemIdentifier } from '../models';
 import { SeriesId } from '../models/seriesType/common';
-import { useHighlighted } from '../context/HighlightedProvider';
 import { useScatterSeries } from '../hooks/useSeries';
 import { useChartContext } from '../context/ChartProvider/useChartContext';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { useSvgRef } from '../hooks/useSvgRef';
 import { useXAxes, useYAxes } from '../hooks';
+import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 
 export type ChartsVoronoiHandlerProps = {
   /**
@@ -35,7 +35,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
   const { voronoiMaxRadius, onItemClick } = props;
   const svgRef = useSvgRef();
   const drawingArea = useDrawingArea();
-  const { instance } = useChartContext();
+  const { instance } = useChartContext<[UseChartHighlightSignature]>();
 
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
@@ -46,8 +46,6 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
   const voronoiRef = React.useRef<Record<string, VoronoiSeries>>({});
   const delauneyRef = React.useRef<Delaunay<any> | undefined>(undefined);
   const lastFind = React.useRef<number | undefined>(undefined);
-
-  const { setHighlighted, clearHighlighted } = useHighlighted();
 
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];
@@ -170,7 +168,8 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
         ...prev,
         interaction: { ...prev.interaction, axis: { x: null, y: null }, item: null },
       }));
-      clearHighlighted();
+
+      instance.clearHighlight();
     };
 
     const handleMouseMove = (event: MouseEvent) => {
@@ -181,7 +180,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
           ...prev,
           interaction: { ...prev.interaction, axis: { x: null, y: null }, item: null },
         }));
-        clearHighlighted();
+        instance.clearHighlight();
         return;
       }
 
@@ -190,7 +189,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
           ...prev,
           interaction: { ...prev.interaction, item: null },
         }));
-        clearHighlighted();
+        instance.clearHighlight();
         return;
       }
 
@@ -200,7 +199,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
         interaction: { ...prev.interaction, item: { type: 'scatter', seriesId, dataIndex } },
       }));
 
-      setHighlighted({
+      instance.setHighlight({
         seriesId,
         dataIndex,
       });
@@ -229,18 +228,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
       element.removeEventListener('pointermove', handleMouseMove);
       element.removeEventListener('click', handleMouseClick);
     };
-  }, [
-    svgRef,
-    yAxis,
-    xAxis,
-    voronoiMaxRadius,
-    onItemClick,
-    setHighlighted,
-    clearHighlighted,
-    drawingArea,
-    store,
-    instance,
-  ]);
+  }, [svgRef, yAxis, xAxis, voronoiMaxRadius, onItemClick, drawingArea, store, instance]);
 
   // eslint-disable-next-line react/jsx-no-useless-fragment
   return <React.Fragment />;

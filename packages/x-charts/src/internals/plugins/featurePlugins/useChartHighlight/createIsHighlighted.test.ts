@@ -1,10 +1,12 @@
 import { expect } from 'chai';
 import { createIsHighlighted } from './createIsHighlighted';
 
+const seriesId = 'id1';
+const dataIndex = 1;
+
 const itemData = {
-  seriesId: '1s',
-  dataIndex: 1,
-  value: '1v',
+  seriesId,
+  dataIndex,
 };
 
 describe('createIsHighlighted', () => {
@@ -20,7 +22,7 @@ describe('createIsHighlighted', () => {
     });
 
     it('should return false when input series is different than highlighted', () => {
-      expect(isHighlightedSameSeries({ ...itemData, seriesId: '2' })).to.equal(false);
+      expect(isHighlightedSameSeries({ ...itemData, seriesId: 'id2' })).to.equal(false);
     });
 
     it('should return true when input item is different than highlighted', () => {
@@ -40,7 +42,7 @@ describe('createIsHighlighted', () => {
     });
 
     it('should return false when input series is different than highlighted', () => {
-      expect(isHighlightedItem({ ...itemData, seriesId: '2' })).to.equal(false);
+      expect(isHighlightedItem({ ...itemData, seriesId: 'id2' })).to.equal(false);
     });
   });
 
