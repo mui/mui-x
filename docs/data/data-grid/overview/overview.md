@@ -22,7 +22,7 @@ The Data Grid is **open-core**: The Community version is MIT-licensed and free f
 
 See [MUI X Licensing](/x/introduction/licensing/) for complete details.
 
-## Community version
+## Community version (free forever)
 
 The MIT-licensed Community version of the Data Grid is a more sophisticated implementation of the [Material UI Table](/material-ui/react-table/).
 
