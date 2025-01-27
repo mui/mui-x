@@ -160,6 +160,11 @@ const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterB
             </rootProps.slots.baseBadge>
           }
           onClick={toggleFilter}
+          onPointerUp={(event) => {
+            if (preferencePanel.open) {
+              event.stopPropagation();
+            }
+          }}
           {...rootProps.slotProps?.baseButton}
           {...buttonProps}
           ref={ref}
