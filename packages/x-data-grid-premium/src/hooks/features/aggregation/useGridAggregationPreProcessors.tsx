@@ -75,8 +75,6 @@ export const useGridAggregationPreProcessors = (
       rulesOnLastColumnHydration.current = aggregationRules;
       apiRef.current.caches.aggregation.rulesOnLastColumnHydration = aggregationRules;
 
-      apiRef.current.caches.aggregation.rulesOnLastColumnHydration = aggregationRules;
-
       return columnsState;
     },
     [apiRef, props.aggregationFunctions, props.disableAggregation, props.unstable_dataSource],
