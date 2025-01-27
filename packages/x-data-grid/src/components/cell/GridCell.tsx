@@ -27,7 +27,7 @@ import {
 } from '../../models/params/gridCellParams';
 import { GridAlignment, GridStateColDef } from '../../models/colDef/gridColDef';
 import { GridRowModel, GridTreeNode, GridTreeNodeWithRender } from '../../models/gridRows';
-import { useGridSelector } from '../../hooks/utils/useGridSelector';
+import { useGridSelector, useGridSelectorV8 } from '../../hooks/utils/useGridSelector';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import {
   gridFocusCellSelector,
@@ -163,7 +163,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
 
   const field = column.field;
 
-  const editCellState: GridEditCellProps<any> | null = useGridSelector(
+  const editCellState: GridEditCellProps<any> | null = useGridSelectorV8(
     apiRef,
     gridEditCellStateSelector,
     {

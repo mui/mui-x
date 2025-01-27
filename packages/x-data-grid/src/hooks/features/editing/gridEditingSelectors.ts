@@ -1,4 +1,4 @@
-import { createSelector } from '../../../utils/createSelector';
+import { createSelectorV8 } from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridRowId } from '../../../models/gridRows';
 
@@ -7,12 +7,12 @@ import { GridRowId } from '../../../models/gridRows';
  */
 export const gridEditRowsStateSelector = (state: GridStateCommunity) => state.editRows;
 
-export const gridRowIsEditingSelector = createSelector(
+export const gridRowIsEditingSelector = createSelectorV8(
   gridEditRowsStateSelector,
   (editRows, rowId: GridRowId) => Boolean(editRows[rowId]),
 );
 
-export const gridEditCellStateSelector = createSelector(
+export const gridEditCellStateSelector = createSelectorV8(
   gridEditRowsStateSelector,
   (
     editRows,

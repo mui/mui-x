@@ -15,7 +15,11 @@ import { GridPinnedColumns } from '../hooks/features/columns';
 import type { GridStateColDef } from '../models/colDef/gridColDef';
 import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../utils/cellBorderUtils';
 import { gridColumnPositionsSelector } from '../hooks/features/columns/gridColumnsSelector';
-import { useGridSelector, objectShallowCompare } from '../hooks/utils/useGridSelector';
+import {
+  useGridSelector,
+  objectShallowCompare,
+  useGridSelectorV8,
+} from '../hooks/utils/useGridSelector';
 import { GridRowClassNameParams } from '../models/params/gridRowParams';
 import { useGridVisibleRows } from '../hooks/utils/useGridVisibleRows';
 import { findParentElementFromClassName, isEventTargetInPortal } from '../utils/domUtils';
@@ -32,9 +36,9 @@ import { GridScrollbarFillerCell as ScrollbarFiller } from './GridScrollbarFille
 import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
 import { useGridConfiguration } from '../hooks/utils/useGridConfiguration';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
-import { createSelector } from '../utils/createSelector';
+import { createSelectorV8 } from '../utils/createSelector';
 
-const isRowReorderingEnabledSelector = createSelector(
+const isRowReorderingEnabledSelector = createSelectorV8(
   gridEditRowsStateSelector,
   (editRows, rowReordering: boolean) => {
     if (!rowReordering) {
@@ -120,14 +124,14 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
   const treeDepth = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector);
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const rowReordering = (rootProps as any).rowReordering as boolean;
-  const isRowReorderingEnabled = useGridSelector(
+  const isRowReorderingEnabled = useGridSelectorV8(
     apiRef,
     isRowReorderingEnabledSelector,
     rowReordering,
   );
   const handleRef = useForkRef(ref, refProp);
   const rowNode = apiRef.current.getRowNode(rowId);
-  const editing = useGridSelector(apiRef, gridRowIsEditingSelector, rowId);
+  const editing = useGridSelectorV8(apiRef, gridRowIsEditingSelector, rowId);
   const editable = rootProps.editMode === GridEditModes.Row;
   const hasFocusCell = focusedColumnIndex !== undefined;
   const hasVirtualFocusCellLeft =
