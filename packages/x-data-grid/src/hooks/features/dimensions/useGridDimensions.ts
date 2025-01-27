@@ -148,18 +148,14 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     rightPinnedWidth,
   } = getStaticDimensions(props, apiRef, densityFactor, pinnedColumns);
 
-  const [savedSize, setSavedSize] = React.useState<ElementSize>();
-  const debouncedSetSavedSize = React.useMemo(
-    () => throttle(setSavedSize, props.resizeThrottleMs),
-    [props.resizeThrottleMs],
-  );
-  React.useEffect(() => debouncedSetSavedSize.clear, [debouncedSetSavedSize]);
-
   const getRootDimensions = () => apiRef.current.state.dimensions;
 
-  const setDimensions = useEventCallback((dimensions: GridDimensions) => {
-    apiRef.current.setState((state) => ({ ...state, dimensions }));
-  });
+  const setDimensions = React.useCallback(
+    (dimensions: GridDimensions) => {
+      apiRef.current.setState((state) => ({ ...state, dimensions }));
+    },
+    [apiRef],
+  );
 
   const getViewportPageSize = React.useCallback(() => {
     const dimensions = gridDimensionsSelector(apiRef.current.state);
@@ -322,6 +318,19 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     rightPinnedWidth,
   ]);
 
+  const updateDimensionCallback = useEventCallback(updateDimensions);
+  const debouncedUpdateDimensions = React.useMemo(
+    () =>
+      props.resizeThrottleMs > 0
+        ? throttle(() => {
+            updateDimensionCallback();
+            apiRef.current.publishEvent('debouncedResize', rootDimensionsRef.current!);
+          }, props.resizeThrottleMs)
+        : undefined,
+    [apiRef, props.resizeThrottleMs, updateDimensionCallback],
+  );
+  React.useEffect(() => debouncedUpdateDimensions?.clear, [debouncedUpdateDimensions]);
+
   const apiPublic: GridDimensionsApi = {
     getRootDimensions,
   };
@@ -331,15 +340,9 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     getViewportPageSize,
   };
 
+  useEnhancedEffect(updateDimensions, [updateDimensions]);
   useGridApiMethod(apiRef, apiPublic, 'public');
   useGridApiMethod(apiRef, apiPrivate, 'private');
-
-  useEnhancedEffect(() => {
-    if (!isFirstSizing.current) {
-      updateDimensions();
-      apiRef.current.publishEvent('debouncedResize', rootDimensionsRef.current!);
-    }
-  }, [apiRef, savedSize, updateDimensions]);
 
   const root = apiRef.current.rootElementRef.current;
   useEnhancedEffect(() => {
@@ -406,16 +409,16 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
         errorShown.current = true;
       }
 
-      if (isFirstSizing.current) {
+      if (isFirstSizing.current || !debouncedUpdateDimensions) {
         // We want to initialize the grid dimensions as soon as possible to avoid flickering
         isFirstSizing.current = false;
         updateDimensions();
         return;
       }
 
-      debouncedSetSavedSize(size);
+      debouncedUpdateDimensions();
     },
-    [updateDimensions, props.autoHeight, debouncedSetSavedSize, logger],
+    [updateDimensions, props.autoHeight, debouncedUpdateDimensions, logger],
   );
 
   useGridApiEventHandler(apiRef, 'resize', handleResize);
