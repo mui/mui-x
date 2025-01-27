@@ -29,7 +29,7 @@ const testCache: GridDataSourceCache = {
 describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
   const { render } = createRenderer();
 
-  let apiRef: RefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
   let fetchRowsSpy: SinonSpy;
   let mockServer: ReturnType<typeof useMockServer>;
 
@@ -143,7 +143,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
       const cell1Content = cell1.innerText;
 
       act(() => {
-        apiRef.current.setPage(1);
+        apiRef.current?.setPage(1);
       });
 
       await waitFor(() => {
@@ -158,7 +158,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
       expect(cell2Content).not.to.equal(cell1Content);
 
       act(() => {
-        apiRef.current.setPage(0);
+        apiRef.current?.setPage(0);
       });
 
       expect(fetchRowsSpy.callCount).to.equal(2);
@@ -195,7 +195,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
       const cell1Content = cell1.innerText;
 
       act(() => {
-        apiRef.current.setPage(1);
+        apiRef.current?.setPage(1);
       });
 
       await waitFor(() => {
@@ -213,7 +213,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
       expect(cell2Content).not.to.equal(cell1Content);
 
       act(() => {
-        apiRef.current.setPage(0);
+        apiRef.current?.setPage(0);
       });
 
       const dataRow3 = await screen.findByText(
@@ -245,7 +245,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
       const cell1Content = cell1.innerText;
 
       act(() => {
-        apiRef.current.setPage(1);
+        apiRef.current?.setPage(1);
       });
 
       await waitFor(() => {
@@ -262,7 +262,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
       expect(cell2Content).not.to.equal(cell1Content);
 
       act(() => {
-        apiRef.current.setPage(0);
+        apiRef.current?.setPage(0);
       });
 
       await waitFor(() => {

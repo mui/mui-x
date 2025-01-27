@@ -87,7 +87,7 @@ function ServerSideLazyLoadingErrorHandling() {
           <ErrorSnackbar
             open={!!retryParams}
             onRetry={() => {
-              apiRef.current.unstable_dataSource.fetchRows(
+              apiRef.current?.unstable_dataSource.fetchRows(
                 GRID_ROOT_GROUP_ID,
                 retryParams,
               );

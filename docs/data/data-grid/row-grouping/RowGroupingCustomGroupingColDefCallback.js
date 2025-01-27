@@ -59,8 +59,12 @@ export default function RowGroupingCustomGroupingColDefCallback() {
               return {
                 headerName: 'Director',
                 valueFormatter: (value, row) => {
-                  const rowId = apiRef.current.getRowId(row);
-                  const rowNode = apiRef.current.getRowNode(rowId);
+                  const rowId = apiRef.current?.getRowId(row);
+                  if (!rowId) {
+                    return undefined;
+                  }
+
+                  const rowNode = apiRef.current?.getRowNode(rowId);
                   if (
                     rowNode?.type === 'group' &&
                     rowNode?.groupingField === 'director'

@@ -64,7 +64,7 @@ import {
 } from '../hooks/features/listView/useGridListView';
 
 export const useDataGridComponent = (
-  inputApiRef: RefObject<GridApiCommunity> | undefined,
+  inputApiRef: RefObject<GridApiCommunity | null> | undefined,
   props: DataGridProcessedProps,
 ) => {
   const apiRef = useGridInitialization<GridPrivateApiCommunity, GridApiCommunity>(

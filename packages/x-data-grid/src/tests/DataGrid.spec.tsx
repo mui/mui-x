@@ -261,7 +261,7 @@ function ApiRefPrivateMethods() {
 function ApiRefPublicMethods() {
   const apiRef = useGridApiRef();
 
-  apiRef.current.unstable_applyPipeProcessors('exportMenu', [], {});
+  apiRef.current!.unstable_applyPipeProcessors('exportMenu', [], {});
 }
 
 function ApiRefProMethods() {
