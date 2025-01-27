@@ -18,7 +18,7 @@ import { isJSDOM, describeSkipIf } from 'test/utils/skipIf';
 describe('<DataGridPremium /> - Cell selection', () => {
   const { render } = createRenderer();
 
-  let apiRef: RefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   function TestDataGridSelection({
     rowLength = 4,
@@ -129,7 +129,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
 
     it('should call selectCellRange', () => {
       render(<TestDataGridSelection />);
-      const spiedSelectCellsBetweenRange = spyApi(apiRef.current, 'selectCellRange');
+      const spiedSelectCellsBetweenRange = spyApi(apiRef.current!, 'selectCellRange');
 
       const cell = getCell(0, 0);
       cell.focus();
@@ -181,7 +181,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
   describe('Shift + arrow keys', () => {
     it('should call selectCellRange when ArrowDown is pressed', () => {
       render(<TestDataGridSelection />);
-      const spiedSelectCellsBetweenRange = spyApi(apiRef.current, 'selectCellRange');
+      const spiedSelectCellsBetweenRange = spyApi(apiRef.current!, 'selectCellRange');
       const cell = getCell(0, 0);
       cell.focus();
       fireUserEvent.mousePress(cell);
@@ -193,7 +193,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
 
     it('should call selectCellRange when ArrowUp is pressed', async () => {
       const { user } = render(<TestDataGridSelection />);
-      const spiedSelectCellsBetweenRange = spyApi(apiRef.current, 'selectCellRange');
+      const spiedSelectCellsBetweenRange = spyApi(apiRef.current!, 'selectCellRange');
       const cell = getCell(1, 0);
       await act(() => {
         cell.focus();
@@ -206,7 +206,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
 
     it('should call selectCellRange when ArrowLeft is pressed', () => {
       render(<TestDataGridSelection />);
-      const spiedSelectCellsBetweenRange = spyApi(apiRef.current, 'selectCellRange');
+      const spiedSelectCellsBetweenRange = spyApi(apiRef.current!, 'selectCellRange');
       const cell = getCell(0, 1);
       cell.focus();
       fireUserEvent.mousePress(cell);
@@ -221,7 +221,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
 
     it('should call selectCellRange when ArrowRight is pressed', () => {
       render(<TestDataGridSelection />);
-      const spiedSelectCellsBetweenRange = spyApi(apiRef.current, 'selectCellRange');
+      const spiedSelectCellsBetweenRange = spyApi(apiRef.current!, 'selectCellRange');
       const cell = getCell(0, 0);
       cell.focus();
       fireUserEvent.mousePress(cell);
@@ -287,7 +287,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       it('should select all cells within the given arguments if end > start', () => {
         render(<TestDataGridSelection />);
         act(() =>
-          apiRef.current.selectCellRange({ id: 0, field: 'id' }, { id: 2, field: 'price1M' }),
+          apiRef.current?.selectCellRange({ id: 0, field: 'id' }, { id: 2, field: 'price1M' }),
         );
 
         expect(getCell(0, 0)).to.have.class('Mui-selected');
@@ -306,7 +306,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       it('should select all cells within the given arguments if start > end', async () => {
         render(<TestDataGridSelection />);
         await act(() =>
-          apiRef.current.selectCellRange({ id: 0, field: 'id' }, { id: 2, field: 'price1M' }),
+          apiRef.current?.selectCellRange({ id: 0, field: 'id' }, { id: 2, field: 'price1M' }),
         );
 
         expect(getCell(0, 0)).to.have.class('Mui-selected');
@@ -334,7 +334,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
         expect(getCell(0, 2)).to.have.class('Mui-selected');
 
         act(() =>
-          apiRef.current.selectCellRange({ id: 1, field: 'id' }, { id: 2, field: 'price1M' }),
+          apiRef.current?.selectCellRange({ id: 1, field: 'id' }, { id: 2, field: 'price1M' }),
         );
 
         expect(getCell(0, 0)).not.to.have.class('Mui-selected');
@@ -358,7 +358,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
             cellSelectionModel={{ 0: { id: true, currencyPair: true, price1M: false } }}
           />,
         );
-        expect(apiRef.current.getSelectedCellsAsArray()).to.deep.equal([
+        expect(apiRef.current?.getSelectedCellsAsArray()).to.deep.equal([
           { id: 0, field: 'id' },
           { id: 0, field: 'currencyPair' },
         ]);

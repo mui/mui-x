@@ -67,5 +67,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the valueCell element"
     }
-  }
+  },
+  "slotDescriptions": { "tooltip": "Custom component for the tooltip popper." }
 }

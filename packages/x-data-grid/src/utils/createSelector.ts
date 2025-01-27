@@ -19,7 +19,10 @@ type GridCreateSelectorFunction = ReturnType<typeof reselectCreateSelector> & {
 };
 
 export interface OutputSelector<State, Args, Result> {
-  (apiRef: RefObject<{ state: State; instanceId: GridCoreApi['instanceId'] }>, args?: Args): Result;
+  (
+    apiRef: RefObject<{ state: State; instanceId: GridCoreApi['instanceId'] } | null>,
+    args?: Args,
+  ): Result;
   (state: State, args?: Args, instanceId?: GridCoreApi['instanceId']): Result;
   acceptsApiRef: boolean;
 }
