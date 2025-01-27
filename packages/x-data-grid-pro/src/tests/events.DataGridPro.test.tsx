@@ -370,7 +370,7 @@ describe('<DataGridPro /> - Events params', () => {
     // Since rowheight < viewport height, onmount calls fetchRows directly
     expect(handleFetchRows.callCount).to.equal(1);
     act(() => {
-      apiRef.current.publishEvent('renderedRowsIntervalChange', {
+      apiRef.current?.publishEvent('renderedRowsIntervalChange', {
         firstRowIndex: 3,
         lastRowIndex: 10,
         firstColumnIndex: 0,
