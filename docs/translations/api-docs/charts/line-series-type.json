@@ -39,6 +39,9 @@
     "stackOrder": {
       "description": "The order in which series&#39; of the same group are stacked together."
     },
+    "strictStepCurve": {
+      "description": "If <code>true</code>, step curve starts and end at the first and last point.<br />By default the line is extended to fill the space before and after."
+    },
     "valueFormatter": {
       "description": "Formatter used to render values in tooltip or other data display."
     },
