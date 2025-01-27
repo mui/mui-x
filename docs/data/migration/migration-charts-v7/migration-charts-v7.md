@@ -109,7 +109,7 @@ The `direction` prop of the legend has been changed to accept `'vertical'` and `
 
 #### Legend position value change ✅
 
-Replace `"left" | "middle" | "right"` values `"start" | "center" | "end"` respectively.
+Replace `"left" | "middle" | "right"` values with `"start" | "center" | "end"` respectively.
 This is to align with the CSS values and reflect the RTL ability of the legend component.
 
 ```diff
