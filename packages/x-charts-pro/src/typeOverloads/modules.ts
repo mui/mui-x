@@ -31,7 +31,7 @@ declare module '@mui/x-charts/internals' {
       series: DefaultizedFunnelSeriesType;
       seriesProp: FunnelSeriesType;
       itemIdentifier: FunnelItemIdentifier;
-      valueType: number | null;
+      valueType: FunnelValueType;
       cartesian: true;
     };
   }
