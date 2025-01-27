@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
+import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -39,7 +40,6 @@ import {
 } from './gridRowsUtils';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 import { GridStrategyGroup } from '../../core/strategyProcessing';
-import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
 
 export const rowsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'unstable_dataSource' | 'rows' | 'rowCount' | 'getRowId' | 'loading'>

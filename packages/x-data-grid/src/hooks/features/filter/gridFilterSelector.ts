@@ -1,3 +1,4 @@
+import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
 import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
 import { GridRowId } from '../../../models/gridRows';
 import { GridFilterItem } from '../../../models/gridFilterItem';
@@ -5,7 +6,6 @@ import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { gridSortedRowEntriesSelector } from '../sorting/gridSortingSelector';
 import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
 import { gridRowMaximumTreeDepthSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
-import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
 
 /**
  * @category Filtering
