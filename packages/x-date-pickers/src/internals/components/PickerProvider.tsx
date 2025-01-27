@@ -16,6 +16,7 @@ import type {
 import {
   UsePickerViewsActionsContextValue,
   UsePickerViewsContextValue,
+  UsePickerViewsPrivateContextValue,
 } from '../hooks/usePicker/usePickerViews';
 import { IsValidValueContext } from '../../hooks/useIsValidValue';
 import {
@@ -40,6 +41,8 @@ export const PickerPrivateContext = React.createContext<PickerPrivateContextValu
     pickerOrientation: 'portrait',
   },
   dismissViews: () => {},
+  hasUIView: true,
+  doesTheCurrentViewHasAnUI: () => true,
 });
 
 /**
@@ -118,6 +121,11 @@ export interface PickerContextValue<
    */
   orientation: PickerOrientation;
   /**
+   * Whether the heavy animations should be disabled.
+   * @default `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13
+   */
+  reduceAnimations?: boolean;
+  /**
    * The ref to attach to the element that triggers the Picker opening.
    * When using a built-in field component, this property is automatically attached to the right element.
    */
@@ -146,7 +154,9 @@ export interface PickerActionsContextValue<
 > extends UsePickerValueActionsContextValue<TValue, TError>,
     UsePickerViewsActionsContextValue<TView> {}
 
-export interface PickerPrivateContextValue extends UsePickerValuePrivateContextValue {
+export interface PickerPrivateContextValue
+  extends UsePickerValuePrivateContextValue,
+    UsePickerViewsPrivateContextValue {
   /**
    * The ownerState of the picker.
    */
