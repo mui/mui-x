@@ -19,7 +19,6 @@ It provides developers with an intuitive API for implementing complex use cases;
 The Grid's theming features are designed to be frictionless when integrating with Material UI and other MUI X components, but it can also stand on its own and be customized to meet the needs of any design system.
 
 The Data Grid is **open-core**: The Community version is MIT-licensed and free forever, while more advanced features require a Pro or Premium commercial license.
-
 See [MUI X Licensing](/x/introduction/licensing/) for complete details.
 
 ## Community version (free forever)
@@ -41,7 +40,6 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 ```
 
 The Pro plan expands on the Community version to support more complex use cases with features like advanced filtering, column pinning, column and row reordering, support for tree data, and virtualization to handle larger datasets.
-
 Pro features are denoted by the blue cube icon (<span class="plan-pro"></span>) throughout the documentation.
 
 The demo below displays 31 columns and 100,000 rows—over three million cells in total:
@@ -55,7 +53,6 @@ import { DataGridPremium } from '@mui/x-data-grid-premium';
 ```
 
 The Premium plan includes all Pro features as well as more advanced features for data analysis and large dataset management, such as row grouping with aggregation functions (like sum and average) and the ability to export to Excel files.
-
 Premium features are denoted by the golden cube icon (<span class="plan-premium"></span>) throughout the documentation.
 
 The demo below groups rows by commodity name, and uses an aggregation function to calculate the sum of quantities for each group and in total (displayed in a summary row).
