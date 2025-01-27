@@ -30,8 +30,6 @@ export type StackingGroupsType = {
   stackingOffset: (series: Series<any, any>, order: Iterable<number>) => void;
 }[];
 
-const defaultStackId = 'default-stack';
-
 export const StackOrder: {
   [key in StackOrderType]: (series: Series<any, any>) => number[];
 } = {
@@ -100,29 +98,26 @@ export const getStackingGroups = <T extends StackableSeriesType>(params: Formatt
   seriesOrder.forEach((id) => {
     const { stack, stackOrder, stackOffset } = series[id];
 
-    // Funnel charts are stacked by default
-    const stackId = !stack ? defaultStackId : stack;
-
-    if (stackId === undefined) {
+    if (stack === undefined) {
       stackingGroups.push({
         ids: [id],
         stackingOrder: StackOrder.none,
         stackingOffset: StackOffset.none,
       });
-    } else if (stackIndex[stackId] === undefined) {
-      stackIndex[stackId] = stackingGroups.length;
+    } else if (stackIndex[stack] === undefined) {
+      stackIndex[stack] = stackingGroups.length;
       stackingGroups.push({
         ids: [id],
         stackingOrder: StackOrder[stackOrder ?? defaultStrategy?.stackOrder ?? 'none'],
         stackingOffset: StackOffset[stackOffset ?? defaultStrategy?.stackOffset ?? 'diverging'],
       });
     } else {
-      stackingGroups[stackIndex[stackId]].ids.push(id);
+      stackingGroups[stackIndex[stack]].ids.push(id);
       if (stackOrder !== undefined) {
-        stackingGroups[stackIndex[stackId]].stackingOrder = StackOrder[stackOrder];
+        stackingGroups[stackIndex[stack]].stackingOrder = StackOrder[stackOrder];
       }
       if (stackOffset !== undefined) {
-        stackingGroups[stackIndex[stackId]].stackingOffset = StackOffset[stackOffset];
+        stackingGroups[stackIndex[stack]].stackingOffset = StackOffset[stackOffset];
       }
     }
   });
