@@ -64,7 +64,7 @@ export function useBaseCalendarDaysGrid(parameters: useBaseCalendarDaysGrid.Para
   });
 
   const tabbableDays = React.useMemo(() => {
-    const flatDays = daysGrid.flat();
+    const flatDays = daysGrid.flat().filter((day) => utils.isSameMonth(day, currentMonth));
 
     let tempTabbableDays: PickerValidDate[] = [];
     tempTabbableDays = flatDays.filter((day) =>
