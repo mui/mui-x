@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridApi, useGridApiRef, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
@@ -17,7 +18,7 @@ describe('<DataGridPro /> - Clipboard', () => {
 
   const columns = [{ field: 'id' }, { field: 'brand', headerName: 'Brand' }];
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: RefObject<GridApi>;
 
   function Test(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
