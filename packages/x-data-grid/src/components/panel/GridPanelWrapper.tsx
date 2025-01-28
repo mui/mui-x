@@ -55,12 +55,4 @@ const GridPanelWrapper = forwardRef<HTMLDivElement, GridPanelWrapperProps>(
   },
 );
 
-GridPanelWrapper.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  slotProps: PropTypes.object,
-} as any;
-
 export { GridPanelWrapper };

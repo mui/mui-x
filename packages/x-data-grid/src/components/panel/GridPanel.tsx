@@ -125,19 +125,97 @@ GridPanel.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  /**
-   * Popper render function or node.
-   */
   children: PropTypes.node,
   /**
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
-  /**
-   * If `true`, the component is shown.
-   */
+  className: PropTypes.string,
+  clickAwayMouseEvent: PropTypes.oneOf([
+    'onClick',
+    'onMouseDown',
+    'onMouseUp',
+    'onPointerDown',
+    'onPointerUp',
+    false,
+  ]),
+  clickAwayTouchEvent: PropTypes.oneOf(['onTouchEnd', 'onTouchStart', false]),
+  flip: PropTypes.bool,
+  focusTrap: PropTypes.bool,
+  focusTrapEnabled: PropTypes.bool,
+  id: PropTypes.string,
+  onClickAway: PropTypes.shape({
+    '__@hasInstance@654': PropTypes.func.isRequired,
+    '__@metadata@656': PropTypes.any,
+    apply: PropTypes.func.isRequired,
+    arguments: PropTypes.any.isRequired,
+    bind: PropTypes.func.isRequired,
+    call: PropTypes.func.isRequired,
+    caller: PropTypes.object.isRequired,
+    length: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    prototype: PropTypes.any.isRequired,
+    toString: PropTypes.func.isRequired,
+  }),
+  onDidMount: PropTypes.shape({
+    '__@hasInstance@654': PropTypes.func.isRequired,
+    '__@metadata@656': PropTypes.any,
+    apply: PropTypes.func.isRequired,
+    arguments: PropTypes.any.isRequired,
+    bind: PropTypes.func.isRequired,
+    call: PropTypes.func.isRequired,
+    caller: PropTypes.object.isRequired,
+    length: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    prototype: PropTypes.any.isRequired,
+    toString: PropTypes.func.isRequired,
+  }),
+  onDidUnmount: PropTypes.shape({
+    '__@hasInstance@654': PropTypes.func.isRequired,
+    '__@metadata@656': PropTypes.any,
+    apply: PropTypes.func.isRequired,
+    arguments: PropTypes.any.isRequired,
+    bind: PropTypes.func.isRequired,
+    call: PropTypes.func.isRequired,
+    caller: PropTypes.object.isRequired,
+    length: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    prototype: PropTypes.any.isRequired,
+    toString: PropTypes.func.isRequired,
+  }),
+  onExited: PropTypes.func,
   open: PropTypes.bool.isRequired,
   ownerState: PropTypes.object,
+  /**
+   * @default 'bottom'
+   */
+  placement: PropTypes.oneOf([
+    'auto-end',
+    'auto-start',
+    'auto',
+    'bottom-end',
+    'bottom-start',
+    'bottom',
+    'left-end',
+    'left-start',
+    'left',
+    'right-end',
+    'right-start',
+    'right',
+    'top-end',
+    'top-start',
+    'top',
+  ]),
+  target: (props, propName) => {
+    if (props[propName] == null) {
+      return new Error(`Prop '${propName}' is required but wasn't specified`);
+    }
+    if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {
+      return new Error(`Expected prop '${propName}' to be of type Element`);
+    }
+    return null;
+  },
+  transition: PropTypes.bool,
 } as any;
 
 export { GridPanel };

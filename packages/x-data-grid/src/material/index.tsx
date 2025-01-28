@@ -237,7 +237,7 @@ function focusTrapWrapper(props: PopperProps, content: any) {
     return content;
   }
   return (
-    <MUIFocusTrap open disableEnforceFocus isEnabled={() => props.focusTrapEnabled ?? false}>
+    <MUIFocusTrap open disableEnforceFocus isEnabled={() => props.focusTrapEnabled ?? true}>
       {content}
     </MUIFocusTrap>
   );
