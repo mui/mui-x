@@ -25,7 +25,7 @@ describe('<GridPanel />', () => {
     );
   }
 
-  describeConformance(<GridPanel disablePortal open />, () => ({
+  describeConformance(<GridPanel open />, () => ({
     classes: classes as any,
     inheritComponent: Popper,
     muiName: 'MuiGridPanel',
