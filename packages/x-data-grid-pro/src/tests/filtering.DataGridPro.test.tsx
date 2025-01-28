@@ -1262,6 +1262,33 @@ describe('<DataGridPro /> - Filter', () => {
       await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['100', '1,000']));
       expect(changeSpy.lastCall.args[0].items[0].value).to.equal(10); // 0.1e2
     });
+
+    it('should allow to navigate to the header filter cell when there are no rows', async () => {
+      clock.restore();
+      const { user } = render(
+        <TestCase
+          headerFilters
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [
+                  {
+                    field: 'brand',
+                    operator: 'contains',
+                    value: 'abc',
+                  },
+                ],
+              },
+            },
+          }}
+        />,
+      );
+      const headerCell = getColumnHeaderCell(0, 0);
+      const filterCell = getColumnHeaderCell(0, 1);
+      await user.click(headerCell);
+      await user.keyboard('{ArrowDown}');
+      expect(filterCell).toHaveFocus();
+    });
   });
 
   describe('Read-only filters', () => {
