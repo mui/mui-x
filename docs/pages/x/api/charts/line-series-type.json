@@ -30,6 +30,7 @@
     "stack": { "type": { "description": "string" } },
     "stackOffset": { "type": { "description": "StackOffsetType" }, "default": "'none'" },
     "stackOrder": { "type": { "description": "StackOrderType" }, "default": "'none'" },
+    "strictStepCurve": { "type": { "description": "boolean" } },
     "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
     "xAxisId": { "type": { "description": "string" } },
     "yAxisId": { "type": { "description": "string" } }

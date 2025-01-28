@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   useGridSelector,
   useGridApiOptionHandler,
@@ -30,7 +31,7 @@ const InfiniteLoadingTriggerElement = styled('div')({
  * @requires useGridScroll (method
  */
 export const useGridInfiniteLoader = (
-  apiRef: React.RefObject<GridPrivateApiPro>,
+  apiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     'onRowsScrollEnd' | 'pagination' | 'paginationMode' | 'rowsLoadingMode' | 'scrollEndThreshold'

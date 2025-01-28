@@ -42,7 +42,7 @@ export default function ColumnAutosizingDynamicRowHeight() {
 
   return (
     <div style={{ width: '100%' }}>
-      <Button onClick={() => apiRef.current.autosizeColumns(autosizeOptions)}>
+      <Button onClick={() => apiRef.current?.autosizeColumns(autosizeOptions)}>
         Autosize Columns
       </Button>
       <div style={{ height: 400, width: '100%' }}>

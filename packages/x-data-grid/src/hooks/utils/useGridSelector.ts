@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { GridApiCommon } from '../../models/api/gridApiCommon';
@@ -18,7 +19,7 @@ type Selector<Api extends GridApiCommon, Args, T> =
   | OutputSelector<Api['state'], Args, T>;
 
 function applySelector<Api extends GridApiCommon, Args, T>(
-  apiRef: React.RefObject<Api>,
+  apiRef: RefObject<Api>,
   selector: Selector<Api, Args, T>,
   args: Args,
   instanceId: GridCoreApi['instanceId'],
@@ -52,7 +53,7 @@ export const argsEqual = (prev: any, curr: any) => {
 const createRefs = () => ({ state: null, equals: null, selector: null, args: null }) as any;
 
 export const useGridSelector = <Api extends GridApiCommon, Args, T>(
-  apiRef: React.RefObject<Api>,
+  apiRef: RefObject<Api>,
   selector: Selector<Api, Args, T>,
   args: Args = undefined as Args,
   equals: <U = T>(a: U, b: U) => boolean = defaultCompare,

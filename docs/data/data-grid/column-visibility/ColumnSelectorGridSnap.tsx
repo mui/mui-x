@@ -17,7 +17,7 @@ export default function ColumnSelectorGridSnap() {
   const apiRef = useGridApiRef();
 
   React.useEffect(() => {
-    apiRef.current.showPreferences(GridPreferencePanelsValue.columns);
+    apiRef.current?.showPreferences(GridPreferencePanelsValue.columns);
   }, [apiRef]);
 
   return (

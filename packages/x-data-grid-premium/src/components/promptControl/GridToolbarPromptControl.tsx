@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import useEventCallback from '@mui/utils/useEventCallback';
@@ -19,12 +20,12 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { PromptResponse } from '../../hooks/features/promptControl/types';
 import { RecordButton, BrowserSpeechRecognition } from './RecordButton';
 
-type OwnerState = DataGridPremiumProcessedProps;
+type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'> & { recording: boolean };
 
 const supportsSpeechRecognition = !!BrowserSpeechRecognition;
 
-const useUtilityClasses = (ownerState: OwnerState, recording: boolean) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes, recording } = ownerState;
 
   const slots = {
     root: ['toolbarPromptControl', recording && 'toolbarPromptControl--recording'],
@@ -39,14 +40,20 @@ const useUtilityClasses = (ownerState: OwnerState, recording: boolean) => {
 const GridToolbarPromptControlRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ToolbarPromptControl',
-  overridesResolver: (_, styles) => styles.toolbarPromptControl,
+  overridesResolver: (props, styles) => {
+    const { ownerState } = props;
+    return [
+      styles.toolbarPromptControl,
+      ownerState.recording && styles['toolbarPromptControl--recording'],
+    ];
+  },
 })<{ ownerState: OwnerState }>({
   flex: 1,
   display: 'flex',
   flexDirection: 'row',
 });
 
-function sampleData(apiRef: React.RefObject<GridApiPremium>) {
+function sampleData(apiRef: RefObject<GridApiPremium>) {
   const columns = gridColumnDefinitionsSelector(apiRef);
   const rows = Object.values(gridRowsLookupSelector(apiRef));
   const columnExamples: Record<string, any[]> = {};
@@ -64,10 +71,7 @@ function sampleData(apiRef: React.RefObject<GridApiPremium>) {
   return columnExamples;
 }
 
-function generateContext(
-  apiRef: React.RefObject<GridApiPremium>,
-  examples?: Record<string, any[]>,
-) {
+function generateContext(apiRef: RefObject<GridApiPremium>, examples?: Record<string, any[]>) {
   const columns = gridColumnDefinitionsSelector(apiRef);
   const columnsContext = columns.map((column) => ({
     field: column.field,
@@ -112,8 +116,8 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
   const [error, setError] = React.useState<string | null>(null);
   const [isRecording, setRecording] = React.useState(false);
   const [query, setQuery] = React.useState('');
-
-  const classes = useUtilityClasses(rootProps, isRecording);
+  const ownerState = { classes: rootProps.classes, recording: isRecording };
+  const classes = useUtilityClasses(ownerState);
   const examplesFromData = React.useMemo(
     () => (allowDataSampling ? sampleData(apiRef) : undefined),
     [apiRef, allowDataSampling],
@@ -213,7 +217,7 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
     : apiRef.current.getLocaleText('toolbarPromptControlPlaceholder');
 
   return (
-    <GridToolbarPromptControlRoot ownerState={rootProps} className={classes.root}>
+    <GridToolbarPromptControlRoot ownerState={ownerState} className={classes.root}>
       <rootProps.slots.baseTextField
         variant="outlined"
         placeholder={
