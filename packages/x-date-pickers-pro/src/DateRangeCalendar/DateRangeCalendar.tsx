@@ -363,6 +363,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     reduceAnimations,
     shouldDisableDate: wrappedShouldDisableDate,
     timezone,
+    focusedView,
   });
 
   if (focusedView === 'day' && calendarState.focusedDay === null) {

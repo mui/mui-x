@@ -4,7 +4,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { SlideDirection } from './PickersSlideTransition';
 import { useIsDateDisabled } from './useIsDateDisabled';
 import { useUtils } from '../internals/hooks/useUtils';
-import { MuiPickersAdapter, PickersTimezone, PickerValidDate } from '../models';
+import { DateView, MuiPickersAdapter, PickersTimezone, PickerValidDate } from '../models';
 import { DateCalendarDefaultizedProps } from './DateCalendar.types';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
@@ -122,11 +122,11 @@ interface UseCalendarStateParameters
     | 'onMonthChange'
     | 'reduceAnimations'
     | 'shouldDisableDate'
-    | 'autoFocus'
   > {
   value: PickerValidDate | null;
   calendars?: number;
   timezone: PickersTimezone;
+  focusedView: DateView | null;
 }
 
 interface UseCalendarStateReturnValue {
@@ -157,7 +157,7 @@ export const useCalendarState = (
     reduceAnimations,
     shouldDisableDate,
     timezone,
-    autoFocus,
+    focusedView,
   } = params;
 
   const utils = useUtils();
@@ -184,10 +184,22 @@ export const useCalendarState = (
 
   const [calendarState, dispatch] = React.useReducer(reducerFn, {
     isMonthSwitchingAnimating: false,
-    focusedDay: autoFocus ? referenceDate : null,
+    focusedDay: focusedView != null ? referenceDate : null,
     currentMonth: utils.startOfMonth(referenceDate),
     slideDirection: 'left',
   });
+
+  if (focusedView == null && calendarState.focusedDay != null) {
+    dispatch({
+      type: 'changeFocusedDay',
+      focusedDay: null,
+    });
+  } else if (focusedView != null && calendarState.focusedDay == null) {
+    dispatch({
+      type: 'changeFocusedDay',
+      focusedDay: referenceDate,
+    });
+  }
 
   // Ensure that `calendarState.currentMonth` timezone is updated when `referenceDate` (or timezone changes)
   // https://github.com/mui/mui-x/issues/10804
