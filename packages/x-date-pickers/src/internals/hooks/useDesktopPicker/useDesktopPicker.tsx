@@ -6,8 +6,8 @@ import { PickerPopper } from '../../components/PickerPopper/PickerPopper';
 import { UseDesktopPickerParams, UseDesktopPickerProps } from './useDesktopPicker.types';
 import { usePicker } from '../usePicker';
 import { PickersLayout } from '../../../PickersLayout';
-import { FieldRef, InferError } from '../../../models';
-import { DateOrTimeViewWithMeridiem, BaseSingleInputFieldProps, PickerValue } from '../../models';
+import { FieldRef } from '../../../models';
+import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
 import { PickerProvider } from '../../components/PickerProvider';
 import { PickerFieldUIContextProvider } from '../../components/PickerFieldUI';
 
@@ -33,9 +33,6 @@ export const useDesktopPicker = <
   const {
     slots,
     slotProps: innerSlotProps,
-    className,
-    sx,
-    name,
     label,
     inputRef,
     readOnly,
@@ -62,11 +59,7 @@ export const useDesktopPicker = <
   });
 
   const Field = slots.field;
-  const fieldProps: BaseSingleInputFieldProps<
-    PickerValue,
-    TEnableAccessibleFieldDOMStructure,
-    InferError<TExternalProps>
-  > = useSlotProps({
+  const { ownerState: fieldOwnerState, ...fieldProps } = useSlotProps({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
     additionalProps: {
@@ -75,13 +68,8 @@ export const useDesktopPicker = <
       autoFocus: autoFocus && !props.open,
 
       // Forwarded props
-      className,
-      sx,
-      label,
-      name,
       focused: providerProps.contextValue.open ? true : undefined,
       ...(isToolbarHidden && { id: labelId }),
-      ...(!!inputRef && { inputRef }),
     },
     ownerState,
   });
@@ -108,11 +96,12 @@ export const useDesktopPicker = <
     },
   };
 
-  const handleFieldRef = useForkRef(fieldRef, fieldProps.unstableFieldRef);
+  // TODO: This `as any` will go away once the field ref is handled by the context.
+  const handleFieldRef = useForkRef(fieldRef, (fieldProps as any).unstableFieldRef);
 
   const renderPicker = () => (
     <PickerProvider {...providerProps}>
-      <PickerFieldUIContextProvider slots={slots} slotProps={slotProps}>
+      <PickerFieldUIContextProvider slots={slots} slotProps={slotProps} inputRef={inputRef}>
         <Field {...fieldProps} unstableFieldRef={handleFieldRef} />
         <PickerPopper role="dialog" slots={slots} slotProps={slotProps}>
           <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>

@@ -1,4 +1,7 @@
 import * as React from 'react';
+import { SxProps } from '@mui/system';
+import { Theme } from '@mui/material/styles';
+
 import { PickerOwnerState } from '../../models';
 import { PickersInputLocaleText } from '../../locales';
 import { LocalizationProvider } from '../../LocalizationProvider';
@@ -145,6 +148,40 @@ export interface PickerContextValue<
    * It is always equal to an empty string if the component you are accessing the context from is not wrapped by a picker.
    */
   fieldFormat: string;
+  /**
+   * The name to apply to the <input /> element if the picker contains one.
+   * If the picker has a field, it should probably be applied to its input element.
+   * It is equal to the picker `name` prop if defined (the prop does not exist on static pickers).
+   * It is always equal to undefined if the component you are accessing the context from is not wrapped by a picker.
+   */
+  name: string | undefined;
+  /**
+   * The label to render by the field if the picker contains one.
+   * It is equal to the picker `label` prop if defined (the prop does not exist on static pickers).
+   * It is always equal to undefined if the component you are accessing the context from is not wrapped by a picker.
+   */
+  label: React.ReactNode | undefined;
+  /**
+   * The class name to apply to the root element.
+   * If the picker has a field, it should be applied to field root element, otherwise to the layout root element.
+   * It is equal to the picker `className` prop if defined.
+   * It is always equal to undefined if the component you are accessing the context from is not wrapped by a picker.
+   */
+  rootClassName: string | undefined;
+  /**
+   * The MUI style prop to apply to the root element.
+   * If the picker has a field, it should be applied to field root element, otherwise to the layout root element.
+   * It is equal to the picker `sx` prop if defined.
+   * It is always equal to undefined if the component you are accessing the context from is not wrapped by a picker.
+   */
+  rootSx: SxProps<Theme> | undefined;
+  /**
+   * The ref to attach to the root element.
+   * If the picker has a field, it should be attached to field root element, otherwise to the layout root element.
+   * It is equal to the ref passed to the picker component if defined.
+   * It is always equal to undefined if the component you are accessing the context from is not wrapped by a picker.
+   */
+  rootRef: React.ForwardedRef<HTMLDivElement> | undefined;
 }
 
 export interface PickerActionsContextValue<
