@@ -712,7 +712,7 @@
       "name": "detailPanels",
       "description": "Component responsible for rendering the detail panels.",
       "default": "GridDetailPanels",
-      "class": "MuiDataGridPremium-detailPanels"
+      "class": null
     },
     {
       "name": "footer",
@@ -1740,12 +1740,6 @@
       "key": "paper",
       "className": "MuiDataGridPremium-paper",
       "description": "Styles applied to the paper element.",
-      "isGlobal": false
-    },
-    {
-      "key": "pinnedColumns",
-      "className": "MuiDataGridPremium-pinnedColumns",
-      "description": "Styles applied to the pinned columns.",
       "isGlobal": false
     },
     {
