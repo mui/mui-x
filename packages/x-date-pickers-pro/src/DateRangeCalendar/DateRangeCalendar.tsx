@@ -349,7 +349,6 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     calendarState,
     changeFocusedDay,
     changeMonth,
-    handleChangeMonth,
     onMonthSwitchingAnimationEnd,
   } = useCalendarState({
     value: value[0] || value[1],
@@ -380,7 +379,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
         views: ['day'],
         view: 'day',
         currentMonth: calendarState.currentMonth,
-        onMonthChange: (newMonth, direction) => handleChangeMonth({ newMonth, direction }),
+        onMonthChange: (newMonth) => changeMonth(newMonth),
         minDate,
         maxDate,
         disabled,

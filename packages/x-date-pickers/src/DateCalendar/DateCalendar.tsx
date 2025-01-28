@@ -178,7 +178,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
     calendarState,
     changeFocusedDay,
     changeMonth,
-    handleChangeMonth,
     isDateDisabled,
     onMonthSwitchingAnimationEnd,
   } = useCalendarState({
@@ -211,7 +210,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
       view,
       currentMonth: calendarState.currentMonth,
       onViewChange: setView,
-      onMonthChange: (newMonth, direction) => handleChangeMonth({ newMonth, direction }),
+      onMonthChange: (newMonth) => changeMonth(newMonth),
       minDate: minDateWithDisabled,
       maxDate: maxDateWithDisabled,
       disabled,
@@ -246,7 +245,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
       onMonthChange?.(startOfMonth);
     } else {
       goToNextView();
-      changeMonth(startOfMonth, true);
+      changeMonth(startOfMonth);
     }
 
     changeFocusedDay(closestEnabledDate, true);
@@ -274,7 +273,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
       onYearChange?.(closestEnabledDate);
     } else {
       goToNextView();
-      changeMonth(startOfYear, true);
+      changeMonth(startOfYear);
     }
 
     changeFocusedDay(closestEnabledDate, true);

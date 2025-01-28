@@ -22,7 +22,7 @@ type ReducerAction<TType, TAdditional = {}> = { type: TType } & TAdditional;
 interface ChangeMonthPayload {
   direction: SlideDirection;
   newMonth: PickerValidDate;
-  newFocusedDay?: PickerValidDate | null;
+  newFocusedDay: PickerValidDate | null;
 }
 
 interface ChangeFocusedDayPayload {
@@ -51,7 +51,7 @@ export const createCalendarStateReducer =
           slideDirection: action.direction,
           currentMonth: action.newMonth,
           isMonthSwitchingAnimating: !reduceAnimations,
-          focusedDay: action.newFocusedDay === undefined ? state.focusedDay : action.newFocusedDay,
+          focusedDay: action.newFocusedDay,
         };
 
       case 'changeMonthTimezone': {
@@ -142,7 +142,6 @@ interface UseCalendarStateReturnValue {
   ) => void;
   isDateDisabled: (day: PickerValidDate | null) => boolean;
   onMonthSwitchingAnimationEnd: () => void;
-  handleChangeMonth: (payload: ChangeMonthPayload) => void;
 }
 
 export const useCalendarState = (
@@ -201,34 +200,6 @@ export const useCalendarState = (
     timezone,
   });
 
-  const getDateToFocusInDayView = useEventCallback((month: PickerValidDate) => {
-    let focusedDay: PickerValidDate | null;
-    if (value != null && utils.isSameMonth(value, month)) {
-      focusedDay = value;
-    } else if (utils.isSameMonth(referenceDate, month)) {
-      focusedDay = referenceDate;
-    } else {
-      focusedDay = utils.startOfMonth(month);
-    }
-
-    if (isDateDisabled(focusedDay)) {
-      const startOfMonth = utils.startOfMonth(month);
-      const endOfMonth = utils.endOfMonth(month);
-      focusedDay = findClosestEnabledDate({
-        utils,
-        date: focusedDay,
-        minDate: utils.isBefore(minDate, startOfMonth) ? startOfMonth : minDate,
-        maxDate: utils.isAfter(maxDate, endOfMonth) ? endOfMonth : maxDate,
-        disablePast,
-        disableFuture,
-        isDateDisabled,
-        timezone,
-      });
-    }
-
-    return focusedDay;
-  });
-
   // Ensure that `calendarState.currentMonth` timezone is updated when `referenceDate` (or timezone changes)
   // https://github.com/mui/mui-x/issues/10804
   React.useEffect(() => {
@@ -238,33 +209,49 @@ export const useCalendarState = (
     });
   }, [referenceDate, utils]);
 
-  const handleChangeMonth = React.useCallback(
-    (payload: ChangeMonthPayload) => {
-      dispatch({
-        type: 'changeMonth',
-        ...payload,
+  const changeMonth = useEventCallback((date: PickerValidDate) => {
+    if (utils.isSameMonth(date, calendarState.currentMonth)) {
+      return;
+    }
+
+    const startOfMonth = utils.startOfMonth(date);
+    let newFocusedDay: PickerValidDate | null;
+    if (
+      calendarState.focusedDay != null &&
+      utils.isSameMonth(calendarState.focusedDay, startOfMonth)
+    ) {
+      newFocusedDay = calendarState.focusedDay;
+    } else if (value != null && utils.isSameMonth(value, startOfMonth)) {
+      newFocusedDay = value;
+    } else if (utils.isSameMonth(referenceDate, startOfMonth)) {
+      newFocusedDay = referenceDate;
+    } else {
+      newFocusedDay = startOfMonth;
+    }
+
+    if (isDateDisabled(newFocusedDay)) {
+      const endOfMonth = utils.endOfMonth(startOfMonth);
+      newFocusedDay = findClosestEnabledDate({
+        utils,
+        date: newFocusedDay,
+        minDate: utils.isBefore(minDate, startOfMonth) ? startOfMonth : minDate,
+        maxDate: utils.isAfter(maxDate, endOfMonth) ? endOfMonth : maxDate,
+        disablePast,
+        disableFuture,
+        isDateDisabled,
+        timezone,
       });
+    }
 
-      if (onMonthChange) {
-        onMonthChange(payload.newMonth);
-      }
-    },
-    [onMonthChange],
-  );
+    dispatch({
+      type: 'changeMonth',
+      newMonth: utils.startOfMonth(startOfMonth),
+      direction: utils.isAfterDay(startOfMonth, calendarState.currentMonth) ? 'left' : 'right',
+      newFocusedDay,
+    });
 
-  const changeMonth = useEventCallback(
-    (newDate: PickerValidDate, shouldInitFocusedDay?: boolean) => {
-      if (utils.isSameMonth(newDate, calendarState.currentMonth)) {
-        return;
-      }
-
-      handleChangeMonth({
-        newMonth: utils.startOfMonth(newDate),
-        direction: utils.isAfterDay(newDate, calendarState.currentMonth) ? 'left' : 'right',
-        newFocusedDay: shouldInitFocusedDay ? getDateToFocusInDayView(newDate) : undefined,
-      });
-    },
-  );
+    onMonthChange?.(startOfMonth);
+  });
 
   const onMonthSwitchingAnimationEnd = React.useCallback(() => {
     dispatch({ type: 'finishMonthSwitchingAnimation' });
@@ -289,6 +276,5 @@ export const useCalendarState = (
     changeFocusedDay,
     isDateDisabled,
     onMonthSwitchingAnimationEnd,
-    handleChangeMonth,
   };
 };
