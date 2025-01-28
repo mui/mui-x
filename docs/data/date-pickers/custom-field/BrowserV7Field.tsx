@@ -32,91 +32,80 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
   },
 );
 
-const BrowserDateField = React.forwardRef(
-  (props: DatePickerFieldProps, ref: React.Ref<HTMLDivElement>) => {
-    const fieldResponse = useDateField<true, typeof props>(props);
+function BrowserDateField(props: DatePickerFieldProps) {
+  const fieldResponse = useDateField<true, typeof props>(props);
 
-    const {
-      // Should be ignored
-      enableAccessibleFieldDOMStructure,
+  const {
+    // Should be ignored
+    enableAccessibleFieldDOMStructure,
 
-      // Should be passed to the PickersSectionList component
-      elements,
-      sectionListRef,
-      contentEditable,
-      onFocus,
-      onBlur,
-      tabIndex,
-      onInput,
-      onPaste,
-      onKeyDown,
+    // Should be passed to the PickersSectionList component
+    elements,
+    sectionListRef,
+    contentEditable,
+    onFocus,
+    onBlur,
+    tabIndex,
+    onInput,
+    onPaste,
+    onKeyDown,
 
-      // Should be passed to the button that opens the picker
-      openPickerAriaLabel,
+    // Should be passed to the button that opens the picker
+    openPickerAriaLabel,
 
-      // Can be passed to a hidden <input /> element
-      onChange,
-      value,
+    // Can be passed to a hidden <input /> element
+    onChange,
+    value,
 
-      // Can be passed to the button that clears the value
-      onClear,
-      clearable,
+    // Can be passed to the button that clears the value
+    onClear,
+    clearable,
 
-      // Can be used to render a custom label
-      label,
+    // Can be used to style the component
+    areAllSectionsEmpty,
+    disabled,
+    readOnly,
+    focused,
+    error,
 
-      // Can be used to style the component
-      areAllSectionsEmpty,
-      disabled,
-      readOnly,
-      focused,
-      error,
+    // The rest can be passed to the root element
+    ...other
+  } = fieldResponse;
 
-      // The rest can be passed to the root element
-      ...other
-    } = fieldResponse;
+  const pickerContext = usePickerContext();
+  const handleRef = useForkRef(pickerContext.triggerRef, pickerContext.rootRef);
 
-    const pickerContext = usePickerContext();
-    const handleRef = useForkRef(pickerContext.triggerRef, ref);
+  return (
+    <BrowserFieldRoot {...other} ref={handleRef}>
+      <BrowserFieldContent>
+        <PickersSectionList
+          elements={elements}
+          sectionListRef={sectionListRef}
+          contentEditable={contentEditable}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          tabIndex={tabIndex}
+          onInput={onInput}
+          onPaste={onPaste}
+          onKeyDown={onKeyDown}
+        />
+      </BrowserFieldContent>
+      <IconButton
+        onClick={() => pickerContext.setOpen((prev) => !prev)}
+        sx={{ marginLeft: 1.5 }}
+        aria-label={openPickerAriaLabel}
+      >
+        <CalendarIcon />
+      </IconButton>
+    </BrowserFieldRoot>
+  );
+}
 
-    return (
-      <BrowserFieldRoot ref={handleRef} {...other}>
-        <BrowserFieldContent>
-          <PickersSectionList
-            elements={elements}
-            sectionListRef={sectionListRef}
-            contentEditable={contentEditable}
-            onFocus={onFocus}
-            onBlur={onBlur}
-            tabIndex={tabIndex}
-            onInput={onInput}
-            onPaste={onPaste}
-            onKeyDown={onKeyDown}
-          />
-        </BrowserFieldContent>
-        <IconButton
-          onClick={() => pickerContext.setOpen((prev) => !prev)}
-          sx={{ marginLeft: 1.5 }}
-          aria-label={openPickerAriaLabel}
-        >
-          <CalendarIcon />
-        </IconButton>
-      </BrowserFieldRoot>
-    );
-  },
-);
-
-const BrowserDatePicker = React.forwardRef(
-  (props: DatePickerProps, ref: React.Ref<HTMLDivElement>) => {
-    return (
-      <DatePicker
-        ref={ref}
-        {...props}
-        slots={{ field: BrowserDateField, ...props.slots }}
-      />
-    );
-  },
-);
+function BrowserDatePicker(props: DatePickerProps) {
+  return (
+    <DatePicker {...props} slots={{ field: BrowserDateField, ...props.slots }} />
+  );
+}
 
 export default function BrowserV7Field() {
   return (

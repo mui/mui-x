@@ -77,6 +77,7 @@ export type {
 } from './hooks/useField';
 export { useFieldOwnerState } from './hooks/useFieldOwnerState';
 export type { MobileOnlyPickerProps } from './hooks/useMobilePicker';
+export { useNullablePickerContext } from './hooks/useNullablePickerContext';
 export { usePicker } from './hooks/usePicker';
 export type {
   UsePickerParams,
@@ -161,6 +162,7 @@ export {
   executeInTheNextEventLoopTick,
   getActiveElement,
   onSpaceOrEnter,
+  mergeSx,
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
 } from './utils/utils';
 export { useReduceAnimations } from './hooks/useReduceAnimations';

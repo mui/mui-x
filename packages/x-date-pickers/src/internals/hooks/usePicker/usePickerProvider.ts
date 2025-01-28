@@ -70,6 +70,7 @@ export function usePickerProvider<
   parameters: UsePickerProviderParameters<TValue, TView, TError>,
 ): UsePickerProviderReturnValue<TValue> {
   const {
+    ref,
     props,
     valueManager,
     localeText,
@@ -133,18 +134,28 @@ export function usePickerProvider<
       triggerRef,
       triggerStatus,
       fieldFormat: props.format ?? '',
+      name: props.name,
+      label: props.label,
+      rootSx: props.sx,
+      rootRef: ref,
+      rootClassName: props.className,
     }),
     [
       paramsFromUsePickerValue.contextValue,
       paramsFromUsePickerViews.contextValue,
+      ref,
       variant,
       orientation,
       reduceAnimations,
       props.disabled,
       props.readOnly,
+      props.format,
+      props.className,
+      props.name,
+      props.label,
+      props.sx,
       triggerRef,
       triggerStatus,
-      props.format,
     ],
   );
 
@@ -169,7 +180,7 @@ export function usePickerProvider<
     [paramsFromUsePickerValue.actionsContextValue, paramsFromUsePickerViews.actionsContextValue],
   );
 
-  const fieldPrivateContextValue = React.useMemo(
+  const fieldPrivateContextValue = React.useMemo<PickerFieldPrivateContextValue>(
     () => ({
       formatDensity: props.formatDensity,
       enableAccessibleFieldDOMStructure: props.enableAccessibleFieldDOMStructure,
@@ -199,6 +210,7 @@ export interface UsePickerProviderParameters<
   TView extends DateOrTimeViewWithMeridiem,
   TError,
 > extends Pick<PickerProviderProps<TValue>, 'localeText'> {
+  ref: React.ForwardedRef<HTMLDivElement> | undefined;
   props: UsePickerProps<TValue, any, any, any> & UsePickerProviderNonStaticProps;
   valueManager: PickerValueManager<TValue, any>;
   variant: PickerVariant;
@@ -240,4 +252,16 @@ export interface UsePickerProviderNonStaticProps extends PickerFieldPrivateConte
    * @default false
    */
   disableOpenPicker?: boolean;
+  /**
+   * The label content.
+   */
+  label?: React.ReactNode;
+  /**
+   * Pass a ref to the `input` element.
+   */
+  inputRef?: React.Ref<HTMLInputElement>;
+  /**
+   * Name attribute used by the `input` element in the Field.
+   */
+  name?: string;
 }
