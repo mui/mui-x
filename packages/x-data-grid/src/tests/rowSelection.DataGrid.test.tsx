@@ -412,6 +412,7 @@ describe('<DataGrid /> - Row selection', () => {
       await act(() => {
         apiRef!.current?.showFilterPanel('id');
       });
+      await waitFor(() => expect(screen.queryByRole('tooltip')).not.to.equal(null));
       await user.keyboard('1');
 
       await waitFor(() => {
@@ -438,6 +439,7 @@ describe('<DataGrid /> - Row selection', () => {
       await act(() => {
         apiRef!.current?.showFilterPanel('id');
       });
+      await waitFor(() => expect(screen.queryByRole('tooltip')).not.to.equal(null));
       await user.keyboard('1');
 
       await waitFor(() => {
