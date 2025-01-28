@@ -413,10 +413,8 @@ describe('<DataGrid /> - Row selection', () => {
         apiRef!.current?.showFilterPanel('id');
       });
       expect(await screen.findByRole('tooltip')).not.to.equal(null);
-      await act(async () => {
-        screen.getByRole('spinbutton', { name: 'Value' }).focus();
-      });
-      await user.keyboard('1');
+
+      await user.type(screen.getByRole('spinbutton', { name: 'Value' }), '1');
 
       await waitFor(() => {
         // Previous selection is cleaned with only the filtered rows
@@ -443,10 +441,8 @@ describe('<DataGrid /> - Row selection', () => {
         apiRef!.current?.showFilterPanel('id');
       });
       expect(await screen.findByRole('tooltip')).not.to.equal(null);
-      await act(async () => {
-        screen.getByRole('spinbutton', { name: 'Value' }).focus();
-      });
-      await user.keyboard('1');
+
+      await user.type(screen.getByRole('spinbutton', { name: 'Value' }), '1');
 
       await waitFor(() => {
         // Previous selection is cleared and only the filtered row is selected
