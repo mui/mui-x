@@ -30,7 +30,7 @@ const pageSizeOptions = [10, 20];
 const serverOptions = { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false };
 
 // Needs layout
-describe.only('<DataGridPro /> - Data source', () => {
+describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
   const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
