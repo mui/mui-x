@@ -86,7 +86,7 @@ export default function ColumnAutosizing() {
       >
         <Button
           variant="outlined"
-          onClick={() => apiRef.current.autosizeColumns(autosizeOptions)}
+          onClick={() => apiRef.current?.autosizeColumns(autosizeOptions)}
         >
           Autosize columns
         </Button>

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridLogger, useGridApiMethod, useGridApiEventHandler } from '../../utils';
 import { gridColumnMenuSelector } from './columnMenuSelector';
@@ -19,9 +20,7 @@ export const columnMenuStateInitializer: GridStateInitializer = (state) => ({
  * @requires useGridColumnResize (event)
  * @requires useGridInfiniteLoader (event)
  */
-export const useGridColumnMenu = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-): void => {
+export const useGridColumnMenu = (apiRef: RefObject<GridPrivateApiCommunity>): void => {
   const logger = useGridLogger(apiRef, 'useGridColumnMenu');
 
   /**
@@ -48,7 +47,6 @@ export const useGridColumnMenu = (
           };
         });
         apiRef.current.hidePreferences();
-        apiRef.current.forceUpdate();
       }
     },
     [apiRef, logger],
@@ -95,7 +93,6 @@ export const useGridColumnMenu = (
           columnMenu: newState,
         };
       });
-      apiRef.current.forceUpdate();
     }
   }, [apiRef, logger]);
 

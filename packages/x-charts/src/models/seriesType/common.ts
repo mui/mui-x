@@ -1,3 +1,4 @@
+import type { ChartsLabelMarkProps } from '../../ChartsLabel';
 import type { HighlightScope } from '../../context';
 import type { StackOffsetType, StackOrderType } from '../stacking';
 
@@ -29,6 +30,12 @@ export type CommonSeriesType<TValue> = {
    * The scope to apply when the series is highlighted.
    */
   highlightScope?: Partial<HighlightScope>;
+  /**
+   * Defines the mark type for the series.
+   *
+   * There is a default mark type for each series type.
+   */
+  labelMarkType?: ChartsLabelMarkProps['type'];
 };
 
 export type CommonDefaultizedProps = 'id' | 'valueFormatter' | 'data';

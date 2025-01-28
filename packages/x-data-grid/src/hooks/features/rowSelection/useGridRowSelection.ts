@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { unstable_useEventCallback as useEventCallback } from '@mui/utils';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -31,7 +32,7 @@ import {
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { isKeyboardEvent, isNavigationKey } from '../../../utils/keyboardUtils';
-import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
+import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../internals/constants';
 import { gridClasses } from '../../../constants/gridClasses';
@@ -59,7 +60,7 @@ export const rowSelectionStateInitializer: GridStateInitializer<
  * @requires useGridKeyboardNavigation (`cellKeyDown` event must first be consumed by it)
  */
 export const useGridRowSelection = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'checkboxSelection'
@@ -116,7 +117,6 @@ export const useGridRowSelection = (
   } = props;
 
   const canHaveMultipleSelection = isMultipleRowSelectionEnabled(props);
-  const visibleRows = useGridVisibleRows(apiRef, props);
   const tree = useGridSelector(apiRef, gridRowTreeSelector);
   const isNestedData = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector) > 1;
 
@@ -750,6 +750,7 @@ export const useGridRowSelection = (
             }
           }
 
+          const visibleRows = getVisibleRows(apiRef);
           const rowsBetweenStartAndEnd: GridRowId[] = [];
           for (let i = start; i <= end; i += 1) {
             rowsBetweenStartAndEnd.push(visibleRows.rows[i].id);
@@ -770,7 +771,7 @@ export const useGridRowSelection = (
         toggleAllRows(true);
       }
     },
-    [apiRef, canHaveMultipleSelection, visibleRows.rows, handleSingleRowSelection, toggleAllRows],
+    [apiRef, canHaveMultipleSelection, handleSingleRowSelection, toggleAllRows],
   );
 
   useGridApiEventHandler(

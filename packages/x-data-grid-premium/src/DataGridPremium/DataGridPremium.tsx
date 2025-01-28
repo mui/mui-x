@@ -2,14 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
-import {
-  GridBody,
-  GridFooterPlaceholder,
-  GridHeader,
-  GridRoot,
-  GridContextProvider,
-  GridValidRowModel,
-} from '@mui/x-data-grid-pro';
+import { GridRoot, GridContextProvider, GridValidRowModel } from '@mui/x-data-grid-pro';
 import {
   propValidatorsDataGrid,
   propValidatorsDataGridPro,
@@ -63,11 +56,7 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
         {...props.slotProps?.root}
         ref={ref}
       >
-        <GridHeader />
-        <GridBody>
-          <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />
-        </GridBody>
-        <GridFooterPlaceholder />
+        <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />
       </GridRoot>
     </GridContextProvider>
   );
@@ -80,7 +69,7 @@ DataGridPremiumRaw.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * Aggregation functions available on the grid.
-   * @default GRID_AGGREGATION_FUNCTIONS
+   * @default GRID_AGGREGATION_FUNCTIONS when `unstable_dataSource` is not provided, `{}` when `unstable_dataSource` is provided
    */
   aggregationFunctions: PropTypes.object,
   /**
@@ -98,7 +87,7 @@ DataGridPremiumRaw.propTypes = {
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef: PropTypes.shape({
-    current: PropTypes.object.isRequired,
+    current: PropTypes.object,
   }),
   /**
    * The label of the Data Grid.
@@ -1079,6 +1068,7 @@ DataGridPremiumRaw.propTypes = {
    */
   treeData: PropTypes.bool,
   unstable_dataSource: PropTypes.shape({
+    getAggregatedValue: PropTypes.func,
     getChildrenCount: PropTypes.func,
     getGroupKey: PropTypes.func,
     getRows: PropTypes.func.isRequired,

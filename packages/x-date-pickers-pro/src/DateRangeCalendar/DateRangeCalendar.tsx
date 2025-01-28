@@ -16,7 +16,7 @@ import {
   DayCalendar,
   DayCalendarSlots,
   DayCalendarSlotProps,
-  useDefaultReduceAnimations,
+  useReduceAnimations,
   useCalendarState,
   useDefaultDates,
   useUtils,
@@ -113,17 +113,17 @@ function useDateRangeCalendarDefaultizedProps(
 ): DateRangeCalendarDefaultizedProps {
   const utils = useUtils();
   const defaultDates = useDefaultDates();
-  const defaultReduceAnimations = useDefaultReduceAnimations();
   const themeProps = useThemeProps({
     props,
     name,
   });
+  const reduceAnimations = useReduceAnimations(themeProps.reduceAnimations);
 
   return {
     ...themeProps,
     renderLoading:
       themeProps.renderLoading ?? (() => <span data-testid="loading-progress">...</span>),
-    reduceAnimations: themeProps.reduceAnimations ?? defaultReduceAnimations,
+    reduceAnimations,
     loading: props.loading ?? false,
     disablePast: props.disablePast ?? false,
     disableFuture: props.disableFuture ?? false,
@@ -243,15 +243,15 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
   const now = useNow(timezone);
   const id = useId();
 
-  const { rangePosition, onRangePositionChange } = useRangePosition({
+  const { rangePosition, setRangePosition } = useRangePosition({
     rangePosition: rangePositionProp ?? rangePositionContext?.rangePosition,
     defaultRangePosition: defaultRangePositionProp,
-    onRangePositionChange: onRangePositionChangeProp ?? rangePositionContext?.onRangePositionChange,
+    onRangePositionChange: onRangePositionChangeProp ?? rangePositionContext?.setRangePosition,
   });
 
   const handleDatePositionChange = useEventCallback((position: RangePosition) => {
     if (rangePosition !== position) {
-      onRangePositionChange(position);
+      setRangePosition(position);
     }
   });
 
@@ -273,7 +273,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
 
       const isNextSectionAvailable = availableRangePositions.includes(nextSelection);
       if (isNextSectionAvailable) {
-        onRangePositionChange(nextSelection);
+        setRangePosition(nextSelection);
       }
 
       const isFullRangeSelected = rangePosition === 'end' && isRangeValid(utils, newRange);
