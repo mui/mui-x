@@ -24,7 +24,11 @@ import {
 } from '@mui/x-data-grid-generator';
 
 const getDetailPanelWidth = (gridDimensions: GridDimensions) => {
-  return gridDimensions.viewportInnerSize.width;
+  return (
+    gridDimensions.viewportInnerSize.width +
+    gridDimensions.leftPinnedWidth +
+    gridDimensions.rightPinnedWidth
+  );
 };
 
 function DetailPanelContent({ row: rowProp }: { row: Customer }) {

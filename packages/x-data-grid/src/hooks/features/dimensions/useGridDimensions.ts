@@ -193,8 +193,10 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     const topContainerHeight = headersTotalHeight + pinnedRowsHeight.top;
     const bottomContainerHeight = pinnedRowsHeight.bottom;
 
+    const nonPinnedColumnsTotalWidth = columnsTotalWidth - leftPinnedWidth - rightPinnedWidth;
+
     const contentSize = {
-      width: columnsTotalWidth,
+      width: nonPinnedColumnsTotalWidth,
       height: roundToDecimalPlaces(rowsMeta.currentPageTotalHeight, 1),
     };
 
@@ -221,7 +223,7 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
         height: rootDimensionsRef.current.height,
       };
       viewportInnerSize = {
-        width: Math.max(0, viewportOuterSize.width),
+        width: Math.max(0, viewportOuterSize.width - leftPinnedWidth - rightPinnedWidth),
         height: Math.max(0, viewportOuterSize.height - topContainerHeight - bottomContainerHeight),
       };
 
