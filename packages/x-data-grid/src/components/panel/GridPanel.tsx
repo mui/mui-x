@@ -206,15 +206,7 @@ GridPanel.propTypes = {
     'top-start',
     'top',
   ]),
-  target: (props, propName) => {
-    if (props[propName] == null) {
-      return new Error(`Prop '${propName}' is required but wasn't specified`);
-    }
-    if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {
-      return new Error(`Expected prop '${propName}' to be of type Element`);
-    }
-    return null;
-  },
+  target: PropTypes /* @typescript-to-proptypes-ignore */.any,
   transition: PropTypes.bool,
 } as any;
 
