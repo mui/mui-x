@@ -952,7 +952,7 @@ describe('<DataGridPro /> - Row selection', () => {
       expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
         includeRowSelection([2, 3]),
       );
-      await act(() => apiRef.current.selectRow(3, false));
+      await act(() => apiRef.current?.selectRow(3, false));
       expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
         includeRowSelection([2]),
       );
