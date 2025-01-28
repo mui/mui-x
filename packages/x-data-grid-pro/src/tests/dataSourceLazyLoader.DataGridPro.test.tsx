@@ -39,6 +39,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
 
     const originalFetchRows = mockServer.fetchRows;
     const fetchRows = React.useMemo<typeof originalFetchRows>(() => {
+      fetchRowsSpy.resetHistory();
       fetchRowsSpy.callsFake(originalFetchRows);
       return (...args) => fetchRowsSpy(...args);
     }, [originalFetchRows]);
@@ -67,17 +68,17 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       [fetchRows],
     );
 
-    const baselineProps = {
-      unstable_dataSource: dataSource,
-      columns: mockServer.columns,
-      unstable_lazyLoading: true,
-      paginationModel: { page: 0, pageSize: 10 },
-      disableVirtualization: true,
-    };
-
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGridPro apiRef={apiRef} {...baselineProps} {...props} />
+        <DataGridPro
+          apiRef={apiRef}
+          columns={mockServer.columns}
+          unstable_dataSource={dataSource}
+          unstable_lazyLoading
+          initialState={{ pagination: { paginationModel: { page: 0, pageSize: 10 } } }}
+          disableVirtualization
+          {...props}
+        />
       </div>
     );
   }
@@ -85,7 +86,6 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
   // eslint-disable-next-line mocha/no-top-level-hooks
   beforeEach(() => {
     transformGetRowsResponse = defaultTransformGetRowsResponse;
-    fetchRowsSpy?.reset();
   });
 
   it('should load the first page initially', async () => {
