@@ -114,11 +114,11 @@ Below are described the steps you need to make to migrate from v7 to v8.
 
 - The clear button in header filter cells has moved to the header filter menu. Use `slotProps={{ headerFilterCell: { showClearIcon: true } }}` to restore the clear button in the cell.
 
-<!-- ### Editing
-
-TBD
-
 ### CSS classes and styling
+
+- The `detailPanels`, `pinnedColumns`, and `pinnedRowsRenderZone` classes have been removed.
+
+<!-- ### Editing
 
 TBD
 
