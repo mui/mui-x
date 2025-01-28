@@ -2,13 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
-import {
-  createRenderer,
-  fireEvent,
-  screen,
-  act,
-  waitForElementToBeRemoved,
-} from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
 import {
   DataGrid,
   DataGridProps,
@@ -420,10 +414,10 @@ describe('<DataGrid /> - Row selection', () => {
       });
       await user.keyboard('1');
 
-      // wait until filtering is done
-      await waitForElementToBeRemoved(() => screen.queryByTestId('LoadIcon'));
-      // Previous selection is cleaned with only the filtered rows
-      expect(getSelectedRowIds()).to.deep.equal([1]);
+      await waitFor(() => {
+        // Previous selection is cleaned with only the filtered rows
+        expect(getSelectedRowIds()).to.deep.equal([1]);
+      });
       expect(grid('selectedRowCount')?.textContent).to.equal('1 row selected');
     });
 
@@ -446,10 +440,10 @@ describe('<DataGrid /> - Row selection', () => {
       });
       await user.keyboard('1');
 
-      // wait until filtering is done
-      await waitForElementToBeRemoved(() => screen.queryByTestId('LoadIcon'));
-      // Previous selection is cleared and only the filtered row is selected
-      expect(getSelectedRowIds()).to.deep.equal([1]);
+      await waitFor(() => {
+        // Previous selection is cleaned with only the filtered rows
+        expect(getSelectedRowIds()).to.deep.equal([1]);
+      });
       expect(grid('selectedRowCount')?.textContent).to.equal('1 row selected');
 
       await user.click(selectAllCheckbox); // Unselect all
