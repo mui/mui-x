@@ -6,14 +6,15 @@ import {
   DataGrid,
   GridFilterOperator,
   GridToolbarFilterButton,
+  GridToolbarContainer,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 function Toolbar() {
   return (
-    <div>
+    <GridToolbarContainer>
       <GridToolbarFilterButton />
-    </div>
+    </GridToolbarContainer>
   );
 }
 
@@ -54,7 +55,7 @@ function RatingInputValue(props: GridFilterInputValueProps) {
   );
 }
 
-const ratingOnlyOperators: GridFilterOperator<any, number, any, any>[] = [
+const ratingOnlyOperators: GridFilterOperator<any, number>[] = [
   {
     label: 'Above',
     value: 'above',
@@ -67,7 +68,6 @@ const ratingOnlyOperators: GridFilterOperator<any, number, any, any>[] = [
       };
     },
     InputComponent: RatingInputValue,
-    InputComponentProps: { type: 'number' },
     getValueAsString: (value: number) => `${value} Stars`,
   },
 ];
