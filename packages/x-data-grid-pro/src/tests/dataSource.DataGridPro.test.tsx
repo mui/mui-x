@@ -3,6 +3,7 @@ import { useMockServer } from '@mui/x-data-grid-generator';
 import { act, createRenderer, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { RefObject } from '@mui/x-internals/types';
+import useLazyRef from '@mui/utils/useLazyRef';
 import {
   DataGridPro,
   DataGridProProps,
@@ -16,7 +17,6 @@ import {
 import { SinonStub, spy, stub } from 'sinon';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 import { getKeyDefault } from '../hooks/features/dataSource/cache';
-import useLazyRef from '@mui/utils/useLazyRef';
 
 const cache = new Map<string, GridGetRowsResponse>();
 
@@ -30,7 +30,7 @@ const pageSizeOptions = [10, 20];
 const serverOptions = { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false };
 
 // Needs layout
-describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
+describe.only('<DataGridPro /> - Data source', () => {
   const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
@@ -234,7 +234,9 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
         apiRef.current?.setPage(0);
       });
 
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
       expect(cache.size).to.equal(2);
       expect(pageChangeSpy.callCount).to.equal(2);
     });
