@@ -22,7 +22,15 @@ interface OwnerState extends DataGridPremiumProcessedProps {
 const GridAggregationHeaderRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'AggregationColumnHeader',
-  overridesResolver: (_, styles) => styles.aggregationColumnHeader,
+  overridesResolver: (props, styles) => {
+    const { ownerState } = props;
+    return [
+      styles.aggregationColumnHeader,
+      ownerState.colDef.headerAlign === 'left' && styles['aggregationColumnHeader--alignLeft'],
+      ownerState.colDef.headerAlign === 'center' && styles['aggregationColumnHeader--alignCenter'],
+      ownerState.colDef.headerAlign === 'right' && styles['aggregationColumnHeader--alignRight'],
+    ];
+  },
 })<{ ownerState: OwnerState }>({
   display: 'flex',
   flexDirection: 'column',
