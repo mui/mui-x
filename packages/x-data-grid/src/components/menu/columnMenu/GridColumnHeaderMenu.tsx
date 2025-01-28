@@ -46,7 +46,7 @@ function GridColumnHeaderMenu({
 
   return (
     <GridMenu
-      placement={`bottom-${colDef!.align === 'right' ? 'start' : 'end'}` as any}
+      position={`bottom-${colDef!.align === 'right' ? 'start' : 'end'}` as any}
       open={open}
       target={target}
       onClose={hideMenu}

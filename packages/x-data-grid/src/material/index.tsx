@@ -164,7 +164,7 @@ function BasePopper(props: GridSlotProps['basePopper']) {
           onDidMount?.();
         },
         effect: () => () => {
-          onDidUnmount?.(false);
+          onDidUnmount?.();
         },
       });
     }
