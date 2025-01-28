@@ -10,7 +10,7 @@ import {
   ZoomData,
 } from '@mui/x-charts/internals';
 import { UseChartProZoomSignature } from './useChartProZoom.types';
-import { defaultizeZoom } from './defaultizeZoom';
+import { creatZoomLookup } from './creatZoomLookup';
 import {
   getDiff,
   getHorizontalCenterRatio,
@@ -80,6 +80,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     () => Object.values(optionsLookup).some((v) => v.panning) || false,
     [optionsLookup],
   );
+
   const isDraggingRef = React.useRef(false);
   const touchStartRef = React.useRef<{ x: number; y: number; zoomData: ZoomData[] } | null>(null);
   React.useEffect(() => {
@@ -372,22 +373,8 @@ useChartProZoom.params = {
 
 useChartProZoom.getDefaultizedParams = ({ params }) => {
   const optionsLookup = {
-    ...params.defaultizedXAxis.reduce<Record<AxisId, DefaultizedZoomOptions>>((acc, v) => {
-      const { zoom, id: axisId } = v;
-      const defaultizedZoom = defaultizeZoom(zoom, axisId, 'x');
-      if (defaultizedZoom) {
-        acc[axisId] = defaultizedZoom;
-      }
-      return acc;
-    }, {}),
-    ...params.defaultizedYAxis.reduce<Record<AxisId, DefaultizedZoomOptions>>((acc, v) => {
-      const { zoom, id: axisId } = v;
-      const defaultizedZoom = defaultizeZoom(zoom, axisId, 'y');
-      if (defaultizedZoom) {
-        acc[axisId] = defaultizedZoom;
-      }
-      return acc;
-    }, {}),
+    ...creatZoomLookup(params.defaultizedXAxis),
+    ...creatZoomLookup(params.defaultizedYAxis),
   };
 
   return {
@@ -399,7 +386,6 @@ useChartProZoom.getDefaultizedParams = ({ params }) => {
 useChartProZoom.getInitialState = (params) => {
   return {
     zoom: {
-      optionsLookup: params.optionsLookup,
       zoomData:
         params.initialZoom === undefined
           ? initializeZoomData(params.optionsLookup)

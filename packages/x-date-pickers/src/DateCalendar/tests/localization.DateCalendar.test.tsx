@@ -4,7 +4,7 @@ import { screen, createRenderer } from '@mui/internal-test-utils';
 import { DateCalendar, dayCalendarClasses } from '@mui/x-date-pickers/DateCalendar';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { createPickerRenderer, AdapterName, availableAdapters } from 'test/utils/pickers';
-import { he, fr } from 'date-fns/locale';
+import { he, fr, enUS } from 'date-fns/locale';
 import 'dayjs/locale/he';
 import 'dayjs/locale/fr';
 import 'moment/locale/he';
@@ -21,7 +21,7 @@ describe('<DateCalendar /> - localization', () => {
       });
 
       it('should display correct week day labels in Hebrew locale ', () => {
-        render(<DateCalendar />);
+        render(<DateCalendar reduceAnimations />);
 
         expect(screen.getByText('א')).toBeVisible();
       });
@@ -31,7 +31,10 @@ describe('<DateCalendar /> - localization', () => {
 
         it('should correctly switch between locale with week starting in Monday and week starting in Sunday', () => {
           const { setProps } = renderWithoutWrapper(
-            <LocalizationProvider dateAdapter={availableAdapters[adapterName]}>
+            <LocalizationProvider
+              dateAdapter={availableAdapters[adapterName]}
+              adapterLocale={adapterName === 'date-fns' ? enUS : 'en-US'}
+            >
               <DateCalendar reduceAnimations />
             </LocalizationProvider>,
           );

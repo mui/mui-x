@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import composeClasses from '@mui/utils/composeClasses';
 import Box from '@mui/material/Box';
 import {
@@ -47,7 +48,7 @@ interface GridTreeDataGroupingCellIconProps
 }
 
 function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) {
-  const apiRef = useGridPrivateApiContext() as React.RefObject<GridPrivateApiPro>;
+  const apiRef = useGridPrivateApiContext() as RefObject<GridPrivateApiPro>;
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
   const { rowNode, id, field, descendantCount } = props;

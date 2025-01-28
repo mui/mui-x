@@ -54,10 +54,8 @@
     "formatDensity": {
       "description": "Density of the format when rendered in the input. Setting <code>formatDensity</code> to <code>&quot;spacious&quot;</code> will add a space before and after each <code>/</code>, <code>-</code> and <code>.</code> character."
     },
-    "inputRef": {
-      "description": "Pass a ref to the <code>input</code> element. Ignored if the field has several inputs."
-    },
-    "label": { "description": "The label content. Ignored if the field has several inputs." },
+    "inputRef": { "description": "Pass a ref to the <code>input</code> element." },
+    "label": { "description": "The label content." },
     "loading": {
       "description": "If <code>true</code>, calls <code>renderLoading</code> instead of rendering the day calendar. Can be used to preload information and show it in calendar."
     },
@@ -67,7 +65,7 @@
     "maxDate": { "description": "Maximal selectable date." },
     "minDate": { "description": "Minimal selectable date." },
     "name": {
-      "description": "Name attribute used by the <code>input</code> element in the Field. Ignored if the field has several inputs."
+      "description": "Name attribute used by the <code>input</code> element in the Field."
     },
     "onAccept": {
       "description": "Callback fired when the value is accepted.",

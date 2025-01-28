@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import {
@@ -52,7 +53,7 @@ describe('<DataGridPro /> - Events params', () => {
     ],
   };
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   function TestEvents(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
@@ -75,7 +76,7 @@ describe('<DataGridPro /> - Events params', () => {
       fireEvent.click(ageColumnElement);
 
       expect(eventArgs!.params).to.deep.include({
-        colDef: apiRef.current.getColumn('age'),
+        colDef: apiRef.current?.getColumn('age'),
         field: 'age',
       });
     });
@@ -96,7 +97,7 @@ describe('<DataGridPro /> - Events params', () => {
       expect(eventArgs!.params).to.deep.include({
         id: 2,
         row: baselineProps.rows[1],
-        columns: apiRef.current.getAllColumns(),
+        columns: apiRef.current?.getAllColumns(),
       });
     });
   });
@@ -119,7 +120,7 @@ describe('<DataGridPro /> - Events params', () => {
         formattedValue: 'Jack',
         isEditable: true,
         row: baselineProps.rows[1],
-        colDef: apiRef.current.getColumn('first'),
+        colDef: apiRef.current?.getColumn('first'),
         hasFocus: false,
         tabIndex: -1,
       });
@@ -144,7 +145,7 @@ describe('<DataGridPro /> - Events params', () => {
         formattedValue: 'Jack',
         isEditable: true,
         row: baselineProps.rows[1],
-        colDef: apiRef.current.getColumn('first'),
+        colDef: apiRef.current?.getColumn('first'),
         hasFocus: false,
         tabIndex: -1,
       });
@@ -343,7 +344,7 @@ describe('<DataGridPro /> - Events params', () => {
           rowCount={50}
         />,
       );
-      act(() => apiRef.current.publishEvent('scrollPositionChange', { left: 0, top: 3 * 52 }));
+      act(() => apiRef.current?.publishEvent('scrollPositionChange', { left: 0, top: 3 * 52 }));
       expect(handleFetchRows.callCount).to.equal(1);
     },
   );
@@ -353,7 +354,7 @@ describe('<DataGridPro /> - Events params', () => {
 
     const { unmount } = render(<TestEvents />);
 
-    act(() => apiRef.current.subscribeEvent('unmount', onUnmount));
+    act(() => apiRef.current?.subscribeEvent('unmount', onUnmount));
     unmount();
     expect(onUnmount.calledOnce).to.equal(true);
   });

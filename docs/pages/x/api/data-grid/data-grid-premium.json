@@ -13,7 +13,7 @@
       "type": { "name": "enum", "description": "'all'<br>&#124;&nbsp;'filtered'" },
       "default": "\"filtered\""
     },
-    "apiRef": { "type": { "name": "shape", "description": "{ current: object }" } },
+    "apiRef": { "type": { "name": "shape", "description": "{ current?: object }" } },
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
     "autoHeight": {

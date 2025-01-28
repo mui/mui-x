@@ -62,14 +62,14 @@ export default function ColumnAutosizingAsync() {
       .then((data) => {
         ReactDOM.flushSync(() => {
           setIsLoading(false);
-          apiRef.current.updateRows(data.rows);
+          apiRef.current?.updateRows(data.rows);
         });
       })
       // `sleep`/`setTimeout` is required because `.updateRows` is an
       // async function throttled to avoid choking on frequent changes.
       .then(() => sleep(0))
       .then(() =>
-        apiRef.current.autosizeColumns({
+        apiRef.current?.autosizeColumns({
           includeHeaders: true,
           includeOutliers: true,
         }),
