@@ -397,8 +397,8 @@ describe('<DataGrid /> - Row selection', () => {
       expect(input2.checked).to.equal(true);
     });
 
-    testSkipIf(isJSDOM)('should remove the selection from rows that are filtered out', () => {
-      render(
+    testSkipIf(isJSDOM)('should remove the selection from rows that are filtered out', async () => {
+      const { user } = render(
         <TestDataGridSelection
           checkboxSelection
           initialState={{
@@ -410,7 +410,7 @@ describe('<DataGrid /> - Row selection', () => {
         />,
       );
       const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
-      fireEvent.click(selectAllCheckbox);
+      await user.click(selectAllCheckbox);
       expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
       expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
 

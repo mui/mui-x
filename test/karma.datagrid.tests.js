@@ -6,6 +6,10 @@ import { createXMochaHooks } from './utils/mochaHooks';
 
 const mochaHooks = createXMochaHooks();
 
+mochaHooks.beforeAll.forEach((mochaHook) => {
+  mochaHook.call(this);
+});
+
 beforeEach(function beforeEachHook() {
   mochaHooks.beforeEach.forEach((mochaHook) => {
     mochaHook.call(this);
