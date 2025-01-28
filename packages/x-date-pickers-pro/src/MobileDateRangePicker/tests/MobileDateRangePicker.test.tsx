@@ -44,7 +44,7 @@ describe('<MobileDateRangePicker />', () => {
 
       render(<MobileDateRangePicker onOpen={onOpen} />);
 
-      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
+      openPicker({ type: 'date-range', initialFocus: 'start' });
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();
@@ -55,7 +55,7 @@ describe('<MobileDateRangePicker />', () => {
 
       render(<MobileDateRangePicker onOpen={onOpen} />);
 
-      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'end' });
+      openPicker({ type: 'date-range', initialFocus: 'end' });
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();
@@ -80,7 +80,7 @@ describe('<MobileDateRangePicker />', () => {
       );
 
       // Open the picker
-      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
+      openPicker({ type: 'date-range', initialFocus: 'start' });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -120,7 +120,7 @@ describe('<MobileDateRangePicker />', () => {
       );
 
       // Open the picker
-      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'end' });
+      openPicker({ type: 'date-range', initialFocus: 'end' });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -151,7 +151,7 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'end' });
+      openPicker({ type: 'date-range', initialFocus: 'end' });
 
       // Change the end date
       fireEvent.click(screen.getByRole('gridcell', { name: '3' }));
@@ -181,7 +181,7 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
+      openPicker({ type: 'date-range', initialFocus: 'start' });
 
       // Change the start date (already tested)
       fireEvent.click(screen.getByRole('gridcell', { name: '3' }));
@@ -213,7 +213,7 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
+      openPicker({ type: 'date-range', initialFocus: 'start' });
 
       // Change the start date (already tested)
       fireEvent.click(screen.getByRole('gridcell', { name: '3' }));
@@ -246,7 +246,7 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
+      openPicker({ type: 'date-range', initialFocus: 'start' });
 
       // Clear the date
       fireEvent.click(screen.getByText(/clear/i));
@@ -272,7 +272,7 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
+      openPicker({ type: 'date-range', initialFocus: 'start' });
 
       // Clear the date
       fireEvent.click(screen.getByText(/clear/i));

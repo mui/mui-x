@@ -5,18 +5,18 @@ import { MakeOptional } from '@mui/x-internals/types';
 import { BarPlot } from '../BarChart';
 import { LinePlot, AreaPlot, LineHighlightPlot } from '../LineChart';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
-import { DEFAULT_X_AXIS_KEY } from '../constants';
+import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { ChartsTooltip } from '../ChartsTooltip';
 import { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../models/axis';
 import { LineSeriesType, BarSeriesType } from '../models/seriesType';
-import { CardinalDirections } from '../models/layout';
 import { AreaPlotSlots, AreaPlotSlotProps } from '../LineChart/AreaPlot';
 import { LinePlotSlots, LinePlotSlotProps } from '../LineChart/LinePlot';
 import { MarkPlotSlots, MarkPlotSlotProps } from '../LineChart/MarkPlot';
 import { LineHighlightPlotSlots, LineHighlightPlotSlotProps } from '../LineChart/LineHighlightPlot';
 import { BarPlotSlots, BarPlotSlotProps } from '../BarChart/BarPlot';
+import { ChartMargin } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.types';
 
 export interface SparkLineChartSlots
   extends AreaPlotSlots,
@@ -95,7 +95,7 @@ export interface SparkLineChartProps
    *   right: 5,
    * }
    */
-  margin?: Partial<CardinalDirections<number>>;
+  margin?: Partial<ChartMargin>;
   /**
    * Overridable component slots.
    * @default {}
@@ -187,7 +187,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
       ]}
       yAxis={[
         {
-          id: DEFAULT_X_AXIS_KEY,
+          id: DEFAULT_Y_AXIS_KEY,
           ...yAxis,
         },
       ]}
@@ -222,6 +222,9 @@ SparkLineChart.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  apiRef: PropTypes.shape({
+    current: PropTypes.object,
+  }),
   /**
    * Set to `true` to fill spark line area.
    * Has no effect if plotType='bar'.
@@ -243,6 +246,8 @@ SparkLineChart.propTypes = {
    * @default 'linear'
    */
   curve: PropTypes.oneOf([
+    'bumpX',
+    'bumpY',
     'catmullRom',
     'linear',
     'monotoneX',
@@ -278,6 +283,11 @@ SparkLineChart.propTypes = {
     dataIndex: PropTypes.number,
     seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   }),
+  /**
+   * This prop is used to help implement the accessibility logic.
+   * If you don't provide this prop. It falls back to a randomly generated id.
+   */
+  id: PropTypes.string,
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
@@ -338,6 +348,7 @@ SparkLineChart.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
   /**
    * Formatter used by the tooltip.

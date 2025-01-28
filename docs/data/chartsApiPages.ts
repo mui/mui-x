@@ -52,6 +52,11 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartDataProvider',
   },
   {
+    pathname: '/x/api/charts/chart-data-provider-pro',
+    title: 'ChartDataProviderPro',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/charts-axis',
     title: 'ChartsAxis',
   },

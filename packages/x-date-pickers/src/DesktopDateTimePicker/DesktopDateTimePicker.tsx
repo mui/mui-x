@@ -9,11 +9,9 @@ import { DateTimeField } from '../DateTimeField';
 import { DesktopDateTimePickerProps } from './DesktopDateTimePicker.types';
 import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
 import { renderDateViewCalendar } from '../dateViewRenderers/dateViewRenderers';
-import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { validateDateTime, extractValidationProps } from '../validation';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../internals/models';
-import { CalendarIcon } from '../icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import {
   resolveDateTimeFormat,
@@ -38,7 +36,6 @@ import {
 } from '../internals/hooks/usePicker/usePickerViews';
 import { isInternalTimeView } from '../internals/utils/time-utils';
 import { isDatePickerView } from '../internals/utils/date-utils';
-import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalization';
 
 const rendererInterceptor = function RendererInterceptor(
   props: PickerRendererInterceptorProps<PickerValue, DateOrTimeViewWithMeridiem, any>,
@@ -112,7 +109,6 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
   inProps: DesktopDateTimePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const translations = usePickerTranslations();
   const utils = useUtils();
 
   // Props with the default values common to all date time pickers
@@ -164,7 +160,6 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
     slots: {
       field: DateTimeField,
       layout: DesktopDateTimePickerLayout,
-      openPickerIcon: CalendarIcon,
       ...defaultizedProps.slots,
     },
     slotProps: {
@@ -172,7 +167,6 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
       field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
-        ref,
       }),
       toolbar: {
         hidden: true,
@@ -191,15 +185,10 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
     TEnableAccessibleFieldDOMStructure,
     typeof props
   >({
+    ref,
     props,
     valueManager: singleItemValueManager,
     valueType: 'date-time',
-    getOpenDialogAriaText: buildGetOpenDialogAriaText({
-      utils,
-      formatKey: 'fullDate',
-      contextTranslation: translations.openDatePickerDialogue,
-      propsTranslation: props.localeText?.openDatePickerDialogue,
-    }),
     validator: validateDateTime,
     rendererInterceptor,
   });

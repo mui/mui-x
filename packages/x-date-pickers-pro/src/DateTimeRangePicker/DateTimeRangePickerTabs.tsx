@@ -121,7 +121,7 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
   const { ownerState } = usePickerPrivateContext();
   const { view, setView } = usePickerContext();
   const classes = useUtilityClasses(classesProp);
-  const { rangePosition, onRangePositionChange } = usePickerRangePositionContext();
+  const { rangePosition, setRangePosition } = usePickerRangePositionContext();
 
   const value = React.useMemo(
     () => (view == null ? null : viewToTab(view, rangePosition)),
@@ -152,9 +152,9 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
 
   const handleRangePositionChange = useEventCallback((newTab: TabValue) => {
     if (newTab.includes('start')) {
-      onRangePositionChange('start');
+      setRangePosition('start');
     } else {
-      onRangePositionChange('end');
+      setRangePosition('end');
     }
   });
 

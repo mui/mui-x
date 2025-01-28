@@ -1,21 +1,12 @@
 import * as React from 'react';
-import type { TextFieldProps } from '@mui/material/TextField';
 import { MakeRequired, SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import {
-  BasePickerProps,
-  BaseNonRangeNonStaticPickerProps,
-} from '../../models/props/basePickerProps';
+import { BasePickerProps } from '../../models/props/basePickerProps';
 import {
   PickersModalDialogSlots,
   PickersModalDialogSlotProps,
 } from '../../components/PickersModalDialog';
 import { UsePickerParams } from '../usePicker';
-import {
-  FieldOwnerState,
-  PickerFieldSlotProps,
-  PickerOwnerState,
-  PickerValidDate,
-} from '../../../models';
+import { PickerFieldSlotProps, PickerOwnerState } from '../../../models';
 import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
@@ -24,36 +15,31 @@ import {
 import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue.types';
 import { UsePickerViewsProps } from '../usePicker/usePickerViews';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
-import { PickersTextFieldProps } from '../../../PickersTextField';
 import { UsePickerProviderNonStaticProps } from '../usePicker/usePickerProvider';
+import {
+  PickerFieldUISlotsFromContext,
+  PickerFieldUISlotPropsFromContext,
+} from '../../components/PickerFieldUI';
 
 export interface UseMobilePickerSlots
   extends PickersModalDialogSlots,
-    ExportedPickersLayoutSlots<PickerValue> {
+    ExportedPickersLayoutSlots<PickerValue>,
+    PickerFieldUISlotsFromContext {
   /**
    * Component used to enter the date with the keyboard.
    */
   field: React.ElementType;
-  /**
-   * Form control with an input to render the value inside the default field.
-   * @default TextField from '@mui/material' or PickersTextField if `enableAccessibleFieldDOMStructure` is `true`.
-   */
-  textField?: React.ElementType;
 }
 
 export interface ExportedUseMobilePickerSlotProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends PickersModalDialogSlotProps,
-    ExportedPickersLayoutSlotProps<PickerValue> {
+    ExportedPickersLayoutSlotProps<PickerValue>,
+    PickerFieldUISlotPropsFromContext {
   field?: SlotComponentPropsFromProps<
     PickerFieldSlotProps<PickerValue, TEnableAccessibleFieldDOMStructure>,
     {},
     PickerOwnerState
-  >;
-  textField?: SlotComponentPropsFromProps<
-    PickersTextFieldProps | TextFieldProps,
-    {},
-    FieldOwnerState
   >;
 }
 
@@ -62,8 +48,7 @@ export interface UseMobilePickerSlotProps<TEnableAccessibleFieldDOMStructure ext
     Pick<PickersLayoutSlotProps<PickerValue>, 'toolbar'> {}
 
 export interface MobileOnlyPickerProps
-  extends BaseNonRangeNonStaticPickerProps,
-    UsePickerValueNonStaticProps,
+  extends UsePickerValueNonStaticProps,
     UsePickerProviderNonStaticProps {}
 
 export interface UseMobilePickerProps<
@@ -96,8 +81,7 @@ export interface UseMobilePickerParams<
   >,
 > extends Pick<
     UsePickerParams<PickerValue, TView, TExternalProps>,
-    'valueManager' | 'valueType' | 'validator'
+    'valueManager' | 'valueType' | 'validator' | 'ref'
   > {
   props: TExternalProps;
-  getOpenDialogAriaText: (date: PickerValidDate | null) => string;
 }

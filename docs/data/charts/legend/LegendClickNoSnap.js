@@ -10,7 +10,7 @@ import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
 import { ChartsLegend, PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';
 
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
-import { ChartDataProvider } from '@mui/x-charts/context';
+import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
 
 /** @type {import('@mui/x-charts/PieChart').PieChartProps['series']} */
 const pieSeries = [

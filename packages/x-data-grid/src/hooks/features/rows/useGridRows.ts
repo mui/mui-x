@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -20,7 +21,7 @@ import {
 import { useTimeout } from '../../utils/useTimeout';
 import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
-import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
+import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridSortedRowIdsSelector } from '../sorting/gridSortingSelector';
 import { gridFilteredRowsLookupSelector } from '../filter/gridFilterSelector';
 import { GridRowsInternalCache } from './gridRowsInterfaces';
@@ -63,7 +64,7 @@ export const rowsStateInitializer: GridStateInitializer<
 };
 
 export const useGridRows = (
-  apiRef: React.RefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'rows'
@@ -87,7 +88,6 @@ export const useGridRows = (
   }
 
   const logger = useGridLogger(apiRef, 'useGridRows');
-  const currentPage = useGridVisibleRows(apiRef, props);
 
   const lastUpdateMs = React.useRef(Date.now());
   const lastRowCount = React.useRef(props.rowCount);
@@ -123,15 +123,6 @@ export const useGridRows = (
       return row.id;
     },
     [getRowIdProp],
-  );
-
-  const lookup = React.useMemo(
-    () =>
-      currentPage.rows.reduce<Record<GridRowId, number>>((acc, { id }, index) => {
-        acc[id] = index;
-        return acc;
-      }, {}),
-    [currentPage.rows],
   );
 
   const throttledRowsChange = React.useCallback(
@@ -267,7 +258,13 @@ export const useGridRows = (
 
   const getRowIndexRelativeToVisibleRows = React.useCallback<
     GridRowApi['getRowIndexRelativeToVisibleRows']
-  >((id) => lookup[id], [lookup]);
+  >(
+    (id) => {
+      const { rowIdToIndexMap } = getVisibleRows(apiRef);
+      return rowIdToIndexMap.get(id)!;
+    },
+    [apiRef],
+  );
 
   const setRowChildrenExpansion = React.useCallback<GridRowProApi['setRowChildrenExpansion']>(
     (id, isExpanded) => {

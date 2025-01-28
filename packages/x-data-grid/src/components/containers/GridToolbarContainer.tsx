@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import { styled, SxProps, Theme } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { vars } from '../../constants/cssVariables';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -29,13 +28,13 @@ const GridToolbarContainerRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ToolbarContainer',
   overridesResolver: (_, styles) => styles.toolbarContainer,
-})<{ ownerState: OwnerState }>({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   flexWrap: 'wrap',
-  gap: vars.spacing(1),
-  padding: vars.spacing(0.5, 0.5, 0),
-});
+  gap: theme.spacing(1),
+  padding: theme.spacing(0.5, 0.5, 0),
+}));
 
 const GridToolbarContainer = forwardRef<HTMLDivElement, GridToolbarContainerProps>(
   function GridToolbarContainer(props, ref) {

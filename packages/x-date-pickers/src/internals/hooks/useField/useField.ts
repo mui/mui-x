@@ -3,7 +3,7 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
 import { useValidation } from '../../../validation';
-import { useUtils } from '../useUtils';
+import { useLocalizationContext, useUtils } from '../useUtils';
 import {
   UseFieldParams,
   UseFieldResponse,
@@ -47,11 +47,13 @@ export const useField = <
       enableAccessibleFieldDOMStructure = true,
       disabled = false,
       readOnly = false,
+      autoFocus = false,
     },
     forwardedProps: { onKeyDown, error, clearable, onClear },
     fieldValueManager,
     valueManager,
     validator,
+    getOpenPickerButtonAriaLabel: getOpenDialogAriaText,
   } = params;
 
   const isRtl = useRtl();
@@ -184,6 +186,11 @@ export const useField = <
           break;
         }
 
+        // if all sections are selected, mark the currently editing one as selected
+        if (parsedSelectedSections === 'all') {
+          setSelectedSections(activeSectionIndex);
+        }
+
         const activeSection = state.sections[activeSectionIndex];
         const activeDateManager = fieldValueManager.getActiveDateManager(
           utils,
@@ -279,9 +286,17 @@ export const useField = <
     clearable: Boolean(clearable && !areAllSectionsEmpty && !readOnly && !disabled),
   };
 
+  const localizationContext = useLocalizationContext();
+  const openPickerAriaLabel = React.useMemo(
+    () => getOpenDialogAriaText({ ...localizationContext, value: state.value }),
+    [getOpenDialogAriaText, state.value, localizationContext],
+  );
+
   const commonAdditionalProps: UseFieldCommonAdditionalProps = {
     disabled,
     readOnly,
+    autoFocus,
+    openPickerAriaLabel,
   };
 
   return {
