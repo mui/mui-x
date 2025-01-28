@@ -214,7 +214,7 @@ function BasePopper(props: GridSlotProps['basePopper']) {
 }
 
 function wrappers(props: PopperProps, content: any) {
-  return clickAwayWrapper(props, focusTrapWrapper(props, content));
+  return focusTrapWrapper(props, clickAwayWrapper(props, content));
 }
 
 function clickAwayWrapper(props: PopperProps, content: any) {
