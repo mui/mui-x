@@ -22,25 +22,20 @@ interface GridOverlaysProps {
   loadingOverlayVariant: GridLoadingOverlayVariant | null;
 }
 
-interface GridOverlayWrapperRootProps extends GridOverlaysProps {
-  right: number;
-}
+interface GridOverlayWrapperRootProps extends GridOverlaysProps {}
 
 const GridOverlayWrapperRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'OverlayWrapper',
-  shouldForwardProp: (prop) =>
-    prop !== 'overlayType' && prop !== 'loadingOverlayVariant' && prop !== 'right',
+  shouldForwardProp: (prop) => prop !== 'overlayType' && prop !== 'loadingOverlayVariant',
   overridesResolver: (props, styles) => styles.overlayWrapper,
-})<GridOverlayWrapperRootProps>(({ overlayType, loadingOverlayVariant, right }) =>
+})<GridOverlayWrapperRootProps>(({ overlayType, loadingOverlayVariant }) =>
   // Skeleton overlay should flow with the scroll container and not be sticky
   loadingOverlayVariant !== 'skeleton'
     ? {
         position: 'sticky', // To stay in place while scrolling
         top: 'var(--DataGrid-headersTotalHeight)', // TODO: take pinned rows into account
         left: 0,
-        right: `${right}px`,
-        width: 0, // To stay above the content instead of shifting it down
         height: 0, // To stay above the content instead of shifting it down
         zIndex:
           overlayType === 'loadingOverlay'
@@ -73,33 +68,20 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 export function GridOverlayWrapper(props: React.PropsWithChildren<GridOverlaysProps>) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
-
-  let height: React.CSSProperties['height'] = Math.max(
-    dimensions.viewportOuterSize.height -
-      dimensions.topContainerHeight -
-      dimensions.bottomContainerHeight -
-      (dimensions.hasScrollX ? dimensions.scrollbarSize : 0),
-    0,
-  );
-
-  if (height === 0) {
-    height = minimalContentHeight;
-  }
+  const height =
+    useGridSelector(
+      apiRef,
+      () => gridDimensionsSelector(apiRef.current.state).viewportInnerSize.height,
+    ) || minimalContentHeight;
 
   const classes = useUtilityClasses({ ...props, classes: rootProps.classes });
 
   return (
-    <GridOverlayWrapperRoot
-      className={clsx(classes.root)}
-      {...props}
-      right={dimensions.columnsTotalWidth - dimensions.viewportOuterSize.width}
-    >
+    <GridOverlayWrapperRoot className={clsx(classes.root)} {...props}>
       <GridOverlayWrapperInner
         className={clsx(classes.inner)}
         style={{
           height,
-          width: dimensions.viewportOuterSize.width,
         }}
         {...props}
       />
