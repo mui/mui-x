@@ -7,7 +7,6 @@ import {
   fireEvent,
   screen,
   act,
-  waitFor,
   waitForElementToBeRemoved,
 } from '@mui/internal-test-utils';
 import {
@@ -419,10 +418,10 @@ describe('<DataGrid /> - Row selection', () => {
       await act(() => {
         apiRef!.current?.showFilterPanel('id');
       });
-      await waitFor(() => expect(screen.queryByRole('tooltip')).not.to.equal(null));
+      expect(await screen.findByRole('tooltip')).not.to.equal(null);
 
       await user.keyboard('1');
-      expect(screen.queryByTestId('LoadIcon')).not.to.equal(null);
+      expect(await screen.findByTestId('LoadIcon')).not.to.equal(null);
 
       await waitForElementToBeRemoved(() => screen.queryByTestId('LoadIcon'));
 
@@ -448,10 +447,10 @@ describe('<DataGrid /> - Row selection', () => {
       await act(() => {
         apiRef!.current?.showFilterPanel('id');
       });
-      await waitFor(() => expect(screen.queryByRole('tooltip')).not.to.equal(null));
+      expect(await screen.findByRole('tooltip')).not.to.equal(null);
 
       await user.keyboard('1');
-      expect(screen.queryByTestId('LoadIcon')).not.to.equal(null);
+      expect(await screen.findByTestId('LoadIcon')).not.to.equal(null);
 
       await waitForElementToBeRemoved(() => screen.queryByTestId('LoadIcon'));
 
