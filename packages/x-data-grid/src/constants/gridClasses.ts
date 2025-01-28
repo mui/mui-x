@@ -274,10 +274,6 @@ export interface GridClasses {
    */
   detailPanel: string;
   /**
-   * Styles applied to the detail panels wrapper element.
-   */
-  detailPanels: string;
-  /**
    * Styles applied to the detail panel toggle cell element.
    */
   detailPanelToggleCell: string;
@@ -451,10 +447,6 @@ export interface GridClasses {
    * Styles applied to the virtualization render zone.
    */
   virtualScrollerRenderZone: string;
-  /**
-   * Styles applied to the pinned columns.
-   */
-  pinnedColumns: string;
   /**
    * Styles applied to the root element.
    */
@@ -683,10 +675,6 @@ export interface GridClasses {
    * Styles applied to the bottom pinned rows container.
    */
   'pinnedRows--bottom': string;
-  /**
-   * Styles applied to pinned rows render zones.
-   */
-  pinnedRowsRenderZone: string;
 }
 
 export type GridClassKey = keyof GridClasses;
@@ -763,7 +751,6 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'container--top',
   'container--bottom',
   'detailPanel',
-  'detailPanels',
   'detailPanelToggleCell',
   'detailPanelToggleCell--expanded',
   'footerCell',
@@ -847,7 +834,6 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'virtualScrollerContent',
   'virtualScrollerContent--overflowed',
   'virtualScrollerRenderZone',
-  'pinnedColumns',
   'withVerticalBorder',
   'withBorderColor',
   'cell--withRightBorder',
@@ -863,5 +849,4 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'pinnedRows',
   'pinnedRows--top',
   'pinnedRows--bottom',
-  'pinnedRowsRenderZone',
 ]);
