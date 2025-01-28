@@ -33,7 +33,7 @@ interface ChangeFocusedDayPayload {
 }
 
 export const createCalendarStateReducer =
-  (reduceAnimations: boolean, disableSwitchToMonthOnDayFocus: boolean, utils: MuiPickersAdapter) =>
+  (reduceAnimations: boolean, calendars: number, utils: MuiPickersAdapter) =>
   (
     state: CalendarState,
     action:
@@ -81,10 +81,15 @@ export const createCalendarStateReducer =
           return state;
         }
 
+        const firstVisibleDate = utils.startOfMonth(state.currentMonth);
+        const lastVisibleDate = utils.endOfMonth(
+          utils.addMonths(state.currentMonth, calendars - 1),
+        );
+
         const needMonthSwitch =
           action.focusedDay != null &&
-          !disableSwitchToMonthOnDayFocus &&
-          !utils.isSameMonth(state.currentMonth, action.focusedDay);
+          (utils.isBefore(action.focusedDay, firstVisibleDate) ||
+            utils.isAfter(action.focusedDay, lastVisibleDate));
 
         return {
           ...state,
@@ -117,9 +122,10 @@ interface UseCalendarStateParameters
     | 'onMonthChange'
     | 'reduceAnimations'
     | 'shouldDisableDate'
+    | 'autoFocus'
   > {
   value: PickerValidDate | null;
-  disableSwitchToMonthOnDayFocus?: boolean;
+  calendars?: number;
   timezone: PickersTimezone;
 }
 
@@ -144,19 +150,20 @@ export const useCalendarState = (
     referenceDate: referenceDateProp,
     disableFuture,
     disablePast,
-    disableSwitchToMonthOnDayFocus = false,
+    calendars = 1,
     maxDate,
     minDate,
     onMonthChange,
     reduceAnimations,
     shouldDisableDate,
     timezone,
+    autoFocus,
   } = params;
 
   const utils = useUtils();
 
   const reducerFn = React.useRef(
-    createCalendarStateReducer(Boolean(reduceAnimations), disableSwitchToMonthOnDayFocus, utils),
+    createCalendarStateReducer(Boolean(reduceAnimations), calendars, utils),
   ).current;
 
   const referenceDate = React.useMemo<PickerValidDate>(
@@ -177,7 +184,7 @@ export const useCalendarState = (
 
   const [calendarState, dispatch] = React.useReducer(reducerFn, {
     isMonthSwitchingAnimating: false,
-    focusedDay: referenceDate,
+    focusedDay: autoFocus ? referenceDate : null,
     currentMonth: utils.startOfMonth(referenceDate),
     slideDirection: 'left',
   });
