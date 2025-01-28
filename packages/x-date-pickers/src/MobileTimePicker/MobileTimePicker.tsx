@@ -66,7 +66,6 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<
       field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
-        ref,
       }),
       toolbar: {
         hidden: false,
@@ -81,6 +80,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<
     TEnableAccessibleFieldDOMStructure,
     typeof props
   >({
+    ref,
     props,
     valueManager: singleItemValueManager,
     valueType: 'time',

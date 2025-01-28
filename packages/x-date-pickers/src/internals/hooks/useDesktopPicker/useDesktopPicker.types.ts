@@ -1,9 +1,6 @@
 import * as React from 'react';
 import { MakeRequired, SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import {
-  BasePickerProps,
-  BaseNonRangeNonStaticPickerProps,
-} from '../../models/props/basePickerProps';
+import { BasePickerProps } from '../../models/props/basePickerProps';
 import {
   PickerPopperSlots,
   PickerPopperSlotProps,
@@ -59,8 +56,7 @@ export interface UseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure ex
     Pick<PickersLayoutSlotProps<PickerValue>, 'toolbar'> {}
 
 export interface DesktopOnlyPickerProps
-  extends BaseNonRangeNonStaticPickerProps,
-    UsePickerValueNonStaticProps,
+  extends UsePickerValueNonStaticProps,
     UsePickerProviderNonStaticProps {
   /**
    * If `true`, the `input` element is focused during the first mount.
@@ -99,7 +95,7 @@ export interface UseDesktopPickerParams<
   >,
 > extends Pick<
     UsePickerParams<PickerValue, TView, TExternalProps>,
-    'valueManager' | 'valueType' | 'validator' | 'rendererInterceptor'
+    'valueManager' | 'valueType' | 'validator' | 'rendererInterceptor' | 'ref'
   > {
   props: TExternalProps;
 }
