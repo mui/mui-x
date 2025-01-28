@@ -19,7 +19,7 @@ describe('<DataGridPro /> - Export', () => {
     autoHeight: isJSDOM,
   };
 
-  let apiRef: RefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   const columns: GridColDef[] = [{ field: 'id' }, { field: 'brand', headerName: 'Brand' }];
 
@@ -54,18 +54,18 @@ describe('<DataGridPro /> - Export', () => {
       }
 
       render(<TestCaseCSVExport />);
-      expect(apiRef.current.getDataAsCsv()).to.equal(
+      expect(apiRef.current?.getDataAsCsv()).to.equal(
         ['id,Brand', '0,Nike', '1,Adidas', '2,Puma'].join('\r\n'),
       );
       act(() =>
-        apiRef.current.updateRows([
+        apiRef.current?.updateRows([
           {
             id: 1,
             brand: 'Adidas,Reebok',
           },
         ]),
       );
-      expect(apiRef.current.getDataAsCsv()).to.equal(
+      expect(apiRef.current?.getDataAsCsv()).to.equal(
         ['id,Brand', '0,Nike', '1,"Adidas,Reebok"', '2,Puma'].join('\r\n'),
       );
     });
@@ -95,7 +95,7 @@ describe('<DataGridPro /> - Export', () => {
       }
 
       render(<TestCaseCSVExport />);
-      expect(apiRef.current.getDataAsCsv()).to.equal(
+      expect(apiRef.current?.getDataAsCsv()).to.equal(
         ['id,Brand', '0,Nike', '1,"Adidas,Puma"'].join('\r\n'),
       );
     });
@@ -132,7 +132,7 @@ describe('<DataGridPro /> - Export', () => {
       }
 
       render(<TestCaseCSVExport />);
-      expect(apiRef.current.getDataAsCsv()).to.equal(
+      expect(apiRef.current?.getDataAsCsv()).to.equal(
         ['id,Brand', '0,Jordan', '1,Adidas'].join('\r\n'),
       );
     });
@@ -156,7 +156,7 @@ describe('<DataGridPro /> - Export', () => {
       }
 
       render(<TestCaseCSVExport />);
-      expect(apiRef.current.getDataAsCsv()).to.equal(
+      expect(apiRef.current?.getDataAsCsv()).to.equal(
         ['id,Brand', '0,Nike', '1,"Samsung 24"" (inches)"'].join('\r\n'),
       );
     });
@@ -194,7 +194,7 @@ describe('<DataGridPro /> - Export', () => {
       }
 
       render(<TestCaseCSVExport />);
-      expect(apiRef.current.getDataAsCsv()).to.equal(
+      expect(apiRef.current?.getDataAsCsv()).to.equal(
         [
           'id,Brand',
           '0,"Nike \n Nike"',
@@ -231,7 +231,7 @@ describe('<DataGridPro /> - Export', () => {
 
       render(<TestCaseCSVExport />);
       expect(
-        apiRef.current.getDataAsCsv({
+        apiRef.current?.getDataAsCsv({
           delimiter: ';',
         }),
       ).to.equal(['id;Brand', '0;Nike', '1;Adidas'].join('\r\n'));
@@ -263,7 +263,7 @@ describe('<DataGridPro /> - Export', () => {
       }
 
       render(<TestCaseCSVExport />);
-      expect(apiRef.current.getDataAsCsv()).to.equal(['id,Brand', '0,Nike'].join('\r\n'));
+      expect(apiRef.current?.getDataAsCsv()).to.equal(['id,Brand', '0,Nike'].join('\r\n'));
     });
 
     it('should export the rows returned by params.getRowsToExport if defined', () => {
@@ -291,7 +291,7 @@ describe('<DataGridPro /> - Export', () => {
       }
 
       render(<TestCaseCSVExport />);
-      expect(apiRef.current.getDataAsCsv({ getRowsToExport: () => [0] })).to.equal(
+      expect(apiRef.current?.getDataAsCsv({ getRowsToExport: () => [0] })).to.equal(
         ['id,Brand', '0,Nike'].join('\r\n'),
       );
     });
@@ -322,7 +322,7 @@ describe('<DataGridPro /> - Export', () => {
       }
 
       render(<TestCaseCSVExport />);
-      expect(apiRef.current.getDataAsCsv()).to.equal(['id', '0', '1'].join('\r\n'));
+      expect(apiRef.current?.getDataAsCsv()).to.equal(['id', '0', '1'].join('\r\n'));
     });
 
     it('should export hidden column if params.allColumns = true', () => {
@@ -352,7 +352,7 @@ describe('<DataGridPro /> - Export', () => {
 
       render(<TestCaseCSVExport />);
       expect(
-        apiRef.current.getDataAsCsv({
+        apiRef.current?.getDataAsCsv({
           allColumns: true,
         }),
       ).to.equal(['id,Brand', '0,Nike', '1,Adidas'].join('\r\n'));
@@ -387,7 +387,7 @@ describe('<DataGridPro /> - Export', () => {
 
       render(<TestCaseCSVExport />);
       expect(
-        apiRef.current.getDataAsCsv({
+        apiRef.current?.getDataAsCsv({
           fields: ['brand'],
         }),
       ).to.equal(['Brand', 'Nike', 'Adidas'].join('\r\n'));
@@ -420,7 +420,7 @@ describe('<DataGridPro /> - Export', () => {
 
       render(<TestCaseCSVExport />);
       expect(
-        apiRef.current.getDataAsCsv({
+        apiRef.current?.getDataAsCsv({
           fields: ['brand'],
         }),
       ).to.equal(['Brand', 'Nike', 'Adidas'].join('\r\n'));
@@ -456,7 +456,7 @@ describe('<DataGridPro /> - Export', () => {
 
       render(<TestCaseCSVExport />);
       expect(
-        apiRef.current.getDataAsCsv({
+        apiRef.current?.getDataAsCsv({
           fields: ['id', 'brand'],
         }),
       ).to.equal(['id,Brand', '0,Nike', '1,Adidas'].join('\r\n'));
@@ -481,7 +481,7 @@ describe('<DataGridPro /> - Export', () => {
         );
       }
       render(<TestCaseCSVExport />);
-      expect(apiRef.current.getDataAsCsv()).to.equal(['id,isAdmin', '0,Yes', '1,No'].join('\r\n'));
+      expect(apiRef.current?.getDataAsCsv()).to.equal(['id,isAdmin', '0,Yes', '1,No'].join('\r\n'));
     });
 
     it('should warn when a value of a field is an object and no `valueFormatter` is provided', () => {
@@ -515,7 +515,7 @@ describe('<DataGridPro /> - Export', () => {
 
       render(<TestCaseCSVExport />);
       expect(() => {
-        apiRef.current.getDataAsCsv();
+        apiRef.current?.getDataAsCsv();
       }).toWarnDev(
         [
           'MUI X: When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.',
@@ -557,7 +557,7 @@ describe('<DataGridPro /> - Export', () => {
 
       it('should include column groups by default', () => {
         render(<TestCaseCSVExport />);
-        expect(apiRef.current.getDataAsCsv()).to.equal(
+        expect(apiRef.current?.getDataAsCsv()).to.equal(
           [
             'Internal,Basic info,Basic info,Basic info',
             ',Full name,Full name,',
@@ -569,7 +569,7 @@ describe('<DataGridPro /> - Export', () => {
 
       it('should not include column groups if disabled', () => {
         render(<TestCaseCSVExport />);
-        expect(apiRef.current.getDataAsCsv({ includeColumnGroupsHeaders: false })).to.equal(
+        expect(apiRef.current?.getDataAsCsv({ includeColumnGroupsHeaders: false })).to.equal(
           ['ID,First name,Last name,Age', '1,Jon,Snow,35'].join('\r\n'),
         );
       });

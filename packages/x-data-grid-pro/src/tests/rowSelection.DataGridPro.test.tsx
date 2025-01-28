@@ -30,7 +30,7 @@ function getSelectedRowIds() {
 describe('<DataGridPro /> - Row selection', () => {
   const { render } = createRenderer();
 
-  let apiRef: RefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   function TestDataGridSelection({
     rowLength = 4,
@@ -179,10 +179,10 @@ describe('<DataGridPro /> - Row selection', () => {
       }),
     );
 
-    expect(apiRef.current.getSelectedRows()).to.have.length(15);
+    expect(apiRef.current?.getSelectedRows()).to.have.length(15);
 
     await act(() => {
-      apiRef.current.setFilterModel({
+      apiRef.current?.setFilterModel({
         items: [
           {
             field: 'jobTitle',
@@ -193,7 +193,7 @@ describe('<DataGridPro /> - Row selection', () => {
       });
     });
 
-    expect(apiRef.current.getSelectedRows()).to.have.keys([1]);
+    expect(apiRef.current?.getSelectedRows()).to.have.keys([1]);
   });
 
   // Context: https://github.com/mui/mui-x/issues/15045
@@ -233,17 +233,17 @@ describe('<DataGridPro /> - Row selection', () => {
       })[1],
     );
 
-    expect(apiRef.current.getSelectedRows()).to.have.length(1);
-    expect(Array.from(apiRef.current.getSelectedRows())[0][0]).to.equal(1);
+    expect(apiRef.current?.getSelectedRows()).to.have.length(1);
+    expect(Array.from(apiRef.current!.getSelectedRows())[0][0]).to.equal(1);
 
     await act(() => {
-      apiRef.current.setFilterModel({
+      apiRef.current?.setFilterModel({
         items: [{ field: 'jobTitle', value: 'Head of Human Resources', operator: 'contains' }],
       });
     });
 
-    expect(apiRef.current.getSelectedRows()).to.have.length(1);
-    expect(Array.from(apiRef.current.getSelectedRows())[0][0]).to.equal(1);
+    expect(apiRef.current?.getSelectedRows()).to.have.length(1);
+    expect(Array.from(apiRef.current!.getSelectedRows())[0][0]).to.equal(1);
   });
 
   // Context: https://github.com/mui/mui-x/issues/15068
@@ -297,7 +297,7 @@ describe('<DataGridPro /> - Row selection', () => {
         name: /select all rows/i,
       });
       await user.click(selectAllCheckbox);
-      expect(apiRef.current.getSelectedRows()).to.have.length(4);
+      expect(apiRef.current?.getSelectedRows()).to.have.length(4);
       expect(selectAllCheckbox.checked).to.equal(true);
     });
 
@@ -311,13 +311,13 @@ describe('<DataGridPro /> - Row selection', () => {
         />,
       );
       await user.click(getCell(0, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([0]);
       await user.click(screen.getByRole('button', { name: /next page/i }));
       const selectAllCheckbox: HTMLInputElement = screen.getByRole('checkbox', {
         name: /select all rows/i,
       });
       await user.click(selectAllCheckbox);
-      expect(apiRef.current.getSelectedRows()).to.have.length(4);
+      expect(apiRef.current?.getSelectedRows()).to.have.length(4);
       expect(selectAllCheckbox.checked).to.equal(true);
     });
 
@@ -336,7 +336,7 @@ describe('<DataGridPro /> - Row selection', () => {
         name: /select all rows/i,
       });
       await user.click(selectAllCheckbox);
-      expect(apiRef.current.getSelectedRows()).to.have.length(rowLength);
+      expect(apiRef.current?.getSelectedRows()).to.have.length(rowLength);
       expect(selectAllCheckbox.checked).to.equal(true);
     });
 
@@ -399,13 +399,13 @@ describe('<DataGridPro /> - Row selection', () => {
       );
 
       await user.click(getCell(0, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([0]);
       await user.click(screen.getByRole('button', { name: /next page/i }));
       const selectAllCheckbox: HTMLInputElement = screen.getByRole('checkbox', {
         name: /select all rows/i,
       });
       await user.click(selectAllCheckbox);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([0, 2, 3]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([0, 2, 3]);
       expect(selectAllCheckbox.checked).to.equal(true);
     });
 
@@ -421,15 +421,15 @@ describe('<DataGridPro /> - Row selection', () => {
       );
 
       await user.click(getCell(0, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([0]);
       await user.click(screen.getByRole('button', { name: /next page/i }));
       await user.click(getCell(2, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([0, 2]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([0, 2]);
       const selectAllCheckbox: HTMLInputElement = screen.getByRole('checkbox', {
         name: /select all rows/i,
       });
       await user.click(selectAllCheckbox);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([0, 2, 3]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([0, 2, 3]);
       expect(selectAllCheckbox.checked).to.equal(true);
     });
 
@@ -490,7 +490,7 @@ describe('<DataGridPro /> - Row selection', () => {
       });
 
       await user.click(selectAllCheckbox);
-      expect(apiRef.current.getSelectedRows()).to.have.length(2);
+      expect(apiRef.current?.getSelectedRows()).to.have.length(2);
     });
 
     // https://github.com/mui/mui-x/issues/14074
@@ -520,13 +520,13 @@ describe('<DataGridPro /> - Row selection', () => {
       );
 
       await user.click(getCell(0, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([0]);
       await user.click(screen.getByRole('button', { name: /next page/i }));
       const selectAllCheckbox: HTMLInputElement = screen.getByRole('checkbox', {
         name: /select all rows/i,
       });
       await user.click(selectAllCheckbox);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([0, 3, 4]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([0, 3, 4]);
       expect(selectAllCheckbox.checked).to.equal(true);
     });
   });
@@ -554,7 +554,7 @@ describe('<DataGridPro /> - Row selection', () => {
       const { user } = render(<SelectionPropagationGrid />);
 
       await user.click(getCell(1, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([1]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([1]);
     });
 
     it('should deselect the parent only when deselecting it', async () => {
@@ -564,9 +564,9 @@ describe('<DataGridPro /> - Row selection', () => {
 
       await user.click(getCell(1, 0).querySelector('input')!);
       await user.click(getCell(2, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([1, 2]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([1, 2]);
       await user.click(getCell(1, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([2]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([2]);
     });
 
     it('should not auto select the parent if all the children are selected', async () => {
@@ -581,7 +581,7 @@ describe('<DataGridPro /> - Row selection', () => {
       await user.click(getCell(6, 0).querySelector('input')!);
       await user.click(getCell(7, 0).querySelector('input')!);
       // The parent row (Thomas, id: 1) should not be among the selected rows
-      expect(apiRef.current.getSelectedRows()).to.have.keys([2, 3, 4, 5, 6, 7]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([2, 3, 4, 5, 6, 7]);
     });
 
     it('should not deselect selected parent if one of the children is deselected', async () => {
@@ -596,26 +596,26 @@ describe('<DataGridPro /> - Row selection', () => {
       await user.click(getCell(5, 0).querySelector('input')!);
       await user.click(getCell(6, 0).querySelector('input')!);
       await user.click(getCell(7, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
       await user.click(getCell(2, 0).querySelector('input')!);
       // The parent row (Thomas, id: 1) should still be among the selected rows
-      expect(apiRef.current.getSelectedRows()).to.have.keys([1, 3, 4, 5, 6, 7]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([1, 3, 4, 5, 6, 7]);
     });
 
     it('should select only the unwrapped rows when clicking "Select All" checkbox', async () => {
       const { user } = render(<SelectionPropagationGrid />);
 
       await user.click(screen.getByRole('checkbox', { name: /select all rows/i }));
-      expect(apiRef.current.getSelectedRows()).to.have.keys([0, 1, 8]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([0, 1, 8]);
     });
 
     it('should deselect only the unwrapped rows when clicking "Select All" checkbox', async () => {
       const { user } = render(<SelectionPropagationGrid />);
 
       await user.click(screen.getByRole('checkbox', { name: /select all rows/i }));
-      expect(apiRef.current.getSelectedRows()).to.have.keys([0, 1, 8]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([0, 1, 8]);
       await user.click(screen.getByRole('checkbox', { name: /select all rows/i }));
-      expect(apiRef.current.getSelectedRows().size).to.equal(0);
+      expect(apiRef.current?.getSelectedRows().size).to.equal(0);
     });
   });
 
@@ -630,16 +630,16 @@ describe('<DataGridPro /> - Row selection', () => {
       const { user } = render(<SelectionPropagationGrid />);
 
       await user.click(getCell(1, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
     });
 
     it('should deselect all the children when deselecting a parent', async () => {
       const { user } = render(<SelectionPropagationGrid />);
 
       await user.click(getCell(1, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
       await user.click(getCell(1, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows().size).to.equal(0);
+      expect(apiRef.current?.getSelectedRows().size).to.equal(0);
     });
 
     it('should not auto select the parent if all the children are selected', async () => {
@@ -654,7 +654,7 @@ describe('<DataGridPro /> - Row selection', () => {
       await user.click(getCell(6, 0).querySelector('input')!);
       await user.click(getCell(7, 0).querySelector('input')!);
       // The parent row (Thomas, id: 1) should not be among the selected rows
-      expect(apiRef.current.getSelectedRows()).to.have.keys([2, 3, 4, 5, 6, 7]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([2, 3, 4, 5, 6, 7]);
     });
 
     it('should not deselect selected parent if one of the children is deselected', async () => {
@@ -663,26 +663,26 @@ describe('<DataGridPro /> - Row selection', () => {
       );
 
       await user.click(getCell(1, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
       await user.click(getCell(2, 0).querySelector('input')!);
       // The parent row (Thomas, id: 1) should still be among the selected rows
-      expect(apiRef.current.getSelectedRows()).to.have.keys([1, 3, 4, 5, 6, 7]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([1, 3, 4, 5, 6, 7]);
     });
 
     it('should select all the nested rows when clicking "Select All" checkbox', async () => {
       const { user } = render(<SelectionPropagationGrid />);
 
       await user.click(screen.getByRole('checkbox', { name: /select all rows/i }));
-      expect(apiRef.current.getSelectedRows().size).to.equal(15);
+      expect(apiRef.current?.getSelectedRows().size).to.equal(15);
     });
 
     it('should deselect all the nested rows when clicking "Select All" checkbox', async () => {
       const { user } = render(<SelectionPropagationGrid />);
 
       await user.click(screen.getByRole('checkbox', { name: /select all rows/i }));
-      expect(apiRef.current.getSelectedRows().size).to.equal(15);
+      expect(apiRef.current?.getSelectedRows().size).to.equal(15);
       await user.click(screen.getByRole('checkbox', { name: /select all rows/i }));
-      expect(apiRef.current.getSelectedRows().size).to.equal(0);
+      expect(apiRef.current?.getSelectedRows().size).to.equal(0);
     });
 
     describe('prop: isRowSelectable', () => {
@@ -696,7 +696,7 @@ describe('<DataGridPro /> - Row selection', () => {
         );
 
         fireEvent.click(getCell(1, 0).querySelector('input')!);
-        expect(apiRef.current.getSelectedRows().size).to.equal(0);
+        expect(apiRef.current?.getSelectedRows().size).to.equal(0);
       });
 
       it('should not auto-select a descendant if not allowed', async () => {
@@ -709,7 +709,7 @@ describe('<DataGridPro /> - Row selection', () => {
         );
 
         await user.click(getCell(1, 0).querySelector('input')!);
-        expect(apiRef.current.getSelectedRows()).to.have.keys([1, 3, 4, 5, 6, 7]);
+        expect(apiRef.current?.getSelectedRows()).to.have.keys([1, 3, 4, 5, 6, 7]);
       });
     });
   });
@@ -738,7 +738,7 @@ describe('<DataGridPro /> - Row selection', () => {
       const { user } = render(<SelectionPropagationGrid />);
 
       await user.click(getCell(1, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([1]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([1]);
     });
 
     it('should deselect the parent only when deselecting it', async () => {
@@ -748,9 +748,9 @@ describe('<DataGridPro /> - Row selection', () => {
 
       await user.click(getCell(1, 0).querySelector('input')!);
       await user.click(getCell(2, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([1, 2]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([1, 2]);
       await user.click(getCell(1, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([2]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([2]);
     });
 
     it('should auto select the parent if all the children are selected', async () => {
@@ -765,7 +765,7 @@ describe('<DataGridPro /> - Row selection', () => {
       await user.click(getCell(6, 0).querySelector('input')!);
       await user.click(getCell(7, 0).querySelector('input')!);
       // The parent row (Thomas, id: 1) should be among the selected rows
-      expect(apiRef.current.getSelectedRows()).to.have.keys([2, 3, 4, 5, 6, 7, 1]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([2, 3, 4, 5, 6, 7, 1]);
     });
 
     it('should deselect selected parent if one of the children is deselected', async () => {
@@ -779,10 +779,10 @@ describe('<DataGridPro /> - Row selection', () => {
       await user.click(getCell(5, 0).querySelector('input')!);
       await user.click(getCell(6, 0).querySelector('input')!);
       await user.click(getCell(7, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([2, 3, 4, 5, 6, 7, 1]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([2, 3, 4, 5, 6, 7, 1]);
       await user.click(getCell(2, 0).querySelector('input')!);
       // The parent row (Thomas, id: 1) should not be among the selected rows
-      expect(apiRef.current.getSelectedRows()).to.have.keys([3, 4, 5, 6, 7]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([3, 4, 5, 6, 7]);
     });
 
     describe('prop: isRowSelectable', () => {
@@ -802,7 +802,7 @@ describe('<DataGridPro /> - Row selection', () => {
         await user.click(getCell(6, 0).querySelector('input')!);
         await user.click(getCell(7, 0).querySelector('input')!);
         // The parent row (Thomas, id: 1) should still not be among the selected rows
-        expect(apiRef.current.getSelectedRows()).to.have.keys([2, 3, 4, 5, 6, 7]);
+        expect(apiRef.current?.getSelectedRows()).to.have.keys([2, 3, 4, 5, 6, 7]);
       });
     });
   });
@@ -818,16 +818,16 @@ describe('<DataGridPro /> - Row selection', () => {
       const { user } = render(<SelectionPropagationGrid />);
 
       await user.click(getCell(1, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
     });
 
     it('should deselect all the children when deselecting a parent', async () => {
       const { user } = render(<SelectionPropagationGrid />);
 
       await user.click(getCell(1, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
       await user.click(getCell(1, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows().size).to.equal(0);
+      expect(apiRef.current?.getSelectedRows().size).to.equal(0);
     });
 
     it('should auto select the parent if all the children are selected', async () => {
@@ -840,7 +840,7 @@ describe('<DataGridPro /> - Row selection', () => {
       await user.click(getCell(12, 0).querySelector('input')!);
 
       // The parent row (Mary, id: 8) should be among the selected rows
-      expect(apiRef.current.getSelectedRows()).to.have.keys([9, 10, 11, 12, 8, 13, 14]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([9, 10, 11, 12, 8, 13, 14]);
     });
 
     it('should deselect auto selected parent if one of the children is deselected', async () => {
@@ -851,9 +851,9 @@ describe('<DataGridPro /> - Row selection', () => {
       await user.click(getCell(9, 0).querySelector('input')!);
       await user.click(getCell(11, 0).querySelector('input')!);
       await user.click(getCell(12, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([9, 10, 11, 12, 8, 13, 14]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([9, 10, 11, 12, 8, 13, 14]);
       await user.click(getCell(9, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([11, 12, 13, 14]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([11, 12, 13, 14]);
     });
 
     it('should select all the children when selecting an indeterminate parent', async () => {
@@ -864,7 +864,7 @@ describe('<DataGridPro /> - Row selection', () => {
       await user.click(getCell(2, 0).querySelector('input')!);
       expect(getCell(1, 0).querySelector('input')!).to.have.attr('data-indeterminate', 'true');
       await user.click(getCell(1, 0).querySelector('input')!);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
     });
 
     describe('prop: keepNonExistentRowsSelected = true', () => {
@@ -872,10 +872,10 @@ describe('<DataGridPro /> - Row selection', () => {
         const { user } = render(<SelectionPropagationGrid keepNonExistentRowsSelected />);
 
         await user.click(getCell(1, 0).querySelector('input')!);
-        expect(apiRef.current.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
+        expect(apiRef.current?.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
 
         await act(() => {
-          apiRef.current.setFilterModel({
+          apiRef.current?.setFilterModel({
             items: [
               {
                 field: 'jobTitle',
@@ -888,7 +888,7 @@ describe('<DataGridPro /> - Row selection', () => {
 
         await user.click(getCell(0, 0).querySelector('input')!);
 
-        expect(apiRef.current.getSelectedRows()).to.have.keys([0, 1, 2, 3, 4, 5, 6, 7]);
+        expect(apiRef.current?.getSelectedRows()).to.have.keys([0, 1, 2, 3, 4, 5, 6, 7]);
       });
     });
   });
@@ -898,14 +898,14 @@ describe('<DataGridPro /> - Row selection', () => {
       render(
         <TestDataGridSelection
           onRowSelectionModelChange={(model) => {
-            expect(apiRef.current.getSelectedRows()).to.have.length(1);
+            expect(apiRef.current?.getSelectedRows()).to.have.length(1);
             expect(model).to.deep.equal([1]);
           }}
         />,
       );
-      expect(apiRef.current.getSelectedRows()).to.have.length(0);
-      await act(() => apiRef.current.selectRow(1));
-      expect(apiRef.current.getSelectedRows().get(1)).to.deep.equal({
+      expect(apiRef.current?.getSelectedRows()).to.have.length(0);
+      await act(() => apiRef.current?.selectRow(1));
+      expect(apiRef.current?.getSelectedRows().get(1)).to.deep.equal({
         id: 1,
         currencyPair: 'USDEUR',
       });
@@ -918,15 +918,15 @@ describe('<DataGridPro /> - Row selection', () => {
 
       await user.click(getCell(1, 0));
 
-      expect(apiRef.current.isRowSelected(0)).to.equal(false);
-      expect(apiRef.current.isRowSelected(1)).to.equal(true);
+      expect(apiRef.current?.isRowSelected(0)).to.equal(false);
+      expect(apiRef.current?.isRowSelected(1)).to.equal(true);
     });
 
     it('should check if the rows selected with the rowSelectionModel prop are selected', () => {
       render(<TestDataGridSelection rowSelectionModel={[1]} />);
 
-      expect(apiRef.current.isRowSelected(0)).to.equal(false);
-      expect(apiRef.current.isRowSelected(1)).to.equal(true);
+      expect(apiRef.current?.isRowSelected(0)).to.equal(false);
+      expect(apiRef.current?.isRowSelected(1)).to.equal(true);
     });
   });
 
@@ -934,15 +934,15 @@ describe('<DataGridPro /> - Row selection', () => {
     it('should call onRowSelectionModelChange with the ids selected', async () => {
       const handleRowSelectionModelChange = spy();
       render(<TestDataGridSelection onRowSelectionModelChange={handleRowSelectionModelChange} />);
-      await act(() => apiRef.current.selectRow(1));
+      await act(() => apiRef.current?.selectRow(1));
       expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal([1]);
       // Reset old selection
-      await act(() => apiRef.current.selectRow(2, true, true));
+      await act(() => apiRef.current?.selectRow(2, true, true));
       expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal([2]);
       // Keep old selection
-      await act(() => apiRef.current.selectRow(3));
+      await act(() => apiRef.current?.selectRow(3));
       expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal([2, 3]);
-      await act(() => apiRef.current.selectRow(3, false));
+      await act(() => apiRef.current?.selectRow(3, false));
       expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal([2]);
     });
 
@@ -954,9 +954,9 @@ describe('<DataGridPro /> - Row selection', () => {
           onRowSelectionModelChange={handleRowSelectionModelChange}
         />,
       );
-      await act(() => apiRef.current.selectRow(0));
+      await act(() => apiRef.current?.selectRow(0));
       expect(handleRowSelectionModelChange.callCount).to.equal(0);
-      await act(() => apiRef.current.selectRow(1));
+      await act(() => apiRef.current?.selectRow(1));
       expect(handleRowSelectionModelChange.callCount).to.equal(1);
     });
   });
@@ -971,17 +971,17 @@ describe('<DataGridPro /> - Row selection', () => {
         />,
       );
 
-      await act(() => apiRef.current.selectRows([1, 2]));
+      await act(() => apiRef.current?.selectRows([1, 2]));
       expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal([1, 2]);
 
-      await act(() => apiRef.current.selectRows([3]));
+      await act(() => apiRef.current?.selectRows([3]));
       expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal([1, 2, 3]);
 
-      await act(() => apiRef.current.selectRows([1, 2], false));
+      await act(() => apiRef.current?.selectRows([1, 2], false));
       expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal([3]);
 
       // Deselect others
-      await act(() => apiRef.current.selectRows([4, 5], true, true));
+      await act(() => apiRef.current?.selectRows([4, 5], true, true));
       expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal([4, 5]);
     });
 
@@ -993,14 +993,14 @@ describe('<DataGridPro /> - Row selection', () => {
           onRowSelectionModelChange={handleRowSelectionModelChange}
         />,
       );
-      await act(() => apiRef.current.selectRows([0, 1, 2]));
+      await act(() => apiRef.current?.selectRows([0, 1, 2]));
       expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal([1, 2]);
     });
 
     it('should not select a range of several elements when disableMultipleRowSelection = true', async () => {
       render(<TestDataGridSelection disableMultipleRowSelection />);
 
-      await act(() => apiRef.current.selectRows([0, 1, 2], true));
+      await act(() => apiRef.current?.selectRows([0, 1, 2], true));
       expect(getSelectedRowIds()).to.deep.equal([]);
     });
   });
@@ -1009,16 +1009,16 @@ describe('<DataGridPro /> - Row selection', () => {
     it('should select all the rows in the range', async () => {
       render(<TestDataGridSelection />);
 
-      await act(() => apiRef.current.selectRowRange({ startId: 1, endId: 3 }, true));
+      await act(() => apiRef.current?.selectRowRange({ startId: 1, endId: 3 }, true));
       expect(getSelectedRowIds()).to.deep.equal([1, 2, 3]);
     });
 
     it('should unselect all the rows in the range', async () => {
       render(<TestDataGridSelection />);
 
-      await act(() => apiRef.current.setRowSelectionModel([2, 3]));
+      await act(() => apiRef.current?.setRowSelectionModel([2, 3]));
       expect(getSelectedRowIds()).to.deep.equal([2, 3]);
-      await act(() => apiRef.current.selectRowRange({ startId: 0, endId: 3 }, false));
+      await act(() => apiRef.current?.selectRowRange({ startId: 0, endId: 3 }, false));
       expect(getSelectedRowIds()).to.deep.equal([]);
     });
 
@@ -1026,10 +1026,10 @@ describe('<DataGridPro /> - Row selection', () => {
       render(<TestDataGridSelection />);
 
       await act(() => {
-        apiRef.current.setRowSelectionModel([2]);
+        apiRef.current?.setRowSelectionModel([2]);
       });
       await act(() => {
-        apiRef.current.selectRowRange({ startId: 1, endId: 3 }, true);
+        apiRef.current?.selectRowRange({ startId: 1, endId: 3 }, true);
       });
       expect(getSelectedRowIds()).to.deep.equal([1, 2, 3]);
     });
@@ -1038,10 +1038,10 @@ describe('<DataGridPro /> - Row selection', () => {
       render(<TestDataGridSelection />);
 
       await act(() => {
-        apiRef.current.setRowSelectionModel([0]);
+        apiRef.current?.setRowSelectionModel([0]);
       });
       await act(() => {
-        apiRef.current.selectRowRange({ startId: 2, endId: 3 }, true, false);
+        apiRef.current?.selectRowRange({ startId: 2, endId: 3 }, true, false);
       });
       expect(getSelectedRowIds()).to.deep.equal([0, 2, 3]);
     });
@@ -1050,10 +1050,10 @@ describe('<DataGridPro /> - Row selection', () => {
       render(<TestDataGridSelection />);
 
       await act(() => {
-        apiRef.current.setRowSelectionModel([0]);
+        apiRef.current?.setRowSelectionModel([0]);
       });
       await act(() => {
-        apiRef.current.selectRowRange({ startId: 2, endId: 3 }, true, true);
+        apiRef.current?.selectRowRange({ startId: 2, endId: 3 }, true, true);
       });
       expect(getSelectedRowIds()).to.deep.equal([2, 3]);
     });
@@ -1061,14 +1061,14 @@ describe('<DataGridPro /> - Row selection', () => {
     it('should not select unselectable rows inside the range', async () => {
       render(<TestDataGridSelection isRowSelectable={(params) => Number(params.id) % 2 === 1} />);
 
-      await act(() => apiRef.current.selectRowRange({ startId: 1, endId: 3 }, true));
+      await act(() => apiRef.current?.selectRowRange({ startId: 1, endId: 3 }, true));
       expect(getSelectedRowIds()).to.deep.equal([1, 3]);
     });
 
     it('should not select a range of several elements when disableMultipleRowSelection = true', async () => {
       render(<TestDataGridSelection disableMultipleRowSelection />);
 
-      await act(() => apiRef.current.selectRowRange({ startId: 1, endId: 3 }, true));
+      await act(() => apiRef.current?.selectRowRange({ startId: 1, endId: 3 }, true));
       expect(getSelectedRowIds()).to.deep.equal([]);
     });
 
@@ -1078,7 +1078,7 @@ describe('<DataGridPro /> - Row selection', () => {
           filterModel={{ items: [{ field: 'id', value: 1, operator: '!=' }] }}
         />,
       );
-      await act(() => apiRef.current.selectRowRange({ startId: 0, endId: 2 }, true));
+      await act(() => apiRef.current?.selectRowRange({ startId: 0, endId: 2 }, true));
       expect(getSelectedRowIds()).to.deep.equal([0, 2]);
     });
   });
@@ -1089,7 +1089,7 @@ describe('<DataGridPro /> - Row selection', () => {
       name: /select all rows/i,
     });
     await act(() =>
-      apiRef.current.setFilterModel({
+      apiRef.current?.setFilterModel({
         items: [
           {
             field: 'currencyPair',
@@ -1115,8 +1115,8 @@ describe('<DataGridPro /> - Row selection', () => {
       const handleSelectionChange = spy();
       const rowSelectionModel: GridRowSelectionModel = [];
       render(<TestDataGridSelection rowSelectionModel={rowSelectionModel} />);
-      apiRef.current.subscribeEvent('rowSelectionChange', handleSelectionChange);
-      apiRef.current.setRowSelectionModel(rowSelectionModel);
+      apiRef.current?.subscribeEvent('rowSelectionChange', handleSelectionChange);
+      apiRef.current?.setRowSelectionModel(rowSelectionModel);
       expect(handleSelectionChange.callCount).to.equal(0);
     });
 

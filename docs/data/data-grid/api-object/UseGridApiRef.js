@@ -19,7 +19,7 @@ export default function UseGridApiRef() {
 
   const apiRef = useGridApiRef();
 
-  const handleGoToPage1 = () => apiRef.current.setPage(1);
+  const handleGoToPage1 = () => apiRef.current?.setPage(1);
 
   return (
     <Stack spacing={1} sx={{ width: '100%' }} alignItems="flex-start">

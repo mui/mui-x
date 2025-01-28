@@ -16,7 +16,7 @@ import {
   DayCalendar,
   DayCalendarSlots,
   DayCalendarSlotProps,
-  useDefaultReduceAnimations,
+  useReduceAnimations,
   useCalendarState,
   useDefaultDates,
   useUtils,
@@ -113,17 +113,17 @@ function useDateRangeCalendarDefaultizedProps(
 ): DateRangeCalendarDefaultizedProps {
   const utils = useUtils();
   const defaultDates = useDefaultDates();
-  const defaultReduceAnimations = useDefaultReduceAnimations();
   const themeProps = useThemeProps({
     props,
     name,
   });
+  const reduceAnimations = useReduceAnimations(themeProps.reduceAnimations);
 
   return {
     ...themeProps,
     renderLoading:
       themeProps.renderLoading ?? (() => <span data-testid="loading-progress">...</span>),
-    reduceAnimations: themeProps.reduceAnimations ?? defaultReduceAnimations,
+    reduceAnimations,
     loading: props.loading ?? false,
     disablePast: props.disablePast ?? false,
     disableFuture: props.disableFuture ?? false,

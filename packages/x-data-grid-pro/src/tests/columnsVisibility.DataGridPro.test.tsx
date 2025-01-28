@@ -25,7 +25,7 @@ const columns: GridColDef[] = [{ field: 'id' }, { field: 'idBis' }];
 describe('<DataGridPro /> - Columns visibility', () => {
   const { render } = createRenderer({ clock: 'fake' });
 
-  let apiRef: RefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   function TestDataGridPro(
     props: Omit<DataGridProProps, 'columns' | 'rows' | 'apiRef'> &
@@ -56,7 +56,7 @@ describe('<DataGridPro /> - Columns visibility', () => {
         />,
       );
 
-      act(() => apiRef.current.updateColumns([{ field: 'id', width: 300 }]));
+      act(() => apiRef.current?.updateColumns([{ field: 'id', width: 300 }]));
       expect(onColumnVisibilityModelChange.callCount).to.equal(0);
     });
   });
@@ -66,13 +66,13 @@ describe('<DataGridPro /> - Columns visibility', () => {
       render(
         <TestDataGridPro initialState={{ columns: { columnVisibilityModel: { idBis: false } } }} />,
       );
-      act(() => apiRef.current.setColumnVisibility('id', false));
+      act(() => apiRef.current?.setColumnVisibility('id', false));
       expect(gridColumnVisibilityModelSelector(apiRef)).to.deep.equal({
         id: false,
         idBis: false,
       });
 
-      act(() => apiRef.current.setColumnVisibility('id', true));
+      act(() => apiRef.current?.setColumnVisibility('id', true));
       expect(gridColumnVisibilityModelSelector(apiRef)).to.deep.equal({
         id: true,
         idBis: false,
@@ -89,14 +89,14 @@ describe('<DataGridPro /> - Columns visibility', () => {
         />,
       );
 
-      act(() => apiRef.current.setColumnVisibility('id', false));
+      act(() => apiRef.current?.setColumnVisibility('id', false));
       expect(onColumnVisibilityModelChange.callCount).to.equal(1);
       expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({
         id: false,
         idBis: false,
       });
 
-      act(() => apiRef.current.setColumnVisibility('id', true));
+      act(() => apiRef.current?.setColumnVisibility('id', true));
       expect(onColumnVisibilityModelChange.callCount).to.equal(2);
       expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({
         idBis: false,
@@ -115,7 +115,7 @@ describe('<DataGridPro /> - Columns visibility', () => {
           onColumnVisibilityModelChange={onColumnVisibilityModelChange}
         />,
       );
-      act(() => apiRef.current.setColumnVisibilityModel({}));
+      act(() => apiRef.current?.setColumnVisibilityModel({}));
       expect(onColumnVisibilityModelChange.callCount).to.equal(1);
       expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({});
     });

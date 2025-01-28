@@ -427,12 +427,12 @@ export const useGridFocus = (
     // If the focused cell is in a row which does not exist anymore,
     // focus previous row or remove the focus
     if (cell && !apiRef.current.getRow(cell.id)) {
-      const lastFocusedRowId = gridFocusCellSelector(apiRef)?.id;
+      const lastFocusedRowId = cell.id;
 
       let nextRowId: GridRowId | null = null;
       if (typeof lastFocusedRowId !== 'undefined') {
-        const lastFocusedRowIndex =
-          apiRef.current.getRowIndexRelativeToVisibleRows(lastFocusedRowId);
+        const rowEl = apiRef.current.getRowElement(lastFocusedRowId);
+        const lastFocusedRowIndex = rowEl?.dataset.rowindex ? Number(rowEl?.dataset.rowindex) : 0;
         const currentPage = getVisibleRows(apiRef, {
           pagination: props.pagination,
           paginationMode: props.paginationMode,

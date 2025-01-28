@@ -31,7 +31,7 @@ describe('<DataGridPro /> - State', () => {
 
   it('should trigger on state change and pass the correct params', () => {
     let onStateParams;
-    let apiRef: RefObject<GridApi>;
+    let apiRef: RefObject<GridApi | null>;
 
     function Test() {
       apiRef = useGridApiRef();
@@ -49,7 +49,7 @@ describe('<DataGridPro /> - State', () => {
     render(<Test />);
     const header = screen.getByRole('columnheader', { name: 'brand' });
     fireEvent.click(header);
-    expect(onStateParams).to.equal(apiRef!.current.state);
+    expect(onStateParams).to.equal(apiRef!.current?.state);
     expect(onStateParams).not.to.equal(undefined);
   });
 
@@ -58,11 +58,11 @@ describe('<DataGridPro /> - State', () => {
       const apiRef = useGridApiRef();
 
       React.useEffect(() => {
-        apiRef.current.setState((prev) => ({
+        apiRef.current?.setState((prev) => ({
           ...prev,
           sorting: { ...prev.sorting, sortModel: [{ field: 'brand', sort: 'asc' }] },
         }));
-        apiRef.current.applySorting();
+        apiRef.current?.applySorting();
       }, [apiRef]);
       return (
         <div style={{ width: 300, height: 300 }}>
