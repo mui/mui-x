@@ -702,7 +702,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
           const columnHeaderHeight = 40;
           const rowHeight = 30;
 
-          let apiRef!: RefObject<GridApi>;
+          let apiRef!: RefObject<GridApi | null>;
           function Test() {
             apiRef = useGridApiRef();
             return (
@@ -720,7 +720,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
           }
           render(<Test />);
 
-          const scrollbarSize = apiRef.current.state.dimensions.scrollbarSize;
+          const scrollbarSize = apiRef.current?.state.dimensions.scrollbarSize || 0;
           expect(scrollbarSize).not.to.equal(0);
           expect(grid('main')!.clientHeight).to.equal(
             scrollbarSize + columnHeaderHeight + rowHeight * baselineProps.rows.length,
@@ -808,7 +808,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
       const columnHeaderHeight = 40;
       const height = 300;
       const border = 1;
-      let apiRef!: RefObject<GridApi>;
+      let apiRef!: RefObject<GridApi | null>;
       function Test() {
         apiRef = useGridApiRef();
         return (
@@ -824,7 +824,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
         );
       }
       render(<Test />);
-      const scrollbarSize = apiRef.current.state.dimensions.scrollbarSize;
+      const scrollbarSize = apiRef.current?.state.dimensions.scrollbarSize || 0;
       const overlayWrapper = screen.getByText('No rows').parentElement;
       const expectedHeight = height - columnHeaderHeight - scrollbarSize;
       expect(overlayWrapper).toHaveComputedStyle({ height: `${expectedHeight}px` });

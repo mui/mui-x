@@ -474,11 +474,14 @@ export default function PopularFeaturesDemo() {
 
   const onRowClick = React.useCallback<GridEventListener<'rowClick'>>(
     (params) => {
-      const rowNode = apiRef.current.getRowNode(params.id);
+      const rowNode = apiRef.current?.getRowNode(params.id);
       if (rowNode && rowNode.type === 'group') {
-        apiRef.current.setRowChildrenExpansion(params.id, !rowNode.childrenExpanded);
+        apiRef.current?.setRowChildrenExpansion(
+          params.id,
+          !rowNode.childrenExpanded,
+        );
       } else {
-        apiRef.current.toggleDetailPanel(params.id);
+        apiRef.current?.toggleDetailPanel(params.id);
       }
     },
     [apiRef],

@@ -258,7 +258,7 @@ describe('<DataGrid /> - Pagination', () => {
     });
 
     it('should throw if pageSize exceeds 100', () => {
-      let apiRef: RefObject<GridApi>;
+      let apiRef: RefObject<GridApi | null>;
       function TestCase() {
         apiRef = useGridApiRef();
         return (
@@ -270,7 +270,7 @@ describe('<DataGrid /> - Pagination', () => {
         );
       }
       render(<TestCase />);
-      expect(() => apiRef.current.setPageSize(101)).to.throw(
+      expect(() => apiRef.current?.setPageSize(101)).to.throw(
         /`pageSize` cannot exceed 100 in the MIT version of the DataGrid./,
       );
     });

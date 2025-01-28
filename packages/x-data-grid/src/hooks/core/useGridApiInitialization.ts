@@ -97,7 +97,7 @@ export function useGridApiInitialization<
   PrivateApi extends GridPrivateApiCommon,
   Api extends GridApiCommon,
 >(
-  inputApiRef: RefObject<Api> | undefined,
+  inputApiRef: RefObject<Api | null> | undefined,
   props: Pick<DataGridProcessedProps, 'signature'>,
 ): RefObject<PrivateApi> {
   const publicApiRef = React.useRef<Api>(null) as RefObject<Api>;
