@@ -24,7 +24,7 @@ import {
   mergeDateAndTime,
 } from '../internals/utils/date-utils';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
-import { useDefaultReduceAnimations } from '../internals/hooks/useDefaultReduceAnimations';
+import { useReduceAnimations } from '../internals/hooks/useReduceAnimations';
 import { DateCalendarClasses, getDateCalendarUtilityClass } from './dateCalendarClasses';
 import { BaseDateValidationProps } from '../internals/models/validation';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
@@ -48,11 +48,11 @@ function useDateCalendarDefaultizedProps(
 ): DateCalendarDefaultizedProps {
   const utils = useUtils();
   const defaultDates = useDefaultDates();
-  const defaultReduceAnimations = useDefaultReduceAnimations();
   const themeProps = useThemeProps({
     props,
     name,
   });
+  const reduceAnimations = useReduceAnimations(themeProps.reduceAnimations);
 
   return {
     ...themeProps,
@@ -61,7 +61,7 @@ function useDateCalendarDefaultizedProps(
     disableFuture: themeProps.disableFuture ?? false,
     openTo: themeProps.openTo ?? 'day',
     views: themeProps.views ?? ['year', 'day'],
-    reduceAnimations: themeProps.reduceAnimations ?? defaultReduceAnimations,
+    reduceAnimations,
     renderLoading:
       themeProps.renderLoading ?? (() => <span data-testid="loading-progress">...</span>),
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),

@@ -51,7 +51,7 @@ export default function ServerSideRowGroupingGroupExpansion() {
     <div style={{ width: '100%' }}>
       <Button
         onClick={() => {
-          apiRef.current.unstable_dataSource.cache.clear();
+          apiRef.current?.unstable_dataSource.cache.clear();
         }}
       >
         Clear cache
