@@ -51,6 +51,7 @@ import { EMPTY_PINNED_COLUMN_FIELDS, GridPinnedColumns } from '../columns';
 import { gridFocusedVirtualCellSelector } from './gridFocusedVirtualCellSelector';
 import { roundToDecimalPlaces } from '../../../utils/roundToDecimalPlaces';
 import { isJSDOM } from '../../../utils/isJSDOM';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
 
 const MINIMUM_COLUMN_WIDTH = 50;
 
@@ -104,8 +105,7 @@ export const useGridVirtualScroller = () => {
   const enabledForRows = useGridSelector(apiRef, gridVirtualizationRowEnabledSelector) && !isJSDOM;
   const enabledForColumns =
     useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector) && !isJSDOM;
-  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
-  const outerSize = dimensions.viewportOuterSize;
+
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
   const pinnedColumnDefinitions = gridVisiblePinnedColumnDefinitionsSelector(apiRef);
   const pinnedColumns = listView
@@ -121,10 +121,15 @@ export const useGridVirtualScroller = () => {
   const scrollerRef = apiRef.current.virtualScrollerRef;
   const scrollbarVerticalRef = apiRef.current.virtualScrollbarVerticalRef;
   const scrollbarHorizontalRef = apiRef.current.virtualScrollbarHorizontalRef;
-  const contentHeight = dimensions.contentSize.height;
-  const columnsTotalWidth = dimensions.columnsTotalWidth;
   const hasColSpan = useGridSelector(apiRef, gridHasColSpanSelector);
   const isRenderContextReady = React.useRef(false);
+
+  const rowHeight = useGridSelector(apiRef, rowHeightSelector);
+  const contentHeight = useGridSelector(apiRef, contentHeightSelector);
+  const columnsTotalWidth = useGridSelector(apiRef, columnsTotalWidthSelector);
+  const needsHorizontalScrollbar = useGridSelector(apiRef, needsHorizontalScrollbarSelector);
+  const verticalScrollbarWidth = useGridSelector(apiRef, verticalScrollbarWidthSelector);
+  const gridHasFiller = useGridSelector(apiRef, gridHasFillerSelector);
 
   const previousSize = React.useRef<{ width: number; height: number }>(null);
 
@@ -217,7 +222,7 @@ export const useGridVirtualScroller = () => {
       isRtl,
       rootProps.rowBufferPx,
       rootProps.columnBufferPx,
-      dimensions.rowHeight * 15,
+      rowHeight * 15,
       MINIMUM_COLUMN_WIDTH * 6,
     ),
   ).current;
@@ -297,8 +302,7 @@ export const useGridVirtualScroller = () => {
     );
 
     // PERF: use the computed minimum column width instead of a static one
-    const didCrossThreshold =
-      rowScroll >= dimensions.rowHeight || columnScroll >= MINIMUM_COLUMN_WIDTH;
+    const didCrossThreshold = rowScroll >= rowHeight || columnScroll >= MINIMUM_COLUMN_WIDTH;
     const didChangeDirection = scrollCache.direction !== direction;
     const shouldUpdate = didCrossThreshold || didChangeDirection;
 
@@ -327,7 +331,7 @@ export const useGridVirtualScroller = () => {
       direction,
       rootProps.rowBufferPx,
       rootProps.columnBufferPx,
-      dimensions.rowHeight * 15,
+      rowHeight * 15,
       MINIMUM_COLUMN_WIDTH * 6,
     );
 
@@ -537,7 +541,7 @@ export const useGridVirtualScroller = () => {
           index={rowIndex}
           selected={isSelected}
           offsetLeft={offsetLeft}
-          columnsTotalWidth={dimensions.columnsTotalWidth}
+          columnsTotalWidth={columnsTotalWidth}
           rowHeight={baseRowHeight}
           pinnedColumns={pinnedColumns}
           visibleColumns={visibleColumns}
@@ -548,8 +552,8 @@ export const useGridVirtualScroller = () => {
           isLastVisible={isLastVisible}
           isNotVisible={isVirtualFocusRow}
           showBottomBorder={showBottomBorder}
-          scrollbarWidth={dimensions.hasScrollY ? dimensions.scrollbarSize : 0}
-          gridHasFiller={dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width}
+          scrollbarWidth={verticalScrollbarWidth}
+          gridHasFiller={gridHasFiller}
           {...rowProps}
         />,
       );
@@ -568,8 +572,6 @@ export const useGridVirtualScroller = () => {
     });
     return rows;
   };
-
-  const needsHorizontalScrollbar = outerSize.width && columnsTotalWidth > outerSize.width;
 
   const scrollerStyle = React.useMemo(
     () =>
@@ -747,6 +749,29 @@ type RenderContextInputs = {
   listView: boolean;
   virtualizeColumnsWithAutoRowHeight: DataGridProcessedProps['virtualizeColumnsWithAutoRowHeight'];
 };
+
+// dimension selectors
+function rowHeightSelector(state: GridStateCommunity) {
+  return state.dimensions.rowHeight;
+}
+function columnsTotalWidthSelector(state: GridStateCommunity) {
+  return state.dimensions.columnsTotalWidth;
+}
+function contentHeightSelector(state: GridStateCommunity) {
+  return state.dimensions.contentSize.height;
+}
+function needsHorizontalScrollbarSelector(state: GridStateCommunity) {
+  return (
+    state.dimensions.viewportOuterSize.width > 0 &&
+    state.dimensions.columnsTotalWidth > state.dimensions.viewportOuterSize.width
+  );
+}
+function verticalScrollbarWidthSelector(state: GridStateCommunity) {
+  return state.dimensions.hasScrollY ? state.dimensions.scrollbarSize : 0;
+}
+function gridHasFillerSelector(state: GridStateCommunity) {
+  return state.dimensions.columnsTotalWidth < state.dimensions.viewportOuterSize.width;
+}
 
 function inputsSelector(
   apiRef: RefObject<GridPrivateApiCommunity>,
