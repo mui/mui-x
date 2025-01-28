@@ -4,50 +4,19 @@ import Autocomplete, { AutocompleteProps, createFilterOptions } from '@mui/mater
 import { unstable_useId as useId } from '@mui/utils';
 import { getValueOptions, isSingleSelectColDef } from './filterPanelUtils';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import { GridFilterInputValueProps } from './GridFilterInputValueProps';
+import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
 import type { GridSingleSelectColDef, ValueOptions } from '../../../models/colDef/gridColDef';
 
-export interface GridFilterInputMultipleSingleSelectProps
-  extends Omit<
-      AutocompleteProps<ValueOptions, true, false, true>,
-      | 'options'
-      | 'renderInput'
-      | 'onChange'
-      | 'value'
-      | 'id'
-      | 'filterOptions'
-      | 'isOptionEqualToValue'
-      | 'multiple'
-      | 'color'
-      | 'getOptionLabel'
-    >,
-    GridFilterInputValueProps {
+export type GridFilterInputMultipleSingleSelectProps = GridFilterInputValueProps<
+  Omit<AutocompleteProps<ValueOptions, true, false, true>, 'options' | 'renderInput'>
+> & {
   type?: 'singleSelect';
-}
+};
 
 const filter = createFilterOptions<any>();
 
 function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingleSelectProps) {
-  const {
-    item,
-    applyValue,
-    type,
-    apiRef,
-    focusElementRef,
-    color,
-    error,
-    helperText,
-    size,
-    variant = 'outlined',
-    ...other
-  } = props;
-  const TextFieldProps = {
-    color,
-    error,
-    helperText,
-    size,
-    variant,
-  };
+  const { item, applyValue, type, apiRef, focusElementRef, slotProps, ...other } = props;
 
   const id = useId();
   const rootProps = useGridRootProps();
@@ -121,22 +90,26 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
           );
         })
       }
-      renderInput={(params) => (
-        <rootProps.slots.baseTextField
-          {...params}
-          label={apiRef.current.getLocaleText('filterPanelInputLabel')}
-          placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
-          InputLabelProps={{
-            ...params.InputLabelProps,
-            shrink: true,
-          }}
-          inputRef={focusElementRef}
-          type="singleSelect"
-          {...TextFieldProps}
-          {...rootProps.slotProps?.baseTextField}
-        />
-      )}
+      renderInput={(params) => {
+        const { inputProps, InputProps, InputLabelProps, ...rest } = params;
+        return (
+          <rootProps.slots.baseTextField
+            {...rest}
+            label={apiRef.current.getLocaleText('filterPanelInputLabel')}
+            placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
+            inputRef={focusElementRef}
+            type={type || 'text'}
+            slotProps={{
+              input: InputProps,
+              inputLabel: InputLabelProps,
+              htmlInput: inputProps,
+            }}
+            {...rootProps.slotProps?.baseTextField}
+          />
+        );
+      }}
       {...other}
+      {...slotProps?.root}
     />
   );
 }
@@ -150,16 +123,35 @@ GridFilterInputMultipleSingleSelect.propTypes = {
     current: PropTypes.object.isRequired,
   }).isRequired,
   applyValue: PropTypes.func.isRequired,
+  className: PropTypes.string,
+  clearButton: PropTypes.node,
+  disabled: PropTypes.bool,
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,
     PropTypes.object,
   ]),
+  headerFilterMenu: PropTypes.node,
+  inputRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.any.isRequired,
+    }),
+  ]),
+  /**
+   * It is `true` if the filter either has a value or an operator with no value
+   * required is selected (for example `isEmpty`)
+   */
+  isFilterActive: PropTypes.bool,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     operator: PropTypes.string.isRequired,
     value: PropTypes.any,
   }).isRequired,
+  onBlur: PropTypes.func,
+  onFocus: PropTypes.func,
+  slotProps: PropTypes.object,
+  tabIndex: PropTypes.number,
   type: PropTypes.oneOf(['singleSelect']),
 } as any;
 
