@@ -26,3 +26,23 @@ export const gridHeaderFilterHeightSelector = (state: GridStateCommunity) =>
 
 export const gridVerticalScrollbarWidthSelector = (state: GridStateCommunity) =>
   state.dimensions.hasScrollY ? state.dimensions.scrollbarSize : 0;
+
+export const gridHorizontalScrollbarHeightSelector = (state: GridStateCommunity) =>
+  state.dimensions.hasScrollX ? state.dimensions.scrollbarSize : 0;
+
+export const gridHasPinnedFillerSelector = (state: GridStateCommunity) => {
+  const hasPinnedColumns =
+    state.dimensions.leftPinnedWidth > 0 || state.dimensions.rightPinnedWidth > 0;
+  if (!hasPinnedColumns) {
+    return false;
+  }
+  const height = state.dimensions.hasScrollX ? state.dimensions.scrollbarSize : 0;
+  const needsLastRowBorder =
+    state.dimensions.viewportOuterSize.height - state.dimensions.minimumSize.height > 0;
+
+  if (height === 0 && !needsLastRowBorder) {
+    return false;
+  }
+
+  return true;
+};

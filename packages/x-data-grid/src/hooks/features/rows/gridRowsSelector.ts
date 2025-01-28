@@ -98,6 +98,22 @@ export const gridPinnedRowsSelector = createSelectorMemoized(
 /**
  * @ignore - do not document.
  */
+export const gridHasTopPinnedRowsSelector = createSelectorMemoized(
+  gridAdditionalRowGroupsSelector,
+  (additionalRowGroups) => Boolean(additionalRowGroups?.pinnedRows?.top?.length),
+);
+
+/**
+ * @ignore - do not document.
+ */
+export const gridHasBottomPinnedRowsSelector = createSelectorMemoized(
+  gridAdditionalRowGroupsSelector,
+  (additionalRowGroups) => Boolean(additionalRowGroups?.pinnedRows?.bottom?.length),
+);
+
+/**
+ * @ignore - do not document.
+ */
 export const gridPinnedRowsCountSelector = createSelector(gridPinnedRowsSelector, (pinnedRows) => {
   return (pinnedRows?.top?.length || 0) + (pinnedRows?.bottom?.length || 0);
 });

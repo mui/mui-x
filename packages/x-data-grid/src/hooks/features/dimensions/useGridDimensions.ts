@@ -103,7 +103,6 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
   const logger = useGridLogger(apiRef, 'useResizeContainer');
   const errorShown = React.useRef(false);
   const rootDimensionsRef = React.useRef(EMPTY_SIZE);
-  const dimensionsState = useGridSelector(apiRef, gridDimensionsSelector);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
@@ -120,11 +119,20 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     rightPinnedWidth,
   } = getStaticDimensions(props, apiRef, densityFactor, pinnedColumns);
 
-  const getRootDimensions = () => apiRef.current.state.dimensions;
+  const getRootDimensions = React.useCallback(
+    () => gridDimensionsSelector(apiRef.current.state),
+    [apiRef],
+  );
 
   const setDimensions = React.useCallback(
     (dimensions: GridDimensions) => {
       apiRef.current.setState((state) => ({ ...state, dimensions }));
+      if (apiRef.current.rootElementRef.current) {
+        setCSSVariables(
+          apiRef.current.rootElementRef.current,
+          gridDimensionsSelector(apiRef.current.state),
+        );
+      }
     },
     [apiRef],
   );
@@ -321,37 +329,8 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     if (!root) {
       return;
     }
-
-    const set = (k: string, v: string) => root.style.setProperty(k, v);
-    set('--DataGrid-width', `${dimensionsState.viewportOuterSize.width}px`);
-    set('--DataGrid-hasScrollX', `${Number(dimensionsState.hasScrollX)}`);
-    set('--DataGrid-hasScrollY', `${Number(dimensionsState.hasScrollY)}`);
-    set('--DataGrid-scrollbarSize', `${dimensionsState.scrollbarSize}px`);
-    set('--DataGrid-rowWidth', `${dimensionsState.rowWidth}px`);
-    set('--DataGrid-columnsTotalWidth', `${dimensionsState.columnsTotalWidth}px`);
-    set('--DataGrid-leftPinnedWidth', `${dimensionsState.leftPinnedWidth}px`);
-    set('--DataGrid-rightPinnedWidth', `${dimensionsState.rightPinnedWidth}px`);
-    set('--DataGrid-headerHeight', `${dimensionsState.headerHeight}px`);
-    set('--DataGrid-headersTotalHeight', `${dimensionsState.headersTotalHeight}px`);
-    set('--DataGrid-topContainerHeight', `${dimensionsState.topContainerHeight}px`);
-    set('--DataGrid-bottomContainerHeight', `${dimensionsState.bottomContainerHeight}px`);
-    set('--height', `${dimensionsState.rowHeight}px`);
-  }, [
-    root,
-    dimensionsState.viewportOuterSize.width,
-    dimensionsState.hasScrollX,
-    dimensionsState.hasScrollY,
-    dimensionsState.scrollbarSize,
-    dimensionsState.rowWidth,
-    dimensionsState.columnsTotalWidth,
-    dimensionsState.leftPinnedWidth,
-    dimensionsState.rightPinnedWidth,
-    dimensionsState.headerHeight,
-    dimensionsState.headersTotalHeight,
-    dimensionsState.topContainerHeight,
-    dimensionsState.bottomContainerHeight,
-    dimensionsState.rowHeight,
-  ]);
+    setCSSVariables(root, gridDimensionsSelector(apiRef.current.state));
+  }, [apiRef, root]);
 
   const handleResize = React.useCallback<GridEventListener<'resize'>>(
     (size) => {
@@ -395,6 +374,24 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
 
   useGridApiEventHandler(apiRef, 'resize', handleResize);
   useGridApiOptionHandler(apiRef, 'debouncedResize', props.onResize);
+}
+
+function setCSSVariables(root: HTMLElement, dimensions: GridDimensions) {
+  const set = (k: string, v: string) => root.style.setProperty(k, v);
+  // @deprecated due to extensive dom updates
+  // set('--DataGrid-width', `${dimensions.viewportOuterSize.width}px`);
+  set('--DataGrid-hasScrollX', `${Number(dimensions.hasScrollX)}`);
+  set('--DataGrid-hasScrollY', `${Number(dimensions.hasScrollY)}`);
+  set('--DataGrid-scrollbarSize', `${dimensions.scrollbarSize}px`);
+  set('--DataGrid-rowWidth', `${dimensions.rowWidth}px`);
+  set('--DataGrid-columnsTotalWidth', `${dimensions.columnsTotalWidth}px`);
+  set('--DataGrid-leftPinnedWidth', `${dimensions.leftPinnedWidth}px`);
+  set('--DataGrid-rightPinnedWidth', `${dimensions.rightPinnedWidth}px`);
+  set('--DataGrid-headerHeight', `${dimensions.headerHeight}px`);
+  set('--DataGrid-headersTotalHeight', `${dimensions.headersTotalHeight}px`);
+  set('--DataGrid-topContainerHeight', `${dimensions.topContainerHeight}px`);
+  set('--DataGrid-bottomContainerHeight', `${dimensions.bottomContainerHeight}px`);
+  set('--height', `${dimensions.rowHeight}px`);
 }
 
 function getStaticDimensions(
