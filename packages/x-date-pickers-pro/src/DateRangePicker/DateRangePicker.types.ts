@@ -9,7 +9,6 @@ import {
   MobileDateRangePickerSlots,
   MobileDateRangePickerSlotProps,
 } from '../MobileDateRangePicker';
-import { DateRangeValidationError } from '../models';
 import { ValidateDateRangeProps } from '../validation';
 
 export interface DateRangePickerSlots
@@ -49,10 +48,5 @@ export interface DateRangePickerProps<TEnableAccessibleFieldDOMStructure extends
 /**
  * Props the field can receive when used inside a date range picker (<DateRangePicker />, <DesktopDateRangePicker /> or <MobileDateRangePicker /> component).
  */
-export type DateRangePickerFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = true> =
-  ValidateDateRangeProps &
-    BaseSingleInputFieldProps<
-      PickerRangeValue,
-      TEnableAccessibleFieldDOMStructure,
-      DateRangeValidationError
-    >;
+export type DateRangePickerFieldProps = ValidateDateRangeProps &
+  BaseSingleInputFieldProps<PickerRangeValue>;

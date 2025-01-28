@@ -153,7 +153,6 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
       field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
-        ref,
       }),
       tabs: {
         hidden: true,
@@ -171,6 +170,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
     TEnableAccessibleFieldDOMStructure,
     typeof props
   >({
+    ref,
     props,
     valueManager: rangeValueManager,
     valueType: 'date-time',
@@ -299,12 +299,10 @@ DesktopDateTimeRangePicker.propTypes = {
   formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Pass a ref to the `input` element.
-   * Ignored if the field has several inputs.
    */
   inputRef: refType,
   /**
    * The label content.
-   * Ignored if the field has several inputs.
    */
   label: PropTypes.node,
   /**
@@ -353,7 +351,6 @@ DesktopDateTimeRangePicker.propTypes = {
   minutesStep: PropTypes.number,
   /**
    * Name attribute used by the `input` element in the Field.
-   * Ignored if the field has several inputs.
    */
   name: PropTypes.string,
   /**

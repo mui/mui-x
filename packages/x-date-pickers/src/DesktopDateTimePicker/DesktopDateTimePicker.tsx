@@ -167,7 +167,6 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
       field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
-        ref,
       }),
       toolbar: {
         hidden: true,
@@ -186,6 +185,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
     TEnableAccessibleFieldDOMStructure,
     typeof props
   >({
+    ref,
     props,
     valueManager: singleItemValueManager,
     valueType: 'date-time',

@@ -18,7 +18,7 @@ export default function RowGroupingSetChildrenExpansion() {
   const apiRef = useGridApiRef();
 
   React.useEffect(() => {
-    apiRef.current.subscribeEvent('rowExpansionChange', debug);
+    apiRef.current?.subscribeEvent('rowExpansionChange', debug);
   }, [apiRef]);
 
   const initialState = useKeepGroupedColumnsHidden({
@@ -32,11 +32,11 @@ export default function RowGroupingSetChildrenExpansion() {
 
   const toggle2ndGroup = () => {
     const groups =
-      apiRef.current.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children;
+      apiRef.current?.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children;
 
-    if (groups.length > 1) {
+    if (groups && groups.length > 1) {
       const groupId = groups[1];
-      apiRef.current.setRowChildrenExpansion(
+      apiRef.current?.setRowChildrenExpansion(
         groupId,
         !apiRef.current.getRowNode<GridGroupNode>(groupId)!.childrenExpanded,
       );

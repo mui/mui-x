@@ -159,9 +159,15 @@ const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterB
               <rootProps.slots.openFilterButtonIcon />
             </rootProps.slots.baseBadge>
           }
-          onClick={toggleFilter}
           {...rootProps.slotProps?.baseButton}
           {...buttonProps}
+          onClick={toggleFilter}
+          onPointerUp={(event) => {
+            if (preferencePanel.open) {
+              event.stopPropagation();
+            }
+            buttonProps.onPointerUp?.(event);
+          }}
           ref={ref}
         >
           {apiRef.current.getLocaleText('toolbarFilters')}

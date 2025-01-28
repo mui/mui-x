@@ -21,9 +21,12 @@ export default function RowGroupingExpandOnRowClick() {
 
   const onRowClick = React.useCallback(
     (params) => {
-      const rowNode = apiRef.current.getRowNode(params.id);
+      const rowNode = apiRef.current?.getRowNode(params.id);
       if (rowNode && rowNode.type === 'group') {
-        apiRef.current.setRowChildrenExpansion(params.id, !rowNode.childrenExpanded);
+        apiRef.current?.setRowChildrenExpansion(
+          params.id,
+          !rowNode.childrenExpanded,
+        );
       }
     },
     [apiRef],
