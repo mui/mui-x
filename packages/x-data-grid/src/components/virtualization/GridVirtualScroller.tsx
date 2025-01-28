@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
+import {
+  gridHasScrollXSelector,
+  gridHasScrollYSelector,
+} from '../../internals/selectors/dimensionSelectors';
 import { GridScrollArea } from '../GridScrollArea';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -18,10 +22,6 @@ import { GridVirtualScrollerFiller as SpaceFiller } from './GridVirtualScrollerF
 import { GridVirtualScrollerRenderZone as RenderZone } from './GridVirtualScrollerRenderZone';
 import { GridVirtualScrollbar as Scrollbar } from './GridVirtualScrollbar';
 import { GridLoadingOverlayVariant } from '../GridLoadingOverlay';
-import {
-  gridHasScrollXSelector,
-  gridHasScrollYSelector,
-} from '../../hooks/features/dimensions/gridDimensionsSelectors';
 import { GridStateCommunity } from '../../models/gridStateCommunity';
 
 type OwnerState = Pick<DataGridProcessedProps, 'classes'> & {

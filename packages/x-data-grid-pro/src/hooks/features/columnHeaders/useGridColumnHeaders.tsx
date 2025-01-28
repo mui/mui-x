@@ -6,12 +6,13 @@ import {
   gridTabIndexColumnHeaderFilterSelector,
   getDataGridUtilityClass,
   GridFilterItem,
+} from '@mui/x-data-grid';
+import {
   gridDimensionsColumnsTotalWidthSelector,
   gridHasFillerSelector,
   gridHeaderFilterHeightSelector,
   gridVerticalScrollbarWidthSelector,
-} from '@mui/x-data-grid';
-import {
+
   useGridColumnHeaders as useGridColumnHeadersCommunity,
   UseGridColumnHeadersProps,
   GetHeadersParams,
@@ -21,8 +22,7 @@ import {
   GridColumnHeaderRow,
   shouldCellShowLeftBorder,
   shouldCellShowRightBorder,
-  PinnedColumnPosition,
-} from '@mui/x-data-grid/internals';
+  PinnedColumnPosition} from '@mui/x-data-grid/internals';
 import composeClasses from '@mui/utils/composeClasses';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';

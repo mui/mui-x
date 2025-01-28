@@ -9,6 +9,13 @@ import useLazyRef from '@mui/utils/useLazyRef';
 import useTimeout from '@mui/utils/useTimeout';
 import { useRtl } from '@mui/system/RtlProvider';
 import reactMajor from '@mui/x-internals/reactMajor';
+import {
+  gridDimensionsColumnsTotalWidthSelector,
+  gridContentHeightSelector,
+  gridHasFillerSelector,
+  gridRowHeightSelector,
+  gridVerticalScrollbarWidthSelector,
+} from '../../../internals/selectors/dimensionSelectors';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
@@ -20,14 +27,7 @@ import {
   gridColumnPositionsSelector,
   gridHasColSpanSelector,
 } from '../columns/gridColumnsSelector';
-import {
-  gridDimensionsColumnsTotalWidthSelector,
-  gridContentHeightSelector,
-  gridDimensionsSelector,
-  gridHasFillerSelector,
-  gridRowHeightSelector,
-  gridVerticalScrollbarWidthSelector,
-} from '../dimensions/gridDimensionsSelectors';
+import { gridDimensionsSelector } from '../dimensions/gridDimensionsSelectors';
 import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
 import { GridPinnedRowsPosition } from '../rows/gridRowsInterfaces';
 import { useGridVisibleRows, getVisibleRows } from '../../utils/useGridVisibleRows';

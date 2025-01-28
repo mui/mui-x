@@ -2,6 +2,7 @@ import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
+import { gridRowHeightSelector } from '../../../internals/selectors/dimensionSelectors';
 import { ResizeObserver } from '../../../utils/ResizeObserver';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowsMetaApi, GridRowsMetaPrivateApi } from '../../../models/api/gridRowsMetaApi';
@@ -18,10 +19,7 @@ import { gridSortModelSelector } from '../sorting/gridSortingSelector';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 import { gridPinnedRowsSelector, gridRowCountSelector } from './gridRowsSelector';
-import {
-  gridDimensionsSelector,
-  gridRowHeightSelector,
-} from '../dimensions/gridDimensionsSelectors';
+import { gridDimensionsSelector } from '../dimensions/gridDimensionsSelectors';
 import { getValidRowHeight, getRowHeightWarning } from './gridRowsUtils';
 import type { HeightEntry } from './gridRowsMetaInterfaces';
 
