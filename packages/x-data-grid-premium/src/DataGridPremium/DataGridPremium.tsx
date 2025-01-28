@@ -29,6 +29,7 @@ const configuration = {
   },
 };
 const releaseInfo = getReleaseInfo();
+const watermark = <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />;
 
 let dataGridPremiumPropValidators: PropValidator<DataGridPremiumProcessedProps>[];
 
@@ -47,11 +48,6 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, dataGridPremiumPropValidators);
   }
-
-  const watermark = React.useMemo(
-    () => <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />,
-    [],
-  );
 
   return (
     <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
