@@ -191,7 +191,13 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
       };
       viewportInnerSize = {
         width: Math.max(0, viewportOuterSize.width - (hasScrollY ? scrollbarSize : 0)),
-        height: Math.max(0, viewportOuterSize.height - (hasScrollX ? scrollbarSize : 0)),
+        height: Math.max(
+          0,
+          viewportOuterSize.height -
+            topContainerHeight -
+            bottomContainerHeight -
+            (hasScrollX ? scrollbarSize : 0),
+        ),
       };
     } else {
       viewportOuterSize = {
