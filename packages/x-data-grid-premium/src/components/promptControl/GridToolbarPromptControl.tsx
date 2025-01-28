@@ -219,7 +219,6 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
   return (
     <GridToolbarPromptControlRoot ownerState={ownerState} className={classes.root}>
       <rootProps.slots.baseTextField
-        variant="outlined"
         placeholder={
           isRecording
             ? apiRef.current.getLocaleText('toolbarPromptControlRecordingPlaceholder')
@@ -234,44 +233,46 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
         onKeyDown={handleKeyDown}
         error={!!error}
         helperText={error}
-        InputProps={{
-          startAdornment: supportsSpeechRecognition && (
-            <rootProps.slots.baseInputAdornment position="start">
-              <RecordButton
-                className={classes.recordButton}
-                lang={lang}
-                recording={isRecording}
-                setRecording={setRecording}
-                disabled={isLoading}
-                onUpdate={setQuery}
-                onDone={handleDone}
-                onError={setError}
-              />
-            </rootProps.slots.baseInputAdornment>
-          ),
-          endAdornment: (
-            <rootProps.slots.baseInputAdornment position="end">
-              <rootProps.slots.baseTooltip
-                title={apiRef.current.getLocaleText('toolbarPromptControlSendActionLabel')}
-              >
-                <div>
-                  <rootProps.slots.baseIconButton
-                    className={classes.sendButton}
-                    disabled={isLoading || isRecording || query === ''}
-                    color="primary"
-                    onClick={processPrompt}
-                    size="small"
-                    aria-label={apiRef.current.getLocaleText(
-                      'toolbarPromptControlSendActionAriaLabel',
-                    )}
-                    edge="end"
-                  >
-                    <rootProps.slots.toolbarPromptSendIcon fontSize="small" />
-                  </rootProps.slots.baseIconButton>
-                </div>
-              </rootProps.slots.baseTooltip>
-            </rootProps.slots.baseInputAdornment>
-          ),
+        slotProps={{
+          input: {
+            startAdornment: supportsSpeechRecognition && (
+              <rootProps.slots.baseInputAdornment position="start">
+                <RecordButton
+                  className={classes.recordButton}
+                  lang={lang}
+                  recording={isRecording}
+                  setRecording={setRecording}
+                  disabled={isLoading}
+                  onUpdate={setQuery}
+                  onDone={handleDone}
+                  onError={setError}
+                />
+              </rootProps.slots.baseInputAdornment>
+            ),
+            endAdornment: (
+              <rootProps.slots.baseInputAdornment position="end">
+                <rootProps.slots.baseTooltip
+                  title={apiRef.current.getLocaleText('toolbarPromptControlSendActionLabel')}
+                >
+                  <div>
+                    <rootProps.slots.baseIconButton
+                      className={classes.sendButton}
+                      disabled={isLoading || isRecording || query === ''}
+                      color="primary"
+                      onClick={processPrompt}
+                      size="small"
+                      aria-label={apiRef.current.getLocaleText(
+                        'toolbarPromptControlSendActionAriaLabel',
+                      )}
+                      edge="end"
+                    >
+                      <rootProps.slots.toolbarPromptSendIcon fontSize="small" />
+                    </rootProps.slots.baseIconButton>
+                  </div>
+                </rootProps.slots.baseTooltip>
+              </rootProps.slots.baseInputAdornment>
+            ),
+          },
         }}
       />
     </GridToolbarPromptControlRoot>
