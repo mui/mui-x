@@ -32,7 +32,7 @@ describe('LineChartPro', () => {
       const { findByText } = render(
         <LineChartPro
           xAxis={[{ id: 'x', data: xData, zoom: { filterMode: 'discard' } }]}
-          initialZoom={[{ axisId: 'x', start: 25, end: 75 }]}
+          initialZoom={[{ axisId: 'x', start: 50, end: 75 }]}
           series={[
             {
               data: yData,
