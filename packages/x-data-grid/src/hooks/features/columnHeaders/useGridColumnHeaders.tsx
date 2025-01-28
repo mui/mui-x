@@ -15,7 +15,7 @@ import {
   gridHasFillerSelector,
   gridHeaderHeightSelector,
   gridVerticalScrollbarWidthSelector,
-} from '../dimensions';
+} from '../../../internals/selectors/dimensionSelectors';
 import { gridRenderContextColumnsSelector } from '../virtualization';
 import { computeOffsetLeft } from '../virtualization/useGridVirtualScroller';
 import { GridColumnGroupHeader } from '../../../components/columnHeaders/GridColumnGroupHeader';
