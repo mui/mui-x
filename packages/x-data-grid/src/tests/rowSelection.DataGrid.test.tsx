@@ -441,7 +441,7 @@ describe('<DataGrid /> - Row selection', () => {
       await user.keyboard('1');
 
       await waitFor(() => {
-        // Previous selection is cleaned with only the filtered rows
+        // Previous selection is cleared and only the filtered row is selected
         expect(getSelectedRowIds()).to.deep.equal([1]);
       });
       expect(grid('selectedRowCount')?.textContent).to.equal('1 row selected');
