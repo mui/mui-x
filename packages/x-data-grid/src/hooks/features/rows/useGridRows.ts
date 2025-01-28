@@ -260,8 +260,9 @@ export const useGridRows = (
     GridRowApi['getRowIndexRelativeToVisibleRows']
   >(
     (id) => {
-      const { rowIdToIndexMap } = getVisibleRows(apiRef);
-      return rowIdToIndexMap.get(id)!;
+      const row = apiRef.current.getRow(id);
+      const { rowToIndexMap } = getVisibleRows(apiRef);
+      return rowToIndexMap.get(row)!;
     },
     [apiRef],
   );

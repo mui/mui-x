@@ -4,18 +4,25 @@ import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSele
 import { gridRenderContextSelector } from './gridVirtualizationSelectors';
 import { gridFocusCellSelector } from '../focus';
 import { gridVisibleRowsSelector } from '../pagination';
+import { gridRowsLookupSelector } from '../rows';
 
 const gridIsFocusedCellOutOfContext = createSelector(
   gridFocusCellSelector,
   gridRenderContextSelector,
   gridVisibleRowsSelector,
   gridVisibleColumnDefinitionsSelector,
-  (focusedCell, renderContext, currentPage, visibleColumns) => {
+  gridRowsLookupSelector,
+  (focusedCell, renderContext, currentPage, visibleColumns, rows) => {
     if (!focusedCell) {
       return false;
     }
 
-    const rowIndex = currentPage.rowIdToIndexMap.get(focusedCell.id);
+    const row = rows[focusedCell.id];
+    if (!row) {
+      return false;
+    }
+
+    const rowIndex = currentPage.rowToIndexMap.get(row);
     const columnIndex = visibleColumns
       .slice(renderContext.firstColumnIndex, renderContext.lastColumnIndex)
       .findIndex((column) => column.field === focusedCell.field);
@@ -34,13 +41,19 @@ export const gridFocusedVirtualCellSelector = createSelectorMemoized(
   gridIsFocusedCellOutOfContext,
   gridVisibleColumnDefinitionsSelector,
   gridVisibleRowsSelector,
+  gridRowsLookupSelector,
   gridFocusCellSelector,
-  (isFocusedCellOutOfRenderContext, visibleColumns, currentPage, focusedCell) => {
+  (isFocusedCellOutOfRenderContext, visibleColumns, currentPage, rows, focusedCell) => {
     if (!isFocusedCellOutOfRenderContext) {
       return null;
     }
 
-    const rowIndex = currentPage.rowIdToIndexMap.get(focusedCell!.id);
+    const row = rows[focusedCell!.id];
+    if (!row) {
+      return null;
+    }
+
+    const rowIndex = currentPage.rowToIndexMap.get(row);
 
     if (rowIndex === undefined) {
       return null;

@@ -7,7 +7,7 @@ import {
 } from '../filter/gridFilterSelector';
 import { gridRowMaximumTreeDepthSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
 import { getPageCount } from './gridPaginationUtils';
-import { GridRowId } from '../../../models/gridRows';
+import { GridValidRowModel } from '../../../models/gridRows';
 
 const ALL_RESULTS_PAGE_VALUE = -1;
 
@@ -213,10 +213,10 @@ export const gridVisibleRowsSelector = createSelectorMemoized(
       return {
         rows: paginationRows,
         range: paginationRowRange,
-        rowIdToIndexMap: paginationRows.reduce((lookup, row, index) => {
-          lookup.set(row.id, index);
+        rowToIndexMap: paginationRows.reduce((lookup, row, index) => {
+          lookup.set(row.model, index);
           return lookup;
-        }, new Map<GridRowId, number>()),
+        }, new Map<GridValidRowModel, number>()),
       };
     }
 
@@ -229,10 +229,10 @@ export const gridVisibleRowsSelector = createSelectorMemoized(
               firstRowIndex: 0,
               lastRowIndex: expandedSortedRowEntries.length - 1,
             },
-      rowIdToIndexMap: expandedSortedRowEntries.reduce((lookup, row, index) => {
-        lookup.set(row.id, index);
+      rowToIndexMap: expandedSortedRowEntries.reduce((lookup, row, index) => {
+        lookup.set(row.model, index);
         return lookup;
-      }, new Map<GridRowId, number>()),
+      }, new Map<GridValidRowModel, number>()),
     };
   },
 );
