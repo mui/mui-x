@@ -101,7 +101,7 @@ export interface DayCalendarProps
   reduceAnimations: boolean;
   slideDirection: SlideDirection;
   TransitionProps?: Partial<SlideTransitionProps>;
-  focusableDay: PickerValidDate;
+  hasFocus: boolean;
   onFocusedViewChange?: (newHasFocus: boolean) => void;
   gridLabelId?: string;
   /**
@@ -239,16 +239,16 @@ const PickersCalendarWeek = styled('div', {
 function WrappedDay({
   parentProps,
   day,
-  focusableDay,
   focusedDay,
   selectedDays,
   isDateDisabled,
   currentMonthNumber,
+  isViewFocused,
   ...other
 }: Pick<PickersDayProps, 'onFocus' | 'onBlur' | 'onKeyDown' | 'onDaySelect'> & {
   parentProps: DayCalendarProps;
   day: PickerValidDate;
-  focusableDay: PickerValidDate;
+  isViewFocused: boolean;
   focusedDay: PickerValidDate | null;
   selectedDays: PickerValidDate[];
   isDateDisabled: (date: PickerValidDate | null) => boolean;
@@ -268,8 +268,8 @@ function WrappedDay({
   const now = useNow(timezone);
   const { ownerState } = usePickerPrivateContext();
 
-  const isFocusableDay = utils.isSameDay(day, focusableDay);
-  const isFocusedDay = focusedDay != null && utils.isSameDay(day, focusedDay);
+  const isFocusableDay = focusedDay != null && utils.isSameDay(day, focusedDay);
+  const isFocusedDay = isViewFocused && isFocusableDay;
   const isSelected = selectedDays.some((selectedDay) => utils.isSameDay(selectedDay, day));
   const isToday = utils.isSameDay(day, now);
 
@@ -364,7 +364,7 @@ export function DayCalendar(inProps: DayCalendarProps) {
     shouldDisableMonth,
     shouldDisableYear,
     dayOfWeekFormatter = (date) => utils.format(date, 'weekdayShort').charAt(0).toUpperCase(),
-    focusableDay,
+    hasFocus,
     onFocusedViewChange,
     gridLabelId,
     displayWeekNumber,
@@ -588,7 +588,7 @@ export function DayCalendar(inProps: DayCalendarProps) {
                     parentProps={props}
                     day={day}
                     selectedDays={validSelectedDays}
-                    focusableDay={focusableDay}
+                    isViewFocused={hasFocus}
                     focusedDay={focusedDay}
                     onKeyDown={handleKeyDown}
                     onFocus={handleFocus}
