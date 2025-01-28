@@ -103,6 +103,8 @@ const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
       onClickAway={handleClickAway}
       clickAwayMouseEvent="onPointerUp"
       clickAwayTouchEvent={false}
+      focusTrap
+      focusTrapEnabled
       {...other}
       ref={ref}
     >

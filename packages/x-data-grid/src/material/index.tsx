@@ -3,6 +3,7 @@ import MUIBadge from '@mui/material/Badge';
 import MUICheckbox from '@mui/material/Checkbox';
 import MUICircularProgress from '@mui/material/CircularProgress';
 import MUIDivider from '@mui/material/Divider';
+import MUIFocusTrap from '@mui/material/Unstable_TrapFocus';
 import MUILinearProgress from '@mui/material/LinearProgress';
 import MUIListItemIcon from '@mui/material/ListItemIcon';
 import MUIListItemText from '@mui/material/ListItemText';
@@ -172,7 +173,7 @@ function BasePopper(props: GridSlotProps['basePopper']) {
 
   let content: any;
   if (!props.transition) {
-    content = clickAwayWrapper(props, props.children);
+    content = wrappers(props, props.children);
   } else {
     const handleExited = (popperOnExited: (() => void) | undefined) => (node: HTMLElement) => {
       if (popperOnExited) {
@@ -185,7 +186,7 @@ function BasePopper(props: GridSlotProps['basePopper']) {
     };
 
     content = ({ TransitionProps, placement }: any) =>
-      clickAwayWrapper(
+      wrappers(
         props,
         <MUIGrow
           {...TransitionProps}
@@ -212,6 +213,10 @@ function BasePopper(props: GridSlotProps['basePopper']) {
   );
 }
 
+function wrappers(props: PopperProps, content: any) {
+  return clickAwayWrapper(props, focusTrapWrapper(props, content));
+}
+
 function clickAwayWrapper(props: PopperProps, content: any) {
   if (props.onClickAway === undefined) {
     return content;
@@ -224,5 +229,16 @@ function clickAwayWrapper(props: PopperProps, content: any) {
     >
       {content}
     </MUIClickAwayListener>
+  );
+}
+
+function focusTrapWrapper(props: PopperProps, content: any) {
+  if (props.focusTrap === undefined) {
+    return content;
+  }
+  return (
+    <MUIFocusTrap open disableEnforceFocus isEnabled={() => props.focusTrapEnabled ?? false}>
+      {content}
+    </MUIFocusTrap>
   );
 }

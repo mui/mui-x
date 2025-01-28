@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import FocusTrap, { TrapFocusProps } from '@mui/material/Unstable_TrapFocus';
 import { styled, Theme } from '@mui/material/styles';
 import { MUIStyledCommonProps } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
@@ -25,7 +24,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridPanelWrapperRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PanelWrapper',
-  overridesResolver: (props, styles) => styles.panelWrapper,
 })<{ ownerState: OwnerState }>({
   display: 'flex',
   flexDirection: 'column',
@@ -35,32 +33,24 @@ const GridPanelWrapperRoot = styled('div', {
   },
 });
 
-const isEnabled = () => true;
-
 export interface GridPanelWrapperProps
   extends React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>,
-    MUIStyledCommonProps<Theme> {
-  slotProps?: {
-    TrapFocus?: TrapFocusProps;
-  };
-}
+    MUIStyledCommonProps<Theme> {}
 
 const GridPanelWrapper = forwardRef<HTMLDivElement, GridPanelWrapperProps>(
   function GridPanelWrapper(props, ref) {
-    const { className, slotProps = {}, ...other } = props;
+    const { className, ...other } = props;
     const rootProps = useGridRootProps();
     const classes = useUtilityClasses(rootProps);
 
     return (
-      <FocusTrap open disableEnforceFocus isEnabled={isEnabled} {...slotProps.TrapFocus}>
-        <GridPanelWrapperRoot
-          tabIndex={-1}
-          className={clsx(classes.root, className)}
-          ownerState={rootProps}
-          {...other}
-          ref={ref}
-        />
-      </FocusTrap>
+      <GridPanelWrapperRoot
+        tabIndex={-1}
+        className={clsx(classes.root, className)}
+        ownerState={rootProps}
+        {...other}
+        ref={ref}
+      />
     );
   },
 );
