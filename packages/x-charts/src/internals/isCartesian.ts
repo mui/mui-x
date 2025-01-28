@@ -6,7 +6,7 @@ import {
 import { cartesianSeriesTypes } from './configInit';
 
 export function isCartesianSeriesType(seriesType: string): seriesType is CartesianChartSeriesType {
-  return cartesianSeriesTypes.getTypes().has(seriesType as ChartSeriesType);
+  return cartesianSeriesTypes.getTypes().has(seriesType as CartesianChartSeriesType);
 }
 
 export function isCartesianSeries(

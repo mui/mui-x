@@ -5,7 +5,7 @@ import { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries
 import {
   CartesianExtremumGetter,
   CartesianExtremumGetterResult,
-} from '../../models/seriesConfig/extremumGetter.types';
+} from '../../models/seriesConfig/cartesianExtremumGetter.types';
 import { GetZoomAxisFilters } from './zoom.types';
 import { isCartesianSeriesType } from '../../../isCartesian';
 

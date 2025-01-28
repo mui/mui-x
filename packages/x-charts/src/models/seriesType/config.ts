@@ -60,6 +60,14 @@ export interface ChartsSeriesConfig {
     itemIdentifier: PieItemIdentifier;
     valueType: DefaultizedPieValueType;
   };
+  radar: {
+    seriesInput: any;
+    series: any;
+    seriesProp: any;
+    itemIdentifier: any;
+    valueType: any;
+    polar: true;
+  };
 }
 
 export type ChartSeriesType = keyof ChartsSeriesConfig;
@@ -68,6 +76,13 @@ export type CartesianChartSeriesType = keyof Pick<
   ChartsSeriesConfig,
   {
     [Key in ChartSeriesType]: ChartsSeriesConfig[Key] extends { cartesian: true } ? Key : never;
+  }[ChartSeriesType]
+>;
+
+export type PolarChartSeriesType = keyof Pick<
+  ChartsSeriesConfig,
+  {
+    [Key in ChartSeriesType]: ChartsSeriesConfig[Key] extends { polar: true } ? Key : never;
   }[ChartSeriesType]
 >;
 
