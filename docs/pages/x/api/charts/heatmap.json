@@ -32,7 +32,14 @@
     "highlightedItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string }"
+        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string }"
+      }
+    },
+    "id": { "type": { "name": "string" } },
+    "initialZoom": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, end: number, start: number }&gt;"
       }
     },
     "id": { "type": { "name": "string" } },
