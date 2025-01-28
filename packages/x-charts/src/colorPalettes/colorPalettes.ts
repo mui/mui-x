@@ -11,6 +11,17 @@ export const rainbowSurgePaletteLight = [
   '#F287B3',
 ];
 
+// TODO: Unused check with design
+export const rainbowSurgePaletteDark = [
+  '#4254FB',
+  '#3eabf9',
+  '#32ae6a',
+  '#FFB219',
+  '#FF7A19',
+  '#dc3845',
+  '#fc9cc4',
+];
+
 export const rainbowSurgePalette: ChartsColorPaletteCallback = (mode) =>
   mode === 'dark' ? rainbowSurgePaletteLight : rainbowSurgePaletteLight;
 
