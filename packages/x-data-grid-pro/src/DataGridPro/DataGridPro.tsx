@@ -34,6 +34,11 @@ const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowMod
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, propValidatorsDataGridPro);
   }
+  const watermark = React.useMemo(
+    () => <Watermark packageName="x-data-grid-pro" releaseInfo={releaseInfo} />,
+    [],
+  );
+
   return (
     <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
       <GridRoot
@@ -43,7 +48,7 @@ const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowMod
         {...props.slotProps?.root}
         ref={ref}
       >
-        <Watermark packageName="x-data-grid-pro" releaseInfo={releaseInfo} />
+        {watermark}
       </GridRoot>
     </GridContextProvider>
   );
