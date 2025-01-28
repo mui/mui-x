@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
-import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
 import {
   DataGrid,
   DataGridProps,
@@ -413,13 +413,16 @@ describe('<DataGrid /> - Row selection', () => {
         apiRef!.current?.showFilterPanel('id');
       });
       expect(await screen.findByRole('tooltip')).not.to.equal(null);
-
+      await act(async () => {
+        screen.getByRole('spinbutton', { name: 'Value' }).focus();
+      });
       await user.keyboard('1');
 
-      expect(await screen.findByText('1 row selected')).not.to.equal(null);
-
-      // Previous selection is cleaned with only the filtered rows
-      expect(getSelectedRowIds()).to.deep.equal([1]);
+      await waitFor(() => {
+        // Previous selection is cleaned with only the filtered rows
+        expect(getSelectedRowIds()).to.deep.equal([1]);
+      });
+      expect(grid('selectedRowCount')?.textContent).to.equal('1 row selected');
     });
 
     it('should only select filtered items when "select all" is toggled after applying a filter', async () => {
@@ -440,13 +443,16 @@ describe('<DataGrid /> - Row selection', () => {
         apiRef!.current?.showFilterPanel('id');
       });
       expect(await screen.findByRole('tooltip')).not.to.equal(null);
-
+      await act(async () => {
+        screen.getByRole('spinbutton', { name: 'Value' }).focus();
+      });
       await user.keyboard('1');
 
-      expect(await screen.findByText('1 row selected')).not.to.equal(null);
-
-      // Previous selection is cleared and only the filtered row is selected
-      expect(getSelectedRowIds()).to.deep.equal([1]);
+      await waitFor(() => {
+        // Previous selection is cleared and only the filtered row is selected
+        expect(getSelectedRowIds()).to.deep.equal([1]);
+      });
+      expect(grid('selectedRowCount')?.textContent).to.equal('1 row selected');
 
       await user.click(selectAllCheckbox); // Unselect all
       expect(getSelectedRowIds()).to.deep.equal([]);
