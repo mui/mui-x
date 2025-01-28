@@ -109,7 +109,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
-    apiRef.current.setFilterModel({
+    apiRef.current?.setFilterModel({
       items: [{ field: 'name', value: 'John', operator: 'contains' }],
     });
     await waitFor(() => {
