@@ -9,7 +9,7 @@ import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import {
   gridColumnPositionsSelector,
-  gridColumnsTotalWidthSelector,
+  gridDimensionsColumnsTotalWidthSelector,
   gridDimensionsSelector,
   gridVisibleColumnDefinitionsSelector,
   gridVisiblePinnedColumnDefinitionsSelector,
@@ -64,7 +64,7 @@ const GridSkeletonLoadingOverlay = forwardRef<HTMLDivElement, React.HTMLAttribut
     const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
     const viewportHeight = dimensions?.viewportInnerSize.height ?? 0;
     const skeletonRowsCount = Math.ceil(viewportHeight / dimensions.rowHeight);
-    const totalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
+    const totalWidth = useGridSelector(apiRef, gridDimensionsColumnsTotalWidthSelector);
     const positions = useGridSelector(apiRef, gridColumnPositionsSelector);
     const inViewportCount = React.useMemo(
       () => positions.filter((value) => value <= totalWidth).length,

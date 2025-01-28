@@ -20,7 +20,14 @@ import {
   gridColumnPositionsSelector,
   gridHasColSpanSelector,
 } from '../columns/gridColumnsSelector';
-import { gridDimensionsSelector } from '../dimensions/gridDimensionsSelectors';
+import {
+  gridDimensionsColumnsTotalWidthSelector,
+  gridContentHeightSelector,
+  gridDimensionsSelector,
+  gridHasFillerSelector,
+  gridRowHeightSelector,
+  gridVerticalScrollbarWidthSelector,
+} from '../dimensions/gridDimensionsSelectors';
 import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
 import { GridPinnedRowsPosition } from '../rows/gridRowsInterfaces';
 import { useGridVisibleRows, getVisibleRows } from '../../utils/useGridVisibleRows';
@@ -124,11 +131,11 @@ export const useGridVirtualScroller = () => {
   const hasColSpan = useGridSelector(apiRef, gridHasColSpanSelector);
   const isRenderContextReady = React.useRef(false);
 
-  const rowHeight = useGridSelector(apiRef, rowHeightSelector);
-  const contentHeight = useGridSelector(apiRef, contentHeightSelector);
-  const columnsTotalWidth = useGridSelector(apiRef, columnsTotalWidthSelector);
+  const rowHeight = useGridSelector(apiRef, gridRowHeightSelector);
+  const contentHeight = useGridSelector(apiRef, gridContentHeightSelector);
+  const columnsTotalWidth = useGridSelector(apiRef, gridDimensionsColumnsTotalWidthSelector);
   const needsHorizontalScrollbar = useGridSelector(apiRef, needsHorizontalScrollbarSelector);
-  const verticalScrollbarWidth = useGridSelector(apiRef, verticalScrollbarWidthSelector);
+  const verticalScrollbarWidth = useGridSelector(apiRef, gridVerticalScrollbarWidthSelector);
   const gridHasFiller = useGridSelector(apiRef, gridHasFillerSelector);
 
   const previousSize = React.useRef<{ width: number; height: number }>(null);
@@ -269,6 +276,7 @@ export const useGridVirtualScroller = () => {
       return undefined;
     }
 
+    const dimensions = gridDimensionsSelector(apiRef.current.state);
     const maxScrollTop = Math.ceil(
       dimensions.minimumSize.height - dimensions.viewportOuterSize.height,
     );
@@ -751,26 +759,11 @@ type RenderContextInputs = {
 };
 
 // dimension selectors
-function rowHeightSelector(state: GridStateCommunity) {
-  return state.dimensions.rowHeight;
-}
-function columnsTotalWidthSelector(state: GridStateCommunity) {
-  return state.dimensions.columnsTotalWidth;
-}
-function contentHeightSelector(state: GridStateCommunity) {
-  return state.dimensions.contentSize.height;
-}
 function needsHorizontalScrollbarSelector(state: GridStateCommunity) {
   return (
     state.dimensions.viewportOuterSize.width > 0 &&
     state.dimensions.columnsTotalWidth > state.dimensions.viewportOuterSize.width
   );
-}
-function verticalScrollbarWidthSelector(state: GridStateCommunity) {
-  return state.dimensions.hasScrollY ? state.dimensions.scrollbarSize : 0;
-}
-function gridHasFillerSelector(state: GridStateCommunity) {
-  return state.dimensions.columnsTotalWidth < state.dimensions.viewportOuterSize.width;
 }
 
 function inputsSelector(

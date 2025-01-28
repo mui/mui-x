@@ -18,7 +18,10 @@ import { gridSortModelSelector } from '../sorting/gridSortingSelector';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 import { gridPinnedRowsSelector, gridRowCountSelector } from './gridRowsSelector';
-import { gridDimensionsSelector } from '../dimensions/gridDimensionsSelectors';
+import {
+  gridDimensionsSelector,
+  gridRowHeightSelector,
+} from '../dimensions/gridDimensionsSelectors';
 import { getValidRowHeight, getRowHeightWarning } from './gridRowsUtils';
 import type { HeightEntry } from './gridRowsMetaInterfaces';
 
@@ -29,7 +32,7 @@ export const rowsMetaStateInitializer: GridStateInitializer = (state, props, api
     heights: new Map(),
   };
 
-  const baseRowHeight = gridDimensionsSelector(apiRef.current.state).rowHeight;
+  const baseRowHeight = gridRowHeightSelector(apiRef.current.state);
   const dataRowCount = gridRowCountSelector(apiRef.current.state);
   const pagination = gridPaginationSelector(apiRef.current.state);
   const rowCount = Math.min(
@@ -77,10 +80,7 @@ export const useGridRowsMeta = (
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const currentPage = useGridVisibleRows(apiRef, props);
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
-  const rowHeight = useGridSelector(
-    apiRef,
-    () => gridDimensionsSelector(apiRef.current.state).rowHeight,
-  );
+  const rowHeight = useGridSelector(apiRef, gridRowHeightSelector);
 
   const getRowHeightEntry: GridRowsMetaPrivateApi['getRowHeightEntry'] = (rowId) => {
     let entry = heightCache.get(rowId);

@@ -13,13 +13,16 @@ import { getDataGridUtilityClass, gridClasses } from '../constants';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridApiEventHandler } from '../hooks/utils/useGridApiEventHandler';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
-import { gridDimensionsSelector } from '../hooks/features/dimensions/gridDimensionsSelectors';
+import {
+  gridDimensionsColumnsTotalWidthSelector,
+  gridDimensionsSelector,
+} from '../hooks/features/dimensions/gridDimensionsSelectors';
 import { gridDensityFactorSelector } from '../hooks/features/density/densitySelector';
-import { gridColumnsTotalWidthSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { GridScrollParams } from '../models/params/gridScrollParams';
 import { GridEventListener } from '../models/events';
 import { useTimeout } from '../hooks/utils/useTimeout';
 import { getTotalHeaderHeight } from '../hooks/features/columns/gridColumnsUtils';
+import { createSelector } from '../utils/createSelector';
 
 const CLIFF = 1;
 const SLOP = 1.5;
@@ -62,14 +65,27 @@ const GridScrollAreaRawRoot = styled('div', {
   },
 }));
 
+const offsetSelector = createSelector(
+  gridDimensionsSelector,
+  (dimensions, direction: ScrollAreaProps['scrollDirection']) => {
+    if (direction === 'left') {
+      return dimensions.leftPinnedWidth;
+    }
+    if (direction === 'right') {
+      return dimensions.rightPinnedWidth + (dimensions.hasScrollX ? dimensions.scrollbarSize : 0);
+    }
+    return 0;
+  },
+);
+
 function GridScrollAreaRaw(props: ScrollAreaProps) {
   const { scrollDirection } = props;
   const rootRef = React.useRef<HTMLDivElement>(null);
   const apiRef = useGridApiContext();
   const timeout = useTimeout();
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
-  const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
-  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
+  const columnsTotalWidth = useGridSelector(apiRef, gridDimensionsColumnsTotalWidthSelector);
+  const sideOffset = useGridSelector(apiRef, offsetSelector, scrollDirection);
 
   const scrollPosition = React.useRef<GridScrollParams>({
     left: 0,
@@ -77,6 +93,7 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
   });
 
   const getCanScrollMore = () => {
+    const dimensions = gridDimensionsSelector(apiRef.current.state);
     if (scrollDirection === 'left') {
       // Only render if the user has not reached yet the start of the list
       return scrollPosition.current.left > 0;
@@ -106,10 +123,9 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
   };
 
   if (scrollDirection === 'left') {
-    style.left = dimensions.leftPinnedWidth;
+    style.left = sideOffset;
   } else if (scrollDirection === 'right') {
-    style.right =
-      dimensions.rightPinnedWidth + (dimensions.hasScrollX ? dimensions.scrollbarSize : 0);
+    style.right = sideOffset;
   }
 
   const handleScrolling: GridEventListener<'scrollPositionChange'> = (newScrollPosition) => {

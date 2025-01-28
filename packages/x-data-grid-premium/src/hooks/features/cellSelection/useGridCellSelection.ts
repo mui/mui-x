@@ -70,7 +70,6 @@ export const useGridCellSelection = (
   const mousePosition = React.useRef<{ x: number; y: number }>(null);
   const autoScrollRAF = React.useRef<number>(null);
   const sortedRowIds = useGridSelector(apiRef, gridSortedRowIdsSelector);
-  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
   const totalHeaderHeight = getTotalHeaderHeight(apiRef, props);
 
   const ignoreValueFormatterProp = props.ignoreValueFormatterDuringExport;
@@ -292,6 +291,8 @@ export const useGridCellSelection = (
         return;
       }
 
+      const dimensions = gridDimensionsSelector(apiRef.current.state);
+
       const { x: mouseX, y: mouseY } = mousePosition.current;
       const { width, height: viewportOuterHeight } = dimensions.viewportOuterSize;
       const height = viewportOuterHeight - totalHeaderHeight;
@@ -331,7 +332,7 @@ export const useGridCellSelection = (
     }
 
     autoScroll();
-  }, [apiRef, dimensions, totalHeaderHeight]);
+  }, [apiRef, totalHeaderHeight]);
 
   const handleCellMouseOver = React.useCallback<GridEventListener<'cellMouseOver'>>(
     (params, event) => {
@@ -354,6 +355,7 @@ export const useGridCellSelection = (
         return;
       }
 
+      const dimensions = gridDimensionsSelector(apiRef.current.state);
       const { x, y } = virtualScrollerRect;
       const { width, height: viewportOuterHeight } = dimensions.viewportOuterSize;
       const height = viewportOuterHeight - totalHeaderHeight;
@@ -378,7 +380,7 @@ export const useGridCellSelection = (
         stopAutoScroll();
       }
     },
-    [apiRef, startAutoScroll, stopAutoScroll, totalHeaderHeight, dimensions],
+    [apiRef, startAutoScroll, stopAutoScroll, totalHeaderHeight],
   );
 
   const handleCellClick = useEventCallback<
