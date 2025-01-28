@@ -49,7 +49,7 @@ export type FilterPanelTriggerProps = Omit<GridSlotProps['baseButton'], 'classNa
  */
 const FilterPanelTrigger = forwardRef<HTMLButtonElement, FilterPanelTriggerProps>(
   function FilterPanelTrigger(props, ref) {
-    const { render, className, onClick, ...other } = props;
+    const { render, className, onClick, onPointerUp, ...other } = props;
     const rootProps = useGridRootProps();
     const buttonId = useId();
     const panelId = useId();
@@ -68,8 +68,14 @@ const FilterPanelTrigger = forwardRef<HTMLButtonElement, FilterPanelTriggerProps
       } else {
         apiRef.current.showPreferences(GridPreferencePanelsValue.filters, panelId, buttonId);
       }
-
       onClick?.(event);
+    };
+
+    const handlePointerUp = (event: React.PointerEvent<HTMLButtonElement>) => {
+      if (open) {
+        event.stopPropagation();
+      }
+      onPointerUp?.(event);
     };
 
     const element = useGridComponentRenderer(
@@ -82,6 +88,7 @@ const FilterPanelTrigger = forwardRef<HTMLButtonElement, FilterPanelTriggerProps
         'aria-expanded': open ? 'true' : undefined,
         'aria-controls': open ? panelId : undefined,
         onClick: handleClick,
+        onPointerUp: handlePointerUp,
         className: resolvedClassName,
         ...other,
         ref,

@@ -44,7 +44,7 @@ export type ColumnsPanelTriggerProps = Omit<GridSlotProps['baseButton'], 'classN
  */
 const ColumnsPanelTrigger = forwardRef<HTMLButtonElement, ColumnsPanelTriggerProps>(
   function ColumnsPanelTrigger(props, ref) {
-    const { render, className, onClick, ...other } = props;
+    const { render, className, onClick, onPointerUp, ...other } = props;
     const rootProps = useGridRootProps();
     const buttonId = useId();
     const panelId = useId();
@@ -61,8 +61,14 @@ const ColumnsPanelTrigger = forwardRef<HTMLButtonElement, ColumnsPanelTriggerPro
       } else {
         apiRef.current.showPreferences(GridPreferencePanelsValue.columns, panelId, buttonId);
       }
-
       onClick?.(event);
+    };
+
+    const handlePointerUp = (event: React.PointerEvent<HTMLButtonElement>) => {
+      if (open) {
+        event.stopPropagation();
+      }
+      onPointerUp?.(event);
     };
 
     const element = useGridComponentRenderer(
@@ -75,6 +81,7 @@ const ColumnsPanelTrigger = forwardRef<HTMLButtonElement, ColumnsPanelTriggerPro
         'aria-expanded': open ? 'true' : undefined,
         'aria-controls': open ? panelId : undefined,
         onClick: handleClick,
+        onPointerUp: handlePointerUp,
         className: resolvedClassName,
         ...other,
         ref,
