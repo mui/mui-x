@@ -51,7 +51,7 @@ const GridMenuRoot = styled('div' as unknown as GridBaseSlots['basePopper'], {
   },
 }));
 
-export interface GridMenuProps extends Omit<PopperProps, 'onKeyDown' | 'children'> {
+export interface GridMenuProps extends Pick<PopperProps, 'className' | 'onExited'> {
   open: boolean;
   target: HTMLElement | null;
   onClose: (event?: Event) => void;
@@ -82,7 +82,7 @@ function GridMenu(props: GridMenuProps) {
     apiRef.current.publishEvent(eventName, { target });
   }, [apiRef, open, target]);
 
-  const handleClickAway = (event: MouseEvent) => {
+  const handleClickAway = (event: MouseEvent | TouchEvent) => {
     if (event.target && (target === event.target || target?.contains(event.target as Node))) {
       return;
     }
@@ -95,7 +95,7 @@ function GridMenu(props: GridMenuProps) {
       className={clsx(classes.root, className)}
       ownerState={rootProps}
       open={open}
-      target={target as any}
+      target={target}
       transition
       placement={position}
       onClickAway={handleClickAway}
@@ -116,81 +116,9 @@ GridMenu.propTypes = {
   // ----------------------------------------------------------------------
   children: PropTypes.node,
   className: PropTypes.string,
-  clickAwayMouseEvent: PropTypes.oneOf([
-    'onClick',
-    'onMouseDown',
-    'onMouseUp',
-    'onPointerDown',
-    'onPointerUp',
-    false,
-  ]),
-  clickAwayTouchEvent: PropTypes.oneOf(['onTouchEnd', 'onTouchStart', false]),
-  flip: PropTypes.bool,
-  focusTrap: PropTypes.bool,
-  focusTrapEnabled: PropTypes.bool,
-  id: PropTypes.string,
-  onClickAway: PropTypes.shape({
-    '__@hasInstance@654': PropTypes.func.isRequired,
-    '__@metadata@656': PropTypes.any,
-    apply: PropTypes.func.isRequired,
-    arguments: PropTypes.any.isRequired,
-    bind: PropTypes.func.isRequired,
-    call: PropTypes.func.isRequired,
-    caller: PropTypes.object.isRequired,
-    length: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    prototype: PropTypes.any.isRequired,
-    toString: PropTypes.func.isRequired,
-  }),
   onClose: PropTypes.func.isRequired,
-  onDidMount: PropTypes.shape({
-    '__@hasInstance@654': PropTypes.func.isRequired,
-    '__@metadata@656': PropTypes.any,
-    apply: PropTypes.func.isRequired,
-    arguments: PropTypes.any.isRequired,
-    bind: PropTypes.func.isRequired,
-    call: PropTypes.func.isRequired,
-    caller: PropTypes.object.isRequired,
-    length: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    prototype: PropTypes.any.isRequired,
-    toString: PropTypes.func.isRequired,
-  }),
-  onDidUnmount: PropTypes.shape({
-    '__@hasInstance@654': PropTypes.func.isRequired,
-    '__@metadata@656': PropTypes.any,
-    apply: PropTypes.func.isRequired,
-    arguments: PropTypes.any.isRequired,
-    bind: PropTypes.func.isRequired,
-    call: PropTypes.func.isRequired,
-    caller: PropTypes.object.isRequired,
-    length: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    prototype: PropTypes.any.isRequired,
-    toString: PropTypes.func.isRequired,
-  }),
   onExited: PropTypes.func,
   open: PropTypes.bool.isRequired,
-  /**
-   * @default 'bottom'
-   */
-  placement: PropTypes.oneOf([
-    'auto-end',
-    'auto-start',
-    'auto',
-    'bottom-end',
-    'bottom-start',
-    'bottom',
-    'left-end',
-    'left-start',
-    'left',
-    'right-end',
-    'right-start',
-    'right',
-    'top-end',
-    'top-start',
-    'top',
-  ]),
   position: PropTypes.oneOf([
     'bottom-end',
     'bottom-start',
@@ -206,7 +134,6 @@ GridMenu.propTypes = {
     'top',
   ]),
   target: HTMLElementType,
-  transition: PropTypes.bool,
 } as any;
 
 export { GridMenu };

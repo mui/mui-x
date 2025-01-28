@@ -80,9 +80,9 @@ export type PopperProps = {
   focusTrap?: boolean;
   focusTrapEnabled?: boolean;
   onExited?: (node: HTMLElement | null) => void;
-  onClickAway?: Function;
-  onDidMount?: Function;
-  onDidUnmount?: Function;
+  onClickAway?: (event: MouseEvent | TouchEvent) => void;
+  onDidMount?: () => void;
+  onDidUnmount?: () => void;
   id?: string;
   ref?: Ref;
   target?: Element | null;
