@@ -16,7 +16,7 @@ import MUIButton from '@mui/material/Button';
 import MUIIconButton from '@mui/material/IconButton';
 import MUIInputAdornment from '@mui/material/InputAdornment';
 import MUITooltip from '@mui/material/Tooltip';
-import MUIPopper from '@mui/material/Popper';
+import MUIPopper, { PopperProps as MUIPopperProps } from '@mui/material/Popper';
 import MUIClickAwayListener from '@mui/material/ClickAwayListener';
 import MUIGrow from '@mui/material/Grow';
 import MUIPaper from '@mui/material/Paper';
@@ -145,7 +145,7 @@ const transformOrigin = {
 function BasePopper(props: GridSlotProps['basePopper']) {
   const { flip, onDidMount, onDidUnmount } = props;
   const modifiers = React.useMemo(() => {
-    const result = [];
+    const result = [] as NonNullable<MUIPopperProps['modifiers']>;
     if (flip) {
       result.push({
         name: 'flip',

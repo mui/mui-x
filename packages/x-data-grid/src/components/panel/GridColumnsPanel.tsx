@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import { GridPanelWrapper, GridPanelWrapperProps } from './GridPanelWrapper';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
