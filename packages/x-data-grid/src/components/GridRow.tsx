@@ -39,7 +39,6 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
    */
   index: number;
   rowHeight: number | 'auto';
-  offsetTop: number | undefined;
   offsetLeft: number;
   columnsTotalWidth: number;
   firstColumnIndex: number;
@@ -75,7 +74,6 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     className,
     visibleColumns,
     pinnedColumns,
-    offsetTop,
     offsetLeft,
     columnsTotalWidth,
     firstColumnIndex,
@@ -485,7 +483,6 @@ GridRow.propTypes = {
   isNotVisible: PropTypes.bool.isRequired,
   lastColumnIndex: PropTypes.number.isRequired,
   offsetLeft: PropTypes.number.isRequired,
-  offsetTop: PropTypes.number,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,
   onMouseEnter: PropTypes.func,
