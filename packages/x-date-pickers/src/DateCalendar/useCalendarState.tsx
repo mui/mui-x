@@ -8,6 +8,7 @@ import { DateView, MuiPickersAdapter, PickersTimezone, PickerValidDate } from '.
 import { DateCalendarDefaultizedProps } from './DateCalendar.types';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
+import { findClosestEnabledDate } from '../internals/utils/date-utils';
 
 interface CalendarState {
   currentMonth: PickerValidDate;
@@ -21,6 +22,7 @@ type ReducerAction<TType, TAdditional = {}> = { type: TType } & TAdditional;
 interface ChangeMonthPayload {
   direction: SlideDirection;
   newMonth: PickerValidDate;
+  newFocusedDay?: PickerValidDate | null;
 }
 
 interface ChangeFocusedDayPayload {
@@ -49,6 +51,7 @@ export const createCalendarStateReducer =
           slideDirection: action.direction,
           currentMonth: action.newMonth,
           isMonthSwitchingAnimating: !reduceAnimations,
+          focusedDay: action.newFocusedDay === undefined ? state.focusedDay : action.newFocusedDay,
         };
 
       case 'changeMonthTimezone': {
@@ -132,7 +135,7 @@ interface UseCalendarStateParameters
 interface UseCalendarStateReturnValue {
   referenceDate: PickerValidDate;
   calendarState: CalendarState;
-  changeMonth: (newDate: PickerValidDate) => void;
+  changeMonth: (newDate: PickerValidDate, shouldInitFocusedDay?: boolean) => void;
   changeFocusedDay: (
     newFocusedDate: PickerValidDate | null,
     withoutMonthSwitchingAnimation?: boolean,
@@ -189,17 +192,42 @@ export const useCalendarState = (
     slideDirection: 'left',
   });
 
-  if (focusedView == null && calendarState.focusedDay != null) {
-    dispatch({
-      type: 'changeFocusedDay',
-      focusedDay: null,
-    });
-  } else if (focusedView != null && calendarState.focusedDay == null) {
-    dispatch({
-      type: 'changeFocusedDay',
-      focusedDay: referenceDate,
-    });
-  }
+  const isDateDisabled = useIsDateDisabled({
+    shouldDisableDate,
+    minDate,
+    maxDate,
+    disableFuture,
+    disablePast,
+    timezone,
+  });
+
+  const getDateToFocusInDayView = useEventCallback((month: PickerValidDate) => {
+    let focusedDay: PickerValidDate | null;
+    if (value != null && utils.isSameMonth(value, month)) {
+      focusedDay = value;
+    } else if (utils.isSameMonth(referenceDate, month)) {
+      focusedDay = referenceDate;
+    } else {
+      focusedDay = utils.startOfMonth(month);
+    }
+
+    if (isDateDisabled(focusedDay)) {
+      const startOfMonth = utils.startOfMonth(month);
+      const endOfMonth = utils.endOfMonth(month);
+      focusedDay = findClosestEnabledDate({
+        utils,
+        date: focusedDay,
+        minDate: utils.isBefore(minDate, startOfMonth) ? startOfMonth : minDate,
+        maxDate: utils.isAfter(maxDate, endOfMonth) ? endOfMonth : maxDate,
+        disablePast,
+        disableFuture,
+        isDateDisabled,
+        timezone,
+      });
+    }
+
+    return focusedDay;
+  });
 
   // Ensure that `calendarState.currentMonth` timezone is updated when `referenceDate` (or timezone changes)
   // https://github.com/mui/mui-x/issues/10804
@@ -224,31 +252,19 @@ export const useCalendarState = (
     [onMonthChange],
   );
 
-  const changeMonth = React.useCallback(
-    (newDate: PickerValidDate) => {
-      const newDateRequested = newDate;
-      if (utils.isSameMonth(newDateRequested, calendarState.currentMonth)) {
+  const changeMonth = useEventCallback(
+    (newDate: PickerValidDate, shouldInitFocusedDay?: boolean) => {
+      if (utils.isSameMonth(newDate, calendarState.currentMonth)) {
         return;
       }
 
       handleChangeMonth({
-        newMonth: utils.startOfMonth(newDateRequested),
-        direction: utils.isAfterDay(newDateRequested, calendarState.currentMonth)
-          ? 'left'
-          : 'right',
+        newMonth: utils.startOfMonth(newDate),
+        direction: utils.isAfterDay(newDate, calendarState.currentMonth) ? 'left' : 'right',
+        newFocusedDay: shouldInitFocusedDay ? getDateToFocusInDayView(newDate) : undefined,
       });
     },
-    [calendarState.currentMonth, handleChangeMonth, utils],
   );
-
-  const isDateDisabled = useIsDateDisabled({
-    shouldDisableDate,
-    minDate,
-    maxDate,
-    disableFuture,
-    disablePast,
-    timezone,
-  });
 
   const onMonthSwitchingAnimationEnd = React.useCallback(() => {
     dispatch({ type: 'finishMonthSwitchingAnimation' });

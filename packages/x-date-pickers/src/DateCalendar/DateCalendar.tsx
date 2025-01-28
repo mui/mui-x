@@ -246,7 +246,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
       onMonthChange?.(startOfMonth);
     } else {
       goToNextView();
-      changeMonth(startOfMonth);
+      changeMonth(startOfMonth, true);
     }
 
     changeFocusedDay(closestEnabledDate, true);
@@ -274,7 +274,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
       onYearChange?.(closestEnabledDate);
     } else {
       goToNextView();
-      changeMonth(startOfYear);
+      changeMonth(startOfYear, true);
     }
 
     changeFocusedDay(closestEnabledDate, true);
