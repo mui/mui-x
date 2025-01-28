@@ -12,14 +12,7 @@ import {
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
-import {
-  createRenderer,
-  fireEvent,
-  screen,
-  waitFor,
-  act,
-  reactMajor,
-} from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, act, reactMajor } from '@mui/internal-test-utils';
 import { $, $$, grid, getRow, getCell, getColumnValues, microtasks } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
@@ -122,7 +115,7 @@ describe('<DataGridPro /> - Detail panel', () => {
         );
       }
       const rowHeight = 50;
-      render(
+      const { user } = render(
         <TestCase
           nbRows={1}
           rowHeight={rowHeight}
@@ -131,15 +124,11 @@ describe('<DataGridPro /> - Detail panel', () => {
         />,
       );
       const virtualScrollerContent = grid('virtualScrollerContent')!;
-      fireEvent.click(screen.getByRole('button', { name: 'Expand' }));
+      await user.click(screen.getByRole('button', { name: 'Expand' }));
 
-      await waitFor(() => {
-        expect(getRow(0).className).to.include(gridClasses['row--detailPanelExpanded']);
-      });
+      expect(getRow(0).className).to.include(gridClasses['row--detailPanelExpanded']);
 
-      await waitFor(() => {
-        expect(virtualScrollerContent).toHaveComputedStyle({ height: `${rowHeight + 100}px` });
-      });
+      expect(virtualScrollerContent).toHaveComputedStyle({ height: `${rowHeight + 100}px` });
       expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
 
       const detailPanels = $$('.MuiDataGrid-detailPanel');
@@ -147,11 +136,9 @@ describe('<DataGridPro /> - Detail panel', () => {
         height: `100px`,
       });
 
-      fireEvent.click(screen.getByRole('button', { name: 'Increase' }));
+      await user.click(screen.getByRole('button', { name: 'Increase' }));
 
-      await waitFor(() => {
-        expect(virtualScrollerContent).toHaveComputedStyle({ height: `${rowHeight + 200}px` });
-      });
+      expect(virtualScrollerContent).toHaveComputedStyle({ height: `${rowHeight + 200}px` });
       expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
 
       expect(detailPanels[0]).toHaveComputedStyle({

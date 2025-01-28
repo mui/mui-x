@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { useMockServer } from '@mui/x-data-grid-generator';
-import { createRenderer, waitFor, screen, within } from '@mui/internal-test-utils';
+import { createRenderer, screen, waitFor, within } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import {
   DataGridPremium,
@@ -99,23 +99,19 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
 
   it('should show aggregation option in the column menu', async () => {
     const { user } = render(<TestDataSourceAggregation />);
-    await waitFor(() => {
-      expect(getRowsSpy.callCount).to.be.greaterThan(0);
-    });
+    expect(getRowsSpy.callCount).to.be.greaterThan(0);
     await user.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
     expect(screen.queryByLabelText('Aggregation')).not.to.equal(null);
   });
 
   it('should not show aggregation option in the column menu when no aggregation function is defined', async () => {
     const { user } = render(<TestDataSourceAggregation aggregationFunctions={{}} />);
-    await waitFor(() => {
-      expect(getRowsSpy.callCount).to.be.greaterThan(0);
-    });
+    expect(getRowsSpy.callCount).to.be.greaterThan(0);
     await user.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
     expect(screen.queryByLabelText('Aggregation')).to.equal(null);
   });
 
-  it('should provide the `aggregationModel` in the `getRows` params', async () => {
+  it('should provide the `aggregationModel` in the `getRows` params', () => {
     render(
       <TestDataSourceAggregation
         initialState={{
@@ -123,9 +119,7 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
         }}
       />,
     );
-    await waitFor(() => {
-      expect(getRowsSpy.callCount).to.be.greaterThan(0);
-    });
+    expect(getRowsSpy.callCount).to.be.greaterThan(0);
     expect(getRowsSpy.args[0][0].aggregationModel).to.deep.equal({ id: 'size' });
   });
 
@@ -145,7 +139,7 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
     expect(footerRow.id).to.deep.equal({ position: 'footer', value: 10 });
   });
 
-  it('should derive the aggregation values using `dataSource.getAggregatedValue`', async () => {
+  it('should derive the aggregation values using `dataSource.getAggregatedValue`', () => {
     render(
       <TestDataSourceAggregation
         initialState={{
@@ -154,9 +148,7 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
         getAggregatedValue={() => 'Agg value'}
       />,
     );
-    await waitFor(() => {
-      expect(Object.keys(apiRef.current.state.aggregation.lookup).length).to.be.greaterThan(0);
-    });
+    expect(Object.keys(apiRef.current.state.aggregation.lookup).length).to.be.greaterThan(0);
     expect(apiRef.current.state.aggregation.lookup[GRID_ROOT_GROUP_ID].id.value).to.equal(
       'Agg value',
     );
