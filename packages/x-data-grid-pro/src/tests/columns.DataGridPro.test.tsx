@@ -2,6 +2,7 @@ import * as React from 'react';
 import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
+import { RefObject } from '@mui/x-internals/types';
 import {
   DataGridProProps,
   useGridApiRef,
@@ -19,7 +20,7 @@ import { describeSkipIf, testSkipIf, isJSDOM } from 'test/utils/skipIf';
 describe('<DataGridPro /> - Columns', () => {
   const { clock, render } = createRenderer({ clock: 'fake' });
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -44,14 +45,14 @@ describe('<DataGridPro /> - Columns', () => {
     it('should open the column menu', async () => {
       render(<Test />);
       expect(screen.queryByRole('menu')).to.equal(null);
-      act(() => apiRef.current.showColumnMenu('brand'));
+      act(() => apiRef.current?.showColumnMenu('brand'));
       expect(screen.queryByRole('menu')).not.to.equal(null);
     });
 
     it('should set the correct id and aria-labelledby', async () => {
       render(<Test />);
       expect(screen.queryByRole('menu')).to.equal(null);
-      act(() => apiRef.current.showColumnMenu('brand'));
+      act(() => apiRef.current?.showColumnMenu('brand'));
       clock.runToLast();
       const menu = screen.getByRole('menu');
       expect(menu.id).to.match(/:r[0-9a-z]+:/);
@@ -63,10 +64,10 @@ describe('<DataGridPro /> - Columns', () => {
     it('should toggle the column menu', async () => {
       render(<Test />);
       expect(screen.queryByRole('menu')).to.equal(null);
-      act(() => apiRef.current.toggleColumnMenu('brand'));
+      act(() => apiRef.current?.toggleColumnMenu('brand'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      act(() => apiRef.current.toggleColumnMenu('brand'));
+      act(() => apiRef.current?.toggleColumnMenu('brand'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).to.equal(null);
     });
@@ -363,7 +364,7 @@ describe('<DataGridPro /> - Columns', () => {
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
 
-        act(() => apiRef.current.setColumnWidth('brand', 150));
+        act(() => apiRef.current?.setColumnWidth('brand', 150));
 
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '148px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
@@ -403,7 +404,7 @@ describe('<DataGridPro /> - Columns', () => {
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
 
-        act(() => apiRef.current.setColumnWidth('brand', 150));
+        act(() => apiRef.current?.setColumnWidth('brand', 150));
 
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '175px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
@@ -420,7 +421,7 @@ describe('<DataGridPro /> - Columns', () => {
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '98px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '200px' });
 
-        act(() => apiRef.current.setColumnWidth('brand', 150));
+        act(() => apiRef.current?.setColumnWidth('brand', 150));
 
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '125px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
@@ -483,7 +484,7 @@ describe('<DataGridPro /> - Columns', () => {
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
 
-        act(() => apiRef.current.setColumnWidth('brand', 150));
+        act(() => apiRef.current?.setColumnWidth('brand', 150));
 
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '148px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
@@ -560,7 +561,7 @@ describe('<DataGridPro /> - Columns', () => {
 
     it('should work through the API', async () => {
       render(<Test rows={rows} columns={columns} />);
-      await apiRef.current.autosizeColumns();
+      await apiRef.current?.autosizeColumns();
       await microtasks();
       expect(getWidths()).to.deep.equal([155, 177]);
     });
@@ -605,7 +606,7 @@ describe('<DataGridPro /> - Columns', () => {
     describe('options', () => {
       const autosize = async (options: GridAutosizeOptions | undefined, widths: number[]) => {
         render(<Test rows={rows} columns={columns} />);
-        await apiRef.current.autosizeColumns({ includeHeaders: false, ...options });
+        await apiRef.current?.autosizeColumns({ includeHeaders: false, ...options });
         await microtasks();
         expect(getWidths()).to.deep.equal(widths);
       };
@@ -643,7 +644,11 @@ describe('<DataGridPro /> - Columns', () => {
       }
       render(<Test checkboxSelection slots={{ footer: Footer }} />);
 
-      act(() => apiRef.current.setColumnWidth('brand', 300));
+      if (apiRef.current === null) {
+        throw new Error('apiRef is not defined');
+      }
+
+      act(() => apiRef.current?.setColumnWidth('brand', 300));
       expect(gridColumnLookupSelector(apiRef).brand.computedWidth).to.equal(300);
       act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnLookupSelector(apiRef).brand.computedWidth).to.equal(300);
@@ -664,7 +669,7 @@ describe('<DataGridPro /> - Columns', () => {
       );
 
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(2);
-      act(() => apiRef.current.setColumnIndex('brand', 1));
+      act(() => apiRef.current?.setColumnIndex('brand', 1));
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(1);
       act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(1);
@@ -678,7 +683,7 @@ describe('<DataGridPro /> - Columns', () => {
       }
       render(<Test checkboxSelection slots={{ footer: Footer }} />);
 
-      act(() => apiRef.current.updateColumns([{ field: 'id' }]));
+      act(() => apiRef.current?.updateColumns([{ field: 'id' }]));
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
       act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);

@@ -34,8 +34,6 @@ export type CommonSeriesType<TValue> = {
    * Defines the mark type for the series.
    *
    * There is a default mark type for each series type.
-   *
-   * It allows custom values which will be passed to the mark component if it was customized.
    */
   labelMarkType?: ChartsLabelMarkProps['type'];
 };

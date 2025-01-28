@@ -70,11 +70,11 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker(
   };
 
   const { renderPicker } = useStaticPicker<DateOrTimeView, typeof props>({
+    ref,
     props,
     valueManager: singleItemValueManager,
     valueType: 'date-time',
     validator: validateDateTime,
-    ref,
   });
 
   return renderPicker();

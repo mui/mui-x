@@ -46,7 +46,7 @@ export interface UseRangePickerParams<
   TExternalProps extends UseRangePickerProps<TView, any, TExternalProps>,
 > extends Pick<
     UsePickerParams<PickerRangeValue, TView, TExternalProps>,
-    'valueManager' | 'valueType' | 'validator' | 'rendererInterceptor'
+    'valueManager' | 'valueType' | 'validator' | 'rendererInterceptor' | 'ref'
   > {
   props: TExternalProps;
 }

@@ -7,7 +7,12 @@ import Typography from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { cleanFieldResponse, useFieldOwnerState } from '@mui/x-date-pickers/internals';
+import useForkRef from '@mui/utils/useForkRef';
+import {
+  cleanFieldResponse,
+  useFieldOwnerState,
+  useNullablePickerContext,
+} from '@mui/x-date-pickers/internals';
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import {
@@ -77,13 +82,15 @@ export function createMultiInputRangeField<TManager extends PickerAnyRangeManage
 
     const classes = useUtilityClasses(classesProp);
     const ownerState = useFieldOwnerState(internalProps as any);
+    const pickerContext = useNullablePickerContext();
+    const handleRef = useForkRef(ref, pickerContext?.rootRef);
 
     const Root = slots?.root ?? MultiInputRangeFieldRoot;
     const rootProps = useSlotProps({
       elementType: Root,
       externalSlotProps: slotProps?.root,
       externalForwardedProps: otherForwardedProps,
-      additionalProps: { ref },
+      additionalProps: { ref: handleRef },
       ownerState,
       className: clsx(className, classes.root),
     });

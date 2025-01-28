@@ -21,7 +21,7 @@ import { TimePickerToolbarClassKey } from '../TimePicker';
 import { DateTimePickerToolbarClassKey, DateTimePickerTabsClassKey } from '../DateTimePicker';
 import { PickersArrowSwitcherClassKey } from '../internals/components/PickersArrowSwitcher';
 import { PickersToolbarClassKey } from '../internals/components/pickersToolbarClasses';
-import { PickersPopperClassKey } from '../internals/components/pickersPopperClasses';
+import { PickerPopperClassKey } from '../internals/components/PickerPopper';
 import { PickersToolbarButtonClassKey } from '../internals/components/pickersToolbarButtonClasses';
 import { PickersToolbarTextClassKey } from '../internals/components/pickersToolbarTextClasses';
 import { DigitalClockClassKey } from '../DigitalClock';
@@ -58,7 +58,7 @@ export interface PickersComponentNameToClassKey {
   MuiPickersDay: PickersDayClassKey;
   MuiPickersFadeTransitionGroup: PickersFadeTransitionGroupClassKey;
   MuiPickersLayout: PickersLayoutClassKey;
-  MuiPickersPopper: PickersPopperClassKey;
+  MuiPickerPopper: PickerPopperClassKey;
   MuiPickersSlideTransition: PickersSlideTransitionClassKey;
   MuiPickersToolbar: PickersToolbarClassKey;
   MuiPickersToolbarButton: PickersToolbarButtonClassKey;

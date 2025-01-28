@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
@@ -51,7 +51,7 @@ export const paginationStateInitializer: GridStateInitializer<
  * @requires useGridDimensions (event) - can be after
  */
 export const useGridPagination = (
-  apiRef: React.RefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: DataGridProcessedProps,
 ) => {
   useGridPaginationMeta(apiRef, props);

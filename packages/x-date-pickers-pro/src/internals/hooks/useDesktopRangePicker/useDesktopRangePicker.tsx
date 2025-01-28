@@ -6,7 +6,7 @@ import {
   executeInTheNextEventLoopTick,
   getActiveElement,
   usePicker,
-  PickersPopper,
+  PickerPopper,
   DateOrTimeViewWithMeridiem,
   PickerProvider,
   PickerValue,
@@ -18,10 +18,7 @@ import {
   UseDesktopRangePickerParams,
   UseDesktopRangePickerProps,
 } from './useDesktopRangePicker.types';
-import {
-  RangePickerPropsForFieldSlot,
-  useEnrichedRangePickerField,
-} from '../useEnrichedRangePickerField';
+import { useEnrichedRangePickerField } from '../useEnrichedRangePickerField';
 import { getReleaseInfo } from '../../utils/releaseInfo';
 import { useRangePosition } from '../useRangePosition';
 import { PickerRangePositionContext } from '../../../hooks/usePickerRangePositionContext';
@@ -43,20 +40,7 @@ export const useDesktopRangePicker = <
 }: UseDesktopRangePickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
-  const {
-    slots,
-    slotProps,
-    className,
-    sx,
-    label,
-    inputRef,
-    name,
-    readOnly,
-    autoFocus,
-    disableOpenPicker,
-    localeText,
-    reduceAnimations,
-  } = props;
+  const { slots, slotProps, inputRef, readOnly, autoFocus, disableOpenPicker, localeText } = props;
 
   const fieldContainerRef = React.useRef<HTMLDivElement>(null);
   const popperRef = React.useRef<HTMLDivElement>(null);
@@ -80,7 +64,7 @@ export const useDesktopRangePicker = <
     fieldRef = endFieldRef;
   }
 
-  const { providerProps, renderCurrentView, shouldRestoreFocus, ownerState } = usePicker<
+  const { providerProps, renderCurrentView, ownerState } = usePicker<
     PickerRangeValue,
     TView,
     TExternalProps
@@ -119,11 +103,7 @@ export const useDesktopRangePicker = <
 
   const Field = slots.field;
 
-  const fieldProps: RangePickerPropsForFieldSlot<
-    boolean,
-    TEnableAccessibleFieldDOMStructure,
-    InferError<TExternalProps>
-  > = useSlotProps({
+  const { ownerState: fieldOwnerState, ...fieldProps } = useSlotProps({
     elementType: Field,
     externalSlotProps: slotProps?.field,
     additionalProps: {
@@ -132,11 +112,7 @@ export const useDesktopRangePicker = <
       autoFocus: autoFocus && !props.open,
 
       // Forwarded props
-      className,
-      sx,
       ref: fieldContainerRef,
-      ...(fieldType === 'single-input' && !!inputRef && { inputRef }),
-      ...(fieldType === 'single-input' && { name }),
     },
     ownerState,
   });
@@ -153,7 +129,6 @@ export const useDesktopRangePicker = <
     fieldPrivateContextValue: providerProps.fieldPrivateContextValue,
     readOnly,
     disableOpenPicker,
-    label,
     localeText,
     onBlur: handleBlur,
     pickerSlotProps: slotProps,
@@ -182,24 +157,20 @@ export const useDesktopRangePicker = <
         ...enrichedFieldResponse.fieldPrivateContextValue,
       }}
     >
-      <PickerFieldUIContextProvider slots={slots} slotProps={slotProps}>
+      <PickerFieldUIContextProvider slots={slots} slotProps={slotProps} inputRef={inputRef}>
         <PickerRangePositionContext.Provider value={rangePositionResponse}>
           <Field {...enrichedFieldResponse.fieldProps} />
-          <PickersPopper
+          <PickerPopper
             role="tooltip"
-            placement="bottom-start"
             containerRef={popperRef}
-            anchorEl={providerProps.contextValue.triggerRef.current}
             onBlur={handleBlur}
             slots={slots}
             slotProps={slotProps}
-            shouldRestoreFocus={shouldRestoreFocus}
-            reduceAnimations={reduceAnimations}
           >
             <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
               {renderCurrentView()}
             </Layout>
-          </PickersPopper>
+          </PickerPopper>
         </PickerRangePositionContext.Provider>
       </PickerFieldUIContextProvider>
     </PickerProvider>
