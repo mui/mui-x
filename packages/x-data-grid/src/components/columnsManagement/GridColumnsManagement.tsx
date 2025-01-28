@@ -15,9 +15,11 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridColDef } from '../../models/colDef/gridColDef';
+import type { GridSlotProps } from '../../models/gridSlotsComponentsProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useLazyRef } from '../../hooks/utils/useLazyRef';
 import { checkColumnVisibilityModelsSame, defaultSearchPredicate } from './utils';
+import { NotRendered } from '../../utils/assert';
 
 export interface GridColumnsManagementProps {
   /*
@@ -227,7 +229,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
           inputRef={searchInputRef}
           className={classes.searchInput}
           value={searchValue}
-          onChange={handleSearchValueChange as any}
+          onChange={handleSearchValueChange}
           size="small"
           type="search"
           slotProps={{
@@ -444,7 +446,7 @@ const GridColumnsManagementHeader = styled('div', {
   padding: theme.spacing(1.5, 3),
 }));
 
-const SearchInput = styled('div', {
+const SearchInput = styled(NotRendered<GridSlotProps['baseTextField']>, {
   name: 'MuiDataGrid',
   slot: 'ColumnsManagementSearchInput',
   overridesResolver: (props, styles) => styles.columnsManagementSearchInput,
