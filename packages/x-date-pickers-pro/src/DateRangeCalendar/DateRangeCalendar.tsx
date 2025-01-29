@@ -554,7 +554,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
               {...baseDateValidationProps}
               {...commonViewProps}
               onMonthSwitchingAnimationEnd={onMonthSwitchingAnimationEnd}
-              onFocusedDayChange={(focusedDay) => setVisibleDate(focusedDay)}
+              onFocusedDayChange={setVisibleDate}
               reduceAnimations={reduceAnimations}
               selectedDays={value}
               onSelectedDaysChange={handleSelectedDayChange}

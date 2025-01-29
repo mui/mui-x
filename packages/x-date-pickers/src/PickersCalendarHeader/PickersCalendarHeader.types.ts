@@ -59,7 +59,7 @@ export interface PickersCalendarHeaderProps
   currentMonth: PickerValidDate;
   disabled?: boolean;
   views: readonly DateView[];
-  onMonthChange: (date: PickerValidDate, slideDirection: SlideDirection) => void;
+  onMonthChange: (date: PickerValidDate) => void;
   view: DateView;
   reduceAnimations: boolean;
   onViewChange?: (view: DateView) => void;
