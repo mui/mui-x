@@ -83,7 +83,7 @@ Subcomponents include:
 
 - Axis components – to define the X and Y axes
 - Plot components – to create Bars, Lines, or any other Chart type
-- Auxillary components - to add Tooltips, Highlights, and more
+- Auxiliary components - to add Tooltips, Highlights, and more
 - Utilities - such as classes and types
 
 See the [Charts composition documentation](/x/react-charts/composition/) for complete details.
