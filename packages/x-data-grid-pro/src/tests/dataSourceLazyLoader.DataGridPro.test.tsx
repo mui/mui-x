@@ -26,6 +26,14 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
   let apiRef: RefObject<GridApi | null>;
   let mockServer: ReturnType<typeof useMockServer>;
 
+  // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
+  function Reset() {
+    React.useLayoutEffect(() => {
+      fetchRowsSpy.resetHistory();
+    }, []);
+    return null;
+  }
+
   function TestDataSourceLazyLoader(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
     mockServer = useMockServer(
@@ -65,6 +73,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
 
     return (
       <div style={{ width: 300, height: 300 }}>
+        <Reset />
         <DataGridPro
           apiRef={apiRef}
           columns={mockServer.columns}

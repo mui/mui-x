@@ -35,6 +35,13 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   let apiRef: RefObject<GridApi | null>;
   let mockServer: ReturnType<typeof useMockServer>;
 
+  // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
+  function Reset() {
+    React.useLayoutEffect(() => {
+      fetchRowsSpy.resetHistory();
+    }, []);
+    return null;
+  }
   function TestDataSource(props: Partial<DataGridProProps> & { shouldRequestsFail?: boolean }) {
     apiRef = useGridApiRef();
     mockServer = useMockServer(dataSetOptions, serverOptions, props.shouldRequestsFail ?? false);
@@ -73,6 +80,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
 
     return (
       <div style={{ width: 300, height: 300 }}>
+        <Reset />
         <DataGridPro
           apiRef={apiRef}
           columns={columns}
