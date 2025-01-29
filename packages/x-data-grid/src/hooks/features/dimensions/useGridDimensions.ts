@@ -18,6 +18,8 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridDimensions, GridDimensionsApi, GridDimensionsPrivateApi } from './gridDimensionsApi';
 import {
+  gridColumnFieldsSelector,
+  gridColumnLookupSelector,
   gridColumnsTotalWidthSelector,
   gridVisiblePinnedColumnDefinitionsSelector,
 } from '../columns';
@@ -291,6 +293,9 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
       gridDensityFactorSelector,
       gridColumnsTotalWidthSelector,
       gridDensityFactorSelector,
+      // we use these two selectors instead of the bottom ones, since they provide stable references, unlike gridVisiblePinnedColumnDefinitionsSelector
+      gridColumnLookupSelector,
+      gridColumnFieldsSelector,
       gridRowsMetaSelector,
       props.scrollbarSize,
       props.autoHeight,

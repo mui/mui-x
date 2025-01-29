@@ -165,7 +165,6 @@ const resolveDeps = <
     }
 
     if (!didChange && prevResolvedDeps && !Object.is(nextDep, prevResolvedDeps[i])) {
-      console.log('changed', nextDep, prevResolvedDeps[i]);
       didChange = true;
     }
 
