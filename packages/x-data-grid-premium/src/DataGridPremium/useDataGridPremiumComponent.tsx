@@ -153,8 +153,8 @@ export const useDataGridPremiumComponent = (
   useGridRowGrouping(apiRef, props);
   useGridHeaderFiltering(apiRef, props);
   useGridTreeData(apiRef, props);
-  useGridDataSource(apiRef, props);
   useGridAggregation(apiRef, props);
+  useGridDataSource(apiRef, props);
   useGridKeyboardNavigation(apiRef, props);
   useGridRowSelection(apiRef, props);
   useGridCellSelection(apiRef, props);
