@@ -399,7 +399,7 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
               className={classes.input}
               apiRef={apiRef}
               item={item}
-              inputRef={inputRef}
+              inputRef={inputRef.current ? inputRef : undefined}
               applyValue={apiRef.current.upsertFilterItem}
               onFocus={() => apiRef.current.startHeaderFilterEditMode(colDef.field)}
               onBlur={(event: React.FocusEvent) => {
