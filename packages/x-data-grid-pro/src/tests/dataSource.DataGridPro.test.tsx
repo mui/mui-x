@@ -67,10 +67,10 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
       [fetchRows],
     );
 
-    const baselineProps = {
+    const baselineProps: DataGridProProps = {
       unstable_dataSource: dataSource,
       columns: mockServer.columns,
-      initialState: { pagination: { paginationModel: { page: 0, pageSize: 10 } } },
+      initialState: { pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 } },
       disableVirtualization: true,
       pagination: true,
       pageSizeOptions: [10],
