@@ -157,6 +157,32 @@ And you can chose another shape by adding a `shape` property to your line series
 The codemod only removes the `experimentalMarkRendering` prop.
 If you relied on the fact that marks were `path` elements, you need to update your logic.
 
+## Replacing `useHighlighted` by `useItemHighlighted` and `useItemHighlightedGetter`
+
+The `useHighlighted` hook that gave access to the internal highlight state has been removed.
+
+To know if your item is highlighted, it is recommended to use the `useItemHighlighted` hook instead:
+
+```jsx
+const { isFaded, isHighlighted } = useItemHighlighted({
+  seriesId,
+  dataIndex,
+});
+```
+
+If you're in a case where you have multiple series id to test (for example in the tooltip), you can use the lower level hook `useItemHighlightedGetter`.
+This hook being lower level only test is the item match with the highlight or fade scope.
+So an item could at the same time have `isFaded` and `isHighlighted` returning `true`.
+
+```jsx
+const { isFaded, isHighlighted } = useItemHighlightedGetter();
+
+const itemIsHighlighted = isHighlighted({ seriesId, dataIndex });
+
+// First make sure the item is not highlighted.
+const itemIsFaded = !itemIsHighlighted && isFaded({ seriesId, dataIndex });
+```
+
 ## Rename `labelFontSize` and `tickFontSize` props ✅
 
 The `labelFontSize` and `tickFontSize` props have been removed in favor of the style objects `labelStyle` and `tickStyle` respectively.
