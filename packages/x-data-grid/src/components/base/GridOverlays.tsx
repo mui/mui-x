@@ -22,7 +22,6 @@ interface GridOverlaysProps {
   loadingOverlayVariant: GridLoadingOverlayVariant | null;
 }
 
-
 const GridOverlayWrapperRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'OverlayWrapper',
