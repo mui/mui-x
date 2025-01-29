@@ -472,6 +472,7 @@ export function DayCalendar(inProps: DayCalendarProps) {
   const handleFocus = useEventCallback(
     (event: React.FocusEvent<HTMLButtonElement>, day: PickerValidDate) => focusDay(day),
   );
+
   const handleBlur = useEventCallback(
     (event: React.FocusEvent<HTMLButtonElement>, day: PickerValidDate) => {
       if (focusedDay != null && utils.isSameDay(focusedDay, day)) {

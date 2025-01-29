@@ -170,7 +170,10 @@ export const useCalendarState = (
   const setVisibleDate = useEventCallback(
     (date: PickerValidDate, skipAnimation: boolean = false) => {
       const startOfMonth = utils.startOfMonth(date);
-      let focusedDay: PickerValidDate | null = date;
+      let focusedDay: PickerValidDate | null =
+        calendarState.focusedDay != null && utils.isSameDay(date, calendarState.focusedDay)
+          ? calendarState.focusedDay
+          : date;
 
       if (isDateDisabled(focusedDay)) {
         const endOfMonth = utils.endOfMonth(startOfMonth);
@@ -186,19 +189,22 @@ export const useCalendarState = (
         });
       }
 
+      const hasChangedMonth = !utils.isSameMonth(calendarState.currentMonth, startOfMonth);
+      const hasChangedYear = !utils.isSameYear(calendarState.currentMonth, startOfMonth);
+
       dispatch({
         type: 'setVisibleDate',
-        month: utils.startOfMonth(startOfMonth),
+        month: hasChangedMonth ? utils.startOfMonth(startOfMonth) : calendarState.currentMonth,
         direction: utils.isAfterDay(startOfMonth, calendarState.currentMonth) ? 'left' : 'right',
         focusedDay,
         skipAnimation,
       });
 
-      if (!utils.isSameMonth(calendarState.currentMonth, startOfMonth)) {
+      if (hasChangedMonth) {
         onMonthChange?.(startOfMonth);
       }
 
-      if (!utils.isSameYear(calendarState.currentMonth, startOfMonth)) {
+      if (hasChangedYear) {
         onYearChange?.(utils.startOfYear(startOfMonth));
       }
     },
