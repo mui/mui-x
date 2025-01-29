@@ -1,14 +1,18 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
-import { DataGrid, GridToolbarFilterButton } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridToolbarFilterButton,
+  GridToolbarContainer,
+} from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 function Toolbar() {
   return (
-    <div>
+    <GridToolbarContainer>
       <GridToolbarFilterButton />
-    </div>
+    </GridToolbarContainer>
   );
 }
 

@@ -164,11 +164,6 @@ export const GridRootStyles = styled('div', {
     { [`& .${c.scrollbar}`]: styles.scrollbar },
     { [`& .${c['scrollbar--horizontal']}`]: styles['scrollbar--horizontal'] },
     { [`& .${c['scrollbar--vertical']}`]: styles['scrollbar--vertical'] },
-    { [`& .${c.scrollbarFiller}`]: styles.scrollbarFiller },
-    { [`& .${c['scrollbarFiller--borderBottom']}`]: styles['scrollbarFiller--borderBottom'] },
-    { [`& .${c['scrollbarFiller--borderTop']}`]: styles['scrollbarFiller--borderTop'] },
-    { [`& .${c['scrollbarFiller--header']}`]: styles['scrollbarFiller--header'] },
-    { [`& .${c['scrollbarFiller--pinnedRight']}`]: styles['scrollbarFiller--pinnedRight'] },
     { [`& .${c.sortIcon}`]: styles.sortIcon },
     { [`& .${c.treeDataGroupingCell}`]: styles.treeDataGroupingCell },
     {
@@ -543,8 +538,7 @@ export const GridRootStyles = styled('div', {
 
     /* Bottom border of the top-container */
     [`& .${c['row--borderBottom']} .${c.columnHeader},
-      & .${c['row--borderBottom']} .${c.filler},
-      & .${c['row--borderBottom']} .${c.scrollbarFiller}`]: {
+      & .${c['row--borderBottom']} .${c.filler}`]: {
       borderBottom: `1px solid var(--DataGrid-rowBorderColor)`,
     },
     [`& .${c['row--borderBottom']} .${c.cell}`]: {
@@ -599,11 +593,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c['virtualScrollerContent--overflowed']} .${c['row--lastVisible']} .${c.cell}`]: {
       borderTopColor: 'transparent',
     },
-    [`& .${c['pinnedRows--top']} :first-of-type`]: {
-      [`& .${c.cell}, .${c.scrollbarFiller}`]: {
-        borderTop: 'none',
-      },
-    },
+
     [`&.${c['root--disableUserSelection']} .${c.cell}`]: {
       userSelect: 'none',
     },
@@ -772,23 +762,6 @@ export const GridRootStyles = styled('div', {
       flex: '0 0 28px',
       alignSelf: 'stretch',
       marginRight: t.spacing(2),
-    },
-
-    /* ScrollbarFiller styles */
-    [`.${c.scrollbarFiller}`]: {
-      minWidth: 'calc(var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize))',
-      alignSelf: 'stretch',
-      [`&.${c['scrollbarFiller--borderTop']}`]: {
-        borderTop: '1px solid var(--DataGrid-rowBorderColor)',
-      },
-      [`&.${c['scrollbarFiller--borderBottom']}`]: {
-        borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
-      },
-      [`&.${c['scrollbarFiller--pinnedRight']}`]: {
-        backgroundColor: 'var(--DataGrid-pinnedBackground)',
-        position: 'sticky',
-        right: 0,
-      },
     },
 
     [`& .${c.filler}`]: {
