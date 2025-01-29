@@ -10,6 +10,7 @@ import {
   GridRowId,
 } from '@mui/x-data-grid';
 import { gridRowGroupsToFetchSelector, GridStateInitializer } from '@mui/x-data-grid/internals';
+import { unstable_debounce as debounce } from '@mui/utils';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { gridGetRowsParamsSelector, gridDataSourceErrorsSelector } from './gridDataSourceSelector';
@@ -252,6 +253,8 @@ export const useGridDataSource = (
     });
   }, [apiRef]);
 
+  const debouncedFetchRows = React.useMemo(() => debounce(fetchRows, 0), [fetchRows]);
+
   const dataSourceApi: GridDataSourceApi = {
     unstable_dataSource: {
       setChildrenLoading,
@@ -269,12 +272,20 @@ export const useGridDataSource = (
   useGridApiMethod(apiRef, dataSourceApi, 'public');
   useGridApiMethod(apiRef, dataSourcePrivateApi, 'private');
 
-  useGridApiEventHandler(apiRef, 'sortModelChange', runIfServerMode(props.sortingMode, fetchRows));
-  useGridApiEventHandler(apiRef, 'filterModelChange', runIfServerMode(props.filterMode, fetchRows));
+  useGridApiEventHandler(
+    apiRef,
+    'sortModelChange',
+    runIfServerMode(props.sortingMode, debouncedFetchRows),
+  );
+  useGridApiEventHandler(
+    apiRef,
+    'filterModelChange',
+    runIfServerMode(props.filterMode, debouncedFetchRows),
+  );
   useGridApiEventHandler(
     apiRef,
     'paginationModelChange',
-    runIfServerMode(props.paginationMode, fetchRows),
+    runIfServerMode(props.paginationMode, debouncedFetchRows),
   );
 
   const isFirstRender = React.useRef(true);
