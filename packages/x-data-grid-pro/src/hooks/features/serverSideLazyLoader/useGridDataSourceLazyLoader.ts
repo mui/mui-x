@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { throttle } from '@mui/x-internals/throttle';
+import { unstable_debounce as debounce } from '@mui/utils';
 import {
   useGridApiEventHandler,
   useGridSelector,
@@ -78,6 +79,15 @@ export const useGridDataSourceLazyLoader = (
   const loadingTrigger = React.useRef<LoadingTrigger | null>(null);
   const rowsStale = React.useRef<boolean>(false);
 
+  const fetchRows = React.useCallback(
+    (params: Partial<GridGetRowsParams>) => {
+      privateApiRef.current.unstable_dataSource.fetchRows(GRID_ROOT_GROUP_ID, params);
+    },
+    [privateApiRef],
+  );
+
+  const debouncedFetchRows = React.useMemo(() => debounce(fetchRows, 0), [fetchRows]);
+
   // Adjust the render context range to fit the pagination model's page size
   // First row index should be decreased to the start of the page, end row index should be increased to the end of the page
   const adjustRowParams = React.useCallback(
@@ -107,8 +117,8 @@ export const useGridDataSourceLazyLoader = (
       filterModel,
     };
 
-    privateApiRef.current.unstable_dataSource.fetchRows(GRID_ROOT_GROUP_ID, getRowsParams);
-  }, [privateApiRef, sortModel, filterModel, paginationModel.pageSize]);
+    fetchRows(getRowsParams);
+  }, [privateApiRef, sortModel, filterModel, paginationModel.pageSize, fetchRows]);
 
   const ensureValidRowCount = React.useCallback(
     (previousLoadingTrigger: LoadingTrigger, newLoadingTrigger: LoadingTrigger) => {
@@ -302,7 +312,7 @@ export const useGridDataSourceLazyLoader = (
   );
 
   const handleRowCountChange = React.useCallback(() => {
-    if (loadingTrigger.current === null) {
+    if (rowsStale.current || loadingTrigger.current === null) {
       return;
     }
 
@@ -313,11 +323,12 @@ export const useGridDataSourceLazyLoader = (
 
   const handleScrolling: GridEventListener<'scrollPositionChange'> = React.useCallback(
     (newScrollPosition) => {
+      if (rowsStale.current || loadingTrigger.current !== LoadingTrigger.SCROLL_END) {
+        return;
+      }
+
       const renderContext = gridRenderContextSelector(privateApiRef);
-      if (
-        loadingTrigger.current !== LoadingTrigger.SCROLL_END ||
-        previousLastRowIndex.current >= renderContext.lastRowIndex
-      ) {
+      if (previousLastRowIndex.current >= renderContext.lastRowIndex) {
         return;
       }
 
@@ -336,10 +347,7 @@ export const useGridDataSourceLazyLoader = (
         };
 
         privateApiRef.current.setLoading(true);
-        privateApiRef.current.unstable_dataSource.fetchRows(
-          GRID_ROOT_GROUP_ID,
-          adjustRowParams(getRowsParams),
-        );
+        fetchRows(adjustRowParams(getRowsParams));
       }
     },
     [
@@ -349,6 +357,7 @@ export const useGridDataSourceLazyLoader = (
       filterModel,
       paginationModel.pageSize,
       adjustRowParams,
+      fetchRows,
     ],
   );
 
@@ -356,7 +365,7 @@ export const useGridDataSourceLazyLoader = (
     GridEventListener<'renderedRowsIntervalChange'>
   >(
     (params) => {
-      if (loadingTrigger.current !== LoadingTrigger.VIEWPORT) {
+      if (rowsStale.current || loadingTrigger.current !== LoadingTrigger.VIEWPORT) {
         return;
       }
 
@@ -400,10 +409,7 @@ export const useGridDataSourceLazyLoader = (
       getRowsParams.start = skeletonRowsSection.firstRowIndex;
       getRowsParams.end = skeletonRowsSection.lastRowIndex;
 
-      privateApiRef.current.unstable_dataSource.fetchRows(
-        GRID_ROOT_GROUP_ID,
-        adjustRowParams(getRowsParams),
-      );
+      fetchRows(adjustRowParams(getRowsParams));
     },
     [
       privateApiRef,
@@ -412,6 +418,7 @@ export const useGridDataSourceLazyLoader = (
       sortModel,
       filterModel,
       adjustRowParams,
+      fetchRows,
     ],
   );
 
@@ -443,12 +450,9 @@ export const useGridDataSourceLazyLoader = (
       };
 
       privateApiRef.current.setLoading(true);
-      privateApiRef.current.unstable_dataSource.fetchRows(
-        GRID_ROOT_GROUP_ID,
-        adjustRowParams(getRowsParams),
-      );
+      debouncedFetchRows(adjustRowParams(getRowsParams));
     },
-    [privateApiRef, filterModel, paginationModel.pageSize, adjustRowParams],
+    [privateApiRef, filterModel, paginationModel.pageSize, adjustRowParams, debouncedFetchRows],
   );
 
   const handleGridFilterModelChange = React.useCallback<GridEventListener<'filterModelChange'>>(
@@ -463,9 +467,9 @@ export const useGridDataSourceLazyLoader = (
       };
 
       privateApiRef.current.setLoading(true);
-      privateApiRef.current.unstable_dataSource.fetchRows(GRID_ROOT_GROUP_ID, getRowsParams);
+      debouncedFetchRows(getRowsParams);
     },
-    [privateApiRef, sortModel, paginationModel.pageSize],
+    [privateApiRef, sortModel, paginationModel.pageSize, debouncedFetchRows],
   );
 
   const handleStrategyActivityChange = React.useCallback<
