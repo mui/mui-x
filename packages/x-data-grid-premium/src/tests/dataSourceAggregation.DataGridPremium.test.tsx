@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { useMockServer } from '@mui/x-data-grid-generator';
-import { createRenderer, screen, waitFor, within } from '@mui/internal-test-utils';
+import { createRenderer, waitFor, screen, within } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import {
   DataGridPremium,
@@ -99,7 +99,9 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
 
   it('should show aggregation option in the column menu', async () => {
     const { user } = render(<TestDataSourceAggregation />);
-    expect(getRowsSpy.callCount).to.be.greaterThan(0);
+    await waitFor(() => {
+      expect(getRowsSpy.callCount).to.be.greaterThan(0);
+    });
     await user.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
     expect(screen.queryByLabelText('Aggregation')).not.to.equal(null);
   });
