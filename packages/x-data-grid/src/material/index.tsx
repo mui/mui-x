@@ -180,8 +180,8 @@ function BaseAutocomplete(props: GridSlotProps['baseAutocomplete']) {
       isOptionEqualToValue={isOptionEqualToValue}
       value={value}
       onChange={onChange}
-      renderTags={(value, getTagProps) =>
-        value.map((option, index) => {
+      renderTags={(currentValue, getTagProps) =>
+        currentValue.map((option, index) => {
           const { key, ...tagProps } = getTagProps({ index });
           return (
             <rootProps.slots.baseChip
@@ -195,10 +195,10 @@ function BaseAutocomplete(props: GridSlotProps['baseAutocomplete']) {
         })
       }
       renderInput={(params) => {
-        const { inputProps, InputProps, InputLabelProps, ...rest } = params;
+        const { inputProps, InputProps, InputLabelProps, ...inputRest } = params;
         return (
           <rootProps.slots.baseTextField
-            {...rest}
+            {...inputRest}
             label={label}
             placeholder={placeholder}
             slotProps={{

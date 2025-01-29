@@ -1,4 +1,5 @@
 [
+  { "name": "BaseAutocompletePropsOverrides", "kind": "Interface" },
   { "name": "BaseBadgePropsOverrides", "kind": "Interface" },
   { "name": "BaseButtonPropsOverrides", "kind": "Interface" },
   { "name": "BaseCheckboxPropsOverrides", "kind": "Interface" },

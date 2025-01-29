@@ -31,8 +31,8 @@ export type AutocompleteProps<
    *
    * If used in free solo mode, it must accept both the type of the options and a string.
    *
-   * @param {Value} option
-   * @returns {string}
+   * @param {Value} option The option
+   * @returns {string} The label
    * @default (option) => option.label ?? option
    */
   getOptionLabel?: (option: Value | AcValueMap<FreeSolo>) => string;
@@ -43,7 +43,7 @@ export type AutocompleteProps<
    *
    * @param {Value} option The option to test.
    * @param {Value} value The value to test against.
-   * @returns {boolean}
+   * @returns {boolean} true if value matches
    */
   isOptionEqualToValue?: (option: Value, value: Value) => boolean;
   /**
