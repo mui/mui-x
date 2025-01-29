@@ -157,7 +157,7 @@ const resolveDeps = <
     );
   }
 
-  const resolvedDeps = [] as any;
+  const resolvedDeps = new Array(nextDeps.length) as any;
   for (let i = 0; i < nextDeps.length; i++) {
     let nextDep = nextDeps[i];
     if (typeof nextDep === 'function') {
@@ -168,7 +168,7 @@ const resolveDeps = <
       didChange = true;
     }
 
-    resolvedDeps.push(nextDep);
+    resolvedDeps[i] = nextDep;
   }
 
   return {
