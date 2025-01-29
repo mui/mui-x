@@ -52,7 +52,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 const getColIndex = (el: HTMLElement) => parseInt(el.getAttribute('data-colindex')!, 10);
 
-const GridSkeletonLoadingOverlayInner = forwardRef<
+export const GridSkeletonLoadingOverlayInner = forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & {
     skeletonRowsCount: number;
@@ -275,20 +275,19 @@ const GridSkeletonLoadingOverlayInner = forwardRef<
   );
 });
 
-const GridSkeletonLoadingOverlay = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  function GridSkeletonLoadingOverlay(props, forwardedRef) {
-    const apiRef = useGridApiContext();
-    const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
-    const viewportHeight = dimensions?.viewportInnerSize.height ?? 0;
-    const skeletonRowsCount = Math.ceil(viewportHeight / dimensions.rowHeight);
-    return (
-      <GridSkeletonLoadingOverlayInner
-        {...props}
-        skeletonRowsCount={skeletonRowsCount}
-        ref={forwardedRef}
-      />
-    );
-  },
-);
-
-export { GridSkeletonLoadingOverlay, GridSkeletonLoadingOverlayInner };
+export const GridSkeletonLoadingOverlay = forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(function GridSkeletonLoadingOverlay(props, forwardedRef) {
+  const apiRef = useGridApiContext();
+  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
+  const viewportHeight = dimensions?.viewportInnerSize.height ?? 0;
+  const skeletonRowsCount = Math.ceil(viewportHeight / dimensions.rowHeight);
+  return (
+    <GridSkeletonLoadingOverlayInner
+      {...props}
+      skeletonRowsCount={skeletonRowsCount}
+      ref={forwardedRef}
+    />
+  );
+});
