@@ -597,6 +597,7 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c.pinnedRows}`]: {
       backgroundColor: 'var(--DataGrid-pinnedBackground)',
+      width: 'var(--DataGrid-rowWidth)',
     },
     [`& .${c['pinnedRows--top']} :first-of-type`]: {
       [`& .${c.cell}, .${c.scrollbarFiller}`]: {
