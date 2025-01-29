@@ -158,6 +158,7 @@ const resolveDeps = <
   }
 
   const resolvedDeps = new Array(nextDeps.length) as any;
+  // eslint-disable-next-line no-plusplus
   for (let i = 0; i < nextDeps.length; i++) {
     let nextDep = nextDeps[i];
     if (typeof nextDep === 'function') {
@@ -212,6 +213,7 @@ export const useGridStateEffect = <
           callback(resolved.values);
         }
       }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     EMPTY,
   );
 
@@ -221,5 +223,6 @@ export const useGridStateEffect = <
       previousResolvedDeps.current = resolved.values;
       callback(resolved.values);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 };
