@@ -192,7 +192,6 @@
   { "name": "HighlightScope", "kind": "TypeAlias" },
   { "name": "isBarSeries", "kind": "Function" },
   { "name": "isDefaultizedBarSeries", "kind": "Function" },
-  { "name": "ItemHighlightedState", "kind": "TypeAlias" },
   { "name": "ItemTooltip", "kind": "Interface" },
   { "name": "labelClasses", "kind": "Variable" },
   { "name": "labelGradientClasses", "kind": "Variable" },

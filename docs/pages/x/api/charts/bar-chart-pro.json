@@ -44,13 +44,6 @@
         "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, end: number, start: number }&gt;"
       }
     },
-    "id": { "type": { "name": "string" } },
-    "initialZoom": {
-      "type": {
-        "name": "arrayOf",
-        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, end: number, start: number }&gt;"
-      }
-    },
     "layout": {
       "type": { "name": "enum", "description": "'horizontal'<br>&#124;&nbsp;'vertical'" },
       "default": "'vertical'"
