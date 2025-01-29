@@ -1,4 +1,5 @@
 import * as React from 'react';
+import MUIAutocomplete from '@mui/material/Autocomplete';
 import MUIBadge from '@mui/material/Badge';
 import MUICheckbox from '@mui/material/Checkbox';
 import MUIChip from '@mui/material/Chip';
@@ -51,6 +52,7 @@ import type { GridIconSlotsComponent } from '../models';
 import type { GridBaseSlots } from '../models/gridSlotsComponent';
 import type { GridSlotProps } from '../models/gridSlotsComponentsProps';
 import MUISelectOption from './components/MUISelectOption';
+import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 const iconSlots: GridIconSlotsComponent = {
   booleanCellTrueIcon: GridCheckIcon,
@@ -92,6 +94,7 @@ const iconSlots: GridIconSlotsComponent = {
 };
 
 const baseSlots: GridBaseSlots = {
+  baseAutocomplete: BaseAutocomplete,
   baseBadge: MUIBadge,
   baseCheckbox: MUICheckbox,
   baseCircularProgress: MUICircularProgress,
@@ -146,6 +149,69 @@ function BaseTextField(props: GridSlotProps['baseTextField']) {
         shrink: true,
         ...(slotProps as any)?.inputLabel,
       }}
+    />
+  );
+}
+
+function BaseAutocomplete(props: GridSlotProps['baseAutocomplete']) {
+  const rootProps = useGridRootProps();
+  const {
+    id,
+    multiple,
+    freeSolo,
+    options,
+    getOptionLabel,
+    isOptionEqualToValue,
+    value,
+    onChange,
+    label,
+    placeholder,
+    slotProps,
+    ...rest
+  } = props;
+
+  return (
+    <MUIAutocomplete<string, true, false, true>
+      id={id}
+      multiple={multiple}
+      freeSolo={freeSolo}
+      options={options}
+      getOptionLabel={getOptionLabel}
+      isOptionEqualToValue={isOptionEqualToValue}
+      value={value}
+      onChange={onChange}
+      renderTags={(value, getTagProps) =>
+        value.map((option, index) => {
+          const { key, ...tagProps } = getTagProps({ index });
+          return (
+            <rootProps.slots.baseChip
+              key={key}
+              variant="outlined"
+              size="small"
+              label={typeof option === 'string' ? option : getOptionLabel?.(option as any)}
+              {...tagProps}
+            />
+          );
+        })
+      }
+      renderInput={(params) => {
+        const { inputProps, InputProps, InputLabelProps, ...rest } = params;
+        return (
+          <rootProps.slots.baseTextField
+            {...rest}
+            label={label}
+            placeholder={placeholder}
+            slotProps={{
+              input: InputProps,
+              inputLabel: InputLabelProps,
+              htmlInput: inputProps,
+            }}
+            {...slotProps?.textField}
+            {...rootProps.slotProps?.baseTextField}
+          />
+        );
+      }}
+      {...rest}
     />
   );
 }
