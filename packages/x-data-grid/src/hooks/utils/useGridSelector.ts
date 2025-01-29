@@ -214,4 +214,12 @@ export const useGridStateEffect = <
       }),
     EMPTY,
   );
+
+  React.useEffect(() => {
+    const resolved = resolveDeps(apiRef, depsRef.current);
+    if (resolved.didChange) {
+      previousResolvedDeps.current = resolved.values;
+      callback(resolved.values);
+    }
+  }, deps);
 };
