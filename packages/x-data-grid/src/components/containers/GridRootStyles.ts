@@ -179,11 +179,9 @@ export const GridRootStyles = styled('div', {
   const borderColor = getBorderColor(t);
   const radius = t.shape.borderRadius;
 
-  const containerBackground = t.vars
-    ? t.vars.palette.background.default
-    : (t.mixins.MuiDataGrid?.containerBackground ?? t.palette.background.default);
-
-  const pinnedBackground = t.mixins.MuiDataGrid?.pinnedBackground ?? containerBackground;
+  const background = (t.vars || t).palette.DataGrid?.bg ?? (t.vars || t).palette.background.default;
+  const headerBackground = (t.vars || t).palette.DataGrid?.headerBg ?? background;
+  const pinnedBackground = (t.vars || t).palette.DataGrid?.pinnedBg ?? background;
 
   const overlayBackground = t.vars
     ? `rgba(${t.vars.palette.background.defaultChannel} / ${t.vars.palette.action.disabledOpacity})`
@@ -251,7 +249,8 @@ export const GridRootStyles = styled('div', {
     '--unstable_DataGrid-headWeight': t.typography.fontWeightMedium,
     '--unstable_DataGrid-overlayBackground': overlayBackground,
 
-    '--DataGrid-containerBackground': containerBackground,
+    '--DataGrid-background': background,
+    '--DataGrid-headerBackground': headerBackground,
     '--DataGrid-pinnedBackground': pinnedBackground,
     '--DataGrid-rowBorderColor': borderColor,
 
@@ -276,6 +275,7 @@ export const GridRootStyles = styled('div', {
     borderStyle: 'solid',
     borderColor,
     borderRadius: 'var(--unstable_DataGrid-radius)',
+    backgroundColor: 'var(--DataGrid-background)',
     color: (t.vars || t).palette.text.primary,
     ...t.typography.body2,
     outline: 'none',
@@ -447,7 +447,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c['columnHeader--pinnedLeft']}, & .${c['columnHeader--pinnedRight']}`]: {
       position: 'sticky',
       zIndex: 4, // Should be above the column separator
-      background: 'var(--DataGrid-pinnedBackground)',
+      background: 'var(--DataGrid-headerBackground)',
     },
     [`& .${c.columnSeparator}`]: {
       position: 'absolute',
@@ -462,6 +462,7 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c.columnHeaders}`]: {
       width: 'var(--DataGrid-rowWidth)',
+      backgroundColor: 'var(--DataGrid-headerBackground)',
     },
     '@media (hover: hover)': {
       [`& .${c.columnHeader}:hover`]: columnHeaderStyles,
@@ -569,11 +570,6 @@ export const GridRootStyles = styled('div', {
       },
       '&.Mui-selected': selectedStyles,
     },
-    [`& .${c['container--top']}, & .${c['container--bottom']}`]: {
-      '[role=row]': {
-        background: 'var(--DataGrid-containerBackground)',
-      },
-    },
 
     /* Cell styles */
     [`& .${c.cell}`]: {
@@ -593,7 +589,9 @@ export const GridRootStyles = styled('div', {
     [`& .${c['virtualScrollerContent--overflowed']} .${c['row--lastVisible']} .${c.cell}`]: {
       borderTopColor: 'transparent',
     },
-
+    [`& .${c.pinnedRows}`]: {
+      backgroundColor: 'var(--DataGrid-pinnedBackground)',
+    },
     [`&.${c['root--disableUserSelection']} .${c.cell}`]: {
       userSelect: 'none',
     },
@@ -698,7 +696,7 @@ export const GridRootStyles = styled('div', {
         backgroundColor: pinnedSelectedBackgroundColor,
       },
     },
-    [`& .${c.virtualScrollerContent} .${c.row}`]: {
+    [`& .${c.row}`]: {
       '&:hover': pinnedHoverStyles,
       '&.Mui-selected': pinnedSelectedStyles,
       '&.Mui-selected:hover': pinnedSelectedHoverStyles,

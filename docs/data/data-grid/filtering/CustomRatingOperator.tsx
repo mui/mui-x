@@ -68,7 +68,6 @@ const ratingOnlyOperators: GridFilterOperator<any, number>[] = [
       };
     },
     InputComponent: RatingInputValue,
-    InputComponentProps: { type: 'number' },
     getValueAsString: (value: number) => `${value} Stars`,
   },
 ];

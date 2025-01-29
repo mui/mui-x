@@ -66,7 +66,6 @@ const ratingOnlyOperators = [
       };
     },
     InputComponent: RatingInputValue,
-    InputComponentProps: { type: 'number' },
     getValueAsString: (value) => `${value} Stars`,
   },
 ];
