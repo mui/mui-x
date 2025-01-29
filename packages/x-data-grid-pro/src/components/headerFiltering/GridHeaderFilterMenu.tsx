@@ -141,15 +141,7 @@ GridHeaderFilterMenu.propTypes = {
         focusElementRef: PropTypes.oneOfType([
           PropTypes.func,
           PropTypes.shape({
-            current: (props, propName) => {
-              if (props[propName] == null) {
-                return null;
-              }
-              if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {
-                return new Error(`Expected prop '${propName}' to be of type Element`);
-              }
-              return null;
-            },
+            current: PropTypes.any.isRequired,
           }),
         ]),
         headerFilterMenu: PropTypes.node,
