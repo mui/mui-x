@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
-import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
 import {
   DataGrid,
   DataGridProps,
@@ -414,7 +414,7 @@ describe('<DataGrid /> - Row selection', () => {
       });
       expect(await screen.findByRole('tooltip')).not.to.equal(null);
 
-      await user.type(screen.getByRole('spinbutton', { name: 'Value' }), '1');
+      await user.type(screen.getByRole('spinbutton', { name: 'Value' }), '1', { skipClick: true });
 
       expect(await screen.findByLabelText('1 active filter')).not.to.equal(null);
       // Previous selection is cleared and only the filtered row is selected
@@ -441,7 +441,7 @@ describe('<DataGrid /> - Row selection', () => {
       });
       expect(await screen.findByRole('tooltip')).not.to.equal(null);
 
-      await user.type(screen.getByRole('spinbutton', { name: 'Value' }), '1');
+      await user.type(screen.getByRole('spinbutton', { name: 'Value' }), '1', { skipClick: true });
 
       expect(await screen.findByLabelText('1 active filter')).not.to.equal(null);
       // Previous selection is cleared and only the filtered row is selected
