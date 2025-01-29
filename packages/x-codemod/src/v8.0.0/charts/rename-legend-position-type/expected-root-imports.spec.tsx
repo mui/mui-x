@@ -1,5 +1,4 @@
 /* eslint-disable no-restricted-imports */
-import * as React from 'react';
 import { Position } from '@mui/x-charts';
 import { Position as LegendPositionPro } from '@mui/x-charts-pro';
 
