@@ -13,7 +13,7 @@ import {
   GRID_AGGREGATION_ROOT_FOOTER_ROW_ID,
   GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid-premium';
-import { SinonSpy, spy } from 'sinon';
+import { spy } from 'sinon';
 import { getColumnHeaderCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
