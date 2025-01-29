@@ -8,7 +8,7 @@ export type ScatterValueType = {
   /**
    * A unique identifier for the scatter point
    */
-  id: string | number;
+  id?: string | number;
 };
 
 export interface ScatterSeriesType
@@ -53,7 +53,7 @@ export interface ScatterSeriesType
     /**
      * The key used to retrieve data from the dataset for the id.
      */
-    id: string;
+    id?: string;
   };
 }
 
