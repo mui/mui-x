@@ -28,6 +28,7 @@ import {
 import {
   PinnedColumnPosition,
   GridStateColDef,
+  GridFilterInputValueProps,
   useGridPrivateApiContext,
   gridHeaderFilteringEditFieldSelector,
   gridHeaderFilteringMenuSelector,
@@ -129,17 +130,18 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const DEFAULT_INPUT_COMPONENTS: { [key in GridColType]: React.JSXElementConstructor<any> | null } =
-  {
-    string: GridFilterInputValue,
-    number: GridFilterInputValue,
-    date: GridFilterInputDate,
-    dateTime: GridFilterInputDate,
-    boolean: GridFilterInputBoolean,
-    singleSelect: GridFilterInputSingleSelect,
-    actions: null,
-    custom: null,
-  };
+const DEFAULT_INPUT_COMPONENTS: {
+  [key in GridColType]: React.JSXElementConstructor<GridFilterInputValueProps> | null;
+} = {
+  string: GridFilterInputValue,
+  number: GridFilterInputValue,
+  date: GridFilterInputDate,
+  dateTime: GridFilterInputDate,
+  boolean: GridFilterInputBoolean,
+  singleSelect: GridFilterInputSingleSelect,
+  actions: null,
+  custom: null,
+};
 
 const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProps>((props, ref) => {
   const {
@@ -415,15 +417,18 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
                   }));
                 }
               }}
-              label={capitalize(label)}
-              placeholder=""
               isFilterActive={isFilterActive}
-              variant="outlined"
-              size="small"
-              disabled={isFilterReadOnly || isNoInputOperator}
-              tabIndex={-1}
               headerFilterMenu={headerFilterMenu}
               clearButton={clearButton}
+              disabled={isFilterReadOnly || isNoInputOperator}
+              tabIndex={-1}
+              slotProps={{
+                root: {
+                  size: 'small',
+                  label: capitalize(label),
+                  placeholder: '',
+                } as any,
+              }}
               {...(isNoInputOperator ? { value: '' } : {})}
               {...currentOperator?.InputComponentProps}
               {...InputComponentProps}
@@ -451,7 +456,39 @@ GridHeaderFilterCell.propTypes = {
     current: PropTypes.object,
   }).isRequired,
   height: PropTypes.number.isRequired,
-  InputComponentProps: PropTypes.object,
+  InputComponentProps: PropTypes.shape({
+    apiRef: PropTypes.shape({
+      current: PropTypes.object.isRequired,
+    }),
+    applyValue: PropTypes.func,
+    className: PropTypes.string,
+    clearButton: PropTypes.node,
+    disabled: PropTypes.bool,
+    focusElementRef: PropTypes.oneOfType([
+      PropTypes.func,
+      PropTypes.shape({
+        current: PropTypes.any.isRequired,
+      }),
+    ]),
+    headerFilterMenu: PropTypes.node,
+    inputRef: PropTypes.oneOfType([
+      PropTypes.func,
+      PropTypes.shape({
+        current: PropTypes.any.isRequired,
+      }),
+    ]),
+    isFilterActive: PropTypes.bool,
+    item: PropTypes.shape({
+      field: PropTypes.string.isRequired,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      operator: PropTypes.string.isRequired,
+      value: PropTypes.any,
+    }),
+    onBlur: PropTypes.func,
+    onFocus: PropTypes.func,
+    slotProps: PropTypes.object,
+    tabIndex: PropTypes.number,
+  }),
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
