@@ -84,6 +84,10 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
       },
     };
 
+    if (!mockServer.isReady) {
+      return null;
+    }
+
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGridPremium apiRef={apiRef} {...baselineProps} {...rest} />

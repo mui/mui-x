@@ -84,6 +84,10 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
       };
     }, [fetchRows]);
 
+    if (!mockServer.isReady) {
+      return null;
+    }
+
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro
