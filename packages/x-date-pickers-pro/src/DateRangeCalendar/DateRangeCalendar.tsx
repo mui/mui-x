@@ -231,7 +231,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     valueManager: rangeValueManager,
   });
 
-  const { view, focusedView, setFocusedView, setValueAndGoToNextView } = useViews({
+  const { view, setFocusedView, setValueAndGoToNextView } = useViews({
     view: inView,
     views,
     openTo,
@@ -356,7 +356,6 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     reduceAnimations,
     shouldDisableDate: wrappedShouldDisableDate,
     timezone,
-    focusedView,
   });
 
   const CalendarHeader = slots?.calendarHeader ?? PickersRangeCalendarHeader;

@@ -190,7 +190,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
     disablePast,
     disableFuture,
     timezone,
-    focusedView,
   });
 
   // When disabled, limit the view to the selected date

@@ -94,7 +94,6 @@ interface UseCalendarStateParameters
   value: PickerValidDate | null;
   calendars?: number;
   timezone: PickersTimezone;
-  focusedView: DateView | null;
 }
 
 interface UseCalendarStateReturnValue {
@@ -121,7 +120,6 @@ export const useCalendarState = (
     reduceAnimations,
     shouldDisableDate,
     timezone,
-    focusedView,
   } = params;
 
   const utils = useUtils();
@@ -148,7 +146,7 @@ export const useCalendarState = (
 
   const [calendarState, dispatch] = React.useReducer(reducerFn, {
     isMonthSwitchingAnimating: false,
-    focusedDay: focusedView != null ? referenceDate : null,
+    focusedDay: referenceDate,
     currentMonth: utils.startOfMonth(referenceDate),
     slideDirection: 'left',
   });
@@ -174,16 +172,7 @@ export const useCalendarState = (
   const setVisibleDate = useEventCallback(
     (date: PickerValidDate, skipAnimation: boolean = false) => {
       const startOfMonth = utils.startOfMonth(date);
-      let focusedDay: PickerValidDate | null;
-      if (calendarState.focusedDay != null && utils.isSameMonth(calendarState.focusedDay, date)) {
-        focusedDay = date;
-      } else if (value != null && utils.isSameMonth(value, startOfMonth)) {
-        focusedDay = value;
-      } else if (utils.isSameMonth(referenceDate, startOfMonth)) {
-        focusedDay = referenceDate;
-      } else {
-        focusedDay = startOfMonth;
-      }
+      let focusedDay: PickerValidDate | null = date;
 
       if (isDateDisabled(focusedDay)) {
         const endOfMonth = utils.endOfMonth(startOfMonth);

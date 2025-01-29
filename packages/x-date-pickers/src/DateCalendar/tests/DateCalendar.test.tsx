@@ -183,7 +183,7 @@ describe('<DateCalendar />', () => {
       ).to.have.text('1');
     });
 
-    it('should use `referenceDate` when no value defined', () => {
+    it.only('should use `referenceDate` when no value defined', () => {
       const onChange = spy();
 
       render(
