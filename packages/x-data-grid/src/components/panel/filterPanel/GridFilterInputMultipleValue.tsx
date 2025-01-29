@@ -6,7 +6,7 @@ import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
 
 export type GridFilterInputMultipleValueProps = GridFilterInputValueProps<
-  Omit<AutocompleteProps<string, true, false, true>, 'options' | 'renderInput'>
+  Omit<AutocompleteProps<string, true, false, true>, 'options'>
 > & {
   type?: 'text' | 'number' | 'date' | 'datetime-local';
 };
