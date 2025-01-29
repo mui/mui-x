@@ -9,7 +9,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 # Tree View - Quickstart
 
-<p class="description">Install the MUI X Tree View package and start building.</p>
+<p class="description">Install the MUI X Tree View package and start building.</p>
 
 ## Installation
 
@@ -21,7 +21,7 @@ Install the Tree View package that best suits your needs—Community or Pro:
 
 ### Peer dependencies
 
-#### Material UI
+#### Material UI
 
 The Tree View packages have a peer dependency on `@mui/material`.
 If you're not already using it, install it now:

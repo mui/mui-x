@@ -17,7 +17,7 @@ MUI X Charts is a library of production-ready components for rendering charts w
 It uses [D3.js](https://d3js.org/) for data manipulation and SVGs for rendering.
 
 The components provide a high level of customization, with beautiful defaults as well as extensive configuration props and flexible composition options.
-Theming features are designed to be frictionless when integrating with Material UI and other MUI X components, but they can also stand on their own and be customized to meet the needs of any design system.
+Theming features are designed to be frictionless when integrating with Material UI and other MUI X components, but they can also stand on their own and be customized to meet the needs of any design system.
 
 The Charts package is **open-core**: The Community version is MIT-licensed and free forever, while more advanced features require a Pro commercial license.
 See [MUI X Licensing](/x/introduction/licensing/) for complete details.

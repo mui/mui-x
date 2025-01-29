@@ -15,7 +15,7 @@ packageName: '@mui/x-tree-view'
 ## Overview
 
 The MUI X Tree View provides all of the functionality necessary to build a hierarchical list of expandable and collapsible items.
-The Tree View's theming features are designed to be frictionless when integrating with Material UI and other MUI X components, but it can also stand on its own and be customized to meet the needs of any design system.
+The Tree View's theming features are designed to be frictionless when integrating with Material UI and other MUI X components, but it can also stand on its own and be customized to meet the needs of any design system.
 
 The Tree View is **open-core**: The Community version is MIT-licensed and free forever, while more advanced features require a Pro commercial license.
 See [MUI X Licensing](/x/introduction/licensing/) for complete details.
