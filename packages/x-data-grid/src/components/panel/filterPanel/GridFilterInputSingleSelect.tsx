@@ -1,9 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { TextFieldProps } from '@mui/material/TextField';
-import { SelectChangeEvent } from '@mui/material/Select';
 import { unstable_useId as useId } from '@mui/utils';
-import { GridFilterInputValueProps } from './GridFilterInputValueProps';
+import { SelectChangeEvent } from '@mui/material/Select';
+import { TextFieldProps } from '../../../models/gridBaseSlots';
+import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
 import { GridSingleSelectColDef } from '../../../models/colDef/gridColDef';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import {
@@ -45,17 +45,9 @@ const renderSingleSelectOptions = ({
   });
 };
 
-export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
-  TextFieldProps & {
-    headerFilterMenu?: React.ReactNode;
-    clearButton?: React.ReactNode | null;
-    /**
-     * It is `true` if the filter either has a value or an operator with no value
-     * required is selected (for example `isEmpty`)
-     */
-    isFilterActive?: boolean;
-    type?: 'singleSelect';
-  };
+export type GridFilterInputSingleSelectProps = GridFilterInputValueProps<TextFieldProps> & {
+  type?: 'singleSelect';
+};
 
 function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   const {
@@ -64,16 +56,11 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     type,
     apiRef,
     focusElementRef,
-    placeholder,
     tabIndex,
-    label: labelProp,
-    variant = 'outlined',
     isFilterActive,
     clearButton,
     headerFilterMenu,
-    InputProps,
-    InputLabelProps,
-    sx,
+    slotProps,
     ...others
   } = props;
   const filterValue = item.value ?? '';
@@ -113,17 +100,17 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     return null;
   }
 
-  const label = labelProp ?? apiRef.current.getLocaleText('filterPanelInputLabel');
+  const label = slotProps?.root.label ?? apiRef.current.getLocaleText('filterPanelInputLabel');
 
   return (
     <React.Fragment>
-      <rootProps.slots.baseFormControl fullWidth sx={sx}>
+      <rootProps.slots.baseFormControl fullWidth>
         <rootProps.slots.baseInputLabel
           {...rootProps.slotProps?.baseInputLabel}
           id={labelId}
           htmlFor={id}
           shrink
-          variant={variant}
+          variant="outlined"
         >
           {label}
         </rootProps.slots.baseInputLabel>
@@ -133,20 +120,23 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
           labelId={labelId}
           value={filterValue}
           onChange={onFilterChange}
-          variant={variant}
+          variant="outlined"
           type={type || 'text'}
           inputProps={{
             tabIndex,
             ref: focusElementRef,
-            placeholder: placeholder ?? apiRef.current.getLocaleText('filterPanelInputPlaceholder'),
-            ...InputProps?.inputProps,
+            placeholder:
+              slotProps?.root.placeholder ??
+              apiRef.current.getLocaleText('filterPanelInputPlaceholder'),
+            ...slotProps?.root.slotProps?.htmlInput,
           }}
           native={isSelectNative}
-          notched={variant === 'outlined' ? true : undefined}
+          notched
           {...rootProps.slotProps?.baseSelect}
           {
             ...(others as any) /* FIXME: typing error */
           }
+          {...slotProps?.root}
         >
           {renderSingleSelectOptions({
             column: resolvedColumn,
@@ -173,12 +163,20 @@ GridFilterInputSingleSelect.propTypes = {
     current: PropTypes.object.isRequired,
   }).isRequired,
   applyValue: PropTypes.func.isRequired,
+  className: PropTypes.string,
   clearButton: PropTypes.node,
+  disabled: PropTypes.bool,
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,
     PropTypes.object,
   ]),
   headerFilterMenu: PropTypes.node,
+  inputRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.any.isRequired,
+    }),
+  ]),
   /**
    * It is `true` if the filter either has a value or an operator with no value
    * required is selected (for example `isEmpty`)
@@ -190,6 +188,11 @@ GridFilterInputSingleSelect.propTypes = {
     operator: PropTypes.string.isRequired,
     value: PropTypes.any,
   }).isRequired,
+  onBlur: PropTypes.func,
+  onFocus: PropTypes.func,
+  slotProps: PropTypes.object,
+  tabIndex: PropTypes.number,
+  type: PropTypes.oneOf(['singleSelect']),
 } as any;
 
 export { GridFilterInputSingleSelect };
