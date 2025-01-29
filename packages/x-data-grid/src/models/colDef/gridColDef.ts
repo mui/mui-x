@@ -259,7 +259,7 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
   /**
    * Allows setting the filter operators for this column.
    */
-  filterOperators?: readonly GridFilterOperator<R, V, F>[];
+  filterOperators?: readonly GridFilterOperator<R, V, F, any>[];
   /**
    * The callback that generates a filtering function for a given quick filter value.
    * This function can return `null` to skip filtering for this value and column.
