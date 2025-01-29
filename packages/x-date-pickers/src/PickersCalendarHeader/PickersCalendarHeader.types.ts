@@ -10,7 +10,6 @@ import {
 } from '../internals/components/PickersArrowSwitcher';
 import { MonthValidationOptions } from '../internals/hooks/date-helpers-hooks';
 import { PickerValidDate, DateView, PickerOwnerState } from '../models';
-import { SlideDirection } from '../DateCalendar/PickersSlideTransition';
 import { PickersCalendarHeaderClasses } from './pickersCalendarHeaderClasses';
 
 export interface PickersCalendarHeaderSlots extends PickersArrowSwitcherSlots {
