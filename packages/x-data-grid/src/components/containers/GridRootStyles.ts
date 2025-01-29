@@ -60,6 +60,7 @@ export const GridRootStyles = styled('div', {
   overridesResolver: (props, styles) => [
     { [`&.${c.autoHeight}`]: styles.autoHeight },
     { [`&.${c.aggregationColumnHeader}`]: styles.aggregationColumnHeader },
+    { [`&.${c.aggregationRowOverlayWrapper}`]: styles.aggregationRowOverlayWrapper },
     {
       [`&.${c['aggregationColumnHeader--alignLeft']}`]:
         styles['aggregationColumnHeader--alignLeft'],
