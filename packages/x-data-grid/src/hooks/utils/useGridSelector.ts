@@ -122,3 +122,97 @@ export const useGridSelector = <Api extends GridApiCommon, Args, T>(
 
   return state;
 };
+
+type Primitive = string | number | boolean | null | undefined;
+
+const resolveDeps = <
+  Api extends GridApiCommon,
+  Args,
+  T,
+  Deps extends Array<Selector<Api, Args, T> | Primitive>,
+>(
+  apiRef: RefObject<Api>,
+  nextDeps: [
+    ...{
+      [K in keyof Deps]: Deps[K] extends Selector<Api, Args, T> ? Selector<Api, Args, T> : Deps[K];
+    },
+  ],
+  prevResolvedDeps?: [
+    ...{ [K in keyof Deps]: Deps[K] extends Selector<Api, Args, infer R> ? R : Deps[K] },
+  ],
+) => {
+  let didChange = false;
+  if (!prevResolvedDeps) {
+    didChange = true;
+  }
+  if (prevResolvedDeps && prevResolvedDeps.length !== nextDeps.length) {
+    console.error(
+      'The dependency array passed to %s changed size between renders. The ' +
+        'order and size of this array must remain constant.\n\n' +
+        'Previous: %s\n' +
+        'Incoming: %s',
+      'useGridStateEffect',
+      `Current dependency array size: ${nextDeps.length} args`,
+      `Previous dependency array size: ${prevResolvedDeps.length} args`,
+    );
+  }
+
+  const resolvedDeps = [] as any;
+  for (let i = 0; i < nextDeps.length; i++) {
+    let nextDep = nextDeps[i];
+    if (typeof nextDep === 'function') {
+      nextDep = applySelector(apiRef, nextDep, null as any, apiRef.current?.instanceId) as any;
+    }
+
+    if (!didChange && prevResolvedDeps && !Object.is(nextDep, prevResolvedDeps[i])) {
+      console.log('changed', nextDep, prevResolvedDeps[i]);
+      didChange = true;
+    }
+
+    resolvedDeps.push(nextDep);
+  }
+
+  return {
+    didChange,
+    values: resolvedDeps,
+  };
+};
+
+export const useGridStateEffect = <
+  Api extends GridApiCommon,
+  Args,
+  T,
+  Deps extends Array<Selector<Api, Args, T> | Primitive>,
+>(
+  apiRef: RefObject<Api>,
+  deps: [
+    ...{
+      [K in keyof Deps]: Deps[K] extends Selector<Api, Args, T> ? Selector<Api, Args, T> : Deps[K];
+    },
+  ],
+  callback: (
+    resolvedDeps: [
+      ...{ [K in keyof Deps]: Deps[K] extends Selector<Api, Args, infer R> ? R : Deps[K] },
+    ],
+  ) => void,
+) => {
+  const depsRef = React.useRef(deps);
+  const previousResolvedDeps = useLazyRef<
+    [...{ [K in keyof Deps]: Deps[K] extends Selector<Api, Args, infer R> ? R : Deps[K] }],
+    undefined
+  >(() => resolveDeps(apiRef, deps).values);
+
+  depsRef.current = deps;
+
+  useEnhancedEffect(
+    () =>
+      apiRef.current.store.subscribe(() => {
+        const resolved = resolveDeps(apiRef, depsRef.current, previousResolvedDeps.current);
+        if (resolved.didChange) {
+          previousResolvedDeps.current = resolved.values;
+          callback(resolved.values);
+        }
+      }),
+    EMPTY,
+  );
+};

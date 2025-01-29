@@ -24,7 +24,6 @@ import {
 import { gridDimensionsSelector } from './gridDimensionsSelectors';
 import { gridDensityFactorSelector } from '../density';
 import { gridRenderContextSelector } from '../virtualization';
-import { useGridSelector } from '../../utils';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { getValidRowHeight, rowHeightWarning } from '../rows/gridRowsUtils';
@@ -34,6 +33,8 @@ import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../../constants/dataGridProps
 import { roundToDecimalPlaces } from '../../../utils/roundToDecimalPlaces';
 import { isJSDOM } from '../../../utils/isJSDOM';
 import { isDeepEqual } from '../../../utils/utils';
+import { useGridStateEffect } from '../../utils/useGridSelector';
+import { gridRowHeightSelector } from '@mui/x-data-grid/internals';
 
 type RootProps = Pick<
   DataGridProcessedProps,
@@ -103,21 +104,7 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
   const logger = useGridLogger(apiRef, 'useResizeContainer');
   const errorShown = React.useRef(false);
   const rootDimensionsRef = React.useRef(EMPTY_SIZE);
-  const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
-  const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
-  const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
-  const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
   const isFirstSizing = React.useRef(true);
-
-  const {
-    rowHeight,
-    headerHeight,
-    groupHeaderHeight,
-    headerFilterHeight,
-    headersTotalHeight,
-    leftPinnedWidth,
-    rightPinnedWidth,
-  } = getStaticDimensions(props, apiRef, densityFactor, pinnedColumns);
 
   const getRootDimensions = React.useCallback(
     () => gridDimensionsSelector(apiRef.current.state),
@@ -157,17 +144,33 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
       return Math.min(viewportPageSize - 1, currentPage.rows.length);
     }
 
+    const rowHeight = gridRowHeightSelector(apiRef.current.state);
     const maximumPageSizeWithoutScrollBar = Math.floor(
       dimensions.viewportInnerSize.height / rowHeight,
     );
 
     return Math.min(maximumPageSizeWithoutScrollBar, currentPage.rows.length);
-  }, [apiRef, props.pagination, props.paginationMode, props.getRowHeight, rowHeight]);
+  }, [apiRef, props.pagination, props.paginationMode, props.getRowHeight]);
 
-  const updateDimensions = React.useCallback(() => {
+  const updateDimensions = useEventCallback(() => {
     if (isFirstSizing.current) {
       return;
     }
+
+    const rowsMeta = gridRowsMetaSelector(apiRef.current.state);
+    const pinnedColumns = gridVisiblePinnedColumnDefinitionsSelector(apiRef);
+    const densityFactor = gridDensityFactorSelector(apiRef);
+    const columnsTotalWidth = gridColumnsTotalWidthSelector(apiRef);
+    const {
+      rowHeight,
+      headerHeight,
+      groupHeaderHeight,
+      headerFilterHeight,
+      headersTotalHeight,
+      leftPinnedWidth,
+      rightPinnedWidth,
+    } = getStaticDimensions(props, apiRef, densityFactor, pinnedColumns);
+
     // All the floating point dimensions should be rounded to .1 decimal places to avoid subpixel rendering issues
     // https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
     // https://github.com/mui/mui-x/issues/15721
@@ -280,34 +283,30 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     }
 
     apiRef.current.updateRenderContext?.();
-  }, [
-    apiRef,
-    setDimensions,
-    props.scrollbarSize,
-    props.autoHeight,
-    rowsMeta.currentPageTotalHeight,
-    rowsMeta.pinnedTopRowsTotalHeight,
-    rowsMeta.pinnedBottomRowsTotalHeight,
-    rowHeight,
-    headerHeight,
-    groupHeaderHeight,
-    headerFilterHeight,
-    columnsTotalWidth,
-    headersTotalHeight,
-    leftPinnedWidth,
-    rightPinnedWidth,
-  ]);
+  });
 
-  const updateDimensionCallback = useEventCallback(updateDimensions);
+  useGridStateEffect(
+    apiRef,
+    [
+      gridDensityFactorSelector,
+      gridColumnsTotalWidthSelector,
+      gridDensityFactorSelector,
+      gridRowsMetaSelector,
+      props.scrollbarSize,
+      props.autoHeight,
+    ],
+    updateDimensions,
+  );
+
   const debouncedUpdateDimensions = React.useMemo(
     () =>
       props.resizeThrottleMs > 0
         ? throttle(() => {
-            updateDimensionCallback();
+            updateDimensions();
             apiRef.current.publishEvent('debouncedResize', rootDimensionsRef.current!);
           }, props.resizeThrottleMs)
         : undefined,
-    [apiRef, props.resizeThrottleMs, updateDimensionCallback],
+    [apiRef, props.resizeThrottleMs, updateDimensions],
   );
   React.useEffect(() => debouncedUpdateDimensions?.clear, [debouncedUpdateDimensions]);
 
@@ -320,7 +319,6 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     getViewportPageSize,
   };
 
-  useEnhancedEffect(updateDimensions, [updateDimensions]);
   useGridApiMethod(apiRef, apiPublic, 'public');
   useGridApiMethod(apiRef, apiPrivate, 'private');
 
