@@ -22,7 +22,6 @@ interface GridOverlaysProps {
   loadingOverlayVariant: GridLoadingOverlayVariant | null;
 }
 
-interface GridOverlayWrapperRootProps extends GridOverlaysProps {}
 
 const GridOverlayWrapperRoot = styled('div', {
   name: 'MuiDataGrid',
