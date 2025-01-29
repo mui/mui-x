@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
 import {
-  gridHasPinnedFillerSelector,
+  gridHasBottomFillerSelector,
   gridHasScrollXSelector,
   gridHasScrollYSelector,
 } from '../../internals/selectors/dimensionSelectors';
@@ -90,7 +90,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   const hasTopPinnedRows = useGridSelector(apiRef, gridHasTopPinnedRowsSelector);
   const hasBottomPinnedRows = useGridSelector(apiRef, gridHasBottomPinnedRowsSelector);
   const hasPinnedRight = useGridSelector(apiRef, hasPinnedRightSelector);
-  const hasPinnedFiller = useGridSelector(apiRef, gridHasPinnedFillerSelector);
+  const hasBottomFiller = useGridSelector(apiRef, gridHasBottomFillerSelector);
   const { getOverlay, overlaysProps } = useGridOverlays();
   const ownerState = {
     classes: rootProps.classes,
@@ -134,7 +134,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
           </RenderZone>
         </Content>
 
-        {hasPinnedFiller && <SpaceFiller rowsLength={rows.length} />}
+        {hasBottomFiller && <SpaceFiller rowsLength={rows.length} />}
 
         {hasBottomPinnedRows && (
           <BottomContainer>
