@@ -49,5 +49,5 @@ jobs:
       - name: Run benchmarks
         uses: CodSpeedHQ/action@513a19673a831f139e8717bf45ead67e47f00044
         with:
-          run: pnpm --trace-warnings --filter @mui-x-internal/performance-charts test:performance
+          run: pnpm --filter @mui-x-internal/performance-charts test:performance
           token: ${{ secrets.CODSPEED_TOKEN }}
