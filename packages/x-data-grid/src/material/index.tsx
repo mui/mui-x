@@ -1,6 +1,7 @@
 import * as React from 'react';
 import MUIBadge from '@mui/material/Badge';
 import MUICheckbox from '@mui/material/Checkbox';
+import MUIChip from '@mui/material/Chip';
 import MUICircularProgress from '@mui/material/CircularProgress';
 import MUIDivider from '@mui/material/Divider';
 import MUIFocusTrap from '@mui/material/Unstable_TrapFocus';
@@ -21,7 +22,6 @@ import MUIClickAwayListener from '@mui/material/ClickAwayListener';
 import MUIGrow from '@mui/material/Grow';
 import MUIPaper from '@mui/material/Paper';
 import MUIInputLabel from '@mui/material/InputLabel';
-import MUIChip from '@mui/material/Chip';
 import MUISkeleton from '@mui/material/Skeleton';
 import { GridColumnUnsortedIcon } from './icons/GridColumnUnsortedIcon';
 import {
@@ -104,7 +104,7 @@ const baseSlots: GridBaseSlots = {
   baseLinearProgress: MUILinearProgress,
   baseMenuList: MUIMenuList,
   baseMenuItem: BaseMenuItem,
-  baseTextField: MUITextField,
+  baseTextField: BaseTextField,
   baseFormControl: MUIFormControl,
   baseSelect: MUISelect,
   baseButton: MUIButton,
@@ -135,6 +135,24 @@ function BaseMenuItem(props: GridSlotProps['baseMenuItem']) {
     <MUIListItemText key="2">{children}</MUIListItemText>,
     iconEnd && <MUIListItemIcon key="3">{iconEnd}</MUIListItemIcon>,
   ]);
+}
+
+function BaseTextField(props: GridSlotProps['baseTextField']) {
+  // MaterialUI v5 doesn't support slotProps, until we drop v5 support we need to
+  // translate the pattern.
+  const { slotProps, ...rest } = props;
+  return (
+    <MUITextField
+      variant="outlined"
+      {...rest}
+      inputProps={slotProps?.htmlInput}
+      InputProps={slotProps?.input}
+      InputLabelProps={{
+        shrink: true,
+        ...(slotProps as any)?.inputLabel,
+      }}
+    />
+  );
 }
 
 const transformOrigin = {

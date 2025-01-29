@@ -72,7 +72,6 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<
       field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
-        ref,
       }),
       toolbar: {
         hidden: false,
@@ -91,6 +90,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<
     TEnableAccessibleFieldDOMStructure,
     typeof props
   >({
+    ref,
     props,
     valueManager: singleItemValueManager,
     valueType: 'date-time',

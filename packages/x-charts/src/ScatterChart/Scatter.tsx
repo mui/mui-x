@@ -11,7 +11,7 @@ import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
 import { D3Scale } from '../models/axis';
-import { useHighlighted } from '../context';
+import { useItemHighlightedGetter } from '../hooks/useItemHighlightedGetter';
 import { selectorChartsInteractionIsVoronoiEnabled } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { useChartContext } from '../context/ChartProvider';
 
@@ -52,7 +52,7 @@ function Scatter(props: ScatterProps) {
 
   const skipInteractionHandlers = isVoronoiEnabled || series.disableHover;
   const getInteractionItemProps = useInteractionItemProps(skipInteractionHandlers);
-  const { isFaded, isHighlighted } = useHighlighted();
+  const { isFaded, isHighlighted } = useItemHighlightedGetter();
 
   const cleanData = React.useMemo(() => {
     const getXPosition = getValueToPositionMapper(xScale);

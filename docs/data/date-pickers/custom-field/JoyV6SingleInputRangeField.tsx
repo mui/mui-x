@@ -22,7 +22,6 @@ import {
   DateRangePickerProps,
 } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { unstable_useSingleInputDateRangeField as useSingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
-import { FieldType } from '@mui/x-date-pickers-pro/models';
 import { usePickerContext } from '@mui/x-date-pickers/hooks';
 
 const DateRangeIcon = createSvgIcon(
@@ -32,69 +31,59 @@ const DateRangeIcon = createSvgIcon(
 
 const joyTheme = extendJoyTheme();
 
-type JoySingleInputDateRangeFieldComponent = ((
-  props: DateRangePickerFieldProps<false> & React.RefAttributes<HTMLDivElement>,
-) => React.JSX.Element) & { fieldType?: FieldType };
+function JoySingleInputDateRangeField(props: DateRangePickerFieldProps) {
+  const fieldResponse = useSingleInputDateRangeField<false, typeof props>(props);
 
-const JoySingleInputDateRangeField = React.forwardRef(
-  (props: DateRangePickerFieldProps<false>, ref: React.Ref<HTMLDivElement>) => {
-    const fieldResponse = useSingleInputDateRangeField<false, typeof props>(props);
+  const {
+    // Should be ignored
+    enableAccessibleFieldDOMStructure,
 
-    const {
-      // Should be ignored
-      enableAccessibleFieldDOMStructure,
+    // Can be passed to the button that clears the value
+    onClear,
+    clearable,
 
-      // Can be passed to the button that clears the value
-      onClear,
-      clearable,
+    disabled,
+    id,
+    inputRef,
+    ...other
+  } = fieldResponse;
 
-      disabled,
-      id,
-      label,
-      inputRef,
-      ...other
-    } = fieldResponse;
+  const pickerContext = usePickerContext();
 
-    const pickerContext = usePickerContext();
-
-    return (
-      <FormControl
+  return (
+    <FormControl
+      disabled={disabled}
+      id={id}
+      ref={pickerContext.rootRef}
+      style={{
+        minWidth: 300,
+      }}
+    >
+      <FormLabel>{pickerContext.label}</FormLabel>
+      <Input
         disabled={disabled}
-        id={id}
-        ref={ref}
-        style={{
-          minWidth: 300,
+        endDecorator={<DateRangeIcon size="md" />}
+        slotProps={{
+          input: { ref: inputRef },
         }}
-      >
-        <FormLabel>{label}</FormLabel>
-        <Input
-          ref={pickerContext.triggerRef}
-          disabled={disabled}
-          endDecorator={<DateRangeIcon size="md" />}
-          slotProps={{
-            input: { ref: inputRef },
-          }}
-          {...other}
-        />
-      </FormControl>
-    );
-  },
-) as JoySingleInputDateRangeFieldComponent;
+        {...other}
+        ref={pickerContext.triggerRef}
+      />
+    </FormControl>
+  );
+}
 
 JoySingleInputDateRangeField.fieldType = 'single-input';
 
-const JoySingleInputDateRangePicker = React.forwardRef(
-  (props: DateRangePickerProps<false>, ref: React.Ref<HTMLDivElement>) => {
-    return (
-      <DateRangePicker
-        {...props}
-        ref={ref}
-        enableAccessibleFieldDOMStructure={false}
-        slots={{ ...props.slots, field: JoySingleInputDateRangeField }}
-      />
-    );
-  },
-);
+function JoySingleInputDateRangePicker(props: DateRangePickerProps<false>) {
+  return (
+    <DateRangePicker
+      {...props}
+      enableAccessibleFieldDOMStructure={false}
+      slots={{ ...props.slots, field: JoySingleInputDateRangeField }}
+    />
+  );
+}
 
 /**
  * This component is for syncing the theme mode of this demo with the MUI docs mode.

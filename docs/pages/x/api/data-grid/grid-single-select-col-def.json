@@ -36,7 +36,7 @@
     "editable": { "type": { "description": "boolean" }, "default": "false" },
     "filterable": { "type": { "description": "boolean" }, "default": "true" },
     "filterOperators": {
-      "type": { "description": "readonly GridFilterOperator&lt;R, V, F&gt;[]" }
+      "type": { "description": "readonly GridFilterOperator&lt;R, V, F, any&gt;[]" }
     },
     "flex": { "type": { "description": "number" } },
     "getApplyQuickFilterFn": { "type": { "description": "GetApplyQuickFilterFn&lt;R, V&gt;" } },
