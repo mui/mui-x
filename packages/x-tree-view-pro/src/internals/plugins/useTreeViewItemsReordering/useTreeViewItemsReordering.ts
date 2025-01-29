@@ -44,6 +44,8 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
   const getDroppingTargetValidActions = React.useCallback(
     (itemId: string) => {
       const itemsReordering = selectorItemsReordering(store.value);
+
+      const totalItems = selectorItemOrderedChildrenIds(store.value, null).length;
       if (!itemsReordering) {
         throw new Error('There is no ongoing reordering.');
       }
@@ -97,16 +99,18 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
               ? targetItemIndex - 1
               : targetItemIndex,
         },
-        'reorder-below': targetItemMeta.expandable
-          ? null
-          : {
-              parentId: targetItemMeta.parentId,
-              index:
-                targetItemMeta.parentId === draggedItemMeta.parentId &&
-                targetItemIndex > draggedItemIndex
-                  ? targetItemIndex
-                  : targetItemIndex + 1,
-            },
+        // For the last element allow reordering to the bottom
+        'reorder-below':
+          !targetItemMeta.expandable || targetItemIndex + 1 === totalItems
+            ? {
+                parentId: targetItemMeta.parentId,
+                index:
+                  targetItemMeta.parentId === draggedItemMeta.parentId &&
+                  targetItemIndex > draggedItemIndex
+                    ? targetItemIndex
+                    : targetItemIndex + 1,
+              }
+            : null,
         'move-to-parent':
           targetItemMeta.parentId == null
             ? null
