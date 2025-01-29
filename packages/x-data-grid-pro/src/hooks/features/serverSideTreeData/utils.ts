@@ -1,6 +1,5 @@
 import { GridRowId, GridRowTreeConfig, GRID_ROOT_GROUP_ID } from '@mui/x-data-grid';
-import { defaultGridFilterLookup } from '@mui/x-data-grid/hooks/features/filter/gridFilterState';
-import { getTreeNodeDescendants } from '@mui/x-data-grid/internals';
+import { defaultGridFilterLookup, getTreeNodeDescendants } from '@mui/x-data-grid/internals';
 
 export function skipFiltering(rowTree: GridRowTreeConfig) {
   const filteredChildrenCountLookup: Record<GridRowId, number> = {};
