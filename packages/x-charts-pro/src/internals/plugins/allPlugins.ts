@@ -9,6 +9,8 @@ import {
   UseChartInteractionSignature,
   useChartZAxis,
   UseChartZAxisSignature,
+  useChartHighlight,
+  UseChartHighlightSignature,
 } from '@mui/x-charts/internals';
 import { useChartProZoom, UseChartProZoomSignature } from './useChartProZoom';
 
@@ -16,6 +18,7 @@ export type AllPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesTyp
   UseChartZAxisSignature,
   UseChartCartesianAxisSignature<TSeries>,
   UseChartInteractionSignature,
+  UseChartHighlightSignature,
   UseChartProZoomSignature,
 ];
 
@@ -26,5 +29,6 @@ export const ALL_PLUGINS = [
   useChartZAxis,
   useChartCartesianAxis,
   useChartInteraction,
+  useChartHighlight,
   useChartProZoom,
 ];
