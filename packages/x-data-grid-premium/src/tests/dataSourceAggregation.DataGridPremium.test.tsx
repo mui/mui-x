@@ -138,7 +138,6 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
       expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
     });
 
-    console.log(fetchRowsSpy.lastCall.args[0]);
     expect(fetchRowsSpy.lastCall.args[0].aggregationModel).to.deep.equal({ id: 'size' });
   });
 
