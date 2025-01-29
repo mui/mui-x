@@ -106,6 +106,7 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
+  const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
   const isFirstSizing = React.useRef(true);
 
   const {
@@ -113,7 +114,6 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     headerHeight,
     groupHeaderHeight,
     headerFilterHeight,
-    columnsTotalWidth,
     headersTotalHeight,
     leftPinnedWidth,
     rightPinnedWidth,
@@ -378,8 +378,6 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
 
 function setCSSVariables(root: HTMLElement, dimensions: GridDimensions) {
   const set = (k: string, v: string) => root.style.setProperty(k, v);
-  // @deprecated due to extensive dom updates
-  // set('--DataGrid-width', `${dimensions.viewportOuterSize.width}px`);
   set('--DataGrid-hasScrollX', `${Number(dimensions.hasScrollX)}`);
   set('--DataGrid-hasScrollY', `${Number(dimensions.hasScrollY)}`);
   set('--DataGrid-scrollbarSize', `${dimensions.scrollbarSize}px`);
@@ -415,7 +413,7 @@ function getStaticDimensions(
     headerFilterHeight: Math.floor(
       (props.headerFilterHeight ?? props.columnHeaderHeight) * density,
     ),
-    columnsTotalWidth: roundToDecimalPlaces(gridColumnsTotalWidthSelector(apiRef), 1),
+    columnsTotalWidth: gridColumnsTotalWidthSelector(apiRef),
     headersTotalHeight: getTotalHeaderHeight(apiRef, props),
     leftPinnedWidth: pinnedColumnns.left.reduce((w, col) => w + col.computedWidth, 0),
     rightPinnedWidth: pinnedColumnns.right.reduce((w, col) => w + col.computedWidth, 0),

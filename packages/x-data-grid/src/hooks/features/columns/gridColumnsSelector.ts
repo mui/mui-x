@@ -6,6 +6,7 @@ import {
   EMPTY_PINNED_COLUMN_FIELDS,
 } from './gridColumnsInterfaces';
 import { gridIsRtlSelector } from '../../core/gridCoreSelector';
+import { roundToDecimalPlaces } from '../../../utils/roundToDecimalPlaces';
 
 /**
  * Get the columns state
@@ -161,7 +162,10 @@ export const gridColumnsTotalWidthSelector = createSelector(
     if (colCount === 0) {
       return 0;
     }
-    return positions[colCount - 1] + visibleColumns[colCount - 1].computedWidth;
+    return roundToDecimalPlaces(
+      positions[colCount - 1] + visibleColumns[colCount - 1].computedWidth,
+      1,
+    );
   },
 );
 
