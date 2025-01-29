@@ -136,7 +136,7 @@ export const featuresSet: Row[] = [
   },
   {
     id: 10,
-    name: 'Column Pinning',
+    name: 'Column pinning',
     description: 'Pin columns to the left or right.',
     plan: 'Pro',
     detailPage: '/column-pinning/',
