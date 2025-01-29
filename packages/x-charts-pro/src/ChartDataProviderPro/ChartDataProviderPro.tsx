@@ -7,8 +7,8 @@ import {
   AnimationProvider,
   ChartSeriesType,
   ChartAnyPluginSignature,
+  ChartProviderProps,
 } from '@mui/x-charts/internals';
-import { HighlightedProvider } from '@mui/x-charts/context';
 import { ChartDataProviderProps } from '@mui/x-charts/ChartDataProvider';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
 import { AllPluginSignatures } from '../internals/plugins/allPlugins';
@@ -21,7 +21,8 @@ const packageIdentifier = 'x-charts-pro';
 export type ChartDataProviderProProps<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
-> = ChartDataProviderProps<TSeries, TSignatures>;
+> = ChartDataProviderProps<TSeries, TSignatures> &
+  Omit<ChartProviderProps<TSeries, TSignatures>['pluginParams'], 'children'>;
 
 /**
  * Orchestrates the data providers for the chart components and hooks.
@@ -53,19 +54,17 @@ export type ChartDataProviderProProps<
 function ChartDataProviderPro<TSeries extends ChartSeriesType = ChartSeriesType>(
   props: ChartDataProviderProProps<TSeries>,
 ) {
-  const { children, highlightedProviderProps, animationProviderProps, chartProviderProps } =
+  const { children, animationProviderProps, chartProviderProps } =
     useChartDataProviderProProps(props);
 
   useLicenseVerifier(packageIdentifier, releaseInfo);
 
   return (
     <ChartProvider {...chartProviderProps}>
-      <HighlightedProvider {...highlightedProviderProps}>
-        <AnimationProvider {...animationProviderProps}>
-          {children}
-          <Watermark packageName={packageIdentifier} releaseInfo={releaseInfo} />
-        </AnimationProvider>
-      </HighlightedProvider>
+      <AnimationProvider {...animationProviderProps}>
+        {children}
+        <Watermark packageName={packageIdentifier} releaseInfo={releaseInfo} />
+      </AnimationProvider>
     </ChartProvider>
   );
 }
@@ -95,11 +94,12 @@ ChartDataProviderPro.propTypes = {
    */
   height: PropTypes.number,
   /**
-   * The item currently highlighted. Turns highlighting into a controlled prop.
+   * The highlighted item.
+   * Used when the highlight is controlled.
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.

@@ -3,34 +3,16 @@ import PropTypes from 'prop-types';
 import Autocomplete, { AutocompleteProps } from '@mui/material/Autocomplete';
 import { unstable_useId as useId } from '@mui/utils';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import { GridFilterInputValueProps } from './GridFilterInputValueProps';
+import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
 
-export type GridFilterInputMultipleValueProps = {
+export type GridFilterInputMultipleValueProps = GridFilterInputValueProps<
+  Omit<AutocompleteProps<string, true, false, true>, 'options' | 'renderInput'>
+> & {
   type?: 'text' | 'number' | 'date' | 'datetime-local';
-} & GridFilterInputValueProps &
-  Omit<AutocompleteProps<string, true, false, true>, 'options' | 'renderInput'>;
+};
 
 function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) {
-  const {
-    item,
-    applyValue,
-    type,
-    apiRef,
-    focusElementRef,
-    color,
-    error,
-    helperText,
-    size,
-    variant = 'outlined',
-    ...other
-  } = props;
-  const TextFieldProps = {
-    color,
-    error,
-    helperText,
-    size,
-    variant,
-  };
+  const { item, applyValue, type, apiRef, focusElementRef, slotProps } = props;
 
   const [filterValueState, setFilterValueState] = React.useState(item.value || []);
   const id = useId();
@@ -71,7 +53,7 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
       }}
       id={id}
       value={filterValueState}
-      onChange={handleChange}
+      onChange={handleChange as any}
       renderTags={(value, getTagProps) =>
         value.map((option, index) => {
           const { key, ...tagProps } = getTagProps({ index });
@@ -86,22 +68,25 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
           );
         })
       }
-      renderInput={(params) => (
-        <rootProps.slots.baseTextField
-          {...params}
-          label={apiRef.current.getLocaleText('filterPanelInputLabel')}
-          placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
-          InputLabelProps={{
-            ...params.InputLabelProps,
-            shrink: true,
-          }}
-          inputRef={focusElementRef}
-          type={type || 'text'}
-          {...TextFieldProps}
-          {...rootProps.slotProps?.baseTextField}
-        />
-      )}
-      {...other}
+      renderInput={(params) => {
+        const { inputProps, InputProps, InputLabelProps, ...rest } = params;
+        return (
+          <rootProps.slots.baseTextField
+            {...rest}
+            label={apiRef.current.getLocaleText('filterPanelInputLabel')}
+            placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
+            inputRef={focusElementRef}
+            type={type || 'text'}
+            slotProps={{
+              input: InputProps,
+              inputLabel: InputLabelProps,
+              htmlInput: inputProps,
+            }}
+            {...rootProps.slotProps?.baseTextField}
+          />
+        );
+      }}
+      {...slotProps?.root}
     />
   );
 }
@@ -115,16 +100,35 @@ GridFilterInputMultipleValue.propTypes = {
     current: PropTypes.object.isRequired,
   }).isRequired,
   applyValue: PropTypes.func.isRequired,
+  className: PropTypes.string,
+  clearButton: PropTypes.node,
+  disabled: PropTypes.bool,
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,
     PropTypes.object,
   ]),
+  headerFilterMenu: PropTypes.node,
+  inputRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.any.isRequired,
+    }),
+  ]),
+  /**
+   * It is `true` if the filter either has a value or an operator with no value
+   * required is selected (for example `isEmpty`)
+   */
+  isFilterActive: PropTypes.bool,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     operator: PropTypes.string.isRequired,
     value: PropTypes.any,
   }).isRequired,
+  onBlur: PropTypes.func,
+  onFocus: PropTypes.func,
+  slotProps: PropTypes.object,
+  tabIndex: PropTypes.number,
   type: PropTypes.oneOf(['date', 'datetime-local', 'number', 'text']),
 } as any;
 
