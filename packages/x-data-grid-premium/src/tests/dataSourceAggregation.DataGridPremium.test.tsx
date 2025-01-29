@@ -146,12 +146,13 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
   });
 
   it('should derive the aggregation values using `dataSource.getAggregatedValue`', async () => {
+    const getAggregatedValue = () => 'Agg value';
     render(
       <TestDataSourceAggregation
         initialState={{
           aggregation: { model: { id: 'size' } },
         }}
-        getAggregatedValue={() => 'Agg value'}
+        getAggregatedValue={getAggregatedValue}
       />,
     );
     await waitFor(() => {

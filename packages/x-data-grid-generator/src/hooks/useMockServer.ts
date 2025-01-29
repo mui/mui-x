@@ -27,6 +27,7 @@ import {
 import type { ServerOptions } from './serverUtils';
 import { randomInt } from '../services';
 import { getMovieRows, getMovieColumns } from './useMovieData';
+import { useEventCallback } from '@mui/material';
 
 const dataCache = new LRUCache<string, GridDemoData>({
   max: 10,
@@ -267,96 +268,84 @@ export const useMockServer = (
     index,
   ]);
 
-  const fetchRows = React.useCallback(
-    async (requestUrl: string): Promise<GridGetRowsResponse> => {
-      if (!requestUrl || !data?.rows) {
-        return sendEmptyResponse();
-      }
-      const params = decodeParams(requestUrl);
-      const verbose = serverOptions?.verbose ?? true;
-      // eslint-disable-next-line no-console
-      const print = console.info;
-      if (verbose) {
-        print('MUI X: DATASOURCE REQUEST', params);
-      }
-      let getRowsResponse: GridGetRowsResponse;
-      const serverOptionsWithDefault = {
-        minDelay: serverOptions?.minDelay ?? DEFAULT_SERVER_OPTIONS.minDelay,
-        maxDelay: serverOptions?.maxDelay ?? DEFAULT_SERVER_OPTIONS.maxDelay,
-        useCursorPagination:
-          serverOptions?.useCursorPagination ?? DEFAULT_SERVER_OPTIONS.useCursorPagination,
-      };
+  const fetchRows = useEventCallback(async (requestUrl: string): Promise<GridGetRowsResponse> => {
+    if (!requestUrl || !data?.rows) {
+      return sendEmptyResponse();
+    }
+    const params = decodeParams(requestUrl);
+    const verbose = serverOptions?.verbose ?? true;
+    // eslint-disable-next-line no-console
+    const print = console.info;
+    if (verbose) {
+      print('MUI X: DATASOURCE REQUEST', params);
+    }
+    let getRowsResponse: GridGetRowsResponse;
+    const serverOptionsWithDefault = {
+      minDelay: serverOptions?.minDelay ?? DEFAULT_SERVER_OPTIONS.minDelay,
+      maxDelay: serverOptions?.maxDelay ?? DEFAULT_SERVER_OPTIONS.maxDelay,
+      useCursorPagination:
+        serverOptions?.useCursorPagination ?? DEFAULT_SERVER_OPTIONS.useCursorPagination,
+    };
 
-      if (shouldRequestsFailRef.current) {
-        const { minDelay, maxDelay } = serverOptionsWithDefault;
-        const delay = randomInt(minDelay, maxDelay);
-        return new Promise<GridGetRowsResponse>((_, reject) => {
-          if (verbose) {
-            print('MUI X: DATASOURCE REQUEST FAILURE', params);
-          }
-          setTimeout(() => reject(new Error('Could not fetch the data')), delay);
-        });
-      }
-
-      if (isTreeData) {
-        const { rows, rootRowCount, aggregateRow } = await processTreeDataRows(
-          data?.rows ?? [],
-          params,
-          serverOptionsWithDefault,
-          columnsWithDefaultColDef,
-        );
-
-        getRowsResponse = {
-          rows: rows.slice().map((row) => ({ ...row, path: undefined })),
-          rowCount: rootRowCount,
-          ...(aggregateRow ? { aggregateRow } : {}),
-        };
-      } else if (isRowGrouping) {
-        const { rows, rootRowCount, aggregateRow } = await processRowGroupingRows(
-          data?.rows ?? [],
-          params,
-          serverOptionsWithDefault,
-          columnsWithDefaultColDef,
-        );
-
-        getRowsResponse = {
-          rows: rows.slice().map((row) => ({ ...row, path: undefined })),
-          rowCount: rootRowCount,
-          ...(aggregateRow ? { aggregateRow } : {}),
-        };
-      } else {
-        const { returnedRows, nextCursor, totalRowCount, aggregateRow } = await loadServerRows(
-          data?.rows ?? [],
-          { ...params, ...params.paginationModel },
-          serverOptionsWithDefault,
-          columnsWithDefaultColDef,
-        );
-        getRowsResponse = {
-          rows: returnedRows,
-          rowCount: totalRowCount,
-          pageInfo: { nextCursor },
-          ...(aggregateRow ? { aggregateRow } : {}),
-        };
-      }
-
-      return new Promise<GridGetRowsResponse>((resolve) => {
+    if (shouldRequestsFailRef.current) {
+      const { minDelay, maxDelay } = serverOptionsWithDefault;
+      const delay = randomInt(minDelay, maxDelay);
+      return new Promise<GridGetRowsResponse>((_, reject) => {
         if (verbose) {
-          print('MUI X: DATASOURCE RESPONSE', params, getRowsResponse);
+          print('MUI X: DATASOURCE REQUEST FAILURE', params);
         }
-        resolve(getRowsResponse);
+        setTimeout(() => reject(new Error('Could not fetch the data')), delay);
       });
-    },
-    [
-      data,
-      serverOptions?.verbose,
-      serverOptions?.minDelay,
-      serverOptions?.maxDelay,
-      serverOptions?.useCursorPagination,
-      isTreeData,
-      columnsWithDefaultColDef,
-      isRowGrouping,
-    ],
-  );
+    }
+
+    if (isTreeData) {
+      const { rows, rootRowCount, aggregateRow } = await processTreeDataRows(
+        data?.rows ?? [],
+        params,
+        serverOptionsWithDefault,
+        columnsWithDefaultColDef,
+      );
+
+      getRowsResponse = {
+        rows: rows.slice().map((row) => ({ ...row, path: undefined })),
+        rowCount: rootRowCount,
+        ...(aggregateRow ? { aggregateRow } : {}),
+      };
+    } else if (isRowGrouping) {
+      const { rows, rootRowCount, aggregateRow } = await processRowGroupingRows(
+        data?.rows ?? [],
+        params,
+        serverOptionsWithDefault,
+        columnsWithDefaultColDef,
+      );
+
+      getRowsResponse = {
+        rows: rows.slice().map((row) => ({ ...row, path: undefined })),
+        rowCount: rootRowCount,
+        ...(aggregateRow ? { aggregateRow } : {}),
+      };
+    } else {
+      const { returnedRows, nextCursor, totalRowCount, aggregateRow } = await loadServerRows(
+        data?.rows ?? [],
+        { ...params, ...params.paginationModel },
+        serverOptionsWithDefault,
+        columnsWithDefaultColDef,
+      );
+      getRowsResponse = {
+        rows: returnedRows,
+        rowCount: totalRowCount,
+        pageInfo: { nextCursor },
+        ...(aggregateRow ? { aggregateRow } : {}),
+      };
+    }
+
+    return new Promise<GridGetRowsResponse>((resolve) => {
+      if (verbose) {
+        print('MUI X: DATASOURCE RESPONSE', params, getRowsResponse);
+      }
+      resolve(getRowsResponse);
+    });
+  });
 
   return {
     columns: columnsWithDefaultColDef,
