@@ -161,7 +161,7 @@ const resolveDeps = <
   for (let i = 0; i < nextDeps.length; i++) {
     let nextDep = nextDeps[i];
     if (typeof nextDep === 'function') {
-      nextDep = applySelector(apiRef, nextDep, null as any, apiRef.current?.instanceId) as any;
+      nextDep = applySelector(apiRef, nextDep, undefined as any, apiRef.current?.instanceId) as any;
     }
 
     if (!didChange && prevResolvedDeps && !Object.is(nextDep, prevResolvedDeps[i])) {

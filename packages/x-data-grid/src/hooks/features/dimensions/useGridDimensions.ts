@@ -293,8 +293,7 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
       gridDensityFactorSelector,
       gridColumnsTotalWidthSelector,
       gridDensityFactorSelector,
-      // we use these two selectors instead of the bottom ones, since they provide stable references, unlike gridVisiblePinnedColumnDefinitionsSelector
-      gridColumnLookupSelector,
+      gridVisiblePinnedColumnDefinitionsSelector,
       gridColumnFieldsSelector,
       gridRowsMetaSelector,
       props.scrollbarSize,
