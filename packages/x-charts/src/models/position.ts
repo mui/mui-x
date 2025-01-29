@@ -6,5 +6,5 @@ export type Position = {
   /**
    * The horizontal position.
    */
-  horizontal?: 'left' | 'middle' | 'right';
+  horizontal?: 'start' | 'center' | 'end';
 };

@@ -14,7 +14,7 @@ export interface ChartsWrapperProps {
 
 const getDirection = (direction?: Direction, position?: Position) => {
   if (direction === 'vertical') {
-    if (position?.horizontal === 'left') {
+    if (position?.horizontal === 'start') {
       return 'row';
     }
 
@@ -40,11 +40,11 @@ const getAlign = (direction?: Direction, position?: Position) => {
   }
 
   if (direction === 'horizontal') {
-    if (position?.horizontal === 'left') {
+    if (position?.horizontal === 'start') {
       return 'flex-start';
     }
 
-    if (position?.horizontal === 'right') {
+    if (position?.horizontal === 'end') {
       return 'flex-end';
     }
   }

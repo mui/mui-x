@@ -51,7 +51,7 @@ export interface UsePickerParams<
     >,
     Pick<
       UsePickerProviderParameters<TValue, TView, InferError<TExternalProps>>,
-      'localeText' | 'variant'
+      'localeText' | 'variant' | 'ref'
     > {
   props: TExternalProps;
 }
