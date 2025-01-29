@@ -4,7 +4,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { SlideDirection } from './PickersSlideTransition';
 import { useIsDateDisabled } from './useIsDateDisabled';
 import { useUtils } from '../internals/hooks/useUtils';
-import { DateView, MuiPickersAdapter, PickersTimezone, PickerValidDate } from '../models';
+import { MuiPickersAdapter, PickersTimezone, PickerValidDate } from '../models';
 import { DateCalendarDefaultizedProps } from './DateCalendar.types';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
