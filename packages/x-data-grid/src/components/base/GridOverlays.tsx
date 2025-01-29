@@ -28,7 +28,7 @@ const GridOverlayWrapperRoot = styled('div', {
   slot: 'OverlayWrapper',
   shouldForwardProp: (prop) => prop !== 'overlayType' && prop !== 'loadingOverlayVariant',
   overridesResolver: (props, styles) => styles.overlayWrapper,
-})<GridOverlayWrapperRootProps>(({ overlayType, loadingOverlayVariant }) =>
+})<GridOverlaysProps>(({ overlayType, loadingOverlayVariant }) =>
   // Skeleton overlay should flow with the scroll container and not be sticky
   loadingOverlayVariant !== 'skeleton'
     ? {
