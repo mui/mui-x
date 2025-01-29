@@ -19,7 +19,6 @@ import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridDimensions, GridDimensionsApi, GridDimensionsPrivateApi } from './gridDimensionsApi';
 import {
   gridColumnFieldsSelector,
-  gridColumnLookupSelector,
   gridColumnsTotalWidthSelector,
   gridVisiblePinnedColumnDefinitionsSelector,
 } from '../columns';
@@ -36,7 +35,7 @@ import { roundToDecimalPlaces } from '../../../utils/roundToDecimalPlaces';
 import { isJSDOM } from '../../../utils/isJSDOM';
 import { isDeepEqual } from '../../../utils/utils';
 import { useGridStateEffect } from '../../utils/useGridSelector';
-import { gridRowHeightSelector } from '@mui/x-data-grid/internals';
+import { gridRowHeightSelector } from '../../../internals/selectors/dimensionSelectors';
 
 type RootProps = Pick<
   DataGridProcessedProps,
