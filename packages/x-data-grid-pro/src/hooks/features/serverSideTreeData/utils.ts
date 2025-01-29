@@ -3,7 +3,6 @@ import { defaultGridFilterLookup, getTreeNodeDescendants } from '@mui/x-data-gri
 
 export function skipFiltering(rowTree: GridRowTreeConfig) {
   const filteredChildrenCountLookup: Record<GridRowId, number> = {};
-  const filteredDescendantCountLookup: Record<GridRowId, number> = {};
 
   const nodes = Object.values(rowTree);
   for (let i = 0; i < nodes.length; i += 1) {
@@ -14,7 +13,7 @@ export function skipFiltering(rowTree: GridRowTreeConfig) {
   return {
     filteredRowsLookup: defaultGridFilterLookup.filteredRowsLookup,
     filteredChildrenCountLookup,
-    filteredDescendantCountLookup,
+    filteredDescendantCountLookup: defaultGridFilterLookup.filteredDescendantCountLookup,
   };
 }
 
