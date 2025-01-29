@@ -66,7 +66,7 @@ export type AutocompleteProps<
 
   /* New props */
 
-  label?: string;
+  label?: React.ReactNode;
   placeholder?: string;
 
   slotProps?: {
