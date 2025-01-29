@@ -712,7 +712,7 @@
       "name": "detailPanels",
       "description": "Component responsible for rendering the detail panels.",
       "default": "GridDetailPanels",
-      "class": "MuiDataGridPremium-detailPanels"
+      "class": null
     },
     {
       "name": "footer",
@@ -1743,12 +1743,6 @@
       "isGlobal": false
     },
     {
-      "key": "pinnedColumns",
-      "className": "MuiDataGridPremium-pinnedColumns",
-      "description": "Styles applied to the pinned columns.",
-      "isGlobal": false
-    },
-    {
       "key": "pinnedRows",
       "className": "MuiDataGridPremium-pinnedRows",
       "description": "Styles applied to the pinned rows container.",
@@ -1764,12 +1758,6 @@
       "key": "pinnedRows--top",
       "className": "MuiDataGridPremium-pinnedRows--top",
       "description": "Styles applied to the top pinned rows container.",
-      "isGlobal": false
-    },
-    {
-      "key": "pinnedRowsRenderZone",
-      "className": "MuiDataGridPremium-pinnedRowsRenderZone",
-      "description": "Styles applied to pinned rows render zones.",
       "isGlobal": false
     },
     {

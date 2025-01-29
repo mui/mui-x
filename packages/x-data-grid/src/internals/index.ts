@@ -35,6 +35,7 @@ export {
   gridHeaderFilteringMenuSelector,
 } from '../hooks/features/headerFiltering/gridHeaderFilteringSelectors';
 export type { GridSlotsComponentsProps } from '../models/gridSlotsComponentsProps';
+export type { GridFilterInputValueProps } from '../models/gridFilterInputComponent';
 export {
   useGridColumnMenu,
   columnMenuStateInitializer,

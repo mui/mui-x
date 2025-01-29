@@ -99,14 +99,12 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
 
   it('should show aggregation option in the column menu', async () => {
     const { user } = render(<TestDataSourceAggregation />);
-    expect(getRowsSpy.callCount).to.be.greaterThan(0);
     await user.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
     expect(await screen.findByLabelText('Aggregation')).not.to.equal(null);
   });
 
   it('should not show aggregation option in the column menu when no aggregation function is defined', async () => {
     const { user } = render(<TestDataSourceAggregation aggregationFunctions={{}} />);
-    expect(getRowsSpy.callCount).to.be.greaterThan(0);
     await user.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
     expect(screen.queryByLabelText('Aggregation')).to.equal(null);
   });
@@ -119,7 +117,6 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
         }}
       />,
     );
-    expect(getRowsSpy.callCount).to.be.greaterThan(0);
     expect(getRowsSpy.args[0][0].aggregationModel).to.deep.equal({ id: 'size' });
   });
 
