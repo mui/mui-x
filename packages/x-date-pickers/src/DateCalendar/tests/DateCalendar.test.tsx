@@ -638,7 +638,8 @@ describe('<DateCalendar />', () => {
 
       const renderCountBeforeChange = RenderCount.callCount;
       fireEvent.click(screen.getByRole('gridcell', { name: '2' }));
-      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(4); // 2 render * 2 days
+      // 2 render (one to update tabIndex + autoFocus, one to update selection) * 2 days * 2 (because dev mode)
+      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(8);
     });
   });
 });
