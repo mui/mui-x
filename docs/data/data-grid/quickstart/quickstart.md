@@ -13,7 +13,7 @@ Install the Data Grid package that best suits your needs—Community, Pro, or Pr
 :::success
 Not sure which package to choose?
 You can start with the Community version and upgrade to Pro or Premium at any time.
-Check out the [Feature showcase](/x/react-data-grid/demo/) for a list of features available in each package.
+Check out the [Feature showcase](/x/react-data-grid/features/) for a list of features available in each package.
 :::
 
 ### Peer dependencies
