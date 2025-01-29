@@ -13,4 +13,3 @@ export type {
 export type { PropsFromSlot } from '@mui/x-internals/slots';
 export type { Position } from './position';
 export type { CurveType } from './curve';
-export type { Position } from './position';
