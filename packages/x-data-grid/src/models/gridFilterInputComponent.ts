@@ -19,7 +19,7 @@ export type GridFilterInputValueProps<
   // Is any because if typed as GridApiRef a dep cycle occurs. Same happens if ApiContext is used.
   apiRef: RefObject<Api>;
   inputRef?: React.Ref<HTMLElement | null>;
-  focusElementRef?: React.Ref<any>;
+  focusElementRef?: React.Ref<HTMLElement | null>;
   headerFilterMenu?: React.ReactNode;
   clearButton?: React.ReactNode | null;
   /**
