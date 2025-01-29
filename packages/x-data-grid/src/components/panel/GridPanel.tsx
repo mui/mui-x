@@ -8,7 +8,8 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { GridBaseSlots } from '../../models/gridSlotsComponent';
+import { GridSlotProps } from '../../models/gridSlotsComponent';
+import { NotRendered } from '../../utils/assert';
 
 type OwnerState = DataGridProcessedProps;
 
@@ -35,7 +36,7 @@ export const gridPanelClasses = generateUtilityClasses<keyof GridPanelClasses>('
   'paper',
 ]);
 
-const GridPanelRoot = styled('div' as unknown as GridBaseSlots['basePopper'], {
+const GridPanelRoot = styled(NotRendered<GridSlotProps['basePopper']>, {
   name: 'MuiDataGrid',
   slot: 'Panel',
 })<{ ownerState: OwnerState }>(({ theme }) => ({

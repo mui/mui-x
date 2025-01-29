@@ -8,11 +8,12 @@ import {
 } from '@mui/utils';
 import { styled } from '@mui/material/styles';
 import { PopperProps } from '../../models/gridBaseSlots';
-import { GridBaseSlots } from '../../models/gridSlotsComponent';
+import { GridSlotProps } from '../../models/gridSlotsComponent';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { NotRendered } from '../../utils/assert';
 
 type MenuPosition =
   | 'bottom-end'
@@ -41,7 +42,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridMenuRoot = styled('div' as unknown as GridBaseSlots['basePopper'], {
+const GridMenuRoot = styled(NotRendered<GridSlotProps['basePopper']>, {
   name: 'MuiDataGrid',
   slot: 'Menu',
 })<{ ownerState: OwnerState }>(({ theme }) => ({
