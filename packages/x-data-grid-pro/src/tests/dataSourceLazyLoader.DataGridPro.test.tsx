@@ -13,18 +13,17 @@ import {
   GridGetRowsResponse,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { SinonStub, stub } from 'sinon';
+import { spy } from 'sinon';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
-import useLazyRef from '@mui/utils/useLazyRef';
 
 // Needs layout
 describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
   const { render } = createRenderer();
   const defaultTransformGetRowsResponse = (response: GridGetRowsResponse) => response;
+  const fetchRowsSpy = spy();
 
   let transformGetRowsResponse: (response: GridGetRowsResponse) => GridGetRowsResponse;
   let apiRef: RefObject<GridApi | null>;
-  let fetchRowsSpy: SinonStub;
   let mockServer: ReturnType<typeof useMockServer>;
 
   function TestDataSourceLazyLoader(props: Partial<DataGridProProps>) {
@@ -34,18 +33,11 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false },
     );
 
-    // Reuse the same stub between rerenders to properly count the calls
-    fetchRowsSpy = useLazyRef(() => stub()).current;
+    const { fetchRows } = mockServer;
 
-    const originalFetchRows = mockServer.fetchRows;
-    const fetchRows = React.useMemo<typeof originalFetchRows>(() => {
+    const dataSource: GridDataSource = React.useMemo(() => {
       fetchRowsSpy.resetHistory();
-      fetchRowsSpy.callsFake(originalFetchRows);
-      return (...args) => fetchRowsSpy(...args);
-    }, [originalFetchRows]);
-
-    const dataSource: GridDataSource = React.useMemo(
-      () => ({
+      return {
         getRows: async (params: GridGetRowsParams) => {
           const urlParams = new URLSearchParams({
             filterModel: JSON.stringify(params.filterModel),
@@ -54,9 +46,9 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
             end: `${params.end}`,
           });
 
-          const getRowsResponse = await fetchRows(
-            `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
-          );
+          const url = `https://mui.com/x/api/data-grid?${urlParams.toString()}`;
+          fetchRowsSpy(url);
+          const getRowsResponse = await fetchRows(url);
 
           const response = transformGetRowsResponse(getRowsResponse);
           return {
@@ -64,9 +56,8 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
             rowCount: response.rowCount,
           };
         },
-      }),
-      [fetchRows],
-    );
+      };
+    }, [fetchRows]);
 
     return (
       <div style={{ width: 300, height: 300 }}>

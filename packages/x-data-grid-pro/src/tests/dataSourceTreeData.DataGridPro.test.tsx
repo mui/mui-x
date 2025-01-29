@@ -13,10 +13,9 @@ import {
   GridGroupNode,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { SinonStub, stub } from 'sinon';
+import { spy } from 'sinon';
 import { getCell } from 'test/utils/helperFn';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
-import useLazyRef from '@mui/utils/useLazyRef';
 
 const dataSetOptions = {
   dataSet: 'Employee' as const,
@@ -31,9 +30,9 @@ const serverOptions = { minDelay: 0, maxDelay: 0, verbose: false };
 // Needs layout
 describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   const { render } = createRenderer();
+  const fetchRowsSpy = spy();
 
   let apiRef: RefObject<GridApi | null>;
-  let fetchRowsSpy: SinonStub;
   let mockServer: ReturnType<typeof useMockServer>;
 
   function TestDataSource(props: Partial<DataGridProProps> & { shouldRequestsFail?: boolean }) {
@@ -41,18 +40,11 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     mockServer = useMockServer(dataSetOptions, serverOptions, props.shouldRequestsFail ?? false);
     const { columns } = mockServer;
 
-    // Reuse the same stub between rerenders to properly count the calls
-    fetchRowsSpy = useLazyRef(() => stub()).current;
+    const { fetchRows } = mockServer;
 
-    const originalFetchRows = mockServer.fetchRows;
-    const fetchRows = React.useMemo<typeof originalFetchRows>(() => {
+    const dataSource: GridDataSource = React.useMemo(() => {
       fetchRowsSpy.resetHistory();
-      fetchRowsSpy.callsFake(originalFetchRows);
-      return (...args) => fetchRowsSpy(...args);
-    }, [originalFetchRows]);
-
-    const dataSource: GridDataSource = React.useMemo(
-      () => ({
+      return {
         getRows: async (params: GridGetRowsParams) => {
           const urlParams = new URLSearchParams({
             paginationModel: JSON.stringify(params.paginationModel),
@@ -61,9 +53,9 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
             groupKeys: JSON.stringify(params.groupKeys),
           });
 
-          const getRowsResponse = await fetchRows(
-            `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
-          );
+          const url = `https://mui.com/x/api/data-grid?${urlParams.toString()}`;
+          fetchRowsSpy(url);
+          const getRowsResponse = await fetchRows(url);
 
           return {
             rows: getRowsResponse.rows,
@@ -72,9 +64,8 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
         },
         getGroupKey: (row) => row[dataSetOptions.treeData.groupingField],
         getChildrenCount: (row) => row.descendantCount,
-      }),
-      [fetchRows],
-    );
+      };
+    }, [fetchRows]);
 
     return (
       <div style={{ width: 300, height: 300 }}>
