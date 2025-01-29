@@ -351,7 +351,6 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     disablePast,
     maxDate,
     minDate,
-    calendars,
     onMonthChange,
     reduceAnimations,
     shouldDisableDate: wrappedShouldDisableDate,
