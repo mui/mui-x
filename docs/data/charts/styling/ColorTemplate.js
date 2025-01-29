@@ -30,7 +30,7 @@ const legendPlacement = {
     legend: {
       position: {
         vertical: 'middle',
-        horizontal: 'start',
+        horizontal: 'end',
       },
       direction: 'vertical',
     },
