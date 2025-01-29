@@ -72,7 +72,7 @@ export type SelectProps = {
   onFocus?: React.FocusEventHandler;
   onBlur?: React.FocusEventHandler;
   onKeyDown?: React.KeyboardEventHandler;
-  onOpen?: (event: React.KeyboardEvent) => void;
+  onOpen?: (event: React.SyntheticEvent) => void;
   onClose?: (
     event: React.KeyboardEvent,
     reason: 'backdropClick' | 'escapeKeyDown' | 'tabKeyDown',
