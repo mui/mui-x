@@ -20,7 +20,6 @@ import type {
   DataGridProSharedPropsWithDefaultValue,
   DataGridProSharedPropsWithoutDefaultValue,
   GridDataSourceCache,
-  GridGetRowsParams,
 } from '@mui/x-data-grid/internals';
 import type { GridPinnedRowsProp } from '../hooks/features/rowPinning';
 import { GridApiPro } from './gridApiPro';
@@ -161,7 +160,6 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
 
 interface DataGridProDataSourceProps {
   unstable_dataSourceCache?: GridDataSourceCache | null;
-  unstable_onDataSourceError?: (error: Error, params: GridGetRowsParams) => void;
 }
 
 interface DataGridProRegularProps<R extends GridValidRowModel> {

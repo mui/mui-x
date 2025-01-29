@@ -4,6 +4,7 @@ import type {
   GridColDef,
   GridRowModel,
   GridPaginationModel,
+  GridRowId,
 } from '.';
 
 export interface GridGetRowsParams {
@@ -33,6 +34,12 @@ export interface GridGetRowsParams {
   groupKeys?: string[];
 }
 
+export interface GridUpdateRowParams {
+  rowId: GridRowId;
+  updatedRow: GridRowModel;
+  previousRow: GridRowModel;
+}
+
 export interface GridGetRowsResponse {
   rows: GridRowModel[];
   /**
@@ -58,11 +65,13 @@ export interface GridDataSource {
    */
   getRows(params: GridGetRowsParams): Promise<GridGetRowsResponse>;
   /**
-   * This method will be called when the user updates a row [Not yet implemented].
+   * This method will be called when the user updates a row.
+   * @param {GridRowModel} id The row to update.
    * @param {GridRowModel} updatedRow The updated row.
+   * @param {GridRowModel} previousRow The previous row.
    * @returns {Promise<any>} If resolved (synced on the backend), the grid will update the row and mutate the cache.
    */
-  updateRow?(updatedRow: GridRowModel): Promise<any>;
+  updateRow?(id: GridRowId, updatedRow: GridRowModel, previousRow: GridRowModel): Promise<any>;
   /**
    * Used to group rows by their parent group. Replaces `getTreeDataPath` used in client side tree-data.
    * @param {GridRowModel} row The row to get the group key of.

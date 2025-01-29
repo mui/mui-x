@@ -7,6 +7,7 @@ import {
   gridPaginationModelSelector,
   GRID_ROOT_GROUP_ID,
   GridEventListener,
+  GridRowId,
 } from '@mui/x-data-grid';
 import {
   GridGetRowsResponse,
@@ -14,6 +15,7 @@ import {
   GridStateInitializer,
   GridStrategyGroup,
   GridStrategyProcessor,
+  GridGetRowsParams,
   GridDataSourceCache,
   runIf,
 } from '@mui/x-data-grid/internals';
@@ -75,6 +77,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiPro>(
     cacheOptions?: GridDataSourceCacheDefaultConfig;
   } = {},
 ) => {
+  const rowIdToGetRowsParams = React.useRef<Record<GridRowId, GridGetRowsParams>>({});
   const setStrategyAvailability = React.useCallback(() => {
     apiRef.current.setStrategyAvailability(
       GridStrategyGroup.DataSource,
@@ -157,6 +160,9 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiPro>(
         const cacheResponses = cacheChunkManager.splitResponse(fetchParams, getRowsResponse);
         cacheResponses.forEach((response, key) => {
           cache.set(key, response);
+          response.rows.forEach((row) => {
+            rowIdToGetRowsParams.current[row.id] = fetchParams;
+          });
         });
 
         if (lastRequestId.current === requestId) {
@@ -324,6 +330,28 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiPro>(
     [apiRef],
   );
 
+  const mutateRowInCache = React.useCallback<GridDataSourcePrivateApi['mutateRowInCache']>(
+    (rowId, rowUpdate) => {
+      const getRowsParams = rowIdToGetRowsParams.current[rowId];
+      if (!getRowsParams) {
+        return;
+      }
+      const cachedData = cache.get(getRowsParams);
+      if (!cachedData) {
+        return;
+      }
+      const updatedRows = [...cachedData.rows];
+      // TODO: Accomodate `props.getRowId`
+      const rowIndex = updatedRows.findIndex((row) => row.id === rowId);
+      if (rowIndex === -1) {
+        return;
+      }
+      updatedRows[rowIndex] = rowUpdate;
+      cache.set(getRowsParams, { ...cachedData, rows: updatedRows });
+    },
+    [cache],
+  );
+
   const handleStrategyActivityChange = React.useCallback<
     GridEventListener<'strategyAvailabilityChange'>
   >(() => {
@@ -375,6 +403,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiPro>(
   const dataSourcePrivateApi: GridDataSourcePrivateApi = {
     fetchRowChildren,
     resetDataSourceState,
+    mutateRowInCache,
   };
 
   const isFirstRender = React.useRef(true);
