@@ -417,9 +417,10 @@ describe('<DataGrid /> - Row selection', () => {
       await user.type(screen.getByRole('spinbutton', { name: 'Value' }), '1');
 
       await waitFor(() => {
-        // Previous selection is cleaned with only the filtered rows
-        expect(getSelectedRowIds()).to.deep.equal([1]);
+        expect(screen.queryByLabelText('1 active filter')).not.to.equal(null);
       });
+      // Previous selection is cleared and only the filtered row is selected
+      expect(getSelectedRowIds()).to.deep.equal([1]);
       expect(grid('selectedRowCount')?.textContent).to.equal('1 row selected');
     });
 
@@ -445,9 +446,10 @@ describe('<DataGrid /> - Row selection', () => {
       await user.type(screen.getByRole('spinbutton', { name: 'Value' }), '1');
 
       await waitFor(() => {
-        // Previous selection is cleared and only the filtered row is selected
-        expect(getSelectedRowIds()).to.deep.equal([1]);
+        expect(screen.queryByLabelText('1 active filter')).not.to.equal(null);
       });
+      // Previous selection is cleared and only the filtered row is selected
+      expect(getSelectedRowIds()).to.deep.equal([1]);
       expect(grid('selectedRowCount')?.textContent).to.equal('1 row selected');
 
       await user.click(selectAllCheckbox); // Unselect all
