@@ -355,6 +355,28 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     reduceAnimations,
     shouldDisableDate: wrappedShouldDisableDate,
     timezone,
+    getCurrentMonthFromVisibleDate: (visibleDate, prevMonth) => {
+      const firstVisibleMonth = utils.addMonths(prevMonth, 1 - currentMonthCalendarPosition);
+      const lastVisibleMonth = utils.endOfMonth(utils.addMonths(firstVisibleMonth, calendars - 1));
+
+      // The new focused day is inside the visible calendars,
+      // Do not change the current month
+      if (utils.isWithinRange(visibleDate, [firstVisibleMonth, lastVisibleMonth])) {
+        return prevMonth;
+      }
+
+      // The new focused day is after the last visible month,
+      // Move the current month so that the new focused day is inside the first visible month
+      if (utils.isAfter(visibleDate, lastVisibleMonth)) {
+        return utils.startOfMonth(utils.addMonths(visibleDate, currentMonthCalendarPosition - 1));
+      }
+
+      // The new focused day is before the first visible month,
+      // Move the current month so that the new focused day is inside the last visible month
+      return utils.startOfMonth(
+        utils.addMonths(visibleDate, currentMonthCalendarPosition - calendars),
+      );
+    },
   });
 
   const CalendarHeader = slots?.calendarHeader ?? PickersRangeCalendarHeader;

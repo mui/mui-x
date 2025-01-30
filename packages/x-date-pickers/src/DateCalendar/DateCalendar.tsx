@@ -190,6 +190,13 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
     disablePast,
     disableFuture,
     timezone,
+    getCurrentMonthFromVisibleDate: (visibleDate, prevMonth) => {
+      if (utils.isSameMonth(visibleDate, prevMonth)) {
+        return prevMonth;
+      }
+
+      return utils.startOfMonth(visibleDate);
+    },
   });
 
   // When disabled, limit the view to the selected date

@@ -93,6 +93,10 @@ interface UseCalendarStateParameters
   > {
   value: PickerValidDate | null;
   timezone: PickersTimezone;
+  getCurrentMonthFromVisibleDate: (
+    focusedDay: PickerValidDate,
+    prevMonth: PickerValidDate,
+  ) => PickerValidDate;
 }
 
 interface UseCalendarStateReturnValue {
@@ -118,6 +122,7 @@ export const useCalendarState = (
     reduceAnimations,
     shouldDisableDate,
     timezone,
+    getCurrentMonthFromVisibleDate,
   } = params;
 
   const utils = useUtils();
@@ -169,14 +174,15 @@ export const useCalendarState = (
 
   const setVisibleDate = useEventCallback(
     (date: PickerValidDate, skipAnimation: boolean = false) => {
-      const startOfMonth = utils.startOfMonth(date);
       let focusedDay: PickerValidDate | null =
         calendarState.focusedDay != null && utils.isSameDay(date, calendarState.focusedDay)
           ? calendarState.focusedDay
           : date;
 
+      // If the date is disabled, we try to find a non-disabled date inside the same month.
       if (isDateDisabled(focusedDay)) {
-        const endOfMonth = utils.endOfMonth(startOfMonth);
+        const startOfMonth = utils.startOfMonth(date);
+        const endOfMonth = utils.endOfMonth(date);
         focusedDay = findClosestEnabledDate({
           utils,
           date: focusedDay,
@@ -189,23 +195,24 @@ export const useCalendarState = (
         });
       }
 
-      const hasChangedMonth = !utils.isSameMonth(calendarState.currentMonth, startOfMonth);
-      const hasChangedYear = !utils.isSameYear(calendarState.currentMonth, startOfMonth);
+      const newMonth = getCurrentMonthFromVisibleDate(date, calendarState.currentMonth);
+      const hasChangedMonth = !utils.isSameMonth(calendarState.currentMonth, newMonth);
+      const hasChangedYear = !utils.isSameYear(calendarState.currentMonth, newMonth);
 
       dispatch({
         type: 'setVisibleDate',
-        month: hasChangedMonth ? utils.startOfMonth(startOfMonth) : calendarState.currentMonth,
-        direction: utils.isAfterDay(startOfMonth, calendarState.currentMonth) ? 'left' : 'right',
+        month: newMonth,
+        direction: utils.isAfterDay(newMonth, calendarState.currentMonth) ? 'left' : 'right',
         focusedDay,
         skipAnimation,
       });
 
       if (hasChangedMonth) {
-        onMonthChange?.(startOfMonth);
+        onMonthChange?.(newMonth);
       }
 
       if (hasChangedYear) {
-        onYearChange?.(utils.startOfYear(startOfMonth));
+        onYearChange?.(utils.startOfYear(newMonth));
       }
     },
   );
