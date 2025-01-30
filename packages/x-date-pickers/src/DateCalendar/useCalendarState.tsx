@@ -102,7 +102,7 @@ interface UseCalendarStateParameters
 interface UseCalendarStateReturnValue {
   referenceDate: PickerValidDate;
   calendarState: CalendarState;
-  setVisibleDate: (date: PickerValidDate, skipAnimation?: boolean) => void;
+  setVisibleDate: (parameters: SetVisibleDateParameters) => void;
   isDateDisabled: (day: PickerValidDate | null) => boolean;
   onMonthSwitchingAnimationEnd: () => void;
 }
@@ -172,17 +172,24 @@ export const useCalendarState = (
     });
   }, [referenceDate, utils]);
 
-  const setVisibleDate = useEventCallback(
-    (date: PickerValidDate, skipAnimation: boolean = false) => {
-      let focusedDay: PickerValidDate | null =
-        calendarState.focusedDay != null && utils.isSameDay(date, calendarState.focusedDay)
-          ? calendarState.focusedDay
-          : date;
+  const setVisibleDate = useEventCallback(({ target, reason }: SetVisibleDateParameters) => {
+    const skipAnimation = reason === 'cell-interaction';
+
+    let month: PickerValidDate;
+    if (reason === 'header-navigation') {
+      month = utils.startOfMonth(target);
+    } else {
+      month = getCurrentMonthFromVisibleDate(target, calendarState.currentMonth);
+    }
+
+    let focusedDay: PickerValidDate | null;
+    if (reason === 'header-navigation' || reason === 'controlled-value-change') {
+      focusedDay = target;
 
       // If the date is disabled, we try to find a non-disabled date inside the same month.
       if (isDateDisabled(focusedDay)) {
-        const startOfMonth = utils.startOfMonth(date);
-        const endOfMonth = utils.endOfMonth(date);
+        const startOfMonth = utils.startOfMonth(target);
+        const endOfMonth = utils.endOfMonth(target);
         focusedDay = findClosestEnabledDate({
           utils,
           date: focusedDay,
@@ -194,28 +201,32 @@ export const useCalendarState = (
           timezone,
         });
       }
+    } else {
+      focusedDay = target;
+    }
 
-      const newMonth = getCurrentMonthFromVisibleDate(date, calendarState.currentMonth);
-      const hasChangedMonth = !utils.isSameMonth(calendarState.currentMonth, newMonth);
-      const hasChangedYear = !utils.isSameYear(calendarState.currentMonth, newMonth);
+    const hasChangedMonth = !utils.isSameMonth(calendarState.currentMonth, month);
+    const hasChangedYear = !utils.isSameYear(calendarState.currentMonth, month);
+    if (hasChangedMonth) {
+      onMonthChange?.(month);
+    }
+    if (hasChangedYear) {
+      onYearChange?.(utils.startOfYear(month));
+    }
 
-      dispatch({
-        type: 'setVisibleDate',
-        month: newMonth,
-        direction: utils.isAfterDay(newMonth, calendarState.currentMonth) ? 'left' : 'right',
-        focusedDay,
-        skipAnimation,
-      });
-
-      if (hasChangedMonth) {
-        onMonthChange?.(newMonth);
-      }
-
-      if (hasChangedYear) {
-        onYearChange?.(utils.startOfYear(newMonth));
-      }
-    },
-  );
+    dispatch({
+      type: 'setVisibleDate',
+      month,
+      direction: utils.isAfterDay(month, calendarState.currentMonth) ? 'left' : 'right',
+      focusedDay:
+        calendarState.focusedDay != null &&
+        focusedDay != null &&
+        utils.isSameDay(focusedDay, calendarState.focusedDay)
+          ? calendarState.focusedDay
+          : focusedDay,
+      skipAnimation,
+    });
+  });
 
   const onMonthSwitchingAnimationEnd = React.useCallback(() => {
     dispatch({ type: 'finishMonthSwitchingAnimation' });
@@ -229,3 +240,8 @@ export const useCalendarState = (
     onMonthSwitchingAnimationEnd,
   };
 };
+
+interface SetVisibleDateParameters {
+  target: PickerValidDate;
+  reason: 'header-navigation' | 'cell-interaction' | 'controlled-value-change';
+}
