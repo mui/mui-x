@@ -198,26 +198,26 @@ export default function RootLayout(props: { children: React.ReactNode }) {
 When using Next.js pages, a great place to call `setLicenseKey` is in [`_app.tsx`](https://nextjs.org/docs/pages/building-your-application/routing/custom-app).
 
 ```tsx title="pages/_app.tsx"
-import type { ReactElement, ReactNode } from 'react'
-import type { NextPage } from 'next'
-import type { AppProps } from 'next/app'
+import type { ReactElement, ReactNode } from 'react';
+import type { NextPage } from 'next';
+import type { AppProps } from 'next/app';
 import { LicenseInfo } from '@mui/x-license';
 
 LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
-  getLayout?: (page: ReactElement) => ReactNode
-}
+  getLayout?: (page: ReactElement) => ReactNode;
+};
 
 type AppPropsWithLayout = AppProps & {
-  Component: NextPageWithLayout
-}
+  Component: NextPageWithLayout;
+};
 
 export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   // Use the layout defined at the page level, if available
-  const getLayout = Component.getLayout ?? ((page) => page)
+  const getLayout = Component.getLayout ?? ((page) => page);
 
-  return getLayout(<Component {...pageProps} />)
+  return getLayout(<Component {...pageProps} />);
 }
 ```
 
