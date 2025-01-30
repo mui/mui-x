@@ -55,12 +55,7 @@ export default function FunnelCurvesNoSnap() {
         return `import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 
 <FunnelChart
-  series={[
-    {
-      curve: '${props.curveType}',
-      // ...
-    },
-  ]}
+  series={[{ curve: '${props.curveType}' }]}
 />
 `;
       }}
