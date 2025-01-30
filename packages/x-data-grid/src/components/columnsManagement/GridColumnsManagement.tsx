@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { styled } from '@mui/material/styles';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { inputBaseClasses } from '@mui/material/InputBase';
+import { TextFieldProps } from '../../models/gridBaseSlots';
 import {
   gridColumnDefinitionsSelector,
   gridColumnVisibilityModelSelector,
@@ -15,9 +15,11 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridColDef } from '../../models/colDef/gridColDef';
+import type { GridSlotProps } from '../../models/gridSlotsComponentsProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useLazyRef } from '../../hooks/utils/useLazyRef';
 import { checkColumnVisibilityModelsSame, defaultSearchPredicate } from './utils';
+import { NotRendered } from '../../utils/assert';
 
 export interface GridColumnsManagementProps {
   /*
@@ -228,38 +230,39 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
           className={classes.searchInput}
           value={searchValue}
           onChange={handleSearchValueChange}
-          variant="outlined"
           size="small"
           type="search"
-          InputProps={{
-            startAdornment: (
-              <rootProps.slots.baseInputAdornment position="start">
-                <rootProps.slots.quickFilterIcon />
-              </rootProps.slots.baseInputAdornment>
-            ),
-            endAdornment: (
-              <rootProps.slots.baseIconButton
-                aria-label={apiRef.current.getLocaleText('columnsManagementDeleteIconLabel')}
-                size="small"
-                style={
-                  searchValue
-                    ? {
-                        visibility: 'visible',
-                      }
-                    : {
-                        visibility: 'hidden',
-                      }
-                }
-                tabIndex={-1}
-                onClick={handleSearchReset}
-                {...rootProps.slotProps?.baseIconButton}
-              >
-                <rootProps.slots.quickFilterClearIcon fontSize="small" />
-              </rootProps.slots.baseIconButton>
-            ),
-          }}
-          inputProps={{
-            'aria-label': apiRef.current.getLocaleText('columnsManagementSearchTitle'),
+          slotProps={{
+            input: {
+              startAdornment: (
+                <rootProps.slots.baseInputAdornment position="start">
+                  <rootProps.slots.quickFilterIcon />
+                </rootProps.slots.baseInputAdornment>
+              ),
+              endAdornment: (
+                <rootProps.slots.baseIconButton
+                  aria-label={apiRef.current.getLocaleText('columnsManagementDeleteIconLabel')}
+                  size="small"
+                  style={
+                    searchValue
+                      ? {
+                          visibility: 'visible',
+                        }
+                      : {
+                          visibility: 'hidden',
+                        }
+                  }
+                  tabIndex={-1}
+                  onClick={handleSearchReset}
+                  {...rootProps.slotProps?.baseIconButton}
+                >
+                  <rootProps.slots.quickFilterClearIcon fontSize="small" />
+                </rootProps.slots.baseIconButton>
+              ),
+            },
+            htmlInput: {
+              'aria-label': apiRef.current.getLocaleText('columnsManagementSearchTitle'),
+            },
           }}
           autoComplete="off"
           fullWidth
@@ -358,7 +361,58 @@ GridColumnsManagement.propTypes = {
    * @returns {GridColDef['field'][]} The list of togglable columns' field names.
    */
   getTogglableColumns: PropTypes.func,
-  searchInputProps: PropTypes.object,
+  searchInputProps: PropTypes.shape({
+    autoComplete: PropTypes.string,
+    className: PropTypes.string,
+    color: PropTypes.oneOf(['error', 'primary']),
+    disabled: PropTypes.bool,
+    error: PropTypes.bool,
+    fullWidth: PropTypes.bool,
+    helperText: PropTypes.string,
+    id: PropTypes.string,
+    inputRef: PropTypes.oneOfType([
+      PropTypes.func,
+      PropTypes.shape({
+        current: PropTypes.object,
+      }),
+    ]),
+    label: PropTypes.node,
+    onChange: PropTypes.func,
+    onKeyDown: PropTypes.func,
+    placeholder: PropTypes.string,
+    size: PropTypes.oneOf(['medium', 'small']),
+    slotProps: PropTypes.object,
+    style: PropTypes.object,
+    tabIndex: PropTypes.number,
+    type: PropTypes.oneOfType([
+      PropTypes.oneOf([
+        'button',
+        'checkbox',
+        'color',
+        'date',
+        'datetime-local',
+        'email',
+        'file',
+        'hidden',
+        'image',
+        'month',
+        'number',
+        'password',
+        'radio',
+        'range',
+        'reset',
+        'search',
+        'submit',
+        'tel',
+        'text',
+        'time',
+        'url',
+        'week',
+      ]),
+      PropTypes.object,
+    ]),
+    value: PropTypes.string,
+  }),
   searchPredicate: PropTypes.func,
   sort: PropTypes.oneOf(['asc', 'desc']),
   /**
@@ -392,7 +446,7 @@ const GridColumnsManagementHeader = styled('div', {
   padding: theme.spacing(1.5, 3),
 }));
 
-const SearchInput = styled(TextField, {
+const SearchInput = styled(NotRendered<GridSlotProps['baseTextField']>, {
   name: 'MuiDataGrid',
   slot: 'ColumnsManagementSearchInput',
   overridesResolver: (props, styles) => styles.columnsManagementSearchInput,

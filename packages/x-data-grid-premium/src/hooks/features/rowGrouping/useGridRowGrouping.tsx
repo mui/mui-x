@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   GridEventListener,
   useGridApiEventHandler,
@@ -51,7 +52,7 @@ export const rowGroupingStateInitializer: GridStateInitializer<
  * @requires useGridParamsApi (method) - can be after, async only
  */
 export const useGridRowGrouping = (
-  apiRef: React.RefObject<GridPrivateApiPremium>,
+  apiRef: RefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
     | 'initialState'

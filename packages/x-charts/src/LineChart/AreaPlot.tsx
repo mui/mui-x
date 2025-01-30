@@ -11,7 +11,7 @@ import {
   AreaElementSlots,
 } from './AreaElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
-import getCurveFactory from '../internals/getCurve';
+import { getCurveFactory } from '../internals/getCurve';
 import { isBandScale } from '../internals/isBandScale';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { LineItemIdentifier } from '../models/seriesType/line';
