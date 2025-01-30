@@ -28,7 +28,8 @@ export const useGridRegisterStrategyProcessor = <
       isFirstRender.current = false;
     } else {
       console.error(
-        'useGridRegisterStrategyProcessor: preProcessor changed after the first render – unstable preProcessors might lead to unexpected behaviors.',
+        `useGridRegisterStrategyProcessor: preProcessor for ${group} changed after the first render – unstable preProcessors might lead to unexpected behaviors.`,
+        processor,
       );
       registerPreProcessor();
     }
@@ -41,8 +42,7 @@ export const useGridRegisterStrategyProcessor = <
           cleanup.current = null;
         }
       };
-    } 
-      return undefined;
-    
+    }
+    return undefined;
   }, [registerPreProcessor]);
 };
