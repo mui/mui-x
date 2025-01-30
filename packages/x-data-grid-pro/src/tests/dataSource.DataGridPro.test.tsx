@@ -51,6 +51,14 @@ describe('<DataGridPro /> - Data source', () => {
   let apiRef: RefObject<GridApi>;
   let mockServer: ReturnType<typeof useMockServer>;
 
+  // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
+  function Reset() {
+    React.useLayoutEffect(() => {
+      fetchRowsSpy.resetHistory();
+    }, []);
+    return null;
+  }
+
   function TestDataSource(props: Partial<DataGridProProps> & { shouldRequestsFail?: boolean }) {
     apiRef = useGridApiRef();
     mockServer = useMockServer(
@@ -61,9 +69,8 @@ describe('<DataGridPro /> - Data source', () => {
 
     const { fetchRows } = mockServer;
 
-    const dataSource: GridDataSource = React.useMemo(() => {
-      fetchRowsSpy.resetHistory();
-      return {
+    const dataSource: GridDataSource = React.useMemo(
+      () => ({
         getRows: async (params: GridGetRowsParams) => {
           const urlParams = new URLSearchParams({
             filterModel: JSON.stringify(params.filterModel),
@@ -80,11 +87,17 @@ describe('<DataGridPro /> - Data source', () => {
             rowCount: getRowsResponse.rowCount,
           };
         },
-      };
-    }, [fetchRows]);
+      }),
+      [fetchRows],
+    );
+
+    if (!mockServer.isReady) {
+      return null;
+    }
 
     return (
       <div style={{ width: 300, height: 300 }}>
+        <Reset />
         <DataGridPro
           apiRef={apiRef}
           columns={mockServer.columns}
