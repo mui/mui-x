@@ -12,7 +12,7 @@ import {
   GridGetRowsResponse,
   useGridApiRef,
 } from '@mui/x-data-grid';
-import { SinonSpy, spy } from 'sinon';
+import { spy } from 'sinon';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 import { getKeyDefault } from '../hooks/features/dataSource/cache';
 
