@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { act, createRenderer, waitFor } from '@mui/internal-test-utils';
-import { RefObject } from '@mui/x-internals/types';
 import { expect } from 'chai';
+import { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
   DataGridProProps,
@@ -13,9 +13,8 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
+import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 import { getKey } from '../hooks/features/dataSource/cache';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 class TestCache {
   private cache: Map<string, GridGetRowsResponse>;
@@ -44,7 +43,8 @@ class TestCache {
 const pageSizeOptions = [10];
 const serverOptions = { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false };
 
-describe('<DataGridPro /> - Data source', () => {
+// Needs layout
+describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
   const { render } = createRenderer();
   const fetchRowsSpy = spy();
 
@@ -69,13 +69,14 @@ describe('<DataGridPro /> - Data source', () => {
 
     const { fetchRows } = mockServer;
 
-    const dataSource: GridDataSource = React.useMemo(
-      () => ({
+    const dataSource: GridDataSource = React.useMemo(() => {
+      return {
         getRows: async (params: GridGetRowsParams) => {
           const urlParams = new URLSearchParams({
             filterModel: JSON.stringify(params.filterModel),
             sortModel: JSON.stringify(params.sortModel),
-            paginationModel: JSON.stringify(params.paginationModel),
+            start: `${params.start}`,
+            end: `${params.end}`,
           });
 
           const url = `https://mui.com/x/api/data-grid?${urlParams.toString()}`;
@@ -87,9 +88,8 @@ describe('<DataGridPro /> - Data source', () => {
             rowCount: getRowsResponse.rowCount,
           };
         },
-      }),
-      [fetchRows],
-    );
+      };
+    }, [fetchRows]);
 
     if (!mockServer.isReady) {
       return null;
@@ -112,12 +112,6 @@ describe('<DataGridPro /> - Data source', () => {
     );
   }
 
-  beforeEach(function beforeTest() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
-  });
-
   it('should fetch the data on initial render', async () => {
     render(<TestDataSource />);
     await waitFor(() => {
@@ -126,43 +120,35 @@ describe('<DataGridPro /> - Data source', () => {
   });
 
   it('should re-fetch the data on filter change', async () => {
-    render(<TestDataSource />);
+    const { setProps } = render(<TestDataSource />);
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
-    act(() => {
-      apiRef.current.setFilterModel({
-        items: [{ field: 'name', value: 'John', operator: 'contains' }],
-      });
-    });
+    setProps({ filterModel: { items: [{ field: 'name', value: 'John', operator: 'contains' }] } });
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.be.greaterThan(1);
+      expect(fetchRowsSpy.callCount).to.equal(2);
     });
   });
 
   it('should re-fetch the data on sort change', async () => {
-    render(<TestDataSource />);
+    const { setProps } = render(<TestDataSource />);
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
-    act(() => {
-      apiRef.current.setSortModel([{ field: 'name', sort: 'asc' }]);
-    });
+    setProps({ sortModel: [{ field: 'name', sort: 'asc' }] });
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.be.greaterThan(1);
+      expect(fetchRowsSpy.callCount).to.equal(2);
     });
   });
 
   it('should re-fetch the data on pagination change', async () => {
-    render(<TestDataSource />);
+    const { setProps } = render(<TestDataSource />);
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
-    act(() => {
-      apiRef.current.setPage(1);
-    });
+    setProps({ paginationModel: { page: 1, pageSize: 10 } });
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.be.greaterThan(1);
+      expect(fetchRowsSpy.callCount).to.equal(2);
     });
   });
 
@@ -239,6 +225,10 @@ describe('<DataGridPro /> - Data source', () => {
       act(() => {
         apiRef.current.setPage(1);
       });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
       await waitFor(() => {
         expect(testCache.size()).to.equal(2);
       });
@@ -247,6 +237,7 @@ describe('<DataGridPro /> - Data source', () => {
       act(() => {
         apiRef.current.setPage(0);
       });
+
       await waitFor(() => {
         expect(fetchRowsSpy.callCount).to.equal(2);
       });
