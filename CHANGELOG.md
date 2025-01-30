@@ -8,7 +8,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ## 8.0.0-alpha.10
 ## 8.0.0-alpha.10
 
-_Jan 29, 2025_
+_Jan 30, 2025_
 
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
