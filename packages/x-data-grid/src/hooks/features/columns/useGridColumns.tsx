@@ -282,6 +282,9 @@ export function useGridColumns(
   /**
    * PRE-PROCESSING
    */
+  const hasVisibilityModelProp =
+    props.columnVisibilityModel != null ||
+    props.initialState?.columns?.columnVisibilityModel != null;
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
     (prevState, context) => {
       const columnsStateToExport: GridColumnsInitialState = {};
@@ -291,10 +294,8 @@ export function useGridColumns(
         // Always export if the `exportOnlyDirtyModels` property is not activated
         !context.exportOnlyDirtyModels ||
         // Always export if the model is controlled
-        props.columnVisibilityModel != null ||
         // Always export if the model has been initialized
-        // TODO v6 Do a nullish check instead to export even if the initial model equals "{}"
-        Object.keys(props.initialState?.columns?.columnVisibilityModel ?? {}).length > 0 ||
+        hasVisibilityModelProp ||
         // Always export if the model is not empty
         Object.keys(columnVisibilityModelToExport).length > 0;
 
@@ -329,7 +330,7 @@ export function useGridColumns(
         columns: columnsStateToExport,
       };
     },
-    [apiRef, props.columnVisibilityModel, props.initialState?.columns],
+    [apiRef],
   );
 
   const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
