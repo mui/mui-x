@@ -13,8 +13,9 @@ export const useGridRegisterStrategyProcessor = <
   group: G,
   processor: GridStrategyProcessor<G>,
 ) => {
+  const cleanup = React.useRef<(() => void) | null>(null);
   const registerPreProcessor = React.useCallback(() => {
-    apiRef.current.registerStrategyProcessor(strategyName, group, processor);
+    cleanup.current = apiRef.current.registerStrategyProcessor(strategyName, group, processor);
   }, [apiRef, processor, group, strategyName]);
 
   useFirstRender(() => {
@@ -26,7 +27,22 @@ export const useGridRegisterStrategyProcessor = <
     if (isFirstRender.current) {
       isFirstRender.current = false;
     } else {
+      console.error(
+        'useGridRegisterStrategyProcessor: preProcessor changed after the first render – unstable preProcessors might lead to unexpected behaviors.',
+      );
       registerPreProcessor();
     }
+
+    // Avoid cleanups in development/testing please StrictMode, yet still be able to use `useFirstRender` that
+    if (process.env.NODE_ENV !== 'production') {
+      return () => {
+        if (cleanup.current) {
+          cleanup.current();
+          cleanup.current = null;
+        }
+      };
+    } 
+      return undefined;
+    
   }, [registerPreProcessor]);
 };
