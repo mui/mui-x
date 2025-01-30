@@ -1,3 +1,4 @@
+import { Position } from '@mui/x-charts/models';
 import { FunnelDataPoints, FunnelLabelOptions } from './funnel.types';
 
 /**
@@ -10,8 +11,8 @@ export const alignLabel = ({
   textAnchor,
   dominantBaseline,
 }: Omit<FunnelLabelOptions, 'margin'>) => {
-  const vertical = position?.vertical ?? 'middle';
-  const horizontal = position?.horizontal ?? 'middle';
+  const vertical: Position['vertical'] = position?.vertical ?? 'middle';
+  const horizontal: Position['horizontal'] = position?.horizontal ?? 'center';
   let anchor = 'middle';
   let baseline = 'central';
 
@@ -68,8 +69,8 @@ export const positionLabel = ({
   dataIndex: number;
   baseScaleData: number[];
 }) => {
-  const vertical = position?.vertical ?? 'middle';
-  const horizontal = position?.horizontal ?? 'middle';
+  const vertical: Position['vertical'] = position?.vertical ?? 'middle';
+  const horizontal: Position['horizontal'] = position?.horizontal ?? 'center';
 
   let x: number | undefined = 0;
   let y: number | undefined = 0;
@@ -160,7 +161,7 @@ export const positionLabel = ({
   }
 
   if (isHorizontal) {
-    if (horizontal === 'middle') {
+    if (horizontal === 'center') {
       x = center;
       if (vertical === 'top') {
         y = topMiddle;
@@ -195,7 +196,7 @@ export const positionLabel = ({
       y = middle;
       if (horizontal === 'start') {
         x = leftCenter;
-      } else if (horizontal === 'middle') {
+      } else if (horizontal === 'center') {
         x = center;
       } else if (horizontal === 'end') {
         x = rightCenter;
@@ -204,7 +205,7 @@ export const positionLabel = ({
       y = maxTop;
       if (horizontal === 'start') {
         x = maxLeft;
-      } else if (horizontal === 'middle') {
+      } else if (horizontal === 'center') {
         x = center;
       } else if (horizontal === 'end') {
         x = maxRight;
@@ -213,7 +214,7 @@ export const positionLabel = ({
       y = maxBottom;
       if (horizontal === 'start') {
         x = minLeft;
-      } else if (horizontal === 'middle') {
+      } else if (horizontal === 'center') {
         x = center;
       } else if (horizontal === 'end') {
         x = minRight;
