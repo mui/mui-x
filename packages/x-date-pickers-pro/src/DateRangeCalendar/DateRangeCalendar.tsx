@@ -435,6 +435,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
           : // If need to focus end, scroll to the state when "end" is displaying in the last calendar
             utils.addMonths(date, -displayingMonthRange);
 
+      console.log(newMonth.toString());
       setVisibleDate({ target: newMonth, reason: 'controlled-value-change' });
     }
   }, [rangePosition, value]); // eslint-disable-line

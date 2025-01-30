@@ -173,8 +173,15 @@ export const useCalendarState = (
   }, [referenceDate, utils]);
 
   const setVisibleDate = useEventCallback(({ target, reason }: SetVisibleDateParameters) => {
-    const skipAnimation = reason === 'cell-interaction';
+    if (
+      reason === 'cell-interaction' &&
+      calendarState.focusedDay != null &&
+      utils.isSameDay(target, calendarState.focusedDay)
+    ) {
+      return;
+    }
 
+    const skipAnimation = reason === 'cell-interaction';
     let month: PickerValidDate;
     let focusedDay: PickerValidDate | null;
     if (reason === 'cell-interaction') {
