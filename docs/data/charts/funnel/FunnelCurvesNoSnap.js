@@ -5,18 +5,7 @@ import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import Stack from '@mui/material/Stack';
 import { populationByEducationLevelPercentageSeries } from './populationByEducationLevel';
 
-const curveTypes = [
-  'bumpY',
-  'bumpX',
-  'linear',
-  'catmullRom',
-  'monotoneX',
-  'monotoneY',
-  'natural',
-  'step',
-  'stepBefore',
-  'stepAfter',
-];
+const curveTypes = ['bumpY', 'bumpX', 'linear', 'step'];
 
 export default function FunnelCurvesNoSnap() {
   return (
@@ -31,7 +20,7 @@ export default function FunnelCurvesNoSnap() {
         },
       ]}
       renderDemo={(
-        /** @type {{ curveType: import('@mui/x-charts/models').CurveType; }} */
+        /** @type {{ curveType: 'linear' | 'step' | 'bumpY' | 'bumpX' }} */
         props,
       ) => (
         <Stack sx={{ width: '100%' }}>
@@ -41,6 +30,18 @@ export default function FunnelCurvesNoSnap() {
                 curve: props.curveType,
                 layout: 'vertical',
                 ...populationByEducationLevelPercentageSeries,
+                data: [
+                  {
+                    value: 100,
+                  },
+                  {
+                    value: 50,
+                  },
+                  {
+                    value: 40,
+                  },
+                  { value: 5 },
+                ],
               },
             ]}
             height={300}
@@ -52,6 +53,18 @@ export default function FunnelCurvesNoSnap() {
                 curve: props.curveType,
                 layout: 'horizontal',
                 ...populationByEducationLevelPercentageSeries,
+                data: [
+                  {
+                    value: 100,
+                  },
+                  {
+                    value: 50,
+                  },
+                  {
+                    value: 40,
+                  },
+                  { value: 5 },
+                ],
               },
             ]}
             height={300}
@@ -60,7 +73,7 @@ export default function FunnelCurvesNoSnap() {
         </Stack>
       )}
       getCode={(
-        /** @type {{props:{ curveType: import('@mui/x-charts/models').CurveType; }}} */
+        /** @type {{props:{ curveType: 'linear' | 'step' | 'bumpY' | 'bumpX' }}} */
         { props },
       ) => {
         return `import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';

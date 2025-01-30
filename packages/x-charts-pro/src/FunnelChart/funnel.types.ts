@@ -61,7 +61,7 @@ export interface FunnelSeriesType<TData = FunnelValueType>
    *
    * @default 'linear'
    */
-  curve?: CurveType;
+  curve?: Extract<CurveType, 'linear' | 'step' | 'bumpY' | 'bumpX'>;
   /**
    * The label configuration for the funnel plot.
    * Allows to customize the position and margin of the label that is displayed on the funnel sections.

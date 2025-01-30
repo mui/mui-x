@@ -19,7 +19,7 @@ The funnel accepts a series which must have a data property containing an array 
 ### Curve interpolation
 
 The interpolation between data points can be customized by the `curve` property.
-This property expects one of the following string values, corresponding to the interpolation method: `'catmullRom'`, `'linear'`, `'monotoneX'`, `'monotoneY'`, `'natural'`, `'step'`, `'stepBefore'`, `'stepAfter'`.
+This property expects one of the following string values, corresponding to the interpolation method: ``'linear'`, `'bumpX'`, `'bumpY'` and `'step'`.
 
 This series property adds the option to control the interpolation of a series.
 Different series could even have different interpolations.

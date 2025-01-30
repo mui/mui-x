@@ -1,14 +1,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 
-import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
+import { CurveFactory, line as d3Line } from '@mui/x-charts-vendor/d3-shape';
 import { getCurveFactory, AxisDefaultized, cartesianSeriesTypes } from '@mui/x-charts/internals';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
+import { CurveType } from '@mui/x-charts/models';
 import { FunnelItemIdentifier, FunnelDataPoints } from './funnel.types';
 import { FunnelElement } from './FunnelElement';
 import { FunnelLabel } from './FunnelLabel';
 import { useFunnelSeries } from '../hooks/useSeries';
 import { alignLabel, positionLabel } from './labelUtils';
+import { funnelHorizontalStepCurve, funnelVerticalStepCurve } from './funnelStepCurve';
 
 cartesianSeriesTypes.addType('funnel');
 
@@ -42,6 +44,14 @@ export interface FunnelPlotProps {
    */
   slots?: FunnelPlotSlots;
 }
+
+const getFunnelCurve = (curve: CurveType | undefined, isHorizontal: boolean): CurveFactory => {
+  if (curve === 'step') {
+    return isHorizontal ? funnelHorizontalStepCurve : funnelVerticalStepCurve;
+  }
+
+  return getCurveFactory(curve ?? 'linear');
+};
 
 const useAggregatedData = () => {
   const seriesData = useFunnelSeries();
@@ -79,7 +89,7 @@ const useAggregatedData = () => {
       const xScale = xAxis[xAxisId].scale;
       const yScale = yAxis[yAxisId].scale;
 
-      const curve = getCurveFactory(currentSeries.curve ?? 'linear');
+      const curve = getFunnelCurve(currentSeries.curve, isHorizontal);
 
       const xPosition = (v: number, bandIndex: number, stackOffset?: number, useBand?: boolean) => {
         if (isXAxisBand) {
