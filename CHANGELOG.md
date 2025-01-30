@@ -23,6 +23,7 @@ Following are all team members who have contributed to this release:
 #### `@mui/x-data-grid@7.24.2`
 
 - [DataGrid] Fix `renderContext` calculation with scroll bounce / over-scroll (#16368) @lauri865
+- [DataGrid] Refactor row state propagation (#16351) @lauri865
 - [DataGrid] Add missing style overrides (#16272) (#16358) @KenanYusuf
 - [DataGrid] Fix header filters keyboard navigation when there are no rows (#16369) @k-rajat19
 - [DataGrid] Fix order of `onClick` prop on toolbar buttons (#16364) @KenanYusuf
@@ -50,7 +51,7 @@ Internal changes.
 Same changes as in `@mui/x-date-pickers@7.24.2`.
 
 ### Charts
- 
+
 #### `@mui/x-charts@7.24.2`
 
 Internal changes.
@@ -61,7 +62,8 @@ Same changes as in `@mui/x-charts@7.24.2`.
 
 ### Tree View
 
-#### `@mui/x-tree-view@7.24.2` 
+#### `@mui/x-tree-view@7.24.2`
+
 Internal changes.
 
 #### `@mui/x-tree-view-pro@7.24.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
