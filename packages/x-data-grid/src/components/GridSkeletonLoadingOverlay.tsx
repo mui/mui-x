@@ -74,7 +74,7 @@ export const GridSkeletonLoadingOverlayInner = forwardRef<
     () => positions.filter((value) => value <= totalWidth).length,
     [totalWidth, positions],
   );
-  const { skeletonRowsCount, visibleColumns, showFirstRowBorder,...rest } = props;
+  const { skeletonRowsCount, visibleColumns, showFirstRowBorder, ...rest } = props;
   const allVisibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const columns = React.useMemo(
     () => allVisibleColumns.slice(0, inViewportCount),
