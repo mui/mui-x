@@ -27,10 +27,6 @@ export const useGridRegisterStrategyProcessor = <
     if (isFirstRender.current) {
       isFirstRender.current = false;
     } else {
-      console.error(
-        `useGridRegisterStrategyProcessor: preProcessor for ${group} changed after the first render – unstable preProcessors might lead to unexpected behaviors.`,
-        processor,
-      );
       registerPreProcessor();
     }
 

@@ -30,7 +30,6 @@ export const useGridRegisterPipeProcessor = <
     } else {
       console.error(
         `useGridRegisterPipeProcessor: preProcessor for group ${group} changed after the first render – unstable preProcessors might lead to unexpected behaviors.`,
-        callback,
       );
       registerPreProcessor();
     }
