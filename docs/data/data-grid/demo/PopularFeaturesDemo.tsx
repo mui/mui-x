@@ -501,9 +501,6 @@ export default function PopularFeaturesDemo() {
         flexDirection: 'column',
         minHeight: 1000,
         width: '100%',
-        border: '1px solid',
-        borderColor: 'divider',
-        borderRadius: 3,
       }}
     >
       <DataGridPremium
@@ -548,7 +545,7 @@ export default function PopularFeaturesDemo() {
             {
               outline: 'none',
             },
-          border: 0,
+          borderRadius: 2,
         }}
         rows={featuresSet}
         columns={columns}
