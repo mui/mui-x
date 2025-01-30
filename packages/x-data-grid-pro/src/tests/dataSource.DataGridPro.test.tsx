@@ -70,7 +70,6 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
     const { fetchRows } = mockServer;
 
     const dataSource: GridDataSource = React.useMemo(() => {
-      fetchRowsSpy.resetHistory();
       return {
         getRows: async (params: GridGetRowsParams) => {
           const urlParams = new URLSearchParams({

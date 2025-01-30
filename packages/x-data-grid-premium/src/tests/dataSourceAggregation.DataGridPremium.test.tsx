@@ -48,7 +48,6 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
     const { fetchRows } = mockServer;
 
     const dataSource: GridDataSource = React.useMemo(() => {
-      fetchRowsSpy.resetHistory();
       return {
         getRows: async (params: GridGetRowsParams) => {
           const urlParams = new URLSearchParams({
@@ -58,10 +57,11 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
             aggregationModel: JSON.stringify(params.aggregationModel),
           });
 
-          const url = `https://mui.com/x/api/data-grid?${urlParams.toString()}`;
           fetchRowsSpy(params);
 
-          const getRowsResponse = await fetchRows(url);
+          const getRowsResponse = await fetchRows(
+            `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
+          );
 
           return {
             rows: getRowsResponse.rows,
