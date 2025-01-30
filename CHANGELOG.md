@@ -127,6 +127,7 @@ Same changes as in `@mui/x-charts@8.0.0-alpha.10`.
 ### Tree View
 
 #### `@mui/x-tree-view@8.0.0-alpha.10` 
+
 Internal changes.
 
 #### `@mui/x-tree-view-pro@8.0.0-alpha.10` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
