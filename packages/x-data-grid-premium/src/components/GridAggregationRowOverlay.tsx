@@ -16,7 +16,6 @@ import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 const GridAggregationRowOverlayWrapper = styled('div', {
   name: 'MuiDataGrid',
   slot: 'AggregationRowOverlayWrapper',
-  overridesResolver: (_, styles) => styles.aggregationRowOverlayWrapper,
 })({
   position: 'absolute',
   top: 0,
@@ -35,7 +34,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 const GridAggregationRowOverlay = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  function GridSkeletonLoadingOverlay(props, forwardedRef) {
+  function GridAggregationRowOverlay(props, forwardedRef) {
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
     const classes = useUtilityClasses({ classes: rootProps.classes });
