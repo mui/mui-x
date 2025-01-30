@@ -31,7 +31,7 @@ import {
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { isKeyboardEvent, isNavigationKey } from '../../../utils/keyboardUtils';
-import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
+import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { GridRowSelectionModel } from '../../../models';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../internals/constants';
@@ -134,7 +134,6 @@ export const useGridRowSelection = (
   } = props;
 
   const canHaveMultipleSelection = isMultipleRowSelectionEnabled(props);
-  const visibleRows = useGridVisibleRows(apiRef, props);
   const tree = useGridSelector(apiRef, gridRowTreeSelector);
   const isNestedData = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector) > 1;
 
@@ -685,6 +684,7 @@ export const useGridRowSelection = (
             }
           }
 
+          const visibleRows = getVisibleRows(apiRef);
           const rowsBetweenStartAndEnd = visibleRows.rows
             .slice(start, end + 1)
             .map((row) => row.id);
@@ -704,7 +704,7 @@ export const useGridRowSelection = (
         selectRows(apiRef.current.getAllRowIds(), true);
       }
     },
-    [apiRef, handleSingleRowSelection, selectRows, visibleRows.rows, canHaveMultipleSelection],
+    [apiRef, handleSingleRowSelection, selectRows, canHaveMultipleSelection],
   );
 
   useGridApiEventHandler(

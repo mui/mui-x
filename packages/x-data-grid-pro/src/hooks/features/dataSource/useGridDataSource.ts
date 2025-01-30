@@ -14,7 +14,7 @@ import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { gridGetRowsParamsSelector, gridDataSourceErrorsSelector } from './gridDataSourceSelector';
 import { GridDataSourceApi, GridDataSourceApiBase, GridDataSourcePrivateApi } from './interfaces';
-import { runIfServerMode, NestedDataManager, RequestStatus } from './utils';
+import { NestedDataManager, RequestStatus, runIfServerMode } from './utils';
 import { GridDataSourceCache } from '../../../models';
 import { GridDataSourceCacheDefault } from './cache';
 

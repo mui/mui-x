@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { RefObject } from '@mui/x-internals/types';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { GridListColDef } from '../../../models/colDef/gridColDef';
@@ -58,7 +59,7 @@ export function useGridListView(
   /*
    * EFFECTS
    */
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     const listColumn = props.unstable_listColumn;
     if (listColumn) {
       apiRef.current.setState((state) => {

@@ -234,7 +234,7 @@ export const useGridColumnPinning = (
   const setPinnedColumns = React.useCallback<GridColumnPinningApi['setPinnedColumns']>(
     (newPinnedColumns) => {
       setState(apiRef, newPinnedColumns);
-      apiRef.current.forceUpdate();
+      apiRef.current.requestPipeProcessorsApplication('hydrateColumns');
     },
     [apiRef],
   );
