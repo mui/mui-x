@@ -108,6 +108,8 @@ Same changes as in `@mui/x-date-pickers@8.0.0-alpha.10`.
 
 - Replace `legend.position.horizontal` from `"left" | "middle" | "right"` to `"start" | "center" | "end"`.
   This is to align with the CSS values and reflect the RTL ability of the legend component.
+- The default colors have changed. To keep using the old palette. It is possible to import `blueberryTwilightPalette` from  `@mui/x-charts/colorPalettes` and set it on the `colors` property of charts.
+- The `id` property is now optional on the `Pie` and `Scatter` data types.
 
 #### `@mui/x-charts@8.0.0-alpha.10`
 
