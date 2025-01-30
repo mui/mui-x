@@ -146,8 +146,6 @@ export const useGridPaginationModel = (
   /**
    * PRE-PROCESSING
    */
-  const hasPaginationModelProp =
-    props.paginationModel != null || props.initialState?.pagination != null;
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
     (prevState, context) => {
       const paginationModel = gridPaginationModelSelector(apiRef);
@@ -155,8 +153,10 @@ export const useGridPaginationModel = (
       const shouldExportPaginationModel =
         // Always export if the `exportOnlyDirtyModels` property is not activated
         !context.exportOnlyDirtyModels ||
-        // Always export if the `paginationModel` is controlled or initialized
-        hasPaginationModelProp ||
+        // Always export if the `paginationModel` is controlled
+        props.paginationModel != null ||
+        // Always export if the `paginationModel` has been initialized
+        props.initialState?.pagination?.paginationModel != null ||
         // Export if `page` or `pageSize` is not equal to the default value
         (paginationModel.page !== 0 &&
           paginationModel.pageSize !== defaultPageSize(props.autoPageSize));
@@ -173,7 +173,12 @@ export const useGridPaginationModel = (
         },
       };
     },
-    [apiRef, hasPaginationModelProp, props.autoPageSize],
+    [
+      apiRef,
+      props.paginationModel,
+      props.initialState?.pagination?.paginationModel,
+      props.autoPageSize,
+    ],
   );
 
   const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
