@@ -3,7 +3,6 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import { styled } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
 import {
-  gridDimensionsSelector,
   GRID_ROOT_GROUP_ID,
   gridRowsLoadingSelector,
   getDataGridUtilityClass,
@@ -40,7 +39,6 @@ const GridAggregationRowOverlay = forwardRef<HTMLDivElement, React.HTMLAttribute
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
     const classes = useUtilityClasses({ classes: rootProps.classes });
-    const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
     const isLoading = useGridSelector(apiRef, gridRowsLoadingSelector);
     const aggregationLookup = useGridSelector(apiRef, gridAggregationLookupSelector);
     if (!isLoading) {
@@ -53,14 +51,12 @@ const GridAggregationRowOverlay = forwardRef<HTMLDivElement, React.HTMLAttribute
     }
 
     const visibleColumns = new Set(Object.keys(rootLookup));
-    const viewportHeight = dimensions.bottomContainerHeight ?? 0;
-    const skeletonRowsCount = Math.ceil(viewportHeight / dimensions.rowHeight);
 
     return (
       <GridAggregationRowOverlayWrapper className={classes.root}>
         <GridSkeletonLoadingOverlayInner
           {...props}
-          skeletonRowsCount={skeletonRowsCount}
+          skeletonRowsCount={1}
           visibleColumns={visibleColumns}
           ref={forwardedRef}
         />
