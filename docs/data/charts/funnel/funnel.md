@@ -14,7 +14,15 @@ The funnel accepts a series which must have a data property containing an array 
 
 {{"demo": "BasicFunnel.js"}}
 
-## Styling
+### Display legends
+
+The funnel chart displays a legend by default. The only requirement is to provide a `label` value in the data objects.
+
+To disable the legend, set the `hideLegend` property to `true`.
+
+{{"demo": "FunnelLegend.js"}}
+
+## Customization
 
 ### Curve interpolation
 
@@ -25,3 +33,28 @@ This series property adds the option to control the interpolation of a series.
 Different series could even have different interpolations.
 
 {{"demo": "FunnelCurvesNoSnap.js"}}
+
+### Colors
+
+The funnel colors can be customized in two ways.
+
+1. You can provide a [color palette](/x/react-charts/styling/#color-palette). Each slice of the funnel will be colored according to this palette.
+2. You can provide a `color` property in `data` objects which overrides the palette.
+
+```jsx
+<FunnelChart
+  colors={['red', 'blue', 'green']} // Use palette
+  series={[
+    {
+      data: [
+        { value: 10, color: 'orange' }, // Use color property
+        // ...
+      ],
+    },
+  ]}
+/>
+```
+
+{{"demo": "FunnelColor.js"}}
+
+### Highlight

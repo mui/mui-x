@@ -11,6 +11,8 @@ import { FunnelPlotProps } from './FunnelPlot';
 import type { FunnelChartProps } from './FunnelChart';
 import { ChartContainerProProps } from '../ChartContainerPro';
 
+const defaultMargin = { top: 20, bottom: 20, left: 20, right: 20 };
+
 /**
  * A helper function that extracts FunnelChartProps from the input props
  * and returns an object with props for the children components of FunnelChart.
@@ -25,7 +27,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     series,
     width,
     height,
-    margin,
+    margin: marginProps,
     colors,
     dataset,
     sx,
@@ -47,6 +49,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     axisHighlight,
     ...rest
   } = props;
+  const margin = { ...defaultMargin, ...marginProps };
 
   const id = useId();
   const clipPathId = `${id}-clip-path`;
