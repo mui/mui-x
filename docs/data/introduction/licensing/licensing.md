@@ -144,7 +144,7 @@ You'll only need to do this once in your app.
 
 ### Where to install the key
 
-You must call the `setLicenseKey()` function before React renders the first component in your app.
+The license key needs to be set during run-time, not build-time, before any MUI X component is rendered in your app using the `setLicenseKey()` function.
 
 Its bundle size is relatively small, so it should be fine to call it in all of your bundles, regardless of whether a commercial MUI X component is rendered.
 
