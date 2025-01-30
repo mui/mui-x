@@ -154,9 +154,9 @@ Its bundle size is relatively small, so it should be fine to call it in all of y
 
 When using Next.js App Router, you have multiple options to install the license key.
 
-1. If your [`layout.js`](https://nextjs.org/docs/app/api-reference/file-conventions/layout) is using `'use client'`, you can set the license key in it:
+1. If your [`layout.tsx`](https://nextjs.org/docs/app/api-reference/file-conventions/layout) is using `'use client'`, you can set the license key in it:
 
-```tsx
+```tsx title="app/layout.tsx"
 'use client';
 import { LicenseInfo } from '@mui/x-license';
 
@@ -165,7 +165,7 @@ LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 
 2. Otherwise (**recommended**), you can create a dummy component called `MuiXLicense.tsx`:
 
-```tsx
+```tsx title="app/components/MuiXLicense.tsx"
 'use client';
 import { LicenseInfo } from '@mui/x-license';
 
@@ -176,10 +176,10 @@ export default function MuiXLicense() {
 }
 ```
 
-And render `<MuiXLicense>` in your [`layout.js`](https://nextjs.org/docs/app/api-reference/file-conventions/layout):
+And render `<MuiXLicense>` in your [`layout.tsx`](https://nextjs.org/docs/app/api-reference/file-conventions/layout):
 
-```tsx
-import MuiXLicense from './MuiXLicense';
+```tsx title="app/layout.tsx"
+import MuiXLicense from '@/components/MuiXLicense';
 
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
@@ -195,16 +195,29 @@ export default function RootLayout(props: { children: React.ReactNode }) {
 
 ### Next.js Pages Router
 
-When using Next.js pages, a great place to call `setLicenseKey` is in [`_app.js`](https://nextjs.org/docs/pages/building-your-application/routing/custom-app).
+When using Next.js pages, a great place to call `setLicenseKey` is in [`_app.tsx`](https://nextjs.org/docs/pages/building-your-application/routing/custom-app).
 
-```tsx
+```tsx title="pages/_app.tsx"
+import type { ReactElement, ReactNode } from 'react'
+import type { NextPage } from 'next'
+import type { AppProps } from 'next/app'
 import { LicenseInfo } from '@mui/x-license';
 
 LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 
-export default function MyApp(props) {
-  const { Component, pageProps } = props;
-  return <Component {...pageProps} />;
+export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+  getLayout?: (page: ReactElement) => ReactNode
+}
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout
+}
+
+export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
+  // Use the layout defined at the page level, if available
+  const getLayout = Component.getLayout ?? ((page) => page)
+
+  return getLayout(<Component {...pageProps} />)
 }
 ```
 
@@ -218,7 +231,8 @@ This method is required if your codebase is "source-available" (to hide the lice
 The license key is validated on the server and client-side so you must expose the environment variable to the browser.
 To do this, you need to prefix the environment variables with `NEXT_PUBLIC_` as explained in the [Next.js documentation](https://nextjs.org/docs/app/building-your-application/configuring/environment-variables#bundling-environment-variables-for-the-browser):
 
-```tsx
+```tsx title="app/layout.tsx"
+'use client';
 import { LicenseInfo } from '@mui/x-license';
 
 LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_X_LICENSE_KEY);
