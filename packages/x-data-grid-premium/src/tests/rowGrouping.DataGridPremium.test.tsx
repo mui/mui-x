@@ -2892,7 +2892,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
       />,
     );
 
-    await act(() => {
+    await act(async () => {
       apiRef.current?.updateRows([{ id: 1, group: 'A', username: 'username 2' }]);
     });
 
@@ -2911,7 +2911,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
 
     await user.click(screen.getByRole('button', { name: 'see children' }));
 
-    await act(() => {
+    await act(async () => {
       apiRef.current?.updateRows([{ id: 1, group: 'A', username: 'username 2' }]);
     });
 
@@ -2936,7 +2936,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
     expect(getColumnValues(3)).to.deep.equal(['', 'username1', 'username2']);
 
     // trigger row update without any changes in row data
-    await act(() => {
+    await act(async () => {
       apiRef.current?.updateRows([{ id: 1 }]);
     });
 
