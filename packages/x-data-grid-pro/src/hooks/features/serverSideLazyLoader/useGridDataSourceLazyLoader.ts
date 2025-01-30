@@ -303,7 +303,13 @@ export const useGridDataSourceLazyLoader = (
       );
       privateApiRef.current.requestPipeProcessorsApplication('hydrateRows');
     },
-    [privateApiRef, updateLoadingTrigger, rebuildSkeletonRows, addSkeletonRows],
+    [
+      privateApiRef,
+      filteredSortedRowIds,
+      updateLoadingTrigger,
+      rebuildSkeletonRows,
+      addSkeletonRows,
+    ],
   );
 
   const handleRowCountChange = React.useCallback(() => {
