@@ -188,7 +188,9 @@ export const useCalendarState = (
       month = getCurrentMonthFromVisibleDate(target, calendarState.currentMonth);
       focusedDay = target;
     } else {
-      month = utils.startOfMonth(target);
+      month = utils.isSameMonth(target, calendarState.currentMonth)
+        ? calendarState.currentMonth
+        : utils.startOfMonth(target);
       focusedDay = target;
 
       // If the date is disabled, we try to find a non-disabled date inside the same month.
