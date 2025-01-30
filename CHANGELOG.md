@@ -103,6 +103,11 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.10`.
 
 ### Date and Time Pickers
 
+#### Breaking changes
+
+- - The component passed to the `field` slot no longer receives the `ref`,  `disabled`, `className`, `sx`, `label`, `name`, `formatDensity`, `enableAccessibleFieldDOMStructure`, `selectedSections`, `onSelectedSectionsChange` and `inputRef` props — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#slot-field)
+
+- The `MuiPickersPopper` theme entry have been renamed `MuiPickerPopper` and some of its props have been removed — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#muipickerspopper)
 #### `@mui/x-date-pickers@8.0.0-alpha.10`
 
 - [pickers] Clean the internals and the public API of `<PickersPopper />` (#16319) @flaviendelangle
