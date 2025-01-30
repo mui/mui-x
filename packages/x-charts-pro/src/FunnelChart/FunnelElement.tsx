@@ -40,6 +40,9 @@ export const FunnelElementPath = styled('path', {
   opacity: (ownerState.isFaded && 0.3) || 1,
 }));
 
+/**
+ * @ignore - internal component.
+ */
 function FunnelElement(props: FunnelElementProps) {
   const {
     seriesId,

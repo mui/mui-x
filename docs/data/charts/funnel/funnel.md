@@ -1,6 +1,7 @@
 ---
 title: React Funnel chart
 productId: x-charts
+components: FunnelChart, FunnelPlot
 ---
 
 # Charts - Funnel [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🚧

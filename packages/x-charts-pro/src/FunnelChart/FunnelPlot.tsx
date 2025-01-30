@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
 import { getCurveFactory, AxisDefaultized, cartesianSeriesTypes } from '@mui/x-charts/internals';
@@ -193,5 +194,33 @@ function FunnelPlot(props: FunnelPlotProps) {
     </React.Fragment>
   );
 }
+
+FunnelPlot.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Callback fired when a funnel item is clicked.
+   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {FunnelItemIdentifier} funnelItemIdentifier The funnel item identifier.
+   */
+  onItemClick: PropTypes.func,
+  /**
+   * If `true`, animations are skipped.
+   * @default false
+   */
+  skipAnimation: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+} as any;
 
 export { FunnelPlot };

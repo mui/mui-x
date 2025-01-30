@@ -22,6 +22,9 @@ export interface FunnelLabelProps extends Omit<React.SVGProps<SVGTextElement>, '
   sx?: SxProps;
 }
 
+/**
+ * @ignore - internal component.
+ */
 function FunnelLabel(inProps: FunnelLabelProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiFunnelLabel' });
 
