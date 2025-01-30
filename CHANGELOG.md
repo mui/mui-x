@@ -10,6 +10,8 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
 
 - 🐞 Bugfixes
 
+Special thanks go out to the community contributors who have helped make this release possible:
+@k-rajat19, @lauri865.
 Following are all team members who have contributed to this release:
 @KenanYusuf, @MBilalShafi, @arminmeh.
 
