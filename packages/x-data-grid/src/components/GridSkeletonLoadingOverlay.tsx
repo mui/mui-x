@@ -56,6 +56,7 @@ export const GridSkeletonLoadingOverlayInner = forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & {
     skeletonRowsCount: number;
+    showFirstRowBorder?: boolean;
     visibleColumns?: Set<GridColDef['field']>;
   }
 >(function GridSkeletonLoadingOverlayInner(props, forwardedRef) {
@@ -73,7 +74,7 @@ export const GridSkeletonLoadingOverlayInner = forwardRef<
     () => positions.filter((value) => value <= totalWidth).length,
     [totalWidth, positions],
   );
-  const { skeletonRowsCount, visibleColumns, ...rest } = props;
+  const { skeletonRowsCount, visibleColumns, showFirstRowBorder,...rest } = props;
   const allVisibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const columns = React.useMemo(
     () => allVisibleColumns.slice(0, inViewportCount),
@@ -192,7 +193,7 @@ export const GridSkeletonLoadingOverlayInner = forwardRef<
           className={clsx(
             gridClasses.row,
             gridClasses.rowSkeleton,
-            i === 0 && gridClasses['row--firstVisible'],
+            i === 0 && !showFirstRowBorder && gridClasses['row--firstVisible'],
           )}
         >
           {rowCells}
@@ -215,6 +216,7 @@ export const GridSkeletonLoadingOverlayInner = forwardRef<
     rootProps.showCellVerticalBorder,
     slots,
     visibleColumns,
+    showFirstRowBorder,
   ]);
 
   // Sync the column resize of the overlay columns with the grid

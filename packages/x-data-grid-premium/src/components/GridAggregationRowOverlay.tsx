@@ -57,6 +57,7 @@ const GridAggregationRowOverlay = forwardRef<HTMLDivElement, React.HTMLAttribute
           {...props}
           skeletonRowsCount={1}
           visibleColumns={visibleColumns}
+          showFirstRowBorder
           ref={forwardedRef}
         />
       </GridAggregationRowOverlayWrapper>
