@@ -63,8 +63,8 @@ Following are all team members who have contributed to this release:
 
 #### `@mui/x-data-grid@8.0.0-alpha.10`
 
-- [data grid] Fix `renderContext` calculation with scroll bounce / over-scroll (#16297) @lauri865
-- [data grid] Remove unused classes from `gridClasses` (#16256) @mateuseap
+- [DataGrid] Fix `renderContext` calculation with scroll bounce / over-scroll (#16297) @lauri865
+- [DataGrid] Remove unused classes from `gridClasses` (#16256) @mateuseap
 - [DataGrid] Add default background color to grid (#16066) @KenanYusuf
 - [DataGrid] Add missing style overrides (#16272) @KenanYusuf
 - [DataGrid] Add possibility of `null` in the return type of the `useGridApiRef()` hook (#16353) @arminmeh
