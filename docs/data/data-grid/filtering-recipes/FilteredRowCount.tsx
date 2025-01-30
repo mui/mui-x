@@ -52,7 +52,7 @@ export default function FilteredRowCount() {
 
       const { filteredRowsLookup } = filterState;
       return Object.keys(filteredRowsLookup).filter(
-        (rowId) => filteredRowsLookup[rowId] === true,
+        (rowId) => filteredRowsLookup[rowId] !== false,
       ).length;
     },
     [apiRef],

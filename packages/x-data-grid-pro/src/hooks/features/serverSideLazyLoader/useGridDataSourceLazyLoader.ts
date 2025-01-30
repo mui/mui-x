@@ -74,7 +74,6 @@ export const useGridDataSourceLazyLoader = (
   const filterModel = useGridSelector(privateApiRef, gridFilterModelSelector);
   const paginationModel = useGridSelector(privateApiRef, gridPaginationModelSelector);
   const filteredSortedRowIds = useGridSelector(privateApiRef, gridFilteredSortedRowIdsSelector);
-  const dimensions = useGridSelector(privateApiRef, gridDimensionsSelector);
   const renderedRowsIntervalCache = React.useRef(INTERVAL_CACHE_INITIAL_STATE);
   const previousLastRowIndex = React.useRef(0);
   const loadingTrigger = React.useRef<LoadingTrigger | null>(null);
@@ -333,6 +332,7 @@ export const useGridDataSourceLazyLoader = (
         return;
       }
 
+      const dimensions = gridDimensionsSelector(privateApiRef.current.state);
       const position = newScrollPosition.top + dimensions.viewportInnerSize.height;
       const target = dimensions.contentSize.height - props.scrollEndThreshold;
 
@@ -355,7 +355,6 @@ export const useGridDataSourceLazyLoader = (
       props.scrollEndThreshold,
       sortModel,
       filterModel,
-      dimensions,
       paginationModel.pageSize,
       adjustRowParams,
       fetchRows,

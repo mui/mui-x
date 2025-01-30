@@ -2,6 +2,7 @@ import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
+import { gridRowHeightSelector } from '../../../internals/selectors/dimensionSelectors';
 import { ResizeObserver } from '../../../utils/ResizeObserver';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowsMetaApi, GridRowsMetaPrivateApi } from '../../../models/api/gridRowsMetaApi';
@@ -17,7 +18,7 @@ import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridSortModelSelector } from '../sorting/gridSortingSelector';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
-import { gridPinnedRowsSelector } from './gridRowsSelector';
+import { gridPinnedRowsSelector, gridRowCountSelector } from './gridRowsSelector';
 import { gridDimensionsSelector } from '../dimensions/gridDimensionsSelectors';
 import { getValidRowHeight, getRowHeightWarning } from './gridRowsUtils';
 import type { HeightEntry } from './gridRowsMetaInterfaces';
@@ -29,11 +30,21 @@ export const rowsMetaStateInitializer: GridStateInitializer = (state, props, api
     heights: new Map(),
   };
 
+  const baseRowHeight = gridRowHeightSelector(apiRef.current.state);
+  const dataRowCount = gridRowCountSelector(apiRef.current.state);
+  const pagination = gridPaginationSelector(apiRef.current.state);
+  const rowCount = Math.min(
+    pagination.enabled ? pagination.paginationModel.pageSize : dataRowCount,
+    dataRowCount,
+  );
+
   return {
     ...state,
     rowsMeta: {
-      currentPageTotalHeight: 0,
-      positions: [],
+      currentPageTotalHeight: rowCount * baseRowHeight,
+      positions: Array.from({ length: rowCount }, (_, i) => i * baseRowHeight),
+      pinnedTopRowsTotalHeight: 0,
+      pinnedBottomRowsTotalHeight: 0,
     },
   };
 };
@@ -67,10 +78,7 @@ export const useGridRowsMeta = (
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const currentPage = useGridVisibleRows(apiRef, props);
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
-  const rowHeight = useGridSelector(
-    apiRef,
-    () => gridDimensionsSelector(apiRef.current.state).rowHeight,
-  );
+  const rowHeight = useGridSelector(apiRef, gridRowHeightSelector);
 
   const getRowHeightEntry: GridRowsMetaPrivateApi['getRowHeightEntry'] = (rowId) => {
     let entry = heightCache.get(rowId);
@@ -158,8 +166,15 @@ export const useGridRowsMeta = (
   const hydrateRowsMeta = React.useCallback(() => {
     hasRowWithAutoHeight.current = false;
 
-    pinnedRows.top.forEach(processHeightEntry);
-    pinnedRows.bottom.forEach(processHeightEntry);
+    const pinnedTopRowsTotalHeight = pinnedRows.top.reduce((acc, row) => {
+      const entry = processHeightEntry(row);
+      return acc + entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
+    }, 0);
+
+    const pinnedBottomRowsTotalHeight = pinnedRows.bottom.reduce((acc, row) => {
+      const entry = processHeightEntry(row);
+      return acc + entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
+    }, 0);
 
     const positions: number[] = [];
     const currentPageTotalHeight = currentPage.rows.reduce((acc, row) => {
@@ -182,6 +197,8 @@ export const useGridRowsMeta = (
         rowsMeta: {
           currentPageTotalHeight,
           positions,
+          pinnedTopRowsTotalHeight,
+          pinnedBottomRowsTotalHeight,
         },
       };
     });

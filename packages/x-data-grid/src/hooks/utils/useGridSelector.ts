@@ -1,11 +1,11 @@
 import * as React from 'react';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { RefObject } from '@mui/x-internals/types';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { GridApiCommon } from '../../models/api/gridApiCommon';
 import type { OutputSelector } from '../../utils/createSelector';
 import { useLazyRef } from './useLazyRef';
-import { useOnMount } from './useOnMount';
 import type { GridCoreApi } from '../../models/api/gridCoreApi';
 
 function isOutputSelector<Api extends GridApiCommon, Args, T>(
@@ -51,6 +51,8 @@ export const argsEqual = (prev: any, curr: any) => {
 };
 
 const createRefs = () => ({ state: null, equals: null, selector: null, args: null }) as any;
+
+const EMPTY = [] as unknown[];
 
 export const useGridSelector = <Api extends GridApiCommon, Args, T>(
   apiRef: RefObject<Api>,
@@ -102,7 +104,7 @@ export const useGridSelector = <Api extends GridApiCommon, Args, T>(
     }
   }
 
-  useOnMount(() => {
+  useEnhancedEffect(() => {
     return apiRef.current.store.subscribe(() => {
       const newState = applySelector(
         apiRef,
@@ -115,7 +117,112 @@ export const useGridSelector = <Api extends GridApiCommon, Args, T>(
         setState(newState);
       }
     });
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, EMPTY);
 
   return state;
+};
+
+type Primitive = string | number | boolean | null | undefined;
+
+const resolveDeps = <
+  Api extends GridApiCommon,
+  Args,
+  T,
+  Deps extends Array<Selector<Api, Args, T> | Primitive>,
+>(
+  apiRef: RefObject<Api>,
+  nextDeps: [
+    ...{
+      [K in keyof Deps]: Deps[K] extends Selector<Api, Args, T> ? Selector<Api, Args, T> : Deps[K];
+    },
+  ],
+  prevResolvedDeps?: [
+    ...{ [K in keyof Deps]: Deps[K] extends Selector<Api, Args, infer R> ? R : Deps[K] },
+  ],
+) => {
+  let didChange = false;
+  if (!prevResolvedDeps) {
+    didChange = true;
+  }
+  if (prevResolvedDeps && prevResolvedDeps.length !== nextDeps.length) {
+    console.error(
+      'The dependency array passed to %s changed size between renders. The ' +
+        'order and size of this array must remain constant.\n\n' +
+        'Previous: %s\n' +
+        'Incoming: %s',
+      'useGridStateEffect',
+      `Current dependency array size: ${nextDeps.length} args`,
+      `Previous dependency array size: ${prevResolvedDeps.length} args`,
+    );
+  }
+
+  const resolvedDeps = new Array(nextDeps.length) as any;
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < nextDeps.length; i++) {
+    let nextDep = nextDeps[i];
+    if (typeof nextDep === 'function') {
+      nextDep = applySelector(apiRef, nextDep, undefined as any, apiRef.current?.instanceId) as any;
+    }
+
+    if (!didChange && prevResolvedDeps && !Object.is(nextDep, prevResolvedDeps[i])) {
+      didChange = true;
+    }
+
+    resolvedDeps[i] = nextDep;
+  }
+
+  return {
+    didChange,
+    values: resolvedDeps,
+  };
+};
+
+export const useGridStateEffect = <
+  Api extends GridApiCommon,
+  Args,
+  T,
+  Deps extends Array<Selector<Api, Args, T> | Primitive>,
+>(
+  apiRef: RefObject<Api>,
+  deps: [
+    ...{
+      [K in keyof Deps]: Deps[K] extends Selector<Api, Args, T> ? Selector<Api, Args, T> : Deps[K];
+    },
+  ],
+  callback: (
+    resolvedDeps: [
+      ...{ [K in keyof Deps]: Deps[K] extends Selector<Api, Args, infer R> ? R : Deps[K] },
+    ],
+  ) => void,
+) => {
+  const depsRef = React.useRef(deps);
+  const previousResolvedDeps = useLazyRef<
+    [...{ [K in keyof Deps]: Deps[K] extends Selector<Api, Args, infer R> ? R : Deps[K] }],
+    undefined
+  >(() => resolveDeps(apiRef, deps).values);
+
+  depsRef.current = deps;
+
+  useEnhancedEffect(
+    () =>
+      apiRef.current.store.subscribe(() => {
+        const resolved = resolveDeps(apiRef, depsRef.current, previousResolvedDeps.current);
+        if (resolved.didChange) {
+          previousResolvedDeps.current = resolved.values;
+          callback(resolved.values);
+        }
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    EMPTY,
+  );
+
+  React.useEffect(() => {
+    const resolved = resolveDeps(apiRef, depsRef.current);
+    if (resolved.didChange) {
+      previousResolvedDeps.current = resolved.values;
+      callback(resolved.values);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, deps);
 };
