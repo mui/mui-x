@@ -22,6 +22,13 @@ To disable the legend, set the `hideLegend` property to `true`.
 
 {{"demo": "FunnelLegend.js"}}
 
+## Labels
+
+The funnel chart displays labels by default. It shows the `value` of the data item in each section.
+To format the labels, a `valueFormatter` function can be provided.
+
+{{"demo": "FunnelLabels.js"}}
+
 ## Customization
 
 ### Curve interpolation
@@ -38,7 +45,7 @@ Different series could even have different interpolations.
 
 The funnel colors can be customized in two ways.
 
-1. You can provide a [color palette](/x/react-charts/styling/#color-palette). Each slice of the funnel will be colored according to this palette.
+1. You can provide a [color palette](/x/react-charts/styling/#color-palette). Each section of the funnel will be colored according to this palette.
 2. You can provide a `color` property in `data` objects which overrides the palette.
 
 ```jsx
