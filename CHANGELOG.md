@@ -117,6 +117,8 @@ Same changes as in `@mui/x-date-pickers@8.0.0-alpha.10`.
 - [charts] Move `tooltipGetter` to `seriesConfig` (#16331) @JCQuintas
 - [charts] Move item highligh feature to plugin system (#16211) @alexfauquette
 - [charts] Replace `legend.position.horizontal` from `"left" | "middle" | "right"` to `"start" | "center" | "end"` (#16315) @JCQuintas
+- [charts] New default colors (#16373) @JCQuintas
+- [charts] Make `id` optional on `PieValueType` and `ScatterValueType` (#16389) @JCQuintas
 
 #### `@mui/x-charts-pro@8.0.0-alpha.10` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
