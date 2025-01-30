@@ -1,0 +1,15 @@
+<FunnelChart
+  series={[populationByEducationLevelPercentageSeriesLabeled]}
+  xAxis={[{ id: 'x' }]}
+  yAxis={[
+    {
+      id: 'y',
+      data: ['First', 'Second', 'Third', 'Fourth', 'Fifth'],
+    },
+  ]}
+  margin={{ left: 50 }}
+  {...funnelProps}
+>
+  <ChartsXAxis axisId="x" position="top" />
+  <ChartsYAxis axisId="y" position="left" />
+</FunnelChart>

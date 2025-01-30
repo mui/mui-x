@@ -63,7 +63,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     ),
   } as const;
 
-  const defaultOtherAxisConfig = {
+  const defaultLinearAxisConfig = {
     scaleType: 'linear',
     domainLimit: 'strict',
   } as const;
@@ -82,11 +82,15 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     colors,
     // dataset,
     xAxis: xAxis?.map((axis) => ({
-      ...(axis?.scaleType === 'band' ? defaultBandAxisConfig : defaultOtherAxisConfig),
+      ...(axis?.scaleType === 'band' || isHorizontal
+        ? defaultBandAxisConfig
+        : defaultLinearAxisConfig),
       ...axis,
     })) ?? [{ id: DEFAULT_X_AXIS_KEY, ...(isHorizontal ? defaultBandAxisConfig : {}) }],
     yAxis: yAxis?.map((axis) => ({
-      ...(axis?.scaleType === 'band' ? defaultBandAxisConfig : defaultOtherAxisConfig),
+      ...(axis?.scaleType === 'band' || !isHorizontal
+        ? defaultBandAxisConfig
+        : defaultLinearAxisConfig),
       ...axis,
     })) ?? [{ id: DEFAULT_Y_AXIS_KEY, ...(isHorizontal ? {} : defaultBandAxisConfig) }],
     sx,
