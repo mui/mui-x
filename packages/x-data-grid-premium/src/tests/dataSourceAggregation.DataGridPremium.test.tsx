@@ -115,7 +115,7 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
     expect(screen.queryByLabelText('Aggregation')).to.equal(null);
   });
 
-  it('should provide the `aggregationModel` in the `getRows` params', () => {
+  it('should provide the `aggregationModel` in the `getRows` params', async () => {
     render(
       <TestDataSourceAggregation
         initialState={{

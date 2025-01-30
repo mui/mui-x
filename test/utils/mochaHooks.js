@@ -18,14 +18,14 @@ export function createXMochaHooks(coreMochaHooks = {}) {
   let licenseKey;
 
   mochaHooks.beforeAll.push(function func() {
-    // disable "react-transition-group" transitions
-    // https://reactcommunity.org/react-transition-group/testing/
-    config.disabled = true;
     licenseKey = generateTestLicenseKey();
   });
 
-  mochaHooks.beforeEach.push(function setupLicenseKey() {
+  mochaHooks.beforeEach.push(function setupCommon() {
     setupTestLicenseKey(licenseKey);
+    // disable "react-transition-group" transitions
+    // https://reactcommunity.org/react-transition-group/testing/
+    config.disabled = true;
   });
 
   mochaHooks.afterEach.push(function resetCleanupTracking() {
@@ -40,8 +40,7 @@ export function createXMochaHooks(coreMochaHooks = {}) {
   });
 
   mochaHooks.afterEach.push(clearWarningsCache);
-
-  mochaHooks.afterAll.push(function restoreTransition() {
+  mochaHooks.afterEach.push(function resetCommon() {
     config.disabled = false;
   });
 
