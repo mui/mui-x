@@ -106,7 +106,7 @@ Same changes as in `@mui/x-date-pickers@8.0.0-alpha.10`.
 
 #### Breaking changes
 
-- Replace `legend.position.horizontal` from `"left" | "middle" | "right"` to `"start" | "center" | "end"`
+- Replace `legend.position.horizontal` from `"left" | "middle" | "right"` to `"start" | "center" | "end"`.
   This is to align with the CSS values and reflect the RTL ability of the legend component.
 
 #### `@mui/x-charts@8.0.0-alpha.10`
