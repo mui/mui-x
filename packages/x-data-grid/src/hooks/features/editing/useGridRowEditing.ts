@@ -30,7 +30,7 @@ import {
   GridEditingSharedPrivateApi,
 } from '../../../models/api/gridEditingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { gridEditRowsStateSelector } from './gridEditingSelectors';
+import { gridEditRowsStateSelector, gridRowIsEditingSelector } from './gridEditingSelectors';
 import { GridRowId } from '../../../models/gridRows';
 import { isPrintableKey, isPasteShortcut } from '../../../utils/keyboardUtils';
 import {
@@ -38,7 +38,7 @@ import {
   gridVisibleColumnFieldsSelector,
 } from '../columns/gridColumnsSelector';
 import { GridCellParams } from '../../../models/params/gridCellParams';
-import { gridRowsDataRowIdToIdLookupSelector } from '../rows/gridRowsSelector';
+import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 import { deepClone } from '../../../utils/utils';
 import {
   GridRowEditStopParams,
@@ -331,8 +331,7 @@ export const useGridRowEditing = (
       if (props.editMode === GridEditModes.Cell) {
         return GridRowModes.View;
       }
-      const editingState = gridEditRowsStateSelector(apiRef.current.state);
-      const isEditing = editingState[id] && Object.keys(editingState[id]).length > 0;
+      const isEditing = gridRowIsEditingSelector(apiRef, id);
       return isEditing ? GridRowModes.Edit : GridRowModes.View;
     },
     [apiRef, props.editMode],
@@ -744,7 +743,7 @@ export const useGridRowEditing = (
 
   // Run this effect synchronously so that the keyboard event can impact the yet-to-be-rendered input.
   useEnhancedEffect(() => {
-    const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
+    const rowsLookup = gridRowsLookupSelector(apiRef);
 
     // Update the ref here because updateStateToStopRowEditMode may change it later
     const copyOfPrevRowModesModel = prevRowModesModel.current;
@@ -754,7 +753,7 @@ export const useGridRowEditing = (
     Array.from(ids).forEach((id) => {
       const params = rowModesModel[id] ?? { mode: GridRowModes.View };
       const prevMode = copyOfPrevRowModesModel[id]?.mode || GridRowModes.View;
-      const originalId = idToIdLookup[id] ?? id;
+      const originalId = rowsLookup[id] ? apiRef.current.getRowId(rowsLookup[id]) : id;
       if (params.mode === GridRowModes.Edit && prevMode === GridRowModes.View) {
         updateStateToStartRowEditMode({ id: originalId, ...params });
       } else if (params.mode === GridRowModes.View && prevMode === GridRowModes.Edit) {

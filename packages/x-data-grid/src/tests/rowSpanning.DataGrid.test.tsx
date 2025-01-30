@@ -4,6 +4,7 @@ import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { DataGrid, useGridApiRef, DataGridProps, GridApi } from '@mui/x-data-grid';
 import { getCell, getActiveCell } from 'test/utils/helperFn';
+import { spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -120,7 +121,7 @@ describe('<DataGrid /> - Row spanning', () => {
     render(<TestDataGrid />);
     const rowsWithSpannedCells = Object.keys(apiRef.current.state.rowSpanning.spannedCells);
     expect(rowsWithSpannedCells.length).to.equal(1);
-    const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows('4');
+    const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(4);
     expect(rowIndex).to.equal(3);
     const spanValue = apiRef.current.state.rowSpanning.spannedCells['4'];
     expect(spanValue).to.deep.equal({ code: 3, totalPrice: 3 });
@@ -140,7 +141,7 @@ describe('<DataGrid /> - Row spanning', () => {
       );
       const rowsWithSpannedCells = Object.keys(apiRef.current.state.rowSpanning.spannedCells);
       expect(rowsWithSpannedCells.length).to.equal(1);
-      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows('4');
+      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(4);
       expect(rowIndex).to.equal(1);
       const spanValue = apiRef.current.state.rowSpanning.spannedCells['4'];
       expect(spanValue).to.deep.equal({ code: 3, totalPrice: 3 });
@@ -155,7 +156,7 @@ describe('<DataGrid /> - Row spanning', () => {
       render(<TestDataGrid sortModel={[{ field: 'code', sort: 'desc' }]} />);
       const rowsWithSpannedCells = Object.keys(apiRef.current.state.rowSpanning.spannedCells);
       expect(rowsWithSpannedCells.length).to.equal(1);
-      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows('4');
+      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(4);
       expect(rowIndex).to.equal(1);
       const spanValue = apiRef.current.state.rowSpanning.spannedCells['4'];
       expect(spanValue).to.deep.equal({ code: 3, totalPrice: 3 });
@@ -182,7 +183,7 @@ describe('<DataGrid /> - Row spanning', () => {
       );
       const rowsWithSpannedCells = Object.keys(apiRef.current.state.rowSpanning.spannedCells);
       expect(rowsWithSpannedCells.length).to.equal(1);
-      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows('5');
+      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(5);
       expect(rowIndex).to.equal(0);
       const spanValue = apiRef.current.state.rowSpanning.spannedCells['5'];
       expect(spanValue).to.deep.equal({ code: 2, totalPrice: 2 });
@@ -203,7 +204,7 @@ describe('<DataGrid /> - Row spanning', () => {
       );
       const rowsWithSpannedCells = Object.keys(apiRef.current.state.rowSpanning.spannedCells);
       expect(rowsWithSpannedCells.length).to.equal(1);
-      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows('5');
+      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(5);
       expect(rowIndex).to.equal(0);
       const spanValue = apiRef.current.state.rowSpanning.spannedCells['5'];
       expect(spanValue).to.deep.equal({ code: 2, totalPrice: 2 });
@@ -250,11 +251,12 @@ describe('<DataGrid /> - Row spanning', () => {
 
   describe('rows update', () => {
     it('should update the row spanning state when the rows are updated', () => {
+      const rowSpanValueGetter = spy((value) => value);
       let rowSpanningStateUpdates = 0;
       let spannedCells = {};
       render(
         <TestDataGrid
-          columns={[{ field: 'code' }]}
+          columns={[{ field: 'code', rowSpanValueGetter }]}
           rows={[{ id: 1, code: 'A101' }]}
           onStateChange={(newState) => {
             const newSpannedCells = newState.rowSpanning.spannedCells;
@@ -270,7 +272,10 @@ describe('<DataGrid /> - Row spanning', () => {
       expect(rowSpanningStateUpdates).to.equal(1);
 
       act(() => {
-        apiRef.current.setRows([{ id: 1, code: 'A101' }]);
+        apiRef.current.setRows([
+          { id: 1, code: 'A101' },
+          { id: 2, code: 'A101' },
+        ]);
       });
 
       // Second update on row update

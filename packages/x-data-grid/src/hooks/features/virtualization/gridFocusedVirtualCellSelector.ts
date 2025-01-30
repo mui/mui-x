@@ -6,7 +6,7 @@ import { gridFocusCellSelector } from '../focus';
 import { gridVisibleRowsSelector } from '../pagination';
 import { gridRowsLookupSelector } from '../rows';
 
-const gridIsFocusedCellOutOfContex = createSelector(
+const gridIsFocusedCellOutOfContext = createSelector(
   gridFocusCellSelector,
   gridRenderContextSelector,
   gridVisibleRowsSelector,
@@ -38,7 +38,7 @@ const gridIsFocusedCellOutOfContex = createSelector(
 );
 
 export const gridFocusedVirtualCellSelector = createSelectorMemoized(
-  gridIsFocusedCellOutOfContex,
+  gridIsFocusedCellOutOfContext,
   gridVisibleColumnDefinitionsSelector,
   gridVisibleRowsSelector,
   gridRowsLookupSelector,

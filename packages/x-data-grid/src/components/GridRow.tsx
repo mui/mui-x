@@ -4,9 +4,10 @@ import clsx from 'clsx';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
 import { GridRowEventLookup } from '../models/events';
 import { GridRowId, GridRowModel } from '../models/gridRows';
-import { GridEditModes, GridRowModes, GridCellModes } from '../models/gridEditRowModel';
+import { GridEditModes, GridCellModes } from '../models/gridEditRowModel';
 import { gridClasses } from '../constants/gridClasses';
 import { composeGridClasses } from '../utils/composeGridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -14,7 +15,11 @@ import { GridPinnedColumns } from '../hooks/features/columns';
 import type { GridStateColDef } from '../models/colDef/gridColDef';
 import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../utils/cellBorderUtils';
 import { gridColumnPositionsSelector } from '../hooks/features/columns/gridColumnsSelector';
-import { useGridSelector, objectShallowCompare } from '../hooks/utils/useGridSelector';
+import {
+  useGridSelector,
+  objectShallowCompare,
+  useGridSelectorV8,
+} from '../hooks/utils/useGridSelector';
 import { GridRowClassNameParams } from '../models/params/gridRowParams';
 import { useGridVisibleRows } from '../hooks/utils/useGridVisibleRows';
 import { findParentElementFromClassName, isEventTargetInPortal } from '../utils/domUtils';
@@ -23,11 +28,26 @@ import { GRID_ACTIONS_COLUMN_TYPE } from '../colDef/gridActionsColDef';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD, PinnedColumnPosition } from '../internals/constants';
 import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSelector';
 import { gridRowMaximumTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
-import { gridEditRowsStateSelector } from '../hooks/features/editing/gridEditingSelectors';
+import {
+  gridEditRowsStateSelector,
+  gridRowIsEditingSelector,
+} from '../hooks/features/editing/gridEditingSelectors';
 import { GridScrollbarFillerCell as ScrollbarFiller } from './GridScrollbarFillerCell';
 import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
 import { useGridConfiguration } from '../hooks/utils/useGridConfiguration';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
+import { createSelectorV8 } from '../utils/createSelector';
+
+const isRowReorderingEnabledSelector = createSelectorV8(
+  gridEditRowsStateSelector,
+  (editRows, rowReordering: boolean) => {
+    if (!rowReordering) {
+      return false;
+    }
+    const isEditingRows = !isObjectEmpty(editRows);
+    return !isEditingRows;
+  },
+);
 
 export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   row: GridRowModel;
@@ -101,10 +121,15 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const treeDepth = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector);
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
-  const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
+  const rowReordering = (rootProps as any).rowReordering as boolean;
+  const isRowReorderingEnabled = useGridSelectorV8(
+    apiRef,
+    isRowReorderingEnabledSelector,
+    rowReordering,
+  );
   const handleRef = useForkRef(ref, refProp);
   const rowNode = apiRef.current.getRowNode(rowId);
-  const editing = apiRef.current.getRowMode(rowId) === GridRowModes.Edit;
+  const editing = useGridSelectorV8(apiRef, gridRowIsEditingSelector, rowId);
   const editable = rootProps.editMode === GridEditModes.Row;
   const hasFocusCell = focusedColumnIndex !== undefined;
   const hasVirtualFocusCellLeft =
@@ -213,8 +238,6 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
 
   const { slots, slotProps, disableColumnReorder } = rootProps;
 
-  const rowReordering = (rootProps as any).rowReordering as boolean;
-
   const heightEntry = useGridSelector(
     apiRef,
     () => ({ ...apiRef.current.getRowHeightEntry(rowId) }),
@@ -271,6 +294,11 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     rowClassNames.push(rootProps.getRowClassName(rowParams));
   }
 
+  /* Start of rendering */
+  if (!rowNode) {
+    return null;
+  }
+
   const getCell = (
     column: GridStateColDef,
     indexInSection: number,
@@ -312,15 +340,12 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
       );
     }
 
-    const editCellState = editRowsState[rowId]?.[column.field] ?? null;
-
     // when the cell is a reorder cell we are not allowing to reorder the col
     // fixes https://github.com/mui/mui-x/issues/11126
     const isReorderCell = column.field === '__reorder__';
-    const isEditingRows = Object.keys(editRowsState).length > 0;
 
     const canReorderColumn = !(disableColumnReorder || column.disableReorder);
-    const canReorderRow = rowReordering && !sortModel.length && treeDepth <= 1 && !isEditingRows;
+    const canReorderRow = isRowReorderingEnabled && !sortModel.length && treeDepth <= 1;
 
     const disableDragEvents = !(canReorderColumn || (isReorderCell && canReorderRow));
 
@@ -345,22 +370,17 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
         colIndex={indexRelativeToAllColumns}
         colSpan={colSpan}
         disableDragEvents={disableDragEvents}
-        editCellState={editCellState}
         isNotVisible={cellIsNotVisible}
         pinnedOffset={pinnedOffset}
         pinnedPosition={pinnedPosition}
         showLeftBorder={showLeftBorder}
         showRightBorder={showRightBorder}
+        row={row}
+        rowNode={rowNode}
         {...slotProps?.cell}
       />
     );
   };
-
-  /* Start of rendering */
-
-  if (!rowNode) {
-    return null;
-  }
 
   const leftCells = pinnedColumns.left.map((column, i) => {
     const indexRelativeToAllColumns = i;

@@ -26,7 +26,7 @@
     "getAllGroupDetails": { "description": "Returns the column group lookup." },
     "getAllRowIds": { "description": "Gets the list of row ids." },
     "getCellElement": {
-      "description": "Gets the underlying DOM element for a cell at the given <code>id</code> and <code>field</code>."
+      "description": "Gets the <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a> object that is passed as argument in events."
     },
     "getCellMode": { "description": "Gets the mode of a cell." },
     "getCellParams": {
