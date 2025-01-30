@@ -42,6 +42,7 @@ type UseMockServerResponse<T extends GridGetRowsResponse> = {
   getChildrenCount?: (row: GridRowModel) => number;
   fetchRows: (url: string) => Promise<T>;
   loadNewData: () => void;
+  isReady: boolean;
 };
 
 type DataSet = 'Commodity' | 'Employee' | 'Movies';
@@ -367,5 +368,6 @@ export const useMockServer = <T extends GridGetRowsResponse>(
     loadNewData: () => {
       setIndex((oldIndex) => oldIndex + 1);
     },
+    isReady: Boolean(data?.rows?.length),
   };
 };
