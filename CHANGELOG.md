@@ -6,7 +6,8 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## 8.0.0-alpha.10
-<!-- generated comparing v8.0.0-alpha.9..master -->
+## 8.0.0-alpha.10
+
 _Jan 29, 2025_
 
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
