@@ -26,6 +26,7 @@ import { GridRowEditStartParams, GridRowEditStopParams } from '../params/gridRow
 import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
 import { GridPaginationMeta, GridPaginationModel } from '../gridPaginationProps';
 import { GridDensity } from '../gridDensity';
+import { GridRowsMetaState } from '../../hooks/features/rows/gridRowsMetaState';
 
 export interface GridRowEventLookup {
   /**
@@ -528,6 +529,11 @@ export interface GridEventLookup
     params: GridRowEditStopParams;
     event: MuiBaseEvent;
   };
+
+  /**
+   * Fired when rows meta is updated.
+   */
+  rowsMetaChange: { params: GridRowsMetaState };
 
   // Focus
   /**

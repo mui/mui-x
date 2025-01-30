@@ -7,7 +7,7 @@ import { ResizeObserver } from '../../../utils/ResizeObserver';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowsMetaApi, GridRowsMetaPrivateApi } from '../../../models/api/gridRowsMetaApi';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { getVisibleRows, useGridVisibleRows } from '../../utils/useGridVisibleRows';
+import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { eslintUseValue } from '../../../utils/utils';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridRowEntry } from '../../../models/gridRows';
@@ -23,6 +23,7 @@ import { gridPinnedRowsSelector, gridRowCountSelector } from './gridRowsSelector
 import { gridDimensionsSelector } from '../dimensions/gridDimensionsSelectors';
 import { getValidRowHeight, getRowHeightWarning } from './gridRowsUtils';
 import type { HeightEntry } from './gridRowsMetaInterfaces';
+import { GridRowsMetaState } from './gridRowsMetaState';
 
 /* eslint-disable no-underscore-dangle */
 
@@ -182,17 +183,21 @@ export const useGridRowsMeta = (
       lastMeasuredRowIndex.current = Infinity;
     }
 
+    const rowsMeta: GridRowsMetaState = {
+      currentPageTotalHeight,
+      positions,
+      pinnedTopRowsTotalHeight,
+      pinnedBottomRowsTotalHeight,
+    };
+
     apiRef.current.setState((state) => {
       return {
         ...state,
-        rowsMeta: {
-          currentPageTotalHeight,
-          positions,
-          pinnedTopRowsTotalHeight,
-          pinnedBottomRowsTotalHeight,
-        },
+        rowsMeta,
       };
     });
+
+    apiRef.current.publishEvent('rowsMetaChange', rowsMeta);
 
     isHeightMetaValid.current = true;
   }, [apiRef, pinnedRows, processHeightEntry]);
@@ -271,7 +276,7 @@ export const useGridRowsMeta = (
         hydrateRowsMeta();
       }
     });
-  }, []);
+  }, [apiRef]);
 
   useEnhancedEffect(() => {
     hydrateRowsMeta();

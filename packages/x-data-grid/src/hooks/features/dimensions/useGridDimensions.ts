@@ -103,7 +103,6 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
   const logger = useGridLogger(apiRef, 'useResizeContainer');
   const errorShown = React.useRef(false);
   const rootDimensionsRef = React.useRef(EMPTY_SIZE);
-  const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
@@ -173,6 +172,7 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     // https://github.com/mui/mui-x/issues/15721
     const rootElement = apiRef.current.rootElementRef.current;
 
+    const rowsMeta = gridRowsMetaSelector(apiRef.current.state);
     const scrollbarSize = measureScrollbarSize(rootElement, props.scrollbarSize);
 
     const topContainerHeight = headersTotalHeight + rowsMeta.pinnedTopRowsTotalHeight;
@@ -285,9 +285,6 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     setDimensions,
     props.scrollbarSize,
     props.autoHeight,
-    rowsMeta.currentPageTotalHeight,
-    rowsMeta.pinnedTopRowsTotalHeight,
-    rowsMeta.pinnedBottomRowsTotalHeight,
     rowHeight,
     headerHeight,
     groupHeaderHeight,
@@ -320,7 +317,6 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     getViewportPageSize,
   };
 
-  useEnhancedEffect(updateDimensions, [updateDimensions]);
   useGridApiMethod(apiRef, apiPublic, 'public');
   useGridApiMethod(apiRef, apiPrivate, 'private');
 
@@ -372,6 +368,8 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     [updateDimensions, props.autoHeight, debouncedUpdateDimensions, logger],
   );
 
+  useEnhancedEffect(updateDimensions, [updateDimensions]);
+  useGridApiOptionHandler(apiRef, 'rowsMetaChange', updateDimensions);
   useGridApiEventHandler(apiRef, 'resize', handleResize);
   useGridApiOptionHandler(apiRef, 'debouncedResize', props.onResize);
 }
