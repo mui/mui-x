@@ -85,19 +85,22 @@ export const useGridDataSourceLazyLoader = (
 
   // Adjust the render context range to fit the pagination model's page size
   // First row index should be decreased to the start of the page, end row index should be increased to the end of the page
-  const adjustRowParams = React.useCallback((params: GridGetRowsParams) => {
-    if (typeof params.start !== 'number') {
-      return params;
-    }
+  const adjustRowParams = React.useCallback(
+    (params: GridGetRowsParams) => {
+      if (typeof params.start !== 'number') {
+        return params;
+      }
 
-    const paginationModel = gridPaginationModelSelector(privateApiRef);
+      const paginationModel = gridPaginationModelSelector(privateApiRef);
 
-    return {
-      ...params,
-      start: params.start - (params.start % paginationModel.pageSize),
-      end: params.end + paginationModel.pageSize - (params.end % paginationModel.pageSize) - 1,
-    };
-  }, []);
+      return {
+        ...params,
+        start: params.start - (params.start % paginationModel.pageSize),
+        end: params.end + paginationModel.pageSize - (params.end % paginationModel.pageSize) - 1,
+      };
+    },
+    [privateApiRef],
+  );
 
   const resetGrid = React.useCallback(() => {
     privateApiRef.current.setLoading(true);
