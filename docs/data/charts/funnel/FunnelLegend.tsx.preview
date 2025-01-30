@@ -1,4 +1,4 @@
-<FunnelToggle hideLegend={hideLegend} setHideLegend={setHideLegend} />
+<Controls hideLegend={hideLegend} setHideLegend={setHideLegend} />
 <FunnelChart
   series={[
     {

@@ -10,7 +10,7 @@ const curveTypes = ['bumpY', 'bumpX', 'linear', 'step'];
 export default function FunnelCurvesNoSnap() {
   return (
     <ChartsUsageDemo
-      componentName="Pie shape"
+      componentName="Funnel curve"
       data={[
         {
           propName: `curveType`,

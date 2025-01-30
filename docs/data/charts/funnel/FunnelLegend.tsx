@@ -9,7 +9,7 @@ export default function FunnelLegend() {
 
   return (
     <Box sx={{ width: '100%', maxWidth: 400 }}>
-      <FunnelToggle hideLegend={hideLegend} setHideLegend={setHideLegend} />
+      <Controls hideLegend={hideLegend} setHideLegend={setHideLegend} />
       <FunnelChart
         series={[
           {
@@ -33,7 +33,7 @@ const funnelProps = {
   slotProps: { legend: { position: { vertical: 'bottom' } } },
 } as const;
 
-function FunnelToggle({
+function Controls({
   hideLegend,
   setHideLegend,
 }: {

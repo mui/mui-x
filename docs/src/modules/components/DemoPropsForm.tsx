@@ -19,6 +19,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import Select from '@mui/material/Select';
 import Paper from '@mui/material/Paper';
 import Switch from '@mui/material/Switch';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 const shallowEqual = (item1: { [k: string]: any }, item2: { [k: string]: any }) => {
@@ -54,6 +55,7 @@ type DataType<PropName> = {
     | 'controlled'
     | 'number'
     | 'placement'
+    | 'margin'
     | 'slider';
   /**
    * The options for these knobs: `select` and `radio`
@@ -424,6 +426,57 @@ export default function ChartDemoPropsForm<T extends string>({
                     },
                   }}
                 />
+              </FormControl>
+            );
+          }
+          if (knob === 'margin') {
+            return (
+              <FormControl key={propName}>
+                <FormLabel>{propName}</FormLabel>
+                <Box
+                  sx={{
+                    display: 'grid',
+                    gap: 1,
+                    alignItems: 'center',
+                    gridTemplateAreas: `
+                      '. top .'
+                      'left . right'
+                      '. bottom .'
+                    `,
+
+                    [`& .${inputClasses.root}`]: {
+                      bgcolor: 'background.body',
+                    },
+                  }}
+                >
+                  {['top', 'right', 'bottom', 'left'].map((direction) => (
+                    <Stack key={direction} sx={{ gridArea: direction }}>
+                      <FormLabel>{direction}</FormLabel>
+                      <Input
+                        size="small"
+                        type="number"
+                        aria-label={direction}
+                        value={props[propName]?.[direction] ?? 0}
+                        sx={{
+                          textTransform: 'capitalize',
+                          width: 50,
+                        }}
+                        onChange={(event) => {
+                          if (Number.isNaN(Number.parseFloat(event.target.value))) {
+                            return;
+                          }
+                          onPropsChange((latestProps) => ({
+                            ...latestProps,
+                            [propName]: {
+                              ...latestProps[propName],
+                              [direction]: Number.parseFloat(event.target.value),
+                            },
+                          }));
+                        }}
+                      />
+                    </Stack>
+                  ))}
+                </Box>
               </FormControl>
             );
           }

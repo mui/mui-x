@@ -29,6 +29,21 @@ To format the labels, a `valueFormatter` function can be provided.
 
 {{"demo": "FunnelLabels.js"}}
 
+### Positioning labels
+
+The labels can be positioned relative to the section they represent. The `sectionLabel` property accepts an object with the following properties:
+
+- `position.vertical`: The vertical position of the label. It can be `top`, `center` or `bottom`.
+- `position.horizontal`: The horizontal position of the label. It can be `start`, `middle` or `end`.
+- `margin`: The margin between the label and the section.
+- `dominantBaseline`: The vertical alignment of the text. It can be `auto`, `baseline`, `text-before-edge`, `text-after-edge`, `central`, `hanging` or `middle`.
+- `textAnchor`: The horizontal alignment of the text. It can be `start`, `middle` or `end`.
+
+The `sectionLabel` property can be set to `false` to hide the labels.
+It also accepts a function that receives the data object and should return the label configuration.
+
+{{"demo": "FunnelLabelPositioningNoSnap.js"}}
+
 ## Customization
 
 ### Curve interpolation
