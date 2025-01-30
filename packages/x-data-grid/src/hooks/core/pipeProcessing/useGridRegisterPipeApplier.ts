@@ -28,10 +28,6 @@ export const useGridRegisterPipeApplier = <
     if (isFirstRender.current) {
       isFirstRender.current = false;
     } else {
-      console.error(
-        `useGridRegisterPipeApplier: preProcessor for group ${group} changed after the first render – unstable preProcessors might lead to unexpected behaviors.`,
-        callback,
-      );
       registerPreProcessor();
     }
 
