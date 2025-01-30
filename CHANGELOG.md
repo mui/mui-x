@@ -141,6 +141,7 @@ Same changes as in `@mui/x-tree-view@8.0.0-alpha.10`.
 
 - [core] Reduce chart perf benchmark weight (#16374) @alexfauquette
 - [test] Fix console warnings while executing tests with React 18 (#16386) @arminmeh
+- [test] Fix flaky data source tests in DataGrid (#16395) @lauri865
 
 ## 8.0.0-alpha.9
 
