@@ -157,7 +157,7 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
     expect(footerRow?.id).to.deep.equal({ position: 'footer', value: 10 });
   });
 
-  it('should derive the aggregation values using `dataSource.getAggregatedValue`', () => {
+  it('should derive the aggregation values using `dataSource.getAggregatedValue`', async () => {
     const getAggregatedValue = () => 'Agg value';
     render(
       <TestDataSourceAggregation
@@ -167,7 +167,9 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
         getAggregatedValue={getAggregatedValue}
       />,
     );
-    expect(Object.keys(apiRef.current!.state.aggregation.lookup).length).to.be.greaterThan(0);
+    await waitFor(() => {
+      expect(Object.keys(apiRef.current!.state.aggregation.lookup).length).to.be.greaterThan(0);
+    });
     expect(apiRef.current?.state.aggregation.lookup[GRID_ROOT_GROUP_ID].id.value).to.equal(
       'Agg value',
     );
