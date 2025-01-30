@@ -7,13 +7,16 @@ import { ResizeObserver } from '../../../utils/ResizeObserver';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowsMetaApi, GridRowsMetaPrivateApi } from '../../../models/api/gridRowsMetaApi';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
+import { getVisibleRows, useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { eslintUseValue } from '../../../utils/utils';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridRowEntry } from '../../../models/gridRows';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { gridDensityFactorSelector } from '../density/densitySelector';
-import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
+import {
+  gridPaginationSelector,
+  gridVisibleRowsSelector,
+} from '../pagination/gridPaginationSelector';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 import { gridPinnedRowsSelector, gridRowCountSelector } from './gridRowsSelector';
@@ -71,7 +74,6 @@ export const useGridRowsMeta = (
   const isHeightMetaValid = React.useRef(false);
 
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
-  const currentPage = useGridVisibleRows(apiRef, props);
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
   const rowHeight = useGridSelector(apiRef, gridRowHeightSelector);
 
@@ -93,6 +95,7 @@ export const useGridRowsMeta = (
 
   const processHeightEntry = React.useCallback(
     (row: GridRowEntry) => {
+      const currentPage = getVisibleRows(apiRef);
       // HACK: rowHeight trails behind the most up-to-date value just enough to
       // mess the initial rowsMeta hydration :/
       const baseRowHeight = gridDimensionsSelector(apiRef.current.state).rowHeight;
@@ -147,18 +150,11 @@ export const useGridRowsMeta = (
 
       return entry;
     },
-    [
-      apiRef,
-      currentPage.rows,
-      getRowHeightProp,
-      getEstimatedRowHeight,
-      rowHeight,
-      getRowSpacing,
-      densityFactor,
-    ],
+    [apiRef, getRowHeightProp, getEstimatedRowHeight, rowHeight, getRowSpacing, densityFactor],
   );
 
   const hydrateRowsMeta = React.useCallback(() => {
+    const currentPage = getVisibleRows(apiRef);
     hasRowWithAutoHeight.current = false;
 
     const pinnedTopRowsTotalHeight = pinnedRows.top.reduce((acc, row) => {
@@ -199,7 +195,7 @@ export const useGridRowsMeta = (
     });
 
     isHeightMetaValid.current = true;
-  }, [apiRef, pinnedRows, currentPage.rows, processHeightEntry]);
+  }, [apiRef, pinnedRows, processHeightEntry]);
 
   const getRowHeight: GridRowsMetaApi['unstable_getRowHeight'] = (rowId) => {
     return heightCache.get(rowId)?.content ?? rowHeight;
@@ -266,11 +262,22 @@ export const useGridRowsMeta = (
 
   useGridRegisterPipeApplier(apiRef, 'rowHeight', hydrateRowsMeta);
 
-  // The effect is used to build the rows meta data - currentPageTotalHeight and positions.
-  // Because of variable row height this is needed for the virtualization
+  useEnhancedEffect(() => {
+    let lastRows = gridVisibleRowsSelector(apiRef).rows;
+    return apiRef.current.store.subscribe(() => {
+      const rows = gridVisibleRowsSelector(apiRef).rows;
+      if (rows !== lastRows) {
+        lastRows = rows;
+        hydrateRowsMeta();
+      }
+    });
+  }, []);
+
   useEnhancedEffect(() => {
     hydrateRowsMeta();
   }, [hydrateRowsMeta]);
+  // The effect is used to build the rows meta data - currentPageTotalHeight and positions.
+  // Because of variable row height this is needed for the virtualization
 
   const rowsMetaApi: GridRowsMetaApi = {
     unstable_getRowHeight: getRowHeight,
