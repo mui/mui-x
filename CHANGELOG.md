@@ -15,7 +15,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 TODO INSERT HIGHLIGHTS
 
 Special thanks go out to the community contributors who have helped make this release possible:
-@arminmeh, @k-rajat19, @lauri865, @mateuseap, @romgrk.
+@k-rajat19, @lauri865, @mateuseap.
 Following are all team members who have contributed to this release:
 @alexfauquette, @flaviendelangle, @JCQuintas, @KenanYusuf, @MBilalShafi.
 
