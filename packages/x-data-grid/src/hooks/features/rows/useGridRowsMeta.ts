@@ -73,9 +73,6 @@ export const useGridRowsMeta = (
   const isHeightMetaValid = React.useRef(false);
 
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
-  const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
-  const paginationState = useGridSelector(apiRef, gridPaginationSelector);
-  const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const currentPage = useGridVisibleRows(apiRef, props);
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
   const rowHeight = useGridSelector(apiRef, gridRowHeightSelector);
@@ -275,7 +272,7 @@ export const useGridRowsMeta = (
   // Because of variable row height this is needed for the virtualization
   useEnhancedEffect(() => {
     hydrateRowsMeta();
-  }, [filterModel, paginationState, sortModel, hydrateRowsMeta]);
+  }, [hydrateRowsMeta]);
 
   const rowsMetaApi: GridRowsMetaApi = {
     unstable_getRowHeight: getRowHeight,
