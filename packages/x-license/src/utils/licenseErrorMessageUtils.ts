@@ -24,6 +24,28 @@ function showError(message: string[]) {
   );
 }
 
+export function showSetLicenseKeyNotCalledError() {
+  showError([
+    'MUI X: `setLicenseKey` was never called.',
+    '',
+    'The `setLicenseKey()` function was never called. This might be because you did not call `setLicenseKey()` during runtime',
+    '',
+    'To solve the issue, you need to double check that `setLicenseKey()` is called with the right argument during runtime',
+    'Please check the license key installation instructions: https://mui.com/r/x-license-key-installation.',
+  ]);
+}
+
+export function showLicenseKeyNotSetError() {
+  showError([
+    'MUI X: License key not set.',
+    '',
+    'The license key is not set. This might be because you did not call `setLicenseKey()` or called it without an argument.',
+    '',
+    'To solve the issue, you need to double check that `setLicenseKey()` is called with the right argument',
+    'Please check the license key installation instructions: https://mui.com/r/x-license-key-installation.',
+  ]);
+}
+
 export function showInvalidLicenseKeyError() {
   showError([
     'MUI X: Invalid license key.',
