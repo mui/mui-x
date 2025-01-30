@@ -846,6 +846,7 @@
       "nodeName": "the main container element",
       "conditions": "it has right pinned columns"
     },
+    "mainContent": { "description": "" },
     "menu": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the menu element" },
     "menuIcon": {
       "description": "Styles applied to {{nodeName}}.",
@@ -1015,7 +1016,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the footer selected row count element"
     },
-    "sidePanel": { "description": "" },
     "sortIcon": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the sort icon element"
@@ -1079,6 +1079,7 @@
       "nodeName": "cells",
       "conditions": "column header and other elements that have border"
     },
+    "withSidePanel": { "description": "" },
     "withVerticalBorder": {
       "description": "Styles applied the grid if <code>showColumnVerticalBorder={true}</code>."
     }

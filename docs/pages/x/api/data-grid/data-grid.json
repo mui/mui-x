@@ -1486,6 +1486,12 @@
       "isGlobal": false
     },
     {
+      "key": "mainContent",
+      "className": "MuiDataGrid-mainContent",
+      "description": "",
+      "isGlobal": false
+    },
+    {
       "key": "menu",
       "className": "MuiDataGrid-menu",
       "description": "Styles applied to the menu element.",
@@ -1744,12 +1750,6 @@
       "isGlobal": false
     },
     {
-      "key": "sidePanel",
-      "className": "MuiDataGrid-sidePanel",
-      "description": "",
-      "isGlobal": false
-    },
-    {
       "key": "sortIcon",
       "className": "MuiDataGrid-sortIcon",
       "description": "Styles applied to the sort icon element.",
@@ -1837,6 +1837,12 @@
       "key": "withBorderColor",
       "className": "MuiDataGrid-withBorderColor",
       "description": "Styles applied to cells, column header and other elements that have border.\nSets border color only.",
+      "isGlobal": false
+    },
+    {
+      "key": "withSidePanel",
+      "className": "MuiDataGrid-withSidePanel",
+      "description": "",
       "isGlobal": false
     },
     {
