@@ -30,18 +30,6 @@ export default function FunnelCurvesNoSnap() {
                 curve: props.curveType,
                 layout: 'vertical',
                 ...populationByEducationLevelPercentageSeries,
-                data: [
-                  {
-                    value: 100,
-                  },
-                  {
-                    value: 50,
-                  },
-                  {
-                    value: 40,
-                  },
-                  { value: 5 },
-                ],
               },
             ]}
             height={300}
@@ -53,18 +41,6 @@ export default function FunnelCurvesNoSnap() {
                 curve: props.curveType,
                 layout: 'horizontal',
                 ...populationByEducationLevelPercentageSeries,
-                data: [
-                  {
-                    value: 100,
-                  },
-                  {
-                    value: 50,
-                  },
-                  {
-                    value: 40,
-                  },
-                  { value: 5 },
-                ],
               },
             ]}
             height={300}
