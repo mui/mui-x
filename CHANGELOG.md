@@ -17,7 +17,7 @@ TODO INSERT HIGHLIGHTS
 Special thanks go out to the community contributors who have helped make this release possible:
 @k-rajat19, @lauri865, @mateuseap.
 Following are all team members who have contributed to this release:
-@alexfauquette, @flaviendelangle, @JCQuintas, @KenanYusuf, @MBilalShafi.
+@alexfauquette, @flaviendelangle, @JCQuintas, @KenanYusuf, @MBilalShafi, @romgrk, @arminmeh.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
