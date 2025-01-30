@@ -176,14 +176,12 @@ export const useCalendarState = (
     const skipAnimation = reason === 'cell-interaction';
 
     let month: PickerValidDate;
-    if (reason === 'header-navigation') {
-      month = utils.startOfMonth(target);
-    } else {
-      month = getCurrentMonthFromVisibleDate(target, calendarState.currentMonth);
-    }
-
     let focusedDay: PickerValidDate | null;
-    if (reason === 'header-navigation' || reason === 'controlled-value-change') {
+    if (reason === 'cell-interaction') {
+      month = getCurrentMonthFromVisibleDate(target, calendarState.currentMonth);
+      focusedDay = target;
+    } else {
+      month = utils.startOfMonth(target);
       focusedDay = target;
 
       // If the date is disabled, we try to find a non-disabled date inside the same month.
@@ -201,8 +199,6 @@ export const useCalendarState = (
           timezone,
         });
       }
-    } else {
-      focusedDay = target;
     }
 
     const hasChangedMonth = !utils.isSameMonth(calendarState.currentMonth, month);
