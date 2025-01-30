@@ -10,6 +10,8 @@ import { DefaultizedProps } from '@mui/x-internals/types';
 
 export type FunnelItemId = string | number;
 
+export type FunnelCurveType = Extract<CurveType, 'linear' | 'step' | 'bumpY' | 'bumpX'>;
+
 export type FunnelValueType = {
   /**
    * A unique identifier of the funnel section.
@@ -61,7 +63,7 @@ export interface FunnelSeriesType<TData = FunnelValueType>
    *
    * @default 'linear'
    */
-  curve?: Extract<CurveType, 'linear' | 'step' | 'bumpY' | 'bumpX'>;
+  curve?: FunnelCurveType;
   /**
    * The label configuration for the funnel plot.
    * Allows to customize the position and margin of the label that is displayed on the funnel sections.

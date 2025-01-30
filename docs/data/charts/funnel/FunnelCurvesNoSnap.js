@@ -20,7 +20,7 @@ export default function FunnelCurvesNoSnap() {
         },
       ]}
       renderDemo={(
-        /** @type {{ curveType: 'linear' | 'step' | 'bumpY' | 'bumpX' }} */
+        /** @type {{ curveType: import('@mui/x-charts-pro/FunnelChart/funnel.types').FunnelCurveType }} */
         props,
       ) => (
         <Stack sx={{ width: '100%' }}>
@@ -49,7 +49,7 @@ export default function FunnelCurvesNoSnap() {
         </Stack>
       )}
       getCode={(
-        /** @type {{props:{ curveType: 'linear' | 'step' | 'bumpY' | 'bumpX' }}} */
+        /** @type {{props:{ curveType: import('@mui/x-charts-pro/FunnelChart/funnel.types').FunnelCurveType }}} */
         { props },
       ) => {
         return `import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
