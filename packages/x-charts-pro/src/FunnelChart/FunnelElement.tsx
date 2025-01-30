@@ -5,7 +5,7 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import { styled } from '@mui/material/styles';
 import { color as d3Color } from '@mui/x-charts-vendor/d3-color';
 import { useInteractionItemProps, SeriesId } from '@mui/x-charts/internals';
-import { useItemHighlighted } from '@mui/x-charts/context';
+import { useItemHighlighted } from '@mui/x-charts/hooks';
 import { FunnelItemIdentifier } from './funnel.types';
 
 export interface FunnelElementProps extends Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> {

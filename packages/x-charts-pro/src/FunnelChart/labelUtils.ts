@@ -21,9 +21,9 @@ export const alignLabel = ({
     baseline = 'baseline';
   }
 
-  if (horizontal === 'left') {
+  if (horizontal === 'start') {
     anchor = 'start';
-  } else if (horizontal === 'right') {
+  } else if (horizontal === 'end') {
     anchor = 'end';
   }
 
@@ -169,7 +169,7 @@ export const positionLabel = ({
       } else if (vertical === 'bottom') {
         y = bottomMiddle;
       }
-    } else if (horizontal === 'left') {
+    } else if (horizontal === 'start') {
       x = maxLeft;
       if (vertical === 'top') {
         y = maxTop;
@@ -178,7 +178,7 @@ export const positionLabel = ({
       } else if (vertical === 'bottom') {
         y = maxBottom;
       }
-    } else if (horizontal === 'right') {
+    } else if (horizontal === 'end') {
       x = maxRight;
       if (vertical === 'top') {
         y = minTop;
@@ -193,29 +193,29 @@ export const positionLabel = ({
   if (!isHorizontal) {
     if (vertical === 'middle') {
       y = middle;
-      if (horizontal === 'left') {
+      if (horizontal === 'start') {
         x = leftCenter;
       } else if (horizontal === 'middle') {
         x = center;
-      } else if (horizontal === 'right') {
+      } else if (horizontal === 'end') {
         x = rightCenter;
       }
     } else if (vertical === 'top') {
       y = maxTop;
-      if (horizontal === 'left') {
+      if (horizontal === 'start') {
         x = maxLeft;
       } else if (horizontal === 'middle') {
         x = center;
-      } else if (horizontal === 'right') {
+      } else if (horizontal === 'end') {
         x = maxRight;
       }
     } else if (vertical === 'bottom') {
       y = maxBottom;
-      if (horizontal === 'left') {
+      if (horizontal === 'start') {
         x = minLeft;
       } else if (horizontal === 'middle') {
         x = center;
-      } else if (horizontal === 'right') {
+      } else if (horizontal === 'end') {
         x = minRight;
       }
     }

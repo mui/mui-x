@@ -1,6 +1,10 @@
 import { AllSeriesType } from '../models/seriesType';
 
-export function defaultizeColor(series: AllSeriesType, seriesIndex: number, colors: string[]) {
+export function defaultizeColor<T extends AllSeriesType>(
+  series: T,
+  seriesIndex: number,
+  colors: string[],
+): T {
   if (
     series.type === 'pie' ||
     // @ts-ignore funnel is a pro feature
