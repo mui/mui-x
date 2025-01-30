@@ -13,7 +13,7 @@ import {
   GridGroupNode,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { SinonSpy, spy } from 'sinon';
+import { spy } from 'sinon';
 import { getCell } from 'test/utils/helperFn';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 
@@ -30,19 +30,27 @@ const serverOptions = { minDelay: 0, maxDelay: 0, verbose: false };
 // Needs layout
 describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   const { render } = createRenderer();
+  const fetchRowsSpy = spy();
 
   let apiRef: RefObject<GridApi | null>;
-  let fetchRowsSpy: SinonSpy;
   let mockServer: ReturnType<typeof useMockServer>;
 
+  // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
+  function Reset() {
+    React.useLayoutEffect(() => {
+      fetchRowsSpy.resetHistory();
+    }, []);
+    return null;
+  }
   function TestDataSource(props: Partial<DataGridProProps> & { shouldRequestsFail?: boolean }) {
     apiRef = useGridApiRef();
     mockServer = useMockServer(dataSetOptions, serverOptions, props.shouldRequestsFail ?? false);
-    fetchRowsSpy = spy(mockServer, 'fetchRows');
-    const { fetchRows, columns } = mockServer;
+    const { columns } = mockServer;
 
-    const dataSource: GridDataSource = React.useMemo(
-      () => ({
+    const { fetchRows } = mockServer;
+
+    const dataSource: GridDataSource = React.useMemo(() => {
+      return {
         getRows: async (params: GridGetRowsParams) => {
           const urlParams = new URLSearchParams({
             paginationModel: JSON.stringify(params.paginationModel),
@@ -51,9 +59,9 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
             groupKeys: JSON.stringify(params.groupKeys),
           });
 
-          const getRowsResponse = await fetchRows(
-            `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
-          );
+          const url = `https://mui.com/x/api/data-grid?${urlParams.toString()}`;
+          fetchRowsSpy(url);
+          const getRowsResponse = await fetchRows(url);
 
           return {
             rows: getRowsResponse.rows,
@@ -62,12 +70,16 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
         },
         getGroupKey: (row) => row[dataSetOptions.treeData.groupingField],
         getChildrenCount: (row) => row.descendantCount,
-      }),
-      [fetchRows],
-    );
+      };
+    }, [fetchRows]);
+
+    if (!mockServer.isReady) {
+      return null;
+    }
 
     return (
       <div style={{ width: 300, height: 300 }}>
+        <Reset />
         <DataGridPro
           apiRef={apiRef}
           columns={columns}
