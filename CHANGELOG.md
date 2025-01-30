@@ -11,7 +11,8 @@ _Jan 30, 2025_
 
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
+- 📚 Documentation improvements
+- 🐞 Bugfixes
 
 Special thanks go out to the community contributors who have helped make this release possible:
 @k-rajat19, @lauri865, @mateuseap.
@@ -24,7 +25,7 @@ Following are all team members who have contributed to this release:
 
 ### Breaking changes
 
-- `viewportInnerSize.width` now includes pinned columns' widths (fixes recursive loops in updating dimensions <-> columns) (Edit: probably should be reclassified as a bugfix, ref: https://github.com/mui/mui-x/pull/15627#issuecomment-2605833070)
+- `viewportInnerSize.width` now includes pinned columns' widths (fixes recursive loops in updating dimensions <-> columns)
 - The Data Grid now has a default background color, and its customization has moved from `theme.mixins.MuiDataGrid` to `theme.palette.DataGrid` with the following properties:
 
   - `bg`: Sets the background color of the entire grid (new property)
