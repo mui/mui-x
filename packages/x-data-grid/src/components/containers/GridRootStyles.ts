@@ -228,8 +228,8 @@ export const GridRootStyles = styled('div', {
     },
   });
 
-  const pinnedBackgroundColor = blendFn(pinnedBackground, hoverColor, hoverOpacity);
-  const pinnedHoverStyles = getPinnedBackgroundStyles(pinnedBackgroundColor);
+  const pinnedHoverBackgroundColor = blendFn(pinnedBackground, hoverColor, hoverOpacity);
+  const pinnedHoverStyles = getPinnedBackgroundStyles(pinnedHoverBackgroundColor);
 
   const pinnedSelectedBackgroundColor = blendFn(
     pinnedBackground,
@@ -601,8 +601,11 @@ export const GridRootStyles = styled('div', {
     [`& .${c['virtualScrollerContent--overflowed']} .${c['row--lastVisible']} .${c.cell}`]: {
       borderTopColor: 'transparent',
     },
-    [`& .${c.pinnedRows}`]: {
+    [`& .${c.pinnedRows} .${c.row}`]: {
       backgroundColor: 'var(--DataGrid-pinnedBackground)',
+      '&:hover': {
+        backgroundColor: pinnedHoverBackgroundColor,
+      },
     },
     [`& .${c['pinnedRows--top']} :first-of-type`]: {
       [`& .${c.cell}, .${c.scrollbarFiller}`]: {
