@@ -49,17 +49,7 @@ Following are all team members who have contributed to this release:
   +  },
    });
   ```
-
-From https://github.com/mui/mui-x/pull/16256
-
-### Breaking changes
-
 - The `detailPanels`, `pinnedColumns`, and `pinnedRowsRenderZone` classes have been removed.
-
-From https://github.com/mui/mui-x/pull/16353
-
-### Breaking changes
-
 - Return type of the `useGridApiRef()` hook and the type of `apiRef` prop are updated to explicitly include the possibilty of `null`. In addition to this, `useGridApiRef()` returns a reference that is initialized with `null` instead of `{}`.
 
   Only the initial value and the type are updated. Logic that initializes the API and its availability remained the same, which means that if you could access API in a particular line of your code before, you are able to access it as well after this change.
