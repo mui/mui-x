@@ -30,7 +30,6 @@ export default function FunnelLegend() {
 
 const funnelProps = {
   height: 300,
-  margin: { bottom: 20 },
   slotProps: { legend: { position: { vertical: 'bottom' } } },
 };
 

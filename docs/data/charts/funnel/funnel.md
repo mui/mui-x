@@ -58,3 +58,9 @@ The funnel colors can be customized in two ways.
 {{"demo": "FunnelColor.js"}}
 
 ### Highlight
+
+The hovered element can be highlighted by setting `highlightScope.highlight` property to one of the possible values.
+
+To fade elements which are not hovered, set the `highlightScope.fade` property.
+
+{{"demo": "HighlightFunnel.js"}}
