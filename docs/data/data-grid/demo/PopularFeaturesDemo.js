@@ -524,6 +524,7 @@ export default function PopularFeaturesDemo() {
             {
               outline: 'none',
             },
+          borderRadius: 2,
         }}
         rows={featuresSet}
         columns={columns}
