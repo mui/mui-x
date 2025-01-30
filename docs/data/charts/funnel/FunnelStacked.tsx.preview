@@ -1,0 +1,15 @@
+<FunnelChart
+  sx={{ 'path:nth-of-type(-n+4)': { filter: 'brightness(0.7)' } }}
+  series={[
+    {
+      data: dataBig,
+      sectionLabel: {
+        position: { horizontal: 'end' },
+        textAnchor: 'start',
+        margin: { right: -10 },
+      },
+    },
+    { data: dataSmall },
+  ]}
+  height={300}
+/>

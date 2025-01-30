@@ -50,7 +50,8 @@ const formatter: SeriesProcessor<'funnel'> = (params, dataset) => {
   seriesOrder.forEach((seriesId) => {
     const currentSeries = series[seriesId];
     // Use dataKey if needed and available
-    const dataKey = currentSeries.dataKey;
+    // const dataKey = currentSeries.dataKey;
+    const dataKey = undefined;
 
     const isHorizontal = currentSeries.layout === 'horizontal';
 

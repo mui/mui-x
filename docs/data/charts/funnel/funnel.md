@@ -47,7 +47,7 @@ It also accepts a function that receives the data object and should return the l
 ## Curve interpolation
 
 The interpolation between data points can be customized by the `curve` property.
-This property expects one of the following string values, corresponding to the interpolation method: ``'linear'`, `'bumpX'`, `'bumpY'` and `'step'`.
+This property expects one of the following string values, corresponding to the interpolation method: `'linear'`, `'bumpX'`, `'bumpY'` and `'step'`.
 
 This series property adds the option to control the interpolation of a series.
 Different series could even have different interpolations.
@@ -76,6 +76,16 @@ The funnel colors can be customized in two ways.
 ```
 
 {{"demo": "FunnelColor.js"}}
+
+## Stacking sections
+
+By default, multiple series are stacked on top of each other.
+
+Simply provide multiple series to the funnel chart and make sure that they have different colors or styles to differentiate them.
+
+The order of the series in the array will determine the stacking order. The first series will be at the bottom and the last will be at the top.
+
+{{"demo": "FunnelStacked.js"}}
 
 ## Highlight
 
