@@ -13,9 +13,8 @@ export const useGridRegisterStrategyProcessor = <
   group: G,
   processor: GridStrategyProcessor<G>,
 ) => {
-  const cleanup = React.useRef<(() => void) | null>(null);
   const registerPreProcessor = React.useCallback(() => {
-    cleanup.current = apiRef.current.registerStrategyProcessor(strategyName, group, processor);
+    apiRef.current.registerStrategyProcessor(strategyName, group, processor);
   }, [apiRef, processor, group, strategyName]);
 
   useFirstRender(() => {
@@ -29,16 +28,5 @@ export const useGridRegisterStrategyProcessor = <
     } else {
       registerPreProcessor();
     }
-
-    // Avoid cleanups in development/testing please StrictMode, yet still be able to use `useFirstRender` that
-    if (process.env.NODE_ENV !== 'production') {
-      return () => {
-        if (cleanup.current) {
-          cleanup.current();
-          cleanup.current = null;
-        }
-      };
-    }
-    return undefined;
   }, [registerPreProcessor]);
 };
