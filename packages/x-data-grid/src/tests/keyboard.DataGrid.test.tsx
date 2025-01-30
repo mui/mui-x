@@ -622,20 +622,19 @@ describe('<DataGrid /> - Keyboard', () => {
     });
   });
 
-  it('should call preventDefault when using keyboard navigation', () => {
+  it('should call preventDefault when using keyboard navigation', async () => {
     const handleKeyDown = spy((event) => event.defaultPrevented);
 
     const columns = [{ field: 'id' }, { field: 'name' }];
     const rows = [{ id: 1, name: 'John' }];
 
-    render(
+    const { user } = render(
       <div style={{ width: 300, height: 300 }} onKeyDown={handleKeyDown}>
         <DataGrid rows={rows} columns={columns} />
       </div>,
     );
-    const firstCell = getCell(0, 0);
-    fireUserEvent.mousePress(firstCell);
-    fireEvent.keyDown(firstCell, { key: 'ArrowRight' });
+    await user.click(getCell(0, 0));
+    await user.keyboard('{ArrowRight}');
     expect(handleKeyDown.returnValues).to.deep.equal([true]);
   });
 
@@ -666,7 +665,7 @@ describe('<DataGrid /> - Keyboard', () => {
       </div>,
     );
 
-    await act(() => {
+    await act(async () => {
       getColumnHeaderCell(0).focus();
     });
     expect(getActiveColumnHeader()).to.equal('0');
