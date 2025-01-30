@@ -23,8 +23,6 @@ Following are all team members who have contributed to this release:
 
 ### Data Grid
 
-From https://github.com/mui/mui-x/pull/15627
-
 ### Breaking changes
 
 - `viewportInnerSize.width` now includes pinned columns' widths (fixes recursive loops in updating dimensions <-> columns) (Edit: probably should be reclassified as a bugfix, ref: https://github.com/mui/mui-x/pull/15627#issuecomment-2605833070)
