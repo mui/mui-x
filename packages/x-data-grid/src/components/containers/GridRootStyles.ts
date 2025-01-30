@@ -210,13 +210,11 @@ export const GridRootStyles = styled('div', {
   const blendFn = t.vars ? blendCssVars : blend;
 
   const getPinnedBackgroundStyles = (backgroundColor: string) => ({
-    [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
-      backgroundColor,
-      '&.Mui-selected': {
-        backgroundColor: blendFn(backgroundColor, selectedBackground, selectedOpacity),
-        '&:hover': {
-          backgroundColor: blendFn(backgroundColor, selectedBackground, selectedHoverOpacity),
-        },
+    backgroundColor,
+    '&.Mui-selected': {
+      backgroundColor: blendFn(backgroundColor, selectedBackground, selectedOpacity),
+      '&:hover': {
+        backgroundColor: blendFn(backgroundColor, selectedBackground, selectedHoverOpacity),
       },
     },
   });
@@ -595,8 +593,27 @@ export const GridRootStyles = styled('div', {
     [`& .${c['virtualScrollerContent--overflowed']} .${c['row--lastVisible']} .${c.cell}`]: {
       borderTopColor: 'transparent',
     },
-    [`& .${c.pinnedRows}`]: {
-      backgroundColor: 'var(--DataGrid-pinnedBackground)',
+    [`& .${c.row}`]: {
+      '&:hover': {
+        [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: pinnedHoverStyles,
+      },
+      '&.Mui-selected': {
+        [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: pinnedSelectedStyles,
+      },
+      '&.Mui-selected:hover': {
+        [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: pinnedSelectedHoverStyles,
+      },
+    },
+    [`& .${c.pinnedRows} .${c.row}`]: {
+      [`& .${c.cell}`]: {
+        backgroundColor: 'var(--DataGrid-pinnedBackground)',
+        '&.Mui-selected': {
+          backgroundColor: pinnedSelectedBackgroundColor,
+        },
+      },
+      [`&:hover .${c.cell}`]: pinnedHoverStyles,
+      [`&.Mui-selected .${c.cell}`]: pinnedSelectedStyles,
+      [`&.Mui-selected:hover .${c.cell}`]: pinnedSelectedHoverStyles,
     },
     [`& .${c['pinnedRows--top']} :first-of-type`]: {
       [`& .${c.cell}, .${c.scrollbarFiller}`]: {
@@ -706,11 +723,6 @@ export const GridRootStyles = styled('div', {
       '&.Mui-selected': {
         backgroundColor: pinnedSelectedBackgroundColor,
       },
-    },
-    [`& .${c.row}`]: {
-      '&:hover': pinnedHoverStyles,
-      '&.Mui-selected': pinnedSelectedStyles,
-      '&.Mui-selected:hover': pinnedSelectedHoverStyles,
     },
     [`& .${c.cellOffsetLeft}`]: {
       flex: '0 0 auto',
