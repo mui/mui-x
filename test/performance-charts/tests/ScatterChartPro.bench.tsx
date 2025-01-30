@@ -39,7 +39,7 @@ describe('ScatterChartPro', () => {
               valueFormatter: (v) => v.toLocaleString('en-US'),
             },
           ]}
-          initialZoom={[{ axisId: 'x', start: 2, end: 7 }]}
+          initialZoom={[{ axisId: 'x', start: 20, end: 70 }]}
           series={[
             {
               data,

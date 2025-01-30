@@ -20,7 +20,7 @@ export const calculateMargins = <
   }
 
   if (props.slotProps?.legend?.direction === 'vertical') {
-    if (props.slotProps?.legend?.position?.horizontal === 'left') {
+    if (props.slotProps?.legend?.position?.horizontal === 'start') {
       return {
         ...DEFAULT_MARGINS,
         left: DEFAULT_LEGEND_FACING_MARGIN,

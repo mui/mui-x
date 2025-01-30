@@ -119,7 +119,47 @@ GridHeaderFilterMenuContainer.propTypes = {
       getValueAsString: PropTypes.func,
       headerLabel: PropTypes.string,
       InputComponent: PropTypes.elementType,
-      InputComponentProps: PropTypes.object,
+      InputComponentProps: PropTypes.shape({
+        apiRef: PropTypes.shape({
+          current: PropTypes.object.isRequired,
+        }),
+        applyValue: PropTypes.func,
+        className: PropTypes.string,
+        clearButton: PropTypes.node,
+        disabled: PropTypes.bool,
+        focusElementRef: PropTypes.oneOfType([
+          PropTypes.func,
+          PropTypes.shape({
+            current: PropTypes.any.isRequired,
+          }),
+        ]),
+        headerFilterMenu: PropTypes.node,
+        inputRef: PropTypes.oneOfType([
+          PropTypes.func,
+          PropTypes.shape({
+            current: (props, propName) => {
+              if (props[propName] == null) {
+                return null;
+              }
+              if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {
+                return new Error(`Expected prop '${propName}' to be of type Element`);
+              }
+              return null;
+            },
+          }),
+        ]),
+        isFilterActive: PropTypes.bool,
+        item: PropTypes.shape({
+          field: PropTypes.string.isRequired,
+          id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+          operator: PropTypes.string.isRequired,
+          value: PropTypes.any,
+        }),
+        onBlur: PropTypes.func,
+        onFocus: PropTypes.func,
+        slotProps: PropTypes.object,
+        tabIndex: PropTypes.number,
+      }),
       label: PropTypes.string,
       requiresFilterValue: PropTypes.bool,
       value: PropTypes.string.isRequired,

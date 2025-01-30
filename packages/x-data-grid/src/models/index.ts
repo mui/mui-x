@@ -5,6 +5,7 @@ export * from './gridEditRowModel';
 export * from './gridFeatureMode';
 export * from './gridFilterItem';
 export * from './gridFilterModel';
+export type { GridFilterInputValueProps } from './gridFilterInputComponent';
 export * from './gridPaginationProps';
 export * from './gridRenderContextProps';
 export * from './gridRows';

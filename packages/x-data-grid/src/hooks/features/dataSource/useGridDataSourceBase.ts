@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
+import { unstable_debounce as debounce } from '@mui/utils';
 
 import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
 import { GridGetRowsResponse, GridDataSourceCache } from '../../../models/gridDataSource';
@@ -42,9 +43,6 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     | 'unstable_dataSource'
     | 'unstable_dataSourceCache'
     | 'unstable_onDataSourceError'
-    | 'sortingMode'
-    | 'filterMode'
-    | 'paginationMode'
     | 'pageSizeOptions'
     | 'signature'
   >,
@@ -197,6 +195,8 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     },
   };
 
+  const debouncedFetchRows = React.useMemo(() => debounce(fetchRows, 0), [fetchRows]);
+
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
     if (isFirstRender.current) {
@@ -229,9 +229,9 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     cache,
     events: {
       strategyAvailabilityChange: handleStrategyActivityChange,
-      sortModelChange: runIf(defaultRowsUpdateStrategyActive, () => fetchRows()),
-      filterModelChange: runIf(defaultRowsUpdateStrategyActive, () => fetchRows()),
-      paginationModelChange: runIf(defaultRowsUpdateStrategyActive, () => fetchRows()),
+      sortModelChange: runIf(defaultRowsUpdateStrategyActive, () => debouncedFetchRows()),
+      filterModelChange: runIf(defaultRowsUpdateStrategyActive, () => debouncedFetchRows()),
+      paginationModelChange: runIf(defaultRowsUpdateStrategyActive, () => debouncedFetchRows()),
     },
   };
 };
