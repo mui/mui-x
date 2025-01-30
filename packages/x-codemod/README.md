@@ -250,8 +250,8 @@ Remove the `<ChartsOnAxisClickHandler />` and move the associated `onAxisClick` 
 > This codemode does not work if component got renamed or if the handler is not a direct child of the container.
 
 ```diff
-- <ChartContainer>
 + <ChartContainer onAxisClick={() => {}}>
+- <ChartContainer>
 -   <ChartsOnAxisClickHandler onAxisClick={() => {}} />
  </ChartContainer>
 ```

@@ -162,15 +162,14 @@ The `ChartsOnAxisClickHandler` component got removed.
 The `onAxisClick` handler can directly be passed to the chart containers.
 
 ```diff
-- <ChartContainer>
 + <ChartContainer onAxisClick={() => {}}>
+- <ChartContainer>
 -   <ChartsOnAxisClickHandler onAxisClick={() => {}} />
  </ChartContainer>
 ```
 
 :::warning
-The codemode handle simple usecases.
-But if you renamed component or if the handler is not a direct child of the container, the codemod will not modify it.
+This codemode does not work if component got renamed or if the handler is not a direct child of the container.
 :::
 
 ## New DOM structure for ChartContainer
