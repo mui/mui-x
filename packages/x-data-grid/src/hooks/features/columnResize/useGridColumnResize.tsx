@@ -206,11 +206,8 @@ function extractColumnWidths(
       : excludeOutliers(widths, options.outliersFactor);
 
     if (options.includeHeaders) {
-      const sortModel = apiRef.current.getSortModel();
       const header = findGridHeader(apiRef.current, column.field);
       if (header) {
-        const sortItem = sortModel.find((item) => item.field === column.field);
-        const isColumnSorted = sortItem != null && sortItem.sort != null;
         const title = header.querySelector(`.${gridClasses.columnHeaderTitle}`);
         const content = header.querySelector(`.${gridClasses.columnHeaderTitleContainerContent}`)!;
         const iconContainer = header.querySelector(`.${gridClasses.iconButtonContainer}`);
@@ -223,9 +220,7 @@ function extractColumnWidths(
         const width =
           contentWidth +
           paddingWidth +
-          // clientWidth is `0`, since the element is hidden and we query it from a ref
-          // we need to use scrollWidth instead in this case.
-          (iconContainer?.[isColumnSorted ? 'scrollWidth' : 'clientWidth'] ?? 0) +
+          (iconContainer?.clientWidth ?? 0) +
           (menuContainer?.clientWidth ?? 0);
 
         filteredWidths.push(width);
