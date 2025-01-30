@@ -48,7 +48,10 @@ export interface FunnelChartSlotProps
     ChartsOverlaySlotProps {}
 
 export interface FunnelChartProps
-  extends Omit<ChartContainerProProps, 'series' | 'plugins' | 'zAxis' | 'zoom' | 'onZoomChange'>,
+  extends Omit<
+      ChartContainerProProps,
+      'series' | 'plugins' | 'zAxis' | 'zoom' | 'onZoomChange' | 'dataset'
+    >,
     Omit<FunnelPlotProps, 'slots' | 'slotProps'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
@@ -80,11 +83,6 @@ export interface FunnelChartProps
    * @default {}
    */
   slotProps?: FunnelChartSlotProps;
-  /**
-   * The direction of the funnel elements.
-   * @default 'vertical'
-   */
-  layout?: FunnelSeriesType['layout'];
 }
 
 const seriesConfig: ChartSeriesConfig<'funnel'> = { funnel: funnelPlugin };

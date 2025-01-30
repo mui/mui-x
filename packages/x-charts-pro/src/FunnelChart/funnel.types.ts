@@ -36,18 +36,14 @@ export type FunnelValueType = {
   labelMarkType?: ChartsLabelMarkProps['type'];
 };
 
-export interface FunnelSeriesType<TData = FunnelValueType>
-  extends Omit<CommonSeriesType<TData>, 'color'>,
+export interface FunnelSeriesType
+  extends Omit<CommonSeriesType<FunnelValueType>, 'color'>,
     CartesianSeriesType {
   type: 'funnel';
   /**
    * Data associated to the funnel section.
    */
-  data?: TData[];
-  /**
-   * The key used to retrieve data from the dataset.
-   */
-  dataKey?: string;
+  data?: FunnelValueType[];
   /**
    * The label to display on the tooltip or the legend. It can be a string or a function.
    */
