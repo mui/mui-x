@@ -2,12 +2,10 @@ import {
   UsePickerValueParams,
   UsePickerValueProps,
   UsePickerValueBaseProps,
-  UsePickerValueResponse,
 } from './usePickerValue.types';
 import {
   UsePickerViewsProps,
   UsePickerViewParams,
-  UsePickerViewsResponse,
   UsePickerViewsBaseProps,
 } from './usePickerViews';
 import { InferError, PickerOwnerState } from '../../../models';
@@ -53,19 +51,13 @@ export interface UsePickerParams<
     >,
     Pick<
       UsePickerProviderParameters<TValue, TView, InferError<TExternalProps>>,
-      'localeText' | 'variant'
+      'localeText' | 'variant' | 'ref'
     > {
   props: TExternalProps;
 }
 
-export interface UsePickerResponse<
-  TValue extends PickerValidValue,
-  TView extends DateOrTimeViewWithMeridiem,
-  TError,
-> extends Pick<UsePickerValueResponse<TValue, TError>, 'fieldProps'>,
-    Pick<UsePickerViewsResponse<TView>, 'shouldRestoreFocus' | 'renderCurrentView'> {
+export interface UsePickerReturnValue<TValue extends PickerValidValue> {
   ownerState: PickerOwnerState;
+  renderCurrentView: () => React.ReactNode;
   providerProps: UsePickerProviderReturnValue<TValue>;
-  // TODO v8: Remove in https://github.com/mui/mui-x/pull/15671
-  hasUIView: boolean;
 }

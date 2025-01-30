@@ -6,21 +6,19 @@ import {
   executeInTheNextEventLoopTick,
   getActiveElement,
   usePicker,
-  PickersPopper,
+  PickerPopper,
   DateOrTimeViewWithMeridiem,
   PickerProvider,
   PickerValue,
   PickerRangeValue,
+  PickerFieldUIContextProvider,
 } from '@mui/x-date-pickers/internals';
 import { FieldRef, InferError } from '@mui/x-date-pickers/models';
 import {
   UseDesktopRangePickerParams,
   UseDesktopRangePickerProps,
 } from './useDesktopRangePicker.types';
-import {
-  RangePickerPropsForFieldSlot,
-  useEnrichedRangePickerFieldProps,
-} from '../useEnrichedRangePickerFieldProps';
+import { useEnrichedRangePickerField } from '../useEnrichedRangePickerField';
 import { getReleaseInfo } from '../../utils/releaseInfo';
 import { useRangePosition } from '../useRangePosition';
 import { PickerRangePositionContext } from '../../../hooks/usePickerRangePositionContext';
@@ -42,30 +40,9 @@ export const useDesktopRangePicker = <
 }: UseDesktopRangePickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
-  const {
-    slots,
-    slotProps,
-    className,
-    sx,
-    format,
-    formatDensity,
-    enableAccessibleFieldDOMStructure,
-    selectedSections,
-    onSelectedSectionsChange,
-    timezone,
-    label,
-    inputRef,
-    name,
-    readOnly,
-    disabled,
-    autoFocus,
-    disableOpenPicker,
-    localeText,
-    reduceAnimations,
-  } = props;
+  const { slots, slotProps, inputRef, readOnly, autoFocus, disableOpenPicker, localeText } = props;
 
   const fieldContainerRef = React.useRef<HTMLDivElement>(null);
-  const anchorRef = React.useRef<HTMLDivElement>(null);
   const popperRef = React.useRef<HTMLDivElement>(null);
   const startFieldRef = React.useRef<FieldRef<PickerValue>>(null);
   const endFieldRef = React.useRef<FieldRef<PickerValue>>(null);
@@ -87,13 +64,11 @@ export const useDesktopRangePicker = <
     fieldRef = endFieldRef;
   }
 
-  const {
-    providerProps,
-    renderCurrentView,
-    shouldRestoreFocus,
-    fieldProps: pickerFieldProps,
-    ownerState,
-  } = usePicker<PickerRangeValue, TView, TExternalProps>({
+  const { providerProps, renderCurrentView, ownerState } = usePicker<
+    PickerRangeValue,
+    TView,
+    TExternalProps
+  >({
     ...pickerParams,
     props,
     variant: 'desktop',
@@ -101,6 +76,9 @@ export const useDesktopRangePicker = <
     fieldRef,
     localeText,
   });
+
+  // Temporary hack to hide the opening button on the range pickers until we have migrate them to the new opening logic.
+  providerProps.contextValue.triggerStatus = 'hidden';
 
   React.useEffect(() => {
     if (providerProps.contextValue.view) {
@@ -125,37 +103,21 @@ export const useDesktopRangePicker = <
 
   const Field = slots.field;
 
-  const fieldProps: RangePickerPropsForFieldSlot<
-    boolean,
-    TEnableAccessibleFieldDOMStructure,
-    InferError<TExternalProps>
-  > = useSlotProps({
+  const { ownerState: fieldOwnerState, ...fieldProps } = useSlotProps({
     elementType: Field,
     externalSlotProps: slotProps?.field,
     additionalProps: {
       // Internal props
       readOnly,
-      disabled,
-      format,
-      formatDensity,
-      enableAccessibleFieldDOMStructure,
-      selectedSections,
-      onSelectedSectionsChange,
-      timezone,
       autoFocus: autoFocus && !props.open,
-      ...pickerFieldProps, // onChange and value
 
       // Forwarded props
-      className,
-      sx,
       ref: fieldContainerRef,
-      ...(fieldType === 'single-input' && !!inputRef && { inputRef }),
-      ...(fieldType === 'single-input' && { name }),
     },
     ownerState,
   });
 
-  const enrichedFieldProps = useEnrichedRangePickerFieldProps<
+  const enrichedFieldResponse = useEnrichedRangePickerField<
     TView,
     TEnableAccessibleFieldDOMStructure,
     InferError<TExternalProps>
@@ -163,17 +125,16 @@ export const useDesktopRangePicker = <
     variant: 'desktop',
     fieldType,
     // These direct access to `providerProps` will go away once the range fields handle the picker opening
-    open: providerProps.contextValue.open,
-    setOpen: providerProps.contextValue.setOpen,
+    contextValue: providerProps.contextValue,
+    fieldPrivateContextValue: providerProps.fieldPrivateContextValue,
     readOnly,
     disableOpenPicker,
-    label,
     localeText,
     onBlur: handleBlur,
     pickerSlotProps: slotProps,
     pickerSlots: slots,
     fieldProps,
-    anchorRef,
+    anchorRef: providerProps.contextValue.triggerRef,
     startFieldRef,
     endFieldRef,
     singleInputFieldRef,
@@ -188,25 +149,30 @@ export const useDesktopRangePicker = <
   const Layout = slots?.layout ?? PickersLayout;
 
   const renderPicker = () => (
-    <PickerProvider {...providerProps}>
-      <PickerRangePositionContext.Provider value={rangePositionResponse}>
-        <Field {...enrichedFieldProps} />
-        <PickersPopper
-          role="tooltip"
-          placement="bottom-start"
-          containerRef={popperRef}
-          anchorEl={anchorRef.current}
-          onBlur={handleBlur}
-          slots={slots}
-          slotProps={slotProps}
-          shouldRestoreFocus={shouldRestoreFocus}
-          reduceAnimations={reduceAnimations}
-        >
-          <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
-            {renderCurrentView()}
-          </Layout>
-        </PickersPopper>
-      </PickerRangePositionContext.Provider>
+    <PickerProvider
+      {...providerProps}
+      // This override will go away once the range fields handle the picker opening
+      fieldPrivateContextValue={{
+        ...providerProps.fieldPrivateContextValue,
+        ...enrichedFieldResponse.fieldPrivateContextValue,
+      }}
+    >
+      <PickerFieldUIContextProvider slots={slots} slotProps={slotProps} inputRef={inputRef}>
+        <PickerRangePositionContext.Provider value={rangePositionResponse}>
+          <Field {...enrichedFieldResponse.fieldProps} />
+          <PickerPopper
+            role="tooltip"
+            containerRef={popperRef}
+            onBlur={handleBlur}
+            slots={slots}
+            slotProps={slotProps}
+          >
+            <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
+              {renderCurrentView()}
+            </Layout>
+          </PickerPopper>
+        </PickerRangePositionContext.Provider>
+      </PickerFieldUIContextProvider>
     </PickerProvider>
   );
 

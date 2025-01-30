@@ -137,6 +137,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Більше або дорівнює',
   'headerFilterOperator<': 'Менше ніж',
   'headerFilterOperator<=': 'Менше або дорівнює',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'будь-який',

@@ -1,5 +1,7 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
+import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { ResizeObserver } from '../../../utils/ResizeObserver';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowsMetaApi, GridRowsMetaPrivateApi } from '../../../models/api/gridRowsMetaApi';
@@ -41,7 +43,7 @@ export const rowsMetaStateInitializer: GridStateInitializer = (state, props, api
  * @requires useGridPage (method)
  */
 export const useGridRowsMeta = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'getRowHeight'
@@ -144,7 +146,7 @@ export const useGridRowsMeta = (
     },
     [
       apiRef,
-      currentPage.rows.length,
+      currentPage.rows,
       getRowHeightProp,
       getEstimatedRowHeight,
       rowHeight,
@@ -254,7 +256,7 @@ export const useGridRowsMeta = (
 
   // The effect is used to build the rows meta data - currentPageTotalHeight and positions.
   // Because of variable row height this is needed for the virtualization
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     hydrateRowsMeta();
   }, [filterModel, paginationState, sortModel, hydrateRowsMeta]);
 

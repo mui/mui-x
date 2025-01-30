@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
-import { useItemHighlighted } from '@mui/x-charts/context';
+import { useItemHighlighted } from '@mui/x-charts/hooks';
 import { useInteractionItemProps, SeriesId } from '@mui/x-charts/internals';
 import { HeatmapClasses, getHeatmapUtilityClass } from './heatmapClasses';
 

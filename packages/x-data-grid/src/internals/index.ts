@@ -35,6 +35,7 @@ export {
   gridHeaderFilteringMenuSelector,
 } from '../hooks/features/headerFiltering/gridHeaderFilteringSelectors';
 export type { GridSlotsComponentsProps } from '../models/gridSlotsComponentsProps';
+export type { GridFilterInputValueProps } from '../models/gridFilterInputComponent';
 export {
   useGridColumnMenu,
   columnMenuStateInitializer,
@@ -154,6 +155,7 @@ export type * from '../models/props/DataGridProps';
 export type * from '../models/gridDataSource';
 export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/export/utils';
 export * from '../utils/createControllablePromise';
+export * from '../utils/rtlFlipSide';
 export { createSelector, createSelectorMemoized } from '../utils/createSelector';
 export { gridRowGroupsToFetchSelector } from '../hooks/features/rows/gridRowsSelector';
 export {

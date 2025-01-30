@@ -2,6 +2,7 @@ import * as React from 'react';
 import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
 import { getColumnValues } from 'test/utils/helperFn';
 import { expect } from 'chai';
+import { RefObject } from '@mui/x-internals/types';
 import { DataGridPro, useGridApiRef, GridApi, DataGridProProps } from '@mui/x-data-grid-pro';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -30,7 +31,7 @@ describe('<DataGridPro /> - State', () => {
 
   it('should trigger on state change and pass the correct params', () => {
     let onStateParams;
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: RefObject<GridApi | null>;
 
     function Test() {
       apiRef = useGridApiRef();
@@ -48,7 +49,7 @@ describe('<DataGridPro /> - State', () => {
     render(<Test />);
     const header = screen.getByRole('columnheader', { name: 'brand' });
     fireEvent.click(header);
-    expect(onStateParams).to.equal(apiRef!.current.state);
+    expect(onStateParams).to.equal(apiRef!.current?.state);
     expect(onStateParams).not.to.equal(undefined);
   });
 
@@ -57,11 +58,11 @@ describe('<DataGridPro /> - State', () => {
       const apiRef = useGridApiRef();
 
       React.useEffect(() => {
-        apiRef.current.setState((prev) => ({
+        apiRef.current?.setState((prev) => ({
           ...prev,
           sorting: { ...prev.sorting, sortModel: [{ field: 'brand', sort: 'asc' }] },
         }));
-        apiRef.current.applySorting();
+        apiRef.current?.applySorting();
       }, [apiRef]);
       return (
         <div style={{ width: 300, height: 300 }}>

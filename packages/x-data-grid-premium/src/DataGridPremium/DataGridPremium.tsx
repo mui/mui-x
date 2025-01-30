@@ -3,9 +3,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
 import {
-  GridBody,
-  GridFooterPlaceholder,
-  GridHeader,
   GridRoot,
   GridContextProvider,
   GridValidRowModel,
@@ -61,30 +58,18 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, dataGridPremiumPropValidators);
   }
+
+  const sidePanel =
+    pivotParams && pivotSettingsOpen ? (
+      <GridSidebar>
+        <GridSidebarColumnPanel pivotParams={pivotParams} />
+      </GridSidebar>
+    ) : null;
+
   return (
     <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
-      <GridRoot
-        className={clsx(props.className, pivotSettingsOpen && gridClasses.sidePanel)}
-        style={props.style}
-        sx={props.sx}
-        {...props.slotProps?.root}
-        ref={ref}
-      >
-        <div
-          style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', flex: 1 }}
-          role="presentation"
-        >
-          <GridHeader />
-          <GridBody>
-            <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />
-          </GridBody>
-          <GridFooterPlaceholder />
-        </div>
-        {pivotParams && pivotSettingsOpen && (
-          <GridSidebar>
-            <GridSidebarColumnPanel pivotParams={pivotParams} />
-          </GridSidebar>
-        )}
+      <GridRoot sidePanel={sidePanel}>
+        <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />
       </GridRoot>
     </GridContextProvider>
   );
@@ -115,7 +100,7 @@ DataGridPremiumRaw.propTypes = {
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef: PropTypes.shape({
-    current: PropTypes.object.isRequired,
+    current: PropTypes.object,
   }),
   /**
    * The label of the Data Grid.

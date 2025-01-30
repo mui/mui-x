@@ -180,6 +180,11 @@ export interface GridIconSlotsComponent {
    */
   columnReorderIcon: React.JSXElementConstructor<any>;
   /**
+   * Icon displayed to indicate that a menu item is selected.
+   * @default GridCheckIcon
+   */
+  menuItemCheckIcon: React.JSXElementConstructor<any>;
+  /**
    * Icon displayed in the pivot menu for adding a field to a pivot section.
    * @default GridAddIcon
    */

@@ -76,9 +76,15 @@ const GridToolbarColumnsButton = forwardRef<HTMLButtonElement, GridToolbarColumn
           aria-expanded={isOpen}
           aria-controls={isOpen ? columnPanelId : undefined}
           startIcon={<rootProps.slots.columnSelectorIcon />}
-          onClick={showColumns}
           {...rootProps.slotProps?.baseButton}
           {...buttonProps}
+          onPointerUp={(event) => {
+            if (preferencePanel.open) {
+              event.stopPropagation();
+            }
+            buttonProps.onPointerUp?.(event);
+          }}
+          onClick={showColumns}
           ref={ref}
         >
           {apiRef.current.getLocaleText('toolbarColumns')}

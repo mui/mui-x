@@ -1,6 +1,6 @@
 import type { LegendItemParams } from '../ChartsLegend';
 import { getLabel } from '../internals/getLabel';
-import { LegendGetter } from '../context/PluginProvider';
+import { LegendGetter } from '../internals/plugins/models';
 
 const legendGetter: LegendGetter<'line'> = (params) => {
   const { seriesOrder, series } = params;
@@ -12,7 +12,7 @@ const legendGetter: LegendGetter<'line'> = (params) => {
     }
 
     acc.push({
-      markType: series[seriesId].labelMarkType ?? 'line',
+      markType: series[seriesId].labelMarkType,
       id: seriesId,
       seriesId,
       color: series[seriesId].color,

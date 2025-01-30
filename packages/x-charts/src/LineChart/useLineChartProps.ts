@@ -55,14 +55,13 @@ export const useLineChartProps = (props: LineChartProps) => {
     highlightedItem,
     onHighlightChange,
     className,
-    experimentalMarkRendering,
     ...other
   } = props;
 
   const id = useId();
   const clipPathId = `${id}-clip-path`;
 
-  const chartContainerProps: ChartContainerProps = {
+  const chartContainerProps: Omit<ChartContainerProps<'line'>, 'plugins'> = {
     ...other,
     series: series.map((s) => ({
       disableHighlight: !!disableLineItemHighlight,
@@ -130,7 +129,6 @@ export const useLineChartProps = (props: LineChartProps) => {
     slotProps,
     onItemClick: onMarkClick,
     skipAnimation,
-    experimentalRendering: experimentalMarkRendering,
   };
 
   const overlayProps: ChartsOverlayProps = {

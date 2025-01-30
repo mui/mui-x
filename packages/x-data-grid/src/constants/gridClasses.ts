@@ -36,7 +36,7 @@ export interface GridClasses {
    * Styles applied to the root element while it is being autosized.
    */
   autosizing: string;
-  sidePanel: string;
+  withSidePanel: string;
   /**
    * Styles applied to the icon of the boolean cell.
    */
@@ -174,7 +174,14 @@ export interface GridClasses {
    * @ignore - do not document.
    */
   'columnHeader--siblingFocused': string;
-
+  /**
+   * Styles applied to the header filter input element.
+   */
+  columnHeaderFilterInput: string;
+  /**
+   * Styles applied to the header filter operator label element.
+   */
+  columnHeaderFilterOperatorLabel: string;
   /**
    * Styles applied to the header checkbox cell element.
    */
@@ -207,6 +214,10 @@ export interface GridClasses {
    * Styles applied to the empty column group header cell.
    */
   'columnHeader--emptyGroup': string;
+  /**
+   * Styles applied to the header filter cell.
+   */
+  'columnHeader--filter': string;
   /**
    * Styles applied to the column headers.
    */
@@ -263,10 +274,6 @@ export interface GridClasses {
    * Styles applied to the detail panel element.
    */
   detailPanel: string;
-  /**
-   * Styles applied to the detail panels wrapper element.
-   */
-  detailPanels: string;
   /**
    * Styles applied to the detail panel toggle cell element.
    */
@@ -375,6 +382,7 @@ export interface GridClasses {
    * Styles applied to the column header filter row.
    */
   headerFilterRow: string;
+  mainContent: string; // TODO: come up with a better name
   /**
    * Styles applied to the main container element.
    */
@@ -441,10 +449,6 @@ export interface GridClasses {
    * Styles applied to the virtualization render zone.
    */
   virtualScrollerRenderZone: string;
-  /**
-   * Styles applied to the pinned columns.
-   */
-  pinnedColumns: string;
   /**
    * Styles applied to the root element.
    */
@@ -674,10 +678,6 @@ export interface GridClasses {
    */
   'pinnedRows--bottom': string;
   /**
-   * Styles applied to pinned rows render zones.
-   */
-  pinnedRowsRenderZone: string;
-  /**
    * Styles applied to the pivot field.
    */
   pivotField: string;
@@ -702,7 +702,8 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'aggregationColumnHeaderLabel',
   'autoHeight',
   'autosizing',
-  'sidePanel',
+  'mainContent',
+  'withSidePanel',
   'booleanCell',
   'cell--editable',
   'cell--editing',
@@ -738,6 +739,9 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnHeader--last',
   'columnHeader--lastUnpinned',
   'columnHeader--siblingFocused',
+  'columnHeader--filter',
+  'columnHeaderFilterInput',
+  'columnHeaderFilterOperatorLabel',
   'columnHeaderCheckbox',
   'columnHeaderDraggableContainer',
   'columnHeaderTitle',
@@ -759,7 +763,6 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'container--top',
   'container--bottom',
   'detailPanel',
-  'detailPanels',
   'detailPanelToggleCell',
   'detailPanelToggleCell--expanded',
   'footerCell',
@@ -845,7 +848,6 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'virtualScrollerContent',
   'virtualScrollerContent--overflowed',
   'virtualScrollerRenderZone',
-  'pinnedColumns',
   'withVerticalBorder',
   'withBorderColor',
   'cell--withRightBorder',
@@ -861,5 +863,4 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'pinnedRows',
   'pinnedRows--top',
   'pinnedRows--bottom',
-  'pinnedRowsRenderZone',
 ]);

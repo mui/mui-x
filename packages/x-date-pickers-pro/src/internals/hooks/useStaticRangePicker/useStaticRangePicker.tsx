@@ -8,6 +8,7 @@ import {
   DateOrTimeViewWithMeridiem,
   PickerProvider,
   PickerRangeValue,
+  mergeSx,
 } from '@mui/x-date-pickers/internals';
 import {
   UseStaticRangePickerParams,
@@ -31,10 +32,9 @@ export const useStaticRangePicker = <
   TExternalProps extends UseStaticRangePickerProps<TView, any, TExternalProps>,
 >({
   props,
-  ref,
   ...pickerParams
 }: UseStaticRangePickerParams<TView, TExternalProps>) => {
-  const { localeText, slots, slotProps, className, sx, displayStaticWrapperAs, autoFocus } = props;
+  const { localeText, slots, slotProps, displayStaticWrapperAs, autoFocus } = props;
 
   const rangePositionResponse = useRangePosition(props);
 
@@ -56,14 +56,9 @@ export const useStaticRangePicker = <
           {...slotProps?.layout}
           slots={slots}
           slotProps={slotProps}
-          sx={[
-            ...(Array.isArray(sx) ? sx : [sx]),
-            ...(Array.isArray(slotProps?.layout?.sx)
-              ? slotProps!.layout!.sx
-              : [slotProps?.layout?.sx]),
-          ]}
-          className={clsx(className, slotProps?.layout?.className)}
-          ref={ref}
+          sx={mergeSx(providerProps.contextValue.rootSx, slotProps?.layout?.sx)}
+          className={clsx(providerProps.contextValue.rootClassName, slotProps?.layout?.className)}
+          ref={providerProps.contextValue.rootRef}
         >
           {renderCurrentView()}
         </Layout>

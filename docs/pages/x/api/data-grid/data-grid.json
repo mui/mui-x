@@ -4,7 +4,7 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
-    "apiRef": { "type": { "name": "shape", "description": "{ current: object }" } },
+    "apiRef": { "type": { "name": "shape", "description": "{ current?: object }" } },
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
     "autoHeight": {
@@ -533,7 +533,7 @@
       "name": "detailPanels",
       "description": "Component responsible for rendering the detail panels.",
       "default": "GridDetailPanels",
-      "class": "MuiDataGrid-detailPanels"
+      "class": null
     },
     {
       "name": "footer",
@@ -926,6 +926,12 @@
       "class": null
     },
     {
+      "name": "menuItemCheckIcon",
+      "description": "Icon displayed to indicate that a menu item is selected.",
+      "default": "GridCheckIcon",
+      "class": null
+    },
+    {
       "name": "pivotMenuAddIcon",
       "description": "Icon displayed in the pivot menu for adding a field to a pivot section.",
       "default": "GridAddIcon",
@@ -1180,6 +1186,12 @@
       "isGlobal": false
     },
     {
+      "key": "columnHeader--filter",
+      "className": "MuiDataGrid-columnHeader--filter",
+      "description": "Styles applied to the header filter cell.",
+      "isGlobal": false
+    },
+    {
       "key": "columnHeader--filtered",
       "className": "MuiDataGrid-columnHeader--filtered",
       "description": "Styles applied to the column header if the column has a filter applied to it.",
@@ -1249,6 +1261,18 @@
       "key": "columnHeaderDraggableContainer",
       "className": "MuiDataGrid-columnHeaderDraggableContainer",
       "description": "Styles applied to the column header's draggable container element.",
+      "isGlobal": false
+    },
+    {
+      "key": "columnHeaderFilterInput",
+      "className": "MuiDataGrid-columnHeaderFilterInput",
+      "description": "Styles applied to the header filter input element.",
+      "isGlobal": false
+    },
+    {
+      "key": "columnHeaderFilterOperatorLabel",
+      "className": "MuiDataGrid-columnHeaderFilterOperatorLabel",
+      "description": "Styles applied to the header filter operator label element.",
       "isGlobal": false
     },
     {
@@ -1540,12 +1564,6 @@
       "isGlobal": false
     },
     {
-      "key": "pinnedColumns",
-      "className": "MuiDataGrid-pinnedColumns",
-      "description": "Styles applied to the pinned columns.",
-      "isGlobal": false
-    },
-    {
       "key": "pinnedRows",
       "className": "MuiDataGrid-pinnedRows",
       "description": "Styles applied to the pinned rows container.",
@@ -1561,12 +1579,6 @@
       "key": "pinnedRows--top",
       "className": "MuiDataGrid-pinnedRows--top",
       "description": "Styles applied to the top pinned rows container.",
-      "isGlobal": false
-    },
-    {
-      "key": "pinnedRowsRenderZone",
-      "className": "MuiDataGrid-pinnedRowsRenderZone",
-      "description": "Styles applied to pinned rows render zones.",
       "isGlobal": false
     },
     {
