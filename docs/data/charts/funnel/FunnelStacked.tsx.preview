@@ -12,4 +12,5 @@
     },
     { data: dataSmall },
   ]}
+  height={300}
 />
