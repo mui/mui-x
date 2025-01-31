@@ -10,6 +10,7 @@ import { getAvailableAggregationFunctions } from '../../../hooks/features/aggreg
 import { PivotField } from './GridSidebarColumnPanelPivotField';
 import { GridSidebarCollapsibleSection } from '../GridSidebarCollapsibleSection';
 import { useResize } from '../../../hooks/utils/useResize';
+import { GridSidebarScrollArea } from '../GridSidebarScrollArea';
 
 function AutoAnimateContainer(props: React.HTMLAttributes<HTMLDivElement>) {
   const [parent] = useAutoAnimate({ duration: 150 });
@@ -23,31 +24,29 @@ const Container = styled('div')({
   overflow: 'hidden',
 });
 
-const TopPane = styled('div')({
+const TopPane = styled(GridSidebarScrollArea)({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
-  overflow: 'auto',
   minHeight: 50,
 });
 
 const BottomPane = styled('div')({
   position: 'relative',
-  minHeight: 100,
+  minHeight: 44,
   overflow: 'hidden',
+  display: 'flex',
+  flexDirection: 'column',
 });
 
-const ScrollArea = styled('div')(({ theme }) => ({
+const ScrollArea = styled(GridSidebarScrollArea)({
   height: '100%',
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.spacing(1),
-  padding: theme.spacing(1),
-  overflow: 'auto',
-  boxSizing: 'border-box',
-}));
+});
 
 const CollapsibleSection = styled(GridSidebarCollapsibleSection)(({ theme }) => ({
+  margin: theme.spacing(0.5, 1),
   transition: theme.transitions.create(['color', 'border-color', 'background-color'], {
     duration: theme.transitions.duration.short,
     easing: theme.transitions.easing.easeInOut,
@@ -129,12 +128,12 @@ export type UpdatePivotModel = (params: {
 const INITIAL_DRAG_STATE = { active: false, dropZone: null, initialModelKey: null };
 
 export function GridSidebarColumnPanelBody({
-  pivotModel,
   columns,
+  pivotModel,
   onPivotModelChange,
 }: {
-  pivotModel: PivotModel;
   columns: GridColDef[];
+  pivotModel: PivotModel;
   onPivotModelChange: React.Dispatch<React.SetStateAction<PivotModel>>;
 }) {
   const { ref: resizeHandleRef } = useResize({
@@ -334,7 +333,6 @@ export function GridSidebarColumnPanelBody({
 
       <BottomPane>
         <ResizeHandle ref={resizeHandleRef} />
-
         <ScrollArea>
           <CollapsibleSection
             title={
