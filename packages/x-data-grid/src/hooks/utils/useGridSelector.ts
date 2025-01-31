@@ -116,7 +116,6 @@ export const useGridSelector = <Api extends GridApiCommon, Args, T>(
         setState(newState);
       }
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, EMPTY);
 
   return state;
