@@ -128,10 +128,6 @@ FunnelChart.propTypes = {
    * @default blueberryTwilightPalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
-  /**
-   * An array of objects that can be used to populate series and axes data using their `dataKey` property.
-   */
-  dataset: PropTypes.arrayOf(PropTypes.object),
   desc: PropTypes.string,
   /**
    * If `true`, the charts will not listen to the mouse move event.
@@ -171,11 +167,6 @@ FunnelChart.propTypes = {
       start: PropTypes.number.isRequired,
     }),
   ),
-  /**
-   * The direction of the funnel elements.
-   * @default 'vertical'
-   */
-  layout: PropTypes.oneOf(['horizontal', 'vertical']),
   /**
    * Indicate which axis to display the left of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
