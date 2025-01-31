@@ -206,7 +206,7 @@ import { LicenseInfo } from '@mui/x-license';
 LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
-  getLayout?: (page: ReactElement) => ReactNode;
+  getLayout?: (page: React.ReactElement) => React.ReactNode;
 };
 
 type AppPropsWithLayout = AppProps & {
