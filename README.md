@@ -40,10 +40,10 @@ Get started in the [MUI X documentation](https://mui.com/x/introduction/).
 
 ### Installation
 
-- [Data Grid installation](https://mui.com/x/react-data-grid/getting-started/#installation)
-- [Date and Time Pickers installation](https://mui.com/x/react-date-pickers/getting-started/#installation)
-- [Charts installation](https://mui.com/x/react-charts/getting-started/#installation)
-- [Tree View installation](https://mui.com/x/react-tree-view/getting-started/#installation)
+- [Data Grid installation](https://mui.com/x/react-data-grid/quickstart/#installation)
+- [Date and Time Pickers installation](https://mui.com/x/react-date-pickers/quickstart/#installation)
+- [Charts installation](https://mui.com/x/react-charts/quickstart/#installation)
+- [Tree View installation](https://mui.com/x/react-tree-view/quickstart/#installation)
 
 ## Licensing
 

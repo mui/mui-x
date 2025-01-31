@@ -4,7 +4,7 @@
 
 ## Installation
 
-Run one of the following commands to install the MUI X Data Grid package that best suits your needs—the free Community version or the paid Pro or Premium version:
+Install the Data Grid package that best suits your needs—Community, Pro, or Premium:
 
 <!-- #default-branch-switch -->
 
@@ -13,11 +13,15 @@ Run one of the following commands to install the MUI X Data Grid package that b
 :::success
 Not sure which package to choose?
 You can start with the Community version and upgrade to Pro or Premium at any time.
-Check out the [Feature showcase](/x/react-data-grid/demo/) for a list of features available in each package.
+Check out the [Feature showcase](/x/react-data-grid/features/) for a list of features available in each package.
 :::
 
+### Peer dependencies
+
+#### Material UI
+
 The Data Grid packages have a peer dependency on `@mui/material`.
-If you're not already using it, install it with the following command:
+If you're not already using it, install it now:
 
 <codeblock storageKey="package-manager">
 
@@ -35,6 +39,8 @@ yarn add @mui/material @emotion/react @emotion/styled
 
 </codeblock>
 
+#### React
+
 <!-- #react-peer-version -->
 
 [`react`](https://www.npmjs.com/package/react) and [`react-dom`](https://www.npmjs.com/package/react-dom) are also peer dependencies:
@@ -46,11 +52,14 @@ yarn add @mui/material @emotion/react @emotion/styled
 },
 ```
 
-## Quickstart
+## Rendering a Data Grid
 
-Import the component that corresponds to the version you're using, along with the `GridRowsProp` and `GridColDef` utilities:
+### Import the component
+
+Import the Data Grid component that corresponds to the version you're using, along with the `GridRowsProp` and `GridColDef` utilities:
 
 ```js
+// choose one
 import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
 import { DataGridPro, GridRowsProp, GridColDef } from '@mui/x-data-grid-pro';
 import { DataGridPremium, GridRowsProp, GridColDef } from '@mui/x-data-grid-premium';
@@ -85,7 +94,7 @@ const columns: GridColDef[] = [
 ];
 ```
 
-### Render the Data Grid
+### Render the component
 
 With the component and utilites imported, and rows and columns defined, you're now ready to render the Data Grid as shown below:
 
@@ -117,6 +126,8 @@ export default function App() {
 
 ## TypeScript
 
+### Theme augmentation
+
 To benefit from [CSS overrides](/material-ui/customization/theme-components/#theme-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#theme-default-props) with the theme, TypeScript users must import the following types.
 These types use module augmentation to extend the default theme structure.
 
@@ -140,16 +151,17 @@ const theme = createTheme({
 
 ## Using this documentation
 
-### The useDemoData hook
+### @mui/x-data-grid-generator
 
-The `useDemoData` hook is a utility hook from the `@mui/x-data-grid-generator` package.
-It contains columns definitions and generates random data for the Data Grid.
-It is often used in our demos to provide realistic data without polluting the code with data generation logic.
+**The `@mui/x-data-grid-generator` is a development-only package and should not be used in production.**
+You can use it to create a reproduction of a bug or generate demo data in your development environment.
+You should not rely on its API—it doesn't follow semver.
 
-:::success
-Looking for the column definitions and custom cell renderers from the `useDemoData` hook?
-Check out the [Custom columns demo](/x/react-data-grid/custom-columns/#full-example) where you can copy them from the demo source code.
-:::
+### useDemoData hook
+
+The `useDemoData` hook is a utility hook from the `@mui/x-data-grid-generator` package, used in demos throughout this documentation to provide realistic data without polluting the code with data generation logic.
+It contains column definitions and generates random data for the Data Grid.
+For more details on these definitions and the custom cell renderers available, see the [custom columns demo](/x/react-data-grid/custom-columns/#full-example) where you can copy them from the demo source code.
 
 Here's how it's used:
 
@@ -167,12 +179,6 @@ export default function Demo() {
 
 It comes with two datasets: `Commodity` and `Employee`.
 You can customize the data generation by passing the custom options of type [`UseDemoDataOptions`](https://github.com/mui/mui-x/blob/6aad22644ee710690b90dc2ac6bbafceb91fecf0/packages/x-data-grid-generator/src/hooks/useDemoData.ts#L29-L36).
-
-:::error
-`@mui/x-data-grid-generator` is a development-only package and should not be used in production.
-You can use it to create a reproduction of a bug or generate demo data in your development environment.
-You should not rely on its API—it doesn't follow semver.
-:::
 
 ## API
 

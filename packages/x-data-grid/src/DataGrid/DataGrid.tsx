@@ -52,8 +52,8 @@ interface DataGridComponent {
 }
 
 /**
- * Demos:
- * - [DataGrid](https://mui.com/x/react-data-grid/demo/)
+ * Features:
+ * - [DataGrid](https://mui.com/x/react-data-grid/features/)
  *
  * API:
  * - [DataGrid API](https://mui.com/x/api/data-grid/data-grid/)
