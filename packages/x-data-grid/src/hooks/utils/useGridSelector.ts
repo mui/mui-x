@@ -63,11 +63,11 @@ type Refs<T> = {
   argsId: number;
 };
 
-const getState = <Api extends GridApiCommon, T>(
+function getState<Api extends GridApiCommon, T>(
   apiRef: RefObject<Api>,
   refs: RefObject<Refs<T>>,
-  listener?: (state: T) => void,
-) => {
+  callback?: (state: T) => void,
+) {
   const newState = applySelector(
     apiRef,
     refs.current.selector,
@@ -76,12 +76,16 @@ const getState = <Api extends GridApiCommon, T>(
   ) as T;
   if (!refs.current.equals(refs.current.state, newState)) {
     refs.current.state = newState;
-    if (listener) {
-      listener(newState);
+    if (callback) {
+      callback(newState);
+      return;
     }
   }
+  if (callback) {
+    return;
+  }
   return refs.current.state;
-};
+}
 
 export const useGridSelector = <Api extends GridApiCommon, Args, T>(
   apiRef: RefObject<Api>,
@@ -111,14 +115,14 @@ export const useGridSelector = <Api extends GridApiCommon, Args, T>(
   }
 
   const getSnapShot = React.useCallback(
-    () => getState(apiRef, refs),
+    () => getState(apiRef, refs)!,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [apiRef, refs.current.argsId],
   );
 
   const subscribe = React.useCallback(
-    (listener: (state: T) => void) =>
-      apiRef.current.store.subscribe(() => getState(apiRef, refs, listener)),
+    (callback: (state: T) => void) =>
+      apiRef.current.store.subscribe(() => getState(apiRef, refs, callback)),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     EMPTY,
   );
