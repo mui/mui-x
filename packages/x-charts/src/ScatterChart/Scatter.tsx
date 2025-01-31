@@ -113,7 +113,7 @@ function Scatter(props: ScatterProps) {
     <g>
       {cleanData.map((dataPoint) => (
         <circle
-          key={dataPoint.id}
+          key={dataPoint.id ?? dataPoint.dataIndex}
           cx={0}
           cy={0}
           r={(dataPoint.isHighlighted ? 1.2 : 1) * markerSize}

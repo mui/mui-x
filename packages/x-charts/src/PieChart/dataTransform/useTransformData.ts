@@ -18,6 +18,7 @@ export interface AnimatedObject {
 }
 
 export interface ValueWithHighlight extends DefaultizedPieValueType, AnimatedObject {
+  dataIndex: number;
   isFaded: boolean;
   isHighlighted: boolean;
 }
@@ -77,6 +78,7 @@ export function useTransformData(
         return {
           ...item,
           ...attributesOverride,
+          dataIndex: itemIndex,
           isFaded,
           isHighlighted,
           paddingAngle,

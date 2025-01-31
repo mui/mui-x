@@ -9,7 +9,7 @@ export type PieValueType = {
   /**
    * A unique identifier of the pie slice.
    */
-  id: PieItemId;
+  id?: PieItemId;
   value: number;
   /**
    * The label to display on the tooltip, arc, or the legend. It can be a string or a function.
