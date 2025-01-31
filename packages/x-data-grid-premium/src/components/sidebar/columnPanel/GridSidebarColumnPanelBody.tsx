@@ -129,10 +129,15 @@ const INITIAL_DRAG_STATE = { active: false, dropZone: null, initialModelKey: nul
 
 export function GridSidebarColumnPanelBody({
   columns,
+  searchState,
   pivotModel,
   onPivotModelChange,
 }: {
   columns: GridColDef[];
+  searchState: {
+    value: string;
+    enabled: boolean;
+  };
   pivotModel: PivotModel;
   onPivotModelChange: React.Dispatch<React.SetStateAction<PivotModel>>;
 }) {
@@ -182,9 +187,21 @@ export function GridSidebarColumnPanelBody({
       if (pivotModel.values.find((item) => item.field === field)) {
         return false;
       }
+      if (searchState.enabled) {
+        const fieldName = getColumnName(field);
+        return fieldName.toLowerCase().includes(searchState.value.toLowerCase());
+      }
       return true;
     });
-  }, [pivotModel.columns, pivotModel.rows, pivotModel.values, fields]);
+  }, [
+    pivotModel.columns,
+    pivotModel.rows,
+    pivotModel.values,
+    searchState.value,
+    searchState.enabled,
+    fields,
+    getColumnName,
+  ]);
 
   const updatePivotModel = React.useCallback<UpdatePivotModel>(
     ({ field, targetSection, originSection, targetField, targetFieldPosition }) => {
@@ -308,7 +325,11 @@ export function GridSidebarColumnPanelBody({
         data-section={null}
         data-drag-over={drag.active && drag.dropZone === null}
       >
-        {availableFields.length === 0 && <Placeholder>Drag here to remove from pivot</Placeholder>}
+        {availableFields.length === 0 && (
+          <Placeholder>
+            {searchState.enabled ? 'No fields' : 'Drag here to remove from pivot'}
+          </Placeholder>
+        )}
         {availableFields.length > 0 && (
           <FieldList>
             {availableFields.map((field) => (

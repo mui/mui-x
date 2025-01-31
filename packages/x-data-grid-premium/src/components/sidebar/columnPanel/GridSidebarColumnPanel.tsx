@@ -9,16 +9,29 @@ export function GridSidebarColumnPanel({
   pivotParams: NonNullable<DataGridPremiumProcessedProps['pivotParams']>;
 }) {
   const { pivotMode, onPivotModeChange, pivotModel, onPivotModelChange } = pivotParams;
+  const [searchState, setSearchState] = React.useState<{
+    value: string;
+    enabled: boolean;
+  }>({
+    value: '',
+    enabled: false,
+  });
 
   return (
     <React.Fragment>
-      <Header pivotMode={pivotMode} onPivotModeChange={onPivotModeChange} />
+      <Header
+        pivotMode={pivotMode}
+        onPivotModeChange={onPivotModeChange}
+        searchState={searchState}
+        onSearchStateChange={setSearchState}
+      />
 
       {pivotMode && (
         <Body
           pivotModel={pivotModel}
           columns={pivotParams.initialColumns ?? []}
           onPivotModelChange={onPivotModelChange}
+          searchState={searchState}
         />
       )}
     </React.Fragment>

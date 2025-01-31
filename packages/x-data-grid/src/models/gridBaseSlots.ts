@@ -69,6 +69,7 @@ export type SkeletonProps = {
 
 export type TextFieldProps = {
   autoComplete?: string;
+  autoFocus?: boolean;
   className?: string;
   color?: 'primary' | 'error';
   disabled?: boolean;
