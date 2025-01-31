@@ -54,6 +54,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     error,
     onValueChange,
     initialOpen = rootProps.editMode === GridEditModes.Cell,
+    slotProps,
     ...other
   } = props;
 
@@ -64,7 +65,6 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
 
   const baseSelectProps = rootProps.slotProps?.baseSelect || {};
   const isSelectNative = baseSelectProps.native ?? false;
-  const { MenuProps, ...otherBaseSelectProps } = rootProps.slotProps?.baseSelect || {};
 
   useEnhancedEffect(() => {
     if (hasFocus) {
@@ -84,7 +84,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
   const getOptionValue = colDef.getOptionValue!;
   const getOptionLabel = colDef.getOptionLabel!;
 
-  const handleChange: SelectProps['onChange'] = async (event) => {
+  const handleChange: React.ChangeEventHandler<HTMLInputElement> = async (event) => {
     if (!isSingleSelectColDef(colDef) || !valueOptions) {
       return;
     }
@@ -136,20 +136,22 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
   return (
     <rootProps.slots.baseSelect
       ref={ref}
-      inputRef={inputRef}
       value={valueProp}
-      onChange={handleChange}
+      onChange={handleChange as any}
       open={open}
       onOpen={handleOpen}
-      MenuProps={{
-        onClose: handleClose,
-        ...MenuProps,
-      }}
+      onClose={handleClose}
       error={error}
       native={isSelectNative}
       fullWidth
+      slotProps={{
+        htmlInput: {
+          ref: inputRef,
+        },
+      }}
       {...other}
-      {...otherBaseSelectProps}
+      {...slotProps?.root}
+      {...rootProps.slotProps?.baseSelect}
     >
       {valueOptions.map((valueOption) => {
         const value = getOptionValue(valueOption);

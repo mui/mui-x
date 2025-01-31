@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_useId as useId } from '@mui/utils';
-import { SelectChangeEvent } from '@mui/material/Select';
 import { TextFieldProps } from '../../../models/gridBaseSlots';
 import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
 import { GridSingleSelectColDef } from '../../../models/colDef/gridColDef';
@@ -86,7 +85,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   }, [resolvedColumn]);
 
   const onFilterChange = React.useCallback(
-    (event: SelectChangeEvent<any>) => {
+    (event: React.ChangeEvent<HTMLSelectElement>) => {
       let value = event.target.value;
 
       // NativeSelect casts the value to a string.
@@ -104,50 +103,38 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
 
   return (
     <React.Fragment>
-      <rootProps.slots.baseFormControl fullWidth>
-        <rootProps.slots.baseInputLabel
-          {...rootProps.slotProps?.baseInputLabel}
-          id={labelId}
-          htmlFor={id}
-          shrink
-          variant="outlined"
-        >
-          {label}
-        </rootProps.slots.baseInputLabel>
-        <rootProps.slots.baseSelect
-          id={id}
-          label={label}
-          labelId={labelId}
-          value={filterValue}
-          onChange={onFilterChange}
-          variant="outlined"
-          type={type || 'text'}
-          inputProps={{
+      <rootProps.slots.baseSelect
+        fullWidth
+        id={id}
+        label={label}
+        labelId={labelId}
+        value={filterValue}
+        onChange={onFilterChange}
+        slotProps={{
+          htmlInput: {
             tabIndex,
             ref: focusElementRef,
+            type: type || 'text',
             placeholder:
               slotProps?.root.placeholder ??
               apiRef.current.getLocaleText('filterPanelInputPlaceholder'),
             ...slotProps?.root.slotProps?.htmlInput,
-          }}
-          native={isSelectNative}
-          notched
-          {...rootProps.slotProps?.baseSelect}
-          {
-            ...(others as any) /* FIXME: typing error */
-          }
-          {...slotProps?.root}
-        >
-          {renderSingleSelectOptions({
-            column: resolvedColumn,
-            OptionComponent: rootProps.slots.baseSelectOption,
-            getOptionLabel,
-            getOptionValue,
-            isSelectNative,
-            baseSelectOptionProps: rootProps.slotProps?.baseSelectOption,
-          })}
-        </rootProps.slots.baseSelect>
-      </rootProps.slots.baseFormControl>
+          },
+        }}
+        native={isSelectNative}
+        {...rootProps.slotProps?.baseSelect}
+        {...others}
+        {...slotProps?.root}
+      >
+        {renderSingleSelectOptions({
+          column: resolvedColumn,
+          OptionComponent: rootProps.slots.baseSelectOption,
+          getOptionLabel,
+          getOptionValue,
+          isSelectNative,
+          baseSelectOptionProps: rootProps.slotProps?.baseSelectOption,
+        })}
+      </rootProps.slots.baseSelect>
       {headerFilterMenu}
       {clearButton}
     </React.Fragment>
