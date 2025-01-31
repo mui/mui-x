@@ -114,7 +114,9 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
       expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
     });
     await user.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
-    expect(screen.queryByLabelText('Aggregation')).not.to.equal(null);
+    await waitFor(() => {
+      expect(screen.getByLabelText('Aggregation')).not.to.equal(null);
+    });
   });
 
   it('should not show aggregation option in the column menu when no aggregation function is defined', async () => {
@@ -123,7 +125,9 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
       expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
     });
     await user.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
-    expect(screen.queryByLabelText('Aggregation')).to.equal(null);
+    await waitFor(() => {
+      expect(screen.getByLabelText('Aggregation')).to.equal(null);
+    });
   });
 
   it('should provide the `aggregationModel` in the `getRows` params', async () => {
