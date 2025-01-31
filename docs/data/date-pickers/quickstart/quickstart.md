@@ -142,7 +142,7 @@ const theme = createTheme({
 });
 ```
 
-### Date and time types
+### Date value types
 
 The Date and Time Pickers are compatible with several date libraries that each use different formats to represent their dates.
 To correctly type all date-related props, the adapters override a global type named `PickerValidDate` to allow for the formatting of their corresponding libraries.

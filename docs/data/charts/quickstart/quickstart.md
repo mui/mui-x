@@ -54,7 +54,7 @@ yarn add @mui/material @emotion/react @emotion/styled
 
 ### Usage with D3
 
-For those using CommonJS, the MUI X Charts provide a vendored package named to access D3 libraries.
+For those using CommonJS, the MUI X Charts provide a vendored package to access D3 libraries.
 You can import D3 functions from `@mui/x-charts-vendor/d3-scale`.
 
 ## Rendering Charts
@@ -144,4 +144,4 @@ const theme = createTheme({
 Most Chart components have two accompanying documents:
 
 1. **Overview** – a general description of built-in features
-2. **Demo** – a collection of custom examples
+2. **Demos** – a collection of custom examples

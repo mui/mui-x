@@ -67,7 +67,7 @@ Please refer to [this section](/x/react-date-pickers/base-concepts/#testing-cave
 
 ### Keyboard Date Picker (legacy)
 
-The current implementation of the Date Picker component replaces the experimental Keyboard Date Picker from Material UI.
+The current implementation of the Date Picker component replaces the experimental Keyboard Date Picker from Material UI.
 See the [migration documentation](/material-ui/migration/pickers-migration/#imports) for more information.
 
 For accessibility, all Picker components accept keyboard inputs.
