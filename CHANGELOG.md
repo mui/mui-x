@@ -99,6 +99,7 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.10`.
 - [pickers] Clean the internals and the public API of `<PickersPopper />` (#16319) @flaviendelangle
 - [pickers] Improve the JSDoc of the `PickerContextValue` properties (#16327) @flaviendelangle
 - [pickers] Move more field props to the context (#16278) @flaviendelangle
+- [pickers] Do not close the picker when doing keyboard editing (#16402) @flaviendelangle
 
 #### `@mui/x-date-pickers-pro@8.0.0-alpha.10` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
