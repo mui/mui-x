@@ -1,9 +1,9 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import composeClasses from '@mui/utils/composeClasses';
-import type { FunnelElementProps } from './FunnelElement';
+import type { FunnelSectionProps } from './FunnelSection';
 
-export interface FunnelElementClasses {
+export interface FunnelSectionClasses {
   /** Styles applied to the root element. */
   root: string;
   /** Styles applied to the root element if `highlighted={true}`. */
@@ -14,11 +14,11 @@ export interface FunnelElementClasses {
   label: string;
 }
 
-function getFunnelElementUtilityClass(slot: string) {
-  return generateUtilityClass('MuiFunnelElement', slot);
+function getFunnelSectionUtilityClass(slot: string) {
+  return generateUtilityClass('MuiFunnelSection', slot);
 }
 
-export const useUtilityClasses = (props: FunnelElementProps) => {
+export const useUtilityClasses = (props: FunnelSectionProps) => {
   const { classes, seriesId } = props;
 
   const slots = {
@@ -28,10 +28,10 @@ export const useUtilityClasses = (props: FunnelElementProps) => {
     label: ['label'],
   };
 
-  return composeClasses(slots, getFunnelElementUtilityClass, classes);
+  return composeClasses(slots, getFunnelSectionUtilityClass, classes);
 };
 
-export const funnelElementClasses: FunnelElementClasses = generateUtilityClasses(
-  'MuiFunnelElement',
+export const funnelSectionClasses: FunnelSectionClasses = generateUtilityClasses(
+  'MuiFunnelSection',
   ['root', 'highlighted', 'faded', 'label'],
 );

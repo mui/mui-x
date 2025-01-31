@@ -1,5 +1,5 @@
 <FunnelChart
-  sx={{ '.MuiFunnelElement-series-big': { filter: 'brightness(0.7)' } }}
+  sx={{ '.MuiFunnelSection-series-big': { filter: 'brightness(0.7)' } }}
   series={[
     {
       id: 'big',

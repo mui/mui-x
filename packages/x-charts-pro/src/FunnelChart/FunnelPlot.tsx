@@ -7,7 +7,7 @@ import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import { CurveType } from '@mui/x-charts/models';
 import { useTheme } from '@mui/material/styles';
 import { FunnelItemIdentifier, FunnelDataPoints } from './funnel.types';
-import { FunnelElement } from './FunnelElement';
+import { FunnelSection } from './FunnelSection';
 import { useFunnelSeries } from '../hooks/useSeries';
 import { alignLabel, positionLabel } from './labelUtils';
 import { funnelHorizontalStepCurve, funnelVerticalStepCurve } from './funnelStepCurve';
@@ -168,7 +168,7 @@ function FunnelPlot(props: FunnelPlotProps) {
   return (
     <React.Fragment>
       {data.map(({ d, color, id, seriesId, dataIndex }) => (
-        <FunnelElement
+        <FunnelSection
           {...other}
           d={d}
           color={color}

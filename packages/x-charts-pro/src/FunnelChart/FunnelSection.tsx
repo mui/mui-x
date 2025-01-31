@@ -5,9 +5,9 @@ import { useInteractionItemProps, SeriesId, consumeSlots } from '@mui/x-charts/i
 import { useItemHighlighted } from '@mui/x-charts/hooks';
 import clsx from 'clsx';
 import { FunnelItemIdentifier } from './funnel.types';
-import { useUtilityClasses } from './funnelElementClasses';
+import { useUtilityClasses } from './funnelSectionClasses';
 
-export interface FunnelElementProps
+export interface FunnelSectionProps
   extends Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id' | 'onClick'> {
   seriesId: SeriesId;
   dataIndex: number;
@@ -28,20 +28,20 @@ export interface FunnelElementProps
   ) => void;
 }
 
-export const FunnelElementPath = styled('path')(() => ({
+export const FunnelSectionPath = styled('path')(() => ({
   transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
 }));
 
 /**
  * @ignore - internal component.
  */
-const FunnelElement = consumeSlots(
-  'MuiFunnelElement',
-  'funnelElement',
+const FunnelSection = consumeSlots(
+  'MuiFunnelSection',
+  'funnelSection',
   {
     classesResolver: useUtilityClasses,
   },
-  function FunnelElement(props: FunnelElementProps, ref: React.Ref<SVGPathElement>) {
+  function FunnelSection(props: FunnelSectionProps, ref: React.Ref<SVGPathElement>) {
     const { seriesId, dataIndex, classes, color, slots, slotProps, onClick, className, ...other } =
       props;
     const getInteractionItemProps = useInteractionItemProps();
@@ -51,7 +51,7 @@ const FunnelElement = consumeSlots(
     });
 
     return (
-      <FunnelElementPath
+      <FunnelSectionPath
         {...getInteractionItemProps({ type: 'funnel', seriesId, dataIndex })}
         filter={isHighlighted ? 'brightness(120%)' : undefined}
         opacity={isFaded ? 0.3 : 1}
@@ -71,4 +71,4 @@ const FunnelElement = consumeSlots(
   },
 );
 
-export { FunnelElement };
+export { FunnelSection };
