@@ -110,10 +110,8 @@ Below are described the steps you need to make to migrate from v7 to v8.
   This change only impacts you if you relied on `filteredRowsLookup` to get ids of filtered rows. In this case,use `gridDataRowIdsSelector` selector to get row ids and check `filteredRowsLookup` for `false` values:
 
   ```diff
-  -const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
+   const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
   -const filteredRowIds = Object.keys(filteredRowsLookup).filter((rowId) => filteredRowsLookup[rowId] === true);
-
-  +const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
   +const rowIds = gridDataRowIdsSelector(apiRef);
   +const filteredRowIds = rowIds.filter((rowId) => filteredRowsLookup[rowId] !== false);
   ```
