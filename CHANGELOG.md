@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 7.24.2
+## 7.25.0
 
 _Jan 31, 2025_
 
@@ -20,7 +20,7 @@ Following are all team members who have contributed to this release:
 
 ### Data Grid
 
-#### `@mui/x-data-grid@7.24.2`
+#### `@mui/x-data-grid@7.25.0`
 
 - [DataGrid] Fix `renderContext` calculation with scroll bounce / over-scroll (#16368) @lauri865
 - [DataGrid] Refactor row state propagation (#16351) @lauri865
@@ -31,46 +31,46 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Remove outdated warning (#16370) @MBilalShafi
 - [DataGrid] Respect width of `iconContainer` during autosizing (#16409) @michelengelen
 
-#### `@mui/x-data-grid-pro@7.24.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@7.25.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@7.24.2`, plus:
+Same changes as in `@mui/x-data-grid@7.25.0`, plus:
 
 - [DataGridPro] Fix the return type of `useGridApiRef` for Pro and Premium packages on React < 19 (#16348) @arminmeh
 - [DataGridPro] Fetch new rows only once when multiple models are changed in one cycle (#16382) @arminmeh
 
-#### `@mui/x-data-grid-premium@7.24.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@7.25.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@7.24.2`.
+Same changes as in `@mui/x-data-grid-pro@7.25.0`.
 
 ### Date and Time Pickers
 
-#### `@mui/x-date-pickers@7.24.2`
+#### `@mui/x-date-pickers@7.25.0`
 
 Internal changes.
 
-#### `@mui/x-date-pickers-pro@7.24.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@7.25.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@7.24.2`.
+Same changes as in `@mui/x-date-pickers@7.25.0`.
 
 ### Charts
 
-#### `@mui/x-charts@7.24.2`
+#### `@mui/x-charts@7.25.0`
 
 Internal changes.
 
-#### `@mui/x-charts-pro@7.24.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-charts-pro@7.25.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-charts@7.24.2`.
+Same changes as in `@mui/x-charts@7.25.0`.
 
 ### Tree View
 
-#### `@mui/x-tree-view@7.24.2`
+#### `@mui/x-tree-view@7.25.0`
 
 Internal changes.
 
-#### `@mui/x-tree-view-pro@7.24.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-tree-view-pro@7.25.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-tree-view@7.24.2`.
+Same changes as in `@mui/x-tree-view@7.25.0`.
 
 ### Docs
 
