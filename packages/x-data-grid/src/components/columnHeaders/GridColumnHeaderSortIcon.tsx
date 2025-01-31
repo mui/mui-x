@@ -15,6 +15,7 @@ export interface GridColumnHeaderSortIconProps {
   index: number | undefined;
   sortingOrder: readonly GridSortDirection[];
   disabled?: boolean;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 type OwnerState = GridColumnHeaderSortIconProps & {
@@ -100,6 +101,7 @@ GridColumnHeaderSortIconRaw.propTypes = {
   disabled: PropTypes.bool,
   field: PropTypes.string.isRequired,
   index: PropTypes.number,
+  onClick: PropTypes.func,
   sortingOrder: PropTypes.arrayOf(PropTypes.oneOf(['asc', 'desc'])).isRequired,
 } as any;
 
