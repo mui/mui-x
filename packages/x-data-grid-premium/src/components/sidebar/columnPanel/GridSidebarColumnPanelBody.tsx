@@ -48,7 +48,6 @@ const ScrollArea = styled('div')(({ theme }) => ({
 }));
 
 const CollapsibleSection = styled(GridSidebarCollapsibleSection)(({ theme }) => ({
-  flex: '1 0 auto',
   transition: theme.transitions.create(['color', 'border-color', 'background-color'], {
     duration: theme.transitions.duration.short,
     easing: theme.transitions.easing.easeInOut,
@@ -87,10 +86,10 @@ const FieldList = styled(AutoAnimateContainer)(({ theme }) => ({
 const Placeholder = styled('div')(({ theme }) => ({
   flex: 1,
   display: 'flex',
-  // flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
-  height: '42px',
+  minHeight: 42,
+  height: '100%',
   fontSize: theme.typography.pxToRem(13),
   color: theme.palette.text.secondary,
 }));
