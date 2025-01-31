@@ -103,13 +103,6 @@ RadarChart.propTypes = {
    */
   hideLegend: PropTypes.bool,
   /**
-   * The item currently highlighted. Turns highlighting into a controlled prop.
-   */
-  highlightedItem: PropTypes.shape({
-    dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  }),
-  /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
@@ -130,12 +123,6 @@ RadarChart.propTypes = {
     right: PropTypes.number,
     top: PropTypes.number,
   }),
-  /**
-   * The callback fired when the highlighted item changes.
-   *
-   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
-   */
-  onHighlightChange: PropTypes.func,
   /**
    * The configuration of the radar scales.
    */
