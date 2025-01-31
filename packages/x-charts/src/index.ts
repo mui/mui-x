@@ -22,6 +22,7 @@ export * from './PieChart';
 export * from './ScatterChart';
 export * from './SparkLineChart';
 export * from './Gauge';
+export * from './RadarChart';
 export * from './ChartsSurface';
 export * from './ChartContainer';
 export * from './ChartDataProvider';
