@@ -120,7 +120,7 @@ export const featuresSet = [
   },
   {
     id: 10,
-    name: 'Column pinning',
+    name: 'Column Pinning',
     description: 'Pin columns to the left or right.',
     plan: 'Pro',
     detailPage: '/column-pinning/',
@@ -480,9 +480,6 @@ export default function PopularFeaturesDemo() {
         flexDirection: 'column',
         minHeight: 1000,
         width: '100%',
-        border: '1px solid',
-        borderColor: 'divider',
-        borderRadius: 3,
       }}
     >
       <DataGridPremium
