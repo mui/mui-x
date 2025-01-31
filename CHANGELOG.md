@@ -29,6 +29,7 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Fix order of `onClick` prop on toolbar buttons (#16364) @KenanYusuf
 - [DataGrid] Improve test coverage of server side data source (#15988) @MBilalShafi
 - [DataGrid] Remove outdated warning (#16370) @MBilalShafi
+- [DataGrid] Respect width of `iconContainer` during autosizing (#16409) @michelengelen
 
 #### `@mui/x-data-grid-pro@7.24.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
