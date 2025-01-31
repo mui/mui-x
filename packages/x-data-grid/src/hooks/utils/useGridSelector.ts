@@ -104,7 +104,7 @@ export const useGridSelector = <Api extends GridApiCommon, Args, T>(
     }
   }
 
-  useEnhancedEffect(() => {
+  React.useInsertionEffect(() => {
     return apiRef.current.store.subscribe(() => {
       const newState = applySelector(
         apiRef,
