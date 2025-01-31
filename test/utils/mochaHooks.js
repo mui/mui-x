@@ -1,4 +1,5 @@
-import sinon from 'sinon';
+import { config } from 'react-transition-group';
+import { restore } from 'sinon';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGrid } from '@mui/x-data-grid';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGridPro } from '@mui/x-data-grid-pro';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingTreeView } from '@mui/x-tree-view';
@@ -20,8 +21,11 @@ export function createXMochaHooks(coreMochaHooks = {}) {
     licenseKey = generateTestLicenseKey();
   });
 
-  mochaHooks.beforeEach.push(function setupLicenseKey() {
+  mochaHooks.beforeEach.push(function setupCommon() {
     setupTestLicenseKey(licenseKey);
+    // disable "react-transition-group" transitions
+    // https://reactcommunity.org/react-transition-group/testing/
+    config.disabled = true;
   });
 
   mochaHooks.afterEach.push(function resetCleanupTracking() {
@@ -32,10 +36,13 @@ export function createXMochaHooks(coreMochaHooks = {}) {
 
     // Restore Sinon default sandbox to avoid memory leak
     // See https://github.com/sinonjs/sinon/issues/1866
-    sinon.restore();
+    restore();
   });
 
   mochaHooks.afterEach.push(clearWarningsCache);
+  mochaHooks.afterEach.push(function resetCommon() {
+    config.disabled = false;
+  });
 
   return mochaHooks;
 }
