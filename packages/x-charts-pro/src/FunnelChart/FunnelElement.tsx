@@ -29,14 +29,8 @@ export interface FunnelElementProps
   ) => void;
 }
 
-export const FunnelElementPath = styled('path', {
-  name: 'MuiFunnelElement',
-  slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: FunnelElementProps }>(({ ownerState }) => ({
-  stroke: 'none',
+export const FunnelElementPath = styled('path')(() => ({
   transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
-  cursor: ownerState.onClick ? 'pointer' : 'unset',
 }));
 
 /**
@@ -60,10 +54,11 @@ const FunnelElement = consumeSlots(
     return (
       <FunnelElementPath
         {...getInteractionItemProps({ type: 'funnel', seriesId, dataIndex })}
-        ownerState={props}
         filter={isHighlighted ? 'brightness(120%)' : undefined}
         opacity={isFaded ? 0.3 : 1}
         fill={color}
+        stroke="none"
+        cursor={onClick ? 'pointer' : 'unset'}
         className={clsx(
           classes.root,
           isHighlighted && classes.highlighted,
