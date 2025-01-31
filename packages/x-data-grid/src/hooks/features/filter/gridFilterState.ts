@@ -26,7 +26,7 @@ export interface GridFilterState {
    * If a row is not registered in this lookup, it is filtered.
    * This is the equivalent of the `visibleRowsLookup` if all the groups were expanded.
    */
-  filteredRowsLookup: Record<GridRowId, boolean>;
+  filteredRowsLookup: Record<GridRowId, false>;
   /**
    * Amount of children that are passing the filters or have children that are passing the filter (does not count grand children).
    * If a row is not registered in this lookup, it is supposed to have no descendant passing the filters.
