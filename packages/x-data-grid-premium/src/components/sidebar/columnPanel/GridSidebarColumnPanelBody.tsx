@@ -48,15 +48,15 @@ const ScrollArea = styled('div')(({ theme }) => ({
 }));
 
 const CollapsibleSection = styled(GridSidebarCollapsibleSection)(({ theme }) => ({
-  flexShrink: 0,
-  // TODO: use theme.transitions.create
-  transitionProperty: 'color, border-color, background-color',
-  transitionDuration: '0.15s',
-  transitionTimingFunction: 'ease-in-out',
+  flex: '1 0 auto',
+  transition: theme.transitions.create(['color', 'border-color', 'background-color'], {
+    duration: theme.transitions.duration.short,
+    easing: theme.transitions.easing.easeInOut,
+  }),
   '&[data-drag-over="true"]': {
     backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.hoverOpacity),
-    outline: `2px solid ${theme.palette.primary.main}`,
-    outlineOffset: -2,
+    borderColor: theme.palette.primary.main,
+    borderStyle: 'dashed',
   },
 }));
 
@@ -342,7 +342,9 @@ export function GridSidebarColumnPanelBody({
               <CollapsibleSectionTitle>
                 <rootProps.slots.densityStandardIcon fontSize="small" />
                 Rows
-                <CollapsibleSectionCount>{pivotModel.rows.length}</CollapsibleSectionCount>
+                {pivotModel.rows.length > 0 && (
+                  <CollapsibleSectionCount>{pivotModel.rows.length}</CollapsibleSectionCount>
+                )}
               </CollapsibleSectionTitle>
             }
             onDrop={handleDrop}
@@ -380,7 +382,9 @@ export function GridSidebarColumnPanelBody({
               <CollapsibleSectionTitle>
                 <rootProps.slots.columnSelectorIcon fontSize="small" />
                 Columns
-                <CollapsibleSectionCount>{pivotModel.columns.length}</CollapsibleSectionCount>
+                {pivotModel.columns.length > 0 && (
+                  <CollapsibleSectionCount>{pivotModel.columns.length}</CollapsibleSectionCount>
+                )}
               </CollapsibleSectionTitle>
             }
             onDrop={handleDrop}
@@ -420,7 +424,9 @@ export function GridSidebarColumnPanelBody({
               <CollapsibleSectionTitle>
                 <rootProps.slots.columnMenuAggregationIcon fontSize="small" />
                 Values
-                <CollapsibleSectionCount>{pivotModel.values.length}</CollapsibleSectionCount>
+                {pivotModel.values.length > 0 && (
+                  <CollapsibleSectionCount>{pivotModel.values.length}</CollapsibleSectionCount>
+                )}
               </CollapsibleSectionTitle>
             }
             onDrop={handleDrop}
