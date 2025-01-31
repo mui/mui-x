@@ -74,9 +74,11 @@ TreeItemIcon.propTypes = {
     disabled: PropTypes.bool.isRequired,
     editable: PropTypes.bool.isRequired,
     editing: PropTypes.bool.isRequired,
+    error: PropTypes.bool.isRequired,
     expandable: PropTypes.bool.isRequired,
     expanded: PropTypes.bool.isRequired,
     focused: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
     selected: PropTypes.bool.isRequired,
   }).isRequired,
 } as any;
