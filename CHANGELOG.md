@@ -3,6 +3,83 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.25.0
+
+_Jan 31, 2025_
+
+We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@k-rajat19, @lauri865.
+Following are all team members who have contributed to this release:
+@KenanYusuf, @MBilalShafi, @arminmeh.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.25.0`
+
+- [DataGrid] Fix `renderContext` calculation with scroll bounce / over-scroll (#16368) @lauri865
+- [DataGrid] Refactor row state propagation (#16351) @lauri865
+- [DataGrid] Add missing style overrides (#16272) (#16358) @KenanYusuf
+- [DataGrid] Fix header filters keyboard navigation when there are no rows (#16369) @k-rajat19
+- [DataGrid] Fix order of `onClick` prop on toolbar buttons (#16364) @KenanYusuf
+- [DataGrid] Improve test coverage of server side data source (#15988) @MBilalShafi
+- [DataGrid] Remove outdated warning (#16370) @MBilalShafi
+- [DataGrid] Respect width of `iconContainer` during autosizing (#16409) @michelengelen
+
+#### `@mui/x-data-grid-pro@7.25.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.25.0`, plus:
+
+- [DataGridPro] Fix the return type of `useGridApiRef` for Pro and Premium packages on React < 19 (#16348) @arminmeh
+- [DataGridPro] Fetch new rows only once when multiple models are changed in one cycle (#16382) @arminmeh
+
+#### `@mui/x-data-grid-premium@7.25.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.25.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.25.0`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@7.25.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.25.0`.
+
+### Charts
+
+#### `@mui/x-charts@7.25.0`
+
+Internal changes.
+
+#### `@mui/x-charts-pro@7.25.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@7.25.0`.
+
+### Tree View
+
+#### `@mui/x-tree-view@7.25.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@7.25.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@7.25.0`.
+
+### Docs
+
+- [docs] Improve release documentation (#16322) @MBilalShafi
+
+### Core
+
+- [test] Fix flaky data source tests in DataGrid (#16382) @lauri865
+
 ## 7.24.1
 
 _Jan 24, 2025_
