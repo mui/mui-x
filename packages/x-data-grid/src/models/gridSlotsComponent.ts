@@ -6,6 +6,11 @@ export type { GridSlotProps } from './gridSlotsComponentsProps';
 
 export interface GridBaseSlots {
   /**
+   * The custom Autocomplete component used in the grid for both header and cells.
+   * @default Autocomplete
+   */
+  baseAutocomplete: React.JSXElementConstructor<GridSlotProps['baseAutocomplete']>;
+  /**
    * The custom Badge component used in the grid for both header and cells.
    * @default Badge
    */

@@ -722,6 +722,12 @@
       "class": "MuiDataGridPro-row"
     },
     {
+      "name": "baseAutocomplete",
+      "description": "The custom Autocomplete component used in the grid for both header and cells.",
+      "default": "Autocomplete",
+      "class": null
+    },
+    {
       "name": "baseBadge",
       "description": "The custom Badge component used in the grid for both header and cells.",
       "default": "Badge",

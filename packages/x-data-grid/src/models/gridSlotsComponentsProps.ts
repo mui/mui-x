@@ -35,6 +35,7 @@ import type { GridLoadingOverlayProps } from '../components/GridLoadingOverlay';
 import type { GridRowCountProps } from '../components/GridRowCount';
 import type { GridColumnHeaderSortIconProps } from '../components/columnHeaders/GridColumnHeaderSortIcon';
 import type {
+  AutocompleteProps,
   BadgeProps,
   ButtonProps,
   CircularProgressProps,
@@ -51,6 +52,7 @@ type RootProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`,
 type MainProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;
 
 // Overrides for module augmentation
+export interface BaseAutocompletePropsOverrides {}
 export interface BaseBadgePropsOverrides {}
 export interface BaseCheckboxPropsOverrides {}
 export interface BaseCircularProgressPropsOverrides {}
@@ -93,6 +95,7 @@ export interface SkeletonCellPropsOverrides {}
 export interface RowPropsOverrides {}
 
 interface BaseSlotProps {
+  baseAutocomplete: AutocompleteProps<string, true, false, true> & BaseAutocompletePropsOverrides;
   baseBadge: BadgeProps & BaseBadgePropsOverrides;
   baseCheckbox: CheckboxProps & BaseCheckboxPropsOverrides;
   baseCircularProgress: CircularProgressProps & BaseCircularProgressPropsOverrides;
