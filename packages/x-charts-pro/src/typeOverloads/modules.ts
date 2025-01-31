@@ -1,4 +1,4 @@
-import { DefaultizedProps } from '@mui/x-internals/types';
+import { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
 import { AxisId } from '@mui/x-charts/internals';
 import {
   HeatmapItemIdentifier,
@@ -7,6 +7,12 @@ import {
   HeatmapValueType,
 } from '../models/seriesType/heatmap';
 import { ZoomOptions as ZoomOptionsPro } from '../internals/plugins/useChartProZoom/zoom.types';
+import {
+  DefaultizedFunnelSeriesType,
+  FunnelItemIdentifier,
+  FunnelSeriesType,
+  FunnelValueType,
+} from '../FunnelChart/funnel.types';
 
 declare module '@mui/x-charts/internals' {
   interface ChartsSeriesConfig {
@@ -16,6 +22,16 @@ declare module '@mui/x-charts/internals' {
       seriesProp: HeatmapSeriesType;
       itemIdentifier: HeatmapItemIdentifier;
       valueType: HeatmapValueType;
+      cartesian: true;
+    };
+    funnel: {
+      seriesInput: Omit<DefaultizedProps<FunnelSeriesType, 'id'>, 'data'> & {
+        data: MakeRequired<FunnelValueType, 'color'>[];
+      };
+      series: DefaultizedFunnelSeriesType;
+      seriesProp: FunnelSeriesType;
+      itemIdentifier: FunnelItemIdentifier;
+      valueType: FunnelValueType;
       cartesian: true;
     };
   }

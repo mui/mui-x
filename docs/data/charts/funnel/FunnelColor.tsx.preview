@@ -1,0 +1,6 @@
+<FunnelChart
+  // Use palette
+  colors={palette}
+  series={[populationByEducationLevelPercentageSeries]}
+  {...funnelParams}
+/>
