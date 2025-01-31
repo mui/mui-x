@@ -4,28 +4,13 @@ import { styled } from '@mui/material/styles';
 import { useInteractionItemProps, SeriesId, consumeSlots } from '@mui/x-charts/internals';
 import { useItemHighlighted } from '@mui/x-charts/hooks';
 import clsx from 'clsx';
-import { FunnelItemIdentifier } from './funnel.types';
-import { useUtilityClasses } from './funnelSectionClasses';
+import { FunnelSectionClasses, useUtilityClasses } from './funnelSectionClasses';
 
-export interface FunnelSectionProps
-  extends Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id' | 'onClick'> {
+export interface FunnelSectionProps extends Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> {
   seriesId: SeriesId;
   dataIndex: number;
   color: string;
-  // TODO: fix any
-  classes?: any;
-  slots?: any;
-  slotProps?: any;
-
-  /**
-   * Callback fired when a funnel item is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
-   * @param {FunnelItemIdentifier} funnelItemIdentifier The funnel item identifier.
-   */
-  onClick?: (
-    event: React.MouseEvent<SVGElement, MouseEvent>,
-    funnelItemIdentifier: FunnelItemIdentifier,
-  ) => void;
+  classes?: Partial<FunnelSectionClasses>;
 }
 
 export const FunnelSectionPath = styled('path')(() => ({
@@ -42,8 +27,7 @@ const FunnelSection = consumeSlots(
     classesResolver: useUtilityClasses,
   },
   function FunnelSection(props: FunnelSectionProps, ref: React.Ref<SVGPathElement>) {
-    const { seriesId, dataIndex, classes, color, slots, slotProps, onClick, className, ...other } =
-      props;
+    const { seriesId, dataIndex, classes, color, onClick, className, ...other } = props;
     const getInteractionItemProps = useInteractionItemProps();
     const { isFaded, isHighlighted } = useItemHighlighted({
       seriesId,
@@ -58,10 +42,11 @@ const FunnelSection = consumeSlots(
         fill={color}
         stroke="none"
         cursor={onClick ? 'pointer' : 'unset'}
+        onClick={onClick}
         className={clsx(
-          classes.root,
-          isHighlighted && classes.highlighted,
-          isFaded && classes.faded,
+          classes?.root,
+          isHighlighted && classes?.highlighted,
+          isFaded && classes?.faded,
           className,
         )}
         {...other}

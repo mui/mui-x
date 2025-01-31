@@ -11,19 +11,11 @@ import { FunnelSection } from './FunnelSection';
 import { useFunnelSeries } from '../hooks/useSeries';
 import { alignLabel, positionLabel } from './labelUtils';
 import { funnelHorizontalStepCurve, funnelVerticalStepCurve } from './funnelStepCurve';
+import { FunnelPlotSlotExtension } from './funnelPlotSlots.types';
 
 cartesianSeriesTypes.addType('funnel');
 
-export interface FunnelPlotSlots {}
-
-export interface FunnelPlotSlotProps {}
-
-export interface FunnelPlotProps {
-  /**
-   * If `true`, animations are skipped.
-   * @default false
-   */
-  skipAnimation?: boolean;
+export interface FunnelPlotProps extends FunnelPlotSlotExtension {
   /**
    * Callback fired when a funnel item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
@@ -33,16 +25,6 @@ export interface FunnelPlotProps {
     event: React.MouseEvent<SVGElement, MouseEvent>,
     funnelItemIdentifier: FunnelItemIdentifier,
   ) => void;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps?: FunnelPlotSlotProps;
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots?: FunnelPlotSlots;
 }
 
 const getFunnelCurve = (curve: CurveType | undefined, isHorizontal: boolean): CurveFactory => {
@@ -160,7 +142,7 @@ const useAggregatedData = () => {
 };
 
 function FunnelPlot(props: FunnelPlotProps) {
-  const { skipAnimation, onItemClick, ...other } = props;
+  const { onItemClick, ...other } = props;
   const theme = useTheme();
 
   const data = useAggregatedData();

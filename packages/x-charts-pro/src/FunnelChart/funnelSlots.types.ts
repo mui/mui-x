@@ -2,7 +2,7 @@ import { ChartsOverlaySlotProps, ChartsOverlaySlots } from '@mui/x-charts/Charts
 import { ChartsTooltipSlotProps, ChartsTooltipSlots } from '@mui/x-charts/ChartsTooltip';
 import { ChartsAxisSlotProps, ChartsAxisSlots } from '@mui/x-charts/internals';
 import { ChartsLegendSlotProps, ChartsLegendSlots } from '@mui/x-charts/ChartsLegend';
-import { FunnelPlotSlotProps, FunnelPlotSlots } from './FunnelPlot';
+import { FunnelPlotSlotProps, FunnelPlotSlots } from './funnelPlotSlots.types';
 
 export interface FunnelChartSlots
   extends ChartsAxisSlots,

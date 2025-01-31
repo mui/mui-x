@@ -105,7 +105,6 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     onItemClick,
     slots,
     slotProps,
-    skipAnimation,
   };
 
   const overlayProps: ChartsOverlayProps = {
