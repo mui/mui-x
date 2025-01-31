@@ -3,86 +3,112 @@ import { alpha, styled } from '@mui/material/styles';
 import { GridColDef } from '@mui/x-data-grid';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import { svgIconClasses } from '@mui/material/SvgIcon';
 
 import { PivotModel } from '../../../hooks/features/pivoting/useGridPivoting';
 import { useGridRootProps } from '../../../typeOverloads/reexports';
 import { getAvailableAggregationFunctions } from '../../../hooks/features/aggregation/gridAggregationUtils';
 import { PivotField } from './GridSidebarColumnPanelPivotField';
+import { GridSidebarCollapsibleSection } from '../GridSidebarCollapsibleSection';
+import { useResize } from '../../../hooks/utils/useResize';
 
 function AutoAnimateContainer(props: React.HTMLAttributes<HTMLDivElement>) {
   const [parent] = useAutoAnimate({ duration: 150 });
   return <div ref={parent} {...props} />;
 }
 
-const PivotSectionContainer = styled('div')({
+const Container = styled('div')({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
   overflow: 'hidden',
 });
 
-const PivotSection = styled(AutoAnimateContainer)(({ theme }) => ({
-  flex: 1,
-  display: 'flex',
-  flexDirection: 'column',
-  overflow: 'hidden',
-  transition: 'background-color 0.15s ease-in-out',
-  '& + &': {
-    borderTop: `1px solid ${theme.palette.divider}`,
-  },
-  '&[data-drag-over="true"]': {
-    backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.hoverOpacity),
-  },
-}));
-
-const PivotSectionTitle = styled('div')(({ theme }) => ({
-  fontSize: theme.typography.pxToRem(12),
-  color: theme.palette.text.secondary,
-  padding: theme.spacing(1, 2),
-  [`.${svgIconClasses.root}`]: {
-    fontSize: theme.typography.pxToRem(18),
-    marginLeft: -1,
-  },
-}));
-
-const PivotSectionList = styled(AutoAnimateContainer)(({ theme }) => ({
+const TopPane = styled('div')({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
   overflow: 'auto',
-  padding: theme.spacing(1, 0),
-  '* + &': {
-    paddingTop: 0,
+  minHeight: 50,
+});
+
+const BottomPane = styled('div')({
+  position: 'relative',
+  minHeight: 100,
+  overflow: 'hidden',
+});
+
+const ScrollArea = styled('div')(({ theme }) => ({
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.spacing(1),
+  padding: theme.spacing(1),
+  overflow: 'auto',
+  boxSizing: 'border-box',
+}));
+
+const CollapsibleSection = styled(GridSidebarCollapsibleSection)(({ theme }) => ({
+  flexShrink: 0,
+  // TODO: use theme.transitions.create
+  transitionProperty: 'color, border-color, background-color',
+  transitionDuration: '0.15s',
+  transitionTimingFunction: 'ease-in-out',
+  '&[data-drag-over="true"]': {
+    backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.hoverOpacity),
+    outline: `2px solid ${theme.palette.primary.main}`,
+    outlineOffset: -2,
   },
 }));
 
-const PivotSectionPlaceholder = styled('div')(({ theme }) => ({
+const CollapsibleSectionTitle = styled('div')(({ theme }) => ({
+  flex: 1,
+  marginRight: theme.spacing(1.25),
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(1),
+  fontSize: theme.typography.pxToRem(13),
+  color: theme.palette.text.secondary,
+  fontWeight: 500,
+}));
+
+const CollapsibleSectionCount = styled('div')(({ theme }) => ({
+  marginLeft: 'auto',
+  fontSize: theme.typography.pxToRem(13),
+  color: theme.palette.text.secondary,
+}));
+
+const FieldList = styled(AutoAnimateContainer)(({ theme }) => ({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
-  justifyContent: 'center',
-  gap: theme.spacing(1),
+  padding: theme.spacing(0.5, 0),
+}));
+
+const Placeholder = styled('div')(({ theme }) => ({
+  flex: 1,
+  display: 'flex',
+  // flexDirection: 'column',
   alignItems: 'center',
-  height: 60,
-  padding: theme.spacing(1.5),
-  margin: theme.spacing(1.5),
-  border: `1px dashed ${theme.palette.grey[400]}`,
-  borderRadius: 4,
+  justifyContent: 'center',
+  height: '42px',
+  fontSize: theme.typography.pxToRem(13),
   color: theme.palette.text.secondary,
-  transitionProperty: 'color, border-color',
-  transitionDuration: '0.15s',
-  transitionTimingFunction: 'ease-in-out',
-  '[data-dragging="true"] &': {
-    color: theme.palette.primary.main,
-    borderColor: theme.palette.primary.main,
-  },
-  '[data-drag-over="true"] &': {
-    borderWidth: 2,
-    borderStyle: 'solid',
-  },
-  '* + &': {
-    marginTop: 0,
+}));
+
+const ResizeHandle = styled('div')(({ theme }) => ({
+  position: 'absolute',
+  zIndex: 2,
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: 6,
+  cursor: 'ns-resize',
+  borderTop: '1px solid var(--DataGrid-rowBorderColor)',
+  transition: 'border-top 0.1s ease-in-out',
+  userSelect: 'none',
+  touchAction: 'pan-y',
+  '&:hover': {
+    borderTop: `2px solid ${theme.palette.primary.main}`,
   },
 }));
 
@@ -112,6 +138,15 @@ export function GridSidebarColumnPanelBody({
   columns: GridColDef[];
   onPivotModelChange: React.Dispatch<React.SetStateAction<PivotModel>>;
 }) {
+  const { ref: resizeHandleRef } = useResize({
+    direction: 'vertical',
+    getInitialSize: (handle) => {
+      return handle.parentElement!.offsetHeight;
+    },
+    onSizeChange: (newSize, handle) => {
+      handle.parentElement!.style.height = `${newSize}px`;
+    },
+  });
   const fields = React.useMemo(() => columns.map((col) => col.field), [columns]);
   const rootProps = useGridRootProps();
   const [drag, setDrag] = React.useState<{
@@ -183,6 +218,7 @@ export function GridSidebarColumnPanelBody({
               : getAvailableAggregationFunctions({
                   aggregationFunctions: rootProps.aggregationFunctions,
                   colDef: initialColumnsLookup[field],
+                  isDataSource: false,
                 })[0];
             newSectionArray.splice(toIndex, 0, {
               field,
@@ -266,19 +302,17 @@ export function GridSidebarColumnPanelBody({
   }, []);
 
   return (
-    <PivotSectionContainer data-dragging={drag.active} onDragLeave={handleDragLeave}>
-      <PivotSection
+    <Container data-dragging={drag.active} onDragLeave={handleDragLeave}>
+      <TopPane
         onDrop={handleDrop}
         onDragEnter={handleDragEnter}
         onDragOver={handleDragOver}
         data-section={null}
         data-drag-over={drag.active && drag.dropZone === null}
       >
-        {availableFields.length === 0 && (
-          <PivotSectionPlaceholder>Drag here to remove from pivot</PivotSectionPlaceholder>
-        )}
+        {availableFields.length === 0 && <Placeholder>Drag here to remove from pivot</Placeholder>}
         {availableFields.length > 0 && (
-          <PivotSectionList>
+          <FieldList>
             {availableFields.map((field) => (
               <PivotField
                 key={field}
@@ -295,124 +329,134 @@ export function GridSidebarColumnPanelBody({
                 {getColumnName(field)}
               </PivotField>
             ))}
-          </PivotSectionList>
+          </FieldList>
         )}
-      </PivotSection>
+      </TopPane>
 
-      <PivotSection
-        onDrop={handleDrop}
-        onDragEnter={handleDragEnter}
-        onDragOver={handleDragOver}
-        data-section="rows"
-        data-drag-over={drag.dropZone === 'rows'}
-      >
-        <PivotSectionTitle>Rows</PivotSectionTitle>
-        {pivotModel.rows.length === 0 && (
-          <PivotSectionPlaceholder>
-            {/* TODO: Replace with pivotRowsIcon or a more generic rowsIcon */}
-            <rootProps.slots.densityStandardIcon />
-            Drag here to create rows
-          </PivotSectionPlaceholder>
-        )}
-        {pivotModel.rows.length > 0 && (
-          <PivotSectionList>
-            {pivotModel.rows.map(({ field }) => (
-              <PivotField
-                key={field}
-                field={field}
-                modelKey="rows"
-                data-field={field}
-                pivotModel={pivotModel}
-                updatePivotModel={updatePivotModel}
-                onPivotModelChange={onPivotModelChange}
-                slots={rootProps.slots}
-                slotProps={rootProps.slotProps}
-                onDragStart={handleDragStart}
-                onDragEnd={handleDragEnd}
-              >
-                {getColumnName(field)}
-              </PivotField>
-            ))}
-          </PivotSectionList>
-        )}
-      </PivotSection>
+      <BottomPane>
+        <ResizeHandle ref={resizeHandleRef} />
 
-      <PivotSection
-        onDrop={handleDrop}
-        onDragEnter={handleDragEnter}
-        onDragOver={handleDragOver}
-        data-section="columns"
-        data-drag-over={drag.dropZone === 'columns'}
-      >
-        <PivotSectionTitle>Columns</PivotSectionTitle>
-        {pivotModel.columns.length === 0 && (
-          <PivotSectionPlaceholder>
-            {/* TODO: Replace with pivotColumnsIcon or a more generic columnsIcon */}
-            <rootProps.slots.columnSelectorIcon />
-            Drag here to create columns
-          </PivotSectionPlaceholder>
-        )}
-        {pivotModel.columns.length > 0 && (
-          <PivotSectionList>
-            {pivotModel.columns.map(({ field, sort }) => (
-              <PivotField
-                key={field}
-                field={field}
-                modelKey="columns"
-                updatePivotModel={updatePivotModel}
-                pivotModel={pivotModel}
-                onPivotModelChange={onPivotModelChange}
-                slots={rootProps.slots}
-                slotProps={rootProps.slotProps}
-                sort={sort}
-                onDragStart={handleDragStart}
-                onDragEnd={handleDragEnd}
-              >
-                {getColumnName(field)}
-              </PivotField>
-            ))}
-          </PivotSectionList>
-        )}
-      </PivotSection>
+        <ScrollArea>
+          <CollapsibleSection
+            title={
+              <CollapsibleSectionTitle>
+                <rootProps.slots.densityStandardIcon fontSize="small" />
+                Rows
+                <CollapsibleSectionCount>{pivotModel.rows.length}</CollapsibleSectionCount>
+              </CollapsibleSectionTitle>
+            }
+            onDrop={handleDrop}
+            onDragEnter={handleDragEnter}
+            onDragOver={handleDragOver}
+            data-section="rows"
+            data-drag-over={drag.dropZone === 'rows'}
+          >
+            {pivotModel.rows.length === 0 && <Placeholder>Drag here to create rows</Placeholder>}
+            {pivotModel.rows.length > 0 && (
+              <FieldList>
+                {pivotModel.rows.map(({ field }) => (
+                  <PivotField
+                    key={field}
+                    field={field}
+                    modelKey="rows"
+                    data-field={field}
+                    pivotModel={pivotModel}
+                    updatePivotModel={updatePivotModel}
+                    onPivotModelChange={onPivotModelChange}
+                    slots={rootProps.slots}
+                    slotProps={rootProps.slotProps}
+                    onDragStart={handleDragStart}
+                    onDragEnd={handleDragEnd}
+                  >
+                    {getColumnName(field)}
+                  </PivotField>
+                ))}
+              </FieldList>
+            )}
+          </CollapsibleSection>
 
-      <PivotSection
-        onDrop={handleDrop}
-        onDragEnter={handleDragEnter}
-        onDragOver={handleDragOver}
-        data-section="values"
-        data-drag-over={drag.dropZone === 'values'}
-      >
-        <PivotSectionTitle>Values</PivotSectionTitle>
-        {pivotModel.values.length === 0 && (
-          <PivotSectionPlaceholder>
-            {/* TODO: Replace with pivotValuesIcon or a more generic valuesIcon */}
-            <rootProps.slots.columnMenuAggregationIcon />
-            Drag here to create values
-          </PivotSectionPlaceholder>
-        )}
-        {pivotModel.values.length > 0 && (
-          <PivotSectionList>
-            {pivotModel.values.map(({ field, aggFunc }) => (
-              <PivotField
-                key={field}
-                field={field}
-                modelKey="values"
-                updatePivotModel={updatePivotModel}
-                pivotModel={pivotModel}
-                onPivotModelChange={onPivotModelChange}
-                slots={rootProps.slots}
-                slotProps={rootProps.slotProps}
-                aggFunc={aggFunc}
-                colDef={initialColumnsLookup[field]}
-                onDragStart={handleDragStart}
-                onDragEnd={handleDragEnd}
-              >
-                {getColumnName(field)}
-              </PivotField>
-            ))}
-          </PivotSectionList>
-        )}
-      </PivotSection>
-    </PivotSectionContainer>
+          <CollapsibleSection
+            title={
+              <CollapsibleSectionTitle>
+                <rootProps.slots.columnSelectorIcon fontSize="small" />
+                Columns
+                <CollapsibleSectionCount>{pivotModel.columns.length}</CollapsibleSectionCount>
+              </CollapsibleSectionTitle>
+            }
+            onDrop={handleDrop}
+            onDragEnter={handleDragEnter}
+            onDragOver={handleDragOver}
+            data-section="columns"
+            data-drag-over={drag.dropZone === 'columns'}
+          >
+            {pivotModel.columns.length === 0 && (
+              <Placeholder>Drag here to create columns</Placeholder>
+            )}
+            {pivotModel.columns.length > 0 && (
+              <FieldList>
+                {pivotModel.columns.map(({ field, sort }) => (
+                  <PivotField
+                    key={field}
+                    field={field}
+                    modelKey="columns"
+                    updatePivotModel={updatePivotModel}
+                    pivotModel={pivotModel}
+                    onPivotModelChange={onPivotModelChange}
+                    slots={rootProps.slots}
+                    slotProps={rootProps.slotProps}
+                    sort={sort}
+                    onDragStart={handleDragStart}
+                    onDragEnd={handleDragEnd}
+                  >
+                    {getColumnName(field)}
+                  </PivotField>
+                ))}
+              </FieldList>
+            )}
+          </CollapsibleSection>
+
+          <CollapsibleSection
+            title={
+              <CollapsibleSectionTitle>
+                <rootProps.slots.columnMenuAggregationIcon fontSize="small" />
+                Values
+                <CollapsibleSectionCount>{pivotModel.values.length}</CollapsibleSectionCount>
+              </CollapsibleSectionTitle>
+            }
+            onDrop={handleDrop}
+            onDragEnter={handleDragEnter}
+            onDragOver={handleDragOver}
+            data-section="values"
+            data-drag-over={drag.dropZone === 'values'}
+          >
+            {pivotModel.values.length === 0 && (
+              <Placeholder>Drag here to create values</Placeholder>
+            )}
+            {pivotModel.values.length > 0 && (
+              <FieldList>
+                {pivotModel.values.map(({ field, aggFunc }) => (
+                  <PivotField
+                    key={field}
+                    field={field}
+                    modelKey="values"
+                    updatePivotModel={updatePivotModel}
+                    pivotModel={pivotModel}
+                    onPivotModelChange={onPivotModelChange}
+                    slots={rootProps.slots}
+                    slotProps={rootProps.slotProps}
+                    aggFunc={aggFunc}
+                    colDef={initialColumnsLookup[field]}
+                    onDragStart={handleDragStart}
+                    onDragEnd={handleDragEnd}
+                  >
+                    {getColumnName(field)}
+                  </PivotField>
+                ))}
+              </FieldList>
+            )}
+          </CollapsibleSection>
+        </ScrollArea>
+      </BottomPane>
+    </Container>
   );
 }

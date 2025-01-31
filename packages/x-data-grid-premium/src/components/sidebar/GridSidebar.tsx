@@ -48,6 +48,8 @@ const GridSidebarRoot = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   width: 300,
+  minWidth: 180,
+  maxWidth: 400,
   overflow: 'hidden',
 });
 
@@ -56,17 +58,17 @@ export function GridSidebar(props: GridSidebarProps) {
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
   const { ref } = useResize({
-    getInitialWidth: (handle) => {
+    getInitialSize: (handle) => {
       return handle.parentElement!.offsetWidth;
     },
-    onWidthChange: (newWidth, handle) => {
-      handle.parentElement!.style.width = `${newWidth}px`;
+    onSizeChange: (newSize, handle) => {
+      handle.parentElement!.style.width = `${newSize}px`;
     },
   });
 
   return (
     <GridSidebarRoot className={clsx(className, classes.root)} ownerState={rootProps} {...other}>
-      <ResizeHandle ref={ref as any} />
+      <ResizeHandle ref={ref} />
       {children}
     </GridSidebarRoot>
   );

@@ -1,11 +1,15 @@
 import * as React from 'react';
 
-export const useResize = <TElement extends HTMLElement>(options: {
-  getInitialWidth: (handleElement: TElement) => number;
-  onWidthChange: (newWidth: number, handleElement: TElement) => void;
+export type ResizeDirection = 'horizontal' | 'vertical';
+
+export const useResize = <TElement extends HTMLDivElement>(options: {
+  getInitialSize: (handleElement: TElement) => number;
+  onSizeChange: (newSize: number, handleElement: TElement) => void;
+  direction?: ResizeDirection;
 }) => {
   const resizeHandleRef = React.useRef<TElement>(null);
   const optionsRef = React.useRef(options);
+
   React.useEffect(() => {
     optionsRef.current = options;
   }, [options]);
@@ -16,30 +20,35 @@ export const useResize = <TElement extends HTMLElement>(options: {
       return undefined;
     }
 
-    const { onWidthChange, getInitialWidth } = optionsRef.current;
+    const { onSizeChange, getInitialSize, direction = 'horizontal' } = optionsRef.current;
 
-    let startX: null | number = null;
-    let startWidth: null | number = null;
+    let startPosition: null | number = null;
+    let startSize: null | number = null;
 
     const handlePointerMove = (event: PointerEvent) => {
       event.preventDefault();
-      if (startX === null || startWidth === null) {
+
+      if (startPosition === null || startSize === null) {
         return;
       }
-      const newWidth = startWidth + (startX - event.clientX);
-      onWidthChange(newWidth, handle);
+
+      const delta =
+        direction === 'horizontal' ? startPosition - event.clientX : startPosition - event.clientY;
+
+      const newSize = startSize + delta;
+      onSizeChange(newSize, handle);
     };
 
     const handlePointerUp = (event: PointerEvent) => {
-      startX = null;
-      startWidth = null;
+      startPosition = null;
+      startSize = null;
       handle.removeEventListener('pointermove', handlePointerMove);
       handle.releasePointerCapture(event.pointerId);
     };
 
     const handlePointerDown = (event: PointerEvent) => {
-      startX = event.clientX;
-      startWidth = getInitialWidth(handle);
+      startPosition = direction === 'horizontal' ? event.clientX : event.clientY;
+      startSize = getInitialSize(handle);
       handle.addEventListener('pointermove', handlePointerMove);
       handle.setPointerCapture(event.pointerId);
     };

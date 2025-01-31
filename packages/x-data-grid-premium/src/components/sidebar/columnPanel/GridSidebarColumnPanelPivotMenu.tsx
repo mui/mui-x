@@ -117,64 +117,58 @@ export function GridSidebarColumnPanelPivotMenu(props: {
 
       {isAvailableField ? (
         <Menu {...menuProps}>
-          <MenuItem dense onClick={() => handleMove('rows')}>
-            Add to Rows
-          </MenuItem>
-          <MenuItem dense onClick={() => handleMove('columns')}>
-            Add to Columns
-          </MenuItem>
-          <MenuItem dense onClick={() => handleMove('values')}>
-            Add to Values
-          </MenuItem>
+          <MenuItem onClick={() => handleMove('rows')}>Add to Rows</MenuItem>
+          <MenuItem onClick={() => handleMove('columns')}>Add to Columns</MenuItem>
+          <MenuItem onClick={() => handleMove('values')}>Add to Values</MenuItem>
         </Menu>
       ) : (
         <Menu {...menuProps}>
-          <MenuItem dense disabled={!canMoveUp} onClick={() => handleMove('up')}>
+          <MenuItem disabled={!canMoveUp} onClick={() => handleMove('up')}>
             <ListItemIcon>
               <rootProps.slots.pivotMenuMoveUpIcon />
             </ListItemIcon>
             <ListItemText>Move up</ListItemText>
           </MenuItem>
-          <MenuItem dense disabled={!canMoveDown} onClick={() => handleMove('down')}>
+          <MenuItem disabled={!canMoveDown} onClick={() => handleMove('down')}>
             <ListItemIcon>
               <rootProps.slots.pivotMenuMoveDownIcon />
             </ListItemIcon>
             <ListItemText>Move down</ListItemText>
           </MenuItem>
           <Divider />
-          <MenuItem dense disabled={!canMoveUp} onClick={() => handleMove('top')}>
+          <MenuItem disabled={!canMoveUp} onClick={() => handleMove('top')}>
             <ListItemIcon>
               <rootProps.slots.pivotMenuMoveToTopIcon />
             </ListItemIcon>
             <ListItemText>Move to top</ListItemText>
           </MenuItem>
-          <MenuItem dense disabled={!canMoveDown} onClick={() => handleMove('bottom')}>
+          <MenuItem disabled={!canMoveDown} onClick={() => handleMove('bottom')}>
             <ListItemIcon>
               <rootProps.slots.pivotMenuMoveToBottomIcon />
             </ListItemIcon>
             <ListItemText>Move to bottom</ListItemText>
           </MenuItem>
           <Divider />
-          <MenuItem dense onClick={() => handleMove('rows')}>
+          <MenuItem onClick={() => handleMove('rows')}>
             <ListItemIcon>
               {modelKey === 'rows' ? <rootProps.slots.pivotMenuCheckIcon /> : null}
             </ListItemIcon>
             <ListItemText>Rows</ListItemText>
           </MenuItem>
-          <MenuItem dense onClick={() => handleMove('columns')}>
+          <MenuItem onClick={() => handleMove('columns')}>
             <ListItemIcon>
               {modelKey === 'columns' ? <rootProps.slots.pivotMenuCheckIcon /> : null}
             </ListItemIcon>
             <ListItemText>Columns</ListItemText>
           </MenuItem>
-          <MenuItem dense onClick={() => handleMove('values')}>
+          <MenuItem onClick={() => handleMove('values')}>
             <ListItemIcon>
               {modelKey === 'values' ? <rootProps.slots.pivotMenuCheckIcon /> : null}
             </ListItemIcon>
             <ListItemText>Values</ListItemText>
           </MenuItem>
           <Divider />
-          <MenuItem dense onClick={() => handleMove(null)}>
+          <MenuItem onClick={() => handleMove(null)}>
             <ListItemIcon>
               <rootProps.slots.pivotMenuRemoveIcon />
             </ListItemIcon>
