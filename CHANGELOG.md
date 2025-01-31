@@ -35,6 +35,7 @@ Following are all team members who have contributed to this release:
 Same changes as in `@mui/x-data-grid@7.24.2`, plus:
 
 - [DataGridPro] Fix the return type of `useGridApiRef` for Pro and Premium packages on React < 19 (#16348) @arminmeh
+- [DataGridPro] Fetch new rows only once when multiple models are changed in one cycle (#16382) @arminmeh
 
 #### `@mui/x-data-grid-premium@7.24.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
