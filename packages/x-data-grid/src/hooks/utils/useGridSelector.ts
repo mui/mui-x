@@ -50,8 +50,7 @@ export const argsEqual = (prev: any, curr: any) => {
   return fn(prev, curr);
 };
 
-const createRefs = () =>
-  ({ state: null, equals: null, selector: null, args: null, argsId: 0 }) as any;
+const createRefs = () => ({ state: null, equals: null, selector: null, args: null }) as any;
 
 const EMPTY = [] as unknown[];
 
@@ -60,32 +59,10 @@ type Refs<T> = {
   equals: <U = T>(a: U, b: U) => boolean;
   selector: Selector<any, any, T>;
   args: any;
-  argsId: number;
+  subscription: undefined | (() => void);
 };
 
-function getState<Api extends GridApiCommon, T>(
-  apiRef: RefObject<Api>,
-  refs: RefObject<Refs<T>>,
-  callback?: (state: T) => void,
-) {
-  const newState = applySelector(
-    apiRef,
-    refs.current.selector,
-    refs.current.args,
-    apiRef.current.instanceId,
-  ) as T;
-  if (!refs.current.equals(refs.current.state, newState)) {
-    refs.current.state = newState;
-    if (callback) {
-      callback(newState);
-      return;
-    }
-  }
-  if (callback) {
-    return;
-  }
-  return refs.current.state;
-}
+const emptyGetSnapshot = () => null;
 
 export const useGridSelector = <Api extends GridApiCommon, Args, T>(
   apiRef: RefObject<Api>,
@@ -105,28 +82,66 @@ export const useGridSelector = <Api extends GridApiCommon, Args, T>(
   const refs = useLazyRef<Refs<T>, never>(createRefs);
   const didInit = refs.current.selector !== null;
 
+  const [state, setState] = React.useState<T>(
+    // We don't use an initialization function to avoid allocations
+    (didInit ? null : applySelector(apiRef, selector, args, apiRef.current.instanceId)) as T,
+  );
+
   refs.current.equals = equals;
   refs.current.selector = selector;
   const prevArgs = refs.current.args;
   refs.current.args = args;
 
   if (didInit && !argsEqual(prevArgs, args)) {
-    refs.current.argsId += 1;
+    const newState = applySelector(
+      apiRef,
+      refs.current.selector,
+      refs.current.args,
+      apiRef.current.instanceId,
+    ) as T;
+    if (!refs.current.equals(refs.current.state, newState)) {
+      refs.current.state = newState;
+      setState(newState);
+    }
   }
 
-  const getSnapShot = React.useCallback(
-    () => getState(apiRef, refs)!,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [apiRef, refs.current.argsId],
-  );
-
   const subscribe = React.useCallback(
-    (callback: (state: T) => void) =>
-      apiRef.current.store.subscribe(() => getState(apiRef, refs, callback)),
+    () => {
+      if (refs.current.subscription) {
+        return null;
+      }
+
+      refs.current.subscription = apiRef.current.store.subscribe(() => {
+        const newState = applySelector(
+          apiRef,
+          refs.current.selector,
+          refs.current.args,
+          apiRef.current.instanceId,
+        ) as T;
+
+        if (!refs.current.equals(refs.current.state, newState)) {
+          refs.current.state = newState;
+          setState(newState);
+        }
+      });
+
+      return null;
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     EMPTY,
   );
 
-  const state = useSyncExternalStore<T>(subscribe, getSnapShot, getSnapShot);
+  const unsubscribe = React.useCallback(() => {
+    return () => {
+      if (refs.current.subscription) {
+        refs.current.subscription();
+        refs.current.subscription = undefined;
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, EMPTY);
+
+  useSyncExternalStore(unsubscribe, subscribe, emptyGetSnapshot);
+
   return state;
 };
