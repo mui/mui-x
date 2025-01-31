@@ -49,6 +49,18 @@ export type MenuItemProps = {
   style?: React.CSSProperties;
 };
 
+export type ToolbarProps = {
+  ref?: React.Ref<HTMLDivElement>;
+  role?: string;
+  'aria-orientation'?: string;
+};
+
+export type ToolbarButtonProps = {
+  ref?: React.Ref<HTMLButtonElement>;
+  tabIndex?: number;
+  onKeyDown?: React.KeyboardEventHandler<HTMLButtonElement>;
+};
+
 export type CircularProgressProps = {
   /**
    * Pixels or CSS value.
