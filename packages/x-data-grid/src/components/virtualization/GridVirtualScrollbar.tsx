@@ -50,8 +50,6 @@ const Scrollbar = styled('div')({
 
 const ScrollbarVertical = styled(Scrollbar)({
   width: 'var(--size)',
-  height:
-    'calc(var(--DataGrid-hasScrollY) * (100% - var(--DataGrid-topContainerHeight) - var(--DataGrid-bottomContainerHeight) - var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize)))',
   overflowY: 'auto',
   overflowX: 'hidden',
   // Disable focus-visible style, it's a scrollbar.
@@ -59,12 +57,12 @@ const ScrollbarVertical = styled(Scrollbar)({
   '& > div': {
     width: 'var(--size)',
   },
-  top: 'var(--DataGrid-topContainerHeight)',
-  right: '0px',
+  top: 0,
+  bottom: 0,
+  right: 0,
 });
 
 const ScrollbarHorizontal = styled(Scrollbar)({
-  width: '100%',
   height: 'var(--size)',
   overflowY: 'hidden',
   overflowX: 'auto',
@@ -73,7 +71,16 @@ const ScrollbarHorizontal = styled(Scrollbar)({
   '& > div': {
     height: 'var(--size)',
   },
-  bottom: '0px',
+  bottom: 0,
+  left: 0,
+});
+
+export const ScrollbarCorner = styled(Scrollbar)({
+  width: 'var(--size)',
+  height: 'var(--size)',
+  bottom: 0,
+  right: 0,
+  overflow: 'scroll',
 });
 
 const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProps>(
@@ -90,18 +97,8 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
     const propertyDimension = props.position === 'vertical' ? 'height' : 'width';
     const propertyScroll = props.position === 'vertical' ? 'scrollTop' : 'scrollLeft';
     const propertyScrollPosition = props.position === 'vertical' ? 'top' : 'left';
-    const hasScroll = props.position === 'vertical' ? dimensions.hasScrollX : dimensions.hasScrollY;
 
-    const contentSize =
-      dimensions.minimumSize[propertyDimension] + (hasScroll ? dimensions.scrollbarSize : 0);
-
-    const scrollbarSize =
-      props.position === 'vertical'
-        ? dimensions.viewportInnerSize.height
-        : dimensions.viewportOuterSize.width;
-
-    const scrollbarInnerSize =
-      scrollbarSize * (contentSize / dimensions.viewportOuterSize[propertyDimension]);
+    const scrollbarInnerSize = dimensions.minimumSize[propertyDimension];
 
     const onScrollerScroll = useEventCallback(() => {
       const scrollbar = scrollbarRef.current;
@@ -123,8 +120,7 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
       }
       isLocked.current = true;
 
-      const value = scrollPosition[propertyScrollPosition] / contentSize;
-      scrollbar[propertyScroll] = value * scrollbarInnerSize;
+      scrollbar[propertyScroll] = scrollPosition[propertyScrollPosition];
     });
 
     const onScrollbarScroll = useEventCallback(() => {
@@ -141,8 +137,7 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
       }
       isLocked.current = true;
 
-      const value = scrollbar[propertyScroll] / scrollbarInnerSize;
-      scroller[propertyScroll] = value * contentSize;
+      scroller[propertyScroll] = scrollbar[propertyScroll];
     });
 
     useOnMount(() => {
@@ -164,15 +159,23 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
 
     const Container = props.position === 'vertical' ? ScrollbarVertical : ScrollbarHorizontal;
 
+    // TODO: Check why this is needed
+    const listViewStyle =
+      props.position === 'vertical' && rootProps.unstable_listView
+        ? { bottom: 0, top: 0 }
+        : undefined;
+
     return (
       <Container
         ref={useForkRef(ref, scrollbarRef)}
         className={classes.root}
-        style={
-          props.position === 'vertical' && rootProps.unstable_listView
-            ? { height: '100%', top: 0 }
-            : undefined
-        }
+        style={{
+          bottom:
+            props.position === 'vertical' && dimensions.hasScrollX ? 'var(--size)' : undefined,
+          right:
+            props.position === 'horizontal' && dimensions.hasScrollY ? 'var(--size)' : undefined,
+          ...listViewStyle,
+        }}
         tabIndex={-1}
         aria-hidden="true"
       >
