@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { useInteractionItemProps, SeriesId, consumeSlots } from '@mui/x-charts/internals';
 import { useItemHighlighted } from '@mui/x-charts/hooks';
@@ -71,13 +70,5 @@ const FunnelElement = consumeSlots(
     );
   },
 );
-
-FunnelElement.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  classes: PropTypes.object,
-} as any;
 
 export { FunnelElement };
