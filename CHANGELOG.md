@@ -75,6 +75,10 @@ Same changes as in `@mui/x-tree-view@7.24.2`.
 
 - [docs] Improve release documentation (#16322) @MBilalShafi
 
+### Core
+
+- [test] Fix flaky data source tests in DataGrid (#16382) @lauri865
+
 ## 7.24.1
 
 _Jan 24, 2025_
