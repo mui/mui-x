@@ -44,17 +44,7 @@ export const FunnelElementPath = styled('path', {
  * @ignore - internal component.
  */
 function FunnelElement(props: FunnelElementProps) {
-  const {
-    seriesId,
-    dataIndex,
-    classes: innerClasses,
-    color,
-    slots,
-    slotProps,
-    style,
-    onClick,
-    ...other
-  } = props;
+  const { seriesId, dataIndex, classes, color, slots, slotProps, style, onClick, ...other } = props;
   const getInteractionItemProps = useInteractionItemProps();
   const { isFaded, isHighlighted } = useItemHighlighted({
     seriesId,
@@ -64,7 +54,7 @@ function FunnelElement(props: FunnelElementProps) {
   const ownerState = {
     seriesId,
     dataIndex,
-    classes: innerClasses,
+    classes,
     color,
     isFaded,
     isHighlighted,

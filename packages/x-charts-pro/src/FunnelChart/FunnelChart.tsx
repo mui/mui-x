@@ -4,48 +4,22 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 
 import { ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
-import {
-  ChartsOverlay,
-  ChartsOverlayProps,
-  ChartsOverlaySlotProps,
-  ChartsOverlaySlots,
-} from '@mui/x-charts/ChartsOverlay';
-import {
-  ChartsTooltip,
-  ChartsTooltipSlotProps,
-  ChartsTooltipSlots,
-} from '@mui/x-charts/ChartsTooltip';
-import {
-  ChartsAxisSlotProps,
-  ChartsAxisSlots,
-  ChartSeriesConfig,
-  ChartsWrapper,
-} from '@mui/x-charts/internals';
-import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '@mui/x-charts/ChartsLegend';
+import { ChartsOverlay, ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
+import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
+import { ChartSeriesConfig, ChartsWrapper } from '@mui/x-charts/internals';
+import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { MakeOptional } from '@mui/x-internals/types';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
-import { FunnelPlot, FunnelPlotProps, FunnelPlotSlotProps, FunnelPlotSlots } from './FunnelPlot';
+import { FunnelPlot, FunnelPlotProps } from './FunnelPlot';
 import { FunnelSeriesType } from './funnel.types';
 import { useFunnelChartProps } from './useFunnelChartProps';
 import { ChartContainerProProps } from '../ChartContainerPro';
 import { plugin as funnelPlugin } from './plugin';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
-
-export interface FunnelChartSlots
-  extends ChartsAxisSlots,
-    FunnelPlotSlots,
-    ChartsLegendSlots,
-    ChartsTooltipSlots,
-    ChartsOverlaySlots {}
-export interface FunnelChartSlotProps
-  extends ChartsAxisSlotProps,
-    FunnelPlotSlotProps,
-    ChartsLegendSlotProps,
-    ChartsTooltipSlotProps,
-    ChartsOverlaySlotProps {}
+import { FunnelChartSlotExtension } from './funnelSlots.types';
 
 export interface FunnelChartProps
   extends Omit<
@@ -54,7 +28,8 @@ export interface FunnelChartProps
     >,
     Omit<FunnelPlotProps, 'slots' | 'slotProps'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
-    Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
+    Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
+    FunnelChartSlotExtension {
   /**
    * The series to display in the funnel chart.
    * An array of [[FunnelSeriesType]] objects.
@@ -73,16 +48,6 @@ export interface FunnelChartProps
    *
    */
   axisHighlight?: ChartsAxisHighlightProps;
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots?: FunnelChartSlots;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps?: FunnelChartSlotProps;
 }
 
 const seriesConfig: ChartSeriesConfig<'funnel'> = { funnel: funnelPlugin };
@@ -91,7 +56,7 @@ const FunnelChart = React.forwardRef(function FunnelChart(
   props: FunnelChartProps,
   ref: React.Ref<SVGSVGElement>,
 ) {
-  const { apiRef, ...themedProps } = useThemeProps({ props, name: 'MuiFunnelChart' });
+  const themedProps = useThemeProps({ props, name: 'MuiFunnelChart' });
 
   const {
     chartContainerProps,
@@ -105,7 +70,7 @@ const FunnelChart = React.forwardRef(function FunnelChart(
     children,
   } = useFunnelChartProps(themedProps);
   const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps(
-    { ...chartContainerProps, apiRef },
+    chartContainerProps,
     ref,
   );
 

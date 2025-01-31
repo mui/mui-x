@@ -5,9 +5,9 @@ import { CurveFactory, line as d3Line } from '@mui/x-charts-vendor/d3-shape';
 import { getCurveFactory, AxisDefaultized, cartesianSeriesTypes } from '@mui/x-charts/internals';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import { CurveType } from '@mui/x-charts/models';
+import { useTheme } from '@mui/material/styles';
 import { FunnelItemIdentifier, FunnelDataPoints } from './funnel.types';
 import { FunnelElement } from './FunnelElement';
-import { FunnelLabel } from './FunnelLabel';
 import { useFunnelSeries } from '../hooks/useSeries';
 import { alignLabel, positionLabel } from './labelUtils';
 import { funnelHorizontalStepCurve, funnelVerticalStepCurve } from './funnelStepCurve';
@@ -161,6 +161,7 @@ const useAggregatedData = () => {
 
 function FunnelPlot(props: FunnelPlotProps) {
   const { skipAnimation, onItemClick, ...other } = props;
+  const theme = useTheme();
 
   const data = useAggregatedData();
 
@@ -188,17 +189,26 @@ function FunnelPlot(props: FunnelPlotProps) {
         }
 
         return (
-          <FunnelLabel
+          <text
             key={id}
             x={label.x}
             y={label.y}
-            sx={{
-              textAnchor: label.textAnchor,
-              dominantBaseline: label.dominantBaseline,
-            }}
+            textAnchor={label.textAnchor}
+            dominantBaseline={label.dominantBaseline}
+            stroke="none"
+            pointerEvents="none"
+            fontFamily={theme.typography.body2.fontFamily}
+            fontSize={theme.typography.body2.fontSize}
+            fontSizeAdjust={theme.typography.body2.fontSizeAdjust}
+            fontWeight={theme.typography.body2.fontWeight}
+            letterSpacing={theme.typography.body2.letterSpacing}
+            fontStretch={theme.typography.body2.fontStretch}
+            fontStyle={theme.typography.body2.fontStyle}
+            fontVariant={theme.typography.body2.fontVariant}
+            fill={(theme.vars || theme)?.palette?.text?.primary}
           >
             {label.value}
-          </FunnelLabel>
+          </text>
         );
       })}
     </React.Fragment>

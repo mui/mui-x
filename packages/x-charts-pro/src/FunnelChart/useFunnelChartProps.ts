@@ -46,6 +46,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     className,
     hideLegend,
     axisHighlight,
+    apiRef,
     ...rest
   } = props;
   const margin = { ...defaultMargin, ...marginProps };
@@ -97,6 +98,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     highlightedItem,
     onHighlightChange,
     className,
+    apiRef,
   };
 
   const funnelPlotProps: FunnelPlotProps = {
