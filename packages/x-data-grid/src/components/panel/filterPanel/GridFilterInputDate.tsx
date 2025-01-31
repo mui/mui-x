@@ -136,7 +136,15 @@ GridFilterInputDate.propTypes = {
   inputRef: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({
-      current: PropTypes.any.isRequired,
+      current: (props, propName) => {
+        if (props[propName] == null) {
+          return null;
+        }
+        if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {
+          return new Error(`Expected prop '${propName}' to be of type Element`);
+        }
+        return null;
+      },
     }),
   ]),
   /**
