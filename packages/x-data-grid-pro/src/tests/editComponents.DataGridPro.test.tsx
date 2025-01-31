@@ -599,7 +599,7 @@ describe('<DataGridPro /> - Edit components', () => {
       await user.dblClick(cell);
       await user.click(screen.queryAllByRole('option')[1]);
       expect(screen.queryByRole('listbox')).to.equal(null);
-      await act(() => {
+      await act(async () => {
         screen.getByRole('combobox').focus();
       });
       await user.keyboard('{Enter}');
