@@ -41,8 +41,8 @@ function RadarDataProvider(props: RadarDataProviderProps) {
     width,
     height,
     colors,
-    highlightedItem,
-    onHighlightChange,
+    // highlightedItem,
+    // onHighlightChange,
     className,
     skipAnimation,
     margin,
@@ -103,8 +103,8 @@ function RadarDataProvider(props: RadarDataProviderProps) {
       margin={defaultizedMargin}
       colors={colors}
       dataset={dataset}
-      highlightedItem={highlightedItem}
-      onHighlightChange={onHighlightChange}
+      // highlightedItem={highlightedItem}
+      // onHighlightChange={onHighlightChange}
       skipAnimation={skipAnimation}
       plugins={RADAR_PLUGINS}
       rotationAxis={rotationAxes}

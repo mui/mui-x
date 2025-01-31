@@ -29,8 +29,8 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     slotProps,
     skipAnimation,
     loading,
-    highlightedItem,
-    onHighlightChange,
+    // highlightedItem,
+    // onHighlightChange,
     hideLegend,
     divisionNumber,
     ...other
@@ -44,8 +44,8 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     margin,
     colors,
     dataset,
-    highlightedItem,
-    onHighlightChange,
+    // highlightedItem,
+    // onHighlightChange,
     skipAnimation,
   };
 

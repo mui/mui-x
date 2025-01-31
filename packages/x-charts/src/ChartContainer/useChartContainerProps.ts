@@ -33,7 +33,9 @@ export const useChartContainerProps = <
     dataset,
     desc,
     disableAxisListener,
+    // @ts-ignore
     highlightedItem,
+    // @ts-ignore
     onHighlightChange,
     sx,
     title,

@@ -1,8 +1,8 @@
-import { useHighlighted } from '../../context/HighlightedProvider';
 import { useRotationScale } from '../../hooks/useScale';
 import { useDrawingArea } from '../../hooks/useDrawingArea';
 import { useRadarSeries } from '../../hooks/useSeries';
-import { useRadiusAxes } from '../../hooks';
+import { useRadiusAxes } from '../../hooks/useAxis';
+import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 
 /**
  *
@@ -16,7 +16,7 @@ export function useRadarSeriesData(querySeriesId?: string) {
   const radarSeries = useRadarSeries();
 
   const drawingArea = useDrawingArea();
-  const highlighted = useHighlighted();
+  const { isFaded: isItemFaded, isHighlighted: isItemHighlighted } = useItemHighlightedGetter();
 
   const cx = drawingArea.left + drawingArea.width / 2;
   const cy = drawingArea.top + drawingArea.height / 2;
@@ -27,8 +27,8 @@ export function useRadarSeriesData(querySeriesId?: string) {
   return radarSeries?.seriesOrder
     .filter((id) => querySeriesId === undefined || id === querySeriesId)
     .map((seriesId) => {
-      const isSeriesHighlighted = highlighted.isHighlighted({ seriesId });
-      const isSeriesFaded = !isSeriesHighlighted && highlighted.isFaded({ seriesId });
+      const isSeriesHighlighted = isItemHighlighted({ seriesId });
+      const isSeriesFaded = !isSeriesHighlighted && isItemFaded({ seriesId });
 
       return {
         ...radarSeries.series[seriesId],
@@ -36,16 +36,16 @@ export function useRadarSeriesData(querySeriesId?: string) {
         isSeriesHighlighted,
         isSeriesFaded,
         points: radarSeries.series[seriesId].data.map((value, dataIndex) => {
-          const isItemHighlighted = highlighted.isHighlighted({ seriesId, dataIndex });
-          const isItemFaded = !isItemHighlighted && highlighted.isFaded({ seriesId, dataIndex });
+          const highlighted = isItemHighlighted({ seriesId, dataIndex });
+          const faded = !highlighted && isItemFaded({ seriesId, dataIndex });
 
           const r = radiusAxis[metrics[dataIndex]].scale(value)!;
           const angle = angles[dataIndex];
           return {
             x: cx + r * Math.sin(angle),
             y: cy - r * Math.cos(angle),
-            isItemHighlighted,
-            isItemFaded,
+            isItemHighlighted: highlighted,
+            isItemFaded: faded,
             dataIndex,
           };
         }),
