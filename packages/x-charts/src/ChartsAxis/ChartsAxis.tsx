@@ -11,6 +11,7 @@ import {
   ChartsYAxisProps,
 } from '../models/axis';
 import { useXAxes, useYAxes } from '../hooks';
+import { useChartContext } from '../context/ChartProvider';
 
 export interface ChartsAxisProps {
   /**
@@ -89,6 +90,7 @@ function ChartsAxis(props: ChartsAxisProps) {
   const { topAxis, leftAxis, rightAxis, bottomAxis, slots, slotProps } = props;
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
+  const { instance } = useChartContext();
 
   const leftId = getAxisId(leftAxis === undefined ? yAxisIds[0] : leftAxis, yAxisIds[0]);
   const bottomId = getAxisId(bottomAxis === undefined ? xAxisIds[0] : bottomAxis, xAxisIds[0]);
@@ -131,6 +133,21 @@ function ChartsAxis(props: ChartsAxisProps) {
   const bottomAxisProps = mergeProps(bottomAxis, slots, slotProps);
   const leftAxisProps = mergeProps(leftAxis, slots, slotProps);
   const rightAxisProps = mergeProps(rightAxis, slots, slotProps);
+
+  React.useEffect(() => {
+    if (topId) {
+      instance.addAxisSide('top');
+    }
+    if (bottomId) {
+      instance.addAxisSide('bottom');
+    }
+    if (leftId) {
+      instance.addAxisSide('left');
+    }
+    if (rightId) {
+      instance.addAxisSide('right');
+    }
+  }, [topId, bottomId, leftId, rightId, instance]);
 
   return (
     <React.Fragment>

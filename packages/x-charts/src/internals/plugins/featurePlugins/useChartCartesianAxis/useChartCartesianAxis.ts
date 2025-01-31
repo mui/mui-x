@@ -53,6 +53,11 @@ export const useChartCartesianAxis: ChartPlugin<
     }));
   }, [seriesConfig, drawingArea, formattedSeries, xAxis, yAxis, dataset, store]);
 
+  // React.useEffect(() => {
+  //   instance.addAxisSide('left');
+  //   instance.addAxisSide('bottom');
+  // }, [instance,xAxis,yAxis]);
+
   return {};
 };
 
