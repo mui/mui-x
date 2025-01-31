@@ -67,7 +67,7 @@ const getState = <Api extends GridApiCommon, T>(
   apiRef: RefObject<Api>,
   refs: RefObject<Refs<T>>,
   listener?: (state: T) => void,
-) => {
+): T => {
   const newState = applySelector(
     apiRef,
     refs.current.selector,
@@ -77,7 +77,7 @@ const getState = <Api extends GridApiCommon, T>(
   if (!refs.current.equals(refs.current.state, newState)) {
     refs.current.state = newState;
     if (listener) {
-      return listener(newState);
+      listener(newState);
     }
   }
   return refs.current.state;
@@ -123,6 +123,6 @@ export const useGridSelector = <Api extends GridApiCommon, Args, T>(
     EMPTY,
   );
 
-  const state = useSyncExternalStore(subscribe, getSnapShot, getSnapShot);
+  const state = useSyncExternalStore<T>(subscribe, getSnapShot, getSnapShot);
   return state;
 };
