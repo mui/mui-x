@@ -9,10 +9,7 @@ import { throttle } from '@mui/x-internals/throttle';
 import { GridEventListener } from '../../../models/events';
 import { ElementSize } from '../../../models';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import {
-  useGridApiEventHandler,
-  useGridApiOptionHandler,
-} from '../../utils/useGridApiEventHandler';
+import { useGridApiOptionHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -324,13 +321,12 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
   useGridApiMethod(apiRef, apiPublic, 'public');
   useGridApiMethod(apiRef, apiPrivate, 'private');
 
-  const root = apiRef.current.rootElementRef.current;
-  useEnhancedEffect(() => {
-    if (!root) {
-      return;
-    }
-    setCSSVariables(root, gridDimensionsSelector(apiRef.current.state));
-  }, [apiRef, root]);
+  const handleRootMount = React.useCallback<GridEventListener<'rootMount'>>(
+    (root) => {
+      setCSSVariables(root, gridDimensionsSelector(apiRef.current.state));
+    },
+    [apiRef],
+  );
 
   const handleResize = React.useCallback<GridEventListener<'resize'>>(
     (size) => {
@@ -372,12 +368,14 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     [updateDimensions, props.autoHeight, debouncedUpdateDimensions, logger],
   );
 
-  useGridApiEventHandler(apiRef, 'resize', handleResize);
+  useGridApiOptionHandler(apiRef, 'rootMount', handleRootMount);
+  useGridApiOptionHandler(apiRef, 'resize', handleResize);
   useGridApiOptionHandler(apiRef, 'debouncedResize', props.onResize);
 }
 
 function setCSSVariables(root: HTMLElement, dimensions: GridDimensions) {
   const set = (k: string, v: string) => root.style.setProperty(k, v);
+  set('--DataGrid-width', `${dimensions.viewportOuterSize.width}px`);
   set('--DataGrid-hasScrollX', `${Number(dimensions.hasScrollX)}`);
   set('--DataGrid-hasScrollY', `${Number(dimensions.hasScrollY)}`);
   set('--DataGrid-scrollbarSize', `${dimensions.scrollbarSize}px`);

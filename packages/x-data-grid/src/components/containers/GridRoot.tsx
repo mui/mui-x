@@ -54,7 +54,18 @@ const GridRoot = forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(pro
   const apiRef = useGridPrivateApiContext();
   const density = useGridSelector(apiRef, gridDensitySelector);
   const rootElementRef = apiRef.current.rootElementRef;
-  const handleRef = useForkRef(rootElementRef, ref);
+
+  const rootMountCallback = React.useCallback(
+    (node: HTMLElement | null) => {
+      if (node === null) {
+        return;
+      }
+      apiRef.current.publishEvent('rootMount', node);
+    },
+    [apiRef],
+  );
+
+  const handleRef = useForkRef(rootElementRef, ref, rootMountCallback);
 
   const ownerState = rootProps;
 
