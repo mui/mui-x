@@ -7,6 +7,7 @@ import {
   getAllFieldInputRoot,
   getExpectedOnChangeCount,
   getFieldInputRoot,
+  isPickerSingleInput,
 } from 'test/utils/pickers';
 import { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.types';
 import { fireUserEvent } from '../../fireUserEvent';
@@ -157,12 +158,10 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       });
     });
 
-    it('should allow editing in field on non-range mobile pickers', () => {
+    it('should allow editing in field on single input mobile pickers', () => {
       if (componentFamily !== 'picker' || params.variant !== 'mobile') {
         return;
       }
-
-      const hasMobileFieldEditing = ['time', 'date', 'date-time'].includes(params.type);
 
       const handleChange = spy();
 
@@ -172,7 +171,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       });
       v7Response.selectSection(undefined);
       fireUserEvent.keyPress(v7Response.getActiveSection(0), { key: 'ArrowUp' });
-      expect(handleChange.callCount).to.equal(hasMobileFieldEditing ? 1 : 0);
+      expect(handleChange.callCount).to.equal(isPickerSingleInput(params) ? 1 : 0);
     });
 
     it('should have correct labelledby relationship when toolbar is shown', () => {

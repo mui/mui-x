@@ -110,36 +110,39 @@ function JoyMultiInputDateRangeField(props: JoyMultiInputDateRangeFieldProps) {
   const startTextFieldProps = useSlotProps({
     elementType: 'input',
     externalSlotProps: slotProps?.textField,
+    additionalProps: { label: 'Start' },
     ownerState: { position: 'start' } as any,
   }) as MultiInputFieldSlotTextFieldProps;
 
   const endTextFieldProps = useSlotProps({
     elementType: 'input',
     externalSlotProps: slotProps?.textField,
+    additionalProps: { label: 'End' },
     ownerState: { position: 'end' } as any,
   }) as MultiInputFieldSlotTextFieldProps;
 
   const fieldResponse = useMultiInputRangeField({
     manager,
     internalProps: { ...internalProps, enableAccessibleFieldDOMStructure: false },
-    startForwardedProps: startTextFieldProps,
-    endForwardedProps: endTextFieldProps,
+    rootProps: {
+      ref: pickerContext.rootRef,
+      spacing: 2,
+      overflow: 'auto',
+      direction: 'row' as const,
+      alignItems: 'center',
+      ...otherForwardedProps,
+    },
+    startTextFieldProps,
+    endTextFieldProps,
   });
 
   return (
-    <Stack
-      spacing={2}
-      overflow="auto"
-      direction="row"
-      alignItems="center"
-      {...otherForwardedProps}
-      ref={pickerContext.rootRef}
-    >
-      <JoyField {...fieldResponse.startDate} />
+    <Stack {...fieldResponse.root}>
+      <JoyField {...fieldResponse.startTextField} />
       <FormControl>
         <Typography sx={{ marginTop: '25px' }}>{' – '}</Typography>
       </FormControl>
-      <JoyField {...fieldResponse.endDate} />
+      <JoyField {...fieldResponse.endTextField} />
     </Stack>
   );
 }

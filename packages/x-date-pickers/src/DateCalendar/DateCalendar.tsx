@@ -134,7 +134,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
     minDate,
     maxDate,
     disableHighlightToday,
-    focusedView: inFocusedView,
+    focusedView: focusedViewProp,
     onFocusedViewChange,
     showDaysOutsideCurrentMonth,
     fixedWeekNumber,
@@ -169,16 +169,14 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
       onChange: handleValueChange,
       onViewChange,
       autoFocus,
-      focusedView: inFocusedView,
+      focusedView: focusedViewProp,
       onFocusedViewChange,
     });
 
   const {
     referenceDate,
     calendarState,
-    changeFocusedDay,
-    changeMonth,
-    handleChangeMonth,
+    setVisibleDate,
     isDateDisabled,
     onMonthSwitchingAnimationEnd,
   } = useCalendarState({
@@ -192,6 +190,13 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
     disablePast,
     disableFuture,
     timezone,
+    getCurrentMonthFromVisibleDate: (visibleDate, prevMonth) => {
+      if (utils.isSameMonth(visibleDate, prevMonth)) {
+        return prevMonth;
+      }
+
+      return utils.startOfMonth(visibleDate);
+    },
   });
 
   // When disabled, limit the view to the selected date
@@ -210,7 +215,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
       view,
       currentMonth: calendarState.currentMonth,
       onViewChange: setView,
-      onMonthChange: (newMonth, direction) => handleChangeMonth({ newMonth, direction }),
+      onMonthChange: (month) => setVisibleDate({ target: month, reason: 'header-navigation' }),
       minDate: minDateWithDisabled,
       maxDate: maxDateWithDisabled,
       disabled,
@@ -242,13 +247,11 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
 
     if (closestEnabledDate) {
       setValueAndGoToNextView(closestEnabledDate, 'finish');
-      onMonthChange?.(startOfMonth);
+      setVisibleDate({ target: closestEnabledDate, reason: 'cell-interaction' });
     } else {
       goToNextView();
-      changeMonth(startOfMonth);
+      setVisibleDate({ target: startOfMonth, reason: 'cell-interaction' });
     }
-
-    changeFocusedDay(closestEnabledDate, true);
   });
 
   const handleDateYearChange = useEventCallback((newDate: PickerValidDate) => {
@@ -270,13 +273,11 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
 
     if (closestEnabledDate) {
       setValueAndGoToNextView(closestEnabledDate, 'finish');
-      onYearChange?.(closestEnabledDate);
+      setVisibleDate({ target: closestEnabledDate, reason: 'cell-interaction' });
     } else {
       goToNextView();
-      changeMonth(startOfYear);
+      setVisibleDate({ target: startOfYear, reason: 'cell-interaction' });
     }
-
-    changeFocusedDay(closestEnabledDate, true);
   });
 
   const handleSelectedDayChange = useEventCallback((day: PickerValidDate | null) => {
@@ -294,7 +295,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
 
   React.useEffect(() => {
     if (utils.isValid(value)) {
-      changeMonth(value);
+      setVisibleDate({ target: value, reason: 'controlled-value-change' });
     }
   }, [value]); // eslint-disable-line
 
@@ -384,14 +385,16 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
               {...baseDateValidationProps}
               {...commonViewProps}
               onMonthSwitchingAnimationEnd={onMonthSwitchingAnimationEnd}
-              onFocusedDayChange={changeFocusedDay}
+              hasFocus={hasFocus}
+              onFocusedDayChange={(focusedDate) =>
+                setVisibleDate({ target: focusedDate, reason: 'cell-interaction' })
+              }
               reduceAnimations={reduceAnimations}
               selectedDays={selectedDays}
               onSelectedDaysChange={handleSelectedDayChange}
               shouldDisableDate={shouldDisableDate}
               shouldDisableMonth={shouldDisableMonth}
               shouldDisableYear={shouldDisableYear}
-              hasFocus={hasFocus}
               onFocusedViewChange={(isViewFocused) => setFocusedView('day', isViewFocused)}
               showDaysOutsideCurrentMonth={showDaysOutsideCurrentMonth}
               fixedWeekNumber={fixedWeekNumber}

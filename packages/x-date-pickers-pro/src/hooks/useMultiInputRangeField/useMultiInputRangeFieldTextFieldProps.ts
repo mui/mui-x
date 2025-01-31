@@ -13,11 +13,13 @@ import {
   PickerManagerEnableAccessibleFieldDOMStructure,
   PickerManagerFieldInternalProps,
   PickerValue,
+  RangePosition,
   useField,
   useFieldInternalPropsWithDefaults,
   UseFieldResponse,
 } from '@mui/x-date-pickers/internals';
 import { PickerAnyRangeManager } from '../../internals/models/managers';
+import { useNullablePickerRangePositionContext } from '../../internals/hooks/useNullablePickerRangePositionContext';
 import {
   UseDateRangeManagerReturnValue,
   UseDateTimeRangeManagerReturnValue,
@@ -30,11 +32,11 @@ import {
 export function useMultiInputRangeFieldTextFieldProps<
   TManager extends PickerAnyRangeManager,
   TForwardedProps extends { [key: string]: any },
->(parameters: UseMultiInputRangeFieldTextFieldProps<TManager>) {
+>(parameters: UseMultiInputRangeFieldTextFieldPropsParameters<TManager>) {
   type TEnableAccessibleFieldDOMStructure =
     PickerManagerEnableAccessibleFieldDOMStructure<TManager>;
 
-  const { fieldProps, valueType } = parameters;
+  const { fieldProps, valueType, position } = parameters;
 
   let useManager: ({
     enableAccessibleFieldDOMStructure,
@@ -64,9 +66,11 @@ export function useMultiInputRangeFieldTextFieldProps<
   });
 
   const { forwardedProps, internalProps } = useSplitFieldProps(fieldProps, 'date');
+  const rangePositionContext = useNullablePickerRangePositionContext();
   const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
     manager,
     internalProps,
+    skipContextFieldRefAssignment: rangePositionContext?.rangePosition !== position,
   });
 
   const { clearable, onClear, ...fieldResponse } = useField<
@@ -88,9 +92,10 @@ export function useMultiInputRangeFieldTextFieldProps<
   return fieldResponse;
 }
 
-interface UseMultiInputRangeFieldTextFieldProps<TManager extends PickerAnyRangeManager> {
+interface UseMultiInputRangeFieldTextFieldPropsParameters<TManager extends PickerAnyRangeManager> {
   valueType: PickerValueType;
   fieldProps: PickerManagerFieldInternalProps<GetDerivedManager<TManager>>;
+  position: RangePosition;
 }
 
 type GetDerivedManager<TManager extends PickerAnyRangeManager> =
