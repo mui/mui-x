@@ -71,6 +71,17 @@ Below are described the steps you need to make to migrate from v7 to v8.
    />
   ```
 
+- Return type of the `useGridApiRef()` hook and the type of `apiRef` prop are updated to explicitly include the possibilty of `null`. In addition to this, `useGridApiRef()` returns a reference that is initialized with `null` instead of `{}`.
+
+  Only the initial value and the type are updated. Logic that initializes the API and its availability remained the same, which means that if you could access API in a particular line of your code before, you are able to access it as well after this change.
+
+  Depending on the context in which the API is being used, you can decide what is the best way to deal with `null` value. Some options are:
+
+  - Use optional chaining
+  - Use non-null assertion operator if you are sure your code is always executed when the `apiRef` is not `null`
+  - Return early if `apiRef` is `null`
+  - Throw an error if `apiRef` is `null`
+
 ### Localization
 
 - If `estimatedRowCount` is used, the text provided to the [Table Pagination](/material-ui/api/table-pagination/) component from the Material UI library is updated and requires additional translations. Check the example at the end of [Index-based pagination section](/x/react-data-grid/pagination/#index-based-pagination).
@@ -102,12 +113,37 @@ Below are described the steps you need to make to migrate from v7 to v8.
 ### Filtering
 
 - The clear button in header filter cells has moved to the header filter menu. Use `slotProps={{ headerFilterCell: { showClearIcon: true } }}` to restore the clear button in the cell.
-
-<!-- ### Editing
-
-TBD
+- Custom filter input components typings have been modified.
 
 ### CSS classes and styling
+
+- The Data Grid now has a default background color, and its customization has moved from `theme.mixins.MuiDataGrid` to `theme.palette.DataGrid` with the following properties:
+
+  - `bg`: Sets the background color of the entire grid (new property)
+  - `headerBg`: Sets the background color of the header (previously named `containerBackground`)
+  - `pinnedBg`: Sets the background color of pinned rows and columns (previously named `pinnedBackground`)
+
+  ```diff
+   const theme = createTheme({
+  -  mixins: {
+  -    MuiDataGrid: {
+  -      containerBackground: '#f8fafc',
+  -      pinnedBackground: '#f1f5f9',
+  -    },
+  -  },
+  +  palette: {
+  +    DataGrid: {
+  +      bg: '#f8fafc',
+  +      headerBg: '#e2e8f0',
+  +      pinnedBg: '#f1f5f9',
+  +    },
+  +  },
+   });
+  ```
+
+- The `detailPanels`, `pinnedColumns`, and `pinnedRowsRenderZone` classes have been removed.
+
+<!-- ### Editing
 
 TBD
 

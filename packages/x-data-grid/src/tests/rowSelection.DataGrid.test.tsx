@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { createRenderer, screen, act, waitFor, fireEvent } from '@mui/internal-test-utils';
+import { RefObject } from '@mui/x-internals/types';
+import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
 import {
   DataGrid,
   DataGridProps,
@@ -893,20 +894,20 @@ describe('<DataGrid /> - Row selection', () => {
     });
 
     it('should throw if rowSelectionModel contains more than 1 row', () => {
-      let apiRef: React.RefObject<GridApi>;
+      let apiRef: RefObject<GridApi | null>;
       function ControlCase() {
         apiRef = useGridApiRef();
         return <TestDataGridSelection apiRef={apiRef} />;
       }
 
       render(<ControlCase />);
-      expect(() => apiRef.current.setRowSelectionModel([0, 1])).to.throw(
+      expect(() => apiRef.current?.setRowSelectionModel([0, 1])).to.throw(
         /`rowSelectionModel` can only contain 1 item in DataGrid/,
       );
     });
 
     it('should not throw if rowSelectionModel contains more than 1 item with checkbox selection', () => {
-      let apiRef: React.RefObject<GridApi>;
+      let apiRef: RefObject<GridApi | null>;
       function ControlCase() {
         apiRef = useGridApiRef();
         return <TestDataGridSelection apiRef={apiRef} checkboxSelection />;
@@ -915,7 +916,7 @@ describe('<DataGrid /> - Row selection', () => {
       render(<ControlCase />);
       expect(() =>
         act(() => {
-          apiRef.current.setRowSelectionModel([0, 1]);
+          apiRef.current?.setRowSelectionModel([0, 1]);
         }),
       ).not.to.throw();
     });

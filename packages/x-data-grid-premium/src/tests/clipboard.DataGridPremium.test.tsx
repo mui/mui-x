@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   GridApi,
   useGridApiRef,
@@ -15,7 +16,7 @@ import { getBasicGridData } from '@mui/x-data-grid-generator';
 describe('<DataGridPremium /> - Clipboard', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   function Test({
     rowLength = 4,
@@ -186,7 +187,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         const { user } = render(<Test />);
 
         const listener = spy();
-        apiRef.current.subscribeEvent('cellEditStart', listener);
+        apiRef.current?.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 1);
         await user.click(cell);
         fireEvent.keyDown(cell, { key: 'v', keyCode: 86, [key]: true }); // Ctrl+V
@@ -199,7 +200,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         const { user } = render(<Test editMode="row" />);
 
         const listener = spy();
-        apiRef.current.subscribeEvent('rowEditStart', listener);
+        apiRef.current?.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 1);
         await user.click(cell);
         fireEvent.keyDown(cell, { key: 'v', keyCode: 86, [key]: true }); // Ctrl+V

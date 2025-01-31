@@ -107,6 +107,33 @@ The `direction` prop of the legend has been changed to accept `'vertical'` and `
  />
 ```
 
+## Legend position value change ✅
+
+Replace `"left" | "middle" | "right"` values with `"start" | "center" | "end"` respectively.
+This is to align with the CSS values and reflect the RTL ability of the legend component.
+
+```diff
+ <BarChart
+    slotProps={{
+      legend: {
+        position: {
+-          horizontal: "left",
++          horizontal: "start",
+        }
+      }
+    }}
+ />
+```
+
+## Rename `LegendPosition` type to `Position` ✅
+
+Renames `LegendPosition` to `Position`.
+
+```diff
+-import { LegendPosition } from '@mui/x-charts/ChartsLegend';
++import { Position } from '@mui/x-charts/models';
+```
+
 ## The `getSeriesToDisplay` function was removed
 
 The `getSeriesToDisplay` function was removed in favor of the `useLegend` hook. You can check the [HTML Components example](/x/react-charts/components/#html-components) for usage information.
@@ -156,6 +183,32 @@ And you can chose another shape by adding a `shape` property to your line series
 
 The codemod only removes the `experimentalMarkRendering` prop.
 If you relied on the fact that marks were `path` elements, you need to update your logic.
+
+## Replacing `useHighlighted` by `useItemHighlighted` and `useItemHighlightedGetter`
+
+The `useHighlighted` hook that gave access to the internal highlight state has been removed.
+
+To know if your item is highlighted, it is recommended to use the `useItemHighlighted` hook instead:
+
+```jsx
+const { isFaded, isHighlighted } = useItemHighlighted({
+  seriesId,
+  dataIndex,
+});
+```
+
+If you're in a case where you have multiple series id to test (for example in the tooltip), you can use the lower level hook `useItemHighlightedGetter`.
+This hook being lower level only test is the item match with the highlight or fade scope.
+So an item could at the same time have `isFaded` and `isHighlighted` returning `true`.
+
+```jsx
+const { isFaded, isHighlighted } = useItemHighlightedGetter();
+
+const itemIsHighlighted = isHighlighted({ seriesId, dataIndex });
+
+// First make sure the item is not highlighted.
+const itemIsFaded = !itemIsHighlighted && isFaded({ seriesId, dataIndex });
+```
 
 ## Rename `labelFontSize` and `tickFontSize` props ✅
 

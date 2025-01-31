@@ -32,10 +32,6 @@ export type UseChartProZoomDefaultizedParameters = UseChartProZoomParameters &
 export interface UseChartProZoomState {
   zoom: {
     /**
-     * The zoom options for each axis.
-     */
-    optionsLookup: Record<AxisId, DefaultizedZoomOptions>;
-    /**
      * Whether the user is currently interacting with the chart.
      * This is useful to disable animations while the user is interacting.
      */

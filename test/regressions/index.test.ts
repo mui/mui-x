@@ -43,7 +43,9 @@ const isConsoleWarningIgnored = (msg?: string) => {
 
   const isReactRouterFlagsError = msg?.includes('React Router Future Flag Warning');
 
-  if (isMuiV6Error || isReactRouterFlagsError) {
+  const isNoDevRoute = msg?.includes('No routes matched location "/#no-dev"');
+
+  if (isMuiV6Error || isReactRouterFlagsError || isNoDevRoute) {
     return true;
   }
   return false;
@@ -71,7 +73,7 @@ async function main() {
   // Block images since they slow down tests (need download).
   // They're also most likely decorative for documentation demos
   await page.route(/./, async (route, request) => {
-    const type = await request.resourceType();
+    const type = request.resourceType();
     // Block all images except the flags
     if (type === 'image' && !request.url().startsWith('https://flagcdn.com')) {
       route.abort();
@@ -103,11 +105,12 @@ async function main() {
     });
   });
 
-  const routes = await page.$$eval('#tests a', (links) => {
+  let routes = await page.$$eval('#tests a', (links) => {
     return links.map((link) => {
       return (link as HTMLAnchorElement).href;
     });
   });
+  routes = routes.map((route) => route.replace(baseURL, ''));
 
   // prepare screenshots
   await fse.emptyDir(screenshotDir);
@@ -139,7 +142,7 @@ async function main() {
           this.timeout(0);
         }
 
-        if (pathURL === '/docs-components-data-grid-overview/DataGridProDemo') {
+        if (route === '/docs-components-data-grid-overview/DataGridProDemo') {
           this.timeout(6000);
         }
 
@@ -149,31 +152,31 @@ async function main() {
         await fse.ensureDir(path.dirname(screenshotPath));
 
         const testcase = await page.waitForSelector(
-          '[data-testid="testcase"]:not([aria-busy="true"])',
+          `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
         );
 
-        // Wait for the flags to load
-        await page.waitForFunction(
-          () => {
-            const images = Array.from(document.querySelectorAll('img'));
-            return images.every((img) => {
+        const images = await page.evaluate(() => document.querySelectorAll('img'));
+        if (images.length > 0) {
+          await page.evaluate(() => {
+            images.forEach((img) => {
               if (!img.complete && img.loading === 'lazy') {
                 // Force lazy-loaded images to load
                 img.setAttribute('loading', 'eager');
               }
-              return img.complete;
             });
-          },
-          undefined,
-          { timeout: 1000 },
-        );
+          });
+          // Wait for the flags to load
+          await page.waitForFunction(() => [...images].every((img) => img.complete), undefined, {
+            timeout: 2000,
+          });
+        }
 
-        if (/^\docs-charts-.*/.test(pathURL)) {
+        if (/^\/docs-charts-.*/.test(route)) {
           // Run one tick of the clock to get the final animation state
           await sleep(10);
         }
 
-        if (timeSensitiveSuites.some((suite) => pathURL.includes(suite))) {
+        if (timeSensitiveSuites.some((suite) => route.includes(suite))) {
           await sleep(100);
         }
 
@@ -183,7 +186,7 @@ async function main() {
         await testcase.screenshot({ path: screenshotPath, type: 'png' });
       });
 
-      it(`should have no errors rendering ${pathURL}`, () => {
+      it(`should have no errors rendering ${route}`, () => {
         const msg = errorConsole;
         errorConsole = undefined;
         if (isConsoleWarningIgnored(msg)) {
@@ -204,7 +207,7 @@ async function main() {
       await navigateToTest(page, pathURL);
 
       const testcase = await page.waitForSelector(
-        '[data-testid="testcase"]:not([aria-busy="true"])',
+        `[data-testid="testcase"][data-testpath="${baseURL}"]:not([aria-busy="true"])`,
       );
 
       await page.evaluate(() => {
@@ -233,13 +236,12 @@ async function main() {
       // Click the export button in the toolbar.
       await page.getByLabel('Export').click({ force: true });
 
+      const printButton = page.getByRole('menuitem', { name: 'Print' });
       // Click the print export option from the export menu in the toolbar.
-      await page.$eval(`li[role="menuitem"]:last-child`, (printButton) => {
-        // Trigger the action async because window.print() is blocking the main thread
-        // like window.alert() is.
-        setTimeout(() => {
-          (printButton as HTMLAnchorElement).click();
-        });
+      // Trigger the action async because window.print() is blocking the main thread
+      // like window.alert() is.
+      setTimeout(() => {
+        printButton.click();
       });
 
       await sleep(4000);

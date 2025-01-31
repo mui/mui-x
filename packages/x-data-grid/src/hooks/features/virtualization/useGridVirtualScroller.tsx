@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import { RefObject } from '@mui/x-internals/types';
 import {
   unstable_useEnhancedEffect as useEnhancedEffect,
   unstable_useEventCallback as useEventCallback,
@@ -46,7 +47,9 @@ import { EMPTY_RENDER_CONTEXT } from './useGridVirtualization';
 import { gridRowSpanningHiddenCellsOriginMapSelector } from '../rows/gridRowSpanningSelectors';
 import { gridListColumnSelector } from '../listView/gridListViewSelectors';
 import { minimalContentHeight } from '../rows/gridRowsUtils';
+import { EMPTY_PINNED_COLUMN_FIELDS, GridPinnedColumns } from '../columns';
 import { gridFocusedVirtualCellSelector } from './gridFocusedVirtualCellSelector';
+import { roundToDecimalPlaces } from '../../../utils/roundToDecimalPlaces';
 import { isJSDOM } from '../../../utils/isJSDOM';
 
 const MINIMUM_COLUMN_WIDTH = 50;
@@ -90,7 +93,7 @@ const createScrollCache = (
 type ScrollCache = ReturnType<typeof createScrollCache>;
 
 export const useGridVirtualScroller = () => {
-  const apiRef = useGridPrivateApiContext() as React.RefObject<PrivateApiWithInfiniteLoader>;
+  const apiRef = useGridPrivateApiContext() as RefObject<PrivateApiWithInfiniteLoader>;
   const rootProps = useGridRootProps();
   const { unstable_listView: listView } = rootProps;
   const visibleColumns = useGridSelector(apiRef, () =>
@@ -104,18 +107,16 @@ export const useGridVirtualScroller = () => {
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
   const outerSize = dimensions.viewportOuterSize;
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
-  const pinnedColumnDefinitions = useGridSelector(
-    apiRef,
-    gridVisiblePinnedColumnDefinitionsSelector,
-  );
-  const pinnedColumns = listView ? { left: [], right: [] } : pinnedColumnDefinitions;
+  const pinnedColumnDefinitions = gridVisiblePinnedColumnDefinitionsSelector(apiRef);
+  const pinnedColumns = listView
+    ? (EMPTY_PINNED_COLUMN_FIELDS as unknown as GridPinnedColumns)
+    : pinnedColumnDefinitions;
   const hasBottomPinnedRows = pinnedRows.bottom.length > 0;
   const [panels, setPanels] = React.useState(EMPTY_DETAIL_PANELS);
 
   const isRtl = useRtl();
-  const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const selectedRowsLookup = useGridSelector(apiRef, selectedIdsLookupSelector);
-  const currentPage = useGridVisibleRows(apiRef, rootProps);
+  const currentPage = useGridVisibleRows(apiRef);
   const mainRef = apiRef.current.mainElementRef;
   const scrollerRef = apiRef.current.virtualScrollerRef;
   const scrollbarVerticalRef = apiRef.current.virtualScrollbarVerticalRef;
@@ -136,7 +137,10 @@ export const useGridVirtualScroller = () => {
       }
 
       const initialRect = node.getBoundingClientRect();
-      let lastSize = roundDimensions(initialRect);
+      let lastSize = {
+        width: roundToDecimalPlaces(initialRect.width, 1),
+        height: roundToDecimalPlaces(initialRect.height, 1),
+      };
 
       if (
         !previousSize.current ||
@@ -157,7 +161,10 @@ export const useGridVirtualScroller = () => {
           return;
         }
 
-        const newSize = roundDimensions(entry.contentRect);
+        const newSize = {
+          width: roundToDecimalPlaces(entry.contentRect.width, 1),
+          height: roundToDecimalPlaces(entry.contentRect.height, 1),
+        };
 
         if (newSize.width === lastSize.width && newSize.height === lastSize.height) {
           return;
@@ -256,9 +263,19 @@ export const useGridVirtualScroller = () => {
       return undefined;
     }
 
+    const maxScrollTop = Math.ceil(
+      dimensions.minimumSize.height - dimensions.viewportOuterSize.height,
+    );
+    const maxScrollLeft = Math.ceil(
+      dimensions.minimumSize.width - dimensions.viewportInnerSize.width,
+    );
+
+    // Clamp the scroll position to the viewport to avoid re-calculating the render context for scroll bounce
     const newScroll = {
-      top: scroller.scrollTop,
-      left: scroller.scrollLeft,
+      top: clamp(scroller.scrollTop, 0, maxScrollTop),
+      left: isRtl
+        ? clamp(scroller.scrollLeft, -maxScrollLeft, 0)
+        : clamp(scroller.scrollLeft, 0, maxScrollLeft),
     };
 
     const dx = newScroll.left - scrollPosition.current.left;
@@ -334,34 +351,17 @@ export const useGridVirtualScroller = () => {
     updateRenderContext(nextRenderContext);
   };
 
-  const handleScroll = useEventCallback((event: React.UIEvent) => {
+  const handleScroll = useEventCallback(() => {
     if (ignoreNextScrollEvent.current) {
       ignoreNextScrollEvent.current = false;
       return;
     }
 
-    const { scrollTop, scrollLeft } = event.currentTarget;
-
-    // On iOS and macOS, negative offsets are possible when swiping past the start
-    if (scrollTop < 0) {
-      return;
-    }
-    if (!isRtl) {
-      if (scrollLeft < 0) {
-        return;
-      }
-    }
-    if (isRtl) {
-      if (scrollLeft > 0) {
-        return;
-      }
-    }
-
     const nextRenderContext = triggerUpdateRenderContext();
 
     apiRef.current.publishEvent('scrollPositionChange', {
-      top: scrollTop,
-      left: scrollLeft,
+      top: scrollPosition.current.top,
+      left: scrollPosition.current.left,
       renderContext: nextRenderContext,
     });
   });
@@ -528,7 +528,6 @@ export const useGridVirtualScroller = () => {
           rowId={id}
           index={rowIndex}
           selected={isSelected}
-          offsetTop={params.rows ? undefined : rowsMeta.positions[rowIndexInPage]}
           offsetLeft={offsetLeft}
           columnsTotalWidth={dimensions.columnsTotalWidth}
           rowHeight={baseRowHeight}
@@ -709,15 +708,23 @@ export const useGridVirtualScroller = () => {
       ref: onContentSizeApplied,
     }),
     getRenderZoneProps: () => ({ role: 'rowgroup' }),
-    getScrollbarVerticalProps: () => ({ ref: scrollbarVerticalRef, role: 'presentation' }),
-    getScrollbarHorizontalProps: () => ({ ref: scrollbarHorizontalRef, role: 'presentation' }),
+    getScrollbarVerticalProps: () => ({
+      ref: scrollbarVerticalRef,
+      role: 'presentation',
+      scrollPosition,
+    }),
+    getScrollbarHorizontalProps: () => ({
+      ref: scrollbarHorizontalRef,
+      role: 'presentation',
+      scrollPosition,
+    }),
   };
 };
 
 type RenderContextInputs = {
   enabledForRows: boolean;
   enabledForColumns: boolean;
-  apiRef: React.RefObject<GridPrivateApiCommunity>;
+  apiRef: RefObject<GridPrivateApiCommunity>;
   autoHeight: boolean;
   rowBufferPx: number;
   columnBufferPx: number;
@@ -739,7 +746,7 @@ type RenderContextInputs = {
 };
 
 function inputsSelector(
-  apiRef: React.RefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   rootProps: ReturnType<typeof useGridRootProps>,
   enabledForRows: boolean,
   enabledForColumns: boolean,
@@ -788,6 +795,13 @@ function computeRenderContext(
     firstColumnIndex: 0,
     lastColumnIndex: inputs.visibleColumns.length,
   };
+
+  if (inputs.listView) {
+    return {
+      ...renderContext,
+      lastColumnIndex: 1,
+    };
+  }
 
   const { top, left } = scrollPosition;
   const realLeft = Math.abs(left) + inputs.leftPinnedWidth;
@@ -1152,13 +1166,4 @@ function bufferForDirection(
       // eslint unable to figure out enum exhaustiveness
       throw new Error('unreachable');
   }
-}
-
-// Round to avoid issues with subpixel rendering
-// https://github.com/mui/mui-x/issues/15721
-function roundDimensions(dimensions: { width: number; height: number }) {
-  return {
-    width: Math.round(dimensions.width * 10) / 10,
-    height: Math.round(dimensions.height * 10) / 10,
-  };
 }

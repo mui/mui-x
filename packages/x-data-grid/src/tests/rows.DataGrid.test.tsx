@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   createRenderer,
   screen,
@@ -42,7 +43,7 @@ import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/densitySelecto
 describe('<DataGrid /> - Rows', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -1056,7 +1057,7 @@ describe('<DataGrid /> - Rows', () => {
     it('should throw when updating more than one row at once', () => {
       render(<TestCase />);
       expect(() =>
-        apiRef.current.updateRows([
+        apiRef.current?.updateRows([
           { id: 1, brand: 'Fila' },
           { id: 0, brand: 'Pata' },
           { id: 2, brand: 'Pum' },
@@ -1067,27 +1068,27 @@ describe('<DataGrid /> - Rows', () => {
 
     it('should allow to update one row at the time', async () => {
       render(<TestCase />);
-      await act(() => apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]));
-      await act(() => apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]));
-      await act(() => apiRef.current.updateRows([{ id: 2, brand: 'Pum' }]));
+      act(() => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
+      act(() => apiRef.current?.updateRows([{ id: 0, brand: 'Pata' }]));
+      act(() => apiRef.current?.updateRows([{ id: 2, brand: 'Pum' }]));
       expect(getColumnValues(0)).to.deep.equal(['Pata', 'Fila', 'Pum']);
     });
 
     it('should allow adding rows', async () => {
       render(<TestCase />);
-      await act(() => apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]));
-      await act(() => apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]));
-      await act(() => apiRef.current.updateRows([{ id: 2, brand: 'Pum' }]));
-      await act(() => apiRef.current.updateRows([{ id: 3, brand: 'Jordan' }]));
+      act(() => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
+      act(() => apiRef.current?.updateRows([{ id: 0, brand: 'Pata' }]));
+      act(() => apiRef.current?.updateRows([{ id: 2, brand: 'Pum' }]));
+      act(() => apiRef.current?.updateRows([{ id: 3, brand: 'Jordan' }]));
       expect(getColumnValues(0)).to.deep.equal(['Pata', 'Fila', 'Pum', 'Jordan']);
     });
 
     it('should allow to delete rows', async () => {
       render(<TestCase />);
-      await act(() => apiRef.current.updateRows([{ id: 1, _action: 'delete' }]));
-      await act(() => apiRef.current.updateRows([{ id: 0, brand: 'Apple' }]));
-      await act(() => apiRef.current.updateRows([{ id: 2, _action: 'delete' }]));
-      await act(() => apiRef.current.updateRows([{ id: 5, brand: 'Atari' }]));
+      act(() => apiRef.current?.updateRows([{ id: 1, _action: 'delete' }]));
+      act(() => apiRef.current?.updateRows([{ id: 0, brand: 'Apple' }]));
+      act(() => apiRef.current?.updateRows([{ id: 2, _action: 'delete' }]));
+      act(() => apiRef.current?.updateRows([{ id: 5, brand: 'Atari' }]));
       expect(getColumnValues(0)).to.deep.equal(['Apple', 'Atari']);
     });
 

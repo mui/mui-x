@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
+import { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
   gridClasses,
@@ -177,7 +178,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
   it('should update pinned rows when calling `apiRef.current.setPinnedRows` method', async () => {
     const data = getBasicGridData(20, 5);
-    let apiRef!: React.RefObject<GridApi>;
+    let apiRef!: RefObject<GridApi | null>;
 
     function TestCase(props: any) {
       const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
@@ -208,8 +209,8 @@ describe('<DataGridPro /> - Row pinning', () => {
     let rows = data.rows.filter((row) => row.id !== 11 && row.id !== 3);
 
     // should work when calling `setPinnedRows` before `setRows`
-    await act(() => apiRef.current.unstable_setPinnedRows(pinnedRows));
-    await act(() => apiRef.current.setRows(rows));
+    await act(() => apiRef.current?.unstable_setPinnedRows(pinnedRows));
+    await act(() => apiRef.current?.setRows(rows));
 
     expect(isRowPinned(getRowById(0), 'top')).to.equal(false, '#0 pinned top');
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(false, '#1 pinned bottom');
@@ -221,8 +222,8 @@ describe('<DataGridPro /> - Row pinning', () => {
     rows = data.rows.filter((row) => row.id !== 8 && row.id !== 5);
 
     // should work when calling `setPinnedRows` after `setRows`
-    await act(() => apiRef.current.setRows(rows));
-    await act(() => apiRef.current.unstable_setPinnedRows(pinnedRows));
+    await act(() => apiRef.current?.setRows(rows));
+    await act(() => apiRef.current?.unstable_setPinnedRows(pinnedRows));
 
     expect(isRowPinned(getRowById(11), 'top')).to.equal(false, '#11 pinned top');
     expect(isRowPinned(getRowById(3), 'bottom')).to.equal(false, '#3 pinned bottom');
@@ -478,12 +479,9 @@ describe('<DataGridPro /> - Row pinning', () => {
 
   // Needs layouting
   testSkipIf(isJSDOM)('should work with variable row height', () => {
-    let apiRef!: React.RefObject<GridApi>;
     function TestCase() {
-      apiRef = useGridApiRef();
       return (
         <BaselineTestCase
-          apiRef={apiRef}
           rowCount={20}
           colCount={5}
           getRowHeight={(row) => {
@@ -509,16 +507,9 @@ describe('<DataGridPro /> - Row pinning', () => {
   testSkipIf(isJSDOM)('should always update on `rowHeight` change', async () => {
     const defaultRowHeight = 52;
 
-    let apiRef!: React.RefObject<GridApi>;
     function TestCase({ rowHeight }: { rowHeight?: number }) {
-      apiRef = useGridApiRef();
       return (
-        <BaselineTestCase
-          apiRef={apiRef}
-          rowCount={10}
-          colCount={5}
-          rowHeight={rowHeight ?? defaultRowHeight}
-        />
+        <BaselineTestCase rowCount={10} colCount={5} rowHeight={rowHeight ?? defaultRowHeight} />
       );
     }
 
@@ -678,7 +669,7 @@ describe('<DataGridPro /> - Row pinning', () => {
   });
 
   it('should not be selectable', async () => {
-    let apiRef: React.RefObject<GridApi>;
+    let apiRef: RefObject<GridApi | null>;
 
     function TestCase() {
       apiRef = useGridApiRef();
@@ -688,7 +679,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     const { user } = render(<TestCase />);
 
     await user.click(getCell(0, 0));
-    expect(apiRef!.current.isRowSelected(0)).to.equal(false);
+    expect(apiRef!.current?.isRowSelected(0)).to.equal(false);
   });
 
   it('should not render selection checkbox for pinned rows', () => {
@@ -699,7 +690,7 @@ describe('<DataGridPro /> - Row pinning', () => {
   });
 
   it('should export pinned rows to CSV', () => {
-    let apiRef: React.RefObject<GridApi>;
+    let apiRef: RefObject<GridApi | null>;
 
     function TestCase() {
       apiRef = useGridApiRef();
@@ -708,9 +699,10 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     render(<TestCase />);
 
-    const csv = apiRef!.current.getDataAsCsv({
-      includeHeaders: false,
-    });
+    const csv =
+      apiRef!.current?.getDataAsCsv({
+        includeHeaders: false,
+      }) || '';
 
     const csvRows = csv.split('\r\n');
     expect(csvRows[0]).to.equal('0');
@@ -812,7 +804,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
   it('should support `updateRows`', async () => {
     const columns: GridColDef[] = [{ field: 'id' }, { field: 'name', editable: true }];
-    let apiRef!: React.RefObject<GridApi>;
+    let apiRef: RefObject<GridApi | null>;
     function TestCase() {
       apiRef = useGridApiRef();
       return (
@@ -839,7 +831,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(getCell(4, 1).textContent).to.equal('Cory');
 
     await act(async () =>
-      apiRef.current.updateRows([
+      apiRef.current?.updateRows([
         { id: 3, name: 'Marcus' },
         { id: 4, name: 'Tom' },
       ]),

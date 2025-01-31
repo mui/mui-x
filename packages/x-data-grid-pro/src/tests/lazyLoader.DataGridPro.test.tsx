@@ -2,6 +2,7 @@ import * as React from 'react';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { getColumnHeaderCell, getColumnValues, getRow } from 'test/utils/helperFn';
 import { expect } from 'chai';
+import { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
   DataGridProProps,
@@ -37,7 +38,7 @@ describe('<DataGridPro /> - Lazy loader', () => {
     columns: [{ field: 'id' }, { field: 'first' }],
   };
 
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   function TestLazyLoader(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
@@ -94,15 +95,15 @@ describe('<DataGridPro /> - Lazy loader', () => {
       { id: 5, name: 'Mac' },
     ];
 
-    const initialAllRows = apiRef.current.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children;
+    const initialAllRows = apiRef.current?.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children!;
     expect(initialAllRows.slice(3, 6)).to.deep.equal([
       'auto-generated-skeleton-row-root-0',
       'auto-generated-skeleton-row-root-1',
       'auto-generated-skeleton-row-root-2',
     ]);
-    act(() => apiRef.current.unstable_replaceRows(4, newRows));
+    act(() => apiRef.current?.unstable_replaceRows(4, newRows));
 
-    const updatedAllRows = apiRef.current.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children;
+    const updatedAllRows = apiRef.current?.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children!;
     expect(updatedAllRows.slice(4, 6)).to.deep.equal([4, 5]);
   });
 
@@ -115,10 +116,10 @@ describe('<DataGridPro /> - Lazy loader', () => {
       { id: 5, first: 'Mac' },
     ];
 
-    act(() => apiRef.current.unstable_replaceRows(3, newRows));
+    act(() => apiRef.current?.unstable_replaceRows(3, newRows));
     expect(getColumnValues(1)).to.deep.equal(['Mike', 'Jack', 'Jim', 'John', 'Mac']);
 
-    act(() => apiRef.current.updateRows([{ id: 4, first: 'John updated' }]));
+    act(() => apiRef.current?.updateRows([{ id: 4, first: 'John updated' }]));
     expect(getColumnValues(1)).to.deep.equal(['Mike', 'Jack', 'Jim', 'John updated', 'Mac']);
   });
 
@@ -150,19 +151,19 @@ describe('<DataGridPro /> - Lazy loader', () => {
       { clientId: 5, name: 'Mac' },
     ];
 
-    const initialAllRows = apiRef.current.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children;
+    const initialAllRows = apiRef.current?.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children!;
     expect(initialAllRows.slice(3, 6)).to.deep.equal([
       'auto-generated-skeleton-row-root-0',
       'auto-generated-skeleton-row-root-1',
       'auto-generated-skeleton-row-root-2',
     ]);
-    act(() => apiRef.current.unstable_replaceRows(4, newRows));
+    act(() => apiRef.current?.unstable_replaceRows(4, newRows));
 
-    const updatedAllRows = apiRef.current.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children;
+    const updatedAllRows = apiRef.current?.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children!;
     expect(updatedAllRows.slice(4, 6)).to.deep.equal([4, 5]);
 
-    expect(apiRef.current.getRowNode(4)).not.to.equal(null);
-    expect(apiRef.current.getRowNode(5)).not.to.equal(null);
+    expect(apiRef.current?.getRowNode(4)).not.to.equal(null);
+    expect(apiRef.current?.getRowNode(5)).not.to.equal(null);
   });
 
   it('should update rows when `apiRef.current.updateRows` with data reversed', () => {
@@ -183,7 +184,7 @@ describe('<DataGridPro /> - Lazy loader', () => {
       },
     ];
 
-    act(() => apiRef.current.unstable_replaceRows(0, newRows));
+    act(() => apiRef.current?.unstable_replaceRows(0, newRows));
     expect(getColumnValues(1)).to.deep.equal(['Jim', 'Jack', 'Mike']);
   });
 });
