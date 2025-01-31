@@ -40,8 +40,8 @@ export const getFakeContextValue = (
       itemOrderedChildrenIdsLookup: {},
       itemChildrenIndexesLookup: {},
     },
-    expansion: { expandedItemsMap: new Map(), expansionTrigger: 'content' },
-    selection: { selectedItemsMap: new Map() },
-    focus: { focusedItemId: null, defaultFocusableItemId: null },
+    expansion: { expandedItems: [], expansionTrigger: 'content' },
+    selection: { selectedItems: null },
+    focus: { focusedItemId: null },
   }),
 });
