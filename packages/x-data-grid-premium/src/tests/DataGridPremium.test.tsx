@@ -36,7 +36,7 @@ describe('<DataGrid /> - Quick filter', () => {
     columns: [{ field: 'brand' }],
   };
 
-  let apiRef: RefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   function TestCase(props: Partial<DataGridProps>) {
     apiRef = useGridApiRef();
@@ -95,7 +95,7 @@ describe('<DataGrid /> - Quick filter', () => {
       />,
     );
 
-    await act(() => apiRef.current.addRowGroupingCriteria('year'));
+    await act(() => apiRef.current?.addRowGroupingCriteria('year'));
 
     setProps({
       filterModel: {

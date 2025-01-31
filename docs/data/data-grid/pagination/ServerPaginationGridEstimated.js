@@ -37,7 +37,9 @@ export default function ServerPaginationGridEstimated() {
 
   return (
     <div style={{ width: '100%' }}>
-      <Button onClick={() => apiRef.current.setRowCount(1000)}>Set Row Count</Button>
+      <Button onClick={() => apiRef.current?.setRowCount(1000)}>
+        Set Row Count
+      </Button>
       <div style={{ height: 400 }}>
         <DataGrid
           apiRef={apiRef}

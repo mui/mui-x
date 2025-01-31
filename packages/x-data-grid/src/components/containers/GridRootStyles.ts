@@ -58,86 +58,124 @@ export const GridRootStyles = styled('div', {
   name: 'MuiDataGrid',
   slot: 'Root',
   overridesResolver: (props, styles) => [
+    // Root overrides
+    styles.root,
     { [`&.${c.autoHeight}`]: styles.autoHeight },
-    { [`&.${c.aggregationColumnHeader}`]: styles.aggregationColumnHeader },
-    {
-      [`&.${c['aggregationColumnHeader--alignLeft']}`]:
-        styles['aggregationColumnHeader--alignLeft'],
-    },
-    {
-      [`&.${c['aggregationColumnHeader--alignCenter']}`]:
-        styles['aggregationColumnHeader--alignCenter'],
-    },
-    {
-      [`&.${c['aggregationColumnHeader--alignRight']}`]:
-        styles['aggregationColumnHeader--alignRight'],
-    },
-    { [`&.${c.aggregationColumnHeaderLabel}`]: styles.aggregationColumnHeaderLabel },
-    {
-      [`&.${c['root--disableUserSelection']} .${c.cell}`]: styles['root--disableUserSelection'],
-    },
     { [`&.${c.autosizing}`]: styles.autosizing },
-    { [`& .${c.editBooleanCell}`]: styles.editBooleanCell },
+    { [`&.${c['root--densityStandard']}`]: styles['root--densityStandard'] },
+    { [`&.${c['root--densityComfortable']}`]: styles['root--densityComfortable'] },
+    { [`&.${c['root--densityCompact']}`]: styles['root--densityCompact'] },
+    { [`&.${c['root--disableUserSelection']}`]: styles['root--disableUserSelection'] },
+    { [`&.${c['root--noToolbar']}`]: styles['root--noToolbar'] },
+    { [`&.${c.withVerticalBorder}`]: styles.withVerticalBorder },
+
+    // Child element overrides
+    // - Only declare overrides here for class names that are not applied to `styled` components.
+    // - For `styled` components, declare overrides in the component itself.
+    { [`& .${c.actionsCell}`]: styles.actionsCell },
+    { [`& .${c.booleanCell}`]: styles.booleanCell },
     { [`& .${c.cell}`]: styles.cell },
+    { [`& .${c['cell--editable']}`]: styles['cell--editable'] },
     { [`& .${c['cell--editing']}`]: styles['cell--editing'] },
-    { [`& .${c['cell--textCenter']}`]: styles['cell--textCenter'] },
-    { [`& .${c['cell--textLeft']}`]: styles['cell--textLeft'] },
-    { [`& .${c['cell--textRight']}`]: styles['cell--textRight'] },
-    { [`& .${c['cell--rangeTop']}`]: styles['cell--rangeTop'] },
+    { [`& .${c['cell--flex']}`]: styles['cell--flex'] },
+    { [`& .${c['cell--pinnedLeft']}`]: styles['cell--pinnedLeft'] },
+    { [`& .${c['cell--pinnedRight']}`]: styles['cell--pinnedRight'] },
     { [`& .${c['cell--rangeBottom']}`]: styles['cell--rangeBottom'] },
     { [`& .${c['cell--rangeLeft']}`]: styles['cell--rangeLeft'] },
     { [`& .${c['cell--rangeRight']}`]: styles['cell--rangeRight'] },
+    { [`& .${c['cell--rangeTop']}`]: styles['cell--rangeTop'] },
+    { [`& .${c['cell--selectionMode']}`]: styles['cell--selectionMode'] },
+    { [`& .${c['cell--textCenter']}`]: styles['cell--textCenter'] },
+    { [`& .${c['cell--textLeft']}`]: styles['cell--textLeft'] },
+    { [`& .${c['cell--textRight']}`]: styles['cell--textRight'] },
+    { [`& .${c['cell--withLeftBorder']}`]: styles['cell--withLeftBorder'] },
     { [`& .${c['cell--withRightBorder']}`]: styles['cell--withRightBorder'] },
     { [`& .${c.cellCheckbox}`]: styles.cellCheckbox },
+    { [`& .${c.cellEmpty}`]: styles.cellEmpty },
+    { [`& .${c.cellOffsetLeft}`]: styles.cellOffsetLeft },
     { [`& .${c.cellSkeleton}`]: styles.cellSkeleton },
     { [`& .${c.checkboxInput}`]: styles.checkboxInput },
+    { [`& .${c.columnHeader}`]: styles.columnHeader },
     { [`& .${c['columnHeader--alignCenter']}`]: styles['columnHeader--alignCenter'] },
     { [`& .${c['columnHeader--alignLeft']}`]: styles['columnHeader--alignLeft'] },
     { [`& .${c['columnHeader--alignRight']}`]: styles['columnHeader--alignRight'] },
     { [`& .${c['columnHeader--dragging']}`]: styles['columnHeader--dragging'] },
+    { [`& .${c['columnHeader--emptyGroup']}`]: styles['columnHeader--emptyGroup'] },
+    { [`& .${c['columnHeader--filledGroup']}`]: styles['columnHeader--filledGroup'] },
+    { [`& .${c['columnHeader--filtered']}`]: styles['columnHeader--filtered'] },
+    { [`& .${c['columnHeader--last']}`]: styles['columnHeader--last'] },
+    { [`& .${c['columnHeader--lastUnpinned']}`]: styles['columnHeader--lastUnpinned'] },
     { [`& .${c['columnHeader--moving']}`]: styles['columnHeader--moving'] },
     { [`& .${c['columnHeader--numeric']}`]: styles['columnHeader--numeric'] },
+    { [`& .${c['columnHeader--pinnedLeft']}`]: styles['columnHeader--pinnedLeft'] },
+    { [`& .${c['columnHeader--pinnedRight']}`]: styles['columnHeader--pinnedRight'] },
+    { [`& .${c['columnHeader--siblingFocused']}`]: styles['columnHeader--siblingFocused'] },
     { [`& .${c['columnHeader--sortable']}`]: styles['columnHeader--sortable'] },
     { [`& .${c['columnHeader--sorted']}`]: styles['columnHeader--sorted'] },
-    {
-      [`& .${c['columnHeader--withRightBorder']}`]: styles['columnHeader--withRightBorder'],
-    },
-    { [`& .${c.columnHeader}`]: styles.columnHeader },
-    { [`& .${c.headerFilterRow}`]: styles.headerFilterRow },
+    { [`& .${c['columnHeader--withLeftBorder']}`]: styles['columnHeader--withLeftBorder'] },
+    { [`& .${c['columnHeader--withRightBorder']}`]: styles['columnHeader--withRightBorder'] },
     { [`& .${c.columnHeaderCheckbox}`]: styles.columnHeaderCheckbox },
     { [`& .${c.columnHeaderDraggableContainer}`]: styles.columnHeaderDraggableContainer },
     { [`& .${c.columnHeaderTitleContainer}`]: styles.columnHeaderTitleContainer },
+    { [`& .${c.columnHeaderTitleContainerContent}`]: styles.columnHeaderTitleContainerContent },
+    { [`& .${c.columnSeparator}`]: styles.columnSeparator },
     { [`& .${c['columnSeparator--resizable']}`]: styles['columnSeparator--resizable'] },
     { [`& .${c['columnSeparator--resizing']}`]: styles['columnSeparator--resizing'] },
-    { [`& .${c.columnSeparator}`]: styles.columnSeparator },
+    { [`& .${c['columnSeparator--sideLeft']}`]: styles['columnSeparator--sideLeft'] },
+    { [`& .${c['columnSeparator--sideRight']}`]: styles['columnSeparator--sideRight'] },
+    { [`& .${c['container--bottom']}`]: styles['container--bottom'] },
+    { [`& .${c['container--top']}`]: styles['container--top'] },
+    { [`& .${c.detailPanelToggleCell}`]: styles.detailPanelToggleCell },
+    { [`& .${c['detailPanelToggleCell--expanded']}`]: styles['detailPanelToggleCell--expanded'] },
+    { [`& .${c.editBooleanCell}`]: styles.editBooleanCell },
     { [`& .${c.filterIcon}`]: styles.filterIcon },
-    { [`& .${c.iconSeparator}`]: styles.iconSeparator },
-    { [`& .${c.menuIcon}`]: styles.menuIcon },
-    { [`& .${c.menuIconButton}`]: styles.menuIconButton },
-    { [`& .${c.menuOpen}`]: styles.menuOpen },
-    { [`& .${c.menuList}`]: styles.menuList },
-    { [`& .${c['row--editable']}`]: styles['row--editable'] },
-    { [`& .${c['row--editing']}`]: styles['row--editing'] },
-    { [`& .${c['row--dragging']}`]: styles['row--dragging'] },
-    { [`& .${c.row}`]: styles.row },
-    { [`& .${c.rowReorderCellPlaceholder}`]: styles.rowReorderCellPlaceholder },
-    { [`& .${c.rowReorderCell}`]: styles.rowReorderCell },
-    { [`& .${c['rowReorderCell--draggable']}`]: styles['rowReorderCell--draggable'] },
-    { [`& .${c.sortIcon}`]: styles.sortIcon },
-    { [`& .${c.withBorderColor}`]: styles.withBorderColor },
-    { [`& .${c.treeDataGroupingCell}`]: styles.treeDataGroupingCell },
-    { [`& .${c.treeDataGroupingCellToggle}`]: styles.treeDataGroupingCellToggle },
-    {
-      [`& .${c.treeDataGroupingCellLoadingContainer}`]: styles.treeDataGroupingCellLoadingContainer,
-    },
+    { [`& .${c['filler--borderBottom']}`]: styles['filler--borderBottom'] },
+    { [`& .${c['filler--pinnedLeft']}`]: styles['filler--pinnedLeft'] },
+    { [`& .${c['filler--pinnedRight']}`]: styles['filler--pinnedRight'] },
+    { [`& .${c.groupingCriteriaCell}`]: styles.groupingCriteriaCell },
     {
       [`& .${c.groupingCriteriaCellLoadingContainer}`]: styles.groupingCriteriaCellLoadingContainer,
     },
-    { [`& .${c.detailPanelToggleCell}`]: styles.detailPanelToggleCell },
+    { [`& .${c.groupingCriteriaCellToggle}`]: styles.groupingCriteriaCellToggle },
+    { [`& .${c.headerFilterRow}`]: styles.headerFilterRow },
+    { [`& .${c.iconSeparator}`]: styles.iconSeparator },
+    { [`& .${c.menuIcon}`]: styles.menuIcon },
+    { [`& .${c.menuIconButton}`]: styles.menuIconButton },
+    { [`& .${c.menuList}`]: styles.menuList },
+    { [`& .${c.menuOpen}`]: styles.menuOpen },
+    { [`& .${c.overlayWrapperInner}`]: styles.overlayWrapperInner },
+    { [`& .${c.pinnedRows}`]: styles.pinnedRows },
+    { [`& .${c['pinnedRows--bottom']}`]: styles['pinnedRows--bottom'] },
+    { [`& .${c['pinnedRows--top']}`]: styles['pinnedRows--top'] },
+    { [`& .${c.row}`]: styles.row },
+    { [`& .${c['row--borderBottom']}`]: styles['row--borderBottom'] },
+    { [`& .${c['row--detailPanelExpanded']}`]: styles['row--detailPanelExpanded'] },
+    { [`& .${c['row--dragging']}`]: styles['row--dragging'] },
+    { [`& .${c['row--dynamicHeight']}`]: styles['row--dynamicHeight'] },
+    { [`& .${c['row--editable']}`]: styles['row--editable'] },
+    { [`& .${c['row--editing']}`]: styles['row--editing'] },
+    { [`& .${c['row--firstVisible']}`]: styles['row--firstVisible'] },
+    { [`& .${c['row--lastVisible']}`]: styles['row--lastVisible'] },
+    { [`& .${c.rowReorderCell}`]: styles.rowReorderCell },
+    { [`& .${c['rowReorderCell--draggable']}`]: styles['rowReorderCell--draggable'] },
+    { [`& .${c.rowReorderCellContainer}`]: styles.rowReorderCellContainer },
+    { [`& .${c.rowReorderCellPlaceholder}`]: styles.rowReorderCellPlaceholder },
+    { [`& .${c.rowSkeleton}`]: styles.rowSkeleton },
+    { [`& .${c.scrollbar}`]: styles.scrollbar },
+    { [`& .${c['scrollbar--horizontal']}`]: styles['scrollbar--horizontal'] },
+    { [`& .${c['scrollbar--vertical']}`]: styles['scrollbar--vertical'] },
+    { [`& .${c.scrollbarFiller}`]: styles.scrollbarFiller },
+    { [`& .${c['scrollbarFiller--borderBottom']}`]: styles['scrollbarFiller--borderBottom'] },
+    { [`& .${c['scrollbarFiller--borderTop']}`]: styles['scrollbarFiller--borderTop'] },
+    { [`& .${c['scrollbarFiller--header']}`]: styles['scrollbarFiller--header'] },
+    { [`& .${c['scrollbarFiller--pinnedRight']}`]: styles['scrollbarFiller--pinnedRight'] },
+    { [`& .${c.sortIcon}`]: styles.sortIcon },
+    { [`& .${c.treeDataGroupingCell}`]: styles.treeDataGroupingCell },
     {
-      [`& .${c['detailPanelToggleCell--expanded']}`]: styles['detailPanelToggleCell--expanded'],
+      [`& .${c.treeDataGroupingCellLoadingContainer}`]: styles.treeDataGroupingCellLoadingContainer,
     },
-    styles.root,
+    { [`& .${c.treeDataGroupingCellToggle}`]: styles.treeDataGroupingCellToggle },
+    { [`& .${c.withBorderColor}`]: styles.withBorderColor },
   ],
 })<{ ownerState: OwnerState }>(({ theme: t }) => {
   const apiRef = useGridPrivateApiContext();
@@ -146,11 +184,9 @@ export const GridRootStyles = styled('div', {
   const borderColor = getBorderColor(t);
   const radius = t.shape.borderRadius;
 
-  const containerBackground = t.vars
-    ? t.vars.palette.background.default
-    : (t.mixins.MuiDataGrid?.containerBackground ?? t.palette.background.default);
-
-  const pinnedBackground = t.mixins.MuiDataGrid?.pinnedBackground ?? containerBackground;
+  const background = (t.vars || t).palette.DataGrid?.bg ?? (t.vars || t).palette.background.default;
+  const headerBackground = (t.vars || t).palette.DataGrid?.headerBg ?? background;
+  const pinnedBackground = (t.vars || t).palette.DataGrid?.pinnedBg ?? background;
 
   const overlayBackground = t.vars
     ? `rgba(${t.vars.palette.background.defaultChannel} / ${t.vars.palette.action.disabledOpacity})`
@@ -185,8 +221,8 @@ export const GridRootStyles = styled('div', {
     },
   });
 
-  const pinnedBackgroundColor = blendFn(pinnedBackground, hoverColor, hoverOpacity);
-  const pinnedHoverStyles = getPinnedBackgroundStyles(pinnedBackgroundColor);
+  const pinnedHoverBackgroundColor = blendFn(pinnedBackground, hoverColor, hoverOpacity);
+  const pinnedHoverStyles = getPinnedBackgroundStyles(pinnedHoverBackgroundColor);
 
   const pinnedSelectedBackgroundColor = blendFn(
     pinnedBackground,
@@ -218,7 +254,8 @@ export const GridRootStyles = styled('div', {
     '--unstable_DataGrid-headWeight': t.typography.fontWeightMedium,
     '--unstable_DataGrid-overlayBackground': overlayBackground,
 
-    '--DataGrid-containerBackground': containerBackground,
+    '--DataGrid-background': background,
+    '--DataGrid-headerBackground': headerBackground,
     '--DataGrid-pinnedBackground': pinnedBackground,
     '--DataGrid-rowBorderColor': borderColor,
 
@@ -243,6 +280,7 @@ export const GridRootStyles = styled('div', {
     borderStyle: 'solid',
     borderColor,
     borderRadius: 'var(--unstable_DataGrid-radius)',
+    backgroundColor: 'var(--DataGrid-background)',
     color: (t.vars || t).palette.text.primary,
     ...t.typography.body2,
     outline: 'none',
@@ -265,10 +303,6 @@ export const GridRootStyles = styled('div', {
         overflow: 'visible !important',
       },
       '@media (hover: hover)': {
-        [`& .${c.iconButtonContainer}`]: {
-          width: '0 !important',
-          visibility: 'hidden !important',
-        },
         [`& .${c.menuIcon}`]: {
           width: '0 !important',
           visibility: 'hidden !important',
@@ -414,7 +448,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c['columnHeader--pinnedLeft']}, & .${c['columnHeader--pinnedRight']}`]: {
       position: 'sticky',
       zIndex: 4, // Should be above the column separator
-      background: 'var(--DataGrid-pinnedBackground)',
+      background: 'var(--DataGrid-headerBackground)',
     },
     [`& .${c.columnSeparator}`]: {
       position: 'absolute',
@@ -429,6 +463,7 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c.columnHeaders}`]: {
       width: 'var(--DataGrid-rowWidth)',
+      backgroundColor: 'var(--DataGrid-headerBackground)',
     },
     '@media (hover: hover)': {
       [`& .${c.columnHeader}:hover`]: columnHeaderStyles,
@@ -537,11 +572,6 @@ export const GridRootStyles = styled('div', {
       },
       '&.Mui-selected': selectedStyles,
     },
-    [`& .${c['container--top']}, & .${c['container--bottom']}`]: {
-      '[role=row]': {
-        background: 'var(--DataGrid-containerBackground)',
-      },
-    },
 
     /* Cell styles */
     [`& .${c.cell}`]: {
@@ -560,6 +590,12 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c['virtualScrollerContent--overflowed']} .${c['row--lastVisible']} .${c.cell}`]: {
       borderTopColor: 'transparent',
+    },
+    [`& .${c.pinnedRows} .${c.row}`]: {
+      backgroundColor: 'var(--DataGrid-pinnedBackground)',
+      '&:hover': {
+        backgroundColor: pinnedHoverBackgroundColor,
+      },
     },
     [`& .${c['pinnedRows--top']} :first-of-type`]: {
       [`& .${c.cell}, .${c.scrollbarFiller}`]: {
@@ -670,7 +706,7 @@ export const GridRootStyles = styled('div', {
         backgroundColor: pinnedSelectedBackgroundColor,
       },
     },
-    [`& .${c.virtualScrollerContent} .${c.row}`]: {
+    [`& .${c.row}`]: {
       '&:hover': pinnedHoverStyles,
       '&.Mui-selected': pinnedSelectedStyles,
       '&.Mui-selected:hover': pinnedSelectedHoverStyles,

@@ -10,7 +10,7 @@ import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 describe('<DataGrid /> - Row spanning', () => {
   const { render } = createRenderer();
 
-  let apiRef: RefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
   const baselineProps: DataGridProps = {
     rowSpanning: true,
     columns: [
@@ -115,6 +115,11 @@ describe('<DataGrid /> - Row spanning', () => {
 
   testSkipIf(isJSDOM)('should span the repeating row values', () => {
     render(<TestDataGrid />);
+
+    if (!apiRef.current?.state) {
+      throw new Error('apiRef.current.state is undefined');
+    }
+
     const rowsWithSpannedCells = Object.keys(apiRef.current.state.rowSpanning.spannedCells);
     expect(rowsWithSpannedCells.length).to.equal(1);
     const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(4);
@@ -132,6 +137,11 @@ describe('<DataGrid /> - Row spanning', () => {
           initialState={{ sorting: { sortModel: [{ field: 'code', sort: 'desc' }] } }}
         />,
       );
+
+      if (!apiRef.current?.state) {
+        throw new Error('apiRef.current.state is undefined');
+      }
+
       const rowsWithSpannedCells = Object.keys(apiRef.current.state.rowSpanning.spannedCells);
       expect(rowsWithSpannedCells.length).to.equal(1);
       const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(4);
@@ -144,6 +154,11 @@ describe('<DataGrid /> - Row spanning', () => {
 
     testSkipIf(isJSDOM)('should work with sorting when controlling sorting', () => {
       render(<TestDataGrid sortModel={[{ field: 'code', sort: 'desc' }]} />);
+
+      if (!apiRef.current?.state) {
+        throw new Error('apiRef.current.state is undefined');
+      }
+
       const rowsWithSpannedCells = Object.keys(apiRef.current.state.rowSpanning.spannedCells);
       expect(rowsWithSpannedCells.length).to.equal(1);
       const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(4);
@@ -168,6 +183,11 @@ describe('<DataGrid /> - Row spanning', () => {
           }}
         />,
       );
+
+      if (!apiRef.current?.state) {
+        throw new Error('apiRef.current.state is undefined');
+      }
+
       const rowsWithSpannedCells = Object.keys(apiRef.current.state.rowSpanning.spannedCells);
       expect(rowsWithSpannedCells.length).to.equal(1);
       const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(5);
@@ -186,6 +206,11 @@ describe('<DataGrid /> - Row spanning', () => {
           }}
         />,
       );
+
+      if (!apiRef.current?.state) {
+        throw new Error('apiRef.current.state is undefined');
+      }
+
       const rowsWithSpannedCells = Object.keys(apiRef.current.state.rowSpanning.spannedCells);
       expect(rowsWithSpannedCells.length).to.equal(1);
       const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(5);
@@ -206,9 +231,14 @@ describe('<DataGrid /> - Row spanning', () => {
           pageSizeOptions={[4]}
         />,
       );
+
+      if (!apiRef.current?.state) {
+        throw new Error('apiRef.current.state is undefined');
+      }
+
       expect(Object.keys(apiRef.current.state.rowSpanning.spannedCells).length).to.equal(0);
-      await act(async () => {
-        apiRef.current.setPage(1);
+      act(() => {
+        apiRef.current?.setPage(1);
       });
       expect(Object.keys(apiRef.current.state.rowSpanning.spannedCells).length).to.equal(1);
       expect(Object.keys(apiRef.current.state.rowSpanning.hiddenCells).length).to.equal(1);
@@ -219,7 +249,7 @@ describe('<DataGrid /> - Row spanning', () => {
     it('should respect the spanned cells when navigating using keyboard', () => {
       render(<TestDataGrid />);
       // Set focus to the cell with value `- 16GB RAM Upgrade`
-      act(() => apiRef.current.setCellFocus(5, 'description'));
+      act(() => apiRef.current?.setCellFocus(5, 'description'));
       expect(getActiveCell()).to.equal('4-1');
       const cell41 = getCell(4, 1);
       fireEvent.keyDown(cell41, { key: 'ArrowLeft' });
@@ -253,7 +283,7 @@ describe('<DataGrid /> - Row spanning', () => {
       expect(rowSpanningStateUpdates).to.equal(1);
 
       act(() => {
-        apiRef.current.setRows([
+        apiRef.current?.setRows([
           { id: 1, code: 'A101' },
           { id: 2, code: 'A101' },
         ]);

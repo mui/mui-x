@@ -64,7 +64,7 @@ export default function ServerSideRowGroupingErrorHandling() {
         <Button
           onClick={() => {
             setRootError('');
-            apiRef.current.unstable_dataSource.fetchRows();
+            apiRef.current?.unstable_dataSource.fetchRows();
           }}
         >
           Refetch rows
