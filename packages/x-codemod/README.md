@@ -242,6 +242,20 @@ Renames `labelFontSize` and `tickFontSize` props to the corresponding `xxxStyle`
  />
 ```
 
+#### `remove-on-axis-click-handler`
+
+Remove the `<ChartsOnAxisClickHandler />` and move the associated `onAxisClick` prop to its parent.
+
+> [!WARNING]
+> This codemode does not work if component got renamed or if the handler is not a direct child of the container.
+
+```diff
++ <ChartContainer onAxisClick={() => {}}>
+- <ChartContainer>
+-   <ChartsOnAxisClickHandler onAxisClick={() => {}} />
+ </ChartContainer>
+```
+
 ### Data Grid codemods
 
 #### `preset-safe` for Data Grid v8.0.0

@@ -7,6 +7,7 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import Popper, { PopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
 import { useSvgRef } from '../hooks/useSvgRef';
+import { AxisDefaultized } from '../models/axis';
 import { TriggerOptions, usePointerType } from './utils';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { useSelector } from '../internals/store/useSelector';
@@ -43,6 +44,8 @@ const ChartsTooltipRoot = styled(Popper, {
   zIndex: theme.zIndex.modal,
 }));
 
+const axisHasData = (axis: AxisDefaultized) => axis?.data !== undefined && axis.data.length !== 0;
+
 /**
  * Demos:
  *
@@ -63,8 +66,6 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const pointerType = usePointerType();
   const xAxis = useXAxis();
 
-  const xAxisHasData = xAxis.data !== undefined && xAxis.data.length !== 0;
-
   const popperRef: PopperProps['popperRef'] = React.useRef(null);
   const positionRef = useLazyRef(() => ({ x: 0, y: 0 }));
 
@@ -73,7 +74,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     store,
     // eslint-disable-next-line no-nested-ternary
     trigger === 'axis'
-      ? xAxisHasData
+      ? axisHasData(xAxis)
         ? selectorChartsInteractionXAxisIsDefined
         : selectorChartsInteractionYAxisIsDefined
       : selectorChartsInteractionItemIsDefined,

@@ -17,7 +17,6 @@ export * from '@mui/x-charts/ChartsTooltip';
 export * from '@mui/x-charts/ChartsLegend';
 export * from '@mui/x-charts/ChartsAxisHighlight';
 export * from '@mui/x-charts/ChartsVoronoiHandler';
-export * from '@mui/x-charts/ChartsOnAxisClickHandler';
 export * from '@mui/x-charts/BarChart';
 export * from '@mui/x-charts/LineChart';
 export * from '@mui/x-charts/PieChart';

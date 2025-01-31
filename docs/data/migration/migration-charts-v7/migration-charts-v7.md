@@ -156,6 +156,22 @@ You can now use `ChartContainer` as a responsive container which works now exact
 +</ChartContainer>
 ```
 
+## Removing ChartsOnAxisClickHandler ✅
+
+The `ChartsOnAxisClickHandler` component got removed.
+The `onAxisClick` handler can directly be passed to the chart containers.
+
+```diff
++ <ChartContainer onAxisClick={() => {}}>
+- <ChartContainer>
+-   <ChartsOnAxisClickHandler onAxisClick={() => {}} />
+ </ChartContainer>
+```
+
+:::warning
+This codemode does not work if component got renamed or if the handler is not a direct child of the container.
+:::
+
 ## New DOM structure for ChartContainer
 
 The `<ChartContainer />` now wraps the `svg` component into a `div`.

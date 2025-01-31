@@ -359,3 +359,21 @@ export function isPointScaleConfig(
 ): scaleConfig is AxisConfig<'point'> & { scaleType: 'point' } {
   return scaleConfig.scaleType === 'point';
 }
+
+/**
+ * The data format returned by onAxisClick.
+ */
+export interface ChartsAxisData {
+  /**
+   * The index in the axis' data property.
+   */
+  dataIndex: number;
+  /**
+   * Tha value associated to the axis item.
+   */
+  axisValue: number | Date | string;
+  /**
+   * The mapping of series ids to their value for this particular axis index.
+   */
+  seriesValues: Record<string, number | null | undefined>;
+}

@@ -9,7 +9,7 @@ function read(fileName) {
 }
 
 describe('v8.0.0/charts', () => {
-  describe('replace-legend-direction-values.test', () => {
+  describe('rename-label-and-tick-font-size', () => {
     const actualPath = `./actual.spec.tsx`;
     const expectedPath = `./expected.spec.tsx`;
 

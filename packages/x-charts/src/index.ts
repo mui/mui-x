@@ -15,7 +15,6 @@ export * from './ChartsLabel';
 export * from './ChartsLegend';
 export * from './ChartsAxisHighlight';
 export * from './ChartsVoronoiHandler';
-export * from './ChartsOnAxisClickHandler';
 export * from './BarChart';
 export * from './LineChart';
 export * from './PieChart';

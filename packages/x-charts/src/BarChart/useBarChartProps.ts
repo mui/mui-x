@@ -4,7 +4,6 @@ import type { BarChartProps } from './BarChart';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { ChartContainerProps } from '../ChartContainer';
 import { BarPlotProps } from './BarPlot';
-import { ChartsOnAxisClickHandlerProps } from '../ChartsOnAxisClickHandler';
 import { ChartsGridProps } from '../ChartsGrid';
 import { ChartsClipPathProps } from '../ChartsClipPath';
 import { ChartsOverlayProps } from '../ChartsOverlay';
@@ -32,7 +31,6 @@ export const useBarChartProps = (props: BarChartProps) => {
     colors,
     dataset,
     sx,
-    onAxisClick,
     axisHighlight,
     grid,
     topAxis,
@@ -93,8 +91,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     disableAxisListener:
       slotProps?.tooltip?.trigger !== 'axis' &&
       axisHighlight?.x === 'none' &&
-      axisHighlight?.y === 'none' &&
-      !onAxisClick,
+      axisHighlight?.y === 'none',
     className,
     skipAnimation,
   };
@@ -105,10 +102,6 @@ export const useBarChartProps = (props: BarChartProps) => {
     slotProps,
     borderRadius,
     barLabel,
-  };
-
-  const axisClickHandlerProps: ChartsOnAxisClickHandlerProps = {
-    onAxisClick,
   };
 
   const gridProps: ChartsGridProps = {
@@ -159,7 +152,6 @@ export const useBarChartProps = (props: BarChartProps) => {
     chartsWrapperProps,
     chartContainerProps,
     barPlotProps,
-    axisClickHandlerProps,
     gridProps,
     clipPathProps,
     clipPathGroupProps,
