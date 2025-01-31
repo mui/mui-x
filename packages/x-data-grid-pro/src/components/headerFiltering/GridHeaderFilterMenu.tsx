@@ -59,7 +59,7 @@ function GridHeaderFilterMenu({
   }
 
   return (
-    <GridMenu placement="bottom-end" open={open} target={target} onClose={hideMenu}>
+    <GridMenu position="bottom-end" open={open} target={target} onClose={hideMenu}>
       <rootProps.slots.baseMenuList
         aria-labelledby={labelledBy}
         id={id}
