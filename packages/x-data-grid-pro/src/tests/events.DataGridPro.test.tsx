@@ -16,7 +16,7 @@ import {
   GridApi,
   GridEventListener,
 } from '@mui/x-data-grid-pro';
-import { getCell, getColumnHeaderCell } from 'test/utils/helperFn';
+import { getCell, getColumnHeaderCell, includeRowSelection } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
@@ -239,7 +239,9 @@ describe('<DataGridPro /> - Events params', () => {
       const cell11 = getCell(1, 1);
       fireEvent.click(cell11);
       expect(handleRowSelectionModelChange.callCount).to.equal(1);
-      expect(handleRowSelectionModelChange.lastCall.firstArg).to.deep.equal([2]);
+      expect(handleRowSelectionModelChange.lastCall.firstArg).to.deep.equal(
+        includeRowSelection([2]),
+      );
     });
 
     it('should not select a row if props.disableRowSelectionOnClick', () => {

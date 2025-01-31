@@ -27,7 +27,7 @@ export function Toolbar(props) {
   const showSelectionOptions = selectionCount > 0;
 
   const handleClearSelection = () => {
-    apiRef.current.setRowSelectionModel([]);
+    apiRef.current.setRowSelectionModel({ type: 'include', ids: new Set() });
   };
 
   const handleDeleteSelectedRows = () => {

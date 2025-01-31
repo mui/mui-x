@@ -32,9 +32,9 @@ import {
   type GridColumnsRenderContext,
   type GridRowEntry,
   type GridRowId,
+  createRowSelectionManager,
 } from '../../../models';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { selectedIdsLookupSelector } from '../rowSelection/gridRowSelectionSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { getFirstNonSpannedColumnToRender } from '../columns/gridColumnsUtils';
 import { GridInfiniteLoaderPrivateApi } from '../../../models/api/gridInfiniteLoaderApi';
@@ -51,6 +51,7 @@ import { EMPTY_PINNED_COLUMN_FIELDS, GridPinnedColumns } from '../columns';
 import { gridFocusedVirtualCellSelector } from './gridFocusedVirtualCellSelector';
 import { roundToDecimalPlaces } from '../../../utils/roundToDecimalPlaces';
 import { isJSDOM } from '../../../utils/isJSDOM';
+import { gridRowSelectionStateSelector } from '../rowSelection';
 
 const MINIMUM_COLUMN_WIDTH = 50;
 
@@ -115,7 +116,7 @@ export const useGridVirtualScroller = () => {
   const [panels, setPanels] = React.useState(EMPTY_DETAIL_PANELS);
 
   const isRtl = useRtl();
-  const selectedRowsLookup = useGridSelector(apiRef, selectedIdsLookupSelector);
+  const rowSelectionModel = useGridSelector(apiRef, gridRowSelectionStateSelector);
   const currentPage = useGridVisibleRows(apiRef);
   const mainRef = apiRef.current.mainElementRef;
   const scrollerRef = apiRef.current.virtualScrollerRef;
@@ -432,6 +433,8 @@ export const useGridVirtualScroller = () => {
     const rowProps = rootProps.slotProps?.row;
     const columnPositions = gridColumnPositionsSelector(apiRef);
 
+    const selectionManager = createRowSelectionManager(rowSelectionModel);
+
     rowIndexes.forEach((rowIndexInPage) => {
       const { id, model } = rowModels[rowIndexInPage];
       const rowIndex = (currentPage?.range?.firstRowIndex || 0) + rowIndexOffset + rowIndexInPage;
@@ -471,12 +474,7 @@ export const useGridVirtualScroller = () => {
         ? apiRef.current.unstable_getRowHeight(id)
         : 'auto';
 
-      let isSelected: boolean;
-      if (selectedRowsLookup[id] == null) {
-        isSelected = false;
-      } else {
-        isSelected = apiRef.current.isRowSelectable(id);
-      }
+      const isSelected = selectionManager.has(id) && apiRef.current.isRowSelectable(id);
 
       let isFirstVisible = false;
       if (params.position === undefined) {
