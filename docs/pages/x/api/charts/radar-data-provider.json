@@ -1,0 +1,42 @@
+{
+  "props": {
+    "radar": {
+      "type": {
+        "name": "shape",
+        "description": "{ divisionNumber?: number, max?: number, metrics: Array&lt;string&gt;<br>&#124;&nbsp;Array&lt;{ max?: number, min?: number, name: string }&gt;, startAngle?: number }"
+      },
+      "required": true
+    },
+    "series": {
+      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
+      "required": true
+    },
+    "colors": {
+      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
+      "default": "blueberryTwilightPalette"
+    },
+    "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
+    "height": { "type": { "name": "number" } },
+    "id": { "type": { "name": "string" } },
+    "margin": {
+      "type": {
+        "name": "shape",
+        "description": "{ bottom?: number, left?: number, right?: number, top?: number }"
+      }
+    },
+    "skipAnimation": { "type": { "name": "bool" } },
+    "width": { "type": { "name": "number" } }
+  },
+  "name": "RadarDataProvider",
+  "imports": [
+    "import { RadarDataProvider } from '@mui/x-charts/RadarChart';",
+    "import { RadarDataProvider } from '@mui/x-charts';",
+    "import { RadarDataProvider } from '@mui/x-charts-pro';"
+  ],
+  "classes": [],
+  "muiName": "MuiRadarDataProvider",
+  "filename": "/packages/x-charts/src/RadarChart/RadarDataProvider/RadarDataProvider.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar 🚧</a></li></ul>",
+  "cssComponent": false
+}

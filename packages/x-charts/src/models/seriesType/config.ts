@@ -14,6 +14,7 @@ import {
   PieValueType,
   DefaultizedPieValueType,
 } from './pie';
+import { DefaultizedRadarSeriesType, RadarItemIdentifier, RadarSeriesType } from './radar';
 
 export interface ChartsSeriesConfig {
   bar: {
@@ -60,6 +61,14 @@ export interface ChartsSeriesConfig {
     itemIdentifier: PieItemIdentifier;
     valueType: DefaultizedPieValueType;
   };
+  radar: {
+    seriesInput: DefaultizedProps<RadarSeriesType, 'id'> & { color: string };
+    series: DefaultizedRadarSeriesType;
+    seriesProp: RadarSeriesType;
+    itemIdentifier: RadarItemIdentifier;
+    valueType: number;
+    polar: true;
+  };
 }
 
 export type ChartSeriesType = keyof ChartsSeriesConfig;
@@ -68,6 +77,13 @@ export type CartesianChartSeriesType = keyof Pick<
   ChartsSeriesConfig,
   {
     [Key in ChartSeriesType]: ChartsSeriesConfig[Key] extends { cartesian: true } ? Key : never;
+  }[ChartSeriesType]
+>;
+
+export type PolarChartSeriesType = keyof Pick<
+  ChartsSeriesConfig,
+  {
+    [Key in ChartSeriesType]: ChartsSeriesConfig[Key] extends { polar: true } ? Key : never;
   }[ChartSeriesType]
 >;
 
