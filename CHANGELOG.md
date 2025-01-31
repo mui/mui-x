@@ -11,6 +11,7 @@ _Jan 30, 2025_
 
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
+- 🎨 Data Grid theming improvements and default background color
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
