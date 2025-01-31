@@ -303,10 +303,6 @@ export const GridRootStyles = styled('div', {
         overflow: 'visible !important',
       },
       '@media (hover: hover)': {
-        [`& .${c.iconButtonContainer}`]: {
-          width: '0 !important',
-          visibility: 'hidden !important',
-        },
         [`& .${c.menuIcon}`]: {
           width: '0 !important',
           visibility: 'hidden !important',
