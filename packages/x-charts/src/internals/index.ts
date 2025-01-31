@@ -38,6 +38,8 @@ export * from './getScale';
 export * from './stackSeries';
 export * from './getCurve';
 export * from './calculateMargins';
+export * from './consumeSlots';
+export * from './consumeThemeProps';
 
 // contexts
 

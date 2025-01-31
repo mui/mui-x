@@ -4,11 +4,12 @@ import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 
 export default function FunnelStacked() {
   return (
-    <Box sx={{ width: '100%', maxWidth: 500 }}>
+    <Box sx={{ width: '100%', height: 300, maxWidth: 500 }}>
       <FunnelChart
-        sx={{ 'path:nth-of-type(-n+4)': { filter: 'brightness(0.7)' } }}
+        sx={{ '.MuiFunnelElement-series-big': { filter: 'brightness(0.7)' } }}
         series={[
           {
+            id: 'big',
             data: dataBig,
             sectionLabel: {
               position: { horizontal: 'end' },
@@ -18,7 +19,6 @@ export default function FunnelStacked() {
           },
           { data: dataSmall },
         ]}
-        height={300}
       />
     </Box>
   );

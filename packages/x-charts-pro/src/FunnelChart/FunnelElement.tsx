@@ -1,17 +1,19 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useSlotProps from '@mui/utils/useSlotProps';
 import { styled } from '@mui/material/styles';
-import { color as d3Color } from '@mui/x-charts-vendor/d3-color';
-import { useInteractionItemProps, SeriesId } from '@mui/x-charts/internals';
+import { useInteractionItemProps, SeriesId, consumeSlots } from '@mui/x-charts/internals';
 import { useItemHighlighted } from '@mui/x-charts/hooks';
+import clsx from 'clsx';
 import { FunnelItemIdentifier } from './funnel.types';
+import { useUtilityClasses } from './funnelElementClasses';
 
-export interface FunnelElementProps extends Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> {
+export interface FunnelElementProps
+  extends Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id' | 'onClick'> {
   seriesId: SeriesId;
   dataIndex: number;
   color: string;
+  // TODO: fix any
   classes?: any;
   slots?: any;
   slotProps?: any;
@@ -21,7 +23,7 @@ export interface FunnelElementProps extends Omit<React.SVGProps<SVGPathElement>,
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
    * @param {FunnelItemIdentifier} funnelItemIdentifier The funnel item identifier.
    */
-  onItemClick?: (
+  onClick?: (
     event: React.MouseEvent<SVGElement, MouseEvent>,
     funnelItemIdentifier: FunnelItemIdentifier,
   ) => void;
@@ -31,50 +33,49 @@ export const FunnelElementPath = styled('path', {
   name: 'MuiFunnelElement',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: any }>(({ ownerState }) => ({
+})<{ ownerState: FunnelElementProps }>(({ ownerState }) => ({
   stroke: 'none',
-  fill: ownerState.isHighlighted
-    ? d3Color(ownerState.color)!.brighter(0.5).formatHex()
-    : ownerState.color,
   transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
-  opacity: (ownerState.isFaded && 0.3) || 1,
+  cursor: ownerState.onClick ? 'pointer' : 'unset',
 }));
 
 /**
  * @ignore - internal component.
  */
-function FunnelElement(props: FunnelElementProps) {
-  const { seriesId, dataIndex, classes, color, slots, slotProps, style, onClick, ...other } = props;
-  const getInteractionItemProps = useInteractionItemProps();
-  const { isFaded, isHighlighted } = useItemHighlighted({
-    seriesId,
-    dataIndex,
-  });
+const FunnelElement = consumeSlots(
+  'MuiFunnelElement',
+  'funnelElement',
+  {
+    classesResolver: useUtilityClasses,
+  },
+  function FunnelElement(props: FunnelElementProps, ref: React.Ref<SVGPathElement>) {
+    const { seriesId, dataIndex, classes, color, slots, slotProps, onClick, className, ...other } =
+      props;
+    const getInteractionItemProps = useInteractionItemProps();
+    const { isFaded, isHighlighted } = useItemHighlighted({
+      seriesId,
+      dataIndex,
+    });
 
-  const ownerState = {
-    seriesId,
-    dataIndex,
-    classes,
-    color,
-    isFaded,
-    isHighlighted,
-  };
-
-  const funnelProps = useSlotProps({
-    elementType: FunnelElementPath,
-    externalSlotProps: slotProps?.funnel,
-    externalForwardedProps: other,
-    additionalProps: {
-      ...getInteractionItemProps({ type: 'funnel', seriesId, dataIndex }),
-      style,
-      onClick,
-      cursor: onClick ? 'pointer' : 'unset',
-    },
-    ownerState,
-  });
-
-  return <FunnelElementPath {...funnelProps} />;
-}
+    return (
+      <FunnelElementPath
+        {...getInteractionItemProps({ type: 'funnel', seriesId, dataIndex })}
+        ownerState={props}
+        filter={isHighlighted ? 'brightness(120%)' : undefined}
+        opacity={isFaded ? 0.3 : 1}
+        fill={color}
+        className={clsx(
+          classes.root,
+          isHighlighted && classes.highlighted,
+          isFaded && classes.faded,
+          className,
+        )}
+        {...other}
+        ref={ref}
+      />
+    );
+  },
+);
 
 FunnelElement.propTypes = {
   // ----------------------------- Warning --------------------------------

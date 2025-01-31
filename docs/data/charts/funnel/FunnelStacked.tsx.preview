@@ -1,7 +1,8 @@
 <FunnelChart
-  sx={{ 'path:nth-of-type(-n+4)': { filter: 'brightness(0.7)' } }}
+  sx={{ '.MuiFunnelElement-series-big': { filter: 'brightness(0.7)' } }}
   series={[
     {
+      id: 'big',
       data: dataBig,
       sectionLabel: {
         position: { horizontal: 'end' },
@@ -11,5 +12,4 @@
     },
     { data: dataSmall },
   ]}
-  height={300}
 />
