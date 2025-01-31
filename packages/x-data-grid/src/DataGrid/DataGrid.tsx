@@ -777,6 +777,27 @@ DataGridRaw.propTypes = {
     PropTypes.object,
   ]),
   /**
+   * The data source object.
+   */
+  unstable_dataSource: PropTypes.shape({
+    getRows: PropTypes.func.isRequired,
+    updateRow: PropTypes.func,
+  }),
+  /**
+   * Data source cache object.
+   */
+  unstable_dataSourceCache: PropTypes.shape({
+    clear: PropTypes.func.isRequired,
+    get: PropTypes.func.isRequired,
+    set: PropTypes.func.isRequired,
+  }),
+  /**
+   * Callback fired when the data source request fails.
+   * @param {Error} error The error object.
+   * @param {GridGetRowsParams} params With all properties from [[GridGetRowsParams]].
+   */
+  unstable_onDataSourceError: PropTypes.func,
+  /**
    * If `true`, the Data Grid enables column virtualization when `getRowHeight` is set to `() => 'auto'`.
    * By default, column virtualization is disabled when dynamic row height is enabled to measure the row height correctly.
    * For datasets with a large number of columns, this can cause performance issues.

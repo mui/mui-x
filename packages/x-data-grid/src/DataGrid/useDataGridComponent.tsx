@@ -62,6 +62,7 @@ import {
   listViewStateInitializer,
   useGridListView,
 } from '../hooks/features/listView/useGridListView';
+import { useGridDataSource } from '../hooks/features/dataSource/useGridDataSource';
 
 export const useDataGridComponent = (
   inputApiRef: RefObject<GridApiCommunity | null> | undefined,
@@ -127,6 +128,7 @@ export const useDataGridComponent = (
   useGridStatePersistence(apiRef);
   useGridVirtualization(apiRef, props);
   useGridListView(apiRef, props);
+  useGridDataSource(apiRef, props);
 
   return apiRef;
 };

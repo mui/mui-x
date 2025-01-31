@@ -22,6 +22,10 @@ export interface GridGetRowsResponsePremium extends GridGetRowsResponse {
 
 export interface GridGetRowsParamsPremium extends GridGetRowsParams {
   aggregationModel?: GridAggregationModel;
+  /**
+   * List of grouped columns (only applicable with `rowGrouping`).
+   */
+  groupFields?: GridColDef['field'][];
 }
 
 export interface GridDataSourcePremium extends Omit<GridDataSource, 'getRows'> {

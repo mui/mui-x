@@ -4,6 +4,7 @@ import {
   useGridApiRef,
   GridInitialState,
   GridDataSource,
+  GridGetRowsResponse,
 } from '@mui/x-data-grid-premium';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
@@ -27,7 +28,7 @@ export default function ServerSideDataGridAggregationTreeData() {
     fetchRows,
     columns,
     initialState: initState,
-  } = useMockServer(dataSetOptions);
+  } = useMockServer<GridGetRowsResponse>(dataSetOptions);
 
   const initialState: GridInitialState = React.useMemo(
     () => ({
