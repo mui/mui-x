@@ -186,17 +186,28 @@ export const useGridRowsMeta = (
       lastMeasuredRowIndex.current = Infinity;
     }
 
+    const didHeightsChange =
+      pinnedTopRowsTotalHeight !== apiRef.current.state.rowsMeta.pinnedTopRowsTotalHeight ||
+      pinnedBottomRowsTotalHeight !== apiRef.current.state.rowsMeta.pinnedBottomRowsTotalHeight ||
+      currentPageTotalHeight !== apiRef.current.state.rowsMeta.currentPageTotalHeight;
+
+    const rowsMeta = {
+      currentPageTotalHeight,
+      positions,
+      pinnedTopRowsTotalHeight,
+      pinnedBottomRowsTotalHeight,
+    };
+
     apiRef.current.setState((state) => {
       return {
         ...state,
-        rowsMeta: {
-          currentPageTotalHeight,
-          positions,
-          pinnedTopRowsTotalHeight,
-          pinnedBottomRowsTotalHeight,
-        },
+        rowsMeta,
       };
     });
+
+    if (didHeightsChange) {
+      apiRef.current.publishEvent('rowsHeightsChange', rowsMeta);
+    }
 
     isHeightMetaValid.current = true;
   }, [apiRef, pinnedRows, currentPage.rows, processHeightEntry]);

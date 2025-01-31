@@ -100,7 +100,6 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
   const logger = useGridLogger(apiRef, 'useResizeContainer');
   const errorShown = React.useRef(false);
   const rootDimensionsRef = React.useRef(EMPTY_SIZE);
-  const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
@@ -140,10 +139,7 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
       return 0;
     }
 
-    const currentPage = getVisibleRows(apiRef, {
-      pagination: props.pagination,
-      paginationMode: props.paginationMode,
-    });
+    const currentPage = getVisibleRows(apiRef);
 
     // TODO: Use a combination of scrollTop, dimensions.viewportInnerSize.height and rowsMeta.possitions
     // to find out the maximum number of rows that can fit in the visible part of the grid
@@ -159,7 +155,7 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     );
 
     return Math.min(maximumPageSizeWithoutScrollBar, currentPage.rows.length);
-  }, [apiRef, props.pagination, props.paginationMode, props.getRowHeight, rowHeight]);
+  }, [apiRef, props.getRowHeight, rowHeight]);
 
   const updateDimensions = React.useCallback(() => {
     if (isFirstSizing.current) {
@@ -172,6 +168,7 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
 
     const scrollbarSize = measureScrollbarSize(rootElement, props.scrollbarSize);
 
+    const rowsMeta = gridRowsMetaSelector(apiRef.current.state);
     const topContainerHeight = headersTotalHeight + rowsMeta.pinnedTopRowsTotalHeight;
     const bottomContainerHeight = rowsMeta.pinnedBottomRowsTotalHeight;
 
@@ -282,9 +279,6 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     setDimensions,
     props.scrollbarSize,
     props.autoHeight,
-    rowsMeta.currentPageTotalHeight,
-    rowsMeta.pinnedTopRowsTotalHeight,
-    rowsMeta.pinnedBottomRowsTotalHeight,
     rowHeight,
     headerHeight,
     groupHeaderHeight,
@@ -368,6 +362,7 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     [updateDimensions, props.autoHeight, debouncedUpdateDimensions, logger],
   );
 
+  useGridApiOptionHandler(apiRef, 'rowsHeightsChange', updateDimensions);
   useGridApiOptionHandler(apiRef, 'rootMount', handleRootMount);
   useGridApiOptionHandler(apiRef, 'resize', handleResize);
   useGridApiOptionHandler(apiRef, 'debouncedResize', props.onResize);
