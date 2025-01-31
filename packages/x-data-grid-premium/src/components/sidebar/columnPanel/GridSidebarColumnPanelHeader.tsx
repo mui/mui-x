@@ -69,7 +69,7 @@ export function GridSidebarColumnPanelHeader(props: GridSidebarColumnPanelHeader
         />
       ) : (
         <HeaderRow>
-          <Typography variant="body2" fontWeight="medium" sx={{ mr: 'auto' }}>
+          <Typography variant="subtitle1" fontWeight="medium" sx={{ mr: 'auto' }}>
             Columns
           </Typography>
           <GridSidebarSearchButton onClick={enableSearch} />

@@ -60,19 +60,12 @@ const CollapsibleSection = styled(GridSidebarCollapsibleSection)(({ theme }) => 
 
 const CollapsibleSectionTitle = styled('div')(({ theme }) => ({
   flex: 1,
-  marginRight: theme.spacing(1.25),
+  marginRight: theme.spacing(1.75),
   display: 'flex',
+  justifyContent: 'space-between',
   alignItems: 'center',
   gap: theme.spacing(1),
-  fontSize: theme.typography.pxToRem(13),
-  color: theme.palette.text.secondary,
-  fontWeight: 500,
-}));
-
-const CollapsibleSectionCount = styled('div')(({ theme }) => ({
-  marginLeft: 'auto',
-  fontSize: theme.typography.pxToRem(13),
-  color: theme.palette.text.secondary,
+  ...theme.typography.subtitle2,
 }));
 
 const FieldList = styled(AutoAnimateContainer)(({ theme }) => ({
@@ -358,10 +351,9 @@ export function GridSidebarColumnPanelBody({
           <CollapsibleSection
             title={
               <CollapsibleSectionTitle>
-                <rootProps.slots.densityStandardIcon fontSize="small" />
                 Rows
                 {pivotModel.rows.length > 0 && (
-                  <CollapsibleSectionCount>{pivotModel.rows.length}</CollapsibleSectionCount>
+                  <rootProps.slots.baseBadge badgeContent={pivotModel.rows.length} />
                 )}
               </CollapsibleSectionTitle>
             }
@@ -398,10 +390,9 @@ export function GridSidebarColumnPanelBody({
           <CollapsibleSection
             title={
               <CollapsibleSectionTitle>
-                <rootProps.slots.columnSelectorIcon fontSize="small" />
                 Columns
                 {pivotModel.columns.length > 0 && (
-                  <CollapsibleSectionCount>{pivotModel.columns.length}</CollapsibleSectionCount>
+                  <rootProps.slots.baseBadge badgeContent={pivotModel.columns.length} />
                 )}
               </CollapsibleSectionTitle>
             }
@@ -440,10 +431,9 @@ export function GridSidebarColumnPanelBody({
           <CollapsibleSection
             title={
               <CollapsibleSectionTitle>
-                <rootProps.slots.columnMenuAggregationIcon fontSize="small" />
                 Values
                 {pivotModel.values.length > 0 && (
-                  <CollapsibleSectionCount>{pivotModel.values.length}</CollapsibleSectionCount>
+                  <rootProps.slots.baseBadge badgeContent={pivotModel.values.length} />
                 )}
               </CollapsibleSectionTitle>
             }

@@ -2,7 +2,7 @@ type Ref<T = HTMLElement> = React.RefCallback<T | null> | React.RefObject<T | nu
 
 export type BadgeProps = {
   badgeContent?: React.ReactNode;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   color?: 'primary' | 'default' | 'error';
   invisible?: boolean;
   overlap?: 'circular';
