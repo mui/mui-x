@@ -13,11 +13,10 @@ import {
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DateField /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer({ clock: 'fake' });
 
   describeValidation(DateField, () => ({
     render,
-    clock,
     views: ['year', 'month', 'day'],
     componentFamily: 'field',
   }));
@@ -36,7 +35,6 @@ describe('<DateField /> - Describes', () => {
     componentFamily: 'field',
     values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-02')],
     emptyValue: null,
-    clock,
     assertRenderedValue: (expectedValue: any) => {
       const fieldRoot = getFieldInputRoot();
 
@@ -46,7 +44,7 @@ describe('<DateField /> - Describes', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { selectSection, pressKey }) => {
+    setNewValue: async (value, _, { selectSection, pressKey }) => {
       const newValue = adapterToUse.addDays(value!, 1);
       selectSection('day');
       pressKey(undefined, 'ArrowUp');

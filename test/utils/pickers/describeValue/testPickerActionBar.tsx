@@ -9,6 +9,7 @@ import {
   expectPickerChangeHandlerValue,
 } from 'test/utils/pickers';
 import { DescribeValueTestSuite } from './describeValue.types';
+import { createFakeClock } from '../../createFakeClock';
 
 export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
   ElementToTest,
@@ -82,12 +83,12 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
     });
 
     describe('cancel action', () => {
-      it('should call onClose and onChange with the initial value', () => {
+      it('should call onClose and onChange with the initial value', async () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();
 
-        const { selectSection, pressKey } = renderWithProps({
+        const { selectSection, pressKey, user } = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           onChange,
           onAccept,
@@ -99,7 +100,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         });
 
         // Change the value (already tested)
-        setNewValue(values[0], { isOpened: true, selectSection, pressKey });
+        await setNewValue(values[0], user, { isOpened: true, selectSection, pressKey });
 
         // Cancel the modifications
         fireEvent.click(screen.getByText(/cancel/i));
@@ -143,12 +144,12 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
     });
 
     describe('confirm action', () => {
-      it('should call onClose and onAccept with the live value', () => {
+      it('should call onClose and onAccept with the live value', async () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();
 
-        const { selectSection, pressKey } = renderWithProps({
+        const { selectSection, pressKey, user } = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           onChange,
           onAccept,
@@ -160,7 +161,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         });
 
         // Change the value (already tested)
-        setNewValue(values[0], { isOpened: true, selectSection, pressKey });
+        await setNewValue(values[0], user, { isOpened: true, selectSection, pressKey });
 
         // Accept the modifications
         fireEvent.click(screen.getByText(/ok/i));
@@ -221,6 +222,8 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
     });
 
     describe('today action', () => {
+      createFakeClock('fake', new Date(2020, 0, 1));
+
       it("should call onClose, onChange with today's value and onAccept with today's value", () => {
         const onChange = spy();
         const onAccept = spy();

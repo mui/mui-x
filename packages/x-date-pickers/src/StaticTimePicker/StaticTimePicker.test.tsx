@@ -8,14 +8,13 @@ import { describeConformance } from 'test/utils/describeConformance';
 import { testSkipIf, hasTouchSupport } from 'test/utils/skipIf';
 
 describe('<StaticTimePicker />', () => {
-  const { render, clock } = createPickerRenderer({
+  const { render } = createPickerRenderer({
     clock: 'fake',
     clockConfig: new Date(2018, 2, 12, 8, 16, 0),
   });
 
   describeValidation(StaticTimePicker, () => ({
     render,
-    clock,
     views: ['hours', 'minutes'],
     componentFamily: 'static-picker',
   }));

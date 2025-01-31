@@ -17,7 +17,6 @@ describe('<MobileDatePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
   const { renderWithProps } = buildFieldInteractions({
     render,
-    clock,
     Component: MobileDatePicker,
   });
 
@@ -150,7 +149,7 @@ describe('<MobileDatePicker />', () => {
       expect(onAccept.callCount).to.equal(1);
     });
 
-    it('should update internal state when controlled value is updated', () => {
+    it('should update internal state when controlled value is updated', async () => {
       const view = renderWithProps({
         enableAccessibleFieldDOMStructure: true as const,
         value: adapterToUse.date('2019-01-01'),
@@ -167,7 +166,7 @@ describe('<MobileDatePicker />', () => {
       openPicker({ type: 'date' });
       // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
       fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
-      clock.runToLast();
+      await clock.runToLast();
 
       // Verify it's still a clean value
       expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');

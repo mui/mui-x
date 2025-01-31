@@ -98,7 +98,8 @@ module.exports = function getBabelConfig(api) {
     ],
   ];
 
-  if (process.env.NODE_ENV === 'test') {
+  // TODO: Remove once vitest is our default runner
+  if (process.env.NODE_ENV === 'test' && process.env.VITEST !== 'true') {
     plugins.push(['@babel/plugin-transform-export-namespace-from']);
     // We replace `date-fns` imports with an aliased `date-fns@v2` version installed as `date-fns-v2` for tests.
     plugins.push([

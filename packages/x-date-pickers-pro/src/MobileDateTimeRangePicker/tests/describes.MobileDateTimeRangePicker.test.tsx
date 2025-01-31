@@ -14,9 +14,7 @@ import {
 import { MobileDateTimeRangePicker } from '@mui/x-date-pickers-pro/MobileDateTimeRangePicker';
 
 describe('<MobileDateTimeRangePicker /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({
-    clock: 'fake',
-  });
+  const { render } = createPickerRenderer();
 
   describePicker(MobileDateTimeRangePicker, {
     render,
@@ -26,7 +24,6 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
 
   describeRangeValidation(MobileDateTimeRangePicker, () => ({
     render,
-    clock,
     views: ['day', 'hours', 'minutes'],
     componentFamily: 'picker',
     variant: 'mobile',
@@ -54,7 +51,6 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
     type: 'date-time-range',
     variant: 'mobile',
     initialFocus: 'start',
-    clock,
     values: [
       // initial start and end dates
       [adapterToUse.date('2018-01-01T11:30:00'), adapterToUse.date('2018-01-04T11:45:00')],
@@ -84,7 +80,7 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
         : expectedPlaceholder;
       expectFieldValueV7(endSectionsContainer, expectedEndValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue, setEndDate = false }) => {
+    setNewValue: async (value, user, { isOpened, applySameValue, setEndDate = false }) => {
       if (!isOpened) {
         openPicker({
           type: 'date-time-range',
@@ -139,8 +135,7 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
       // Close the picker
       if (!isOpened) {
         // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
-        clock.runToLast();
+        await user.keyboard('[Escape]');
       } else {
         // return to the start date view in case we'd like to repeat the selection process
         fireEvent.click(

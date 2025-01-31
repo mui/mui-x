@@ -58,7 +58,7 @@ describe('<AdapterDateFnsJalali />', () => {
       }[localeKey];
 
       describe(`test with the "${localeKey}" locale`, () => {
-        const { render, adapter, clock } = createPickerRenderer({
+        const { render, adapter } = createPickerRenderer({
           clock: 'fake',
           adapterName: 'date-fns-jalali',
           locale: localeObject,
@@ -66,7 +66,6 @@ describe('<AdapterDateFnsJalali />', () => {
 
         const { renderWithProps } = buildFieldInteractions({
           render,
-          clock,
           Component: DateTimeField,
         });
 

@@ -83,7 +83,7 @@ describe('<MobileDateTimePicker />', () => {
   });
 
   describe('picker state', () => {
-    testSkipIf(!hasTouchSupport)('should call onChange when selecting each view', () => {
+    testSkipIf(!hasTouchSupport)('should call onChange when selecting each view', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -111,7 +111,7 @@ describe('<MobileDateTimePicker />', () => {
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2010, 0, 1));
 
-      clock.runToLast();
+      await clock.runToLast();
 
       // Change the date
       fireEvent.click(screen.getByRole('gridcell', { name: '15' }));

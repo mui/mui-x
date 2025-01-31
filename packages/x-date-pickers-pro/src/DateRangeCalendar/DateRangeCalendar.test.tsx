@@ -16,6 +16,7 @@ import {
 import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { describeConformance } from 'test/utils/describeConformance';
 import { testSkipIf } from 'test/utils/skipIf';
+import { createFakeClock } from 'test/utils/createFakeClock';
 import { RangePosition } from '../models';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
@@ -29,10 +30,8 @@ const dynamicShouldDisableDate = (date, position: RangePosition) => {
 };
 
 describe('<DateRangeCalendar />', () => {
-  const { render, clock } = createPickerRenderer({
-    clock: 'fake',
-    clockConfig: new Date(2018, 0, 10),
-  });
+  const { render } = createPickerRenderer();
+  const clock = createFakeClock('fake', new Date(2018, 0, 10));
 
   describeConformance(<DateRangeCalendar />, () => ({
     classes,
@@ -44,7 +43,7 @@ describe('<DateRangeCalendar />', () => {
   }));
 
   describe('Selection', () => {
-    it('should select the range from the next month', () => {
+    it('should select the range from the next month', async () => {
       const onChange = spy();
 
       render(
@@ -62,7 +61,7 @@ describe('<DateRangeCalendar />', () => {
         name: 'Next month',
       });
       fireEvent.click(visibleButton);
-      clock.runToLast();
+      await clock.runToLast();
       fireEvent.click(getPickerDay('19', 'March 2019'));
 
       expect(onChange.callCount).to.equal(2);
@@ -450,7 +449,7 @@ describe('<DateRangeCalendar />', () => {
   });
 
   describe('prop: disableAutoMonthSwitching', () => {
-    it('should go to the month of the end date when changing the start date', () => {
+    it('should go to the month of the end date when changing the start date', async () => {
       render(
         <DateRangeCalendar
           defaultValue={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-07-01')]}
@@ -458,11 +457,11 @@ describe('<DateRangeCalendar />', () => {
       );
 
       fireEvent.click(getPickerDay('5', 'January 2018'));
-      clock.runToLast();
+      await clock.runToLast();
       expect(getPickerDay('1', 'July 2018')).not.to.equal(null);
     });
 
-    it('should not go to the month of the end date when changing the start date and props.disableAutoMonthSwitching = true', () => {
+    it('should not go to the month of the end date when changing the start date and props.disableAutoMonthSwitching = true', async () => {
       render(
         <DateRangeCalendar
           defaultValue={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-07-01')]}
@@ -471,11 +470,11 @@ describe('<DateRangeCalendar />', () => {
       );
 
       fireEvent.click(getPickerDay('5', 'January 2018'));
-      clock.runToLast();
+      await clock.runToLast();
       expect(getPickerDay('1', 'January 2018')).not.to.equal(null);
     });
 
-    it('should go to the month of the start date when changing both date from the outside', () => {
+    it('should go to the month of the start date when changing both date from the outside', async () => {
       const { setProps } = render(
         <DateRangeCalendar
           value={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-07-01')]}
@@ -485,12 +484,12 @@ describe('<DateRangeCalendar />', () => {
       setProps({
         value: [adapterToUse.date('2018-04-01'), adapterToUse.date('2018-04-01')],
       });
-      clock.runToLast();
+      await clock.runToLast();
       expect(getPickerDay('1', 'April 2018')).not.to.equal(null);
     });
 
     describe('prop: currentMonthCalendarPosition', () => {
-      it('should switch to the selected month when changing value from the outside', () => {
+      it('should switch to the selected month when changing value from the outside', async () => {
         const { setProps } = render(
           <DateRangeCalendar
             value={[adapterToUse.date('2018-01-10'), adapterToUse.date('2018-01-15')]}
@@ -501,7 +500,7 @@ describe('<DateRangeCalendar />', () => {
         setProps({
           value: [adapterToUse.date('2018-02-11'), adapterToUse.date('2018-02-22')],
         });
-        clock.runToLast();
+        await clock.runToLast();
         expect(getPickerDay('1', 'February 2018')).not.to.equal(null);
       });
     });

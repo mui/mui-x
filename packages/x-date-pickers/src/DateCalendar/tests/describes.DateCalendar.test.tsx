@@ -13,11 +13,10 @@ import {
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DateCalendar /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer({ clock: 'fake' });
 
   describeValidation(DateCalendar, () => ({
     render,
-    clock,
     views: ['year', 'month', 'day'],
     componentFamily: 'calendar',
   }));
@@ -36,7 +35,6 @@ describe('<DateCalendar /> - Describes', () => {
     componentFamily: 'calendar',
     values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-02')],
     emptyValue: null,
-    clock,
     assertRenderedValue: (expectedValue: any) => {
       const selectedCells = document.querySelectorAll(`.${pickersDayClasses.selected}`);
       if (expectedValue == null) {
@@ -46,7 +44,7 @@ describe('<DateCalendar /> - Describes', () => {
         expect(selectedCells[0]).to.have.text(adapterToUse.getDate(expectedValue).toString());
       }
     },
-    setNewValue: (value) => {
+    setNewValue: async (value) => {
       const newValue = adapterToUse.addDays(value!, 1);
       fireEvent.click(
         screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),

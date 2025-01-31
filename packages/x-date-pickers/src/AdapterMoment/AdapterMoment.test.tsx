@@ -15,6 +15,7 @@ import {
 import 'moment/locale/de';
 import 'moment/locale/fr';
 import 'moment/locale/ko';
+import 'moment/locale/ru';
 
 describe('<AdapterMoment />', () => {
   const commonParams = {
@@ -25,7 +26,11 @@ describe('<AdapterMoment />', () => {
     frenchLocale: 'fr',
   };
 
+  moment.locale('en');
+
   describeGregorianAdapter(AdapterMoment, commonParams);
+
+  moment.locale('en');
 
   // Makes sure that all the tests that do not use timezones works fine when dayjs do not support UTC / timezone.
   describeGregorianAdapter(AdapterMoment, {
@@ -148,7 +153,7 @@ describe('<AdapterMoment />', () => {
       const localeObject = { code: localeKey };
 
       describe(`test with the locale "${localeKey}"`, () => {
-        const { render, clock, adapter } = createPickerRenderer({
+        const { render, adapter } = createPickerRenderer({
           clock: 'fake',
           adapterName: 'moment',
           locale: localeObject,
@@ -156,7 +161,6 @@ describe('<AdapterMoment />', () => {
 
         const { renderWithProps } = buildFieldInteractions({
           render,
-          clock,
           Component: DateTimeField,
         });
 

@@ -58,7 +58,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
       { initialDay: '10', key: 'ArrowLeft', expectFocusedDay: '9' },
       { initialDay: '09', key: 'ArrowRight', expectFocusedDay: '10' },
     ].forEach(({ initialDay, key, expectFocusedDay }) => {
-      it(key, () => {
+      it(key, async () => {
         render(
           <StaticDatePicker
             autoFocus
@@ -71,7 +71,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
         // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
         fireEvent.keyDown(document.activeElement!, { key });
 
-        clock.runToLast();
+        await clock.runToLast();
         // Based on column header, screen reader should pronounce <Day Number> <Week Day>
         // But `toHaveAccessibleName` does not do the link between column header and cell value, so we only get <day number> in test
         expect(document.activeElement).toHaveAccessibleName(expectFocusedDay);
