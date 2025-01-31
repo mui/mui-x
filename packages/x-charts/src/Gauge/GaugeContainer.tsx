@@ -54,7 +54,15 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(
       pluginParams={{
         width: inWidth,
         height: inHeight,
-        margin: { left: 10, right: 10, top: 10, bottom: 10, ...margin },
+        margin:
+          typeof margin === 'number'
+            ? {
+                top: margin,
+                bottom: margin,
+                left: margin,
+                right: margin,
+              }
+            : { left: 10, right: 10, top: 10, bottom: 10, ...margin },
       }}
       plugins={[]}
     >

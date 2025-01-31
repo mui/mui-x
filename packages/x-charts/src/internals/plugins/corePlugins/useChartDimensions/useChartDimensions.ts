@@ -3,7 +3,7 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import ownerWindow from '@mui/utils/ownerWindow';
-import { DEFAULT_MARGINS } from '../../../../constants';
+import { DEFAULT_AXIS_SIZE, DEFAULT_MARGINS } from '../../../../constants';
 import { ChartPlugin } from '../../models';
 import { UseChartDimensionsSignature } from './useChartDimensions.types';
 import { selectorChartDimensionsState } from './useChartDimensions.selectors';
@@ -195,26 +195,114 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
     [store.value],
   );
 
-  return { instance: { isPointInside } };
+  const addAxisSide = React.useCallback(
+    (side: keyof typeof DEFAULT_AXIS_SIZE) => {
+      store.update((prev) => axisUpdater(side, true, params, prev));
+    },
+    [store, params],
+  );
+
+  const removeAxisSide = React.useCallback(
+    (side: keyof typeof DEFAULT_AXIS_SIZE) => {
+      store.update((prev) => axisUpdater(side, false, params, prev));
+    },
+    [store, params],
+  );
+
+  return { instance: { isPointInside, addAxisSide, removeAxisSide } };
 };
 
 useChartDimensions.params = {
   width: true,
   height: true,
   margin: true,
+  axisSize: true,
+};
+
+function axisUpdater(
+  side: keyof typeof DEFAULT_AXIS_SIZE,
+  enabled: boolean,
+  params: UseChartDimensionsSignature['defaultizedParams'],
+  prev: any,
+): any {
+  const enabledAxis = {
+    ...prev.dimensions.enabledAxis,
+    [side]: enabled,
+  };
+
+  return {
+    ...prev,
+    dimensions: {
+      ...prev.dimensions,
+      enabledAxis,
+      left: params.margin.left + (enabledAxis.left ? params.axisSize.left : 0),
+      top: params.margin.top + (enabledAxis.top ? params.axisSize.top : 0),
+      right: params.margin.right + (enabledAxis.right ? params.axisSize.right : 0),
+      bottom: params.margin.bottom + (enabledAxis.bottom ? params.axisSize.bottom : 0),
+      width:
+        params.width -
+        params.margin.left -
+        params.margin.right -
+        (enabledAxis.left ? params.axisSize.left : 0) -
+        (enabledAxis.right ? params.axisSize.right : 0),
+      height:
+        params.height -
+        params.margin.top -
+        params.margin.bottom -
+        (enabledAxis.top ? params.axisSize.top : 0) -
+        (enabledAxis.bottom ? params.axisSize.bottom : 0),
+    },
+  };
+}
+
+const defaultizeMargin = (
+  input: UseChartDimensionsSignature['params']['margin'],
+  defaultInput: typeof DEFAULT_MARGINS,
+) => {
+  if (!input) {
+    return defaultInput;
+  }
+
+  if (typeof input === 'number') {
+    return {
+      top: input,
+      bottom: input,
+      left: input,
+      right: input,
+    };
+  }
+
+  return {
+    ...defaultInput,
+    ...input,
+  };
 };
 
 useChartDimensions.getDefaultizedParams = ({ params }) => ({
   ...params,
-  margin: params.margin ? { ...DEFAULT_MARGINS, ...params.margin } : DEFAULT_MARGINS,
+  width: params.width ?? 0,
+  height: params.height ?? 0,
+  margin: defaultizeMargin(params.margin, DEFAULT_MARGINS),
+  axisSize: defaultizeMargin(params.axisSize, DEFAULT_AXIS_SIZE),
 });
 
-useChartDimensions.getInitialState = ({ width, height, margin }) => ({
-  dimensions: {
-    ...margin,
-    width: (width ?? 0) - margin.left - margin.right,
-    height: (height ?? 0) - margin.top - margin.bottom,
-    propsWidth: width,
-    propsHeight: height,
-  },
-});
+useChartDimensions.getInitialState = ({ width, height, margin }) => {
+  return {
+    dimensions: {
+      enabledAxis: {
+        left: false,
+        top: false,
+        right: false,
+        bottom: false,
+      },
+      left: margin.left,
+      top: margin.top,
+      right: margin.right,
+      bottom: margin.bottom,
+      width: (width ?? 0) - margin.left - margin.right,
+      height: (height ?? 0) - margin.top - margin.bottom,
+      propsWidth: width,
+      propsHeight: height,
+    },
+  };
+};

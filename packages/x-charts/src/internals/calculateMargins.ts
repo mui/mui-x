@@ -3,6 +3,19 @@ import { DEFAULT_MARGINS, DEFAULT_LEGEND_FACING_MARGIN } from '../constants';
 import type { LayoutConfig } from '../models';
 import type { CartesianChartSeriesType, ChartsSeriesConfig } from '../models/seriesType/config';
 
+const numberToMargin = (input: LayoutConfig['margin']) => {
+  if (typeof input === 'number') {
+    return {
+      top: input,
+      bottom: input,
+      left: input,
+      right: input,
+    };
+  }
+
+  return input;
+};
+
 export const calculateMargins = <
   T extends ChartsLegendSlotExtension &
     Pick<LayoutConfig, 'margin'> & {
@@ -15,7 +28,7 @@ export const calculateMargins = <
   if (props.hideLegend || !props.series?.some((s) => s.label)) {
     return {
       ...DEFAULT_MARGINS,
-      ...props.margin,
+      ...numberToMargin(props.margin),
     };
   }
 
@@ -24,14 +37,14 @@ export const calculateMargins = <
       return {
         ...DEFAULT_MARGINS,
         left: DEFAULT_LEGEND_FACING_MARGIN,
-        ...props.margin,
+        ...numberToMargin(props.margin),
       };
     }
 
     return {
       ...DEFAULT_MARGINS,
       right: DEFAULT_LEGEND_FACING_MARGIN,
-      ...props.margin,
+      ...numberToMargin(props.margin),
     };
   }
 
@@ -39,13 +52,13 @@ export const calculateMargins = <
     return {
       ...DEFAULT_MARGINS,
       bottom: DEFAULT_LEGEND_FACING_MARGIN,
-      ...props.margin,
+      ...numberToMargin(props.margin),
     };
   }
 
   return {
     ...DEFAULT_MARGINS,
     top: DEFAULT_LEGEND_FACING_MARGIN,
-    ...props.margin,
+    ...numberToMargin(props.margin),
   };
 };
