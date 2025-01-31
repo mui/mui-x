@@ -63,5 +63,6 @@ export default defineConfig({
       minThreads: 2,
       maxThreads: 2,
     }),
+    exclude: ['**/*.{spec}.{js,ts,tsx}', '**/node_modules/**'],
   },
 });

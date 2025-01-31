@@ -103,7 +103,7 @@ export function testDayViewRangeValidation(
       it('should apply disableFuture', () => {
         const { render } = getOptions();
 
-        const now = Date.now();
+        const now = adapterToUse.date();
         function WithFakeTimer(props: any) {
           const { referenceDate, ...otherProps } = props;
           return <ElementToTest value={[now, null]} {...otherProps} />;

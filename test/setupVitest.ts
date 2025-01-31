@@ -4,6 +4,13 @@ import 'test/utils/setupPickers';
 import 'test/utils/licenseRelease';
 import { generateTestLicenseKey, setupTestLicenseKey } from 'test/utils/testLicense';
 import * as testingLibrary from '@testing-library/dom';
+
+import sinon from 'sinon';
+import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGrid } from '@mui/x-data-grid';
+import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGridPro } from '@mui/x-data-grid-pro';
+import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingTreeView } from '@mui/x-tree-view';
+import { unstable_cleanupDOM as unstable_cleanupDOMCharts } from '@mui/x-charts/internals';
+
 // Core's setupVitest is causing issues with the test setup
 // import '@mui/internal-test-utils/setupVitest';
 
@@ -22,6 +29,17 @@ beforeAll(() => {
 
 beforeEach(() => {
   setupTestLicenseKey(licenseKey);
+});
+
+afterEach(() => {
+  unstable_resetCleanupTrackingDataGrid();
+  unstable_resetCleanupTrackingDataGridPro();
+  unstable_resetCleanupTrackingTreeView();
+  unstable_cleanupDOMCharts();
+
+  // Restore Sinon default sandbox to avoid memory leak
+  // See https://github.com/sinonjs/sinon/issues/1866
+  sinon.restore();
 });
 
 // checking if an element is hidden is quite expensive
