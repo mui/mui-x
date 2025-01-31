@@ -474,6 +474,7 @@ export async function buildExcel(
 }
 
 export interface ExcelExportInitEvent {
+  namespace?: string;
   serializedColumns: SerializedColumns;
   serializedRows: SerializedRow[];
   valueOptionsSheetName: string;
@@ -492,6 +493,7 @@ export function setupExcelExportWebWorker(
   // eslint-disable-next-line no-restricted-globals
   addEventListener('message', async (event: MessageEvent<ExcelExportInitEvent>) => {
     const {
+      namespace,
       serializedColumns,
       serializedRows,
       options,
@@ -500,6 +502,11 @@ export function setupExcelExportWebWorker(
       columnGroupDetails,
       columnGroupPaths,
     } = event.data;
+
+    // workers share the pub-sub channel namespace. Use this property to filter out messages.
+    if (namespace !== 'mui-x-data-grid-export') {
+      return;
+    }
 
     const { exceljsPostProcess, exceljsPreProcess } = workerOptions;
 

@@ -156,6 +156,8 @@ export const useGridExcelExport = (
       }, {});
 
       const message: ExcelExportInitEvent = {
+        // workers share the pub-sub channel namespace. Use this property to filter out messages.
+        namespace: 'mui-x-data-grid-export',
         serializedColumns,
         serializedRows,
         valueOptionsData,
