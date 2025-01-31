@@ -67,7 +67,7 @@ const getState = <Api extends GridApiCommon, T>(
   apiRef: RefObject<Api>,
   refs: RefObject<Refs<T>>,
   listener?: (state: T) => void,
-): T => {
+) => {
   const newState = applySelector(
     apiRef,
     refs.current.selector,
