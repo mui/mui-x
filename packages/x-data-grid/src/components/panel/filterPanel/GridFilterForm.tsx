@@ -471,7 +471,6 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
               'aria-label': apiRef.current.getLocaleText('filterPanelLogicOperator'),
             },
           }}
-          debug
           value={multiFilterOperator ?? ''}
           onChange={changeLogicOperator}
           disabled={!!disableMultiFilterOperator || logicOperators.length === 1}
