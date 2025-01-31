@@ -1191,6 +1191,12 @@
       "isGlobal": false
     },
     {
+      "key": "aggregationRowOverlayWrapper",
+      "className": "MuiDataGridPremium-aggregationRowOverlayWrapper",
+      "description": "Styles applied to the aggregation row overlay wrapper.",
+      "isGlobal": false
+    },
+    {
       "key": "autoHeight",
       "className": "MuiDataGridPremium-autoHeight",
       "description": "Styles applied to the root element if `autoHeight={true}`.",

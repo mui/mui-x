@@ -516,6 +516,10 @@
       "nodeName": "the aggregation label in the column header",
       "conditions": "aggregated"
     },
+    "aggregationRowOverlayWrapper": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the aggregation row overlay wrapper"
+    },
     "autoHeight": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
