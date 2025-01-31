@@ -410,6 +410,13 @@
     "event": "MuiEvent<React.ChangeEvent<HTMLElement>>"
   },
   {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "rowsHeightsChange",
+    "description": "Fired when the rows total heights change. GridRowsMetaState object.",
+    "params": "GridRowsMetaState",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "projects": ["x-data-grid-pro", "x-data-grid-premium"],
     "name": "rowsScrollEnd",
     "description": "Fired when scrolling to the bottom of the grid viewport.",
