@@ -1,13 +1,7 @@
 import * as React from 'react';
+import { config } from 'react-transition-group';
 import { RefObject } from '@mui/x-internals/types';
-import {
-  createRenderer,
-  fireEvent,
-  screen,
-  act,
-  waitFor,
-  reactMajor,
-} from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, act, reactMajor } from '@mui/internal-test-utils';
 import {
   microtasks,
   getColumnHeaderCell,
@@ -1792,6 +1786,10 @@ describe('<DataGridPremium /> - Row grouping', () => {
     });
 
     it('should add a "Stop grouping {field}" menu item for each grouping criteria on the grouping column when prop.rowGroupingColumnMode = "single"', () => {
+      const restoreDisabledConfig = config.disabled;
+      // enable `react-transition-group` transitions for this test
+      config.disabled = false;
+
       render(
         <Test
           columns={[
@@ -1826,6 +1824,9 @@ describe('<DataGridPremium /> - Row grouping', () => {
       });
       fireEvent.click(menuItemCategory2);
       expect(apiRef.current?.state.rowGrouping.model).to.deep.equal([]);
+
+      // restore previous config
+      config.disabled = restoreDisabledConfig;
     });
 
     it('should add a "Stop grouping {field}" menu item for each grouping criteria with colDef.groupable = false but it should be disabled', () => {
@@ -2891,14 +2892,16 @@ describe('<DataGridPremium /> - Row grouping', () => {
       />,
     );
 
-    act(() => apiRef.current?.updateRows([{ id: 1, group: 'A', username: 'username 2' }]));
+    await act(async () => {
+      apiRef.current?.updateRows([{ id: 1, group: 'A', username: 'username 2' }]);
+    });
 
-    await waitFor(() => expect(getCell(1, 3).textContent).to.equal('username 2'));
+    expect(getCell(1, 3).textContent).to.equal('username 2');
   });
 
   // See https://github.com/mui/mui-x/issues/8580
   it('should not collapse expanded groups after `updateRows`', async () => {
-    render(
+    const { user } = render(
       <Test
         columns={[{ field: 'id' }, { field: 'group' }, { field: 'username', width: 150 }]}
         rows={[{ id: 1, group: 'A', username: 'username' }]}
@@ -2906,14 +2909,14 @@ describe('<DataGridPremium /> - Row grouping', () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole('button', { name: 'see children' }));
+    await user.click(screen.getByRole('button', { name: 'see children' }));
 
-    act(() => apiRef.current?.updateRows([{ id: 1, group: 'A', username: 'username 2' }]));
-
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'hide children' })).toBeVisible();
+    await act(async () => {
+      apiRef.current?.updateRows([{ id: 1, group: 'A', username: 'username 2' }]);
     });
-    await waitFor(() => expect(getCell(1, 3).textContent).to.equal('username 2'));
+
+    expect(screen.getByRole('button', { name: 'hide children' })).toBeVisible();
+    expect(getCell(1, 3).textContent).to.equal('username 2');
   });
 
   // See https://github.com/mui/mui-x/issues/8853
@@ -2933,10 +2936,10 @@ describe('<DataGridPremium /> - Row grouping', () => {
     expect(getColumnValues(3)).to.deep.equal(['', 'username1', 'username2']);
 
     // trigger row update without any changes in row data
-    act(() => apiRef.current?.updateRows([{ id: 1 }]));
-
-    await waitFor(() => {
-      expect(getColumnValues(3)).to.deep.equal(['', 'username1', 'username2']);
+    await act(async () => {
+      apiRef.current?.updateRows([{ id: 1 }]);
     });
+
+    expect(getColumnValues(3)).to.deep.equal(['', 'username1', 'username2']);
   });
 });
