@@ -87,6 +87,7 @@ export const useGridSelector = <Api extends GridApiCommon, Args, T>(
     (didInit ? null : applySelector(apiRef, selector, args, apiRef.current.instanceId)) as T,
   );
 
+  refs.current.state = state;
   refs.current.equals = equals;
   refs.current.selector = selector;
   const prevArgs = refs.current.args;
