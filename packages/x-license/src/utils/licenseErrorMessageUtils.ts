@@ -42,7 +42,7 @@ export function showLicenseKeyNotSetError() {
     'The license key is not set. This might be because you did not call `setLicenseKey()` or called it without an argument.',
     '',
     'To solve the issue, you need to double check that `setLicenseKey()` is called with the right argument',
-    'Please check the license key installation instructions: https://mui.com/r/x-license-key-installation.',
+    'Please check the license key installation instructions: https://mui.com/r/x-license-key-installation',
   ]);
 }
 
