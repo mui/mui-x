@@ -362,7 +362,6 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     [updateDimensions, props.autoHeight, debouncedUpdateDimensions, logger],
   );
 
-  useGridApiOptionHandler(apiRef, 'rowsHeightsChange', updateDimensions);
   useGridApiOptionHandler(apiRef, 'rootMount', handleRootMount);
   useGridApiOptionHandler(apiRef, 'resize', handleResize);
   useGridApiOptionHandler(apiRef, 'debouncedResize', props.onResize);

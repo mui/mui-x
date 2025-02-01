@@ -206,7 +206,7 @@ export const useGridRowsMeta = (
     });
 
     if (didHeightsChange) {
-      apiRef.current.publishEvent('rowsHeightsChange', rowsMeta);
+      apiRef.current.updateDimensions();
     }
 
     isHeightMetaValid.current = true;
