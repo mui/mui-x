@@ -413,13 +413,9 @@ export const useGridVirtualScroller = () => {
     let baseRenderContext = renderContext;
     if (params.renderContext) {
       baseRenderContext = params.renderContext as GridRenderContext;
-      if (
-        baseRenderContext.firstColumnIndex === undefined ||
-        baseRenderContext.lastColumnIndex === undefined
-      ) {
-        baseRenderContext.firstColumnIndex = renderContext.firstColumnIndex;
-        baseRenderContext.lastColumnIndex = renderContext.lastColumnIndex;
-      }
+
+      baseRenderContext.firstColumnIndex = renderContext.firstColumnIndex;
+      baseRenderContext.lastColumnIndex = renderContext.lastColumnIndex;
     }
 
     const isLastSection =
