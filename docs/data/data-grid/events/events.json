@@ -308,6 +308,13 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "rootMount",
+    "description": "Fired when rootElementRef.current becomes available.",
+    "params": "HTMLElement",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "rowClick",
     "description": "Fired when a row is clicked. Not fired if the cell clicked is from an interactive column (actions, checkbox, etc).",
     "params": "GridRowParams",
@@ -401,6 +408,13 @@
     "description": "Fired when the value of the selection checkbox of a row is changed.",
     "params": "GridRowSelectionCheckboxParams",
     "event": "MuiEvent<React.ChangeEvent<HTMLElement>>"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "rowsHeightsChange",
+    "description": "Fired when the rows total heights change. GridRowsMetaState object.",
+    "params": "GridRowsMetaState",
+    "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid-pro", "x-data-grid-premium"],

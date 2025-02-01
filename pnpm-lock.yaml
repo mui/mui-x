@@ -1000,6 +1000,9 @@ importers:
       reselect:
         specifier: ^5.1.1
         version: 5.1.1
+      use-sync-external-store:
+        specifier: ^1.0.0
+        version: 1.4.0(react@19.0.0)
     devDependencies:
       '@mui/internal-test-utils':
         specifier: ^1.0.26
@@ -1016,6 +1019,9 @@ importers:
       '@types/prop-types':
         specifier: ^15.7.14
         version: 15.7.14
+      '@types/use-sync-external-store':
+        specifier: ^0.0.6
+        version: 0.0.6
       react:
         specifier: ^19.0.0
         version: 19.0.0

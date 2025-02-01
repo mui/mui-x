@@ -45,15 +45,14 @@ export default function FilteredRowCount() {
 
   const getFilteredRowsCount = React.useCallback(
     (filterModel: GridFilterModel) => {
+      const rowIds = apiRef.current?.getAllRowIds();
       const filterState = apiRef.current?.getFilterState(filterModel);
-      if (!filterState) {
+      if (!rowIds || !filterState) {
         return 0;
       }
 
       const { filteredRowsLookup } = filterState;
-      return Object.keys(filteredRowsLookup).filter(
-        (rowId) => filteredRowsLookup[rowId] === true,
-      ).length;
+      return rowIds.filter((rowId) => filteredRowsLookup[rowId] !== false).length;
     },
     [apiRef],
   );

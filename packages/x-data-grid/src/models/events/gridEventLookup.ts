@@ -1,4 +1,5 @@
 import * as React from 'react';
+import type { GridRowsMetaState } from '../../hooks/features/rows/gridRowsMetaState';
 import type {
   GridColumnHeaderParams,
   GridColumnOrderChangeParams,
@@ -400,6 +401,10 @@ export interface GridEventLookup
     GridCellEventLookup,
     GridControlledStateEventLookup {
   /**
+   * Fired when rootElementRef.current becomes available.
+   */
+  rootMount: { params: HTMLElement };
+  /**
    * Fired when the grid is unmounted.
    */
   unmount: {};
@@ -485,6 +490,11 @@ export interface GridEventLookup
    * Fired when the rendered rows index interval changes. Called with a [[GridRenderContext]] object.
    */
   renderedRowsIntervalChange: { params: GridRenderContext };
+  /**
+   * Fired when the rows total heights change.
+   * [[GridRowsMetaState]] object.
+   */
+  rowsHeightsChange: { params: GridRowsMetaState };
 
   // Edit
   /**

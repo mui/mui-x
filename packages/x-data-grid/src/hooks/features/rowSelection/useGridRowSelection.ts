@@ -463,7 +463,7 @@ export const useGridRowSelection = (
         if (props.filterMode === 'server') {
           return !rowsLookup[id];
         }
-        return filteredRowsLookup[id] !== true;
+        return !rowsLookup[id] || filteredRowsLookup[id] === false;
       };
 
       let hasChanged = false;

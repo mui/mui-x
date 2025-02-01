@@ -5,6 +5,12 @@ import { GridRowId, GridValidRowModel } from '../../../models/gridRows';
 export type GridFilterItemResult = { [key: Required<GridFilterItem>['id']]: boolean };
 export type GridQuickFilterValueResult = { [key: string]: boolean };
 
+export const defaultGridFilterLookup = {
+  filteredRowsLookup: {},
+  filteredChildrenCountLookup: {},
+  filteredDescendantCountLookup: {},
+};
+
 export const getDefaultGridFilterModel: () => GridFilterModel = () => ({
   items: [],
   logicOperator: GridLogicOperator.And,
@@ -20,7 +26,7 @@ export interface GridFilterState {
    * If a row is not registered in this lookup, it is filtered.
    * This is the equivalent of the `visibleRowsLookup` if all the groups were expanded.
    */
-  filteredRowsLookup: Record<GridRowId, boolean>;
+  filteredRowsLookup: Record<GridRowId, false>;
   /**
    * Amount of children that are passing the filters or have children that are passing the filter (does not count grand children).
    * If a row is not registered in this lookup, it is supposed to have no descendant passing the filters.
