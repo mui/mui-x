@@ -243,7 +243,7 @@ export const getVisibleRowsLookup = ({
   const visibleRowsLookup: Record<GridRowId, boolean> = {};
 
   const handleTreeNode = (node: GridTreeNode, areAncestorsExpanded: boolean) => {
-    const isPassingFiltering = filteredRowsLookup[node.id];
+    const isPassingFiltering = filteredRowsLookup[node.id] !== false;
 
     if (node.type === 'group') {
       node.children.forEach((childId) => {
