@@ -24,10 +24,6 @@ import { GridVirtualScrollerRenderZone as RenderZone } from './GridVirtualScroll
 import { GridVirtualScrollbar as Scrollbar } from './GridVirtualScrollbar';
 import { GridLoadingOverlayVariant } from '../GridLoadingOverlay';
 import { GridStateCommunity } from '../../models/gridStateCommunity';
-import {
-  gridHasBottomPinnedRowsSelector,
-  gridHasTopPinnedRowsSelector,
-} from '../../hooks/features/rows/gridRowsSelector';
 
 type OwnerState = Pick<DataGridProcessedProps, 'classes'> & {
   hasScrollX: boolean;
@@ -87,8 +83,6 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   const rootProps = useGridRootProps();
   const hasScrollY = useGridSelector(apiRef, gridHasScrollYSelector);
   const hasScrollX = useGridSelector(apiRef, gridHasScrollXSelector);
-  const hasTopPinnedRows = useGridSelector(apiRef, gridHasTopPinnedRowsSelector);
-  const hasBottomPinnedRows = useGridSelector(apiRef, gridHasBottomPinnedRowsSelector);
   const hasPinnedRight = useGridSelector(apiRef, hasPinnedRightSelector);
   const hasBottomFiller = useGridSelector(apiRef, gridHasBottomFillerSelector);
   const { getOverlay, overlaysProps } = useGridOverlays();
@@ -109,20 +103,19 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
     getScrollbarVerticalProps,
     getScrollbarHorizontalProps,
     getRows,
+    getScrollAreaProps,
   } = virtualScroller;
 
   const rows = getRows();
 
   return (
     <Container className={classes.root} {...getContainerProps()} ownerState={ownerState}>
-      <GridScrollArea scrollDirection="left" />
-      <GridScrollArea scrollDirection="right" />
+      <GridScrollArea scrollDirection="left" {...getScrollAreaProps()} />
+      <GridScrollArea scrollDirection="right" {...getScrollAreaProps()} />
       <Scroller className={classes.scroller} {...getScrollerProps()} ownerState={ownerState}>
         <TopContainer>
           {!rootProps.unstable_listView && <GridHeaders />}
-          {hasTopPinnedRows && (
-            <rootProps.slots.pinnedRows position="top" virtualScroller={virtualScroller} />
-          )}
+          <rootProps.slots.pinnedRows position="top" virtualScroller={virtualScroller} />
         </TopContainer>
 
         {getOverlay()}
@@ -135,12 +128,9 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
         </Content>
 
         {hasBottomFiller && <SpaceFiller rowsLength={rows.length} />}
-
-        {hasBottomPinnedRows && (
-          <BottomContainer>
-            <rootProps.slots.pinnedRows position="bottom" virtualScroller={virtualScroller} />
-          </BottomContainer>
-        )}
+        <BottomContainer>
+          <rootProps.slots.pinnedRows position="bottom" virtualScroller={virtualScroller} />
+        </BottomContainer>
       </Scroller>
       {hasScrollX && !rootProps.unstable_listView && (
         <Scrollbar position="horizontal" {...getScrollbarHorizontalProps()} />

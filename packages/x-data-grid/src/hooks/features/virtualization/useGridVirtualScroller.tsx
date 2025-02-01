@@ -398,14 +398,24 @@ export const useGridVirtualScroller = () => {
     params: {
       rows?: GridRowEntry[];
       position?: GridPinnedRowsPosition;
-      renderContext?: GridRenderContext;
+      renderContext?:
+        | GridRenderContext
+        | (Pick<GridRenderContext, 'firstRowIndex' | 'lastRowIndex'> & {
+            firstColumnIndex: undefined;
+            lastColumnIndex: undefined;
+          });
     } = {},
   ) => {
     if (!params.rows && !currentPage.range) {
       return [];
     }
 
-    const baseRenderContext = params.renderContext ?? renderContext;
+    let baseRenderContext = renderContext;
+    if (params.renderContext) {
+      baseRenderContext = params.renderContext as GridRenderContext;
+      baseRenderContext.firstColumnIndex = renderContext.firstColumnIndex;
+      baseRenderContext.lastColumnIndex = renderContext.lastColumnIndex;
+    }
 
     const isLastSection =
       (!hasBottomPinnedRows && params.position === undefined) ||
@@ -520,7 +530,6 @@ export const useGridVirtualScroller = () => {
 
       let currentRenderContext = baseRenderContext;
       if (
-        !isPinnedSection &&
         frozenContext.current &&
         rowIndexInPage >= frozenContext.current.firstRowIndex &&
         rowIndexInPage < frozenContext.current.lastRowIndex
@@ -729,6 +738,9 @@ export const useGridVirtualScroller = () => {
     getScrollbarHorizontalProps: () => ({
       ref: scrollbarHorizontalRef,
       role: 'presentation',
+      scrollPosition,
+    }),
+    getScrollAreaProps: () => ({
       scrollPosition,
     }),
   };
