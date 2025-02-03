@@ -1,0 +1,16 @@
+<RichTreeViewPro
+  items={ITEMS}
+  apiRef={apiRef}
+  defaultExpandedItems={['1', '1.1']}
+  sx={{ height: 'fit-content', flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
+  slots={{ item: CustomTreeItem }}
+  itemsReordering
+  canMoveItemToNewPosition={(params) => {
+    return (
+      params.newPosition.parentId === null ||
+      ['folder', 'trash'].includes(
+        apiRef.current!.getItem(params.newPosition.parentId).fileType,
+      )
+    );
+  }}
+/>

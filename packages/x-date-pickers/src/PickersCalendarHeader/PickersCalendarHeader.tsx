@@ -183,8 +183,8 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader(
     className: classes.switchViewIcon,
   });
 
-  const selectNextMonth = () => onMonthChange(utils.addMonths(month, 1), 'left');
-  const selectPreviousMonth = () => onMonthChange(utils.addMonths(month, -1), 'right');
+  const selectNextMonth = () => onMonthChange(utils.addMonths(month, 1));
+  const selectPreviousMonth = () => onMonthChange(utils.addMonths(month, -1));
 
   const isNextMonthDisabled = useNextMonthDisabled(month, {
     disableFuture,
