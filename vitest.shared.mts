@@ -60,8 +60,8 @@ export default defineConfig({
       screenshotFailures: false,
     },
     ...(process.env.CI && {
-      minThreads: 2,
-      maxThreads: 2,
+      minThreads: 1,
+      maxThreads: 1,
     }),
     exclude: [
       '**/*.spec.{js,ts,tsx}',
