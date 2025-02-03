@@ -2,7 +2,6 @@ import * as React from 'react';
 import { alpha, styled } from '@mui/material/styles';
 import { GridColDef } from '@mui/x-data-grid';
 import useLazyRef from '@mui/utils/useLazyRef';
-import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 import { PivotModel } from '../../../hooks/features/pivoting/useGridPivoting';
 import { useGridRootProps } from '../../../typeOverloads/reexports';
@@ -12,11 +11,6 @@ import { GridSidebarCollapsibleSection } from '../GridSidebarCollapsibleSection'
 import { useResize } from '../../../hooks/utils/useResize';
 import { GridSidebarScrollArea } from '../GridSidebarScrollArea';
 
-function AutoAnimateContainer(props: React.HTMLAttributes<HTMLDivElement>) {
-  const [parent] = useAutoAnimate({ duration: 150 });
-  return <div ref={parent} {...props} />;
-}
-
 const Container = styled('div')({
   flex: 1,
   display: 'flex',
@@ -24,12 +18,19 @@ const Container = styled('div')({
   overflow: 'hidden',
 });
 
-const TopPane = styled(GridSidebarScrollArea)({
+const TopPane = styled(GridSidebarScrollArea)(({ theme }) => ({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
   minHeight: 50,
-});
+  transition: theme.transitions.create('background-color', {
+    duration: theme.transitions.duration.short,
+    easing: theme.transitions.easing.easeInOut,
+  }),
+  '&[data-drag-over="true"]': {
+    backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.hoverOpacity),
+  },
+}));
 
 const BottomPane = styled('div')({
   position: 'relative',
@@ -47,7 +48,7 @@ const ScrollArea = styled(GridSidebarScrollArea)({
 
 const CollapsibleSection = styled(GridSidebarCollapsibleSection)(({ theme }) => ({
   margin: theme.spacing(0.5, 1),
-  transition: theme.transitions.create(['color', 'border-color', 'background-color'], {
+  transition: theme.transitions.create(['border-color', 'background-color'], {
     duration: theme.transitions.duration.short,
     easing: theme.transitions.easing.easeInOut,
   }),
@@ -68,7 +69,7 @@ const CollapsibleSectionTitle = styled('div')(({ theme }) => ({
   ...theme.typography.subtitle2,
 }));
 
-const FieldList = styled(AutoAnimateContainer)(({ theme }) => ({
+const FieldList = styled('div')(({ theme }) => ({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',

@@ -82,6 +82,7 @@ const PivotFieldRoot = styled('div', {
     },
     {
       props: { section: null },
+      style: { borderTopColor: 'transparent', borderBottomColor: 'transparent' },
     },
   ],
   '&:hover': {
@@ -109,7 +110,7 @@ const PivotFieldActionContainer = styled('div')({
   alignItems: 'center',
 });
 
-const PivotFieldDragHandle = styled('div')(({ theme }) => ({
+const PivotFieldDragIcon = styled('div')(({ theme }) => ({
   width: 16,
   display: 'flex',
   justifyContent: 'center',
@@ -155,6 +156,7 @@ function AggregationSelect({
       getAvailableAggregationFunctions({
         aggregationFunctions: rootProps.aggregationFunctions,
         colDef,
+        isDataSource: false,
       }),
     [colDef, rootProps.aggregationFunctions],
   );
@@ -318,9 +320,9 @@ export function PivotField(props: PivotFieldProps) {
       section={props.modelKey}
       draggable="true"
     >
-      <PivotFieldDragHandle>
+      <PivotFieldDragIcon>
         <slots.columnReorderIcon fontSize="small" />
-      </PivotFieldDragHandle>
+      </PivotFieldDragIcon>
 
       <PivotFieldLabel>
         {isSelectable ? (
