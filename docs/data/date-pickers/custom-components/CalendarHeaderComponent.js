@@ -22,12 +22,10 @@ const CustomCalendarHeaderRoot = styled('div')({
 function CustomCalendarHeader(props) {
   const { currentMonth, onMonthChange } = props;
 
-  const selectNextMonth = () => onMonthChange(currentMonth.add(1, 'month'), 'left');
-  const selectNextYear = () => onMonthChange(currentMonth.add(1, 'year'), 'left');
-  const selectPreviousMonth = () =>
-    onMonthChange(currentMonth.subtract(1, 'month'), 'right');
-  const selectPreviousYear = () =>
-    onMonthChange(currentMonth.subtract(1, 'year'), 'right');
+  const selectNextMonth = () => onMonthChange(currentMonth.add(1, 'month'));
+  const selectNextYear = () => onMonthChange(currentMonth.add(1, 'year'));
+  const selectPreviousMonth = () => onMonthChange(currentMonth.subtract(1, 'month'));
+  const selectPreviousYear = () => onMonthChange(currentMonth.subtract(1, 'year'));
 
   return (
     <CustomCalendarHeaderRoot>
