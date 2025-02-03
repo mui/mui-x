@@ -347,7 +347,7 @@ jobs:
   test_browser_vitest:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.49.0-noble
+      - image: mcr.microsoft.com/playwright:v1.50.1-noble
     resource_class: medium+
     steps:
       - checkout
