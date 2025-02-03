@@ -5,7 +5,6 @@ import {
   selectorItemMeta,
   selectorItemOrderedChildrenIds,
 } from '@mui/x-tree-view/internals';
-import { warnOnce } from '@mui/x-internals/warning';
 import { TreeViewItemsReorderingAction } from '@mui/x-tree-view/models';
 import {
   TreeViewItemItemReorderingValidActions,
@@ -258,24 +257,10 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
 
 useTreeViewItemsReordering.itemPlugin = useTreeViewItemsReorderingItemPlugin;
 
-useTreeViewItemsReordering.getDefaultizedParams = ({ params, experimentalFeatures }) => {
-  const canUseFeature = experimentalFeatures?.itemsReordering;
-
-  if (process.env.NODE_ENV !== 'production') {
-    if (params.itemsReordering && !canUseFeature) {
-      warnOnce([
-        'MUI X: The items reordering feature requires the `itemsReordering` experimental feature to be enabled.',
-        'You can do it by passing `experimentalFeatures={{ itemsReordering: true }}` to the `<RichTreeViewPro />`component.',
-        'Check the documentation for more details: https://mui.com/x/react-tree-view/rich-tree-view/items/',
-      ]);
-    }
-  }
-
-  return {
-    ...params,
-    itemsReordering: canUseFeature ? (params.itemsReordering ?? false) : false,
-  };
-};
+useTreeViewItemsReordering.getDefaultizedParams = ({ params }) => ({
+  ...params,
+  itemsReordering: params.itemsReordering ?? false,
+});
 
 useTreeViewItemsReordering.getInitialState = () => ({ itemsReordering: null });
 
