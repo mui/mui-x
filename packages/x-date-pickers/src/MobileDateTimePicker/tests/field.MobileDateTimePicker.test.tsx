@@ -8,7 +8,6 @@ import {
 describe('<MobileDateTimePicker /> - Field', () => {
   const { render } = createPickerRenderer();
   const { renderWithProps } = buildFieldInteractions({
-    clock,
     render,
     Component: MobileDateTimePicker,
   });

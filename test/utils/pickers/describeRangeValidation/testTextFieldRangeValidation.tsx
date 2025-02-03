@@ -186,7 +186,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
     });
 
     describe('with fake timer', () => {
-      createFakeClock('fake', new Date(2018, 0, 1));
+      createFakeClock('real', new Date(2018, 0, 1));
 
       it('should apply disablePast', () => {
         const onErrorMock = spy();

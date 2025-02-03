@@ -32,7 +32,6 @@ describe('<TimeClock /> - Describes', () => {
     componentFamily: 'clock',
     values: [adapterToUse.date('2018-01-01T12:30:00'), adapterToUse.date('2018-01-01T13:35:00')],
     emptyValue: null,
-    clock,
     assertRenderedValue: (expectedValue: any) => {
       const clockPointer = document.querySelector<HTMLDivElement>(`.${clockPointerClasses.root}`);
       if (expectedValue == null) {

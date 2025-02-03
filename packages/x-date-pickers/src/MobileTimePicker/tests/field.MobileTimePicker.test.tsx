@@ -9,7 +9,6 @@ describe('<MobileTimePicker /> - Field', () => {
   const { render } = createPickerRenderer();
   const { renderWithProps } = buildFieldInteractions({
     render,
-    clock,
     Component: MobileTimePicker,
   });
 

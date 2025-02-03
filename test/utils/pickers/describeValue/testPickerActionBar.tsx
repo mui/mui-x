@@ -222,7 +222,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
     });
 
     describe('today action', () => {
-      createFakeClock('fake', new Date(2020, 0, 1));
+      createFakeClock('real', new Date(2020, 0, 1));
 
       it("should call onClose, onChange with today's value and onAccept with today's value", () => {
         const onChange = spy();

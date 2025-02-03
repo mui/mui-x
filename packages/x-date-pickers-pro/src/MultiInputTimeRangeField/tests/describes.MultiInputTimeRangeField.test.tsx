@@ -25,7 +25,6 @@ describe('<MultiInputTimeRangeField />', () => {
 
   describeRangeValidation(MultiInputTimeRangeField, () => ({
     render,
-    clock,
     componentFamily: 'field',
     views: ['hours', 'minutes'],
     setValue: (value, { setEndDate } = {}) => {

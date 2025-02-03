@@ -10,7 +10,6 @@ import { DesktopTimePicker, DesktopTimePickerProps } from '@mui/x-date-pickers/D
 describe('<DesktopTimePicker /> - Field', () => {
   const { render } = createPickerRenderer();
   const { renderWithProps } = buildFieldInteractions({
-    clock,
     render,
     Component: DesktopTimePicker,
   });

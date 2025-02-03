@@ -139,8 +139,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
     });
 
     describeSkipIf(!withDate)('with fake timers', () => {
-      createFakeClock('fake');
-
+      createFakeClock('real', new Date(2018, 0, 1));
       it('should apply disablePast', () => {
         let now;
         function WithFakeTimer(props: any) {

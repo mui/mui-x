@@ -31,7 +31,7 @@ const dynamicShouldDisableDate = (date, position: RangePosition) => {
 
 describe('<DateRangeCalendar />', () => {
   const { render } = createPickerRenderer();
-  const clock = createFakeClock('fake', new Date(2018, 0, 10));
+  createFakeClock('real', new Date(2018, 0, 10));
 
   describeConformance(<DateRangeCalendar />, () => ({
     classes,
@@ -61,7 +61,7 @@ describe('<DateRangeCalendar />', () => {
         name: 'Next month',
       });
       fireEvent.click(visibleButton);
-      await fireEvent.click(getPickerDay('19', 'March 2019'));
+      fireEvent.click(getPickerDay('19', 'March 2019'));
 
       expect(onChange.callCount).to.equal(2);
 

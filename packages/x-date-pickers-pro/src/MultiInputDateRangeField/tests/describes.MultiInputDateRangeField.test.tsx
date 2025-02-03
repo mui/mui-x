@@ -22,7 +22,6 @@ describe('<MultiInputDateRangeField />', () => {
 
   describeRangeValidation(MultiInputDateRangeField, () => ({
     render,
-    clock,
     componentFamily: 'field',
     views: ['year', 'month', 'day'],
     setValue: (value, { setEndDate } = {}) => {

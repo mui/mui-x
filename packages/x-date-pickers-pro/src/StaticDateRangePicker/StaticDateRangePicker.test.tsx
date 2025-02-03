@@ -27,7 +27,6 @@ describe('<StaticDateRangePicker />', () => {
 
   describeRangeValidation(StaticDateRangePicker, () => ({
     render,
-    clock,
     componentFamily: 'static-picker',
     views: ['day'],
     variant: 'mobile',

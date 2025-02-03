@@ -18,7 +18,6 @@ describe('<SingleInputDateRangeField /> - Describes', () => {
 
   describeRangeValidation(SingleInputDateRangeField, () => ({
     render,
-    clock,
     componentFamily: 'field',
     views: ['year', 'month', 'day'],
     isSingleInput: true,

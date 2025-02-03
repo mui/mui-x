@@ -29,7 +29,7 @@ function innerDescribeRangeValidation(
   }
 
   TEST_SUITES.forEach((testSuite) => {
-    testSuite(ElementToTest, getTestOptions);
+    testSuite(ElementToTest as any, getTestOptions);
   });
 }
 

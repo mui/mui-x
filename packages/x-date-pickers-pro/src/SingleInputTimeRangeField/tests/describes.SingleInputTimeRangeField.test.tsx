@@ -17,7 +17,6 @@ describe('<SingleInputTimeRangeField /> - Describes', () => {
 
   describeRangeValidation(SingleInputTimeRangeField, () => ({
     render,
-    clock,
     componentFamily: 'field',
     views: ['hours', 'minutes', 'seconds'],
     isSingleInput: true,
