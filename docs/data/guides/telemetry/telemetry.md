@@ -4,7 +4,7 @@ packageName: '@mui/x-telemetry'
 
 # MUI X Telemetry guide
 
-<p class="description">MUI X Telemetry is a feature that collects anonymous usage data to help improve the library. This guide will walk you through how to opt-in, opt-out, and configure telemetry.</p>
+<p class="description">MUI X Telemetry collects anonymous usage data to help improve the library. This guide will walk you through how to opt-in, opt-out, and configure telemetry.</p>
 
 ## Opting In
 
@@ -14,7 +14,7 @@ Currently, **Telemetry is disabled by default**. To opt-in, you can use one of t
 
 You can set the `MUI_X_TELEMETRY_DISABLED` environment variable to `false` to enable telemetry:
 
-```dotenv
+```bash
 MUI_X_TELEMETRY_DISABLED=false
 ```
 
@@ -56,7 +56,7 @@ To opt-out of telemetry, you can use one of the following methods:
 
 You can set the `MUI_X_TELEMETRY_DISABLED` environment variable to `true` to disable telemetry:
 
-```dotenv
+```bash
 MUI_X_TELEMETRY_DISABLED=true
 ```
 

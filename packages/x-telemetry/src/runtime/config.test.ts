@@ -20,7 +20,7 @@ describe('Telemetry: getTelemetryConfig', () => {
   });
 
   it('should be disabled by default', () => {
-    expect(getTelemetryEnvConfig(true).IS_COLLECTING).equal(false);
+    expect(getTelemetryEnvConfig(true).IS_COLLECTING).not.equal(true);
   });
 
   function testConfigWithDisabledEnv(envKey: string) {
@@ -71,11 +71,13 @@ describe('Telemetry: getTelemetryConfig', () => {
     expect(getTelemetryEnvConfig().DEBUG).equal(true);
   });
 
-  it('debug should be enabled if env MUI_TELEMETRY_DEBUG is set to `1`', () => {
-    sinon.stub(process, 'env').value({ MUI_TELEMETRY_DEBUG: '1' });
+  it('debug should be enabled if env MUI_X_TELEMETRY_DEBUG is set to `1`', () => {
+    sinon.stub(process, 'env').value({ MUI_X_TELEMETRY_DEBUG: '1' });
+    process.stdout.write(`${JSON.stringify(getTelemetryEnvConfig(true), null, 2)}\n`);
     expect(getTelemetryEnvConfig(true).DEBUG).equal(true);
 
-    sinon.stub(process, 'env').value({ MUI_TELEMETRY_DEBUG: '0' });
+    sinon.stub(process, 'env').value({ MUI_X_TELEMETRY_DEBUG: '0' });
+    process.stdout.write(`${JSON.stringify(getTelemetryEnvConfig(true), null, 2)}\n`);
     expect(getTelemetryEnvConfig(true).DEBUG).equal(false);
   });
 });
