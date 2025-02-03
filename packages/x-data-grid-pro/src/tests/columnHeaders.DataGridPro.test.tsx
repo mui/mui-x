@@ -9,11 +9,6 @@ import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 describe('<DataGridPro /> - Column headers', () => {
   const { render } = createRenderer();
 
-  afterEach(() => {
-    // Focus body to avoid multiple tooltips in the DOM
-    document.body.focus();
-  });
-
   const baselineProps = {
     autoHeight: isJSDOM,
     disableColumnResize: false,
@@ -201,7 +196,7 @@ describe('<DataGridPro /> - Column headers', () => {
       expect(screen.queryByRole('menu')).to.equal(null);
     });
 
-    test('should remove the MuiDataGrid-menuOpen CSS class only after the transition has ended', async () => {
+    it('should remove the MuiDataGrid-menuOpen CSS class only after the transition has ended', async () => {
       // enable `react-transition-group` transitions for this test
       config.disabled = false;
 
@@ -215,13 +210,13 @@ describe('<DataGridPro /> - Column headers', () => {
 
       await user.click(menuIconButton);
       expect(menuIconButton?.parentElement).to.have.class(gridClasses.menuOpen);
-      expect(screen.queryByRole('tooltip')).not.to.equal(null);
+      expect(screen.queryByRole('menu')).not.to.equal(null);
 
       await user.keyboard('[Escape]');
 
       // JSDOM is instantaneous, but the browser needs time to transition
       await waitFor(() => {
-        expect(screen.queryByRole('tooltip')).to.equal(null);
+        expect(screen.queryByRole('menu')).to.equal(null);
       });
       expect(menuIconButton?.parentElement).not.to.have.class(gridClasses.menuOpen);
     });

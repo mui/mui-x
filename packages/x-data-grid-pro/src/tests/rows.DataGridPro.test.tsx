@@ -188,7 +188,7 @@ describe('<DataGridPro /> - Rows', () => {
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       await act(() => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
 
-      await sleep(20);
+      await sleep(10);
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
 
       await waitFor(() => {
