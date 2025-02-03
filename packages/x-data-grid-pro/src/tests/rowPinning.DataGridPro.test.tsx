@@ -12,7 +12,7 @@ import {
   GridColDef,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { createRenderer, screen, act, waitFor } from '@mui/internal-test-utils';
+import { createRenderer, screen, act } from '@mui/internal-test-utils';
 import {
   $,
   grid,
@@ -754,13 +754,13 @@ describe('<DataGridPro /> - Row pinning', () => {
     await user.dblClick(cell);
 
     const input = cell.querySelector('input')!;
-
-    await user.type(input, '[Backspace>5]Marcus');
+    // remove the previous value before typing in the new one
+    // was "fireEvent.change(input, { target: { value: 'Marcus' } })"
+    await user.clear(input);
+    await user.type(input, 'Marcus');
     await user.keyboard('{Enter}');
 
-    await waitFor(() => {
-      expect(cell.textContent).to.equal('Marcus');
-    });
+    expect(cell.textContent).to.equal('Marcus');
     expect(processRowUpdate.callCount).to.equal(1);
     expect(processRowUpdate.lastCall.args[0]).to.deep.equal({ id: 3, name: 'Marcus' });
   });
@@ -792,12 +792,13 @@ describe('<DataGridPro /> - Row pinning', () => {
     await user.dblClick(cell);
 
     const input = cell.querySelector('input')!;
-    await user.type(input, '[Backspace>5]Marcus');
+    // remove the previous value before typing in the new one
+    // was "fireEvent.change(input, { target: { value: 'Marcus' } })"
+    await user.clear(input);
+    await user.type(input, 'Marcus');
     await user.keyboard('{Enter}');
 
-    await waitFor(() => {
-      expect(cell.textContent).to.equal('Marcus');
-    });
+    expect(cell.textContent).to.equal('Marcus');
     expect(processRowUpdate.callCount).to.equal(1);
     expect(processRowUpdate.lastCall.args[0]).to.deep.equal({ id: 3, name: 'Marcus' });
   });

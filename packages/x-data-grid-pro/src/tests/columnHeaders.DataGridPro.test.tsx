@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
+import { config } from 'react-transition-group';
 import { expect } from 'chai';
 import { gridClasses, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
@@ -143,11 +144,78 @@ describe('<DataGridPro /> - Column headers', () => {
       });
     });
 
-    // This works on browser mode because the transition is async
-    testSkipIf(isJSDOM)(
-      'should close the menu of a column when resizing another column',
-      async () => {
-        const { user } = render(
+    it('should close the menu of a column when resizing another column', () => {
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGridPro
+            {...baselineProps}
+            columns={[
+              { field: 'brand', resizable: true },
+              { field: 'foundationYear', resizable: true },
+            ]}
+          />
+        </div>,
+      );
+
+      const columnWithMenuCell = getColumnHeaderCell(0);
+      const columnToResizeCell = getColumnHeaderCell(1);
+
+      const menuIconButton = columnWithMenuCell.querySelector('button[aria-label="Menu"]')!;
+
+      fireEvent.click(menuIconButton);
+      expect(screen.queryByRole('menu')).not.to.equal(null);
+
+      const separator = columnToResizeCell.querySelector(
+        `.${gridClasses['columnSeparator--resizable']}`,
+      )!;
+      fireEvent.mouseDown(separator);
+      expect(screen.queryByRole('menu')).to.equal(null);
+      // cleanup
+      fireEvent.mouseUp(separator);
+    });
+
+    it('should close the menu of a column when pressing the Escape key', () => {
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGridPro {...baselineProps} columns={[{ field: 'brand' }]} />
+        </div>,
+      );
+
+      const columnCell = getColumnHeaderCell(0);
+      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
+
+      fireEvent.click(menuIconButton);
+      expect(screen.queryByRole('menu')).not.to.equal(null);
+      /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
+      fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+      expect(screen.queryByRole('menu')).to.equal(null);
+    });
+
+    it('should remove the MuiDataGrid-menuOpen CSS class only after the transition has ended', () => {
+      const restoreDisabledConfig = config.disabled;
+      // enable `react-transition-group` transitions for this test
+      config.disabled = false;
+
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGridPro {...baselineProps} columns={[{ field: 'brand' }]} />
+        </div>,
+      );
+      const columnCell = getColumnHeaderCell(0);
+      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
+      fireEvent.click(menuIconButton);
+      expect(menuIconButton?.parentElement).to.have.class(gridClasses.menuOpen);
+      fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+      expect(menuIconButton?.parentElement).to.have.class(gridClasses.menuOpen);
+      expect(menuIconButton?.parentElement).not.to.have.class(gridClasses.menuOpen);
+
+      // restore previous config
+      config.disabled = restoreDisabledConfig;
+    });
+
+    it('should restore focus to the column header when dismissing the menu by selecting any item', async () => {
+      function Test(props: Partial<DataGridProProps>) {
+        return (
           <div style={{ width: 300, height: 500 }}>
             <DataGridPro
               {...baselineProps}
@@ -156,30 +224,31 @@ describe('<DataGridPro /> - Column headers', () => {
                 { field: 'foundationYear', resizable: true },
               ]}
             />
-          </div>,
+          </div>
         );
+      }
 
-        const columnWithMenuCell = getColumnHeaderCell(0);
-        const columnToResizeCell = getColumnHeaderCell(1);
+      const { user } = render(<Test />);
+      const columnWithMenuCell = getColumnHeaderCell(0);
+      const columnToResizeCell = getColumnHeaderCell(1);
 
-        const menuIconButton = columnWithMenuCell.querySelector('button[aria-label="Menu"]')!;
+      const menuIconButton = columnWithMenuCell.querySelector('button[aria-label="Menu"]')!;
 
-        await user.click(menuIconButton);
-        await waitFor(() => {
-          expect(screen.queryByRole('menu')).not.to.equal(null);
-        });
+      await user.click(menuIconButton);
+      await waitFor(() => {
+        expect(screen.queryByRole('menu')).not.to.equal(null);
+      });
 
-        const separator = columnToResizeCell.querySelector(
-          `.${gridClasses['columnSeparator--resizable']}`,
-        )!;
-        await user.pointer([{ keys: '[MouseLeft>]', target: separator }]);
-        await waitFor(() => {
-          expect(screen.queryByRole('menu')).to.equal(null);
-        });
-        // cleanup
-        await user.pointer([{ keys: '[/MouseLeft]', target: separator }]);
-      },
-    );
+      const separator = columnToResizeCell.querySelector(
+        `.${gridClasses['columnSeparator--resizable']}`,
+      )!;
+      await user.pointer([{ keys: '[MouseLeft>]', target: separator }]);
+      await waitFor(() => {
+        expect(screen.queryByRole('menu')).to.equal(null);
+      });
+      // cleanup
+      await user.pointer([{ keys: '[/MouseLeft]', target: separator }]);
+    });
 
     // Flaky on JSDOM
     testSkipIf(isJSDOM)(

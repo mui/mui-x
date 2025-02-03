@@ -5,8 +5,8 @@ import {
   screen,
   act,
   ErrorBoundary,
-  waitFor,
   reactMajor,
+  waitFor,
 } from '@mui/internal-test-utils';
 import clsx from 'clsx';
 import { expect } from 'chai';
@@ -32,7 +32,6 @@ import {
   getRow,
   getActiveCell,
   getCell,
-  microtasks,
   $$,
 } from 'test/utils/helperFn';
 import Dialog from '@mui/material/Dialog';
@@ -281,9 +280,7 @@ describe('<DataGrid /> - Rows', () => {
       );
       expect(screen.queryByText('print')).to.equal(null);
       await user.click(screen.getByRole('menuitem', { name: 'more' }));
-      await waitFor(() => {
-        expect(screen.queryByText('print')).not.to.equal(null);
-      });
+      expect(screen.queryByText('print')).not.to.equal(null);
     });
 
     it('should not select the row when clicking in an action', async () => {
@@ -292,8 +289,7 @@ describe('<DataGrid /> - Rows', () => {
       );
       expect(getRow(0)).not.to.have.class('Mui-selected');
       await user.click(screen.getByRole('menuitem', { name: 'print' }));
-
-      await waitFor(() => expect(getRow(0)).not.to.have.class('Mui-selected'));
+      expect(getRow(0)).not.to.have.class('Mui-selected');
     });
 
     it('should not select the row when clicking in a menu action', async () => {
@@ -304,15 +300,10 @@ describe('<DataGrid /> - Rows', () => {
       );
       expect(getRow(0)).not.to.have.class('Mui-selected');
       await user.click(screen.getByRole('menuitem', { name: 'more' }));
-      await waitFor(() => {
-        expect(screen.queryByText('print')).not.to.equal(null);
-      });
+      expect(screen.queryByText('print')).not.to.equal(null);
 
       await user.click(screen.getByText('print'));
-      await waitFor(() => {
-        expect(getRow(0)).not.to.have.class('Mui-selected');
-      });
-      await microtasks();
+      expect(getRow(0)).not.to.have.class('Mui-selected');
     });
 
     it('should not select the row when opening the menu', async () => {
@@ -321,9 +312,7 @@ describe('<DataGrid /> - Rows', () => {
       );
       expect(getRow(0)).not.to.have.class('Mui-selected');
       await user.click(screen.getByRole('menuitem', { name: 'more' }));
-      await waitFor(() => {
-        expect(getRow(0)).not.to.have.class('Mui-selected');
-      });
+      expect(getRow(0)).not.to.have.class('Mui-selected');
     });
 
     it('should close other menus before opening a new one', async () => {
@@ -376,10 +365,8 @@ describe('<DataGrid /> - Rows', () => {
       const moreButton = screen.getByRole('menuitem', { name: 'more' });
       await user.click(moreButton);
 
-      await waitFor(() => {
-        const printButton = screen.queryByRole('menuitem', { name: 'print' });
-        expect(printButton).toHaveFocus();
-      });
+      const printButton = screen.queryByRole('menuitem', { name: 'print' });
+      expect(printButton).toHaveFocus();
     });
 
     it('should allow to navigate between actions using the arrow keys', async () => {
@@ -643,9 +630,11 @@ describe('<DataGrid /> - Rows', () => {
           '.MuiDataGrid-virtualScrollerContent',
         );
         const expectedHeight = baselineProps.rows.length * (contentHeight + border);
+
         await waitFor(() => {
           expect(virtualScrollerContent).toHaveComputedStyle({ height: `${expectedHeight}px` });
         });
+
         expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
       });
 
@@ -670,9 +659,11 @@ describe('<DataGrid /> - Rows', () => {
           measuredRowHeight +
           border + // Measured rows also include the border
           (baselineProps.rows.length - 1) * defaultRowHeight;
+
         await waitFor(() => {
           expect(virtualScrollerContent).toHaveComputedStyle({ height: `${expectedHeight}px` });
         });
+
         expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
       });
 
@@ -697,9 +688,11 @@ describe('<DataGrid /> - Rows', () => {
         const firstRowHeight = measuredRowHeight + border; // Measured rows also include the border
         const expectedHeight =
           firstRowHeight + (baselineProps.rows.length - 1) * estimatedRowHeight;
+
         await waitFor(() => {
           expect(virtualScrollerContent).toHaveComputedStyle({ height: `${expectedHeight}px` });
         });
+
         expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
       });
 
@@ -715,14 +708,17 @@ describe('<DataGrid /> - Rows', () => {
         const virtualScrollerContent = document.querySelector(
           '.MuiDataGrid-virtualScrollerContent',
         );
+
         await waitFor(() => {
           expect(virtualScrollerContent).toHaveComputedStyle({ height: '101px' });
         });
         expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
         setProps({ rows: [{ clientId: 'c1', expanded: true }] });
+
         await waitFor(() => {
           expect(virtualScrollerContent).toHaveComputedStyle({ height: '201px' });
         });
+
         expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
       });
 
@@ -765,15 +761,16 @@ describe('<DataGrid /> - Rows', () => {
           />,
         );
         const virtualScroller = grid('virtualScroller')!;
-        await waitFor(() =>
-          expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 52 + 52),
-        );
+
+        await waitFor(() => {
+          expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 52 + 52);
+        });
         virtualScroller.scrollTop = 101; // Scroll to measure the 2nd cell
         await act(() => virtualScroller.dispatchEvent(new Event('scroll')));
 
-        await waitFor(() =>
-          expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 101 + 52),
-        );
+        await waitFor(() => {
+          expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 101 + 52);
+        });
         virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
         await act(() => virtualScroller.dispatchEvent(new Event('scroll')));
         await waitFor(() =>
@@ -801,6 +798,7 @@ describe('<DataGrid /> - Rows', () => {
         const virtualScrollerContent = document.querySelector(
           '.MuiDataGrid-virtualScrollerContent',
         )!;
+
         await waitFor(() => {
           expect(virtualScrollerContent).toHaveComputedStyle({
             height: `${Math.floor(expectedHeight)}px`,
@@ -839,7 +837,7 @@ describe('<DataGrid /> - Rows', () => {
         },
       );
 
-      it('should position correctly the render zone when changing pageSize to a lower value', async () => {
+      it('should position correctly the render zone when changing pageSize to a lower value', () => {
         const data = getBasicGridData(120, 3);
         const columnHeaderHeight = 50;
         const measuredRowHeight = 100;

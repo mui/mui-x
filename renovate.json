@@ -40,6 +40,11 @@
       "allowedVersions": "< 2.0.0"
     },
     {
+      "groupName": "react-docgen",
+      "matchPackageNames": ["react-docgen"],
+      "allowedVersions": "< 6.0.0"
+    },
+    {
       "groupName": "React",
       "matchPackageNames": ["react", "react-dom", "react-is", "@types/react", "@types/react-dom"]
     },
