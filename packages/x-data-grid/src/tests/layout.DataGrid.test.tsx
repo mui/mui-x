@@ -37,7 +37,7 @@ import { describeSkipIf, testSkipIf, isJSDOM, isOSX } from 'test/utils/skipIf';
 const getVariable = (name: string) => $('.MuiDataGrid-root')!.style.getPropertyValue(name);
 
 describe('<DataGrid /> - Layout & warnings', () => {
-  const { clock, render } = createRenderer();
+  const { render } = createRenderer();
 
   const baselineProps = {
     rows: [
@@ -190,8 +190,6 @@ describe('<DataGrid /> - Layout & warnings', () => {
     });
 
     describe('layout warnings', () => {
-      clock.withFakeTimers();
-
       it('should error if the container has no intrinsic height', () => {
         expect(() => {
           render(
@@ -200,7 +198,6 @@ describe('<DataGrid /> - Layout & warnings', () => {
             </div>,
           );
           // Use timeout to allow simpler tests in JSDOM.
-          clock.tick(0);
         }).toErrorDev(
           'MUI X: useResizeContainer - The parent DOM element of the Data Grid has an empty height.',
         );
@@ -216,7 +213,6 @@ describe('<DataGrid /> - Layout & warnings', () => {
             </div>,
           );
           // Use timeout to allow simpler tests in JSDOM.
-          clock.tick(0);
         }).toErrorDev(
           'MUI X: useResizeContainer - The parent DOM element of the Data Grid has an empty width',
         );
@@ -224,8 +220,6 @@ describe('<DataGrid /> - Layout & warnings', () => {
     });
 
     describe('swallow warnings', () => {
-      clock.withFakeTimers();
-
       beforeEach(() => {
         stub(console, 'error');
       });
@@ -243,7 +237,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
           </div>,
         );
         const firstHeight = grid('root')?.clientHeight;
-        clock.tick(10);
+
         const secondHeight = grid('root')?.clientHeight;
         expect(firstHeight).to.equal(secondHeight);
       });

@@ -14,12 +14,12 @@ import {
 } from '@mui/x-data-grid-pro';
 import Portal from '@mui/material/Portal';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { createRenderer, fireEvent, act, screen } from '@mui/internal-test-utils';
-import { getCell, getRow, spyApi } from 'test/utils/helperFn';
+import { createRenderer, fireEvent, act, screen, waitFor } from '@mui/internal-test-utils';
+import { getCell, getRow, sleep, spyApi } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<DataGridPro /> - Row editing', () => {
-  const { render, clock } = createRenderer();
+  const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
 
@@ -409,9 +409,7 @@ describe('<DataGridPro /> - Row editing', () => {
       });
 
       describe('with debounceMs > 0', () => {
-        clock.withFakeTimers();
-
-        it('should debounce multiple changes if debounceMs > 0', () => {
+        it('should debounce multiple changes if debounceMs > 0', async () => {
           const renderEditCell = spy(defaultRenderEditCell);
 
           render(<TestCase column1Props={{ renderEditCell }} />);
@@ -436,8 +434,13 @@ describe('<DataGridPro /> - Row editing', () => {
             });
           });
           expect(renderEditCell.callCount).to.equal(0);
-          clock.tick(100);
+
+          await sleep(100);
+          expect(renderEditCell.callCount).to.equal(0);
+
+          await sleep(10);
           expect(renderEditCell.callCount).not.to.equal(0);
+
           expect(renderEditCell.lastCall.args[0].value).to.equal('USD GBP');
         });
       });
@@ -782,8 +785,6 @@ describe('<DataGridPro /> - Row editing', () => {
       });
 
       describe('with pending value mutation', () => {
-        clock.withFakeTimers();
-
         it('should run all pending value mutations before calling processRowUpdate', async () => {
           const processRowUpdate = spy((newRow) => newRow);
           const renderEditCell = spy(defaultRenderEditCell);
@@ -1039,17 +1040,17 @@ describe('<DataGridPro /> - Row editing', () => {
 
   describe('stop edit mode', () => {
     describe('by clicking outside the cell', () => {
-      clock.withFakeTimers();
-
-      it(`should publish 'rowEditStop' with reason=rowFocusOut`, () => {
+      it(`should publish 'rowEditStop' with reason=rowFocusOut`, async () => {
         render(<TestCase />);
         const listener = spy();
         apiRef.current?.subscribeEvent('rowEditStop', listener);
         fireEvent.doubleClick(getCell(0, 1));
         expect(listener.callCount).to.equal(0);
         fireUserEvent.mousePress(getCell(1, 1));
-        clock.runToLast();
-        expect(listener.lastCall.args[0].reason).to.equal('rowFocusOut');
+
+        await waitFor(() => {
+          expect(listener.lastCall.args[0].reason).to.equal('rowFocusOut');
+        });
       });
 
       it(`should not publish 'rowEditStop' if field has error`, async () => {
@@ -1068,16 +1069,15 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(listener.callCount).to.equal(0);
 
         fireUserEvent.mousePress(getCell(1, 1));
-        clock.runToLast();
+
         expect(listener.callCount).to.equal(0);
       });
 
-      it('should call stopRowEditMode with ignoreModifications=false and no cellToFocusAfter', () => {
-        render(<TestCase />);
+      it('should call stopRowEditMode with ignoreModifications=false and no cellToFocusAfter', async () => {
+        const { user } = render(<TestCase />);
         const spiedStopRowEditMode = spyApi(apiRef.current!, 'stopRowEditMode');
-        fireEvent.doubleClick(getCell(0, 1));
-        fireUserEvent.mousePress(getCell(1, 1));
-        clock.runToLast();
+        await user.dblClick(getCell(0, 1));
+        await user.click(getCell(1, 1));
         expect(spiedStopRowEditMode.callCount).to.equal(1);
         expect(spiedStopRowEditMode.lastCall.args[0]).to.deep.equal({
           id: 0,
@@ -1089,15 +1089,18 @@ describe('<DataGridPro /> - Row editing', () => {
 
       it('should call stopRowEditMode with ignoreModifications=false if the props are being processed', async () => {
         const preProcessEditCellProps = () => new Promise(() => {});
-        render(<TestCase column1Props={{ preProcessEditCellProps }} />);
+        const { user } = render(<TestCase column1Props={{ preProcessEditCellProps }} />);
         const spiedStopRowEditMode = spyApi(apiRef.current!, 'stopRowEditMode');
-        fireEvent.doubleClick(getCell(0, 1));
+        await user.dblClick(getCell(0, 1));
         act(() => {
           apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
         });
-        fireUserEvent.mousePress(getCell(1, 1));
-        clock.runToLast();
-        expect(spiedStopRowEditMode.callCount).to.equal(1);
+        await user.click(getCell(1, 1));
+
+        await waitFor(() => {
+          expect(spiedStopRowEditMode.callCount).to.equal(1);
+        });
+
         expect(spiedStopRowEditMode.lastCall.args[0].ignoreModifications).to.equal(false);
       });
     });

@@ -130,7 +130,9 @@ describe('<DataGridPro /> - Detail panel', () => {
       const virtualScrollerContent = grid('virtualScrollerContent')!;
       await user.click(screen.getByRole('button', { name: 'Expand' }));
 
-      expect(getRow(0).className).to.include(gridClasses['row--detailPanelExpanded']);
+      await waitFor(() => {
+        expect(getRow(0).className).to.include(gridClasses['row--detailPanelExpanded']);
+      });
 
       expect(virtualScrollerContent).toHaveComputedStyle({ height: `${rowHeight + 100}px` });
       expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });

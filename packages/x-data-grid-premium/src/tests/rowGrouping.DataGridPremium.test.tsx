@@ -1,7 +1,14 @@
 import * as React from 'react';
 import { config } from 'react-transition-group';
 import { RefObject } from '@mui/x-internals/types';
-import { createRenderer, fireEvent, screen, act, reactMajor } from '@mui/internal-test-utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  act,
+  reactMajor,
+  waitFor,
+} from '@mui/internal-test-utils';
 import {
   microtasks,
   getColumnHeaderCell,
@@ -71,7 +78,7 @@ const baselineProps: BaselineProps = {
 };
 
 describe('<DataGridPremium /> - Row grouping', () => {
-  const { render, clock } = createRenderer();
+  const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
 
@@ -86,8 +93,6 @@ describe('<DataGridPremium /> - Row grouping', () => {
   }
 
   describe('Setting grouping criteria', () => {
-    clock.withFakeTimers();
-
     describe('initialState: rowGrouping.model', () => {
       it('should allow to initialize the row grouping', () => {
         render(
@@ -264,8 +269,6 @@ describe('<DataGridPremium /> - Row grouping', () => {
   });
 
   describe('prop: rowGroupingColumnMode', () => {
-    clock.withFakeTimers();
-
     it('should gather all the grouping criteria into a single column when rowGroupingColumnMode is not defined', () => {
       render(
         <Test
@@ -543,8 +546,6 @@ describe('<DataGridPremium /> - Row grouping', () => {
   });
 
   describe('prop: disableRowGrouping', () => {
-    clock.withFakeTimers();
-
     it('should disable the row grouping when `prop.disableRowGrouping = true`', () => {
       render(
         <Test
@@ -563,7 +564,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
 
       // No menu item on column menu to add / remove grouping criteria
       act(() => apiRef.current?.showColumnMenu('category1'));
-      clock.runToLast();
+
       expect(screen.queryByRole('menu')).not.to.equal(null);
       const category1Menuitem = screen.queryByRole('menuitem', {
         name: 'Stop grouping by category1',
@@ -571,11 +572,11 @@ describe('<DataGridPremium /> - Row grouping', () => {
       expect(category1Menuitem).to.equal(null);
 
       act(() => apiRef.current?.hideColumnMenu());
-      clock.runToLast();
+
       expect(screen.queryByRole('menu')).to.equal(null);
 
       act(() => apiRef.current?.showColumnMenu('category2'));
-      clock.runToLast();
+
       expect(screen.queryByRole('menu')).not.to.equal(null);
       const category2Menuitem = screen.queryByRole('menuitem', { name: 'Group by category2' });
       expect(category2Menuitem).to.equal(null);
@@ -583,8 +584,6 @@ describe('<DataGridPremium /> - Row grouping', () => {
   });
 
   describe('prop: defaultGroupingExpansionDepth', () => {
-    clock.withFakeTimers();
-
     it('should not expand any row if defaultGroupingExpansionDepth = 0', () => {
       render(
         <Test
@@ -681,8 +680,6 @@ describe('<DataGridPremium /> - Row grouping', () => {
   });
 
   describe('prop: isGroupExpandedByDefault', () => {
-    clock.withFakeTimers();
-
     it('should expand groups according to isGroupExpandedByDefault when defined', () => {
       const isGroupExpandedByDefault = spy(
         (node: GridGroupNode) => node.groupingKey === 'Cat A' && node.groupingField === 'category1',
@@ -734,8 +731,6 @@ describe('<DataGridPremium /> - Row grouping', () => {
   });
 
   describe('prop: groupingColDef when groupingColumnMode = "single"', () => {
-    clock.withFakeTimers();
-
     it('should not allow to override the field', () => {
       render(
         <Test
@@ -1080,8 +1075,6 @@ describe('<DataGridPremium /> - Row grouping', () => {
   });
 
   describe('prop: groupingColDef when groupingColumnMode = "multiple"', () => {
-    clock.withFakeTimers();
-
     it('should not allow to override the field', () => {
       render(
         <Test
@@ -1556,8 +1549,6 @@ describe('<DataGridPremium /> - Row grouping', () => {
   });
 
   describe('colDef: groupingValueGetter & valueGetter', () => {
-    clock.withFakeTimers();
-
     it('should use groupingValueGetter to group rows when defined', () => {
       render(
         <Test
@@ -1672,8 +1663,6 @@ describe('<DataGridPremium /> - Row grouping', () => {
   });
 
   describe('column menu', () => {
-    clock.withFakeTimers();
-
     it('should add a "Group by {field}" menu item on ungrouped columns when coLDef.groupable is not defined', () => {
       render(
         <Test
@@ -1688,7 +1677,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
         />,
       );
       act(() => apiRef.current?.showColumnMenu('category1'));
-      clock.runToLast();
+
       expect(screen.queryByRole('menu')).not.to.equal(null);
       const menuItem = screen.getByRole('menuitem', { name: 'Group by category1' });
       fireEvent.click(menuItem);
@@ -1710,7 +1699,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
         />,
       );
       act(() => apiRef.current?.showColumnMenu('category1'));
-      clock.runToLast();
+
       expect(screen.queryByRole('menu')).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Group by category1' })).to.equal(null);
     });
@@ -1734,7 +1723,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
         />,
       );
       act(() => apiRef.current?.showColumnMenu('category1'));
-      clock.runToLast();
+
       expect(screen.queryByRole('menu')).not.to.equal(null);
       const menuItem = screen.getByRole('menuitem', { name: 'Stop grouping by category1' });
       fireEvent.click(menuItem);
@@ -1765,7 +1754,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
       );
 
       act(() => apiRef.current?.showColumnMenu('__row_group_by_columns_group_category1__'));
-      clock.runToLast();
+
       expect(screen.queryByRole('menu')).not.to.equal(null);
       const menuItemCategory1 = screen.getByRole('menuitem', {
         name: 'Stop grouping by category1',
@@ -1774,11 +1763,11 @@ describe('<DataGridPremium /> - Row grouping', () => {
       expect(apiRef.current?.state.rowGrouping.model).to.deep.equal(['category2']);
 
       act(() => apiRef.current?.hideColumnMenu());
-      clock.runToLast();
+
       expect(screen.queryByRole('menu')).to.equal(null);
 
       act(() => apiRef.current?.showColumnMenu('__row_group_by_columns_group_category2__'));
-      clock.runToLast();
+
       expect(screen.queryByRole('menu')).not.to.equal(null);
       const menuItemCategory2 = screen.getByRole('menuitem', {
         name: 'Stop grouping by category2',
@@ -1814,7 +1803,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
       );
 
       act(() => apiRef.current?.showColumnMenu('__row_group_by_columns_group__'));
-      clock.runToLast();
+
       expect(screen.queryByRole('menu')).not.to.equal(null);
       const menuItemCategory1 = screen.getByRole('menuitem', {
         name: 'Stop grouping by category1',
@@ -1856,7 +1845,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
       );
 
       act(() => apiRef.current?.showColumnMenu('__row_group_by_columns_group__'));
-      clock.runToLast();
+
       expect(screen.queryByRole('menu')).not.to.equal(null);
       const menuItemCategory1 = screen.getByRole('menuitem', {
         name: 'Stop grouping by category1',
@@ -1883,7 +1872,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
         />,
       );
       act(() => apiRef.current?.showColumnMenu('category1'));
-      clock.runToLast();
+
       expect(screen.queryByRole('menu')).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Group by Category 1' })).not.to.equal(null);
     });
@@ -1908,7 +1897,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
         />,
       );
       act(() => apiRef.current?.showColumnMenu('category1'));
-      clock.runToLast();
+
       expect(screen.queryByRole('menu')).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Stop grouping by Category 1' })).not.to.equal(
         null,
@@ -1917,8 +1906,6 @@ describe('<DataGridPremium /> - Row grouping', () => {
   });
 
   describe('sorting', () => {
-    clock.withFakeTimers();
-
     describe('prop: rowGroupingColumnMode = "single"', () => {
       it('should use each grouping criteria for sorting if leafField are not defined', async () => {
         render(
@@ -2165,11 +2152,9 @@ describe('<DataGridPremium /> - Row grouping', () => {
   });
 
   describe('filtering', () => {
-    clock.withFakeTimers();
-
     describe('prop: rowGroupingColumnMode = "single"', () => {
-      it('should use the top level grouping criteria for filtering if mainGroupingCriteria and leafField are not defined', () => {
-        render(
+      it('should use the top level grouping criteria for filtering if mainGroupingCriteria and leafField are not defined', async () => {
+        const { user } = render(
           <Test
             initialState={{
               rowGrouping: { model: ['category1', 'category2'] },
@@ -2179,23 +2164,22 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
-        fireEvent.change(screen.getByRole('textbox', { name: 'Value' }), {
-          target: { value: 'Cat A' },
-        });
-        clock.tick(500);
+        await user.type(screen.getByRole('textbox', { name: 'Value' }), 'Cat A');
 
-        expect(getColumnValues(0)).to.deep.equal([
-          'Cat A (3)',
-          'Cat 1 (1)',
-          '',
-          'Cat 2 (2)',
-          '',
-          '',
-        ]);
+        await waitFor(() => {
+          expect(getColumnValues(0)).to.deep.equal([
+            'Cat A (3)',
+            'Cat 1 (1)',
+            '',
+            'Cat 2 (2)',
+            '',
+            '',
+          ]);
+        });
       });
 
-      it('should use the column grouping criteria for filtering if mainGroupingCriteria is one of the grouping criteria and leaf field is defined', () => {
-        render(
+      it('should use the column grouping criteria for filtering if mainGroupingCriteria is one of the grouping criteria and leaf field is defined', async () => {
+        const { user } = render(
           <Test
             initialState={{
               rowGrouping: { model: ['category1', 'category2'] },
@@ -2209,23 +2193,22 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
-        fireEvent.change(screen.getByRole('textbox', { name: 'Value' }), {
-          target: { value: 'Cat 1' },
-        });
-        clock.tick(500);
+        await user.type(screen.getByRole('textbox', { name: 'Value' }), 'Cat 1');
 
-        expect(getColumnValues(0)).to.deep.equal([
-          'Cat A (1)',
-          'Cat 1 (1)',
-          '0',
-          'Cat B (1)',
-          'Cat 1 (1)',
-          '4',
-        ]);
+        await waitFor(() => {
+          expect(getColumnValues(0)).to.deep.equal([
+            'Cat A (1)',
+            'Cat 1 (1)',
+            '0',
+            'Cat B (1)',
+            'Cat 1 (1)',
+            '4',
+          ]);
+        });
       });
 
-      it('should use the leaf field for filtering if mainGroupingCriteria is not defined and leaf field is defined', () => {
-        render(
+      it('should use the leaf field for filtering if mainGroupingCriteria is not defined and leaf field is defined', async () => {
+        const { user } = render(
           <Test
             initialState={{
               rowGrouping: { model: ['category1', 'category2'] },
@@ -2241,16 +2224,21 @@ describe('<DataGridPremium /> - Row grouping', () => {
         fireEvent.change(getSelectByName('Operator'), {
           target: { value: '>' },
         });
-        fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
-          target: { value: 2 },
-        });
-        clock.tick(500);
+        await user.type(screen.getByRole('spinbutton', { name: 'Value' }), '2');
 
-        expect(getColumnValues(0)).to.deep.equal(['Cat B (2)', 'Cat 2 (1)', '3', 'Cat 1 (1)', '4']);
+        await waitFor(() => {
+          expect(getColumnValues(0)).to.deep.equal([
+            'Cat B (2)',
+            'Cat 2 (1)',
+            '3',
+            'Cat 1 (1)',
+            '4',
+          ]);
+        });
       });
 
-      it('should use the leaf field for filtering if mainGroupingCriteria is not one of the grouping criteria and leaf field is defined', () => {
-        render(
+      it('should use the leaf field for filtering if mainGroupingCriteria is not one of the grouping criteria and leaf field is defined', async () => {
+        const { user } = render(
           <Test
             initialState={{
               rowGrouping: { model: ['category1', 'category2'] },
@@ -2267,12 +2255,18 @@ describe('<DataGridPremium /> - Row grouping', () => {
         fireEvent.change(getSelectByName('Operator'), {
           target: { value: '>' },
         });
-        fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
-          target: { value: 2 },
-        });
-        clock.tick(500);
 
-        expect(getColumnValues(0)).to.deep.equal(['Cat B (2)', 'Cat 2 (1)', '3', 'Cat 1 (1)', '4']);
+        await user.type(screen.getByRole('spinbutton', { name: 'Value' }), '2');
+
+        await waitFor(() => {
+          expect(getColumnValues(0)).to.deep.equal([
+            'Cat B (2)',
+            'Cat 2 (1)',
+            '3',
+            'Cat 1 (1)',
+            '4',
+          ]);
+        });
       });
 
       it('should not filter the groups when filtering with an item that is not on the grouping column', () => {
@@ -2471,8 +2465,8 @@ describe('<DataGridPremium /> - Row grouping', () => {
     });
 
     describe('prop: rowGroupingColumnMode = "multiple"', () => {
-      it('should use the column grouping criteria for filtering if mainGroupingCriteria and leafField are not defined', () => {
-        render(
+      it('should use the column grouping criteria for filtering if mainGroupingCriteria and leafField are not defined', async () => {
+        const { user } = render(
           <Test
             initialState={{
               rowGrouping: { model: ['category1'] },
@@ -2483,17 +2477,17 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
-        fireEvent.change(screen.getByRole('textbox', { name: 'Value' }), {
-          target: { value: 'Cat A' },
-        });
-        clock.tick(500);
+        await user.type(screen.getByRole('textbox', { name: 'Value' }), 'Cat A');
 
-        expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '']);
+        await waitFor(() => {
+          expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '']);
+        });
+
         expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2']);
       });
 
-      it('should use the column grouping criteria for filtering if mainGroupingCriteria matches the column grouping criteria and leaf field is defined', () => {
-        render(
+      it('should use the column grouping criteria for filtering if mainGroupingCriteria matches the column grouping criteria and leaf field is defined', async () => {
+        const { user } = render(
           <Test
             initialState={{
               rowGrouping: { model: ['category1'] },
@@ -2508,16 +2502,15 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
-        fireEvent.change(screen.getByRole('textbox', { name: 'Value' }), {
-          target: { value: 'Cat A' },
-        });
-        clock.tick(500);
+        await user.type(screen.getByRole('textbox', { name: 'Value' }), 'Cat A');
 
-        expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '0', '1', '2']);
+        await waitFor(() => {
+          expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '0', '1', '2']);
+        });
       });
 
-      it('should use the leaf field for filtering if mainGroupingCriteria is not defined and leaf field is defined', () => {
-        render(
+      it('should use the leaf field for filtering if mainGroupingCriteria is not defined and leaf field is defined', async () => {
+        const { user } = render(
           <Test
             initialState={{
               rowGrouping: { model: ['category1'] },
@@ -2534,16 +2527,16 @@ describe('<DataGridPremium /> - Row grouping', () => {
         fireEvent.change(getSelectByName('Operator'), {
           target: { value: '>' },
         });
-        fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
-          target: { value: 2 },
-        });
-        clock.tick(500);
+        await user.clear(screen.getByRole('spinbutton', { name: 'Value' }));
+        await user.type(screen.getByRole('spinbutton', { name: 'Value' }), '2');
 
-        expect(getColumnValues(0)).to.deep.equal(['Cat B (2)', '3', '4']);
+        await waitFor(() => {
+          expect(getColumnValues(0)).to.deep.equal(['Cat B (2)', '3', '4']);
+        });
       });
 
-      it("should use the leaf field for filtering if mainGroupingCriteria doesn't match the column grouping criteria and leaf field is defined", () => {
-        render(
+      it("should use the leaf field for filtering if mainGroupingCriteria doesn't match the column grouping criteria and leaf field is defined", async () => {
+        const { user } = render(
           <Test
             initialState={{
               rowGrouping: { model: ['category1'] },
@@ -2561,12 +2554,12 @@ describe('<DataGridPremium /> - Row grouping', () => {
         fireEvent.change(getSelectByName('Operator'), {
           target: { value: '>' },
         });
-        fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
-          target: { value: 2 },
-        });
-        clock.tick(500);
+        await user.clear(screen.getByRole('spinbutton', { name: 'Value' }));
+        await user.type(screen.getByRole('spinbutton', { name: 'Value' }), '2');
 
-        expect(getColumnValues(0)).to.deep.equal(['Cat B (2)', '3', '4']);
+        await waitFor(() => {
+          expect(getColumnValues(0)).to.deep.equal(['Cat B (2)', '3', '4']);
+        });
       });
 
       it('should not filter the groups when filtering with an item that is not on the grouping column', () => {
@@ -2705,8 +2698,6 @@ describe('<DataGridPremium /> - Row grouping', () => {
   });
 
   describe('apiRef: addRowGroupingCriteria', () => {
-    clock.withFakeTimers();
-
     it('should add grouping criteria to model', () => {
       render(<Test initialState={{ rowGrouping: { model: ['category1'] } }} />);
       act(() => apiRef.current?.addRowGroupingCriteria('category2'));
@@ -2721,8 +2712,6 @@ describe('<DataGridPremium /> - Row grouping', () => {
   });
 
   describe('apiRef: removeRowGroupingCriteria', () => {
-    clock.withFakeTimers();
-
     it('should remove field from model', () => {
       render(<Test initialState={{ rowGrouping: { model: ['category1'] } }} />);
       act(() => apiRef.current?.removeRowGroupingCriteria('category1'));
@@ -2731,8 +2720,6 @@ describe('<DataGridPremium /> - Row grouping', () => {
   });
 
   describe('apiRef: setRowGroupingCriteriaIndex', () => {
-    clock.withFakeTimers();
-
     it('should change the grouping criteria order', () => {
       render(<Test initialState={{ rowGrouping: { model: ['category1', 'category2'] } }} />);
       act(() => apiRef.current?.setRowGroupingCriteriaIndex('category1', 1));
@@ -2741,8 +2728,6 @@ describe('<DataGridPremium /> - Row grouping', () => {
   });
 
   describe('apiRef: getRowGroupChildren', () => {
-    clock.withFakeTimers();
-
     it('should return the rows in group of depth 0 of length 1 from tree of depth 1', () => {
       render(
         <Test

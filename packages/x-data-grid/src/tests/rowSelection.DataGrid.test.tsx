@@ -607,7 +607,7 @@ describe('<DataGrid /> - Row selection', () => {
 
     // Skip on everything as this is failing on all environments on ubuntu/CI
     //   describe('ripple', () => {
-    //     clock.withFakeTimers();
+    //
     //     // JSDOM doesn't fire "blur" when .focus is called in another element
     //     // FIXME Firefox doesn't show any ripple
     //     testSkipIf(isJSDOM)('should keep only one ripple visible when navigating between checkboxes', async () => {
@@ -616,7 +616,7 @@ describe('<DataGrid /> - Row selection', () => {
     //       fireUserEvent.mousePress(cell);
     //       fireEvent.keyDown(cell, { key: 'ArrowLeft' });
     //       fireEvent.keyDown(getCell(1, 0).querySelector('input')!, { key: 'ArrowUp' });
-    //       clock.runToLast(); // Wait for transition
+    //
     //       await flushMicrotasks();
     //       expect(document.querySelectorAll('.MuiTouchRipple-rippleVisible')).to.have.length(1);
     //     });

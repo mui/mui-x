@@ -119,6 +119,7 @@ describe('<DataGridPro /> - Columns', () => {
       await user.pointer([
         { keys: '[MouseLeft>]', target: separator, coords: { x: 100 } },
         { target: separator, coords: { x: 110 } },
+        { target: separator, coords: { x: 120 } },
         { keys: '[/MouseLeft]', target: separator, coords: { x: 120 } },
       ]);
 
@@ -136,7 +137,7 @@ describe('<DataGridPro /> - Columns', () => {
 
       await user.pointer([
         { keys: '[MouseLeft>]', target: separator, coords: { x: 100 } },
-        { target: separator, coords: { x: 110 } },
+        { target: separator, coords: { x: 120 } },
         { keys: '[/MouseLeft]', target: separator, coords: { x: 120 } },
       ]);
 
@@ -153,7 +154,7 @@ describe('<DataGridPro /> - Columns', () => {
 
       await user.pointer([
         { keys: '[MouseLeft>]', target: separator, coords: { x: 100 } },
-        { target: separator, coords: { x: 110 } },
+        { target: separator, coords: { x: 120 } },
         { keys: '[/MouseLeft]', target: separator, coords: { x: 120 } },
       ]);
 
@@ -609,7 +610,7 @@ describe('<DataGridPro /> - Columns', () => {
       await user.dblClick(separators[0]);
 
       await waitFor(() => {
-        expect(columns.map((_, i) => getColumnHeaderCell(i).offsetWidth)).to.deep.equal([50, 233]);
+        expect(columns.map((_, i) => getColumnHeaderCell(i).offsetWidth)).to.deep.equal([50, 248]);
       });
 
       await user.dblClick(separators[1]);
@@ -645,7 +646,7 @@ describe('<DataGridPro /> - Columns', () => {
 
       it('.expand works', async () => {
         // These values are tuned to Ubuntu/Chromium and might be flaky in other environments
-        await autosize({ expand: true }, [134, 148]);
+        await autosize({ expand: true }, [142, 155]);
       });
     });
   });
