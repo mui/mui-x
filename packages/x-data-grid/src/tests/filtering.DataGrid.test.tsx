@@ -1450,9 +1450,14 @@ describe('<DataGrid /> - Filter', () => {
 
       await user.hover(filterButton);
 
-      await waitFor(() => {
-        expect(screen.queryByRole('tooltip')).not.to.equal(null);
-      });
+      await waitFor(
+        () => {
+          expect(screen.queryByRole('tooltip')).not.to.equal(null);
+        },
+        {
+          timeout: 2000,
+        },
+      );
 
       const tooltip = screen.getByRole('tooltip');
 

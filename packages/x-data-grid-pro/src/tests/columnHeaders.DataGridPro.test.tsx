@@ -9,6 +9,11 @@ import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 describe('<DataGridPro /> - Column headers', () => {
   const { render } = createRenderer();
 
+  afterEach(() => {
+    // Focus body to avoid multiple tooltips in the DOM
+    document.body.focus();
+  });
+
   const baselineProps = {
     autoHeight: isJSDOM,
     disableColumnResize: false,

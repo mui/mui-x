@@ -21,7 +21,7 @@ function TestComponent(props: { packageName?: MuiCommercialPackageName }) {
   return <div data-testid="status">Status: {licenseStatus.status}</div>;
 }
 
-// Can't change the process.env.NODE_ENV in Karma
+// Can't change the process.env.NODE_ENV in Browser
 describeSkipIf(!isJSDOM)('useLicenseVerifier', () => {
   const { render } = createRenderer();
 
