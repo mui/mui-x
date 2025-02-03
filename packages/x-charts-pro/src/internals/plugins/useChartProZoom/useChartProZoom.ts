@@ -373,8 +373,8 @@ useChartProZoom.params = {
 
 useChartProZoom.getDefaultizedParams = ({ params }) => {
   const optionsLookup = {
-    ...creatZoomLookup(params.defaultizedXAxis),
-    ...creatZoomLookup(params.defaultizedYAxis),
+    ...creatZoomLookup('x')(params.defaultizedXAxis),
+    ...creatZoomLookup('y')(params.defaultizedYAxis),
   };
 
   return {

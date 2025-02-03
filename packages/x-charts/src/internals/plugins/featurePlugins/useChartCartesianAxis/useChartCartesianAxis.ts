@@ -4,7 +4,7 @@ import { warnOnce } from '@mui/x-internals/warning';
 import { ChartPlugin } from '../../models';
 import { ChartSeriesType } from '../../../../models/seriesType/config';
 import { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
-import { blueberryTwilightPalette } from '../../../../colorPalettes';
+import { rainbowSurgePalette } from '../../../../colorPalettes';
 import { useSelector } from '../../../store/useSelector';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
 import { selectorChartSeriesState } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
@@ -65,7 +65,7 @@ useChartCartesianAxis.params = {
 useChartCartesianAxis.getDefaultizedParams = ({ params }) => {
   return {
     ...params,
-    colors: params.colors ?? blueberryTwilightPalette,
+    colors: params.colors ?? rainbowSurgePalette,
     theme: params.theme ?? 'light',
     defaultizedXAxis: defaultizeAxis(params.xAxis, params.dataset, 'x'),
     defaultizedYAxis: defaultizeAxis(params.yAxis, params.dataset, 'y'),
