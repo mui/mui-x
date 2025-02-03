@@ -28,9 +28,7 @@
       "type": { "name": "enum", "description": "'content'<br>&#124;&nbsp;'iconContainer'" },
       "default": "'content'"
     },
-    "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ itemsReordering?: bool, labelEditing?: bool }" }
-    },
+    "experimentalFeatures": { "type": { "name": "object" } },
     "getItemId": {
       "type": { "name": "func" },
       "default": "(item) => item.id",
@@ -58,7 +56,10 @@
         "returned": "boolean"
       }
     },
-    "isItemEditable": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;bool" } },
+    "isItemEditable": {
+      "type": { "name": "union", "description": "func<br>&#124;&nbsp;bool" },
+      "default": "() => false"
+    },
     "isItemReorderable": {
       "type": { "name": "func" },
       "default": "() => true",
