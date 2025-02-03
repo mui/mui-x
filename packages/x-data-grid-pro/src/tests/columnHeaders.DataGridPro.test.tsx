@@ -135,8 +135,9 @@ describe('<DataGridPro /> - Column headers', () => {
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
 
       await user.click(menuIconButton);
-      expect(screen.queryByRole('menu')).not.to.equal(null);
-
+      await waitFor(() => {
+        expect(screen.queryByRole('menu')).not.to.equal(null);
+      });
       const separator = columnCell.querySelector('.MuiDataGrid-iconSeparator')!.parentElement!;
       await user.click(separator);
       await waitFor(() => {
@@ -163,19 +164,15 @@ describe('<DataGridPro /> - Column headers', () => {
       const menuIconButton = columnWithMenuCell.querySelector('button[aria-label="Menu"]')!;
 
       await user.click(menuIconButton);
-
-      await waitFor(() => {
-        expect(screen.queryByRole('menu')).not.to.equal(null);
-      });
+      await screen.findByRole('menu');
 
       const separator = columnToResizeCell.querySelector(
         `.${gridClasses['columnSeparator--resizable']}`,
       )!;
-      await user.pointer({
-        keys: '[MouseLeft>]',
-        target: separator,
+      await user.click(separator);
+      await waitFor(() => {
+        expect(screen.queryByRole('menu')).to.equal(null);
       });
-      expect(screen.queryByRole('menu')).to.equal(null);
     });
 
     it('should close the menu of a column when pressing the Escape key', async () => {
