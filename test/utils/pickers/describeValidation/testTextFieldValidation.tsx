@@ -5,7 +5,7 @@ import { TimeView } from '@mui/x-date-pickers/models';
 import { adapterToUse, getFieldInputRoot } from 'test/utils/pickers';
 import { describeSkipIf, testSkipIf } from 'test/utils/skipIf';
 import { DescribeValidationTestSuite } from './describeValidation.types';
-import { createFakeClock } from '../../createFakeClock';
+import { createClock } from '../../createFakeClock';
 
 export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTest, getOptions) => {
   const { componentFamily, render, withDate, withTime } = getOptions();
@@ -139,7 +139,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
     });
 
     describeSkipIf(!withDate)('with fake timers', () => {
-      createFakeClock('real', new Date(2018, 0, 1));
+      createClock(new Date(2018, 0, 1));
       it('should apply disablePast', () => {
         let now;
         function WithFakeTimer(props: any) {

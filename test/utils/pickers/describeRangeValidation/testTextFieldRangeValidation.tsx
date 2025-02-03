@@ -4,7 +4,7 @@ import { spy } from 'sinon';
 import { adapterToUse, getAllFieldInputRoot } from 'test/utils/pickers';
 import { describeSkipIf, testSkipIf } from 'test/utils/skipIf';
 import { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
-import { createFakeClock } from '../../createFakeClock';
+import { createClock } from '../../createFakeClock';
 
 const testInvalidStatus = (expectedAnswer: boolean[], isSingleInput: boolean | undefined) => {
   const answers = isSingleInput ? [expectedAnswer[0] || expectedAnswer[1]] : expectedAnswer;
@@ -186,7 +186,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
     });
 
     describe('with fake timer', () => {
-      createFakeClock('real', new Date(2018, 0, 1));
+      createClock(new Date(2018, 0, 1));
 
       it('should apply disablePast', () => {
         const onErrorMock = spy();

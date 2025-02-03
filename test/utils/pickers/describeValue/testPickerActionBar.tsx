@@ -9,7 +9,7 @@ import {
   expectPickerChangeHandlerValue,
 } from 'test/utils/pickers';
 import { DescribeValueTestSuite } from './describeValue.types';
-import { createFakeClock } from '../../createFakeClock';
+import { createClock } from '../../createFakeClock';
 
 export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
   ElementToTest,
@@ -222,7 +222,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
     });
 
     describe('today action', () => {
-      createFakeClock('real', new Date(2020, 0, 1));
+      createClock(new Date(2020, 0, 1));
 
       it("should call onClose, onChange with today's value and onAccept with today's value", () => {
         const onChange = spy();

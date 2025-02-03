@@ -33,33 +33,20 @@ export interface Clock {
 
 export type ClockConfig = undefined | number | Date;
 
-export function createFakeClock(
-  defaultMode: 'fake' | 'real',
+export function createClock(
   config?: ClockConfig,
   options?: Exclude<Parameters<typeof vi.useFakeTimers>[0], number | Date>,
 ): Clock {
-  if (defaultMode === 'fake') {
-    beforeEach(() => {
-      vi.useFakeTimers(options);
-      if (config) {
-        vi.setSystemTime(config);
-      }
-    });
-    afterEach(() => {
+  beforeEach(() => {
+    if (config) {
+      vi.setSystemTime(config);
+    }
+  });
+  afterEach(() => {
+    if (config) {
       vi.useRealTimers();
-    });
-  } else {
-    beforeEach(() => {
-      if (config) {
-        vi.setSystemTime(config);
-      }
-    });
-    afterEach(() => {
-      if (config) {
-        vi.useRealTimers();
-      }
-    });
-  }
+    }
+  });
 
   return {
     withFakeTimers() {
