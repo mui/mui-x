@@ -8,8 +8,7 @@ import notifyAboutMuiXTelemetry from './notify';
 // This is the key that stores whether or not telemetry is enabled or disabled.
 const TELEMETRY_KEY_IS_COLLECTING = 'telemetry.isCollecting';
 
-// This is the key that specifies when the user was informed about anonymous
-// telemetry collection.
+// This is the key that specifies when the user was informed about telemetry collection.
 const TELEMETRY_KEY_NOTIFY_DATE = 'telemetry.notifiedAt';
 
 // This is a quasi-persistent identifier used to dedupe recurring events. It's

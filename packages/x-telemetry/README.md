@@ -1,6 +1,6 @@
 # @mui/x-telemetry
 
-Package used by some of MUI X to collects **completely anonymous** temetry data about general usage. Participation in this anonymous program is optional, and you may opt-out if you'd not like to share any information.
+Package used by some of MUI X to collects **anonymous** telemetry data about general usage. Participation in this anonymous program is optional, and you may opt-out if you'd not like to share any information.
 
 ## How to opt-in
 
@@ -10,6 +10,8 @@ Currently, **it's disabled by default,** and you could opt-in to it in 3 ways:
 
 ```shell
 npx mui-x-telemetry enable
+# or
+npx mui-x-telemetry disable
 ```
 
 2. By setting it directly to package settings on the application start (e.g. in main file).
@@ -27,39 +29,32 @@ muiXTelemetrySettings.disableTelemetry(); // to disable telemetry collection and
 3. By setting the environment variable.
 
 ```dotenv
-MUI_X_TELEMETRY_ENABLED=true
+MUI_X_TELEMETRY_DISABLED=false # Enable telemetry
 # or
-MUI_X_TELEMETRY_DISABLED=true
+MUI_X_TELEMETRY_DISABLED=true # Enable telemetry
 ```
 
-> ⚠️ Note that some frameworks requires to prefix the variable with `REACT_APP_` or `NEXT_PUBLIC_` or other.
->
-> Supported prefixes are:
->
-> - REACT*APP*
-> - NEXT*PUBLIC*
-> - GATSBY\_
-> - PUBLIC\_
+> ⚠️ Note that some frameworks requires to prefix the variable with `REACT_APP_`, `NEXT_PUBLIC_`, etc.
 
 4. By setting the flag to global object on the application start (e.g. in main file).
 
 ```js
 import { ponyfillGlobal } from '@mui/utils';
 
-ponyfillGlobal.__MUI_X_TELEMETRY_ENABLED__ = true;
+ponyfillGlobal.__MUI_X_TELEMETRY_DISABLED__ = false; // enabled
 // or
-ponyfillGlobal.__MUI_X_TELEMETRY_DISABLED__ = true;
+ponyfillGlobal.__MUI_X_TELEMETRY_DISABLED__ = true; // disabled
 ```
 
 OR
 
 ```js
 if (typeof window !== 'undefined') {
-  window.__MUI_X_TELEMETRY_ENABLED__ = true;
+  window.__MUI_X_TELEMETRY_DISABLED__ = false; // enabled
 }
 // or
 if (typeof window !== 'undefined') {
-  window.__MUI_X_TELEMETRY_DISABLED__ = true;
+  window.__MUI_X_TELEMETRY_DISABLED__ = true; // disabled
 }
 ```
 

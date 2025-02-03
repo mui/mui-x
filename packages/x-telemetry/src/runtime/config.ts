@@ -39,6 +39,15 @@ function getBooleanEnvFromEnvObject(envKey: string, envObj: Record<string, any>)
 }
 
 function getIsTelemetryCollecting(): boolean | undefined {
+  // Check global variable
+  // eslint-disable-next-line no-underscore-dangle
+  const globalValue = ponyfillGlobal.__MUI_X_TELEMETRY_DISABLED__;
+  if (typeof globalValue === 'boolean') {
+    // If disabled=true, telemetry is disabled
+    // If disabled=false, telemetry is enabled
+    return !globalValue;
+  }
+
   try {
     if (typeof process !== 'undefined' && process.env && typeof process.env === 'object') {
       const result = getBooleanEnvFromEnvObject('MUI_X_TELEMETRY_DISABLED', process.env);
@@ -69,6 +78,7 @@ function getIsTelemetryCollecting(): boolean | undefined {
   }
 
   try {
+    // Some build tools replace env variables on compilation
     // e.g. Next.js, webpack EnvironmentPlugin
     const envValue =
       process.env.MUI_X_TELEMETRY_DISABLED ||
