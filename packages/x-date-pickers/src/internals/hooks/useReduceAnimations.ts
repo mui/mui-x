@@ -12,7 +12,12 @@ const iOSVersion =
 export const slowAnimationDevices =
   (androidVersion && androidVersion < 10) || (iOSVersion && iOSVersion < 13) || false;
 
-export const useDefaultReduceAnimations = () => {
+export function useReduceAnimations(customReduceAnimations: boolean | undefined) {
   const prefersReduced = useMediaQuery(PREFERS_REDUCED_MOTION, { defaultMatches: false });
+
+  if (customReduceAnimations != null) {
+    return customReduceAnimations;
+  }
+
   return prefersReduced || slowAnimationDevices;
-};
+}

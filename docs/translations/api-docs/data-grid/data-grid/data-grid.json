@@ -893,10 +893,6 @@
       "nodeName": "the panel wrapper element"
     },
     "paper": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the paper element" },
-    "pinnedColumns": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the pinned columns"
-    },
     "pinnedRows": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the pinned rows container"
@@ -908,10 +904,6 @@
     "pinnedRows--top": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the top pinned rows container"
-    },
-    "pinnedRowsRenderZone": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "pinned rows render zones"
     },
     "root": { "description": "Styles applied to the root element." },
     "root--densityComfortable": {

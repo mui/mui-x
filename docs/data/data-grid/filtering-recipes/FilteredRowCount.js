@@ -45,7 +45,12 @@ export default function FilteredRowCount() {
 
   const getFilteredRowsCount = React.useCallback(
     (filterModel) => {
-      const { filteredRowsLookup } = apiRef.current.getFilterState(filterModel);
+      const filterState = apiRef.current?.getFilterState(filterModel);
+      if (!filterState) {
+        return 0;
+      }
+
+      const { filteredRowsLookup } = filterState;
       return Object.keys(filteredRowsLookup).filter(
         (rowId) => filteredRowsLookup[rowId] === true,
       ).length;
@@ -72,7 +77,7 @@ export default function FilteredRowCount() {
           return (
             <Button
               key={label}
-              onClick={() => apiRef.current.setFilterModel(filterModel)}
+              onClick={() => apiRef.current?.setFilterModel(filterModel)}
               variant="outlined"
             >
               {label} {count !== undefined ? `(${count})` : ''}

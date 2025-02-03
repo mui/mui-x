@@ -9,7 +9,6 @@ import { options } from '../utils/options';
 describe('ScatterChartPro', () => {
   const dataLength = 50;
   const data = Array.from({ length: dataLength }).map((_, i) => ({
-    id: i,
     x: i,
     y: 50 + Math.sin(i / 5) * 25,
   }));
@@ -39,7 +38,7 @@ describe('ScatterChartPro', () => {
               valueFormatter: (v) => v.toLocaleString('en-US'),
             },
           ]}
-          initialZoom={[{ axisId: 'x', start: 2, end: 7 }]}
+          initialZoom={[{ axisId: 'x', start: 20, end: 70 }]}
           series={[
             {
               data,

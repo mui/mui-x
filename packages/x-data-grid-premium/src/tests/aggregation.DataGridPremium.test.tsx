@@ -47,7 +47,7 @@ const baselineProps: DataGridPremiumProps = {
 describe('<DataGridPremium /> - Aggregation', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
-  let apiRef: RefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   function Test(props: Partial<DataGridPremiumProps>) {
     apiRef = useGridApiRef();
@@ -391,7 +391,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
     it('should render select on aggregable column', () => {
       render(<Test />);
 
-      act(() => apiRef.current.showColumnMenu('id'));
+      act(() => apiRef.current?.showColumnMenu('id'));
       clock.runToLast();
 
       expect(screen.queryByLabelText('Aggregation')).not.to.equal(null);
@@ -402,7 +402,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
 
-      act(() => apiRef.current.showColumnMenu('id'));
+      act(() => apiRef.current?.showColumnMenu('id'));
       clock.runToLast();
       fireUserEvent.mousePress(screen.getByLabelText('Aggregation'));
       fireUserEvent.mousePress(
@@ -556,7 +556,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         />,
       );
 
-      act(() => apiRef.current.showColumnMenu('id'));
+      act(() => apiRef.current?.showColumnMenu('id'));
       clock.runToLast();
 
       expect(screen.queryAllByLabelText('Aggregation')).to.have.length(0);
@@ -596,7 +596,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
 
       act(() =>
-        apiRef.current.updateColumns([
+        apiRef.current?.updateColumns([
           { field: 'id', availableAggregationFunctions: ['min', 'max'] },
         ]),
       );

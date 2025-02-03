@@ -96,7 +96,7 @@ import {
 import { useGridClipboardImport } from '../hooks/features/clipboard/useGridClipboardImport';
 
 export const useDataGridPremiumComponent = (
-  inputApiRef: RefObject<GridApiPremium> | undefined,
+  inputApiRef: RefObject<GridApiPremium | null> | undefined,
   props: DataGridPremiumProcessedProps,
 ) => {
   const apiRef = useGridInitialization<GridPrivateApiPremium, GridApiPremium>(inputApiRef, props);
@@ -153,8 +153,8 @@ export const useDataGridPremiumComponent = (
   useGridRowGrouping(apiRef, props);
   useGridHeaderFiltering(apiRef, props);
   useGridTreeData(apiRef, props);
-  useGridDataSource(apiRef, props);
   useGridAggregation(apiRef, props);
+  useGridDataSource(apiRef, props);
   useGridKeyboardNavigation(apiRef, props);
   useGridRowSelection(apiRef, props);
   useGridCellSelection(apiRef, props);
