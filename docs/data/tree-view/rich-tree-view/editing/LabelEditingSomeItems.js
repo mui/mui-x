@@ -9,7 +9,6 @@ export default function LabelEditingSomeItems() {
       <RichTreeView
         items={MUI_X_PRODUCTS}
         isItemEditable={(item) => Boolean(item?.editable)}
-        experimentalFeatures={{ labelEditing: true }}
         defaultExpandedItems={['grid', 'pickers']}
       />
     </Box>
