@@ -4,7 +4,7 @@ packageName: '@mui/x-telemetry'
 
 # MUI X Telemetry guide
 
-<p class="description">MUI X Telemetry collects anonymous usage data to help improve the library. This guide will walk you through how to opt-in, opt-out, and configure telemetry.</p>
+<p class="description">MUI X Telemetry collects anonymous usage data to help improve the library. This guide walk you through how to opt-in, opt-out, and configure telemetry.</p>
 
 ## Opting In
 
