@@ -17,7 +17,7 @@ import {
   useGridApiMethod,
   useGridApiEventHandler,
 } from '../../utils';
-import { isDeepEqual, runIf } from '../../../utils/utils';
+import { isDeepEqual } from '../../../utils/utils';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { gridPageCountSelector, gridPaginationModelSelector } from './gridPaginationSelector';
 import {
@@ -299,16 +299,8 @@ export const useGridPaginationModel = (
   useGridApiEventHandler(apiRef, 'viewportInnerSizeChange', handleUpdateAutoPageSize);
   useGridApiEventHandler(apiRef, 'paginationModelChange', handlePaginationModelChange);
   useGridApiEventHandler(apiRef, 'rowCountChange', handleRowCountChange);
-  useGridApiEventHandler(
-    apiRef,
-    'sortModelChange',
-    runIf(props.resetPageOnSortFilter, handleSortModelChange),
-  );
-  useGridApiEventHandler(
-    apiRef,
-    'filterModelChange',
-    runIf(props.resetPageOnSortFilter, handleFilterModelChange),
-  );
+  useGridApiEventHandler(apiRef, 'sortModelChange', handleSortModelChange);
+  useGridApiEventHandler(apiRef, 'filterModelChange', handleFilterModelChange);
 
   /**
    * EFFECTS
