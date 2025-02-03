@@ -62,6 +62,7 @@ async function sendMuiXTelemetryEvent(event: TelemetryEvent | null) {
         headers: {
           'Content-Type': 'application/json',
           'X-Telemetry-Client-Version': packageJson.version,
+          'X-Telemetry-Node-Env': (process.env.NODE_ENV as any) ?? '<unknown>',
         },
         body: JSON.stringify([eventPayload]),
       },
