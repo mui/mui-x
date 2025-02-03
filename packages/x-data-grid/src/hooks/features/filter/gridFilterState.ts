@@ -73,4 +73,4 @@ export type GridFilteringMethodValue = Omit<GridFilterState, 'filterModel'>;
  * A row is visible if it is passing the filters AND if its parents are expanded.
  * If a row is not registered in this lookup, it is visible.
  */
-export type GridVisibleRowsLookupState = Record<GridRowId, boolean>;
+export type GridVisibleRowsLookupState = Record<GridRowId, false>;
