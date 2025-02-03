@@ -61,8 +61,7 @@ describe('<DateRangeCalendar />', () => {
         name: 'Next month',
       });
       fireEvent.click(visibleButton);
-      await clock.runToLast();
-      fireEvent.click(getPickerDay('19', 'March 2019'));
+      await fireEvent.click(getPickerDay('19', 'March 2019'));
 
       expect(onChange.callCount).to.equal(2);
 
@@ -457,8 +456,7 @@ describe('<DateRangeCalendar />', () => {
       );
 
       fireEvent.click(getPickerDay('5', 'January 2018'));
-      await clock.runToLast();
-      expect(getPickerDay('1', 'July 2018')).not.to.equal(null);
+      await expect(getPickerDay('1', 'July 2018')).not.to.equal(null);
     });
 
     it('should not go to the month of the end date when changing the start date and props.disableAutoMonthSwitching = true', async () => {
@@ -470,8 +468,7 @@ describe('<DateRangeCalendar />', () => {
       );
 
       fireEvent.click(getPickerDay('5', 'January 2018'));
-      await clock.runToLast();
-      expect(getPickerDay('1', 'January 2018')).not.to.equal(null);
+      await expect(getPickerDay('1', 'January 2018')).not.to.equal(null);
     });
 
     it('should go to the month of the start date when changing both date from the outside', async () => {
@@ -484,8 +481,7 @@ describe('<DateRangeCalendar />', () => {
       setProps({
         value: [adapterToUse.date('2018-04-01'), adapterToUse.date('2018-04-01')],
       });
-      await clock.runToLast();
-      expect(getPickerDay('1', 'April 2018')).not.to.equal(null);
+      await expect(getPickerDay('1', 'April 2018')).not.to.equal(null);
     });
 
     describe('prop: currentMonthCalendarPosition', () => {
@@ -500,8 +496,7 @@ describe('<DateRangeCalendar />', () => {
         setProps({
           value: [adapterToUse.date('2018-02-11'), adapterToUse.date('2018-02-22')],
         });
-        await clock.runToLast();
-        expect(getPickerDay('1', 'February 2018')).not.to.equal(null);
+        await expect(getPickerDay('1', 'February 2018')).not.to.equal(null);
       });
     });
   });

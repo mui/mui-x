@@ -12,7 +12,6 @@ import { DesktopDateTimeRangePicker } from '../DesktopDateTimeRangePicker';
 
 describe('<DesktopDateTimeRangePicker />', () => {
   const { render } = createPickerRenderer({
-    clock: 'fake',
     clockConfig: new Date(2018, 0, 10, 10, 16, 0),
   });
 

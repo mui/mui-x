@@ -20,7 +20,7 @@ function WrappedDateCalendar(
 }
 
 describe('<DateCalendar /> - Validation', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   // Test about `shouldDisableMonth` on the "month" view is on the `MonthCalendar` test file.
   describe('props.shouldDisableMonth', () => {
@@ -40,17 +40,13 @@ describe('<DateCalendar /> - Validation', () => {
       });
 
       fireEvent.click(screen.getByTitle('Next month'));
-      await clock.runToLast();
-
-      // All dates should be disabled in disabled month
+      await // All dates should be disabled in disabled month
       screen.getAllByTestId('day').forEach((day) => {
         expect(day).to.have.attribute('disabled');
       });
 
       fireEvent.click(screen.getByTitle('Next month'));
-      await clock.runToLast();
-
-      // No date should be disabled in the month after the disabled month
+      await // No date should be disabled in the month after the disabled month
       screen.getAllByTestId('day').forEach((day) => {
         expect(day).not.to.have.attribute('disabled');
       });
@@ -75,9 +71,7 @@ describe('<DateCalendar /> - Validation', () => {
       });
 
       fireEvent.click(screen.getByTitle('Next month'));
-      await clock.runToLast();
-
-      // All dates should be disabled in disabled year
+      await // All dates should be disabled in disabled year
       screen.getAllByTestId('day').forEach((day) => {
         expect(day).to.have.attribute('disabled');
       });

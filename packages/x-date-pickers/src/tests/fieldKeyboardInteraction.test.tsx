@@ -58,7 +58,6 @@ const adapterToTest = [
 
 describe(`RTL - test arrows navigation`, () => {
   const { render, adapter } = createPickerRenderer({
-    clock: 'fake',
     adapterName: 'moment-jalaali',
   });
 
@@ -210,7 +209,6 @@ describe(`RTL - test arrows navigation`, () => {
 adapterToTest.forEach((adapterName) => {
   describe(`test keyboard interaction with ${adapterName} adapter`, () => {
     const { render, adapter } = createPickerRenderer({
-      clock: 'fake',
       adapterName,
     });
 

@@ -5,7 +5,7 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { adapterToUse, createPickerRenderer } from 'test/utils/pickers';
 
 describe('<DateCalendar /> keyboard interactions', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describe('Calendar keyboard navigation', () => {
     it('can autofocus selected day on mount', () => {
@@ -76,8 +76,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
         // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
         fireEvent.keyDown(document.activeElement!, { key });
 
-        await clock.runToLast();
-        // Based on column header, screen reader should pronounce <Day Number> <Week Day>
+        await // Based on column header, screen reader should pronounce <Day Number> <Week Day>
         // But `toHaveAccessibleName` does not do the link between column header and cell value, so we only get <day number> in test
         expect(document.activeElement).toHaveAccessibleName(expectFocusedDay);
       });
@@ -115,8 +114,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
           // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
           fireEvent.keyDown(document.activeElement!, { key });
 
-          await clock.runToLast();
-          // Based on column header, screen reader should pronounce <Day Number> <Week Day>
+          await // Based on column header, screen reader should pronounce <Day Number> <Week Day>
           // But `toHaveAccessibleName` does not do the link between column header and cell value, so we only get <day number> in test
           expect(document.activeElement).toHaveAccessibleName(expectFocusedDay);
         });
@@ -133,8 +131,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
         // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
         fireEvent.keyDown(document.activeElement!, { key: 'Enter' });
 
-        await clock.runToLast();
-        expect(document.activeElement).toHaveAccessibleName('Next month');
+        await expect(document.activeElement).toHaveAccessibleName('Next month');
       });
     });
   });

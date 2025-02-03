@@ -14,7 +14,7 @@ import {
 } from 'test/utils/pickers';
 
 describe('<MobileDatePicker />', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
   const { renderWithProps } = buildFieldInteractions({
     render,
     Component: MobileDatePicker,
@@ -166,9 +166,7 @@ describe('<MobileDatePicker />', () => {
       openPicker({ type: 'date' });
       // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
       fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
-      await clock.runToLast();
-
-      // Verify it's still a clean value
+      await // Verify it's still a clean value
       expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
     });
   });

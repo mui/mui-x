@@ -12,7 +12,7 @@ import {
 import { hasTouchSupport, testSkipIf } from 'test/utils/skipIf';
 
 describe('<MobileDateTimePicker />', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   it('should render date and time by default', () => {
     render(
@@ -111,9 +111,7 @@ describe('<MobileDateTimePicker />', () => {
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2010, 0, 1));
 
-      await clock.runToLast();
-
-      // Change the date
+      await // Change the date
       fireEvent.click(screen.getByRole('gridcell', { name: '15' }));
       expect(onChange.callCount).to.equal(2);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2010, 0, 15));

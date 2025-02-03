@@ -14,7 +14,7 @@ import { describeConformance } from 'test/utils/describeConformance';
 import { PickerValue } from '@mui/x-date-pickers/internals';
 
 describe('<TimeField /> - Describes', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describeValidation(TimeField, () => ({
     render,

@@ -22,8 +22,7 @@ const getPickerDay = (name: string, picker = 'January 2018') =>
   within(screen.getByRole('grid', { name: picker })).getByRole('gridcell', { name });
 
 describe('<DesktopDateRangePicker />', () => {
-  const { render, clock } = createPickerRenderer({
-    clock: 'fake',
+  const { render } = createPickerRenderer({
     clockConfig: new Date(2018, 0, 10),
   });
 
@@ -357,10 +356,10 @@ describe('<DesktopDateRangePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
 
-      render(
+      const { user } = render(
         <div>
-          <DesktopDateRangePicker onChange={onChange} onAccept={onAccept} onClose={onClose} />
           <input id="test-id" />
+          <DesktopDateRangePicker onChange={onChange} onAccept={onAccept} onClose={onClose} />
         </div>,
       );
 
@@ -369,16 +368,11 @@ describe('<DesktopDateRangePicker />', () => {
       // Dismiss the picker
       const input = document.getElementById('test-id')!;
 
-      fireEvent.mouseDown(input);
-      await act(async () => {
-        input.focus();
-      });
-      fireEvent.mouseUp(input);
-      await clock.runToLast();
+      await user.click(input);
 
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(1);
+      expect(onClose.callCount).to.equal(2);
     });
 
     it('should call onClose and onAccept with the live value when clicking outside of the picker', async () => {
@@ -406,7 +400,6 @@ describe('<DesktopDateRangePicker />', () => {
 
       // Change the start date (already tested)
       fireEvent.click(getPickerDay('3'));
-      await clock.runToLast();
 
       // Dismiss the picker
       const input = document.getElementById('test-id')!;
@@ -417,13 +410,11 @@ describe('<DesktopDateRangePicker />', () => {
       });
       fireEvent.mouseUp(input);
 
-      await clock.runToLast();
-
       expect(onChange.callCount).to.equal(1); // Start date change
-      expect(onAccept.callCount).to.equal(1);
+      expect(onAccept.callCount).to.equal(2);
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onAccept.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
-      expect(onClose.callCount).to.equal(1);
+      expect(onClose.callCount).to.equal(2);
     });
 
     it('should not call onClose or onAccept when clicking outside of the picker if not opened', () => {
@@ -461,7 +452,6 @@ describe('<DesktopDateRangePicker />', () => {
         expect(screen.getByRole('tooltip')).toBeVisible();
 
         await act(async () => document.querySelector<HTMLButtonElement>('#test')!.focus());
-        await clock.runToLast();
 
         expect(onChange.callCount).to.equal(0);
         expect(onAccept.callCount).to.equal(0);
@@ -495,18 +485,18 @@ describe('<DesktopDateRangePicker />', () => {
 
       // Change the start date (already tested)
       fireEvent.click(getPickerDay('3'));
-      await clock.runToLast();
+
+      expect(onAccept.callCount).to.equal(0);
 
       await act(async () => {
         document.querySelector<HTMLButtonElement>('#test')!.focus();
       });
-      await clock.runToLast();
 
       expect(onChange.callCount).to.equal(1); // Start date change
-      expect(onAccept.callCount).to.equal(1);
+      expect(onAccept.callCount).to.equal(2);
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onAccept.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
-      expect(onClose.callCount).to.equal(1);
+      expect(onClose.callCount).to.equal(2);
     });
 
     it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', () => {

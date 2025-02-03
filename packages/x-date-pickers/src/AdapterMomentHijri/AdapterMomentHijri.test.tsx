@@ -65,7 +65,6 @@ describe('<AdapterMomentHijri />', () => {
 
       describe(`test with the locale "${localeKey}"`, () => {
         const { render, adapter } = createPickerRenderer({
-          clock: 'fake',
           adapterName: 'moment-hijri',
           locale: localeObject,
         });

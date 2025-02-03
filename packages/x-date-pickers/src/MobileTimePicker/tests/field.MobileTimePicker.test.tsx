@@ -6,7 +6,7 @@ import {
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 
 describe('<MobileTimePicker /> - Field', () => {
-  const { render, clock } = createPickerRenderer();
+  const { render } = createPickerRenderer();
   const { renderWithProps } = buildFieldInteractions({
     render,
     clock,

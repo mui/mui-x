@@ -7,7 +7,6 @@ import { adapterToUse, createPickerRenderer, openPicker } from 'test/utils/picke
 
 describe('<DesktopTimePicker />', () => {
   const { render } = createPickerRenderer({
-    clock: 'fake',
     clockConfig: new Date('2018-01-01T10:05:05.000'),
   });
 

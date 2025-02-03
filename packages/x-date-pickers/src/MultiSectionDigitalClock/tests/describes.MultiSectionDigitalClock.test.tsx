@@ -16,7 +16,7 @@ import { formatMeridiem, PickerValue } from '@mui/x-date-pickers/internals';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<MultiSectionDigitalClock /> - Describes', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describeValidation(MultiSectionDigitalClock, () => ({
     render,

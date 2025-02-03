@@ -10,7 +10,7 @@ import { describeSkipIf, testSkipIf, isJSDOM } from 'test/utils/skipIf';
 import { PickersActionBar, PickersActionBarAction } from '@mui/x-date-pickers/PickersActionBar';
 
 describe('<DesktopDatePicker />', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describe('Views', () => {
     it('should switch between views uncontrolled', () => {
@@ -95,9 +95,7 @@ describe('<DesktopDatePicker />', () => {
       setProps({ views: ['month', 'year'] });
       openPicker({ type: 'date' });
       // wait for all pending changes to be flushed
-      await clock.runToLast();
-
-      // should have changed the open view
+      await // should have changed the open view
       expect(screen.getByRole('radio', { checked: true, name: 'January' })).not.to.equal(null);
     });
 
@@ -130,9 +128,7 @@ describe('<DesktopDatePicker />', () => {
       setProps({ view: 'year' });
       openPicker({ type: 'date' });
       // wait for all pending changes to be flushed
-      await clock.runToLast();
-
-      // should have changed the open view
+      await // should have changed the open view
       expect(screen.getByRole('radio', { checked: true, name: '2018' })).not.to.equal(null);
     });
   });

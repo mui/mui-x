@@ -9,7 +9,6 @@ import { testSkipIf, hasTouchSupport } from 'test/utils/skipIf';
 
 describe('<StaticTimePicker />', () => {
   const { render } = createPickerRenderer({
-    clock: 'fake',
     clockConfig: new Date(2018, 2, 12, 8, 16, 0),
   });
 

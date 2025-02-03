@@ -4,7 +4,7 @@ import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<StaticDatePicker /> - Describes', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describePicker(StaticDatePicker, { render, fieldType: 'single-input', variant: 'static' });
 

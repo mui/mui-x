@@ -4,7 +4,7 @@ import { describeConformance } from 'test/utils/describeConformance';
 import { DateTimeRangePicker } from '../DateTimeRangePicker';
 
 describe('<DateTimeRangePicker /> - Describes', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describeConformance(<DateTimeRangePicker />, () => ({
     classes: {} as any,

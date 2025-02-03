@@ -13,7 +13,7 @@ import {
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DateCalendar /> - Describes', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describeValidation(DateCalendar, () => ({
     render,

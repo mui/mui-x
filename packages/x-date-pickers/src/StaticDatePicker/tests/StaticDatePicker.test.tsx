@@ -6,7 +6,7 @@ import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<StaticDatePicker />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   it('render proper month', () => {
     render(<StaticDatePicker defaultValue={adapterToUse.date('2019-01-01')} />);

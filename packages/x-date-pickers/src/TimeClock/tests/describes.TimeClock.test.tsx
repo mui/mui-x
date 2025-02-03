@@ -16,7 +16,7 @@ import { describeConformance } from 'test/utils/describeConformance';
 import { PickerValue } from '@mui/x-date-pickers/internals';
 
 describe('<TimeClock /> - Describes', () => {
-  const { render, clock } = createPickerRenderer();
+  const { render } = createPickerRenderer();
 
   describeConformance(<TimeClock />, () => ({
     classes,

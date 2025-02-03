@@ -5,7 +5,7 @@ import { PickersCalendarHeader } from './PickersCalendarHeader';
 import { pickersCalendarHeaderClasses } from './pickersCalendarHeaderClasses';
 
 describe('<PickersCalendarHeader /> - Describes', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describeConformance(
     <PickersCalendarHeader

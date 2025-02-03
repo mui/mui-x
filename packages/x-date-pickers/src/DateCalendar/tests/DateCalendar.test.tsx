@@ -8,7 +8,7 @@ import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DateCalendar />', () => {
-  const { render, clock } = createPickerRenderer({ clockConfig: new Date(2019, 0, 2) });
+  const { render } = createPickerRenderer({ clockConfig: new Date(2019, 0, 2) });
 
   it('switches between views uncontrolled', async () => {
     const handleViewChange = spy();
@@ -129,7 +129,6 @@ describe('<DateCalendar />', () => {
   describe('with fake timers', () => {
     // TODO: remove when migrated to vitest
     if (process.env.VITEST !== 'true') {
-      clock.withFakeTimers();
     }
 
     // test: https://github.com/mui/mui-x/issues/12373
@@ -145,7 +144,6 @@ describe('<DateCalendar />', () => {
 
       if (process.env.VITEST !== 'true') {
         // Finish the transition to the day view
-        clock.runToLast();
       } else {
         await screen.findByRole('gridcell', { name: '1' });
       }

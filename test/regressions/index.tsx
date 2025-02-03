@@ -127,8 +127,6 @@ requireRegressions.keys().forEach((path: string) => {
   });
 });
 
-clock.restore();
-
 if (unusedBlacklistPatterns.size > 0) {
   console.warn(
     [

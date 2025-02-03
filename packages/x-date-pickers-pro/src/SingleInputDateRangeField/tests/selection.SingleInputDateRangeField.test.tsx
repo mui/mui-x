@@ -12,7 +12,7 @@ import {
 } from 'test/utils/pickers';
 
 describe('<SingleInputDateRangeField /> - Selection', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
   const { renderWithProps } = buildFieldInteractions({
     render,
     Component: SingleInputDateRangeField,
@@ -39,13 +39,10 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
 
     it('should select all on <Tab> focus (v6 only)', async () => {
       // Test with non-accessible DOM structure
-      renderWithProps({ enableAccessibleFieldDOMStructure: false });
+      const { user } = renderWithProps({ enableAccessibleFieldDOMStructure: false });
       const input = getTextbox();
-      // Simulate a <Tab> focus interaction on desktop
-      await act(async () => {
-        input.focus();
-      });
-      await clock.runToLast();
+      await user.tab();
+
       await act(async () => {
         input.select();
       });

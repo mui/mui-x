@@ -13,7 +13,7 @@ import {
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DateField /> - Describes', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describeValidation(DateField, () => ({
     render,

@@ -14,7 +14,7 @@ import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 
 describe('<MobileDateRangePicker />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describe('Field slot: SingleInputDateRangeField', () => {
     it('should render the input with a given `name` when `SingleInputDateRangeField` is used', () => {

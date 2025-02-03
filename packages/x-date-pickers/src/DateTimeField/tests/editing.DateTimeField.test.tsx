@@ -11,7 +11,6 @@ import {
 
 describe('<DateTimeField /> - Editing', () => {
   const { render } = createPickerRenderer({
-    clock: 'fake',
     clockConfig: new Date(2012, 4, 3, 14, 30, 15, 743),
   });
 
