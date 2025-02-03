@@ -4,6 +4,7 @@ import 'test/utils/setupPickers';
 import 'test/utils/licenseRelease';
 import { generateTestLicenseKey, setupTestLicenseKey } from 'test/utils/testLicense';
 import { configure } from '@mui/internal-test-utils';
+import { config } from 'react-transition-group';
 
 import sinon from 'sinon';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGrid } from '@mui/x-data-grid';
@@ -29,6 +30,7 @@ beforeAll(() => {
 
 beforeEach(() => {
   setupTestLicenseKey(licenseKey);
+  config.disabled = true;
 });
 
 afterEach(() => {
@@ -40,6 +42,7 @@ afterEach(() => {
   // Restore Sinon default sandbox to avoid memory leak
   // See https://github.com/sinonjs/sinon/issues/1866
   sinon.restore();
+  config.disabled = false;
 });
 
 // checking if an element is hidden is quite expensive

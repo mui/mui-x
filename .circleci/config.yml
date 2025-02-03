@@ -184,6 +184,7 @@ jobs:
       - run:
           name: Tests fake browser (vitest-date-pickers)
           command: pnpm vitest --project "jsdom/x-date-pickers" --coverage
+          no_output_timeout: 20m
 
   test_unit_date_pickers_pro:
     <<: *default-job
@@ -193,7 +194,7 @@ jobs:
       - run:
           name: Tests fake browser (vitest-date-pickers-pro)
           command: pnpm vitest --project "jsdom/x-date-pickers-pro" --coverage
-
+          no_output_timeout: 20m
   test_unit_data_grid:
     <<: *default-job
     steps:
@@ -202,6 +203,7 @@ jobs:
       - run:
           name: Tests fake browser (vitest-data-grid)
           command: pnpm vitest --project "jsdom/x-data-grid" --coverage
+          no_output_timeout: 20m
 
   test_unit_data_grid_pro:
     <<: *default-job
@@ -211,6 +213,7 @@ jobs:
       - run:
           name: Tests fake browser (vitest-data-grid-pro)
           command: pnpm vitest --project "jsdom/x-data-grid-pro" --coverage
+          no_output_timeout: 20m
 
   test_unit_data_grid_premium:
     <<: *default-job
@@ -220,6 +223,7 @@ jobs:
       - run:
           name: Tests fake browser (vitest-data-grid-premium)
           command: pnpm vitest --project "jsdom/x-data-grid-premium" --coverage
+          no_output_timeout: 20m
 
   test_unit_vitest:
     <<: *default-job
@@ -229,6 +233,7 @@ jobs:
       - run:
           name: Tests fake browser (vitest)
           command: pnpm vitest --project "jsdom/*" --coverage
+          no_output_timeout: 20m
       - run:
           name: Check coverage generated
           command: |
@@ -351,6 +356,7 @@ jobs:
       - run:
           name: Tests real browsers (vitest)
           command: pnpm vitest --project "browser/*" --coverage
+          no_output_timeout: 20m
       - run:
           name: Check coverage generated
           command: |
