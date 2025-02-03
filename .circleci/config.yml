@@ -195,6 +195,7 @@ jobs:
           name: Tests fake browser (vitest-date-pickers-pro)
           command: pnpm vitest --project "jsdom/x-date-pickers-pro" --coverage
           no_output_timeout: 20m
+
   test_unit_data_grid:
     <<: *default-job
     steps:
@@ -223,6 +224,46 @@ jobs:
       - run:
           name: Tests fake browser (vitest-data-grid-premium)
           command: pnpm vitest --project "jsdom/x-data-grid-premium" --coverage
+          no_output_timeout: 20m
+
+  test_unit_charts:
+    <<: *default-job
+    steps:
+      - checkout
+      - install_js
+      - run:
+          name: Tests fake browser (vitest-charts)
+          command: pnpm vitest --project "jsdom/x-charts" --coverage
+          no_output_timeout: 20m
+
+  test_unit_charts_pro:
+    <<: *default-job
+    steps:
+      - checkout
+      - install_js
+      - run:
+          name: Tests fake browser (vitest-charts-pro)
+          command: pnpm vitest --project "jsdom/x-charts-pro" --coverage
+          no_output_timeout: 20m
+
+  test_unit_tree_view:
+    <<: *default-job
+    steps:
+      - checkout
+      - install_js
+      - run:
+          name: Tests fake browser (vitest-tree-view)
+          command: pnpm vitest --project "jsdom/x-tree-view" --coverage
+          no_output_timeout: 20m
+
+  test_unit_tree_view_pro:
+    <<: *default-job
+    steps:
+      - checkout
+      - install_js
+      - run:
+          name: Tests fake browser (vitest-tree-view-pro)
+          command: pnpm vitest --project "jsdom/x-tree-view-pro" --coverage
           no_output_timeout: 20m
 
   test_unit_vitest:
