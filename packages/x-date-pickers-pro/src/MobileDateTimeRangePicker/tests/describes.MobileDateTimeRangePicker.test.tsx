@@ -134,7 +134,6 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
       }
       // Close the picker
       if (!isOpened) {
-        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
         await user.keyboard('[Escape]');
       } else {
         // return to the start date view in case we'd like to repeat the selection process

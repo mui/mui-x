@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { adapterToUse } from 'test/utils/pickers';
-import { useFakeTimers } from 'sinon';
+import { createClock } from 'test/utils/createFakeClock';
 import { findClosestEnabledDate } from './date-utils';
 
 describe('findClosestEnabledDate', () => {
@@ -101,7 +101,7 @@ describe('findClosestEnabledDate', () => {
   });
 
   it('should return now with given time part if disablePast and now is valid', () => {
-    const clock = useFakeTimers({ now: new Date('2000-01-02') });
+    createClock(new Date('2000-01-02'));
 
     const tryDate = adapterToUse.date('2000-01-01T11:12:13');
     const result = findClosestEnabledDate({
@@ -165,7 +165,7 @@ describe('findClosestEnabledDate', () => {
   });
 
   it('should keep the time of the `date` when `disablePast`', () => {
-    const clock = useFakeTimers({ now: new Date('2000-01-02T11:12:13.123Z') });
+    createClock(new Date('2000-01-02T11:12:13.123Z'));
 
     const result = findClosestEnabledDate({
       date: adapterToUse.date('2000-01-01T11:12:13.550Z'),

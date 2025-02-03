@@ -298,7 +298,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
   describe('apiRef', () => {
     describe('selectCellRange', () => {
       it('should select all cells within the given arguments if end > start', async () => {
-        const { user } = render(<TestDataGridSelection />);
+        render(<TestDataGridSelection />);
         act(() =>
           apiRef.current?.selectCellRange({ id: 0, field: 'id' }, { id: 2, field: 'price1M' }),
         );
@@ -317,7 +317,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       });
 
       it('should select all cells within the given arguments if start > end', async () => {
-        const { user } = render(<TestDataGridSelection />);
+        render(<TestDataGridSelection />);
         await act(() =>
           apiRef.current?.selectCellRange({ id: 0, field: 'id' }, { id: 2, field: 'price1M' }),
         );

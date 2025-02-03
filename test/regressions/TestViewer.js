@@ -44,7 +44,9 @@ function MockTime(props) {
     });
     setReady(true);
 
-    return () => {};
+    return () => {
+      clock.restore();
+    };
   }, [props.isDataGridTest]);
 
   return ready ? props.children : null;
@@ -82,6 +84,7 @@ function LoadFont(props) {
     document.fonts.addEventListener('loadingdone', handleFontsEvent);
 
     // and wait `load-css` timeouts to be flushed
+    clock.runToLast();
 
     // In case the child triggered font fetching we're not ready yet.
     // The fonts event handler will mark the test as ready on `loadingdone`
