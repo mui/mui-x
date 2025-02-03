@@ -183,7 +183,7 @@ jobs:
       - install_js
       - run:
           name: Tests fake browser (vitest-date-pickers)
-          command: pnpm vitest --project "jsdom/x-date-pickers" --coverage
+          command: pnpm vitest --project "jsdom/x-date-pickers"
           no_output_timeout: 20m
 
   test_unit_date_pickers_pro:
@@ -193,7 +193,7 @@ jobs:
       - install_js
       - run:
           name: Tests fake browser (vitest-date-pickers-pro)
-          command: pnpm vitest --project "jsdom/x-date-pickers-pro" --coverage
+          command: pnpm vitest --project "jsdom/x-date-pickers-pro"
           no_output_timeout: 20m
 
   test_unit_data_grid:
@@ -203,7 +203,7 @@ jobs:
       - install_js
       - run:
           name: Tests fake browser (vitest-data-grid)
-          command: pnpm vitest --project "jsdom/x-data-grid" --coverage
+          command: pnpm vitest --project "jsdom/x-data-grid"
           no_output_timeout: 20m
 
   test_unit_data_grid_pro:
@@ -213,7 +213,7 @@ jobs:
       - install_js
       - run:
           name: Tests fake browser (vitest-data-grid-pro)
-          command: pnpm vitest --project "jsdom/x-data-grid-pro" --coverage
+          command: pnpm vitest --project "jsdom/x-data-grid-pro"
           no_output_timeout: 20m
 
   test_unit_data_grid_premium:
@@ -223,7 +223,7 @@ jobs:
       - install_js
       - run:
           name: Tests fake browser (vitest-data-grid-premium)
-          command: pnpm vitest --project "jsdom/x-data-grid-premium" --coverage
+          command: pnpm vitest --project "jsdom/x-data-grid-premium"
           no_output_timeout: 20m
 
   test_unit_charts:
@@ -233,7 +233,7 @@ jobs:
       - install_js
       - run:
           name: Tests fake browser (vitest-charts)
-          command: pnpm vitest --project "jsdom/x-charts" --coverage
+          command: pnpm vitest --project "jsdom/x-charts"
           no_output_timeout: 20m
 
   test_unit_charts_pro:
@@ -243,7 +243,7 @@ jobs:
       - install_js
       - run:
           name: Tests fake browser (vitest-charts-pro)
-          command: pnpm vitest --project "jsdom/x-charts-pro" --coverage
+          command: pnpm vitest --project "jsdom/x-charts-pro"
           no_output_timeout: 20m
 
   test_unit_tree_view:
@@ -253,7 +253,7 @@ jobs:
       - install_js
       - run:
           name: Tests fake browser (vitest-tree-view)
-          command: pnpm vitest --project "jsdom/x-tree-view" --coverage
+          command: pnpm vitest --project "jsdom/x-tree-view"
           no_output_timeout: 20m
 
   test_unit_tree_view_pro:
@@ -263,7 +263,7 @@ jobs:
       - install_js
       - run:
           name: Tests fake browser (vitest-tree-view-pro)
-          command: pnpm vitest --project "jsdom/x-tree-view-pro" --coverage
+          command: pnpm vitest --project "jsdom/x-tree-view-pro"
           no_output_timeout: 20m
 
   test_unit_vitest:
@@ -273,15 +273,15 @@ jobs:
       - install_js
       - run:
           name: Tests fake browser (vitest)
-          command: pnpm vitest --project "jsdom/*" --coverage
+          command: pnpm vitest --project "jsdom/*"
           no_output_timeout: 20m
-      - run:
-          name: Check coverage generated
-          command: |
-            if ! [[ -s coverage/lcov.info ]]
-            then
-              exit 1
-            fi
+      # - run:
+      #     name: Check coverage generated
+      #     command: |
+      #       if ! [[ -s coverage/lcov.info ]]
+      #       then
+      #         exit 1
+      #       fi
       # - run:
       #     name: Coverage
       #     command: |
@@ -396,15 +396,15 @@ jobs:
           browsers: true
       - run:
           name: Tests real browsers (vitest)
-          command: pnpm vitest --project "browser/*" --coverage
+          command: pnpm vitest --project "browser/*"
           no_output_timeout: 20m
-      - run:
-          name: Check coverage generated
-          command: |
-            if ! [[ -s coverage/lcov.info ]]
-            then
-              exit 1
-            fi
+      # - run:
+      #     name: Check coverage generated
+      #     command: |
+      #       if ! [[ -s coverage/lcov.info ]]
+      #       then
+      #         exit 1
+      #       fi
 
   test_types:
     <<: *default-job
@@ -505,6 +505,22 @@ workflows:
           requires:
             - checkout
       - test_unit_data_grid_premium:
+          <<: *default-context
+          requires:
+            - checkout
+      - test_unit_charts:
+          <<: *default-context
+          requires:
+            - checkout
+      - test_unit_charts_pro:
+          <<: *default-context
+          requires:
+            - checkout
+      - test_unit_tree_view:
+          <<: *default-context
+          requires:
+            - checkout
+      - test_unit_tree_view_pro:
           <<: *default-context
           requires:
             - checkout
