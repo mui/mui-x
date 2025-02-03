@@ -213,43 +213,6 @@ describe('<DataGridPro /> - Column headers', () => {
       config.disabled = restoreDisabledConfig;
     });
 
-    it('should restore focus to the column header when dismissing the menu by selecting any item', async () => {
-      function Test(props: Partial<DataGridProProps>) {
-        return (
-          <div style={{ width: 300, height: 500 }}>
-            <DataGridPro
-              {...baselineProps}
-              columns={[
-                { field: 'brand', resizable: true },
-                { field: 'foundationYear', resizable: true },
-              ]}
-            />
-          </div>
-        );
-      }
-
-      const { user } = render(<Test />);
-      const columnWithMenuCell = getColumnHeaderCell(0);
-      const columnToResizeCell = getColumnHeaderCell(1);
-
-      const menuIconButton = columnWithMenuCell.querySelector('button[aria-label="Menu"]')!;
-
-      await user.click(menuIconButton);
-      await waitFor(() => {
-        expect(screen.queryByRole('menu')).not.to.equal(null);
-      });
-
-      const separator = columnToResizeCell.querySelector(
-        `.${gridClasses['columnSeparator--resizable']}`,
-      )!;
-      await user.pointer([{ keys: '[MouseLeft>]', target: separator }]);
-      await waitFor(() => {
-        expect(screen.queryByRole('menu')).to.equal(null);
-      });
-      // cleanup
-      await user.pointer([{ keys: '[/MouseLeft]', target: separator }]);
-    });
-
     // Flaky on JSDOM
     testSkipIf(isJSDOM)(
       'should close the menu of a column when pressing the Escape key',

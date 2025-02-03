@@ -3,7 +3,7 @@ import 'test/utils/addChaiAssertions';
 import 'test/utils/setupPickers';
 import 'test/utils/licenseRelease';
 import { generateTestLicenseKey, setupTestLicenseKey } from 'test/utils/testLicense';
-import * as testingLibrary from '@testing-library/dom';
+import { configure } from '@mui/internal-test-utils';
 
 import sinon from 'sinon';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGrid } from '@mui/x-data-grid';
@@ -48,7 +48,7 @@ afterEach(() => {
 // from assistive technology
 const defaultHidden = !process.env.CI;
 
-testingLibrary.configure({
+configure({
   // JSDOM logs errors otherwise on `getComputedStyle(element, pseudoElement)` calls.
   computedStyleSupportsPseudoElements: false,
   defaultHidden,
