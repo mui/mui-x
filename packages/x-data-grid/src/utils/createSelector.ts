@@ -1,5 +1,6 @@
 import { lruMemoize, createSelectorCreator, Selector, SelectorResultArray } from 'reselect';
 import { argsEqual } from '../hooks/utils/useGridSelector';
+import { weakMapMemoize } from './customMemoize';
 
 type CacheKey = { id: number };
 
@@ -9,6 +10,7 @@ const reselectCreateSelector = createSelectorCreator({
     maxSize: 1,
     equalityCheck: Object.is,
   },
+  argsMemoize: weakMapMemoize,
 });
 
 type GridCreateSelectorFunction = ReturnType<typeof reselectCreateSelector> & {
