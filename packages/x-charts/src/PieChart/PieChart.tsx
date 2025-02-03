@@ -1,10 +1,9 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useRtl } from '@mui/system/RtlProvider';
 import { useThemeProps } from '@mui/material/styles';
 import { MakeOptional } from '@mui/x-internals/types';
-import { ChartContainer, ChartContainerProps } from '../ChartContainer';
+import { ChartContainerProps } from '../ChartContainer';
 import { PieSeriesType } from '../models/seriesType';
 import { ChartsTooltip } from '../ChartsTooltip';
 import { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
@@ -17,6 +16,10 @@ import {
   ChartsOverlaySlotProps,
   ChartsOverlaySlots,
 } from '../ChartsOverlay';
+import { ChartsSurface } from '../ChartsSurface';
+import { ChartDataProvider } from '../ChartDataProvider';
+import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
+import { ChartsWrapper } from '../internals/components/ChartsWrapper';
 
 export interface PieChartSlots
   extends PiePlotSlots,
@@ -59,8 +62,7 @@ export interface PieChartProps
   slotProps?: PieChartSlotProps;
 }
 
-const defaultMargin = { top: 5, bottom: 5, left: 5, right: 100 };
-const defaultRTLMargin = { top: 5, bottom: 5, left: 100, right: 5 };
+const defaultMargin = { top: 5, bottom: 5, left: 5, right: 5 };
 
 /**
  * Demos:
@@ -98,40 +100,48 @@ const PieChart = React.forwardRef(function PieChart(
     className,
     ...other
   } = props;
-  const isRtl = useRtl();
+  const margin = { ...defaultMargin, ...marginProps };
 
-  const margin = { ...(isRtl ? defaultRTLMargin : defaultMargin), ...marginProps };
+  const { chartDataProviderProps, chartsSurfaceProps } = useChartContainerProps(
+    {
+      ...other,
+      series: series.map((s) => ({ type: 'pie', ...s })),
+      width,
+      height,
+      margin,
+      colors,
+      disableAxisListener: true,
+      highlightedItem,
+      onHighlightChange,
+      className,
+      skipAnimation,
+    },
+    ref,
+  );
 
   const Tooltip = slots?.tooltip ?? ChartsTooltip;
   return (
-    <ChartContainer
-      {...other}
-      ref={ref}
-      series={series.map((s) => ({ type: 'pie', ...s }))}
-      width={width}
-      height={height}
-      margin={margin}
-      colors={colors}
-      sx={sx}
-      disableAxisListener
-      highlightedItem={highlightedItem}
-      onHighlightChange={onHighlightChange}
-      className={className}
-      skipAnimation={skipAnimation}
-    >
-      <PiePlot slots={slots} slotProps={slotProps} onItemClick={onItemClick} />
-      <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
-      {!hideLegend && (
-        <ChartsLegend
-          direction="column"
-          position={{ vertical: 'middle', horizontal: isRtl ? 'left' : 'right' }}
-          slots={slots}
-          slotProps={slotProps}
-        />
-      )}
-      {!loading && <Tooltip trigger="item" {...slotProps?.tooltip} />}
-      {children}
-    </ChartContainer>
+    <ChartDataProvider {...chartDataProviderProps}>
+      <ChartsWrapper
+        legendPosition={props.slotProps?.legend?.position}
+        legendDirection={props?.slotProps?.legend?.direction ?? 'vertical'}
+        sx={sx}
+      >
+        {!hideLegend && (
+          <ChartsLegend
+            direction={props?.slotProps?.legend?.direction ?? 'vertical'}
+            slots={slots}
+            slotProps={slotProps}
+          />
+        )}
+        <ChartsSurface {...chartsSurfaceProps}>
+          <PiePlot slots={slots} slotProps={slotProps} onItemClick={onItemClick} />
+          <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
+          {!loading && <Tooltip trigger="item" {...slotProps?.tooltip} />}
+          {children}
+        </ChartsSurface>
+      </ChartsWrapper>
+    </ChartDataProvider>
   );
 });
 
@@ -140,6 +150,9 @@ PieChart.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  apiRef: PropTypes.shape({
+    current: PropTypes.object,
+  }),
   children: PropTypes.node,
   className: PropTypes.string,
   /**
@@ -167,12 +180,18 @@ PieChart.propTypes = {
    */
   hideLegend: PropTypes.bool,
   /**
-   * The item currently highlighted. Turns highlighting into a controlled prop.
+   * The highlighted item.
+   * Used when the highlight is controlled.
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   }),
+  /**
+   * This prop is used to help implement the accessibility logic.
+   * If you don't provide this prop. It falls back to a randomly generated id.
+   */
+  id: PropTypes.string,
   /**
    * If `true`, a loading overlay is displayed.
    * @default false
@@ -182,7 +201,6 @@ PieChart.propTypes = {
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
-   * @default object Depends on the charts type.
    */
   margin: PropTypes.shape({
     bottom: PropTypes.number,
@@ -225,6 +243,7 @@ PieChart.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.

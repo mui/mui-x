@@ -39,16 +39,13 @@ jobs:
         with:
           run_install: false
       - name: Use Node.js 20.x
-        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
         with:
           node-version: 20
           cache: 'pnpm' # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
       - run: pnpm install --frozen-lockfile
       # Ensure we are running on the prod version of our libs
-      - run: pnpm --filter @mui/x-internals build
-      - run: pnpm --filter @mui/x-license build
-      - run: pnpm --filter @mui/x-charts build
-      - run: pnpm --filter @mui/x-charts-pro build
+      - run: pnpm --filter "@mui/x-charts-pro..." build
       - name: Run benchmarks
         uses: CodSpeedHQ/action@513a19673a831f139e8717bf45ead67e47f00044
         with:

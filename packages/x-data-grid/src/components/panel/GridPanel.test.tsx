@@ -1,11 +1,7 @@
 import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
-import {
-  GridPanel,
-  gridPanelClasses as classes,
-  useGridApiRef,
-  GridApiContext,
-} from '@mui/x-data-grid';
+import { GridApiCommunity } from '@mui/x-data-grid/internals';
+import { GridPanel, gridPanelClasses as classes, GridApiContext } from '@mui/x-data-grid';
 import { GridRootPropsContext } from '@mui/x-data-grid/context/GridRootPropsContext';
 import Popper from '@mui/material/Popper';
 import { describeConformance } from 'test/utils/describeConformance';
@@ -16,7 +12,7 @@ describe('<GridPanel />', () => {
   function Wrapper(props: { children: React.ReactNode }) {
     // mock rootProps
     const rootProps = React.useMemo(() => ({}), []);
-    const apiRef = useGridApiRef();
+    const apiRef = React.useRef({} as GridApiCommunity);
     apiRef.current.rootElementRef = {
       // @ts-ignore
       current: document.body,

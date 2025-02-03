@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
+import { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
   GridApi,
@@ -26,7 +27,7 @@ import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 describe('<DataGridPro /> - Detail panel', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   function TestCase({ nbRows = 20, ...other }: Partial<DataGridProProps> & { nbRows?: number }) {
     apiRef = useGridApiRef();
@@ -121,7 +122,7 @@ describe('<DataGridPro /> - Detail panel', () => {
         );
       }
       const rowHeight = 50;
-      render(
+      const { user } = render(
         <TestCase
           nbRows={1}
           rowHeight={rowHeight}
@@ -130,15 +131,11 @@ describe('<DataGridPro /> - Detail panel', () => {
         />,
       );
       const virtualScrollerContent = grid('virtualScrollerContent')!;
-      fireEvent.click(screen.getByRole('button', { name: 'Expand' }));
+      await user.click(screen.getByRole('button', { name: 'Expand' }));
 
-      await waitFor(() => {
-        expect(getRow(0).className).to.include(gridClasses['row--detailPanelExpanded']);
-      });
+      expect(getRow(0).className).to.include(gridClasses['row--detailPanelExpanded']);
 
-      await waitFor(() => {
-        expect(virtualScrollerContent).toHaveComputedStyle({ height: `${rowHeight + 100}px` });
-      });
+      expect(virtualScrollerContent).toHaveComputedStyle({ height: `${rowHeight + 100}px` });
       expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
 
       const detailPanels = $$('.MuiDataGrid-detailPanel');
@@ -146,7 +143,7 @@ describe('<DataGridPro /> - Detail panel', () => {
         height: `100px`,
       });
 
-      fireEvent.click(screen.getByRole('button', { name: 'Increase' }));
+      await user.click(screen.getByRole('button', { name: 'Increase' }));
 
       await waitFor(() => {
         expect(virtualScrollerContent).toHaveComputedStyle({ height: `${rowHeight + 200}px` });
@@ -618,9 +615,9 @@ describe('<DataGridPro /> - Detail panel', () => {
       it('should toggle the panel of the given row id', () => {
         render(<TestCase getDetailPanelContent={() => <div>Detail</div>} />);
         expect(screen.queryByText('Detail')).to.equal(null);
-        act(() => apiRef.current.toggleDetailPanel(0));
+        act(() => apiRef.current?.toggleDetailPanel(0));
         expect(screen.queryByText('Detail')).not.to.equal(null);
-        act(() => apiRef.current.toggleDetailPanel(0));
+        act(() => apiRef.current?.toggleDetailPanel(0));
         expect(screen.queryByText('Detail')).to.equal(null);
       });
 
@@ -631,7 +628,7 @@ describe('<DataGridPro /> - Detail panel', () => {
             getDetailPanelContent={({ id }) => (id === 0 ? <div>Detail</div> : null)}
           />,
         );
-        act(() => apiRef.current.toggleDetailPanel(1));
+        act(() => apiRef.current?.toggleDetailPanel(1));
         expect(document.querySelector('.MuiDataGrid-detailPanels')).to.equal(null);
         expect(getRow(1)).not.toHaveComputedStyle({ marginBottom: '50px' });
       });
@@ -641,7 +638,7 @@ describe('<DataGridPro /> - Detail panel', () => {
         render(<TestCase getDetailPanelContent={() => <div>Detail</div>} />);
         expect(screen.queryByText('Detail')).to.equal(null);
         // '0' !== 0
-        act(() => apiRef.current.toggleDetailPanel('0'));
+        act(() => apiRef.current?.toggleDetailPanel('0'));
         expect(screen.queryByText('Detail')).to.equal(null);
       });
     });
@@ -658,7 +655,7 @@ describe('<DataGridPro /> - Detail panel', () => {
             }}
           />,
         );
-        act(() => expect(apiRef.current.getExpandedDetailPanels()).to.deep.equal(new Set([0, 1])));
+        act(() => expect(apiRef.current?.getExpandedDetailPanels()).to.deep.equal(new Set([0, 1])));
       });
     });
 
@@ -677,7 +674,7 @@ describe('<DataGridPro /> - Detail panel', () => {
         expect(screen.queryByText('Row 0')).not.to.equal(null);
         expect(screen.queryByText('Row 1')).to.equal(null);
         expect(screen.queryByText('Row 2')).to.equal(null);
-        act(() => apiRef.current.setExpandedDetailPanels(new Set([1, 2])));
+        act(() => apiRef.current?.setExpandedDetailPanels(new Set([1, 2])));
         expect(screen.queryByText('Row 0')).to.equal(null);
         expect(screen.queryByText('Row 1')).not.to.equal(null);
         expect(screen.queryByText('Row 2')).not.to.equal(null);

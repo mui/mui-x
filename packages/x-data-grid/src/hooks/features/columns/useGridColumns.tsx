@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridEventListener } from '../../../models/events';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColumnApi, GridColumnReorderApi } from '../../../models/api/gridColumnApi';
@@ -65,7 +66,7 @@ export const columnsStateInitializer: GridStateInitializer<
  * TODO: Impossible priority - useGridParamsApi also needs to be after useGridColumns
  */
 export function useGridColumns(
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'initialState'
@@ -391,11 +392,17 @@ export function useGridColumns(
    */
 
   const prevInnerWidth = React.useRef<number | null>(null);
-  const handleGridSizeChange: GridEventListener<'viewportInnerSizeChange'> = (
-    viewportInnerSize,
-  ) => {
-    if (prevInnerWidth.current !== viewportInnerSize.width) {
-      prevInnerWidth.current = viewportInnerSize.width;
+  const handleGridSizeChange: GridEventListener<'viewportInnerSizeChange'> = (size) => {
+    if (prevInnerWidth.current !== size.width) {
+      prevInnerWidth.current = size.width;
+
+      const hasFlexColumns = gridVisibleColumnDefinitionsSelector(apiRef).some(
+        (col) => col.flex && col.flex > 0,
+      );
+      if (!hasFlexColumns) {
+        return;
+      }
+
       setGridColumnsState(
         hydrateColumnsWidth(
           gridColumnsStateSelector(apiRef.current.state),

@@ -15,16 +15,16 @@
     "highlightedItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string }"
+        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string }"
       }
     },
+    "id": { "type": { "name": "string" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "margin": {
       "type": {
         "name": "shape",
         "description": "{ bottom?: number, left?: number, right?: number, top?: number }"
-      },
-      "default": "object Depends on the charts type."
+      }
     },
     "onHighlightChange": {
       "type": { "name": "func" },
@@ -65,7 +65,7 @@
     {
       "name": "legend",
       "description": "Custom rendering of the legend.",
-      "default": "DefaultChartsLegend",
+      "default": "ChartsLegend",
       "class": null
     },
     {
@@ -91,7 +91,7 @@
   ],
   "classes": [],
   "spread": true,
-  "themeDefaultProps": true,
+  "themeDefaultProps": false,
   "muiName": "MuiPieChart",
   "forwardsRefTo": "SVGSVGElement",
   "filename": "/packages/x-charts/src/PieChart/PieChart.tsx",

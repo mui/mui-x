@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   createRenderer,
   screen,
@@ -701,7 +702,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
           const columnHeaderHeight = 40;
           const rowHeight = 30;
 
-          let apiRef!: React.MutableRefObject<GridApi>;
+          let apiRef!: RefObject<GridApi | null>;
           function Test() {
             apiRef = useGridApiRef();
             return (
@@ -719,7 +720,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
           }
           render(<Test />);
 
-          const scrollbarSize = apiRef.current.state.dimensions.scrollbarSize;
+          const scrollbarSize = apiRef.current?.state.dimensions.scrollbarSize || 0;
           expect(scrollbarSize).not.to.equal(0);
           expect(grid('main')!.clientHeight).to.equal(
             scrollbarSize + columnHeaderHeight + rowHeight * baselineProps.rows.length,
@@ -807,7 +808,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
       const columnHeaderHeight = 40;
       const height = 300;
       const border = 1;
-      let apiRef!: React.MutableRefObject<GridApi>;
+      let apiRef!: RefObject<GridApi | null>;
       function Test() {
         apiRef = useGridApiRef();
         return (
@@ -823,7 +824,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
         );
       }
       render(<Test />);
-      const scrollbarSize = apiRef.current.state.dimensions.scrollbarSize;
+      const scrollbarSize = apiRef.current?.state.dimensions.scrollbarSize || 0;
       const overlayWrapper = screen.getByText('No rows').parentElement;
       const expectedHeight = height - columnHeaderHeight - scrollbarSize;
       expect(overlayWrapper).toHaveComputedStyle({ height: `${expectedHeight}px` });
@@ -1156,7 +1157,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
       { field: 'username', width: 300 },
     ];
 
-    it('grid container', async () => {
+    it('grid container', () => {
       render(
         <div style={{ maxWidth: 400 }}>
           <div style={{ display: 'grid' }}>
@@ -1165,12 +1166,10 @@ describe('<DataGrid /> - Layout & warnings', () => {
         </div>,
       );
 
-      await waitFor(() => {
-        expect(grid('root')).toHaveComputedStyle({ width: '400px' });
-      });
+      expect(grid('root')).toHaveComputedStyle({ width: '400px' });
     });
 
-    it('flex container', async () => {
+    it('flex container', () => {
       render(
         <div style={{ maxWidth: 400 }}>
           <div style={{ display: 'flex' }}>
@@ -1179,9 +1178,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
         </div>,
       );
 
-      await waitFor(() => {
-        expect(grid('root')).toHaveComputedStyle({ width: '400px' });
-      });
+      expect(grid('root')).toHaveComputedStyle({ width: '400px' });
     });
   });
 

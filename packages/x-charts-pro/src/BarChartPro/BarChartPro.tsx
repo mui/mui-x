@@ -11,16 +11,17 @@ import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
-import { useBarChartProps } from '@mui/x-charts/internals';
-import { ChartContainerPro } from '../ChartContainerPro';
-import { ZoomSetup } from '../context/ZoomProvider/ZoomSetup';
-import { useZoom } from '../context/ZoomProvider/useZoom';
-import { ZoomProps } from '../context/ZoomProvider';
+import { useBarChartProps, ChartsWrapper } from '@mui/x-charts/internals';
+import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import { ChartContainerProProps } from '../ChartContainerPro';
+import { useIsZoomInteracting } from '../hooks/zoom';
+import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
+import { ChartDataProviderPro } from '../ChartDataProviderPro';
 
 function BarChartPlotZoom(props: BarPlotProps) {
-  const { isInteracting } = useZoom();
+  const isInteracting = useIsZoomInteracting();
 
-  return <BarPlot {...props} skipAnimation={isInteracting || undefined} />;
+  return <BarPlot {...props} skipAnimation={isInteracting || props.skipAnimation} />;
 }
 
 BarChartPlotZoom.propTypes = {
@@ -63,7 +64,9 @@ BarChartPlotZoom.propTypes = {
   slots: PropTypes.object,
 } as any;
 
-export interface BarChartProProps extends BarChartProps, ZoomProps {}
+export interface BarChartProProps
+  extends Omit<BarChartProps, 'apiRef'>,
+    Omit<ChartContainerProProps<'bar'>, 'series' | 'plugins' | 'seriesConfig'> {}
 
 /**
  * Demos:
@@ -81,8 +84,9 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   ref: React.Ref<SVGSVGElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiBarChartPro' });
-  const { zoom, onZoomChange, ...other } = props;
+  const { initialZoom, onZoomChange, apiRef, ...other } = props;
   const {
+    chartsWrapperProps,
     chartContainerProps,
     barPlotProps,
     axisClickHandlerProps,
@@ -96,24 +100,32 @@ const BarChartPro = React.forwardRef(function BarChartPro(
     children,
   } = useBarChartProps(other);
 
+  const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps(
+    { ...chartContainerProps, initialZoom, onZoomChange, apiRef },
+    ref,
+  );
+
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
 
   return (
-    <ChartContainerPro ref={ref} {...chartContainerProps} zoom={zoom} onZoomChange={onZoomChange}>
-      {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
-      <ChartsGrid {...gridProps} />
-      <g {...clipPathGroupProps}>
-        <BarChartPlotZoom {...barPlotProps} />
-        <ChartsOverlay {...overlayProps} />
-        <ChartsAxisHighlight {...axisHighlightProps} />
-      </g>
-      <ChartsAxis {...chartsAxisProps} />
-      {!props.hideLegend && <ChartsLegend {...legendProps} />}
-      {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
-      <ChartsClipPath {...clipPathProps} />
-      <ZoomSetup />
-      {children}
-    </ChartContainerPro>
+    <ChartDataProviderPro {...chartDataProviderProProps}>
+      <ChartsWrapper {...chartsWrapperProps}>
+        {!props.hideLegend && <ChartsLegend {...legendProps} />}
+        <ChartsSurface {...chartsSurfaceProps}>
+          {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
+          <ChartsGrid {...gridProps} />
+          <g {...clipPathGroupProps}>
+            <BarChartPlotZoom {...barPlotProps} />
+            <ChartsOverlay {...overlayProps} />
+            <ChartsAxisHighlight {...axisHighlightProps} />
+          </g>
+          <ChartsAxis {...chartsAxisProps} />
+          {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
+          <ChartsClipPath {...clipPathProps} />
+          {children}
+        </ChartsSurface>
+      </ChartsWrapper>
+    </ChartDataProviderPro>
   );
 });
 
@@ -122,6 +134,11 @@ BarChartPro.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  apiRef: PropTypes.shape({
+    current: PropTypes.shape({
+      setZoomData: PropTypes.func.isRequired,
+    }),
+  }),
   /**
    * The configuration of axes highlight.
    * Default is set to 'band' in the bar direction.
@@ -184,12 +201,28 @@ BarChartPro.propTypes = {
    */
   hideLegend: PropTypes.bool,
   /**
-   * The item currently highlighted. Turns highlighting into a controlled prop.
+   * The highlighted item.
+   * Used when the highlight is controlled.
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   }),
+  /**
+   * This prop is used to help implement the accessibility logic.
+   * If you don't provide this prop. It falls back to a randomly generated id.
+   */
+  id: PropTypes.string,
+  /**
+   * The list of zoom data related to each axis.
+   */
+  initialZoom: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      end: PropTypes.number.isRequired,
+      start: PropTypes.number.isRequired,
+    }),
+  ),
   /**
    * The direction of the bar elements.
    * @default 'vertical'
@@ -210,7 +243,6 @@ BarChartPro.propTypes = {
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
-   * @default object Depends on the charts type.
    */
   margin: PropTypes.shape({
     bottom: PropTypes.number,
@@ -274,6 +306,7 @@ BarChartPro.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
   /**
    * Indicate which axis to display the top of the charts.
@@ -458,13 +491,42 @@ BarChartPro.propTypes = {
     }),
   ),
   /**
-   * The list of zoom data related to each axis.
+   * The configuration of the z-axes.
    */
-  zoom: PropTypes.arrayOf(
+  zAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      end: PropTypes.number.isRequired,
-      start: PropTypes.number.isRequired,
+      colorMap: PropTypes.oneOfType([
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
+        PropTypes.shape({
+          color: PropTypes.oneOfType([
+            PropTypes.arrayOf(PropTypes.string.isRequired),
+            PropTypes.func,
+          ]).isRequired,
+          max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          type: PropTypes.oneOf(['continuous']).isRequired,
+        }),
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          thresholds: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+          ).isRequired,
+          type: PropTypes.oneOf(['piecewise']).isRequired,
+        }),
+      ]),
+      data: PropTypes.array,
+      dataKey: PropTypes.string,
+      id: PropTypes.string,
+      max: PropTypes.number,
+      min: PropTypes.number,
     }),
   ),
 } as any;

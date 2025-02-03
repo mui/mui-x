@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridCellClassNamePropType } from '../gridCellClass';
 import { GridColumnHeaderClassNamePropType } from '../gridColumnHeaderClass';
 import type { GridFilterOperator } from '../gridFilterOperator';
@@ -32,13 +33,13 @@ export type GridApplyQuickFilter<R extends GridValidRowModel = GridValidRowModel
   value: V,
   row: R,
   column: GridColDef,
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: RefObject<GridApiCommunity>,
 ) => boolean;
 
 export type GetApplyQuickFilterFn<R extends GridValidRowModel = GridValidRowModel, V = any> = (
   value: any,
   colDef: GridStateColDef<R, V>,
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: RefObject<GridApiCommunity>,
 ) => null | GridApplyQuickFilter<R, V>;
 
 export type GridValueGetter<
@@ -46,44 +47,34 @@ export type GridValueGetter<
   V = any,
   F = V,
   TValue = never,
-> = (
-  value: TValue,
-  row: R,
-  column: GridColDef<R, V, F>,
-  apiRef: React.MutableRefObject<GridApiCommunity>,
-) => V;
+> = (value: TValue, row: R, column: GridColDef<R, V, F>, apiRef: RefObject<GridApiCommunity>) => V;
 
 export type GridValueFormatter<
   R extends GridValidRowModel = GridValidRowModel,
   V = any,
   F = V,
   TValue = never,
-> = (
-  value: TValue,
-  row: R,
-  column: GridColDef<R, V, F>,
-  apiRef: React.MutableRefObject<GridApiCommunity>,
-) => F;
+> = (value: TValue, row: R, column: GridColDef<R, V, F>, apiRef: RefObject<GridApiCommunity>) => F;
 
 export type GridValueSetter<R extends GridValidRowModel = GridValidRowModel, V = any, F = V> = (
   value: V,
   row: R,
   column: GridColDef<R, V, F>,
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: RefObject<GridApiCommunity>,
 ) => R;
 
 export type GridValueParser<R extends GridValidRowModel = GridValidRowModel, V = any, F = V> = (
   value: F | undefined,
   row: R | undefined,
   column: GridColDef<R, V, F>,
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: RefObject<GridApiCommunity>,
 ) => V;
 
 export type GridColSpanFn<R extends GridValidRowModel = GridValidRowModel, V = any, F = V> = (
   value: V,
   row: R,
   column: GridColDef<R, V, F>,
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: RefObject<GridApiCommunity>,
 ) => number | undefined;
 
 /**
@@ -268,13 +259,13 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
   /**
    * Allows setting the filter operators for this column.
    */
-  filterOperators?: readonly GridFilterOperator<R, V, F>[];
+  filterOperators?: readonly GridFilterOperator<R, V, F, any>[];
   /**
    * The callback that generates a filtering function for a given quick filter value.
    * This function can return `null` to skip filtering for this value and column.
    * @param {any} value The value with which we want to filter the column.
    * @param {GridStateColDef} colDef The column from which we want to filter the rows.
-   * @param {React.MutableRefObject<GridApiCommunity>} apiRef Deprecated: The API of the grid.
+   * @param {RefObject<GridApiCommunity>} apiRef Deprecated: The API of the grid.
    * @returns {null | GridApplyQuickFilter} The function to call to check if a row pass this filter value or not.
    */
   getApplyQuickFilterFn?: GetApplyQuickFilterFn<R, V>;

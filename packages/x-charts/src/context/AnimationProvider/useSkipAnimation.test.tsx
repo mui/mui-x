@@ -38,7 +38,7 @@ describe('useSkipAnimation', () => {
     const errorMessage2 =
       'It looks like you rendered your component outside of a ChartsContainer parent component.';
     const errorMessage3 = 'The above error occurred in the <UseSkipAnimation> component:';
-    const expextedError =
+    const expectedError =
       reactMajor < 19
         ? [errorMessage1, errorMessage2, errorMessage3]
         : `${errorMessage1}\n${errorMessage2}`;
@@ -49,7 +49,7 @@ describe('useSkipAnimation', () => {
           <UseSkipAnimation />
         </ErrorBoundary>,
       ),
-    ).toErrorDev(expextedError);
+    ).toErrorDev(expectedError);
 
     expect((errorRef.current as any).errors).to.have.length(1);
     expect((errorRef.current as any).errors[0].toString()).to.include(
