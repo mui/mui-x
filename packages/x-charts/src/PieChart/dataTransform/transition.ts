@@ -1,27 +1,31 @@
 import { UseTransitionProps } from '@react-spring/web';
 import { ValueWithHighlight } from './useTransformData';
 
-export const defaultTransitionConfig: UseTransitionProps<ValueWithHighlight> = {
-  keys: (item) => item.id,
-  from: ({
-    innerRadius,
-    outerRadius,
-    cornerRadius,
-    startAngle,
-    endAngle,
-    paddingAngle,
-    color,
-    isFaded,
-  }) => ({
-    innerRadius,
-    outerRadius: (innerRadius + outerRadius) / 2,
-    cornerRadius,
-    startAngle: (startAngle + endAngle) / 2,
-    endAngle: (startAngle + endAngle) / 2,
-    paddingAngle,
-    fill: color,
-    opacity: isFaded ? 0.3 : 1,
-  }),
+export const getDefaultTransitionConfig = (
+  skipAnimation?: boolean,
+): UseTransitionProps<ValueWithHighlight> => ({
+  keys: (item) => item.id ?? item.dataIndex,
+  from: skipAnimation
+    ? undefined
+    : ({
+        innerRadius,
+        outerRadius,
+        cornerRadius,
+        startAngle,
+        endAngle,
+        paddingAngle,
+        color,
+        isFaded,
+      }) => ({
+        innerRadius,
+        outerRadius: (innerRadius + outerRadius) / 2,
+        cornerRadius,
+        startAngle: (startAngle + endAngle) / 2,
+        endAngle: (startAngle + endAngle) / 2,
+        paddingAngle,
+        fill: color,
+        opacity: isFaded ? 0.3 : 1,
+      }),
   leave: ({ innerRadius, startAngle, endAngle }) => ({
     innerRadius,
     outerRadius: innerRadius,
@@ -31,7 +35,6 @@ export const defaultTransitionConfig: UseTransitionProps<ValueWithHighlight> = {
   enter: ({ innerRadius, outerRadius, startAngle, endAngle }) => ({
     innerRadius,
     outerRadius,
-
     startAngle,
     endAngle,
   }),
@@ -59,28 +62,32 @@ export const defaultTransitionConfig: UseTransitionProps<ValueWithHighlight> = {
     friction: 14,
     clamp: true,
   },
-};
+});
 
-export const defaultLabelTransitionConfig: UseTransitionProps<ValueWithHighlight> = {
-  keys: (item) => item.id,
-  from: ({
-    innerRadius,
-    outerRadius,
-    arcLabelRadius,
-    cornerRadius,
-    startAngle,
-    endAngle,
-    paddingAngle,
-  }) => ({
-    innerRadius,
-    outerRadius: (innerRadius + outerRadius) / 2,
-    cornerRadius,
-    arcLabelRadius,
-    startAngle: (startAngle + endAngle) / 2,
-    endAngle: (startAngle + endAngle) / 2,
-    paddingAngle,
-    opacity: 0,
-  }),
+export const getDefaultLabelTransitionConfig = (
+  skipAnimation?: boolean,
+): UseTransitionProps<ValueWithHighlight> => ({
+  keys: (item) => item.id ?? item.dataIndex,
+  from: skipAnimation
+    ? undefined
+    : ({
+        innerRadius,
+        outerRadius,
+        arcLabelRadius,
+        cornerRadius,
+        startAngle,
+        endAngle,
+        paddingAngle,
+      }) => ({
+        innerRadius,
+        outerRadius: (innerRadius + outerRadius) / 2,
+        cornerRadius,
+        arcLabelRadius,
+        startAngle: (startAngle + endAngle) / 2,
+        endAngle: (startAngle + endAngle) / 2,
+        paddingAngle,
+        opacity: 0,
+      }),
   leave: ({ innerRadius, startAngle, endAngle }) => ({
     innerRadius,
     outerRadius: innerRadius,
@@ -120,4 +127,4 @@ export const defaultLabelTransitionConfig: UseTransitionProps<ValueWithHighlight
     friction: 14,
     clamp: true,
   },
-};
+});

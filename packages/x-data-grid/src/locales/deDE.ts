@@ -114,6 +114,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Größer als oder gleich',
   'headerFilterOperator<': 'Kleiner als',
   'headerFilterOperator<=': 'Kleiner als oder gleich',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'Beliebig',

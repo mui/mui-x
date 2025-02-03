@@ -1,5 +1,5 @@
 {
-  "componentDescription": "It sets up the data providers as well as the `<svg>` for the chart.\n\nThis is a combination of both the `ChartDataProvider` and `ChartsSurface` components.",
+  "componentDescription": "It sets up the data providers as well as the `<svg>` for the chart.\n\nThis is a combination of both the `ChartDataProviderPro` and `ChartsSurface` components.",
   "propDescriptions": {
     "colors": { "description": "Color palette used to colorize multiple series." },
     "dataset": {
@@ -12,7 +12,7 @@
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
     "highlightedItem": {
-      "description": "The item currently highlighted. Turns highlighting into a controlled prop."
+      "description": "The highlighted item. Used when the highlight is controlled."
     },
     "id": {
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."

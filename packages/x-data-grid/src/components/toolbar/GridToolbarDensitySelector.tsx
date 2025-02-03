@@ -119,9 +119,9 @@ const GridToolbarDensitySelector = forwardRef<HTMLButtonElement, GridToolbarDens
             aria-expanded={open}
             aria-controls={open ? densityMenuId : undefined}
             id={densityButtonId}
-            onClick={handleDensitySelectorOpen}
             {...rootProps.slotProps?.baseButton}
             {...buttonProps}
+            onClick={handleDensitySelectorOpen}
             ref={handleRef}
           >
             {apiRef.current.getLocaleText('toolbarDensity')}

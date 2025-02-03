@@ -3,7 +3,7 @@ import { useDrawingArea, useXAxes, useYAxes } from '../../../hooks';
 import ChartsPiecewiseGradient from './ChartsPiecewiseGradient';
 import ChartsContinuousGradient from './ChartsContinuousGradient';
 import ChartsContinuousGradientObjectBound from './ChartsContinuousGradientObjectBound';
-import { useZAxis } from '../../../hooks/useZAxis';
+import { useZAxes } from '../../../hooks/useZAxis';
 import {
   useChartGradientIdBuilder,
   useChartGradientIdObjectBoundBuilder,
@@ -20,7 +20,7 @@ export function ChartsAxesGradients() {
 
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
-  const { zAxisIds, zAxis } = useZAxis();
+  const { zAxis, zAxisIds } = useZAxes();
 
   const filteredYAxisIds = yAxisIds.filter((axisId) => yAxis[axisId].colorMap !== undefined);
   const filteredXAxisIds = xAxisIds.filter((axisId) => xAxis[axisId].colorMap !== undefined);

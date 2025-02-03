@@ -92,7 +92,7 @@ export default function CustomColumnMenu() {
         onClick={(event) => {
           event.stopPropagation();
           setColor((current) => (current === 'primary' ? 'secondary' : 'primary'));
-          apiRef.current.showColumnMenu('default');
+          apiRef.current?.showColumnMenu('default');
         }}
       >
         Toggle menu background

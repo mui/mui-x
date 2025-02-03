@@ -272,10 +272,15 @@ export interface UsePickerValueContextValue<TValue extends PickerValidValue, TEr
   value: TValue;
   /**
    * The timezone to use when rendering the dates.
+   * If a `timezone` prop is provided, it will be used.
+   * If the `value` prop contains a valid date, its timezone will be used.
+   * If no `value` prop is provided, but the `defaultValue` contains a valid date, its timezone will be used.
+   * If no `value` or `defaultValue` is provided, but the `referenceDate` is provided, its timezone will be used.
+   * Otherwise, the timezone will be the default one of your date library.
    */
   timezone: PickersTimezone;
   /**
-   * `true` if the picker is open, `false` otherwise.
+   * Whether the picker is open.
    */
   open: boolean;
 }
@@ -324,14 +329,14 @@ export interface UsePickerValueActionsContextValue<TValue extends PickerValidVal
 
 export interface UsePickerValuePrivateContextValue {
   /**
-   * Closes the picker and accepts the current value if it is not equal to the last accepted value.
+   * Close the picker and accepts the current value if it is not equal to the last accepted value.
    */
   dismissViews: () => void;
 }
 
 export interface SetValueActionOptions<TError = string | null> {
   /**
-   * Importance of the change when picking a value:
+   * The importance of the change when picking a value:
    * - "accept": fires `onChange`, fires `onAccept` and closes the picker.
    * - "set": fires `onChange` but do not fire `onAccept` and does not close the picker.
    * @default "accept"
@@ -339,19 +344,24 @@ export interface SetValueActionOptions<TError = string | null> {
   changeImportance?: PickerChangeImportance;
   /**
    * The validation error associated to the current value.
-   * If not defined, the validation will be re-applied by the picker.
+   * If not defined, the validation will be computed by the picker.
    */
   validationError?: TError;
   /**
    * The shortcut that triggered this change.
-   * Should not be defined if the change does not come from a shortcut.
+   * It should not be defined if the change does not come from a shortcut.
    */
   shortcut?: PickersShortcutsItemContext;
   /**
-   * Decide if the value should call `onChange` and `onAccept` when the value is not controlled and has never been modified.
+   * Whether the value should call `onChange` and `onAccept` when the value is not controlled and has never been modified.
    * If `true`, the `onChange` and `onAccept` callback will only be fired if the value has been modified (and is not equal to the last published value).
    * If `false`, the `onChange` and `onAccept` callback will be fired when the value has never been modified (`onAccept` only if `changeImportance` is set to "accept").
    * @default false
    */
   skipPublicationIfPristine?: boolean;
+  /**
+   * Whether the picker should close.
+   * @default changeImportance === "accept"
+   */
+  shouldClose?: boolean;
 }

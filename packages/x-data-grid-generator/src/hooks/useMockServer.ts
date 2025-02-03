@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { LRUCache } from 'lru-cache';
 import {
@@ -41,6 +42,7 @@ type UseMockServerResponse = {
   getChildrenCount?: (row: GridRowModel) => number;
   fetchRows: (url: string) => Promise<GridGetRowsResponse>;
   loadNewData: () => void;
+  isReady: boolean;
 };
 
 type DataSet = 'Commodity' | 'Employee' | 'Movies';
@@ -366,5 +368,6 @@ export const useMockServer = (
     loadNewData: () => {
       setIndex((oldIndex) => oldIndex + 1);
     },
+    isReady: Boolean(data?.rows?.length),
   };
 };

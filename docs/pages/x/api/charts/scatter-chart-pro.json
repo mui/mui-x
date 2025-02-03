@@ -34,7 +34,7 @@
     "highlightedItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string }"
+        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string }"
       }
     },
     "id": { "type": { "name": "string" } },
@@ -118,6 +118,8 @@
     "import { ScatterChartPro } from '@mui/x-charts-pro';"
   ],
   "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
   "muiName": "MuiScatterChartPro",
   "filename": "/packages/x-charts-pro/src/ScatterChartPro/ScatterChartPro.tsx",
   "inheritance": null,

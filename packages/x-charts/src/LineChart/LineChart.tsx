@@ -33,7 +33,7 @@ import {
 } from '../ChartsOverlay';
 import { useLineChartProps } from './useLineChartProps';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
-import { ChartDataProvider } from '../context';
+import { ChartDataProvider } from '../ChartDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../internals/components/ChartsWrapper';
 
@@ -111,10 +111,6 @@ export interface LineChartProps
    * @default false
    */
   skipAnimation?: boolean;
-  /**
-   * If `true` marks will render `<circle />` instead of `<path />` and drop theme override for faster rendering.
-   */
-  experimentalMarkRendering?: boolean;
 }
 
 /**
@@ -230,10 +226,6 @@ LineChart.propTypes = {
    */
   disableLineItemHighlight: PropTypes.bool,
   /**
-   * If `true` marks will render `<circle />` instead of `<path />` and drop theme override for faster rendering.
-   */
-  experimentalMarkRendering: PropTypes.bool,
-  /**
    * Option to display a cartesian grid in the background.
    */
   grid: PropTypes.shape({
@@ -249,11 +241,12 @@ LineChart.propTypes = {
    */
   hideLegend: PropTypes.bool,
   /**
-   * The item currently highlighted. Turns highlighting into a controlled prop.
+   * The highlighted item.
+   * Used when the highlight is controlled.
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.

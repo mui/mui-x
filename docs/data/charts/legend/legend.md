@@ -1,7 +1,7 @@
 ---
 title: Charts - Legend
 productId: x-charts
-components: ChartsLegend, DefaultChartsLegend, ChartsText, ContinuousColorLegend, PiecewiseColorLegend, ChartsLabel, ChartsLabelMark, ChartsLabelGradient
+components: ChartsLegend, ChartsText, ContinuousColorLegend, PiecewiseColorLegend
 ---
 
 # Charts - Legend
@@ -17,8 +17,6 @@ In chart components, the legend links series with `label` properties and their c
 ## Customization
 
 This section explains how to customize the legend using classes and properties.
-
-In order to fully customize the legend with custom components, see an example at the [HTML components docs](https://mui.com/x/react-charts/components/#html-components).
 
 ### Dimensions
 
@@ -79,6 +77,17 @@ The legend can be made scrollable by setting the `overflowY` for vertical legend
 Make sure that the legend container has a fixed height or width to enable scrolling.
 
 {{"demo": "ScrollableLegend.js"}}
+
+### Custom component
+
+For advanced customization, you can create your own legend with `useLegend`.
+This hook returns the items that the default legend would plot.
+Allowing you to focus on the rendering.
+
+This demo show how to use it with slots.
+Another demo in [HTML components docs](/x/react-charts/components/#html-components) shows how to use it with composition.
+
+{{"demo": "CustomLegend.js"}}
 
 ## Color legend
 

@@ -67,6 +67,36 @@ export type SkeletonProps = {
   height?: number | string;
 };
 
+export type TextFieldProps = {
+  autoComplete?: string;
+  className?: string;
+  color?: 'primary' | 'error';
+  disabled?: boolean;
+  error?: boolean;
+  fullWidth?: boolean;
+  helperText?: string | null;
+  id?: string;
+  inputRef?: React.Ref<HTMLInputElement>;
+  label?: React.ReactNode;
+  onChange?: React.ChangeEventHandler;
+  onKeyDown?: React.KeyboardEventHandler;
+  placeholder?: string;
+  size?: 'small' | 'medium';
+  slotProps?: {
+    input?: {
+      disabled?: boolean;
+      endAdornment?: React.ReactNode;
+      startAdornment?: React.ReactNode;
+    };
+    inputLabel?: {};
+    htmlInput?: React.InputHTMLAttributes<HTMLInputElement>;
+  };
+  style?: React.CSSProperties;
+  tabIndex?: number;
+  type?: React.HTMLInputTypeAttribute;
+  value?: string;
+};
+
 export type TooltipProps = {
   children: React.ReactElement<any, any>;
   enterDelay?: number;

@@ -9,8 +9,7 @@ import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 
 function ButtonDateField(props: DatePickerFieldProps) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-  const { InputProps, slotProps, slots, ownerState, label, focused, name, ...other } =
-    forwardedProps;
+  const { focused, ...other } = forwardedProps;
 
   const pickerContext = usePickerContext();
 
@@ -33,13 +32,17 @@ function ButtonDateField(props: DatePickerFieldProps) {
       variant="outlined"
       size="small"
       startIcon={<CalendarTodayRoundedIcon fontSize="small" />}
-      sx={{ minWidth: 'fit-content' }}
+      sx={[
+        { minWidth: 'fit-content' },
+        ...(Array.isArray(pickerContext.rootSx) ? pickerContext.rootSx : [pickerContext.rootSx]),
+      ]}
       fullWidth
       color={hasValidationError ? 'error' : 'primary'}
-      ref={InputProps?.ref}
+      ref={pickerContext.triggerRef}
+      className={pickerContext.rootClassName}
       onClick={() => pickerContext.setOpen((prev) => !prev)}
     >
-      {label ? `${label}: ${valueStr}` : valueStr}
+      {pickerContext.label ? `${pickerContext.label}: ${valueStr}` : valueStr}
     </Button>
   );
 }

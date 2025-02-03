@@ -67,12 +67,12 @@ export function Toolbar(props) {
       ) : (
         <React.Fragment>
           <Box
-            sx={{ ml: 0.5, flex: 1, display: 'flex', justifyContent: 'flex-start' }}
-          >
-            <GridToolbarQuickFilter
-              variant="outlined"
-              size="small"
-              sx={{
+            sx={{
+              ml: 0.5,
+              flex: 1,
+              display: 'flex',
+              justifyContent: 'flex-start',
+              '& > *': {
                 width: '100%',
                 maxWidth: 260,
                 pb: 0,
@@ -89,6 +89,14 @@ export function Toolbar(props) {
                   {
                     display: 'block',
                   },
+              },
+            }}
+          >
+            <GridToolbarQuickFilter
+              slotProps={{
+                root: {
+                  size: 'small',
+                },
               }}
             />
           </Box>

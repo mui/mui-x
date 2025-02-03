@@ -7,10 +7,8 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { TimeField } from '../TimeField';
 import { DesktopTimePickerProps } from './DesktopTimePicker.types';
 import { TimePickerViewRenderers, useTimePickerDefaultizedProps } from '../TimePicker/shared';
-import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { extractValidationProps, validateTime } from '../validation';
-import { ClockIcon } from '../icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import {
   renderDigitalClockTimeView,
@@ -20,7 +18,6 @@ import { TimeViewWithMeridiem } from '../internals/models';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
 import { resolveTimeViewsResponse } from '../internals/utils/date-time-utils';
 import { TimeView, PickerOwnerState } from '../models';
-import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalization';
 
 type DesktopTimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   props: DesktopTimePickerProps<TEnableAccessibleFieldDOMStructure> &
@@ -43,7 +40,6 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
   inProps: DesktopTimePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const translations = usePickerTranslations();
   const utils = useUtils();
 
   // Props with the default values common to all time pickers
@@ -90,7 +86,6 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
     views: shouldRenderTimeInASingleColumn ? ['hours' as TimeViewWithMeridiem] : views,
     slots: {
       field: TimeField,
-      openPickerIcon: ClockIcon,
       ...defaultizedProps.slots,
     },
     slotProps: {
@@ -98,7 +93,6 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
       field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
-        ref,
       }),
       toolbar: {
         hidden: true,
@@ -113,15 +107,10 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
     TEnableAccessibleFieldDOMStructure,
     typeof props
   >({
+    ref,
     props,
     valueManager: singleItemValueManager,
     valueType: 'time',
-    getOpenDialogAriaText: buildGetOpenDialogAriaText({
-      utils,
-      formatKey: 'fullTime',
-      contextTranslation: translations.openTimePickerDialogue,
-      propsTranslation: props.localeText?.openTimePickerDialogue,
-    }),
     validator: validateTime,
   });
 

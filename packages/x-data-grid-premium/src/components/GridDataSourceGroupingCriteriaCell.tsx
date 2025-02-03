@@ -1,7 +1,8 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import Box from '@mui/material/Box';
-import { vars, useGridPrivateApiContext } from '@mui/x-data-grid-pro/internals';
+import { useGridPrivateApiContext } from '@mui/x-data-grid-pro/internals';
 import {
   useGridSelector,
   getDataGridUtilityClass,
@@ -38,7 +39,7 @@ interface GridGroupingCriteriaCellIconProps
 }
 
 function GridGroupingCriteriaCellIcon(props: GridGroupingCriteriaCellIconProps) {
-  const apiRef = useGridPrivateApiContext() as React.RefObject<GridPrivateApiPremium>;
+  const apiRef = useGridPrivateApiContext() as RefObject<GridPrivateApiPremium>;
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
   const { rowNode, id, field, descendantCount } = props;
@@ -124,7 +125,8 @@ export function GridDataSourceGroupingCriteriaCell(props: GridGroupingCriteriaCe
         ml:
           rootProps.rowGroupingColumnMode === 'multiple'
             ? 0
-            : `calc(var(--DataGrid-cellOffsetMultiplier) * ${vars.spacing(rowNode.depth)})`,
+            : (theme) =>
+                `calc(var(--DataGrid-cellOffsetMultiplier) * ${theme.spacing(rowNode.depth)})`,
       }}
     >
       <div className={classes.toggle}>

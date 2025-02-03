@@ -4,6 +4,17 @@ export type {
   PickersArrowSwitcherSlots,
   PickersArrowSwitcherSlotProps,
 } from './components/PickersArrowSwitcher';
+export {
+  PickerFieldUI,
+  PickerFieldUIContextProvider,
+  cleanFieldResponse,
+  useFieldTextFieldProps,
+} from './components/PickerFieldUI';
+export type {
+  ExportedPickerFieldUIProps,
+  PickerFieldUISlots,
+  PickerFieldUISlotProps,
+} from './components/PickerFieldUI';
 export { PickerProvider } from './components/PickerProvider';
 export type { PickerContextValue } from './components/PickerProvider';
 export { PickersModalDialog } from './components/PickersModalDialog';
@@ -11,8 +22,11 @@ export type {
   PickersModalDialogSlots,
   PickersModalDialogSlotProps,
 } from './components/PickersModalDialog';
-export { PickersPopper } from './components/PickersPopper';
-export type { PickersPopperSlots, PickersPopperSlotProps } from './components/PickersPopper';
+export { PickerPopper } from './components/PickerPopper/PickerPopper';
+export type {
+  PickerPopperSlots,
+  PickerPopperSlotProps,
+} from './components/PickerPopper/PickerPopper';
 export { PickersToolbar } from './components/PickersToolbar';
 export type { PickersToolbarProps } from './components/PickersToolbar';
 export { pickersToolbarClasses } from './components/pickersToolbarClasses';
@@ -40,12 +54,6 @@ export type {
   PickersArrowSwitcherClassKey,
   PickersArrowSwitcherClasses,
 } from './components/PickersArrowSwitcher/pickersArrowSwitcherClasses';
-export type { PickerPopperProps } from './components/PickersPopper';
-export { pickersPopperClasses } from './components/pickersPopperClasses';
-export type {
-  PickersPopperClassKey,
-  PickersPopperClasses,
-} from './components/pickersPopperClasses';
 export { PickersToolbarButton } from './components/PickersToolbarButton';
 
 export { DAY_MARGIN, DIALOG_WIDTH, VIEW_HEIGHT } from './constants/dimensions';
@@ -69,6 +77,7 @@ export type {
 } from './hooks/useField';
 export { useFieldOwnerState } from './hooks/useFieldOwnerState';
 export type { MobileOnlyPickerProps } from './hooks/useMobilePicker';
+export { useNullablePickerContext } from './hooks/useNullablePickerContext';
 export { usePicker } from './hooks/usePicker';
 export type {
   UsePickerParams,
@@ -103,6 +112,12 @@ export type { ExportedUseViewsOptions, UseViewsOptions } from './hooks/useViews'
 export { useViews } from './hooks/useViews';
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';
 
+export type {
+  PickerAnyManager,
+  PickerManagerFieldInternalProps,
+  PickerManagerEnableAccessibleFieldDOMStructure,
+  PickerManagerError,
+} from './models/manager';
 export type { RangePosition } from './models/pickers';
 export type { BaseSingleInputFieldProps, FieldRangeSection } from './models/fields';
 export type { BasePickerProps, BasePickerInputProps } from './models/props/basePickerProps';
@@ -132,7 +147,6 @@ export type {
   PickerValidValue,
 } from './models/value';
 
-export { convertFieldResponseIntoMuiTextFieldProps } from './utils/convertFieldResponseIntoMuiTextFieldProps';
 export {
   applyDefaultDate,
   replaceInvalidDateByNull,
@@ -148,9 +162,10 @@ export {
   executeInTheNextEventLoopTick,
   getActiveElement,
   onSpaceOrEnter,
+  mergeSx,
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
 } from './utils/utils';
-export { useDefaultReduceAnimations } from './hooks/useDefaultReduceAnimations';
+export { useReduceAnimations } from './hooks/useReduceAnimations';
 export { applyDefaultViewProps } from './utils/views';
 
 export { DayCalendar } from '../DateCalendar/DayCalendar';
