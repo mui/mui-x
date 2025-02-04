@@ -100,22 +100,24 @@ describe('findClosestEnabledDate', () => {
     expect(result).toEqualDateTime(today);
   });
 
-  it('should return now with given time part if disablePast and now is valid', () => {
+  describe('fake clock', () => {
     createClock(new Date('2000-01-02'));
 
-    const tryDate = adapterToUse.date('2000-01-01T11:12:13');
-    const result = findClosestEnabledDate({
-      date: tryDate,
-      minDate: adapterToUse.date('1900-01-01'),
-      maxDate: adapterToUse.date('2100-01-01'),
-      utils: adapterToUse,
-      isDateDisabled: () => false,
-      disableFuture: false,
-      disablePast: true,
-      timezone: 'default',
-    });
+    it('should return now with given time part if disablePast and now is valid', () => {
+      const tryDate = adapterToUse.date('2000-01-01T11:12:13');
+      const result = findClosestEnabledDate({
+        date: tryDate,
+        minDate: adapterToUse.date('1900-01-01'),
+        maxDate: adapterToUse.date('2100-01-01'),
+        utils: adapterToUse,
+        isDateDisabled: () => false,
+        disableFuture: false,
+        disablePast: true,
+        timezone: 'default',
+      });
 
-    expect(result).toEqualDateTime(adapterToUse.addDays(tryDate, 1));
+      expect(result).toEqualDateTime(adapterToUse.addDays(tryDate, 1));
+    });
   });
 
   it('should return `null` when disablePast+disableFuture and now is invalid', () => {
@@ -164,21 +166,23 @@ describe('findClosestEnabledDate', () => {
     expect(result).toEqualDateTime(adapterToUse.date('2018-08-18'));
   });
 
-  it('should keep the time of the `date` when `disablePast`', () => {
+  describe('fake clock hours', () => {
     createClock(new Date('2000-01-02T11:12:13.123Z'));
 
-    const result = findClosestEnabledDate({
-      date: adapterToUse.date('2000-01-01T11:12:13.550Z'),
-      minDate: adapterToUse.date('1900-01-01'),
-      maxDate: adapterToUse.date('2100-01-01'),
-      utils: adapterToUse,
-      isDateDisabled: () => false,
-      disableFuture: false,
-      disablePast: true,
-      timezone: 'default',
-    });
+    it('should keep the time of the `date` when `disablePast`', () => {
+      const result = findClosestEnabledDate({
+        date: adapterToUse.date('2000-01-01T11:12:13.550Z'),
+        minDate: adapterToUse.date('1900-01-01'),
+        maxDate: adapterToUse.date('2100-01-01'),
+        utils: adapterToUse,
+        isDateDisabled: () => false,
+        disableFuture: false,
+        disablePast: true,
+        timezone: 'default',
+      });
 
-    expect(result).toEqualDateTime(adapterToUse.date('2000-01-02T11:12:13.550Z'));
+      expect(result).toEqualDateTime(adapterToUse.date('2000-01-02T11:12:13.550Z'));
+    });
   });
 
   it('should return maxDate if it is before the date and valid', () => {
