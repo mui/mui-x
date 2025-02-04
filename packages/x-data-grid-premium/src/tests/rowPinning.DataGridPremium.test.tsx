@@ -37,7 +37,7 @@ const baselineProps: DataGridPremiumProps = {
 };
 
 describe('<DataGridPremium /> - Row pinning', () => {
-  const { render } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   function getRowById(id: number | string) {
     return document.querySelector(`[data-id="${id}"]`);

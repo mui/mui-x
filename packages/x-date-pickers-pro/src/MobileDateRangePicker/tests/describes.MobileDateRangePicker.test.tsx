@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, fireDiscreteEvent, fireEvent } from '@mui/internal-test-utils';
+import { screen, fireEvent } from '@mui/internal-test-utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
 import {
@@ -15,16 +15,12 @@ import {
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<MobileDateRangePicker /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({
-    clock: 'fake',
-    clockConfig: new Date(2018, 0, 1, 0, 0, 0, 0),
-  });
+  const { render } = createPickerRenderer();
 
   describePicker(MobileDateRangePicker, { render, fieldType: 'multi-input', variant: 'mobile' });
 
   describeRangeValidation(MobileDateRangePicker, () => ({
     render,
-    clock,
     componentFamily: 'picker',
     views: ['day'],
     variant: 'mobile',
@@ -52,7 +48,6 @@ describe('<MobileDateRangePicker /> - Describes', () => {
     type: 'date-range',
     variant: 'mobile',
     initialFocus: 'start',
-    clock,
     values: [
       // initial start and end dates
       [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-04')],
@@ -73,7 +68,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
         : 'MM/DD/YYYY';
       expectFieldValueV7(endFieldRoot, expectedEndValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue, setEndDate = false }) => {
+    setNewValue: async (value, user, { isOpened, applySameValue, setEndDate = false }) => {
       let newValue: PickerNonNullableRangeValue;
       if (applySameValue) {
         newValue = value;
@@ -95,8 +90,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
 
       // Close the picker
       if (!isOpened) {
-        fireDiscreteEvent.keyDown(document.activeElement!, { key: 'Escape' });
-        clock.runToLast();
+        await user.keyboard('[Escape]');
       }
 
       return newValue;

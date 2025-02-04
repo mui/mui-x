@@ -15,13 +15,12 @@ import { PickerValue } from '@mui/x-date-pickers/internals';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<MobileDatePicker /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describePicker(MobileDatePicker, { render, fieldType: 'single-input', variant: 'mobile' });
 
   describeValidation(MobileDatePicker, () => ({
     render,
-    clock,
     views: ['year', 'month', 'day'],
     componentFamily: 'picker',
   }));
@@ -49,7 +48,6 @@ describe('<MobileDatePicker /> - Describes', () => {
     variant: 'mobile',
     values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-02')],
     emptyValue: null,
-    clock,
     assertRenderedValue: (expectedValue: any) => {
       const fieldRoot = getFieldInputRoot();
 
@@ -59,7 +57,7 @@ describe('<MobileDatePicker /> - Describes', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue }) => {
+    setNewValue: async (value, user, { isOpened, applySameValue }) => {
       if (!isOpened) {
         openPicker({ type: 'date' });
       }
@@ -73,7 +71,6 @@ describe('<MobileDatePicker /> - Describes', () => {
       if (!isOpened) {
         // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
         fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
-        clock.runToLast();
       }
 
       return newValue;

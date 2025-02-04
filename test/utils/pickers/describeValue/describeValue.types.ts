@@ -19,8 +19,6 @@ interface DescribeValueBaseOptions<
   values: [InferNonNullablePickerValue<TValue>, InferNonNullablePickerValue<TValue>];
   emptyValue: TValue;
   defaultProps?: object;
-  // TODO: Export `Clock` from monorepo
-  clock: ReturnType<typeof createRenderer>['clock'];
 }
 
 export type DescribeValueOptions<
@@ -32,6 +30,7 @@ export type DescribeValueOptions<
         variant: 'desktop' | 'mobile';
         setNewValue: (
           value: InferNonNullablePickerValue<TValue>,
+          user: ReturnType<ReturnType<typeof createRenderer>['render']>['user'],
           options: {
             selectSection: FieldSectionSelector;
             pressKey: FieldPressCharacter;
@@ -39,13 +38,14 @@ export type DescribeValueOptions<
             applySameValue?: boolean;
             setEndDate?: boolean;
           },
-        ) => InferNonNullablePickerValue<TValue>;
+        ) => Promise<InferNonNullablePickerValue<TValue>>;
       }
     : {
         setNewValue: (
           value: TValue,
+          user: ReturnType<ReturnType<typeof createRenderer>['render']>['user'],
           options: { selectSection: FieldSectionSelector; pressKey: FieldPressCharacter },
-        ) => TValue;
+        ) => Promise<TValue>;
       });
 
 export type DescribeValueTestSuite<

@@ -20,11 +20,11 @@ function WrappedDateCalendar(
 }
 
 describe('<DateCalendar /> - Validation', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   // Test about `shouldDisableMonth` on the "month" view is on the `MonthCalendar` test file.
   describe('props.shouldDisableMonth', () => {
-    it('should disable all the dates on the "day" view when `shouldDisableMonth` returns false for its month`', () => {
+    it('should disable all the dates on the "day" view when `shouldDisableMonth` returns false for its month`', async () => {
       render(
         <WrappedDateCalendar
           initialValue={adapterToUse.date('2018-06-01')}
@@ -40,17 +40,13 @@ describe('<DateCalendar /> - Validation', () => {
       });
 
       fireEvent.click(screen.getByTitle('Next month'));
-      clock.runToLast();
-
-      // All dates should be disabled in disabled month
+      await // All dates should be disabled in disabled month
       screen.getAllByTestId('day').forEach((day) => {
         expect(day).to.have.attribute('disabled');
       });
 
       fireEvent.click(screen.getByTitle('Next month'));
-      clock.runToLast();
-
-      // No date should be disabled in the month after the disabled month
+      await // No date should be disabled in the month after the disabled month
       screen.getAllByTestId('day').forEach((day) => {
         expect(day).not.to.have.attribute('disabled');
       });
@@ -59,7 +55,7 @@ describe('<DateCalendar /> - Validation', () => {
 
   // Test about `shouldDisableYear` on the "year" view is on the `YearCalendar` test file.
   describe('props.shouldDisableYear', () => {
-    it('should disable all the dates on the "day" view when `shouldDisableYear` returns false for its year`', () => {
+    it('should disable all the dates on the "day" view when `shouldDisableYear` returns false for its year`', async () => {
       render(
         <WrappedDateCalendar
           initialValue={adapterToUse.date('2017-12-01')}
@@ -75,9 +71,7 @@ describe('<DateCalendar /> - Validation', () => {
       });
 
       fireEvent.click(screen.getByTitle('Next month'));
-      clock.runToLast();
-
-      // All dates should be disabled in disabled year
+      await // All dates should be disabled in disabled year
       screen.getAllByTestId('day').forEach((day) => {
         expect(day).to.have.attribute('disabled');
       });

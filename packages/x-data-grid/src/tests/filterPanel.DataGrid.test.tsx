@@ -49,7 +49,7 @@ function CustomInputValue(props: GridFilterInputValueProps) {
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Filter panel', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   const baselineProps: DataGridProps = {
     autoHeight: isJSDOM,
@@ -467,7 +467,7 @@ describe('<DataGrid /> - Filter panel', () => {
     expect(screen.queryAllByRole('tooltip').length).to.deep.equal(1);
 
     deleteFilterForm();
-    clock.tick(100);
+
     expect(screen.queryAllByRole('tooltip').length).to.deep.equal(0);
   });
 

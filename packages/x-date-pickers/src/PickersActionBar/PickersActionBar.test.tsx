@@ -7,7 +7,7 @@ import { createPickerRenderer } from 'test/utils/pickers';
 import { PickerActionsContext } from '../internals/components/PickerProvider';
 
 describe('<PickersActionBar />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   const renderWithContext = (element: React.ReactElement) => {
     const spys = {

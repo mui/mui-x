@@ -13,9 +13,7 @@ import {
 import { DesktopDateTimeRangePicker } from '../DesktopDateTimeRangePicker';
 
 describe('<DesktopDateTimeRangePicker /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({
-    clock: 'fake',
-  });
+  const { render } = createPickerRenderer();
 
   describePicker(DesktopDateTimeRangePicker, {
     render,
@@ -25,7 +23,6 @@ describe('<DesktopDateTimeRangePicker /> - Describes', () => {
 
   describeRangeValidation(DesktopDateTimeRangePicker, () => ({
     render,
-    clock,
     views: ['day', 'hours', 'minutes'],
     componentFamily: 'picker',
     variant: 'desktop',
@@ -53,7 +50,6 @@ describe('<DesktopDateTimeRangePicker /> - Describes', () => {
     type: 'date-time-range',
     variant: 'desktop',
     initialFocus: 'start',
-    clock,
     values: [
       // initial start and end dates
       [adapterToUse.date('2018-01-01T11:30:00'), adapterToUse.date('2018-01-04T11:45:00')],
@@ -83,8 +79,9 @@ describe('<DesktopDateTimeRangePicker /> - Describes', () => {
         : expectedPlaceholder;
       expectFieldValueV7(endSectionsContainer, expectedEndValueStr);
     },
-    setNewValue: (
+    setNewValue: async (
       value,
+      _,
       { isOpened, applySameValue, setEndDate = false, selectSection, pressKey },
     ) => {
       let newValue: PickerNonNullableRangeValue;

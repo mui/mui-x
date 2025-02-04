@@ -5,7 +5,7 @@ import { PickersArrowSwitcher } from './PickersArrowSwitcher';
 import { pickersArrowSwitcherClasses } from './pickersArrowSwitcherClasses';
 
 describe('<PickersArrowSwitcher /> - Describes', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describeConformance(
     <PickersArrowSwitcher

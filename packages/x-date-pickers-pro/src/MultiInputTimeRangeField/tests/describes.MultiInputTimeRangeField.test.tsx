@@ -9,7 +9,10 @@ import {
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<MultiInputTimeRangeField />', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer({
+    clockConfig: new Date(2018, 0, 10),
+    clockOptions: { toFake: ['Date'] },
+  });
 
   describeConformance(<MultiInputTimeRangeField />, () => ({
     classes: {} as any,
@@ -22,7 +25,6 @@ describe('<MultiInputTimeRangeField />', () => {
 
   describeRangeValidation(MultiInputTimeRangeField, () => ({
     render,
-    clock,
     componentFamily: 'field',
     views: ['hours', 'minutes'],
     setValue: (value, { setEndDate } = {}) => {

@@ -14,13 +14,12 @@ import { PickerValue } from '@mui/x-date-pickers/internals';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DesktopDatePicker /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describePicker(DesktopDatePicker, { render, fieldType: 'single-input', variant: 'desktop' });
 
   describeValidation(DesktopDatePicker, () => ({
     render,
-    clock,
     views: ['year', 'month', 'day'],
     componentFamily: 'picker',
   }));
@@ -48,7 +47,6 @@ describe('<DesktopDatePicker /> - Describes', () => {
     variant: 'desktop',
     values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-02')],
     emptyValue: null,
-    clock,
     assertRenderedValue: (expectedValue: any) => {
       const fieldRoot = getFieldInputRoot();
 
@@ -58,7 +56,7 @@ describe('<DesktopDatePicker /> - Describes', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue, selectSection, pressKey }) => {
+    setNewValue: async (value, _, { isOpened, applySameValue, selectSection, pressKey }) => {
       const newValue = applySameValue ? value! : adapterToUse.addDays(value!, 1);
 
       if (isOpened) {

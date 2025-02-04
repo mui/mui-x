@@ -17,16 +17,12 @@ import { PickerValue } from '@mui/x-date-pickers/internals';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<MobileTimePicker /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({
-    clock: 'fake',
-    clockConfig: new Date(2018, 2, 12, 8, 16, 0),
-  });
+  const { render } = createPickerRenderer();
 
   describePicker(MobileTimePicker, { render, fieldType: 'single-input', variant: 'mobile' });
 
   describeValidation(MobileTimePicker, () => ({
     render,
-    clock,
     views: ['hours', 'minutes'],
     componentFamily: 'picker',
   }));
@@ -54,7 +50,6 @@ describe('<MobileTimePicker /> - Describes', () => {
     variant: 'mobile',
     values: [adapterToUse.date('2018-01-01T11:30:00'), adapterToUse.date('2018-01-01T12:35:00')],
     emptyValue: null,
-    clock,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       const fieldRoot = getFieldInputRoot();
@@ -68,7 +63,7 @@ describe('<MobileTimePicker /> - Describes', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue }) => {
+    setNewValue: async (value, user, { isOpened, applySameValue }) => {
       if (!isOpened) {
         openPicker({ type: 'time' });
       }
@@ -99,7 +94,6 @@ describe('<MobileTimePicker /> - Describes', () => {
       if (!isOpened) {
         // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
         fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
-        clock.runToLast();
       } else {
         // return to the hours view in case we'd like to repeat the selection process
         fireEvent.click(screen.getByRole('button', { name: 'Open previous view' }));

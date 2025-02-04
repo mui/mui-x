@@ -6,7 +6,7 @@ import { describeSkipIf } from 'test/utils/skipIf';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
 export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTest, getOptions) => {
-  const { views, componentFamily, render, clock } = getOptions();
+  const { views, componentFamily, render } = getOptions();
 
   describeSkipIf(componentFamily === 'field' || !views.includes('month'))('month view:', () => {
     const defaultProps = {
@@ -28,7 +28,7 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
         <ElementToTest
           {...defaultProps}
           value={null}
-          shouldDisableMonth={(date) => adapterToUse.getMonth(date) === 3}
+          shouldDisableMonth={(date: any) => adapterToUse.getMonth(date) === 3}
         />,
       );
 
@@ -39,7 +39,7 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
 
     it('should apply disablePast', () => {
       let now;
-      function WithFakeTimer(props) {
+      function WithFakeTimer(props: any) {
         now = adapterToUse.date();
         return <ElementToTest value={now} {...props} />;
       }
@@ -54,7 +54,6 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
 
       if (!adapterToUse.isSameYear(now, nextMonth)) {
         setProps({ value: nextMonth });
-        clock.runToLast();
       }
       expect(screen.getByText(adapterToUse.format(nextMonth, 'monthShort'))).not.to.have.attribute(
         'disabled',
@@ -62,7 +61,6 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
 
       if (!adapterToUse.isSameYear(prevMonth, nextMonth)) {
         setProps({ value: prevMonth });
-        clock.runToLast();
       }
       expect(screen.getByText(adapterToUse.format(prevMonth, 'monthShort'))).to.have.attribute(
         'disabled',
@@ -73,7 +71,7 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
 
     it('should apply disableFuture', () => {
       let now;
-      function WithFakeTimer(props) {
+      function WithFakeTimer(props: any) {
         now = adapterToUse.date();
         return <ElementToTest value={now} {...props} />;
       }
@@ -88,7 +86,6 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
 
       if (!adapterToUse.isSameYear(now, nextMonth)) {
         setProps({ value: nextMonth });
-        clock.runToLast();
       }
       expect(screen.getByText(adapterToUse.format(nextMonth, 'monthShort'))).to.have.attribute(
         'disabled',
@@ -96,7 +93,6 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
 
       if (!adapterToUse.isSameYear(prevMonth, nextMonth)) {
         setProps({ value: prevMonth });
-        clock.runToLast();
       }
       expect(screen.getByText(adapterToUse.format(prevMonth, 'monthShort'))).not.to.have.attribute(
         'disabled',

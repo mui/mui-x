@@ -15,10 +15,9 @@ import {
 } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
 import { getColumnHeaderCell } from 'test/utils/helperFn';
+import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
-describe('<DataGridPremium /> - Data source aggregation', () => {
+describeSkipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => {
   const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
@@ -102,12 +101,6 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
     );
   }
 
-  beforeEach(function beforeTest() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
-  });
-
   it('should show aggregation option in the column menu', async () => {
     const { user } = render(<TestDataSourceAggregation />);
     await waitFor(() => {
@@ -153,8 +146,10 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
       expect(Object.keys(apiRef.current!.state.aggregation.lookup).length).to.be.greaterThan(0);
     });
     expect(apiRef.current?.state.rows.tree[GRID_AGGREGATION_ROOT_FOOTER_ROW_ID]).not.to.equal(null);
-    const footerRow = apiRef.current?.state.aggregation.lookup[GRID_ROOT_GROUP_ID];
-    expect(footerRow?.id).to.deep.equal({ position: 'footer', value: 10 });
+    await waitFor(() => {
+      const footerRow = apiRef.current?.state.aggregation.lookup[GRID_ROOT_GROUP_ID];
+      expect(footerRow?.id).to.deep.equal({ position: 'footer', value: 10 });
+    });
   });
 
   it('should derive the aggregation values using `dataSource.getAggregatedValue`', async () => {

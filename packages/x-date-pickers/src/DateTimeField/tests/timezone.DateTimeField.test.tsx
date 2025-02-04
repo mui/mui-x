@@ -118,12 +118,10 @@ describe('<DateTimeField /> - Timezone', () => {
   });
 
   describe('Value timezone modification - Luxon', () => {
-    const { render, adapter, clock } = createPickerRenderer({
-      clock: 'fake',
+    const { render, adapter } = createPickerRenderer({
       adapterName: 'luxon',
     });
     const { renderWithProps } = buildFieldInteractions({
-      clock,
       render,
       Component: DateTimeField,
     });

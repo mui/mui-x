@@ -5,7 +5,7 @@ import { createPickerRenderer, describeRangeValidation } from 'test/utils/picker
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<SingleInputDateRangeField /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describeConformance(<SingleInputDateRangeField />, () => ({
     classes: {} as any,
@@ -18,7 +18,6 @@ describe('<SingleInputDateRangeField /> - Describes', () => {
 
   describeRangeValidation(SingleInputDateRangeField, () => ({
     render,
-    clock,
     componentFamily: 'field',
     views: ['year', 'month', 'day'],
     isSingleInput: true,

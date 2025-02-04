@@ -1,13 +1,12 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, within } from '@mui/internal-test-utils';
+import { act, createRenderer, screen, waitFor, within } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { DataGrid, gridClasses, GridColDef } from '@mui/x-data-grid';
 import { getCell, getActiveCell, getColumnHeaderCell } from 'test/utils/helperFn';
-import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGrid /> - Column spanning', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   const baselineProps = {
     rows: [
@@ -118,64 +117,64 @@ describe('<DataGrid /> - Column spanning', () => {
       { field: 'rating' },
     ];
 
-    it('should move to the cell right when pressing "ArrowRight"', () => {
-      render(
+    it('should move to the cell right when pressing "ArrowRight"', async () => {
+      const { user } = render(
         <div style={{ width: 500, height: 300 }}>
           <DataGrid {...baselineProps} columns={columns} />
         </div>,
       );
 
-      fireUserEvent.mousePress(getCell(0, 0));
+      await user.click(getCell(0, 0));
       expect(getActiveCell()).to.equal('0-0');
 
-      fireEvent.keyDown(getCell(0, 0), { key: 'ArrowRight' });
+      await user.keyboard('{ArrowRight}');
       expect(getActiveCell()).to.equal('0-2');
     });
 
-    it('should move to the cell left when pressing "ArrowLeft"', () => {
-      render(
+    it('should move to the cell left when pressing "ArrowLeft"', async () => {
+      const { user } = render(
         <div style={{ width: 500, height: 300 }}>
           <DataGrid {...baselineProps} columns={columns} />
         </div>,
       );
 
-      fireUserEvent.mousePress(getCell(0, 2));
+      await user.click(getCell(0, 2));
       expect(getActiveCell()).to.equal('0-2');
 
-      fireEvent.keyDown(getCell(0, 2), { key: 'ArrowLeft' });
+      await user.keyboard('{ArrowLeft}');
       expect(getActiveCell()).to.equal('0-0');
     });
 
-    it('should move to the cell above when pressing "ArrowUp"', () => {
-      render(
+    it('should move to the cell above when pressing "ArrowUp"', async () => {
+      const { user } = render(
         <div style={{ width: 500, height: 300 }}>
           <DataGrid {...baselineProps} columns={columns} />
         </div>,
       );
 
-      fireUserEvent.mousePress(getCell(1, 1));
+      await user.click(getCell(1, 1));
       expect(getActiveCell()).to.equal('1-1');
 
-      fireEvent.keyDown(getCell(1, 1), { key: 'ArrowUp' });
+      await user.keyboard('{ArrowUp}');
       expect(getActiveCell()).to.equal('0-0');
     });
 
-    it('should move to the cell below when pressing "ArrowDown"', () => {
-      render(
+    it('should move to the cell below when pressing "ArrowDown"', async () => {
+      const { user } = render(
         <div style={{ width: 500, height: 300 }}>
           <DataGrid {...baselineProps} columns={columns} disableVirtualization={isJSDOM} />
         </div>,
       );
 
-      fireUserEvent.mousePress(getCell(1, 3));
+      await user.click(getCell(1, 3));
       expect(getActiveCell()).to.equal('1-3');
 
-      fireEvent.keyDown(getCell(1, 3), { key: 'ArrowDown' });
+      await user.keyboard('{ArrowDown}');
       expect(getActiveCell()).to.equal('2-2');
     });
 
-    it('should move down by the amount of rows visible on screen when pressing "PageDown"', () => {
-      render(
+    it('should move down by the amount of rows visible on screen when pressing "PageDown"', async () => {
+      const { user } = render(
         <div style={{ width: 500, height: 300 }}>
           <DataGrid
             {...baselineProps}
@@ -186,30 +185,30 @@ describe('<DataGrid /> - Column spanning', () => {
         </div>,
       );
 
-      fireUserEvent.mousePress(getCell(0, 3));
+      await user.click(getCell(0, 3));
       expect(getActiveCell()).to.equal('0-3');
 
-      fireEvent.keyDown(getCell(0, 3), { key: 'PageDown' });
+      await user.keyboard('{PageDown}');
       expect(getActiveCell()).to.equal('2-2');
     });
 
-    it('should move up by the amount of rows visible on screen when pressing "PageUp"', () => {
-      render(
+    it('should move up by the amount of rows visible on screen when pressing "PageUp"', async () => {
+      const { user } = render(
         <div style={{ width: 500, height: 300 }}>
           <DataGrid {...baselineProps} columns={columns} autoHeight={isJSDOM} />
         </div>,
       );
 
-      fireUserEvent.mousePress(getCell(2, 1));
+      await user.click(getCell(2, 1));
       expect(getActiveCell()).to.equal('2-1');
 
-      fireEvent.keyDown(getCell(2, 1), { key: 'PageUp' });
+      await user.keyboard('{PageUp}');
       expect(getActiveCell()).to.equal('0-0');
     });
 
-    it('should move to the cell below when pressing "Enter" after editing', () => {
+    it('should move to the cell below when pressing "Enter" after editing', async () => {
       const editableColumns = columns.map((column) => ({ ...column, editable: true }));
-      render(
+      const { user } = render(
         <div style={{ width: 500, height: 300 }}>
           <DataGrid
             {...baselineProps}
@@ -220,55 +219,51 @@ describe('<DataGrid /> - Column spanning', () => {
         </div>,
       );
 
-      fireUserEvent.mousePress(getCell(1, 3));
+      await user.click(getCell(1, 3));
       expect(getActiveCell()).to.equal('1-3');
 
-      // start editing
-      fireEvent.keyDown(getCell(1, 3), { key: 'Enter' });
+      // start editing / commit
+      await user.keyboard('{Enter}{Enter}');
 
-      // commit
-      fireEvent.keyDown(getCell(1, 3).querySelector('input')!, { key: 'Enter' });
       expect(getActiveCell()).to.equal('2-2');
     });
 
-    it('should move to the cell on the right when pressing "Tab" after editing', () => {
+    it('should move to the cell on the right when pressing "Tab" after editing', async () => {
       const editableColumns = columns.map((column) => ({ ...column, editable: true }));
-      render(
+      const { user } = render(
         <div style={{ width: 500, height: 300 }}>
           <DataGrid {...baselineProps} columns={editableColumns} disableVirtualization={isJSDOM} />
         </div>,
       );
 
-      fireUserEvent.mousePress(getCell(1, 1));
+      await user.click(getCell(1, 1));
       expect(getActiveCell()).to.equal('1-1');
 
       // start editing
-      fireEvent.keyDown(getCell(1, 1), { key: 'Enter' });
+      await user.keyboard('{Enter}{Tab}');
 
-      fireEvent.keyDown(getCell(1, 1).querySelector('input')!, { key: 'Tab' });
       expect(getActiveCell()).to.equal('1-3');
     });
 
     it('should move to the cell on the left when pressing "Shift+Tab" after editing', async () => {
       const editableColumns = columns.map((column) => ({ ...column, editable: true }));
-      render(
+      const { user } = render(
         <div style={{ width: 500, height: 300 }}>
           <DataGrid {...baselineProps} columns={editableColumns} disableVirtualization={isJSDOM} />
         </div>,
       );
 
-      fireUserEvent.mousePress(getCell(0, 2));
+      await user.click(getCell(0, 2));
       expect(getActiveCell()).to.equal('0-2');
 
       // start editing
-      fireEvent.keyDown(getCell(0, 2), { key: 'Enter' });
+      await user.keyboard('{Enter}{Shift>}{Tab}{/Shift}');
 
-      fireEvent.keyDown(getCell(0, 2).querySelector('input')!, { key: 'Tab', shiftKey: true });
       expect(getActiveCell()).to.equal('0-0');
     });
 
     // needs virtualization
-    testSkipIf(isJSDOM)('should work with row virtualization', () => {
+    testSkipIf(isJSDOM)('should work with row virtualization', async () => {
       const rows = [
         {
           id: 0,
@@ -299,7 +294,7 @@ describe('<DataGrid /> - Column spanning', () => {
 
       const rowHeight = 52;
 
-      render(
+      const { user } = render(
         <div style={{ width: 500, height: (rows.length + 1) * rowHeight }}>
           <DataGrid
             columns={[
@@ -314,23 +309,18 @@ describe('<DataGrid /> - Column spanning', () => {
         </div>,
       );
 
-      fireUserEvent.mousePress(getCell(1, 1));
+      await user.click(getCell(1, 1));
       expect(getActiveCell()).to.equal('1-1');
 
-      fireEvent.keyDown(getCell(1, 1), { key: 'ArrowDown' });
+      await user.keyboard('{ArrowDown}{ArrowDown}');
 
-      const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
-      // trigger virtualization
-      virtualScroller.dispatchEvent(new Event('scroll'));
-
-      fireEvent.keyDown(getCell(2, 1), { key: 'ArrowDown' });
       const activeCell = getActiveCell();
       expect(activeCell).to.equal('3-0');
     });
 
     // needs layout
-    testSkipIf(isJSDOM)('should work with column virtualization', () => {
-      render(
+    testSkipIf(isJSDOM)('should work with column virtualization', async () => {
+      const { user } = render(
         <div style={{ width: 200, height: 200 }}>
           <DataGrid
             columns={[
@@ -345,18 +335,17 @@ describe('<DataGrid /> - Column spanning', () => {
         </div>,
       );
 
-      fireUserEvent.mousePress(getCell(0, 0));
+      await user.click(getCell(0, 0));
 
-      fireEvent.keyDown(getCell(0, 0), { key: 'ArrowRight' });
-      document.querySelector(`.${gridClasses.virtualScroller}`)!.dispatchEvent(new Event('scroll'));
+      await user.keyboard('{ArrowRight}');
 
       expect(() => getCell(0, 3)).not.to.throw();
       // should not be rendered because of first column colSpan
       expect(() => getCell(0, 2)).to.throw(/not found/);
     });
 
-    it('should work with filtering', () => {
-      render(
+    it('should work with filtering', async () => {
+      const { user } = render(
         <div style={{ width: 500, height: 300 }}>
           <DataGrid
             {...baselineProps}
@@ -421,19 +410,19 @@ describe('<DataGrid /> - Column spanning', () => {
         </div>,
       );
 
-      fireUserEvent.mousePress(getCell(0, 0));
+      await user.click(getCell(0, 0));
       expect(getActiveCell()).to.equal('0-0');
 
-      fireEvent.keyDown(getCell(0, 0), { key: 'ArrowDown' });
+      await user.keyboard('{ArrowDown}');
       expect(getActiveCell()).to.equal('1-0');
 
-      fireEvent.keyDown(getCell(1, 0), { key: 'ArrowRight' });
+      await user.keyboard('{ArrowRight}');
       expect(getActiveCell()).to.equal('1-2');
     });
 
     // needs layout
-    testSkipIf(isJSDOM)('should scroll the whole cell into view when `colSpan` > 1', () => {
-      render(
+    testSkipIf(isJSDOM)('should scroll the whole cell into view when `colSpan` > 1', async () => {
+      const { user } = render(
         <div style={{ width: 200, height: 200 }}>
           <DataGrid
             columns={[
@@ -449,27 +438,25 @@ describe('<DataGrid /> - Column spanning', () => {
         </div>,
       );
 
-      fireUserEvent.mousePress(getCell(0, 0));
+      await user.click(getCell(0, 0));
 
       const virtualScroller = document.querySelector<HTMLElement>(
         `.${gridClasses.virtualScroller}`,
       )!;
 
-      fireEvent.keyDown(getCell(0, 0), { key: 'ArrowRight' });
-      virtualScroller.dispatchEvent(new Event('scroll'));
-      fireEvent.keyDown(getCell(0, 2), { key: 'ArrowRight' });
-      virtualScroller.dispatchEvent(new Event('scroll'));
+      await user.keyboard('{ArrowRight}{ArrowRight}');
+
       expect(getActiveCell()).to.equal('0-3');
       // should be scrolled to the end of the cell
       expect(virtualScroller.scrollLeft).to.equal(3 * 100);
 
-      fireEvent.keyDown(getCell(0, 3), { key: 'ArrowLeft' });
-      virtualScroller.dispatchEvent(new Event('scroll'));
-      fireEvent.keyDown(getCell(0, 2), { key: 'ArrowLeft' });
-      virtualScroller.dispatchEvent(new Event('scroll'));
+      await user.keyboard('{ArrowLeft}{ArrowLeft}');
 
       expect(getActiveCell()).to.equal('0-0');
-      expect(virtualScroller.scrollLeft).to.equal(0);
+
+      await waitFor(() => {
+        expect(virtualScroller.scrollLeft).to.equal(0);
+      });
     });
   });
 
@@ -552,8 +539,8 @@ describe('<DataGrid /> - Column spanning', () => {
     expect(() => getCell(1, 3)).not.to.throw();
   });
 
-  it('should apply `colSpan` properly after hiding a column', () => {
-    render(
+  it('should apply `colSpan` properly after hiding a column', async () => {
+    const { user } = render(
       <div style={{ width: 500, height: 300 }}>
         <DataGrid
           {...baselineProps}
@@ -568,12 +555,13 @@ describe('<DataGrid /> - Column spanning', () => {
     );
 
     // hide `category` column
-    fireEvent.click(within(getColumnHeaderCell(1)).getByLabelText('Menu'));
-    fireEvent.click(screen.getByRole('menuitem', { name: 'Hide column' }));
-    clock.runToLast();
+    await user.click(within(getColumnHeaderCell(1)).getByLabelText('Menu'));
+    await user.click(screen.getByRole('menuitem', { name: 'Hide column' }));
 
     // Nike row
-    expect(() => getCell(0, 0)).not.to.throw();
+    await waitFor(() => {
+      expect(() => getCell(0, 0)).not.to.throw();
+    });
     expect(() => getCell(0, 1)).to.throw(/not found/);
     expect(() => getCell(0, 2)).not.to.throw();
 
@@ -607,7 +595,7 @@ describe('<DataGrid /> - Column spanning', () => {
     expect(getCell(0, 2)).to.have.attribute('aria-colspan', '1');
   });
 
-  it('should work with pagination', () => {
+  it('should work with pagination', async () => {
     const rows = [
       {
         id: 0,
@@ -698,19 +686,19 @@ describe('<DataGrid /> - Column spanning', () => {
       );
     }
 
-    render(<TestCase />);
+    const { user } = render(<TestCase />);
 
     checkRows(0, ['Nike', 'Adidas']);
 
-    fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+    await user.click(screen.getByRole('button', { name: /next page/i }));
     checkRows(1, ['Puma', 'Nike']);
 
-    fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+    await user.click(screen.getByRole('button', { name: /next page/i }));
     checkRows(2, ['Adidas', 'Puma']);
   });
 
   // Need layout for column virtualization
-  testSkipIf(isJSDOM)('should work with column virtualization', () => {
+  testSkipIf(isJSDOM)('should work with column virtualization', async () => {
     render(
       <div style={{ width: 390, height: 300 }}>
         <DataGrid
@@ -744,7 +732,7 @@ describe('<DataGrid /> - Column spanning', () => {
     const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
     // scroll to the very end
     virtualScroller.scrollLeft = 1000;
-    virtualScroller.dispatchEvent(new Event('scroll'));
+    await act(() => virtualScroller.dispatchEvent(new Event('scroll')));
 
     expect(getCell(0, 5).offsetLeft).to.equal(
       getCell(1, 5).offsetLeft,
@@ -758,7 +746,7 @@ describe('<DataGrid /> - Column spanning', () => {
   });
 
   // Need layout for column virtualization
-  testSkipIf(isJSDOM)('should work with both column and row virtualization', () => {
+  testSkipIf(isJSDOM)('should work with both column and row virtualization', async () => {
     const rowHeight = 50;
 
     render(
@@ -803,13 +791,15 @@ describe('<DataGrid /> - Column spanning', () => {
     virtualScroller.scrollLeft = 1000;
     // hide first row to trigger row virtualization
     virtualScroller.scrollTop = rowHeight + 10;
-    virtualScroller.dispatchEvent(new Event('scroll'));
-    clock.runToLast();
 
-    expect(getCell(2, 5).offsetLeft).to.equal(
-      getCell(1, 5).offsetLeft,
-      'last cells in both rows should be aligned after scroll',
-    );
+    await act(() => virtualScroller.dispatchEvent(new Event('scroll')));
+
+    await waitFor(() => {
+      expect(getCell(2, 5).offsetLeft).to.equal(
+        getCell(1, 5).offsetLeft,
+        'last cells in both rows should be aligned after scroll',
+      );
+    });
 
     expect(getColumnHeaderCell(5).offsetLeft).to.equal(
       getCell(1, 5).offsetLeft,
@@ -818,7 +808,7 @@ describe('<DataGrid /> - Column spanning', () => {
   });
 
   // Need layout for column virtualization
-  testSkipIf(isJSDOM)('should work with pagination and column virtualization', () => {
+  testSkipIf(isJSDOM)('should work with pagination and column virtualization', async () => {
     const rowHeight = 50;
 
     function TestCase() {
@@ -899,9 +889,9 @@ describe('<DataGrid /> - Column spanning', () => {
       );
     }
 
-    render(<TestCase />);
+    const { user } = render(<TestCase />);
 
-    fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+    await user.click(screen.getByRole('button', { name: /next page/i }));
 
     expect(getCell(5, 4).offsetLeft).to.equal(
       getCell(4, 4).offsetLeft,
@@ -918,7 +908,7 @@ describe('<DataGrid /> - Column spanning', () => {
     virtualScroller.scrollLeft = 1000;
     // hide first row to trigger row virtualization
     virtualScroller.scrollTop = rowHeight + 10;
-    virtualScroller.dispatchEvent(new Event('scroll'));
+    await act(() => virtualScroller.dispatchEvent(new Event('scroll')));
 
     expect(getCell(5, 5).offsetLeft).to.equal(
       getCell(4, 5).offsetLeft,
