@@ -24,6 +24,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
           unstable_useLineSeries: 'useLineSeries',
           unstable_useBarSeries: 'useBarSeries',
           unstable_useScatterSeries: 'useScatterSeries',
+          unstable_useHeatmapSeries: 'useHeatmapSeries',
         },
       },
     ],

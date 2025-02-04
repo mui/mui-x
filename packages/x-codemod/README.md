@@ -273,6 +273,10 @@ Renames multiple `useSeries` components from their unstable, as they have now be
 -   unstable_useScatterSeries,
 +   useScatterSeries,
   } from '@mui/x-charts/hooks';
+  import {
+-   unstable_useHeatmapSeries,
++   useHeatmapSeries,
+  } from '@mui/x-charts-pro/hooks';
 ```
 
 ### Data Grid codemods

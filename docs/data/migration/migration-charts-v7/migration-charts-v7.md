@@ -260,4 +260,8 @@ The `useSeries` hook family has been stabilized and renamed accordingly.
 -   unstable_useScatterSeries,
 +   useScatterSeries,
   } from '@mui/x-charts/hooks';
+  import {
+-   unstable_useHeatmapSeries,
++   useHeatmapSeries,
+  } from '@mui/x-charts-pro/hooks';
 ```
