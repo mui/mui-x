@@ -54,7 +54,7 @@ const RadarChart = React.forwardRef(function RadarChart(
     <RadarDataProvider {...radarDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps}>
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsSurface {...chartsSurfaceProps} disableAxisListener ref={ref}>
+        <ChartsSurface {...chartsSurfaceProps} ref={ref}>
           <RadarGrid {...radarGrid} />
           <RadarSeriesArea />
           <RadarSeriesMarks />
@@ -81,14 +81,7 @@ RadarChart.propTypes = {
    * @default blueberryTwilightPalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
-  dataset: PropTypes.arrayOf(PropTypes.object),
   desc: PropTypes.string,
-  /**
-   * If `true`, the charts will not listen to the mouse move event.
-   * It might break interactive features, but will improve performance.
-   * @default false
-   */
-  disableAxisListener: PropTypes.bool,
   /**
    * The number of divisions in the radar grid.
    * @default 5
@@ -102,6 +95,14 @@ RadarChart.propTypes = {
    * If `true`, the legend is not rendered.
    */
   hideLegend: PropTypes.bool,
+  /**
+   * The highlighted item.
+   * Used when the highlight is controlled.
+   */
+  highlightedItem: PropTypes.shape({
+    dataIndex: PropTypes.number,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  }),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
@@ -123,6 +124,12 @@ RadarChart.propTypes = {
     right: PropTypes.number,
     top: PropTypes.number,
   }),
+  /**
+   * The callback fired when the highlighted item changes.
+   *
+   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   */
+  onHighlightChange: PropTypes.func,
   /**
    * The configuration of the radar scales.
    */

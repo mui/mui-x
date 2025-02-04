@@ -15,13 +15,25 @@
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "blueberryTwilightPalette"
     },
-    "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "height": { "type": { "name": "number" } },
+    "highlightedItem": {
+      "type": {
+        "name": "shape",
+        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string }"
+      }
+    },
     "id": { "type": { "name": "string" } },
     "margin": {
       "type": {
         "name": "shape",
         "description": "{ bottom?: number, left?: number, right?: number, top?: number }"
+      }
+    },
+    "onHighlightChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(highlightedItem: HighlightItemData | null) => void",
+        "describedArgs": ["highlightedItem"]
       }
     },
     "skipAnimation": { "type": { "name": "bool" } },

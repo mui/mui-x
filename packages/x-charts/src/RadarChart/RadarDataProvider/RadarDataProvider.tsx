@@ -10,17 +10,23 @@ import {
   useChartPolarAxis,
   UseChartPolarAxisSignature,
 } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
+import {
+  useChartHighlight,
+  UseChartHighlightSignature,
+} from '../../internals/plugins/featurePlugins/useChartHighlight';
 import { radarSeriesConfig } from '../seriesConfig';
 import { DEFAULT_MARGINS } from '../../constants';
 import { RadarConfig } from './radar.types';
 
 const RADAR_SERIES_CONFIG = { radar: radarSeriesConfig };
-const RADAR_PLUGINS = [useChartPolarAxis] as const;
+const RADAR_PLUGINS = [useChartPolarAxis, useChartHighlight] as const;
+
+type RadarPluginSignatures = [UseChartPolarAxisSignature, UseChartHighlightSignature];
 
 export interface RadarDataProviderProps
   extends Omit<
-    ChartContainerProps<'radar', [UseChartPolarAxisSignature]>,
-    'series' | 'plugins' | 'rotationAxis' | 'radiusAxis'
+    ChartContainerProps<'radar', RadarPluginSignatures>,
+    'series' | 'plugins' | 'rotationAxis' | 'radiusAxis' | 'dataset'
   > {
   /**
    * The series to display in the bar chart.
@@ -36,13 +42,12 @@ export interface RadarDataProviderProps
 function RadarDataProvider(props: RadarDataProviderProps) {
   const {
     series,
-    dataset,
     children,
     width,
     height,
     colors,
-    // highlightedItem,
-    // onHighlightChange,
+    highlightedItem,
+    onHighlightChange,
     className,
     skipAnimation,
     margin,
@@ -95,16 +100,15 @@ function RadarDataProvider(props: RadarDataProviderProps) {
   const defaultizedMargin = React.useMemo(() => ({ ...DEFAULT_MARGINS, ...margin }), [margin]);
 
   return (
-    <ChartDataProvider<'radar', [UseChartPolarAxisSignature]>
+    <ChartDataProvider<'radar', RadarPluginSignatures>
       {...other}
       series={defaultizedSeries}
       width={width}
       height={height}
       margin={defaultizedMargin}
       colors={colors}
-      dataset={dataset}
-      // highlightedItem={highlightedItem}
-      // onHighlightChange={onHighlightChange}
+      highlightedItem={highlightedItem}
+      onHighlightChange={onHighlightChange}
       skipAnimation={skipAnimation}
       plugins={RADAR_PLUGINS}
       rotationAxis={rotationAxes}
@@ -131,18 +135,19 @@ RadarDataProvider.propTypes = {
    * @default blueberryTwilightPalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
-  dataset: PropTypes.arrayOf(PropTypes.object),
   desc: PropTypes.string,
-  /**
-   * If `true`, the charts will not listen to the mouse move event.
-   * It might break interactive features, but will improve performance.
-   * @default false
-   */
-  disableAxisListener: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height: PropTypes.number,
+  /**
+   * The highlighted item.
+   * Used when the highlight is controlled.
+   */
+  highlightedItem: PropTypes.shape({
+    dataIndex: PropTypes.number,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  }),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
@@ -159,6 +164,12 @@ RadarDataProvider.propTypes = {
     right: PropTypes.number,
     top: PropTypes.number,
   }),
+  /**
+   * The callback fired when the highlighted item changes.
+   *
+   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   */
+  onHighlightChange: PropTypes.func,
   /**
    * The configuration of the radar scales.
    */
