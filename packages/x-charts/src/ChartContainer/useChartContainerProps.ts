@@ -32,6 +32,8 @@ export const useChartContainerProps = <
     colors,
     dataset,
     desc,
+    // @ts-ignore
+    onAxisClick,
     disableAxisListener,
     // @ts-ignore
     highlightedItem,
@@ -53,13 +55,12 @@ export const useChartContainerProps = <
     seriesConfig,
     plugins,
     ...other
-  } = props;
+  } = props as ChartContainerProps<TSeries, AllPluginSignatures<TSeries>>;
 
   const chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> } = {
     title,
     desc,
     sx,
-    disableAxisListener,
     ref,
     ...other,
   };
@@ -69,8 +70,10 @@ export const useChartContainerProps = <
     series,
     colors,
     dataset,
+    disableAxisListener,
     highlightedItem,
     onHighlightChange,
+    onAxisClick,
     xAxis,
     yAxis,
     zAxis,
