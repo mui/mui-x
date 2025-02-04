@@ -99,8 +99,8 @@ importers:
         specifier: ^5.16.14
         version: 5.16.14(@emotion/react@11.14.0(@types/react@19.0.8)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.8)(react@19.0.0))(@types/react@19.0.8)(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#c4f898d3b624b1248245b43dcd1fe035a66b08d5
-        version: https://codeload.github.com/mui/material-ui/tar.gz/c4f898d3b624b1248245b43dcd1fe035a66b08d5(encoding@0.1.13)
+        specifier: github:mui/material-ui#40a4e6b3e684fff41c68f2d01d5a0e45aded980e
+        version: https://codeload.github.com/mui/material-ui/tar.gz/40a4e6b3e684fff41c68f2d01d5a0e45aded980e(encoding@0.1.13)
       '@mui/utils':
         specifier: ^5.16.14
         version: 5.16.14(@types/react@19.0.8)(react@19.0.0)
@@ -3231,9 +3231,9 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/c4f898d3b624b1248245b43dcd1fe035a66b08d5':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/c4f898d3b624b1248245b43dcd1fe035a66b08d5}
-    version: 6.4.0
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/40a4e6b3e684fff41c68f2d01d5a0e45aded980e':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/40a4e6b3e684fff41c68f2d01d5a0e45aded980e}
+    version: 7.0.0-alpha.0
     engines: {pnpm: 9.15.4}
 
   '@mui/private-theming@5.16.14':
@@ -6646,8 +6646,8 @@ packages:
     resolution: {integrity: sha512-4kKdWXTtgQ4biIo7hZA396HT062nDVVHPjQcurNZ3o/voYN+o5FUC5kOwuORbpExp3XbTJ3SU7iRipiIhQtovw==}
     engines: {node: '>=14'}
 
-  google-auth-library@9.15.0:
-    resolution: {integrity: sha512-7ccSEJFDFO7exFbO6NRyC+xH8/mZ1GZGG2xxx9iHxZWcjUjJpjWxIMw3cofAKcueZ6DATiukmmprD7yavQHOyQ==}
+  google-auth-library@9.15.1:
+    resolution: {integrity: sha512-Jb6Z0+nvECVz+2lzSMt9u98UsoakXxA2HGHMCxh+so3n90XgYWkq5dur19JAJV7ONiJY22yBTyJB1TSkvPq9Ng==}
     engines: {node: '>=14'}
 
   googleapis-common@7.2.0:
@@ -12283,13 +12283,13 @@ snapshots:
       '@emotion/styled': 11.14.0(@emotion/react@11.14.0(@types/react@19.0.8)(react@19.0.0))(@types/react@19.0.8)(react@19.0.0)
       '@types/react': 19.0.8
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/c4f898d3b624b1248245b43dcd1fe035a66b08d5(encoding@0.1.13)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/40a4e6b3e684fff41c68f2d01d5a0e45aded980e(encoding@0.1.13)':
     dependencies:
       '@googleapis/sheets': 9.3.1(encoding@0.1.13)
       '@netlify/functions': 3.0.0
       '@slack/bolt': 4.2.0
       execa: 9.5.2
-      google-auth-library: 9.15.0(encoding@0.1.13)
+      google-auth-library: 9.15.1(encoding@0.1.13)
     transitivePeerDependencies:
       - bufferutil
       - debug
@@ -16358,7 +16358,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  google-auth-library@9.15.0(encoding@0.1.13):
+  google-auth-library@9.15.1(encoding@0.1.13):
     dependencies:
       base64-js: 1.5.1
       ecdsa-sig-formatter: 1.0.11
@@ -16374,7 +16374,7 @@ snapshots:
     dependencies:
       extend: 3.0.2
       gaxios: 6.7.1(encoding@0.1.13)
-      google-auth-library: 9.15.0(encoding@0.1.13)
+      google-auth-library: 9.15.1(encoding@0.1.13)
       qs: 6.13.1
       url-template: 2.0.8
       uuid: 9.0.1
