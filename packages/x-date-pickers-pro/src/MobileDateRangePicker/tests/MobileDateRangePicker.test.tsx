@@ -13,7 +13,7 @@ import { DateRange } from '@mui/x-date-pickers-pro/models';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 
-describe('<MobileDateRangePicker />', () => {
+describe.only('<MobileDateRangePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
 
   describe('Field slot: SingleInputDateRangeField', () => {
@@ -289,6 +289,22 @@ describe('<MobileDateRangePicker />', () => {
 
       expect(screen.getByText('Start', { selector: 'label' })).to.have.class('Mui-focused');
     });
+  });
+
+  it('should ignore "currentMonthCalendarPosition" prop value and have expected selection behavior', () => {
+    render(
+      <MobileDateRangePicker
+        currentMonthCalendarPosition={2}
+        open
+        referenceDate={adapterToUse.date('2022-04-17')}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('gridcell', { name: '3' }));
+    fireEvent.click(screen.getByRole('gridcell', { name: '5' }));
+
+    expect(screen.getByText('Apr 3')).not.to.equal(null);
+    expect(screen.getByText('Apr 5')).not.to.equal(null);
   });
 
   // TODO: Write test
