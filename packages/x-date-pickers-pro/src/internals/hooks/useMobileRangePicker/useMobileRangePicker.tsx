@@ -1,5 +1,6 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
+import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { useLicenseVerifier } from '@mui/x-license';
 import { PickersLayout } from '@mui/x-date-pickers/PickersLayout';
 import {
@@ -12,6 +13,7 @@ import {
   PickerFieldUIContextProvider,
 } from '@mui/x-date-pickers/internals';
 import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
+import { FieldOwnerState } from '@mui/x-date-pickers/models';
 import useId from '@mui/utils/useId';
 import {
   UseMobileRangePickerParams,
@@ -108,6 +110,14 @@ export const useMobileRangePicker = <
       'aria-labelledby': labelledById,
       ...innerSlotProps?.mobilePaper,
     },
+    ...((fieldType === 'multi-input' && {
+      textField: (slotOwnerState: FieldOwnerState & { position: 'start' | 'end' }) => {
+        return {
+          ...resolveComponentProps(innerSlotProps?.textField, slotOwnerState),
+          id: `${labelId}-${slotOwnerState.position}`,
+        };
+      },
+    }) as any),
   };
 
   const renderPicker = () => (

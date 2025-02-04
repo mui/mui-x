@@ -106,7 +106,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
   }));
 
   // With single input field
-  describeValue.only<PickerRangeValue, 'picker'>(MobileDateRangePicker, () => ({
+  describeValue<PickerRangeValue, 'picker'>(MobileDateRangePicker, () => ({
     render,
     componentFamily: 'picker',
     type: 'date-range',

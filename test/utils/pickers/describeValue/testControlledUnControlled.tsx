@@ -202,14 +202,14 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         enableAccessibleFieldDOMStructure: true,
         open: true,
         slotProps: { toolbar: { hidden: true } },
-        ...(isRangeType
-          ? {
+        ...(isPickerSingleInput(params)
+          ? { label: 'test relationship' }
+          : {
               localeText: {
                 start: 'test',
                 end: 'relationship',
               },
-            }
-          : { label: 'test relationship' }),
+            }),
       });
 
       expect(screen.getByRole('dialog', { name: 'test relationship' })).not.to.equal(null);
