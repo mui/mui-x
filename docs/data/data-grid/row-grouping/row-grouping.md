@@ -387,14 +387,11 @@ The `apiRef.current.getRowGroupChildren` method is not compatible with the [serv
 ## Row group panel 🚧
 
 :::warning
-This feature isn't implemented yet. It's coming.
-
-👍 Upvote [issue #5235](https://github.com/mui/mui-x/issues/5235) if you want to see it land faster.
-
-Don't hesitate to leave a comment on the same issue to influence what gets built. Especially if you already have a use case for this component, or if you are facing a pain point with your current solution.
+This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/5235) to help us prioritize it.
+Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
 :::
 
-With this panel, your users will be able to control which columns are used for grouping just by dragging them inside the panel.
+With the row group panel, users would be able to control which columns are used for grouping by dragging them inside the panel.
 
 ## Full example
 

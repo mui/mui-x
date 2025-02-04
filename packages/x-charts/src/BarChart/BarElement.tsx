@@ -8,7 +8,7 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { SeriesId } from '../models/seriesType/common';
-import { useItemHighlighted } from '../context';
+import { useItemHighlighted } from '../hooks/useItemHighlighted';
 import { AnimatedBarElement, BarProps } from './AnimatedBarElement';
 
 export interface BarElementClasses {

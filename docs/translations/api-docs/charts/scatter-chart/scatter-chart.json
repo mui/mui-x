@@ -24,7 +24,7 @@
     },
     "hideLegend": { "description": "If <code>true</code>, the legend is not rendered." },
     "highlightedItem": {
-      "description": "The item currently highlighted. Turns highlighting into a controlled prop."
+      "description": "The highlighted item. Used when the highlight is controlled."
     },
     "id": {
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
@@ -35,6 +35,13 @@
     "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
     "margin": {
       "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend. Accepts an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
+    },
+    "onAxisClick": {
+      "description": "The function called for onClick events. The second argument contains information about all line/bar elements at the current mouse position.",
+      "typeDescriptions": {
+        "event": "The mouse event recorded on the <code>&lt;svg/&gt;</code> element.",
+        "data": "The data about the clicked axis and items associated with it."
+      }
     },
     "onHighlightChange": {
       "description": "The callback fired when the highlighted item changes.",

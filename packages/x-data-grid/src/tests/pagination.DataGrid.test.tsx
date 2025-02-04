@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { spy, stub, SinonStub, SinonSpy } from 'sinon';
 import { expect } from 'chai';
 import { createRenderer, fireEvent, reactMajor, screen, waitFor } from '@mui/internal-test-utils';
@@ -257,7 +258,7 @@ describe('<DataGrid /> - Pagination', () => {
     });
 
     it('should throw if pageSize exceeds 100', () => {
-      let apiRef: React.RefObject<GridApi>;
+      let apiRef: RefObject<GridApi | null>;
       function TestCase() {
         apiRef = useGridApiRef();
         return (
@@ -269,7 +270,7 @@ describe('<DataGrid /> - Pagination', () => {
         );
       }
       render(<TestCase />);
-      expect(() => apiRef.current.setPageSize(101)).to.throw(
+      expect(() => apiRef.current?.setPageSize(101)).to.throw(
         /`pageSize` cannot exceed 100 in the MIT version of the DataGrid./,
       );
     });

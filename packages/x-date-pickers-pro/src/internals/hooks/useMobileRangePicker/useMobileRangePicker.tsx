@@ -19,10 +19,7 @@ import {
   UseMobileRangePickerParams,
   UseMobileRangePickerProps,
 } from './useMobileRangePicker.types';
-import {
-  RangePickerPropsForFieldSlot,
-  useEnrichedRangePickerField,
-} from '../useEnrichedRangePickerField';
+import { useEnrichedRangePickerField } from '../useEnrichedRangePickerField';
 import { getReleaseInfo } from '../../utils/releaseInfo';
 import { useRangePosition } from '../useRangePosition';
 import { PickerRangePositionContext } from '../../../hooks/usePickerRangePositionContext';
@@ -47,11 +44,8 @@ export const useMobileRangePicker = <
   const {
     slots,
     slotProps: innerSlotProps,
-    className,
-    sx,
     label,
     inputRef,
-    name,
     readOnly,
     disableOpenPicker,
     localeText,
@@ -95,22 +89,12 @@ export const useMobileRangePicker = <
   providerProps.contextValue.triggerStatus = 'hidden';
 
   const Field = slots.field;
-  const fieldProps: RangePickerPropsForFieldSlot<
-    boolean,
-    TEnableAccessibleFieldDOMStructure,
-    InferError<TExternalProps>
-  > = useSlotProps({
+  const { ownerState: fieldOwnerState, ...fieldProps } = useSlotProps({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
     additionalProps: {
       // Internal props
       readOnly: readOnly ?? true,
-
-      // Forwarded props
-      className,
-      sx,
-      ...(fieldType === 'single-input' && !!inputRef && { inputRef }),
-      ...(fieldType === 'single-input' && { name }),
     },
     ownerState,
   });
@@ -130,7 +114,6 @@ export const useMobileRangePicker = <
     readOnly,
     labelId,
     disableOpenPicker,
-    label,
     localeText,
     pickerSlots: slots,
     pickerSlotProps: innerSlotProps,
@@ -187,7 +170,7 @@ export const useMobileRangePicker = <
         ...enrichedFieldResponse.fieldPrivateContextValue,
       }}
     >
-      <PickerFieldUIContextProvider slots={slots} slotProps={slotProps}>
+      <PickerFieldUIContextProvider slots={slots} slotProps={slotProps} inputRef={inputRef}>
         <PickerRangePositionContext.Provider value={rangePositionResponse}>
           <Field {...enrichedFieldResponse.fieldProps} />
           <PickersModalDialog slots={slots} slotProps={slotProps}>

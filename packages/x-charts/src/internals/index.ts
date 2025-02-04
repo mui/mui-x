@@ -20,6 +20,7 @@ export * from './plugins/corePlugins/useChartDimensions';
 export * from './plugins/featurePlugins/useChartZAxis';
 export * from './plugins/featurePlugins/useChartCartesianAxis';
 export * from './plugins/featurePlugins/useChartInteraction';
+export * from './plugins/featurePlugins/useChartHighlight';
 export * from './plugins/utils/selectors';
 
 export * from './store/useCharts';
@@ -34,6 +35,7 @@ export * from './getSVGPoint';
 export * from './isDefined';
 export { unstable_cleanupDOM } from './domUtils';
 export * from './getScale';
+export * from './getCurve';
 
 // contexts
 

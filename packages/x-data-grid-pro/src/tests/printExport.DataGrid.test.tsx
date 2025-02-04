@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
+import { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
   GridToolbar,
@@ -16,7 +17,7 @@ describe('<DataGridPro /> - Print export', () => {
 
   const NB_ROWS = 2;
   const defaultData = getBasicGridData(NB_ROWS, 2);
-  let apiRef: React.RefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   const baselineProps = {
     ...defaultData,
@@ -100,7 +101,7 @@ describe('<DataGridPro /> - Print export', () => {
         expect(onColumnVisibilityModelChange.callCount).to.equal(0);
 
         await act(() =>
-          apiRef.current.exportDataAsPrint({
+          apiRef.current?.exportDataAsPrint({
             fields: printVisible ? ['currencyPair', 'id'] : ['id'],
           }),
         );
@@ -129,7 +130,7 @@ describe('<DataGridPro /> - Print export', () => {
 
       expect(onColumnVisibilityModelChange.callCount).to.equal(0);
 
-      await act(() => apiRef.current.exportDataAsPrint({ fields: ['id'], allColumns: true }));
+      await act(() => apiRef.current?.exportDataAsPrint({ fields: ['id'], allColumns: true }));
 
       expect(onColumnVisibilityModelChange.firstCall.firstArg).to.deep.equal({
         currencyPair: false,
@@ -149,7 +150,7 @@ describe('<DataGridPro /> - Print export', () => {
 
       expect(onColumnVisibilityModelChange.callCount).to.equal(0);
 
-      await act(() => apiRef.current.exportDataAsPrint({ fields: ['id'], allColumns: true }));
+      await act(() => apiRef.current?.exportDataAsPrint({ fields: ['id'], allColumns: true }));
 
       expect(onColumnVisibilityModelChange.firstCall.firstArg).to.deep.equal({
         currencyPair: false,
@@ -169,7 +170,7 @@ describe('<DataGridPro /> - Print export', () => {
 
       expect(onColumnVisibilityModelChange.callCount).to.equal(0);
 
-      await act(() => apiRef.current.exportDataAsPrint({ allColumns: true }));
+      await act(() => apiRef.current?.exportDataAsPrint({ allColumns: true }));
 
       expect(onColumnVisibilityModelChange.firstCall.firstArg).to.deep.equal({
         currencyPair: true,
@@ -190,7 +191,7 @@ describe('<DataGridPro /> - Print export', () => {
 
       expect(onColumnVisibilityModelChange.callCount).to.equal(0);
 
-      await act(() => apiRef.current.exportDataAsPrint({ allColumns: true }));
+      await act(() => apiRef.current?.exportDataAsPrint({ allColumns: true }));
 
       expect(onColumnVisibilityModelChange.firstCall.firstArg).to.deep.equal({
         currencyPair: true,
