@@ -113,7 +113,6 @@ const baseSlots: GridBaseSlots = {
   baseInputLabel: MUIInputLabel,
   baseSelectOption: MUISelectOption,
   baseSkeleton: MUISkeleton,
-  baseChip: MUIChip,
 };
 
 const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
@@ -184,7 +183,7 @@ function BaseAutocomplete(props: GridSlotProps['baseAutocomplete']) {
         currentValue.map((option, index) => {
           const { key, ...tagProps } = getTagProps({ index });
           return (
-            <rootProps.slots.baseChip
+            <MUIChip
               key={key}
               variant="outlined"
               size="small"

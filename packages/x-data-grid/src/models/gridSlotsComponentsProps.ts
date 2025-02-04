@@ -15,7 +15,6 @@ import type { TooltipProps as MUITooltipProps } from '@mui/material/Tooltip';
 import type { InputLabelProps } from '@mui/material/InputLabel';
 import type { PopperProps } from '@mui/material/Popper';
 import type { TablePaginationProps } from '@mui/material/TablePagination';
-import type { ChipProps } from '@mui/material/Chip';
 import type { GridToolbarProps } from '../components/toolbar/GridToolbar';
 import type { ColumnHeaderFilterIconButtonProps } from '../components/columnHeaders/GridColumnHeaderFilterIconButton';
 import type { GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenuProps';
@@ -119,7 +118,6 @@ interface BaseSlotProps {
     children?: React.ReactNode;
   } & BaseSelectOptionPropsOverrides;
   baseSkeleton: SkeletonProps & BaseSkeletonPropsOverrides;
-  baseChip: ChipProps & BaseChipPropsOverrides;
 }
 
 interface MaterialSlotProps {

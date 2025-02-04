@@ -26,11 +26,6 @@ export interface GridBaseSlots {
    */
   baseCircularProgress: React.JSXElementConstructor<GridSlotProps['baseCircularProgress']>;
   /**
-   * The custom Chip component used in the grid.
-   * @default Chip
-   */
-  baseChip: React.JSXElementConstructor<GridSlotProps['baseChip']>;
-  /**
    * The custom Divider component used in the grid.
    * @default Divider
    */
@@ -111,11 +106,6 @@ export interface GridBaseSlots {
  * Grid components React prop interface containing all the overridable components.
  */
 export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponent {
-  /**
-   * The custom Chip component used in the grid.
-   * @default Chip
-   */
-  baseChip: React.JSXElementConstructor<GridSlotProps['baseChip']>;
   /**
    * Component rendered for each cell.
    * @default GridCell

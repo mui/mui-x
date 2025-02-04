@@ -602,12 +602,6 @@
       "class": null
     },
     {
-      "name": "baseChip",
-      "description": "The custom Chip component used in the grid.",
-      "default": "Chip",
-      "class": null
-    },
-    {
       "name": "cell",
       "description": "Component rendered for each cell.",
       "default": "GridCell",
