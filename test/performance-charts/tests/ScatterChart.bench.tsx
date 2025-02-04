@@ -8,7 +8,6 @@ import { options } from '../utils/options';
 describe('ScatterChart', () => {
   const dataLength = 800;
   const data = Array.from({ length: dataLength }).map((_, i) => ({
-    id: i,
     x: i,
     y: 50 + Math.sin(i / 5) * 25,
   }));

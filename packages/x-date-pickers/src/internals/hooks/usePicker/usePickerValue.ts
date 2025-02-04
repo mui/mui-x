@@ -145,6 +145,7 @@ export const usePickerValue = <
       skipPublicationIfPristine = false,
       validationError,
       shortcut,
+      shouldClose = changeImportance === 'accept',
     } = options ?? {};
 
     let shouldPublish: boolean;
@@ -193,7 +194,7 @@ export const usePickerValue = <
       onAccept(newValue, getContext());
     }
 
-    if (changeImportance === 'accept') {
+    if (shouldClose) {
       setOpen(false);
     }
   });
