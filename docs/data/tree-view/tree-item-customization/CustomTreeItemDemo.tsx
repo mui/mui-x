@@ -225,7 +225,6 @@ export default function CustomTreeItemDemo() {
         slots={{ item: CustomTreeItem }}
         defaultSelectedItems="1.1"
         checkboxSelection
-        experimentalFeatures={{ labelEditing: true }}
         isItemEditable={(item) => Boolean(item?.editable)}
       />
     </Box>
