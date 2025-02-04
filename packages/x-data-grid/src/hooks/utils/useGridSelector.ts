@@ -3,7 +3,6 @@ import { RefObject } from '@mui/x-internals/types';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { warnOnce } from '@mui/x-internals/warning';
 import { useSyncExternalStore } from 'use-sync-external-store/shim';
-import { unstable_useEventCallback as useEventCallback } from '@mui/utils';
 import type { GridApiCommon } from '../../models/api/gridApiCommon';
 import type { OutputSelector } from '../../utils/createSelector';
 import { useLazyRef } from './useLazyRef';
@@ -52,6 +51,8 @@ export const argsEqual = (prev: any, curr: any) => {
 };
 
 const createRefs = () => ({ state: null, equals: null, selector: null, args: undefined }) as any;
+
+const EMPTY = [] as unknown[];
 
 type Refs<T> = {
   state: T;
@@ -105,36 +106,41 @@ export const useGridSelector = <Api extends GridApiCommon, Args, T>(
     }
   }
 
-  const subscribe = useEventCallback(() => {
-    if (refs.current.subscription) {
-      return null;
-    }
-
-    refs.current.subscription = apiRef.current.store.subscribe(() => {
-      const newState = applySelector(
-        apiRef,
-        refs.current.selector,
-        refs.current.args,
-        apiRef.current.instanceId,
-      ) as T;
-
-      if (!refs.current.equals(refs.current.state, newState)) {
-        refs.current.state = newState;
-        setState(newState);
+  const subscribe = React.useCallback(
+    () => {
+      if (refs.current.subscription) {
+        return null;
       }
-    });
 
-    return null;
-  });
+      refs.current.subscription = apiRef.current.store.subscribe(() => {
+        const newState = applySelector(
+          apiRef,
+          refs.current.selector,
+          refs.current.args,
+          apiRef.current.instanceId,
+        ) as T;
 
-  const unsubscribe = useEventCallback(() => {
+        if (!refs.current.equals(refs.current.state, newState)) {
+          refs.current.state = newState;
+          setState(newState);
+        }
+      });
+
+      return null;
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    EMPTY,
+  );
+
+  const unsubscribe = React.useCallback(() => {
     return () => {
       if (refs.current.subscription) {
         refs.current.subscription();
         refs.current.subscription = undefined;
       }
     };
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, EMPTY);
 
   useSyncExternalStore(unsubscribe, subscribe, emptyGetSnapshot);
 
