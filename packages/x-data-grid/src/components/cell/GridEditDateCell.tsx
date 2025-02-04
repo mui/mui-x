@@ -229,6 +229,7 @@ GridEditDateCell.propTypes = {
    * The node of the row that the current cell belongs to.
    */
   rowNode: PropTypes.object.isRequired,
+  slotProps: PropTypes.object,
   /**
    * the tabIndex value.
    */
