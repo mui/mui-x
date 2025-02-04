@@ -1,5 +1,6 @@
 import { mergeConfig } from 'vitest/config';
-import filterReplacePlugin from 'vite-plugin-filter-replace';
+// eslint-disable-next-line import/no-relative-packages
+import filterReplacePlugin from '../../test/vite-plugin-filter-replace.mts';
 import sharedConfig from '../../vitest.shared.mts';
 import packageJson from './package.json';
 

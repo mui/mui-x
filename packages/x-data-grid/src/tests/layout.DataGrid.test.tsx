@@ -690,38 +690,34 @@ describe('<DataGrid /> - Layout & warnings', () => {
         );
       });
 
-      // On MacOS the scrollbar has zero width
-      testSkipIf(isOSX)(
-        'should include the scrollbar in the intrinsic height when there are more columns to show',
-        () => {
-          const columnHeaderHeight = 40;
-          const rowHeight = 30;
+      it('should include the scrollbar in the intrinsic height when there are more columns to show', () => {
+        const columnHeaderHeight = 40;
+        const rowHeight = 30;
 
-          let apiRef!: RefObject<GridApi | null>;
-          function Test() {
-            apiRef = useGridApiRef();
-            return (
-              <div style={{ width: 150 }}>
-                <DataGrid
-                  {...baselineProps}
-                  apiRef={apiRef}
-                  columnHeaderHeight={columnHeaderHeight}
-                  rowHeight={rowHeight}
-                  columns={[{ field: 'brand' }, { field: 'year' }]}
-                  autoHeight
-                />
-              </div>
-            );
-          }
-          render(<Test />);
-
-          const scrollbarSize = apiRef.current?.state.dimensions.scrollbarSize || 0;
-          expect(scrollbarSize).not.to.equal(0);
-          expect(grid('main')!.clientHeight).to.equal(
-            scrollbarSize + columnHeaderHeight + rowHeight * baselineProps.rows.length,
+        let apiRef!: RefObject<GridApi | null>;
+        function Test() {
+          apiRef = useGridApiRef();
+          return (
+            <div style={{ width: 150 }}>
+              <DataGrid
+                {...baselineProps}
+                apiRef={apiRef}
+                columnHeaderHeight={columnHeaderHeight}
+                rowHeight={rowHeight}
+                columns={[{ field: 'brand' }, { field: 'year' }]}
+                autoHeight
+              />
+            </div>
           );
-        },
-      );
+        }
+        render(<Test />);
+
+        const scrollbarSize = apiRef.current?.state.dimensions.scrollbarSize || 0;
+        expect(scrollbarSize).not.to.equal(0);
+        expect(grid('main')!.clientHeight).to.equal(
+          scrollbarSize + columnHeaderHeight + rowHeight * baselineProps.rows.length,
+        );
+      });
 
       it('should give some space to the noRows overlay', () => {
         const rowHeight = 30;

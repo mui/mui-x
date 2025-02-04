@@ -164,7 +164,9 @@ describe('<DataGridPro /> - Column headers', () => {
       const menuIconButton = columnWithMenuCell.querySelector('button[aria-label="Menu"]')!;
 
       await user.click(menuIconButton);
-      await screen.findByRole('menu');
+      await waitFor(() => {
+        expect(screen.queryByRole('menu')).not.to.equal(null);
+      });
 
       const separator = columnToResizeCell.querySelector(
         `.${gridClasses['columnSeparator--resizable']}`,

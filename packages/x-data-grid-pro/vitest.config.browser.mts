@@ -1,3 +1,4 @@
+/// <reference types="@vitest/browser/providers/playwright" />
 import { mergeConfig } from 'vitest/config';
 import sharedConfig from '../../vitest.shared.mts';
 import packageJson from './package.json';
@@ -8,14 +9,15 @@ export default mergeConfig(sharedConfig, {
     environment: 'browser',
     browser: {
       enabled: true,
-      name: 'chromium',
-      // https://playwright.dev
-      providerOptions: {
-        launch: {
-          // Required for x-data-grid-pro tests which use scrollbars.
-          ignoreDefaultArgs: ['--hide-scrollbars'],
+      instances: [
+        {
+          browser: 'chromium',
+          launch: {
+            // Required for tests which use scrollbars.
+            ignoreDefaultArgs: ['--hide-scrollbars'],
+          },
         },
-      },
+      ],
     },
   },
 });
