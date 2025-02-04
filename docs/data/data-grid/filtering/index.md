@@ -147,6 +147,12 @@ const columns = [
 
 {{"demo": "ReadOnlyFilters.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Reset pagination
+
+By default user stays on the same page after the filter is applied, unless the new row count indicates that that page does not exist anymore. In that case, page is changed to the last page for the new row count. If you want to get the user back to the first page each time new filter is applied, use `resetPageAfterSortingOrFiltering` prop.
+
+{{"demo": "FilteringWithPageReset.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Ignore diacritics (accents)
 
 You can ignore diacritics (accents) when filtering the rows. See [Quick filter - Ignore diacritics (accents)](/x/react-data-grid/filtering/quick-filter/#ignore-diacritics-accents).
