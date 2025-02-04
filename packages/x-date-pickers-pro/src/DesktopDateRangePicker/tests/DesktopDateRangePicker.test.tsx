@@ -384,7 +384,7 @@ describe('<DesktopDateRangePicker />', () => {
         adapterToUse.date('2018-01-06'),
       ];
 
-      render(
+      const { user } = render(
         <div>
           <DesktopDateRangePicker
             onChange={onChange}
@@ -404,17 +404,14 @@ describe('<DesktopDateRangePicker />', () => {
       // Dismiss the picker
       const input = document.getElementById('test-id')!;
 
-      fireEvent.mouseDown(input);
-      await act(async () => {
-        input.focus();
-      });
-      fireEvent.mouseUp(input);
+      await user.click(input);
 
-      expect(onChange.callCount).to.equal(1); // Start date change
-      expect(onAccept.callCount).to.equal(2);
+      // Start date change
+      expect(onChange.callCount).to.equal(1);
+      expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onAccept.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
-      expect(onClose.callCount).to.equal(2);
+      expect(onClose.callCount).to.equal(1);
     });
 
     it('should not call onClose or onAccept when clicking outside of the picker if not opened', () => {
@@ -468,7 +465,7 @@ describe('<DesktopDateRangePicker />', () => {
         adapterToUse.date('2018-01-06'),
       ];
 
-      render(
+      const { user } = render(
         <div>
           <DesktopDateRangePicker
             defaultValue={defaultValue}
@@ -488,15 +485,14 @@ describe('<DesktopDateRangePicker />', () => {
 
       expect(onAccept.callCount).to.equal(0);
 
-      await act(async () => {
-        document.querySelector<HTMLButtonElement>('#test')!.focus();
-      });
+      await user.click(document.querySelector<HTMLButtonElement>('#test')!);
 
-      expect(onChange.callCount).to.equal(1); // Start date change
-      expect(onAccept.callCount).to.equal(2);
+      // Start date change
+      expect(onChange.callCount).to.equal(1);
+      expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onAccept.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
-      expect(onClose.callCount).to.equal(2);
+      expect(onClose.callCount).to.equal(1);
     });
 
     it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', () => {
