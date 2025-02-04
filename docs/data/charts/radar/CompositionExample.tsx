@@ -27,7 +27,7 @@ export default function CompositionExample() {
         metrics: ['Oil', 'Coal', 'Gas', 'Flaring', 'Other industry', 'Cement'],
       }}
     >
-      <ChartsSurface disableAxisListener>
+      <ChartsSurface>
         <RadarGrid divisionNumber={3} />
         <RadarSeriesArea />
         <RadarSeriesMarks seriesId="usa-id" />
