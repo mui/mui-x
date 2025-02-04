@@ -91,6 +91,12 @@ In the following demo, the `firstName` column is not sortable by the default gri
 
 {{"demo": "ReadOnlySortingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Reset pagination
+
+By default sorting does not change the current page. If you want to get the user back to the first page each time new sort is applied, use `resetPageAfterSortingOrFiltering` prop.
+
+{{"demo": "SortingWithPageReset.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Custom comparator
 
 A comparator determines how two cell values should be sorted.
