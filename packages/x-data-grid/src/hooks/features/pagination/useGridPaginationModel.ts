@@ -5,6 +5,12 @@ import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPaginationModelApi, GridPaginationState } from './gridPaginationInterfaces';
 import { GridEventListener } from '../../../models/events';
 import { GridPaginationModel } from '../../../models/gridPaginationProps';
+import { GridFilterModel } from '../../../models/gridFilterModel';
+import {
+  gridFilterModelSelector,
+  gridFilterActiveItemsSelector,
+} from '../filter/gridFilterSelector';
+import { getDefaultGridFilterModel } from '../filter/gridFilterState';
 import { gridDensityFactorSelector } from '../density';
 import {
   useGridLogger,
@@ -12,6 +18,7 @@ import {
   useGridApiMethod,
   useGridApiEventHandler,
 } from '../../utils';
+import { isDeepEqual, runIf } from '../../../utils/utils';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { gridPageCountSelector, gridPaginationModelSelector } from './gridPaginationSelector';
 import {
@@ -67,10 +74,12 @@ export const useGridPaginationModel = (
     | 'pagination'
     | 'signature'
     | 'rowHeight'
+    | 'resetPageAfterSortingOrFiltering'
   >,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPaginationModel');
 
+  const previousFilterModel = React.useRef<GridFilterModel>(getDefaultGridFilterModel());
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
   const rowHeight = Math.floor(props.rowHeight * densityFactor);
   apiRef.current.registerControlState({
@@ -242,7 +251,12 @@ export const useGridPaginationModel = (
       if (newRowCount == null) {
         return;
       }
+
       const paginationModel = gridPaginationModelSelector(apiRef);
+      if (paginationModel.page === 0) {
+        return;
+      }
+
       const pageCount = gridPageCountSelector(apiRef);
       if (paginationModel.page > pageCount - 1) {
         apiRef.current.setPage(Math.max(0, pageCount - 1));
@@ -251,9 +265,49 @@ export const useGridPaginationModel = (
     [apiRef],
   );
 
+  const handleSortModelChange = React.useCallback(() => {
+    apiRef.current.setPage(0);
+  }, [apiRef]);
+
+  /**
+   * Resets the page only if the active items or quick filter has changed from the last time.
+   * This is to avoid resetting the page when the filter model is changed
+   * because of and update of the operator from an item that does not have the value
+   * or reseting when the filter panel is just opened
+   */
+  const handleFilterModelChange = React.useCallback(() => {
+    const paginationModel = gridPaginationModelSelector(apiRef);
+    if (paginationModel.page === 0) {
+      return;
+    }
+
+    const currentActiveFilters = {
+      ...gridFilterModelSelector(apiRef),
+      // replace items with the active items
+      items: gridFilterActiveItemsSelector(apiRef),
+    };
+
+    if (isDeepEqual(currentActiveFilters, previousFilterModel.current)) {
+      return;
+    }
+
+    previousFilterModel.current = currentActiveFilters;
+    apiRef.current.setPage(0);
+  }, [apiRef]);
+
   useGridApiEventHandler(apiRef, 'viewportInnerSizeChange', handleUpdateAutoPageSize);
   useGridApiEventHandler(apiRef, 'paginationModelChange', handlePaginationModelChange);
   useGridApiEventHandler(apiRef, 'rowCountChange', handleRowCountChange);
+  useGridApiEventHandler(
+    apiRef,
+    'sortModelChange',
+    runIf(props.resetPageAfterSortingOrFiltering, handleSortModelChange),
+  );
+  useGridApiEventHandler(
+    apiRef,
+    'filterModelChange',
+    runIf(props.resetPageAfterSortingOrFiltering, handleFilterModelChange),
+  );
 
   /**
    * EFFECTS
