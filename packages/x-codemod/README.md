@@ -256,6 +256,25 @@ Remove the `<ChartsOnAxisClickHandler />` and move the associated `onAxisClick` 
  </ChartContainer>
 ```
 
+#### `rename-unstable-use-series`
+
+Renames multiple `useSeries` components from their unstable, as they have now become stable.
+
+```diff
+  import {
+-   unstable_useSeries,
++   useSeries,
+-   unstable_usePieSeries,
++   usePieSeries,
+-   unstable_useLineSeries,
++   useLineSeries,
+-   unstable_useBarSeries,
++   useBarSeries,
+-   unstable_useScatterSeries,
++   useScatterSeries,
+  } from '@mui/x-charts/hooks';
+```
+
 ### Data Grid codemods
 
 #### `preset-safe` for Data Grid v8.0.0
