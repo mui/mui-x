@@ -4,6 +4,7 @@ import MUICheckbox from '@mui/material/Checkbox';
 import MUIChip from '@mui/material/Chip';
 import MUICircularProgress from '@mui/material/CircularProgress';
 import MUIDivider from '@mui/material/Divider';
+import MUIInputBase from '@mui/material/InputBase';
 import MUILinearProgress from '@mui/material/LinearProgress';
 import MUIListItemIcon from '@mui/material/ListItemIcon';
 import MUIListItemText from '@mui/material/ListItemText';
@@ -96,6 +97,7 @@ const baseSlots: GridBaseSlots = {
   baseCheckbox: MUICheckbox,
   baseCircularProgress: MUICircularProgress,
   baseDivider: MUIDivider,
+  baseInput: BaseInput,
   baseLinearProgress: MUILinearProgress,
   baseMenuList: MUIMenuList,
   baseMenuItem: BaseMenuItem,
@@ -148,4 +150,9 @@ function BaseTextField(props: GridSlotProps['baseTextField']) {
       }}
     />
   );
+}
+
+function BaseInput(props: GridSlotProps['baseInput']) {
+  const { slotProps, ...rest } = props;
+  return <MUIInputBase {...rest} inputProps={slotProps?.htmlInput} />;
 }
