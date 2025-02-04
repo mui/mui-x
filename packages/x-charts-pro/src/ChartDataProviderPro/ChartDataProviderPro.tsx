@@ -90,6 +90,12 @@ ChartDataProviderPro.propTypes = {
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
   /**
+   * If `true`, the charts will not listen to the mouse move event.
+   * It might break interactive features, but will improve performance.
+   * @default false
+   */
+  disableAxisListener: PropTypes.bool,
+  /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height: PropTypes.number,
@@ -127,6 +133,13 @@ ChartDataProviderPro.propTypes = {
     right: PropTypes.number,
     top: PropTypes.number,
   }),
+  /**
+   * The function called for onClick events.
+   * The second argument contains information about all line/bar elements at the current mouse position.
+   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
+   * @param {null | AxisData} data The data about the clicked axis and items associated with it.
+   */
+  onAxisClick: PropTypes.func,
   /**
    * The callback fired when the highlighted item changes.
    *
