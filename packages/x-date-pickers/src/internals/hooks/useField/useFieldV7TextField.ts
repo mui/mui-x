@@ -13,6 +13,7 @@ import { getActiveElement } from '../../utils/utils';
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
 import { usePickerTranslations } from '../../../hooks/usePickerTranslations';
 import { useUtils } from '../useUtils';
+import { FieldRangeSection } from '../../models';
 
 export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
   const {
@@ -424,6 +425,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
   const elements = React.useMemo<PickersSectionElement[]>(() => {
     return state.sections.map((section, index) => {
       const isEditable = !isContainerEditable && !disabled && !readOnly;
+      const dateRangePosition = (section as FieldRangeSection).dateName || undefined;
       return {
         container: {
           'data-sectionindex': index,
@@ -434,6 +436,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
           contentEditable: !isContainerEditable && !disabled && !readOnly,
           role: 'spinbutton',
           id: `${id}-${section.type}`,
+          'data-range-position': dateRangePosition,
           'aria-labelledby': `${id}-${section.type}`,
           'aria-readonly': readOnly,
           'aria-valuenow': getSectionValueNow(section, utils),
@@ -463,6 +466,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
         },
         after: {
           children: section.endSeparator,
+          'data-range-position': section.isEndFormatSeparator ? dateRangePosition : undefined,
         },
       };
     });
