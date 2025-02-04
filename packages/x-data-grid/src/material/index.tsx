@@ -11,6 +11,7 @@ import MUIMenuList from '@mui/material/MenuList';
 import MUIMenuItem from '@mui/material/MenuItem';
 import MUITextField from '@mui/material/TextField';
 import MUIFormControl from '@mui/material/FormControl';
+import MUIFormControlLabel from '@mui/material/FormControlLabel';
 import MUISelect from '@mui/material/Select';
 import MUIButton from '@mui/material/Button';
 import MUIIconButton from '@mui/material/IconButton';
@@ -93,7 +94,7 @@ const iconSlots: GridIconSlotsComponent = {
 
 const baseSlots: GridBaseSlots = {
   baseBadge: MUIBadge,
-  baseCheckbox: MUICheckbox,
+  baseCheckbox: BaseCheckbox,
   baseCircularProgress: MUICircularProgress,
   baseDivider: MUIDivider,
   baseLinearProgress: MUILinearProgress,
@@ -119,6 +120,19 @@ const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
 };
 
 export default materialSlots;
+
+function BaseCheckbox(props: GridSlotProps['baseCheckbox']) {
+  const { label, slotProps, ...other } = props;
+  if (!label) {
+    return <MUICheckbox {...other} inputProps={slotProps?.htmlInput} />;
+  }
+  return (
+    <MUIFormControlLabel
+      control={<MUICheckbox {...other} inputProps={slotProps?.htmlInput} />}
+      label={label}
+    />
+  );
+}
 
 function BaseMenuItem(props: GridSlotProps['baseMenuItem']) {
   const { inert, iconStart, iconEnd, children, ...other } = props;

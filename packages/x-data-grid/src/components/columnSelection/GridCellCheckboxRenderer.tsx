@@ -114,7 +114,9 @@ const GridCellCheckboxForwardRef = forwardRef<HTMLInputElement, GridRenderCellPa
         checked={isChecked && !isIndeterminate}
         onChange={handleChange}
         className={classes.root}
-        inputProps={{ 'aria-label': label, name: 'select_row' }}
+        slotProps={{
+          htmlInput: { 'aria-label': label, name: 'select_row' },
+        }}
         onKeyDown={handleKeyDown}
         indeterminate={isIndeterminate}
         disabled={!isSelectable}

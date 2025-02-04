@@ -2,7 +2,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import { styled } from '@mui/material/styles';
 import { inputBaseClasses } from '@mui/material/InputBase';
 import { TextFieldProps } from '../../models/gridBaseSlots';
@@ -272,21 +271,15 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
       </GridColumnsManagementHeader>
       <GridColumnsManagementBody className={classes.root} ownerState={rootProps}>
         {currentColumns.map((column) => (
-          <FormControlLabel
-            key={column.field}
-            className={classes.row}
-            control={
-              <rootProps.slots.baseCheckbox
-                disabled={column.hideable === false}
-                checked={columnVisibilityModel[column.field] !== false}
-                onClick={toggleColumn}
-                name={column.field}
-                sx={{ p: 0.5 }}
-                inputRef={isFirstHideableColumn(column) ? firstSwitchRef : undefined}
-                {...rootProps.slotProps?.baseCheckbox}
-              />
-            }
+          <rootProps.slots.baseCheckbox
+            disabled={column.hideable === false}
+            checked={columnVisibilityModel[column.field] !== false}
+            onClick={toggleColumn}
+            name={column.field}
+            style={{ padding: 0.5 }}
+            inputRef={isFirstHideableColumn(column) ? firstSwitchRef : undefined}
             label={column.headerName || column.field}
+            {...rootProps.slotProps?.baseCheckbox}
           />
         ))}
         {currentColumns.length === 0 && (
@@ -298,19 +291,15 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
       {(!disableShowHideToggle || !disableResetButton) && currentColumns.length > 0 ? (
         <GridColumnsManagementFooter ownerState={rootProps} className={classes.footer}>
           {!disableShowHideToggle ? (
-            <FormControlLabel
-              control={
-                <rootProps.slots.baseCheckbox
-                  disabled={hideableColumns.length === 0}
-                  checked={allHideableColumnsVisible}
-                  indeterminate={!allHideableColumnsVisible && !allHideableColumnsHidden}
-                  onClick={() => toggleAllColumns(!allHideableColumnsVisible)}
-                  name={apiRef.current.getLocaleText('columnsManagementShowHideAllText')}
-                  sx={{ p: 0.5 }}
-                  {...rootProps.slotProps?.baseCheckbox}
-                />
-              }
+            <rootProps.slots.baseCheckbox
+              disabled={hideableColumns.length === 0}
+              checked={allHideableColumnsVisible}
+              indeterminate={!allHideableColumnsVisible && !allHideableColumnsHidden}
+              onClick={() => toggleAllColumns(!allHideableColumnsVisible)}
+              name={apiRef.current.getLocaleText('columnsManagementShowHideAllText')}
+              style={{ padding: 0.5 }}
               label={apiRef.current.getLocaleText('columnsManagementShowHideAllText')}
+              {...rootProps.slotProps?.baseCheckbox}
             />
           ) : (
             <span />
