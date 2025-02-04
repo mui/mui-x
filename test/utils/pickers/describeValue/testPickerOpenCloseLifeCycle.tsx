@@ -3,7 +3,12 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import { PickerRangeValue, PickerValidValue } from '@mui/x-date-pickers/internals';
-import { getExpectedOnChangeCount, getFieldInputRoot, openPicker } from 'test/utils/pickers';
+import {
+  getExpectedOnChangeCount,
+  getFieldInputRoot,
+  isPickerSingleInput,
+  openPicker,
+} from 'test/utils/pickers';
 import { describeSkipIf, testSkipIf } from 'test/utils/skipIf';
 import { DescribeValueTestSuite } from './describeValue.types';
 import { fireUserEvent } from '../../fireUserEvent';
@@ -16,7 +21,8 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
     options;
 
   const isRangeType = pickerParams.type === 'date-range' || pickerParams.type === 'date-time-range';
-  const viewWrapperRole = isRangeType && pickerParams.variant === 'desktop' ? 'tooltip' : 'dialog';
+  const viewWrapperRole =
+    isPickerSingleInput(options) || pickerParams.variant === 'mobile' ? 'dialog' : 'tooltip';
   const shouldCloseOnSelect =
     (pickerParams.type === 'date' || pickerParams.type === 'date-range') &&
     pickerParams.variant === 'desktop';

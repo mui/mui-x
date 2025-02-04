@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { usePickerContext, useSplitFieldProps } from '@mui/x-date-pickers/hooks';
+import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { useDateRangeManager } from '@mui/x-date-pickers-pro/managers';
 import { unstable_useMultiInputRangeField as useMultiInputRangeField } from '@mui/x-date-pickers-pro/hooks';
@@ -75,7 +75,6 @@ function BrowserTextField(props) {
 }
 
 function BrowserMultiInputDateRangeField(props) {
-  const pickerContext = usePickerContext();
   const manager = useDateRangeManager();
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
   const { slotProps, ...otherForwardedProps } = forwardedProps;
@@ -95,21 +94,21 @@ function BrowserMultiInputDateRangeField(props) {
   const fieldResponse = useMultiInputRangeField({
     manager,
     internalProps,
-    startForwardedProps: startTextFieldProps,
-    endForwardedProps: endTextFieldProps,
+    startTextFieldProps,
+    endTextFieldProps,
+    rootProps: {
+      spacing: 2,
+      direction: 'row',
+      overflow: 'auto',
+      ...otherForwardedProps,
+    },
   });
 
   return (
-    <Stack
-      ref={pickerContext.rootRef}
-      spacing={2}
-      direction="row"
-      overflow="auto"
-      {...otherForwardedProps}
-    >
-      <BrowserTextField {...fieldResponse.startDate} />
+    <Stack {...fieldResponse.root}>
+      <BrowserTextField {...fieldResponse.startTextField} />
       <span>–</span>
-      <BrowserTextField {...fieldResponse.endDate} />
+      <BrowserTextField {...fieldResponse.endTextField} />
     </Stack>
   );
 }

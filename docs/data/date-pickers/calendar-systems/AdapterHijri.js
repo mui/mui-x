@@ -24,7 +24,6 @@ const cacheRtl = createCache({
 
 function ButtonDateTimeField(props) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-  const { focused, ...other } = forwardedProps;
 
   const pickerContext = usePickerContext();
   const parsedFormat = useParsedFormat();
@@ -42,7 +41,7 @@ function ButtonDateTimeField(props) {
 
   return (
     <Button
-      {...other}
+      {...forwardedProps}
       variant="outlined"
       color={hasValidationError ? 'error' : 'primary'}
       className={pickerContext.rootClassName}

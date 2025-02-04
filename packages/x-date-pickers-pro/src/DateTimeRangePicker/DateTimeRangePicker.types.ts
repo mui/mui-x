@@ -1,4 +1,4 @@
-import { BaseSingleInputFieldProps, PickerRangeValue } from '@mui/x-date-pickers/internals';
+import { BaseSingleInputFieldProps } from '@mui/x-date-pickers/internals';
 import {
   DesktopDateTimeRangePickerProps,
   DesktopDateTimeRangePickerSlots,
@@ -43,5 +43,4 @@ export interface DateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure ext
 /**
  * Props the field can receive when used inside a date time range picker (<DateTimeRangePicker />, <DesktopDateTimeRangePicker /> or <MobileDateTimeRangePicker /> component).
  */
-export type DateTimeRangePickerFieldProps = ValidateDateTimeRangeProps &
-  BaseSingleInputFieldProps<PickerRangeValue>;
+export type DateTimeRangePickerFieldProps = ValidateDateTimeRangeProps & BaseSingleInputFieldProps;
