@@ -8,7 +8,6 @@ import type { MenuListProps } from '@mui/material/MenuList';
 import type { MenuItemProps as MUIMenuItemProps } from '@mui/material/MenuItem';
 import type { FormControlProps } from '@mui/material/FormControl';
 import type { SelectProps } from '@mui/material/Select';
-import type { SwitchProps } from '@mui/material/Switch';
 import type { IconButtonProps as MUIIconButtonProps } from '@mui/material/IconButton';
 import type { InputAdornmentProps } from '@mui/material/InputAdornment';
 import type { TooltipProps as MUITooltipProps } from '@mui/material/Tooltip';
@@ -61,7 +60,6 @@ export interface BaseMenuItemPropsOverrides {}
 export interface BaseTextFieldPropsOverrides {}
 export interface BaseFormControlPropsOverrides {}
 export interface BaseSelectPropsOverrides {}
-export interface BaseSwitchPropsOverrides {}
 export interface BaseButtonPropsOverrides {}
 export interface BaseIconButtonPropsOverrides {}
 export interface BaseInputAdornmentPropsOverrides {}
@@ -103,7 +101,6 @@ interface BaseSlotProps {
   baseTextField: TextFieldProps & BaseTextFieldPropsOverrides;
   baseFormControl: FormControlProps & BaseFormControlPropsOverrides;
   baseSelect: SelectProps & BaseSelectPropsOverrides;
-  baseSwitch: SwitchProps & BaseSwitchPropsOverrides;
   baseButton: ButtonProps & BaseButtonPropsOverrides;
   baseIconButton: IconButtonProps & BaseIconButtonPropsOverrides;
   basePopper: PopperProps & BasePopperPropsOverrides;

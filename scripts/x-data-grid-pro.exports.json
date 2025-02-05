@@ -16,7 +16,6 @@
   { "name": "BaseSelectOptionPropsOverrides", "kind": "Interface" },
   { "name": "BaseSelectPropsOverrides", "kind": "Interface" },
   { "name": "BaseSkeletonPropsOverrides", "kind": "Interface" },
-  { "name": "BaseSwitchPropsOverrides", "kind": "Interface" },
   { "name": "BaseTextFieldPropsOverrides", "kind": "Interface" },
   { "name": "BaseTooltipPropsOverrides", "kind": "Interface" },
   { "name": "CellPropsOverrides", "kind": "Interface" },
