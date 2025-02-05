@@ -776,17 +776,10 @@ export const GridRootStyles = styled('div', {
     [`.${c.scrollbarFiller}`]: {
       minWidth: 'calc(var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize))',
       alignSelf: 'stretch',
-      [`&.${c['scrollbarFiller--borderTop']}`]: {
-        borderTop: '1px solid var(--DataGrid-rowBorderColor)',
-      },
-      [`&.${c['scrollbarFiller--borderBottom']}`]: {
-        borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
-      },
-      [`&.${c['scrollbarFiller--pinnedRight']}`]: {
-        backgroundColor: 'var(--DataGrid-pinnedBackground)',
-        position: 'sticky',
-        right: 0,
-      },
+      backgroundColor: 'var(--DataGrid-headerBackground)',
+      position: 'sticky',
+      right: 0,
+      zIndex: 3,
     },
 
     [`& .${c.filler}`]: {
