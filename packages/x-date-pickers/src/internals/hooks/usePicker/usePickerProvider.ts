@@ -1,6 +1,7 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useForkRef from '@mui/utils/useForkRef';
+import useId from '@mui/utils/useId';
 import { PickerOwnerState } from '../../../models';
 import { PickerValueManager, UsePickerValueProviderParams } from './usePickerValue.types';
 import {
@@ -23,6 +24,7 @@ import { UsePickerViewsProviderParams } from './usePickerViews';
 import { PickerFieldPrivateContextValue } from '../useNullableFieldPrivateContext';
 import type { UseFieldInternalProps } from '../useField';
 import { useReduceAnimations } from '../useReduceAnimations';
+import { ExportedBaseToolbarProps } from '../../models/props/toolbar';
 
 function getOrientation(): PickerOrientation {
   if (typeof window === 'undefined') {
@@ -90,6 +92,11 @@ export function usePickerProvider<
   const popupRef = React.useRef<HTMLElement>(null);
   const rootRefObject = React.useRef<HTMLDivElement>(null);
   const rootRef = useForkRef(ref, rootRefObject);
+
+  /**
+   * TODO: Improve how we generate the aria-label and aria-labelledby attributes.
+   */
+  const labelId = useId();
 
   const ownerState = React.useMemo<PickerOwnerState>(
     () => ({
@@ -174,11 +181,13 @@ export function usePickerProvider<
       ...paramsFromUsePickerViews.privateContextValue,
       ownerState,
       rootRefObject,
+      labelId,
     }),
     [
       paramsFromUsePickerValue.privateContextValue,
       paramsFromUsePickerViews.privateContextValue,
       ownerState,
+      labelId,
     ],
   );
 
@@ -223,7 +232,8 @@ export interface UsePickerProviderParameters<
   TError,
 > extends Pick<PickerProviderProps<TValue>, 'localeText'> {
   ref: React.ForwardedRef<HTMLDivElement> | undefined;
-  props: UsePickerProps<TValue, any, any, any> & UsePickerProviderNonStaticProps;
+  props: UsePickerProps<TValue, any, any, any> &
+    UsePickerProviderNonStaticProps & { slotProps?: { toolbar?: ExportedBaseToolbarProps } };
   valueManager: PickerValueManager<TValue, any>;
   variant: PickerVariant;
   paramsFromUsePickerValue: UsePickerValueProviderParams<TValue, TError>;

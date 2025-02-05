@@ -48,6 +48,7 @@ export const PickerPrivateContext = React.createContext<PickerPrivateContextValu
   doesTheCurrentViewHasAnUI: () => true,
   rootRefObject: { current: null },
   viewContainerRole: undefined,
+  labelId: undefined,
 });
 
 /**
@@ -216,4 +217,8 @@ export interface PickerPrivateContextValue
    * This is the object counterpart of the `usePickerContext().rootRef` property which can be a function.
    */
   rootRefObject: React.RefObject<HTMLDivElement | null>;
+  /**
+   * The id of the label element.
+   */
+  labelId: string | undefined;
 }

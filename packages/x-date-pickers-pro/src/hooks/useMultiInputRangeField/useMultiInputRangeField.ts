@@ -11,6 +11,7 @@ import {
   useControlledValueWithTimezone,
   useFieldInternalPropsWithDefaults,
   UseFieldResponse,
+  usePickerPrivateContext,
 } from '@mui/x-date-pickers/internals';
 import { useValidation } from '@mui/x-date-pickers/validation';
 import { useMultiInputRangeFieldTextFieldProps } from './useMultiInputRangeFieldTextFieldProps';
@@ -92,6 +93,8 @@ export function useMultiInputRangeField<
     unstableEndFieldRef,
   } = internalPropsWithDefaults;
 
+  const pickerPrivateContext = usePickerPrivateContext();
+
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
     name: 'useMultiInputRangeField',
     timezone: timezoneProp,
@@ -158,6 +161,7 @@ export function useMultiInputRangeField<
       defaultValue: defaultValue === undefined ? undefined : defaultValue[0],
       onChange: handleStartDateChange,
       autoFocus,
+      id: `${pickerPrivateContext.labelId}-start`,
     },
   });
 
@@ -173,6 +177,7 @@ export function useMultiInputRangeField<
       defaultValue: defaultValue === undefined ? undefined : defaultValue[1],
       onChange: handleEndDateChange,
       autoFocus: false,
+      id: `${pickerPrivateContext.labelId}-end`,
     },
   });
 

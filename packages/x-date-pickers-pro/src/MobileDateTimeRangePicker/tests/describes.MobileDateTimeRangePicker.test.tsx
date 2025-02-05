@@ -88,7 +88,6 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
       if (!isOpened) {
         openPicker({
           type: 'date-time-range',
-
           initialFocus: setEndDate ? 'end' : 'start',
         });
       }
@@ -188,10 +187,14 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
         : expectedPlaceholder;
       expectFieldValueV7(endSectionsContainer, expectedEndValueStr);
     },
-    setNewValue: (
-      value,
-      { isOpened, applySameValue, setEndDate = false, selectSection, pressKey },
-    ) => {
+    setNewValue: (value, { isOpened, applySameValue, setEndDate = false }) => {
+      if (!isOpened) {
+        openPicker({
+          type: 'date-time-range',
+          initialFocus: setEndDate ? 'end' : 'start',
+        });
+      }
+
       let newValue: PickerNonNullableRangeValue;
       if (applySameValue) {
         newValue = value;
@@ -206,49 +209,28 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
           value[1],
         ];
       }
-      if (isOpened) {
-        fireEvent.click(
-          screen.getByRole('gridcell', {
-            name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
-          }),
-        );
-        const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-        const hours = adapterToUse.format(
-          newValue[setEndDate ? 1 : 0],
-          hasMeridiem ? 'hours12h' : 'hours24h',
-        );
-        const hoursNumber = adapterToUse.getHours(newValue[setEndDate ? 1 : 0]);
-        fireEvent.click(screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }));
-        fireEvent.click(
-          screen.getByRole('option', {
-            name: `${adapterToUse.getMinutes(newValue[setEndDate ? 1 : 0])} minutes`,
-          }),
-        );
-        if (hasMeridiem) {
-          // meridiem is an extra view on `DesktopDateTimeRangePicker`
-          // we need to click it to finish selection
-          fireEvent.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
-        }
-      } else {
-        selectSection('day');
-        pressKey(undefined, 'ArrowUp');
 
-        selectSection('hours');
-        pressKey(undefined, 'ArrowUp');
-
-        selectSection('minutes');
-        pressKey(undefined, 'PageUp'); // increment by 5 minutes
-
-        const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-        if (hasMeridiem) {
-          selectSection('meridiem');
-          const previousHours = adapterToUse.getHours(value[setEndDate ? 1 : 0]);
-          const newHours = adapterToUse.getHours(newValue[setEndDate ? 1 : 0]);
-          // update meridiem section if it changed
-          if ((previousHours < 12 && newHours >= 12) || (previousHours >= 12 && newHours < 12)) {
-            pressKey(undefined, 'ArrowUp');
-          }
-        }
+      fireEvent.click(
+        screen.getByRole('gridcell', {
+          name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
+        }),
+      );
+      const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
+      const hours = adapterToUse.format(
+        newValue[setEndDate ? 1 : 0],
+        hasMeridiem ? 'hours12h' : 'hours24h',
+      );
+      const hoursNumber = adapterToUse.getHours(newValue[setEndDate ? 1 : 0]);
+      fireEvent.click(screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }));
+      fireEvent.click(
+        screen.getByRole('option', {
+          name: `${adapterToUse.getMinutes(newValue[setEndDate ? 1 : 0])} minutes`,
+        }),
+      );
+      if (hasMeridiem) {
+        // meridiem is an extra view on `DesktopDateTimeRangePicker`
+        // we need to click it to finish selection
+        fireEvent.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
       }
 
       return newValue;

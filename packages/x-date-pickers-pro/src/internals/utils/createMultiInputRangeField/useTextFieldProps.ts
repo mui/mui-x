@@ -80,7 +80,6 @@ export function useTextFieldProps({
       // TODO: Decide if we also want to set the default labels on standalone fields.
       label: pickerContext ? translations[position] : undefined,
       focused: pickerContext?.open ? rangePosition === position : undefined,
-      id: `id-${position}`,
     },
     ownerState: { ...ownerState, position },
   });
