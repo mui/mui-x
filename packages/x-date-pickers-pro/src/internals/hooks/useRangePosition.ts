@@ -26,7 +26,7 @@ export interface UseRangePositionProps {
 
 export interface UseRangePositionResponse {
   rangePosition: RangePosition;
-  setRangePosition: (newPosition: RangePosition) => void;
+  setRangePosition: (newPosition: RangePosition, syncSelectedSections?: boolean) => void;
 }
 
 export const useRangePosition = (
@@ -52,11 +52,15 @@ export const useRangePosition = (
     singleInputFieldRef.current.setSelectedSections(targetActiveSectionIndex);
   };
 
-  const handleRangePositionChange = useEventCallback((newRangePosition: RangePosition) => {
-    setRangePosition(newRangePosition);
-    props.onRangePositionChange?.(newRangePosition);
-    syncRangePositionWithSingleInputField(newRangePosition);
-  });
+  const handleRangePositionChange = useEventCallback(
+    (newRangePosition: RangePosition, syncSelectedSections = true) => {
+      setRangePosition(newRangePosition);
+      props.onRangePositionChange?.(newRangePosition);
+      if (syncSelectedSections) {
+        syncRangePositionWithSingleInputField(newRangePosition);
+      }
+    },
+  );
 
   return { rangePosition, setRangePosition: handleRangePositionChange };
 };

@@ -1063,6 +1063,30 @@ async function initializeEnvironment(
           'MUI X: The timezone of the start and the end date should be the same.',
         );
       });
+
+      it('should keep the focus on the clicked section', async () => {
+        await renderFixture('DatePicker/DesktopDateRangePickerWithValue');
+
+        const startDaySection = page.getByRole('spinbutton', { name: 'Day' }).first();
+        await startDaySection.click();
+        expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('12');
+
+        const endYearSection = page.getByRole('spinbutton', { name: 'Year' }).last();
+        await endYearSection.click();
+        expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('2024');
+      });
+
+      it('should keep the focus on the clicked section with single input field', async () => {
+        await renderFixture('DatePicker/SingleDesktopDateRangePickerWithTZ');
+
+        const startDaySection = page.getByRole('spinbutton', { name: 'Day' }).first();
+        await startDaySection.click();
+        expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('12');
+
+        const endYearSection = page.getByRole('spinbutton', { name: 'Year' }).last();
+        await endYearSection.click();
+        expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('2024');
+      });
     });
   });
 });
