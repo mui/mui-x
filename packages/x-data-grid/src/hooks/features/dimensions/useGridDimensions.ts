@@ -98,7 +98,7 @@ export const dimensionsStateInitializer: GridStateInitializer<RootProps> = (
   };
 };
 
-export const columnsTotalWidthSelector = createSelector(
+const columnsTotalWidthSelector = createSelector(
   gridVisibleColumnDefinitionsSelector,
   gridColumnPositionsSelector,
   (visibleColumns, positions) => {
