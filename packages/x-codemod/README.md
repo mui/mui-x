@@ -258,7 +258,7 @@ Remove the `<ChartsOnAxisClickHandler />` and move the associated `onAxisClick` 
 
 #### `rename-unstable-use-series`
 
-Renames multiple `useSeries` components from their unstable, as they have now become stable.
+Remove `unstable_` prefix from `useSeries` and `use*Series` hooks, as they have now become stable.
 
 ```diff
   import {
