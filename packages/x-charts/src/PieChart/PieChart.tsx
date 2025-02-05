@@ -110,7 +110,17 @@ const PieChart = React.forwardRef(function PieChart(
     className,
     ...other
   } = props;
-  const margin = { ...defaultMargin, ...marginProps };
+  const margin = {
+    ...defaultMargin,
+    ...(typeof marginProps === 'number'
+      ? {
+          top: marginProps,
+          bottom: marginProps,
+          left: marginProps,
+          right: marginProps,
+        }
+      : marginProps),
+  };
 
   const { chartDataProviderProps, chartsSurfaceProps } = useChartContainerProps<
     'pie',
