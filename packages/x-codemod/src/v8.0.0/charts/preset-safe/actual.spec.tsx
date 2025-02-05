@@ -53,5 +53,5 @@ function App() {
   <BarChart slotProps={{ legend: { position: { vertical: 'top', horizontal: 'middle' } } }} />
   <BarChart slotProps={{ legend: { position: { vertical: 'bottom', horizontal: 'right' } } }} />
   <BarChart slotProps={{ legend: { position: { vertical: 'wrong', horizontal: 'wrong' } } }} />
-</div>;
+  </div>;
 }
