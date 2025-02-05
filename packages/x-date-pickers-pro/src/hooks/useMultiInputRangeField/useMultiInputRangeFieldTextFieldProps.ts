@@ -1,3 +1,5 @@
+import * as React from 'react';
+import useEventCallback from '@mui/utils/useEventCallback';
 import {
   useDateManager,
   UseDateManagerReturnValue,
@@ -17,6 +19,9 @@ import {
   useField,
   useFieldInternalPropsWithDefaults,
   UseFieldResponse,
+  useNullableFieldPrivateContext,
+  useNullablePickerContext,
+  usePickerPrivateContext,
 } from '@mui/x-date-pickers/internals';
 import { PickerAnyRangeManager } from '../../internals/models/managers';
 import { useNullablePickerRangePositionContext } from '../../internals/hooks/useNullablePickerRangePositionContext';
@@ -31,12 +36,23 @@ import {
  */
 export function useMultiInputRangeFieldTextFieldProps<
   TManager extends PickerAnyRangeManager,
-  TForwardedProps extends { [key: string]: any },
->(parameters: UseMultiInputRangeFieldTextFieldPropsParameters<TManager>) {
+  TForwardedProps extends UseMultiInputRangeFieldTextFieldBaseForwardedProps,
+>(
+  parameters: UseMultiInputRangeFieldTextFieldPropsParameters<TManager, TForwardedProps>,
+): UseMultiInputRangeFieldTextFieldPropsReturnValue<TManager, TForwardedProps> {
   type TEnableAccessibleFieldDOMStructure =
     PickerManagerEnableAccessibleFieldDOMStructure<TManager>;
 
-  const { fieldProps, valueType, position } = parameters;
+  const pickerContext = useNullablePickerContext();
+  const fieldPrivateContext = useNullableFieldPrivateContext();
+  const pickerPrivateContext = usePickerPrivateContext();
+  const rangePositionContext = useNullablePickerRangePositionContext();
+
+  const rangePosition = rangePositionContext?.rangePosition ?? 'start';
+  const setRangePosition = rangePositionContext?.setRangePosition;
+  const previousRangePosition = React.useRef<RangePosition>(rangePosition);
+
+  const { props, valueType, position } = parameters;
 
   let useManager: ({
     enableAccessibleFieldDOMStructure,
@@ -46,6 +62,7 @@ export function useMultiInputRangeFieldTextFieldProps<
   switch (valueType) {
     case 'date': {
       useManager = useDateManager;
+      break;
       break;
     }
     case 'time': {
@@ -62,15 +79,57 @@ export function useMultiInputRangeFieldTextFieldProps<
   }
 
   const manager = useManager({
-    enableAccessibleFieldDOMStructure: fieldProps.enableAccessibleFieldDOMStructure,
+    enableAccessibleFieldDOMStructure: props.enableAccessibleFieldDOMStructure,
   });
 
-  const { forwardedProps, internalProps } = useSplitFieldProps(fieldProps, 'date');
-  const rangePositionContext = useNullablePickerRangePositionContext();
+  const openPickerIfPossible = (event: React.UIEvent) => {
+    if (!pickerContext) {
+      return;
+    }
+
+    event.stopPropagation();
+    setRangePosition?.(position);
+    if (pickerContext.triggerStatus === 'enabled') {
+      event.preventDefault();
+      pickerContext.setOpen(true);
+    }
+  };
+
+  const handleKeyDown = useEventCallback((event: React.KeyboardEvent) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      openPickerIfPossible(event);
+    }
+  });
+
+  // Registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
+  // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
+  const handleClick = useEventCallback((event: React.MouseEvent) => {
+    openPickerIfPossible(event);
+  });
+
+  const handleFocus = useEventCallback((event: React.FocusEvent) => {
+    props.onFocus?.(event);
+    if (pickerContext?.open) {
+      setRangePosition?.(position);
+      if (previousRangePosition.current !== position && pickerContext.initialView) {
+        pickerContext.setView?.(pickerContext.initialView);
+      }
+    }
+  });
+
+  const allProps = {
+    ...props,
+    onClick: handleClick,
+    onFocus: handleFocus,
+    onKeyDown: handleKeyDown,
+    id: `${pickerPrivateContext.labelId}-${position}`,
+  };
+
+  const { forwardedProps, internalProps } = useSplitFieldProps(allProps, 'date');
   const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
     manager,
     internalProps,
-    skipContextFieldRefAssignment: rangePositionContext?.rangePosition !== position,
+    skipContextFieldRefAssignment: rangePosition !== position,
   });
 
   const { clearable, onClear, ...fieldResponse } = useField<
@@ -87,15 +146,71 @@ export function useMultiInputRangeFieldTextFieldProps<
     valueType: manager.valueType,
     // TODO v8: Add a real aria label before moving the opening logic to the field on range pickers.
     getOpenPickerButtonAriaLabel: () => '',
-  }) as UseFieldResponse<TEnableAccessibleFieldDOMStructure, TForwardedProps>;
+  }) as UseFieldResponse<TEnableAccessibleFieldDOMStructure, typeof allProps>;
+
+  React.useEffect(() => {
+    if (!pickerContext?.open || pickerContext?.variant === 'mobile') {
+      return;
+    }
+
+    fieldPrivateContext?.fieldRef.current?.focusField();
+    if (
+      !fieldPrivateContext?.fieldRef.current ||
+      pickerContext.view === pickerContext.initialView
+    ) {
+      // could happen when the user is switching between the inputs
+      previousRangePosition.current = rangePosition;
+      return;
+    }
+
+    // bring back focus to the field
+    fieldPrivateContext?.fieldRef.current.setSelectedSections(
+      // use the current view or `0` when the range position has just been swapped
+      previousRangePosition.current === rangePosition ? pickerContext.view : 0,
+    );
+    previousRangePosition.current = rangePosition;
+  }, [
+    rangePosition,
+    pickerContext?.open,
+    pickerContext?.variant,
+    pickerContext?.initialView,
+    pickerContext?.view,
+    fieldPrivateContext?.fieldRef,
+  ]);
 
   return fieldResponse;
 }
 
-interface UseMultiInputRangeFieldTextFieldPropsParameters<TManager extends PickerAnyRangeManager> {
+interface UseMultiInputRangeFieldTextFieldPropsParameters<
+  TManager extends PickerAnyRangeManager,
+  TForwardedProps extends UseMultiInputRangeFieldTextFieldBaseForwardedProps,
+> {
   valueType: PickerValueType;
-  fieldProps: PickerManagerFieldInternalProps<GetDerivedManager<TManager>>;
+  props: PickerManagerFieldInternalProps<GetDerivedManager<TManager>> & TForwardedProps;
   position: RangePosition;
+}
+
+type UseMultiInputRangeFieldTextFieldPropsReturnValue<
+  TManager extends PickerAnyRangeManager,
+  TForwardedProps extends UseMultiInputRangeFieldTextFieldBaseForwardedProps,
+> = Omit<
+  UseFieldResponse<
+    PickerManagerEnableAccessibleFieldDOMStructure<TManager>,
+    TForwardedProps & {
+      onKeyDown: React.KeyboardEventHandler;
+      onClick: React.MouseEventHandler;
+      onFocus: React.FocusEventHandler;
+      id: string;
+    }
+  >,
+  'onClear' | 'clearable'
+>;
+
+export interface UseMultiInputRangeFieldTextFieldBaseForwardedProps {
+  onKeyDown?: React.KeyboardEventHandler;
+  onClick?: React.MouseEventHandler;
+  onFocus?: React.FocusEventHandler;
+  [key: string]: any;
 }
 
 type GetDerivedManager<TManager extends PickerAnyRangeManager> =

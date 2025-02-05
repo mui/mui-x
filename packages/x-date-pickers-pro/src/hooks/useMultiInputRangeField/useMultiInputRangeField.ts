@@ -11,10 +11,12 @@ import {
   useControlledValueWithTimezone,
   useFieldInternalPropsWithDefaults,
   UseFieldResponse,
-  usePickerPrivateContext,
 } from '@mui/x-date-pickers/internals';
 import { useValidation } from '@mui/x-date-pickers/validation';
-import { useMultiInputRangeFieldTextFieldProps } from './useMultiInputRangeFieldTextFieldProps';
+import {
+  UseMultiInputRangeFieldTextFieldBaseForwardedProps,
+  useMultiInputRangeFieldTextFieldProps,
+} from './useMultiInputRangeFieldTextFieldProps';
 import { useMultiInputRangeFieldSelectedSections } from './useMultiInputRangeFieldSelectedSections';
 import { PickerAnyRangeManager } from '../../internals/models/managers';
 import {
@@ -60,7 +62,7 @@ import {
  */
 export function useMultiInputRangeField<
   TManager extends PickerAnyRangeManager,
-  TTextFieldProps extends { [key: string]: any },
+  TTextFieldProps extends UseMultiInputRangeFieldTextFieldBaseForwardedProps,
   TRootProps extends { [key: string]: any },
 >(
   parameters: UseMultiInputRangeFieldParameters<TManager, TTextFieldProps, TRootProps>,
@@ -92,8 +94,6 @@ export function useMultiInputRangeField<
     unstableStartFieldRef,
     unstableEndFieldRef,
   } = internalPropsWithDefaults;
-
-  const pickerPrivateContext = usePickerPrivateContext();
 
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
     name: 'useMultiInputRangeField',
@@ -152,7 +152,7 @@ export function useMultiInputRangeField<
   const startTextFieldResponse = useMultiInputRangeFieldTextFieldProps<TManager, TTextFieldProps>({
     valueType: manager.valueType,
     position: 'start',
-    fieldProps: {
+    props: {
       error: !!validationError[0],
       ...startTextFieldProps,
       ...selectedSectionsResponse.start,
@@ -161,14 +161,13 @@ export function useMultiInputRangeField<
       defaultValue: defaultValue === undefined ? undefined : defaultValue[0],
       onChange: handleStartDateChange,
       autoFocus,
-      id: `${pickerPrivateContext.labelId}-start`,
     },
   });
 
   const endTextFieldResponse = useMultiInputRangeFieldTextFieldProps<TManager, TTextFieldProps>({
     valueType: manager.valueType,
     position: 'end',
-    fieldProps: {
+    props: {
       error: !!validationError[1],
       ...endTextFieldProps,
       ...selectedSectionsResponse.end,
@@ -176,8 +175,6 @@ export function useMultiInputRangeField<
       value: valueProp === undefined ? undefined : valueProp[1],
       defaultValue: defaultValue === undefined ? undefined : defaultValue[1],
       onChange: handleEndDateChange,
-      autoFocus: false,
-      id: `${pickerPrivateContext.labelId}-end`,
     },
   });
 

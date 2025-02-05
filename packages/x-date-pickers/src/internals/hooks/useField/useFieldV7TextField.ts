@@ -255,8 +255,8 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
     updateValueFromValueStr(pastedValue);
   });
 
-  const handleContainerFocus = useEventCallback((...args) => {
-    onFocus?.(...(args as []));
+  const handleContainerFocus = useEventCallback((event: React.FocusEvent) => {
+    onFocus?.(event);
 
     if (focused || !sectionListRef.current) {
       return;
@@ -273,8 +273,8 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
     }
   });
 
-  const handleContainerBlur = useEventCallback((...args) => {
-    onBlur?.(...(args as []));
+  const handleContainerBlur = useEventCallback((event: React.FocusEvent) => {
+    onBlur?.(event);
     setTimeout(() => {
       if (!sectionListRef.current) {
         return;

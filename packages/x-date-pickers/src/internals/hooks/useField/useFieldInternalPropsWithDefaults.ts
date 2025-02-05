@@ -27,7 +27,7 @@ export function useFieldInternalPropsWithDefaults<TManager extends PickerAnyMana
 
   const handleFieldRef = useForkRef(
     internalProps.unstableFieldRef,
-    skipContextFieldRefAssignment ? null : fieldPrivateContext?.internalFieldRef,
+    skipContextFieldRefAssignment ? null : fieldPrivateContext?.fieldRef,
   );
 
   const setValue = pickerContext?.setValue;
@@ -86,7 +86,7 @@ interface UseFieldInternalPropsWithDefaultsParameters<TManager extends PickerAny
   manager: TManager;
   internalProps: PickerManagerFieldInternalProps<TManager>;
   /**
-   * Hack to make sure that on multi input range field, the `useNullableFieldPrivateContext().internalFieldRef` is only bound to the field matching the range position.
+   * Hack to make sure that on multi input range field, the `useNullableFieldPrivateContext().fieldRef` is only bound to the field matching the range position.
    * @default false
    */
   skipContextFieldRefAssignment?: boolean;

@@ -166,7 +166,7 @@ export interface UsePickerViewsPrivateContextValue {
 }
 
 export interface UsePickerViewsFieldPrivateContextValue {
-  internalFieldRef: React.RefObject<FieldRef<PickerValue> | FieldRef<PickerRangeValue> | null>;
+  fieldRef: React.RefObject<FieldRef<PickerValue> | FieldRef<PickerRangeValue> | null>;
 }
 
 export interface UsePickerViewsProviderParams<TView extends DateOrTimeViewWithMeridiem> {
@@ -316,7 +316,7 @@ export const usePickerViews = <
   );
 
   const fieldPrivateContextValue = React.useMemo<UsePickerViewsFieldPrivateContextValue>(
-    () => ({ internalFieldRef: fieldRef }),
+    () => ({ fieldRef }),
     [],
   );
 

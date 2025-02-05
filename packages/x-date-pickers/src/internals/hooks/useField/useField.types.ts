@@ -149,9 +149,9 @@ export type UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure extends bo
 
 export interface UseFieldV6ForwardedProps {
   inputRef?: React.Ref<HTMLInputElement>;
-  onBlur?: () => void;
+  onBlur?: React.FocusEventHandler;
   onClick?: React.MouseEventHandler;
-  onFocus?: () => void;
+  onFocus?: React.FocusEventHandler;
   onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
   placeholder?: string;
 }
@@ -169,9 +169,9 @@ interface UseFieldV6AdditionalProps
 export interface UseFieldV7ForwardedProps {
   focused?: boolean;
   sectionListRef?: React.Ref<PickersSectionListRef>;
-  onBlur?: () => void;
+  onBlur?: React.FocusEventHandler;
   onClick?: React.MouseEventHandler;
-  onFocus?: () => void;
+  onFocus?: React.FocusEventHandler;
   onInput?: React.FormEventHandler<HTMLDivElement>;
   onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
 }
