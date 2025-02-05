@@ -11,11 +11,13 @@ import { ElementSize } from '../../../models';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiOptionHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
+import { createSelector } from '../../../utils/createSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridDimensions, GridDimensionsApi, GridDimensionsPrivateApi } from './gridDimensionsApi';
 import {
-  gridColumnsTotalWidthSelector,
+  gridColumnPositionsSelector,
+  gridVisibleColumnDefinitionsSelector,
   gridVisiblePinnedColumnDefinitionsSelector,
 } from '../columns';
 import { gridDimensionsSelector } from './gridDimensionsSelectors';
@@ -96,13 +98,28 @@ export const dimensionsStateInitializer: GridStateInitializer<RootProps> = (
   };
 };
 
+export const columnsTotalWidthSelector = createSelector(
+  gridVisibleColumnDefinitionsSelector,
+  gridColumnPositionsSelector,
+  (visibleColumns, positions) => {
+    const colCount = visibleColumns.length;
+    if (colCount === 0) {
+      return 0;
+    }
+    return roundToDecimalPlaces(
+      positions[colCount - 1] + visibleColumns[colCount - 1].computedWidth,
+      1,
+    );
+  },
+);
+
 export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, props: RootProps) {
   const logger = useGridLogger(apiRef, 'useResizeContainer');
   const errorShown = React.useRef(false);
   const rootDimensionsRef = React.useRef(EMPTY_SIZE);
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
-  const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
+  const columnsTotalWidth = useGridSelector(apiRef, columnsTotalWidthSelector);
   const isFirstSizing = React.useRef(true);
 
   const {
@@ -404,7 +421,7 @@ function getStaticDimensions(
     headerFilterHeight: Math.floor(
       (props.headerFilterHeight ?? props.columnHeaderHeight) * density,
     ),
-    columnsTotalWidth: gridColumnsTotalWidthSelector(apiRef),
+    columnsTotalWidth: columnsTotalWidthSelector(apiRef),
     headersTotalHeight: getTotalHeaderHeight(apiRef, props),
     leftPinnedWidth: pinnedColumnns.left.reduce((w, col) => w + col.computedWidth, 0),
     rightPinnedWidth: pinnedColumnns.right.reduce((w, col) => w + col.computedWidth, 0),

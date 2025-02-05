@@ -16,7 +16,7 @@ import {
   useGridSelector,
 } from '../hooks';
 import { PinnedColumnPosition } from '../internals/constants';
-import { gridDimensionsColumnsTotalWidthSelector } from '../hooks/features/dimensions/gridDimensionsSelectors';
+import { gridColumnsTotalWidthSelector } from '../hooks/features/dimensions/gridDimensionsSelectors';
 import { GridEventListener } from '../models';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { getDataGridUtilityClass, gridClasses } from '../constants/gridClasses';
@@ -64,7 +64,7 @@ const GridSkeletonLoadingOverlay = forwardRef<HTMLDivElement, React.HTMLAttribut
     const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
     const viewportHeight = dimensions?.viewportInnerSize.height ?? 0;
     const skeletonRowsCount = Math.ceil(viewportHeight / dimensions.rowHeight);
-    const totalWidth = useGridSelector(apiRef, gridDimensionsColumnsTotalWidthSelector);
+    const totalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
     const positions = useGridSelector(apiRef, gridColumnPositionsSelector);
     const inViewportCount = React.useMemo(
       () => positions.filter((value) => value <= totalWidth).length,

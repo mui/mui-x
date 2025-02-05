@@ -10,7 +10,7 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEventListener } from '../../../models/events';
 import { GridColumnHeaderItem } from '../../../components/columnHeaders/GridColumnHeaderItem';
 import {
-  gridDimensionsColumnsTotalWidthSelector,
+  gridColumnsTotalWidthSelector,
   gridGroupHeaderHeightSelector,
   gridHasFillerSelector,
   gridHeaderHeightSelector,
@@ -111,7 +111,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
   const columnsLookup = useGridSelector(apiRef, gridColumnLookupSelector);
   const offsetLeft = computeOffsetLeft(columnPositions, renderContext, pinnedColumns.left.length);
-  const columnsTotalWidth = useGridSelector(apiRef, gridDimensionsColumnsTotalWidthSelector);
+  const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
   const gridHasFiller = useGridSelector(apiRef, gridHasFillerSelector);
   const headerHeight = useGridSelector(apiRef, gridHeaderHeightSelector);
   const groupHeaderHeight = useGridSelector(apiRef, gridGroupHeaderHeightSelector);

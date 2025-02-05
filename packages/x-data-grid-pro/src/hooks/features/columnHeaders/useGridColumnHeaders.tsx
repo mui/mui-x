@@ -8,7 +8,7 @@ import {
   GridFilterItem,
 } from '@mui/x-data-grid';
 import {
-  gridDimensionsColumnsTotalWidthSelector,
+  gridColumnsTotalWidthSelector,
   gridHasFillerSelector,
   gridHeaderFilterHeightSelector,
   gridVerticalScrollbarWidthSelector,
@@ -73,7 +73,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const classes = useUtilityClasses(rootProps);
   const disableHeaderFiltering = !rootProps.headerFilters;
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
-  const columnsTotalWidth = useGridSelector(apiRef, gridDimensionsColumnsTotalWidthSelector);
+  const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
   const gridHasFiller = useGridSelector(apiRef, gridHasFillerSelector);
   const headerFilterHeight = useGridSelector(apiRef, gridHeaderFilterHeightSelector);
   const scrollbarWidth = useGridSelector(apiRef, gridVerticalScrollbarWidthSelector);

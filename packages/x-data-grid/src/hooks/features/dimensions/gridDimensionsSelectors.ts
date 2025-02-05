@@ -1,11 +1,18 @@
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { createSelector } from '../../../utils/createSelector';
 
 export const gridDimensionsSelector = (state: GridStateCommunity) => state.dimensions;
 
-export const gridRowHeightSelector = (state: GridStateCommunity) => state.dimensions.rowHeight;
+/**
+ * Get the summed width of all the visible columns.
+ * @category Visible Columns
+ */
+export const gridColumnsTotalWidthSelector = createSelector(
+  gridDimensionsSelector,
+  (dimensions) => dimensions.columnsTotalWidth,
+);
 
-export const gridDimensionsColumnsTotalWidthSelector = (state: GridStateCommunity) =>
-  state.dimensions.columnsTotalWidth;
+export const gridRowHeightSelector = (state: GridStateCommunity) => state.dimensions.rowHeight;
 
 export const gridContentHeightSelector = (state: GridStateCommunity) =>
   state.dimensions.contentSize.height;

@@ -6,7 +6,6 @@ import {
   EMPTY_PINNED_COLUMN_FIELDS,
 } from './gridColumnsInterfaces';
 import { gridIsRtlSelector } from '../../core/gridCoreSelector';
-import { roundToDecimalPlaces } from '../../../utils/roundToDecimalPlaces';
 
 /**
  * Get the columns state
@@ -147,25 +146,6 @@ export const gridColumnPositionsSelector = createSelectorMemoized(
     }
 
     return positions;
-  },
-);
-
-/**
- * Get the summed width of all the visible columns.
- * @category Visible Columns
- */
-export const gridColumnsTotalWidthSelector = createSelector(
-  gridVisibleColumnDefinitionsSelector,
-  gridColumnPositionsSelector,
-  (visibleColumns, positions) => {
-    const colCount = visibleColumns.length;
-    if (colCount === 0) {
-      return 0;
-    }
-    return roundToDecimalPlaces(
-      positions[colCount - 1] + visibleColumns[colCount - 1].computedWidth,
-      1,
-    );
   },
 );
 

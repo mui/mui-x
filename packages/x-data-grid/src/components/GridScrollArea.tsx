@@ -16,7 +16,7 @@ import { useGridApiEventHandler } from '../hooks/utils/useGridApiEventHandler';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import {
   gridDimensionsSelector,
-  gridDimensionsColumnsTotalWidthSelector,
+  gridColumnsTotalWidthSelector,
 } from '../hooks/features/dimensions/gridDimensionsSelectors';
 import { gridDensityFactorSelector } from '../hooks/features/density/densitySelector';
 import { GridScrollParams } from '../models/params/gridScrollParams';
@@ -100,7 +100,7 @@ function GridScrollAreaContent(props: ScrollAreaProps) {
   const apiRef = useGridApiContext();
   const timeout = useTimeout();
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
-  const columnsTotalWidth = useGridSelector(apiRef, gridDimensionsColumnsTotalWidthSelector);
+  const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
   const sideOffset = useGridSelector(apiRef, offsetSelector, scrollDirection);
 
   const getCanScrollMore = () => {

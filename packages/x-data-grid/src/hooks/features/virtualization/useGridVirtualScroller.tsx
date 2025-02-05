@@ -11,7 +11,7 @@ import { useRtl } from '@mui/system/RtlProvider';
 import reactMajor from '@mui/x-internals/reactMajor';
 import {
   gridDimensionsSelector,
-  gridDimensionsColumnsTotalWidthSelector,
+  gridColumnsTotalWidthSelector,
   gridContentHeightSelector,
   gridHasFillerSelector,
   gridRowHeightSelector,
@@ -133,7 +133,7 @@ export const useGridVirtualScroller = () => {
 
   const rowHeight = useGridSelector(apiRef, gridRowHeightSelector);
   const contentHeight = useGridSelector(apiRef, gridContentHeightSelector);
-  const columnsTotalWidth = useGridSelector(apiRef, gridDimensionsColumnsTotalWidthSelector);
+  const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
   const needsHorizontalScrollbar = useGridSelector(apiRef, needsHorizontalScrollbarSelector);
   const verticalScrollbarWidth = useGridSelector(apiRef, gridVerticalScrollbarWidthSelector);
   const gridHasFiller = useGridSelector(apiRef, gridHasFillerSelector);
