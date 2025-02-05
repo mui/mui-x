@@ -26,8 +26,8 @@ export function GridPinnedRows({ position, virtualScroller }: GridPinnedRowsProp
     () => ({
       firstRowIndex: 0,
       lastRowIndex: rows.length,
-      firstColumnIndex: undefined,
-      lastColumnIndex: undefined,
+      firstColumnIndex: -1,
+      lastColumnIndex: -1,
     }),
     [rows],
   );

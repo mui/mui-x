@@ -398,12 +398,7 @@ export const useGridVirtualScroller = () => {
     params: {
       rows?: GridRowEntry[];
       position?: GridPinnedRowsPosition;
-      renderContext?:
-        | GridRenderContext
-        | (Pick<GridRenderContext, 'firstRowIndex' | 'lastRowIndex'> & {
-            firstColumnIndex: undefined;
-            lastColumnIndex: undefined;
-          });
+      renderContext?: GridRenderContext;
     } = {},
   ) => {
     if (!params.rows && !currentPage.range) {
