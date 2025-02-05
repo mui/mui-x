@@ -150,22 +150,6 @@ export const gridColumnPositionsSelector = createSelectorMemoized(
 );
 
 /**
- * Get the summed width of all the visible columns.
- * @category Visible Columns
- */
-export const gridColumnsTotalWidthSelector = createSelector(
-  gridVisibleColumnDefinitionsSelector,
-  gridColumnPositionsSelector,
-  (visibleColumns, positions) => {
-    const colCount = visibleColumns.length;
-    if (colCount === 0) {
-      return 0;
-    }
-    return positions[colCount - 1] + visibleColumns[colCount - 1].computedWidth;
-  },
-);
-
-/**
  * Get the filterable columns as an array.
  * @category Columns
  */
