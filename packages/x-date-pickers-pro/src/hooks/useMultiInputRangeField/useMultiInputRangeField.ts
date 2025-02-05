@@ -36,18 +36,19 @@ import {
  * function MultiInputField(props) {
  *   const manager = useDateRangeManager();
  *   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
- *   const { startDate, endDate } = useMultiInputRangeField({
+ *   const response = useMultiInputRangeField({
  *     manager,
  *     internalProps,
- *     startForwardedProps: forwardedProps,
- *     endForwardedProps: forwardedProps,
+ *     startTextFieldProps: {},
+ *     endTextFieldProps: {},
+ *     rootProps: forwardedProps,
  *   });
  *
  *   return (
- *     <Box {...forwardedProps}>
- *       <PickersTextField {...startDate} />
+ *     <Box {...response.root}>
+ *       <PickersTextField {...response.startTextField} />
  *       <span>{' – '}</span>
- *       <PickersTextField {...endDate} />
+ *       <PickersTextField {...response.endTextField} />
  *     </Box>
  *   );
  * }

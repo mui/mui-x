@@ -140,11 +140,9 @@ function BrowserMultiInputDateRangeField(
 
   return (
     <Stack {...fieldResponse.root}>
-      <BrowserTextField
-        {...(fieldResponse.startTextField as BrowserTextFieldProps)}
-      />
+      <BrowserTextField {...fieldResponse.startTextField} />
       <span>–</span>
-      <BrowserTextField {...(fieldResponse.endTextField as BrowserTextFieldProps)} />
+      <BrowserTextField {...fieldResponse.endTextField} />
     </Stack>
   );
 }
