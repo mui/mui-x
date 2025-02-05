@@ -45,7 +45,7 @@ export const useChartContainerProps = <
     seriesConfig,
     plugins,
     ...other
-  } = props as ChartContainerProps<TSeries, TSignatures>;
+  } = props as ChartContainerProps<TSeries, AllPluginSignatures>;
 
   const chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> } = {
     title,

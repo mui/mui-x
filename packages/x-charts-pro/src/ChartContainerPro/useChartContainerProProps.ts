@@ -27,7 +27,8 @@ export const useChartContainerProProps = <
   props: ChartContainerProProps<TSeries, TSignatures>,
   ref: React.Ref<SVGSVGElement>,
 ): UseChartContainerProPropsReturnValue<TSeries, TSignatures> => {
-  const { initialZoom, onZoomChange, plugins, apiRef, ...baseProps } = props;
+  const { initialZoom, onZoomChange, plugins, apiRef, ...baseProps } =
+    props as ChartContainerProProps<TSeries, AllPluginSignatures>;
 
   const { chartDataProviderProps, chartsSurfaceProps, children } = useChartContainerProps<TSeries>(
     baseProps,
