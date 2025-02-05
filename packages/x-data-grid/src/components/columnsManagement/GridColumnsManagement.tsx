@@ -272,6 +272,8 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
       <GridColumnsManagementBody className={classes.root} ownerState={rootProps}>
         {currentColumns.map((column) => (
           <rootProps.slots.baseCheckbox
+            key={column.field}
+            className={classes.row}
             disabled={column.hideable === false}
             checked={columnVisibilityModel[column.field] !== false}
             onClick={toggleColumn}

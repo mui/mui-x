@@ -122,12 +122,13 @@ const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
 export default materialSlots;
 
 function BaseCheckbox(props: GridSlotProps['baseCheckbox']) {
-  const { label, slotProps, ...other } = props;
+  const { label, slotProps, className, ...other } = props;
   if (!label) {
-    return <MUICheckbox {...other} inputProps={slotProps?.htmlInput} />;
+    return <MUICheckbox {...other} className={className} inputProps={slotProps?.htmlInput} />;
   }
   return (
     <MUIFormControlLabel
+      className={className}
       control={<MUICheckbox {...other} inputProps={slotProps?.htmlInput} />}
       label={label}
     />
