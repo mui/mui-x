@@ -7,8 +7,11 @@ import { ChartSeriesType } from '../models/seriesType/config';
 import { ALL_PLUGINS, AllPluginSignatures, AllPluginsType } from '../internals/plugins/allPlugins';
 import { ChartAnyPluginSignature } from '../internals/plugins/models';
 
-export type UseChartContainerPropsReturnValue<TSeries extends ChartSeriesType> = {
-  chartDataProviderProps: ChartDataProviderProps<TSeries, AllPluginSignatures<TSeries>>;
+export type UseChartContainerPropsReturnValue<
+  TSeries extends ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+> = {
+  chartDataProviderProps: ChartDataProviderProps<TSeries, TSignatures>;
   chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> };
   children: React.ReactNode;
 };

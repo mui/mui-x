@@ -27,6 +27,12 @@ export * from './store/useCharts';
 export * from './store/useStore';
 export * from './store/useSelector';
 
+// plugins configs
+
+export * from '../BarChart/plugins';
+export * from '../LineChart/plugins';
+export * from '../ScatterChart/plugins';
+
 // utils
 export * from './defaultizeValueFormatter';
 export * from './configInit';

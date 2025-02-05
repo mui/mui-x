@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useCharts } from '../../internals/store/useCharts';
-import { ChartProviderProps } from './ChartProvider.types';
+import type { ChartProviderProps } from './ChartProvider.types';
 import { ChartContext } from './ChartContext';
 import {
   ChartAnyPluginSignature,

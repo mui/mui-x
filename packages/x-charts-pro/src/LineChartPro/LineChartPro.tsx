@@ -20,11 +20,17 @@ import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import { useLineChartProps, ChartsWrapper } from '@mui/x-charts/internals';
+import {
+  useLineChartProps,
+  ChartsWrapper,
+  LineChartPluginsSignatures,
+  LINE_CHART_PLUGINS,
+} from '@mui/x-charts/internals';
 import { ChartContainerProProps } from '../ChartContainerPro';
 import { useIsZoomInteracting } from '../hooks/zoom';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
+import { useChartProZoom, UseChartProZoomSignature } from '../internals/plugins/useChartProZoom';
 
 function AreaPlotZoom(props: AreaPlotProps) {
   const isInteracting = useIsZoomInteracting();
@@ -129,6 +135,9 @@ export interface LineChartProProps
   extends Omit<LineChartProps, 'apiRef'>,
     Omit<ChartContainerProProps<'line'>, 'series' | 'plugins' | 'seriesConfig'> {}
 
+const LINE_CHART_PRO_PLUGINS = [...LINE_CHART_PLUGINS, useChartProZoom] as const;
+type LineChartProPluginsSignatures = [...LineChartPluginsSignatures, UseChartProZoomSignature];
+
 /**
  * Demos:
  *
@@ -161,8 +170,11 @@ const LineChartPro = React.forwardRef(function LineChartPro(
     legendProps,
     children,
   } = useLineChartProps(other);
-  const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps(
-    { ...chartContainerProps, initialZoom, onZoomChange, apiRef },
+  const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
+    'line',
+    LineChartProPluginsSignatures
+  >(
+    { ...chartContainerProps, initialZoom, onZoomChange, apiRef, plugins: LINE_CHART_PRO_PLUGINS },
     ref,
   );
 

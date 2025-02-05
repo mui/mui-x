@@ -25,6 +25,7 @@ import { ChartDataProvider } from '../ChartDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
 import { ChartsWrapper } from '../internals/components/ChartsWrapper';
+import { BarChartPluginsSignatures } from './plugins';
 
 export interface BarChartSlots
   extends ChartsAxisSlots,
@@ -40,7 +41,10 @@ export interface BarChartSlotProps
     ChartsTooltipSlotProps {}
 
 export interface BarChartProps
-  extends Omit<ChartContainerProps<'bar'>, 'series' | 'plugins' | 'zAxis'>,
+  extends Omit<
+      ChartContainerProps<'bar', BarChartPluginsSignatures>,
+      'series' | 'plugins' | 'zAxis'
+    >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<BarPlotProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
