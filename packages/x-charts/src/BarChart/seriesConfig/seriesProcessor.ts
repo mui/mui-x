@@ -1,19 +1,20 @@
 import { stack as d3Stack } from '@mui/x-charts-vendor/d3-shape';
 import { warnOnce } from '@mui/x-internals/warning';
 import { DefaultizedProps } from '@mui/x-internals/types';
-import { getStackingGroups } from '../internals/stackSeries';
-import { ChartSeries, DatasetElementType, DatasetType } from '../models/seriesType/config';
-import { defaultizeValueFormatter } from '../internals/defaultizeValueFormatter';
-import { SeriesId } from '../models/seriesType/common';
-import { SeriesProcessor } from '../internals/plugins/models';
+import { getStackingGroups } from '../../internals/stackSeries';
+import { ChartSeries, DatasetElementType, DatasetType } from '../../models/seriesType/config';
+import { defaultizeValueFormatter } from '../../internals/defaultizeValueFormatter';
+import { SeriesId } from '../../models/seriesType/common';
+import { SeriesProcessor } from '../../internals/plugins/models';
 
-// For now it's a copy past of bar charts formatter, but maybe will diverge later
-const formatter: SeriesProcessor<'line'> = (params, dataset) => {
+type BarDataset = DatasetType<number | null>;
+
+const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset) => {
   const { seriesOrder, series } = params;
-  const stackingGroups = getStackingGroups({ ...params, defaultStrategy: { stackOffset: 'none' } });
+  const stackingGroups = getStackingGroups(params);
 
   // Create a data set with format adapted to d3
-  const d3Dataset: DatasetType<number | null> = (dataset as DatasetType<number | null>) ?? [];
+  const d3Dataset: BarDataset = (dataset as BarDataset) ?? [];
   seriesOrder.forEach((id) => {
     const data = series[id].data;
     if (data !== undefined) {
@@ -24,21 +25,22 @@ const formatter: SeriesProcessor<'line'> = (params, dataset) => {
           d3Dataset[index][id] = value;
         }
       });
-    } else if (dataset === undefined && process.env.NODE_ENV !== 'production') {
+    } else if (dataset === undefined) {
       throw new Error(
         [
-          `MUI X: line series with id='${id}' has no data.`,
+          `MUI X: bar series with id='${id}' has no data.`,
           'Either provide a data property to the series or use the dataset prop.',
         ].join('\n'),
       );
     }
   });
 
-  const completedSeries: Record<SeriesId, DefaultizedProps<ChartSeries<'line'>, 'data'>> = {};
+  const completedSeries: { [id: string]: DefaultizedProps<ChartSeries<'bar'>, 'data' | 'layout'> } =
+    {};
 
   stackingGroups.forEach((stackingGroup) => {
+    const { ids, stackingOffset, stackingOrder } = stackingGroup;
     // Get stacked values, and derive the domain
-    const { ids, stackingOrder, stackingOffset } = stackingGroup;
     const stackedSeries = d3Stack<any, DatasetElementType<number | null>, SeriesId>()
       .keys(
         ids.map((id) => {
@@ -54,7 +56,8 @@ const formatter: SeriesProcessor<'line'> = (params, dataset) => {
     ids.forEach((id, index) => {
       const dataKey = series[id].dataKey;
       completedSeries[id] = {
-        labelMarkType: 'line',
+        layout: 'vertical',
+        labelMarkType: 'square',
         ...series[id],
         data: dataKey
           ? dataset!.map((data) => {
@@ -63,12 +66,12 @@ const formatter: SeriesProcessor<'line'> = (params, dataset) => {
                 if (process.env.NODE_ENV !== 'production') {
                   if (value !== null) {
                     warnOnce([
-                      `MUI X: Your dataset key "${dataKey}" is used for plotting line, but contains nonnumerical elements.`,
-                      'Line plots only support numbers and null values.',
+                      `MUI X: your dataset key "${dataKey}" is used for plotting bars, but contains nonnumerical elements.`,
+                      'Bar plots only support numbers and null values.',
                     ]);
                   }
                 }
-                return null;
+                return 0;
               }
               return value;
             })
@@ -85,4 +88,4 @@ const formatter: SeriesProcessor<'line'> = (params, dataset) => {
   };
 };
 
-export default formatter;
+export default seriesProcessor;
