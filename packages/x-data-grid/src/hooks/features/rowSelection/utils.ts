@@ -145,7 +145,7 @@ const getFilteredRowNodeSiblings = (
 
   const parentNode = tree[parent] as GridGroupNode;
 
-  return parentNode.children.filter((childId) => childId !== id && filteredRows[childId]);
+  return parentNode.children.filter((childId) => childId !== id && filteredRows[childId] !== false);
 };
 
 export const findRowsToSelect = (

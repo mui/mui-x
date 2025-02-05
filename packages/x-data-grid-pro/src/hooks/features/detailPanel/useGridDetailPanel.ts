@@ -29,9 +29,6 @@ import {
   GridDetailPanelState,
 } from './gridDetailPanelInterface';
 
-// FIXME: calling `api.updateDimensions()` here triggers a cycle where `updateDimensions` is
-// called 3 times when opening/closing a panel.
-
 export const detailPanelStateInitializer: GridStateInitializer<
   Pick<DataGridProProcessedProps, 'initialState' | 'detailPanelExpandedRowIds'>
 > = (state, props) => {
@@ -174,8 +171,6 @@ export const useGridDetailPanel = (
           },
         };
       });
-      apiRef.current.updateDimensions();
-      apiRef.current.forceUpdate();
     },
     [apiRef],
   );
@@ -199,7 +194,6 @@ export const useGridDetailPanel = (
           },
         };
       });
-      apiRef.current.updateDimensions();
 
       apiRef.current.requestPipeProcessorsApplication('rowHeight');
     },
@@ -240,6 +234,9 @@ export const useGridDetailPanel = (
   }, [apiRef, props.detailPanelExpandedRowIds]);
 
   const updateCachesAndForceUpdate = React.useCallback(() => {
+    if (!props.getDetailPanelContent) {
+      return;
+    }
     apiRef.current.setState((state) => {
       return {
         ...state,
@@ -254,16 +251,15 @@ export const useGridDetailPanel = (
         },
       };
     });
-    apiRef.current.updateDimensions?.();
     apiRef.current.forceUpdate();
   }, [apiRef, props.getDetailPanelContent, props.getDetailPanelHeight]);
 
   useGridApiEventHandler(apiRef, 'sortedRowsSet', updateCachesAndForceUpdate);
 
   const previousGetDetailPanelContentProp =
-    React.useRef<DataGridProProcessedProps['getDetailPanelContent']>(null);
+    React.useRef<DataGridProProcessedProps['getDetailPanelContent']>(undefined);
   const previousGetDetailPanelHeightProp =
-    React.useRef<DataGridProProcessedProps['getDetailPanelHeight']>(null);
+    React.useRef<DataGridProProcessedProps['getDetailPanelHeight']>(undefined);
 
   const updateCachesIfNeeded = React.useCallback(() => {
     if (
@@ -287,7 +283,6 @@ export const useGridDetailPanel = (
         },
       };
     });
-    apiRef.current.updateDimensions?.();
 
     previousGetDetailPanelContentProp.current = props.getDetailPanelContent;
     previousGetDetailPanelHeightProp.current = props.getDetailPanelHeight;
@@ -310,7 +305,8 @@ export const useGridDetailPanel = (
     [apiRef, expandedRowIds, updateCachesIfNeeded],
   );
 
-  useGridRegisterPipeProcessor(apiRef, 'rowHeight', addDetailHeight);
+  const enabled = props.getDetailPanelContent !== undefined;
+  useGridRegisterPipeProcessor(apiRef, 'rowHeight', addDetailHeight, enabled);
 
   const isFirstRender = React.useRef(true);
   if (isFirstRender.current) {
@@ -319,7 +315,6 @@ export const useGridDetailPanel = (
   React.useEffect(() => {
     if (!isFirstRender.current) {
       updateCachesIfNeeded();
-      apiRef.current.hydrateRowsMeta();
     }
     isFirstRender.current = false;
   }, [apiRef, updateCachesIfNeeded]);
