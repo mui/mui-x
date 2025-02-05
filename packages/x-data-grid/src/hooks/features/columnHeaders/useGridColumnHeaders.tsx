@@ -27,7 +27,6 @@ import {
 } from '../columns';
 import { GridGroupingStructure } from '../columnGrouping/gridColumnGroupsInterfaces';
 import { gridColumnGroupsUnwrappedModelSelector } from '../columnGrouping/gridColumnGroupsSelector';
-import { GridScrollbarFillerCell as ScrollbarFiller } from '../../../components/GridScrollbarFillerCell';
 import { getPinnedCellOffset } from '../../../internals/utils/getPinnedCellOffset';
 import { GridColumnHeaderSeparatorSides } from '../../../components/columnHeaders/GridColumnHeaderSeparator';
 import { gridClasses } from '../../../constants/gridClasses';
@@ -176,12 +175,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     leftOverflow: number,
     borderBottom: boolean = false,
   ) => {
-    const isPinnedRight = params?.position === PinnedColumnPosition.RIGHT;
     const isNotPinned = params?.position === undefined;
-
-    const hasScrollbarFiller =
-      (pinnedColumns.right.length > 0 && isPinnedRight) ||
-      (pinnedColumns.right.length === 0 && isNotPinned);
 
     const leftOffsetWidth = offsetLeft - leftOverflow;
 
@@ -196,14 +190,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
               gridClasses.filler,
               borderBottom && gridClasses['filler--borderBottom'],
             )}
-          />
-        )}
-        {hasScrollbarFiller && (
-          <ScrollbarFiller
-            header
-            pinnedRight={isPinnedRight}
-            borderBottom={borderBottom}
-            borderTop={false}
           />
         )}
       </React.Fragment>

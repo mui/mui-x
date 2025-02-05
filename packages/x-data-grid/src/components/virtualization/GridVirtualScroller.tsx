@@ -17,7 +17,7 @@ import { GridBottomContainer as BottomContainer } from './GridBottomContainer';
 import { GridVirtualScrollerContent as Content } from './GridVirtualScrollerContent';
 import { GridVirtualScrollerFiller as SpaceFiller } from './GridVirtualScrollerFiller';
 import { GridVirtualScrollerRenderZone as RenderZone } from './GridVirtualScrollerRenderZone';
-import { GridVirtualScrollbar as Scrollbar } from './GridVirtualScrollbar';
+import { GridVirtualScrollbar as Scrollbar, ScrollbarCorner } from './GridVirtualScrollbar';
 import { GridLoadingOverlayVariant } from '../GridLoadingOverlay';
 
 type OwnerState = Pick<DataGridProcessedProps, 'classes'> & {
@@ -127,6 +127,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
         <Scrollbar position="horizontal" {...getScrollbarHorizontalProps()} />
       )}
       {dimensions.hasScrollY && <Scrollbar position="vertical" {...getScrollbarVerticalProps()} />}
+      {dimensions.hasScrollX && dimensions.hasScrollY && <ScrollbarCorner />}
       {props.children}
     </Container>
   );
