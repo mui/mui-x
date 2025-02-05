@@ -96,6 +96,7 @@ const defaultProps = {
   disableLine: false,
   disableTicks: false,
   tickSize: 6,
+  offset: 0,
 } as const;
 
 /**
@@ -136,6 +137,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickPlacement,
     tickLabelPlacement,
     sx,
+    offset,
   } = defaultizedProps;
 
   const theme = useTheme();
@@ -212,7 +214,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   }
   return (
     <XAxisRoot
-      transform={`translate(0, ${position === 'bottom' ? top + height : top})`}
+      transform={`translate(0, ${position === 'bottom' ? top + height + offset : top - offset})`}
       className={classes.root}
       sx={sx}
     >
@@ -220,36 +222,42 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
         <Line x1={left} x2={left + width} className={classes.line} {...slotProps?.axisLine} />
       )}
 
-      {xTicksWithDimension.map(({ formattedValue, offset, labelOffset, skipLabel }, index) => {
-        const xTickLabel = labelOffset ?? 0;
-        const yTickLabel = positionSign * (tickSize + 3);
+      {xTicksWithDimension.map(
+        ({ formattedValue, offset: tickOffset, labelOffset, skipLabel }, index) => {
+          const xTickLabel = labelOffset ?? 0;
+          const yTickLabel = positionSign * (tickSize + 3);
 
-        const showTick = instance.isPointInside({ x: offset, y: -1 }, { direction: 'x' });
-        const showTickLabel = instance.isPointInside(
-          { x: offset + xTickLabel, y: -1 },
-          { direction: 'x' },
-        );
-        return (
-          <g key={index} transform={`translate(${offset}, 0)`} className={classes.tickContainer}>
-            {!disableTicks && showTick && (
-              <Tick
-                y2={positionSign * tickSize}
-                className={classes.tick}
-                {...slotProps?.axisTick}
-              />
-            )}
+          const showTick = instance.isPointInside({ x: tickOffset, y: -1 }, { direction: 'x' });
+          const showTickLabel = instance.isPointInside(
+            { x: tickOffset + xTickLabel, y: -1 },
+            { direction: 'x' },
+          );
+          return (
+            <g
+              key={index}
+              transform={`translate(${tickOffset}, 0)`}
+              className={classes.tickContainer}
+            >
+              {!disableTicks && showTick && (
+                <Tick
+                  y2={positionSign * tickSize}
+                  className={classes.tick}
+                  {...slotProps?.axisTick}
+                />
+              )}
 
-            {formattedValue !== undefined && !skipLabel && showTickLabel && (
-              <TickLabel
-                x={xTickLabel}
-                y={yTickLabel}
-                {...axisTickLabelProps}
-                text={formattedValue.toString()}
-              />
-            )}
-          </g>
-        );
-      })}
+              {formattedValue !== undefined && !skipLabel && showTickLabel && (
+                <TickLabel
+                  x={xTickLabel}
+                  y={yTickLabel}
+                  {...axisTickLabelProps}
+                  text={formattedValue.toString()}
+                />
+              )}
+            </g>
+          );
+        },
+      )}
 
       {label && (
         <g className={classes.label}>

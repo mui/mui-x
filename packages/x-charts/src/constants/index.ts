@@ -7,9 +7,4 @@ export const DEFAULT_MARGINS = {
   right: 20,
 };
 export const DEFAULT_LEGEND_FACING_MARGIN = 20;
-export const DEFAULT_AXIS_SIZE = {
-  top: 30,
-  bottom: 30,
-  left: 30,
-  right: 30,
-};
+export const DEFAULT_AXIS_SIZE = 30;
