@@ -99,8 +99,8 @@ importers:
         specifier: ^5.16.14
         version: 5.16.14(@emotion/react@11.14.0(@types/react@19.0.6)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.6)(react@19.0.0))(@types/react@19.0.6)(react@19.0.0))(@types/react@19.0.6)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#5a862c088c52bcb57cebc8a9243d8434febfb551
-        version: https://codeload.github.com/mui/material-ui/tar.gz/5a862c088c52bcb57cebc8a9243d8434febfb551(encoding@0.1.13)
+        specifier: github:mui/material-ui#ec7db42a43be527f3c2fe2c4e7a18a5a91f6dd6b
+        version: https://codeload.github.com/mui/material-ui/tar.gz/ec7db42a43be527f3c2fe2c4e7a18a5a91f6dd6b(@babel/core@7.26.0)(encoding@0.1.13)
       '@mui/utils':
         specifier: ^5.16.14
         version: 5.16.14(@types/react@19.0.6)(react@19.0.0)
@@ -3105,6 +3105,7 @@ packages:
   '@mui/base@5.0.0-beta.40-0':
     resolution: {integrity: sha512-hG3atoDUxlvEy+0mqdMpWd04wca8HKr2IHjW/fAjlkCHQolSLazhZM46vnHjOf15M4ESu25mV/3PgjczyjVM4w==}
     engines: {node: '>=12.0.0'}
+    deprecated: This package has been replaced by @base-ui-components/react
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -3234,9 +3235,9 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/5a862c088c52bcb57cebc8a9243d8434febfb551':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/5a862c088c52bcb57cebc8a9243d8434febfb551}
-    version: 6.4.0
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/ec7db42a43be527f3c2fe2c4e7a18a5a91f6dd6b':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/ec7db42a43be527f3c2fe2c4e7a18a5a91f6dd6b}
+    version: 7.0.0-alpha.0
     engines: {pnpm: 9.15.4}
 
   '@mui/private-theming@5.16.14':
@@ -4876,6 +4877,11 @@ packages:
 
   babel-plugin-search-and-replace@1.1.1:
     resolution: {integrity: sha512-fjP2VTF3mxxOUnc96mdK22llH92A6gu7A5AFapJmgnqsQi3bqLduIRP0FpA2r5vRZOYPpnX4rE5izQlpsMBjSA==}
+
+  babel-plugin-transform-import-meta@2.3.2:
+    resolution: {integrity: sha512-902o4GiQqI1GqAXfD5rEoz0PJamUfJ3VllpdWaNsFTwdaNjFSFHawvBO+cp5K2j+g2h3bZ4lnM1Xb6yFYGihtA==}
+    peerDependencies:
+      '@babel/core': ^7.10.0
 
   babel-plugin-transform-react-remove-prop-types@0.4.24:
     resolution: {integrity: sha512-eqj0hVcJUR57/Ug2zE1Yswsw4LhuqqHhD+8v120T1cl3kjg76QwtyBrdIk4WVwK+lAhBJVYCd/v+4nc4y+8JsA==}
@@ -6652,8 +6658,8 @@ packages:
     resolution: {integrity: sha512-4kKdWXTtgQ4biIo7hZA396HT062nDVVHPjQcurNZ3o/voYN+o5FUC5kOwuORbpExp3XbTJ3SU7iRipiIhQtovw==}
     engines: {node: '>=14'}
 
-  google-auth-library@9.15.0:
-    resolution: {integrity: sha512-7ccSEJFDFO7exFbO6NRyC+xH8/mZ1GZGG2xxx9iHxZWcjUjJpjWxIMw3cofAKcueZ6DATiukmmprD7yavQHOyQ==}
+  google-auth-library@9.15.1:
+    resolution: {integrity: sha512-Jb6Z0+nvECVz+2lzSMt9u98UsoakXxA2HGHMCxh+so3n90XgYWkq5dur19JAJV7ONiJY22yBTyJB1TSkvPq9Ng==}
     engines: {node: '>=14'}
 
   googleapis-common@7.2.0:
@@ -7586,6 +7592,7 @@ packages:
 
   lodash.get@4.4.2:
     resolution: {integrity: sha512-z+Uw/vLuy6gQe8cfaFWD7p0wVv8fJl3mbzXh33RS+0oW2wvUqiRXiQ69gLWSLpgB5/6sU+r6BlQR0MBILadqTQ==}
+    deprecated: This package is deprecated. Use the optional chaining (?.) operator instead.
 
   lodash.groupby@4.6.0:
     resolution: {integrity: sha512-5dcWxm23+VAoz+awKmBaiBvzox8+RqMgFhi7UvX9DHZr2HdxHXM/Wrf8cfKpsW37RNrvtPn6hSwNqurSILbmJw==}
@@ -7601,6 +7608,7 @@ packages:
 
   lodash.isequal@4.5.0:
     resolution: {integrity: sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ==}
+    deprecated: This package is deprecated. Use require('node:util').isDeepStrictEqual instead.
 
   lodash.isfunction@3.0.9:
     resolution: {integrity: sha512-AirXNj15uRIMMPihnkInB4i3NHeb4iBtNg9WRWuK2o31S+ePwwNmDPaTL3o7dTJ+VXNZim7rFs4rxN4YU1oUJw==}
@@ -12281,14 +12289,16 @@ snapshots:
       '@emotion/styled': 11.14.0(@emotion/react@11.14.0(@types/react@19.0.6)(react@19.0.0))(@types/react@19.0.6)(react@19.0.0)
       '@types/react': 19.0.6
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/5a862c088c52bcb57cebc8a9243d8434febfb551(encoding@0.1.13)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/ec7db42a43be527f3c2fe2c4e7a18a5a91f6dd6b(@babel/core@7.26.0)(encoding@0.1.13)':
     dependencies:
       '@googleapis/sheets': 9.3.1(encoding@0.1.13)
       '@netlify/functions': 3.0.0
       '@slack/bolt': 4.2.0
+      babel-plugin-transform-import-meta: 2.3.2(@babel/core@7.26.0)
       execa: 9.5.2
-      google-auth-library: 9.15.0(encoding@0.1.13)
+      google-auth-library: 9.15.1(encoding@0.1.13)
     transitivePeerDependencies:
+      - '@babel/core'
       - bufferutil
       - debug
       - encoding
@@ -14204,6 +14214,12 @@ snapshots:
       lodash.isstring: 4.0.1
 
   babel-plugin-search-and-replace@1.1.1: {}
+
+  babel-plugin-transform-import-meta@2.3.2(@babel/core@7.26.0):
+    dependencies:
+      '@babel/core': 7.26.0
+      '@babel/template': 7.25.9
+      tslib: 2.8.1
 
   babel-plugin-transform-react-remove-prop-types@0.4.24: {}
 
@@ -16362,7 +16378,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  google-auth-library@9.15.0(encoding@0.1.13):
+  google-auth-library@9.15.1(encoding@0.1.13):
     dependencies:
       base64-js: 1.5.1
       ecdsa-sig-formatter: 1.0.11
@@ -16378,7 +16394,7 @@ snapshots:
     dependencies:
       extend: 3.0.2
       gaxios: 6.7.1(encoding@0.1.13)
-      google-auth-library: 9.15.0(encoding@0.1.13)
+      google-auth-library: 9.15.1(encoding@0.1.13)
       qs: 6.13.1
       url-template: 2.0.8
       uuid: 9.0.1
