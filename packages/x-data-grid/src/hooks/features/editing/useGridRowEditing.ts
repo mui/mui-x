@@ -328,7 +328,7 @@ export const useGridRowEditing = (
 
   const getRowMode = React.useCallback<GridRowEditingApi['getRowMode']>(
     (id) => {
-      const isEditing = gridRowIsEditingSelector(apiRef.current.state, {
+      const isEditing = gridRowIsEditingSelector(apiRef, {
         rowId: id,
         editMode: props.editMode,
       });

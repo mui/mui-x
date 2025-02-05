@@ -568,7 +568,7 @@ export const useGridCellSelection = (
       if (apiRef.current.getSelectedCellsAsArray().length <= 1) {
         return value;
       }
-      const sortedRowIds = gridSortedRowIdsSelector(apiRef.current.state);
+      const sortedRowIds = gridSortedRowIdsSelector(apiRef);
       const cellSelectionModel = apiRef.current.getCellSelectionModel();
       const unsortedSelectedRowIds = Object.keys(cellSelectionModel);
       const sortedSelectedRowIds = sortedRowIds.filter((id) =>

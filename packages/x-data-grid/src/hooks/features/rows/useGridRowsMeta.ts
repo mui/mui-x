@@ -31,7 +31,7 @@ export const rowsMetaStateInitializer: GridStateInitializer = (state, props, api
   };
 
   const baseRowHeight = gridRowHeightSelector(apiRef.current.state);
-  const dataRowCount = gridRowCountSelector(apiRef.current.state);
+  const dataRowCount = gridRowCountSelector(apiRef);
   const pagination = gridPaginationSelector(apiRef.current.state);
   const rowCount = Math.min(
     pagination.enabled ? pagination.paginationModel.pageSize : dataRowCount,

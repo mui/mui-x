@@ -12,7 +12,7 @@ import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass, gridClasses } from '../constants';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridApiEventHandler } from '../hooks/utils/useGridApiEventHandler';
-import { useGridSelector } from '../hooks/utils/useGridSelector';
+import { useGridSelector, useGridSelectorV8 } from '../hooks/utils/useGridSelector';
 import {
   gridDimensionsSelector,
   gridColumnsTotalWidthSelector,
@@ -22,7 +22,7 @@ import { GridScrollParams } from '../models/params/gridScrollParams';
 import { GridEventListener } from '../models/events';
 import { useTimeout } from '../hooks/utils/useTimeout';
 import { getTotalHeaderHeight } from '../hooks/features/columns/gridColumnsUtils';
-import { createSelector } from '../utils/createSelector';
+import { createSelectorV8 } from '../utils/createSelector';
 
 const CLIFF = 1;
 const SLOP = 1.5;
@@ -66,7 +66,7 @@ const GridScrollAreaRawRoot = styled('div', {
   },
 }));
 
-const offsetSelector = createSelector(
+const offsetSelector = createSelectorV8(
   gridDimensionsSelector,
   (dimensions, direction: ScrollAreaProps['scrollDirection']) => {
     if (direction === 'left') {
@@ -100,7 +100,7 @@ function GridScrollAreaContent(props: ScrollAreaProps) {
   const timeout = useTimeout();
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
-  const sideOffset = useGridSelector(apiRef, offsetSelector, scrollDirection);
+  const sideOffset = useGridSelectorV8(apiRef, offsetSelector, scrollDirection);
 
   const getCanScrollMore = () => {
     const dimensions = gridDimensionsSelector(apiRef.current.state);
