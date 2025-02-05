@@ -14,7 +14,6 @@ describeTreeView<[UseTreeViewLabelSignature]>(
         // This test is not relevant for the TreeItem component or the SimpleTreeView.
         it('should not render labelInput when double clicked if item is not editable', () => {
           const view = render({
-            experimentalFeatures: { labelEditing: true },
             items: [{ id: '1', editable: false }],
             isItemEditable: (item) => item.editable,
           });
@@ -28,7 +27,6 @@ describeTreeView<[UseTreeViewLabelSignature]>(
 
         it('should render labelInput when double clicked if item is editable', () => {
           const view = render({
-            experimentalFeatures: { labelEditing: true },
             items: [{ id: '1', editable: true }],
             isItemEditable: (item) => item.editable,
           });
@@ -42,7 +40,6 @@ describeTreeView<[UseTreeViewLabelSignature]>(
 
         it('should not render label when double clicked if item is editable', () => {
           const view = render({
-            experimentalFeatures: { labelEditing: true },
             items: [{ id: '1', editable: true }],
             isItemEditable: (item) => item.editable,
           });
@@ -56,7 +53,6 @@ describeTreeView<[UseTreeViewLabelSignature]>(
 
         it('should not render labelInput on Enter if item is not editable', () => {
           const view = render({
-            experimentalFeatures: { labelEditing: true },
             items: [{ id: '1', editable: false }],
             isItemEditable: (item) => item.editable,
           });
@@ -71,7 +67,6 @@ describeTreeView<[UseTreeViewLabelSignature]>(
 
         it('should render labelInput on Enter if item is editable', () => {
           const view = render({
-            experimentalFeatures: { labelEditing: true },
             items: [{ id: '1', editable: true }],
             isItemEditable: (item) => item.editable,
           });
@@ -85,7 +80,6 @@ describeTreeView<[UseTreeViewLabelSignature]>(
 
         it('should unmount labelInput after save', () => {
           const view = render({
-            experimentalFeatures: { labelEditing: true },
             items: [{ id: '1', label: 'test', editable: true }],
             isItemEditable: (item) => item.editable,
           });
@@ -101,7 +95,6 @@ describeTreeView<[UseTreeViewLabelSignature]>(
 
         it('should unmount labelInput after cancel', () => {
           const view = render({
-            experimentalFeatures: { labelEditing: true },
             items: [{ id: '1', label: 'test', editable: true }],
             isItemEditable: (item) => item.editable,
           });
@@ -119,7 +112,6 @@ describeTreeView<[UseTreeViewLabelSignature]>(
       describe('labelInput value', () => {
         it('should equal label value on first render', () => {
           const view = render({
-            experimentalFeatures: { labelEditing: true },
             items: [{ id: '1', label: 'test', editable: true }],
             isItemEditable: (item) => item.editable,
           });
@@ -133,7 +125,6 @@ describeTreeView<[UseTreeViewLabelSignature]>(
 
         it('should save new value on Enter', () => {
           const view = render({
-            experimentalFeatures: { labelEditing: true },
             items: [{ id: '1', label: 'test', editable: true }],
             isItemEditable: (item) => item.editable,
           });
@@ -149,7 +140,6 @@ describeTreeView<[UseTreeViewLabelSignature]>(
 
         it('should hold new value on render after save', () => {
           const view = render({
-            experimentalFeatures: { labelEditing: true },
             items: [{ id: '1', label: 'test', editable: true }],
             isItemEditable: (item) => item.editable,
           });
@@ -166,7 +156,6 @@ describeTreeView<[UseTreeViewLabelSignature]>(
 
         it('should hold initial value on render after cancel', () => {
           const view = render({
-            experimentalFeatures: { labelEditing: true },
             items: [{ id: '1', label: 'test', editable: true }],
             isItemEditable: (item) => item.editable,
           });
