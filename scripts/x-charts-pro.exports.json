@@ -54,7 +54,7 @@
   { "name": "CardinalDirections", "kind": "Interface" },
   { "name": "CartesianSeriesType", "kind": "TypeAlias" },
   { "name": "ChartContainerPro", "kind": "Variable" },
-  { "name": "ChartContainerProProps", "kind": "Interface" },
+  { "name": "ChartContainerProProps", "kind": "TypeAlias" },
   { "name": "ChartDataProvider", "kind": "Function" },
   { "name": "ChartDataProviderPro", "kind": "Function" },
   { "name": "ChartDataProviderProProps", "kind": "TypeAlias" },
