@@ -3,7 +3,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { BarPlotProps, BarChartProps, BarPlot } from '@mui/x-charts/BarChart';
-import { ChartsOnAxisClickHandler } from '@mui/x-charts/ChartsOnAxisClickHandler';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
@@ -12,16 +11,16 @@ import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { useBarChartProps, ChartsWrapper } from '@mui/x-charts/internals';
-import { ChartDataProvider } from '@mui/x-charts/context';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartContainerProProps } from '../ChartContainerPro';
 import { useIsZoomInteracting } from '../hooks/zoom';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
+import { ChartDataProviderPro } from '../ChartDataProviderPro';
 
 function BarChartPlotZoom(props: BarPlotProps) {
   const isInteracting = useIsZoomInteracting();
 
-  return <BarPlot {...props} skipAnimation={isInteracting || undefined} />;
+  return <BarPlot {...props} skipAnimation={isInteracting || props.skipAnimation} />;
 }
 
 BarChartPlotZoom.propTypes = {
@@ -89,7 +88,6 @@ const BarChartPro = React.forwardRef(function BarChartPro(
     chartsWrapperProps,
     chartContainerProps,
     barPlotProps,
-    axisClickHandlerProps,
     gridProps,
     clipPathProps,
     clipPathGroupProps,
@@ -101,23 +99,17 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   } = useBarChartProps(other);
 
   const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps(
-    { ...chartContainerProps, apiRef },
+    { ...chartContainerProps, initialZoom, onZoomChange, apiRef },
     ref,
   );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
 
   return (
-    <ChartDataProvider
-      {...chartDataProviderProProps}
-      apiRef={apiRef}
-      initialZoom={initialZoom}
-      onZoomChange={onZoomChange}
-    >
+    <ChartDataProviderPro {...chartDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps}>
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
-          {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
           <ChartsGrid {...gridProps} />
           <g {...clipPathGroupProps}>
             <BarChartPlotZoom {...barPlotProps} />
@@ -130,7 +122,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
           {children}
         </ChartsSurface>
       </ChartsWrapper>
-    </ChartDataProvider>
+    </ChartDataProviderPro>
   );
 });
 
@@ -206,11 +198,12 @@ BarChartPro.propTypes = {
    */
   hideLegend: PropTypes.bool,
   /**
-   * The item currently highlighted. Turns highlighting into a controlled prop.
+   * The highlighted item.
+   * Used when the highlight is controlled.
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.

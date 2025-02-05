@@ -32,7 +32,7 @@
     "highlightedItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string }"
+        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string }"
       }
     },
     "id": { "type": { "name": "string" } },
@@ -118,6 +118,8 @@
       "isGlobal": false
     }
   ],
+  "spread": true,
+  "themeDefaultProps": null,
   "muiName": "MuiHeatmap",
   "filename": "/packages/x-charts-pro/src/Heatmap/Heatmap.tsx",
   "inheritance": null,

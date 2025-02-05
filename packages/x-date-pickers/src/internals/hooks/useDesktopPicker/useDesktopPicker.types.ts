@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { MakeRequired, SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { BasePickerProps } from '../../models/props/basePickerProps';
 import {
-  BasePickerProps,
-  BaseNonRangeNonStaticPickerProps,
-} from '../../models/props/basePickerProps';
-import { PickersPopperSlots, PickersPopperSlotProps } from '../../components/PickersPopper';
+  PickerPopperSlots,
+  PickerPopperSlotProps,
+} from '../../components/PickerPopper/PickerPopper';
 import { UsePickerParams } from '../usePicker';
 import { PickerFieldSlotProps, PickerOwnerState } from '../../../models';
 import {
@@ -23,7 +23,7 @@ import { UsePickerProviderNonStaticProps } from '../usePicker/usePickerProvider'
 
 export interface UseDesktopPickerSlots
   extends Pick<
-      PickersPopperSlots,
+      PickerPopperSlots,
       'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper'
     >,
     ExportedPickersLayoutSlots<PickerValue>,
@@ -41,7 +41,7 @@ export interface UseDesktopPickerSlots
 
 export interface ExportedUseDesktopPickerSlotProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends PickersPopperSlotProps,
+> extends PickerPopperSlotProps,
     ExportedPickersLayoutSlotProps<PickerValue>,
     PickerFieldUISlotPropsFromContext {
   field?: SlotComponentPropsFromProps<
@@ -56,8 +56,7 @@ export interface UseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure ex
     Pick<PickersLayoutSlotProps<PickerValue>, 'toolbar'> {}
 
 export interface DesktopOnlyPickerProps
-  extends BaseNonRangeNonStaticPickerProps,
-    UsePickerValueNonStaticProps,
+  extends UsePickerValueNonStaticProps,
     UsePickerProviderNonStaticProps {
   /**
    * If `true`, the `input` element is focused during the first mount.
@@ -96,7 +95,7 @@ export interface UseDesktopPickerParams<
   >,
 > extends Pick<
     UsePickerParams<PickerValue, TView, TExternalProps>,
-    'valueManager' | 'valueType' | 'validator' | 'rendererInterceptor'
+    'valueManager' | 'valueType' | 'validator' | 'rendererInterceptor' | 'ref'
   > {
   props: TExternalProps;
 }

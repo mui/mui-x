@@ -5,7 +5,6 @@ import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPathProps } from '../ChartsClipPath';
 import { ChartsGridProps } from '../ChartsGrid';
 import { ChartsLegendSlotExtension } from '../ChartsLegend';
-import { ChartsOnAxisClickHandlerProps } from '../ChartsOnAxisClickHandler';
 import { ChartsOverlayProps } from '../ChartsOverlay';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { ChartContainerProps } from '../ChartContainer';
@@ -35,7 +34,6 @@ export const useLineChartProps = (props: LineChartProps) => {
     colors,
     dataset,
     sx,
-    onAxisClick,
     onAreaClick,
     onLineClick,
     onMarkClick,
@@ -55,7 +53,6 @@ export const useLineChartProps = (props: LineChartProps) => {
     highlightedItem,
     onHighlightChange,
     className,
-    experimentalMarkRendering,
     ...other
   } = props;
 
@@ -90,14 +87,9 @@ export const useLineChartProps = (props: LineChartProps) => {
     disableAxisListener:
       slotProps?.tooltip?.trigger !== 'axis' &&
       axisHighlight?.x === 'none' &&
-      axisHighlight?.y === 'none' &&
-      !onAxisClick,
+      axisHighlight?.y === 'none',
     className,
     skipAnimation,
-  };
-
-  const axisClickHandlerProps: ChartsOnAxisClickHandlerProps = {
-    onAxisClick,
   };
 
   const gridProps: ChartsGridProps = {
@@ -130,7 +122,6 @@ export const useLineChartProps = (props: LineChartProps) => {
     slotProps,
     onItemClick: onMarkClick,
     skipAnimation,
-    experimentalRendering: experimentalMarkRendering,
   };
 
   const overlayProps: ChartsOverlayProps = {
@@ -172,7 +163,6 @@ export const useLineChartProps = (props: LineChartProps) => {
   return {
     chartsWrapperProps,
     chartContainerProps,
-    axisClickHandlerProps,
     gridProps,
     clipPathProps,
     clipPathGroupProps,

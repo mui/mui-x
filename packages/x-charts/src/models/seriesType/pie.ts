@@ -9,7 +9,7 @@ export type PieValueType = {
   /**
    * A unique identifier of the pie slice.
    */
-  id: PieItemId;
+  id?: PieItemId;
   value: number;
   /**
    * The label to display on the tooltip, arc, or the legend. It can be a string or a function.
@@ -18,9 +18,6 @@ export type PieValueType = {
   color?: string;
   /**
    * Defines the mark type for the pie item.
-   *
-   * It allows custom values which will be passed to the mark component if it was customized.
-   *
    * @default 'circle'
    */
   labelMarkType?: ChartsLabelMarkProps['type'];

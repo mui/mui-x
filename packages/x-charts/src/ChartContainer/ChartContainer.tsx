@@ -2,14 +2,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { ChartSeriesType } from '../models/seriesType/config';
-import { ChartDataProvider, ChartDataProviderProps } from '../context/ChartDataProvider';
+import { ChartDataProvider, ChartDataProviderProps } from '../ChartDataProvider';
 import { useChartContainerProps } from './useChartContainerProps';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
 import { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { ChartAnyPluginSignature } from '../internals/plugins/models';
 
-export interface ChartContainerProps<SeriesType extends ChartSeriesType = ChartSeriesType>
-  extends Omit<ChartDataProviderProps<SeriesType, AllPluginSignatures<SeriesType>>, 'children'>,
-    ChartsSurfaceProps {}
+export type ChartContainerProps<
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
+> = Omit<ChartDataProviderProps<SeriesType, TSignatures>, 'children'> & ChartsSurfaceProps;
 
 /**
  * It sets up the data providers as well as the `<svg>` for the chart.
@@ -18,7 +20,7 @@ export interface ChartContainerProps<SeriesType extends ChartSeriesType = ChartS
  *
  * Demos:
  *
- * - [Composition](http://localhost:3001/x/react-charts/composition/)
+ * - [Composition](https://mui.com/x/api/charts/composition/)
  *
  * API:
  *
@@ -86,11 +88,12 @@ ChartContainer.propTypes = {
    */
   height: PropTypes.number,
   /**
-   * The item currently highlighted. Turns highlighting into a controlled prop.
+   * The highlighted item.
+   * Used when the highlight is controlled.
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.
@@ -108,6 +111,13 @@ ChartContainer.propTypes = {
     right: PropTypes.number,
     top: PropTypes.number,
   }),
+  /**
+   * The function called for onClick events.
+   * The second argument contains information about all line/bar elements at the current mouse position.
+   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
+   * @param {null | AxisData} data The data about the clicked axis and items associated with it.
+   */
+  onAxisClick: PropTypes.func,
   /**
    * The callback fired when the highlighted item changes.
    *

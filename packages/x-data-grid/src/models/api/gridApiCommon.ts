@@ -7,7 +7,7 @@ import { GridEditingApi, GridEditingPrivateApi } from './gridEditingApi';
 import type { GridFilterApi } from './gridFilterApi';
 import { GridFocusApi, GridFocusPrivateApi } from './gridFocusApi';
 import type { GridLocaleTextApi } from './gridLocaleTextApi';
-import type { GridParamsApi } from './gridParamsApi';
+import type { GridParamsApi, GridParamsPrivateApi } from './gridParamsApi';
 import { GridPreferencesPanelApi } from './gridPreferencesPanelApi';
 import { GridPrintExportApi } from './gridPrintExportApi';
 import { GridRowApi, GridRowProPrivateApi } from './gridRowApi';
@@ -83,7 +83,8 @@ export interface GridPrivateOnlyApiCommon<
     GridFocusPrivateApi,
     GridHeaderFilteringPrivateApi,
     GridVirtualizationPrivateApi,
-    GridRowProPrivateApi {}
+    GridRowProPrivateApi,
+    GridParamsPrivateApi {}
 
 export interface GridPrivateApiCommon
   extends GridApiCommon,

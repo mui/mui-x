@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridApiContext } from '../components/GridApiContext';
 import { GridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { GridPrivateApiCommunity } from '../models/api/gridApiCommunity';
@@ -7,7 +8,7 @@ import { GridConfiguration } from '../models/configuration/gridConfiguration';
 import { GridConfigurationContext } from '../components/GridConfigurationContext';
 
 type GridContextProviderProps = {
-  privateApiRef: React.RefObject<GridPrivateApiCommunity>;
+  privateApiRef: RefObject<GridPrivateApiCommunity>;
   configuration: GridConfiguration;
   props: {};
   children: React.ReactNode;

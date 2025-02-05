@@ -182,7 +182,7 @@ export default function DetailPanelExpandOnRowClick() {
 
   const onRowClick = React.useCallback<GridEventListener<'rowClick'>>(
     (params) => {
-      apiRef.current.toggleDetailPanel(params.id);
+      apiRef.current?.toggleDetailPanel(params.id);
     },
     [apiRef],
   );

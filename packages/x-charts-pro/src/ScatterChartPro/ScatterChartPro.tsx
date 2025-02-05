@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ScatterChartProps, ScatterPlot } from '@mui/x-charts/ScatterChart';
-import { ChartDataProvider } from '@mui/x-charts/context';
 import { ChartsVoronoiHandler } from '@mui/x-charts/ChartsVoronoiHandler';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
@@ -15,6 +14,7 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { useScatterChartProps, ChartsWrapper } from '@mui/x-charts/internals';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartContainerProProps } from '../ChartContainerPro/ChartContainerPro';
+import { ChartDataProviderPro } from '../ChartDataProviderPro';
 
 export interface ScatterChartProProps
   extends Omit<ScatterChartProps, 'apiRef'>,
@@ -49,19 +49,14 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
     children,
   } = useScatterChartProps(other);
   const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps(
-    { ...chartContainerProps, apiRef },
+    { ...chartContainerProps, initialZoom, onZoomChange, apiRef },
     ref,
   );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
 
   return (
-    <ChartDataProvider
-      {...chartDataProviderProProps}
-      apiRef={apiRef}
-      initialZoom={initialZoom}
-      onZoomChange={onZoomChange}
-    >
+    <ChartDataProviderPro {...chartDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps}>
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
@@ -78,7 +73,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
           {children}
         </ChartsSurface>
       </ChartsWrapper>
-    </ChartDataProvider>
+    </ChartDataProviderPro>
   );
 });
 
@@ -146,11 +141,12 @@ ScatterChartPro.propTypes = {
    */
   hideLegend: PropTypes.bool,
   /**
-   * The item currently highlighted. Turns highlighting into a controlled prop.
+   * The highlighted item.
+   * Used when the highlight is controlled.
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.
@@ -189,6 +185,13 @@ ScatterChartPro.propTypes = {
     right: PropTypes.number,
     top: PropTypes.number,
   }),
+  /**
+   * The function called for onClick events.
+   * The second argument contains information about all line/bar elements at the current mouse position.
+   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
+   * @param {null | AxisData} data The data about the clicked axis and items associated with it.
+   */
+  onAxisClick: PropTypes.func,
   /**
    * The callback fired when the highlighted item changes.
    *

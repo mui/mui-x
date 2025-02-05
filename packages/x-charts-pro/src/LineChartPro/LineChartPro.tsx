@@ -12,7 +12,6 @@ import {
   MarkPlot,
   MarkPlotProps,
 } from '@mui/x-charts/LineChart';
-import { ChartsOnAxisClickHandler } from '@mui/x-charts/ChartsOnAxisClickHandler';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
@@ -22,14 +21,14 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { useLineChartProps, ChartsWrapper } from '@mui/x-charts/internals';
-import { ChartDataProvider } from '@mui/x-charts/context';
 import { ChartContainerProProps } from '../ChartContainerPro';
 import { useIsZoomInteracting } from '../hooks/zoom';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
+import { ChartDataProviderPro } from '../ChartDataProviderPro';
 
 function AreaPlotZoom(props: AreaPlotProps) {
   const isInteracting = useIsZoomInteracting();
-  return <AreaPlot {...props} skipAnimation={isInteracting || undefined} />;
+  return <AreaPlot {...props} skipAnimation={isInteracting || props.skipAnimation} />;
 }
 
 AreaPlotZoom.propTypes = {
@@ -62,7 +61,7 @@ AreaPlotZoom.propTypes = {
 
 function LinePlotZoom(props: LinePlotProps) {
   const isInteracting = useIsZoomInteracting();
-  return <LinePlot {...props} skipAnimation={isInteracting || undefined} />;
+  return <LinePlot {...props} skipAnimation={isInteracting || props.skipAnimation} />;
 }
 
 LinePlotZoom.propTypes = {
@@ -103,12 +102,6 @@ MarkPlotZoom.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  /**
-   * If `true` the mark element will only be able to render circle.
-   * Giving fewer customization options, but saving around 40ms per 1.000 marks.
-   * @default false
-   */
-  experimentalRendering: PropTypes.bool,
   /**
    * Callback fired when a line mark item is clicked.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
@@ -155,7 +148,6 @@ const LineChartPro = React.forwardRef(function LineChartPro(
   const {
     chartsWrapperProps,
     chartContainerProps,
-    axisClickHandlerProps,
     gridProps,
     clipPathProps,
     clipPathGroupProps,
@@ -170,23 +162,17 @@ const LineChartPro = React.forwardRef(function LineChartPro(
     children,
   } = useLineChartProps(other);
   const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps(
-    { ...chartContainerProps, apiRef },
+    { ...chartContainerProps, initialZoom, onZoomChange, apiRef },
     ref,
   );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
 
   return (
-    <ChartDataProvider
-      {...chartDataProviderProProps}
-      apiRef={apiRef}
-      initialZoom={initialZoom}
-      onZoomChange={onZoomChange}
-    >
+    <ChartDataProviderPro {...chartDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps}>
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
-          {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
           <ChartsGrid {...gridProps} />
           <g {...clipPathGroupProps}>
             <AreaPlotZoom {...areaPlotProps} />
@@ -205,7 +191,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(
           {children}
         </ChartsSurface>
       </ChartsWrapper>
-    </ChartDataProvider>
+    </ChartDataProviderPro>
   );
 });
 
@@ -257,10 +243,6 @@ LineChartPro.propTypes = {
    */
   disableLineItemHighlight: PropTypes.bool,
   /**
-   * If `true` marks will render `<circle />` instead of `<path />` and drop theme override for faster rendering.
-   */
-  experimentalMarkRendering: PropTypes.bool,
-  /**
    * Option to display a cartesian grid in the background.
    */
   grid: PropTypes.shape({
@@ -276,11 +258,12 @@ LineChartPro.propTypes = {
    */
   hideLegend: PropTypes.bool,
   /**
-   * The item currently highlighted. Turns highlighting into a controlled prop.
+   * The highlighted item.
+   * Used when the highlight is controlled.
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.

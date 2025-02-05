@@ -40,7 +40,8 @@ export const useGridOverlays = () => {
   if (loading) {
     overlayType = 'loadingOverlay';
     loadingOverlayVariant =
-      rootProps.slotProps?.loadingOverlay?.[noRows ? 'noRowsVariant' : 'variant'] || null;
+      rootProps.slotProps?.loadingOverlay?.[noRows ? 'noRowsVariant' : 'variant'] ??
+      (noRows ? 'skeleton' : 'linear-progress');
   }
 
   const overlaysProps = { overlayType, loadingOverlayVariant };
