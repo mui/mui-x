@@ -49,6 +49,13 @@
         "description": "{ bottom?: number, left?: number, right?: number, top?: number }"
       }
     },
+    "onAxisClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: MouseEvent, data: null | AxisData) => void",
+        "describedArgs": ["event", "data"]
+      }
+    },
     "onHighlightChange": {
       "type": { "name": "func" },
       "signature": {
