@@ -5,7 +5,7 @@ import {
   gridHasBottomFillerSelector,
   gridHasScrollXSelector,
   gridHasScrollYSelector,
-} from '../../internals/selectors/dimensionSelectors';
+} from '../../hooks/features/dimensions/gridDimensionsSelectors';
 import { GridScrollArea } from '../GridScrollArea';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';

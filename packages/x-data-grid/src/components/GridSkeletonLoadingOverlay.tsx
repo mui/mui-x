@@ -16,7 +16,7 @@ import {
   useGridSelector,
 } from '../hooks';
 import { PinnedColumnPosition } from '../internals/constants';
-import { gridDimensionsColumnsTotalWidthSelector } from '../internals/selectors/dimensionSelectors';
+import { gridDimensionsColumnsTotalWidthSelector } from '../hooks/features/dimensions/gridDimensionsSelectors';
 import { GridEventListener } from '../models';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { getDataGridUtilityClass, gridClasses } from '../constants/gridClasses';

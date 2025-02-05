@@ -129,6 +129,7 @@ export {
   dimensionsStateInitializer,
   useGridDimensions,
 } from '../hooks/features/dimensions/useGridDimensions';
+export * from '../hooks/features/dimensions/gridDimensionsSelectors';
 export { useGridStatePersistence } from '../hooks/features/statePersistence/useGridStatePersistence';
 export type { GridRestoreStatePreProcessingContext } from '../hooks/features/statePersistence/gridStatePersistenceInterface';
 export {
@@ -181,5 +182,3 @@ export { serializeCellValue } from '../hooks/features/export/serializers/csvSeri
 export * from './utils';
 export * from './constants';
 export type { Localization } from '../utils/getGridLocalization';
-
-export * from './selectors/dimensionSelectors';

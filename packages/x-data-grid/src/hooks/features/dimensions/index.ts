@@ -1,3 +1,3 @@
 export type { GridDimensionsState } from './useGridDimensions';
-export * from './gridDimensionsSelectors';
+export { gridDimensionsSelector } from './gridDimensionsSelectors';
 export type { GridDimensions, GridDimensionsApi } from './gridDimensionsApi';

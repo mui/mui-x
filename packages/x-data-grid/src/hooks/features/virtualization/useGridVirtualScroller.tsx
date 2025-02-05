@@ -10,12 +10,13 @@ import useTimeout from '@mui/utils/useTimeout';
 import { useRtl } from '@mui/system/RtlProvider';
 import reactMajor from '@mui/x-internals/reactMajor';
 import {
+  gridDimensionsSelector,
   gridDimensionsColumnsTotalWidthSelector,
   gridContentHeightSelector,
   gridHasFillerSelector,
   gridRowHeightSelector,
   gridVerticalScrollbarWidthSelector,
-} from '../../../internals/selectors/dimensionSelectors';
+} from '../dimensions/gridDimensionsSelectors';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
@@ -27,7 +28,6 @@ import {
   gridColumnPositionsSelector,
   gridHasColSpanSelector,
 } from '../columns/gridColumnsSelector';
-import { gridDimensionsSelector } from '../dimensions/gridDimensionsSelectors';
 import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
 import { GridPinnedRowsPosition } from '../rows/gridRowsInterfaces';
 import { useGridVisibleRows, getVisibleRows } from '../../utils/useGridVisibleRows';

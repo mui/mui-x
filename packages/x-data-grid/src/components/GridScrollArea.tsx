@@ -14,8 +14,10 @@ import { getDataGridUtilityClass, gridClasses } from '../constants';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridApiEventHandler } from '../hooks/utils/useGridApiEventHandler';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
-import { gridDimensionsSelector } from '../hooks/features/dimensions/gridDimensionsSelectors';
-import { gridDimensionsColumnsTotalWidthSelector } from '../internals/selectors/dimensionSelectors';
+import {
+  gridDimensionsSelector,
+  gridDimensionsColumnsTotalWidthSelector,
+} from '../hooks/features/dimensions/gridDimensionsSelectors';
 import { gridDensityFactorSelector } from '../hooks/features/density/densitySelector';
 import { GridScrollParams } from '../models/params/gridScrollParams';
 import { GridEventListener } from '../models/events';
