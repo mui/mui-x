@@ -317,7 +317,6 @@
   { "name": "useChartId", "kind": "Function" },
   { "name": "useDrawingArea", "kind": "Function" },
   { "name": "useGaugeState", "kind": "Function" },
-  { "name": "useHeatmapSeries", "kind": "Function" },
   { "name": "useItemHighlighted", "kind": "Function" },
   { "name": "useItemHighlightedGetter", "kind": "Function" },
   { "name": "useItemTooltip", "kind": "Function" },
