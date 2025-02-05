@@ -19,10 +19,10 @@ export type LineChartProPluginsSignatures = [
   UseChartProZoomSignature,
 ];
 
-export const LINE_CHART_PRO_PLUGINS = [
+export const LINE_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<LineChartProPluginsSignatures> = [
   useChartZAxis,
   useChartCartesianAxis,
   useChartInteraction,
   useChartHighlight,
   useChartProZoom,
-] as ConvertSignaturesIntoPlugins<LineChartProPluginsSignatures>;
+];

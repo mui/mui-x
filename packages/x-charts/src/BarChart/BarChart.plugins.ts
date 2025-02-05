@@ -23,9 +23,9 @@ export type BarChartPluginsSignatures = [
   UseChartHighlightSignature,
 ];
 
-export const BAR_CHART_PLUGINS = [
+export const BAR_CHART_PLUGINS: ConvertSignaturesIntoPlugins<BarChartPluginsSignatures> = [
   useChartZAxis,
   useChartCartesianAxis,
   useChartInteraction,
   useChartHighlight,
-] as ConvertSignaturesIntoPlugins<BarChartPluginsSignatures>;
+];

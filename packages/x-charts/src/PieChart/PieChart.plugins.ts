@@ -10,7 +10,7 @@ import { ConvertSignaturesIntoPlugins } from '../internals/plugins/models/helper
 
 export type PieChartPluginSignatures = [UseChartInteractionSignature, UseChartHighlightSignature];
 
-export const PIE_CHART_PLUGINS = [
+export const PIE_CHART_PLUGINS: ConvertSignaturesIntoPlugins<PieChartPluginSignatures> = [
   useChartInteraction,
   useChartHighlight,
-] as ConvertSignaturesIntoPlugins<PieChartPluginSignatures>;
+];

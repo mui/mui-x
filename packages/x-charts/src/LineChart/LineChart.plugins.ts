@@ -23,9 +23,9 @@ export type LineChartPluginsSignatures = [
   UseChartHighlightSignature,
 ];
 
-export const LINE_CHART_PLUGINS = [
+export const LINE_CHART_PLUGINS: ConvertSignaturesIntoPlugins<LineChartPluginsSignatures> = [
   useChartZAxis,
   useChartCartesianAxis,
   useChartInteraction,
   useChartHighlight,
-] as ConvertSignaturesIntoPlugins<LineChartPluginsSignatures>;
+];

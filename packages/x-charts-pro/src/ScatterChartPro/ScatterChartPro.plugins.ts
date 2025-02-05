@@ -19,10 +19,5 @@ export type ScatterChartProPluginsSignatures = [
   UseChartProZoomSignature,
 ];
 
-export const SCATTER_CHART_PRO_PLUGINS = [
-  useChartZAxis,
-  useChartCartesianAxis,
-  useChartInteraction,
-  useChartHighlight,
-  useChartProZoom,
-] as ConvertSignaturesIntoPlugins<ScatterChartProPluginsSignatures>;
+export const SCATTER_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<ScatterChartProPluginsSignatures> =
+  [useChartZAxis, useChartCartesianAxis, useChartInteraction, useChartHighlight, useChartProZoom];

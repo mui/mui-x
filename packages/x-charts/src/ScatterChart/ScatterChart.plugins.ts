@@ -23,9 +23,9 @@ export type ScatterChartPluginsSignatures = [
   UseChartHighlightSignature,
 ];
 
-export const SCATTER_CHART_PLUGINS = [
+export const SCATTER_CHART_PLUGINS: ConvertSignaturesIntoPlugins<ScatterChartPluginsSignatures> = [
   useChartZAxis,
   useChartCartesianAxis,
   useChartInteraction,
   useChartHighlight,
-] as ConvertSignaturesIntoPlugins<ScatterChartPluginsSignatures>;
+];

@@ -19,10 +19,10 @@ export type BarChartProPluginsSignatures = [
   UseChartProZoomSignature,
 ];
 
-export const BAR_CHART_PRO_PLUGINS = [
+export const BAR_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<BarChartProPluginsSignatures> = [
   useChartZAxis,
   useChartCartesianAxis,
   useChartInteraction,
   useChartHighlight,
   useChartProZoom,
-] as ConvertSignaturesIntoPlugins<BarChartProPluginsSignatures>;
+];
