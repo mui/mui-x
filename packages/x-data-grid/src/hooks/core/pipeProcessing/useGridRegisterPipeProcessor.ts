@@ -31,11 +31,15 @@ export const useGridRegisterPipeProcessor = <
       registerPreProcessor();
     }
 
-    return () => {
-      if (cleanup.current) {
-        cleanup.current();
-        cleanup.current = null;
-      }
-    };
+    // Avoid cleanups in development/testing please StrictMode, yet still be able to use `useFirstRender` that
+    if (process.env.NODE_ENV !== 'production') {
+      return () => {
+        if (cleanup.current) {
+          cleanup.current();
+          cleanup.current = null;
+        }
+      };
+    }
+    return undefined;
   }, [registerPreProcessor]);
 };
