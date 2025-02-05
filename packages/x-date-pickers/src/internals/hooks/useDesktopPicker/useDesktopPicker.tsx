@@ -1,6 +1,5 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import useId from '@mui/utils/useId';
 import { PickerPopper } from '../../components/PickerPopper/PickerPopper';
 import { UseDesktopPickerParams, UseDesktopPickerProps } from './useDesktopPicker.types';
 import { usePicker } from '../usePicker';
@@ -30,9 +29,6 @@ export const useDesktopPicker = <
 }: UseDesktopPickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
   const { slots, slotProps: innerSlotProps, label, inputRef, localeText } = props;
 
-  const labelId = useId();
-  const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
-
   const { providerProps, renderCurrentView, ownerState } = usePicker<
     PickerValue,
     TView,
@@ -45,6 +41,9 @@ export const useDesktopPicker = <
     viewContainerRole: 'dialog',
     variant: 'desktop',
   });
+
+  const labelId = providerProps.privateContextValue.labelId;
+  const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
 
   const Field = slots.field;
   const { ownerState: fieldOwnerState, ...fieldProps } = useSlotProps({

@@ -14,7 +14,6 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import { FieldOwnerState } from '@mui/x-date-pickers/models';
-import useId from '@mui/utils/useId';
 import {
   UseMobileRangePickerParams,
   UseMobileRangePickerProps,
@@ -44,7 +43,6 @@ export const useMobileRangePicker = <
 
   const fieldType = (slots.field as any).fieldType ?? 'multi-input';
   const rangePositionResponse = useRangePosition(props);
-  const labelId = useId();
   const contextTranslations = usePickerTranslations();
 
   const { providerProps, renderCurrentView, ownerState } = usePicker<
@@ -60,6 +58,7 @@ export const useMobileRangePicker = <
     localeText,
   });
 
+  const labelId = providerProps.privateContextValue.labelId;
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
 
   const Field = slots.field;

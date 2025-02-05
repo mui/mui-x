@@ -1,6 +1,5 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import useId from '@mui/utils/useId';
 import { PickersModalDialog } from '../../components/PickersModalDialog';
 import { UseMobilePickerParams, UseMobilePickerProps } from './useMobilePicker.types';
 import { usePicker } from '../usePicker';
@@ -30,9 +29,6 @@ export const useMobilePicker = <
 }: UseMobilePickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
   const { slots, slotProps: innerSlotProps, label, inputRef, localeText } = props;
 
-  const labelId = useId();
-  const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
-
   const { providerProps, renderCurrentView, ownerState } = usePicker<
     PickerValue,
     TView,
@@ -45,6 +41,9 @@ export const useMobilePicker = <
     viewContainerRole: 'dialog',
     variant: 'mobile',
   });
+
+  const labelId = providerProps.privateContextValue.labelId;
+  const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
 
   const Field = slots.field;
   const { ownerState: fieldOwnerState, ...fieldProps } = useSlotProps({
