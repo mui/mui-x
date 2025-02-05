@@ -17,6 +17,7 @@ const pages: MuiPage[] = [
       { pathname: `/x/introduction/installation` },
       { pathname: `/x/introduction/licensing` },
       { pathname: `/x/introduction/support` },
+      { pathname: `/x/introduction/priority-support` },
       { pathname: `/x/introduction/roadmap` },
     ],
   },
