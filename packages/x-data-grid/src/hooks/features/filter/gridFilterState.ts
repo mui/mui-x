@@ -23,7 +23,7 @@ export interface GridFilterState {
   /**
    * Filtering status for each row.
    * A row is filtered if it is passing the filters, whether its parents are expanded or not.
-   * If a row is not registered in this lookup, it is filtered.
+   * All the rows are filtered except the ones registered in this lookup with `false` values.
    * This is the equivalent of the `visibleRowsLookup` if all the groups were expanded.
    */
   filteredRowsLookup: Record<GridRowId, false>;
