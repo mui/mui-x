@@ -882,4 +882,23 @@ describe('<DataGridPremium /> - Aggregation', () => {
       });
     });
   });
+
+  describe('"no rows" overlay', () => {
+    it('should display "no rows" overlay and not show aggregation footer when there are no rows', () => {
+      render(
+        <Test
+          rows={[]}
+          initialState={{
+            aggregation: { model: { id: 'sum' } },
+          }}
+        />,
+      );
+
+      // Check for "no rows" overlay
+      expect(screen.queryByText('No rows')).not.to.equal(null);
+
+      // Ensure aggregation footer is not present
+      expect(getColumnValues(0)).to.deep.equal([]);
+    });
+  });
 });
