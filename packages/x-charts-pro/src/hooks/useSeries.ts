@@ -20,7 +20,7 @@ export function useHeatmapSeries(): ProcessedSeries['heatmap'] {
  * The returned object contains:
  * - series: a mapping from ids to series attributes.
  * - seriesOrder: the array of series ids.
- * @returns {{ series: Record<SeriesId, DefaultizedScatterSeriesType>; seriesOrder: SeriesId[]; } | undefined}  funnelSeries
+ * @returns {{ series: Record<SeriesId, DefaultizedFunnelSeriesType>; seriesOrder: SeriesId[]; } | undefined}  funnelSeries
  */
 export function useFunnelSeries(): ProcessedSeries['funnel'] {
   const series = useSeries();
