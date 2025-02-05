@@ -22,13 +22,15 @@ import { GridApiPremium } from '../../../models/gridApiPremium';
 import { isGroupingColumn } from '../rowGrouping';
 
 export interface PivotModel {
-  columns: { field: GridColDef['field']; sort?: 'asc' | 'desc' }[];
+  columns: { field: GridColDef['field']; sort?: 'asc' | 'desc'; hidden?: boolean }[];
   rows: {
     field: GridColDef['field'];
+    hidden?: boolean;
   }[];
   values: {
     field: GridColDef['field'];
     aggFunc: string;
+    hidden?: boolean;
   }[];
 }
 
@@ -80,6 +82,10 @@ const getPivotedData = ({
   columnVisibilityModel: NonNullable<DataGridPremiumProcessedProps['columnVisibilityModel']>;
   columnGroupingModel: NonNullable<DataGridPremiumProcessedProps['columnGroupingModel']>;
 } => {
+  const visibleColumns = pivotModel.columns.filter((column) => !column.hidden);
+  const visibleRows = pivotModel.rows.filter((row) => !row.hidden);
+  const visibleValues = pivotModel.values.filter((value) => !value.hidden);
+
   const pivotColumns: GridColDef[] = [];
   const columnVisibilityModel: DataGridPremiumProcessedProps['columnVisibilityModel'] = {};
 
@@ -115,7 +121,7 @@ const getPivotedData = ({
     return attributes;
   };
 
-  pivotModel.rows.forEach((pivotRow) => {
+  visibleRows.forEach((pivotRow) => {
     pivotColumns.push({
       field: pivotRow.field,
       groupable: true,
@@ -126,15 +132,14 @@ const getPivotedData = ({
   const aggregationModel: GridAggregationModel = {};
 
   const columnGroupingModel: GridColumnGroupingModel = [];
-  // Lookup for faster access to column groups
   const columnGroupingModelLookup = new Map<string, GridColumnGroup>();
 
   let newRows: GridRowModel[] = [];
 
-  if (pivotModel.columns.length === 0) {
+  if (visibleColumns.length === 0) {
     newRows = rows;
 
-    pivotModel.values.forEach((pivotValue) => {
+    visibleValues.forEach((pivotValue) => {
       aggregationModel[pivotValue.field] = pivotValue.aggFunc;
       delete columnVisibilityModel[pivotValue.field];
     });
@@ -144,7 +149,7 @@ const getPivotedData = ({
       const newRow = { ...row };
       const columnGroupPath: string[] = [];
 
-      pivotModel.columns.forEach(({ field: colGroupField }, depth) => {
+      visibleColumns.forEach(({ field: colGroupField }, depth) => {
         const column = initialColumns.get(colGroupField);
         const colValue = apiRef.current.getRowValue(row, column!) || '(No value)';
         columnGroupPath.push(String(colValue));
@@ -168,10 +173,10 @@ const getPivotedData = ({
           }
         }
 
-        const isLastColumnGroupLevel = depth === pivotModel.columns.length - 1;
+        const isLastColumnGroupLevel = depth === visibleColumns.length - 1;
 
         if (isLastColumnGroupLevel) {
-          pivotModel.values.forEach((pivotValue) => {
+          visibleValues.forEach((pivotValue) => {
             const valueField = pivotValue.field;
             const valueKey = `${columnGroupPath.join('-')}-${valueField}`;
             newRow[valueKey] = newRow[valueField];
@@ -183,7 +188,7 @@ const getPivotedData = ({
       newRows.push(newRow);
     }
 
-    sortColumnGroups(columnGroupingModel, pivotModel.columns);
+    sortColumnGroups(columnGroupingModel, visibleColumns);
   }
 
   function createColumns(columnGroups: GridColumnNode[], depth = 0) {
@@ -192,9 +197,9 @@ const getPivotedData = ({
       if (isLeaf(columnGroup)) {
         continue;
       }
-      const isLastColumnGroupLevel = depth === pivotModel.columns.length - 1;
+      const isLastColumnGroupLevel = depth === visibleColumns.length - 1;
       if (isLastColumnGroupLevel) {
-        pivotModel.values.forEach((pivotValue) => {
+        visibleValues.forEach((pivotValue) => {
           const valueField = pivotValue.field;
           const mapValueKey = `${columnGroup.groupId}-${valueField}`;
           const column: GridColDef = {
@@ -221,7 +226,7 @@ const getPivotedData = ({
   return {
     rows: newRows,
     columns: pivotColumns,
-    rowGroupingModel: pivotModel.rows.map((row) => row.field),
+    rowGroupingModel: visibleRows.map((row) => row.field),
     aggregationModel,
     getAggregationPosition: (groupNode) => (groupNode.depth === -1 ? 'footer' : 'inline'),
     columnVisibilityModel,
@@ -245,7 +250,7 @@ export const useGridPivoting = ({
   onPivotModeChange: (isPivot: boolean) => void;
 }) => {
   const isPivot = pivotMode;
-  const [pivotSettingsOpen, setPivotSettingsOpen] = React.useState(false);
+  const [pivotSettingsOpen, setPivotSettingsOpen] = React.useState(true);
   const exportedStateRef = React.useRef<GridInitialStatePremium | null>(null);
   const nonPivotDataRef = React.useRef<{ rows: GridRowModel[]; columns: GridColDef[] } | undefined>(
     undefined,

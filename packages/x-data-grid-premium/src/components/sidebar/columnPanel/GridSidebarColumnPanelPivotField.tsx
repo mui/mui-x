@@ -30,9 +30,14 @@ type PivotFieldProps = {
   onDragStart: (modelKey: FieldTransferObject['modelKey']) => void;
   onDragEnd: () => void;
 } & (
-  | { modelKey: 'columns'; sort: PivotModel['columns'][number]['sort'] }
-  | { modelKey: 'rows' }
-  | { modelKey: 'values'; aggFunc: PivotModel['values'][number]['aggFunc']; colDef: GridColDef }
+  | { modelKey: 'columns'; sort: PivotModel['columns'][number]['sort']; hidden?: boolean }
+  | { modelKey: 'rows'; hidden?: boolean }
+  | {
+      modelKey: 'values';
+      aggFunc: PivotModel['values'][number]['aggFunc'];
+      colDef: GridColDef;
+      hidden?: boolean;
+    }
   | { modelKey: null }
 );
 
@@ -206,9 +211,9 @@ export function PivotField(props: PivotFieldProps) {
     children,
     field,
     pivotModel,
+    slots,
     updatePivotModel,
     onPivotModelChange,
-    slots,
     onDragStart,
     onDragEnd,
   } = props;
@@ -305,7 +310,23 @@ export function PivotField(props: PivotFieldProps) {
     });
   };
 
-  const isSelectable = props.modelKey !== null;
+  const handleVisibilityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (props.modelKey) {
+      onPivotModelChange((prev) => {
+        return {
+          ...prev,
+          [props.modelKey]: prev[props.modelKey].map((col) => {
+            if (col.field === field) {
+              return { ...col, hidden: !event.target.checked };
+            }
+            return col;
+          }),
+        };
+      });
+    }
+  };
+
+  const hideable = props.modelKey !== null;
 
   return (
     <PivotFieldRoot
@@ -325,14 +346,14 @@ export function PivotField(props: PivotFieldProps) {
       </PivotFieldDragIcon>
 
       <PivotFieldLabel>
-        {isSelectable ? (
+        {hideable ? (
           <FormControlLabel
             control={
               <rootProps.slots.baseCheckbox
                 size="small"
                 {...rootProps.slotProps?.baseCheckbox}
-                // TODO: implement column visibility
-                defaultChecked
+                checked={!props.hidden}
+                onChange={handleVisibilityChange}
               />
             }
             label={children}

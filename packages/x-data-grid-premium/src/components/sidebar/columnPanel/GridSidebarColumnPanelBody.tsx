@@ -367,12 +367,13 @@ export function GridSidebarColumnPanelBody({
             {pivotModel.rows.length === 0 && <Placeholder>Drag here to create rows</Placeholder>}
             {pivotModel.rows.length > 0 && (
               <FieldList>
-                {pivotModel.rows.map(({ field }) => (
+                {pivotModel.rows.map(({ field, hidden }) => (
                   <PivotField
                     key={field}
                     field={field}
                     modelKey="rows"
                     data-field={field}
+                    hidden={hidden ?? false}
                     pivotModel={pivotModel}
                     updatePivotModel={updatePivotModel}
                     onPivotModelChange={onPivotModelChange}
@@ -408,7 +409,7 @@ export function GridSidebarColumnPanelBody({
             )}
             {pivotModel.columns.length > 0 && (
               <FieldList>
-                {pivotModel.columns.map(({ field, sort }) => (
+                {pivotModel.columns.map(({ field, sort, hidden }) => (
                   <PivotField
                     key={field}
                     field={field}
@@ -419,6 +420,7 @@ export function GridSidebarColumnPanelBody({
                     slots={rootProps.slots}
                     slotProps={rootProps.slotProps}
                     sort={sort}
+                    hidden={hidden ?? false}
                     onDragStart={handleDragStart}
                     onDragEnd={handleDragEnd}
                   >
@@ -449,7 +451,7 @@ export function GridSidebarColumnPanelBody({
             )}
             {pivotModel.values.length > 0 && (
               <FieldList>
-                {pivotModel.values.map(({ field, aggFunc }) => (
+                {pivotModel.values.map(({ field, aggFunc, hidden }) => (
                   <PivotField
                     key={field}
                     field={field}
@@ -461,6 +463,7 @@ export function GridSidebarColumnPanelBody({
                     slotProps={rootProps.slotProps}
                     aggFunc={aggFunc}
                     colDef={initialColumnsLookup[field]}
+                    hidden={hidden ?? false}
                     onDragStart={handleDragStart}
                     onDragEnd={handleDragEnd}
                   >

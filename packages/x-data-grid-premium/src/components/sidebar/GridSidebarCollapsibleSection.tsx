@@ -32,18 +32,17 @@ const CollapsibleSectionTrigger = styled('div')(({ theme }) => ({
 
 const CollapsibleSectionIcon = styled('svg')<{ open: boolean }>(({ theme, open }) => ({
   color: theme.palette.text.secondary,
-  transform: open ? 'none' : 'rotate(-180deg)',
-  transition: 'transform 0.1s ease-in-out',
+  transform: open ? 'none' : 'rotate(180deg)',
+  transition: theme.transitions.create(['transform'], {
+    duration: theme.transitions.duration.shorter,
+    easing: theme.transitions.easing.easeInOut,
+  }),
 }));
 
 const CollapsibleSectionContent = styled('div')(({ theme }) => ({
   borderTop: `1px solid ${theme.palette.divider}`,
   flex: 1,
   overflow: 'hidden',
-  transition: theme.transitions.create(['height'], {
-    duration: theme.transitions.duration.short,
-    easing: theme.transitions.easing.easeInOut,
-  }),
 }));
 
 export function GridSidebarCollapsibleSection(props: GridSidebarCollapsibleSectionProps) {
