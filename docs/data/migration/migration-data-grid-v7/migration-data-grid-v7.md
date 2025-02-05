@@ -119,8 +119,8 @@ Below are described the steps you need to make to migrate from v7 to v8.
 - The `visibleRowsLookup` state does not contain `true` values anymore. If the row is not visible, the value is `false`. Otherwise, the row id is not present in the object:
   ```diff
    const visibleRowsLookup = gridVisibleRowsLookupSelector(apiRef);
-   -const isRowVisible = visibleRowsLookup[rowId] === true;
-   +const isRowVisible = visibleRowsLookup[rowId] !== false;
+  -const isRowVisible = visibleRowsLookup[rowId] === true;
+  +const isRowVisible = visibleRowsLookup[rowId] !== false;
   ```
 
 ### Other exports
