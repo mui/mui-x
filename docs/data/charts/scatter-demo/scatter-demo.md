@@ -15,7 +15,3 @@ components: Scatter, ScatterChart, ScatterPlot, ChartsVoronoiHandler
 ## MultipleYAxesScatterChart
 
 {{"demo": "MultipleYAxesScatterChart.js"}}
-
-## LinkPointsScatterChart
-
-{{"demo": "LinkPointsScatterChart.js"}}

@@ -10,7 +10,6 @@ const data1 = [
   { x: 150, y: 400, id: 5 },
   { x: 110, y: 280, id: 6 },
 ];
-
 const data2 = [
   { x: 300, y: 300, id: 1 },
   { x: 200, y: 700, id: 2 },
@@ -19,7 +18,7 @@ const data2 = [
   { x: 420, y: 280, id: 5 },
 ];
 
-function LinkPoints({ seriesId, close }) {
+function LinkPoints({ seriesId, close }: { seriesId: string; close?: boolean }) {
   const scatter = useScatterSeries();
   const xScale = useXScale();
   const yScale = useYScale();
@@ -47,7 +46,7 @@ function LinkPoints({ seriesId, close }) {
   );
 }
 
-export default function LinkPointsScatterChart() {
+export default function CustomScatter() {
   return (
     <ScatterChart
       series={[
