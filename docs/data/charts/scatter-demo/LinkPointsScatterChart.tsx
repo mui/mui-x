@@ -18,11 +18,6 @@ const data2 = [
   { x: 420, y: 280, id: 5 },
 ];
 
-const chartSetting = {
-  width: 500,
-  height: 300,
-};
-
 function LinkPoints({ seriesId, close }: { seriesId: string; close?: boolean }) {
   const scatter = useScatterSeries();
   const xScale = useXScale();
@@ -67,7 +62,8 @@ export default function LinkPointsScatterChart() {
         },
       ]}
       xAxis={[{ min: 0 }]}
-      {...chartSetting}
+      width={500}
+      height={300}
     >
       <LinkPoints seriesId="s1" />
       <LinkPoints seriesId="s2" close />
