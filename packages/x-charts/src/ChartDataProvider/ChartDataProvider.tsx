@@ -68,7 +68,7 @@ ChartDataProvider.propTypes = {
   children: PropTypes.node,
   /**
    * Color palette used to colorize multiple series.
-   * @default rainbowSurgePalette
+   * @default blueberryTwilightPalette
    */
   colors: PropTypes.any,
   /**

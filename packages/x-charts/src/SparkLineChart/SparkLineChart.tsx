@@ -261,8 +261,14 @@ SparkLineChart.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
   /**
+   * Color used to colorize the sparkline.
+   * @default rainbowSurgePalette
+   */
+  color: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  /**
    * Color palette used to colorize multiple series.
    * @default rainbowSurgePalette
+   * @deprecated use {@link color} prop instead
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   /**

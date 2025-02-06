@@ -73,8 +73,8 @@ You can customize the color of the sparkline by providing a color to the `color`
 
 {{"demo": "ColorCustomization.js"}}
 
-The `color` prop also accepts a function that will be called with the mode (light or dark), so you can adapt the color to user preferences.
+The `color` prop also accepts a function that is called with the mode (`'light'` or `'dark'`), so you can adapt the color to user preferences.
 
-The following example will show a white line if this page is in dark mode, or a black one if it is in light mode.
+The following example shows a white line if this page is in dark mode, or a black one if it is in light mode.
 
 {{"demo": "ColorCustomizationMode.js"}}
