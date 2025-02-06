@@ -13,7 +13,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepick
 
 ## Installation
 
-Install the Date Pickers package that best suits your needs—Community or Pro—along with a required third-party date library.
+Install the Date and Time Pickers package that best suits your needs—Community or Pro—along with one of the supported third-party date libraries.
 The Pickers currently support [Day.js](https://day.js.org/), [date-fns](https://date-fns.org/), [Luxon](https://moment.github.io/luxon/#/), and [Moment.js](https://momentjs.com/).
 
 Choose your packages and manager through the toggles below, then run the commands as provided to install:
