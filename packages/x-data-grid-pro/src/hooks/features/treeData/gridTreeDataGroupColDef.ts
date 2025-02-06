@@ -1,9 +1,10 @@
-import { GRID_STRING_COL_DEF, GridColDef } from '@mui/x-data-grid';
 import {
-  GRID_TREE_DATA_GROUPING_FIELD,
+  GRID_STRING_COL_DEF,
+  GridColDef,
   gridRowIdSelector,
   gridRowNodeSelector,
-} from '@mui/x-data-grid/internals';
+} from '@mui/x-data-grid';
+import { GRID_TREE_DATA_GROUPING_FIELD } from '@mui/x-data-grid/internals';
 
 /**
  * TODO: Add sorting and filtering on the value and the filteredDescendantCount

@@ -9,14 +9,10 @@ import {
   GridGroupNode,
   GridTreeNodeWithRender,
   GridValueFormatter,
-  gridRowTreeSelector,
-} from '@mui/x-data-grid-pro';
-import {
-  GridColumnRawLookup,
-  isSingleSelectColDef,
   gridRowIdSelector,
   gridRowNodeSelector,
-} from '@mui/x-data-grid-pro/internals';
+} from '@mui/x-data-grid-pro';
+import { GridColumnRawLookup, isSingleSelectColDef } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import { GridGroupingColumnFooterCell } from '../../../components/GridGroupingColumnFooterCell';
 import { GridGroupingCriteriaCell } from '../../../components/GridGroupingCriteriaCell';

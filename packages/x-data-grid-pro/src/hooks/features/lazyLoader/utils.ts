@@ -1,6 +1,5 @@
 import { RefObject } from '@mui/x-internals/types';
-import { GridRowEntry } from '@mui/x-data-grid';
-import { gridRowNodeSelector } from '@mui/x-data-grid/internals';
+import { GridRowEntry, gridRowNodeSelector } from '@mui/x-data-grid';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 
 export const findSkeletonRowsSection = ({

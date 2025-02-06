@@ -7,8 +7,8 @@ import {
   GridLeafNode,
   gridRowTreeSelector,
   GRID_ROOT_GROUP_ID,
+  gridRowNodeSelector,
 } from '@mui/x-data-grid-pro';
-import { gridRowNodeSelector } from '@mui/x-data-grid-pro/internals';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {

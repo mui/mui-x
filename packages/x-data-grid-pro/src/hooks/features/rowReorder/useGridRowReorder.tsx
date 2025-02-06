@@ -10,12 +10,12 @@ import {
   gridSortModelSelector,
   gridRowMaximumTreeDepthSelector,
   useGridApiOptionHandler,
+  gridRowNodeSelector,
   GridRowId,
 } from '@mui/x-data-grid';
 import {
   gridEditRowsStateSelector,
   gridSortedRowIndexLookupSelector,
-  gridRowNodeSelector,
 } from '@mui/x-data-grid/internals';
 import { GridRowOrderChangeParams } from '../../../models/gridRowOrderChangeParams';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';

@@ -4,13 +4,10 @@ import {
   GridColDef,
   GridFilterOperator,
   GridRowId,
-  gridRowTreeSelector,
-} from '@mui/x-data-grid-pro';
-import {
-  type GridBaseColDef,
   gridRowIdSelector,
   gridRowNodeSelector,
-} from '@mui/x-data-grid-pro/internals';
+} from '@mui/x-data-grid-pro';
+import { type GridBaseColDef } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import type {
   GridAggregationCellMeta,
