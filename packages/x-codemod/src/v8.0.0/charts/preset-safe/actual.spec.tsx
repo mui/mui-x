@@ -4,6 +4,7 @@ import { PieChart } from '@mui/x-charts/PieChart';
 import { BarPlot, BarChart } from '@mui/x-charts/BarChart';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
+import { ChartsOnAxisClickHandler } from '@mui/x-charts/ChartsOnAxisClickHandler';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { LegendPosition } from '@mui/x-charts/ChartsLegend';
 
@@ -12,6 +13,7 @@ import { LegendPosition } from '@mui/x-charts/ChartsLegend';
   <PieChart legend={{ hidden: true }} />
   <PieChart legend={{ hidden: true }} slotProps={{ tooltip: { trigger: 'axis' } }} />
   <ResponsiveChartContainer>
+    <ChartsOnAxisClickHandler onAxisClick={onAxisClickHandler} />
     <BarPlot />
   </ResponsiveChartContainer>
   <ChartsXAxis labelFontSize={18} tickFontSize={20} />
