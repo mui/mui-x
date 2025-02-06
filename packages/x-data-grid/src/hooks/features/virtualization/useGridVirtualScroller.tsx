@@ -58,7 +58,7 @@ import { EMPTY_PINNED_COLUMN_FIELDS, GridPinnedColumns } from '../columns';
 import { gridFocusedVirtualCellSelector } from './gridFocusedVirtualCellSelector';
 import { roundToDecimalPlaces } from '../../../utils/roundToDecimalPlaces';
 import { isJSDOM } from '../../../utils/isJSDOM';
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 
 const MINIMUM_COLUMN_WIDTH = 50;
 
@@ -257,7 +257,7 @@ export const useGridVirtualScroller = () => {
       // The lazy-loading hook is listening to `renderedRowsIntervalChange`,
       // but only does something if we already have a render context, because
       // otherwise we would call an update directly on mount
-      const isReady = gridDimensionsSelector(apiRef.current.state).isReady;
+      const isReady = gridDimensionsSelector(apiRef).isReady;
       if (isReady && didRowsIntervalChange) {
         previousRowContext.current = nextRenderContext;
         apiRef.current.publishEvent('renderedRowsIntervalChange', nextRenderContext);
@@ -274,7 +274,7 @@ export const useGridVirtualScroller = () => {
       return undefined;
     }
 
-    const dimensions = gridDimensionsSelector(apiRef.current.state);
+    const dimensions = gridDimensionsSelector(apiRef);
     const maxScrollTop = Math.ceil(
       dimensions.minimumSize.height - dimensions.viewportOuterSize.height,
     );
@@ -356,10 +356,7 @@ export const useGridVirtualScroller = () => {
 
   const forceUpdateRenderContext = () => {
     // skip update if dimensions are not ready and virtualization is enabled
-    if (
-      !gridDimensionsSelector(apiRef.current.state).isReady &&
-      (enabledForRows || enabledForColumns)
-    ) {
+    if (!gridDimensionsSelector(apiRef).isReady && (enabledForRows || enabledForColumns)) {
       return;
     }
     const inputs = inputsSelector(apiRef, rootProps, enabledForRows, enabledForColumns);
@@ -765,10 +762,11 @@ type RenderContextInputs = {
 };
 
 // dimension selectors
-function needsHorizontalScrollbarSelector(state: GridStateCommunity) {
+function needsHorizontalScrollbarSelector(apiRef: RefObject<GridApiCommunity>) {
   return (
-    state.dimensions.viewportOuterSize.width > 0 &&
-    state.dimensions.columnsTotalWidth > state.dimensions.viewportOuterSize.width
+    apiRef.current.state.dimensions.viewportOuterSize.width > 0 &&
+    apiRef.current.state.dimensions.columnsTotalWidth >
+      apiRef.current.state.dimensions.viewportOuterSize.width
   );
 }
 
