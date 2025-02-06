@@ -20,6 +20,10 @@ import { useLazyRef } from '../../hooks/utils/useLazyRef';
 import { checkColumnVisibilityModelsSame, defaultSearchPredicate } from './utils';
 import { NotRendered } from '../../utils/assert';
 
+const Checkbox = styled(NotRendered<GridSlotProps['baseCheckbox']>)({
+  p: 0.5,
+});
+
 export interface GridColumnsManagementProps {
   /*
    * Changes how the options in the columns selector should be ordered.
@@ -271,14 +275,14 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
       </GridColumnsManagementHeader>
       <GridColumnsManagementBody className={classes.root} ownerState={rootProps}>
         {currentColumns.map((column) => (
-          <rootProps.slots.baseCheckbox
+          <Checkbox
+            as={rootProps.slots.baseCheckbox}
             key={column.field}
             className={classes.row}
             disabled={column.hideable === false}
             checked={columnVisibilityModel[column.field] !== false}
             onClick={toggleColumn}
             name={column.field}
-            style={{ padding: 0.5 }}
             inputRef={isFirstHideableColumn(column) ? firstSwitchRef : undefined}
             label={column.headerName || column.field}
             {...rootProps.slotProps?.baseCheckbox}
@@ -293,13 +297,13 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
       {(!disableShowHideToggle || !disableResetButton) && currentColumns.length > 0 ? (
         <GridColumnsManagementFooter ownerState={rootProps} className={classes.footer}>
           {!disableShowHideToggle ? (
-            <rootProps.slots.baseCheckbox
+            <Checkbox
+              as={rootProps.slots.baseCheckbox}
               disabled={hideableColumns.length === 0}
               checked={allHideableColumnsVisible}
               indeterminate={!allHideableColumnsVisible && !allHideableColumnsHidden}
               onClick={() => toggleAllColumns(!allHideableColumnsVisible)}
               name={apiRef.current.getLocaleText('columnsManagementShowHideAllText')}
-              style={{ padding: 0.5 }}
               label={apiRef.current.getLocaleText('columnsManagementShowHideAllText')}
               {...rootProps.slotProps?.baseCheckbox}
             />
