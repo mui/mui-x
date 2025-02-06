@@ -40,6 +40,12 @@ const SkeletonOverlay = styled('div', {
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
+type GridSkeletonLoadingOverlayInnerProps = React.HTMLAttributes<HTMLDivElement> & {
+  skeletonRowsCount: number;
+  showFirstRowBorder?: boolean;
+  visibleColumns?: Set<GridColDef['field']>;
+};
+
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
@@ -54,11 +60,7 @@ const getColIndex = (el: HTMLElement) => parseInt(el.getAttribute('data-colindex
 
 export const GridSkeletonLoadingOverlayInner = forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & {
-    skeletonRowsCount: number;
-    showFirstRowBorder?: boolean;
-    visibleColumns?: Set<GridColDef['field']>;
-  }
+  GridSkeletonLoadingOverlayInnerProps
 >(function GridSkeletonLoadingOverlayInner(props, forwardedRef) {
   const rootProps = useGridRootProps();
   const { slots } = rootProps;
