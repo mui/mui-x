@@ -253,8 +253,10 @@ export function weakMapMemoize<Func extends AnyFunction>(
 
   function memoized() {
     let cacheNode = fnNode;
+    // eslint-disable-next-line prefer-rest-params
     const { length } = arguments;
-    for (let i = 0, l = length; i < l; i++) {
+    for (let i = 0, l = length; i < l; i += 1) {
+      // eslint-disable-next-line prefer-rest-params
       let arg = arguments[i];
       if (typeof arg === 'function' || (typeof arg === 'object' && arg !== null)) {
         if ('current' in arg && 'instanceId' in arg.current) {
@@ -263,7 +265,8 @@ export function weakMapMemoize<Func extends AnyFunction>(
         // Objects go into a WeakMap
         let objectCache = cacheNode.o;
         if (objectCache === null) {
-          cacheNode.o = objectCache = new WeakMap();
+          objectCache = new WeakMap();
+          cacheNode.o = objectCache;
         }
         const objectNode = objectCache.get(arg);
         if (objectNode === undefined) {
@@ -276,7 +279,8 @@ export function weakMapMemoize<Func extends AnyFunction>(
         // Primitives go into a regular Map
         let primitiveCache = cacheNode.p;
         if (primitiveCache === null) {
-          cacheNode.p = primitiveCache = new Map();
+          primitiveCache = new Map();
+          cacheNode.p = primitiveCache;
         }
         const primitiveNode = primitiveCache.get(arg);
         if (primitiveNode === undefined) {
@@ -296,8 +300,9 @@ export function weakMapMemoize<Func extends AnyFunction>(
       result = cacheNode.v;
     } else {
       // Allow errors to propagate
+      // eslint-disable-next-line prefer-spread, prefer-rest-params
       result = func.apply(null, arguments as unknown as any[]);
-      resultsCount++;
+      resultsCount += 1;
 
       if (resultEqualityCheck) {
         // Deref lastResult if it is a Ref
@@ -309,7 +314,9 @@ export function weakMapMemoize<Func extends AnyFunction>(
         ) {
           result = lastResultValue;
 
-          resultsCount !== 0 && resultsCount--;
+          if (resultsCount !== 0) {
+            resultsCount -= 1;
+          }
         }
 
         const needsWeakRef =
