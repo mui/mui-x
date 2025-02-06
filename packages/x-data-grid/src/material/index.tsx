@@ -97,7 +97,7 @@ const baseSlots: GridBaseSlots = {
   baseCircularProgress: MUICircularProgress,
   baseDivider: MUIDivider,
   baseLinearProgress: MUILinearProgress,
-  baseMenuList: MUIMenuList,
+  baseMenuList: BaseMenuList,
   baseMenuItem: BaseMenuItem,
   baseTextField: BaseTextField,
   baseFormControl: MUIFormControl,
@@ -119,6 +119,10 @@ const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
 };
 
 export default materialSlots;
+
+function BaseMenuList(props: GridSlotProps['baseMenuList']) {
+  return <MUIMenuList {...props} />;
+}
 
 function BaseMenuItem(props: GridSlotProps['baseMenuItem']) {
   const { inert, iconStart, iconEnd, children, ...other } = props;

@@ -36,7 +36,7 @@ export type IconButtonProps = Omit<ButtonProps, 'startIcon'> & {
 export type DividerProps = {};
 
 export type MenuListProps = {
-  ref?: Ref;
+  ref?: Ref<HTMLUListElement>;
   id?: string;
   className?: string;
   children?: React.ReactNode;
