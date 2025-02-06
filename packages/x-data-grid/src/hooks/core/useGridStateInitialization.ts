@@ -12,8 +12,6 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
   const controlStateMapRef = React.useRef<
     Record<string, GridControlStateItem<PrivateApi['state'], any>>
   >({});
-  const [, rawForceUpdate] = React.useState<PrivateApi['state']>();
-
   const registerControlState = React.useCallback<
     GridStatePrivateApi<PrivateApi['state']>['registerControlState']
   >((controlStateItem) => {
@@ -113,7 +111,9 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
     [apiRef],
   );
 
-  const forceUpdate = React.useCallback(() => rawForceUpdate(() => apiRef.current.state), [apiRef]);
+  const forceUpdate = React.useCallback(() => {
+    // @deprecated - do nothing
+  }, []);
 
   const publicStateApi: Omit<GridStateApi<PrivateApi['state']>, 'state'> = {
     setState,

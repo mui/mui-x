@@ -1,6 +1,5 @@
 import { RefObject } from '@mui/x-internals/types';
 import {
-  GridRowId,
   GridRowTreeConfig,
   GridFilterState,
   GridFilterModel,
@@ -79,9 +78,9 @@ export const filterRowTreeFromGroupingColumns = (
   params: FilterRowTreeFromTreeDataParams,
 ): Omit<GridFilterState, 'filterModel'> => {
   const { apiRef, rowTree, isRowMatchingFilters, filterModel } = params;
-  const filteredRowsLookup: Record<GridRowId, boolean> = {};
-  const filteredChildrenCountLookup: Record<GridRowId, number> = {};
-  const filteredDescendantCountLookup: Record<GridRowId, number> = {};
+  const filteredRowsLookup: GridFilterState['filteredRowsLookup'] = {};
+  const filteredChildrenCountLookup: GridFilterState['filteredChildrenCountLookup'] = {};
+  const filteredDescendantCountLookup: GridFilterState['filteredDescendantCountLookup'] = {};
   const filterCache = {};
 
   const filterTreeNode = (

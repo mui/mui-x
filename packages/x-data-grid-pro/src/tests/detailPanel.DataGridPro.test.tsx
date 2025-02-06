@@ -20,7 +20,7 @@ import {
   act,
   reactMajor,
 } from '@mui/internal-test-utils';
-import { $, $$, grid, getRow, getCell, getColumnValues, microtasks } from 'test/utils/helperFn';
+import { $, $$, grid, getRow, getCell, getColumnValues } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -82,7 +82,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     }
     const rowHeight = 50;
     const detailPanelHeight = 100;
-    render(
+    const { user } = render(
       <TestCase
         nbRows={1}
         rowHeight={rowHeight}
@@ -90,8 +90,10 @@ describe('<DataGridPro /> - Detail panel', () => {
         getDetailPanelHeight={() => 'auto'}
       />,
     );
-    fireEvent.click(screen.getAllByRole('button', { name: 'Expand' })[0]);
-    await microtasks();
+    await user.click(screen.getAllByRole('button', { name: 'Expand' })[0]);
+    await waitFor(() =>
+      expect(getRow(0).className).to.include(gridClasses['row--detailPanelExpanded']),
+    );
 
     const virtualScrollerContent = $('.MuiDataGrid-virtualScrollerContent')!;
     expect(virtualScrollerContent).toHaveComputedStyle({
@@ -131,9 +133,9 @@ describe('<DataGridPro /> - Detail panel', () => {
     const virtualScrollerContent = grid('virtualScrollerContent')!;
     fireEvent.click(screen.getByRole('button', { name: 'Expand' }));
 
-    await waitFor(() => {
-      expect(getRow(0).className).to.include(gridClasses['row--detailPanelExpanded']);
-    });
+    await waitFor(() =>
+      expect(getRow(0).className).to.include(gridClasses['row--detailPanelExpanded']),
+    );
 
     await waitFor(() => {
       expect(virtualScrollerContent).toHaveComputedStyle({ height: `${rowHeight + 100}px` });
