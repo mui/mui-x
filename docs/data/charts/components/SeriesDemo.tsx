@@ -8,7 +8,7 @@ import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-function ExtremaLabels({ seriesIndex }: { seriesIndex: number }) {
+function ExtremaLabels({ seriesId }: { seriesId: string }) {
   const lineSeries = useLineSeries();
   const xAxis = useXAxis('x');
 
@@ -16,15 +16,14 @@ function ExtremaLabels({ seriesIndex }: { seriesIndex: number }) {
     return null;
   }
 
-  const seriesId = lineSeries.seriesOrder[seriesIndex];
   const series = lineSeries.series[seriesId];
 
   const min = series.data.reduce(
-    (a, b) => Math.min(a ?? Infinity, b ?? Infinity),
+    (acc, value) => Math.min(acc ?? Infinity, value ?? Infinity),
     Infinity,
   );
   const max = series.data.reduce(
-    (a, b) => Math.max(a ?? -Infinity, b ?? -Infinity),
+    (acc, value) => Math.max(acc ?? -Infinity, value ?? -Infinity),
     -Infinity,
   );
 
@@ -96,8 +95,8 @@ export default function SeriesDemo() {
       <ChartDataProvider
         xAxis={[{ id: 'x', data: [1, 2, 3, 5, 8, 10] }]}
         series={[
-          { type: 'line', data: [4, 6, 4, 9, 3, 5] },
-          { type: 'line', data: [3, 9, 8, 2, 4, 9] },
+          { id: 'a', type: 'line', data: [4, 6, 4, 9, 3, 5] },
+          { id: 'b', type: 'line', data: [3, 9, 8, 2, 4, 9] },
         ]}
         yAxis={[{ min: 0, max: 10 }]}
         height={300}
@@ -107,8 +106,8 @@ export default function SeriesDemo() {
           <ChartsXAxis />
           <ChartsYAxis />
         </ChartsSurface>
-        <ExtremaLabels seriesIndex={0} />
-        <ExtremaLabels seriesIndex={1} />
+        <ExtremaLabels seriesId="a" />
+        <ExtremaLabels seriesId="b" />
       </ChartDataProvider>
     </Box>
   );
