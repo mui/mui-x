@@ -43,7 +43,7 @@ const useUtilityClasses = (ownerState: MultiInputDateRangeFieldProps<any, any>) 
 
 const MultiInputDateRangeFieldRoot = styled(
   React.forwardRef((props: StackProps, ref: React.Ref<HTMLDivElement>) => (
-    <Stack ref={ref} spacing={2} direction="row" alignItems="center" {...props} />
+    <Stack ref={ref} spacing={2} direction="row" alignItems="baseline" {...props} />
   )),
   {
     name: 'MuiMultiInputDateRangeField',
