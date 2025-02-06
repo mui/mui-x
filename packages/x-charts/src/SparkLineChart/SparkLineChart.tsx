@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { MakeOptional } from '@mui/x-internals/types';
+import { ChartsColor, ChartsColorPalette } from '../colorPalettes';
 import { BarPlot } from '../BarChart';
 import { LinePlot, AreaPlot, LineHighlightPlot } from '../LineChart';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
@@ -106,6 +107,19 @@ export interface SparkLineChartProps
    * @default {}
    */
   slotProps?: SparkLineChartSlotProps;
+
+  /**
+   * Color palette used to colorize multiple series.
+   * @default rainbowSurgePalette
+   * @deprecated use the `color` prop instead
+   */
+  colors?: ChartContainerProps['colors'];
+
+  /**
+   * Color used to colorize the sparkline.
+   * @default rainbowSurgePalette[0]
+   */
+  color?: ChartsColor;
 }
 
 const SPARKLINE_DEFAULT_MARGIN = {
@@ -134,7 +148,8 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
     width,
     height,
     margin = SPARKLINE_DEFAULT_MARGIN,
-    colors,
+    color,
+    colors: deprecatedColors,
     sx,
     showTooltip,
     showHighlight,
@@ -159,6 +174,14 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
   };
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
+
+  const colors: ChartsColorPalette | undefined = React.useMemo(() => {
+    if (color == null) {
+      return undefined;
+    }
+
+    return typeof color === 'function' ? (mode: 'light' | 'dark') => [color(mode)] : [color];
+  }, [color]);
 
   return (
     <ChartContainer
@@ -191,7 +214,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
           ...yAxis,
         },
       ]}
-      colors={colors}
+      colors={colors ?? deprecatedColors}
       sx={sx}
       disableAxisListener={
         (!showTooltip || slotProps?.tooltip?.trigger !== 'axis') &&
@@ -238,8 +261,14 @@ SparkLineChart.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
   /**
+   * Color used to colorize the sparkline.
+   * @default rainbowSurgePalette[0]
+   */
+  color: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  /**
    * Color palette used to colorize multiple series.
    * @default rainbowSurgePalette
+   * @deprecated use the `color` prop instead
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   /**
