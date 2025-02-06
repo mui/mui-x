@@ -197,3 +197,33 @@ Notice that the `onAxisClick` will handle both bar and line series if you mix th
 ## Composition
 
 TK
+
+## Common examples
+
+### Tiny Bar Chart
+
+{{"demo": "TinyBarChart.js"}}
+
+### Simple Bar Chart
+
+{{"demo": "SimpleBarChart.js"}}
+
+### Stacked Bar Chart
+
+{{"demo": "StackedBarChart.js"}}
+
+### Mixed Bar Chart
+
+{{"demo": "MixedBarChart.js"}}
+
+### Positive and negative Bar Chart
+
+{{"demo": "PositiveAndNegativeBarChart.js"}}
+
+### Bar Chart stacked by sign
+
+{{"demo": "BarChartStackedBySign.js"}}
+
+### Biaxial Bar Chart
+
+{{"demo": "BiaxialBarChart.js"}}

@@ -61,5 +61,7 @@
 # 2024
 /x/react-charts/heat-map/ /x/react-charts/heatmap/ 301
 /x/react-charts/tree-map/ /x/react-charts/treemap/ 301
+# 2025
+/x/react-charts/bar-demo/ /x/react-charts/bars/ 301
 
 # Proxies
