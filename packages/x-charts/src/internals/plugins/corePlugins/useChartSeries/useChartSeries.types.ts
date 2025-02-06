@@ -17,7 +17,7 @@ export interface UseChartSeriesParameters<T extends ChartSeriesType = ChartSerie
   series?: AllSeriesType<T>[];
   /**
    * Color palette used to colorize multiple series.
-   * @default rainbowSurgePalette
+   * @default blueberryTwilightPalette
    */
   colors?: ChartsColorPalette;
   theme?: 'light' | 'dark';
@@ -33,7 +33,7 @@ export type UseChartSeriesDefaultizedParameters<T extends ChartSeriesType = Char
     series: AllSeriesType<T>[];
     /**
      * Color palette used to colorize multiple series.
-     * @default rainbowSurgePalette
+     * @default blueberryTwilightPalette
      */
     colors: ChartsColorPalette;
     theme: 'light' | 'dark';
