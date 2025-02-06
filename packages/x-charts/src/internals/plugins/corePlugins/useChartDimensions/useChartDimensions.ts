@@ -9,7 +9,7 @@ import { UseChartDimensionsSignature } from './useChartDimensions.types';
 import { selectorChartDimensionsState } from './useChartDimensions.selectors';
 import { useSelector } from '../../../store/useSelector';
 import { selectorChartCartesianAxisState } from '../../featurePlugins/useChartCartesianAxis/useChartCartesianAxis.selectors';
-import { defaultizeMargin } from '../../../calculateMargins';
+import { defaultizeMargin } from '../../../defaultizeMargin';
 
 const MAX_COMPUTE_RUN = 10;
 
