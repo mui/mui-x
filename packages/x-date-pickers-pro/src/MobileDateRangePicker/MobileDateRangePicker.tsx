@@ -57,6 +57,8 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
     format: utils.formats.keyboardDate,
     // Force one calendar on mobile to avoid layout issues
     calendars: 1,
+    // force current calendar position, since we only have one calendar
+    currentMonthCalendarPosition: 1,
     views: ['day'] as const,
     openTo: 'day' as const,
     slots: {

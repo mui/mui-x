@@ -1,5 +1,5 @@
 {
-  "props": { "disableAxisListener": { "type": { "name": "bool" }, "default": "false" } },
+  "props": {},
   "name": "ChartsSurface",
   "imports": [
     "import { ChartsSurface } from '@mui/x-charts/ChartsSurface';",

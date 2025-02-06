@@ -18,7 +18,8 @@ import { Position } from '@mui/x-charts/models';
       tooltip: { trigger: 'axis' },
       legend: { hidden: true }
     }} />
-  <ChartContainer>
+  <ChartContainer onAxisClick={onAxisClickHandler}>
+
     <BarPlot />
   </ChartContainer>
   <ChartsXAxis
