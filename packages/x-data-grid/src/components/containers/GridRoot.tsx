@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
   unstable_useForkRef as useForkRef,
-  unstable_useEnhancedEffect as useEnhancedEffect,
   unstable_capitalize as capitalize,
   unstable_composeClasses as composeClasses,
 } from '@mui/utils';
@@ -19,6 +18,7 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { gridDensitySelector } from '../../hooks/features/density/densitySelector';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridDensity } from '../../models/gridDensity';
+import { useIsSSR } from '../../hooks/utils/useIsSSR';
 import { GridHeader } from '../GridHeader';
 import { GridBody, GridFooterPlaceholder } from '../base';
 
@@ -54,19 +54,26 @@ const GridRoot = forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(pro
   const apiRef = useGridPrivateApiContext();
   const density = useGridSelector(apiRef, gridDensitySelector);
   const rootElementRef = apiRef.current.rootElementRef;
-  const handleRef = useForkRef(rootElementRef, ref);
+
+  const rootMountCallback = React.useCallback(
+    (node: HTMLElement | null) => {
+      if (node === null) {
+        return;
+      }
+      apiRef.current.publishEvent('rootMount', node);
+    },
+    [apiRef],
+  );
+
+  const handleRef = useForkRef(rootElementRef, ref, rootMountCallback);
 
   const ownerState = rootProps;
 
   const classes = useUtilityClasses(ownerState, density);
 
-  // Our implementation of <NoSsr />
-  const [mountedState, setMountedState] = React.useState(false);
-  useEnhancedEffect(() => {
-    setMountedState(true);
-  }, []);
+  const isSSR = useIsSSR();
 
-  if (!mountedState) {
+  if (isSSR) {
     return null;
   }
 
