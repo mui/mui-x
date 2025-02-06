@@ -1,5 +1,5 @@
 import { RefObject } from '@mui/x-internals/types';
-import { GridSignature } from '../../utils/useGridApiEventHandler';
+import { GridSignature } from '../../../constants/signature';
 import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
 import { gridFilteredRowsLookupSelector } from '../filter/gridFilterSelector';
 import { gridSortedRowIdsSelector } from '../sorting/gridSortingSelector';
