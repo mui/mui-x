@@ -7,7 +7,7 @@ import {
   randomBoolean,
 } from '@mui/x-data-grid-generator';
 
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient({
   defaultOptions: {

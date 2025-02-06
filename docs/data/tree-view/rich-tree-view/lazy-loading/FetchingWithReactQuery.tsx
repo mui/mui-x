@@ -7,7 +7,11 @@ import {
   randomBoolean,
 } from '@mui/x-data-grid-generator';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-import { QueryClient, QueryClientProvider, useQueryClient } from 'react-query';
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
 
@@ -36,7 +40,10 @@ export function FetchChildren() {
 
   const fetchTreeItems = async (parentId?: string) => {
     const queryKey = parentId ? ['treeItems', parentId] : ['treeItems', 'root'];
-    const data = await myQueryClient.fetchQuery(queryKey, () => fetchData(parentId));
+    const data = await myQueryClient.fetchQuery({
+      queryKey,
+      queryFn: () => fetchData(parentId),
+    });
     return data;
   };
 

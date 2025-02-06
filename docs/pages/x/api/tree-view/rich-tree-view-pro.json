@@ -29,10 +29,7 @@
       "default": "'content'"
     },
     "experimentalFeatures": {
-      "type": {
-        "name": "shape",
-        "description": "{ lazyLoading?: bool }"
-      }
+      "type": { "name": "shape", "description": "{ lazyLoading?: bool }" }
     },
     "getItemId": {
       "type": { "name": "func" },

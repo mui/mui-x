@@ -7,7 +7,7 @@ import {
   randomBoolean,
 } from '@mui/x-data-grid-generator';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { DataSourceCache } from '@mui/x-tree-view/utils';
 
 const queryClient = new QueryClient({
