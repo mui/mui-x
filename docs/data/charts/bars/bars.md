@@ -8,16 +8,26 @@ components: BarChart, BarChartPro, BarElement, BarPlot, ChartsGrid, BarLabel
 
 <p class="description">Bar charts express quantities through a bar's length, using a common baseline.</p>
 
+{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
+
+## Introduction
+
+TK
+
 ## Basics
 
-Bar charts series should contain a `data` property containing an array of values.
+```tsx
+import { BarChart } from '@mui/x-charts/BarChart';
+```
+
+Bar chart series should contain a `data` property containing an array of values.
 
 You can customize bar ticks with the `xAxis`.
 This axis might have `scaleType='band'` and its `data` should have the same length as your series.
 
 {{"demo": "BasicBars.js"}}
 
-### Using a dataset
+### Dataset helper
 
 If your data is stored in an array of objects, you can use the `dataset` helper prop.
 It accepts an array of objects such as `dataset={[{x: 1, y: 32}, {x: 2, y: 41}, ...]}`.
@@ -28,9 +38,9 @@ For example `xAxis={[{ dataKey: 'x'}]}` or `series={[{ dataKey: 'y'}]}`.
 
 {{"demo": "BarsDataset.js"}}
 
-## Bar size
+### Bar size
 
-You can define bar dimensions with `categoryGapRatio` and `barGapRatio` properties.
+You can define bar dimensions with `categoryGapRatio` and `barGapRatio` props.
 
 The `categoryGapRatio` defines the gap between two categories.
 The ratio is obtained by dividing the size of the gap by the size of the category (the space used by bars).
@@ -42,9 +52,16 @@ And a value of `-1` will make bars overlap on top of each other.
 
 {{"demo": "BarGapNoSnap.js", "hideToolbar": true, "bg": "playground"}}
 
-## Stacking
+### Bar direction
 
-Each bar series can get a `stack` property expecting a string value.
+Bar charts can be rendered with a horizontal layout by providing the `layout="horizontal"` prop.
+If you're using [composition](/x/react-charts/composition/), you should set the property `layout: 'horizontal'` to each bar series object.
+
+{{"demo": "HorizontalBars.js"}}
+
+### Stacking
+
+Each bar series can get a `stack` prop expecting a string value.
 Series with the same `stack` will be stacked on top of each other.
 
 {{"demo": "StackBars.js"}}
@@ -57,14 +74,61 @@ By default, they are stacked in the order you defined them, with positive values
 
 For more information, see [stacking docs](/x/react-charts/stacking/).
 
-## Layout
+### Grid
 
-### Bar direction
+You can add a grid in the background of the chart with the `grid` prop.
 
-Bar charts can be rendered with a horizontal layout by providing the `layout="horizontal"` prop.
-If you're using [composition](/x/react-charts/composition/), you should set the property `layout: 'horizontal'` to each bar series object.
+See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information.
 
-{{"demo": "HorizontalBars.js"}}
+{{"demo": "GridDemo.js"}}
+
+### Border radius
+
+To give your bar chart rounded corners, you can change the value of the `borderRadius` property on the [BarChart](/x/api/charts/bar-chart/#bar-chart-prop-slots).
+
+It works with any positive value and is properly applied to horizontal layouts, stacks, and negative values.
+
+{{"demo": "BorderRadius.js"}}
+
+### Labels
+
+You can display labels on the bars.
+To do so, the `BarChart` or `BarPlot` accepts a `barLabel` property.
+It can either get a function that gets the bar item and some context.
+Or you can pass `'value'` to display the raw value of the bar.
+
+{{"demo": "BarLabel.js"}}
+
+#### Custom labels
+
+You can display, change, or hide labels based on conditional logic.
+To do so, provide a function to the `barLabel`.
+Labels are not displayed if the function returns `null`.
+
+In the example we display a `'High'` text on values higher than 10, and hide values when the generated bar height is lower than 60px.
+
+{{"demo": "CustomLabels.js"}}
+
+### Animation
+
+To skip animation at the creation and update of your chart, you can use the `skipAnimation` prop.
+When set to `true` it skips animation powered by `@react-spring/web`.
+
+Charts containers already use the `useReducedMotion()` from `@react-spring/web` to skip animation [according to user preferences](https://react-spring.dev/docs/utilities/use-reduced-motion#why-is-it-important).
+
+```jsx
+// For a single component chart
+<BarChart skipAnimation />
+
+// For a composed chart
+<ChartContainer>
+  <BarPlot skipAnimation />
+</ChartContainer>
+```
+
+{{"demo": "BarAnimation.js"}}
+
+## Customization
 
 ### Tick placement
 
@@ -76,14 +140,6 @@ When using a `"band"` scale, the axis has some additional customization properti
 You can test all configuration options in the following demo:
 
 {{"demo": "TickPlacementBars.js"}}
-
-### Grid
-
-You can add a grid in the background of the chart with the `grid` prop.
-
-See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information.
-
-{{"demo": "GridDemo.js"}}
 
 ### Color scale
 
@@ -100,38 +156,11 @@ Learn more about the `colorMap` properties in the [Styling docs](/x/react-charts
 
 {{"demo": "ColorScale.js"}}
 
-### Border radius
+### Click events
 
-To give your bar chart rounded corners, you can change the value of the `borderRadius` property on the [BarChart](/x/api/charts/bar-chart/#bar-chart-prop-slots).
+Bar charts provide two click handlers:
 
-It works with any positive value and is properly applied to horizontal layouts, stacks, and negative values.
-
-{{"demo": "BorderRadius.js"}}
-
-## Labels
-
-You can display labels on the bars.
-To do so, the `BarChart` or `BarPlot` accepts a `barLabel` property.
-It can either get a function that gets the bar item and some context.
-Or you can pass `'value'` to display the raw value of the bar.
-
-{{"demo": "BarLabel.js"}}
-
-### Custom labels
-
-You can display, change, or hide labels based on conditional logic.
-To do so, provide a function to the `barLabel`.
-Labels are not displayed if the function returns `null`.
-
-In the example we display a `'High'` text on values higher than 10, and hide values when the generated bar height is lower than 60px.
-
-{{"demo": "CustomLabels.js"}}
-
-## Click event
-
-Bar charts provides two click handlers:
-
-- `onItemClick` for click on a specific bar.
+- `onItemClick` for a click on a specific bar.
 - `onAxisClick` for a click anywhere in the chart
 
 They both provide the following signature.
@@ -153,7 +182,7 @@ Their is a slight difference between the `event` of `onItemClick` and `onAxisCli
 
 :::
 
-### Composition
+### With composed Bar Charts
 
 If you're using composition, you can get those click event as follows.
 Notice that the `onAxisClick` will handle both bar and line series if you mix them.
@@ -165,21 +194,6 @@ Notice that the `onAxisClick` will handle both bar and line series if you mix th
 </ChartContainer>
 ```
 
-## Animation
+## Composition
 
-To skip animation at the creation and update of your chart, you can use the `skipAnimation` prop.
-When set to `true` it skips animation powered by `@react-spring/web`.
-
-Charts containers already use the `useReducedMotion()` from `@react-spring/web` to skip animation [according to user preferences](https://react-spring.dev/docs/utilities/use-reduced-motion#why-is-it-important).
-
-```jsx
-// For a single component chart
-<BarChart skipAnimation />
-
-// For a composed chart
-<ChartContainer>
-  <BarPlot skipAnimation />
-</ChartContainer>
-```
-
-{{"demo": "BarAnimation.js"}}
+TK
