@@ -3,6 +3,74 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.25.1
+
+<!-- generated comparing v7.25.0..v7.x -->
+
+_Feb 6, 2025_
+
+We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+TODO INSERT HIGHLIGHTS
+
+Following are all team members who have contributed to this release:
+@arminmeh, @noraleonte, @LukasTy, @KenanYusuf.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.25.1`
+
+- [data grid] Fix "no rows" overlay not showing with active aggregation (#16468) @KenanYusuf
+
+#### `@mui/x-data-grid-pro@7.25.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.25.1`, plus:
+
+- [DataGridPro] Fix the return type of `useGridApiContext()` for Pro and Premium packages on React < 19 (#16446) @arminmeh
+
+#### `@mui/x-data-grid-premium@7.25.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.25.1`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.25.1`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@7.25.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.25.1`, plus:
+
+- [DateRangePicker] Fix `currentMonthCalendarPosition` prop behavior on mobile (#16457) @LukasTy
+- [DateRangePicker] Fix vertical alignment for multi input fields (#16490) @noraleonte
+
+### Charts
+
+#### `@mui/x-charts@7.25.1`
+
+Internal changes.
+
+#### `@mui/x-charts-pro@7.25.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@7.25.1`.
+
+### Tree View
+
+#### `@mui/x-tree-view@7.25.1`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@7.25.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@7.25.1`.
+
+### Core
+
+- [core] Fix corepack and pnpm installation in CircleCI (@flaviendelangle) (#16452) @arminmeh
+
 ## 7.25.0
 
 _Jan 31, 2025_
