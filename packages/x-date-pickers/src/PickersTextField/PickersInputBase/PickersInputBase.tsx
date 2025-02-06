@@ -114,6 +114,7 @@ const PickersInputBaseSection = styled(PickersSectionListSection, {
   letterSpacing: 'inherit',
   lineHeight: '1.4375em', // 23px
   display: 'inline-block',
+  whiteSpace: 'nowrap',
 }));
 
 const PickersInputBaseSectionContent = styled(PickersSectionListSectionContent, {
