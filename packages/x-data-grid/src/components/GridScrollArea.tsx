@@ -104,7 +104,7 @@ function GridScrollAreaContent(props: ScrollAreaProps) {
   const sideOffset = useGridSelector(apiRef, offsetSelector, scrollDirection);
 
   const getCanScrollMore = () => {
-    const dimensions = gridDimensionsSelector(apiRef.current.state);
+    const dimensions = gridDimensionsSelector(apiRef);
     if (scrollDirection === 'left') {
       // Only render if the user has not reached yet the start of the list
       return scrollPosition.current.left > 0;
