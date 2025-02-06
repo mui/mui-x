@@ -35,6 +35,10 @@ export type ChartContextValue<
   svgRef: React.RefObject<SVGSVGElement | null>;
 };
 
+export type ChartPluginParams<TSignatures extends readonly ChartAnyPluginSignature[]> =
+  UseChartBaseProps<TSignatures> &
+    MergeSignaturesProperty<[...ChartCorePluginSignatures, ...TSignatures], 'params'>;
+
 export interface ChartProviderProps<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
@@ -43,8 +47,7 @@ export interface ChartProviderProps<
    * Array of plugins used to add features to the chart.
    */
   plugins?: ConvertSignaturesIntoPlugins<TSignatures>;
-  pluginParams?: UseChartBaseProps<TSignatures> &
-    MergeSignaturesProperty<[...ChartCorePluginSignatures, ...TSignatures], 'params'>;
+  pluginParams?: ChartPluginParams<TSignatures>;
   /**
    * The configuration helpers used to compute attributes according to the serries type.
    * @ignore Unstable props for internal usage.

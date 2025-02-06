@@ -22,7 +22,7 @@ describe('<DataGrid /> - Filter panel', () => {
     columns: [{ field: 'brand' }],
   };
 
-  let apiRef: RefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   function TestCase(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
@@ -35,7 +35,7 @@ describe('<DataGrid /> - Filter panel', () => {
 
   it('should add an id and `operator` to the filter item created when opening the filter panel', () => {
     render(<TestCase />);
-    act(() => apiRef.current.showFilterPanel('brand'));
+    act(() => apiRef.current?.showFilterPanel('brand'));
     const model = gridFilterModelSelector(apiRef);
     expect(model.items).to.have.length(1);
     expect(model.items[0].id).not.to.equal(null);

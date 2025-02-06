@@ -26,7 +26,7 @@ const formatter: SeriesProcessor<'scatter'> = ({ series, seriesOrder }, dataset)
               x: d[datasetKeys.x] ?? null,
               y: d[datasetKeys.y] ?? null,
               z: datasetKeys.z && d[datasetKeys.z],
-              id: d[datasetKeys.id],
+              id: datasetKeys.id && d[datasetKeys.id],
             } as ScatterValueType;
           }) ?? []);
 

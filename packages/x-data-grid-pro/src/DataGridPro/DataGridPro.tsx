@@ -22,6 +22,7 @@ const configuration = {
   },
 };
 const releaseInfo = getReleaseInfo();
+const watermark = <Watermark packageName="x-data-grid-pro" releaseInfo={releaseInfo} />;
 
 const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowModel>(
   inProps: DataGridProProps<R>,
@@ -34,6 +35,7 @@ const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowMod
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, propValidatorsDataGridPro);
   }
+
   return (
     <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
       <GridRoot
@@ -43,7 +45,7 @@ const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowMod
         {...props.slotProps?.root}
         ref={ref}
       >
-        <Watermark packageName="x-data-grid-pro" releaseInfo={releaseInfo} />
+        {watermark}
       </GridRoot>
     </GridContextProvider>
   );
@@ -74,7 +76,7 @@ DataGridProRaw.propTypes = {
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef: PropTypes.shape({
-    current: PropTypes.object.isRequired,
+    current: PropTypes.object,
   }),
   /**
    * The label of the Data Grid.

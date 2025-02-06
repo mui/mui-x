@@ -35,6 +35,7 @@ export {
   gridHeaderFilteringMenuSelector,
 } from '../hooks/features/headerFiltering/gridHeaderFilteringSelectors';
 export type { GridSlotsComponentsProps } from '../models/gridSlotsComponentsProps';
+export type { GridFilterInputValueProps } from '../models/gridFilterInputComponent';
 export {
   useGridColumnMenu,
   columnMenuStateInitializer,
@@ -60,6 +61,7 @@ export { useGridDensity, densityStateInitializer } from '../hooks/features/densi
 export { useGridCsvExport } from '../hooks/features/export/useGridCsvExport';
 export { useGridPrintExport } from '../hooks/features/export/useGridPrintExport';
 export { useGridFilter, filterStateInitializer } from '../hooks/features/filter/useGridFilter';
+export { defaultGridFilterLookup } from '../hooks/features/filter/gridFilterState';
 export { passFilterLogic } from '../hooks/features/filter/gridFilterUtils';
 export {
   gridFilteredChildrenCountLookupSelector,
@@ -113,7 +115,6 @@ export {
   headerFilteringStateInitializer,
   useGridHeaderFiltering,
 } from '../hooks/features/headerFiltering/useGridHeaderFiltering';
-export { calculatePinnedRowsHeight } from '../hooks/features/rows/gridRowsUtils';
 export {
   useGridRowSelection,
   rowSelectionStateInitializer,
@@ -128,6 +129,7 @@ export {
   dimensionsStateInitializer,
   useGridDimensions,
 } from '../hooks/features/dimensions/useGridDimensions';
+export * from '../hooks/features/dimensions/gridDimensionsSelectors';
 export { useGridStatePersistence } from '../hooks/features/statePersistence/useGridStatePersistence';
 export type { GridRestoreStatePreProcessingContext } from '../hooks/features/statePersistence/gridStatePersistenceInterface';
 export {

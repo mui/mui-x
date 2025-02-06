@@ -96,7 +96,7 @@ import {
 import { useGridClipboardImport } from '../hooks/features/clipboard/useGridClipboardImport';
 
 export const useDataGridPremiumComponent = (
-  inputApiRef: RefObject<GridApiPremium> | undefined,
+  inputApiRef: RefObject<GridApiPremium | null> | undefined,
   props: DataGridPremiumProcessedProps,
 ) => {
   const apiRef = useGridInitialization<GridPrivateApiPremium, GridApiPremium>(inputApiRef, props);
@@ -122,7 +122,6 @@ export const useDataGridPremiumComponent = (
   /**
    * Register all state initializers here.
    */
-  useGridInitializeState(dimensionsStateInitializer, apiRef, props);
   useGridInitializeState(headerFilteringStateInitializer, apiRef, props);
   useGridInitializeState(rowGroupingStateInitializer, apiRef, props);
   useGridInitializeState(aggregationStateInitializer, apiRef, props);
@@ -143,18 +142,19 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(densityStateInitializer, apiRef, props);
   useGridInitializeState(columnReorderStateInitializer, apiRef, props);
   useGridInitializeState(columnResizeStateInitializer, apiRef, props);
-  useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
   useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
   useGridInitializeState(virtualizationStateInitializer, apiRef, props);
   useGridInitializeState(dataSourceStateInitializer, apiRef, props);
+  useGridInitializeState(dimensionsStateInitializer, apiRef, props);
+  useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(listViewStateInitializer, apiRef, props);
 
   useGridRowGrouping(apiRef, props);
   useGridHeaderFiltering(apiRef, props);
   useGridTreeData(apiRef, props);
-  useGridDataSource(apiRef, props);
   useGridAggregation(apiRef, props);
+  useGridDataSource(apiRef, props);
   useGridKeyboardNavigation(apiRef, props);
   useGridRowSelection(apiRef, props);
   useGridCellSelection(apiRef, props);

@@ -1,6 +1,6 @@
 import {
-  PickersPopperSlots,
-  PickersPopperSlotProps,
+  PickerPopperSlots,
+  PickerPopperSlotProps,
   UsePickerViewsProps,
   DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
@@ -12,11 +12,11 @@ import {
   UseRangePickerSlots,
 } from '../models/useRangePicker';
 
-export interface UseDesktopRangePickerSlots extends UseRangePickerSlots, PickersPopperSlots {}
+export interface UseDesktopRangePickerSlots extends UseRangePickerSlots, PickerPopperSlots {}
 
 export interface UseDesktopRangePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends UseRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
-    PickersPopperSlotProps {}
+    PickerPopperSlotProps {}
 
 export interface DesktopRangeOnlyPickerProps extends RangeOnlyPickerProps {
   /**

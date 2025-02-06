@@ -7,7 +7,7 @@ import { LicenseInfo, generateLicense } from '@mui/x-license';
 import { options } from '../utils/options';
 
 describe('BarChartPro', () => {
-  const dataLength = 500;
+  const dataLength = 400;
   const data = Array.from({ length: dataLength + 1 }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,
@@ -32,7 +32,7 @@ describe('BarChartPro', () => {
       const { findByText } = render(
         <BarChartPro
           xAxis={[{ id: 'x', scaleType: 'band', data: xData, zoom: { filterMode: 'discard' } }]}
-          initialZoom={[{ axisId: 'x', start: 0.25, end: 0.75 }]}
+          initialZoom={[{ axisId: 'x', start: 25, end: 75 }]}
           series={[
             {
               data: yData,

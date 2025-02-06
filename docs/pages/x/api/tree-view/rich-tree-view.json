@@ -20,9 +20,7 @@
       "type": { "name": "enum", "description": "'content'<br>&#124;&nbsp;'iconContainer'" },
       "default": "'content'"
     },
-    "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ labelEditing?: bool }" }
-    },
+    "experimentalFeatures": { "type": { "name": "object" } },
     "getItemId": {
       "type": { "name": "func" },
       "default": "(item) => item.id",
@@ -50,7 +48,10 @@
         "returned": "boolean"
       }
     },
-    "isItemEditable": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;bool" } },
+    "isItemEditable": {
+      "type": { "name": "union", "description": "func<br>&#124;&nbsp;bool" },
+      "default": "() => false"
+    },
     "itemChildrenIndentation": {
       "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
       "default": "12px"

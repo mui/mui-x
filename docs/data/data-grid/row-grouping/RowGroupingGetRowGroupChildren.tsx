@@ -28,7 +28,7 @@ export default function RowGroupingGetRowGroupChildren() {
   const handleRowClick = React.useCallback<GridEventListener<'rowClick'>>(
     (params) => {
       // Only log groups
-      if (apiRef.current.getRowNode(params.id)?.type !== 'group') {
+      if (apiRef.current?.getRowNode(params.id)?.type !== 'group') {
         return;
       }
 
@@ -37,7 +37,7 @@ export default function RowGroupingGetRowGroupChildren() {
       });
 
       const rowTitles = rowIds.map(
-        (rowId) => apiRef.current.getRow<Movie>(rowId)!.title,
+        (rowId) => apiRef.current!.getRow<Movie>(rowId)!.title,
       );
 
       setLastGroupClickedChildren(rowTitles);

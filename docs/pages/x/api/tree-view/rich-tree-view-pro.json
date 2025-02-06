@@ -31,7 +31,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ itemsReordering?: bool, labelEditing?: bool, lazyLoading?: bool }"
+        "description": "{ lazyLoading?: bool }"
       }
     },
     "getItemId": {
@@ -61,7 +61,10 @@
         "returned": "boolean"
       }
     },
-    "isItemEditable": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;bool" } },
+    "isItemEditable": {
+      "type": { "name": "union", "description": "func<br>&#124;&nbsp;bool" },
+      "default": "() => false"
+    },
     "isItemReorderable": {
       "type": { "name": "func" },
       "default": "() => true",

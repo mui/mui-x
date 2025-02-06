@@ -7,8 +7,8 @@ import {
   AnimationProvider,
   ChartSeriesType,
   ChartAnyPluginSignature,
+  ChartProviderProps,
 } from '@mui/x-charts/internals';
-import { HighlightedProvider } from '@mui/x-charts/context';
 import { ChartDataProviderProps } from '@mui/x-charts/ChartDataProvider';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
 import { AllPluginSignatures } from '../internals/plugins/allPlugins';
@@ -21,7 +21,8 @@ const packageIdentifier = 'x-charts-pro';
 export type ChartDataProviderProProps<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
-> = ChartDataProviderProps<TSeries, TSignatures>;
+> = ChartDataProviderProps<TSeries, TSignatures> &
+  Omit<ChartProviderProps<TSeries, TSignatures>['pluginParams'], 'children'>;
 
 /**
  * Orchestrates the data providers for the chart components and hooks.
@@ -53,19 +54,17 @@ export type ChartDataProviderProProps<
 function ChartDataProviderPro<TSeries extends ChartSeriesType = ChartSeriesType>(
   props: ChartDataProviderProProps<TSeries>,
 ) {
-  const { children, highlightedProviderProps, animationProviderProps, chartProviderProps } =
+  const { children, animationProviderProps, chartProviderProps } =
     useChartDataProviderProProps(props);
 
   useLicenseVerifier(packageIdentifier, releaseInfo);
 
   return (
     <ChartProvider {...chartProviderProps}>
-      <HighlightedProvider {...highlightedProviderProps}>
-        <AnimationProvider {...animationProviderProps}>
-          {children}
-          <Watermark packageName={packageIdentifier} releaseInfo={releaseInfo} />
-        </AnimationProvider>
-      </HighlightedProvider>
+      <AnimationProvider {...animationProviderProps}>
+        {children}
+        <Watermark packageName={packageIdentifier} releaseInfo={releaseInfo} />
+      </AnimationProvider>
     </ChartProvider>
   );
 }
@@ -83,7 +82,7 @@ ChartDataProviderPro.propTypes = {
   children: PropTypes.node,
   /**
    * Color palette used to colorize multiple series.
-   * @default blueberryTwilightPalette
+   * @default rainbowSurgePalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   /**
@@ -91,15 +90,22 @@ ChartDataProviderPro.propTypes = {
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
   /**
+   * If `true`, the charts will not listen to the mouse move event.
+   * It might break interactive features, but will improve performance.
+   * @default false
+   */
+  disableAxisListener: PropTypes.bool,
+  /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height: PropTypes.number,
   /**
-   * The item currently highlighted. Turns highlighting into a controlled prop.
+   * The highlighted item.
+   * Used when the highlight is controlled.
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.
@@ -127,6 +133,13 @@ ChartDataProviderPro.propTypes = {
     right: PropTypes.number,
     top: PropTypes.number,
   }),
+  /**
+   * The function called for onClick events.
+   * The second argument contains information about all line/bar elements at the current mouse position.
+   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
+   * @param {null | AxisData} data The data about the clicked axis and items associated with it.
+   */
+  onAxisClick: PropTypes.func,
   /**
    * The callback fired when the highlighted item changes.
    *

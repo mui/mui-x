@@ -192,8 +192,6 @@ RichTreeViewPro.propTypes = {
    * the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
-    itemsReordering: PropTypes.bool,
-    labelEditing: PropTypes.bool,
     lazyLoading: PropTypes.bool,
   }),
   /**
@@ -227,17 +225,15 @@ RichTreeViewPro.propTypes = {
    */
   isItemDisabled: PropTypes.func,
   /**
-   * Determines if a given item is editable or not.
-   * Make sure to also enable the `labelEditing` experimental feature:
-   * `<RichTreeViewPro experimentalFeatures={{ labelEditing: true }}  />`.
-   * By default, the items are not editable.
+   * Determine if a given item can be edited.
    * @template R
    * @param {R} item The item to check.
-   * @returns {boolean} `true` if the item is editable.
+   * @returns {boolean} `true` if the item can be edited.
+   * @default () => false
    */
   isItemEditable: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   /**
-   * Used to determine if a given item can be reordered.
+   * Determine if a given item can be reordered.
    * @param {string} itemId The id of the item to check.
    * @returns {boolean} `true` if the item can be reordered.
    * @default () => true
@@ -252,8 +248,6 @@ RichTreeViewPro.propTypes = {
   items: PropTypes.array.isRequired,
   /**
    * If `true`, the reordering of items is enabled.
-   * Make sure to also enable the `itemsReordering` experimental feature:
-   * `<RichTreeViewPro experimentalFeatures={{ itemsReordering: true }} itemsReordering />`.
    * @default false
    */
   itemsReordering: PropTypes.bool,

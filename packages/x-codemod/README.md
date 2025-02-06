@@ -173,6 +173,24 @@ Replace `row` and `column` values by `horizontal` and `vertical` respectively.
  />
 ```
 
+#### `replace-legend-position-values`
+
+Replace `"left" | "middle" | "right"` values `"start" | "center" | "end"` respectively.
+This is to align with the CSS values and reflect the RTL ability of the legend component.
+
+```diff
+ <BarChart
+    slotProps={{
+      legend: {
+        position: {
+-          horizontal: "left",
++          horizontal: "start",
+        }
+      }
+    }}
+ />
+```
+
 #### `rename-responsive-chart-container`
 
 Renames `ResponsiveChartContainer` and `ResponsiveChartContainerPro` by `ChartContainer` and `ChartContainerPro` which have the same behavior in v8.
@@ -186,6 +204,15 @@ Renames `ResponsiveChartContainer` and `ResponsiveChartContainerPro` by `ChartCo
    <BarPlot />
 -</ResponsiveChartContainer>
 +</ChartContainer>
+```
+
+#### `rename-legend-position-type`
+
+Renames `LegendPosition` to `Position`.
+
+```diff
+-import { LegendPosition } from '@mui/x-charts/ChartsLegend';
++import { Position } from '@mui/x-charts/models';
 ```
 
 > [!WARNING]
@@ -213,6 +240,20 @@ Renames `labelFontSize` and `tickFontSize` props to the corresponding `xxxStyle`
 +    fontSize: 20
 +  }}
  />
+```
+
+#### `remove-on-axis-click-handler`
+
+Remove the `<ChartsOnAxisClickHandler />` and move the associated `onAxisClick` prop to its parent.
+
+> [!WARNING]
+> This codemode does not work if component got renamed or if the handler is not a direct child of the container.
+
+```diff
++ <ChartContainer onAxisClick={() => {}}>
+- <ChartContainer>
+-   <ChartsOnAxisClickHandler onAxisClick={() => {}} />
+ </ChartContainer>
 ```
 
 ### Data Grid codemods

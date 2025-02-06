@@ -7,17 +7,10 @@ import {
   SingleInputDateRangeFieldProps,
 } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { FieldType } from '@mui/x-date-pickers-pro/models';
 
-type FieldComponent = ((
-  props: SingleInputDateRangeFieldProps & React.RefAttributes<HTMLInputElement>,
-) => React.JSX.Element) & { fieldType?: FieldType };
-
-const WrappedSingleInputDateRangeField = React.forwardRef(
-  (props: SingleInputDateRangeFieldProps, ref: React.Ref<HTMLInputElement>) => {
-    return <SingleInputDateRangeField size="small" {...props} ref={ref} />;
-  },
-) as FieldComponent;
+function WrappedSingleInputDateRangeField(props: SingleInputDateRangeFieldProps) {
+  return <SingleInputDateRangeField size="small" {...props} />;
+}
 
 WrappedSingleInputDateRangeField.fieldType = 'single-input';
 

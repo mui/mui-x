@@ -56,7 +56,6 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
    */
   index: number;
   rowHeight: number | 'auto';
-  offsetTop: number | undefined;
   offsetLeft: number;
   columnsTotalWidth: number;
   firstColumnIndex: number;
@@ -92,7 +91,6 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     className,
     visibleColumns,
     pinnedColumns,
-    offsetTop,
     offsetLeft,
     columnsTotalWidth,
     firstColumnIndex,
@@ -128,7 +126,10 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
   );
   const handleRef = useForkRef(ref, refProp);
   const rowNode = apiRef.current.getRowNode(rowId);
-  const editing = useGridSelector(apiRef, gridRowIsEditingSelector, rowId);
+  const editing = useGridSelector(apiRef, gridRowIsEditingSelector, {
+    rowId,
+    editMode: rootProps.editMode,
+  });
   const editable = rootProps.editMode === GridEditModes.Row;
   const hasFocusCell = focusedColumnIndex !== undefined;
   const hasVirtualFocusCellLeft =
@@ -475,7 +476,9 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
       {cells}
       <div role="presentation" className={clsx(gridClasses.cell, gridClasses.cellEmpty)} />
       {rightCells}
-      {scrollbarWidth !== 0 && <ScrollbarFiller pinnedRight={pinnedColumns.right.length > 0} />}
+      {scrollbarWidth !== 0 && (
+        <ScrollbarFiller pinnedRight={pinnedColumns.right.length > 0} borderTop={!isFirstVisible} />
+      )}
     </div>
   );
 });
@@ -503,7 +506,6 @@ GridRow.propTypes = {
   isNotVisible: PropTypes.bool.isRequired,
   lastColumnIndex: PropTypes.number.isRequired,
   offsetLeft: PropTypes.number.isRequired,
-  offsetTop: PropTypes.number,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,
   onMouseEnter: PropTypes.func,

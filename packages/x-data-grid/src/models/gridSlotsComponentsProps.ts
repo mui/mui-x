@@ -6,7 +6,6 @@ import type { CircularProgressProps as MUICircularProgressProps } from '@mui/mat
 import type { LinearProgressProps as MUILinearProgressProps } from '@mui/material/LinearProgress';
 import type { MenuListProps } from '@mui/material/MenuList';
 import type { MenuItemProps as MUIMenuItemProps } from '@mui/material/MenuItem';
-import type { TextFieldProps } from '@mui/material/TextField';
 import type { FormControlProps } from '@mui/material/FormControl';
 import type { SelectProps } from '@mui/material/Select';
 import type { SwitchProps } from '@mui/material/Switch';
@@ -45,6 +44,7 @@ import type {
   MenuItemProps,
   SkeletonProps,
   TooltipProps,
+  TextFieldProps,
 } from './gridBaseSlots';
 
 type RootProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;
