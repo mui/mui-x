@@ -111,13 +111,13 @@ export interface SparkLineChartProps
   /**
    * Color palette used to colorize multiple series.
    * @default rainbowSurgePalette
-   * @deprecated use {@link color} prop instead
+   * @deprecated use the `color` prop instead
    */
   colors?: ChartContainerProps['colors'];
 
   /**
    * Color used to colorize the sparkline.
-   * @default rainbowSurgePalette
+   * @default rainbowSurgePalette[0]
    */
   color?: ChartsColor;
 }
@@ -262,13 +262,13 @@ SparkLineChart.propTypes = {
   className: PropTypes.string,
   /**
    * Color used to colorize the sparkline.
-   * @default rainbowSurgePalette
+   * @default rainbowSurgePalette[0]
    */
   color: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   /**
    * Color palette used to colorize multiple series.
    * @default rainbowSurgePalette
-   * @deprecated use {@link color} prop instead
+   * @deprecated use the `color` prop instead
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   /**
