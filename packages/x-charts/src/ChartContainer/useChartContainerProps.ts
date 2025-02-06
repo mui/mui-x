@@ -4,11 +4,14 @@ import { ChartsSurfaceProps } from '../ChartsSurface';
 import { ChartDataProviderProps } from '../ChartDataProvider';
 import type { ChartContainerProps } from './ChartContainer';
 import { ChartSeriesType } from '../models/seriesType/config';
-import { ALL_PLUGINS, AllPluginSignatures, AllPluginsType } from '../internals/plugins/allPlugins';
-import { ChartAnyPluginSignature } from '../internals/plugins/models';
+import { ALL_PLUGINS, AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
 
-export type UseChartContainerPropsReturnValue<TSeries extends ChartSeriesType> = {
-  chartDataProviderProps: ChartDataProviderProps<TSeries, AllPluginSignatures<TSeries>>;
+export type UseChartContainerPropsReturnValue<
+  TSeries extends ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[],
+> = {
+  chartDataProviderProps: Omit<ChartDataProviderProps<TSeries, TSignatures>, 'children'>;
   chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> };
   children: React.ReactNode;
 };
@@ -19,7 +22,7 @@ export const useChartContainerProps = <
 >(
   props: ChartContainerProps<TSeries, TSignatures>,
   ref: React.Ref<SVGSVGElement>,
-): UseChartContainerPropsReturnValue<TSeries> => {
+): UseChartContainerPropsReturnValue<TSeries, TSignatures> => {
   const {
     width,
     height,
@@ -29,15 +32,25 @@ export const useChartContainerProps = <
     colors,
     dataset,
     desc,
+    // @ts-ignore
     onAxisClick,
     disableAxisListener,
+    // @ts-ignore
     highlightedItem,
+    // @ts-ignore
     onHighlightChange,
     sx,
     title,
+    // @ts-ignore
     xAxis,
+    // @ts-ignore
     yAxis,
+    // @ts-ignore
     zAxis,
+    // @ts-ignore
+    rotationAxis,
+    // @ts-ignore
+    radiusAxis,
     skipAnimation,
     seriesConfig,
     plugins,
@@ -52,27 +65,26 @@ export const useChartContainerProps = <
     ...other,
   };
 
-  const chartDataProviderProps: Omit<
-    ChartDataProviderProps<TSeries, AllPluginSignatures<TSeries>>,
-    'children'
-  > = {
+  const chartDataProviderProps = {
     margin,
     series,
     colors,
     dataset,
+    disableAxisListener,
     highlightedItem,
     onHighlightChange,
     onAxisClick,
     xAxis,
     yAxis,
     zAxis,
+    rotationAxis,
+    radiusAxis,
     skipAnimation,
     width,
     height,
     seriesConfig,
-    plugins: plugins ?? (ALL_PLUGINS as unknown as AllPluginsType<TSeries>),
-    disableAxisListener,
-  };
+    plugins: plugins ?? ALL_PLUGINS,
+  } as unknown as Omit<ChartDataProviderProps<TSeries, TSignatures>, 'children'>;
 
   return {
     chartDataProviderProps,

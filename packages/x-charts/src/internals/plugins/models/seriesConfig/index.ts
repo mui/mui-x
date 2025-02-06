@@ -1,5 +1,6 @@
 export * from './colorProcessor.types';
-export * from './extremumGetter.types';
+export * from './cartesianExtremumGetter.types';
+export * from './polarExtremumGetter.types';
 export * from './seriesConfig.types';
 export * from './seriesProcessor.types';
 export * from './tooltipGetter.types';
