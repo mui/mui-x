@@ -11,6 +11,7 @@ import {
   gridRowMaximumTreeDepthSelector,
   useGridApiOptionHandler,
   GridRowId,
+  gridRowTreeSelector,
 } from '@mui/x-data-grid';
 import {
   gridEditRowsStateSelector,
@@ -114,7 +115,7 @@ export const useGridRowReorder = (
         return;
       }
 
-      const rowNode = apiRef.current.getRowNode(params.id);
+      const rowNode = gridRowTreeSelector(apiRef)[params.id];
 
       if (!rowNode || rowNode.type === 'footer' || rowNode.type === 'pinnedRow') {
         return;

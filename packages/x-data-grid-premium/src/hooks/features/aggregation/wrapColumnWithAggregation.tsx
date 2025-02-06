@@ -1,6 +1,11 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import { GridColDef, GridFilterOperator, GridRowId } from '@mui/x-data-grid-pro';
+import {
+  GridColDef,
+  GridFilterOperator,
+  GridRowId,
+  gridRowTreeSelector,
+} from '@mui/x-data-grid-pro';
 import {
   type GridBaseColDef,
   gridPropsStateSelector,
@@ -205,7 +210,7 @@ export const wrapColumnWithAggregationValue = ({
     field: string,
   ): GridAggregationLookup[GridRowId][string] | null => {
     let cellAggregationPosition: GridAggregationPosition | null = null;
-    const rowNode = apiRef.current.getRowNode(id)!;
+    const rowNode = gridRowTreeSelector(apiRef)[id];
 
     if (rowNode.type === 'group') {
       cellAggregationPosition = 'inline';

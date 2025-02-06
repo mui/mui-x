@@ -209,7 +209,7 @@ export const useGridRowSelection = (
         return false;
       }
 
-      const rowNode = apiRef.current.getRowNode(id);
+      const rowNode = gridRowTreeSelector(apiRef)[id];
       if (rowNode?.type === 'footer' || rowNode?.type === 'pinnedRow') {
         return false;
       }
@@ -574,7 +574,7 @@ export const useGridRowSelection = (
         }
       }
 
-      const rowNode = apiRef.current.getRowNode(params.id);
+      const rowNode = gridRowTreeSelector(apiRef)[params.id];
       if (rowNode!.type === 'pinnedRow') {
         return;
       }

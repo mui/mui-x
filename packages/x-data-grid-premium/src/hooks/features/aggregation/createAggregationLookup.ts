@@ -46,7 +46,7 @@ const getGroupAggregatedValue = (
     //   A.B
     //     A.B.A
     //     A.B.B
-    const rowNode = apiRef.current.getRowNode(rowId)!;
+    const rowNode = gridRowTreeSelector(apiRef)[rowId];
     if (rowNode.type === 'group') {
       return;
     }
