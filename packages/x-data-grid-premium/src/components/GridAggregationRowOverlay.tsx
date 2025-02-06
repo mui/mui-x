@@ -3,14 +3,13 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import { styled } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
 import {
-  GRID_ROOT_GROUP_ID,
   gridRowsLoadingSelector,
   getDataGridUtilityClass,
   useGridRootProps,
 } from '@mui/x-data-grid-pro';
 import { GridSkeletonLoadingOverlayInner, useGridSelector } from '@mui/x-data-grid-pro/internals';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
-import { gridAggregationLookupSelector } from '../hooks/features/aggregation/gridAggregationSelectors';
+import { gridAggregationModelSelector } from '../hooks/features/aggregation/gridAggregationSelectors';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 
 const GridAggregationRowOverlayWrapper = styled('div', {
@@ -39,17 +38,12 @@ const GridAggregationRowOverlay = forwardRef<HTMLDivElement, React.HTMLAttribute
     const rootProps = useGridRootProps();
     const classes = useUtilityClasses({ classes: rootProps.classes });
     const isLoading = useGridSelector(apiRef, gridRowsLoadingSelector);
-    const aggregationLookup = useGridSelector(apiRef, gridAggregationLookupSelector);
-    if (!isLoading) {
-      return null;
-    }
-    const rootLookup = aggregationLookup[GRID_ROOT_GROUP_ID];
-    const initialDataFetched = Object.values(rootLookup).some(({ value }) => value !== '');
-    if (initialDataFetched) {
+    const aggregationModel = useGridSelector(apiRef, gridAggregationModelSelector);
+    if (!isLoading || Object.keys(aggregationModel).length === 0) {
       return null;
     }
 
-    const visibleColumns = new Set(Object.keys(rootLookup));
+    const visibleColumns = new Set(Object.keys(aggregationModel));
 
     return (
       <GridAggregationRowOverlayWrapper className={classes.root}>
