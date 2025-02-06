@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { styled } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
 import {
@@ -23,7 +24,7 @@ import { GridVirtualScrollerFiller as SpaceFiller } from './GridVirtualScrollerF
 import { GridVirtualScrollerRenderZone as RenderZone } from './GridVirtualScrollerRenderZone';
 import { GridVirtualScrollbar as Scrollbar } from './GridVirtualScrollbar';
 import { GridLoadingOverlayVariant } from '../GridLoadingOverlay';
-import { GridStateCommunity } from '../../models/gridStateCommunity';
+import { GridApiCommunity } from '../../models/api/gridApiCommunity';
 
 type OwnerState = Pick<DataGridProcessedProps, 'classes'> & {
   hasScrollX: boolean;
@@ -72,7 +73,8 @@ const Scroller = styled('div', {
   zIndex: 0,
 });
 
-const hasPinnedRightSelector = (state: GridStateCommunity) => state.dimensions.rightPinnedWidth > 0;
+const hasPinnedRightSelector = (apiRef: RefObject<GridApiCommunity>) =>
+  apiRef.current.state.dimensions.rightPinnedWidth > 0;
 
 export interface GridVirtualScrollerProps {
   children?: React.ReactNode;

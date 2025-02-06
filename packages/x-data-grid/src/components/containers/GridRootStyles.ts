@@ -1,3 +1,4 @@
+import { RefObject } from '@mui/x-internals/types';
 import { CSSInterpolation } from '@mui/system';
 import {
   alpha,
@@ -13,7 +14,7 @@ import { gridClasses as c } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
-import { GridStateCommunity } from '../../models/gridStateCommunity';
+import { GridApiCommunity } from '../../models/api/gridApiCommunity';
 
 export type OwnerState = DataGridProcessedProps;
 
@@ -54,9 +55,10 @@ const separatorIconDragStyles = {
 const ignoreSsrWarning =
   '/* emotion-disable-server-rendering-unsafe-selector-warning-please-do-not-use-this-the-warning-exists-for-a-reason */';
 
-const shouldShowBorderTopRightRadiusSelector = (state: GridStateCommunity) =>
-  state.dimensions.hasScrollX &&
-  (!state.dimensions.hasScrollY || state.dimensions.scrollbarSize === 0);
+const shouldShowBorderTopRightRadiusSelector = (apiRef: RefObject<GridApiCommunity>) =>
+  apiRef.current.state.dimensions.hasScrollX &&
+  (!apiRef.current.state.dimensions.hasScrollY ||
+    apiRef.current.state.dimensions.scrollbarSize === 0);
 
 export const GridRootStyles = styled('div', {
   name: 'MuiDataGrid',
