@@ -3,7 +3,7 @@ import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { useScatterSeries, useXScale, useYScale } from '@mui/x-charts/hooks';
 
 const data1 = [
-  { x: 100, y: 200, id: 1 },
+  { x: 95, y: 200, id: 1 },
   { x: 120, y: 100, id: 2 },
   { x: 170, y: 300, id: 3 },
   { x: 140, y: 250, id: 4 },
@@ -17,18 +17,20 @@ const data2 = [
   { x: 340, y: 350, id: 4 },
   { x: 420, y: 280, id: 5 },
 ];
+const series = [
+  { id: 's1', data: data1, label: 'Open' },
+  { id: 's2', data: data2, label: 'Closed' },
+];
 
 function LinkPoints({ seriesId, close }: { seriesId: string; close?: boolean }) {
   const scatter = useScatterSeries();
   const xScale = useXScale();
   const yScale = useYScale();
 
-  if (!scatter) {
+  if (!scatter || !scatter.series[seriesId]) {
     return null;
   }
-
-  const color = scatter.series[seriesId]?.color;
-  const data = scatter.series[seriesId]?.data;
+  const { color, data } = scatter.series[seriesId];
 
   if (!data) {
     return null;
@@ -48,23 +50,7 @@ function LinkPoints({ seriesId, close }: { seriesId: string; close?: boolean }) 
 
 export default function CustomScatter() {
   return (
-    <ScatterChart
-      series={[
-        {
-          id: 's1',
-          data: data1,
-          label: 'Open',
-        },
-        {
-          data: data2,
-          id: 's2',
-          label: 'Closed',
-        },
-      ]}
-      xAxis={[{ min: 0 }]}
-      width={500}
-      height={300}
-    >
+    <ScatterChart series={series} width={500} height={300}>
       <LinkPoints seriesId="s1" />
       <LinkPoints seriesId="s2" close />
     </ScatterChart>

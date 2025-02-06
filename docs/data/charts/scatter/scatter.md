@@ -121,7 +121,8 @@ See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information
 
 You can customize the plotting of the data in a scatter chart by providing custom components as `children` of the `ScatterChart` component.
 
-A scatter chart's series can be accessed through the `useScatterSeries` hook. This hook returns the order of the series and information about the series themselves, including their data points, color, etc.
+A scatter chart's series can be accessed through the `useScatterSeries` hook.
+This hook returns the order of the series and information about the series themselves, including their data points, color, etc.
 
 See [Custom components](/x/react-charts/components/) to learn how to further customize your charts.
 
