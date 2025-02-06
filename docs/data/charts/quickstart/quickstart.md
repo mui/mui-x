@@ -138,10 +138,3 @@ const theme = createTheme({
   },
 });
 ```
-
-## Using this documentation
-
-Most Chart components have two accompanying documents:
-
-1. **Overview** – a general description of built-in features
-2. **Demos** – a collection of custom examples
