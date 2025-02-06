@@ -26,36 +26,38 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
         return;
       }
 
-      const colorsExpression = attribute.node.value.expression;
+      const colorsAttributeExpression = attribute.node.value.expression;
 
-      let colorExpression;
+      let colorAttributeExpression;
 
-      if (colorsExpression.type === 'ArrayExpression') {
-        colorExpression = j.memberExpression(colorsExpression, j.literal(0));
-      } else if (colorsExpression.type === 'Identifier') {
-        colorExpression = j.conditionalExpression(
+      if (colorsAttributeExpression.type === 'ArrayExpression') {
+        colorAttributeExpression = j.chainExpression(
+          j.optionalMemberExpression(colorsAttributeExpression, j.literal(0)),
+        );
+      } else if (colorsAttributeExpression.type === 'Identifier') {
+        colorAttributeExpression = j.conditionalExpression(
           j.binaryExpression(
             '===',
-            j.unaryExpression('typeof', colorsExpression),
+            j.unaryExpression('typeof', colorsAttributeExpression),
             j.literal('function'),
           ),
           j.arrowFunctionExpression(
             [j.identifier('mode')],
             j.chainExpression(
               j.optionalMemberExpression(
-                j.callExpression(colorsExpression, [j.identifier('mode')]),
+                j.callExpression(colorsAttributeExpression, [j.identifier('mode')]),
                 j.literal(0),
               ),
             ),
           ),
-          colorsExpression,
+          colorsAttributeExpression,
         );
-      } else if (colorsExpression.type === 'ArrowFunctionExpression') {
-        colorExpression = j.arrowFunctionExpression(
+      } else if (colorsAttributeExpression.type === 'ArrowFunctionExpression') {
+        colorAttributeExpression = j.arrowFunctionExpression(
           [j.identifier('mode')],
           j.chainExpression(
             j.optionalMemberExpression(
-              j.callExpression(colorsExpression, [j.identifier('mode')]),
+              j.callExpression(colorsAttributeExpression, [j.identifier('mode')]),
               j.literal(0),
             ),
           ),
@@ -65,11 +67,11 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
       }
 
       // Only apply transformation if we know how to handle it
-      if (colorExpression) {
+      if (colorAttributeExpression) {
         j(attribute).replaceWith(
           j.jsxAttribute(
             j.jsxIdentifier(props[attribute.node.name.name as string]),
-            j.jsxExpressionContainer(colorExpression),
+            j.jsxExpressionContainer(colorAttributeExpression),
           ),
         );
       }
