@@ -13,6 +13,7 @@ function Chart() {
       <SparkLineChart data={data} colors={['red']} />
       <SparkLineChart data={data} colors={fn} />
       <SparkLineChart data={data} colors={(mode) => (mode === 'light' ? ['black'] : ['white'])} />
+      <SparkLineChart data={data} colors="red" />
     </React.Fragment>
   );
 }
