@@ -11,11 +11,11 @@ import {
   gridRowMaximumTreeDepthSelector,
   useGridApiOptionHandler,
   GridRowId,
-  gridRowTreeSelector,
 } from '@mui/x-data-grid';
 import {
   gridEditRowsStateSelector,
   gridSortedRowIndexLookupSelector,
+  gridRowNodeSelector,
 } from '@mui/x-data-grid/internals';
 import { GridRowOrderChangeParams } from '../../../models/gridRowOrderChangeParams';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
@@ -115,7 +115,7 @@ export const useGridRowReorder = (
         return;
       }
 
-      const rowNode = gridRowTreeSelector(apiRef)[params.id];
+      const rowNode = gridRowNodeSelector(apiRef, params.id);
 
       if (!rowNode || rowNode.type === 'footer' || rowNode.type === 'pinnedRow') {
         return;

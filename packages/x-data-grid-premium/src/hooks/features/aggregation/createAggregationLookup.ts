@@ -8,6 +8,7 @@ import {
   gridRowTreeSelector,
   GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid-pro';
+import { gridRowNodeSelector } from '@mui/x-data-grid-pro/internals';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
@@ -46,7 +47,7 @@ const getGroupAggregatedValue = (
     //   A.B
     //     A.B.A
     //     A.B.B
-    const rowNode = gridRowTreeSelector(apiRef)[rowId];
+    const rowNode = gridRowNodeSelector(apiRef, rowId);
     if (rowNode.type === 'group') {
       return;
     }

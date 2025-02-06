@@ -1,5 +1,6 @@
 import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import type { GridStateCommunity } from '../../../models/gridStateCommunity';
+import type { GridRowId } from '../../../models/gridRows';
 
 const gridRowsStateSelector = (state: GridStateCommunity) => state.rows;
 
@@ -25,6 +26,11 @@ export const gridRowsLookupSelector = createSelector(
 );
 
 export const gridRowTreeSelector = createSelector(gridRowsStateSelector, (rows) => rows.tree);
+
+export const gridRowNodeSelector = createSelector(
+  gridRowTreeSelector,
+  (rowTree, rowId: GridRowId) => rowTree[rowId],
+);
 
 export const gridRowGroupsToFetchSelector = createSelector(
   gridRowsStateSelector,

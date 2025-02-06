@@ -11,7 +11,7 @@ import {
   GridSortModel,
   GridSortCellParams,
 } from '../../../models/gridSortModel';
-import { gridRowTreeSelector } from '../rows/gridRowsSelector';
+import { gridRowNodeSelector } from '../rows/gridRowsSelector';
 
 type GridSortingFieldComparator = {
   getSortCellParams: (id: GridRowId) => GridSortCellParams;
@@ -83,7 +83,7 @@ const parseSortItem = (
   const getSortCellParams = (id: GridRowId): GridSortCellParams => ({
     id,
     field: column.field,
-    rowNode: gridRowTreeSelector(apiRef)[id],
+    rowNode: gridRowNodeSelector(apiRef, id),
     value: apiRef.current.getCellValue(id, column.field),
     api: apiRef.current,
   });

@@ -1,8 +1,8 @@
-import { GRID_STRING_COL_DEF, GridColDef, gridRowTreeSelector } from '@mui/x-data-grid';
+import { GRID_STRING_COL_DEF, GridColDef } from '@mui/x-data-grid';
 import {
   GRID_TREE_DATA_GROUPING_FIELD,
-  gridPropsStateSelector,
-  getRowId,
+  gridRowIdSelector,
+  gridRowNodeSelector,
 } from '@mui/x-data-grid/internals';
 
 /**
@@ -18,9 +18,8 @@ export const GRID_TREE_DATA_GROUPING_COL_DEF: Omit<GridColDef, 'field' | 'editab
   align: 'left',
   width: 200,
   valueGetter: (value, row, column, apiRef) => {
-    const { getRowId: getRowIdProp } = gridPropsStateSelector(apiRef.current.state);
-    const rowId = getRowId(row, getRowIdProp);
-    const rowNode = gridRowTreeSelector(apiRef)[rowId];
+    const rowId = gridRowIdSelector(apiRef, row);
+    const rowNode = gridRowNodeSelector(apiRef, rowId);
     return rowNode?.type === 'group' || rowNode?.type === 'leaf' ? rowNode.groupingKey : undefined;
   },
 };

@@ -1,5 +1,6 @@
 import { RefObject } from '@mui/x-internals/types';
-import { GridRowEntry, gridRowTreeSelector } from '@mui/x-data-grid';
+import { GridRowEntry } from '@mui/x-data-grid';
+import { gridRowNodeSelector } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 
 export const findSkeletonRowsSection = ({
@@ -19,9 +20,9 @@ export const findSkeletonRowsSection = ({
 
   while (!isSkeletonSectionFound && firstRowIndex < lastRowIndex) {
     const isStartingWithASkeletonRow =
-      gridRowTreeSelector(apiRef)[visibleRowsSection[startIndex].id]?.type === 'skeletonRow';
+      gridRowNodeSelector(apiRef, visibleRowsSection[startIndex].id)?.type === 'skeletonRow';
     const isEndingWithASkeletonRow =
-      gridRowTreeSelector(apiRef)[visibleRowsSection[endIndex].id]?.type === 'skeletonRow';
+      gridRowNodeSelector(apiRef, visibleRowsSection[endIndex].id)?.type === 'skeletonRow';
 
     if (isStartingWithASkeletonRow && isEndingWithASkeletonRow) {
       isSkeletonSectionFound = true;

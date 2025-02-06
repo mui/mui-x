@@ -4,8 +4,7 @@ import { GridHeaderCheckbox } from '../components/columnSelection/GridHeaderChec
 import { selectedIdsLookupSelector } from '../hooks/features/rowSelection/gridRowSelectionSelector';
 import { GridColDef } from '../models/colDef/gridColDef';
 import { GRID_BOOLEAN_COL_DEF } from './gridBooleanColDef';
-import { gridPropsStateSelector } from '../hooks/core/useGridProps';
-import { getRowId } from '../hooks/features/rows/gridRowsUtils';
+import { gridRowIdSelector } from '../hooks/core/useGridProps';
 
 export const GRID_CHECKBOX_SELECTION_FIELD = '__check__';
 
@@ -26,8 +25,7 @@ export const GRID_CHECKBOX_SELECTION_COL_DEF: GridColDef = {
   display: 'flex',
   valueGetter: (value, row, column, apiRef) => {
     const selectionLookup = selectedIdsLookupSelector(apiRef);
-    const { getRowId: getRowIdProp } = gridPropsStateSelector(apiRef.current.state);
-    const rowId = getRowId(row, getRowIdProp);
+    const rowId = gridRowIdSelector(apiRef, row);
     return selectionLookup[rowId] !== undefined;
   },
   renderHeader: (params) => <GridHeaderCheckbox {...params} />,

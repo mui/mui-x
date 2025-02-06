@@ -13,7 +13,7 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridListColumnSelector } from '../listView/gridListViewSelectors';
-import { gridRowTreeSelector } from './gridRowsSelector';
+import { gridRowNodeSelector } from './gridRowsSelector';
 
 export class MissingRowIdError extends Error {}
 
@@ -89,7 +89,7 @@ export function useGridParamsApi(
   const getCellParams = React.useCallback<GridParamsApi['getCellParams']>(
     (id, field) => {
       const row = apiRef.current.getRow(id);
-      const rowNode = gridRowTreeSelector(apiRef)[id];
+      const rowNode = gridRowNodeSelector(apiRef, id);
 
       if (!row || !rowNode) {
         throw new MissingRowIdError(`No row with id #${id} found`);
