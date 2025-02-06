@@ -82,8 +82,8 @@ By using `invert`, the value associated with the current mouse coordinate `y` ca
 Information about series is accessible through the `useSeries` and `use*Series` hooks.
 These hooks return the order of the series and their configuration, including data points, color, among others.
 
-You can leverage that information to create custom charts. For example, you can use `useLineSeries` to obtain the series of
-a line chart and display an indicator of the minimum and maximum values of each series:
+You can leverage that information to create custom charts.
+For example, you can use `useLineSeries` to obtain the series of a line chart and display an indicator of the minimum and maximum values of each series:
 
 {{"demo": "SeriesDemo.js"}}
 

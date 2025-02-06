@@ -76,14 +76,12 @@ function PointLabel({ x, y, placement, color }) {
         left,
         top,
         translate: '-50% -50%',
-        background: color,
+        border: `2px solid ${color}`,
         borderRadius: 1,
         px: 1,
       }}
     >
-      <Typography variant="caption" sx={{ mixBlendMode: 'difference' }}>
-        {y}
-      </Typography>
+      <Typography variant="caption">{y}</Typography>
     </Box>
   );
 }
