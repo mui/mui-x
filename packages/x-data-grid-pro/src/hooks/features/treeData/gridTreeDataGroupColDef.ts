@@ -1,5 +1,9 @@
-import { GRID_STRING_COL_DEF, GridColDef } from '@mui/x-data-grid';
-import { GRID_TREE_DATA_GROUPING_FIELD } from '@mui/x-data-grid/internals';
+import { GRID_STRING_COL_DEF, GridColDef, gridRowTreeSelector } from '@mui/x-data-grid';
+import {
+  GRID_TREE_DATA_GROUPING_FIELD,
+  gridPropsStateSelector,
+  getRowId,
+} from '@mui/x-data-grid/internals';
 
 /**
  * TODO: Add sorting and filtering on the value and the filteredDescendantCount
@@ -14,8 +18,9 @@ export const GRID_TREE_DATA_GROUPING_COL_DEF: Omit<GridColDef, 'field' | 'editab
   align: 'left',
   width: 200,
   valueGetter: (value, row, column, apiRef) => {
-    const rowId = apiRef.current.getRowId(row);
-    const rowNode = apiRef.current.getRowNode(rowId);
+    const { getRowId: getRowIdProp } = gridPropsStateSelector(apiRef.current.state);
+    const rowId = getRowId(row, getRowIdProp);
+    const rowNode = gridRowTreeSelector(apiRef)[rowId];
     return rowNode?.type === 'group' || rowNode?.type === 'leaf' ? rowNode.groupingKey : undefined;
   },
 };

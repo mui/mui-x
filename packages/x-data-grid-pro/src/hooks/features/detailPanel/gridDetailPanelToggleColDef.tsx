@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { GRID_STRING_COL_DEF, GridColDef } from '@mui/x-data-grid';
-import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '@mui/x-data-grid/internals';
+import {
+  GRID_DETAIL_PANEL_TOGGLE_FIELD,
+  gridPropsStateSelector,
+  getRowId,
+} from '@mui/x-data-grid/internals';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { GridDetailPanelToggleCell } from '../../../components/GridDetailPanelToggleCell';
 import { gridDetailPanelExpandedRowIdsSelector } from './gridDetailPanelSelector';
@@ -23,7 +27,8 @@ export const GRID_DETAIL_PANEL_TOGGLE_COL_DEF: GridColDef = {
   align: 'left',
   width: 40,
   valueGetter: (value, row, column, apiRef) => {
-    const rowId = apiRef.current.getRowId(row);
+    const { getRowId: getRowIdProp } = gridPropsStateSelector(apiRef.current.state);
+    const rowId = getRowId(row, getRowIdProp);
     const expandedRowIds = gridDetailPanelExpandedRowIdsSelector(
       (apiRef.current as GridApiPro).state,
     );

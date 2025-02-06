@@ -12,6 +12,8 @@ export { GridHeaders } from '../components/GridHeaders';
 export { GridBaseColumnHeaders } from '../components/columnHeaders/GridBaseColumnHeaders';
 export { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
 
+export { propsStateInitializer, gridPropsStateSelector } from '../hooks/core/useGridProps';
+export { getRowId } from '../hooks/features/rows/gridRowsUtils';
 export { getGridFilter } from '../components/panel/filterPanel/GridFilterPanel';
 export { getValueOptions } from '../components/panel/filterPanel/filterPanelUtils';
 export { useGridRegisterPipeProcessor } from '../hooks/core/pipeProcessing';

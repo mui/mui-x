@@ -9,8 +9,14 @@ import {
   GridGroupNode,
   GridTreeNodeWithRender,
   GridValueFormatter,
+  gridRowTreeSelector,
 } from '@mui/x-data-grid-pro';
-import { GridColumnRawLookup, isSingleSelectColDef } from '@mui/x-data-grid-pro/internals';
+import {
+  getRowId,
+  GridColumnRawLookup,
+  isSingleSelectColDef,
+  gridPropsStateSelector,
+} from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import { GridGroupingColumnFooterCell } from '../../../components/GridGroupingColumnFooterCell';
 import { GridGroupingCriteriaCell } from '../../../components/GridGroupingCriteriaCell';
@@ -210,8 +216,9 @@ export const createGroupingColDefForOneGroupingCriteria = ({
       return '';
     },
     valueGetter: (value, row, column, apiRef) => {
-      const rowId = apiRef.current.getRowId(row);
-      const rowNode = apiRef.current.getRowNode<GridTreeNodeWithRender>(rowId);
+      const { getRowId: getRowIdProp } = gridPropsStateSelector(apiRef.current.state);
+      const rowId = getRowId(row, getRowIdProp);
+      const rowNode = gridRowTreeSelector(apiRef)[rowId] as GridTreeNodeWithRender;
       if (!rowNode || rowNode.type === 'footer' || rowNode.type === 'pinnedRow') {
         return undefined;
       }
@@ -340,8 +347,9 @@ export const createGroupingColDefForAllGroupingCriteria = ({
       );
     },
     valueGetter: (value, row) => {
-      const rowId = apiRef.current.getRowId(row);
-      const rowNode = apiRef.current.getRowNode<GridTreeNodeWithRender>(rowId);
+      const { getRowId: getRowIdProp } = gridPropsStateSelector(apiRef.current.state);
+      const rowId = getRowId(row, getRowIdProp);
+      const rowNode = gridRowTreeSelector(apiRef)[rowId] as GridTreeNodeWithRender;
       if (!rowNode || rowNode.type === 'footer' || rowNode.type === 'pinnedRow') {
         return undefined;
       }

@@ -62,6 +62,7 @@ import {
   listViewStateInitializer,
   useGridListView,
 } from '../hooks/features/listView/useGridListView';
+import { propsStateInitializer } from '../hooks/core/useGridProps';
 
 export const useDataGridComponent = (
   inputApiRef: RefObject<GridApiCommunity | null> | undefined,
@@ -81,6 +82,7 @@ export const useDataGridComponent = (
   /**
    * Register all state initializers here.
    */
+  useGridInitializeState(propsStateInitializer, apiRef, props);
   useGridInitializeState(rowSelectionStateInitializer, apiRef, props);
   useGridInitializeState(columnsStateInitializer, apiRef, props);
   useGridInitializeState(paginationStateInitializer, apiRef, props);
