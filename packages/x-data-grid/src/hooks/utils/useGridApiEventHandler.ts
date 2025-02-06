@@ -108,6 +108,7 @@ export function unstable_resetCleanupTracking() {
   registryContainer.current = createRegistry();
 }
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const internal_registryContainer = registryContainer;
 
 function createRegistry() {
