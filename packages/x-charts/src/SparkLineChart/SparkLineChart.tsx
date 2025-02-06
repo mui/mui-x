@@ -35,7 +35,10 @@ export interface SparkLineChartSlotProps
     ChartsTooltipSlotProps {}
 
 export interface SparkLineChartProps
-  extends Omit<ChartContainerProps, 'series' | 'xAxis' | 'yAxis' | 'zAxis' | 'margin' | 'plugins'> {
+  extends Omit<
+    ChartContainerProps,
+    'series' | 'xAxis' | 'yAxis' | 'zAxis' | 'margin' | 'plugins' | 'colors'
+  > {
   /**
    * The xAxis configuration.
    * Notice it is a single [[AxisConfig]] object, not an array of configuration.
@@ -109,13 +112,6 @@ export interface SparkLineChartProps
   slotProps?: SparkLineChartSlotProps;
 
   /**
-   * Color palette used to colorize multiple series.
-   * @default rainbowSurgePalette
-   * @deprecated use the `color` prop instead
-   */
-  colors?: ChartContainerProps['colors'];
-
-  /**
    * Color used to colorize the sparkline.
    * @default rainbowSurgePalette[0]
    */
@@ -149,7 +145,6 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
     height,
     margin = SPARKLINE_DEFAULT_MARGIN,
     color,
-    colors: deprecatedColors,
     sx,
     showTooltip,
     showHighlight,
@@ -214,7 +209,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
           ...yAxis,
         },
       ]}
-      colors={colors ?? deprecatedColors}
+      colors={colors}
       sx={sx}
       disableAxisListener={
         (!showTooltip || slotProps?.tooltip?.trigger !== 'axis') &&
@@ -265,12 +260,6 @@ SparkLineChart.propTypes = {
    * @default rainbowSurgePalette[0]
    */
   color: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-  /**
-   * Color palette used to colorize multiple series.
-   * @default rainbowSurgePalette
-   * @deprecated use the `color` prop instead
-   */
-  colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   /**
    * @default 'linear'
    */
