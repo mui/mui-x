@@ -81,7 +81,6 @@ const defaultFormats: AdapterFormats = {
   fullTime12h: 'hh:mm a',
   fullTime24h: 'HH:mm',
 
-  keyboardDateTime: 'D t',
   keyboardDateTime12h: 'D hh:mm a',
   keyboardDateTime24h: 'D T',
 };

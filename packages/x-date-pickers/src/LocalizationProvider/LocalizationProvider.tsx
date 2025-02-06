@@ -180,7 +180,6 @@ LocalizationProvider.propTypes = {
     hours12h: PropTypes.string,
     hours24h: PropTypes.string,
     keyboardDate: PropTypes.string,
-    keyboardDateTime: PropTypes.string,
     keyboardDateTime12h: PropTypes.string,
     keyboardDateTime24h: PropTypes.string,
     meridiem: PropTypes.string,

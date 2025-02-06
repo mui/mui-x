@@ -70,7 +70,6 @@ const defaultFormats: AdapterFormats = {
   fullTime12h: 'hh:mm A',
   fullTime24h: 'HH:mm',
 
-  keyboardDateTime: 'jYYYY/jMM/jDD LT',
   keyboardDateTime12h: 'jYYYY/jMM/jDD hh:mm A',
   keyboardDateTime24h: 'jYYYY/jMM/jDD HH:mm',
 };

@@ -116,12 +116,6 @@ export interface AdapterFormats {
 
   // Date & Time formats
   /**
-   * A keyboard input friendly time format.
-   * Used in the date-time fields.
-   * @example "02/13/2020 11:44 PM" for locales with meridiem, "02/13/2020 23:44" for locales without meridiem.
-   */
-  keyboardDateTime: string;
-  /**
    * A keyboard input friendly time format for 12-hour clock.
    * Used in the date-time fields.
    * @example "02/13/2020 11:44 PM"
