@@ -7,16 +7,30 @@ import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import { DefaultizedLineSeriesType } from '@mui/x-charts/models';
 
-function ExtremaLabels({ seriesId }: { seriesId: string }) {
+function ExtremaLabels() {
   const lineSeries = useLineSeries();
-  const xAxis = useXAxis('x');
 
   if (!lineSeries) {
     return null;
   }
 
-  const series = lineSeries.series[seriesId];
+  return (
+    <React.Fragment>
+      {lineSeries.seriesOrder.map((seriesId) => (
+        <SingleSeriesExtremaLabels series={lineSeries.series[seriesId]} />
+      ))}
+    </React.Fragment>
+  );
+}
+
+function SingleSeriesExtremaLabels({
+  series,
+}: {
+  series: DefaultizedLineSeriesType;
+}) {
+  const xAxis = useXAxis('x');
 
   const min = series.data.reduce(
     (acc, value) => Math.min(acc ?? Infinity, value ?? Infinity),
@@ -106,8 +120,7 @@ export default function SeriesDemo() {
           <ChartsXAxis />
           <ChartsYAxis />
         </ChartsSurface>
-        <ExtremaLabels seriesId="a" />
-        <ExtremaLabels seriesId="b" />
+        <ExtremaLabels />
       </ChartDataProvider>
     </Box>
   );

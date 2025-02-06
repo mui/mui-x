@@ -28,7 +28,7 @@ export * from '@mui/x-charts/ChartDataProvider';
 export * from '@mui/x-charts/ChartsLabel';
 
 // Pro components
-export { useHeatmapSeries } from './hooks';
+export * from './hooks';
 export * from './Heatmap';
 export * from './ChartContainerPro';
 export * from './ChartDataProviderPro';
