@@ -5,6 +5,95 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## **8.0.0-alpha.11**
+
+<!-- generated comparing v8.0.0-alpha.10..master -->
+
+_Feb 7, 2025_
+
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+TODO INSERT HIGHLIGHTS
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@lauri865.
+Following are all team members who have contributed to this release:
+@alexfauquette, @arminmeh, @bernardobelchior, @flaviendelangle, @Janpot, @KenanYusuf, @LukasTy, @MBilalShafi, @noraleonte, @romgrk.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+From https://github.com/mui/mui-x/pull/16479
+
+### Breaking changes
+
+- `createUseGridApiEventHandler` is not exported anymore.
+
+#### `@mui/x-data-grid@8.0.0-alpha.11`
+
+- [data grid] Fix "no rows" overlay not showing with active aggregation (#16466) @KenanYusuf
+- [DataGrid] Avoid `<GridRoot />` double-render pass on mount in SPA mode (#15648) @lauri865
+- [DataGrid] Fix loading overlay not in sync with scroll (#16437) @MBilalShafi
+- [DataGrid] Refactor: remove material MenuList import (#16444) @romgrk
+- [DataGrid] Refactor: simplify useGridApiEventHandler (#16479) @romgrk
+
+#### `@mui/x-data-grid-pro@8.0.0-alpha.11` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.0.0-alpha.11`, plus:
+
+- [DataGridPro] Fix the return type of `useGridApiContext()` for Pro and Premium packages on React < 19 (#16441) @arminmeh
+
+#### `@mui/x-data-grid-premium@8.0.0-alpha.11` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.11`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.0.0-alpha.11`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@8.0.0-alpha.11` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.0.0-alpha.11`, plus:
+
+- [DateRangePicker] Fix `currentMonthCalendarPosition` prop behavior on mobile (#16455) @LukasTy
+- [DateRangePicker] Fix vertical alignment for multi input fields (#16489) @noraleonte
+
+### Charts
+
+#### `@mui/x-charts@8.0.0-alpha.11`
+
+- [charts] Add `color` prop to `Sparkline` and deprecate `colors` (#16477) @bernardobelchior
+- [charts] Remove component for axis event listener (#16314) @alexfauquette
+
+#### `@mui/x-charts-pro@8.0.0-alpha.11` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.0.0-alpha.11`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.0.0-alpha.11`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.0.0-alpha.11` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.0.0-alpha.11`.
+
+### Docs
+
+- [docs] Update colors default value (#16484) @bernardobelchior
+
+### Core
+
+- [core] Fix corepack and pnpm installation in CircleCI (#16434) @flaviendelangle
+- [code-infra] Update monorepo (#16112) @Janpot
+- [DateRangeCalendar] Support arrow navigation with multiple months rendered (#16363) @flaviendelangle
+- [test] Avoid test warning when running on React 18 (#16486) @LukasTy
+- [test] Disable `react-transition-group` transitions in unit testing (#16288) @lauri865
+
 ## 8.0.0-alpha.10
 
 _Jan 30, 2025_
@@ -50,6 +139,7 @@ Following are all team members who have contributed to this release:
   +  },
    });
   ```
+
 - The `detailPanels`, `pinnedColumns`, and `pinnedRowsRenderZone` classes have been removed.
 - Return type of the `useGridApiRef()` hook and the type of `apiRef` prop are updated to explicitly include the possibilty of `null`. In addition to this, `useGridApiRef()` returns a reference that is initialized with `null` instead of `{}`.
 
@@ -91,7 +181,7 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.10`.
 
 #### Breaking changes
 
-- The component passed to the `field` slot no longer receives the `ref`,  `disabled`, `className`, `sx`, `label`, `name`, `formatDensity`, `enableAccessibleFieldDOMStructure`, `selectedSections`, `onSelectedSectionsChange` and `inputRef` props — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#slot-field)
+- The component passed to the `field` slot no longer receives the `ref`, `disabled`, `className`, `sx`, `label`, `name`, `formatDensity`, `enableAccessibleFieldDOMStructure`, `selectedSections`, `onSelectedSectionsChange` and `inputRef` props — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#slot-field)
 - The `MuiPickersPopper` theme entry have been renamed `MuiPickerPopper` and some of its props have been removed — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#muipickerspopper)
 
 #### `@mui/x-date-pickers@8.0.0-alpha.10`
@@ -111,7 +201,7 @@ Same changes as in `@mui/x-date-pickers@8.0.0-alpha.10`.
 
 - Replace `legend.position.horizontal` from `"left" | "middle" | "right"` to `"start" | "center" | "end"`.
   This is to align with the CSS values and reflect the RTL ability of the legend component.
-- The default colors have changed. To keep using the old palette. It is possible to import `blueberryTwilightPalette` from  `@mui/x-charts/colorPalettes` and set it on the `colors` property of charts.
+- The default colors have changed. To keep using the old palette. It is possible to import `blueberryTwilightPalette` from `@mui/x-charts/colorPalettes` and set it on the `colors` property of charts.
 - The `id` property is now optional on the `Pie` and `Scatter` data types.
 
 #### `@mui/x-charts@8.0.0-alpha.10`
