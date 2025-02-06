@@ -27,7 +27,7 @@ export interface GridDataSourcePro extends Omit<GridDataSource, 'getRows'> {
   /**
    * This method will be called when the grid needs to fetch some rows.
    * @param {GridGetRowsParamsPro} params The parameters required to fetch the rows.
-   * @returns {Promise<GridGetRowsResponsePro>} A promise that resolves to the data of type [GridGetRowsResponsePremium].
+   * @returns {Promise<GridGetRowsResponsePro>} A promise that resolves to the data of type [GridGetRowsResponsePro].
    */
   getRows(params: GridGetRowsParamsPro): Promise<GridGetRowsResponsePro>;
   /**

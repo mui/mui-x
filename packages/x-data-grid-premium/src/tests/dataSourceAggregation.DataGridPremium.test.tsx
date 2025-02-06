@@ -15,15 +15,13 @@ import {
 } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
 import { getColumnHeaderCell } from 'test/utils/helperFn';
+import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
-describe('<DataGridPremium /> - Data source aggregation', () => {
+describeSkipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => {
   const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
   const fetchRowsSpy = spy();
-  let mockServer: ReturnType<typeof useMockServer>;
 
   // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
   function Reset() {
@@ -40,12 +38,10 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
   ) {
     apiRef = useGridApiRef();
     const { getAggregatedValue: getAggregatedValueProp, ...rest } = props;
-    mockServer = useMockServer<GridGetRowsResponse>(
+    const { fetchRows, columns, isReady } = useMockServer<GridGetRowsResponse>(
       { rowLength: 10, maxColumns: 1 },
       { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false },
     );
-
-    const { fetchRows } = mockServer;
 
     const dataSource: GridDataSource = React.useMemo(() => {
       return {
@@ -59,9 +55,9 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
 
           fetchRowsSpy(params);
 
-          const getRowsResponse = (await fetchRows(
+          const getRowsResponse = await fetchRows(
             `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
-          )) as GridGetRowsResponse;
+          );
 
           return {
             rows: getRowsResponse.rows,
@@ -77,36 +73,30 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
       };
     }, [fetchRows, getAggregatedValueProp]);
 
-    const baselineProps = {
-      unstable_dataSource: dataSource,
-      columns: mockServer.columns,
-      disableVirtualization: true,
-      aggregationFunctions: {
-        sum: { columnTypes: ['number'] },
-        avg: { columnTypes: ['number'] },
-        min: { columnTypes: ['number', 'date', 'dateTime'] },
-        max: { columnTypes: ['number', 'date', 'dateTime'] },
-        size: {},
-      },
-    };
-
-    if (!mockServer.isReady) {
+    if (!isReady) {
       return null;
     }
 
     return (
       <div style={{ width: 300, height: 300 }}>
         <Reset />
-        <DataGridPremium apiRef={apiRef} {...baselineProps} {...rest} />
+        <DataGridPremium
+          apiRef={apiRef}
+          unstable_dataSource={dataSource}
+          columns={columns}
+          disableVirtualization
+          aggregationFunctions={{
+            sum: { columnTypes: ['number'] },
+            avg: { columnTypes: ['number'] },
+            min: { columnTypes: ['number', 'date', 'dateTime'] },
+            max: { columnTypes: ['number', 'date', 'dateTime'] },
+            size: {},
+          }}
+          {...rest}
+        />
       </div>
     );
   }
-
-  beforeEach(function beforeTest() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
-  });
 
   it('should show aggregation option in the column menu', async () => {
     const { user } = render(<TestDataSourceAggregation />);

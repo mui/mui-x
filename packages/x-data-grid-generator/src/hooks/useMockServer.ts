@@ -35,7 +35,7 @@ const dataCache = new LRUCache<string, GridDemoData>({
 
 export const BASE_URL = 'https://mui.com/x/api/data-grid';
 
-type UseMockServerResponse<T extends GridGetRowsResponse> = {
+type UseMockServerResponse<T> = {
   columns: GridColDef[];
   initialState: GridInitialState;
   getGroupKey?: (row: GridRowModel) => string;
@@ -138,7 +138,7 @@ const getInitialState = (columns: GridColDefGenerator[], groupingField?: string)
 
 const defaultColDef = getGridDefaultColumnTypes();
 
-function sendEmptyResponse<T extends GridGetRowsResponse>() {
+function sendEmptyResponse<T>() {
   return new Promise<T>((resolve) => {
     resolve({ rows: [], rowCount: 0 } as unknown as T);
   });

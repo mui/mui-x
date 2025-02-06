@@ -26,7 +26,6 @@ import { HeightEntry } from '../../features/rows/gridRowsMetaInterfaces';
 export type GridPipeProcessorGroup = keyof GridPipeProcessingLookup;
 
 export interface GridPipeProcessingLookup {
-  clearDataSourceState: { value: null };
   columnMenu: {
     value: Array<string>;
     context: GridColDef;

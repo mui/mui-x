@@ -14,8 +14,6 @@ import {
   gridGetRowsParamsSelector,
   DataSourceRowsUpdateStrategy,
   GridStrategyGroup,
-  useGridRegisterPipeProcessor,
-  GridPipeProcessor,
 } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -47,10 +45,21 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
     () => new NestedDataManager(apiRef),
   ).current;
   const scheduledGroups = React.useRef<number>(0);
+
+  const clearDataSourceState = React.useCallback(() => {
+    nestedDataManager.clear();
+    scheduledGroups.current = 0;
+    const dataSourceState = apiRef.current.state.dataSource;
+    if (dataSourceState !== INITIAL_STATE) {
+      apiRef.current.resetDataSourceState();
+    }
+    return null;
+  }, [apiRef, nestedDataManager]);
+
   const { api, strategyProcessor, events, cacheChunkManager, cache } = useGridDataSourceBase(
     apiRef,
     props,
-    { ...options, fetchRowChildren: nestedDataManager.queue },
+    { ...options, fetchRowChildren: nestedDataManager.queue, clearDataSourceState },
   );
 
   const setStrategyAvailability = React.useCallback(() => {
@@ -225,18 +234,6 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
     fetchRowChildren,
     resetDataSourceState,
   };
-
-  const clearDataSourceState = React.useCallback<GridPipeProcessor<'clearDataSourceState'>>(() => {
-    nestedDataManager.clear();
-    scheduledGroups.current = 0;
-    const dataSourceState = apiRef.current.state.dataSource;
-    if (dataSourceState !== INITIAL_STATE) {
-      apiRef.current.resetDataSourceState();
-    }
-    return null;
-  }, [apiRef, nestedDataManager]);
-
-  useGridRegisterPipeProcessor(apiRef, 'clearDataSourceState', clearDataSourceState);
 
   React.useEffect(() => {
     if (

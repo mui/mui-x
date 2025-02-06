@@ -49,6 +49,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   options: {
     cacheOptions?: GridDataSourceCacheDefaultConfig;
     fetchRowChildren?: (parents: GridRowId[]) => void;
+    clearDataSourceState?: () => void;
   } = {},
 ) => {
   const setStrategyAvailability = React.useCallback(() => {
@@ -91,7 +92,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         return;
       }
 
-      apiRef.current.unstable_applyPipeProcessors('clearDataSourceState', null);
+      options.clearDataSourceState?.();
 
       const fetchParams = {
         ...gridGetRowsParamsSelector(apiRef),

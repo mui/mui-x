@@ -21,6 +21,9 @@ export interface GridGetRowsResponsePremium extends GridGetRowsResponse {
 }
 
 export interface GridGetRowsParamsPremium extends GridGetRowsParams {
+  /**
+   * List of aggregated columns.
+   */
   aggregationModel?: GridAggregationModel;
   /**
    * List of grouped columns (only applicable with `rowGrouping`).
