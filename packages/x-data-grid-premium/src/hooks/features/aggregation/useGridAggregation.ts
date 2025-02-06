@@ -64,7 +64,6 @@ export const useGridAggregation = (
       const currentModel = gridAggregationModelSelector(apiRef);
       if (currentModel !== model) {
         apiRef.current.setState(mergeStateWithAggregationModel(model));
-        apiRef.current.forceUpdate();
       }
     },
     [apiRef],
@@ -118,7 +117,6 @@ export const useGridAggregation = (
 
     // Re-apply the column hydration to wrap / unwrap the aggregated columns
     if (!areAggregationRulesEqual(rulesOnLastColumnHydration, aggregationRules)) {
-      apiRef.current.caches.aggregation.rulesOnLastColumnHydration = aggregationRules;
       apiRef.current.requestPipeProcessorsApplication('hydrateColumns');
     }
   }, [apiRef, applyAggregation, props.aggregationFunctions, props.disableAggregation]);

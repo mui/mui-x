@@ -16,6 +16,7 @@ import {
 } from '@mui/x-data-grid/internals';
 import { RowTreeBuilderGroupingCriterion } from './models';
 import { DataGridProProps } from '../../models/dataGridProProps';
+import type { GridStatePro } from '../../models/gridStatePro';
 
 export const getGroupRowIdFromPath = (path: RowTreeBuilderGroupingCriterion[]) => {
   const pathStr = path
@@ -240,10 +241,10 @@ export const getVisibleRowsLookup = ({
     return {};
   }
 
-  const visibleRowsLookup: Record<GridRowId, boolean> = {};
+  const visibleRowsLookup: GridStatePro['visibleRowsLookup'] = {};
 
   const handleTreeNode = (node: GridTreeNode, areAncestorsExpanded: boolean) => {
-    const isPassingFiltering = filteredRowsLookup[node.id];
+    const isPassingFiltering = filteredRowsLookup[node.id] !== false;
 
     if (node.type === 'group') {
       node.children.forEach((childId) => {
