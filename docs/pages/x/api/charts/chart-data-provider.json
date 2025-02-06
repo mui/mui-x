@@ -1,6 +1,7 @@
 {
   "props": {
-    "colors": { "type": { "name": "any" }, "default": "blueberryTwilightPalette" },
+    "colors": { "type": { "name": "any" }, "default": "rainbowSurgePalette" },
+    "dataset": { "type": { "name": "any" } },
     "height": { "type": { "name": "any" } },
     "id": { "type": { "name": "any" } },
     "margin": { "type": { "name": "any" } },
