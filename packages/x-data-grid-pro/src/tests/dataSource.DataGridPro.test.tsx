@@ -278,7 +278,23 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
   describe('Error handling', () => {
     it('should call `unstable_onDataSourceError` when the data source returns an error', async () => {
       const onDataSourceError = spy();
-      render(<TestDataSource unstable_onDataSourceError={onDataSourceError} shouldRequestsFail />);
+
+      const dataSource: GridDataSource = {
+        getRows: () => {
+          throw new Error('Could not fetch the data');
+        },
+      };
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            columns={[]}
+            unstable_dataSource={dataSource}
+            unstable_onDataSourceError={onDataSourceError}
+          />
+        </div>,
+      );
+
       await waitFor(() => {
         expect(onDataSourceError.callCount).to.equal(1);
       });
