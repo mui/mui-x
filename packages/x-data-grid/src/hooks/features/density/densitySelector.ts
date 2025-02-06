@@ -1,3 +1,4 @@
+import { RefObject } from '@mui/x-internals/types';
 import { createSelector } from '../../../utils/createSelector';
 import { GridDensity } from '../../../models/gridDensity';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -11,7 +12,7 @@ const DENSITY_FACTORS: Record<GridDensity, number> = {
   standard: 1,
 };
 
-export const gridDensitySelector = (apiRef: React.RefObject<GridApiCommunity>) =>
+export const gridDensitySelector = (apiRef: RefObject<GridApiCommunity>) =>
   apiRef.current.state.density;
 
 export const gridDensityFactorSelector = createSelector(

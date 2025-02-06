@@ -1,3 +1,4 @@
+import { RefObject } from '@mui/x-internals/types';
 import {
   GridPaginationModel,
   gridFilterModelSelector,
@@ -29,7 +30,7 @@ export const gridGetRowsParamsSelector = createSelector(
   },
 );
 
-export const gridDataSourceStateSelector = (apiRef: React.RefObject<GridApiPro>) =>
+export const gridDataSourceStateSelector = (apiRef: RefObject<GridApiPro>) =>
   apiRef.current.state.dataSource;
 
 export const gridDataSourceLoadingSelector = createSelector(

@@ -156,7 +156,6 @@ export const useGridSorting = (
       }
 
       const sortModel = gridSortModelSelector({
-        ...apiRef,
         current: { ...apiRef.current, state },
       });
       const sortRowList = buildAggregatedSortingApplier(sortModel, apiRef);
