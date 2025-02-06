@@ -32,7 +32,7 @@ From https://github.com/mui/mui-x/pull/16479
 
 #### `@mui/x-data-grid@8.0.0-alpha.11`
 
-- [data grid] Fix "no rows" overlay not showing with active aggregation (#16466) @KenanYusuf
+- [DataGrid] Fix "no rows" overlay not showing with active aggregation (#16466) @KenanYusuf
 - [DataGrid] Avoid `<GridRoot />` double-render pass on mount in SPA mode (#15648) @lauri865
 - [DataGrid] Fix loading overlay not in sync with scroll (#16437) @MBilalShafi
 - [DataGrid] Refactor: remove material MenuList import (#16444) @romgrk
