@@ -88,7 +88,6 @@ export function ListCell(props) {
             {showSize && <CardDetail>{formatSize(params.row.size)}</CardDetail>}
           </CardDetailList>
         )}
-
         {density === 'comfortable' && (showCreatedAt || showUpdatedAt) && (
           <CardDetail>
             {showUpdatedAt && `Updated ${formatDate(params.row.updatedAt)}`}
