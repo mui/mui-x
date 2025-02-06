@@ -28,7 +28,7 @@ import {
   useChartHighlight,
   UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
-import { defaultizeMargin } from '../internals/calculateMargins';
+import { defaultizeMargin } from '../internals/defaultizeMargin';
 
 export interface PieChartSlots
   extends PiePlotSlots,

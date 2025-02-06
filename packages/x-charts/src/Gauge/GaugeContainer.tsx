@@ -7,7 +7,7 @@ import { GaugeProvider, GaugeProviderProps } from './GaugeProvider';
 import { ChartProvider } from '../context/ChartProvider';
 import { MergeSignaturesProperty } from '../internals/plugins/models';
 import { ChartCorePluginSignatures } from '../internals/plugins/corePlugins';
-import { defaultizeMargin } from '../internals/calculateMargins';
+import { defaultizeMargin } from '../internals/defaultizeMargin';
 
 export interface GaugeContainerProps
   extends Omit<ChartsSurfaceProps, 'children'>,

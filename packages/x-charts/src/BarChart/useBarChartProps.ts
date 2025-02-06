@@ -11,7 +11,6 @@ import { ChartsAxisProps } from '../ChartsAxis';
 import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsLegendSlotExtension } from '../ChartsLegend';
 import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
-import { calculateMargins } from '../internals/calculateMargins';
 
 /**
  * A helper function that extracts BarChartProps from the input props
@@ -77,7 +76,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     })),
     width,
     height,
-    margin: calculateMargins({ margin, hideLegend, slotProps, series }),
+    margin,
     colors,
     dataset,
     xAxis:

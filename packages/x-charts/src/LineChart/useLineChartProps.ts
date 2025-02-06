@@ -14,7 +14,6 @@ import { LineHighlightPlotProps } from './LineHighlightPlot';
 import { LinePlotProps } from './LinePlot';
 import { MarkPlotProps } from './MarkPlot';
 import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
-import { calculateMargins } from '../internals/calculateMargins';
 
 /**
  * A helper function that extracts LineChartProps from the input props
@@ -68,7 +67,7 @@ export const useLineChartProps = (props: LineChartProps) => {
     })),
     width,
     height,
-    margin: calculateMargins({ margin, hideLegend, slotProps, series }),
+    margin,
     colors,
     dataset,
     xAxis: xAxis ?? [
