@@ -28,36 +28,30 @@ function SingleSeriesExtremaLabels({ series }) {
   const xAxis = useXAxis('x');
 
   const min = series.data.reduce(
-    (acc, value) => Math.min(acc ?? Infinity, value ?? Infinity),
-    Infinity,
+    (acc, value, index) =>
+      value != null && value < acc.value ? { index, value } : acc,
+    { index: -1, value: Infinity },
   );
   const max = series.data.reduce(
-    (acc, value) => Math.max(acc ?? -Infinity, value ?? -Infinity),
-    -Infinity,
+    (acc, value, index) =>
+      value != null && value > acc.value ? { index, value } : acc,
+    { index: -1, value: -Infinity },
   );
 
   return (
     <React.Fragment>
-      {series.data.map((y, index) => {
-        const x = xAxis.data?.[index];
-
-        if (x == null || y == null) {
-          return null;
-        }
-
-        if (y !== min && y !== max) {
-          return null;
-        }
-
-        return (
-          <PointLabel
-            x={x}
-            y={y}
-            placement={y === min ? 'below' : 'above'}
-            color={series.color}
-          />
-        );
-      })}
+      <PointLabel
+        x={xAxis.data?.[min.index]}
+        y={min.value}
+        placement="below"
+        color={series.color}
+      />
+      <PointLabel
+        x={xAxis.data?.[max.index]}
+        y={max.value}
+        placement="above"
+        color={series.color}
+      />
     </React.Fragment>
   );
 }
@@ -93,7 +87,7 @@ export default function SeriesDemo() {
         xAxis={[{ id: 'x', data: [1, 2, 3, 5, 8, 10] }]}
         series={[
           { id: 'a', type: 'line', data: [4, 6, 4, 9, 3, 5] },
-          { id: 'b', type: 'line', data: [3, 9, 8, 2, 4, 9] },
+          { id: 'b', type: 'line', data: [3, 7, 8, 2, 4, 9] },
         ]}
         yAxis={[{ min: 0, max: 10 }]}
         height={300}
