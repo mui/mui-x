@@ -4,14 +4,17 @@ import type { LayoutConfig } from '../models';
 import type { CartesianChartSeriesType, ChartsSeriesConfig } from '../models/seriesType/config';
 import { ChartMargin } from './plugins/corePlugins/useChartDimensions/useChartDimensions.types';
 
-export function numberToMargin(input: LayoutConfig['margin'], setDefault: true): ChartMargin;
-export function numberToMargin(
+export function defaultizeMargin(
   input: LayoutConfig['margin'],
-  setDefault?: false,
+  defaultMargin: ChartMargin,
+): ChartMargin;
+export function defaultizeMargin(
+  input: LayoutConfig['margin'],
+  defaultMargin?: ChartMargin,
 ): Partial<ChartMargin> | undefined;
-export function numberToMargin(
+export function defaultizeMargin(
   input: LayoutConfig['margin'],
-  setDefault?: boolean,
+  defaultMargin?: ChartMargin,
 ): Partial<ChartMargin> | undefined {
   if (typeof input === 'number') {
     return {
@@ -22,9 +25,9 @@ export function numberToMargin(
     };
   }
 
-  if (setDefault) {
+  if (defaultMargin) {
     return {
-      ...DEFAULT_MARGINS,
+      ...defaultMargin,
       ...input,
     };
   }
@@ -42,39 +45,32 @@ export const calculateMargins = <
   props: T,
 ): Required<LayoutConfig['margin']> => {
   if (props.hideLegend || !props.series?.some((s) => s.label)) {
-    return {
-      ...DEFAULT_MARGINS,
-      ...numberToMargin(props.margin),
-    };
+    return defaultizeMargin(props.margin, DEFAULT_MARGINS);
   }
 
   if (props.slotProps?.legend?.direction === 'vertical') {
     if (props.slotProps?.legend?.position?.horizontal === 'start') {
-      return {
+      return defaultizeMargin(props.margin, {
         ...DEFAULT_MARGINS,
         left: DEFAULT_LEGEND_FACING_MARGIN,
-        ...numberToMargin(props.margin),
-      };
+      });
     }
 
-    return {
+    return defaultizeMargin(props.margin, {
       ...DEFAULT_MARGINS,
       right: DEFAULT_LEGEND_FACING_MARGIN,
-      ...numberToMargin(props.margin),
-    };
+    });
   }
 
   if (props.slotProps?.legend?.position?.vertical === 'bottom') {
-    return {
+    return defaultizeMargin(props.margin, {
       ...DEFAULT_MARGINS,
       bottom: DEFAULT_LEGEND_FACING_MARGIN,
-      ...numberToMargin(props.margin),
-    };
+    });
   }
 
-  return {
+  return defaultizeMargin(props.margin, {
     ...DEFAULT_MARGINS,
     top: DEFAULT_LEGEND_FACING_MARGIN,
-    ...numberToMargin(props.margin),
-  };
+  });
 };

@@ -3,13 +3,13 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import ownerWindow from '@mui/utils/ownerWindow';
-import { DEFAULT_AXIS_SIZE } from '../../../../constants';
+import { DEFAULT_AXIS_SIZE, DEFAULT_MARGINS } from '../../../../constants';
 import { ChartPlugin } from '../../models';
 import { UseChartDimensionsSignature } from './useChartDimensions.types';
 import { selectorChartDimensionsState } from './useChartDimensions.selectors';
 import { useSelector } from '../../../store/useSelector';
 import { selectorChartCartesianAxisState } from '../../featurePlugins/useChartCartesianAxis/useChartCartesianAxis.selectors';
-import { numberToMargin } from '../../../calculateMargins';
+import { defaultizeMargin } from '../../../calculateMargins';
 
 const MAX_COMPUTE_RUN = 10;
 
@@ -221,7 +221,7 @@ useChartDimensions.params = {
 
 useChartDimensions.getDefaultizedParams = ({ params }) => ({
   ...params,
-  margin: numberToMargin(params.margin, true),
+  margin: defaultizeMargin(params.margin, DEFAULT_MARGINS),
 });
 
 useChartDimensions.getInitialState = ({
@@ -253,7 +253,7 @@ useChartDimensions.getInitialState = ({
       .map((axis) => axis.width ?? DEFAULT_AXIS_SIZE)
       .reduce((acc, cur) => acc + cur, 0) || 0;
 
-  const margins = numberToMargin(margin, true);
+  const margins = defaultizeMargin(margin, DEFAULT_MARGINS);
 
   return {
     dimensions: {
