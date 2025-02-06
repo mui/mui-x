@@ -40,11 +40,29 @@ export type ChartPluginSignature<
     optionalDependencies?: readonly ChartAnyPluginSignature[];
   },
 > = {
+  /**
+   * The properties that can be passed to the plugin.
+   */
   params: T extends { params: {} } ? T['params'] : {};
+  /**
+   * The params after being processed with the default values.
+   */
   defaultizedParams: T extends { defaultizedParams: {} } ? T['defaultizedParams'] : {};
+  /**
+   * The instance methods of the plugin.
+   */
   instance: T extends { instance: {} } ? T['instance'] : {};
+  /**
+   * The state is the data that will actually be stored in the plugin state and can be accessed by other plugins.
+   */
   state: T extends { state: {} } ? T['state'] : {};
+  // TODO: What is the difference between publicAPI and instance?
+  /**
+   * The public API is the data that will be exposed to the user.
+   *
+   */
   publicAPI: T extends { publicAPI: {} } ? T['publicAPI'] : {};
+  // TODO: ??
   models: T extends { defaultizedParams: {}; modelNames: keyof T['defaultizedParams'] }
     ? {
         [TControlled in T['modelNames']]-?: ChartControlModel<
@@ -52,22 +70,30 @@ export type ChartPluginSignature<
         >;
       }
     : {};
+  // TODO: ??
+  /**
+   * Any plugins that this plugin depends on. Will be used to merge the states of the plugins.
+   */
   dependencies: T extends { dependencies: Array<any> } ? T['dependencies'] : [];
+  // TODO: ??
+  /**
+   * Same as dependencies but the plugin might not have been initialized.
+   */
   optionalDependencies: T extends { optionalDependencies: Array<any> }
     ? T['optionalDependencies']
     : [];
 };
 
-export type ChartAnyPluginSignature = {
-  state: any;
-  instance: any;
+export type ChartAnyPluginSignature = ChartPluginSignature<{
   params: any;
-  models: any;
   defaultizedParams: any;
+  instance: any;
+  publicAPI: any;
+  state: any;
+  modelNames: any;
   dependencies: any;
   optionalDependencies: any;
-  publicAPI: any;
-};
+}>;
 
 type ChartRequiredPlugins<TSignature extends ChartAnyPluginSignature> = [
   ...ChartCorePluginSignatures,

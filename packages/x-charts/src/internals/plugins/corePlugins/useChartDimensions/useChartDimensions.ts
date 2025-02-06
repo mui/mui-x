@@ -5,13 +5,23 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import ownerWindow from '@mui/utils/ownerWindow';
 import { DEFAULT_AXIS_SIZE, DEFAULT_MARGINS } from '../../../../constants';
 import { ChartPlugin } from '../../models';
-import { UseChartDimensionsSignature } from './useChartDimensions.types';
+import type { UseChartDimensionsSignature } from './useChartDimensions.types';
 import { selectorChartDimensionsState } from './useChartDimensions.selectors';
 import { useSelector } from '../../../store/useSelector';
-import { selectorChartCartesianAxisState } from '../../featurePlugins/useChartCartesianAxis/useChartCartesianAxis.selectors';
 import { defaultizeMargin } from '../../../defaultizeMargin';
+import type { UseChartCartesianAxisSignature } from '../../featurePlugins/useChartCartesianAxis';
+import type { ChartState } from '../../models/chart';
+import { createSelector } from '../../utils/selectors';
 
 const MAX_COMPUTE_RUN = 10;
+
+// Copied here from useChartCartesianAxis to avoid circular dependency
+const selectorChartCartesianAxisState = (state: ChartState<[UseChartCartesianAxisSignature]>) =>
+  state.cartesianAxis;
+
+const selectorChartRawXAxis = createSelector(selectorChartCartesianAxisState, (axis) => axis?.x);
+
+const selectorChartRawYAxis = createSelector(selectorChartCartesianAxisState, (axis) => axis?.y);
 
 export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
   params,
@@ -26,7 +36,9 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
 
   // TODO: fix error
   // @ts-expect-error
-  const rawAxis = useSelector(store, selectorChartCartesianAxisState);
+  const rawXAxis = useSelector(store, selectorChartRawXAxis);
+  // @ts-expect-error
+  const rawYAxis = useSelector(store, selectorChartRawYAxis);
 
   const computeSize = React.useCallback(() => {
     const mainEl = svgRef?.current;
@@ -42,22 +54,22 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
     const newWidth = Math.floor(parseFloat(computedStyle.width)) || 0;
 
     const topAxisSize =
-      rawAxis.x
+      rawXAxis
         ?.filter((axis) => axis.position === 'top')
         .map((axis) => axis.height ?? DEFAULT_AXIS_SIZE)
         .reduce((acc, cur) => acc + cur, 0) || 0;
     const rightAxisSize =
-      rawAxis.y
+      rawYAxis
         ?.filter((axis) => axis.position === 'right')
         .map((axis) => axis.width ?? DEFAULT_AXIS_SIZE)
         .reduce((acc, cur) => acc + cur, 0) || 0;
     const bottomAxisSize =
-      rawAxis.x
+      rawXAxis
         ?.filter((axis) => axis.position === 'bottom')
         .map((axis) => axis.height ?? DEFAULT_AXIS_SIZE)
         .reduce((acc, cur) => acc + cur, 0) || 0;
     const leftAxisSize =
-      rawAxis.y
+      rawYAxis
         ?.filter((axis) => axis.position === 'left')
         .map((axis) => axis.width ?? DEFAULT_AXIS_SIZE)
         .reduce((acc, cur) => acc + cur, 0) || 0;
@@ -91,7 +103,8 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
   }, [
     store,
     svgRef,
-    rawAxis,
+    rawXAxis,
+    rawYAxis,
     params.margin.left,
     params.margin.right,
     params.margin.top,
