@@ -125,7 +125,10 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
   );
   const handleRef = useForkRef(ref, refProp);
   const rowNode = apiRef.current.getRowNode(rowId);
-  const editing = useGridSelector(apiRef, gridRowIsEditingSelector, rowId);
+  const editing = useGridSelector(apiRef, gridRowIsEditingSelector, {
+    rowId,
+    editMode: rootProps.editMode,
+  });
   const editable = rootProps.editMode === GridEditModes.Row;
   const hasFocusCell = focusedColumnIndex !== undefined;
   const hasVirtualFocusCellLeft =

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
+import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -329,7 +330,9 @@ export const useGridRows = (
 
       if (applyFiltering) {
         const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
-        children = children.filter((childId) => filteredRowsLookup[childId] !== false);
+        children = isObjectEmpty(filteredRowsLookup)
+          ? children
+          : children.filter((childId) => filteredRowsLookup[childId] !== false);
       }
 
       return children;
