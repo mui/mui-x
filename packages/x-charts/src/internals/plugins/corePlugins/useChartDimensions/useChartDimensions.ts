@@ -3,10 +3,13 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import ownerWindow from '@mui/utils/ownerWindow';
-import { DEFAULT_MARGINS } from '../../../../constants';
+import { DEFAULT_AXIS_SIZE } from '../../../../constants';
 import { ChartPlugin } from '../../models';
 import { UseChartDimensionsSignature } from './useChartDimensions.types';
 import { selectorChartDimensionsState } from './useChartDimensions.selectors';
+import { useSelector } from '../../../store/useSelector';
+import { selectorChartCartesianAxisState } from '../../featurePlugins/useChartCartesianAxis/useChartCartesianAxis.selectors';
+import { numberToMargin } from '../../../calculateMargins';
 
 const MAX_COMPUTE_RUN = 10;
 
@@ -21,6 +24,10 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
   const [innerWidth, setInnerWidth] = React.useState(0);
   const [innerHeight, setInnerHeight] = React.useState(0);
 
+  // TODO: fix error
+  // @ts-expect-error
+  const rawAxis = useSelector(store, selectorChartCartesianAxisState);
+
   const computeSize = React.useCallback(() => {
     const mainEl = svgRef?.current;
 
@@ -34,6 +41,27 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
     const newHeight = Math.floor(parseFloat(computedStyle.height)) || 0;
     const newWidth = Math.floor(parseFloat(computedStyle.width)) || 0;
 
+    const topAxisSize =
+      rawAxis.x
+        ?.filter((axis) => axis.position === 'top')
+        .map((axis) => axis.height ?? DEFAULT_AXIS_SIZE)
+        .reduce((acc, cur) => acc + cur, 0) || 0;
+    const rightAxisSize =
+      rawAxis.y
+        ?.filter((axis) => axis.position === 'right')
+        .map((axis) => axis.width ?? DEFAULT_AXIS_SIZE)
+        .reduce((acc, cur) => acc + cur, 0) || 0;
+    const bottomAxisSize =
+      rawAxis.x
+        ?.filter((axis) => axis.position === 'bottom')
+        .map((axis) => axis.height ?? DEFAULT_AXIS_SIZE)
+        .reduce((acc, cur) => acc + cur, 0) || 0;
+    const leftAxisSize =
+      rawAxis.y
+        ?.filter((axis) => axis.position === 'left')
+        .map((axis) => axis.width ?? DEFAULT_AXIS_SIZE)
+        .reduce((acc, cur) => acc + cur, 0) || 0;
+
     store.update((prev) => {
       const prevWidth = prev.dimensions.width + prev.dimensions.left + prev.dimensions.right;
       const prevHeight = prev.dimensions.height + prev.dimensions.top + prev.dimensions.bottom;
@@ -46,8 +74,13 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
         ...prev,
         dimensions: {
           ...prev.dimensions,
-          width: newWidth - prev.dimensions.left - prev.dimensions.right,
-          height: newHeight - prev.dimensions.top - prev.dimensions.bottom,
+          top: params.margin.top + topAxisSize,
+          left: params.margin.left + leftAxisSize,
+          bottom: params.margin.bottom + bottomAxisSize,
+          right: params.margin.right + rightAxisSize,
+          width: newWidth - params.margin.left - params.margin.right - leftAxisSize - rightAxisSize,
+          height:
+            newHeight - params.margin.top - params.margin.bottom - topAxisSize - bottomAxisSize,
         },
       };
     });
@@ -55,33 +88,15 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
       height: newHeight,
       width: newWidth,
     };
-  }, [store, svgRef]);
-
-  store.update((prev) => {
-    if (
-      (params.width === undefined || prev.dimensions.propsWidth === params.width) &&
-      (params.height === undefined || prev.dimensions.propsHeight === params.height)
-    ) {
-      return prev;
-    }
-
-    return {
-      ...prev,
-      dimensions: {
-        ...prev.dimensions,
-        width:
-          params.width === undefined
-            ? prev.dimensions.width
-            : params.width - prev.dimensions.left - prev.dimensions.right,
-        height:
-          params.height === undefined
-            ? prev.dimensions.height
-            : params.height - prev.dimensions.top - prev.dimensions.bottom,
-        propsWidth: params.width,
-        propsHeight: params.height,
-      },
-    };
-  });
+  }, [
+    store,
+    svgRef,
+    rawAxis,
+    params.margin.left,
+    params.margin.right,
+    params.margin.top,
+    params.margin.bottom,
+  ]);
 
   React.useEffect(() => {
     // Ensure the error detection occurs after the first rendering.
@@ -206,15 +221,50 @@ useChartDimensions.params = {
 
 useChartDimensions.getDefaultizedParams = ({ params }) => ({
   ...params,
-  margin: params.margin ? { ...DEFAULT_MARGINS, ...params.margin } : DEFAULT_MARGINS,
+  margin: numberToMargin(params.margin, true),
 });
 
-useChartDimensions.getInitialState = ({ width, height, margin }) => ({
-  dimensions: {
-    ...margin,
-    width: (width ?? 0) - margin.left - margin.right,
-    height: (height ?? 0) - margin.top - margin.bottom,
-    propsWidth: width,
-    propsHeight: height,
-  },
-});
+useChartDimensions.getInitialState = ({
+  width,
+  height,
+  margin,
+  defaultizedXAxis,
+  defaultizedYAxis,
+}) => {
+  // TODO: move calc to single place?
+  const topAxisSize =
+    defaultizedXAxis
+      ?.filter((axis) => axis.position === 'top')
+      .map((axis) => axis.height ?? DEFAULT_AXIS_SIZE)
+      .reduce((acc, cur) => acc + cur, 0) || 0;
+  const rightAxisSize =
+    defaultizedYAxis
+      ?.filter((axis) => axis.position === 'right')
+      .map((axis) => axis.width ?? DEFAULT_AXIS_SIZE)
+      .reduce((acc, cur) => acc + cur, 0) || 0;
+  const bottomAxisSize =
+    defaultizedXAxis
+      ?.filter((axis) => axis.position === 'bottom')
+      .map((axis) => axis.height ?? DEFAULT_AXIS_SIZE)
+      .reduce((acc, cur) => acc + cur, 0) || 0;
+  const leftAxisSize =
+    defaultizedYAxis
+      ?.filter((axis) => axis.position === 'left')
+      .map((axis) => axis.width ?? DEFAULT_AXIS_SIZE)
+      .reduce((acc, cur) => acc + cur, 0) || 0;
+
+  const margins = numberToMargin(margin, true);
+
+  return {
+    dimensions: {
+      top: margins.top + topAxisSize,
+      left: margins.left + leftAxisSize,
+      bottom: margins.bottom + bottomAxisSize,
+      right: margins.right + rightAxisSize,
+      width: (width ?? 0) - margin.left - margin.right - leftAxisSize - rightAxisSize,
+      height: (height ?? 0) - margin.top - margin.bottom - topAxisSize - bottomAxisSize,
+      propsWidth: width,
+      propsHeight: height,
+    },
+  };
+};

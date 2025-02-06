@@ -2,8 +2,17 @@ import type { ChartsLegendSlotExtension } from '../ChartsLegend';
 import { DEFAULT_MARGINS, DEFAULT_LEGEND_FACING_MARGIN } from '../constants';
 import type { LayoutConfig } from '../models';
 import type { CartesianChartSeriesType, ChartsSeriesConfig } from '../models/seriesType/config';
+import { ChartMargin } from './plugins/corePlugins/useChartDimensions/useChartDimensions.types';
 
-const numberToMargin = (input: LayoutConfig['margin']) => {
+export function numberToMargin(input: LayoutConfig['margin'], setDefault: true): ChartMargin;
+export function numberToMargin(
+  input: LayoutConfig['margin'],
+  setDefault?: false,
+): Partial<ChartMargin> | undefined;
+export function numberToMargin(
+  input: LayoutConfig['margin'],
+  setDefault?: boolean,
+): Partial<ChartMargin> | undefined {
   if (typeof input === 'number') {
     return {
       top: input,
@@ -13,8 +22,15 @@ const numberToMargin = (input: LayoutConfig['margin']) => {
     };
   }
 
+  if (setDefault) {
+    return {
+      ...DEFAULT_MARGINS,
+      ...input,
+    };
+  }
+
   return input;
-};
+}
 
 export const calculateMargins = <
   T extends ChartsLegendSlotExtension &

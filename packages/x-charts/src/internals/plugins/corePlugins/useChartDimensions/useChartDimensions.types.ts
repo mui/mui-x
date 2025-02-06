@@ -1,4 +1,5 @@
 import { ChartPluginSignature } from '../../models';
+import { UseChartCartesianAxisSignature } from '../../featurePlugins/useChartCartesianAxis';
 
 export interface ChartMargin {
   /**
@@ -33,7 +34,7 @@ export interface UseChartDimensionsParameters {
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
    */
-  margin?: Partial<ChartMargin>;
+  margin?: Partial<ChartMargin> | number;
 }
 
 export type UseChartDimensionsDefaultizedParameters = UseChartDimensionsParameters & {
@@ -102,4 +103,5 @@ export type UseChartDimensionsSignature = ChartPluginSignature<{
   defaultizedParams: UseChartDimensionsDefaultizedParameters;
   state: UseChartDimensionsState;
   instance: UseChartDimensionsInstance;
+  optionalDependencies: [UseChartCartesianAxisSignature];
 }>;
