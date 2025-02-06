@@ -102,9 +102,7 @@ export const filterRowTreeFromTreeData = (
       }
     }
 
-    if (!shouldPassFilters) {
-      filteredRowsLookup[node.id] = false;
-    }
+    filteredRowsLookup[node.id] = shouldPassFilters;
 
     if (!shouldPassFilters) {
       return 0;
