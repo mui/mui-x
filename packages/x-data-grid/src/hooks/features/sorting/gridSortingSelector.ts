@@ -1,3 +1,4 @@
+import { RefObject } from '@mui/x-internals/types';
 import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
 import { GridSortDirection, GridSortModel } from '../../../models/gridSortModel';
 import { gridRowTreeSelector, gridRowsLookupSelector } from '../rows/gridRowsSelector';
@@ -9,7 +10,7 @@ import type { GridValidRowModel, GridRowEntry, GridRowId } from '../../../models
  * @category Sorting
  * @ignore - do not document.
  */
-const gridSortingStateSelector = (apiRef: React.RefObject<GridApiCommunity>) =>
+const gridSortingStateSelector = (apiRef: RefObject<GridApiCommunity>) =>
   apiRef.current.state.sorting;
 
 /**

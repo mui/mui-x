@@ -1,10 +1,11 @@
+import { RefObject } from '@mui/x-internals/types';
 import type { GridCallbackDetails } from './api/gridCallbackDetails';
 import type { GridEventLookup, GridControlledStateEventLookup } from './events';
 import type { OutputSelector } from '../utils/createSelector';
 import { GridApiCommunity } from './api/gridApiCommunity';
 
 export interface GridControlStateItem<
-  ApiRef extends React.RefObject<GridApiCommunity>,
+  ApiRef extends RefObject<GridApiCommunity>,
   Args,
   E extends keyof GridControlledStateEventLookup,
 > {

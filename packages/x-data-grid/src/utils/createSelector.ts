@@ -1,3 +1,4 @@
+import { RefObject } from '@mui/x-internals/types';
 import { lruMemoize, createSelectorCreator, Selector, SelectorResultArray } from 'reselect';
 import { argsEqual } from '../hooks/utils/useGridSelector';
 import { weakMapMemoize } from './customMemoize';
@@ -74,7 +75,7 @@ export const createSelector = ((
 
   // eslint-disable-next-line id-denylist
   if (a && b && c && d && e && f) {
-    selector = (apiRef: any, args: any) => {
+    selector = (apiRef: RefObject<any>, args: any) => {
       const va = a(apiRef, args);
       const vb = b(apiRef, args);
       const vc = c(apiRef, args);
@@ -84,7 +85,7 @@ export const createSelector = ((
     };
     // eslint-disable-next-line id-denylist
   } else if (a && b && c && d && e) {
-    selector = (apiRef: any, args: any) => {
+    selector = (apiRef: RefObject<any>, args: any) => {
       const va = a(apiRef, args);
       const vb = b(apiRef, args);
       const vc = c(apiRef, args);
@@ -92,20 +93,20 @@ export const createSelector = ((
       return e(va, vb, vc, vd, args);
     };
   } else if (a && b && c && d) {
-    selector = (apiRef: any, args: any) => {
+    selector = (apiRef: RefObject<any>, args: any) => {
       const va = a(apiRef, args);
       const vb = b(apiRef, args);
       const vc = c(apiRef, args);
       return d(va, vb, vc, args);
     };
   } else if (a && b && c) {
-    selector = (apiRef: any, args: any) => {
+    selector = (apiRef: RefObject<any>, args: any) => {
       const va = a(apiRef, args);
       const vb = b(apiRef, args);
       return c(va, vb, args);
     };
   } else if (a && b) {
-    selector = (apiRef: any, args: any) => {
+    selector = (apiRef: RefObject<any>, args: any) => {
       const va = a(apiRef, args);
       return b(va, args);
     };
@@ -117,7 +118,7 @@ export const createSelector = ((
 }) as unknown as CreateSelectorFunction;
 
 export const createSelectorMemoized: CreateSelectorFunction = (...args: any) => {
-  const selector = (apiRef: any, selectorArgs: any) => {
+  const selector = (apiRef: RefObject<any>, selectorArgs: any) => {
     const cacheKey = apiRef.current.instanceId;
     const cacheArgsInit = cache.get(cacheKey);
     const cacheArgs = cacheArgsInit ?? new Map();
