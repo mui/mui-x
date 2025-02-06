@@ -5,7 +5,6 @@ import { getDataGridUtilityClass, gridClasses, useGridSelector } from '@mui/x-da
 import {
   GridPinnedRowsProps,
   gridPinnedRowsSelector,
-  gridRenderContextSelector,
   useGridPrivateApiContext,
 } from '@mui/x-data-grid/internals';
 
@@ -20,7 +19,6 @@ export function GridPinnedRows({ position, virtualScroller }: GridPinnedRowsProp
   const classes = useUtilityClasses();
   const apiRef = useGridPrivateApiContext();
 
-  const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
   const pinnedRowsData = useGridSelector(apiRef, gridPinnedRowsSelector);
   const rows = pinnedRowsData[position];
 
@@ -28,10 +26,10 @@ export function GridPinnedRows({ position, virtualScroller }: GridPinnedRowsProp
     () => ({
       firstRowIndex: 0,
       lastRowIndex: rows.length,
-      firstColumnIndex: renderContext.firstColumnIndex,
-      lastColumnIndex: renderContext.lastColumnIndex,
+      firstColumnIndex: -1,
+      lastColumnIndex: -1,
     }),
-    [rows, renderContext.firstColumnIndex, renderContext.lastColumnIndex],
+    [rows],
   );
 
   if (rows.length === 0) {
