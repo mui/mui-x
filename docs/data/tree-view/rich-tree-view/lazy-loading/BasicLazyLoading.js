@@ -10,7 +10,7 @@ import {
 } from '@mui/x-data-grid-generator';
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 
-function valuetext(value) {
+function getSliderAriaValueText(value) {
   return `${value}°C`;
 }
 
@@ -51,7 +51,7 @@ export default function BasicLazyLoading() {
           shiftStep={1000}
           step={500}
           marks
-          getAriaValueText={valuetext}
+          getAriaValueText={getSliderAriaValueText}
           valueLabelDisplay="auto"
         />
       </Box>

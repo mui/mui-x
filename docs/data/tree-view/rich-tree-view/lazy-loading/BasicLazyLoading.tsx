@@ -17,7 +17,7 @@ type ItemType = TreeViewBaseItem<{
   childrenCount?: number;
 }>;
 
-function valuetext(value: number) {
+function getSliderAriaValueText(value: number) {
   return `${value}°C`;
 }
 
@@ -58,7 +58,7 @@ export default function BasicLazyLoading() {
           shiftStep={1000}
           step={500}
           marks
-          getAriaValueText={valuetext}
+          getAriaValueText={getSliderAriaValueText}
           valueLabelDisplay="auto"
         />
       </Box>
