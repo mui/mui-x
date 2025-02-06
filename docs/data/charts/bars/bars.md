@@ -20,6 +20,8 @@ TK
 import { BarChart } from '@mui/x-charts/BarChart';
 ```
 
+### Data
+
 Bar chart series should contain a `data` property containing an array of values.
 
 You can customize bar ticks with the `xAxis`.
@@ -27,7 +29,7 @@ This axis might have `scaleType='band'` and its `data` should have the same leng
 
 {{"demo": "BasicBars.js"}}
 
-### Dataset helper
+#### Dataset helper
 
 If your data is stored in an array of objects, you can use the `dataset` helper prop.
 It accepts an array of objects such as `dataset={[{x: 1, y: 32}, {x: 2, y: 41}, ...]}`.

@@ -427,12 +427,7 @@ const pages: MuiPage[] = [
         subheader: 'Components',
         children: [
           {
-            pathname: '/x/react-charts-bars',
-            title: 'Bars',
-            children: [
-              { pathname: '/x/react-charts/bars', title: 'Bars overview' },
-              { pathname: '/x/react-charts/bar-demo', title: 'Demos' },
-            ],
+            pathname: '/x/react-charts/bars',
           },
           {
             pathname: '/x/react-charts-lines',
