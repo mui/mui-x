@@ -1,0 +1,143 @@
+{
+  "props": {
+    "action": {
+      "type": {
+        "name": "union",
+        "description": "func<br>&#124;&nbsp;{ current?: { focusVisible: func } }"
+      }
+    },
+    "centerRipple": { "type": { "name": "bool" }, "default": "false" },
+    "color": {
+      "type": {
+        "name": "enum",
+        "description": "'default'<br>&#124;&nbsp;'inherit'<br>&#124;&nbsp;'primary'"
+      }
+    },
+    "disabled": { "type": { "name": "bool" } },
+    "disableFocusRipple": { "type": { "name": "bool" }, "default": "false" },
+    "disableRipple": { "type": { "name": "bool" }, "default": "false" },
+    "disableTouchRipple": { "type": { "name": "bool" }, "default": "false" },
+    "edge": {
+      "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'<br>&#124;&nbsp;false" }
+    },
+    "focusRipple": { "type": { "name": "bool" }, "default": "false" },
+    "focusVisibleClassName": { "type": { "name": "string" } },
+    "LinkComponent": { "type": { "name": "elementType" }, "default": "'a'" },
+    "onFocusVisible": { "type": { "name": "func" } },
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } },
+    "size": {
+      "type": {
+        "name": "enum",
+        "description": "'large'<br>&#124;&nbsp;'medium'<br>&#124;&nbsp;'small'"
+      }
+    },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    },
+    "TouchRippleProps": { "type": { "name": "object" } },
+    "touchRippleRef": { "type": { "name": "any" } }
+  },
+  "name": "ToolbarButton",
+  "imports": [
+    "import { ToolbarButton } from '@mui/x-data-grid/components';",
+    "import { ToolbarButton } from '@mui/x-data-grid';",
+    "import { ToolbarButton } from '@mui/x-data-grid-pro';",
+    "import { ToolbarButton } from '@mui/x-data-grid-premium';"
+  ],
+  "classes": [
+    {
+      "key": "colorError",
+      "className": "MuiToolbarButton-colorError",
+      "description": "Styles applied to the root element if `color=\"error\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorInfo",
+      "className": "MuiToolbarButton-colorInfo",
+      "description": "Styles applied to the root element if `color=\"info\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorInherit",
+      "className": "MuiToolbarButton-colorInherit",
+      "description": "Styles applied to the root element if `color=\"inherit\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorPrimary",
+      "className": "MuiToolbarButton-colorPrimary",
+      "description": "Styles applied to the root element if `color=\"primary\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorSecondary",
+      "className": "MuiToolbarButton-colorSecondary",
+      "description": "Styles applied to the root element if `color=\"secondary\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorSuccess",
+      "className": "MuiToolbarButton-colorSuccess",
+      "description": "Styles applied to the root element if `color=\"success\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorWarning",
+      "className": "MuiToolbarButton-colorWarning",
+      "description": "Styles applied to the root element if `color=\"warning\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "disabled",
+      "className": "Mui-disabled",
+      "description": "State class applied to the root element if `disabled={true}`.",
+      "isGlobal": true
+    },
+    {
+      "key": "edgeEnd",
+      "className": "MuiToolbarButton-edgeEnd",
+      "description": "Styles applied to the root element if `edge=\"end\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "edgeStart",
+      "className": "MuiToolbarButton-edgeStart",
+      "description": "Styles applied to the root element if `edge=\"start\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiToolbarButton-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sizeLarge",
+      "className": "MuiToolbarButton-sizeLarge",
+      "description": "Styles applied to the root element if `size=\"large\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "sizeMedium",
+      "className": "MuiToolbarButton-sizeMedium",
+      "description": "Styles applied to the root element if `size=\"medium\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "sizeSmall",
+      "className": "MuiToolbarButton-sizeSmall",
+      "description": "Styles applied to the root element if `size=\"small\"`.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiToolbarButton",
+  "forwardsRefTo": "GridRoot",
+  "filename": "/packages/x-data-grid/src/components/toolbarV8/ToolbarButton.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-data-grid/components/toolbar\">Data Grid - Toolbar</a></li></ul>",
+  "cssComponent": false
+}

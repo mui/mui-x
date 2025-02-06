@@ -588,6 +588,10 @@ export interface GridClasses {
    */
   sortIcon: string;
   /**
+   * Styles applied to the toolbar root element.
+   */
+  toolbar: string;
+  /**
    * Styles applied to the toolbar container element.
    */
   toolbarContainer: string;
