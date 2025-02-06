@@ -22,7 +22,8 @@ import {
 } from './gridRowsSelector';
 import { gridRowIdSelector } from '../../core/useGridProps';
 import { useTimeout } from '../../utils/useTimeout';
-import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { GridSignature } from '../../../constants/signature';
+import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridSortedRowIdsSelector } from '../sorting/gridSortingSelector';
