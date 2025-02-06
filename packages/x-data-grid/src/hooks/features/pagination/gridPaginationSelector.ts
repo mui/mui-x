@@ -1,3 +1,4 @@
+import { RefObject } from '@mui/x-internals/types';
 import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import {
@@ -15,7 +16,7 @@ const ALL_RESULTS_PAGE_VALUE = -1;
  * @category Pagination
  * @ignore - do not document.
  */
-export const gridPaginationSelector = (apiRef: React.RefObject<GridApiCommunity>) =>
+export const gridPaginationSelector = (apiRef: RefObject<GridApiCommunity>) =>
   apiRef.current.state.pagination;
 
 /**

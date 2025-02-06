@@ -101,7 +101,7 @@ export function useGridParamsApi(
       return apiRef.current.getCellParamsForRow<any, any, any, any>(id, field, row, {
         colDef:
           props.unstable_listView && props.unstable_listColumn?.field === field
-            ? gridListColumnSelector(apiRef.current.state)!
+            ? gridListColumnSelector(apiRef)!
             : apiRef.current.getColumn(field),
         rowNode,
         hasFocus: cellFocus !== null && cellFocus.field === field && cellFocus.id === id,

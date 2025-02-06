@@ -6,8 +6,6 @@ import { useSyncExternalStore } from 'use-sync-external-store/shim';
 import type { GridApiCommon } from '../../models/api/gridApiCommon';
 import type { OutputSelector } from '../../utils/createSelector';
 import { useLazyRef } from './useLazyRef';
-import type { GridCoreApi } from '../../models/api/gridCoreApi';
-import { useOnMount } from './useOnMount';
 
 type Selector<ApiRef extends RefObject<GridApiCommon>, Args, T> =
   | ((apiRef: ApiRef) => T)

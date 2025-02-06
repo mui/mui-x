@@ -1,8 +1,9 @@
+import { RefObject } from '@mui/x-internals/types';
 import { createSelector } from '../../../utils/createSelector';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridFocusState, GridTabIndexState } from './gridFocusState';
 
-export const gridFocusStateSelector = (apiRef: React.RefObject<GridApiCommunity>) =>
+export const gridFocusStateSelector = (apiRef: RefObject<GridApiCommunity>) =>
   apiRef.current.state.focus;
 
 export const gridFocusCellSelector = createSelector(
@@ -25,7 +26,7 @@ export const gridFocusColumnGroupHeaderSelector = createSelector(
   (focusState: GridFocusState) => focusState.columnGroupHeader,
 );
 
-export const gridTabIndexStateSelector = (apiRef: React.RefObject<GridApiCommunity>) =>
+export const gridTabIndexStateSelector = (apiRef: RefObject<GridApiCommunity>) =>
   apiRef.current.state.tabIndex;
 
 export const gridTabIndexCellSelector = createSelector(

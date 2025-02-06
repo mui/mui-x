@@ -1,3 +1,4 @@
+import { RefObject } from '@mui/x-internals/types';
 import { GridStateCommunity } from '../gridStateCommunity';
 import { GridControlledStateEventLookup, GridControlledStateReasonLookup } from '../events';
 import { GridControlStateItem } from '../controlStateItem';
@@ -26,7 +27,7 @@ export interface GridStateApi<State extends GridStateCommunity> {
   ) => boolean;
 }
 
-export interface GridStatePrivateApi<ApiRef extends React.RefObject<GridApiCommunity>> {
+export interface GridStatePrivateApi<ApiRef extends RefObject<GridApiCommunity>> {
   /**
    * Updates a single sub-state.
    * Publishes the `xxxChange` event and calls the `onXXXChange` prop.

@@ -1,3 +1,4 @@
+import { RefObject } from '@mui/x-internals/types';
 import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
 import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
 import { GridRowId } from '../../../models/gridRows';
@@ -10,7 +11,7 @@ import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 /**
  * @category Filtering
  */
-const gridFilterStateSelector = (apiRef: React.RefObject<GridApiCommunity>) =>
+const gridFilterStateSelector = (apiRef: RefObject<GridApiCommunity>) =>
   apiRef.current.state.filter;
 
 /**
@@ -35,7 +36,7 @@ export const gridQuickFilterValuesSelector = createSelector(
  * @category Visible rows
  * @ignore - do not document.
  */
-export const gridVisibleRowsLookupSelector = (apiRef: React.RefObject<GridApiCommunity>) =>
+export const gridVisibleRowsLookupSelector = (apiRef: RefObject<GridApiCommunity>) =>
   apiRef.current.state.visibleRowsLookup;
 
 /**

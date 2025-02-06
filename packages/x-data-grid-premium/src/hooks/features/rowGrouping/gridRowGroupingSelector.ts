@@ -1,8 +1,9 @@
+import { RefObject } from '@mui/x-internals/types';
 import { gridColumnLookupSelector } from '@mui/x-data-grid-pro';
 import { createSelector, createSelectorMemoized } from '@mui/x-data-grid/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 
-const gridRowGroupingStateSelector = (apiRef: React.RefObject<GridApiPremium>) =>
+const gridRowGroupingStateSelector = (apiRef: RefObject<GridApiPremium>) =>
   apiRef.current.state.rowGrouping;
 
 export const gridRowGroupingModelSelector = createSelector(

@@ -1,7 +1,8 @@
+import { RefObject } from '@mui/x-internals/types';
 import { createSelector } from '../../../utils/createSelector';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 
-export const gridHeaderFilteringStateSelector = (apiRef: React.RefObject<GridApiCommunity>) =>
+export const gridHeaderFilteringStateSelector = (apiRef: RefObject<GridApiCommunity>) =>
   apiRef.current.state.headerFiltering;
 
 export const gridHeaderFilteringEnabledSelector = createSelector(

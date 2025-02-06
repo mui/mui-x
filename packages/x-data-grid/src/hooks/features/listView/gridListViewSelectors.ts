@@ -1,3 +1,4 @@
+import { RefObject } from '@mui/x-internals/types';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 
 /**
@@ -5,5 +6,5 @@ import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
  * @category List View
  * @ignore - Do not document
  */
-export const gridListColumnSelector = (apiRef: React.RefObject<GridApiCommunity>) =>
+export const gridListColumnSelector = (apiRef: RefObject<GridApiCommunity>) =>
   apiRef.current.state.listViewColumn;

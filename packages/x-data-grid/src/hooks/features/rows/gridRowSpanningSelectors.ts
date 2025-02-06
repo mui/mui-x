@@ -1,7 +1,8 @@
+import { RefObject } from '@mui/x-internals/types';
 import { createSelector } from '../../../utils/createSelector';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 
-const gridRowSpanningStateSelector = (apiRef: React.RefObject<GridApiCommunity>) =>
+const gridRowSpanningStateSelector = (apiRef: RefObject<GridApiCommunity>) =>
   apiRef.current.state.rowSpanning;
 
 export const gridRowSpanningHiddenCellsSelector = createSelector(

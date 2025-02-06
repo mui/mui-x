@@ -103,7 +103,7 @@ export function GridDataSourceTreeDataGroupingCell(props: GridTreeDataGroupingCe
 
   const rootProps = useGridRootProps();
   const apiRef = useGridPrivateApiContext();
-  const rowSelector = (apiRefObject: React.RefObject<GridApiPro>) =>
+  const rowSelector = (apiRefObject: RefObject<GridApiPro>) =>
     apiRefObject.current.state.rows.dataRowIdToModelLookup[id];
   const row = useGridSelector(apiRef, rowSelector);
   const classes = useUtilityClasses(rootProps);

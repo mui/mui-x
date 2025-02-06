@@ -30,9 +30,9 @@ export const rowsMetaStateInitializer: GridStateInitializer = (state, props, api
     heights: new Map(),
   };
 
-  const baseRowHeight = gridRowHeightSelector(apiRef.current.state);
-  const dataRowCount = gridRowCountSelector(apiRef.current.state);
-  const pagination = gridPaginationSelector(apiRef.current.state);
+  const baseRowHeight = gridRowHeightSelector(apiRef);
+  const dataRowCount = gridRowCountSelector(apiRef);
+  const pagination = gridPaginationSelector(apiRef);
   const rowCount = Math.min(
     pagination.enabled ? pagination.paginationModel.pageSize : dataRowCount,
     dataRowCount,

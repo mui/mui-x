@@ -1,7 +1,8 @@
+import { RefObject } from '@mui/x-internals/types';
 import { createSelector } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 
-export const gridAggregationStateSelector = (apiRef: React.RefObject<GridApiPremium>) =>
+export const gridAggregationStateSelector = (apiRef: RefObject<GridApiPremium>) =>
   apiRef.current.state.aggregation;
 
 /**

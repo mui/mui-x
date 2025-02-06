@@ -1,9 +1,10 @@
+import { RefObject } from '@mui/x-internals/types';
 import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
-import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
+import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 
-export const gridRowSelectionStateSelector = (apiRef: React.RefObject<GridApiCommunity>) =>
+export const gridRowSelectionStateSelector = (apiRef: RefObject<GridApiCommunity>) =>
   apiRef.current.state.rowSelection;
 
 export const selectedGridRowsCountSelector = createSelector(
