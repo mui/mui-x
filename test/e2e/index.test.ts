@@ -1069,7 +1069,10 @@ async function initializeEnvironment(
 
         const startDaySection = page.getByRole('spinbutton', { name: 'Day' }).first();
         await startDaySection.click();
-        expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('12');
+        await waitFor(async () => {
+          expect(await page.evaluate(() => document.getSelection()?.toString())).to.equal('12');
+          expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('12');
+        });
 
         const endYearSection = page.getByRole('spinbutton', { name: 'Year' }).last();
         await endYearSection.click();
@@ -1081,7 +1084,10 @@ async function initializeEnvironment(
 
         const startDaySection = page.getByRole('spinbutton', { name: 'Day' }).first();
         await startDaySection.click();
-        expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('12');
+        await waitFor(async () => {
+          expect(await page.evaluate(() => document.getSelection()?.toString())).to.equal('12');
+          expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('12');
+        });
 
         const endYearSection = page.getByRole('spinbutton', { name: 'Year' }).last();
         await endYearSection.click();
