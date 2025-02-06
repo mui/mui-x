@@ -13,6 +13,7 @@ import {
 import { useXAxes, useYAxes } from '../hooks';
 import { DEFAULT_AXIS_SIZE } from '../constants';
 
+// TODO: Add links to the migration docs for each prop
 export interface ChartsAxisProps {
   /**
    * Indicate which axis to display the top of the charts.
