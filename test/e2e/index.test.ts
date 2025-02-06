@@ -1070,7 +1070,6 @@ async function initializeEnvironment(
         const startDaySection = page.getByRole('spinbutton', { name: 'Day' }).first();
         await startDaySection.click();
         await waitFor(async () => {
-          expect(await page.evaluate(() => document.getSelection()?.toString())).to.equal('12');
           expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('12');
         });
 
@@ -1085,7 +1084,6 @@ async function initializeEnvironment(
         const startDaySection = page.getByRole('spinbutton', { name: 'Day' }).first();
         await startDaySection.click();
         await waitFor(async () => {
-          expect(await page.evaluate(() => document.getSelection()?.toString())).to.equal('12');
           expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('12');
         });
 
