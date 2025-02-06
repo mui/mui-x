@@ -47,7 +47,7 @@ async function addLicense(packageData) {
 
 async function run() {
   try {
-    const packageData = await createPackageFile();
+    const packageData = await createPackageFile(true);
 
     const filesToCopy = ['./README.md', '../../CHANGELOG.md'];
 
