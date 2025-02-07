@@ -1,10 +1,5 @@
 const is = Object.is;
 
-/**
- * Fast shallow compare for objects.
-
-* @returns true if objects are equal.
- */
 export function fastObjectShallowCompare<T extends Record<string, any> | null>(a: T, b: T) {
   if (a === b) {
     return true;
