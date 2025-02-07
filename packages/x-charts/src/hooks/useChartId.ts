@@ -2,7 +2,11 @@
 import * as React from 'react';
 import { DrawingAreaContext } from '../context/DrawingAreaProvider';
 
-export function useChartId() {
+/**
+ * Get the unique identifier of the chart.
+ * @returns {string} chartId
+ */
+export function useChartId(): string {
   const { chartId } = React.useContext(DrawingAreaContext);
 
   return React.useMemo(() => chartId, [chartId]);

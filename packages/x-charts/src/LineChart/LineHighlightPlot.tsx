@@ -9,7 +9,7 @@ import { LineHighlightElement, LineHighlightElementProps } from './LineHighlight
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import getColor from './getColor';
-import { useLineSeries } from '../hooks/useSeries';
+import { useLineSeries } from '../hooks/useLineSeries';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { selectorChartsInteractionXAxis } from '../context/InteractionSelectors';
 

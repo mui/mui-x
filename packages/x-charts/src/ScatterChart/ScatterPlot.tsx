@@ -5,7 +5,7 @@ import { Scatter, ScatterProps } from './Scatter';
 import { useCartesianContext } from '../context/CartesianProvider';
 import getColor from './getColor';
 import { ZAxisContext } from '../context/ZAxisContextProvider';
-import { useScatterSeries } from '../hooks/useSeries';
+import { useScatterSeries } from '../hooks/useScatterSeries';
 
 export interface ScatterPlotSlots {
   scatter?: React.JSXElementConstructor<ScatterProps>;

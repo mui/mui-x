@@ -2,6 +2,10 @@
 import * as React from 'react';
 import { SvgRefContext } from '../context/SvgRefProvider';
 
+/**
+ * Get the ref for the SVG element.
+ * @returns The SVG ref.
+ */
 export function useSvgRef(): React.MutableRefObject<SVGSVGElement> {
   const { isInitialized, data } = React.useContext(SvgRefContext);
 

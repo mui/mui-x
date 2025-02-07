@@ -16,7 +16,7 @@ import getCurveFactory from '../internals/getCurve';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { LineItemIdentifier } from '../models/seriesType/line';
 import { useChartGradient } from '../internals/components/ChartsAxesGradients';
-import { useLineSeries } from '../hooks/useSeries';
+import { useLineSeries } from '../hooks/useLineSeries';
 import { AxisId } from '../models/axis';
 import { useSkipAnimation } from '../context/AnimationProvider';
 
