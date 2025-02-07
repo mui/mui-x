@@ -18,12 +18,12 @@ type GridCreateSelectorFunction = ReturnType<typeof reselectCreateSelector> & {
   selectorArgs?: any;
 };
 
-export interface OutputSelector<ApiRef, Args, Result> {
-  (apiRef: ApiRef, args?: Args): Result;
+export interface OutputSelector<State, Args, Result> {
+  (apiRef: RefObject<{ state: State }>, args?: Args): Result;
 }
 
 type StateFromSelector<T> = T extends (first: infer F, ...args: any[]) => any
-  ? F extends { apiRef: { current: { state: infer F2 } } }
+  ? F extends RefObject<{ state: infer F2 } | null>
     ? F2
     : F
   : never;
