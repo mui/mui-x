@@ -20,9 +20,7 @@ import { useLazyRef } from '../../hooks/utils/useLazyRef';
 import { checkColumnVisibilityModelsSame, defaultSearchPredicate } from './utils';
 import { NotRendered } from '../../utils/assert';
 
-const Checkbox = styled(NotRendered<GridSlotProps['baseCheckbox']>)({
-  p: 0.5,
-});
+const Checkbox = styled(NotRendered<GridSlotProps['baseCheckbox']>)({});
 
 export interface GridColumnsManagementProps {
   /*
@@ -285,6 +283,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
             name={column.field}
             inputRef={isFirstHideableColumn(column) ? firstSwitchRef : undefined}
             label={column.headerName || column.field}
+            size='small'
             {...rootProps.slotProps?.baseCheckbox}
           />
         ))}
