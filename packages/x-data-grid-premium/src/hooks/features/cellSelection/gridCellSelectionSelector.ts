@@ -1,5 +1,5 @@
 import { RefObject } from '@mui/x-internals/types';
-import { GridApiPremium } from '../../../models/gridApiPremium';
+import { GridStatePremium } from '../../../models/gridStatePremium';
 
-export const gridCellSelectionStateSelector = (apiRef: RefObject<GridApiPremium>) =>
+export const gridCellSelectionStateSelector = (apiRef: RefObject<{ state: GridStatePremium }>) =>
   apiRef.current.state.cellSelection;
