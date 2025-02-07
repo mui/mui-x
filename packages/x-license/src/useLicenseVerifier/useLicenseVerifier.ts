@@ -9,6 +9,8 @@ import {
   showLicenseKeyPlanMismatchError,
   showExpiredPackageVersionError,
   showNotAvailableInInitialProPlanError,
+  showLicenseKeyNotSetError,
+  showSetLicenseKeyNotCalledError,
 } from '../utils/licenseErrorMessageUtils';
 import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
 import MuiLicenseInfoContext from '../Unstable_LicenseInfoProvider/MuiLicenseInfoContext';
@@ -31,6 +33,12 @@ export function useLicenseVerifier(
 } {
   const { key: contextKey } = React.useContext(MuiLicenseInfoContext);
   return React.useMemo(() => {
+    if (!LicenseInfo.getHasSetLicenseKeyRun()) {
+      showSetLicenseKeyNotCalledError();
+    }
+    if (!LicenseInfo.getIsLicenseKeySet()) {
+      showLicenseKeyNotSetError();
+    }
     const licenseKey = contextKey ?? LicenseInfo.getLicenseKey();
 
     // Cache the response to not trigger the error twice.
