@@ -27,6 +27,28 @@ export type ButtonProps = {
   touchRippleRef?: any; // FIXME(v8:romgrk): find a way to remove
 };
 
+export type CheckboxProps = {
+  ref?: Ref<HTMLButtonElement>;
+  id?: string;
+  checked?: boolean;
+  className?: string;
+  disabled?: boolean;
+  indeterminate?: boolean;
+  inputRef?: React.Ref<HTMLInputElement>;
+  name?: string;
+  label?: React.ReactNode;
+  onClick?: React.MouseEventHandler;
+  onChange?: React.ChangeEventHandler;
+  onKeyDown?: React.KeyboardEventHandler;
+  size?: 'small' | 'medium';
+  slotProps?: {
+    htmlInput?: React.InputHTMLAttributes<HTMLInputElement>;
+  };
+  style?: React.CSSProperties;
+  tabIndex?: number;
+  touchRippleRef?: any; // FIXME(v8:romgrk): find a way to remove
+};
+
 export type IconButtonProps = Omit<ButtonProps, 'startIcon'> & {
   label?: string;
   color?: 'default' | 'inherit' | 'primary';
