@@ -8,7 +8,7 @@ import { LineHighlightElement, LineHighlightElementProps } from './LineHighlight
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import getColor from './getColor';
-import { useLineSeries } from '../hooks/useSeries';
+import { useLineSeries } from '../hooks/useLineSeries';
 import { useChartContext } from '../context/ChartProvider';
 import { selectorChartsInteractionXAxis } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { useXAxes, useYAxes } from '../hooks/useAxis';

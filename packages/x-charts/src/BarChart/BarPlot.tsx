@@ -13,7 +13,7 @@ import { BarClipPath } from './BarClipPath';
 import { BarLabelItemProps, BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
 import { checkScaleErrors } from './checkScaleErrors';
-import { useBarSeries } from '../hooks/useSeries';
+import { useBarSeries } from '../hooks/useBarSeries';
 import { useSkipAnimation } from '../context/AnimationProvider';
 import { SeriesProcessorResult } from '../internals/plugins/models/seriesConfig/seriesProcessor.types';
 

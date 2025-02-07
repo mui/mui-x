@@ -1,2 +1,2 @@
-export { useHeatmapSeries } from './useSeries';
+export { useHeatmapSeries } from './useHeatmapSeries';
 export * from './zoom';
