@@ -13,6 +13,24 @@ Please don't hesitate to leave a comment there to describe your needs, especiall
 
 With the pivoting feature, users would be able to turn a column into a row, transforming the column's values into new columns.
 
+## Movies
+
+{{"demo": "GridPivotingMovies.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Simple examples
+
+<!-- {{"demo": "GridPivotingBasic.js", "bg": "inline", "defaultCodeOpen": false}} -->
+
+<!-- {{"demo": "GridPivotingMultipleValues.js", "bg": "inline", "defaultCodeOpen": false}} -->
+
+## Commodities
+
+{{"demo": "GridPivotingCommodities.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Financials
+
+{{"demo": "GridPivotingFinancial.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)

@@ -972,6 +972,7 @@
       "nodeName": "the main container element",
       "conditions": "it has right pinned columns"
     },
+    "mainContent": { "description": "" },
     "menu": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the menu element" },
     "menuIcon": {
       "description": "Styles applied to {{nodeName}}.",
@@ -1030,6 +1031,15 @@
     "pinnedRows--top": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the top pinned rows container"
+    },
+    "pivotField": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot field"
+    },
+    "pivotField--sorted": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the pivot field",
+      "conditions": "sorted"
     },
     "root": { "description": "Styles applied to the root element." },
     "root--densityComfortable": {
@@ -1195,6 +1205,7 @@
       "nodeName": "cells",
       "conditions": "column header and other elements that have border"
     },
+    "withSidePanel": { "description": "" },
     "withVerticalBorder": {
       "description": "Styles applied the grid if <code>showColumnVerticalBorder={true}</code>."
     }
@@ -1270,6 +1281,13 @@
     "openFilterButtonIcon": "Icon displayed on the open filter button present in the toolbar by default.",
     "pagination": "Pagination component rendered in the grid footer by default.",
     "panel": "Panel component wrapping the filters and columns panels.",
+    "pivotMenuAddIcon": "Icon displayed in the pivot menu for adding a field to a pivot section.",
+    "pivotMenuCheckIcon": "Icon displayed in the pivot menu to signify a pivot section is selected.",
+    "pivotMenuMoveDownIcon": "Icon displayed in the pivot menu for moving a field down.",
+    "pivotMenuMoveToBottomIcon": "Icon displayed in the pivot menu for moving a field to the bottom.",
+    "pivotMenuMoveToTopIcon": "Icon displayed in the pivot menu for moving a field to the top.",
+    "pivotMenuMoveUpIcon": "Icon displayed in the pivot menu for moving a field up.",
+    "pivotMenuRemoveIcon": "Icon displayed in the pivot menu for removing a field from the pivot.",
     "quickFilterClearIcon": "Icon displayed on the quick filter reset input.",
     "quickFilterIcon": "Icon displayed on the quick filter input.",
     "row": "Component rendered for each row.",

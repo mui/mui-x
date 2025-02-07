@@ -249,6 +249,11 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
 
     const { InputComponentProps, ...valueInputPropsOther } = valueInputProps;
 
+    // @ts-ignore
+    const isPivotMode = rootProps.pivotParams?.pivotMode ?? false;
+    // @ts-ignore
+    const initialColumns = rootProps.pivotParams?.initialColumns;
+
     const { filteredColumns, selectedField } = React.useMemo(() => {
       let itemField: string | undefined = item.field;
 
@@ -259,6 +264,17 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
       if (selectedNonFilterableColumn) {
         return {
           filteredColumns: [selectedNonFilterableColumn],
+          selectedField: itemField,
+        };
+      }
+
+      if (isPivotMode) {
+        return {
+          filteredColumns: filterableColumns.filter(
+            (column) =>
+              initialColumns?.find((col: GridStateColDef) => col.field === column.field) !==
+              undefined,
+          ),
           selectedField: itemField,
         };
       }
@@ -283,7 +299,15 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
         }),
         selectedField: itemField,
       };
-    }, [filterColumns, filterModel?.items, filterableColumns, item.field, columnLookup]);
+    }, [
+      item.field,
+      columnLookup,
+      isPivotMode,
+      filterColumns,
+      filterableColumns,
+      filterModel?.items,
+      initialColumns,
+    ]);
 
     const sortedFilteredColumns = React.useMemo(() => {
       switch (columnsSort) {
