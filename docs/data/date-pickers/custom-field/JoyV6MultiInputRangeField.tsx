@@ -37,10 +37,9 @@ import {
 const joyTheme = extendJoyTheme();
 
 interface JoyTextFieldProps
-  extends UseMultiInputRangeFieldTextFieldProps<
-    false,
-    InputProps & { label?: React.ReactNode }
-  > {
+  extends UseMultiInputRangeFieldTextFieldProps<false, {}>,
+    Omit<InputProps, keyof UseMultiInputRangeFieldTextFieldProps<false, {}>> {
+  label?: React.ReactNode;
   triggerRef?: React.Ref<HTMLDivElement>;
 }
 
