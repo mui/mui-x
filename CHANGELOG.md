@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Feb 7, 2025_
 
-We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 - ⚡ Mount and resize performance improvements for the Data Grid
 - 🐞 Bugfixes
@@ -23,7 +23,6 @@ Following are all team members who have contributed to this release:
 
 #### `@mui/x-data-grid@7.26.0`
 
-- [DataGrid] Fix "no rows" overlay not showing with active aggregation (#16468) @KenanYusuf
 - [DataGrid] Avoid `<GridRoot />` double-render pass on mount in SPA mode (#16480) @lauri865
 
 #### `@mui/x-data-grid-pro@7.26.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -34,7 +33,9 @@ Same changes as in `@mui/x-data-grid@7.26.0`, plus:
 
 #### `@mui/x-data-grid-premium@7.26.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@7.26.0`.
+Same changes as in `@mui/x-data-grid-pro@7.26.0`, plus:
+
+- [DataGridPremium] Fix "no rows" overlay not showing with active aggregation (#16468) @KenanYusuf
 
 ### Date and Time Pickers
 
