@@ -1,4 +1,3 @@
-import { RefObject } from '@mui/x-internals/types';
 import { GridColumnApi } from './gridColumnApi';
 import { GridColumnMenuApi } from './gridColumnMenuApi';
 import { GridCoreApi, GridCorePrivateApi } from './gridCoreApi';
@@ -73,7 +72,7 @@ export interface GridPrivateOnlyApiCommon<
   PrivateApi extends GridPrivateApiCommon,
   Props extends DataGridProcessedProps,
 > extends GridCorePrivateApi<Api, PrivateApi, Props>,
-    GridStatePrivateApi<RefObject<PrivateApi>>,
+    GridStatePrivateApi<PrivateApi['state']>,
     GridPipeProcessingPrivateApi,
     GridStrategyProcessingApi,
     GridColumnSpanningPrivateApi,
