@@ -2,11 +2,7 @@ import * as React from 'react';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { styled } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
-import {
-  gridRowsLoadingSelector,
-  getDataGridUtilityClass,
-  useGridRootProps,
-} from '@mui/x-data-grid-pro';
+import { getDataGridUtilityClass, useGridRootProps } from '@mui/x-data-grid-pro';
 import { GridSkeletonLoadingOverlayInner, useGridSelector } from '@mui/x-data-grid-pro/internals';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { gridAggregationModelSelector } from '../hooks/features/aggregation/gridAggregationSelectors';
@@ -37,11 +33,7 @@ const GridAggregationRowOverlay = forwardRef<HTMLDivElement, React.HTMLAttribute
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
     const classes = useUtilityClasses({ classes: rootProps.classes });
-    const isLoading = useGridSelector(apiRef, gridRowsLoadingSelector);
     const aggregationModel = useGridSelector(apiRef, gridAggregationModelSelector);
-    if (!isLoading || Object.keys(aggregationModel).length === 0) {
-      return null;
-    }
 
     const visibleColumns = new Set(Object.keys(aggregationModel));
 
