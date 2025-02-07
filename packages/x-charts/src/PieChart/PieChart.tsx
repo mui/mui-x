@@ -28,6 +28,7 @@ import {
   useChartHighlight,
   UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
+import { defaultizeMargin } from '../internals/defaultizeMargin';
 import { PieChartPluginSignatures } from './PieChart.plugins';
 
 export interface PieChartSlots
@@ -74,7 +75,7 @@ export interface PieChartProps
   slotProps?: PieChartSlotProps;
 }
 
-const PIE_CHART_PLUGGINS = [useChartInteraction, useChartHighlight] as const;
+const PIE_CHART_PLUGINS = [useChartInteraction, useChartHighlight] as const;
 const defaultMargin = { top: 5, bottom: 5, left: 5, right: 5 };
 
 /**
@@ -111,7 +112,7 @@ const PieChart = React.forwardRef(function PieChart(
     className,
     ...other
   } = props;
-  const margin = { ...defaultMargin, ...marginProps };
+  const margin = defaultizeMargin(marginProps, defaultMargin);
 
   const { chartDataProviderProps, chartsSurfaceProps } = useChartContainerProps<
     'pie',
@@ -128,7 +129,7 @@ const PieChart = React.forwardRef(function PieChart(
       onHighlightChange,
       className,
       skipAnimation,
-      plugins: PIE_CHART_PLUGGINS,
+      plugins: PIE_CHART_PLUGINS,
     },
     ref,
   );

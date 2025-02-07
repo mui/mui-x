@@ -1,5 +1,5 @@
 import { ChartRootSelector, createSelector } from '../../utils/selectors';
-import { UseChartDimensionsSignature } from './useChartDimensions.types';
+import type { UseChartDimensionsSignature } from './useChartDimensions.types';
 
 export const selectorChartDimensionsState: ChartRootSelector<UseChartDimensionsSignature> = (
   state,

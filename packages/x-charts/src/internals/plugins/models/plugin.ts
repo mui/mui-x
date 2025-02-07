@@ -114,7 +114,7 @@ export type ChartUsedControlModels<TSignature extends ChartAnyPluginSignature> =
     RemoveSetValue<MergeSignaturesProperty<ChartRequiredPlugins<TSignature>, 'models'>>;
 
 export type ChartUsedStore<TSignature extends ChartAnyPluginSignature> = ChartStore<
-  [TSignature, ...TSignature['dependencies']]
+  [TSignature, ...TSignature['dependencies'], ...TSignature['optionalDependencies']]
 >;
 
 export type ChartPlugin<TSignature extends ChartAnyPluginSignature> = {

@@ -7,6 +7,7 @@ import { GaugeProvider, GaugeProviderProps } from './GaugeProvider';
 import { ChartProvider } from '../context/ChartProvider';
 import { MergeSignaturesProperty } from '../internals/plugins/models';
 import { ChartCorePluginSignatures } from '../internals/plugins/corePlugins';
+import { defaultizeMargin } from '../internals/defaultizeMargin';
 
 export interface GaugeContainerProps
   extends Omit<ChartsSurfaceProps, 'children'>,
@@ -54,7 +55,7 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(
       pluginParams={{
         width: inWidth,
         height: inHeight,
-        margin: { left: 10, right: 10, top: 10, bottom: 10, ...margin },
+        margin: defaultizeMargin(margin, { left: 10, right: 10, top: 10, bottom: 10 }),
       }}
       plugins={[]}
     >

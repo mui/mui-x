@@ -73,7 +73,7 @@ export function computeAxisValue<T extends ChartSeriesType>(
     axis?: AxisConfig<ScaleName, any, ChartsXAxisProps>[];
     axisDirection: 'x';
   },
-): ComputeResult<ChartsAxisProps>;
+): ComputeResult<ChartsXAxisProps>;
 export function computeAxisValue<T extends ChartSeriesType>({
   drawingArea,
   formattedSeries,
