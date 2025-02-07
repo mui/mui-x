@@ -15,6 +15,10 @@ import { useScatterChartProps, ChartsWrapper } from '@mui/x-charts/internals';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartContainerProProps } from '../ChartContainerPro/ChartContainerPro';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
+import {
+  SCATTER_CHART_PRO_PLUGINS,
+  ScatterChartProPluginsSignatures,
+} from './ScatterChartPro.plugins';
 
 export interface ScatterChartProProps
   extends Omit<ScatterChartProps, 'apiRef'>,
@@ -48,8 +52,17 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
     axisHighlightProps,
     children,
   } = useScatterChartProps(other);
-  const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps(
-    { ...chartContainerProps, initialZoom, onZoomChange, apiRef },
+  const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
+    'scatter',
+    ScatterChartProPluginsSignatures
+  >(
+    {
+      ...chartContainerProps,
+      initialZoom,
+      onZoomChange,
+      apiRef,
+      plugins: SCATTER_CHART_PRO_PLUGINS,
+    },
     ref,
   );
 
