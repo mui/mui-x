@@ -37,7 +37,6 @@ export type UseTreeViewFocusDefaultizedParameters = UseTreeViewFocusParameters;
 export interface UseTreeViewFocusState {
   focus: {
     focusedItemId: string | null;
-    defaultFocusableItemId: string | null;
   };
 }
 

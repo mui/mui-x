@@ -10,42 +10,43 @@ import {
   getNonDisabledItemsInRange,
 } from '../../utils/tree';
 import {
+  TreeViewSelectionValue,
   UseTreeViewSelectionInstance,
   UseTreeViewSelectionParameters,
   UseTreeViewSelectionSignature,
 } from './useTreeViewSelection.types';
 import {
-  convertSelectedItemsToArray,
   propagateSelection,
   getAddedAndRemovedItems,
   getLookupFromArray,
-  createSelectedItemsMap,
 } from './useTreeViewSelection.utils';
-import { selectorIsItemSelected } from './useTreeViewSelection.selectors';
+import {
+  selectorIsItemSelected,
+  selectorSelectionModel,
+  selectorSelectionModelArray,
+} from './useTreeViewSelection.selectors';
 import { useTreeViewSelectionItemPlugin } from './useTreeViewSelection.itemPlugin';
+import { useAssertModelConsistency } from '../../utils/models';
 
 export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature> = ({
   store,
   params,
-  models,
 }) => {
+  useAssertModelConsistency({
+    state: 'selectedItems',
+    controlled: params.selectedItems,
+    defaultValue: params.defaultSelectedItems,
+  });
+
   const lastSelectedItem = React.useRef<string | null>(null);
   const lastSelectedRange = React.useRef<{ [itemId: string]: boolean }>({});
-
-  useEnhancedEffect(() => {
-    store.update((prevState) => ({
-      ...prevState,
-      selection: {
-        selectedItemsMap: createSelectedItemsMap(models.selectedItems.value),
-      },
-    }));
-  }, [store, models.selectedItems.value]);
 
   const setSelectedItems = (
     event: React.SyntheticEvent,
     newModel: typeof params.defaultSelectedItems,
     additionalItemsToPropagate?: TreeViewItemId[],
   ) => {
+    const oldModel = selectorSelectionModel(store.value);
     let cleanModel: typeof newModel;
 
     if (
@@ -56,7 +57,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
         store,
         selectionPropagation: params.selectionPropagation,
         newModel: newModel as string[],
-        oldModel: models.selectedItems.value as string[],
+        oldModel: oldModel as string[],
         additionalItemsToPropagate,
       });
     } else {
@@ -68,7 +69,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
         const changes = getAddedAndRemovedItems({
           store,
           newModel: cleanModel as string[],
-          oldModel: models.selectedItems.value as string[],
+          oldModel: oldModel as string[],
         });
 
         if (params.onItemSelectionToggle) {
@@ -80,9 +81,9 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
             params.onItemSelectionToggle!(event, itemId, false);
           });
         }
-      } else if (params.onItemSelectionToggle && cleanModel !== models.selectedItems.value) {
-        if (models.selectedItems.value != null) {
-          params.onItemSelectionToggle(event, models.selectedItems.value as string, false);
+      } else if (params.onItemSelectionToggle && cleanModel !== oldModel) {
+        if (oldModel != null) {
+          params.onItemSelectionToggle(event, oldModel as string, false);
         }
         if (cleanModel != null) {
           params.onItemSelectionToggle(event, cleanModel as string, true);
@@ -90,11 +91,14 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
       }
     }
 
-    if (params.onSelectedItemsChange) {
-      params.onSelectedItemsChange(event, cleanModel);
+    if (params.selectedItems === undefined) {
+      store.update((prevState) => ({
+        ...prevState,
+        selection: { selectedItems: cleanModel },
+      }));
     }
 
-    models.selectedItems.setControlledValue(cleanModel);
+    params.onSelectedItemsChange?.(event, cleanModel);
   };
 
   const selectItem: UseTreeViewSelectionInstance['selectItem'] = ({
@@ -107,16 +111,16 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
       return;
     }
 
-    let newSelected: typeof models.selectedItems.value;
+    let newModel: TreeViewSelectionValue<boolean>;
     if (keepExistingSelection) {
-      const cleanSelectedItems = convertSelectedItemsToArray(models.selectedItems.value);
+      const oldModel = selectorSelectionModelArray(store.value);
       const isSelectedBefore = selectorIsItemSelected(store.value, itemId);
       if (isSelectedBefore && (shouldBeSelected === false || shouldBeSelected == null)) {
-        newSelected = cleanSelectedItems.filter((id) => id !== itemId);
+        newModel = oldModel.filter((id) => id !== itemId);
       } else if (!isSelectedBefore && (shouldBeSelected === true || shouldBeSelected == null)) {
-        newSelected = [itemId].concat(cleanSelectedItems);
+        newModel = [itemId].concat(oldModel);
       } else {
-        newSelected = cleanSelectedItems;
+        newModel = oldModel;
       }
     } else {
       // eslint-disable-next-line no-lonely-if
@@ -124,15 +128,15 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
         shouldBeSelected === false ||
         (shouldBeSelected == null && selectorIsItemSelected(store.value, itemId))
       ) {
-        newSelected = params.multiSelect ? [] : null;
+        newModel = params.multiSelect ? [] : null;
       } else {
-        newSelected = params.multiSelect ? [itemId] : itemId;
+        newModel = params.multiSelect ? [itemId] : itemId;
       }
     }
 
     setSelectedItems(
       event,
-      newSelected,
+      newModel,
       // If shouldBeSelected === selectorIsItemSelected(store, itemId), we still want to propagate the select.
       // This is useful when the element is in an indeterminate state.
       [itemId],
@@ -146,7 +150,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
       return;
     }
 
-    let newSelectedItems = convertSelectedItemsToArray(models.selectedItems.value).slice();
+    let newSelectedItems = selectorSelectionModelArray(store.value).slice();
 
     // If the last selection was a range selection,
     // remove the items that were part of the last range from the model
@@ -199,7 +203,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
       return;
     }
 
-    let newSelectedItems = convertSelectedItemsToArray(models.selectedItems.value).slice();
+    let newSelectedItems = selectorSelectionModelArray(store.value).slice();
 
     if (Object.keys(lastSelectedRange.current).length === 0) {
       newSelectedItems.push(nextItem);
@@ -220,6 +224,19 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
 
     setSelectedItems(event, newSelectedItems);
   };
+
+  /**
+   * Update the selected items in the state when the `selectedItems` prop changes.
+   */
+  useEnhancedEffect(() => {
+    const selectedItems = params.selectedItems;
+    if (selectedItems !== undefined) {
+      store.update((prevState) => ({
+        ...prevState,
+        selection: { ...prevState.selection, selectedItems },
+      }));
+    }
+  }, [store, params.selectedItems]);
 
   const pluginContextValue = React.useMemo(
     () => ({
@@ -263,12 +280,6 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
 
 useTreeViewSelection.itemPlugin = useTreeViewSelectionItemPlugin;
 
-useTreeViewSelection.models = {
-  selectedItems: {
-    getDefaultValue: (params) => params.defaultSelectedItems,
-  },
-};
-
 const DEFAULT_SELECTED_ITEMS: string[] = [];
 
 const EMPTY_SELECTION_PROPAGATION: UseTreeViewSelectionParameters<true>['selectionPropagation'] =
@@ -285,17 +296,8 @@ useTreeViewSelection.getDefaultizedParams = ({ params }) => ({
 
 useTreeViewSelection.getInitialState = (params) => ({
   selection: {
-    selectedItemsMap: createSelectedItemsMap(
+    selectedItems:
       params.selectedItems === undefined ? params.defaultSelectedItems : params.selectedItems,
-    ),
-  },
-});
-
-useTreeViewSelection.getInitialState = (params) => ({
-  selection: {
-    selectedItemsMap: createSelectedItemsMap(
-      params.selectedItems === undefined ? params.defaultSelectedItems : params.selectedItems,
-    ),
   },
 });
 
