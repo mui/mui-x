@@ -41,7 +41,7 @@ export const gridPaginationModelSelector = createSelector(
  */
 export const gridPaginationRowCountSelector = createSelector(
   gridPaginationSelector,
-  (pagination) => pagination.rowCount,
+  (pagination) => pagination.rowCount ?? 0,
 );
 
 /**
