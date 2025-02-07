@@ -44,7 +44,11 @@ export interface DateCalendar2Props extends Omit<Calendar.Root.Props, 'children'
    * @default 3
    */
   yearsPerRow?: 3 | 4;
-  // TODO: Add reduceAnimations and loading props
+  // Missing props:
+  // reduceAnimations
+  // loading
+  // renderLoading (convert to a slot)
+  // yearsOrder
 }
 
 export interface DateCalendar2Slots {
