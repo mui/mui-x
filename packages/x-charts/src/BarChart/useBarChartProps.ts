@@ -12,6 +12,7 @@ import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsLegendSlotExtension } from '../ChartsLegend';
 import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
 import { calculateMargins } from '../internals/calculateMargins';
+import { BAR_CHART_PLUGINS, BarChartPluginsSignatures } from './BarChart.plugins';
 
 /**
  * A helper function that extracts BarChartProps from the input props
@@ -68,7 +69,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     ),
   } as const;
 
-  const chartContainerProps: Omit<ChartContainerProps<'bar'>, 'plugins'> = {
+  const chartContainerProps: ChartContainerProps<'bar', BarChartPluginsSignatures> = {
     ...rest,
     series: series.map((s) => ({
       type: 'bar' as const,
@@ -94,6 +95,7 @@ export const useBarChartProps = (props: BarChartProps) => {
       axisHighlight?.y === 'none',
     className,
     skipAnimation,
+    plugins: BAR_CHART_PLUGINS,
   };
 
   const barPlotProps: BarPlotProps = {

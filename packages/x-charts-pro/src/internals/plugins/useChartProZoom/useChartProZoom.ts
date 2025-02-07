@@ -8,9 +8,10 @@ import {
   getSVGPoint,
   selectorChartDrawingArea,
   ZoomData,
+  creatZoomLookup,
+  selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
 import { UseChartProZoomSignature } from './useChartProZoom.types';
-import { creatZoomLookup } from './creatZoomLookup';
 import {
   getDiff,
   getHorizontalCenterRatio,
@@ -21,7 +22,6 @@ import {
   preventDefault,
   zoomAtPoint,
 } from './useChartProZoom.utils';
-import { selectorChartZoomOptionsLookup } from './useChartProZoom.selectors';
 
 // It is helpful to avoid the need to provide the possibly auto-generated id for each axis.
 function initializeZoomData(options: Record<AxisId, DefaultizedZoomOptions>) {
@@ -372,24 +372,20 @@ useChartProZoom.params = {
 };
 
 useChartProZoom.getDefaultizedParams = ({ params }) => {
-  const optionsLookup = {
-    ...creatZoomLookup('x')(params.defaultizedXAxis),
-    ...creatZoomLookup('y')(params.defaultizedYAxis),
-  };
-
   return {
     ...params,
-    optionsLookup,
   };
 };
 
 useChartProZoom.getInitialState = (params) => {
+  const optionsLookup = {
+    ...creatZoomLookup('x')(params.defaultizedXAxis),
+    ...creatZoomLookup('y')(params.defaultizedYAxis),
+  };
   return {
     zoom: {
       zoomData:
-        params.initialZoom === undefined
-          ? initializeZoomData(params.optionsLookup)
-          : params.initialZoom,
+        params.initialZoom === undefined ? initializeZoomData(optionsLookup) : params.initialZoom,
       isInteracting: false,
     },
   };
