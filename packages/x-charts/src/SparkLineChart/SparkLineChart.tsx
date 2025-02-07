@@ -2,21 +2,22 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { MakeOptional } from '@mui/x-internals/types';
+import { ChartsColor, ChartsColorPalette } from '../colorPalettes';
 import { BarPlot } from '../BarChart';
 import { LinePlot, AreaPlot, LineHighlightPlot } from '../LineChart';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
-import { DEFAULT_X_AXIS_KEY } from '../constants';
+import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { ChartsTooltip } from '../ChartsTooltip';
 import { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../models/axis';
 import { LineSeriesType, BarSeriesType } from '../models/seriesType';
-import { CardinalDirections } from '../models/layout';
 import { AreaPlotSlots, AreaPlotSlotProps } from '../LineChart/AreaPlot';
 import { LinePlotSlots, LinePlotSlotProps } from '../LineChart/LinePlot';
 import { MarkPlotSlots, MarkPlotSlotProps } from '../LineChart/MarkPlot';
 import { LineHighlightPlotSlots, LineHighlightPlotSlotProps } from '../LineChart/LineHighlightPlot';
 import { BarPlotSlots, BarPlotSlotProps } from '../BarChart/BarPlot';
+import { ChartMargin } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.types';
 
 export interface SparkLineChartSlots
   extends AreaPlotSlots,
@@ -95,7 +96,7 @@ export interface SparkLineChartProps
    *   right: 5,
    * }
    */
-  margin?: Partial<CardinalDirections<number>>;
+  margin?: Partial<ChartMargin>;
   /**
    * Overridable component slots.
    * @default {}
@@ -106,6 +107,19 @@ export interface SparkLineChartProps
    * @default {}
    */
   slotProps?: SparkLineChartSlotProps;
+
+  /**
+   * Color palette used to colorize multiple series.
+   * @default rainbowSurgePalette
+   * @deprecated use the `color` prop instead
+   */
+  colors?: ChartContainerProps['colors'];
+
+  /**
+   * Color used to colorize the sparkline.
+   * @default rainbowSurgePalette[0]
+   */
+  color?: ChartsColor;
 }
 
 const SPARKLINE_DEFAULT_MARGIN = {
@@ -134,7 +148,8 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
     width,
     height,
     margin = SPARKLINE_DEFAULT_MARGIN,
-    colors,
+    color,
+    colors: deprecatedColors,
     sx,
     showTooltip,
     showHighlight,
@@ -159,6 +174,14 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
   };
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
+
+  const colors: ChartsColorPalette | undefined = React.useMemo(() => {
+    if (color == null) {
+      return undefined;
+    }
+
+    return typeof color === 'function' ? (mode: 'light' | 'dark') => [color(mode)] : [color];
+  }, [color]);
 
   return (
     <ChartContainer
@@ -187,11 +210,11 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
       ]}
       yAxis={[
         {
-          id: DEFAULT_X_AXIS_KEY,
+          id: DEFAULT_Y_AXIS_KEY,
           ...yAxis,
         },
       ]}
-      colors={colors}
+      colors={colors ?? deprecatedColors}
       sx={sx}
       disableAxisListener={
         (!showTooltip || slotProps?.tooltip?.trigger !== 'axis') &&
@@ -222,6 +245,9 @@ SparkLineChart.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  apiRef: PropTypes.shape({
+    current: PropTypes.object,
+  }),
   /**
    * Set to `true` to fill spark line area.
    * Has no effect if plotType='bar'.
@@ -235,14 +261,22 @@ SparkLineChart.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
   /**
+   * Color used to colorize the sparkline.
+   * @default rainbowSurgePalette[0]
+   */
+  color: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  /**
    * Color palette used to colorize multiple series.
-   * @default blueberryTwilightPalette
+   * @default rainbowSurgePalette
+   * @deprecated use the `color` prop instead
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   /**
    * @default 'linear'
    */
   curve: PropTypes.oneOf([
+    'bumpX',
+    'bumpY',
     'catmullRom',
     'linear',
     'monotoneX',
@@ -272,12 +306,18 @@ SparkLineChart.propTypes = {
    */
   height: PropTypes.number,
   /**
-   * The item currently highlighted. Turns highlighting into a controlled prop.
+   * The highlighted item.
+   * Used when the highlight is controlled.
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   }),
+  /**
+   * This prop is used to help implement the accessibility logic.
+   * If you don't provide this prop. It falls back to a randomly generated id.
+   */
+  id: PropTypes.string,
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
@@ -295,6 +335,13 @@ SparkLineChart.propTypes = {
     right: PropTypes.number,
     top: PropTypes.number,
   }),
+  /**
+   * The function called for onClick events.
+   * The second argument contains information about all line/bar elements at the current mouse position.
+   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
+   * @param {null | AxisData} data The data about the clicked axis and items associated with it.
+   */
+  onAxisClick: PropTypes.func,
   /**
    * The callback fired when the highlighted item changes.
    *
@@ -338,6 +385,7 @@ SparkLineChart.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
   /**
    * Formatter used by the tooltip.

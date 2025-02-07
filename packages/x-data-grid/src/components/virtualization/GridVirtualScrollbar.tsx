@@ -15,7 +15,13 @@ import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 type Position = 'vertical' | 'horizontal';
 type OwnerState = DataGridProcessedProps;
-type GridVirtualScrollbarProps = { position: Position };
+type GridVirtualScrollbarProps = {
+  position: Position;
+  scrollPosition: React.RefObject<{
+    left: number;
+    top: number;
+  }>;
+};
 
 const useUtilityClasses = (ownerState: OwnerState, position: Position) => {
   const { classes } = ownerState;
@@ -32,6 +38,9 @@ const Scrollbar = styled('div')({
   position: 'absolute',
   display: 'inline-block',
   zIndex: 6,
+  '&:hover': {
+    zIndex: 7,
+  },
   // In macOS Safari and Gnome Web, scrollbars are overlaid and don't affect the layout. So we consider
   // their size to be 0px throughout all the calculations, but the floating scrollbar container does need
   // to appear and have a real size. We set it to 14px because it seems like an acceptable value and we
@@ -80,6 +89,7 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
 
     const propertyDimension = props.position === 'vertical' ? 'height' : 'width';
     const propertyScroll = props.position === 'vertical' ? 'scrollTop' : 'scrollLeft';
+    const propertyScrollPosition = props.position === 'vertical' ? 'top' : 'left';
     const hasScroll = props.position === 'vertical' ? dimensions.hasScrollX : dimensions.hasScrollY;
 
     const contentSize =
@@ -94,17 +104,18 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
       scrollbarSize * (contentSize / dimensions.viewportOuterSize[propertyDimension]);
 
     const onScrollerScroll = useEventCallback(() => {
-      const scroller = apiRef.current.virtualScrollerRef.current!;
       const scrollbar = scrollbarRef.current;
+      const scrollPosition = props.scrollPosition.current;
+
       if (!scrollbar) {
         return;
       }
 
-      if (scroller[propertyScroll] === lastPosition.current) {
+      if (scrollPosition[propertyScrollPosition] === lastPosition.current) {
         return;
       }
 
-      lastPosition.current = scroller[propertyScroll];
+      lastPosition.current = scrollPosition[propertyScrollPosition];
 
       if (isLocked.current) {
         isLocked.current = false;
@@ -112,13 +123,14 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
       }
       isLocked.current = true;
 
-      const value = scroller[propertyScroll] / contentSize;
+      const value = scrollPosition[propertyScrollPosition] / contentSize;
       scrollbar[propertyScroll] = value * scrollbarInnerSize;
     });
 
     const onScrollbarScroll = useEventCallback(() => {
       const scroller = apiRef.current.virtualScrollerRef.current!;
       const scrollbar = scrollbarRef.current;
+
       if (!scrollbar) {
         return;
       }
@@ -136,11 +148,12 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
     useOnMount(() => {
       const scroller = apiRef.current.virtualScrollerRef.current!;
       const scrollbar = scrollbarRef.current!;
-      scroller.addEventListener('scroll', onScrollerScroll, { capture: true });
-      scrollbar.addEventListener('scroll', onScrollbarScroll, { capture: true });
+      const options: AddEventListenerOptions = { passive: true };
+      scroller.addEventListener('scroll', onScrollerScroll, options);
+      scrollbar.addEventListener('scroll', onScrollbarScroll, options);
       return () => {
-        scroller.removeEventListener('scroll', onScrollerScroll, { capture: true });
-        scrollbar.removeEventListener('scroll', onScrollbarScroll, { capture: true });
+        scroller.removeEventListener('scroll', onScrollerScroll, options);
+        scrollbar.removeEventListener('scroll', onScrollbarScroll, options);
       };
     });
 

@@ -1,5 +1,7 @@
+import { RefObject } from '@mui/x-internals/types';
 import { GridRowId } from '@mui/x-data-grid';
-import { GridPrivateApiPro, GridGetRowsParams, GridGetRowsResponse } from '../../../models';
+import { GridGetRowsParams, GridGetRowsResponse } from '@mui/x-data-grid/internals';
+import { GridPrivateApiPro } from '../../../models';
 
 const MAX_CONCURRENT_REQUESTS = Infinity;
 
@@ -38,7 +40,7 @@ export class NestedDataManager {
   private maxConcurrentRequests: number;
 
   constructor(
-    privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
+    privateApiRef: RefObject<GridPrivateApiPro>,
     maxConcurrentRequests = MAX_CONCURRENT_REQUESTS,
   ) {
     this.api = privateApiRef.current;

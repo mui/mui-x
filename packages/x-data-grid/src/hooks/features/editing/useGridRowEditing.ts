@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   unstable_useEventCallback as useEventCallback,
   unstable_useEnhancedEffect as useEnhancedEffect,
@@ -29,7 +30,7 @@ import {
   GridEditingSharedPrivateApi,
 } from '../../../models/api/gridEditingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { gridEditRowsStateSelector } from './gridEditingSelectors';
+import { gridEditRowsStateSelector, gridRowIsEditingSelector } from './gridEditingSelectors';
 import { GridRowId } from '../../../models/gridRows';
 import { isPrintableKey, isPasteShortcut } from '../../../utils/keyboardUtils';
 import {
@@ -49,7 +50,7 @@ import { GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 import { getDefaultCellValue } from './utils';
 
 export const useGridRowEditing = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'editMode'
@@ -327,11 +328,10 @@ export const useGridRowEditing = (
 
   const getRowMode = React.useCallback<GridRowEditingApi['getRowMode']>(
     (id) => {
-      if (props.editMode === GridEditModes.Cell) {
-        return GridRowModes.View;
-      }
-      const editingState = gridEditRowsStateSelector(apiRef.current.state);
-      const isEditing = editingState[id] && Object.keys(editingState[id]).length > 0;
+      const isEditing = gridRowIsEditingSelector(apiRef.current.state, {
+        rowId: id,
+        editMode: props.editMode,
+      });
       return isEditing ? GridRowModes.Edit : GridRowModes.View;
     },
     [apiRef, props.editMode],
@@ -550,7 +550,7 @@ export const useGridRowEditing = (
               [
                 'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
                 'To handle the error pass a callback to the `onProcessRowUpdateError` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
-                'For more detail, see https://mui.com/x/react-data-grid/editing/#server-side-persistence.',
+                'For more detail, see https://mui.com/x/react-data-grid/editing/persistence/.',
               ],
               'error',
             );
@@ -753,7 +753,7 @@ export const useGridRowEditing = (
     Array.from(ids).forEach((id) => {
       const params = rowModesModel[id] ?? { mode: GridRowModes.View };
       const prevMode = copyOfPrevRowModesModel[id]?.mode || GridRowModes.View;
-      const originalId = apiRef.current.getRowId(rowsLookup[id]) ?? id;
+      const originalId = rowsLookup[id] ? apiRef.current.getRowId(rowsLookup[id]) : id;
       if (params.mode === GridRowModes.Edit && prevMode === GridRowModes.View) {
         updateStateToStartRowEditMode({ id: originalId, ...params });
       } else if (params.mode === GridRowModes.View && prevMode === GridRowModes.Edit) {

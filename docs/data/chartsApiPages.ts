@@ -52,6 +52,11 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartDataProvider',
   },
   {
+    pathname: '/x/api/charts/chart-data-provider-pro',
+    title: 'ChartDataProviderPro',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/charts-axis',
     title: 'ChartsAxis',
   },
@@ -78,10 +83,6 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/charts-legend',
     title: 'ChartsLegend',
-  },
-  {
-    pathname: '/x/api/charts/charts-on-axis-click-handler',
-    title: 'ChartsOnAxisClickHandler',
   },
   {
     pathname: '/x/api/charts/charts-reference-line',
@@ -118,10 +119,6 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/continuous-color-legend',
     title: 'ContinuousColorLegend',
-  },
-  {
-    pathname: '/x/api/charts/default-charts-legend',
-    title: 'DefaultChartsLegend',
   },
   {
     pathname: '/x/api/charts/gauge',

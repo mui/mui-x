@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import type { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 import { GridStateApi, GridStatePrivateApi } from '../../models/api/gridStateApi';
 import { GridControlStateItem } from '../../models/controlStateItem';
@@ -6,13 +7,11 @@ import { useGridApiMethod } from '../utils';
 import { isFunction } from '../../utils/utils';
 
 export const useGridStateInitialization = <PrivateApi extends GridPrivateApiCommon>(
-  apiRef: React.RefObject<PrivateApi>,
+  apiRef: RefObject<PrivateApi>,
 ) => {
   const controlStateMapRef = React.useRef<
     Record<string, GridControlStateItem<PrivateApi['state'], any, any>>
   >({});
-  const [, rawForceUpdate] = React.useState<PrivateApi['state']>();
-
   const registerControlState = React.useCallback<
     GridStatePrivateApi<PrivateApi['state']>['registerControlState']
   >((controlStateItem) => {
@@ -117,7 +116,9 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
     [apiRef],
   );
 
-  const forceUpdate = React.useCallback(() => rawForceUpdate(() => apiRef.current.state), [apiRef]);
+  const forceUpdate = React.useCallback(() => {
+    // @deprecated - do nothing
+  }, []);
 
   const publicStateApi: Omit<GridStateApi<PrivateApi['state']>, 'state'> = {
     setState,

@@ -1,4 +1,6 @@
 import { GridColDef } from '../colDef';
+import { GridStateColDef } from '../colDef/gridColDef';
+import { GridCellMode } from '../gridCell';
 import { GridValidRowModel, GridRowId, GridTreeNode, GridRowModel } from '../gridRows';
 import { GridCellParams } from '../params/gridCellParams';
 import { GridColumnHeaderParams } from '../params/gridColumnHeaderParams';
@@ -34,10 +36,10 @@ export interface GridParamsApi {
    */
   getRowFormattedValue: <V extends any = any>(row: GridRowModel, colDef: GridColDef) => V;
   /**
-   * Gets the underlying DOM element for a cell at the given `id` and `field`.
+   * Gets the [[GridCellParams]] object that is passed as argument in events.
    * @param {GridRowId} id The id of the row.
    * @param {string} field The column field.
-   * @returns {HTMLDivElement | null} The DOM element or `null`.
+   * @returns {GridCellParams} The cell params.
    */
   getCellElement: (id: GridRowId, field: string) => HTMLDivElement | null;
   /**
@@ -80,4 +82,47 @@ export interface GridParamsApi {
    * @returns {GridColumnHeaderParams} The cell params.
    */
   getColumnHeaderParams: (field: string) => GridColumnHeaderParams;
+}
+
+export interface GridParamsPrivateApi {
+  /**
+   * @typedef {Object} CellParamsOverrides
+   * @property {GridCellMode} cellMode - The mode of the cell.
+   * @property {GridStateColDef} colDef - The column definition.
+   * @property {boolean} hasFocus - Indicates if the cell is in focus.
+   * @property {GridTreeNode} rowNode - The node of the row that the current cell belongs to.
+   * @property {0|-1} tabIndex - The tabIndex value.
+   */
+
+  /**
+   * Used internally to render the cell based on existing row data provided by the GridRow.
+   * @param {GridRowId} id The id of the row.
+   * @param {string} field The column field.
+   * @param {GridValidRowModel} row The row model.
+   * @param {CellParamsOverrides} cellParams The cell params.
+   * @returns {GridCellParams} The cell params.
+   */
+  getCellParamsForRow: <
+    R extends GridValidRowModel = any,
+    V = unknown,
+    F = V,
+    N extends GridTreeNode = GridTreeNode,
+  >(
+    id: GridRowId,
+    field: string,
+    row: R,
+    {
+      cellMode,
+      colDef,
+      hasFocus,
+      rowNode,
+      tabIndex,
+    }: {
+      cellMode: GridCellMode;
+      colDef: GridStateColDef;
+      hasFocus: boolean;
+      rowNode: N;
+      tabIndex: 0 | -1;
+    },
+  ) => GridCellParams<R, V, F, N>;
 }

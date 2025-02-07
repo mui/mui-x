@@ -57,11 +57,6 @@ export interface UsePickerViewsBaseProps<
    */
   viewRenderers: PickerViewRendererLookup<TValue, TView, TExternalProps>;
   /**
-   * If `true`, disable heavy animations.
-   * @default `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13
-   */
-  reduceAnimations?: boolean;
-  /**
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
    */
@@ -114,31 +109,55 @@ export interface PickerRendererInterceptorProps<
 
 export interface UsePickerViewsResponse<TView extends DateOrTimeViewWithMeridiem> {
   renderCurrentView: () => React.ReactNode;
-  shouldRestoreFocus: () => boolean;
   provider: UsePickerViewsProviderParams<TView>;
 }
 
-export interface UsePickerViewsContextValue<TView extends DateOrTimeViewWithMeridiem> {
+export interface UsePickerViewsActionsContextValue<TView extends DateOrTimeViewWithMeridiem> {
   /**
-   * Available views.
-   */
-  views: readonly TView[];
-  /**
-   * View currently rendered.
-   */
-  view: TView | null;
-  /**
-   * Callback called when the view to render changes
+   * Set the current view.
    * @template TView
    * @param {TView} view The view to render
    */
-  onViewChange: (view: TView) => void;
+  setView: (view: TView) => void;
+}
+
+export interface UsePickerViewsContextValue<TView extends DateOrTimeViewWithMeridiem>
+  extends UsePickerViewsActionsContextValue<TView> {
+  /**
+   * The views that the picker must render.
+   * It is equal to the picker `views` prop if defined.
+   * Otherwise, a default set of views is provided based on the component you are using:
+   * - Date Pickers: ['year', 'day']
+   * - Time Pickers: ['hours', 'minutes']
+   * - Date Time Pickers: ['year', 'day', 'hours', 'minutes']
+   * - Date Range Pickers: ['day']
+   * - Date Time Range Pickers: ['day', 'hours', 'minutes']
+   */
+  views: readonly TView[];
+  /**
+   * The view currently rendered.
+   */
+  view: TView | null;
+}
+
+export interface UsePickerViewsPrivateContextValue {
+  /**
+   * Whether one of the view has an UI (it has a view renderer associated).
+   */
+  hasUIView: boolean;
+  /**
+   * Check whether the current view has an UI.
+   * @returns {boolean} Whether the current view has an UI.
+   */
+  doesTheCurrentViewHasAnUI: () => boolean;
 }
 
 export interface UsePickerViewsProviderParams<TView extends DateOrTimeViewWithMeridiem> {
   hasUIView: boolean;
   views: readonly TView[];
   contextValue: UsePickerViewsContextValue<TView>;
+  actionsContextValue: UsePickerViewsActionsContextValue<TView>;
+  privateContextValue: UsePickerViewsPrivateContextValue;
 }
 
 /**
@@ -207,7 +226,7 @@ export const usePickerViews = <
   );
 
   const currentViewMode = viewModeLookup[view];
-  const shouldRestoreFocus = useEventCallback(() => currentViewMode === 'UI');
+  const doesTheCurrentViewHasAnUI = useEventCallback(() => currentViewMode === 'UI');
 
   const [popperView, setPopperView] = React.useState<TView | null>(
     currentViewMode === 'UI' ? view : null,
@@ -256,23 +275,34 @@ export const usePickerViews = <
     setFocusedView(newView, true);
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const actionsContextValue = React.useMemo<UsePickerViewsActionsContextValue<TView>>(
+    () => ({ setView }),
+    [setView],
+  );
+
   const contextValue = React.useMemo<UsePickerViewsContextValue<TView>>(
     () => ({
+      ...actionsContextValue,
       views,
       view: popperView,
-      onViewChange: setView,
     }),
-    [views, popperView, setView],
+    [actionsContextValue, views, popperView],
+  );
+
+  const privateContextValue = React.useMemo<UsePickerViewsPrivateContextValue>(
+    () => ({ hasUIView, doesTheCurrentViewHasAnUI }),
+    [hasUIView, doesTheCurrentViewHasAnUI],
   );
 
   const providerParams: UsePickerViewsProviderParams<TView> = {
     hasUIView,
     views,
     contextValue,
+    actionsContextValue,
+    privateContextValue,
   };
 
   return {
-    shouldRestoreFocus,
     provider: providerParams,
     renderCurrentView: () => {
       if (popperView == null) {

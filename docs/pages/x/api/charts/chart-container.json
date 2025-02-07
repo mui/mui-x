@@ -1,12 +1,8 @@
 {
   "props": {
-    "series": {
-      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
-      "required": true
-    },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
-      "default": "blueberryTwilightPalette"
+      "default": "rainbowSurgePalette"
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
@@ -14,15 +10,22 @@
     "highlightedItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string }"
+        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string }"
       }
     },
+    "id": { "type": { "name": "string" } },
     "margin": {
       "type": {
         "name": "shape",
         "description": "{ bottom?: number, left?: number, right?: number, top?: number }"
-      },
-      "default": "object Depends on the charts type."
+      }
+    },
+    "onAxisClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: MouseEvent, data: null | AxisData) => void",
+        "describedArgs": ["event", "data"]
+      }
     },
     "onHighlightChange": {
       "type": { "name": "func" },
@@ -31,7 +34,7 @@
         "describedArgs": ["highlightedItem"]
       }
     },
-    "plugins": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "series": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "skipAnimation": { "type": { "name": "bool" } },
     "width": { "type": { "name": "number" } },
     "xAxis": {

@@ -1,15 +1,16 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   useGridSelector,
   useGridApiOptionHandler,
   gridVisibleColumnDefinitionsSelector,
   useGridApiMethod,
-  gridDimensionsSelector,
 } from '@mui/x-data-grid';
 import {
   useGridVisibleRows,
   GridInfiniteLoaderPrivateApi,
   useTimeout,
+  gridHorizontalScrollbarHeightSelector,
 } from '@mui/x-data-grid/internals';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { styled } from '@mui/system';
@@ -30,7 +31,7 @@ const InfiniteLoadingTriggerElement = styled('div')({
  * @requires useGridScroll (method
  */
 export const useGridInfiniteLoader = (
-  apiRef: React.MutableRefObject<GridPrivateApiPro>,
+  apiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     'onRowsScrollEnd' | 'pagination' | 'paginationMode' | 'rowsLoadingMode' | 'scrollEndThreshold'
@@ -63,10 +64,6 @@ export const useGridInfiniteLoader = (
   });
 
   const virtualScroller = apiRef.current.virtualScrollerRef.current;
-  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
-
-  const marginBottom =
-    props.scrollEndThreshold - (dimensions.hasScrollX ? dimensions.scrollbarSize : 0);
 
   React.useEffect(() => {
     if (!isEnabled) {
@@ -77,6 +74,9 @@ export const useGridInfiniteLoader = (
     }
     observer.current?.disconnect();
 
+    const horizontalScrollbarHeight = gridHorizontalScrollbarHeightSelector(apiRef.current.state);
+    const marginBottom = props.scrollEndThreshold - horizontalScrollbarHeight;
+
     observer.current = new IntersectionObserver(handleLoadMoreRows, {
       threshold: 1,
       root: virtualScroller,
@@ -85,7 +85,7 @@ export const useGridInfiniteLoader = (
     if (triggerElement.current) {
       observer.current.observe(triggerElement.current);
     }
-  }, [virtualScroller, handleLoadMoreRows, isEnabled, marginBottom]);
+  }, [apiRef, virtualScroller, handleLoadMoreRows, isEnabled, props.scrollEndThreshold]);
 
   const updateTarget = (node: HTMLElement | null) => {
     if (triggerElement.current !== node) {

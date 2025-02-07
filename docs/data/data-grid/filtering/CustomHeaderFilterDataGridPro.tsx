@@ -71,7 +71,7 @@ function CustomHeaderFilter(props: GridHeaderFilterCellProps) {
     <Stack
       sx={[
         {
-          borderTop: `1px solid var(--DataGrid-rowBorderColor)`,
+          borderBottom: `1px solid var(--DataGrid-rowBorderColor)`,
         },
         hasFocus
           ? {

@@ -1,7 +1,7 @@
-import { SeriesFormatter } from '../context/PluginProvider/SeriesFormatter.types';
 import { ScatterValueType } from '../models';
+import { SeriesProcessor } from '../internals/plugins/models';
 
-const formatter: SeriesFormatter<'scatter'> = ({ series, seriesOrder }, dataset) => {
+const formatter: SeriesProcessor<'scatter'> = ({ series, seriesOrder }, dataset) => {
   const completeSeries = Object.fromEntries(
     Object.entries(series).map(([seriesId, seriesData]) => {
       const datasetKeys = seriesData?.datasetKeys;
@@ -26,13 +26,14 @@ const formatter: SeriesFormatter<'scatter'> = ({ series, seriesOrder }, dataset)
               x: d[datasetKeys.x] ?? null,
               y: d[datasetKeys.y] ?? null,
               z: datasetKeys.z && d[datasetKeys.z],
-              id: d[datasetKeys.id],
+              id: datasetKeys.id && d[datasetKeys.id],
             } as ScatterValueType;
           }) ?? []);
 
       return [
         seriesId,
         {
+          labelMarkType: 'circle' as const,
           ...seriesData,
           data,
           valueFormatter: seriesData.valueFormatter ?? ((v) => v && `(${v.x}, ${v.y})`),

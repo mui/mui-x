@@ -11,20 +11,16 @@ import { refType, unstable_useId as useId } from '@mui/utils';
 import { gridHeaderFilteringMenuSelector } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-const sx = {
-  width: 22,
-  height: 22,
-  margin: 'auto 0 10px 5px',
-};
-
 function GridHeaderFilterMenuContainer(props: {
   operators: GridFilterOperator<any, any, any>[];
   field: GridColDef['field'];
   item: GridFilterItem;
   applyFilterChanges: (item: GridFilterItem) => void;
-  headerFilterMenuRef: React.MutableRefObject<HTMLButtonElement | null>;
+  headerFilterMenuRef: React.RefObject<HTMLButtonElement | null>;
   buttonRef: React.Ref<HTMLButtonElement>;
   disabled?: boolean;
+  showClearItem?: boolean;
+  clearFilterItem?: () => void;
 }) {
   const {
     operators,
@@ -33,6 +29,8 @@ function GridHeaderFilterMenuContainer(props: {
     buttonRef,
     headerFilterMenuRef,
     disabled = false,
+    showClearItem,
+    clearFilterItem,
     ...others
   } = props;
 
@@ -69,11 +67,16 @@ function GridHeaderFilterMenuContainer(props: {
         tabIndex={-1}
         size="small"
         onClick={handleClick}
-        sx={sx}
         disabled={disabled}
         {...rootProps.slotProps?.baseIconButton}
       >
-        <rootProps.slots.openFilterButtonIcon fontSize="small" />
+        <rootProps.slots.baseBadge
+          color="primary"
+          variant="dot"
+          badgeContent={showClearItem ? 1 : 0}
+        >
+          <rootProps.slots.openFilterButtonIcon fontSize="inherit" />
+        </rootProps.slots.baseBadge>
       </rootProps.slots.baseIconButton>
       <rootProps.slots.headerFilterMenu
         field={field}
@@ -83,6 +86,8 @@ function GridHeaderFilterMenuContainer(props: {
         operators={operators}
         labelledBy={buttonId!}
         id={menuId!}
+        clearFilterItem={clearFilterItem}
+        showClearItem={showClearItem}
         {...others}
       />
     </React.Fragment>
@@ -96,6 +101,7 @@ GridHeaderFilterMenuContainer.propTypes = {
   // ----------------------------------------------------------------------
   applyFilterChanges: PropTypes.func.isRequired,
   buttonRef: refType,
+  clearFilterItem: PropTypes.func,
   disabled: PropTypes.bool,
   field: PropTypes.string.isRequired,
   headerFilterMenuRef: PropTypes.shape({
@@ -113,12 +119,53 @@ GridHeaderFilterMenuContainer.propTypes = {
       getValueAsString: PropTypes.func,
       headerLabel: PropTypes.string,
       InputComponent: PropTypes.elementType,
-      InputComponentProps: PropTypes.object,
+      InputComponentProps: PropTypes.shape({
+        apiRef: PropTypes.shape({
+          current: PropTypes.object.isRequired,
+        }),
+        applyValue: PropTypes.func,
+        className: PropTypes.string,
+        clearButton: PropTypes.node,
+        disabled: PropTypes.bool,
+        focusElementRef: PropTypes.oneOfType([
+          PropTypes.func,
+          PropTypes.shape({
+            current: PropTypes.any.isRequired,
+          }),
+        ]),
+        headerFilterMenu: PropTypes.node,
+        inputRef: PropTypes.oneOfType([
+          PropTypes.func,
+          PropTypes.shape({
+            current: (props, propName) => {
+              if (props[propName] == null) {
+                return null;
+              }
+              if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {
+                return new Error(`Expected prop '${propName}' to be of type Element`);
+              }
+              return null;
+            },
+          }),
+        ]),
+        isFilterActive: PropTypes.bool,
+        item: PropTypes.shape({
+          field: PropTypes.string.isRequired,
+          id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+          operator: PropTypes.string.isRequired,
+          value: PropTypes.any,
+        }),
+        onBlur: PropTypes.func,
+        onFocus: PropTypes.func,
+        slotProps: PropTypes.object,
+        tabIndex: PropTypes.number,
+      }),
       label: PropTypes.string,
       requiresFilterValue: PropTypes.bool,
       value: PropTypes.string.isRequired,
     }),
   ).isRequired,
+  showClearItem: PropTypes.bool,
 } as any;
 
 export { GridHeaderFilterMenuContainer };

@@ -2,14 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
-import {
-  GridBody,
-  GridFooterPlaceholder,
-  GridHeader,
-  GridRoot,
-  GridContextProvider,
-  GridValidRowModel,
-} from '@mui/x-data-grid';
+import { GridRoot, GridContextProvider, GridValidRowModel } from '@mui/x-data-grid';
 import { validateProps } from '@mui/x-data-grid/internals';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useDataGridProComponent } from './useDataGridProComponent';
@@ -29,6 +22,7 @@ const configuration = {
   },
 };
 const releaseInfo = getReleaseInfo();
+const watermark = <Watermark packageName="x-data-grid-pro" releaseInfo={releaseInfo} />;
 
 const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowModel>(
   inProps: DataGridProProps<R>,
@@ -41,6 +35,7 @@ const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowMod
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, propValidatorsDataGridPro);
   }
+
   return (
     <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
       <GridRoot
@@ -50,11 +45,7 @@ const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowMod
         {...props.slotProps?.root}
         ref={ref}
       >
-        <GridHeader />
-        <GridBody>
-          <Watermark packageName="x-data-grid-pro" releaseInfo={releaseInfo} />
-        </GridBody>
-        <GridFooterPlaceholder />
+        {watermark}
       </GridRoot>
     </GridContextProvider>
   );
@@ -85,7 +76,7 @@ DataGridProRaw.propTypes = {
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef: PropTypes.shape({
-    current: PropTypes.object.isRequired,
+    current: PropTypes.object,
   }),
   /**
    * The label of the Data Grid.

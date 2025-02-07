@@ -21,7 +21,7 @@ export function AppearingMask(props: AppearingMaskProps) {
   const transitionAppear = useTransition<typeof drawingArea, { animatedWidth: number }>(
     [drawingArea],
     {
-      from: (v) => ({ animatedWidth: v.left }),
+      from: props.skipAnimation ? undefined : (v) => ({ animatedWidth: v.left }),
       enter: (v) => ({ animatedWidth: v.width + v.left + v.right }),
       leave: (v) => ({ animatedWidth: v.width + v.left + v.right }),
       reset: false,

@@ -22,7 +22,7 @@
     },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
-      "default": "blueberryTwilightPalette"
+      "default": "rainbowSurgePalette"
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
@@ -34,9 +34,10 @@
     "highlightedItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string }"
+        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string }"
       }
     },
+    "id": { "type": { "name": "string" } },
     "layout": {
       "type": { "name": "enum", "description": "'horizontal'<br>&#124;&nbsp;'vertical'" },
       "default": "'vertical'"
@@ -50,8 +51,7 @@
       "type": {
         "name": "shape",
         "description": "{ bottom?: number, left?: number, right?: number, top?: number }"
-      },
-      "default": "object Depends on the charts type."
+      }
     },
     "onAxisClick": {
       "type": { "name": "func" },
@@ -149,7 +149,7 @@
     {
       "name": "legend",
       "description": "Custom rendering of the legend.",
-      "default": "DefaultChartsLegend",
+      "default": "ChartsLegend",
       "class": null
     },
     {
@@ -173,7 +173,7 @@
   ],
   "classes": [],
   "spread": true,
-  "themeDefaultProps": true,
+  "themeDefaultProps": false,
   "muiName": "MuiBarChart",
   "forwardsRefTo": "SVGSVGElement",
   "filename": "/packages/x-charts/src/BarChart/BarChart.tsx",

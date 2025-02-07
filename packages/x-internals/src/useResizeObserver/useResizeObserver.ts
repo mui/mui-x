@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 
-const isDevEnvironment = process.env.NODE_ENV === 'development';
+const isDevEnvironment = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test';
 
 const noop = () => {};
 
 export function useResizeObserver(
-  ref: React.MutableRefObject<HTMLElement | undefined | null>,
+  ref: React.RefObject<HTMLElement | undefined | null>,
   fn: (entries: ResizeObserverEntry[]) => void,
   enabled?: boolean,
 ) {
