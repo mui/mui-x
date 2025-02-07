@@ -1,8 +1,6 @@
 import {
-  AxisId,
   UseChartSeriesSignature,
   ChartPluginSignature,
-  DefaultizedZoomOptions,
   UseChartCartesianAxisSignature,
   UseChartCartesianAxisDefaultizedParameters,
   ZoomData,
@@ -22,12 +20,7 @@ export interface UseChartProZoomParameters {
 }
 
 export type UseChartProZoomDefaultizedParameters = UseChartProZoomParameters &
-  UseChartCartesianAxisDefaultizedParameters & {
-    /**
-     * The zoom options for each axis.
-     */
-    optionsLookup: Record<AxisId, DefaultizedZoomOptions>;
-  };
+  UseChartCartesianAxisDefaultizedParameters;
 
 export interface UseChartProZoomState {
   zoom: {
