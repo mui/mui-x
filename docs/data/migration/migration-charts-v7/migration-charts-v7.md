@@ -243,7 +243,7 @@ The `labelFontSize` and `tickFontSize` props have been removed in favor of the s
   />
 ```
 
-## Stabilize `useSeries` and `use*Series` hooks ✅
+## Stabilize `useSeries` and `useXxxSeries` hooks ✅
 
 The `useSeries` hook family has been stabilized and renamed accordingly.
 

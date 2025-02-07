@@ -79,7 +79,7 @@ By using `invert`, the value associated with the current mouse coordinate `y` ca
 
 ### Series
 
-Information about series is accessible through the `useSeries` and `use*Series` hooks.
+Series information is accessible through the `useSeries` hook for all series types, and `useXxxSeries` hook for a specific series type.
 These hooks return the order of the series and their configuration, including data points, color, among others.
 
 You can leverage that information to create custom charts.
