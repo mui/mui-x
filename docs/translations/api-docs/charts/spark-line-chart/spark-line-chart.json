@@ -5,7 +5,6 @@
       "description": "Set to <code>true</code> to fill spark line area. Has no effect if plotType=&#39;bar&#39;."
     },
     "color": { "description": "Color used to colorize the sparkline." },
-    "colors": { "description": "Color palette used to colorize multiple series." },
     "data": { "description": "Data to plot." },
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
