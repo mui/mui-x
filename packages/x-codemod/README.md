@@ -279,6 +279,26 @@ Remove `unstable_` prefix from `useSeries` and `use*Series` hooks, as they have 
   } from '@mui/x-charts-pro/hooks';
 ```
 
+#### `rename-sparkline-colors-to-color`
+
+Renames the `colors` prop of a `SparkLineChart` to `color` and accesses its first element.
+
+```diff
+ <SparkLineChart
+-  colors={['red']}
++  color={['red'][0]}
+ />
+```
+
+If `colors` is a function, it will be wrapped in another function that returns its first element.
+
+```diff
+ <SparkLineChart
+-  colors={fn}
++  color={typeof fn === 'function' ? mode => fn(mode)[0] : fn[0]}
+ />
+```
+
 ### Data Grid codemods
 
 #### `preset-safe` for Data Grid v8.0.0
