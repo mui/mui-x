@@ -7,8 +7,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## **8.0.0-alpha.11**
 
-<!-- generated comparing v8.0.0-alpha.10..master -->
-
 _Feb 7, 2025_
 
 We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
@@ -28,15 +26,14 @@ From https://github.com/mui/mui-x/pull/16479
 
 ### Breaking changes
 
-- `createUseGridApiEventHandler` is not exported anymore.
+- `createUseGridApiEventHandler()` is not exported anymore.
 
 #### `@mui/x-data-grid@8.0.0-alpha.11`
 
-- [DataGrid] Fix "no rows" overlay not showing with active aggregation (#16466) @KenanYusuf
 - [DataGrid] Avoid `<GridRoot />` double-render pass on mount in SPA mode (#15648) @lauri865
 - [DataGrid] Fix loading overlay not in sync with scroll (#16437) @MBilalShafi
-- [DataGrid] Refactor: remove material MenuList import (#16444) @romgrk
-- [DataGrid] Refactor: simplify useGridApiEventHandler (#16479) @romgrk
+- [DataGrid] Refactor: remove material `MenuList` import (#16444) @romgrk
+- [DataGrid] Refactor: simplify `useGridApiEventHandler()` (#16479) @romgrk
 
 #### `@mui/x-data-grid-pro@8.0.0-alpha.11` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -46,7 +43,9 @@ Same changes as in `@mui/x-data-grid@8.0.0-alpha.11`, plus:
 
 #### `@mui/x-data-grid-premium@8.0.0-alpha.11` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.11`.
+Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.11`, plus:
+
+- [DataGridPremium] Fix "no rows" overlay not showing with active aggregation (#16466) @KenanYusuf
 
 ### Date and Time Pickers
 
@@ -58,6 +57,7 @@ Internal changes.
 
 Same changes as in `@mui/x-date-pickers@8.0.0-alpha.11`, plus:
 
+- [DateRangeCalendar] Support arrow navigation with multiple months rendered (#16363) @flaviendelangle
 - [DateRangePicker] Fix `currentMonthCalendarPosition` prop behavior on mobile (#16455) @LukasTy
 - [DateRangePicker] Fix vertical alignment for multi input fields (#16489) @noraleonte
 
@@ -66,6 +66,7 @@ Same changes as in `@mui/x-date-pickers@8.0.0-alpha.11`, plus:
 #### `@mui/x-charts@8.0.0-alpha.11`
 
 - [charts] Add `color` prop to `Sparkline` and deprecate `colors` (#16477) @bernardobelchior
+- [charts] Make typescript more flexible about plugins and their params (#16478) @alexfauquette
 - [charts] Remove component for axis event listener (#16314) @alexfauquette
 
 #### `@mui/x-charts-pro@8.0.0-alpha.11` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -84,13 +85,12 @@ Same changes as in `@mui/x-tree-view@8.0.0-alpha.11`.
 
 ### Docs
 
-- [docs] Update colors default value (#16484) @bernardobelchior
+- [docs] Update charts colors default value (#16484) @bernardobelchior
 
 ### Core
 
 - [core] Fix corepack and pnpm installation in CircleCI (#16434) @flaviendelangle
 - [code-infra] Update monorepo (#16112) @Janpot
-- [DateRangeCalendar] Support arrow navigation with multiple months rendered (#16363) @flaviendelangle
 - [test] Avoid test warning when running on React 18 (#16486) @LukasTy
 - [test] Disable `react-transition-group` transitions in unit testing (#16288) @lauri865
 
