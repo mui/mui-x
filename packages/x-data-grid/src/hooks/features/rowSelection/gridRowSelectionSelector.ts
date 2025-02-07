@@ -1,10 +1,10 @@
 import { RefObject } from '@mui/x-internals/types';
 import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
+import { GridStateCommunity } from '@mui/x-data-grid/models/gridStateCommunity';
 
-export const gridRowSelectionStateSelector = (apiRef: RefObject<GridApiCommunity>) =>
+export const gridRowSelectionStateSelector = (apiRef: RefObject<{ state: GridStateCommunity }>) =>
   apiRef.current.state.rowSelection;
 
 export const selectedGridRowsCountSelector = createSelector(
