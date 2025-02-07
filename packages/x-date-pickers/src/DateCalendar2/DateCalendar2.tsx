@@ -44,6 +44,15 @@ const DateCalendar2TransitionGroup = styled(TransitionGroup, {
   position: 'relative',
 });
 
+/**
+ * - [x] Implementation without customization
+ * - [x] Implement classes (both props.classes and built-in classes)
+ * - [x] Implement theme entries
+ * - [ ] Implement props.slots and props.slotProps
+ * - [ ] Implement all the missing props
+ * - [ ] Add tests
+ * - [ ] Add doc examples
+ */
 export const DateCalendar2 = React.forwardRef(function DateCalendar2(
   props: DateCalendar2Props,
   ref: React.ForwardedRef<HTMLDivElement>,
