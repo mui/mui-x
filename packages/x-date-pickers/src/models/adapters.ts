@@ -98,12 +98,6 @@ export interface AdapterFormats {
 
   // Time formats
   /**
-   * The hours and the minutes.
-   * Used for the aria-label of the opening button of the `TimePicker`.
-   * @example "11:44 PM" for locales with meridiem, "23:44" for locales without meridiem.
-   */
-  fullTime: string;
-  /**
    * The hours with the meridiem and minutes.
    * @example "11:44 PM"
    */

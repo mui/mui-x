@@ -174,7 +174,6 @@ LocalizationProvider.propTypes = {
     dayOfMonth: PropTypes.string,
     dayOfMonthFull: PropTypes.string,
     fullDate: PropTypes.string,
-    fullTime: PropTypes.string,
     fullTime12h: PropTypes.string,
     fullTime24h: PropTypes.string,
     hours12h: PropTypes.string,

@@ -77,7 +77,6 @@ const defaultFormats: AdapterFormats = {
   normalDate: 'd MMMM',
   normalDateWithWeekday: 'EEE, MMM d',
 
-  fullTime: 't',
   fullTime12h: 'hh:mm a',
   fullTime24h: 'HH:mm',
 
