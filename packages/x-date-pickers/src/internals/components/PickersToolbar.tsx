@@ -18,6 +18,7 @@ export interface PickersToolbarProps extends Pick<BaseToolbarProps, 'hidden' | '
 const useUtilityClasses = (classes: Partial<PickersToolbarClasses> | undefined) => {
   const slots = {
     root: ['root'],
+    title: ['title'],
     content: ['content'],
   };
 
@@ -123,6 +124,7 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar(
         color="text.secondary"
         variant="overline"
         id={titleId}
+        className={classes.title}
       >
         {toolbarTitle}
       </Typography>
