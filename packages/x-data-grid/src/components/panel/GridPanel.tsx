@@ -21,7 +21,7 @@ export interface GridPanelClasses {
 }
 
 export interface GridPanelProps
-  extends Partial<Omit<React.ComponentProps<typeof GridPanelRoot>, 'ref'>> {
+  extends Pick<GridSlotProps['basePopper'], 'id' | 'className' | 'target'> {
   ref?: React.Ref<HTMLElement>;
   children?: React.ReactNode;
   /**
@@ -75,7 +75,7 @@ const GridPanel = forwardRef<HTMLElement, GridPanelProps>((props, ref) => {
     [apiRef],
   );
 
-  const [anchorEl, setAnchorEl] = React.useState<Element | null>(null);
+  const [target, setTarget] = React.useState<Element | null>(null);
 
   React.useEffect(() => {
     const panelAnchor = apiRef.current.rootElementRef?.current?.querySelector(
@@ -83,11 +83,11 @@ const GridPanel = forwardRef<HTMLElement, GridPanelProps>((props, ref) => {
     );
 
     if (panelAnchor) {
-      setAnchorEl(panelAnchor);
+      setTarget(panelAnchor);
     }
   }, [apiRef]);
 
-  if (!anchorEl) {
+  if (!target) {
     return null;
   }
 
@@ -97,7 +97,7 @@ const GridPanel = forwardRef<HTMLElement, GridPanelProps>((props, ref) => {
       ownerState={rootProps}
       placement="bottom-start"
       className={clsx(classes.panel, className)}
-      target={anchorEl}
+      target={target}
       flip
       onDidMount={() => setIsPlaced(true)}
       onDidUnmount={() => setIsPlaced(false)}
@@ -107,6 +107,7 @@ const GridPanel = forwardRef<HTMLElement, GridPanelProps>((props, ref) => {
       focusTrap
       focusTrapEnabled
       {...other}
+      {...rootProps.slotProps?.basePopper}
       ref={ref}
     >
       <GridPaperRoot
