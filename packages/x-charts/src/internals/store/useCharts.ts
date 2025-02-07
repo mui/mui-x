@@ -17,24 +17,17 @@ import { ChartSeriesType } from '../../models/seriesType/config';
 import { ChartSeriesConfig } from '../plugins/models/seriesConfig';
 import { useChartModels } from './useChartModels';
 
-export function useChartApiInitialization<T>(
-  inputApiRef: React.RefObject<T | undefined> | undefined,
-): T {
-  const fallbackPublicApiRef = React.useRef({}) as React.RefObject<T>;
-
-  if (inputApiRef) {
-    if (inputApiRef.current == null) {
-      // eslint-disable-next-line react-compiler/react-compiler
-      inputApiRef.current = {} as T;
-    }
-    return inputApiRef.current;
-  }
-
-  return fallbackPublicApiRef.current;
-}
-
 let globalId = 0;
 
+/**
+ * This is the main hook that setups the plugin system for the chart.
+ *
+ * It manages the data used to create the charts.
+ *
+ * @param inPlugins are all the plugins that will be used in the chart.
+ * @param props the props passed to the chart.
+ * @param seriesConfig is the set of helpers used for series-specific computation.
+ */
 export function useCharts<
   TSeriesType extends ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[],
@@ -130,4 +123,20 @@ export function useCharts<
   );
 
   return { contextValue };
+}
+
+export function useChartApiInitialization<T>(
+  inputApiRef: React.RefObject<T | undefined> | undefined,
+): T {
+  const fallbackPublicApiRef = React.useRef({}) as React.RefObject<T>;
+
+  if (inputApiRef) {
+    if (inputApiRef.current == null) {
+      // eslint-disable-next-line react-compiler/react-compiler
+      inputApiRef.current = {} as T;
+    }
+    return inputApiRef.current;
+  }
+
+  return fallbackPublicApiRef.current;
 }
