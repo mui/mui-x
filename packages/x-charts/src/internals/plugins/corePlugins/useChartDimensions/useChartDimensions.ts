@@ -8,8 +8,65 @@ import { ChartPlugin } from '../../models';
 import type { UseChartDimensionsSignature } from './useChartDimensions.types';
 import { selectorChartDimensionsState } from './useChartDimensions.selectors';
 import { defaultizeMargin } from '../../../defaultizeMargin';
+import { useSelector } from '../../../store/useSelector';
+// TODO: fix dep cycle, should we move selectors to their own folder/file? Eg:
+// useChartCartesianAxis/selectors/chartXAxis.ts
+import {
+  selectorChartXAxis,
+  selectorChartYAxis,
+} from '../../featurePlugins/useChartCartesianAxis/useChartCartesianAxis.selectors';
+import { createSelector } from '../../utils/selectors';
+import { isBandScale } from '../../../isBandScale';
+import { isInfinity } from '../../../isInfinity';
 
 const MAX_COMPUTE_RUN = 10;
+
+const selectorChartAxisSize = createSelector(
+  [selectorChartXAxis, selectorChartYAxis],
+  (xAxis, yAxis) => {
+    const topBottom = xAxis.axisIds.reduce(
+      (acc, id) => {
+        const axis = xAxis.axis[id];
+
+        // TODO: move this to the selectorChartXAxis, axis.isUsed? axis.shouldRender?
+        const scale = axis.scale;
+
+        const domain = scale.domain();
+        const ordinalAxis = isBandScale(scale);
+        if ((ordinalAxis && domain.length === 0) || (!ordinalAxis && domain.some(isInfinity))) {
+          return acc;
+        }
+
+        if (axis.position === 'top') {
+          return { ...acc, top: acc.top + (axis.height || 0) };
+        }
+        return { ...acc, bottom: acc.bottom + (axis.height || 0) };
+      },
+      { top: 0, bottom: 0 },
+    );
+
+    const leftRight = yAxis.axisIds.reduce(
+      (acc, id) => {
+        const axis = yAxis.axis[id];
+        const scale = axis.scale;
+
+        const domain = scale.domain();
+        const ordinalAxis = isBandScale(scale);
+        if ((ordinalAxis && domain.length === 0) || (!ordinalAxis && domain.some(isInfinity))) {
+          return acc;
+        }
+
+        if (axis.position === 'right') {
+          return { ...acc, right: acc.right + (axis.width || 0) };
+        }
+        return { ...acc, left: acc.left + (axis.width || 0) };
+      },
+      { right: 0, left: 0 },
+    );
+
+    return { ...topBottom, ...leftRight };
+  },
+);
 
 export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
   params,
@@ -21,6 +78,8 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
   // States only used for the initialization of the size.
   const [innerWidth, setInnerWidth] = React.useState(0);
   const [innerHeight, setInnerHeight] = React.useState(0);
+
+  const usedAxisSizes = useSelector(store, selectorChartAxisSize);
 
   const computeSize = React.useCallback(() => {
     const mainEl = svgRef?.current;
@@ -43,7 +102,15 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
         return prev;
       }
 
-      const axisSize = defaultizeMargin(params.axisSize, EMPTY_SIDES);
+      const axisSize = defaultizeMargin(
+        {
+          top: usedAxisSizes.top,
+          left: usedAxisSizes.left,
+          bottom: usedAxisSizes.bottom,
+          right: usedAxisSizes.right,
+        },
+        EMPTY_SIDES,
+      );
 
       return {
         ...prev,
@@ -64,22 +131,30 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
       height: newHeight,
       width: newWidth,
     };
-  }, [store, svgRef, params.axisSize, params.margin]);
+  }, [
+    store,
+    svgRef,
+    params.margin.left,
+    params.margin.right,
+    params.margin.top,
+    params.margin.bottom,
+    usedAxisSizes.bottom,
+    usedAxisSizes.left,
+    usedAxisSizes.right,
+    usedAxisSizes.top,
+  ]);
 
   React.useEffect(() => {
     store.update((prev) => {
       const prevWidth = prev.dimensions.width + prev.dimensions.left + prev.dimensions.right;
       const prevHeight = prev.dimensions.height + prev.dimensions.top + prev.dimensions.bottom;
 
-      // Manual mapping so the useEffect doesn't complain that it's missing dependencies.
-      // If we use `params.axisSize` directly, it will trigger the useEffect on every render.
-      // Same is true for `params.margin`.
       const axisSize = defaultizeMargin(
         {
-          left: params.axisSize?.left,
-          right: params.axisSize?.right,
-          top: params.axisSize?.top,
-          bottom: params.axisSize?.bottom,
+          top: usedAxisSizes.top,
+          left: usedAxisSizes.left,
+          bottom: usedAxisSizes.bottom,
+          right: usedAxisSizes.right,
         },
         EMPTY_SIDES,
       );
@@ -104,10 +179,10 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
     params.margin.right,
     params.margin.top,
     params.margin.bottom,
-    params.axisSize?.bottom,
-    params.axisSize?.left,
-    params.axisSize?.right,
-    params.axisSize?.top,
+    usedAxisSizes.bottom,
+    usedAxisSizes.left,
+    usedAxisSizes.right,
+    usedAxisSizes.top,
     store,
   ]);
 
@@ -237,17 +312,15 @@ useChartDimensions.getDefaultizedParams = ({ params }) => ({
   margin: defaultizeMargin(params.margin, DEFAULT_MARGINS),
 });
 
-useChartDimensions.getInitialState = ({ width, height, margin, axisSize }) => {
-  const axisSizes = defaultizeMargin(axisSize, EMPTY_SIDES);
-
+useChartDimensions.getInitialState = ({ width, height, margin }) => {
   return {
     dimensions: {
-      top: margin.top + axisSizes.top,
-      left: margin.left + axisSizes.left,
-      bottom: margin.bottom + axisSizes.bottom,
-      right: margin.right + axisSizes.right,
-      width: (width ?? 0) - margin.left - margin.right - axisSizes.left - axisSizes.right,
-      height: (height ?? 0) - margin.top - margin.bottom - axisSizes.top - axisSizes.bottom,
+      top: margin.top,
+      left: margin.left,
+      bottom: margin.bottom,
+      right: margin.right,
+      width: (width ?? 0) - margin.left - margin.right,
+      height: (height ?? 0) - margin.top - margin.bottom,
       propsWidth: width,
       propsHeight: height,
     },

@@ -235,39 +235,12 @@ useChartCartesianAxis.params = {
 };
 
 useChartCartesianAxis.getDefaultizedParams = ({ params }) => {
-  const defaultizedXAxis = defaultizeAxis(params.xAxis, params.dataset, 'x');
-  const defaultizedYAxis = defaultizeAxis(params.yAxis, params.dataset, 'y');
-  const xAxisSizes = defaultizedXAxis.reduce(
-    (acc, cur) => {
-      if (cur.position === 'top') {
-        return { ...acc, top: acc.top + (cur.height || 0) };
-      }
-      return { ...acc, bottom: acc.bottom + (cur.height || 0) };
-    },
-    { top: 0, bottom: 0 },
-  );
-  const yAxisSizes = defaultizedYAxis.reduce(
-    (acc, cur) => {
-      if (cur.position === 'right') {
-        return { ...acc, right: acc.right + (cur.width || 0) };
-      }
-      return { ...acc, left: acc.left + (cur.width || 0) };
-    },
-    { left: 0, right: 0 },
-  );
-
   return {
     ...params,
     colors: params.colors ?? rainbowSurgePalette,
     theme: params.theme ?? 'light',
-    defaultizedXAxis,
-    defaultizedYAxis,
-    axisSize: {
-      top: xAxisSizes.top,
-      right: yAxisSizes.right,
-      bottom: xAxisSizes.bottom,
-      left: yAxisSizes.left,
-    },
+    defaultizedXAxis: defaultizeAxis(params.xAxis, params.dataset, 'x'),
+    defaultizedYAxis: defaultizeAxis(params.yAxis, params.dataset, 'y'),
   };
 };
 
