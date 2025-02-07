@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-imports */
+/* eslint-disable no-restricted-imports, @typescript-eslint/no-shadow */
 import * as React from 'react';
 import { SparkLineChart } from '@mui/x-charts';
 
@@ -13,7 +13,6 @@ function Chart() {
       <SparkLineChart data={data} colors={['red']} />
       <SparkLineChart data={data} colors={fn} />
       <SparkLineChart data={data} colors={(mode) => (mode === 'light' ? ['black'] : ['white'])} />
-      <SparkLineChart data={data} colors="red" />
     </React.Fragment>
   );
 }
