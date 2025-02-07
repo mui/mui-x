@@ -152,7 +152,7 @@ export function GridSidebarColumnPanelBody({
     initialModelKey: FieldTransferObject['modelKey'];
   }>(INITIAL_DRAG_STATE);
 
-  const initialColumnsLookup = useLazyRef(() => {
+  const initialColumnsLookup = React.useMemo(() => {
     return columns.reduce(
       (acc, column) => {
         acc[column.field] = column;
@@ -160,7 +160,7 @@ export function GridSidebarColumnPanelBody({
       },
       {} as Record<string, GridColDef>,
     );
-  }).current;
+  }, [columns]);
 
   const getColumnName = React.useCallback(
     (field: string) => {

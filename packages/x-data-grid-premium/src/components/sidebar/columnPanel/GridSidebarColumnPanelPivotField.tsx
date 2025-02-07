@@ -166,6 +166,10 @@ function AggregationSelect({
     [colDef, rootProps.aggregationFunctions],
   );
 
+  if (!colDef) {
+    return null;
+  }
+
   return (
     <AggregationSelectRoot
       as={rootProps.slots.baseSelect}

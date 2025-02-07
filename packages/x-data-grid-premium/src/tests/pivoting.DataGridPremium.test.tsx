@@ -178,13 +178,8 @@ describe('<DataGridPremium /> - Pivoting', () => {
       />,
     );
 
-    const columnsBtn = screen.getByRole('button', { name: /Columns/i });
-    user.click(columnsBtn);
-
-    await waitFor(() => {
-      const pivotSwitch = screen.getByLabelText('Pivot');
-      user.click(pivotSwitch);
-    });
+    const pivotSwitch = screen.getByLabelText('Pivot');
+    user.click(pivotSwitch);
 
     await waitFor(() => {
       const pivotSwitch = screen.getByLabelText('Pivot');
@@ -213,13 +208,8 @@ describe('<DataGridPremium /> - Pivoting', () => {
       />,
     );
 
-    const columnsBtn = screen.getByRole('button', { name: /Columns/i });
-    user.click(columnsBtn);
-
-    await waitFor(() => {
-      const pivotSwitch = screen.getByLabelText('Pivot');
-      user.click(pivotSwitch);
-    });
+    const pivotSwitch = screen.getByLabelText('Pivot');
+    user.click(pivotSwitch);
 
     await waitFor(() => {
       const pivotSwitch = screen.getByLabelText('Pivot');
@@ -248,13 +238,8 @@ describe('<DataGridPremium /> - Pivoting', () => {
       />,
     );
 
-    const columnsBtn = screen.getByRole('button', { name: /Columns/i });
-    user.click(columnsBtn);
-
-    await waitFor(() => {
-      const pivotSwitch = screen.getByLabelText('Pivot');
-      user.click(pivotSwitch);
-    });
+    const pivotSwitch = screen.getByLabelText('Pivot');
+    user.click(pivotSwitch);
 
     await waitFor(() => {
       const pivotSwitch = screen.getByLabelText('Pivot');
