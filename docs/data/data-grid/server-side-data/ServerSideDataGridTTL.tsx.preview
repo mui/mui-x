@@ -1,4 +1,4 @@
-<DataGridPro
+<DataGrid
   columns={columns}
   unstable_dataSource={dataSource}
   unstable_dataSourceCache={lowTTLCache}

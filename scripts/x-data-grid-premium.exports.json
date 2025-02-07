@@ -258,6 +258,7 @@
   { "name": "GridDataSourceApiBase", "kind": "Interface" },
   { "name": "GridDataSourceCache", "kind": "Interface" },
   { "name": "GridDataSourceCacheDefault", "kind": "Class" },
+  { "name": "GridDataSourceCacheDefaultConfig", "kind": "TypeAlias" },
   { "name": "GridDataSourceGroupNode", "kind": "Interface" },
   { "name": "GridDataSourcePrivateApi", "kind": "Interface" },
   { "name": "GridDataSourceState", "kind": "Interface" },

@@ -466,11 +466,7 @@
       "required": true,
       "isProPlan": true
     },
-    "unstable_dataSource": {
-      "type": { "description": "GridDataSourceApiBase" },
-      "required": true,
-      "isProPlan": true
-    },
+    "unstable_dataSource": { "type": { "description": "GridDataSourceApiBase" }, "required": true },
     "unstable_replaceRows": {
       "type": { "description": "(firstRowToReplace: number, newRows: GridRowModel[]) =&gt; void" },
       "required": true

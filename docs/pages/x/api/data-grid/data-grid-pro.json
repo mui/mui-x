@@ -571,6 +571,15 @@
     },
     "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
     "treeData": { "type": { "name": "bool" }, "default": "false" },
+    "unstable_dataSource": {
+      "type": {
+        "name": "shape",
+        "description": "{ getChildrenCount?: func, getGroupKey?: func, getRows: func, updateRow?: func }"
+      }
+    },
+    "unstable_dataSourceCache": {
+      "type": { "name": "shape", "description": "{ clear: func, get: func, set: func }" }
+    },
     "unstable_lazyLoading": { "type": { "name": "bool" }, "default": "false" },
     "unstable_lazyLoadingRequestThrottleMs": { "type": { "name": "number" }, "default": "500" },
     "unstable_listColumn": {
@@ -580,6 +589,13 @@
       }
     },
     "unstable_listView": { "type": { "name": "bool" } },
+    "unstable_onDataSourceError": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(error: Error, params: GridGetRowsParams) => void",
+        "describedArgs": ["error", "params"]
+      }
+    },
     "virtualizeColumnsWithAutoRowHeight": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "DataGridPro",
