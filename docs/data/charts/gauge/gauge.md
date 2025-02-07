@@ -13,48 +13,57 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/meter/
 
 {{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
-## Basics
+## Introduction
 
 The Gauge displays a numeric value that varies within a defined range.
 
 {{"demo": "BasicGauges.js"}}
 
-## Value range
+## Basics
 
-The Gauge's value is provided through the `value` props, which accept a value range between 0 and 100.
-To modify it, use the `valueMin` and `valueMax` props.
+### Import
+
+```tsx
+import { Gauge } from '@mui/x-charts/Gauge';
+```
+
+### Value range
+
+Use the `value` prop to set the value within the default range of 0 and 100.
+You can adjust the minimum and maximum values using the `valueMin` and `valueMax` props, respectively.
 
 {{"demo": "GaugeValueRangeNoSnap.js"}}
 
-## Arcs configuration
+### Arc configuration
 
-Modify the arc shape with the following props:
+You can use the following props to modify the shape of the arc:
 
 - `startAngle` and `endAngle`: The angle range provided in degrees
-- `innerRadius` and `outerRadius`: The arc's radii. It can be a fixed number of pixels or a percentage string, which will be a percent of the maximal available radius
-- `cornerRadius`: It can be a fixed number of pixels or a percentage string, which will be a percent of the maximal available radius
+- `innerRadius` and `outerRadius`: The arc's radii, which can either be fixed numbers (in pixels), or percentages in strings that describe how much of the available space to fill
+- `cornerRadius`: The corner radius, which can either be a fixed number (in pixels), or a percentage in a string that describes how much of the available space to fill
+
+Try manipulating these dimensions in the playground below to see how they behave:
 
 {{"demo": "ArcPlaygroundNoSnap.js", "bg": "playground", "hideToolbar": true }}
 
 :::success
-Notice that the arc position is computed to let the Gauge take as much space as possible in the drawing area.
-
-Use the `cx` and/or `cy` props to fix the coordinate of the arc center.
+The arc position is computed to let the Gauge fill as much space as possible in the drawing area.
+You can use the `cx` and/or `cy` props to keep the arc's center coordinates fixed to a given location.
 :::
 
-## Text configuration
+### Text configuration
 
-By default, the Gauge displays the value in the center of the arc.
-To modify it, use the `text` prop.
+By default, the Gauge displays its value in the center of the arc.
+You can modify this content using the `text` prop, which accepts a string as well as a formatter.
+The formatter's argument contains `value`, `valueMin` and `valueMax`.
 
-This prop can be a string, or a formatter.
-In the second case, the formatter argument contains the `value`, `valueMin` and `valueMax`.
-
-To modify the text's layout, use the `gaugeClasses.valueText` class name.
+To modify the text layout, use the `gaugeClasses.valueText` class name.
 
 {{"demo": "TextPlaygroundNoSnap.js", "bg": "playground", "hideToolbar": true}}
 
-## Arc design
+## Customization
+
+### Arc design
 
 To customize the Gauge styles, use the `chartsGaugeClasses` export to pull class names from different parts of the component, such as `valueText`, `valueArc`, and `referenceArc`.
 
@@ -62,9 +71,9 @@ For a full reference list, visit the [API page](/x/api/charts/gauge/#classes).
 
 {{"demo": "ArcDesign.js"}}
 
-## Adding elements
+### Adding elements
 
-### Using the default Gauge
+#### Using the default Gauge
 
 To insert more elements into the Gauge, the first option would be to add them as children, which means they will be stacked on top of the default rendering.
 
@@ -76,7 +85,7 @@ import { Gauge } from '@mui/x-charts/Gauge';
 </Gauge>;
 ```
 
-### Using the Gauge container
+#### Using the Gauge container
 
 The second option is to make use of the following elements that are available within the Gauge module:
 
@@ -99,9 +108,18 @@ import {
 </GaugeContainer>;
 ```
 
-### Creating your components
+## Composition
 
-To create your own components, use the `useGaugeState()` hook which provides all you need about the gauge configuration:
+```tsx
+import {
+  GaugeContainer,
+  GaugeValueArc,
+  GaugeReferenceArc,
+  useGaugeState,
+} from '@mui/x-charts/Gauge';
+```
+
+To compose your own Gauge component, use the `useGaugeState()` hook which provides all of the necessary props and values:
 
 - information about the value: `value`, `valueMin`, `valueMax`
 - information to plot the arc: `startAngle`, `endAngle`, `outerRadius`, `innerRadius`, `cornerRadius`, `cx`, and `cy`
@@ -113,19 +131,19 @@ To create your own components, use the `useGaugeState()` hook which provides all
 
 ## Accessibility
 
-The MUI X Gauge is compliant with the [Meter ARIA pattern](https://www.w3.org/WAI/ARIA/apg/patterns/meter/), which includes the addition of the `meter` role to the parent container and correct usage of the `aria-valuenow`, `aria-valuemin`, and `aria-valuemax` attributes.
+The MUI X Gauge is compliant with the [Meter ARIA pattern](https://www.w3.org/WAI/ARIA/apg/patterns/meter/), which includes the addition of the `meter` role to the parent container and the appropriate usage of the `aria-valuenow`, `aria-valuemin`, and `aria-valuemax` attributes.
 
 ### Label
 
-If a visible label is available, reference it by adding `aria-labelledby` attribute.
-Otherwise, the label can be manually provided by `aria-label`.
+If a visible label is available, you should reference it by adding an `aria-labelledby` attribute.
+Otherwise, you can use `aria-label` to label it manually.
 
 ### Presentation
 
-Assistive technologies often present the value as a percentage.
-This can be modified by providing `aria-valuetext` attribute.
+Assistive technologies often present the value as a percentage, which may not be accurate or useful to the user.
+You can use the `aria-valuetext` attribute to explicitly define how an assistive device should describe the units.
 
-For example, a battery level indicator is better with an hour-long duration.
+The snippet shows how to use this attribute in the context of a battery level indicator to let the user know how many hours of battery life are remaining.
 
 ```jsx
 <h3 id="battery_level_label">
