@@ -1,9 +1,8 @@
 'use client';
-import * as React from 'react';
 import { ProcessedSeries } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.types';
 import { SeriesId } from '../models/seriesType/common';
 import { ChartSeriesDefaultized } from '../models/seriesType/config';
-import { useSeries } from './useSeries';
+import { useSeriesOfType } from '../internals/useSeriesOfType';
 
 /**
  * Get access to the internal state of line series.
@@ -28,23 +27,5 @@ export function useLineSeries(seriesId: SeriesId): ChartSeriesDefaultized<'line'
  */
 export function useLineSeries(...seriesIds: SeriesId[]): ChartSeriesDefaultized<'line'>[];
 export function useLineSeries(...seriesIds: SeriesId[]): any {
-  const series = useSeries();
-
-  return React.useMemo(
-    () => {
-      if (seriesIds.length === 0) {
-        return series.line;
-      }
-
-      if (seriesIds.length === 1) {
-        return series?.line?.series[seriesIds[0]];
-      }
-
-      return seriesIds.map((id) => series?.line?.series[id]).filter(Boolean);
-    },
-    // DANGER: Ensure that the dependencies array is correct.
-    // eslint-disable-next-line react-compiler/react-compiler
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [series.line, ...seriesIds],
-  );
+  return useSeriesOfType('line', ...seriesIds);
 }
