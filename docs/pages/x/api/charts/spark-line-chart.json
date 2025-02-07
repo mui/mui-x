@@ -5,9 +5,15 @@
       "required": true
     },
     "area": { "type": { "name": "bool" }, "default": "false" },
+    "color": {
+      "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" },
+      "default": "rainbowSurgePalette[0]"
+    },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
-      "default": "rainbowSurgePalette"
+      "default": "rainbowSurgePalette",
+      "deprecated": true,
+      "deprecationInfo": "use the <code>color</code> prop instead"
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },

@@ -29,6 +29,7 @@ import {
   UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { defaultizeMargin } from '../internals/defaultizeMargin';
+import { PieChartPluginSignatures } from './PieChart.plugins';
 
 export interface PieChartSlots
   extends PiePlotSlots,
@@ -74,7 +75,7 @@ export interface PieChartProps
   slotProps?: PieChartSlotProps;
 }
 
-const PIE_CHART_PLUGGINS = [useChartInteraction, useChartHighlight] as const;
+const PIE_CHART_PLUGINS = [useChartInteraction, useChartHighlight] as const;
 const defaultMargin = { top: 5, bottom: 5, left: 5, right: 5 };
 
 /**
@@ -115,7 +116,7 @@ const PieChart = React.forwardRef(function PieChart(
 
   const { chartDataProviderProps, chartsSurfaceProps } = useChartContainerProps<
     'pie',
-    [UseChartInteractionSignature, UseChartHighlightSignature]
+    PieChartPluginSignatures
   >(
     {
       ...other,
@@ -128,14 +129,14 @@ const PieChart = React.forwardRef(function PieChart(
       onHighlightChange,
       className,
       skipAnimation,
-      plugins: PIE_CHART_PLUGGINS,
+      plugins: PIE_CHART_PLUGINS,
     },
     ref,
   );
 
   const Tooltip = slots?.tooltip ?? ChartsTooltip;
   return (
-    <ChartDataProvider {...chartDataProviderProps}>
+    <ChartDataProvider<'pie', PieChartPluginSignatures> {...chartDataProviderProps}>
       <ChartsWrapper
         legendPosition={props.slotProps?.legend?.position}
         legendDirection={props?.slotProps?.legend?.direction ?? 'vertical'}

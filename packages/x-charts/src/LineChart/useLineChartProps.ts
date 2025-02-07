@@ -14,6 +14,7 @@ import { LineHighlightPlotProps } from './LineHighlightPlot';
 import { LinePlotProps } from './LinePlot';
 import { MarkPlotProps } from './MarkPlot';
 import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
+import { LINE_CHART_PLUGINS, LineChartPluginsSignatures } from './LineChart.plugins';
 
 /**
  * A helper function that extracts LineChartProps from the input props
@@ -58,7 +59,7 @@ export const useLineChartProps = (props: LineChartProps) => {
   const id = useId();
   const clipPathId = `${id}-clip-path`;
 
-  const chartContainerProps: Omit<ChartContainerProps<'line'>, 'plugins'> = {
+  const chartContainerProps: ChartContainerProps<'line', LineChartPluginsSignatures> = {
     ...other,
     series: series.map((s) => ({
       disableHighlight: !!disableLineItemHighlight,
@@ -89,6 +90,7 @@ export const useLineChartProps = (props: LineChartProps) => {
       axisHighlight?.y === 'none',
     className,
     skipAnimation,
+    plugins: LINE_CHART_PLUGINS,
   };
 
   const gridProps: ChartsGridProps = {

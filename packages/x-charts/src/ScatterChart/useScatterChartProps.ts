@@ -9,6 +9,7 @@ import { ChartContainerProps } from '../ChartContainer';
 import type { ScatterChartProps } from './ScatterChart';
 import type { ScatterPlotProps } from './ScatterPlot';
 import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
+import { SCATTER_CHART_PLUGINS, ScatterChartPluginsSignatures } from './ScatterChart.plugins';
 
 /**
  * A helper function that extracts ScatterChartProps from the input props
@@ -48,7 +49,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     ...other
   } = props;
 
-  const chartContainerProps: Omit<ChartContainerProps<'scatter'>, 'plugins'> = {
+  const chartContainerProps: ChartContainerProps<'scatter', ScatterChartPluginsSignatures> = {
     ...other,
     series: series.map((s) => ({ type: 'scatter' as const, ...s })),
     width,
@@ -61,6 +62,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     highlightedItem,
     onHighlightChange,
     className,
+    plugins: SCATTER_CHART_PLUGINS,
   };
 
   const voronoiHandlerProps: ChartsVoronoiHandlerProps = {
