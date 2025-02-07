@@ -11,9 +11,15 @@ import Button from '@mui/material/Button';
 export default function ServerSideRowGroupingGroupExpansion() {
   const apiRef = useGridApiRef();
 
-  const { fetchRows, columns } = useMockServer({
-    rowGrouping: true,
-  });
+  const { fetchRows, columns } = useMockServer(
+    {
+      rowGrouping: true,
+    },
+    {
+      minDelay: 0,
+      maxDelay: 0,
+    },
+  );
 
   const dataSource: GridDataSource = React.useMemo(() => {
     return {
