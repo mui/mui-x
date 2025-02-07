@@ -1,7 +1,7 @@
-import { ScatterValueType } from '../models';
-import { SeriesProcessor } from '../internals/plugins/models';
+import { ScatterValueType } from '../../models';
+import { SeriesProcessor } from '../../internals/plugins/models';
 
-const formatter: SeriesProcessor<'scatter'> = ({ series, seriesOrder }, dataset) => {
+const seriesProcessor: SeriesProcessor<'scatter'> = ({ series, seriesOrder }, dataset) => {
   const completeSeries = Object.fromEntries(
     Object.entries(series).map(([seriesId, seriesData]) => {
       const datasetKeys = seriesData?.datasetKeys;
@@ -48,4 +48,4 @@ const formatter: SeriesProcessor<'scatter'> = ({ series, seriesOrder }, dataset)
   };
 };
 
-export default formatter;
+export default seriesProcessor;

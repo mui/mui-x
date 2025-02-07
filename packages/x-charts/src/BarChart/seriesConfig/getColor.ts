@@ -1,4 +1,4 @@
-import { ColorProcessor } from '../internals/plugins/models';
+import { ColorProcessor } from '../../internals/plugins/models';
 
 const getColor: ColorProcessor<'bar'> = (series, xAxis, yAxis) => {
   const verticalLayout = series.layout === 'vertical';

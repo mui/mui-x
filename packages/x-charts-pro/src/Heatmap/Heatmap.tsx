@@ -25,7 +25,7 @@ import {
 import { ChartContainerPro, ChartContainerProProps } from '../ChartContainerPro';
 import { HeatmapSeriesType } from '../models/seriesType/heatmap';
 import { HeatmapPlot } from './HeatmapPlot';
-import { plugin as heatmapPlugin } from './plugin';
+import { seriesConfig as heatmapSeriesConfig } from './seriesConfig';
 import { HeatmapTooltip, HeatmapTooltipProps } from './HeatmapTooltip';
 import { HeatmapItemSlotProps, HeatmapItemSlots } from './HeatmapItem';
 import { HEATMAP_PLUGINS, HeatmapPluginsSignatures } from './Heatmap.plugins';
@@ -98,7 +98,7 @@ const defaultColorMap = interpolateRgbBasis([
   '#084081',
 ]);
 
-const seriesConfig: ChartSeriesConfig<'heatmap'> = { heatmap: heatmapPlugin };
+const seriesConfig: ChartSeriesConfig<'heatmap'> = { heatmap: heatmapSeriesConfig };
 
 const Heatmap = React.forwardRef(function Heatmap(
   inProps: HeatmapProps,

@@ -1,11 +1,11 @@
 import { ChartSeriesTypeConfig } from '@mui/x-charts/internals';
 import { getBaseExtremum } from './extremums';
-import formatter from './formatter';
+import seriesProcessor from './seriesProcessor';
 import getColor from './getColor';
 import tooltipGetter from './tooltip';
 
-export const plugin: ChartSeriesTypeConfig<'heatmap'> = {
-  seriesProcessor: formatter,
+export const seriesConfig: ChartSeriesTypeConfig<'heatmap'> = {
+  seriesProcessor,
   colorProcessor: getColor,
   legendGetter: () => [],
   tooltipGetter,

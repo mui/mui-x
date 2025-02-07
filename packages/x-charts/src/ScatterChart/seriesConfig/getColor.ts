@@ -1,4 +1,4 @@
-import { ColorProcessor } from '../internals/plugins/models';
+import { ColorProcessor } from '../../internals/plugins/models';
 
 const getColor: ColorProcessor<'scatter'> = (series, xAxis, yAxis, zAxis) => {
   const zColorScale = zAxis?.colorScale;

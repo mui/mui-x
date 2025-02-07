@@ -1,8 +1,8 @@
-import type { LegendItemParams } from '../ChartsLegend';
-import { getLabel } from '../internals/getLabel';
-import { LegendGetter } from '../internals/plugins/models';
+import type { LegendItemParams } from '../../ChartsLegend';
+import { getLabel } from '../../internals/getLabel';
+import { LegendGetter } from '../../internals/plugins/models';
 
-const legendGetter: LegendGetter<'bar'> = (params) => {
+const legendGetter: LegendGetter<'scatter'> = (params) => {
   const { seriesOrder, series } = params;
   return seriesOrder.reduce((acc, seriesId) => {
     const formattedLabel = getLabel(series[seriesId].label, 'legend');
@@ -18,7 +18,6 @@ const legendGetter: LegendGetter<'bar'> = (params) => {
       color: series[seriesId].color,
       label: formattedLabel,
     });
-
     return acc;
   }, [] as LegendItemParams[]);
 };

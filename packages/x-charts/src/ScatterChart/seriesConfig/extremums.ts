@@ -1,7 +1,7 @@
 import {
   CartesianExtremumGetter,
   CartesianExtremumGetterResult,
-} from '../internals/plugins/models/seriesConfig/extremumGetter.types';
+} from '../../internals/plugins/models/seriesConfig/extremumGetter.types';
 
 const mergeMinMax = (
   acc: CartesianExtremumGetterResult,

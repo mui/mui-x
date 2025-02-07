@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import lineFormatter from './formatter';
-import { SeriesProcessorParams } from '../internals/plugins/models';
+import lineProcessor from './seriesProcessor';
+import { SeriesProcessorParams } from '../../internals/plugins/models';
 
 const seriesOrder = ['id1'];
 const seriesDataset: SeriesProcessorParams<'line'>['series'] = {
@@ -19,12 +19,12 @@ const dataSet = [{ k: 1 }, { k: 2 }, { k: 3 }];
 describe('LineChart - formatter', () => {
   describe('data from dataset', () => {
     it('should get data from the dataset', () => {
-      const { series } = lineFormatter({ seriesOrder, series: seriesDataset }, dataSet);
+      const { series } = lineProcessor({ seriesOrder, series: seriesDataset }, dataSet);
       expect(series.id1.data).to.deep.equal([1, 2, 3]);
     });
 
     it('should support missing values', () => {
-      const { series } = lineFormatter({ seriesOrder, series: seriesDataset }, [
+      const { series } = lineProcessor({ seriesOrder, series: seriesDataset }, [
         { k: 1 },
         { k: null },
         { k: 2 },

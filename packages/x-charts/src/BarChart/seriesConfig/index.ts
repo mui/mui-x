@@ -1,12 +1,12 @@
-import { ChartSeriesTypeConfig } from '../internals/plugins/models/seriesConfig';
+import { ChartSeriesTypeConfig } from '../../internals/plugins/models/seriesConfig';
 import { getExtremumX, getExtremumY } from './extremums';
-import formatter from './formatter';
+import seriesProcessor from './seriesProcessor';
 import legendGetter from './legend';
 import getColor from './getColor';
 import tooltipGetter from './tooltip';
 
-export const plugin: ChartSeriesTypeConfig<'bar'> = {
-  seriesProcessor: formatter,
+export const seriesConfig: ChartSeriesTypeConfig<'bar'> = {
+  seriesProcessor,
   colorProcessor: getColor,
   legendGetter,
   tooltipGetter,
