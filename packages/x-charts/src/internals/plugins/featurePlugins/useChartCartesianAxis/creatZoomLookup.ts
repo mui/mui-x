@@ -5,7 +5,7 @@ import { DefaultizedZoomOptions } from './useChartCartesianAxis.types';
 
 export const creatZoomLookup =
   (axisDirection: 'x' | 'y') =>
-  (axes: AxisConfig<ScaleName, any, ChartsXAxisProps | ChartsYAxisProps>[]) =>
+  (axes: AxisConfig<ScaleName, any, ChartsXAxisProps | ChartsYAxisProps>[] = []) =>
     axes.reduce<Record<AxisId, DefaultizedZoomOptions>>((acc, v) => {
       // @ts-ignore
       const { zoom, id: axisId } = v;
