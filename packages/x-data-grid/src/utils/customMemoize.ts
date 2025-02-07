@@ -1,5 +1,5 @@
 // Original source:
-// - https://github.com/facebook/react/blob/0b974418c9a56f6c560298560265dcf4b65784bc/packages/react/src/ReactCache.js
+// - https://github.com/reduxjs/reselect/blob/1c3fc05f041d32cd69c11a7f7deccf0bce6f4598/src/weakMapMemoize.ts
 
 /**
  * An alias for type `{}`. Represents any value that is not `null` or `undefined`.
@@ -259,6 +259,7 @@ export function weakMapMemoize<Func extends AnyFunction>(
       // eslint-disable-next-line prefer-rest-params
       let arg = arguments[i];
       if (typeof arg === 'function' || (typeof arg === 'object' && arg !== null)) {
+        // Following logic is added over the original `weakMapMemoize` to support the proper memoization of the `GridApiRef`
         if ('current' in arg && 'instanceId' in arg.current) {
           arg = arg.current.state;
         }
