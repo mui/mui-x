@@ -35,6 +35,16 @@ export type IconButtonProps = Omit<ButtonProps, 'startIcon'> & {
 
 export type DividerProps = {};
 
+export type MenuListProps = {
+  ref?: Ref<HTMLUListElement>;
+  id?: string;
+  className?: string;
+  children?: React.ReactNode;
+  autoFocus?: boolean;
+  autoFocusItem?: boolean;
+  onKeyDown?: React.KeyboardEventHandler;
+};
+
 export type MenuItemProps = {
   autoFocus?: boolean;
   children?: React.ReactNode;
