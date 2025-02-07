@@ -43,7 +43,6 @@ Following are all team members who have contributed to this release:
   +const isRowVisible = visibleRowsLookup[rowId] !== false;
   ```
 
-
 #### `@mui/x-data-grid@8.0.0-alpha.11`
 
 - [DataGrid] Avoid `<GridRoot />` double-render pass on mount in SPA mode (#15648) @lauri865
