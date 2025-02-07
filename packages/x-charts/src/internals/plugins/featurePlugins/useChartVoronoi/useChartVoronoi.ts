@@ -1,48 +1,37 @@
-'use client';
 import * as React from 'react';
-import PropTypes from 'prop-types';
-import { Delaunay } from '@mui/x-charts-vendor/d3-delaunay';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { getValueToPositionMapper } from '../hooks/useScale';
-import { useStore } from '../internals/store/useStore';
-import { getSVGPoint } from '../internals/getSVGPoint';
-import { ScatterItemIdentifier } from '../models';
-import { SeriesId } from '../models/seriesType/common';
-import { useScatterSeries } from '../hooks/useSeries';
-import { useChartContext } from '../context/ChartProvider/useChartContext';
-import { useDrawingArea } from '../hooks/useDrawingArea';
-import { useSvgRef } from '../hooks/useSvgRef';
-import { useXAxes, useYAxes } from '../hooks';
-import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
-
-export type ChartsVoronoiHandlerProps = {
-  /**
-   * Defines the maximal distance between a scatter point and the pointer that triggers the interaction.
-   * If `undefined`, the radius is assumed to be infinite.
-   */
-  voronoiMaxRadius?: number | undefined;
-  /**
-   * Callback fired when clicking on a scatter item.
-   * @param {MouseEvent} event Mouse event caught at the svg level
-   * @param {ScatterItemIdentifier} scatterItemIdentifier Identify which item got clicked
-   */
-  onItemClick?: (event: MouseEvent, scatterItemIdentifier: ScatterItemIdentifier) => void;
-};
+import useEventCallback from '@mui/utils/useEventCallback';
+import { Delaunay } from '@mui/x-charts-vendor/d3-delaunay';
+import { ChartPlugin } from '../../models';
+import { getValueToPositionMapper } from '../../../../hooks/useScale';
+import { SeriesId } from '../../../../models/seriesType/common';
+import { UseChartVoronoiSignature } from './useChartVoronoi.types';
+import { getSVGPoint } from '../../../getSVGPoint';
+import { useSelector } from '../../../store/useSelector';
+import {
+  selectorChartXAxis,
+  selectorChartYAxis,
+  selectorChartZoomIsInteracting,
+} from '../useChartCartesianAxis';
+import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
+import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
 
 type VoronoiSeries = { seriesId: SeriesId; startIndex: number; endIndex: number };
 
-function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
-  const { voronoiMaxRadius, onItemClick } = props;
-  const svgRef = useSvgRef();
-  const drawingArea = useDrawingArea();
-  const { instance } = useChartContext<[UseChartHighlightSignature]>();
+export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
+  svgRef,
+  params,
+  store,
+  instance,
+}) => {
+  const { disableVoronoi, voronoiMaxRadius, onItemClick } = params;
+  const drawingArea = useSelector(store, selectorChartDrawingArea);
 
-  const { xAxis, xAxisIds } = useXAxes();
-  const { yAxis, yAxisIds } = useYAxes();
+  const { axis: xAxis, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
+  const { axis: yAxis, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
+  const zoomIsInteracting = useSelector(store, selectorChartZoomIsInteracting);
 
-  const store = useStore();
-
-  const { series, seriesOrder } = useScatterSeries() ?? {};
+  const { series, seriesOrder } = useSelector(store, selectorChartSeriesProcessed)?.scatter ?? {};
   const voronoiRef = React.useRef<Record<string, VoronoiSeries>>({});
   const delauneyRef = React.useRef<Delaunay<any> | undefined>(undefined);
   const lastFind = React.useRef<number | undefined>(undefined);
@@ -51,23 +40,22 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
   const defaultYAxisId = yAxisIds[0];
 
   useEnhancedEffect(() => {
-    store.update((prev) => ({
-      ...prev,
-      interaction: { ...prev.interaction, useVoronoiInteraction: true },
-    }));
-
-    return () => {
-      store.update((prev) => ({
-        ...prev,
-        interaction: { ...prev.interaction, useVoronoiInteraction: false },
-      }));
-    };
-  }, [store]);
+    store.update((prev) =>
+      prev.voronoi.isVoronoiEnabled === !disableVoronoi
+        ? prev
+        : {
+            ...prev,
+            voronoi: {
+              isVoronoiEnabled: !disableVoronoi,
+            },
+          },
+    );
+  }, [store, disableVoronoi]);
 
   useEnhancedEffect(() => {
     // This effect generate and store the Delaunay object that's used to map coordinate to closest point.
 
-    if (seriesOrder === undefined || series === undefined) {
+    if (zoomIsInteracting || seriesOrder === undefined || series === undefined || disableVoronoi) {
       // If there is no scatter chart series
       return;
     }
@@ -107,10 +95,21 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
 
     delauneyRef.current = new Delaunay(points);
     lastFind.current = undefined;
-  }, [defaultXAxisId, defaultYAxisId, series, seriesOrder, xAxis, yAxis, drawingArea, instance]);
+  }, [
+    zoomIsInteracting,
+    defaultXAxisId,
+    defaultYAxisId,
+    series,
+    seriesOrder,
+    xAxis,
+    yAxis,
+    drawingArea,
+    instance,
+    disableVoronoi,
+  ]);
 
   React.useEffect(() => {
-    if (svgRef.current === null) {
+    if (svgRef.current === null || disableVoronoi) {
       return undefined;
     }
     const element = svgRef.current;
@@ -164,42 +163,29 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
     }
 
     const handleMouseLeave = () => {
-      store.update((prev) => ({
-        ...prev,
-        interaction: { ...prev.interaction, axis: { x: null, y: null }, item: null },
-      }));
-
-      instance.clearHighlight();
+      instance.cleanInteraction?.();
+      instance.clearHighlight?.();
     };
 
     const handleMouseMove = (event: MouseEvent) => {
       const closestPoint = getClosestPoint(event);
 
       if (closestPoint === 'outside-chart') {
-        store.update((prev) => ({
-          ...prev,
-          interaction: { ...prev.interaction, axis: { x: null, y: null }, item: null },
-        }));
-        instance.clearHighlight();
+        instance.cleanInteraction?.();
+        instance.clearHighlight?.();
         return;
       }
 
       if (closestPoint === 'outside-voronoi-max-radius' || closestPoint === 'no-point-found') {
-        store.update((prev) => ({
-          ...prev,
-          interaction: { ...prev.interaction, item: null },
-        }));
-        instance.clearHighlight();
+        instance.removeItemInteraction?.();
+        instance.clearHighlight?.();
         return;
       }
 
       const { seriesId, dataIndex } = closestPoint;
-      store.update((prev) => ({
-        ...prev,
-        interaction: { ...prev.interaction, item: { type: 'scatter', seriesId, dataIndex } },
-      }));
 
-      instance.setHighlight({
+      instance.setItemInteraction?.({ type: 'scatter', seriesId, dataIndex });
+      instance.setHighlight?.({
         seriesId,
         dataIndex,
       });
@@ -228,28 +214,50 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
       element.removeEventListener('pointermove', handleMouseMove);
       element.removeEventListener('click', handleMouseClick);
     };
-  }, [svgRef, yAxis, xAxis, voronoiMaxRadius, onItemClick, drawingArea, store, instance]);
+  }, [svgRef, yAxis, xAxis, voronoiMaxRadius, onItemClick, disableVoronoi, drawingArea, instance]);
 
-  // eslint-disable-next-line react/jsx-no-useless-fragment
-  return <React.Fragment />;
-}
+  // Instance implementation
+  const enableVoronoiCallback = useEventCallback(() => {
+    store.update((prev) => ({
+      ...prev,
+      voronoi: {
+        ...prev.voronoi,
+        isVoronoiEnabled: true,
+      },
+    }));
+  });
 
-ChartsVoronoiHandler.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  /**
-   * Callback fired when clicking on a scatter item.
-   * @param {MouseEvent} event Mouse event caught at the svg level
-   * @param {ScatterItemIdentifier} scatterItemIdentifier Identify which item got clicked
-   */
-  onItemClick: PropTypes.func,
-  /**
-   * Defines the maximal distance between a scatter point and the pointer that triggers the interaction.
-   * If `undefined`, the radius is assumed to be infinite.
-   */
-  voronoiMaxRadius: PropTypes.number,
-} as any;
+  const disableVoronoiCallback = useEventCallback(() => {
+    store.update((prev) => ({
+      ...prev,
+      voronoi: {
+        ...prev.voronoi,
+        isVoronoiEnabled: false,
+      },
+    }));
+  });
 
-export { ChartsVoronoiHandler };
+  return {
+    instance: {
+      enableVoronoi: enableVoronoiCallback,
+      disableVoronoi: disableVoronoiCallback,
+    },
+  };
+};
+
+useChartVoronoi.getDefaultizedParams = ({ params }) => ({
+  ...params,
+  disableVoronoi: params.disableVoronoi ?? !params.series.some((item) => item.type === 'scatter'),
+});
+
+useChartVoronoi.getInitialState = (params) => ({
+  voronoi: {
+    isVoronoiEnabled: !params.disableVoronoi,
+  },
+});
+
+useChartVoronoi.params = {
+  disableVoronoi: true,
+  voronoiMaxRadius: true,
+  onItemClick: true,
+};

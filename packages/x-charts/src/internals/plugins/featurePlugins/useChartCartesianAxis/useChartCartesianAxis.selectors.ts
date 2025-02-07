@@ -40,6 +40,11 @@ export const selectorChartRawYAxis = createSelector(
  * Following selectors are not exported because they exist in the MIT chart only to ba able to reuse the Zoom state from the pro.
  */
 
+export const selectorChartZoomIsInteracting = createSelector(
+  selectorChartZoomState,
+  (zoom) => zoom?.isInteracting,
+);
+
 const selectorChartZoomMap = createSelector(
   selectorChartZoomState,
   (zoom) => zoom?.zoomData && createZoomMap(zoom?.zoomData),

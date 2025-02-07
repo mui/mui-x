@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ScatterChartProps, ScatterPlot } from '@mui/x-charts/ScatterChart';
-import { ChartsVoronoiHandler } from '@mui/x-charts/ChartsVoronoiHandler';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
@@ -22,7 +21,10 @@ import {
 
 export interface ScatterChartProProps
   extends Omit<ScatterChartProps, 'apiRef'>,
-    Omit<ChartContainerProProps<'scatter'>, 'series' | 'plugins' | 'seriesConfig'> {}
+    Omit<
+      ChartContainerProProps<'scatter', ScatterChartProPluginsSignatures>,
+      'series' | 'plugins' | 'seriesConfig' | 'onItemClick'
+    > {}
 
 /**
  * Demos:
@@ -43,7 +45,6 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   const {
     chartsWrapperProps,
     chartContainerProps,
-    voronoiHandlerProps,
     chartsAxisProps,
     gridProps,
     scatterPlotProps,
@@ -73,7 +74,6 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
       <ChartsWrapper {...chartsWrapperProps}>
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
-          {!props.disableVoronoi && <ChartsVoronoiHandler {...voronoiHandlerProps} />}
           <ChartsAxis {...chartsAxisProps} />
           <ChartsGrid {...gridProps} />
           <g data-drawing-container>

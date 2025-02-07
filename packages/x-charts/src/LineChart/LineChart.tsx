@@ -32,6 +32,7 @@ import { useChartContainerProps } from '../ChartContainer/useChartContainerProps
 import { ChartDataProvider } from '../ChartDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../internals/components/ChartsWrapper';
+import { LineChartPluginsSignatures } from './LineChart.plugins';
 
 export interface LineChartSlots
   extends ChartsAxisSlots,
@@ -53,7 +54,10 @@ export interface LineChartSlotProps
     ChartsTooltipSlotProps {}
 
 export interface LineChartProps
-  extends Omit<ChartContainerProps, 'series' | 'plugins' | 'zAxis'>,
+  extends Omit<
+      ChartContainerProps<'line', LineChartPluginsSignatures>,
+      'series' | 'plugins' | 'zAxis'
+    >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
   /**
@@ -147,7 +151,7 @@ const LineChart = React.forwardRef(function LineChart(
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
 
   return (
-    <ChartDataProvider {...chartDataProviderProps}>
+    <ChartDataProvider<'line', LineChartPluginsSignatures> {...chartDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps}>
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>

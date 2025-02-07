@@ -17,6 +17,7 @@
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
+    "disableVoronoi": { "type": { "name": "bool" } },
     "height": { "type": { "name": "number" } },
     "highlightedItem": {
       "type": {
@@ -46,6 +47,13 @@
         "describedArgs": ["highlightedItem"]
       }
     },
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: MouseEvent, scatterItemIdentifier: ScatterItemIdentifier) => void",
+        "describedArgs": ["event", "scatterItemIdentifier"]
+      }
+    },
     "plotType": {
       "type": { "name": "enum", "description": "'bar'<br>&#124;&nbsp;'line'" },
       "default": "'line'"
@@ -68,6 +76,7 @@
         "returned": "string"
       }
     },
+    "voronoiMaxRadius": { "type": { "name": "number" } },
     "width": { "type": { "name": "number" } },
     "xAxis": {
       "type": {

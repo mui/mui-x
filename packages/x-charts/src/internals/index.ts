@@ -21,11 +21,18 @@ export * from './plugins/featurePlugins/useChartZAxis';
 export * from './plugins/featurePlugins/useChartCartesianAxis';
 export * from './plugins/featurePlugins/useChartInteraction';
 export * from './plugins/featurePlugins/useChartHighlight';
+export * from './plugins/featurePlugins/useChartVoronoi';
 export * from './plugins/utils/selectors';
 
 export * from './store/useCharts';
 export * from './store/useStore';
 export * from './store/useSelector';
+
+// plugins configs
+
+export * from '../BarChart/BarChart.plugins';
+export * from '../LineChart/LineChart.plugins';
+export * from '../ScatterChart/ScatterChart.plugins';
 
 // utils
 export * from './defaultizeValueFormatter';

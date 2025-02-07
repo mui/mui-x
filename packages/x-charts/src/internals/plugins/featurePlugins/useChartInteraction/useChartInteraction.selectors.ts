@@ -38,8 +38,3 @@ export const selectorChartsInteractionYAxisIsDefined = createSelector(
   selectorChartsInteractionYAxis,
   (y) => y !== null,
 );
-
-export const selectorChartsInteractionIsVoronoiEnabled = createSelector(
-  selectInteraction,
-  (interaction) => interaction.isVoronoiEnabled,
-);
