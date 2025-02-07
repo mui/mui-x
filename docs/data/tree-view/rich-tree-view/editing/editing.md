@@ -97,3 +97,7 @@ apiRef.current.updateItemLabel(
 ```
 
 {{"demo": "ApiMethodUpdateItemLabel.js"}}
+
+## Editing lazy loaded children
+
+In order to register changes for item labels on your server or update them in the cache use the `onItemLabelChange` callback function. Visit the dedicated page for [lazy loading](/x/react-tree-view/rich-tree-view/lazy-loading/#lazy-loading-and-label-editing) to read more.
