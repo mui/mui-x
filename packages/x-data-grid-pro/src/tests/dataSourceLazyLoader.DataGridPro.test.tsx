@@ -78,7 +78,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
           columns={mockServer.columns}
           unstable_dataSource={dataSource}
           unstable_lazyLoading
-          initialState={{ pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 } }}
+          initialState={{ pagination: { paginationModel: { page: 0, pageSize: 10 } } }}
           disableVirtualization
           {...props}
         />

@@ -102,7 +102,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
           apiRef={apiRef}
           columns={mockServer.columns}
           unstable_dataSource={dataSource}
-          initialState={{ pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 } }}
+          initialState={{ pagination: { paginationModel: { page: 0, pageSize: 10 } } }}
           pagination
           pageSizeOptions={pageSizeOptions}
           disableVirtualization
