@@ -25,7 +25,10 @@ import {
   DateRangePickerProps,
 } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { useDateRangeManager } from '@mui/x-date-pickers-pro/managers';
-import { unstable_useMultiInputRangeField as useMultiInputRangeField } from '@mui/x-date-pickers-pro/hooks';
+import {
+  unstable_useMultiInputRangeField as useMultiInputRangeField,
+  UseMultiInputRangeFieldTextFieldProps,
+} from '@mui/x-date-pickers-pro/hooks';
 import {
   MultiInputFieldRefs,
   MultiInputFieldSlotTextFieldProps,
@@ -33,28 +36,23 @@ import {
 
 const joyTheme = extendJoyTheme();
 
-interface JoyFieldProps extends InputProps {
-  label?: React.ReactNode;
-  inputRef?: React.Ref<HTMLInputElement>;
-  enableAccessibleFieldDOMStructure?: boolean;
-  InputProps?: {
-    ref?: React.Ref<any>;
-    endAdornment?: React.ReactNode;
-    startAdornment?: React.ReactNode;
-  };
+interface JoyTextFieldProps
+  extends UseMultiInputRangeFieldTextFieldProps<
+    false,
+    InputProps & { label?: React.ReactNode }
+  > {
+  triggerRef?: React.Ref<HTMLDivElement>;
 }
 
-function JoyField(props: JoyFieldProps) {
+function JoyField(props: JoyTextFieldProps) {
   const {
     // Should be ignored
     enableAccessibleFieldDOMStructure,
 
+    triggerRef,
     disabled,
     id,
     label,
-    InputProps: { ref: anchorRef, startAdornment, endAdornment } = {},
-    endDecorator,
-    startDecorator,
     slotProps,
     inputRef,
     ...other
@@ -65,24 +63,12 @@ function JoyField(props: JoyFieldProps) {
       <FormLabel>{label}</FormLabel>
       <Input
         disabled={disabled}
-        startDecorator={
-          <React.Fragment>
-            {startAdornment}
-            {startDecorator}
-          </React.Fragment>
-        }
-        endDecorator={
-          <React.Fragment>
-            {endAdornment}
-            {endDecorator}
-          </React.Fragment>
-        }
         slotProps={{
           ...slotProps,
           input: { ...slotProps?.input, ref: inputRef },
         }}
         {...other}
-        ref={anchorRef}
+        ref={triggerRef}
       />
     </FormControl>
   );
@@ -138,7 +124,10 @@ function JoyMultiInputDateRangeField(props: JoyMultiInputDateRangeFieldProps) {
 
   return (
     <Stack {...fieldResponse.root}>
-      <JoyField {...fieldResponse.startTextField} />
+      <JoyField
+        {...fieldResponse.startTextField}
+        triggerRef={pickerContext.triggerRef}
+      />
       <FormControl>
         <Typography sx={{ marginTop: '25px' }}>{' – '}</Typography>
       </FormControl>

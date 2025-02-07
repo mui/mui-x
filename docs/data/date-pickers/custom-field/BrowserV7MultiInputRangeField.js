@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
+import { usePickerContext, useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { useDateRangeManager } from '@mui/x-date-pickers-pro/managers';
 import { unstable_useMultiInputRangeField as useMultiInputRangeField } from '@mui/x-date-pickers-pro/hooks';
@@ -48,14 +48,13 @@ function BrowserTextField(props) {
     readOnly,
     focused,
     error,
-    InputProps: { ref, startAdornment, endAdornment } = {},
+    triggerRef,
     // The rest can be passed to the root element
     ...other
   } = props;
 
   return (
-    <BrowserFieldRoot {...other} ref={ref}>
-      {startAdornment}
+    <BrowserFieldRoot {...other} ref={triggerRef}>
       <BrowserFieldContent>
         <PickersSectionList
           elements={elements}
@@ -69,13 +68,13 @@ function BrowserTextField(props) {
           onKeyDown={onKeyDown}
         />
       </BrowserFieldContent>
-      {endAdornment}
     </BrowserFieldRoot>
   );
 }
 
 function BrowserMultiInputDateRangeField(props) {
   const manager = useDateRangeManager();
+  const pickerContext = usePickerContext();
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
   const { slotProps, ...otherForwardedProps } = forwardedProps;
 
@@ -97,6 +96,7 @@ function BrowserMultiInputDateRangeField(props) {
     startTextFieldProps,
     endTextFieldProps,
     rootProps: {
+      ref: pickerContext.rootRef,
       spacing: 2,
       direction: 'row',
       overflow: 'auto',
@@ -106,7 +106,10 @@ function BrowserMultiInputDateRangeField(props) {
 
   return (
     <Stack {...fieldResponse.root}>
-      <BrowserTextField {...fieldResponse.startTextField} />
+      <BrowserTextField
+        {...fieldResponse.startTextField}
+        triggerRef={pickerContext.triggerRef}
+      />
       <span>–</span>
       <BrowserTextField {...fieldResponse.endTextField} />
     </Stack>

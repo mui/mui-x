@@ -1,22 +1,20 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import {
-  useDateManager,
-  UseDateManagerReturnValue,
-  useDateTimeManager,
-  UseDateTimeManagerReturnValue,
-  useTimeManager,
-  UseTimeManagerReturnValue,
-} from '@mui/x-date-pickers/managers';
+import { useDateManager, useDateTimeManager, useTimeManager } from '@mui/x-date-pickers/managers';
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
+import { UseValidationReturnValue } from '@mui/x-date-pickers/validation';
 import { PickerValueType } from '@mui/x-date-pickers/models';
 import {
+  FieldChangeHandler,
+  FieldChangeHandlerContext,
   PickerAnyManager,
   PickerManagerEnableAccessibleFieldDOMStructure,
-  PickerManagerFieldInternalProps,
+  PickerManagerError,
+  PickerRangeValue,
   PickerValue,
   RangePosition,
   useField,
+  UseFieldInternalProps,
   useFieldInternalPropsWithDefaults,
   UseFieldResponse,
   useNullableFieldPrivateContext,
@@ -25,21 +23,22 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { PickerAnyRangeManager } from '../../internals/models/managers';
 import { useNullablePickerRangePositionContext } from '../../internals/hooks/useNullablePickerRangePositionContext';
-import {
-  UseDateRangeManagerReturnValue,
-  UseDateTimeRangeManagerReturnValue,
-  UseTimeRangeManagerReturnValue,
-} from '../../managers';
+import { UseMultiInputFieldSelectedSectionsResponseItem } from './useMultiInputRangeFieldSelectedSections';
+import type { UseMultiInputRangeFieldTextFieldProps } from './useMultiInputRangeField';
 
 /**
  * @ignore - internal hook.
  */
-export function useMultiInputRangeFieldTextFieldProps<
+export function useTextFieldProps<
   TManager extends PickerAnyRangeManager,
-  TForwardedProps extends UseMultiInputRangeFieldTextFieldBaseForwardedProps,
+  TForwardedProps extends UseTextFieldBaseForwardedProps,
 >(
-  parameters: UseMultiInputRangeFieldTextFieldPropsParameters<TManager, TForwardedProps>,
-): UseMultiInputRangeFieldTextFieldPropsReturnValue<TManager, TForwardedProps> {
+  parameters: UseTextFieldPropsParameters<TManager, TForwardedProps>,
+): UseMultiInputRangeFieldTextFieldProps<
+  PickerManagerEnableAccessibleFieldDOMStructure<TManager>,
+  TForwardedProps
+> {
+  type TError = PickerManagerError<TManager>;
   type TEnableAccessibleFieldDOMStructure =
     PickerManagerEnableAccessibleFieldDOMStructure<TManager>;
 
@@ -52,7 +51,17 @@ export function useMultiInputRangeFieldTextFieldProps<
   const setRangePosition = rangePositionContext?.setRangePosition;
   const previousRangePosition = React.useRef<RangePosition>(rangePosition);
 
-  const { props, valueType, position } = parameters;
+  const {
+    forwardedProps,
+    sharedInternalProps,
+    selectedSectionProps,
+    valueType,
+    position,
+    value,
+    onChange,
+    autoFocus,
+    validation,
+  } = parameters;
 
   let useManager: ({
     enableAccessibleFieldDOMStructure,
@@ -79,7 +88,7 @@ export function useMultiInputRangeFieldTextFieldProps<
   }
 
   const manager = useManager({
-    enableAccessibleFieldDOMStructure: props.enableAccessibleFieldDOMStructure,
+    enableAccessibleFieldDOMStructure: sharedInternalProps.enableAccessibleFieldDOMStructure,
   });
 
   const openPickerIfPossible = (event: React.UIEvent) => {
@@ -108,7 +117,7 @@ export function useMultiInputRangeFieldTextFieldProps<
   });
 
   const handleFocus = useEventCallback((event: React.FocusEvent) => {
-    props.onFocus?.(event);
+    forwardedProps.onFocus?.(event);
     if (pickerContext?.open) {
       setRangePosition?.(position);
       if (previousRangePosition.current !== position && pickerContext.initialView) {
@@ -117,28 +126,48 @@ export function useMultiInputRangeFieldTextFieldProps<
     }
   });
 
+  const handleChange: FieldChangeHandler<PickerValue, TError> = useEventCallback(
+    (newSingleValue, rawContext) => {
+      const newRange: PickerRangeValue =
+        position === 'start' ? [newSingleValue, value[1]] : [value[0], newSingleValue];
+
+      const context: FieldChangeHandlerContext<TError> = {
+        ...rawContext,
+        validationError: validation.getValidationErrorForNewValue(newRange),
+      };
+
+      onChange(newRange, context);
+    },
+  );
+
   const allProps = {
-    ...props,
+    value: position === 'start' ? value[0] : value[1],
+    // TODO: Check if we should add back the validation error
+    id: `${pickerPrivateContext.labelId}-${position}`,
+    autoFocus: position === 'start' ? autoFocus : undefined,
+    ...forwardedProps,
+    ...sharedInternalProps,
+    ...selectedSectionProps,
     onClick: handleClick,
     onFocus: handleFocus,
     onKeyDown: handleKeyDown,
-    id: `${pickerPrivateContext.labelId}-${position}`,
+    onChange: handleChange,
   };
 
-  const { forwardedProps, internalProps } = useSplitFieldProps(allProps, 'date');
+  const splittedProps = useSplitFieldProps(allProps, 'date');
   const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
     manager,
-    internalProps,
+    internalProps: splittedProps.internalProps,
     skipContextFieldRefAssignment: rangePosition !== position,
   });
 
-  const { clearable, onClear, ...fieldResponse } = useField<
+  const { clearable, onClear, openPickerAriaLabel, ...fieldResponse } = useField<
     PickerValue,
     TEnableAccessibleFieldDOMStructure,
-    typeof forwardedProps,
+    typeof splittedProps.forwardedProps,
     typeof internalPropsWithDefaults
   >({
-    forwardedProps,
+    forwardedProps: splittedProps.forwardedProps,
     internalProps: internalPropsWithDefaults,
     valueManager: manager.internal_valueManager,
     fieldValueManager: manager.internal_fieldValueManager,
@@ -181,45 +210,40 @@ export function useMultiInputRangeFieldTextFieldProps<
   return fieldResponse;
 }
 
-interface UseMultiInputRangeFieldTextFieldPropsParameters<
+interface UseTextFieldPropsParameters<
   TManager extends PickerAnyRangeManager,
-  TForwardedProps extends UseMultiInputRangeFieldTextFieldBaseForwardedProps,
+  TForwardedProps extends UseTextFieldBaseForwardedProps,
 > {
   valueType: PickerValueType;
-  props: PickerManagerFieldInternalProps<GetDerivedManager<TManager>> & TForwardedProps;
+  value: PickerRangeValue;
+  onChange: FieldChangeHandler<PickerRangeValue, PickerManagerError<TManager>>;
+  autoFocus: boolean | undefined;
+  forwardedProps: TForwardedProps;
+  sharedInternalProps: UseTextFieldSharedInternalProps<TManager>;
+  selectedSectionProps: UseMultiInputFieldSelectedSectionsResponseItem;
   position: RangePosition;
+  validation: UseValidationReturnValue<PickerRangeValue, PickerManagerError<TManager>>;
 }
 
-type UseMultiInputRangeFieldTextFieldPropsReturnValue<
-  TManager extends PickerAnyRangeManager,
-  TForwardedProps extends UseMultiInputRangeFieldTextFieldBaseForwardedProps,
-> = Omit<
-  UseFieldResponse<
-    PickerManagerEnableAccessibleFieldDOMStructure<TManager>,
-    TForwardedProps & {
-      onKeyDown: React.KeyboardEventHandler;
-      onClick: React.MouseEventHandler;
-      onFocus: React.FocusEventHandler;
-      id: string;
-    }
-  >,
-  'onClear' | 'clearable'
->;
-
-export interface UseMultiInputRangeFieldTextFieldBaseForwardedProps {
+export interface UseTextFieldBaseForwardedProps {
   onKeyDown?: React.KeyboardEventHandler;
   onClick?: React.MouseEventHandler;
   onFocus?: React.FocusEventHandler;
   [key: string]: any;
 }
 
-type GetDerivedManager<TManager extends PickerAnyRangeManager> =
-  TManager extends UseDateRangeManagerReturnValue<infer TEnableAccessibleFieldDOMStructure>
-    ? UseDateManagerReturnValue<TEnableAccessibleFieldDOMStructure>
-    : TManager extends UseTimeRangeManagerReturnValue<infer TEnableAccessibleFieldDOMStructure>
-      ? UseTimeManagerReturnValue<TEnableAccessibleFieldDOMStructure>
-      : TManager extends UseDateTimeRangeManagerReturnValue<
-            infer TEnableAccessibleFieldDOMStructure
-          >
-        ? UseDateTimeManagerReturnValue<TEnableAccessibleFieldDOMStructure>
-        : never;
+interface UseTextFieldSharedInternalProps<TManager extends PickerAnyRangeManager>
+  extends Pick<
+    UseFieldInternalProps<
+      PickerValue,
+      PickerManagerEnableAccessibleFieldDOMStructure<TManager>,
+      PickerManagerError<TManager>
+    >,
+    | 'enableAccessibleFieldDOMStructure'
+    | 'disabled'
+    | 'readOnly'
+    | 'timezone'
+    | 'format'
+    | 'formatDensity'
+    | 'shouldRespectLeadingZeros'
+  > {}

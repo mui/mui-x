@@ -29,12 +29,10 @@ function JoyField(props) {
   const {
     // Should be ignored
     enableAccessibleFieldDOMStructure,
+    triggerRef,
     disabled,
     id,
     label,
-    InputProps: { ref: anchorRef, startAdornment, endAdornment } = {},
-    endDecorator,
-    startDecorator,
     slotProps,
     inputRef,
     ...other
@@ -45,24 +43,12 @@ function JoyField(props) {
       <FormLabel>{label}</FormLabel>
       <Input
         disabled={disabled}
-        startDecorator={
-          <React.Fragment>
-            {startAdornment}
-            {startDecorator}
-          </React.Fragment>
-        }
-        endDecorator={
-          <React.Fragment>
-            {endAdornment}
-            {endDecorator}
-          </React.Fragment>
-        }
         slotProps={{
           ...slotProps,
           input: { ...slotProps?.input, ref: inputRef },
         }}
         {...other}
-        ref={anchorRef}
+        ref={triggerRef}
       />
     </FormControl>
   );
@@ -107,7 +93,10 @@ function JoyMultiInputDateRangeField(props) {
 
   return (
     <Stack {...fieldResponse.root}>
-      <JoyField {...fieldResponse.startTextField} />
+      <JoyField
+        {...fieldResponse.startTextField}
+        triggerRef={pickerContext.triggerRef}
+      />
       <FormControl>
         <Typography sx={{ marginTop: '25px' }}>{' – '}</Typography>
       </FormControl>

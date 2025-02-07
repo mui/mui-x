@@ -4,19 +4,21 @@ import { styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
+import { usePickerContext, useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import {
   DateRangePicker,
   DateRangePickerFieldProps,
   DateRangePickerProps,
 } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { useDateRangeManager } from '@mui/x-date-pickers-pro/managers';
-import { unstable_useMultiInputRangeField as useMultiInputRangeField } from '@mui/x-date-pickers-pro/hooks';
+import {
+  unstable_useMultiInputRangeField as useMultiInputRangeField,
+  UseMultiInputRangeFieldTextFieldProps,
+} from '@mui/x-date-pickers-pro/hooks';
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
 import {
   MultiInputFieldSlotTextFieldProps,
   MultiInputFieldRefs,
-  BaseMultiInputPickersTextFieldProps,
 } from '@mui/x-date-pickers-pro/models';
 
 const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
@@ -35,11 +37,12 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
 );
 
 interface BrowserTextFieldProps
-  extends BaseMultiInputPickersTextFieldProps<true>,
-    Omit<
-      React.HTMLAttributes<HTMLDivElement>,
-      keyof BaseMultiInputPickersTextFieldProps<true>
-    > {}
+  extends UseMultiInputRangeFieldTextFieldProps<
+    true,
+    React.HTMLAttributes<HTMLDivElement>
+  > {
+  triggerRef?: React.Ref<HTMLDivElement>;
+}
 
 function BrowserTextField(props: BrowserTextFieldProps) {
   const {
@@ -68,15 +71,14 @@ function BrowserTextField(props: BrowserTextFieldProps) {
     focused,
     error,
 
-    InputProps: { ref, startAdornment, endAdornment } = {},
+    triggerRef,
 
     // The rest can be passed to the root element
     ...other
   } = props;
 
   return (
-    <BrowserFieldRoot {...other} ref={ref}>
-      {startAdornment}
+    <BrowserFieldRoot {...other} ref={triggerRef}>
       <BrowserFieldContent>
         <PickersSectionList
           elements={elements}
@@ -90,7 +92,6 @@ function BrowserTextField(props: BrowserTextFieldProps) {
           onKeyDown={onKeyDown}
         />
       </BrowserFieldContent>
-      {endAdornment}
     </BrowserFieldRoot>
   );
 }
@@ -110,6 +111,7 @@ function BrowserMultiInputDateRangeField(
   props: BrowserMultiInputDateRangeFieldProps,
 ) {
   const manager = useDateRangeManager();
+  const pickerContext = usePickerContext();
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
   const { slotProps, ...otherForwardedProps } = forwardedProps;
 
@@ -131,6 +133,7 @@ function BrowserMultiInputDateRangeField(
     startTextFieldProps,
     endTextFieldProps,
     rootProps: {
+      ref: pickerContext.rootRef,
       spacing: 2,
       direction: 'row' as const,
       overflow: 'auto',
@@ -140,7 +143,10 @@ function BrowserMultiInputDateRangeField(
 
   return (
     <Stack {...fieldResponse.root}>
-      <BrowserTextField {...fieldResponse.startTextField} />
+      <BrowserTextField
+        {...fieldResponse.startTextField}
+        triggerRef={pickerContext.triggerRef}
+      />
       <span>–</span>
       <BrowserTextField {...fieldResponse.endTextField} />
     </Stack>

@@ -16,7 +16,7 @@ interface UseMultiInputRangeFieldSelectedSectionsParameters
     >,
     MultiInputFieldRefs {}
 
-interface UseMultiInputFieldSelectedSectionsResponseItem {
+export interface UseMultiInputFieldSelectedSectionsResponseItem {
   unstableFieldRef?: React.Ref<FieldRef<PickerValue>>;
   selectedSections: FieldSelectedSections;
   onSelectedSectionsChange: (newSelectedSections: FieldSelectedSections) => void;

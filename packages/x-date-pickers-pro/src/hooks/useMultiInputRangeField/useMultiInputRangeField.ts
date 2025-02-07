@@ -1,22 +1,13 @@
 'use client';
-import useEventCallback from '@mui/utils/useEventCallback';
 import {
-  FieldChangeHandler,
-  FieldChangeHandlerContext,
   PickerManagerEnableAccessibleFieldDOMStructure,
-  PickerManagerError,
   PickerManagerFieldInternalProps,
-  PickerRangeValue,
-  PickerValue,
   useControlledValueWithTimezone,
   useFieldInternalPropsWithDefaults,
   UseFieldResponse,
 } from '@mui/x-date-pickers/internals';
 import { useValidation } from '@mui/x-date-pickers/validation';
-import {
-  UseMultiInputRangeFieldTextFieldBaseForwardedProps,
-  useMultiInputRangeFieldTextFieldProps,
-} from './useMultiInputRangeFieldTextFieldProps';
+import { UseTextFieldBaseForwardedProps, useTextFieldProps } from './useTextFieldProps';
 import { useMultiInputRangeFieldSelectedSections } from './useMultiInputRangeFieldSelectedSections';
 import { PickerAnyRangeManager } from '../../internals/models/managers';
 import {
@@ -63,13 +54,11 @@ import {
  */
 export function useMultiInputRangeField<
   TManager extends PickerAnyRangeManager,
-  TTextFieldProps extends UseMultiInputRangeFieldTextFieldBaseForwardedProps,
+  TTextFieldProps extends UseTextFieldBaseForwardedProps,
   TRootProps extends { [key: string]: any },
 >(
   parameters: UseMultiInputRangeFieldParameters<TManager, TTextFieldProps, TRootProps>,
 ): UseMultiInputRangeFieldReturnValue<TManager, TTextFieldProps, TRootProps> {
-  type TError = PickerManagerError<TManager>;
-
   const { manager, internalProps, rootProps, startTextFieldProps, endTextFieldProps } = parameters;
 
   const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
@@ -106,30 +95,13 @@ export function useMultiInputRangeField<
     valueManager: manager.internal_valueManager,
   });
 
-  const { validationError, getValidationErrorForNewValue } = useValidation({
+  const validation = useValidation({
     props: internalPropsWithDefaults,
     value,
     timezone,
     validator: manager.validator,
     onError: internalPropsWithDefaults.onError,
   });
-
-  const buildChangeHandler = (index: 0 | 1): FieldChangeHandler<PickerValue, unknown> => {
-    return (newSingleValue, rawContext) => {
-      const newRange: PickerRangeValue =
-        index === 0 ? [newSingleValue, value[1]] : [value[0], newSingleValue];
-
-      const context: FieldChangeHandlerContext<TError> = {
-        ...rawContext,
-        validationError: getValidationErrorForNewValue(newRange),
-      };
-
-      handleValueChange(newRange, context);
-    };
-  };
-
-  const handleStartDateChange = useEventCallback(buildChangeHandler(0));
-  const handleEndDateChange = useEventCallback(buildChangeHandler(1));
 
   const selectedSectionsResponse = useMultiInputRangeFieldSelectedSections({
     selectedSections,
@@ -138,7 +110,7 @@ export function useMultiInputRangeField<
     unstableEndFieldRef,
   });
 
-  const sharedProps = {
+  const sharedInternalProps = {
     disabled,
     readOnly,
     timezone,
@@ -150,33 +122,28 @@ export function useMultiInputRangeField<
 
   const rootResponse = useMultiInputRangeFieldRootProps(rootProps);
 
-  const startTextFieldResponse = useMultiInputRangeFieldTextFieldProps<TManager, TTextFieldProps>({
+  const startTextFieldResponse = useTextFieldProps<TManager, TTextFieldProps>({
     valueType: manager.valueType,
     position: 'start',
-    props: {
-      error: !!validationError[0],
-      ...startTextFieldProps,
-      ...selectedSectionsResponse.start,
-      ...sharedProps,
-      value: valueProp === undefined ? undefined : valueProp[0],
-      defaultValue: defaultValue === undefined ? undefined : defaultValue[0],
-      onChange: handleStartDateChange,
-      autoFocus,
-    },
+    value,
+    onChange: handleValueChange,
+    autoFocus,
+    validation,
+    forwardedProps: startTextFieldProps,
+    selectedSectionProps: selectedSectionsResponse.start,
+    sharedInternalProps,
   });
 
-  const endTextFieldResponse = useMultiInputRangeFieldTextFieldProps<TManager, TTextFieldProps>({
+  const endTextFieldResponse = useTextFieldProps<TManager, TTextFieldProps>({
     valueType: manager.valueType,
     position: 'end',
-    props: {
-      error: !!validationError[1],
-      ...endTextFieldProps,
-      ...selectedSectionsResponse.end,
-      ...sharedProps,
-      value: valueProp === undefined ? undefined : valueProp[1],
-      defaultValue: defaultValue === undefined ? undefined : defaultValue[1],
-      onChange: handleEndDateChange,
-    },
+    value,
+    onChange: handleValueChange,
+    autoFocus,
+    validation,
+    forwardedProps: endTextFieldProps,
+    selectedSectionProps: selectedSectionsResponse.end,
+    sharedInternalProps,
   });
 
   return {
@@ -205,13 +172,29 @@ interface UseMultiInputRangeFieldReturnValue<
   TRootProps extends { [key: string]: any },
 > {
   root: UseMultiInputRangeFieldRootPropsReturnValue<TRootProps>;
-  startTextField: Omit<
-    UseFieldResponse<PickerManagerEnableAccessibleFieldDOMStructure<TManager>, TTextFieldProps>,
-    'clearable' | 'onClear'
+  startTextField: UseMultiInputRangeFieldTextFieldProps<
+    PickerManagerEnableAccessibleFieldDOMStructure<TManager>,
+    TTextFieldProps
   >;
-  endTextField: Omit<
-    UseFieldResponse<PickerManagerEnableAccessibleFieldDOMStructure<TManager>, TTextFieldProps>,
-    'clearable' | 'onClear'
+  endTextField: UseMultiInputRangeFieldTextFieldProps<
+    PickerManagerEnableAccessibleFieldDOMStructure<TManager>,
+    TTextFieldProps
   >;
   enableAccessibleFieldDOMStructure: PickerManagerEnableAccessibleFieldDOMStructure<TManager>;
 }
+
+export type UseMultiInputRangeFieldTextFieldProps<
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TForwardedProps extends UseTextFieldBaseForwardedProps,
+> = Omit<
+  UseFieldResponse<
+    TEnableAccessibleFieldDOMStructure,
+    TForwardedProps & {
+      onKeyDown: React.KeyboardEventHandler;
+      onClick: React.MouseEventHandler;
+      onFocus: React.FocusEventHandler;
+      id: string;
+    }
+  >,
+  'onClear' | 'clearable' | 'openPickerAriaLabel'
+>;
