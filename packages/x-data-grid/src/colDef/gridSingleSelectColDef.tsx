@@ -7,7 +7,7 @@ import {
   isSingleSelectColDef,
 } from '../components/panel/filterPanel/filterPanelUtils';
 import { isObject } from '../utils/utils';
-import { gridRowIdSelector } from '../hooks/core/useGridProps';
+import { gridRowIdSelector } from '../hooks/core/gridPropsSelectors';
 
 const isArrayOfObjects = (options: any): options is Array<Record<string, any>> => {
   return typeof options[0] === 'object';

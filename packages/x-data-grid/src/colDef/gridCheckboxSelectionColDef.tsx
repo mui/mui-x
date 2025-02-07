@@ -4,7 +4,7 @@ import { GridHeaderCheckbox } from '../components/columnSelection/GridHeaderChec
 import { selectedIdsLookupSelector } from '../hooks/features/rowSelection/gridRowSelectionSelector';
 import { GridColDef } from '../models/colDef/gridColDef';
 import { GRID_BOOLEAN_COL_DEF } from './gridBooleanColDef';
-import { gridRowIdSelector } from '../hooks/core/useGridProps';
+import { gridRowIdSelector } from '../hooks/core/gridPropsSelectors';
 
 export const GRID_CHECKBOX_SELECTION_FIELD = '__check__';
 

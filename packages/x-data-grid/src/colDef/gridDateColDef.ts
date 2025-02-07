@@ -3,7 +3,7 @@ import { getGridDateOperators } from './gridDateOperators';
 import { GRID_STRING_COL_DEF } from './gridStringColDef';
 import { GridColTypeDef, GridValueFormatter } from '../models/colDef/gridColDef';
 import { renderEditDateCell } from '../components/cell/GridEditDateCell';
-import { gridRowIdSelector } from '../hooks/core/useGridProps';
+import { gridRowIdSelector } from '../hooks/core/gridPropsSelectors';
 
 function throwIfNotDateObject({
   value,

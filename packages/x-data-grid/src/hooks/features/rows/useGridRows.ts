@@ -20,7 +20,7 @@ import {
   gridRowGroupsToFetchSelector,
   gridRowNodeSelector,
 } from './gridRowsSelector';
-import { gridRowIdSelector } from '../../core/useGridProps';
+import { gridRowIdSelector } from '../../core/gridPropsSelectors';
 import { useTimeout } from '../../utils/useTimeout';
 import { GridSignature } from '../../../constants/signature';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
