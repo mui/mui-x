@@ -9,7 +9,6 @@ import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import {
   gridColumnPositionsSelector,
-  gridColumnsTotalWidthSelector,
   gridDimensionsSelector,
   gridVisibleColumnDefinitionsSelector,
   gridVisiblePinnedColumnDefinitionsSelector,
@@ -17,6 +16,7 @@ import {
   useGridSelector,
 } from '../hooks';
 import { PinnedColumnPosition } from '../internals/constants';
+import { gridColumnsTotalWidthSelector } from '../hooks/features/dimensions/gridDimensionsSelectors';
 import { GridEventListener } from '../models';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { getDataGridUtilityClass, gridClasses } from '../constants/gridClasses';

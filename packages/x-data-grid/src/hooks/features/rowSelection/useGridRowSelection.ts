@@ -8,7 +8,8 @@ import {
   GridRowMultiSelectionApi,
 } from '../../../models/api/gridRowSelectionApi';
 import { GridGroupNode, GridRowId } from '../../../models/gridRows';
-import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { GridSignature } from '../../../constants/signature';
+import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridSelector } from '../../utils/useGridSelector';
@@ -463,7 +464,7 @@ export const useGridRowSelection = (
         if (props.filterMode === 'server') {
           return !rowsLookup[id];
         }
-        return filteredRowsLookup[id] !== true;
+        return !rowsLookup[id] || filteredRowsLookup[id] === false;
       };
 
       let hasChanged = false;
