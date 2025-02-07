@@ -145,7 +145,9 @@ const useMultiInputFieldSlotProps = <
     }
 
     const currentFieldRef = rangePosition === 'start' ? startFieldRef : endFieldRef;
-    currentFieldRef.current?.focusField();
+    if (!currentFieldRef.current?.isFieldFocused()) {
+      currentFieldRef.current?.focusField();
+    }
     if (!currentFieldRef.current || !currentView) {
       // could happen when the user is switching between the inputs
       previousRangePosition.current = rangePosition;
@@ -153,6 +155,7 @@ const useMultiInputFieldSlotProps = <
     }
 
     // bring back focus to the field
+    // currentView is present on DateTimeRangePicker
     currentFieldRef.current.setSelectedSections(
       // use the current view or `0` when the range position has just been swapped
       previousRangePosition.current === rangePosition ? currentView : 0,
@@ -335,7 +338,7 @@ const useSingleInputFieldSlotProps = <
       activeSectionIndex == null || activeSectionIndex < sections.length / 2 ? 'start' : 'end';
 
     if (domRangePosition != null && domRangePosition !== rangePosition) {
-      setRangePosition(domRangePosition);
+      setRangePosition(domRangePosition, false);
     }
   };
 
