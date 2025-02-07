@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { FormattedSeries } from '../context/SeriesProvider';
+import { ProcessedSeries } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.types';
 import { SeriesId } from '../models/seriesType/common';
 import { ChartSeriesDefaultized } from '../models/seriesType/config';
 import { useSeries } from './useSeries';
@@ -12,7 +12,7 @@ import { useSeries } from './useSeries';
  * - seriesOrder: the array of series ids.
  * @returns {{ series: Record<SeriesId, DefaultizedPieSeriesType>; seriesOrder: SeriesId[]; } | undefined}  pieSeries
  */
-export function usePieSeries(): FormattedSeries['pie'];
+export function usePieSeries(): ProcessedSeries['pie'];
 /**
  * Get access to the internal state of pie series.
  *

@@ -4,7 +4,7 @@ import { stub, restore } from 'sinon';
 import { useBarSeries } from './useBarSeries';
 import * as series from './useSeries';
 import { SeriesId } from '../models/seriesType/common';
-import { FormattedSeries } from '../context/SeriesProvider';
+import { ProcessedSeries } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.types';
 
 describe('useBarSeries', () => {
   const defaultProps = {
@@ -15,7 +15,7 @@ describe('useBarSeries', () => {
     stackedData: [] as [number, number][],
   } as const;
 
-  const mockSeries: FormattedSeries = {
+  const mockSeries: ProcessedSeries = {
     bar: {
       series: {
         '1': { ...defaultProps, id: '1', data: [1, 2, 3] },

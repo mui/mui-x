@@ -8,7 +8,7 @@ import { useStore } from '../internals/store/useStore';
 import { getSVGPoint } from '../internals/getSVGPoint';
 import { ScatterItemIdentifier } from '../models';
 import { SeriesId } from '../models/seriesType/common';
-import { useScatterSeries } from '../hooks/useSeries';
+import { useScatterSeries } from '../hooks/useScatterSeries';
 import { useChartContext } from '../context/ChartProvider/useChartContext';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { useSvgRef } from '../hooks/useSvgRef';

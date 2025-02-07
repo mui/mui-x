@@ -4,7 +4,7 @@ import { stub, restore } from 'sinon';
 import { useScatterSeries } from './useScatterSeries';
 import * as series from './useSeries';
 import { SeriesId } from '../models/seriesType/common';
-import { FormattedSeries } from '../context/SeriesProvider';
+import { ProcessedSeries } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.types';
 
 describe('useScatterSeries', () => {
   const defaultProps = {
@@ -14,7 +14,7 @@ describe('useScatterSeries', () => {
     type: 'scatter',
   } as const;
 
-  const mockSeries: FormattedSeries = {
+  const mockSeries: ProcessedSeries = {
     scatter: {
       series: {
         '1': {
