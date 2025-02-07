@@ -11,7 +11,7 @@ import {
 const rows = [
   {
     id: 1,
-    date: '2024-03-15',
+    date: '2024-05-15',
     ticker: 'AAPL',
     price: 192.45,
     volume: 5500,
@@ -27,7 +27,7 @@ const rows = [
   },
   {
     id: 3,
-    date: '2024-03-17',
+    date: '2024-01-17',
     ticker: 'MSFT',
     price: 345.22,
     volume: 4100,
@@ -35,7 +35,7 @@ const rows = [
   },
   {
     id: 4,
-    date: '2023-03-18',
+    date: '2023-12-18',
     ticker: 'AAPL',
     price: 193.1,
     volume: 6700,
@@ -43,7 +43,7 @@ const rows = [
   },
   {
     id: 5,
-    date: '2024-03-19',
+    date: '2024-11-19',
     ticker: 'AMZN',
     price: 145.33,
     volume: 2900,
@@ -59,7 +59,7 @@ const rows = [
   },
   {
     id: 7,
-    date: '2024-03-21',
+    date: '2024-08-21',
     ticker: 'US_TREASURY_2Y',
     price: 98.75,
     volume: 1000,
@@ -67,7 +67,7 @@ const rows = [
   },
   {
     id: 8,
-    date: '2024-03-22',
+    date: '2024-05-22',
     ticker: 'MSFT',
     price: 347.89,
     volume: 4500,
@@ -75,7 +75,7 @@ const rows = [
   },
   {
     id: 9,
-    date: '2024-03-23',
+    date: '2024-04-23',
     ticker: 'US_TREASURY_10Y',
     price: 95.6,
     volume: 750,
@@ -107,12 +107,6 @@ const columns: GridColDef[] = [
     valueFormatter: (value: number | undefined) =>
       value ? `$${value.toFixed(2)}` : null,
   },
-  {
-    field: 'year',
-    headerName: 'Year',
-    valueGetter: (value, row) =>
-      row.date ? new Date(row.date).getFullYear() : null,
-  },
   { field: 'volume', type: 'number', headerName: 'Volume' },
   {
     field: 'type',
@@ -122,12 +116,18 @@ const columns: GridColDef[] = [
   },
 ];
 
+const getYearField = (field: string) => `${field}-year`;
+const getQuarterField = (field: string) => `${field}-quarter`;
+
 export default function GridPivotingFinancial() {
   const apiRef = useGridApiRef();
 
   const [pivotModel, setPivotModel] = React.useState<Unstable_GridPivotModel>({
     rows: [{ field: 'ticker' }],
-    columns: [{ field: 'year' }],
+    columns: [
+      { field: getYearField('date'), sort: 'asc' },
+      { field: getQuarterField('date'), sort: 'asc' },
+    ],
     values: [
       { field: 'price', aggFunc: 'avg' },
       { field: 'volume', aggFunc: 'sum' },

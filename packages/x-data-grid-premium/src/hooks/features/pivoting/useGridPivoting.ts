@@ -282,7 +282,32 @@ export const useGridPivoting = ({
         const rows = rowIds.map((id) => rowsLookup[id]);
         const columns = gridColumnDefinitionsSelector(apiRef);
 
-        nonPivotDataRef.current = { rows, columns };
+        const initialColumns: GridColDef[] = [];
+        for (let i = 0; i < columns.length; i += 1) {
+          const column = columns[i];
+          const field = column.field;
+          if (!isGroupingColumn(field)) {
+            initialColumns.push(column);
+
+            if (column.type === 'date') {
+              initialColumns.push({
+                field: `${field}-year`,
+                headerName: `${column.headerName} (Year)`,
+                type: 'number',
+                valueGetter: (value, row) => new Date(row[field]).getFullYear(),
+              });
+
+              initialColumns.push({
+                field: `${field}-quarter`,
+                headerName: `${column.headerName} (Quarter)`,
+                valueGetter: (value, row) =>
+                  `Q${Math.floor(new Date(row[field]).getMonth() / 3) + 1}`,
+              });
+            }
+          }
+        }
+
+        nonPivotDataRef.current = { rows, columns: initialColumns };
       }
 
       const { rows, columns } = nonPivotDataRef.current || { rows: [], columns: [] };
@@ -318,7 +343,6 @@ export const useGridPivoting = ({
     props,
     pivotModel,
     onPivotModelChange,
-    // TODO: automatically generate derived Year and Quarter columns for date columns
     initialColumns: nonPivotDataRef.current?.columns.filter(
       (column) => !isGroupingColumn(column.field),
     ),
