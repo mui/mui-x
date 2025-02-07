@@ -1,23 +1,26 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import TransitionGroup from 'react-transition-group/TransitionGroup';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled, useTheme, useThemeProps } from '@mui/material/styles';
 import Fade from '@mui/material/Fade';
 import useEventCallback from '@mui/utils/useEventCallback';
 import composeClasses from '@mui/utils/composeClasses';
+import useSlotProps from '@mui/utils/useSlotProps';
 import useId from '@mui/utils/useId';
 import useControlled from '@mui/utils/useControlled';
 import { DateView } from '../models/views';
 import { Calendar } from '../internals/base/Calendar';
-import { DateCalendar2Header } from './DateCalendar2Header';
+import { DateCalendar2Header, DateCalendar2HeaderProps } from './DateCalendar2Header';
 import { PickerValue } from '../internals/models';
 import { DateCalendar2YearsGrid } from './DateCalendar2YearsGrid';
 import { DateCalendar2MonthsGrid } from './DateCalendar2MonthsGrid';
 import { DateCalendar2DaysGrid } from './DateCalendar2DaysGrid';
 import { DIALOG_WIDTH, VIEW_HEIGHT } from '../internals/constants/dimensions';
-import { DateCalendar2Props } from './DateCalendar2.types';
+import { DateCalendar2ContextValue, DateCalendar2Props } from './DateCalendar2.types';
 import { DateCalendar2Classes, getDateCalendar2UtilityClass } from './DateCalendar2.classes';
 import { DateCalendar2Context } from './DateCalendar2Context';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
+import { useReduceAnimations } from '../internals/hooks/useReduceAnimations';
 
 const DEFAULT_VIEWS = { year: true, month: false, day: true };
 
@@ -59,11 +62,20 @@ export const DateCalendar2 = React.forwardRef(function DateCalendar2(
 ) {
   const id = useId();
   const theme = useTheme();
+  const { ownerState } = usePickerPrivateContext();
+
+  const themeProps = useThemeProps({
+    props,
+    name: 'MuiDateCalendar2',
+  });
 
   const {
-    // Style props
+    // Customization props
     classes: classesProp,
     className,
+    slots,
+    slotProps,
+    reduceAnimations: reduceAnimationsProp,
 
     // View props
     views = DEFAULT_VIEWS,
@@ -76,24 +88,26 @@ export const DateCalendar2 = React.forwardRef(function DateCalendar2(
     displayWeekNumber = false,
     monthsPerRow = 3,
     yearsPerRow = 3,
+    yearsOrder = 'asc',
 
     // Forwarded props
     ...other
-  } = props;
+  } = themeProps;
 
+  const reduceAnimations = useReduceAnimations(reduceAnimationsProp);
   const classes = useUtilityClasses(classesProp);
 
-  const [view, setView] = useControlled({
+  const [view, setControlledView] = useControlled({
     name: 'DateCalendar',
     state: 'view',
     default: defaultView,
     controlled: viewProp,
   });
 
-  const daysGridLabelId = `${id}-grid-label`;
+  const labelId = `${id}-grid-label`;
 
-  const handleViewChange = useEventCallback((newView: DateView) => {
-    setView(newView);
+  const setView = useEventCallback((newView: DateView) => {
+    setControlledView(newView);
     onViewChange?.(newView);
   });
 
@@ -101,14 +115,34 @@ export const DateCalendar2 = React.forwardRef(function DateCalendar2(
     (value: PickerValue, ctx: Calendar.Root.ValueChangeHandlerContext) => {
       onValueChange?.(value, ctx);
       if (ctx.section === 'year' && views.month) {
-        handleViewChange('month');
+        setView('month');
       } else if (ctx.section !== 'day' && views.day) {
-        handleViewChange('day');
+        setView('day');
       }
     },
   );
 
-  const contextValue = React.useMemo(() => ({ classes }), [classes]);
+  const contextValue = React.useMemo<DateCalendar2ContextValue>(
+    () => ({ classes, slots, slotProps, view, views, setView, labelId, reduceAnimations }),
+    [classes, slots, slotProps, view, views, setView, labelId, reduceAnimations],
+  );
+
+  const CalendarHeader = slots?.calendarHeader ?? DateCalendar2Header;
+  const calendarHeaderProps: DateCalendar2HeaderProps = useSlotProps({
+    elementType: CalendarHeader,
+    externalSlotProps: slotProps?.calendarHeader,
+    ownerState,
+  });
+
+  const viewContent = (
+    <div>
+      {view === 'year' && (
+        <DateCalendar2YearsGrid cellsPerRow={yearsPerRow} yearsOrder={yearsOrder} />
+      )}
+      {view === 'month' && <DateCalendar2MonthsGrid cellsPerRow={monthsPerRow} />}
+      {view === 'day' && <DateCalendar2DaysGrid displayWeekNumber={displayWeekNumber} />}
+    </div>
+  );
 
   return (
     <DateCalendar2Context.Provider value={contextValue}>
@@ -118,36 +152,26 @@ export const DateCalendar2 = React.forwardRef(function DateCalendar2(
         className={clsx(className, classes.root)}
         ref={ref}
       >
-        <DateCalendar2Header
-          view={view}
-          views={views}
-          onViewChange={handleViewChange}
-          labelId={daysGridLabelId}
-        />
-        <DateCalendar2TransitionGroup className={classes.transitionGroup}>
-          <Fade
-            appear={false}
-            mountOnEnter
-            unmountOnExit
-            key={view}
-            timeout={{
-              appear: theme.transitions.duration.enteringScreen,
-              enter: theme.transitions.duration.enteringScreen,
-              exit: 0,
-            }}
-          >
-            <div>
-              {view === 'year' && <DateCalendar2YearsGrid cellsPerRow={yearsPerRow} />}
-              {view === 'month' && <DateCalendar2MonthsGrid cellsPerRow={monthsPerRow} />}
-              {view === 'day' && (
-                <DateCalendar2DaysGrid
-                  labelId={daysGridLabelId}
-                  displayWeekNumber={displayWeekNumber}
-                />
-              )}
-            </div>
-          </Fade>
-        </DateCalendar2TransitionGroup>
+        <CalendarHeader {...calendarHeaderProps} />
+        {reduceAnimations ? (
+          viewContent
+        ) : (
+          <DateCalendar2TransitionGroup className={classes.transitionGroup}>
+            <Fade
+              appear={false}
+              mountOnEnter
+              unmountOnExit
+              key={view}
+              timeout={{
+                appear: theme.transitions.duration.enteringScreen,
+                enter: theme.transitions.duration.enteringScreen,
+                exit: 0,
+              }}
+            >
+              {viewContent}
+            </Fade>
+          </DateCalendar2TransitionGroup>
+        )}
       </DateCalendar2Root>
     </DateCalendar2Context.Provider>
   );

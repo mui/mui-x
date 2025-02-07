@@ -4,12 +4,14 @@ import { TransitionGroupProps } from 'react-transition-group/TransitionGroup';
 import { alpha, styled, useTheme } from '@mui/material/styles';
 import ButtonBase from '@mui/material/ButtonBase';
 import Typography from '@mui/material/Typography';
+import useSlotProps from '@mui/utils/useSlotProps';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { Calendar, useCalendarContext } from '../internals/base/Calendar';
 import { usePickerTranslations } from '../hooks';
 import { DAY_MARGIN, DAY_SIZE } from '../internals/constants/dimensions';
 import { useUtils } from '../internals/hooks/useUtils';
 import { useDateCalendar2Context } from './DateCalendar2Context';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 
 const WEEKS_CONTAINER_HEIGHT = (DAY_SIZE + DAY_MARGIN * 2) * 6;
 
@@ -202,14 +204,29 @@ const DateCalendar2DaysCell = styled(ButtonBase, {
   },
 }));
 
+function WrappedDaysButton() {
+  const { ownerState } = usePickerPrivateContext();
+  const { classes, slots, slotProps } = useDateCalendar2Context();
+
+  const MonthsButton = slots?.dayButton ?? DateCalendar2DaysCell;
+  const yearsButtonProps = useSlotProps({
+    elementType: MonthsButton,
+    externalSlotProps: slotProps?.day,
+    ownerState,
+    className: classes.daysCell,
+  });
+
+  return <DateCalendar2DaysCell {...yearsButtonProps} />;
+}
+
 export function DateCalendar2DaysGrid(props: DateCalendar2DaysGridProps) {
   const translations = usePickerTranslations();
   const theme = useTheme();
   const utils = useUtils();
   const { visibleDate } = useCalendarContext();
-  const { classes } = useDateCalendar2Context();
+  const { classes, labelId } = useDateCalendar2Context();
 
-  const { labelId, displayWeekNumber } = props;
+  const { displayWeekNumber } = props;
 
   // We need a new ref whenever the `key` of the transition changes: https://reactcommunity.org/react-transition-group/transition/#Transition-prop-nodeRef.
   const transitionKey = utils.formatByString(
@@ -302,9 +319,9 @@ export function DateCalendar2DaysGrid(props: DateCalendar2DaysGridProps) {
                         )}
                         {days.map((day) => (
                           <Calendar.DaysCell
+                            render={<WrappedDaysButton />}
                             value={day}
                             className={classes.daysCell}
-                            render={<DateCalendar2DaysCell />}
                           />
                         ))}
                       </React.Fragment>
@@ -321,6 +338,5 @@ export function DateCalendar2DaysGrid(props: DateCalendar2DaysGridProps) {
 }
 
 interface DateCalendar2DaysGridProps {
-  labelId: string;
   displayWeekNumber: boolean;
 }

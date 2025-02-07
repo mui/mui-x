@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { alpha, styled } from '@mui/material/styles';
+import useSlotProps from '@mui/utils/useSlotProps';
 import { Calendar } from '../internals/base/Calendar';
 import { DIALOG_WIDTH } from '../internals/constants/dimensions';
 import { useDateCalendar2Context } from './DateCalendar2Context';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 
 const DateCalendar2MonthsGridRoot = styled(Calendar.MonthsGrid, {
   name: 'MuiDateCalendar2',
@@ -20,7 +22,7 @@ const DateCalendar2MonthsGridRoot = styled(Calendar.MonthsGrid, {
   boxSizing: 'border-box',
 });
 
-const DateCalendar2MonthsCell = styled(Calendar.MonthsCell, {
+const DateCalendar2MonthsCell = styled('button', {
   name: 'MuiDateCalendar2',
   slot: 'MonthsCell',
   overridesResolver: (props, styles) => styles.monthsCell,
@@ -60,6 +62,21 @@ const DateCalendar2MonthsCell = styled(Calendar.MonthsCell, {
   },
 }));
 
+function WrappedMonthsButton() {
+  const { ownerState } = usePickerPrivateContext();
+  const { classes, slots, slotProps } = useDateCalendar2Context();
+
+  const MonthsButton = slots?.monthButton ?? DateCalendar2MonthsCell;
+  const monthsButtonProps = useSlotProps({
+    elementType: MonthsButton,
+    externalSlotProps: slotProps?.monthButton,
+    className: classes.monthsCell,
+    ownerState,
+  });
+
+  return <DateCalendar2MonthsCell {...monthsButtonProps} />;
+}
+
 export function DateCalendar2MonthsGrid(props: DateCalendarMonthsGridProps) {
   const { classes } = useDateCalendar2Context();
 
@@ -67,9 +84,9 @@ export function DateCalendar2MonthsGrid(props: DateCalendarMonthsGridProps) {
     <DateCalendar2MonthsGridRoot {...props} className={classes.monthsGridRoot}>
       {({ months }) =>
         months.map((month) => (
-          <DateCalendar2MonthsCell
+          <Calendar.MonthsCell
+            render={<WrappedMonthsButton />}
             value={month}
-            className={classes.monthsCell}
             key={month.toString()}
           />
         ))

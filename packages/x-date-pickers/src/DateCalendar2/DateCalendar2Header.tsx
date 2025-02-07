@@ -4,12 +4,13 @@ import { styled, useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import Fade from '@mui/material/Fade';
 import { useRtl } from '@mui/system/RtlProvider';
+import useSlotProps from '@mui/utils/useSlotProps';
 import { Calendar, useCalendarContext } from '../internals/base/Calendar';
 import { usePickerTranslations } from '../hooks';
-import { DateView } from '../models/views';
 import { ArrowDropDownIcon, ArrowLeftIcon, ArrowRightIcon } from '../icons';
 import { useUtils } from '../internals/hooks/useUtils';
 import { useDateCalendar2Context } from './DateCalendar2Context';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 
 const DateCalendar2HeaderRoot = styled('div', {
   name: 'MuiDateCalendar2',
@@ -105,38 +106,33 @@ const DateCalendar2HeaderNavigationSpacer = styled('div', {
   width: theme.spacing(3),
 }));
 
-export function DateCalendar2Header(props: DateCalendar2HeaderProps) {
+export const DateCalendar2Header = React.forwardRef(function DateCalendar2Header(
+  props: DateCalendar2HeaderProps,
+  ref: React.ForwardedRef<HTMLDivElement>,
+) {
   const utils = useUtils();
   const translations = usePickerTranslations();
+  const { ownerState } = usePickerPrivateContext();
   const theme = useTheme();
   const isRtl = useRtl();
   const { visibleDate, disabled } = useCalendarContext();
-  const { classes } = useDateCalendar2Context();
+  const { classes, slots, slotProps, view, setView, views, labelId } = useDateCalendar2Context();
 
-  const {
-    // Props from DateCalendar2
-    view,
-    onViewChange,
-    views,
-    labelId,
-
-    // Props from the calendarHeader slotProps
-    format = `${utils.formats.month} ${utils.formats.year}`,
-  } = props;
+  const { format = `${utils.formats.month} ${utils.formats.year}`, ...other } = props;
 
   const handleToggleView = () => {
     if (view === 'year' && views.month) {
-      onViewChange('month');
+      setView('month');
     } else if (view === 'year' && views.day) {
-      onViewChange('day');
+      setView('day');
     } else if (view === 'month' && views.day) {
-      onViewChange('day');
+      setView('day');
     } else if (view === 'month' && views.year) {
-      onViewChange('year');
+      setView('year');
     } else if (view === 'day' && views.month) {
-      onViewChange('month');
+      setView('month');
     } else if (view === 'day' && views.year) {
-      onViewChange('year');
+      setView('year');
     }
   };
 
@@ -145,14 +141,85 @@ export function DateCalendar2Header(props: DateCalendar2HeaderProps) {
     [visibleDate, format, utils],
   );
 
+  const viewCount = Object.values(views).filter(Boolean).length;
+
+  const SwitchViewButton = slots?.switchViewButton ?? DateCalendar2HeaderSwitchViewButton;
+  const switchViewButtonProps = useSlotProps({
+    elementType: SwitchViewButton,
+    externalSlotProps: slotProps?.switchViewButton,
+    additionalProps: {
+      size: 'small',
+      'aria-label': translations.calendarViewSwitchingButtonAriaLabel(view),
+    },
+    className: classes.headerSwitchViewButton,
+    ownerState,
+  });
+
+  const SwitchViewIcon = slots?.switchViewIcon ?? DateCalendar2HeaderSwitchViewIcon;
+  const switchViewIconProps = useSlotProps({
+    elementType: SwitchViewIcon,
+    externalSlotProps: slotProps?.switchViewIcon,
+    additionalProps: {
+      'data-view': view,
+    },
+    className: classes.headerSwitchViewIcon,
+    ownerState,
+  });
+
+  const PreviousNavigationButton = slots?.navigationButton ?? DateCalendar2HeaderNavigationButton;
+  const previousNavigationButton = useSlotProps({
+    elementType: PreviousNavigationButton,
+    externalSlotProps: slotProps?.navigationButton,
+    additionalProps: {
+      size: 'medium',
+      title: translations.previousMonth,
+      'aria-label': translations.previousMonth,
+      edge: 'end',
+    },
+    className: classes.headerNavigationButton,
+    ownerState: { ...ownerState, target: 'previous' },
+  });
+
+  const NextNavigationButton = slots?.navigationButton ?? DateCalendar2HeaderNavigationButton;
+  const nextNavigationButton = useSlotProps({
+    elementType: PreviousNavigationButton,
+    externalSlotProps: slotProps?.navigationButton,
+    additionalProps: {
+      size: 'medium',
+      title: translations.nextMonth,
+      'aria-label': translations.nextMonth,
+      edge: 'start',
+    },
+    className: classes.headerNavigationButton,
+    ownerState: { ...ownerState, target: 'next' },
+  });
+
+  const LeftNavigationIcon = slots?.leftNavigationIcon ?? ArrowLeftIcon;
+  const leftNavigationIconProps = useSlotProps({
+    elementType: LeftNavigationIcon,
+    externalSlotProps: slotProps?.leftNavigationIcon,
+    additionalProps: {
+      fontSize: 'inherit',
+    },
+    ownerState,
+  });
+
+  const RightNavigationIcon = slots?.rightNavigationIcon ?? ArrowRightIcon;
+  const rightNavigationIconProps = useSlotProps({
+    elementType: RightNavigationIcon,
+    externalSlotProps: slotProps?.rightNavigationIcon,
+    additionalProps: {
+      fontSize: 'inherit',
+    },
+    ownerState,
+  });
+
   if (!views.day && !views.month && views.year) {
     return null;
   }
 
-  const viewCount = Object.values(views).filter(Boolean).length;
-
   return (
-    <DateCalendar2HeaderRoot className={classes.headerRoot}>
+    <DateCalendar2HeaderRoot className={classes.headerRoot} ref={ref} {...other}>
       <DateCalendar2HeaderLabelContainer
         role="presentation"
         onClick={handleToggleView}
@@ -178,66 +245,44 @@ export function DateCalendar2Header(props: DateCalendar2HeaderProps) {
           </Fade>
         </DateCalendar2HeaderLabelTransitionGroup>
         {viewCount > 1 && !disabled && (
-          <DateCalendar2HeaderSwitchViewButton
-            size="small"
-            aria-label={translations.calendarViewSwitchingButtonAriaLabel(view)}
-            className={classes.headerSwitchViewButton}
-          >
-            <DateCalendar2HeaderSwitchViewIcon
-              data-view={view}
-              className={classes.headerSwitchViewButton}
-            />
-          </DateCalendar2HeaderSwitchViewButton>
+          <SwitchViewButton {...switchViewButtonProps}>
+            <SwitchViewIcon {...switchViewIconProps} />
+          </SwitchViewButton>
         )}
       </DateCalendar2HeaderLabelContainer>
       <Fade in={view === 'day'}>
         <DateCalendar2HeaderNavigation className={classes.headerNavigation}>
           <Calendar.SetVisibleMonth
             target="previous"
-            render={
-              <DateCalendar2HeaderNavigationButton
-                size="medium"
-                title={translations.previousMonth}
-                aria-label={translations.previousMonth}
-                edge="end"
-                className={classes.headerNavigationButton}
-              />
-            }
+            render={<PreviousNavigationButton {...previousNavigationButton} />}
           >
-            {isRtl ? <ArrowRightIcon fontSize="inherit" /> : <ArrowLeftIcon fontSize="inherit" />}
+            {isRtl ? (
+              <RightNavigationIcon {...rightNavigationIconProps} />
+            ) : (
+              <LeftNavigationIcon {...leftNavigationIconProps} />
+            )}
           </Calendar.SetVisibleMonth>
           <DateCalendar2HeaderNavigationSpacer className={classes.headerNavigationSpacer} />
           <Calendar.SetVisibleMonth
             target="next"
-            render={
-              <DateCalendar2HeaderNavigationButton
-                size="medium"
-                title={translations.nextMonth}
-                aria-label={translations.nextMonth}
-                edge="start"
-                className={classes.headerNavigationButton}
-              />
-            }
+            render={<NextNavigationButton {...nextNavigationButton} />}
           >
-            {isRtl ? <ArrowLeftIcon fontSize="inherit" /> : <ArrowRightIcon fontSize="inherit" />}
+            {isRtl ? (
+              <LeftNavigationIcon {...leftNavigationIconProps} />
+            ) : (
+              <RightNavigationIcon {...rightNavigationIconProps} />
+            )}
           </Calendar.SetVisibleMonth>
         </DateCalendar2HeaderNavigation>
       </Fade>
     </DateCalendar2HeaderRoot>
   );
-}
+});
 
-interface DateCalendar2HeaderSlotProps {
+export interface DateCalendar2HeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * Format used to display the date.
    * @default `${adapter.formats.month} ${adapter.formats.year}`
    */
   format?: string;
-}
-
-export interface DateCalendar2HeaderProps extends DateCalendar2HeaderSlotProps {
-  view: DateView;
-  onViewChange: (view: DateView) => void;
-  views: { [key in DateView]?: boolean };
-  labelId: string;
 }

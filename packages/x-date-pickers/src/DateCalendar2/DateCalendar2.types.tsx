@@ -4,7 +4,7 @@ import { ButtonBaseProps } from '@mui/material/ButtonBase';
 import { SxProps } from '@mui/material/styles';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { Calendar } from '../internals/base/Calendar';
-import { PickerOwnerState, PickerValidDate } from '../models/pickers';
+import { PickerOwnerState } from '../models/pickers';
 import { DateView } from '../models/views';
 import { DateCalendar2HeaderProps } from './DateCalendar2Header';
 import { DateCalendar2Classes } from './DateCalendar2.classes';
@@ -33,7 +33,16 @@ export interface DateCalendar2Props extends Omit<Calendar.Root.Props, 'children'
   view?: DateView;
   onViewChange?: (view: DateView) => void;
   defaultView?: DateView;
+  /**
+   * If `true`, the week number will be display in the calendar.
+   */
   displayWeekNumber?: boolean;
+  /**
+   * Years are displayed in ascending (chronological) order by default.
+   * If `desc`, years are displayed in descending order.
+   * @default 'asc'
+   */
+  yearsOrder?: 'asc' | 'desc';
   /**
    * Months rendered per row.
    * @default 3
@@ -44,11 +53,14 @@ export interface DateCalendar2Props extends Omit<Calendar.Root.Props, 'children'
    * @default 3
    */
   yearsPerRow?: 3 | 4;
+  /**
+   * If `true`, disable heavy animations.
+   * @default `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13
+   */
+  reduceAnimations?: boolean;
   // Missing props:
-  // reduceAnimations
   // loading
   // renderLoading (convert to a slot)
-  // yearsOrder
 }
 
 export interface DateCalendar2Slots {
@@ -83,75 +95,53 @@ export interface DateCalendar2Slots {
    */
   switchViewIcon?: React.ElementType;
   /**
-   * Button allowing to switch to the left view.
+   * Button allowing to switch to navigate to the previous or the next page of the current view.
    * @default IconButton
    */
-  previousIconButton?: React.ElementType;
+  navigationButton?: React.ElementType;
   /**
-   * Button allowing to switch to the right view.
-   * @default IconButton
-   */
-  nextIconButton?: React.ElementType;
-  /**
-   * Icon displayed in the left view switch button.
+   * Icon displayed in the left navigation button.
    * @default ArrowLeft
    */
-  leftArrowIcon?: React.ElementType;
+  leftNavigationIcon?: React.ElementType;
   /**
-   * Icon displayed in the right view switch button.
+   * Icon displayed in the right navigation button.
    * @default ArrowRight
    */
-  rightArrowIcon?: React.ElementType;
+  rightNavigationIcon?: React.ElementType;
 }
 
 export interface DateCalendar2SlotProps {
-  day?: SlotComponentPropsFromProps<ButtonBaseProps, {}, DateCalendar2PickerDayOwnerState>;
+  day?: SlotComponentPropsFromProps<ButtonBaseProps, {}, PickerOwnerState>;
   monthButton?: SlotComponentPropsFromProps<
     React.HTMLAttributes<HTMLButtonElement> & { sx: SxProps },
     {},
-    DateCalendar2MonthButtonOwnerState
+    PickerOwnerState
   >;
   yearButton?: SlotComponentPropsFromProps<
     React.HTMLAttributes<HTMLButtonElement> & { sx: SxProps },
     {},
-    DateCalendar2YearButtonOwnerState
+    PickerOwnerState
   >;
   calendarHeader?: SlotComponentPropsFromProps<DateCalendar2HeaderProps, {}, PickerOwnerState>;
   switchViewButton?: SlotComponentPropsFromProps<IconButtonProps, {}, PickerOwnerState>;
   switchViewIcon?: SlotComponentPropsFromProps<SvgIconProps, {}, PickerOwnerState>;
-  previousIconButton?: SlotComponentPropsFromProps<
+  navigationButton?: SlotComponentPropsFromProps<
     IconButtonProps,
     {},
-    DateCalendar2HidableButtonOwnerState
+    PickerOwnerState & { target: 'previous' | 'next' }
   >;
-  nextIconButton?: SlotComponentPropsFromProps<
-    IconButtonProps,
-    {},
-    DateCalendar2HidableButtonOwnerState
-  >;
-  leftArrowIcon?: SlotComponentPropsFromProps<SvgIconProps, {}, PickerOwnerState>;
-  rightArrowIcon?: SlotComponentPropsFromProps<SvgIconProps, {}, PickerOwnerState>;
+  leftNavigationIcon?: SlotComponentPropsFromProps<SvgIconProps, {}, PickerOwnerState>;
+  rightNavigationIcon?: SlotComponentPropsFromProps<SvgIconProps, {}, PickerOwnerState>;
 }
 
-interface DateCalendar2HidableButtonOwnerState extends PickerOwnerState {
-  /**
-   * If `true`, this button should be hidden.
-   */
-  isButtonHidden: boolean;
-}
-
-export interface DateCalendar2PickerDayOwnerState extends PickerOwnerState {
-  isDaySelected: boolean;
-  isDayDisabled: boolean;
-  day: PickerValidDate;
-}
-
-export interface DateCalendar2MonthButtonOwnerState extends PickerOwnerState {
-  isMonthSelected: boolean;
-  isMonthDisabled: boolean;
-}
-
-export interface DateCalendar2YearButtonOwnerState extends PickerOwnerState {
-  isMonthSelected: boolean;
-  isMonthDisabled: boolean;
+export interface DateCalendar2ContextValue {
+  classes: DateCalendar2Classes;
+  slots?: DateCalendar2Slots | undefined;
+  slotProps?: DateCalendar2SlotProps | undefined;
+  view: DateView;
+  setView: (view: DateView) => void;
+  views: { [key in DateView]?: boolean };
+  labelId: string;
+  reduceAnimations: boolean;
 }
