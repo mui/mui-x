@@ -1,0 +1,428 @@
+[
+    {
+        "countryName": "United Arab Emirates",
+        "countryCode": "AE",
+        "BigMac_dollar": 4.015626914228932,
+        "GDP_dollar": 45591.68
+    },
+    {
+        "countryName": "Argentina",
+        "countryCode": "AR",
+        "BigMac_dollar": 2.8468874031059372,
+        "GDP_dollar": 11786.43
+    },
+    {
+        "countryName": "Australia",
+        "countryCode": "AU",
+        "BigMac_dollar": 4.451144999531294,
+        "GDP_dollar": 56352.94
+    },
+    {
+        "countryName": "Austria",
+        "countryCode": "AT",
+        "BigMac_dollar": 4.270656000320726,
+        "GDP_dollar": 51234.48
+    },
+    {
+        "countryName": "Azerbaijan",
+        "countryCode": "AZ",
+        "BigMac_dollar": 2.3283230179781906,
+        "GDP_dollar": 4759.8
+    },
+    {
+        "countryName": "Belgium",
+        "countryCode": "BE",
+        "BigMac_dollar": 4.782245000359147,
+        "GDP_dollar": 47685.35
+    },
+    {
+        "countryName": "Bahrain",
+        "countryCode": "BH",
+        "BigMac_dollar": 3.7135278514588856,
+        "GDP_dollar": 25149.47
+    },
+    {
+        "countryName": "Brazil",
+        "countryCode": "BR",
+        "BigMac_dollar": 4.804558294502523,
+        "GDP_dollar": 9629.6
+    },
+    {
+        "countryName": "Canada",
+        "countryCode": "CA",
+        "BigMac_dollar": 5.181585090505529,
+        "GDP_dollar": 46625.86
+    },
+    {
+        "countryName": "Switzerland",
+        "countryCode": "CH",
+        "BigMac_dollar": 6.7131422669765035,
+        "GDP_dollar": 85546.67
+    },
+    {
+        "countryName": "Chile",
+        "countryCode": "CL",
+        "BigMac_dollar": 3.416414317881823,
+        "GDP_dollar": 15755.0
+    },
+    {
+        "countryName": "China",
+        "countryCode": "CN",
+        "BigMac_dollar": 3.122730573710966,
+        "GDP_dollar": 9848.95
+    },
+    {
+        "countryName": "Colombia",
+        "countryCode": "CO",
+        "BigMac_dollar": 3.619634234439755,
+        "GDP_dollar": 6923.64
+    },
+    {
+        "countryName": "Costa Rica",
+        "countryCode": "CR",
+        "BigMac_dollar": 4.123060187906275,
+        "GDP_dollar": 12428.92
+    },
+    {
+        "countryName": "Czech Republic",
+        "countryCode": "CZ",
+        "BigMac_dollar": 3.755918333079257,
+        "GDP_dollar": 23380.77
+    },
+    {
+        "countryName": "Germany",
+        "countryCode": "DE",
+        "BigMac_dollar": 4.6043010003457825,
+        "GDP_dollar": 47961.18
+    },
+    {
+        "countryName": "Denmark",
+        "countryCode": "DK",
+        "BigMac_dollar": 4.464717569407755,
+        "GDP_dollar": 61724.49
+    },
+    {
+        "countryName": "Egypt",
+        "countryCode": "EG",
+        "BigMac_dollar": 2.644836272040302,
+        "GDP_dollar": 2710.16
+    },
+    {
+        "countryName": "Spain",
+        "countryCode": "ES",
+        "BigMac_dollar": 4.671030000350795,
+        "GDP_dollar": 30438.34
+    },
+    {
+        "countryName": "Estonia",
+        "countryCode": "EE",
+        "BigMac_dollar": 3.5588800002672722,
+        "GDP_dollar": 23176.36
+    },
+    {
+        "countryName": "Finland",
+        "countryCode": "FI",
+        "BigMac_dollar": 5.371684500403414,
+        "GDP_dollar": 50032.02
+    },
+    {
+        "countryName": "France",
+        "countryCode": "FR",
+        "BigMac_dollar": 4.671030000350795,
+        "GDP_dollar": 43060.59
+    },
+    {
+        "countryName": "Britain",
+        "countryCode": "GB",
+        "BigMac_dollar": 4.410220497364894,
+        "GDP_dollar": 43377.76
+    },
+    {
+        "countryName": "Greece",
+        "countryCode": "GR",
+        "BigMac_dollar": 3.6700950002756243,
+        "GDP_dollar": 19750.74
+    },
+    {
+        "countryName": "Guatemala",
+        "countryCode": "GT",
+        "BigMac_dollar": 3.244098983948198,
+        "GDP_dollar": 4251.61
+    },
+    {
+        "countryName": "Hong Kong",
+        "countryCode": "HK",
+        "BigMac_dollar": 2.6365372619882064,
+        "GDP_dollar": 48310.04
+    },
+    {
+        "countryName": "Honduras",
+        "countryCode": "HN",
+        "BigMac_dollar": 3.528724629686714,
+        "GDP_dollar": 2506.62
+    },
+    {
+        "countryName": "Croatia",
+        "countryCode": "HR",
+        "BigMac_dollar": 3.2852982901515717,
+        "GDP_dollar": 15009.09
+    },
+    {
+        "countryName": "Hungary",
+        "countryCode": "HU",
+        "BigMac_dollar": 3.0125502844851653,
+        "GDP_dollar": 16421.11
+    },
+    {
+        "countryName": "Indonesia",
+        "countryCode": "ID",
+        "BigMac_dollar": 2.414045354791514,
+        "GDP_dollar": 3947.25
+    },
+    {
+        "countryName": "India",
+        "countryCode": "IN",
+        "BigMac_dollar": 2.6524394330269625,
+        "GDP_dollar": 1974.38
+    },
+    {
+        "countryName": "Ireland",
+        "countryCode": "IE",
+        "BigMac_dollar": 4.671030000350795,
+        "GDP_dollar": 79184.61
+    },
+    {
+        "countryName": "Israel",
+        "countryCode": "IL",
+        "BigMac_dollar": 4.914004914004915,
+        "GDP_dollar": 41834.03
+    },
+    {
+        "countryName": "Italy",
+        "countryCode": "IT",
+        "BigMac_dollar": 4.782245000359147,
+        "GDP_dollar": 34917.56
+    },
+    {
+        "countryName": "Jordan",
+        "countryCode": "JO",
+        "BigMac_dollar": 3.244005641748942,
+        "GDP_dollar": 4358.32
+    },
+    {
+        "countryName": "Japan",
+        "countryCode": "JP",
+        "BigMac_dollar": 3.5441657579062156,
+        "GDP_dollar": 39850.33
+    },
+    {
+        "countryName": "South Korea",
+        "countryCode": "KR",
+        "BigMac_dollar": 3.892396851483436,
+        "GDP_dollar": 33447.16
+    },
+    {
+        "countryName": "Kuwait",
+        "countryCode": "KW",
+        "BigMac_dollar": 3.6255767963085037,
+        "GDP_dollar": 29905.29
+    },
+    {
+        "countryName": "Lebanon",
+        "countryCode": "LB",
+        "BigMac_dollar": 4.29326287978864,
+        "GDP_dollar": 8003.82
+    },
+    {
+        "countryName": "Sri Lanka",
+        "countryCode": "LK",
+        "BigMac_dollar": 3.1964728575365116,
+        "GDP_dollar": 4360.15
+    },
+    {
+        "countryName": "Lithuania",
+        "countryCode": "LT",
+        "BigMac_dollar": 3.169627500238039,
+        "GDP_dollar": 19195.06
+    },
+    {
+        "countryName": "Latvia",
+        "countryCode": "LV",
+        "BigMac_dollar": 3.169627500238039,
+        "GDP_dollar": 17806.56
+    },
+    {
+        "countryName": "Moldova",
+        "countryCode": "MD",
+        "BigMac_dollar": 2.5832376578645233,
+        "GDP_dollar": 4121.05
+    },
+    {
+        "countryName": "Mexico",
+        "countryCode": "MX",
+        "BigMac_dollar": 2.6566775590446587,
+        "GDP_dollar": 10024.12
+    },
+    {
+        "countryName": "Malaysia",
+        "countryCode": "MY",
+        "BigMac_dollar": 2.331574426309977,
+        "GDP_dollar": 11079.62
+    },
+    {
+        "countryName": "Nicaragua",
+        "countryCode": "NI",
+        "BigMac_dollar": 3.5422994837098503,
+        "GDP_dollar": 2008.4
+    },
+    {
+        "countryName": "Netherlands",
+        "countryCode": "NL",
+        "BigMac_dollar": 4.548693500341607,
+        "GDP_dollar": 53224.69
+    },
+    {
+        "countryName": "Norway",
+        "countryCode": "NO",
+        "BigMac_dollar": 5.971730055266672,
+        "GDP_dollar": 82605.97
+    },
+    {
+        "countryName": "New Zealand",
+        "countryCode": "NZ",
+        "BigMac_dollar": 4.2945499995391945,
+        "GDP_dollar": 42761.93
+    },
+    {
+        "countryName": "Oman",
+        "countryCode": "OM",
+        "BigMac_dollar": 2.999610440202571,
+        "GDP_dollar": 19885.1
+    },
+    {
+        "countryName": "Pakistan",
+        "countryCode": "PK",
+        "BigMac_dollar": 3.357546408393866,
+        "GDP_dollar": 1698.03
+    },
+    {
+        "countryName": "Peru",
+        "countryCode": "PE",
+        "BigMac_dollar": 3.5761509796850586,
+        "GDP_dollar": 7053.56
+    },
+    {
+        "countryName": "Philippines",
+        "countryCode": "PH",
+        "BigMac_dollar": 2.807433768287861,
+        "GDP_dollar": 3279.52
+    },
+    {
+        "countryName": "Poland",
+        "countryCode": "PL",
+        "BigMac_dollar": 2.897329189274614,
+        "GDP_dollar": 15504.37
+    },
+    {
+        "countryName": "Portugal",
+        "countryCode": "PT",
+        "BigMac_dollar": 3.6144875002714483,
+        "GDP_dollar": 23573.3
+    },
+    {
+        "countryName": "Qatar",
+        "countryCode": "QA",
+        "BigMac_dollar": 3.5704476792090083,
+        "GDP_dollar": 66421.62
+    },
+    {
+        "countryName": "Romania",
+        "countryCode": "RO",
+        "BigMac_dollar": 2.2102275371085573,
+        "GDP_dollar": 12465.7
+    },
+    {
+        "countryName": "Russia",
+        "countryCode": "RU",
+        "BigMac_dollar": 2.1975338786472958,
+        "GDP_dollar": 11261.72
+    },
+    {
+        "countryName": "Saudi Arabia",
+        "countryCode": "SA",
+        "BigMac_dollar": 3.4650034650034653,
+        "GDP_dollar": 28036.03
+    },
+    {
+        "countryName": "Singapore",
+        "countryCode": "SG",
+        "BigMac_dollar": 4.379616226849275,
+        "GDP_dollar": 66836.54
+    },
+    {
+        "countryName": "Slovakia",
+        "countryCode": "SK",
+        "BigMac_dollar": 3.7813100002839763,
+        "GDP_dollar": 19508.33
+    },
+    {
+        "countryName": "Slovenia",
+        "countryCode": "SI",
+        "BigMac_dollar": 2.669160000200454,
+        "GDP_dollar": 26224.26
+    },
+    {
+        "countryName": "Sweden",
+        "countryCode": "SE",
+        "BigMac_dollar": 5.4444926050047044,
+        "GDP_dollar": 54295.73
+    },
+    {
+        "countryName": "Thailand",
+        "countryCode": "TH",
+        "BigMac_dollar": 3.798199983486087,
+        "GDP_dollar": 7298.94
+    },
+    {
+        "countryName": "Turkey",
+        "countryCode": "TR",
+        "BigMac_dollar": 2.209089749585477,
+        "GDP_dollar": 9514.05
+    },
+    {
+        "countryName": "Taiwan",
+        "countryCode": "TW",
+        "BigMac_dollar": 2.409275711489234,
+        "GDP_dollar": 25825.57
+    },
+    {
+        "countryName": "Ukraine",
+        "countryCode": "UA",
+        "BigMac_dollar": 2.375989995831597,
+        "GDP_dollar": 3118.26
+    },
+    {
+        "countryName": "Uruguay",
+        "countryCode": "UY",
+        "BigMac_dollar": 4.781621477227193,
+        "GDP_dollar": 18604.96
+    },
+    {
+        "countryName": "United States",
+        "countryCode": "US",
+        "BigMac_dollar": 4.82,
+        "GDP_dollar": 62787.78
+    },
+    {
+        "countryName": "Vietnam",
+        "countryCode": "VN",
+        "BigMac_dollar": 2.8477735588539868,
+        "GDP_dollar": 3216.25
+    },
+    {
+        "countryName": "South Africa",
+        "countryCode": "ZA",
+        "BigMac_dollar": 2.1541241053436178,
+        "GDP_dollar": 6991.71
+    }
+]
