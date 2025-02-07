@@ -1,7 +1,7 @@
 import { RefObject } from '@mui/x-internals/types';
 import { createSelectorMemoized } from '@mui/x-data-grid/internals';
 import { GridApiPro } from '../../../models/gridApiPro';
-import { GridStatePro } from '@mui/x-data-grid-pro/models/gridStatePro';
+import { GridStatePro } from '../../../models/gridStatePro';
 
 const gridDetailPanelStateSelector = (apiRef: RefObject<GridApiPro>) =>
   apiRef.current.state.detailPanel;
