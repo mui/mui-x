@@ -1,7 +1,7 @@
 import { RefObject } from '@mui/x-internals/types';
 import { lruMemoize, createSelectorCreator, Selector, SelectorResultArray } from 'reselect';
 import { argsEqual } from '../hooks/utils/useGridSelector';
-import { weakMapMemoize } from './customMemoize';
+import { weakMapMemoize as customWeakMapMemoize } from './weakMapMemoize';
 
 type CacheKey = { id: number };
 
@@ -11,7 +11,7 @@ const reselectCreateSelector = createSelectorCreator({
     maxSize: 1,
     equalityCheck: Object.is,
   },
-  argsMemoize: weakMapMemoize,
+  argsMemoize: customWeakMapMemoize,
 });
 
 type GridCreateSelectorFunction = ReturnType<typeof reselectCreateSelector> & {
