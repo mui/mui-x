@@ -50,30 +50,15 @@ export default async function buildGridSelectorsDocumentation(
 
         const parameterSymbol = signature.getParameters()[0];
 
-        let isSelector = false;
-
         const firstParamName = project.checker.getTypeOfSymbolAtLocation(
           parameterSymbol,
           parameterSymbol.valueDeclaration!,
         ).symbol?.name;
 
         if (
-          [
-            'React.RefObject<GridApiCommunity>',
-            'React.RefObject<GridApiPro>',
-            'React.RefObject<GridApiPremium>',
-          ].includes(firstParamName)
+          firstParamName !== 'RefObject' ||
+          symbol.name === 'useGridSelector' // Ignore hook
         ) {
-          // Selector not wrapped in `createSelector`
-          isSelector = true;
-        } else if (
-          // Selector wrapped in `createSelector`
-          type.symbol?.name === 'OutputSelector'
-        ) {
-          isSelector = true;
-        }
-
-        if (!isSelector) {
           return null;
         }
 
