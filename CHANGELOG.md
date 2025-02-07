@@ -11,7 +11,7 @@ _Feb 7, 2025_
 
 We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
+- ⚡ Mount and resize performance improvements for the Data Grid
 
 Special thanks go out to the community contributors who have helped make this release possible:
 @lauri865.
@@ -22,11 +22,27 @@ Following are all team members who have contributed to this release:
 
 ### Data Grid
 
-From https://github.com/mui/mui-x/pull/16479
-
-### Breaking changes
+#### Breaking changes
 
 - `createUseGridApiEventHandler()` is not exported anymore.
+- The `filteredRowsLookup` object of the filter state does not contain `true` values anymore. If the row is filtered out, the value is `false`. Otherwise, the row id is not present in the object.
+  This change only impacts you if you relied on `filteredRowsLookup` to get ids of filtered rows. In this case,use `gridDataRowIdsSelector` selector to get row ids and check `filteredRowsLookup` for `false` values:
+
+  ```diff
+   const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
+  -const filteredRowIds = Object.keys(filteredRowsLookup).filter((rowId) => filteredRowsLookup[rowId] === true);
+  +const rowIds = gridDataRowIdsSelector(apiRef);
+  +const filteredRowIds = rowIds.filter((rowId) => filteredRowsLookup[rowId] !== false);
+  ```
+
+- The `visibleRowsLookup` state does not contain `true` values anymore. If the row is not visible, the value is `false`. Otherwise, the row id is not present in the object:
+
+  ```diff
+   const visibleRowsLookup = gridVisibleRowsLookupSelector(apiRef);
+  -const isRowVisible = visibleRowsLookup[rowId] === true;
+  +const isRowVisible = visibleRowsLookup[rowId] !== false;
+  ```
+
 
 #### `@mui/x-data-grid@8.0.0-alpha.11`
 
