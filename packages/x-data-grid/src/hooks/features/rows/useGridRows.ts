@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
+import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -19,7 +20,8 @@ import {
   gridRowGroupsToFetchSelector,
 } from './gridRowsSelector';
 import { useTimeout } from '../../utils/useTimeout';
-import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { GridSignature } from '../../../constants/signature';
+import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridSortedRowIdsSelector } from '../sorting/gridSortingSelector';
@@ -329,7 +331,9 @@ export const useGridRows = (
 
       if (applyFiltering) {
         const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
-        children = children.filter((childId) => filteredRowsLookup[childId] !== false);
+        children = isObjectEmpty(filteredRowsLookup)
+          ? children
+          : children.filter((childId) => filteredRowsLookup[childId] !== false);
       }
 
       return children;
