@@ -1,12 +1,13 @@
 import { RefObject } from '@mui/x-internals/types';
 import { expect } from 'chai';
 import { createSelectorMemoized, OutputSelector } from './createSelector';
+import { GridStateCommunity } from '../models/gridStateCommunity';
 import { GridApiCommunity } from '../models/api/gridApiCommunity';
 
 describe('createSelectorMemoized', () => {
   it('should return the same selectors for the same cache keys', () => {
     const selector = createSelectorMemoized([], () => []) as OutputSelector<
-      RefObject<GridApiCommunity>,
+      GridStateCommunity,
       any,
       any
     >;
@@ -19,7 +20,7 @@ describe('createSelectorMemoized', () => {
 
   it('should return different selectors for different cache keys', () => {
     const selector = createSelectorMemoized([], () => []) as OutputSelector<
-      RefObject<GridApiCommunity>,
+      GridStateCommunity,
       any,
       any
     >;
@@ -35,7 +36,7 @@ describe('createSelectorMemoized', () => {
 
   it('should not clear the cache of one selector when another key is passed', () => {
     const selector = createSelectorMemoized([], () => []) as OutputSelector<
-      RefObject<GridApiCommunity>,
+      GridStateCommunity,
       any,
       any
     >;

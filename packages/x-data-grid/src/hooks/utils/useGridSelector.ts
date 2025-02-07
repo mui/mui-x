@@ -7,9 +7,10 @@ import type { GridApiCommon } from '../../models/api/gridApiCommon';
 import type { OutputSelector } from '../../utils/createSelector';
 import { useLazyRef } from './useLazyRef';
 
-type Selector<ApiRef extends RefObject<GridApiCommon>, Args, T> =
-  | ((apiRef: ApiRef) => T)
-  | OutputSelector<ApiRef, Args, T>;
+type Selector<Api extends GridApiCommon, Args, T> =
+  | ((apiRef: RefObject<Api>) => T)
+  | ((apiRef: RefObject<Api | null>) => T)
+  | OutputSelector<Api['state'], Args, T>;
 
 const defaultCompare = Object.is;
 export const objectShallowCompare = fastObjectShallowCompare as (a: unknown, b: unknown) => boolean;
@@ -45,9 +46,9 @@ type Refs<T> = {
 
 const emptyGetSnapshot = () => null;
 
-export const useGridSelector = <ApiRef extends RefObject<GridApiCommon>, Args, T>(
-  apiRef: ApiRef,
-  selector: Selector<ApiRef, Args, T>,
+export const useGridSelector = <Api extends GridApiCommon, Args, T>(
+  apiRef: RefObject<Api>,
+  selector: Selector<Api, Args, T>,
   args: Args = undefined as Args,
   equals: <U = T>(a: U, b: U) => boolean = defaultCompare,
 ) => {
