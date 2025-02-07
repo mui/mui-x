@@ -12,7 +12,7 @@ import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsLegendSlotExtension } from '../ChartsLegend';
 import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
 import { calculateMargins } from '../internals/calculateMargins';
-import { BAR_CHART_PLUGINS, BarChartPluginsSignatures } from './plugins';
+import { BAR_CHART_PLUGINS, BarChartPluginsSignatures } from './BarChart.plugins';
 
 /**
  * A helper function that extracts BarChartProps from the input props

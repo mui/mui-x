@@ -15,7 +15,7 @@ import { LinePlotProps } from './LinePlot';
 import { MarkPlotProps } from './MarkPlot';
 import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
 import { calculateMargins } from '../internals/calculateMargins';
-import { LINE_CHART_PLUGINS, LineChartPluginsSignatures } from './plugins';
+import { LINE_CHART_PLUGINS, LineChartPluginsSignatures } from './LineChart.plugins';
 
 /**
  * A helper function that extracts LineChartProps from the input props

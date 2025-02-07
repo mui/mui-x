@@ -20,17 +20,12 @@ import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import {
-  useLineChartProps,
-  ChartsWrapper,
-  LineChartPluginsSignatures,
-  LINE_CHART_PLUGINS,
-} from '@mui/x-charts/internals';
+import { useLineChartProps, ChartsWrapper } from '@mui/x-charts/internals';
 import { ChartContainerProProps } from '../ChartContainerPro';
 import { useIsZoomInteracting } from '../hooks/zoom';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
-import { useChartProZoom, UseChartProZoomSignature } from '../internals/plugins/useChartProZoom';
+import { LINE_CHART_PRO_PLUGINS, LineChartProPluginsSignatures } from './LineChartPro.plugins';
 
 function AreaPlotZoom(props: AreaPlotProps) {
   const isInteracting = useIsZoomInteracting();
@@ -135,9 +130,6 @@ export interface LineChartProProps
   extends Omit<LineChartProps, 'apiRef'>,
     Omit<ChartContainerProProps<'line'>, 'series' | 'plugins' | 'seriesConfig'> {}
 
-const LINE_CHART_PRO_PLUGINS = [...LINE_CHART_PLUGINS, useChartProZoom] as const;
-type LineChartProPluginsSignatures = [...LineChartPluginsSignatures, UseChartProZoomSignature];
-
 /**
  * Demos:
  *
@@ -236,7 +228,7 @@ LineChartPro.propTypes = {
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
-   * @default blueberryTwilightPalette
+   * @default rainbowSurgePalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   /**

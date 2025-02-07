@@ -9,6 +9,7 @@ export interface GridStateApi<State extends GridStateCommunity> {
   state: State;
   /**
    * Forces the grid to rerender. It's often used after a state update.
+   * @deprecated no longer needed.
    */
   forceUpdate: () => void;
   /**

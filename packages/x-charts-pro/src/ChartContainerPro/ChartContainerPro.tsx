@@ -11,7 +11,7 @@ import { ChartDataProviderPro, ChartDataProviderProProps } from '../ChartDataPro
 export type ChartContainerProProps<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
-> = ChartDataProviderProProps<TSeries, TSignatures> & ChartsSurfaceProps & {};
+> = ChartDataProviderProProps<TSeries, TSignatures> & ChartsSurfaceProps;
 
 type ChartContainerProComponent = <
   TSeries extends ChartSeriesType = ChartSeriesType,

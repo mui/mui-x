@@ -10,18 +10,13 @@ import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
-import {
-  useBarChartProps,
-  ChartsWrapper,
-  BarChartPluginsSignatures,
-  BAR_CHART_PLUGINS,
-} from '@mui/x-charts/internals';
+import { useBarChartProps, ChartsWrapper } from '@mui/x-charts/internals';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartContainerProProps } from '../ChartContainerPro';
 import { useIsZoomInteracting } from '../hooks/zoom';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
-import { useChartProZoom, UseChartProZoomSignature } from '../internals/plugins/useChartProZoom';
+import { BAR_CHART_PRO_PLUGINS, BarChartProPluginsSignatures } from './BarChartPro.plugins';
 
 function BarChartPlotZoom(props: BarPlotProps) {
   const isInteracting = useIsZoomInteracting();
@@ -72,9 +67,6 @@ BarChartPlotZoom.propTypes = {
 export interface BarChartProProps
   extends Omit<BarChartProps, 'apiRef'>,
     Omit<ChartContainerProProps<'bar'>, 'series' | 'plugins' | 'seriesConfig'> {}
-
-const BAR_CHART_PRO_PLUGINS = [...BAR_CHART_PLUGINS, useChartProZoom] as const;
-type BarChartProPluginsSignatures = [...BarChartPluginsSignatures, UseChartProZoomSignature];
 
 /**
  * Demos:
@@ -179,7 +171,7 @@ BarChartPro.propTypes = {
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
-   * @default blueberryTwilightPalette
+   * @default rainbowSurgePalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   /**

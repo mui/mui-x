@@ -21,6 +21,7 @@ export * from './plugins/featurePlugins/useChartZAxis';
 export * from './plugins/featurePlugins/useChartCartesianAxis';
 export * from './plugins/featurePlugins/useChartInteraction';
 export * from './plugins/featurePlugins/useChartHighlight';
+export * from './plugins/featurePlugins/useChartVoronoi';
 export * from './plugins/utils/selectors';
 
 export * from './store/useCharts';

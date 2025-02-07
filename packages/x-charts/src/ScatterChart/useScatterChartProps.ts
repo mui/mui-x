@@ -9,8 +9,8 @@ import type { ScatterChartProps } from './ScatterChart';
 import type { ScatterPlotProps } from './ScatterPlot';
 import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
 import { calculateMargins } from '../internals/calculateMargins';
+import { SCATTER_CHART_PLUGINS, ScatterChartPluginsSignatures } from './ScatterChart.plugins';
 import { UseChartVoronoiSignature } from '../internals/plugins/featurePlugins/useChartVoronoi';
-import { SCATTER_CHART_PLUGINS, ScatterChartPluginsSignatures } from './plugins';
 
 /**
  * A helper function that extracts ScatterChartProps from the input props

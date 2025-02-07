@@ -10,32 +10,21 @@ import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
-import {
-  useScatterChartProps,
-  ChartsWrapper,
-  ScatterChartPluginsSignatures,
-  SCATTER_CHART_PLUGINS,
-} from '@mui/x-charts/internals';
+import { useScatterChartProps, ChartsWrapper } from '@mui/x-charts/internals';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartContainerProProps } from '../ChartContainerPro/ChartContainerPro';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
-import { useChartProZoom, UseChartProZoomSignature } from '../internals/plugins/useChartProZoom';
+import {
+  SCATTER_CHART_PRO_PLUGINS,
+  ScatterChartProPluginsSignatures,
+} from './ScatterChartPro.plugins';
 
 export interface ScatterChartProProps
   extends Omit<ScatterChartProps, 'apiRef'>,
     Omit<
-      ChartContainerProProps<
-        'scatter',
-        [...ScatterChartPluginsSignatures, UseChartProZoomSignature]
-      >,
+      ChartContainerProProps<'scatter'>,
       'series' | 'plugins' | 'seriesConfig' | 'onItemClick'
     > {}
-
-const SCATTER_CHART_PRO_PLUGINS = [...SCATTER_CHART_PLUGINS, useChartProZoom] as const;
-type ScatterChartProPluginsSignatures = [
-  ...ScatterChartPluginsSignatures,
-  UseChartProZoomSignature,
-];
 
 /**
  * Demos:
@@ -130,7 +119,7 @@ ScatterChartPro.propTypes = {
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
-   * @default blueberryTwilightPalette
+   * @default rainbowSurgePalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   /**
