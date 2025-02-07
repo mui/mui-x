@@ -5,12 +5,34 @@ import { ChartStore } from '../utils/ChartStore';
 import { ChartSeriesConfig } from './seriesConfig';
 
 export interface ChartPluginOptions<TSignature extends ChartAnyPluginSignature> {
+  /**
+   * An imperative api available for internal use.
+   */
   instance: ChartUsedInstance<TSignature>;
+  /**
+   * The parameters after being processed with the default values.
+   */
   params: ChartUsedDefaultizedParams<TSignature>;
+  /**
+   * The store of controlled properties.
+   * If they are not controlled by the user, they will be initialized by the plugin.
+   */
   models: ChartUsedControlModels<TSignature>;
+  /**
+   * The store that can be used to access the state of other plugins.
+   */
   store: ChartUsedStore<TSignature>;
+  /**
+   * Reference to the main svg element.
+   */
   svgRef: React.RefObject<SVGSVGElement | null>;
+  /**
+   * All the plugins that are used in the chart.
+   */
   plugins: ChartPlugin<ChartAnyPluginSignature>[];
+  /**
+   * All the series configurations that are currently loaded.
+   */
   seriesConfig: ChartSeriesConfig<any>;
 }
 
@@ -41,7 +63,7 @@ export type ChartPluginSignature<
   },
 > = {
   /**
-   * The properties that can be passed to the plugin.
+   * The raw properties that can be passed to the plugin.
    */
   params: T extends { params: {} } ? T['params'] : {};
   /**
@@ -49,20 +71,22 @@ export type ChartPluginSignature<
    */
   defaultizedParams: T extends { defaultizedParams: {} } ? T['defaultizedParams'] : {};
   /**
-   * The instance methods of the plugin.
+   * An imperative api available for internal use.
    */
   instance: T extends { instance: {} } ? T['instance'] : {};
   /**
-   * The state is the data that will actually be stored in the plugin state and can be accessed by other plugins.
+   * The state is the mutable data that will actually be stored in the plugin state and can be accessed by other plugins.
    */
   state: T extends { state: {} } ? T['state'] : {};
-  // TODO: What is the difference between publicAPI and instance?
   /**
-   * The public API is the data that will be exposed to the user.
-   *
+   * The public imperative API that will be exposed to the user.
+   * Accessed through the `apiRef` property of the plugin.
    */
   publicAPI: T extends { publicAPI: {} } ? T['publicAPI'] : {};
-  // TODO: ??
+  /**
+   * A helper for controlled properties.
+   * Properties defined here can be controlled by the user. If they are not controlled, they will be initialized by the plugin.
+   */
   models: T extends { defaultizedParams: {}; modelNames: keyof T['defaultizedParams'] }
     ? {
         [TControlled in T['modelNames']]-?: ChartControlModel<
@@ -70,12 +94,10 @@ export type ChartPluginSignature<
         >;
       }
     : {};
-  // TODO: ??
   /**
-   * Any plugins that this plugin depends on. Will be used to merge the states of the plugins.
+   * Any plugins that this plugin depends on.
    */
   dependencies: T extends { dependencies: Array<any> } ? T['dependencies'] : [];
-  // TODO: ??
   /**
    * Same as dependencies but the plugin might not have been initialized.
    */
@@ -144,14 +166,42 @@ export type ChartUsedStore<TSignature extends ChartAnyPluginSignature> = ChartSt
 >;
 
 export type ChartPlugin<TSignature extends ChartAnyPluginSignature> = {
+  /**
+   * The main function of the plugin that will be executed by the chart.
+   *
+   * This should be a valid React `use` function, as it will be executed in the render phase and can contain hooks.
+   */
   (options: ChartPluginOptions<TSignature>): ChartResponse<TSignature>;
+  /**
+   * The initial is computed after the default values are applied.
+   *
+   * @param {ChartUsedDefaultizedParams<TSignature>} params The parameters after being processed with the default values.
+   * @param {MergeSignaturesProperty<ChartRequiredPlugins<TSignature>, 'state'>} currentState The current state of the chart.
+   * @param {ChartSeriesConfig<any>} seriesConfig The series configuration.
+   *
+   * @returns {TSignature['state']} The initial state of the plugin.
+   */
   getInitialState?: (
     params: ChartUsedDefaultizedParams<TSignature>,
     currentState: MergeSignaturesProperty<ChartRequiredPlugins<TSignature>, 'state'>,
     seriesConfig: ChartSeriesConfig<any>,
   ) => TSignature['state'];
+  /**
+   * The configuration of properties that can be controlled by the user.
+   * If they are not controlled, they will be initialized by the plugin.
+   */
   models?: ChartControlModelsInitializer<TSignature>;
+  /**
+   * An object where each property used by the plugin is set to `true`.
+   */
   params: Record<keyof TSignature['params'], true>;
+  /**
+   * A function that receives the parameters and returns the parameters after being processed with the default values.
+   *
+   * @param {ChartUsedParams<TSignature>} options the object.
+   * @param {ChartUsedParams<TSignature>['params']} options.params The parameters before being processed with the default values.
+   * @returns {TSignature['defaultizedParams']} The parameters after being processed with the default values.
+   */
   getDefaultizedParams?: (options: {
     params: ChartUsedParams<TSignature>;
   }) => TSignature['defaultizedParams'];
