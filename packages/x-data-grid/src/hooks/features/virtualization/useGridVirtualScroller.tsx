@@ -58,7 +58,7 @@ import { EMPTY_PINNED_COLUMN_FIELDS, GridPinnedColumns } from '../columns';
 import { gridFocusedVirtualCellSelector } from './gridFocusedVirtualCellSelector';
 import { roundToDecimalPlaces } from '../../../utils/roundToDecimalPlaces';
 import { isJSDOM } from '../../../utils/isJSDOM';
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 
 const MINIMUM_COLUMN_WIDTH = 50;
 
@@ -105,9 +105,7 @@ export const useGridVirtualScroller = () => {
   const rootProps = useGridRootProps();
   const { unstable_listView: listView } = rootProps;
   const visibleColumns = useGridSelector(apiRef, () =>
-    listView
-      ? [gridListColumnSelector(apiRef.current.state)!]
-      : gridVisibleColumnDefinitionsSelector(apiRef),
+    listView ? [gridListColumnSelector(apiRef)!] : gridVisibleColumnDefinitionsSelector(apiRef),
   );
   const enabledForRows = useGridSelector(apiRef, gridVirtualizationRowEnabledSelector) && !isJSDOM;
   const enabledForColumns =
@@ -259,7 +257,7 @@ export const useGridVirtualScroller = () => {
       // The lazy-loading hook is listening to `renderedRowsIntervalChange`,
       // but only does something if we already have a render context, because
       // otherwise we would call an update directly on mount
-      const isReady = gridDimensionsSelector(apiRef.current.state).isReady;
+      const isReady = gridDimensionsSelector(apiRef).isReady;
       if (isReady && didRowsIntervalChange) {
         previousRowContext.current = nextRenderContext;
         apiRef.current.publishEvent('renderedRowsIntervalChange', nextRenderContext);
@@ -276,7 +274,7 @@ export const useGridVirtualScroller = () => {
       return undefined;
     }
 
-    const dimensions = gridDimensionsSelector(apiRef.current.state);
+    const dimensions = gridDimensionsSelector(apiRef);
     const maxScrollTop = Math.ceil(
       dimensions.minimumSize.height - dimensions.viewportOuterSize.height,
     );
@@ -358,10 +356,7 @@ export const useGridVirtualScroller = () => {
 
   const forceUpdateRenderContext = () => {
     // skip update if dimensions are not ready and virtualization is enabled
-    if (
-      !gridDimensionsSelector(apiRef.current.state).isReady &&
-      (enabledForRows || enabledForColumns)
-    ) {
+    if (!gridDimensionsSelector(apiRef).isReady && (enabledForRows || enabledForColumns)) {
       return;
     }
     const inputs = inputsSelector(apiRef, rootProps, enabledForRows, enabledForColumns);
@@ -767,10 +762,11 @@ type RenderContextInputs = {
 };
 
 // dimension selectors
-function needsHorizontalScrollbarSelector(state: GridStateCommunity) {
+function needsHorizontalScrollbarSelector(apiRef: RefObject<GridApiCommunity>) {
   return (
-    state.dimensions.viewportOuterSize.width > 0 &&
-    state.dimensions.columnsTotalWidth > state.dimensions.viewportOuterSize.width
+    apiRef.current.state.dimensions.viewportOuterSize.width > 0 &&
+    apiRef.current.state.dimensions.columnsTotalWidth >
+      apiRef.current.state.dimensions.viewportOuterSize.width
   );
 }
 
@@ -780,10 +776,10 @@ function inputsSelector(
   enabledForRows: boolean,
   enabledForColumns: boolean,
 ): RenderContextInputs {
-  const dimensions = gridDimensionsSelector(apiRef.current.state);
+  const dimensions = gridDimensionsSelector(apiRef);
   const currentPage = getVisibleRows(apiRef, rootProps);
   const visibleColumns = rootProps.unstable_listView
-    ? [gridListColumnSelector(apiRef.current.state)!]
+    ? [gridListColumnSelector(apiRef)!]
     : gridVisibleColumnDefinitionsSelector(apiRef);
   const hiddenCellsOriginMap = gridRowSpanningHiddenCellsOriginMapSelector(apiRef);
   const lastRowId = apiRef.current.state.rows.dataRowIds.at(-1);
@@ -801,7 +797,7 @@ function inputsSelector(
     viewportInnerHeight: dimensions.viewportInnerSize.height,
     lastRowHeight: lastRowId !== undefined ? apiRef.current.unstable_getRowHeight(lastRowId) : 0,
     lastColumnWidth: lastColumn?.computedWidth ?? 0,
-    rowsMeta: gridRowsMetaSelector(apiRef.current.state),
+    rowsMeta: gridRowsMetaSelector(apiRef),
     columnPositions: gridColumnPositionsSelector(apiRef),
     rows: currentPage.rows,
     range: currentPage.range,

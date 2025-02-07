@@ -96,14 +96,14 @@ export const useGridCellSelection = (
       if (!props.cellSelection) {
         return false;
       }
-      const cellSelectionModel = gridCellSelectionStateSelector(apiRef.current.state);
+      const cellSelectionModel = gridCellSelectionStateSelector(apiRef);
       return cellSelectionModel[id] ? !!cellSelectionModel[id][field] : false;
     },
     [apiRef, props.cellSelection],
   );
 
   const getCellSelectionModel = React.useCallback(() => {
-    return gridCellSelectionStateSelector(apiRef.current.state);
+    return gridCellSelectionStateSelector(apiRef);
   }, [apiRef]);
 
   const setCellSelectionModel = React.useCallback<GridCellSelectionApi['setCellSelectionModel']>(
@@ -288,7 +288,7 @@ export const useGridCellSelection = (
         return;
       }
 
-      const dimensions = gridDimensionsSelector(apiRef.current.state);
+      const dimensions = gridDimensionsSelector(apiRef);
 
       const { x: mouseX, y: mouseY } = mousePosition.current;
       const { width, height: viewportOuterHeight } = dimensions.viewportOuterSize;
@@ -352,7 +352,7 @@ export const useGridCellSelection = (
         return;
       }
 
-      const dimensions = gridDimensionsSelector(apiRef.current.state);
+      const dimensions = gridDimensionsSelector(apiRef);
       const { x, y } = virtualScrollerRect;
       const { width, height: viewportOuterHeight } = dimensions.viewportOuterSize;
       const height = viewportOuterHeight - totalHeaderHeight;
@@ -567,7 +567,7 @@ export const useGridCellSelection = (
       if (apiRef.current.getSelectedCellsAsArray().length <= 1) {
         return value;
       }
-      const sortedRowIds = gridSortedRowIdsSelector(apiRef.current.state);
+      const sortedRowIds = gridSortedRowIdsSelector(apiRef);
       const cellSelectionModel = apiRef.current.getCellSelectionModel();
       const unsortedSelectedRowIds = Object.keys(cellSelectionModel);
       const sortedSelectedRowIds = sortedRowIds.filter((id) =>

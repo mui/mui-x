@@ -132,26 +132,20 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     rightPinnedWidth,
   } = getStaticDimensions(props, apiRef, densityFactor, pinnedColumns);
 
-  const getRootDimensions = React.useCallback(
-    () => gridDimensionsSelector(apiRef.current.state),
-    [apiRef],
-  );
+  const getRootDimensions = React.useCallback(() => gridDimensionsSelector(apiRef), [apiRef]);
 
   const setDimensions = React.useCallback(
     (dimensions: GridDimensions) => {
       apiRef.current.setState((state) => ({ ...state, dimensions }));
       if (apiRef.current.rootElementRef.current) {
-        setCSSVariables(
-          apiRef.current.rootElementRef.current,
-          gridDimensionsSelector(apiRef.current.state),
-        );
+        setCSSVariables(apiRef.current.rootElementRef.current, gridDimensionsSelector(apiRef));
       }
     },
     [apiRef],
   );
 
   const getViewportPageSize = React.useCallback(() => {
-    const dimensions = gridDimensionsSelector(apiRef.current.state);
+    const dimensions = gridDimensionsSelector(apiRef);
     if (!dimensions.isReady) {
       return 0;
     }
@@ -185,7 +179,7 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
 
     const scrollbarSize = measureScrollbarSize(rootElement, props.scrollbarSize);
 
-    const rowsMeta = gridRowsMetaSelector(apiRef.current.state);
+    const rowsMeta = gridRowsMetaSelector(apiRef);
     const topContainerHeight = headersTotalHeight + rowsMeta.pinnedTopRowsTotalHeight;
     const bottomContainerHeight = rowsMeta.pinnedBottomRowsTotalHeight;
 
@@ -334,7 +328,7 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
 
   const handleRootMount = React.useCallback<GridEventListener<'rootMount'>>(
     (root) => {
-      setCSSVariables(root, gridDimensionsSelector(apiRef.current.state));
+      setCSSVariables(root, gridDimensionsSelector(apiRef));
     },
     [apiRef],
   );

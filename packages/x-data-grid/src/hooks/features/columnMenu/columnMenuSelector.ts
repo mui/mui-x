@@ -1,3 +1,5 @@
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { RefObject } from '@mui/x-internals/types';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 
-export const gridColumnMenuSelector = (state: GridStateCommunity) => state.columnMenu;
+export const gridColumnMenuSelector = (apiRef: RefObject<GridApiCommunity>) =>
+  apiRef.current.state.columnMenu;

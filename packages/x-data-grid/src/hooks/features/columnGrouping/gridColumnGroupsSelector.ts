@@ -1,11 +1,13 @@
+import { RefObject } from '@mui/x-internals/types';
 import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 
 /**
  * @category ColumnGrouping
  * @ignore - do not document.
  */
-export const gridColumnGroupingSelector = (state: GridStateCommunity) => state.columnGrouping;
+export const gridColumnGroupingSelector = (apiRef: RefObject<GridApiCommunity>) =>
+  apiRef.current.state.columnGrouping;
 
 export const gridColumnGroupsUnwrappedModelSelector = createSelectorMemoized(
   gridColumnGroupingSelector,

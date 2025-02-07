@@ -30,9 +30,9 @@ export const rowsMetaStateInitializer: GridStateInitializer = (state, props, api
     heights: new Map(),
   };
 
-  const baseRowHeight = gridRowHeightSelector(apiRef.current.state);
-  const dataRowCount = gridRowCountSelector(apiRef.current.state);
-  const pagination = gridPaginationSelector(apiRef.current.state);
+  const baseRowHeight = gridRowHeightSelector(apiRef);
+  const dataRowCount = gridRowCountSelector(apiRef);
+  const pagination = gridPaginationSelector(apiRef);
   const rowCount = Math.min(
     pagination.enabled ? pagination.paginationModel.pageSize : dataRowCount,
     dataRowCount,
@@ -97,7 +97,7 @@ export const useGridRowsMeta = (
     (row: GridRowEntry) => {
       // HACK: rowHeight trails behind the most up-to-date value just enough to
       // mess the initial rowsMeta hydration :/
-      const baseRowHeight = gridDimensionsSelector(apiRef.current.state).rowHeight;
+      const baseRowHeight = gridDimensionsSelector(apiRef).rowHeight;
       eslintUseValue(rowHeight);
 
       const entry = apiRef.current.getRowHeightEntry(row.id);
