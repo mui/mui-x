@@ -165,7 +165,7 @@ const transformOrigin = {
 };
 
 function BasePopper(props: GridSlotProps['basePopper']) {
-  const { flip, onDidMount, onDidUnmount } = props;
+  const { flip, onDidShow, onDidHide } = props;
   const modifiers = React.useMemo(() => {
     const result = [] as NonNullable<MUIPopperProps['modifiers']>;
     if (flip) {
@@ -177,21 +177,21 @@ function BasePopper(props: GridSlotProps['basePopper']) {
         },
       });
     }
-    if (onDidMount || onDidUnmount) {
+    if (onDidShow || onDidHide) {
       result.push({
         name: 'isPlaced',
         enabled: true,
         phase: 'main' as const,
         fn: () => {
-          onDidMount?.();
+          onDidShow?.();
         },
         effect: () => () => {
-          onDidUnmount?.();
+          onDidHide?.();
         },
       });
     }
     return result;
-  }, [flip, onDidMount, onDidUnmount]);
+  }, [flip, onDidShow, onDidHide]);
 
   let content: any;
   if (!props.transition) {

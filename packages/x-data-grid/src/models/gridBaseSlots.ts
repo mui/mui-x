@@ -91,8 +91,8 @@ export type PopperProps = {
   focusTrapEnabled?: boolean;
   onExited?: (node: HTMLElement | null) => void;
   onClickAway?: (event: MouseEvent | TouchEvent) => void;
-  onDidMount?: () => void;
-  onDidUnmount?: () => void;
+  onDidShow?: () => void;
+  onDidHide?: () => void;
   id?: string;
   ref?: Ref;
   target?: Element | null;

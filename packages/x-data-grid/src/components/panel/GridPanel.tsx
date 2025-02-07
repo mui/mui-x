@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { unstable_generateUtilityClasses as generateUtilityClasses } from '@mui/utils';
+import useEventCallback from '@mui/utils/useEventCallback';
 import Paper from '@mui/material/Paper';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -62,18 +63,18 @@ const GridPanel = forwardRef<HTMLElement, GridPanelProps>((props, ref) => {
   const classes = gridPanelClasses;
   const [isPlaced, setIsPlaced] = React.useState(false);
 
-  const handleClickAway = React.useCallback(() => {
-    apiRef.current.hidePreferences();
-  }, [apiRef]);
+  const onDidShow = useEventCallback(() => setIsPlaced(true));
+  const onDidHide = useEventCallback(() => setIsPlaced(false));
 
-  const handleKeyDown = React.useCallback(
-    (event: React.KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        apiRef.current.hidePreferences();
-      }
-    },
-    [apiRef],
-  );
+  const handleClickAway = useEventCallback(() => {
+    apiRef.current.hidePreferences();
+  });
+
+  const handleKeyDown = useEventCallback((event: React.KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      apiRef.current.hidePreferences();
+    }
+  });
 
   const [target, setTarget] = React.useState<Element | null>(null);
 
@@ -99,8 +100,8 @@ const GridPanel = forwardRef<HTMLElement, GridPanelProps>((props, ref) => {
       className={clsx(classes.panel, className)}
       target={target}
       flip
-      onDidMount={() => setIsPlaced(true)}
-      onDidUnmount={() => setIsPlaced(false)}
+      onDidShow={onDidShow}
+      onDidHide={onDidHide}
       onClickAway={handleClickAway}
       clickAwayMouseEvent="onPointerUp"
       clickAwayTouchEvent={false}
@@ -147,8 +148,8 @@ GridPanel.propTypes = {
   focusTrapEnabled: PropTypes.bool,
   id: PropTypes.string,
   onClickAway: PropTypes.func,
-  onDidMount: PropTypes.func,
-  onDidUnmount: PropTypes.func,
+  onDidShow: PropTypes.func,
+  onDidHide: PropTypes.func,
   onExited: PropTypes.func,
   open: PropTypes.bool.isRequired,
   ownerState: PropTypes.object,
