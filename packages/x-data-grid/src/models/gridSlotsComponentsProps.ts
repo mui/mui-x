@@ -6,7 +6,6 @@ import type { CircularProgressProps as MUICircularProgressProps } from '@mui/mat
 import type { LinearProgressProps as MUILinearProgressProps } from '@mui/material/LinearProgress';
 import type { MenuItemProps as MUIMenuItemProps } from '@mui/material/MenuItem';
 import type { FormControlProps } from '@mui/material/FormControl';
-import type { SelectProps } from '@mui/material/Select';
 import type { SwitchProps } from '@mui/material/Switch';
 import type { IconButtonProps as MUIIconButtonProps } from '@mui/material/IconButton';
 import type { InputAdornmentProps } from '@mui/material/InputAdornment';
@@ -42,6 +41,8 @@ import type {
   LinearProgressProps,
   MenuListProps,
   MenuItemProps,
+  SelectProps,
+  SelectOptionProps,
   SkeletonProps,
   TooltipProps,
   TextFieldProps,
@@ -102,7 +103,6 @@ interface BaseSlotProps {
   baseMenuItem: MenuItemProps & BaseMenuItemPropsOverrides;
   baseTextField: TextFieldProps & BaseTextFieldPropsOverrides;
   baseFormControl: FormControlProps & BaseFormControlPropsOverrides;
-  baseSelect: SelectProps & BaseSelectPropsOverrides;
   baseSwitch: SwitchProps & BaseSwitchPropsOverrides;
   baseButton: ButtonProps & BaseButtonPropsOverrides;
   baseIconButton: IconButtonProps & BaseIconButtonPropsOverrides;
@@ -110,11 +110,8 @@ interface BaseSlotProps {
   baseTooltip: TooltipProps & BaseTooltipPropsOverrides;
   baseInputLabel: InputLabelProps & BaseInputLabelPropsOverrides;
   baseInputAdornment: InputAdornmentProps & BaseInputAdornmentPropsOverrides;
-  baseSelectOption: {
-    native: boolean;
-    value: any;
-    children?: React.ReactNode;
-  } & BaseSelectOptionPropsOverrides;
+  baseSelect: SelectProps & BaseSelectPropsOverrides;
+  baseSelectOption: SelectOptionProps & BaseSelectOptionPropsOverrides;
   baseSkeleton: SkeletonProps & BaseSkeletonPropsOverrides;
   baseChip: ChipProps & BaseChipPropsOverrides;
 }
