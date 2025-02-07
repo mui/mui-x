@@ -20,6 +20,8 @@ import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPrem
 import { GridAggregationModel } from '../aggregation';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import { isGroupingColumn } from '../rowGrouping';
+import { usePreviousProps } from '@mui/utils';
+import { RefObject } from '@mui/x-internals/types';
 
 export interface PivotModel {
   columns: { field: GridColDef['field']; sort?: 'asc' | 'desc'; hidden?: boolean }[];
@@ -245,7 +247,7 @@ export const useGridPivoting = ({
   // initialIsPivot?: boolean;
   pivotModel: PivotModel;
   onPivotModelChange: React.Dispatch<React.SetStateAction<PivotModel>>;
-  apiRef: React.MutableRefObject<GridApiPremium>;
+  apiRef: RefObject<GridApiPremium | null>;
   pivotMode: boolean;
   onPivotModeChange: (isPivot: boolean) => void;
 }) => {
@@ -260,7 +262,7 @@ export const useGridPivoting = ({
 
   const [isLoading, setIsLoading] = React.useState(true);
   useOnMount(() => {
-    return apiRef.current.store.subscribe(() => {
+    return apiRef.current?.store.subscribe(() => {
       const loading = gridRowsLoadingSelector(apiRef);
       if (typeof loading !== 'undefined' && loading !== isLoading) {
         setIsLoading(loading);
@@ -268,9 +270,11 @@ export const useGridPivoting = ({
     });
   });
 
+  const prevProps = usePreviousProps({ isPivot });
+
   const props = React.useMemo(() => {
     if (isMounted && !isLoading && isPivot) {
-      if (apiRef.current.exportState) {
+      if (apiRef.current && (prevProps.isPivot === false || !nonPivotDataRef.current)) {
         exportedStateRef.current = apiRef.current.exportState();
 
         const rowIds = gridDataRowIdsSelector(apiRef);
@@ -295,7 +299,7 @@ export const useGridPivoting = ({
   }, [isPivot, pivotModel, apiRef, isMounted, isLoading]);
 
   useEnhancedEffect(() => {
-    if (!isPivot) {
+    if (!isPivot && apiRef.current) {
       if (nonPivotDataRef.current) {
         const { rows, columns } = nonPivotDataRef.current;
         apiRef.current.setRows(rows);
@@ -314,6 +318,7 @@ export const useGridPivoting = ({
     props,
     pivotModel,
     onPivotModelChange,
+    // TODO: automatically generate derived Year and Quarter columns for date columns
     initialColumns: nonPivotDataRef.current?.columns.filter(
       (column) => !isGroupingColumn(column.field),
     ),
