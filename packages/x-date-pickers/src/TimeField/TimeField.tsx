@@ -1,15 +1,12 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
-import useSlotProps from '@mui/utils/useSlotProps';
 import { refType } from '@mui/utils';
 import { TimeFieldProps } from './TimeField.types';
 import { useTimeField } from './useTimeField';
-import { useClearableField } from '../hooks';
-import { PickersTextField } from '../PickersTextField';
-import { convertFieldResponseIntoMuiTextFieldProps } from '../internals/utils/convertFieldResponseIntoMuiTextFieldProps';
+import { PickerFieldUI, useFieldTextFieldProps } from '../internals/components/PickerFieldUI';
+import { ClockIcon } from '../icons';
 
 type TimeFieldComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   props: TimeFieldProps<TEnableAccessibleFieldDOMStructure> & React.RefAttributes<HTMLDivElement>,
@@ -35,37 +32,26 @@ const TimeField = React.forwardRef(function TimeField<
 
   const { slots, slotProps, InputProps, inputProps, ...other } = themeProps;
 
-  const ownerState = themeProps;
-
-  const TextField =
-    slots?.textField ??
-    (inProps.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
-  const textFieldProps = useSlotProps({
-    elementType: TextField,
-    externalSlotProps: slotProps?.textField,
-    externalForwardedProps: other,
-    ownerState,
-    additionalProps: {
+  const textFieldProps = useFieldTextFieldProps<TimeFieldProps<TEnableAccessibleFieldDOMStructure>>(
+    {
+      slotProps,
       ref: inRef,
+      externalForwardedProps: other,
     },
-  }) as TimeFieldProps<TEnableAccessibleFieldDOMStructure>;
-
-  // TODO: Remove when mui/material-ui#35088 will be merged
-  textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
-  textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
+  );
 
   const fieldResponse = useTimeField<TEnableAccessibleFieldDOMStructure, typeof textFieldProps>(
     textFieldProps,
   );
-  const convertedFieldResponse = convertFieldResponseIntoMuiTextFieldProps(fieldResponse);
 
-  const processedFieldProps = useClearableField({
-    ...convertedFieldResponse,
-    slots,
-    slotProps,
-  });
-
-  return <TextField {...processedFieldProps} />;
+  return (
+    <PickerFieldUI
+      slots={slots}
+      slotProps={slotProps}
+      fieldResponse={fieldResponse}
+      defaultOpenPickerIcon={ClockIcon}
+    />
+  );
 }) as TimeFieldComponent;
 
 TimeField.propTypes = {
@@ -89,6 +75,12 @@ TimeField.propTypes = {
    * @default false
    */
   clearable: PropTypes.bool,
+  /**
+   * The position at which the clear button is placed.
+   * If the field is not clearable, the button is not rendered.
+   * @default 'end'
+   */
+  clearButtonPosition: PropTypes.oneOf(['end', 'start']),
   /**
    * The color of the component.
    * It supports both default and custom theme colors, which can be added as shown in the
@@ -243,6 +235,12 @@ TimeField.propTypes = {
    */
   onSelectedSectionsChange: PropTypes.func,
   /**
+   * The position at which the opening button is placed.
+   * If there is no picker to open, the button is not rendered
+   * @default 'end'
+   */
+  openPickerButtonPosition: PropTypes.oneOf(['end', 'start']),
+  /**
    * If `true`, the component is read-only.
    * When read-only, the value cannot be changed but the user can interact with the interface.
    * @default false
@@ -291,10 +289,10 @@ TimeField.propTypes = {
    */
   shouldDisableTime: PropTypes.func,
   /**
-   * If `true`, the format will respect the leading zeroes (e.g: on dayjs, the format `M/D/YYYY` will render `8/16/2018`)
-   * If `false`, the format will always add leading zeroes (e.g: on dayjs, the format `M/D/YYYY` will render `08/16/2018`)
+   * If `true`, the format will respect the leading zeroes (for example on dayjs, the format `M/D/YYYY` will render `8/16/2018`)
+   * If `false`, the format will always add leading zeroes (for example on dayjs, the format `M/D/YYYY` will render `08/16/2018`)
    *
-   * Warning n°1: Luxon is not able to respect the leading zeroes when using macro tokens (e.g: "DD"), so `shouldRespectLeadingZeros={true}` might lead to inconsistencies when using `AdapterLuxon`.
+   * Warning n°1: Luxon is not able to respect the leading zeroes when using macro tokens (for example "DD"), so `shouldRespectLeadingZeros={true}` might lead to inconsistencies when using `AdapterLuxon`.
    *
    * Warning n°2: When `shouldRespectLeadingZeros={true}`, the field will add an invisible character on the sections containing a single digit to make sure `onChange` is fired.
    * If you need to get the clean value from the input, you can remove this character using `input.value.replace(/\u200e/g, '')`.

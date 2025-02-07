@@ -36,7 +36,6 @@ const daDKGrid: Partial<GridLocaleText> = {
   // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlDeleteIconLabel: 'Clear',
   // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
   // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
   // toolbarPromptControlSendActionLabel: 'Send',
@@ -114,6 +113,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Større end eller lig med',
   'headerFilterOperator<': 'Mindre end',
   'headerFilterOperator<=': 'Mindre end eller lig med',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'hvilken som helst',

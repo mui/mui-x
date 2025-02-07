@@ -59,7 +59,6 @@ const beBYGrid: Partial<GridLocaleText> = {
   // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlDeleteIconLabel: 'Clear',
   // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
   // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
   // toolbarPromptControlSendActionLabel: 'Send',
@@ -137,6 +136,7 @@ const beBYGrid: Partial<GridLocaleText> = {
   // 'headerFilterOperator>=': 'Greater than or equal to',
   // 'headerFilterOperator<': 'Less than',
   // 'headerFilterOperator<=': 'Less than or equal to',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'усякі',

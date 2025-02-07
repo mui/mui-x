@@ -35,7 +35,6 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlDeleteIconLabel: 'Clear',
   // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
   // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
   // toolbarPromptControlSendActionLabel: 'Send',
@@ -113,6 +112,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'По-голямо или равно на',
   'headerFilterOperator<': 'По-малко от',
   'headerFilterOperator<=': 'По-малко или равно на',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'всякакви',

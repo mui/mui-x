@@ -311,15 +311,15 @@ If you are dynamically switching the `leafField` or `mainGroupingCriteria`, the 
 
 ## Automatic parents and children selection
 
-By default, selecting a parent row does not select its children.
-You can override this behavior by using the `rowSelectionPropagation` prop.
+By default, selecting a parent row selects all its descendants automatically.
+You can customize this behavior by using the `rowSelectionPropagation` prop.
 
 Here's how it's structured:
 
 ```ts
 type GridRowSelectionPropagation = {
-  descendants?: boolean; // default: false
-  parents?: boolean; // default: false
+  descendants?: boolean; // default: true
+  parents?: boolean; // default: true
 };
 ```
 
@@ -387,30 +387,11 @@ The `apiRef.current.getRowGroupChildren` method is not compatible with the [serv
 ## Row group panel 🚧
 
 :::warning
-This feature isn't implemented yet. It's coming.
-
-👍 Upvote [issue #5235](https://github.com/mui/mui-x/issues/5235) if you want to see it land faster.
-
-Don't hesitate to leave a comment on the same issue to influence what gets built. Especially if you already have a use case for this component, or if you are facing a pain point with your current solution.
+This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/5235) to help us prioritize it.
+Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
 :::
 
-With this panel, your users will be able to control which columns are used for grouping just by dragging them inside the panel.
-
-## Accessibility changes in v8
-
-The Data Grid v8 with row grouping feature will improve the accessibility and will be more aligned with the WAI-ARIA authoring practices.
-
-You can start using the new accessibility features by enabling `ariaV8` experimental feature flag:
-
-```tsx
-<DataGridPremium experimentalFeatures={{ ariaV8: true }} />
-```
-
-:::warning
-The value of `ariaV8` should be constant and not change during the lifetime of the Data Grid.
-:::
-
-{{"demo": "RowGroupingAriaV8.js", "bg": "inline", "defaultCodeOpen": false}}
+With the row group panel, users would be able to control which columns are used for grouping by dragging them inside the panel.
 
 ## Full example
 

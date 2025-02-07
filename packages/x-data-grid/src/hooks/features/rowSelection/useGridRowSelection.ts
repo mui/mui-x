@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -7,7 +8,8 @@ import {
   GridRowMultiSelectionApi,
 } from '../../../models/api/gridRowSelectionApi';
 import { GridGroupNode, GridRowId } from '../../../models/gridRows';
-import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { GridSignature } from '../../../constants/signature';
+import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridSelector } from '../../utils/useGridSelector';
@@ -30,7 +32,7 @@ import {
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { isKeyboardEvent, isNavigationKey } from '../../../utils/keyboardUtils';
-import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
+import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { GridRowSelectionModel } from '../../../models';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../internals/constants';
@@ -73,7 +75,7 @@ export const rowSelectionStateInitializer: GridStateInitializer<
  * @requires useGridKeyboardNavigation (`cellKeyDown` event must first be consumed by it)
  */
 export const useGridRowSelection = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'checkboxSelection'
@@ -133,7 +135,6 @@ export const useGridRowSelection = (
   } = props;
 
   const canHaveMultipleSelection = isMultipleRowSelectionEnabled(props);
-  const visibleRows = useGridVisibleRows(apiRef, props);
   const tree = useGridSelector(apiRef, gridRowTreeSelector);
   const isNestedData = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector) > 1;
 
@@ -450,12 +451,8 @@ export const useGridRowSelection = (
   /*
    * EVENTS
    */
-  const isFirstRender = React.useRef(true);
   const removeOutdatedSelection = React.useCallback(
     (sortModelUpdated = false) => {
-      if (isFirstRender.current) {
-        return;
-      }
       const currentSelection = gridRowSelectionStateSelector(apiRef.current.state);
       const rowsLookup = gridRowsLookupSelector(apiRef);
       const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
@@ -467,7 +464,7 @@ export const useGridRowSelection = (
         if (props.filterMode === 'server') {
           return !rowsLookup[id];
         }
-        return filteredRowsLookup[id] !== true;
+        return !rowsLookup[id] || filteredRowsLookup[id] === false;
       };
 
       let hasChanged = false;
@@ -538,13 +535,13 @@ export const useGridRowSelection = (
       const isMultipleSelectionDisabled =
         !checkboxSelection && !hasCtrlKey && !isKeyboardEvent(event);
       const resetSelection = !canHaveMultipleSelection || isMultipleSelectionDisabled;
+      const selectedRowsCount = apiRef.current.getSelectedRows().size;
 
-      const isSelected = apiRef.current.isRowSelected(id);
-
-      if (resetSelection) {
-        apiRef.current.selectRow(id, !isMultipleSelectionDisabled ? !isSelected : true, true);
+      if (canHaveMultipleSelection && selectedRowsCount > 1 && !hasCtrlKey) {
+        apiRef.current.selectRow(id, true, resetSelection);
       } else {
-        apiRef.current.selectRow(id, !isSelected, false);
+        const isSelected = apiRef.current.isRowSelected(id);
+        apiRef.current.selectRow(id, !isSelected, resetSelection);
       }
     },
     [apiRef, canHaveMultipleSelection, checkboxSelection],
@@ -688,6 +685,7 @@ export const useGridRowSelection = (
             }
           }
 
+          const visibleRows = getVisibleRows(apiRef);
           const rowsBetweenStartAndEnd = visibleRows.rows
             .slice(start, end + 1)
             .map((row) => row.id);
@@ -707,7 +705,7 @@ export const useGridRowSelection = (
         selectRows(apiRef.current.getAllRowIds(), true);
       }
     },
-    [apiRef, handleSingleRowSelection, selectRows, visibleRows.rows, canHaveMultipleSelection],
+    [apiRef, handleSingleRowSelection, selectRows, canHaveMultipleSelection],
   );
 
   useGridApiEventHandler(
@@ -786,10 +784,4 @@ export const useGridRowSelection = (
   React.useEffect(() => {
     runIfRowSelectionIsEnabled(removeOutdatedSelection);
   }, [removeOutdatedSelection, runIfRowSelectionIsEnabled]);
-
-  React.useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-    }
-  }, []);
 };

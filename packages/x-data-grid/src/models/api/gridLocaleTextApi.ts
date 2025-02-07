@@ -46,7 +46,6 @@ export interface GridLocaleText {
   toolbarPromptControlWithRecordingPlaceholder: string;
   toolbarPromptControlRecordingPlaceholder: string;
   toolbarPromptControlLabel: string;
-  toolbarPromptControlDeleteIconLabel: string;
   toolbarPromptControlRecordButtonDefaultLabel: string;
   toolbarPromptControlRecordButtonActiveLabel: string;
   toolbarPromptControlSendActionLabel: string;
@@ -124,6 +123,7 @@ export interface GridLocaleText {
   'headerFilterOperator>=': string;
   'headerFilterOperator<': string;
   'headerFilterOperator<=': string;
+  headerFilterClear: string;
 
   // Filter values text
   filterValueAny: string;

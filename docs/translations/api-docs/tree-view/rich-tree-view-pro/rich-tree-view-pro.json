@@ -55,11 +55,9 @@
         "boolean": "<code>true</code> if the item should be disabled."
       }
     },
-    "isItemEditable": {
-      "description": "Determines if a given item is editable or not. Make sure to also enable the <code>labelEditing</code> experimental feature: <code>&lt;RichTreeViewPro experimentalFeatures={{ labelEditing: true }}  /&gt;</code>. By default, the items are not editable."
-    },
+    "isItemEditable": { "description": "Determine if a given item can be edited." },
     "isItemReorderable": {
-      "description": "Used to determine if a given item can be reordered.",
+      "description": "Determine if a given item can be reordered.",
       "typeDescriptions": {
         "itemId": "The id of the item to check.",
         "boolean": "<code>true</code> if the item can be reordered."
@@ -69,7 +67,7 @@
       "description": "Horizontal indentation between an item and its children. Examples: 24, &quot;24px&quot;, &quot;2rem&quot;, &quot;2em&quot;."
     },
     "itemsReordering": {
-      "description": "If <code>true</code>, the reordering of items is enabled. Make sure to also enable the <code>itemsReordering</code> experimental feature: <code>&lt;RichTreeViewPro experimentalFeatures={{ itemsReordering: true }} itemsReordering /&gt;</code>."
+      "description": "If <code>true</code>, the reordering of items is enabled."
     },
     "multiSelect": {
       "description": "If <code>true</code>, <code>ctrl</code> and <code>shift</code> will trigger multiselect."

@@ -36,7 +36,6 @@ const nbNOGrid: Partial<GridLocaleText> = {
   // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlDeleteIconLabel: 'Clear',
   // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
   // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
   // toolbarPromptControlSendActionLabel: 'Send',
@@ -114,6 +113,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Større enn eller lik',
   'headerFilterOperator<': 'Mindre enn',
   'headerFilterOperator<=': 'Mindre enn eller lik',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'noen',

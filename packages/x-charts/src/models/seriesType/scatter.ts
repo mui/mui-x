@@ -8,10 +8,12 @@ export type ScatterValueType = {
   /**
    * A unique identifier for the scatter point
    */
-  id: string | number;
+  id?: string | number;
 };
 
-export interface ScatterSeriesType extends CommonSeriesType<ScatterValueType>, CartesianSeriesType {
+export interface ScatterSeriesType
+  extends CommonSeriesType<ScatterValueType | null>,
+    CartesianSeriesType {
   type: 'scatter';
   data?: ScatterValueType[];
   markerSize?: number;
@@ -51,7 +53,7 @@ export interface ScatterSeriesType extends CommonSeriesType<ScatterValueType>, C
     /**
      * The key used to retrieve data from the dataset for the id.
      */
-    id: string;
+    id?: string;
   };
 }
 

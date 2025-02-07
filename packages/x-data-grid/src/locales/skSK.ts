@@ -43,7 +43,6 @@ const skSKGrid: Partial<GridLocaleText> = {
   // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlDeleteIconLabel: 'Clear',
   // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
   // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
   // toolbarPromptControlSendActionLabel: 'Send',
@@ -121,6 +120,7 @@ const skSKGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Väčší ako alebo rovný',
   'headerFilterOperator<': 'Menší ako',
   'headerFilterOperator<=': 'Menší ako alebo rovný',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'akýkoľvek',

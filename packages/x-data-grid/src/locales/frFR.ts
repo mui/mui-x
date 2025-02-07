@@ -36,7 +36,6 @@ const frFRGrid: Partial<GridLocaleText> = {
   // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlDeleteIconLabel: 'Clear',
   // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
   // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
   // toolbarPromptControlSendActionLabel: 'Send',
@@ -114,6 +113,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Est supérieur ou égal à',
   'headerFilterOperator<': 'Est inférieur à',
   'headerFilterOperator<=': 'Est inférieur ou égal à',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'tous',

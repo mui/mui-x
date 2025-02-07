@@ -35,7 +35,6 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlDeleteIconLabel: 'Clear',
   // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
   // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
   // toolbarPromptControlSendActionLabel: 'Send',
@@ -113,6 +112,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': '以上',
   'headerFilterOperator<': '未満',
   'headerFilterOperator<=': '以下',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'いずれか',

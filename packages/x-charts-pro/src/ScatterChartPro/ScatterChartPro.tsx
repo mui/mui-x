@@ -4,19 +4,25 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ScatterChartProps, ScatterPlot } from '@mui/x-charts/ScatterChart';
-import { ZAxisContextProvider } from '@mui/x-charts/context';
 import { ChartsVoronoiHandler } from '@mui/x-charts/ChartsVoronoiHandler';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
+import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
-import { useScatterChartProps } from '@mui/x-charts/internals';
-import { ChartContainerPro } from '../ChartContainerPro';
-import { ZoomSetup } from '../context/ZoomProvider/ZoomSetup';
-import { ZoomProps } from '../context/ZoomProvider';
+import { useScatterChartProps, ChartsWrapper } from '@mui/x-charts/internals';
+import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
+import { ChartContainerProProps } from '../ChartContainerPro/ChartContainerPro';
+import { ChartDataProviderPro } from '../ChartDataProviderPro';
+import {
+  SCATTER_CHART_PRO_PLUGINS,
+  ScatterChartProPluginsSignatures,
+} from './ScatterChartPro.plugins';
 
-export interface ScatterChartProProps extends ScatterChartProps, ZoomProps {}
+export interface ScatterChartProProps
+  extends Omit<ScatterChartProps, 'apiRef'>,
+    Omit<ChartContainerProProps<'scatter'>, 'series' | 'plugins' | 'seriesConfig'> {}
 
 /**
  * Demos:
@@ -33,10 +39,10 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   ref: React.Ref<SVGSVGElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiScatterChartPro' });
-  const { zoom, onZoomChange, ...other } = props;
+  const { initialZoom, onZoomChange, apiRef, ...other } = props;
   const {
+    chartsWrapperProps,
     chartContainerProps,
-    zAxisProps,
     voronoiHandlerProps,
     chartsAxisProps,
     gridProps,
@@ -46,27 +52,41 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
     axisHighlightProps,
     children,
   } = useScatterChartProps(other);
+  const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
+    'scatter',
+    ScatterChartProPluginsSignatures
+  >(
+    {
+      ...chartContainerProps,
+      initialZoom,
+      onZoomChange,
+      apiRef,
+      plugins: SCATTER_CHART_PRO_PLUGINS,
+    },
+    ref,
+  );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
 
   return (
-    <ChartContainerPro ref={ref} {...chartContainerProps} zoom={zoom} onZoomChange={onZoomChange}>
-      <ZAxisContextProvider {...zAxisProps}>
-        {!props.disableVoronoi && <ChartsVoronoiHandler {...voronoiHandlerProps} />}
-        <ChartsAxis {...chartsAxisProps} />
-        <ChartsGrid {...gridProps} />
-        <g data-drawing-container>
-          {/* The `data-drawing-container` indicates that children are part of the drawing area. Ref: https://github.com/mui/mui-x/issues/13659 */}
-          <ScatterPlot {...scatterPlotProps} />
-        </g>
-        <ChartsOverlay {...overlayProps} />
+    <ChartDataProviderPro {...chartDataProviderProProps}>
+      <ChartsWrapper {...chartsWrapperProps}>
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsAxisHighlight {...axisHighlightProps} />
-        {!props.loading && <Tooltip {...props?.slotProps?.tooltip} />}
-        <ZoomSetup />
-        {children}
-      </ZAxisContextProvider>
-    </ChartContainerPro>
+        <ChartsSurface {...chartsSurfaceProps}>
+          {!props.disableVoronoi && <ChartsVoronoiHandler {...voronoiHandlerProps} />}
+          <ChartsAxis {...chartsAxisProps} />
+          <ChartsGrid {...gridProps} />
+          <g data-drawing-container>
+            {/* The `data-drawing-container` indicates that children are part of the drawing area. Ref: https://github.com/mui/mui-x/issues/13659 */}
+            <ScatterPlot {...scatterPlotProps} />
+          </g>
+          <ChartsOverlay {...overlayProps} />
+          <ChartsAxisHighlight {...axisHighlightProps} />
+          {!props.loading && <Tooltip {...props?.slotProps?.tooltip} trigger="item" />}
+          {children}
+        </ChartsSurface>
+      </ChartsWrapper>
+    </ChartDataProviderPro>
   );
 });
 
@@ -75,6 +95,11 @@ ScatterChartPro.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  apiRef: PropTypes.shape({
+    current: PropTypes.shape({
+      setZoomData: PropTypes.func.isRequired,
+    }),
+  }),
   /**
    * The configuration of axes highlight.
    * @see See {@link https://mui.com/x/react-charts/highlighting/ highlighting docs} for more details.
@@ -94,7 +119,7 @@ ScatterChartPro.propTypes = {
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
-   * @default blueberryTwilightPalette
+   * @default rainbowSurgePalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   /**
@@ -129,12 +154,28 @@ ScatterChartPro.propTypes = {
    */
   hideLegend: PropTypes.bool,
   /**
-   * The item currently highlighted. Turns highlighting into a controlled prop.
+   * The highlighted item.
+   * Used when the highlight is controlled.
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   }),
+  /**
+   * This prop is used to help implement the accessibility logic.
+   * If you don't provide this prop. It falls back to a randomly generated id.
+   */
+  id: PropTypes.string,
+  /**
+   * The list of zoom data related to each axis.
+   */
+  initialZoom: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      end: PropTypes.number.isRequired,
+      start: PropTypes.number.isRequired,
+    }),
+  ),
   /**
    * Indicate which axis to display the left of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
@@ -150,7 +191,6 @@ ScatterChartPro.propTypes = {
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
-   * @default object Depends on the charts type.
    */
   margin: PropTypes.shape({
     bottom: PropTypes.number,
@@ -158,6 +198,13 @@ ScatterChartPro.propTypes = {
     right: PropTypes.number,
     top: PropTypes.number,
   }),
+  /**
+   * The function called for onClick events.
+   * The second argument contains information about all line/bar elements at the current mouse position.
+   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
+   * @param {null | AxisData} data The data about the clicked axis and items associated with it.
+   */
+  onAxisClick: PropTypes.func,
   /**
    * The callback fired when the highlighted item changes.
    *
@@ -207,6 +254,7 @@ ScatterChartPro.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
   /**
    * Indicate which axis to display the top of the charts.
@@ -267,7 +315,6 @@ ScatterChartPro.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
-      labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -282,7 +329,6 @@ ScatterChartPro.propTypes = {
         PropTypes.func,
         PropTypes.object,
       ]),
-      tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
         PropTypes.array,
@@ -355,7 +401,6 @@ ScatterChartPro.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
-      labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -370,7 +415,6 @@ ScatterChartPro.propTypes = {
         PropTypes.func,
         PropTypes.object,
       ]),
-      tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
         PropTypes.array,
@@ -436,16 +480,6 @@ ScatterChartPro.propTypes = {
       id: PropTypes.string,
       max: PropTypes.number,
       min: PropTypes.number,
-    }),
-  ),
-  /**
-   * The list of zoom data related to each axis.
-   */
-  zoom: PropTypes.arrayOf(
-    PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      end: PropTypes.number.isRequired,
-      start: PropTypes.number.isRequired,
     }),
   ),
 } as any;

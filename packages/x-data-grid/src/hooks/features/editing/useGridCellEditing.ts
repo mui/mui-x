@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   unstable_useEventCallback as useEventCallback,
   unstable_useEnhancedEffect as useEnhancedEffect,
@@ -31,7 +32,7 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector } from './gridEditingSelectors';
 import { GridRowId } from '../../../models/gridRows';
 import { isPrintableKey, isPasteShortcut } from '../../../utils/keyboardUtils';
-import { gridRowsDataRowIdToIdLookupSelector } from '../rows/gridRowsSelector';
+import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 import { deepClone } from '../../../utils/utils';
 import {
   GridCellEditStartParams,
@@ -42,7 +43,7 @@ import {
 import { getDefaultCellValue } from './utils';
 
 export const useGridCellEditing = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'editMode'
@@ -438,7 +439,7 @@ export const useGridCellEditing = (
               [
                 'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
                 'To handle the error pass a callback to the `onProcessRowUpdateError` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
-                'For more detail, see https://mui.com/x/react-data-grid/editing/#server-side-persistence.',
+                'For more detail, see https://mui.com/x/react-data-grid/editing/persistence/.',
               ],
               'error',
             );
@@ -560,7 +561,7 @@ export const useGridCellEditing = (
 
   // Run this effect synchronously so that the keyboard event can impact the yet-to-be-rendered input.
   useEnhancedEffect(() => {
-    const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
+    const rowsLookup = gridRowsLookupSelector(apiRef);
 
     // Update the ref here because updateStateToStopCellEditMode may change it later
     const copyOfPrevCellModes = prevCellModesModel.current;
@@ -569,7 +570,7 @@ export const useGridCellEditing = (
     Object.entries(cellModesModel).forEach(([id, fields]) => {
       Object.entries(fields).forEach(([field, params]) => {
         const prevMode = copyOfPrevCellModes[id]?.[field]?.mode || GridCellModes.View;
-        const originalId = idToIdLookup[id] ?? id;
+        const originalId = rowsLookup[id] ? apiRef.current.getRowId(rowsLookup[id]) : id;
         if (params.mode === GridCellModes.Edit && prevMode === GridCellModes.View) {
           updateStateToStartCellEditMode({ id: originalId, field, ...params });
         } else if (params.mode === GridCellModes.View && prevMode === GridCellModes.Edit) {

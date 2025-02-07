@@ -35,7 +35,6 @@ const huHUGrid: Partial<GridLocaleText> = {
   // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlDeleteIconLabel: 'Clear',
   // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
   // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
   // toolbarPromptControlSendActionLabel: 'Send',
@@ -113,6 +112,7 @@ const huHUGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Nagyobb vagy egyenlő',
   'headerFilterOperator<': 'Kisebb mint',
   'headerFilterOperator<=': 'Kisebb vagy egyenlő',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'bármilyen',

@@ -9,7 +9,6 @@ import {
   MobileDateRangePickerSlots,
   MobileDateRangePickerSlotProps,
 } from '../MobileDateRangePicker';
-import { DateRangeValidationError, RangeFieldSection } from '../models';
 import { ValidateDateRangeProps } from '../validation';
 
 export interface DateRangePickerSlots
@@ -39,16 +38,15 @@ export interface DateRangePickerProps<TEnableAccessibleFieldDOMStructure extends
    * @default {}
    */
   slotProps?: DateRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
+  /**
+   * If `true`, the Picker will close after submitting the full date.
+   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   */
+  closeOnSelect?: boolean;
 }
 
 /**
  * Props the field can receive when used inside a date range picker (<DateRangePicker />, <DesktopDateRangePicker /> or <MobileDateRangePicker /> component).
  */
-export type DateRangePickerFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = true> =
-  ValidateDateRangeProps &
-    BaseSingleInputFieldProps<
-      PickerRangeValue,
-      RangeFieldSection,
-      TEnableAccessibleFieldDOMStructure,
-      DateRangeValidationError
-    >;
+export type DateRangePickerFieldProps = ValidateDateRangeProps &
+  BaseSingleInputFieldProps<PickerRangeValue>;

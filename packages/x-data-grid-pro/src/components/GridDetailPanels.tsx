@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import composeClasses from '@mui/utils/composeClasses';
 import { getDataGridUtilityClass, useGridSelector, GridRowId } from '@mui/x-data-grid';
@@ -6,10 +7,10 @@ import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContex
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import {
   gridDetailPanelExpandedRowsContentCacheSelector,
-  gridDetailPanelExpandedRowsHeightCacheSelector,
   gridDetailPanelExpandedRowIdsSelector,
 } from '../hooks/features/detailPanel';
 import { GridDetailPanel } from './GridDetailPanel';
+import { gridDetailPanelRawHeightCacheSelector } from '../hooks/features/detailPanel/gridDetailPanelSelector';
 
 const useUtilityClasses = () => {
   const slots = {
@@ -36,10 +37,7 @@ function GridDetailPanelsImpl({ virtualScroller }: GridDetailPanelsProps) {
     apiRef,
     gridDetailPanelExpandedRowsContentCacheSelector,
   );
-  const detailPanelsHeights = useGridSelector(
-    apiRef,
-    gridDetailPanelExpandedRowsHeightCacheSelector,
-  );
+  const detailPanelsHeights = useGridSelector(apiRef, gridDetailPanelRawHeightCacheSelector);
 
   const getDetailPanel = React.useCallback(
     (rowId: GridRowId): React.ReactNode => {
@@ -53,8 +51,8 @@ function GridDetailPanelsImpl({ virtualScroller }: GridDetailPanelsProps) {
         return null;
       }
 
-      const hasAutoHeight = apiRef.current.detailPanelHasAutoHeight(rowId);
-      const height = hasAutoHeight ? 'auto' : detailPanelsHeights[rowId];
+      const heightCache = detailPanelsHeights[rowId];
+      const height = heightCache.autoHeight ? 'auto' : heightCache.height;
 
       return (
         <GridDetailPanel
@@ -71,14 +69,14 @@ function GridDetailPanelsImpl({ virtualScroller }: GridDetailPanelsProps) {
   );
 
   React.useEffect(() => {
-    if (expandedRowIds.length === 0) {
+    if (expandedRowIds.size === 0) {
       setPanels(EMPTY_DETAIL_PANELS);
     } else {
-      setPanels(
-        new Map<GridRowId, React.ReactNode>(
-          expandedRowIds.map((rowId) => [rowId, getDetailPanel(rowId)]),
-        ),
-      );
+      const map = new Map<GridRowId, React.ReactNode>();
+      for (const rowId of expandedRowIds) {
+        map.set(rowId, getDetailPanel(rowId));
+      }
+      setPanels(map);
     }
   }, [expandedRowIds, setPanels, getDetailPanel]);
 

@@ -30,9 +30,10 @@ The `preset-safe` codemod will automatically adjust the bulk of your code to acc
 You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
 
 ```bash
-// Data Grid specific
+# Data Grid specific
 npx @mui/x-codemod@latest v6.0.0/data-grid/preset-safe <path>
-// Target Date and Time Pickers as well
+
+# Target Date and Time Pickers as well
 npx @mui/x-codemod@latest v6.0.0/preset-safe <path>
 ```
 
@@ -422,7 +423,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
    />
   ```
 - The `editCellPropsChange` event was removed. If you still need it please file a new issue so we can propose an alternative.
-- The `cellEditCommit` event was removed and the `processRowUpdate` prop can be used in place. More information, check the [docs](https://mui.com/x/react-data-grid/editing/#server-side-persistence) section about the topic.
+- The `cellEditCommit` event was removed and the `processRowUpdate` prop can be used in place. More information, check the [docs](https://mui.com/x/react-data-grid/editing/persistence/) section about the topic.
 - The `editRowsModel` and `onEditRowsModelChange` props were removed. The [`cellModesModel`](https://v6.mui.com/x/react-data-grid/editing/#controlled-mode) or [`rowModesModel`](https://v6.mui.com/x/react-data-grid/editing/#controlled-mode) props can be used to achieve the same goal.
 - The `GridEditRowsModel` type was removed.
 - The following API methods were removed:

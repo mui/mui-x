@@ -9,16 +9,20 @@ import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
-import { DateView, PickerValidDate } from '../models';
 import {
   DatePickerToolbarClasses,
   getDatePickerToolbarUtilityClass,
 } from './datePickerToolbarClasses';
 import { resolveDateFormat } from '../internals/utils/date-utils';
+import {
+  PickerToolbarOwnerState,
+  useToolbarOwnerState,
+} from '../internals/hooks/useToolbarOwnerState';
+import { usePickerContext } from '../hooks';
+import { DateView } from '../models/views';
+import { PickerValue } from '../internals/models';
 
-export interface DatePickerToolbarProps
-  extends BaseToolbarProps<PickerValidDate | null, DateView>,
-    ExportedDatePickerToolbarProps {}
+export interface DatePickerToolbarProps extends BaseToolbarProps, ExportedDatePickerToolbarProps {}
 
 export interface ExportedDatePickerToolbarProps extends ExportedBaseToolbarProps {
   /**
@@ -27,8 +31,7 @@ export interface ExportedDatePickerToolbarProps extends ExportedBaseToolbarProps
   classes?: Partial<DatePickerToolbarClasses>;
 }
 
-const useUtilityClasses = (ownerState: DatePickerToolbarProps) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classes: Partial<DatePickerToolbarClasses> | undefined) => {
   const slots = {
     root: ['root'],
     title: ['title'],
@@ -47,10 +50,10 @@ const DatePickerToolbarTitle = styled(Typography, {
   name: 'MuiDatePickerToolbar',
   slot: 'Title',
   overridesResolver: (_, styles) => styles.title,
-})<{ ownerState: DatePickerToolbarProps }>({
+})<{ ownerState: PickerToolbarOwnerState }>({
   variants: [
     {
-      props: { isLandscape: true },
+      props: { pickerOrientation: 'landscape' },
       style: {
         margin: 'auto 16px auto auto',
       },
@@ -78,23 +81,20 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar(
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiDatePickerToolbar' });
   const {
-    value,
-    isLandscape,
-    onChange,
     toolbarFormat,
     toolbarPlaceholder = '––',
-    views,
     className,
-    onViewChange,
-    view,
+    classes: classesProp,
     ...other
   } = props;
   const utils = useUtils();
+  const { value, views, orientation } = usePickerContext<PickerValue, DateView>();
   const translations = usePickerTranslations();
-  const classes = useUtilityClasses(props);
+  const ownerState = useToolbarOwnerState();
+  const classes = useUtilityClasses(classesProp);
 
   const dateText = React.useMemo(() => {
-    if (!value) {
+    if (!utils.isValid(value)) {
       return toolbarPlaceholder;
     }
 
@@ -103,20 +103,17 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar(
     return utils.formatByString(value, formatFromViews);
   }, [value, toolbarFormat, toolbarPlaceholder, utils, views]);
 
-  const ownerState = props;
-
   return (
     <DatePickerToolbarRoot
       ref={ref}
       toolbarTitle={translations.datePickerToolbarTitle}
-      isLandscape={isLandscape}
       className={clsx(classes.root, className)}
       {...other}
     >
       <DatePickerToolbarTitle
         variant="h4"
         data-testid="datepicker-toolbar-date"
-        align={isLandscape ? 'left' : 'center'}
+        align={orientation === 'landscape' ? 'left' : 'center'}
         ownerState={ownerState}
         className={classes.title}
       >
@@ -141,14 +138,6 @@ DatePickerToolbar.propTypes = {
    * @default `true` for Desktop, `false` for Mobile.
    */
   hidden: PropTypes.bool,
-  isLandscape: PropTypes.bool.isRequired,
-  onChange: PropTypes.func.isRequired,
-  /**
-   * Callback called when a toolbar is clicked
-   * @template TView
-   * @param {TView} view The view to open
-   */
-  onViewChange: PropTypes.func.isRequired,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
@@ -167,13 +156,4 @@ DatePickerToolbar.propTypes = {
    * @default "––"
    */
   toolbarPlaceholder: PropTypes.node,
-  value: PropTypes.object,
-  /**
-   * Currently visible picker view.
-   */
-  view: PropTypes.oneOf(['day', 'month', 'year']).isRequired,
-  /**
-   * Available views.
-   */
-  views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired).isRequired,
 } as any;

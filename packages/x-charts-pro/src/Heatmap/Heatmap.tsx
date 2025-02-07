@@ -13,12 +13,9 @@ import {
   ChartsXAxisProps,
   ChartsYAxisProps,
   AxisConfig,
+  ChartSeriesConfig,
 } from '@mui/x-charts/internals';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
-import {
-  ChartsOnAxisClickHandler,
-  ChartsOnAxisClickHandlerProps,
-} from '@mui/x-charts/ChartsOnAxisClickHandler';
 import {
   ChartsOverlay,
   ChartsOverlayProps,
@@ -31,6 +28,7 @@ import { HeatmapPlot } from './HeatmapPlot';
 import { plugin as heatmapPlugin } from './plugin';
 import { HeatmapTooltip, HeatmapTooltipProps } from './HeatmapTooltip';
 import { HeatmapItemSlotProps, HeatmapItemSlots } from './HeatmapItem';
+import { HEATMAP_PLUGINS, HeatmapPluginsSignatures } from './Heatmap.plugins';
 
 export interface HeatmapSlots extends ChartsAxisSlots, ChartsOverlaySlots, HeatmapItemSlots {
   /**
@@ -52,8 +50,7 @@ export interface HeatmapProps
       'series' | 'plugins' | 'xAxis' | 'yAxis' | 'zoom' | 'onZoomChange' | 'skipAnimation'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
-    Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
-    ChartsOnAxisClickHandlerProps {
+    Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
   /**
    * The configuration of the x-axes.
    * If not provided, a default axis config is used.
@@ -100,6 +97,8 @@ const defaultColorMap = interpolateRgbBasis([
   '#0868ac',
   '#084081',
 ]);
+
+const seriesConfig: ChartSeriesConfig<'heatmap'> = { heatmap: heatmapPlugin };
 
 const Heatmap = React.forwardRef(function Heatmap(
   inProps: HeatmapProps,
@@ -161,9 +160,9 @@ const Heatmap = React.forwardRef(function Heatmap(
   const Tooltip = props.slots?.tooltip ?? HeatmapTooltip;
 
   return (
-    <ChartContainerPro
+    <ChartContainerPro<'heatmap', HeatmapPluginsSignatures>
       ref={ref}
-      plugins={[heatmapPlugin]}
+      seriesConfig={seriesConfig}
       series={series.map((s) => ({
         type: 'heatmap',
         ...s,
@@ -180,8 +179,9 @@ const Heatmap = React.forwardRef(function Heatmap(
       disableAxisListener
       highlightedItem={highlightedItem}
       onHighlightChange={onHighlightChange}
+      onAxisClick={onAxisClick}
+      plugins={HEATMAP_PLUGINS}
     >
-      {onAxisClick && <ChartsOnAxisClickHandler onAxisClick={onAxisClick} />}
       <g clipPath={`url(#${clipPathId})`}>
         <HeatmapPlot slots={slots} slotProps={slotProps} />
         <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
@@ -207,6 +207,11 @@ Heatmap.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  apiRef: PropTypes.shape({
+    current: PropTypes.shape({
+      setZoomData: PropTypes.func.isRequired,
+    }),
+  }),
   /**
    * Indicate which axis to display the bottom of the charts.
    * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.
@@ -217,7 +222,7 @@ Heatmap.propTypes = {
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
-   * @default blueberryTwilightPalette
+   * @default rainbowSurgePalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   /**
@@ -236,12 +241,28 @@ Heatmap.propTypes = {
    */
   height: PropTypes.number,
   /**
-   * The item currently highlighted. Turns highlighting into a controlled prop.
+   * The highlighted item.
+   * Used when the highlight is controlled.
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   }),
+  /**
+   * This prop is used to help implement the accessibility logic.
+   * If you don't provide this prop. It falls back to a randomly generated id.
+   */
+  id: PropTypes.string,
+  /**
+   * The list of zoom data related to each axis.
+   */
+  initialZoom: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      end: PropTypes.number.isRequired,
+      start: PropTypes.number.isRequired,
+    }),
+  ),
   /**
    * Indicate which axis to display the left of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
@@ -257,7 +278,6 @@ Heatmap.propTypes = {
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
-   * @default object Depends on the charts type.
    */
   margin: PropTypes.shape({
     bottom: PropTypes.number,
@@ -290,6 +310,11 @@ Heatmap.propTypes = {
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
+   * The configuration helpers used to compute attributes according to the serries type.
+   * @ignore Unstable props for internal usage.
+   */
+  seriesConfig: PropTypes.object,
+  /**
    * The props used for each component slot.
    * @default {}
    */
@@ -304,6 +329,7 @@ Heatmap.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
   /**
    * The configuration of the tooltip.
@@ -366,7 +392,6 @@ Heatmap.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
-      labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -381,7 +406,6 @@ Heatmap.propTypes = {
         PropTypes.func,
         PropTypes.object,
       ]),
-      tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
         PropTypes.array,
@@ -456,7 +480,6 @@ Heatmap.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
-      labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -471,7 +494,6 @@ Heatmap.propTypes = {
         PropTypes.func,
         PropTypes.object,
       ]),
-      tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
         PropTypes.array,

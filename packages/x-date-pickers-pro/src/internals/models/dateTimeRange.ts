@@ -1,33 +1,4 @@
-import { MakeOptional } from '@mui/x-internals/types';
-import {
-  UseFieldInternalProps,
-  DateOrTimeViewWithMeridiem,
-  AmPmProps,
-  PickerRangeValue,
-} from '@mui/x-date-pickers/internals';
-import {
-  DateTimeRangeValidationError,
-  RangeFieldSection,
-  RangeFieldSeparatorProps,
-} from '../../models';
-import { ExportedValidateDateTimeRangeProps } from '../../validation/validateDateTimeRange';
-
-export interface UseDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends MakeOptional<
-      Omit<
-        UseFieldInternalProps<
-          PickerRangeValue,
-          RangeFieldSection,
-          TEnableAccessibleFieldDOMStructure,
-          DateTimeRangeValidationError
-        >,
-        'unstableFieldRef'
-      >,
-      'format'
-    >,
-    RangeFieldSeparatorProps,
-    ExportedValidateDateTimeRangeProps,
-    AmPmProps {}
+import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals';
 
 export type DateTimeRangePickerView = Exclude<DateOrTimeViewWithMeridiem, 'month' | 'year'>;
 

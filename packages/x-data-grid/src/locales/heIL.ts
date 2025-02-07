@@ -32,16 +32,15 @@ const heILGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterDeleteIconLabel: 'ניקוי',
 
   // Prompt toolbar field
-  // toolbarPromptControlPlaceholder: 'Type a prompt…',
-  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
-  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
-  // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlDeleteIconLabel: 'Clear',
-  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
-  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
-  // toolbarPromptControlSendActionLabel: 'Send',
-  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
-  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+  toolbarPromptControlPlaceholder: 'הקלד ערך…',
+  toolbarPromptControlWithRecordingPlaceholder: 'הקלד או הקלט ערך…',
+  toolbarPromptControlRecordingPlaceholder: 'ממתין להנחיה…',
+  toolbarPromptControlLabel: 'הזן ערך',
+  toolbarPromptControlRecordButtonDefaultLabel: 'הקלטה',
+  toolbarPromptControlRecordButtonActiveLabel: 'הפסק הקלטה',
+  toolbarPromptControlSendActionLabel: 'שלח',
+  toolbarPromptControlSendActionAriaLabel: 'שלח ערך',
+  toolbarPromptControlErrorMessage: 'התרחשה שגיאה בזמן העיבוד של הבקשה. נסה שוב עם ערך אחר בבקשה.',
 
   // Export selector toolbar button text
   toolbarExport: 'ייצוא',
@@ -55,7 +54,7 @@ const heILGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'אין עמודות',
   columnsManagementShowHideAllText: 'הצג/הסתר הכל',
   columnsManagementReset: 'אתחול',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementDeleteIconLabel: 'נקה',
 
   // Filter panel text
   filterPanelAddFilter: 'הוסף מסנן',
@@ -71,9 +70,9 @@ const heILGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'מכיל',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'לא מכיל',
   filterOperatorEquals: 'שווה',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'לא שווה',
   filterOperatorStartsWith: 'מתחיל ב-',
   filterOperatorEndsWith: 'נגמר ב-',
   filterOperatorIs: 'הינו',
@@ -94,9 +93,9 @@ const heILGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'מכיל',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'לא מכיל',
   headerFilterOperatorEquals: 'שווה',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'לא שווה',
   headerFilterOperatorStartsWith: 'מתחיל ב-',
   headerFilterOperatorEndsWith: 'נגמר ב-',
   headerFilterOperatorIs: 'הינו',
@@ -114,6 +113,7 @@ const heILGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'גדול שווה ל-',
   'headerFilterOperator<': 'קטן מ-',
   'headerFilterOperator<=': 'קטן שווה ל-',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'כל ערך',

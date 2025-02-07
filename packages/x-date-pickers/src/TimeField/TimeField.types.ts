@@ -1,34 +1,22 @@
-import * as React from 'react';
-import { SlotComponentProps } from '@mui/utils';
 import { MakeOptional } from '@mui/x-internals/types';
-import TextField from '@mui/material/TextField';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
-import {
-  FieldSection,
-  PickerValidDate,
-  TimeValidationError,
-  BuiltInFieldTextFieldProps,
-} from '../models';
-import {
-  ExportedUseClearableFieldProps,
-  UseClearableFieldSlots,
-  UseClearableFieldSlotProps,
-} from '../hooks/useClearableField';
+import { TimeValidationError, BuiltInFieldTextFieldProps } from '../models';
 import { ExportedValidateTimeProps } from '../validation/validateTime';
 import { AmPmProps } from '../internals/models/props/time';
+import { PickerValue } from '../internals/models';
+import {
+  ExportedPickerFieldUIProps,
+  PickerFieldUISlotProps,
+  PickerFieldUISlots,
+} from '../internals/components/PickerFieldUI';
 
 export interface UseTimeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends MakeOptional<
-      UseFieldInternalProps<
-        PickerValidDate | null,
-        FieldSection,
-        TEnableAccessibleFieldDOMStructure,
-        TimeValidationError
-      >,
+      UseFieldInternalProps<PickerValue, TEnableAccessibleFieldDOMStructure, TimeValidationError>,
       'format'
     >,
     ExportedValidateTimeProps,
-    ExportedUseClearableFieldProps,
+    ExportedPickerFieldUIProps,
     AmPmProps {}
 
 export type TimeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = true> =
@@ -48,25 +36,9 @@ export type TimeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = 
        * The props used for each component slot.
        * @default {}
        */
-      slotProps?: TimeFieldSlotProps<TEnableAccessibleFieldDOMStructure>;
+      slotProps?: TimeFieldSlotProps;
     };
 
-export type TimeFieldOwnerState<TEnableAccessibleFieldDOMStructure extends boolean> =
-  TimeFieldProps<TEnableAccessibleFieldDOMStructure>;
+export interface TimeFieldSlots extends PickerFieldUISlots {}
 
-export interface TimeFieldSlots extends UseClearableFieldSlots {
-  /**
-   * Form control with an input to render the value.
-   * @default TextField from '@mui/material' or PickersTextField if `enableAccessibleFieldDOMStructure` is `true`.
-   */
-  textField?: React.ElementType;
-}
-
-export interface TimeFieldSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends UseClearableFieldSlotProps {
-  textField?: SlotComponentProps<
-    typeof TextField,
-    {},
-    TimeFieldOwnerState<TEnableAccessibleFieldDOMStructure>
-  >;
-}
+export interface TimeFieldSlotProps extends PickerFieldUISlotProps {}

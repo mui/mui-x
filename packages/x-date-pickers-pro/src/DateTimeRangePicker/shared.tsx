@@ -6,7 +6,6 @@ import {
   useDefaultDates,
   useUtils,
   applyDefaultDate,
-  BaseDateValidationProps,
   BasePickerInputProps,
   PickerViewRendererLookup,
   BaseClockProps,
@@ -15,7 +14,6 @@ import {
   TimeViewWithMeridiem,
   resolveTimeViewsResponse,
   UseViewsOptions,
-  DateTimeValidationProps,
   DateOrTimeViewWithMeridiem,
   PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
@@ -43,6 +41,10 @@ import {
   DateTimeRangePickerTabsProps,
   ExportedDateTimeRangePickerTabsProps,
 } from './DateTimeRangePickerTabs';
+import {
+  ExportedValidateDateTimeRangeProps,
+  ValidateDateTimeRangePropsToDefault,
+} from '../validation/validateDateTimeRange';
 
 export interface BaseDateTimeRangePickerSlots
   extends DateRangeCalendarSlots,
@@ -74,19 +76,16 @@ export interface BaseDateTimeRangePickerSlotProps
   toolbar?: ExportedDateTimeRangePickerToolbarProps;
 }
 
-export type DateTimeRangePickerRenderers<
-  TView extends DateOrTimeViewWithMeridiem,
-  TAdditionalProps extends {} = {},
-> = PickerViewRendererLookup<
-  PickerRangeValue,
-  TView,
-  Omit<DateRangeViewRendererProps<'day'>, 'view' | 'slots' | 'slotProps'> &
-    Omit<
-      TimeViewRendererProps<TimeViewWithMeridiem, BaseClockProps<TimeViewWithMeridiem>>,
-      'view' | 'slots' | 'slotProps'
-    > & { view: TView },
-  TAdditionalProps
->;
+export type DateTimeRangePickerRenderers<TView extends DateOrTimeViewWithMeridiem> =
+  PickerViewRendererLookup<
+    PickerRangeValue,
+    TView,
+    Omit<DateRangeViewRendererProps<'day'>, 'view' | 'slots' | 'slotProps'> &
+      Omit<
+        TimeViewRendererProps<TimeViewWithMeridiem, BaseClockProps<TimeViewWithMeridiem>>,
+        'view' | 'slots' | 'slotProps'
+      > & { view: TView }
+  >;
 
 export interface BaseDateTimeRangePickerProps
   extends Omit<
@@ -94,12 +93,11 @@ export interface BaseDateTimeRangePickerProps
       'orientation' | 'views' | 'openTo'
     >,
     ExportedDateRangeCalendarProps,
-    BaseDateValidationProps,
+    ExportedValidateDateTimeRangeProps,
     DesktopOnlyTimePickerProps,
     Partial<
       Pick<UseViewsOptions<PickerRangeValue, DateTimeRangePickerViewExternal>, 'openTo' | 'views'>
-    >,
-    DateTimeValidationProps {
+    > {
   /**
    * Overridable component slots.
    * @default {}
@@ -120,7 +118,7 @@ export interface BaseDateTimeRangePickerProps
 
 type UseDateTimeRangePickerDefaultizedProps<Props extends BaseDateTimeRangePickerProps> =
   LocalizedComponent<
-    Omit<DefaultizedProps<Props, 'openTo' | 'ampm' | keyof BaseDateValidationProps>, 'views'>
+    Omit<DefaultizedProps<Props, 'openTo' | 'ampm' | ValidateDateTimeRangePropsToDefault>, 'views'>
   > & {
     shouldRenderTimeInASingleColumn: boolean;
     views: readonly DateTimeRangePickerView[];

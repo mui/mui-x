@@ -36,7 +36,6 @@ const itITGrid: Partial<GridLocaleText> = {
   // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlDeleteIconLabel: 'Clear',
   // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
   // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
   // toolbarPromptControlSendActionLabel: 'Send',
@@ -114,6 +113,7 @@ const itITGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Maggiore o uguale a',
   'headerFilterOperator<': 'Minore di',
   'headerFilterOperator<=': 'Minore o uguale a',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'qualunque',

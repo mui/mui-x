@@ -43,7 +43,6 @@ const csCZGrid: Partial<GridLocaleText> = {
   // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlDeleteIconLabel: 'Clear',
   // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
   // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
   // toolbarPromptControlSendActionLabel: 'Send',
@@ -121,6 +120,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Větší než nebo rovno',
   'headerFilterOperator<': 'Menší než',
   'headerFilterOperator<=': 'Menší než nebo rovno',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'jakýkoliv',

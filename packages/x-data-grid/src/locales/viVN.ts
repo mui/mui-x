@@ -36,7 +36,6 @@ const viVNGrid: Partial<GridLocaleText> = {
   // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlDeleteIconLabel: 'Clear',
   // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
   // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
   // toolbarPromptControlSendActionLabel: 'Send',
@@ -114,6 +113,7 @@ const viVNGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Lớn hơn hoặc bằng',
   'headerFilterOperator<': 'Nhỏ hơn',
   'headerFilterOperator<=': 'Nhỏ hơn hoặc bằng',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'bất kỳ giá trị nào',

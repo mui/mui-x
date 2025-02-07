@@ -112,7 +112,7 @@
       "isPremiumPlan": true
     },
     "getExpandedDetailPanels": {
-      "type": { "description": "() =&gt; GridRowId[]" },
+      "type": { "description": "() =&gt; Set&lt;GridRowId&gt;" },
       "required": true,
       "isProPlan": true
     },
@@ -246,7 +246,6 @@
       "isPremiumPlan": true
     },
     "resetRowHeights": { "type": { "description": "() =&gt; void" }, "required": true },
-    "resize": { "type": { "description": "() =&gt; void" }, "required": true },
     "restoreState": {
       "type": { "description": "(stateToRestore: InitialState) =&gt; void" },
       "required": true
@@ -336,7 +335,7 @@
       "required": true
     },
     "setExpandedDetailPanels": {
-      "type": { "description": "(ids: GridRowId[]) =&gt; void" },
+      "type": { "description": "(ids: Set&lt;GridRowId&gt;) =&gt; void" },
       "required": true,
       "isProPlan": true
     },

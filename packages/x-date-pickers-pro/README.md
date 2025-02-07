@@ -1,7 +1,7 @@
 # MUI X Date Pickers Pro
 
 This package is the Pro plan edition of the Date and Time Picker Components.
-It's part of [MUI X](https://mui.com/x/), an open-core extension of MUI Core, with advanced components.
+It's part of [MUI X](https://mui.com/x/), an open-core extension of our Core libraries, with advanced components.
 
 ## Installation
 
@@ -20,13 +20,16 @@ The pickers currently support the following date libraries:
 - [Moment.js](https://momentjs.com/)
 
 ```bash
-// date-fns
+# date-fns
 npm install date-fns
-// or dayjs
+
+# or dayjs
 npm install dayjs
-// or luxon
+
+# or luxon
 npm install luxon
-// or moment
+
+# or moment
 npm install moment
 ```
 

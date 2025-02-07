@@ -35,7 +35,6 @@ const zhTWGrid: Partial<GridLocaleText> = {
   // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlDeleteIconLabel: 'Clear',
   // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
   // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
   // toolbarPromptControlSendActionLabel: 'Send',
@@ -113,6 +112,7 @@ const zhTWGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': '大於或等於',
   'headerFilterOperator<': '小於',
   'headerFilterOperator<=': '小於或等於',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: '任何值',

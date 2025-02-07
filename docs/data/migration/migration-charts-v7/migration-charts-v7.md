@@ -19,6 +19,9 @@ In `package.json`, change the version of the charts package to `next`.
 ```diff
 -"@mui/x-charts": "^7.0.0",
 +"@mui/x-charts": "next",
+
+-"@mui/x-charts-pro": "^7.0.0",
++"@mui/x-charts-pro": "next",
 ```
 
 Using `next` ensures that it will always use the latest v8 pre-release version, but you can also use a fixed version, like `8.0.0-alpha.0`.
@@ -38,10 +41,10 @@ You can either run it on a specific file, folder, or your entire codebase when c
 <!-- #default-branch-switch -->
 
 ```bash
-// Charts specific
+# Charts-specific
 npx @mui/x-codemod@latest v8.0.0/charts/preset-safe <path>
 
-// Target the other packages as well
+# Target the other packages as well
 npx @mui/x-codemod@latest v8.0.0/preset-safe <path>
 ```
 
@@ -85,9 +88,55 @@ The `legend` prop of charts single components has been removed.
 To pass props to the legend, use the `slotProps.legend`.
 
 ```diff
-- <PieChart legend={{ ... }} />
-+ <PieChart slotProps={{ legend: { ... } }} />
+-<PieChart legend={{ ... }} />
++<PieChart slotProps={{ legend: { ... } }} />
 ```
+
+## Legend direction value change ✅
+
+The `direction` prop of the legend has been changed to accept `'vertical'` and `'horizontal'` instead of `'column'` and `'row'`.
+
+```diff
+ <PieChart
+   slotProps={{
+     legend: {
+-      direction: 'column'
++      direction: 'vertical'
+     }
+   }}
+ />
+```
+
+## Legend position value change ✅
+
+Replace `"left" | "middle" | "right"` values with `"start" | "center" | "end"` respectively.
+This is to align with the CSS values and reflect the RTL ability of the legend component.
+
+```diff
+ <BarChart
+    slotProps={{
+      legend: {
+        position: {
+-          horizontal: "left",
++          horizontal: "start",
+        }
+      }
+    }}
+ />
+```
+
+## Rename `LegendPosition` type to `Position` ✅
+
+Renames `LegendPosition` to `Position`.
+
+```diff
+-import { LegendPosition } from '@mui/x-charts/ChartsLegend';
++import { Position } from '@mui/x-charts/models';
+```
+
+## The `getSeriesToDisplay` function was removed
+
+The `getSeriesToDisplay` function was removed in favor of the `useLegend` hook. You can check the [HTML Components example](/x/react-charts/components/#html-components) for usage information.
 
 ## Removing ResponsiveChartContainer ✅
 
@@ -95,17 +144,33 @@ The `ResponsiveChartContainer` has been removed.
 You can now use `ChartContainer` as a responsive container which works now exactly the same way.
 
 ```diff
-- import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
-- import { ResponsiveChartContainerPro } from '@mui/x-charts-pro/ResponsiveChartContainerPro';
-+ import { ChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
-+ import { ChartContainerPro } from '@mui/x-charts-pro/ResponsiveChartContainerPro';
+-import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
+-import { ResponsiveChartContainerPro } from '@mui/x-charts-pro/ResponsiveChartContainerPro';
++import { ChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
++import { ChartContainerPro } from '@mui/x-charts-pro/ResponsiveChartContainerPro';
 
-- <ResponsiveChartContainer>
-+ <ChartContainer>
+-<ResponsiveChartContainer>
++<ChartContainer>
    <BarPlot />
-- </ResponsiveChartContainer>
-+ </ChartContainer>
+-</ResponsiveChartContainer>
++</ChartContainer>
 ```
+
+## Removing ChartsOnAxisClickHandler ✅
+
+The `ChartsOnAxisClickHandler` component got removed.
+The `onAxisClick` handler can directly be passed to the chart containers.
+
+```diff
++ <ChartContainer onAxisClick={() => {}}>
+- <ChartContainer>
+-   <ChartsOnAxisClickHandler onAxisClick={() => {}} />
+ </ChartContainer>
+```
+
+:::warning
+This codemode does not work if component got renamed or if the handler is not a direct child of the container.
+:::
 
 ## New DOM structure for ChartContainer
 
@@ -119,9 +184,84 @@ The `<PieChart />` by error had the code to render axes.
 This code has been removed in v8, which implies removing the following props: `axisHighlight`, `topAxis`, `rightAxis`, `bottomAxis`, and `leftAxis`.
 
 This should not impact your code.
-If you used axes in a pie chart please open an issue, we would be curious to get more information about the use-case.
+If you used axes in a pie chart please open an issue, we would be curious to get more information about the use case.
 
 ## Remove `resolveSizeBeforeRender` prop
 
 The `resolveSizeBeforeRender` prop has been removed from all components.
 If you were using this prop, you can safely remove it.
+
+## Remove `experimentalMarkRendering` prop ✅
+
+The `experimentalMarkRendering` prop has been removed from the LineChart component.
+The line mark are now `<circle />` element by default.
+And you can chose another shape by adding a `shape` property to your line series.
+
+The codemod only removes the `experimentalMarkRendering` prop.
+If you relied on the fact that marks were `path` elements, you need to update your logic.
+
+## Replacing `useHighlighted` by `useItemHighlighted` and `useItemHighlightedGetter`
+
+The `useHighlighted` hook that gave access to the internal highlight state has been removed.
+
+To know if your item is highlighted, it is recommended to use the `useItemHighlighted` hook instead:
+
+```jsx
+const { isFaded, isHighlighted } = useItemHighlighted({
+  seriesId,
+  dataIndex,
+});
+```
+
+If you're in a case where you have multiple series id to test (for example in the tooltip), you can use the lower level hook `useItemHighlightedGetter`.
+This hook being lower level only test is the item match with the highlight or fade scope.
+So an item could at the same time have `isFaded` and `isHighlighted` returning `true`.
+
+```jsx
+const { isFaded, isHighlighted } = useItemHighlightedGetter();
+
+const itemIsHighlighted = isHighlighted({ seriesId, dataIndex });
+
+// First make sure the item is not highlighted.
+const itemIsFaded = !itemIsHighlighted && isFaded({ seriesId, dataIndex });
+```
+
+## Rename `labelFontSize` and `tickFontSize` props ✅
+
+The `labelFontSize` and `tickFontSize` props have been removed in favor of the style objects `labelStyle` and `tickStyle` respectively.
+
+```diff
+  <ChartsXAxis
+-   labelFontSize={18}
++   labelStyle={{
++     fontSize: 18
++   }}
+-   tickFontSize={20}
++   tickStyle={{
++     fontSize: 20
++   }}
+  />
+```
+
+## Stabilize `useSeries` and `useXxxSeries` hooks ✅
+
+The `useSeries` hook family has been stabilized and renamed accordingly.
+
+```diff
+  import {
+-   unstable_useSeries,
++   useSeries,
+-   unstable_usePieSeries,
++   usePieSeries,
+-   unstable_useLineSeries,
++   useLineSeries,
+-   unstable_useBarSeries,
++   useBarSeries,
+-   unstable_useScatterSeries,
++   useScatterSeries,
+  } from '@mui/x-charts/hooks';
+  import {
+-   unstable_useHeatmapSeries,
++   useHeatmapSeries,
+  } from '@mui/x-charts-pro/hooks';
+```

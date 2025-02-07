@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { EventHandlers } from '@mui/utils';
+import { EventHandlers } from '@mui/utils/types';
 import extractEventHandlers from '@mui/utils/extractEventHandlers';
 import useForkRef from '@mui/utils/useForkRef';
 import { TreeViewCancellableEvent } from '../models';
@@ -30,6 +30,7 @@ import { selectorIsItemTheDefaultFocusableItem } from '../internals/plugins/useT
 import { generateTreeItemIdAttribute } from '../internals/corePlugins/useTreeViewId/useTreeViewId.utils';
 import { selectorCanItemBeFocused } from '../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
 import { selectorTreeViewId } from '../internals/corePlugins/useTreeViewId/useTreeViewId.selectors';
+import { selectorItemExpansionTrigger } from '../internals/plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
 
 export const useTreeItem = <
   TSignatures extends UseTreeItemMinimalPlugins = UseTreeItemMinimalPlugins,
@@ -41,7 +42,6 @@ export const useTreeItem = <
     runItemPlugins,
     items: { onItemClick },
     selection: { disableSelection, checkboxSelection },
-    expansion: { expansionTrigger },
     label: labelContext,
     instance,
     publicAPI,
@@ -162,7 +162,7 @@ export const useTreeItem = <
       if (event.defaultMuiPrevented || checkboxRef.current?.contains(event.target as HTMLElement)) {
         return;
       }
-      if (expansionTrigger === 'content') {
+      if (selectorItemExpansionTrigger(store.value) === 'content') {
         interactions.handleExpansion(event);
       }
 
@@ -190,7 +190,7 @@ export const useTreeItem = <
       if (event.defaultMuiPrevented) {
         return;
       }
-      if (expansionTrigger === 'iconContainer') {
+      if (selectorItemExpansionTrigger(store.value) === 'iconContainer') {
         interactions.handleExpansion(event);
       }
     };

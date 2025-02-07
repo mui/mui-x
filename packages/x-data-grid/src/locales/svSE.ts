@@ -36,7 +36,6 @@ const svSEGrid: Partial<GridLocaleText> = {
   // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlDeleteIconLabel: 'Clear',
   // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
   // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
   // toolbarPromptControlSendActionLabel: 'Send',
@@ -114,6 +113,7 @@ const svSEGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Större eller lika med',
   'headerFilterOperator<': 'Mindre än',
   'headerFilterOperator<=': 'Mindre eller lika med',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'något',

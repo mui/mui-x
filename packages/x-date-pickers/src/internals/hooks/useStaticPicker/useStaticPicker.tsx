@@ -6,8 +6,8 @@ import { usePicker } from '../usePicker';
 import { PickerProvider } from '../../components/PickerProvider';
 import { PickersLayout } from '../../../PickersLayout';
 import { DIALOG_WIDTH } from '../../constants/dimensions';
-import { FieldSection, PickerValidDate } from '../../../models';
-import { DateOrTimeViewWithMeridiem } from '../../models';
+import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
+import { mergeSx } from '../../utils/utils';
 
 const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',
@@ -26,24 +26,15 @@ export const useStaticPicker = <
   TExternalProps extends UseStaticPickerProps<TView, any, TExternalProps>,
 >({
   props,
-  ref,
   ...pickerParams
 }: UseStaticPickerParams<TView, TExternalProps>) => {
-  const { localeText, slots, slotProps, className, sx, displayStaticWrapperAs, autoFocus } = props;
+  const { localeText, slots, slotProps, displayStaticWrapperAs, autoFocus } = props;
 
-  const { layoutProps, providerProps, renderCurrentView } = usePicker<
-    PickerValidDate | null,
-    TView,
-    FieldSection,
-    TExternalProps,
-    {}
-  >({
+  const { providerProps, renderCurrentView } = usePicker<PickerValue, TView, TExternalProps>({
     ...pickerParams,
     props,
     autoFocusView: autoFocus ?? false,
-    fieldRef: undefined,
     localeText,
-    additionalViewProps: {},
     variant: displayStaticWrapperAs,
   });
 
@@ -52,18 +43,12 @@ export const useStaticPicker = <
   const renderPicker = () => (
     <PickerProvider {...providerProps}>
       <Layout
-        {...layoutProps}
         {...slotProps?.layout}
         slots={slots}
         slotProps={slotProps}
-        sx={[
-          ...(Array.isArray(sx) ? sx : [sx]),
-          ...(Array.isArray(slotProps?.layout?.sx)
-            ? slotProps!.layout!.sx
-            : [slotProps?.layout?.sx]),
-        ]}
-        className={clsx(className, slotProps?.layout?.className)}
-        ref={ref}
+        sx={mergeSx(providerProps.contextValue.rootSx, slotProps?.layout?.sx)}
+        className={clsx(providerProps.contextValue.rootClassName, slotProps?.layout?.className)}
+        ref={providerProps.contextValue.rootRef}
       >
         {renderCurrentView()}
       </Layout>

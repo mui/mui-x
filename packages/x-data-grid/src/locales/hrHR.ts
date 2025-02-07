@@ -43,7 +43,6 @@ const hrHRGrid: Partial<GridLocaleText> = {
   // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlDeleteIconLabel: 'Clear',
   // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
   // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
   // toolbarPromptControlSendActionLabel: 'Send',
@@ -121,6 +120,7 @@ const hrHRGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Veće ili jednako',
   'headerFilterOperator<': 'Manje od',
   'headerFilterOperator<=': 'Manje od ili jednako',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'bilo koji',

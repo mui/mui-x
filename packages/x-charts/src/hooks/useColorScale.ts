@@ -1,8 +1,7 @@
 'use client';
-import * as React from 'react';
 import { AxisId, AxisScaleComputedConfig, ScaleName } from '../models/axis';
-import { ZAxisContext } from '../context/ZAxisContextProvider';
 import { useXAxis, useYAxis } from './useAxis';
+import { useZAxis } from './useZAxis';
 
 /**
  * Get the X axis color scale.
@@ -41,9 +40,7 @@ export function useYColorScale<S extends ScaleName>(
 export function useZColorScale<S extends ScaleName>(
   axisId?: AxisId,
 ): AxisScaleComputedConfig[S]['colorScale'] | undefined {
-  const { zAxis, zAxisIds } = React.useContext(ZAxisContext);
+  const axis = useZAxis(axisId);
 
-  const id = axisId ?? zAxisIds[0];
-
-  return zAxis[id]?.colorScale;
+  return axis.colorScale;
 }

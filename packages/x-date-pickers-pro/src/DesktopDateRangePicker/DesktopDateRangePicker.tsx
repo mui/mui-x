@@ -10,6 +10,8 @@ import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { PickerOwnerState } from '@mui/x-date-pickers/models';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { refType } from '@mui/utils';
+import { PickerLayoutOwnerState } from '@mui/x-date-pickers/PickersLayout';
+import { PickersActionBarAction } from '@mui/x-date-pickers/PickersActionBar';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopDateRangePickerProps } from './DesktopDateRangePicker.types';
 import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
@@ -22,6 +24,8 @@ type DesktopDateRangePickerComponent = (<TEnableAccessibleFieldDOMStructure exte
   props: DesktopDateRangePickerProps<TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
+
+const emptyActions: PickersActionBarAction[] = [];
 
 /**
  * Demos:
@@ -46,13 +50,14 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
     DesktopDateRangePickerProps<TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiDesktopDateRangePicker');
 
-  const viewRenderers: PickerViewRendererLookup<PickerRangeValue, 'day', any, {}> = {
+  const viewRenderers: PickerViewRendererLookup<PickerRangeValue, any, any> = {
     day: renderDateRangeViewCalendar,
     ...defaultizedProps.viewRenderers,
   };
 
   const props = {
     ...defaultizedProps,
+    closeOnSelect: defaultizedProps.closeOnSelect ?? true,
     viewRenderers,
     format: utils.formats.keyboardDate,
     calendars: defaultizedProps.calendars ?? 2,
@@ -67,12 +72,15 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
       field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
-        ref,
       }),
       toolbar: {
         hidden: true,
         ...defaultizedProps.slotProps?.toolbar,
       },
+      actionBar: (ownerState: PickerLayoutOwnerState) => ({
+        actions: emptyActions,
+        ...resolveComponentProps(defaultizedProps.slotProps?.actionBar, ownerState),
+      }),
     },
   };
 
@@ -81,6 +89,7 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
     TEnableAccessibleFieldDOMStructure,
     typeof props
   >({
+    ref,
     props,
     valueManager: rangeValueManager,
     valueType: 'date',
@@ -109,8 +118,8 @@ DesktopDateRangePicker.propTypes = {
   calendars: PropTypes.oneOf([1, 2, 3]),
   className: PropTypes.string,
   /**
-   * If `true`, the popover or modal will close after submitting the full date.
-   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * If `true`, the Picker will close after submitting the full date.
+   * @default true
    */
   closeOnSelect: PropTypes.bool,
   /**
@@ -198,12 +207,10 @@ DesktopDateRangePicker.propTypes = {
   formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Pass a ref to the `input` element.
-   * Ignored if the field has several inputs.
    */
   inputRef: refType,
   /**
    * The label content.
-   * Ignored if the field has several inputs.
    */
   label: PropTypes.node,
   /**
@@ -229,7 +236,6 @@ DesktopDateRangePicker.propTypes = {
   minDate: PropTypes.object,
   /**
    * Name attribute used by the `input` element in the Field.
-   * Ignored if the field has several inputs.
    */
   name: PropTypes.string,
   /**

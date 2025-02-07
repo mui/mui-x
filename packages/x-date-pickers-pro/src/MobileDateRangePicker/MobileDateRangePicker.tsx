@@ -46,7 +46,7 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
     MobileDateRangePickerProps<TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiMobileDateRangePicker');
 
-  const viewRenderers: PickerViewRendererLookup<PickerRangeValue, 'day', any, {}> = {
+  const viewRenderers: PickerViewRendererLookup<PickerRangeValue, any, any> = {
     day: renderDateRangeViewCalendar,
     ...defaultizedProps.viewRenderers,
   };
@@ -57,6 +57,8 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
     format: utils.formats.keyboardDate,
     // Force one calendar on mobile to avoid layout issues
     calendars: 1,
+    // force current calendar position, since we only have one calendar
+    currentMonthCalendarPosition: 1,
     views: ['day'] as const,
     openTo: 'day' as const,
     slots: {
@@ -68,7 +70,6 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
       field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
-        ref,
       }),
       toolbar: {
         hidden: false,
@@ -82,6 +83,7 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
     TEnableAccessibleFieldDOMStructure,
     typeof props
   >({
+    ref,
     props,
     valueManager: rangeValueManager,
     valueType: 'date',
@@ -105,8 +107,8 @@ MobileDateRangePicker.propTypes = {
   autoFocus: PropTypes.bool,
   className: PropTypes.string,
   /**
-   * If `true`, the popover or modal will close after submitting the full date.
-   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * If `true`, the Picker will close after submitting the full date.
+   * @default false
    */
   closeOnSelect: PropTypes.bool,
   /**
@@ -194,12 +196,10 @@ MobileDateRangePicker.propTypes = {
   formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Pass a ref to the `input` element.
-   * Ignored if the field has several inputs.
    */
   inputRef: refType,
   /**
    * The label content.
-   * Ignored if the field has several inputs.
    */
   label: PropTypes.node,
   /**
@@ -225,7 +225,6 @@ MobileDateRangePicker.propTypes = {
   minDate: PropTypes.object,
   /**
    * Name attribute used by the `input` element in the Field.
-   * Ignored if the field has several inputs.
    */
   name: PropTypes.string,
   /**

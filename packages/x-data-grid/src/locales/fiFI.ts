@@ -36,7 +36,6 @@ const fiFIGrid: Partial<GridLocaleText> = {
   // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlDeleteIconLabel: 'Clear',
   // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
   // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
   // toolbarPromptControlSendActionLabel: 'Send',
@@ -114,6 +113,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Enemmän tai yhtä paljon kuin',
   'headerFilterOperator<': 'Vähemmän kuin',
   'headerFilterOperator<=': 'Vähemmän tai yhtä paljon kuin',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'mikä tahansa',

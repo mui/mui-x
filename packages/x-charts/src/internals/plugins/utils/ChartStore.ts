@@ -1,20 +1,23 @@
-import type { ChartState } from '../models'; // For now this is fixed. Will need to support generic if we add plugins
+import type { ChartState } from '../models/chart';
+import type { ChartAnyPluginSignature } from '../models/plugin';
 
 type Listener<T> = (value: T) => void;
 
-export type StoreUpdater = (prevState: ChartState) => ChartState;
+export type StoreUpdater<TSignatures extends readonly ChartAnyPluginSignature[]> = (
+  prevState: ChartState<TSignatures>,
+) => ChartState<TSignatures>;
 
-export class ChartStore {
-  public value: ChartState;
+export class ChartStore<TSignatures extends readonly ChartAnyPluginSignature[]> {
+  public value: ChartState<TSignatures>;
 
-  private listeners: Set<Listener<ChartState>>;
+  private listeners: Set<Listener<ChartState<TSignatures>>>;
 
-  constructor(value: ChartState) {
+  constructor(value: ChartState<TSignatures>) {
     this.value = value;
     this.listeners = new Set();
   }
 
-  public subscribe = (fn: Listener<ChartState>) => {
+  public subscribe = (fn: Listener<ChartState<TSignatures>>) => {
     this.listeners.add(fn);
     return () => {
       this.listeners.delete(fn);
@@ -25,7 +28,7 @@ export class ChartStore {
     return this.value;
   };
 
-  public update = (updater: StoreUpdater) => {
+  public update = (updater: StoreUpdater<TSignatures>) => {
     const newState = updater(this.value);
     if (newState !== this.value) {
       this.value = newState;

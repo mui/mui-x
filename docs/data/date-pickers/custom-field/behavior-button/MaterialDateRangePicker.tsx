@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Dayjs } from 'dayjs';
+import useForkRef from '@mui/utils/useForkRef';
 import Button from '@mui/material/Button';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -18,38 +19,22 @@ import {
 
 function ButtonDateRangeField(props: DateRangePickerFieldProps) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-  const { value, timezone, format } = internalProps;
-  const {
-    InputProps,
-    slotProps,
-    slots,
-    ownerState,
-    label,
-    focused,
-    name,
-    ...other
-  } = forwardedProps;
+  const { focused, ...other } = forwardedProps;
 
   const pickerContext = usePickerContext();
-
-  const parsedFormat = useParsedFormat(internalProps);
+  const handleRef = useForkRef(pickerContext.triggerRef, pickerContext.rootRef);
+  const parsedFormat = useParsedFormat();
   const { hasValidationError } = useValidation({
     validator: validateDateRange,
-    value,
-    timezone,
+    value: pickerContext.value,
+    timezone: pickerContext.timezone,
     props: internalProps,
   });
 
-  const handleTogglePicker = (event: React.UIEvent) => {
-    if (pickerContext.open) {
-      pickerContext.onClose(event);
-    } else {
-      pickerContext.onOpen(event);
-    }
-  };
-
-  const formattedValue = (value ?? [null, null])
-    .map((date: Dayjs) => (date == null ? parsedFormat : date.format(format)))
+  const formattedValue = pickerContext.value
+    .map((date: Dayjs) =>
+      date == null ? parsedFormat : date.format(pickerContext.fieldFormat),
+    )
     .join(' – ');
 
   return (
@@ -57,10 +42,14 @@ function ButtonDateRangeField(props: DateRangePickerFieldProps) {
       {...other}
       variant="outlined"
       color={hasValidationError ? 'error' : 'primary'}
-      ref={InputProps?.ref}
-      onClick={handleTogglePicker}
+      ref={handleRef}
+      className={pickerContext.rootClassName}
+      sx={pickerContext.rootSx}
+      onClick={() => pickerContext.setOpen((prev) => !prev)}
     >
-      {label ? `${label}: ${formattedValue}` : formattedValue}
+      {pickerContext.label
+        ? `${pickerContext.label}: ${formattedValue}`
+        : formattedValue}
     </Button>
   );
 }

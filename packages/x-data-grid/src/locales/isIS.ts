@@ -36,7 +36,6 @@ const isISGrid: Partial<GridLocaleText> = {
   // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlDeleteIconLabel: 'Clear',
   // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
   // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
   // toolbarPromptControlSendActionLabel: 'Send',
@@ -114,6 +113,7 @@ const isISGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Stærra en eða jafnt og',
   'headerFilterOperator<': 'Minna en',
   'headerFilterOperator<=': 'Minna en eða jafnt og',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'hvað sem er',

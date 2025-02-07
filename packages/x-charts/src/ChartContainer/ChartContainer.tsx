@@ -1,39 +1,75 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { ChartDataProvider, ChartDataProviderProps } from '../context/ChartDataProvider';
-import { ResizableContainer } from './ResizableContainer';
+import { ChartSeriesType } from '../models/seriesType/config';
+import { ChartDataProvider, ChartDataProviderProps } from '../ChartDataProvider';
 import { useChartContainerProps } from './useChartContainerProps';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
+import { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { ChartAnyPluginSignature } from '../internals/plugins/models';
 
-export interface ChartContainerProps extends ChartDataProviderProps, ChartsSurfaceProps {}
+export type ChartContainerProps<
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
+> = Omit<ChartDataProviderProps<SeriesType, TSignatures>, 'children'> & ChartsSurfaceProps;
 
-const ChartContainer = React.forwardRef(function ChartContainer(
-  props: ChartContainerProps,
+/**
+ * It sets up the data providers as well as the `<svg>` for the chart.
+ *
+ * This is a combination of both the `ChartDataProvider` and `ChartsSurface` components.
+ *
+ * Demos:
+ *
+ * - [Composition](https://mui.com/x/api/charts/composition/)
+ *
+ * API:
+ *
+ * - [ChartContainer API](https://mui.com/x/api/charts/chart-container/)
+ *
+ * @example
+ * ```jsx
+ * <ChartContainer
+ *   series={[{ label: "Label", type: "bar", data: [10, 20] }]}
+ *   xAxis={[{ data: ["A", "B"], scaleType: "band", id: "x-axis" }]}
+ * >
+ *    <BarPlot />
+ *    <ChartsXAxis position="bottom" axisId="x-axis" />
+ * </ChartContainer>
+ * ```
+ */
+const ChartContainer = React.forwardRef(function ChartContainer<TSeries extends ChartSeriesType>(
+  props: ChartContainerProps<TSeries>,
   ref: React.Ref<SVGSVGElement>,
 ) {
-  const { chartDataProviderProps, children, resizableContainerProps, chartsSurfaceProps } =
-    useChartContainerProps(props, ref);
+  const { chartDataProviderProps, children, chartsSurfaceProps } = useChartContainerProps(
+    props,
+    ref,
+  );
 
   return (
-    <ChartDataProvider {...chartDataProviderProps}>
-      <ResizableContainer {...resizableContainerProps}>
-        <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
-      </ResizableContainer>
+    <ChartDataProvider<TSeries, AllPluginSignatures<TSeries>> {...chartDataProviderProps}>
+      <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
     </ChartDataProvider>
   );
-});
+}) as <TSeries extends ChartSeriesType>(
+  props: ChartContainerProps<TSeries> & { ref?: React.ForwardedRef<SVGSVGElement> },
+) => React.JSX.Element;
+
+// @ts-ignore
 
 ChartContainer.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  apiRef: PropTypes.shape({
+    current: PropTypes.object,
+  }),
   children: PropTypes.node,
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
-   * @default blueberryTwilightPalette
+   * @default rainbowSurgePalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   /**
@@ -52,17 +88,22 @@ ChartContainer.propTypes = {
    */
   height: PropTypes.number,
   /**
-   * The item currently highlighted. Turns highlighting into a controlled prop.
+   * The highlighted item.
+   * Used when the highlight is controlled.
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   }),
+  /**
+   * This prop is used to help implement the accessibility logic.
+   * If you don't provide this prop. It falls back to a randomly generated id.
+   */
+  id: PropTypes.string,
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
-   * @default object Depends on the charts type.
    */
   margin: PropTypes.shape({
     bottom: PropTypes.number,
@@ -71,22 +112,24 @@ ChartContainer.propTypes = {
     top: PropTypes.number,
   }),
   /**
+   * The function called for onClick events.
+   * The second argument contains information about all line/bar elements at the current mouse position.
+   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
+   * @param {null | AxisData} data The data about the clicked axis and items associated with it.
+   */
+  onAxisClick: PropTypes.func,
+  /**
    * The callback fired when the highlighted item changes.
    *
    * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
   /**
-   * An array of plugins defining how to preprocess data.
-   * If not provided, the container supports line, bar, scatter and pie charts.
-   */
-  plugins: PropTypes.arrayOf(PropTypes.object),
-  /**
    * The array of series to display.
    * Each type of series has its own specificity.
    * Please refer to the appropriate docs page to learn more about it.
    */
-  series: PropTypes.arrayOf(PropTypes.object).isRequired,
+  series: PropTypes.arrayOf(PropTypes.object),
   /**
    * If `true`, animations are skipped.
    * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
@@ -97,6 +140,7 @@ ChartContainer.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
@@ -146,7 +190,6 @@ ChartContainer.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
-      labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -161,7 +204,6 @@ ChartContainer.propTypes = {
         PropTypes.func,
         PropTypes.object,
       ]),
-      tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
         PropTypes.array,
@@ -222,7 +264,6 @@ ChartContainer.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
-      labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -237,7 +278,6 @@ ChartContainer.propTypes = {
         PropTypes.func,
         PropTypes.object,
       ]),
-      tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
         PropTypes.array,

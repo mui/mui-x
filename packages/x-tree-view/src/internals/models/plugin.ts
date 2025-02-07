@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { EventHandlers } from '@mui/utils';
+import { EventHandlers } from '@mui/utils/types';
 import { TreeViewExperimentalFeatures, TreeViewInstance, TreeViewModel } from './treeView';
 import type { MergeSignaturesProperty, OptionalIfEmpty } from './helpers';
 import { TreeViewEventLookupElement } from './events';
@@ -16,7 +16,7 @@ export interface TreeViewPluginOptions<TSignature extends TreeViewAnyPluginSigna
   experimentalFeatures: TreeViewUsedExperimentalFeatures<TSignature>;
   models: TreeViewUsedModels<TSignature>;
   store: TreeViewUsedStore<TSignature>;
-  rootRef: React.RefObject<HTMLUListElement>;
+  rootRef: React.RefObject<HTMLUListElement | null>;
   plugins: TreeViewPlugin<TreeViewAnyPluginSignature>[];
 }
 
@@ -112,7 +112,7 @@ type PluginPropertyWithDependencies<
 export type TreeViewUsedParams<TSignature extends TreeViewAnyPluginSignature> =
   PluginPropertyWithDependencies<TSignature, 'params'>;
 
-type TreeViewUsedDefaultizedParams<TSignature extends TreeViewAnyPluginSignature> =
+export type TreeViewUsedDefaultizedParams<TSignature extends TreeViewAnyPluginSignature> =
   PluginPropertyWithDependencies<TSignature, 'defaultizedParams'>;
 
 export type TreeViewUsedInstance<TSignature extends TreeViewAnyPluginSignature> =

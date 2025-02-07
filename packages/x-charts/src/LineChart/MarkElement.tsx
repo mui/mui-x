@@ -6,11 +6,11 @@ import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-
 import { animated, to, useSpring } from '@react-spring/web';
 import { getSymbol } from '../internals/getSymbol';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { useItemHighlighted } from '../context';
+import { useItemHighlighted } from '../hooks/useItemHighlighted';
 import { MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
-import { selectorChartsInteractionXAxis } from '../context/InteractionSelectors';
-import { useSelector } from '../internals/useSelector';
-import { useStore } from '../internals/useStore';
+import { selectorChartsInteractionXAxis } from '../internals/plugins/featurePlugins/useChartInteraction';
+import { useSelector } from '../internals/store/useSelector';
+import { useStore } from '../internals/store/useStore';
 
 const MarkElementPath = styled(animated.path, {
   name: 'MuiMarkElement',
@@ -89,6 +89,7 @@ function MarkElement(props: MarkElementProps) {
         transformOrigin: to([position.x, position.y], (pX, pY) => `${pX}px ${pY}px`),
       }}
       ownerState={ownerState}
+      // @ts-expect-error
       className={classes.root}
       d={d3Symbol(d3SymbolsFill[getSymbol(shape)])()!}
       onClick={onClick}

@@ -1,10 +1,10 @@
 import * as React from 'react';
+import { config } from 'react-transition-group';
 import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { gridClasses, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Column headers', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
@@ -31,10 +31,8 @@ describe('<DataGridPro /> - Column headers', () => {
     ],
   };
 
-  it('should not scroll the column headers when a column is focused', function test() {
-    if (isJSDOM) {
-      this.skip(); // JSDOM version of .focus() doesn't scroll
-    }
+  // JSDOM version of .focus() doesn't scroll
+  testSkipIf(isJSDOM)('should not scroll the column headers when a column is focused', () => {
     render(
       <div style={{ width: 102, height: 500 }}>
         <DataGridPro
@@ -201,6 +199,10 @@ describe('<DataGridPro /> - Column headers', () => {
     });
 
     it('should remove the MuiDataGrid-menuOpen CSS class only after the transition has ended', () => {
+      const restoreDisabledConfig = config.disabled;
+      // enable `react-transition-group` transitions for this test
+      config.disabled = false;
+
       render(
         <div style={{ width: 300, height: 500 }}>
           <DataGridPro {...baselineProps} columns={[{ field: 'brand' }]} />
@@ -215,6 +217,9 @@ describe('<DataGridPro /> - Column headers', () => {
       expect(menuIconButton?.parentElement).to.have.class(gridClasses.menuOpen);
       clock.runToLast(); // Wait for the transition to run
       expect(menuIconButton?.parentElement).not.to.have.class(gridClasses.menuOpen);
+
+      // restore previous config
+      config.disabled = restoreDisabledConfig;
     });
 
     it('should restore focus to the column header when dismissing the menu by selecting any item', () => {

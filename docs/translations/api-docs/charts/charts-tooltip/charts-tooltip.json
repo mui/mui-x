@@ -45,6 +45,10 @@
     }
   },
   "classDescriptions": {
+    "axisValueCell": {
+      "description": "Styles applied to {{nodeName}}. Only available for axis tooltip.",
+      "nodeName": "the axisValueCell element"
+    },
     "cell": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the cell element" },
     "labelCell": {
       "description": "Styles applied to {{nodeName}}.",
@@ -63,5 +67,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the valueCell element"
     }
-  }
+  },
+  "slotDescriptions": { "tooltip": "Custom component for the tooltip popper." }
 }

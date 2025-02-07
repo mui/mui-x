@@ -93,7 +93,7 @@ It can take 3 different values:
 
 - `"nice"` Rounds the domain at human friendly values. It's the default behavior.
 - `"strict"` Sets the domain to the min/max value to display.
-- `([minValue, maxValue]) => [min, max]` Receives the calculated extremums as parameters, and should return the axis domain.
+- `(minValue, maxValue) => { min, max }` Receives the calculated extremums as parameters, and should return the axis domain.
 
 The demo below shows different ways to set the y-axis range.
 They always display the same data, going from -15 to 92, but with different `domainLimit` settings.
@@ -206,7 +206,7 @@ The x-axis label placement is based on the axis configuration, and the y-axis is
 ### Position
 
 Charts components provide 4 props: `topAxis`, `rightAxis`, `bottomAxis`, and `leftAxis` allowing to define the 4 axes of the chart.
-Those pros can accept three type of value:
+Those props can accept three type of value:
 
 - `null` to not display the axis
 - `string` which should correspond to the id of a `xAxis` for top and bottom. Or to the id of a `yAxis` for left and right.

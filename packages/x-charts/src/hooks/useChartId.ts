@@ -1,13 +1,13 @@
 'use client';
-import * as React from 'react';
-import { DrawingAreaContext } from '../context/DrawingAreaProvider';
+import { useStore } from '../internals/store/useStore';
+import { useSelector } from '../internals/store/useSelector';
+import { selectorChartId } from '../internals/plugins/corePlugins/useChartId/useChartId.selectors';
 
 /**
  * Get the unique identifier of the chart.
- * @returns {string} chartId
+ * @returns chartId if it exists.
  */
-export function useChartId(): string {
-  const { chartId } = React.useContext(DrawingAreaContext);
-
-  return React.useMemo(() => chartId, [chartId]);
+export function useChartId(): string | undefined {
+  const store = useStore();
+  return useSelector(store, selectorChartId);
 }

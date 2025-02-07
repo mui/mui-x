@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { FieldSection, PickerOwnerState } from '../../../models';
-import { PickerValueManager, UsePickerValueResponse } from './usePickerValue.types';
+import { PickerOwnerState } from '../../../models';
+import { PickerValueManager, UsePickerValueProviderParams } from './usePickerValue.types';
 import {
   PickerProviderProps,
   PickerContextValue,
@@ -12,10 +12,14 @@ import {
   DateOrTimeViewWithMeridiem,
   FormProps,
   PickerOrientation,
+  PickerValidValue,
   PickerVariant,
 } from '../../models';
 import { useUtils } from '../useUtils';
 import { arrayIncludes } from '../../utils/utils';
+import { UsePickerViewsProviderParams } from './usePickerViews';
+import { PickerFieldPrivateContextValue } from '../useField/useFieldInternalPropsWithDefaults';
+import { useReduceAnimations } from '../useReduceAnimations';
 
 function getOrientation(): PickerOrientation {
   if (typeof window === 'undefined') {
@@ -58,22 +62,37 @@ export const usePickerOrientation = (
   return customOrientation ?? orientation;
 };
 
-export function usePickerProvider<TValue>(
-  parameters: UsePickerProviderParameters<TValue>,
-): UsePickerProviderReturnValue {
-  const { props, pickerValueResponse, valueManager, localeText, variant, views } = parameters;
+export function usePickerProvider<
+  TValue extends PickerValidValue,
+  TView extends DateOrTimeViewWithMeridiem,
+  TError,
+>(
+  parameters: UsePickerProviderParameters<TValue, TView, TError>,
+): UsePickerProviderReturnValue<TValue> {
+  const {
+    ref,
+    props,
+    valueManager,
+    localeText,
+    variant,
+    paramsFromUsePickerValue,
+    paramsFromUsePickerViews,
+  } = parameters;
 
   const utils = useUtils();
-  const orientation = usePickerOrientation(views, props.orientation);
+  const orientation = usePickerOrientation(paramsFromUsePickerViews.views, props.orientation);
+  const reduceAnimations = useReduceAnimations(props.reduceAnimations);
+
+  const triggerRef = React.useRef<HTMLElement>(null);
 
   const ownerState = React.useMemo<PickerOwnerState>(
     () => ({
       isPickerValueEmpty: valueManager.areValuesEqual(
         utils,
-        pickerValueResponse.viewProps.value,
+        paramsFromUsePickerValue.value,
         valueManager.emptyValue,
       ),
-      isPickerOpen: pickerValueResponse.open,
+      isPickerOpen: paramsFromUsePickerValue.contextValue.open,
       isPickerDisabled: props.disabled ?? false,
       isPickerReadOnly: props.readOnly ?? false,
       pickerOrientation: orientation,
@@ -82,8 +101,8 @@ export function usePickerProvider<TValue>(
     [
       utils,
       valueManager,
-      pickerValueResponse.viewProps.value,
-      pickerValueResponse.open,
+      paramsFromUsePickerValue.value,
+      paramsFromUsePickerValue.contextValue.open,
       orientation,
       variant,
       props.disabled,
@@ -91,52 +110,119 @@ export function usePickerProvider<TValue>(
     ],
   );
 
-  const contextValue = React.useMemo<PickerContextValue>(
+  const triggerStatus = React.useMemo(() => {
+    if (props.disableOpenPicker || !paramsFromUsePickerViews.hasUIView) {
+      return 'hidden';
+    }
+
+    if (props.disabled || props.readOnly) {
+      return 'disabled';
+    }
+
+    return 'enabled';
+  }, [props.disableOpenPicker, paramsFromUsePickerViews.hasUIView, props.disabled, props.readOnly]);
+
+  const contextValue = React.useMemo<PickerContextValue<TValue, TView, TError>>(
     () => ({
-      onOpen: pickerValueResponse.actions.onOpen,
-      onClose: pickerValueResponse.actions.onClose,
-      open: pickerValueResponse.open,
+      ...paramsFromUsePickerValue.contextValue,
+      ...paramsFromUsePickerViews.contextValue,
       disabled: props.disabled ?? false,
       readOnly: props.readOnly ?? false,
       variant,
       orientation,
+      reduceAnimations,
+      triggerRef,
+      triggerStatus,
+      fieldFormat: props.format ?? '',
+      name: props.name,
+      label: props.label,
+      rootSx: props.sx,
+      rootRef: ref,
+      rootClassName: props.className,
     }),
     [
-      pickerValueResponse.actions.onOpen,
-      pickerValueResponse.actions.onClose,
-      pickerValueResponse.open,
+      paramsFromUsePickerValue.contextValue,
+      paramsFromUsePickerViews.contextValue,
+      ref,
       variant,
       orientation,
+      reduceAnimations,
       props.disabled,
       props.readOnly,
+      props.format,
+      props.className,
+      props.name,
+      props.label,
+      props.sx,
+      triggerRef,
+      triggerStatus,
     ],
   );
 
   const privateContextValue = React.useMemo<PickerPrivateContextValue>(
-    () => ({ ownerState }),
-    [ownerState],
+    () => ({
+      ...paramsFromUsePickerValue.privateContextValue,
+      ...paramsFromUsePickerViews.privateContextValue,
+      ownerState,
+    }),
+    [
+      paramsFromUsePickerValue.privateContextValue,
+      paramsFromUsePickerViews.privateContextValue,
+      ownerState,
+    ],
+  );
+
+  const actionsContextValue = React.useMemo(
+    () => ({
+      ...paramsFromUsePickerValue.actionsContextValue,
+      ...paramsFromUsePickerViews.actionsContextValue,
+    }),
+    [paramsFromUsePickerValue.actionsContextValue, paramsFromUsePickerViews.actionsContextValue],
+  );
+
+  const fieldPrivateContextValue = React.useMemo<PickerFieldPrivateContextValue>(
+    () => ({
+      formatDensity: props.formatDensity,
+      enableAccessibleFieldDOMStructure: props.enableAccessibleFieldDOMStructure,
+      selectedSections: props.selectedSections,
+      onSelectedSectionsChange: props.onSelectedSectionsChange,
+    }),
+    [
+      props.formatDensity,
+      props.enableAccessibleFieldDOMStructure,
+      props.selectedSections,
+      props.onSelectedSectionsChange,
+    ],
   );
 
   return {
     localeText,
     contextValue,
     privateContextValue,
+    actionsContextValue,
+    fieldPrivateContextValue,
+    isValidContextValue: paramsFromUsePickerValue.isValidContextValue,
   };
 }
 
-export interface UsePickerProviderParameters<TValue>
-  extends Pick<PickerProviderProps, 'localeText'> {
-  props: UsePickerProps<TValue, any, any, any, any>;
-  pickerValueResponse: UsePickerValueResponse<TValue, FieldSection, any>;
+export interface UsePickerProviderParameters<
+  TValue extends PickerValidValue,
+  TView extends DateOrTimeViewWithMeridiem,
+  TError,
+> extends Pick<PickerProviderProps<TValue>, 'localeText'> {
+  ref: React.ForwardedRef<HTMLDivElement> | undefined;
+  props: UsePickerProps<TValue, any, any, any> & UsePickerProviderNonStaticProps;
   valueManager: PickerValueManager<TValue, any>;
   variant: PickerVariant;
-  views: readonly DateOrTimeViewWithMeridiem[];
+  paramsFromUsePickerValue: UsePickerValueProviderParams<TValue, TError>;
+  paramsFromUsePickerViews: UsePickerViewsProviderParams<TView>;
 }
 
-export interface UsePickerProviderReturnValue extends Omit<PickerProviderProps, 'children'> {}
+export interface UsePickerProviderReturnValue<TValue extends PickerValidValue>
+  extends Omit<PickerProviderProps<TValue>, 'children'> {}
 
 /**
- * Props used to create the private context.
+ * Props used to create the picker's contexts.
  * Those props are exposed on all the pickers.
  */
 export interface UsePickerProviderProps extends FormProps {
@@ -144,4 +230,38 @@ export interface UsePickerProviderProps extends FormProps {
    * Force rendering in particular orientation.
    */
   orientation?: PickerOrientation;
+  /**
+   * If `true`, disable heavy animations.
+   * @default `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13
+   */
+  reduceAnimations?: boolean;
+}
+
+/**
+ * Props used to create the picker's contexts and that are not available on static pickers.
+ */
+export interface UsePickerProviderNonStaticProps extends PickerFieldPrivateContextValue {
+  // We don't take the `format` prop from `UseFieldInternalProps` to have a custom JSDoc description.
+  /**
+   * Format of the date when rendered in the input(s).
+   * Defaults to localized format based on the used `views`.
+   */
+  format?: string;
+  /**
+   * If `true`, the open picker button will not be rendered (renders only the field).
+   * @default false
+   */
+  disableOpenPicker?: boolean;
+  /**
+   * The label content.
+   */
+  label?: React.ReactNode;
+  /**
+   * Pass a ref to the `input` element.
+   */
+  inputRef?: React.Ref<HTMLInputElement>;
+  /**
+   * Name attribute used by the `input` element in the Field.
+   */
+  name?: string;
 }

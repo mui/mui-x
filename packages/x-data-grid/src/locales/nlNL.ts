@@ -36,7 +36,6 @@ const nlNLGrid: Partial<GridLocaleText> = {
   // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlDeleteIconLabel: 'Clear',
   // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
   // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
   // toolbarPromptControlSendActionLabel: 'Send',
@@ -55,7 +54,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Geen kolommen',
   columnsManagementShowHideAllText: 'Toon/Verberg Alle',
   columnsManagementReset: 'Reset',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementDeleteIconLabel: 'Verwijderen',
 
   // Filter panel text
   filterPanelAddFilter: 'Filter toevoegen',
@@ -71,9 +70,9 @@ const nlNLGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'bevat',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'bevat niet',
   filterOperatorEquals: 'gelijk aan',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'niet gelijk aan',
   filterOperatorStartsWith: 'begint met',
   filterOperatorEndsWith: 'eindigt met',
   filterOperatorIs: 'is',
@@ -94,9 +93,9 @@ const nlNLGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Bevat',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'Bevat niet',
   headerFilterOperatorEquals: 'Gelijk aan',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'Niet gelijk aan',
   headerFilterOperatorStartsWith: 'Begint met',
   headerFilterOperatorEndsWith: 'Eindigt met',
   headerFilterOperatorIs: 'Is',
@@ -114,6 +113,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Is groter dan of gelijk aan',
   'headerFilterOperator<': 'Is kleiner dan',
   'headerFilterOperator<=': 'Is kleiner dan of gelijk aan',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'alles',

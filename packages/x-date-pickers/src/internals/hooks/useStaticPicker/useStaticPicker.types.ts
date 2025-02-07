@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
@@ -6,14 +5,11 @@ import {
 import { BasePickerProps } from '../../models/props/basePickerProps';
 import { UsePickerParams } from '../usePicker';
 import { UsePickerViewsProps } from '../usePicker/usePickerViews';
-import { FieldSection, PickerValidDate } from '../../../models';
-import { DateOrTimeViewWithMeridiem } from '../../models';
+import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
 
-export interface UseStaticPickerSlots<TView extends DateOrTimeViewWithMeridiem>
-  extends ExportedPickersLayoutSlots<PickerValidDate | null, TView> {}
+export interface UseStaticPickerSlots extends ExportedPickersLayoutSlots<PickerValue> {}
 
-export interface UseStaticPickerSlotProps<TView extends DateOrTimeViewWithMeridiem>
-  extends ExportedPickersLayoutSlotProps<PickerValidDate | null, TView> {}
+export interface UseStaticPickerSlotProps extends ExportedPickersLayoutSlotProps<PickerValue> {}
 
 export interface StaticOnlyPickerProps {
   /**
@@ -37,31 +33,27 @@ export interface StaticOnlyPickerProps {
 export interface UseStaticPickerProps<
   TView extends DateOrTimeViewWithMeridiem,
   TError,
-  TExternalProps extends UsePickerViewsProps<PickerValidDate | null, TView, any, any>,
-> extends BasePickerProps<PickerValidDate | null, TView, TError, TExternalProps, {}>,
+  TExternalProps extends UsePickerViewsProps<PickerValue, TView, any>,
+> extends BasePickerProps<PickerValue, TView, TError, TExternalProps>,
     StaticOnlyPickerProps {
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UseStaticPickerSlots<TView>;
+  slots?: UseStaticPickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseStaticPickerSlotProps<TView>;
+  slotProps?: UseStaticPickerSlotProps;
 }
 
 export interface UseStaticPickerParams<
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseStaticPickerProps<TView, any, TExternalProps>,
 > extends Pick<
-    UsePickerParams<PickerValidDate | null, TView, FieldSection, TExternalProps, {}>,
-    'valueManager' | 'valueType' | 'validator'
+    UsePickerParams<PickerValue, TView, TExternalProps>,
+    'valueManager' | 'valueType' | 'validator' | 'ref'
   > {
   props: TExternalProps;
-  /**
-   * Ref to pass to the root element
-   */
-  ref?: React.Ref<HTMLDivElement>;
 }

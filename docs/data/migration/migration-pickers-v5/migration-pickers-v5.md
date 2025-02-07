@@ -30,9 +30,10 @@ The `preset-safe` codemod will automatically adjust the bulk of your code to acc
 You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
 
 ```bash
-// Date and Time Pickers specific
+# Date and Time Pickers specific
 npx @mui/x-codemod@latest v6.0.0/pickers/preset-safe <path>
-// Target Data Grid as well
+
+# Target Data Grid as well
 npx @mui/x-codemod@latest v6.0.0/preset-safe <path>
 ```
 
@@ -151,14 +152,14 @@ const theme = createTheme({
 ```
 
 :::success
-If you are using TypeScript, please make sure to add the [theme augmentation](/x/react-date-pickers/base-concepts/#typescript) to your project.
+If you are using TypeScript, please make sure to add the [theme augmentation](/x/react-date-pickers/quickstart/#typescript) to your project.
 :::
 
 ### Remove the keyboard view
 
 The picker components no longer have a keyboard view to render the input inside the modal on mobile.
 
-- If your date is easier to edit with the keyboard (e.g: a birthdate), you can directly use the new field components:
+- If your date is easier to edit with the keyboard (for example a birthdate), you can directly use the new field components:
 
   ```diff
    function App() {
@@ -171,7 +172,7 @@ The picker components no longer have a keyboard view to render the input inside 
 
 - If you want to keep the old keyboard view, you can pass a custom `Layout` component slot to re-introduce the keyboard view.
 
-{{"demo": "MobileKeyboardView.js", "defaultCodeOpen": false}}
+{{"demo": "MobileKeyboardView.js", "hideToolbar": true, "bg": true}}
 
 :::info
 At some point, the mobile pickers should have a prop allowing to have an editable field without opening the modal.
@@ -444,8 +445,8 @@ The `locale` prop of the `LocalizationProvider` component have been renamed `ada
 
 ## Component slots / component slot props
 
-All the props used to pass props to parts of the UI (e.g: pass a prop to the input) have been replaced by component slot props.
-All the props used to override parts of the UI (e.g: pass a custom day renderer) have been replaced by component slots.
+All the props used to pass props to parts of the UI (for example to pass a prop to the input) have been replaced by component slot props.
+All the props used to override parts of the UI (for example to pass a custom day renderer) have been replaced by component slots.
 
 You can find more information about this pattern in the [Base UI documentation](https://mui.com/base-ui/getting-started/usage/#shared-props).
 

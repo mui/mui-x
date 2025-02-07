@@ -20,9 +20,9 @@ export default function ColumnAutosizingGroupedRows() {
   });
 
   React.useEffect(() => {
-    return apiRef.current.subscribeEvent('rowExpansionChange', (params) => {
+    return apiRef.current?.subscribeEvent('rowExpansionChange', (params) => {
       if (params.childrenExpanded) {
-        apiRef.current.autosizeColumns({ includeOutliers: true });
+        apiRef.current?.autosizeColumns({ includeOutliers: true });
       }
     });
   }, [apiRef]);

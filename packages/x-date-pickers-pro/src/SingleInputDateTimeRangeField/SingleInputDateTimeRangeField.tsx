@@ -1,13 +1,10 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import MuiTextField from '@mui/material/TextField';
-import { convertFieldResponseIntoMuiTextFieldProps } from '@mui/x-date-pickers/internals';
-import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
+import { DateRangeIcon } from '@mui/x-date-pickers/icons';
+import { PickerFieldUI, useFieldTextFieldProps } from '@mui/x-date-pickers/internals';
 import { useThemeProps } from '@mui/material/styles';
 import { refType } from '@mui/utils';
-import useSlotProps from '@mui/utils/useSlotProps';
-import { useClearableField } from '@mui/x-date-pickers/hooks';
 import { SingleInputDateTimeRangeFieldProps } from './SingleInputDateTimeRangeField.types';
 import { useSingleInputDateTimeRangeField } from './useSingleInputDateTimeRangeField';
 import { FieldType } from '../models';
@@ -38,40 +35,29 @@ const SingleInputDateTimeRangeField = React.forwardRef(function SingleInputDateT
     name: 'MuiSingleInputDateTimeRangeField',
   });
 
-  const { slots, slotProps, InputProps, inputProps, ...other } = themeProps;
+  const { slots, slotProps, ...other } = themeProps;
 
-  const ownerState = themeProps;
-
-  const TextField =
-    slots?.textField ??
-    (inProps.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
-  const textFieldProps = useSlotProps({
-    elementType: TextField,
-    externalSlotProps: slotProps?.textField,
+  const textFieldProps = useFieldTextFieldProps<
+    SingleInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>
+  >({
+    slotProps,
+    ref: inRef,
     externalForwardedProps: other,
-    ownerState,
-    additionalProps: {
-      ref: inRef,
-    },
-  }) as SingleInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>;
-
-  // TODO: Remove when mui/material-ui#35088 will be merged
-  textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
-  textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
+  });
 
   const fieldResponse = useSingleInputDateTimeRangeField<
     TEnableAccessibleFieldDOMStructure,
     typeof textFieldProps
   >(textFieldProps);
-  const convertedFieldResponse = convertFieldResponseIntoMuiTextFieldProps(fieldResponse);
 
-  const processedFieldProps = useClearableField({
-    ...convertedFieldResponse,
-    slots,
-    slotProps,
-  });
-
-  return <TextField {...processedFieldProps} />;
+  return (
+    <PickerFieldUI
+      slots={slots}
+      slotProps={slotProps}
+      fieldResponse={fieldResponse}
+      defaultOpenPickerIcon={DateRangeIcon}
+    />
+  );
 }) as DateRangeFieldComponent;
 
 SingleInputDateTimeRangeField.fieldType = 'single-input';
@@ -97,6 +83,12 @@ SingleInputDateTimeRangeField.propTypes = {
    * @default false
    */
   clearable: PropTypes.bool,
+  /**
+   * The position at which the clear button is placed.
+   * If the field is not clearable, the button is not rendered.
+   * @default 'end'
+   */
+  clearButtonPosition: PropTypes.oneOf(['end', 'start']),
   /**
    * The color of the component.
    * It supports both default and custom theme colors, which can be added as shown in the
@@ -332,10 +324,10 @@ SingleInputDateTimeRangeField.propTypes = {
    */
   shouldDisableTime: PropTypes.func,
   /**
-   * If `true`, the format will respect the leading zeroes (e.g: on dayjs, the format `M/D/YYYY` will render `8/16/2018`)
-   * If `false`, the format will always add leading zeroes (e.g: on dayjs, the format `M/D/YYYY` will render `08/16/2018`)
+   * If `true`, the format will respect the leading zeroes (for example on dayjs, the format `M/D/YYYY` will render `8/16/2018`)
+   * If `false`, the format will always add leading zeroes (for example on dayjs, the format `M/D/YYYY` will render `08/16/2018`)
    *
-   * Warning n°1: Luxon is not able to respect the leading zeroes when using macro tokens (e.g: "DD"), so `shouldRespectLeadingZeros={true}` might lead to inconsistencies when using `AdapterLuxon`.
+   * Warning n°1: Luxon is not able to respect the leading zeroes when using macro tokens (for example "DD"), so `shouldRespectLeadingZeros={true}` might lead to inconsistencies when using `AdapterLuxon`.
    *
    * Warning n°2: When `shouldRespectLeadingZeros={true}`, the field will add an invisible character on the sections containing a single digit to make sure `onChange` is fired.
    * If you need to get the clean value from the input, you can remove this character using `input.value.replace(/\u200e/g, '')`.

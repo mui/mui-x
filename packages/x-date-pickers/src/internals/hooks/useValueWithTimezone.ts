@@ -4,13 +4,17 @@ import useControlled from '@mui/utils/useControlled';
 import { useUtils } from './useUtils';
 import type { PickerValueManager } from './usePicker';
 import { PickersTimezone, PickerValidDate } from '../../models';
+import { PickerValidValue } from '../models';
 
 /**
  * Hooks making sure that:
  * - The value returned by `onChange` always have the timezone of `props.value` or `props.defaultValue` if defined
  * - The value rendered is always the one from `props.timezone` if defined
  */
-export const useValueWithTimezone = <TValue, TChange extends (...params: any[]) => void>({
+export const useValueWithTimezone = <
+  TValue extends PickerValidValue,
+  TChange extends (...params: any[]) => void,
+>({
   timezone: timezoneProp,
   value: valueProp,
   defaultValue,
@@ -63,7 +67,10 @@ export const useValueWithTimezone = <TValue, TChange extends (...params: any[]) 
 /**
  * Wrapper around `useControlled` and `useValueWithTimezone`
  */
-export const useControlledValueWithTimezone = <TValue, TChange extends (...params: any[]) => void>({
+export const useControlledValueWithTimezone = <
+  TValue extends PickerValidValue,
+  TChange extends (...params: any[]) => void,
+>({
   name,
   timezone: timezoneProp,
   value: valueProp,
@@ -94,7 +101,10 @@ export const useControlledValueWithTimezone = <TValue, TChange extends (...param
   });
 };
 
-interface UseValueWithTimezoneParameters<TValue, TChange extends (...params: any[]) => void> {
+interface UseValueWithTimezoneParameters<
+  TValue extends PickerValidValue,
+  TChange extends (...params: any[]) => void,
+> {
   timezone: PickersTimezone | undefined;
   value: TValue | undefined;
   defaultValue: TValue | undefined;
@@ -109,7 +119,7 @@ interface UseValueWithTimezoneParameters<TValue, TChange extends (...params: any
 }
 
 interface UseControlledValueWithTimezoneParameters<
-  TValue,
+  TValue extends PickerValidValue,
   TChange extends (...params: any[]) => void,
 > extends UseValueWithTimezoneParameters<TValue, TChange> {
   name: string;

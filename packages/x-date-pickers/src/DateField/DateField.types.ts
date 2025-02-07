@@ -1,33 +1,21 @@
-import * as React from 'react';
-import { SlotComponentProps } from '@mui/utils';
 import { MakeOptional } from '@mui/x-internals/types';
-import TextField from '@mui/material/TextField';
-import {
-  ExportedUseClearableFieldProps,
-  UseClearableFieldSlots,
-  UseClearableFieldSlotProps,
-} from '../hooks/useClearableField';
-import {
-  DateValidationError,
-  FieldSection,
-  PickerValidDate,
-  BuiltInFieldTextFieldProps,
-} from '../models';
+import { DateValidationError, BuiltInFieldTextFieldProps } from '../models';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { ExportedValidateDateProps } from '../validation/validateDate';
+import { PickerValue } from '../internals/models';
+import {
+  ExportedPickerFieldUIProps,
+  PickerFieldUISlotProps,
+  PickerFieldUISlots,
+} from '../internals/components/PickerFieldUI';
 
 export interface UseDateFieldProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends MakeOptional<
-      UseFieldInternalProps<
-        PickerValidDate | null,
-        FieldSection,
-        TEnableAccessibleFieldDOMStructure,
-        DateValidationError
-      >,
+      UseFieldInternalProps<PickerValue, TEnableAccessibleFieldDOMStructure, DateValidationError>,
       'format'
     >,
     ExportedValidateDateProps,
-    ExportedUseClearableFieldProps {}
+    ExportedPickerFieldUIProps {}
 
 export type DateFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = true> =
   // The hook props
@@ -46,25 +34,12 @@ export type DateFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = 
        * The props used for each component slot.
        * @default {}
        */
-      slotProps?: DateFieldSlotProps<TEnableAccessibleFieldDOMStructure>;
+      slotProps?: DateFieldSlotProps;
     };
 
 export type DateFieldOwnerState<TEnableAccessibleFieldDOMStructure extends boolean> =
   DateFieldProps<TEnableAccessibleFieldDOMStructure>;
 
-export interface DateFieldSlots extends UseClearableFieldSlots {
-  /**
-   * Form control with an input to render the value.
-   * @default TextField from '@mui/material' or PickersTextField if `enableAccessibleFieldDOMStructure` is `true`.
-   */
-  textField?: React.ElementType;
-}
+export interface DateFieldSlots extends PickerFieldUISlots {}
 
-export interface DateFieldSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends UseClearableFieldSlotProps {
-  textField?: SlotComponentProps<
-    typeof TextField,
-    {},
-    DateFieldOwnerState<TEnableAccessibleFieldDOMStructure>
-  >;
-}
+export interface DateFieldSlotProps extends PickerFieldUISlotProps {}

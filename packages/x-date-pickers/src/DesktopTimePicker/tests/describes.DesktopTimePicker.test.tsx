@@ -11,6 +11,7 @@ import {
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
+import { PickerValue } from '@mui/x-date-pickers/internals';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DesktopTimePicker /> - Describes', () => {
@@ -27,7 +28,6 @@ describe('<DesktopTimePicker /> - Describes', () => {
     clock,
     views: ['hours', 'minutes'],
     componentFamily: 'picker',
-    variant: 'desktop',
   }));
 
   describeConformance(<DesktopTimePicker />, () => ({
@@ -46,7 +46,7 @@ describe('<DesktopTimePicker /> - Describes', () => {
     ],
   }));
 
-  describeValue(DesktopTimePicker, () => ({
+  describeValue<PickerValue, 'picker'>(DesktopTimePicker, () => ({
     render,
     componentFamily: 'picker',
     type: 'time',

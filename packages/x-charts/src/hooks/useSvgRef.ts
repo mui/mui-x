@@ -1,15 +1,15 @@
 'use client';
 import * as React from 'react';
-import { SvgRefContext } from '../context/SvgRefProvider';
+import { useChartContext } from '../context/ChartProvider';
 
 /**
  * Get the ref for the SVG element.
  * @returns The SVG ref.
  */
-export function useSvgRef(): React.MutableRefObject<SVGSVGElement> {
-  const { isInitialized, data } = React.useContext(SvgRefContext);
+export function useSvgRef(): React.RefObject<SVGSVGElement | null> {
+  const context = useChartContext();
 
-  if (!isInitialized) {
+  if (!context) {
     throw new Error(
       [
         'MUI X: Could not find the svg ref context.',
@@ -18,5 +18,5 @@ export function useSvgRef(): React.MutableRefObject<SVGSVGElement> {
     );
   }
 
-  return data.svgRef as React.MutableRefObject<SVGSVGElement>;
+  return context.svgRef;
 }

@@ -1,3 +1,4 @@
+import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
 import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
 import { GridRowId } from '../../../models/gridRows';
 import { GridFilterItem } from '../../../models/gridFilterItem';
@@ -70,8 +71,12 @@ export const gridFilteredDescendantCountLookupSelector = createSelector(
 export const gridExpandedSortedRowEntriesSelector = createSelectorMemoized(
   gridVisibleRowsLookupSelector,
   gridSortedRowEntriesSelector,
-  (visibleRowsLookup, sortedRows) =>
-    sortedRows.filter((row) => visibleRowsLookup[row.id] !== false),
+  (visibleRowsLookup, sortedRows) => {
+    if (isObjectEmpty(visibleRowsLookup)) {
+      return sortedRows;
+    }
+    return sortedRows.filter((row) => visibleRowsLookup[row.id] !== false);
+  },
 );
 
 /**
@@ -93,7 +98,9 @@ export const gridFilteredSortedRowEntriesSelector = createSelectorMemoized(
   gridFilteredRowsLookupSelector,
   gridSortedRowEntriesSelector,
   (filteredRowsLookup, sortedRows) =>
-    sortedRows.filter((row) => filteredRowsLookup[row.id] !== false),
+    isObjectEmpty(filteredRowsLookup)
+      ? sortedRows
+      : sortedRows.filter((row) => filteredRowsLookup[row.id] !== false),
 );
 
 /**

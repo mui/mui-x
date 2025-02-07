@@ -9,16 +9,15 @@ import {
   BaseDatePickerSlots,
   BaseDatePickerSlotProps,
 } from '../DatePicker/shared';
-import { DateView } from '../models';
 import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
 
 export interface DesktopDatePickerSlots
   extends BaseDatePickerSlots,
-    MakeOptional<UseDesktopPickerSlots<DateView>, 'field' | 'openPickerIcon'> {}
+    MakeOptional<UseDesktopPickerSlots, 'field' | 'openPickerIcon'> {}
 
 export interface DesktopDatePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends BaseDatePickerSlotProps,
-    ExportedUseDesktopPickerSlotProps<DateView, TEnableAccessibleFieldDOMStructure> {}
+    ExportedUseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
 
 export interface DesktopDatePickerProps<TEnableAccessibleFieldDOMStructure extends boolean = true>
   extends BaseDatePickerProps,
@@ -39,4 +38,9 @@ export interface DesktopDatePickerProps<TEnableAccessibleFieldDOMStructure exten
    * @default 4
    */
   yearsPerRow?: 3 | 4;
+  /**
+   * If `true`, the Picker will close after submitting the full date.
+   * @default true
+   */
+  closeOnSelect?: boolean;
 }

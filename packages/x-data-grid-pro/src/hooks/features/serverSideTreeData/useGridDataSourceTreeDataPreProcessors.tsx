@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   gridRowTreeSelector,
   useFirstRender,
@@ -11,6 +12,7 @@ import {
 import {
   GridPipeProcessor,
   GridRowsPartialUpdates,
+  GridStrategyGroup,
   GridStrategyProcessor,
   useGridRegisterPipeProcessor,
   useGridRegisterStrategyProcessor,
@@ -37,7 +39,7 @@ import { getVisibleRowsLookup } from '../../../utils/tree/utils';
 import { TreeDataStrategy } from '../treeData/gridTreeDataUtils';
 
 export const useGridDataSourceTreeDataPreProcessors = (
-  privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
+  privateApiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     | 'treeData'
@@ -51,7 +53,7 @@ export const useGridDataSourceTreeDataPreProcessors = (
 ) => {
   const setStrategyAvailability = React.useCallback(() => {
     privateApiRef.current.setStrategyAvailability(
-      'rowTree',
+      GridStrategyGroup.RowTree,
       TreeDataStrategy.DataSource,
       props.treeData && props.unstable_dataSource ? () => true : () => false,
     );

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Theme } from '@mui/material/styles';
-import { SxProps } from '@mui/system';
-import { SlotComponentProps } from '@mui/utils';
+import { SxProps } from '@mui/system/styleFunctionSx';
+import { SlotComponentProps } from '@mui/utils/types';
 import { RichTreeViewClasses } from './richTreeViewClasses';
 import {
   RichTreeViewPluginParameters,
@@ -29,7 +29,7 @@ export interface RichTreeViewSlotProps<R extends {}, Multiple extends boolean | 
   root?: SlotComponentProps<'ul', {}, RichTreeViewProps<R, Multiple>>;
 }
 
-export type RichTreeViewApiRef = React.MutableRefObject<
+export type RichTreeViewApiRef = React.RefObject<
   TreeViewPublicAPI<RichTreeViewPluginSignatures> | undefined
 >;
 
