@@ -84,7 +84,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
           apiRef={apiRef}
           columns={columns}
           unstable_dataSource={dataSource}
-          initialState={{ pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 } }}
+          initialState={{ pagination: { paginationModel: { page: 0, pageSize: 10 } } }}
           pagination
           treeData
           pageSizeOptions={pageSizeOptions}
