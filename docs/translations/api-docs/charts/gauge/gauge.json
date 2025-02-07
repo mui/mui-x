@@ -10,9 +10,6 @@
     "cy": {
       "description": "The y coordinate of the arc center. Can be a number (in px) or a string with a percentage such as &#39;50%&#39;. The &#39;100%&#39; is the height the drawing area."
     },
-    "disableAxisListener": {
-      "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
-    },
     "endAngle": { "description": "The end angle (deg)." },
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."

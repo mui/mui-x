@@ -242,6 +242,43 @@ Renames `labelFontSize` and `tickFontSize` props to the corresponding `xxxStyle`
  />
 ```
 
+#### `remove-on-axis-click-handler`
+
+Remove the `<ChartsOnAxisClickHandler />` and move the associated `onAxisClick` prop to its parent.
+
+> [!WARNING]
+> This codemode does not work if component got renamed or if the handler is not a direct child of the container.
+
+```diff
++ <ChartContainer onAxisClick={() => {}}>
+- <ChartContainer>
+-   <ChartsOnAxisClickHandler onAxisClick={() => {}} />
+ </ChartContainer>
+```
+
+#### `rename-unstable-use-series`
+
+Remove `unstable_` prefix from `useSeries` and `use*Series` hooks, as they have now become stable.
+
+```diff
+  import {
+-   unstable_useSeries,
++   useSeries,
+-   unstable_usePieSeries,
++   usePieSeries,
+-   unstable_useLineSeries,
++   useLineSeries,
+-   unstable_useBarSeries,
++   useBarSeries,
+-   unstable_useScatterSeries,
++   useScatterSeries,
+  } from '@mui/x-charts/hooks';
+  import {
+-   unstable_useHeatmapSeries,
++   useHeatmapSeries,
+  } from '@mui/x-charts-pro/hooks';
+```
+
 ### Data Grid codemods
 
 #### `preset-safe` for Data Grid v8.0.0
