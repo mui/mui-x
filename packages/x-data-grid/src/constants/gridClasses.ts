@@ -29,6 +29,10 @@ export interface GridClasses {
    */
   aggregationColumnHeaderLabel: string;
   /**
+   * Styles applied to the aggregation row overlay wrapper.
+   */
+  aggregationRowOverlayWrapper: string;
+  /**
    * Styles applied to the root element if `autoHeight={true}`.
    */
   autoHeight: string;
@@ -690,6 +694,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'aggregationColumnHeader--alignCenter',
   'aggregationColumnHeader--alignRight',
   'aggregationColumnHeaderLabel',
+  'aggregationRowOverlayWrapper',
   'autoHeight',
   'autosizing',
   'booleanCell',
