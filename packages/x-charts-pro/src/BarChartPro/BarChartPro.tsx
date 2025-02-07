@@ -108,6 +108,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
+
   return (
     <ChartDataProviderPro {...chartDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps}>

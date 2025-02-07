@@ -22,7 +22,7 @@ import {
 export interface ScatterChartProProps
   extends Omit<ScatterChartProps, 'apiRef'>,
     Omit<
-      ChartContainerProProps<'scatter'>,
+      ChartContainerProProps<'scatter', ScatterChartProPluginsSignatures>,
       'series' | 'plugins' | 'seriesConfig' | 'onItemClick'
     > {}
 

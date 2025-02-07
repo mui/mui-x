@@ -30,7 +30,7 @@ import { ChartDataProvider } from '../ChartDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../internals/components/ChartsWrapper';
 import { UseChartVoronoiSignature } from '../internals/plugins/featurePlugins/useChartVoronoi';
-import { ScatterChartPluginsSignatures } from './plugins';
+import { ScatterChartPluginsSignatures } from './ScatterChart.plugins';
 
 export interface ScatterChartSlots
   extends ChartsAxisSlots,

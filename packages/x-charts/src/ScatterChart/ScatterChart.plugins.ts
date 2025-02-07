@@ -15,7 +15,10 @@ import {
   UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { ConvertSignaturesIntoPlugins } from '../internals/plugins/models/helpers';
-import { useChartVoronoi, UseChartVoronoiSignature } from '../internals/plugins/featurePlugins/useChartVoronoi';
+import {
+  useChartVoronoi,
+  UseChartVoronoiSignature,
+} from '../internals/plugins/featurePlugins/useChartVoronoi';
 
 export type ScatterChartPluginsSignatures = [
   UseChartZAxisSignature,

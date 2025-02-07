@@ -31,7 +31,6 @@ export const useChartContainerProProps = <
     props as ChartContainerProProps<TSeries, AllPluginSignatures>;
 
   const { chartDataProviderProps, chartsSurfaceProps, children } = useChartContainerProps(
-    // @ts-ignore
     baseProps,
     ref,
   );
