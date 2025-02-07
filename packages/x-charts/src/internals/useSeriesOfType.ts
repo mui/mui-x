@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ChartsSeriesConfig } from '../models/seriesType/config';
 import { SeriesId } from '../models/seriesType/common';
-import { useSeries } from '../hooks';
+import { useSeries } from '../hooks/useSeries';
 
 export function useSeriesOfType<T extends keyof ChartsSeriesConfig>(
   seriesType: T,
