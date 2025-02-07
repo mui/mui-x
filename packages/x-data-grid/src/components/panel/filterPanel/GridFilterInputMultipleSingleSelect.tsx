@@ -1,19 +1,17 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Autocomplete, { AutocompleteProps, createFilterOptions } from '@mui/material/Autocomplete';
 import { unstable_useId as useId } from '@mui/utils';
-import { getValueOptions, isSingleSelectColDef } from './filterPanelUtils';
+import { AutocompleteProps } from '../../../models/gridBaseSlots';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
 import type { GridSingleSelectColDef, ValueOptions } from '../../../models/colDef/gridColDef';
+import { getValueOptions, isSingleSelectColDef } from './filterPanelUtils';
 
 export type GridFilterInputMultipleSingleSelectProps = GridFilterInputValueProps<
-  Omit<AutocompleteProps<ValueOptions, true, false, true>, 'options' | 'renderInput'>
+  Omit<AutocompleteProps<ValueOptions, true, false, true>, 'options'>
 > & {
   type?: 'singleSelect';
 };
-
-const filter = createFilterOptions<any>();
 
 function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingleSelectProps) {
   const { item, applyValue, type, apiRef, focusElementRef, slotProps, ...other } = props;
@@ -66,47 +64,26 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     [applyValue, item, getOptionValue],
   );
 
+  const BaseAutocomplete = rootProps.slots.baseAutocomplete as React.JSXElementConstructor<
+    AutocompleteProps<ValueOptions, true, false, true>
+  >;
+
   return (
-    <Autocomplete<ValueOptions, true, false, true>
+    <BaseAutocomplete
       multiple
       options={resolvedValueOptions}
       isOptionEqualToValue={isOptionEqualToValue}
-      filterOptions={filter}
       id={id}
       value={filteredValues}
       onChange={handleChange}
       getOptionLabel={getOptionLabel}
-      renderTags={(value, getTagProps) =>
-        value.map((option, index) => {
-          const { key, ...tagProps } = getTagProps({ index });
-          return (
-            <rootProps.slots.baseChip
-              key={key}
-              variant="outlined"
-              size="small"
-              label={getOptionLabel(option)}
-              {...tagProps}
-            />
-          );
-        })
-      }
-      renderInput={(params) => {
-        const { inputProps, InputProps, InputLabelProps, ...rest } = params;
-        return (
-          <rootProps.slots.baseTextField
-            {...rest}
-            label={apiRef.current.getLocaleText('filterPanelInputLabel')}
-            placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
-            inputRef={focusElementRef}
-            type={type || 'text'}
-            slotProps={{
-              input: InputProps,
-              inputLabel: InputLabelProps,
-              htmlInput: inputProps,
-            }}
-            {...rootProps.slotProps?.baseTextField}
-          />
-        );
+      label={apiRef.current.getLocaleText('filterPanelInputLabel')}
+      placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
+      slotProps={{
+        textField: {
+          type: type || 'text',
+          inputRef: focusElementRef,
+        },
       }}
       {...other}
       {...slotProps?.root}
