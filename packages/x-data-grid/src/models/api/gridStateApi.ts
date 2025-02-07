@@ -1,8 +1,6 @@
-import { RefObject } from '@mui/x-internals/types';
 import { GridStateCommunity } from '../gridStateCommunity';
 import { GridControlledStateEventLookup, GridControlledStateReasonLookup } from '../events';
 import { GridControlStateItem } from '../controlStateItem';
-import { GridApiCommunity } from './gridApiCommunity';
 
 export interface GridStateApi<State extends GridStateCommunity> {
   /**
@@ -27,7 +25,7 @@ export interface GridStateApi<State extends GridStateCommunity> {
   ) => boolean;
 }
 
-export interface GridStatePrivateApi<ApiRef extends RefObject<GridApiCommunity>> {
+export interface GridStatePrivateApi<State extends GridStateCommunity> {
   /**
    * Updates a single sub-state.
    * Publishes the `xxxChange` event and calls the `onXXXChange` prop.
@@ -38,7 +36,7 @@ export interface GridStatePrivateApi<ApiRef extends RefObject<GridApiCommunity>>
    */
   updateControlState: <K extends keyof GridControlledStateReasonLookup>(
     key: K,
-    state: (oldState: ApiRef['current']['state'][K]) => ApiRef['current']['state'][K],
+    state: (oldState: State[K]) => State[K],
     reason?: GridControlledStateReasonLookup[K],
   ) => boolean;
   /**
@@ -46,6 +44,6 @@ export interface GridStatePrivateApi<ApiRef extends RefObject<GridApiCommunity>>
    * @param {GridControlStateItem>} controlState The [[GridControlStateItem]] to be registered.
    */
   registerControlState: <E extends keyof GridControlledStateEventLookup, Args>(
-    controlState: GridControlStateItem<ApiRef, Args, E>,
+    controlState: GridControlStateItem<State, Args, E>,
   ) => void;
 }

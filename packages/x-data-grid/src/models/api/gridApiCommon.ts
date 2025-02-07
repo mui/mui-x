@@ -76,7 +76,7 @@ export interface GridPrivateOnlyApiCommon<
   PrivateApi extends GridPrivateApiCommon,
   Props extends DataGridProcessedProps,
 > extends GridCorePrivateApi<Api, PrivateApi, Props>,
-    GridStatePrivateApi<RefObject<PrivateApi>>,
+    GridStatePrivateApi<PrivateApi['state']>,
     GridPipeProcessingPrivateApi,
     GridStrategyProcessingApi,
     GridColumnSpanningPrivateApi,
