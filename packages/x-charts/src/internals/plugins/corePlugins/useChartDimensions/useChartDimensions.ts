@@ -3,7 +3,7 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import ownerWindow from '@mui/utils/ownerWindow';
-import { DEFAULT_AXIS_SIZES, DEFAULT_MARGINS } from '../../../../constants';
+import { DEFAULT_MARGINS, EMPTY_SIDES } from '../../../../constants';
 import { ChartPlugin } from '../../models';
 import type { UseChartDimensionsSignature } from './useChartDimensions.types';
 import { selectorChartDimensionsState } from './useChartDimensions.selectors';
@@ -43,7 +43,7 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
         return prev;
       }
 
-      const axisSize = defaultizeMargin(params.axisSize, DEFAULT_AXIS_SIZES);
+      const axisSize = defaultizeMargin(params.axisSize, EMPTY_SIDES);
 
       return {
         ...prev,
@@ -81,7 +81,7 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
           top: params.axisSize?.top,
           bottom: params.axisSize?.bottom,
         },
-        DEFAULT_AXIS_SIZES,
+        EMPTY_SIDES,
       );
 
       return {
@@ -238,7 +238,7 @@ useChartDimensions.getDefaultizedParams = ({ params }) => ({
 });
 
 useChartDimensions.getInitialState = ({ width, height, margin, axisSize }) => {
-  const axisSizes = defaultizeMargin(axisSize, DEFAULT_AXIS_SIZES);
+  const axisSizes = defaultizeMargin(axisSize, EMPTY_SIDES);
 
   return {
     dimensions: {
