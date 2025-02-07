@@ -42,6 +42,7 @@ export const preprocessSeries = <TSeriesType extends ChartSeriesType>({
       throw new Error(`MUI X: series' id "${id}" is not unique.`);
     }
 
+    // @ts-ignore
     seriesGroups[type]!.series[id] = {
       id,
       ...defaultizeColor(seriesData, seriesIndex, colors),

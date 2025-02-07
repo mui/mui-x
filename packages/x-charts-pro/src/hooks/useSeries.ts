@@ -14,3 +14,16 @@ export function useHeatmapSeries(): ProcessedSeries['heatmap'] {
 
   return React.useMemo(() => series.heatmap, [series.heatmap]);
 }
+
+/**
+ * Get access to the internal state of funnel series.
+ * The returned object contains:
+ * - series: a mapping from ids to series attributes.
+ * - seriesOrder: the array of series ids.
+ * @returns {{ series: Record<SeriesId, DefaultizedFunnelSeriesType>; seriesOrder: SeriesId[]; } | undefined}  funnelSeries
+ */
+export function useFunnelSeries(): ProcessedSeries['funnel'] {
+  const series = useSeries();
+
+  return React.useMemo(() => series.funnel, [series.funnel]);
+}

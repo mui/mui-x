@@ -72,7 +72,6 @@ function getComponents() {
       srcLight: '/static/x/component-illustrations/funnel-light.png',
       srcDark: '/static/x/component-illustrations/funnel-dark.png',
       href: '/x/react-charts/funnel/',
-      planned: true,
       pro: true,
     },
     {

@@ -1,0 +1,5 @@
+<FunnelChart
+  series={[populationByEducationLevelPercentageSeriesLabeled]}
+  yAxis={[{ scaleType: 'linear' }]}
+  {...funnelProps}
+/>
