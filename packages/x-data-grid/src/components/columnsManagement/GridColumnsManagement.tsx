@@ -20,8 +20,6 @@ import { useLazyRef } from '../../hooks/utils/useLazyRef';
 import { checkColumnVisibilityModelsSame, defaultSearchPredicate } from './utils';
 import { NotRendered } from '../../utils/assert';
 
-const Checkbox = styled(NotRendered<GridSlotProps['baseCheckbox']>)({});
-
 export interface GridColumnsManagementProps {
   /*
    * Changes how the options in the columns selector should be ordered.
@@ -273,8 +271,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
       </GridColumnsManagementHeader>
       <GridColumnsManagementBody className={classes.root} ownerState={rootProps}>
         {currentColumns.map((column) => (
-          <Checkbox
-            as={rootProps.slots.baseCheckbox}
+          <rootProps.slots.baseCheckbox
             key={column.field}
             className={classes.row}
             disabled={column.hideable === false}
@@ -283,7 +280,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
             name={column.field}
             inputRef={isFirstHideableColumn(column) ? firstSwitchRef : undefined}
             label={column.headerName || column.field}
-            size='small'
+            size='medium'
             {...rootProps.slotProps?.baseCheckbox}
           />
         ))}
@@ -296,8 +293,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
       {(!disableShowHideToggle || !disableResetButton) && currentColumns.length > 0 ? (
         <GridColumnsManagementFooter ownerState={rootProps} className={classes.footer}>
           {!disableShowHideToggle ? (
-            <Checkbox
-              as={rootProps.slots.baseCheckbox}
+            <rootProps.slots.baseCheckbox
               disabled={hideableColumns.length === 0}
               checked={allHideableColumnsVisible}
               indeterminate={!allHideableColumnsVisible && !allHideableColumnsHidden}

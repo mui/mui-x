@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
 import { ChartPlugin } from '../../models';
-import { ChartSeriesType } from '../../../../models/seriesType/config';
 import { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 import { rainbowSurgePalette } from '../../../../colorPalettes';
 import { useSelector } from '../../../store/useSelector';
@@ -14,9 +13,13 @@ import { getAxisValue } from './getAxisValue';
 import { getSVGPoint } from '../../../getSVGPoint';
 import { selectorChartsInteractionAxis } from '../useChartInteraction';
 
-export const useChartCartesianAxis: ChartPlugin<
-  UseChartCartesianAxisSignature<ChartSeriesType>
-> = ({ params, store, seriesConfig, svgRef, instance }) => {
+export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<any>> = ({
+  params,
+  store,
+  seriesConfig,
+  svgRef,
+  instance,
+}) => {
   const { xAxis, yAxis, dataset } = params;
 
   if (process.env.NODE_ENV !== 'production') {

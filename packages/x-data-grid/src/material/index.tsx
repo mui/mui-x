@@ -98,7 +98,7 @@ const baseSlots: GridBaseSlots = {
   baseCircularProgress: MUICircularProgress,
   baseDivider: MUIDivider,
   baseLinearProgress: MUILinearProgress,
-  baseMenuList: MUIMenuList,
+  baseMenuList: BaseMenuList,
   baseMenuItem: BaseMenuItem,
   baseTextField: BaseTextField,
   baseFormControl: MUIFormControl,
@@ -133,6 +133,10 @@ function BaseCheckbox(props: GridSlotProps['baseCheckbox']) {
       label={label}
     />
   );
+}
+
+function BaseMenuList(props: GridSlotProps['baseMenuList']) {
+  return <MUIMenuList {...props} />;
 }
 
 function BaseMenuItem(props: GridSlotProps['baseMenuItem']) {

@@ -3,7 +3,6 @@ import type { BadgeProps as MUIBadgeProps } from '@mui/material/Badge';
 import type { ButtonProps as MUIButtonProps } from '@mui/material/Button';
 import type { CircularProgressProps as MUICircularProgressProps } from '@mui/material/CircularProgress';
 import type { LinearProgressProps as MUILinearProgressProps } from '@mui/material/LinearProgress';
-import type { MenuListProps } from '@mui/material/MenuList';
 import type { MenuItemProps as MUIMenuItemProps } from '@mui/material/MenuItem';
 import type { FormControlProps } from '@mui/material/FormControl';
 import type { SelectProps } from '@mui/material/Select';
@@ -41,6 +40,7 @@ import type {
   DividerProps,
   IconButtonProps,
   LinearProgressProps,
+  MenuListProps,
   MenuItemProps,
   SkeletonProps,
   TooltipProps,

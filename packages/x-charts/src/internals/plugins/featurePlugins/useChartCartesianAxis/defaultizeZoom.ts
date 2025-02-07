@@ -1,4 +1,6 @@
-import { AxisId, DefaultizedZoomOptions, ZoomOptions } from '@mui/x-charts/internals';
+import { AxisId } from '../../../../models/axis';
+import { DefaultizedZoomOptions } from './useChartCartesianAxis.types';
+import { ZoomOptions } from './zoom.types';
 
 const defaultZoomOptions: Required<ZoomOptions> = {
   minStart: 0,
