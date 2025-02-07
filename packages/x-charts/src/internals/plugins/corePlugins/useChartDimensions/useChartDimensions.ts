@@ -71,6 +71,9 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
       const prevWidth = prev.dimensions.width + prev.dimensions.left + prev.dimensions.right;
       const prevHeight = prev.dimensions.height + prev.dimensions.top + prev.dimensions.bottom;
 
+      // Manual mapping so the useEffect doesn't complain that it's missing dependencies.
+      // If we use `params.axisSize` directly, it will trigger the useEffect on every render.
+      // Same is true for `params.margin`.
       const axisSize = defaultizeMargin(
         {
           left: params.axisSize?.left,
