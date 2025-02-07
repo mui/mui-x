@@ -72,6 +72,12 @@ export interface UseChartCartesianAxisParameters {
 export type UseChartCartesianAxisDefaultizedParameters = UseChartCartesianAxisParameters & {
   defaultizedXAxis: AxisConfig<ScaleName, any, ChartsXAxisProps>[];
   defaultizedYAxis: AxisConfig<ScaleName, any, ChartsYAxisProps>[];
+  axisSize: {
+    left: number;
+    bottom: number;
+    right: number;
+    top: number;
+  };
 };
 
 export interface DefaultizedZoomOptions extends Required<ZoomOptions> {

@@ -7,3 +7,9 @@ export const DEFAULT_MARGINS = {
   right: 20,
 };
 export const DEFAULT_AXIS_SIZE = 30;
+export const DEFAULT_AXIS_SIZES = {
+  top: DEFAULT_AXIS_SIZE,
+  bottom: DEFAULT_AXIS_SIZE,
+  left: DEFAULT_AXIS_SIZE,
+  right: DEFAULT_AXIS_SIZE,
+};

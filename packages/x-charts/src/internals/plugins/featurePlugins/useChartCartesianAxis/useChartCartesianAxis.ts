@@ -159,30 +159,30 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       event.preventDefault();
 
       let dataIndex: number | null = null;
-      let isXaxis: boolean = false;
+      let isXAxis: boolean = false;
       if (interactionAxis.x === null && interactionAxis.y === null) {
         const svgPoint = getSVGPoint(element, event);
 
         const xIndex = getAxisValue(xAxisWithScale[usedXAxis], svgPoint.x)?.index ?? null;
-        isXaxis = xIndex !== null && xIndex !== -1;
+        isXAxis = xIndex !== null && xIndex !== -1;
 
-        dataIndex = isXaxis
+        dataIndex = isXAxis
           ? xIndex
           : (getAxisValue(yAxisWithScale[usedYAxis], svgPoint.y)?.index ?? null);
       } else {
-        isXaxis = interactionAxis.x !== null && interactionAxis.x.index !== -1;
-        dataIndex = isXaxis
+        isXAxis = interactionAxis.x !== null && interactionAxis.x.index !== -1;
+        dataIndex = isXAxis
           ? interactionAxis.x && interactionAxis.x.index
           : interactionAxis.y && interactionAxis.y.index;
       }
 
-      const USED_AXIS_ID = isXaxis ? xAxisIds[0] : yAxisIds[0];
+      const USED_AXIS_ID = isXAxis ? xAxisIds[0] : yAxisIds[0];
       if (dataIndex == null || dataIndex === -1) {
         return;
       }
 
       // The .data exist because otherwise the dataIndex would be null or -1.
-      const axisValue = (isXaxis ? xAxisWithScale : yAxisWithScale)[USED_AXIS_ID].data![dataIndex];
+      const axisValue = (isXAxis ? xAxisWithScale : yAxisWithScale)[USED_AXIS_ID].data![dataIndex];
 
       const seriesValues: Record<string, number | null | undefined> = {};
 
@@ -195,7 +195,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
             const providedXAxisId = seriesItem.xAxisId;
             const providedYAxisId = seriesItem.yAxisId;
 
-            const axisKey = isXaxis ? providedXAxisId : providedYAxisId;
+            const axisKey = isXAxis ? providedXAxisId : providedYAxisId;
             if (axisKey === undefined || axisKey === USED_AXIS_ID) {
               seriesValues[seriesId] = seriesItem.data[dataIndex];
             }
@@ -235,12 +235,39 @@ useChartCartesianAxis.params = {
 };
 
 useChartCartesianAxis.getDefaultizedParams = ({ params }) => {
+  const defaultizedXAxis = defaultizeAxis(params.xAxis, params.dataset, 'x');
+  const defaultizedYAxis = defaultizeAxis(params.yAxis, params.dataset, 'y');
+  const xAxisSizes = defaultizedXAxis.reduce(
+    (acc, cur) => {
+      if (cur.position === 'top') {
+        return { ...acc, top: acc.top + (cur.height || 0) };
+      }
+      return { ...acc, bottom: acc.bottom + (cur.height || 0) };
+    },
+    { top: 0, bottom: 0 },
+  );
+  const yAxisSizes = defaultizedYAxis.reduce(
+    (acc, cur) => {
+      if (cur.position === 'right') {
+        return { ...acc, right: acc.right + (cur.width || 0) };
+      }
+      return { ...acc, left: acc.left + (cur.width || 0) };
+    },
+    { left: 0, right: 0 },
+  );
+
   return {
     ...params,
     colors: params.colors ?? rainbowSurgePalette,
     theme: params.theme ?? 'light',
-    defaultizedXAxis: defaultizeAxis(params.xAxis, params.dataset, 'x'),
-    defaultizedYAxis: defaultizeAxis(params.yAxis, params.dataset, 'y'),
+    defaultizedXAxis,
+    defaultizedYAxis,
+    axisSize: {
+      top: xAxisSizes.top,
+      right: yAxisSizes.right,
+      bottom: xAxisSizes.bottom,
+      left: yAxisSizes.left,
+    },
   };
 };
 
