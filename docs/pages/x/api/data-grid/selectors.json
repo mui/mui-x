@@ -409,6 +409,7 @@
     "description": "",
     "supportsApiRef": true
   },
+  { "name": "gridRowIdSelector", "returnType": "any", "description": "", "supportsApiRef": true },
   {
     "name": "gridRowIsEditingSelector",
     "returnType": "boolean",
@@ -418,6 +419,12 @@
   {
     "name": "gridRowMaximumTreeDepthSelector",
     "returnType": "number",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridRowNodeSelector",
+    "returnType": "GridTreeNode",
     "description": "",
     "supportsApiRef": true
   },
