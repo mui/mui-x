@@ -23,7 +23,7 @@ export const GRID_DETAIL_PANEL_TOGGLE_COL_DEF: GridColDef = {
   align: 'left',
   width: 40,
   valueGetter: (value, row, column, apiRef) => {
-    const rowId = gridRowIdSelector(apiRef, row);
+    const rowId = gridRowIdSelector(apiRef.current.state, row);
     const expandedRowIds = gridDetailPanelExpandedRowIdsSelector(
       (apiRef.current as GridApiPro).state,
     );

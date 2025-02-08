@@ -53,7 +53,7 @@ const getAggregationValueWrappedValueGetter: ColumnPropertyWrapper<'valueGetter'
   getCellAggregationResult,
 }) => {
   const wrappedValueGetter: GridBaseColDef['valueGetter'] = (value, row, column, apiRef) => {
-    const rowId = gridRowIdSelector(apiRef, row);
+    const rowId = gridRowIdSelector(apiRef.current.state, row);
     const cellAggregationResult = rowId ? getCellAggregationResult(rowId, column.field) : null;
     if (cellAggregationResult != null) {
       return cellAggregationResult?.value ?? null;
@@ -81,7 +81,7 @@ const getAggregationValueWrappedValueFormatter: ColumnPropertyWrapper<'valueForm
   }
 
   const wrappedValueFormatter: GridBaseColDef['valueFormatter'] = (value, row, column, apiRef) => {
-    const rowId = gridRowIdSelector(apiRef, row);
+    const rowId = gridRowIdSelector(apiRef.current.state, row);
     if (rowId != null) {
       const cellAggregationResult = getCellAggregationResult(rowId, column.field);
       if (cellAggregationResult != null) {
@@ -153,7 +153,7 @@ const getWrappedFilterOperators: ColumnPropertyWrapper<'filterOperators'> = ({
         return null;
       }
       return (value, row, column, api) => {
-        const rowId = gridRowIdSelector(apiRef, row);
+        const rowId = gridRowIdSelector(apiRef.current.state, row);
         if (getCellAggregationResult(rowId, column.field) != null) {
           return true;
         }

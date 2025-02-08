@@ -212,7 +212,7 @@ export const createGroupingColDefForOneGroupingCriteria = ({
       return '';
     },
     valueGetter: (value, row, column, apiRef) => {
-      const rowId = gridRowIdSelector(apiRef, row);
+      const rowId = gridRowIdSelector(apiRef.current.state, row);
       const rowNode = gridRowNodeSelector(apiRef, rowId) as GridTreeNodeWithRender;
       if (!rowNode || rowNode.type === 'footer' || rowNode.type === 'pinnedRow') {
         return undefined;
@@ -342,7 +342,7 @@ export const createGroupingColDefForAllGroupingCriteria = ({
       );
     },
     valueGetter: (value, row) => {
-      const rowId = gridRowIdSelector(apiRef, row);
+      const rowId = gridRowIdSelector(apiRef.current.state, row);
       const rowNode = gridRowNodeSelector(apiRef, rowId) as GridTreeNodeWithRender;
       if (!rowNode || rowNode.type === 'footer' || rowNode.type === 'pinnedRow') {
         return undefined;
