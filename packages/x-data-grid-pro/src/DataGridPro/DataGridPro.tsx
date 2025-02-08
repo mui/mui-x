@@ -59,8 +59,8 @@ interface DataGridProComponent {
 }
 
 /**
- * Demos:
- * - [DataGridPro](https://mui.com/x/react-data-grid/demo/)
+ * Features:
+ * - [DataGridPro](https://mui.com/x/react-data-grid/features/)
  *
  * API:
  * - [DataGridPro API](https://mui.com/x/api/data-grid/data-grid-pro/)
