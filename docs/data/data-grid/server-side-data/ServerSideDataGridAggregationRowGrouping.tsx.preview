@@ -2,14 +2,6 @@
   apiRef={apiRef}
   columns={columns}
   unstable_dataSource={dataSource}
-  initialState={{
-    ...initialState,
-    rowGrouping: {
-      model: ['company', 'director'],
-    },
-    aggregation: {
-      model: { title: 'size', gross: 'sum', year: 'max' },
-    },
-  }}
+  initialState={initialStateWithAggregation}
   aggregationFunctions={aggregationFunctions}
 />

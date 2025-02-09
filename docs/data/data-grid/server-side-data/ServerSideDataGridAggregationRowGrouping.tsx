@@ -49,21 +49,23 @@ export default function ServerSideDataGridAggregationRowGrouping() {
     [fetchRows],
   );
 
+  const initialStateWithAggregation = useKeepGroupedColumnsHidden({
+    apiRef,
+    initialState: {
+      ...initialState,
+      aggregation: {
+        model: { title: 'size', gross: 'sum', year: 'max' },
+      },
+    },
+  });
+
   return (
     <div style={{ width: '100%', height: 400 }}>
       <DataGridPremium
         apiRef={apiRef}
         columns={columns}
         unstable_dataSource={dataSource}
-        initialState={{
-          ...initialState,
-          rowGrouping: {
-            model: ['company', 'director'],
-          },
-          aggregation: {
-            model: { title: 'size', gross: 'sum', year: 'max' },
-          },
-        }}
+        initialState={initialStateWithAggregation}
         aggregationFunctions={aggregationFunctions}
       />
     </div>

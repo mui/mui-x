@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   DataGridPremium,
   useGridApiRef,
-  GridInitialState,
   GridDataSource,
   GridGetRowsResponse,
 } from '@mui/x-data-grid-premium';
