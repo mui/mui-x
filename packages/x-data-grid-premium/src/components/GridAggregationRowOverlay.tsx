@@ -12,8 +12,7 @@ const GridAggregationRowOverlayWrapper = styled('div', {
   name: 'MuiDataGrid',
   slot: 'AggregationRowOverlayWrapper',
 })({
-  position: 'absolute',
-  top: 0,
+  backgroundColor: 'var(--DataGrid-pinnedBackground)',
 });
 
 type OwnerState = { classes: DataGridPremiumProcessedProps['classes'] };

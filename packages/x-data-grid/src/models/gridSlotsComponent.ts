@@ -112,6 +112,11 @@ export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponen
    */
   baseChip: React.JSXElementConstructor<GridSlotProps['baseChip']>;
   /**
+   * Component rendered for each aggregation skeleton.
+   * @default GridBottomContainer
+   */
+  bottomContainer: React.JSXElementConstructor<GridSlotProps['bottomContainer']>;
+  /**
    * Component rendered for each cell.
    * @default GridCell
    */
