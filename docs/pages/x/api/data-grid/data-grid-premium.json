@@ -674,7 +674,7 @@
     },
     {
       "name": "bottomContainer",
-      "description": "Component rendered for each aggregation skeleton.",
+      "description": "Component rendered for the bottom container.",
       "default": "GridBottomContainer",
       "class": null
     },
