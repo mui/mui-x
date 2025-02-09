@@ -1,0 +1,5 @@
+<SparkLineChart
+  data={values}
+  color={(mode) => (mode === 'light' ? 'black' : 'white')}
+  {...settings}
+/>
