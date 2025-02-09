@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-  DataGridPremium,
-  useKeepGroupedColumnsHidden,
-  useGridApiRef,
-} from '@mui/x-data-grid-premium';
+import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
 const aggregationFunctions = {
@@ -16,11 +12,9 @@ const aggregationFunctions = {
 
 export default function ServerSideDataGridAggregationRowGrouping() {
   const apiRef = useGridApiRef();
-  const {
-    columns,
-    initialState: initState,
-    fetchRows,
-  } = useMockServer({ rowGrouping: true });
+  const { columns, initialState, fetchRows } = useMockServer({
+    rowGrouping: true,
+  });
 
   const dataSource = React.useMemo(
     () => ({
@@ -49,26 +43,21 @@ export default function ServerSideDataGridAggregationRowGrouping() {
     [fetchRows],
   );
 
-  const initialState = useKeepGroupedColumnsHidden({
-    apiRef,
-    initialState: {
-      ...initState,
-      rowGrouping: {
-        model: ['company', 'director'],
-      },
-      aggregation: {
-        model: { title: 'size', gross: 'sum', year: 'max' },
-      },
-    },
-  });
-
   return (
     <div style={{ width: '100%', height: 400 }}>
       <DataGridPremium
         apiRef={apiRef}
         columns={columns}
         unstable_dataSource={dataSource}
-        initialState={initialState}
+        initialState={{
+          ...initialState,
+          rowGrouping: {
+            model: ['company', 'director'],
+          },
+          aggregation: {
+            model: { title: 'size', gross: 'sum', year: 'max' },
+          },
+        }}
         aggregationFunctions={aggregationFunctions}
       />
     </div>

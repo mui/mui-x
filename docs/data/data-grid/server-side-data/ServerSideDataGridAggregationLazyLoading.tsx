@@ -15,11 +15,10 @@ const aggregationFunctions = {
 };
 
 export default function ServerSideDataGridAggregationLazyLoading() {
-  const {
-    columns,
-    initialState: initState,
-    fetchRows,
-  } = useMockServer<GridGetRowsResponse>({}, { useCursorPagination: false });
+  const { columns, initialState, fetchRows } = useMockServer<GridGetRowsResponse>(
+    {},
+    { useCursorPagination: false },
+  );
 
   const dataSource: GridDataSource = React.useMemo(
     () => ({
@@ -47,26 +46,18 @@ export default function ServerSideDataGridAggregationLazyLoading() {
     [fetchRows],
   );
 
-  const initialState = React.useMemo(
-    () => ({
-      ...initState,
-      pagination: {
-        paginationModel: { pageSize: 10, page: 0 },
-        rowCount: 0,
-      },
-      aggregation: {
-        model: { commodity: 'size', quantity: 'sum' },
-      },
-    }),
-    [initState],
-  );
-
   return (
     <div style={{ width: '100%', height: 400 }}>
       <DataGridPremium
         columns={columns}
         unstable_dataSource={dataSource}
-        initialState={initialState}
+        initialState={{
+          ...initialState,
+          pagination: { paginationModel: { pageSize: 10, page: 0 }, rowCount: 0 },
+          aggregation: {
+            model: { commodity: 'size', quantity: 'sum' },
+          },
+        }}
         unstable_lazyLoading
         aggregationFunctions={aggregationFunctions}
       />

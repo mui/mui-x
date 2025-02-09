@@ -24,21 +24,8 @@ const aggregationFunctions = {
 
 export default function ServerSideDataGridAggregationTreeData() {
   const apiRef = useGridApiRef();
-  const {
-    fetchRows,
-    columns,
-    initialState: initState,
-  } = useMockServer<GridGetRowsResponse>(dataSetOptions);
-
-  const initialState: GridInitialState = React.useMemo(
-    () => ({
-      ...initState,
-      aggregation: {
-        model: { rating: 'avg', website: 'size' },
-      },
-    }),
-    [initState],
-  );
+  const { fetchRows, columns, initialState } =
+    useMockServer<GridGetRowsResponse>(dataSetOptions);
 
   const dataSource: GridDataSource = React.useMemo(
     () => ({
@@ -73,7 +60,12 @@ export default function ServerSideDataGridAggregationTreeData() {
         unstable_dataSource={dataSource}
         treeData
         apiRef={apiRef}
-        initialState={initialState}
+        initialState={{
+          ...initialState,
+          aggregation: {
+            model: { rating: 'avg', website: 'size' },
+          },
+        }}
         aggregationFunctions={aggregationFunctions}
       />
     </div>
