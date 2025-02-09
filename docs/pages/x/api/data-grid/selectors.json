@@ -409,7 +409,7 @@
     "description": "",
     "supportsApiRef": true
   },
-  { "name": "gridRowIdSelector", "returnType": "any", "description": "", "supportsApiRef": true },
+  { "name": "gridRowIdSelector", "returnType": "any", "description": "", "supportsApiRef": false },
   {
     "name": "gridRowIsEditingSelector",
     "returnType": "boolean",
