@@ -608,6 +608,12 @@
       "class": null
     },
     {
+      "name": "bottomContainer",
+      "description": "Component rendered for each aggregation skeleton.",
+      "default": "GridBottomContainer",
+      "class": null
+    },
+    {
       "name": "cell",
       "description": "Component rendered for each cell.",
       "default": "GridCell",
