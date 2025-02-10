@@ -266,42 +266,43 @@ export async function getDataForValueOptionsSheet(
   valueOptionsSheetName: string,
   api: GridPrivateApiPremium,
 ): Promise<ValueOptionsData> {
-  const candidateColumns = columns.filter(
-    (column) => isSingleSelectColDef(column) && Array.isArray(column.valueOptions),
-  );
-
   // Creates a temp worksheet to obtain the column letters
   const excelJS = await getExcelJs();
   const workbook: Excel.Workbook = new excelJS.Workbook();
   const worksheet = workbook.addWorksheet('Sheet1');
 
-  worksheet.columns = candidateColumns.map((column) => ({ key: column.field }));
+  const record: Record<string, { values: (string | number)[]; address: string }> = {};
+  const worksheetColumns: typeof worksheet.columns = [];
 
-  return candidateColumns.reduce<Record<string, { values: (string | number)[]; address: string }>>(
-    (acc, column) => {
-      const singleSelectColumn = column as GridSingleSelectColDef;
-      const header = column.headerName ?? column.field;
+  for (let i = 0; i < columns.length; i += 1) {
+    const column = columns[i];
+    const isCandidateColumn = isSingleSelectColDef(column) && Array.isArray(column.valueOptions);
+    if (!isCandidateColumn) {
+      continue;
+    }
 
-      const values: any[] = [header];
-      getFormattedValueOptions(
-        singleSelectColumn,
-        {},
-        singleSelectColumn.valueOptions as Array<ValueOptions>,
-        api,
-        (value) => {
-          values.push(value);
-        },
-      );
+    worksheetColumns.push({ key: column.field });
+    worksheet.columns = worksheetColumns;
 
-      const letter = worksheet.getColumn(column.field).letter;
-      const address = `${valueOptionsSheetName}!$${letter}$2:$${letter}$${values.length}`;
+    const header = column.headerName ?? column.field;
+    const values: any[] = [header];
+    getFormattedValueOptions(
+      column,
+      {},
+      column.valueOptions as Array<ValueOptions>,
+      api,
+      (value) => {
+        values.push(value);
+      },
+    );
 
-      acc[column.field] = { values, address };
+    const letter = worksheet.getColumn(column.field).letter;
+    const address = `${valueOptionsSheetName}!$${letter}$2:$${letter}$${values.length}`;
 
-      return acc;
-    },
-    {},
-  );
+    record[column.field] = { values, address };
+  }
+
+  return record;
 }
 interface BuildExcelOptions
   extends Pick<GridExcelExportOptions, 'exceljsPreProcess' | 'exceljsPostProcess'>,
