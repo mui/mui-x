@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { alpha, styled } from '@mui/material/styles';
-import { GridColDef } from '@mui/x-data-grid';
-import useLazyRef from '@mui/utils/useLazyRef';
+import { GridColDef, GridShadowScrollArea } from '@mui/x-data-grid';
 
 import { PivotModel } from '../../../hooks/features/pivoting/useGridPivoting';
 import { useGridRootProps } from '../../../typeOverloads/reexports';
@@ -9,7 +8,6 @@ import { getAvailableAggregationFunctions } from '../../../hooks/features/aggreg
 import { PivotField } from './GridSidebarColumnPanelPivotField';
 import { GridSidebarCollapsibleSection } from '../GridSidebarCollapsibleSection';
 import { useResize } from '../../../hooks/utils/useResize';
-import { GridSidebarScrollArea } from '../GridSidebarScrollArea';
 
 const Container = styled('div')({
   flex: 1,
@@ -18,7 +16,7 @@ const Container = styled('div')({
   overflow: 'hidden',
 });
 
-const TopPane = styled(GridSidebarScrollArea)(({ theme }) => ({
+const TopPane = styled(GridShadowScrollArea)(({ theme }) => ({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
@@ -40,7 +38,7 @@ const BottomPane = styled('div')({
   flexDirection: 'column',
 });
 
-const ScrollArea = styled(GridSidebarScrollArea)({
+const ScrollArea = styled(GridShadowScrollArea)({
   height: '100%',
   display: 'flex',
   flexDirection: 'column',
@@ -324,26 +322,23 @@ export function GridSidebarColumnPanelBody({
             {searchState.enabled ? 'No fields' : 'Drag here to remove from pivot'}
           </Placeholder>
         )}
-        {availableFields.length > 0 && (
-          <FieldList>
-            {availableFields.map((field) => (
-              <PivotField
-                key={field}
-                field={field}
-                modelKey={null}
-                updatePivotModel={updatePivotModel}
-                pivotModel={pivotModel}
-                onPivotModelChange={onPivotModelChange}
-                slots={rootProps.slots}
-                slotProps={rootProps.slotProps}
-                onDragStart={handleDragStart}
-                onDragEnd={handleDragEnd}
-              >
-                {getColumnName(field)}
-              </PivotField>
-            ))}
-          </FieldList>
-        )}
+        {availableFields.length > 0 &&
+          availableFields.map((field) => (
+            <PivotField
+              key={field}
+              field={field}
+              modelKey={null}
+              updatePivotModel={updatePivotModel}
+              pivotModel={pivotModel}
+              onPivotModelChange={onPivotModelChange}
+              slots={rootProps.slots}
+              slotProps={rootProps.slotProps}
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
+            >
+              {getColumnName(field)}
+            </PivotField>
+          ))}
       </TopPane>
 
       <BottomPane>

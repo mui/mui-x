@@ -1,10 +1,15 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { getDataGridUtilityClass, GridColDef, GridSortDirection } from '@mui/x-data-grid';
+import {
+  getDataGridUtilityClass,
+  GridColDef,
+  GridSlotProps,
+  GridSortDirection,
+  NotRendered,
+} from '@mui/x-data-grid';
 import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
-import Typography, { typographyClasses } from '@mui/material/Typography';
 
-import Select, { selectClasses } from '@mui/material/Select';
+import { selectClasses } from '@mui/material/Select';
 import { outlinedInputClasses } from '@mui/material/OutlinedInput';
 import composeClasses from '@mui/utils/composeClasses';
 import { DataGridProcessedProps } from '@mui/x-data-grid/internals';
@@ -102,7 +107,7 @@ const PivotFieldLabel = styled('div')(({ theme }) => ({
     width: '100%',
     cursor: 'grab',
   },
-  [`.${typographyClasses.root}`]: {
+  [`.${formControlLabelClasses.label}, & > span`]: {
     fontSize: theme.typography.pxToRem(14),
     overflow: 'hidden',
     whiteSpace: 'nowrap',
@@ -127,7 +132,7 @@ const PivotFieldDragIcon = styled('div')(({ theme }) => ({
   },
 }));
 
-const AggregationSelectRoot = styled(Select)(({ theme }) => ({
+const AggregationSelectRoot = styled(NotRendered<GridSlotProps['baseSelect']>)(({ theme }) => ({
   fontSize: theme.typography.pxToRem(12),
   [`& .${selectClasses.select}.${selectClasses.outlined}.${outlinedInputClasses.input}`]: {
     padding: theme.spacing(0.75, 3, 0.75, 1),
@@ -175,10 +180,9 @@ function AggregationSelect({
       as={rootProps.slots.baseSelect}
       {...rootProps.slotProps?.baseSelect}
       size="small"
-      variant="outlined"
       value={aggFunc}
-      onChange={(event) => {
-        const newValue = event.target.value as string;
+      onChange={(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const newValue = event.target.value;
         onPivotModelChange((prev) => {
           return {
             ...prev,
@@ -363,7 +367,7 @@ export function PivotField(props: PivotFieldProps) {
             label={children}
           />
         ) : (
-          <Typography>{children}</Typography>
+          <span>{children}</span>
         )}
       </PivotFieldLabel>
 

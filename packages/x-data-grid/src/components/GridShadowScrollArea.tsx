@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { styled, keyframes } from '@mui/system';
 
-export interface GridSidebarScrollAreaProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface GridShadowScrollAreaProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
 }
 
 const reveal = keyframes({ from: { opacity: 0 }, to: { opacity: 1 } });
 const detectScroll = keyframes({ 'from, to': { '--scrollable': '" "' } });
 
-const ScrollArea = styled('div')({
+const ShadowScrollArea = styled('div')({
   animation: detectScroll,
   animationTimeline: '--scroll-timeline',
   animationFillMode: 'none',
@@ -21,7 +21,7 @@ const ScrollArea = styled('div')({
     display: 'block',
     position: 'sticky',
     left: 0,
-    right: 0,
+    width: '100%',
     height: '4px',
     animation: `${reveal} linear both`,
     animationTimeline: '--scroll-timeline',
@@ -46,7 +46,7 @@ const ScrollArea = styled('div')({
   },
 });
 
-export function GridSidebarScrollArea(props: GridSidebarScrollAreaProps) {
+export function GridShadowScrollArea(props: GridShadowScrollAreaProps) {
   const { children, ...rest } = props;
-  return <ScrollArea {...rest}>{children}</ScrollArea>;
+  return <ShadowScrollArea {...rest}>{children}</ShadowScrollArea>;
 }
