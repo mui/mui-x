@@ -2,7 +2,9 @@
 import { ProcessedSeries } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.types';
 import { SeriesId } from '../models/seriesType/common';
 import { ChartSeriesDefaultized } from '../models/seriesType/config';
-import { useSeriesOfType } from '../internals/useSeriesOfType';
+import { createSeriesSelectorsOfType } from '../internals/createSeriesSelectorOfType';
+
+const selectorSeries = createSeriesSelectorsOfType('line');
 
 /**
  * Get access to the internal state of line series.
@@ -18,14 +20,16 @@ export function useLineSeries(): ProcessedSeries['line'];
  * @param {SeriesId} seriesId The id of the series to get.
  * @returns {ChartSeriesDefaultized<'line'> | undefined}  lineSeries
  */
-export function useLineSeries(seriesId: SeriesId): ChartSeriesDefaultized<'line'>;
+export function useLineSeries(seriesId: SeriesId): ChartSeriesDefaultized<'line'> | undefined;
 /**
  * Get access to the internal state of line series.
  *
  * @param {SeriesId[]} seriesIds The ids of the series to get. Order is preserved.
  * @returns {ChartSeriesDefaultized<'line'>[] | undefined}  lineSeries
  */
-export function useLineSeries(...seriesIds: SeriesId[]): ChartSeriesDefaultized<'line'>[];
+export function useLineSeries(
+  ...seriesIds: SeriesId[]
+): (ChartSeriesDefaultized<'line'> | undefined)[];
 export function useLineSeries(...seriesIds: SeriesId[]): any {
-  return useSeriesOfType('line', ...seriesIds);
+  return selectorSeries(seriesIds);
 }

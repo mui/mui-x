@@ -2,7 +2,9 @@
 import { ProcessedSeries } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.types';
 import { SeriesId } from '../models/seriesType/common';
 import { ChartSeriesDefaultized } from '../models/seriesType/config';
-import { useSeriesOfType } from '../internals/useSeriesOfType';
+import { createSeriesSelectorsOfType } from '../internals/createSeriesSelectorOfType';
+
+const selectorSeries = createSeriesSelectorsOfType('scatter');
 
 /**
  * Get access to the internal state of scatter series.
@@ -18,14 +20,16 @@ export function useScatterSeries(): ProcessedSeries['scatter'];
  * @param {SeriesId} seriesId The id of the series to get.
  * @returns {ChartSeriesDefaultized<'scatter'> | undefined}  scatterSeries
  */
-export function useScatterSeries(seriesId: SeriesId): ChartSeriesDefaultized<'scatter'>;
+export function useScatterSeries(seriesId: SeriesId): ChartSeriesDefaultized<'scatter'> | undefined;
 /**
  * Get access to the internal state of scatter series.
  *
  * @param {SeriesId[]} seriesIds The ids of the series to get. Order is preserved.
  * @returns {ChartSeriesDefaultized<'scatter'>[] | undefined}  scatterSeries
  */
-export function useScatterSeries(...seriesIds: SeriesId[]): ChartSeriesDefaultized<'scatter'>[];
+export function useScatterSeries(
+  ...seriesIds: SeriesId[]
+): (ChartSeriesDefaultized<'scatter'> | undefined)[];
 export function useScatterSeries(...seriesIds: SeriesId[]): any {
-  return useSeriesOfType('scatter', ...seriesIds);
+  return selectorSeries(seriesIds);
 }

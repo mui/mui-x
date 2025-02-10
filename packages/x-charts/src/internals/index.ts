@@ -12,7 +12,7 @@ export { useLineChartProps } from '../LineChart/useLineChartProps';
 export { useBarChartProps } from '../BarChart/useBarChartProps';
 export * from '../ChartContainer/useChartContainerProps';
 export * from '../ChartDataProvider/useChartDataProviderProps';
-export * from './useSeriesOfType';
+export * from './createSeriesSelectorOfType';
 
 // plugins
 export * from './plugins/corePlugins/useChartId';

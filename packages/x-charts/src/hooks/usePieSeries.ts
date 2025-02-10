@@ -2,7 +2,9 @@
 import { ProcessedSeries } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.types';
 import { SeriesId } from '../models/seriesType/common';
 import { ChartSeriesDefaultized } from '../models/seriesType/config';
-import { useSeriesOfType } from '../internals/useSeriesOfType';
+import { createSeriesSelectorsOfType } from '../internals/createSeriesSelectorOfType';
+
+const selectorSeries = createSeriesSelectorsOfType('pie');
 
 /**
  * Get access to the internal state of pie series.
@@ -18,14 +20,16 @@ export function usePieSeries(): ProcessedSeries['pie'];
  * @param {SeriesId} seriesId The id of the series to get.
  * @returns {ChartSeriesDefaultized<'pie'> | undefined}  pieSeries
  */
-export function usePieSeries(seriesId: SeriesId): ChartSeriesDefaultized<'pie'>;
+export function usePieSeries(seriesId: SeriesId): ChartSeriesDefaultized<'pie'> | undefined;
 /**
  * Get access to the internal state of pie series.
  *
  * @param {SeriesId[]} seriesIds The ids of the series to get. Order is preserved.
  * @returns {ChartSeriesDefaultized<'pie'>[] | undefined}  pieSeries
  */
-export function usePieSeries(...seriesIds: SeriesId[]): ChartSeriesDefaultized<'pie'>[];
+export function usePieSeries(
+  ...seriesIds: SeriesId[]
+): (ChartSeriesDefaultized<'pie'> | undefined)[];
 export function usePieSeries(...seriesIds: SeriesId[]): any {
-  return useSeriesOfType('pie', ...seriesIds);
+  return selectorSeries(seriesIds);
 }
