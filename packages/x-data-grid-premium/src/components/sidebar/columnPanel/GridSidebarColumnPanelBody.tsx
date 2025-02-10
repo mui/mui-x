@@ -18,8 +18,6 @@ const Container = styled('div')({
 
 const TopPane = styled(GridShadowScrollArea)(({ theme }) => ({
   flex: 1,
-  display: 'flex',
-  flexDirection: 'column',
   minHeight: 50,
   transition: theme.transitions.create('background-color', {
     duration: theme.transitions.duration.short,
@@ -40,8 +38,6 @@ const BottomPane = styled('div')({
 
 const ScrollArea = styled(GridShadowScrollArea)({
   height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
 });
 
 const CollapsibleSection = styled(GridSidebarCollapsibleSection)(({ theme }) => ({
@@ -79,8 +75,11 @@ const Placeholder = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  textWrap: 'balance',
+  textAlign: 'center',
   minHeight: 42,
   height: '100%',
+  padding: theme.spacing(0, 1),
   fontSize: theme.typography.pxToRem(13),
   color: theme.palette.text.secondary,
 }));
@@ -301,23 +300,26 @@ export function GridSidebarColumnPanelBody({
         data-drag-over={drag.active && drag.dropZone === null}
       >
         {availableFields.length === 0 && <Placeholder>No fields</Placeholder>}
-        {availableFields.length > 0 &&
-          availableFields.map((field) => (
-            <PivotField
-              key={field}
-              field={field}
-              modelKey={null}
-              updatePivotModel={updatePivotModel}
-              pivotModel={pivotModel}
-              onPivotModelChange={onPivotModelChange}
-              slots={rootProps.slots}
-              slotProps={rootProps.slotProps}
-              onDragStart={handleDragStart}
-              onDragEnd={handleDragEnd}
-            >
-              {getColumnName(field)}
-            </PivotField>
-          ))}
+        {availableFields.length > 0 && (
+          <FieldList>
+            {availableFields.map((field) => (
+              <PivotField
+                key={field}
+                field={field}
+                modelKey={null}
+                updatePivotModel={updatePivotModel}
+                pivotModel={pivotModel}
+                onPivotModelChange={onPivotModelChange}
+                slots={rootProps.slots}
+                slotProps={rootProps.slotProps}
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}
+              >
+                {getColumnName(field)}
+              </PivotField>
+            ))}
+          </FieldList>
+        )}
       </TopPane>
 
       <BottomPane>

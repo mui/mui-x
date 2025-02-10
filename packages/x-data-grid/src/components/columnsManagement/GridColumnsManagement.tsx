@@ -442,9 +442,6 @@ const GridColumnsManagementBody = styled(GridShadowScrollArea, {
   overridesResolver: (props, styles) => styles.columnsManagement,
 })<{ ownerState: OwnerState }>({
   flex: 1,
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-start',
 });
 
 const GridColumnsManagementHeader = styled('div', {
