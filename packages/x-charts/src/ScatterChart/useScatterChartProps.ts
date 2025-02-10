@@ -62,6 +62,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     zAxis,
     highlightedItem,
     onHighlightChange,
+    disableVoronoi,
     voronoiMaxRadius,
     onItemClick: disableVoronoi
       ? undefined
