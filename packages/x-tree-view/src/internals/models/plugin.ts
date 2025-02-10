@@ -125,7 +125,7 @@ export type TreeViewPluginSignature<
     : [];
 };
 
-export type TreeViewAnyPluginSignature = TreeViewPluginSignature<{
+export type TreeViewAnyPluginSignature = {
   cache: any;
   state: any;
   instance: any;
@@ -140,7 +140,7 @@ export type TreeViewAnyPluginSignature = TreeViewPluginSignature<{
   models: any;
   experimentalFeatures: any;
   publicAPI: any;
-}>;
+};
 
 type TreeViewRequiredPlugins<TSignature extends TreeViewAnyPluginSignature> = [
   ...TreeViewCorePluginSignatures,
