@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-imports, @typescript-eslint/no-shadow */
+/* eslint-disable no-restricted-imports */
 import * as React from 'react';
 import { SparkLineChart } from '@mui/x-charts';
 
@@ -19,7 +19,7 @@ function Chart() {
       <SparkLineChart
         data={data}
         /* mui-x-codemod: We renamed the `colors` prop to `color`, but didn't change the value. Please ensure sure this prop receives a string or a function that returns a string. */
-        colors="red" />
+        color="red" />
     </React.Fragment>)
   );
 }

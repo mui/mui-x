@@ -22,15 +22,6 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
 
   return colorAttributes
     .forEach((attribute) => {
-      if (attribute.node.value?.type !== 'JSXExpressionContainer') {
-        j(attribute).insertBefore(
-          j.commentBlock(
-            " mui-x-codemod: We renamed the `colors` prop to `color`, but didn't change the value. Please ensure sure this prop receives a string or a function that returns a string. ",
-          ),
-        );
-        return;
-      }
-
       const colorsAttributeExpression =
         attribute.node.value.type === 'JSXExpressionContainer'
           ? attribute.node.value.expression

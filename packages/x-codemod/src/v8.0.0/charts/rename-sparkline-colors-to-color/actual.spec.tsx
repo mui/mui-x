@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-imports, @typescript-eslint/no-shadow */
+/* eslint-disable no-restricted-imports */
 import * as React from 'react';
 import { SparkLineChart } from '@mui/x-charts';
 
