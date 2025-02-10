@@ -70,11 +70,8 @@ export type UseTreeViewLazyLoadingDefaultizedParameters<R extends {}> = Defaulti
   'dataSource'
 >;
 
-interface UseTreeViewLazyLoadingContextValue {
-  lazyLoading: boolean;
-}
-
 export interface UseTreeViewLazyLoadingState {
+  lazyLoading: boolean;
   dataSource: {
     loading: Record<TreeViewItemId, boolean>;
     errors: Record<TreeViewItemId, Error | null>;
@@ -93,5 +90,4 @@ export type UseTreeViewLazyLoadingSignature = TreeViewPluginSignature<{
     UseTreeViewExpansionSignature,
     UseTreeViewSelectionSignature,
   ];
-  contextValue: UseTreeViewLazyLoadingContextValue;
 }>;

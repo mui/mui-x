@@ -10,8 +10,5 @@
     ],
     "noImplicitAny": false
   },
-  "include": [
-    "src/**/*",
-    "src/internals/plugins/useTreeViewLazyLoading/useTreeViewLazyLoading.types.ts"
-  ]
+  "include": ["src/**/*"]
 }

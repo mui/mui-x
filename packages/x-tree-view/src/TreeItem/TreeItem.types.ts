@@ -52,7 +52,7 @@ export interface TreeItemSlots extends TreeItemIconSlots {
   dragAndDropOverlay?: React.ElementType;
   /**
    * The component that wraps the `iconContainer` slot when the item is in an error state.
-   * Warning: This slot is only useful when using the `<RichTreeView />` component.
+   * Warning: This slot is only useful when using the `<RichTreeViewPro />` component is lazy loading is enabled.
    * @default TreeItemErrorContainer
    */
   errorContainer?: React.ElementType;

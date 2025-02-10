@@ -92,14 +92,12 @@ const updateItemsState = ({
       );
     }
 
-    const isItemExpandable = getChildrenCount ? getChildrenCount(item) > 0 : false;
-
     itemMetaLookup[id] = {
       id,
       label,
       parentId,
       idAttribute: undefined,
-      expandable: !!item.children?.length || isItemExpandable,
+      expandable: getChildrenCount ? getChildrenCount(item) > 0 : !!item.children?.length,
       disabled: isItemDisabled ? isItemDisabled(item) : false,
       depth,
     };
@@ -152,18 +150,18 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     [store],
   );
 
-  const setTreeViewLoading = (isLoading: boolean) => {
+  const setTreeViewLoading = useEventCallback((isLoading: boolean) => {
     store.update((prevState) => ({
       ...prevState,
       items: { ...prevState.items, loading: isLoading },
     }));
-  };
-  const setTreeViewError = (error: Error | null) => {
+  });
+  const setTreeViewError = useEventCallback((error: Error | null) => {
     store.update((prevState) => ({
       ...prevState,
       items: { ...prevState.items, error },
     }));
-  };
+  });
 
   const getItemTree = React.useCallback(() => {
     const getItemFromItemId = (itemId: TreeViewItemId): TreeViewBaseItem => {

@@ -11,12 +11,12 @@ export enum RequestStatus {
 }
 
 /**
- * Plugins that need to be present in the Tree View in order for `useTreeItemUtils` to work correctly.
+ * Plugins that need to be present in the Tree View in order for the `NestedDataManager` class to work correctly.
  */
 type NestedDataManagerMinimalPlugins = readonly [UseTreeViewLazyLoadingSignature];
 
 /**
- * Plugins that `useTreeItemUtils` can use if they are present, but are not required.
+ * Plugins that the `NestedDataManager` class can use if they are present, but are not required.
  */
 
 export type NestedDataManagerOptionalPlugins = readonly [];

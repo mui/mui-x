@@ -6,6 +6,15 @@ export const selectorDataSourceState = (state: TreeViewState<[UseTreeViewLazyLoa
   state.dataSource;
 
 /**
+ * Check if lazy loading is enabled
+ * @param {TreeViewState<[UseTreeViewLazyLoadingSignature]>} state The state of the tree view.
+ * @returns {boolean} True if lazy loading is enabled, false if it isn't.
+ */
+export const selectorIsLazyLoadingEnabled = (
+  state: TreeViewState<[UseTreeViewLazyLoadingSignature]>,
+) => state.lazyLoading;
+
+/**
  * Get the loading state for a tree item.
  * @param {TreeViewState<[UseTreeViewLazyLoadingSignature]>} state The state of the tree view.
  * @param {TreeViewItemId} itemId The id of the item to get the loading state of.

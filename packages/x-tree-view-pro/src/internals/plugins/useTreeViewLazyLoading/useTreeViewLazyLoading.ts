@@ -238,6 +238,10 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
 
   React.useEffect(() => {
     if (isLazyLoadingEnabled && firstRenderRef.current) {
+      store.update((prevState) => ({
+        ...prevState,
+        lazyLoading: true,
+      }));
       if (params.items.length) {
         const getChildrenCount = params.dataSource?.getChildrenCount || (() => 0);
         instance.addItems({ items: params.items, depth: 0, getChildrenCount });
@@ -246,12 +250,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
       }
       firstRenderRef.current = false;
     }
-  }, [instance, params.items, params.dataSource, isLazyLoadingEnabled]);
-
-  const pluginContextValue = React.useMemo(
-    () => ({ lazyLoading: params.dataSource !== undefined }),
-    [params.dataSource],
-  );
+  }, [instance, params.items, params.dataSource, isLazyLoadingEnabled, store]);
 
   if (isLazyLoadingEnabled) {
     instance.preventItemUpdates();
@@ -265,7 +264,6 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
       setDataSourceError,
     },
     publicAPI: {},
-    contextValue: pluginContextValue,
   };
 };
 
@@ -293,6 +291,7 @@ useTreeViewLazyLoading.getDefaultizedParams = ({ params, experimentalFeatures })
 
 useTreeViewLazyLoading.getInitialState = () => ({
   dataSource: INITIAL_STATE,
+  lazyLoading: false,
 });
 
 useTreeViewLazyLoading.params = {

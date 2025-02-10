@@ -25,6 +25,7 @@ import { selectorIsItemSelected } from '../../internals/plugins/useTreeViewSelec
 import {
   selectorGetTreeItemError,
   selectorIsItemLoading,
+  selectorIsLazyLoadingEnabled,
 } from '../../internals/plugins/useTreeViewLazyLoading/useTreeViewLazyLoading.selectors';
 import {
   selectorIsItemBeingEdited,
@@ -93,17 +94,17 @@ export const useTreeItemUtils = <
     label,
     store,
     selection: { multiSelect },
-    lazyLoading,
     publicAPI,
   } = useTreeViewContext<TSignatures, TOptionalSignatures>();
 
   const isItemExpandable = useSelector(store, selectorIsItemExpandable, itemId);
+  const isLazyLoadingEnabled = useSelector(store, selectorIsLazyLoadingEnabled);
 
   const loading = useSelector(store, (state) =>
-    lazyLoading == null ? false : selectorIsItemLoading(state, itemId),
+    isLazyLoadingEnabled == null ? false : selectorIsItemLoading(state, itemId),
   );
   const error = useSelector(store, (state) =>
-    lazyLoading == null ? false : Boolean(selectorGetTreeItemError(state, itemId)),
+    isLazyLoadingEnabled == null ? false : Boolean(selectorGetTreeItemError(state, itemId)),
   );
   const isExpandable = itemHasChildren(children) || isItemExpandable;
   const isExpanded = useSelector(store, selectorIsItemExpanded, itemId);
@@ -145,7 +146,6 @@ export const useTreeItemUtils = <
     // If already expanded and trying to toggle selection don't close
     if (status.expandable && !(multiple && selectorIsItemExpanded(store.value, itemId))) {
       // make sure the children selection is propagated again
-
       await instance.toggleItemExpansion(event, itemId);
     }
   };
