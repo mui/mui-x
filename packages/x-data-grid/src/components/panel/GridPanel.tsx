@@ -134,47 +134,9 @@ GridPanel.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
-  clickAwayMouseEvent: PropTypes.oneOf([
-    'onClick',
-    'onMouseDown',
-    'onMouseUp',
-    'onPointerDown',
-    'onPointerUp',
-    false,
-  ]),
-  clickAwayTouchEvent: PropTypes.oneOf(['onTouchEnd', 'onTouchStart', false]),
-  flip: PropTypes.bool,
-  focusTrap: PropTypes.bool,
-  focusTrapEnabled: PropTypes.bool,
   id: PropTypes.string,
-  onClickAway: PropTypes.func,
-  onDidShow: PropTypes.func,
-  onDidHide: PropTypes.func,
-  onExited: PropTypes.func,
   open: PropTypes.bool.isRequired,
-  ownerState: PropTypes.object,
-  /**
-   * @default 'bottom'
-   */
-  placement: PropTypes.oneOf([
-    'auto-end',
-    'auto-start',
-    'auto',
-    'bottom-end',
-    'bottom-start',
-    'bottom',
-    'left-end',
-    'left-start',
-    'left',
-    'right-end',
-    'right-start',
-    'right',
-    'top-end',
-    'top-start',
-    'top',
-  ]),
   target: PropTypes /* @typescript-to-proptypes-ignore */.any,
-  transition: PropTypes.bool,
 } as any;
 
 export { GridPanel };
