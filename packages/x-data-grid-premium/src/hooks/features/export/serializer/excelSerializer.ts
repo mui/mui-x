@@ -157,7 +157,7 @@ export const serializeRowUnsafe = (
           };
         }
 
-        const formattedValue = apiRef.current.getCellParams(id, castColumn.field).formattedValue;
+        const formattedValue = apiRef.current.getRowFormattedValue(row, castColumn);
         if (process.env.NODE_ENV !== 'production') {
           if (String(formattedValue) === '[object Object]') {
             warnOnce([
@@ -175,14 +175,14 @@ export const serializeRowUnsafe = (
       }
       case 'boolean':
       case 'number':
-        cellValue = apiRef.current.getCellParams(id, column.field).value as any;
+        cellValue = apiRef.current.getRowValue(row, column);
         break;
       case 'date':
       case 'dateTime': {
         // Excel does not do any timezone conversion, so we create a date using UTC instead of local timezone
         // Solution from: https://github.com/exceljs/exceljs/issues/486#issuecomment-432557582
         // About Date.UTC(): https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/UTC#exemples
-        const value = apiRef.current.getCellParams<any, Date>(id, column.field).value;
+        const value = apiRef.current.getRowValue(row, column) as Date;
         // value may be `undefined` in auto-generated grouping rows
         if (!value) {
           break;
@@ -203,7 +203,7 @@ export const serializeRowUnsafe = (
       case 'actions':
         break;
       default:
-        cellValue = apiRef.current.getCellParams(id, column.field).formattedValue as any;
+        cellValue = apiRef.current.getRowFormattedValue(row, column);
         if (process.env.NODE_ENV !== 'production') {
           if (String(cellValue) === '[object Object]') {
             warnOnce([
