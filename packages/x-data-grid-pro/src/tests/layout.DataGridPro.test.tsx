@@ -79,7 +79,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Layout', () => {
 
   describe('columns width', () => {
     it('should resize flex: 1 column when changing column visibility to avoid exceeding grid width (apiRef setColumnVisibility method call)', () => {
-      let apiRef: RefObject<GridApi>;
+      let apiRef: RefObject<GridApi | null>;
 
       function TestCase(props: Omit<DataGridProProps, 'apiRef'>) {
         apiRef = useGridApiRef();
@@ -130,7 +130,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Layout', () => {
         width: '198px', // because of the 2px border
       });
 
-      act(() => apiRef!.current.setColumnVisibility('age', true));
+      act(() => apiRef.current?.setColumnVisibility('age', true));
       firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
       expect(firstColumn).toHaveInlineStyle({
         width: '148px', // because of the 2px border

@@ -455,7 +455,6 @@ export const useGridCellEditing = (
           Promise.resolve(props.unstable_dataSource.updateRow(id, rowUpdate, row))
             .then((finalRowUpdate) => {
               apiRef.current.updateRows([finalRowUpdate]);
-              // @ts-expect-error TODO: Move basic dataSource to community
               apiRef.current.mutateRowInCache?.(id, rowUpdate);
               finishCellEditMode();
             })

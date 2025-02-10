@@ -7,7 +7,7 @@ import { LicenseInfo, generateLicense } from '@mui/x-license';
 import { options } from '../utils/options';
 
 describe('LineChartPro', () => {
-  const dataLength = 600;
+  const dataLength = 200;
   const data = Array.from({ length: dataLength }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,
@@ -32,7 +32,7 @@ describe('LineChartPro', () => {
       const { findByText } = render(
         <LineChartPro
           xAxis={[{ id: 'x', data: xData, zoom: { filterMode: 'discard' } }]}
-          initialZoom={[{ axisId: 'x', start: 0.25, end: 0.75 }]}
+          initialZoom={[{ axisId: 'x', start: 50, end: 75 }]}
           series={[
             {
               data: yData,

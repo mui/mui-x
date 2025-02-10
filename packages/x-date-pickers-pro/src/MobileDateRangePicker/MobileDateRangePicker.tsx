@@ -57,6 +57,8 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
     format: utils.formats.keyboardDate,
     // Force one calendar on mobile to avoid layout issues
     calendars: 1,
+    // force current calendar position, since we only have one calendar
+    currentMonthCalendarPosition: 1,
     views: ['day'] as const,
     openTo: 'day' as const,
     slots: {
@@ -68,7 +70,6 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
       field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
-        ref,
       }),
       toolbar: {
         hidden: false,
@@ -82,6 +83,7 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
     TEnableAccessibleFieldDOMStructure,
     typeof props
   >({
+    ref,
     props,
     valueManager: rangeValueManager,
     valueType: 'date',
@@ -194,12 +196,10 @@ MobileDateRangePicker.propTypes = {
   formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Pass a ref to the `input` element.
-   * Ignored if the field has several inputs.
    */
   inputRef: refType,
   /**
    * The label content.
-   * Ignored if the field has several inputs.
    */
   label: PropTypes.node,
   /**
@@ -225,7 +225,6 @@ MobileDateRangePicker.propTypes = {
   minDate: PropTypes.object,
   /**
    * Name attribute used by the `input` element in the Field.
-   * Ignored if the field has several inputs.
    */
   name: PropTypes.string,
   /**

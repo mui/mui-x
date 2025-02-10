@@ -33,7 +33,12 @@ import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
 import { GridColumnGroupingModel } from '../gridColumnGrouping';
 import { GridPaginationMeta, GridPaginationModel } from '../gridPaginationProps';
 import type { GridAutosizeOptions } from '../../hooks/features/columnResize';
-import type { GridDataSource, GridGetRowsParams, GridUpdateRowParams } from '../gridDataSource';
+import type {
+  GridDataSource,
+  GridGetRowsParams,
+  GridDataSourceCache,
+  GridUpdateRowParams,
+} from '../gridDataSource';
 import type { GridRowSelectionPropagation } from '../gridRowSelectionModel';
 
 export interface GridExperimentalFeatures {
@@ -399,7 +404,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   /**
    * The ref object that allows Data Grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
-  apiRef?: RefObject<GridApiCommunity>;
+  apiRef?: RefObject<GridApiCommunity | null>;
   /**
    * Signal to the underlying logic what version of the public component API
    * of the Data Grid is exposed [[GridSignature]].
@@ -825,6 +830,23 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnWidthChange?: GridEventListener<'columnWidthChange'>;
+  /**
+   * The data source object.
+   */
+  unstable_dataSource?: GridDataSource;
+  /**
+   * Data source cache object.
+   */
+  unstable_dataSourceCache?: GridDataSourceCache | null;
+  /**
+   * Callback fired when the data source request fails.
+   * @param {Error} error The error object.
+   * @param {GridGetRowsParams} params With all properties from [[GridGetRowsParams]].
+   */
+  unstable_onDataSourceError?: (
+    error: Error,
+    params: GridGetRowsParams | GridUpdateRowParams,
+  ) => void;
 }
 
 export interface DataGridProSharedPropsWithDefaultValue {
@@ -859,11 +881,6 @@ export interface DataGridProSharedPropsWithoutDefaultValue<R extends GridValidRo
    * Override the height of the header filters.
    */
   headerFilterHeight?: number;
-  unstable_dataSource?: GridDataSource;
-  unstable_onDataSourceError?: (
-    error: Error,
-    params: GridGetRowsParams | GridUpdateRowParams,
-  ) => void;
   /**
    * Definition of the column rendered when the `unstable_listView` prop is enabled.
    */

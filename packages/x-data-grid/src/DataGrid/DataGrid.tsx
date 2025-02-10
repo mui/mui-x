@@ -5,16 +5,12 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridRoot } from '../components';
 import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
-import { DataGridProcessedProps, DataGridProps } from '../models/props/DataGridProps';
+import { DataGridProps } from '../models/props/DataGridProps';
 import { GridContextProvider } from '../context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
 import { useDataGridProps } from './useDataGridProps';
 import { GridValidRowModel } from '../models/gridRows';
-import {
-  PropValidator,
-  propValidatorsDataGrid,
-  validateProps,
-} from '../internals/utils/propValidation';
+import { propValidatorsDataGrid, validateProps } from '../internals/utils/propValidation';
 
 export type { GridSlotsComponent as GridSlots } from '../models';
 
@@ -24,24 +20,6 @@ const configuration = {
     useGridRowAriaAttributes,
   },
 };
-let propValidators: PropValidator<DataGridProcessedProps>[];
-
-if (process.env.NODE_ENV !== 'production') {
-  propValidators = [
-    ...propValidatorsDataGrid,
-    // Only validate in MIT version
-    (props) =>
-      (props.columns &&
-        props.columns.some((column) => column.resizable) &&
-        [
-          `MUI X: \`column.resizable = true\` is not a valid prop.`,
-          'Column resizing is not available in the MIT version.',
-          '',
-          'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
-        ].join('\n')) ||
-      undefined,
-  ];
-}
 
 const DataGridRaw = forwardRef(function DataGrid<R extends GridValidRowModel>(
   inProps: DataGridProps<R>,
@@ -51,7 +29,7 @@ const DataGridRaw = forwardRef(function DataGrid<R extends GridValidRowModel>(
   const privateApiRef = useDataGridComponent(props.apiRef, props);
 
   if (process.env.NODE_ENV !== 'production') {
-    validateProps(props, propValidators);
+    validateProps(props, propValidatorsDataGrid);
   }
   return (
     <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
@@ -74,8 +52,8 @@ interface DataGridComponent {
 }
 
 /**
- * Demos:
- * - [DataGrid](https://mui.com/x/react-data-grid/demo/)
+ * Features:
+ * - [DataGrid](https://mui.com/x/react-data-grid/features/)
  *
  * API:
  * - [DataGrid API](https://mui.com/x/api/data-grid/data-grid/)
@@ -91,7 +69,7 @@ DataGridRaw.propTypes = {
    * The ref object that allows Data Grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef: PropTypes.shape({
-    current: PropTypes.object.isRequired,
+    current: PropTypes.object,
   }),
   /**
    * The label of the Data Grid.
@@ -798,6 +776,27 @@ DataGridRaw.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The data source object.
+   */
+  unstable_dataSource: PropTypes.shape({
+    getRows: PropTypes.func.isRequired,
+    updateRow: PropTypes.func,
+  }),
+  /**
+   * Data source cache object.
+   */
+  unstable_dataSourceCache: PropTypes.shape({
+    clear: PropTypes.func.isRequired,
+    get: PropTypes.func.isRequired,
+    set: PropTypes.func.isRequired,
+  }),
+  /**
+   * Callback fired when the data source request fails.
+   * @param {Error} error The error object.
+   * @param {GridGetRowsParams} params With all properties from [[GridGetRowsParams]].
+   */
+  unstable_onDataSourceError: PropTypes.func,
   /**
    * If `true`, the Data Grid enables column virtualization when `getRowHeight` is set to `() => 'auto'`.
    * By default, column virtualization is disabled when dynamic row height is enabled to measure the row height correctly.

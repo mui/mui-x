@@ -29,10 +29,10 @@ export default function ScrollPlayground() {
 
   React.useEffect(() => {
     const { rowIndex, colIndex } = coordinates;
-    apiRef.current.scrollToIndexes(coordinates);
+    apiRef.current?.scrollToIndexes(coordinates);
     const id = gridExpandedSortedRowIdsSelector(apiRef)[rowIndex];
     const column = gridVisibleColumnDefinitionsSelector(apiRef)[colIndex];
-    apiRef.current.setCellFocus(id, column.field);
+    apiRef.current?.setCellFocus(id, column.field);
   }, [apiRef, coordinates]);
 
   const handleClick = (position: string) => () => {

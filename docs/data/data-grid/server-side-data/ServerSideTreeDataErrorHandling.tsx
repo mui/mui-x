@@ -4,6 +4,8 @@ import {
   useGridApiRef,
   GridInitialState,
   GridDataSource,
+  GridGetRowsResponse,
+  GridGetRowsParams,
 } from '@mui/x-data-grid-pro';
 import Snackbar from '@mui/material/Snackbar';
 import Button from '@mui/material/Button';
@@ -26,7 +28,7 @@ export default function ServerSideTreeDataErrorHandling() {
   const [childrenError, setChildrenError] = React.useState<string>();
   const [shouldRequestsFail, setShouldRequestsFail] = React.useState(false);
 
-  const { fetchRows, ...props } = useMockServer(
+  const { fetchRows, ...props } = useMockServer<GridGetRowsResponse>(
     dataSetOptions,
     serverOptions,
     shouldRequestsFail,
@@ -74,7 +76,7 @@ export default function ServerSideTreeDataErrorHandling() {
         <Button
           onClick={() => {
             setRootError('');
-            apiRef.current.unstable_dataSource.fetchRows();
+            apiRef.current?.unstable_dataSource.fetchRows();
           }}
         >
           Refetch rows
@@ -94,7 +96,8 @@ export default function ServerSideTreeDataErrorHandling() {
           {...props}
           treeData
           unstable_dataSource={dataSource}
-          unstable_onDataSourceError={(error, params) => {
+          unstable_onDataSourceError={(error, p) => {
+            const params = p as GridGetRowsParams;
             if (!params.groupKeys || params.groupKeys.length === 0) {
               setRootError(error.message);
             } else {

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import MUIBadge from '@mui/material/Badge';
 import MUICheckbox from '@mui/material/Checkbox';
+import MUIChip from '@mui/material/Chip';
 import MUICircularProgress from '@mui/material/CircularProgress';
 import MUIDivider from '@mui/material/Divider';
 import MUILinearProgress from '@mui/material/LinearProgress';
@@ -17,7 +18,6 @@ import MUIInputAdornment from '@mui/material/InputAdornment';
 import MUITooltip from '@mui/material/Tooltip';
 import MUIPopper from '@mui/material/Popper';
 import MUIInputLabel from '@mui/material/InputLabel';
-import MUIChip from '@mui/material/Chip';
 import MUISkeleton from '@mui/material/Skeleton';
 import { GridColumnUnsortedIcon } from './icons/GridColumnUnsortedIcon';
 import {
@@ -50,7 +50,7 @@ import {
 import type { GridIconSlotsComponent } from '../models';
 import type { GridBaseSlots } from '../models/gridSlotsComponent';
 import type { GridSlotProps } from '../models/gridSlotsComponentsProps';
-import MUISelectOption from './components/MUISelectOption';
+import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 const iconSlots: GridIconSlotsComponent = {
   booleanCellTrueIcon: GridCheckIcon,
@@ -97,18 +97,18 @@ const baseSlots: GridBaseSlots = {
   baseCircularProgress: MUICircularProgress,
   baseDivider: MUIDivider,
   baseLinearProgress: MUILinearProgress,
-  baseMenuList: MUIMenuList,
+  baseMenuList: BaseMenuList,
   baseMenuItem: BaseMenuItem,
-  baseTextField: MUITextField,
+  baseTextField: BaseTextField,
   baseFormControl: MUIFormControl,
-  baseSelect: MUISelect,
   baseButton: MUIButton,
   baseIconButton: MUIIconButton,
   baseInputAdornment: MUIInputAdornment,
   baseTooltip: MUITooltip,
   basePopper: MUIPopper,
   baseInputLabel: MUIInputLabel,
-  baseSelectOption: MUISelectOption,
+  baseSelect: BaseSelect,
+  baseSelectOption: BaseSelectOption,
   baseSkeleton: MUISkeleton,
   baseChip: MUIChip,
 };
@@ -120,6 +120,10 @@ const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
 
 export default materialSlots;
 
+function BaseMenuList(props: GridSlotProps['baseMenuList']) {
+  return <MUIMenuList {...props} />;
+}
+
 function BaseMenuItem(props: GridSlotProps['baseMenuItem']) {
   const { inert, iconStart, iconEnd, children, ...other } = props;
   if (inert) {
@@ -130,4 +134,86 @@ function BaseMenuItem(props: GridSlotProps['baseMenuItem']) {
     <MUIListItemText key="2">{children}</MUIListItemText>,
     iconEnd && <MUIListItemIcon key="3">{iconEnd}</MUIListItemIcon>,
   ]);
+}
+
+function BaseTextField(props: GridSlotProps['baseTextField']) {
+  // MaterialUI v5 doesn't support slotProps, until we drop v5 support we need to
+  // translate the pattern.
+  const { slotProps, ...rest } = props;
+  return (
+    <MUITextField
+      variant="outlined"
+      {...rest}
+      inputProps={slotProps?.htmlInput}
+      InputProps={slotProps?.input}
+      InputLabelProps={{
+        shrink: true,
+        ...(slotProps as any)?.inputLabel,
+      }}
+    />
+  );
+}
+
+function BaseSelect(props: GridSlotProps['baseSelect']) {
+  const rootProps = useGridRootProps();
+  const {
+    id,
+    label,
+    labelId,
+    disabled,
+    slotProps,
+    onChange,
+    onKeyDown,
+    onOpen,
+    onClose,
+    size,
+    style,
+    fullWidth,
+    ...rest
+  } = props;
+  return (
+    <MUIFormControl
+      size={size}
+      fullWidth={fullWidth}
+      style={style}
+      disabled={disabled}
+      {...rootProps.slotProps?.baseFormControl}
+    >
+      <MUIInputLabel
+        id={labelId}
+        htmlFor={id}
+        shrink
+        variant="outlined"
+        {...rootProps.slotProps?.baseInputLabel}
+      >
+        {label}
+      </MUIInputLabel>
+      <MUISelect
+        id={id}
+        labelId={labelId}
+        label={label}
+        displayEmpty
+        onChange={onChange as any}
+        {...rest}
+        variant="outlined"
+        notched
+        inputProps={slotProps?.htmlInput}
+        onOpen={onOpen}
+        MenuProps={{
+          PaperProps: {
+            onKeyDown,
+            onClose,
+          },
+        }}
+        size={size}
+      />
+    </MUIFormControl>
+  );
+}
+
+function BaseSelectOption({ native, ...props }: NonNullable<GridSlotProps['baseSelectOption']>) {
+  if (native) {
+    return <option {...props} />;
+  }
+  return <MUIMenuItem {...props} />;
 }

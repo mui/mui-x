@@ -3,7 +3,7 @@ import { RefObject } from '@mui/x-internals/types';
 import { EventManager } from '@mui/x-internals/EventManager';
 import { Store } from '../../utils/Store';
 import { useGridApiMethod } from '../utils/useGridApiMethod';
-import { GridSignature } from '../utils/useGridApiEventHandler';
+import { GridSignature } from '../../constants/signature';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridCoreApi } from '../../models';
 import type { GridApiCommon, GridPrivateApiCommon } from '../../models/api/gridApiCommon';
@@ -97,7 +97,7 @@ export function useGridApiInitialization<
   PrivateApi extends GridPrivateApiCommon,
   Api extends GridApiCommon,
 >(
-  inputApiRef: RefObject<Api> | undefined,
+  inputApiRef: RefObject<Api | null> | undefined,
   props: Pick<DataGridProcessedProps, 'signature'>,
 ): RefObject<PrivateApi> {
   const publicApiRef = React.useRef<Api>(null) as RefObject<Api>;

@@ -4,7 +4,7 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
-    "apiRef": { "type": { "name": "shape", "description": "{ current: object }" } },
+    "apiRef": { "type": { "name": "shape", "description": "{ current?: object }" } },
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
     "autoHeight": {
@@ -571,6 +571,15 @@
     },
     "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
     "treeData": { "type": { "name": "bool" }, "default": "false" },
+    "unstable_dataSource": {
+      "type": {
+        "name": "shape",
+        "description": "{ getChildrenCount?: func, getGroupKey?: func, getRows: func, updateRow?: func }"
+      }
+    },
+    "unstable_dataSourceCache": {
+      "type": { "name": "shape", "description": "{ clear: func, get: func, set: func }" }
+    },
     "unstable_lazyLoading": { "type": { "name": "bool" }, "default": "false" },
     "unstable_lazyLoadingRequestThrottleMs": { "type": { "name": "number" }, "default": "500" },
     "unstable_listColumn": {
@@ -580,6 +589,13 @@
       }
     },
     "unstable_listView": { "type": { "name": "bool" } },
+    "unstable_onDataSourceError": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(error: Error, params: GridGetRowsParams) => void",
+        "describedArgs": ["error", "params"]
+      }
+    },
     "virtualizeColumnsWithAutoRowHeight": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "DataGridPro",
@@ -647,7 +663,7 @@
       "name": "detailPanels",
       "description": "Component responsible for rendering the detail panels.",
       "default": "GridDetailPanels",
-      "class": "MuiDataGridPro-detailPanels"
+      "class": null
     },
     {
       "name": "footer",
@@ -1648,12 +1664,6 @@
       "isGlobal": false
     },
     {
-      "key": "pinnedColumns",
-      "className": "MuiDataGridPro-pinnedColumns",
-      "description": "Styles applied to the pinned columns.",
-      "isGlobal": false
-    },
-    {
       "key": "pinnedRows",
       "className": "MuiDataGridPro-pinnedRows",
       "description": "Styles applied to the pinned rows container.",
@@ -1669,12 +1679,6 @@
       "key": "pinnedRows--top",
       "className": "MuiDataGridPro-pinnedRows--top",
       "description": "Styles applied to the top pinned rows container.",
-      "isGlobal": false
-    },
-    {
-      "key": "pinnedRowsRenderZone",
-      "className": "MuiDataGridPro-pinnedRowsRenderZone",
-      "description": "Styles applied to pinned rows render zones.",
       "isGlobal": false
     },
     {

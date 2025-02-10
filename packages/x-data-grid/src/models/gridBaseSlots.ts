@@ -35,6 +35,16 @@ export type IconButtonProps = Omit<ButtonProps, 'startIcon'> & {
 
 export type DividerProps = {};
 
+export type MenuListProps = {
+  ref?: Ref<HTMLUListElement>;
+  id?: string;
+  className?: string;
+  children?: React.ReactNode;
+  autoFocus?: boolean;
+  autoFocusItem?: boolean;
+  onKeyDown?: React.KeyboardEventHandler;
+};
+
 export type MenuItemProps = {
   autoFocus?: boolean;
   children?: React.ReactNode;
@@ -61,10 +71,74 @@ export type CircularProgressProps = {
 
 export type LinearProgressProps = {};
 
+export type SelectProps = {
+  ref?: Ref;
+  id?: string;
+  value?: any;
+  open?: boolean;
+  error?: boolean;
+  disabled?: boolean;
+  onChange?: React.ChangeEventHandler;
+  onFocus?: React.FocusEventHandler;
+  onBlur?: React.FocusEventHandler;
+  onKeyDown?: React.KeyboardEventHandler;
+  onOpen?: (event: React.SyntheticEvent) => void;
+  onClose?: (
+    event: React.KeyboardEvent,
+    reason: 'backdropClick' | 'escapeKeyDown' | 'tabKeyDown',
+  ) => void;
+  label?: React.ReactNode;
+  labelId?: string;
+  native?: boolean;
+  fullWidth?: boolean;
+  size?: 'small' | 'medium';
+  slotProps?: {
+    htmlInput?: { ref?: Ref } & React.InputHTMLAttributes<HTMLInputElement>;
+  };
+  style?: React.CSSProperties;
+  children?: React.ReactNode;
+};
+
+export type SelectOptionProps = {
+  native: boolean;
+  value: any;
+  children?: React.ReactNode;
+};
+
 export type SkeletonProps = {
   variant?: 'circular' | 'text';
   width?: number | string;
   height?: number | string;
+};
+
+export type TextFieldProps = {
+  autoComplete?: string;
+  className?: string;
+  color?: 'primary' | 'error';
+  disabled?: boolean;
+  error?: boolean;
+  fullWidth?: boolean;
+  helperText?: string | null;
+  id?: string;
+  inputRef?: React.Ref<HTMLInputElement>;
+  label?: React.ReactNode;
+  onChange?: React.ChangeEventHandler;
+  onKeyDown?: React.KeyboardEventHandler;
+  placeholder?: string;
+  size?: 'small' | 'medium';
+  slotProps?: {
+    input?: {
+      disabled?: boolean;
+      endAdornment?: React.ReactNode;
+      startAdornment?: React.ReactNode;
+    };
+    inputLabel?: {};
+    htmlInput?: React.InputHTMLAttributes<HTMLInputElement>;
+  };
+  style?: React.CSSProperties;
+  tabIndex?: number;
+  type?: React.HTMLInputTypeAttribute;
+  value?: string;
 };
 
 export type TooltipProps = {

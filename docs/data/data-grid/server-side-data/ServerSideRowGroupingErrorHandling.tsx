@@ -4,6 +4,8 @@ import {
   GridDataSource,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
+  GridGetRowsResponse,
+  GridGetRowsParams,
 } from '@mui/x-data-grid-premium';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import Snackbar from '@mui/material/Snackbar';
@@ -18,7 +20,7 @@ export default function ServerSideRowGroupingErrorHandling() {
   const [childrenError, setChildrenError] = React.useState<string>();
   const [shouldRequestsFail, setShouldRequestsFail] = React.useState(false);
 
-  const { fetchRows, columns } = useMockServer(
+  const { fetchRows, columns } = useMockServer<GridGetRowsResponse>(
     {
       rowGrouping: true,
     },
@@ -64,7 +66,7 @@ export default function ServerSideRowGroupingErrorHandling() {
         <Button
           onClick={() => {
             setRootError('');
-            apiRef.current.unstable_dataSource.fetchRows();
+            apiRef.current?.unstable_dataSource.fetchRows();
           }}
         >
           Refetch rows
@@ -83,7 +85,8 @@ export default function ServerSideRowGroupingErrorHandling() {
         <DataGridPremium
           columns={columns}
           unstable_dataSource={dataSource}
-          unstable_onDataSourceError={(error, params) => {
+          unstable_onDataSourceError={(error, p) => {
+            const params = p as GridGetRowsParams;
             if (!params.groupKeys || params.groupKeys.length === 0) {
               setRootError(error.message);
             } else {
