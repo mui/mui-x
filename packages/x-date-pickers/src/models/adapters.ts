@@ -79,7 +79,7 @@ export interface AdapterFormats {
   keyboardDate: string;
   /**
    * The abbreviated month name and the day of the month.
-   * Used in the `DateRangePicker` toolbar.
+   * Used in the `DateTimePicker` and `DateRangePicker` toolbars.
    * @example "Jan 1"
    */
   shortDate: string;
