@@ -286,14 +286,18 @@ export async function getDataForValueOptionsSheet(
   return candidateColumns.reduce<Record<string, { values: (string | number)[]; address: string }>>(
     (acc, column) => {
       const singleSelectColumn = column as GridSingleSelectColDef;
-      const formattedValueOptions = getFormattedValueOptions(
+      const header = column.headerName ?? column.field;
+
+      const values: any[] = [header];
+      getFormattedValueOptions(
         singleSelectColumn,
         {},
         singleSelectColumn.valueOptions as Array<ValueOptions>,
         api,
+        (value) => {
+          values.push(value);
+        },
       );
-      const header = column.headerName ?? column.field;
-      const values = [header, ...formattedValueOptions];
 
       const letter = worksheet.getColumn(column.field).letter;
       const address = `${valueOptionsSheetName}!$${letter}$2:$${letter}$${values.length}`;
