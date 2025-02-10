@@ -154,7 +154,12 @@ export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
 
 export type * from '../models/props/DataGridProps';
-export type * from '../models/gridDataSource';
+export type { GridDataSourceApiBase, GridDataSourceApi } from '../hooks/features/dataSource/models';
+export { DataSourceRowsUpdateStrategy } from '../hooks/features/dataSource/utils';
+export { useGridDataSourceBase } from '../hooks/features/dataSource/useGridDataSourceBase';
+export { CacheChunkManager } from '../hooks/features/dataSource/utils';
+export { gridGetRowsParamsSelector } from '../hooks/features/dataSource/gridDataSourceSelector';
+
 export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/export/utils';
 export * from '../utils/createControllablePromise';
 export * from '../utils/rtlFlipSide';
