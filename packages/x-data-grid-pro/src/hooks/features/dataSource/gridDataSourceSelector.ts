@@ -1,34 +1,7 @@
 import { RefObject } from '@mui/x-internals/types';
-import {
-  GridPaginationModel,
-  gridFilterModelSelector,
-  gridSortModelSelector,
-  gridPaginationModelSelector,
-} from '@mui/x-data-grid';
 import { createSelector } from '@mui/x-data-grid/internals';
 import type { GridRowId } from '@mui/x-data-grid';
 import { GridApiPro } from '../../../models/gridApiPro';
-
-const computeStartEnd = (paginationModel: GridPaginationModel) => {
-  const start = paginationModel.page * paginationModel.pageSize;
-  const end = start + paginationModel.pageSize - 1;
-  return { start, end };
-};
-
-export const gridGetRowsParamsSelector = createSelector(
-  gridFilterModelSelector,
-  gridSortModelSelector,
-  gridPaginationModelSelector,
-  (filterModel, sortModel, paginationModel) => {
-    return {
-      groupKeys: [],
-      paginationModel,
-      sortModel,
-      filterModel,
-      ...computeStartEnd(paginationModel),
-    };
-  },
-);
 
 export const gridDataSourceStateSelector = (apiRef: RefObject<GridApiPro>) =>
   apiRef.current.state.dataSource;

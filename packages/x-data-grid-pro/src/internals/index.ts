@@ -44,11 +44,8 @@ export {
 export { useGridLazyLoader } from '../hooks/features/lazyLoader/useGridLazyLoader';
 export { useGridLazyLoaderPreProcessors } from '../hooks/features/lazyLoader/useGridLazyLoaderPreProcessors';
 export { useGridDataSourceLazyLoader } from '../hooks/features/serverSideLazyLoader/useGridDataSourceLazyLoader';
+export { dataSourceStateInitializer } from '../hooks/features/dataSource/useGridDataSourcePro';
 export { useGridDataSourceBasePro } from '../hooks/features/dataSource/useGridDataSourceBasePro';
-export {
-  useGridDataSourceBase,
-  dataSourceStateInitializer,
-} from '../hooks/features/dataSource/useGridDataSourceBase';
 export {
   gridDataSourceErrorSelector,
   gridDataSourceLoadingIdSelector,
