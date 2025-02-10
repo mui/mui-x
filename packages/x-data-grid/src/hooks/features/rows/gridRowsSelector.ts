@@ -1,4 +1,5 @@
 import { RefObject } from '@mui/x-internals/types';
+import { GridRowId } from '../../../models/gridRows';
 import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 
@@ -23,6 +24,11 @@ export const gridTopLevelRowCountSelector = createSelector(
 export const gridRowsLookupSelector = createSelector(
   gridRowsStateSelector,
   (rows) => rows.dataRowIdToModelLookup,
+);
+
+export const gridRowsLookupIdSelector = createSelector(
+  gridRowsLookupSelector,
+  (rowsLookup, id: GridRowId) => rowsLookup[id],
 );
 
 export const gridRowTreeSelector = createSelector(gridRowsStateSelector, (rows) => rows.tree);

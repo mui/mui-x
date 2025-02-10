@@ -178,6 +178,7 @@ describe('<DataGrid /> - Cells', () => {
     }).toWarnDev(['MUI X: The cell with id=1 and field=brand received focus.']);
   });
 
+  //
   testSkipIf(isJSDOM)(
     'should keep the focused cell/row rendered in the DOM if it scrolls outside the viewport',
     () => {
