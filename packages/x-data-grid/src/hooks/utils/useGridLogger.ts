@@ -1,9 +1,10 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { Logger } from '../../models/logger';
 import { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 
 export function useGridLogger<PrivateApi extends GridPrivateApiCommon>(
-  privateApiRef: React.MutableRefObject<PrivateApi>,
+  privateApiRef: RefObject<PrivateApi>,
   name: string,
 ): Logger {
   const logger = React.useRef<Logger | null>(null);

@@ -6,11 +6,19 @@
 
 You can scroll to a specific cell by calling `apiRef.current.scrollToIndexes()`.
 The only argument that must be passed is an object containing the row index and the column index of the cell to scroll.
-If the row or column index is not present, the data grid will not do any movement in the missing axis.
+If the row or column index is not present, the Data Grid will not do any movement in the missing axis.
 
 The following demo explores the usage of this API:
 
 {{"demo": "ScrollPlayground.js", "bg": "inline"}}
+
+## Scroll restoration
+
+You can restore scroll to a previous position by definining `initialState.scroll` values `{ top: number, left: number }`. The Data Grid will mount at the specified scroll offset in pixels.
+
+The following demo explores the usage of scroll restoration:
+
+{{"demo": "ScrollRestoration.js", "bg": "inline"}}
 
 ## apiRef
 

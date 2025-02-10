@@ -31,6 +31,18 @@ const ptPTGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Procurar',
   toolbarQuickFilterDeleteIconLabel: 'Claro',
 
+  // Prompt toolbar field
+  toolbarPromptControlPlaceholder: 'Digite um prompt…',
+  toolbarPromptControlWithRecordingPlaceholder: 'Digite ou grave um prompt…',
+  toolbarPromptControlRecordingPlaceholder: 'Ouvindo o prompt…',
+  toolbarPromptControlLabel: 'Entrada de prompt',
+  toolbarPromptControlRecordButtonDefaultLabel: 'Gravar',
+  toolbarPromptControlRecordButtonActiveLabel: 'Parar gravação',
+  toolbarPromptControlSendActionLabel: 'Enviar',
+  toolbarPromptControlSendActionAriaLabel: 'Enviar prompt',
+  toolbarPromptControlErrorMessage:
+    'Ocorreu um erro ao processar a solicitação. Por favor, tente novamente com um prompt diferente.',
+
   // Export selector toolbar button text
   toolbarExport: 'Exportar',
   toolbarExportLabel: 'Exportar',
@@ -43,6 +55,7 @@ const ptPTGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Sem colunas',
   columnsManagementShowHideAllText: 'Mostrar/Ocultar Todas',
   columnsManagementReset: 'Repor',
+  columnsManagementDeleteIconLabel: 'Limpar',
 
   // Filter panel text
   filterPanelAddFilter: 'Adicionar filtro',
@@ -58,9 +71,9 @@ const ptPTGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'contém',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'não contém',
   filterOperatorEquals: 'é igual a',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'não é igual a',
   filterOperatorStartsWith: 'começa com',
   filterOperatorEndsWith: 'termina com',
   filterOperatorIs: 'é',
@@ -81,9 +94,9 @@ const ptPTGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Contém',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'Não contém',
   headerFilterOperatorEquals: 'É igual a',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'Não é igual',
   headerFilterOperatorStartsWith: 'Começa com',
   headerFilterOperatorEndsWith: 'Termina com',
   headerFilterOperatorIs: 'É',
@@ -101,6 +114,7 @@ const ptPTGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Melhor que ou igual a',
   'headerFilterOperator<': 'Menor que',
   'headerFilterOperator<=': 'Menos que ou igual a',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'qualquer',

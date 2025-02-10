@@ -1,16 +1,12 @@
 import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { render, cleanup } from '@testing-library/react';
-import { afterEach, bench, describe } from 'vitest';
+import { bench, describe } from 'vitest';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { options } from '../utils/options';
 
 describe('BarChart', () => {
-  afterEach(() => {
-    cleanup();
-  });
-
-  const dataLength = 250;
+  const dataLength = 150;
   const data = Array.from({ length: dataLength + 1 }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,
@@ -41,6 +37,8 @@ describe('BarChart', () => {
       );
 
       await findByText(dataLength.toLocaleString(), { ignore: 'span' });
+
+      cleanup();
     },
     options,
   );

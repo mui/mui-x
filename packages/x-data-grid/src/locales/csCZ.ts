@@ -38,6 +38,17 @@ const csCZGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Hledat',
   toolbarQuickFilterDeleteIconLabel: 'Vymazat',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Export',
   toolbarExportLabel: 'Export',
@@ -50,6 +61,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Žádné sloupce',
   columnsManagementShowHideAllText: 'Zobrazit/skrýt vše',
   columnsManagementReset: 'Resetovat',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Přidat filtr',
@@ -108,6 +120,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Větší než nebo rovno',
   'headerFilterOperator<': 'Menší než',
   'headerFilterOperator<=': 'Menší než nebo rovno',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'jakýkoliv',

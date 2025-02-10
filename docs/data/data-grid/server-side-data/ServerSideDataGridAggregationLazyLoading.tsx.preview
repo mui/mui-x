@@ -1,0 +1,7 @@
+<DataGridPremium
+  columns={columns}
+  unstable_dataSource={dataSource}
+  initialState={initialState}
+  unstable_lazyLoading
+  aggregationFunctions={aggregationFunctions}
+/>

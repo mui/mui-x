@@ -7,7 +7,7 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import IconButton from '@mui/material/IconButton';
-import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from '../DateCalendar/PickersFadeTransitionGroup';
 import { ArrowDropDownIcon } from '../icons';
@@ -18,16 +18,14 @@ import {
 } from '../internals/hooks/date-helpers-hooks';
 import {
   getPickersCalendarHeaderUtilityClass,
+  PickersCalendarHeaderClasses,
   pickersCalendarHeaderClasses,
 } from './pickersCalendarHeaderClasses';
-import {
-  PickersCalendarHeaderOwnerState,
-  PickersCalendarHeaderProps,
-} from './PickersCalendarHeader.types';
-import { PickerValidDate } from '../models';
+import { PickersCalendarHeaderProps } from './PickersCalendarHeader.types';
+import { PickerOwnerState } from '../models/pickers';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 
-const useUtilityClasses = (ownerState: PickersCalendarHeaderOwnerState<any>) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classes: Partial<PickersCalendarHeaderClasses> | undefined) => {
   const slots = {
     root: ['root'],
     labelContainer: ['labelContainer'],
@@ -44,7 +42,7 @@ const PickersCalendarHeaderRoot = styled('div', {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })<{
-  ownerState: PickersCalendarHeaderOwnerState<any>;
+  ownerState: PickerOwnerState;
 }>({
   display: 'flex',
   alignItems: 'center',
@@ -62,7 +60,7 @@ const PickersCalendarHeaderLabelContainer = styled('div', {
   slot: 'LabelContainer',
   overridesResolver: (_, styles) => styles.labelContainer,
 })<{
-  ownerState: PickersCalendarHeaderOwnerState<any>;
+  ownerState: PickerOwnerState;
 }>(({ theme }) => ({
   display: 'flex',
   overflow: 'hidden',
@@ -78,7 +76,7 @@ const PickersCalendarHeaderLabel = styled('div', {
   slot: 'Label',
   overridesResolver: (_, styles) => styles.label,
 })<{
-  ownerState: PickersCalendarHeaderOwnerState<any>;
+  ownerState: PickerOwnerState;
 }>({
   marginRight: 6,
 });
@@ -88,7 +86,7 @@ const PickersCalendarHeaderSwitchViewButton = styled(IconButton, {
   slot: 'SwitchViewButton',
   overridesResolver: (_, styles) => styles.switchViewButton,
 })<{
-  ownerState: PickersCalendarHeaderOwnerState<any>;
+  ownerState: PickerOwnerState;
 }>({
   marginRight: 'auto',
   variants: [
@@ -108,15 +106,15 @@ const PickersCalendarHeaderSwitchViewIcon = styled(ArrowDropDownIcon, {
   slot: 'SwitchViewIcon',
   overridesResolver: (_, styles) => styles.switchViewIcon,
 })<{
-  ownerState: PickersCalendarHeaderOwnerState<any>;
+  ownerState: PickerOwnerState;
 }>(({ theme }) => ({
   willChange: 'transform',
   transition: theme.transitions.create('transform'),
   transform: 'rotate(0deg)',
 }));
 
-type PickersCalendarHeaderComponent = (<TDate extends PickerValidDate>(
-  props: PickersCalendarHeaderProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type PickersCalendarHeaderComponent = ((
+  props: PickersCalendarHeaderProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -130,11 +128,12 @@ type PickersCalendarHeaderComponent = (<TDate extends PickerValidDate>(
  *
  * - [PickersCalendarHeader API](https://mui.com/x/api/date-pickers/pickers-calendar-header/)
  */
-const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<
-  TDate extends PickerValidDate,
->(inProps: PickersCalendarHeaderProps<TDate>, ref: React.Ref<HTMLDivElement>) {
-  const translations = usePickersTranslations<TDate>();
-  const utils = useUtils<TDate>();
+const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader(
+  inProps: PickersCalendarHeaderProps,
+  ref: React.Ref<HTMLDivElement>,
+) {
+  const translations = usePickerTranslations();
+  const utils = useUtils();
 
   const props = useThemeProps({ props: inProps, name: 'MuiPickersCalendarHeader' });
 
@@ -154,14 +153,14 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<
     views,
     labelId,
     className,
+    classes: classesProp,
     timezone,
     format = `${utils.formats.month} ${utils.formats.year}`,
     ...other
   } = props;
 
-  const ownerState = props;
-
-  const classes = useUtilityClasses(props);
+  const { ownerState } = usePickerPrivateContext();
+  const classes = useUtilityClasses(classesProp);
 
   const SwitchViewButton = slots?.switchViewButton ?? PickersCalendarHeaderSwitchViewButton;
   const switchViewButtonProps = useSlotProps({
@@ -184,8 +183,8 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<
     className: classes.switchViewIcon,
   });
 
-  const selectNextMonth = () => onMonthChange(utils.addMonths(month, 1), 'left');
-  const selectPreviousMonth = () => onMonthChange(utils.addMonths(month, -1), 'right');
+  const selectNextMonth = () => onMonthChange(utils.addMonths(month, 1));
+  const selectPreviousMonth = () => onMonthChange(utils.addMonths(month, -1));
 
   const isNextMonthDisabled = useNextMonthDisabled(month, {
     disableFuture,
@@ -223,7 +222,7 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<
     <PickersCalendarHeaderRoot
       {...other}
       ownerState={ownerState}
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       ref={ref}
     >
       <PickersCalendarHeaderLabelContainer
@@ -237,7 +236,7 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<
         <PickersFadeTransitionGroup reduceAnimations={reduceAnimations} transKey={label}>
           <PickersCalendarHeaderLabel
             id={labelId}
-            data-mui-test="calendar-month-and-year-text"
+            data-testid="calendar-month-and-year-text"
             ownerState={ownerState}
             className={classes.label}
           >
@@ -250,7 +249,7 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<
           </SwitchViewButton>
         )}
       </PickersCalendarHeaderLabelContainer>
-      <Fade in={view === 'day'}>
+      <Fade in={view === 'day'} appear={!reduceAnimations} enter={!reduceAnimations}>
         <PickersArrowSwitcher
           slots={slots}
           slotProps={slotProps}

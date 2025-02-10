@@ -1,6 +1,6 @@
 # Data Grid - API Reference
 
-<p class="description">This page contains an index to the most important APIs of the data grid.</p>
+<p class="description">This page contains an index to the most important APIs of the Data Grid.</p>
 
 ## Components
 
@@ -17,6 +17,7 @@
 - [GridColDef](/x/api/data-grid/grid-col-def/)
 - [GridSingleSelectColDef](/x/api/data-grid/grid-single-select-col-def/)
 - [GridActionsColDef](/x/api/data-grid/grid-actions-col-def/)
+- [GridListColDef](/x/api/data-grid/grid-list-col-def/)
 - [GridExportStateParams](/x/api/data-grid/grid-export-state-params/)
 - [GridFilterItem](/x/api/data-grid/grid-filter-item/)
 - [GridFilterModel](/x/api/data-grid/grid-filter-model/)
@@ -25,6 +26,7 @@
 - [GridRowParams](/x/api/data-grid/grid-row-params/)
 - [GridRowSpacingParams](/x/api/data-grid/grid-row-spacing-params/)
 - [GridAggregationFunction](/x/api/data-grid/grid-aggregation-function/)
+- [GridAggregationFunctionDataSource](/x/api/data-grid/grid-aggregation-function-data-source/)
 - [GridCsvExportOptions](/x/api/data-grid/grid-csv-export-options/)
 - [GridPrintExportOptions](/x/api/data-grid/grid-print-export-options/)
 - [GridExcelExportOptions](/x/api/data-grid/grid-excel-export-options/)

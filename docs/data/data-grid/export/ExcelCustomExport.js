@@ -236,7 +236,7 @@ const groupingColDef = {
   headerName: 'Feature',
 };
 
-const exceljsPreProcess = ({ workbook, worksheet }) => {
+const exceljsPreProcess = async ({ workbook, worksheet }) => {
   // Set document meta data
   workbook.creator = 'MUI-X team';
   workbook.created = new Date();
@@ -264,14 +264,17 @@ const exceljsPreProcess = ({ workbook, worksheet }) => {
   };
   worksheet.addRow([]);
 };
-const exceljsPostProcess = ({ worksheet }) => {
+const exceljsPostProcess = async ({ worksheet }) => {
   // add a text after the data
   worksheet.addRow({}); // Add empty row
 
   worksheet.addRow(['Those data are for internal use only']);
 };
 
-const excelOptions = { exceljsPreProcess, exceljsPostProcess };
+const excelOptions = {
+  exceljsPreProcess,
+  exceljsPostProcess,
+};
 
 const getTreeDataPath = (row) => row.path;
 

@@ -13,7 +13,7 @@ export const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   },
   {
     id: 'pickers',
-    label: 'Date and time pickers',
+    label: 'Date and Time pickers',
 
     children: [
       {

@@ -1,7 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import LinearProgress from '@mui/material/LinearProgress';
-import CircularProgress from '@mui/material/CircularProgress';
+import { forwardRef } from '@mui/x-internals/forwardRef';
+import type { DataGridProcessedProps } from '../models/props/DataGridProps';
+import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { GridOverlay, GridOverlayProps } from './containers/GridOverlay';
 import { GridSkeletonLoadingOverlay } from './GridSkeletonLoadingOverlay';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
@@ -12,12 +13,12 @@ export type GridLoadingOverlayVariant = 'circular-progress' | 'linear-progress' 
 export interface GridLoadingOverlayProps extends GridOverlayProps {
   /**
    * The variant of the overlay.
-   * @default 'circular-progress'
+   * @default 'linear-progress'
    */
   variant?: GridLoadingOverlayVariant;
   /**
    * The variant of the overlay when no rows are displayed.
-   * @default 'circular-progress'
+   * @default 'skeleton'
    */
   noRowsVariant?: GridLoadingOverlayVariant;
 }
@@ -25,39 +26,36 @@ export interface GridLoadingOverlayProps extends GridOverlayProps {
 const LOADING_VARIANTS: Record<
   GridLoadingOverlayVariant,
   {
-    component: React.ComponentType;
+    component: (rootProps: DataGridProcessedProps) => React.ComponentType;
     style: React.CSSProperties;
   }
 > = {
   'circular-progress': {
-    component: CircularProgress,
+    component: (rootProps: DataGridProcessedProps) => rootProps.slots.baseCircularProgress,
     style: {},
   },
   'linear-progress': {
-    component: LinearProgress,
+    component: (rootProps: DataGridProcessedProps) => rootProps.slots.baseLinearProgress,
     style: { display: 'block' },
   },
   skeleton: {
-    component: GridSkeletonLoadingOverlay,
+    component: () => GridSkeletonLoadingOverlay,
     style: { display: 'block' },
   },
 };
 
-const GridLoadingOverlay = React.forwardRef<HTMLDivElement, GridLoadingOverlayProps>(
+const GridLoadingOverlay = forwardRef<HTMLDivElement, GridLoadingOverlayProps>(
   function GridLoadingOverlay(props, ref) {
-    const {
-      variant = 'circular-progress',
-      noRowsVariant = 'circular-progress',
-      style,
-      ...other
-    } = props;
+    const { variant = 'linear-progress', noRowsVariant = 'skeleton', style, ...other } = props;
     const apiRef = useGridApiContext();
+    const rootProps = useGridRootProps();
     const rowsCount = useGridSelector(apiRef, gridRowCountSelector);
     const activeVariant = LOADING_VARIANTS[rowsCount === 0 ? noRowsVariant : variant];
+    const Component = activeVariant.component(rootProps);
 
     return (
-      <GridOverlay ref={ref} style={{ ...activeVariant.style, ...style }} {...other}>
-        <activeVariant.component />
+      <GridOverlay style={{ ...activeVariant.style, ...style }} {...other} ref={ref}>
+        <Component />
       </GridOverlay>
     );
   },
@@ -70,7 +68,7 @@ GridLoadingOverlay.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * The variant of the overlay when no rows are displayed.
-   * @default 'circular-progress'
+   * @default 'skeleton'
    */
   noRowsVariant: PropTypes.oneOf(['circular-progress', 'linear-progress', 'skeleton']),
   sx: PropTypes.oneOfType([
@@ -80,7 +78,7 @@ GridLoadingOverlay.propTypes = {
   ]),
   /**
    * The variant of the overlay.
-   * @default 'circular-progress'
+   * @default 'linear-progress'
    */
   variant: PropTypes.oneOf(['circular-progress', 'linear-progress', 'skeleton']),
 } as any;

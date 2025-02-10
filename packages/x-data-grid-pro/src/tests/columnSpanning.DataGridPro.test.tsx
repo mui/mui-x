@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
+import { RefObject } from '@mui/x-internals/types';
 import { DataGridPro, GridApi, useGridApiRef, GridColDef, gridClasses } from '@mui/x-data-grid-pro';
 import { getActiveCell, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Column spanning', () => {
   const { render } = createRenderer({ clock: 'fake' });
@@ -36,31 +36,30 @@ describe('<DataGridPro /> - Column spanning', () => {
     ],
   };
 
-  it('should not apply `colSpan` in pinned columns section if there is only one column there', function test() {
-    if (isJSDOM) {
-      // Need layouting
-      this.skip();
-    }
+  // Need layouting
+  testSkipIf(isJSDOM)(
+    'should not apply `colSpan` in pinned columns section if there is only one column there',
+    () => {
+      render(
+        <div style={{ width: 500, height: 300 }}>
+          <DataGridPro
+            {...baselineProps}
+            columns={[
+              { field: 'brand', colSpan: 2, width: 110 },
+              { field: 'category' },
+              { field: 'price' },
+            ]}
+            initialState={{ pinnedColumns: { left: ['brand'], right: [] } }}
+          />
+        </div>,
+      );
 
-    render(
-      <div style={{ width: 500, height: 300 }}>
-        <DataGridPro
-          {...baselineProps}
-          columns={[
-            { field: 'brand', colSpan: 2, width: 110 },
-            { field: 'category' },
-            { field: 'price' },
-          ]}
-          initialState={{ pinnedColumns: { left: ['brand'], right: [] } }}
-        />
-      </div>,
-    );
-
-    expect(getCell(0, 0).offsetWidth).to.equal(110);
-    expect(() => getCell(0, 0)).to.not.throw();
-    expect(() => getCell(0, 1)).to.not.throw();
-    expect(() => getCell(0, 2)).to.not.throw();
-  });
+      expect(getCell(0, 0).offsetWidth).to.equal(110);
+      expect(() => getCell(0, 0)).not.to.throw();
+      expect(() => getCell(0, 1)).not.to.throw();
+      expect(() => getCell(0, 2)).not.to.throw();
+    },
+  );
 
   it('should apply `colSpan` inside pinned columns section', () => {
     render(
@@ -73,9 +72,9 @@ describe('<DataGridPro /> - Column spanning', () => {
       </div>,
     );
 
-    expect(() => getCell(0, 0)).to.not.throw();
+    expect(() => getCell(0, 0)).not.to.throw();
     expect(() => getCell(0, 1)).to.throw(/not found/);
-    expect(() => getCell(0, 2)).to.not.throw();
+    expect(() => getCell(0, 2)).not.to.throw();
   });
 
   describe('key navigation', () => {
@@ -87,7 +86,7 @@ describe('<DataGridPro /> - Column spanning', () => {
     ];
 
     it('should work after column reordering', () => {
-      let apiRef: React.MutableRefObject<GridApi>;
+      let apiRef: RefObject<GridApi | null>;
 
       function Test() {
         apiRef = useGridApiRef();
@@ -101,7 +100,7 @@ describe('<DataGridPro /> - Column spanning', () => {
 
       render(<Test />);
 
-      act(() => apiRef!.current.setColumnIndex('price', 1));
+      act(() => apiRef!.current?.setColumnIndex('price', 1));
 
       fireUserEvent.mousePress(getCell(1, 1));
       fireEvent.keyDown(getCell(1, 1), { key: 'ArrowRight' });
@@ -110,7 +109,7 @@ describe('<DataGridPro /> - Column spanning', () => {
   });
 
   it('should recalculate cells after column reordering', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: RefObject<GridApi | null>;
 
     function Test() {
       apiRef = useGridApiRef();
@@ -134,33 +133,29 @@ describe('<DataGridPro /> - Column spanning', () => {
 
     render(<Test />);
 
-    act(() => apiRef!.current.setColumnIndex('brand', 1));
+    act(() => apiRef.current?.setColumnIndex('brand', 1));
 
     // Nike row
-    expect(() => getCell(0, 0)).to.not.throw();
-    expect(() => getCell(0, 1)).to.not.throw();
+    expect(() => getCell(0, 0)).not.to.throw();
+    expect(() => getCell(0, 1)).not.to.throw();
     expect(() => getCell(0, 2)).to.throw(/not found/);
-    expect(() => getCell(0, 3)).to.not.throw();
+    expect(() => getCell(0, 3)).not.to.throw();
 
     // Adidas row
-    expect(() => getCell(1, 0)).to.not.throw();
+    expect(() => getCell(1, 0)).not.to.throw();
     expect(() => getCell(1, 1)).to.throw(/not found/);
-    expect(() => getCell(1, 2)).to.not.throw();
-    expect(() => getCell(1, 3)).to.not.throw();
+    expect(() => getCell(1, 2)).not.to.throw();
+    expect(() => getCell(1, 3)).not.to.throw();
 
     // Puma row
-    expect(() => getCell(2, 0)).to.not.throw();
-    expect(() => getCell(2, 1)).to.not.throw();
-    expect(() => getCell(2, 2)).to.not.throw();
+    expect(() => getCell(2, 0)).not.to.throw();
+    expect(() => getCell(2, 1)).not.to.throw();
+    expect(() => getCell(2, 2)).not.to.throw();
     expect(() => getCell(2, 3)).to.throw(/not found/);
   });
 
-  it('should work with column resizing', function test() {
-    if (isJSDOM) {
-      // Need layouting
-      this.skip();
-    }
-
+  // Need layouting
+  testSkipIf(isJSDOM)('should work with column resizing', () => {
     const columns = [{ field: 'brand', colSpan: 2 }, { field: 'category' }, { field: 'price' }];
 
     render(
@@ -191,7 +186,7 @@ describe('<DataGridPro /> - Column spanning', () => {
       { field: 'rating' },
     ];
 
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: RefObject<GridApi | null>;
 
     function Test() {
       apiRef = useGridApiRef();
@@ -211,7 +206,7 @@ describe('<DataGridPro /> - Column spanning', () => {
     render(<Test />);
 
     act(() =>
-      apiRef!.current.setRows([
+      apiRef.current?.setRows([
         {
           id: 0,
           brand: 'Adidas',
@@ -237,21 +232,21 @@ describe('<DataGridPro /> - Column spanning', () => {
     );
 
     // Adidas row
-    expect(() => getCell(0, 0)).to.not.throw();
-    expect(() => getCell(0, 1)).to.not.throw();
+    expect(() => getCell(0, 0)).not.to.throw();
+    expect(() => getCell(0, 1)).not.to.throw();
     expect(() => getCell(0, 2)).to.throw(/not found/);
-    expect(() => getCell(0, 3)).to.not.throw();
+    expect(() => getCell(0, 3)).not.to.throw();
 
     // Nike row
-    expect(() => getCell(1, 0)).to.not.throw();
+    expect(() => getCell(1, 0)).not.to.throw();
     expect(() => getCell(1, 1)).to.throw(/not found/);
-    expect(() => getCell(1, 2)).to.not.throw();
-    expect(() => getCell(1, 3)).to.not.throw();
+    expect(() => getCell(1, 2)).not.to.throw();
+    expect(() => getCell(1, 3)).not.to.throw();
 
     // Reebok row
-    expect(() => getCell(2, 0)).to.not.throw();
-    expect(() => getCell(2, 1)).to.not.throw();
-    expect(() => getCell(2, 2)).to.not.throw();
-    expect(() => getCell(2, 3)).to.not.throw();
+    expect(() => getCell(2, 0)).not.to.throw();
+    expect(() => getCell(2, 1)).not.to.throw();
+    expect(() => getCell(2, 2)).not.to.throw();
+    expect(() => getCell(2, 3)).not.to.throw();
   });
 });

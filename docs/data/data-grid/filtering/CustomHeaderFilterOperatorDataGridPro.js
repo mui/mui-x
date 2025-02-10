@@ -23,33 +23,30 @@ function RatingInputValue(props) {
   };
 
   return (
-    <React.Fragment>
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        width: '100%',
+      }}
+    >
+      <Rating
+        name="custom-rating-filter-operator"
+        value={Number(item.value)}
+        onChange={handleFilterChange}
+        precision={0.5}
+        ref={ratingRef}
+        sx={{ mr: 0.5 }}
+      />
       {headerFilterMenu}
-      <Box
-        sx={{
-          display: 'inline-flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          height: '100%',
-          pl: '10px',
-          bl: '1px solid lightgrey',
-        }}
-      >
-        <Rating
-          name="custom-rating-filter-operator"
-          value={Number(item.value)}
-          onChange={handleFilterChange}
-          precision={0.5}
-          ref={ratingRef}
-        />
-      </Box>
       {clearButton}
-    </React.Fragment>
+    </Box>
   );
 }
 
 export default function CustomHeaderFilterOperatorDataGridPro() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     rowLength: 100,
     visibleFields: VISIBLE_FIELDS,
@@ -79,7 +76,7 @@ export default function CustomHeaderFilterOperatorDataGridPro() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro {...data} columns={columns} headerFilters />
+      <DataGridPro {...data} loading={loading} columns={columns} headerFilters />
     </div>
   );
 }

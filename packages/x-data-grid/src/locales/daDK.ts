@@ -31,6 +31,17 @@ const daDKGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Søg',
   toolbarQuickFilterDeleteIconLabel: 'Ryd',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Eksport',
   toolbarExportLabel: 'Eksporter',
@@ -42,7 +53,8 @@ const daDKGrid: Partial<GridLocaleText> = {
   columnsManagementSearchTitle: 'Søg',
   columnsManagementNoColumns: 'Ingen søjler',
   columnsManagementShowHideAllText: 'Vis/Skjul Alle',
-  // columnsManagementReset: 'Reset',
+  columnsManagementReset: 'Nulstil',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Tilføj filter',
@@ -58,9 +70,9 @@ const daDKGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'indeholder',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'indeholder ikke',
   filterOperatorEquals: 'lig med',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'ikke lig med',
   filterOperatorStartsWith: 'begynder med',
   filterOperatorEndsWith: 'ender med',
   filterOperatorIs: 'er lig med',
@@ -81,9 +93,9 @@ const daDKGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Indeholder',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'Indeholder ikke',
   headerFilterOperatorEquals: 'Lig med',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'Ikke lig med',
   headerFilterOperatorStartsWith: 'Begynder med',
   headerFilterOperatorEndsWith: 'Ender med',
   headerFilterOperatorIs: 'Er lig med',
@@ -101,6 +113,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Større end eller lig med',
   'headerFilterOperator<': 'Mindre end',
   'headerFilterOperator<=': 'Mindre end eller lig med',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'hvilken som helst',

@@ -35,7 +35,6 @@ export default function BarGapNoSnap() {
         <BarChart
           dataset={balanceSheet}
           series={series}
-          width={500}
           height={300}
           margin={{ top: 15 }}
           xAxis={[
@@ -47,7 +46,7 @@ export default function BarGapNoSnap() {
             },
           ]}
           yAxis={[{ valueFormatter: (v) => `$ ${v / 1000000}B` }]}
-          slotProps={{ legend: { hidden: true } }}
+          hideLegend
         />
       )}
       getCode={({ props }) => {

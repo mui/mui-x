@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridColDef, GridFilterOperator, GridRowId } from '@mui/x-data-grid-pro';
 import { GridBaseColDef } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
@@ -31,7 +32,7 @@ interface GridColDefWithAggregationWrappers extends GridBaseColDef {
 }
 
 type ColumnPropertyWrapper<P extends WrappableColumnProperty> = (params: {
-  apiRef: React.MutableRefObject<GridApiPremium>;
+  apiRef: RefObject<GridApiPremium>;
   value: GridBaseColDef[P];
   colDef: GridBaseColDef;
   aggregationRule: GridAggregationRule;
@@ -46,8 +47,8 @@ const getAggregationValueWrappedValueGetter: ColumnPropertyWrapper<'valueGetter'
   getCellAggregationResult,
 }) => {
   const wrappedValueGetter: GridBaseColDef['valueGetter'] = (value, row, column, apiRef) => {
-    const rowId = apiRef.current.getRowId(row);
-    const cellAggregationResult = getCellAggregationResult(rowId, column.field);
+    const rowId = apiRef.current.getRowId?.(row);
+    const cellAggregationResult = rowId ? getCellAggregationResult(rowId, column.field) : null;
     if (cellAggregationResult != null) {
       return cellAggregationResult?.value ?? null;
     }
@@ -188,7 +189,7 @@ export const wrapColumnWithAggregationValue = ({
   aggregationRule,
 }: {
   column: GridBaseColDef;
-  apiRef: React.MutableRefObject<GridApiPremium>;
+  apiRef: RefObject<GridApiPremium>;
   aggregationRule: GridAggregationRule;
 }): GridBaseColDef => {
   const getCellAggregationResult = (

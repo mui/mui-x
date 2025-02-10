@@ -11,7 +11,7 @@ import type {
 } from '../hooks';
 
 /**
- * The state of `DataGridPremium`.
+ * The state of Data Grid Premium.
  */
 export interface GridStatePremium extends GridStatePro {
   rowGrouping: GridRowGroupingState;
@@ -20,7 +20,7 @@ export interface GridStatePremium extends GridStatePro {
 }
 
 /**
- * The initial state of `DataGridPremium`.
+ * The initial state of Data Grid Premium.
  */
 export interface GridInitialStatePremium extends GridInitialStatePro {
   rowGrouping?: GridRowGroupingInitialState;

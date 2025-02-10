@@ -1,6 +1,9 @@
-import { ExtremumGetter, ExtremumFilter } from '../context/PluginProvider/ExtremumGetter.types';
+import {
+  CartesianExtremumFilter,
+  CartesianExtremumGetter,
+} from '../internals/plugins/models/seriesConfig/extremumGetter.types';
 
-export const getExtremumX: ExtremumGetter<'line'> = (params) => {
+export const getExtremumX: CartesianExtremumGetter<'line'> = (params) => {
   const { axis } = params;
 
   const minX = Math.min(...(axis.data ?? []));
@@ -12,11 +15,15 @@ type GetValues = (d: [number, number]) => [number, number];
 
 function getSeriesExtremums(
   getValues: GetValues,
+  data: (number | null)[],
   stackedData: [number, number][],
-  filter?: ExtremumFilter,
+  filter?: CartesianExtremumFilter,
 ): [number, number] {
   return stackedData.reduce<[number, number]>(
     (seriesAcc, stackedValue, index) => {
+      if (data[index] === null) {
+        return seriesAcc;
+      }
       const [base, value] = getValues(stackedValue);
       if (
         filter &&
@@ -31,24 +38,24 @@ function getSeriesExtremums(
   );
 }
 
-export const getExtremumY: ExtremumGetter<'line'> = (params) => {
+export const getExtremumY: CartesianExtremumGetter<'line'> = (params) => {
   const { series, axis, isDefaultAxis, getFilters } = params;
 
   return Object.keys(series)
     .filter((seriesId) => {
-      const yAxisId = series[seriesId].yAxisId ?? series[seriesId].yAxisKey;
+      const yAxisId = series[seriesId].yAxisId;
       return yAxisId === axis.id || (isDefaultAxis && yAxisId === undefined);
     })
     .reduce(
       (acc, seriesId) => {
-        const { area, stackedData } = series[seriesId];
+        const { area, stackedData, data } = series[seriesId];
         const isArea = area !== undefined;
 
         const filter = getFilters?.({
           currentAxisId: axis.id,
           isDefaultAxis,
-          seriesXAxisId: series[seriesId].xAxisId ?? series[seriesId].xAxisKey,
-          seriesYAxisId: series[seriesId].yAxisId ?? series[seriesId].yAxisKey,
+          seriesXAxisId: series[seriesId].xAxisId,
+          seriesYAxisId: series[seriesId].yAxisId,
         });
 
         // Since this series is not used to display an area, we do not consider the base (the d[0]).
@@ -57,7 +64,7 @@ export const getExtremumY: ExtremumGetter<'line'> = (params) => {
             ? (d) => d
             : (d) => [d[1], d[1]];
 
-        const seriesExtremums = getSeriesExtremums(getValues, stackedData, filter);
+        const seriesExtremums = getSeriesExtremums(getValues, data, stackedData, filter);
 
         const [seriesMin, seriesMax] = seriesExtremums;
         return [Math.min(seriesMin, acc[0]), Math.max(seriesMax, acc[1])];

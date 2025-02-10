@@ -8,10 +8,12 @@ import {
 } from '../models/seriesType/scatter';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { InteractionContext } from '../context/InteractionProvider';
+import { useStore } from '../internals/store/useStore';
+import { useSelector } from '../internals/store/useSelector';
 import { D3Scale } from '../models/axis';
-import { useHighlighted } from '../context';
-import { useDrawingArea } from '../hooks/useDrawingArea';
+import { useItemHighlightedGetter } from '../hooks/useItemHighlightedGetter';
+import { selectorChartsInteractionIsVoronoiEnabled } from '../internals/plugins/featurePlugins/useChartInteraction';
+import { useChartContext } from '../context/ChartProvider';
 
 export interface ScatterProps {
   series: DefaultizedScatterSeriesType;
@@ -44,13 +46,13 @@ export interface ScatterProps {
 function Scatter(props: ScatterProps) {
   const { series, xScale, yScale, color, colorGetter, markerSize, onItemClick } = props;
 
-  const drawingArea = useDrawingArea();
+  const { instance } = useChartContext();
+  const store = useStore();
+  const isVoronoiEnabled = useSelector(store, selectorChartsInteractionIsVoronoiEnabled);
 
-  const { useVoronoiInteraction } = React.useContext(InteractionContext);
-
-  const skipInteractionHandlers = useVoronoiInteraction || series.disableHover;
+  const skipInteractionHandlers = isVoronoiEnabled || series.disableHover;
   const getInteractionItemProps = useInteractionItemProps(skipInteractionHandlers);
-  const { isFaded, isHighlighted } = useHighlighted();
+  const { isFaded, isHighlighted } = useItemHighlightedGetter();
 
   const cleanData = React.useMemo(() => {
     const getXPosition = getValueToPositionMapper(xScale);
@@ -70,7 +72,7 @@ function Scatter(props: ScatterProps) {
       const x = getXPosition(scatterPoint.x);
       const y = getYPosition(scatterPoint.y);
 
-      const isInRange = drawingArea.isPointInside({ x, y });
+      const isInRange = instance.isPointInside({ x, y });
 
       const pointCtx = { type: 'scatter' as const, seriesId: series.id, dataIndex: i };
 
@@ -97,7 +99,6 @@ function Scatter(props: ScatterProps) {
   }, [
     xScale,
     yScale,
-    drawingArea,
     series.data,
     series.id,
     isHighlighted,
@@ -105,13 +106,14 @@ function Scatter(props: ScatterProps) {
     getInteractionItemProps,
     colorGetter,
     color,
+    instance,
   ]);
 
   return (
     <g>
       {cleanData.map((dataPoint) => (
         <circle
-          key={dataPoint.id}
+          key={dataPoint.id ?? dataPoint.dataIndex}
           cx={0}
           cy={0}
           r={(dataPoint.isHighlighted ? 1.2 : 1) * markerSize}

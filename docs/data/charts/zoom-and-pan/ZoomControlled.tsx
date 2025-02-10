@@ -1,26 +1,29 @@
 import * as React from 'react';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
-import { ZoomData } from '@mui/x-charts-pro/context';
 import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import { ChartPublicAPI, ZoomData } from '@mui/x-charts/internals';
 
+const initialZoomData: ZoomData[] = [
+  {
+    axisId: 'my-x-axis',
+    start: 20,
+    end: 40,
+  },
+];
 export default function ZoomControlled() {
-  const [zoom, setZoom] = React.useState<ZoomData[]>([
-    {
-      axisId: 'my-x-axis',
-      start: 20,
-      end: 40,
-    },
-  ]);
+  const apiRef = React.useRef(undefined) as React.MutableRefObject<
+    ChartPublicAPI<[any]> | undefined
+  >;
+  const [zoomData, setZoomData] = React.useState(initialZoomData);
 
   return (
-    <div>
-      <Button onClick={() => setZoom([{ axisId: 'my-x-axis', start: 0, end: 100 }])}>
-        Reset zoom
-      </Button>
+    <Stack direction={'column'} alignItems={'center'}>
       <LineChartPro
         {...chartProps}
-        zoom={zoom}
-        onZoomChange={setZoom}
+        initialZoom={initialZoomData}
+        apiRef={apiRef}
+        onZoomChange={(newZoomData) => setZoomData(newZoomData)}
         xAxis={[
           {
             zoom: true,
@@ -30,7 +33,16 @@ export default function ZoomControlled() {
           },
         ]}
       />
-    </div>
+      <pre>{JSON.stringify(zoomData, null, 2)}</pre>
+      <Button
+        variant="contained"
+        onClick={() =>
+          apiRef.current.setZoomData([{ axisId: 'my-x-axis', start: 0, end: 100 }])
+        }
+      >
+        Reset zoom
+      </Button>
+    </Stack>
   );
 }
 

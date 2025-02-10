@@ -5,7 +5,7 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
 export default function DisableFilteringGridAllColumns() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
@@ -13,7 +13,7 @@ export default function DisableFilteringGridAllColumns() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid {...data} disableColumnFilter />
+      <DataGrid {...data} loading={loading} disableColumnFilter />
     </div>
   );
 }

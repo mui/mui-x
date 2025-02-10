@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { useGridApiEventHandler, GridEventListener } from '@mui/x-data-grid';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -6,7 +7,7 @@ import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GRID_TREE_DATA_GROUPING_FIELD } from './gridTreeDataGroupColDef';
 
 export const useGridTreeData = (
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: RefObject<GridApiPro>,
   props: Pick<DataGridProProcessedProps, 'unstable_dataSource'>,
 ) => {
   /**
@@ -17,7 +18,7 @@ export const useGridTreeData = (
       const cellParams = apiRef.current.getCellParams(params.id, params.field);
       if (
         cellParams.colDef.field === GRID_TREE_DATA_GROUPING_FIELD &&
-        event.key === ' ' &&
+        (event.key === ' ' || event.key === 'Enter') &&
         !event.shiftKey
       ) {
         if (params.rowNode.type !== 'group') {

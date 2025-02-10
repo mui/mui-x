@@ -6,7 +6,7 @@ title: Data Grid - Row pinning
 
 <p class="description">Pin rows to keep them visible at all times.</p>
 
-Pinned (or frozen, locked, or floating) rows are those visible at all times while the user scrolls the data grid vertically.
+Pinned (or frozen, locked, or floating) rows are those visible at all times while the user scrolls the Data Grid vertically.
 
 You can pin rows at the top or bottom of the Data Grid by passing pinned rows data through the `pinnedRows` prop:
 

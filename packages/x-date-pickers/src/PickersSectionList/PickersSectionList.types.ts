@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/utils';
 import { PickersSectionListClasses } from './pickersSectionListClasses';
+import { PickerOwnerState } from '../models';
 
 export interface PickersSectionListSlots {
   root: React.ElementType;
@@ -9,11 +10,20 @@ export interface PickersSectionListSlots {
   sectionContent: React.ElementType;
 }
 
+export interface PickerSectionSeparatorOwnerState extends PickerOwnerState {
+  /**
+   * The position of the separator.
+   * `before` if the separator is rendered before the section content.
+   * `after` if the separator is rendered after the section content.
+   */
+  separatorPosition: 'before' | 'after';
+}
+
 export interface PickersSectionListSlotProps {
-  root?: SlotComponentProps<'div', {}, {}>;
-  section?: SlotComponentProps<'span', {}, {}>;
-  sectionSeparator?: SlotComponentProps<'span', {}, { position: 'before' | 'after' }>;
-  sectionContent?: SlotComponentProps<'span', {}, {}>;
+  root?: SlotComponentProps<'div', {}, PickerOwnerState>;
+  section?: SlotComponentProps<'span', {}, PickerOwnerState>;
+  sectionSeparator?: SlotComponentProps<'span', {}, PickerSectionSeparatorOwnerState>;
+  sectionContent?: SlotComponentProps<'span', {}, PickerOwnerState>;
 }
 
 export interface PickersSectionElement {

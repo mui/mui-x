@@ -11,9 +11,22 @@ components: ScatterChart, ScatterChartPro, ScatterPlot, ChartsVoronoiHandler, Ch
 ## Basics
 
 Scatter chart series should contain a `data` property containing an array of objects.
-Those objects require `x`, `y`, and `id` properties.
+Those objects require the `x` and `y` properties.
+With an optional `id` property if more optimization is needed.
 
 {{"demo": "BasicScatter.js"}}
+
+### Using a dataset
+
+If your data is stored in an array of objects, you can use the `dataset` helper prop.
+It accepts an array of objects such as `dataset={[{a: 1, b: 32, c: 873}, {a: 2, b: 41, c: 182}, ...]}`.
+
+You can reuse this data when defining the series.
+The scatter series work a bit differently than in other charts.
+You need to specify the `datasetKeys` properties which is an object that requires the `x` and `y` keys.
+With an optional `id` and `z` keys if needed.
+
+{{"demo": "ScatterDataset.js"}}
 
 ## Interaction
 

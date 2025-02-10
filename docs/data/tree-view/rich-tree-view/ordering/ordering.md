@@ -1,7 +1,7 @@
 ---
 productId: x-tree-view
 title: Rich Tree View - Ordering
-components: TreeItem2, TreeItem, RichTreeViewPro
+components: TreeItem, RichTreeViewPro, TreeItemDragAndDropOverlay
 packageName: '@mui/x-tree-view'
 githubLabel: 'component: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
@@ -10,19 +10,6 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 # Rich Tree View - Ordering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">Drag and drop your items to reorder them.</p>
-
-:::success
-To be able to reorder items, you first have to enable the `indentationAtItemLevel` and the `itemsReordering` experimental features:
-
-```tsx
-<RichTreeViewPro
-  items={ITEMS}
-  experimentalFeatures={{ indentationAtItemLevel: true, itemsReordering: true }}
-/>
-```
-
-See [Tree Item Customization—Apply the nested item's indentation at the item level](/x/react-tree-view/tree-item-customization/#apply-the-nested-items-indentation-at-the-item-level) for more details.
-:::
 
 ## Enable drag & drop re-ordering
 
@@ -50,7 +37,7 @@ You can use the `onItemPositionChange` to send the new position of an item to yo
 {{"demo": "OnItemPositionChange.js"}}
 
 If you want to send the entire dataset to your backend, you can use the [`getItemTree`](/x/react-tree-view/rich-tree-view/items/#get-the-current-item-tree) API method.
-The following demo demonstrates it by synchronizing the first tree view with the second one whenever you do a re-ordering:
+The following demo demonstrates it by synchronizing the first Tree View with the second one whenever you do a re-ordering:
 
 {{"demo": "SendAllItemsToServer.js"}}
 

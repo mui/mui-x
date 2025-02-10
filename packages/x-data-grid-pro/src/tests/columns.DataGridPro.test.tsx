@@ -2,6 +2,7 @@ import * as React from 'react';
 import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
+import { RefObject } from '@mui/x-internals/types';
 import {
   DataGridProProps,
   useGridApiRef,
@@ -13,30 +14,20 @@ import {
   GridAutosizeOptions,
 } from '@mui/x-data-grid-pro';
 import { useGridPrivateApiContext } from '@mui/x-data-grid-pro/internals';
-import { getColumnHeaderCell, getCell, microtasks } from 'test/utils/helperFn';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { getColumnHeaderCell, getCell, microtasks, getRow } from 'test/utils/helperFn';
+import { describeSkipIf, testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Columns', () => {
   const { clock, render } = createRenderer({ clock: 'fake' });
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   const baselineProps = {
     autoHeight: isJSDOM,
     rows: [
-      {
-        id: 0,
-        brand: 'Nike',
-      },
-      {
-        id: 1,
-        brand: 'Adidas',
-      },
-      {
-        id: 2,
-        brand: 'Puma',
-      },
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
     ],
     columns: [{ field: 'brand' }],
   };
@@ -54,14 +45,14 @@ describe('<DataGridPro /> - Columns', () => {
     it('should open the column menu', async () => {
       render(<Test />);
       expect(screen.queryByRole('menu')).to.equal(null);
-      act(() => apiRef.current.showColumnMenu('brand'));
+      act(() => apiRef.current?.showColumnMenu('brand'));
       expect(screen.queryByRole('menu')).not.to.equal(null);
     });
 
     it('should set the correct id and aria-labelledby', async () => {
       render(<Test />);
       expect(screen.queryByRole('menu')).to.equal(null);
-      act(() => apiRef.current.showColumnMenu('brand'));
+      act(() => apiRef.current?.showColumnMenu('brand'));
       clock.runToLast();
       const menu = screen.getByRole('menu');
       expect(menu.id).to.match(/:r[0-9a-z]+:/);
@@ -73,23 +64,17 @@ describe('<DataGridPro /> - Columns', () => {
     it('should toggle the column menu', async () => {
       render(<Test />);
       expect(screen.queryByRole('menu')).to.equal(null);
-      act(() => apiRef.current.toggleColumnMenu('brand'));
+      act(() => apiRef.current?.toggleColumnMenu('brand'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      act(() => apiRef.current.toggleColumnMenu('brand'));
+      act(() => apiRef.current?.toggleColumnMenu('brand'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).to.equal(null);
     });
   });
 
-  describe('resizing', () => {
-    before(function beforeHook() {
-      if (isJSDOM) {
-        // Need layouting
-        this.skip();
-      }
-    });
-
+  // Need layouting
+  describeSkipIf(isJSDOM)('resizing', () => {
     const columns = [{ field: 'brand', width: 100 }];
 
     it('should allow to resize columns with the mouse', () => {
@@ -102,26 +87,26 @@ describe('<DataGridPro /> - Columns', () => {
       expect(getCell(1, 0).getBoundingClientRect().width).to.equal(110);
     });
 
-    it('should allow to resize columns with the touch', function test() {
-      // Only run in supported browsers
-      if (typeof Touch === 'undefined') {
-        this.skip();
-      }
-      render(<Test columns={columns} />);
-      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
-      const now = Date.now();
-      fireEvent.touchStart(separator, {
-        changedTouches: [new Touch({ identifier: now, target: separator, clientX: 100 })],
-      });
-      fireEvent.touchMove(separator, {
-        changedTouches: [new Touch({ identifier: now, target: separator, clientX: 110 })],
-      });
-      fireEvent.touchEnd(separator, {
-        changedTouches: [new Touch({ identifier: now, target: separator, clientX: 110 })],
-      });
-      expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '110px' });
-      expect(getCell(1, 0).getBoundingClientRect().width).to.equal(110);
-    });
+    // Only run in supported browsers
+    testSkipIf(typeof Touch === 'undefined')(
+      'should allow to resize columns with the touch',
+      () => {
+        render(<Test columns={columns} />);
+        const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
+        const now = Date.now();
+        fireEvent.touchStart(separator, {
+          changedTouches: [new Touch({ identifier: now, target: separator, clientX: 100 })],
+        });
+        fireEvent.touchMove(separator, {
+          changedTouches: [new Touch({ identifier: now, target: separator, clientX: 110 })],
+        });
+        fireEvent.touchEnd(separator, {
+          changedTouches: [new Touch({ identifier: now, target: separator, clientX: 110 })],
+        });
+        expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '110px' });
+        expect(getCell(1, 0).getBoundingClientRect().width).to.equal(110);
+      },
+    );
 
     it('should call onColumnResize during resizing', () => {
       const onColumnResize = spy();
@@ -166,11 +151,11 @@ describe('<DataGridPro /> - Columns', () => {
       await microtasks();
       expect(onColumnWidthChange.callCount).to.be.at.least(2);
       const widthArgs = onColumnWidthChange.args.map((arg) => arg[0].width);
-      const isWidth114Present = widthArgs.some((width) => width === 114);
-      expect(isWidth114Present).to.equal(true);
+      const isWidth120Present = widthArgs.some((width) => width === 120);
+      expect(isWidth120Present).to.equal(true);
       const colDefWidthArgs = onColumnWidthChange.args.map((arg) => arg[0].colDef.width);
-      const isColDefWidth114Present = colDefWidthArgs.some((width) => width === 114);
-      expect(isColDefWidth114Present).to.equal(true);
+      const isColDefWidth120Present = colDefWidthArgs.some((width) => width === 120);
+      expect(isColDefWidth120Present).to.equal(true);
     });
 
     it('should not affect other cell elements that are not part of the main DataGrid instance', () => {
@@ -237,14 +222,137 @@ describe('<DataGridPro /> - Columns', () => {
       expect(bottomPinnedRowCell?.getBoundingClientRect().width).to.equal(150);
     });
 
-    describe('flex resizing', () => {
-      before(function beforeHook() {
-        if (isJSDOM) {
-          // Need layouting
-          this.skip();
-        }
-      });
+    // https://github.com/mui/mui-x/issues/12852
+    it('should work with right pinned column', () => {
+      render(
+        <Test
+          columns={[
+            { field: 'id', width: 100 },
+            { field: 'brand', width: 100 },
+          ]}
+          initialState={{ pinnedColumns: { right: ['brand'] } }}
+        />,
+      );
 
+      const pinnedHeaderCell = getColumnHeaderCell(1);
+      const pinnedCell = getCell(1, 1);
+      const pinnedSeparator = pinnedHeaderCell.querySelector(
+        `.${gridClasses['columnSeparator--resizable']}`,
+      )!;
+      const pinnedRightPosition = pinnedHeaderCell.getBoundingClientRect().right;
+
+      // resize right pinned column to the right
+      fireEvent.mouseDown(pinnedSeparator, { clientX: 100 });
+      fireEvent.mouseMove(pinnedSeparator, { clientX: 150, buttons: 1 });
+
+      // check that the right pinned column has shrunk and is in the same position
+      expect(pinnedHeaderCell.getBoundingClientRect().width).to.equal(50);
+      expect(pinnedCell.getBoundingClientRect().width).to.equal(50);
+      expect(pinnedHeaderCell.getBoundingClientRect().right).to.equal(pinnedRightPosition);
+
+      // release the mouse and check that the right pinned column is still in the same position
+      fireEvent.mouseUp(pinnedSeparator);
+      expect(pinnedHeaderCell.getBoundingClientRect().width).to.equal(50);
+      expect(pinnedCell.getBoundingClientRect().width).to.equal(50);
+      expect(pinnedHeaderCell.getBoundingClientRect().right).to.equal(pinnedRightPosition);
+
+      // resize the right pinned column to the left
+      fireEvent.mouseDown(pinnedSeparator, { clientX: 150 });
+      fireEvent.mouseMove(pinnedSeparator, { clientX: 50, buttons: 1 });
+
+      // check that the right pinned column has grown and is in the same position
+      expect(pinnedHeaderCell.getBoundingClientRect().width).to.equal(150);
+      expect(pinnedCell.getBoundingClientRect().width).to.equal(150);
+      expect(pinnedHeaderCell.getBoundingClientRect().right).to.equal(pinnedRightPosition);
+
+      // release the mouse and check that the right pinned column is still in the same position
+      fireEvent.mouseUp(pinnedSeparator);
+      expect(pinnedHeaderCell.getBoundingClientRect().width).to.equal(150);
+      expect(pinnedCell.getBoundingClientRect().width).to.equal(150);
+      expect(pinnedHeaderCell.getBoundingClientRect().right).to.equal(pinnedRightPosition);
+    });
+
+    // https://github.com/mui/mui-x/issues/15755
+    it('should keep right-pinned column group aligned with its pinned children', () => {
+      render(
+        <Test
+          rows={[
+            { id: 1, brand: 'Nike', category: 'Shoes' },
+            { id: 2, brand: 'Adidas', category: 'Shoes' },
+            { id: 3, brand: 'Puma', category: 'Shoes' },
+          ]}
+          columns={[
+            { field: 'id', width: 50 },
+            { field: 'brand', width: 50 },
+            { field: 'category', width: 50 },
+          ]}
+          initialState={{ pinnedColumns: { right: ['brand', 'category'] } }}
+          columnGroupingModel={[
+            {
+              groupId: 'group1',
+              children: [{ field: 'brand' }, { field: 'category' }],
+            },
+          ]}
+        />,
+      );
+
+      const lastColumnSeparator = document.querySelector(
+        `[role="columnheader"][data-field="category"] .${gridClasses['columnSeparator--resizable']}`,
+      )!;
+
+      // resize the last column to the left
+      fireEvent.mouseDown(lastColumnSeparator, { clientX: 150 });
+      fireEvent.mouseMove(lastColumnSeparator, { clientX: 100, buttons: 1 });
+
+      const rightPinnedColumns = [
+        document.querySelector<HTMLElement>('[role="columnheader"][data-field="brand"]')!,
+        document.querySelector<HTMLElement>('[role="columnheader"][data-field="category"]')!,
+      ];
+
+      const rightPinnedHeadersTotalWidth = rightPinnedColumns.reduce(
+        (acc, column) => acc + column.offsetWidth,
+        0,
+      );
+
+      const rightPinnedColumnGroup = document.querySelector<HTMLElement>(
+        '[role="columnheader"][data-fields="|-brand-|-category-|"]',
+      )!;
+
+      expect(rightPinnedColumnGroup.offsetWidth).to.equal(
+        rightPinnedHeadersTotalWidth,
+        'offsetWidth',
+      );
+      expect(rightPinnedColumnGroup.offsetLeft).to.equal(
+        rightPinnedColumns[0].offsetLeft,
+        'offsetLeft',
+      );
+    });
+
+    // https://github.com/mui/mui-x/issues/13548
+    it('should fill remaining horizontal space in a row with an empty cell', () => {
+      render(<Test columns={[{ field: 'id', width: 100 }]} />);
+
+      const row = getRow(0);
+      const rowWidth = row.getBoundingClientRect().width;
+      const headerCell = getColumnHeaderCell(0);
+      const separator = headerCell.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
+      const emptyCell = row.querySelector(`.${gridClasses.cellEmpty}`)!;
+
+      // check that empty cell takes up the remaining width in a row
+      expect(emptyCell.getBoundingClientRect().width).to.equal(rowWidth - 100);
+
+      // check that empty cell takes up the remaining width when the column is resized
+      fireEvent.mouseDown(separator, { clientX: 100 });
+      fireEvent.mouseMove(separator, { clientX: 50, buttons: 1 });
+      expect(emptyCell.getBoundingClientRect().width).to.equal(rowWidth - 50);
+
+      // release the mouse and check that the empty cell still takes up the remaining width
+      fireEvent.mouseUp(separator);
+      expect(emptyCell.getBoundingClientRect().width).to.equal(rowWidth - 50);
+    });
+
+    // Need layouting
+    describeSkipIf(isJSDOM)('flex resizing', () => {
       it('should resize the flex width after resizing another column with api', () => {
         const twoColumns = [
           { field: 'id', width: 100, flex: 1 },
@@ -256,7 +364,7 @@ describe('<DataGridPro /> - Columns', () => {
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
 
-        act(() => apiRef.current.setColumnWidth('brand', 150));
+        act(() => apiRef.current?.setColumnWidth('brand', 150));
 
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '148px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
@@ -296,7 +404,7 @@ describe('<DataGridPro /> - Columns', () => {
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
 
-        act(() => apiRef.current.setColumnWidth('brand', 150));
+        act(() => apiRef.current?.setColumnWidth('brand', 150));
 
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '175px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
@@ -313,7 +421,7 @@ describe('<DataGridPro /> - Columns', () => {
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '98px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '200px' });
 
-        act(() => apiRef.current.setColumnWidth('brand', 150));
+        act(() => apiRef.current?.setColumnWidth('brand', 150));
 
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '125px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
@@ -376,7 +484,7 @@ describe('<DataGridPro /> - Columns', () => {
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
 
-        act(() => apiRef.current.setColumnWidth('brand', 150));
+        act(() => apiRef.current?.setColumnWidth('brand', 150));
 
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '148px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
@@ -434,31 +542,13 @@ describe('<DataGridPro /> - Columns', () => {
     });
   });
 
-  describe('autosizing', () => {
-    before(function beforeHook() {
-      if (isJSDOM) {
-        // Need layouting
-        this.skip();
-      }
-    });
-
+  // Need layouting
+  describeSkipIf(isJSDOM)('autosizing', () => {
     const rows = [
-      {
-        id: 0,
-        brand: 'Nike',
-      },
-      {
-        id: 1,
-        brand: 'Adidas',
-      },
-      {
-        id: 2,
-        brand: 'Puma',
-      },
-      {
-        id: 3,
-        brand: 'Lululemon Athletica',
-      },
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
+      { id: 3, brand: 'Lululemon Athletica' },
     ];
     const columns = [
       { field: 'id', headerName: 'This is the ID column' },
@@ -471,9 +561,9 @@ describe('<DataGridPro /> - Columns', () => {
 
     it('should work through the API', async () => {
       render(<Test rows={rows} columns={columns} />);
-      await apiRef.current.autosizeColumns();
+      await apiRef.current?.autosizeColumns();
       await microtasks();
-      expect(getWidths()).to.deep.equal([211, 233]);
+      expect(getWidths()).to.deep.equal([155, 177]);
     });
 
     it('should work through double-clicking the separator', async () => {
@@ -483,20 +573,40 @@ describe('<DataGridPro /> - Columns', () => {
       )[1];
       fireEvent.doubleClick(separator);
       await microtasks();
-      expect(getWidths()).to.deep.equal([100, 233]);
+      expect(getWidths()).to.deep.equal([100, 177]);
     });
 
     it('should work on mount', async () => {
       render(<Test rows={rows} columns={columns} autosizeOnMount />);
       await microtasks(); /* first effect after render */
       await microtasks(); /* async autosize operation */
-      expect(getWidths()).to.deep.equal([211, 233]);
+      expect(getWidths()).to.deep.equal([155, 177]);
+    });
+
+    it('should work with flex columns', async () => {
+      render(
+        <Test
+          rows={rows}
+          columns={[
+            { field: 'id', flex: 1 },
+            { field: 'brand', flex: 2 },
+          ]}
+        />,
+      );
+      const separators = document.querySelectorAll(`.${gridClasses['columnSeparator--resizable']}`);
+      fireEvent.doubleClick(separators[0]);
+      await microtasks();
+      expect(columns.map((_, i) => getColumnHeaderCell(i).offsetWidth)).to.deep.equal([50, 233]);
+
+      fireEvent.doubleClick(separators[1]);
+      await microtasks();
+      expect(columns.map((_, i) => getColumnHeaderCell(i).offsetWidth)).to.deep.equal([50, 64]);
     });
 
     describe('options', () => {
       const autosize = async (options: GridAutosizeOptions | undefined, widths: number[]) => {
         render(<Test rows={rows} columns={columns} />);
-        await apiRef.current.autosizeColumns({ includeHeaders: false, ...options });
+        await apiRef.current?.autosizeColumns({ includeHeaders: false, ...options });
         await microtasks();
         expect(getWidths()).to.deep.equal(widths);
       };
@@ -506,7 +616,7 @@ describe('<DataGridPro /> - Columns', () => {
       });
 
       it('.includeHeaders works', async () => {
-        await autosize({ includeHeaders: true }, [211, 233]);
+        await autosize({ includeHeaders: true }, [155, 177]);
       });
 
       it('.includeOutliers works', async () => {
@@ -534,7 +644,11 @@ describe('<DataGridPro /> - Columns', () => {
       }
       render(<Test checkboxSelection slots={{ footer: Footer }} />);
 
-      act(() => apiRef.current.setColumnWidth('brand', 300));
+      if (apiRef.current === null) {
+        throw new Error('apiRef is not defined');
+      }
+
+      act(() => apiRef.current?.setColumnWidth('brand', 300));
       expect(gridColumnLookupSelector(apiRef).brand.computedWidth).to.equal(300);
       act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnLookupSelector(apiRef).brand.computedWidth).to.equal(300);
@@ -555,7 +669,7 @@ describe('<DataGridPro /> - Columns', () => {
       );
 
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(2);
-      act(() => apiRef.current.setColumnIndex('brand', 1));
+      act(() => apiRef.current?.setColumnIndex('brand', 1));
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(1);
       act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(1);
@@ -569,7 +683,7 @@ describe('<DataGridPro /> - Columns', () => {
       }
       render(<Test checkboxSelection slots={{ footer: Footer }} />);
 
-      act(() => apiRef.current.updateColumns([{ field: 'id' }]));
+      act(() => apiRef.current?.updateColumns([{ field: 'id' }]));
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
       act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);

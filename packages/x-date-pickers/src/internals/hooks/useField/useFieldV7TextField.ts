@@ -11,12 +11,12 @@ import {
 } from './useField.types';
 import { getActiveElement } from '../../utils/utils';
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
-import { usePickersTranslations } from '../../../hooks/usePickersTranslations';
+import { usePickerTranslations } from '../../../hooks/usePickerTranslations';
 import { useUtils } from '../useUtils';
 
 export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
   const {
-    internalProps: { disabled, readOnly = false },
+    internalProps: { disabled, readOnly = false, autoFocus = false },
     forwardedProps: {
       sectionListRef: inSectionListRef,
       onBlur,
@@ -25,7 +25,6 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
       onInput,
       onPaste,
       focused: focusedProp,
-      autoFocus = false,
     },
     fieldValueManager,
     applyCharacterEditing,
@@ -44,7 +43,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
 
   const sectionListRef = React.useRef<PickersSectionListRef>(null);
   const handleSectionListRef = useForkRef(inSectionListRef, sectionListRef);
-  const translations = usePickersTranslations();
+  const translations = usePickerTranslations();
   const utils = useUtils();
   const id = useId();
 
@@ -233,6 +232,9 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
     } else if (keyPressed.length > 1) {
       updateValueFromValueStr(keyPressed);
     } else {
+      if (parsedSelectedSections === 'all') {
+        setSelectedSections(0);
+      }
       applyCharacterEditing({
         keyPressed,
         sectionIndex: 0,
@@ -260,10 +262,12 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
       return;
     }
 
+    const activeElement = getActiveElement(document);
+
     setFocused(true);
 
     const isFocusInsideASection =
-      sectionListRef.current.getSectionIndexFromDOMElement(getActiveElement(document)) != null;
+      sectionListRef.current.getSectionIndexFromDOMElement(activeElement) != null;
     if (!isFocusInsideASection) {
       setSelectedSections(sectionOrder.startIndex);
     }

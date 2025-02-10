@@ -6,7 +6,7 @@ title: Data Grid - Column pinning
 
 <p class="description">Pin columns to keep them visible at all time.</p>
 
-Pinned (or frozen, locked, or sticky) columns are columns that are visible at all time while the user scrolls the data grid horizontally.
+Pinned (or frozen, locked, or sticky) columns are columns that are visible at all time while the user scrolls the Data Grid horizontally.
 They can be pinned either to the left or right side and cannot be reordered.
 
 To pin a column, there are a few ways:

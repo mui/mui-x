@@ -1,21 +1,26 @@
-import * as React from 'react';
+import type { FieldSection } from '../../models';
 import type { UseFieldInternalProps } from '../hooks/useField';
-import { FieldSection, PickerValidDate } from '../../models';
-import type { ExportedUseClearableFieldProps } from '../../hooks/useClearableField';
+import { RangePosition } from './pickers';
+import { PickerValidValue } from './value';
 
-export interface BaseFieldProps<
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TError,
-> extends Omit<
-      UseFieldInternalProps<TValue, TDate, TSection, TEnableAccessibleFieldDOMStructure, TError>,
-      'format'
-    >,
-    ExportedUseClearableFieldProps {
-  className?: string;
-  format?: string;
-  disabled?: boolean;
+export interface FieldRangeSection extends FieldSection {
+  dateName: RangePosition;
+}
+
+export interface BaseForwardedSingleInputFieldProps {
+  id?: string;
+  focused?: boolean;
+  onKeyDown?: React.KeyboardEventHandler;
+  onBlur?: React.FocusEventHandler;
   ref?: React.Ref<HTMLDivElement>;
 }
+
+/**
+ * Props the single input field can receive when used inside a picker.
+ * Only contains what the MUI components are passing to the field, not what users can pass using the `props.slotProps.field`.
+ */
+export type BaseSingleInputFieldProps<TValue extends PickerValidValue> = Pick<
+  UseFieldInternalProps<TValue, boolean, any>,
+  'readOnly' | 'unstableFieldRef' | 'autoFocus'
+> &
+  BaseForwardedSingleInputFieldProps;

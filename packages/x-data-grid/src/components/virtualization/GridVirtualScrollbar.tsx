@@ -5,6 +5,7 @@ import {
   unstable_useForkRef as useForkRef,
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useOnMount } from '../../hooks/utils/useOnMount';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { gridDimensionsSelector, useGridSelector } from '../../hooks';
@@ -14,7 +15,13 @@ import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 type Position = 'vertical' | 'horizontal';
 type OwnerState = DataGridProcessedProps;
-type GridVirtualScrollbarProps = { position: Position };
+type GridVirtualScrollbarProps = {
+  position: Position;
+  scrollPosition: React.RefObject<{
+    left: number;
+    top: number;
+  }>;
+};
 
 const useUtilityClasses = (ownerState: OwnerState, position: Position) => {
   const { classes } = ownerState;
@@ -31,8 +38,8 @@ const Scrollbar = styled('div')({
   position: 'absolute',
   display: 'inline-block',
   zIndex: 6,
-  '& > div': {
-    display: 'inline-block',
+  '&:hover': {
+    zIndex: 7,
   },
   // In macOS Safari and Gnome Web, scrollbars are overlaid and don't affect the layout. So we consider
   // their size to be 0px throughout all the calculations, but the floating scrollbar container does need
@@ -69,11 +76,7 @@ const ScrollbarHorizontal = styled(Scrollbar)({
   bottom: '0px',
 });
 
-const Content = styled('div')({
-  display: 'inline-block',
-});
-
-const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollbarProps>(
+const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProps>(
   function GridVirtualScrollbar(props, ref) {
     const apiRef = useGridPrivateApiContext();
     const rootProps = useGridRootProps();
@@ -86,6 +89,7 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
 
     const propertyDimension = props.position === 'vertical' ? 'height' : 'width';
     const propertyScroll = props.position === 'vertical' ? 'scrollTop' : 'scrollLeft';
+    const propertyScrollPosition = props.position === 'vertical' ? 'top' : 'left';
     const hasScroll = props.position === 'vertical' ? dimensions.hasScrollX : dimensions.hasScrollY;
 
     const contentSize =
@@ -100,12 +104,18 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
       scrollbarSize * (contentSize / dimensions.viewportOuterSize[propertyDimension]);
 
     const onScrollerScroll = useEventCallback(() => {
-      const scroller = apiRef.current.virtualScrollerRef.current!;
-      const scrollbar = scrollbarRef.current!;
+      const scrollbar = scrollbarRef.current;
+      const scrollPosition = props.scrollPosition.current;
 
-      if (scroller[propertyScroll] === lastPosition.current) {
+      if (!scrollbar) {
         return;
       }
+
+      if (scrollPosition[propertyScrollPosition] === lastPosition.current) {
+        return;
+      }
+
+      lastPosition.current = scrollPosition[propertyScrollPosition];
 
       if (isLocked.current) {
         isLocked.current = false;
@@ -113,15 +123,17 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
       }
       isLocked.current = true;
 
-      const value = scroller[propertyScroll] / contentSize;
+      const value = scrollPosition[propertyScrollPosition] / contentSize;
       scrollbar[propertyScroll] = value * scrollbarInnerSize;
-
-      lastPosition.current = scroller[propertyScroll];
     });
 
     const onScrollbarScroll = useEventCallback(() => {
       const scroller = apiRef.current.virtualScrollerRef.current!;
-      const scrollbar = scrollbarRef.current!;
+      const scrollbar = scrollbarRef.current;
+
+      if (!scrollbar) {
+        return;
+      }
 
       if (isLocked.current) {
         isLocked.current = false;
@@ -136,11 +148,12 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
     useOnMount(() => {
       const scroller = apiRef.current.virtualScrollerRef.current!;
       const scrollbar = scrollbarRef.current!;
-      scroller.addEventListener('scroll', onScrollerScroll, { capture: true });
-      scrollbar.addEventListener('scroll', onScrollbarScroll, { capture: true });
+      const options: AddEventListenerOptions = { passive: true };
+      scroller.addEventListener('scroll', onScrollerScroll, options);
+      scrollbar.addEventListener('scroll', onScrollbarScroll, options);
       return () => {
-        scroller.removeEventListener('scroll', onScrollerScroll, { capture: true });
-        scrollbar.removeEventListener('scroll', onScrollbarScroll, { capture: true });
+        scroller.removeEventListener('scroll', onScrollerScroll, options);
+        scrollbar.removeEventListener('scroll', onScrollbarScroll, options);
       };
     });
 
@@ -155,10 +168,15 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
       <Container
         ref={useForkRef(ref, scrollbarRef)}
         className={classes.root}
+        style={
+          props.position === 'vertical' && rootProps.unstable_listView
+            ? { height: '100%', top: 0 }
+            : undefined
+        }
         tabIndex={-1}
         aria-hidden="true"
       >
-        <Content ref={contentRef} className={classes.content} />
+        <div ref={contentRef} className={classes.content} />
       </Container>
     );
   },

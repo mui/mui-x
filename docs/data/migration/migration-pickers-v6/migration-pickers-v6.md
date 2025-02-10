@@ -18,6 +18,9 @@ In `package.json`, change the version of the date pickers package to `^7.0.0`.
 ```diff
 -"@mui/x-date-pickers": "^6.0.0",
 +"@mui/x-date-pickers": "^7.0.0",
+
+-"@mui/x-date-pickers-pro": "^6.0.0",
++"@mui/x-date-pickers-pro": "^7.0.0",
 ```
 
 Since `v7` is a major release, it contains changes that affect the public API.
@@ -56,10 +59,10 @@ You can either run it on a specific file, folder, or your entire codebase when c
 <!-- #default-branch-switch -->
 
 ```bash
-// Date and Time Pickers specific
+# Date and Time Pickers specific
 npx @mui/x-codemod@latest v7.0.0/pickers/preset-safe <path>
 
-// Target other MUI X components as well
+# Target other MUI X components as well
 npx @mui/x-codemod@latest v7.0.0/preset-safe <path>
 ```
 
@@ -101,13 +104,13 @@ The `legacy` bundle that used to support old browsers like IE 11 is no longer i
 If you need support for IE 11, you will need to keep using the latest version of the `v6` release.
 :::
 
-### Drop Webpack 4 support
+### Drop webpack 4 support
 
 Dropping old browsers support also means that we no longer transpile some features that are natively supported by modern browsers – like [Nullish Coalescing](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing) and [Optional Chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining).
 
-These features are not supported by Webpack 4, so if you are using Webpack 4, you will need to transpile these features yourself or upgrade to Webpack 5.
+These features are not supported by webpack 4, so if you are using webpack 4, you will need to transpile these features yourself or upgrade to webpack 5.
 
-Here is an example of how you can transpile these features on Webpack 4 using the `@babel/preset-env` preset:
+Here is an example of how you can transpile these features on webpack 4 using the `@babel/preset-env` preset:
 
 ```diff
  // webpack.config.js
@@ -177,7 +180,7 @@ The same applies to `slotProps` and `componentsProps`.
 
 ### ✅ Rename slots types
 
-The slot interfaces got renamed to match with `@mui/base` naming convention.
+The slot interfaces have been renamed to match with `@mui/base` naming convention.
 Suffix `SlotsComponent` is replaced by `Slots` and `SlotsComponentsProps` is replaced by `SlotProps`.
 If you are not relying on the codemod, consider checking all the renamed types in [this file](https://github.com/mui/mui-x/blob/HEAD/packages/x-codemod/src/v7.0.0/pickers/rename-slots-types/index.ts).
 Here is an example on the `DateCalendar` typing.
@@ -297,7 +300,7 @@ All the date-related props are now strictly typed to only accept the date format
 (`Date` object for `date-fns`, `daysjs.Dayjs` object for `days-js`, etc.).
 
 :::info
-See [Base concepts—Typing of the date](/x/react-date-pickers/base-concepts/#typing-of-the-date) for more details.
+See [Date and time types](/x/react-date-pickers/quickstart/#date-and-time-types) for more details.
 :::
 
 ## Field components
@@ -407,7 +410,7 @@ If you are using a multi input range field hook, the same applies to the ref in 
 
 The `useClearableField` hook API has been simplified to now take a `props` parameter instead of a `fieldProps`, `InputProps`, `clearable`, `onClear`, `slots` and `slotProps` parameters.
 
-You should now be able to directly pass the returned value from your field hook (e.g: `useDateField`) to `useClearableField`
+You should now be able to directly pass the returned value from your field hook (for example `useDateField`) to `useClearableField`
 
 ```diff
   const fieldResponse = useDateField(props);
@@ -440,7 +443,7 @@ The headless field hooks (e.g.: `useDateField`) now return a new prop called `en
 This is used to know if the current UI expected is built using the accessible DOM structure or not.
 
 :::info
-See [Fields—Accessible DOM structure](/x/react-date-pickers/fields/#accessible-dom-structure) for more details.
+See [Migration from v7 to v8—New DOM structure for the field](/x/migration/migration-pickers-v7/#new-dom-structure-for-the-field) for more details.
 :::
 
 When building a custom UI, you are most-likely only supporting one DOM structure, so you can remove `enableAccessibleFieldDOMStructure` before it is passed to the DOM:

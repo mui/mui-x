@@ -79,7 +79,7 @@ Arcs with angles smaller than the value (in deg) will not have labels.
 ## Highlight
 
 Pie series can get `highlightScope` property to manage element highlighting.
-Its behavior is described in the [dedicated page](/x/react-charts/tooltip/#highlighting-series).
+Its behavior is described in the [dedicated page](/x/react-charts/highlighting/#highlighting-series).
 
 When elements are highlighted or faded they can be customized with dedicated CSS classes: `.MuiPieArc-faded` and `.MuiPieArc-highlighted`.
 
@@ -110,16 +110,16 @@ const onItemClick = (
 To skip animation at the creation and update of your chart you can use the `skipAnimation` prop.
 When set to `true` it skips animation powered by `@react-spring/web`.
 
-Charts containers already use the `useReducedMotion` from `@react-spring/web` to skip animation [according to user preferences](https://react-spring.dev/docs/utilities/use-reduced-motion#why-is-it-important).
+Charts containers already use the `useReducedMotion()` from `@react-spring/web` to skip animation [according to user preferences](https://react-spring.dev/docs/utilities/use-reduced-motion#why-is-it-important).
 
 ```jsx
 // For a single component chart
 <PieChart skipAnimation />
 
 // For a composed chart
-<ResponsiveChartContainer>
+<ChartContainer>
   <PiePlot skipAnimation />
-</ResponsiveChartContainer>
+</ChartContainer>
 ```
 
 {{"demo": "PieAnimation.js"}}

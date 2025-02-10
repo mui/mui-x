@@ -1,18 +1,13 @@
 import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { render, cleanup } from '@testing-library/react';
-import { afterEach, bench, describe } from 'vitest';
+import { bench, describe } from 'vitest';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { options } from '../utils/options';
 
 describe('ScatterChart', () => {
-  afterEach(() => {
-    cleanup();
-  });
-
-  const dataLength = 1_000;
+  const dataLength = 800;
   const data = Array.from({ length: dataLength }).map((_, i) => ({
-    id: i,
     x: i,
     y: 50 + Math.sin(i / 5) * 25,
   }));
@@ -24,7 +19,7 @@ describe('ScatterChart', () => {
     async () => {
       const { findByText } = render(
         <ScatterChart
-          xAxis={[{ data: xData }]}
+          xAxis={[{ data: xData, valueFormatter: (v) => v.toLocaleString('en-US') }]}
           series={[
             {
               data,
@@ -35,7 +30,9 @@ describe('ScatterChart', () => {
         />,
       );
 
-      await findByText(dataLength.toLocaleString(), { ignore: 'span' });
+      await findByText(dataLength.toLocaleString('en-US'), { ignore: 'span' });
+
+      cleanup();
     },
     options,
   );

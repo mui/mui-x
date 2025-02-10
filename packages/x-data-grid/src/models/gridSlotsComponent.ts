@@ -6,15 +6,45 @@ export type { GridSlotProps } from './gridSlotsComponentsProps';
 
 export interface GridBaseSlots {
   /**
+   * The custom Badge component used in the grid for both header and cells.
+   * @default Badge
+   */
+  baseBadge: React.JSXElementConstructor<GridSlotProps['baseBadge']>;
+  /**
    * The custom Checkbox component used in the grid for both header and cells.
    * @default Checkbox
    */
   baseCheckbox: React.JSXElementConstructor<GridSlotProps['baseCheckbox']>;
   /**
+   * The custom CircularProgress component used in the grid.
+   * @default CircularProgress
+   */
+  baseCircularProgress: React.JSXElementConstructor<GridSlotProps['baseCircularProgress']>;
+  /**
    * The custom Chip component used in the grid.
    * @default Chip
    */
   baseChip: React.JSXElementConstructor<GridSlotProps['baseChip']>;
+  /**
+   * The custom Divider component used in the grid.
+   * @default Divider
+   */
+  baseDivider: React.JSXElementConstructor<GridSlotProps['baseDivider']>;
+  /**
+   * The custom LinearProgress component used in the grid.
+   * @default LinearProgress
+   */
+  baseLinearProgress: React.JSXElementConstructor<GridSlotProps['baseLinearProgress']>;
+  /**
+   * The custom MenuList component used in the grid.
+   * @default MenuList
+   */
+  baseMenuList: React.JSXElementConstructor<GridSlotProps['baseMenuList']>;
+  /**
+   * The custom MenuItem component used in the grid.
+   * @default MenuItem
+   */
+  baseMenuItem: React.JSXElementConstructor<GridSlotProps['baseMenuItem']>;
   /**
    * The custom InputAdornment component used in the grid.
    * @default InputAdornment
@@ -62,9 +92,14 @@ export interface GridBaseSlots {
   baseInputLabel: React.JSXElementConstructor<GridSlotProps['baseInputLabel']>;
   /**
    * The custom SelectOption component used in the grid.
-   * @default MenuItem
+   * @default SelectOption
    */
   baseSelectOption: React.JSXElementConstructor<GridSlotProps['baseSelectOption']>;
+  /**
+   * The custom Skeleton component used in the grid.
+   * @default Skeleton
+   */
+  baseSkeleton: React.JSXElementConstructor<GridSlotProps['baseSkeleton']>;
 }
 
 /**

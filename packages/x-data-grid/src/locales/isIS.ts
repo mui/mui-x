@@ -31,6 +31,17 @@ const isISGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Leita',
   toolbarQuickFilterDeleteIconLabel: 'Eyða',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Flytja út',
   toolbarExportLabel: 'Flytja út',
@@ -43,6 +54,7 @@ const isISGrid: Partial<GridLocaleText> = {
   // columnsManagementNoColumns: 'No columns',
   // columnsManagementShowHideAllText: 'Show/Hide All',
   // columnsManagementReset: 'Reset',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Bæta síu',
@@ -101,6 +113,7 @@ const isISGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Stærra en eða jafnt og',
   'headerFilterOperator<': 'Minna en',
   'headerFilterOperator<=': 'Minna en eða jafnt og',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'hvað sem er',

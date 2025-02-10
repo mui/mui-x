@@ -9,10 +9,10 @@ import {
 } from '../internals/models/validation';
 
 export const DATE_VALIDATION_PROP_NAMES: (
-  | keyof BaseDateValidationProps<any>
-  | keyof YearValidationProps<any>
-  | keyof MonthValidationProps<any>
-  | keyof DayValidationProps<any>
+  | keyof BaseDateValidationProps
+  | keyof YearValidationProps
+  | keyof MonthValidationProps
+  | keyof DayValidationProps
 )[] = [
   'disablePast',
   'disableFuture',
@@ -25,7 +25,7 @@ export const DATE_VALIDATION_PROP_NAMES: (
 
 export const TIME_VALIDATION_PROP_NAMES: (
   | keyof BaseTimeValidationProps
-  | keyof TimeValidationProps<any>
+  | keyof TimeValidationProps
   | 'ampm'
 )[] = [
   'disablePast',
@@ -38,7 +38,7 @@ export const TIME_VALIDATION_PROP_NAMES: (
   'disableIgnoringDatePartForTimeValidation',
 ];
 
-export const DATE_TIME_VALIDATION_PROP_NAMES: (keyof DateTimeValidationProps<any>)[] = [
+export const DATE_TIME_VALIDATION_PROP_NAMES: (keyof DateTimeValidationProps)[] = [
   'minDateTime',
   'maxDateTime',
 ];

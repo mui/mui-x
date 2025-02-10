@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   gridRowTreeSelector,
   useFirstRender,
@@ -10,6 +11,7 @@ import {
 } from '@mui/x-data-grid';
 import {
   GridPipeProcessor,
+  GridStrategyGroup,
   GridStrategyProcessor,
   useGridRegisterPipeProcessor,
   useGridRegisterStrategyProcessor,
@@ -19,7 +21,7 @@ import {
   GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES,
 } from './gridTreeDataGroupColDef';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { filterRowTreeFromTreeData, TREE_DATA_STRATEGY } from './gridTreeDataUtils';
+import { filterRowTreeFromTreeData, TreeDataStrategy } from './gridTreeDataUtils';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import {
   GridGroupingColDefOverride,
@@ -36,7 +38,7 @@ import { updateRowTree } from '../../../utils/tree/updateRowTree';
 import { getVisibleRowsLookup } from '../../../utils/tree/utils';
 
 export const useGridTreeDataPreProcessors = (
-  privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
+  privateApiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     | 'treeData'
@@ -51,8 +53,8 @@ export const useGridTreeDataPreProcessors = (
 ) => {
   const setStrategyAvailability = React.useCallback(() => {
     privateApiRef.current.setStrategyAvailability(
-      'rowTree',
-      TREE_DATA_STRATEGY,
+      GridStrategyGroup.RowTree,
+      TreeDataStrategy.Default,
       props.treeData && !props.unstable_dataSource ? () => true : () => false,
     );
   }, [privateApiRef, props.treeData, props.unstable_dataSource]);
@@ -63,7 +65,7 @@ export const useGridTreeDataPreProcessors = (
     let colDefOverride: GridGroupingColDefOverride | null | undefined;
     if (typeof groupingColDefProp === 'function') {
       const params: GridGroupingColDefOverrideParams = {
-        groupingName: TREE_DATA_STRATEGY,
+        groupingName: TreeDataStrategy.Default,
         fields: [],
       };
 
@@ -158,7 +160,7 @@ export const useGridTreeDataPreProcessors = (
           nodes: params.updates.rows.map(getRowTreeBuilderNode),
           defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
           isGroupExpandedByDefault: props.isGroupExpandedByDefault,
-          groupingName: TREE_DATA_STRATEGY,
+          groupingName: TreeDataStrategy.Default,
           onDuplicatePath,
         });
       }
@@ -173,7 +175,7 @@ export const useGridTreeDataPreProcessors = (
         previousTreeDepth: params.previousTreeDepths!,
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
         isGroupExpandedByDefault: props.isGroupExpandedByDefault,
-        groupingName: TREE_DATA_STRATEGY,
+        groupingName: TreeDataStrategy.Default,
       });
     },
     [props.getTreeDataPath, props.defaultGroupingExpansionDepth, props.isGroupExpandedByDefault],
@@ -211,15 +213,20 @@ export const useGridTreeDataPreProcessors = (
   useGridRegisterPipeProcessor(privateApiRef, 'hydrateColumns', updateGroupingColumn);
   useGridRegisterStrategyProcessor(
     privateApiRef,
-    TREE_DATA_STRATEGY,
+    TreeDataStrategy.Default,
     'rowTreeCreation',
     createRowTreeForTreeData,
   );
-  useGridRegisterStrategyProcessor(privateApiRef, TREE_DATA_STRATEGY, 'filtering', filterRows);
-  useGridRegisterStrategyProcessor(privateApiRef, TREE_DATA_STRATEGY, 'sorting', sortRows);
   useGridRegisterStrategyProcessor(
     privateApiRef,
-    TREE_DATA_STRATEGY,
+    TreeDataStrategy.Default,
+    'filtering',
+    filterRows,
+  );
+  useGridRegisterStrategyProcessor(privateApiRef, TreeDataStrategy.Default, 'sorting', sortRows);
+  useGridRegisterStrategyProcessor(
+    privateApiRef,
+    TreeDataStrategy.Default,
     'visibleRowsLookupCreation',
     getVisibleRowsLookup,
   );

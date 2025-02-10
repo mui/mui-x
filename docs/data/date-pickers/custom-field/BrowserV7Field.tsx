@@ -1,22 +1,18 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
 import useForkRef from '@mui/utils/useForkRef';
 import { styled } from '@mui/material/styles';
+import IconButton from '@mui/material/IconButton';
+import { CalendarIcon } from '@mui/x-date-pickers/icons';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker, DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 import {
-  unstable_useDateField as useDateField,
-  UseDateFieldProps,
-} from '@mui/x-date-pickers/DateField';
-import { useClearableField } from '@mui/x-date-pickers/hooks';
-import {
-  BaseSingleInputPickersTextFieldProps,
-  BaseSingleInputFieldProps,
-  DateValidationError,
-  FieldSection,
-} from '@mui/x-date-pickers/models';
+  DatePicker,
+  DatePickerFieldProps,
+  DatePickerProps,
+} from '@mui/x-date-pickers/DatePicker';
+import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
+import { usePickerContext } from '@mui/x-date-pickers/hooks';
 
 const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
   display: 'flex',
@@ -36,115 +32,80 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
   },
 );
 
-interface BrowserTextFieldProps
-  extends BaseSingleInputPickersTextFieldProps<true>,
-    Omit<
-      React.HTMLAttributes<HTMLDivElement>,
-      keyof BaseSingleInputPickersTextFieldProps<true>
-    > {}
+function BrowserDateField(props: DatePickerFieldProps) {
+  const fieldResponse = useDateField<true, typeof props>(props);
 
-const BrowserTextField = React.forwardRef(
-  (props: BrowserTextFieldProps, ref: React.Ref<unknown>) => {
-    const {
-      // Should be ignored
-      enableAccessibleFieldDOMStructure,
+  const {
+    // Should be ignored
+    enableAccessibleFieldDOMStructure,
 
-      // Should be passed to the PickersSectionList component
-      elements,
-      sectionListRef,
-      contentEditable,
-      onFocus,
-      onBlur,
-      tabIndex,
-      onInput,
-      onPaste,
-      onKeyDown,
+    // Should be passed to the PickersSectionList component
+    elements,
+    sectionListRef,
+    contentEditable,
+    onFocus,
+    onBlur,
+    tabIndex,
+    onInput,
+    onPaste,
+    onKeyDown,
 
-      // Can be passed to a hidden <input /> element
-      onChange,
-      value,
+    // Should be passed to the button that opens the picker
+    openPickerAriaLabel,
 
-      // Can be used to render a custom label
-      label,
+    // Can be passed to a hidden <input /> element
+    onChange,
+    value,
 
-      // Can be used to style the component
-      areAllSectionsEmpty,
-      disabled,
-      readOnly,
-      focused,
-      error,
+    // Can be passed to the button that clears the value
+    onClear,
+    clearable,
 
-      InputProps: { ref: InputPropsRef, startAdornment, endAdornment } = {},
+    // Can be used to style the component
+    areAllSectionsEmpty,
+    disabled,
+    readOnly,
+    focused,
+    error,
 
-      // The rest can be passed to the root element
-      ...other
-    } = props;
+    // The rest can be passed to the root element
+    ...other
+  } = fieldResponse;
 
-    const handleRef = useForkRef(InputPropsRef, ref);
+  const pickerContext = usePickerContext();
+  const handleRef = useForkRef(pickerContext.triggerRef, pickerContext.rootRef);
 
-    return (
-      <BrowserFieldRoot ref={handleRef} {...other}>
-        {startAdornment}
-        <BrowserFieldContent>
-          <PickersSectionList
-            elements={elements}
-            sectionListRef={sectionListRef}
-            contentEditable={contentEditable}
-            onFocus={onFocus}
-            onBlur={onBlur}
-            tabIndex={tabIndex}
-            onInput={onInput}
-            onPaste={onPaste}
-            onKeyDown={onKeyDown}
-          />
-        </BrowserFieldContent>
-        {endAdornment}
-      </BrowserFieldRoot>
-    );
-  },
-);
+  return (
+    <BrowserFieldRoot {...other} ref={handleRef}>
+      <BrowserFieldContent>
+        <PickersSectionList
+          elements={elements}
+          sectionListRef={sectionListRef}
+          contentEditable={contentEditable}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          tabIndex={tabIndex}
+          onInput={onInput}
+          onPaste={onPaste}
+          onKeyDown={onKeyDown}
+        />
+      </BrowserFieldContent>
+      <IconButton
+        onClick={() => pickerContext.setOpen((prev) => !prev)}
+        sx={{ marginLeft: 1.5 }}
+        aria-label={openPickerAriaLabel}
+      >
+        <CalendarIcon />
+      </IconButton>
+    </BrowserFieldRoot>
+  );
+}
 
-interface BrowserDateFieldProps
-  extends UseDateFieldProps<Dayjs, true>,
-    BaseSingleInputFieldProps<
-      Dayjs | null,
-      Dayjs,
-      FieldSection,
-      true,
-      DateValidationError
-    > {}
-
-const BrowserDateField = React.forwardRef(
-  (props: BrowserDateFieldProps, ref: React.Ref<HTMLDivElement>) => {
-    const { slots, slotProps, ...textFieldProps } = props;
-
-    const fieldResponse = useDateField<Dayjs, true, typeof textFieldProps>({
-      ...textFieldProps,
-      enableAccessibleFieldDOMStructure: true,
-    });
-
-    /* If you don't need a clear button, you can skip the use of this hook */
-    const processedFieldProps = useClearableField({
-      ...fieldResponse,
-      slots,
-      slotProps,
-    });
-
-    return <BrowserTextField ref={ref} {...processedFieldProps} />;
-  },
-);
-
-const BrowserDatePicker = React.forwardRef(
-  (props: DatePickerProps<Dayjs>, ref: React.Ref<HTMLDivElement>) => {
-    return (
-      <DatePicker
-        ref={ref}
-        {...props}
-        slots={{ field: BrowserDateField, ...props.slots }}
-      />
-    );
-  },
-);
+function BrowserDatePicker(props: DatePickerProps) {
+  return (
+    <DatePicker {...props} slots={{ field: BrowserDateField, ...props.slots }} />
+  );
+}
 
 export default function BrowserV7Field() {
   return (

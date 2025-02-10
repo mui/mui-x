@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -20,10 +19,9 @@ const CustomCalendarHeaderRoot = styled('div')({
 function CustomCalendarHeader(props) {
   const { currentMonth, onMonthChange, month, calendars, monthIndex } = props;
 
-  const selectNextMonth = () =>
-    onMonthChange(currentMonth.add(calendars, 'month'), 'left');
+  const selectNextMonth = () => onMonthChange(currentMonth.add(calendars, 'month'));
   const selectPreviousMonth = () =>
-    onMonthChange(currentMonth.subtract(calendars, 'month'), 'right');
+    onMonthChange(currentMonth.subtract(calendars, 'month'));
 
   return (
     <CustomCalendarHeaderRoot>

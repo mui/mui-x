@@ -16,9 +16,7 @@
 [![Renovate status](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://github.com/mui/mui-x/issues/2081)
 [![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/mui/mui-x.svg)](https://isitmaintained.com/project/mui/mui-x 'Average time to resolve an issue')
 [![Open Collective backers and sponsors](https://img.shields.io/opencollective/all/mui-org)](https://opencollective.com/mui-org)
-[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/6293/badge)](https://bestpractices.coreinfrastructure.org/projects/6293)
-
-<!-- [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/8715/badge)](https://www.bestpractices.dev/projects/8715) -->
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/6293/badge)](https://www.bestpractices.dev/projects/6293)
 
 </div>
 
@@ -42,10 +40,10 @@ Get started in the [MUI X documentation](https://mui.com/x/introduction/).
 
 ### Installation
 
-- [Data Grid installation](https://mui.com/x/react-data-grid/getting-started/#installation)
-- [Date and Time Pickers installation](https://mui.com/x/react-date-pickers/getting-started/#installation)
-- [Charts installation](https://mui.com/x/react-charts/getting-started/#installation)
-- [Tree View installation](https://mui.com/x/react-tree-view/getting-started/#installation)
+- [Data Grid installation](https://mui.com/x/react-data-grid/quickstart/#installation)
+- [Date and Time Pickers installation](https://mui.com/x/react-date-pickers/quickstart/#installation)
+- [Charts installation](https://mui.com/x/react-charts/quickstart/#installation)
+- [Tree View installation](https://mui.com/x/react-tree-view/quickstart/#installation)
 
 ## Licensing
 

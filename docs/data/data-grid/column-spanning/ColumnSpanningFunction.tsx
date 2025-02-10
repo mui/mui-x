@@ -118,6 +118,8 @@ export default function ColumnSpanningFunction() {
   return (
     <Box
       sx={{
+        display: 'flex',
+        flexDirection: 'column',
         width: '100%',
         '& .bold': {
           fontWeight: 600,
@@ -125,7 +127,6 @@ export default function ColumnSpanningFunction() {
       }}
     >
       <DataGrid
-        autoHeight
         disableColumnFilter
         disableRowSelectionOnClick
         hideFooter

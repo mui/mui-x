@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useCartesianContext } from '../context/CartesianProvider';
 import { ChartsXAxis } from '../ChartsXAxis';
 import { ChartsYAxis } from '../ChartsYAxis';
 import {
@@ -11,6 +10,7 @@ import {
   ChartsXAxisProps,
   ChartsYAxisProps,
 } from '../models/axis';
+import { useXAxes, useYAxes } from '../hooks';
 
 export interface ChartsAxisProps {
   /**
@@ -87,10 +87,8 @@ const mergeProps = (
  */
 function ChartsAxis(props: ChartsAxisProps) {
   const { topAxis, leftAxis, rightAxis, bottomAxis, slots, slotProps } = props;
-  const { xAxis, xAxisIds, yAxis, yAxisIds } = useCartesianContext();
-
-  // TODO: use for plotting line without ticks or any thing
-  // const drawingArea = React.useContext(DrawingContext);
+  const { xAxis, xAxisIds } = useXAxes();
+  const { yAxis, yAxisIds } = useYAxes();
 
   const leftId = getAxisId(leftAxis === undefined ? yAxisIds[0] : leftAxis, yAxisIds[0]);
   const bottomId = getAxisId(bottomAxis === undefined ? xAxisIds[0] : bottomAxis, xAxisIds[0]);
@@ -98,7 +96,7 @@ function ChartsAxis(props: ChartsAxisProps) {
   const rightId = getAxisId(rightAxis, yAxisIds[0]);
 
   if (topId !== null && !xAxis[topId]) {
-    throw Error(
+    throw new Error(
       [
         `MUI X: id used for top axis "${topId}" is not defined.`,
         `Available ids are: ${xAxisIds.join(', ')}.`,
@@ -106,7 +104,7 @@ function ChartsAxis(props: ChartsAxisProps) {
     );
   }
   if (leftId !== null && !yAxis[leftId]) {
-    throw Error(
+    throw new Error(
       [
         `MUI X: id used for left axis "${leftId}" is not defined.`,
         `Available ids are: ${yAxisIds.join(', ')}.`,
@@ -114,7 +112,7 @@ function ChartsAxis(props: ChartsAxisProps) {
     );
   }
   if (rightId !== null && !yAxis[rightId]) {
-    throw Error(
+    throw new Error(
       [
         `MUI X: id used for right axis "${rightId}" is not defined.`,
         `Available ids are: ${yAxisIds.join(', ')}.`,
@@ -122,7 +120,7 @@ function ChartsAxis(props: ChartsAxisProps) {
     );
   }
   if (bottomId !== null && !xAxis[bottomId]) {
-    throw Error(
+    throw new Error(
       [
         `MUI X: id used for bottom axis "${bottomId}" is not defined.`,
         `Available ids are: ${xAxisIds.join(', ')}.`,

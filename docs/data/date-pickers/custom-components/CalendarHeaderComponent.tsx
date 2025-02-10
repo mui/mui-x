@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
@@ -21,15 +20,13 @@ const CustomCalendarHeaderRoot = styled('div')({
   alignItems: 'center',
 });
 
-function CustomCalendarHeader(props: PickersCalendarHeaderProps<Dayjs>) {
+function CustomCalendarHeader(props: PickersCalendarHeaderProps) {
   const { currentMonth, onMonthChange } = props;
 
-  const selectNextMonth = () => onMonthChange(currentMonth.add(1, 'month'), 'left');
-  const selectNextYear = () => onMonthChange(currentMonth.add(1, 'year'), 'left');
-  const selectPreviousMonth = () =>
-    onMonthChange(currentMonth.subtract(1, 'month'), 'right');
-  const selectPreviousYear = () =>
-    onMonthChange(currentMonth.subtract(1, 'year'), 'right');
+  const selectNextMonth = () => onMonthChange(currentMonth.add(1, 'month'));
+  const selectNextYear = () => onMonthChange(currentMonth.add(1, 'year'));
+  const selectPreviousMonth = () => onMonthChange(currentMonth.subtract(1, 'month'));
+  const selectPreviousYear = () => onMonthChange(currentMonth.subtract(1, 'year'));
 
   return (
     <CustomCalendarHeaderRoot>

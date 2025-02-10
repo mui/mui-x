@@ -40,10 +40,6 @@ export default function DragAndDrop() {
         items={ITEMS}
         itemsReordering
         defaultExpandedItems={['grid', 'pickers']}
-        experimentalFeatures={{
-          indentationAtItemLevel: true,
-          itemsReordering: true,
-        }}
       />
     </Box>
   );

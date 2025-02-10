@@ -45,13 +45,25 @@ export const isHideMenuKey = (key: React.KeyboardEvent['key']) => key === 'Tab' 
 // In theory, on macOS, ctrl + v doesn't trigger a paste, so the function should return false.
 // However, maybe it's overkill to fix, so let's be lazy.
 export function isPasteShortcut(event: React.KeyboardEvent) {
-  if (
+  return (
     (event.ctrlKey || event.metaKey) &&
-    event.key.toLowerCase() === 'v' &&
+    // We can't use event.code === 'KeyV' as event.code assumes a QWERTY keyboard layout,
+    // for example, it would be another letter on a Dvorak physical keyboard.
+    // We can't use event.key === 'v' as event.key is not stable with key modifiers and keyboard layouts,
+    // for example, it would be ה on a Hebrew keyboard layout.
+    // https://github.com/w3c/uievents/issues/377 could be a long-term solution
+    String.fromCharCode(event.keyCode) === 'V' &&
     !event.shiftKey &&
     !event.altKey
-  ) {
-    return true;
-  }
-  return false;
+  );
+}
+
+// Checks if the keyboard event corresponds to the copy shortcut (CTRL+C or CMD+C) across different localization keyboards.
+export function isCopyShortcut(event: KeyboardEvent): boolean {
+  return (
+    (event.ctrlKey || event.metaKey) &&
+    String.fromCharCode(event.keyCode) === 'C' &&
+    !event.shiftKey &&
+    !event.altKey
+  );
 }

@@ -4,7 +4,7 @@ export default function CoreV5WithCoreV4() {
   return (
     <iframe
       title="codesandbox"
-      src="https://codesandbox.io/embed/mui-core-v5-with-mui-core-v4-1pmwj?hidenavigation=1&fontsize=14&view=preview"
+      src="https://codesandbox.io/embed/https-mui-com-x-migration-migration-data-grid-v4-24ltxx?hidenavigation=1&fontsize=14&view=preview"
       style={{
         width: '100%',
         height: 520,

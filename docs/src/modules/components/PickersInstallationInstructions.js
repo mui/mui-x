@@ -4,8 +4,8 @@ import InstallationInstructions from './InstallationInstructions';
 // #default-branch-switch
 
 const packages = {
-  Community: '@mui/x-date-pickers',
-  Pro: '@mui/x-date-pickers-pro',
+  Community: '@mui/x-date-pickers@next',
+  Pro: '@mui/x-date-pickers-pro@next',
 };
 
 const peerDependency = {

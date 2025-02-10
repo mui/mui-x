@@ -31,6 +31,17 @@ const faIRGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'جستجو',
   toolbarQuickFilterDeleteIconLabel: 'حذف',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'خروجی',
   toolbarExportLabel: 'خروجی',
@@ -43,6 +54,7 @@ const faIRGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'بدون سطر',
   columnsManagementShowHideAllText: 'نمایش/مخفی کردن همه',
   columnsManagementReset: 'بازنشانی',
+  columnsManagementDeleteIconLabel: 'پاک کردن',
 
   // Filter panel text
   filterPanelAddFilter: 'افزودن فیلتر',
@@ -58,9 +70,9 @@ const faIRGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'شامل',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'شامل نمیشود',
   filterOperatorEquals: 'مساوی',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'برابر نیست',
   filterOperatorStartsWith: 'شروع با',
   filterOperatorEndsWith: 'پایان با',
   filterOperatorIs: 'هست',
@@ -81,9 +93,9 @@ const faIRGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'شامل',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'شامل نمیشود',
   headerFilterOperatorEquals: 'مساوی',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'برابر نیست',
   headerFilterOperatorStartsWith: 'شروع با',
   headerFilterOperatorEndsWith: 'پایان با',
   headerFilterOperatorIs: 'هست',
@@ -101,6 +113,7 @@ const faIRGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'بزرگتر یا مساوی',
   'headerFilterOperator<': 'کوچکتر',
   'headerFilterOperator<=': 'کوچکتر یا مساوی',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'هرچیزی',

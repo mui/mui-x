@@ -111,7 +111,7 @@ function GridMenu(props: GridMenuProps) {
   return (
     <GridMenuRoot
       as={rootProps.slots.basePopper}
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       ownerState={rootProps}
       open={open}
       anchorEl={target as any}

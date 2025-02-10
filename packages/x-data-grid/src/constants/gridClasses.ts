@@ -173,7 +173,14 @@ export interface GridClasses {
    * @ignore - do not document.
    */
   'columnHeader--siblingFocused': string;
-
+  /**
+   * Styles applied to the header filter input element.
+   */
+  columnHeaderFilterInput: string;
+  /**
+   * Styles applied to the header filter operator label element.
+   */
+  columnHeaderFilterOperatorLabel: string;
   /**
    * Styles applied to the header checkbox cell element.
    */
@@ -206,6 +213,10 @@ export interface GridClasses {
    * Styles applied to the empty column group header cell.
    */
   'columnHeader--emptyGroup': string;
+  /**
+   * Styles applied to the header filter cell.
+   */
+  'columnHeader--filter': string;
   /**
    * Styles applied to the column headers.
    */
@@ -243,6 +254,10 @@ export interface GridClasses {
    */
   columnsManagementHeader: string;
   /**
+   * Styles applied to the columns management search input element.
+   */
+  columnsManagementSearchInput: string;
+  /**
    * Styles applied to the columns management footer element.
    */
   columnsManagementFooter: string;
@@ -258,10 +273,6 @@ export interface GridClasses {
    * Styles applied to the detail panel element.
    */
   detailPanel: string;
-  /**
-   * Styles applied to the detail panels wrapper element.
-   */
-  detailPanels: string;
   /**
    * Styles applied to the detail panel toggle cell element.
    */
@@ -437,10 +448,6 @@ export interface GridClasses {
    */
   virtualScrollerRenderZone: string;
   /**
-   * Styles applied to the pinned columns.
-   */
-  pinnedColumns: string;
-  /**
    * Styles applied to the root element.
    */
   root: string;
@@ -589,6 +596,26 @@ export interface GridClasses {
    */
   toolbarFilterList: string;
   /**
+   * Styles applied to the toolbar prompt control element.
+   */
+  toolbarPromptControl: string;
+  /**
+   * Styles applied to the toolbar prompt control element when recording.
+   */
+  'toolbarPromptControl--recording': string;
+  /**
+   * Styles applied to the toolbar prompt control recording indicator element.
+   */
+  toolbarPromptControlRecordingIndicator: string;
+  /**
+   * Styles applied to the toolbar prompt control record button element.
+   */
+  toolbarPromptControlRecordButton: string;
+  /**
+   * Styles applied to the toolbar prompt control send button element.
+   */
+  toolbarPromptControlSendButton: string;
+  /**
    * Styles applied the grid if `showColumnVerticalBorder={true}`.
    */
   withVerticalBorder: string;
@@ -632,6 +659,11 @@ export interface GridClasses {
    */
   groupingCriteriaCellToggle: string;
   /**
+   * Styles applied to the loading container of the grouping cell of the tree data.
+   * @ignore - do not document.
+   */
+  groupingCriteriaCellLoadingContainer: string;
+  /**
    * Styles applied to the pinned rows container.
    */
   pinnedRows: string;
@@ -643,10 +675,6 @@ export interface GridClasses {
    * Styles applied to the bottom pinned rows container.
    */
   'pinnedRows--bottom': string;
-  /**
-   * Styles applied to pinned rows render zones.
-   */
-  pinnedRowsRenderZone: string;
 }
 
 export type GridClassKey = keyof GridClasses;
@@ -699,6 +727,9 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnHeader--last',
   'columnHeader--lastUnpinned',
   'columnHeader--siblingFocused',
+  'columnHeader--filter',
+  'columnHeaderFilterInput',
+  'columnHeaderFilterOperatorLabel',
   'columnHeaderCheckbox',
   'columnHeaderDraggableContainer',
   'columnHeaderTitle',
@@ -715,11 +746,11 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnsManagement',
   'columnsManagementRow',
   'columnsManagementHeader',
+  'columnsManagementSearchInput',
   'columnsManagementFooter',
   'container--top',
   'container--bottom',
   'detailPanel',
-  'detailPanels',
   'detailPanelToggleCell',
   'detailPanelToggleCell--expanded',
   'footerCell',
@@ -793,12 +824,16 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'sortIcon',
   'toolbarContainer',
   'toolbarFilterList',
+  'toolbarPromptControl',
+  'toolbarPromptControl--recording',
+  'toolbarPromptControlRecordingIndicator',
+  'toolbarPromptControlRecordButton',
+  'toolbarPromptControlSendButton',
   'virtualScroller',
   'virtualScroller--hasScrollX',
   'virtualScrollerContent',
   'virtualScrollerContent--overflowed',
   'virtualScrollerRenderZone',
-  'pinnedColumns',
   'withVerticalBorder',
   'withBorderColor',
   'cell--withRightBorder',
@@ -810,8 +845,8 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'treeDataGroupingCellLoadingContainer',
   'groupingCriteriaCell',
   'groupingCriteriaCellToggle',
+  'groupingCriteriaCellLoadingContainer',
   'pinnedRows',
   'pinnedRows--top',
   'pinnedRows--bottom',
-  'pinnedRowsRenderZone',
 ]);

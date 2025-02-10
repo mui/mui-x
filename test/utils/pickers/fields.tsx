@@ -2,9 +2,10 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { createRenderer, screen, act, fireEvent } from '@mui/internal-test-utils';
-import { FieldRef, FieldSection, FieldSectionType } from '@mui/x-date-pickers/models';
+import { FieldRef, FieldSectionType } from '@mui/x-date-pickers/models';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
 import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
+import { PickerValue } from '@mui/x-date-pickers/internals';
 import { fireUserEvent } from '../fireUserEvent';
 import { expectFieldValueV7, expectFieldValueV6 } from './assertions';
 
@@ -88,10 +89,10 @@ export const buildFieldInteractions = <P extends {}>({
     props,
     { hook, componentFamily = 'field', direction = 'ltr' } = {},
   ) => {
-    let fieldRef: React.RefObject<FieldRef<FieldSection>> = { current: null };
+    let fieldRef: React.RefObject<FieldRef<PickerValue> | null> = { current: null };
 
     function WrappedComponent(propsFromRender: any) {
-      fieldRef = React.useRef<FieldRef<FieldSection>>(null);
+      fieldRef = React.useRef<FieldRef<PickerValue>>(null);
       const hookResult = hook?.(propsFromRender);
 
       const allProps = {
@@ -234,7 +235,7 @@ export const buildFieldInteractions = <P extends {}>({
     selectedSection,
     ...props
   }) => {
-    // Test with v7 input
+    // Test with accessible DOM structure
     const v7Response = renderWithProps({
       ...props,
       enableAccessibleFieldDOMStructure: true,
@@ -244,7 +245,7 @@ export const buildFieldInteractions = <P extends {}>({
     expectFieldValueV7(v7Response.getSectionsContainer(), expectedValue);
     v7Response.unmount();
 
-    // Test with v6 input
+    // Test with non-accessible DOM structure
     const v6Response = renderWithProps({
       ...props,
       enableAccessibleFieldDOMStructure: false,
@@ -263,7 +264,7 @@ export const buildFieldInteractions = <P extends {}>({
     ...props
   }) => {
     if (!skipV7) {
-      // Test with v7 input
+      // Test with accessible DOM structure
       const v7Response = renderWithProps({
         ...props,
         enableAccessibleFieldDOMStructure: true,
@@ -280,7 +281,7 @@ export const buildFieldInteractions = <P extends {}>({
       v7Response.unmount();
     }
 
-    // Test with v6 input
+    // Test with non-accessible DOM structure
     const v6Response = renderWithProps({
       ...props,
       enableAccessibleFieldDOMStructure: false,

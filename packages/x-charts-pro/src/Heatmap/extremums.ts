@@ -1,6 +1,6 @@
-import { ExtremumGetter } from '@mui/x-charts/internals';
+import { CartesianExtremumGetter } from '@mui/x-charts/internals';
 
-export const getBaseExtremum: ExtremumGetter<'heatmap'> = (params) => {
+export const getBaseExtremum: CartesianExtremumGetter<'heatmap'> = (params) => {
   const { axis } = params;
 
   const minX = Math.min(...(axis.data ?? []));

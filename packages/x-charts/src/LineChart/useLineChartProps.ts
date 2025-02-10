@@ -1,20 +1,21 @@
 'use client';
 import useId from '@mui/utils/useId';
-import { DEFAULT_X_AXIS_KEY } from '../constants';
-import type { LineChartProps } from './LineChart';
-import { ResponsiveChartContainerProps } from '../ResponsiveChartContainer';
-import { ChartsOnAxisClickHandlerProps } from '../ChartsOnAxisClickHandler';
-import { ChartsGridProps } from '../ChartsGrid';
-import { ChartsClipPathProps } from '../ChartsClipPath';
-import { AreaPlotProps } from './AreaPlot';
-import { LinePlotProps } from './LinePlot';
-import { MarkPlotProps } from './MarkPlot';
-import { ChartsOverlayProps } from '../ChartsOverlay';
 import { ChartsAxisProps } from '../ChartsAxis';
 import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import { ChartsClipPathProps } from '../ChartsClipPath';
+import { ChartsGridProps } from '../ChartsGrid';
+import { ChartsLegendSlotExtension } from '../ChartsLegend';
+import { ChartsOverlayProps } from '../ChartsOverlay';
+import { DEFAULT_X_AXIS_KEY } from '../constants';
+import { ChartContainerProps } from '../ChartContainer';
+import { AreaPlotProps } from './AreaPlot';
+import type { LineChartProps } from './LineChart';
 import { LineHighlightPlotProps } from './LineHighlightPlot';
-import { ChartsLegendProps } from '../ChartsLegend';
-import { ChartsTooltipProps } from '../ChartsTooltip';
+import { LinePlotProps } from './LinePlot';
+import { MarkPlotProps } from './MarkPlot';
+import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
+import { calculateMargins } from '../internals/calculateMargins';
+import { LINE_CHART_PLUGINS, LineChartPluginsSignatures } from './LineChart.plugins';
 
 /**
  * A helper function that extracts LineChartProps from the input props
@@ -34,14 +35,12 @@ export const useLineChartProps = (props: LineChartProps) => {
     colors,
     dataset,
     sx,
-    tooltip,
-    onAxisClick,
     onAreaClick,
     onLineClick,
     onMarkClick,
     axisHighlight,
     disableLineItemHighlight,
-    legend,
+    hideLegend,
     grid,
     topAxis,
     leftAxis,
@@ -55,14 +54,13 @@ export const useLineChartProps = (props: LineChartProps) => {
     highlightedItem,
     onHighlightChange,
     className,
-    experimentalMarkRendering,
     ...other
   } = props;
 
   const id = useId();
   const clipPathId = `${id}-clip-path`;
 
-  const chartContainerProps: ResponsiveChartContainerProps = {
+  const chartContainerProps: ChartContainerProps<'line', LineChartPluginsSignatures> = {
     ...other,
     series: series.map((s) => ({
       disableHighlight: !!disableLineItemHighlight,
@@ -71,7 +69,7 @@ export const useLineChartProps = (props: LineChartProps) => {
     })),
     width,
     height,
-    margin,
+    margin: calculateMargins({ margin, hideLegend, slotProps, series }),
     colors,
     dataset,
     xAxis: xAxis ?? [
@@ -85,19 +83,15 @@ export const useLineChartProps = (props: LineChartProps) => {
       },
     ],
     yAxis,
-    sx,
     highlightedItem,
     onHighlightChange,
     disableAxisListener:
-      tooltip?.trigger !== 'axis' &&
+      slotProps?.tooltip?.trigger !== 'axis' &&
       axisHighlight?.x === 'none' &&
-      axisHighlight?.y === 'none' &&
-      !onAxisClick,
+      axisHighlight?.y === 'none',
     className,
-  };
-
-  const axisClickHandlerProps: ChartsOnAxisClickHandlerProps = {
-    onAxisClick,
+    skipAnimation,
+    plugins: LINE_CHART_PLUGINS,
   };
 
   const gridProps: ChartsGridProps = {
@@ -117,14 +111,12 @@ export const useLineChartProps = (props: LineChartProps) => {
     slots,
     slotProps,
     onItemClick: onAreaClick,
-    skipAnimation,
   };
 
   const linePlotProps: LinePlotProps = {
     slots,
     slotProps,
     onItemClick: onLineClick,
-    skipAnimation,
   };
 
   const markPlotProps: MarkPlotProps = {
@@ -132,7 +124,6 @@ export const useLineChartProps = (props: LineChartProps) => {
     slotProps,
     onItemClick: onMarkClick,
     skipAnimation,
-    experimentalRendering: experimentalMarkRendering,
   };
 
   const overlayProps: ChartsOverlayProps = {
@@ -160,21 +151,20 @@ export const useLineChartProps = (props: LineChartProps) => {
     slotProps,
   };
 
-  const legendProps: ChartsLegendProps = {
-    ...legend,
+  const legendProps: ChartsLegendSlotExtension = {
     slots,
     slotProps,
   };
 
-  const tooltipProps: ChartsTooltipProps<'line'> = {
-    ...tooltip,
-    slots,
-    slotProps,
+  const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {
+    sx,
+    legendPosition: props.slotProps?.legend?.position,
+    legendDirection: props.slotProps?.legend?.direction,
   };
 
   return {
+    chartsWrapperProps,
     chartContainerProps,
-    axisClickHandlerProps,
     gridProps,
     clipPathProps,
     clipPathGroupProps,
@@ -186,7 +176,6 @@ export const useLineChartProps = (props: LineChartProps) => {
     axisHighlightProps,
     lineHighlightPlotProps,
     legendProps,
-    tooltipProps,
     children,
   };
 };

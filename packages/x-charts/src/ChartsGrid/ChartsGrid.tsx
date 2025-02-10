@@ -3,12 +3,12 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps } from '@mui/material/styles';
-import { useCartesianContext } from '../context/CartesianProvider';
 import { ChartsGridClasses, getChartsGridUtilityClass } from './chartsGridClasses';
 import { useDrawingArea } from '../hooks/useDrawingArea';
-import { GridRoot } from './styledCommonents';
+import { GridRoot } from './styledComponents';
 import { ChartsGridVertical } from './ChartsVerticalGrid';
 import { ChartsGridHorizontal } from './ChartsHorizontalGrid';
+import { useXAxes, useYAxes } from '../hooks/useAxis';
 
 const useUtilityClasses = ({ classes }: ChartsGridProps) => {
   const slots = {
@@ -49,7 +49,8 @@ function ChartsGrid(inProps: ChartsGridProps) {
 
   const drawingArea = useDrawingArea();
   const { vertical, horizontal, ...other } = props;
-  const { xAxis, xAxisIds, yAxis, yAxisIds } = useCartesianContext();
+  const { xAxis, xAxisIds } = useXAxes();
+  const { yAxis, yAxisIds } = useYAxes();
 
   const classes = useUtilityClasses(props);
 
@@ -59,11 +60,21 @@ function ChartsGrid(inProps: ChartsGridProps) {
   return (
     <GridRoot {...other} className={classes.root}>
       {vertical && (
-        <ChartsGridVertical axis={verticalAxis} drawingArea={drawingArea} classes={classes} />
+        <ChartsGridVertical
+          axis={verticalAxis}
+          start={drawingArea.top}
+          end={drawingArea.height + drawingArea.top}
+          classes={classes}
+        />
       )}
 
       {horizontal && (
-        <ChartsGridHorizontal axis={horizontalAxis} drawingArea={drawingArea} classes={classes} />
+        <ChartsGridHorizontal
+          axis={horizontalAxis}
+          start={drawingArea.left}
+          end={drawingArea.width + drawingArea.left}
+          classes={classes}
+        />
       )}
     </GridRoot>
   );

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPaginationModelApi, GridPaginationState } from './gridPaginationInterfaces';
@@ -40,7 +41,7 @@ export const getDerivedPaginationModel = (
     paginationModel = paginationModelProp;
   }
 
-  const validPage = getValidPage(paginationModel.page, pageCount);
+  const validPage = pageSize === -1 ? 0 : getValidPage(paginationModel.page, pageCount);
   if (validPage !== paginationModel.page) {
     paginationModel = { ...paginationModel, page: validPage };
   }
@@ -55,7 +56,7 @@ export const getDerivedPaginationModel = (
  * @requires useGridDimensions (event) - can be after
  */
 export const useGridPaginationModel = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'paginationModel'
@@ -63,6 +64,7 @@ export const useGridPaginationModel = (
     | 'autoPageSize'
     | 'initialState'
     | 'paginationMode'
+    | 'pagination'
     | 'signature'
     | 'rowHeight'
   >,
@@ -115,17 +117,20 @@ export const useGridPaginationModel = (
       }
       logger.debug("Setting 'paginationModel' to", paginationModel);
 
-      apiRef.current.setState((state) => ({
-        ...state,
-        pagination: {
-          ...state.pagination,
-          paginationModel: getDerivedPaginationModel(
-            state.pagination,
-            props.signature,
-            paginationModel,
-          ),
-        },
-      }));
+      apiRef.current.setState(
+        (state) => ({
+          ...state,
+          pagination: {
+            ...state.pagination,
+            paginationModel: getDerivedPaginationModel(
+              state.pagination,
+              props.signature,
+              paginationModel,
+            ),
+          },
+        }),
+        'setPaginationModel',
+      );
     },
     [apiRef, logger, props.signature],
   );
@@ -184,17 +189,20 @@ export const useGridPaginationModel = (
             ...context.stateToRestore.pagination?.paginationModel,
           }
         : gridPaginationModelSelector(apiRef);
-      apiRef.current.setState((state) => ({
-        ...state,
-        pagination: {
-          ...state.pagination,
-          paginationModel: getDerivedPaginationModel(
-            state.pagination,
-            props.signature,
-            paginationModel,
-          ),
-        },
-      }));
+      apiRef.current.setState(
+        (state) => ({
+          ...state,
+          pagination: {
+            ...state.pagination,
+            paginationModel: getDerivedPaginationModel(
+              state.pagination,
+              props.signature,
+              paginationModel,
+            ),
+          },
+        }),
+        'stateRestorePreProcessing',
+      );
       return params;
     },
     [apiRef, props.autoPageSize, props.signature],
@@ -250,7 +258,15 @@ export const useGridPaginationModel = (
   /**
    * EFFECTS
    */
+  const isFirstRender = React.useRef(true);
   React.useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if (!props.pagination) {
+      return;
+    }
     apiRef.current.setState((state) => ({
       ...state,
       pagination: {
@@ -262,7 +278,28 @@ export const useGridPaginationModel = (
         ),
       },
     }));
-  }, [apiRef, props.paginationModel, props.paginationMode, props.signature]);
+  }, [apiRef, props.paginationModel, props.signature, props.pagination]);
+
+  React.useEffect(() => {
+    apiRef.current.setState((state) => {
+      const isEnabled = props.pagination === true;
+      if (
+        state.pagination.paginationMode === props.paginationMode ||
+        state.pagination.enabled === isEnabled
+      ) {
+        return state;
+      }
+
+      return {
+        ...state,
+        pagination: {
+          ...state.pagination,
+          paginationMode: props.paginationMode,
+          enabled: props.pagination === true,
+        },
+      };
+    });
+  }, [apiRef, props.paginationMode, props.pagination]);
 
   React.useEffect(handleUpdateAutoPageSize, [handleUpdateAutoPageSize]);
 };

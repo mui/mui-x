@@ -132,6 +132,7 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
   },
   {
     field: 'position',
+    description: 'Job title',
     headerName: 'Position',
     generateData: randomJobTitle,
     width: 180,
@@ -170,7 +171,7 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
       if (!value || typeof value !== 'number') {
         return value;
       }
-      return `${value.toLocaleString()}$`;
+      return `$${value.toLocaleString()}`;
     },
   },
 ];

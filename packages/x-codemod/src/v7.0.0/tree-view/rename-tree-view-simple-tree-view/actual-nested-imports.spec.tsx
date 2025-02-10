@@ -13,6 +13,7 @@ import { TreeItem } from '@mui/x-tree-view/TreeItem';
 function App() {
   getTreeViewUtilityClass('root');
 
+  // prettier-ignore
   return (
     <TreeView>
       <TreeItem nodeId="1" label="Item 1" />

@@ -1,14 +1,18 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
-import { DataGrid, GridToolbarFilterButton } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridToolbarFilterButton,
+  GridToolbarContainer,
+} from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 function Toolbar() {
   return (
-    <div>
+    <GridToolbarContainer>
       <GridToolbarFilterButton />
-    </div>
+    </GridToolbarContainer>
   );
 }
 
@@ -62,7 +66,6 @@ const ratingOnlyOperators = [
       };
     },
     InputComponent: RatingInputValue,
-    InputComponentProps: { type: 'number' },
     getValueAsString: (value) => `${value} Stars`,
   },
 ];
@@ -70,7 +73,7 @@ const ratingOnlyOperators = [
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
 export default function CustomRatingOperator() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
@@ -93,6 +96,7 @@ export default function CustomRatingOperator() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
+        loading={loading}
         columns={columns}
         slots={{
           toolbar: Toolbar,

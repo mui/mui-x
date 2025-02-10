@@ -1,30 +1,39 @@
 import * as React from 'react';
+import { TreeViewCancellableEvent } from '@mui/x-tree-view/models';
 import {
-  MuiCancellableEvent,
   TreeViewItemPlugin,
   useTreeViewContext,
   UseTreeViewItemsSignature,
   isTargetInDescendants,
+  useSelector,
 } from '@mui/x-tree-view/internals';
-import { TreeItem2Props } from '@mui/x-tree-view/TreeItem2';
 import {
-  UseTreeItem2DragAndDropOverlaySlotPropsFromItemsReordering,
-  UseTreeItem2RootSlotPropsFromItemsReordering,
+  UseTreeItemDragAndDropOverlaySlotPropsFromItemsReordering,
+  UseTreeItemRootSlotPropsFromItemsReordering,
   UseTreeViewItemsReorderingSignature,
   TreeViewItemItemReorderingValidActions,
-  UseTreeItem2ContentSlotPropsFromItemsReordering,
+  UseTreeItemContentSlotPropsFromItemsReordering,
 } from './useTreeViewItemsReordering.types';
+import {
+  selectorItemsReorderingDraggedItemProperties,
+  selectorItemsReorderingIsValidTarget,
+} from './useTreeViewItemsReordering.selectors';
 
 export const isAndroid = () => navigator.userAgent.toLowerCase().includes('android');
 
-export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2Props> = ({
-  props,
-}) => {
-  const { itemsReordering, instance } =
+export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props }) => {
+  const { instance, store, itemsReordering } =
     useTreeViewContext<[UseTreeViewItemsSignature, UseTreeViewItemsReorderingSignature]>();
   const { itemId } = props;
 
   const validActionsRef = React.useRef<TreeViewItemItemReorderingValidActions | null>(null);
+
+  const draggedItemProperties = useSelector(
+    store,
+    selectorItemsReorderingDraggedItemProperties,
+    itemId,
+  );
+  const isValidTarget = useSelector(store, selectorItemsReorderingIsValidTarget, itemId);
 
   return {
     propsEnhancers: {
@@ -32,13 +41,15 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
         rootRefObject,
         contentRefObject,
         externalEventHandlers,
-      }): UseTreeItem2RootSlotPropsFromItemsReordering => {
-        const draggable = instance.canItemBeDragged(itemId);
-        if (!draggable) {
+      }): UseTreeItemRootSlotPropsFromItemsReordering => {
+        if (
+          !itemsReordering.enabled ||
+          (itemsReordering.isItemReorderable && !itemsReordering.isItemReorderable(itemId))
+        ) {
           return {};
         }
 
-        const handleDragStart = (event: React.DragEvent & MuiCancellableEvent) => {
+        const handleDragStart = (event: React.DragEvent & TreeViewCancellableEvent) => {
           externalEventHandlers.onDragStart?.(event);
           if (event.defaultMuiPrevented || event.defaultPrevented) {
             return;
@@ -66,7 +77,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
           instance.startDraggingItem(itemId);
         };
 
-        const handleRootDragOver = (event: React.DragEvent & MuiCancellableEvent) => {
+        const handleRootDragOver = (event: React.DragEvent & TreeViewCancellableEvent) => {
           externalEventHandlers.onDragOver?.(event);
           if (event.defaultMuiPrevented) {
             return;
@@ -75,7 +86,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
           event.preventDefault();
         };
 
-        const handleRootDragEnd = (event: React.DragEvent & MuiCancellableEvent) => {
+        const handleRootDragEnd = (event: React.DragEvent & TreeViewCancellableEvent) => {
           externalEventHandlers.onDragEnd?.(event);
           if (event.defaultMuiPrevented) {
             return;
@@ -94,13 +105,12 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
       content: ({
         externalEventHandlers,
         contentRefObject,
-      }): UseTreeItem2ContentSlotPropsFromItemsReordering => {
-        const currentDrag = itemsReordering.currentDrag;
-        if (!currentDrag || currentDrag.draggedItemId === itemId) {
+      }): UseTreeItemContentSlotPropsFromItemsReordering => {
+        if (!isValidTarget) {
           return {};
         }
 
-        const handleDragOver = (event: React.DragEvent & MuiCancellableEvent) => {
+        const handleDragOver = (event: React.DragEvent & TreeViewCancellableEvent) => {
           externalEventHandlers.onDragOver?.(event);
           if (event.defaultMuiPrevented || validActionsRef.current == null) {
             return;
@@ -119,7 +129,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
           });
         };
 
-        const handleDragEnter = (event: React.DragEvent & MuiCancellableEvent) => {
+        const handleDragEnter = (event: React.DragEvent & TreeViewCancellableEvent) => {
           externalEventHandlers.onDragEnter?.(event);
           if (event.defaultMuiPrevented) {
             return;
@@ -133,21 +143,16 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
           onDragOver: handleDragOver,
         };
       },
-      dragAndDropOverlay: (): UseTreeItem2DragAndDropOverlaySlotPropsFromItemsReordering => {
-        const currentDrag = itemsReordering.currentDrag;
-        if (!currentDrag || currentDrag.targetItemId !== itemId || currentDrag.action == null) {
+      dragAndDropOverlay: (): UseTreeItemDragAndDropOverlaySlotPropsFromItemsReordering => {
+        if (!draggedItemProperties) {
           return {};
         }
 
-        const targetDepth =
-          currentDrag.newPosition?.parentId == null
-            ? 0
-            : // The depth is always defined because drag&drop is only usable with Rich Tree View components.
-              instance.getItemMeta(currentDrag.newPosition.parentId).depth! + 1;
-
         return {
-          action: currentDrag.action,
-          style: { '--TreeView-targetDepth': targetDepth } as React.CSSProperties,
+          action: draggedItemProperties.action,
+          style: {
+            '--TreeView-targetDepth': draggedItemProperties.targetDepth,
+          } as React.CSSProperties,
         };
       },
     },

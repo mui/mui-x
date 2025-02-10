@@ -1,0 +1,20 @@
+{
+  "name": "GridListColDef",
+  "imports": [
+    "import { GridListColDef } from '@mui/x-data-grid-premium'",
+    "import { GridListColDef } from '@mui/x-data-grid-pro'",
+    "import { GridListColDef } from '@mui/x-data-grid'"
+  ],
+  "demos": "<ul><li><a href=\"/x/react-data-grid/list-view/\">List view</a></li></ul>",
+  "properties": {
+    "field": { "type": { "description": "string" }, "required": true },
+    "align": { "type": { "description": "GridAlignment" } },
+    "cellClassName": { "type": { "description": "GridCellClassNamePropType&lt;R, V&gt;" } },
+    "display": { "type": { "description": "'text' | 'flex'" } },
+    "renderCell": {
+      "type": {
+        "description": "(params: GridRenderCellParams&lt;R, V, F&gt;) =&gt; React.ReactNode"
+      }
+    }
+  }
+}

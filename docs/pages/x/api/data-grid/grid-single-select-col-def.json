@@ -36,7 +36,7 @@
     "editable": { "type": { "description": "boolean" }, "default": "false" },
     "filterable": { "type": { "description": "boolean" }, "default": "true" },
     "filterOperators": {
-      "type": { "description": "readonly GridFilterOperator&lt;R, V, F&gt;[]" }
+      "type": { "description": "readonly GridFilterOperator&lt;R, V, F, any&gt;[]" }
     },
     "flex": { "type": { "description": "number" } },
     "getApplyQuickFilterFn": { "type": { "description": "GetApplyQuickFilterFn&lt;R, V&gt;" } },
@@ -89,9 +89,11 @@
       "isProPlan": true
     },
     "resizable": { "type": { "description": "boolean" }, "default": "true" },
+    "rowSpanValueGetter": { "type": { "description": "GridValueGetter&lt;R, V, F&gt;" } },
     "sortable": { "type": { "description": "boolean" }, "default": "true" },
     "sortComparator": { "type": { "description": "GridComparatorFn&lt;V&gt;" } },
     "sortingOrder": { "type": { "description": "readonly GridSortDirection[]" } },
+    "unstable_examples": { "type": { "description": "V[]" } },
     "valueFormatter": { "type": { "description": "GridValueFormatter&lt;R, V, F&gt;" } },
     "valueGetter": { "type": { "description": "GridValueGetter&lt;R, V, F&gt;" } },
     "valueOptions": {

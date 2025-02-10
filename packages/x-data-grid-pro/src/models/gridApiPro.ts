@@ -11,13 +11,15 @@ import type {
   GridDetailPanelApi,
   GridRowPinningApi,
   GridDetailPanelPrivateApi,
+} from '../hooks';
+import type {
   GridDataSourceApi,
   GridDataSourcePrivateApi,
-} from '../hooks';
+} from '../hooks/features/dataSource/interfaces';
 import type { DataGridProProcessedProps } from './dataGridProProps';
 
 /**
- * The api of `DataGridPro`.
+ * The api of Data Grid Pro.
  */
 export interface GridApiPro
   extends GridApiCommon<GridStatePro, GridInitialStatePro>,

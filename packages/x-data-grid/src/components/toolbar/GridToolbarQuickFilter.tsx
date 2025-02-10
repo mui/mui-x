@@ -1,15 +1,16 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
 import { unstable_debounce as debounce } from '@mui/utils';
 import composeClasses from '@mui/utils/composeClasses';
+import { outlinedInputClasses } from '@mui/material/OutlinedInput';
 import { getDataGridUtilityClass } from '../../constants';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridQuickFilterValuesSelector } from '../../hooks/features/filter';
+import { TextFieldProps } from '../../models/gridBaseSlots';
 import { GridFilterModel } from '../../models/gridFilterModel';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { isDeepEqual } from '../../utils/utils';
@@ -26,18 +27,13 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridToolbarQuickFilterRoot = styled(TextField, {
+const GridToolbarQuickFilterRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ToolbarQuickFilter',
   overridesResolver: (props, styles) => styles.toolbarQuickFilter,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
-  width: 'auto',
-  paddingBottom: theme.spacing(0.5),
-  '& input': {
-    marginLeft: theme.spacing(0.5),
-  },
-  '& .MuiInput-underline:before': {
-    borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
+  [`.${outlinedInputClasses.root}`]: {
+    fontSize: theme.typography.body2.fontSize,
   },
   [`& input[type="search"]::-webkit-search-decoration,
   & input[type="search"]::-webkit-search-cancel-button,
@@ -53,7 +49,8 @@ const defaultSearchValueParser = (searchText: string) =>
 
 const defaultSearchValueFormatter = (values: string[]) => values.join(' ');
 
-export type GridToolbarQuickFilterProps = TextFieldProps & {
+export type GridToolbarQuickFilterProps = {
+  className?: string;
   /**
    * Function responsible for parsing text input in an array of independent values for quick filtering.
    * @param {string} input The value entered by the user
@@ -75,6 +72,9 @@ export type GridToolbarQuickFilterProps = TextFieldProps & {
    * @default 150
    */
   debounceMs?: number;
+  slotProps?: {
+    root: TextFieldProps;
+  };
 };
 
 function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
@@ -88,6 +88,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
     quickFilterFormatter = defaultSearchValueFormatter,
     debounceMs = rootProps.filterDebounceMs,
     className,
+    slotProps,
     ...other
   } = props;
 
@@ -124,6 +125,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
     () => debounce(updateSearchValue, debounceMs),
     [updateSearchValue, debounceMs],
   );
+  React.useEffect(() => debouncedUpdateSearchValue.clear, [debouncedUpdateSearchValue]);
 
   const handleSearchValueChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -143,36 +145,46 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
     <GridToolbarQuickFilterRoot
       as={rootProps.slots.baseTextField}
       ownerState={rootProps}
-      variant="standard"
+      size="small"
       value={searchValue}
-      onChange={handleSearchValueChange}
-      className={clsx(className, classes.root)}
+      onChange={handleSearchValueChange as any}
+      className={clsx(classes.root, className)}
       placeholder={apiRef.current.getLocaleText('toolbarQuickFilterPlaceholder')}
       aria-label={apiRef.current.getLocaleText('toolbarQuickFilterLabel')}
       type="search"
       {...other}
-      InputProps={{
-        startAdornment: <rootProps.slots.quickFilterIcon fontSize="small" />,
-        endAdornment: (
-          <rootProps.slots.baseIconButton
-            aria-label={apiRef.current.getLocaleText('toolbarQuickFilterDeleteIconLabel')}
-            size="small"
-            sx={[
-              searchValue
-                ? {
-                    visibility: 'visible',
-                  }
-                : {
-                    visibility: 'hidden',
-                  },
-            ]}
-            onClick={handleSearchReset}
-            {...rootProps.slotProps?.baseIconButton}
-          >
-            <rootProps.slots.quickFilterClearIcon fontSize="small" />
-          </rootProps.slots.baseIconButton>
-        ),
-        ...other.InputProps,
+      slotProps={{
+        ...slotProps?.root.slotProps,
+        input: {
+          startAdornment: (
+            <rootProps.slots.baseInputAdornment position="start">
+              <rootProps.slots.quickFilterIcon fontSize="small" />
+            </rootProps.slots.baseInputAdornment>
+          ),
+          endAdornment: (
+            <rootProps.slots.baseInputAdornment position="end">
+              <rootProps.slots.baseIconButton
+                aria-label={apiRef.current.getLocaleText('toolbarQuickFilterDeleteIconLabel')}
+                size="small"
+                edge="end"
+                style={
+                  searchValue
+                    ? {
+                        visibility: 'visible',
+                      }
+                    : {
+                        visibility: 'hidden',
+                      }
+                }
+                onClick={handleSearchReset}
+                {...rootProps.slotProps?.baseIconButton}
+              >
+                <rootProps.slots.quickFilterClearIcon fontSize="small" />
+              </rootProps.slots.baseIconButton>
+            </rootProps.slots.baseInputAdornment>
+          ),
+          ...slotProps?.root.slotProps?.input,
+        },
       }}
       {...rootProps.slotProps?.baseTextField}
     />
@@ -184,6 +196,7 @@ GridToolbarQuickFilter.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  className: PropTypes.string,
   /**
    * The debounce time in milliseconds.
    * @default 150
@@ -205,6 +218,7 @@ GridToolbarQuickFilter.propTypes = {
    *   .filter((word) => word !== '')
    */
   quickFilterParser: PropTypes.func,
+  slotProps: PropTypes.object,
 } as any;
 
 /**

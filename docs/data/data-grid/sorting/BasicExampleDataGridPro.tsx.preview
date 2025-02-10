@@ -1,1 +1,1 @@
-<DataGridPro {...data} />
+<DataGridPro {...data} loading={loading} />

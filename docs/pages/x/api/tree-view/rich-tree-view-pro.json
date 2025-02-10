@@ -28,12 +28,7 @@
       "type": { "name": "enum", "description": "'content'<br>&#124;&nbsp;'iconContainer'" },
       "default": "'content'"
     },
-    "experimentalFeatures": {
-      "type": {
-        "name": "shape",
-        "description": "{ indentationAtItemLevel?: bool, itemsReordering?: bool, labelEditing?: bool }"
-      }
-    },
+    "experimentalFeatures": { "type": { "name": "object" } },
     "getItemId": {
       "type": { "name": "func" },
       "default": "(item) => item.id",
@@ -61,7 +56,10 @@
         "returned": "boolean"
       }
     },
-    "isItemEditable": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;bool" } },
+    "isItemEditable": {
+      "type": { "name": "union", "description": "func<br>&#124;&nbsp;bool" },
+      "default": "() => false"
+    },
     "isItemReorderable": {
       "type": { "name": "func" },
       "default": "() => true",
@@ -134,6 +132,10 @@
       }
     },
     "selectedItems": { "type": { "name": "any" } },
+    "selectionPropagation": {
+      "type": { "name": "shape", "description": "{ descendants?: bool, parents?: bool }" },
+      "default": "{ parents: false, descendants: false }"
+    },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
@@ -161,12 +163,6 @@
       "class": "MuiRichTreeViewPro-root"
     },
     {
-      "name": "item",
-      "description": "Custom component for the item.",
-      "default": "TreeItem.",
-      "class": null
-    },
-    {
       "name": "collapseIcon",
       "description": "The default icon used to collapse the item.",
       "class": null
@@ -178,7 +174,13 @@
     },
     {
       "name": "endIcon",
-      "description": "The default icon displayed next to an end item.\nThis is applied to all tree items and can be overridden by the TreeItem `icon` slot prop.",
+      "description": "The default icon displayed next to an end item.\nThis is applied to all Tree Items and can be overridden by the TreeItem `icon` slot prop.",
+      "class": null
+    },
+    {
+      "name": "item",
+      "description": "Custom component to render a Tree Item.",
+      "default": "TreeItem.",
       "class": null
     }
   ],

@@ -1,7 +1,1 @@
-<DataGridPremium
-  columns={columns}
-  rows={rows}
-  disableColumnMenu
-  autoHeight
-  hideFooter
-/>
+<DataGridPremium columns={columns} rows={rows} disableColumnMenu hideFooter />

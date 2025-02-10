@@ -1,20 +1,24 @@
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import MenuList from '@mui/material/MenuList';
 import { styled } from '@mui/material/styles';
 
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { isHideMenuKey } from '../../../utils/keyboardUtils';
-import { GridColumnMenuContainerProps } from './GridColumnMenuProps';
+import { NotRendered } from '../../../utils/assert';
 import { gridClasses } from '../../../constants/gridClasses';
+import { GridSlotProps } from '../../../models/gridSlotsComponent';
+import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { GridColumnMenuContainerProps } from './GridColumnMenuProps';
 
-const StyledMenuList = styled(MenuList)(() => ({
+const StyledMenuList = styled(NotRendered<GridSlotProps['baseMenuList']>)(() => ({
   minWidth: 248,
 }));
 
-const GridColumnMenuContainer = React.forwardRef<HTMLUListElement, GridColumnMenuContainerProps>(
+const GridColumnMenuContainer = forwardRef<HTMLUListElement, GridColumnMenuContainerProps>(
   function GridColumnMenuContainer(props, ref) {
     const { hideMenu, colDef, id, labelledby, className, children, open, ...other } = props;
+    const rootProps = useGridRootProps();
 
     const handleListKeyDown = React.useCallback(
       (event: React.KeyboardEvent) => {
@@ -30,13 +34,14 @@ const GridColumnMenuContainer = React.forwardRef<HTMLUListElement, GridColumnMen
 
     return (
       <StyledMenuList
+        as={rootProps.slots.baseMenuList}
         id={id}
-        ref={ref}
         className={clsx(gridClasses.menuList, className)}
         aria-labelledby={labelledby}
         onKeyDown={handleListKeyDown}
         autoFocus={open}
         {...other}
+        ref={ref}
       >
         {children}
       </StyledMenuList>

@@ -8,108 +8,40 @@ packageName: '@mui/x-tree-view'
 
 # MUI X Tree View
 
-<p class="description">The Tree View component lets users navigate hierarchical lists of data with nested levels that can be expanded and collapsed.</p>
+<p class="description">The Tree View lets users navigate hierarchical lists of data with nested levels that can be expanded and collapsed.</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader"}}
 
-## Available components
+## Overview
 
-The MUI X Tree View package exposes two different versions of the component:
+The MUI X Tree View provides all of the functionality necessary to build a hierarchical list of expandable and collapsible items.
+The Tree View's theming features are designed to be frictionless when integrating with Material UI and other MUI X components, but it can also stand on its own and be customized to meet the needs of any design system.
 
-### Simple Tree View
+The Tree View is **open-core**: The Community version is MIT-licensed and free forever, while more advanced features require a Pro commercial license.
+See [MUI X Licensing](/x/introduction/licensing/) for complete details.
 
-```jsx
+The demo below shows how to render a Simple Tree View—try clicking on an item to see how it expands and collapses:
+
+{{"demo": "TreeViewOverviewDemo.js", "defaultCodeOpen": true}}
+
+## Community version (free forever)
+
+```js
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 ```
 
-The simple version of the Tree View component receives its items as JSX children.
-This is the recommended version for hardcoded items.
-
-{{"demo": "BasicSimpleTreeView.js"}}
-
-### Rich Tree View
-
-```jsx
+```js
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 ```
 
-The rich version of the Tree View component receives its items dynamically from an external data source.
-This is the recommended version for larger trees, as well as those that require more advanced features like editing and virtualization.
+The MIT-licensed Community version of the Tree View covers the most common use cases.
+Proceed to the [Quickstart guide](/x/react-tree-view/quickstart/) to learn more about the differences between the Simple and Rich Tree View components.
 
-{{"demo": "BasicRichTreeView.js"}}
+## Pro version [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-:::info
-At the moment, the Simple and Rich Tree Views are similar in terms of feature support. But as the component grows, you can expect to see the more advanced ones appear primarily on the Rich Tree View.
-:::
-
-### Tree Item components
-
-The `@mui/x-tree-view` package exposes two different components to define your tree items:
-
-- `TreeItem`
-- `TreeItem2`
-
-#### `TreeItem`
-
-This is the long-standing component that is very similar to the one used in previous versions (`@mui/x-tree-view@6` and `@mui/lab`).
-
-When using `SimpleTreeView`,
-you can import it from `@mui/x-tree-view/TreeItem` and use it as a child of the `SimpleTreeView` component:
-
-```tsx
-import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import { TreeItem } from '@mui/x-tree-view/TreeItem';
-
-export default function App() {
-  return (
-    <SimpleTreeView>
-      <TreeItem itemId="1" label="Item 1" />
-      <TreeItem itemId="2" label="Item 2" />
-    </SimpleTreeView>
-  );
-}
+```js
+import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 ```
 
-When using `RichTreeView`,
-you don't have to import anything; it's the default component used to render the items:
-
-```tsx
-import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-
-export default function App() {
-  return <RichTreeView items={ITEMS} />;
-}
-```
-
-#### `TreeItem2`
-
-This is a new component that provides a more powerful customization API, and will eventually replace `TreeItem`.
-
-When using `SimpleTreeView`,
-you can import it from `@mui/x-tree-view/TreeItem2` and use it as a child of the `SimpleTreeView` component:
-
-```tsx
-import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
-
-export default function App() {
-  return (
-    <SimpleTreeView>
-      <TreeItem2 itemId="1" label="Item 1" />
-      <TreeItem2 itemId="2" label="Item 2" />
-    </SimpleTreeView>
-  );
-}
-```
-
-When using `RichTreeView`,
-you can import it from `@mui/x-tree-view/TreeItem2` and pass it as a slot of the `RichTreeView` component:
-
-```tsx
-import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
-
-export default function App() {
-  return <RichTreeView items={ITEMS} slots={{ item: TreeItem2 }} />;
-}
-```
+The Pro version of the Rich Tree View expands on the Community version by providing [drag-and-drop reordering](/x/react-tree-view/rich-tree-view/ordering/) functionality in addition to all other features.
+Pro features are denoted by the blue cube icon (<span class="plan-pro"></span>) throughout the documentation.
