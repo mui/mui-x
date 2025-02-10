@@ -419,9 +419,8 @@ GridColumnsManagement.propTypes = {
 const GridColumnsManagementBody = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnsManagement',
-  overridesResolver: (props, styles) => styles.columnsManagement,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
-  padding: theme.spacing(0, 3, 1.5),
+  padding: theme.spacing(0, 2, 1.5),
   display: 'flex',
   flexDirection: 'column',
   overflow: 'auto',
@@ -433,7 +432,6 @@ const GridColumnsManagementBody = styled('div', {
 const GridColumnsManagementHeader = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnsManagementHeader',
-  overridesResolver: (props, styles) => styles.columnsManagementHeader,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   padding: theme.spacing(1.5, 3),
 }));
@@ -441,7 +439,6 @@ const GridColumnsManagementHeader = styled('div', {
 const SearchInput = styled(NotRendered<GridSlotProps['baseTextField']>, {
   name: 'MuiDataGrid',
   slot: 'ColumnsManagementSearchInput',
-  overridesResolver: (props, styles) => styles.columnsManagementSearchInput,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   [`& .${inputBaseClasses.root}`]: {
     padding: theme.spacing(0, 1.5, 0, 1.5),
@@ -458,7 +455,6 @@ const SearchInput = styled(NotRendered<GridSlotProps['baseTextField']>, {
 const GridColumnsManagementFooter = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnsManagementFooter',
-  overridesResolver: (props, styles) => styles.columnsManagementFooter,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   padding: theme.spacing(0.5, 1, 0.5, 3),
   display: 'flex',
