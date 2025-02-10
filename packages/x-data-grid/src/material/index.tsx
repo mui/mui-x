@@ -54,6 +54,8 @@ import type { GridBaseSlots } from '../models/gridSlotsComponent';
 import type { GridSlotProps } from '../models/gridSlotsComponentsProps';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
+/* eslint-disable material-ui/disallow-react-api-in-server-components */
+
 const iconSlots: GridIconSlotsComponent = {
   booleanCellTrueIcon: GridCheckIcon,
   booleanCellFalseIcon: GridCloseIcon,
