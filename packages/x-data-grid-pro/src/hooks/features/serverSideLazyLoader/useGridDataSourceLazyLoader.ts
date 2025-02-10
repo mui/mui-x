@@ -16,18 +16,18 @@ import {
 } from '@mui/x-data-grid';
 import {
   getVisibleRows,
-  GridGetRowsParams,
   gridRenderContextSelector,
   GridStrategyGroup,
   GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
   runIf,
+  DataSourceRowsUpdateStrategy,
 } from '@mui/x-data-grid/internals';
+import { GridGetRowsParamsPro as GridGetRowsParams } from '../dataSource/models';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { findSkeletonRowsSection } from '../lazyLoader/utils';
 import { GRID_SKELETON_ROW_ROOT_ID } from '../lazyLoader/useGridLazyLoaderPreProcessors';
-import { DataSourceRowsUpdateStrategy } from '../dataSource/utils';
 
 enum LoadingTrigger {
   VIEWPORT,
