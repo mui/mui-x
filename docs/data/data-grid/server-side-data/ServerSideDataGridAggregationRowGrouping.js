@@ -47,12 +47,15 @@ export default function ServerSideDataGridAggregationRowGrouping() {
     [fetchRows],
   );
 
-  const initialStateWithAggregation = useKeepGroupedColumnsHidden({
+  const initialStateUpdated = useKeepGroupedColumnsHidden({
     apiRef,
     initialState: {
       ...initialState,
       aggregation: {
         model: { title: 'size', gross: 'sum', year: 'max' },
+      },
+      rowGrouping: {
+        model: ['company', 'director'],
       },
     },
   });
@@ -63,7 +66,7 @@ export default function ServerSideDataGridAggregationRowGrouping() {
         apiRef={apiRef}
         columns={columns}
         unstable_dataSource={dataSource}
-        initialState={initialStateWithAggregation}
+        initialState={initialStateUpdated}
         aggregationFunctions={aggregationFunctions}
       />
     </div>

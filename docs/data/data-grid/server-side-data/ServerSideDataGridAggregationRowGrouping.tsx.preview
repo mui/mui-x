@@ -2,6 +2,6 @@
   apiRef={apiRef}
   columns={columns}
   unstable_dataSource={dataSource}
-  initialState={initialStateWithAggregation}
+  initialState={initialStateUpdated}
   aggregationFunctions={aggregationFunctions}
 />
