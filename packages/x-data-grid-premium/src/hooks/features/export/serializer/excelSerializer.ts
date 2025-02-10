@@ -36,14 +36,12 @@ const getFormattedValueOptions = (
   row: GridValidRowModel,
   valueOptions: ValueOptions[],
   api: GridApi,
-  callback?: (value: any, index: number) => void,
+  callback: (value: any, index: number) => void,
 ) => {
   if (!colDef.valueOptions) {
-    return [];
+    return;
   }
   const valueFormatter = colDef.valueFormatter;
-  const valueOptionsFormatted = [];
-  const hasCallback = typeof callback === 'function';
 
   for (let i = 0; i < valueOptions.length; i += 1) {
     const option = valueOptions[i];
@@ -57,14 +55,8 @@ const getFormattedValueOptions = (
     } else {
       value = typeof option === 'object' ? option.label : option;
     }
-    if (hasCallback) {
-      callback(value, i);
-    } else {
-      valueOptionsFormatted.push(value);
-    }
+    callback(value, i);
   }
-
-  return valueOptionsFormatted;
 };
 
 const commaRegex = /,/g;
