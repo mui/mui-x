@@ -1,6 +1,5 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
-import { TouchRippleActions } from '@mui/material/ButtonBase/TouchRipple';
 import MUIBadge from '@mui/material/Badge';
 import MUICheckbox from '@mui/material/Checkbox';
 import MUIChip from '@mui/material/Chip';
@@ -130,7 +129,7 @@ function BaseCheckbox(props: GridSlotProps['baseCheckbox'], ref: React.Ref<HTMLB
 
   const elementRef = React.useRef<HTMLButtonElement>(null);
   const handleRef = useForkRef(elementRef, ref);
-  const rippleRef = React.useRef<TouchRippleActions>(null);
+  const rippleRef = React.useRef<any>(null);
 
   const sx = density === 'compact' ? CHECKBOX_COMPACT : undefined;
 
