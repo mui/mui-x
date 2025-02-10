@@ -24,9 +24,9 @@ let globalId = 0;
  *
  * It manages the data used to create the charts.
  *
- * @param inPlugins are all the plugins that will be used in the chart.
- * @param props the props passed to the chart.
- * @param seriesConfig is the set of helpers used for series-specific computation.
+ * @param inPlugins All the plugins that will be used in the chart.
+ * @param props The props passed to the chart.
+ * @param seriesConfig The set of helpers used for series-specific computation.
  */
 export function useCharts<
   TSeriesType extends ChartSeriesType,

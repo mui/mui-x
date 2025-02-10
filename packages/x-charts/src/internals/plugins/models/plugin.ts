@@ -173,7 +173,9 @@ export type ChartPlugin<TSignature extends ChartAnyPluginSignature> = {
    */
   (options: ChartPluginOptions<TSignature>): ChartResponse<TSignature>;
   /**
-   * The initial is computed after the default values are applied.
+   * The initial state is computed after the default values are applied.
+   * It set up the state for the first render.
+   * Other state modifications have to be done in effects and so could not be applied on the initial render.
    *
    * @param {ChartUsedDefaultizedParams<TSignature>} params The parameters after being processed with the default values.
    * @param {MergeSignaturesProperty<ChartRequiredPlugins<TSignature>, 'state'>} currentState The current state of the chart.
@@ -198,7 +200,7 @@ export type ChartPlugin<TSignature extends ChartAnyPluginSignature> = {
   /**
    * A function that receives the parameters and returns the parameters after being processed with the default values.
    *
-   * @param {ChartUsedParams<TSignature>} options the object.
+   * @param {ChartUsedParams<TSignature>} options The options object.
    * @param {ChartUsedParams<TSignature>['params']} options.params The parameters before being processed with the default values.
    * @returns {TSignature['defaultizedParams']} The parameters after being processed with the default values.
    */
