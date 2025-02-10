@@ -3,7 +3,7 @@ import { AxisId } from '../../../../models/axis';
 import { defaultizeZoom } from './defaultizeZoom';
 import { DefaultizedZoomOptions } from './useChartCartesianAxis.types';
 
-export const creatZoomLookup =
+export const createZoomLookup =
   (axisDirection: 'x' | 'y') =>
   (axes: AxisConfig<ScaleName, any, ChartsXAxisProps | ChartsYAxisProps>[] = []) =>
     axes.reduce<Record<AxisId, DefaultizedZoomOptions>>((acc, v) => {

@@ -8,7 +8,7 @@ import {
   getSVGPoint,
   selectorChartDrawingArea,
   ZoomData,
-  creatZoomLookup,
+  createZoomLookup,
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
 import { UseChartProZoomSignature } from './useChartProZoom.types';
@@ -379,8 +379,8 @@ useChartProZoom.getDefaultizedParams = ({ params }) => {
 
 useChartProZoom.getInitialState = (params) => {
   const optionsLookup = {
-    ...creatZoomLookup('x')(params.defaultizedXAxis),
-    ...creatZoomLookup('y')(params.defaultizedYAxis),
+    ...createZoomLookup('x')(params.defaultizedXAxis),
+    ...createZoomLookup('y')(params.defaultizedYAxis),
   };
   return {
     zoom: {

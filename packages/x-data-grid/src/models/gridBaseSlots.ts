@@ -59,6 +59,48 @@ export type MenuItemProps = {
   style?: React.CSSProperties;
 };
 
+type BasePlacement = 'top' | 'bottom' | 'left' | 'right';
+type VariationPlacement =
+  | 'top-start'
+  | 'top-end'
+  | 'bottom-start'
+  | 'bottom-end'
+  | 'right-start'
+  | 'right-end'
+  | 'left-start'
+  | 'left-end';
+type AutoPlacement = 'auto' | 'auto-start' | 'auto-end';
+type Placement = AutoPlacement | BasePlacement | VariationPlacement;
+
+type ClickAwayMouseEventHandler =
+  | 'onClick'
+  | 'onMouseDown'
+  | 'onMouseUp'
+  | 'onPointerDown'
+  | 'onPointerUp';
+type ClickAwayTouchEventHandler = 'onTouchStart' | 'onTouchEnd';
+
+export type PopperProps = {
+  open: boolean;
+  children?: React.ReactNode;
+  className?: string;
+  clickAwayTouchEvent?: false | ClickAwayTouchEventHandler;
+  clickAwayMouseEvent?: false | ClickAwayMouseEventHandler;
+  flip?: boolean;
+  focusTrap?: boolean;
+  focusTrapEnabled?: boolean;
+  onExited?: (node: HTMLElement | null) => void;
+  onClickAway?: (event: MouseEvent | TouchEvent) => void;
+  onDidShow?: () => void;
+  onDidHide?: () => void;
+  id?: string;
+  ref?: Ref;
+  target?: Element | null;
+  transition?: boolean;
+  /** @default 'bottom' */
+  placement?: Placement;
+};
+
 export type CircularProgressProps = {
   /**
    * Pixels or CSS value.
