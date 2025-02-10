@@ -1,5 +1,5 @@
-import { GridControlledStateReasonLookup } from '../events/gridEventLookup';
-import { GridApiCommunity } from './gridApiCommunity';
+import type { GridControlledStateReasonLookup } from '../events/gridEventLookup';
+import type { GridApiCommon } from './gridApiCommon';
 
 /**
  * Additional details passed to the callbacks
@@ -12,5 +12,5 @@ export interface GridCallbackDetails<K extends keyof GridControlledStateReasonLo
   /**
    * GridApi that let you manipulate the grid.
    */
-  api: GridApiCommunity;
+  api: GridApiCommon;
 }

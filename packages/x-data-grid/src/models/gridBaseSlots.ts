@@ -71,6 +71,40 @@ export type CircularProgressProps = {
 
 export type LinearProgressProps = {};
 
+export type SelectProps = {
+  ref?: Ref;
+  id?: string;
+  value?: any;
+  open?: boolean;
+  error?: boolean;
+  disabled?: boolean;
+  onChange?: React.ChangeEventHandler;
+  onFocus?: React.FocusEventHandler;
+  onBlur?: React.FocusEventHandler;
+  onKeyDown?: React.KeyboardEventHandler;
+  onOpen?: (event: React.SyntheticEvent) => void;
+  onClose?: (
+    event: React.KeyboardEvent,
+    reason: 'backdropClick' | 'escapeKeyDown' | 'tabKeyDown',
+  ) => void;
+  label?: React.ReactNode;
+  labelId?: string;
+  native?: boolean;
+  fullWidth?: boolean;
+  size?: 'small' | 'medium';
+  slotProps?: {
+    htmlInput?: { ref?: Ref } & React.InputHTMLAttributes<HTMLInputElement>;
+  };
+  style?: React.CSSProperties;
+  children?: React.ReactNode;
+};
+
+export type SelectOptionProps = {
+  native: boolean;
+  value: any;
+  children?: React.ReactNode;
+};
+
 export type SkeletonProps = {
   variant?: 'circular' | 'text';
   width?: number | string;

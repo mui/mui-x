@@ -82,8 +82,10 @@ import {
   rowPinningStateInitializer,
 } from '../hooks/features/rowPinning/useGridRowPinning';
 import { useGridRowPinningPreProcessors } from '../hooks/features/rowPinning/useGridRowPinningPreProcessors';
-import { useGridDataSourcePro as useGridDataSource } from '../hooks/features/dataSource/useGridDataSourcePro';
-import { dataSourceStateInitializer } from '../hooks/features/dataSource/useGridDataSourceBase';
+import {
+  useGridDataSourcePro as useGridDataSource,
+  dataSourceStateInitializer,
+} from '../hooks/features/dataSource/useGridDataSourcePro';
 import { useGridDataSourceLazyLoader } from '../hooks/features/serverSideLazyLoader/useGridDataSourceLazyLoader';
 
 export const useDataGridProComponent = (
