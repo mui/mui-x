@@ -2,7 +2,7 @@ import { RefObject } from '@mui/x-internals/types';
 import type { GridCallbackDetails } from './api/gridCallbackDetails';
 import type { GridEventLookup, GridControlledStateEventLookup } from './events';
 import type { OutputSelector } from '../utils/createSelector';
-import { GridStateCommunity } from './gridStateCommunity';
+import type { GridStateCommunity } from './gridStateCommunity';
 
 export interface GridControlStateItem<
   State extends GridStateCommunity,

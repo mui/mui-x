@@ -1,4 +1,3 @@
-import { RefObject } from '@mui/x-internals/types';
 import type { GridColumnApi } from './gridColumnApi';
 import type { GridColumnMenuApi } from './gridColumnMenuApi';
 import type { GridCoreApi, GridCorePrivateApi } from './gridCoreApi';
