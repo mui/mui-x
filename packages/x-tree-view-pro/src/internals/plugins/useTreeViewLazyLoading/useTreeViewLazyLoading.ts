@@ -49,6 +49,9 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
   const cacheRef = useLazyRef<DataSourceCache, void>(() => getCache(params.dataSourceCache));
 
   const setDataSourceLoading = useEventCallback((itemId: TreeViewItemId, isLoading: boolean) => {
+    if (!isLazyLoadingEnabled) {
+      return;
+    }
     store.update((prevState) => {
       if (!prevState.dataSource.loading[itemId] && !isLoading) {
         return prevState;
@@ -66,6 +69,9 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
   });
 
   const setDataSourceError = (itemId: TreeViewItemId, error: Error | null) => {
+    if (!isLazyLoadingEnabled) {
+      return;
+    }
     store.update((prevState) => {
       const errors = { ...prevState.dataSource.errors };
       if (error === null && errors[itemId] !== undefined) {
@@ -80,15 +86,19 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
   };
 
   const resetDataSourceState = useEventCallback(() => {
-    store.update((prevState) => {
-      return {
-        ...prevState,
-        dataSource: INITIAL_STATE,
-      };
-    });
+    if (!isLazyLoadingEnabled) {
+      return;
+    }
+    store.update((prevState) => ({
+      ...prevState,
+      dataSource: INITIAL_STATE,
+    }));
   });
 
   const fetchItems = useEventCallback(async (parentIds?: TreeViewItemId[]) => {
+    if (!isLazyLoadingEnabled) {
+      return;
+    }
     const getChildrenCount = params.dataSource?.getChildrenCount || (() => 0);
 
     const getTreeItems = params.dataSource?.getTreeItems;
@@ -138,6 +148,9 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
   });
 
   const fetchItemChildren = useEventCallback(async (id: TreeViewItemId) => {
+    if (!isLazyLoadingEnabled) {
+      return;
+    }
     const getChildrenCount = params.dataSource?.getChildrenCount || (() => 0);
 
     const getTreeItems = params.dataSource?.getTreeItems;
@@ -240,10 +253,9 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
     [params.dataSource],
   );
 
-  if (!isLazyLoadingEnabled) {
-    return {} as UseTreeViewLazyLoadingSignature;
+  if (isLazyLoadingEnabled) {
+    instance.preventItemUpdates();
   }
-  instance.preventItemUpdates();
 
   return {
     instance: {
@@ -268,7 +280,7 @@ useTreeViewLazyLoading.getDefaultizedParams = ({ params, experimentalFeatures })
       ]);
     }
   }
-  const defaultDataSource = params?.dataSource || {
+  const defaultDataSource = params?.dataSource ?? {
     getChildrenCount: () => 0,
     getTreeItems: () => Promise.resolve([]),
   };
