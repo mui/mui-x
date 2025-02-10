@@ -30,9 +30,11 @@ export type ButtonProps = {
 export type CheckboxProps = {
   ref?: Ref<HTMLButtonElement>;
   id?: string;
+  autoFocus?: boolean;
   checked?: boolean;
   className?: string;
   disabled?: boolean;
+  fullWidth?: boolean;
   indeterminate?: boolean;
   inputRef?: React.Ref<HTMLInputElement>;
   name?: string;
@@ -41,6 +43,7 @@ export type CheckboxProps = {
   onChange?: React.ChangeEventHandler;
   onKeyDown?: React.KeyboardEventHandler;
   size?: 'small' | 'medium';
+  density?: 'standard' | 'compact';
   slotProps?: {
     htmlInput?: React.InputHTMLAttributes<HTMLInputElement>;
   };

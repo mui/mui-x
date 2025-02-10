@@ -280,7 +280,9 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
             name={column.field}
             inputRef={isFirstHideableColumn(column) ? firstSwitchRef : undefined}
             label={column.headerName || column.field}
-            size='medium'
+            size="medium"
+            density="compact"
+            fullWidth
             {...rootProps.slotProps?.baseCheckbox}
           />
         ))}
