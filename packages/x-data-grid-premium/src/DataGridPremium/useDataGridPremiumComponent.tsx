@@ -154,7 +154,6 @@ export const useDataGridPremiumComponent = (
   useGridHeaderFiltering(apiRef, props);
   useGridTreeData(apiRef, props);
   useGridAggregation(apiRef, props);
-  useGridDataSource(apiRef, props);
   useGridKeyboardNavigation(apiRef, props);
   useGridRowSelection(apiRef, props);
   useGridCellSelection(apiRef, props);
