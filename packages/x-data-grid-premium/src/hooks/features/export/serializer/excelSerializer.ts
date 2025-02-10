@@ -29,6 +29,8 @@ import {
   ValueOptionsData,
 } from './utils';
 
+export type { ExcelExportInitEvent } from './utils';
+
 const getFormattedValueOptions = (
   colDef: GridSingleSelectColDef,
   row: GridValidRowModel,
