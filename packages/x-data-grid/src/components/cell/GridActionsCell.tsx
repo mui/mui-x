@@ -235,7 +235,6 @@ function GridActionsCell(props: GridActionsCellProps) {
             className={gridClasses.menuList}
             onKeyDown={handleListKeyDown}
             aria-labelledby={buttonId}
-            variant="menu"
             autoFocusItem
           >
             {menuButtons.map((button, index) =>
