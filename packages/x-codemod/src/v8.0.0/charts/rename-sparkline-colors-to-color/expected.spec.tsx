@@ -10,7 +10,7 @@ function Chart() {
   // prettier-ignore
   return (
     (<React.Fragment>
-      <SparkLineChart data={data} color={['red']?.[0]} />
+      <SparkLineChart data={data} color={'red'} />
       <SparkLineChart data={data} color={typeof fn === "function" ? mode => fn(mode)?.[0] : fn} />
       <SparkLineChart
         data={data}

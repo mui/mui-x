@@ -39,9 +39,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
       let colorAttributeExpression;
 
       if (colorsAttributeExpression?.type === 'ArrayExpression') {
-        colorAttributeExpression = j.chainExpression(
-          j.optionalMemberExpression(colorsAttributeExpression, j.literal(0)),
-        );
+        colorAttributeExpression = colorsAttributeExpression.elements[0];
       } else if (colorsAttributeExpression?.type === 'Identifier') {
         colorAttributeExpression = j.conditionalExpression(
           j.binaryExpression(
