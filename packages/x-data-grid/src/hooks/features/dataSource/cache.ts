@@ -1,4 +1,4 @@
-import { GridGetRowsParams, GridGetRowsResponse } from '@mui/x-data-grid/internals';
+import type { GridGetRowsParams, GridGetRowsResponse } from '../../../models/gridDataSource';
 
 export type GridDataSourceCacheDefaultConfig = {
   /**
@@ -17,14 +17,7 @@ export type GridDataSourceCacheDefaultConfig = {
 };
 
 export function getKeyDefault(params: GridGetRowsParams) {
-  return JSON.stringify([
-    params.filterModel,
-    params.sortModel,
-    params.groupKeys,
-    params.groupFields,
-    params.start,
-    params.end,
-  ]);
+  return JSON.stringify([params.filterModel, params.sortModel, params.start, params.end]);
 }
 
 export class GridDataSourceCacheDefault {
