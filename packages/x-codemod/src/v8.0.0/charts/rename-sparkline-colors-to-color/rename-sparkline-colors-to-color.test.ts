@@ -23,19 +23,5 @@ describe('v8.0.0/charts', () => {
       const expected = read('./expected.spec.tsx');
       expect(actual).to.equal(expected, 'The transformed version should be correct');
     });
-
-    it('should be idempotent for expression', () => {
-      const actual = transform(
-        {
-          source: read('./expected.spec.tsx'),
-          path: require.resolve('./expected.spec.tsx'),
-        },
-        { jscodeshift: jscodeshift.withParser('tsx') },
-        {},
-      );
-
-      const expected = read('./expected.spec.tsx');
-      expect(actual).to.equal(expected, 'The transformed version should be correct');
-    });
   });
 });

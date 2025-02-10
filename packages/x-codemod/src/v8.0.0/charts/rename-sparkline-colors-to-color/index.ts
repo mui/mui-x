@@ -23,18 +23,26 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   return colorAttributes
     .forEach((attribute) => {
       if (attribute.node.value?.type !== 'JSXExpressionContainer') {
+        j(attribute).insertBefore(
+          j.commentBlock(
+            " mui-x-codemod: We renamed the `colors` prop to `color`, but didn't change the value. Please ensure sure this prop receives a string or a function that returns a string. ",
+          ),
+        );
         return;
       }
 
-      const colorsAttributeExpression = attribute.node.value.expression;
+      const colorsAttributeExpression =
+        attribute.node.value.type === 'JSXExpressionContainer'
+          ? attribute.node.value.expression
+          : null;
 
       let colorAttributeExpression;
 
-      if (colorsAttributeExpression.type === 'ArrayExpression') {
+      if (colorsAttributeExpression?.type === 'ArrayExpression') {
         colorAttributeExpression = j.chainExpression(
           j.optionalMemberExpression(colorsAttributeExpression, j.literal(0)),
         );
-      } else if (colorsAttributeExpression.type === 'Identifier') {
+      } else if (colorsAttributeExpression?.type === 'Identifier') {
         colorAttributeExpression = j.conditionalExpression(
           j.binaryExpression(
             '===',
@@ -52,21 +60,11 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
           ),
           colorsAttributeExpression,
         );
-      } else if (colorsAttributeExpression.type === 'ArrowFunctionExpression') {
-        colorAttributeExpression = j.arrowFunctionExpression(
-          [j.identifier('mode')],
-          j.chainExpression(
-            j.optionalMemberExpression(
-              j.callExpression(colorsAttributeExpression, [j.identifier('mode')]),
-              j.literal(0),
-            ),
-          ),
-        );
       } else {
         // Don't know how to handle this case
       }
 
-      // Only apply transformation if we know how to handle it
+      // Only transform the value if we know how to handle it, otherwise rename the prop and add a comment
       if (colorAttributeExpression) {
         j(attribute).replaceWith(
           j.jsxAttribute(
@@ -74,6 +72,19 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
             j.jsxExpressionContainer(colorAttributeExpression),
           ),
         );
+      } else {
+        j(attribute)
+          .replaceWith(
+            j.jsxAttribute(
+              j.jsxIdentifier(props[attribute.node.name.name as string]),
+              attribute.node.value,
+            ),
+          )
+          .insertBefore(
+            j.commentBlock(
+              " mui-x-codemod: We renamed the `colors` prop to `color`, but didn't change the value. Please ensure sure this prop receives a string or a function that returns a string. ",
+            ),
+          );
       }
     })
     .toSource(printOptions);
