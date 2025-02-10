@@ -4,14 +4,14 @@ import { act, createRenderer, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { RefObject } from '@mui/x-internals/types';
 import {
-  DataGridPro,
-  DataGridProProps,
+  DataGrid,
+  DataGridProps,
   GridApi,
   GridDataSource,
   GridGetRowsParams,
   GridGetRowsResponse,
   useGridApiRef,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid';
 import { spy } from 'sinon';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 import { getKeyDefault } from '../hooks/features/dataSource/cache';
@@ -44,7 +44,7 @@ const pageSizeOptions = [10, 20];
 const serverOptions = { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false };
 
 // Needs layout
-describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
+describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
   const { render } = createRenderer();
   const fetchRowsSpy = spy();
 
@@ -59,7 +59,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
     return null;
   }
 
-  function TestDataSource(props: Partial<DataGridProProps> & { shouldRequestsFail?: boolean }) {
+  function TestDataSource(props: Partial<DataGridProps> & { shouldRequestsFail?: boolean }) {
     apiRef = useGridApiRef();
     mockServer = useMockServer(
       { rowLength: 100, maxColumns: 1 },
@@ -98,7 +98,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
     return (
       <div style={{ width: 300, height: 300 }}>
         <Reset />
-        <DataGridPro
+        <DataGrid
           apiRef={apiRef}
           columns={mockServer.columns}
           unstable_dataSource={dataSource}
