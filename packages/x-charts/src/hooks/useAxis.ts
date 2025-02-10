@@ -9,14 +9,14 @@ import { useStore } from '../internals/store/useStore';
 import { AxisId } from '../models/axis';
 
 /**
- * Get all the X axes.
+ * Get all the x-axes.
  *
  * - `xAxis` is an object with the shape `{ [axisId]: axis }`.
  * - `xAxisIds` is an array of axis IDs.
  *
  * If access to a specific X axis is needed, use the `useXAxis` hook instead.
  *
- * @returns `{ xAxis, xAxisIds }` - The X axes and their IDs.
+ * @returns `{ xAxis, xAxisIds }` - The x-axes and their IDs.
  */
 export function useXAxes() {
   const store = useStore<[UseChartCartesianAxisSignature]>();
@@ -26,14 +26,14 @@ export function useXAxes() {
 }
 
 /**
- * Get all the Y axes.
+ * Get all the y-axes.
  *
  * - `yAxis` is an object with the shape `{ [axisId]: axis }`.
  * - `yAxisIds` is an array of axis IDs.
  *
  * If access to a specific Y axis is needed, use the `useYAxis` hook instead.
  *
- * @returns `{ yAxis, yAxisIds }` - The Y axes and their IDs.
+ * @returns `{ yAxis, yAxisIds }` - The y-axes and their IDs.
  */
 export function useYAxes() {
   const store = useStore<[UseChartCartesianAxisSignature]>();
