@@ -28,6 +28,7 @@ import {
   useChartHighlight,
   UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
+import { PieChartPluginSignatures } from './PieChart.plugins';
 
 export interface PieChartSlots
   extends PiePlotSlots,
@@ -114,7 +115,7 @@ const PieChart = React.forwardRef(function PieChart(
 
   const { chartDataProviderProps, chartsSurfaceProps } = useChartContainerProps<
     'pie',
-    [UseChartInteractionSignature, UseChartHighlightSignature]
+    PieChartPluginSignatures
   >(
     {
       ...other,
@@ -134,7 +135,7 @@ const PieChart = React.forwardRef(function PieChart(
 
   const Tooltip = slots?.tooltip ?? ChartsTooltip;
   return (
-    <ChartDataProvider {...chartDataProviderProps}>
+    <ChartDataProvider<'pie', PieChartPluginSignatures> {...chartDataProviderProps}>
       <ChartsWrapper
         legendPosition={props.slotProps?.legend?.position}
         legendDirection={props?.slotProps?.legend?.direction ?? 'vertical'}

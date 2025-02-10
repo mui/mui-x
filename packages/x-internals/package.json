@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-internals",
-  "version": "8.0.0-alpha.10",
+  "version": "8.0.0-alpha.11",
   "description": "Utility functions for the MUI X packages (internal use only).",
   "author": "MUI Team",
   "license": "MIT",
