@@ -134,6 +134,7 @@ GridPanel.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  flip: PropTypes.bool,
   id: PropTypes.string,
   open: PropTypes.bool.isRequired,
   target: PropTypes /* @typescript-to-proptypes-ignore */.any,
