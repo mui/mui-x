@@ -15,7 +15,7 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
-import { getDefaultGridFilterModel } from './gridFilterState';
+import { defaultGridFilterLookup, getDefaultGridFilterModel } from './gridFilterState';
 import { gridFilterModelSelector } from './gridFilterSelector';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { gridRowsLookupSelector } from '../rows';
@@ -46,9 +46,7 @@ export const filterStateInitializer: GridStateInitializer<
     ...state,
     filter: {
       filterModel: sanitizeFilterModel(filterModel, props.disableMultipleColumnsFiltering, apiRef),
-      filteredRowsLookup: {},
-      filteredChildrenCountLookup: {},
-      filteredDescendantCountLookup: {},
+      ...defaultGridFilterLookup,
     },
     visibleRowsLookup: {},
   };
@@ -423,12 +421,12 @@ export const useGridFilter = (
 
   const flatFilteringMethod = React.useCallback<GridStrategyProcessor<'filtering'>>(
     (params) => {
-      if (props.filterMode !== 'client' || !params.isRowMatchingFilters) {
-        return {
-          filteredRowsLookup: {},
-          filteredChildrenCountLookup: {},
-          filteredDescendantCountLookup: {},
-        };
+      if (
+        props.filterMode !== 'client' ||
+        !params.isRowMatchingFilters ||
+        (!params.filterModel.items.length && !params.filterModel.quickFilterValues?.length)
+      ) {
+        return defaultGridFilterLookup;
       }
 
       const dataRowIdToModelLookup = gridRowsLookupSelector(apiRef);
@@ -456,7 +454,9 @@ export const useGridFilter = (
           filterCache,
         );
 
-        filteredRowsLookup[id] = isRowPassing;
+        if (!isRowPassing) {
+          filteredRowsLookup[id] = isRowPassing;
+        }
       }
 
       const footerId = 'auto-generated-group-footer-root';

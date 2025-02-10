@@ -1,10 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { GridColumnMenuItemProps, useGridSelector } from '@mui/x-data-grid-pro';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
 import { unstable_useId as useId } from '@mui/utils';
-import { SelectChangeEvent } from '@mui/material/Select';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import {
@@ -55,7 +52,7 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
     return '';
   }, [rootProps.aggregationFunctions, rootProps.unstable_dataSource, aggregationModel, colDef]);
 
-  const handleAggregationItemChange = (event: SelectChangeEvent<unknown>) => {
+  const handleAggregationItemChange = (event: React.ChangeEvent<unknown>) => {
     const newAggregationItem = (event.target as HTMLSelectElement | null)?.value || undefined;
     const currentModel = gridAggregationModelSelector(apiRef);
     const { [colDef.field]: columnItem, ...otherColumnItems } = currentModel;
@@ -88,53 +85,49 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
       iconStart={<rootProps.slots.columnMenuAggregationIcon fontSize="small" />}
       onKeyDown={handleMenuItemKeyDown}
     >
-      <FormControl size="small" fullWidth sx={{ minWidth: 150 }}>
-        <InputLabel id={`${id}-label`} htmlFor={`${id}-input`}>
-          {label}
-        </InputLabel>
-        <rootProps.slots.baseSelect
-          labelId={`${id}-label`}
-          inputRef={inputRef}
-          id={`${id}-input`}
-          value={selectedAggregationRule}
-          label={label}
-          color="primary"
-          onChange={handleAggregationItemChange}
-          MenuProps={{
-            PaperProps: {
-              onKeyDown: handleSelectKeyDown,
-            },
-          }}
-          onBlur={(event) => event.stopPropagation()}
+      <rootProps.slots.baseSelect
+        labelId={`${id}-label`}
+        id={`${id}-input`}
+        value={selectedAggregationRule}
+        label={label}
+        onChange={handleAggregationItemChange}
+        onKeyDown={handleSelectKeyDown}
+        onBlur={(event) => event.stopPropagation()}
+        native={isBaseSelectNative}
+        fullWidth
+        size="small"
+        style={{ minWidth: 150 }}
+        slotProps={{
+          htmlInput: {
+            ref: inputRef,
+          },
+        }}
+        {...baseSelectProps}
+      >
+        <rootProps.slots.baseSelectOption
+          {...baseSelectOptionProps}
           native={isBaseSelectNative}
-          fullWidth
-          {...baseSelectProps}
+          value=""
         >
+          ...
+        </rootProps.slots.baseSelectOption>
+        {availableAggregationFunctions.map((aggFunc) => (
           <rootProps.slots.baseSelectOption
             {...baseSelectOptionProps}
+            key={aggFunc}
+            value={aggFunc}
             native={isBaseSelectNative}
-            value=""
           >
-            ...
+            {getAggregationFunctionLabel({
+              apiRef,
+              aggregationRule: {
+                aggregationFunctionName: aggFunc,
+                aggregationFunction: rootProps.aggregationFunctions[aggFunc],
+              },
+            })}
           </rootProps.slots.baseSelectOption>
-          {availableAggregationFunctions.map((aggFunc) => (
-            <rootProps.slots.baseSelectOption
-              {...baseSelectOptionProps}
-              key={aggFunc}
-              value={aggFunc}
-              native={isBaseSelectNative}
-            >
-              {getAggregationFunctionLabel({
-                apiRef,
-                aggregationRule: {
-                  aggregationFunctionName: aggFunc,
-                  aggregationFunction: rootProps.aggregationFunctions[aggFunc],
-                },
-              })}
-            </rootProps.slots.baseSelectOption>
-          ))}
-        </rootProps.slots.baseSelect>
-      </FormControl>
+        ))}
+      </rootProps.slots.baseSelect>
     </rootProps.slots.baseMenuItem>
   );
 }
