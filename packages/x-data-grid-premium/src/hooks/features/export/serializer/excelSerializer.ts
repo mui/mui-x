@@ -36,25 +36,39 @@ const getFormattedValueOptions = (
   row: GridValidRowModel,
   valueOptions: ValueOptions[],
   api: GridApi,
+  callback?: (value: any, index: number) => void,
 ) => {
   if (!colDef.valueOptions) {
     return [];
   }
-  let valueOptionsFormatted = valueOptions;
+  const valueFormatter = colDef.valueFormatter;
+  const valueOptionsFormatted = [];
+  const hasCallback = typeof callback === 'function';
 
-  if (colDef.valueFormatter) {
-    valueOptionsFormatted = valueOptionsFormatted.map((option) => {
+  for (let i = 0; i < valueOptions.length; i += 1) {
+    const option = valueOptions[i];
+    let value: any;
+    if (valueFormatter) {
       if (typeof option === 'object') {
-        return option;
+        value = option.label;
+      } else {
+        value = String(colDef.valueFormatter!(option as never, row, colDef, { current: api }));
       }
-
-      return String(colDef.valueFormatter!(option as never, row, colDef, { current: api }));
-    });
+    } else {
+      value = typeof option === 'object' ? option.label : option;
+    }
+    if (hasCallback) {
+      callback(value, i);
+    } else {
+      valueOptionsFormatted.push(value);
+    }
   }
-  return valueOptionsFormatted.map((option) =>
-    typeof option === 'object' ? option.label : option,
-  );
+
+  return valueOptionsFormatted;
 };
+
+const commaRegex = /,/g;
+const commaReplacement = 'CHAR(44)';
 
 /**
  * FIXME: This function mutates the colspan info, but colspan info assumes that the columns
@@ -116,20 +130,27 @@ export const serializeRowUnsafe = (
             row,
             field: cellParams.field,
           });
-          const formattedValueOptions = getFormattedValueOptions(
+
+          let formulae: string = '"';
+          getFormattedValueOptions(
             castColumn,
             row,
             valueOptions,
             apiRef.current,
+            (value, index) => {
+              const formatted = value.toString().replace(commaRegex, commaReplacement);
+              formulae += formatted;
+              if (index < valueOptions.length - 1) {
+                formulae += ',';
+              }
+            },
           );
+          formulae += '"';
+
           dataValidation[castColumn.field] = {
             type: 'list',
             allowBlank: true,
-            formulae: [
-              `"${formattedValueOptions
-                .map((x) => x.toString().replaceAll(',', 'CHAR(44)'))
-                .join(',')}"`,
-            ],
+            formulae: [formulae],
           };
         } else {
           const address = defaultValueOptionsFormulae[column.field].address;
