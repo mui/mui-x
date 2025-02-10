@@ -75,15 +75,16 @@ export const serializeRowUnsafe = (
   defaultValueOptionsFormulae: { [field: string]: { address: string } },
   options: Pick<BuildExcelOptions, 'escapeFormulas'>,
 ): SerializedRow => {
-  const row: SerializedRow['row'] = {};
+  const serializedRow: SerializedRow['row'] = {};
   const dataValidation: SerializedRow['dataValidation'] = {};
   const mergedCells: SerializedRow['mergedCells'] = [];
 
+  const row = apiRef.current.getRow(id);
   const rowNode = apiRef.current.getRowNode(id);
-  const outlineLevel = rowNode!.depth;
-  if (!rowNode) {
+  if (!row || !rowNode) {
     throw new Error(`No row with id #${id} found`);
   }
+  const outlineLevel = rowNode.depth;
   const hasColSpan = gridHasColSpanSelector(apiRef);
 
   if (hasColSpan) {
@@ -166,9 +167,9 @@ export const serializeRowUnsafe = (
           }
         }
         if (isObject<{ label: any }>(formattedValue)) {
-          row[castColumn.field] = formattedValue?.label;
+          serializedRow[castColumn.field] = formattedValue?.label;
         } else {
-          row[castColumn.field] = formattedValue as any;
+          serializedRow[castColumn.field] = formattedValue as any;
         }
         break;
       }
@@ -196,7 +197,7 @@ export const serializeRowUnsafe = (
             value.getSeconds(),
           ),
         );
-        row[column.field] = utcDate;
+        serializedRow[column.field] = utcDate;
         break;
       }
       case 'actions':
@@ -222,12 +223,12 @@ export const serializeRowUnsafe = (
     }
 
     if (typeof cellValue !== 'undefined') {
-      row[column.field] = cellValue;
+      serializedRow[column.field] = cellValue;
     }
   });
 
   return {
-    row,
+    row: serializedRow,
     dataValidation,
     outlineLevel,
     mergedCells,
