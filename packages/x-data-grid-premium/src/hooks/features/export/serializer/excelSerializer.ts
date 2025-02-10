@@ -79,8 +79,11 @@ export const serializeRowUnsafe = (
   const dataValidation: SerializedRow['dataValidation'] = {};
   const mergedCells: SerializedRow['mergedCells'] = [];
 
-  const firstCellParams = apiRef.current.getCellParams(id, columns[0].field);
-  const outlineLevel = firstCellParams.rowNode.depth;
+  const rowNode = apiRef.current.getRowNode(id);
+  const outlineLevel = rowNode!.depth;
+  if (!rowNode) {
+    throw new Error(`No row with id #${id} found`);
+  }
   const hasColSpan = gridHasColSpanSelector(apiRef);
 
   if (hasColSpan) {
@@ -107,20 +110,18 @@ export const serializeRowUnsafe = (
       });
     }
 
-    const cellParams = apiRef.current.getCellParams(id, column.field);
-
     let cellValue: string | undefined;
 
-    switch (cellParams.colDef.type) {
+    switch (column.type) {
       case 'singleSelect': {
-        const castColumn = cellParams.colDef as GridSingleSelectColDef;
+        const castColumn = column as GridSingleSelectColDef;
         if (typeof castColumn.valueOptions === 'function') {
           // If value option depends on the row, set specific options to the cell
           // This dataValidation is buggy with LibreOffice and does not allow to have coma
           const valueOptions = castColumn.valueOptions({
             id,
             row,
-            field: cellParams.field,
+            field: column.field,
           });
 
           let formulae: string = '"';
@@ -157,7 +158,7 @@ export const serializeRowUnsafe = (
 
         const formattedValue = apiRef.current.getCellParams(id, castColumn.field).formattedValue;
         if (process.env.NODE_ENV !== 'production') {
-          if (String(cellParams.formattedValue) === '[object Object]') {
+          if (String(formattedValue) === '[object Object]') {
             warnOnce([
               'MUI X: When the value of a field is an object or a `renderCell` is provided, the Excel export might not display the value correctly.',
               'You can provide a `valueFormatter` with a string representation to be used.',
@@ -203,7 +204,7 @@ export const serializeRowUnsafe = (
       default:
         cellValue = apiRef.current.getCellParams(id, column.field).formattedValue as any;
         if (process.env.NODE_ENV !== 'production') {
-          if (String(cellParams.formattedValue) === '[object Object]') {
+          if (String(cellValue) === '[object Object]') {
             warnOnce([
               'MUI X: When the value of a field is an object or a `renderCell` is provided, the Excel export might not display the value correctly.',
               'You can provide a `valueFormatter` with a string representation to be used.',
