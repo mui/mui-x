@@ -4,6 +4,7 @@ import MUICheckbox from '@mui/material/Checkbox';
 import MUIChip from '@mui/material/Chip';
 import MUICircularProgress from '@mui/material/CircularProgress';
 import MUIDivider from '@mui/material/Divider';
+import MUIFocusTrap from '@mui/material/Unstable_TrapFocus';
 import MUILinearProgress from '@mui/material/LinearProgress';
 import MUIListItemIcon from '@mui/material/ListItemIcon';
 import MUIListItemText from '@mui/material/ListItemText';
@@ -16,7 +17,10 @@ import MUIButton from '@mui/material/Button';
 import MUIIconButton from '@mui/material/IconButton';
 import MUIInputAdornment from '@mui/material/InputAdornment';
 import MUITooltip from '@mui/material/Tooltip';
-import MUIPopper from '@mui/material/Popper';
+import MUIPopper, { PopperProps as MUIPopperProps } from '@mui/material/Popper';
+import MUIClickAwayListener from '@mui/material/ClickAwayListener';
+import MUIGrow from '@mui/material/Grow';
+import MUIPaper from '@mui/material/Paper';
 import MUIInputLabel from '@mui/material/InputLabel';
 import MUISkeleton from '@mui/material/Skeleton';
 import { GridColumnUnsortedIcon } from './icons/GridColumnUnsortedIcon';
@@ -50,6 +54,7 @@ import {
 import type { GridIconSlotsComponent } from '../models';
 import type { GridBaseSlots } from '../models/gridSlotsComponent';
 import type { GridSlotProps } from '../models/gridSlotsComponentsProps';
+import type { PopperProps } from '../models/gridBaseSlots';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 const iconSlots: GridIconSlotsComponent = {
@@ -105,7 +110,7 @@ const baseSlots: GridBaseSlots = {
   baseIconButton: MUIIconButton,
   baseInputAdornment: MUIInputAdornment,
   baseTooltip: MUITooltip,
-  basePopper: MUIPopper,
+  basePopper: BasePopper,
   baseInputLabel: MUIInputLabel,
   baseSelect: BaseSelect,
   baseSelectOption: BaseSelectOption,
@@ -151,6 +156,112 @@ function BaseTextField(props: GridSlotProps['baseTextField']) {
         ...(slotProps as any)?.inputLabel,
       }}
     />
+  );
+}
+
+const transformOrigin = {
+  'bottom-start': 'top left',
+  'bottom-end': 'top right',
+};
+
+function BasePopper(props: GridSlotProps['basePopper']) {
+  const { flip, onDidShow, onDidHide } = props;
+  const modifiers = React.useMemo(() => {
+    const result = [] as NonNullable<MUIPopperProps['modifiers']>;
+    if (flip) {
+      result.push({
+        name: 'flip',
+        enabled: true,
+        options: {
+          rootBoundary: 'document',
+        },
+      });
+    }
+    if (onDidShow || onDidHide) {
+      result.push({
+        name: 'isPlaced',
+        enabled: true,
+        phase: 'main' as const,
+        fn: () => {
+          onDidShow?.();
+        },
+        effect: () => () => {
+          onDidHide?.();
+        },
+      });
+    }
+    return result;
+  }, [flip, onDidShow, onDidHide]);
+
+  let content: any;
+  if (!props.transition) {
+    content = wrappers(props, props.children);
+  } else {
+    const handleExited = (popperOnExited: (() => void) | undefined) => (node: HTMLElement) => {
+      if (popperOnExited) {
+        popperOnExited();
+      }
+
+      if (props.onExited) {
+        props.onExited(node);
+      }
+    };
+
+    content = ({ TransitionProps, placement }: any) =>
+      wrappers(
+        props,
+        <MUIGrow
+          {...TransitionProps}
+          style={{ transformOrigin: transformOrigin[placement as keyof typeof transformOrigin] }}
+          onExited={handleExited(TransitionProps?.onExited)}
+        >
+          <MUIPaper>{props.children}</MUIPaper>
+        </MUIGrow>,
+      );
+  }
+
+  return (
+    <MUIPopper
+      id={props.id}
+      className={props.className}
+      open={props.open}
+      anchorEl={props.target as any}
+      transition={props.transition}
+      placement={props.placement}
+      modifiers={modifiers}
+    >
+      {content}
+    </MUIPopper>
+  );
+}
+
+function wrappers(props: PopperProps, content: any) {
+  return focusTrapWrapper(props, clickAwayWrapper(props, content));
+}
+
+function clickAwayWrapper(props: PopperProps, content: any) {
+  if (props.onClickAway === undefined) {
+    return content;
+  }
+  return (
+    <MUIClickAwayListener
+      onClickAway={props.onClickAway as any}
+      touchEvent={props.clickAwayTouchEvent}
+      mouseEvent={props.clickAwayMouseEvent}
+    >
+      {content}
+    </MUIClickAwayListener>
+  );
+}
+
+function focusTrapWrapper(props: PopperProps, content: any) {
+  if (props.focusTrap === undefined) {
+    return content;
+  }
+  return (
+    <MUIFocusTrap open disableEnforceFocus isEnabled={() => props.focusTrapEnabled ?? true}>
+      {content}
+    </MUIFocusTrap>
   );
 }
 
