@@ -1170,8 +1170,8 @@ interface DataGridPremiumComponent {
 }
 
 /**
- * Demos:
- * - [DataGridPremium](https://mui.com/x/react-data-grid/demo/)
+ * Features:
+ * - [DataGridPremium](https://mui.com/x/react-data-grid/features/)
  *
  * API:
  * - [DataGridPremium API](https://mui.com/x/api/data-grid/data-grid-premium/)

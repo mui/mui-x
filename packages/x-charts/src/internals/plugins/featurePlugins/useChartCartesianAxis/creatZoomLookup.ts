@@ -1,11 +1,13 @@
-import { AxisId, DefaultizedZoomOptions } from '@mui/x-charts/internals';
-import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '@mui/x-charts/models';
+import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../../../../models';
+import { AxisId } from '../../../../models/axis';
 import { defaultizeZoom } from './defaultizeZoom';
+import { DefaultizedZoomOptions } from './useChartCartesianAxis.types';
 
 export const creatZoomLookup =
   (axisDirection: 'x' | 'y') =>
-  (axes: AxisConfig<ScaleName, any, ChartsXAxisProps | ChartsYAxisProps>[]) =>
+  (axes: AxisConfig<ScaleName, any, ChartsXAxisProps | ChartsYAxisProps>[] = []) =>
     axes.reduce<Record<AxisId, DefaultizedZoomOptions>>((acc, v) => {
+      // @ts-ignore
       const { zoom, id: axisId } = v;
       const defaultizedZoom = defaultizeZoom(zoom, axisId, axisDirection);
       if (defaultizedZoom) {
