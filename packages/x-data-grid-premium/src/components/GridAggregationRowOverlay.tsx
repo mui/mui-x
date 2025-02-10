@@ -1,19 +1,11 @@
 import * as React from 'react';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { styled } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
 import { getDataGridUtilityClass, useGridRootProps } from '@mui/x-data-grid-pro';
 import { GridSkeletonLoadingOverlayInner, useGridSelector } from '@mui/x-data-grid-pro/internals';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { gridAggregationModelSelector } from '../hooks/features/aggregation/gridAggregationSelectors';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
-
-const GridAggregationRowOverlayWrapper = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'AggregationRowOverlayWrapper',
-})({
-  backgroundColor: 'var(--DataGrid-pinnedBackground)',
-});
 
 type OwnerState = { classes: DataGridPremiumProcessedProps['classes'] };
 
@@ -37,7 +29,7 @@ const GridAggregationRowOverlay = forwardRef<HTMLDivElement, React.HTMLAttribute
     const visibleColumns = new Set(Object.keys(aggregationModel));
 
     return (
-      <GridAggregationRowOverlayWrapper className={classes.root}>
+      <div className={classes.root}>
         <GridSkeletonLoadingOverlayInner
           {...props}
           skeletonRowsCount={1}
@@ -45,7 +37,7 @@ const GridAggregationRowOverlay = forwardRef<HTMLDivElement, React.HTMLAttribute
           showFirstRowBorder
           ref={forwardedRef}
         />
-      </GridAggregationRowOverlayWrapper>
+      </div>
     );
   },
 );
