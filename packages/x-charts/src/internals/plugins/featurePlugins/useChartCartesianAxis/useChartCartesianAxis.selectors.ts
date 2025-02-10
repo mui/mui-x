@@ -10,7 +10,7 @@ import { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 import { ChartState } from '../../models/chart';
 import { createAxisFilterMapper, createGetAxisFilters } from './createAxisFilterMapper';
 import { ZoomAxisFilters, ZoomData } from './zoom.types';
-import { creatZoomLookup } from './creatZoomLookup';
+import { createZoomLookup } from './createZoomLookup';
 
 export const createZoomMap = (zoom: ZoomData[]) => {
   const zoomItemMap = new Map<AxisId, ZoomData>();
@@ -45,9 +45,15 @@ const selectorChartZoomMap = createSelector(
   (zoom) => zoom?.zoomData && createZoomMap(zoom?.zoomData),
 );
 
-const selectorChartXZoomOptionsLookup = createSelector(selectorChartRawXAxis, creatZoomLookup('x'));
+const selectorChartXZoomOptionsLookup = createSelector(
+  selectorChartRawXAxis,
+  createZoomLookup('x'),
+);
 
-const selectorChartYZoomOptionsLookup = createSelector(selectorChartRawYAxis, creatZoomLookup('y'));
+const selectorChartYZoomOptionsLookup = createSelector(
+  selectorChartRawYAxis,
+  createZoomLookup('y'),
+);
 
 export const selectorChartZoomOptionsLookup = createSelector(
   [selectorChartXZoomOptionsLookup, selectorChartYZoomOptionsLookup],
