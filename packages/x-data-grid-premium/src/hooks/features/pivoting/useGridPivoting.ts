@@ -15,13 +15,13 @@ import {
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useOnMount from '@mui/utils/useOnMount';
 import { useMounted } from '@mui/x-internals/useMounted';
+import { usePreviousProps } from '@mui/utils';
+import { RefObject } from '@mui/x-internals/types';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridAggregationModel } from '../aggregation';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import { isGroupingColumn } from '../rowGrouping';
-import { usePreviousProps } from '@mui/utils';
-import { RefObject } from '@mui/x-internals/types';
 
 export interface PivotModel {
   columns: { field: GridColDef['field']; sort?: 'asc' | 'desc'; hidden?: boolean }[];
@@ -316,12 +316,12 @@ export const useGridPivoting = ({
         rows,
         columns,
         pivotModel,
-        apiRef,
+        apiRef: apiRef as RefObject<GridApiPremium>,
       });
     }
 
     return nonPivotDataRef.current;
-  }, [isPivot, pivotModel, apiRef, isMounted, isLoading]);
+  }, [isPivot, pivotModel, apiRef, isMounted, isLoading, prevProps.isPivot]);
 
   useEnhancedEffect(() => {
     if (!isPivot && apiRef.current) {
