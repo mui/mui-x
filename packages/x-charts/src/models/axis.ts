@@ -141,6 +141,11 @@ export interface ChartsYAxisProps extends ChartsAxisProps {
 
 export interface ChartsXAxisProps extends ChartsAxisProps {
   /**
+   * The minimum gap in pixels between two tick labels.
+   * @default 8
+   */
+  minTickLabelGap?: number;
+  /**
    * Position of the axis.
    */
   position?: 'top' | 'bottom';
