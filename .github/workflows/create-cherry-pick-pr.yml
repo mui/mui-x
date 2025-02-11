@@ -26,3 +26,4 @@ jobs:
     with:
       target_branch: ${{ inputs.target_branch }}
       pr_number: ${{ inputs.pr_number }}
+      token: ${{ secrets.GITHUB_TOKEN }}
