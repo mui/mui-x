@@ -302,11 +302,11 @@ If `colors` is a function, it will be wrapped in another function that returns i
 If there are cases that the codemod cannot handle, you should see a comment with a `mui-x-codemod` prefix in the code.
 
 ```diff
-<SparkLineChart
-- colors={(mode) => (mode === 'light' ? ['black'] : ['white'])}
-+ /* mui-x-codemod: We renamed the `colors` prop to `color`, but didn't change the value. Please ensure sure this prop receives a string or a function that returns a string. */
-+ color={(mode) => (mode === 'light' ? ['black'] : ['white'])}
-/>
+ <SparkLineChart
+-  colors={(mode) => (mode === 'light' ? ['black'] : ['white'])}
++  /* mui-x-codemod: We renamed the `colors` prop to `color`, but didn't change the value. Please ensure sure this prop receives a string or a function that returns a string. */
++  color={(mode) => (mode === 'light' ? ['black'] : ['white'])}
+ />
 ```
 
 ### Data Grid codemods
