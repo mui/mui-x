@@ -128,8 +128,10 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
 
   React.useEffect(() => {
     store.update((prev) => {
-      const prevWidth = prev.dimensions.width + prev.dimensions.left + prev.dimensions.right;
-      const prevHeight = prev.dimensions.height + prev.dimensions.top + prev.dimensions.bottom;
+      const width =
+        params.width || prev.dimensions.width + prev.dimensions.left + prev.dimensions.right;
+      const height =
+        params.height || prev.dimensions.height + prev.dimensions.top + prev.dimensions.bottom;
 
       const axisSize = defaultizeMargin(
         {
@@ -149,10 +151,11 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
           left: params.margin.left + axisSize.left,
           bottom: params.margin.bottom + axisSize.bottom,
           right: params.margin.right + axisSize.right,
-          width:
-            prevWidth - params.margin.left - params.margin.right - axisSize.left - axisSize.right,
+          width: width - params.margin.left - params.margin.right - axisSize.left - axisSize.right,
           height:
-            prevHeight - params.margin.top - params.margin.bottom - axisSize.top - axisSize.bottom,
+            height - params.margin.top - params.margin.bottom - axisSize.top - axisSize.bottom,
+          propsHeight: params.height,
+          propsWidth: params.width,
         },
       };
     });
@@ -161,6 +164,8 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
     params.margin.right,
     params.margin.top,
     params.margin.bottom,
+    params.height,
+    params.width,
     usedAxisSizes.bottom,
     usedAxisSizes.left,
     usedAxisSizes.right,
