@@ -10,7 +10,7 @@ import {
 const selectorSeries = createSeriesSelectorsOfType('scatter');
 const selectorSeriesContext = createAllSeriesSelectorOfType('scatter');
 
-export type UseScatterSeriesReturnValue = ChartSeriesDefaultized<'scatter'> | undefined;
+export type UseScatterSeriesReturnValue = ChartSeriesDefaultized<'scatter'>;
 export type UseScatterSeriesContextReturnValue = ProcessedSeries['scatter'];
 
 /**
@@ -19,7 +19,7 @@ export type UseScatterSeriesContextReturnValue = ProcessedSeries['scatter'];
  * @param {SeriesId} seriesId The id of the series to get.
  * @returns {UseScatterSeriesReturnValue} the scatter series
  */
-export function useScatterSeries(seriesId: SeriesId): UseScatterSeriesReturnValue;
+export function useScatterSeries(seriesId: SeriesId): UseScatterSeriesReturnValue | undefined;
 /**
  * Get access to the internal state of scatter series.
  *

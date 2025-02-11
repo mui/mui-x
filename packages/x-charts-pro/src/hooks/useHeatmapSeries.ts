@@ -10,7 +10,7 @@ import {
 const selectorSeries = createSeriesSelectorsOfType('heatmap');
 const selectorSeriesContext = createAllSeriesSelectorOfType('heatmap');
 
-export type UseHeatmapSeriesReturnValue = ChartSeriesDefaultized<'heatmap'> | undefined;
+export type UseHeatmapSeriesReturnValue = ChartSeriesDefaultized<'heatmap'>;
 export type UseHeatmapSeriesContextReturnValue = ProcessedSeries['heatmap'];
 
 /**
@@ -19,7 +19,7 @@ export type UseHeatmapSeriesContextReturnValue = ProcessedSeries['heatmap'];
  * @param {SeriesId} seriesId The id of the series to get.
  * @returns {UseHeatmapSeriesReturnValue} the heatmap series
  */
-export function useHeatmapSeries(seriesId: SeriesId): UseHeatmapSeriesReturnValue;
+export function useHeatmapSeries(seriesId: SeriesId): UseHeatmapSeriesReturnValue | undefined;
 /**
  * Get access to the internal state of heatmap series.
  *

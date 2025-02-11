@@ -10,7 +10,7 @@ import {
 const selectorSeries = createSeriesSelectorsOfType('bar');
 const selectorSeriesContext = createAllSeriesSelectorOfType('bar');
 
-export type UseBarSeriesReturnValue = ChartSeriesDefaultized<'bar'> | undefined;
+export type UseBarSeriesReturnValue = ChartSeriesDefaultized<'bar'>;
 export type UseBarSeriesContextReturnValue = ProcessedSeries['bar'];
 
 /**
@@ -19,7 +19,7 @@ export type UseBarSeriesContextReturnValue = ProcessedSeries['bar'];
  * @param {SeriesId} seriesId The id of the series to get.
  * @returns {UseBarSeriesReturnValue} the bar series
  */
-export function useBarSeries(seriesId: SeriesId): UseBarSeriesReturnValue;
+export function useBarSeries(seriesId: SeriesId): UseBarSeriesReturnValue | undefined;
 /**
  * Get access to the internal state of bar series.
  *

@@ -5,9 +5,11 @@
  *
  * It is faster than `fastObjectShallowCompare` for arrays.
  *
+ * Returns true for instance equality, even if inputs are not arrays.
+ *
  * @returns true if arrays contain the same elements in the same order, false otherwise.
  */
-export function fastArrayCompare<T extends any[]>(a: T, b: T): boolean {
+export function fastArrayCompare<T extends any>(a: T, b: T): boolean {
   if (a === b) {
     return true;
   }

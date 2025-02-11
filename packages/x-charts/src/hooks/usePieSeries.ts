@@ -10,7 +10,7 @@ import {
 const selectorSeries = createSeriesSelectorsOfType('pie');
 const selectorSeriesContext = createAllSeriesSelectorOfType('pie');
 
-export type UsePieSeriesReturnValue = ChartSeriesDefaultized<'pie'> | undefined;
+export type UsePieSeriesReturnValue = ChartSeriesDefaultized<'pie'>;
 export type UsePieSeriesContextReturnValue = ProcessedSeries['pie'];
 
 /**
@@ -19,7 +19,7 @@ export type UsePieSeriesContextReturnValue = ProcessedSeries['pie'];
  * @param {SeriesId} seriesId The id of the series to get.
  * @returns {UsePieSeriesReturnValue} the pie series
  */
-export function usePieSeries(seriesId: SeriesId): UsePieSeriesReturnValue;
+export function usePieSeries(seriesId: SeriesId): UsePieSeriesReturnValue | undefined;
 /**
  * Get access to the internal state of pie series.
  *

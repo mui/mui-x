@@ -10,7 +10,7 @@ import {
 const selectorSeries = createSeriesSelectorsOfType('line');
 const selectorSeriesContext = createAllSeriesSelectorOfType('line');
 
-export type UseLineSeriesReturnValue = ChartSeriesDefaultized<'line'> | undefined;
+export type UseLineSeriesReturnValue = ChartSeriesDefaultized<'line'>;
 export type UseLineSeriesContextReturnValue = ProcessedSeries['line'];
 
 /**
@@ -19,7 +19,7 @@ export type UseLineSeriesContextReturnValue = ProcessedSeries['line'];
  * @param {SeriesId} seriesId The id of the series to get.
  * @returns {UseLineSeriesReturnValue} the line series
  */
-export function useLineSeries(seriesId: SeriesId): UseLineSeriesReturnValue;
+export function useLineSeries(seriesId: SeriesId): UseLineSeriesReturnValue | undefined;
 /**
  * Get access to the internal state of line series.
  *
