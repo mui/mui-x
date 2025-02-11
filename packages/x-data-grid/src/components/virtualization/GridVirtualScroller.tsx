@@ -21,7 +21,7 @@ import { GridBottomContainer as BottomContainer } from './GridBottomContainer';
 import { GridVirtualScrollerContent as Content } from './GridVirtualScrollerContent';
 import { GridVirtualScrollerFiller as SpaceFiller } from './GridVirtualScrollerFiller';
 import { GridVirtualScrollerRenderZone as RenderZone } from './GridVirtualScrollerRenderZone';
-import { GridVirtualScrollbar as Scrollbar } from './GridVirtualScrollbar';
+import { GridVirtualScrollbar as Scrollbar, ScrollbarCorner } from './GridVirtualScrollbar';
 import { GridLoadingOverlayVariant } from '../GridLoadingOverlay';
 import { GridStateCommunity } from '../../models/gridStateCommunity';
 
@@ -136,6 +136,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
         <Scrollbar position="horizontal" {...getScrollbarHorizontalProps()} />
       )}
       {hasScrollY && <Scrollbar position="vertical" {...getScrollbarVerticalProps()} />}
+      {hasScrollX && hasScrollY && <ScrollbarCorner />}
       {props.children}
     </Container>
   );
