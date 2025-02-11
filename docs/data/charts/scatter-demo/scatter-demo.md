@@ -1,7 +1,7 @@
 ---
 title: Charts - Scatter demonstration
 productId: x-charts
-components: Scatter, ScatterChart, ScatterPlot, ChartsVoronoiHandler
+components: Scatter, ScatterChart, ScatterPlot
 ---
 
 # Charts - Scatter demonstration
