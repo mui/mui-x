@@ -417,6 +417,7 @@ export const useGridCellEditing = (
 
       const editingState = gridEditRowsStateSelector(apiRef.current.state);
       const { error, isProcessingProps } = editingState[id][field];
+      const row = apiRef.current.getRow(id)!;
 
       if (error || isProcessingProps) {
         // Attempt to change cell mode to "view" was not successful
@@ -448,8 +449,6 @@ export const useGridCellEditing = (
             );
           }
         };
-
-        const row = apiRef.current.getRow(id)!;
 
         try {
           Promise.resolve(props.unstable_dataSource.updateRow(id, rowUpdate, row))
@@ -485,7 +484,6 @@ export const useGridCellEditing = (
         };
 
         try {
-          const row = apiRef.current.getRow(id)!;
           Promise.resolve(processRowUpdate(rowUpdate, row, { rowId: id }))
             .then((finalRowUpdate) => {
               apiRef.current.updateRows([finalRowUpdate]);
