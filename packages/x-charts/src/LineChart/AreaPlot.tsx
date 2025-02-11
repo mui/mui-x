@@ -15,7 +15,7 @@ import { getCurveFactory } from '../internals/getCurve';
 import { isBandScale } from '../internals/isBandScale';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { LineItemIdentifier } from '../models/seriesType/line';
-import { useLineSeries } from '../hooks/useSeries';
+import { useLineSeries } from '../hooks/useLineSeries';
 import { useSkipAnimation } from '../context/AnimationProvider';
 import { useChartGradientIdBuilder } from '../hooks/useChartGradientId';
 import { useXAxes, useYAxes } from '../hooks/useAxis';
