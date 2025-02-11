@@ -10,7 +10,7 @@ export const gridRowGroupingStateSelector = createRootSelector(
   (state: GridStatePremium) => state.rowGrouping,
 );
 
-export const gridRowGroupingModelSelector = createSelector(
+const gridRowGroupingModelSelector = createSelector(
   gridRowGroupingStateSelector,
   (rowGrouping) => rowGrouping.model,
 );

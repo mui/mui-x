@@ -1,7 +1,8 @@
 import { createSelector, createRootSelector } from '../../../utils/createSelector';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridRowId } from '../../../models/gridRows';
 import { GridEditModes, GridEditMode } from '../../../models/gridEditRowModel';
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
+
 /**
  * Select the row editing state.
  */
