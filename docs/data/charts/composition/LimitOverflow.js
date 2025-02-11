@@ -77,7 +77,6 @@ export default function LimitOverflow() {
           },
         ]}
         height={300}
-        margin={{ top: 10 }}
       >
         <ChartsGrid vertical horizontal />
         <g clipPath={`url(#${clipPathId})`}>

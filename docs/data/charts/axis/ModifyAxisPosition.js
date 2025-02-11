@@ -23,7 +23,6 @@ export default function ModifyAxisPosition() {
         bottomAxis={null}
         topAxis={{}}
         rightAxis={{}}
-        margin={{ top: 30, bottom: 10 }}
       />
     </Box>
   );

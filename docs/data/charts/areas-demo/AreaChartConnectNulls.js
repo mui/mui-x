@@ -12,13 +12,11 @@ export default function AreaChartConnectNulls() {
         xAxis={[{ data: xData, scaleType: 'point' }]}
         series={[{ data, showMark: false, area: true }]}
         height={200}
-        margin={{ top: 10, bottom: 20 }}
       />
       <LineChart
         xAxis={[{ data: xData, scaleType: 'point' }]}
         series={[{ data, showMark: false, area: true, connectNulls: true }]}
         height={200}
-        margin={{ top: 10, bottom: 20 }}
       />
     </Stack>
   );

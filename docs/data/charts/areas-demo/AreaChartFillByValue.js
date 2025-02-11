@@ -41,7 +41,7 @@ export default function AreaChartFillByValue() {
         yAxis={[{ min: -3000, max: 4000 }]}
         series={[{ data, showMark: false, area: true }]}
         height={200}
-        margin={{ top: 20, bottom: 30, left: 75 }}
+        margin={{ top: 30, bottom: 0 }}
         sx={{
           [`& .${areaElementClasses.root}`]: {
             fill: 'url(#swich-color-id-1)',
@@ -63,7 +63,7 @@ export default function AreaChartFillByValue() {
         yAxis={[{ min: -3000, max: 4000 }]}
         series={[{ data, showMark: false, area: true }]}
         height={200}
-        margin={{ top: 20, bottom: 30, left: 75 }}
+        margin={{ top: 30, bottom: 0 }}
         sx={{
           [`& .${areaElementClasses.root}`]: {
             fill: 'url(#swich-color-id-2)',

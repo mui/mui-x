@@ -59,7 +59,6 @@ export default function CustomOverlay() {
           noDataOverlay: { message: 'No data to display in this chart' },
         }}
         series={[]}
-        margin={{ top: 10, right: 10, left: 25, bottom: 25 }}
         height={150}
       />
       <BarChart
@@ -69,7 +68,6 @@ export default function CustomOverlay() {
         ]}
         slots={{ loadingOverlay: LoadingOverlay }}
         series={[]}
-        margin={{ top: 10, right: 10, left: 25, bottom: 25 }}
         height={150}
       />
     </Stack>
