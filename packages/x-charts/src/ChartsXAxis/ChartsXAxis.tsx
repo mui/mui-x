@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, Theme, styled } from '@mui/material/styles';
+import { ChartInstance } from '@mui/x-charts/internals';
 import { useTicks, TickItemType } from '../hooks/useTicks';
 import { AxisDefaultized, ChartsXAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
@@ -41,8 +42,12 @@ function addLabelDimension(
     tickLabelInterval,
     reverse,
     isMounted,
+    isPointInside,
   }: Pick<ChartsXAxisProps, 'tickLabelInterval' | 'tickLabelStyle'> &
-    Pick<AxisDefaultized, 'reverse'> & { isMounted: boolean },
+    Pick<AxisDefaultized, 'reverse'> & {
+      isMounted: boolean;
+      isPointInside: (position: number) => boolean;
+    },
 ): (TickItemType & LabelExtraData)[] {
   const getTickSize = (tick: TickItemType) => {
     if (!isMounted || tick.formattedValue === undefined) {
@@ -75,6 +80,10 @@ function addLabelDimension(
     const textPosition = offset + labelOffset;
 
     if (labelIndex > 0 && direction * (textPosition - minGap) < direction * previousTextLimit) {
+      return { ...item, width: 0, height: 0, skipLabel: true };
+    }
+
+    if (!isPointInside(textPosition)) {
       return { ...item, width: 0, height: 0, skipLabel: true };
     }
 
@@ -190,6 +199,8 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickLabelInterval,
     reverse,
     isMounted,
+    isPointInside: (offset: number) =>
+      instance.isPointInside({ x: offset, y: -1 }, { direction: 'x' }),
   });
 
   const labelRefPoint = {
