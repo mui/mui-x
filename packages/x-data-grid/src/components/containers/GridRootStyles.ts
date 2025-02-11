@@ -597,7 +597,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c['virtualScrollerContent--overflowed']} .${c['row--lastVisible']} .${c.cell}`]: {
       borderTopColor: 'transparent',
     },
-    [`& .${c.pinnedRows} .${c.row}`]: {
+    [`& .${c.pinnedRows} .${c.row}, .${c.aggregationRowOverlayWrapper} .${c.row}`]: {
       backgroundColor: 'var(--DataGrid-pinnedBackground)',
       '&:hover': {
         backgroundColor: pinnedHoverBackgroundColor,

@@ -507,6 +507,12 @@
       "class": null
     },
     {
+      "name": "bottomContainer",
+      "description": "Component rendered for the bottom container.",
+      "default": "GridBottomContainer",
+      "class": null
+    },
+    {
       "name": "cell",
       "description": "Component rendered for each cell.",
       "default": "GridCell",
@@ -980,6 +986,12 @@
       "key": "aggregationColumnHeaderLabel",
       "className": "MuiDataGrid-aggregationColumnHeaderLabel",
       "description": "Styles applied to the aggregation label in the column header when aggregated.",
+      "isGlobal": false
+    },
+    {
+      "key": "aggregationRowOverlayWrapper",
+      "className": "MuiDataGrid-aggregationRowOverlayWrapper",
+      "description": "Styles applied to the aggregation row overlay wrapper.",
       "isGlobal": false
     },
     {
