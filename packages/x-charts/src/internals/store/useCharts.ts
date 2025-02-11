@@ -70,11 +70,6 @@ export function useCharts<
     globalId += 1;
 
     const initialState = {
-      // TODO remove when the interaction moves to plugin
-      interaction: {
-        item: null,
-        axis: { x: null, y: null },
-      },
       cacheKey: { id: globalId },
     } as ChartState<TSignaturesWithCorePluginSignatures> & UseChartInteractionState;
 
