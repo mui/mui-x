@@ -1,4 +1,4 @@
-<DataGridPro
+<DataGrid
   initialState={initialStateWithPagination}
   columns={columns}
   unstable_dataSource={dataSource}
