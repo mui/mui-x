@@ -72,9 +72,15 @@
       "class": "MuiTreeItem-dragAndDropOverlay"
     },
     {
-      "name": "errorContainer",
-      "description": "The component that wraps the `iconContainer` slot when the item is in an error state.\nWarning: This slot is only useful when using the `<RichTreeViewPro />` component is lazy loading is enabled.",
+      "name": "errorIcon",
+      "description": "The component that is rendered when the item is in an error state.\nWarning: This slot is only useful when using the `<RichTreeViewPro />` component is lazy loading is enabled.",
       "default": "TreeItemErrorContainer",
+      "class": null
+    },
+    {
+      "name": "loadingIcon",
+      "description": "The component that is rendered when the item is in an loading state.\nWarning: This slot is only useful when using the `<RichTreeViewPro />` component is lazy loading is enabled.",
+      "default": "TreeItemLoadingContainer",
       "class": null
     },
     { "name": "collapseIcon", "description": "The icon used to collapse the item.", "class": null },
