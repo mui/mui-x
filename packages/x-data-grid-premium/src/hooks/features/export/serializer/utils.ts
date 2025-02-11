@@ -122,6 +122,7 @@ export async function createValueOptionsSheetIfNeeded(
 }
 
 export interface ExcelExportInitEvent {
+  namespace?: string;
   serializedColumns: SerializedColumns;
   serializedRows: SerializedRow[];
   valueOptionsSheetName: string;
