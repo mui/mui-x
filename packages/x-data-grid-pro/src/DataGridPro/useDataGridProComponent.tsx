@@ -82,8 +82,10 @@ import {
   rowPinningStateInitializer,
 } from '../hooks/features/rowPinning/useGridRowPinning';
 import { useGridRowPinningPreProcessors } from '../hooks/features/rowPinning/useGridRowPinningPreProcessors';
-import { useGridDataSourcePro as useGridDataSource } from '../hooks/features/dataSource/useGridDataSourcePro';
-import { dataSourceStateInitializer } from '../hooks/features/dataSource/useGridDataSourceBase';
+import {
+  useGridDataSourcePro as useGridDataSource,
+  dataSourceStateInitializer,
+} from '../hooks/features/dataSource/useGridDataSourcePro';
 import { useGridDataSourceLazyLoader } from '../hooks/features/serverSideLazyLoader/useGridDataSourceLazyLoader';
 
 export const useDataGridProComponent = (
@@ -110,7 +112,6 @@ export const useDataGridProComponent = (
   /**
    * Register all state initializers here.
    */
-  useGridInitializeState(dimensionsStateInitializer, apiRef, props);
   useGridInitializeState(headerFilteringStateInitializer, apiRef, props);
   useGridInitializeState(rowSelectionStateInitializer, apiRef, props);
   useGridInitializeState(detailPanelStateInitializer, apiRef, props);
@@ -128,11 +129,12 @@ export const useDataGridProComponent = (
   useGridInitializeState(densityStateInitializer, apiRef, props);
   useGridInitializeState(columnReorderStateInitializer, apiRef, props);
   useGridInitializeState(columnResizeStateInitializer, apiRef, props);
-  useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
   useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
   useGridInitializeState(virtualizationStateInitializer, apiRef, props);
   useGridInitializeState(dataSourceStateInitializer, apiRef, props);
+  useGridInitializeState(dimensionsStateInitializer, apiRef, props);
+  useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(listViewStateInitializer, apiRef, props);
 
   useGridHeaderFiltering(apiRef, props);

@@ -34,6 +34,9 @@ export const useChartContainerProps = <
     desc,
     // @ts-ignore
     onAxisClick,
+    disableVoronoi,
+    voronoiMaxRadius,
+    onItemClick,
     disableAxisListener,
     // @ts-ignore
     highlightedItem,
@@ -55,7 +58,7 @@ export const useChartContainerProps = <
     seriesConfig,
     plugins,
     ...other
-  } = props as ChartContainerProps<TSeries, AllPluginSignatures<TSeries>>;
+  } = props as ChartContainerProps<TSeries, AllPluginSignatures>;
 
   const chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> } = {
     title,
@@ -65,7 +68,7 @@ export const useChartContainerProps = <
     ...other,
   };
 
-  const chartDataProviderProps = {
+  const chartDataProviderProps: Omit<ChartDataProviderProps<TSeries, TSignatures>, 'children'> = {
     margin,
     series,
     colors,
@@ -74,6 +77,9 @@ export const useChartContainerProps = <
     highlightedItem,
     onHighlightChange,
     onAxisClick,
+    disableVoronoi,
+    voronoiMaxRadius,
+    onItemClick,
     xAxis,
     yAxis,
     zAxis,

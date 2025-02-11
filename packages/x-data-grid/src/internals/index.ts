@@ -11,6 +11,7 @@ export type { GridPinnedRowsProps } from '../components/GridPinnedRows';
 export { GridHeaders } from '../components/GridHeaders';
 export { GridBaseColumnHeaders } from '../components/columnHeaders/GridBaseColumnHeaders';
 export { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
+export * from '../constants/signature';
 
 export { getGridFilter } from '../components/panel/filterPanel/GridFilterPanel';
 export { getValueOptions } from '../components/panel/filterPanel/filterPanelUtils';
@@ -61,6 +62,7 @@ export { useGridDensity, densityStateInitializer } from '../hooks/features/densi
 export { useGridCsvExport } from '../hooks/features/export/useGridCsvExport';
 export { useGridPrintExport } from '../hooks/features/export/useGridPrintExport';
 export { useGridFilter, filterStateInitializer } from '../hooks/features/filter/useGridFilter';
+export { defaultGridFilterLookup } from '../hooks/features/filter/gridFilterState';
 export { passFilterLogic } from '../hooks/features/filter/gridFilterUtils';
 export {
   gridFilteredChildrenCountLookupSelector,
@@ -114,7 +116,6 @@ export {
   headerFilteringStateInitializer,
   useGridHeaderFiltering,
 } from '../hooks/features/headerFiltering/useGridHeaderFiltering';
-export { calculatePinnedRowsHeight } from '../hooks/features/rows/gridRowsUtils';
 export {
   useGridRowSelection,
   rowSelectionStateInitializer,
@@ -129,6 +130,7 @@ export {
   dimensionsStateInitializer,
   useGridDimensions,
 } from '../hooks/features/dimensions/useGridDimensions';
+export * from '../hooks/features/dimensions/gridDimensionsSelectors';
 export { useGridStatePersistence } from '../hooks/features/statePersistence/useGridStatePersistence';
 export type { GridRestoreStatePreProcessingContext } from '../hooks/features/statePersistence/gridStatePersistenceInterface';
 export {
@@ -152,7 +154,12 @@ export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
 
 export type * from '../models/props/DataGridProps';
-export type * from '../models/gridDataSource';
+export type { GridDataSourceApiBase, GridDataSourceApi } from '../hooks/features/dataSource/models';
+export { DataSourceRowsUpdateStrategy } from '../hooks/features/dataSource/utils';
+export { useGridDataSourceBase } from '../hooks/features/dataSource/useGridDataSourceBase';
+export { CacheChunkManager } from '../hooks/features/dataSource/utils';
+export { gridGetRowsParamsSelector } from '../hooks/features/dataSource/gridDataSourceSelector';
+
 export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/export/utils';
 export * from '../utils/createControllablePromise';
 export * from '../utils/rtlFlipSide';
