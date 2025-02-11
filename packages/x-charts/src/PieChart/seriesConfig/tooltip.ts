@@ -1,5 +1,5 @@
-import { getLabel } from '../internals/getLabel';
-import type { TooltipGetter } from '../internals/plugins/models';
+import { getLabel } from '../../internals/getLabel';
+import type { TooltipGetter } from '../../internals/plugins/models';
 
 const tooltipGetter: TooltipGetter<'pie'> = (params) => {
   const { series, getColor, identifier } = params;

@@ -1,7 +1,7 @@
-import { getLabel } from '../internals/getLabel';
-import type { TooltipGetter } from '../internals/plugins/models';
+import { getLabel } from '../../internals/getLabel';
+import type { TooltipGetter } from '../../internals/plugins/models';
 
-const tooltipGetter: TooltipGetter<'bar'> = (params) => {
+const tooltipGetter: TooltipGetter<'line'> = (params) => {
   const { series, getColor, identifier } = params;
 
   if (!identifier || identifier.dataIndex === undefined) {

@@ -1,4 +1,4 @@
-import { ColorProcessor } from '../internals/plugins/models';
+import { ColorProcessor } from '../../internals/plugins/models';
 
 const getColor: ColorProcessor<'line'> = (series, xAxis, yAxis) => {
   const yColorScale = yAxis?.colorScale;
