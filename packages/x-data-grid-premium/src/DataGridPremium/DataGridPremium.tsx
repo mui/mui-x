@@ -29,6 +29,7 @@ const configuration = {
   },
 };
 const releaseInfo = getReleaseInfo();
+const watermark = <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />;
 
 let dataGridPremiumPropValidators: PropValidator<DataGridPremiumProcessedProps>[];
 
@@ -47,6 +48,7 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, dataGridPremiumPropValidators);
   }
+
   return (
     <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
       <GridRoot
@@ -56,7 +58,7 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
         {...props.slotProps?.root}
         ref={ref}
       >
-        <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />
+        {watermark}
       </GridRoot>
     </GridContextProvider>
   );
@@ -1068,6 +1070,9 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   treeData: PropTypes.bool,
+  /**
+   * Data source object.
+   */
   unstable_dataSource: PropTypes.shape({
     getAggregatedValue: PropTypes.func,
     getChildrenCount: PropTypes.func,
@@ -1075,6 +1080,9 @@ DataGridPremiumRaw.propTypes = {
     getRows: PropTypes.func.isRequired,
     updateRow: PropTypes.func,
   }),
+  /**
+   * Data source cache object.
+   */
   unstable_dataSourceCache: PropTypes.shape({
     clear: PropTypes.func.isRequired,
     get: PropTypes.func.isRequired,
@@ -1107,6 +1115,11 @@ DataGridPremiumRaw.propTypes = {
    * Use in combination with `unstable_listColumn`.
    */
   unstable_listView: PropTypes.bool,
+  /**
+   * Callback fired when the data source request fails.
+   * @param {Error} error The error object.
+   * @param {GridGetRowsParams} params With all properties from [[GridGetRowsParams]].
+   */
   unstable_onDataSourceError: PropTypes.func,
   /**
    * If `true`, the Data Grid enables column virtualization when `getRowHeight` is set to `() => 'auto'`.
@@ -1126,8 +1139,8 @@ interface DataGridPremiumComponent {
 }
 
 /**
- * Demos:
- * - [DataGridPremium](https://mui.com/x/react-data-grid/demo/)
+ * Features:
+ * - [DataGridPremium](https://mui.com/x/react-data-grid/features/)
  *
  * API:
  * - [DataGridPremium API](https://mui.com/x/api/data-grid/data-grid-premium/)
