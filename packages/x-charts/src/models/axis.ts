@@ -145,9 +145,11 @@ export interface ChartsYAxisProps extends ChartsAxisProps {
    *
    * When set, the space for the axis is reserved, even if the axis is not displayed due to missing data.
    *
+   * Set to 'none' to hide the axis.
+   *
    * The first axis in the list will always have a default position.
    */
-  position?: 'left' | 'right';
+  position?: 'left' | 'right' | 'none';
   /**
    * The width of the axis.
    * @default 30
@@ -161,9 +163,11 @@ export interface ChartsXAxisProps extends ChartsAxisProps {
    *
    * When set, the space for the axis is reserved, even if the axis is not displayed due to missing data.
    *
+   * Set to 'none' to hide the axis.
+   *
    * The first axis in the list will always have a default position.
    */
-  position?: 'top' | 'bottom';
+  position?: 'top' | 'bottom' | 'none';
   /**
    * The height of the axis.
    * @default 30
