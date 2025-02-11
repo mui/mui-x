@@ -1,4 +1,4 @@
 // Used in ExcelExportWithWebWorker demo
-import { setupExcelExportWebWorker } from '@mui/x-data-grid-premium';
+import { setupExcelExportWebWorker } from '@mui/x-data-grid-premium/setupExcelExportWebWorker';
 
 setupExcelExportWebWorker();

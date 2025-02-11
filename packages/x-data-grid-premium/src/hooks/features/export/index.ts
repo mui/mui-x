@@ -1,3 +1,3 @@
 export * from './gridExcelExportInterface';
 
-export { setupExcelExportWebWorker } from './serializer/excelSerializer';
+export { setupExcelExportWebWorker } from './serializer/setupExcelExportWebWorker';
