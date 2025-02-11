@@ -30,7 +30,7 @@ export const useChartContainerProProps = <
   const { initialZoom, onZoomChange, plugins, apiRef, ...baseProps } =
     props as ChartContainerProProps<TSeries, AllPluginSignatures>;
 
-  const { chartDataProviderProps, chartsSurfaceProps, children } = useChartContainerProps<TSeries>(
+  const { chartDataProviderProps, chartsSurfaceProps, children } = useChartContainerProps(
     baseProps,
     ref,
   );

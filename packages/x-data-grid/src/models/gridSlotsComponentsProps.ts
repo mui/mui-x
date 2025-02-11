@@ -1,19 +1,15 @@
 import * as React from 'react';
 import type { BadgeProps as MUIBadgeProps } from '@mui/material/Badge';
 import type { ButtonProps as MUIButtonProps } from '@mui/material/Button';
-import type { CheckboxProps } from '@mui/material/Checkbox';
 import type { CircularProgressProps as MUICircularProgressProps } from '@mui/material/CircularProgress';
 import type { LinearProgressProps as MUILinearProgressProps } from '@mui/material/LinearProgress';
-import type { MenuListProps } from '@mui/material/MenuList';
 import type { MenuItemProps as MUIMenuItemProps } from '@mui/material/MenuItem';
 import type { FormControlProps } from '@mui/material/FormControl';
-import type { SelectProps } from '@mui/material/Select';
 import type { SwitchProps } from '@mui/material/Switch';
 import type { IconButtonProps as MUIIconButtonProps } from '@mui/material/IconButton';
 import type { InputAdornmentProps } from '@mui/material/InputAdornment';
 import type { TooltipProps as MUITooltipProps } from '@mui/material/Tooltip';
 import type { InputLabelProps } from '@mui/material/InputLabel';
-import type { PopperProps } from '@mui/material/Popper';
 import type { TablePaginationProps } from '@mui/material/TablePagination';
 import type { ChipProps } from '@mui/material/Chip';
 import type { GridToolbarProps } from '../components/toolbar/GridToolbar';
@@ -34,14 +30,20 @@ import type { GridColumnsManagementProps } from '../components/columnsManagement
 import type { GridLoadingOverlayProps } from '../components/GridLoadingOverlay';
 import type { GridRowCountProps } from '../components/GridRowCount';
 import type { GridColumnHeaderSortIconProps } from '../components/columnHeaders/GridColumnHeaderSortIcon';
+import type { GridBottomContainerProps } from '../components/virtualization/GridBottomContainer';
 import type {
   BadgeProps,
   ButtonProps,
+  CheckboxProps,
   CircularProgressProps,
   DividerProps,
   IconButtonProps,
   LinearProgressProps,
+  MenuListProps,
   MenuItemProps,
+  PopperProps,
+  SelectProps,
+  SelectOptionProps,
   SkeletonProps,
   TooltipProps,
   TextFieldProps,
@@ -91,6 +93,7 @@ export interface PanelPropsOverrides {}
 export interface PinnedRowsPropsOverrides {}
 export interface SkeletonCellPropsOverrides {}
 export interface RowPropsOverrides {}
+export interface BottomContainerPropsOverrides {}
 
 interface BaseSlotProps {
   baseBadge: BadgeProps & BaseBadgePropsOverrides;
@@ -102,7 +105,6 @@ interface BaseSlotProps {
   baseMenuItem: MenuItemProps & BaseMenuItemPropsOverrides;
   baseTextField: TextFieldProps & BaseTextFieldPropsOverrides;
   baseFormControl: FormControlProps & BaseFormControlPropsOverrides;
-  baseSelect: SelectProps & BaseSelectPropsOverrides;
   baseSwitch: SwitchProps & BaseSwitchPropsOverrides;
   baseButton: ButtonProps & BaseButtonPropsOverrides;
   baseIconButton: IconButtonProps & BaseIconButtonPropsOverrides;
@@ -110,11 +112,8 @@ interface BaseSlotProps {
   baseTooltip: TooltipProps & BaseTooltipPropsOverrides;
   baseInputLabel: InputLabelProps & BaseInputLabelPropsOverrides;
   baseInputAdornment: InputAdornmentProps & BaseInputAdornmentPropsOverrides;
-  baseSelectOption: {
-    native: boolean;
-    value: any;
-    children?: React.ReactNode;
-  } & BaseSelectOptionPropsOverrides;
+  baseSelect: SelectProps & BaseSelectPropsOverrides;
+  baseSelectOption: SelectOptionProps & BaseSelectOptionPropsOverrides;
   baseSkeleton: SkeletonProps & BaseSkeletonPropsOverrides;
   baseChip: ChipProps & BaseChipPropsOverrides;
 }
@@ -130,6 +129,7 @@ interface MaterialSlotProps {
 }
 
 interface ElementSlotProps {
+  bottomContainer: GridBottomContainerProps & BottomContainerPropsOverrides;
   cell: GridCellProps & CellPropsOverrides;
   columnHeaders: GridColumnHeadersProps;
   columnHeaderFilterIconButton: ColumnHeaderFilterIconButtonProps &

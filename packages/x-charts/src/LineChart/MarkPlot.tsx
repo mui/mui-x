@@ -9,7 +9,7 @@ import { useLineSeries } from '../hooks/useSeries';
 import { cleanId } from '../internals/cleanId';
 import { LineItemIdentifier } from '../models/seriesType/line';
 import { CircleMarkElement } from './CircleMarkElement';
-import getColor from './getColor';
+import getColor from './seriesConfig/getColor';
 import { MarkElement, MarkElementProps } from './MarkElement';
 import { useChartContext } from '../context/ChartProvider';
 import { useXAxes, useYAxes } from '../hooks';

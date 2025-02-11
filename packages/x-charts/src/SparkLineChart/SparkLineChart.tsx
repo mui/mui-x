@@ -35,7 +35,10 @@ export interface SparkLineChartSlotProps
     ChartsTooltipSlotProps {}
 
 export interface SparkLineChartProps
-  extends Omit<ChartContainerProps, 'series' | 'xAxis' | 'yAxis' | 'zAxis' | 'margin' | 'plugins'> {
+  extends Omit<
+    ChartContainerProps,
+    'series' | 'xAxis' | 'yAxis' | 'zAxis' | 'margin' | 'plugins' | 'colors'
+  > {
   /**
    * The xAxis configuration.
    * Notice it is a single [[AxisConfig]] object, not an array of configuration.
@@ -109,13 +112,6 @@ export interface SparkLineChartProps
   slotProps?: SparkLineChartSlotProps;
 
   /**
-   * Color palette used to colorize multiple series.
-   * @default rainbowSurgePalette
-   * @deprecated use the `color` prop instead
-   */
-  colors?: ChartContainerProps['colors'];
-
-  /**
    * Color used to colorize the sparkline.
    * @default rainbowSurgePalette[0]
    */
@@ -149,7 +145,6 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
     height,
     margin = SPARKLINE_DEFAULT_MARGIN,
     color,
-    colors: deprecatedColors,
     sx,
     showTooltip,
     showHighlight,
@@ -214,7 +209,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
           ...yAxis,
         },
       ]}
-      colors={colors ?? deprecatedColors}
+      colors={colors}
       sx={sx}
       disableAxisListener={
         (!showTooltip || slotProps?.tooltip?.trigger !== 'axis') &&
@@ -266,12 +261,6 @@ SparkLineChart.propTypes = {
    */
   color: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   /**
-   * Color palette used to colorize multiple series.
-   * @default rainbowSurgePalette
-   * @deprecated use the `color` prop instead
-   */
-  colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
-  /**
    * @default 'linear'
    */
   curve: PropTypes.oneOf([
@@ -301,6 +290,10 @@ SparkLineChart.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
+  /**
+   * If true, the voronoi interaction are ignored.
+   */
+  disableVoronoi: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -349,6 +342,13 @@ SparkLineChart.propTypes = {
    */
   onHighlightChange: PropTypes.func,
   /**
+   * Callback fired when clicking close to an item.
+   * This is only available for scatter plot for now.
+   * @param {MouseEvent} event Mouse event caught at the svg level
+   * @param {ScatterItemIdentifier} scatterItemIdentifier Identify which item got clicked
+   */
+  onItemClick: PropTypes.func,
+  /**
    * Type of plot used.
    * @default 'line'
    */
@@ -394,6 +394,11 @@ SparkLineChart.propTypes = {
    * @default (value: number | null) => (value === null ? '' : value.toString())
    */
   valueFormatter: PropTypes.func,
+  /**
+   * Defines the maximal distance between a scatter point and the pointer that triggers the interaction.
+   * If `undefined`, the radius is assumed to be infinite.
+   */
+  voronoiMaxRadius: PropTypes.number,
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
