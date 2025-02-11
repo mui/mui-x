@@ -98,10 +98,6 @@ export const getStyleString = (style: React.CSSProperties) =>
     );
 
 let domCleanTimeout: NodeJS.Timeout | undefined;
-const domResults = { count: 0, time: 0 };
-if (typeof window !== 'undefined') {
-  window.domResults = domResults;
-}
 
 /**
  *
@@ -121,9 +117,6 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
   if (stringCache.widthCache[cacheKey]) {
     return stringCache.widthCache[cacheKey];
   }
-
-  domResults.count++;
-  const startTime = performance.now();
 
   try {
     let measurementSpan = document.getElementById(MEASUREMENT_SPAN_ID);
@@ -166,8 +159,6 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
     return result;
   } catch {
     return { width: 0, height: 0 };
-  } finally {
-    domResults.time += performance.now() - startTime;
   }
 };
 
