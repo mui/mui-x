@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, Theme, styled } from '@mui/material/styles';
-import { ChartInstance } from '@mui/x-charts/internals';
 import { useTicks, TickItemType } from '../hooks/useTicks';
 import { AxisDefaultized, ChartsXAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
@@ -49,7 +48,7 @@ function addLabelDimension(
       isPointInside: (position: number) => boolean;
     },
 ): (TickItemType & LabelExtraData)[] {
-  const getTickSize = (tick: TickItemType) => {
+  const getTickLabelSize = (tick: TickItemType) => {
     if (!isMounted || tick.formattedValue === undefined) {
       return { width: 0, height: 0 };
     }
@@ -62,13 +61,18 @@ function addLabelDimension(
     };
   };
 
-  // FIXME: Add this back
-  // if (typeof tickLabelInterval === 'function') {
-  //  return withDimension.map((item, index) => ({
-  //    ...item,
-  //    skipLabel: !tickLabelInterval(item.value, index),
-  //  }));
-  // }
+  if (typeof tickLabelInterval === 'function') {
+    return xTicks.map((item, index) => {
+      const skipLabel = !tickLabelInterval(item.value, index);
+      const size = skipLabel ? { width: 0, height: 0 } : getTickLabelSize(item);
+
+      return {
+        ...item,
+        ...size,
+        skipLabel,
+      };
+    });
+  }
 
   // Filter label to avoid overlap
   let previousTextLimit = 0;
@@ -87,7 +91,7 @@ function addLabelDimension(
       return { ...item, width: 0, height: 0, skipLabel: true };
     }
 
-    const { width, height } = getTickSize(item);
+    const { width, height } = getTickLabelSize(item);
 
     const distance = getMinXTranslation(width, height, style?.angle);
 
