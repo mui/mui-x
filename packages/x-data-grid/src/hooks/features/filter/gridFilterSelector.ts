@@ -1,18 +1,20 @@
-import { RefObject } from '@mui/x-internals/types';
 import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
-import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
+import {
+  createSelector,
+  createRootSelector,
+  createSelectorMemoized,
+} from '../../../utils/createSelector';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridRowId } from '../../../models/gridRows';
 import { GridFilterItem } from '../../../models/gridFilterItem';
 import { gridSortedRowEntriesSelector } from '../sorting/gridSortingSelector';
 import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
 import { gridRowMaximumTreeDepthSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 
 /**
  * @category Filtering
  */
-const gridFilterStateSelector = (apiRef: RefObject<GridApiCommunity>) =>
-  apiRef.current.state.filter;
+const gridFilterStateSelector = createRootSelector((state: GridStateCommunity) => state.filter);
 
 /**
  * Get the current filter model.
@@ -36,8 +38,9 @@ export const gridQuickFilterValuesSelector = createSelector(
  * @category Visible rows
  * @ignore - do not document.
  */
-export const gridVisibleRowsLookupSelector = (apiRef: RefObject<GridApiCommunity>) =>
-  apiRef.current.state.visibleRowsLookup;
+export const gridVisibleRowsLookupSelector = createRootSelector(
+  (state: GridStateCommunity) => state.visibleRowsLookup,
+);
 
 /**
  * @category Filtering

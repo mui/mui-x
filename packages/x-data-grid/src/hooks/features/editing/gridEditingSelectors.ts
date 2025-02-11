@@ -1,13 +1,13 @@
-import { RefObject } from '@mui/x-internals/types';
-import { createSelector } from '../../../utils/createSelector';
+import { createSelector, createRootSelector } from '../../../utils/createSelector';
 import { GridRowId } from '../../../models/gridRows';
 import { GridEditModes, GridEditMode } from '../../../models/gridEditRowModel';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
 /**
  * Select the row editing state.
  */
-export const gridEditRowsStateSelector = (apiRef: RefObject<GridApiCommunity>) =>
-  apiRef.current.state.editRows;
+export const gridEditRowsStateSelector = createRootSelector(
+  (state: GridStateCommunity) => state.editRows,
+);
 
 export const gridRowIsEditingSelector = createSelector(
   gridEditRowsStateSelector,

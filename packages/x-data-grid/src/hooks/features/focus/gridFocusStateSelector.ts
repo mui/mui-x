@@ -1,10 +1,10 @@
-import { RefObject } from '@mui/x-internals/types';
-import { createSelector } from '../../../utils/createSelector';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { createSelector, createRootSelector } from '../../../utils/createSelector';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridFocusState, GridTabIndexState } from './gridFocusState';
 
-export const gridFocusStateSelector = (apiRef: RefObject<GridApiCommunity>) =>
-  apiRef.current.state.focus;
+export const gridFocusStateSelector = createRootSelector(
+  (state: GridStateCommunity) => state.focus,
+);
 
 export const gridFocusCellSelector = createSelector(
   gridFocusStateSelector,
@@ -26,8 +26,9 @@ export const gridFocusColumnGroupHeaderSelector = createSelector(
   (focusState: GridFocusState) => focusState.columnGroupHeader,
 );
 
-export const gridTabIndexStateSelector = (apiRef: RefObject<GridApiCommunity>) =>
-  apiRef.current.state.tabIndex;
+export const gridTabIndexStateSelector = createRootSelector(
+  (state: GridStateCommunity) => state.tabIndex,
+);
 
 export const gridTabIndexCellSelector = createSelector(
   gridTabIndexStateSelector,

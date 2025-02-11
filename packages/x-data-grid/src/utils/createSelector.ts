@@ -117,6 +117,16 @@ export const createSelector = ((
   return selector;
 }) as unknown as CreateSelectorFunction;
 
+/**
+ * Used to create the root selector for a feature. It assumes that the state is already initialized
+ * and strips from the types the possibility of `apiRef` being `null`.
+ * Users are warned about this in our documentation https://mui.com/x/react-data-grid/state/#direct-selector-access
+ */
+export const createRootSelector =
+  <State, Result>(fn: (state: State) => Result): OutputSelector<State, void, Result> =>
+  (apiRef: RefObject<{ state: State } | null>) =>
+    fn(apiRef.current!.state);
+
 export const createSelectorMemoized: CreateSelectorFunction = (...args: any) => {
   const selector = (apiRef: RefObject<any>, selectorArgs: any) => {
     const cacheKey = apiRef.current.instanceId;

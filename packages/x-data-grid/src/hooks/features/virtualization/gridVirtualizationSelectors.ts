@@ -1,14 +1,20 @@
 import { RefObject } from '@mui/x-internals/types';
-import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
+import {
+  createRootSelector,
+  createSelector,
+  createSelectorMemoized,
+} from '../../../utils/createSelector';
 import type { GridColumnsRenderContext } from '../../../models/params/gridScrollParams';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 
 /**
  * Get the columns state
  * @category Virtualization
  */
-export const gridVirtualizationSelector = (apiRef: RefObject<GridApiCommunity>) =>
-  apiRef.current.state.virtualization;
+export const gridVirtualizationSelector = createRootSelector(
+  (state: GridStateCommunity) => state.virtualization,
+);
 
 /**
  * Get the enabled state for virtualization
@@ -55,12 +61,12 @@ export const gridRenderContextSelector = createSelector(
  * @ignore - do not document.
  */
 export const gridRenderContextColumnsSelector = createSelectorMemoized(
-  (apiRef: RefObject<GridApiCommunity>) =>
-    apiRef.current.state.virtualization.renderContext.firstColumnIndex,
-  (apiRef: RefObject<GridApiCommunity>) =>
-    apiRef.current.state.virtualization.renderContext.lastColumnIndex,
+  (apiRef: RefObject<GridApiCommunity | null>) =>
+    apiRef.current?.state.virtualization.renderContext.firstColumnIndex,
+  (apiRef: RefObject<GridApiCommunity | null>) =>
+    apiRef.current?.state.virtualization.renderContext.lastColumnIndex,
   (firstColumnIndex, lastColumnIndex): GridColumnsRenderContext => ({
-    firstColumnIndex,
-    lastColumnIndex,
+    firstColumnIndex: firstColumnIndex || 0,
+    lastColumnIndex: lastColumnIndex || 0,
   }),
 );

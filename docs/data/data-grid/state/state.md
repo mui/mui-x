@@ -31,11 +31,15 @@ You can use them to get data from the state without worrying about its internal 
 
 ### Direct selector access
 
-The simplest way to use a selector is to call it as a function with `apiRef` as its first argument:
+The way to use a selector is to call it as a function with `apiRef` as its first argument:
 
 ```tsx
 const paginationModel = gridPaginationModelSelector(apiRef);
 ```
+
+:::warning
+To make the developer experience better, selectors are typed to allow `apiRef` to reference a `null` value, but they throw an error if called before the state is initialized. Use selectors after the initialization in a `useEffect()` hook or in an event handler.
+:::
 
 {{"demo": "DirectSelector.js", "bg": "inline"}}
 

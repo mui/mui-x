@@ -1,7 +1,6 @@
-import { RefObject } from '@mui/x-internals/types';
-import { createSelector } from '../../../utils/createSelector';
-import { GridDensity } from '../../../models/gridDensity';
+import { createSelector, createRootSelector } from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { GridDensity } from '../../../models/gridDensity';
 
 export const COMPACT_DENSITY_FACTOR = 0.7;
 export const COMFORTABLE_DENSITY_FACTOR = 1.3;
@@ -12,8 +11,7 @@ const DENSITY_FACTORS: Record<GridDensity, number> = {
   standard: 1,
 };
 
-export const gridDensitySelector = (apiRef: RefObject<{ state: GridStateCommunity }>) =>
-  apiRef.current.state.density;
+export const gridDensitySelector = createRootSelector((state: GridStateCommunity) => state.density);
 
 export const gridDensityFactorSelector = createSelector(
   gridDensitySelector,

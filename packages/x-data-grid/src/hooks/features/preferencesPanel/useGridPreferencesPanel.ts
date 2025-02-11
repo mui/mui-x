@@ -36,7 +36,6 @@ export const useGridPreferencesPanel = (
 
       logger.debug('Hiding Preferences Panel');
       const preferencePanelState = gridPreferencePanelStateSelector({
-        ...apiRef,
         current: { ...apiRef.current, state },
       });
       apiRef.current.publishEvent('preferencePanelClose', {

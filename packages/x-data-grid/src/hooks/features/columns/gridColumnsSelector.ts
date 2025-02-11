@@ -1,5 +1,8 @@
-import { RefObject } from '@mui/x-internals/types';
-import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
+import {
+  createSelector,
+  createSelectorMemoized,
+  createRootSelector,
+} from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import {
   GridColumnLookup,
@@ -12,8 +15,9 @@ import { gridIsRtlSelector } from '../../core/gridCoreSelector';
  * Get the columns state
  * @category Columns
  */
-export const gridColumnsStateSelector = (apiRef: RefObject<{ state: GridStateCommunity }>) =>
-  apiRef.current.state.columns;
+export const gridColumnsStateSelector = createRootSelector(
+  (state: GridStateCommunity) => state.columns,
+);
 
 /**
  * Get an array of column fields in the order rendered on screen.
@@ -77,8 +81,9 @@ export const gridVisibleColumnFieldsSelector = createSelectorMemoized(
  * Get the visible pinned columns model.
  * @category Visible Columns
  */
-export const gridPinnedColumnsSelector = (apiRef: RefObject<{ state: GridStateCommunity }>) =>
-  apiRef.current.state.pinnedColumns;
+export const gridPinnedColumnsSelector = createRootSelector(
+  (state: GridStateCommunity) => state.pinnedColumns,
+);
 
 /**
  * Get the visible pinned columns.
