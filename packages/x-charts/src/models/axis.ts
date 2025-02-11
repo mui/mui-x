@@ -142,6 +142,10 @@ export interface ChartsAxisProps extends TickParams {
 export interface ChartsYAxisProps extends ChartsAxisProps {
   /**
    * Position of the axis.
+   *
+   * When set, the space for the axis is reserved, even if the axis is not displayed due to missing data.
+   *
+   * The first axis in the list will always have a default position.
    */
   position?: 'left' | 'right';
   /**
@@ -154,6 +158,10 @@ export interface ChartsYAxisProps extends ChartsAxisProps {
 export interface ChartsXAxisProps extends ChartsAxisProps {
   /**
    * Position of the axis.
+   *
+   * When set, the space for the axis is reserved, even if the axis is not displayed due to missing data.
+   *
+   * The first axis in the list will always have a default position.
    */
   position?: 'top' | 'bottom';
   /**

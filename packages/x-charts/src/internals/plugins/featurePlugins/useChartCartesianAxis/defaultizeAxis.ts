@@ -29,9 +29,12 @@ export function defaultizeAxis(
     ...(hasNoDefaultAxis ? [{ id: DEFAULT_AXIS_KEY, scaleType: 'linear' as const }] : []),
   ].map((axisConfig, index) => {
     const dataKey = axisConfig.dataKey;
+    const defaultPosition = axisName === 'x' ? 'bottom' : 'left';
 
     const sharedConfig = {
       id: `defaultized-${axisName}-axis-${index}`,
+      // The fist axis is defaultized to the bottom/left
+      ...(index === 0 ? { position: defaultPosition } : {}),
       height: axisName === 'x' ? DEFAULT_AXIS_SIZE : 0,
       width: axisName === 'y' ? DEFAULT_AXIS_SIZE : 0,
       ...axisConfig,

@@ -9,57 +9,39 @@ import type { UseChartDimensionsSignature } from './useChartDimensions.types';
 import { selectorChartDimensionsState } from './useChartDimensions.selectors';
 import { defaultizeMargin } from '../../../defaultizeMargin';
 import { useSelector } from '../../../store/useSelector';
-// TODO: fix dep cycle, should we move selectors to their own folder/file? Eg:
-// useChartCartesianAxis/selectors/chartXAxis.ts
 import {
-  selectorChartXAxis,
-  selectorChartYAxis,
-} from '../../featurePlugins/useChartCartesianAxis/useChartCartesianAxis.selectors';
+  selectorChartRawXAxis,
+  selectorChartRawYAxis,
+} from '../../featurePlugins/useChartCartesianAxis/useChartCartesianAxisLayout.selectors';
 import { createSelector } from '../../utils/selectors';
-import { isBandScale } from '../../../isBandScale';
-import { isInfinity } from '../../../isInfinity';
 
 const MAX_COMPUTE_RUN = 10;
 
 const selectorChartAxisSize = createSelector(
-  [selectorChartXAxis, selectorChartYAxis],
+  [selectorChartRawXAxis, selectorChartRawYAxis],
   (xAxis, yAxis) => {
-    const topBottom = xAxis.axisIds.reduce(
-      (acc, id) => {
-        const axis = xAxis.axis[id];
-
-        // TODO: move this to the selectorChartXAxis, axis.isUsed? axis.shouldRender?
-        const scale = axis.scale;
-
-        const domain = scale.domain();
-        const ordinalAxis = isBandScale(scale);
-        if ((ordinalAxis && domain.length === 0) || (!ordinalAxis && domain.some(isInfinity))) {
-          return acc;
-        }
-
+    const topBottom = xAxis.reduce(
+      (acc, axis) => {
         if (axis.position === 'top') {
           return { ...acc, top: acc.top + (axis.height || 0) };
         }
-        return { ...acc, bottom: acc.bottom + (axis.height || 0) };
+        if (axis.position === 'bottom') {
+          return { ...acc, bottom: acc.bottom + (axis.height || 0) };
+        }
+        return acc;
       },
       { top: 0, bottom: 0 },
     );
 
-    const leftRight = yAxis.axisIds.reduce(
-      (acc, id) => {
-        const axis = yAxis.axis[id];
-        const scale = axis.scale;
-
-        const domain = scale.domain();
-        const ordinalAxis = isBandScale(scale);
-        if ((ordinalAxis && domain.length === 0) || (!ordinalAxis && domain.some(isInfinity))) {
-          return acc;
-        }
-
+    const leftRight = yAxis.reduce(
+      (acc, axis) => {
         if (axis.position === 'right') {
           return { ...acc, right: acc.right + (axis.width || 0) };
         }
-        return { ...acc, left: acc.left + (axis.width || 0) };
+        if (axis.position === 'left') {
+          return { ...acc, left: acc.left + (axis.width || 0) };
+        }
+        return acc;
       },
       { right: 0, left: 0 },
     );
