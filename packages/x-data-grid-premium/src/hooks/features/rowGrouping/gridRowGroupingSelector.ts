@@ -6,11 +6,11 @@ import {
 } from '@mui/x-data-grid-pro/internals';
 import { GridStatePremium } from '../../../models/gridStatePremium';
 
-export const gridRowGroupingStateSelector = createRootSelector(
+const gridRowGroupingStateSelector = createRootSelector(
   (state: GridStatePremium) => state.rowGrouping,
 );
 
-const gridRowGroupingModelSelector = createSelector(
+export const gridRowGroupingModelSelector = createSelector(
   gridRowGroupingStateSelector,
   (rowGrouping) => rowGrouping.model,
 );
