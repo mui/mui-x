@@ -2,7 +2,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import { styled } from '@mui/material/styles';
 import { inputBaseClasses } from '@mui/material/InputBase';
 import { TextFieldProps } from '../../models/gridBaseSlots';
@@ -272,21 +271,19 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
       </GridColumnsManagementHeader>
       <GridColumnsManagementBody className={classes.root} ownerState={rootProps}>
         {currentColumns.map((column) => (
-          <FormControlLabel
+          <rootProps.slots.baseCheckbox
             key={column.field}
             className={classes.row}
-            control={
-              <rootProps.slots.baseCheckbox
-                disabled={column.hideable === false}
-                checked={columnVisibilityModel[column.field] !== false}
-                onClick={toggleColumn}
-                name={column.field}
-                sx={{ p: 0.5 }}
-                inputRef={isFirstHideableColumn(column) ? firstSwitchRef : undefined}
-                {...rootProps.slotProps?.baseCheckbox}
-              />
-            }
+            disabled={column.hideable === false}
+            checked={columnVisibilityModel[column.field] !== false}
+            onClick={toggleColumn}
+            name={column.field}
+            inputRef={isFirstHideableColumn(column) ? firstSwitchRef : undefined}
             label={column.headerName || column.field}
+            size="medium"
+            density="compact"
+            fullWidth
+            {...rootProps.slotProps?.baseCheckbox}
           />
         ))}
         {currentColumns.length === 0 && (
@@ -298,19 +295,14 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
       {(!disableShowHideToggle || !disableResetButton) && currentColumns.length > 0 ? (
         <GridColumnsManagementFooter ownerState={rootProps} className={classes.footer}>
           {!disableShowHideToggle ? (
-            <FormControlLabel
-              control={
-                <rootProps.slots.baseCheckbox
-                  disabled={hideableColumns.length === 0}
-                  checked={allHideableColumnsVisible}
-                  indeterminate={!allHideableColumnsVisible && !allHideableColumnsHidden}
-                  onClick={() => toggleAllColumns(!allHideableColumnsVisible)}
-                  name={apiRef.current.getLocaleText('columnsManagementShowHideAllText')}
-                  sx={{ p: 0.5 }}
-                  {...rootProps.slotProps?.baseCheckbox}
-                />
-              }
+            <rootProps.slots.baseCheckbox
+              disabled={hideableColumns.length === 0}
+              checked={allHideableColumnsVisible}
+              indeterminate={!allHideableColumnsVisible && !allHideableColumnsHidden}
+              onClick={() => toggleAllColumns(!allHideableColumnsVisible)}
+              name={apiRef.current.getLocaleText('columnsManagementShowHideAllText')}
               label={apiRef.current.getLocaleText('columnsManagementShowHideAllText')}
+              {...rootProps.slotProps?.baseCheckbox}
             />
           ) : (
             <span />
@@ -427,9 +419,8 @@ GridColumnsManagement.propTypes = {
 const GridColumnsManagementBody = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnsManagement',
-  overridesResolver: (props, styles) => styles.columnsManagement,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
-  padding: theme.spacing(0, 3, 1.5),
+  padding: theme.spacing(0, 2, 1.5),
   display: 'flex',
   flexDirection: 'column',
   overflow: 'auto',
@@ -441,7 +432,6 @@ const GridColumnsManagementBody = styled('div', {
 const GridColumnsManagementHeader = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnsManagementHeader',
-  overridesResolver: (props, styles) => styles.columnsManagementHeader,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   padding: theme.spacing(1.5, 3),
 }));
@@ -449,7 +439,6 @@ const GridColumnsManagementHeader = styled('div', {
 const SearchInput = styled(NotRendered<GridSlotProps['baseTextField']>, {
   name: 'MuiDataGrid',
   slot: 'ColumnsManagementSearchInput',
-  overridesResolver: (props, styles) => styles.columnsManagementSearchInput,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   [`& .${inputBaseClasses.root}`]: {
     padding: theme.spacing(0, 1.5, 0, 1.5),
@@ -466,7 +455,6 @@ const SearchInput = styled(NotRendered<GridSlotProps['baseTextField']>, {
 const GridColumnsManagementFooter = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnsManagementFooter',
-  overridesResolver: (props, styles) => styles.columnsManagementFooter,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   padding: theme.spacing(0.5, 1, 0.5, 3),
   display: 'flex',

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useForkRef from '@mui/utils/useForkRef';
 import MUIBadge from '@mui/material/Badge';
 import MUICheckbox from '@mui/material/Checkbox';
 import MUIChip from '@mui/material/Chip';
@@ -12,6 +13,7 @@ import MUIMenuList from '@mui/material/MenuList';
 import MUIMenuItem from '@mui/material/MenuItem';
 import MUITextField from '@mui/material/TextField';
 import MUIFormControl from '@mui/material/FormControl';
+import MUIFormControlLabel from '@mui/material/FormControlLabel';
 import MUISelect from '@mui/material/Select';
 import MUIButton from '@mui/material/Button';
 import MUIIconButton from '@mui/material/IconButton';
@@ -57,6 +59,8 @@ import type { GridSlotProps } from '../models/gridSlotsComponentsProps';
 import type { PopperProps } from '../models/gridBaseSlots';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
+/* eslint-disable material-ui/disallow-react-api-in-server-components */
+
 const iconSlots: GridIconSlotsComponent = {
   booleanCellTrueIcon: GridCheckIcon,
   booleanCellFalseIcon: GridCloseIcon,
@@ -98,7 +102,7 @@ const iconSlots: GridIconSlotsComponent = {
 
 const baseSlots: GridBaseSlots = {
   baseBadge: MUIBadge,
-  baseCheckbox: MUICheckbox,
+  baseCheckbox: React.forwardRef(BaseCheckbox),
   baseCircularProgress: MUICircularProgress,
   baseDivider: MUIDivider,
   baseLinearProgress: MUILinearProgress,
@@ -124,6 +128,59 @@ const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
 };
 
 export default materialSlots;
+
+const CHECKBOX_COMPACT = { p: 0.5 };
+
+function BaseCheckbox(props: GridSlotProps['baseCheckbox'], ref: React.Ref<HTMLButtonElement>) {
+  const { autoFocus, label, fullWidth, slotProps, className, density, ...other } = props;
+
+  const elementRef = React.useRef<HTMLButtonElement>(null);
+  const handleRef = useForkRef(elementRef, ref);
+  const rippleRef = React.useRef<any>(null);
+
+  const sx = density === 'compact' ? CHECKBOX_COMPACT : undefined;
+
+  React.useEffect(() => {
+    if (autoFocus) {
+      const input = elementRef.current?.querySelector('input');
+      input?.focus({ preventScroll: true });
+    } else if (autoFocus === false && rippleRef.current) {
+      // Only available in @mui/material v5.4.1 or later
+      // @ts-ignore
+      rippleRef.current.stop({});
+    }
+  }, [autoFocus]);
+
+  if (!label) {
+    return (
+      <MUICheckbox
+        {...other}
+        className={className}
+        inputProps={slotProps?.htmlInput}
+        ref={handleRef}
+        sx={sx}
+        touchRippleRef={rippleRef}
+      />
+    );
+  }
+
+  return (
+    <MUIFormControlLabel
+      className={className}
+      control={
+        <MUICheckbox
+          {...other}
+          inputProps={slotProps?.htmlInput}
+          ref={handleRef}
+          sx={sx}
+          touchRippleRef={rippleRef}
+        />
+      }
+      label={label}
+      sx={fullWidth ? { width: '100%', margin: 0 } : undefined}
+    />
+  );
+}
 
 function BaseMenuList(props: GridSlotProps['baseMenuList']) {
   return <MUIMenuList {...props} />;

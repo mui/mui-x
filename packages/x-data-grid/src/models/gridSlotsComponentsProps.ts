@@ -1,7 +1,6 @@
 import * as React from 'react';
 import type { BadgeProps as MUIBadgeProps } from '@mui/material/Badge';
 import type { ButtonProps as MUIButtonProps } from '@mui/material/Button';
-import type { CheckboxProps } from '@mui/material/Checkbox';
 import type { CircularProgressProps as MUICircularProgressProps } from '@mui/material/CircularProgress';
 import type { LinearProgressProps as MUILinearProgressProps } from '@mui/material/LinearProgress';
 import type { MenuItemProps as MUIMenuItemProps } from '@mui/material/MenuItem';
@@ -34,6 +33,7 @@ import type { GridColumnHeaderSortIconProps } from '../components/columnHeaders/
 import type {
   BadgeProps,
   ButtonProps,
+  CheckboxProps,
   CircularProgressProps,
   DividerProps,
   IconButtonProps,
