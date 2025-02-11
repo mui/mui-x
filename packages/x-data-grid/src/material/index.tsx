@@ -25,6 +25,7 @@ import MUIGrow from '@mui/material/Grow';
 import MUIPaper from '@mui/material/Paper';
 import MUIInputLabel from '@mui/material/InputLabel';
 import MUISkeleton from '@mui/material/Skeleton';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridColumnUnsortedIcon } from './icons/GridColumnUnsortedIcon';
 import {
   GridAddIcon,
@@ -58,6 +59,8 @@ import type { GridBaseSlots } from '../models/gridSlotsComponent';
 import type { GridSlotProps } from '../models/gridSlotsComponentsProps';
 import type { PopperProps } from '../models/gridBaseSlots';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
+
+const ClickAwayListener = forwardRef(MUIClickAwayListener);
 
 /* eslint-disable material-ui/disallow-react-api-in-server-components */
 
@@ -301,13 +304,13 @@ function clickAwayWrapper(props: PopperProps, content: any) {
     return content;
   }
   return (
-    <MUIClickAwayListener
+    <ClickAwayListener
       onClickAway={props.onClickAway as any}
       touchEvent={props.clickAwayTouchEvent}
       mouseEvent={props.clickAwayMouseEvent}
     >
       {content}
-    </MUIClickAwayListener>
+    </ClickAwayListener>
   );
 }
 
