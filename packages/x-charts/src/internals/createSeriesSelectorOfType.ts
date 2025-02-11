@@ -10,7 +10,7 @@ export function createSeriesSelectorsOfType<T extends keyof ChartsSeriesConfig>(
     [selectorChartSeriesProcessed, (_, ids?: SeriesId | SeriesId[]) => ids],
     (processedSeries, ids) => {
       if (!ids || (Array.isArray(ids) && ids.length === 0)) {
-        return processedSeries[seriesType];
+        return Object.values(processedSeries[seriesType]?.series ?? []);
       }
 
       if (!Array.isArray(ids)) {
@@ -25,5 +25,18 @@ export function createSeriesSelectorsOfType<T extends keyof ChartsSeriesConfig>(
     const store = useStore();
 
     return useSelector(store, selectorSeriesWithIds, ids);
+  };
+}
+
+export function createAllSeriesSelectorOfType<T extends keyof ChartsSeriesConfig>(seriesType: T) {
+  const selectorSeries = createSelector(
+    selectorChartSeriesProcessed,
+    (processedSeries) => processedSeries[seriesType],
+  );
+
+  return () => {
+    const store = useStore();
+
+    return useSelector(store, selectorSeries);
   };
 }
