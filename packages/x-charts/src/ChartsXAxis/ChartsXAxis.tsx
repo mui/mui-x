@@ -44,44 +44,53 @@ function addLabelDimension(
   }: Pick<ChartsXAxisProps, 'tickLabelInterval' | 'tickLabelStyle'> &
     Pick<AxisDefaultized, 'reverse'> & { isMounted: boolean },
 ): (TickItemType & LabelExtraData)[] {
-  const withDimension = xTicks.map((tick) => {
+  const getTickSize = (tick: TickItemType) => {
     if (!isMounted || tick.formattedValue === undefined) {
-      return { ...tick, width: 0, height: 0 };
+      return { width: 0, height: 0 };
     }
+
     const tickSizes = getWordsByLines({ style, needsComputation: true, text: tick.formattedValue });
+
     return {
-      ...tick,
       width: Math.max(...tickSizes.map((size) => size.width)),
       height: Math.max(tickSizes.length * tickSizes[0].height),
     };
-  });
+  };
 
-  if (typeof tickLabelInterval === 'function') {
-    return withDimension.map((item, index) => ({
-      ...item,
-      skipLabel: !tickLabelInterval(item.value, index),
-    }));
-  }
+  // FIXME: Add this back
+  // if (typeof tickLabelInterval === 'function') {
+  //  return withDimension.map((item, index) => ({
+  //    ...item,
+  //    skipLabel: !tickLabelInterval(item.value, index),
+  //  }));
+  // }
 
   // Filter label to avoid overlap
-  let currentTextLimit = 0;
   let previousTextLimit = 0;
   const direction = reverse ? -1 : 1;
-  return withDimension.map((item, labelIndex) => {
-    const { width, offset, labelOffset, height } = item;
+  const minGap = 8;
+
+  return xTicks.map((item, labelIndex) => {
+    const { offset, labelOffset } = item;
+    const textPosition = offset + labelOffset;
+
+    if (labelIndex > 0 && direction * (textPosition - minGap) < direction * previousTextLimit) {
+      return { ...item, width: 0, height: 0, skipLabel: true };
+    }
+
+    const { width, height } = getTickSize(item);
 
     const distance = getMinXTranslation(width, height, style?.angle);
-    const textPosition = offset + labelOffset;
-    const gapRatio = 1.2; // Ratio applied to the minimal distance to add some margin.
 
-    currentTextLimit = textPosition - (direction * (gapRatio * distance)) / 2;
-    if (labelIndex > 0 && direction * currentTextLimit < direction * previousTextLimit) {
+    const currentTextLimit = textPosition - (direction * distance) / 2;
+    if (labelIndex > 0 && direction * (currentTextLimit - minGap) < direction * previousTextLimit) {
       // Except for the first label, we skip all label that overlap with the last accepted.
       // Notice that the early return prevents `previousTextLimit` from being updated.
-      return { ...item, skipLabel: true };
+      return { ...item, width, height, skipLabel: true };
     }
-    previousTextLimit = textPosition + (direction * (gapRatio * distance)) / 2;
-    return item;
+
+    previousTextLimit = textPosition + (direction * distance) / 2;
+    return { ...item, width, height };
   });
 }
 
