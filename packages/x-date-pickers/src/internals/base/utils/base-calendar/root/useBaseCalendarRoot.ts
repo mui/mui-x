@@ -8,7 +8,6 @@ import {
   PickerValidDate,
   TimezoneProps,
 } from '../../../../../models';
-import { useValidation } from '../../../../../validation';
 import { ValidateDateProps, validateDate } from '../../../../../validation/validateDate';
 import { FormProps, PickerValidValue } from '../../../../models';
 import { SECTION_TYPE_GRANULARITY } from '../../../../utils/getDefaultReferenceDate';
@@ -86,11 +85,13 @@ export function useBaseCalendarRoot<
     [referenceDateProp, timezone],
   );
 
-  const { getValidationErrorForNewValue } = useValidation({
-    props: { ...valueValidationProps, onError },
-    value,
-    timezone,
-    validator: manager.validator,
+  const getValidationErrorForNewValue = useEventCallback((newValue: TValue) => {
+    return manager.validator({
+      adapter,
+      value: newValue,
+      timezone,
+      props: { ...valueValidationProps, onError },
+    });
   });
 
   const sectionsRef = React.useRef<Record<BaseCalendarSection, Record<number, PickerValidDate>>>({
