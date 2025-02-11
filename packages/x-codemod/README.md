@@ -286,7 +286,7 @@ Renames the `colors` prop of a `SparkLineChart` to `color` and accesses its firs
 ```diff
  <SparkLineChart
 -  colors={['red']}
-+  color={['red'][0]}
++  color={'red'}
  />
 ```
 
@@ -297,6 +297,16 @@ If `colors` is a function, it will be wrapped in another function that returns i
 -  colors={fn}
 +  color={typeof fn === 'function' ? mode => fn(mode)[0] : fn[0]}
  />
+```
+
+If there are cases that the codemod cannot handle, you should see a comment with a `mui-x-codemod` prefix in the code.
+
+```diff
+<SparkLineChart
+- colors={(mode) => (mode === 'light' ? ['black'] : ['white'])}
++ /* mui-x-codemod: We renamed the `colors` prop to `color`, but didn't change the value. Please ensure sure this prop receives a string or a function that returns a string. */
++ color={(mode) => (mode === 'light' ? ['black'] : ['white'])}
+/>
 ```
 
 ### Data Grid codemods
