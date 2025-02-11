@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { useGridApiOptionHandler, useGridNativeEventListener } from '../../utils';
+import { useGridApiOptionHandler } from '../../utils';
 import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
 import { serializeCellValue } from '../export/serializers/csvSerializer';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -119,7 +119,17 @@ export const useGridClipboard = (
     [apiRef, ignoreValueFormatter, clipboardCopyCellDelimiter],
   );
 
-  useGridNativeEventListener(apiRef, apiRef.current.rootElementRef!, 'keydown', handleCopy);
+  useGridApiOptionHandler(apiRef, 'rootMount', () => {
+    const element = apiRef.current.rootElementRef.current;
+    if (!element) {
+      return undefined;
+    }
+    element.addEventListener('keydown', handleCopy);
+
+    return () => {
+      element.removeEventListener('keydown', handleCopy);
+    };
+  });
 
   useGridApiOptionHandler(apiRef, 'clipboardCopy', props.onClipboardCopy);
 };
