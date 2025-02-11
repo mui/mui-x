@@ -53,18 +53,24 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
       return;
     }
     store.update((prevState) => {
-      if (!prevState.dataSource.loading[itemId] && !isLoading) {
+      if (!prevState.lazyLoading.dataSource.loading[itemId] && !isLoading) {
         return prevState;
       }
 
-      const loading = { ...prevState.dataSource.loading };
+      const loading = { ...prevState.lazyLoading.dataSource.loading };
       if (isLoading === false) {
         delete loading[itemId];
       } else {
         loading[itemId] = isLoading;
       }
 
-      return { ...prevState, dataSource: { ...prevState.dataSource, loading } };
+      return {
+        ...prevState,
+        lazyLoading: {
+          ...prevState.lazyLoading,
+          dataSource: { ...prevState.lazyLoading.dataSource, loading },
+        },
+      };
     });
   });
 
@@ -73,7 +79,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
       return;
     }
     store.update((prevState) => {
-      const errors = { ...prevState.dataSource.errors };
+      const errors = { ...prevState.lazyLoading.dataSource.errors };
       if (error === null && errors[itemId] !== undefined) {
         delete errors[itemId];
       } else {
@@ -81,7 +87,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
       }
 
       errors[itemId] = error;
-      return { ...prevState, dataSource: { ...prevState.dataSource, errors } };
+      return { ...prevState, dataSource: { ...prevState.lazyLoading.dataSource, errors } };
     });
   };
 
@@ -240,7 +246,10 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
     if (isLazyLoadingEnabled && firstRenderRef.current) {
       store.update((prevState) => ({
         ...prevState,
-        lazyLoading: true,
+        lazyLoading: {
+          ...prevState.lazyLoading,
+          enabled: true,
+        },
       }));
       if (params.items.length) {
         const getChildrenCount = params.dataSource?.getChildrenCount || (() => 0);
@@ -290,8 +299,10 @@ useTreeViewLazyLoading.getDefaultizedParams = ({ params, experimentalFeatures })
 };
 
 useTreeViewLazyLoading.getInitialState = () => ({
-  dataSource: INITIAL_STATE,
-  lazyLoading: false,
+  lazyLoading: {
+    enabled: false,
+    dataSource: INITIAL_STATE,
+  },
 });
 
 useTreeViewLazyLoading.params = {

@@ -71,10 +71,12 @@ export type UseTreeViewLazyLoadingDefaultizedParameters<R extends {}> = Defaulti
 >;
 
 export interface UseTreeViewLazyLoadingState {
-  lazyLoading: boolean;
-  dataSource: {
-    loading: Record<TreeViewItemId, boolean>;
-    errors: Record<TreeViewItemId, Error | null>;
+  lazyLoading: {
+    enabled: boolean;
+    dataSource: {
+      loading: Record<TreeViewItemId, boolean>;
+      errors: Record<TreeViewItemId, Error | null>;
+    };
   };
 }
 
