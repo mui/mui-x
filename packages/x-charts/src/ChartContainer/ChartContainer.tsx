@@ -6,7 +6,7 @@ import { ChartDataProvider, ChartDataProviderProps } from '../ChartDataProvider'
 import { useChartContainerProps } from './useChartContainerProps';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
 import { AllPluginSignatures } from '../internals/plugins/allPlugins';
-import { ChartAnyPluginSignature } from '../internals/plugins/models';
+import { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
 
 export type ChartContainerProps<
   SeriesType extends ChartSeriesType = ChartSeriesType,

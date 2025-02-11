@@ -1,4 +1,4 @@
-import { CartesianExtremumGetter } from '../../internals/plugins/models/seriesConfig/extremumGetter.types';
+import { CartesianExtremumGetter } from '../../internals/plugins/models/seriesConfig';
 
 const createResult = (data: any, direction: 'x' | 'y') => {
   if (direction === 'x') {

@@ -29,6 +29,7 @@ export * from './line';
 export * from './bar';
 export * from './scatter';
 export * from './pie';
+export * from './radar';
 export type {
   AllSeriesType,
   CartesianSeriesType,
