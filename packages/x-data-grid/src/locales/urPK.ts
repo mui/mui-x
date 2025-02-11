@@ -6,6 +6,8 @@ const urPKGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'کوئی قطاریں نہیں',
   noResultsOverlayLabel: 'کوئی نتائج نہیں',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'کثافت',

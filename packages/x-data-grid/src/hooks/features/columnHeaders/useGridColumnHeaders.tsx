@@ -300,6 +300,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         aria-rowindex={headerGroupingMaxDepth + 1}
         ownerState={rootProps}
         className={gridClasses['row--borderBottom']}
+        style={{ height: headerHeight }}
       >
         {leftRenderContext &&
           getColumnHeaders(

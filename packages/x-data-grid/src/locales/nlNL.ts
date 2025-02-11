@@ -6,6 +6,8 @@ const nlNLGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Geen resultaten.',
   noResultsOverlayLabel: 'Geen resultaten gevonden.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'Grootte',

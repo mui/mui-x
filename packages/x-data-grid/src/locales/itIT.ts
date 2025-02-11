@@ -6,6 +6,8 @@ const itITGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Nessun record',
   noResultsOverlayLabel: 'Nessun record trovato.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'Densità',
