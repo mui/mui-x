@@ -20,7 +20,7 @@ const MAX_COMPUTE_RUN = 10;
 const selectorChartAxisSize = createSelector(
   [selectorChartRawXAxis, selectorChartRawYAxis],
   (xAxis, yAxis) => {
-    const topBottom = xAxis.reduce(
+    const topBottom = (xAxis ?? []).reduce(
       (acc, axis) => {
         if (axis.position === 'top') {
           return { ...acc, top: acc.top + (axis.height || 0) };
@@ -33,7 +33,7 @@ const selectorChartAxisSize = createSelector(
       { top: 0, bottom: 0 },
     );
 
-    const leftRight = yAxis.reduce(
+    const leftRight = (yAxis ?? []).reduce(
       (acc, axis) => {
         if (axis.position === 'right') {
           return { ...acc, right: acc.right + (axis.width || 0) };
