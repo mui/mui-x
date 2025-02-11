@@ -142,7 +142,7 @@ export function useTextFieldProps<
 
   const allProps = {
     value: position === 'start' ? value[0] : value[1],
-    // TODO: Check if we should add back the validation error
+    error: position === 'start' ? !!validation.validationError[0] : !!validation.validationError[1],
     id: `${pickerPrivateContext.labelId}-${position}`,
     autoFocus: position === 'start' ? autoFocus : undefined,
     ...forwardedProps,
