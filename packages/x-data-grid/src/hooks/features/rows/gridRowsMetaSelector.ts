@@ -1,5 +1,6 @@
-import { RefObject } from '@mui/x-internals/types';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { createRootSelector } from '../../../utils/createSelector';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
 
-export const gridRowsMetaSelector = (apiRef: RefObject<GridApiCommunity>) =>
-  apiRef.current.state.rowsMeta;
+export const gridRowsMetaSelector = createRootSelector(
+  (state: GridStateCommunity) => state.rowsMeta,
+);

@@ -1,10 +1,14 @@
-import { RefObject } from '@mui/x-internals/types';
 import { gridColumnLookupSelector } from '@mui/x-data-grid-pro';
-import { createSelector, createSelectorMemoized } from '@mui/x-data-grid/internals';
-import { GridApiPremium } from '../../../models/gridApiPremium';
+import {
+  createSelector,
+  createRootSelector,
+  createSelectorMemoized,
+} from '@mui/x-data-grid-pro/internals';
+import { GridStatePremium } from '../../../models/gridStatePremium';
 
-const gridRowGroupingStateSelector = (apiRef: RefObject<GridApiPremium>) =>
-  apiRef.current.state.rowGrouping;
+export const gridRowGroupingStateSelector = createRootSelector(
+  (state: GridStatePremium) => state.rowGrouping,
+);
 
 export const gridRowGroupingModelSelector = createSelector(
   gridRowGroupingStateSelector,

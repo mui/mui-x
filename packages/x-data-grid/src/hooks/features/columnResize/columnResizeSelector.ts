@@ -1,9 +1,9 @@
-import { RefObject } from '@mui/x-internals/types';
-import { createSelector } from '../../../utils/createSelector';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { createRootSelector, createSelector } from '../../../utils/createSelector';
 
-export const gridColumnResizeSelector = (apiRef: RefObject<GridApiCommunity>) =>
-  apiRef.current.state.columnResize;
+export const gridColumnResizeSelector = createRootSelector(
+  (state: GridStateCommunity) => state.columnResize,
+);
 
 export const gridResizingColumnFieldSelector = createSelector(
   gridColumnResizeSelector,

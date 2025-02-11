@@ -1,9 +1,9 @@
-import { RefObject } from '@mui/x-internals/types';
-import { createSelector } from '../../../utils/createSelector';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { createSelector, createRootSelector } from '../../../utils/createSelector';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
 
-const gridRowSpanningStateSelector = (apiRef: RefObject<GridApiCommunity>) =>
-  apiRef.current.state.rowSpanning;
+const gridRowSpanningStateSelector = createRootSelector(
+  (state: GridStateCommunity) => state.rowSpanning,
+);
 
 export const gridRowSpanningHiddenCellsSelector = createSelector(
   gridRowSpanningStateSelector,

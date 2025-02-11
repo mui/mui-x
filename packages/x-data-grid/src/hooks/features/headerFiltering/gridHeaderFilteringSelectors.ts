@@ -1,9 +1,9 @@
-import { RefObject } from '@mui/x-internals/types';
-import { createSelector } from '../../../utils/createSelector';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { createSelector, createRootSelector } from '../../../utils/createSelector';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
 
-export const gridHeaderFilteringStateSelector = (apiRef: RefObject<GridApiCommunity>) =>
-  apiRef.current.state.headerFiltering;
+export const gridHeaderFilteringStateSelector = createRootSelector(
+  (state: GridStateCommunity) => state.headerFiltering,
+);
 
 export const gridHeaderFilteringEnabledSelector = createSelector(
   gridHeaderFilteringStateSelector,

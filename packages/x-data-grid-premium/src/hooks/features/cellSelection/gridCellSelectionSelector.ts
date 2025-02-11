@@ -1,5 +1,6 @@
-import { RefObject } from '@mui/x-internals/types';
+import { createRootSelector } from '@mui/x-data-grid-pro/internals';
 import { GridStatePremium } from '../../../models/gridStatePremium';
 
-export const gridCellSelectionStateSelector = (apiRef: RefObject<{ state: GridStatePremium }>) =>
-  apiRef.current.state.cellSelection;
+export const gridCellSelectionStateSelector = createRootSelector(
+  (state: GridStatePremium) => state.cellSelection,
+);

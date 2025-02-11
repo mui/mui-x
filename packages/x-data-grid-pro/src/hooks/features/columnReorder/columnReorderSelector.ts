@@ -1,9 +1,9 @@
-import { RefObject } from '@mui/x-internals/types';
-import { createSelector } from '@mui/x-data-grid/internals';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { createSelector, createRootSelector } from '@mui/x-data-grid/internals';
+import { GridStatePro } from '../../../models/gridStatePro';
 
-export const gridColumnReorderSelector = (apiRef: RefObject<GridApiPro>) =>
-  apiRef.current.state.columnReorder;
+export const gridColumnReorderSelector = createRootSelector(
+  (state: GridStatePro) => state.columnReorder,
+);
 
 export const gridColumnReorderDragColSelector = createSelector(
   gridColumnReorderSelector,

@@ -1,9 +1,9 @@
-import { RefObject } from '@mui/x-internals/types';
-import { createSelector } from '@mui/x-data-grid-pro/internals';
-import { GridApiPremium } from '../../../models/gridApiPremium';
+import { createSelector, createRootSelector } from '@mui/x-data-grid-pro/internals';
+import { GridStatePremium } from '../../../models/gridStatePremium';
 
-export const gridAggregationStateSelector = (apiRef: RefObject<GridApiPremium>) =>
-  apiRef.current.state.aggregation;
+export const gridAggregationStateSelector = createRootSelector(
+  (state: GridStatePremium) => state.aggregation,
+);
 
 /**
  * Get the aggregation model, containing the aggregation function of each column.

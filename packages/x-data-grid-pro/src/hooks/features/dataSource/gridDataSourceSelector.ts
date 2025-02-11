@@ -1,10 +1,10 @@
-import { RefObject } from '@mui/x-internals/types';
-import { createSelector } from '@mui/x-data-grid/internals';
+import { createSelector, createRootSelector } from '@mui/x-data-grid/internals';
 import type { GridRowId } from '@mui/x-data-grid';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridStatePro } from '../../../models/gridStatePro';
 
-export const gridDataSourceStateSelector = (apiRef: RefObject<GridApiPro>) =>
-  apiRef.current.state.dataSource;
+export const gridDataSourceStateSelector = createRootSelector(
+  (state: GridStatePro) => state.dataSource,
+);
 
 export const gridDataSourceLoadingSelector = createSelector(
   gridDataSourceStateSelector,

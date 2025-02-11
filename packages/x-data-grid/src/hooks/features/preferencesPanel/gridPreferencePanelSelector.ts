@@ -1,9 +1,9 @@
-import { RefObject } from '@mui/x-internals/types';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
-import { createSelector } from '../../../utils/createSelector';
+import { createSelector, createRootSelector } from '../../../utils/createSelector';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
 
-export const gridPreferencePanelStateSelector = (apiRef: RefObject<GridApiCommunity>) =>
-  apiRef.current.state.preferencePanel;
+export const gridPreferencePanelStateSelector = createRootSelector(
+  (state: GridStateCommunity) => state.preferencePanel,
+);
 
 export const gridPreferencePanelSelectorWithLabel = createSelector(
   gridPreferencePanelStateSelector,

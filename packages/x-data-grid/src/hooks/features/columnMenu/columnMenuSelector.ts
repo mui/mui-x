@@ -1,5 +1,6 @@
-import { RefObject } from '@mui/x-internals/types';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { createRootSelector } from '../../../utils/createSelector';
 
-export const gridColumnMenuSelector = (apiRef: RefObject<GridApiCommunity>) =>
-  apiRef.current.state.columnMenu;
+export const gridColumnMenuSelector = createRootSelector(
+  (state: GridStateCommunity) => state.columnMenu,
+);
