@@ -20,10 +20,10 @@ const queryClient = new QueryClient({
 
 const cache: DataSourceCache = {
   set: (key: string, value) => {
-    queryClient.setQueryData(key, value);
+    queryClient.setQueryData([key], value);
   },
   get: (key: string) => {
-    return queryClient.getQueryData(key);
+    return queryClient.getQueryData([key]);
   },
   clear: () => {
     queryClient.clear();
