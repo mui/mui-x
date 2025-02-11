@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { ChartsXAxis } from '../ChartsXAxis';
 import { ChartsYAxis } from '../ChartsYAxis';
 import {
+  AxisDefaultized,
   AxisId,
   ChartsAxisSlotProps,
   ChartsAxisSlots,
@@ -12,6 +13,7 @@ import {
 } from '../models/axis';
 import { useXAxes, useYAxes } from '../hooks';
 import { DEFAULT_AXIS_SIZE } from '../constants';
+import { DefaultizedAxisConfig } from '../context/PolarProvider/Polar.types';
 
 // TODO: Add links to the migration docs for each prop
 export interface ChartsAxisProps {
@@ -55,20 +57,22 @@ export interface ChartsAxisProps {
   slotProps?: ChartsAxisSlotProps;
 }
 
-const getAxisId = (
+const axisIdToAxis = (
   propsValue: undefined | null | AxisId | ChartsXAxisProps | ChartsYAxisProps,
-): AxisId | null => {
+): ChartsXAxisProps | ChartsYAxisProps => {
   if (propsValue == null) {
-    return null;
+    return { axisId: undefined };
   }
   if (typeof propsValue === 'object') {
-    return propsValue.axisId ?? null;
+    return propsValue;
   }
-  return propsValue;
+  return {
+    axisId: propsValue,
+  };
 };
 
 const mergeProps = (
-  axisConfig: undefined | null | AxisId | ChartsXAxisProps | ChartsYAxisProps,
+  axisConfig: AxisDefaultized,
   slots?: Partial<ChartsAxisSlots>,
   slotProps?: Partial<ChartsAxisSlotProps>,
 ) => {
@@ -79,6 +83,34 @@ const mergeProps = (
       }
     : { slots, slotProps };
 };
+
+type HeightWidth = { height?: number; width?: number };
+
+function formatAxis<AxisProps extends ChartsXAxisProps | ChartsYAxisProps>(
+  axisProp: AxisProps,
+  axisConfig: DefaultizedAxisConfig<AxisProps>,
+  axisIds: string[],
+  position: AxisProps['position'],
+  slots?: Partial<ChartsAxisSlots>,
+  slotProps?: Partial<ChartsAxisSlotProps>,
+) {
+  const dimension = position === 'top' || position === 'bottom' ? 'height' : 'width';
+
+  return (
+    axisProp.axisId
+      ? [{ ...axisConfig[axisProp.axisId], ...axisProp }]
+      : axisIds.map((id) => axisConfig[id]).filter((axis) => axis.position === position)
+  ).map((axis, i, arr) => ({
+    offset: arr
+      .slice(0, i)
+      .reduce(
+        (acc, curr) => acc + ((curr as HeightWidth)[dimension] ?? DEFAULT_AXIS_SIZE),
+        axis.offset ?? 0,
+      ),
+    ...axis,
+    ...mergeProps(axis, slots, slotProps),
+  }));
+}
 
 /**
  * Demos:
@@ -101,119 +133,64 @@ function ChartsAxis(props: ChartsAxisProps) {
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
 
-  const topId = getAxisId(topAxisProp);
-  const rightId = getAxisId(rightAxisProp);
-  const bottomId = getAxisId(bottomAxisProp);
-  const leftId = getAxisId(leftAxisProp);
+  const top = axisIdToAxis(topAxisProp);
+  const right = axisIdToAxis(rightAxisProp);
+  const bottom = axisIdToAxis(bottomAxisProp);
+  const left = axisIdToAxis(leftAxisProp);
 
   if (process.env.NODE_ENV !== 'production') {
-    if (topId !== null && !xAxis[topId]) {
+    if (top.axisId != null && !xAxis[top.axisId]) {
       throw new Error(
         [
-          `MUI X: id used for top axis "${topId}" is not defined.`,
+          `MUI X: id used for top axis "${top.axisId}" is not defined.`,
           `Available ids are: ${xAxisIds.join(', ')}.`,
         ].join('\n'),
       );
     }
-    if (rightId !== null && !yAxis[rightId]) {
+    if (right.axisId != null && !yAxis[right.axisId]) {
       throw new Error(
         [
-          `MUI X: id used for right axis "${rightId}" is not defined.`,
+          `MUI X: id used for right axis "${right.axisId}" is not defined.`,
           `Available ids are: ${yAxisIds.join(', ')}.`,
         ].join('\n'),
       );
     }
-    if (bottomId !== null && !xAxis[bottomId]) {
+    if (bottom.axisId != null && !xAxis[bottom.axisId]) {
       throw new Error(
         [
-          `MUI X: id used for bottom axis "${bottomId}" is not defined.`,
+          `MUI X: id used for bottom axis "${bottom.axisId}" is not defined.`,
           `Available ids are: ${xAxisIds.join(', ')}.`,
         ].join('\n'),
       );
     }
-    if (leftId !== null && !yAxis[leftId]) {
+    if (left.axisId != null && !yAxis[left.axisId]) {
       throw new Error(
         [
-          `MUI X: id used for left axis "${leftId}" is not defined.`,
+          `MUI X: id used for left axis "${left.axisId}" is not defined.`,
           `Available ids are: ${yAxisIds.join(', ')}.`,
         ].join('\n'),
       );
     }
   }
 
-  const topAxes = topId
-    ? [xAxis[topId]]
-    : xAxisIds.map((id) => xAxis[id]).filter((axis) => axis.position === 'top');
-  const rightAxes = rightId
-    ? [yAxis[rightId]]
-    : yAxisIds.map((id) => yAxis[id]).filter((axis) => axis.position === 'right');
-  const bottomAxes = bottomId
-    ? [xAxis[bottomId]]
-    : xAxisIds.map((id) => xAxis[id]).filter((axis) => axis.position === 'bottom');
-  const leftAxes = leftId
-    ? [yAxis[leftId]]
-    : yAxisIds.map((id) => yAxis[id]).filter((axis) => axis.position === 'left');
-
-  const completeTopAxisProps = topAxes.map((axis) => ({
-    ...axis,
-    ...mergeProps(axis, slots, slotProps),
-  }));
-  const completeRightAxisProps = rightAxes.map((axis) => ({
-    ...axis,
-    ...mergeProps(axis, slots, slotProps),
-  }));
-  const completeBottomAxisProps = (
-    bottomAxes.length === 0 && !xAxis[xAxisIds[0]].position ? [xAxis[xAxisIds[0]]] : bottomAxes
-  ).map((axis) => ({ ...axis, ...mergeProps(axis, slots, slotProps) }));
-  const completeLeftAxisProps = (
-    leftAxes.length === 0 && !yAxis[yAxisIds[0]].position ? [yAxis[yAxisIds[0]]] : leftAxes
-  ).map((axis) => ({ ...axis, ...mergeProps(axis, slots, slotProps) }));
+  const topAxes = formatAxis(top, xAxis, xAxisIds, 'top', slots, slotProps);
+  const rightAxes = formatAxis(right, yAxis, yAxisIds, 'right', slots, slotProps);
+  const bottomAxes = formatAxis(bottom, xAxis, xAxisIds, 'bottom', slots, slotProps);
+  const leftAxes = formatAxis(left, yAxis, yAxisIds, 'left', slots, slotProps);
 
   return (
     <React.Fragment>
-      {completeTopAxisProps.map((axis, i, arr) => (
-        <ChartsXAxis
-          key={axis.id}
-          {...axis}
-          position="top"
-          axisId={axis.id}
-          offset={arr
-            .slice(0, i)
-            .reduce((acc, curr) => acc + (curr.height ?? DEFAULT_AXIS_SIZE), axis.offset ?? 0)}
-        />
+      {topAxes.map((axis) => (
+        <ChartsXAxis key={axis.id} {...axis} position="top" axisId={axis.id} />
       ))}
-      {completeRightAxisProps.map((axis, i, arr) => (
-        <ChartsYAxis
-          key={axis.id}
-          {...axis}
-          position="right"
-          axisId={axis.id}
-          offset={arr
-            .slice(0, i)
-            .reduce((acc, curr) => acc + (curr.width ?? DEFAULT_AXIS_SIZE), axis.offset ?? 0)}
-        />
+      {rightAxes.map((axis) => (
+        <ChartsYAxis key={axis.id} {...axis} position="right" axisId={axis.id} />
       ))}
-      {completeBottomAxisProps.map((axis, i, arr) => (
-        <ChartsXAxis
-          key={axis.id}
-          {...axis}
-          position="bottom"
-          axisId={axis.id}
-          offset={arr
-            .slice(0, i)
-            .reduce((acc, curr) => acc + (curr.height ?? DEFAULT_AXIS_SIZE), axis.offset ?? 0)}
-        />
+      {bottomAxes.map((axis) => (
+        <ChartsXAxis key={axis.id} {...axis} position="bottom" axisId={axis.id} />
       ))}
-      {completeLeftAxisProps.map((axis, i, arr) => (
-        <ChartsYAxis
-          key={axis.id}
-          {...axis}
-          position="left"
-          axisId={axis.id}
-          offset={arr
-            .slice(0, i)
-            .reduce((acc, curr) => acc + (curr.width ?? DEFAULT_AXIS_SIZE), axis.offset ?? 0)}
-        />
+      {leftAxes.map((axis) => (
+        <ChartsYAxis key={axis.id} {...axis} position="left" axisId={axis.id} />
       ))}
     </React.Fragment>
   );
