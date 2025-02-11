@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ChartContextValue } from './ChartProvider.types';
+import type { ChartContextValue } from './ChartProvider.types';
 
 /**
  * @ignore - internal component.

@@ -20,12 +20,10 @@ export function GridPreferencesPanel() {
 
   return (
     <rootProps.slots.panel
-      as={rootProps.slots.basePopper}
-      open={columns.length > 0 && preferencePanelState.open}
       id={preferencePanelState.panelId}
+      open={columns.length > 0 && preferencePanelState.open}
       aria-labelledby={preferencePanelState.labelId}
       {...rootProps.slotProps?.panel}
-      {...rootProps.slotProps?.basePopper}
     >
       {panelContent}
     </rootProps.slots.panel>
