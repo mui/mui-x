@@ -19,6 +19,7 @@
   { "name": "BaseSwitchPropsOverrides", "kind": "Interface" },
   { "name": "BaseTextFieldPropsOverrides", "kind": "Interface" },
   { "name": "BaseTooltipPropsOverrides", "kind": "Interface" },
+  { "name": "BottomContainerPropsOverrides", "kind": "Interface" },
   { "name": "CellPropsOverrides", "kind": "Interface" },
   { "name": "checkGridRowIdIsValid", "kind": "Function" },
   { "name": "ColumnHeaderFilterIconButtonProps", "kind": "Interface" },

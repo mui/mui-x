@@ -30,6 +30,7 @@ import type { GridColumnsManagementProps } from '../components/columnsManagement
 import type { GridLoadingOverlayProps } from '../components/GridLoadingOverlay';
 import type { GridRowCountProps } from '../components/GridRowCount';
 import type { GridColumnHeaderSortIconProps } from '../components/columnHeaders/GridColumnHeaderSortIcon';
+import type { GridBottomContainerProps } from '../components/virtualization/GridBottomContainer';
 import type {
   BadgeProps,
   ButtonProps,
@@ -93,6 +94,7 @@ export interface PanelPropsOverrides {}
 export interface PinnedRowsPropsOverrides {}
 export interface SkeletonCellPropsOverrides {}
 export interface RowPropsOverrides {}
+export interface BottomContainerPropsOverrides {}
 
 interface BaseSlotProps {
   baseBadge: BadgeProps & BaseBadgePropsOverrides;
@@ -128,6 +130,7 @@ interface MaterialSlotProps {
 }
 
 interface ElementSlotProps {
+  bottomContainer: GridBottomContainerProps & BottomContainerPropsOverrides;
   cell: GridCellProps & CellPropsOverrides;
   columnHeaders: GridColumnHeadersProps;
   columnHeaderFilterIconButton: ColumnHeaderFilterIconButtonProps &
