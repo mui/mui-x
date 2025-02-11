@@ -1,18 +1,39 @@
-import { TreeViewState } from '../../models';
-import { createSelector } from '../../utils/selectors';
+import { TreeViewAnyPluginSignature, TreeViewState } from '../../models';
+import {
+  createSelector,
+  TreeViewRootSelector,
+  TreeViewRootSelectorForOptionalPlugin,
+} from '../../utils/selectors';
 import { UseTreeViewLazyLoadingSignature } from './useTreeViewLazyLoading.types';
 
-export const selectorDataSourceState = (state: TreeViewState<[UseTreeViewLazyLoadingSignature]>) =>
-  state.dataSource;
+export type Temp<TSignature extends TreeViewAnyPluginSignature> = <
+  TSignatures extends [],
+  TOptionalSignatures extends [TSignature],
+>(
+  state: TreeViewState<TSignatures, TOptionalSignatures>,
+) => TSignature['state'][keyof TSignature['state']];
+
+const selectorLazyLoading: TreeViewRootSelector<UseTreeViewLazyLoadingSignature> = (state) =>
+  state.lazyLoading;
+
+const selectorLazyLoadingOptional: TreeViewRootSelectorForOptionalPlugin<
+  UseTreeViewLazyLoadingSignature
+> = (state) => state.lazyLoading;
+
+export const selectorDataSourceState = createSelector(
+  [selectorLazyLoading],
+  (lazyLoading) => lazyLoading.dataSource,
+);
 
 /**
- * Check if lazy loading is enabled
+ * Check if lazy loading is enabled.
  * @param {TreeViewState<[UseTreeViewLazyLoadingSignature]>} state The state of the tree view.
  * @returns {boolean} True if lazy loading is enabled, false if it isn't.
  */
-export const selectorIsLazyLoadingEnabled = (
-  state: TreeViewState<[UseTreeViewLazyLoadingSignature]>,
-) => state.lazyLoading;
+export const selectorIsLazyLoadingEnabled = createSelector(
+  [selectorLazyLoadingOptional],
+  (lazyLoading) => !!lazyLoading?.enabled,
+);
 
 /**
  * Get the loading state for a tree item.
