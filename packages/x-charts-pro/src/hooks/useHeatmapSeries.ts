@@ -30,8 +30,8 @@ export function useHeatmapSeries(seriesId: SeriesId): ChartSeriesDefaultized<'he
  * @returns {ChartSeriesDefaultized<'heatmap'>[] | undefined}  heatmapSeries
  */
 export function useHeatmapSeries(
-  ...seriesIds: SeriesId[]
+  seriesIds: SeriesId[],
 ): (ChartSeriesDefaultized<'heatmap'> | undefined)[];
-export function useHeatmapSeries(...seriesIds: SeriesId[]): any {
+export function useHeatmapSeries(seriesIds?: any): any {
   return selectorSeries(seriesIds);
 }

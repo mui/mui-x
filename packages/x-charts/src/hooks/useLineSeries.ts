@@ -28,8 +28,8 @@ export function useLineSeries(seriesId: SeriesId): ChartSeriesDefaultized<'line'
  * @returns {ChartSeriesDefaultized<'line'>[] | undefined}  lineSeries
  */
 export function useLineSeries(
-  ...seriesIds: SeriesId[]
+  seriesIds: SeriesId[],
 ): (ChartSeriesDefaultized<'line'> | undefined)[];
-export function useLineSeries(...seriesIds: SeriesId[]): any {
+export function useLineSeries(seriesIds?: any): any {
   return selectorSeries(seriesIds);
 }

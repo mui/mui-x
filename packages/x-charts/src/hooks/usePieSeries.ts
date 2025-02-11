@@ -27,9 +27,7 @@ export function usePieSeries(seriesId: SeriesId): ChartSeriesDefaultized<'pie'> 
  * @param {SeriesId[]} seriesIds The ids of the series to get. Order is preserved.
  * @returns {ChartSeriesDefaultized<'pie'>[] | undefined}  pieSeries
  */
-export function usePieSeries(
-  ...seriesIds: SeriesId[]
-): (ChartSeriesDefaultized<'pie'> | undefined)[];
-export function usePieSeries(...seriesIds: SeriesId[]): any {
+export function usePieSeries(seriesIds: SeriesId[]): (ChartSeriesDefaultized<'pie'> | undefined)[];
+export function usePieSeries(seriesIds?: any): any {
   return selectorSeries(seriesIds);
 }

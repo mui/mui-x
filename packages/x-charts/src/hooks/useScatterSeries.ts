@@ -28,8 +28,8 @@ export function useScatterSeries(seriesId: SeriesId): ChartSeriesDefaultized<'sc
  * @returns {ChartSeriesDefaultized<'scatter'>[] | undefined}  scatterSeries
  */
 export function useScatterSeries(
-  ...seriesIds: SeriesId[]
+  seriesIds: SeriesId[],
 ): (ChartSeriesDefaultized<'scatter'> | undefined)[];
-export function useScatterSeries(...seriesIds: SeriesId[]): any {
+export function useScatterSeries(seriesIds?: any): any {
   return selectorSeries(seriesIds);
 }

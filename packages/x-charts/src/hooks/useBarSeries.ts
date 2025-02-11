@@ -27,9 +27,7 @@ export function useBarSeries(seriesId: SeriesId): ChartSeriesDefaultized<'bar'> 
  * @param {SeriesId[]} seriesIds The ids of the series to get. Order is preserved.
  * @returns {ChartSeriesDefaultized<'bar'>[] | undefined}  barSeries
  */
-export function useBarSeries(
-  ...seriesIds: SeriesId[]
-): (ChartSeriesDefaultized<'bar'> | undefined)[];
-export function useBarSeries(...seriesIds: SeriesId[]): any {
+export function useBarSeries(seriesIds: SeriesId[]): (ChartSeriesDefaultized<'bar'> | undefined)[];
+export function useBarSeries(seriesIds?: any): any {
   return selectorSeries(seriesIds);
 }
