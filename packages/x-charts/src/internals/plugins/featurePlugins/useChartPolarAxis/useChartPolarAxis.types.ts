@@ -35,17 +35,17 @@ export interface UseChartPolarAxisParameters {
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  rotationAxis: AxisConfig<ScaleName, any, ChartsRotationAxisProps>[];
+  rotationAxis?: AxisConfig<ScaleName, any, ChartsRotationAxisProps>[];
   /**
    * The configuration of the radial-axes.
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  radiusAxis: AxisConfig<'linear', any, ChartsRadiusAxisProps>[];
+  radiusAxis?: AxisConfig<'linear', any, ChartsRadiusAxisProps>[];
   dataset?: DatasetType;
 }
 
-export type UseChartPolarAxisDefaultizedParameters = UseChartPolarAxisParameters;
+export type UseChartPolarAxisDefaultizedParameters = UseChartPolarAxisParameters & {};
 
 export interface UseChartPolarAxisState {
   polarAxis: {

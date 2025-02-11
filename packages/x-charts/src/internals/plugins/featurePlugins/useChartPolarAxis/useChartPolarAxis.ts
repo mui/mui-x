@@ -2,14 +2,13 @@
 import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
 import { ChartPlugin } from '../../models';
-import { ChartSeriesType } from '../../../../models/seriesType/config';
 import { UseChartPolarAxisSignature } from './useChartPolarAxis.types';
 import { useSelector } from '../../../store/useSelector';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
 import { selectorChartSeriesState } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import { defaultizeAxis } from './defaultizeAxis';
 
-export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<ChartSeriesType>> = ({
+export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = ({
   params,
   store,
   seriesConfig,

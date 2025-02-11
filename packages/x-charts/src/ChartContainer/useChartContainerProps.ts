@@ -32,27 +32,19 @@ export const useChartContainerProps = <
     colors,
     dataset,
     desc,
-    // @ts-ignore
     onAxisClick,
     disableVoronoi,
     voronoiMaxRadius,
     onItemClick,
     disableAxisListener,
-    // @ts-ignore
     highlightedItem,
-    // @ts-ignore
     onHighlightChange,
     sx,
     title,
-    // @ts-ignore
     xAxis,
-    // @ts-ignore
     yAxis,
-    // @ts-ignore
     zAxis,
-    // @ts-ignore
     rotationAxis,
-    // @ts-ignore
     radiusAxis,
     skipAnimation,
     seriesConfig,
