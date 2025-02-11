@@ -1,12 +1,12 @@
 # Priority Support
 
-<p class="description">Learn how to get priority technical support for MUI components.</p>
+<p class="description">Learn how to get priority technical support for MUI X components.</p>
 
 ## What is priority support?
 
-Priority support is a paid MUI offering that guarantees an expedited technical support experience for your critical apps. It offers quick troubleshooting and priority treatment of your queries.
+Priority Support is a premium service ensuring fast, expert assistance for your critical applications, with expedited troubleshooting and priority handling of inquiries.
 
-Priority support gets a higher precedence over standard support which comes by default with the paid plans. It is governed by an SLA while the others are not. Our support team caters to the user queries in the following order:
+Priority support takes precedence over standard support, which is included by default in paid plans. It is backed by an SLA, whereas standard support is not. Support requests are prioritized in the following order:
 
 :::info
 Community < Pro < Premium Standard (No SLA) < Priority Support (SLA governed)
@@ -15,7 +15,7 @@ Community < Pro < Premium Standard (No SLA) < Priority Support (SLA governed)
 The SLAs included in priority support are:
 
 - **24 hour response SLA**
-  Receive an initial response from our support team within 24 business hours.
+  Receive an initial response within 24 business hours.
 - **4 hour pre-screening SLA**
   Issues submitted through priority support channels undergo an initial review to validate, and reproduce the issue. This ensures your tickets have the right information for debugging.
 - **Issue Escalation**
@@ -25,26 +25,22 @@ The SLAs included in priority support are:
 
 Priority support is ideal for teams working on mission-critical applications or handling complex projects that demand rapid resolutions and proactive technical assistance. Priority support covers the following MUI products:
 
-- MUI X
+- MUI X
   - Data Grid
   - Date and Time Pickers
   - Tree View
   - Charts
-- MUI Core
-  - Material UI
-  - MUI System
-  - Joy UI
 
-These are also mentioned in our legal terms: https://mui.com/legal/technical-support-sla/
+These are also mentioned in the legal terms: https://mui.com/legal/technical-support-sla/
 
 ## How to buy priority support?
 
-Priority support is available as an add-on to our Premium users. You can buy it at $399/developer/year from our pricing page.
+Priority support is available as an add-on to the premium plan users. You can buy it at $399/developer/year from the pricing page or you can reach out to the support team.
 
-- In case, you are already a premium user and want to subscribe to buy it, you can reach out to our support team.
-- In case, you are a pro user, you first need to upgrade to the premium plan and then you'll be eligible for priority support. You can reach out to the support team for upgrade.
+- In case, you are already a premium user and want to subscribe to buy it.
+- In case, you are a pro user, you first need to upgrade to the premium plan and then you'll be eligible for priority support.
 
-Upon purchase you'll receive a support key that you need to use when raising queries. You must keep it safe.
+Upon purchase you'll receive a support key that you need to validate when raising queries. You must keep it safe.
 
 ## How to use priority support?
 
