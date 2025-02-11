@@ -1,6 +1,12 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DataGrid } from '@mui/x-data-grid';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import {
+  DataGrid,
+  GridPreferencePanelsValue,
+  useGridApiContext,
+} from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import { styled } from '@mui/material/styles';
 
@@ -9,6 +15,7 @@ const StyledGridOverlay = styled('div')(({ theme }) => ({
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
+  textAlign: 'center',
   height: '100%',
   '& .no-columns-primary': {
     fill: '#3D4751',
@@ -25,6 +32,12 @@ const StyledGridOverlay = styled('div')(({ theme }) => ({
 }));
 
 function CustomNoColumnsOverlay() {
+  const apiRef = useGridApiContext();
+
+  const handleOpenManageColumns = () => {
+    apiRef.current.showPreferences(GridPreferencePanelsValue.columns);
+  };
+
   return (
     <StyledGridOverlay>
       <svg
@@ -44,7 +57,12 @@ function CustomNoColumnsOverlay() {
           d="M185 71c-32.585 0-59 26.415-59 59s26.415 59 59 59 59-26.415 59-59-26.415-59-59-59Zm-79 59c0-43.63 35.37-79 79-79s79 35.37 79 79c0 43.631-35.37 79-79 79s-79-35.369-79-79Zm109.296-30.56c3.905 3.905 3.905 10.236 0 14.142l-16.286 16.286 16.286 16.286c3.905 3.905 3.905 10.237 0 14.142-3.905 3.905-10.237 3.905-14.142 0l-16.286-16.286-16.286 16.286c-3.905 3.905-10.237 3.905-14.142 0-3.906-3.905-3.906-10.237 0-14.142l16.286-16.286-16.286-16.286c-3.906-3.905-3.906-10.237 0-14.142 3.905-3.906 10.237-3.906 14.142 0l16.286 16.286 16.286-16.286c3.905-3.906 10.237-3.906 14.142 0Z"
         />
       </svg>
-      <Box sx={{ mt: 2 }}>No columns</Box>
+      <Stack sx={{ mt: 2 }} gap={1}>
+        No columns
+        <Button onClick={handleOpenManageColumns} size="small">
+          Manage columns
+        </Button>
+      </Stack>
     </StyledGridOverlay>
   );
 }

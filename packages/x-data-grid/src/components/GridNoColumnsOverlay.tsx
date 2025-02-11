@@ -13,21 +13,20 @@ const GridNoColumnsOverlay = forwardRef<HTMLDivElement, GridOverlayProps>(
     const apiRef = useGridApiContext();
     const columns = useGridSelector(apiRef, gridColumnFieldsSelector);
 
-    const showColumns = () => {
+    const handleOpenManageColumns = () => {
       apiRef.current.showPreferences(GridPreferencePanelsValue.columns);
     };
 
-    const showManageColumns = !rootProps.disableColumnSelector && columns.length > 0;
+    const showManageColumnsButton = !rootProps.disableColumnSelector && columns.length > 0;
 
     return (
       <GridOverlay {...props} ref={ref}>
         {apiRef.current.getLocaleText('noColumnsOverlayLabel')}
-        {showManageColumns && (
+        {showManageColumnsButton && (
           <rootProps.slots.baseButton
-            startIcon={<rootProps.slots.columnSelectorIcon fontSize="small" />}
             size="small"
             {...rootProps.slotProps?.baseButton}
-            onClick={showColumns}
+            onClick={handleOpenManageColumns}
           >
             {apiRef.current.getLocaleText('noColumnsOverlayManageColumns')}
           </rootProps.slots.baseButton>
