@@ -32,6 +32,6 @@ export function useHeatmapSeries(seriesId: SeriesId): ChartSeriesDefaultized<'he
 export function useHeatmapSeries(
   seriesIds: SeriesId[],
 ): (ChartSeriesDefaultized<'heatmap'> | undefined)[];
-export function useHeatmapSeries(seriesIds?: any): any {
+export function useHeatmapSeries(seriesIds?: any) {
   return selectorSeries(seriesIds);
 }

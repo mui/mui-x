@@ -28,6 +28,6 @@ export function useBarSeries(seriesId: SeriesId): ChartSeriesDefaultized<'bar'> 
  * @returns {ChartSeriesDefaultized<'bar'>[] | undefined}  barSeries
  */
 export function useBarSeries(seriesIds: SeriesId[]): (ChartSeriesDefaultized<'bar'> | undefined)[];
-export function useBarSeries(seriesIds?: any): any {
+export function useBarSeries(seriesIds?: any) {
   return selectorSeries(seriesIds);
 }

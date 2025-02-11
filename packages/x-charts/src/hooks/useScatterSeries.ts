@@ -30,6 +30,6 @@ export function useScatterSeries(seriesId: SeriesId): ChartSeriesDefaultized<'sc
 export function useScatterSeries(
   seriesIds: SeriesId[],
 ): (ChartSeriesDefaultized<'scatter'> | undefined)[];
-export function useScatterSeries(seriesIds?: any): any {
+export function useScatterSeries(seriesIds?: any) {
   return selectorSeries(seriesIds);
 }

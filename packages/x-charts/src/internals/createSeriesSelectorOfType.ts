@@ -7,14 +7,14 @@ import { useSelector } from './store/useSelector';
 
 export function createSeriesSelectorsOfType<T extends keyof ChartsSeriesConfig>(seriesType: T) {
   const selectorSeriesWithIds = createSelector(
-    [selectorChartSeriesProcessed, (_, ids: SeriesId[]) => ids],
+    [selectorChartSeriesProcessed, (_, ids?: SeriesId | SeriesId[]) => ids],
     (processedSeries, ids) => {
-      if (ids.length === 0) {
+      if (!ids || (Array.isArray(ids) && ids.length === 0)) {
         return processedSeries[seriesType];
       }
 
-      if (ids.length === 1) {
-        return processedSeries[seriesType]?.series?.[ids[0]];
+      if (!Array.isArray(ids)) {
+        return processedSeries[seriesType]?.series?.[ids];
       }
 
       return ids.map((id) => processedSeries[seriesType]?.series?.[id]);

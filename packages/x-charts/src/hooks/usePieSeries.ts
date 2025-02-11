@@ -28,6 +28,6 @@ export function usePieSeries(seriesId: SeriesId): ChartSeriesDefaultized<'pie'> 
  * @returns {ChartSeriesDefaultized<'pie'>[] | undefined}  pieSeries
  */
 export function usePieSeries(seriesIds: SeriesId[]): (ChartSeriesDefaultized<'pie'> | undefined)[];
-export function usePieSeries(seriesIds?: any): any {
+export function usePieSeries(seriesIds?: any) {
   return selectorSeries(seriesIds);
 }
