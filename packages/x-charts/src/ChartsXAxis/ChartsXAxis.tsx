@@ -42,10 +42,12 @@ function addLabelDimension(
     tickLabelMinGap,
     reverse,
     isMounted,
+    isPointInside,
   }: Pick<ChartsXAxisProps, 'tickLabelInterval' | 'tickLabelStyle'> &
     Pick<AxisDefaultized<ScaleName, any, ChartsXAxisProps>, 'reverse'> & {
       isMounted: boolean;
       tickLabelMinGap: NonNullable<ChartsXAxisProps['tickLabelMinGap']>;
+      isPointInside: (position: number) => boolean;
     },
 ): (TickItemType & LabelExtraData)[] {
   const getTickSize = (tick: TickItemType) => {
@@ -81,6 +83,10 @@ function addLabelDimension(
       return { ...item, width: 0, height: 0, skipLabel: true };
     }
 
+    if (!isPointInside(textPosition)) {
+      return { ...item, width: 0, height: 0, skipLabel: true };
+    }
+
     const { width, height } = getTickSize(item);
 
     const distance = getMinXTranslation(width, height, style?.angle);
@@ -91,6 +97,7 @@ function addLabelDimension(
       // Notice that the early return prevents `previousTextLimit` from being updated.
       return { ...item, width, height, skipLabel: true };
     }
+
     previousTextLimit = textPosition + (direction * distance) / 2;
     return { ...item, width, height };
   });
@@ -196,6 +203,8 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickLabelMinGap,
     reverse,
     isMounted,
+    isPointInside: (offset: number) =>
+      instance.isPointInside({ x: offset, y: -1 }, { direction: 'x' }),
   });
 
   const labelRefPoint = {
