@@ -23,7 +23,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   return colorAttributes
     .forEach((attribute) => {
       const colorsAttributeExpression =
-        attribute.node.value.type === 'JSXExpressionContainer'
+        attribute.node.value?.type === 'JSXExpressionContainer'
           ? attribute.node.value.expression
           : null;
 
