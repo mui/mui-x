@@ -30,6 +30,6 @@ export function useLineSeries(seriesId: SeriesId): ChartSeriesDefaultized<'line'
 export function useLineSeries(
   seriesIds: SeriesId[],
 ): (ChartSeriesDefaultized<'line'> | undefined)[];
-export function useLineSeries(seriesIds?: any) {
+export function useLineSeries(seriesIds?: SeriesId | SeriesId[]) {
   return selectorSeries(seriesIds);
 }
