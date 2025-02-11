@@ -20,7 +20,7 @@ import {
 import { selectorTreeViewId } from '../../corePlugins/useTreeViewId/useTreeViewId.selectors';
 import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.utils';
 
-interface UpdateItemsStateParameters
+interface ProcessItemsLookupsParameters
   extends Pick<
     UseTreeViewItemsDefaultizedParameters<TreeViewBaseItem>,
     'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemId' | 'disabledItemsFocusable'
@@ -60,7 +60,7 @@ const checkId = (
   }
 };
 
-const updateItemsState = ({
+const processItemsLookups = ({
   disabledItemsFocusable,
   items,
   isItemDisabled,
@@ -70,7 +70,7 @@ const updateItemsState = ({
   initialParentId = null,
   getChildrenCount,
   ignoreChildren = false,
-}: UpdateItemsStateParameters): Omit<State, 'loading' | 'error'> => {
+}: ProcessItemsLookupsParameters): Omit<State, 'loading' | 'error'> => {
   const itemMetaLookup: State['itemMetaLookup'] = {};
   const itemModelLookup: State['itemModelLookup'] = {};
   const itemOrderedChildrenIdsLookup: State['itemOrderedChildrenIdsLookup'] = {
@@ -212,7 +212,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     getChildrenCount,
   }: AddItemsParameters<TreeViewBaseItem>) => {
     if (items) {
-      const newState = updateItemsState({
+      const newState = processItemsLookups({
         disabledItemsFocusable: params.disabledItemsFocusable,
         items,
         isItemDisabled: params.isItemDisabled,
@@ -300,7 +300,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       return;
     }
     store.update((prevState) => {
-      const newState = updateItemsState({
+      const newState = processItemsLookups({
         disabledItemsFocusable: params.disabledItemsFocusable,
         items: params.items,
         isItemDisabled: params.isItemDisabled,
@@ -373,7 +373,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
 
 useTreeViewItems.getInitialState = (params) => ({
   items: {
-    ...updateItemsState({
+    ...processItemsLookups({
       disabledItemsFocusable: params.disabledItemsFocusable,
       items: params.items,
       isItemDisabled: params.isItemDisabled,
