@@ -51,11 +51,17 @@ export interface TreeItemSlots extends TreeItemIconSlots {
    */
   dragAndDropOverlay?: React.ElementType;
   /**
-   * The component that wraps the `iconContainer` slot when the item is in an error state.
+   * The component that is rendered when the item is in an error state.
    * Warning: This slot is only useful when using the `<RichTreeViewPro />` component is lazy loading is enabled.
    * @default TreeItemErrorContainer
    */
-  errorContainer?: React.ElementType;
+  errorIcon?: React.ElementType;
+  /**
+   * The component that is rendered when the item is in an loading state.
+   * Warning: This slot is only useful when using the `<RichTreeViewPro />` component is lazy loading is enabled.
+   * @default TreeItemLoadingContainer
+   */
+  loadingIcon?: React.ElementType;
 }
 
 export interface TreeItemSlotProps extends TreeItemIconSlotProps {
@@ -67,7 +73,8 @@ export interface TreeItemSlotProps extends TreeItemIconSlotProps {
   label?: SlotComponentProps<'div', {}, {}>;
   labelInput?: SlotComponentProps<'input', {}, {}>;
   dragAndDropOverlay?: SlotComponentProps<'div', {}, {}>;
-  errorContainer?: SlotComponentProps<'div', {}, {}>;
+  errorIcon?: SlotComponentProps<'div', {}, {}>;
+  loadingIcon?: SlotComponentProps<'div', {}, {}>;
 }
 
 export interface TreeItemProps

@@ -20,6 +20,7 @@ import {
   UseTreeItemRootSlotPropsFromUseTreeItem,
   UseTreeItemContentSlotPropsFromUseTreeItem,
   UseTreeItemErrorContainerSlotProps,
+  UseTreeItemLoadingContainerSlotProps,
 } from './useTreeItem.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider';
 import { TreeViewItemPluginSlotPropsEnhancerParams } from '../internals/models';
@@ -353,6 +354,18 @@ export const useTreeItem = <
       ...externalProps,
     };
   };
+  const getLoadingContainerProps = <ExternalProps extends Record<string, any> = {}>(
+    externalProps: ExternalProps = {} as ExternalProps,
+  ): UseTreeItemLoadingContainerSlotProps<ExternalProps> => {
+    const externalEventHandlers = extractEventHandlers(externalProps);
+
+    return {
+      size: '12px',
+      thickness: 6,
+      ...externalEventHandlers,
+      ...externalProps,
+    };
+  };
 
   const getGroupTransitionProps = <ExternalProps extends Record<string, any> = {}>(
     externalProps: ExternalProps = {} as ExternalProps,
@@ -400,6 +413,7 @@ export const useTreeItem = <
     getLabelInputProps,
     getDragAndDropOverlayProps,
     getErrorContainerProps,
+    getLoadingContainerProps,
     rootRef: handleRootRef,
     status,
     publicAPI,
