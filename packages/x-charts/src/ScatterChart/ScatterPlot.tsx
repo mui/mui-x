@@ -2,8 +2,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Scatter, ScatterProps } from './Scatter';
+import { useScatterSeries } from '../hooks/useScatterSeries';
 import getColor from './seriesConfig/getColor';
-import { useScatterSeries } from '../hooks/useSeries';
 import { useXAxes, useYAxes } from '../hooks';
 import { useZAxes } from '../hooks/useZAxis';
 
