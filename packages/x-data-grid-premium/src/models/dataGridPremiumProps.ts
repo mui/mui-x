@@ -24,7 +24,10 @@ import { GridPremiumSlotsComponent } from './gridPremiumSlotsComponent';
 import { GridInitialStatePremium } from './gridStatePremium';
 import { GridApiPremium } from './gridApiPremium';
 import { GridCellSelectionModel } from '../hooks/features/cellSelection';
-import { GridDataSourcePremium as GridDataSource } from '../hooks/features/dataSource/models';
+import {
+  GridDataSourcePremium as GridDataSource,
+  GridGetRowsParamsPremium as GridGetRowsParams,
+} from '../hooks/features/dataSource/models';
 
 export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
 
@@ -124,7 +127,7 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
   extends Omit<
     DataGridProPropsWithoutDefaultValue<R>,
-    'initialState' | 'apiRef' | 'unstable_dataSource'
+    'initialState' | 'apiRef' | 'unstable_dataSource' | 'unstable_onDataSourceError'
   > {
   /**
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
@@ -195,5 +198,14 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
    */
   experimentalFeatures?: Partial<GridExperimentalPremiumFeatures>;
+  /**
+   * Data source object.
+   */
   unstable_dataSource?: GridDataSource;
+  /**
+   * Callback fired when the data source request fails.
+   * @param {Error} error The error object.
+   * @param {GridGetRowsParams} params With all properties from [[GridGetRowsParams]].
+   */
+  unstable_onDataSourceError?: (error: Error, params: GridGetRowsParams) => void;
 }

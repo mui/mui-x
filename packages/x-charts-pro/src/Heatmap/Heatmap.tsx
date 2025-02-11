@@ -25,9 +25,10 @@ import {
 import { ChartContainerPro, ChartContainerProProps } from '../ChartContainerPro';
 import { HeatmapSeriesType } from '../models/seriesType/heatmap';
 import { HeatmapPlot } from './HeatmapPlot';
-import { plugin as heatmapPlugin } from './plugin';
+import { seriesConfig as heatmapSeriesConfig } from './seriesConfig';
 import { HeatmapTooltip, HeatmapTooltipProps } from './HeatmapTooltip';
 import { HeatmapItemSlotProps, HeatmapItemSlots } from './HeatmapItem';
+import { HEATMAP_PLUGINS, HeatmapPluginsSignatures } from './Heatmap.plugins';
 
 export interface HeatmapSlots extends ChartsAxisSlots, ChartsOverlaySlots, HeatmapItemSlots {
   /**
@@ -97,7 +98,7 @@ const defaultColorMap = interpolateRgbBasis([
   '#084081',
 ]);
 
-const seriesConfig: ChartSeriesConfig<'heatmap'> = { heatmap: heatmapPlugin };
+const seriesConfig: ChartSeriesConfig<'heatmap'> = { heatmap: heatmapSeriesConfig };
 
 const Heatmap = React.forwardRef(function Heatmap(
   inProps: HeatmapProps,
@@ -159,7 +160,7 @@ const Heatmap = React.forwardRef(function Heatmap(
   const Tooltip = props.slots?.tooltip ?? HeatmapTooltip;
 
   return (
-    <ChartContainerPro
+    <ChartContainerPro<'heatmap', HeatmapPluginsSignatures>
       ref={ref}
       seriesConfig={seriesConfig}
       series={series.map((s) => ({
@@ -179,6 +180,7 @@ const Heatmap = React.forwardRef(function Heatmap(
       highlightedItem={highlightedItem}
       onHighlightChange={onHighlightChange}
       onAxisClick={onAxisClick}
+      plugins={HEATMAP_PLUGINS}
     >
       <g clipPath={`url(#${clipPathId})`}>
         <HeatmapPlot slots={slots} slotProps={slotProps} />

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { getExtremumX } from './extremums';
+import { getExtremumX } from './seriesConfig/extremums';
 import { CartesianExtremumGetter } from '../internals/plugins/models';
 
 const buildData = (

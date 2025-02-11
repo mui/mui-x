@@ -16,6 +16,7 @@ import { ChartContainerProProps } from '../ChartContainerPro';
 import { useIsZoomInteracting } from '../hooks/zoom';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
+import { BAR_CHART_PRO_PLUGINS, BarChartProPluginsSignatures } from './BarChartPro.plugins';
 
 function BarChartPlotZoom(props: BarPlotProps) {
   const isInteracting = useIsZoomInteracting();
@@ -98,8 +99,11 @@ const BarChartPro = React.forwardRef(function BarChartPro(
     children,
   } = useBarChartProps(other);
 
-  const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps(
-    { ...chartContainerProps, initialZoom, onZoomChange, apiRef },
+  const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
+    'bar',
+    BarChartProPluginsSignatures
+  >(
+    { ...chartContainerProps, initialZoom, onZoomChange, apiRef, plugins: BAR_CHART_PRO_PLUGINS },
     ref,
   );
 

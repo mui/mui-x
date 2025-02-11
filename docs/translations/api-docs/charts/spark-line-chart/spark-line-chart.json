@@ -4,7 +4,7 @@
     "area": {
       "description": "Set to <code>true</code> to fill spark line area. Has no effect if plotType=&#39;bar&#39;."
     },
-    "colors": { "description": "Color palette used to colorize multiple series." },
+    "color": { "description": "Color used to colorize the sparkline." },
     "data": { "description": "Data to plot." },
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
@@ -12,6 +12,7 @@
     "disableAxisListener": {
       "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
     },
+    "disableVoronoi": { "description": "If true, the voronoi interaction are ignored." },
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
@@ -35,6 +36,13 @@
       "description": "The callback fired when the highlighted item changes.",
       "typeDescriptions": { "highlightedItem": "The newly highlighted item." }
     },
+    "onItemClick": {
+      "description": "Callback fired when clicking close to an item. This is only available for scatter plot for now.",
+      "typeDescriptions": {
+        "event": "Mouse event caught at the svg level",
+        "scatterItemIdentifier": "Identify which item got clicked"
+      }
+    },
     "plotType": { "description": "Type of plot used." },
     "showHighlight": {
       "description": "Set to <code>true</code> to highlight the value. With line, it shows a point. With bar, it shows a highlight band."
@@ -50,6 +58,9 @@
     "valueFormatter": {
       "description": "Formatter used by the tooltip.",
       "typeDescriptions": { "value": "The value to format.", "string": "the formatted value." }
+    },
+    "voronoiMaxRadius": {
+      "description": "Defines the maximal distance between a scatter point and the pointer that triggers the interaction. If <code>undefined</code>, the radius is assumed to be infinite."
     },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
