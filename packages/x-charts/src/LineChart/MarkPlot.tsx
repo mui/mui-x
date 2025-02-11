@@ -5,7 +5,7 @@ import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { useSkipAnimation } from '../context/AnimationProvider';
 import { useChartId } from '../hooks/useChartId';
 import { getValueToPositionMapper } from '../hooks/useScale';
-import { useLineSeries } from '../hooks/useSeries';
+import { useLineSeries } from '../hooks/useLineSeries';
 import { cleanId } from '../internals/cleanId';
 import { LineItemIdentifier } from '../models/seriesType/line';
 import { CircleMarkElement } from './CircleMarkElement';
