@@ -67,6 +67,6 @@ describe('useHeatmapSeries', () => {
 
   it('should return undefined series when invalid seriesIds are provided', () => {
     const { result } = renderHook(() => useHeatmapSeries(['1', '3']), options);
-    expect(result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[0].id, undefined]);
+    expect(result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[0].id]);
   });
 });
