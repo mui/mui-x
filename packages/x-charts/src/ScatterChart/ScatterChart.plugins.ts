@@ -15,12 +15,17 @@ import {
   UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { ConvertSignaturesIntoPlugins } from '../internals/plugins/models/helpers';
+import {
+  useChartVoronoi,
+  UseChartVoronoiSignature,
+} from '../internals/plugins/featurePlugins/useChartVoronoi';
 
 export type ScatterChartPluginsSignatures = [
   UseChartZAxisSignature,
   UseChartCartesianAxisSignature<'scatter'>,
   UseChartInteractionSignature,
   UseChartHighlightSignature,
+  UseChartVoronoiSignature,
 ];
 
 export const SCATTER_CHART_PLUGINS: ConvertSignaturesIntoPlugins<ScatterChartPluginsSignatures> = [
@@ -28,4 +33,5 @@ export const SCATTER_CHART_PLUGINS: ConvertSignaturesIntoPlugins<ScatterChartPlu
   useChartCartesianAxis,
   useChartInteraction,
   useChartHighlight,
+  useChartVoronoi,
 ];

@@ -9,14 +9,9 @@
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" },
       "default": "rainbowSurgePalette[0]"
     },
-    "colors": {
-      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
-      "default": "rainbowSurgePalette",
-      "deprecated": true,
-      "deprecationInfo": "use the <code>color</code> prop instead"
-    },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
+    "disableVoronoi": { "type": { "name": "bool" } },
     "height": { "type": { "name": "number" } },
     "highlightedItem": {
       "type": {
@@ -46,6 +41,13 @@
         "describedArgs": ["highlightedItem"]
       }
     },
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: MouseEvent, scatterItemIdentifier: ScatterItemIdentifier) => void",
+        "describedArgs": ["event", "scatterItemIdentifier"]
+      }
+    },
     "plotType": {
       "type": { "name": "enum", "description": "'bar'<br>&#124;&nbsp;'line'" },
       "default": "'line'"
@@ -68,6 +70,7 @@
         "returned": "string"
       }
     },
+    "voronoiMaxRadius": { "type": { "name": "number" } },
     "width": { "type": { "name": "number" } },
     "xAxis": {
       "type": {
