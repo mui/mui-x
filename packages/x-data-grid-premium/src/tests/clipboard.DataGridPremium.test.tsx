@@ -191,7 +191,6 @@ describe('<DataGridPremium /> - Clipboard', () => {
         const listener = spy();
         apiRef.current?.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 1);
-        cell.focus();
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'v', keyCode: 86, [key]: true }); // Ctrl+V
         expect(listener.callCount).to.equal(0);
@@ -205,7 +204,6 @@ describe('<DataGridPremium /> - Clipboard', () => {
         const listener = spy();
         apiRef.current?.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 1);
-        cell.focus();
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'v', keyCode: 86, [key]: true }); // Ctrl+V
         expect(listener.callCount).to.equal(0);
@@ -452,7 +450,6 @@ describe('<DataGridPremium /> - Clipboard', () => {
         render(<Test checkboxSelection />);
 
         const checkboxInput = getCell(0, 0).querySelector('input')!;
-        checkboxInput.focus();
         fireUserEvent.mousePress(checkboxInput!);
 
         const clipboardData = ['p01', 'p02', 'p03'].join('\t');
@@ -912,7 +909,6 @@ describe('<DataGridPremium /> - Clipboard', () => {
       }
 
       function copyCell(cell: HTMLElement) {
-        cell.focus();
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
       }
