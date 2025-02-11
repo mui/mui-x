@@ -2,8 +2,8 @@
 
 <h1 align="center">MUI X DataGrid overview</h1>
 
-Welcome in the documentation for contributors. If you want to use DataGrid components for your project, the [documentation for developers](https://mui.com/x/react-data-grid/getting-started/) is more appropriate.
-Here we will discuss how the code is structured, to simplify codebase navigation, and onboard new contributors.
+Welcome to the documentation for contributors. If you want to use Data Grid components for your project, the [documentation for developers](https://mui.com/x/react-data-grid/) is more appropriate.
+Here we discuss how the code is structured to simplify codebase navigation and onboard new contributors.
 
 ## Where is the code?
 

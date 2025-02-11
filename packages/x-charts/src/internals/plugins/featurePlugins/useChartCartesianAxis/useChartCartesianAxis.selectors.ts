@@ -10,6 +10,7 @@ import { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 import { ChartState } from '../../models/chart';
 import { createAxisFilterMapper, createGetAxisFilters } from './createAxisFilterMapper';
 import { ZoomAxisFilters, ZoomData } from './zoom.types';
+import { createZoomLookup } from './createZoomLookup';
 
 export const createZoomMap = (zoom: ZoomData[]) => {
   const zoomItemMap = new Map<AxisId, ZoomData>();
@@ -44,7 +45,20 @@ const selectorChartZoomMap = createSelector(
   (zoom) => zoom?.zoomData && createZoomMap(zoom?.zoomData),
 );
 
-const selectorChartZoomOptionsLookup = createSelector(selectorChartZoomState, () => undefined);
+const selectorChartXZoomOptionsLookup = createSelector(
+  selectorChartRawXAxis,
+  createZoomLookup('x'),
+);
+
+const selectorChartYZoomOptionsLookup = createSelector(
+  selectorChartRawYAxis,
+  createZoomLookup('y'),
+);
+
+export const selectorChartZoomOptionsLookup = createSelector(
+  [selectorChartXZoomOptionsLookup, selectorChartYZoomOptionsLookup],
+  (xLookup, yLookup) => ({ ...xLookup, ...yLookup }),
+);
 
 const selectorChartXFilter = createSelector(
   [
@@ -93,7 +107,6 @@ const selectorChartZoomAxisFilters = createSelector(
     }
 
     const xFilters = xAxis.reduce<ZoomAxisFilters>((acc, axis, index) => {
-      // @ts-expect-error The type is defined in the pro package
       const filter = xMapper(axis, index);
       if (filter !== null) {
         acc[axis.id] = filter;
@@ -102,7 +115,6 @@ const selectorChartZoomAxisFilters = createSelector(
     }, {});
 
     const yFilters = yAxis.reduce<ZoomAxisFilters>((acc, axis, index) => {
-      // @ts-expect-error The type is defined in the pro package
       const filter = yMapper(axis, index);
       if (filter !== null) {
         acc[axis.id] = filter;

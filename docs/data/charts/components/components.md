@@ -77,6 +77,16 @@ By using `invert`, the value associated with the current mouse coordinate `y` ca
 
 {{"demo": "ScaleDemo.js"}}
 
+### Series
+
+Series information is accessible through the `useSeries` hook for all series types, and `useXxxSeries` hook for a specific series type.
+These hooks return the order of the series and their configuration, including data points, color, among others.
+
+You can leverage that information to create custom charts.
+For example, you can use `useLineSeries` to obtain the series of a line chart and display an indicator of the minimum and maximum values of each series:
+
+{{"demo": "SeriesDemo.js"}}
+
 ## HTML components
 
 With the introduction of the `ChartDataProvider` in v8, the chart data can be accessed from any component.
