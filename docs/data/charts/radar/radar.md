@@ -34,7 +34,7 @@ You can plot multiple series on the same radar chart.
 The `metrics` property of `radar` takes an array with one item per corner of the radar.
 This item can either be:
 
-- A string used as the axis label. The other properties will be defaulted.
+- A string used as the axis label. The other properties are populated from the data.
 - An object with the following properties:
   - `name`: The label associated to the axis.
   - `min`: The minimal value along this direction (by default 0).
@@ -46,8 +46,8 @@ This item can either be:
 
 The radar chart displays a grid behind the series that can be configured with
 
-- `startAngle` The rotation angle of the entire chart
-- `divisionNumber` The nb of division of the grid
+- `startAngle` The rotation angle of the entire chart in degree
+- `divisionNumber` The number of division of the grid
 
 {{"demo": "DemoRadarNoSnap.js" }}
 
