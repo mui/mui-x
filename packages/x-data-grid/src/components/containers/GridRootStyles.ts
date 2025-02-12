@@ -802,8 +802,8 @@ export const GridRootStyles = styled('div', {
       borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
     },
 
-    /* Hide grid rows, row filler, and vertical scrollbar when skeleton overlay is visible */
-    [`& .${c['main--hasSkeletonLoadingOverlay']}`]: {
+    /* Hide grid rows, row filler, and vertical scrollbar. Used when skeleton/no columns overlay is visible */
+    [`& .${c['main--hiddenContent']}`]: {
       [`& .${c.virtualScrollerContent}`]: {
         // We use visibility hidden so that the virtual scroller content retains its height.
         // Position fixed is used to remove the virtual scroller content from the flow.

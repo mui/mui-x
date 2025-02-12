@@ -20,7 +20,6 @@ describe('fastArrayCompare', () => {
   });
 
   it('should return false if both arguments are not an array', () => {
-    // @ts-expect-error
     expect(fastArrayCompare(1, 2)).to.equal(false);
   });
 

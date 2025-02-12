@@ -1,4 +1,5 @@
-import { ChartsSeriesConfig } from '../models/seriesType/config';
+import { fastArrayCompare } from '@mui/x-internals/fastArrayCompare';
+import { ChartSeriesDefaultized, ChartsSeriesConfig } from '../models/seriesType/config';
 import { SeriesId } from '../models/seriesType/common';
 import { createSelector } from './plugins/utils/selectors';
 import { selectorChartSeriesProcessed } from './plugins/corePlugins/useChartSeries/useChartSeries.selectors';
@@ -10,20 +11,40 @@ export function createSeriesSelectorsOfType<T extends keyof ChartsSeriesConfig>(
     [selectorChartSeriesProcessed, (_, ids?: SeriesId | SeriesId[]) => ids],
     (processedSeries, ids) => {
       if (!ids || (Array.isArray(ids) && ids.length === 0)) {
-        return processedSeries[seriesType];
+        return Object.values(processedSeries[seriesType]?.series ?? {});
       }
 
       if (!Array.isArray(ids)) {
         return processedSeries[seriesType]?.series?.[ids];
       }
 
-      return ids.map((id) => processedSeries[seriesType]?.series?.[id]);
+      const result: ChartSeriesDefaultized<T>[] = [];
+      for (const id of ids) {
+        const series = processedSeries[seriesType]?.series?.[id];
+        if (series) {
+          result.push(series);
+        }
+      }
+      return result;
     },
   );
 
   return (ids?: SeriesId | SeriesId[]) => {
     const store = useStore();
 
-    return useSelector(store, selectorSeriesWithIds, ids);
+    return useSelector(store, selectorSeriesWithIds, ids, fastArrayCompare);
+  };
+}
+
+export function createAllSeriesSelectorOfType<T extends keyof ChartsSeriesConfig>(seriesType: T) {
+  const selectorSeries = createSelector(
+    selectorChartSeriesProcessed,
+    (processedSeries) => processedSeries[seriesType],
+  );
+
+  return () => {
+    const store = useStore();
+
+    return useSelector(store, selectorSeries);
   };
 }
