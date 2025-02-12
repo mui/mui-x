@@ -44,7 +44,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   pageSizeOptions: [25, 50, 100],
   pagination: false,
   paginationMode: 'client',
-  resetPageAfterSortingOrFiltering: false,
+  resetPageOnSortFilter: false,
   resizeThrottleMs: 60,
   rowBufferPx: 150,
   rowHeight: 52,

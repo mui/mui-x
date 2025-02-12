@@ -679,7 +679,7 @@ DataGridRaw.propTypes = {
    * This prop will be removed in the next major version and resetting the page will become the default behavior.
    * @default false
    */
-  resetPageAfterSortingOrFiltering: PropTypes.bool,
+  resetPageOnSortFilter: PropTypes.bool,
   /**
    * The milliseconds throttle delay for resizing the grid.
    * @default 60

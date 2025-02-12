@@ -19,7 +19,7 @@ export default function FilteringWithPageReset() {
         pagination
         initialState={{ pagination: { paginationModel: { page: 0, pageSize: 10 } } }}
         pageSizeOptions={[10]}
-        resetPageAfterSortingOrFiltering
+        resetPageOnSortFilter
         slots={{ toolbar: GridToolbar }}
       />
     </div>

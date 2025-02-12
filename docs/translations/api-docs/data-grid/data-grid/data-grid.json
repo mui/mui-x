@@ -447,7 +447,7 @@
         "Promise<R> | R": "The final values to update the row."
       }
     },
-    "resetPageAfterSortingOrFiltering": {
+    "resetPageOnSortFilter": {
       "description": "If <code>true</code>, the page is set to 0 after each sorting or filtering. This prop will be removed in the next major version and resetting the page will become the default behavior."
     },
     "resizeThrottleMs": { "description": "The milliseconds throttle delay for resizing the grid." },
