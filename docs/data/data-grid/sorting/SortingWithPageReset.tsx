@@ -19,7 +19,7 @@ export default function SortingWithPageReset() {
         pagination
         pageSizeOptions={[10]}
         initialState={{ pagination: { paginationModel: { page: 0, pageSize: 10 } } }}
-        resetPageAfterSortingOrFiltering
+        resetPageOnSortFilter
       />
     </div>
   );

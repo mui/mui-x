@@ -74,7 +74,7 @@ export const useGridPaginationModel = (
     | 'pagination'
     | 'signature'
     | 'rowHeight'
-    | 'resetPageAfterSortingOrFiltering'
+    | 'resetPageOnSortFilter'
   >,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPaginationModel');
@@ -301,12 +301,12 @@ export const useGridPaginationModel = (
   useGridApiEventHandler(
     apiRef,
     'sortModelChange',
-    runIf(props.resetPageAfterSortingOrFiltering, handleSortModelChange),
+    runIf(props.resetPageOnSortFilter, handleSortModelChange),
   );
   useGridApiEventHandler(
     apiRef,
     'filterModelChange',
-    runIf(props.resetPageAfterSortingOrFiltering, handleFilterModelChange),
+    runIf(props.resetPageOnSortFilter, handleFilterModelChange),
   );
 
   /**

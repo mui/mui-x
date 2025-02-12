@@ -291,7 +291,7 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    * This prop will be removed in the next major version and resetting the page will become the default behavior.
    * @default false
    */
-  resetPageAfterSortingOrFiltering: boolean;
+  resetPageOnSortFilter: boolean;
   /**
    * Set of rows of type [[GridRowsProp]].
    * @default []
