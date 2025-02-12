@@ -40,11 +40,13 @@ export default function ZoomControlled() {
       <LineChartPro
         {...chartProps}
         onZoomChange={(newZoomData) => setZoomData(newZoomData)}
+        zoomData={zoomData}
         xAxis={lineAxis}
       />
       <BarChartPro
         {...chartProps}
         onZoomChange={(newZoomData) => setZoomData(newZoomData)}
+        zoomData={zoomData}
         xAxis={barAxis}
       />
       <pre>{JSON.stringify(zoomData, null, 2)}</pre>
