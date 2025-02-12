@@ -87,7 +87,13 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
       }
 
       errors[itemId] = error;
-      return { ...prevState, dataSource: { ...prevState.lazyLoading.dataSource, errors } };
+      return {
+        ...prevState,
+        lazyLoading: {
+          ...prevState.lazyLoading,
+          dataSource: { ...prevState.lazyLoading.dataSource, errors },
+        },
+      };
     });
   };
 
