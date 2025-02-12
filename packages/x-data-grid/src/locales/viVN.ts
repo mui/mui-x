@@ -6,6 +6,8 @@ const viVNGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Không có dữ liệu',
   noResultsOverlayLabel: 'Không tìm thấy kết quả.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'Độ giãn',

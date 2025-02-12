@@ -56,6 +56,22 @@ In the following demo, a labeled determinate [CircularProgress](/material-ui/rea
 
 {{"demo": "LoadingOverlayCustom.js", "bg": "inline"}}
 
+## No columns overlay
+
+The no-columns overlay is displayed when the Data Grid has no columns, or when all columns are hidden.
+
+The "Manage columns" button is displayed when all columns are hidden and `disableColumnSelector` is `false`.
+
+{{"demo": "NoColumnsOverlay.js", "bg": "inline"}}
+
+### Custom component
+
+If you want to customize the no-columns overlay, a component can be passed to the `noColumnsOverlay` slot and rendered in place.
+
+In the following demo, an illustration is added on top of the default "No columns" message.
+
+{{"demo": "NoColumnsOverlayCustom.js", "bg": "inline"}}
+
 ## No rows overlay
 
 The no-rows overlay is displayed when the Data Grid has no rows.

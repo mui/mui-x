@@ -189,6 +189,11 @@ export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponen
    */
   noRowsOverlay: React.JSXElementConstructor<GridSlotProps['noRowsOverlay']>;
   /**
+   * No columns overlay component rendered when the grid has no columns.
+   * @default GridNoColumnsOverlay
+   */
+  noColumnsOverlay: React.JSXElementConstructor<GridSlotProps['noColumnsOverlay']>;
+  /**
    * Pagination component rendered in the grid footer by default.
    * @default Pagination
    */
