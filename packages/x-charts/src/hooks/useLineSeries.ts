@@ -44,6 +44,7 @@ export function useLineSeries(seriesIds?: SeriesId | SeriesId[]) {
  * The returned object contains:
  * - series: a mapping from ids to series attributes.
  * - seriesOrder: the array of series ids.
+ * - stackingGroups: the array of stacking groups. Each group contains the series ids stacked and the strategy to use.
  * @returns the line series
  */
 export function useLineSeriesContext(): UseLineSeriesContextReturnValue {
