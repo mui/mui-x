@@ -332,7 +332,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
       if (isValidPastedValue) {
         resetCharacterQuery();
         updateSectionValue({
-          activeSection,
+          section: activeSection,
           newSectionValue: pastedValue,
           shouldGoToNextSection: true,
         });
@@ -378,6 +378,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
       }
 
       resetCharacterQuery();
+      revertDOMSectionChange(sectionIndex);
       clearActiveSection();
       return;
     }

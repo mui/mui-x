@@ -292,7 +292,7 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
       if (isValidPastedValue) {
         resetCharacterQuery();
         updateSectionValue({
-          activeSection,
+          section: activeSection,
           newSectionValue: pastedValue,
           shouldGoToNextSection: true,
         });
