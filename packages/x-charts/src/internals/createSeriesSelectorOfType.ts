@@ -1,4 +1,5 @@
 import { fastArrayCompare } from '@mui/x-internals/fastArrayCompare';
+import { warnOnce } from '@mui/x-internals/warning';
 import { ChartSeriesDefaultized, ChartsSeriesConfig } from '../models/seriesType/config';
 import { SeriesId } from '../models/seriesType/common';
 import { createSelector } from './plugins/utils/selectors';
@@ -11,7 +12,11 @@ export function createSeriesSelectorsOfType<T extends keyof ChartsSeriesConfig>(
     [selectorChartSeriesProcessed, (_, ids?: SeriesId | SeriesId[]) => ids],
     (processedSeries, ids) => {
       if (!ids || (Array.isArray(ids) && ids.length === 0)) {
-        return Object.values(processedSeries[seriesType]?.series ?? {});
+        return (
+          processedSeries[seriesType]?.seriesOrder?.map(
+            (seriesId) => processedSeries[seriesType]?.series[seriesId],
+          ) ?? []
+        );
       }
 
       if (!Array.isArray(ids)) {
@@ -19,11 +24,22 @@ export function createSeriesSelectorsOfType<T extends keyof ChartsSeriesConfig>(
       }
 
       const result: ChartSeriesDefaultized<T>[] = [];
+      const failedIds: SeriesId[] = [];
       for (const id of ids) {
         const series = processedSeries[seriesType]?.series?.[id];
         if (series) {
           result.push(series);
+        } else {
+          failedIds.push(id);
         }
+      }
+      if (process.env.NODE_ENV !== 'production' && failedIds.length > 0) {
+        const formattedIds = failedIds.map((v) => JSON.stringify(v)).join(', ');
+        const fnName = `use${seriesType.charAt(0).toUpperCase()}${seriesType.slice(1)}Series`;
+        warnOnce([
+          `MUI X: The following ids provided to "${fnName}" could not be found: ${formattedIds}.`,
+          `Make sure that they exist and their series are using the "${seriesType}" series type.`,
+        ]);
       }
       return result;
     },
