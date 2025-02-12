@@ -10,7 +10,7 @@ import { Calendar, useCalendarContext } from '../internals/base/Calendar';
 import { usePickerTranslations } from '../hooks';
 import { DAY_MARGIN, DAY_SIZE } from '../internals/constants/dimensions';
 import { useUtils } from '../internals/hooks/useUtils';
-import { useDateCalendar2Context } from './DateCalendar2Context';
+import { useDateCalendar2PrivateContext } from './DateCalendar2Context';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { DateCalendar2Loadable } from './DateCalendar2Loadable';
 import { DAYS_GRID_BODY_HEIGHT } from './DateCalendar2.utils';
@@ -121,13 +121,13 @@ const DateCalendar2DaysGridBodyTransitionGroup = styled(TransitionGroup, {
   };
 });
 
-const DateCalendar2DaysGridBody = styled(Calendar.DaysGridBody, {
+export const DateCalendar2DaysGridBody = styled('div', {
   name: 'MuiDateCalendar2',
   slot: 'DaysGridBody',
   overridesResolver: (props, styles) => styles.daysGridBody,
 })({ overflow: 'hidden' });
 
-const DateCalendar2DaysGridRow = styled(Calendar.DaysGridRow, {
+export const DateCalendar2DaysGridRow = styled('div', {
   name: 'MuiDateCalendar2',
   slot: 'DaysGridRow',
   overridesResolver: (props, styles) => styles.daysGridRow,
@@ -214,7 +214,7 @@ const DateCalendar2DaysCell = styled(ButtonBase, {
 
 function WrappedDaysButton(props: React.HTMLAttributes<HTMLButtonElement>) {
   const { ownerState } = usePickerPrivateContext();
-  const { classes, slots, slotProps } = useDateCalendar2Context();
+  const { classes, slots, slotProps } = useDateCalendar2PrivateContext();
 
   const DaysButton = slots?.dayButton ?? DateCalendar2DaysCell;
   const daysButtonProps = useSlotProps({
@@ -234,14 +234,15 @@ const WrappedDateCalendar2DaysGridBody = React.forwardRef(function WrappedDateCa
 ) {
   const translations = usePickerTranslations();
   const { displayWeekNumber, ...other } = props;
-  const { classes } = useDateCalendar2Context();
+  const { classes } = useDateCalendar2PrivateContext();
   const utils = useUtils();
 
   return (
-    <DateCalendar2DaysGridBody {...other} ref={ref}>
+    <Calendar.DaysGridBody {...other} ref={ref} render={<DateCalendar2DaysGridBody />}>
       {({ weeks }) =>
         weeks.map((week) => (
-          <DateCalendar2DaysGridRow
+          <Calendar.DaysGridRow
+            render={<DateCalendar2DaysGridRow />}
             value={week}
             className={classes.daysGridRow}
             key={week.toString()}
@@ -270,10 +271,10 @@ const WrappedDateCalendar2DaysGridBody = React.forwardRef(function WrappedDateCa
                 </React.Fragment>
               );
             }}
-          </DateCalendar2DaysGridRow>
+          </Calendar.DaysGridRow>
         ))
       }
-    </DateCalendar2DaysGridBody>
+    </Calendar.DaysGridBody>
   );
 });
 
@@ -282,7 +283,7 @@ export function DateCalendar2DaysGrid(props: DateCalendar2DaysGridProps) {
   const theme = useTheme();
   const utils = useUtils();
   const { visibleDate } = useCalendarContext();
-  const { classes, reduceAnimations, labelId } = useDateCalendar2Context();
+  const { classes, reduceAnimations, labelId } = useDateCalendar2PrivateContext();
 
   const { displayWeekNumber } = props;
 
@@ -338,7 +339,7 @@ export function DateCalendar2DaysGrid(props: DateCalendar2DaysGridProps) {
           </React.Fragment>
         )}
       </DateCalendar2DaysGridHeader>
-      <DateCalendar2Loadable>
+      <DateCalendar2Loadable view="day">
         {reduceAnimations ? (
           <DateCalendar2DaysGridBodyNoTransition>
             <WrappedDateCalendar2DaysGridBody

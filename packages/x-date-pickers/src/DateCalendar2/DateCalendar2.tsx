@@ -16,9 +16,13 @@ import { DateCalendar2YearsGrid } from './DateCalendar2YearsGrid';
 import { DateCalendar2MonthsGrid } from './DateCalendar2MonthsGrid';
 import { DateCalendar2DaysGrid } from './DateCalendar2DaysGrid';
 import { DIALOG_WIDTH, VIEW_HEIGHT } from '../internals/constants/dimensions';
-import { DateCalendar2ContextValue, DateCalendar2Props } from './DateCalendar2.types';
+import {
+  DateCalendar2ContextValue,
+  DateCalendar2PrivateContextValue,
+  DateCalendar2Props,
+} from './DateCalendar2.types';
 import { DateCalendar2Classes, getDateCalendar2UtilityClass } from './DateCalendar2.classes';
-import { DateCalendar2Context } from './DateCalendar2Context';
+import { DateCalendar2Context, DateCalendar2PrivateContext } from './DateCalendar2Context';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { useReduceAnimations } from '../internals/hooks/useReduceAnimations';
 
@@ -123,9 +127,14 @@ export const DateCalendar2 = React.forwardRef(function DateCalendar2(
     },
   );
 
+  const privateContextValue = React.useMemo<DateCalendar2PrivateContextValue>(
+    () => ({ classes, slots, slotProps, labelId, reduceAnimations, loading }),
+    [classes, slots, slotProps, labelId, reduceAnimations, loading],
+  );
+
   const contextValue = React.useMemo<DateCalendar2ContextValue>(
-    () => ({ classes, slots, slotProps, view, views, setView, labelId, reduceAnimations, loading }),
-    [classes, slots, slotProps, view, views, setView, labelId, reduceAnimations, loading],
+    () => ({ view, views, setView }),
+    [view, views, setView],
   );
 
   const CalendarHeader = slots?.calendarHeader ?? DateCalendar2Header;
@@ -136,44 +145,46 @@ export const DateCalendar2 = React.forwardRef(function DateCalendar2(
   });
 
   const viewContent = (
-    <div>
+    <React.Fragment>
       {view === 'year' && (
         <DateCalendar2YearsGrid cellsPerRow={yearsPerRow} yearsOrder={yearsOrder} />
       )}
       {view === 'month' && <DateCalendar2MonthsGrid cellsPerRow={monthsPerRow} />}
       {view === 'day' && <DateCalendar2DaysGrid displayWeekNumber={displayWeekNumber} />}
-    </div>
+    </React.Fragment>
   );
 
   return (
     <DateCalendar2Context.Provider value={contextValue}>
-      <DateCalendar2Root
-        onValueChange={handleValueChange}
-        {...other}
-        className={clsx(className, classes.root)}
-        ref={ref}
-      >
-        <CalendarHeader {...calendarHeaderProps} />
-        {reduceAnimations ? (
-          viewContent
-        ) : (
-          <DateCalendar2TransitionGroup className={classes.transitionGroup}>
-            <Fade
-              appear={false}
-              mountOnEnter
-              unmountOnExit
-              key={view}
-              timeout={{
-                appear: theme.transitions.duration.enteringScreen,
-                enter: theme.transitions.duration.enteringScreen,
-                exit: 0,
-              }}
-            >
-              {viewContent}
-            </Fade>
-          </DateCalendar2TransitionGroup>
-        )}
-      </DateCalendar2Root>
+      <DateCalendar2PrivateContext.Provider value={privateContextValue}>
+        <DateCalendar2Root
+          onValueChange={handleValueChange}
+          {...other}
+          className={clsx(className, classes.root)}
+          ref={ref}
+        >
+          <CalendarHeader {...calendarHeaderProps} />
+          {reduceAnimations ? (
+            viewContent
+          ) : (
+            <DateCalendar2TransitionGroup className={classes.transitionGroup}>
+              <Fade
+                appear={false}
+                mountOnEnter
+                unmountOnExit
+                key={view}
+                timeout={{
+                  appear: theme.transitions.duration.enteringScreen,
+                  enter: theme.transitions.duration.enteringScreen,
+                  exit: 0,
+                }}
+              >
+                {viewContent}
+              </Fade>
+            </DateCalendar2TransitionGroup>
+          )}
+        </DateCalendar2Root>
+      </DateCalendar2PrivateContext.Provider>
     </DateCalendar2Context.Provider>
   );
 });
@@ -214,6 +225,7 @@ function useUtilityClasses(classes: Partial<DateCalendar2Classes> | undefined) {
     monthsCell: ['monthsCell'],
     yearsGridRoot: ['yearsGridRoot'],
     yearsCell: ['yearsCell'],
+    loadingPanel: ['loadingPanel'],
   };
 
   return composeClasses(slots, getDateCalendar2UtilityClass, classes);

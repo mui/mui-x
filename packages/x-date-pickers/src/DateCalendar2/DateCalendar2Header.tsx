@@ -9,7 +9,7 @@ import { Calendar, useCalendarContext } from '../internals/base/Calendar';
 import { usePickerTranslations } from '../hooks';
 import { ArrowDropDownIcon, ArrowLeftIcon, ArrowRightIcon } from '../icons';
 import { useUtils } from '../internals/hooks/useUtils';
-import { useDateCalendar2Context } from './DateCalendar2Context';
+import { useDateCalendar2Context, useDateCalendar2PrivateContext } from './DateCalendar2Context';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 
 const DateCalendar2HeaderRoot = styled('div', {
@@ -116,7 +116,8 @@ export const DateCalendar2Header = React.forwardRef(function DateCalendar2Header
   const theme = useTheme();
   const isRtl = useRtl();
   const { visibleDate, disabled } = useCalendarContext();
-  const { classes, slots, slotProps, view, setView, views, labelId } = useDateCalendar2Context();
+  const { classes, slots, slotProps, labelId } = useDateCalendar2PrivateContext();
+  const { view, setView, views } = useDateCalendar2Context();
 
   const { format = `${utils.formats.month} ${utils.formats.year}`, ...other } = props;
 

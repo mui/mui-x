@@ -3,8 +3,9 @@ import { alpha, styled } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { Calendar } from '../internals/base/Calendar';
 import { DIALOG_WIDTH } from '../internals/constants/dimensions';
-import { useDateCalendar2Context } from './DateCalendar2Context';
+import { useDateCalendar2PrivateContext } from './DateCalendar2Context';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
+import { DateCalendar2Loadable } from './DateCalendar2Loadable';
 
 const DateCalendar2MonthsGridRoot = styled(Calendar.MonthsGrid, {
   name: 'MuiDateCalendar2',
@@ -64,7 +65,7 @@ const DateCalendar2MonthsCell = styled('button', {
 
 function WrappedMonthsButton(props: React.HTMLAttributes<HTMLButtonElement>) {
   const { ownerState } = usePickerPrivateContext();
-  const { classes, slots, slotProps } = useDateCalendar2Context();
+  const { classes, slots, slotProps } = useDateCalendar2PrivateContext();
 
   const MonthsButton = slots?.monthButton ?? DateCalendar2MonthsCell;
   const monthsButtonProps = useSlotProps({
@@ -79,20 +80,23 @@ function WrappedMonthsButton(props: React.HTMLAttributes<HTMLButtonElement>) {
 }
 
 export function DateCalendar2MonthsGrid(props: DateCalendarMonthsGridProps) {
-  const { classes } = useDateCalendar2Context();
+  const { classes } = useDateCalendar2PrivateContext();
 
   return (
-    <DateCalendar2MonthsGridRoot {...props} className={classes.monthsGridRoot}>
-      {({ months }) =>
-        months.map((month) => (
-          <Calendar.MonthsCell
-            render={<WrappedMonthsButton />}
-            value={month}
-            key={month.toString()}
-          />
-        ))
-      }
-    </DateCalendar2MonthsGridRoot>
+    <DateCalendar2Loadable view="month">
+      <DateCalendar2MonthsGridRoot {...props} className={classes.monthsGridRoot}>
+        {({ months }) =>
+          months.map((month) => (
+            <Calendar.MonthsCell
+              key={month.toString()}
+              render={<WrappedMonthsButton />}
+              value={month}
+              format="MMM"
+            />
+          ))
+        }
+      </DateCalendar2MonthsGridRoot>
+    </DateCalendar2Loadable>
   );
 }
 

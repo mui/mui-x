@@ -6,7 +6,7 @@ import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { Calendar } from '../internals/base/Calendar';
 import { PickerOwnerState } from '../models/pickers';
 import { DateView } from '../models/views';
-import { DateCalendar2HeaderProps } from './DateCalendar2Header';
+import type { DateCalendar2HeaderProps } from './DateCalendar2Header';
 import { DateCalendar2Classes } from './DateCalendar2.classes';
 
 export interface DateCalendar2Props extends Omit<Calendar.Root.Props, 'children'> {
@@ -149,14 +149,17 @@ export interface DateCalendar2SlotProps {
   >;
 }
 
-export interface DateCalendar2ContextValue {
+export interface DateCalendar2PrivateContextValue {
   classes: DateCalendar2Classes;
   slots?: DateCalendar2Slots | undefined;
   slotProps?: DateCalendar2SlotProps | undefined;
-  view: DateView;
-  setView: (view: DateView) => void;
-  views: { [key in DateView]?: boolean };
   labelId: string;
   reduceAnimations: boolean;
   loading: boolean;
+}
+
+export interface DateCalendar2ContextValue {
+  view: DateView;
+  setView: (view: DateView) => void;
+  views: { [key in DateView]?: boolean };
 }
