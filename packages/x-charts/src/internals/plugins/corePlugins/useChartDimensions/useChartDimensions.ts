@@ -10,45 +10,13 @@ import { selectorChartDimensionsState } from './useChartDimensions.selectors';
 import { defaultizeMargin } from '../../../defaultizeMargin';
 import { useSelector } from '../../../store/useSelector';
 import {
-  selectorChartRawXAxis,
-  selectorChartRawYAxis,
-} from '../../featurePlugins/useChartCartesianAxis/useChartCartesianAxisLayout.selectors';
-import { createSelector } from '../../utils/selectors';
+  selectorChartLeftAxisSize,
+  selectorChartBottomAxisSize,
+  selectorChartRightAxisSize,
+  selectorChartTopAxisSize,
+} from './useChartAxisSize.selectors';
 
 const MAX_COMPUTE_RUN = 10;
-
-const selectorChartAxisSize = createSelector(
-  [selectorChartRawXAxis, selectorChartRawYAxis],
-  (xAxis, yAxis) => {
-    const topBottom = (xAxis ?? []).reduce(
-      (acc, axis) => {
-        if (axis.position === 'top') {
-          return { ...acc, top: acc.top + (axis.height || 0) };
-        }
-        if (axis.position === 'bottom') {
-          return { ...acc, bottom: acc.bottom + (axis.height || 0) };
-        }
-        return acc;
-      },
-      { top: 0, bottom: 0 },
-    );
-
-    const leftRight = (yAxis ?? []).reduce(
-      (acc, axis) => {
-        if (axis.position === 'right') {
-          return { ...acc, right: acc.right + (axis.width || 0) };
-        }
-        if (axis.position === 'left') {
-          return { ...acc, left: acc.left + (axis.width || 0) };
-        }
-        return acc;
-      },
-      { right: 0, left: 0 },
-    );
-
-    return { ...topBottom, ...leftRight };
-  },
-);
 
 export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
   params,
@@ -61,7 +29,10 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
   const [innerWidth, setInnerWidth] = React.useState(0);
   const [innerHeight, setInnerHeight] = React.useState(0);
 
-  const usedAxisSizes = useSelector(store, selectorChartAxisSize);
+  const leftAxisSize = useSelector(store, selectorChartLeftAxisSize);
+  const rightAxisSize = useSelector(store, selectorChartRightAxisSize);
+  const topAxisSize = useSelector(store, selectorChartTopAxisSize);
+  const bottomAxisSize = useSelector(store, selectorChartBottomAxisSize);
 
   const computeSize = React.useCallback(() => {
     const mainEl = svgRef?.current;
@@ -77,8 +48,10 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
     const newWidth = Math.floor(parseFloat(computedStyle.width)) || 0;
 
     store.update((prev) => {
-      const prevWidth = prev.dimensions.width + prev.dimensions.left + prev.dimensions.right;
-      const prevHeight = prev.dimensions.height + prev.dimensions.top + prev.dimensions.bottom;
+      const prevWidth =
+        params.width ?? prev.dimensions.width + prev.dimensions.left + prev.dimensions.right;
+      const prevHeight =
+        params.height ?? prev.dimensions.height + prev.dimensions.top + prev.dimensions.bottom;
 
       if (prevWidth === newWidth && prevHeight === newHeight) {
         return prev;
@@ -86,10 +59,10 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
 
       const axisSize = defaultizeMargin(
         {
-          top: usedAxisSizes.top,
-          left: usedAxisSizes.left,
-          bottom: usedAxisSizes.bottom,
-          right: usedAxisSizes.right,
+          top: topAxisSize,
+          left: leftAxisSize,
+          bottom: bottomAxisSize,
+          right: rightAxisSize,
         },
         EMPTY_SIDES,
       );
@@ -97,7 +70,6 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
       return {
         ...prev,
         dimensions: {
-          ...prev.dimensions,
           top: params.margin.top + axisSize.top,
           left: params.margin.left + axisSize.left,
           bottom: params.margin.bottom + axisSize.bottom,
@@ -106,6 +78,8 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
             newWidth - params.margin.left - params.margin.right - axisSize.left - axisSize.right,
           height:
             newHeight - params.margin.top - params.margin.bottom - axisSize.top - axisSize.bottom,
+          propsWidth: params.width,
+          propsHeight: params.height,
         },
       };
     });
@@ -120,25 +94,27 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
     params.margin.right,
     params.margin.top,
     params.margin.bottom,
-    usedAxisSizes.bottom,
-    usedAxisSizes.left,
-    usedAxisSizes.right,
-    usedAxisSizes.top,
+    params.width,
+    params.height,
+    leftAxisSize,
+    rightAxisSize,
+    topAxisSize,
+    bottomAxisSize,
   ]);
 
   React.useEffect(() => {
     store.update((prev) => {
       const width =
-        params.width || prev.dimensions.width + prev.dimensions.left + prev.dimensions.right;
+        params.width ?? prev.dimensions.width + prev.dimensions.left + prev.dimensions.right;
       const height =
-        params.height || prev.dimensions.height + prev.dimensions.top + prev.dimensions.bottom;
+        params.height ?? prev.dimensions.height + prev.dimensions.top + prev.dimensions.bottom;
 
       const axisSize = defaultizeMargin(
         {
-          top: usedAxisSizes.top,
-          left: usedAxisSizes.left,
-          bottom: usedAxisSizes.bottom,
-          right: usedAxisSizes.right,
+          top: topAxisSize,
+          left: leftAxisSize,
+          bottom: bottomAxisSize,
+          right: rightAxisSize,
         },
         EMPTY_SIDES,
       );
@@ -166,10 +142,10 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
     params.margin.bottom,
     params.height,
     params.width,
-    usedAxisSizes.bottom,
-    usedAxisSizes.left,
-    usedAxisSizes.right,
-    usedAxisSizes.top,
+    leftAxisSize,
+    rightAxisSize,
+    topAxisSize,
+    bottomAxisSize,
     store,
   ]);
 
