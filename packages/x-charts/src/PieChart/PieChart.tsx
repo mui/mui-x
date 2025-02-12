@@ -21,6 +21,7 @@ import { ChartDataProvider } from '../ChartDataProvider';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
 import { ChartsWrapper } from '../internals/components/ChartsWrapper';
 import { PIE_CHART_PLUGINS, PieChartPluginSignatures } from './PieChart.plugins';
+import { defaultizeMargin } from '../internals/defaultizeMargin';
 
 export interface PieChartSlots
   extends PiePlotSlots,
@@ -99,7 +100,7 @@ const PieChart = React.forwardRef(function PieChart(
     className,
     ...other
   } = props;
-  const margin = { ...defaultMargin, ...marginProps };
+  const margin = defaultizeMargin(marginProps, defaultMargin);
 
   const { chartDataProviderProps, chartsSurfaceProps } = useChartContainerProps<
     'pie',

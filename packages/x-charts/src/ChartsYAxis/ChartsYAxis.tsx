@@ -41,6 +41,7 @@ const defaultProps = {
   disableLine: false,
   disableTicks: false,
   tickSize: 6,
+  offset: 0,
 } as const;
 
 /**
@@ -79,6 +80,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     tickInterval,
     tickLabelInterval,
     sx,
+    offset,
   } = defaultizedProps;
 
   const theme = useTheme();
@@ -156,6 +158,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
 
   const domain = yScale.domain();
   const ordinalAxis = isBandScale(yScale);
+
   // Skip axis rendering if no data is available
   // - The domain is an empty array for band/point scales.
   // - The domains contains Infinity for continuous scales.
@@ -165,7 +168,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
 
   return (
     <YAxisRoot
-      transform={`translate(${position === 'right' ? left + width : left}, 0)`}
+      transform={`translate(${position === 'right' ? left + width + offset : left - offset}, 0)`}
       className={classes.root}
       sx={sx}
     >
@@ -173,20 +176,24 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
         <Line y1={top} y2={top + height} className={classes.line} {...lineSlotProps} />
       )}
 
-      {yTicks.map(({ formattedValue, offset, labelOffset, value }, index) => {
+      {yTicks.map(({ formattedValue, offset: tickOffset, labelOffset, value }, index) => {
         const xTickLabel = positionSign * (tickSize + 2);
         const yTickLabel = labelOffset;
         const skipLabel =
           typeof tickLabelInterval === 'function' && !tickLabelInterval?.(value, index);
 
-        const showLabel = instance.isPointInside({ x: -1, y: offset }, { direction: 'y' });
+        const showLabel = instance.isPointInside({ x: -1, y: tickOffset }, { direction: 'y' });
 
         if (!showLabel) {
           return null;
         }
 
         return (
-          <g key={index} transform={`translate(0, ${offset})`} className={classes.tickContainer}>
+          <g
+            key={index}
+            transform={`translate(0, ${tickOffset})`}
+            className={classes.tickContainer}
+          >
             {!disableTicks && (
               <Tick
                 x2={positionSign * tickSize}

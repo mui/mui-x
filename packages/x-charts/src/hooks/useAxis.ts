@@ -3,7 +3,7 @@ import type { UseChartCartesianAxisSignature } from '../internals/plugins/featur
 import {
   selectorChartXAxis,
   selectorChartYAxis,
-} from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.selectors';
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import { AxisId } from '../models/axis';

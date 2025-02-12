@@ -116,6 +116,13 @@ export interface ChartsAxisProps extends TickParams {
    */
   tickSize?: number;
   /**
+   * The offset of the axis in pixels. It can be used to move the axis from its default position.
+   * X-axis: A top axis will move up, and a bottom axis will move down.
+   * Y-axis: A left axis will move left, and a right axis will move right.
+   * @default 0
+   */
+  offset?: number;
+  /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<ChartsAxisClasses>;
@@ -135,15 +142,37 @@ export interface ChartsAxisProps extends TickParams {
 export interface ChartsYAxisProps extends ChartsAxisProps {
   /**
    * Position of the axis.
+   *
+   * When set, the space for the axis is reserved, even if the axis is not displayed due to missing data.
+   *
+   * Set to 'none' to hide the axis.
+   *
+   * The first axis in the list will always have a default position.
    */
-  position?: 'left' | 'right';
+  position?: 'left' | 'right' | 'none';
+  /**
+   * The width of the axis.
+   * @default 30
+   */
+  width?: number;
 }
 
 export interface ChartsXAxisProps extends ChartsAxisProps {
   /**
    * Position of the axis.
+   *
+   * When set, the space for the axis is reserved, even if the axis is not displayed due to missing data.
+   *
+   * Set to 'none' to hide the axis.
+   *
+   * The first axis in the list will always have a default position.
    */
-  position?: 'top' | 'bottom';
+  position?: 'top' | 'bottom' | 'none';
+  /**
+   * The height of the axis.
+   * @default 30
+   */
+  height?: number;
 }
 
 export interface ChartsRotationAxisProps extends ChartsAxisProps {
