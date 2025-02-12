@@ -316,7 +316,7 @@ const DateCalendar2DaysGridBodyLoading = React.memo(function DateCalendar2DaysGr
     <DateCalendar2DaysGridBody {...props}>
       {Array.from({ length: 4 }, (_, weekIndex) => (
         <DateCalendar2DaysGridRow key={weekIndex}>
-          {Array.from({ length: 7 }, (_, dayIndex) => (
+          {Array.from({ length: 7 }, (_day, dayIndex) => (
             <DateCalendar2DaysCellLoading
               key={dayIndex}
               variant="circular"
