@@ -40,6 +40,7 @@ export interface GridClasses {
    * Styles applied to the root element while it is being autosized.
    */
   autosizing: string;
+  withSidePanel: string;
   /**
    * Styles applied to the icon of the boolean cell.
    */
@@ -385,6 +386,7 @@ export interface GridClasses {
    * Styles applied to the column header filter row.
    */
   headerFilterRow: string;
+  mainContent: string; // TODO: come up with a better name
   /**
    * Styles applied to the main container element.
    */
@@ -679,6 +681,14 @@ export interface GridClasses {
    * Styles applied to the bottom pinned rows container.
    */
   'pinnedRows--bottom': string;
+  /**
+   * Styles applied to the pivot field.
+   */
+  pivotField: string;
+  /**
+   * Styles applied to the pivot field when sorted.
+   */
+  'pivotField--sorted': string;
 }
 
 export type GridClassKey = keyof GridClasses;
@@ -697,6 +707,8 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'aggregationRowOverlayWrapper',
   'autoHeight',
   'autosizing',
+  'mainContent',
+  'withSidePanel',
   'booleanCell',
   'cell--editable',
   'cell--editing',
@@ -765,6 +777,8 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'panelContent',
   'panelFooter',
   'paper',
+  'pivotField',
+  'pivotField--sorted',
   'editBooleanCell',
   'editInputCell',
   'filler',

@@ -955,6 +955,48 @@
       "description": "Icon displayed to indicate that a menu item is selected.",
       "default": "GridCheckIcon",
       "class": null
+    },
+    {
+      "name": "pivotMenuAddIcon",
+      "description": "Icon displayed in the pivot menu for adding a field to a pivot section.",
+      "default": "GridAddIcon",
+      "class": null
+    },
+    {
+      "name": "pivotMenuMoveUpIcon",
+      "description": "Icon displayed in the pivot menu for moving a field up.",
+      "default": "GridExpandLessIcon",
+      "class": null
+    },
+    {
+      "name": "pivotMenuMoveDownIcon",
+      "description": "Icon displayed in the pivot menu for moving a field down.",
+      "default": "GridExpandMoreIcon",
+      "class": null
+    },
+    {
+      "name": "pivotMenuMoveToTopIcon",
+      "description": "Icon displayed in the pivot menu for moving a field to the top.",
+      "default": "GridMoveToTopIcon",
+      "class": null
+    },
+    {
+      "name": "pivotMenuMoveToBottomIcon",
+      "description": "Icon displayed in the pivot menu for moving a field to the bottom.",
+      "default": "GridMoveToBottomIcon",
+      "class": null
+    },
+    {
+      "name": "pivotMenuCheckIcon",
+      "description": "Icon displayed in the pivot menu to signify a pivot section is selected.",
+      "default": "GridCheckIcon",
+      "class": null
+    },
+    {
+      "name": "pivotMenuRemoveIcon",
+      "description": "Icon displayed in the pivot menu for removing a field from the pivot.",
+      "default": "GridDeleteIcon",
+      "class": null
     }
   ],
   "classes": [
@@ -1475,6 +1517,12 @@
       "isGlobal": false
     },
     {
+      "key": "mainContent",
+      "className": "MuiDataGrid-mainContent",
+      "description": "",
+      "isGlobal": false
+    },
+    {
       "key": "menu",
       "className": "MuiDataGrid-menu",
       "description": "Styles applied to the menu element.",
@@ -1568,6 +1616,18 @@
       "key": "pinnedRows--top",
       "className": "MuiDataGrid-pinnedRows--top",
       "description": "Styles applied to the top pinned rows container.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotField",
+      "className": "MuiDataGrid-pivotField",
+      "description": "Styles applied to the pivot field.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotField--sorted",
+      "className": "MuiDataGrid-pivotField--sorted",
+      "description": "Styles applied to the pivot field when sorted.",
       "isGlobal": false
     },
     {
@@ -1808,6 +1868,12 @@
       "key": "withBorderColor",
       "className": "MuiDataGrid-withBorderColor",
       "description": "Styles applied to cells, column header and other elements that have border.\nSets border color only.",
+      "isGlobal": false
+    },
+    {
+      "key": "withSidePanel",
+      "className": "MuiDataGrid-withSidePanel",
+      "description": "",
       "isGlobal": false
     },
     {

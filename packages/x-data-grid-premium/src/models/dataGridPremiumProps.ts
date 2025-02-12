@@ -4,6 +4,7 @@ import {
   GridValidRowModel,
   GridGroupNode,
   GridEventListener,
+  GridColDef,
 } from '@mui/x-data-grid-pro';
 import {
   GridExperimentalProFeatures,
@@ -24,6 +25,7 @@ import { GridPremiumSlotsComponent } from './gridPremiumSlotsComponent';
 import { GridInitialStatePremium } from './gridStatePremium';
 import { GridApiPremium } from './gridApiPremium';
 import { GridCellSelectionModel } from '../hooks/features/cellSelection';
+import type { PivotModel } from '../hooks/features/pivoting/useGridPivoting';
 import {
   GridDataSourcePremium as GridDataSource,
   GridGetRowsParamsPremium as GridGetRowsParams,
@@ -202,6 +204,26 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * Data source object.
    */
   unstable_dataSource?: GridDataSource;
+
+  pivotParams?: {
+    pivotMode: boolean;
+    onPivotModeChange: (pivotMode: boolean) => void;
+    props?: Pick<
+      DataGridPremiumProps,
+      | 'rows'
+      | 'columns'
+      | 'rowGroupingModel'
+      | 'aggregationModel'
+      | 'getAggregationPosition'
+      | 'columnVisibilityModel'
+      | 'columnGroupingModel'
+    >;
+    pivotModel: PivotModel;
+    onPivotModelChange: React.Dispatch<React.SetStateAction<PivotModel>>;
+    initialColumns: GridColDef[] | undefined;
+    pivotSettingsOpen: boolean;
+    onPivotSettingsOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
+  };
   /**
    * Callback fired when the data source request fails.
    * @param {Error} error The error object.

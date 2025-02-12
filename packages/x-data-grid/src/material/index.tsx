@@ -52,6 +52,10 @@ import {
   GridClearIcon,
   GridLoadIcon,
   GridDeleteForeverIcon,
+  GridMoveToTopIcon,
+  GridMoveToBottomIcon,
+  GridDeleteIcon,
+  GridExpandLessIcon,
 } from './icons';
 import type { GridIconSlotsComponent } from '../models';
 import type { GridBaseSlots } from '../models/gridSlotsComponent';
@@ -98,6 +102,13 @@ const iconSlots: GridIconSlotsComponent = {
   filterPanelRemoveAllIcon: GridDeleteForeverIcon,
   columnReorderIcon: GridDragIcon,
   menuItemCheckIcon: GridCheckIcon,
+  pivotMenuAddIcon: GridAddIcon,
+  pivotMenuMoveUpIcon: GridExpandLessIcon,
+  pivotMenuMoveDownIcon: GridExpandMoreIcon,
+  pivotMenuMoveToTopIcon: GridMoveToTopIcon,
+  pivotMenuMoveToBottomIcon: GridMoveToBottomIcon,
+  pivotMenuCheckIcon: GridCheckIcon,
+  pivotMenuRemoveIcon: GridDeleteIcon,
 };
 
 const baseSlots: GridBaseSlots = {
@@ -132,7 +143,7 @@ export default materialSlots;
 const CHECKBOX_COMPACT = { p: 0.5 };
 
 function BaseCheckbox(props: GridSlotProps['baseCheckbox'], ref: React.Ref<HTMLButtonElement>) {
-  const { autoFocus, label, fullWidth, slotProps, className, density, ...other } = props;
+  const { autoFocus, label, fullWidth, slotProps, className, density, truncate, ...other } = props;
 
   const elementRef = React.useRef<HTMLButtonElement>(null);
   const handleRef = useForkRef(elementRef, ref);
@@ -177,7 +188,24 @@ function BaseCheckbox(props: GridSlotProps['baseCheckbox'], ref: React.Ref<HTMLB
         />
       }
       label={label}
-      sx={fullWidth ? { width: '100%', margin: 0 } : undefined}
+      slotProps={{
+        typography: {
+          sx: {
+            fontSize: 14,
+            ...(truncate
+              ? {
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }
+              : {}),
+          },
+        },
+      }}
+      sx={{
+        ...(truncate ? { overflow: 'hidden' } : {}),
+        ...(fullWidth ? { width: '100%', margin: 0 } : undefined),
+      }}
     />
   );
 }
