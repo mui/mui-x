@@ -82,7 +82,7 @@ Below are described the steps you need to make to migrate from v7 to v8.
   - Return early if `apiRef` is `null`
   - Throw an error if `apiRef` is `null`
 
-- `createUseGridApiEventHandler` is not exported anymore.
+- `createUseGridApiEventHandler()` is not exported anymore.
 
 ### Localization
 
@@ -94,14 +94,21 @@ Below are described the steps you need to make to migrate from v7 to v8.
 
 ### State
 
-- The selectors signature has been updated due to the support of arguments in the selectors. Pass `undefined` as `arguments` if the selector doesn't use any arguments.
+- The selectors signature has been updated. They are only accepting `apiRef` as a first argument. Some selectors support additional arguments.
 
   ```diff
   -mySelector(state, instanceId)
-  +mySelector(state, arguments, instanceId)
+  +mySelector(apiRef)
   ```
 
-- The `useGridSelector` signature has been updated due to the introduction of arguments parameter in the selectors. Pass `undefined` as `arguments` if the selector doesn't use any arguments.
+  or
+
+  ```diff
+  -mySelector(state, instanceId)
+  +mySelector(apiRef, arguments)
+  ```
+
+- The `useGridSelector()` signature has been updated due to the introduction of arguments parameter in the selectors. Pass `undefined` as `arguments` if the selector doesn't use any arguments.
 
   ```diff
   -const output = useGridSelector(apiRef, selector, equals);

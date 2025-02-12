@@ -1,3 +1,4 @@
+import { createRootSelector } from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 
 /**
@@ -5,4 +6,6 @@ import { GridStateCommunity } from '../../../models/gridStateCommunity';
  * @category List View
  * @ignore - Do not document
  */
-export const gridListColumnSelector = (state: GridStateCommunity) => state.listViewColumn;
+export const gridListColumnSelector = createRootSelector(
+  (state: GridStateCommunity) => state.listViewColumn,
+);

@@ -106,7 +106,9 @@ export const useGridFilter = (
 
   const updateFilteredRows = React.useCallback(() => {
     apiRef.current.setState((state) => {
-      const filterModel = gridFilterModelSelector(state, undefined, apiRef.current.instanceId);
+      const filterModel = gridFilterModelSelector({
+        current: { ...apiRef.current, state },
+      });
       const filterState = apiRef.current.getFilterState(filterModel);
 
       const newState = {
