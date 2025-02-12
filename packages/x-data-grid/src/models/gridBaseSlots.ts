@@ -44,6 +44,7 @@ export type CheckboxProps = {
   onKeyDown?: React.KeyboardEventHandler;
   size?: 'small' | 'medium';
   density?: 'standard' | 'compact';
+  truncate?: boolean;
   slotProps?: {
     htmlInput?: React.InputHTMLAttributes<HTMLInputElement>;
   };

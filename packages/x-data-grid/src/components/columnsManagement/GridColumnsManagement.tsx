@@ -279,33 +279,39 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
           />
         </GridColumnsManagementHeader>
       )}
-      <GridColumnsManagementBody className={classes.root} ownerState={rootProps}>
-        {currentColumns.map((column) => (
-          <rootProps.slots.baseCheckbox
-            key={column.field}
-            className={classes.row}
-            disabled={column.hideable === false}
-            checked={columnVisibilityModel[column.field] !== false}
-            onClick={toggleColumn}
-            name={column.field}
-            inputRef={isFirstHideableColumn(column) ? firstSwitchRef : undefined}
-            label={column.headerName || column.field}
-            size="small"
-            density="compact"
-            fullWidth
-            {...rootProps.slotProps?.baseCheckbox}
-          />
-        ))}
-        {currentColumns.length === 0 && (
-          <GridColumnsManagementEmptyText ownerState={rootProps}>
-            {apiRef.current.getLocaleText('columnsManagementNoColumns')}
-          </GridColumnsManagementEmptyText>
-        )}
-      </GridColumnsManagementBody>
+      <GridShadowScrollArea>
+        <GridColumnsManagementBody className={classes.root} ownerState={rootProps}>
+          {currentColumns.map((column) => (
+            <GridColumnsManagementCheckboxLabel
+              as={rootProps.slots.baseCheckbox}
+              ownerState={rootProps}
+              key={column.field}
+              className={classes.row}
+              disabled={column.hideable === false}
+              checked={columnVisibilityModel[column.field] !== false}
+              onClick={toggleColumn}
+              name={column.field}
+              inputRef={isFirstHideableColumn(column) ? firstSwitchRef : undefined}
+              label={column.headerName || column.field}
+              size="small"
+              density="compact"
+              fullWidth
+              {...rootProps.slotProps?.baseCheckbox}
+            />
+          ))}
+          {currentColumns.length === 0 && (
+            <GridColumnsManagementEmptyText ownerState={rootProps}>
+              {apiRef.current.getLocaleText('columnsManagementNoColumns')}
+            </GridColumnsManagementEmptyText>
+          )}
+        </GridColumnsManagementBody>
+      </GridShadowScrollArea>
       {!disableShowHideToggle || !disableResetButton ? (
         <GridColumnsManagementFooter ownerState={rootProps} className={classes.footer}>
           {!disableShowHideToggle ? (
-            <rootProps.slots.baseCheckbox
+            <GridColumnsManagementCheckboxLabel
+              as={rootProps.slots.baseCheckbox}
+              ownerState={rootProps}
               disabled={hideableColumns.length === 0}
               checked={allHideableColumnsVisible}
               indeterminate={!allHideableColumnsVisible && !allHideableColumnsHidden}
@@ -428,13 +434,14 @@ GridColumnsManagement.propTypes = {
   toggleAllMode: PropTypes.oneOf(['all', 'filteredOnly']),
 } as any;
 
-const GridColumnsManagementBody = styled(GridShadowScrollArea, {
+const GridColumnsManagementBody = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnsManagement',
   overridesResolver: (props, styles) => styles.columnsManagement,
-})<{ ownerState: OwnerState }>({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   flex: 1,
-});
+  padding: theme.spacing(0.5, 0),
+}));
 
 const GridColumnsManagementHeader = styled('div', {
   name: 'MuiDataGrid',
@@ -471,22 +478,18 @@ const GridColumnsManagementFooter = styled('div', {
   borderTop: `1px solid ${theme.palette.divider}`,
 }));
 
-// const GridColumnsManagementCheckboxLabel = styled(FormControlLabel, {
-//   name: 'MuiDataGrid',
-//   slot: 'ColumnsManagementCheckboxLabel',
-// })<{ ownerState: OwnerState }>(({ theme }) => ({
-//   boxSizing: 'border-box',
-//   width: '100%',
-//   height: 34,
-//   margin: 0,
-//   paddingLeft: 5,
-//   '&:hover': {
-//     backgroundColor: theme.palette.action.hover,
-//   },
-//   [`& .${formControlLabelClasses.label}`]: {
-//     fontSize: theme.typography.pxToRem(14),
-//   },
-// }));
+const GridColumnsManagementCheckboxLabel = styled(NotRendered<GridSlotProps['baseCheckbox']>, {
+  name: 'MuiDataGrid',
+  slot: 'ColumnsManagementCheckboxLabel',
+})<{ ownerState: OwnerState }>(({ theme }) => ({
+  boxSizing: 'border-box',
+  height: 34,
+  margin: 0,
+  paddingLeft: theme.spacing(1),
+  '&:hover': {
+    backgroundColor: theme.palette.action.hover,
+  },
+}));
 
 const GridColumnsManagementEmptyText = styled('div')<{ ownerState: OwnerState }>(({ theme }) => ({
   padding: theme.spacing(2, 2),

@@ -7,7 +7,6 @@ import {
   GridSortDirection,
   NotRendered,
 } from '@mui/x-data-grid';
-import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
 
 import { selectClasses } from '@mui/material/Select';
 import { outlinedInputClasses } from '@mui/material/OutlinedInput';
@@ -72,7 +71,8 @@ const PivotFieldRoot = styled('div', {
   section: FieldTransferObject['modelKey'];
 }>(({ theme }) => ({
   flexShrink: 0,
-  paddingRight: theme.spacing(1),
+  position: 'relative',
+  padding: theme.spacing(0, 1, 0, 2),
   height: '32px',
   display: 'flex',
   alignItems: 'center',
@@ -100,20 +100,12 @@ const PivotFieldRoot = styled('div', {
   },
 }));
 
-const PivotFieldLabel = styled('div')(({ theme }) => ({
+const PivotFieldName = styled('span')({
   flex: 1,
-  minWidth: 0,
-  [`.${formControlLabelClasses.root}`]: {
-    width: '100%',
-    cursor: 'grab',
-  },
-  [`.${formControlLabelClasses.label}, & > span`]: {
-    fontSize: theme.typography.pxToRem(14),
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
-  },
-}));
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+});
 
 const PivotFieldActionContainer = styled('div')({
   display: 'flex',
@@ -121,15 +113,23 @@ const PivotFieldActionContainer = styled('div')({
 });
 
 const PivotFieldDragIcon = styled('div')(({ theme }) => ({
+  position: 'absolute',
+  left: -1,
   width: 16,
   display: 'flex',
   justifyContent: 'center',
   color: theme.palette.text.primary,
   opacity: 0,
-  marginRight: theme.spacing(-0.5),
   '[draggable="true"]:hover > &': {
     opacity: 0.3,
   },
+}));
+
+const PivotFieldCheckbox = styled(NotRendered<GridSlotProps['baseCheckbox']>)(({ theme }) => ({
+  flex: 1,
+  position: 'relative',
+  margin: theme.spacing(0, 0, 0, -1),
+  cursor: 'grab',
 }));
 
 const AggregationSelectRoot = styled(NotRendered<GridSlotProps['baseSelect']>)(({ theme }) => ({
@@ -335,6 +335,7 @@ export function PivotField(props: PivotFieldProps) {
   };
 
   const hideable = props.modelKey !== null;
+  // const hideable = true;
 
   return (
     <PivotFieldRoot
@@ -353,23 +354,20 @@ export function PivotField(props: PivotFieldProps) {
         <slots.columnReorderIcon fontSize="small" />
       </PivotFieldDragIcon>
 
-      <PivotFieldLabel>
-        {hideable ? (
-          <FormControlLabel
-            control={
-              <rootProps.slots.baseCheckbox
-                size="small"
-                {...rootProps.slotProps?.baseCheckbox}
-                checked={!props.hidden}
-                onChange={handleVisibilityChange}
-              />
-            }
-            label={children}
-          />
-        ) : (
-          <span>{children}</span>
-        )}
-      </PivotFieldLabel>
+      {hideable ? (
+        <PivotFieldCheckbox
+          as={rootProps.slots.baseCheckbox}
+          size="small"
+          density="compact"
+          truncate
+          {...rootProps.slotProps?.baseCheckbox}
+          checked={!props.hidden}
+          onChange={handleVisibilityChange}
+          label={children}
+        />
+      ) : (
+        <PivotFieldName>{children}</PivotFieldName>
+      )}
 
       <PivotFieldActionContainer>
         {props.modelKey === 'columns' && (

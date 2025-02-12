@@ -9,6 +9,7 @@ const reveal = keyframes({ from: { opacity: 0 }, to: { opacity: 1 } });
 const detectScroll = keyframes({ 'from, to': { '--scrollable': '" "' } });
 
 const ShadowScrollArea = styled('div')({
+  flex: 1,
   display: 'flex',
   flexDirection: 'column',
   animation: detectScroll,
