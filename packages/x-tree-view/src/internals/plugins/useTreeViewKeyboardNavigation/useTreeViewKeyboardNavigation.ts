@@ -103,7 +103,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   };
 
   // ARIA specification: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/#keyboardinteraction
-  const handleItemKeyDown = (
+  const handleItemKeyDown = async (
     event: React.KeyboardEvent<HTMLElement> & TreeViewCancellableEvent,
     itemId: string,
   ) => {
