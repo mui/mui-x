@@ -171,7 +171,6 @@ export interface DateCalendar2PrivateContextValue {
   slots?: DateCalendar2Slots | undefined;
   slotProps?: DateCalendar2SlotProps | undefined;
   labelId: string;
-  reduceAnimations: boolean;
   loading: boolean;
 }
 
@@ -179,4 +178,5 @@ export interface DateCalendar2ContextValue {
   view: DateView;
   setView: (view: DateView) => void;
   views: { [key in DateView]?: boolean };
+  reduceAnimations: boolean;
 }

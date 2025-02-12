@@ -117,7 +117,7 @@ export const DateCalendar2Header = React.forwardRef(function DateCalendar2Header
   const isRtl = useRtl();
   const { visibleDate, disabled } = useCalendarContext();
   const { classes, slots, slotProps, labelId } = useDateCalendar2PrivateContext();
-  const { view, setView, views } = useDateCalendar2Context();
+  const { view, setView, views, reduceAnimations } = useDateCalendar2Context();
   const { format = `${utils.formats.month} ${utils.formats.year}`, ...other } = props;
 
   const handleToggleView = () => {
@@ -227,23 +227,29 @@ export const DateCalendar2Header = React.forwardRef(function DateCalendar2Header
         aria-live="polite"
         className={classes.headerLabelContainer}
       >
-        <DateCalendar2HeaderLabelTransitionGroup className={classes.headerLabelTransitionGroup}>
-          <Fade
-            appear={false}
-            mountOnEnter
-            unmountOnExit
-            key={label}
-            timeout={{
-              appear: theme.transitions.duration.enteringScreen,
-              enter: theme.transitions.duration.enteringScreen,
-              exit: 0,
-            }}
-          >
-            <DateCalendar2HeaderLabelContent id={labelId} className={classes.headerLabelContent}>
-              {label}
-            </DateCalendar2HeaderLabelContent>
-          </Fade>
-        </DateCalendar2HeaderLabelTransitionGroup>
+        {reduceAnimations ? (
+          <DateCalendar2HeaderLabelContent id={labelId} className={classes.headerLabelContent}>
+            {label}
+          </DateCalendar2HeaderLabelContent>
+        ) : (
+          <DateCalendar2HeaderLabelTransitionGroup className={classes.headerLabelTransitionGroup}>
+            <Fade
+              appear={false}
+              mountOnEnter
+              unmountOnExit
+              key={label}
+              timeout={{
+                appear: theme.transitions.duration.enteringScreen,
+                enter: theme.transitions.duration.enteringScreen,
+                exit: 0,
+              }}
+            >
+              <DateCalendar2HeaderLabelContent id={labelId} className={classes.headerLabelContent}>
+                {label}
+              </DateCalendar2HeaderLabelContent>
+            </Fade>
+          </DateCalendar2HeaderLabelTransitionGroup>
+        )}
         {viewCount > 1 && !disabled && (
           <SwitchViewButton {...switchViewButtonProps}>
             <SwitchViewIcon {...switchViewIconProps} />

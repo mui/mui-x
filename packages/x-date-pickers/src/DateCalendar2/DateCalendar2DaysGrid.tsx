@@ -11,7 +11,7 @@ import { Calendar, useCalendarContext } from '../internals/base/Calendar';
 import { usePickerTranslations } from '../hooks';
 import { DAY_MARGIN, DAY_SIZE } from '../internals/constants/dimensions';
 import { useUtils } from '../internals/hooks/useUtils';
-import { useDateCalendar2PrivateContext } from './DateCalendar2Context';
+import { useDateCalendar2Context, useDateCalendar2PrivateContext } from './DateCalendar2Context';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { DateCalendar2Loadable } from './DateCalendar2Loadable';
 import { DAYS_GRID_BODY_HEIGHT } from './DateCalendar2.utils';
@@ -327,7 +327,8 @@ export function DateCalendar2DaysGrid(props: DateCalendar2DaysGridProps) {
   const theme = useTheme();
   const utils = useUtils();
   const { visibleDate } = useCalendarContext();
-  const { classes, reduceAnimations, labelId } = useDateCalendar2PrivateContext();
+  const { classes, labelId } = useDateCalendar2PrivateContext();
+  const { reduceAnimations } = useDateCalendar2Context();
 
   const { displayWeekNumber } = props;
 

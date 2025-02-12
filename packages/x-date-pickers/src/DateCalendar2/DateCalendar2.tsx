@@ -141,13 +141,13 @@ export const DateCalendar2 = React.forwardRef(function DateCalendar2(
   );
 
   const privateContextValue = React.useMemo<DateCalendar2PrivateContextValue>(
-    () => ({ classes, slots, slotProps, labelId, reduceAnimations, loading }),
-    [classes, slots, slotProps, labelId, reduceAnimations, loading],
+    () => ({ classes, slots, slotProps, labelId, loading }),
+    [classes, slots, slotProps, labelId, loading],
   );
 
   const contextValue = React.useMemo<DateCalendar2ContextValue>(
-    () => ({ view, views, setView }),
-    [view, views, setView],
+    () => ({ view, views, setView, reduceAnimations }),
+    [view, views, setView, reduceAnimations],
   );
 
   const CalendarHeader = slots?.calendarHeader ?? DateCalendar2Header;
@@ -157,15 +157,16 @@ export const DateCalendar2 = React.forwardRef(function DateCalendar2(
     ownerState,
   });
 
-  const viewContent = (
-    <React.Fragment>
-      {view === 'year' && (
-        <DateCalendar2YearsGrid cellsPerRow={yearsPerRow} yearsOrder={yearsOrder} />
-      )}
-      {view === 'month' && <DateCalendar2MonthsGrid cellsPerRow={monthsPerRow} />}
-      {view === 'day' && <DateCalendar2DaysGrid displayWeekNumber={displayWeekNumber} />}
-    </React.Fragment>
-  );
+  const renderViewContent = () => {
+    if (view === 'year') {
+      return <DateCalendar2YearsGrid cellsPerRow={yearsPerRow} yearsOrder={yearsOrder} />;
+    }
+
+    if (view === 'month') {
+      return <DateCalendar2MonthsGrid cellsPerRow={monthsPerRow} />;
+    }
+    return <DateCalendar2DaysGrid displayWeekNumber={displayWeekNumber} />;
+  };
 
   return (
     <DateCalendar2Context.Provider value={contextValue}>
@@ -178,7 +179,7 @@ export const DateCalendar2 = React.forwardRef(function DateCalendar2(
         >
           <CalendarHeader {...calendarHeaderProps} />
           {reduceAnimations ? (
-            viewContent
+            renderViewContent()
           ) : (
             <DateCalendar2TransitionGroup className={classes.transitionGroup}>
               <Fade
@@ -192,7 +193,7 @@ export const DateCalendar2 = React.forwardRef(function DateCalendar2(
                   exit: 0,
                 }}
               >
-                {viewContent}
+                {renderViewContent()}
               </Fade>
             </DateCalendar2TransitionGroup>
           )}
