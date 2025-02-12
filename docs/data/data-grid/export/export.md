@@ -336,7 +336,7 @@ This file will be later used as the worker script, so it must be accessible by a
 
 ```tsx
 // in file ./worker.ts
-import { setupExcelExportWebWorker } from '@mui/x-data-grid-premium';
+import { setupExcelExportWebWorker } from '@mui/x-data-grid-premium/setupExcelExportWebWorker';
 
 setupExcelExportWebWorker();
 ```
