@@ -368,10 +368,8 @@ function BaseSelect(props: GridSlotProps['baseSelect']) {
         inputProps={slotProps?.htmlInput}
         onOpen={onOpen}
         MenuProps={{
-          PaperProps: {
-            onKeyDown,
-            onClose,
-          },
+          onKeyDown,
+          onClose,
         }}
         size={size}
       />
