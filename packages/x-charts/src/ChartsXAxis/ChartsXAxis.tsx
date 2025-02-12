@@ -5,7 +5,7 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, Theme, styled } from '@mui/material/styles';
 import { useTicks, TickItemType } from '../hooks/useTicks';
-import { AxisDefaultized, ChartsXAxisProps } from '../models/axis';
+import { AxisDefaultized, ChartsXAxisProps, ScaleName } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
@@ -39,10 +39,14 @@ function addLabelDimension(
   {
     tickLabelStyle: style,
     tickLabelInterval,
+    // FIXME: Define the default value in the correct place
+    minTickLabelGap = 8,
     reverse,
     isMounted,
   }: Pick<ChartsXAxisProps, 'tickLabelInterval' | 'tickLabelStyle'> &
-    Pick<AxisDefaultized, 'reverse'> & { isMounted: boolean },
+    Pick<AxisDefaultized<ScaleName, any, ChartsXAxisProps>, 'reverse' | 'minTickLabelGap'> & {
+      isMounted: boolean;
+    },
 ): (TickItemType & LabelExtraData)[] {
   const withDimension = xTicks.map((tick) => {
     if (!isMounted || tick.formattedValue === undefined) {
@@ -64,7 +68,6 @@ function addLabelDimension(
   }
 
   // Filter label to avoid overlap
-  let currentTextLimit = 0;
   let previousTextLimit = 0;
   const direction = reverse ? -1 : 1;
   return withDimension.map((item, labelIndex) => {
@@ -72,15 +75,17 @@ function addLabelDimension(
 
     const distance = getMinXTranslation(width, height, style?.angle);
     const textPosition = offset + labelOffset;
-    const gapRatio = 1.2; // Ratio applied to the minimal distance to add some margin.
 
-    currentTextLimit = textPosition - (direction * (gapRatio * distance)) / 2;
-    if (labelIndex > 0 && direction * currentTextLimit < direction * previousTextLimit) {
+    const currentTextLimit = textPosition - (direction * distance) / 2;
+    if (
+      labelIndex > 0 &&
+      direction * currentTextLimit < direction * (previousTextLimit + minTickLabelGap)
+    ) {
       // Except for the first label, we skip all label that overlap with the last accepted.
       // Notice that the early return prevents `previousTextLimit` from being updated.
       return { ...item, skipLabel: true };
     }
-    previousTextLimit = textPosition + (direction * (gapRatio * distance)) / 2;
+    previousTextLimit = textPosition + (direction * distance) / 2;
     return item;
   });
 }
