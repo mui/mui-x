@@ -4,14 +4,12 @@ import PropTypes from 'prop-types';
 import { ChartsXAxis } from '../ChartsXAxis';
 import { ChartsYAxis } from '../ChartsYAxis';
 import {
-  AxisDefaultized,
   ChartsAxisSlotProps,
   ChartsAxisSlots,
   ChartsXAxisProps,
   ChartsYAxisProps,
 } from '../models/axis';
 import { useXAxes, useYAxes } from '../hooks';
-import { DEFAULT_AXIS_SIZE } from '../constants';
 import { DefaultizedAxisConfig } from '../context/PolarProvider/Polar.types';
 
 export interface ChartsAxisProps {
@@ -27,21 +25,6 @@ export interface ChartsAxisProps {
   slotProps?: ChartsAxisSlotProps;
 }
 
-const mergeProps = (
-  axisConfig: AxisDefaultized,
-  slots?: Partial<ChartsAxisSlots>,
-  slotProps?: Partial<ChartsAxisSlotProps>,
-) => {
-  return typeof axisConfig === 'object'
-    ? {
-        slots: { ...slots, ...axisConfig?.slots },
-        slotProps: { ...slotProps, ...axisConfig?.slotProps },
-      }
-    : { slots, slotProps };
-};
-
-type HeightWidth = { height?: number; width?: number };
-
 function formatAxis<AxisProps extends ChartsXAxisProps | ChartsYAxisProps>(
   axisConfig: DefaultizedAxisConfig<AxisProps>,
   axisIds: string[],
@@ -49,24 +32,13 @@ function formatAxis<AxisProps extends ChartsXAxisProps | ChartsYAxisProps>(
   slots?: Partial<ChartsAxisSlots>,
   slotProps?: Partial<ChartsAxisSlotProps>,
 ) {
-  const dimension = position === 'top' || position === 'bottom' ? 'height' : 'width';
-
   return axisIds
     .filter((id) => axisConfig[id].position === position)
-    .map((id, i, arr) => {
-      const axis = axisConfig[id];
-      const offset = arr
-        .slice(0, i)
-        .reduce(
-          (acc, currId) =>
-            acc + ((axisConfig[currId] as HeightWidth)[dimension] ?? DEFAULT_AXIS_SIZE),
-          axis.offset ?? 0,
-        );
-
+    .map((id) => {
       return {
-        offset,
-        ...axis,
-        ...mergeProps(axis, slots, slotProps),
+        ...axisConfig[id],
+        slots: { ...slots, ...axisConfig?.slots },
+        slotProps: { ...slotProps, ...axisConfig?.slotProps },
       };
     });
 }
