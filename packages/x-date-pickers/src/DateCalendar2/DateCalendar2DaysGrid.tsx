@@ -12,8 +12,8 @@ import { DAY_MARGIN, DAY_SIZE } from '../internals/constants/dimensions';
 import { useUtils } from '../internals/hooks/useUtils';
 import { useDateCalendar2Context } from './DateCalendar2Context';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
-
-const WEEKS_CONTAINER_HEIGHT = (DAY_SIZE + DAY_MARGIN * 2) * 6;
+import { DateCalendar2Loadable } from './DateCalendar2Loadable';
+import { DAYS_GRID_BODY_HEIGHT } from './DateCalendar2.utils';
 
 const DaysCalendar2DaysGridRoot = styled(Calendar.DaysGrid, {
   name: 'MuiDateCalendar2',
@@ -61,6 +61,14 @@ const DateCalendar2DaysGridHeaderCell = styled(Typography, {
   color: (theme.vars || theme).palette.text.secondary,
 }));
 
+const DateCalendar2DaysGridBodyNoTransition = styled('div', {
+  name: 'MuiDateCalendar2',
+  slot: 'DaysGridBodyNoTransition',
+  overridesResolver: (props, styles) => styles.daysGridBodyNoTransition,
+})({
+  minHeight: DAYS_GRID_BODY_HEIGHT,
+});
+
 const DateCalendar2DaysGridBodyTransitionGroup = styled(TransitionGroup, {
   name: 'MuiDateCalendar2',
   slot: 'DaysGridBodyTransitionGroup',
@@ -71,7 +79,7 @@ const DateCalendar2DaysGridBodyTransitionGroup = styled(TransitionGroup, {
     easing: 'cubic-bezier(0.35, 0.8, 0.4, 1)',
   });
   return {
-    minHeight: WEEKS_CONTAINER_HEIGHT,
+    minHeight: DAYS_GRID_BODY_HEIGHT,
     display: 'block',
     position: 'relative',
     overflow: 'hidden',
@@ -204,27 +212,77 @@ const DateCalendar2DaysCell = styled(ButtonBase, {
   },
 }));
 
-function WrappedDaysButton() {
+function WrappedDaysButton(props: React.HTMLAttributes<HTMLButtonElement>) {
   const { ownerState } = usePickerPrivateContext();
   const { classes, slots, slotProps } = useDateCalendar2Context();
 
-  const MonthsButton = slots?.dayButton ?? DateCalendar2DaysCell;
-  const yearsButtonProps = useSlotProps({
-    elementType: MonthsButton,
+  const DaysButton = slots?.dayButton ?? DateCalendar2DaysCell;
+  const daysButtonProps = useSlotProps({
+    elementType: DaysButton,
     externalSlotProps: slotProps?.day,
+    externalForwardedProps: props,
     ownerState,
     className: classes.daysCell,
   });
 
-  return <DateCalendar2DaysCell {...yearsButtonProps} />;
+  return <DaysButton {...daysButtonProps} />;
 }
+
+const WrappedDateCalendar2DaysGridBody = React.forwardRef(function WrappedDateCalendar2DaysGridBody(
+  props: Calendar.DaysGridBody.Props & { displayWeekNumber: boolean },
+  ref: React.ForwardedRef<HTMLDivElement>,
+) {
+  const translations = usePickerTranslations();
+  const { displayWeekNumber, ...other } = props;
+  const { classes } = useDateCalendar2Context();
+  const utils = useUtils();
+
+  return (
+    <DateCalendar2DaysGridBody {...other} ref={ref}>
+      {({ weeks }) =>
+        weeks.map((week) => (
+          <DateCalendar2DaysGridRow
+            value={week}
+            className={classes.daysGridRow}
+            key={week.toString()}
+          >
+            {({ days }) => {
+              const weekNumber = displayWeekNumber ? utils.getWeekNumber(days[0]) : 0;
+              return (
+                <React.Fragment>
+                  {displayWeekNumber && (
+                    <DateCalendar2DaysGridWeekNumberCell
+                      role="rowheader"
+                      aria-label={translations.calendarWeekNumberAriaLabelText(weekNumber)}
+                      className={classes.daysGridWeekNumberCell}
+                    >
+                      {translations.calendarWeekNumberText(weekNumber)}
+                    </DateCalendar2DaysGridWeekNumberCell>
+                  )}
+                  {days.map((day) => (
+                    <Calendar.DaysCell
+                      render={<WrappedDaysButton />}
+                      value={day}
+                      className={classes.daysCell}
+                      key={day.toString()}
+                    />
+                  ))}
+                </React.Fragment>
+              );
+            }}
+          </DateCalendar2DaysGridRow>
+        ))
+      }
+    </DateCalendar2DaysGridBody>
+  );
+});
 
 export function DateCalendar2DaysGrid(props: DateCalendar2DaysGridProps) {
   const translations = usePickerTranslations();
   const theme = useTheme();
   const utils = useUtils();
   const { visibleDate } = useCalendarContext();
-  const { classes, labelId } = useDateCalendar2Context();
+  const { classes, reduceAnimations, labelId } = useDateCalendar2Context();
 
   const { displayWeekNumber } = props;
 
@@ -280,59 +338,41 @@ export function DateCalendar2DaysGrid(props: DateCalendar2DaysGridProps) {
           </React.Fragment>
         )}
       </DateCalendar2DaysGridHeader>
-      <DateCalendar2DaysGridBodyTransitionGroup
-        childFactory={(element: React.ReactElement<any>) =>
-          React.cloneElement(element, {
-            classNames: dayGridTransitionClasses,
-          })
-        }
-        role="presentation"
-        className={classes.daysGridBodyTransitionGroup}
-      >
-        <CSSTransition
-          mountOnEnter
-          unmountOnExit
-          key={transitionKey}
-          timeout={theme.transitions.duration.complex}
-          nodeRef={daysGridBodyNodeRef}
-        >
-          <DateCalendar2DaysGridBody ref={daysGridBodyNodeRef} className={classes.daysGridBody}>
-            {({ weeks }) =>
-              weeks.map((week) => (
-                <DateCalendar2DaysGridRow
-                  value={week}
-                  className={classes.daysGridRow}
-                  key={weeks.toString()}
-                >
-                  {({ days }) => {
-                    const weekNumber = displayWeekNumber ? utils.getWeekNumber(days[0]) : 0;
-                    return (
-                      <React.Fragment>
-                        {displayWeekNumber && (
-                          <DateCalendar2DaysGridWeekNumberCell
-                            role="rowheader"
-                            aria-label={translations.calendarWeekNumberAriaLabelText(weekNumber)}
-                            className={classes.daysGridWeekNumberCell}
-                          >
-                            {translations.calendarWeekNumberText(weekNumber)}
-                          </DateCalendar2DaysGridWeekNumberCell>
-                        )}
-                        {days.map((day) => (
-                          <Calendar.DaysCell
-                            render={<WrappedDaysButton />}
-                            value={day}
-                            className={classes.daysCell}
-                          />
-                        ))}
-                      </React.Fragment>
-                    );
-                  }}
-                </DateCalendar2DaysGridRow>
-              ))
+      <DateCalendar2Loadable>
+        {reduceAnimations ? (
+          <DateCalendar2DaysGridBodyNoTransition>
+            <WrappedDateCalendar2DaysGridBody
+              ref={daysGridBodyNodeRef}
+              className={classes.daysGridBody}
+              displayWeekNumber={displayWeekNumber}
+            />
+          </DateCalendar2DaysGridBodyNoTransition>
+        ) : (
+          <DateCalendar2DaysGridBodyTransitionGroup
+            childFactory={(element: React.ReactElement<any>) =>
+              React.cloneElement(element, {
+                classNames: dayGridTransitionClasses,
+              })
             }
-          </DateCalendar2DaysGridBody>
-        </CSSTransition>
-      </DateCalendar2DaysGridBodyTransitionGroup>
+            role="presentation"
+            className={classes.daysGridBodyTransitionGroup}
+          >
+            <CSSTransition
+              mountOnEnter
+              unmountOnExit
+              key={transitionKey}
+              timeout={theme.transitions.duration.complex}
+              nodeRef={daysGridBodyNodeRef}
+            >
+              <WrappedDateCalendar2DaysGridBody
+                ref={daysGridBodyNodeRef}
+                className={classes.daysGridBody}
+                displayWeekNumber={displayWeekNumber}
+              />
+            </CSSTransition>
+          </DateCalendar2DaysGridBodyTransitionGroup>
+        )}
+      </DateCalendar2Loadable>
     </DaysCalendar2DaysGridRoot>
   );
 }

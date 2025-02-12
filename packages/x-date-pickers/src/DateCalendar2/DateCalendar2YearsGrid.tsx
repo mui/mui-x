@@ -66,7 +66,7 @@ const DateCalendar2YearsCell = styled('button', {
   },
 }));
 
-function WrappedYearsButton() {
+function WrappedYearsButton(props: React.HTMLAttributes<HTMLButtonElement>) {
   const { ownerState } = usePickerPrivateContext();
   const { classes, slots, slotProps } = useDateCalendar2Context();
 
@@ -74,6 +74,7 @@ function WrappedYearsButton() {
   const yearsButtonProps = useSlotProps({
     elementType: YearsButton,
     externalSlotProps: slotProps?.yearButton,
+    externalForwardedProps: props,
     className: classes.yearsCell,
     ownerState,
   });

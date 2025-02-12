@@ -51,7 +51,7 @@ const DateCalendar2TransitionGroup = styled(TransitionGroup, {
  * - [x] Implementation without customization
  * - [x] Implement classes (both props.classes and built-in classes)
  * - [x] Implement theme entries
- * - [ ] Implement props.slots and props.slotProps
+ * - [x] Implement props.slots and props.slotProps
  * - [ ] Implement all the missing props
  * - [ ] Add tests
  * - [ ] Add doc examples
@@ -75,16 +75,17 @@ export const DateCalendar2 = React.forwardRef(function DateCalendar2(
     className,
     slots,
     slotProps,
+    loading = false,
     reduceAnimations: reduceAnimationsProp,
 
-    // View props
+    // View lifecycle props
     views = DEFAULT_VIEWS,
     defaultView = getDefaultView(views),
     view: viewProp,
     onViewChange,
     onValueChange,
 
-    // View customization props
+    // View-specific customization props
     displayWeekNumber = false,
     monthsPerRow = 3,
     yearsPerRow = 3,
@@ -98,7 +99,7 @@ export const DateCalendar2 = React.forwardRef(function DateCalendar2(
   const classes = useUtilityClasses(classesProp);
 
   const [view, setControlledView] = useControlled({
-    name: 'DateCalendar',
+    name: 'DateCalendar2',
     state: 'view',
     default: defaultView,
     controlled: viewProp,
@@ -123,8 +124,8 @@ export const DateCalendar2 = React.forwardRef(function DateCalendar2(
   );
 
   const contextValue = React.useMemo<DateCalendar2ContextValue>(
-    () => ({ classes, slots, slotProps, view, views, setView, labelId, reduceAnimations }),
-    [classes, slots, slotProps, view, views, setView, labelId, reduceAnimations],
+    () => ({ classes, slots, slotProps, view, views, setView, labelId, reduceAnimations, loading }),
+    [classes, slots, slotProps, view, views, setView, labelId, reduceAnimations, loading],
   );
 
   const CalendarHeader = slots?.calendarHeader ?? DateCalendar2Header;

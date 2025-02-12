@@ -62,7 +62,7 @@ const DateCalendar2MonthsCell = styled('button', {
   },
 }));
 
-function WrappedMonthsButton() {
+function WrappedMonthsButton(props: React.HTMLAttributes<HTMLButtonElement>) {
   const { ownerState } = usePickerPrivateContext();
   const { classes, slots, slotProps } = useDateCalendar2Context();
 
@@ -70,6 +70,7 @@ function WrappedMonthsButton() {
   const monthsButtonProps = useSlotProps({
     elementType: MonthsButton,
     externalSlotProps: slotProps?.monthButton,
+    externalForwardedProps: props,
     className: classes.monthsCell,
     ownerState,
   });

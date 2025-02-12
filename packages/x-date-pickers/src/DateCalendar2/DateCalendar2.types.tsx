@@ -58,8 +58,13 @@ export interface DateCalendar2Props extends Omit<Calendar.Root.Props, 'children'
    * @default `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13
    */
   reduceAnimations?: boolean;
-  // Missing props:
-  // loading
+  // BREAKING CHANGE: in Date Calendar, loading was only used for the day view.
+  /**
+   * If `true`, calls `renderLoading` instead of rendering the view.
+   * Can be used to preload information and show it in the cells.
+   * @default false
+   */
+  loading?: boolean;
   // renderLoading (convert to a slot)
 }
 
@@ -109,6 +114,10 @@ export interface DateCalendar2Slots {
    * @default ArrowRight
    */
   rightNavigationIcon?: React.ElementType;
+  /**
+   * Panel displayed when the calendar is in the loading state.
+   */
+  loadingPanel?: React.ElementType;
 }
 
 export interface DateCalendar2SlotProps {
@@ -133,6 +142,11 @@ export interface DateCalendar2SlotProps {
   >;
   leftNavigationIcon?: SlotComponentPropsFromProps<SvgIconProps, {}, PickerOwnerState>;
   rightNavigationIcon?: SlotComponentPropsFromProps<SvgIconProps, {}, PickerOwnerState>;
+  loadingPanel?: SlotComponentPropsFromProps<
+    React.HTMLAttributes<HTMLDivElement>,
+    {},
+    PickerOwnerState
+  >;
 }
 
 export interface DateCalendar2ContextValue {
@@ -144,4 +158,5 @@ export interface DateCalendar2ContextValue {
   views: { [key in DateView]?: boolean };
   labelId: string;
   reduceAnimations: boolean;
+  loading: boolean;
 }

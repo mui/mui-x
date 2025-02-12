@@ -50,6 +50,8 @@ export interface DateCalendar2Classes {
   yearsGridRoot: string;
   /** Styles applied to the year's cell element */
   yearsCell: string;
+  /** Styles applied to the loading panel element */
+  loadingPanel: string;
 }
 
 export const getDateCalendar2UtilityClass = (slot: string) =>
@@ -82,5 +84,6 @@ export const dateCalendar2Classes: DateCalendar2Classes = generateUtilityClasses
     'monthsCell',
     'yearsGridRoot',
     'yearsCell',
+    'loadingPanel',
   ],
 );
