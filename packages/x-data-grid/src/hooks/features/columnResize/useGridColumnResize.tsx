@@ -35,7 +35,6 @@ import {
   useGridApiMethod,
   useGridApiOptionHandler,
   useGridLogger,
-  useGridNativeEventListener,
   useGridSelector,
   useOnMount,
 } from '../../utils';
@@ -796,13 +795,17 @@ export const useGridColumnResize = (
     }
   });
 
-  useGridNativeEventListener(
-    apiRef,
-    () => apiRef.current.columnHeadersContainerRef?.current,
-    'touchstart',
-    handleTouchStart,
-    { passive: true },
-  );
+  useGridApiOptionHandler(apiRef, 'rootMount', () => {
+    const element = apiRef.current.columnHeadersContainerRef?.current;
+    if (!element) {
+      return undefined;
+    }
+    element.addEventListener('touchstart', handleTouchStart, { passive: true });
+
+    return () => {
+      element.removeEventListener('touchstart', handleTouchStart);
+    };
+  });
 
   useGridApiMethod(
     apiRef,

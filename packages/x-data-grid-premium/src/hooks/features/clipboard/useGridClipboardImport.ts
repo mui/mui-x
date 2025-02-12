@@ -341,7 +341,6 @@ export const useGridClipboardImport = (
   const onProcessRowUpdateError = props.onProcessRowUpdateError;
   const getRowId = props.getRowId;
   const enableClipboardPaste = !props.disableClipboardPaste;
-  const rootEl = apiRef.current.rootElementRef?.current;
   const logger = useGridLogger(apiRef, 'useGridClipboardImport');
 
   const splitClipboardPastedText = props.splitClipboardPastedText;
@@ -366,6 +365,7 @@ export const useGridClipboardImport = (
         }
       }
 
+      const rootEl = apiRef.current.rootElementRef?.current;
       if (!rootEl) {
         return;
       }
@@ -418,7 +418,6 @@ export const useGridClipboardImport = (
       onProcessRowUpdateError,
       getRowId,
       enableClipboardPaste,
-      rootEl,
       splitClipboardPastedText,
       pagination,
       paginationMode,
