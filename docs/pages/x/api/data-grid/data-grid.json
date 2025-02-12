@@ -477,6 +477,19 @@
       },
       "additionalInfo": { "sx": true }
     },
+    "unstable_dataSource": {
+      "type": { "name": "shape", "description": "{ getRows: func, updateRow?: func }" }
+    },
+    "unstable_dataSourceCache": {
+      "type": { "name": "shape", "description": "{ clear: func, get: func, set: func }" }
+    },
+    "unstable_onDataSourceError": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(error: Error, params: GridGetRowsParams) => void",
+        "describedArgs": ["error", "params"]
+      }
+    },
     "virtualizeColumnsWithAutoRowHeight": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "DataGrid",
@@ -491,6 +504,12 @@
       "name": "baseChip",
       "description": "The custom Chip component used in the grid.",
       "default": "Chip",
+      "class": null
+    },
+    {
+      "name": "bottomContainer",
+      "description": "Component rendered for the bottom container.",
+      "default": "GridBottomContainer",
       "class": null
     },
     {
@@ -1009,6 +1028,12 @@
       "key": "aggregationColumnHeaderLabel",
       "className": "MuiDataGrid-aggregationColumnHeaderLabel",
       "description": "Styles applied to the aggregation label in the column header when aggregated.",
+      "isGlobal": false
+    },
+    {
+      "key": "aggregationRowOverlayWrapper",
+      "className": "MuiDataGrid-aggregationRowOverlayWrapper",
+      "description": "Styles applied to the aggregation row overlay wrapper.",
       "isGlobal": false
     },
     {
