@@ -104,18 +104,13 @@ let domCleanTimeout: NodeJS.Timeout | undefined;
  * @param style The style applied
  * @returns width and height of the text
  */
-export const getStringSize = (
-  text: string | number,
-  { className = '', style = {} }: { className?: string; style?: React.CSSProperties },
-) => {
+export const getStringSize = (text: string | number, style: React.CSSProperties = {}) => {
   if (text === undefined || text === null || isSsr()) {
     return { width: 0, height: 0 };
   }
 
   const str = `${text}`;
   const styleString = getStyleString(style);
-  // FIXME: How to handle the className in cache? The class name be the same, but the style it's applying can change,
-  //        however this wouldn't cause the cache to be invalidated, resulting in wrong sizes.
   const cacheKey = `${str}-${styleString}`;
 
   if (stringCache.widthCache[cacheKey]) {
@@ -134,7 +129,6 @@ export const getStringSize = (
     // https://en.wikipedia.org/wiki/Content_Security_Policy
     const measurementSpanStyle: Record<string, any> = { ...SPAN_STYLE, ...style };
 
-    measurementSpan.className = className;
     Object.keys(measurementSpanStyle).map((styleKey) => {
       (measurementSpan!.style as Record<string, any>)[camelToMiddleLine(styleKey)] =
         autoCompleteStyle(styleKey, measurementSpanStyle[styleKey]);
