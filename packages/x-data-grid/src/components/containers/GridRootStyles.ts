@@ -13,7 +13,7 @@ import { gridClasses as c } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
-import { gridDimensionsSelector } from '../../hooks/features/dimensions/gridDimensionsSelectors';
+import { GridStateCommunity } from '../../models/gridStateCommunity';
 
 export type OwnerState = DataGridProcessedProps;
 
@@ -53,6 +53,10 @@ const separatorIconDragStyles = {
 // https://github.com/emotion-js/emotion/issues/1105#issuecomment-1722524968
 const ignoreSsrWarning =
   '/* emotion-disable-server-rendering-unsafe-selector-warning-please-do-not-use-this-the-warning-exists-for-a-reason */';
+
+const shouldShowBorderTopRightRadiusSelector = (state: GridStateCommunity) =>
+  state.dimensions.hasScrollX &&
+  (!state.dimensions.hasScrollY || state.dimensions.scrollbarSize === 0);
 
 export const GridRootStyles = styled('div', {
   name: 'MuiDataGrid',
@@ -179,7 +183,10 @@ export const GridRootStyles = styled('div', {
   ],
 })<{ ownerState: OwnerState }>(({ theme: t }) => {
   const apiRef = useGridPrivateApiContext();
-  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
+  const shouldShowBorderTopRightRadius = useGridSelector(
+    apiRef,
+    shouldShowBorderTopRightRadiusSelector,
+  );
 
   const borderColor = getBorderColor(t);
   const radius = t.shape.borderRadius;
@@ -367,10 +374,9 @@ export const GridRootStyles = styled('div', {
       borderTopLeftRadius: 'calc(var(--unstable_DataGrid-radius) - 1px)',
     },
     [`&.${c['root--noToolbar']} [aria-rowindex="1"] .${c['columnHeader--last']}`]: {
-      borderTopRightRadius:
-        dimensions.hasScrollX && (!dimensions.hasScrollY || dimensions.scrollbarSize === 0)
-          ? 'calc(var(--unstable_DataGrid-radius) - 1px)'
-          : undefined,
+      borderTopRightRadius: shouldShowBorderTopRightRadius
+        ? 'calc(var(--unstable_DataGrid-radius) - 1px)'
+        : undefined,
     },
     [`& .${c.columnHeaderCheckbox}, & .${c.cellCheckbox}`]: {
       padding: 0,
@@ -591,7 +597,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c['virtualScrollerContent--overflowed']} .${c['row--lastVisible']} .${c.cell}`]: {
       borderTopColor: 'transparent',
     },
-    [`& .${c.pinnedRows} .${c.row}`]: {
+    [`& .${c.pinnedRows} .${c.row}, .${c.aggregationRowOverlayWrapper} .${c.row}`]: {
       backgroundColor: 'var(--DataGrid-pinnedBackground)',
       '&:hover': {
         backgroundColor: pinnedHoverBackgroundColor,
@@ -796,8 +802,8 @@ export const GridRootStyles = styled('div', {
       borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
     },
 
-    /* Hide grid rows, row filler, and vertical scrollbar when skeleton overlay is visible */
-    [`& .${c['main--hasSkeletonLoadingOverlay']}`]: {
+    /* Hide grid rows, row filler, and vertical scrollbar. Used when skeleton/no columns overlay is visible */
+    [`& .${c['main--hiddenContent']}`]: {
       [`& .${c.virtualScrollerContent}`]: {
         // We use visibility hidden so that the virtual scroller content retains its height.
         // Position fixed is used to remove the virtual scroller content from the flow.

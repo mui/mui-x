@@ -145,7 +145,9 @@ const GridHeaderCheckbox = forwardRef<HTMLButtonElement, GridColumnHeaderParams>
         checked={isChecked && !isIndeterminate}
         onChange={handleChange}
         className={classes.root}
-        inputProps={{ 'aria-label': label, name: 'select_all_rows' }}
+        slotProps={{
+          htmlInput: { 'aria-label': label, name: 'select_all_rows' },
+        }}
         tabIndex={tabIndex}
         onKeyDown={handleKeyDown}
         disabled={!isMultipleRowSelectionEnabled(rootProps)}

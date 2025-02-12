@@ -26,6 +26,8 @@ const ukUAGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Немає рядків',
   noResultsOverlayLabel: 'Дані не знайдено.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'Висота рядка',

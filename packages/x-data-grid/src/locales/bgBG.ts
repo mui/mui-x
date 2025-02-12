@@ -6,6 +6,8 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Няма редове',
   noResultsOverlayLabel: 'Няма намерени резултати.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'Гъстота',

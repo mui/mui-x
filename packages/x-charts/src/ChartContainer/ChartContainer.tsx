@@ -69,7 +69,7 @@ ChartContainer.propTypes = {
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
-   * @default blueberryTwilightPalette
+   * @default rainbowSurgePalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   /**
@@ -83,6 +83,10 @@ ChartContainer.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
+  /**
+   * If true, the voronoi interaction are ignored.
+   */
+  disableVoronoi: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -125,6 +129,13 @@ ChartContainer.propTypes = {
    */
   onHighlightChange: PropTypes.func,
   /**
+   * Callback fired when clicking close to an item.
+   * This is only available for scatter plot for now.
+   * @param {MouseEvent} event Mouse event caught at the svg level
+   * @param {ScatterItemIdentifier} scatterItemIdentifier Identify which item got clicked
+   */
+  onItemClick: PropTypes.func,
+  /**
    * The array of series to display.
    * Each type of series has its own specificity.
    * Please refer to the appropriate docs page to learn more about it.
@@ -142,6 +153,11 @@ ChartContainer.propTypes = {
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
+  /**
+   * Defines the maximal distance between a scatter point and the pointer that triggers the interaction.
+   * If `undefined`, the radius is assumed to be infinite.
+   */
+  voronoiMaxRadius: PropTypes.number,
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
