@@ -20,7 +20,7 @@ describe('<TimeClock />', () => {
     render(<TimeClock value={adapterToUse.date('2019-01-01T04:20:00')} onChange={() => {}} />);
 
     const listbox = screen.getByRole('listbox');
-    expect(listbox).toHaveAccessibleName('Select hours. Selected time is 4:20 AM');
+    expect(listbox).toHaveAccessibleName('Select hours. Selected time is 04:20 AM');
   });
 
   it('renders the current value as an accessible option', () => {

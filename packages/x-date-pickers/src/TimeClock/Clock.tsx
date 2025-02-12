@@ -397,7 +397,7 @@ export function Clock(inProps: ClockProps) {
           aria-activedescendant={selectedId}
           aria-label={translations.clockLabelText(
             type,
-            value == null ? null : utils.format(value, 'fullTime'),
+            value == null ? null : utils.format(value, ampm ? 'fullTime12h' : 'fullTime24h'),
           )}
           ref={listboxRef}
           role="listbox"

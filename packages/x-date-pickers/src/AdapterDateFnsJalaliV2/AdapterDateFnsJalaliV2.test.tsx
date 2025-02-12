@@ -25,7 +25,6 @@ describe('<AdapterDateFnsJalaliV2 />', () => {
 
       expectDate('fullDate', '12-ام بهمن 1398');
       expectDate('keyboardDate', '1398/11/12');
-      expectDate('keyboardDateTime', '1398/11/12 11:44 ب.ظ.');
       expectDate('keyboardDateTime12h', '1398/11/12 11:44 ب.ظ.');
       expectDate('keyboardDateTime24h', '1398/11/12 23:44');
     });
