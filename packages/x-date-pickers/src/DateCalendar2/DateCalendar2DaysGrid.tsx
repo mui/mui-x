@@ -4,6 +4,7 @@ import { TransitionGroupProps } from 'react-transition-group/TransitionGroup';
 import { alpha, styled, useTheme } from '@mui/material/styles';
 import ButtonBase from '@mui/material/ButtonBase';
 import Typography from '@mui/material/Typography';
+import Skeleton from '@mui/material/Skeleton';
 import useSlotProps from '@mui/utils/useSlotProps';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { Calendar, useCalendarContext } from '../internals/base/Calendar';
@@ -212,6 +213,17 @@ const DateCalendar2DaysCell = styled(ButtonBase, {
   },
 }));
 
+const DateCalendar2DaysCellLoading = styled(Skeleton, {
+  name: 'MuiDayCalendarSkeleton',
+  slot: 'DaySkeleton',
+  overridesResolver: (props, styles) => styles.daySkeleton,
+})({
+  margin: `0 ${DAY_MARGIN}px`,
+  '&[data-outside-month="true"]': {
+    visibility: 'hidden',
+  },
+});
+
 function WrappedDaysButton(props: React.HTMLAttributes<HTMLButtonElement>) {
   const { ownerState } = usePickerPrivateContext();
   const { classes, slots, slotProps } = useDateCalendar2PrivateContext();
@@ -278,6 +290,38 @@ const WrappedDateCalendar2DaysGridBody = React.forwardRef(function WrappedDateCa
   );
 });
 
+function DateCalendar2DaysGridBodyLoading(props: React.HTMLAttributes<HTMLDivElement>) {
+  const isDayHidden = (weekIndex: number, dayIndex: number, weekAmount: number) => {
+    if (weekIndex === 0 && dayIndex === 0) {
+      return true;
+    }
+
+    if (weekIndex === weekAmount - 1 && dayIndex > 3) {
+      return true;
+    }
+
+    return false;
+  };
+
+  return (
+    <DateCalendar2DaysGridBody {...props}>
+      {Array.from({ length: 4 }, (_, weekIndex) => (
+        <DateCalendar2DaysGridRow key={weekIndex}>
+          {Array.from({ length: 7 }, (_, dayIndex) => (
+            <DateCalendar2DaysCellLoading
+              key={dayIndex}
+              variant="circular"
+              width={DAY_SIZE}
+              height={DAY_SIZE}
+              data-outside-month={isDayHidden(weekIndex, dayIndex, 4)}
+            />
+          ))}
+        </DateCalendar2DaysGridRow>
+      ))}
+    </DateCalendar2DaysGridBody>
+  );
+}
+
 export function DateCalendar2DaysGrid(props: DateCalendar2DaysGridProps) {
   const translations = usePickerTranslations();
   const theme = useTheme();
@@ -339,7 +383,7 @@ export function DateCalendar2DaysGrid(props: DateCalendar2DaysGridProps) {
           </React.Fragment>
         )}
       </DateCalendar2DaysGridHeader>
-      <DateCalendar2Loadable view="day">
+      <DateCalendar2Loadable defaultComponent={DateCalendar2DaysGridBodyLoading}>
         {reduceAnimations ? (
           <DateCalendar2DaysGridBodyNoTransition>
             <WrappedDateCalendar2DaysGridBody

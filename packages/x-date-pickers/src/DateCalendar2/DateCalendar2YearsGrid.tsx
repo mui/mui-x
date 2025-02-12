@@ -98,7 +98,7 @@ export function DateCalendar2YearsGrid(props: DateCalendarYearsGridProps) {
   }, [yearsOrder]);
 
   return (
-    <DateCalendar2Loadable view="year">
+    <DateCalendar2Loadable>
       <DateCalendar2YearsGridRoot
         getItems={getItems}
         cellsPerRow={cellsPerRow}

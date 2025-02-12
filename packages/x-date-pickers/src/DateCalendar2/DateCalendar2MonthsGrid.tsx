@@ -83,7 +83,7 @@ export function DateCalendar2MonthsGrid(props: DateCalendarMonthsGridProps) {
   const { classes } = useDateCalendar2PrivateContext();
 
   return (
-    <DateCalendar2Loadable view="month">
+    <DateCalendar2Loadable>
       <DateCalendar2MonthsGridRoot {...props} className={classes.monthsGridRoot}>
         {({ months }) =>
           months.map((month) => (
