@@ -101,10 +101,10 @@ export const useTreeItemUtils = <
   const isLazyLoadingEnabled = useSelector(store, selectorIsLazyLoadingEnabled);
 
   const loading = useSelector(store, (state) =>
-    isLazyLoadingEnabled == null ? false : selectorIsItemLoading(state, itemId),
+    isLazyLoadingEnabled ? selectorIsItemLoading(state, itemId) : false,
   );
   const error = useSelector(store, (state) =>
-    isLazyLoadingEnabled == null ? false : Boolean(selectorGetTreeItemError(state, itemId)),
+    isLazyLoadingEnabled ? Boolean(selectorGetTreeItemError(state, itemId)) : false,
   );
   const isExpandable = itemHasChildren(children) || isItemExpandable;
   const isExpanded = useSelector(store, selectorIsItemExpanded, itemId);

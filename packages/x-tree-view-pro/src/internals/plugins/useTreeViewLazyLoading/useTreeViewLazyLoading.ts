@@ -97,7 +97,10 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
     }
     store.update((prevState) => ({
       ...prevState,
-      dataSource: INITIAL_STATE,
+      lazyLoading: {
+        ...prevState.lazyLoading,
+        dataSource: INITIAL_STATE,
+      },
     }));
   });
 
