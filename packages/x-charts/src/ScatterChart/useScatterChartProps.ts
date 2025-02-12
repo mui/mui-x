@@ -34,10 +34,6 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     colors,
     sx,
     grid,
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
     onItemClick,
     children,
     slots,
@@ -71,10 +67,6 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
   };
 
   const chartsAxisProps: ChartsAxisProps = {
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
     slots,
     slotProps,
   };

@@ -33,10 +33,6 @@ export const useBarChartProps = (props: BarChartProps) => {
     sx,
     axisHighlight,
     grid,
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
     children,
     slots,
     slotProps,
@@ -125,10 +121,6 @@ export const useBarChartProps = (props: BarChartProps) => {
   };
 
   const chartsAxisProps: ChartsAxisProps = {
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
     slots,
     slotProps,
   };

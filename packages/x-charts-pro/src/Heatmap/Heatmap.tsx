@@ -116,10 +116,6 @@ const Heatmap = React.forwardRef(function Heatmap(
     colors,
     dataset,
     sx,
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
     onAxisClick,
     children,
     slots,
@@ -186,14 +182,7 @@ const Heatmap = React.forwardRef(function Heatmap(
         <HeatmapPlot slots={slots} slotProps={slotProps} />
         <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
       </g>
-      <ChartsAxis
-        topAxis={topAxis}
-        leftAxis={leftAxis}
-        rightAxis={rightAxis}
-        bottomAxis={bottomAxis}
-        slots={slots}
-        slotProps={slotProps}
-      />
+      <ChartsAxis slots={slots} slotProps={slotProps} />
       {!loading && <Tooltip {...slotProps?.tooltip} />}
 
       <ChartsClipPath id={clipPathId} />

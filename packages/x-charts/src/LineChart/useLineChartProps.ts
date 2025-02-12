@@ -41,10 +41,6 @@ export const useLineChartProps = (props: LineChartProps) => {
     disableLineItemHighlight,
     hideLegend,
     grid,
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
     children,
     slots,
     slotProps,
@@ -132,10 +128,6 @@ export const useLineChartProps = (props: LineChartProps) => {
   };
 
   const chartsAxisProps: ChartsAxisProps = {
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
     slots,
     slotProps,
   };
