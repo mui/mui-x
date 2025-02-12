@@ -1279,6 +1279,7 @@
     "loadingOverlay": "Loading overlay component rendered when the grid is in a loading state.",
     "menuItemCheckIcon": "Icon displayed to indicate that a menu item is selected.",
     "moreActionsIcon": "Icon displayed on the <code>actions</code> column type to open the menu.",
+    "noColumnsOverlay": "No columns overlay component rendered when the grid has no columns.",
     "noResultsOverlay": "No results overlay component rendered when the grid has no results after filtering.",
     "noRowsOverlay": "No rows overlay component rendered when the grid has no rows.",
     "openFilterButtonIcon": "Icon displayed on the open filter button present in the toolbar by default.",

@@ -89,6 +89,7 @@ export interface PaginationPropsOverrides {}
 export interface LoadingOverlayPropsOverrides {}
 export interface NoResultsOverlayPropsOverrides {}
 export interface NoRowsOverlayPropsOverrides {}
+export interface NoColumnsOverlayPropsOverrides {}
 export interface PanelPropsOverrides {}
 export interface PinnedRowsPropsOverrides {}
 export interface SkeletonCellPropsOverrides {}
@@ -145,6 +146,7 @@ interface ElementSlotProps {
   loadingOverlay: GridLoadingOverlayProps & LoadingOverlayPropsOverrides;
   noResultsOverlay: GridOverlayProps & NoResultsOverlayPropsOverrides;
   noRowsOverlay: GridOverlayProps & NoRowsOverlayPropsOverrides;
+  noColumnsOverlay: GridOverlayProps & NoColumnsOverlayPropsOverrides;
   pagination: Partial<TablePaginationProps> & PaginationPropsOverrides;
   panel: GridPanelProps & PanelPropsOverrides;
   pinnedRows: GridPinnedRowsProps & PinnedRowsPropsOverrides;
