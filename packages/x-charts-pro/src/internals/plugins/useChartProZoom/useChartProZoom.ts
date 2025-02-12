@@ -68,11 +68,11 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
           ...prevState,
           zoom: {
             ...prevState.zoom,
-            isInteracting: true,
+            isInteracting: false,
           },
         };
       });
-    }, 100);
+    }, 166);
 
     return () => {
       clearTimeout(timeout);
