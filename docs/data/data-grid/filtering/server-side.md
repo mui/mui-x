@@ -8,6 +8,10 @@ The example below demonstrates how to achieve server-side filtering.
 
 {{"demo": "ServerFilterGrid.js", "bg": "inline"}}
 
+:::info
+Combine server-side filtering with [Server-side sorting](/x/react-data-grid/sorting/#server-side-sorting) and [Server-side pagination](/x/react-data-grid/pagination/#server-side-pagination) to avoid fetching more data than needed, since you already process the data outside of the Data Grid.
+:::
+
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)
