@@ -130,7 +130,7 @@ export const useTreeItemUtils = <
       return;
     }
 
-    if (!status.focused) {
+    if (!status.focused && !status.editing) {
       instance.focusItem(event, itemId);
     }
 
