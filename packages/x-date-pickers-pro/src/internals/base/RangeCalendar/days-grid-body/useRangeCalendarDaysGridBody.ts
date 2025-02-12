@@ -9,11 +9,8 @@ import { GenericHTMLProps } from '@mui/x-date-pickers/internals/base/base-utils/
 import { useRangeCalendarRootContext } from '../root/RangeCalendarRootContext';
 
 export function useRangeCalendarDaysGridBody(parameters: useRangeCalendarDaysGridBody.Parameters) {
-  const {
-    getDaysGridBodyProps: getBaseDaysGridBodyProps,
-    context,
-    calendarWeekRowRefs,
-  } = useBaseCalendarDaysGridBody(parameters);
+  const { getDaysGridBodyProps: getBaseDaysGridBodyProps, context } =
+    useBaseCalendarDaysGridBody(parameters);
 
   const rootContext = useRangeCalendarRootContext();
 
@@ -31,7 +28,7 @@ export function useRangeCalendarDaysGridBody(parameters: useRangeCalendarDaysGri
     [getBaseDaysGridBodyProps, onMouseLeave],
   );
 
-  return { context, calendarWeekRowRefs, getDaysGridBodyProps };
+  return { context, getDaysGridBodyProps };
 }
 
 export namespace useRangeCalendarDaysGridBody {

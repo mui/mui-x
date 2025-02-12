@@ -24,7 +24,7 @@ export function useBaseCalendarDaysCell(parameters: useBaseCalendarDaysCell.Para
         role: 'gridcell',
         'aria-selected': ctx.isSelected,
         'aria-current': ctx.isCurrent ? 'date' : undefined,
-        'aria-colindex': ctx.colIndex + 1,
+        'aria-colindex': utils.getDayOfWeek(value),
         children: formattedValue,
         disabled: ctx.isDisabled,
         tabIndex: ctx.isTabbable ? 0 : -1,
@@ -32,11 +32,12 @@ export function useBaseCalendarDaysCell(parameters: useBaseCalendarDaysCell.Para
       });
     },
     [
+      utils,
+      value,
       formattedValue,
       ctx.isSelected,
       ctx.isDisabled,
       ctx.isTabbable,
-      ctx.colIndex,
       ctx.isCurrent,
       onClick,
     ],
@@ -63,7 +64,6 @@ export namespace useBaseCalendarDaysCell {
   }
 
   export interface Context {
-    colIndex: number;
     isSelected: boolean;
     isDisabled: boolean;
     isInvalid: boolean;

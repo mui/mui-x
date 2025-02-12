@@ -3,15 +3,15 @@ import * as React from 'react';
 import { useBaseCalendarDaysGridRow } from '../../utils/base-calendar/days-grid-row/useBaseCalendarDaysGridRow';
 import { BaseUIComponentProps } from '../../base-utils/types';
 import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
-import { CompositeList } from '../../composite/list/CompositeList';
 import { useBaseCalendarDaysGridRowWrapper } from '../../utils/base-calendar/days-grid-row/useBaseCalendarDaysGridRowWrapper';
+import { BaseCalendarDaysGridRowContext } from '../../utils/base-calendar/days-grid-row/BaseCalendarDaysGridRoContext';
 
 const InnerCalendarDaysGridRow = React.forwardRef(function InnerCalendarDaysGridRow(
   props: InnerCalendarDaysGridRowProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, render, value, ctx, children, ...otherProps } = props;
-  const { getDaysGridRowProps, cellRefs } = useBaseCalendarDaysGridRow({
+  const { getDaysGridRowProps, context } = useBaseCalendarDaysGridRow({
     value,
     ctx,
     children,
@@ -27,7 +27,11 @@ const InnerCalendarDaysGridRow = React.forwardRef(function InnerCalendarDaysGrid
     extraProps: otherProps,
   });
 
-  return <CompositeList elementsRef={cellRefs}>{renderElement()}</CompositeList>;
+  return (
+    <BaseCalendarDaysGridRowContext.Provider value={context}>
+      {renderElement()}
+    </BaseCalendarDaysGridRowContext.Provider>
+  );
 });
 
 const MemoizedInnerCalendarDaysGridRow = React.memo(InnerCalendarDaysGridRow);

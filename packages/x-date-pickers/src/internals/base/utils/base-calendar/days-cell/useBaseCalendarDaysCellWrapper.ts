@@ -1,10 +1,12 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { useUtils } from '../../../../hooks/useUtils';
-import { useCompositeListItem } from '../../../composite/list/useCompositeListItem';
 import { useBaseCalendarDaysGridContext } from '../days-grid/BaseCalendarDaysGridContext';
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 import type { useBaseCalendarDaysCell } from './useBaseCalendarDaysCell';
+import { useBaseCalendarDaysGridRowContext } from '../days-grid-row/BaseCalendarDaysGridRoContext';
+import { useBaseCalendarDaysGridBodyContext } from '../days-grid-body/BaseCalendarDaysGridBodyContext';
 
 export function useBaseCalendarDaysCellWrapper(
   parameters: useBaseCalendarDaysCellWrapper.Parameters,
@@ -12,9 +14,11 @@ export function useBaseCalendarDaysCellWrapper(
   const { forwardedRef, value } = parameters;
   const baseRootContext = useBaseCalendarRootContext();
   const baseDaysGridContext = useBaseCalendarDaysGridContext();
-  const { ref: listItemRef, index: colIndex } = useCompositeListItem();
+  const baseDaysGridBodyContext = useBaseCalendarDaysGridBodyContext();
+  const baseDaysGridRowContext = useBaseCalendarDaysGridRowContext();
+  const ref = React.useRef<HTMLButtonElement>(null);
   const utils = useUtils();
-  const mergedRef = useForkRef(forwardedRef, listItemRef);
+  const mergedRef = useForkRef(forwardedRef, ref);
 
   const isSelected = React.useMemo(
     () => baseRootContext.selectedDates.some((date) => utils.isSameDay(date, value)),
@@ -51,7 +55,6 @@ export function useBaseCalendarDaysCellWrapper(
 
   const ctx = React.useMemo<useBaseCalendarDaysCell.Context>(
     () => ({
-      colIndex,
       isSelected,
       isDisabled,
       isInvalid,
@@ -68,9 +71,17 @@ export function useBaseCalendarDaysCellWrapper(
       isCurrent,
       isOutsideCurrentMonth,
       baseDaysGridContext.selectDay,
-      colIndex,
     ],
   );
+
+  const registerDaysGridCell = baseRootContext.registerDaysGridCell;
+  useEnhancedEffect(() => {
+    return registerDaysGridCell({
+      cell: ref,
+      row: baseDaysGridRowContext.ref,
+      grid: baseDaysGridBodyContext.ref,
+    });
+  }, [baseDaysGridBodyContext.ref, baseDaysGridRowContext.ref, registerDaysGridCell]);
 
   return {
     ref: mergedRef,

@@ -1,7 +1,4 @@
 import * as React from 'react';
-import useForkRef from '@mui/utils/useForkRef';
-import { useCompositeListItem } from '../../../composite/list/useCompositeListItem';
-import { useBaseCalendarDaysGridBodyContext } from '../days-grid-body/BaseCalendarDaysGridBodyContext';
 import { useBaseCalendarDaysGridContext } from '../days-grid/BaseCalendarDaysGridContext';
 import type { useBaseCalendarDaysGridRow } from './useBaseCalendarDaysGridRow';
 
@@ -10,9 +7,6 @@ export function useBaseCalendarDaysGridRowWrapper(
 ): useBaseCalendarDaysGridRowWrapper.ReturnValue {
   const { forwardedRef, value } = parameters;
   const baseDaysGridContext = useBaseCalendarDaysGridContext();
-  const baseDaysGridBodyContext = useBaseCalendarDaysGridBodyContext();
-  const { ref: listItemRef, index: rowIndex } = useCompositeListItem();
-  const mergedRef = useForkRef(forwardedRef, listItemRef);
 
   // TODO: Improve how we pass the week to the week row components.
   const days = React.useMemo(
@@ -23,13 +17,11 @@ export function useBaseCalendarDaysGridRowWrapper(
   const ctx = React.useMemo(
     () => ({
       days,
-      rowIndex,
-      registerWeekRowCells: baseDaysGridBodyContext.registerWeekRowCells,
     }),
-    [days, rowIndex, baseDaysGridBodyContext.registerWeekRowCells],
+    [days],
   );
 
-  return { ref: mergedRef, ctx };
+  return { ref: forwardedRef, ctx };
 }
 
 export namespace useBaseCalendarDaysGridRowWrapper {
@@ -44,7 +36,7 @@ export namespace useBaseCalendarDaysGridRowWrapper {
     /**
      * The ref to forward to the component.
      */
-    ref: React.RefCallback<HTMLDivElement> | null;
+    ref: React.ForwardedRef<HTMLDivElement> | null;
     /**
      * The memoized context to forward to the memoized component so that it does not need to subscribe to any context.
      */

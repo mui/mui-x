@@ -1,10 +1,7 @@
 import * as React from 'react';
 
 export interface BaseCalendarDaysGridBodyContext {
-  registerWeekRowCells: (
-    weekRowRef: React.RefObject<HTMLElement | null>,
-    cellsRef: React.RefObject<(HTMLElement | null)[]>,
-  ) => () => void;
+  ref: React.RefObject<HTMLDivElement | null>;
 }
 
 export const BaseCalendarDaysGridBodyContext = React.createContext<

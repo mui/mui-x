@@ -4,6 +4,7 @@ import { ValidateDateProps } from '../../../../../validation';
 import type { useBaseCalendarRoot } from './useBaseCalendarRoot';
 import type { useBaseCalendarDaysGridBody } from '../days-grid-body/useBaseCalendarDaysGridBody';
 import { BaseCalendarSection } from '../utils/types';
+import { useBaseCalendarDaysGridNavigation } from './useBaseCalendarDaysGridsNavigation';
 
 export interface BaseCalendarRootContext {
   /**
@@ -60,10 +61,7 @@ export interface BaseCalendarRootContext {
   monthPageSize: number;
   yearPageSize: number;
   applyDayGridKeyboardNavigation: (event: React.KeyboardEvent) => void;
-  registerDaysGridCells: (
-    cellsRef: useBaseCalendarDaysGridBody.CellsRef,
-    rowsRef: useBaseCalendarDaysGridBody.RowsRef,
-  ) => () => void;
+  registerDaysGridCell: (ref: useBaseCalendarDaysGridNavigation.CellRefs) => () => void;
   registerSection: (parameters: useBaseCalendarRoot.RegisterSectionParameters) => () => void;
 }
 

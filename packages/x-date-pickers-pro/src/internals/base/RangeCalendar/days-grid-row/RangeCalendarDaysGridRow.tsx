@@ -9,14 +9,14 @@ import { BaseUIComponentProps } from '@mui/x-date-pickers/internals/base/base-ut
 // eslint-disable-next-line no-restricted-imports
 import { useComponentRenderer } from '@mui/x-date-pickers/internals/base/base-utils/useComponentRenderer';
 // eslint-disable-next-line no-restricted-imports
-import { CompositeList } from '@mui/x-date-pickers/internals/base/composite/list/CompositeList';
+import { BaseCalendarDaysGridRowContext } from '@mui/x-date-pickers/internals/base/utils/base-calendar/days-grid-row/BaseCalendarDaysGridRoContext';
 
 const InnerRangeCalendarDaysGridRow = React.forwardRef(function InnerRangeCalendarDaysGridRow(
   props: InnerRangeCalendarDaysGridRowProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, render, value, ctx, children, ...otherProps } = props;
-  const { getDaysGridRowProps, cellRefs } = useBaseCalendarDaysGridRow({
+  const { getDaysGridRowProps, context } = useBaseCalendarDaysGridRow({
     value,
     ctx,
     children,
@@ -32,7 +32,11 @@ const InnerRangeCalendarDaysGridRow = React.forwardRef(function InnerRangeCalend
     extraProps: otherProps,
   });
 
-  return <CompositeList elementsRef={cellRefs}>{renderElement()}</CompositeList>;
+  return (
+    <BaseCalendarDaysGridRowContext.Provider value={context}>
+      {renderElement()}
+    </BaseCalendarDaysGridRowContext.Provider>
+  );
 });
 
 const MemoizedInnerRangeCalendarDaysGridRow = React.memo(InnerRangeCalendarDaysGridRow);

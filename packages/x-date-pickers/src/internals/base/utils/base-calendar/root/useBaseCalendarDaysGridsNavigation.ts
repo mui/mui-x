@@ -4,7 +4,6 @@ import useTimeout from '@mui/utils/useTimeout';
 import { PickerValidDate } from '../../../../../models';
 import { ValidateDateProps } from '../../../../../validation';
 import { useUtils } from '../../../../hooks/useUtils';
-import type { useBaseCalendarDaysGridBody } from '../days-grid-body/useBaseCalendarDaysGridBody';
 import {
   applyInitialFocusInGrid,
   navigateInGrid,
@@ -23,9 +22,7 @@ export function useBaseCalendarDaysGridNavigation(
 ) {
   const { visibleDate, setVisibleDate, monthPageSize, dateValidationProps } = parameters;
   const utils = useUtils();
-  const gridsRef = React.useRef<
-    { cells: useBaseCalendarDaysGridBody.CellsRef; rows: useBaseCalendarDaysGridBody.RowsRef }[]
-  >([]);
+  const cellsRef = React.useRef(new Map<number, useBaseCalendarDaysGridNavigation.CellRefs>());
   const pageNavigationTargetRef = React.useRef<PageGridNavigationTarget | null>(null);
 
   const timeout = useTimeout();
@@ -33,7 +30,7 @@ export function useBaseCalendarDaysGridNavigation(
     if (pageNavigationTargetRef.current) {
       const target = pageNavigationTargetRef.current;
       timeout.start(0, () => {
-        const cells = getCellsInCalendar(gridsRef.current);
+        const cells = getCellsInCalendar(cellsRef);
         applyInitialFocusInGrid({ cells, target });
       });
     }
@@ -65,26 +62,20 @@ export function useBaseCalendarDaysGridNavigation(
 
       pageNavigationTargetRef.current = params.target;
     };
-
-    const cells = getCellsInCalendar(gridsRef.current);
+    const cells = getCellsInCalendar(cellsRef);
     navigateInGrid({ cells, event, changePage });
   });
 
-  const registerDaysGridCells = useEventCallback(
-    (
-      gridCellsRef: useBaseCalendarDaysGridBody.CellsRef,
-      gridRowsRef: useBaseCalendarDaysGridBody.RowsRef,
-    ) => {
-      gridsRef.current.push({ cells: gridCellsRef, rows: gridRowsRef });
-
-      return () => {
-        gridsRef.current = gridsRef.current.filter((entry) => entry.cells !== gridCellsRef);
-      };
+  const registerDaysGridCell = useEventCallback(
+    (ref: useBaseCalendarDaysGridNavigation.CellRefs) => {
+      const id = Math.random();
+      cellsRef.current.set(id, ref);
+      return () => cellsRef.current.delete(id);
     },
   );
 
   return {
-    registerDaysGridCells,
+    registerDaysGridCell,
     applyDayGridKeyboardNavigation,
   };
 }
@@ -100,54 +91,70 @@ export namespace useBaseCalendarDaysGridNavigation {
   export interface ReturnValue
     extends Pick<
       BaseCalendarRootContext,
-      'registerDaysGridCells' | 'applyDayGridKeyboardNavigation'
+      'registerDaysGridCell' | 'applyDayGridKeyboardNavigation'
     > {}
+
+  export interface CellRefs {
+    cell: React.RefObject<HTMLButtonElement | null>;
+    row: React.RefObject<HTMLDivElement | null>;
+    grid: React.RefObject<HTMLDivElement | null>;
+  }
 }
 
 /* eslint-disable no-bitwise */
-function sortGridByDocumentPosition(a: HTMLElement[][], b: HTMLElement[][]) {
-  const position = a[0][0].compareDocumentPosition(b[0][0]);
+const createSortByDocumentPosition =
+  <T>(getDOMElement: (element: T) => HTMLElement) =>
+  (a: T, b: T) => {
+    const aElement = getDOMElement(a);
+    const bElement = getDOMElement(b);
+    const position = aElement.compareDocumentPosition(bElement);
 
-  if (
-    position & Node.DOCUMENT_POSITION_FOLLOWING ||
-    position & Node.DOCUMENT_POSITION_CONTAINED_BY
-  ) {
-    return -1;
-  }
+    if (
+      position & Node.DOCUMENT_POSITION_FOLLOWING ||
+      position & Node.DOCUMENT_POSITION_CONTAINED_BY
+    ) {
+      return -1;
+    }
 
-  if (position & Node.DOCUMENT_POSITION_PRECEDING || position & Node.DOCUMENT_POSITION_CONTAINS) {
-    return 1;
-  }
+    if (position & Node.DOCUMENT_POSITION_PRECEDING || position & Node.DOCUMENT_POSITION_CONTAINS) {
+      return 1;
+    }
 
-  return 0;
-}
+    return 0;
+  };
 /* eslint-enable no-bitwise */
 
 function getCellsInCalendar(
-  grids: {
-    cells: useBaseCalendarDaysGridBody.CellsRef;
-    rows: useBaseCalendarDaysGridBody.RowsRef;
-  }[],
+  cellsRef: React.RefObject<Map<number, useBaseCalendarDaysGridNavigation.CellRefs>>,
 ) {
-  const cells: HTMLElement[][][] = [];
+  const grids: {
+    element: HTMLDivElement;
+    rows: { element: HTMLDivElement; cells: HTMLButtonElement[] }[];
+  }[] = [];
 
-  for (let i = 0; i < grids.length; i += 1) {
-    const grid = grids[i];
-    const gridCells: HTMLElement[][] = [];
-    for (let j = 0; j < grid.rows.current.length; j += 1) {
-      const row = grid.rows.current[j];
-      const rowCells = grid.cells.current
-        .find((entry) => entry.rowRef.current === row)
-        ?.cellsRef.current?.filter((cell) => cell !== null);
-      if (rowCells && rowCells.length > 0) {
-        gridCells.push(rowCells);
+  for (const [, cellRefs] of cellsRef.current) {
+    if (cellRefs.cell.current && cellRefs.row.current && cellRefs.grid.current) {
+      let cellGrid = grids.find((grid) => grid.element === cellRefs.grid.current);
+      if (!cellGrid) {
+        cellGrid = { element: cellRefs.grid.current, rows: [] };
+        grids.push(cellGrid);
       }
-    }
 
-    if (gridCells.length > 0) {
-      cells.push(gridCells);
+      let cellRow = cellGrid.rows.find((row) => row.element === cellRefs.row.current);
+      if (!cellRow) {
+        cellRow = { element: cellRefs.row.current, cells: [] };
+        cellGrid.rows.push(cellRow);
+      }
+
+      cellRow.cells.push(cellRefs.cell.current);
     }
   }
 
-  return cells.sort(sortGridByDocumentPosition);
+  return grids
+    .sort(createSortByDocumentPosition((grid) => grid.element))
+    .map((grid) =>
+      grid.rows
+        .sort(createSortByDocumentPosition((row) => row.element))
+        .map((row) => row.cells.sort(createSortByDocumentPosition((cell) => cell))),
+    );
 }

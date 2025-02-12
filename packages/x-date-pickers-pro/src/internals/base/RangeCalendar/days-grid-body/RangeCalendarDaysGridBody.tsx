@@ -5,8 +5,6 @@ import { BaseUIComponentProps } from '@mui/x-date-pickers/internals/base/base-ut
 // eslint-disable-next-line no-restricted-imports
 import { useComponentRenderer } from '@mui/x-date-pickers/internals/base/base-utils/useComponentRenderer';
 // eslint-disable-next-line no-restricted-imports
-import { CompositeList } from '@mui/x-date-pickers/internals/base/composite/list/CompositeList';
-// eslint-disable-next-line no-restricted-imports
 import { BaseCalendarDaysGridBodyContext } from '@mui/x-date-pickers/internals/base/utils/base-calendar/days-grid-body/BaseCalendarDaysGridBodyContext';
 import { useRangeCalendarDaysGridBody } from './useRangeCalendarDaysGridBody';
 
@@ -15,7 +13,7 @@ const RangeCalendarDaysGridBody = React.forwardRef(function CalendarDaysGrid(
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, render, children, ...otherProps } = props;
-  const { getDaysGridBodyProps, context, calendarWeekRowRefs } = useRangeCalendarDaysGridBody({
+  const { getDaysGridBodyProps, context } = useRangeCalendarDaysGridBody({
     children,
   });
   const state = React.useMemo(() => ({}), []);
@@ -31,7 +29,7 @@ const RangeCalendarDaysGridBody = React.forwardRef(function CalendarDaysGrid(
 
   return (
     <BaseCalendarDaysGridBodyContext.Provider value={context}>
-      <CompositeList elementsRef={calendarWeekRowRefs}>{renderElement()}</CompositeList>
+      {renderElement()}
     </BaseCalendarDaysGridBodyContext.Provider>
   );
 });

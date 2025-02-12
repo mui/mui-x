@@ -141,7 +141,7 @@ export function useBaseCalendarRoot<
     },
   );
 
-  const { applyDayGridKeyboardNavigation, registerDaysGridCells } =
+  const { applyDayGridKeyboardNavigation, registerDaysGridCell } =
     useBaseCalendarDaysGridNavigation({
       visibleDate,
       setVisibleDate,
@@ -205,7 +205,7 @@ export function useBaseCalendarRoot<
       monthPageSize,
       yearPageSize,
       applyDayGridKeyboardNavigation,
-      registerDaysGridCells,
+      registerDaysGridCell,
       registerSection,
       selectDate,
       dateValidationProps,
@@ -222,7 +222,7 @@ export function useBaseCalendarRoot<
       monthPageSize,
       yearPageSize,
       applyDayGridKeyboardNavigation,
-      registerDaysGridCells,
+      registerDaysGridCell,
       registerSection,
       dateValidationProps,
       selectDate,

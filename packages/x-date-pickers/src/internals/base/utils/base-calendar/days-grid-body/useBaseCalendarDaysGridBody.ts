@@ -1,5 +1,4 @@
 import * as React from 'react';
-import useEventCallback from '@mui/utils/useEventCallback';
 import { PickerValidDate } from '../../../../../models';
 import { useBaseCalendarDaysGridContext } from '../days-grid/BaseCalendarDaysGridContext';
 import { mergeReactProps } from '../../../base-utils/mergeReactProps';
@@ -11,12 +10,12 @@ export function useBaseCalendarDaysGridBody(parameters: useBaseCalendarDaysGridB
   const { children } = parameters;
   const baseRootContext = useBaseCalendarRootContext();
   const baseDaysGridContext = useBaseCalendarDaysGridContext();
-  const rowsRef: useBaseCalendarDaysGridBody.RowsRef = React.useRef([]);
-  const cellsRef: useBaseCalendarDaysGridBody.CellsRef = React.useRef([]);
+  const ref = React.useRef<HTMLDivElement>(null);
 
   const getDaysGridBodyProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
       return mergeReactProps(externalProps, {
+        ref,
         role: 'rowgroup',
         children:
           children == null
@@ -28,33 +27,9 @@ export function useBaseCalendarDaysGridBody(parameters: useBaseCalendarDaysGridB
     [baseDaysGridContext.daysGrid, baseRootContext.applyDayGridKeyboardNavigation, children],
   );
 
-  const registerWeekRowCells = useEventCallback(
-    (
-      weekRowRef: React.RefObject<HTMLElement | null>,
-      weekCellsRef: React.RefObject<(HTMLElement | null)[]>,
-    ) => {
-      cellsRef.current.push({ rowRef: weekRowRef, cellsRef: weekCellsRef });
+  const context: BaseCalendarDaysGridBodyContext = React.useMemo(() => ({ ref }), [ref]);
 
-      return () => {
-        cellsRef.current = cellsRef.current.filter((entry) => entry.rowRef !== weekRowRef);
-      };
-    },
-  );
-
-  const registerDaysGridCells = baseRootContext.registerDaysGridCells;
-  React.useEffect(() => {
-    return registerDaysGridCells(cellsRef, rowsRef);
-  }, [registerDaysGridCells]);
-
-  const context: BaseCalendarDaysGridBodyContext = React.useMemo(
-    () => ({ registerWeekRowCells }),
-    [registerWeekRowCells],
-  );
-
-  return React.useMemo(
-    () => ({ getDaysGridBodyProps, context, calendarWeekRowRefs: rowsRef }),
-    [getDaysGridBodyProps, context, rowsRef],
-  );
+  return React.useMemo(() => ({ getDaysGridBodyProps, context }), [getDaysGridBodyProps, context]);
 }
 
 export namespace useBaseCalendarDaysGridBody {
@@ -65,13 +40,4 @@ export namespace useBaseCalendarDaysGridBody {
   export interface ChildrenParameters {
     weeks: PickerValidDate[];
   }
-
-  export type CellsRef = React.RefObject<
-    {
-      rowRef: React.RefObject<HTMLElement | null>;
-      cellsRef: React.RefObject<(HTMLElement | null)[]>;
-    }[]
-  >;
-
-  export type RowsRef = React.RefObject<(HTMLElement | null)[]>;
 }

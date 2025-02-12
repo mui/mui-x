@@ -224,7 +224,10 @@ const DateCalendar2DaysCellLoading = styled(Skeleton, {
   },
 });
 
-function WrappedDaysButton(props: React.HTMLAttributes<HTMLButtonElement>) {
+const WrappedDaysButton = React.forwardRef(function WrappedDaysButton(
+  props: React.HTMLAttributes<HTMLButtonElement>,
+  ref: React.Ref<HTMLButtonElement>,
+) {
   const { ownerState } = usePickerPrivateContext();
   const { classes, slots, slotProps } = useDateCalendar2PrivateContext();
 
@@ -235,10 +238,11 @@ function WrappedDaysButton(props: React.HTMLAttributes<HTMLButtonElement>) {
     externalForwardedProps: props,
     ownerState,
     className: classes.daysCell,
+    additionalProps: { ref },
   });
 
   return <DaysButton {...daysButtonProps} />;
-}
+});
 
 const WrappedDateCalendar2DaysGridBody = React.memo(function WrappedDateCalendar2DaysGridBody(
   props: Calendar.DaysGridBody.Props & {
