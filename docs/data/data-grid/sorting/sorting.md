@@ -91,6 +91,12 @@ In the following demo, the `firstName` column is not sortable by the default gri
 
 {{"demo": "ReadOnlySortingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Reset pagination
+
+By default sorting does not change the current page. If you want to get the user back to the first page each time new sort is applied, use `resetPageOnSortFilter` prop.
+
+{{"demo": "SortingWithPageReset.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Custom comparator
 
 A comparator determines how two cell values should be sorted.
@@ -163,6 +169,10 @@ const columns: GridColDef = [
 Sorting can be run server-side by setting the `sortingMode` prop to `server`, and implementing the `onSortModelChange` handler.
 
 {{"demo": "ServerSortingGrid.js", "bg": "inline"}}
+
+:::info
+Combine server-side sorting with [Server-side filtering](/x/react-data-grid/filtering/server-side/) and [Server-side pagination](/x/react-data-grid/pagination/#server-side-pagination) to avoid fetching more data than needed, since you already process the data outside of the Data Grid.
+:::
 
 ## apiRef
 

@@ -2,7 +2,14 @@ import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { spy, stub, SinonStub, SinonSpy } from 'sinon';
 import { expect } from 'chai';
-import { createRenderer, fireEvent, reactMajor, screen, waitFor } from '@mui/internal-test-utils';
+import {
+  createRenderer,
+  fireEvent,
+  reactMajor,
+  screen,
+  waitFor,
+  act,
+} from '@mui/internal-test-utils';
 import {
   DataGrid,
   DataGridProps,
@@ -19,15 +26,17 @@ import { isJSDOM, describeSkipIf } from 'test/utils/skipIf';
 
 describe('<DataGrid /> - Pagination', () => {
   const { render } = createRenderer();
+  let apiRef: RefObject<GridApi | null>;
 
   function BaselineTestCase(props: Omit<DataGridProps, 'rows' | 'columns'> & { height?: number }) {
     const { height = 300, ...other } = props;
 
+    apiRef = useGridApiRef();
     const basicData = useBasicDemoData(20, 2);
 
     return (
       <div style={{ width: 300, height }}>
-        <DataGrid {...basicData} autoHeight={isJSDOM} {...other} />
+        <DataGrid {...basicData} apiRef={apiRef} autoHeight={isJSDOM} {...other} />
       </div>
     );
   }
@@ -258,18 +267,12 @@ describe('<DataGrid /> - Pagination', () => {
     });
 
     it('should throw if pageSize exceeds 100', () => {
-      let apiRef: RefObject<GridApi | null>;
-      function TestCase() {
-        apiRef = useGridApiRef();
-        return (
-          <BaselineTestCase
-            apiRef={apiRef}
-            paginationModel={{ pageSize: 1, page: 0 }}
-            pageSizeOptions={[1, 2, 101]}
-          />
-        );
-      }
-      render(<TestCase />);
+      render(
+        <BaselineTestCase
+          paginationModel={{ pageSize: 1, page: 0 }}
+          pageSizeOptions={[1, 2, 101]}
+        />,
+      );
       expect(() => apiRef.current?.setPageSize(101)).to.throw(
         /`pageSize` cannot exceed 100 in the MIT version of the DataGrid./,
       );
@@ -612,6 +615,70 @@ describe('<DataGrid /> - Pagination', () => {
       setProps({ rowCount: 4 });
       expect(getColumnValues(0)).to.deep.equal(['3']);
       expect(screen.getByText('4–4 of 4')).not.to.equal(null);
+    });
+  });
+
+  describe('resetPageOnSortFilter prop', () => {
+    it('should reset page to 0 if sort or filter is applied and `resetPageOnSortFilter` is `true`', () => {
+      const { setProps } = render(
+        <BaselineTestCase
+          initialState={{ pagination: { paginationModel: { page: 0, pageSize: 5 }, rowCount: 0 } }}
+          pageSizeOptions={[5]}
+        />,
+      );
+
+      act(() => {
+        apiRef.current?.setPage(1);
+      });
+      expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(1);
+
+      act(() => {
+        apiRef.current?.sortColumn('id', 'desc');
+        apiRef.current?.setFilterModel({
+          items: [
+            {
+              field: 'id',
+              value: '1',
+              operator: '>=',
+            },
+          ],
+        });
+      });
+
+      // page stays the same after sorting and filtering
+      expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(1);
+
+      // enable reset
+      setProps({
+        resetPageOnSortFilter: true,
+      });
+
+      act(() => {
+        apiRef.current?.sortColumn('id', 'asc');
+      });
+      // page is reset to 0 after sorting
+      expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(0);
+
+      // move to the next page again
+      act(() => {
+        apiRef.current?.setPage(1);
+      });
+      expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(1);
+
+      act(() => {
+        apiRef.current?.setFilterModel({
+          items: [
+            {
+              field: 'id',
+              value: '1',
+              operator: '>=',
+            },
+          ],
+        });
+      });
+
+      // page is reset to 0 after filtering
+      expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(0);
     });
   });
 
