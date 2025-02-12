@@ -57,8 +57,21 @@ const DateCalendar2TransitionGroup = styled(TransitionGroup, {
  * - [x] Implement theme entries
  * - [x] Implement props.slots and props.slotProps
  * - [ ] Implement all the missing props
+ *   - [ ] Decide if onYearChange / onMonthChange should be used for the visible date or for the selected date.
  * - [ ] Add tests
  * - [ ] Add doc examples
+ *
+ * Theme entries that DateCalendar2 would eventually replace:
+ * - MuiDateCalendar
+ * - MuiDayCalendar
+ * - MuiDayCalendarSkeleton
+ * - MuiMonthCalendar
+ * - MuiPickersArrowSwitcher (would also be inlined in the new Clock component if we keep it)
+ * - MuiPickersCalendarHeader
+ * - MuiPickersDay
+ * - MuiPickersFadeTransitionGroup
+ * - MuiPickersSlideTransition
+ * - MuiYearCalendar
  */
 export const DateCalendar2 = React.forwardRef(function DateCalendar2(
   props: DateCalendar2Props,

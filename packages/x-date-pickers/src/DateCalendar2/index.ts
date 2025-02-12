@@ -10,4 +10,4 @@ export type { DateCalendar2HeaderProps } from './DateCalendar2Header';
 export { getDateCalendar2UtilityClass, dateCalendar2Classes } from './DateCalendar2.classes';
 export type { DateCalendar2Classes } from './DateCalendar2.classes';
 
-export { useDateCalendar2PrivateContext as useDateCalendar2Context } from './DateCalendar2Context';
+export { useDateCalendar2Context } from './DateCalendar2Context';

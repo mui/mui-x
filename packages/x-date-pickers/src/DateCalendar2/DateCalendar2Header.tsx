@@ -118,7 +118,6 @@ export const DateCalendar2Header = React.forwardRef(function DateCalendar2Header
   const { visibleDate, disabled } = useCalendarContext();
   const { classes, slots, slotProps, labelId } = useDateCalendar2PrivateContext();
   const { view, setView, views } = useDateCalendar2Context();
-
   const { format = `${utils.formats.month} ${utils.formats.year}`, ...other } = props;
 
   const handleToggleView = () => {

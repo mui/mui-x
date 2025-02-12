@@ -29,10 +29,27 @@ export interface DateCalendar2Props extends Omit<Calendar.Root.Props, 'children'
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps;
+  /**
+   * The views that the user can switch between.
+   * @default { year: true, day: true }
+   */
   views?: { [key in DateView]?: boolean };
+  /**
+   * The controlled view that should be visible.
+   * To render an uncontrolled DateCalendar2, use the `defaultValue` prop instead.
+   */
   view?: DateView;
-  onViewChange?: (view: DateView) => void;
+  /**
+   * The uncontrolled view that should be initially visible.
+   * To render a controlled DateCalendar2, use the `view` prop instead.
+   */
   defaultView?: DateView;
+  /**
+   * Event handler called when the view changes.
+   * Provides the new view as an argument.
+   * @param {DateView} view The new view.
+   */
+  onViewChange?: (view: DateView) => void;
   /**
    * If `true`, the week number will be display in the calendar.
    */
@@ -65,7 +82,6 @@ export interface DateCalendar2Props extends Omit<Calendar.Root.Props, 'children'
    * @default false
    */
   loading?: boolean;
-  // renderLoading (convert to a slot)
 }
 
 export interface DateCalendar2Slots {
@@ -116,6 +132,7 @@ export interface DateCalendar2Slots {
   rightNavigationIcon?: React.ElementType;
   /**
    * Panel displayed when the calendar is in the loading state.
+   * @default DateCalendar2DaysGridBodyLoading for day view, "DateCalendar2MonthOrYearLoadingPanel" for month and year views.
    */
   loadingPanel?: React.ElementType;
 }
