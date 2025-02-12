@@ -3,14 +3,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { ChartsXAxis } from '../ChartsXAxis';
 import { ChartsYAxis } from '../ChartsYAxis';
-import {
-  ChartsAxisSlotProps,
-  ChartsAxisSlots,
-  ChartsXAxisProps,
-  ChartsYAxisProps,
-} from '../models/axis';
+import { ChartsAxisSlotProps, ChartsAxisSlots } from '../models/axis';
 import { useXAxes, useYAxes } from '../hooks';
-import { DefaultizedAxisConfig } from '../context/PolarProvider/Polar.types';
 
 export interface ChartsAxisProps {
   /**
@@ -25,24 +19,6 @@ export interface ChartsAxisProps {
   slotProps?: ChartsAxisSlotProps;
 }
 
-function formatAxis<AxisProps extends ChartsXAxisProps | ChartsYAxisProps>(
-  axisConfig: DefaultizedAxisConfig<AxisProps>,
-  axisIds: string[],
-  position: AxisProps['position'],
-  slots?: Partial<ChartsAxisSlots>,
-  slotProps?: Partial<ChartsAxisSlotProps>,
-) {
-  return axisIds
-    .filter((id) => axisConfig[id].position === position)
-    .map((id) => {
-      return {
-        ...axisConfig[id],
-        slots: { ...slots, ...axisConfig?.slots },
-        slotProps: { ...slotProps, ...axisConfig?.slotProps },
-      };
-    });
-}
-
 /**
  * Demos:
  *
@@ -54,27 +30,16 @@ function formatAxis<AxisProps extends ChartsXAxisProps | ChartsYAxisProps>(
  */
 function ChartsAxis(props: ChartsAxisProps) {
   const { slots, slotProps } = props;
-  const { xAxis, xAxisIds } = useXAxes();
-  const { yAxis, yAxisIds } = useYAxes();
-
-  const topAxes = formatAxis(xAxis, xAxisIds, 'top', slots, slotProps);
-  const rightAxes = formatAxis(yAxis, yAxisIds, 'right', slots, slotProps);
-  const bottomAxes = formatAxis(xAxis, xAxisIds, 'bottom', slots, slotProps);
-  const leftAxes = formatAxis(yAxis, yAxisIds, 'left', slots, slotProps);
+  const { xAxisIds } = useXAxes();
+  const { yAxisIds } = useYAxes();
 
   return (
     <React.Fragment>
-      {topAxes.map((axis) => (
-        <ChartsXAxis key={axis.id} {...axis} position="top" axisId={axis.id} />
+      {xAxisIds.map((axisId) => (
+        <ChartsXAxis key={axisId} slots={slots} slotProps={slotProps} axisId={axisId} />
       ))}
-      {rightAxes.map((axis) => (
-        <ChartsYAxis key={axis.id} {...axis} position="right" axisId={axis.id} />
-      ))}
-      {bottomAxes.map((axis) => (
-        <ChartsXAxis key={axis.id} {...axis} position="bottom" axisId={axis.id} />
-      ))}
-      {leftAxes.map((axis) => (
-        <ChartsYAxis key={axis.id} {...axis} position="left" axisId={axis.id} />
+      {yAxisIds.map((axisId) => (
+        <ChartsYAxis key={axisId} slots={slots} slotProps={slotProps} axisId={axisId} />
       ))}
     </React.Fragment>
   );

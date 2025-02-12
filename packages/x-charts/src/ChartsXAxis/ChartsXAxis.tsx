@@ -3,9 +3,9 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
-import { useThemeProps, useTheme, Theme, styled } from '@mui/material/styles';
+import { useThemeProps, styled } from '@mui/material/styles';
 import { useTicks, TickItemType } from '../hooks/useTicks';
-import { AxisDefaultized, ChartsXAxisProps } from '../models/axis';
+import { AxisConfig, AxisDefaultized, ChartsXAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
@@ -18,7 +18,7 @@ import { isBandScale } from '../internals/isBandScale';
 import { useChartContext } from '../context/ChartProvider/useChartContext';
 import { useXAxes } from '../hooks/useAxis';
 
-const useUtilityClasses = (ownerState: ChartsXAxisProps & { theme: Theme }) => {
+const useUtilityClasses = (ownerState: AxisConfig<any, any, ChartsXAxisProps>) => {
   const { classes, position } = ownerState;
   const slots = {
     root: ['root', 'directionX', position],
@@ -92,11 +92,9 @@ const XAxisRoot = styled(AxisRoot, {
 })({});
 
 const defaultProps = {
-  position: 'bottom',
   disableLine: false,
   disableTicks: false,
   tickSize: 6,
-  offset: 0,
 } as const;
 
 /**
@@ -140,8 +138,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     offset,
   } = defaultizedProps;
 
-  const theme = useTheme();
-  const classes = useUtilityClasses({ ...defaultizedProps, theme });
+  const classes = useUtilityClasses(defaultizedProps);
   const { left, top, width, height } = useDrawingArea();
   const { instance } = useChartContext();
 

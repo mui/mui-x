@@ -1,24 +1,24 @@
 import { MakeOptional } from '@mui/x-internals/types';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY, DEFAULT_AXIS_SIZE } from '../../../../constants';
 import { AxisConfig, ScaleName } from '../../../../models';
-import { ChartsAxisProps, ChartsXAxisProps, ChartsYAxisProps } from '../../../../models/axis';
+import { ChartsXAxisProps, ChartsYAxisProps } from '../../../../models/axis';
 import { DatasetType } from '../../../../models/seriesType/config';
 
 export function defaultizeAxis(
-  inAxis: MakeOptional<AxisConfig<ScaleName, any, ChartsAxisProps>, 'id'>[] | undefined,
+  inAxis: MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>[] | undefined,
   dataset: DatasetType | undefined,
   axisName: 'x',
 ): AxisConfig<ScaleName, any, ChartsXAxisProps>[];
 export function defaultizeAxis(
-  inAxis: MakeOptional<AxisConfig<ScaleName, any, ChartsAxisProps>, 'id'>[] | undefined,
+  inAxis: MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[] | undefined,
   dataset: DatasetType | undefined,
   axisName: 'y',
 ): AxisConfig<ScaleName, any, ChartsYAxisProps>[];
 export function defaultizeAxis(
-  inAxis: MakeOptional<AxisConfig<ScaleName, any, ChartsAxisProps>, 'id'>[] | undefined,
+  inAxis: MakeOptional<AxisConfig, 'id'>[] | undefined,
   dataset: DatasetType | undefined,
   axisName: 'x' | 'y',
-): AxisConfig<ScaleName, any, ChartsAxisProps>[] {
+): AxisConfig[] {
   const DEFAULT_AXIS_KEY = axisName === 'x' ? DEFAULT_X_AXIS_KEY : DEFAULT_Y_AXIS_KEY;
 
   const hasNoDefaultAxis =
@@ -30,7 +30,7 @@ export function defaultizeAxis(
   ]
     .map((axisConfig, index) => {
       const dataKey = axisConfig.dataKey;
-      const defaultPosition = axisName === 'x' ? 'bottom' : 'left';
+      const defaultPosition = axisName === 'x' ? ('bottom' as const) : ('left' as const);
 
       const sharedConfig = {
         id: `defaultized-${axisName}-axis-${index}`,
