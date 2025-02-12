@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
   ChartPlugin,
   AxisId,
@@ -38,16 +39,47 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   svgRef,
   params,
 }) => {
+  const { zoomData: paramsZoomData, onZoomChange } = params;
+
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
   const isZoomEnabled = Object.keys(optionsLookup).length > 0;
 
-  // Add events
-  const panningEventCacheRef = React.useRef<PointerEvent[]>([]);
-  const zoomEventCacheRef = React.useRef<PointerEvent[]>([]);
-  const eventPrevDiff = React.useRef<number>(0);
-  const interactionTimeoutRef = React.useRef<number | undefined>(undefined);
+  // Manage controlled state
 
+  useEnhancedEffect(() => {
+    if (paramsZoomData === undefined) {
+      return undefined;
+    }
+    store.update((prevState) => {
+      return {
+        ...prevState,
+        zoom: {
+          ...prevState.zoom,
+          isInteracting: true,
+          zoomData: paramsZoomData,
+        },
+      };
+    });
+
+    const timeout = setTimeout(() => {
+      store.update((prevState) => {
+        return {
+          ...prevState,
+          zoom: {
+            ...prevState.zoom,
+            isInteracting: true,
+          },
+        };
+      });
+    }, 100);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [store, paramsZoomData]);
+
+  // Add instance methods
   const setIsInteracting = React.useCallback(
     (isInteracting: boolean) => {
       store.update((prev) => ({ ...prev, zoom: { ...prev.zoom, isInteracting } }));
@@ -60,7 +92,11 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
       store.update((prevState) => {
         const newZoomData =
           typeof zoomData === 'function' ? zoomData(prevState.zoom.zoomData) : zoomData;
-        params.onZoomChange?.(newZoomData);
+        onZoomChange?.(newZoomData);
+
+        if (prevState.zoom.isControlled) {
+          return prevState;
+        }
 
         return {
           ...prevState,
@@ -72,8 +108,14 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
       });
     },
 
-    [params, store],
+    [onZoomChange, store],
   );
+
+  // Add events
+  const panningEventCacheRef = React.useRef<PointerEvent[]>([]);
+  const zoomEventCacheRef = React.useRef<PointerEvent[]>([]);
+  const eventPrevDiff = React.useRef<number>(0);
+  const interactionTimeoutRef = React.useRef<number | undefined>(undefined);
 
   // Add event for chart panning
   const isPanEnabled = React.useMemo(
@@ -369,6 +411,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
 useChartProZoom.params = {
   initialZoom: true,
   onZoomChange: true,
+  zoomData: true,
 };
 
 useChartProZoom.getDefaultizedParams = ({ params }) => {
@@ -378,15 +421,23 @@ useChartProZoom.getDefaultizedParams = ({ params }) => {
 };
 
 useChartProZoom.getInitialState = (params) => {
+  const { initialZoom, zoomData, defaultizedXAxis, defaultizedYAxis } = params;
+
   const optionsLookup = {
-    ...createZoomLookup('x')(params.defaultizedXAxis),
-    ...createZoomLookup('y')(params.defaultizedYAxis),
+    ...createZoomLookup('x')(defaultizedXAxis),
+    ...createZoomLookup('y')(defaultizedYAxis),
   };
   return {
     zoom: {
       zoomData:
-        params.initialZoom === undefined ? initializeZoomData(optionsLookup) : params.initialZoom,
+        // eslint-disable-next-line no-nested-ternary
+        zoomData !== undefined
+          ? zoomData
+          : initialZoom !== undefined
+            ? initialZoom
+            : initializeZoomData(optionsLookup),
       isInteracting: false,
+      isControlled: zoomData !== undefined,
     },
   };
 };
