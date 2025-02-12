@@ -4,7 +4,11 @@ import useLazyRef from '@mui/utils/useLazyRef';
 import { unstable_debounce as debounce } from '@mui/utils';
 
 import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
-import { GridGetRowsResponse, GridDataSourceCache } from '../../../models/gridDataSource';
+import {
+  GridGetRowsResponse,
+  GridDataSourceCache,
+  GridGetRowsParams,
+} from '../../../models/gridDataSource';
 import { runIf } from '../../../utils/utils';
 import { GridStrategyGroup } from '../../core/strategyProcessing';
 import { useGridSelector } from '../../utils/useGridSelector';
@@ -13,7 +17,7 @@ import { gridGetRowsParamsSelector } from './gridDataSourceSelector';
 import { CacheChunkManager, DataSourceRowsUpdateStrategy } from './utils';
 import { GridDataSourceCacheDefault, type GridDataSourceCacheDefaultConfig } from './cache';
 
-import type { GridDataSourceApi, GridDataSourceApiBase } from './models';
+import type { GridDataSourceApi, GridDataSourceApiBase, GridDataSourcePrivateApi } from './models';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type { GridStrategyProcessor } from '../../core/strategyProcessing';
@@ -52,6 +56,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     clearDataSourceState?: () => void;
   } = {},
 ) => {
+  const rowIdToGetRowsParams = React.useRef<Record<GridRowId, GridGetRowsParams>>({});
   const setStrategyAvailability = React.useCallback(() => {
     apiRef.current.setStrategyAvailability(
       GridStrategyGroup.DataSource,
@@ -125,6 +130,9 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         const cacheResponses = cacheChunkManager.splitResponse(fetchParams, getRowsResponse);
         cacheResponses.forEach((response, key) => {
           cache.set(key, response);
+          response.rows.forEach((row) => {
+            rowIdToGetRowsParams.current[row.id] = fetchParams;
+          });
         });
 
         if (lastRequestId.current === requestId) {
@@ -157,6 +165,28 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       options,
       props.signature,
     ],
+  );
+
+  const mutateRowInCache = React.useCallback<GridDataSourcePrivateApi['mutateRowInCache']>(
+    (rowId, rowUpdate) => {
+      const getRowsParams = rowIdToGetRowsParams.current[rowId];
+      if (!getRowsParams) {
+        return;
+      }
+      const cachedData = cache.get(getRowsParams);
+      if (!cachedData) {
+        return;
+      }
+      const updatedRows = [...cachedData.rows];
+      // TODO: Accomodate `props.getRowId`
+      const rowIndex = updatedRows.findIndex((row) => row.id === rowId);
+      if (rowIndex === -1) {
+        return;
+      }
+      updatedRows[rowIndex] = rowUpdate;
+      cache.set(getRowsParams, { ...cachedData, rows: updatedRows });
+    },
+    [cache],
   );
 
   const handleStrategyActivityChange = React.useCallback<
@@ -196,6 +226,10 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     },
   };
 
+  const dataSourcePrivateApi: GridDataSourcePrivateApi = {
+    mutateRowInCache,
+  };
+
   const debouncedFetchRows = React.useMemo(() => debounce(fetchRows, 0), [fetchRows]);
 
   const isFirstRender = React.useRef(true);
@@ -219,7 +253,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   }, [apiRef, props.unstable_dataSource]);
 
   return {
-    api: { public: dataSourceApi },
+    api: { public: dataSourceApi, private: dataSourcePrivateApi },
     strategyProcessor: {
       strategyName: DataSourceRowsUpdateStrategy.Default,
       group: 'dataSourceRowsUpdate' as const,

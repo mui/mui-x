@@ -33,7 +33,12 @@ import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
 import { GridColumnGroupingModel } from '../gridColumnGrouping';
 import { GridPaginationMeta, GridPaginationModel } from '../gridPaginationProps';
 import type { GridAutosizeOptions } from '../../hooks/features/columnResize';
-import type { GridDataSource, GridDataSourceCache, GridGetRowsParams } from '../gridDataSource';
+import type {
+  GridDataSource,
+  GridGetRowsParams,
+  GridDataSourceCache,
+  GridUpdateRowParams,
+} from '../gridDataSource';
 import type { GridRowSelectionPropagation } from '../gridRowSelectionModel';
 
 export interface GridExperimentalFeatures {
@@ -838,7 +843,10 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {Error} error The error object.
    * @param {GridGetRowsParams} params With all properties from [[GridGetRowsParams]].
    */
-  unstable_onDataSourceError?: (error: Error, params: GridGetRowsParams) => void;
+  unstable_onDataSourceError?: (
+    error: Error,
+    params: GridGetRowsParams | GridUpdateRowParams,
+  ) => void;
 }
 
 export interface DataGridProSharedPropsWithDefaultValue {

@@ -575,6 +575,7 @@
   { "name": "GridTripleDotsVerticalIcon", "kind": "Variable" },
   { "name": "GridTypeFilterInputValueProps", "kind": "TypeAlias" },
   { "name": "GridUpdateAction", "kind": "TypeAlias" },
+  { "name": "GridUpdateRowParams", "kind": "Interface" },
   { "name": "GridValidRowModel", "kind": "TypeAlias" },
   { "name": "GridValueFormatter", "kind": "TypeAlias" },
   { "name": "GridValueGetter", "kind": "TypeAlias" },

@@ -1,9 +1,10 @@
 'use client';
 import * as React from 'react';
 import { LRUCache } from 'lru-cache';
-import type { GridGetRowsResponse } from '@mui/x-data-grid';
 import {
   getGridDefaultColumnTypes,
+  type GridGetRowsResponse,
+  type GridRowId,
   type GridRowModel,
   type GridColDef,
   type GridInitialState,
@@ -41,6 +42,7 @@ type UseMockServerResponse<T> = {
   getGroupKey?: (row: GridRowModel) => string;
   getChildrenCount?: (row: GridRowModel) => number;
   fetchRows: (url: string) => Promise<T>;
+  editRow: (rowId: GridRowId, updatedRow: GridRowModel) => Promise<GridRowModel>;
   loadNewData: () => void;
   isReady: boolean;
 };
@@ -359,12 +361,45 @@ export const useMockServer = <T extends GridGetRowsResponse>(
     ],
   );
 
+  const editRow = React.useCallback(
+    async (rowId: GridRowId, updatedRow: GridRowModel) => {
+      return new Promise<GridRowModel>((resolve, reject) => {
+        const minDelay = serverOptions?.minDelay ?? DEFAULT_SERVER_OPTIONS.minDelay;
+        const maxDelay = serverOptions?.maxDelay ?? DEFAULT_SERVER_OPTIONS.maxDelay;
+        const delay = randomInt(minDelay, maxDelay);
+
+        if (shouldRequestsFailRef.current) {
+          setTimeout(() => reject(new Error('Could not update the row')), delay);
+          return;
+        }
+
+        setData((prevData) => {
+          const newData = { ...prevData } as GridDemoData;
+          newData.rows = newData.rows?.map((row) => (row.id === rowId ? updatedRow : row));
+          const cacheKey = `${options.dataSet}-${options.rowLength}-${index}-${options.maxColumns}`;
+          dataCache.set(cacheKey, newData!);
+          setTimeout(() => resolve(updatedRow), delay);
+          return newData;
+        });
+      });
+    },
+    [
+      index,
+      options.dataSet,
+      options.maxColumns,
+      options.rowLength,
+      serverOptions?.maxDelay,
+      serverOptions?.minDelay,
+    ],
+  );
+
   return {
     columns: columnsWithDefaultColDef,
     initialState: options.dataSet === 'Movies' ? {} : initialState,
     getGroupKey,
     getChildrenCount,
     fetchRows,
+    editRow,
     loadNewData: () => {
       setIndex((oldIndex) => oldIndex + 1);
     },
