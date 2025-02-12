@@ -155,7 +155,7 @@ const DateCalendar2DaysGridWeekNumberCell = styled(Typography, {
   display: 'inline-flex',
 }));
 
-const DateCalendar2DaysCell = styled(ButtonBase, {
+const DateCalendar2DaysCell = styled((props) => <ButtonBase centerRipple {...props} />, {
   name: 'MuiDateCalendar2',
   slot: 'DaysCell',
   overridesResolver: (props, styles) => styles.daysCell,
@@ -240,19 +240,21 @@ function WrappedDaysButton(props: React.HTMLAttributes<HTMLButtonElement>) {
   return <DaysButton {...daysButtonProps} />;
 }
 
-const WrappedDateCalendar2DaysGridBody = React.forwardRef(function WrappedDateCalendar2DaysGridBody(
-  props: Calendar.DaysGridBody.Props & { displayWeekNumber: boolean },
-  ref: React.ForwardedRef<HTMLDivElement>,
+const WrappedDateCalendar2DaysGridBody = React.memo(function WrappedDateCalendar2DaysGridBody(
+  props: Calendar.DaysGridBody.Props & {
+    displayWeekNumber: boolean;
+    nodeRef: React.RefObject<HTMLDivElement | null>;
+  },
 ) {
   const translations = usePickerTranslations();
-  const { displayWeekNumber, ...other } = props;
+  const { displayWeekNumber, nodeRef, ...other } = props;
   const { classes } = useDateCalendar2PrivateContext();
   const utils = useUtils();
 
   return (
-    <Calendar.DaysGridBody {...other} ref={ref} render={<DateCalendar2DaysGridBody />}>
-      {({ weeks }) =>
-        weeks.map((week) => (
+    <Calendar.DaysGridBody {...other} ref={nodeRef} render={<DateCalendar2DaysGridBody />}>
+      {({ weeks }) => {
+        return weeks.map((week) => (
           <Calendar.DaysGridRow
             render={<DateCalendar2DaysGridRow />}
             value={week}
@@ -261,6 +263,7 @@ const WrappedDateCalendar2DaysGridBody = React.forwardRef(function WrappedDateCa
           >
             {({ days }) => {
               const weekNumber = displayWeekNumber ? utils.getWeekNumber(days[0]) : 0;
+
               return (
                 <React.Fragment>
                   {displayWeekNumber && (
@@ -284,13 +287,15 @@ const WrappedDateCalendar2DaysGridBody = React.forwardRef(function WrappedDateCa
               );
             }}
           </Calendar.DaysGridRow>
-        ))
-      }
+        ));
+      }}
     </Calendar.DaysGridBody>
   );
 });
 
-function DateCalendar2DaysGridBodyLoading(props: React.HTMLAttributes<HTMLDivElement>) {
+const DateCalendar2DaysGridBodyLoading = React.memo(function DateCalendar2DaysGridBodyLoading(
+  props: React.HTMLAttributes<HTMLDivElement>,
+) {
   const isDayHidden = (weekIndex: number, dayIndex: number, weekAmount: number) => {
     if (weekIndex === 0 && dayIndex === 0) {
       return true;
@@ -320,7 +325,7 @@ function DateCalendar2DaysGridBodyLoading(props: React.HTMLAttributes<HTMLDivEle
       ))}
     </DateCalendar2DaysGridBody>
   );
-}
+});
 
 export function DateCalendar2DaysGrid(props: DateCalendar2DaysGridProps) {
   const translations = usePickerTranslations();
@@ -329,7 +334,6 @@ export function DateCalendar2DaysGrid(props: DateCalendar2DaysGridProps) {
   const { visibleDate } = useCalendarContext();
   const { classes, labelId } = useDateCalendar2PrivateContext();
   const { reduceAnimations } = useDateCalendar2Context();
-
   const { displayWeekNumber } = props;
 
   // We need a new ref whenever the `key` of the transition changes: https://reactcommunity.org/react-transition-group/transition/#Transition-prop-nodeRef.
@@ -388,7 +392,7 @@ export function DateCalendar2DaysGrid(props: DateCalendar2DaysGridProps) {
         {reduceAnimations ? (
           <DateCalendar2DaysGridBodyNoTransition>
             <WrappedDateCalendar2DaysGridBody
-              ref={daysGridBodyNodeRef}
+              nodeRef={daysGridBodyNodeRef}
               className={classes.daysGridBody}
               displayWeekNumber={displayWeekNumber}
             />
@@ -411,7 +415,7 @@ export function DateCalendar2DaysGrid(props: DateCalendar2DaysGridProps) {
               nodeRef={daysGridBodyNodeRef}
             >
               <WrappedDateCalendar2DaysGridBody
-                ref={daysGridBodyNodeRef}
+                nodeRef={daysGridBodyNodeRef}
                 className={classes.daysGridBody}
                 displayWeekNumber={displayWeekNumber}
               />
