@@ -113,7 +113,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
         return sectionListRef.current.getSectionIndexFromDOMElement(activeElement);
       },
       focusField: (newSelectedSections = 0) => {
-        if (!sectionListRef.current) {
+        if (!sectionListRef.current || focused) {
           return;
         }
 

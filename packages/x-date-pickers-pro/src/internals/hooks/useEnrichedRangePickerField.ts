@@ -145,9 +145,7 @@ const useMultiInputFieldSlotProps = <
     }
 
     const currentFieldRef = rangePosition === 'start' ? startFieldRef : endFieldRef;
-    if (!currentFieldRef.current?.isFieldFocused()) {
-      currentFieldRef.current?.focusField();
-    }
+    currentFieldRef.current?.focusField();
     if (!currentFieldRef.current || !currentView) {
       // could happen when the user is switching between the inputs
       previousRangePosition.current = rangePosition;
@@ -338,7 +336,7 @@ const useSingleInputFieldSlotProps = <
       activeSectionIndex == null || activeSectionIndex < sections.length / 2 ? 'start' : 'end';
 
     if (domRangePosition != null && domRangePosition !== rangePosition) {
-      setRangePosition(domRangePosition, false);
+      setRangePosition(domRangePosition);
     }
   };
 
