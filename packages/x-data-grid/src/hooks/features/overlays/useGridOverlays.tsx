@@ -44,10 +44,6 @@ export const useGridOverlays = () => {
     overlayType = 'noResultsOverlay';
   }
 
-  if (showNoColumnsOverlay) {
-    overlayType = 'noColumnsOverlay';
-  }
-
   if (loading) {
     overlayType = 'loadingOverlay';
     loadingOverlayVariant =
