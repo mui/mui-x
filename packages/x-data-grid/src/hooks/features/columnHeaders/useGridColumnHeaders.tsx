@@ -467,6 +467,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           role="row"
           aria-rowindex={depth + 1}
           ownerState={rootProps}
+          style={{ height: groupHeaderHeight }}
         >
           {leftRenderContext &&
             getColumnGroupHeaders({
