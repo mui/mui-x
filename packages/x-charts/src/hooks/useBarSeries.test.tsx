@@ -58,7 +58,7 @@ describe('useBarSeries', () => {
   it('should return undefined series when invalid seriesIds are provided', () => {
     const message = [
       `MUI X: The following ids provided to "useBarSeries" could not be found: "3".`,
-      `Make sure that they exist and that its series are using the "bar" series type.`,
+      `Make sure that they exist and their series are using the "bar" series type.`,
     ].join('\n');
 
     expect(() => renderHook(() => useBarSeries(['1', '3']), options)).toWarnDev(message);

@@ -38,7 +38,7 @@ export function createSeriesSelectorsOfType<T extends keyof ChartsSeriesConfig>(
         const fnName = `use${seriesType.charAt(0).toUpperCase()}${seriesType.slice(1)}Series`;
         warnOnce([
           `MUI X: The following ids provided to "${fnName}" could not be found: ${formattedIds}.`,
-          `Make sure that they exist and that its series are using the "${seriesType}" series type.`,
+          `Make sure that they exist and their series are using the "${seriesType}" series type.`,
         ]);
       }
       return result;
