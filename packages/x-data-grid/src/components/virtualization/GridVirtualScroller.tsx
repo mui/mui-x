@@ -23,7 +23,6 @@ import { GridVirtualScrollerFiller as SpaceFiller } from './GridVirtualScrollerF
 import { GridVirtualScrollerRenderZone as RenderZone } from './GridVirtualScrollerRenderZone';
 import { GridVirtualScrollbar as Scrollbar } from './GridVirtualScrollbar';
 import { GridLoadingOverlayVariant } from '../GridLoadingOverlay';
-import { GridStateCommunity } from '../../models/gridStateCommunity';
 import { GridOverlayType } from '../base/GridOverlays';
 import { GridApiCommunity } from '../../models/api/gridApiCommunity';
 
