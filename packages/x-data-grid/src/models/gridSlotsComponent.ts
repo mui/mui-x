@@ -100,6 +100,11 @@ export interface GridBaseSlots {
    * @default Skeleton
    */
   baseSkeleton: React.JSXElementConstructor<GridSlotProps['baseSkeleton']>;
+  /**
+   * The custom Switch component used in the grid.
+   * @default Switch
+   */
+  baseSwitch: React.JSXElementConstructor<GridSlotProps['baseSwitch']>;
 }
 
 /**
