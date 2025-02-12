@@ -7,8 +7,8 @@ import {
   createAllSeriesSelectorOfType,
 } from '../internals/createSeriesSelectorOfType';
 
-const selectorSeries = createSeriesSelectorsOfType('scatter');
-const selectorSeriesContext = createAllSeriesSelectorOfType('scatter');
+const useSelectorSeries = createSeriesSelectorsOfType('scatter');
+const useSelectorSeriesContext = createAllSeriesSelectorOfType('scatter');
 
 export type UseScatterSeriesReturnValue = ChartSeriesDefaultized<'scatter'>;
 export type UseScatterSeriesContextReturnValue = ProcessedSeries['scatter'];
@@ -36,7 +36,7 @@ export function useScatterSeries(): UseScatterSeriesReturnValue[];
  */
 export function useScatterSeries(seriesIds: SeriesId[]): UseScatterSeriesReturnValue[];
 export function useScatterSeries(seriesIds?: SeriesId | SeriesId[]) {
-  return selectorSeries(seriesIds);
+  return useSelectorSeries(seriesIds);
 }
 
 /**
@@ -47,5 +47,5 @@ export function useScatterSeries(seriesIds?: SeriesId | SeriesId[]) {
  * @returns the scatter series
  */
 export function useScatterSeriesContext(): UseScatterSeriesContextReturnValue {
-  return selectorSeriesContext();
+  return useSelectorSeriesContext();
 }

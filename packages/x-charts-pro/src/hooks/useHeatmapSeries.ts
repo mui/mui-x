@@ -7,8 +7,8 @@ import {
   ChartSeriesDefaultized,
 } from '@mui/x-charts/internals';
 
-const selectorSeries = createSeriesSelectorsOfType('heatmap');
-const selectorSeriesContext = createAllSeriesSelectorOfType('heatmap');
+const useSelectorSeries = createSeriesSelectorsOfType('heatmap');
+const useSelectorSeriesContext = createAllSeriesSelectorOfType('heatmap');
 
 export type UseHeatmapSeriesReturnValue = ChartSeriesDefaultized<'heatmap'>;
 export type UseHeatmapSeriesContextReturnValue = ProcessedSeries['heatmap'];
@@ -36,7 +36,7 @@ export function useHeatmapSeries(): UseHeatmapSeriesReturnValue[];
  */
 export function useHeatmapSeries(seriesIds: SeriesId[]): UseHeatmapSeriesReturnValue[];
 export function useHeatmapSeries(seriesIds?: SeriesId | SeriesId[]) {
-  return selectorSeries(seriesIds);
+  return useSelectorSeries(seriesIds);
 }
 
 /**
@@ -47,5 +47,5 @@ export function useHeatmapSeries(seriesIds?: SeriesId | SeriesId[]) {
  * @returns the heatmap series
  */
 export function useHeatmapSeriesContext(): UseHeatmapSeriesContextReturnValue {
-  return selectorSeriesContext();
+  return useSelectorSeriesContext();
 }

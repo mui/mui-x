@@ -7,8 +7,8 @@ import {
   createAllSeriesSelectorOfType,
 } from '../internals/createSeriesSelectorOfType';
 
-const selectorSeries = createSeriesSelectorsOfType('bar');
-const selectorSeriesContext = createAllSeriesSelectorOfType('bar');
+const useSelectorSeries = createSeriesSelectorsOfType('bar');
+const useSelectorSeriesContext = createAllSeriesSelectorOfType('bar');
 
 export type UseBarSeriesReturnValue = ChartSeriesDefaultized<'bar'>;
 export type UseBarSeriesContextReturnValue = ProcessedSeries['bar'];
@@ -36,7 +36,7 @@ export function useBarSeries(): UseBarSeriesReturnValue[];
  */
 export function useBarSeries(seriesIds: SeriesId[]): UseBarSeriesReturnValue[];
 export function useBarSeries(seriesIds?: SeriesId | SeriesId[]) {
-  return selectorSeries(seriesIds);
+  return useSelectorSeries(seriesIds);
 }
 
 /**
@@ -48,5 +48,5 @@ export function useBarSeries(seriesIds?: SeriesId | SeriesId[]) {
  * @returns the bar series
  */
 export function useBarSeriesContext(): UseBarSeriesContextReturnValue {
-  return selectorSeriesContext();
+  return useSelectorSeriesContext();
 }

@@ -7,8 +7,8 @@ import {
   createAllSeriesSelectorOfType,
 } from '../internals/createSeriesSelectorOfType';
 
-const selectorSeries = createSeriesSelectorsOfType('line');
-const selectorSeriesContext = createAllSeriesSelectorOfType('line');
+const useSelectorSeries = createSeriesSelectorsOfType('line');
+const useSelectorSeriesContext = createAllSeriesSelectorOfType('line');
 
 export type UseLineSeriesReturnValue = ChartSeriesDefaultized<'line'>;
 export type UseLineSeriesContextReturnValue = ProcessedSeries['line'];
@@ -36,7 +36,7 @@ export function useLineSeries(): UseLineSeriesReturnValue[];
  */
 export function useLineSeries(seriesIds: SeriesId[]): UseLineSeriesReturnValue[];
 export function useLineSeries(seriesIds?: SeriesId | SeriesId[]) {
-  return selectorSeries(seriesIds);
+  return useSelectorSeries(seriesIds);
 }
 
 /**
@@ -48,5 +48,5 @@ export function useLineSeries(seriesIds?: SeriesId | SeriesId[]) {
  * @returns the line series
  */
 export function useLineSeriesContext(): UseLineSeriesContextReturnValue {
-  return selectorSeriesContext();
+  return useSelectorSeriesContext();
 }
