@@ -30,7 +30,7 @@ const Element = styled('div', {
     return [
       styles.main,
       ownerState.hasPinnedRight && styles['main--hasPinnedRight'],
-      hideContent && styles['main--hideContent'],
+      hideContent && styles['main--hiddenContent'],
     ];
   },
 })<{ ownerState: OwnerState }>({

@@ -397,7 +397,7 @@ export interface GridClasses {
    * Styles applied to the main container element to hide the contents of the grid.
    * @ignore - do not document.
    */
-  'main--hideContent': string;
+  'main--hiddenContent': string;
   /**
    * Styles applied to the menu element.
    */
@@ -784,7 +784,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'iconSeparator',
   'main',
   'main--hasPinnedRight',
-  'main--hideContent',
+  'main--hiddenContent',
   'menu',
   'menuIcon',
   'menuIconButton',

@@ -36,7 +36,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes, hasScrollX, hasPinnedRight, loadingOverlayVariant, overlayType } = ownerState;
   const hideContent = loadingOverlayVariant === 'skeleton' || overlayType === 'noColumnsOverlay';
   const slots = {
-    root: ['main', hasPinnedRight && 'main--hasPinnedRight', hideContent && 'main--hideContent'],
+    root: ['main', hasPinnedRight && 'main--hasPinnedRight', hideContent && 'main--hiddenContent'],
     scroller: ['virtualScroller', hasScrollX && 'virtualScroller--hasScrollX'],
   };
 
