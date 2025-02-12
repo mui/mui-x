@@ -1065,10 +1065,6 @@ async function initializeEnvironment(
       });
 
       it('should keep the focus on the clicked section', async () => {
-        // firefox in CI is not happy with this test
-        if (browserType.name() === 'firefox') {
-          return;
-        }
         await renderFixture('DatePicker/DesktopDateRangePickerWithValue');
 
         const startDaySection = page.getByRole('spinbutton', { name: 'Day' }).first();
@@ -1081,10 +1077,6 @@ async function initializeEnvironment(
       });
 
       it('should keep the focus on the clicked section with single input field', async () => {
-        // firefox in CI is not happy with this test
-        if (browserType.name() === 'firefox') {
-          return;
-        }
         await renderFixture('DatePicker/SingleDesktopDateRangePickerWithTZ');
 
         const startDaySection = page.getByRole('spinbutton', { name: 'Day' }).first();
