@@ -16,12 +16,6 @@ const stringCache: StringCache = {
 };
 const MAX_CACHE_NUM = 2000;
 const SPAN_STYLE = {
-  position: 'absolute',
-  top: '-20000px',
-  left: 0,
-  padding: 0,
-  margin: 0,
-  border: 'none',
   whiteSpace: 'pre',
 };
 const STYLE_LIST = [
@@ -104,7 +98,14 @@ let domCleanTimeout: NodeJS.Timeout | undefined;
  * @param style The style applied
  * @returns width and height of the text
  */
-export const getStringSize = (text: string | number, style: React.CSSProperties = {}) => {
+export const getStringSize = (
+  text: string | number,
+  {
+    className = '',
+    style = {},
+    measuringElement,
+  }: { className?: string; style?: React.CSSProperties; measuringElement: SVGElement },
+) => {
   if (text === undefined || text === null || isSsr()) {
     return { width: 0, height: 0 };
   }
@@ -118,24 +119,21 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
   }
 
   try {
-    let measurementSpan = document.getElementById(MEASUREMENT_SPAN_ID);
-    if (measurementSpan === null) {
-      measurementSpan = document.createElement('span');
-      measurementSpan.setAttribute('id', MEASUREMENT_SPAN_ID);
-      measurementSpan.setAttribute('aria-hidden', 'true');
-      document.body.appendChild(measurementSpan);
-    }
     // Need to use CSS Object Model (CSSOM) to be able to comply with Content Security Policy (CSP)
     // https://en.wikipedia.org/wiki/Content_Security_Policy
-    const measurementSpanStyle: Record<string, any> = { ...SPAN_STYLE, ...style };
+    const measurementStyle: Record<string, any> = { ...SPAN_STYLE, ...style };
 
-    Object.keys(measurementSpanStyle).map((styleKey) => {
-      (measurementSpan!.style as Record<string, any>)[camelToMiddleLine(styleKey)] =
-        autoCompleteStyle(styleKey, measurementSpanStyle[styleKey]);
+    const measurementText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    measurementText.classList.add(...className.split(' '));
+    // measurementText.style = measurementStyle;
+    Object.keys(measurementStyle).map((styleKey) => {
+      (measurementText!.style as Record<string, any>)[camelToMiddleLine(styleKey)] =
+        autoCompleteStyle(styleKey, measurementStyle[styleKey]);
       return styleKey;
     });
-    measurementSpan.textContent = str;
-    const rect = measurementSpan.getBoundingClientRect();
+    measurementText.textContent = str;
+    measuringElement.appendChild(measurementText);
+    const rect = measurementText.getBBox();
     const result = { width: rect.width, height: rect.height };
 
     stringCache.widthCache[cacheKey] = result;
@@ -147,13 +145,15 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
       stringCache.cacheCount += 1;
     }
 
-    if (domCleanTimeout) {
-      clearTimeout(domCleanTimeout);
-    }
-    domCleanTimeout = setTimeout(() => {
-      // Limit node cleaning to once per render cycle
-      measurementSpan.textContent = '';
-    }, 0);
+    measuringElement.removeChild(measurementText);
+
+    // if (domCleanTimeout) {
+    //  clearTimeout(domCleanTimeout);
+    // }
+    // domCleanTimeout = setTimeout(() => {
+    //  // Limit node cleaning to once per render cycle
+    //  measurementSpan.textContent = '';
+    // }, 0);
 
     return result;
   } catch {

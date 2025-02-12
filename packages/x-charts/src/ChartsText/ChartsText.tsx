@@ -21,11 +21,18 @@ export interface ChartsTextProps
  */
 function ChartsText(props: ChartsTextProps) {
   const { x, y, style: styleProps, text, ownerState, ...textProps } = props;
+  const measuringElementRef = React.useRef<SVGGElement | null>(null);
 
   const { angle, textAnchor, dominantBaseline, ...style } = styleProps ?? {};
 
   const wordsByLines = React.useMemo(
-    () => getWordsByLines({ style, needsComputation: text.includes('\n'), text }),
+    () =>
+      getWordsByLines({
+        style,
+        needsComputation: text.includes('\n'),
+        text,
+        measuringElement: measuringElementRef.current,
+      }),
     [style, text],
   );
 

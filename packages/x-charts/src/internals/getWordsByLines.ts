@@ -12,6 +12,8 @@ export interface ChartsTextStyle extends React.CSSProperties {
 }
 
 export interface GetWordsByLinesParams {
+  className?: string;
+  measuringElement: SVGElement;
   /**
    * Text displayed.
    */
@@ -27,9 +29,17 @@ export interface GetWordsByLinesParams {
   needsComputation?: boolean;
 }
 
-export function getWordsByLines({ style, needsComputation, text }: GetWordsByLinesParams) {
+export function getWordsByLines({
+  className,
+  style,
+  needsComputation,
+  text,
+  measuringElement,
+}: GetWordsByLinesParams) {
   return text.split('\n').map((subText) => ({
     text: subText,
-    ...(needsComputation ? getStringSize(subText, style) : { width: 0, height: 0 }),
+    ...(needsComputation
+      ? getStringSize(subText, { className, style, measuringElement })
+      : { width: 0, height: 0 }),
   }));
 }

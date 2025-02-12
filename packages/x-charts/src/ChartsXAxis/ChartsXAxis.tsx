@@ -37,18 +37,30 @@ type LabelExtraData = { width: number; height: number; skipLabel?: boolean };
 function addLabelDimension(
   xTicks: TickItemType[],
   {
+    tickLabelClassName: className,
     tickLabelStyle: style,
     tickLabelInterval,
     reverse,
     isMounted,
+    measuringElement,
   }: Pick<ChartsXAxisProps, 'tickLabelInterval' | 'tickLabelStyle'> &
-    Pick<AxisDefaultized, 'reverse'> & { isMounted: boolean },
+    Pick<AxisDefaultized, 'reverse'> & {
+      isMounted: boolean;
+      className?: string;
+      measuringElement: SVGElement;
+    },
 ): (TickItemType & LabelExtraData)[] {
   const withDimension = xTicks.map((tick) => {
     if (!isMounted || tick.formattedValue === undefined) {
       return { ...tick, width: 0, height: 0 };
     }
-    const tickSizes = getWordsByLines({ style, needsComputation: true, text: tick.formattedValue });
+    const tickSizes = getWordsByLines({
+      style,
+      needsComputation: true,
+      text: tick.formattedValue,
+      className,
+      measuringElement,
+    });
     return {
       ...tick,
       width: Math.max(...tickSizes.map((size) => size.width)),
@@ -142,6 +154,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   const classes = useUtilityClasses({ ...defaultizedProps, theme });
   const { left, top, width, height } = useDrawingArea();
   const { instance } = useChartContext();
+  const measuringElementRef = React.useRef<SVGGElement | null>(null);
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
@@ -177,10 +190,12 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   });
 
   const xTicksWithDimension = addLabelDimension(xTicks, {
+    tickLabelClassName: axisTickLabelProps.className,
     tickLabelStyle: axisTickLabelProps.style,
     tickLabelInterval,
     reverse,
     isMounted,
+    measuringElement: measuringElementRef.current,
   });
 
   const labelRefPoint = {
@@ -220,6 +235,12 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
         <Line x1={left} x2={left + width} className={classes.line} {...slotProps?.axisLine} />
       )}
 
+      <g
+        ref={measuringElementRef}
+        className={classes.tickContainer}
+        aria-hidden
+        style={{ visibility: 'hidden' }}
+      />
       {xTicksWithDimension.map(({ formattedValue, offset, labelOffset, skipLabel }, index) => {
         const xTickLabel = labelOffset ?? 0;
         const yTickLabel = positionSign * (tickSize + 3);
