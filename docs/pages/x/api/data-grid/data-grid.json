@@ -591,6 +591,12 @@
       "class": null
     },
     {
+      "name": "noColumnsOverlay",
+      "description": "No columns overlay component rendered when the grid has no columns.",
+      "default": "GridNoColumnsOverlay",
+      "class": null
+    },
+    {
       "name": "pagination",
       "description": "Pagination component rendered in the grid footer by default.",
       "default": "Pagination",
