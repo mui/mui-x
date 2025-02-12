@@ -290,7 +290,7 @@ export type AxisValueFormatterContext<S extends ScaleName = ScaleName> =
       /**
        * The d3-scale instance associated to the axis.
        */
-      scale: AxisScaleConfig[S]['scale'] | AxisScaleComputedConfig[S]['colorScale'];
+      scale: AxisScaleConfig[S]['scale'];
     };
 
 export type AxisConfig<
@@ -326,7 +326,10 @@ export type AxisConfig<
    * @param {AxisValueFormatterContext} context The rendering context of the value.
    * @returns {string} The string to display.
    */
-  valueFormatter?: (value: V, context: AxisValueFormatterContext) => string;
+  valueFormatter?: <TScaleName extends S>(
+    value: V,
+    context: AxisValueFormatterContext<TScaleName>,
+  ) => string;
   /**
    * If `true`, hide this value in the tooltip
    */
