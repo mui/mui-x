@@ -42,6 +42,7 @@ const daDKPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Vælg dato & tidspunkt',
   timePickerToolbarTitle: 'Vælg tidspunkt',
   dateRangePickerToolbarTitle: 'Vælg datointerval',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>

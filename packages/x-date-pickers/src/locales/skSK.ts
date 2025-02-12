@@ -42,6 +42,7 @@ const skSKPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Vyberte dátum a čas',
   timePickerToolbarTitle: 'Vyberte čas',
   dateRangePickerToolbarTitle: 'Vyberete rozmedzie dátumov',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>

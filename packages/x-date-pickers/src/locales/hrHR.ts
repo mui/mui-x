@@ -42,6 +42,7 @@ const hrHRPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Odaberi datum i vrijeme',
   timePickerToolbarTitle: 'Odaberi vrijeme',
   dateRangePickerToolbarTitle: 'Odaberi vremenski okvir',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>

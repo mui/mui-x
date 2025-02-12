@@ -87,6 +87,10 @@ export interface FieldSection {
    * For example, on Day.js, the `year` section of the format `[year] YYYY` has a start separator equal to `[year]`
    */
   endSeparator: string;
+  /**
+   * If `true`, the `endSeparator` is a format separator (i.e. ":" or "/").
+   */
+  isEndFormatSeparator?: boolean;
 }
 
 // If `PickerValidDate` contains `any`, then `TValue extends PickerRangeValue` will return true, so we have to handle this edge case first.

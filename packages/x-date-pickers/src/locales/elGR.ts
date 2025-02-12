@@ -41,6 +41,7 @@ const elGRPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Επιλέξτε ημερομηνία και ώρα',
   timePickerToolbarTitle: 'Επιλέξτε ώρα',
   dateRangePickerToolbarTitle: 'Επιλέξτε εύρος ημερομηνιών',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>

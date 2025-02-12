@@ -41,6 +41,7 @@ const viVNPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Chọn ngày và giờ',
   timePickerToolbarTitle: 'Chọn giờ',
   dateRangePickerToolbarTitle: 'Chọn khoảng ngày',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
