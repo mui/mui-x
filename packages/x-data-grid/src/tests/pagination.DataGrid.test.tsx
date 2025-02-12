@@ -618,8 +618,8 @@ describe('<DataGrid /> - Pagination', () => {
     });
   });
 
-  describe('resetPageAfterSortingOrFiltering prop', () => {
-    it('should reset page to 0 if sort or filter is applied and `resetPageAfterSortingOrFiltering` is `true`', () => {
+  describe('resetPageOnSortFilter prop', () => {
+    it('should reset page to 0 if sort or filter is applied and `resetPageOnSortFilter` is `true`', () => {
       const { setProps } = render(
         <BaselineTestCase
           initialState={{ pagination: { paginationModel: { page: 0, pageSize: 5 }, rowCount: 0 } }}
@@ -650,7 +650,7 @@ describe('<DataGrid /> - Pagination', () => {
 
       // enable reset
       setProps({
-        resetPageAfterSortingOrFiltering: true,
+        resetPageOnSortFilter: true,
       });
 
       act(() => {
