@@ -6,8 +6,8 @@ const deDEGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Keine Einträge',
   noResultsOverlayLabel: 'Keine Ergebnisse gefunden.',
-  // noColumnsOverlayLabel: 'No columns',
-  // noColumnsOverlayManageColumns: 'Manage columns',
+  noColumnsOverlayLabel: 'Keine Spalter',
+  noColumnsOverlayManageColumns: 'Spalten verwalten',
 
   // Density selector toolbar button text
   toolbarDensity: 'Zeilenhöhe',
