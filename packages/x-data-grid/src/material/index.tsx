@@ -62,6 +62,64 @@ import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 const ClickAwayListener = forwardRef(MUIClickAwayListener);
 
+const BaseSelect = forwardRef<any, GridSlotProps['baseSelect']>(function BaseSelect(props, ref) {
+  const rootProps = useGridRootProps();
+  const {
+    id,
+    label,
+    labelId,
+    disabled,
+    slotProps,
+    onChange,
+    onKeyDown,
+    onOpen,
+    onClose,
+    size,
+    style,
+    fullWidth,
+    ...rest
+  } = props;
+  return (
+    <MUIFormControl
+      size={size}
+      fullWidth={fullWidth}
+      style={style}
+      disabled={disabled}
+      {...rootProps.slotProps?.baseFormControl}
+      ref={ref}
+    >
+      <MUIInputLabel
+        id={labelId}
+        htmlFor={id}
+        shrink
+        variant="outlined"
+        {...rootProps.slotProps?.baseInputLabel}
+      >
+        {label}
+      </MUIInputLabel>
+      <MUISelect
+        id={id}
+        labelId={labelId}
+        label={label}
+        displayEmpty
+        onChange={onChange as any}
+        {...rest}
+        variant="outlined"
+        notched
+        inputProps={slotProps?.htmlInput}
+        onOpen={onOpen}
+        MenuProps={{
+          onClose,
+          PaperProps: {
+            onKeyDown,
+          },
+        }}
+        size={size}
+      />
+    </MUIFormControl>
+  );
+});
+
 /* eslint-disable material-ui/disallow-react-api-in-server-components */
 
 const iconSlots: GridIconSlotsComponent = {
@@ -322,63 +380,6 @@ function focusTrapWrapper(props: PopperProps, content: any) {
     <MUIFocusTrap open disableEnforceFocus isEnabled={() => props.focusTrapEnabled ?? true}>
       {content}
     </MUIFocusTrap>
-  );
-}
-
-function BaseSelect(props: GridSlotProps['baseSelect']) {
-  const rootProps = useGridRootProps();
-  const {
-    id,
-    label,
-    labelId,
-    disabled,
-    slotProps,
-    onChange,
-    onKeyDown,
-    onOpen,
-    onClose,
-    size,
-    style,
-    fullWidth,
-    ...rest
-  } = props;
-  return (
-    <MUIFormControl
-      size={size}
-      fullWidth={fullWidth}
-      style={style}
-      disabled={disabled}
-      {...rootProps.slotProps?.baseFormControl}
-    >
-      <MUIInputLabel
-        id={labelId}
-        htmlFor={id}
-        shrink
-        variant="outlined"
-        {...rootProps.slotProps?.baseInputLabel}
-      >
-        {label}
-      </MUIInputLabel>
-      <MUISelect
-        id={id}
-        labelId={labelId}
-        label={label}
-        displayEmpty
-        onChange={onChange as any}
-        {...rest}
-        variant="outlined"
-        notched
-        inputProps={slotProps?.htmlInput}
-        onOpen={onOpen}
-        MenuProps={{
-          onClose,
-          PaperProps: {
-            onKeyDown,
-          },
-        }}
-        size={size}
-      />
-    </MUIFormControl>
   );
 }
 
