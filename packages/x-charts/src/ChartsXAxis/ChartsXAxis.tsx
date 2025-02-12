@@ -37,7 +37,6 @@ type LabelExtraData = { width: number; height: number; skipLabel?: boolean };
 function addLabelDimension(
   xTicks: TickItemType[],
   {
-    tickLabelClassName: className,
     tickLabelStyle: style,
     tickLabelInterval,
     // FIXME: Define the default value in the correct place
@@ -46,7 +45,6 @@ function addLabelDimension(
     isMounted,
   }: Pick<ChartsXAxisProps, 'tickLabelInterval' | 'tickLabelStyle'> &
     Pick<AxisDefaultized<ScaleName, any, ChartsXAxisProps>, 'reverse' | 'minTickLabelGap'> & {
-      tickLabelClassName?: string;
       isMounted: boolean;
     },
 ): (TickItemType & LabelExtraData)[] {
@@ -54,12 +52,7 @@ function addLabelDimension(
     if (!isMounted || tick.formattedValue === undefined) {
       return { ...tick, width: 0, height: 0 };
     }
-    const tickSizes = getWordsByLines({
-      className,
-      style,
-      needsComputation: true,
-      text: tick.formattedValue,
-    });
+    const tickSizes = getWordsByLines({ style, needsComputation: true, text: tick.formattedValue });
     return {
       ...tick,
       width: Math.max(...tickSizes.map((size) => size.width)),
@@ -190,7 +183,6 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   });
 
   const xTicksWithDimension = addLabelDimension(xTicks, {
-    tickLabelClassName: axisTickLabelProps.className,
     tickLabelStyle: axisTickLabelProps.style,
     tickLabelInterval,
     reverse,
