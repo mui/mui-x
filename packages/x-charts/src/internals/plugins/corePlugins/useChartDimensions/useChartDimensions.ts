@@ -275,15 +275,45 @@ useChartDimensions.getDefaultizedParams = ({ params }) => ({
   margin: defaultizeMargin(params.margin, DEFAULT_MARGINS),
 });
 
-useChartDimensions.getInitialState = ({ width, height, margin }) => {
+useChartDimensions.getInitialState = ({
+  width,
+  height,
+  margin,
+  defaultizedXAxis,
+  defaultizedYAxis,
+}) => {
+  // Axis size needs to be calculated for initial state to avoid flickering.
+  const axisSize = [...(defaultizedXAxis || []), ...(defaultizedYAxis || [])].reduce(
+    (acc, axis) => {
+      if (axis.position === 'top') {
+        acc.top += axis.height || 0;
+        return acc;
+      }
+      if (axis.position === 'bottom') {
+        acc.bottom += axis.height || 0;
+        return acc;
+      }
+      if (axis.position === 'left') {
+        acc.left += axis.width || 0;
+        return acc;
+      }
+      if (axis.position === 'right') {
+        acc.right += axis.width || 0;
+        return acc;
+      }
+      return acc;
+    },
+    { top: 0, bottom: 0, right: 0, left: 0 },
+  );
+
   return {
     dimensions: {
-      top: margin.top,
-      left: margin.left,
-      bottom: margin.bottom,
-      right: margin.right,
-      width: (width ?? 0) - margin.left - margin.right,
-      height: (height ?? 0) - margin.top - margin.bottom,
+      top: margin.top + axisSize.top,
+      left: margin.left + axisSize.left,
+      bottom: margin.bottom + axisSize.bottom,
+      right: margin.right + axisSize.right,
+      width: (width ?? 0) - margin.left - margin.right - axisSize.left - axisSize.right,
+      height: (height ?? 0) - margin.top - margin.bottom - axisSize.top - axisSize.bottom,
       propsWidth: width,
       propsHeight: height,
     },
