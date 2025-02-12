@@ -82,6 +82,8 @@ Below are described the steps you need to make to migrate from v7 to v8.
   - Return early if `apiRef` is `null`
   - Throw an error if `apiRef` is `null`
 
+- `createUseGridApiEventHandler` is not exported anymore.
+
 ### Localization
 
 - If `estimatedRowCount` is used, the text provided to the [Table Pagination](/material-ui/api/table-pagination/) component from the Material UI library is updated and requires additional translations. Check the example at the end of [Index-based pagination section](/x/react-data-grid/pagination/#index-based-pagination).

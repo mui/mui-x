@@ -17,7 +17,6 @@ import { useGridOverlays } from '../../hooks/features/overlays/useGridOverlays';
 import { GridHeaders } from '../GridHeaders';
 import { GridMainContainer as Container } from './GridMainContainer';
 import { GridTopContainer as TopContainer } from './GridTopContainer';
-import { GridBottomContainer as BottomContainer } from './GridBottomContainer';
 import { GridVirtualScrollerContent as Content } from './GridVirtualScrollerContent';
 import { GridVirtualScrollerFiller as SpaceFiller } from './GridVirtualScrollerFiller';
 import { GridVirtualScrollerRenderZone as RenderZone } from './GridVirtualScrollerRenderZone';
@@ -128,9 +127,9 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
         </Content>
 
         {hasBottomFiller && <SpaceFiller rowsLength={rows.length} />}
-        <BottomContainer>
+        <rootProps.slots.bottomContainer>
           <rootProps.slots.pinnedRows position="bottom" virtualScroller={virtualScroller} />
-        </BottomContainer>
+        </rootProps.slots.bottomContainer>
       </Scroller>
       {hasScrollX && !rootProps.unstable_listView && (
         <Scrollbar position="horizontal" {...getScrollbarHorizontalProps()} />

@@ -1,7 +1,7 @@
 ---
 title: React Scatter chart
 productId: x-charts
-components: ScatterChart, ScatterChartPro, ScatterPlot, ChartsVoronoiHandler, ChartsGrid
+components: ScatterChart, ScatterChartPro, ScatterPlot, ChartsGrid
 ---
 
 # Charts - Scatter
@@ -39,12 +39,6 @@ If the distance with the pointer is larger than this radius, no item will be sel
 Or set the `disableVoronoi` prop to `true` to trigger interactions only when hovering exactly over an element instead of Voronoi cells.
 
 {{"demo": "VoronoiInteraction.js"}}
-
-To use this feature with composition, add the `ChartsVoronoiHandler`.
-
-```jsx
-<ChartsVoronoiHandler voronoiMaxRadius={50} />
-```
 
 ## Click event
 
@@ -116,3 +110,14 @@ See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information
 ### Shape 🚧
 
 ### Size 🚧
+
+## Plot Customization
+
+You can customize the plotting of the data in a scatter chart by providing custom components as `children` of the `ScatterChart` component.
+
+A scatter chart's series can be accessed through the `useScatterSeries` hook.
+This hook returns the order of the series and information about the series themselves, including their data points, color, etc.
+
+See [Custom components](/x/react-charts/components/) to learn how to further customize your charts.
+
+{{"demo": "CustomScatter.js"}}

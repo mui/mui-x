@@ -1,7 +1,13 @@
 <DataGridPremium
   columns={columns}
   unstable_dataSource={dataSource}
-  initialState={initialState}
+  initialState={{
+    ...initialState,
+    pagination: { paginationModel: { pageSize: 10, page: 0 }, rowCount: 0 },
+    aggregation: {
+      model: { commodity: 'size', quantity: 'sum' },
+    },
+  }}
   unstable_lazyLoading
   aggregationFunctions={aggregationFunctions}
 />

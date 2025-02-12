@@ -4,12 +4,13 @@ import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsGridProps } from '../ChartsGrid';
 import { ChartsLegendSlotExtension } from '../ChartsLegend';
 import { ChartsOverlayProps } from '../ChartsOverlay';
-import type { ChartsVoronoiHandlerProps } from '../ChartsVoronoiHandler';
 import { ChartContainerProps } from '../ChartContainer';
 import type { ScatterChartProps } from './ScatterChart';
 import type { ScatterPlotProps } from './ScatterPlot';
 import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
 import { calculateMargins } from '../internals/calculateMargins';
+import { SCATTER_CHART_PLUGINS, ScatterChartPluginsSignatures } from './ScatterChart.plugins';
+import { UseChartVoronoiSignature } from '../internals/plugins/featurePlugins/useChartVoronoi';
 
 /**
  * A helper function that extracts ScatterChartProps from the input props
@@ -49,7 +50,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     ...other
   } = props;
 
-  const chartContainerProps: Omit<ChartContainerProps<'scatter'>, 'plugins'> = {
+  const chartContainerProps: ChartContainerProps<'scatter', ScatterChartPluginsSignatures> = {
     ...other,
     series: series.map((s) => ({ type: 'scatter' as const, ...s })),
     width,
@@ -61,13 +62,15 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     zAxis,
     highlightedItem,
     onHighlightChange,
+    disableVoronoi,
+    voronoiMaxRadius,
+    onItemClick: disableVoronoi
+      ? undefined
+      : (onItemClick as UseChartVoronoiSignature['params']['onItemClick']),
     className,
+    plugins: SCATTER_CHART_PLUGINS,
   };
 
-  const voronoiHandlerProps: ChartsVoronoiHandlerProps = {
-    voronoiMaxRadius,
-    onItemClick: onItemClick as ChartsVoronoiHandlerProps['onItemClick'],
-  };
   const chartsAxisProps: ChartsAxisProps = {
     topAxis,
     leftAxis,
@@ -114,7 +117,6 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
   return {
     chartsWrapperProps,
     chartContainerProps,
-    voronoiHandlerProps,
     chartsAxisProps,
     gridProps,
     scatterPlotProps,
