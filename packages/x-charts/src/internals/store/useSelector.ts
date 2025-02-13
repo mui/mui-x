@@ -19,7 +19,8 @@ export const useSelector = <TSignatures extends readonly ChartAnyPluginSignature
   store: ChartStore<TSignatures>,
   selector: ChartsSelector<ChartState<TSignatures>, TArgs, TValue>,
   args: TArgs = undefined as TArgs,
-  equals: (a: TValue, b: TValue) => boolean = complainIfNoMemoize,
+  // equals: (a: TValue, b: TValue) => boolean = complainIfNoMemoize,
+  equals: (a: TValue, b: TValue) => boolean = fastShallowCompare,
 ): TValue => {
   const selectorWithArgs = (state: ChartState<TSignatures>) => selector(state, args);
 

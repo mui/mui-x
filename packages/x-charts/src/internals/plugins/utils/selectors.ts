@@ -21,8 +21,10 @@ const reselectCreateSelector = createSelectorCreator({
   memoize: lruMemoize,
   memoizeOptions: {
     maxSize: 1,
-    equalityCheck: complainIfNoMemoize('prop check'),
-    resultEqualityCheck: complainIfNoMemoize('result check'),
+    // equalityCheck: complainIfNoMemoize('prop check'),
+    equalityCheck: fastShallowCompare,
+    // resultEqualityCheck: complainIfNoMemoize('result check'),
+    resultEqualityCheck: fastShallowCompare,
   },
 });
 
