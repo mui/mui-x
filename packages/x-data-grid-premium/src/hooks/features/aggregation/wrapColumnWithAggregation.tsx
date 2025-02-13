@@ -1,9 +1,15 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import { GridColDef, GridFilterOperator, GridRowId } from '@mui/x-data-grid-pro';
-import { GridBaseColDef } from '@mui/x-data-grid-pro/internals';
-import { GridApiPremium } from '../../../models/gridApiPremium';
 import {
+  GridColDef,
+  GridFilterOperator,
+  GridRowId,
+  gridRowIdSelector,
+  gridRowTreeSelector,
+} from '@mui/x-data-grid-pro';
+import { type GridBaseColDef } from '@mui/x-data-grid-pro/internals';
+import { GridApiPremium } from '../../../models/gridApiPremium';
+import type {
   GridAggregationCellMeta,
   GridAggregationLookup,
   GridAggregationPosition,
@@ -47,7 +53,7 @@ const getAggregationValueWrappedValueGetter: ColumnPropertyWrapper<'valueGetter'
   getCellAggregationResult,
 }) => {
   const wrappedValueGetter: GridBaseColDef['valueGetter'] = (value, row, column, apiRef) => {
-    const rowId = apiRef.current.getRowId?.(row);
+    const rowId = gridRowIdSelector(apiRef.current.state, row);
     const cellAggregationResult = rowId ? getCellAggregationResult(rowId, column.field) : null;
     if (cellAggregationResult != null) {
       return cellAggregationResult?.value ?? null;
@@ -75,7 +81,7 @@ const getAggregationValueWrappedValueFormatter: ColumnPropertyWrapper<'valueForm
   }
 
   const wrappedValueFormatter: GridBaseColDef['valueFormatter'] = (value, row, column, apiRef) => {
-    const rowId = apiRef.current.getRowId(row);
+    const rowId = gridRowIdSelector(apiRef.current.state, row);
     if (rowId != null) {
       const cellAggregationResult = getCellAggregationResult(rowId, column.field);
       if (cellAggregationResult != null) {
@@ -147,7 +153,8 @@ const getWrappedFilterOperators: ColumnPropertyWrapper<'filterOperators'> = ({
         return null;
       }
       return (value, row, column, api) => {
-        if (getCellAggregationResult(apiRef.current.getRowId(row), column.field) != null) {
+        const rowId = gridRowIdSelector(apiRef.current.state, row);
+        if (getCellAggregationResult(rowId, column.field) != null) {
           return true;
         }
         return filterFn(value, row, column, api);
@@ -197,7 +204,7 @@ export const wrapColumnWithAggregationValue = ({
     field: string,
   ): GridAggregationLookup[GridRowId][string] | null => {
     let cellAggregationPosition: GridAggregationPosition | null = null;
-    const rowNode = apiRef.current.getRowNode(id)!;
+    const rowNode = gridRowTreeSelector(apiRef)[id];
 
     if (rowNode.type === 'group') {
       cellAggregationPosition = 'inline';
