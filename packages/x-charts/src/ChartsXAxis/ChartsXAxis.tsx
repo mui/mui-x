@@ -136,7 +136,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   const classes = useUtilityClasses({ ...defaultizedProps, theme });
   const { left, top, width, height } = useDrawingArea();
   const { instance } = useChartContext();
-  const [measuring, setMeasuring] = React.useState(true);
+  const [needsMeasuring, setNeedsMeasuring] = React.useState(true);
   const textMapRef = React.useRef(new Map<number, SVGTextElement>());
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
@@ -177,7 +177,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
 
   React.useLayoutEffect(
     function measureTicks() {
-      if (measuring) {
+      if (needsMeasuring) {
         setMeasurements(
           new Map(
             xTicks.map(function measureTick(_, index) {
@@ -190,10 +190,10 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
             }),
           ),
         );
-        setMeasuring(false);
+        setNeedsMeasuring(false);
       }
     },
-    [measuring, xTicks],
+    [needsMeasuring, xTicks],
   );
 
   const visibleLabels = computeVisibleLabels(xTicks, {
@@ -260,12 +260,12 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
               />
             )}
 
-            {measuring || (formattedValue !== undefined && isLabelVisible && showTickLabel) ? (
+            {needsMeasuring || (formattedValue !== undefined && isLabelVisible && showTickLabel) ? (
               <TickLabel
                 x={xTickLabel}
                 y={yTickLabel}
                 {...axisTickLabelProps}
-                measuring={measuring}
+                measuring={needsMeasuring}
                 ref={(ref) => {
                   const textMap = textMapRef.current;
 
