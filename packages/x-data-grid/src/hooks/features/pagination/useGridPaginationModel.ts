@@ -77,10 +77,8 @@ export const useGridPaginationModel = (
   >,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPaginationModel');
-
-  const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
-  const previousFilterModel = React.useRef<GridFilterModel>(filterModel);
+  const previousFilterModel = React.useRef<GridFilterModel>(gridFilterModelSelector(apiRef));
 
   const rowHeight = Math.floor(props.rowHeight * densityFactor);
   apiRef.current.registerControlState({
@@ -276,24 +274,27 @@ export const useGridPaginationModel = (
    * because of and update of the operator from an item that does not have the value
    * or reseting when the filter panel is just opened
    */
-  const handleFilterModelChange = React.useCallback(() => {
-    const paginationModel = gridPaginationModelSelector(apiRef);
-    const currentActiveFilters = {
-      ...filterModel,
-      // replace items with the active items
-      items: gridFilterActiveItemsSelector(apiRef),
-    };
+  const handleFilterModelChange = React.useCallback<GridEventListener<'filterModelChange'>>(
+    (filterModel) => {
+      const paginationModel = gridPaginationModelSelector(apiRef);
+      const currentActiveFilters = {
+        ...filterModel,
+        // replace items with the active items
+        items: gridFilterActiveItemsSelector(apiRef),
+      };
 
-    if (isDeepEqual(currentActiveFilters, previousFilterModel.current)) {
-      return;
-    }
+      if (isDeepEqual(currentActiveFilters, previousFilterModel.current)) {
+        return;
+      }
 
-    previousFilterModel.current = currentActiveFilters;
+      previousFilterModel.current = currentActiveFilters;
 
-    if (paginationModel.page !== 0) {
-      apiRef.current.setPage(0);
-    }
-  }, [apiRef, filterModel]);
+      if (paginationModel.page !== 0) {
+        apiRef.current.setPage(0);
+      }
+    },
+    [apiRef],
+  );
 
   useGridApiEventHandler(apiRef, 'viewportInnerSizeChange', handleUpdateAutoPageSize);
   useGridApiEventHandler(apiRef, 'paginationModelChange', handlePaginationModelChange);
