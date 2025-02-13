@@ -65,9 +65,8 @@ packages: &packages
     - 'x-data-grid'
     - 'x-data-grid-pro'
     - 'x-data-grid-premium'
-    - 'x-data-grid-generator'
-    - 'x-date-picker'
-    - 'x-date-picker-pro'
+    - 'x-date-pickers'
+    - 'x-date-pickers-pro'
     - 'x-charts'
     - 'x-charts-pro'
     - 'x-charts-vendor'
@@ -76,6 +75,12 @@ packages: &packages
     - 'x-codemod'
     - 'x-internals'
     - 'x-license'
+
+exclude-packages-from-browser: &exclude-packages-from-browser
+  exclude:
+    - package:
+        - 'x-codemod'
+        - 'x-internals'
 
 test-react-18-context: &test-react-18-context
   <<: *default-context
@@ -379,6 +384,14 @@ workflows:
           matrix:
             parameters:
               <<: *packages
+      - test_browser:
+          <<: *default-context
+          requires:
+            - checkout
+          matrix:
+            parameters:
+              <<: *packages
+            <<: *exclude-packages-from-browser
       - test_lint:
           <<: *default-context
           requires:
@@ -387,13 +400,6 @@ workflows:
           <<: *default-context
           requires:
             - checkout
-      - test_browser:
-          <<: *default-context
-          requires:
-            - checkout
-          matrix:
-            parameters:
-              <<: *packages
       - test_types:
           <<: *default-context
           requires:
@@ -443,6 +449,7 @@ workflows:
           matrix:
             parameters:
               <<: *packages
+            <<: *exclude-packages-from-browser
       - test_regressions:
           <<: *default-context
           name: test_regressions_additional
@@ -475,6 +482,7 @@ workflows:
           matrix:
             parameters:
               <<: *packages
+            <<: *exclude-packages-from-browser
       - test_regressions:
           <<: *test-react-18-context
           name: test_regressions_react_18
