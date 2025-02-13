@@ -1,14 +1,13 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { GetWordsByLinesParams } from '../internals/getWordsByLines';
+import { ChartsTextStyle } from '../internals/getWordsByLines';
 
 export interface ChartsTextProps
   extends Omit<
-      React.SVGTextElementAttributes<SVGTextElement>,
-      'width' | 'ref' | 'style' | 'dominantBaseline'
-    >,
-    GetWordsByLinesParams {
+    React.SVGTextElementAttributes<SVGTextElement>,
+    'width' | 'ref' | 'style' | 'dominantBaseline'
+  > {
   /**
    * Height of a text line (in `em`).
    */
@@ -19,7 +18,9 @@ export interface ChartsTextProps
    * Its size is needed to avoid overlapping text.
    * When this property is true, the component should be not visible (e.g., using `visibility: 'hidden'`).
    */
-  measuring: boolean;
+  measuring?: boolean;
+  text: string;
+  style?: ChartsTextStyle;
 }
 
 /**
