@@ -116,5 +116,10 @@ GridOverlayWrapper.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   loadingOverlayVariant: PropTypes.oneOf(['circular-progress', 'linear-progress', 'skeleton']),
-  overlayType: PropTypes.oneOf(['loadingOverlay', 'noResultsOverlay', 'noRowsOverlay']),
+  overlayType: PropTypes.oneOf([
+    'loadingOverlay',
+    'noResultsOverlay',
+    'noRowsOverlay',
+    'noColumnsOverlay',
+  ]),
 } as any;
