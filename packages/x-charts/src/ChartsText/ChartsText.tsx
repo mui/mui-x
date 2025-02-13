@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { ChartsTextStyle } from '../internals/getWordsByLines';
+import { ChartsTextStyle } from '../internals/ChartsTextStyle';
 
 export interface ChartsTextProps
   extends Omit<
