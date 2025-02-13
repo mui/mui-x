@@ -73,7 +73,7 @@ export const useGridInfiniteLoader = (
     }
     observer.current?.disconnect();
 
-    const horizontalScrollbarHeight = gridHorizontalScrollbarHeightSelector(apiRef.current.state);
+    const horizontalScrollbarHeight = gridHorizontalScrollbarHeightSelector(apiRef);
     const marginBottom = props.scrollEndThreshold - horizontalScrollbarHeight;
 
     observer.current = new IntersectionObserver(handleLoadMoreRows, {
