@@ -38,6 +38,7 @@ import Dialog from '@mui/material/Dialog';
 import { testSkipIf, isJSDOM, describeSkipIf } from 'test/utils/skipIf';
 
 import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/densitySelector';
+import { GridApiCommunity } from '../models/api/gridApiCommunity';
 
 describe('<DataGrid /> - Rows', () => {
   const { render } = createRenderer();
@@ -828,6 +829,7 @@ describe('<DataGrid /> - Rows', () => {
           const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
           virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
           await act(async () => virtualScroller.dispatchEvent(new Event('scroll')));
+          expect(gridOffsetTop()).not.to.equal(0);
 
           await user.click(screen.getByRole('button', { name: /next page/i }));
 
@@ -841,6 +843,7 @@ describe('<DataGrid /> - Rows', () => {
         const data = getBasicGridData(120, 3);
         const columnHeaderHeight = 50;
         const measuredRowHeight = 100;
+        const apiRef = React.createRef<GridApiCommunity>();
 
         const { setProps } = render(
           <TestCase
@@ -853,11 +856,12 @@ describe('<DataGrid /> - Rows', () => {
             initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
             pageSizeOptions={[5, 10]}
             height={columnHeaderHeight + 10 * measuredRowHeight}
+            apiRef={apiRef}
             {...data}
           />,
         );
         expect(gridOffsetTop()).to.equal(0);
-        setProps({ pageSize: 5 });
+        apiRef.current?.setPageSize(5);
         expect(gridOffsetTop()).to.equal(0);
       });
 
@@ -868,8 +872,9 @@ describe('<DataGrid /> - Rows', () => {
           const data = getBasicGridData(120, 3);
           const columnHeaderHeight = 50;
           const measuredRowHeight = 100;
+          const apiRef = React.createRef<GridApiCommunity>();
 
-          const { setProps, user } = render(
+          const { user } = render(
             <TestCase
               getBioContentHeight={() => measuredRowHeight}
               getRowHeight={() => 'auto'}
@@ -880,6 +885,7 @@ describe('<DataGrid /> - Rows', () => {
               initialState={{ pagination: { paginationModel: { pageSize: 25 } } }}
               pageSizeOptions={[10, 25]}
               height={columnHeaderHeight + 10 * measuredRowHeight}
+              apiRef={apiRef}
               {...data}
             />,
           );
@@ -889,8 +895,10 @@ describe('<DataGrid /> - Rows', () => {
           const virtualScroller = grid('virtualScroller')!;
           virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
           await act(async () => virtualScroller.dispatchEvent(new Event('scroll')));
+          expect(gridOffsetTop()).not.to.equal(0);
 
-          setProps({ pageSize: 10 });
+          apiRef.current?.setPageSize(10);
+
           await user.click(screen.getByRole('button', { name: /next page/i }));
 
           await waitFor(() => {
