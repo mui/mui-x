@@ -702,6 +702,9 @@ importers:
       '@typescript-eslint/parser':
         specifier: ^8.24.0
         version: 8.24.0(eslint@8.57.1)(typescript@5.7.3)
+      '@typescript-eslint/rule-tester':
+        specifier: ^8.24.0
+        version: 8.24.0(eslint@8.57.1)(typescript@5.7.3)
       '@typescript-eslint/utils':
         specifier: ^8.24.0
         version: 8.24.0(eslint@8.57.1)(typescript@5.7.3)
@@ -4308,6 +4311,12 @@ packages:
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0
       typescript: '>=4.8.4 <5.8.0'
+
+  '@typescript-eslint/rule-tester@8.24.0':
+    resolution: {integrity: sha512-rr9pPtM/nCBZaMDH7GQTblwD873FGFDyAxKR2Yxr1bBePdqGrdjKXP/Egkm7QjUjyfo6C+wup5KP0fGKotRbiQ==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    peerDependencies:
+      eslint: ^8.57.0 || ^9.0.0
 
   '@typescript-eslint/scope-manager@8.24.0':
     resolution: {integrity: sha512-HZIX0UByphEtdVBKaQBgTDdn9z16l4aTUz8e8zPQnyxwHBtf5vtl1L+OhH+m1FGV9DrRmoDuYKqzVrvWDcDozw==}
@@ -13456,6 +13465,19 @@ snapshots:
       typescript: 5.7.3
     transitivePeerDependencies:
       - supports-color
+
+  '@typescript-eslint/rule-tester@8.24.0(eslint@8.57.1)(typescript@5.7.3)':
+    dependencies:
+      '@typescript-eslint/typescript-estree': 8.24.0(typescript@5.7.3)
+      '@typescript-eslint/utils': 8.24.0(eslint@8.57.1)(typescript@5.7.3)
+      ajv: 6.12.6
+      eslint: 8.57.1
+      json-stable-stringify-without-jsonify: 1.0.1
+      lodash.merge: 4.6.2
+      semver: 7.7.1
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
 
   '@typescript-eslint/scope-manager@8.24.0':
     dependencies:
