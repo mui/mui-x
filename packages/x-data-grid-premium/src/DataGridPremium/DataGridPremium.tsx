@@ -907,6 +907,12 @@ DataGridPremiumRaw.propTypes = {
    */
   processRowUpdate: PropTypes.func,
   /**
+   * If `true`, the page is set to 0 after each sorting or filtering.
+   * This prop will be removed in the next major version and resetting the page will become the default behavior.
+   * @default false
+   */
+  resetPageOnSortFilter: PropTypes.bool,
+  /**
    * The milliseconds throttle delay for resizing the grid.
    * @default 60
    */
