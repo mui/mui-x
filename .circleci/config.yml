@@ -62,20 +62,20 @@ default-context: &default-context
 
 packages: &packages
   package:
-    - 'data-grid'
-    - 'data-grid-pro'
-    - 'data-grid-premium'
-    - 'data-grid-generator'
-    - 'date-picker'
-    - 'date-picker-pro'
-    - 'charts'
-    - 'charts-pro'
-    - 'charts-vendor'
-    - 'tree-view'
-    - 'tree-view-pro'
-    - 'codemod'
-    - 'internals'
-    - 'license'
+    - 'x-data-grid'
+    - 'x-data-grid-pro'
+    - 'x-data-grid-premium'
+    - 'x-data-grid-generator'
+    - 'x-date-picker'
+    - 'x-date-picker-pro'
+    - 'x-charts'
+    - 'x-charts-pro'
+    - 'x-charts-vendor'
+    - 'x-tree-view'
+    - 'x-tree-view-pro'
+    - 'x-codemod'
+    - 'x-internals'
+    - 'x-license'
 
 test-react-18-context: &test-react-18-context
   <<: *default-context
