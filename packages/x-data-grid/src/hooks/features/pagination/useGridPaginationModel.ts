@@ -278,10 +278,6 @@ export const useGridPaginationModel = (
    */
   const handleFilterModelChange = React.useCallback(() => {
     const paginationModel = gridPaginationModelSelector(apiRef);
-    if (paginationModel.page === 0) {
-      return;
-    }
-
     const currentActiveFilters = {
       ...filterModel,
       // replace items with the active items
@@ -293,7 +289,10 @@ export const useGridPaginationModel = (
     }
 
     previousFilterModel.current = currentActiveFilters;
-    apiRef.current.setPage(0);
+
+    if (paginationModel.page !== 0) {
+      apiRef.current.setPage(0);
+    }
   }, [apiRef, filterModel]);
 
   useGridApiEventHandler(apiRef, 'viewportInnerSizeChange', handleUpdateAutoPageSize);
