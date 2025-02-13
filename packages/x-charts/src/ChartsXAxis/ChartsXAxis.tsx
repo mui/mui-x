@@ -65,7 +65,7 @@ function findLabelsToSkip(
 
     const distance = getMinXTranslation(width, height, style?.angle);
     const textPosition = offset + labelOffset;
-    const gapRatio = 1; // Ratio applied to the minimal distance to add some margin.
+    const gapRatio = 1.2; // Ratio applied to the minimal distance to add some margin.
 
     currentTextLimit = textPosition - (direction * (gapRatio * distance)) / 2;
     if (labelIndex > 0 && direction * currentTextLimit < direction * previousTextLimit) {
