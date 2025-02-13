@@ -1,4 +1,4 @@
-import type {} from '../typeOverloads';
+import '../typeOverloads';
 
 export { Heatmap } from './Heatmap';
 export { HeatmapPlot } from './HeatmapPlot';
