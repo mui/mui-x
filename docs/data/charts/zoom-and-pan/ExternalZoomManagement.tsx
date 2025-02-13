@@ -2,7 +2,8 @@ import * as React from 'react';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import { ChartPublicAPI, ZoomData } from '@mui/x-charts/internals';
+import { ZoomData } from '@mui/x-charts-pro/models';
+import { ChartPublicAPI } from '@mui/x-charts/internals';
 import { randomData } from './randomData';
 
 const initialZoomData: ZoomData[] = [
