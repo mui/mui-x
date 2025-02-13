@@ -136,7 +136,6 @@ export const useGridRows = (
           }),
         }));
         apiRef.current.publishEvent('rowsSet');
-        apiRef.current.forceUpdate();
       };
 
       timeout.clear();
@@ -282,7 +281,6 @@ export const useGridRows = (
           },
         };
       });
-      apiRef.current.forceUpdate();
       apiRef.current.publishEvent('rowExpansionChange', newNode);
     },
     [apiRef],
@@ -353,9 +351,7 @@ export const useGridRows = (
       }
 
       apiRef.current.setState((state) => {
-        const group = gridRowTreeSelector(state, undefined, apiRef.current.instanceId)[
-          GRID_ROOT_GROUP_ID
-        ] as GridGroupNode;
+        const group = gridRowTreeSelector(apiRef)[GRID_ROOT_GROUP_ID] as GridGroupNode;
         const allRows = group.children;
         const oldIndex = allRows.findIndex((row) => row === rowId);
         if (oldIndex === -1 || oldIndex === targetIndex) {
@@ -567,10 +563,10 @@ export const useGridRows = (
   const applyHydrateRowsProcessor = React.useCallback(() => {
     apiRef.current.setState((state) => {
       const response = apiRef.current.unstable_applyPipeProcessors('hydrateRows', {
-        tree: gridRowTreeSelector(state, undefined, apiRef.current.instanceId),
-        treeDepths: gridRowTreeDepthsSelector(state, undefined, apiRef.current.instanceId),
-        dataRowIds: gridDataRowIdsSelector(state, undefined, apiRef.current.instanceId),
-        dataRowIdToModelLookup: gridRowsLookupSelector(state, undefined, apiRef.current.instanceId),
+        tree: gridRowTreeSelector(apiRef),
+        treeDepths: gridRowTreeDepthsSelector(apiRef),
+        dataRowIds: gridDataRowIdsSelector(apiRef),
+        dataRowIdToModelLookup: gridRowsLookupSelector(apiRef),
       });
 
       return {
@@ -586,7 +582,6 @@ export const useGridRows = (
       };
     });
     apiRef.current.publishEvent('rowsSet');
-    apiRef.current.forceUpdate();
   }, [apiRef, props.rowCount]);
 
   useGridRegisterPipeApplier(apiRef, 'hydrateRows', applyHydrateRowsProcessor);
@@ -633,7 +628,6 @@ export const useGridRows = (
           rows: { ...state.rows, loading: props.loading },
         }));
         apiRef.current.caches.rows!.loadingPropBeforePartialUpdates = props.loading;
-        apiRef.current.forceUpdate();
       }
 
       if (!isNewRowCountAlreadyInState) {
@@ -646,7 +640,6 @@ export const useGridRows = (
           },
         }));
         apiRef.current.caches.rows.rowCountPropBeforePartialUpdates = props.rowCount;
-        apiRef.current.forceUpdate();
       }
       if (!isRowCountPropUpdated) {
         return;

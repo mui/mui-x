@@ -43,7 +43,7 @@ const GridVirtualScrollerRenderZone = forwardRef<
   const classes = useUtilityClasses(rootProps);
   const offsetTop = useGridSelector(apiRef, () => {
     const renderContext = gridRenderContextSelector(apiRef);
-    const rowsMeta = gridRowsMetaSelector(apiRef.current.state);
+    const rowsMeta = gridRowsMetaSelector(apiRef);
     return rowsMeta.positions[renderContext.firstRowIndex] ?? 0;
   });
 

@@ -85,7 +85,6 @@ export const useGridRowGrouping = (
       if (currentModel !== model) {
         apiRef.current.setState(mergeStateWithRowGroupingModel(model));
         setStrategyAvailability(apiRef, props.disableRowGrouping);
-        apiRef.current.forceUpdate();
       }
     },
     [apiRef, props.disableRowGrouping],

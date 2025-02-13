@@ -19,15 +19,12 @@ import { gridAggregationLookupSelector } from './gridAggregationSelectors';
 import { GridFooterCell } from '../../../components/GridFooterCell';
 import { GridAggregationHeader } from '../../../components/GridAggregationHeader';
 
-const AGGREGATION_WRAPPABLE_PROPERTIES = [
-  'valueGetter',
-  'valueFormatter',
-  'renderCell',
-  'renderHeader',
-  'filterOperators',
-] as const;
-
-type WrappableColumnProperty = (typeof AGGREGATION_WRAPPABLE_PROPERTIES)[number];
+type WrappableColumnProperty =
+  | 'valueGetter'
+  | 'valueFormatter'
+  | 'renderCell'
+  | 'renderHeader'
+  | 'filterOperators';
 
 interface GridColDefWithAggregationWrappers extends GridBaseColDef {
   aggregationWrappedProperties: {

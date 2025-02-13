@@ -265,3 +265,22 @@ The `useSeries` hook family has been stabilized and renamed accordingly.
 +   useHeatmapSeries,
   } from '@mui/x-charts-pro/hooks';
 ```
+
+## Rename `colors` prop in `SparkLineChart`
+
+The `colors` prop in `SparkLineChart` has been renamed to `color`. It now accepts a single color or a function that returns a color.
+
+```diff
+  <SparkLineChart
+-   colors={['#000', '#fff']}
++   color="#000"
+  />
+```
+
+We provide a codemod to fix simple cases of this change, which you can run as follows:
+
+```bash
+npx @mui/x-codemod@latest v8.0.0/charts/rename-sparkline-colors-to-color <path>
+```
+
+For more complex cases, you may need to adjust the code manually. To aid you in finding these cases, the codemod adds a comment prefixed by `mui-x-codemod`, which you can search for in your codebase.

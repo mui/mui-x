@@ -110,7 +110,7 @@ const getGroupAggregatedValueDataSource = (
 
     groupAggregationLookup[aggregatedField] = {
       position,
-      value: apiRef.current.resolveGroupAggregation(groupId, aggregatedField),
+      value: apiRef.current.resolveGroupAggregation?.(groupId, aggregatedField) ?? '',
     };
   }
 

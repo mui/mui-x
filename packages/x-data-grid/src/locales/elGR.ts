@@ -6,6 +6,8 @@ const elGRGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Δεν υπάρχουν καταχωρήσεις',
   noResultsOverlayLabel: 'Δεν βρέθηκαν αποτελέσματα.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'Ύψος σειράς',
