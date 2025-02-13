@@ -26,16 +26,19 @@ parameters:
     type: string
     default: ''
 
+default-parameters: &default-parameters
+  react-version:
+    description: The version of react to be used
+    type: string
+    default: << pipeline.parameters.react-version >>
+  e2e-base-url:
+    description: The base url for running end-to-end test
+    type: string
+    default: << pipeline.parameters.e2e-base-url >>
+
 default-job: &default-job
   parameters:
-    react-version:
-      description: The version of react to be used
-      type: string
-      default: << pipeline.parameters.react-version >>
-    e2e-base-url:
-      description: The base url for running end-to-end test
-      type: string
-      default: << pipeline.parameters.e2e-base-url >>
+    <<: *default-parameters
   environment:
     # expose it globally otherwise we have to thread it from each job to the install command
     BROWSERSTACK_FORCE: << pipeline.parameters.browserstack-force >>
@@ -173,6 +176,7 @@ jobs:
   test_unit:
     <<: *default-job
     parameters:
+      <<: *default-parameters
       package:
         description: The package to test
         type: string
@@ -203,6 +207,7 @@ jobs:
       - image: mcr.microsoft.com/playwright:v1.50.1-noble
     # resource_class: medium+
     parameters:
+      <<: *default-parameters
       package:
         description: The package to test
         type: string
