@@ -11,7 +11,6 @@ import {
   gridRowMaximumTreeDepthSelector,
   useGridApiOptionHandler,
   GridRowId,
-  gridRowTreeSelector,
 } from '@mui/x-data-grid';
 import {
   gridEditRowsStateSelector,
