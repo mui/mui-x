@@ -20,7 +20,7 @@ import { PickerValue } from '../internals/models';
 export function useTimeManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   parameters: UseTimeManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
 ): UseTimeManagerReturnValue<TEnableAccessibleFieldDOMStructure> {
-  const { enableAccessibleFieldDOMStructure = true as TEnableAccessibleFieldDOMStructure, ampm } =
+  const { enableAccessibleFieldDOMStructure = true as TEnableAccessibleFieldDOMStructure } =
     parameters;
 
   return React.useMemo(
@@ -36,12 +36,15 @@ export function useTimeManager<TEnableAccessibleFieldDOMStructure extends boolea
       }),
       internal_getOpenPickerButtonAriaLabel: ({ value, utils, localeText }) => {
         const formattedValue = utils.isValid(value)
-          ? utils.format(value, ampm ? 'fullTime12h' : 'fullTime24h')
+          ? utils.format(
+              value,
+              utils.is12HourCycleInCurrentLocale() ? 'fullTime12h' : 'fullTime24h',
+            )
           : null;
         return localeText.openTimePickerDialogue(formattedValue);
       },
     }),
-    [ampm, enableAccessibleFieldDOMStructure],
+    [enableAccessibleFieldDOMStructure],
   );
 }
 
@@ -63,8 +66,7 @@ export function getTimeFieldInternalPropsDefaults(
   };
 }
 
-export interface UseTimeManagerParameters<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends AmPmProps {
+export interface UseTimeManagerParameters<TEnableAccessibleFieldDOMStructure extends boolean> {
   enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;
 }
 
