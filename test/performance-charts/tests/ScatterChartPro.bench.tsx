@@ -3,13 +3,11 @@ import * as React from 'react';
 import { render, cleanup } from '@testing-library/react';
 import { bench, describe } from 'vitest';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
-import { LicenseInfo, generateLicense } from '@mui/x-license';
 import { options } from '../utils/options';
 
 describe('ScatterChartPro', () => {
   const dataLength = 50;
   const data = Array.from({ length: dataLength }).map((_, i) => ({
-    id: i,
     x: i,
     y: 50 + Math.sin(i / 5) * 25,
   }));
@@ -19,16 +17,6 @@ describe('ScatterChartPro', () => {
   bench(
     'ScatterChartPro with big data amount',
     async () => {
-      const licenseKey = generateLicense({
-        expiryDate: new Date(3001, 0, 0, 0, 0, 0, 0),
-        orderNumber: 'MUI-123',
-        planScope: 'pro',
-        licenseModel: 'subscription',
-        planVersion: 'Q3-2024',
-      });
-
-      LicenseInfo.setLicenseKey(licenseKey);
-
       const { findByText } = render(
         <ScatterChartPro
           xAxis={[
@@ -39,7 +27,7 @@ describe('ScatterChartPro', () => {
               valueFormatter: (v) => v.toLocaleString('en-US'),
             },
           ]}
-          initialZoom={[{ axisId: 'x', start: 2, end: 7 }]}
+          initialZoom={[{ axisId: 'x', start: 20, end: 70 }]}
           series={[
             {
               data,

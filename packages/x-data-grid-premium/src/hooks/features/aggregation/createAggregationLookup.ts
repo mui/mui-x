@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   gridColumnLookupSelector,
   gridFilteredRowsLookupSelector,
@@ -7,6 +7,7 @@ import {
   GridLeafNode,
   gridRowTreeSelector,
   GRID_ROOT_GROUP_ID,
+  gridRowNodeSelector,
 } from '@mui/x-data-grid-pro';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
@@ -22,7 +23,7 @@ import { gridAggregationModelSelector } from './gridAggregationSelectors';
 
 const getGroupAggregatedValue = (
   groupId: GridRowId,
-  apiRef: React.RefObject<GridPrivateApiPremium>,
+  apiRef: RefObject<GridPrivateApiPremium>,
   aggregationRowsScope: DataGridPremiumProcessedProps['aggregationRowsScope'],
   aggregatedFields: string[],
   aggregationRules: GridAggregationRules,
@@ -46,7 +47,7 @@ const getGroupAggregatedValue = (
     //   A.B
     //     A.B.A
     //     A.B.B
-    const rowNode = apiRef.current.getRowNode(rowId)!;
+    const rowNode = gridRowNodeSelector(apiRef, rowId);
     if (rowNode.type === 'group') {
       return;
     }
@@ -98,7 +99,7 @@ const getGroupAggregatedValue = (
 
 const getGroupAggregatedValueDataSource = (
   groupId: GridRowId,
-  apiRef: React.RefObject<GridPrivateApiPremium>,
+  apiRef: RefObject<GridPrivateApiPremium>,
   aggregatedFields: string[],
   position: GridAggregationPosition,
 ) => {
@@ -109,7 +110,7 @@ const getGroupAggregatedValueDataSource = (
 
     groupAggregationLookup[aggregatedField] = {
       position,
-      value: apiRef.current.resolveGroupAggregation(groupId, aggregatedField),
+      value: apiRef.current.resolveGroupAggregation?.(groupId, aggregatedField) ?? '',
     };
   }
 
@@ -123,7 +124,7 @@ export const createAggregationLookup = ({
   getAggregationPosition,
   isDataSource,
 }: {
-  apiRef: React.RefObject<GridPrivateApiPremium>;
+  apiRef: RefObject<GridPrivateApiPremium>;
   aggregationFunctions:
     | Record<string, GridAggregationFunction>
     | Record<string, GridAggregationFunctionDataSource>;

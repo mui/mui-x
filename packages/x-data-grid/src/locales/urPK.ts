@@ -6,6 +6,8 @@ const urPKGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'کوئی قطاریں نہیں',
   noResultsOverlayLabel: 'کوئی نتائج نہیں',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'کثافت',
@@ -50,11 +52,11 @@ const urPKGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'ایکسل کے طور پر ڈاوٴنلوڈ کریں',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
-  // columnsManagementReset: 'Reset',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementSearchTitle: 'تلاش',
+  columnsManagementNoColumns: 'کوئی کالم نہیں',
+  columnsManagementShowHideAllText: 'تمام دکھائیں/چھپائیں',
+  columnsManagementReset: 'ریسیٹ',
+  columnsManagementDeleteIconLabel: 'کلئیر',
 
   // Filter panel text
   filterPanelAddFilter: 'نیا فلٹر',
@@ -70,9 +72,9 @@ const urPKGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'شامل ہے',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'موجود نہیں ہے',
   filterOperatorEquals: 'برابر ہے',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'برابر نہیں ہے',
   filterOperatorStartsWith: 'شروع ہوتا ہے',
   filterOperatorEndsWith: 'ختم ہوتا ہے',
   filterOperatorIs: 'ہے',
@@ -93,9 +95,9 @@ const urPKGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'شامل ہے',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'موجود نہیں ہے',
   headerFilterOperatorEquals: 'برابر ہے',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'برابر نہیں ہے',
   headerFilterOperatorStartsWith: 'شروع ہوتا ہے',
   headerFilterOperatorEndsWith: 'ختم ہوتا ہے',
   headerFilterOperatorIs: 'ہے',

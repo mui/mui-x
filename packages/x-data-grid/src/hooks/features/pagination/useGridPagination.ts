@@ -1,8 +1,7 @@
-import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
-
 import {
   throwIfPageSizeExceedsTheLimit,
   getDefaultGridPaginationModel,
@@ -31,7 +30,10 @@ export const paginationStateInitializer: GridStateInitializer<
 
   throwIfPageSizeExceedsTheLimit(paginationModel.pageSize, props.signature);
 
-  const rowCount = props.rowCount ?? props.initialState?.pagination?.rowCount;
+  const rowCount =
+    props.rowCount ??
+    props.initialState?.pagination?.rowCount ??
+    (props.paginationMode === 'client' ? state.rows?.totalRowCount : undefined);
   const meta = props.paginationMeta ?? props.initialState?.pagination?.meta ?? {};
   return {
     ...state,
@@ -51,7 +53,7 @@ export const paginationStateInitializer: GridStateInitializer<
  * @requires useGridDimensions (event) - can be after
  */
 export const useGridPagination = (
-  apiRef: React.RefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: DataGridProcessedProps,
 ) => {
   useGridPaginationMeta(apiRef, props);

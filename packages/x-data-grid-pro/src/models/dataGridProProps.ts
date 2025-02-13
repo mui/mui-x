@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   GridEventListener,
   GridCallbackDetails,
@@ -18,8 +19,6 @@ import type {
   GridPinnedColumnFields,
   DataGridProSharedPropsWithDefaultValue,
   DataGridProSharedPropsWithoutDefaultValue,
-  GridDataSourceCache,
-  GridGetRowsParams,
 } from '@mui/x-data-grid/internals';
 import type { GridPinnedRowsProp } from '../hooks/features/rowPinning';
 import { GridApiPro } from './gridApiPro';
@@ -30,6 +29,10 @@ import {
 import { GridInitialStatePro } from './gridStatePro';
 import { GridProSlotsComponent } from './gridProSlotsComponent';
 import type { GridProSlotProps } from './gridProSlotProps';
+import {
+  GridDataSourcePro as GridDataSource,
+  GridGetRowsParamsPro as GridGetRowsParams,
+} from '../hooks/features/dataSource/models';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {}
 
@@ -157,12 +160,6 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
    */
   unstable_lazyLoadingRequestThrottleMs: number;
 }
-
-interface DataGridProDataSourceProps {
-  unstable_dataSourceCache?: GridDataSourceCache | null;
-  unstable_onDataSourceError?: (error: Error, params: GridGetRowsParams) => void;
-}
-
 interface DataGridProRegularProps<R extends GridValidRowModel> {
   /**
    * Determines the path of a row in the tree data.
@@ -178,15 +175,18 @@ interface DataGridProRegularProps<R extends GridValidRowModel> {
 export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>
   extends Omit<
       DataGridPropsWithoutDefaultValue<R>,
-      'initialState' | 'componentsProps' | 'slotProps'
+      | 'initialState'
+      | 'componentsProps'
+      | 'slotProps'
+      | 'unstable_dataSource'
+      | 'unstable_onDataSourceError'
     >,
     DataGridProRegularProps<R>,
-    DataGridProDataSourceProps,
     DataGridProSharedPropsWithoutDefaultValue {
   /**
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
-  apiRef?: React.RefObject<GridApiPro>;
+  apiRef?: RefObject<GridApiPro | null>;
   /**
    * The initial state of the DataGridPro.
    * The data in it will be set in the state on initialization but will not be controlled.
@@ -268,4 +268,14 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * Definition of the column rendered when the `unstable_listView` prop is enabled.
    */
   unstable_listColumn?: GridListColDef<R>;
+  /**
+   * The data source of the Data Grid Pro.
+   */
+  unstable_dataSource?: GridDataSource;
+  /**
+   * Callback fired when the data source request fails.
+   * @param {Error} error The error object.
+   * @param {GridGetRowsParams} params With all properties from [[GridGetRowsParams]].
+   */
+  unstable_onDataSourceError?: (error: Error, params: GridGetRowsParams) => void;
 }

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   GridColDef,
   GridRowId,
@@ -89,7 +90,7 @@ class CellValueUpdater {
   updateRow: (row: GridRowModel) => void;
 
   options: {
-    apiRef: React.RefObject<GridPrivateApiPremium>;
+    apiRef: RefObject<GridPrivateApiPremium>;
     processRowUpdate: DataGridPremiumProcessedProps['processRowUpdate'];
     onProcessRowUpdateError: DataGridPremiumProcessedProps['onProcessRowUpdateError'];
     getRowId: DataGridPremiumProcessedProps['getRowId'];
@@ -212,7 +213,7 @@ function defaultPasteResolver({
   paginationMode,
 }: {
   pastedData: string[][];
-  apiRef: React.RefObject<GridApiPremium>;
+  apiRef: RefObject<GridApiPremium>;
   updateCell: CellValueUpdater['updateCell'];
   pagination: DataGridPremiumProcessedProps['pagination'];
   paginationMode: DataGridPremiumProcessedProps['paginationMode'];
@@ -321,7 +322,7 @@ function defaultPasteResolver({
 }
 
 export const useGridClipboardImport = (
-  apiRef: React.RefObject<GridPrivateApiPremium>,
+  apiRef: RefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
     | 'pagination'
@@ -340,7 +341,6 @@ export const useGridClipboardImport = (
   const onProcessRowUpdateError = props.onProcessRowUpdateError;
   const getRowId = props.getRowId;
   const enableClipboardPaste = !props.disableClipboardPaste;
-  const rootEl = apiRef.current.rootElementRef?.current;
   const logger = useGridLogger(apiRef, 'useGridClipboardImport');
 
   const splitClipboardPastedText = props.splitClipboardPastedText;
@@ -365,6 +365,7 @@ export const useGridClipboardImport = (
         }
       }
 
+      const rootEl = apiRef.current.rootElementRef?.current;
       if (!rootEl) {
         return;
       }
@@ -417,7 +418,6 @@ export const useGridClipboardImport = (
       onProcessRowUpdateError,
       getRowId,
       enableClipboardPaste,
-      rootEl,
       splitClipboardPastedText,
       pagination,
       paginationMode,

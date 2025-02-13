@@ -75,17 +75,9 @@ export interface RangePickerFieldSlotProps<TEnableAccessibleFieldDOMStructure ex
   >;
 }
 
-export type RangePickerPropsForFieldSlot<
-  TIsSingleInput extends boolean,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TError,
-> =
-  | (TIsSingleInput extends true
-      ? BaseSingleInputFieldProps<PickerRangeValue, TEnableAccessibleFieldDOMStructure, TError>
-      : never)
-  | (TIsSingleInput extends false
-      ? BaseMultiInputFieldProps<TEnableAccessibleFieldDOMStructure, TError>
-      : never);
+export type RangePickerPropsForFieldSlot<TIsSingleInput extends boolean> =
+  | (TIsSingleInput extends true ? BaseSingleInputFieldProps<PickerRangeValue> : never)
+  | (TIsSingleInput extends false ? BaseMultiInputFieldProps : never);
 
 export interface UseEnrichedRangePickerFieldPropsParams<
   TIsSingleInput extends boolean,
@@ -101,15 +93,10 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   labelId?: string;
   disableOpenPicker?: boolean;
   onBlur?: () => void;
-  label?: React.ReactNode;
   localeText: PickersInputLocaleText | undefined;
   pickerSlotProps: RangePickerFieldSlotProps<TEnableAccessibleFieldDOMStructure> | undefined;
   pickerSlots: RangePickerFieldSlots | undefined;
-  fieldProps: RangePickerPropsForFieldSlot<
-    TIsSingleInput,
-    TEnableAccessibleFieldDOMStructure,
-    TError
-  >;
+  fieldProps: RangePickerPropsForFieldSlot<TIsSingleInput>;
   anchorRef?: React.Ref<HTMLElement>;
   currentView?: TView | null;
   initialView?: TView;
@@ -146,8 +133,6 @@ const useMultiInputFieldSlotProps = <
   TEnableAccessibleFieldDOMStructure,
   TError
 >) => {
-  type ReturnType = BaseMultiInputFieldProps<TEnableAccessibleFieldDOMStructure, TError>;
-
   const translations = usePickerTranslations();
   const handleStartFieldRef = useForkRef(fieldProps.unstableStartFieldRef, startFieldRef);
   const handleEndFieldRef = useForkRef(fieldProps.unstableEndFieldRef, endFieldRef);
@@ -168,6 +153,7 @@ const useMultiInputFieldSlotProps = <
     }
 
     // bring back focus to the field
+    // currentView is present on DateTimeRangePicker
     currentFieldRef.current.setSelectedSections(
       // use the current view or `0` when the range position has just been swapped
       previousRangePosition.current === rangePosition ? currentView : 0,
@@ -211,14 +197,14 @@ const useMultiInputFieldSlotProps = <
     }
   };
 
-  const slots: ReturnType['slots'] = {
+  const slots: BaseMultiInputFieldProps['slots'] = {
     textField: pickerSlots?.textField,
     root: pickerSlots?.fieldRoot,
     separator: pickerSlots?.fieldSeparator,
     ...fieldProps.slots,
   };
 
-  const slotProps: ReturnType['slotProps'] & {
+  const slotProps: BaseMultiInputFieldProps['slotProps'] & {
     separator?: any;
   } = {
     ...fieldProps.slotProps,
@@ -280,7 +266,7 @@ const useMultiInputFieldSlotProps = <
   /* TODO: remove this when a clearable behavior for multiple input range fields is implemented */
   const { clearable, onClear, ...restFieldProps } = fieldProps as any;
 
-  const enrichedFieldProps: ReturnType = {
+  const enrichedFieldProps: BaseMultiInputFieldProps = {
     ...restFieldProps,
     unstableStartFieldRef: handleStartFieldRef,
     unstableEndFieldRef: handleEndFieldRef,
@@ -305,7 +291,6 @@ const useSingleInputFieldSlotProps = <
   readOnly,
   labelId,
   disableOpenPicker,
-  label,
   onBlur,
   rangePosition,
   setRangePosition,
@@ -318,12 +303,6 @@ const useSingleInputFieldSlotProps = <
   TEnableAccessibleFieldDOMStructure,
   TError
 >) => {
-  type ReturnType = BaseSingleInputFieldProps<
-    PickerRangeValue,
-    TEnableAccessibleFieldDOMStructure,
-    TError
-  >;
-
   const handleFieldRef = useForkRef(fieldProps.unstableFieldRef, singleInputFieldRef);
 
   React.useEffect(() => {
@@ -377,9 +356,8 @@ const useSingleInputFieldSlotProps = <
     }
   };
 
-  const enrichedFieldProps: ReturnType = {
+  const enrichedFieldProps: BaseSingleInputFieldProps<PickerRangeValue> = {
     ...fieldProps,
-    label,
     unstableFieldRef: handleFieldRef,
     onKeyDown: onSpaceOrEnter(openPicker, fieldProps.onKeyDown),
     onBlur,

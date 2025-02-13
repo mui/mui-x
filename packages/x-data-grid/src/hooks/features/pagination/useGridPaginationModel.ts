@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPaginationModelApi, GridPaginationState } from './gridPaginationInterfaces';
@@ -40,7 +41,7 @@ export const getDerivedPaginationModel = (
     paginationModel = paginationModelProp;
   }
 
-  const validPage = getValidPage(paginationModel.page, pageCount);
+  const validPage = pageSize === -1 ? 0 : getValidPage(paginationModel.page, pageCount);
   if (validPage !== paginationModel.page) {
     paginationModel = { ...paginationModel, page: validPage };
   }
@@ -55,7 +56,7 @@ export const getDerivedPaginationModel = (
  * @requires useGridDimensions (event) - can be after
  */
 export const useGridPaginationModel = (
-  apiRef: React.RefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'paginationModel'

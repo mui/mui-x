@@ -1,20 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { TextFieldProps } from '@mui/material/TextField';
 import { refType, unstable_useId as useId } from '@mui/utils';
-import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { TextFieldProps } from '../../../models/gridBaseSlots';
+import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
 
-export type GridFilterInputBooleanProps = GridFilterInputValueProps &
-  TextFieldProps & {
-    headerFilterMenu?: React.ReactNode;
-    clearButton?: React.ReactNode | null;
-    /**
-     * It is `true` if the filter either has a value or an operator with no value
-     * required is selected (for example `isEmpty`)
-     */
-    isFilterActive?: boolean;
-  };
+export type GridFilterInputBooleanProps = GridFilterInputValueProps<TextFieldProps>;
 
 function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
   const {
@@ -26,11 +17,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     headerFilterMenu,
     clearButton,
     tabIndex,
-    label: labelProp,
-    variant = 'outlined',
-    InputProps,
-    InputLabelProps,
-    sx,
+    slotProps,
     ...others
   } = props;
   const [filterValueState, setFilterValueState] = React.useState<boolean | undefined>(
@@ -60,62 +47,52 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     setFilterValueState(sanitizeFilterItemValue(item.value));
   }, [item.value]);
 
-  const label = labelProp ?? apiRef.current.getLocaleText('filterPanelInputLabel');
+  const label = slotProps?.root.label ?? apiRef.current.getLocaleText('filterPanelInputLabel');
+  const rootSlotProps = slotProps?.root.slotProps;
 
   return (
     <React.Fragment>
-      <rootProps.slots.baseFormControl fullWidth sx={sx}>
-        <rootProps.slots.baseInputLabel
-          {...rootProps.slotProps?.baseInputLabel}
-          id={labelId}
-          shrink
-          variant={variant}
-        >
-          {label}
-        </rootProps.slots.baseInputLabel>
-        <rootProps.slots.baseSelect
-          labelId={labelId}
-          id={selectId}
-          label={label}
-          value={filterValueState === undefined ? '' : String(filterValueState)}
-          onChange={onFilterChange}
-          variant={variant}
-          notched={variant === 'outlined' ? true : undefined}
-          native={isSelectNative}
-          displayEmpty
-          inputProps={{
+      <rootProps.slots.baseSelect
+        fullWidth
+        labelId={labelId}
+        id={selectId}
+        label={label}
+        value={filterValueState === undefined ? '' : String(filterValueState)}
+        onChange={onFilterChange}
+        native={isSelectNative}
+        slotProps={{
+          htmlInput: {
             ref: focusElementRef,
             tabIndex,
-            ...InputProps?.inputProps,
-          }}
-          {...baseSelectProps}
-          {
-            ...(others as any) /* FIXME: typing error */
-          }
+            ...rootSlotProps?.htmlInput,
+          },
+        }}
+        {...baseSelectProps}
+        {...others}
+        {...slotProps?.root}
+      >
+        <rootProps.slots.baseSelectOption
+          {...baseSelectOptionProps}
+          native={isSelectNative}
+          value=""
         >
-          <rootProps.slots.baseSelectOption
-            {...baseSelectOptionProps}
-            native={isSelectNative}
-            value=""
-          >
-            {apiRef.current.getLocaleText('filterValueAny')}
-          </rootProps.slots.baseSelectOption>
-          <rootProps.slots.baseSelectOption
-            {...baseSelectOptionProps}
-            native={isSelectNative}
-            value="true"
-          >
-            {apiRef.current.getLocaleText('filterValueTrue')}
-          </rootProps.slots.baseSelectOption>
-          <rootProps.slots.baseSelectOption
-            {...baseSelectOptionProps}
-            native={isSelectNative}
-            value="false"
-          >
-            {apiRef.current.getLocaleText('filterValueFalse')}
-          </rootProps.slots.baseSelectOption>
-        </rootProps.slots.baseSelect>
-      </rootProps.slots.baseFormControl>
+          {apiRef.current.getLocaleText('filterValueAny')}
+        </rootProps.slots.baseSelectOption>
+        <rootProps.slots.baseSelectOption
+          {...baseSelectOptionProps}
+          native={isSelectNative}
+          value="true"
+        >
+          {apiRef.current.getLocaleText('filterValueTrue')}
+        </rootProps.slots.baseSelectOption>
+        <rootProps.slots.baseSelectOption
+          {...baseSelectOptionProps}
+          native={isSelectNative}
+          value="false"
+        >
+          {apiRef.current.getLocaleText('filterValueFalse')}
+        </rootProps.slots.baseSelectOption>
+      </rootProps.slots.baseSelect>
       {headerFilterMenu}
       {clearButton}
     </React.Fragment>
@@ -141,9 +118,25 @@ GridFilterInputBoolean.propTypes = {
     current: PropTypes.object.isRequired,
   }).isRequired,
   applyValue: PropTypes.func.isRequired,
+  className: PropTypes.string,
   clearButton: PropTypes.node,
+  disabled: PropTypes.bool,
   focusElementRef: refType,
   headerFilterMenu: PropTypes.node,
+  inputRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: (props, propName) => {
+        if (props[propName] == null) {
+          return null;
+        }
+        if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {
+          return new Error(`Expected prop '${propName}' to be of type Element`);
+        }
+        return null;
+      },
+    }),
+  ]),
   /**
    * It is `true` if the filter either has a value or an operator with no value
    * required is selected (for example `isEmpty`)
@@ -155,6 +148,10 @@ GridFilterInputBoolean.propTypes = {
     operator: PropTypes.string.isRequired,
     value: PropTypes.any,
   }).isRequired,
+  onBlur: PropTypes.func,
+  onFocus: PropTypes.func,
+  slotProps: PropTypes.object,
+  tabIndex: PropTypes.number,
 } as any;
 
 export { GridFilterInputBoolean };

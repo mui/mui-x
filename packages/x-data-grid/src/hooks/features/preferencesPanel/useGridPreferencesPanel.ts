@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -19,7 +20,7 @@ export const preferencePanelStateInitializer: GridStateInitializer<
  * TODO: Add a single `setPreferencePanel` method to avoid multiple `setState`
  */
 export const useGridPreferencesPanel = (
-  apiRef: React.RefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'initialState'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridPreferencesPanel');
@@ -34,7 +35,7 @@ export const useGridPreferencesPanel = (
       }
 
       logger.debug('Hiding Preferences Panel');
-      const preferencePanelState = gridPreferencePanelStateSelector(state);
+      const preferencePanelState = gridPreferencePanelStateSelector(apiRef);
       apiRef.current.publishEvent('preferencePanelClose', {
         openedPanelValue: preferencePanelState.openedPanelValue,
       });
@@ -76,7 +77,7 @@ export const useGridPreferencesPanel = (
    */
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
     (prevState, context) => {
-      const preferencePanelToExport = gridPreferencePanelStateSelector(apiRef.current.state);
+      const preferencePanelToExport = gridPreferencePanelStateSelector(apiRef);
 
       const shouldExportPreferencePanel =
         // Always export if the `exportOnlyDirtyModels` property is not activated

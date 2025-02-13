@@ -1,28 +1,20 @@
-import { createSelector } from 'reselect';
-import { createSelectorMemoized } from '../../../utils/createSelector';
+import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { gridRenderContextSelector } from './gridVirtualizationSelectors';
 import { gridFocusCellSelector } from '../focus';
 import { gridVisibleRowsSelector } from '../pagination';
-import { gridRowsLookupSelector } from '../rows';
 
-const gridIsFocusedCellOutOfContex = createSelector(
+const gridIsFocusedCellOutOfContext = createSelector(
   gridFocusCellSelector,
   gridRenderContextSelector,
   gridVisibleRowsSelector,
   gridVisibleColumnDefinitionsSelector,
-  gridRowsLookupSelector,
-  (focusedCell, renderContext, currentPage, visibleColumns, rows) => {
+  (focusedCell, renderContext, currentPage, visibleColumns) => {
     if (!focusedCell) {
       return false;
     }
 
-    const row = rows[focusedCell.id];
-    if (!row) {
-      return false;
-    }
-
-    const rowIndex = currentPage.rowToIndexMap.get(row);
+    const rowIndex = currentPage.rowIdToIndexMap.get(focusedCell.id);
     const columnIndex = visibleColumns
       .slice(renderContext.firstColumnIndex, renderContext.lastColumnIndex)
       .findIndex((column) => column.field === focusedCell.field);
@@ -38,22 +30,16 @@ const gridIsFocusedCellOutOfContex = createSelector(
 );
 
 export const gridFocusedVirtualCellSelector = createSelectorMemoized(
-  gridIsFocusedCellOutOfContex,
+  gridIsFocusedCellOutOfContext,
   gridVisibleColumnDefinitionsSelector,
   gridVisibleRowsSelector,
-  gridRowsLookupSelector,
   gridFocusCellSelector,
-  (isFocusedCellOutOfRenderContext, visibleColumns, currentPage, rows, focusedCell) => {
+  (isFocusedCellOutOfRenderContext, visibleColumns, currentPage, focusedCell) => {
     if (!isFocusedCellOutOfRenderContext) {
       return null;
     }
 
-    const row = rows[focusedCell!.id];
-    if (!row) {
-      return null;
-    }
-
-    const rowIndex = currentPage.rowToIndexMap.get(row);
+    const rowIndex = currentPage.rowIdToIndexMap.get(focusedCell!.id);
 
     if (rowIndex === undefined) {
       return null;

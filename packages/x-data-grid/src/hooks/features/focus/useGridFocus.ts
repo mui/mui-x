@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   unstable_ownerDocument as ownerDocument,
   unstable_useEventCallback as useEventcallback,
@@ -37,7 +38,7 @@ export const focusStateInitializer: GridStateInitializer = (state) => ({
  * @requires useGridEditing (event)
  */
 export const useGridFocus = (
-  apiRef: React.RefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFocus');
@@ -86,7 +87,6 @@ export const useGridFocus = (
           },
         };
       });
-      apiRef.current.forceUpdate();
 
       // The row might have been deleted
       if (!apiRef.current.getRow(id)) {
@@ -128,8 +128,6 @@ export const useGridFocus = (
           },
         };
       });
-
-      apiRef.current.forceUpdate();
     },
     [apiRef, logger, publishCellFocusOut],
   );
@@ -158,8 +156,6 @@ export const useGridFocus = (
           },
         };
       });
-
-      apiRef.current.forceUpdate();
     },
     [apiRef, logger, publishCellFocusOut],
   );
@@ -194,8 +190,6 @@ export const useGridFocus = (
           },
         };
       });
-
-      apiRef.current.forceUpdate();
     },
     [apiRef],
   );
@@ -397,7 +391,6 @@ export const useGridFocus = (
             columnGroupHeader: null,
           },
         }));
-        apiRef.current.forceUpdate();
 
         // There's a focused cell but another element (not a cell) was clicked
         // Publishes an event to notify that the focus was lost
@@ -426,12 +419,12 @@ export const useGridFocus = (
     // If the focused cell is in a row which does not exist anymore,
     // focus previous row or remove the focus
     if (cell && !apiRef.current.getRow(cell.id)) {
-      const lastFocusedRowId = gridFocusCellSelector(apiRef)?.id;
+      const lastFocusedRowId = cell.id;
 
       let nextRowId: GridRowId | null = null;
       if (typeof lastFocusedRowId !== 'undefined') {
-        const lastFocusedRowIndex =
-          apiRef.current.getRowIndexRelativeToVisibleRows(lastFocusedRowId);
+        const rowEl = apiRef.current.getRowElement(lastFocusedRowId);
+        const lastFocusedRowIndex = rowEl?.dataset.rowindex ? Number(rowEl?.dataset.rowindex) : 0;
         const currentPage = getVisibleRows(apiRef, {
           pagination: props.pagination,
           paginationMode: props.paginationMode,

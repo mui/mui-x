@@ -5,17 +5,18 @@
       "required": true
     },
     "area": { "type": { "name": "bool" }, "default": "false" },
-    "colors": {
-      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
-      "default": "blueberryTwilightPalette"
+    "color": {
+      "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" },
+      "default": "rainbowSurgePalette[0]"
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
+    "disableVoronoi": { "type": { "name": "bool" } },
     "height": { "type": { "name": "number" } },
     "highlightedItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string }"
+        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string }"
       }
     },
     "id": { "type": { "name": "string" } },
@@ -26,11 +27,25 @@
       },
       "default": "{\n  top: 5,\n  bottom: 5,\n  left: 5,\n  right: 5,\n}"
     },
+    "onAxisClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: MouseEvent, data: null | AxisData) => void",
+        "describedArgs": ["event", "data"]
+      }
+    },
     "onHighlightChange": {
       "type": { "name": "func" },
       "signature": {
         "type": "function(highlightedItem: HighlightItemData | null) => void",
         "describedArgs": ["highlightedItem"]
+      }
+    },
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: MouseEvent, scatterItemIdentifier: ScatterItemIdentifier) => void",
+        "describedArgs": ["event", "scatterItemIdentifier"]
       }
     },
     "plotType": {
@@ -55,6 +70,7 @@
         "returned": "string"
       }
     },
+    "voronoiMaxRadius": { "type": { "name": "number" } },
     "width": { "type": { "name": "number" } },
     "xAxis": {
       "type": {

@@ -85,10 +85,6 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsLegend',
   },
   {
-    pathname: '/x/api/charts/charts-on-axis-click-handler',
-    title: 'ChartsOnAxisClickHandler',
-  },
-  {
     pathname: '/x/api/charts/charts-reference-line',
     title: 'ChartsReferenceLine',
   },
@@ -107,10 +103,6 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/charts-tooltip-container',
     title: 'ChartsTooltipContainer',
-  },
-  {
-    pathname: '/x/api/charts/charts-voronoi-handler',
-    title: 'ChartsVoronoiHandler',
   },
   {
     pathname: '/x/api/charts/charts-x-axis',

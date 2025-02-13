@@ -1,4 +1,8 @@
-import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
+import {
+  createSelector,
+  createSelectorMemoized,
+  createRootSelector,
+} from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import {
   GridColumnLookup,
@@ -11,7 +15,9 @@ import { gridIsRtlSelector } from '../../core/gridCoreSelector';
  * Get the columns state
  * @category Columns
  */
-export const gridColumnsStateSelector = (state: GridStateCommunity) => state.columns;
+export const gridColumnsStateSelector = createRootSelector(
+  (state: GridStateCommunity) => state.columns,
+);
 
 /**
  * Get an array of column fields in the order rendered on screen.
@@ -75,7 +81,9 @@ export const gridVisibleColumnFieldsSelector = createSelectorMemoized(
  * Get the visible pinned columns model.
  * @category Visible Columns
  */
-export const gridPinnedColumnsSelector = (state: GridStateCommunity) => state.pinnedColumns;
+export const gridPinnedColumnsSelector = createRootSelector(
+  (state: GridStateCommunity) => state.pinnedColumns,
+);
 
 /**
  * Get the visible pinned columns.
@@ -146,22 +154,6 @@ export const gridColumnPositionsSelector = createSelectorMemoized(
     }
 
     return positions;
-  },
-);
-
-/**
- * Get the summed width of all the visible columns.
- * @category Visible Columns
- */
-export const gridColumnsTotalWidthSelector = createSelector(
-  gridVisibleColumnDefinitionsSelector,
-  gridColumnPositionsSelector,
-  (visibleColumns, positions) => {
-    const colCount = visibleColumns.length;
-    if (colCount === 0) {
-      return 0;
-    }
-    return positions[colCount - 1] + visibleColumns[colCount - 1].computedWidth;
   },
 );
 

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
   BasePickerProps,
   UsePickerParams,
@@ -45,11 +44,7 @@ export interface UseStaticRangePickerParams<
   TExternalProps extends UseStaticRangePickerProps<TView, any, TExternalProps>,
 > extends Pick<
     UsePickerParams<PickerRangeValue, TView, TExternalProps>,
-    'valueManager' | 'valueType' | 'validator'
+    'valueManager' | 'valueType' | 'validator' | 'ref'
   > {
   props: TExternalProps;
-  /**
-   * Ref to pass to the root element
-   */
-  ref: React.Ref<HTMLDivElement> | undefined;
 }

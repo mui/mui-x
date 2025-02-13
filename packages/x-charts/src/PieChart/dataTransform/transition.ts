@@ -4,7 +4,7 @@ import { ValueWithHighlight } from './useTransformData';
 export const getDefaultTransitionConfig = (
   skipAnimation?: boolean,
 ): UseTransitionProps<ValueWithHighlight> => ({
-  keys: (item) => item.id,
+  keys: (item) => item.id ?? item.dataIndex,
   from: skipAnimation
     ? undefined
     : ({
@@ -67,7 +67,7 @@ export const getDefaultTransitionConfig = (
 export const getDefaultLabelTransitionConfig = (
   skipAnimation?: boolean,
 ): UseTransitionProps<ValueWithHighlight> => ({
-  keys: (item) => item.id,
+  keys: (item) => item.id ?? item.dataIndex,
   from: skipAnimation
     ? undefined
     : ({
