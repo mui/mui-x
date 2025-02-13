@@ -79,7 +79,9 @@ function WrappedMonthsButton(props: React.HTMLAttributes<HTMLButtonElement>) {
   return <DateCalendar2MonthsCell {...monthsButtonProps} />;
 }
 
-export function DateCalendar2MonthsGrid(props: DateCalendarMonthsGridProps) {
+export const DateCalendar2MonthsGrid = React.memo(function DateCalendar2MonthsGrid(
+  props: DateCalendarMonthsGridProps,
+) {
   const { classes } = useDateCalendar2PrivateContext();
 
   return (
@@ -98,6 +100,6 @@ export function DateCalendar2MonthsGrid(props: DateCalendarMonthsGridProps) {
       </DateCalendar2MonthsGridRoot>
     </DateCalendar2Loadable>
   );
-}
+});
 
 interface DateCalendarMonthsGridProps extends Pick<Calendar.MonthsGrid.Props, 'cellsPerRow'> {}

@@ -136,12 +136,11 @@ export const DateCalendar2Header = React.forwardRef(function DateCalendar2Header
     }
   };
 
+  const viewCount = Object.values(views).filter(Boolean).length;
   const label = React.useMemo(
     () => utils.formatByString(visibleDate, format),
     [visibleDate, format, utils],
   );
-
-  const viewCount = Object.values(views).filter(Boolean).length;
 
   const SwitchViewButton = slots?.switchViewButton ?? DateCalendar2HeaderSwitchViewButton;
   const switchViewButtonProps = useSlotProps({
@@ -288,7 +287,7 @@ export const DateCalendar2Header = React.forwardRef(function DateCalendar2Header
 export interface DateCalendar2HeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * Format used to display the date.
-   * @default `${adapter.formats.month} ${adapter.formats.year}`
+   * @default ${adapter.formats.month} ${adapter.formats.year}
    */
   format?: string;
 }

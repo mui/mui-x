@@ -214,33 +214,35 @@ function getDefaultView(views: { [key in DateView]?: boolean }) {
 }
 
 function useUtilityClasses(classes: Partial<DateCalendar2Classes> | undefined) {
-  const slots = {
-    root: ['root'],
-    transitionGroup: ['transitionGroup'],
-    headerRoot: ['headerRoot'],
-    headerLabelContainer: ['headerLabelContainer'],
-    headerLabelTransitionGroup: ['headerLabelTransitionGroup'],
-    headerLabelContent: ['headerLabelContent'],
-    headerSwitchViewButton: ['headerSwitchViewButton'],
-    headerSwitchViewIcon: ['headerSwitchViewIcon'],
-    headerNavigation: ['headerNavigation'],
-    headerNavigationButton: ['headerNavigationButton'],
-    headerNavigationSpacer: ['headerNavigationSpacer'],
-    daysGridRoot: ['daysGridRoot'],
-    daysGridHeader: ['daysGridHeader'],
-    daysGridWeekNumberHeaderCell: ['daysGridWeekNumberHeaderCell'],
-    daysGridHeaderCell: ['daysGridHeaderCell'],
-    daysGridBodyTransitionGroup: ['daysGridBodyTransitionGroup'],
-    daysGridBody: ['daysGridBody'],
-    daysGridRow: ['daysGridRow'],
-    daysGridWeekNumberCell: ['daysGridWeekNumberCell'],
-    daysCell: ['daysCell'],
-    monthsGridRoot: ['monthsGridRoot'],
-    monthsCell: ['monthsCell'],
-    yearsGridRoot: ['yearsGridRoot'],
-    yearsCell: ['yearsCell'],
-    loadingPanel: ['loadingPanel'],
-  };
+  return React.useMemo(() => {
+    const slots = {
+      root: ['root'],
+      transitionGroup: ['transitionGroup'],
+      headerRoot: ['headerRoot'],
+      headerLabelContainer: ['headerLabelContainer'],
+      headerLabelTransitionGroup: ['headerLabelTransitionGroup'],
+      headerLabelContent: ['headerLabelContent'],
+      headerSwitchViewButton: ['headerSwitchViewButton'],
+      headerSwitchViewIcon: ['headerSwitchViewIcon'],
+      headerNavigation: ['headerNavigation'],
+      headerNavigationButton: ['headerNavigationButton'],
+      headerNavigationSpacer: ['headerNavigationSpacer'],
+      daysGridRoot: ['daysGridRoot'],
+      daysGridHeader: ['daysGridHeader'],
+      daysGridWeekNumberHeaderCell: ['daysGridWeekNumberHeaderCell'],
+      daysGridHeaderCell: ['daysGridHeaderCell'],
+      daysGridBodyTransitionGroup: ['daysGridBodyTransitionGroup'],
+      daysGridBody: ['daysGridBody'],
+      daysGridRow: ['daysGridRow'],
+      daysGridWeekNumberCell: ['daysGridWeekNumberCell'],
+      daysCell: ['daysCell'],
+      monthsGridRoot: ['monthsGridRoot'],
+      monthsCell: ['monthsCell'],
+      yearsGridRoot: ['yearsGridRoot'],
+      yearsCell: ['yearsCell'],
+      loadingPanel: ['loadingPanel'],
+    };
 
-  return composeClasses(slots, getDateCalendar2UtilityClass, classes);
+    return composeClasses(slots, getDateCalendar2UtilityClass, classes);
+  }, [classes]);
 }

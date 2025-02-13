@@ -331,7 +331,9 @@ const DateCalendar2DaysGridBodyLoading = React.memo(function DateCalendar2DaysGr
   );
 });
 
-export function DateCalendar2DaysGrid(props: DateCalendar2DaysGridProps) {
+export const DateCalendar2DaysGrid = React.memo(function DateCalendar2DaysGrid(
+  props: DateCalendar2DaysGridProps,
+) {
   const translations = usePickerTranslations();
   const theme = useTheme();
   const utils = useUtils();
@@ -429,7 +431,7 @@ export function DateCalendar2DaysGrid(props: DateCalendar2DaysGridProps) {
       </DateCalendar2Loadable>
     </DaysCalendar2DaysGridRoot>
   );
-}
+});
 
 interface DateCalendar2DaysGridProps {
   displayWeekNumber: boolean;

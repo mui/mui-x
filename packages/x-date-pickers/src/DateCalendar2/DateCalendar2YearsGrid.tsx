@@ -83,7 +83,9 @@ function WrappedYearsButton(props: React.HTMLAttributes<HTMLButtonElement>) {
   return <DateCalendar2YearsCell {...yearsButtonProps} />;
 }
 
-export function DateCalendar2YearsGrid(props: DateCalendarYearsGridProps) {
+export const DateCalendar2YearsGrid = React.memo(function DateCalendar2YearsGrid(
+  props: DateCalendarYearsGridProps,
+) {
   const { yearsOrder, cellsPerRow } = props;
   const { classes } = useDateCalendar2PrivateContext();
 
@@ -116,7 +118,7 @@ export function DateCalendar2YearsGrid(props: DateCalendarYearsGridProps) {
       </DateCalendar2YearsGridRoot>
     </DateCalendar2Loadable>
   );
-}
+});
 
 interface DateCalendarYearsGridProps extends Pick<Calendar.YearsGrid.Props, 'cellsPerRow'> {
   yearsOrder: 'asc' | 'desc';
