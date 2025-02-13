@@ -13,8 +13,9 @@ import {
 import { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
 import { ZoomData, ZoomOptions } from './zoom.types';
 import { UseChartInteractionSignature } from '../useChartInteraction';
+import { ChartsAxisProps } from '../../../../ChartsAxis';
 
-export type DefaultizedAxisConfig<AxisProps> = {
+export type DefaultizedAxisConfig<AxisProps extends ChartsAxisProps> = {
   [axisId: AxisId]: AxisDefaultized<ScaleName, any, AxisProps>;
 };
 
