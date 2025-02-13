@@ -66,7 +66,8 @@ const ruRUGrid: Partial<GridLocaleText> = {
   toolbarPromptControlRecordButtonActiveLabel: 'Остановить запись',
   toolbarPromptControlSendActionLabel: 'Отправить',
   toolbarPromptControlSendActionAriaLabel: 'Отправить запрос',
-  toolbarPromptControlErrorMessage: 'При обработке запроса произошла ошибка. Пожалуйста, повторите попытку с другим запросом.',
+  toolbarPromptControlErrorMessage:
+    'При обработке запроса произошла ошибка. Пожалуйста, повторите попытку с другим запросом.',
 
   // Export selector toolbar button text
   toolbarExport: 'Экспорт',
