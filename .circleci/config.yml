@@ -428,10 +428,16 @@ workflows:
           <<: *default-context
           name: test_unit_additional
           react-version: << pipeline.parameters.with-react-version >>
+          matrix:
+            parameters:
+              <<: *packages
       - test_browser:
           <<: *default-context
           name: test_browser_additional
           react-version: << pipeline.parameters.with-react-version >>
+          matrix:
+            parameters:
+              <<: *packages
       - test_regressions:
           <<: *default-context
           name: test_regressions_additional
@@ -455,9 +461,15 @@ workflows:
       - test_unit:
           <<: *test-react-18-context
           name: test_unit_react_18
+          matrix:
+            parameters:
+              <<: *packages
       - test_browser:
           <<: *test-react-18-context
           name: test_browser_react_18
+          matrix:
+            parameters:
+              <<: *packages
       - test_regressions:
           <<: *test-react-18-context
           name: test_regressions_react_18
