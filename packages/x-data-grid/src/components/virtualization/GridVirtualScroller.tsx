@@ -23,21 +23,20 @@ import { GridVirtualScrollerRenderZone as RenderZone } from './GridVirtualScroll
 import { GridVirtualScrollbar as Scrollbar } from './GridVirtualScrollbar';
 import { GridLoadingOverlayVariant } from '../GridLoadingOverlay';
 import { GridStateCommunity } from '../../models/gridStateCommunity';
+import { GridOverlayType } from '../base/GridOverlays';
 
 type OwnerState = Pick<DataGridProcessedProps, 'classes'> & {
   hasScrollX: boolean;
   hasPinnedRight: boolean;
   loadingOverlayVariant: GridLoadingOverlayVariant | null;
+  overlayType: GridOverlayType;
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { classes, hasScrollX, hasPinnedRight, loadingOverlayVariant } = ownerState;
+  const { classes, hasScrollX, hasPinnedRight, loadingOverlayVariant, overlayType } = ownerState;
+  const hideContent = loadingOverlayVariant === 'skeleton' || overlayType === 'noColumnsOverlay';
   const slots = {
-    root: [
-      'main',
-      hasPinnedRight && 'main--hasPinnedRight',
-      loadingOverlayVariant === 'skeleton' && 'main--hasSkeletonLoadingOverlay',
-    ],
+    root: ['main', hasPinnedRight && 'main--hasPinnedRight', hideContent && 'main--hiddenContent'],
     scroller: ['virtualScroller', hasScrollX && 'virtualScroller--hasScrollX'],
   };
 
@@ -89,7 +88,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
     classes: rootProps.classes,
     hasScrollX,
     hasPinnedRight,
-    loadingOverlayVariant: overlaysProps.loadingOverlayVariant,
+    ...overlaysProps,
   };
   const classes = useUtilityClasses(ownerState);
 

@@ -131,8 +131,8 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(columnPinningStateInitializer, apiRef, props);
   useGridInitializeState(columnsStateInitializer, apiRef, props);
   useGridInitializeState(rowPinningStateInitializer, apiRef, props);
-  useGridInitializeState(paginationStateInitializer, apiRef, props);
   useGridInitializeState(rowsStateInitializer, apiRef, props);
+  useGridInitializeState(paginationStateInitializer, apiRef, props);
   useGridInitializeState(editingStateInitializer, apiRef, props);
   useGridInitializeState(focusStateInitializer, apiRef, props);
   useGridInitializeState(sortingStateInitializer, apiRef, props);
