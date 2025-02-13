@@ -10,7 +10,6 @@ import {
   gridFilterModelSelector,
   gridFilterActiveItemsSelector,
 } from '../filter/gridFilterSelector';
-import { getDefaultGridFilterModel } from '../filter/gridFilterState';
 import { gridDensityFactorSelector } from '../density';
 import {
   useGridLogger,
@@ -79,8 +78,10 @@ export const useGridPaginationModel = (
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPaginationModel');
 
-  const previousFilterModel = React.useRef<GridFilterModel>(getDefaultGridFilterModel());
+  const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
+  const previousFilterModel = React.useRef<GridFilterModel>(filterModel);
+
   const rowHeight = Math.floor(props.rowHeight * densityFactor);
   apiRef.current.registerControlState({
     stateId: 'paginationModel',
@@ -282,7 +283,7 @@ export const useGridPaginationModel = (
     }
 
     const currentActiveFilters = {
-      ...gridFilterModelSelector(apiRef),
+      ...filterModel,
       // replace items with the active items
       items: gridFilterActiveItemsSelector(apiRef),
     };
@@ -293,7 +294,7 @@ export const useGridPaginationModel = (
 
     previousFilterModel.current = currentActiveFilters;
     apiRef.current.setPage(0);
-  }, [apiRef]);
+  }, [apiRef, filterModel]);
 
   useGridApiEventHandler(apiRef, 'viewportInnerSizeChange', handleUpdateAutoPageSize);
   useGridApiEventHandler(apiRef, 'paginationModelChange', handlePaginationModelChange);
