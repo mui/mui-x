@@ -7,7 +7,10 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 export default function BasicDesktopDateRangePicker() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DateRangePicker defaultValue={[dayjs('2024-04-12'), dayjs('2024-04-14')]} />
+      <DateRangePicker
+        defaultValue={[dayjs('2024-04-12'), dayjs('2024-04-14')]}
+        enableAccessibleFieldDOMStructure
+      />
     </LocalizationProvider>
   );
 }
