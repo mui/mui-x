@@ -35,12 +35,15 @@ const ChartsText = React.forwardRef<SVGTextElement, ChartsTextProps>(
 
     const { angle, textAnchor, dominantBaseline, ...style } = styleProps ?? {};
 
-    React.useLayoutEffect(() => {
-      const bbox = firstLineTSpanRef.current?.getBBox();
-      if (bbox) {
-        setLineHeight(bbox.height);
-      }
-    }, [style, text, textProps.className]);
+    React.useLayoutEffect(
+      function getLineHeight() {
+        const bbox = firstLineTSpanRef.current?.getBBox();
+        if (bbox) {
+          setLineHeight(bbox.height);
+        }
+      },
+      [style, text, textProps.className],
+    );
 
     let startDy: number;
     switch (dominantBaseline) {

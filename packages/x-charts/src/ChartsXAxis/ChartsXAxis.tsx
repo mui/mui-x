@@ -175,23 +175,26 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     new Map<number, { width: number; height: number }>(),
   );
 
-  React.useLayoutEffect(() => {
-    if (measuring) {
-      setMeasurements(
-        new Map(
-          xTicks.map((_, index) => {
-            const bbox = textMapRef.current.get(index)?.getBBox() ?? {
-              width: 0,
-              height: 0,
-            };
+  React.useLayoutEffect(
+    function measureTicks() {
+      if (measuring) {
+        setMeasurements(
+          new Map(
+            xTicks.map(function measureTick(_, index) {
+              const bbox = textMapRef.current.get(index)?.getBBox() ?? {
+                width: 0,
+                height: 0,
+              };
 
-            return [index, { width: bbox.width, height: bbox.height }] as const;
-          }),
-        ),
-      );
-      setMeasuring(false);
-    }
-  }, [measuring, xTicks]);
+              return [index, { width: bbox.width, height: bbox.height }] as const;
+            }),
+          ),
+        );
+        setMeasuring(false);
+      }
+    },
+    [measuring, xTicks],
+  );
 
   const labelsToSkip = findLabelsToSkip(xTicks, {
     tickLabelStyle: axisTickLabelProps.style,
