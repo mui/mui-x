@@ -30,6 +30,7 @@ function getHasEval() {
   }
 
   try {
+    // eslint-disable-next-line no-new-func
     hasEval = new Function('return true')() as boolean;
   } catch (_: unknown) {
     hasEval = false;
@@ -258,6 +259,7 @@ const buildAggregatedFilterItemsApplier = (
 
   // We generate a new function with `new Function()` to avoid expensive patterns for JS engines
   // such as a dynamic object assignment, for example `{ [dynamicKey]: value }`.
+  // eslint-disable-next-line no-new-func
   const filterItemCore = new Function(
     'appliers',
     'row',

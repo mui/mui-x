@@ -2,8 +2,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Scatter, ScatterProps } from './Scatter';
-import getColor from './getColor';
-import { useScatterSeries } from '../hooks/useSeries';
+import { useScatterSeriesContext } from '../hooks/useScatterSeries';
+import getColor from './seriesConfig/getColor';
 import { useXAxes, useYAxes } from '../hooks';
 import { useZAxes } from '../hooks/useZAxis';
 
@@ -40,7 +40,7 @@ export interface ScatterPlotProps extends Pick<ScatterProps, 'onItemClick'> {
  */
 function ScatterPlot(props: ScatterPlotProps) {
   const { slots, slotProps, onItemClick } = props;
-  const seriesData = useScatterSeries();
+  const seriesData = useScatterSeriesContext();
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
   const { zAxis, zAxisIds } = useZAxes();

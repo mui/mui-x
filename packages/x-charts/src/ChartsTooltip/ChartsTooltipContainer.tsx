@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import HTMLElementType from '@mui/utils/HTMLElementType';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { styled, useThemeProps } from '@mui/material/styles';
-import Popper, { PopperProps } from '@mui/material/Popper';
+import Popper, { PopperPlacementType, PopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
 import { useSvgRef } from '../hooks/useSvgRef';
 import { AxisDefaultized } from '../models/axis';
@@ -131,7 +131,15 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
             {
               name: 'offset',
               options: {
-                offset: [0, pointerType?.pointerType === 'touch' ? 40 - pointerType.height : 0],
+                offset: ({ placement }: { placement: PopperPlacementType }) => {
+                  if (pointerType?.pointerType !== 'touch') {
+                    return [0, 0];
+                  }
+
+                  const isBottom = placement.startsWith('bottom');
+                  const placementOffset = isBottom ? 32 : 8;
+                  return [0, pointerType.height + placementOffset];
+                },
               },
             },
           ]}

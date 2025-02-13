@@ -525,6 +525,10 @@
       "nodeName": "the aggregation label in the column header",
       "conditions": "aggregated"
     },
+    "aggregationRowOverlayWrapper": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the aggregation row overlay wrapper"
+    },
     "autoHeight": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
@@ -1104,6 +1108,7 @@
     "baseTooltip": "The custom Tooltip component used in the grid.",
     "booleanCellFalseIcon": "Icon displayed on the boolean cell to represent the false value.",
     "booleanCellTrueIcon": "Icon displayed on the boolean cell to represent the true value.",
+    "bottomContainer": "Component rendered for the bottom container.",
     "cell": "Component rendered for each cell.",
     "columnFilteredIcon": "Icon displayed on the column header menu to show that a filter has been applied to the column.",
     "columnHeaderFilterIconButton": "Filter icon component rendered in each column header.",
@@ -1144,6 +1149,7 @@
     "loadingOverlay": "Loading overlay component rendered when the grid is in a loading state.",
     "menuItemCheckIcon": "Icon displayed to indicate that a menu item is selected.",
     "moreActionsIcon": "Icon displayed on the <code>actions</code> column type to open the menu.",
+    "noColumnsOverlay": "No columns overlay component rendered when the grid has no columns.",
     "noResultsOverlay": "No results overlay component rendered when the grid has no results after filtering.",
     "noRowsOverlay": "No rows overlay component rendered when the grid has no rows.",
     "openFilterButtonIcon": "Icon displayed on the open filter button present in the toolbar by default.",
