@@ -30,7 +30,7 @@ const useUtilityClasses = (ownerState: ChartsXAxisProps & { theme: Theme }) => {
   return composeClasses(slots, getAxisUtilityClass, classes);
 };
 
-function findLabelsToSkip(
+function computeVisibleLabels(
   xTicks: TickItemType[],
   {
     tickLabelStyle: style,
@@ -42,17 +42,17 @@ function findLabelsToSkip(
       measurements: Map<number, { width: number; height: number }>;
     },
 ): Set<number> {
-  const labelsToSkip = new Set<number>();
+  const visibleLabels = new Set<number>();
   if (typeof tickLabelInterval === 'function') {
     xTicks.forEach((item, index) => {
-      const shouldSkip = !tickLabelInterval(item.value, index);
+      const isLabelVisible = tickLabelInterval(item.value, index);
 
-      if (shouldSkip) {
-        labelsToSkip.add(index);
+      if (isLabelVisible) {
+        visibleLabels.add(index);
       }
     });
 
-    return labelsToSkip;
+    return visibleLabels;
   }
 
   // Filter label to avoid overlap
@@ -71,14 +71,14 @@ function findLabelsToSkip(
     if (labelIndex > 0 && direction * currentTextLimit < direction * previousTextLimit) {
       // Except for the first label, we skip all label that overlap with the last accepted.
       // Notice that the early return prevents `previousTextLimit` from being updated.
-      labelsToSkip.add(labelIndex);
       return;
     }
 
+    visibleLabels.add(labelIndex);
     previousTextLimit = textPosition + (direction * (gapRatio * distance)) / 2;
   });
 
-  return labelsToSkip;
+  return visibleLabels;
 }
 
 const XAxisRoot = styled(AxisRoot, {
@@ -196,7 +196,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     [measuring, xTicks],
   );
 
-  const labelsToSkip = findLabelsToSkip(xTicks, {
+  const visibleLabels = computeVisibleLabels(xTicks, {
     tickLabelStyle: axisTickLabelProps.style,
     tickLabelInterval,
     reverse,
@@ -241,7 +241,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
       )}
 
       {xTicks.map(({ formattedValue, offset, labelOffset }, index) => {
-        const skipLabel = labelsToSkip.has(index);
+        const isLabelVisible = visibleLabels.has(index);
         const xTickLabel = labelOffset ?? 0;
         const yTickLabel = positionSign * (tickSize + 3);
 
@@ -260,7 +260,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
               />
             )}
 
-            {measuring || (formattedValue !== undefined && !skipLabel && showTickLabel) ? (
+            {measuring || (formattedValue !== undefined && isLabelVisible && showTickLabel) ? (
               <TickLabel
                 x={xTickLabel}
                 y={yTickLabel}
