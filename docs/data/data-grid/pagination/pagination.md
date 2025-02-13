@@ -104,7 +104,7 @@ This means you have to give the rows of all pages to the Data Grid.
 If your dataset is too big, and you want to fetch the pages on demand, you can use server-side pagination.
 
 :::warning
-If you enable server-side pagination with no other server-side features, then the Data Grid will only be provided with partial data for filtering and sorting. 
+If you enable server-side pagination with no other server-side features, then the Data Grid will only be provided with partial data for filtering and sorting.
 To be able to work with the entire dataset, you must also implement [server-side filtering](/x/react-data-grid/filtering/server-side/) and [server-side sorting](/x/react-data-grid/sorting/#server-side-sorting).
 :::
 
