@@ -118,12 +118,7 @@ export interface SparkLineChartProps
   color?: ChartsColor;
 }
 
-const SPARKLINE_DEFAULT_MARGIN = {
-  top: 5,
-  bottom: 5,
-  left: 5,
-  right: 5,
-};
+const SPARK_LINE_DEFAULT_MARGIN = 5;
 
 /**
  * Demos:
@@ -143,7 +138,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
     yAxis,
     width,
     height,
-    margin = SPARKLINE_DEFAULT_MARGIN,
+    margin = SPARK_LINE_DEFAULT_MARGIN,
     color,
     sx,
     showTooltip,

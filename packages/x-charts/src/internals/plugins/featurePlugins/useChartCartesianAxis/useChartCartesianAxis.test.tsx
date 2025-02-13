@@ -24,8 +24,8 @@ describe('useChartCartesianAxis', () => {
       render(
         <BarChart
           xAxis={[
-            { scaleType: 'band', id: 'qwerty', data: ['a', 'b', 'c'] },
-            { scaleType: 'band', id: 'qwerty', data: ['a', 'b', 'c'] },
+            { scaleType: 'band', id: 'qwerty', data: ['a', 'b', 'c'], position: 'none' },
+            { scaleType: 'band', id: 'qwerty', data: ['a', 'b', 'c'], position: 'none' },
           ]}
           series={[{ data: [1, 2, 3] }]}
           height={100}

@@ -30,17 +30,25 @@ export interface ChartsAxisProps {
  */
 function ChartsAxis(props: ChartsAxisProps) {
   const { slots, slotProps } = props;
-  const { xAxisIds } = useXAxes();
-  const { yAxisIds } = useYAxes();
+  const { xAxisIds, xAxis } = useXAxes();
+  const { yAxisIds, yAxis } = useYAxes();
 
   return (
     <React.Fragment>
-      {xAxisIds.map((axisId) => (
-        <ChartsXAxis key={axisId} slots={slots} slotProps={slotProps} axisId={axisId} />
-      ))}
-      {yAxisIds.map((axisId) => (
-        <ChartsYAxis key={axisId} slots={slots} slotProps={slotProps} axisId={axisId} />
-      ))}
+      {xAxisIds.map((axisId) => {
+        if (!xAxis[axisId].position || xAxis[axisId].position === 'none') {
+          return null;
+        }
+
+        return <ChartsXAxis key={axisId} slots={slots} slotProps={slotProps} axisId={axisId} />;
+      })}
+      {yAxisIds.map((axisId) => {
+        if (!yAxis[axisId].position || yAxis[axisId].position === 'none') {
+          return null;
+        }
+
+        return <ChartsYAxis key={axisId} slots={slots} slotProps={slotProps} axisId={axisId} />;
+      })}
     </React.Fragment>
   );
 }

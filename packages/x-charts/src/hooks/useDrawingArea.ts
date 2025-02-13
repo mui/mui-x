@@ -1,4 +1,5 @@
 'use client';
+import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
 import { selectorChartDrawingArea } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.selectors';
@@ -21,5 +22,5 @@ export type ChartDrawingArea = {
  */
 export function useDrawingArea(): ChartDrawingArea {
   const store = useStore();
-  return useSelector(store, selectorChartDrawingArea);
+  return useSelector(store, selectorChartDrawingArea, undefined, fastObjectShallowCompare);
 }
