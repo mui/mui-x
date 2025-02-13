@@ -48,6 +48,15 @@ export const useRangePosition = (
 
     const sections = singleInputFieldRef.current.getSections();
     const targetActiveSectionIndex = newRangePosition === 'start' ? 0 : sections.length / 2;
+    const activeSectionIndex = singleInputFieldRef.current.getActiveSectionIndex();
+    // if the active section is already within the target range, we don't need to update it.
+    if (
+      activeSectionIndex &&
+      activeSectionIndex >= targetActiveSectionIndex &&
+      activeSectionIndex < targetActiveSectionIndex + sections.length / 2
+    ) {
+      return;
+    }
     singleInputFieldRef.current.setSelectedSections(targetActiveSectionIndex);
   };
 
