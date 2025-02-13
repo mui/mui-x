@@ -127,6 +127,17 @@ export const createRootSelector =
   (apiRef: RefObject<{ state: State } | null>) =>
     fn(apiRef.current!.state);
 
+export const createRootArgumentsSelector =
+  <State, Args, Result>(
+    fn: (state: State, args: Args) => Result,
+  ): OutputSelector<State, Args, Result> =>
+  (apiRef: RefObject<{ state: State } | null>, args: Args | undefined) => {
+    if (args === undefined) {
+      throw new Error('Arguments are required for this selector');
+    }
+    return fn(apiRef.current!.state, args);
+  };
+
 export const createSelectorMemoized: CreateSelectorFunction = (...args: any) => {
   const selector = (apiRef: RefObject<any>, selectorArgs: any) => {
     const cacheKey = apiRef.current.instanceId;

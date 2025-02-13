@@ -27,7 +27,7 @@ export const GRID_SINGLE_SELECT_COL_DEF: Omit<GridSingleSelectColDef, 'field'> =
   getOptionLabel: defaultGetOptionLabel,
   getOptionValue: defaultGetOptionValue,
   valueFormatter(value, row, colDef, apiRef) {
-    const rowId = gridRowIdSelector(apiRef.current.state, row);
+    const rowId = gridRowIdSelector(apiRef, row);
 
     if (!isSingleSelectColDef(colDef)) {
       return '';

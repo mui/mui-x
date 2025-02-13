@@ -116,7 +116,7 @@ export const useGridRows = (
   );
 
   const getRowId = React.useCallback<GridRowApi['getRowId']>(
-    (row) => gridRowIdSelector(apiRef.current.state, row),
+    (row) => gridRowIdSelector(apiRef, row),
     [apiRef],
   );
 

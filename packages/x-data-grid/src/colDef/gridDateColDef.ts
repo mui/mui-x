@@ -31,7 +31,7 @@ export const gridDateFormatter: GridValueFormatter = (value: Date, row, column, 
   if (!value) {
     return '';
   }
-  const rowId = gridRowIdSelector(apiRef.current.state, row);
+  const rowId = gridRowIdSelector(apiRef, row);
   throwIfNotDateObject({ value, columnType: 'date', rowId, field: column.field });
   return value.toLocaleDateString();
 };
@@ -45,7 +45,7 @@ export const gridDateTimeFormatter: GridValueFormatter = (
   if (!value) {
     return '';
   }
-  const rowId = gridRowIdSelector(apiRef.current.state, row);
+  const rowId = gridRowIdSelector(apiRef, row);
   throwIfNotDateObject({ value, columnType: 'dateTime', rowId, field: column.field });
   return value.toLocaleString();
 };

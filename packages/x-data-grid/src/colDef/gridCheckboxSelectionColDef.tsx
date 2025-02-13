@@ -25,7 +25,7 @@ export const GRID_CHECKBOX_SELECTION_COL_DEF: GridColDef = {
   display: 'flex',
   valueGetter: (value, row, column, apiRef) => {
     const selectionLookup = selectedIdsLookupSelector(apiRef);
-    const rowId = gridRowIdSelector(apiRef.current.state, row);
+    const rowId = gridRowIdSelector(apiRef, row);
     return selectionLookup[rowId] !== undefined;
   },
   renderHeader: (params) => <GridHeaderCheckbox {...params} />,
