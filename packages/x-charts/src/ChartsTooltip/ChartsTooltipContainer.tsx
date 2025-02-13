@@ -93,12 +93,50 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
       positionRef.current = { x: event.clientX, y: event.clientY };
       popperRef.current?.update();
     };
+
     element.addEventListener('pointermove', handleMove);
 
     return () => {
       element.removeEventListener('pointermove', handleMove);
     };
   }, [svgRef, positionRef]);
+
+  const anchorEl = React.useMemo(
+    () => ({
+      getBoundingClientRect: () => ({
+        x: positionRef.current.x,
+        y: positionRef.current.y,
+        top: positionRef.current.y,
+        left: positionRef.current.x,
+        right: positionRef.current.x,
+        bottom: positionRef.current.y,
+        width: 0,
+        height: 0,
+        toJSON: () => '',
+      }),
+    }),
+    [positionRef],
+  );
+
+  const modifiers = React.useMemo(
+    () => [
+      {
+        name: 'offset',
+        options: {
+          offset: ({ placement }: { placement: PopperPlacementType }) => {
+            if (pointerType?.pointerType !== 'touch') {
+              return [0, 0];
+            }
+
+            const isBottom = placement.startsWith('bottom');
+            const placementOffset = isBottom ? 32 : 8;
+            return [0, pointerType.height + placementOffset];
+          },
+        },
+      },
+    ],
+    [pointerType],
+  );
 
   if (trigger === 'none') {
     return null;
@@ -114,35 +152,8 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
             pointerType?.pointerType === 'mouse' ? ('right-start' as const) : ('top' as const)
           }
           popperRef={popperRef}
-          anchorEl={{
-            getBoundingClientRect: () => ({
-              x: positionRef.current.x,
-              y: positionRef.current.y,
-              top: positionRef.current.y,
-              left: positionRef.current.x,
-              right: positionRef.current.x,
-              bottom: positionRef.current.y,
-              width: 0,
-              height: 0,
-              toJSON: () => '',
-            }),
-          }}
-          modifiers={[
-            {
-              name: 'offset',
-              options: {
-                offset: ({ placement }: { placement: PopperPlacementType }) => {
-                  if (pointerType?.pointerType !== 'touch') {
-                    return [0, 0];
-                  }
-
-                  const isBottom = placement.startsWith('bottom');
-                  const placementOffset = isBottom ? 32 : 8;
-                  return [0, pointerType.height + placementOffset];
-                },
-              },
-            },
-          ]}
+          anchorEl={anchorEl}
+          modifiers={modifiers}
           {...other}
         >
           {children}

@@ -100,7 +100,7 @@ importers:
         version: 5.16.14(@emotion/react@11.14.0(@types/react@19.0.8)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.8)(react@19.0.0))(@types/react@19.0.8)(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mui/monorepo':
         specifier: github:mui/material-ui#c390c1c2d1c85f42d40f16ce405a3c4b62026ec7
-        version: https://codeload.github.com/mui/material-ui/tar.gz/c390c1c2d1c85f42d40f16ce405a3c4b62026ec7(@babel/core@7.26.7)(encoding@0.1.13)
+        version: https://codeload.github.com/mui/material-ui/tar.gz/c390c1c2d1c85f42d40f16ce405a3c4b62026ec7(@babel/core@7.26.8)(encoding@0.1.13)
       '@mui/utils':
         specifier: ^5.16.14
         version: 5.16.14(@types/react@19.0.8)(react@19.0.0)
@@ -12323,12 +12323,12 @@ snapshots:
       '@emotion/styled': 11.14.0(@emotion/react@11.14.0(@types/react@19.0.8)(react@19.0.0))(@types/react@19.0.8)(react@19.0.0)
       '@types/react': 19.0.8
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/c390c1c2d1c85f42d40f16ce405a3c4b62026ec7(@babel/core@7.26.7)(encoding@0.1.13)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/c390c1c2d1c85f42d40f16ce405a3c4b62026ec7(@babel/core@7.26.8)(encoding@0.1.13)':
     dependencies:
       '@googleapis/sheets': 9.3.1(encoding@0.1.13)
       '@netlify/functions': 3.0.0
       '@slack/bolt': 4.2.0
-      babel-plugin-transform-import-meta: 2.3.2(@babel/core@7.26.7)
+      babel-plugin-transform-import-meta: 2.3.2(@babel/core@7.26.8)
       execa: 9.5.2
       google-auth-library: 9.15.1(encoding@0.1.13)
     transitivePeerDependencies:
@@ -14215,10 +14215,10 @@ snapshots:
 
   babel-plugin-search-and-replace@1.1.1: {}
 
-  babel-plugin-transform-import-meta@2.3.2(@babel/core@7.26.7):
+  babel-plugin-transform-import-meta@2.3.2(@babel/core@7.26.8):
     dependencies:
-      '@babel/core': 7.26.7
-      '@babel/template': 7.25.9
+      '@babel/core': 7.26.8
+      '@babel/template': 7.26.8
       tslib: 2.8.1
 
   babel-plugin-transform-react-remove-prop-types@0.4.24: {}
