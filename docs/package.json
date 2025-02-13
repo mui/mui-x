@@ -27,6 +27,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/server": "^11.11.0",
     "@emotion/styled": "^11.14.0",
+    "@fontsource/geist-sans": "^5.1.0",
     "@mui/docs": "6.4.1",
     "@mui/icons-material": "^5.16.14",
     "@mui/joy": "^5.0.0-beta.51",

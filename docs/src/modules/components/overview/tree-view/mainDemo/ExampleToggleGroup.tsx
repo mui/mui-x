@@ -14,10 +14,11 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
 }));
 
 export type ExampleToggleGroupProps = {
+  selected: 'github' | 'figma' | 'vscode';
   onToggleChange: (value: 'github' | 'figma' | 'vscode') => void;
 };
 
-export default function ExampleToggleGroup({ onToggleChange }: ExampleToggleGroupProps) {
+export default function ExampleToggleGroup({ selected, onToggleChange }: ExampleToggleGroupProps) {
   return (
     <Paper
       elevation={0}
@@ -30,7 +31,7 @@ export default function ExampleToggleGroup({ onToggleChange }: ExampleToggleGrou
     >
       <StyledToggleButtonGroup
         orientation="horizontal"
-        value="github"
+        value={selected}
         exclusive
         size="small"
         onChange={(_event, value) => onToggleChange(value)}
