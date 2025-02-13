@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { GetWordsByLinesParams, getWordsByLines } from '../internals/getWordsByLines';
+import { GetWordsByLinesParams } from '../internals/getWordsByLines';
 
 export interface ChartsTextProps
   extends Omit<
@@ -27,22 +27,19 @@ export interface ChartsTextProps
  */
 const ChartsText = React.forwardRef<SVGTextElement, ChartsTextProps>(
   function ChartsText(props, ref) {
-    const { x, y, style: styleProps, text, ownerState, ...textProps } = props;
-    const [measuringElement, setMeasuringElement] = React.useState<SVGGElement | null>(null);
+    const { x, y, style: styleProps, text, ownerState, measuring, ...textProps } = props;
+    const firstLineTSpanRef = React.useRef<SVGTSpanElement | null>(null);
+    const [lineHeight, setLineHeight] = React.useState(0);
+    const lines = text.split('\n');
 
     const { angle, textAnchor, dominantBaseline, ...style } = styleProps ?? {};
 
-    const wordsByLines = React.useMemo(
-      () =>
-        getWordsByLines({
-          className: textProps?.className,
-          style,
-          needsComputation: text.includes('\n'),
-          text,
-          measuringElement,
-        }),
-      [measuringElement, style, text, textProps?.className],
-    );
+    React.useLayoutEffect(() => {
+      const bbox = firstLineTSpanRef.current?.getBBox();
+      if (bbox) {
+        setLineHeight(bbox.height);
+      }
+    }, [style, text, textProps.className]);
 
     let startDy: number;
     switch (dominantBaseline) {
@@ -50,10 +47,10 @@ const ChartsText = React.forwardRef<SVGTextElement, ChartsTextProps>(
         startDy = 0;
         break;
       case 'central':
-        startDy = ((wordsByLines.length - 1) / 2) * -wordsByLines[0].height;
+        startDy = ((lines.length - 1) / 2) * -lineHeight;
         break;
       default:
-        startDy = (wordsByLines.length - 1) * -wordsByLines[0].height;
+        startDy = (lines.length - 1) * -lineHeight;
         break;
     }
 
@@ -75,16 +72,17 @@ const ChartsText = React.forwardRef<SVGTextElement, ChartsTextProps>(
         y={y}
         textAnchor={textAnchor}
         dominantBaseline={dominantBaseline}
-        style={measuringElement ? { ...style, visibility: 'hidden' } : style}
+        style={measuring ? { ...style, visibility: 'hidden' } : style}
       >
-        {wordsByLines.map((line, index) => (
+        {lines.map((line, index) => (
           <tspan
+            ref={index === 0 ? firstLineTSpanRef : undefined}
             x={x}
-            dy={`${index === 0 ? startDy : wordsByLines[0].height}px`}
+            dy={`${index === 0 ? startDy : lineHeight}px`}
             dominantBaseline={dominantBaseline} // Propagated to fix Safari issue: https://github.com/mui/mui-x/issues/10808
             key={index}
           >
-            {line.text}
+            {line}
           </tspan>
         ))}
       </text>

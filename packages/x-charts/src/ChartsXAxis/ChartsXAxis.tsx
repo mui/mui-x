@@ -175,7 +175,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     new Map<number, { width: number; height: number }>(),
   );
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     if (measuring) {
       setMeasurements(
         new Map(
