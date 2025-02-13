@@ -327,7 +327,7 @@ export const createColumnsState = ({
       columnVisibilityModel,
     };
   } else {
-    const currentState = gridColumnsStateSelector(apiRef.current.state);
+    const currentState = gridColumnsStateSelector(apiRef);
     columnsState = {
       orderedFields: keepOnlyColumnsToUpsert ? [] : [...currentState.orderedFields],
       lookup: { ...currentState.lookup }, // Will be cleaned later if keepOnlyColumnsToUpsert=true
