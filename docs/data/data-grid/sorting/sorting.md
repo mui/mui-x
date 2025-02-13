@@ -93,7 +93,7 @@ In the following demo, the `firstName` column is not sortable by the default gri
 
 ## Reset page on sorting
 
-By default, sorting does not change the current page. 
+By default, sorting does not change the current page.
 To send the user back to the first page when a new sort is applied, use the `resetPageOnSortFilter` prop.
 
 {{"demo": "SortingWithPageReset.js", "bg": "inline", "defaultCodeOpen": false}}

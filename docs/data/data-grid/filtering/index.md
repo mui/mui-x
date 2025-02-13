@@ -149,8 +149,8 @@ const columns = [
 
 ## Reset page on filtering
 
-By default, the user stays on the same page after a filter is applied, unless the new row count indicates that that page doesn't exist anymore. 
-In that case, the user is sent to the last page as defined by the new row count. 
+By default, the user stays on the same page after a filter is applied, unless the new row count indicates that that page doesn't exist anymore.
+In that case, the user is sent to the last page as defined by the new row count.
 To send the user back to the first page when a new filter is applied, use the `resetPageOnSortFilter` prop.
 
 {{"demo": "FilteringWithPageReset.js", "bg": "inline", "defaultCodeOpen": false}}
