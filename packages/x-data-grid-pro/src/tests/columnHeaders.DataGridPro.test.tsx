@@ -3,7 +3,7 @@ import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-t
 import { config } from 'react-transition-group';
 import { expect } from 'chai';
 import { gridClasses, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
-import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
+import { getColumnHeaderCell, getColumnValues, sleep } from 'test/utils/helperFn';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Column headers', () => {
@@ -161,12 +161,15 @@ describe('<DataGridPro /> - Column headers', () => {
       const columnWithMenuCell = getColumnHeaderCell(0);
       const columnToResizeCell = getColumnHeaderCell(1);
 
+      await user.hover(columnWithMenuCell);
+      // The sleep seems to be necessary to avoid a flaky test
+      await sleep(50);
+
       const menuIconButton = columnWithMenuCell.querySelector('button[aria-label="Menu"]')!;
 
       await user.click(menuIconButton);
-      await waitFor(() => {
-        expect(screen.queryByRole('menu')).not.to.equal(null);
-      });
+
+      await screen.findByRole('menu');
 
       const separator = columnToResizeCell.querySelector(
         `.${gridClasses['columnSeparator--resizable']}`,
@@ -186,13 +189,17 @@ describe('<DataGridPro /> - Column headers', () => {
       );
 
       const columnCell = getColumnHeaderCell(0);
+
+      await user.hover(columnCell);
+      // The sleep seems to be necessary to avoid a flaky test
+      await sleep(50);
+
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
 
-      await user.hover(menuIconButton);
       await user.click(menuIconButton);
-      await waitFor(() => {
-        expect(screen.queryByRole('menu')).not.to.equal(null);
-      });
+
+      await screen.findByRole('menu');
+
       await user.keyboard('[Escape]');
       expect(screen.queryByRole('menu')).to.equal(null);
     });
