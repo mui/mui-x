@@ -20,14 +20,7 @@ import { ChartsSurface } from '../ChartsSurface';
 import { ChartDataProvider } from '../ChartDataProvider';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
 import { ChartsWrapper } from '../internals/components/ChartsWrapper';
-import {
-  useChartInteraction,
-  UseChartInteractionSignature,
-} from '../internals/plugins/featurePlugins/useChartInteraction';
-import {
-  useChartHighlight,
-  UseChartHighlightSignature,
-} from '../internals/plugins/featurePlugins/useChartHighlight';
+import { PIE_CHART_PLUGINS, PieChartPluginSignatures } from './PieChart.plugins';
 
 export interface PieChartSlots
   extends PiePlotSlots,
@@ -42,10 +35,7 @@ export interface PieChartSlotProps
     ChartsTooltipSlotProps {}
 
 export interface PieChartProps
-  extends Omit<
-      ChartContainerProps<'pie', [UseChartInteractionSignature, UseChartHighlightSignature]>,
-      'series'
-    >,
+  extends Omit<ChartContainerProps<'pie', PieChartPluginSignatures>, 'series'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     Pick<PiePlotProps, 'skipAnimation'> {
   /**
@@ -73,7 +63,6 @@ export interface PieChartProps
   slotProps?: PieChartSlotProps;
 }
 
-const PIE_CHART_PLUGGINS = [useChartInteraction, useChartHighlight] as const;
 const defaultMargin = { top: 5, bottom: 5, left: 5, right: 5 };
 
 /**
@@ -114,7 +103,7 @@ const PieChart = React.forwardRef(function PieChart(
 
   const { chartDataProviderProps, chartsSurfaceProps } = useChartContainerProps<
     'pie',
-    [UseChartInteractionSignature, UseChartHighlightSignature]
+    PieChartPluginSignatures
   >(
     {
       ...other,
@@ -127,14 +116,14 @@ const PieChart = React.forwardRef(function PieChart(
       onHighlightChange,
       className,
       skipAnimation,
-      plugins: PIE_CHART_PLUGGINS,
+      plugins: PIE_CHART_PLUGINS,
     },
     ref,
   );
 
   const Tooltip = slots?.tooltip ?? ChartsTooltip;
   return (
-    <ChartDataProvider {...chartDataProviderProps}>
+    <ChartDataProvider<'pie', PieChartPluginSignatures> {...chartDataProviderProps}>
       <ChartsWrapper
         legendPosition={props.slotProps?.legend?.position}
         legendDirection={props?.slotProps?.legend?.direction ?? 'vertical'}
@@ -170,7 +159,7 @@ PieChart.propTypes = {
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
-   * @default blueberryTwilightPalette
+   * @default rainbowSurgePalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   /**

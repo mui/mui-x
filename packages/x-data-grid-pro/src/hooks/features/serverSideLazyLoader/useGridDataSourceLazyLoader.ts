@@ -16,18 +16,18 @@ import {
 } from '@mui/x-data-grid';
 import {
   getVisibleRows,
-  GridGetRowsParams,
   gridRenderContextSelector,
   GridStrategyGroup,
   GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
   runIf,
+  DataSourceRowsUpdateStrategy,
 } from '@mui/x-data-grid/internals';
+import { GridGetRowsParamsPro as GridGetRowsParams } from '../dataSource/models';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { findSkeletonRowsSection } from '../lazyLoader/utils';
 import { GRID_SKELETON_ROW_ROOT_ID } from '../lazyLoader/useGridLazyLoaderPreProcessors';
-import { DataSourceRowsUpdateStrategy } from '../dataSource/utils';
 
 enum LoadingTrigger {
   VIEWPORT,
@@ -328,7 +328,7 @@ export const useGridDataSourceLazyLoader = (
         return;
       }
 
-      const dimensions = gridDimensionsSelector(privateApiRef.current.state);
+      const dimensions = gridDimensionsSelector(privateApiRef);
       const position = newScrollPosition.top + dimensions.viewportInnerSize.height;
       const target = dimensions.contentSize.height - props.scrollEndThreshold;
 

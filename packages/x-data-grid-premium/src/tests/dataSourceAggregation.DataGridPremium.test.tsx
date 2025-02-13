@@ -8,7 +8,7 @@ import {
   DataGridPremiumProps,
   GridApi,
   GridDataSource,
-  GridGetRowsParams,
+  GridGetRowsResponse,
   useGridApiRef,
   GRID_AGGREGATION_ROOT_FOOTER_ROW_ID,
   GRID_ROOT_GROUP_ID,
@@ -22,7 +22,6 @@ describeSkipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => {
 
   let apiRef: RefObject<GridApi | null>;
   const fetchRowsSpy = spy();
-  let mockServer: ReturnType<typeof useMockServer>;
 
   // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
   function Reset() {
@@ -39,16 +38,14 @@ describeSkipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => {
   ) {
     apiRef = useGridApiRef();
     const { getAggregatedValue: getAggregatedValueProp, ...rest } = props;
-    mockServer = useMockServer(
+    const { fetchRows, columns, isReady } = useMockServer<GridGetRowsResponse>(
       { rowLength: 10, maxColumns: 1 },
       { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false },
     );
 
-    const { fetchRows } = mockServer;
-
     const dataSource: GridDataSource = React.useMemo(() => {
       return {
-        getRows: async (params: GridGetRowsParams) => {
+        getRows: async (params) => {
           const urlParams = new URLSearchParams({
             filterModel: JSON.stringify(params.filterModel),
             sortModel: JSON.stringify(params.sortModel),
@@ -76,27 +73,27 @@ describeSkipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => {
       };
     }, [fetchRows, getAggregatedValueProp]);
 
-    const baselineProps = {
-      unstable_dataSource: dataSource,
-      columns: mockServer.columns,
-      disableVirtualization: true,
-      aggregationFunctions: {
-        sum: { columnTypes: ['number'] },
-        avg: { columnTypes: ['number'] },
-        min: { columnTypes: ['number', 'date', 'dateTime'] },
-        max: { columnTypes: ['number', 'date', 'dateTime'] },
-        size: {},
-      },
-    };
-
-    if (!mockServer.isReady) {
+    if (!isReady) {
       return null;
     }
 
     return (
       <div style={{ width: 300, height: 300 }}>
         <Reset />
-        <DataGridPremium apiRef={apiRef} {...baselineProps} {...rest} />
+        <DataGridPremium
+          apiRef={apiRef}
+          unstable_dataSource={dataSource}
+          columns={columns}
+          disableVirtualization
+          aggregationFunctions={{
+            sum: { columnTypes: ['number'] },
+            avg: { columnTypes: ['number'] },
+            min: { columnTypes: ['number', 'date', 'dateTime'] },
+            max: { columnTypes: ['number', 'date', 'dateTime'] },
+            size: {},
+          }}
+          {...rest}
+        />
       </div>
     );
   }

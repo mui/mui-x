@@ -6,6 +6,7 @@ import transformLegendPositionValues from '../replace-legend-position-values';
 import transformRemoveExperimentalMarkRendering from '../remove-experimental-mark-rendering';
 import transformRenameLegendPositionType from '../rename-legend-position-type';
 import transformReplaceAxisClickHandler from '../remove-on-axis-click-handler';
+import transformRenameUnstableUseSeries from '../rename-unstable-use-series';
 
 import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 
@@ -18,6 +19,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   file.source = transformRemoveExperimentalMarkRendering(file, api, options);
   file.source = transformRenameLegendPositionType(file, api, options);
   file.source = transformReplaceAxisClickHandler(file, api, options);
+  file.source = transformRenameUnstableUseSeries(file, api, options);
 
   return file.source;
 }

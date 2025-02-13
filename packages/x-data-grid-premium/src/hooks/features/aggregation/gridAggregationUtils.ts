@@ -196,7 +196,10 @@ export const addFooterRows = ({
   };
 
   const updateRootGroupFooter = (groupNode: GridGroupNode) => {
-    const shouldHaveFooter = hasAggregationRule && getAggregationPosition(groupNode) === 'footer';
+    const shouldHaveFooter =
+      hasAggregationRule &&
+      getAggregationPosition(groupNode) === 'footer' &&
+      groupNode.children.length > 0;
 
     if (shouldHaveFooter) {
       const rowId = getAggregationFooterRowIdFromGroupId(null);

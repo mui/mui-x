@@ -1,15 +1,19 @@
-import { createSelector } from '../../../utils/createSelector';
+import { createSelector, createRootSelector } from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridRowId } from '../../../models/gridRows';
+import { GridEditModes, GridEditMode } from '../../../models/gridEditRowModel';
 
 /**
  * Select the row editing state.
  */
-export const gridEditRowsStateSelector = (state: GridStateCommunity) => state.editRows;
+export const gridEditRowsStateSelector = createRootSelector(
+  (state: GridStateCommunity) => state.editRows,
+);
 
 export const gridRowIsEditingSelector = createSelector(
   gridEditRowsStateSelector,
-  (editRows, rowId: GridRowId) => Boolean(editRows[rowId]),
+  (editRows, { rowId, editMode }: { rowId: GridRowId; editMode: GridEditMode }) =>
+    editMode === GridEditModes.Row && Boolean(editRows[rowId]),
 );
 
 export const gridEditCellStateSelector = createSelector(

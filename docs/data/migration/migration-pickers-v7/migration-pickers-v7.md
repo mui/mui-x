@@ -1791,3 +1791,28 @@ If you have customized those translation keys, you have to update them following
 +  value == null ? null : value.format('hh:mm:ss')
 +);
 ```
+
+## Remove unused adapter formats
+
+The following unused formats have been removed from the adapters and can no longer be overridden via the `dateFormats` prop on the `<LocalizationProvider />` component:
+
+- `fullTime` - please use `fullTime12h` and `fullTime24h` instead:
+  ```diff
+    <LocalizationProvider
+      dateFormats={{
+  -     fullTime: 'LT',
+  +     fullTime12h: 'hh:mm A',
+  +     fullTime24h: 'hh:mm',
+      }}
+    >
+  ```
+- `keyboardDateTime` - please use `keyboardDateTime12h` and `keyboardDateTime24h` instead:
+  ```diff
+    <LocalizationProvider
+      dateFormats={{
+  -     keyboardDateTime: 'DD.MM.YYYY | LT',
+  +     keyboardDateTime12h: 'DD.MM.YYYY | hh:mm A',
+  +     keyboardDateTime24h: 'DD.MM.YYYY | hh:mm',
+      }}
+    >
+  ```
