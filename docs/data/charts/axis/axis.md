@@ -194,9 +194,7 @@ At the bottom, you can see one tick for the beginning and the middle of the day 
 ## Position
 
 The axis position can be customized with the `position` property of the axis configuration.
-Currently, the `xAxis` and `yAxis` props accept the `position` property.
-
-It can be set to:
+Its value can be:
 
 - `'top'` or `'bottom'` for the x-axis.
 - `'left'` or `'right'` for the y-axis.
@@ -207,7 +205,6 @@ It can be set to:
 ### Hiding axis
 
 To hide an axis, set its `position` to `'none'`.
-
 The axis is still computed and used for the scaling.
 
 {{"demo": "HidingAxis.js"}}
@@ -215,7 +212,7 @@ The axis is still computed and used for the scaling.
 ### Multiple axes on the same side
 
 You can display multiple axes on the same side.
-If two or more axes share the same `position`, they will be displayed in the order they are defined from closest to the chart to farthest.
+If two or more axes share the same `position`, they are displayed in the order they are defined from closest to the chart to farthest.
 
 To avoid overlapping, you can use the `height` prop for `xAxis` and `width` for `yAxis` to increase the space between the axes.
 
