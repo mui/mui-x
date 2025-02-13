@@ -25,6 +25,7 @@ import MUIGrow from '@mui/material/Grow';
 import MUIPaper from '@mui/material/Paper';
 import MUIInputLabel from '@mui/material/InputLabel';
 import MUISkeleton from '@mui/material/Skeleton';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridColumnUnsortedIcon } from './icons/GridColumnUnsortedIcon';
 import {
   GridAddIcon,
@@ -58,6 +59,66 @@ import type { GridBaseSlots } from '../models/gridSlotsComponent';
 import type { GridSlotProps } from '../models/gridSlotsComponentsProps';
 import type { PopperProps } from '../models/gridBaseSlots';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
+
+const ClickAwayListener = forwardRef(MUIClickAwayListener);
+
+const BaseSelect = forwardRef<any, GridSlotProps['baseSelect']>(function BaseSelect(props, ref) {
+  const rootProps = useGridRootProps();
+  const {
+    id,
+    label,
+    labelId,
+    disabled,
+    slotProps,
+    onChange,
+    onKeyDown,
+    onOpen,
+    onClose,
+    size,
+    style,
+    fullWidth,
+    ...rest
+  } = props;
+  return (
+    <MUIFormControl
+      size={size}
+      fullWidth={fullWidth}
+      style={style}
+      disabled={disabled}
+      {...rootProps.slotProps?.baseFormControl}
+      ref={ref}
+    >
+      <MUIInputLabel
+        id={labelId}
+        htmlFor={id}
+        shrink
+        variant="outlined"
+        {...rootProps.slotProps?.baseInputLabel}
+      >
+        {label}
+      </MUIInputLabel>
+      <MUISelect
+        id={id}
+        labelId={labelId}
+        label={label}
+        displayEmpty
+        onChange={onChange as any}
+        {...rest}
+        variant="outlined"
+        notched
+        inputProps={slotProps?.htmlInput}
+        onOpen={onOpen}
+        MenuProps={{
+          onClose,
+          PaperProps: {
+            onKeyDown,
+          },
+        }}
+        size={size}
+      />
+    </MUIFormControl>
+  );
+});
 
 /* eslint-disable material-ui/disallow-react-api-in-server-components */
 
@@ -301,13 +362,13 @@ function clickAwayWrapper(props: PopperProps, content: any) {
     return content;
   }
   return (
-    <MUIClickAwayListener
+    <ClickAwayListener
       onClickAway={props.onClickAway as any}
       touchEvent={props.clickAwayTouchEvent}
       mouseEvent={props.clickAwayMouseEvent}
     >
       {content}
-    </MUIClickAwayListener>
+    </ClickAwayListener>
   );
 }
 
@@ -319,63 +380,6 @@ function focusTrapWrapper(props: PopperProps, content: any) {
     <MUIFocusTrap open disableEnforceFocus isEnabled={() => props.focusTrapEnabled ?? true}>
       {content}
     </MUIFocusTrap>
-  );
-}
-
-function BaseSelect(props: GridSlotProps['baseSelect']) {
-  const rootProps = useGridRootProps();
-  const {
-    id,
-    label,
-    labelId,
-    disabled,
-    slotProps,
-    onChange,
-    onKeyDown,
-    onOpen,
-    onClose,
-    size,
-    style,
-    fullWidth,
-    ...rest
-  } = props;
-  return (
-    <MUIFormControl
-      size={size}
-      fullWidth={fullWidth}
-      style={style}
-      disabled={disabled}
-      {...rootProps.slotProps?.baseFormControl}
-    >
-      <MUIInputLabel
-        id={labelId}
-        htmlFor={id}
-        shrink
-        variant="outlined"
-        {...rootProps.slotProps?.baseInputLabel}
-      >
-        {label}
-      </MUIInputLabel>
-      <MUISelect
-        id={id}
-        labelId={labelId}
-        label={label}
-        displayEmpty
-        onChange={onChange as any}
-        {...rest}
-        variant="outlined"
-        notched
-        inputProps={slotProps?.htmlInput}
-        onOpen={onOpen}
-        MenuProps={{
-          onClose,
-          PaperProps: {
-            onKeyDown,
-          },
-        }}
-        size={size}
-      />
-    </MUIFormControl>
   );
 }
 
