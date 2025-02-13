@@ -6,7 +6,7 @@ import {
   useGridPrivateApiContext,
   gridDataSourceErrorSelector,
   gridDataSourceLoadingIdSelector,
-  gridRowsLookupIdSelector,
+  gridRowSelector,
 } from '@mui/x-data-grid-pro/internals';
 import {
   useGridSelector,
@@ -100,7 +100,7 @@ export function GridDataSourceGroupingCriteriaCell(props: GridGroupingCriteriaCe
 
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
-  const row = useGridSelector(apiRef, gridRowsLookupIdSelector, id);
+  const row = useGridSelector(apiRef, gridRowSelector, id);
   const classes = useUtilityClasses(rootProps);
 
   let descendantCount = 0;

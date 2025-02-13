@@ -29,9 +29,9 @@ export const gridRowsLookupSelector = createSelector(
   (rows) => rows.dataRowIdToModelLookup,
 );
 
-export const gridRowsLookupIdSelector = createSelector(
+export const gridRowSelector = createSelector(
   gridRowsLookupSelector,
-  (rowsLookup, id: GridRowId) => rowsLookup[id],
+  (rows, id: GridRowId) => rows[id],
 );
 
 export const gridRowTreeSelector = createSelector(gridRowsStateSelector, (rows) => rows.tree);
