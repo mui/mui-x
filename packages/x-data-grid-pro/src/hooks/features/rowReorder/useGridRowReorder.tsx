@@ -84,7 +84,7 @@ export const useGridRowReorder = (
   const handleDragStart = React.useCallback<GridEventListener<'rowDragStart'>>(
     (params, event) => {
       // Call the gridEditRowsStateSelector directly to avoid infnite loop
-      const editRowsState = gridEditRowsStateSelector(apiRef.current.state);
+      const editRowsState = gridEditRowsStateSelector(apiRef);
       if (isRowReorderDisabled || Object.keys(editRowsState).length !== 0) {
         return;
       }
@@ -159,7 +159,7 @@ export const useGridRowReorder = (
   const handleDragEnd = React.useCallback<GridEventListener<'rowDragEnd'>>(
     (params, event): void => {
       // Call the gridEditRowsStateSelector directly to avoid infnite loop
-      const editRowsState = gridEditRowsStateSelector(apiRef.current.state);
+      const editRowsState = gridEditRowsStateSelector(apiRef);
       if (dragRowId === '' || isRowReorderDisabled || Object.keys(editRowsState).length !== 0) {
         return;
       }

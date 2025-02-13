@@ -328,7 +328,7 @@ export const useGridDataSourceLazyLoader = (
         return;
       }
 
-      const dimensions = gridDimensionsSelector(privateApiRef.current.state);
+      const dimensions = gridDimensionsSelector(privateApiRef);
       const position = newScrollPosition.top + dimensions.viewportInnerSize.height;
       const target = dimensions.contentSize.height - props.scrollEndThreshold;
 
