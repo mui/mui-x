@@ -1,11 +1,12 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { alpha, styled } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { Calendar } from '../internals/base/Calendar';
 import { DIALOG_WIDTH, MAX_CALENDAR_HEIGHT } from '../internals/constants/dimensions';
 import { useDateCalendar2PrivateContext } from './DateCalendar2Context';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
-import { DateCalendar2Loadable } from './DateCalendar2Loadable';
+import { useLoadingPanel } from './DateCalendar2.utils';
 
 const DateCalendar2YearsGridRoot = styled(Calendar.YearsGrid, {
   name: 'MuiDateCalendar2',
@@ -83,11 +84,13 @@ function WrappedYearsButton(props: React.HTMLAttributes<HTMLButtonElement>) {
   return <DateCalendar2YearsCell {...yearsButtonProps} />;
 }
 
-export const DateCalendar2YearsGrid = React.memo(function DateCalendar2YearsGrid(
+export const DateCalendar2YearsGrid = React.forwardRef(function DateCalendar2YearsGrid(
   props: DateCalendarYearsGridProps,
+  ref: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { yearsOrder, cellsPerRow } = props;
-  const { classes } = useDateCalendar2PrivateContext();
+  const { yearsOrder, className, ...other } = props;
+  const { classes, loading } = useDateCalendar2PrivateContext();
+  const renderLoadingPanel = useLoadingPanel({ view: 'year' });
 
   const getItems = React.useMemo<Calendar.YearsGrid.Props['getItems']>(() => {
     if (yearsOrder === 'asc') {
@@ -99,27 +102,28 @@ export const DateCalendar2YearsGrid = React.memo(function DateCalendar2YearsGrid
     };
   }, [yearsOrder]);
 
+  if (loading) {
+    return renderLoadingPanel();
+  }
+
   return (
-    <DateCalendar2Loadable>
-      <DateCalendar2YearsGridRoot
-        getItems={getItems}
-        cellsPerRow={cellsPerRow}
-        className={classes.yearsGridRoot}
-      >
-        {({ years }) =>
-          years.map((year) => (
-            <Calendar.YearsCell
-              render={<WrappedYearsButton />}
-              value={year}
-              key={year.toString()}
-            />
-          ))
-        }
-      </DateCalendar2YearsGridRoot>
-    </DateCalendar2Loadable>
+    <DateCalendar2YearsGridRoot
+      getItems={getItems}
+      className={clsx(className, classes.yearsGridRoot)}
+      ref={ref}
+      {...other}
+    >
+      {({ years }) =>
+        years.map((year) => (
+          <Calendar.YearsCell render={<WrappedYearsButton />} value={year} key={year.toString()} />
+        ))
+      }
+    </DateCalendar2YearsGridRoot>
   );
 });
 
-interface DateCalendarYearsGridProps extends Pick<Calendar.YearsGrid.Props, 'cellsPerRow'> {
+interface DateCalendarYearsGridProps
+  extends Pick<Calendar.YearsGrid.Props, 'cellsPerRow'>,
+    React.HTMLAttributes<HTMLDivElement> {
   yearsOrder: 'asc' | 'desc';
 }

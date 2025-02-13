@@ -1,11 +1,12 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { alpha, styled } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { Calendar } from '../internals/base/Calendar';
 import { DIALOG_WIDTH } from '../internals/constants/dimensions';
 import { useDateCalendar2PrivateContext } from './DateCalendar2Context';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
-import { DateCalendar2Loadable } from './DateCalendar2Loadable';
+import { useLoadingPanel } from './DateCalendar2.utils';
 
 const DateCalendar2MonthsGridRoot = styled(Calendar.MonthsGrid, {
   name: 'MuiDateCalendar2',
@@ -79,27 +80,38 @@ function WrappedMonthsButton(props: React.HTMLAttributes<HTMLButtonElement>) {
   return <DateCalendar2MonthsCell {...monthsButtonProps} />;
 }
 
-export const DateCalendar2MonthsGrid = React.memo(function DateCalendar2MonthsGrid(
+export const DateCalendar2MonthsGrid = React.forwardRef(function DateCalendar2MonthsGrid(
   props: DateCalendarMonthsGridProps,
+  ref: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { classes } = useDateCalendar2PrivateContext();
+  const { className, ...other } = props;
+  const { classes, loading } = useDateCalendar2PrivateContext();
+  const renderLoadingPanel = useLoadingPanel({ view: 'month' });
+
+  if (loading) {
+    return renderLoadingPanel();
+  }
 
   return (
-    <DateCalendar2Loadable>
-      <DateCalendar2MonthsGridRoot {...props} className={classes.monthsGridRoot}>
-        {({ months }) =>
-          months.map((month) => (
-            <Calendar.MonthsCell
-              key={month.toString()}
-              render={<WrappedMonthsButton />}
-              value={month}
-              format="MMM"
-            />
-          ))
-        }
-      </DateCalendar2MonthsGridRoot>
-    </DateCalendar2Loadable>
+    <DateCalendar2MonthsGridRoot
+      className={clsx(className, classes.monthsGridRoot)}
+      ref={ref}
+      {...other}
+    >
+      {({ months }) =>
+        months.map((month) => (
+          <Calendar.MonthsCell
+            key={month.toString()}
+            render={<WrappedMonthsButton />}
+            value={month}
+            format="MMM"
+          />
+        ))
+      }
+    </DateCalendar2MonthsGridRoot>
   );
 });
 
-interface DateCalendarMonthsGridProps extends Pick<Calendar.MonthsGrid.Props, 'cellsPerRow'> {}
+interface DateCalendarMonthsGridProps
+  extends Pick<Calendar.MonthsGrid.Props, 'cellsPerRow'>,
+    React.HTMLAttributes<HTMLDivElement> {}

@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import clsx from 'clsx';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { TransitionGroupProps } from 'react-transition-group/TransitionGroup';
 import { alpha, styled, useTheme } from '@mui/material/styles';
@@ -15,8 +16,7 @@ import { DAY_MARGIN, DAY_SIZE } from '../internals/constants/dimensions';
 import { useUtils } from '../internals/hooks/useUtils';
 import { useDateCalendar2Context, useDateCalendar2PrivateContext } from './DateCalendar2Context';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
-import { DateCalendar2Loadable } from './DateCalendar2Loadable';
-import { DAYS_GRID_BODY_HEIGHT } from './DateCalendar2.utils';
+import { DAYS_GRID_BODY_HEIGHT, useLoadingPanel } from './DateCalendar2.utils';
 
 const DaysCalendar2DaysGridRoot = styled(Calendar.DaysGrid, {
   name: 'MuiDateCalendar2',
@@ -372,15 +372,20 @@ const DateCalendar2DaysGridBodyLoading = React.memo(function DateCalendar2DaysGr
   );
 });
 
-export const DateCalendar2DaysGrid = React.memo(function DateCalendar2DaysGrid(
+export const DateCalendar2DaysGrid = React.forwardRef(function DateCalendar2DaysGrid(
   props: DateCalendar2DaysGridProps,
+  ref: React.ForwardedRef<HTMLDivElement>,
 ) {
   const translations = usePickerTranslations();
   const utils = useUtils();
   const { visibleDate } = useCalendarContext();
-  const { classes, labelId } = useDateCalendar2PrivateContext();
+  const { classes, loading, labelId } = useDateCalendar2PrivateContext();
   const { reduceAnimations } = useDateCalendar2Context();
-  const { displayWeekNumber, fixedWeekNumber } = props;
+  const renderLoadingPanel = useLoadingPanel({
+    view: 'year',
+    defaultComponent: DateCalendar2DaysGridBodyLoading,
+  });
+  const { displayWeekNumber, fixedWeekNumber, className, ...other } = props;
 
   // We need a new ref whenever the `key` of the transition changes: https://reactcommunity.org/react-transition-group/transition/#Transition-prop-nodeRef.
   const transitionKey = utils.formatByString(
@@ -404,7 +409,12 @@ export const DateCalendar2DaysGrid = React.memo(function DateCalendar2DaysGrid(
   };
 
   return (
-    <DaysCalendar2DaysGridRoot aria-labelledby={labelId} className={classes.daysGridRoot}>
+    <DaysCalendar2DaysGridRoot
+      aria-labelledby={labelId}
+      className={clsx(className, classes.daysGridRoot)}
+      ref={ref}
+      {...other}
+    >
       <DateCalendar2DaysGridHeader className={classes.daysGridHeader}>
         {({ days }) => (
           <React.Fragment>
@@ -429,37 +439,39 @@ export const DateCalendar2DaysGrid = React.memo(function DateCalendar2DaysGrid(
           </React.Fragment>
         )}
       </DateCalendar2DaysGridHeader>
-      <DateCalendar2Loadable defaultComponent={DateCalendar2DaysGridBodyLoading}>
-        {reduceAnimations ? (
-          <DateCalendar2DaysGridBodyNoTransition>
-            <WrappedDateCalendar2DaysGridBody
-              className={classes.daysGridBody}
-              displayWeekNumber={displayWeekNumber}
-              fixedWeekNumber={fixedWeekNumber}
-            />
-          </DateCalendar2DaysGridBodyNoTransition>
-        ) : (
-          <DateCalendar2DaysGridBodyTransitionGroup
-            childFactory={(element: React.ReactElement<any>) =>
-              React.cloneElement(element, {
-                classNames: dayGridTransitionClasses,
-              })
-            }
-            role="presentation"
-            className={classes.daysGridBodyTransitionGroup}
-          >
-            <WrappedDateCalendar2DaysGridBodyWithTransition
-              key={transitionKey}
-              displayWeekNumber={displayWeekNumber}
-              fixedWeekNumber={fixedWeekNumber}
-            />
-          </DateCalendar2DaysGridBodyTransitionGroup>
-        )}
-      </DateCalendar2Loadable>
+      {loading && renderLoadingPanel()}
+      {!loading && reduceAnimations && (
+        <DateCalendar2DaysGridBodyNoTransition>
+          <WrappedDateCalendar2DaysGridBody
+            className={classes.daysGridBody}
+            displayWeekNumber={displayWeekNumber}
+            fixedWeekNumber={fixedWeekNumber}
+          />
+        </DateCalendar2DaysGridBodyNoTransition>
+      )}
+      {!loading && !reduceAnimations && (
+        <DateCalendar2DaysGridBodyTransitionGroup
+          childFactory={(element: React.ReactElement<any>) =>
+            React.cloneElement(element, {
+              classNames: dayGridTransitionClasses,
+            })
+          }
+          role="presentation"
+          className={classes.daysGridBodyTransitionGroup}
+        >
+          <WrappedDateCalendar2DaysGridBodyWithTransition
+            key={transitionKey}
+            displayWeekNumber={displayWeekNumber}
+            fixedWeekNumber={fixedWeekNumber}
+          />
+        </DateCalendar2DaysGridBodyTransitionGroup>
+      )}
     </DaysCalendar2DaysGridRoot>
   );
 });
 
-interface DateCalendar2DaysGridProps extends Pick<Calendar.DaysGridBody.Props, 'fixedWeekNumber'> {
+interface DateCalendar2DaysGridProps
+  extends Pick<Calendar.DaysGridBody.Props, 'fixedWeekNumber'>,
+    React.HTMLAttributes<HTMLDivElement> {
   displayWeekNumber: boolean;
 }
