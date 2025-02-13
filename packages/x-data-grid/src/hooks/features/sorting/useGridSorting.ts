@@ -168,7 +168,6 @@ export const useGridSorting = (
     });
 
     apiRef.current.publishEvent('sortedRowsSet');
-    apiRef.current.forceUpdate();
   }, [apiRef, logger, props.sortingMode]);
 
   const setSortModel = React.useCallback<GridSortApi['setSortModel']>(
@@ -179,7 +178,6 @@ export const useGridSorting = (
         apiRef.current.setState(
           mergeStateWithSortModel(model, props.disableMultipleColumnsSorting),
         );
-        apiRef.current.forceUpdate();
         apiRef.current.applySorting();
       }
     },
