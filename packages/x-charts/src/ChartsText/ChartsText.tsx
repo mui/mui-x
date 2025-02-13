@@ -14,6 +14,12 @@ export interface ChartsTextProps
    */
   lineHeight?: number;
   ownerState?: any;
+  /**
+   * When true, this component is being rendered only for measuring its size.
+   * Its size is needed to avoid overlapping text.
+   * When this property is true, the component should be not visible (e.g., using `visibility: 'hidden'`).
+   */
+  measuring: boolean;
 }
 
 /**
@@ -69,7 +75,7 @@ const ChartsText = React.forwardRef<SVGTextElement, ChartsTextProps>(
         y={y}
         textAnchor={textAnchor}
         dominantBaseline={dominantBaseline}
-        style={style}
+        style={measuringElement ? { ...style, visibility: 'hidden' } : style}
       >
         {wordsByLines.map((line, index) => (
           <tspan

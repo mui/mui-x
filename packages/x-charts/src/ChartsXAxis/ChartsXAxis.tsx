@@ -10,7 +10,6 @@ import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
 import { getMinXTranslation } from '../internals/geometry';
-import { useMounted } from '../hooks/useMounted';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { isInfinity } from '../internals/isInfinity';
 import { isBandScale } from '../internals/isBandScale';
@@ -31,34 +30,36 @@ const useUtilityClasses = (ownerState: ChartsXAxisProps & { theme: Theme }) => {
   return composeClasses(slots, getAxisUtilityClass, classes);
 };
 
-type LabelExtraData = { width: number; height: number; skipLabel?: boolean };
-
-function addLabelDimension(
+function findLabelsToSkip(
   xTicks: TickItemType[],
   {
     tickLabelStyle: style,
     tickLabelInterval,
     reverse,
-    isMounted,
     measurements,
   }: Pick<ChartsXAxisProps, 'tickLabelInterval' | 'tickLabelStyle'> &
     Pick<AxisDefaultized, 'reverse'> & {
-      isMounted: boolean;
       measurements: Map<number, { width: number; height: number }>;
     },
-): (TickItemType & LabelExtraData)[] {
+): Set<number> {
+  const labelsToSkip = new Set<number>();
   if (typeof tickLabelInterval === 'function') {
-    return xTicks.map((item, index) => ({
-      ...item,
-      skipLabel: !tickLabelInterval(item.value, index),
-    }));
+    xTicks.forEach((item, index) => {
+      const shouldSkip = !tickLabelInterval(item.value, index);
+
+      if (shouldSkip) {
+        labelsToSkip.add(index);
+      }
+    });
+
+    return labelsToSkip;
   }
 
   // Filter label to avoid overlap
   let currentTextLimit = 0;
   let previousTextLimit = 0;
   const direction = reverse ? -1 : 1;
-  return xTicks.map((item, labelIndex) => {
+  xTicks.forEach((item, labelIndex) => {
     const { width, height } = measurements.get(labelIndex) ?? { width: 0, height: 0 };
     const { offset, labelOffset } = item;
 
@@ -70,11 +71,14 @@ function addLabelDimension(
     if (labelIndex > 0 && direction * currentTextLimit < direction * previousTextLimit) {
       // Except for the first label, we skip all label that overlap with the last accepted.
       // Notice that the early return prevents `previousTextLimit` from being updated.
-      return { ...item, skipLabel: true };
+      labelsToSkip.add(labelIndex);
+      return;
     }
+
     previousTextLimit = textPosition + (direction * (gapRatio * distance)) / 2;
-    return item;
   });
+
+  return labelsToSkip;
 }
 
 const XAxisRoot = styled(AxisRoot, {
@@ -102,8 +106,6 @@ const defaultProps = {
 function ChartsXAxis(inProps: ChartsXAxisProps) {
   const { xAxis, xAxisIds } = useXAxes();
   const { scale: xScale, tickNumber, reverse, ...settings } = xAxis[inProps.axisId ?? xAxisIds[0]];
-
-  const isMounted = useMounted();
 
   const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsXAxis' });
 
@@ -191,11 +193,10 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     }
   }, [measuring, xTicks]);
 
-  const xTicksWithDimension = addLabelDimension(xTicks, {
+  const labelsToSkip = findLabelsToSkip(xTicks, {
     tickLabelStyle: axisTickLabelProps.style,
     tickLabelInterval,
     reverse,
-    isMounted,
     measurements,
   });
 
@@ -236,7 +237,8 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
         <Line x1={left} x2={left + width} className={classes.line} {...slotProps?.axisLine} />
       )}
 
-      {xTicksWithDimension.map(({ formattedValue, offset, labelOffset, skipLabel }, index) => {
+      {xTicks.map(({ formattedValue, offset, labelOffset }, index) => {
+        const skipLabel = labelsToSkip.has(index);
         const xTickLabel = labelOffset ?? 0;
         const yTickLabel = positionSign * (tickSize + 3);
 
@@ -260,15 +262,14 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
                 x={xTickLabel}
                 y={yTickLabel}
                 {...axisTickLabelProps}
-                style={{
-                  ...axisTickLabelProps.style,
-                  ...(measuring ? { visibility: 'hidden' } : {}),
-                }}
+                measuring={measuring}
                 ref={(ref) => {
+                  const textMap = textMapRef.current;
+
                   if (ref == null) {
-                    textMapRef.current.delete(index);
+                    textMap.delete(index);
                   } else {
-                    textMapRef.current.set(index, ref);
+                    textMap.set(index, ref);
                   }
                 }}
                 text={formattedValue?.toString() ?? ''}
