@@ -1,11 +1,28 @@
 import { lruMemoize, createSelectorCreator, CreateSelectorFunction } from 'reselect';
+import { fastShallowCompare } from '@mui/x-internals/fastShallowCompare';
 import { ChartAnyPluginSignature, ChartState, ChartStateCacheKey } from '../models';
+
+const complainIfNoMemoize =
+  (name: string) =>
+  (a: any, b: any): boolean => {
+    const is = Object.is(a, b);
+    const shallow = fastShallowCompare(a, b);
+    if (is !== shallow) {
+      console.warn(
+        `Selector ${name} returned inconsistent results. Is: ${is} Shallow: ${shallow}`,
+        a,
+        b,
+      );
+    }
+    return is;
+  };
 
 const reselectCreateSelector = createSelectorCreator({
   memoize: lruMemoize,
   memoizeOptions: {
     maxSize: 1,
-    equalityCheck: Object.is,
+    equalityCheck: complainIfNoMemoize('prop check'),
+    resultEqualityCheck: complainIfNoMemoize('result check'),
   },
 });
 
