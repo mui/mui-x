@@ -316,7 +316,6 @@ export const useGridCellEditing = (
 
         return { ...state, editRows: newEditingState };
       });
-      apiRef.current.forceUpdate();
     },
     [apiRef],
   );

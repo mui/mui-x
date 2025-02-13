@@ -227,7 +227,7 @@ export const useGridDetailPanel = (
     }
   }, [apiRef, props.detailPanelExpandedRowIds]);
 
-  const updateCachesAndForceUpdate = React.useCallback(() => {
+  const updateCaches = React.useCallback(() => {
     if (!props.getDetailPanelContent) {
       return;
     }
@@ -245,10 +245,9 @@ export const useGridDetailPanel = (
         },
       };
     });
-    apiRef.current.forceUpdate();
   }, [apiRef, props.getDetailPanelContent, props.getDetailPanelHeight]);
 
-  useGridApiEventHandler(apiRef, 'sortedRowsSet', updateCachesAndForceUpdate);
+  useGridApiEventHandler(apiRef, 'sortedRowsSet', updateCaches);
 
   const previousGetDetailPanelContentProp =
     React.useRef<DataGridProProcessedProps['getDetailPanelContent']>(undefined);

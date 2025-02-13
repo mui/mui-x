@@ -112,7 +112,6 @@ export const useGridCellSelection = (
         return;
       }
       apiRef.current.setState((prevState) => ({ ...prevState, cellSelection: newModel }));
-      apiRef.current.forceUpdate();
     },
     [apiRef, props.cellSelection],
   );
