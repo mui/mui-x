@@ -120,7 +120,7 @@ For now, the validation behaviors are exactly the same as on `<DateCalendar />`:
 ### With fixed week number
 
 ```tsx
-<Calendar.DaysGrid fixedWeekNumber={6}>{children}</Calendar.DaysGrid>
+<Calendar.DaysGridBody fixedWeekNumber={6}>{children}</Calendar.DaysGridBody>
 ```
 
 {{"demo": "DayCalendarWithFixedWeekNumberDemo.js", "defaultCodeOpen": false}}

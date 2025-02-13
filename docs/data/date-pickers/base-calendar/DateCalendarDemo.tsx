@@ -143,7 +143,7 @@ export default function DateCalendarDemo() {
           </Calendar.MonthsList>
         )}
         {activeSection === 'day' && (
-          <Calendar.DaysGrid focusOnMount={hasNavigated} className={styles.DaysGrid}>
+          <Calendar.DaysGrid className={styles.DaysGrid}>
             <Calendar.DaysGridHeader className={styles.DaysGridHeader}>
               {({ days }) =>
                 days.map((day) => (
@@ -155,7 +155,10 @@ export default function DateCalendarDemo() {
                 ))
               }
             </Calendar.DaysGridHeader>
-            <Calendar.DaysGridBody className={styles.DaysGridBody}>
+            <Calendar.DaysGridBody
+              className={styles.DaysGridBody}
+              focusOnMount={hasNavigated}
+            >
               {({ weeks }) =>
                 weeks.map((week) => (
                   <Calendar.DaysGridRow

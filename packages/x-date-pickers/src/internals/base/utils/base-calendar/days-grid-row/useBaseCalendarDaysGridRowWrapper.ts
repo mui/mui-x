@@ -1,27 +1,32 @@
 import * as React from 'react';
-import { useBaseCalendarDaysGridContext } from '../days-grid/BaseCalendarDaysGridContext';
+import useForkRef from '@mui/utils/useForkRef';
+import { useBaseCalendarDaysGridBodyContext } from '../days-grid-body/BaseCalendarDaysGridBodyContext';
 import type { useBaseCalendarDaysGridRow } from './useBaseCalendarDaysGridRow';
+import { useCompositeListItem } from '../../../composite/list/useCompositeListItem';
 
 export function useBaseCalendarDaysGridRowWrapper(
   parameters: useBaseCalendarDaysGridRowWrapper.Parameters,
 ): useBaseCalendarDaysGridRowWrapper.ReturnValue {
   const { forwardedRef, value } = parameters;
-  const baseDaysGridContext = useBaseCalendarDaysGridContext();
+  const baseDaysGridBodyContext = useBaseCalendarDaysGridBodyContext();
+  const { ref: listItemRef, index } = useCompositeListItem();
+  const ref = useForkRef(forwardedRef, listItemRef);
 
   // TODO: Improve how we pass the week to the week row components.
   const days = React.useMemo(
-    () => baseDaysGridContext.daysGrid.find((week) => week[0] === value) ?? [],
-    [baseDaysGridContext.daysGrid, value],
+    () => baseDaysGridBodyContext.daysGrid.find((week) => week[0] === value) ?? [],
+    [baseDaysGridBodyContext.daysGrid, value],
   );
 
-  const ctx = React.useMemo(
+  const ctx = React.useMemo<useBaseCalendarDaysGridRow.Context>(
     () => ({
       days,
+      rowIndex: index,
     }),
-    [days],
+    [days, index],
   );
 
-  return { ref: forwardedRef, ctx };
+  return { ref, ctx };
 }
 
 export namespace useBaseCalendarDaysGridRowWrapper {

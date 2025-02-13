@@ -2,7 +2,6 @@ import * as React from 'react';
 import { PickersTimezone, PickerValidDate } from '../../../../../models';
 import { ValidateDateProps } from '../../../../../validation';
 import type { useBaseCalendarRoot } from './useBaseCalendarRoot';
-import type { useBaseCalendarDaysGridBody } from '../days-grid-body/useBaseCalendarDaysGridBody';
 import { BaseCalendarSection } from '../utils/types';
 import { useBaseCalendarDaysGridNavigation } from './useBaseCalendarDaysGridsNavigation';
 
@@ -19,13 +18,6 @@ export interface BaseCalendarRootContext {
    * Whether the calendar is read-only.
    */
   readOnly: boolean;
-  /**
-   * The date currently visible.
-   * It is used to determine:
-   * - which month to render in Calendar.DaysGrid and RangeCalendar.DaysGrid
-   * - which year to render in Calendar.YearsGrid, Calendar.YearsList, RangeCalendar.YearsGrid, and RangeCalendar.YearsList
-   */
-  visibleDate: PickerValidDate;
   /**
    * The current date.
    * It is used to determine:

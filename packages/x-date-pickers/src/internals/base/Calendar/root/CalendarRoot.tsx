@@ -6,6 +6,7 @@ import { BaseUIComponentProps } from '../../base-utils/types';
 import { BaseCalendarRootContext } from '../../utils/base-calendar/root/BaseCalendarRootContext';
 import { useBaseCalendarRoot } from '../../utils/base-calendar/root/useBaseCalendarRoot';
 import { useCalendarRoot } from './useCalendarRoot';
+import { BaseCalendarRootVisibleDateContext } from '../../utils/base-calendar/root/BaseCalendarRootVisibleDateContext';
 
 const CalendarRoot = React.forwardRef(function CalendarRoot(
   props: CalendarRoot.Props,
@@ -45,7 +46,7 @@ const CalendarRoot = React.forwardRef(function CalendarRoot(
     // Props forwarded to the DOM element
     ...otherProps
   } = props;
-  const { getRootProps, baseContext, isEmpty } = useCalendarRoot({
+  const { getRootProps, baseContext, visibleDateContext, isEmpty } = useCalendarRoot({
     readOnly,
     disabled,
     monthPageSize,
@@ -81,9 +82,11 @@ const CalendarRoot = React.forwardRef(function CalendarRoot(
   });
 
   return (
-    <BaseCalendarRootContext.Provider value={baseContext}>
-      {renderElement()}
-    </BaseCalendarRootContext.Provider>
+    <BaseCalendarRootVisibleDateContext.Provider value={visibleDateContext}>
+      <BaseCalendarRootContext.Provider value={baseContext}>
+        {renderElement()}
+      </BaseCalendarRootContext.Provider>
+    </BaseCalendarRootVisibleDateContext.Provider>
   );
 });
 

@@ -7,11 +7,13 @@ import { useBaseCalendarSetVisibleMonth } from './useBaseCalendarSetVisibleMonth
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 import { useNullableBaseCalendarMonthsGridOrListContext } from '../months-grid/BaseCalendarMonthsGridOrListContext';
 import { useCompositeListItem } from '../../../composite/list/useCompositeListItem';
+import { useBaseCalendarRootVisibleDateContext } from '../root/BaseCalendarRootVisibleDateContext';
 
 export function useBaseCalendarSetVisibleMonthWrapper(
   parameters: useBaseCalendarSetVisibleMonthWrapper.Parameters,
 ): useBaseCalendarSetVisibleMonthWrapper.ReturnValue {
   const { forwardedRef, target } = parameters;
+  const baseRootVisibleDateContext = useBaseCalendarRootVisibleDateContext();
   const baseRootContext = useBaseCalendarRootContext();
   const baseMonthsListOrGridContext = useNullableBaseCalendarMonthsGridOrListContext();
   const utils = useUtils();
@@ -20,18 +22,21 @@ export function useBaseCalendarSetVisibleMonthWrapper(
 
   const targetDate = React.useMemo(() => {
     if (target === 'previous') {
-      return utils.addMonths(baseRootContext.visibleDate, -baseRootContext.monthPageSize);
+      return utils.addMonths(
+        baseRootVisibleDateContext.visibleDate,
+        -baseRootContext.monthPageSize,
+      );
     }
 
     if (target === 'next') {
-      return utils.addMonths(baseRootContext.visibleDate, baseRootContext.monthPageSize);
+      return utils.addMonths(baseRootVisibleDateContext.visibleDate, baseRootContext.monthPageSize);
     }
 
     return utils.setYear(
-      utils.setMonth(baseRootContext.visibleDate, utils.getMonth(target)),
+      utils.setMonth(baseRootVisibleDateContext.visibleDate, utils.getMonth(target)),
       utils.getYear(target),
     );
-  }, [baseRootContext.visibleDate, baseRootContext.monthPageSize, utils, target]);
+  }, [baseRootVisibleDateContext.visibleDate, baseRootContext.monthPageSize, utils, target]);
 
   const isDisabled = React.useMemo(() => {
     if (baseRootContext.disabled) {
@@ -39,7 +44,7 @@ export function useBaseCalendarSetVisibleMonthWrapper(
     }
 
     // TODO: Check if the logic below works correctly when multiple months are rendered at once.
-    const isMovingBefore = utils.isBefore(targetDate, baseRootContext.visibleDate);
+    const isMovingBefore = utils.isBefore(targetDate, baseRootVisibleDateContext.visibleDate);
 
     // All the months before the visible ones are fully disabled, we skip the navigation.
     if (isMovingBefore) {
@@ -57,7 +62,7 @@ export function useBaseCalendarSetVisibleMonthWrapper(
   }, [
     baseRootContext.disabled,
     baseRootContext.dateValidationProps,
-    baseRootContext.visibleDate,
+    baseRootVisibleDateContext.visibleDate,
     targetDate,
     utils,
   ]);

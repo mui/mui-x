@@ -108,7 +108,7 @@ function DaysGrid(props: { offset: 0 | 1 }) {
   const bookedDates = useBookedDates(visibleDate);
 
   return (
-    <RangeCalendar.DaysGrid className={styles.DaysGrid} offset={offset}>
+    <RangeCalendar.DaysGrid className={styles.DaysGrid}>
       <RangeCalendar.DaysGridHeader className={styles.DaysGridHeader}>
         {({ days }) =>
           days.map((day) => (
@@ -120,7 +120,7 @@ function DaysGrid(props: { offset: 0 | 1 }) {
           ))
         }
       </RangeCalendar.DaysGridHeader>
-      <RangeCalendar.DaysGridBody className={styles.DaysGridBody}>
+      <RangeCalendar.DaysGridBody className={styles.DaysGridBody} offset={offset}>
         {({ weeks }) =>
           weeks.map((week) => (
             <RangeCalendar.DaysGridRow

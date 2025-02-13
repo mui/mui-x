@@ -9,7 +9,9 @@ import { DateView } from '../models/views';
 import type { DateCalendar2HeaderProps } from './DateCalendar2Header';
 import { DateCalendar2Classes } from './DateCalendar2.classes';
 
-export interface DateCalendar2Props extends Omit<Calendar.Root.Props, 'children'> {
+export interface DateCalendar2Props
+  extends Omit<Calendar.Root.Props, 'children'>,
+    Pick<Calendar.DaysGridBody.Props, 'fixedWeekNumber'> {
   /**
    * Overridable component slots.
    * @default {}

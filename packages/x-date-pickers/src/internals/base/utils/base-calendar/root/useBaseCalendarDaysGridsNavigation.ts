@@ -11,7 +11,7 @@ import {
   PageGridNavigationTarget,
 } from '../utils/keyboardNavigation';
 import { getFirstEnabledMonth, getLastEnabledMonth } from '../utils/date';
-import { BaseCalendarRootContext } from './BaseCalendarRootContext';
+import type { BaseCalendarRootContext } from './BaseCalendarRootContext';
 
 /**
  * This logic needs to be in Calendar.Root to support multiple Calendar.DaysGrid.

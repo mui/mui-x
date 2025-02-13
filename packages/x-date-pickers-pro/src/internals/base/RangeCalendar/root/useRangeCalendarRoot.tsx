@@ -167,6 +167,7 @@ export function useRangeCalendarRoot(parameters: useRangeCalendarRoot.Parameters
     setValue,
     setVisibleDate,
     isDateCellVisible,
+    visibleDateContext,
     context: baseContext,
   } = useBaseCalendarRoot({
     ...baseParameters,
@@ -211,20 +212,20 @@ export function useRangeCalendarRoot(parameters: useRangeCalendarRoot.Parameters
     (externalProps: GenericHTMLProps) => {
       let children: React.ReactNode;
       if (!React.isValidElement(childrenProp) && typeof childrenProp === 'function') {
-        children = childrenProp({ visibleDate: baseContext.visibleDate });
+        children = childrenProp({ visibleDate: visibleDateContext.visibleDate });
       } else {
         children = childrenProp;
       }
       return mergeReactProps(externalProps, { children });
     },
-    [childrenProp, baseContext.visibleDate],
+    [childrenProp, visibleDateContext.visibleDate],
   );
 
   const isEmpty = value[0] == null && value[1] == null;
 
   return React.useMemo(
-    () => ({ getRootProps, context, baseContext, isEmpty }),
-    [getRootProps, context, baseContext, isEmpty],
+    () => ({ getRootProps, context, baseContext, visibleDateContext, isEmpty }),
+    [getRootProps, context, baseContext, visibleDateContext, isEmpty],
   );
 }
 

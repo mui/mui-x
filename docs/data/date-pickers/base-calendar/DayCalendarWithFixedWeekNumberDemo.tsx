@@ -26,7 +26,7 @@ export default function DayCalendarWithFixedWeekNumberDemo() {
                 ▶
               </Calendar.SetVisibleMonth>
             </header>
-            <Calendar.DaysGrid className={styles.DaysGrid} fixedWeekNumber={6}>
+            <Calendar.DaysGrid className={styles.DaysGrid}>
               <Calendar.DaysGridHeader className={styles.DaysGridHeader}>
                 {({ days }) =>
                   days.map((day) => (
@@ -38,7 +38,10 @@ export default function DayCalendarWithFixedWeekNumberDemo() {
                   ))
                 }
               </Calendar.DaysGridHeader>
-              <Calendar.DaysGridBody className={styles.DaysGridBody}>
+              <Calendar.DaysGridBody
+                className={styles.DaysGridBody}
+                fixedWeekNumber={6}
+              >
                 {({ weeks }) =>
                   weeks.map((week) => (
                     <Calendar.DaysGridRow

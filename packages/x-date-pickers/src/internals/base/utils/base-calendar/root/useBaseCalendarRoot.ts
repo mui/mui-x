@@ -19,6 +19,7 @@ import { BaseDateValidationProps } from '../../../../models/validation';
 import { useBaseCalendarDaysGridNavigation } from './useBaseCalendarDaysGridsNavigation';
 import { BaseCalendarRootContext } from './BaseCalendarRootContext';
 import { BaseCalendarSection } from '../utils/types';
+import { BaseCalendarRootVisibleDateContext } from './BaseCalendarRootVisibleDateContext';
 
 export function useBaseCalendarRoot<
   TValue extends PickerValidValue,
@@ -192,13 +193,17 @@ export function useBaseCalendarRoot<
     [getSelectedDatesFromValue, value],
   );
 
+  const visibleDateContext: BaseCalendarRootVisibleDateContext = React.useMemo(
+    () => ({ visibleDate }),
+    [visibleDate],
+  );
+
   const context: BaseCalendarRootContext = React.useMemo(
     () => ({
       timezone,
       disabled,
       readOnly,
       isDateInvalid,
-      visibleDate,
       currentDate,
       selectedDates,
       setVisibleDate: handleVisibleDateChange,
@@ -215,7 +220,6 @@ export function useBaseCalendarRoot<
       disabled,
       readOnly,
       isDateInvalid,
-      visibleDate,
       currentDate,
       selectedDates,
       handleVisibleDateChange,
@@ -236,6 +240,7 @@ export function useBaseCalendarRoot<
     setVisibleDate,
     isDateCellVisible,
     context,
+    visibleDateContext,
   };
 }
 

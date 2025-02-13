@@ -7,12 +7,14 @@ import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 import { getFirstEnabledYear, getLastEnabledYear } from '../utils/date';
 import { useNullableBaseCalendarYearsGridOrListContext } from '../years-grid/BaseCalendarYearsGridOrListContext';
 import { useCompositeListItem } from '../../../composite/list/useCompositeListItem';
+import { useBaseCalendarRootVisibleDateContext } from '../root/BaseCalendarRootVisibleDateContext';
 
 export function useBaseCalendarSetVisibleYearWrapper(
   parameters: useBaseCalendarSetVisibleYearWrapper.Parameters,
 ): useBaseCalendarSetVisibleYearWrapper.ReturnValue {
   const { forwardedRef, target } = parameters;
   const baseRootContext = useBaseCalendarRootContext();
+  const baseRootVisibleDateContext = useBaseCalendarRootVisibleDateContext();
   const baseYearsListOrGridContext = useNullableBaseCalendarYearsGridOrListContext();
   const utils = useUtils();
   const { ref: listItemRef } = useCompositeListItem();
@@ -20,22 +22,22 @@ export function useBaseCalendarSetVisibleYearWrapper(
 
   const targetDate = React.useMemo(() => {
     if (target === 'previous') {
-      return utils.addYears(baseRootContext.visibleDate, -1);
+      return utils.addYears(baseRootVisibleDateContext.visibleDate, -1);
     }
 
     if (target === 'next') {
-      return utils.addYears(baseRootContext.visibleDate, 1);
+      return utils.addYears(baseRootVisibleDateContext.visibleDate, 1);
     }
 
-    return utils.setYear(baseRootContext.visibleDate, utils.getYear(target));
-  }, [baseRootContext.visibleDate, utils, target]);
+    return utils.setYear(baseRootVisibleDateContext.visibleDate, utils.getYear(target));
+  }, [baseRootVisibleDateContext.visibleDate, utils, target]);
 
   const isDisabled = React.useMemo(() => {
     if (baseRootContext.disabled) {
       return true;
     }
 
-    const isMovingBefore = utils.isBefore(targetDate, baseRootContext.visibleDate);
+    const isMovingBefore = utils.isBefore(targetDate, baseRootVisibleDateContext.visibleDate);
 
     // All the years before the visible ones are fully disabled, we skip the navigation.
     if (isMovingBefore) {
@@ -53,7 +55,7 @@ export function useBaseCalendarSetVisibleYearWrapper(
   }, [
     baseRootContext.disabled,
     baseRootContext.dateValidationProps,
-    baseRootContext.visibleDate,
+    baseRootVisibleDateContext.visibleDate,
     targetDate,
     utils,
   ]);

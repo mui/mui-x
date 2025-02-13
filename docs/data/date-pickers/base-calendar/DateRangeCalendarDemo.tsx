@@ -133,10 +133,7 @@ export default function DateRangeCalendarDemo() {
           </RangeCalendar.MonthsList>
         )}
         {activeSection === 'day' && (
-          <RangeCalendar.DaysGrid
-            focusOnMount={hasNavigated}
-            className={styles.DaysGrid}
-          >
+          <RangeCalendar.DaysGrid className={styles.DaysGrid}>
             <RangeCalendar.DaysGridHeader className={styles.DaysGridHeader}>
               {({ days }) =>
                 days.map((day) => (
@@ -148,7 +145,10 @@ export default function DateRangeCalendarDemo() {
                 ))
               }
             </RangeCalendar.DaysGridHeader>
-            <RangeCalendar.DaysGridBody className={styles.DaysGridBody}>
+            <RangeCalendar.DaysGridBody
+              className={styles.DaysGridBody}
+              focusOnMount={hasNavigated}
+            >
               {({ weeks }) =>
                 weeks.map((week) => (
                   <RangeCalendar.DaysGridRow

@@ -107,6 +107,7 @@ export const DateCalendar2 = React.forwardRef(function DateCalendar2(
     monthsPerRow = 3,
     yearsPerRow = 3,
     yearsOrder = 'asc',
+    fixedWeekNumber,
 
     // Forwarded props
     ...other
@@ -165,7 +166,12 @@ export const DateCalendar2 = React.forwardRef(function DateCalendar2(
     if (view === 'month') {
       return <DateCalendar2MonthsGrid cellsPerRow={monthsPerRow} />;
     }
-    return <DateCalendar2DaysGrid displayWeekNumber={displayWeekNumber} />;
+    return (
+      <DateCalendar2DaysGrid
+        displayWeekNumber={displayWeekNumber}
+        fixedWeekNumber={fixedWeekNumber}
+      />
+    );
   };
 
   return (

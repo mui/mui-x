@@ -43,7 +43,7 @@ function Header() {
 function DaysGrid(props: { offset: 0 | 1 }) {
   const { offset } = props;
   return (
-    <Calendar.DaysGrid className={styles.DaysGrid} offset={offset}>
+    <Calendar.DaysGrid className={styles.DaysGrid}>
       <Calendar.DaysGridHeader className={styles.DaysGridHeader}>
         {({ days }) =>
           days.map((day) => (
@@ -55,7 +55,7 @@ function DaysGrid(props: { offset: 0 | 1 }) {
           ))
         }
       </Calendar.DaysGridHeader>
-      <Calendar.DaysGridBody className={styles.DaysGridBody}>
+      <Calendar.DaysGridBody className={styles.DaysGridBody} offset={offset}>
         {({ weeks }) =>
           weeks.map((week) => (
             <Calendar.DaysGridRow

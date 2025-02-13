@@ -1,6 +1,11 @@
 import * as React from 'react';
+import { PickerValidDate } from '../../../../../models';
 
 export interface BaseCalendarDaysGridBodyContext {
+  selectDay: (value: PickerValidDate) => void;
+  currentMonth: PickerValidDate;
+  tabbableDays: PickerValidDate[];
+  daysGrid: PickerValidDate[][];
   ref: React.RefObject<HTMLDivElement | null>;
 }
 

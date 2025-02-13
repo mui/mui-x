@@ -4,7 +4,7 @@ import { useBaseCalendarDaysGridRow } from '../../utils/base-calendar/days-grid-
 import { BaseUIComponentProps } from '../../base-utils/types';
 import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
 import { useBaseCalendarDaysGridRowWrapper } from '../../utils/base-calendar/days-grid-row/useBaseCalendarDaysGridRowWrapper';
-import { BaseCalendarDaysGridRowContext } from '../../utils/base-calendar/days-grid-row/BaseCalendarDaysGridRoContext';
+import { BaseCalendarDaysGridRowContext } from '../../utils/base-calendar/days-grid-row/BaseCalendarDaysGridRowContext';
 
 const InnerCalendarDaysGridRow = React.forwardRef(function InnerCalendarDaysGridRow(
   props: InnerCalendarDaysGridRowProps,

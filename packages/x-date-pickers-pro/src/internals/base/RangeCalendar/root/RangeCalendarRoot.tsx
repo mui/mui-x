@@ -8,6 +8,8 @@ import { useBaseCalendarRoot } from '@mui/x-date-pickers/internals/base/utils/ba
 import { BaseUIComponentProps } from '@mui/x-date-pickers/internals/base/base-utils/types';
 // eslint-disable-next-line no-restricted-imports
 import { useComponentRenderer } from '@mui/x-date-pickers/internals/base/base-utils/useComponentRenderer';
+// eslint-disable-next-line no-restricted-imports
+import { BaseCalendarRootVisibleDateContext } from '@mui/x-date-pickers/internals/base/utils/base-calendar/root/BaseCalendarRootVisibleDateContext';
 import { DateRangeValidationError } from '../../../../models';
 import { RangeCalendarRootContext } from './RangeCalendarRootContext';
 import { useRangeCalendarRoot } from './useRangeCalendarRoot';
@@ -57,7 +59,7 @@ const RangeCalendarRoot = React.forwardRef(function RangeCalendarRoot(
     // Props forwarded to the DOM element
     ...otherProps
   } = props;
-  const { getRootProps, context, baseContext, isEmpty } = useRangeCalendarRoot({
+  const { getRootProps, context, baseContext, visibleDateContext, isEmpty } = useRangeCalendarRoot({
     readOnly,
     disabled,
     monthPageSize,
@@ -101,11 +103,13 @@ const RangeCalendarRoot = React.forwardRef(function RangeCalendarRoot(
   });
 
   return (
-    <BaseCalendarRootContext.Provider value={baseContext}>
-      <RangeCalendarRootContext.Provider value={context}>
-        {renderElement()}
-      </RangeCalendarRootContext.Provider>
-    </BaseCalendarRootContext.Provider>
+    <BaseCalendarRootVisibleDateContext.Provider value={visibleDateContext}>
+      <BaseCalendarRootContext.Provider value={baseContext}>
+        <RangeCalendarRootContext.Provider value={context}>
+          {renderElement()}
+        </RangeCalendarRootContext.Provider>
+      </BaseCalendarRootContext.Provider>
+    </BaseCalendarRootVisibleDateContext.Provider>
   );
 });
 

@@ -4,7 +4,6 @@ import useTimeout from '@mui/utils/useTimeout';
 import { PickerValidDate } from '../../../../../models';
 import { GenericHTMLProps } from '../../../base-utils/types';
 import { mergeReactProps } from '../../../base-utils/mergeReactProps';
-import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 import {
   applyInitialFocusInGrid,
   navigateInGrid,
@@ -12,6 +11,7 @@ import {
   PageGridNavigationTarget,
 } from '../utils/keyboardNavigation';
 import { useMonthsCells } from '../utils/useMonthsCells';
+import { useBaseCalendarRootVisibleDateContext } from '../root/BaseCalendarRootVisibleDateContext';
 
 export function useBaseCalendarMonthsGrid(parameters: useBaseCalendarMonthsGrid.Parameters) {
   const {
@@ -22,7 +22,7 @@ export function useBaseCalendarMonthsGrid(parameters: useBaseCalendarMonthsGrid.
     canChangeYear = true,
     cellsPerRowCssVar,
   } = parameters;
-  const baseRootContext = useBaseCalendarRootContext();
+  const baseRootVisibleDateContext = useBaseCalendarRootVisibleDateContext();
   const cellRefs = React.useRef<(HTMLElement | null)[]>([]);
   const { items, monthsListOrGridContext, changePage, scrollerRef } = useMonthsCells({
     getItems,
@@ -56,7 +56,7 @@ export function useBaseCalendarMonthsGrid(parameters: useBaseCalendarMonthsGrid.
         applyInitialFocusInGrid({ cells, target });
       });
     }
-  }, [baseRootContext.visibleDate, timeout, getCellsInCalendar]);
+  }, [baseRootVisibleDateContext.visibleDate, timeout, getCellsInCalendar]);
 
   // TODO: Add support for multiple months grids.
   const onKeyDown = useEventCallback((event: React.KeyboardEvent) => {

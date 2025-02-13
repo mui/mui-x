@@ -2,10 +2,9 @@ import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { useUtils } from '../../../../hooks/useUtils';
-import { useBaseCalendarDaysGridContext } from '../days-grid/BaseCalendarDaysGridContext';
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 import type { useBaseCalendarDaysCell } from './useBaseCalendarDaysCell';
-import { useBaseCalendarDaysGridRowContext } from '../days-grid-row/BaseCalendarDaysGridRoContext';
+import { useBaseCalendarDaysGridRowContext } from '../days-grid-row/BaseCalendarDaysGridRowContext';
 import { useBaseCalendarDaysGridBodyContext } from '../days-grid-body/BaseCalendarDaysGridBodyContext';
 
 export function useBaseCalendarDaysCellWrapper(
@@ -13,7 +12,6 @@ export function useBaseCalendarDaysCellWrapper(
 ): useBaseCalendarDaysCellWrapper.ReturnValue {
   const { forwardedRef, value } = parameters;
   const baseRootContext = useBaseCalendarRootContext();
-  const baseDaysGridContext = useBaseCalendarDaysGridContext();
   const baseDaysGridBodyContext = useBaseCalendarDaysGridBodyContext();
   const baseDaysGridRowContext = useBaseCalendarDaysGridRowContext();
   const ref = React.useRef<HTMLButtonElement>(null);
@@ -29,10 +27,10 @@ export function useBaseCalendarDaysCellWrapper(
 
   const isOutsideCurrentMonth = React.useMemo(
     () =>
-      baseDaysGridContext.currentMonth == null
+      baseDaysGridBodyContext.currentMonth == null
         ? false
-        : !utils.isSameMonth(baseDaysGridContext.currentMonth, value),
-    [baseDaysGridContext.currentMonth, value, utils],
+        : !utils.isSameMonth(baseDaysGridBodyContext.currentMonth, value),
+    [baseDaysGridBodyContext.currentMonth, value, utils],
   );
 
   const isDateInvalid = baseRootContext.isDateInvalid;
@@ -49,8 +47,8 @@ export function useBaseCalendarDaysCellWrapper(
   const isTabbable = React.useMemo(
     () =>
       !isOutsideCurrentMonth &&
-      baseDaysGridContext.tabbableDays.some((day) => utils.isSameDay(day, value)),
-    [utils, isOutsideCurrentMonth, baseDaysGridContext.tabbableDays, value],
+      baseDaysGridBodyContext.tabbableDays.some((day) => utils.isSameDay(day, value)),
+    [utils, isOutsideCurrentMonth, baseDaysGridBodyContext.tabbableDays, value],
   );
 
   const ctx = React.useMemo<useBaseCalendarDaysCell.Context>(
@@ -61,7 +59,7 @@ export function useBaseCalendarDaysCellWrapper(
       isTabbable,
       isCurrent,
       isOutsideCurrentMonth,
-      selectDay: baseDaysGridContext.selectDay,
+      selectDay: baseDaysGridBodyContext.selectDay,
     }),
     [
       isSelected,
@@ -70,7 +68,7 @@ export function useBaseCalendarDaysCellWrapper(
       isTabbable,
       isCurrent,
       isOutsideCurrentMonth,
-      baseDaysGridContext.selectDay,
+      baseDaysGridBodyContext.selectDay,
     ],
   );
 

@@ -62,6 +62,7 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
     setVisibleDate,
     isDateCellVisible,
     context: baseContext,
+    visibleDateContext,
   } = useBaseCalendarRoot({
     ...baseParameters,
     manager,
@@ -82,20 +83,20 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
     (externalProps: GenericHTMLProps) => {
       let children: React.ReactNode;
       if (!React.isValidElement(childrenProp) && typeof childrenProp === 'function') {
-        children = childrenProp({ visibleDate: baseContext.visibleDate });
+        children = childrenProp({ visibleDate: visibleDateContext.visibleDate });
       } else {
         children = childrenProp;
       }
       return mergeReactProps(externalProps, { children });
     },
-    [childrenProp, baseContext.visibleDate],
+    [childrenProp, visibleDateContext.visibleDate],
   );
 
   const isEmpty = value == null;
 
   return React.useMemo(
-    () => ({ getRootProps, baseContext, isEmpty }),
-    [getRootProps, baseContext, isEmpty],
+    () => ({ getRootProps, baseContext, visibleDateContext, isEmpty }),
+    [getRootProps, baseContext, visibleDateContext, isEmpty],
   );
 }
 

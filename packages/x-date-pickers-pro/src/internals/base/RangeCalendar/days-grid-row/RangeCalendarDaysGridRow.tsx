@@ -9,7 +9,7 @@ import { BaseUIComponentProps } from '@mui/x-date-pickers/internals/base/base-ut
 // eslint-disable-next-line no-restricted-imports
 import { useComponentRenderer } from '@mui/x-date-pickers/internals/base/base-utils/useComponentRenderer';
 // eslint-disable-next-line no-restricted-imports
-import { BaseCalendarDaysGridRowContext } from '@mui/x-date-pickers/internals/base/utils/base-calendar/days-grid-row/BaseCalendarDaysGridRoContext';
+import { BaseCalendarDaysGridRowContext } from '@mui/x-date-pickers/internals/base/utils/base-calendar/days-grid-row/BaseCalendarDaysGridRowContext';
 
 const InnerRangeCalendarDaysGridRow = React.forwardRef(function InnerRangeCalendarDaysGridRow(
   props: InnerRangeCalendarDaysGridRowProps,

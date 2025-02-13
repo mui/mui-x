@@ -2,7 +2,7 @@ import * as React from 'react';
 import { PickerValidDate } from '../../../../../models';
 import { GenericHTMLProps } from '../../../base-utils/types';
 import { mergeReactProps } from '../../../base-utils/mergeReactProps';
-import { BaseCalendarDaysGridRowContext } from './BaseCalendarDaysGridRoContext';
+import { BaseCalendarDaysGridRowContext } from './BaseCalendarDaysGridRowContext';
 
 export function useBaseCalendarDaysGridRow(parameters: useBaseCalendarDaysGridRow.Parameters) {
   const { children, ctx } = parameters;
@@ -13,11 +13,11 @@ export function useBaseCalendarDaysGridRow(parameters: useBaseCalendarDaysGridRo
       return mergeReactProps(externalProps, {
         ref,
         role: 'row',
-        'aria-rowindex': 1, // TODO: Fix rowindex
+        'aria-rowindex': ctx.rowIndex + 1,
         children: children == null ? null : children({ days: ctx.days }),
       });
     },
-    [ctx.days, children],
+    [ctx.days, ctx.rowIndex, children],
   );
 
   const context: BaseCalendarDaysGridRowContext = React.useMemo(() => ({ ref }), [ref]);
@@ -47,5 +47,9 @@ export namespace useBaseCalendarDaysGridRow {
 
   export interface Context {
     days: PickerValidDate[];
+    /**
+     * The index of the row in the grid.
+     */
+    rowIndex: number;
   }
 }

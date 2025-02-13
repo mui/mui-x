@@ -6,15 +6,17 @@ import { getFirstEnabledYear, getLastEnabledYear } from './date';
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 import { BaseCalendarMonthsGridOrListContext } from '../months-grid/BaseCalendarMonthsGridOrListContext';
 import { useCellList } from './useCellList';
+import { useBaseCalendarRootVisibleDateContext } from '../root/BaseCalendarRootVisibleDateContext';
 
 export function useMonthsCells(parameters: useMonthsCells.Parameters): useMonthsCells.ReturnValue {
   const { getItems, focusOnMount } = parameters;
   const baseRootContext = useBaseCalendarRootContext();
+  const baseRootVisibleDateContext = useBaseCalendarRootVisibleDateContext();
   const utils = useUtils();
 
   const currentYear = React.useMemo(
-    () => utils.startOfYear(baseRootContext.visibleDate),
-    [utils, baseRootContext.visibleDate],
+    () => utils.startOfYear(baseRootVisibleDateContext.visibleDate),
+    [utils, baseRootVisibleDateContext.visibleDate],
   );
 
   const items = React.useMemo(() => {
@@ -60,7 +62,7 @@ export function useMonthsCells(parameters: useMonthsCells.Parameters): useMonths
     // TODO: Jump over months with no valid date.
     if (direction === 'previous') {
       const targetDate = utils.addYears(
-        utils.startOfYear(baseRootContext.visibleDate),
+        utils.startOfYear(baseRootVisibleDateContext.visibleDate),
         -baseRootContext.yearPageSize,
       );
       const lastYearInNewPage = utils.addYears(targetDate, baseRootContext.yearPageSize - 1);
@@ -76,13 +78,13 @@ export function useMonthsCells(parameters: useMonthsCells.Parameters): useMonths
       }
 
       baseRootContext.setVisibleDate(
-        utils.addYears(baseRootContext.visibleDate, -baseRootContext.yearPageSize),
+        utils.addYears(baseRootVisibleDateContext.visibleDate, -baseRootContext.yearPageSize),
         false,
       );
     }
     if (direction === 'next') {
       const targetDate = utils.addYears(
-        utils.startOfYear(baseRootContext.visibleDate),
+        utils.startOfYear(baseRootVisibleDateContext.visibleDate),
         baseRootContext.yearPageSize,
       );
 
@@ -93,7 +95,7 @@ export function useMonthsCells(parameters: useMonthsCells.Parameters): useMonths
         return;
       }
       baseRootContext.setVisibleDate(
-        utils.addYears(baseRootContext.visibleDate, baseRootContext.yearPageSize),
+        utils.addYears(baseRootVisibleDateContext.visibleDate, baseRootContext.yearPageSize),
         false,
       );
     }

@@ -4,10 +4,12 @@ import { useUtils } from '../../../../hooks/useUtils';
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 import { BaseCalendarYearsGridOrListContext } from '../years-grid/BaseCalendarYearsGridOrListContext';
 import { useCellList } from './useCellList';
+import { useBaseCalendarRootVisibleDateContext } from '../root/BaseCalendarRootVisibleDateContext';
 
 export function useYearsCells(parameters: useYearsCells.Parameters): useYearsCells.ReturnValue {
   const { getItems, focusOnMount } = parameters;
   const baseRootContext = useBaseCalendarRootContext();
+  const baseRootVisibleDateContext = useBaseCalendarRootVisibleDateContext();
   const utils = useUtils();
 
   const items = React.useMemo(() => {
@@ -18,7 +20,7 @@ export function useYearsCells(parameters: useYearsCells.Parameters): useYearsCel
       ]);
     if (getItems) {
       return getItems({
-        visibleDate: baseRootContext.visibleDate,
+        visibleDate: baseRootVisibleDateContext.visibleDate,
         minDate: baseRootContext.dateValidationProps.minDate,
         maxDate: baseRootContext.dateValidationProps.maxDate,
         getDefaultItems,
@@ -29,7 +31,7 @@ export function useYearsCells(parameters: useYearsCells.Parameters): useYearsCel
   }, [
     utils,
     getItems,
-    baseRootContext.visibleDate,
+    baseRootVisibleDateContext.visibleDate,
     baseRootContext.dateValidationProps.minDate,
     baseRootContext.dateValidationProps.maxDate,
   ]);
@@ -37,7 +39,7 @@ export function useYearsCells(parameters: useYearsCells.Parameters): useYearsCel
   const { scrollerRef } = useCellList({
     focusOnMount,
     section: 'year',
-    value: baseRootContext.visibleDate,
+    value: baseRootVisibleDateContext.visibleDate,
   });
 
   const tabbableYears = React.useMemo(() => {
