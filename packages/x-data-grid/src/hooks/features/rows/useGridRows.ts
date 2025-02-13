@@ -360,9 +360,7 @@ export const useGridRows = (
       }
 
       apiRef.current.setState((state) => {
-        const group = gridRowTreeSelector({
-          current: { ...apiRef.current, state },
-        })[GRID_ROOT_GROUP_ID] as GridGroupNode;
+        const group = gridRowTreeSelector(apiRef)[GRID_ROOT_GROUP_ID] as GridGroupNode;
         const allRows = group.children;
         const oldIndex = allRows.findIndex((row) => row === rowId);
         if (oldIndex === -1 || oldIndex === targetIndex) {
@@ -573,12 +571,11 @@ export const useGridRows = (
    */
   const applyHydrateRowsProcessor = React.useCallback(() => {
     apiRef.current.setState((state) => {
-      const apiRefWithUpdatedState = { current: { ...apiRef.current, state } };
       const response = apiRef.current.unstable_applyPipeProcessors('hydrateRows', {
-        tree: gridRowTreeSelector(apiRefWithUpdatedState),
-        treeDepths: gridRowTreeDepthsSelector(apiRefWithUpdatedState),
-        dataRowIds: gridDataRowIdsSelector(apiRefWithUpdatedState),
-        dataRowIdToModelLookup: gridRowsLookupSelector(apiRefWithUpdatedState),
+        tree: gridRowTreeSelector(apiRef),
+        treeDepths: gridRowTreeDepthsSelector(apiRef),
+        dataRowIds: gridDataRowIdsSelector(apiRef),
+        dataRowIdToModelLookup: gridRowsLookupSelector(apiRef),
       });
 
       return {

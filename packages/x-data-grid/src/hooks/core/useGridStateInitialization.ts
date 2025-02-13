@@ -33,7 +33,6 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
 
       const apiRefWithNewState = {
         current: {
-          ...apiRef.current,
           state: newState,
         },
       };
