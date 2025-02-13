@@ -1,8 +1,7 @@
-import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import { isFunction } from '../../utils/utils';
 import { useGridLogger } from './useGridLogger';
 import { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
+import { useGridApiOptionHandler } from './useGridApiEventHandler';
 
 export const useGridNativeEventListener = <
   PrivateApi extends GridPrivateApiCommon,
@@ -15,32 +14,20 @@ export const useGridNativeEventListener = <
   options?: AddEventListenerOptions,
 ) => {
   const logger = useGridLogger(apiRef, 'useNativeEventListener');
-  const [added, setAdded] = React.useState(false);
-  const handlerRef = React.useRef(handler);
 
-  const targetElement = isFunction(ref) ? ref() : (ref?.current ?? null);
+  useGridApiOptionHandler(apiRef, 'rootMount', () => {
+    const targetElement = typeof ref === 'function' ? ref() : ref.current;
 
-  const wrapHandler = React.useCallback((event: HTMLElementEventMap[K]) => {
-    return handlerRef.current && handlerRef.current(event);
-  }, []);
-
-  React.useEffect(() => {
-    handlerRef.current = handler;
-  }, [handler]);
-
-  React.useEffect(() => {
-    if (targetElement && eventName && !added) {
-      logger.debug(`Binding native ${eventName} event`);
-      targetElement.addEventListener(eventName, wrapHandler, options);
-
-      setAdded(true);
-
-      const unsubscribe = () => {
-        logger.debug(`Clearing native ${eventName} event`);
-        targetElement.removeEventListener(eventName, wrapHandler, options);
-      };
-
-      apiRef.current.subscribeEvent('unmount', unsubscribe);
+    if (!targetElement || !eventName || !handler) {
+      return undefined;
     }
-  }, [targetElement, wrapHandler, eventName, added, logger, options, apiRef]);
+
+    logger.debug(`Binding native ${eventName} event`);
+    targetElement.addEventListener(eventName, handler, options);
+
+    return () => {
+      logger.debug(`Clearing native ${eventName} event`);
+      targetElement.removeEventListener(eventName, handler, options);
+    };
+  });
 };
