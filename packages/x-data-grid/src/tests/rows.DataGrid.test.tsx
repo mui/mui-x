@@ -843,9 +843,9 @@ describe('<DataGrid /> - Rows', () => {
         const data = getBasicGridData(120, 3);
         const columnHeaderHeight = 50;
         const measuredRowHeight = 100;
-        const apiRef = React.createRef<GridApiCommunity>();
+        const apiRefPage = React.createRef<GridApiCommunity>();
 
-        const { setProps } = render(
+        render(
           <TestCase
             getBioContentHeight={() => measuredRowHeight}
             getRowHeight={() => 'auto'}
@@ -856,12 +856,12 @@ describe('<DataGrid /> - Rows', () => {
             initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
             pageSizeOptions={[5, 10]}
             height={columnHeaderHeight + 10 * measuredRowHeight}
-            apiRef={apiRef}
+            apiRef={apiRefPage}
             {...data}
           />,
         );
         expect(gridOffsetTop()).to.equal(0);
-        apiRef.current?.setPageSize(5);
+        apiRefPage.current?.setPageSize(5);
         expect(gridOffsetTop()).to.equal(0);
       });
 
@@ -872,7 +872,7 @@ describe('<DataGrid /> - Rows', () => {
           const data = getBasicGridData(120, 3);
           const columnHeaderHeight = 50;
           const measuredRowHeight = 100;
-          const apiRef = React.createRef<GridApiCommunity>();
+          const apiRefPage = React.createRef<GridApiCommunity>();
 
           const { user } = render(
             <TestCase
@@ -885,7 +885,7 @@ describe('<DataGrid /> - Rows', () => {
               initialState={{ pagination: { paginationModel: { pageSize: 25 } } }}
               pageSizeOptions={[10, 25]}
               height={columnHeaderHeight + 10 * measuredRowHeight}
-              apiRef={apiRef}
+              apiRef={apiRefPage}
               {...data}
             />,
           );
@@ -897,7 +897,7 @@ describe('<DataGrid /> - Rows', () => {
           await act(async () => virtualScroller.dispatchEvent(new Event('scroll')));
           expect(gridOffsetTop()).not.to.equal(0);
 
-          apiRef.current?.setPageSize(10);
+          apiRefPage.current?.setPageSize(10);
 
           await user.click(screen.getByRole('button', { name: /next page/i }));
 

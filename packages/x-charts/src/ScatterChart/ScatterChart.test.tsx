@@ -98,7 +98,6 @@ describe('<ScatterChart />', () => {
         <ScatterChart {...config} disableVoronoi series={[{ id: 's1', data: config.dataset }]} />
       </div>,
     );
-    const svg = document.querySelector<HTMLElement>('svg')!;
     const marks = document.querySelectorAll<HTMLElement>('circle');
 
     await user.pointer([
