@@ -209,14 +209,14 @@ export const useGridRowSelection = (
         return false;
       }
 
-      const rowNode = tree[id];
+      const rowNode = gridRowTreeSelector(apiRef)[id];
       if (rowNode?.type === 'footer' || rowNode?.type === 'pinnedRow') {
         return false;
       }
 
       return true;
     },
-    [apiRef, tree, props.rowSelection, propIsRowSelectable],
+    [apiRef, props.rowSelection, propIsRowSelectable],
   );
 
   const getSelectedRows = React.useCallback<GridRowSelectionApi['getSelectedRows']>(
@@ -574,7 +574,7 @@ export const useGridRowSelection = (
         }
       }
 
-      const rowNode = tree[params.id];
+      const rowNode = gridRowTreeSelector(apiRef)[params.id];
       if (rowNode!.type === 'pinnedRow') {
         return;
       }
@@ -591,7 +591,6 @@ export const useGridRowSelection = (
       apiRef,
       expandMouseRowRangeSelection,
       handleSingleRowSelection,
-      tree,
     ],
   );
 
