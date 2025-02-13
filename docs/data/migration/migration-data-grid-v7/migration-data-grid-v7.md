@@ -50,6 +50,7 @@ Below are described the steps you need to make to migrate from v7 to v8.
 ### Changes to the public API
 
 - The `rowPositionsDebounceMs` prop was removed.
+- The `resetPageOnSortFilter` prop was removed. The Data Grid now goes back to the first page after sort or filter is applied.
 - The `apiRef.current.resize()` method was removed.
 - The `apiRef.current.forceUpdate()` method was removed. Use selectors combined with `useGridSelector()` hook to react to changes in the state.
 - The `<GridOverlays />` component is not exported anymore.
