@@ -104,9 +104,9 @@ export const getStringSize = (
     className = '',
     style = {},
     measuringElement,
-  }: { className?: string; style?: React.CSSProperties; measuringElement: SVGElement },
+  }: { className?: string; style?: React.CSSProperties; measuringElement: SVGElement | null },
 ) => {
-  if (text === undefined || text === null || isSsr()) {
+  if (text === undefined || text === null || isSsr() || measuringElement === null) {
     return { width: 0, height: 0 };
   }
 

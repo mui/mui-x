@@ -12,7 +12,6 @@ import { ChartsText, ChartsTextProps } from '../ChartsText';
 import { getMinXTranslation } from '../internals/geometry';
 import { useMounted } from '../hooks/useMounted';
 import { useDrawingArea } from '../hooks/useDrawingArea';
-import { getWordsByLines } from '../internals/getWordsByLines';
 import { isInfinity } from '../internals/isInfinity';
 import { isBandScale } from '../internals/isBandScale';
 import { useChartContext } from '../context/ChartProvider/useChartContext';
@@ -37,39 +36,19 @@ type LabelExtraData = { width: number; height: number; skipLabel?: boolean };
 function addLabelDimension(
   xTicks: TickItemType[],
   {
-    tickLabelClassName: className,
     tickLabelStyle: style,
     tickLabelInterval,
     reverse,
     isMounted,
-    measuringElement,
+    measurements,
   }: Pick<ChartsXAxisProps, 'tickLabelInterval' | 'tickLabelStyle'> &
     Pick<AxisDefaultized, 'reverse'> & {
       isMounted: boolean;
-      className?: string;
-      measuringElement: SVGElement;
+      measurements: Map<number, { width: number; height: number }>;
     },
 ): (TickItemType & LabelExtraData)[] {
-  const withDimension = xTicks.map((tick) => {
-    if (!isMounted || tick.formattedValue === undefined) {
-      return { ...tick, width: 0, height: 0 };
-    }
-    const tickSizes = getWordsByLines({
-      style,
-      needsComputation: true,
-      text: tick.formattedValue,
-      className,
-      measuringElement,
-    });
-    return {
-      ...tick,
-      width: Math.max(...tickSizes.map((size) => size.width)),
-      height: Math.max(tickSizes.length * tickSizes[0].height),
-    };
-  });
-
   if (typeof tickLabelInterval === 'function') {
-    return withDimension.map((item, index) => ({
+    return xTicks.map((item, index) => ({
       ...item,
       skipLabel: !tickLabelInterval(item.value, index),
     }));
@@ -79,12 +58,13 @@ function addLabelDimension(
   let currentTextLimit = 0;
   let previousTextLimit = 0;
   const direction = reverse ? -1 : 1;
-  return withDimension.map((item, labelIndex) => {
-    const { width, offset, labelOffset, height } = item;
+  return xTicks.map((item, labelIndex) => {
+    const { width, height } = measurements.get(labelIndex) ?? { width: 0, height: 0 };
+    const { offset, labelOffset } = item;
 
     const distance = getMinXTranslation(width, height, style?.angle);
     const textPosition = offset + labelOffset;
-    const gapRatio = 1.2; // Ratio applied to the minimal distance to add some margin.
+    const gapRatio = 1; // Ratio applied to the minimal distance to add some margin.
 
     currentTextLimit = textPosition - (direction * (gapRatio * distance)) / 2;
     if (labelIndex > 0 && direction * currentTextLimit < direction * previousTextLimit) {
@@ -154,7 +134,8 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   const classes = useUtilityClasses({ ...defaultizedProps, theme });
   const { left, top, width, height } = useDrawingArea();
   const { instance } = useChartContext();
-  const measuringElementRef = React.useRef<SVGGElement | null>(null);
+  const [measuring, setMeasuring] = React.useState(true);
+  const textMapRef = React.useRef(new Map<number, SVGTextElement>());
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
@@ -188,14 +169,34 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickPlacement,
     tickLabelPlacement,
   });
+  const [measurements, setMeasurements] = React.useState(
+    new Map<number, { width: number; height: number }>(),
+  );
+
+  React.useEffect(() => {
+    if (measuring) {
+      setMeasurements(
+        new Map(
+          xTicks.map((_, index) => {
+            const bbox = textMapRef.current.get(index)?.getBBox() ?? {
+              width: 0,
+              height: 0,
+            };
+
+            return [index, { width: bbox.width, height: bbox.height }] as const;
+          }),
+        ),
+      );
+      setMeasuring(false);
+    }
+  }, [measuring, xTicks]);
 
   const xTicksWithDimension = addLabelDimension(xTicks, {
-    tickLabelClassName: axisTickLabelProps.className,
     tickLabelStyle: axisTickLabelProps.style,
     tickLabelInterval,
     reverse,
     isMounted,
-    measuringElement: measuringElementRef.current,
+    measurements,
   });
 
   const labelRefPoint = {
@@ -235,12 +236,6 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
         <Line x1={left} x2={left + width} className={classes.line} {...slotProps?.axisLine} />
       )}
 
-      <g
-        ref={measuringElementRef}
-        className={classes.tickContainer}
-        aria-hidden
-        style={{ visibility: 'hidden' }}
-      />
       {xTicksWithDimension.map(({ formattedValue, offset, labelOffset, skipLabel }, index) => {
         const xTickLabel = labelOffset ?? 0;
         const yTickLabel = positionSign * (tickSize + 3);
@@ -260,14 +255,25 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
               />
             )}
 
-            {formattedValue !== undefined && !skipLabel && showTickLabel && (
+            {measuring || (formattedValue !== undefined && !skipLabel && showTickLabel) ? (
               <TickLabel
                 x={xTickLabel}
                 y={yTickLabel}
                 {...axisTickLabelProps}
-                text={formattedValue.toString()}
+                style={{
+                  ...axisTickLabelProps.style,
+                  ...(measuring ? { visibility: 'hidden' } : {}),
+                }}
+                ref={(ref) => {
+                  if (ref == null) {
+                    textMapRef.current.delete(index);
+                  } else {
+                    textMapRef.current.set(index, ref);
+                  }
+                }}
+                text={formattedValue?.toString() ?? ''}
               />
-            )}
+            ) : null}
           </g>
         );
       })}

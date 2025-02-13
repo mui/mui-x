@@ -19,68 +19,72 @@ export interface ChartsTextProps
 /**
  * Helper component to manage multiline text in SVG
  */
-function ChartsText(props: ChartsTextProps) {
-  const { x, y, style: styleProps, text, ownerState, ...textProps } = props;
-  const measuringElementRef = React.useRef<SVGGElement | null>(null);
+const ChartsText = React.forwardRef<SVGTextElement, ChartsTextProps>(
+  function ChartsText(props, ref) {
+    const { x, y, style: styleProps, text, ownerState, ...textProps } = props;
+    const [measuringElement, setMeasuringElement] = React.useState<SVGGElement | null>(null);
 
-  const { angle, textAnchor, dominantBaseline, ...style } = styleProps ?? {};
+    const { angle, textAnchor, dominantBaseline, ...style } = styleProps ?? {};
 
-  const wordsByLines = React.useMemo(
-    () =>
-      getWordsByLines({
-        style,
-        needsComputation: text.includes('\n'),
-        text,
-        measuringElement: measuringElementRef.current,
-      }),
-    [style, text],
-  );
+    const wordsByLines = React.useMemo(
+      () =>
+        getWordsByLines({
+          className: textProps?.className,
+          style,
+          needsComputation: text.includes('\n'),
+          text,
+          measuringElement,
+        }),
+      [measuringElement, style, text, textProps?.className],
+    );
 
-  let startDy: number;
-  switch (dominantBaseline) {
-    case 'hanging':
-      startDy = 0;
-      break;
-    case 'central':
-      startDy = ((wordsByLines.length - 1) / 2) * -wordsByLines[0].height;
-      break;
-    default:
-      startDy = (wordsByLines.length - 1) * -wordsByLines[0].height;
-      break;
-  }
+    let startDy: number;
+    switch (dominantBaseline) {
+      case 'hanging':
+        startDy = 0;
+        break;
+      case 'central':
+        startDy = ((wordsByLines.length - 1) / 2) * -wordsByLines[0].height;
+        break;
+      default:
+        startDy = (wordsByLines.length - 1) * -wordsByLines[0].height;
+        break;
+    }
 
-  const transforms: string[] = [];
-  // if (scaleToFit) {
-  //   const lineWidth = wordsByLines[0].width;
-  //   transforms.push(`scale(${(isNumber(width as number) ? (width as number) / lineWidth : 1) / lineWidth})`);
-  // }
-  if (angle) {
-    transforms.push(`rotate(${angle}, ${x}, ${y})`);
-  }
+    const transforms: string[] = [];
+    // if (scaleToFit) {
+    //   const lineWidth = wordsByLines[0].width;
+    //   transforms.push(`scale(${(isNumber(width as number) ? (width as number) / lineWidth : 1) / lineWidth})`);
+    // }
+    if (angle) {
+      transforms.push(`rotate(${angle}, ${x}, ${y})`);
+    }
 
-  return (
-    <text
-      {...textProps}
-      transform={transforms.length > 0 ? transforms.join(' ') : undefined}
-      x={x}
-      y={y}
-      textAnchor={textAnchor}
-      dominantBaseline={dominantBaseline}
-      style={style}
-    >
-      {wordsByLines.map((line, index) => (
-        <tspan
-          x={x}
-          dy={`${index === 0 ? startDy : wordsByLines[0].height}px`}
-          dominantBaseline={dominantBaseline} // Propagated to fix Safari issue: https://github.com/mui/mui-x/issues/10808
-          key={index}
-        >
-          {line.text}
-        </tspan>
-      ))}
-    </text>
-  );
-}
+    return (
+      <text
+        ref={ref}
+        {...textProps}
+        transform={transforms.length > 0 ? transforms.join(' ') : undefined}
+        x={x}
+        y={y}
+        textAnchor={textAnchor}
+        dominantBaseline={dominantBaseline}
+        style={style}
+      >
+        {wordsByLines.map((line, index) => (
+          <tspan
+            x={x}
+            dy={`${index === 0 ? startDy : wordsByLines[0].height}px`}
+            dominantBaseline={dominantBaseline} // Propagated to fix Safari issue: https://github.com/mui/mui-x/issues/10808
+            key={index}
+          >
+            {line.text}
+          </tspan>
+        ))}
+      </text>
+    );
+  },
+);
 
 ChartsText.propTypes = {
   // ----------------------------- Warning --------------------------------
