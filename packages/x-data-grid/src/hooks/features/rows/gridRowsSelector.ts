@@ -1,7 +1,12 @@
-import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
+import { GridRowId } from '../../../models/gridRows';
+import {
+  createRootSelector,
+  createSelector,
+  createSelectorMemoized,
+} from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 
-const gridRowsStateSelector = (state: GridStateCommunity) => state.rows;
+export const gridRowsStateSelector = createRootSelector((state: GridStateCommunity) => state.rows);
 
 export const gridRowCountSelector = createSelector(
   gridRowsStateSelector,
@@ -22,6 +27,11 @@ export const gridTopLevelRowCountSelector = createSelector(
 export const gridRowsLookupSelector = createSelector(
   gridRowsStateSelector,
   (rows) => rows.dataRowIdToModelLookup,
+);
+
+export const gridRowSelector = createSelector(
+  gridRowsLookupSelector,
+  (rows, id: GridRowId) => rows[id],
 );
 
 export const gridRowTreeSelector = createSelector(gridRowsStateSelector, (rows) => rows.tree);

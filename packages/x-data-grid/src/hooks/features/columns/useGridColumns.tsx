@@ -214,7 +214,7 @@ export function useGridColumns(
       const fieldRemoved = updatedColumns.splice(oldIndexPosition, 1)[0];
       updatedColumns.splice(targetIndexPosition, 0, fieldRemoved);
       setGridColumnsState({
-        ...gridColumnsStateSelector(apiRef.current.state),
+        ...gridColumnsStateSelector(apiRef),
         orderedFields: updatedColumns,
       });
 
@@ -232,7 +232,7 @@ export function useGridColumns(
     (field, width) => {
       logger.debug(`Updating column ${field} width to ${width}`);
 
-      const columnsState = gridColumnsStateSelector(apiRef.current.state);
+      const columnsState = gridColumnsStateSelector(apiRef);
       const column = columnsState.lookup[field];
       const newColumn: GridStateColDef = { ...column, width, hasBeenResized: true };
 
@@ -405,10 +405,7 @@ export function useGridColumns(
       }
 
       setGridColumnsState(
-        hydrateColumnsWidth(
-          gridColumnsStateSelector(apiRef.current.state),
-          apiRef.current.getRootDimensions(),
-        ),
+        hydrateColumnsWidth(gridColumnsStateSelector(apiRef), apiRef.current.getRootDimensions()),
       );
     }
   };
