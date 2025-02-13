@@ -17,6 +17,7 @@ import {
   useUtilityClasses,
 } from './continuousColorLegendClasses';
 import { useChartGradientIdObjectBoundBuilder } from '../hooks/useChartGradientId';
+import { ZAxisDefaultized } from '../models/z-axis';
 
 type LabelFormatter = (params: { value: number | Date; formattedValue: string }) => string;
 
@@ -179,6 +180,8 @@ const getText = (
   }
   return label?.({ value, formattedValue }) ?? formattedValue;
 };
+const isZAxis = (axis: AxisDefaultized | ZAxisDefaultized): axis is ZAxisDefaultized =>
+  (axis as AxisDefaultized).scale === undefined;
 
 const ContinuousColorLegend = consumeThemeProps(
   'MuiContinuousColorLegend',
@@ -223,7 +226,8 @@ const ContinuousColorLegend = consumeThemeProps(
 
     // Get texts to display
 
-    const valueFormatter = (axisItem as AxisDefaultized)?.valueFormatter;
+    const valueFormatter = isZAxis(axisItem) ? undefined : axisItem.valueFormatter;
+
     const formattedMin = valueFormatter
       ? valueFormatter(minValue, { location: 'legend' })
       : minValue.toLocaleString();
