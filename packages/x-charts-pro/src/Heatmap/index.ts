@@ -1,5 +1,3 @@
-import '../typeOverloads';
-
 export { Heatmap } from './Heatmap';
 export { HeatmapPlot } from './HeatmapPlot';
 export * from './HeatmapTooltip';
