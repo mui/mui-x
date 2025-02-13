@@ -57,6 +57,23 @@ default-context: &default-context
   context:
     - org-global
 
+packages: &packages
+  package:
+    - 'data-grid'
+    - 'data-grid-pro'
+    - 'data-grid-premium'
+    - 'data-grid-generator'
+    - 'date-picker'
+    - 'date-picker-pro'
+    - 'charts'
+    - 'charts-pro'
+    - 'charts-vendor'
+    - 'tree-view'
+    - 'tree-view-pro'
+    - 'codemod'
+    - 'internals'
+    - 'license'
+
 test-react-18-context: &test-react-18-context
   <<: *default-context
   react-version: ^18.0.0
@@ -155,116 +172,17 @@ jobs:
             fi
   test_unit:
     <<: *default-job
+    parameters:
+      package:
+        description: The package to test
+        type: string
     steps:
       - checkout
       - install_js:
           react-version: << parameters.react-version >>
       - run:
-          name: Tests fake browser
-          command: pnpm test:coverage
-      - run:
-          name: Check coverage generated
-          command: |
-            if ! [[ -s coverage/lcov.info ]]
-            then
-              exit 1
-            fi
-      - run:
-          name: Coverage
-          command: |
-            curl -Os https://uploader.codecov.io/latest/linux/codecov
-            chmod +x codecov
-            ./codecov -t ${CODECOV_TOKEN} -Z -F "$REACT_VERSION-jsdom"
-
-  test_unit_date_pickers:
-    <<: *default-job
-    steps:
-      - checkout
-      - install_js
-      - run:
-          name: Tests fake browser (vitest-date-pickers)
-          command: pnpm vitest --project "jsdom/x-date-pickers"
-
-  test_unit_date_pickers_pro:
-    <<: *default-job
-    steps:
-      - checkout
-      - install_js
-      - run:
-          name: Tests fake browser (vitest-date-pickers-pro)
-          command: pnpm vitest --project "jsdom/x-date-pickers-pro"
-
-  test_unit_data_grid:
-    <<: *default-job
-    steps:
-      - checkout
-      - install_js
-      - run:
-          name: Tests fake browser (vitest-data-grid)
-          command: pnpm vitest --project "jsdom/x-data-grid"
-
-  test_unit_data_grid_pro:
-    <<: *default-job
-    steps:
-      - checkout
-      - install_js
-      - run:
-          name: Tests fake browser (vitest-data-grid-pro)
-          command: pnpm vitest --project "jsdom/x-data-grid-pro"
-
-  test_unit_data_grid_premium:
-    <<: *default-job
-    steps:
-      - checkout
-      - install_js
-      - run:
-          name: Tests fake browser (vitest-data-grid-premium)
-          command: pnpm vitest --project "jsdom/x-data-grid-premium"
-
-  test_unit_charts:
-    <<: *default-job
-    steps:
-      - checkout
-      - install_js
-      - run:
-          name: Tests fake browser (vitest-charts)
-          command: pnpm vitest --project "jsdom/x-charts"
-
-  test_unit_charts_pro:
-    <<: *default-job
-    steps:
-      - checkout
-      - install_js
-      - run:
-          name: Tests fake browser (vitest-charts-pro)
-          command: pnpm vitest --project "jsdom/x-charts-pro"
-
-  test_unit_tree_view:
-    <<: *default-job
-    steps:
-      - checkout
-      - install_js
-      - run:
-          name: Tests fake browser (vitest-tree-view)
-          command: pnpm vitest --project "jsdom/x-tree-view"
-
-  test_unit_tree_view_pro:
-    <<: *default-job
-    steps:
-      - checkout
-      - install_js
-      - run:
-          name: Tests fake browser (vitest-tree-view-pro)
-          command: pnpm vitest --project "jsdom/x-tree-view-pro"
-
-  test_unit_vitest:
-    <<: *default-job
-    steps:
-      - checkout
-      - install_js
-      - run:
-          name: Tests fake browser (vitest)
-          command: pnpm vitest --project "jsdom/*"
+          name: Test JSDOM
+          command: pnpm vitest --project "jsdom/<< parameters.package >>"
       # - run:
       #     name: Check coverage generated
       #     command: |
@@ -278,6 +196,24 @@ jobs:
       #       curl -Os https://uploader.codecov.io/latest/linux/codecov
       #       chmod +x codecov
       #       ./codecov -t ${CODECOV_TOKEN} -Z -F "$REACT_VERSION-jsdom"
+
+  test_browser:
+    <<: *default-job
+    docker:
+      - image: mcr.microsoft.com/playwright:v1.50.1-noble
+    # resource_class: medium+
+    parameters:
+      package:
+        description: The package to test
+        type: string
+    steps:
+      - checkout
+      - install_js:
+          browsers: true
+          react-version: << parameters.react-version >>
+      - run:
+          name: Test Browser
+          command: pnpm vitest --project "browser/<< parameters.package >>"
 
   test_lint:
     <<: *default-job
@@ -357,44 +293,6 @@ jobs:
             else
                 exit 0
             fi
-
-  test_browser:
-    <<: *default-job
-    docker:
-      - image: mcr.microsoft.com/playwright:v1.50.1-noble
-    steps:
-      - checkout
-      - install_js:
-          browsers: true
-          react-version: << parameters.react-version >>
-      - run:
-          name: Tests real browsers
-          command: pnpm test:karma
-      - store_artifacts:
-          # hardcoded in karma-webpack
-          path: /tmp/_karma_webpack_
-          destination: artifact-file
-
-  test_browser_vitest:
-    <<: *default-job
-    docker:
-      - image: mcr.microsoft.com/playwright:v1.50.1-noble
-    resource_class: medium+
-    steps:
-      - checkout
-      - install_js:
-          browsers: true
-      - run:
-          name: Tests real browsers (vitest)
-          command: pnpm vitest --project "browser/*"
-      # - run:
-      #     name: Check coverage generated
-      #     command: |
-      #       if ! [[ -s coverage/lcov.info ]]
-      #       then
-      #         exit 1
-      #       fi
-
   test_types:
     <<: *default-job
     steps:
@@ -473,46 +371,9 @@ workflows:
           <<: *default-context
           requires:
             - checkout
-      - test_unit_vitest:
-          <<: *default-context
-          requires:
-            - checkout
-      - test_unit_date_pickers:
-          <<: *default-context
-          requires:
-            - checkout
-      - test_unit_date_pickers_pro:
-          <<: *default-context
-          requires:
-            - checkout
-      - test_unit_data_grid:
-          <<: *default-context
-          requires:
-            - checkout
-      - test_unit_data_grid_pro:
-          <<: *default-context
-          requires:
-            - checkout
-      - test_unit_data_grid_premium:
-          <<: *default-context
-          requires:
-            - checkout
-      - test_unit_charts:
-          <<: *default-context
-          requires:
-            - checkout
-      - test_unit_charts_pro:
-          <<: *default-context
-          requires:
-            - checkout
-      - test_unit_tree_view:
-          <<: *default-context
-          requires:
-            - checkout
-      - test_unit_tree_view_pro:
-          <<: *default-context
-          requires:
-            - checkout
+          matrix:
+            parameters:
+              <<: *packages
       - test_lint:
           <<: *default-context
           requires:
@@ -525,10 +386,9 @@ workflows:
           <<: *default-context
           requires:
             - checkout
-      - test_browser_vitest:
-          <<: *default-context
-          requires:
-            - checkout
+          matrix:
+            parameters:
+              <<: *packages
       - test_types:
           <<: *default-context
           requires:
