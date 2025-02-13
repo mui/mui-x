@@ -19,10 +19,8 @@ export default function ModifyAxisPosition() {
     <Box sx={{ width: '100%', maxWidth: 500 }}>
       <ScatterChart
         {...params}
-        leftAxis={null}
-        bottomAxis={null}
-        topAxis={{}}
-        rightAxis={{}}
+        xAxis={[{ position: 'top' }]}
+        yAxis={[{ position: 'right' }]}
         margin={{ top: 30, bottom: 10 }}
       />
     </Box>

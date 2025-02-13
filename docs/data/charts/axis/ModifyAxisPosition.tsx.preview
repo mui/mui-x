@@ -1,8 +1,6 @@
 <ScatterChart
   {...params}
-  leftAxis={null}
-  bottomAxis={null}
-  topAxis={{}}
-  rightAxis={{}}
+  xAxis={[{ position: 'top' }]}
+  yAxis={[{ position: 'right' }]}
   margin={{ top: 30, bottom: 10 }}
 />
