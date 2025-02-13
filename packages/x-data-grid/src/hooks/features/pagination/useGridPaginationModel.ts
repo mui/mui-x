@@ -73,7 +73,6 @@ export const useGridPaginationModel = (
     | 'pagination'
     | 'signature'
     | 'rowHeight'
-    | 'resetPageOnSortFilter'
   >,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPaginationModel');

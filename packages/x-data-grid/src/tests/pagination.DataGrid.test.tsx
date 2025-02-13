@@ -618,68 +618,45 @@ describe('<DataGrid /> - Pagination', () => {
     });
   });
 
-  describe('resetPageOnSortFilter prop', () => {
-    it('should reset page to 0 if sort or filter is applied and `resetPageOnSortFilter` is `true`', () => {
-      const { setProps } = render(
-        <BaselineTestCase
-          initialState={{ pagination: { paginationModel: { page: 0, pageSize: 5 }, rowCount: 0 } }}
-          pageSizeOptions={[5]}
-        />,
-      );
+  it('should reset page to 0 if sort or filter is applied', () => {
+    render(
+      <BaselineTestCase
+        initialState={{ pagination: { paginationModel: { page: 0, pageSize: 5 }, rowCount: 0 } }}
+        pageSizeOptions={[5]}
+      />,
+    );
 
-      act(() => {
-        apiRef.current?.setPage(1);
-      });
-      expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(1);
-
-      act(() => {
-        apiRef.current?.sortColumn('id', 'desc');
-        apiRef.current?.setFilterModel({
-          items: [
-            {
-              field: 'id',
-              value: '1',
-              operator: '>=',
-            },
-          ],
-        });
-      });
-
-      // page stays the same after sorting and filtering
-      expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(1);
-
-      // enable reset
-      setProps({
-        resetPageOnSortFilter: true,
-      });
-
-      act(() => {
-        apiRef.current?.sortColumn('id', 'asc');
-      });
-      // page is reset to 0 after sorting
-      expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(0);
-
-      // move to the next page again
-      act(() => {
-        apiRef.current?.setPage(1);
-      });
-      expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(1);
-
-      act(() => {
-        apiRef.current?.setFilterModel({
-          items: [
-            {
-              field: 'id',
-              value: '1',
-              operator: '>=',
-            },
-          ],
-        });
-      });
-
-      // page is reset to 0 after filtering
-      expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(0);
+    act(() => {
+      apiRef.current!.setPage(1);
     });
+    expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(1);
+
+    act(() => {
+      apiRef.current!.sortColumn('id', 'asc');
+    });
+    // page is reset to 0 after sorting
+    expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(0);
+
+    // move to the next page again
+    act(() => {
+      apiRef.current!.setPage(1);
+    });
+    expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(1);
+
+    act(() => {
+      apiRef.current?.setFilterModel({
+        items: [
+          {
+            field: 'id',
+            value: '1',
+            operator: '>=',
+          },
+        ],
+      });
+    });
+
+    // page is reset to 0 after filtering
+    expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(0);
   });
 
   it('should make the first cell focusable after changing the page', () => {
