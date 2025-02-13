@@ -670,11 +670,13 @@ export const GridRootStyles = styled('div', {
     [`& .${c['rowReorderCell--draggable']}`]: {
       cursor: 'move',
       opacity: 1,
+      userSelect: "none"
     },
     [`& .${c.rowReorderCellContainer}`]: {
       padding: 0,
       display: 'flex',
       alignItems: 'stretch',
+      userSelect: "none"
     },
     [`.${c.withBorderColor}`]: {
       borderColor,
