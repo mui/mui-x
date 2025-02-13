@@ -147,9 +147,11 @@ const columns = [
 
 {{"demo": "ReadOnlyFilters.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Reset pagination
+## Reset page on filtering
 
-By default user stays on the same page after the filter is applied, unless the new row count indicates that that page does not exist anymore. In that case, page is changed to the last page for the new row count. If you want to get the user back to the first page each time new filter is applied, use `resetPageOnSortFilter` prop.
+By default, the user stays on the same page after a filter is applied, unless the new row count indicates that that page doesn't exist anymore. 
+In that case, the user is sent to the last page as defined by the new row count. 
+To send the user back to the first page when a new filter is applied, use the `resetPageOnSortFilter` prop.
 
 {{"demo": "FilteringWithPageReset.js", "bg": "inline", "defaultCodeOpen": false}}
 
