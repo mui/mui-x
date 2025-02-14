@@ -36,7 +36,7 @@ Following are all team members who have contributed to this release:
   +mySelector(apiRef, arguments)
   ```
 
-#### `@mui/x-data-grid@v8.0.0-alpha.12`
+#### `@mui/x-data-grid@8.0.0-alpha.12`
 
 - [DataGrid] Add "No columns" overlay (#16543) @KenanYusuf
 - [DataGrid] Add `resetPageOnSortFilter` prop that resets the page after sorting/filtering (#16450) @arminmeh
@@ -56,13 +56,13 @@ Following are all team members who have contributed to this release:
 - [l10n] Improve Polish (pl-PL) locale (#16123) @pawelkula
 - [l10n] Improve Ukrainian (uk-UA) locale (#16463) @Neonin
 
-#### `@mui/x-data-grid-pro@v8.0.0-alpha.12` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@8.0.0-alpha.12` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@v8.0.0-alpha.12`.
+Same changes as in `@mui/x-data-grid@8.0.0-alpha.12`.
 
-#### `@mui/x-data-grid-premium@v8.0.0-alpha.12` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@8.0.0-alpha.12` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@v8.0.0-alpha.12`, plus:
+Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.12`, plus:
 
 - [DataGridPremium] Fix Excel export Web Worker demo not working in dev mode (#16517) @cherniavskii
 - [DataGridPremium] Fix loading issue + add skeleton overlay (#16282) @MBilalShafi
@@ -98,14 +98,14 @@ Same changes as in `@mui/x-data-grid-pro@v8.0.0-alpha.12`, plus:
       >
     ```
 
-#### `@mui/x-date-pickers@v8.0.0-alpha.12`
+#### `@mui/x-date-pickers@8.0.0-alpha.12`
 
 - [pickers] Fix time related aria labels to depend on `ampm` flag value (#16572) @LukasTy
 - [pickers] Remove unused adapter formats (#16522) @LukasTy
 
-#### `@mui/x-date-pickers-pro@v8.0.0-alpha.12` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@8.0.0-alpha.12` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@v8.0.0-alpha.12`, plus:
+Same changes as in `@mui/x-date-pickers@8.0.0-alpha.12`, plus:
 
 - [DateRangePicker] Avoid unnecessary field section focusing (#16474) @LukasTy
 
@@ -115,7 +115,7 @@ Same changes as in `@mui/x-date-pickers@v8.0.0-alpha.12`, plus:
 
 - The `useSeries` hook family has been stabilized and renamed accordingly — [Learn more](https://next.mui.com/x/migration/migration-charts-v7/#stabilize-useseries-and-usexxxseries-hooks-✅)
 
-#### `@mui/x-charts@v8.0.0-alpha.12`
+#### `@mui/x-charts@8.0.0-alpha.12`
 
 - [charts] Add docs for scatter "Size" section (#16556) @bernardobelchior
 - [charts] Add warning when using unknown ids in `useXxxSeries` hooks (#16552) @JCQuintas
@@ -133,19 +133,19 @@ Same changes as in `@mui/x-date-pickers@v8.0.0-alpha.12`, plus:
 - [charts] Remove `colors` prop from `SparkLineChart`. (#16494) @bernardobelchior
 - [charts] Stabilize series hooks (`useSeries`, `usePieSeries`, etc.) (#16459) @bernardobelchior
 
-#### `@mui/x-charts-pro@v8.0.0-alpha.12` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-charts-pro@8.0.0-alpha.12` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-charts@v8.0.0-alpha.12`.
+Same changes as in `@mui/x-charts@8.0.0-alpha.12`.
 
 ### Tree View
 
-#### `@mui/x-tree-view@v8.0.0-alpha.12`
+#### `@mui/x-tree-view@8.0.0-alpha.12`
 
 Internal changes.
 
-#### `@mui/x-tree-view-pro@v8.0.0-alpha.12` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-tree-view-pro@8.0.0-alpha.12` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-tree-view@v8.0.0-alpha.12`.
+Same changes as in `@mui/x-tree-view@8.0.0-alpha.12`.
 
 ### Docs
 
