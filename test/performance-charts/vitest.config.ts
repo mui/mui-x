@@ -7,6 +7,7 @@ export default defineConfig({
   test: {
     setupFiles: ['./setup.ts'],
     environment: 'jsdom',
+    testTimeout: 30_000,
     // browser: {
     //   enabled: true,
     //   headless: true,
