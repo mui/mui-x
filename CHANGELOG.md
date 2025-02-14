@@ -12,6 +12,7 @@ _Feb 14, 2025_
 We'd like to offer a big thanks to the 16 contributors who made this release possible. Here are some highlights ✨:
 
 - 📦 Data Grid [data source](https://next.mui.com/x/react-data-grid/server-side-data/) is now available in the Community plan
+- ⚡ Improve Data Grid Excel export serialization performance
 - 🌍 Improve Polish (pl-PL) and Ukrainian (uk-UA) locales on the Data Grid
 - 🐞 Bugfixes
 
