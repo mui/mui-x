@@ -59,7 +59,7 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Fix the `onClock` prop of the base Select slot (#16557) @romgrk
 - [DataGrid] Make base data source available in the Community plan (#16359) @MBilalShafi
 - [DataGrid] Remove `apiRef.current.forceUpdate()` method (#16560) @MBilalShafi
-- [DataGrid] Fix the unexpected behavior of the pagination when using -1 for "All" rows per page (#16485) @nusr
+- [DataGrid] Fix the unexpected behavior of the pagination when using `-1` for "All" rows per page (#16485) @nusr
 - [l10n] Improve Polish (pl-PL) locale (#16123) @pawelkula
 - [l10n] Improve Ukrainian (uk-UA) locale (#16463) @Neonin
 
