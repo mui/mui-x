@@ -59,11 +59,20 @@ export const selectorChartsIsFadedCallback = createSelector(
 );
 
 export const selectorChartsIsHighlighted = createSelector(
-  [selectorChartsIsHighlightedCallback, (_, item: HighlightItemData | null) => item],
-  (callback, item) => callback(item),
+  [
+    selectorChartsHighlightScope,
+    selectorChartsHighlightedItem,
+    (_, item: HighlightItemData | null) => item,
+  ],
+  (highlightScope, highlightedItem, item) =>
+    createIsHighlighted(highlightScope, highlightedItem)(item),
 );
 
 export const selectorChartsIsFaded = createSelector(
-  [selectorChartsIsFadedCallback, (_, item: HighlightItemData | null) => item],
-  (callback, item) => callback(item),
+  [
+    selectorChartsHighlightScope,
+    selectorChartsHighlightedItem,
+    (_, item: HighlightItemData | null) => item,
+  ],
+  (highlightScope, highlightedItem, item) => createIsFaded(highlightScope, highlightedItem)(item),
 );
