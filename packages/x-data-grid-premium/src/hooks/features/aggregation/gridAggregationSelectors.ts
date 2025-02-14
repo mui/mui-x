@@ -1,7 +1,9 @@
-import { createSelector } from '@mui/x-data-grid-pro/internals';
+import { createSelector, createRootSelector } from '@mui/x-data-grid-pro/internals';
 import { GridStatePremium } from '../../../models/gridStatePremium';
 
-export const gridAggregationStateSelector = (state: GridStatePremium) => state.aggregation;
+export const gridAggregationStateSelector = createRootSelector(
+  (state: GridStatePremium) => state.aggregation,
+);
 
 /**
  * Get the aggregation model, containing the aggregation function of each column.

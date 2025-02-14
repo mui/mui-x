@@ -9,39 +9,34 @@ interface GridCustomState extends GridStateCommunity {
 
 createSelector(
   // @ts-expect-error The state must be typed with GridState
-  (state: unknown) => state.columns.orderedFields,
+  (apiRef: unknown) => apiRef.current.state.columns.orderedFields,
   (fields: any) => fields,
 );
 
 createSelector(
   // @ts-expect-error Missing combiner function
-  (state: GridStateCommunity) => state.columns.orderedFields,
-  (state: GridStateCommunity) => state.columns.lookup,
+  (apiRef: RefObject<GridApiCommunity>) => apiRef.current.state.columns.orderedFields,
+  (apiRef: RefObject<GridApiCommunity>) => apiRef.current.state.columns.lookup,
 );
 
 createSelector(
-  (state: GridStateCommunity) => state.columns.orderedFields,
+  (apiRef: RefObject<GridApiCommunity>) => apiRef.current.state.columns.orderedFields,
   (fields) => fields,
   // @ts-expect-error Wrong state value
 )(null);
 
 createSelector(
-  (state: GridStateCommunity) => state.columns.orderedFields,
+  (apiRef: RefObject<GridApiCommunity>) => apiRef.current.state.columns.orderedFields,
   (fields) => fields,
 )({} as RefObject<GridApiCommunity>);
 
 createSelector(
-  (state: GridStateCommunity) => state.columns.orderedFields,
-  (fields) => fields,
-)({} as GridStateCommunity, undefined, { id: 1 });
-
-createSelector(
   // @ts-expect-error Wrong state key
-  (state: GridStateCommunity) => state.customKey,
+  (apiRef: RefObject<GridApiCommunity>) => apiRef.current.state.customKey,
   (customKey) => customKey.custmKeyBis,
 );
 
 createSelector(
-  (state: GridCustomState) => state.customKey,
+  (apiRef: RefObject<{ state: GridCustomState }>) => apiRef.current.state.customKey,
   (customKey) => customKey.customKeyBis,
 );
