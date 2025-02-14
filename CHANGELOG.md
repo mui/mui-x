@@ -3,6 +3,65 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v7.26.1
+
+<!-- generated comparing v7.26.0..v7.x -->
+
+_Feb 14, 2025_
+
+We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+TODO INSERT HIGHLIGHTS
+
+Following are all team members who have contributed to this release:
+@cherniavskii, @JCQuintas, @oliviertassinari, @arminmeh and @LukasTy
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@v7.26.1`
+
+- [DataGrid] Avoid `undefined` value for pagination `rowCount` (#16558) @cherniavskii
+
+#### `@mui/x-data-grid-pro@v7.26.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@v7.26.1`.
+
+#### `@mui/x-data-grid-premium@v7.26.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@v7.26.1`, plus:
+
+- [DataGridPremium] Fix Excel export Web Worker demo not working in dev mode (#16532) @cherniavskii
+- [DataGridPremium] Improve Excel export serialization performance (#16545) @cherniavskii
+- [DataGridPremium] Namespace Excel export worker (#16539) @oliviertassinari
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@v7.26.1`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@v7.26.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@v7.26.1`, plus:
+
+- [DateRangePicker] Avoid unnecessary field section focusing (#16569) @LukasTy
+
+### Charts
+
+#### `@mui/x-charts@v7.26.1`
+
+- [charts] Fix automatic type overloads (#16579) @JCQuintas
+
+#### `@mui/x-charts-pro@v7.26.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@v7.26.1`.
+
+### Core
+
+- [test] Fix Data Grid data source error test on React 18 (#16565) @arminmeh
+
 ## 7.26.0
 
 _Feb 7, 2025_
