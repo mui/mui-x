@@ -150,7 +150,9 @@
         "GridRowHeightReturnValue": "The row height value. If <code>null</code> or <code>undefined</code> then the default row height is applied. If &quot;auto&quot; then the row height is calculated based on the content."
       }
     },
-    "getRowId": { "description": "Return the id of a given GridRowModel." },
+    "getRowId": {
+      "description": "Return the id of a given GridRowModel. Ensure the reference of this prop is stable to avoid performance implications. It could be done by either defining the prop outside of the component or by memoizing it."
+    },
     "getRowSpacing": {
       "description": "Function that allows to specify the spacing between rows.",
       "typeDescriptions": {
@@ -543,6 +545,9 @@
         "Promise<R> | R": "The final values to update the row."
       }
     },
+    "resetPageOnSortFilter": {
+      "description": "If <code>true</code>, the page is set to 0 after each sorting or filtering. This prop will be removed in the next major version and resetting the page will become the default behavior."
+    },
     "resizeThrottleMs": { "description": "The milliseconds throttle delay for resizing the grid." },
     "rowBufferPx": { "description": "Row region in pixels to render before/after the viewport" },
     "rowCount": {
@@ -650,6 +655,10 @@
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the aggregation label in the column header",
       "conditions": "aggregated"
+    },
+    "aggregationRowOverlayWrapper": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the aggregation row overlay wrapper"
     },
     "autoHeight": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
@@ -1231,6 +1240,7 @@
     "baseTooltip": "The custom Tooltip component used in the grid.",
     "booleanCellFalseIcon": "Icon displayed on the boolean cell to represent the false value.",
     "booleanCellTrueIcon": "Icon displayed on the boolean cell to represent the true value.",
+    "bottomContainer": "Component rendered for the bottom container.",
     "cell": "Component rendered for each cell.",
     "columnFilteredIcon": "Icon displayed on the column header menu to show that a filter has been applied to the column.",
     "columnHeaderFilterIconButton": "Filter icon component rendered in each column header.",
@@ -1275,6 +1285,7 @@
     "loadingOverlay": "Loading overlay component rendered when the grid is in a loading state.",
     "menuItemCheckIcon": "Icon displayed to indicate that a menu item is selected.",
     "moreActionsIcon": "Icon displayed on the <code>actions</code> column type to open the menu.",
+    "noColumnsOverlay": "No columns overlay component rendered when the grid has no columns.",
     "noResultsOverlay": "No results overlay component rendered when the grid has no results after filtering.",
     "noRowsOverlay": "No rows overlay component rendered when the grid has no rows.",
     "openFilterButtonIcon": "Icon displayed on the open filter button present in the toolbar by default.",

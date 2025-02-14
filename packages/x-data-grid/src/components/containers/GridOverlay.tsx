@@ -28,15 +28,17 @@ const GridOverlayRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'Overlay',
   overridesResolver: (_, styles) => styles.overlay,
-})<{ ownerState: OwnerState }>({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   width: '100%',
   height: '100%',
   display: 'flex',
+  gap: theme.spacing(1),
+  flexDirection: 'column',
   alignSelf: 'center',
   alignItems: 'center',
   justifyContent: 'center',
   backgroundColor: 'var(--unstable_DataGrid-overlayBackground)',
-});
+}));
 
 const GridOverlay = forwardRef<HTMLDivElement, GridOverlayProps>(function GridOverlay(props, ref) {
   const { className, ...other } = props;

@@ -14,6 +14,7 @@ export * from './GridFooter';
 export * from './GridHeader';
 export * from './GridLoadingOverlay';
 export * from './GridNoRowsOverlay';
+export * from './GridNoColumnsOverlay';
 export { GridPagination } from './GridPagination';
 export * from './GridRowCount';
 export * from './GridRow';
