@@ -72,7 +72,7 @@ export type CircularProgressProps = {
 export type LinearProgressProps = {};
 
 export type InputProps = {
-  ref?: React.Ref<HTMLInputElement>;
+  ref?: React.Ref<HTMLElement>;
   inputRef?: React.Ref<HTMLInputElement>;
   className?: string;
   fullWidth?: boolean;
