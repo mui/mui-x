@@ -20,7 +20,7 @@ Following are all team members who have contributed to this release:
 
 - [DataGrid] Avoid `undefined` value for pagination `rowCount` (#16558) @cherniavskii
 
-#### `@mui/x-data-grid-pro@v7.26.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@7.26.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-data-grid@v7.26.1`.
 
