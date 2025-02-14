@@ -34,7 +34,7 @@ Same changes as in `@mui/x-data-grid-pro@7.26.1`, plus:
 
 ### Date and Time Pickers
 
-#### `@mui/x-date-pickers@v7.26.1`
+#### `@mui/x-date-pickers@7.26.1`
 
 Internal changes.
 
