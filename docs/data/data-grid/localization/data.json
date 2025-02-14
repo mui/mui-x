@@ -260,8 +260,8 @@
     "importName": "ukUA",
     "localeName": "Ukrainian",
     "missingKeysCount": 0,
-    "totalKeysCount": 135,
-    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/ukUA.ts"
+    "totalKeysCount": 123,
+    "githubLink": "https://github.com/mui/mui-x/blob/v7.x/packages/x-data-grid/src/locales/ukUA.ts"
   },
   {
     "languageTag": "ur-PK",

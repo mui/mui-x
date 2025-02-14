@@ -26,8 +26,6 @@ const ukUAGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Немає рядків',
   noResultsOverlayLabel: 'Дані не знайдено.',
-  noColumnsOverlayLabel: 'Немає стовпців',
-  noColumnsOverlayManageColumns: 'Керування стовпцями',
 
   // Density selector toolbar button text
   toolbarDensity: 'Висота рядка',
@@ -56,18 +54,6 @@ const ukUAGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterPlaceholder: 'Пошук…',
   toolbarQuickFilterLabel: 'Пошук',
   toolbarQuickFilterDeleteIconLabel: 'Очистити',
-
-  // Prompt toolbar field
-  toolbarPromptControlPlaceholder: 'Введіть запит…',
-  toolbarPromptControlWithRecordingPlaceholder: 'Введіть або запишіть запит…',
-  toolbarPromptControlRecordingPlaceholder: 'Прослуховування запиту…',
-  toolbarPromptControlLabel: 'Введення запиту',
-  toolbarPromptControlRecordButtonDefaultLabel: 'Запис',
-  toolbarPromptControlRecordButtonActiveLabel: 'Зупинити запис',
-  toolbarPromptControlSendActionLabel: 'Надіслати',
-  toolbarPromptControlSendActionAriaLabel: 'Надіслати запит',
-  toolbarPromptControlErrorMessage:
-    'Сталася помилка під час обробки запиту. Будь ласка, спробуйте ще раз із іншим запитом.',
 
   // Export selector toolbar button text
   toolbarExport: 'Експорт',
@@ -140,7 +126,6 @@ const ukUAGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Більше або дорівнює',
   'headerFilterOperator<': 'Менше ніж',
   'headerFilterOperator<=': 'Менше або дорівнює',
-  headerFilterClear: 'Очистити фільтр',
 
   // Filter values text
   filterValueAny: 'будь-який',
