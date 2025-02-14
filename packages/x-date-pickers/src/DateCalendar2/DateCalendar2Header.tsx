@@ -63,7 +63,8 @@ export const DateCalendar2Header = React.forwardRef(function DateCalendar2Header
     externalSlotProps: slotProps?.switchViewButton,
     additionalProps: {
       size: 'small',
-      'aria-label': translations.calendarViewSwitchingButtonAriaLabel(view),
+      'aria-label':
+        view == null ? undefined : translations.calendarViewSwitchingButtonAriaLabel(view),
     },
     className: classes.headerSwitchViewButton,
     ownerState,

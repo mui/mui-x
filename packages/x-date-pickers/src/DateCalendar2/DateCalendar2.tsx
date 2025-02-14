@@ -196,7 +196,13 @@ export const DateCalendar2 = React.forwardRef(function DateCalendar2(
     if (view === 'month') {
       return <DateCalendar2MonthGrid />;
     }
-    return <DateCalendar2DayGrid />;
+
+    if (view === 'day') {
+      return <DateCalendar2DayGrid />;
+    }
+
+    // We don't return null to make sure the Fade component always have a React component to clone its props on.
+    return <div />;
   };
 
   return (
@@ -241,7 +247,10 @@ function getDefaultView(views: { [key in DateView]?: boolean }) {
   if (views.month) {
     return 'month';
   }
-  return 'year';
+  if (views.year) {
+    return 'year';
+  }
+  return null;
 }
 
 function useUtilityClasses(classes: Partial<DateCalendar2Classes> | undefined) {

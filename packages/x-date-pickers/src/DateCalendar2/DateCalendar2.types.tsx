@@ -185,7 +185,7 @@ export interface DateCalendar2PrivateContextValue {
 }
 
 export interface DateCalendar2ContextValue {
-  view: DateView;
+  view: DateView | null;
   setView: (view: DateView) => void;
   views: { [key in DateView]?: boolean };
   reduceAnimations: boolean;
