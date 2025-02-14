@@ -15,6 +15,7 @@ import MUITextField from '@mui/material/TextField';
 import MUIFormControl from '@mui/material/FormControl';
 import MUIFormControlLabel from '@mui/material/FormControlLabel';
 import MUISelect from '@mui/material/Select';
+import MUISwitch from '@mui/material/Switch';
 import MUIButton from '@mui/material/Button';
 import MUIIconButton from '@mui/material/IconButton';
 import MUIInputAdornment from '@mui/material/InputAdornment';
@@ -180,6 +181,7 @@ const baseSlots: GridBaseSlots = {
   baseSelect: BaseSelect,
   baseSelectOption: BaseSelectOption,
   baseSkeleton: MUISkeleton,
+  baseSwitch: MUISwitch,
   baseChip: MUIChip,
 };
 

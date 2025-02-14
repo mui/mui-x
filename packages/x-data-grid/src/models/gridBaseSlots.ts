@@ -178,6 +178,12 @@ export type SkeletonProps = {
   height?: number | string;
 };
 
+export type SwitchProps = {
+  checked?: boolean;
+  onChange?: React.ChangeEventHandler;
+  size?: 'small' | 'medium';
+};
+
 export type TextFieldProps = {
   autoComplete?: string;
   className?: string;

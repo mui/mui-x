@@ -5,7 +5,6 @@ import type { CircularProgressProps as MUICircularProgressProps } from '@mui/mat
 import type { LinearProgressProps as MUILinearProgressProps } from '@mui/material/LinearProgress';
 import type { MenuItemProps as MUIMenuItemProps } from '@mui/material/MenuItem';
 import type { FormControlProps } from '@mui/material/FormControl';
-import type { SwitchProps } from '@mui/material/Switch';
 import type { IconButtonProps as MUIIconButtonProps } from '@mui/material/IconButton';
 import type { InputAdornmentProps } from '@mui/material/InputAdornment';
 import type { TooltipProps as MUITooltipProps } from '@mui/material/Tooltip';
@@ -45,6 +44,7 @@ import type {
   SelectProps,
   SelectOptionProps,
   SkeletonProps,
+  SwitchProps,
   TooltipProps,
   TextFieldProps,
 } from './gridBaseSlots';
