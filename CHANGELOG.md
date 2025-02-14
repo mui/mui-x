@@ -5,7 +5,172 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## **8.0.0-alpha.11**
+## 8.0.0-alpha.12
+
+_Feb 14, 2025_
+
+We'd like to offer a big thanks to the 16 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@mapache-salvaje, @Neonin, @nusr, @pawelkula, .
+Following are all team members who have contributed to this release:
+@alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @Janpot, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @michelengelen, @oliviertassinari and @romgrk.
+
+### Data Grid
+
+#### Breaking changes
+
+- The `main--hasSkeletonLoadingOverlay` class has been renamed to `main--hiddenContent` and is now also applied when the "No columns" overlay is displayed.
+
+- The `apiRef.current.forceUpdate()` method was removed. Use selectors combined with `useGridSelector()` hook to react to changes in the state.
+
+- Fixes #16220
+
+  - Before: https://codesandbox.io/p/sandbox/intelligent-leavitt-q4h68n?from-embed=&workspaceId=ws_96AUJAP4MpFUq5gdSxRein
+  - After: https://codesandbox.io/p/sandbox/stupefied-scott-qnqpx5
+
+- Add a skeleton loading overlay on the aggregation row while it's loading
+
+  https://github.com/user-attachments/assets/310f57fe-2809-45c7-9930-22f5df413e04
+
+- The selectors signature has been updated. They are only accepting `apiRef` as a first argument.
+
+  ```diff
+  -mySelector(state, arguments, instanceId)
+  +mySelector(apiRef, arguments)
+  ```
+
+#### `@mui/x-data-grid@v8.0.0-alpha.12`
+
+- [DataGrid] Add "No columns" overlay (#16543) @KenanYusuf
+- [DataGrid] Add `resetPageOnSortFilter` prop that resets the page after sorting/filtering (#16450) @arminmeh
+- [DataGrid] All selectors accept only `apiRef` as first argument (#16198) @arminmeh
+- [DataGrid] Avoid `undefined` value for pagination `rowCount` (#16488) @LukasTy
+- [DataGrid] Extract `getRowId` API method as a selector (#16487) @MBilalShafi
+- [DataGrid] Fix: base Select onClose (#16557) @romgrk
+- [DataGrid] Make base data source available in the Community plan (#16359) @MBilalShafi
+- [DataGrid] Refactor: create base Checkbox (#16445) @romgrk
+- [DataGrid] Refactor: create base Input (#16443) @romgrk
+- [DataGrid] Refactor: create base MenuList props (#16481) @romgrk
+- [DataGrid] Refactor: create base Popper (#16362) @romgrk
+- [DataGrid] Refactor: create base Select (#16394) @romgrk
+- [DataGrid] Refactor: create base Switch (#16527) @romgrk
+- [DataGrid] Remove `apiRef.current.forceUpdate()` method (#16560) @MBilalShafi
+- [DataGrid] Fix the unexpected behavior of the pagination when using -1 for "All" rows per page (#16485) @nusr
+- [l10n] Improve Polish (pl-PL) locale (#16123) @pawelkula
+- [l10n] Improve Ukrainian (uk-UA) locale (#16463) @Neonin
+
+#### `@mui/x-data-grid-pro@v8.0.0-alpha.12` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@v8.0.0-alpha.12`.
+
+#### `@mui/x-data-grid-premium@v8.0.0-alpha.12` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@v8.0.0-alpha.12`, plus:
+
+- [DataGridPremium] Fix Excel export Web Worker demo not working in dev mode (#16517) @cherniavskii
+- [DataGridPremium] Fix loading issue + add skeleton overlay (#16282) @MBilalShafi
+- [DataGridPremium] Improve Excel export serialization performance (#16526) @cherniavskii
+- [DataGridPremium] Namespace Excel export worker (#16020) @oliviertassinari
+
+### Date and Time Pickers
+
+#### Breaking changes
+
+- The `aria-label` on the `<Clock />` component and Time Picker opening button has been fixed to rely on the set `ampm` property instead of defaulting to the user's locale.
+
+- The following unused formats have been removed from the adapters and can no longer be overridden via the `dateFormats` prop on the `<LocalizationProvider />` component:
+
+  - `fullTime` - please use `fullTime12h` and `fullTime24h` instead:
+    ```diff
+      <LocalizationProvider
+        dateFormats={{
+    -     fullTime: 'LT',
+    +     fullTime12h: 'hh:mm A',
+    +     fullTime24h: 'hh:mm',
+        }}
+      >
+    ```
+  - `keyboardDateTime` - please use `keyboardDateTime12h` and `keyboardDateTime24h` instead:
+    ```diff
+      <LocalizationProvider
+        dateFormats={{
+    -     keyboardDateTime: 'DD.MM.YYYY | LT',
+    +     keyboardDateTime12h: 'DD.MM.YYYY | hh:mm A',
+    +     keyboardDateTime24h: 'DD.MM.YYYY | hh:mm',
+        }}
+      >
+    ```
+
+#### `@mui/x-date-pickers@v8.0.0-alpha.12`
+
+- [pickers] Fix time related aria labels to depend on `ampm` flag value (#16572) @LukasTy
+- [pickers] Remove unused adapter formats (#16522) @LukasTy
+
+#### `@mui/x-date-pickers-pro@v8.0.0-alpha.12` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@v8.0.0-alpha.12`, plus:
+
+- [DateRangePicker] Avoid unnecessary field section focusing (#16474) @LukasTy
+
+### Charts
+
+From https://github.com/mui/mui-x/pull/16459
+
+Stabilize series hooks: `useSeries`, `usePieSeries`, `useLineSeries`, `useBarSeries`, `useScatterSeries` and `useHeatmapSeries`.
+
+- [x] I have followed (at least) the [PR section of the contributing guide](https://github.com/mui/mui-x/blob/HEAD/CONTRIBUTING.md#sending-a-pull-request).
+
+#### `@mui/x-charts@v8.0.0-alpha.12`
+
+- [charts] Add docs for scatter "Size" section (#16556) @bernardobelchior
+- [charts] Add warning when using unknown ids in `useXxxSeries` hooks (#16552) @JCQuintas
+- [charts] Divide the logic for `useXxxSeries` into `useXxxSeriesContext` (#16546) @JCQuintas
+- [charts] Document plugins for internal use (#16504) @JCQuintas
+- [charts] Fix internal typo (#16524) @alexfauquette
+- [charts] Fix type overloads (#16581) @JCQuintas
+- [charts] Fix zoom filter regression (#16507) @alexfauquette
+- [charts] Improve tooltip placement in mobile (#16553) @bernardobelchior
+- [charts] Let the `useXxxSeries` support array of ids and document them (#15545) @JCQuintas
+- [charts] Memoize some tooltip internals (#16564) @alexfauquette
+- [charts] Move Voronoi handler in a dedicated plugin (#16470) @alexfauquette
+- [charts] Performance tests: set license on setup. Update vitest minor version. (#16525) @bernardobelchior
+- [charts] Propagate the axis scale to the `valueFormatter` (#16555) @alexfauquette
+- [charts] Remove `colors` prop from `SparkLineChart`. (#16494) @bernardobelchior
+- [charts] Stabilize series hooks (`useSeries`, `usePieSeries`, etc.) (#16459) @bernardobelchior
+
+#### `@mui/x-charts-pro@v8.0.0-alpha.12` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@v8.0.0-alpha.12`.
+
+### Tree View
+
+#### `@mui/x-tree-view@v8.0.0-alpha.12`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@v8.0.0-alpha.12` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@v8.0.0-alpha.12`.
+
+### Docs
+
+- [docs] Add demo for Scatter Chart with linked points (#16505) @bernardobelchior
+- [docs] Improve license installation page (#16403) @michelengelen
+- [docs] Standardize getting started docs across all packages (#16302) @mapache-salvaje
+
+### Core
+
+- [core] Update charts folder structure (#16471) @alexfauquette
+- [code-infra] Bump @mui/monorepo (#16422) @renovate[bot]
+- [code-infra] Fix lock file (#16562) @LukasTy
+- [code-infra] Fix root package version (#16503) @JCQuintas
+- [code-infra] Update internal packages to `next` releases (#16423) @renovate[bot]
+- [code-infra] Update package layout for better ESM support (#14386) @Janpot
+
+## 8.0.0-alpha.11
 
 _Feb 7, 2025_
 
