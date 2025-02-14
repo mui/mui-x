@@ -50,7 +50,7 @@ Same changes as in `@mui/x-date-pickers@v7.26.1`, plus:
 
 Internal changes.
 
-#### `@mui/x-charts-pro@v7.26.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-charts-pro@7.26.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 - [charts-pro] Fix automatic type overloads (#16579) @JCQuintas
 
