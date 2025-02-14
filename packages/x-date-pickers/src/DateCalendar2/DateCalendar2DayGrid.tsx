@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import CSSTransition, { CSSTransitionProps } from 'react-transition-group/CSSTransition';
 import { useTheme } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { Calendar, useCalendarContext } from '../internals/base/Calendar';
 import { usePickerTranslations } from '../hooks';
 import { useUtils } from '../internals/hooks/useUtils';
@@ -180,7 +179,7 @@ const DateCalendar2DayGridLoadingPanel = React.memo(function DateCalendar2DayGri
 });
 
 export const DateCalendar2DayGrid = React.forwardRef(function DateCalendar2DayGrid(
-  props: DateCalendar2DayGridProps,
+  props: React.HTMLAttributes<HTMLDivElement>,
   ref: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, ...other } = props;
@@ -203,7 +202,7 @@ export const DateCalendar2DayGrid = React.forwardRef(function DateCalendar2DayGr
   const prevVisibleDate = React.useRef(visibleDate);
   const slideDirection = utils.isBefore(prevVisibleDate.current, visibleDate) ? 'left' : 'right';
 
-  useEnhancedEffect(() => {
+  React.useEffect(() => {
     prevVisibleDate.current = visibleDate;
   }, [visibleDate]);
 
@@ -267,5 +266,3 @@ export const DateCalendar2DayGrid = React.forwardRef(function DateCalendar2DayGr
     </Calendar.DayGrid>
   );
 });
-
-interface DateCalendar2DayGridProps extends React.HTMLAttributes<HTMLDivElement> {}

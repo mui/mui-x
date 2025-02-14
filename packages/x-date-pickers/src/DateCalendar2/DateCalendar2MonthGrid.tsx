@@ -56,7 +56,7 @@ const DateCalendar2MonthGridLoadingPanel = React.forwardRef(
 );
 
 export const DateCalendar2MonthGrid = React.forwardRef(function DateCalendar2MonthGrid(
-  props: DateCalendarMonthGridProps,
+  props: React.HTMLAttributes<HTMLDivElement>,
   ref: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, ...other } = props;
@@ -92,5 +92,3 @@ export const DateCalendar2MonthGrid = React.forwardRef(function DateCalendar2Mon
     </Calendar.MonthGrid>
   );
 });
-
-interface DateCalendarMonthGridProps extends React.HTMLAttributes<HTMLDivElement> {}
