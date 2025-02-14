@@ -104,10 +104,10 @@ export const DateCalendar2 = React.forwardRef(function DateCalendar2(
 
     // View-specific customization props
     displayWeekNumber = false,
+    fixedWeekNumber,
     monthsPerRow = 3,
     yearsPerRow = 3,
     yearsOrder = 'asc',
-    fixedWeekNumber,
 
     // Forwarded props
     ...other
@@ -142,8 +142,8 @@ export const DateCalendar2 = React.forwardRef(function DateCalendar2(
   );
 
   const privateContextValue = React.useMemo<DateCalendar2PrivateContextValue>(
-    () => ({ classes, slots, slotProps, labelId, loading }),
-    [classes, slots, slotProps, labelId, loading],
+    () => ({ classes, slots, slotProps, labelId, loading, displayWeekNumber, fixedWeekNumber }),
+    [classes, slots, slotProps, labelId, loading, displayWeekNumber, fixedWeekNumber],
   );
 
   const contextValue = React.useMemo<DateCalendar2ContextValue>(
@@ -166,12 +166,7 @@ export const DateCalendar2 = React.forwardRef(function DateCalendar2(
     if (view === 'month') {
       return <DateCalendar2MonthGrid cellsPerRow={monthsPerRow} />;
     }
-    return (
-      <DateCalendar2DayGrid
-        displayWeekNumber={displayWeekNumber}
-        fixedWeekNumber={fixedWeekNumber}
-      />
-    );
+    return <DateCalendar2DayGrid />;
   };
 
   return (

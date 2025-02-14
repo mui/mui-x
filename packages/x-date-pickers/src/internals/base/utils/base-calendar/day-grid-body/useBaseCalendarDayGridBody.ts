@@ -143,11 +143,6 @@ export namespace useBaseCalendarDayGridBody {
      */
     offset?: number;
     /**
-     * If `true`, the first tabbable children inside this component will be focused on mount.
-     * @default false
-     */
-    focusOnMount?: boolean;
-    /**
      * If `true`, the component's month won't update when the visible date or the offset changes.
      * This is mostly useful when doing transitions between several months to avoid having the exiting month updated to the new visible date.
      */

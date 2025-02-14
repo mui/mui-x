@@ -1,32 +1,15 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { styled } from '@mui/material/styles';
 import { DAY_MARGIN, DAY_SIZE } from '../internals/constants/dimensions';
 import { useDateCalendar2PrivateContext } from './DateCalendar2Context';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { DateView } from '../models/views';
+import {
+  DateCalendar2LoadingPanelContainer,
+  DateCalendar2MonthOrYearLoadingPanel,
+} from './DateCalendar2.parts';
 
 export const DAYS_GRID_BODY_HEIGHT = (DAY_SIZE + DAY_MARGIN * 2) * 6;
-
-const DateCalendar2LoadingPanelContainer = styled('div', {
-  name: 'MuiDateCalendar2',
-  slot: 'LoadingPanelContainer',
-  overridesResolver: (_, styles) => styles.loadingPanelContainer,
-})({
-  display: 'flex',
-  justifyContent: 'center',
-  flex: '1 1 auto',
-  '&[data-view="day"]': {
-    minHeight: DAYS_GRID_BODY_HEIGHT,
-  },
-});
-
-// TODO: Remove once we have implemented a good loading panel for each view
-const DateCalendar2MonthOrYearLoadingPanel = styled((props) => <div {...props}>...</div>, {
-  name: 'MuiDateCalendar2',
-  slot: 'MonthOrYearLoadingPanel',
-  overridesResolver: (_, styles) => styles.monthOrYearLoading,
-})({});
 
 export function useLoadingPanel(parameters: UseLoadingPanelParameters) {
   const { view, defaultComponent: DefaultComponent = DateCalendar2MonthOrYearLoadingPanel } =
@@ -41,8 +24,11 @@ export function useLoadingPanel(parameters: UseLoadingPanelParameters) {
     className: classes.loadingPanel,
   });
 
-  const renderLoadingPanel = () => (
-    <DateCalendar2LoadingPanelContainer data-view={view}>
+  const renderLoadingPanel = (
+    params?: React.HTMLAttributes<HTMLDivElement> & { ref: React.ForwardedRef<HTMLDivElement> },
+  ) => (
+    // TODO: Add className
+    <DateCalendar2LoadingPanelContainer data-view={view} {...params}>
       <LoadingPanel {...loadingPanelProps} />
     </DateCalendar2LoadingPanelContainer>
   );

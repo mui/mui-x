@@ -1,110 +1,25 @@
 import * as React from 'react';
-import TransitionGroup from 'react-transition-group/TransitionGroup';
-import { styled, useTheme } from '@mui/material/styles';
-import IconButton from '@mui/material/IconButton';
+import { useTheme } from '@mui/material/styles';
 import Fade from '@mui/material/Fade';
 import { useRtl } from '@mui/system/RtlProvider';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { Calendar, useCalendarContext } from '../internals/base/Calendar';
 import { usePickerTranslations } from '../hooks';
-import { ArrowDropDownIcon, ArrowLeftIcon, ArrowRightIcon } from '../icons';
+import { ArrowLeftIcon, ArrowRightIcon } from '../icons';
 import { useUtils } from '../internals/hooks/useUtils';
 import { useDateCalendar2Context, useDateCalendar2PrivateContext } from './DateCalendar2Context';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
-
-const DateCalendar2HeaderRoot = styled('div', {
-  name: 'MuiDateCalendar2',
-  slot: 'HeaderRoot',
-  overridesResolver: (props, styles) => styles.headerRoot,
-})({
-  display: 'flex',
-  alignItems: 'center',
-  marginTop: 12,
-  marginBottom: 4,
-  paddingLeft: 24,
-  paddingRight: 12,
-  // prevent jumping in safari
-  maxHeight: 40,
-  minHeight: 40,
-});
-
-const DateCalendar2HeaderLabelContainer = styled('div', {
-  name: 'MuiDateCalendar2',
-  slot: 'HeaderLabelContainer',
-  overridesResolver: (props, styles) => styles.headerLabelContainer,
-})(({ theme }) => ({
-  display: 'flex',
-  overflow: 'hidden',
-  alignItems: 'center',
-  cursor: 'pointer',
-  marginRight: 'auto',
-  ...theme.typography.body1,
-  fontWeight: theme.typography.fontWeightMedium,
-}));
-
-const DateCalendar2HeaderLabelTransitionGroup = styled(TransitionGroup, {
-  name: 'MuiDateCalendar2',
-  slot: 'HeaderLabelTransitionGroup',
-  overridesResolver: (props, styles) => styles.headerLabelTransitionGroup,
-})({
-  display: 'block',
-  position: 'relative',
-});
-
-const DateCalendar2HeaderLabelContent = styled('div', {
-  name: 'MuiDateCalendar2',
-  slot: 'HeaderLabelContent',
-  overridesResolver: (props, styles) => styles.headerLabelContent,
-})({
-  marginRight: 6,
-});
-
-const DateCalendar2HeaderSwitchViewButton = styled(IconButton, {
-  name: 'MuiDateCalendar2',
-  slot: 'HeaderSwitchViewButton',
-  overridesResolver: (props, styles) => styles.headerSwitchViewButton,
-})({
-  marginRight: 'auto',
-});
-
-const DateCalendar2HeaderSwitchViewIcon = styled(ArrowDropDownIcon, {
-  name: 'MuiDateCalendar2',
-  slot: 'HeaderSwitchViewIcon',
-  overridesResolver: (props, styles) => styles.headerSwitchViewIcon,
-})(({ theme }) => ({
-  willChange: 'transform',
-  transition: theme.transitions.create('transform'),
-  transform: 'rotate(0deg)',
-  '&[data-view="year"]': {
-    transform: 'rotate(180deg)',
-  },
-}));
-
-const DateCalendar2HeaderNavigation = styled('div', {
-  name: 'MuiDateCalendar2',
-  slot: 'HeaderNavigation',
-  overridesResolver: (props, styles) => styles.headerNavigation,
-})({
-  display: 'flex',
-});
-
-const DateCalendar2HeaderNavigationButton = styled(IconButton, {
-  name: 'MuiDateCalendar2',
-  slot: 'HeaderNavigationButton',
-  overridesResolver: (props, styles) => styles.headerNavigationButton,
-})({
-  '&:disabled': {
-    visibility: 'hidden',
-  },
-});
-
-const DateCalendar2HeaderNavigationSpacer = styled('div', {
-  name: 'MuiDateCalendar2',
-  slot: 'HeaderNavigationSpacer',
-  overridesResolver: (props, styles) => styles.headerNavigationSpacer,
-})(({ theme }) => ({
-  width: theme.spacing(3),
-}));
+import {
+  DateCalendar2HeaderLabelContainer,
+  DateCalendar2HeaderLabelContent,
+  DateCalendar2HeaderLabelTransitionGroup,
+  DateCalendar2HeaderNavigation,
+  DateCalendar2HeaderNavigationButton,
+  DateCalendar2HeaderNavigationSpacer,
+  DateCalendar2HeaderRoot,
+  DateCalendar2HeaderSwitchViewButton,
+  DateCalendar2HeaderSwitchViewIcon,
+} from './DateCalendar2.parts';
 
 export const DateCalendar2Header = React.forwardRef(function DateCalendar2Header(
   props: DateCalendar2HeaderProps,

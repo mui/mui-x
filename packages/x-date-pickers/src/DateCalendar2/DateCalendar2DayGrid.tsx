@@ -1,230 +1,31 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { TransitionGroupProps } from 'react-transition-group/TransitionGroup';
-import { alpha, styled, useTheme } from '@mui/material/styles';
-import ButtonBase from '@mui/material/ButtonBase';
-import Typography from '@mui/material/Typography';
-import Skeleton from '@mui/material/Skeleton';
+import { CSSTransition } from 'react-transition-group';
+import { useTheme } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { CSSTransitionProps } from 'react-transition-group/CSSTransition';
 import { Calendar, useCalendarContext } from '../internals/base/Calendar';
 import { usePickerTranslations } from '../hooks';
-import { DAY_MARGIN, DAY_SIZE } from '../internals/constants/dimensions';
+import { DAY_SIZE } from '../internals/constants/dimensions';
 import { useUtils } from '../internals/hooks/useUtils';
 import { useDateCalendar2Context, useDateCalendar2PrivateContext } from './DateCalendar2Context';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
-import { DAYS_GRID_BODY_HEIGHT, useLoadingPanel } from './DateCalendar2.utils';
-
-const DaysCalendar2DayGridRoot = styled(Calendar.DayGrid, {
-  name: 'MuiDateCalendar2',
-  slot: 'DayGridRoot',
-  overridesResolver: (props, styles) => styles.dayGridRoot,
-})({});
-
-const DateCalendar2DayGridHeader = styled(Calendar.DayGridHeader, {
-  name: 'MuiDateCalendar2',
-  slot: 'DayGridHeader',
-  overridesResolver: (props, styles) => styles.dayGridHeader,
-})({
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-});
-
-const DateCalendar2DayGridWeekNumberHeaderCell = styled(Typography, {
-  name: 'MuiDateCalendar2',
-  slot: 'DayGridWeekNumberHeaderCell',
-  overridesResolver: (props, styles) => styles.dayGridWeekNumberHeaderCell,
-})(({ theme }) => ({
-  width: 36,
-  height: 40,
-  margin: '0 2px',
-  textAlign: 'center',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  color: theme.palette.text.disabled,
-}));
-
-const DateCalendar2DayGridHeaderCell = styled(Typography, {
-  name: 'MuiDateCalendar2',
-  slot: 'DayGridHeaderCell',
-  overridesResolver: (props, styles) => styles.dayGridHeaderCell,
-})(({ theme }) => ({
-  width: 36,
-  height: 40,
-  margin: '0 2px',
-  textAlign: 'center',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  color: (theme.vars || theme).palette.text.secondary,
-}));
-
-const DateCalendar2DayGridBodyNoTransition = styled('div', {
-  name: 'MuiDateCalendar2',
-  slot: 'DayGridBodyNoTransition',
-  overridesResolver: (props, styles) => styles.dayGridBodyNoTransition,
-})({
-  minHeight: DAYS_GRID_BODY_HEIGHT,
-});
-
-const DateCalendar2DayGridBodyTransitionGroup = styled(TransitionGroup, {
-  name: 'MuiDateCalendar2',
-  slot: 'DayGridBodyTransitionGroup',
-  overridesResolver: (props, styles) => styles.dayGridBodyTransitionGroup,
-})<TransitionGroupProps>(({ theme }) => {
-  const slideTransition = theme.transitions.create('transform', {
-    duration: theme.transitions.duration.complex,
-    easing: 'cubic-bezier(0.35, 0.8, 0.4, 1)',
-  });
-  return {
-    minHeight: DAYS_GRID_BODY_HEIGHT,
-    display: 'block',
-    position: 'relative',
-    overflow: 'hidden',
-    '& > *': {
-      position: 'absolute',
-      top: 0,
-      right: 0,
-      left: 0,
-    },
-    '& .day-grid-enter-left': {
-      willChange: 'transform',
-      transform: 'translate(100%)',
-      zIndex: 1,
-    },
-    '& .day-grid-enter-right': {
-      willChange: 'transform',
-      transform: 'translate(-100%)',
-      zIndex: 1,
-    },
-    '& .day-grid-enter-active': {
-      transform: 'translate(0%)',
-      transition: slideTransition,
-    },
-    '& .day-grid-exit': {
-      transform: 'translate(0%)',
-    },
-    '& .day-grid-exit-active-left': {
-      willChange: 'transform',
-      transform: 'translate(-100%)',
-      transition: slideTransition,
-      zIndex: 0,
-    },
-    '& .day-grid-exit-active-right': {
-      willChange: 'transform',
-      transform: 'translate(100%)',
-      transition: slideTransition,
-      zIndex: 0,
-    },
-  };
-});
-
-export const DateCalendar2DayGridBody = styled('div', {
-  name: 'MuiDateCalendar2',
-  slot: 'DayGridBody',
-  overridesResolver: (props, styles) => styles.dayGridBody,
-})({ overflow: 'hidden' });
-
-export const DateCalendar2DayGridRow = styled('div', {
-  name: 'MuiDateCalendar2',
-  slot: 'DayGridRow',
-  overridesResolver: (props, styles) => styles.dayGridRow,
-})({
-  margin: `${DAY_MARGIN}px 0`,
-  display: 'flex',
-  justifyContent: 'center',
-});
-
-const DateCalendar2DayGridWeekNumberCell = styled(Typography, {
-  name: 'MuiDateCalendar2',
-  slot: 'DayGridWeekNumberCell',
-  overridesResolver: (props, styles) => styles.dayGridWeekNumberCell,
-})(({ theme }) => ({
-  ...theme.typography.caption,
-  width: DAY_SIZE,
-  height: DAY_SIZE,
-  padding: 0,
-  margin: `0 ${DAY_MARGIN}px`,
-  color: theme.palette.text.disabled,
-  fontSize: '0.75rem',
-  alignItems: 'center',
-  justifyContent: 'center',
-  display: 'inline-flex',
-}));
-
-const DateCalendar2DayCell = styled((props) => <ButtonBase centerRipple {...props} />, {
-  name: 'MuiDateCalendar2',
-  slot: 'DayCell',
-  overridesResolver: (props, styles) => styles.dayCell,
-})(({ theme }) => ({
-  ...theme.typography.caption,
-  width: DAY_SIZE,
-  height: DAY_SIZE,
-  borderRadius: '50%',
-  padding: 0,
-  margin: `0 ${DAY_MARGIN}px`,
-
-  // explicitly setting to `transparent` to avoid potentially getting impacted by change from the overridden component
-  backgroundColor: 'transparent',
-  transition: theme.transitions.create('background-color', {
-    duration: theme.transitions.duration.short,
-  }),
-  color: (theme.vars || theme).palette.text.primary,
-  '@media (pointer: fine)': {
-    '&:hover': {
-      backgroundColor: theme.vars
-        ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.hoverOpacity})`
-        : alpha(theme.palette.primary.main, theme.palette.action.hoverOpacity),
-    },
-  },
-  '&:focus': {
-    backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.focusOpacity})`
-      : alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
-    '&[data-selected]': {
-      willChange: 'background-color',
-      backgroundColor: (theme.vars || theme).palette.primary.dark,
-    },
-  },
-  '&[data-selected]': {
-    color: (theme.vars || theme).palette.primary.contrastText,
-    backgroundColor: (theme.vars || theme).palette.primary.main,
-    fontWeight: theme.typography.fontWeightMedium,
-    '&:hover': {
-      willChange: 'background-color',
-      backgroundColor: (theme.vars || theme).palette.primary.dark,
-    },
-  },
-  '&[data-disabled]:not([data-selected])': {
-    color: (theme.vars || theme).palette.text.disabled,
-  },
-  '&[data-disabled][data-selected]': {
-    opacity: 0.6,
-  },
-  '&[data-outside-month]': {
-    color: (theme.vars || theme).palette.text.secondary,
-    pointerEvents: 'none',
-  },
-  '&[data-current]:not([data-selected])': {
-    border: `1px solid ${(theme.vars || theme).palette.text.secondary}`,
-  },
-}));
-
-const DateCalendar2DayCellLoading = styled(Skeleton, {
-  name: 'MuiDayCalendarSkeleton',
-  slot: 'DaySkeleton',
-  overridesResolver: (props, styles) => styles.daySkeleton,
-})({
-  margin: `0 ${DAY_MARGIN}px`,
-  '&[data-outside-month="true"]': {
-    visibility: 'hidden',
-  },
-});
+import { useLoadingPanel } from './DateCalendar2.utils';
+import {
+  DateCalendar2DayCell,
+  DateCalendar2DayCellLoading,
+  DateCalendar2DayGridBody,
+  DateCalendar2DayGridBodyNoTransition,
+  DateCalendar2DayGridBodyTransitionGroup,
+  DateCalendar2DayGridHeader,
+  DateCalendar2DayGridHeaderCell,
+  DateCalendar2DayGridRow,
+  DateCalendar2DayGridWeekNumberCell,
+  DateCalendar2DayGridWeekNumberHeaderCell,
+  DaysCalendar2DayGridRoot,
+} from './DateCalendar2.parts';
 
 const WrappedDayCell = React.forwardRef(function WrappedDayCell(
   props: React.HTMLAttributes<HTMLButtonElement>,
@@ -250,12 +51,12 @@ const renderDay = (props: any) => <WrappedDayCell {...props} />;
 const renderRow = (props: any) => <DateCalendar2DayGridRow {...props} />;
 
 const WrappedDateCalendar2DayGridBody = React.forwardRef(function WrappedDateCalendar2DayGridBody(
-  props: Calendar.DayGridBody.Props & { displayWeekNumber: boolean },
+  props: Pick<Calendar.DayGridBody.Props, 'freezeCurrentMonth'>,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const { freezeCurrentMonth } = props;
   const translations = usePickerTranslations();
-  const { displayWeekNumber, ...other } = props;
-  const { classes } = useDateCalendar2PrivateContext();
+  const { classes, displayWeekNumber, fixedWeekNumber } = useDateCalendar2PrivateContext();
   const utils = useUtils();
 
   const renderBodyChildren = React.useCallback<
@@ -307,16 +108,20 @@ const WrappedDateCalendar2DayGridBody = React.forwardRef(function WrappedDateCal
   );
 
   return (
-    <Calendar.DayGridBody {...other} ref={ref} render={<DateCalendar2DayGridBody />}>
+    <Calendar.DayGridBody
+      ref={ref}
+      className={classes.dayGridBody}
+      fixedWeekNumber={fixedWeekNumber}
+      freezeCurrentMonth={freezeCurrentMonth}
+      render={<DateCalendar2DayGridBody />}
+    >
       {renderBodyChildren}
     </Calendar.DayGridBody>
   );
 });
 
-function WrappedDateCalendar2DayGridBodyWithTransition(
-  props: Partial<CSSTransitionProps> & { displayWeekNumber: boolean },
-) {
-  const { displayWeekNumber, onExit, ...other } = props;
+function WrappedDateCalendar2DayGridBodyWithTransition(props: Partial<CSSTransitionProps>) {
+  const { onExit, ...other } = props;
   const theme = useTheme();
   const { classes } = useDateCalendar2PrivateContext();
   const ref = React.createRef<HTMLDivElement>();
@@ -329,12 +134,7 @@ function WrappedDateCalendar2DayGridBodyWithTransition(
       nodeRef={ref}
       {...other}
     >
-      <WrappedDateCalendar2DayGridBody
-        ref={ref}
-        className={classes.dayGridBody}
-        displayWeekNumber={displayWeekNumber}
-        freezeCurrentMonth={!props.in}
-      />
+      <WrappedDateCalendar2DayGridBody ref={ref} freezeCurrentMonth={!props.in} />
     </CSSTransition>
   );
 }
@@ -342,6 +142,9 @@ function WrappedDateCalendar2DayGridBodyWithTransition(
 const DateCalendar2DayGridBodyLoading = React.memo(function DateCalendar2DayGridBodyLoading(
   props: React.HTMLAttributes<HTMLDivElement>,
 ) {
+  const { className, ...other } = props;
+  const { classes, displayWeekNumber } = useDateCalendar2PrivateContext();
+
   const isDayHidden = (weekIndex: number, dayIndex: number, weekAmount: number) => {
     if (weekIndex === 0 && dayIndex === 0) {
       return true;
@@ -355,9 +158,12 @@ const DateCalendar2DayGridBodyLoading = React.memo(function DateCalendar2DayGrid
   };
 
   return (
-    <DateCalendar2DayGridBody {...props}>
+    <DateCalendar2DayGridBody className={clsx(className, classes.dayGridRow)} {...other}>
       {Array.from({ length: 4 }, (_, weekIndex) => (
-        <DateCalendar2DayGridRow key={weekIndex}>
+        <DateCalendar2DayGridRow key={weekIndex} className={classes.dayGridRow}>
+          {displayWeekNumber && (
+            <DateCalendar2DayGridWeekNumberCell className={classes.dayGridWeekNumberCell} />
+          )}
           {Array.from({ length: 7 }, (_day, dayIndex) => (
             <DateCalendar2DayCellLoading
               key={dayIndex}
@@ -380,13 +186,13 @@ export const DateCalendar2DayGrid = React.forwardRef(function DateCalendar2DayGr
   const translations = usePickerTranslations();
   const utils = useUtils();
   const { visibleDate } = useCalendarContext();
-  const { classes, loading, labelId } = useDateCalendar2PrivateContext();
+  const { classes, loading, labelId, displayWeekNumber } = useDateCalendar2PrivateContext();
   const { reduceAnimations } = useDateCalendar2Context();
   const renderLoadingPanel = useLoadingPanel({
     view: 'year',
     defaultComponent: DateCalendar2DayGridBodyLoading,
   });
-  const { displayWeekNumber, fixedWeekNumber, className, ...other } = props;
+  const { className, ...other } = props;
 
   // We need a new ref whenever the `key` of the transition changes: https://reactcommunity.org/react-transition-group/transition/#Transition-prop-nodeRef.
   const transitionKey = utils.formatByString(
@@ -443,11 +249,7 @@ export const DateCalendar2DayGrid = React.forwardRef(function DateCalendar2DayGr
       {loading && renderLoadingPanel()}
       {!loading && reduceAnimations && (
         <DateCalendar2DayGridBodyNoTransition>
-          <WrappedDateCalendar2DayGridBody
-            className={classes.dayGridBody}
-            displayWeekNumber={displayWeekNumber}
-            fixedWeekNumber={fixedWeekNumber}
-          />
+          <WrappedDateCalendar2DayGridBody />
         </DateCalendar2DayGridBodyNoTransition>
       )}
       {!loading && !reduceAnimations && (
@@ -460,19 +262,11 @@ export const DateCalendar2DayGrid = React.forwardRef(function DateCalendar2DayGr
           role="presentation"
           className={classes.dayGridBodyTransitionGroup}
         >
-          <WrappedDateCalendar2DayGridBodyWithTransition
-            key={transitionKey}
-            displayWeekNumber={displayWeekNumber}
-            fixedWeekNumber={fixedWeekNumber}
-          />
+          <WrappedDateCalendar2DayGridBodyWithTransition key={transitionKey} />
         </DateCalendar2DayGridBodyTransitionGroup>
       )}
     </DaysCalendar2DayGridRoot>
   );
 });
 
-interface DateCalendar2DayGridProps
-  extends Pick<Calendar.DayGridBody.Props, 'fixedWeekNumber'>,
-    React.HTMLAttributes<HTMLDivElement> {
-  displayWeekNumber: boolean;
-}
+interface DateCalendar2DayGridProps extends React.HTMLAttributes<HTMLDivElement> {}

@@ -178,6 +178,8 @@ export interface DateCalendar2PrivateContextValue {
   slotProps?: DateCalendar2SlotProps | undefined;
   labelId: string;
   loading: boolean;
+  displayWeekNumber: boolean;
+  fixedWeekNumber: number | undefined;
 }
 
 export interface DateCalendar2ContextValue {
