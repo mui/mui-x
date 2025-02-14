@@ -30,18 +30,6 @@ const plPLGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Szukaj',
   toolbarQuickFilterDeleteIconLabel: 'Wyczyść',
 
-  // Prompt toolbar field
-  toolbarPromptControlPlaceholder: 'Wpisz polecenie...',
-  toolbarPromptControlWithRecordingPlaceholder: 'Wpisz lub nagraj polecenie...',
-  toolbarPromptControlRecordingPlaceholder: 'Nasłuchiwanie polecenia...',
-  toolbarPromptControlLabel: 'Wprowadź polecenie',
-  toolbarPromptControlRecordButtonDefaultLabel: 'Nagrywaj',
-  toolbarPromptControlRecordButtonActiveLabel: 'Zatrzymaj nagrywanie',
-  toolbarPromptControlSendActionLabel: 'Wyślij',
-  toolbarPromptControlSendActionAriaLabel: 'Wyślij polecenie',
-  toolbarPromptControlErrorMessage:
-    'Wystąpił błąd podczas przetwarzania żądania. Spróbuj ponownie z innym poleceniem.',
-
   // Export selector toolbar button text
   toolbarExport: 'Eksportuj',
   toolbarExportLabel: 'Eksportuj',
@@ -113,7 +101,6 @@ const plPLGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Większy lub równy',
   'headerFilterOperator<': 'Mniejszy niż',
   'headerFilterOperator<=': 'Mniejszy lub równy',
-  headerFilterClear: 'Wyczyść',
 
   // Filter values text
   filterValueAny: 'dowolny',
