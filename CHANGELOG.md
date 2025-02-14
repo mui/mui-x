@@ -55,7 +55,7 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Create the base Popper slot (#16362) @romgrk
 - [DataGrid] Create the base Select slot (#16394) @romgrk
 - [DataGrid] Create the base Switch slot (#16527) @romgrk
-- [DataGrid] Extract `getRowId` API method as a selector (#16487) @MBilalShafi
+- [DataGrid] Extract `getRowId()` API method as a selector (#16487) @MBilalShafi
 - [DataGrid] Fix the `onClock` prop of the base Select slot (#16557) @romgrk
 - [DataGrid] Make base data source available in the Community plan (#16359) @MBilalShafi
 - [DataGrid] Remove `apiRef.current.forceUpdate()` method (#16560) @MBilalShafi
