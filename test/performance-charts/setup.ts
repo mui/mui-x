@@ -2,9 +2,9 @@ import { beforeAll } from 'vitest';
 import { generateLicense, LicenseInfo } from '@mui/x-license';
 
 beforeAll(() => {
-  if (process.env.VITEST_ENV !== 'browser') {
-    /* JSDOM does not impement getBBox, so we need to polyfill it. */
-    Object.defineProperty(window.SVGElement.prototype, 'getBBox', {
+  if (!window.SVGGraphicsElement.prototype.getBBox) {
+    /* JSDOM does not implement getBBox, so we need to polyfill it. */
+    Object.defineProperty(window.SVGGraphicsElement.prototype, 'getBBox', {
       writable: true,
       value: () => ({
         x: 0,

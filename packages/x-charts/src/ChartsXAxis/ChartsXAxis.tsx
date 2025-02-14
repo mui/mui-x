@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, Theme, styled } from '@mui/material/styles';
-import { objectShallowCompare } from '@mui/x-data-grid/hooks/utils/useGridSelector';
+import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { useTicks, TickItemType } from '../hooks/useTicks';
 import { AxisDefaultized, ChartsXAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
@@ -31,7 +31,7 @@ const useUtilityClasses = (ownerState: ChartsXAxisProps & { theme: Theme }) => {
   return composeClasses(slots, getAxisUtilityClass, classes);
 };
 
-function computeVisibleLabels(
+function getVisibleLabels(
   xTicks: TickItemType[],
   {
     tickLabelStyle: style,
@@ -184,7 +184,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
           new Map(
             xTicks.map(function measureTick(_, index) {
               const labelRef = labelRefsMapRef.current.get(index);
-              const bbox = labelRef.getBBox() ?? { width: 0, height: 0 };
+              const bbox = labelRef?.getBBox() ?? { width: 0, height: 0 };
 
               return [index, { width: bbox.width, height: bbox.height }] as const;
             }),
@@ -196,12 +196,12 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     [needsMeasuring, xTicks],
   );
 
-  if (!objectShallowCompare(prevTickLabelStyle, axisTickLabelProps.style)) {
+  if (!fastObjectShallowCompare(prevTickLabelStyle, axisTickLabelProps.style)) {
     setPrevTickLabelStyle(axisTickLabelProps.style);
     setNeedsMeasuring(true);
   }
 
-  const visibleLabels = computeVisibleLabels(xTicks, {
+  const visibleLabels = getVisibleLabels(xTicks, {
     tickLabelStyle: axisTickLabelProps.style,
     tickLabelInterval,
     reverse,
