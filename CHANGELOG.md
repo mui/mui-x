@@ -22,7 +22,7 @@ Following are all team members who have contributed to this release:
 
 #### `@mui/x-data-grid-pro@7.26.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@v7.26.1`.
+Same changes as in `@mui/x-data-grid@7.26.1`.
 
 #### `@mui/x-data-grid-premium@v7.26.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
