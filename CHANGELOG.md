@@ -46,7 +46,7 @@ Same changes as in `@mui/x-date-pickers@v7.26.1`, plus:
 
 ### Charts
 
-#### `@mui/x-charts@v7.26.1`
+#### `@mui/x-charts@7.26.1`
 
 Internal changes.
 
