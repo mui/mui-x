@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, Theme, styled } from '@mui/material/styles';
+import { objectShallowCompare } from '@mui/x-data-grid/hooks/utils/useGridSelector';
 import { useTicks, TickItemType } from '../hooks/useTicks';
 import { AxisDefaultized, ChartsXAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
@@ -162,6 +163,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     className: classes.tickLabel,
     ownerState: {},
   });
+  const [prevTickLabelStyle, setPrevTickLabelStyle] = React.useState(axisTickLabelProps.style);
 
   const xTicks = useTicks({
     scale: xScale,
@@ -195,6 +197,11 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     },
     [needsMeasuring, xTicks],
   );
+
+  if (!objectShallowCompare(prevTickLabelStyle, axisTickLabelProps.style)) {
+    setPrevTickLabelStyle(axisTickLabelProps.style);
+    setNeedsMeasuring(true);
+  }
 
   const visibleLabels = computeVisibleLabels(xTicks, {
     tickLabelStyle: axisTickLabelProps.style,
