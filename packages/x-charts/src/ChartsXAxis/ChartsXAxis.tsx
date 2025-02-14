@@ -138,7 +138,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   const { left, top, width, height } = useDrawingArea();
   const { instance } = useChartContext();
   const [needsMeasuring, setNeedsMeasuring] = React.useState(true);
-  const textMapRef = React.useRef(new Map<number, SVGTextElement>());
+  const labelRefsMapRef = React.useRef(new Map<number, SVGTextElement>());
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
@@ -183,7 +183,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
         setMeasurements(
           new Map(
             xTicks.map(function measureTick(_, index) {
-              const bbox = textMapRef.current.get(index)?.getBBox() ?? {
+              const bbox = labelRefsMapRef.current.get(index)?.getBBox() ?? {
                 width: 0,
                 height: 0,
               };
@@ -274,12 +274,12 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
                 {...axisTickLabelProps}
                 measuring={needsMeasuring}
                 ref={(ref) => {
-                  const textMap = textMapRef.current;
+                  const labelRefsMap = labelRefsMapRef.current;
 
                   if (ref == null) {
-                    textMap.delete(index);
+                    labelRefsMap.delete(index);
                   } else {
-                    textMap.set(index, ref);
+                    labelRefsMap.set(index, ref);
                   }
                 }}
                 text={formattedValue?.toString() ?? ''}
