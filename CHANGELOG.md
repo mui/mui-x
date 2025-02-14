@@ -11,6 +11,7 @@ _Feb 14, 2025_
 
 We'd like to offer a big thanks to the 16 contributors who made this release possible. Here are some highlights ✨:
 
+- 🌍 Improve Polish (pl-PL) and Ukrainian (uk-UA) locales on the Data Grid
 - 🐞 Bugfixes
 
 Special thanks go out to the community contributors who have helped make this release possible:
@@ -48,15 +49,15 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Add `resetPageOnSortFilter` prop that resets the page after sorting/filtering (#16450) @arminmeh
 - [DataGrid] All selectors accept only `apiRef` as first argument (#16198) @arminmeh
 - [DataGrid] Avoid `undefined` value for pagination `rowCount` (#16488) @LukasTy
+- [DataGrid] Create the base Checkbox slot (#16445) @romgrk
+- [DataGrid] Create the base Input slot (#16443) @romgrk
+- [DataGrid] Create the base MenuList slot (#16481) @romgrk
+- [DataGrid] Create the base Popper slot (#16362) @romgrk
+- [DataGrid] Create the base Select slot (#16394) @romgrk
+- [DataGrid] Create the base Switch slot (#16527) @romgrk
 - [DataGrid] Extract `getRowId` API method as a selector (#16487) @MBilalShafi
-- [DataGrid] Fix: base Select onClose (#16557) @romgrk
+- [DataGrid] Fix the `onClock` prop of the base Select slot (#16557) @romgrk
 - [DataGrid] Make base data source available in the Community plan (#16359) @MBilalShafi
-- [DataGrid] Refactor: create base Checkbox (#16445) @romgrk
-- [DataGrid] Refactor: create base Input (#16443) @romgrk
-- [DataGrid] Refactor: create base MenuList props (#16481) @romgrk
-- [DataGrid] Refactor: create base Popper (#16362) @romgrk
-- [DataGrid] Refactor: create base Select (#16394) @romgrk
-- [DataGrid] Refactor: create base Switch (#16527) @romgrk
 - [DataGrid] Remove `apiRef.current.forceUpdate()` method (#16560) @MBilalShafi
 - [DataGrid] Fix the unexpected behavior of the pagination when using -1 for "All" rows per page (#16485) @nusr
 - [l10n] Improve Polish (pl-PL) locale (#16123) @pawelkula
