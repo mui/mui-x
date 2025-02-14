@@ -38,7 +38,7 @@ Same changes as in `@mui/x-data-grid-pro@7.26.1`, plus:
 
 Internal changes.
 
-#### `@mui/x-date-pickers-pro@v7.26.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@7.26.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-date-pickers@7.26.1`, plus:
 
