@@ -23,8 +23,8 @@ Following are all team members who have contributed to this release:
 #### `@mui/x-data-grid@7.26.1`
 
 - [DataGrid] Avoid `undefined` value for pagination `rowCount` (#16558) @cherniavskii
- [l10n] Improve Polish (pl-PL) locale (#16594) @pawelkula
- 
+  [l10n] Improve Polish (pl-PL) locale (#16594) @pawelkula
+
 #### `@mui/x-data-grid-pro@7.26.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-data-grid@7.26.1`.
