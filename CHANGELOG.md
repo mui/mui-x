@@ -3,20 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## v7.26.1
-
-<!-- generated comparing v7.26.0..v7.x -->
+## 7.26.1
 
 _Feb 14, 2025_
 
-We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
+- 🐞 Bugfixes
 
 Following are all team members who have contributed to this release:
 @cherniavskii, @JCQuintas, @oliviertassinari, @arminmeh and @LukasTy
-
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
