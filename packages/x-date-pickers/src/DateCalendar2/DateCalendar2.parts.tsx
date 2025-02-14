@@ -482,13 +482,3 @@ export const DateCalendar2HeaderNavigationSpacer = styled('div', {
 })(({ theme }) => ({
   width: theme.spacing(3),
 }));
-
-export const DateCalendar2LoadingPanelContainer = styled('div', {
-  name: 'MuiDateCalendar2',
-  slot: 'LoadingPanelContainer',
-  overridesResolver: (_, styles) => styles.loadingPanelContainer,
-})({
-  display: 'flex',
-  justifyContent: 'center',
-  flex: '1 1 auto',
-});

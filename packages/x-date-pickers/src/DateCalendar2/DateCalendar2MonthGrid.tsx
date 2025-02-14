@@ -62,12 +62,13 @@ export const DateCalendar2MonthGrid = React.forwardRef(function DateCalendar2Mon
   const { className, ...other } = props;
   const { classes, loading, labelId, monthsPerRow } = useDateCalendar2PrivateContext();
   const renderLoadingPanel = useLoadingPanel({
-    view: 'month',
+    ref,
+    forwardedProps: props,
     defaultComponent: DateCalendar2MonthGridLoadingPanel,
   });
 
   if (loading) {
-    return renderLoadingPanel({ ...props, ref });
+    return renderLoadingPanel();
   }
 
   return (

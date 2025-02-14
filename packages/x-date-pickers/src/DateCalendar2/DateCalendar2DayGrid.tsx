@@ -189,7 +189,6 @@ export const DateCalendar2DayGrid = React.forwardRef(function DateCalendar2DayGr
   const { classes, loading, labelId, displayWeekNumber } = useDateCalendar2PrivateContext();
   const { reduceAnimations } = useDateCalendar2Context();
   const renderLoadingPanel = useLoadingPanel({
-    view: 'year',
     defaultComponent: DateCalendar2DayGridLoadingPanel,
   });
 

@@ -62,7 +62,8 @@ export const DateCalendar2YearGrid = React.forwardRef(function DateCalendar2Year
   const { yearsOrder, className, ...other } = props;
   const { classes, loading, labelId, yearsPerRow } = useDateCalendar2PrivateContext();
   const renderLoadingPanel = useLoadingPanel({
-    view: 'year',
+    ref,
+    forwardedProps: { ...other, className },
     defaultComponent: DateCalendar2YearGridLoadingPanel,
   });
 
@@ -77,7 +78,7 @@ export const DateCalendar2YearGrid = React.forwardRef(function DateCalendar2Year
   }, [yearsOrder]);
 
   if (loading) {
-    return renderLoadingPanel({ className, ...other, ref });
+    return renderLoadingPanel();
   }
 
   return (

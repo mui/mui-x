@@ -78,6 +78,7 @@ export const dateCalendar2Classes: DateCalendar2Classes = generateUtilityClasses
     'headerSwitchViewIcon',
     'headerNavigation',
     'headerNavigationButton',
+    'headerNavigationIcon',
     'headerNavigationSpacer',
     'dayGridRoot',
     'dayGridHeader',
