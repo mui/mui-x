@@ -6,20 +6,15 @@ export default defineConfig({
   plugins: [codspeedPlugin(), react()],
   test: {
     setupFiles: ['./setup.ts'],
-    ...(process.env.VITEST_ENV === 'browser'
-      ? {
-          browser: {
-            enabled: true,
-            headless: true,
-            name: 'chromium',
-            provider: 'playwright',
-            providerOptions: {
-              timeout: 60000,
-            },
-          },
-        }
-      : {
-          environment: 'jsdom',
-        }),
+    environment: 'jsdom',
+    // browser: {
+    //   enabled: true,
+    //   headless: true,
+    //   name: 'chromium',
+    //   provider: 'playwright',
+    //   providerOptions: {
+    //     timeout: 60000,
+    //   },
+    // },
   },
 });
