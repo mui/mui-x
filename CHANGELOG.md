@@ -28,15 +28,6 @@ Following are all team members who have contributed to this release:
 
 - The `apiRef.current.forceUpdate()` method was removed. Use selectors combined with `useGridSelector()` hook to react to changes in the state.
 
-- Fixes #16220
-
-  - Before: https://codesandbox.io/p/sandbox/intelligent-leavitt-q4h68n?from-embed=&workspaceId=ws_96AUJAP4MpFUq5gdSxRein
-  - After: https://codesandbox.io/p/sandbox/stupefied-scott-qnqpx5
-
-- Add a skeleton loading overlay on the aggregation row while it's loading
-
-  https://github.com/user-attachments/assets/310f57fe-2809-45c7-9930-22f5df413e04
-
 - The selectors signature has been updated. They are only accepting `apiRef` as a first argument.
 
   ```diff
