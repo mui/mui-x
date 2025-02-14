@@ -9,6 +9,7 @@ _Feb 14, 2025_
 
 We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
+- ⚡ Improve Data Grid Excel export serialization performance
 - 🐞 Bugfixes
 - 🌍 Improve Polish (pl-PL) locale on the Data Grid
 
