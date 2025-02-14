@@ -1,11 +1,10 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { CSSTransition } from 'react-transition-group';
+import CSSTransition, { CSSTransitionProps } from 'react-transition-group/CSSTransition';
 import { useTheme } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { CSSTransitionProps } from 'react-transition-group/CSSTransition';
 import { Calendar, useCalendarContext } from '../internals/base/Calendar';
 import { usePickerTranslations } from '../hooks';
 import { useUtils } from '../internals/hooks/useUtils';
@@ -208,14 +207,6 @@ export const DateCalendar2DayGrid = React.forwardRef(function DateCalendar2DayGr
     prevVisibleDate.current = visibleDate;
   }, [visibleDate]);
 
-  // TODO: Try to move slide direction to a data-direction attribute
-  const dayGridTransitionClasses = {
-    exit: 'day-grid-exit',
-    enterActive: 'day-grid-enter-active',
-    enter: `day-grid-enter-${slideDirection}`,
-    exitActive: `day-grid-exit-active-${slideDirection}`,
-  };
-
   return (
     <Calendar.DayGrid
       aria-labelledby={labelId}
@@ -256,11 +247,17 @@ export const DateCalendar2DayGrid = React.forwardRef(function DateCalendar2DayGr
       )}
       {!loading && !reduceAnimations && (
         <DateCalendar2DayGridBodyTransitionGroup
-          childFactory={(element: React.ReactElement<any>) =>
-            React.cloneElement(element, {
-              classNames: dayGridTransitionClasses,
-            })
-          }
+          childFactory={(element: React.ReactElement<any>) => {
+            // If we pass the classes directly to the CSSTransition component, the direction of the exiting component would not update.
+            return React.cloneElement(element, {
+              classNames: {
+                exit: 'exit',
+                enterActive: 'enter-active',
+                enter: `enter-${slideDirection}`,
+                exitActive: `exit-active-${slideDirection}`,
+              },
+            });
+          }}
           role="presentation"
           className={classes.dayGridBodyTransitionGroup}
         >

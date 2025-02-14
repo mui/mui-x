@@ -112,30 +112,30 @@ export const DateCalendar2DayGridBodyTransitionGroup = styled(TransitionGroup, {
       right: 0,
       left: 0,
     },
-    '& .day-grid-enter-left': {
+    '& .enter-left': {
       willChange: 'transform',
       transform: 'translate(100%)',
       zIndex: 1,
     },
-    '& .day-grid-enter-right': {
+    '& .enter-right': {
       willChange: 'transform',
       transform: 'translate(-100%)',
       zIndex: 1,
     },
-    '& .day-grid-enter-active': {
+    '& .enter-active': {
       transform: 'translate(0%)',
       transition: slideTransition,
     },
-    '& .day-grid-exit': {
+    '& .exit': {
       transform: 'translate(0%)',
     },
-    '& .day-grid-exit-active-left': {
+    '& .exit-active-left': {
       willChange: 'transform',
       transform: 'translate(-100%)',
       transition: slideTransition,
       zIndex: 0,
     },
-    '& .day-grid-exit-active-right': {
+    '& .exit-active-right': {
       willChange: 'transform',
       transform: 'translate(100%)',
       transition: slideTransition,
