@@ -196,7 +196,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     [needsMeasuring, xTicks],
   );
 
-  if (!fastObjectShallowCompare(prevTickLabelStyle, axisTickLabelProps.style)) {
+  if (!fastObjectShallowCompare(prevTickLabelStyle ?? null, axisTickLabelProps.style ?? null)) {
     setPrevTickLabelStyle(axisTickLabelProps.style);
     setNeedsMeasuring(true);
   }
