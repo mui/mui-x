@@ -48,7 +48,7 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Add "No columns" overlay (#16543) @KenanYusuf
 - [DataGrid] Add `resetPageOnSortFilter` prop that resets the page after sorting/filtering (#16450) @arminmeh
 - [DataGrid] All selectors accept only `apiRef` as first argument (#16198) @arminmeh
-- [DataGrid] Avoid `undefined` value for pagination `rowCount` (#16488) @LukasTy
+- [DataGrid] Avoid `undefined` value for pagination `rowCount` (#16488) @cherniavskii
 - [DataGrid] Create the base Checkbox slot (#16445) @romgrk
 - [DataGrid] Create the base Input slot (#16443) @romgrk
 - [DataGrid] Create the base MenuList slot (#16481) @romgrk
