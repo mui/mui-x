@@ -1,7 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import TransitionGroup from 'react-transition-group/TransitionGroup';
-import { styled, useTheme, useThemeProps } from '@mui/material/styles';
+import { useTheme, useThemeProps } from '@mui/material/styles';
 import Fade from '@mui/material/Fade';
 import useEventCallback from '@mui/utils/useEventCallback';
 import composeClasses from '@mui/utils/composeClasses';
@@ -15,7 +14,6 @@ import { PickerValue } from '../internals/models';
 import { DateCalendar2YearGrid } from './DateCalendar2YearGrid';
 import { DateCalendar2MonthGrid } from './DateCalendar2MonthGrid';
 import { DateCalendar2DayGrid } from './DateCalendar2DayGrid';
-import { DIALOG_WIDTH, VIEW_HEIGHT } from '../internals/constants/dimensions';
 import {
   DateCalendar2ContextValue,
   DateCalendar2PrivateContextValue,
@@ -25,31 +23,9 @@ import { DateCalendar2Classes, getDateCalendar2UtilityClass } from './DateCalend
 import { DateCalendar2Context, DateCalendar2PrivateContext } from './DateCalendar2Context';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { useReduceAnimations } from '../internals/hooks/useReduceAnimations';
+import { DateCalendar2Root, DateCalendar2TransitionGroup } from './DateCalendar2.parts';
 
 const DEFAULT_VIEWS = { year: true, month: false, day: true };
-
-const DateCalendar2Root = styled(Calendar.Root, {
-  name: 'DateCalendar2',
-  slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
-})({
-  overflow: 'hidden',
-  width: DIALOG_WIDTH,
-  maxHeight: VIEW_HEIGHT,
-  display: 'flex',
-  flexDirection: 'column',
-  margin: '0 auto',
-  height: VIEW_HEIGHT,
-});
-
-const DateCalendar2TransitionGroup = styled(TransitionGroup, {
-  name: 'DateCalendar2',
-  slot: 'TransitionGroup',
-  overridesResolver: (props, styles) => styles.transitionGroup,
-})({
-  display: 'block',
-  position: 'relative',
-});
 
 /**
  * - [x] Implementation without customization
@@ -208,11 +184,12 @@ export const DateCalendar2 = React.forwardRef(function DateCalendar2(
   return (
     <DateCalendar2Context.Provider value={contextValue}>
       <DateCalendar2PrivateContext.Provider value={privateContextValue}>
-        <DateCalendar2Root
+        <Calendar.Root
           onValueChange={handleValueChange}
-          {...other}
           className={clsx(className, classes.root)}
           ref={ref}
+          render={<DateCalendar2Root />}
+          {...other}
         >
           <CalendarHeader {...calendarHeaderProps} />
           {reduceAnimations ? (
@@ -234,7 +211,7 @@ export const DateCalendar2 = React.forwardRef(function DateCalendar2(
               </Fade>
             </DateCalendar2TransitionGroup>
           )}
-        </DateCalendar2Root>
+        </Calendar.Root>
       </DateCalendar2PrivateContext.Provider>
     </DateCalendar2Context.Provider>
   );

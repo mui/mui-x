@@ -8,7 +8,6 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { CSSTransitionProps } from 'react-transition-group/CSSTransition';
 import { Calendar, useCalendarContext } from '../internals/base/Calendar';
 import { usePickerTranslations } from '../hooks';
-import { DAY_SIZE } from '../internals/constants/dimensions';
 import { useUtils } from '../internals/hooks/useUtils';
 import { useDateCalendar2Context, useDateCalendar2PrivateContext } from './DateCalendar2Context';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
@@ -47,12 +46,14 @@ const WrappedDayCell = React.forwardRef(function WrappedDayCell(
   return <DayCell {...dayCellProps} />;
 });
 
-const renderDay = (props: any) => <WrappedDayCell {...props} />;
-const renderRow = (props: any) => <DateCalendar2DayGridRow {...props} />;
+const renderDayGrid = (props: any) => <DaysCalendar2DayGridRoot {...props} />;
+const renderDayGridHeader = (props: any) => <DateCalendar2DayGridHeader {...props} />;
 const renderDayGridBody = (props: any) => <DateCalendar2DayGridBody {...props} />;
 const renderDayGridHeaderCell = (props: any) => (
   <DateCalendar2DayGridHeaderCell variant="caption" {...props} />
 );
+const renderRow = (props: any) => <DateCalendar2DayGridRow {...props} />;
+const renderDay = (props: any) => <WrappedDayCell {...props} />;
 
 const WrappedDateCalendar2DayGridBody = React.forwardRef(function WrappedDateCalendar2DayGridBody(
   props: Pick<Calendar.DayGridBody.Props, 'freezeCurrentMonth'>,
@@ -216,13 +217,14 @@ export const DateCalendar2DayGrid = React.forwardRef(function DateCalendar2DayGr
   };
 
   return (
-    <DaysCalendar2DayGridRoot
+    <Calendar.DayGrid
       aria-labelledby={labelId}
       className={clsx(className, classes.dayGridRoot)}
+      render={renderDayGrid}
       ref={ref}
       {...other}
     >
-      <DateCalendar2DayGridHeader className={classes.dayGridHeader}>
+      <Calendar.DayGridHeader className={classes.dayGridHeader} render={renderDayGridHeader}>
         {({ days }) => (
           <React.Fragment>
             {displayWeekNumber && (
@@ -245,7 +247,7 @@ export const DateCalendar2DayGrid = React.forwardRef(function DateCalendar2DayGr
             ))}
           </React.Fragment>
         )}
-      </DateCalendar2DayGridHeader>
+      </Calendar.DayGridHeader>
       {loading && renderLoadingPanel()}
       {!loading && reduceAnimations && (
         <DateCalendar2DayGridBodyNoTransition>
@@ -265,7 +267,7 @@ export const DateCalendar2DayGrid = React.forwardRef(function DateCalendar2DayGr
           <WrappedDateCalendar2DayGridBodyWithTransition key={transitionKey} />
         </DateCalendar2DayGridBodyTransitionGroup>
       )}
-    </DaysCalendar2DayGridRoot>
+    </Calendar.DayGrid>
   );
 });
 

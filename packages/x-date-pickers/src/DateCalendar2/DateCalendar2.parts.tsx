@@ -10,18 +10,41 @@ import {
   DAY_SIZE,
   DIALOG_WIDTH,
   MAX_CALENDAR_HEIGHT,
+  VIEW_HEIGHT,
 } from '../internals/constants/dimensions';
-import { Calendar } from '../internals/base/Calendar';
 import { DAYS_GRID_BODY_HEIGHT } from './DateCalendar2.utils';
 import { ArrowDropDownIcon } from '../icons';
 
-export const DaysCalendar2DayGridRoot = styled(Calendar.DayGrid, {
+export const DateCalendar2Root = styled('div', {
+  name: 'DateCalendar2',
+  slot: 'Root',
+  overridesResolver: (props, styles) => styles.root,
+})({
+  overflow: 'hidden',
+  width: DIALOG_WIDTH,
+  maxHeight: VIEW_HEIGHT,
+  display: 'flex',
+  flexDirection: 'column',
+  margin: '0 auto',
+  height: VIEW_HEIGHT,
+});
+
+export const DateCalendar2TransitionGroup = styled(TransitionGroup, {
+  name: 'DateCalendar2',
+  slot: 'TransitionGroup',
+  overridesResolver: (props, styles) => styles.transitionGroup,
+})({
+  display: 'block',
+  position: 'relative',
+});
+
+export const DaysCalendar2DayGridRoot = styled('div', {
   name: 'MuiDateCalendar2',
   slot: 'DayGridRoot',
   overridesResolver: (props, styles) => styles.dayGridRoot,
 })({});
 
-export const DateCalendar2DayGridHeader = styled(Calendar.DayGridHeader, {
+export const DateCalendar2DayGridHeader = styled('div', {
   name: 'MuiDateCalendar2',
   slot: 'DayGridHeader',
   overridesResolver: (props, styles) => styles.dayGridHeader,
