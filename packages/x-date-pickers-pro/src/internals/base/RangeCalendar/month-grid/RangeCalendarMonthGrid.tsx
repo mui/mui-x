@@ -8,7 +8,7 @@ import { useComponentRenderer } from '@mui/x-date-pickers/internals/base/base-ut
 // eslint-disable-next-line no-restricted-imports
 import { useBaseCalendarMonthGrid } from '@mui/x-date-pickers/internals/base/utils/base-calendar/month-grid/useBaseCalendarMonthGrid';
 // eslint-disable-next-line no-restricted-imports
-import { BaseCalendarMonthGridOrListContext } from '@mui/x-date-pickers/internals/base/utils/base-calendar/month-grid/BaseCalendarMonthGridOrListContext';
+import { BaseCalendarMonthCollectionContext } from '@mui/x-date-pickers/internals/base/utils/base-calendar/utils/BaseCalendarMonthCollectionContext';
 // eslint-disable-next-line no-restricted-imports
 import { CompositeList } from '@mui/x-date-pickers/internals/base/composite/list/CompositeList';
 import { RangeCalendarMonthGridCssVars } from './RangeCalendarMonthGridCssVars';
@@ -49,9 +49,9 @@ const RangeCalendarMonthGrid = React.forwardRef(function RangeCalendarMonthList(
   });
 
   return (
-    <BaseCalendarMonthGridOrListContext.Provider value={monthsListOrGridContext}>
+    <BaseCalendarMonthCollectionContext.Provider value={monthsListOrGridContext}>
       <CompositeList elementsRef={cellRefs}>{renderElement()}</CompositeList>
-    </BaseCalendarMonthGridOrListContext.Provider>
+    </BaseCalendarMonthCollectionContext.Provider>
   );
 });
 

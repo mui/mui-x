@@ -5,7 +5,7 @@ import { useUtils } from '../../../../hooks/useUtils';
 import { useBaseCalendarSetVisibleYear } from './useBaseCalendarSetVisibleYear';
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 import { getFirstEnabledYear, getLastEnabledYear } from '../utils/date';
-import { useNullableBaseCalendarYearGridOrListContext } from '../year-grid/BaseCalendarYearGridOrListContext';
+import { useNullableBaseCalendarYearCollectionContext } from '../utils/BaseCalendarYearCollectionContext';
 import { useCompositeListItem } from '../../../composite/list/useCompositeListItem';
 import { useBaseCalendarRootVisibleDateContext } from '../root/BaseCalendarRootVisibleDateContext';
 
@@ -15,7 +15,7 @@ export function useBaseCalendarSetVisibleYearWrapper(
   const { forwardedRef, target } = parameters;
   const baseRootContext = useBaseCalendarRootContext();
   const baseRootVisibleDateContext = useBaseCalendarRootVisibleDateContext();
-  const baseYearListOrGridContext = useNullableBaseCalendarYearGridOrListContext();
+  const baseYearListOrGridContext = useNullableBaseCalendarYearCollectionContext();
   const utils = useUtils();
   const { ref: listItemRef } = useCompositeListItem();
   const mergedRef = useForkRef(forwardedRef, listItemRef);

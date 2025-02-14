@@ -5,7 +5,7 @@ import { useBaseCalendarYearGrid } from '../../utils/base-calendar/year-grid/use
 import { BaseUIComponentProps } from '../../base-utils/types';
 import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
 import { CompositeList } from '../../composite/list/CompositeList';
-import { BaseCalendarYearGridOrListContext } from '../../utils/base-calendar/year-grid/BaseCalendarYearGridOrListContext';
+import { BaseCalendarYearCollectionContext } from '../../utils/base-calendar/utils/BaseCalendarYearCollectionContext';
 import { CalendarYearGridCssVars } from './CalendarYearGridCssVars';
 
 const CalendarYearGrid = React.forwardRef(function CalendarYearList(
@@ -34,9 +34,9 @@ const CalendarYearGrid = React.forwardRef(function CalendarYearList(
   });
 
   return (
-    <BaseCalendarYearGridOrListContext.Provider value={yearsListOrGridContext}>
+    <BaseCalendarYearCollectionContext.Provider value={yearsListOrGridContext}>
       <CompositeList elementsRef={yearsCellRefs}>{renderElement()}</CompositeList>
-    </BaseCalendarYearGridOrListContext.Provider>
+    </BaseCalendarYearCollectionContext.Provider>
   );
 });
 

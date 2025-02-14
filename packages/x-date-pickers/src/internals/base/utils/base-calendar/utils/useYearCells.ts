@@ -2,7 +2,7 @@ import * as React from 'react';
 import { PickerValidDate } from '../../../../../models';
 import { useUtils } from '../../../../hooks/useUtils';
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
-import { BaseCalendarYearGridOrListContext } from '../year-grid/BaseCalendarYearGridOrListContext';
+import { BaseCalendarYearCollectionContext } from './BaseCalendarYearCollectionContext';
 import { useCellList } from './useCellList';
 import { useBaseCalendarRootVisibleDateContext } from '../root/BaseCalendarRootVisibleDateContext';
 
@@ -55,7 +55,7 @@ export function useYearCells(parameters: useYearCells.Parameters): useYearCells.
     return tempTabbableDays;
   }, [baseRootContext.currentDate, baseRootContext.selectedDates, items, utils]);
 
-  const yearsListOrGridContext = React.useMemo<BaseCalendarYearGridOrListContext>(
+  const yearsListOrGridContext = React.useMemo<BaseCalendarYearCollectionContext>(
     () => ({
       tabbableYears,
     }),
@@ -83,7 +83,7 @@ export namespace useYearCells {
   }
 
   export interface ReturnValue extends useCellList.ReturnValue {
-    yearsListOrGridContext: BaseCalendarYearGridOrListContext;
+    yearsListOrGridContext: BaseCalendarYearCollectionContext;
     items: PickerValidDate[];
   }
 }

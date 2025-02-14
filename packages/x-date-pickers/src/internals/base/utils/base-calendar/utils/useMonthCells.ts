@@ -4,7 +4,7 @@ import { getMonthsInYear } from '../../../../utils/date-utils';
 import { useUtils } from '../../../../hooks/useUtils';
 import { getFirstEnabledYear, getLastEnabledYear } from './date';
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
-import { BaseCalendarMonthGridOrListContext } from '../month-grid/BaseCalendarMonthGridOrListContext';
+import { BaseCalendarMonthCollectionContext } from './BaseCalendarMonthCollectionContext';
 import { useCellList } from './useCellList';
 import { useBaseCalendarRootVisibleDateContext } from '../root/BaseCalendarRootVisibleDateContext';
 
@@ -51,7 +51,7 @@ export function useMonthCells(parameters: useMonthCells.Parameters): useMonthCel
     return tempTabbableDays;
   }, [baseRootContext.currentDate, baseRootContext.selectedDates, items, utils]);
 
-  const monthsListOrGridContext = React.useMemo<BaseCalendarMonthGridOrListContext>(
+  const monthsListOrGridContext = React.useMemo<BaseCalendarMonthCollectionContext>(
     () => ({
       tabbableMonths,
     }),
@@ -121,7 +121,7 @@ export namespace useMonthCells {
 
   export interface ReturnValue extends useCellList.ReturnValue {
     items: PickerValidDate[];
-    monthsListOrGridContext: BaseCalendarMonthGridOrListContext;
+    monthsListOrGridContext: BaseCalendarMonthCollectionContext;
     changePage: (direction: 'next' | 'previous') => void;
   }
 }

@@ -5,7 +5,7 @@ import { useBaseCalendarMonthList } from '../../utils/base-calendar/month-list/u
 import { BaseUIComponentProps } from '../../base-utils/types';
 import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
 import { CompositeList } from '../../composite/list/CompositeList';
-import { BaseCalendarMonthGridOrListContext } from '../../utils/base-calendar/month-grid/BaseCalendarMonthGridOrListContext';
+import { BaseCalendarMonthCollectionContext } from '../../utils/base-calendar/utils/BaseCalendarMonthCollectionContext';
 
 const CalendarMonthList = React.forwardRef(function CalendarMonthList(
   props: CalendarMonthList.Props,
@@ -42,9 +42,9 @@ const CalendarMonthList = React.forwardRef(function CalendarMonthList(
   });
 
   return (
-    <BaseCalendarMonthGridOrListContext.Provider value={monthsListOrGridContext}>
+    <BaseCalendarMonthCollectionContext.Provider value={monthsListOrGridContext}>
       <CompositeList elementsRef={cellRefs}>{renderElement()}</CompositeList>
-    </BaseCalendarMonthGridOrListContext.Provider>
+    </BaseCalendarMonthCollectionContext.Provider>
   );
 });
 

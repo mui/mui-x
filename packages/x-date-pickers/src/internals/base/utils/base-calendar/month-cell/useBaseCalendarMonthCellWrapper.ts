@@ -7,14 +7,14 @@ import { findClosestEnabledDate } from '../../../../utils/date-utils';
 import { useCompositeListItem } from '../../../composite/list/useCompositeListItem';
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 import { useBaseCalendarMonthCell } from './useBaseCalendarMonthCell';
-import { useBaseCalendarMonthGridOrListContext } from '../month-grid/BaseCalendarMonthGridOrListContext';
+import { useBaseCalendarMonthCollectionContext } from '../utils/BaseCalendarMonthCollectionContext';
 
 export function useBaseCalendarMonthCellWrapper(
   parameters: useBaseCalendarMonthCellWrapper.Parameters,
 ): useBaseCalendarMonthCellWrapper.ReturnValue {
   const { forwardedRef, value } = parameters;
   const baseRootContext = useBaseCalendarRootContext();
-  const baseMonthListOrGridContext = useBaseCalendarMonthGridOrListContext();
+  const baseMonthListOrGridContext = useBaseCalendarMonthCollectionContext();
   const { ref: listItemRef } = useCompositeListItem();
   const utils = useUtils();
   const now = useNow(baseRootContext.timezone);

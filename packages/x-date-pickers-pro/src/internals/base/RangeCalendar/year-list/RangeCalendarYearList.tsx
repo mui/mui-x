@@ -10,7 +10,7 @@ import { useComponentRenderer } from '@mui/x-date-pickers/internals/base/base-ut
 // eslint-disable-next-line no-restricted-imports
 import { CompositeList } from '@mui/x-date-pickers/internals/base/composite/list/CompositeList';
 // eslint-disable-next-line no-restricted-imports
-import { BaseCalendarYearGridOrListContext } from '@mui/x-date-pickers/internals/base/utils/base-calendar/year-grid/BaseCalendarYearGridOrListContext';
+import { BaseCalendarYearCollectionContext } from '@mui/x-date-pickers/internals/base/utils/base-calendar/utils/BaseCalendarYearCollectionContext';
 
 const RangeCalendarYearList = React.forwardRef(function CalendarYearList(
   props: CalendarYearList.Props,
@@ -37,9 +37,9 @@ const RangeCalendarYearList = React.forwardRef(function CalendarYearList(
   });
 
   return (
-    <BaseCalendarYearGridOrListContext.Provider value={yearsListOrGridContext}>
+    <BaseCalendarYearCollectionContext.Provider value={yearsListOrGridContext}>
       <CompositeList elementsRef={cellRefs}>{renderElement()}</CompositeList>
-    </BaseCalendarYearGridOrListContext.Provider>
+    </BaseCalendarYearCollectionContext.Provider>
   );
 });
 
