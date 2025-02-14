@@ -59,10 +59,7 @@ const ChartsText = React.forwardRef<SVGTextElement, ChartsTextProps>(
     }
 
     const transforms: string[] = [];
-    // if (scaleToFit) {
-    //   const lineWidth = wordsByLines[0].width;
-    //   transforms.push(`scale(${(isNumber(width as number) ? (width as number) / lineWidth : 1) / lineWidth})`);
-    // }
+
     if (angle) {
       transforms.push(`rotate(${angle}, ${x}, ${y})`);
     }
