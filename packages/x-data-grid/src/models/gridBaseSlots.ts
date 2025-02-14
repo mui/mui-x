@@ -138,6 +138,22 @@ export type CircularProgressProps = {
 
 export type LinearProgressProps = {};
 
+export type InputProps = {
+  ref?: React.Ref<HTMLElement>;
+  inputRef?: React.Ref<HTMLInputElement>;
+  className?: string;
+  fullWidth?: boolean;
+  type?: React.HTMLInputTypeAttribute;
+  value?: string;
+  onChange: React.ChangeEventHandler;
+  disabled?: boolean;
+  endAdornment?: React.ReactNode;
+  startAdornment?: React.ReactNode;
+  slotProps?: {
+    htmlInput?: React.InputHTMLAttributes<HTMLInputElement>;
+  };
+};
+
 export type SelectProps = {
   ref?: Ref;
   id?: string;

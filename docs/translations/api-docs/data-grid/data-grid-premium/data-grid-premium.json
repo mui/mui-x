@@ -1288,6 +1288,7 @@
     "baseDivider": "The custom Divider component used in the grid.",
     "baseFormControl": "The custom FormControl component used in the grid.",
     "baseIconButton": "The custom IconButton component used in the grid.",
+    "baseInput": "The custom Input component used in the grid.",
     "baseInputAdornment": "The custom InputAdornment component used in the grid.",
     "baseInputLabel": "The custom InputLabel component used in the grid.",
     "baseLinearProgress": "The custom LinearProgress component used in the grid.",
