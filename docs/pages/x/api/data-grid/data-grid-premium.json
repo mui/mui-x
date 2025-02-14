@@ -894,6 +894,12 @@
       "class": null
     },
     {
+      "name": "baseInput",
+      "description": "The custom Input component used in the grid.",
+      "default": "Input",
+      "class": null
+    },
+    {
       "name": "baseTooltip",
       "description": "The custom Tooltip component used in the grid.",
       "default": "Tooltip",

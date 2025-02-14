@@ -6,6 +6,7 @@ import MUICheckbox from '@mui/material/Checkbox';
 import MUIChip from '@mui/material/Chip';
 import MUICircularProgress from '@mui/material/CircularProgress';
 import MUIDivider from '@mui/material/Divider';
+import MUIInputBase from '@mui/material/InputBase';
 import MUIFocusTrap from '@mui/material/Unstable_TrapFocus';
 import MUILinearProgress from '@mui/material/LinearProgress';
 import MUIListItemIcon from '@mui/material/ListItemIcon';
@@ -169,6 +170,7 @@ const baseSlots: GridBaseSlots = {
   baseCheckbox: React.forwardRef(BaseCheckbox),
   baseCircularProgress: MUICircularProgress,
   baseDivider: MUIDivider,
+  baseInput: BaseInput,
   baseLinearProgress: MUILinearProgress,
   baseMenuList: BaseMenuList,
   baseMenuItem: BaseMenuItem,
@@ -341,6 +343,11 @@ function BaseAutocomplete(props: GridSlotProps['baseAutocomplete']) {
       {...rest}
     />
   );
+}
+
+function BaseInput(props: GridSlotProps['baseInput']) {
+  const { slotProps, ...rest } = props;
+  return <MUIInputBase {...rest} inputProps={slotProps?.htmlInput} />;
 }
 
 const transformOrigin = {
