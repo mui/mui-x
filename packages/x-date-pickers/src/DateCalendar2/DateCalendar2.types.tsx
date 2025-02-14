@@ -134,7 +134,7 @@ export interface DateCalendar2Slots {
   rightNavigationIcon?: React.ElementType;
   /**
    * Panel displayed when the calendar is in the loading state.
-   * @default DateCalendar2DayGridBodyLoading for day view, "DateCalendar2MonthOrYearLoadingPanel" for month and year views.
+   * @default DateCalendar2DayGridLoadingPanel for day view, DateCalendar2MonthGridLoadingPanel for month view and DateCalendar2YearGridLoadingPanel for year view.
    */
   loadingPanel?: React.ElementType;
 }

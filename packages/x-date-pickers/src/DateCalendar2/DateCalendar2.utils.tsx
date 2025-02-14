@@ -4,16 +4,12 @@ import { DAY_MARGIN, DAY_SIZE } from '../internals/constants/dimensions';
 import { useDateCalendar2PrivateContext } from './DateCalendar2Context';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { DateView } from '../models/views';
-import {
-  DateCalendar2LoadingPanelContainer,
-  DateCalendar2MonthOrYearLoadingPanel,
-} from './DateCalendar2.parts';
+import { DateCalendar2LoadingPanelContainer } from './DateCalendar2.parts';
 
 export const DAYS_GRID_BODY_HEIGHT = (DAY_SIZE + DAY_MARGIN * 2) * 6;
 
 export function useLoadingPanel(parameters: UseLoadingPanelParameters) {
-  const { view, defaultComponent: DefaultComponent = DateCalendar2MonthOrYearLoadingPanel } =
-    parameters;
+  const { view, defaultComponent: DefaultComponent } = parameters;
   const { classes, slots, slotProps } = useDateCalendar2PrivateContext();
   const { ownerState } = usePickerPrivateContext();
   const LoadingPanel = slots?.loadingPanel ?? DefaultComponent;
@@ -38,5 +34,5 @@ export function useLoadingPanel(parameters: UseLoadingPanelParameters) {
 
 interface UseLoadingPanelParameters {
   view: DateView;
-  defaultComponent?: React.ElementType;
+  defaultComponent: React.ElementType<React.HTMLAttributes<HTMLDivElement>>;
 }

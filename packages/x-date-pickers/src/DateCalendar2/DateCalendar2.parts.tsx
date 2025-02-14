@@ -469,10 +469,3 @@ export const DateCalendar2LoadingPanelContainer = styled('div', {
   justifyContent: 'center',
   flex: '1 1 auto',
 });
-
-// TODO: Remove once we have implemented a good loading panel for each view
-export const DateCalendar2MonthOrYearLoadingPanel = styled((props) => <div {...props}>...</div>, {
-  name: 'MuiDateCalendar2',
-  slot: 'MonthOrYearLoadingPanel',
-  overridesResolver: (_, styles) => styles.monthOrYearLoading,
-})({});
