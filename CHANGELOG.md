@@ -10,6 +10,7 @@ _Feb 14, 2025_
 We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
+- 🌍 Improve Polish (pl-PL) locale on the Data Grid
 
 Special thanks go out to the community contributors who have helped make this release possible:
 @pawelkula.
