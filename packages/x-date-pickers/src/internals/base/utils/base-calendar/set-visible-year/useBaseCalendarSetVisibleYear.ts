@@ -39,5 +39,6 @@ export namespace useBaseCalendarSetVisibleYear {
     setTarget: () => void;
     isDisabled: boolean;
     isTabbable: boolean;
+    direction: 'before' | 'after';
   }
 }

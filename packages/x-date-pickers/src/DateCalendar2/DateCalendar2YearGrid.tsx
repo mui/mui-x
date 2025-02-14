@@ -15,7 +15,7 @@ function WrappedYearCell(props: React.HTMLAttributes<HTMLButtonElement>) {
   const { ownerState } = usePickerPrivateContext();
   const { classes, slots, slotProps } = useDateCalendar2PrivateContext();
 
-  const YearCell = slots?.yearButton ?? DateCalendar2YearCell;
+  const YearCell = slots?.yearCell ?? DateCalendar2YearCell;
   const yearCellProps = useSlotProps({
     elementType: YearCell,
     externalSlotProps: slotProps?.yearCell,

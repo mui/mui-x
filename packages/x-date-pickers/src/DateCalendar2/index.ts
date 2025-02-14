@@ -1,7 +1,9 @@
 export { DateCalendar2 } from './DateCalendar2';
 export type {
   DateCalendar2Props,
-  DateCalendar2PrivateContextValue as DateCalendar2ContextValue,
+  DateCalendar2Slots,
+  DateCalendar2SlotProps,
+  DateCalendar2ContextValue,
 } from './DateCalendar2.types';
 
 export { DateCalendar2Header } from './DateCalendar2Header';

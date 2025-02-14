@@ -3,7 +3,6 @@ import clsx from 'clsx';
 import { useTheme, useThemeProps } from '@mui/material/styles';
 import Fade from '@mui/material/Fade';
 import useEventCallback from '@mui/utils/useEventCallback';
-import composeClasses from '@mui/utils/composeClasses';
 import useSlotProps from '@mui/utils/useSlotProps';
 import useId from '@mui/utils/useId';
 import useControlled from '@mui/utils/useControlled';
@@ -19,11 +18,11 @@ import {
   DateCalendar2PrivateContextValue,
   DateCalendar2Props,
 } from './DateCalendar2.types';
-import { DateCalendar2Classes, getDateCalendar2UtilityClass } from './DateCalendar2.classes';
 import { DateCalendar2Context, DateCalendar2PrivateContext } from './DateCalendar2Context';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { useReduceAnimations } from '../internals/hooks/useReduceAnimations';
 import { DateCalendar2Root, DateCalendar2TransitionGroup } from './DateCalendar2.parts';
+import { useUtilityClasses } from './DateCalendar2.utils';
 
 const DEFAULT_VIEWS = { year: true, month: false, day: true };
 
@@ -228,41 +227,4 @@ function getDefaultView(views: { [key in DateView]?: boolean }) {
     return 'year';
   }
   return null;
-}
-
-function useUtilityClasses(classes: Partial<DateCalendar2Classes> | undefined) {
-  return React.useMemo<DateCalendar2Classes>(() => {
-    const slots = {
-      root: ['root'],
-      transitionGroup: ['transitionGroup'],
-      headerRoot: ['headerRoot'],
-      headerLabelContainer: ['headerLabelContainer'],
-      headerLabelTransitionGroup: ['headerLabelTransitionGroup'],
-      headerLabelContent: ['headerLabelContent'],
-      headerSwitchViewButton: ['headerSwitchViewButton'],
-      headerSwitchViewIcon: ['headerSwitchViewIcon'],
-      headerNavigation: ['headerNavigation'],
-      headerNavigationButton: ['headerNavigationButton'],
-      headerNavigationSpacer: ['headerNavigationSpacer'],
-      dayGridRoot: ['daysGridRoot'],
-      dayGridHeader: ['daysGridHeader'],
-      dayGridWeekNumberHeaderCell: ['daysGridWeekNumberHeaderCell'],
-      dayGridHeaderCell: ['daysGridHeaderCell'],
-      dayGridBodyTransitionGroup: ['daysGridBodyTransitionGroup'],
-      dayGridBody: ['daysGridBody'],
-      dayGridRow: ['daysGridRow'],
-      dayGridWeekNumberCell: ['daysGridWeekNumberCell'],
-      dayCell: ['daysCell'],
-      dayCellSkeleton: ['daysCellSkeleton'],
-      monthGridRoot: ['monthsGridRoot'],
-      monthCell: ['monthsCell'],
-      monthCellSkeleton: ['monthsCellSkeleton'],
-      yearGridRoot: ['yearsGridRoot'],
-      yearCell: ['yearsCell'],
-      yearCellSkeleton: ['yearsCellSkeleton'],
-      loadingPanel: ['loadingPanel'],
-    };
-
-    return composeClasses(slots, getDateCalendar2UtilityClass, classes);
-  }, [classes]);
 }

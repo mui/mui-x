@@ -12,7 +12,12 @@ const InnerCalendarSetVisibleYear = React.forwardRef(function InnerCalendarSetVi
   const { className, render, ctx, target, ...otherProps } = props;
   const { getSetVisibleYearProps } = useBaseCalendarSetVisibleYear({ ctx, target });
 
-  const state: CalendarSetVisibleYear.State = React.useMemo(() => ({}), []);
+  const state: CalendarSetVisibleYear.State = React.useMemo(
+    () => ({
+      direction: ctx.direction,
+    }),
+    [ctx.direction],
+  );
 
   const { renderElement } = useComponentRenderer({
     propGetter: getSetVisibleYearProps,
@@ -38,7 +43,14 @@ const CalendarSetVisibleYear = React.forwardRef(function CalendarSetVisibleYear(
 });
 
 export namespace CalendarSetVisibleYear {
-  export interface State {}
+  export interface State {
+    /**
+     * The direction of the target year relative to the current visible year.
+     * - "before" if the target year is before the current visible year.
+     * - "after" if the target year is after the current visible year.
+     */
+    direction: 'before' | 'after';
+  }
 
   export interface Props
     extends Omit<useBaseCalendarSetVisibleYear.Parameters, 'ctx'>,

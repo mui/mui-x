@@ -33,7 +33,7 @@ const WrappedDayCell = React.forwardRef(function WrappedDayCell(
   const { ownerState } = usePickerPrivateContext();
   const { classes, slots, slotProps } = useDateCalendar2PrivateContext();
 
-  const DayCell = slots?.dayButton ?? DateCalendar2DayCell;
+  const DayCell = slots?.dayCell ?? DateCalendar2DayCell;
   const dayCellProps = useSlotProps({
     elementType: DayCell,
     externalSlotProps: slotProps?.dayCell,

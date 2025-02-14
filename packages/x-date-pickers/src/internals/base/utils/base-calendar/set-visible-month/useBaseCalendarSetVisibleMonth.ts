@@ -39,5 +39,6 @@ export namespace useBaseCalendarSetVisibleMonth {
     setTarget: () => void;
     isDisabled: boolean;
     isTabbable: boolean;
+    direction: 'before' | 'after';
   }
 }

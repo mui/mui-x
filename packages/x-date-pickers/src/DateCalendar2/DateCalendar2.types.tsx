@@ -91,17 +91,17 @@ export interface DateCalendar2Slots {
    * Button displayed to render a single day in the `day` view.
    * @default PickersDay
    */
-  dayButton?: React.ElementType<ButtonBaseProps>;
+  dayCell?: React.ElementType<ButtonBaseProps>;
   /**
    * Button displayed to render a single month in the `month` view.
    * @default MonthCalendarButton
    */
-  monthButton?: React.ElementType;
+  monthCell?: React.ElementType;
   /**
    * Button displayed to render a single year in the `year` view.
    * @default YearCalendarButton
    */
-  yearButton?: React.ElementType;
+  yearCell?: React.ElementType;
   /**
    * Custom component for calendar header.
    * @default DateCalendar2Header

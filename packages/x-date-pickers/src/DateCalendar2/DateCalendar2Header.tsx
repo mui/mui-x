@@ -116,6 +116,7 @@ export const DateCalendar2Header = React.forwardRef(function DateCalendar2Header
     additionalProps: {
       fontSize: 'inherit',
     },
+    className: classes.headerNavigationIcon,
     ownerState,
   });
 
@@ -126,6 +127,7 @@ export const DateCalendar2Header = React.forwardRef(function DateCalendar2Header
     additionalProps: {
       fontSize: 'inherit',
     },
+    className: classes.headerNavigationIcon,
     ownerState,
   });
 

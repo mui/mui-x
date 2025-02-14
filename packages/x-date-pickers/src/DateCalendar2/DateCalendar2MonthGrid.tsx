@@ -15,7 +15,7 @@ function WrappedMonthCell(props: React.HTMLAttributes<HTMLButtonElement>) {
   const { ownerState } = usePickerPrivateContext();
   const { classes, slots, slotProps } = useDateCalendar2PrivateContext();
 
-  const MonthCell = slots?.monthButton ?? DateCalendar2MonthCell;
+  const MonthCell = slots?.monthCell ?? DateCalendar2MonthCell;
   const monthCellProps = useSlotProps({
     elementType: MonthCell,
     externalSlotProps: slotProps?.monthCell,

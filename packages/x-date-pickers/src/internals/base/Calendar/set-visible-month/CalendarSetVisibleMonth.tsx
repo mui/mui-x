@@ -13,7 +13,12 @@ const InnerCalendarSetVisibleMonth = React.forwardRef(function InnerCalendarSetV
   const { className, render, ctx, target, ...otherProps } = props;
   const { getSetVisibleMonthProps } = useBaseCalendarSetVisibleMonth({ ctx, target });
 
-  const state: CalendarSetVisibleMonth.State = React.useMemo(() => ({}), []);
+  const state: CalendarSetVisibleMonth.State = React.useMemo(
+    () => ({
+      direction: ctx.direction,
+    }),
+    [ctx.direction],
+  );
 
   const { renderElement } = useComponentRenderer({
     propGetter: getSetVisibleMonthProps,
@@ -41,7 +46,14 @@ const CalendarSetVisibleMonth = React.forwardRef(function CalendarSetVisibleMont
 });
 
 export namespace CalendarSetVisibleMonth {
-  export interface State {}
+  export interface State {
+    /**
+     * The direction of the target month relative to the current visible month.
+     * - "before" if the target month is before the current visible month.
+     * - "after" if the target month is after the current visible month.
+     */
+    direction: 'before' | 'after';
+  }
 
   export interface Props
     extends Omit<useBaseCalendarSetVisibleMonth.Parameters, 'ctx'>,

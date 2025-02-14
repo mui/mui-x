@@ -77,13 +77,19 @@ export function useBaseCalendarSetVisibleYearWrapper(
     baseRootContext.setVisibleDate(targetDate, false);
   });
 
+  const direction = React.useMemo(
+    () => (utils.isBefore(targetDate, baseRootVisibleDateContext.visibleDate) ? 'before' : 'after'),
+    [targetDate, baseRootVisibleDateContext.visibleDate, utils],
+  );
+
   const ctx = React.useMemo<useBaseCalendarSetVisibleYear.Context>(
     () => ({
       setTarget,
       isDisabled,
       isTabbable,
+      direction,
     }),
-    [setTarget, isDisabled, isTabbable],
+    [setTarget, isDisabled, isTabbable, direction],
   );
 
   return { ref: mergedRef, ctx };

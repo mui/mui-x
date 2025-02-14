@@ -22,6 +22,8 @@ export interface DateCalendar2Classes {
   headerNavigation: string;
   /** Styles applied to the navigation button element of the header. */
   headerNavigationButton: string;
+  /** Styles applied to the navigation icon element of the header. */
+  headerNavigationIcon: string;
   /** Styles applied to the navigation spacer element of the header. */
   headerNavigationSpacer: string;
   /** Styles applied to the root element of the day's grid. */
