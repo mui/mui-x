@@ -36,7 +36,7 @@ describe('BarChart', () => {
         />,
       );
 
-      await findByText(dataLength.toLocaleString(), { ignore: 'span' });
+      await findByText('148', { ignore: 'span' });
 
       cleanup();
     },

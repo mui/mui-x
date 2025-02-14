@@ -101,18 +101,13 @@ ChartsText.propTypes = {
    */
   lineHeight: PropTypes.number,
   /**
-   * If `true`, the line width is computed.
-   * @default false
+   * When true, this component is being rendered only for measuring its size.
+   * Its size is needed to avoid overlapping text.
+   * When this property is true, the component should be not visible (e.g., using `visibility: 'hidden'`).
    */
-  needsComputation: PropTypes.bool,
+  measuring: PropTypes.bool,
   ownerState: PropTypes.any,
-  /**
-   * Style applied to text elements.
-   */
   style: PropTypes.object,
-  /**
-   * Text displayed.
-   */
   text: PropTypes.string.isRequired,
 } as any;
 

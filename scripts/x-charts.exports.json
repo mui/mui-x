@@ -100,7 +100,7 @@
   { "name": "ChartsReferenceLineClassKey", "kind": "TypeAlias" },
   { "name": "ChartsSurface", "kind": "Variable" },
   { "name": "ChartsSurfaceProps", "kind": "Interface" },
-  { "name": "ChartsText", "kind": "Function" },
+  { "name": "ChartsText", "kind": "Variable" },
   { "name": "ChartsTextProps", "kind": "Interface" },
   { "name": "ChartsTextStyle", "kind": "Interface" },
   { "name": "ChartsTooltip", "kind": "Function" },
