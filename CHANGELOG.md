@@ -118,11 +118,9 @@ Same changes as in `@mui/x-date-pickers@v8.0.0-alpha.12`, plus:
 
 ### Charts
 
-From https://github.com/mui/mui-x/pull/16459
+#### Breaking changes
 
-Stabilize series hooks: `useSeries`, `usePieSeries`, `useLineSeries`, `useBarSeries`, `useScatterSeries` and `useHeatmapSeries`.
-
-- [x] I have followed (at least) the [PR section of the contributing guide](https://github.com/mui/mui-x/blob/HEAD/CONTRIBUTING.md#sending-a-pull-request).
+- The `useSeries` hook family has been stabilized and renamed accordingly — [Learn more](https://next.mui.com/x/migration/migration-charts-v7/#stabilize-useseries-and-usexxxseries-hooks-✅)
 
 #### `@mui/x-charts@v8.0.0-alpha.12`
 
