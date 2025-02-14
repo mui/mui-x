@@ -291,8 +291,14 @@
   },
   { "name": "gridRowGroupingNameSelector", "returnType": "string", "description": "" },
   { "name": "gridRowGroupingSanitizedModelSelector", "returnType": "string[]", "description": "" },
+  {
+    "name": "gridRowIdSelector",
+    "returnType": "GridRowId",
+    "description": "Get the row id for a given row"
+  },
   { "name": "gridRowIsEditingSelector", "returnType": "boolean", "description": "" },
   { "name": "gridRowMaximumTreeDepthSelector", "returnType": "number", "description": "" },
+  { "name": "gridRowNodeSelector", "returnType": "GridTreeNode", "description": "" },
   {
     "name": "gridRowSelectionStateSelector",
     "returnType": "GridRowSelectionModel",

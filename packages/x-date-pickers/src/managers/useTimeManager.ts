@@ -35,7 +35,12 @@ export function useTimeManager<TEnableAccessibleFieldDOMStructure extends boolea
         ...getTimeFieldInternalPropsDefaults({ utils, internalProps }),
       }),
       internal_getOpenPickerButtonAriaLabel: ({ value, utils, localeText }) => {
-        const formattedValue = utils.isValid(value) ? utils.format(value, 'fullTime') : null;
+        const formattedValue = utils.isValid(value)
+          ? utils.format(
+              value,
+              utils.is12HourCycleInCurrentLocale() ? 'fullTime12h' : 'fullTime24h',
+            )
+          : null;
         return localeText.openTimePickerDialogue(formattedValue);
       },
     }),
