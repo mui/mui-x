@@ -163,7 +163,7 @@ Same changes as in `@mui/x-tree-view@v8.0.0-alpha.12`.
 ### Core
 
 - [core] Update charts folder structure (#16471) @alexfauquette
-- [code-infra] Bump @mui/monorepo (#16422) @renovate[bot]
+- [code-infra] Bump @mui/monorepo (#16422) @LukasTy
 - [code-infra] Fix lock file (#16562) @LukasTy
 - [code-infra] Fix root package version (#16503) @JCQuintas
 - [code-infra] Update internal packages to `next` releases (#16423) @renovate[bot]
