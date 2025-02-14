@@ -5,6 +5,7 @@ import MUICheckbox from '@mui/material/Checkbox';
 import MUIChip from '@mui/material/Chip';
 import MUICircularProgress from '@mui/material/CircularProgress';
 import MUIDivider from '@mui/material/Divider';
+import MUIInputBase from '@mui/material/InputBase';
 import MUIFocusTrap from '@mui/material/Unstable_TrapFocus';
 import MUILinearProgress from '@mui/material/LinearProgress';
 import MUIListItemIcon from '@mui/material/ListItemIcon';
@@ -15,6 +16,7 @@ import MUITextField from '@mui/material/TextField';
 import MUIFormControl from '@mui/material/FormControl';
 import MUIFormControlLabel from '@mui/material/FormControlLabel';
 import MUISelect from '@mui/material/Select';
+import MUISwitch from '@mui/material/Switch';
 import MUIButton from '@mui/material/Button';
 import MUIIconButton from '@mui/material/IconButton';
 import MUIInputAdornment from '@mui/material/InputAdornment';
@@ -166,6 +168,7 @@ const baseSlots: GridBaseSlots = {
   baseCheckbox: React.forwardRef(BaseCheckbox),
   baseCircularProgress: MUICircularProgress,
   baseDivider: MUIDivider,
+  baseInput: BaseInput,
   baseLinearProgress: MUILinearProgress,
   baseMenuList: BaseMenuList,
   baseMenuItem: BaseMenuItem,
@@ -180,6 +183,7 @@ const baseSlots: GridBaseSlots = {
   baseSelect: BaseSelect,
   baseSelectOption: BaseSelectOption,
   baseSkeleton: MUISkeleton,
+  baseSwitch: MUISwitch,
   baseChip: MUIChip,
 };
 
@@ -275,6 +279,11 @@ function BaseTextField(props: GridSlotProps['baseTextField']) {
       }}
     />
   );
+}
+
+function BaseInput(props: GridSlotProps['baseInput']) {
+  const { slotProps, ...rest } = props;
+  return <MUIInputBase {...rest} inputProps={slotProps?.htmlInput} />;
 }
 
 const transformOrigin = {

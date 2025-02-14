@@ -5,8 +5,9 @@ import {
   unstable_useEnhancedEffect as useEnhancedEffect,
 } from '@mui/utils';
 import { styled } from '@mui/material/styles';
-import InputBase, { InputBaseProps } from '@mui/material/InputBase';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import { NotRendered } from '../../utils/assert';
+import { GridSlotProps } from '../../models/gridSlotsComponent';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -25,10 +26,9 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridEditInputCellRoot = styled(InputBase, {
+const GridEditInputCellRoot = styled(NotRendered<GridSlotProps['baseInput']>, {
   name: 'MuiDataGrid',
   slot: 'EditInputCell',
-  overridesResolver: (props, styles) => styles.editInputCell,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   ...theme.typography.body2,
   padding: '1px 0',
@@ -38,9 +38,7 @@ const GridEditInputCellRoot = styled(InputBase, {
   },
 }));
 
-export interface GridEditInputCellProps
-  extends GridRenderEditCellParams,
-    Omit<InputBaseProps, 'id' | 'value' | 'tabIndex' | 'ref'> {
+export interface GridEditInputCellProps extends GridRenderEditCellParams {
   debounceMs?: number;
   /**
    * Callback called when the value is changed by the user.
@@ -52,6 +50,9 @@ export interface GridEditInputCellProps
     event: React.ChangeEvent<HTMLInputElement>,
     newValue: string,
   ) => Promise<void> | void;
+  slotProps?: {
+    root?: Partial<GridSlotProps['baseInput']>;
+  };
 }
 
 const GridEditInputCell = forwardRef<HTMLInputElement, GridEditInputCellProps>((props, ref) => {
@@ -74,6 +75,7 @@ const GridEditInputCell = forwardRef<HTMLInputElement, GridEditInputCellProps>((
     debounceMs = 200,
     isProcessingProps,
     onValueChange,
+    slotProps,
     ...other
   } = props;
 
@@ -122,6 +124,7 @@ const GridEditInputCell = forwardRef<HTMLInputElement, GridEditInputCellProps>((
 
   return (
     <GridEditInputCellRoot
+      as={rootProps.slots.baseInput}
       inputRef={inputRef}
       className={classes.root}
       ownerState={rootProps}
@@ -133,6 +136,7 @@ const GridEditInputCell = forwardRef<HTMLInputElement, GridEditInputCellProps>((
         isProcessingProps ? <rootProps.slots.loadIcon fontSize="small" color="action" /> : undefined
       }
       {...other}
+      {...slotProps?.root}
       ref={ref}
     />
   );
@@ -194,6 +198,7 @@ GridEditInputCell.propTypes = {
    * The node of the row that the current cell belongs to.
    */
   rowNode: PropTypes.object.isRequired,
+  slotProps: PropTypes.object,
   /**
    * the tabIndex value.
    */
