@@ -15,7 +15,7 @@ import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateCont
 import { useLoadingPanel } from './DateCalendar2.utils';
 import {
   DateCalendar2DayCell,
-  DateCalendar2DayCellLoading,
+  DateCalendar2DayCellSkeleton,
   DateCalendar2DayGridBody,
   DateCalendar2DayGridBodyNoTransition,
   DateCalendar2DayGridBodyTransitionGroup,
@@ -49,6 +49,10 @@ const WrappedDayCell = React.forwardRef(function WrappedDayCell(
 
 const renderDay = (props: any) => <WrappedDayCell {...props} />;
 const renderRow = (props: any) => <DateCalendar2DayGridRow {...props} />;
+const renderDayGridBody = (props: any) => <DateCalendar2DayGridBody {...props} />;
+const renderDayGridHeaderCell = (props: any) => (
+  <DateCalendar2DayGridHeaderCell variant="caption" {...props} />
+);
 
 const WrappedDateCalendar2DayGridBody = React.forwardRef(function WrappedDateCalendar2DayGridBody(
   props: Pick<Calendar.DayGridBody.Props, 'freezeCurrentMonth'>,
@@ -59,9 +63,7 @@ const WrappedDateCalendar2DayGridBody = React.forwardRef(function WrappedDateCal
   const { classes, displayWeekNumber, fixedWeekNumber } = useDateCalendar2PrivateContext();
   const utils = useUtils();
 
-  const renderBodyChildren = React.useCallback<
-    Exclude<Calendar.DayGridBody.Props['children'], undefined>
-  >(
+  const children = React.useCallback<Exclude<Calendar.DayGridBody.Props['children'], undefined>>(
     ({ weeks }) =>
       weeks.map((week) => (
         <Calendar.DayGridRow
@@ -113,9 +115,9 @@ const WrappedDateCalendar2DayGridBody = React.forwardRef(function WrappedDateCal
       className={classes.dayGridBody}
       fixedWeekNumber={fixedWeekNumber}
       freezeCurrentMonth={freezeCurrentMonth}
-      render={<DateCalendar2DayGridBody />}
+      render={renderDayGridBody}
     >
-      {renderBodyChildren}
+      {children}
     </Calendar.DayGridBody>
   );
 });
@@ -123,7 +125,6 @@ const WrappedDateCalendar2DayGridBody = React.forwardRef(function WrappedDateCal
 function WrappedDateCalendar2DayGridBodyWithTransition(props: Partial<CSSTransitionProps>) {
   const { onExit, ...other } = props;
   const theme = useTheme();
-  const { classes } = useDateCalendar2PrivateContext();
   const ref = React.createRef<HTMLDivElement>();
 
   return (
@@ -139,7 +140,7 @@ function WrappedDateCalendar2DayGridBodyWithTransition(props: Partial<CSSTransit
   );
 }
 
-const DateCalendar2DayGridBodyLoading = React.memo(function DateCalendar2DayGridBodyLoading(
+const DateCalendar2DayGridLoadingPanel = React.memo(function DateCalendar2DayGridLoadingPanel(
   props: React.HTMLAttributes<HTMLDivElement>,
 ) {
   const { className, ...other } = props;
@@ -158,18 +159,17 @@ const DateCalendar2DayGridBodyLoading = React.memo(function DateCalendar2DayGrid
   };
 
   return (
-    <DateCalendar2DayGridBody className={clsx(className, classes.dayGridRow)} {...other}>
+    <DateCalendar2DayGridBody className={clsx(className, classes.dayGridBody)} {...other}>
       {Array.from({ length: 4 }, (_, weekIndex) => (
         <DateCalendar2DayGridRow key={weekIndex} className={classes.dayGridRow}>
           {displayWeekNumber && (
             <DateCalendar2DayGridWeekNumberCell className={classes.dayGridWeekNumberCell} />
           )}
           {Array.from({ length: 7 }, (_day, dayIndex) => (
-            <DateCalendar2DayCellLoading
+            <DateCalendar2DayCellSkeleton
               key={dayIndex}
+              className={classes.dayCellSkeleton}
               variant="circular"
-              width={DAY_SIZE}
-              height={DAY_SIZE}
               data-outside-month={isDayHidden(weekIndex, dayIndex, 4)}
             />
           ))}
@@ -183,6 +183,7 @@ export const DateCalendar2DayGrid = React.forwardRef(function DateCalendar2DayGr
   props: DateCalendar2DayGridProps,
   ref: React.ForwardedRef<HTMLDivElement>,
 ) {
+  const { className, ...other } = props;
   const translations = usePickerTranslations();
   const utils = useUtils();
   const { visibleDate } = useCalendarContext();
@@ -190,9 +191,8 @@ export const DateCalendar2DayGrid = React.forwardRef(function DateCalendar2DayGr
   const { reduceAnimations } = useDateCalendar2Context();
   const renderLoadingPanel = useLoadingPanel({
     view: 'year',
-    defaultComponent: DateCalendar2DayGridBodyLoading,
+    defaultComponent: DateCalendar2DayGridLoadingPanel,
   });
-  const { className, ...other } = props;
 
   // We need a new ref whenever the `key` of the transition changes: https://reactcommunity.org/react-transition-group/transition/#Transition-prop-nodeRef.
   const transitionKey = utils.formatByString(
@@ -240,7 +240,7 @@ export const DateCalendar2DayGrid = React.forwardRef(function DateCalendar2DayGr
                 value={day}
                 className={classes.dayGridHeaderCell}
                 key={day.toString()}
-                render={<DateCalendar2DayGridHeaderCell variant="caption" />}
+                render={renderDayGridHeaderCell}
               />
             ))}
           </React.Fragment>

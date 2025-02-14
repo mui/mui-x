@@ -8,10 +8,19 @@ import { useComponentRenderer } from '@mui/x-date-pickers/internals/base/base-ut
 // eslint-disable-next-line no-restricted-imports
 import { useBaseCalendarMonthGrid } from '@mui/x-date-pickers/internals/base/utils/base-calendar/month-grid/useBaseCalendarMonthGrid';
 // eslint-disable-next-line no-restricted-imports
+import { CustomStyleHookMapping } from '@mui/x-date-pickers/internals/base/base-utils/getStyleHookProps';
+// eslint-disable-next-line no-restricted-imports
 import { BaseCalendarMonthCollectionContext } from '@mui/x-date-pickers/internals/base/utils/base-calendar/utils/BaseCalendarMonthCollectionContext';
 // eslint-disable-next-line no-restricted-imports
 import { CompositeList } from '@mui/x-date-pickers/internals/base/composite/list/CompositeList';
 import { RangeCalendarMonthGridCssVars } from './RangeCalendarMonthGridCssVars';
+import { RangeCalendarMonthGridDataAttributes } from './RangeCalendarMonthGridDataAttributes';
+
+const customStyleHookMapping: CustomStyleHookMapping<RangeCalendarMonthGrid.State> = {
+  cellsPerRow(value) {
+    return value ? { [RangeCalendarMonthGridDataAttributes.cellsPerRow]: value.toString() } : null;
+  },
+};
 
 const RangeCalendarMonthGrid = React.forwardRef(function RangeCalendarMonthList(
   props: RangeCalendarMonthGrid.Props,
@@ -36,7 +45,7 @@ const RangeCalendarMonthGrid = React.forwardRef(function RangeCalendarMonthList(
       canChangeYear,
       cellsPerRowCssVar: RangeCalendarMonthGridCssVars.calendarMonthGridCellsPerRow,
     });
-  const state = React.useMemo(() => ({}), []);
+  const state = React.useMemo<RangeCalendarMonthGrid.State>(() => ({ cellsPerRow }), [cellsPerRow]);
   const ref = useForkRef(forwardedRef, scrollerRef);
 
   const { renderElement } = useComponentRenderer({
@@ -46,6 +55,7 @@ const RangeCalendarMonthGrid = React.forwardRef(function RangeCalendarMonthList(
     className,
     state,
     extraProps: otherProps,
+    customStyleHookMapping,
   });
 
   return (
@@ -56,7 +66,12 @@ const RangeCalendarMonthGrid = React.forwardRef(function RangeCalendarMonthList(
 });
 
 export namespace RangeCalendarMonthGrid {
-  export interface State {}
+  export interface State {
+    /**
+     * The number of cells per row.
+     */
+    cellsPerRow: number;
+  }
 
   export interface Props
     extends Omit<BaseUIComponentProps<'div', State>, 'children'>,

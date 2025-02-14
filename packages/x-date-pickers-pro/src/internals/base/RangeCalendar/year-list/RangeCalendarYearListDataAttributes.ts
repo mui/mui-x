@@ -1,1 +1,1 @@
-export enum CalendarYearListDataAttributes {}
+export enum RangeCalendarYearListDataAttributes {}

@@ -58,8 +58,18 @@ const DateCalendar2TransitionGroup = styled(TransitionGroup, {
  * - [x] Implement props.slots and props.slotProps
  * - [ ] Implement all the missing props
  *   - [ ] Decide if onYearChange / onMonthChange should be used for the visible date or for the selected date.
+ *   - [ ] Decide what to do with with onFocusedViewChange and focusedView
  * - [ ] Add tests
  * - [ ] Add doc examples
+ *
+ * Removed props:
+ * - disableHighlightToday: people should be able to override using CSS (TODO: create doc example)
+ * - renderLoading:  replaced by the loadingPanel slot
+ * - openTo: replaced by the initialView prop
+ * - onChange: replace by the onValueChange prop
+ *
+ * Modified props:
+ * - views: is now an object with the following keys: year, month, day
  *
  * Theme entries that DateCalendar2 would eventually replace:
  * - MuiDateCalendar
@@ -142,8 +152,28 @@ export const DateCalendar2 = React.forwardRef(function DateCalendar2(
   );
 
   const privateContextValue = React.useMemo<DateCalendar2PrivateContextValue>(
-    () => ({ classes, slots, slotProps, labelId, loading, displayWeekNumber, fixedWeekNumber }),
-    [classes, slots, slotProps, labelId, loading, displayWeekNumber, fixedWeekNumber],
+    () => ({
+      classes,
+      slots,
+      slotProps,
+      labelId,
+      loading,
+      displayWeekNumber,
+      fixedWeekNumber,
+      yearsPerRow,
+      monthsPerRow,
+    }),
+    [
+      classes,
+      slots,
+      slotProps,
+      labelId,
+      loading,
+      displayWeekNumber,
+      fixedWeekNumber,
+      yearsPerRow,
+      monthsPerRow,
+    ],
   );
 
   const contextValue = React.useMemo<DateCalendar2ContextValue>(
@@ -160,11 +190,11 @@ export const DateCalendar2 = React.forwardRef(function DateCalendar2(
 
   const renderViewContent = () => {
     if (view === 'year') {
-      return <DateCalendar2YearGrid cellsPerRow={yearsPerRow} yearsOrder={yearsOrder} />;
+      return <DateCalendar2YearGrid yearsOrder={yearsOrder} />;
     }
 
     if (view === 'month') {
-      return <DateCalendar2MonthGrid cellsPerRow={monthsPerRow} />;
+      return <DateCalendar2MonthGrid />;
     }
     return <DateCalendar2DayGrid />;
   };
@@ -237,10 +267,13 @@ function useUtilityClasses(classes: Partial<DateCalendar2Classes> | undefined) {
       dayGridRow: ['daysGridRow'],
       dayGridWeekNumberCell: ['daysGridWeekNumberCell'],
       dayCell: ['daysCell'],
+      dayCellSkeleton: ['daysCellSkeleton'],
       monthGridRoot: ['monthsGridRoot'],
       monthCell: ['monthsCell'],
+      monthCellSkeleton: ['monthsCellSkeleton'],
       yearGridRoot: ['yearsGridRoot'],
       yearCell: ['yearsCell'],
+      yearCellSkeleton: ['yearsCellSkeleton'],
       loadingPanel: ['loadingPanel'],
     };
 

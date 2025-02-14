@@ -212,18 +212,20 @@ export const DateCalendar2DayCell = styled((props) => <ButtonBase centerRipple {
   },
 }));
 
-export const DateCalendar2DayCellLoading = styled(Skeleton, {
-  name: 'MuiDayCalendarSkeleton',
-  slot: 'DaySkeleton',
-  overridesResolver: (props, styles) => styles.daySkeleton,
+export const DateCalendar2DayCellSkeleton = styled(Skeleton, {
+  name: 'MuiDateCalendar2',
+  slot: 'DayCellSkeleton',
+  overridesResolver: (props, styles) => styles.dayCellSkeleton,
 })({
+  width: DAY_SIZE,
+  height: DAY_SIZE,
   margin: `0 ${DAY_MARGIN}px`,
   '&[data-outside-month="true"]': {
     visibility: 'hidden',
   },
 });
 
-export const DateCalendar2MonthGridRoot = styled(Calendar.MonthGrid, {
+export const DateCalendar2MonthGridRoot = styled('div', {
   name: 'MuiDateCalendar2',
   slot: 'MonthGridRoot',
   overridesResolver: (props, styles) => styles.monthGridRoot,
@@ -237,6 +239,9 @@ export const DateCalendar2MonthGridRoot = styled(Calendar.MonthGrid, {
   width: DIALOG_WIDTH,
   // avoid padding increasing width over defined
   boxSizing: 'border-box',
+  '&[data-cells-per-row="4"]': {
+    columnGap: 0,
+  },
 });
 
 export const DateCalendar2MonthCell = styled('button', {
@@ -279,7 +284,16 @@ export const DateCalendar2MonthCell = styled('button', {
   },
 }));
 
-export const DateCalendar2YearGridRoot = styled(Calendar.YearGrid, {
+export const DateCalendar2MonthCellSkeleton = styled(Skeleton, {
+  name: 'MuiDateCalendar2',
+  slot: 'MonthCellSkeleton',
+  overridesResolver: (props, styles) => styles.monthCellSkeleton,
+})({
+  height: 36,
+  width: 72,
+});
+
+export const DateCalendar2YearGridRoot = styled('div', {
   name: 'MuiDateCalendar2',
   slot: 'YearGridRoot',
   overridesResolver: (props, styles) => styles.yearGridRoot,
@@ -297,6 +311,10 @@ export const DateCalendar2YearGridRoot = styled(Calendar.YearGrid, {
   // avoid padding increasing width over defined
   boxSizing: 'border-box',
   position: 'relative',
+  '&[data-cells-per-row="4"]': {
+    columnGap: 0,
+    padding: '0 2px',
+  },
 });
 
 export const DateCalendar2YearCell = styled('button', {
@@ -338,6 +356,15 @@ export const DateCalendar2YearCell = styled('button', {
     },
   },
 }));
+
+export const DateCalendar2YearCellSkeleton = styled(Skeleton, {
+  name: 'MuiDateCalendar2',
+  slot: 'YearCellSkeleton',
+  overridesResolver: (props, styles) => styles.yearCellSkeleton,
+})({
+  height: 36,
+  width: 72,
+});
 
 export const DateCalendar2HeaderRoot = styled('div', {
   name: 'MuiDateCalendar2',
@@ -441,9 +468,6 @@ export const DateCalendar2LoadingPanelContainer = styled('div', {
   display: 'flex',
   justifyContent: 'center',
   flex: '1 1 auto',
-  '&[data-view="day"]': {
-    minHeight: DAYS_GRID_BODY_HEIGHT,
-  },
 });
 
 // TODO: Remove once we have implemented a good loading panel for each view

@@ -180,6 +180,8 @@ export interface DateCalendar2PrivateContextValue {
   loading: boolean;
   displayWeekNumber: boolean;
   fixedWeekNumber: number | undefined;
+  monthsPerRow: 3 | 4;
+  yearsPerRow: 3 | 4;
 }
 
 export interface DateCalendar2ContextValue {

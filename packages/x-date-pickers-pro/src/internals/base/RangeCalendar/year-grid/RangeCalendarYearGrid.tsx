@@ -10,8 +10,17 @@ import { useComponentRenderer } from '@mui/x-date-pickers/internals/base/base-ut
 // eslint-disable-next-line no-restricted-imports
 import { CompositeList } from '@mui/x-date-pickers/internals/base/composite/list/CompositeList';
 // eslint-disable-next-line no-restricted-imports
+import { CustomStyleHookMapping } from '@mui/x-date-pickers/internals/base/base-utils/getStyleHookProps';
+// eslint-disable-next-line no-restricted-imports
 import { BaseCalendarYearCollectionContext } from '@mui/x-date-pickers/internals/base/utils/base-calendar/utils/BaseCalendarYearCollectionContext';
 import { RangeCalendarYearGridCssVars } from './RangeCalendarYearGridCssVars';
+import { RangeCalendarYearGridDataAttributes } from './RangeCalendarYearGridDataAttributes';
+
+const customStyleHookMapping: CustomStyleHookMapping<RangeCalendarYearGrid.State> = {
+  cellsPerRow(value) {
+    return value ? { [RangeCalendarYearGridDataAttributes.cellsPerRow]: value.toString() } : null;
+  },
+};
 
 const RangeCalendarYearGrid = React.forwardRef(function CalendarYearList(
   props: RangeCalendarYearGrid.Props,
@@ -26,7 +35,7 @@ const RangeCalendarYearGrid = React.forwardRef(function CalendarYearList(
       cellsPerRow,
       cellsPerRowCssVar: RangeCalendarYearGridCssVars.rangeCalendarYearGridCellsPerRow,
     });
-  const state = React.useMemo(() => ({}), []);
+  const state = React.useMemo<RangeCalendarYearGrid.State>(() => ({ cellsPerRow }), [cellsPerRow]);
   const ref = useForkRef(forwardedRef, scrollerRef);
 
   const { renderElement } = useComponentRenderer({
@@ -36,6 +45,7 @@ const RangeCalendarYearGrid = React.forwardRef(function CalendarYearList(
     className,
     state,
     extraProps: otherProps,
+    customStyleHookMapping,
   });
 
   return (
@@ -46,7 +56,12 @@ const RangeCalendarYearGrid = React.forwardRef(function CalendarYearList(
 });
 
 export namespace RangeCalendarYearGrid {
-  export interface State {}
+  export interface State {
+    /**
+     * The number of cells per row.
+     */
+    cellsPerRow: number;
+  }
 
   export interface Props
     extends Omit<BaseUIComponentProps<'div', State>, 'children'>,

@@ -5,7 +5,11 @@ import { Calendar } from '../internals/base/Calendar';
 import { useDateCalendar2PrivateContext } from './DateCalendar2Context';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { useLoadingPanel } from './DateCalendar2.utils';
-import { DateCalendar2YearCell, DateCalendar2YearGridRoot } from './DateCalendar2.parts';
+import {
+  DateCalendar2YearCell,
+  DateCalendar2YearCellSkeleton,
+  DateCalendar2YearGridRoot,
+} from './DateCalendar2.parts';
 
 function WrappedYearCell(props: React.HTMLAttributes<HTMLButtonElement>) {
   const { ownerState } = usePickerPrivateContext();
@@ -23,13 +27,44 @@ function WrappedYearCell(props: React.HTMLAttributes<HTMLButtonElement>) {
   return <DateCalendar2YearCell {...yearCellProps} />;
 }
 
+const DateCalendar2YearGridLoadingPanel = React.forwardRef(
+  function DateCalendar2YearGridLoadingPanel(
+    props: React.HTMLAttributes<HTMLDivElement>,
+    ref: React.ForwardedRef<HTMLDivElement>,
+  ) {
+    const { className, ...other } = props;
+    const { classes, labelId, yearsPerRow } = useDateCalendar2PrivateContext();
+
+    return (
+      <DateCalendar2YearGridRoot
+        aria-labelledby={labelId}
+        className={clsx(className, classes.yearGridRoot)}
+        data-cells-per-row={yearsPerRow}
+        ref={ref}
+        {...other}
+      >
+        {Array.from({ length: 24 }, (_, index) => (
+          <DateCalendar2YearCellSkeleton
+            key={index}
+            className={classes.yearCellSkeleton}
+            variant="rounded"
+          />
+        ))}
+      </DateCalendar2YearGridRoot>
+    );
+  },
+);
+
 export const DateCalendar2YearGrid = React.forwardRef(function DateCalendar2YearGrid(
   props: DateCalendarYearGridProps,
   ref: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { yearsOrder, className, ...other } = props;
-  const { classes, loading } = useDateCalendar2PrivateContext();
-  const renderLoadingPanel = useLoadingPanel({ view: 'year' });
+  const { classes, loading, labelId, yearsPerRow } = useDateCalendar2PrivateContext();
+  const renderLoadingPanel = useLoadingPanel({
+    view: 'year',
+    defaultComponent: DateCalendar2YearGridLoadingPanel,
+  });
 
   const getItems = React.useMemo<Calendar.YearGrid.Props['getItems']>(() => {
     if (yearsOrder === 'asc') {
@@ -46,9 +81,12 @@ export const DateCalendar2YearGrid = React.forwardRef(function DateCalendar2Year
   }
 
   return (
-    <DateCalendar2YearGridRoot
+    <Calendar.YearGrid
       getItems={getItems}
+      aria-labelledby={labelId}
       className={clsx(className, classes.yearGridRoot)}
+      cellsPerRow={yearsPerRow}
+      render={<DateCalendar2YearGridRoot />}
       ref={ref}
       {...other}
     >
@@ -57,12 +95,10 @@ export const DateCalendar2YearGrid = React.forwardRef(function DateCalendar2Year
           <Calendar.YearCell render={<WrappedYearCell />} value={year} key={year.toString()} />
         ))
       }
-    </DateCalendar2YearGridRoot>
+    </Calendar.YearGrid>
   );
 });
 
-interface DateCalendarYearGridProps
-  extends Pick<Calendar.YearGrid.Props, 'cellsPerRow'>,
-    React.HTMLAttributes<HTMLDivElement> {
+interface DateCalendarYearGridProps extends React.HTMLAttributes<HTMLDivElement> {
   yearsOrder: 'asc' | 'desc';
 }

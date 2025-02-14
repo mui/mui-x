@@ -42,14 +42,20 @@ export interface DateCalendar2Classes {
   dayGridWeekNumberCell: string;
   /** Styles applied to the day's cell element. */
   dayCell: string;
+  /** Styles applied to the day's cell skeleton element. */
+  dayCellSkeleton: string;
   /** Styles applied to the root element of the day's grid. */
   monthGridRoot: string;
   /** Styles applied to the month's cell element */
   monthCell: string;
+  /** Styles applied to the month's cell skeleton element */
+  monthCellSkeleton: string;
   /** Styles applied to the root element of the year's grid. */
   yearGridRoot: string;
   /** Styles applied to the year's cell element */
   yearCell: string;
+  /** Styles applied to the year's cell skeleton element */
+  yearCellSkeleton: string;
   /** Styles applied to the loading panel element */
   loadingPanel: string;
 }
@@ -80,10 +86,13 @@ export const dateCalendar2Classes: DateCalendar2Classes = generateUtilityClasses
     'dayGridRow',
     'dayGridWeekNumberCell',
     'dayCell',
+    'dayCellSkeleton',
     'monthGridRoot',
     'monthCell',
+    'monthCellSkeleton',
     'yearGridRoot',
     'yearCell',
+    'yearCellSkeleton',
     'loadingPanel',
   ],
 );

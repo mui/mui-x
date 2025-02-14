@@ -7,6 +7,14 @@ import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
 import { CompositeList } from '../../composite/list/CompositeList';
 import { CalendarMonthGridCssVars } from './CalendarMonthGridCssVars';
 import { BaseCalendarMonthCollectionContext } from '../../utils/base-calendar/utils/BaseCalendarMonthCollectionContext';
+import { CustomStyleHookMapping } from '../../base-utils/getStyleHookProps';
+import { CalendarMonthGridDataAttributes } from './CalendarMonthGridDataAttributes';
+
+const customStyleHookMapping: CustomStyleHookMapping<CalendarMonthGrid.State> = {
+  cellsPerRow(value) {
+    return value ? { [CalendarMonthGridDataAttributes.cellsPerRow]: value.toString() } : null;
+  },
+};
 
 const CalendarMonthGrid = React.forwardRef(function CalendarMonthList(
   props: CalendarMonthGrid.Props,
@@ -31,7 +39,7 @@ const CalendarMonthGrid = React.forwardRef(function CalendarMonthList(
       canChangeYear,
       cellsPerRowCssVar: CalendarMonthGridCssVars.calendarMonthGridCellsPerRow,
     });
-  const state = React.useMemo(() => ({}), []);
+  const state = React.useMemo<CalendarMonthGrid.State>(() => ({ cellsPerRow }), [cellsPerRow]);
   const ref = useForkRef(forwardedRef, scrollerRef);
 
   const { renderElement } = useComponentRenderer({
@@ -41,6 +49,7 @@ const CalendarMonthGrid = React.forwardRef(function CalendarMonthList(
     className,
     state,
     extraProps: otherProps,
+    customStyleHookMapping,
   });
 
   return (
@@ -51,7 +60,12 @@ const CalendarMonthGrid = React.forwardRef(function CalendarMonthList(
 });
 
 export namespace CalendarMonthGrid {
-  export interface State {}
+  export interface State {
+    /**
+     * The number of cells per row.
+     */
+    cellsPerRow: number;
+  }
 
   export interface Props
     extends Omit<BaseUIComponentProps<'div', State>, 'children'>,

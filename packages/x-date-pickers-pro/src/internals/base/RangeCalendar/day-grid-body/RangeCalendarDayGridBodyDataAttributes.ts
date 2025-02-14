@@ -1,1 +1,1 @@
-export enum CalendarDayGridBodyDataAttributes {}
+export enum RangeCalendarDayGridBodyDataAttributes {}
