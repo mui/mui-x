@@ -25,31 +25,31 @@ export interface DateCalendar2Classes {
   /** Styles applied to the navigation spacer element of the header. */
   headerNavigationSpacer: string;
   /** Styles applied to the root element of the day's grid. */
-  daysGridRoot: string;
+  dayGridRoot: string;
   /** Styles applied to the header element of the day's grid. */
-  daysGridHeader: string;
+  dayGridHeader: string;
   /** Styles applied to the week number header cell element of the day's grid. */
-  daysGridWeekNumberHeaderCell: string;
+  dayGridWeekNumberHeaderCell: string;
   /** Styles applied to the header cell element of the day's grid. */
-  daysGridHeaderCell: string;
+  dayGridHeaderCell: string;
   /** Styles applied to the body transition group element of the day's grid. */
-  daysGridBodyTransitionGroup: string;
+  dayGridBodyTransitionGroup: string;
   /** Styles applied to the body element of the day's grid. */
-  daysGridBody: string;
+  dayGridBody: string;
   /** Styles applied to the row element of the day's grid. */
-  daysGridRow: string;
+  dayGridRow: string;
   /** Styles applied to the week number cell element of the day's grid. */
-  daysGridWeekNumberCell: string;
+  dayGridWeekNumberCell: string;
   /** Styles applied to the day's cell element. */
-  daysCell: string;
+  dayCell: string;
   /** Styles applied to the root element of the day's grid. */
-  monthsGridRoot: string;
+  monthGridRoot: string;
   /** Styles applied to the month's cell element */
-  monthsCell: string;
+  monthCell: string;
   /** Styles applied to the root element of the year's grid. */
-  yearsGridRoot: string;
+  yearGridRoot: string;
   /** Styles applied to the year's cell element */
-  yearsCell: string;
+  yearCell: string;
   /** Styles applied to the loading panel element */
   loadingPanel: string;
 }
@@ -71,19 +71,19 @@ export const dateCalendar2Classes: DateCalendar2Classes = generateUtilityClasses
     'headerNavigation',
     'headerNavigationButton',
     'headerNavigationSpacer',
-    'daysGridRoot',
-    'daysGridHeader',
-    'daysGridWeekNumberHeaderCell',
-    'daysGridHeaderCell',
-    'daysGridBodyTransitionGroup',
-    'daysGridBody',
-    'daysGridRow',
-    'daysGridWeekNumberCell',
-    'daysCell',
-    'monthsGridRoot',
-    'monthsCell',
-    'yearsGridRoot',
-    'yearsCell',
+    'dayGridRoot',
+    'dayGridHeader',
+    'dayGridWeekNumberHeaderCell',
+    'dayGridHeaderCell',
+    'dayGridBodyTransitionGroup',
+    'dayGridBody',
+    'dayGridRow',
+    'dayGridWeekNumberCell',
+    'dayCell',
+    'monthGridRoot',
+    'monthCell',
+    'yearGridRoot',
+    'yearCell',
     'loadingPanel',
   ],
 );

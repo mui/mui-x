@@ -6,7 +6,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Calendar } from '@mui/x-date-pickers/internals/base/Calendar';
 import styles from './calendar.module.css';
 
-const getYears: Calendar.YearsGrid.Props['getItems'] = ({ getDefaultItems }) => {
+const getYears: Calendar.YearGrid.Props['getItems'] = ({ getDefaultItems }) => {
   return getDefaultItems().toReversed();
 };
 
@@ -16,21 +16,21 @@ export default function YearCalendarWithReversedOrderDemo() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Calendar.Root value={value} onValueChange={setValue} className={styles.Root}>
-        <Calendar.YearsGrid
+        <Calendar.YearGrid
           cellsPerRow={3}
-          className={styles.YearsGrid}
+          className={styles.YearGrid}
           getItems={getYears}
         >
           {({ years }) =>
             years.map((year) => (
-              <Calendar.YearsCell
+              <Calendar.YearCell
                 value={year}
-                className={styles.YearsCell}
+                className={styles.YearCell}
                 key={year.toString()}
               />
             ))
           }
-        </Calendar.YearsGrid>
+        </Calendar.YearGrid>
       </Calendar.Root>
     </LocalizationProvider>
   );

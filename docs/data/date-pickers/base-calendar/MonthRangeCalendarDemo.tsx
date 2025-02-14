@@ -27,17 +27,17 @@ export default function MonthRangeCalendarDemo() {
                 ▶
               </RangeCalendar.SetVisibleYear>
             </header>
-            <RangeCalendar.MonthsGrid cellsPerRow={2} className={styles.MonthsGrid}>
+            <RangeCalendar.MonthGrid cellsPerRow={2} className={styles.MonthGrid}>
               {({ months }) =>
                 months.map((month) => (
-                  <RangeCalendar.MonthsCell
+                  <RangeCalendar.MonthCell
                     value={month}
-                    className={clsx(styles.MonthsCell, styles.RangeMonthsCell)}
+                    className={clsx(styles.MonthCell, styles.RangeMonthCell)}
                     key={month.toString()}
                   />
                 ))
               }
-            </RangeCalendar.MonthsGrid>
+            </RangeCalendar.MonthGrid>
           </React.Fragment>
         )}
       </RangeCalendar.Root>

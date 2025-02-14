@@ -39,21 +39,21 @@ export default function YearCalendarWithDecadeNavigationDemo() {
                 ▶
               </Calendar.SetVisibleYear>
             </header>
-            <Calendar.YearsGrid
+            <Calendar.YearGrid
               cellsPerRow={2}
-              className={styles.YearsGrid}
+              className={styles.YearGrid}
               getItems={getYearsInDecade}
             >
               {({ years }) =>
                 years.map((year) => (
-                  <Calendar.YearsCell
+                  <Calendar.YearCell
                     value={year}
-                    className={styles.YearsCell}
+                    className={styles.YearCell}
                     key={year.toString()}
                   />
                 ))
               }
-            </Calendar.YearsGrid>
+            </Calendar.YearGrid>
           </React.Fragment>
         )}
       </Calendar.Root>

@@ -16,7 +16,7 @@ import { applyDefaultDate } from '../../../../utils/date-utils';
 import { useDefaultDates, useLocalizationContext, useUtils } from '../../../../hooks/useUtils';
 import { useControlledValueWithTimezone } from '../../../../hooks/useValueWithTimezone';
 import { BaseDateValidationProps } from '../../../../models/validation';
-import { useBaseCalendarDaysGridNavigation } from './useBaseCalendarDaysGridsNavigation';
+import { useBaseCalendarDayGridNavigation } from './useBaseCalendarDayGridsNavigation';
 import { BaseCalendarRootContext } from './BaseCalendarRootContext';
 import { BaseCalendarSection } from '../utils/types';
 import { BaseCalendarRootVisibleDateContext } from './BaseCalendarRootVisibleDateContext';
@@ -142,13 +142,12 @@ export function useBaseCalendarRoot<
     },
   );
 
-  const { applyDayGridKeyboardNavigation, registerDaysGridCell } =
-    useBaseCalendarDaysGridNavigation({
-      visibleDate,
-      setVisibleDate,
-      monthPageSize,
-      dateValidationProps,
-    });
+  const { applyDayGridKeyboardNavigation, registerDayGridCell } = useBaseCalendarDayGridNavigation({
+    visibleDate,
+    setVisibleDate,
+    monthPageSize,
+    dateValidationProps,
+  });
 
   const isDateInvalid = React.useCallback(
     (day: PickerValidDate | null) =>
@@ -210,7 +209,7 @@ export function useBaseCalendarRoot<
       monthPageSize,
       yearPageSize,
       applyDayGridKeyboardNavigation,
-      registerDaysGridCell,
+      registerDayGridCell,
       registerSection,
       selectDate,
       dateValidationProps,
@@ -226,7 +225,7 @@ export function useBaseCalendarRoot<
       monthPageSize,
       yearPageSize,
       applyDayGridKeyboardNavigation,
-      registerDaysGridCell,
+      registerDayGridCell,
       registerSection,
       dateValidationProps,
       selectDate,

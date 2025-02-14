@@ -31,58 +31,58 @@ function DayCalendar(props: Omit<Calendar.Root.Props, 'children'>) {
                 ▶
               </Calendar.SetVisibleMonth>
             </header>
-            <Calendar.DaysGrid className={styles.DaysGrid}>
-              <Calendar.DaysGridHeader className={styles.DaysGridHeader}>
+            <Calendar.DayGrid className={styles.DayGrid}>
+              <Calendar.DayGridHeader className={styles.DayGridHeader}>
                 {({ days }) => (
                   <React.Fragment>
                     <span
                       role="columnheader"
                       aria-label="Week number"
-                      className={styles.DaysGridHeaderCell}
+                      className={styles.DayGridHeaderCell}
                     >
                       #
                     </span>
                     {days.map((day) => (
-                      <Calendar.DaysGridHeaderCell
+                      <Calendar.DayGridHeaderCell
                         value={day}
                         key={day.toString()}
-                        className={styles.DaysGridHeaderCell}
+                        className={styles.DayGridHeaderCell}
                       />
                     ))}
                   </React.Fragment>
                 )}
-              </Calendar.DaysGridHeader>
-              <Calendar.DaysGridBody className={styles.DaysGridBody}>
+              </Calendar.DayGridHeader>
+              <Calendar.DayGridBody className={styles.DayGridBody}>
                 {({ weeks }) =>
                   weeks.map((week) => (
-                    <Calendar.DaysGridRow
+                    <Calendar.DayGridRow
                       value={week}
                       key={week.toString()}
-                      className={styles.DaysGridRow}
+                      className={styles.DayGridRow}
                     >
                       {({ days }) => (
                         <React.Fragment>
                           <span
                             role="rowheader"
                             aria-label={`Week ${days[0].week()}`}
-                            className={styles.DaysWeekNumber}
+                            className={styles.DayWeekNumber}
                           >
                             {days[0].week()}
                           </span>
                           {days.map((day) => (
-                            <Calendar.DaysCell
+                            <Calendar.DayCell
                               value={day}
                               key={day.toString()}
-                              className={styles.DaysCell}
+                              className={styles.DayCell}
                             />
                           ))}
                         </React.Fragment>
                       )}
-                    </Calendar.DaysGridRow>
+                    </Calendar.DayGridRow>
                   ))
                 }
-              </Calendar.DaysGridBody>
-            </Calendar.DaysGrid>
+              </Calendar.DayGridBody>
+            </Calendar.DayGrid>
           </React.Fragment>
         )}
       </Calendar.Root>

@@ -11,7 +11,7 @@ import { DateCalendar2Classes } from './DateCalendar2.classes';
 
 export interface DateCalendar2Props
   extends Omit<Calendar.Root.Props, 'children'>,
-    Pick<Calendar.DaysGridBody.Props, 'fixedWeekNumber'> {
+    Pick<Calendar.DayGridBody.Props, 'fixedWeekNumber'> {
   /**
    * Overridable component slots.
    * @default {}
@@ -134,19 +134,23 @@ export interface DateCalendar2Slots {
   rightNavigationIcon?: React.ElementType;
   /**
    * Panel displayed when the calendar is in the loading state.
-   * @default DateCalendar2DaysGridBodyLoading for day view, "DateCalendar2MonthOrYearLoadingPanel" for month and year views.
+   * @default DateCalendar2DayGridBodyLoading for day view, "DateCalendar2MonthOrYearLoadingPanel" for month and year views.
    */
   loadingPanel?: React.ElementType;
 }
 
 export interface DateCalendar2SlotProps {
-  day?: SlotComponentPropsFromProps<ButtonBaseProps, {}, PickerOwnerState>;
-  monthButton?: SlotComponentPropsFromProps<
+  dayCell?: SlotComponentPropsFromProps<
     React.HTMLAttributes<HTMLButtonElement> & { sx: SxProps },
     {},
     PickerOwnerState
   >;
-  yearButton?: SlotComponentPropsFromProps<
+  monthCell?: SlotComponentPropsFromProps<
+    React.HTMLAttributes<HTMLButtonElement> & { sx: SxProps },
+    {},
+    PickerOwnerState
+  >;
+  yearCell?: SlotComponentPropsFromProps<
     React.HTMLAttributes<HTMLButtonElement> & { sx: SxProps },
     {},
     PickerOwnerState

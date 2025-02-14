@@ -12,17 +12,17 @@ export default function YearCalendarWithListLayoutDemo() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Calendar.Root value={value} onValueChange={setValue} className={styles.Root}>
-        <Calendar.YearsList className={styles.YearsList}>
+        <Calendar.YearList className={styles.YearList}>
           {({ years }) =>
             years.map((year) => (
-              <Calendar.YearsCell
+              <Calendar.YearCell
                 value={year}
-                className={styles.YearsCell}
+                className={styles.YearCell}
                 key={year.toString()}
               />
             ))
           }
-        </Calendar.YearsList>
+        </Calendar.YearList>
       </Calendar.Root>
     </LocalizationProvider>
   );

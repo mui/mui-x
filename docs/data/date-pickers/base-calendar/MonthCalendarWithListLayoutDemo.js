@@ -29,17 +29,17 @@ export default function MonthCalendarWithListLayoutDemo() {
                 ▶
               </Calendar.SetVisibleYear>
             </header>
-            <Calendar.MonthsList className={styles.MonthsList}>
+            <Calendar.MonthList className={styles.MonthList}>
               {({ months }) =>
                 months.map((month) => (
-                  <Calendar.MonthsCell
+                  <Calendar.MonthCell
                     value={month}
-                    className={styles.MonthsCell}
+                    className={styles.MonthCell}
                     key={month.toString()}
                   />
                 ))
               }
-            </Calendar.MonthsList>
+            </Calendar.MonthList>
           </React.Fragment>
         )}
       </Calendar.Root>

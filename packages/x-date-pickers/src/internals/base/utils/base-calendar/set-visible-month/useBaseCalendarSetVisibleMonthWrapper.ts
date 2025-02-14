@@ -5,7 +5,7 @@ import { useUtils } from '../../../../hooks/useUtils';
 import { getFirstEnabledMonth, getLastEnabledMonth } from '../utils/date';
 import { useBaseCalendarSetVisibleMonth } from './useBaseCalendarSetVisibleMonth';
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
-import { useNullableBaseCalendarMonthsGridOrListContext } from '../months-grid/BaseCalendarMonthsGridOrListContext';
+import { useNullableBaseCalendarMonthGridOrListContext } from '../month-grid/BaseCalendarMonthGridOrListContext';
 import { useCompositeListItem } from '../../../composite/list/useCompositeListItem';
 import { useBaseCalendarRootVisibleDateContext } from '../root/BaseCalendarRootVisibleDateContext';
 
@@ -15,7 +15,7 @@ export function useBaseCalendarSetVisibleMonthWrapper(
   const { forwardedRef, target } = parameters;
   const baseRootVisibleDateContext = useBaseCalendarRootVisibleDateContext();
   const baseRootContext = useBaseCalendarRootContext();
-  const baseMonthsListOrGridContext = useNullableBaseCalendarMonthsGridOrListContext();
+  const baseMonthListOrGridContext = useNullableBaseCalendarMonthGridOrListContext();
   const utils = useUtils();
   const { ref: listItemRef } = useCompositeListItem();
   const mergedRef = useForkRef(forwardedRef, listItemRef);
@@ -67,7 +67,7 @@ export function useBaseCalendarSetVisibleMonthWrapper(
     utils,
   ]);
 
-  const tabbableMonths = baseMonthsListOrGridContext?.tabbableMonths;
+  const tabbableMonths = baseMonthListOrGridContext?.tabbableMonths;
   const isTabbable = React.useMemo(() => {
     // If the button is not inside a month list or grid, then it is always tabbable.
     if (tabbableMonths == null) {

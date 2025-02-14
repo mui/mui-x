@@ -1,22 +1,22 @@
 export { CalendarRoot as Root } from './root/CalendarRoot';
 
 // Days
-export { CalendarDaysGrid as DaysGrid } from './days-grid/CalendarDaysGrid';
-export { CalendarDaysGridHeader as DaysGridHeader } from './days-grid-header/CalendarDaysGridHeader';
-export { CalendarDaysGridHeaderCell as DaysGridHeaderCell } from './days-grid-header-cell/CalendarDaysGridHeaderCell';
-export { CalendarDaysGridBody as DaysGridBody } from './days-grid-body/CalendarDaysGridBody';
-export { CalendarDaysGridRow as DaysGridRow } from './days-grid-row/CalendarDaysGridRow';
-export { CalendarDaysCell as DaysCell } from './days-cell/CalendarDaysCell';
+export { CalendarDayGrid as DayGrid } from './day-grid/CalendarDayGrid';
+export { CalendarDayGridHeader as DayGridHeader } from './day-grid-header/CalendarDayGridHeader';
+export { CalendarDayGridHeaderCell as DayGridHeaderCell } from './day-grid-header-cell/CalendarDayGridHeaderCell';
+export { CalendarDayGridBody as DayGridBody } from './day-grid-body/CalendarDayGridBody';
+export { CalendarDayGridRow as DayGridRow } from './days-grid-row/CalendarDayGridRow';
+export { CalendarDayCell as DayCell } from './day-cell/CalendarDayCell';
 
 // Months
-export { CalendarMonthsList as MonthsList } from './months-list/CalendarMonthsList';
-export { CalendarMonthsGrid as MonthsGrid } from './months-grid/CalendarMonthsGrid';
-export { CalendarMonthsCell as MonthsCell } from './months-cell/CalendarMonthsCell';
+export { CalendarMonthList as MonthList } from './months-list/CalendarMonthList';
+export { CalendarMonthGrid as MonthGrid } from './month-grid/CalendarMonthGrid';
+export { CalendarMonthCell as MonthCell } from './month-cell/CalendarMonthCell';
 
 // Years
-export { CalendarYearsList as YearsList } from './years-list/CalendarYearsList';
-export { CalendarYearsGrid as YearsGrid } from './years-grid/CalendarYearsGrid';
-export { CalendarYearsCell as YearsCell } from './years-cell/CalendarYearsCell';
+export { CalendarYearList as YearList } from './year-list/CalendarYearList';
+export { CalendarYearGrid as YearGrid } from './year-grid/CalendarYearGrid';
+export { CalendarYearCell as YearCell } from './year-cell/CalendarYearCell';
 
 // Navigation
 export { CalendarSetVisibleMonth as SetVisibleMonth } from './set-visible-month/CalendarSetVisibleMonth';

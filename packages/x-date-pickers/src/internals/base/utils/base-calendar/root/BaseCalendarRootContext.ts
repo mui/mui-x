@@ -3,7 +3,7 @@ import { PickersTimezone, PickerValidDate } from '../../../../../models';
 import { ValidateDateProps } from '../../../../../validation';
 import type { useBaseCalendarRoot } from './useBaseCalendarRoot';
 import { BaseCalendarSection } from '../utils/types';
-import { useBaseCalendarDaysGridNavigation } from './useBaseCalendarDaysGridsNavigation';
+import { useBaseCalendarDayGridNavigation } from './useBaseCalendarDayGridsNavigation';
 
 export interface BaseCalendarRootContext {
   /**
@@ -53,7 +53,7 @@ export interface BaseCalendarRootContext {
   monthPageSize: number;
   yearPageSize: number;
   applyDayGridKeyboardNavigation: (event: React.KeyboardEvent) => void;
-  registerDaysGridCell: (ref: useBaseCalendarDaysGridNavigation.CellRefs) => () => void;
+  registerDayGridCell: (ref: useBaseCalendarDayGridNavigation.CellRefs) => () => void;
   registerSection: (parameters: useBaseCalendarRoot.RegisterSectionParameters) => () => void;
 }
 

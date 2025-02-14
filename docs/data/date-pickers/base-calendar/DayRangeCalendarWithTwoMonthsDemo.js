@@ -40,43 +40,43 @@ function Header() {
   );
 }
 
-function DaysGrid(props) {
+function DayGrid(props) {
   const { offset } = props;
   return (
-    <RangeCalendar.DaysGrid className={styles.DaysGrid}>
-      <RangeCalendar.DaysGridHeader className={styles.DaysGridHeader}>
+    <RangeCalendar.DayGrid className={styles.DayGrid}>
+      <RangeCalendar.DayGridHeader className={styles.DayGridHeader}>
         {({ days }) =>
           days.map((day) => (
-            <RangeCalendar.DaysGridHeaderCell
+            <RangeCalendar.DayGridHeaderCell
               value={day}
               key={day.toString()}
-              className={styles.DaysGridHeaderCell}
+              className={styles.DayGridHeaderCell}
             />
           ))
         }
-      </RangeCalendar.DaysGridHeader>
-      <RangeCalendar.DaysGridBody className={styles.DaysGridBody} offset={offset}>
+      </RangeCalendar.DayGridHeader>
+      <RangeCalendar.DayGridBody className={styles.DayGridBody} offset={offset}>
         {({ weeks }) =>
           weeks.map((week) => (
-            <RangeCalendar.DaysGridRow
+            <RangeCalendar.DayGridRow
               value={week}
               key={week.toString()}
-              className={styles.DaysGridRow}
+              className={styles.DayGridRow}
             >
               {({ days }) =>
                 days.map((day) => (
-                  <RangeCalendar.DaysCell
+                  <RangeCalendar.DayCell
                     value={day}
                     key={day.toString()}
-                    className={clsx(styles.DaysCell, styles.RangeDaysCell)}
+                    className={clsx(styles.DayCell, styles.RangeDayCell)}
                   />
                 ))
               }
-            </RangeCalendar.DaysGridRow>
+            </RangeCalendar.DayGridRow>
           ))
         }
-      </RangeCalendar.DaysGridBody>
-    </RangeCalendar.DaysGrid>
+      </RangeCalendar.DayGridBody>
+    </RangeCalendar.DayGrid>
   );
 }
 
@@ -90,9 +90,9 @@ function DayRangeCalendar(props) {
       >
         <Header />
         <div className={styles.RootWithTwoPanelsContent}>
-          <DaysGrid offset={0} />
-          <Separator className={styles.DaysGridSeparator} />
-          <DaysGrid offset={1} />
+          <DayGrid offset={0} />
+          <Separator className={styles.DayGridSeparator} />
+          <DayGrid offset={1} />
         </div>
       </RangeCalendar.Root>
     </LocalizationProvider>

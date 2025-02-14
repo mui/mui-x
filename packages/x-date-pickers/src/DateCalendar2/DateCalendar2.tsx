@@ -12,9 +12,9 @@ import { DateView } from '../models/views';
 import { Calendar } from '../internals/base/Calendar';
 import { DateCalendar2Header, DateCalendar2HeaderProps } from './DateCalendar2Header';
 import { PickerValue } from '../internals/models';
-import { DateCalendar2YearsGrid } from './DateCalendar2YearsGrid';
-import { DateCalendar2MonthsGrid } from './DateCalendar2MonthsGrid';
-import { DateCalendar2DaysGrid } from './DateCalendar2DaysGrid';
+import { DateCalendar2YearGrid } from './DateCalendar2YearGrid';
+import { DateCalendar2MonthGrid } from './DateCalendar2MonthGrid';
+import { DateCalendar2DayGrid } from './DateCalendar2DayGrid';
 import { DIALOG_WIDTH, VIEW_HEIGHT } from '../internals/constants/dimensions';
 import {
   DateCalendar2ContextValue,
@@ -160,14 +160,14 @@ export const DateCalendar2 = React.forwardRef(function DateCalendar2(
 
   const renderViewContent = () => {
     if (view === 'year') {
-      return <DateCalendar2YearsGrid cellsPerRow={yearsPerRow} yearsOrder={yearsOrder} />;
+      return <DateCalendar2YearGrid cellsPerRow={yearsPerRow} yearsOrder={yearsOrder} />;
     }
 
     if (view === 'month') {
-      return <DateCalendar2MonthsGrid cellsPerRow={monthsPerRow} />;
+      return <DateCalendar2MonthGrid cellsPerRow={monthsPerRow} />;
     }
     return (
-      <DateCalendar2DaysGrid
+      <DateCalendar2DayGrid
         displayWeekNumber={displayWeekNumber}
         fixedWeekNumber={fixedWeekNumber}
       />
@@ -220,7 +220,7 @@ function getDefaultView(views: { [key in DateView]?: boolean }) {
 }
 
 function useUtilityClasses(classes: Partial<DateCalendar2Classes> | undefined) {
-  return React.useMemo(() => {
+  return React.useMemo<DateCalendar2Classes>(() => {
     const slots = {
       root: ['root'],
       transitionGroup: ['transitionGroup'],
@@ -233,19 +233,19 @@ function useUtilityClasses(classes: Partial<DateCalendar2Classes> | undefined) {
       headerNavigation: ['headerNavigation'],
       headerNavigationButton: ['headerNavigationButton'],
       headerNavigationSpacer: ['headerNavigationSpacer'],
-      daysGridRoot: ['daysGridRoot'],
-      daysGridHeader: ['daysGridHeader'],
-      daysGridWeekNumberHeaderCell: ['daysGridWeekNumberHeaderCell'],
-      daysGridHeaderCell: ['daysGridHeaderCell'],
-      daysGridBodyTransitionGroup: ['daysGridBodyTransitionGroup'],
-      daysGridBody: ['daysGridBody'],
-      daysGridRow: ['daysGridRow'],
-      daysGridWeekNumberCell: ['daysGridWeekNumberCell'],
-      daysCell: ['daysCell'],
-      monthsGridRoot: ['monthsGridRoot'],
-      monthsCell: ['monthsCell'],
-      yearsGridRoot: ['yearsGridRoot'],
-      yearsCell: ['yearsCell'],
+      dayGridRoot: ['daysGridRoot'],
+      dayGridHeader: ['daysGridHeader'],
+      dayGridWeekNumberHeaderCell: ['daysGridWeekNumberHeaderCell'],
+      dayGridHeaderCell: ['daysGridHeaderCell'],
+      dayGridBodyTransitionGroup: ['daysGridBodyTransitionGroup'],
+      dayGridBody: ['daysGridBody'],
+      dayGridRow: ['daysGridRow'],
+      dayGridWeekNumberCell: ['daysGridWeekNumberCell'],
+      dayCell: ['daysCell'],
+      monthGridRoot: ['monthsGridRoot'],
+      monthCell: ['monthsCell'],
+      yearGridRoot: ['yearsGridRoot'],
+      yearCell: ['yearsCell'],
       loadingPanel: ['loadingPanel'],
     };
 

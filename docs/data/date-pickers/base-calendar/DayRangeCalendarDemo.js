@@ -27,40 +27,40 @@ export default function DayRangeCalendarDemo() {
                 ▶
               </RangeCalendar.SetVisibleMonth>
             </header>
-            <RangeCalendar.DaysGrid className={styles.DaysGrid}>
-              <RangeCalendar.DaysGridHeader className={styles.DaysGridHeader}>
+            <RangeCalendar.DayGrid className={styles.DayGrid}>
+              <RangeCalendar.DayGridHeader className={styles.DayGridHeader}>
                 {({ days }) =>
                   days.map((day) => (
-                    <RangeCalendar.DaysGridHeaderCell
+                    <RangeCalendar.DayGridHeaderCell
                       value={day}
                       key={day.toString()}
-                      className={styles.DaysGridHeaderCell}
+                      className={styles.DayGridHeaderCell}
                     />
                   ))
                 }
-              </RangeCalendar.DaysGridHeader>
-              <RangeCalendar.DaysGridBody className={styles.DaysGridBody}>
+              </RangeCalendar.DayGridHeader>
+              <RangeCalendar.DayGridBody className={styles.DayGridBody}>
                 {({ weeks }) =>
                   weeks.map((week) => (
-                    <RangeCalendar.DaysGridRow
+                    <RangeCalendar.DayGridRow
                       value={week}
                       key={week.toString()}
-                      className={styles.DaysGridRow}
+                      className={styles.DayGridRow}
                     >
                       {({ days }) =>
                         days.map((day) => (
-                          <RangeCalendar.DaysCell
+                          <RangeCalendar.DayCell
                             value={day}
                             key={day.toString()}
-                            className={clsx(styles.DaysCell, styles.RangeDaysCell)}
+                            className={clsx(styles.DayCell, styles.RangeDayCell)}
                           />
                         ))
                       }
-                    </RangeCalendar.DaysGridRow>
+                    </RangeCalendar.DayGridRow>
                   ))
                 }
-              </RangeCalendar.DaysGridBody>
-            </RangeCalendar.DaysGrid>
+              </RangeCalendar.DayGridBody>
+            </RangeCalendar.DayGrid>
           </React.Fragment>
         )}
       </RangeCalendar.Root>

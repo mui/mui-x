@@ -14,20 +14,20 @@ packageName: '@mui/x-date-pickers'
 
 ```tsx
 <Calendar.Root>
-  <Calendar.DaysGrid>
-    <Calendar.DaysGridHeader>
-      {({ days }) => days.map((day) => <Calendar.DaysGridHeaderCell value={day} />)}
-    </Calendar.DaysGridHeader>
-    <Calendar.DaysGridBody>
+  <Calendar.DayGrid>
+    <Calendar.DayGridHeader>
+      {({ days }) => days.map((day) => <Calendar.DayGridHeaderCell value={day} />)}
+    </Calendar.DayGridHeader>
+    <Calendar.DayGridBody>
       {({ weeks }) =>
         weeks.map((week) => (
-          <Calendar.DaysGridRow value={week}>
-            {({ days }) => days.map((day) => <Calendar.DaysCell value={day} />)}
-          </Calendar.DaysGridRow>
+          <Calendar.DayGridRow value={week}>
+            {({ days }) => days.map((day) => <Calendar.DayCell value={day} />)}
+          </Calendar.DayGridRow>
         ))
       }
-    </Calendar.DaysGridBody>
-  </Calendar.DaysGrid>
+    </Calendar.DayGridBody>
+  </Calendar.DayGrid>
 </Calendar.Root>
 ```
 
@@ -36,16 +36,16 @@ packageName: '@mui/x-date-pickers'
 ```tsx
 // Grid layout
 <Calendar.Root>
-  <Calendar.MonthsGrid>
-    {({ months }) => months.map((month) => <Calendar.MonthsCell value={month} />)}
-  </Calendar.MonthsGrid>
+  <Calendar.MonthGrid>
+    {({ months }) => months.map((month) => <Calendar.MonthCell value={month} />)}
+  </Calendar.MonthGrid>
 </Calendar.Root>
 
 // List layout
 <Calendar.Root>
-  <Calendar.MonthsList>
-    {({ months }) => months.map((month) => <Calendar.MonthsCell value={month} />)}
-  </Calendar.MonthsList>
+  <Calendar.MonthList>
+    {({ months }) => months.map((month) => <Calendar.MonthCell value={month} />)}
+  </Calendar.MonthList>
 </Calendar.Root>
 ```
 
@@ -54,16 +54,16 @@ packageName: '@mui/x-date-pickers'
 ```tsx
 // Grid layout
 <Calendar.Root>
-  <Calendar.YearsGrid>
-    {({ years }) => years.map((year) => <Calendar.YearsCell value={year} />)}
-  </Calendar.YearsGrid>
+  <Calendar.YearGrid>
+    {({ years }) => years.map((year) => <Calendar.YearCell value={year} />)}
+  </Calendar.YearGrid>
 </Calendar.Root>
 
 // List layout
 <Calendar.Root>
-  <Calendar.YearsList>
-    {({ years }) => years.map((year) => <Calendar.YearsCell value={year} />)}
-  </Calendar.YearsList>
+  <Calendar.YearList>
+    {({ years }) => years.map((year) => <Calendar.YearCell value={year} />)}
+  </Calendar.YearList>
 </Calendar.Root>
 ```
 
@@ -84,16 +84,16 @@ packageName: '@mui/x-date-pickers'
 
 ### Multiple visible months
 
-1. Add the `offset` prop to each of the `<Calendar.DaysGrid />`
+1. Add the `offset` prop to each of the `<Calendar.DayGrid />`
 
    ```tsx
    <React.Fragment>
-     <Calendar.DaysGrid offset={0}>
+     <Calendar.DayGrid offset={0}>
        {/** Children for the 1st month **/}
-     </Calendar.DaysGrid>
-     <Calendar.DaysGrid offset={1}>
+     </Calendar.DayGrid>
+     <Calendar.DayGrid offset={1}>
        {/** Children for the 2nd month **/}
-     </Calendar.DaysGrid>
+     </Calendar.DayGrid>
    </React.Fragment>
    ```
 
@@ -120,17 +120,17 @@ For now, the validation behaviors are exactly the same as on `<DateCalendar />`:
 ### With fixed week number
 
 ```tsx
-<Calendar.DaysGridBody fixedWeekNumber={6}>{children}</Calendar.DaysGridBody>
+<Calendar.DayGridBody fixedWeekNumber={6}>{children}</Calendar.DayGridBody>
 ```
 
 {{"demo": "DayCalendarWithFixedWeekNumberDemo.js", "defaultCodeOpen": false}}
 
 ### Recipe: With week number
 
-1. Add a custom cell in `<Calendar.DaysGridHeader />`
+1. Add a custom cell in `<Calendar.DayGridHeader />`
 
    ```tsx
-   <Calendar.DaysGridHeader>
+   <Calendar.DayGridHeader>
      {({ days }) => (
        <React.Fragment>
          <span role="columnheader" aria-label="Week number">
@@ -139,13 +139,13 @@ For now, the validation behaviors are exactly the same as on `<DateCalendar />`:
          {/** Day header cells **/}
        </React.Fragment>
      )}
-   </Calendar.DaysGridHeader>
+   </Calendar.DayGridHeader>
    ```
 
-2. Add a custom cell in `<Calendar.DaysGridRow />`
+2. Add a custom cell in `<Calendar.DayGridRow />`
 
    ```tsx
-   <Calendar.DaysGridRow value={week}>
+   <Calendar.DayGridRow value={week}>
      {({ days }) => (
        <React.Fragment>
          <span role="rowheader" aria-label={`Week ${days[0].week()}`}>
@@ -154,7 +154,7 @@ For now, the validation behaviors are exactly the same as on `<DateCalendar />`:
          {/** Day cells */}
        </React.Fragment>
      )}
-   </Calendar.DaysGridRow>
+   </Calendar.DayGridRow>
    ```
 
 {{"demo": "DayCalendarWithWeekNumberDemo.js", "defaultCodeOpen": false}}
@@ -172,11 +172,11 @@ For now, the validation behaviors are exactly the same as on `<DateCalendar />`:
 ### Custom cell format
 
 ```tsx
-<Calendar.MonthsCell value={month} format="MMM" />
+<Calendar.MonthCell value={month} format="MMM" />
 ```
 
 :::success
-This also works for the `<Calendar.DaysCell />` and `<Calendar.YearsCell />` components, but it's the `<Calendar.MonthsCell />` that benefits from it the most.
+This also works for the `<Calendar.DayCell />` and `<Calendar.YearCell />` components, but it's the `<Calendar.MonthCell />` that benefits from it the most.
 :::
 
 {{"demo": "MonthCalendarWithCustomCellFormatDemo.js", "defaultCodeOpen": false}}
@@ -202,13 +202,13 @@ const getYears = ({ getDefaultItems }) => {
   return getDefaultItems().toReversed();
 };
 
-<Calendar.YearsGrid cellsPerRow={2} getItems={getYearsInDecade}>
+<Calendar.YearGrid cellsPerRow={2} getItems={getYearsInDecade}>
   {/** Year cells */}
-</Calendar.YearsGrid>;
+</Calendar.YearGrid>;
 ```
 
 :::success
-Using the `getItems` prop instead of manually providing a list of `<Calendar.YearsCell />` as children allows the `<Calendar.YearsGrid />` to always have at least one cell with `tabIndex={0}` and to correctly scroll to the first item with `tabIndex={0}`
+Using the `getItems` prop instead of manually providing a list of `<Calendar.YearCell />` as children allows the `<Calendar.YearGrid />` to always have at least one cell with `tabIndex={0}` and to correctly scroll to the first item with `tabIndex={0}`
 :::
 
 {{"demo": "YearCalendarWithReversedOrderDemo.js", "defaultCodeOpen": false}}
@@ -224,13 +224,13 @@ const getYearsInDecade = ({ visibleDate }) => {
   );
 };
 
-<Calendar.YearsGrid cellsPerRow={2} getItems={getYearsInDecade}>
+<Calendar.YearGrid cellsPerRow={2} getItems={getYearsInDecade}>
   {/** Year cells */}
-</Calendar.YearsGrid>;
+</Calendar.YearGrid>;
 ```
 
 :::success
-Using the `getItems` prop instead of manually providing a list of `<Calendar.YearsCell />` as children allows the `<Calendar.YearsGrid />` to always have at least one cell with `tabIndex={0}` and to correctly scroll to the first item with `tabIndex={0}`
+Using the `getItems` prop instead of manually providing a list of `<Calendar.YearCell />` as children allows the `<Calendar.YearGrid />` to always have at least one cell with `tabIndex={0}` and to correctly scroll to the first item with `tabIndex={0}`
 :::
 
 {{"demo": "YearCalendarWithDecadeNavigationDemo.js", "defaultCodeOpen": false}}

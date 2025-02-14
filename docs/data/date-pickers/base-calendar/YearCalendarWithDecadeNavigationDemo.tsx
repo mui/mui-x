@@ -5,7 +5,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Calendar } from '@mui/x-date-pickers/internals/base/Calendar';
 import styles from './calendar.module.css';
 
-const getYearsInDecade: Calendar.YearsGrid.Props['getItems'] = ({ visibleDate }) => {
+const getYearsInDecade: Calendar.YearGrid.Props['getItems'] = ({ visibleDate }) => {
   const reference = visibleDate.startOf('year');
   const decade = Math.floor(reference.year() / 10) * 10;
   return Array.from({ length: 10 }, (_, index) =>
@@ -39,21 +39,21 @@ export default function YearCalendarWithDecadeNavigationDemo() {
                 ▶
               </Calendar.SetVisibleYear>
             </header>
-            <Calendar.YearsGrid
+            <Calendar.YearGrid
               cellsPerRow={2}
-              className={styles.YearsGrid}
+              className={styles.YearGrid}
               getItems={getYearsInDecade}
             >
               {({ years }) =>
                 years.map((year) => (
-                  <Calendar.YearsCell
+                  <Calendar.YearCell
                     value={year}
-                    className={styles.YearsCell}
+                    className={styles.YearCell}
                     key={year.toString()}
                   />
                 ))
               }
-            </Calendar.YearsGrid>
+            </Calendar.YearGrid>
           </React.Fragment>
         )}
       </Calendar.Root>

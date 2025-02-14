@@ -5,8 +5,8 @@ export interface BaseCalendarRootVisibleDateContext {
   /**
    * The date currently visible.
    * It is used to determine:
-   * - which month to render in Calendar.DaysGrid and RangeCalendar.DaysGrid
-   * - which year to render in Calendar.YearsGrid, Calendar.YearsList, RangeCalendar.YearsGrid, and RangeCalendar.YearsList
+   * - which month to render in Calendar.DayGrid and RangeCalendar.DayGrid
+   * - which year to render in Calendar.YearGrid, Calendar.YearList, RangeCalendar.YearGrid, and RangeCalendar.YearList
    */
   visibleDate: PickerValidDate;
 }

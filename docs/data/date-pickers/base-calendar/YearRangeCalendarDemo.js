@@ -10,17 +10,17 @@ export default function YearRangeCalendarDemo() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <RangeCalendar.Root className={clsx(styles.Root)}>
-        <RangeCalendar.YearsGrid cellsPerRow={2} className={styles.YearsGrid}>
+        <RangeCalendar.YearGrid cellsPerRow={2} className={styles.YearGrid}>
           {({ years }) =>
             years.map((year) => (
-              <RangeCalendar.YearsCell
+              <RangeCalendar.YearCell
                 value={year}
-                className={clsx(styles.YearsCell, styles.RangeYearsCell)}
+                className={clsx(styles.YearCell, styles.RangeYearCell)}
                 key={year.toString()}
               />
             ))
           }
-        </RangeCalendar.YearsGrid>
+        </RangeCalendar.YearGrid>
       </RangeCalendar.Root>
     </LocalizationProvider>
   );

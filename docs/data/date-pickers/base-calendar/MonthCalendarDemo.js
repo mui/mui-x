@@ -29,17 +29,17 @@ export default function MonthCalendarDemo() {
                 ▶
               </Calendar.SetVisibleYear>
             </header>
-            <Calendar.MonthsGrid cellsPerRow={2} className={styles.MonthsGrid}>
+            <Calendar.MonthGrid cellsPerRow={2} className={styles.MonthGrid}>
               {({ months }) =>
                 months.map((month) => (
-                  <Calendar.MonthsCell
+                  <Calendar.MonthCell
                     value={month}
-                    className={styles.MonthsCell}
+                    className={styles.MonthCell}
                     key={month.toString()}
                   />
                 ))
               }
-            </Calendar.MonthsGrid>
+            </Calendar.MonthGrid>
           </React.Fragment>
         )}
       </Calendar.Root>

@@ -90,9 +90,9 @@ export default function DateRangeCalendarDemo() {
           onActiveSectionChange={handleActiveSectionChange}
         />
         {activeSection === 'year' && (
-          <RangeCalendar.YearsList
+          <RangeCalendar.YearList
             focusOnMount={hasNavigated}
-            className={styles.YearsList}
+            className={styles.YearList}
           >
             {({ years }) =>
               years.map((year) => (
@@ -100,18 +100,18 @@ export default function DateRangeCalendarDemo() {
                   target={year}
                   key={year.toString()}
                   onClick={() => handleActiveSectionChange('day')}
-                  className={styles.YearsCell}
+                  className={styles.YearCell}
                 >
                   {year.format('YYYY')}
                 </RangeCalendar.SetVisibleYear>
               ))
             }
-          </RangeCalendar.YearsList>
+          </RangeCalendar.YearList>
         )}
         {activeSection === 'month' && (
-          <RangeCalendar.MonthsList
+          <RangeCalendar.MonthList
             focusOnMount={hasNavigated}
-            className={styles.MonthsList}
+            className={styles.MonthList}
           >
             {({ months }) =>
               months.map((month) => (
@@ -119,52 +119,52 @@ export default function DateRangeCalendarDemo() {
                   target={month}
                   key={month.toString()}
                   onClick={() => handleActiveSectionChange('day')}
-                  className={styles.MonthsCell}
+                  className={styles.MonthCell}
                 >
                   {month.format('MMMM')}
                 </RangeCalendar.SetVisibleMonth>
               ))
             }
-          </RangeCalendar.MonthsList>
+          </RangeCalendar.MonthList>
         )}
         {activeSection === 'day' && (
-          <RangeCalendar.DaysGrid className={styles.DaysGrid}>
-            <RangeCalendar.DaysGridHeader className={styles.DaysGridHeader}>
+          <RangeCalendar.DayGrid className={styles.DayGrid}>
+            <RangeCalendar.DayGridHeader className={styles.DayGridHeader}>
               {({ days }) =>
                 days.map((day) => (
-                  <RangeCalendar.DaysGridHeaderCell
+                  <RangeCalendar.DayGridHeaderCell
                     value={day}
                     key={day.toString()}
-                    className={styles.DaysGridHeaderCell}
+                    className={styles.DayGridHeaderCell}
                   />
                 ))
               }
-            </RangeCalendar.DaysGridHeader>
-            <RangeCalendar.DaysGridBody
-              className={styles.DaysGridBody}
+            </RangeCalendar.DayGridHeader>
+            <RangeCalendar.DayGridBody
+              className={styles.DayGridBody}
               focusOnMount={hasNavigated}
             >
               {({ weeks }) =>
                 weeks.map((week) => (
-                  <RangeCalendar.DaysGridRow
+                  <RangeCalendar.DayGridRow
                     value={week}
                     key={week.toString()}
-                    className={styles.DaysGridRow}
+                    className={styles.DayGridRow}
                   >
                     {({ days }) =>
                       days.map((day) => (
-                        <RangeCalendar.DaysCell
+                        <RangeCalendar.DayCell
                           value={day}
                           key={day.toString()}
-                          className={clsx(styles.DaysCell, styles.RangeDaysCell)}
+                          className={clsx(styles.DayCell, styles.RangeDayCell)}
                         />
                       ))
                     }
-                  </RangeCalendar.DaysGridRow>
+                  </RangeCalendar.DayGridRow>
                 ))
               }
-            </RangeCalendar.DaysGridBody>
-          </RangeCalendar.DaysGrid>
+            </RangeCalendar.DayGridBody>
+          </RangeCalendar.DayGrid>
         )}
       </RangeCalendar.Root>
     </LocalizationProvider>

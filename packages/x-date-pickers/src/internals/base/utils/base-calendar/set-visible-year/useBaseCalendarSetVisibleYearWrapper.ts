@@ -5,7 +5,7 @@ import { useUtils } from '../../../../hooks/useUtils';
 import { useBaseCalendarSetVisibleYear } from './useBaseCalendarSetVisibleYear';
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 import { getFirstEnabledYear, getLastEnabledYear } from '../utils/date';
-import { useNullableBaseCalendarYearsGridOrListContext } from '../years-grid/BaseCalendarYearsGridOrListContext';
+import { useNullableBaseCalendarYearGridOrListContext } from '../year-grid/BaseCalendarYearGridOrListContext';
 import { useCompositeListItem } from '../../../composite/list/useCompositeListItem';
 import { useBaseCalendarRootVisibleDateContext } from '../root/BaseCalendarRootVisibleDateContext';
 
@@ -15,7 +15,7 @@ export function useBaseCalendarSetVisibleYearWrapper(
   const { forwardedRef, target } = parameters;
   const baseRootContext = useBaseCalendarRootContext();
   const baseRootVisibleDateContext = useBaseCalendarRootVisibleDateContext();
-  const baseYearsListOrGridContext = useNullableBaseCalendarYearsGridOrListContext();
+  const baseYearListOrGridContext = useNullableBaseCalendarYearGridOrListContext();
   const utils = useUtils();
   const { ref: listItemRef } = useCompositeListItem();
   const mergedRef = useForkRef(forwardedRef, listItemRef);
@@ -60,7 +60,7 @@ export function useBaseCalendarSetVisibleYearWrapper(
     utils,
   ]);
 
-  const tabbableYears = baseYearsListOrGridContext?.tabbableYears;
+  const tabbableYears = baseYearListOrGridContext?.tabbableYears;
   const isTabbable = React.useMemo(() => {
     // If the button is not inside a year list or grid, then it is always tabbable.
     if (tabbableYears == null) {

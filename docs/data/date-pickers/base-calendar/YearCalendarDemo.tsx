@@ -12,17 +12,17 @@ export default function YearCalendarDemo() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Calendar.Root value={value} onValueChange={setValue} className={styles.Root}>
-        <Calendar.YearsGrid cellsPerRow={3} className={styles.YearsGrid}>
+        <Calendar.YearGrid cellsPerRow={3} className={styles.YearGrid}>
           {({ years }) =>
             years.map((year) => (
-              <Calendar.YearsCell
+              <Calendar.YearCell
                 value={year}
-                className={styles.YearsCell}
+                className={styles.YearCell}
                 key={year.toString()}
               />
             ))
           }
-        </Calendar.YearsGrid>
+        </Calendar.YearGrid>
       </Calendar.Root>
     </LocalizationProvider>
   );

@@ -110,8 +110,8 @@
   text-wrap: nowrap;
 }
 
-.MonthsList,
-.YearsList {
+.MonthList,
+.YearList {
   padding: 12px;
   display: flex;
   flex-direction: column;
@@ -120,8 +120,8 @@
   overflow-y: auto;
 }
 
-.MonthsGrid,
-.YearsGrid {
+.MonthGrid,
+.YearGrid {
   padding: 12px;
   display: grid;
   row-gap: 2px;
@@ -129,22 +129,22 @@
   z-index: 1;
 }
 
-.MonthsGrid {
+.MonthGrid {
   grid-template-columns: repeat(
-    var(--calendar-months-grid-cells-per-row, var(--range-calendar-months-grid-cells-per-row)),
+    var(--calendar-month-grid-cells-per-row, var(--range-calendar-month-grid-cells-per-row)),
     1fr
   );
 }
 
-.YearsGrid {
+.YearGrid {
   grid-template-columns: repeat(
-    var(--calendar-years-grid-cells-per-row, var(--range-calendar-years-grid-cells-per-row)),
+    var(--calendar-year-grid-cells-per-row, var(--range-calendar-year-grid-cells-per-row)),
     1fr
   );
 }
 
-.MonthsCell,
-.YearsCell {
+.MonthCell,
+.YearCell {
   height: 28px;
   min-height: 28px;
 
@@ -153,7 +153,7 @@
   }
 }
 
-.DaysGrid {
+.DayGrid {
   padding: 12px;
   height: 276px;
   display: flex;
@@ -162,19 +162,19 @@
   z-index: 1;
 }
 
-.DaysGridBody {
+.DayGridBody {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-.DaysGridRow,
-.DaysGridHeader {
+.DayGridRow,
+.DayGridHeader {
   display: flex;
   justify-content: center;
 }
 
-.DaysWeekNumber {
+.DayWeekNumber {
   height: 36px;
   width: 36px;
   display: inline-flex;
@@ -184,9 +184,9 @@
   color: var(--days-grid-header-color);
 }
 
-.DaysCell,
-.MonthsCell,
-.YearsCell {
+.DayCell,
+.MonthCell,
+.YearCell {
   position: relative;
   user-select: none;
   border: none;
@@ -262,9 +262,9 @@
     left: 0;
   }
 
-  &.RangeDaysCell,
-  &.RangeMonthsCell,
-  &.RangeYearsCell {
+  &.RangeDayCell,
+  &.RangeMonthCell,
+  &.RangeYearCell {
     &[data-selected]:not([data-selection-start])::before {
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
@@ -277,7 +277,7 @@
   }
 }
 
-.DaysCell {
+.DayCell {
   height: 36px;
   width: 36px;
 
@@ -286,8 +286,8 @@
   }
 }
 
-.Root:not([data-empty]) .RangeDaysCell:not([data-outside-month])[data-previewed],
-.Root:not([data-empty]) .RangeMonthsCell[data-previewed] {
+.Root:not([data-empty]) .RangeDayCell:not([data-outside-month])[data-previewed],
+.Root:not([data-empty]) .RangeMonthCell[data-previewed] {
   &:not([data-preview-start]) {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
@@ -312,14 +312,14 @@
   }
 }
 
-.DaysGridHeaderCell {
+.DayGridHeaderCell {
   width: 36px;
   text-align: center;
   font-size: 0.75rem;
   color: var(--days-grid-header-color);
 }
 
-.DaysGridSeparator {
+.DayGridSeparator {
   background-color: var(--days-grid-separator-bg-color);
   margin: 24px 0;
   width: 1px;

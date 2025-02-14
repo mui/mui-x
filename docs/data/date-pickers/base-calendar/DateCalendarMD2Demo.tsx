@@ -85,60 +85,60 @@ export default function DateCalendarMD2Demo() {
           onActiveSectionChange={setActiveSection}
         />
         {activeSection === 'year' && (
-          <Calendar.YearsGrid
+          <Calendar.YearGrid
             cellsPerRow={3}
             focusOnMount={hasNavigated}
-            className={styles.YearsGrid}
+            className={styles.YearGrid}
           >
             {({ years }) =>
               years.map((year) => (
-                <Calendar.YearsCell
+                <Calendar.YearCell
                   value={year}
-                  className={styles.YearsCell}
+                  className={styles.YearCell}
                   key={year.toString()}
                 />
               ))
             }
-          </Calendar.YearsGrid>
+          </Calendar.YearGrid>
         )}
         {activeSection === 'day' && (
-          <Calendar.DaysGrid className={styles.DaysGrid}>
-            <Calendar.DaysGridHeader className={styles.DaysGridHeader}>
+          <Calendar.DayGrid className={styles.DayGrid}>
+            <Calendar.DayGridHeader className={styles.DayGridHeader}>
               {({ days }) =>
                 days.map((day) => (
-                  <Calendar.DaysGridHeaderCell
+                  <Calendar.DayGridHeaderCell
                     value={day}
                     key={day.toString()}
-                    className={styles.DaysGridHeaderCell}
+                    className={styles.DayGridHeaderCell}
                   />
                 ))
               }
-            </Calendar.DaysGridHeader>
-            <Calendar.DaysGridBody
-              className={styles.DaysGridBody}
+            </Calendar.DayGridHeader>
+            <Calendar.DayGridBody
+              className={styles.DayGridBody}
               focusOnMount={hasNavigated}
             >
               {({ weeks }) =>
                 weeks.map((week) => (
-                  <Calendar.DaysGridRow
+                  <Calendar.DayGridRow
                     value={week}
                     key={week.toString()}
-                    className={styles.DaysGridRow}
+                    className={styles.DayGridRow}
                   >
                     {({ days }) =>
                       days.map((day) => (
-                        <Calendar.DaysCell
+                        <Calendar.DayCell
                           value={day}
                           key={day.toString()}
-                          className={styles.DaysCell}
+                          className={styles.DayCell}
                         />
                       ))
                     }
-                  </Calendar.DaysGridRow>
+                  </Calendar.DayGridRow>
                 ))
               }
-            </Calendar.DaysGridBody>
-          </Calendar.DaysGrid>
+            </Calendar.DayGridBody>
+          </Calendar.DayGrid>
         )}
       </Calendar.Root>
     </LocalizationProvider>
