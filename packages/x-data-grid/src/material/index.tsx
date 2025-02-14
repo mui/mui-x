@@ -5,6 +5,7 @@ import MUICheckbox from '@mui/material/Checkbox';
 import MUIChip from '@mui/material/Chip';
 import MUICircularProgress from '@mui/material/CircularProgress';
 import MUIDivider from '@mui/material/Divider';
+import MUIInputBase from '@mui/material/InputBase';
 import MUIFocusTrap from '@mui/material/Unstable_TrapFocus';
 import MUILinearProgress from '@mui/material/LinearProgress';
 import MUIListItemIcon from '@mui/material/ListItemIcon';
@@ -15,6 +16,7 @@ import MUITextField from '@mui/material/TextField';
 import MUIFormControl from '@mui/material/FormControl';
 import MUIFormControlLabel from '@mui/material/FormControlLabel';
 import MUISelect from '@mui/material/Select';
+import MUISwitch from '@mui/material/Switch';
 import MUIButton from '@mui/material/Button';
 import MUIIconButton from '@mui/material/IconButton';
 import MUIInputAdornment from '@mui/material/InputAdornment';
@@ -25,6 +27,7 @@ import MUIGrow from '@mui/material/Grow';
 import MUIPaper from '@mui/material/Paper';
 import MUIInputLabel from '@mui/material/InputLabel';
 import MUISkeleton from '@mui/material/Skeleton';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridColumnUnsortedIcon } from './icons/GridColumnUnsortedIcon';
 import {
   GridAddIcon,
@@ -58,6 +61,66 @@ import type { GridBaseSlots } from '../models/gridSlotsComponent';
 import type { GridSlotProps } from '../models/gridSlotsComponentsProps';
 import type { PopperProps } from '../models/gridBaseSlots';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
+
+const ClickAwayListener = forwardRef(MUIClickAwayListener);
+
+const BaseSelect = forwardRef<any, GridSlotProps['baseSelect']>(function BaseSelect(props, ref) {
+  const rootProps = useGridRootProps();
+  const {
+    id,
+    label,
+    labelId,
+    disabled,
+    slotProps,
+    onChange,
+    onKeyDown,
+    onOpen,
+    onClose,
+    size,
+    style,
+    fullWidth,
+    ...rest
+  } = props;
+  return (
+    <MUIFormControl
+      size={size}
+      fullWidth={fullWidth}
+      style={style}
+      disabled={disabled}
+      {...rootProps.slotProps?.baseFormControl}
+      ref={ref}
+    >
+      <MUIInputLabel
+        id={labelId}
+        htmlFor={id}
+        shrink
+        variant="outlined"
+        {...rootProps.slotProps?.baseInputLabel}
+      >
+        {label}
+      </MUIInputLabel>
+      <MUISelect
+        id={id}
+        labelId={labelId}
+        label={label}
+        displayEmpty
+        onChange={onChange as any}
+        {...rest}
+        variant="outlined"
+        notched
+        inputProps={slotProps?.htmlInput}
+        onOpen={onOpen}
+        MenuProps={{
+          onClose,
+          PaperProps: {
+            onKeyDown,
+          },
+        }}
+        size={size}
+      />
+    </MUIFormControl>
+  );
+});
 
 /* eslint-disable material-ui/disallow-react-api-in-server-components */
 
@@ -105,6 +168,7 @@ const baseSlots: GridBaseSlots = {
   baseCheckbox: React.forwardRef(BaseCheckbox),
   baseCircularProgress: MUICircularProgress,
   baseDivider: MUIDivider,
+  baseInput: BaseInput,
   baseLinearProgress: MUILinearProgress,
   baseMenuList: BaseMenuList,
   baseMenuItem: BaseMenuItem,
@@ -119,6 +183,7 @@ const baseSlots: GridBaseSlots = {
   baseSelect: BaseSelect,
   baseSelectOption: BaseSelectOption,
   baseSkeleton: MUISkeleton,
+  baseSwitch: MUISwitch,
   baseChip: MUIChip,
 };
 
@@ -216,6 +281,11 @@ function BaseTextField(props: GridSlotProps['baseTextField']) {
   );
 }
 
+function BaseInput(props: GridSlotProps['baseInput']) {
+  const { slotProps, ...rest } = props;
+  return <MUIInputBase {...rest} inputProps={slotProps?.htmlInput} />;
+}
+
 const transformOrigin = {
   'bottom-start': 'top left',
   'bottom-end': 'top right',
@@ -301,13 +371,13 @@ function clickAwayWrapper(props: PopperProps, content: any) {
     return content;
   }
   return (
-    <MUIClickAwayListener
+    <ClickAwayListener
       onClickAway={props.onClickAway as any}
       touchEvent={props.clickAwayTouchEvent}
       mouseEvent={props.clickAwayMouseEvent}
     >
       {content}
-    </MUIClickAwayListener>
+    </ClickAwayListener>
   );
 }
 
@@ -319,63 +389,6 @@ function focusTrapWrapper(props: PopperProps, content: any) {
     <MUIFocusTrap open disableEnforceFocus isEnabled={() => props.focusTrapEnabled ?? true}>
       {content}
     </MUIFocusTrap>
-  );
-}
-
-function BaseSelect(props: GridSlotProps['baseSelect']) {
-  const rootProps = useGridRootProps();
-  const {
-    id,
-    label,
-    labelId,
-    disabled,
-    slotProps,
-    onChange,
-    onKeyDown,
-    onOpen,
-    onClose,
-    size,
-    style,
-    fullWidth,
-    ...rest
-  } = props;
-  return (
-    <MUIFormControl
-      size={size}
-      fullWidth={fullWidth}
-      style={style}
-      disabled={disabled}
-      {...rootProps.slotProps?.baseFormControl}
-    >
-      <MUIInputLabel
-        id={labelId}
-        htmlFor={id}
-        shrink
-        variant="outlined"
-        {...rootProps.slotProps?.baseInputLabel}
-      >
-        {label}
-      </MUIInputLabel>
-      <MUISelect
-        id={id}
-        labelId={labelId}
-        label={label}
-        displayEmpty
-        onChange={onChange as any}
-        {...rest}
-        variant="outlined"
-        notched
-        inputProps={slotProps?.htmlInput}
-        onOpen={onOpen}
-        MenuProps={{
-          PaperProps: {
-            onKeyDown,
-            onClose,
-          },
-        }}
-        size={size}
-      />
-    </MUIFormControl>
   );
 }
 

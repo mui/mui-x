@@ -193,6 +193,7 @@ export function useTextFieldProps<
     }
 
     // bring back focus to the field
+    // currentView is present on DateTimeRangePicker
     fieldPrivateContext?.fieldRef.current.setSelectedSections(
       // use the current view or `0` when the range position has just been swapped
       previousRangePosition.current === rangePosition ? pickerContext.view : 0,

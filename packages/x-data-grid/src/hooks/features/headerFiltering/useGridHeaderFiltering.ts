@@ -46,7 +46,6 @@ export const useGridHeaderFiltering = (
           },
         };
       });
-      apiRef.current.forceUpdate();
     },
     [apiRef, props.signature, props.headerFilters],
   );

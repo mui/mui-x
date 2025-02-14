@@ -76,6 +76,11 @@ export interface GridBaseSlots {
    */
   baseIconButton: React.JSXElementConstructor<GridSlotProps['baseIconButton']>;
   /**
+   * The custom Input component used in the grid.
+   * @default Input
+   */
+  baseInput: React.JSXElementConstructor<GridSlotProps['baseInput']>;
+  /**
    * The custom Tooltip component used in the grid.
    * @default Tooltip
    */
@@ -100,6 +105,11 @@ export interface GridBaseSlots {
    * @default Skeleton
    */
   baseSkeleton: React.JSXElementConstructor<GridSlotProps['baseSkeleton']>;
+  /**
+   * The custom Switch component used in the grid.
+   * @default Switch
+   */
+  baseSwitch: React.JSXElementConstructor<GridSlotProps['baseSwitch']>;
 }
 
 /**
@@ -188,6 +198,11 @@ export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponen
    * @default GridNoRowsOverlay
    */
   noRowsOverlay: React.JSXElementConstructor<GridSlotProps['noRowsOverlay']>;
+  /**
+   * No columns overlay component rendered when the grid has no columns.
+   * @default GridNoColumnsOverlay
+   */
+  noColumnsOverlay: React.JSXElementConstructor<GridSlotProps['noColumnsOverlay']>;
   /**
    * Pagination component rendered in the grid footer by default.
    * @default Pagination
