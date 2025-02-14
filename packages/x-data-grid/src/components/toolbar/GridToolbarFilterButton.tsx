@@ -153,10 +153,11 @@ const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterB
             <rootProps.slots.baseBadge
               badgeContent={activeFilters.length}
               color="primary"
+              variant="dot"
               {...rootProps.slotProps?.baseBadge}
               {...badgeProps}
             >
-              <rootProps.slots.openFilterButtonIcon />
+              <rootProps.slots.openFilterButtonIcon fontSize="small" />
             </rootProps.slots.baseBadge>
           }
           {...rootProps.slotProps?.baseButton}

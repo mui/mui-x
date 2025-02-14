@@ -70,7 +70,7 @@ export function GridSidebarColumnPanelHeader(props: GridSidebarColumnPanelHeader
       ) : (
         <HeaderRow>
           <Typography variant="subtitle1" fontWeight="medium" sx={{ mr: 'auto' }}>
-            Columns
+            Pivot settings
           </Typography>
           <GridSidebarSearchButton onClick={enableSearch} />
           <GridSidebarCloseButton sx={{ mr: -1 }} />

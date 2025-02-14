@@ -335,7 +335,6 @@ export function PivotField(props: PivotFieldProps) {
   };
 
   const hideable = props.modelKey !== null;
-  // const hideable = true;
 
   return (
     <PivotFieldRoot
