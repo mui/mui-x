@@ -23,16 +23,14 @@ import {
 } from '../ChartsOverlay';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
-import {
-  ChartsVoronoiHandler,
-  ChartsVoronoiHandlerProps,
-} from '../ChartsVoronoiHandler/ChartsVoronoiHandler';
 import { ChartsGrid, ChartsGridProps } from '../ChartsGrid';
 import { useScatterChartProps } from './useScatterChartProps';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
 import { ChartDataProvider } from '../ChartDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../internals/components/ChartsWrapper';
+import { UseChartVoronoiSignature } from '../internals/plugins/featurePlugins/useChartVoronoi';
+import { ScatterChartPluginsSignatures } from './ScatterChart.plugins';
 
 export interface ScatterChartSlots
   extends ChartsAxisSlots,
@@ -48,10 +46,12 @@ export interface ScatterChartSlotProps
     ChartsTooltipSlotProps {}
 
 export interface ScatterChartProps
-  extends Omit<ChartContainerProps, 'series' | 'plugins'>,
+  extends Omit<
+      ChartContainerProps<'scatter', ScatterChartPluginsSignatures>,
+      'series' | 'plugins' | 'onItemClick'
+    >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
-    Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
-    Omit<ChartsVoronoiHandlerProps, 'onItemClick'> {
+    Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
   /**
    * The series to display in the scatter chart.
    * An array of [[ScatterSeriesType]] objects.
@@ -91,7 +91,7 @@ export interface ScatterChartProps
    * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element if using Voronoi cells. Or the Mouse event from the scatter element, when `disableVoronoi=true`.
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
-  onItemClick?: ScatterPlotProps['onItemClick'] | ChartsVoronoiHandlerProps['onItemClick'];
+  onItemClick?: ScatterPlotProps['onItemClick'] | UseChartVoronoiSignature['params']['onItemClick'];
 }
 
 /**
@@ -112,7 +112,6 @@ const ScatterChart = React.forwardRef(function ScatterChart(
   const {
     chartsWrapperProps,
     chartContainerProps,
-    voronoiHandlerProps,
     chartsAxisProps,
     gridProps,
     scatterPlotProps,
@@ -133,7 +132,6 @@ const ScatterChart = React.forwardRef(function ScatterChart(
       <ChartsWrapper {...chartsWrapperProps}>
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
-          {!props.disableVoronoi && <ChartsVoronoiHandler {...voronoiHandlerProps} />}
           <ChartsAxis {...chartsAxisProps} />
           <ChartsGrid {...gridProps} />
           <g data-drawing-container>

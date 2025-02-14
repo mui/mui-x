@@ -294,6 +294,8 @@ DataGridRaw.propTypes = {
   getRowHeight: PropTypes.func,
   /**
    * Return the id of a given [[GridRowModel]].
+   * Ensure the reference of this prop is stable to avoid performance implications.
+   * It could be done by either defining the prop outside of the component or by memoizing it.
    */
   getRowId: PropTypes.func,
   /**
@@ -673,6 +675,12 @@ DataGridRaw.propTypes = {
    */
   processRowUpdate: PropTypes.func,
   /**
+   * If `true`, the page is set to 0 after each sorting or filtering.
+   * This prop will be removed in the next major version and resetting the page will become the default behavior.
+   * @default false
+   */
+  resetPageOnSortFilter: PropTypes.bool,
+  /**
    * The milliseconds throttle delay for resizing the grid.
    * @default 60
    */
@@ -776,6 +784,27 @@ DataGridRaw.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The data source object.
+   */
+  unstable_dataSource: PropTypes.shape({
+    getRows: PropTypes.func.isRequired,
+    updateRow: PropTypes.func,
+  }),
+  /**
+   * Data source cache object.
+   */
+  unstable_dataSourceCache: PropTypes.shape({
+    clear: PropTypes.func.isRequired,
+    get: PropTypes.func.isRequired,
+    set: PropTypes.func.isRequired,
+  }),
+  /**
+   * Callback fired when the data source request fails.
+   * @param {Error} error The error object.
+   * @param {GridGetRowsParams} params With all properties from [[GridGetRowsParams]].
+   */
+  unstable_onDataSourceError: PropTypes.func,
   /**
    * If `true`, the Data Grid enables column virtualization when `getRowHeight` is set to `() => 'auto'`.
    * By default, column virtualization is disabled when dynamic row height is enabled to measure the row height correctly.

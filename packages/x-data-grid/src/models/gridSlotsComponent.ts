@@ -100,12 +100,22 @@ export interface GridBaseSlots {
    * @default Skeleton
    */
   baseSkeleton: React.JSXElementConstructor<GridSlotProps['baseSkeleton']>;
+  /**
+   * The custom Switch component used in the grid.
+   * @default Switch
+   */
+  baseSwitch: React.JSXElementConstructor<GridSlotProps['baseSwitch']>;
 }
 
 /**
  * Grid components React prop interface containing all the overridable components.
  */
 export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponent {
+  /**
+   * Component rendered for the bottom container.
+   * @default GridBottomContainer
+   */
+  bottomContainer: React.JSXElementConstructor<GridSlotProps['bottomContainer']>;
   /**
    * Component rendered for each cell.
    * @default GridCell
@@ -178,6 +188,11 @@ export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponen
    * @default GridNoRowsOverlay
    */
   noRowsOverlay: React.JSXElementConstructor<GridSlotProps['noRowsOverlay']>;
+  /**
+   * No columns overlay component rendered when the grid has no columns.
+   * @default GridNoColumnsOverlay
+   */
+  noColumnsOverlay: React.JSXElementConstructor<GridSlotProps['noColumnsOverlay']>;
   /**
    * Pagination component rendered in the grid footer by default.
    * @default Pagination

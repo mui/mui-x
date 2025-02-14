@@ -6,14 +6,14 @@ import { styled } from '@mui/material/styles';
 import { BarElement, barElementClasses, BarElementSlotProps, BarElementSlots } from './BarElement';
 import { AxisDefaultized } from '../models/axis';
 import { BarItemIdentifier } from '../models';
-import getColor from './getColor';
+import getColor from './seriesConfig/getColor';
 import { useChartId, useDrawingArea, useXAxes, useYAxes } from '../hooks';
 import { AnimationData, CompletedBarData, MaskData } from './types';
 import { BarClipPath } from './BarClipPath';
 import { BarLabelItemProps, BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
 import { checkScaleErrors } from './checkScaleErrors';
-import { useBarSeries } from '../hooks/useSeries';
+import { useBarSeriesContext } from '../hooks/useBarSeries';
 import { useSkipAnimation } from '../context/AnimationProvider';
 import { SeriesProcessorResult } from '../internals/plugins/models/seriesConfig/seriesProcessor.types';
 
@@ -89,7 +89,7 @@ const useAggregatedData = (): {
   masksData: MaskData[];
 } => {
   const seriesData =
-    useBarSeries() ??
+    useBarSeriesContext() ??
     ({ series: {}, stackingGroups: [], seriesOrder: [] } as SeriesProcessorResult<'bar'>);
 
   const drawingArea = useDrawingArea();

@@ -430,6 +430,7 @@
         "returned": "Promise<R> | R"
       }
     },
+    "resetPageOnSortFilter": { "type": { "name": "bool" }, "default": "false" },
     "resizeThrottleMs": { "type": { "name": "number" }, "default": "60" },
     "rowBufferPx": { "type": { "name": "number" }, "default": "150" },
     "rowCount": { "type": { "name": "number" } },
@@ -477,6 +478,19 @@
       },
       "additionalInfo": { "sx": true }
     },
+    "unstable_dataSource": {
+      "type": { "name": "shape", "description": "{ getRows: func, updateRow?: func }" }
+    },
+    "unstable_dataSourceCache": {
+      "type": { "name": "shape", "description": "{ clear: func, get: func, set: func }" }
+    },
+    "unstable_onDataSourceError": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(error: Error, params: GridGetRowsParams) => void",
+        "describedArgs": ["error", "params"]
+      }
+    },
     "virtualizeColumnsWithAutoRowHeight": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "DataGrid",
@@ -487,6 +501,12 @@
     "import { DataGrid } from '@mui/x-data-grid-premium';"
   ],
   "slots": [
+    {
+      "name": "bottomContainer",
+      "description": "Component rendered for the bottom container.",
+      "default": "GridBottomContainer",
+      "class": null
+    },
     {
       "name": "cell",
       "description": "Component rendered for each cell.",
@@ -563,6 +583,12 @@
       "name": "noRowsOverlay",
       "description": "No rows overlay component rendered when the grid has no rows.",
       "default": "GridNoRowsOverlay",
+      "class": null
+    },
+    {
+      "name": "noColumnsOverlay",
+      "description": "No columns overlay component rendered when the grid has no columns.",
+      "default": "GridNoColumnsOverlay",
       "class": null
     },
     {
@@ -713,6 +739,12 @@
       "name": "baseSkeleton",
       "description": "The custom Skeleton component used in the grid.",
       "default": "Skeleton",
+      "class": null
+    },
+    {
+      "name": "baseSwitch",
+      "description": "The custom Switch component used in the grid.",
+      "default": "Switch",
       "class": null
     },
     {
@@ -967,6 +999,12 @@
       "key": "aggregationColumnHeaderLabel",
       "className": "MuiDataGrid-aggregationColumnHeaderLabel",
       "description": "Styles applied to the aggregation label in the column header when aggregated.",
+      "isGlobal": false
+    },
+    {
+      "key": "aggregationRowOverlayWrapper",
+      "className": "MuiDataGrid-aggregationRowOverlayWrapper",
+      "description": "Styles applied to the aggregation row overlay wrapper.",
       "isGlobal": false
     },
     {

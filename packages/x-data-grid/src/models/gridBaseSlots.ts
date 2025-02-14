@@ -101,6 +101,31 @@ export type ButtonProps = {
   touchRippleRef?: any; // FIXME(v8:romgrk): find a way to remove
 };
 
+export type CheckboxProps = {
+  ref?: Ref<HTMLButtonElement>;
+  id?: string;
+  autoFocus?: boolean;
+  checked?: boolean;
+  className?: string;
+  disabled?: boolean;
+  fullWidth?: boolean;
+  indeterminate?: boolean;
+  inputRef?: React.Ref<HTMLInputElement>;
+  name?: string;
+  label?: React.ReactNode;
+  onClick?: React.MouseEventHandler;
+  onChange?: React.ChangeEventHandler;
+  onKeyDown?: React.KeyboardEventHandler;
+  size?: 'small' | 'medium';
+  density?: 'standard' | 'compact';
+  slotProps?: {
+    htmlInput?: React.InputHTMLAttributes<HTMLInputElement>;
+  };
+  style?: React.CSSProperties;
+  tabIndex?: number;
+  touchRippleRef?: any; // FIXME(v8:romgrk): find a way to remove
+};
+
 export type IconButtonProps = Omit<ButtonProps, 'startIcon'> & {
   label?: string;
   color?: 'default' | 'inherit' | 'primary';
@@ -131,6 +156,48 @@ export type MenuItemProps = {
   selected?: boolean;
   value?: number | string | readonly string[];
   style?: React.CSSProperties;
+};
+
+type BasePlacement = 'top' | 'bottom' | 'left' | 'right';
+type VariationPlacement =
+  | 'top-start'
+  | 'top-end'
+  | 'bottom-start'
+  | 'bottom-end'
+  | 'right-start'
+  | 'right-end'
+  | 'left-start'
+  | 'left-end';
+type AutoPlacement = 'auto' | 'auto-start' | 'auto-end';
+type Placement = AutoPlacement | BasePlacement | VariationPlacement;
+
+type ClickAwayMouseEventHandler =
+  | 'onClick'
+  | 'onMouseDown'
+  | 'onMouseUp'
+  | 'onPointerDown'
+  | 'onPointerUp';
+type ClickAwayTouchEventHandler = 'onTouchStart' | 'onTouchEnd';
+
+export type PopperProps = {
+  open: boolean;
+  children?: React.ReactNode;
+  className?: string;
+  clickAwayTouchEvent?: false | ClickAwayTouchEventHandler;
+  clickAwayMouseEvent?: false | ClickAwayMouseEventHandler;
+  flip?: boolean;
+  focusTrap?: boolean;
+  focusTrapEnabled?: boolean;
+  onExited?: (node: HTMLElement | null) => void;
+  onClickAway?: (event: MouseEvent | TouchEvent) => void;
+  onDidShow?: () => void;
+  onDidHide?: () => void;
+  id?: string;
+  ref?: Ref;
+  target?: Element | null;
+  transition?: boolean;
+  /** @default 'bottom' */
+  placement?: Placement;
 };
 
 export type CircularProgressProps = {
@@ -183,6 +250,12 @@ export type SkeletonProps = {
   variant?: 'circular' | 'text';
   width?: number | string;
   height?: number | string;
+};
+
+export type SwitchProps = {
+  checked?: boolean;
+  onChange?: React.ChangeEventHandler;
+  size?: 'small' | 'medium';
 };
 
 export type TextFieldProps = {
