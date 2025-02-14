@@ -264,8 +264,20 @@ export const useGridPaginationModel = (
     [apiRef],
   );
 
-  const handleSortModelChange = React.useCallback(() => {
-    apiRef.current.setPage(0);
+  /**
+   * Goes to the first row of the grid
+   */
+  const navigateToStart = React.useCallback(() => {
+    const paginationModel = gridPaginationModelSelector(apiRef);
+    if (paginationModel.page !== 0) {
+      apiRef.current.setPage(0);
+    }
+
+    // If the page was not changed it might be needed to scroll to the top
+    const scrollPosition = apiRef.current.getScrollPosition();
+    if (scrollPosition.top !== 0) {
+      apiRef.current.scroll({ top: 0 });
+    }
   }, [apiRef]);
 
   /**
@@ -276,7 +288,6 @@ export const useGridPaginationModel = (
    */
   const handleFilterModelChange = React.useCallback<GridEventListener<'filterModelChange'>>(
     (filterModel) => {
-      const paginationModel = gridPaginationModelSelector(apiRef);
       const currentActiveFilters = {
         ...filterModel,
         // replace items with the active items
@@ -288,12 +299,9 @@ export const useGridPaginationModel = (
       }
 
       previousFilterModel.current = currentActiveFilters;
-
-      if (paginationModel.page !== 0) {
-        apiRef.current.setPage(0);
-      }
+      navigateToStart();
     },
-    [apiRef],
+    [apiRef, navigateToStart],
   );
 
   useGridApiEventHandler(apiRef, 'viewportInnerSizeChange', handleUpdateAutoPageSize);
@@ -302,7 +310,7 @@ export const useGridPaginationModel = (
   useGridApiEventHandler(
     apiRef,
     'sortModelChange',
-    runIf(props.resetPageOnSortFilter, handleSortModelChange),
+    runIf(props.resetPageOnSortFilter, navigateToStart),
   );
   useGridApiEventHandler(
     apiRef,

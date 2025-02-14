@@ -27,13 +27,13 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Pagination', () => {
   const { render } = createRenderer();
-  let apiRef: RefObject<GridApi | null>;
+  let apiRef: RefObject<GridApi>;
 
   function BaselineTestCase(props: Omit<DataGridProps, 'rows' | 'columns'> & { height?: number }) {
     const { height = 300, ...other } = props;
 
     apiRef = useGridApiRef();
-    const basicData = useBasicDemoData(20, 2);
+    const basicData = useBasicDemoData(100, 2);
 
     return (
       <div style={{ width: 300, height }}>
@@ -632,18 +632,22 @@ describe('<DataGrid /> - Pagination', () => {
   });
 
   describe('resetPageOnSortFilter prop', () => {
-    it('should reset page to 0 if sort or filter is applied and `resetPageOnSortFilter` is `true`', () => {
+    it('should reset page to 0 and scroll to top if sort or filter is applied and `resetPageOnSortFilter` is `true`', () => {
       const { setProps } = render(
         <BaselineTestCase
-          initialState={{ pagination: { paginationModel: { page: 0, pageSize: 5 }, rowCount: 0 } }}
-          pageSizeOptions={[5]}
+          initialState={{ pagination: { paginationModel: { page: 0, pageSize: 50 }, rowCount: 0 } }}
+          pageSizeOptions={[50]}
         />,
       );
 
+      const randomScrollTopPostion = 500;
+
       act(() => {
         apiRef.current?.setPage(1);
+        apiRef.current!.scroll({ top: randomScrollTopPostion });
       });
       expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(1);
+      expect(apiRef.current!.getScrollPosition().top).to.equal(randomScrollTopPostion);
 
       act(() => {
         apiRef.current?.sortColumn('id', 'desc');
@@ -658,8 +662,9 @@ describe('<DataGrid /> - Pagination', () => {
         });
       });
 
-      // page stays the same after sorting and filtering
+      // page and the scroll position stays the same after sorting and filtering
       expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(1);
+      expect(apiRef.current!.getScrollPosition().top).to.equal(randomScrollTopPostion);
 
       // enable reset
       setProps({
@@ -671,12 +676,26 @@ describe('<DataGrid /> - Pagination', () => {
       });
       // page is reset to 0 after sorting
       expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(0);
+      expect(apiRef.current!.getScrollPosition().top).to.equal(0);
 
-      // move to the next page again
+      // scroll but stay on the same page
+      act(() => {
+        apiRef.current!.scroll({ top: randomScrollTopPostion });
+      });
+      expect(apiRef.current!.getScrollPosition().top).to.equal(randomScrollTopPostion);
+
+      act(() => {
+        apiRef.current!.sortColumn('id', 'desc');
+      });
+      expect(apiRef.current!.getScrollPosition().top).to.equal(0);
+
+      // move to the next page again and scroll
       act(() => {
         apiRef.current?.setPage(1);
+        apiRef.current!.scroll({ top: randomScrollTopPostion });
       });
       expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(1);
+      expect(apiRef.current!.getScrollPosition().top).to.equal(randomScrollTopPostion);
 
       act(() => {
         apiRef.current?.setFilterModel({
@@ -690,8 +709,9 @@ describe('<DataGrid /> - Pagination', () => {
         });
       });
 
-      // page is reset to 0 after filtering
+      // page and scroll position are reset filtering
       expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(0);
+      expect(apiRef.current!.getScrollPosition().top).to.equal(0);
     });
   });
 
