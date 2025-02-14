@@ -447,6 +447,9 @@
         "Promise<R> | R": "The final values to update the row."
       }
     },
+    "resetPageOnSortFilter": {
+      "description": "If <code>true</code>, the page is set to 0 after each sorting or filtering. This prop will be removed in the next major version and resetting the page will become the default behavior."
+    },
     "resizeThrottleMs": { "description": "The milliseconds throttle delay for resizing the grid." },
     "rowBufferPx": { "description": "Row region in pixels to render before/after the viewport" },
     "rowCount": {
@@ -1097,6 +1100,7 @@
     "baseDivider": "The custom Divider component used in the grid.",
     "baseFormControl": "The custom FormControl component used in the grid.",
     "baseIconButton": "The custom IconButton component used in the grid.",
+    "baseInput": "The custom Input component used in the grid.",
     "baseInputAdornment": "The custom InputAdornment component used in the grid.",
     "baseInputLabel": "The custom InputLabel component used in the grid.",
     "baseLinearProgress": "The custom LinearProgress component used in the grid.",
@@ -1106,6 +1110,7 @@
     "baseSelect": "The custom Select component used in the grid.",
     "baseSelectOption": "The custom SelectOption component used in the grid.",
     "baseSkeleton": "The custom Skeleton component used in the grid.",
+    "baseSwitch": "The custom Switch component used in the grid.",
     "baseTextField": "The custom TextField component used in the grid.",
     "baseTooltip": "The custom Tooltip component used in the grid.",
     "booleanCellFalseIcon": "Icon displayed on the boolean cell to represent the false value.",
