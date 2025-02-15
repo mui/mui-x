@@ -4,8 +4,7 @@ import { vars } from '../../constants/cssVariables';
 export function transformMaterialUITheme(t: Theme) {
   const borderColor = getBorderColor(t);
 
-  const backgroundBase =
-    t.palette.DataGrid?.bg ?? (t.vars || t).palette.background.default;
+  const backgroundBase = t.palette.DataGrid?.bg ?? (t.vars || t).palette.background.default;
 
   const backgroundHeader = t.palette.DataGrid?.headerBg ?? backgroundBase;
 
