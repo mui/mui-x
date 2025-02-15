@@ -346,6 +346,7 @@ export const GridRootStyles = styled('div', {
       position: 'relative',
       display: 'flex',
       alignItems: 'center',
+      backgroundColor: headerBackground,
     },
     [`& .${c['columnHeader--filter']}`]: {
       paddingTop: 8,
