@@ -2,7 +2,14 @@ import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { spy, stub, SinonStub, SinonSpy } from 'sinon';
 import { expect } from 'chai';
-import { createRenderer, fireEvent, reactMajor, screen, waitFor } from '@mui/internal-test-utils';
+import {
+  createRenderer,
+  fireEvent,
+  reactMajor,
+  screen,
+  waitFor,
+  act,
+} from '@mui/internal-test-utils';
 import {
   DataGrid,
   DataGridProps,
@@ -20,15 +27,17 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Pagination', () => {
   const { render } = createRenderer();
+  let apiRef: RefObject<GridApi>;
 
   function BaselineTestCase(props: Omit<DataGridProps, 'rows' | 'columns'> & { height?: number }) {
     const { height = 300, ...other } = props;
 
-    const basicData = useBasicDemoData(20, 2);
+    apiRef = useGridApiRef();
+    const basicData = useBasicDemoData(100, 2);
 
     return (
       <div style={{ width: 300, height }}>
-        <DataGrid {...basicData} autoHeight={isJSDOM} {...other} />
+        <DataGrid {...basicData} apiRef={apiRef} autoHeight={isJSDOM} {...other} />
       </div>
     );
   }
@@ -265,19 +274,13 @@ describe('<DataGrid /> - Pagination', () => {
     });
 
     it('should throw if pageSize exceeds 100', () => {
-      let apiRef: RefObject<GridApi>;
-      function TestCase() {
-        apiRef = useGridApiRef();
-        return (
-          <BaselineTestCase
-            apiRef={apiRef}
-            paginationModel={{ pageSize: 1, page: 0 }}
-            pageSizeOptions={[1, 2, 101]}
-          />
-        );
-      }
-      render(<TestCase />);
-      expect(() => apiRef.current.setPageSize(101)).to.throw(
+      render(
+        <BaselineTestCase
+          paginationModel={{ pageSize: 1, page: 0 }}
+          pageSizeOptions={[1, 2, 101]}
+        />,
+      );
+      expect(() => apiRef.current?.setPageSize(101)).to.throw(
         /`pageSize` cannot exceed 100 in the MIT version of the DataGrid./,
       );
     });
@@ -625,6 +628,90 @@ describe('<DataGrid /> - Pagination', () => {
       setProps({ rowCount: 4 });
       expect(getColumnValues(0)).to.deep.equal(['3']);
       expect(screen.getByText('4–4 of 4')).not.to.equal(null);
+    });
+  });
+
+  describe('resetPageOnSortFilter prop', () => {
+    it('should reset page to 0 and scroll to top if sort or filter is applied and `resetPageOnSortFilter` is `true`', () => {
+      const { setProps } = render(
+        <BaselineTestCase
+          initialState={{ pagination: { paginationModel: { page: 0, pageSize: 50 }, rowCount: 0 } }}
+          pageSizeOptions={[50]}
+        />,
+      );
+
+      const randomScrollTopPostion = 500;
+
+      act(() => {
+        apiRef.current?.setPage(1);
+        apiRef.current!.scroll({ top: randomScrollTopPostion });
+      });
+      expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(1);
+      expect(apiRef.current!.getScrollPosition().top).to.equal(randomScrollTopPostion);
+
+      act(() => {
+        apiRef.current?.sortColumn('id', 'desc');
+        apiRef.current?.setFilterModel({
+          items: [
+            {
+              field: 'id',
+              value: '1',
+              operator: '>=',
+            },
+          ],
+        });
+      });
+
+      // page and the scroll position stays the same after sorting and filtering
+      expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(1);
+      expect(apiRef.current!.getScrollPosition().top).to.equal(randomScrollTopPostion);
+
+      // enable reset
+      setProps({
+        resetPageOnSortFilter: true,
+      });
+
+      act(() => {
+        apiRef.current?.sortColumn('id', 'asc');
+      });
+      // page is reset to 0 after sorting
+      expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(0);
+      expect(apiRef.current!.getScrollPosition().top).to.equal(0);
+
+      // scroll but stay on the same page
+      act(() => {
+        apiRef.current!.scroll({ top: randomScrollTopPostion });
+      });
+      expect(apiRef.current!.getScrollPosition().top).to.equal(randomScrollTopPostion);
+
+      act(() => {
+        apiRef.current!.sortColumn('id', 'desc');
+      });
+      expect(apiRef.current!.getScrollPosition().top).to.equal(0);
+
+      // move to the next page again and scroll
+      act(() => {
+        apiRef.current?.setPage(1);
+        apiRef.current!.scroll({ top: randomScrollTopPostion });
+      });
+      expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(1);
+      expect(apiRef.current!.getScrollPosition().top).to.equal(randomScrollTopPostion);
+
+      act(() => {
+        apiRef.current?.setFilterModel({
+          items: [
+            {
+              field: 'id',
+              value: '1',
+              operator: '>=',
+            },
+          ],
+        });
+      });
+
+      // page and scroll position are reset filtering
+      expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(0);
+      expect(apiRef.current!.getScrollPosition().top).to.equal(0);
     });
   });
 
