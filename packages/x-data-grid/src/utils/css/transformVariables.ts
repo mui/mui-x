@@ -3,12 +3,11 @@ import { vars } from '../../constants/cssVariables';
 
 export function transformMaterialUITheme(t: Theme) {
   const borderColor = getBorderColor(t);
+  const dataGridPalette = (t.palette as any).DataGrid; // FIXME: docs typecheck error
 
-  const backgroundBase = t.palette.DataGrid?.bg ?? (t.vars || t).palette.background.default;
-
-  const backgroundHeader = t.palette.DataGrid?.headerBg ?? backgroundBase;
-
-  const backgroundPinned = t.palette.DataGrid?.pinnedBg ?? backgroundBase;
+  const backgroundBase = dataGridPalette?.bg ?? (t.vars || t).palette.background.default;
+  const backgroundHeader = dataGridPalette?.headerBg ?? backgroundBase;
+  const backgroundPinned = dataGridPalette?.pinnedBg ?? backgroundBase;
   const backgroundBackdrop = t.vars
     ? `rgba(${t.vars.palette.background.defaultChannel} / ${t.vars.palette.action.disabledOpacity})`
     : alpha(t.palette.background.default, t.palette.action.disabledOpacity);

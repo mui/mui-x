@@ -13,6 +13,8 @@ export const hash = xxh;
  */
 // prettier-ignore
 function xxh(input: string) {
+  /* eslint-disable no-bitwise */
+
   if (input.length > bufferLength) {
     // buffer.resize() is only available in recent browsers, so we re-allocate
     // a new and views
@@ -31,11 +33,12 @@ function xxh(input: string) {
   let h = (seed + len | 0) + 0x165667B1 | 0;
 
   if (len < 16) {
-    for (; (i + 3 | 0) < len; i = i + 4 | 0)
+    for (; (i + 3 | 0) < len; i = i + 4 | 0) {
       h = Math.imul(
         rotl32(h + Math.imul(int32View[i] | 0, 0xC2B2AE3D) | 0, 17) | 0,
         0x27D4EB2F
       );
+    }
   } else {
     let v0 = seed + 0x24234428 | 0;
     let v1 = seed + 0x85EBCA77 | 0;

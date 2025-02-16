@@ -7,7 +7,7 @@ const CLASSNAME_PREFIX = 'MuiDataGridVariables';
 
 const CSSVariablesContext = React.createContext({
   className: 'unset',
-  tag: <style href="/unset"></style>,
+  tag: <style href="/unset" />,
 });
 
 export function useCSSVariablesClass() {
@@ -41,8 +41,10 @@ export function GridCSSVariablesContext(props: { children: any }) {
 
 function variablesToString(variables: Record<string, any>) {
   let output = '';
-  for (let key in variables) {
-    output += `${key}:${variables[key]};`;
+  for (const key in variables) {
+    if (Object.hasOwn(variables, key)) {
+      output += `${key}:${variables[key]};`;
+    }
   }
   return output;
 }
