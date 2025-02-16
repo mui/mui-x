@@ -7,7 +7,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import Paper from '@mui/material/Paper';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { vars } from '../../constants/cssVariables';
-import { useCSSVariablesClass } from '../../utils/css/themeManager';
+import { useCSSVariablesClass } from '../../utils/css/context';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';

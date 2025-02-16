@@ -1,2 +1,2 @@
 export type { OutputSelector } from './createSelector';
-export { GridPortalWrapper } from './css/themeManager';
+export { GridPortalWrapper } from './css/context';

@@ -10,7 +10,7 @@ import { styled } from '@mui/material/styles';
 import { PopperProps } from '../../models/gridBaseSlots';
 import { GridSlotProps } from '../../models/gridSlotsComponent';
 import { vars } from '../../constants/cssVariables';
-import { useCSSVariablesClass } from '../../utils/css/themeManager';
+import { useCSSVariablesClass } from '../../utils/css/context';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
