@@ -338,7 +338,7 @@ describe('<DataGrid /> - Columns visibility', () => {
     expect(resetButton).to.have.attribute('disabled');
   });
 
-  it.only('should use the initial column visibility model as a reference when `Reset` button is clicked in columns management panel', async () => {
+  it('should use the initial column visibility model as a reference when `Reset` button is clicked in columns management panel', async () => {
     const { user } = render(
       <TestDataGrid
         slots={{
@@ -377,7 +377,7 @@ describe('<DataGrid /> - Columns visibility', () => {
     expect(resetButton1).to.have.attribute('disabled');
   });
 
-  it.only('should use the first controlled column visibility model as a reference when `Reset` button is clicked in columns management panel', async () => {
+  it('should use the first controlled column visibility model as a reference when `Reset` button is clicked in columns management panel', async () => {
     function ControlledTest() {
       const [model, setModel] = React.useState<GridColumnVisibilityModel>({ idBis: false });
       return (
@@ -417,7 +417,7 @@ describe('<DataGrid /> - Columns visibility', () => {
     expect(resetButton1).to.have.attribute('disabled');
   });
 
-  it.only('should update the initial column visibility model when the columns are updated', async () => {
+  it('should update the initial column visibility model when the columns are updated', async () => {
     const { user, setProps } = render(
       <TestDataGrid
         slots={{
