@@ -46,7 +46,7 @@ import startOfWeek from 'date-fns/startOfWeek/index.js';
 import startOfYear from 'date-fns/startOfYear/index.js';
 import isWithinInterval from 'date-fns/isWithinInterval/index.js';
 import defaultLocale from 'date-fns/locale/en-US/index.js';
-import { Locale as DateFnsLocale } from 'date-fns/locale/index.js';
+import type { Locale as DateFnsLocale } from 'date-fns';
 import longFormatters from 'date-fns/_lib/format/longFormatters/index.js';
 import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
 import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
