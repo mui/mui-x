@@ -570,7 +570,10 @@ export const useGridRowEditing = (
           Promise.resolve(props.unstable_dataSource.updateRow(id, rowUpdate, row))
             .then((finalRowUpdate) => {
               apiRef.current.updateRows([finalRowUpdate]);
-              apiRef.current.mutateRowInCache?.(id, rowUpdate);
+              if (finalRowUpdate !== row) {
+                // Avoid mutating the cache if the row is not updated
+                apiRef.current.mutateRowInCache?.(id, finalRowUpdate);
+              }
               finishRowEditMode();
             })
             .catch((errorThrown) =>
