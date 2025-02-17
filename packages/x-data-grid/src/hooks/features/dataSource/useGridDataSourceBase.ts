@@ -3,7 +3,7 @@ import { RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { unstable_debounce as debounce } from '@mui/utils';
 import { warnOnce } from '@mui/x-internals/warning';
-import { gridRowIdSelector } from '@mui/x-data-grid-pro';
+import { gridRowIdSelector } from '../../core/gridPropsSelectors';
 import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
 import {
   GridGetRowsResponse,
