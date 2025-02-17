@@ -16,6 +16,7 @@ import { useGridSelector } from '../../utils/useGridSelector';
 import {
   gridRowsLookupSelector,
   gridRowMaximumTreeDepthSelector,
+  gridRowNodeSelector,
   gridRowTreeSelector,
 } from '../rows/gridRowsSelector';
 import {
@@ -209,7 +210,7 @@ export const useGridRowSelection = (
         return false;
       }
 
-      const rowNode = apiRef.current.getRowNode(id);
+      const rowNode = gridRowNodeSelector(apiRef, id);
       if (rowNode?.type === 'footer' || rowNode?.type === 'pinnedRow') {
         return false;
       }
@@ -574,7 +575,7 @@ export const useGridRowSelection = (
         }
       }
 
-      const rowNode = apiRef.current.getRowNode(params.id);
+      const rowNode = gridRowNodeSelector(apiRef, params.id);
       if (rowNode!.type === 'pinnedRow') {
         return;
       }

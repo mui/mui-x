@@ -36,6 +36,11 @@ export const gridRowSelector = createSelector(
 
 export const gridRowTreeSelector = createSelector(gridRowsStateSelector, (rows) => rows.tree);
 
+export const gridRowNodeSelector = createSelector(
+  gridRowTreeSelector,
+  (rowTree, rowId: GridRowId) => rowTree[rowId],
+);
+
 export const gridRowGroupsToFetchSelector = createSelector(
   gridRowsStateSelector,
   (rows) => rows.groupsToFetch,

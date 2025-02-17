@@ -123,9 +123,11 @@ export const createSelector = ((
  * Users are warned about this in our documentation https://mui.com/x/react-data-grid/state/#direct-selector-access
  */
 export const createRootSelector =
-  <State, Result>(fn: (state: State) => Result): OutputSelector<State, void, Result> =>
-  (apiRef: RefObject<{ state: State } | null>) =>
-    fn(apiRef.current!.state);
+  <State, Args, Result>(
+    fn: (state: State, args: Args) => Result,
+  ): OutputSelector<State, Args, Result> =>
+  (apiRef: RefObject<{ state: State } | null>, args?: Args) =>
+    fn(apiRef.current!.state, args!);
 
 export const createSelectorMemoized: CreateSelectorFunction = (...args: any) => {
   const selector = (apiRef: RefObject<any>, selectorArgs: any) => {

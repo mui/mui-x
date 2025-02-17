@@ -5,7 +5,6 @@ import type { CircularProgressProps as MUICircularProgressProps } from '@mui/mat
 import type { LinearProgressProps as MUILinearProgressProps } from '@mui/material/LinearProgress';
 import type { MenuItemProps as MUIMenuItemProps } from '@mui/material/MenuItem';
 import type { FormControlProps } from '@mui/material/FormControl';
-import type { SwitchProps } from '@mui/material/Switch';
 import type { IconButtonProps as MUIIconButtonProps } from '@mui/material/IconButton';
 import type { InputAdornmentProps } from '@mui/material/InputAdornment';
 import type { TooltipProps as MUITooltipProps } from '@mui/material/Tooltip';
@@ -38,6 +37,7 @@ import type {
   CircularProgressProps,
   DividerProps,
   IconButtonProps,
+  InputProps,
   LinearProgressProps,
   MenuListProps,
   MenuItemProps,
@@ -45,6 +45,7 @@ import type {
   SelectProps,
   SelectOptionProps,
   SkeletonProps,
+  SwitchProps,
   TooltipProps,
   TextFieldProps,
 } from './gridBaseSlots';
@@ -69,6 +70,7 @@ export interface BaseIconButtonPropsOverrides {}
 export interface BaseInputAdornmentPropsOverrides {}
 export interface BaseTooltipPropsOverrides {}
 export interface BasePopperPropsOverrides {}
+export interface BaseInputPropsOverrides {}
 export interface BaseInputLabelPropsOverrides {}
 export interface BaseSelectOptionPropsOverrides {}
 export interface BaseSkeletonPropsOverrides {}
@@ -111,6 +113,7 @@ interface BaseSlotProps {
   baseIconButton: IconButtonProps & BaseIconButtonPropsOverrides;
   basePopper: PopperProps & BasePopperPropsOverrides;
   baseTooltip: TooltipProps & BaseTooltipPropsOverrides;
+  baseInput: InputProps & BaseInputPropsOverrides;
   baseInputLabel: InputLabelProps & BaseInputLabelPropsOverrides;
   baseInputAdornment: InputAdornmentProps & BaseInputAdornmentPropsOverrides;
   baseSelect: SelectProps & BaseSelectPropsOverrides;
