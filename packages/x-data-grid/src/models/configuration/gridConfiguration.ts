@@ -8,7 +8,7 @@ export interface GridAriaAttributesInternalHook {
 export interface GridInternalHook
   extends GridAriaAttributesInternalHook,
     GridRowAriaAttributesInternalHook {
-  useCSSVariables: () => { id: string, variables: Record<string, string | number> };
+  useCSSVariables: () => { id: string; variables: Record<string, string | number> };
 }
 
 export interface GridConfiguration {

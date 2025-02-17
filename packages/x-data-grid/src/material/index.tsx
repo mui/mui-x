@@ -61,6 +61,7 @@ import type { GridBaseSlots } from '../models/gridSlotsComponent';
 import type { GridSlotProps } from '../models/gridSlotsComponentsProps';
 import type { PopperProps } from '../models/gridBaseSlots';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
+
 export { useMaterialCSSVariables } from './variables';
 
 const ClickAwayListener = forwardRef(MUIClickAwayListener);
