@@ -164,6 +164,10 @@ Sorting can be run server-side by setting the `sortingMode` prop to `server`, an
 
 {{"demo": "ServerSortingGrid.js", "bg": "inline"}}
 
+:::success
+You can combine server-side sorting with [server-side filtering](/x/react-data-grid/filtering/server-side/) and [server-side pagination](/x/react-data-grid/pagination/#server-side-pagination) to avoid fetching more data than needed, since it's already processed outside of the Data Grid.
+:::
+
 ## apiRef
 
 :::warning
