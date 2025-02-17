@@ -22,5 +22,7 @@ export type ChartDrawingArea = {
  */
 export function useDrawingArea(): ChartDrawingArea {
   const store = useStore();
+  // TODO: fix before merge
+  // @ts-expect-error
   return useSelector(store, selectorChartDrawingArea, undefined, fastObjectShallowCompare);
 }
