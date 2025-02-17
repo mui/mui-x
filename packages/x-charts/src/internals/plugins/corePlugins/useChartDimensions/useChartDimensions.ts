@@ -3,18 +3,11 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import ownerWindow from '@mui/utils/ownerWindow';
-import { DEFAULT_MARGINS, EMPTY_SIDES } from '../../../../constants';
+import { DEFAULT_MARGINS } from '../../../../constants';
 import { ChartPlugin } from '../../models';
 import type { UseChartDimensionsSignature } from './useChartDimensions.types';
 import { selectorChartDimensionsState } from './useChartDimensions.selectors';
 import { defaultizeMargin } from '../../../defaultizeMargin';
-import { useSelector } from '../../../store/useSelector';
-import {
-  selectorChartLeftAxisSize,
-  selectorChartBottomAxisSize,
-  selectorChartRightAxisSize,
-  selectorChartTopAxisSize,
-} from './useChartAxisSize.selectors';
 
 const MAX_COMPUTE_RUN = 10;
 
@@ -28,11 +21,6 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
   // States only used for the initialization of the size.
   const [innerWidth, setInnerWidth] = React.useState(0);
   const [innerHeight, setInnerHeight] = React.useState(0);
-
-  const leftAxisSize = useSelector(store, selectorChartLeftAxisSize);
-  const rightAxisSize = useSelector(store, selectorChartRightAxisSize);
-  const topAxisSize = useSelector(store, selectorChartTopAxisSize);
-  const bottomAxisSize = useSelector(store, selectorChartBottomAxisSize);
 
   const computeSize = React.useCallback(() => {
     const mainEl = svgRef?.current;
@@ -48,36 +36,21 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
     const newWidth = Math.floor(parseFloat(computedStyle.width)) || 0;
 
     store.update((prev) => {
-      const prevWidth =
-        params.width ?? prev.dimensions.width + prev.dimensions.left + prev.dimensions.right;
-      const prevHeight =
-        params.height ?? prev.dimensions.height + prev.dimensions.top + prev.dimensions.bottom;
-
-      if (prevWidth === newWidth && prevHeight === newHeight) {
+      if (prev.dimensions.width === newWidth && prev.dimensions.height === newHeight) {
         return prev;
       }
-
-      const axisSize = defaultizeMargin(
-        {
-          top: topAxisSize,
-          left: leftAxisSize,
-          bottom: bottomAxisSize,
-          right: rightAxisSize,
-        },
-        EMPTY_SIDES,
-      );
 
       return {
         ...prev,
         dimensions: {
-          top: params.margin.top + axisSize.top,
-          left: params.margin.left + axisSize.left,
-          bottom: params.margin.bottom + axisSize.bottom,
-          right: params.margin.right + axisSize.right,
-          width:
-            newWidth - params.margin.left - params.margin.right - axisSize.left - axisSize.right,
-          height:
-            newHeight - params.margin.top - params.margin.bottom - axisSize.top - axisSize.bottom,
+          margin: {
+            top: params.margin.top,
+            right: params.margin.right,
+            bottom: params.margin.bottom,
+            left: params.margin.left,
+          },
+          width: params.width ?? prev.dimensions.width,
+          height: params.height ?? prev.dimensions.height,
           propsWidth: params.width,
           propsHeight: params.height,
         },
@@ -90,63 +63,45 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
   }, [
     store,
     svgRef,
+    params.height,
+    params.width,
+    // Margin is an object, so we need to include all the properties to prevent infinite loops.
     params.margin.left,
     params.margin.right,
     params.margin.top,
     params.margin.bottom,
-    params.width,
-    params.height,
-    leftAxisSize,
-    rightAxisSize,
-    topAxisSize,
-    bottomAxisSize,
   ]);
 
   React.useEffect(() => {
     store.update((prev) => {
-      const width =
-        params.width ?? prev.dimensions.width + prev.dimensions.left + prev.dimensions.right;
-      const height =
-        params.height ?? prev.dimensions.height + prev.dimensions.top + prev.dimensions.bottom;
-
-      const axisSize = defaultizeMargin(
-        {
-          top: topAxisSize,
-          left: leftAxisSize,
-          bottom: bottomAxisSize,
-          right: rightAxisSize,
-        },
-        EMPTY_SIDES,
-      );
+      const width = params.width ?? prev.dimensions.width;
+      const height = params.height ?? prev.dimensions.height;
 
       return {
         ...prev,
         dimensions: {
-          ...prev.dimensions,
-          top: params.margin.top + axisSize.top,
-          left: params.margin.left + axisSize.left,
-          bottom: params.margin.bottom + axisSize.bottom,
-          right: params.margin.right + axisSize.right,
-          width: width - params.margin.left - params.margin.right - axisSize.left - axisSize.right,
-          height:
-            height - params.margin.top - params.margin.bottom - axisSize.top - axisSize.bottom,
+          margin: {
+            top: params.margin.top,
+            right: params.margin.right,
+            bottom: params.margin.bottom,
+            left: params.margin.left,
+          },
+          width,
+          height,
           propsHeight: params.height,
           propsWidth: params.width,
         },
       };
     });
   }, [
+    store,
+    params.height,
+    params.width,
+    // Margin is an object, so we need to include all the properties to prevent infinite loops.
     params.margin.left,
     params.margin.right,
     params.margin.top,
     params.margin.bottom,
-    params.height,
-    params.width,
-    leftAxisSize,
-    rightAxisSize,
-    topAxisSize,
-    bottomAxisSize,
-    store,
   ]);
 
   React.useEffect(() => {
@@ -245,8 +200,11 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
       }
       const drawingArea = selectorChartDimensionsState(store.value);
 
-      const isInsideX = x >= drawingArea.left - 1 && x <= drawingArea.left + drawingArea.width;
-      const isInsideY = y >= drawingArea.top - 1 && y <= drawingArea.top + drawingArea.height;
+      // TODO: change the logic to use the drawing area margin.
+      // const isInsideX = x >= drawingArea.left - 1 && x <= drawingArea.left + drawingArea.width;
+      // const isInsideY = y >= drawingArea.top - 1 && y <= drawingArea.top + drawingArea.height;
+      const isInsideX = x >= 0 && x <= drawingArea.width;
+      const isInsideY = y >= 0 && y <= drawingArea.height;
 
       if (options?.direction === 'x') {
         return isInsideX;
@@ -275,45 +233,12 @@ useChartDimensions.getDefaultizedParams = ({ params }) => ({
   margin: defaultizeMargin(params.margin, DEFAULT_MARGINS),
 });
 
-useChartDimensions.getInitialState = ({
-  width,
-  height,
-  margin,
-  defaultizedXAxis,
-  defaultizedYAxis,
-}) => {
-  // Axis size needs to be calculated for initial state to avoid flickering.
-  const axisSize = [...(defaultizedXAxis || []), ...(defaultizedYAxis || [])].reduce(
-    (acc, axis) => {
-      if (axis.position === 'top') {
-        acc.top += axis.height || 0;
-        return acc;
-      }
-      if (axis.position === 'bottom') {
-        acc.bottom += axis.height || 0;
-        return acc;
-      }
-      if (axis.position === 'left') {
-        acc.left += axis.width || 0;
-        return acc;
-      }
-      if (axis.position === 'right') {
-        acc.right += axis.width || 0;
-        return acc;
-      }
-      return acc;
-    },
-    { top: 0, bottom: 0, right: 0, left: 0 },
-  );
-
+useChartDimensions.getInitialState = ({ width, height, margin }) => {
   return {
     dimensions: {
-      top: margin.top + axisSize.top,
-      left: margin.left + axisSize.left,
-      bottom: margin.bottom + axisSize.bottom,
-      right: margin.right + axisSize.right,
-      width: (width ?? 0) - margin.left - margin.right - axisSize.left - axisSize.right,
-      height: (height ?? 0) - margin.top - margin.bottom - axisSize.top - axisSize.bottom,
+      margin,
+      width: width ?? 0,
+      height: height ?? 0,
       propsWidth: width,
       propsHeight: height,
     },

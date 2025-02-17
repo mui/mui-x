@@ -8,12 +8,12 @@ export const selectorChartDimensionsState: ChartRootSelector<UseChartDimensionsS
 export const selectorChartDrawingArea = createSelector(
   selectorChartDimensionsState,
   (dimensionsState) => ({
-    width: dimensionsState.width,
-    left: dimensionsState.left,
-    right: dimensionsState.right,
-    height: dimensionsState.height,
-    top: dimensionsState.top,
-    bottom: dimensionsState.bottom,
+    width: dimensionsState.width - dimensionsState.margin.left - dimensionsState.margin.right,
+    left: dimensionsState.margin.left,
+    right: dimensionsState.margin.right,
+    height: dimensionsState.height - dimensionsState.margin.top - dimensionsState.margin.bottom,
+    top: dimensionsState.margin.top,
+    bottom: dimensionsState.margin.bottom,
   }),
 );
 
@@ -28,8 +28,8 @@ export const selectorChartPropsSize = createSelector(
 export const selectorChartContainerSize = createSelector(
   selectorChartDimensionsState,
   (dimensionsState) => ({
-    width: dimensionsState.width + dimensionsState.left + dimensionsState.right,
-    height: dimensionsState.height + dimensionsState.top + dimensionsState.bottom,
+    width: dimensionsState.width,
+    height: dimensionsState.height,
   }),
 );
 
