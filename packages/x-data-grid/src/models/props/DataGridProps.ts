@@ -287,12 +287,6 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    */
   paginationMode: GridFeatureMode;
   /**
-   * If `true`, the page is set to 0 after each sorting or filtering.
-   * This prop will be removed in the next major version and resetting the page will become the default behavior.
-   * @default false
-   */
-  resetPageOnSortFilter: boolean;
-  /**
    * Set of rows of type [[GridRowsProp]].
    * @default []
    */
