@@ -219,6 +219,7 @@
   { "name": "GridDataSourceCache", "kind": "Interface" },
   { "name": "GridDataSourceCacheDefault", "kind": "Class" },
   { "name": "GridDataSourceCacheDefaultConfig", "kind": "TypeAlias" },
+  { "name": "GridDataSourceError", "kind": "Class" },
   { "name": "GridDataSourceGroupNode", "kind": "Interface" },
   { "name": "gridDateComparator", "kind": "Variable" },
   { "name": "gridDateFormatter", "kind": "Variable" },

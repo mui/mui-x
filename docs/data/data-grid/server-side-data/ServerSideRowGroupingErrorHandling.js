@@ -82,14 +82,15 @@ export default function ServerSideRowGroupingErrorHandling() {
         <DataGridPremium
           columns={columns}
           unstable_dataSource={dataSource}
-          unstable_onDataSourceError={(error, p) => {
-            const params = p;
-            if (!params.groupKeys || params.groupKeys.length === 0) {
-              setRootError(error.message);
-            } else {
-              setChildrenError(
-                `${error.message} (Requested level: ${params.groupKeys.join(' > ')})`,
-              );
+          unstable_onDataSourceError={(error) => {
+            if (error.isFetch()) {
+              if (!error.params.groupKeys || error.params.groupKeys.length === 0) {
+                setRootError(error.message);
+              } else {
+                setChildrenError(
+                  `${error.message} (Requested level: ${error.params.groupKeys.join(' > ')})`,
+                );
+              }
             }
           }}
           unstable_dataSourceCache={null}

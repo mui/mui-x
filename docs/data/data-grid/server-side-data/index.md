@@ -271,31 +271,58 @@ To disable the data source cache, pass `null` to the `unstable_dataSourceCache` 
 
 {{"demo": "ServerSideDataGridNoCache.js", "bg": "inline"}}
 
+## Updating data
+
+The data source supports an optional method (`updateRow()`) for updating data on the server.
+
+This method returns a promise that resolves when the row is updated.
+If the promise resolves, the grid updates the row and mutates the cache. In case of an error, `unstable_onDataSourceError` is triggered with the error object containing the params as mentioned in the [Error handling](#error-handling) section.
+
+```diff
+ const dataSource: GridDataSource = {
+  getRows: async (params: GridGetRowsParams) => {
+    // fetch rows from the server
+  },
++ updateRow: async (rowId: GridRowId, updatedRow: GridRowModel, previousRow: GridRowModel) => {
++   // update row on the server
++ },
+ }
+```
+
+{{"demo": "ServerSideEditing.js", "bg": "inline"}}
+
 ## Error handling
 
 You could handle the errors with the data source by providing an error handler function using the `unstable_onDataSourceError`.
 It will be called whenever there's an error in fetching the data.
 
-The first argument of this function is the error object, and the second argument is the fetch parameters of type `GridGetRowsParams`.
+This function recieves an error object of type `GridDataSourceError` which includes the parameters of type `GridGetRowsParams` or `GridUpdateRowParams`.
+
+The `GridDataSourceError` object provides helper methods to check the type of the error:
+
+| Method       | Description                                                          | Type of `error.params` |
+| :----------- | :------------------------------------------------------------------- | :--------------------- |
+| `isFetch()`  | Returns `true` if the error is a result of a `getRows` operation.    | `GridGetRowsParams`    |
+| `isUpdate()` | Returns `true` if the error is a result of an `updateRow` operation. | `GridUpdateRowParams`  |
 
 ```tsx
-<DataGridPro
+<DataGrid
   columns={columns}
   unstable_dataSource={customDataSource}
-  unstable_onDataSourceError={(error, params) => {
-    console.error(error);
+  unstable_onDataSourceError={(error) => {
+    if (error.isFetch()) {
+      // error.params is of type `GridGetRowsParams`
+      // fetch related logic, e.g set an overlay state
+    }
+    if (error.isUpdate()) {
+      // error.params is of type `GridUpdateRowParams`
+      // update related logic, e.g set a snackbar state
+    }
   }}
 />
 ```
 
 {{"demo": "ServerSideErrorHandling.js", "bg": "inline"}}
-
-## Updating data
-
-The data source also supports updating data on the server.
-Use data source's `updateRow` method to update a row on the server as the demo below shows.
-
-{{"demo": "ServerSideEditing.js", "bg": "inline"}}
 
 ## API
 

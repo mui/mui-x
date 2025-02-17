@@ -16,6 +16,7 @@ import { gridPaginationModelSelector } from '../pagination/gridPaginationSelecto
 import { gridGetRowsParamsSelector } from './gridDataSourceSelector';
 import { CacheChunkManager, DataSourceRowsUpdateStrategy } from './utils';
 import { GridDataSourceCacheDefault, type GridDataSourceCacheDefaultConfig } from './cache';
+import { GridDataSourceError } from './gridDataSourceError';
 
 import type { GridDataSourceApi, GridDataSourceApiBase, GridDataSourcePrivateApi } from './models';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -71,7 +72,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
   const lastRequestId = React.useRef<number>(0);
 
-  const onError = props.unstable_onDataSourceError;
+  const onDataSourceErrorProp = props.unstable_onDataSourceError;
 
   const cacheChunkManager = useLazyRef<CacheChunkManager, void>(() => {
     const sortedPageSizeOptions = props.pageSizeOptions
@@ -141,13 +142,20 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
             fetchParams,
           });
         }
-      } catch (error) {
+      } catch (originalError) {
         if (lastRequestId.current === requestId) {
           apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
-            error: error as Error,
+            error: originalError as Error,
             fetchParams,
           });
-          onError?.(error as Error, fetchParams);
+          onDataSourceErrorProp?.(
+            new GridDataSourceError({
+              message: (originalError as Error)?.message,
+              operationType: 'fetchRows',
+              params: fetchParams,
+              cause: originalError as Error,
+            }),
+          );
         }
       } finally {
         if (defaultRowsUpdateStrategyActive && lastRequestId.current === requestId) {
@@ -161,7 +169,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       apiRef,
       defaultRowsUpdateStrategyActive,
       props.unstable_dataSource?.getRows,
-      onError,
+      onDataSourceErrorProp,
       options,
       props.signature,
     ],

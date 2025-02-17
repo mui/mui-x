@@ -6,6 +6,7 @@ import {
   GridRowId,
   useGridSelector,
   GridDataSourceCacheDefaultConfig,
+  GridDataSourceError,
 } from '@mui/x-data-grid';
 import {
   gridRowGroupsToFetchSelector,
@@ -70,7 +71,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
     );
   }, [apiRef, props.unstable_dataSource, props.unstable_lazyLoading]);
 
-  const onError = props.unstable_onDataSourceError;
+  const onDataSourceErrorProp = props.unstable_onDataSourceError;
 
   const fetchRowChildren = React.useCallback<GridDataSourcePrivateApiPro['fetchRowChildren']>(
     async (id) => {
@@ -147,7 +148,14 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       } catch (error) {
         const childrenFetchError = error as Error;
         apiRef.current.unstable_dataSource.setChildrenFetchError(id, childrenFetchError);
-        onError?.(childrenFetchError, fetchParams);
+        onDataSourceErrorProp?.(
+          new GridDataSourceError({
+            message: childrenFetchError.message,
+            operationType: 'fetchRows',
+            params: fetchParams,
+            cause: childrenFetchError,
+          }),
+        );
       } finally {
         apiRef.current.unstable_dataSource.setChildrenLoading(id, false);
         nestedDataManager.setRequestSettled(id);
@@ -157,7 +165,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       nestedDataManager,
       cacheChunkManager,
       cache,
-      onError,
+      onDataSourceErrorProp,
       apiRef,
       props.treeData,
       props.unstable_dataSource?.getRows,

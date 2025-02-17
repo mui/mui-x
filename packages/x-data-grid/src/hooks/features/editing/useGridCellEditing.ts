@@ -42,6 +42,7 @@ import {
 } from '../../../models/params/gridEditCellParams';
 import { getDefaultCellValue } from './utils';
 import { GridUpdateRowParams } from '../../../models/gridDataSource';
+import { GridDataSourceError } from '../dataSource';
 
 export const useGridCellEditing = (
   apiRef: RefObject<GridPrivateApiCommunity>,
@@ -436,12 +437,19 @@ export const useGridCellEditing = (
           updateFieldInCellModesModel(id, field, { mode: GridCellModes.Edit });
 
           if (typeof props.unstable_onDataSourceError === 'function') {
-            props.unstable_onDataSourceError(errorThrown, updateParams);
+            props.unstable_onDataSourceError(
+              new GridDataSourceError({
+                message: errorThrown?.message,
+                operationType: 'updateRow',
+                params: updateParams,
+                cause: errorThrown,
+              }),
+            );
           } else if (process.env.NODE_ENV !== 'production') {
             warnOnce(
               [
                 'MUI X: A call to `unstable_dataSource.updateRow()` threw an error which was not handled because `unstable_onDataSourceError` is missing.',
-                'To handle the error pass a callback to the `unstable_onDataSourceError` prop, for example `<DataGrid unstable_onDataSourceError={(error, params) => ...} />`.',
+                'To handle the error pass a callback to the `unstable_onDataSourceError` prop, for example `<DataGrid unstable_onDataSourceError={(error) => ...} />`.',
                 'For more detail, see https://mui.com/x/react-data-grid/server-side-data/#error-handling.',
               ],
               'error',

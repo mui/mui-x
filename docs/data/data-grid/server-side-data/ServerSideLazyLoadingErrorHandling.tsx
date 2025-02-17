@@ -99,8 +99,8 @@ function ServerSideLazyLoadingErrorHandling() {
           {...props}
           apiRef={apiRef}
           unstable_dataSource={dataSource}
-          unstable_onDataSourceError={(_, params) =>
-            setRetryParams(params as GridGetRowsParams)
+          unstable_onDataSourceError={(error) =>
+            setRetryParams(error.params as GridGetRowsParams)
           }
           unstable_dataSourceCache={null}
           unstable_lazyLoading

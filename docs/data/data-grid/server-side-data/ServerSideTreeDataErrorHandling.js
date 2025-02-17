@@ -89,14 +89,16 @@ export default function ServerSideTreeDataErrorHandling() {
           {...props}
           treeData
           unstable_dataSource={dataSource}
-          unstable_onDataSourceError={(error, p) => {
-            const params = p;
-            if (!params.groupKeys || params.groupKeys.length === 0) {
-              setRootError(error.message);
-            } else {
-              setChildrenError(
-                `${error.message} (Requested level: ${params.groupKeys.join(' > ')})`,
-              );
+          unstable_onDataSourceError={(error) => {
+            if (error.isFetch()) {
+              const params = error.params;
+              if (!params.groupKeys || params.groupKeys.length === 0) {
+                setRootError(error.message);
+              } else {
+                setChildrenError(
+                  `${error.message} (Requested level: ${params.groupKeys.join(' > ')})`,
+                );
+              }
             }
           }}
           unstable_dataSourceCache={null}
