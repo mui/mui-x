@@ -9,6 +9,7 @@ import {
 export interface UseChartProZoomParameters {
   /**
    * The list of zoom data related to each axis.
+   * Used to initialize the zoom in a specific configuration without controlling it.
    */
   initialZoom?: ZoomData[];
   /**
@@ -17,6 +18,10 @@ export interface UseChartProZoomParameters {
    * @param {ZoomData[]} zoomData Updated zoom data.
    */
   onZoomChange?: (zoomData: ZoomData[] | ((zoomData: ZoomData[]) => ZoomData[])) => void;
+  /**
+   * The list of zoom data related to each axis.
+   */
+  zoomData?: ZoomData[];
 }
 
 export type UseChartProZoomDefaultizedParameters = UseChartProZoomParameters &
@@ -33,6 +38,10 @@ export interface UseChartProZoomState {
      * Mapping of axis id to the zoom data.
      */
     zoomData: ZoomData[];
+    /**
+     * Internal information to know if the user control the state or not.
+     */
+    isControlled: boolean;
   };
 }
 

@@ -41,7 +41,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   ref: React.Ref<SVGSVGElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiScatterChartPro' });
-  const { initialZoom, onZoomChange, apiRef, ...other } = props;
+  const { initialZoom, zoomData, onZoomChange, apiRef, ...other } = props;
   const {
     chartsWrapperProps,
     chartContainerProps,
@@ -60,6 +60,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
     {
       ...chartContainerProps,
       initialZoom,
+      zoomData,
       onZoomChange,
       apiRef,
       plugins: SCATTER_CHART_PRO_PLUGINS,
@@ -168,6 +169,7 @@ ScatterChartPro.propTypes = {
   id: PropTypes.string,
   /**
    * The list of zoom data related to each axis.
+   * Used to initialize the zoom in a specific configuration without controlling it.
    */
   initialZoom: PropTypes.arrayOf(
     PropTypes.shape({
@@ -480,6 +482,16 @@ ScatterChartPro.propTypes = {
       id: PropTypes.string,
       max: PropTypes.number,
       min: PropTypes.number,
+    }),
+  ),
+  /**
+   * The list of zoom data related to each axis.
+   */
+  zoomData: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      end: PropTypes.number.isRequired,
+      start: PropTypes.number.isRequired,
     }),
   ),
 } as any;
