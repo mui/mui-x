@@ -3,6 +3,68 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.27.0
+
+_Feb 17, 2025_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- ⚡ Improve Data Grid Excel export serialization performance
+- 🐞 Bugfixes
+- 🌍 Improve Polish (pl-PL) and Ukrainian (uk-UA) locale on the Data Grid
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@pawelkula, @Neonin.
+Following are all team members who have contributed to this release:
+@cherniavskii, @JCQuintas, @oliviertassinari, @arminmeh and @LukasTy
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.27.0`
+
+- [DataGrid] Add `resetPageOnSortFilter` prop that resets the page after sorting and filtering (#16580) @arminmeh
+- [DataGrid] Avoid `undefined` value for pagination `rowCount` (#16558) @cherniavskii
+- [l10n] Improve Polish (pl-PL) locale (#16594) @pawelkula
+- [l10n] Improve Ukrainian (uk-UA) locale (#16593) @Neonin
+
+#### `@mui/x-data-grid-pro@7.27.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.27.0`.
+
+#### `@mui/x-data-grid-premium@7.27.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.27.0`, plus:
+
+- [DataGridPremium] Fix Excel export Web Worker demo not working in dev mode (#16532) @cherniavskii
+- [DataGridPremium] Improve Excel export serialization performance (#16545) @cherniavskii
+- [DataGridPremium] Namespace Excel export worker (#16539) @oliviertassinari
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.27.0`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@7.27.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.27.0`, plus:
+
+- [DateRangePicker] Avoid unnecessary field section focusing (#16569) @LukasTy
+
+### Charts
+
+#### `@mui/x-charts@7.27.0`
+
+Internal changes.
+
+#### `@mui/x-charts-pro@7.27.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+- [charts-pro] Fix automatic type overloads (#16579) @JCQuintas
+
+### Core
+
+- [test] Fix Data Grid data source error test on React 18 (#16565) @arminmeh
+
 ## 7.26.0
 
 _Feb 7, 2025_
