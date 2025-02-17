@@ -3,9 +3,9 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 7.26.1
+## 7.27.0
 
-_Feb 14, 2025_
+_Feb 17, 2025_
 
 We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
@@ -20,18 +20,19 @@ Following are all team members who have contributed to this release:
 
 ### Data Grid
 
-#### `@mui/x-data-grid@7.26.1`
+#### `@mui/x-data-grid@7.27.0`
 
+- [DataGrid] Add `resetPageOnSortFilter` prop that resets the page after sorting and filtering (#16580) @arminmeh
 - [DataGrid] Avoid `undefined` value for pagination `rowCount` (#16558) @cherniavskii
-  [l10n] Improve Polish (pl-PL) locale (#16594) @pawelkula
+- [l10n] Improve Polish (pl-PL) locale (#16594) @pawelkula
 
-#### `@mui/x-data-grid-pro@7.26.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@7.27.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@7.26.1`.
+Same changes as in `@mui/x-data-grid@7.27.0`.
 
-#### `@mui/x-data-grid-premium@7.26.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@7.27.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@7.26.1`, plus:
+Same changes as in `@mui/x-data-grid-pro@7.27.0`, plus:
 
 - [DataGridPremium] Fix Excel export Web Worker demo not working in dev mode (#16532) @cherniavskii
 - [DataGridPremium] Improve Excel export serialization performance (#16545) @cherniavskii
@@ -39,23 +40,23 @@ Same changes as in `@mui/x-data-grid-pro@7.26.1`, plus:
 
 ### Date and Time Pickers
 
-#### `@mui/x-date-pickers@7.26.1`
+#### `@mui/x-date-pickers@7.27.0`
 
 Internal changes.
 
-#### `@mui/x-date-pickers-pro@7.26.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@7.27.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@7.26.1`, plus:
+Same changes as in `@mui/x-date-pickers@7.27.0`, plus:
 
 - [DateRangePicker] Avoid unnecessary field section focusing (#16569) @LukasTy
 
 ### Charts
 
-#### `@mui/x-charts@7.26.1`
+#### `@mui/x-charts@7.27.0`
 
 Internal changes.
 
-#### `@mui/x-charts-pro@7.26.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-charts-pro@7.27.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 - [charts-pro] Fix automatic type overloads (#16579) @JCQuintas
 
