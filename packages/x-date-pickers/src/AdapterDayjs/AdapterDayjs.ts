@@ -1,6 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import defaultDayjs, { Dayjs } from 'dayjs';
 // dayjs has no exports field defined
+// See https://github.com/iamkun/dayjs/issues/2562
 /* eslint-disable import/extensions */
 import weekOfYearPlugin from 'dayjs/plugin/weekOfYear.js';
 import customParseFormatPlugin from 'dayjs/plugin/customParseFormat.js';
