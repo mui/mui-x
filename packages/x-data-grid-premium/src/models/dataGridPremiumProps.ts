@@ -222,7 +222,7 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
     onPivotModelChange: React.Dispatch<React.SetStateAction<PivotModel>>;
     initialColumns: GridColDef[] | undefined;
     pivotSettingsOpen: boolean;
-    onPivotSettingsOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
+    onPivotSettingsOpenChange: (isPivotSettingsOpen: boolean) => void;
   };
   /**
    * Callback fired when the data source request fails.

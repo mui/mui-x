@@ -35,7 +35,8 @@ export default function GridPivotingMovies() {
     ],
   });
 
-  const [isPivotMode, setIsPivotMode] = React.useState(false);
+  const [isPivotMode, setIsPivotMode] = React.useState(true);
+  const [pivotSettingsOpen, setPivotSettingsOpen] = React.useState(false);
 
   const pivotParams = unstable_useGridPivoting({
     apiRef,
@@ -43,6 +44,8 @@ export default function GridPivotingMovies() {
     onPivotModelChange: setPivotModel,
     pivotMode: isPivotMode,
     onPivotModeChange: setIsPivotMode,
+    pivotSettingsOpen,
+    onPivotSettingsOpenChange: setPivotSettingsOpen,
   });
 
   return (
