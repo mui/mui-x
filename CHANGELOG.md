@@ -13,6 +13,7 @@ We'd like to offer a big thanks to the 16 contributors who made this release pos
 
 - 📦 Data Grid [data source](https://next.mui.com/x/react-data-grid/server-side-data/) is now available in the Community plan
 - ⚡ Improve Data Grid Excel export serialization performance
+- 🚫 Add ["No columns" overlay](https://next.mui.com/x/react-data-grid/overlays/#no-columns-overlay) to Data Grid
 - 🌍 Improve Polish (pl-PL) and Ukrainian (uk-UA) locales on the Data Grid
 - 🐞 Bugfixes
 
