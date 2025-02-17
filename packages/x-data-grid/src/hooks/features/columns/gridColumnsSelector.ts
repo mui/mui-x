@@ -58,6 +58,17 @@ export const gridColumnVisibilityModelSelector = createSelector(
 );
 
 /**
+ * Get the "initial" column visibility model, containing the visibility status of each column.
+ * It is updated when the `columns` prop is updated or when `updateColumns` API method is called.
+ * If a column is not registered in the model, it is visible.
+ * @category Visible Columns
+ */
+export const gridInitialColumnVisibilityModelSelector = createSelector(
+  gridColumnsStateSelector,
+  (columnsState) => columnsState.initialColumnVisibilityModel,
+);
+
+/**
  * Get the visible columns as a lookup (an object containing the field for keys and the definition for values).
  * @category Visible Columns
  */

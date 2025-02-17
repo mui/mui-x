@@ -167,6 +167,7 @@ export function useGridColumns(
         columnsToUpsert: columns,
         initialState: undefined,
         keepOnlyColumnsToUpsert: false,
+        updateInitialVisibilityModel: true,
       });
       setGridColumnsState(columnsState);
     },
@@ -451,6 +452,7 @@ export function useGridColumns(
       // If the user provides a model, we don't want to set it in the state here because it has it's dedicated `useEffect` which calls `setColumnVisibilityModel`
       columnsToUpsert: props.columns,
       keepOnlyColumnsToUpsert: true,
+      updateInitialVisibilityModel: true,
     });
     previousColumnsProp.current = props.columns;
     setGridColumnsState(columnsState);

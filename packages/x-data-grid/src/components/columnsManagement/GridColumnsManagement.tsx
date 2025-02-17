@@ -8,6 +8,7 @@ import { TextFieldProps } from '../../models/gridBaseSlots';
 import {
   gridColumnDefinitionsSelector,
   gridColumnVisibilityModelSelector,
+  gridInitialColumnVisibilityModelSelector,
 } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -16,7 +17,6 @@ import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridColDef } from '../../models/colDef/gridColDef';
 import type { GridSlotProps } from '../../models/gridSlotsComponentsProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
-import { useLazyRef } from '../../hooks/utils/useLazyRef';
 import { checkColumnVisibilityModelsSame, defaultSearchPredicate } from './utils';
 import { NotRendered } from '../../utils/assert';
 
@@ -84,9 +84,10 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
   const apiRef = useGridApiContext();
   const searchInputRef = React.useRef<HTMLInputElement>(null);
   const columns = useGridSelector(apiRef, gridColumnDefinitionsSelector);
-  const initialColumnVisibilityModel = useLazyRef(() =>
-    gridColumnVisibilityModelSelector(apiRef),
-  ).current;
+  const initialColumnVisibilityModel = useGridSelector(
+    apiRef,
+    gridInitialColumnVisibilityModelSelector,
+  );
   const columnVisibilityModel = useGridSelector(apiRef, gridColumnVisibilityModelSelector);
   const rootProps = useGridRootProps();
   const [searchValue, setSearchValue] = React.useState('');

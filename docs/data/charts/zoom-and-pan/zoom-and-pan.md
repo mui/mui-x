@@ -52,7 +52,9 @@ See how the secondary axis adapts to the visible part of the primary axis in the
 
 {{"demo": "ZoomFilterMode.js"}}
 
-## External zoom management
+## Zoom management
+
+### External zoom management
 
 You can manage the zoom state by two means:
 
@@ -66,5 +68,11 @@ The `zoom` state is an array of objects that define the zoom state for each axis
 - **axisId**: The id of the axis to control.
 - **start**: The starting percentage of the axis range.
 - **end**: The ending percentage of the zoom range.
+
+{{"demo": "ExternalZoomManagement.js"}}
+
+### Zoom synchronization
+
+To synchronize zoom between multiple charts, you can control the zoom state.
 
 {{"demo": "ZoomControlled.js"}}

@@ -308,11 +308,13 @@ export const createColumnsState = ({
   initialState,
   columnVisibilityModel = gridColumnVisibilityModelSelector(apiRef),
   keepOnlyColumnsToUpsert = false,
+  updateInitialVisibilityModel = false,
 }: {
   columnsToUpsert: readonly GridColDef[];
   initialState: GridColumnsInitialState | undefined;
   columnVisibilityModel?: GridColumnVisibilityModel;
   keepOnlyColumnsToUpsert: boolean;
+  updateInitialVisibilityModel?: boolean;
   apiRef: RefObject<GridApiCommunity>;
 }) => {
   const isInsideStateInitializer = !apiRef.current.state.columns;
@@ -325,6 +327,7 @@ export const createColumnsState = ({
       orderedFields: [],
       lookup: {},
       columnVisibilityModel,
+      initialColumnVisibilityModel: columnVisibilityModel,
     };
   } else {
     const currentState = gridColumnsStateSelector(apiRef);
@@ -332,6 +335,9 @@ export const createColumnsState = ({
       orderedFields: keepOnlyColumnsToUpsert ? [] : [...currentState.orderedFields],
       lookup: { ...currentState.lookup }, // Will be cleaned later if keepOnlyColumnsToUpsert=true
       columnVisibilityModel,
+      initialColumnVisibilityModel: updateInitialVisibilityModel
+        ? columnVisibilityModel
+        : currentState.initialColumnVisibilityModel,
     };
   }
 

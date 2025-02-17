@@ -3,21 +3,27 @@ import type { ChartAnyPluginSignature } from '../models/plugin';
 
 type Listener<T> = (value: T) => void;
 
-export type StoreUpdater<TSignatures extends readonly ChartAnyPluginSignature[]> = (
-  prevState: ChartState<TSignatures>,
-) => ChartState<TSignatures>;
+export type StoreUpdater<
+  TSignatures extends readonly ChartAnyPluginSignature[],
+  TOptionalSignatures extends readonly ChartAnyPluginSignature[] = [],
+> = (
+  prevState: ChartState<TSignatures, TOptionalSignatures>,
+) => ChartState<TSignatures, TOptionalSignatures>;
 
-export class ChartStore<TSignatures extends readonly ChartAnyPluginSignature[]> {
-  public value: ChartState<TSignatures>;
+export class ChartStore<
+  TSignatures extends readonly ChartAnyPluginSignature[],
+  TOptionalSignatures extends readonly ChartAnyPluginSignature[] = [],
+> {
+  public value: ChartState<TSignatures, TOptionalSignatures>;
 
-  private listeners: Set<Listener<ChartState<TSignatures>>>;
+  private listeners: Set<Listener<ChartState<TSignatures, TOptionalSignatures>>>;
 
-  constructor(value: ChartState<TSignatures>) {
+  constructor(value: ChartState<TSignatures, TOptionalSignatures>) {
     this.value = value;
     this.listeners = new Set();
   }
 
-  public subscribe = (fn: Listener<ChartState<TSignatures>>) => {
+  public subscribe = (fn: Listener<ChartState<TSignatures, TOptionalSignatures>>) => {
     this.listeners.add(fn);
     return () => {
       this.listeners.delete(fn);
@@ -28,7 +34,7 @@ export class ChartStore<TSignatures extends readonly ChartAnyPluginSignature[]> 
     return this.value;
   };
 
-  public update = (updater: StoreUpdater<TSignatures>) => {
+  public update = (updater: StoreUpdater<TSignatures, TOptionalSignatures>) => {
     const newState = updater(this.value);
     if (newState !== this.value) {
       this.value = newState;
