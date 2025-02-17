@@ -1108,7 +1108,6 @@ describe('<DataGrid /> - Rows', () => {
 
   // https://github.com/mui/mui-x/issues/10373
   // needs virtualization
-  // needs virtualization
   testSkipIf(isJSDOM)(
     'should set proper `data-rowindex` and `aria-rowindex` when focused row is out of the viewport',
     () => {

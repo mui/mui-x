@@ -2,7 +2,7 @@
 title: React Data Grid - Server-side data
 ---
 
-# Data Grid - Server-side data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🧪
+# Data Grid - Server-side data 🧪
 
 <p class="description">The Data Grid server-side data.</p>
 
@@ -48,7 +48,7 @@ React.useEffect(() => {
   fetcher();
 }, [paginationModel, sortModel, filterModel]);
 
-<DataGridPro
+<DataGrid
   columns={columns}
   pagination
   sortingMode="server"
@@ -119,7 +119,7 @@ const customDataSource: GridDataSource = {
   },
 }
 
-<DataGridPro
+<DataGrid
   columns={columns}
   unstable_dataSource={customDataSource}
   pagination
@@ -164,7 +164,7 @@ With the data source, the features `filtering`, `sorting`, `pagination` are auto
 When the corresponding models update, the Data Grid calls the `getRows` method with the updated values of type `GridGetRowsParams` to get updated data.
 
 ```tsx
-<DataGridPro
+<DataGrid
   columns={columns}
   // automatically sets `sortingMode="server"`, `filterMode="server"`, `paginationMode="server"`
   unstable_dataSource={customDataSource}
@@ -231,11 +231,11 @@ Changing those would require a new response to be retrieved and stored in the ch
 The `GridDataSourceCacheDefault` has a default Time To Live (`ttl`) of 5 minutes. To customize it, pass the `ttl` option in milliseconds to the `GridDataSourceCacheDefault` constructor, and then pass it as the `unstable_dataSourceCache` prop.
 
 ```tsx
-import { GridDataSourceCacheDefault } from '@mui/x-data-grid-pro';
+import { GridDataSourceCacheDefault } from '@mui/x-data-grid';
 
 const lowTTLCache = new GridDataSourceCacheDefault({ ttl: 1000 * 10 }); // 10 seconds
 
-<DataGridPro
+<DataGrid
   columns={columns}
   unstable_dataSource={customDataSource}
   unstable_dataSourceCache={lowTTLCache}
@@ -262,7 +262,7 @@ export interface GridDataSourceCache {
 To disable the data source cache, pass `null` to the `unstable_dataSourceCache` prop.
 
 ```tsx
-<DataGridPro
+<DataGrid
   columns={columns}
   unstable_dataSource={customDataSource}
   unstable_dataSourceCache={null}
