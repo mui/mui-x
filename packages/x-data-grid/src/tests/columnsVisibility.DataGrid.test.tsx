@@ -338,6 +338,119 @@ describe('<DataGrid /> - Columns visibility', () => {
     expect(resetButton).to.have.attribute('disabled');
   });
 
+  it('should use the initial column visibility model as a reference when `Reset` button is clicked in columns management panel', async () => {
+    const { user } = render(
+      <TestDataGrid
+        slots={{
+          toolbar: GridToolbar,
+        }}
+        initialState={{
+          columns: {
+            columnVisibilityModel: { idBis: false },
+          },
+        }}
+      />,
+    );
+
+    expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
+    await user.click(screen.getByRole('button', { name: 'Select columns' }));
+    const resetButton = screen.getByRole('button', { name: 'Reset' });
+    expect(resetButton).to.have.attribute('disabled');
+
+    // Show `idBis` column
+    await user.click(screen.getByRole('checkbox', { name: 'idBis' }));
+    expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'idBis']);
+    expect(resetButton).not.to.have.attribute('disabled');
+
+    // Close columns management
+    await user.click(screen.getByRole('button', { name: 'Select columns' }));
+
+    // Reopen columns management
+    await user.click(screen.getByRole('button', { name: 'Select columns' }));
+
+    const resetButton1 = screen.getByRole('button', { name: 'Reset' });
+    expect(resetButton1).not.to.have.attribute('disabled');
+
+    // Reset columns
+    await user.click(resetButton1);
+    expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
+    expect(resetButton1).to.have.attribute('disabled');
+  });
+
+  it('should use the first controlled column visibility model as a reference when `Reset` button is clicked in columns management panel', async () => {
+    function ControlledTest() {
+      const [model, setModel] = React.useState<GridColumnVisibilityModel>({ idBis: false });
+      return (
+        <TestDataGrid
+          slots={{
+            toolbar: GridToolbar,
+          }}
+          columnVisibilityModel={model}
+          onColumnVisibilityModelChange={setModel}
+        />
+      );
+    }
+    const { user } = render(<ControlledTest />);
+
+    expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
+    await user.click(screen.getByRole('button', { name: 'Select columns' }));
+    const resetButton = screen.getByRole('button', { name: 'Reset' });
+    expect(resetButton).to.have.attribute('disabled');
+
+    // Show `idBis` column
+    await user.click(screen.getByRole('checkbox', { name: 'idBis' }));
+    expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'idBis']);
+    expect(resetButton).not.to.have.attribute('disabled');
+
+    // Close columns management
+    await user.click(screen.getByRole('button', { name: 'Select columns' }));
+
+    // Reopen columns management
+    await user.click(screen.getByRole('button', { name: 'Select columns' }));
+
+    const resetButton1 = screen.getByRole('button', { name: 'Reset' });
+    expect(resetButton1).not.to.have.attribute('disabled');
+
+    // Reset columns
+    await user.click(resetButton1);
+    expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
+    expect(resetButton1).to.have.attribute('disabled');
+  });
+
+  it('should update the initial column visibility model when the columns are updated', async () => {
+    const { user, setProps } = render(
+      <TestDataGrid
+        slots={{
+          toolbar: GridToolbar,
+        }}
+        initialState={{
+          columns: {
+            columnVisibilityModel: { idBis: false },
+          },
+        }}
+      />,
+    );
+
+    expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
+    await user.click(screen.getByRole('button', { name: 'Select columns' }));
+    const resetButton = screen.getByRole('button', { name: 'Reset' });
+    expect(resetButton).to.have.attribute('disabled');
+
+    // Show `idBis` column
+    await user.click(screen.getByRole('checkbox', { name: 'idBis' }));
+    expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'idBis']);
+    expect(resetButton).not.to.have.attribute('disabled');
+
+    // Reset columns
+    setProps({
+      columns: [{ field: 'id' }, { field: 'idBis' }],
+    });
+
+    expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'idBis']);
+    // Reference updated to the current `columnVisibilityModel`
+    expect(resetButton).to.have.attribute('disabled');
+  });
+
   describe('prop: `getTogglableColumns`', () => {
     it('should control columns shown in columns panel using `getTogglableColumns` prop', () => {
       const getTogglableColumns = (cols: GridColDef[]) =>
