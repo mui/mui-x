@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test:performance": "vitest bench"
+    "test:performance": "vitest bench",
+    "test:performance:browser": "vitest bench --browser"
   },
   "devDependencies": {
     "@codspeed/vitest-plugin": "^4.0.0",
