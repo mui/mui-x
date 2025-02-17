@@ -2,7 +2,7 @@ import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { unstable_debounce as debounce } from '@mui/utils';
-
+import { warnOnce } from '@mui/x-internals/warning';
 import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
 import {
   GridGetRowsResponse,
@@ -148,14 +148,25 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
             error: originalError as Error,
             fetchParams,
           });
-          onDataSourceErrorProp?.(
-            new GridDataSourceError({
-              message: (originalError as Error)?.message,
-              operationType: 'fetchRows',
-              params: fetchParams,
-              cause: originalError as Error,
-            }),
-          );
+          if (typeof onDataSourceErrorProp === 'function') {
+            onDataSourceErrorProp(
+              new GridDataSourceError({
+                message: (originalError as Error)?.message,
+                operationType: 'fetchRows',
+                params: fetchParams,
+                cause: originalError as Error,
+              }),
+            );
+          } else if (process.env.NODE_ENV !== 'production') {
+            warnOnce(
+              [
+                'MUI X: A call to `unstable_dataSource.getRows()` threw an error which was not handled because `unstable_onDataSourceError` is missing.',
+                'To handle the error pass a callback to the `unstable_onDataSourceError` prop, for example `<DataGrid unstable_onDataSourceError={(error) => ...} />`.',
+                'For more detail, see https://mui.com/x/react-data-grid/server-side-data/#error-handling.',
+              ],
+              'error',
+            );
+          }
         }
       } finally {
         if (defaultRowsUpdateStrategyActive && lastRequestId.current === requestId) {

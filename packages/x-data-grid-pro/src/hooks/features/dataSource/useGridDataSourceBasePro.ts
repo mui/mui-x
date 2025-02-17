@@ -16,6 +16,7 @@ import {
   DataSourceRowsUpdateStrategy,
   GridStrategyGroup,
 } from '@mui/x-data-grid/internals';
+import { warnOnce } from '@mui/x-internals/warning';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { NestedDataManager, RequestStatus } from './utils';
@@ -148,14 +149,25 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       } catch (error) {
         const childrenFetchError = error as Error;
         apiRef.current.unstable_dataSource.setChildrenFetchError(id, childrenFetchError);
-        onDataSourceErrorProp?.(
-          new GridDataSourceError({
-            message: childrenFetchError.message,
-            operationType: 'fetchRows',
-            params: fetchParams,
-            cause: childrenFetchError,
-          }),
-        );
+        if (typeof onDataSourceErrorProp === 'function') {
+          onDataSourceErrorProp(
+            new GridDataSourceError({
+              message: childrenFetchError.message,
+              operationType: 'fetchRows',
+              params: fetchParams,
+              cause: childrenFetchError,
+            }),
+          );
+        } else if (process.env.NODE_ENV !== 'production') {
+          warnOnce(
+            [
+              'MUI X: A call to `unstable_dataSource.getRows()` threw an error which was not handled because `unstable_onDataSourceError` is missing.',
+              'To handle the error pass a callback to the `unstable_onDataSourceError` prop, for example `<DataGrid unstable_onDataSourceError={(error) => ...} />`.',
+              'For more detail, see https://mui.com/x/react-data-grid/server-side-data/#error-handling.',
+            ],
+            'error',
+          );
+        }
       } finally {
         apiRef.current.unstable_dataSource.setChildrenLoading(id, false);
         nestedDataManager.setRequestSettled(id);
