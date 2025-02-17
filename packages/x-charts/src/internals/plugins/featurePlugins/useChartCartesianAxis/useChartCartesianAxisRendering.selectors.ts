@@ -101,7 +101,7 @@ const selectorChartZoomAxisFilters = createSelector(
       return undefined;
     }
 
-    const xFilters = xAxis.reduce<ZoomAxisFilters>((acc, axis, index) => {
+    const xFilters = xAxis?.reduce<ZoomAxisFilters>((acc, axis, index) => {
       const filter = xMapper(axis, index);
       if (filter !== null) {
         acc[axis.id] = filter;
@@ -109,7 +109,7 @@ const selectorChartZoomAxisFilters = createSelector(
       return acc;
     }, {});
 
-    const yFilters = yAxis.reduce<ZoomAxisFilters>((acc, axis, index) => {
+    const yFilters = yAxis?.reduce<ZoomAxisFilters>((acc, axis, index) => {
       const filter = yMapper(axis, index);
       if (filter !== null) {
         acc[axis.id] = filter;
@@ -117,7 +117,7 @@ const selectorChartZoomAxisFilters = createSelector(
       return acc;
     }, {} as ZoomAxisFilters);
 
-    if (Object.keys(xFilters).length === 0 && Object.keys(yFilters).length === 0) {
+    if (Object.keys(xFilters ?? {}).length === 0 && Object.keys(yFilters ?? {}).length === 0) {
       return undefined;
     }
 

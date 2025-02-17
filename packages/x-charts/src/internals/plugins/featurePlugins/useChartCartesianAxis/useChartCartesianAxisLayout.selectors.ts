@@ -3,7 +3,7 @@ import { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 import { ChartState } from '../../models/chart';
 
 export const selectorChartCartesianAxisState = (
-  state: ChartState<[UseChartCartesianAxisSignature]>,
+  state: ChartState<[], [UseChartCartesianAxisSignature]>,
 ) => state.cartesianAxis;
 
 export const selectorChartRawXAxis = createSelector(

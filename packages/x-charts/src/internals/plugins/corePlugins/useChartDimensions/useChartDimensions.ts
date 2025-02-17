@@ -198,8 +198,7 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
       if (options?.targetElement && options?.targetElement.closest('[data-drawing-container]')) {
         return true;
       }
-      // TODO: fix before merge
-      // @ts-expect-error
+
       const drawingArea = selectorChartDrawingArea(store.value);
 
       const isInsideX = x >= drawingArea.left - 1 && x <= drawingArea.left + drawingArea.width;
