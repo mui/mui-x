@@ -557,7 +557,7 @@ export const useGridRowEditing = (
           } else if (process.env.NODE_ENV !== 'production') {
             warnOnce(
               [
-                'MUI X: A call to `unstable_dataSource.updateRow()` threw an error which was not handled because `unstable_onDataSourceError` is missing.',
+                'MUI X: A call to `unstable_dataSource.updateRow()` threw an error which was not handled because `unstable_onDataSourceError()` is missing.',
                 'To handle the error pass a callback to the `unstable_onDataSourceError` prop, for example `<DataGrid unstable_onDataSourceError={(error) => ...} />`.',
                 'For more detail, see https://mui.com/x/react-data-grid/server-side-data/#error-handling.',
               ],

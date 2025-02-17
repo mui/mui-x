@@ -3,6 +3,7 @@ import { RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { unstable_debounce as debounce } from '@mui/utils';
 import { warnOnce } from '@mui/x-internals/warning';
+import { gridRowIdSelector } from '@mui/x-data-grid-pro';
 import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
 import {
   GridGetRowsResponse,
@@ -160,7 +161,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
           } else if (process.env.NODE_ENV !== 'production') {
             warnOnce(
               [
-                'MUI X: A call to `unstable_dataSource.getRows()` threw an error which was not handled because `unstable_onDataSourceError` is missing.',
+                'MUI X: A call to `unstable_dataSource.getRows()` threw an error which was not handled because `unstable_onDataSourceError()` is missing.',
                 'To handle the error pass a callback to the `unstable_onDataSourceError` prop, for example `<DataGrid unstable_onDataSourceError={(error) => ...} />`.',
                 'For more detail, see https://mui.com/x/react-data-grid/server-side-data/#error-handling.',
               ],
@@ -197,15 +198,14 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         return;
       }
       const updatedRows = [...cachedData.rows];
-      // TODO: Accomodate `props.getRowId`
-      const rowIndex = updatedRows.findIndex((row) => row.id === rowId);
+      const rowIndex = updatedRows.findIndex((row) => gridRowIdSelector(apiRef, row) === rowId);
       if (rowIndex === -1) {
         return;
       }
       updatedRows[rowIndex] = rowUpdate;
       cache.set(getRowsParams, { ...cachedData, rows: updatedRows });
     },
-    [cache],
+    [apiRef, cache],
   );
 
   const handleStrategyActivityChange = React.useCallback<
