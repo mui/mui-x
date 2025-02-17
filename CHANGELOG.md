@@ -30,7 +30,7 @@ Following are all team members who have contributed to this release:
 
 - The `apiRef.current.forceUpdate()` method was removed. Use selectors combined with `useGridSelector()` hook to react to changes in the state.
 
-- The selectors signature has been updated. They are only accepting `apiRef` as a first argument.
+- The selectors signature has been updated. They are only accepting `apiRef` as a first argument and `instanceId` is no longer the third argument.
 
   ```diff
   -mySelector(state, arguments, instanceId)
