@@ -7,7 +7,7 @@ import { PieChart } from '@mui/x-charts/PieChart';
 const config = {
   width: 400,
   height: 400,
-};
+} as const;
 
 describe('PieChart - click event', () => {
   const { render } = createRenderer();
