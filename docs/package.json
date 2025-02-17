@@ -76,7 +76,7 @@
     "moment-hijri": "^3.0.0",
     "moment-jalaali": "^0.10.4",
     "moment-timezone": "^0.5.47",
-    "next": "^15.1.6",
+    "next": "^15.1.7",
     "nprogress": "^0.2.0",
     "postcss": "^8.5.2",
     "prismjs": "^1.29.0",
