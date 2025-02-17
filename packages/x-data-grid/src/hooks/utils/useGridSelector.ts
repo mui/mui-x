@@ -2,7 +2,7 @@ import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { warnOnce } from '@mui/x-internals/warning';
-// commonjs-only module
+// use-sync-external-store has no exports field defined
 // eslint-disable-next-line import/extensions
 import { useSyncExternalStore } from 'use-sync-external-store/shim/index.js';
 import type { GridApiCommon } from '../../models/api/gridApiCommon';

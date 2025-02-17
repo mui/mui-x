@@ -1,4 +1,4 @@
-// commonjs-only module
+// use-sync-external-store has no exports field defined
 // eslint-disable-next-line import/extensions
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector.js';
 import { TreeViewAnyPluginSignature, TreeViewState } from '../models';

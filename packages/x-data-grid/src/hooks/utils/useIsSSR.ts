@@ -1,4 +1,4 @@
-// commonjs-only module
+// use-sync-external-store has no exports field defined
 // eslint-disable-next-line import/extensions
 import { useSyncExternalStore } from 'use-sync-external-store/shim/index.js';
 
