@@ -20,7 +20,7 @@ We'd like to offer a big thanks to the 16 contributors who made this release pos
 Special thanks go out to the community contributors who have helped make this release possible:
 @Neonin, @nusr, and @pawelkula.
 Following are all team members who have contributed to this release:
-@alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @Janpot, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @michelengelen, @oliviertassinari, @romgrk and @mapache-salvaje.
+@alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @Janpot, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @michelengelen, @oliviertassinari, @romgrk, and @mapache-salvaje.
 
 ### Data Grid
 
