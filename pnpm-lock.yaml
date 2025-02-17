@@ -318,7 +318,7 @@ importers:
         specifier: ^5.0.1
         version: 5.0.1(webpack@5.98.0)
       lerna:
-        specifier: ^8.1.8
+        specifier: ^8.1.9
         version: 8.1.9(@swc/core@1.10.16(@swc/helpers@0.5.15))(babel-plugin-macros@3.1.0)(encoding@0.1.13)
       lodash:
         specifier: ^4.17.21
