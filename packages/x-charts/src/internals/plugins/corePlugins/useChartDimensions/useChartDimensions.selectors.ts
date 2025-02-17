@@ -52,13 +52,3 @@ export const selectorChartContainerSize = createSelector(
     height: dimensionsState.height,
   }),
 );
-
-/**
- * Get the id attribute of the chart.
- * @param {ChartState<[UseChartIdSignature]>} state The state of the chart.
- * @returns {string} The id attribute of the chart.
- */
-export const selectorChartHasIntrinsicSize = createSelector(
-  selectorChartContainerSize,
-  (svgSize) => svgSize.width > 0 && svgSize.height > 0,
-);
