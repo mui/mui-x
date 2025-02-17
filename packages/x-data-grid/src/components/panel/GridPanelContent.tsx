@@ -23,7 +23,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridPanelContentRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PanelContent',
-  overridesResolver: (props, styles) => styles.panelContent,
 })<{ ownerState: OwnerState }>({
   display: 'flex',
   flexDirection: 'column',
