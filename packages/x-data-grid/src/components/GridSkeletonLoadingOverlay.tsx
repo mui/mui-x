@@ -23,7 +23,6 @@ import { getDataGridUtilityClass, gridClasses } from '../constants/gridClasses';
 import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
 import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../utils/cellBorderUtils';
 import { escapeOperandAttributeSelector } from '../utils/domUtils';
-import { GridScrollbarFillerCell } from './GridScrollbarFillerCell';
 import { rtlFlipSide } from '../utils/rtlFlipSide';
 import { attachPinnedStyle } from '../internals/utils';
 
@@ -147,7 +146,6 @@ export const GridSkeletonLoadingOverlayInner = forwardRef<
         const emptyCell = (
           <slots.skeletonCell key={`skeleton-filler-column-${i}`} width={emptyCellWidth} empty />
         );
-        const hasScrollbarFiller = isLastColumn && scrollbarWidth !== 0;
 
         if (hasFillerBefore) {
           rowCells.push(emptyCell);
@@ -177,15 +175,6 @@ export const GridSkeletonLoadingOverlayInner = forwardRef<
 
         if (hasFillerAfter) {
           rowCells.push(emptyCell);
-        }
-
-        if (hasScrollbarFiller) {
-          rowCells.push(
-            <GridScrollbarFillerCell
-              key={`skeleton-scrollbar-filler-${i}`}
-              pinnedRight={pinnedColumns.right.length > 0}
-            />,
-          );
         }
       }
 
