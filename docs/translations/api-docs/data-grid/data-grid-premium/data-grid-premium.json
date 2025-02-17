@@ -169,7 +169,9 @@
         "GridRowHeightReturnValue": "The row height value. If <code>null</code> or <code>undefined</code> then the default row height is applied. If &quot;auto&quot; then the row height is calculated based on the content."
       }
     },
-    "getRowId": { "description": "Return the id of a given GridRowModel." },
+    "getRowId": {
+      "description": "Return the id of a given GridRowModel. Ensure the reference of this prop is stable to avoid performance implications. It could be done by either defining the prop outside of the component or by memoizing it."
+    },
     "getRowSpacing": {
       "description": "Function that allows to specify the spacing between rows.",
       "typeDescriptions": {
@@ -1294,6 +1296,7 @@
     "baseDivider": "The custom Divider component used in the grid.",
     "baseFormControl": "The custom FormControl component used in the grid.",
     "baseIconButton": "The custom IconButton component used in the grid.",
+    "baseInput": "The custom Input component used in the grid.",
     "baseInputAdornment": "The custom InputAdornment component used in the grid.",
     "baseInputLabel": "The custom InputLabel component used in the grid.",
     "baseLinearProgress": "The custom LinearProgress component used in the grid.",
@@ -1303,6 +1306,7 @@
     "baseSelect": "The custom Select component used in the grid.",
     "baseSelectOption": "The custom SelectOption component used in the grid.",
     "baseSkeleton": "The custom Skeleton component used in the grid.",
+    "baseSwitch": "The custom Switch component used in the grid.",
     "baseTextField": "The custom TextField component used in the grid.",
     "baseTooltip": "The custom Tooltip component used in the grid.",
     "booleanCellFalseIcon": "Icon displayed on the boolean cell to represent the false value.",
