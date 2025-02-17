@@ -22,8 +22,10 @@ export function GridToolbarPivotButton() {
       }
       {...rootProps.slotProps?.baseButton}
       onClick={() => {
-        pivotParams.onPivotModeChange(!pivotParams.isPivotMode);
         pivotParams.onPivotSettingsOpenChange(!pivotParams.pivotSettingsOpen);
+        if (!pivotParams.isPivotMode && !pivotParams.pivotSettingsOpen) {
+          pivotParams.onPivotModeChange(true);
+        }
       }}
     >
       Pivot
