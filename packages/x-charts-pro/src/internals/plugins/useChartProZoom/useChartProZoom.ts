@@ -69,7 +69,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
         zoom: {
           ...prevState.zoom,
           isInteracting: true,
-          zoomData: paramsZoomData,
+          zoomData: [...paramsZoomData],
         },
       };
     });
@@ -104,7 +104,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
       store.update((prevState) => {
         const newZoomData =
           typeof zoomData === 'function' ? zoomData(prevState.zoom.zoomData) : zoomData;
-        onZoomChange?.(newZoomData);
+        onZoomChange?.([...newZoomData]);
 
         if (prevState.zoom.isControlled) {
           return prevState;
@@ -114,7 +114,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
           ...prevState,
           zoom: {
             ...prevState.zoom,
-            zoomData: newZoomData,
+            zoomData: [...newZoomData],
           },
         };
       });
@@ -136,7 +136,11 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   );
 
   const isDraggingRef = React.useRef(false);
-  const touchStartRef = React.useRef<{ x: number; y: number; zoomData: ZoomData[] } | null>(null);
+  const touchStartRef = React.useRef<{
+    x: number;
+    y: number;
+    zoomData: readonly ZoomData[];
+  } | null>(null);
   React.useEffect(() => {
     const element = svgRef.current;
     if (element === null || !isPanEnabled) {
@@ -441,13 +445,14 @@ useChartProZoom.getInitialState = (params) => {
   };
   return {
     zoom: {
-      zoomData:
+      zoomData: [
         // eslint-disable-next-line no-nested-ternary
-        zoomData !== undefined
+        ...(zoomData !== undefined
           ? zoomData
           : initialZoom !== undefined
             ? initialZoom
-            : initializeZoomData(optionsLookup),
+            : initializeZoomData(optionsLookup)),
+      ],
       isInteracting: false,
       isControlled: zoomData !== undefined,
     },

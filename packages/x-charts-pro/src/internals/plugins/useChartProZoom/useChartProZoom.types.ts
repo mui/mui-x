@@ -11,7 +11,7 @@ export interface UseChartProZoomParameters {
    * The list of zoom data related to each axis.
    * Used to initialize the zoom in a specific configuration without controlling it.
    */
-  initialZoom?: ZoomData[];
+  initialZoom?: readonly ZoomData[];
   /**
    * Callback fired when the zoom has changed.
    *
@@ -21,7 +21,7 @@ export interface UseChartProZoomParameters {
   /**
    * The list of zoom data related to each axis.
    */
-  zoomData?: ZoomData[];
+  zoomData?: readonly ZoomData[];
 }
 
 export type UseChartProZoomDefaultizedParameters = UseChartProZoomParameters &
