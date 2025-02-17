@@ -107,5 +107,6 @@ export type UseChartCartesianAxisSignature<SeriesType extends ChartSeriesType = 
     defaultizedParams: UseChartCartesianAxisDefaultizedParameters;
     state: UseChartCartesianAxisState;
     // instance: UseChartCartesianAxisInstance;
-    dependencies: [UseChartInteractionSignature, UseChartSeriesSignature<SeriesType>];
+    dependencies: [UseChartSeriesSignature<SeriesType>];
+    optionalDependencies: [UseChartInteractionSignature];
   }>;
