@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 8.0.0-alpha.12
 
-_Feb 14, 2025_
+_Feb 17, 2025_
 
 We'd like to offer a big thanks to the 16 contributors who made this release possible. Here are some highlights ✨:
 
@@ -50,6 +50,7 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Create the base Switch slot (#16527) @romgrk
 - [DataGrid] Extract `getRowId()` API method as a selector (#16487) @MBilalShafi
 - [DataGrid] Fix the `onClock` prop of the base Select slot (#16557) @romgrk
+- [DataGrid] Go to the first page when sorting/filtering is applied (#16447) @arminmeh
 - [DataGrid] Make base data source available in the Community plan (#16359) @MBilalShafi
 - [DataGrid] Remove `apiRef.current.forceUpdate()` method (#16560) @MBilalShafi
 - [DataGrid] Fix the unexpected behavior of the pagination when using `-1` for "All" rows per page (#16485) @nusr
@@ -118,6 +119,7 @@ Same changes as in `@mui/x-date-pickers@8.0.0-alpha.12`, plus:
 #### `@mui/x-charts@8.0.0-alpha.12`
 
 - [charts] Add docs for scatter "Size" section (#16556) @bernardobelchior
+- [charts] Add `test:performance:browser` script #16600 @bernardobelchior
 - [charts] Add warning when using unknown ids in `useXxxSeries` hooks (#16552) @JCQuintas
 - [charts] Divide the logic for `useXxxSeries` into `useXxxSeriesContext` (#16546) @JCQuintas
 - [charts] Document plugins for internal use (#16504) @JCQuintas
@@ -161,6 +163,7 @@ Same changes as in `@mui/x-tree-view@8.0.0-alpha.12`.
 - [code-infra] Fix root package version (#16503) @JCQuintas
 - [code-infra] Update internal packages to `next` releases (#16423) @LukasTy
 - [code-infra] Update package layout for better ESM support (#14386) @Janpot
+- [code-infra] Update peer dependencies for v8 (#16563) @Janpot
 
 ## 8.0.0-alpha.11
 
