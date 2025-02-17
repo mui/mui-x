@@ -398,6 +398,8 @@ DataGridPremiumRaw.propTypes = {
   getRowHeight: PropTypes.func,
   /**
    * Return the id of a given [[GridRowModel]].
+   * Ensure the reference of this prop is stable to avoid performance implications.
+   * It could be done by either defining the prop outside of the component or by memoizing it.
    */
   getRowId: PropTypes.func,
   /**
@@ -1070,6 +1072,9 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   treeData: PropTypes.bool,
+  /**
+   * Data source object.
+   */
   unstable_dataSource: PropTypes.shape({
     getAggregatedValue: PropTypes.func,
     getChildrenCount: PropTypes.func,
@@ -1077,6 +1082,9 @@ DataGridPremiumRaw.propTypes = {
     getRows: PropTypes.func.isRequired,
     updateRow: PropTypes.func,
   }),
+  /**
+   * Data source cache object.
+   */
   unstable_dataSourceCache: PropTypes.shape({
     clear: PropTypes.func.isRequired,
     get: PropTypes.func.isRequired,
@@ -1109,6 +1117,11 @@ DataGridPremiumRaw.propTypes = {
    * Use in combination with `unstable_listColumn`.
    */
   unstable_listView: PropTypes.bool,
+  /**
+   * Callback fired when the data source request fails.
+   * @param {Error} error The error object.
+   * @param {GridGetRowsParams} params With all properties from [[GridGetRowsParams]].
+   */
   unstable_onDataSourceError: PropTypes.func,
   /**
    * If `true`, the Data Grid enables column virtualization when `getRowHeight` is set to `() => 'auto'`.
