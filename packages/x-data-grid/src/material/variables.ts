@@ -1,7 +1,19 @@
+import * as React from 'react';
 import { alpha, darken, lighten, type Theme } from '@mui/material/styles';
-import { vars } from '../../constants/cssVariables';
+import { useTheme } from '@mui/material/styles';
+import { hash } from '@mui/x-internals/hash';
+import { vars } from '../constants/cssVariables';
 
-export function transformMaterialUITheme(t: Theme) {
+export function useMaterialCSSVariables() {
+  const theme = useTheme();
+  return React.useMemo(() => {
+    const id = hash(JSON.stringify(theme));
+    const variables = transformTheme(theme);
+    return { id, variables };
+  }, [theme]);
+}
+
+function transformTheme(t: Theme) {
   const borderColor = getBorderColor(t);
   const dataGridPalette = (t.palette as any).DataGrid; // FIXME: docs typecheck error
 

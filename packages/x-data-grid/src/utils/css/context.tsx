@@ -1,7 +1,5 @@
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
-import { hash } from '@mui/x-internals/hash';
-import { transformMaterialUITheme } from './transformVariables';
+import { useGridConfiguration } from '../../hooks/utils/useGridConfiguration';
 
 const CLASSNAME_PREFIX = 'MuiDataGridVariables';
 
@@ -24,15 +22,15 @@ export function GridPortalWrapper({ children }: { children: React.ReactNode }) {
 }
 
 export function GridCSSVariablesContext(props: { children: any }) {
-  const theme = useTheme();
+  const config = useGridConfiguration();
+  const description = config.hooks.useCSSVariables();
 
   const context = React.useMemo(() => {
-    const variables = transformMaterialUITheme(theme);
-    const className = `${CLASSNAME_PREFIX}-${hash(JSON.stringify(theme))}`;
-    const cssString = `.${className}{${variablesToString(variables)}}`;
+    const className = `${CLASSNAME_PREFIX}-${description.id}`;
+    const cssString = `.${className}{${variablesToString(description.variables)}}`;
     const tag = <style href={`/${className}`}>{cssString}</style>;
     return { className, tag };
-  }, [theme]);
+  }, [description]);
 
   return (
     <CSSVariablesContext.Provider value={context}>{props.children}</CSSVariablesContext.Provider>
