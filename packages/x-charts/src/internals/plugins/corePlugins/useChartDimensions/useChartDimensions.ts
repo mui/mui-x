@@ -6,7 +6,7 @@ import ownerWindow from '@mui/utils/ownerWindow';
 import { DEFAULT_MARGINS } from '../../../../constants';
 import { ChartPlugin } from '../../models';
 import type { UseChartDimensionsSignature } from './useChartDimensions.types';
-import { selectorChartDimensionsState } from './useChartDimensions.selectors';
+import { selectorChartDrawingArea } from './useChartDimensions.selectors';
 import { defaultizeMargin } from '../../../defaultizeMargin';
 
 const MAX_COMPUTE_RUN = 10;
@@ -198,13 +198,10 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
       if (options?.targetElement && options?.targetElement.closest('[data-drawing-container]')) {
         return true;
       }
-      const drawingArea = selectorChartDimensionsState(store.value);
+      const drawingArea = selectorChartDrawingArea(store.value);
 
-      // TODO: change the logic to use the drawing area margin.
-      // const isInsideX = x >= drawingArea.left - 1 && x <= drawingArea.left + drawingArea.width;
-      // const isInsideY = y >= drawingArea.top - 1 && y <= drawingArea.top + drawingArea.height;
-      const isInsideX = x >= 0 && x <= drawingArea.width;
-      const isInsideY = y >= 0 && y <= drawingArea.height;
+      const isInsideX = x >= drawingArea.left - 1 && x <= drawingArea.left + drawingArea.width;
+      const isInsideY = y >= drawingArea.top - 1 && y <= drawingArea.top + drawingArea.height;
 
       if (options?.direction === 'x') {
         return isInsideX;

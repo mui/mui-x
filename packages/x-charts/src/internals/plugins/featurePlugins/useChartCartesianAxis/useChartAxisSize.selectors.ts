@@ -1,7 +1,7 @@
 import {
   selectorChartRawXAxis,
   selectorChartRawYAxis,
-} from '../../featurePlugins/useChartCartesianAxis/useChartCartesianAxisLayout.selectors';
+} from './useChartCartesianAxisLayout.selectors';
 import { createSelector } from '../../utils/selectors';
 
 export const selectorChartLeftAxisSize = createSelector([selectorChartRawYAxis], (yAxis) =>
