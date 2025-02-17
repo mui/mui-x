@@ -7,14 +7,14 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Feb 17, 2025_
 
-We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
 
 - ⚡ Improve Data Grid Excel export serialization performance
 - 🐞 Bugfixes
-- 🌍 Improve Polish (pl-PL) locale on the Data Grid
+- 🌍 Improve Polish (pl-PL) and Ukrainian (uk-UA) locale on the Data Grid
 
 Special thanks go out to the community contributors who have helped make this release possible:
-@pawelkula.
+@pawelkula, @Neonin.
 Following are all team members who have contributed to this release:
 @cherniavskii, @JCQuintas, @oliviertassinari, @arminmeh and @LukasTy
 
@@ -25,6 +25,7 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Add `resetPageOnSortFilter` prop that resets the page after sorting and filtering (#16580) @arminmeh
 - [DataGrid] Avoid `undefined` value for pagination `rowCount` (#16558) @cherniavskii
 - [l10n] Improve Polish (pl-PL) locale (#16594) @pawelkula
+- [l10n] Improve Ukrainian (uk-UA) locale (#16593) @Neonin
 
 #### `@mui/x-data-grid-pro@7.27.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
