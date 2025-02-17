@@ -15,10 +15,12 @@ export const hash = xxh;
 function xxh(input: string) {
   /* eslint-disable no-bitwise */
 
-  if (input.length > bufferLength) {
+  // Worst-case scenario: full string of 2-byte characters
+  const requiredLength = input.length * 2;
+  if (requiredLength > bufferLength) {
     // buffer.resize() is only available in recent browsers, so we re-allocate
     // a new and views
-    bufferLength = input.length + (4 - input.length % 4)
+    bufferLength = requiredLength + (4 - requiredLength % 4)
     buffer = new ArrayBuffer(bufferLength)
 
     uint8View = new Uint8Array(buffer)
