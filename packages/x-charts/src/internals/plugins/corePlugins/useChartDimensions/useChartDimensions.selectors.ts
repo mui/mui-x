@@ -1,5 +1,11 @@
 import { ChartRootSelector, createSelector } from '../../utils/selectors';
 import type { UseChartDimensionsSignature } from './useChartDimensions.types';
+import {
+  selectorChartBottomAxisSize,
+  selectorChartLeftAxisSize,
+  selectorChartRightAxisSize,
+  selectorChartTopAxisSize,
+} from '../../featurePlugins/useChartCartesianAxis/useChartAxisSize.selectors';
 
 export const selectorChartDimensionsState: ChartRootSelector<UseChartDimensionsSignature> = (
   state,
@@ -7,13 +13,27 @@ export const selectorChartDimensionsState: ChartRootSelector<UseChartDimensionsS
 
 export const selectorChartDrawingArea = createSelector(
   selectorChartDimensionsState,
-  (dimensionsState) => ({
-    width: dimensionsState.width - dimensionsState.margin.left - dimensionsState.margin.right,
-    left: dimensionsState.margin.left,
-    right: dimensionsState.margin.right,
-    height: dimensionsState.height - dimensionsState.margin.top - dimensionsState.margin.bottom,
-    top: dimensionsState.margin.top,
-    bottom: dimensionsState.margin.bottom,
+  selectorChartTopAxisSize,
+  selectorChartRightAxisSize,
+  selectorChartBottomAxisSize,
+  selectorChartLeftAxisSize,
+  (dimensionsState, axisSizeTop, axisSizeRight, axisSizeBottom, axisSizeLeft) => ({
+    width:
+      dimensionsState.width -
+      dimensionsState.margin.left -
+      dimensionsState.margin.right -
+      axisSizeLeft -
+      axisSizeRight,
+    left: dimensionsState.margin.left + axisSizeLeft,
+    right: dimensionsState.margin.right + axisSizeRight,
+    height:
+      dimensionsState.height -
+      dimensionsState.margin.top -
+      dimensionsState.margin.bottom -
+      axisSizeTop -
+      axisSizeBottom,
+    top: dimensionsState.margin.top + axisSizeTop,
+    bottom: dimensionsState.margin.bottom + axisSizeBottom,
   }),
 );
 
