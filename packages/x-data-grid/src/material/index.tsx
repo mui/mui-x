@@ -14,7 +14,7 @@ import MUIMenuList from '@mui/material/MenuList';
 import MUIMenuItem from '@mui/material/MenuItem';
 import MUITextField from '@mui/material/TextField';
 import MUIFormControl from '@mui/material/FormControl';
-import MUIFormControlLabel from '@mui/material/FormControlLabel';
+import MUIFormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
 import MUISelect from '@mui/material/Select';
 import MUISwitch from '@mui/material/Switch';
 import MUIButton from '@mui/material/Button';
@@ -242,7 +242,14 @@ function BaseCheckbox(props: GridSlotProps['baseCheckbox'], ref: React.Ref<HTMLB
         />
       }
       label={label}
-      sx={fullWidth ? { width: '100%', margin: 0 } : undefined}
+      sx={(theme) => ({
+        gap: 0.5,
+        margin: 0,
+        width: fullWidth ? '100%' : undefined,
+        [`& .${formControlLabelClasses.label}`]: {
+          fontSize: theme.typography.pxToRem(14),
+        },
+      })}
     />
   );
 }
