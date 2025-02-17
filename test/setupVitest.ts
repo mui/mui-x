@@ -54,7 +54,7 @@ const defaultHidden = !process.env.CI;
 configure({
   // JSDOM logs errors otherwise on `getComputedStyle(element, pseudoElement)` calls.
   computedStyleSupportsPseudoElements: false,
-  // defaultHidden,
+  defaultHidden,
 });
 
 if (!globalThis.before) {
