@@ -40,7 +40,6 @@ Following are all team members who have contributed to this release:
 #### `@mui/x-data-grid@8.0.0-alpha.12`
 
 - [DataGrid] Add "No columns" overlay (#16543) @KenanYusuf
-- [DataGrid] Go to the first page when sorting/filtering is applied (#16447) @arminmeh
 - [DataGrid] All selectors accept only `apiRef` as first argument (#16198) @arminmeh
 - [DataGrid] Avoid `undefined` value for pagination `rowCount` (#16488) @cherniavskii
 - [DataGrid] Create the base Checkbox slot (#16445) @romgrk
