@@ -721,7 +721,7 @@ importers:
         specifier: ^11.8.1
         version: 11.14.0(@emotion/react@11.14.0(@types/react@19.0.8)(react@19.0.0))(@types/react@19.0.8)(react@19.0.0)
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0
+        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0-alpha
         version: 5.16.14(@types/react@19.0.8)(react@19.0.0)
       '@mui/x-charts-vendor':
         specifier: workspace:*
@@ -801,7 +801,7 @@ importers:
         specifier: ^11.8.1
         version: 11.14.0(@emotion/react@11.14.0(@types/react@19.0.8)(react@19.0.0))(@types/react@19.0.8)(react@19.0.0)
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0
+        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0-alpha
         version: 5.16.14(@types/react@19.0.8)(react@19.0.0)
       '@mui/x-charts':
         specifier: workspace:*
@@ -989,7 +989,7 @@ importers:
         specifier: ^11.8.1
         version: 11.14.0(@emotion/react@11.14.0(@types/react@19.0.8)(react@19.0.0))(@types/react@19.0.8)(react@19.0.0)
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0
+        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0-alpha
         version: 5.16.14(@types/react@19.0.8)(react@19.0.0)
       '@mui/x-internals':
         specifier: workspace:*
@@ -1092,7 +1092,7 @@ importers:
         specifier: ^11.8.1
         version: 11.14.0(@emotion/react@11.14.0(@types/react@19.0.8)(react@19.0.0))(@types/react@19.0.8)(react@19.0.0)
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0
+        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0-alpha
         version: 5.16.14(@types/react@19.0.8)(react@19.0.0)
       '@mui/x-data-grid':
         specifier: workspace:*
@@ -1166,7 +1166,7 @@ importers:
         specifier: ^11.8.1
         version: 11.14.0(@emotion/react@11.14.0(@types/react@19.0.8)(react@19.0.0))(@types/react@19.0.8)(react@19.0.0)
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0
+        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0-alpha
         version: 5.16.14(@types/react@19.0.8)(react@19.0.0)
       '@mui/x-data-grid':
         specifier: workspace:*
@@ -1231,7 +1231,7 @@ importers:
         specifier: ^11.8.1
         version: 11.14.0(@emotion/react@11.14.0(@types/react@19.0.8)(react@19.0.0))(@types/react@19.0.8)(react@19.0.0)
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0
+        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0-alpha
         version: 5.16.14(@types/react@19.0.8)(react@19.0.0)
       '@mui/x-internals':
         specifier: workspace:*
@@ -1317,7 +1317,7 @@ importers:
         specifier: ^11.8.1
         version: 11.14.0(@emotion/react@11.14.0(@types/react@19.0.8)(react@19.0.0))(@types/react@19.0.8)(react@19.0.0)
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0
+        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0-alpha
         version: 5.16.14(@types/react@19.0.8)(react@19.0.0)
       '@mui/x-date-pickers':
         specifier: workspace:*
@@ -1391,7 +1391,7 @@ importers:
         specifier: ^7.26.9
         version: 7.26.9
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0
+        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0-alpha
         version: 5.16.14(@types/react@19.0.8)(react@19.0.0)
     devDependencies:
       '@mui/internal-test-utils':
@@ -1414,7 +1414,7 @@ importers:
         specifier: ^7.26.9
         version: 7.26.9
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0
+        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0-alpha
         version: 5.16.14(@types/react@19.0.8)(react@19.0.0)
       '@mui/x-internals':
         specifier: workspace:*
@@ -1446,7 +1446,7 @@ importers:
         specifier: ^11.8.1
         version: 11.14.0(@emotion/react@11.14.0(@types/react@19.0.8)(react@19.0.0))(@types/react@19.0.8)(react@19.0.0)
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0
+        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0-alpha
         version: 5.16.14(@types/react@19.0.8)(react@19.0.0)
       '@mui/x-internals':
         specifier: workspace:*
@@ -1508,7 +1508,7 @@ importers:
         specifier: ^11.8.1
         version: 11.14.0(@emotion/react@11.14.0(@types/react@19.0.8)(react@19.0.0))(@types/react@19.0.8)(react@19.0.0)
       '@mui/utils':
-        specifier: ^5.16.6 || ^6.0.0
+        specifier: ^5.16.6 || ^6.0.0 || ^7.0.0-alpha
         version: 5.16.14(@types/react@19.0.8)(react@19.0.0)
       '@mui/x-internals':
         specifier: workspace:*
