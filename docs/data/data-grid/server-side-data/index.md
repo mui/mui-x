@@ -294,7 +294,7 @@ If the promise resolves, the grid updates the row and mutates the cache. In case
 ## Error handling
 
 You could handle the errors with the data source by providing an error handler function using the `unstable_onDataSourceError`.
-It will be called whenever there's an error in fetching the data.
+It will be called whenever there's an error in fetching or updating the data.
 
 This function recieves an error object of type `GridDataSourceError` which includes the parameters of type `GridGetRowsParams` or `GridUpdateRowParams`.
 
@@ -311,11 +311,11 @@ The `GridDataSourceError` object provides helper methods to check the type of th
   unstable_dataSource={customDataSource}
   unstable_onDataSourceError={(error) => {
     if (error.isFetch()) {
-      // error.params is of type `GridGetRowsParams`
+      // `error.params` is of type `GridGetRowsParams`
       // fetch related logic, e.g set an overlay state
     }
     if (error.isUpdate()) {
-      // error.params is of type `GridUpdateRowParams`
+      // `error.params` is of type `GridUpdateRowParams`
       // update related logic, e.g set a snackbar state
     }
   }}
