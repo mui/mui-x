@@ -50,6 +50,8 @@ const GridPanelContent = styled('div', {
   slot: 'panelContent',
 })<{ ownerState: OwnerState }>({
   backgroundColor: vars.colors.background.overlay,
+  borderRadius: vars.radius.base,
+  boxShadow: vars.shadows.overlay,
   minWidth: 300,
   maxHeight: 450,
   display: 'flex',

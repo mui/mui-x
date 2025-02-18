@@ -81,6 +81,7 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     [k.transitions.duration.long]: `${t.transitions.duration.standard}ms`,
 
     [k.shadows.base]: t.shadows[2],
+    [k.shadows.overlay]: t.shadows[8],
 
     [k.zIndex.panel]: t.zIndex.modal,
     [k.zIndex.menu]: t.zIndex.modal,
