@@ -5,8 +5,8 @@ import { ChartsAxisProps } from '../../../../models/axis';
 import { DatasetType } from '../../../../models/seriesType/config';
 
 export function defaultizeAxis(
-  inAxis: MakeOptional<AxisConfig<ScaleName, any, ChartsAxisProps>, 'id'>[] | undefined,
-  dataset: DatasetType | undefined,
+  inAxis: readonly MakeOptional<AxisConfig<ScaleName, any, ChartsAxisProps>, 'id'>[] | undefined,
+  dataset: Readonly<DatasetType> | undefined,
   axisName: 'x' | 'y',
 ) {
   const DEFAULT_AXIS_KEY = axisName === 'x' ? DEFAULT_X_AXIS_KEY : DEFAULT_Y_AXIS_KEY;
