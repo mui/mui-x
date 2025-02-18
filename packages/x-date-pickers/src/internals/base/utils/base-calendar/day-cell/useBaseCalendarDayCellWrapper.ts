@@ -40,10 +40,10 @@ export function useBaseCalendarDayCellWrapper(
 
   const isOutsideCurrentMonth = React.useMemo(
     () =>
-      baseDayGridBodyContext.currentMonth == null
+      baseDayGridBodyContext.month == null
         ? false
-        : !utils.isSameMonth(baseDayGridBodyContext.currentMonth, value),
-    [baseDayGridBodyContext.currentMonth, value, utils],
+        : !utils.isSameMonth(baseDayGridBodyContext.month, value),
+    [baseDayGridBodyContext.month, value, utils],
   );
 
   const isDateInvalid = baseRootContext.isDateInvalid;
