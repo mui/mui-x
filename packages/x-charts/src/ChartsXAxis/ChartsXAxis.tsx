@@ -40,11 +40,11 @@ function addLabelDimension(
     tickLabelStyle: style,
     tickLabelInterval,
     // FIXME: Define the default value in the correct place
-    minTickLabelGap = 8,
+    tickLabelMinGap = 8,
     reverse,
     isMounted,
   }: Pick<ChartsXAxisProps, 'tickLabelInterval' | 'tickLabelStyle'> &
-    Pick<AxisDefaultized<ScaleName, any, ChartsXAxisProps>, 'reverse' | 'minTickLabelGap'> & {
+    Pick<AxisDefaultized<ScaleName, any, ChartsXAxisProps>, 'reverse' | 'tickLabelMinGap'> & {
       isMounted: boolean;
     },
 ): (TickItemType & LabelExtraData)[] {
@@ -79,7 +79,7 @@ function addLabelDimension(
     const currentTextLimit = textPosition - (direction * distance) / 2;
     if (
       labelIndex > 0 &&
-      direction * currentTextLimit < direction * (previousTextLimit + minTickLabelGap)
+      direction * currentTextLimit < direction * (previousTextLimit + tickLabelMinGap)
     ) {
       // Except for the first label, we skip all label that overlap with the last accepted.
       // Notice that the early return prevents `previousTextLimit` from being updated.
