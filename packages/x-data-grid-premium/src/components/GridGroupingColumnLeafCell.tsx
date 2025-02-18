@@ -12,8 +12,8 @@ function GridGroupingColumnLeafCell(props: GridRenderCellParams) {
       style={{
         marginLeft:
           rootProps.rowGroupingColumnMode === 'multiple'
-            ? 0
-            : `calc(var(--DataGrid-cellOffsetMultiplier) * ${rowNode.depth} * ${vars.spacing(1)})`,
+            ? vars.spacing(1)
+            : `calc(var(--DataGrid-cellOffsetMultiplier) * ${vars.spacing(rowNode.depth)})`,
       }}
     >
       {props.formattedValue ?? props.value}
