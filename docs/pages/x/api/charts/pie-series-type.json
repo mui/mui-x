@@ -5,7 +5,7 @@
     "import { PieSeriesType } from '@mui/x-charts'"
   ],
   "properties": {
-    "data": { "type": { "description": "TData[]" }, "required": true },
+    "data": { "type": { "description": "Readonly&lt;TData[]&gt;" }, "required": true },
     "type": { "type": { "description": "'pie'" }, "required": true },
     "arcLabel": {
       "type": {
