@@ -41,10 +41,6 @@ const legendPlacement = {
       direction: 'vertical',
     },
   },
-  margin: {
-    top: 20,
-    right: 20,
-  },
 };
 
 const series = [

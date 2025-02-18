@@ -112,7 +112,13 @@ export default function ScaleDemo() {
           yAxisId: 'right_axis_id',
         },
       ]}
-      xAxis={[{ data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], scaleType: 'point' }]}
+      xAxis={[
+        {
+          data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+          scaleType: 'point',
+          position: 'none',
+        },
+      ]}
       yAxis={[
         { id: 'left_axis_id', position: 'left' },
         { id: 'right_axis_id', position: 'right' },
