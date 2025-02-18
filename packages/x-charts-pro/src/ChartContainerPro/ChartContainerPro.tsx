@@ -39,7 +39,7 @@ type ChartContainerProComponent = <
  *   xAxis={[{ data: ["A", "B"], scaleType: "band", id: "x-axis" }]}
  * >
  *    <BarPlot />
- *    <ChartsXAxis position="bottom" axisId="x-axis" />
+ *    <ChartsXAxis axisId="x-axis" />
  * </ChartContainerPro>
  * ```
  */

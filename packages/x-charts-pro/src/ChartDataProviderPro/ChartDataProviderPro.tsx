@@ -45,7 +45,7 @@ export type ChartDataProviderProProps<
  * >
  *   <ChartsSurface>
  *      <BarPlot />
- *      <ChartsXAxis position="bottom" axisId="x-axis" />
+ *      <ChartsXAxis axisId="x-axis" />
  *   </ChartsSurface>
  *   {'Custom Legend Component'}
  * </ChartDataProviderPro>

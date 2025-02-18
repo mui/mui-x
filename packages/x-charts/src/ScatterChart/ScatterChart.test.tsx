@@ -51,8 +51,8 @@ describe('<ScatterChart />', () => {
       { id: 5, x: 5, y: 5 },
     ],
     margin: 0,
-    xAxis: [{ position: 'none' as const }],
-    yAxis: [{ position: 'none' as const }],
+    xAxis: [{ position: 'none' }],
+    yAxis: [{ position: 'none' }],
     width: 100,
     height: 100,
   } as const;

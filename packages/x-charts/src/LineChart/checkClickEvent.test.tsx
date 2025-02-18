@@ -14,8 +14,8 @@ const config = {
     { x: 40, v1: 10, v2: 0 },
   ],
   margin: { top: 0, left: 0, bottom: 0, right: 0 },
-  xAxis: [{ position: 'none' as const }],
-  yAxis: [{ position: 'none' as const }],
+  xAxis: [{ position: 'none' }],
+  yAxis: [{ position: 'none' }],
   width: 400,
   height: 400,
 } as const;
