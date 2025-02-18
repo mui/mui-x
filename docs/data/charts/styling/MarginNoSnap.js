@@ -16,7 +16,10 @@ export default function MarginNoSnap() {
     <ChartsUsageDemo
       componentName="Margin demos"
       data={data}
-      renderDemo={(props) => (
+      renderDemo={(
+        /** @type {{ left: number; right: number; top: number; bottom: number; }} */
+        props,
+      ) => (
         <div style={{ width: '100%', margin: 4 }}>
           <BarChart
             series={[{ data: [6, 18, 12] }]}
@@ -39,7 +42,10 @@ export default function MarginNoSnap() {
           />
         </div>
       )}
-      getCode={({ props }) => `import { BarChart } from '@mui/x-charts/BarChart';
+      getCode={(
+        /** @type {{props: { left: number; right: number; top: number; bottom: number; }}} */
+        { props },
+      ) => `import { BarChart } from '@mui/x-charts/BarChart';
 
 <BarChart
   // ...

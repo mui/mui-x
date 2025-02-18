@@ -24,7 +24,10 @@ export default function AxisTextCustomizationNoSnap() {
         { propName: 'fontSize', knob: 'number', defaultValue: 12 },
         { propName: 'labelFontSize', knob: 'number', defaultValue: 14 },
       ]}
-      renderDemo={(props) => (
+      renderDemo={(
+        /** @type {{ labelFontSize: number; angle: number; textAnchor: 'start'| 'middle'| 'end'; fontSize: number; }} */
+        props,
+      ) => (
         <Box sx={{ width: '100%', maxWidth: 400 }}>
           <BarChart
             dataset={dataset}
@@ -56,7 +59,10 @@ export default function AxisTextCustomizationNoSnap() {
           />
         </Box>
       )}
-      getCode={({ props }) => `import { BarChart } from '@mui/x-charts/BarChart';
+      getCode={(
+        /** @type {{props: { labelFontSize: number; angle: number; textAnchor: 'start'| 'middle'| 'end'; fontSize: number; }}} */
+        { props },
+      ) => `import { BarChart } from '@mui/x-charts/BarChart';
 
 <ScatterChart
   // ...

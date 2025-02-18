@@ -29,7 +29,10 @@ export default function AxisCustomizationNoSnap() {
         { propName: 'label', knob: 'input', defaultValue: 'my axis' },
         { propName: 'tickSize', knob: 'number', defaultValue: 6 },
       ]}
-      renderDemo={(props) => (
+      renderDemo={(
+        /** @type {{ disableLine: boolean; disableTicks: boolean; label: string; tickSize: number; }} */
+        props,
+      ) => (
         <Box sx={{ width: '100%', maxWidth: 400 }}>
           <ScatterChart
             series={[
@@ -50,9 +53,10 @@ export default function AxisCustomizationNoSnap() {
           />
         </Box>
       )}
-      getCode={({
-        props,
-      }) => `import { ScatterChart } from '@mui/x-charts/ScatterChart';
+      getCode={(
+        /** @type {{props: { disableLine: boolean; disableTicks: boolean; label: string; tickSize: number; }}} */
+        { props },
+      ) => `import { ScatterChart } from '@mui/x-charts/ScatterChart';
 
 <ScatterChart
   // ...
