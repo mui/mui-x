@@ -22,6 +22,7 @@
       "type": { "name": "union", "description": "'auto'<br>&#124;&nbsp;func" },
       "default": "'auto'"
     },
+    "tickLabelMinGap": { "type": { "name": "number" }, "default": "8" },
     "tickLabelPlacement": {
       "type": { "name": "enum", "description": "'middle'<br>&#124;&nbsp;'tick'" },
       "default": "'middle'"

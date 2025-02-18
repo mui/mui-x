@@ -348,6 +348,11 @@ ChartsXAxis.propTypes = {
    */
   tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
   /**
+   * The minimum gap in pixels between two tick labels.
+   * @default 8
+   */
+  tickLabelMinGap: PropTypes.number,
+  /**
    * The placement of ticks label. Can be the middle of the band, or the tick position.
    * Only used if scale is 'band'.
    * @default 'middle'
