@@ -124,7 +124,7 @@ export interface UseFieldInternalProps<
    */
   autoFocus?: boolean;
   /**
-   * If `true`, the field is visually focused.
+   * If `true`, the component is displayed in focused state.
    */
   focused?: boolean;
 }
