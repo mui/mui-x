@@ -5,6 +5,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/material/styles';
 import { inputBaseClasses } from '@mui/material/InputBase';
 import { TextFieldProps } from '../../models/gridBaseSlots';
+import { vars } from '../../constants/cssVariables';
 import {
   gridColumnDefinitionsSelector,
   gridColumnVisibilityModelSelector,
@@ -420,52 +421,52 @@ GridColumnsManagement.propTypes = {
 const GridColumnsManagementBody = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnsManagement',
-})<{ ownerState: OwnerState }>(({ theme }) => ({
-  padding: theme.spacing(0, 2, 1.5),
+})<{ ownerState: OwnerState }>({
+  padding: vars.spacing(0, 2, 1.5),
   display: 'flex',
   flexDirection: 'column',
   overflow: 'auto',
   flex: '1 1',
   maxHeight: 400,
   alignItems: 'flex-start',
-}));
+});
 
 const GridColumnsManagementHeader = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnsManagementHeader',
-})<{ ownerState: OwnerState }>(({ theme }) => ({
-  padding: theme.spacing(1.5, 3),
-}));
+})<{ ownerState: OwnerState }>({
+  padding: vars.spacing(1.5, 3),
+});
 
 const SearchInput = styled(NotRendered<GridSlotProps['baseTextField']>, {
   name: 'MuiDataGrid',
   slot: 'ColumnsManagementSearchInput',
-})<{ ownerState: OwnerState }>(({ theme }) => ({
+})<{ ownerState: OwnerState }>({
   [`& .${inputBaseClasses.root}`]: {
-    padding: theme.spacing(0, 1.5, 0, 1.5),
+    padding: vars.spacing(0, 1.5, 0, 1.5),
   },
   [`& .${inputBaseClasses.input}::-webkit-search-decoration,
-  & .${inputBaseClasses.input}::-webkit-search-cancel-button,
-  & .${inputBaseClasses.input}::-webkit-search-results-button,
-  & .${inputBaseClasses.input}::-webkit-search-results-decoration`]: {
+      & .${inputBaseClasses.input}::-webkit-search-cancel-button,
+      & .${inputBaseClasses.input}::-webkit-search-results-button,
+      & .${inputBaseClasses.input}::-webkit-search-results-decoration`]: {
     /* clears the 'X' icon from Chrome */
     display: 'none',
   },
-}));
+});
 
 const GridColumnsManagementFooter = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnsManagementFooter',
-})<{ ownerState: OwnerState }>(({ theme }) => ({
-  padding: theme.spacing(0.5, 1, 0.5, 3),
+})<{ ownerState: OwnerState }>({
+  padding: vars.spacing(0.5, 1, 0.5, 3),
   display: 'flex',
   justifyContent: 'space-between',
-  borderTop: `1px solid ${theme.palette.divider}`,
-}));
+  borderTop: `1px solid ${vars.colors.border.base}`,
+});
 
-const GridColumnsManagementEmptyText = styled('div')<{ ownerState: OwnerState }>(({ theme }) => ({
-  padding: theme.spacing(0.5, 0),
-  color: theme.palette.grey[500],
-}));
+const GridColumnsManagementEmptyText = styled('div')<{ ownerState: OwnerState }>({
+  padding: vars.spacing(0.5, 0),
+  color: vars.colors.foreground.muted,
+});
 
 export { GridColumnsManagement };

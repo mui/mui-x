@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import {
   unstable_composeClasses as composeClasses,
   unstable_useId as useId,
@@ -7,8 +8,8 @@ import {
 } from '@mui/utils';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
-import clsx from 'clsx';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import { vars } from '../../../constants/cssVariables';
 import {
   gridFilterableColumnDefinitionsSelector,
   gridColumnLookupSelector,
@@ -145,10 +146,10 @@ const GridFilterFormRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterForm',
   overridesResolver: (props, styles) => styles.filterForm,
-})<{ ownerState: OwnerState }>(({ theme }) => ({
+})<{ ownerState: OwnerState }>({
   display: 'flex',
-  gap: theme.spacing(1.5),
-}));
+  gap: vars.spacing(1.5),
+});
 
 const FilterFormDeleteIcon = styled('div', {
   name: 'MuiDataGrid',
