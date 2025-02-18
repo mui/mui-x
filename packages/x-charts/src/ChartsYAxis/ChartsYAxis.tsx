@@ -224,6 +224,7 @@ ChartsYAxis.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  axis: PropTypes.oneOf(['y']),
   /**
    * The id of the axis to render.
    * If undefined, it will be the first defined axis.
@@ -256,10 +257,6 @@ ChartsYAxis.propTypes = {
    * The style applied to the axis label.
    */
   labelStyle: PropTypes.object,
-  /**
-   * Position of the axis.
-   */
-  position: PropTypes.oneOf(['left', 'right']),
   /**
    * The props used for each component slot.
    * @default {}

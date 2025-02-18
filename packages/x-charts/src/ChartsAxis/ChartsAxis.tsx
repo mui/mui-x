@@ -59,24 +59,6 @@ ChartsAxis.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * Indicate which axis to display the bottom of the charts.
-   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.
-   * @default xAxisIds[0] The id of the first provided axis
-   */
-  bottomAxis: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  /**
-   * Indicate which axis to display the left of the charts.
-   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
-   * @default yAxisIds[0] The id of the first provided axis
-   */
-  leftAxis: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  /**
-   * Indicate which axis to display the right of the charts.
-   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
-   * @default null
-   */
-  rightAxis: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  /**
    * The props used for each component slot.
    * @default {}
    */
@@ -86,12 +68,6 @@ ChartsAxis.propTypes = {
    * @default {}
    */
   slots: PropTypes.object,
-  /**
-   * Indicate which axis to display the top of the charts.
-   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.
-   * @default null
-   */
-  topAxis: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
 } as any;
 
 export { ChartsAxis };

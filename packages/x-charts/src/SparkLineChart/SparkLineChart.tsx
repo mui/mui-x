@@ -403,6 +403,7 @@ SparkLineChart.propTypes = {
    * Notice it is a single [[AxisConfig]] object, not an array of configuration.
    */
   xAxis: PropTypes.shape({
+    axis: PropTypes.oneOf(['x']),
     classes: PropTypes.object,
     colorMap: PropTypes.oneOfType([
       PropTypes.shape({
@@ -435,13 +436,15 @@ SparkLineChart.propTypes = {
     disableTicks: PropTypes.bool,
     domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
     fill: PropTypes.string,
+    height: PropTypes.number,
     hideTooltip: PropTypes.bool,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     label: PropTypes.string,
     labelStyle: PropTypes.object,
     max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
     min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-    position: PropTypes.oneOf(['bottom', 'top']),
+    offset: PropTypes.number,
+    position: PropTypes.oneOf(['bottom', 'none', 'top']),
     reverse: PropTypes.bool,
     scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
     slotProps: PropTypes.object,
@@ -468,6 +471,7 @@ SparkLineChart.propTypes = {
    * Notice it is a single [[AxisConfig]] object, not an array of configuration.
    */
   yAxis: PropTypes.shape({
+    axis: PropTypes.oneOf(['y']),
     classes: PropTypes.object,
     colorMap: PropTypes.oneOfType([
       PropTypes.shape({
@@ -506,7 +510,8 @@ SparkLineChart.propTypes = {
     labelStyle: PropTypes.object,
     max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
     min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-    position: PropTypes.oneOf(['left', 'right']),
+    offset: PropTypes.number,
+    position: PropTypes.oneOf(['left', 'none', 'right']),
     reverse: PropTypes.bool,
     scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
     slotProps: PropTypes.object,
@@ -527,6 +532,7 @@ SparkLineChart.propTypes = {
     tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
     tickSize: PropTypes.number,
     valueFormatter: PropTypes.func,
+    width: PropTypes.number,
   }),
 } as any;
 

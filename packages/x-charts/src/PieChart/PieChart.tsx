@@ -199,12 +199,15 @@ PieChart.propTypes = {
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
    */
-  margin: PropTypes.shape({
-    bottom: PropTypes.number,
-    left: PropTypes.number,
-    right: PropTypes.number,
-    top: PropTypes.number,
-  }),
+  margin: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.shape({
+      bottom: PropTypes.number,
+      left: PropTypes.number,
+      right: PropTypes.number,
+      top: PropTypes.number,
+    }),
+  ]),
   /**
    * The callback fired when the highlighted item changes.
    *
