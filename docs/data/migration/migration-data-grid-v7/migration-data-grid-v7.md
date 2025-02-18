@@ -86,6 +86,16 @@ Below are described the steps you need to make to migrate from v7 to v8.
 
 - `createUseGridApiEventHandler()` is not exported anymore.
 
+### Behavioral changes
+
+- The "Reset" button in the column visibility panel now resets to the initial column visibility model instead of the model when the panel was opened. The reset behavior follows these rules:
+
+  1. If an initial `columnVisibilityModel` is provided, it resets to that model.
+  2. If a controlled `columnVisibilityModel` is provided, it resets to the first model value.
+  3. When the columns are updated (via the `columns` prop or `updateColumns()` API method), the reset reference point updates to the current `columnVisibilityModel`.
+
+  To revert to the previous behavior, provide a custom component to the `slots.columnsManagement`.
+
 ### Localization
 
 - If `estimatedRowCount` is used, the text provided to the [Table Pagination](/material-ui/api/table-pagination/) component from the Material UI library is updated and requires additional translations. Check the example at the end of [Index-based pagination section](/x/react-data-grid/pagination/#index-based-pagination).
@@ -137,6 +147,7 @@ Below are described the steps you need to make to migrate from v7 to v8.
 ### Other exports
 
 - `ariaV8` experimental flag is removed. It's now the default behavior.
+- Subcomponents that are in a React Portal must now be wrapped with `GridPortalWrapper`
 
 ### Filtering
 
@@ -171,6 +182,10 @@ Below are described the steps you need to make to migrate from v7 to v8.
 
 - The `detailPanels`, `pinnedColumns`, and `pinnedRowsRenderZone` classes have been removed.
 - The `main--hasSkeletonLoadingOverlay` class has been renamed to `main--hiddenContent` and is now also applied when the "No columns" overlay is displayed.
+
+### Slots
+
+- The `baseFormControl` slot was removed.
 
 <!-- ### Editing
 

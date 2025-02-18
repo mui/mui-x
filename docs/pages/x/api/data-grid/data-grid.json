@@ -501,12 +501,6 @@
   ],
   "slots": [
     {
-      "name": "baseChip",
-      "description": "The custom Chip component used in the grid.",
-      "default": "Chip",
-      "class": null
-    },
-    {
       "name": "bottomContainer",
       "description": "Component rendered for the bottom container.",
       "default": "GridBottomContainer",
@@ -633,6 +627,12 @@
       "class": "MuiDataGrid-row"
     },
     {
+      "name": "baseAutocomplete",
+      "description": "The custom Autocomplete component used in the grid for both header and cells.",
+      "default": "Autocomplete",
+      "class": null
+    },
+    {
       "name": "baseBadge",
       "description": "The custom Badge component used in the grid for both header and cells.",
       "default": "Badge",
@@ -684,12 +684,6 @@
       "name": "baseTextField",
       "description": "The custom TextField component used in the grid.",
       "default": "TextField",
-      "class": null
-    },
-    {
-      "name": "baseFormControl",
-      "description": "The custom FormControl component used in the grid.",
-      "default": "FormControl",
       "class": null
     },
     {

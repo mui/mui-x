@@ -11,6 +11,7 @@ import { Theme } from '@mui/material/styles';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridRootStyles } from './GridRootStyles';
+import { useCSSVariablesContext } from '../../utils/css/context';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -71,6 +72,7 @@ const GridRoot = forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(pro
   const ownerState = rootProps;
 
   const classes = useUtilityClasses(ownerState, density);
+  const cssVariables = useCSSVariablesContext();
 
   const isSSR = useIsSSR();
 
@@ -80,7 +82,7 @@ const GridRoot = forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(pro
 
   return (
     <GridRootStyles
-      className={clsx(classes.root, className, sidePanel && gridClasses.withSidePanel)}
+      className={clsx(classes.root, className, cssVariables.className, sidePanel && gridClasses.withSidePanel)}
       ownerState={ownerState}
       {...other}
       ref={handleRef}
@@ -91,6 +93,7 @@ const GridRoot = forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(pro
         <GridFooterPlaceholder />
       </div>
       {sidePanel}
+      {cssVariables.tag}
     </GridRootStyles>
   );
 });
