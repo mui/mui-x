@@ -158,7 +158,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     additionalProps: {
       style: {
         ...theme.typography.caption,
-        lineHeight: 1.5,
+        lineHeight: 'normal',
         fontSize: 12,
         textAnchor: 'middle',
         dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
