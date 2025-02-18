@@ -155,7 +155,7 @@ export const useGridSorting = (
         };
       }
 
-      const sortModel = gridSortModelSelector(state, undefined, apiRef.current.instanceId);
+      const sortModel = gridSortModelSelector(apiRef);
       const sortRowList = buildAggregatedSortingApplier(sortModel, apiRef);
       const sortedRows = apiRef.current.applyStrategyProcessor('sorting', {
         sortRowList,
@@ -168,7 +168,6 @@ export const useGridSorting = (
     });
 
     apiRef.current.publishEvent('sortedRowsSet');
-    apiRef.current.forceUpdate();
   }, [apiRef, logger, props.sortingMode]);
 
   const setSortModel = React.useCallback<GridSortApi['setSortModel']>(
@@ -179,7 +178,6 @@ export const useGridSorting = (
         apiRef.current.setState(
           mergeStateWithSortModel(model, props.disableMultipleColumnsSorting),
         );
-        apiRef.current.forceUpdate();
         apiRef.current.applySorting();
       }
     },

@@ -40,7 +40,6 @@
       "type": { "description": "(params?: GridExportStateParams) =&gt; InitialState" },
       "required": true
     },
-    "forceUpdate": { "type": { "description": "() =&gt; void" }, "required": true },
     "getAllColumns": { "type": { "description": "() =&gt; GridStateColDef[]" }, "required": true },
     "getAllGroupDetails": {
       "type": { "description": "() =&gt; GridColumnGroupLookup" },

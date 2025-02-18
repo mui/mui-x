@@ -394,10 +394,10 @@ export interface GridClasses {
    */
   'main--hasPinnedRight': string;
   /**
-   * Styles applied to the main container element when it has an active skeleton loading overlay.
+   * Styles applied to the main container element to hide the contents of the grid.
    * @ignore - do not document.
    */
-  'main--hasSkeletonLoadingOverlay': string;
+  'main--hiddenContent': string;
   /**
    * Styles applied to the menu element.
    */
@@ -784,7 +784,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'iconSeparator',
   'main',
   'main--hasPinnedRight',
-  'main--hasSkeletonLoadingOverlay',
+  'main--hiddenContent',
   'menu',
   'menuIcon',
   'menuIconButton',

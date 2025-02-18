@@ -23,14 +23,14 @@ const series = [
 ];
 
 function LinkPoints({ seriesId, close }: { seriesId: string; close?: boolean }) {
-  const scatter = useScatterSeries();
+  const scatter = useScatterSeries(seriesId);
   const xScale = useXScale();
   const yScale = useYScale();
 
-  if (!scatter || !scatter.series[seriesId]) {
+  if (!scatter) {
     return null;
   }
-  const { color, data } = scatter.series[seriesId];
+  const { color, data } = scatter;
 
   if (!data) {
     return null;

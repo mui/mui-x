@@ -8,11 +8,11 @@ import {
   GridDataSourceGroupNode,
   useGridSelector,
 } from '@mui/x-data-grid';
+import { gridRowSelector } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 import { GridPrivateApiPro } from '../models/gridApiPro';
-import { GridStatePro } from '../models/gridStatePro';
 import {
   gridDataSourceErrorSelector,
   gridDataSourceLoadingIdSelector,
@@ -104,8 +104,7 @@ export function GridDataSourceTreeDataGroupingCell(props: GridTreeDataGroupingCe
 
   const rootProps = useGridRootProps();
   const apiRef = useGridPrivateApiContext();
-  const rowSelector = (state: GridStatePro) => state.rows.dataRowIdToModelLookup[id];
-  const row = useGridSelector(apiRef, rowSelector);
+  const row = useGridSelector(apiRef, gridRowSelector, id);
   const classes = useUtilityClasses(rootProps);
 
   let descendantCount = 0;

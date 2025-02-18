@@ -66,7 +66,7 @@ function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonPro
       event.preventDefault();
       event.stopPropagation();
 
-      const { open, openedPanelValue } = gridPreferencePanelStateSelector(apiRef.current.state);
+      const { open, openedPanelValue } = gridPreferencePanelStateSelector(apiRef);
 
       if (open && openedPanelValue === GridPreferencePanelsValue.filters) {
         apiRef.current.hideFilterPanel();

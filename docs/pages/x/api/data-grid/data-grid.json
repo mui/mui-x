@@ -501,12 +501,6 @@
   ],
   "slots": [
     {
-      "name": "baseChip",
-      "description": "The custom Chip component used in the grid.",
-      "default": "Chip",
-      "class": null
-    },
-    {
       "name": "bottomContainer",
       "description": "Component rendered for the bottom container.",
       "default": "GridBottomContainer",
@@ -591,6 +585,12 @@
       "class": null
     },
     {
+      "name": "noColumnsOverlay",
+      "description": "No columns overlay component rendered when the grid has no columns.",
+      "default": "GridNoColumnsOverlay",
+      "class": null
+    },
+    {
       "name": "pagination",
       "description": "Pagination component rendered in the grid footer by default.",
       "default": "Pagination",
@@ -625,6 +625,12 @@
       "description": "Component rendered for each row.",
       "default": "GridRow",
       "class": "MuiDataGrid-row"
+    },
+    {
+      "name": "baseAutocomplete",
+      "description": "The custom Autocomplete component used in the grid for both header and cells.",
+      "default": "Autocomplete",
+      "class": null
     },
     {
       "name": "baseBadge",
@@ -705,6 +711,12 @@
       "class": null
     },
     {
+      "name": "baseInput",
+      "description": "The custom Input component used in the grid.",
+      "default": "Input",
+      "class": null
+    },
+    {
       "name": "baseTooltip",
       "description": "The custom Tooltip component used in the grid.",
       "default": "Tooltip",
@@ -732,6 +744,12 @@
       "name": "baseSkeleton",
       "description": "The custom Skeleton component used in the grid.",
       "default": "Skeleton",
+      "class": null
+    },
+    {
+      "name": "baseSwitch",
+      "description": "The custom Switch component used in the grid.",
+      "default": "Switch",
       "class": null
     },
     {

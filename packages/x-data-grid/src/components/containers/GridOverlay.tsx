@@ -5,6 +5,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { Theme, SxProps, styled } from '@mui/system';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { vars } from '../../constants/cssVariables';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
@@ -27,15 +28,16 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridOverlayRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'Overlay',
-  overridesResolver: (_, styles) => styles.overlay,
 })<{ ownerState: OwnerState }>({
   width: '100%',
   height: '100%',
   display: 'flex',
+  gap: vars.spacing(1),
+  flexDirection: 'column',
   alignSelf: 'center',
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: 'var(--unstable_DataGrid-overlayBackground)',
+  backgroundColor: vars.colors.background.backdrop,
 });
 
 const GridOverlay = forwardRef<HTMLDivElement, GridOverlayProps>(function GridOverlay(props, ref) {
