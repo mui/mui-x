@@ -48,8 +48,8 @@ const getAggregationCellValue = ({
     //   A.B
     //     A.B.A
     //     A.B.B
-    const rowNode = apiRef.current.getRowNode(rowId)!;
-    if (rowNode.type === 'group') {
+    const rowNode = apiRef.current.getRowNode(rowId);
+    if (rowNode?.type === 'group') {
       return;
     }
 

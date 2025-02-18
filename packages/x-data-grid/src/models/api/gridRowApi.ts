@@ -77,7 +77,6 @@ export interface GridRowApi {
   getRowId: <R extends GridValidRowModel = any>(row: R) => GridRowId;
   /**
    * Gets the row node from the internal tree structure.
-   * TODO rows v6: Rename `getTreeNode`
    * @param {GridRowId} id The id of the row.
    * @returns {GridTreeNode} The tree node.
    */
