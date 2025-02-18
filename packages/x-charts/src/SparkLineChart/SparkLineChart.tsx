@@ -92,14 +92,9 @@ export interface SparkLineChartProps
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
-   * @default {
-   *   top: 5,
-   *   bottom: 5,
-   *   left: 5,
-   *   right: 5,
-   * }
+   * @default 5
    */
-  margin?: Partial<ChartMargin>;
+  margin?: Partial<ChartMargin> | number;
   /**
    * Overridable component slots.
    * @default {}
@@ -310,19 +305,17 @@ SparkLineChart.propTypes = {
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
-   * @default {
-   *   top: 5,
-   *   bottom: 5,
-   *   left: 5,
-   *   right: 5,
-   * }
+   * @default 5
    */
-  margin: PropTypes.shape({
-    bottom: PropTypes.number,
-    left: PropTypes.number,
-    right: PropTypes.number,
-    top: PropTypes.number,
-  }),
+  margin: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.shape({
+      bottom: PropTypes.number,
+      left: PropTypes.number,
+      right: PropTypes.number,
+      top: PropTypes.number,
+    }),
+  ]),
   /**
    * The function called for onClick events.
    * The second argument contains information about all line/bar elements at the current mouse position.
