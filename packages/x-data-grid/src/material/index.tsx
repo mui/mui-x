@@ -85,12 +85,7 @@ const BaseSelect = forwardRef<any, GridSlotProps['baseSelect']>(function BaseSel
   } = props;
   return (
     <MUIFormControl size={size} fullWidth={fullWidth} style={style} disabled={disabled} ref={ref}>
-      <MUIInputLabel
-        id={labelId}
-        htmlFor={id}
-        shrink
-        variant="outlined"
-      >
+      <MUIInputLabel id={labelId} htmlFor={id} shrink variant="outlined">
         {label}
       </MUIInputLabel>
       <MUISelect
@@ -336,9 +331,7 @@ function BaseAutocomplete(props: GridSlotProps['baseAutocomplete']) {
 }
 
 function BaseInput(props: GridSlotProps['baseInput']) {
-  return (
-    <MUIInputBase {...transformInputProps(props)} />
-  );
+  return <MUIInputBase {...transformInputProps(props)} />;
 }
 
 function transformInputProps(props: GridSlotProps['baseInput'] | undefined) {
@@ -346,26 +339,20 @@ function transformInputProps(props: GridSlotProps['baseInput'] | undefined) {
     return undefined;
   }
 
-  let {
-    slotProps,
-    startAdornment,
-    endAdornment,
-    ...rest
-  } = props;
+  const { slotProps, ...rest } = props;
   const result = rest as Partial<MUIInputBaseProps>;
 
-  if (startAdornment) {
-    startAdornment =
-      <MUIInputAdornment position='start'>{startAdornment}</MUIInputAdornment>
+  if (result.startAdornment) {
+    result.startAdornment = (
+      <MUIInputAdornment position="start">{result.startAdornment}</MUIInputAdornment>
+    );
   }
 
-  if (endAdornment) {
-    endAdornment =
-      <MUIInputAdornment position='end'>{endAdornment}</MUIInputAdornment>
+  if (result.endAdornment) {
+    result.endAdornment = (
+      <MUIInputAdornment position="end">{result.endAdornment}</MUIInputAdornment>
+    );
   }
-
-  result.startAdornment = startAdornment;
-  result.endAdornment = endAdornment;
 
   result.inputProps = slotProps?.htmlInput;
 

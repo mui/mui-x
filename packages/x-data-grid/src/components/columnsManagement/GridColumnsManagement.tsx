@@ -235,29 +235,18 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
           type="search"
           slotProps={{
             input: {
-              startAdornment: (
-                <rootProps.slots.quickFilterIcon />
-              ),
-              endAdornment: (
+              startAdornment: <rootProps.slots.quickFilterIcon />,
+              endAdornment: searchValue ? (
                 <rootProps.slots.baseIconButton
                   aria-label={apiRef.current.getLocaleText('columnsManagementDeleteIconLabel')}
                   size="small"
-                  style={
-                    searchValue
-                      ? {
-                          visibility: 'visible',
-                        }
-                      : {
-                          visibility: 'hidden',
-                        }
-                  }
                   tabIndex={-1}
                   onClick={handleSearchReset}
                   {...rootProps.slotProps?.baseIconButton}
                 >
                   <rootProps.slots.quickFilterClearIcon fontSize="small" />
                 </rootProps.slots.baseIconButton>
-              ),
+              ) : undefined,
             },
             htmlInput: {
               'aria-label': apiRef.current.getLocaleText('columnsManagementSearchTitle'),

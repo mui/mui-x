@@ -157,9 +157,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
       slotProps={{
         ...slotProps?.root.slotProps,
         input: {
-          startAdornment: (
-            <rootProps.slots.quickFilterIcon fontSize="small" />
-          ),
+          startAdornment: <rootProps.slots.quickFilterIcon fontSize="small" />,
           endAdornment: (
             <rootProps.slots.baseIconButton
               aria-label={apiRef.current.getLocaleText('toolbarQuickFilterDeleteIconLabel')}
