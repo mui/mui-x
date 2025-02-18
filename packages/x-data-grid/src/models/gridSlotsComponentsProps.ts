@@ -62,7 +62,6 @@ export interface BaseLinearProgressPropsOverrides {}
 export interface BaseMenuListPropsOverrides {}
 export interface BaseMenuItemPropsOverrides {}
 export interface BaseTextFieldPropsOverrides {}
-export interface BaseFormControlPropsOverrides {}
 export interface BaseSelectPropsOverrides {}
 export interface BaseSwitchPropsOverrides {}
 export interface BaseButtonPropsOverrides {}
