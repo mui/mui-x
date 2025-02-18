@@ -46,9 +46,8 @@ export default function MultipleYAxesScatterChart() {
       xAxis={[{ min: 0 }]}
       yAxis={[
         { id: 'leftAxis', min: 0 },
-        { id: 'rightAxis', min: 0 },
+        { id: 'rightAxis', min: 0, position: 'right' },
       ]}
-      rightAxis="rightAxis"
       sx={{
         [`& .${axisClasses.left}`]: {
           line: { stroke: '#8884d8' },

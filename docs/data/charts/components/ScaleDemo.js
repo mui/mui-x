@@ -115,17 +115,13 @@ export default function ScaleDemo() {
       ]}
       xAxis={[{ data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], scaleType: 'point' }]}
       yAxis={[
-        {
-          id: 'left_axis_id',
-        },
-        {
-          id: 'right_axis_id',
-        },
+        { id: 'left_axis_id', position: 'left' },
+        { id: 'right_axis_id', position: 'right' },
       ]}
     >
       <LinePlot />
-      <ChartsYAxis position="left" axisId="left_axis_id" />
-      <ChartsYAxis position="right" axisId="right_axis_id" />
+      <ChartsYAxis axisId="left_axis_id" />
+      <ChartsYAxis axisId="right_axis_id" />
       <ValueHighlight svgRef={svgRef} />
     </ChartContainer>
   );
