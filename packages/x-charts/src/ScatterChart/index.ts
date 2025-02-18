@@ -4,6 +4,4 @@ export * from './ScatterPlot';
 
 export * from './Scatter';
 
-export * from './ScatterMarker';
-
-export * from './Scatter.types';
+export * from './ScatterMarker.types';
