@@ -48,9 +48,10 @@ export default function BorderRadius() {
         borderRadius={radius}
       />
       <HighlightedCode
-        code={[`<BarChart`, `  /* ... */`, `  borderRadius={${radius}}`, `/>`].join(
-          '\n',
-        )}
+        code={`<BarChart
+  // ...
+  borderRadius={${radius}}
+/>`}
         language="jsx"
         copyButtonHidden
       />

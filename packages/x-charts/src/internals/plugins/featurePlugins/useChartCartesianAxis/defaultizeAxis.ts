@@ -1,5 +1,10 @@
 import { MakeOptional } from '@mui/x-internals/types';
-import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY, DEFAULT_AXIS_SIZE } from '../../../../constants';
+import {
+  DEFAULT_X_AXIS_KEY,
+  DEFAULT_Y_AXIS_KEY,
+  DEFAULT_AXIS_SIZE_HEIGHT,
+  DEFAULT_AXIS_SIZE_WIDTH,
+} from '../../../../constants';
 import { AxisConfig, ScaleName } from '../../../../models';
 import { ChartsXAxisProps, ChartsYAxisProps } from '../../../../models/axis';
 import { DatasetType } from '../../../../models/seriesType/config';
@@ -42,8 +47,8 @@ export function defaultizeAxis(
     const position = axisConfig.position ?? 'none';
     const dimension = axisName === 'x' ? 'height' : 'width';
 
-    const height = axisName === 'x' ? DEFAULT_AXIS_SIZE : 0;
-    const width = axisName === 'y' ? DEFAULT_AXIS_SIZE : 0;
+    const height = axisName === 'x' ? DEFAULT_AXIS_SIZE_HEIGHT : 0;
+    const width = axisName === 'y' ? DEFAULT_AXIS_SIZE_WIDTH : 0;
 
     const sharedConfig = {
       id: `defaultized-${axisName}-axis-${index}`,
@@ -57,7 +62,8 @@ export function defaultizeAxis(
 
     // Increment the offset for the next axis
     if (position !== 'none') {
-      offsets[position] += (axisConfig as any)[dimension] ?? DEFAULT_AXIS_SIZE;
+      offsets[position] +=
+        (axisConfig as any)[dimension] ?? (dimension === 'height' ? height : width);
     }
 
     // If `dataKey` is NOT provided
