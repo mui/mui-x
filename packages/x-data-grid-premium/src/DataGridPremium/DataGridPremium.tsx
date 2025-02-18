@@ -8,6 +8,7 @@ import {
   propValidatorsDataGridPro,
   PropValidator,
   validateProps,
+  useGridApiInitialization,
 } from '@mui/x-data-grid-pro/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
@@ -22,6 +23,7 @@ import { GridSidebar } from '../components/sidebar/GridSidebar';
 import { GridSidebarColumnPanel } from '../components/sidebar/columnPanel/GridSidebarColumnPanel';
 import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
+import type { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
@@ -46,7 +48,11 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useDataGridPremiumProps(inProps);
-  const privateApiRef = useDataGridPremiumComponent(props.apiRef, props);
+  const privateApiRef = useGridApiInitialization<GridPrivateApiPremium, GridApiPremium>(
+    props.apiRef,
+    props,
+  );
+  useDataGridPremiumComponent(privateApiRef, props);
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
   const { pivotParams } = props;

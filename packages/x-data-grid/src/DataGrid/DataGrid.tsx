@@ -12,6 +12,8 @@ import { useDataGridProps } from './useDataGridProps';
 import { GridValidRowModel } from '../models/gridRows';
 import { propValidatorsDataGrid, validateProps } from '../internals/utils/propValidation';
 import { useMaterialCSSVariables } from '../material/variables';
+import type { GridApiCommunity, GridPrivateApiCommunity } from '../models/api/gridApiCommunity';
+import { useGridApiInitialization } from '../hooks/core/useGridApiInitialization';
 
 export type { GridSlotsComponent as GridSlots } from '../models';
 
@@ -28,7 +30,11 @@ const DataGridRaw = forwardRef(function DataGrid<R extends GridValidRowModel>(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useDataGridProps(inProps);
-  const privateApiRef = useDataGridComponent(props.apiRef, props);
+  const privateApiRef = useGridApiInitialization<GridPrivateApiCommunity, GridApiCommunity>(
+    props.apiRef,
+    props,
+  );
+  useDataGridComponent(privateApiRef, props);
 
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, propValidatorsDataGrid);
