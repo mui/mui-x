@@ -10,7 +10,6 @@ import type { InputAdornmentProps } from '@mui/material/InputAdornment';
 import type { TooltipProps as MUITooltipProps } from '@mui/material/Tooltip';
 import type { InputLabelProps } from '@mui/material/InputLabel';
 import type { TablePaginationProps } from '@mui/material/TablePagination';
-import type { ChipProps } from '@mui/material/Chip';
 import type { GridToolbarProps } from '../components/toolbar/GridToolbar';
 import type { ColumnHeaderFilterIconButtonProps } from '../components/columnHeaders/GridColumnHeaderFilterIconButton';
 import type { GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenuProps';
@@ -31,6 +30,7 @@ import type { GridRowCountProps } from '../components/GridRowCount';
 import type { GridColumnHeaderSortIconProps } from '../components/columnHeaders/GridColumnHeaderSortIcon';
 import type { GridBottomContainerProps } from '../components/virtualization/GridBottomContainer';
 import type {
+  AutocompleteProps,
   BadgeProps,
   ButtonProps,
   CheckboxProps,
@@ -54,6 +54,7 @@ type RootProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`,
 type MainProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;
 
 // Overrides for module augmentation
+export interface BaseAutocompletePropsOverrides {}
 export interface BaseBadgePropsOverrides {}
 export interface BaseCheckboxPropsOverrides {}
 export interface BaseCircularProgressPropsOverrides {}
@@ -99,6 +100,7 @@ export interface RowPropsOverrides {}
 export interface BottomContainerPropsOverrides {}
 
 interface BaseSlotProps {
+  baseAutocomplete: AutocompleteProps<string, true, false, true> & BaseAutocompletePropsOverrides;
   baseBadge: BadgeProps & BaseBadgePropsOverrides;
   baseCheckbox: CheckboxProps & BaseCheckboxPropsOverrides;
   baseCircularProgress: CircularProgressProps & BaseCircularProgressPropsOverrides;
@@ -119,7 +121,6 @@ interface BaseSlotProps {
   baseSelect: SelectProps & BaseSelectPropsOverrides;
   baseSelectOption: SelectOptionProps & BaseSelectOptionPropsOverrides;
   baseSkeleton: SkeletonProps & BaseSkeletonPropsOverrides;
-  baseChip: ChipProps & BaseChipPropsOverrides;
 }
 
 interface MaterialSlotProps {

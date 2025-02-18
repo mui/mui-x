@@ -618,12 +618,6 @@
       "class": null
     },
     {
-      "name": "baseChip",
-      "description": "The custom Chip component used in the grid.",
-      "default": "Chip",
-      "class": null
-    },
-    {
       "name": "bottomContainer",
       "description": "Component rendered for the bottom container.",
       "default": "GridBottomContainer",
@@ -748,6 +742,12 @@
       "description": "Component rendered for each row.",
       "default": "GridRow",
       "class": "MuiDataGridPro-row"
+    },
+    {
+      "name": "baseAutocomplete",
+      "description": "The custom Autocomplete component used in the grid for both header and cells.",
+      "default": "Autocomplete",
+      "class": null
     },
     {
       "name": "baseBadge",
