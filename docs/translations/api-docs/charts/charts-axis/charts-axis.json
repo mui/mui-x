@@ -1,20 +1,8 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "bottomAxis": {
-      "description": "Indicate which axis to display the bottom of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
-    },
-    "leftAxis": {
-      "description": "Indicate which axis to display the left of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
-    },
-    "rightAxis": {
-      "description": "Indicate which axis to display the right of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
-    },
     "slotProps": { "description": "The props used for each component slot." },
-    "slots": { "description": "Overridable component slots." },
-    "topAxis": {
-      "description": "Indicate which axis to display the top of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
-    }
+    "slots": { "description": "Overridable component slots." }
   },
   "classDescriptions": {
     "bottom": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the bottom axis" },

@@ -7,7 +7,6 @@
     "fill": { "type": { "name": "string" }, "default": "'currentColor'" },
     "label": { "type": { "name": "string" } },
     "labelStyle": { "type": { "name": "object" } },
-    "position": { "type": { "name": "enum", "description": "'bottom'<br>&#124;&nbsp;'top'" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
