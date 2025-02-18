@@ -1,3 +1,4 @@
+// @ts-check
 import * as React from 'react';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { BarChart } from '@mui/x-charts/BarChart';
@@ -31,28 +32,24 @@ export default function MarginNoSnap() {
                 id: 'x-axis',
                 scaleType: 'band',
                 data: ['Page 1', 'Page 2', 'Page 3'],
+                position: 'top',
               },
             ]}
-            topAxis="x-axis"
-            rightAxis={{}}
+            yAxis={[{ position: 'right' }]}
           />
         </div>
       )}
-      getCode={({ props }) => {
-        return [
-          `import { BarChart } from '@mui/x-charts/BarChart';`,
-          '',
-          `<BarChart`,
-          `  // ...`,
-          `  margin={{`,
-          `    left: ${props.left},`,
-          `    right: ${props.right},`,
-          `    top: ${props.top},`,
-          `    bottom: ${props.bottom},`,
-          `  }}`,
-          '/>',
-        ].join('\n');
-      }}
+      getCode={({ props }) => `import { BarChart } from '@mui/x-charts/BarChart';
+
+<BarChart
+  // ...
+  margin={{
+    left: ${props.left},
+    right: ${props.right},
+    top: ${props.top},
+    bottom: ${props.bottom},
+  }}
+/>`}
     />
   );
 }

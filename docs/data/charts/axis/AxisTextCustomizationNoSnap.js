@@ -1,3 +1,4 @@
+// @ts-check
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
@@ -32,11 +33,10 @@ export default function AxisTextCustomizationNoSnap() {
                 scaleType: 'band',
                 dataKey: 'month',
                 label: 'months',
+                height: 40,
                 labelStyle: {
                   fontSize: props.labelFontSize,
-                  transform: `translateY(${
-                    5 * Math.abs(Math.sin((Math.PI * props.angle) / 180))
-                  }px)`,
+                  transform: `translateY(10px)`,
                 },
                 tickLabelStyle: {
                   angle: props.angle,
@@ -51,33 +51,28 @@ export default function AxisTextCustomizationNoSnap() {
               { dataKey: 'newYork', label: 'New York', valueFormatter },
               { dataKey: 'seoul', label: 'Seoul', valueFormatter },
             ]}
+            margin={{ bottom: 30 }}
             {...chartSetting}
           />
         </Box>
       )}
-      getCode={({ props }) =>
-        [
-          `import { ScatterChart } from '@mui/x-charts/ScatterChart';`,
-          '',
-          `<ScatterChart`,
-          '  {/** ... */}',
-          `  bottomAxis={{`,
-          `    labelStyle: {`,
-          `      fontSize: ${props.labelFontSize},`,
-          `      transform: \`translateY(\${
-            // Hack that should be added in the lib latter.
-            5 * Math.abs(Math.sin((Math.PI * props.angle) / 180))
-          }px)\``,
-          `    },`,
-          `    tickLabelStyle: {`,
-          `      angle: ${props.angle},`,
-          `      textAnchor: '${props.textAnchor}',`,
-          `      fontSize: ${props.fontSize},`,
-          `    },`,
-          '  }}',
-          '/>',
-        ].join('\n')
-      }
+      getCode={({ props }) => `import { BarChart } from '@mui/x-charts/BarChart';
+
+<ScatterChart
+  // ...
+  xAxis={[
+    {
+      labelStyle: {
+        fontSize: ${props.labelFontSize},
+      },
+      tickLabelStyle: {
+        angle: ${props.angle},
+        textAnchor: '${props.textAnchor}',
+        fontSize: ${props.fontSize},
+      },
+    },
+  ]}
+/>`}
     />
   );
 }

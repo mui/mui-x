@@ -1,3 +1,4 @@
+// @ts-check
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
@@ -38,35 +39,32 @@ export default function AxisCustomizationNoSnap() {
                 data,
               },
             ]}
-            leftAxis={null}
-            bottomAxis={{
-              ...defaultXAxis,
-              ...props,
-            }}
+            yAxis={[{ position: 'none' }]}
+            xAxis={[
+              {
+                ...defaultXAxis,
+                ...props,
+              },
+            ]}
             height={300}
             margin={{ top: 10, left: 20, right: 20 }}
           />
         </Box>
       )}
-      getCode={({ props }) =>
-        [
-          `import { ScatterChart } from '@mui/x-charts/ScatterChart';`,
-          '',
-          `<ScatterChart`,
-          '  {/** ... */}',
-          `  bottomAxis={{`,
-          ...Object.keys(props)
-            .filter((prop) => props[prop] !== defaultXAxis[prop])
-            .map(
-              (prop) =>
-                `    ${prop}: ${
-                  typeof props[prop] === 'string' ? `"${props[prop]}"` : props[prop]
-                },`,
-            ),
-          '  }}',
-          '/>',
-        ].join('\n')
-      }
+      getCode={({
+        props,
+      }) => `import { ScatterChart } from '@mui/x-charts/ScatterChart';
+
+<ScatterChart
+  // ...
+  xAxis={{
+    disableLine: ${props.disableLine},
+    disableTicks: ${props.disableTicks},
+    label: "${props.label}",
+    tickSize: ${props.tickSize},
+  }}
+/>
+`}
     />
   );
 }

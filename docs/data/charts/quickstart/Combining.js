@@ -55,10 +55,7 @@ export default function Combining() {
             },
           ]}
           yAxis={[
-            {
-              id: 'price',
-              scaleType: 'linear',
-            },
+            { id: 'price', scaleType: 'linear', position: 'left' },
             {
               id: 'volume',
               scaleType: 'linear',
