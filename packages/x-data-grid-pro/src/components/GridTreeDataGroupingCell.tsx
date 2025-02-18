@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import Box from '@mui/material/Box';
 import {
   useGridSelector,
   gridFilteredDescendantCountLookupSelector,
@@ -9,6 +8,7 @@ import {
   GridRenderCellParams,
   GridGroupNode,
 } from '@mui/x-data-grid';
+import { vars } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
@@ -59,7 +59,10 @@ function GridTreeDataGroupingCell(props: GridTreeDataGroupingCellProps) {
   };
 
   return (
-    <Box className={classes.root} sx={{ ml: rowNode.depth * offsetMultiplier }}>
+    <div
+      className={classes.root}
+      style={{ marginLeft: vars.spacing(rowNode.depth * offsetMultiplier) }}
+    >
       <div className={classes.toggle}>
         {filteredDescendantCount > 0 && (
           <rootProps.slots.baseIconButton
@@ -81,7 +84,7 @@ function GridTreeDataGroupingCell(props: GridTreeDataGroupingCellProps) {
         {formattedValue === undefined ? rowNode.groupingKey : formattedValue}
         {!hideDescendantCount && filteredDescendantCount > 0 ? ` (${filteredDescendantCount})` : ''}
       </span>
-    </Box>
+    </div>
   );
 }
 

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import Box from '@mui/material/Box';
 import {
   useGridPrivateApiContext,
   gridDataSourceErrorSelector,
@@ -121,10 +120,10 @@ export function GridDataSourceGroupingCriteriaCell(props: GridGroupingCriteriaCe
   }
 
   return (
-    <Box
+    <div
       className={classes.root}
-      sx={{
-        ml:
+      style={{
+        marginLeft:
           rootProps.rowGroupingColumnMode === 'multiple'
             ? 0
             : `calc(var(--DataGrid-cellOffsetMultiplier) * ${vars.spacing(rowNode.depth)})`,
@@ -143,6 +142,6 @@ export function GridDataSourceGroupingCriteriaCell(props: GridGroupingCriteriaCe
       {!hideDescendantCount && descendantCount > 0 ? (
         <span style={{ whiteSpace: 'pre' }}> ({descendantCount})</span>
       ) : null}
-    </Box>
+    </div>
   );
 }
