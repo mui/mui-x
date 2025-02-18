@@ -58,7 +58,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "group including the tick and its label"
     },
-    "tickLabel": { "description": "Styles applied to {{nodeName}}.", "nodeName": "ticks label" },
+    "tickLabel": {
+      "description": "Styles applied to {{nodeName}}.<br>⚠️ For performance reasons, only the inline styles get considered for bounding box computation. Modifying text size by adding properties like <code>font-size</code> or <code>letter-spacing</code> to this class might cause labels to overlap.",
+      "nodeName": "ticks label"
+    },
     "top": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the top axis" }
   }
 }
