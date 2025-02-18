@@ -1,11 +1,14 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { useUtils } from '../../../../hooks/useUtils';
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 import type { useBaseCalendarDayCell } from './useBaseCalendarDayCell';
 import { useBaseCalendarDayGridRowContext } from '../day-grid-row/BaseCalendarDayGridRowContext';
 import { useBaseCalendarDayGridBodyContext } from '../day-grid-body/BaseCalendarDayGridBodyContext';
+import { PickerValidDate } from '../../../../../models';
+import { mergeDateAndTime } from '../../../../utils/date-utils';
 
 export function useBaseCalendarDayCellWrapper(
   parameters: useBaseCalendarDayCellWrapper.Parameters,
@@ -61,6 +64,16 @@ export function useBaseCalendarDayCellWrapper(
     [utils, isOutsideCurrentMonth, baseDayGridBodyContext.tabbableDays, value],
   );
 
+  const selectDay = useEventCallback((date: PickerValidDate) => {
+    if (baseRootContext.readOnly) {
+      return;
+    }
+
+    const newCleanValue = mergeDateAndTime(utils, date, baseRootContext.currentDate);
+
+    baseRootContext.selectDate(newCleanValue, { section: 'day' });
+  });
+
   const ctx = React.useMemo<useBaseCalendarDayCell.Context>(
     () => ({
       isSelected,
@@ -71,7 +84,7 @@ export function useBaseCalendarDayCellWrapper(
       isStartOfWeek,
       isEndOfWeek,
       isOutsideCurrentMonth,
-      selectDay: baseDayGridBodyContext.selectDay,
+      selectDay,
     }),
     [
       isSelected,
@@ -82,7 +95,7 @@ export function useBaseCalendarDayCellWrapper(
       isEndOfWeek,
       isCurrent,
       isOutsideCurrentMonth,
-      baseDayGridBodyContext.selectDay,
+      selectDay,
     ],
   );
 

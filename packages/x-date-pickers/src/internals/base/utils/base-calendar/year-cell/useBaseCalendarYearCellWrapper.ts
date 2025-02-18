@@ -69,12 +69,12 @@ export function useBaseCalendarYearCellWrapper(
     [baseYearListOrGridContext, value, utils],
   );
 
-  const selectYear = useEventCallback((newValue: PickerValidDate) => {
+  const selectYear = useEventCallback((date: PickerValidDate) => {
     if (baseRootContext.readOnly) {
       return;
     }
 
-    const newCleanValue = utils.setYear(baseRootContext.currentDate, utils.getYear(newValue));
+    const newCleanValue = utils.setYear(baseRootContext.currentDate, utils.getYear(date));
 
     const startOfYear = utils.startOfYear(newCleanValue);
     const endOfYear = utils.endOfYear(newCleanValue);

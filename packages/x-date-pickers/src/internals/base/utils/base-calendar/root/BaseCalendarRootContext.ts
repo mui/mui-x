@@ -32,14 +32,14 @@ export interface BaseCalendarRootContext {
    */
   selectedDates: PickerValidDate[];
   /**
-   * Selects a date.
+   * Select a date.
    * @param {PickerValidDate} date The date to select.
    * @param {object} options The options to select the date.
    * @param {BaseCalendarSection} options.section The section handled by the UI that triggered the change.
    */
   selectDate: (date: PickerValidDate, options: { section: BaseCalendarSection }) => void;
   /**
-   * Determines if the given date is invalid.
+   * Determine if the given date is invalid.
    * @param {PickerValidDate} date The date to check.
    * @returns {boolean} Whether the date is invalid.
    */
@@ -49,11 +49,36 @@ export interface BaseCalendarRootContext {
    * Warning: Even when used inside the RangeCalendar component, this is still equal to the validation props for a single date.
    */
   dateValidationProps: ValidateDateProps;
+  /**
+   * Set the visible data.
+   * @param {PickerValidDate} visibleDate The new visible data.
+   * @param {boolean} skipIfAlreadyVisible Whether to skip the update if the date is already inside one of the visible grids / lists.
+   */
   setVisibleDate: (visibleDate: PickerValidDate, skipIfAlreadyVisible: boolean) => void;
+  /**
+   * The number of months to switch by when using clicking on SetVisibleMonth primitive with target="previous" or target="next".
+   */
   monthPageSize: number;
+  /**
+   * The number of years to switch by when using clicking on SetVisibleYear primitive with target="previous" or target="next".
+   */
   yearPageSize: number;
+  /**
+   * Callback forwarded to the `onKeyDown` prop of the day grid body.
+   * @param {React.KeyboardEvent} event The keyboard event.
+   */
   applyDayGridKeyboardNavigation: (event: React.KeyboardEvent) => void;
-  registerDayGridCell: (ref: useBaseCalendarDayGridNavigation.CellRefs) => () => void;
+  /**
+   * Register a day cell ref to be able to apply keyboard navigation.
+   * @param {useBaseCalendarDayGridNavigation.CellRefs} refs The grid, row and cell refs of the day cell.
+   * @returns {() => void} A cleanup function to unregister the cell.
+   */
+  registerDayGridCell: (refs: useBaseCalendarDayGridNavigation.CellRefs) => () => void;
+  /**
+   * Register a section to be able to know if a date cell is visible or not.
+   * @param {useBaseCalendarRoot.RegisterSectionParameters} parameters The type and value of the section.
+   * @returns {() => void} A cleanup function to unregister the section.
+   */
   registerSection: (parameters: useBaseCalendarRoot.RegisterSectionParameters) => () => void;
 }
 

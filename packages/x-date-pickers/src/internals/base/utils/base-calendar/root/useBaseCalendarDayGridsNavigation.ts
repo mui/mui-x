@@ -66,11 +66,13 @@ export function useBaseCalendarDayGridNavigation(
     navigateInGrid({ cells, event, changePage });
   });
 
-  const registerDayGridCell = useEventCallback((ref: useBaseCalendarDayGridNavigation.CellRefs) => {
-    const id = Math.random();
-    cellsRef.current.set(id, ref);
-    return () => cellsRef.current.delete(id);
-  });
+  const registerDayGridCell = useEventCallback(
+    (refs: useBaseCalendarDayGridNavigation.CellRefs) => {
+      const id = Math.random();
+      cellsRef.current.set(id, refs);
+      return () => cellsRef.current.delete(id);
+    },
+  );
 
   return {
     registerDayGridCell,

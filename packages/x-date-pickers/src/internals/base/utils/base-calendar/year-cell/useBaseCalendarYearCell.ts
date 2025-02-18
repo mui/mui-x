@@ -57,6 +57,6 @@ export namespace useBaseCalendarYearCell {
     isInvalid: boolean;
     isTabbable: boolean;
     isCurrent: boolean;
-    selectYear: (value: PickerValidDate) => void;
+    selectYear: (date: PickerValidDate) => void;
   }
 }

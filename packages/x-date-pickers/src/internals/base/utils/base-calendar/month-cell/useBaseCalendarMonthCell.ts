@@ -57,6 +57,6 @@ export namespace useBaseCalendarMonthCell {
     isInvalid: boolean;
     isTabbable: boolean;
     isCurrent: boolean;
-    selectMonth: (value: PickerValidDate) => void;
+    selectMonth: (date: PickerValidDate) => void;
   }
 }

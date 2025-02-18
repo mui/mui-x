@@ -1,5 +1,4 @@
 import * as React from 'react';
-import useEventCallback from '@mui/utils/useEventCallback';
 import { PickerValidDate } from '../../../../../models';
 import { useUtils } from '../../../../hooks/useUtils';
 import { mergeReactProps } from '../../../base-utils/mergeReactProps';
@@ -7,7 +6,6 @@ import { GenericHTMLProps } from '../../../base-utils/types';
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 import { BaseCalendarDayGridBodyContext } from './BaseCalendarDayGridBodyContext';
 import { useCellList } from '../utils/useCellList';
-import { mergeDateAndTime } from '../../../../utils/date-utils';
 import { useBaseCalendarRootVisibleDateContext } from '../root/BaseCalendarRootVisibleDateContext';
 
 export function useBaseCalendarDayGridBody(parameters: useBaseCalendarDayGridBody.Parameters) {
@@ -66,16 +64,6 @@ export function useBaseCalendarDayGridBody(parameters: useBaseCalendarDayGridBod
     return toDisplay;
   }, [currentMonth, fixedWeekNumber, utils]);
 
-  const selectDay = useEventCallback((newValue: PickerValidDate) => {
-    if (baseRootContext.readOnly) {
-      return;
-    }
-
-    const newCleanValue = mergeDateAndTime(utils, newValue, baseRootContext.currentDate);
-
-    baseRootContext.selectDate(newCleanValue, { section: 'day' });
-  });
-
   const tabbableDays = React.useMemo(() => {
     const flatDays = daysGrid.flat().filter((day) => utils.isSameMonth(day, currentMonth));
 
@@ -118,8 +106,8 @@ export function useBaseCalendarDayGridBody(parameters: useBaseCalendarDayGridBod
   );
 
   const context: BaseCalendarDayGridBodyContext = React.useMemo(
-    () => ({ selectDay, daysGrid, currentMonth, tabbableDays, ref }),
-    [selectDay, daysGrid, currentMonth, tabbableDays, ref],
+    () => ({ daysGrid, currentMonth, tabbableDays, ref }),
+    [daysGrid, currentMonth, tabbableDays, ref],
   );
 
   return React.useMemo(

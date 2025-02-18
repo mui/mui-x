@@ -73,12 +73,12 @@ export function useBaseCalendarMonthCellWrapper(
     [baseMonthListOrGridContext, value, utils],
   );
 
-  const selectMonth = useEventCallback((newValue: PickerValidDate) => {
+  const selectMonth = useEventCallback((date: PickerValidDate) => {
     if (baseRootContext.readOnly) {
       return;
     }
 
-    const newCleanValue = utils.setMonth(baseRootContext.currentDate, utils.getMonth(newValue));
+    const newCleanValue = utils.setMonth(baseRootContext.currentDate, utils.getMonth(date));
 
     const startOfMonth = utils.startOfMonth(newCleanValue);
     const endOfMonth = utils.endOfMonth(newCleanValue);
