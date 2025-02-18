@@ -50,7 +50,7 @@ const EMPTY_ARRAY: any[] = [];
 
 useChartSeries.getDefaultizedParams = ({ params }) => ({
   ...params,
-  series: params.series?.length ? [...params.series] : EMPTY_ARRAY,
+  series: params.series?.length ? params.series : EMPTY_ARRAY,
   colors: params.colors ?? rainbowSurgePalette,
   theme: params.theme ?? 'light',
 });

@@ -30,7 +30,7 @@ export type UseChartSeriesDefaultizedParameters<T extends ChartSeriesType = Char
      * Each type of series has its own specificity.
      * Please refer to the appropriate docs page to learn more about it.
      */
-    series: AllSeriesType<T>[];
+    series: readonly AllSeriesType<T>[];
     /**
      * Color palette used to colorize multiple series.
      * @default rainbowSurgePalette
