@@ -58,7 +58,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "group including the tick and its label"
     },
-    "tickLabel": { "description": "Styles applied to {{nodeName}}.", "nodeName": "ticks label" },
+    "tickLabel": {
+      "description": "Styles applied to {{nodeName}}.<br>⚠️ For performance reasons, only the inline styles of tick labels are taken into account when measuring their width and height. Using classes to apply styles that change text width or height (e.g,. font-size, letter-spacing, font-weight) might cause labels to overlap. ⚠️",
+      "nodeName": "ticks label"
+    },
     "top": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the top axis" }
   }
 }
