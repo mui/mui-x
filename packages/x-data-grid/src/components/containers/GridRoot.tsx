@@ -11,7 +11,7 @@ import { Theme } from '@mui/material/styles';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridRootStyles } from './GridRootStyles';
-import { useCSSVariables } from '../../utils/css/context';
+import { useCSSVariablesContext } from '../../utils/css/context';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -71,7 +71,7 @@ const GridRoot = forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(pro
   const ownerState = rootProps;
 
   const classes = useUtilityClasses(ownerState, density);
-  const cssVariables = useCSSVariables();
+  const cssVariables = useCSSVariablesContext();
 
   const isSSR = useIsSSR();
 

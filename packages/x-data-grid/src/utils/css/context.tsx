@@ -12,7 +12,7 @@ export function useCSSVariablesClass() {
   return React.useContext(CSSVariablesContext).className;
 }
 
-export function useCSSVariables() {
+export function useCSSVariablesContext() {
   return React.useContext(CSSVariablesContext);
 }
 

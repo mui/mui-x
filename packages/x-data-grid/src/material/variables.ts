@@ -2,7 +2,7 @@ import * as React from 'react';
 import { alpha, darken, lighten, type Theme } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import { hash } from '@mui/x-internals/hash';
-import { vars } from '../constants/cssVariables';
+import { vars, type GridCSSVariablesInterface } from '../constants/cssVariables';
 
 export function useMaterialCSSVariables() {
   const theme = useTheme();
@@ -13,7 +13,7 @@ export function useMaterialCSSVariables() {
   }, [theme]);
 }
 
-function transformTheme(t: Theme) {
+function transformTheme(t: Theme): GridCSSVariablesInterface {
   const borderColor = getBorderColor(t);
   const dataGridPalette = (t.palette as any).DataGrid; // FIXME: docs typecheck error
 
@@ -57,21 +57,21 @@ function transformTheme(t: Theme) {
     [k.radius.base]:
       typeof t.shape.borderRadius === 'number' ? `${t.shape.borderRadius}px` : t.shape.borderRadius,
 
-    [k.typography.fontFamily.base]: t.typography.fontFamily,
-    [k.typography.fontWeight.light]: t.typography.fontWeightLight,
-    [k.typography.fontWeight.regular]: t.typography.fontWeightRegular,
-    [k.typography.fontWeight.medium]: t.typography.fontWeightMedium,
-    [k.typography.fontWeight.bold]: t.typography.fontWeightBold,
-    [k.typography.body.fontFamily]: t.typography.body2.fontFamily,
-    [k.typography.body.fontSize]: t.typography.body2.fontSize,
-    [k.typography.body.fontWeight]: t.typography.body2.fontWeight,
-    [k.typography.body.letterSpacing]: t.typography.body2.letterSpacing,
-    [k.typography.body.lineHeight]: t.typography.body2.lineHeight,
-    [k.typography.small.fontFamily]: t.typography.caption.fontFamily,
-    [k.typography.small.fontSize]: t.typography.caption.fontSize,
-    [k.typography.small.fontWeight]: t.typography.caption.fontWeight,
-    [k.typography.small.letterSpacing]: t.typography.caption.letterSpacing,
-    [k.typography.small.lineHeight]: t.typography.caption.lineHeight,
+    [k.typography.fontFamily.base]: t.typography.fontFamily as string,
+    [k.typography.fontWeight.light]: t.typography.fontWeightLight as string,
+    [k.typography.fontWeight.regular]: t.typography.fontWeightRegular as string,
+    [k.typography.fontWeight.medium]: t.typography.fontWeightMedium as string,
+    [k.typography.fontWeight.bold]: t.typography.fontWeightBold as string,
+    [k.typography.body.fontFamily]: t.typography.body2.fontFamily as string,
+    [k.typography.body.fontSize]: t.typography.body2.fontSize as string,
+    [k.typography.body.fontWeight]: t.typography.body2.fontWeight as string,
+    [k.typography.body.letterSpacing]: t.typography.body2.letterSpacing as string,
+    [k.typography.body.lineHeight]: t.typography.body2.lineHeight as string,
+    [k.typography.small.fontFamily]: t.typography.caption.fontFamily as string,
+    [k.typography.small.fontSize]: t.typography.caption.fontSize as string,
+    [k.typography.small.fontWeight]: t.typography.caption.fontWeight as string,
+    [k.typography.small.letterSpacing]: t.typography.caption.letterSpacing as string,
+    [k.typography.small.lineHeight]: t.typography.caption.lineHeight as string,
 
     [k.transitions.easing.easeIn]: t.transitions.easing.easeIn,
     [k.transitions.easing.easeOut]: t.transitions.easing.easeOut,
