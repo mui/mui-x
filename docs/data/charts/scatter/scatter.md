@@ -109,6 +109,8 @@ See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information
 
 ### Shape 🚧
 
+{{"demo": "ScatterCustomShape.js"}}
+
 ### Size
 
 You can customize the size of points in a scatter chart using the `markerSize` prop of every series.

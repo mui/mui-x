@@ -45,7 +45,7 @@
     "onLineClick": { "description": "Callback fired when a line element is clicked." },
     "onMarkClick": { "description": "Callback fired when a mark element is clicked." },
     "series": {
-      "description": "The series to display in the line chart. An array of <a href='/x/api/charts/line-series-type/'>LineSeriesType</a> objects."
+      "description": "The series to display in the line chart. An array of [[LineSeriesType]] objects."
     },
     "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
     "slotProps": { "description": "The props used for each component slot." },
@@ -54,10 +54,10 @@
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     },
     "xAxis": {
-      "description": "The configuration of the x-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
+      "description": "The configuration of the x-axes. If not provided, a default axis config is used. An array of [[AxisConfig]] objects."
     },
     "yAxis": {
-      "description": "The configuration of the y-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
+      "description": "The configuration of the y-axes. If not provided, a default axis config is used. An array of [[AxisConfig]] objects."
     }
   },
   "classDescriptions": {},
