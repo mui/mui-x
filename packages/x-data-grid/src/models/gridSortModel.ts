@@ -37,4 +37,4 @@ export interface GridSortItem {
 /**
  * The model used for sorting the grid.
  */
-export type GridSortModel = GridSortItem[];
+export type GridSortModel = readonly GridSortItem[];
