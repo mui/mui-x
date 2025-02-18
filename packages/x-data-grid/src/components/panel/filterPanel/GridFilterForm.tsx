@@ -159,6 +159,7 @@ const FilterFormDeleteIcon = styled('div', {
   flexShrink: 0,
   display: 'flex',
   justifyContent: 'center',
+  alignItems: 'center',
 });
 
 const FilterFormLogicOperatorInput = styled('div', {
