@@ -97,7 +97,6 @@ export default function ScaleDemo() {
   return (
     <ChartContainer
       ref={svgRef}
-      margin={{ top: 20, left: 50, right: 50, bottom: 30 }}
       height={300}
       series={[
         {

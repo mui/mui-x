@@ -21,7 +21,6 @@ export default function ModifyAxisPosition() {
         {...params}
         xAxis={[{ position: 'top' }]}
         yAxis={[{ position: 'right' }]}
-        margin={{ top: 30, bottom: 10 }}
       />
     </Box>
   );

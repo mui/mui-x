@@ -80,7 +80,6 @@ export default function ContinuousInteractiveDemoNoSnap() {
           ]}
           grid={{ horizontal: true }}
           height={300}
-          margin={{ top: 20, right: 20 }}
           slots={{ legend: ContinuousColorLegend }}
           slotProps={{
             legend: {
@@ -108,7 +107,6 @@ import { ContinuousColorLegend } from '@mui/x-charts/ChartsLegend';
 
 <LineChart
   {/** ... */}
-  margin={{ top: 20, right: 20 }}
   slots={{ legend: ContinuousColorLegend }}
   slotProps={{
     legend: {

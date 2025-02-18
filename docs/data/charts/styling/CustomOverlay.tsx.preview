@@ -1,0 +1,16 @@
+<BarChart
+  slotProps={{
+    noDataOverlay: { message: 'No data to display in this chart' },
+  }}
+  series={[]}
+  height={150}
+/>
+<BarChart
+  loading
+  xAxis={[
+    { scaleType: 'band', data: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'] },
+  ]}
+  slots={{ loadingOverlay: LoadingOverlay }}
+  series={[]}
+  height={150}
+/>

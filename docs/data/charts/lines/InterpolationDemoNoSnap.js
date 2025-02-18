@@ -61,7 +61,6 @@ export default function InterpolationDemoNoSnap() {
           { curve: curveType, data: [6, 3, 7, 9.5, 4, 2] },
         ]}
         height={300}
-        margin={{ top: 10, bottom: 30 }}
         skipAnimation
       />
       <HighlightedCode code={getExample(curveType)} language="tsx" />

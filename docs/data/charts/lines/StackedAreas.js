@@ -14,6 +14,11 @@ export default function StackedAreas() {
           valueFormatter: (date) => date.getFullYear().toString(),
         },
       ]}
+      yAxis={[
+        {
+          width: 70,
+        },
+      ]}
       series={[
         {
           id: 'France',
@@ -42,7 +47,6 @@ export default function StackedAreas() {
       ]}
       width={600}
       height={400}
-      margin={{ left: 70 }}
     />
   );
 }

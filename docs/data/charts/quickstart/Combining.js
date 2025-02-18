@@ -45,7 +45,6 @@ export default function Combining() {
         <ChartContainer
           series={series}
           height={400}
-          margin={{ top: 10 }}
           xAxis={[
             {
               id: 'date',

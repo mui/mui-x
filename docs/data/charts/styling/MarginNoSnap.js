@@ -6,7 +6,7 @@ import { BarChart } from '@mui/x-charts/BarChart';
 const data = ['left', 'right', 'top', 'bottom'].map((propName) => ({
   propName,
   knob: 'number',
-  defaultValue: 80,
+  defaultValue: 60,
   step: 1,
   min: 0,
   max: 200,

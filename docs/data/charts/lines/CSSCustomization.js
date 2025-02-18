@@ -24,6 +24,11 @@ export default function CSSCustomization() {
           valueFormatter: (date) => date.getFullYear().toString(),
         },
       ]}
+      yAxis={[
+        {
+          width: 60,
+        },
+      ]}
       series={[
         {
           id: 'France',
@@ -47,7 +52,6 @@ export default function CSSCustomization() {
           showMark: false,
         },
       ]}
-      margin={{ left: 60, top: 10, right: 20 }}
       width={600}
       height={300}
     >

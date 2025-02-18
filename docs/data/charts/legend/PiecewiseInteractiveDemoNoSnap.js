@@ -79,7 +79,6 @@ export default function PiecewiseInteractiveDemoNoSnap() {
           ]}
           grid={{ horizontal: true }}
           height={300}
-          margin={{ top: 20, right: 20 }}
           slots={{
             legend: PiecewiseColorLegend,
           }}
@@ -116,7 +115,6 @@ import {
 
 <LineChart
   {/** ... */}
-  margin={{ top: 20, right: 20 }}
   slots={{ legend: PiecewiseColorLegend }}
   slotProps={{
     legend: {

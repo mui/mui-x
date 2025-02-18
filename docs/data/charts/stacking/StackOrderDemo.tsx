@@ -115,11 +115,11 @@ export default function StackOrderDemo() {
               labelStyle: {
                 transform: 'translateY(15px)',
               },
+              height: 50,
             },
           ]}
           yAxis={[{ min: 0, max: 100 }]}
           series={modifiedSeries}
-          margin={{ bottom: 70 }}
         />
       </Box>
     </Box>

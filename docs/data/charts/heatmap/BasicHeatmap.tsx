@@ -10,7 +10,6 @@ export default function BasicHeatmap() {
         xAxis={[{ data: [1, 2, 3, 4] }]}
         yAxis={[{ data: ['A', 'B', 'C', 'D', 'E'] }]}
         series={[{ data }]}
-        margin={{ top: 5, right: 5, left: 20 }}
         height={300}
       />
     </Box>
