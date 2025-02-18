@@ -512,7 +512,6 @@
         "returned": "Promise<R> | R"
       }
     },
-    "resetPageOnSortFilter": { "type": { "name": "bool" }, "default": "false" },
     "resizeThrottleMs": { "type": { "name": "number" }, "default": "60" },
     "rowBufferPx": { "type": { "name": "number" }, "default": "150" },
     "rowCount": { "type": { "name": "number" } },
@@ -616,12 +615,6 @@
       "name": "headerFilterMenu",
       "description": "Component responsible for showing menu in Header filter row",
       "default": "GridHeaderFilterMenu",
-      "class": null
-    },
-    {
-      "name": "baseChip",
-      "description": "The custom Chip component used in the grid.",
-      "default": "Chip",
       "class": null
     },
     {
@@ -749,6 +742,12 @@
       "description": "Component rendered for each row.",
       "default": "GridRow",
       "class": "MuiDataGridPro-row"
+    },
+    {
+      "name": "baseAutocomplete",
+      "description": "The custom Autocomplete component used in the grid for both header and cells.",
+      "default": "Autocomplete",
+      "class": null
     },
     {
       "name": "baseBadge",
