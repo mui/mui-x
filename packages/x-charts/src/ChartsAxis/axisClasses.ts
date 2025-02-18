@@ -12,9 +12,9 @@ export interface ChartsAxisClasses {
   tick: string;
   /** Styles applied to ticks label.
    *
-   * ⚠️ For performance reasons, only the inline styles of tick labels are taken into account when measuring their width
-   * and height. Using classes to apply styles that change text width or height (e.g,. font-size, letter-spacing,
-   * font-weight) might cause labels to overlap. ⚠️ */
+   * ⚠️ For performance reasons, only the inline styles get considered for bounding box computation.
+   * Modifying text size by adding properties like `font-size` or `letter-spacing` to this class might cause labels to overlap.
+   */
   tickLabel: string;
   /** Styles applied to the group containing the axis label. */
   label: string;
