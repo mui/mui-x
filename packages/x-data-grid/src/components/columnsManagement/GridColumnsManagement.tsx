@@ -242,25 +242,26 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
                 </rootProps.slots.baseInputAdornment>
               ),
               endAdornment: (
-                <rootProps.slots.baseIconButton
-                  aria-label={apiRef.current.getLocaleText('columnsManagementDeleteIconLabel')}
-                  size="small"
-                  style={
-                    searchValue
-                      ? {
-                          visibility: 'visible',
-                        }
-                      : {
-                          visibility: 'hidden',
-                        }
-                  }
-                  tabIndex={-1}
-                  onClick={handleSearchReset}
-                  edge="end"
-                  {...rootProps.slotProps?.baseIconButton}
-                >
-                  <rootProps.slots.quickFilterClearIcon fontSize="small" />
-                </rootProps.slots.baseIconButton>
+                <rootProps.slots.baseInputAdornment position="end">
+                  <rootProps.slots.baseIconButton
+                    aria-label={apiRef.current.getLocaleText('columnsManagementDeleteIconLabel')}
+                    style={
+                      searchValue
+                        ? {
+                            visibility: 'visible',
+                          }
+                        : {
+                            visibility: 'hidden',
+                          }
+                    }
+                    tabIndex={-1}
+                    onClick={handleSearchReset}
+                    edge="end"
+                    {...rootProps.slotProps?.baseIconButton}
+                  >
+                    <rootProps.slots.quickFilterClearIcon fontSize="small" />
+                  </rootProps.slots.baseIconButton>
+                </rootProps.slots.baseInputAdornment>
               ),
             },
             htmlInput: {
