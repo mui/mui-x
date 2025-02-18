@@ -8,7 +8,11 @@ export default function FigmaExample() {
   const [selectedItem, setSelectedItem] = React.useState<IdType | null>(null);
   return (
     <Stack sx={{ width: '100%', height: '100%' }} direction="row">
-      <Stack pl={1} py={1} sx={{ borderRight: '1px solid rgba(0, 0, 0, 0.12)', height: '100%' }}>
+      <Stack
+        pl={1}
+        py={1}
+        sx={(theme) => ({ borderRight: `1px solid ${theme.palette.divider}`, height: '100%' })}
+      >
         <FigmaTreeView selectedItem={selectedItem} setSelectedItem={setSelectedItem} />
       </Stack>
       <Stack
@@ -16,8 +20,6 @@ export default function FigmaExample() {
         alignItems="center"
         sx={(theme) => ({
           flexGrow: 1,
-          // background-color: #e5e5f7;
-          // opacity: 0.8;
           backgroundImage: `linear-gradient(${theme.palette.divider} 1px, transparent 1px), linear-gradient(to right,${theme.palette.divider} 1px, ${theme.palette.background.paper} 1px)`,
           backgroundSize: '20px 20px',
         })}

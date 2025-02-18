@@ -2,7 +2,7 @@ import * as React from 'react';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import ExampleToggleGroup from './ExampleToggleGroup';
-import GitHubExample from './GitHubExample';
+import GitHubExample from './github/GitHubExample';
 import FigmaExample from './figma/FigmaExample';
 import VsCodeExample from './VsCodeExample';
 
