@@ -25,6 +25,16 @@ export function useBaseCalendarDayCellWrapper(
 
   const isCurrent = React.useMemo(() => utils.isSameDay(value, utils.date()), [utils, value]);
 
+  const isStartOfWeek = React.useMemo(
+    () => utils.isSameDay(value, utils.startOfWeek(value)),
+    [utils, value],
+  );
+
+  const isEndOfWeek = React.useMemo(
+    () => utils.isSameDay(value, utils.endOfWeek(value)),
+    [utils, value],
+  );
+
   const isOutsideCurrentMonth = React.useMemo(
     () =>
       baseDayGridBodyContext.currentMonth == null
@@ -58,6 +68,8 @@ export function useBaseCalendarDayCellWrapper(
       isInvalid,
       isTabbable,
       isCurrent,
+      isStartOfWeek,
+      isEndOfWeek,
       isOutsideCurrentMonth,
       selectDay: baseDayGridBodyContext.selectDay,
     }),
@@ -66,6 +78,8 @@ export function useBaseCalendarDayCellWrapper(
       isDisabled,
       isInvalid,
       isTabbable,
+      isStartOfWeek,
+      isEndOfWeek,
       isCurrent,
       isOutsideCurrentMonth,
       baseDayGridBodyContext.selectDay,

@@ -27,8 +27,13 @@ const InnerRangeCalendarDayCell = React.forwardRef(function RangeCalendarDayGrid
 
   const cellState = useRangeCellState(ctx);
   const state = React.useMemo<RangeCalendarDayCell.State>(
-    () => ({ ...cellState, outsideMonth: ctx.isOutsideCurrentMonth }),
-    [cellState, ctx.isOutsideCurrentMonth],
+    () => ({
+      ...cellState,
+      startOfWeek: ctx.isStartOfWeek,
+      endOfWeek: ctx.isEndOfWeek,
+      outsideMonth: ctx.isOutsideCurrentMonth,
+    }),
+    [cellState, ctx.isStartOfWeek, ctx.isEndOfWeek, ctx.isOutsideCurrentMonth],
   );
 
   const { renderElement } = useComponentRenderer({
@@ -57,6 +62,14 @@ const RangeCalendarDayCell = React.forwardRef(function RangeCalendarDayCell(
 
 export namespace RangeCalendarDayCell {
   export interface State extends RangeCellState {
+    /**
+     * Whether the day is the first day of its week.
+     */
+    startOfWeek: boolean;
+    /**
+     * Whether the day is the last day of its week.
+     */
+    endOfWeek: boolean;
     /**
      * Whether the cell is outside the month rendered by the day grid wrapping it.
      */

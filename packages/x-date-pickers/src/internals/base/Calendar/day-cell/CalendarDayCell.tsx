@@ -20,6 +20,12 @@ const customStyleHookMapping: CustomStyleHookMapping<CalendarDayCell.State> = {
   current(value) {
     return value ? { [CalendarDayCellDataAttributes.current]: '' } : null;
   },
+  startOfWeek(value) {
+    return value ? { [CalendarDayCellDataAttributes.startOfWeek]: '' } : null;
+  },
+  endOfWeek(value) {
+    return value ? { [CalendarDayCellDataAttributes.endOfWeek]: '' } : null;
+  },
   outsideMonth(value) {
     return value ? { [CalendarDayCellDataAttributes.outsideMonth]: '' } : null;
   },
@@ -37,10 +43,20 @@ const InnerCalendarDayCell = React.forwardRef(function CalendarDayGrid(
       selected: ctx.isSelected,
       disabled: ctx.isDisabled,
       invalid: ctx.isInvalid,
-      outsideMonth: ctx.isOutsideCurrentMonth,
       current: ctx.isCurrent,
+      startOfWeek: ctx.isStartOfWeek,
+      endOfWeek: ctx.isEndOfWeek,
+      outsideMonth: ctx.isOutsideCurrentMonth,
     }),
-    [ctx.isSelected, ctx.isDisabled, ctx.isInvalid, ctx.isOutsideCurrentMonth, ctx.isCurrent],
+    [
+      ctx.isSelected,
+      ctx.isDisabled,
+      ctx.isInvalid,
+      ctx.isCurrent,
+      ctx.isStartOfWeek,
+      ctx.isEndOfWeek,
+      ctx.isOutsideCurrentMonth,
+    ],
   );
 
   const { renderElement } = useComponentRenderer({
@@ -85,6 +101,14 @@ export namespace CalendarDayCell {
      * Whether the day contains the current date.
      */
     current: boolean;
+    /**
+     * Whether the day is the first day of its week.
+     */
+    startOfWeek: boolean;
+    /**
+     * Whether the day is the last day of its week.
+     */
+    endOfWeek: boolean;
     /**
      * Whether the day is outside the month rendered by the day grid wrapping it.
      */

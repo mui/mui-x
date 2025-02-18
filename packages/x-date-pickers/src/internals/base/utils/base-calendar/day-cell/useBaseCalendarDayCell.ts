@@ -69,6 +69,8 @@ export namespace useBaseCalendarDayCell {
     isInvalid: boolean;
     isTabbable: boolean;
     isCurrent: boolean;
+    isStartOfWeek: boolean;
+    isEndOfWeek: boolean;
     isOutsideCurrentMonth: boolean;
     selectDay: (value: PickerValidDate) => void;
   }
