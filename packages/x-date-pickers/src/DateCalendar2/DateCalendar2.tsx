@@ -137,6 +137,7 @@ export const DateCalendar2 = React.forwardRef(function DateCalendar2(
       fixedWeekNumber,
       yearsPerRow,
       monthsPerRow,
+      yearsOrder,
     }),
     [
       classes,
@@ -148,6 +149,7 @@ export const DateCalendar2 = React.forwardRef(function DateCalendar2(
       fixedWeekNumber,
       yearsPerRow,
       monthsPerRow,
+      yearsOrder,
     ],
   );
 
@@ -165,7 +167,7 @@ export const DateCalendar2 = React.forwardRef(function DateCalendar2(
 
   const renderViewContent = () => {
     if (view === 'year') {
-      return <DateCalendar2YearGrid yearsOrder={yearsOrder} />;
+      return <DateCalendar2YearGrid />;
     }
 
     if (view === 'month') {

@@ -56,11 +56,11 @@ const DateCalendar2YearGridLoadingPanel = React.forwardRef(
 );
 
 export const DateCalendar2YearGrid = React.forwardRef(function DateCalendar2YearGrid(
-  props: DateCalendarYearGridProps,
+  props: React.HTMLAttributes<HTMLDivElement>,
   ref: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { yearsOrder, className, ...other } = props;
-  const { classes, loading, labelId, yearsPerRow } = useDateCalendar2PrivateContext();
+  const { className, ...other } = props;
+  const { classes, loading, labelId, yearsPerRow, yearsOrder } = useDateCalendar2PrivateContext();
   const renderLoadingPanel = useLoadingPanel({
     ref,
     forwardedProps: { ...other, className },
@@ -99,7 +99,3 @@ export const DateCalendar2YearGrid = React.forwardRef(function DateCalendar2Year
     </Calendar.YearGrid>
   );
 });
-
-interface DateCalendarYearGridProps extends React.HTMLAttributes<HTMLDivElement> {
-  yearsOrder: 'asc' | 'desc';
-}

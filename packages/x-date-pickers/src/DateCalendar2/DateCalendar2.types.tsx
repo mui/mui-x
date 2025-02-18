@@ -182,6 +182,7 @@ export interface DateCalendar2PrivateContextValue {
   fixedWeekNumber: number | undefined;
   monthsPerRow: 3 | 4;
   yearsPerRow: 3 | 4;
+  yearsOrder: 'asc' | 'desc';
 }
 
 export interface DateCalendar2ContextValue {
