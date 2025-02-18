@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
-import { useThemeProps, styled } from '@mui/material/styles';
+import { useThemeProps, useTheme, styled } from '@mui/material/styles';
 import { useTicks, TickItemType } from '../hooks/useTicks';
 import { AxisConfig, AxisDefaultized, ChartsXAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
@@ -138,6 +138,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     offset,
   } = defaultizedProps;
 
+  const theme = useTheme();
   const classes = useUtilityClasses(defaultizedProps);
   const { left, top, width, height } = useDrawingArea();
   const { instance } = useChartContext();
