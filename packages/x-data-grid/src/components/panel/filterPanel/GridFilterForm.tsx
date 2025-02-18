@@ -157,7 +157,9 @@ const FilterFormDeleteIcon = styled('div', {
   overridesResolver: (_, styles) => styles.filterFormDeleteIcon,
 })<{ ownerState: OwnerState }>({
   flexShrink: 0,
+  display: 'flex',
   justifyContent: 'center',
+  alignItems: 'center',
 });
 
 const FilterFormLogicOperatorInput = styled('div', {
@@ -240,8 +242,6 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
     const multiFilterOperator = filterModel.logicOperator ?? GridLogicOperator.And;
 
     const hasLogicOperatorColumn: boolean = hasMultipleFilters && logicOperators.length > 0;
-
-    const baseFormControlProps = rootProps.slotProps?.baseFormControl || {};
 
     const baseSelectProps = rootProps.slotProps?.baseSelect || {};
     const isBaseSelectNative = baseSelectProps.native ?? false;
@@ -423,14 +423,8 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
         ref={ref}
       >
         <FilterFormDeleteIcon
-          as={rootProps.slots.baseFormControl}
-          {...baseFormControlProps}
           {...deleteIconProps}
-          className={clsx(
-            classes.deleteIcon,
-            baseFormControlProps.className,
-            deleteIconProps.className,
-          )}
+          className={clsx(classes.deleteIcon, deleteIconProps.className)}
           ownerState={rootProps}
         >
           <rootProps.slots.baseIconButton
@@ -516,9 +510,8 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
           ))}
         </FilterFormColumnInput>
         <FilterFormOperatorInput
-          variant="outlined"
-          size="small"
           as={rootProps.slots.baseSelect}
+          size="small"
           {...operatorInputProps}
           className={clsx(classes.operatorInput, operatorInputProps.className)}
           ownerState={rootProps}
@@ -547,9 +540,6 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
           ))}
         </FilterFormOperatorInput>
         <FilterFormValueInput
-          variant="outlined"
-          size="small"
-          as={rootProps.slots.baseFormControl}
           {...valueInputPropsOther}
           className={clsx(classes.valueInput, valueInputPropsOther.className)}
           ownerState={rootProps}
