@@ -6,17 +6,17 @@ import { DatasetType } from '../../../../models/seriesType/config';
 
 export function defaultizeAxis(
   inAxis: readonly MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>[] | undefined,
-  dataset: DatasetType | undefined,
+  dataset: Readonly<DatasetType> | undefined,
   axisName: 'x',
 ): AxisConfig<ScaleName, any, ChartsXAxisProps>[];
 export function defaultizeAxis(
   inAxis: readonly MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[] | undefined,
-  dataset: DatasetType | undefined,
+  dataset: Readonly<DatasetType> | undefined,
   axisName: 'y',
 ): AxisConfig<ScaleName, any, ChartsYAxisProps>[];
 export function defaultizeAxis(
   inAxis: readonly MakeOptional<AxisConfig, 'id'>[] | undefined,
-  dataset: DatasetType | undefined,
+  dataset: Readonly<DatasetType> | undefined,
   axisName: 'x' | 'y',
 ): AxisConfig[] {
   const DEFAULT_AXIS_KEY = axisName === 'x' ? DEFAULT_X_AXIS_KEY : DEFAULT_Y_AXIS_KEY;
