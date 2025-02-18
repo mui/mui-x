@@ -2,7 +2,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { ScatterMarker, ScatterMarkerOwnerState, ScatterMarkerProps } from './ScatterMarker';
+import {
+  ScatterMarkerElementProps,
+  ScatterMarkerSlotProps,
+  ScatterMarkerSlots,
+} from './Scatter.types';
+import { ScatterMarker } from './ScatterMarker';
 import {
   DefaultizedScatterSeriesType,
   ScatterItemIdentifier,
@@ -147,25 +152,6 @@ function Scatter(props: ScatterProps) {
       ))}
     </g>
   );
-}
-
-export interface ScatterMarkerElementProps extends ScatterMarkerOwnerState {
-  slots?: ScatterMarkerSlots;
-  slotProps?: ScatterMarkerSlotProps;
-  onItemClick: ScatterMarkerProps['onClick'];
-  interactionProps: ReturnType<ReturnType<typeof useInteractionItemProps>>;
-}
-
-export interface ScatterMarkerSlots {
-  /**
-   * The component that renders the marker for a scatter point.
-   * @default ScatterMarker
-   */
-  marker?: React.JSXElementConstructor<ScatterMarkerProps>;
-}
-
-export interface ScatterMarkerSlotProps {
-  marker?: ScatterMarkerProps;
 }
 
 function ScatterMarkerElement({
