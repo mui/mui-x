@@ -17,7 +17,7 @@ export interface UseChartProZoomParameters {
    *
    * @param {ZoomData[]} zoomData Updated zoom data.
    */
-  onZoomChange?: (zoomData: ZoomData[] | ((zoomData: ZoomData[]) => ZoomData[])) => void;
+  onZoomChange?: (zoomData: ZoomData[]) => void;
   /**
    * The list of zoom data related to each axis.
    */
