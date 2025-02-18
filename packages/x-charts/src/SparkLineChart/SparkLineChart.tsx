@@ -189,6 +189,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
           id: DEFAULT_X_AXIS_KEY,
           scaleType: plotType === 'bar' ? 'band' : 'point',
           data: Array.from({ length: data.length }, (_, index) => index),
+          position: 'none',
           hideTooltip: xAxis === undefined,
           ...xAxis,
         },
@@ -196,6 +197,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
       yAxis={[
         {
           id: DEFAULT_Y_AXIS_KEY,
+          position: 'none',
           ...yAxis,
         },
       ]}
