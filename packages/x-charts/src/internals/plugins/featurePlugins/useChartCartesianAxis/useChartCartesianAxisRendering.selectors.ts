@@ -16,7 +16,7 @@ import {
   selectorChartRawYAxis,
 } from './useChartCartesianAxisLayout.selectors';
 
-export const createZoomMap = (zoom: ZoomData[]) => {
+export const createZoomMap = (zoom: readonly ZoomData[]) => {
   const zoomItemMap = new Map<AxisId, ZoomData>();
   zoom.forEach((zoomItem) => {
     zoomItemMap.set(zoomItem.axisId, zoomItem);

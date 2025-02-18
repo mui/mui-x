@@ -18,7 +18,7 @@ const config = {
   yAxis: [{ position: 'none' as const }],
   width: 400,
   height: 400,
-};
+} as const;
 
 describe('LineChart - click event', () => {
   const { render } = createRenderer();

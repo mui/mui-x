@@ -16,7 +16,7 @@ const config = {
   yAxis: [{ position: 'none' as const }],
   width: 400,
   height: 400,
-};
+} as const;
 
 // Plot as follow to simplify click position
 //

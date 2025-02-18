@@ -5,17 +5,17 @@ import { ChartsXAxisProps, ChartsYAxisProps } from '../../../../models/axis';
 import { DatasetType } from '../../../../models/seriesType/config';
 
 export function defaultizeAxis(
-  inAxis: MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>[] | undefined,
+  inAxis: readonly MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>[] | undefined,
   dataset: DatasetType | undefined,
   axisName: 'x',
 ): AxisConfig<ScaleName, any, ChartsXAxisProps>[];
 export function defaultizeAxis(
-  inAxis: MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[] | undefined,
+  inAxis: readonly MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[] | undefined,
   dataset: DatasetType | undefined,
   axisName: 'y',
 ): AxisConfig<ScaleName, any, ChartsYAxisProps>[];
 export function defaultizeAxis(
-  inAxis: MakeOptional<AxisConfig, 'id'>[] | undefined,
+  inAxis: readonly MakeOptional<AxisConfig, 'id'>[] | undefined,
   dataset: DatasetType | undefined,
   axisName: 'x' | 'y',
 ): AxisConfig[] {

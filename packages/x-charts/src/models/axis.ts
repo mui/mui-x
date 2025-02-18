@@ -352,7 +352,7 @@ export type AxisConfig<
   /**
    * The data used by `'band'` and `'point'` scales.
    */
-  data?: V[];
+  data?: readonly V[];
   /**
    * The key used to retrieve `data` from the `dataset` prop.
    */

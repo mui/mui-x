@@ -18,7 +18,7 @@ const config = {
   yAxis: [{ position: 'none' as const }],
   width: 100,
   height: 100,
-};
+} as const;
 
 // Plot on series as a dice 5
 //

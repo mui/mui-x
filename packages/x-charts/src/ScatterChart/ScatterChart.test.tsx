@@ -55,7 +55,7 @@ describe('<ScatterChart />', () => {
     yAxis: [{ position: 'none' as const }],
     width: 100,
     height: 100,
-  };
+  } as const;
 
   // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
   testSkipIf(isJSDOM)('should show the tooltip without errors in default config', () => {
