@@ -7,7 +7,7 @@ import MenuItem from '@mui/material/MenuItem';
 const settings = {
   height: 200,
   series: [{ data: [60, -15, 66, 68, 87, 82, 83, 85, 92, 75, 76, 50, 91] }],
-  margin: { top: 10, bottom: 20 },
+  margin: { top: 10, bottom: 10 },
 };
 
 // Extend a value to match a multiple of the step.

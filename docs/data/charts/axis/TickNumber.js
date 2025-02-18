@@ -30,8 +30,6 @@ const valueFormatter = (date) =>
 const config = {
   series: [{ data: y1 }, { data: y2 }],
   height: 300,
-  topAxis: 'half days',
-  leftAxis: null,
 };
 const xAxisCommon = {
   data: timeData,
@@ -50,9 +48,11 @@ export default function TickNumber() {
           {
             ...xAxisCommon,
             id: 'half days',
+            position: 'top',
             tickMinStep: 3600 * 1000 * 12, // min step: 12hu
           },
         ]}
+        yAxis={[{ position: 'none' }]}
         {...config}
       />
     </Box>

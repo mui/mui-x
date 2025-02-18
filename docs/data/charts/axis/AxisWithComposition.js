@@ -20,8 +20,8 @@ export default function AxisWithComposition() {
           },
         ]}
         yAxis={[
-          { id: 'money', position: 'right' },
-          { id: 'quantities', position: 'left' },
+          { id: 'money', position: 'right', width: 40 },
+          { id: 'quantities', position: 'left', width: 40 },
         ]}
         series={[
           {
@@ -44,13 +44,13 @@ export default function AxisWithComposition() {
           },
         ]}
         height={400}
-        margin={{ left: 70, right: 70 }}
+        margin={{ left: 25, right: 25 }}
         sx={{
           [`.${axisClasses.left} .${axisClasses.label}`]: {
             transform: 'translate(-25px, 0)',
           },
           [`.${axisClasses.right} .${axisClasses.label}`]: {
-            transform: 'translate(30px, 0)',
+            transform: 'translate(25px, 0)',
           },
         }}
       >
