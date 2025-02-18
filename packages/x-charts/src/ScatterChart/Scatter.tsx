@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import useSlotProps from '@mui/utils/useSlotProps';
+import { ScatterMarker, ScatterMarkerOwnerState, ScatterMarkerProps } from './ScatterMarker';
 import {
   DefaultizedScatterSeriesType,
   ScatterItemIdentifier,
@@ -22,7 +24,6 @@ export interface ScatterProps {
   series: DefaultizedScatterSeriesType;
   xScale: D3Scale;
   yScale: D3Scale;
-  markerSize: number;
   color: string;
   colorGetter?: (dataIndex: number) => string;
   /**
@@ -34,7 +35,13 @@ export interface ScatterProps {
     event: React.MouseEvent<SVGElement, MouseEvent>,
     scatterItemIdentifier: ScatterItemIdentifier,
   ) => void;
+  slots?: ScatterSlots;
+  slotProps?: ScatterSlotProps;
 }
+
+export interface ScatterSlots extends ScatterMarkerSlots {}
+
+export interface ScatterSlotProps extends ScatterMarkerSlotProps {}
 
 /**
  * Demos:
@@ -47,7 +54,7 @@ export interface ScatterProps {
  * - [Scatter API](https://mui.com/x/api/charts/scatter/)
  */
 function Scatter(props: ScatterProps) {
-  const { series, xScale, yScale, color, colorGetter, markerSize, onItemClick } = props;
+  const { series, xScale, yScale, color, colorGetter, onItemClick, slots, slotProps } = props;
 
   const { instance } = useChartContext();
   const store = useStore<[UseChartVoronoiSignature]>();
@@ -115,15 +122,16 @@ function Scatter(props: ScatterProps) {
   return (
     <g>
       {cleanData.map((dataPoint) => (
-        <circle
+        <ScatterMarkerElement
           key={dataPoint.id ?? dataPoint.dataIndex}
-          cx={0}
-          cy={0}
-          r={(dataPoint.isHighlighted ? 1.2 : 1) * markerSize}
-          transform={`translate(${dataPoint.x}, ${dataPoint.y})`}
-          fill={dataPoint.color}
-          opacity={(dataPoint.isFaded && 0.3) || 1}
-          onClick={
+          id={series.id}
+          dataIndex={dataPoint.dataIndex}
+          color={dataPoint.color}
+          isHighlighted={dataPoint.isHighlighted}
+          isFaded={dataPoint.isFaded}
+          x={dataPoint.x}
+          y={dataPoint.y}
+          onItemClick={
             onItemClick &&
             ((event) =>
               onItemClick(event, {
@@ -132,13 +140,100 @@ function Scatter(props: ScatterProps) {
                 dataIndex: dataPoint.dataIndex,
               }))
           }
-          cursor={onItemClick ? 'pointer' : 'unset'}
-          {...dataPoint.interactionProps}
+          interactionProps={dataPoint.interactionProps}
+          slots={slots}
+          slotProps={slotProps}
         />
       ))}
     </g>
   );
 }
+
+export interface ScatterMarkerElementProps extends ScatterMarkerOwnerState {
+  slots?: ScatterMarkerSlots;
+  slotProps?: ScatterMarkerSlotProps;
+  onItemClick: ScatterMarkerProps['onClick'];
+  interactionProps: ReturnType<ReturnType<typeof useInteractionItemProps>>;
+}
+
+export interface ScatterMarkerSlots {
+  /**
+   * The component that renders the marker for a scatter point.
+   * @default ScatterMarker
+   */
+  marker?: React.JSXElementConstructor<ScatterMarkerProps>;
+}
+
+export interface ScatterMarkerSlotProps {
+  marker?: ScatterMarkerProps;
+}
+
+function ScatterMarkerElement({
+  id,
+  x,
+  y,
+  onItemClick,
+  dataIndex,
+  color,
+  isHighlighted,
+  isFaded,
+  interactionProps,
+  slots,
+  slotProps,
+}: ScatterMarkerElementProps) {
+  const Marker = slots?.marker ?? ScatterMarker;
+
+  const ownerState = {
+    id,
+    dataIndex,
+    color,
+    isFaded,
+    isHighlighted,
+    x,
+    y,
+  };
+
+  const markerProps = useSlotProps({
+    elementType: Marker,
+    externalSlotProps: slotProps?.marker,
+    additionalProps: {
+      onClick: onItemClick,
+      cursor: onItemClick ? 'pointer' : 'unset',
+      ...interactionProps,
+    },
+    ownerState,
+  });
+
+  return <Marker {...markerProps} />;
+}
+
+ScatterMarkerElement.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  color: PropTypes.string.isRequired,
+  dataIndex: PropTypes.number.isRequired,
+  /**
+   * ID of the series this marker belongs to.
+   */
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  interactionProps: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.shape({
+      onPointerDown: PropTypes.func.isRequired,
+      onPointerEnter: PropTypes.func.isRequired,
+      onPointerLeave: PropTypes.func.isRequired,
+    }),
+  ]).isRequired,
+  isFaded: PropTypes.bool.isRequired,
+  isHighlighted: PropTypes.bool.isRequired,
+  onItemClick: PropTypes.func,
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+  x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired,
+} as any;
 
 Scatter.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -147,7 +242,6 @@ Scatter.propTypes = {
   // ----------------------------------------------------------------------
   color: PropTypes.string.isRequired,
   colorGetter: PropTypes.func,
-  markerSize: PropTypes.number.isRequired,
   /**
    * Callback fired when clicking on a scatter item.
    * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.
@@ -155,6 +249,8 @@ Scatter.propTypes = {
    */
   onItemClick: PropTypes.func,
   series: PropTypes.object.isRequired,
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
   xScale: PropTypes.func.isRequired,
   yScale: PropTypes.func.isRequired,
 } as any;
