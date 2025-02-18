@@ -24,61 +24,57 @@ export function defaultizeAxis(
   const hasNoDefaultAxis =
     inAxis === undefined || inAxis.findIndex(({ id }) => id === DEFAULT_AXIS_KEY) === -1;
 
+  const offsets = {
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    none: 0,
+  };
+
   const parsedAxes = [
     ...(inAxis ?? []),
     ...(hasNoDefaultAxis ? [{ id: DEFAULT_AXIS_KEY, scaleType: 'linear' as const }] : []),
-  ]
-    .map((axisConfig, index) => {
-      const dataKey = axisConfig.dataKey;
-      const defaultPosition = axisName === 'x' ? ('bottom' as const) : ('left' as const);
+  ].map((axisConfig, index) => {
+    const dataKey = axisConfig.dataKey;
+    const defaultPosition = axisName === 'x' ? ('bottom' as const) : ('left' as const);
 
-      const sharedConfig = {
-        id: `defaultized-${axisName}-axis-${index}`,
-        // The fist axis is defaultized to the bottom/left
-        ...(index === 0 ? { position: defaultPosition } : {}),
-        height: axisName === 'x' ? DEFAULT_AXIS_SIZE : 0,
-        width: axisName === 'y' ? DEFAULT_AXIS_SIZE : 0,
-        ...axisConfig,
-      };
+    const position = axisConfig.position ?? 'none';
+    const dimension = axisName === 'x' ? 'height' : 'width';
 
-      // If `dataKey` is NOT provided
-      if (dataKey === undefined || axisConfig.data !== undefined) {
-        return sharedConfig;
-      }
+    const height = axisName === 'x' ? DEFAULT_AXIS_SIZE : 0;
+    const width = axisName === 'y' ? DEFAULT_AXIS_SIZE : 0;
 
-      if (dataset === undefined) {
-        throw new Error(`MUI X: ${axisName}-axis uses \`dataKey\` but no \`dataset\` is provided.`);
-      }
+    const sharedConfig = {
+      id: `defaultized-${axisName}-axis-${index}`,
+      // The fist axis is defaultized to the bottom/left
+      ...(index === 0 ? { position: defaultPosition } : {}),
+      height,
+      width,
+      offset: offsets[position],
+      ...axisConfig,
+    };
 
-      // If `dataKey` is provided
-      return {
-        ...sharedConfig,
-        data: dataset.map((d) => d[dataKey]),
-      };
-    })
-    // We need to iterate over the axes to calculate the offset
-    // We only calculate offset of axes that are positioned at the same side
-    .map((axisConfig, index, arr) => {
-      if (axisConfig.position === 'none') {
-        return axisConfig;
-      }
+    // Increment the offset for the next axis
+    if (position !== 'none') {
+      offsets[position] += (axisConfig as any)[dimension] ?? DEFAULT_AXIS_SIZE;
+    }
 
-      const dimension =
-        axisConfig.position === 'top' || axisConfig.position === 'bottom' ? 'height' : 'width';
+    // If `dataKey` is NOT provided
+    if (dataKey === undefined || axisConfig.data !== undefined) {
+      return sharedConfig;
+    }
 
-      const offset = arr.slice(0, index).reduce((acc, currAxisConfig) => {
-        if (currAxisConfig.position !== axisConfig.position) {
-          return acc;
-        }
+    if (dataset === undefined) {
+      throw new Error(`MUI X: ${axisName}-axis uses \`dataKey\` but no \`dataset\` is provided.`);
+    }
 
-        return acc + (currAxisConfig[dimension] ?? DEFAULT_AXIS_SIZE);
-      }, axisConfig.offset ?? 0);
-
-      return {
-        ...axisConfig,
-        offset,
-      };
-    });
+    // If `dataKey` is provided
+    return {
+      ...sharedConfig,
+      data: dataset.map((d) => d[dataKey]),
+    };
+  });
 
   return parsedAxes;
 }
