@@ -12,11 +12,11 @@ export interface UseChartZAxisParameters {
   /**
    * The configuration of the z-axes.
    */
-  zAxis?: MakeOptional<ZAxisConfig, 'id'>[];
+  zAxis?: readonly MakeOptional<ZAxisConfig, 'id'>[];
   /**
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
-  dataset?: DatasetType;
+  dataset?: Readonly<DatasetType>;
 }
 
 export type UseChartZAxisDefaultizedParameters = UseChartZAxisParameters;
