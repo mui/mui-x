@@ -2,7 +2,12 @@ import * as React from 'react';
 import { PickerValidDate } from '../../../../../models';
 
 export interface BaseCalendarYearCollectionContext {
-  tabbableYears: PickerValidDate[];
+  /**
+   * Return true if the year should be reachable using tab navigation.
+   * @param {PickerValidDate} year The year to check.
+   * @returns {boolean} Whether the year should be reachable using tab navigation.
+   */
+  canCellBeTabbed: (year: PickerValidDate) => boolean;
 }
 
 export const BaseCalendarYearCollectionContext = React.createContext<

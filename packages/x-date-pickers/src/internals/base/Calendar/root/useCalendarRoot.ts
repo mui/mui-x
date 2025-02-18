@@ -33,7 +33,7 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
     shouldDisableMonth,
     shouldDisableYear,
     // Children
-    children: childrenProp,
+    children,
     // Parameters forwarded to `useBaseCalendarRoot`
     ...baseParameters
   } = parameters;
@@ -79,17 +79,19 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
     }
   }
 
+  const resolvedChildren = React.useMemo(() => {
+    if (!React.isValidElement(children) && typeof children === 'function') {
+      return children({ visibleDate: visibleDateContext.visibleDate });
+    }
+
+    return children;
+  }, [children, visibleDateContext.visibleDate]);
+
   const getRootProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
-      let children: React.ReactNode;
-      if (!React.isValidElement(childrenProp) && typeof childrenProp === 'function') {
-        children = childrenProp({ visibleDate: visibleDateContext.visibleDate });
-      } else {
-        children = childrenProp;
-      }
-      return mergeReactProps(externalProps, { children });
+      return mergeReactProps(externalProps, { children: resolvedChildren });
     },
-    [childrenProp, visibleDateContext.visibleDate],
+    [resolvedChildren],
   );
 
   const isEmpty = value == null;
@@ -105,7 +107,7 @@ export namespace useCalendarRoot {
     extends useBaseCalendarRoot.PublicParameters<PickerValue, DateValidationError>,
       ExportedValidateDateProps {
     /**
-     * The children of the calendar.
+     * The children of the component.
      * If a function is provided, it will be called with the public context as its parameter.
      */
     children?: React.ReactNode | ((parameters: ChildrenParameters) => React.ReactNode);

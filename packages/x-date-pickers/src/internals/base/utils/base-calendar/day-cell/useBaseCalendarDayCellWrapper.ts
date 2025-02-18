@@ -57,12 +57,8 @@ export function useBaseCalendarDayCellWrapper(
     return isInvalid;
   }, [baseRootContext.disabled, isInvalid]);
 
-  const isTabbable = React.useMemo(
-    () =>
-      !isOutsideCurrentMonth &&
-      baseDayGridBodyContext.tabbableDays.some((day) => utils.isSameDay(day, value)),
-    [utils, isOutsideCurrentMonth, baseDayGridBodyContext.tabbableDays, value],
-  );
+  const canCellBeTabbed = baseDayGridBodyContext.canCellBeTabbed;
+  const isTabbable = React.useMemo(() => canCellBeTabbed(value), [canCellBeTabbed, value]);
 
   const selectDay = useEventCallback((date: PickerValidDate) => {
     if (baseRootContext.readOnly) {

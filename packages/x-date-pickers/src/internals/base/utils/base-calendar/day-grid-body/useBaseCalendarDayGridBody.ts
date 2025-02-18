@@ -9,42 +9,36 @@ import { useCellList } from '../utils/useCellList';
 import { useBaseCalendarRootVisibleDateContext } from '../root/BaseCalendarRootVisibleDateContext';
 
 export function useBaseCalendarDayGridBody(parameters: useBaseCalendarDayGridBody.Parameters) {
-  const {
-    fixedWeekNumber,
-    focusOnMount,
-    children,
-    offset = 0,
-    freezeCurrentMonth = false,
-  } = parameters;
+  const { fixedWeekNumber, focusOnMount, children, offset = 0, freezeMonth = false } = parameters;
   const utils = useUtils();
   const baseRootContext = useBaseCalendarRootContext();
   const baseRootVisibleDateContext = useBaseCalendarRootVisibleDateContext();
   const ref = React.useRef<HTMLDivElement>(null);
   const rowsRefs = React.useRef<(HTMLElement | null)[]>([]);
 
-  const rawCurrentMonth = React.useMemo(() => {
+  const rawMonth = React.useMemo(() => {
     const cleanVisibleDate = utils.startOfMonth(baseRootVisibleDateContext.visibleDate);
     return offset === 0 ? cleanVisibleDate : utils.addMonths(cleanVisibleDate, offset);
   }, [utils, baseRootVisibleDateContext.visibleDate, offset]);
 
-  const lastNonFrozenMonthRef = React.useRef(rawCurrentMonth);
+  const lastNonFrozenMonthRef = React.useRef(rawMonth);
   React.useEffect(() => {
-    if (!freezeCurrentMonth) {
-      lastNonFrozenMonthRef.current = rawCurrentMonth;
+    if (!freezeMonth) {
+      lastNonFrozenMonthRef.current = rawMonth;
     }
-  }, [freezeCurrentMonth, rawCurrentMonth]);
+  }, [freezeMonth, rawMonth]);
 
-  const currentMonth = freezeCurrentMonth ? lastNonFrozenMonthRef.current : rawCurrentMonth;
+  const month = freezeMonth ? lastNonFrozenMonthRef.current : rawMonth;
 
   const { scrollerRef } = useCellList({
     focusOnMount,
     section: 'day',
-    value: currentMonth,
+    value: month,
   });
 
   const daysGrid = React.useMemo(() => {
-    const toDisplay = utils.getWeekArray(currentMonth);
-    let nextMonth = utils.addMonths(currentMonth, 1);
+    const toDisplay = utils.getWeekArray(month);
+    let nextMonth = utils.addMonths(month, 1);
     while (fixedWeekNumber && toDisplay.length < fixedWeekNumber) {
       const additionalWeeks = utils.getWeekArray(nextMonth);
       const hasCommonWeek = utils.isSameDay(
@@ -62,52 +56,59 @@ export function useBaseCalendarDayGridBody(parameters: useBaseCalendarDayGridBod
     }
 
     return toDisplay;
-  }, [currentMonth, fixedWeekNumber, utils]);
+  }, [month, fixedWeekNumber, utils]);
 
-  const tabbableDays = React.useMemo(() => {
-    const flatDays = daysGrid.flat().filter((day) => utils.isSameMonth(day, currentMonth));
-
-    let tempTabbableDays: PickerValidDate[] = [];
-    tempTabbableDays = flatDays.filter((day) =>
+  const canCellBeTabbed = React.useMemo(() => {
+    let tabbableCells: PickerValidDate[];
+    const daysInMonth = daysGrid.flat().filter((day) => utils.isSameMonth(day, month));
+    const selectedAndVisibleDays = daysInMonth.filter((day) =>
       baseRootContext.selectedDates.some((selectedDay) => utils.isSameDay(day, selectedDay)),
     );
-
-    if (tempTabbableDays.length === 0) {
-      tempTabbableDays = flatDays.filter((day) =>
+    if (selectedAndVisibleDays.length > 0) {
+      tabbableCells = selectedAndVisibleDays;
+    } else {
+      const currentDay = daysInMonth.find((day) =>
         utils.isSameDay(day, baseRootContext.currentDate),
       );
-    }
-
-    if (tempTabbableDays.length === 0) {
-      const firstDayInMonth = flatDays.find((day) => utils.isSameMonth(day, currentMonth));
-      if (firstDayInMonth != null) {
-        tempTabbableDays = [firstDayInMonth];
+      if (currentDay != null) {
+        tabbableCells = [currentDay];
+      } else {
+        tabbableCells = daysInMonth.slice(0, 1);
       }
     }
 
-    return tempTabbableDays;
-  }, [baseRootContext.currentDate, baseRootContext.selectedDates, daysGrid, utils, currentMonth]);
+    const format = `${utils.formats.year}/${utils.formats.month}/${utils.formats.dayOfMonth}`;
+    const formattedTabbableCells = new Set(
+      tabbableCells.map((day) => utils.formatByString(day, format)),
+    );
 
-  const childrenNode = React.useMemo(
-    () => (children == null ? null : children({ weeks: daysGrid.map((week) => week[0]) })),
-    [children, daysGrid],
-  );
+    return (date: PickerValidDate) =>
+      formattedTabbableCells.has(utils.formatByString(date, format));
+  }, [baseRootContext.currentDate, baseRootContext.selectedDates, daysGrid, utils, month]);
+
+  const resolvedChildren = React.useMemo(() => {
+    if (!React.isValidElement(children) && typeof children === 'function') {
+      return children({ weeks: daysGrid.map((week) => week[0]) });
+    }
+
+    return children;
+  }, [children, daysGrid]);
 
   const getDayGridBodyProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
       return mergeReactProps(externalProps, {
         ref,
         role: 'rowgroup',
-        children: childrenNode,
+        children: resolvedChildren,
         onKeyDown: baseRootContext.applyDayGridKeyboardNavigation,
       });
     },
-    [baseRootContext.applyDayGridKeyboardNavigation, childrenNode],
+    [baseRootContext.applyDayGridKeyboardNavigation, resolvedChildren],
   );
 
   const context: BaseCalendarDayGridBodyContext = React.useMemo(
-    () => ({ daysGrid, currentMonth, tabbableDays, ref }),
-    [daysGrid, currentMonth, tabbableDays, ref],
+    () => ({ daysGrid, month, canCellBeTabbed, ref }),
+    [daysGrid, month, canCellBeTabbed, ref],
   );
 
   return React.useMemo(
@@ -118,7 +119,11 @@ export function useBaseCalendarDayGridBody(parameters: useBaseCalendarDayGridBod
 
 export namespace useBaseCalendarDayGridBody {
   export interface Parameters extends useCellList.PublicParameters {
-    children?: (parameters: ChildrenParameters) => React.ReactNode;
+    /**
+     * The children of the component.
+     * If a function is provided, it will be called with the weeks weeks to render as its parameter.
+     */
+    children?: React.ReactNode | ((parameters: ChildrenParameters) => React.ReactNode);
     /**
      * The day view will show as many weeks as needed after the end of the current month to match this value.
      * Put it to 6 to have a fixed number of weeks in Gregorian calendars
@@ -134,7 +139,7 @@ export namespace useBaseCalendarDayGridBody {
      * If `true`, the component's month won't update when the visible date or the offset changes.
      * This is mostly useful when doing transitions between several months to avoid having the exiting month updated to the new visible date.
      */
-    freezeCurrentMonth?: boolean;
+    freezeMonth?: boolean;
   }
 
   export interface ChildrenParameters {

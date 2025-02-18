@@ -17,9 +17,10 @@ export function useBaseCalendarMonthList(parameters: useBaseCalendarMonthList.Pa
   const { children, getItems, focusOnMount, loop = true, canChangeYear = true } = parameters;
   const baseRootVisibleDateContext = useBaseCalendarRootVisibleDateContext();
   const cellRefs = React.useRef<(HTMLElement | null)[]>([]);
-  const { items, monthsListOrGridContext, changePage, scrollerRef } = useMonthCells({
+  const { resolvedChildren, monthsListOrGridContext, changePage, scrollerRef } = useMonthCells({
     getItems,
     focusOnMount,
+    children,
   });
   const pageNavigationTargetRef = React.useRef<PageListNavigationTarget | null>(null);
 
@@ -52,11 +53,11 @@ export function useBaseCalendarMonthList(parameters: useBaseCalendarMonthList.Pa
     (externalProps: GenericHTMLProps) => {
       return mergeReactProps(externalProps, {
         role: 'radiogroup',
-        children: children == null ? null : children({ months: items }),
+        children: resolvedChildren,
         onKeyDown,
       });
     },
-    [items, children, onKeyDown],
+    [resolvedChildren, onKeyDown],
   );
 
   return React.useMemo(
@@ -80,7 +81,6 @@ export namespace useBaseCalendarMonthList {
      * @default true
      */
     canChangeYear?: boolean;
-    children?: (parameters: ChildrenParameters) => React.ReactNode;
   }
 
   export interface ChildrenParameters {

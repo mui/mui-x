@@ -9,7 +9,7 @@ import { useCellList } from './useCellList';
 import { useBaseCalendarRootVisibleDateContext } from '../root/BaseCalendarRootVisibleDateContext';
 
 export function useMonthCells(parameters: useMonthCells.Parameters): useMonthCells.ReturnValue {
-  const { getItems, focusOnMount } = parameters;
+  const { getItems, focusOnMount, children } = parameters;
   const baseRootContext = useBaseCalendarRootContext();
   const baseRootVisibleDateContext = useBaseCalendarRootVisibleDateContext();
   const utils = useUtils();
@@ -34,28 +34,36 @@ export function useMonthCells(parameters: useMonthCells.Parameters): useMonthCel
 
   const { scrollerRef } = useCellList({ focusOnMount, section: 'month', value: currentYear });
 
-  const tabbableMonths = React.useMemo(() => {
-    let tempTabbableDays: PickerValidDate[] = [];
-    tempTabbableDays = items.filter((day) =>
+  const canCellBeTabbed = React.useMemo(() => {
+    let tabbableCells: PickerValidDate[];
+    const selectedAndVisibleCells = items.filter((day) =>
       baseRootContext.selectedDates.some((selectedDay) => utils.isSameMonth(day, selectedDay)),
     );
-
-    if (tempTabbableDays.length === 0) {
-      tempTabbableDays = items.filter((day) => utils.isSameMonth(day, baseRootContext.currentDate));
+    if (selectedAndVisibleCells.length > 0) {
+      tabbableCells = selectedAndVisibleCells;
+    } else {
+      const currentMonth = items.find((day) => utils.isSameMonth(day, baseRootContext.currentDate));
+      if (currentMonth != null) {
+        tabbableCells = [currentMonth];
+      } else {
+        tabbableCells = items.slice(0, 1);
+      }
     }
 
-    if (tempTabbableDays.length === 0) {
-      tempTabbableDays = [items[0]];
-    }
+    const format = `${utils.formats.year}/${utils.formats.month}`;
+    const formattedTabbableCells = new Set(
+      tabbableCells.map((day) => utils.formatByString(day, format)),
+    );
 
-    return tempTabbableDays;
+    return (date: PickerValidDate) =>
+      formattedTabbableCells.has(utils.formatByString(date, format));
   }, [baseRootContext.currentDate, baseRootContext.selectedDates, items, utils]);
 
   const monthsListOrGridContext = React.useMemo<BaseCalendarMonthCollectionContext>(
     () => ({
-      tabbableMonths,
+      canCellBeTabbed,
     }),
-    [tabbableMonths],
+    [canCellBeTabbed],
   );
 
   const changePage = (direction: 'next' | 'previous') => {
@@ -101,27 +109,54 @@ export function useMonthCells(parameters: useMonthCells.Parameters): useMonthCel
     }
   };
 
-  return { items, monthsListOrGridContext, changePage, scrollerRef };
+  const resolvedChildren = React.useMemo(() => {
+    if (!React.isValidElement(children) && typeof children === 'function') {
+      return children({ months: items });
+    }
+
+    return children;
+  }, [children, items]);
+
+  return { resolvedChildren, monthsListOrGridContext, changePage, scrollerRef };
 }
 
 export namespace useMonthCells {
   export interface Parameters extends useCellList.PublicParameters {
     /**
      * Generate the list of items to render the given visible date.
-     * @param {GetCellsParameters} parameters The current parameters of the list.
+     * @param {GetItemsParameters} parameters The current parameters of the list.
      * @returns {PickerValidDate[]} The list of items.
      */
-    getItems?: (parameters: GetCellsParameters) => PickerValidDate[];
+    getItems?: (parameters: GetItemsParameters) => PickerValidDate[];
+    /**
+     * The children of the component.
+     * If a function is provided, it will be called with the list of the months to render as its parameter.
+     */
+    children?: React.ReactNode | ((parameters: ChildrenParameters) => React.ReactNode);
   }
 
-  export interface GetCellsParameters {
+  export interface ChildrenParameters {
+    /**
+     * The list of months to render.
+     */
+    months: PickerValidDate[];
+  }
+
+  export interface GetItemsParameters {
+    /**
+     * The visible year.
+     */
     year: PickerValidDate;
+    /**
+     * A function that returns the items that would be rendered if getItems is not provided.
+     * @returns {PickerValidDate[]} The list of to render items.
+     */
     getDefaultItems: () => PickerValidDate[];
   }
 
   export interface ReturnValue extends useCellList.ReturnValue {
-    items: PickerValidDate[];
     monthsListOrGridContext: BaseCalendarMonthCollectionContext;
     changePage: (direction: 'next' | 'previous') => void;
+    resolvedChildren: React.ReactNode;
   }
 }

@@ -2,7 +2,12 @@ import * as React from 'react';
 import { PickerValidDate } from '../../../../../models';
 
 export interface BaseCalendarMonthCollectionContext {
-  tabbableMonths: PickerValidDate[];
+  /**
+   * Return true if the month should be reachable using tab navigation.
+   * @param {PickerValidDate} month The month to check.
+   * @returns {boolean} Whether the month should be reachable using tab navigation.
+   */
+  canCellBeTabbed: (month: PickerValidDate) => boolean;
 }
 
 export const BaseCalendarMonthCollectionContext = React.createContext<

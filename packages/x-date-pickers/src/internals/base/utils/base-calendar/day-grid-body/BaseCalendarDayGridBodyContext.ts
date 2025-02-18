@@ -7,9 +7,11 @@ export interface BaseCalendarDayGridBodyContext {
    */
   month: PickerValidDate;
   /**
-   * The list of the days that should be reachable using tab navigation.
+   * Return true if the day should be reachable using tab navigation.
+   * @param {PickerValidDate} day The day to check.
+   * @returns {boolean} Whether the day should be reachable using tab navigation.
    */
-  tabbableDays: PickerValidDate[];
+  canCellBeTabbed: (day: PickerValidDate) => boolean;
   /**
    * The days grid to render inside this component.
    */

@@ -1,6 +1,9 @@
 import * as React from 'react';
 
 export interface BaseCalendarDayGridRowContext {
+  /**
+   * The DOM ref of the DayGridRow primitive.
+   */
   ref: React.RefObject<HTMLDivElement | null>;
 }
 

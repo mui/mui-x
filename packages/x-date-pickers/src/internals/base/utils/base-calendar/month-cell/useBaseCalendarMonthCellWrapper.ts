@@ -67,11 +67,8 @@ export function useBaseCalendarMonthCellWrapper(
     return isInvalid;
   }, [baseRootContext.disabled, isInvalid]);
 
-  const isTabbable = React.useMemo(
-    () =>
-      baseMonthListOrGridContext.tabbableMonths.some((month) => utils.isSameMonth(month, value)),
-    [baseMonthListOrGridContext, value, utils],
-  );
+  const canCellBeTabbed = baseMonthListOrGridContext.canCellBeTabbed;
+  const isTabbable = React.useMemo(() => canCellBeTabbed(value), [canCellBeTabbed, value]);
 
   const selectMonth = useEventCallback((date: PickerValidDate) => {
     if (baseRootContext.readOnly) {

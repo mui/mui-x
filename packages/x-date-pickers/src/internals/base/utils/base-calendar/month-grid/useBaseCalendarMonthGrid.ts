@@ -1,7 +1,6 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useTimeout from '@mui/utils/useTimeout';
-import { PickerValidDate } from '../../../../../models';
 import { GenericHTMLProps } from '../../../base-utils/types';
 import { mergeReactProps } from '../../../base-utils/mergeReactProps';
 import {
@@ -24,9 +23,10 @@ export function useBaseCalendarMonthGrid(parameters: useBaseCalendarMonthGrid.Pa
   } = parameters;
   const baseRootVisibleDateContext = useBaseCalendarRootVisibleDateContext();
   const cellRefs = React.useRef<(HTMLElement | null)[]>([]);
-  const { items, monthsListOrGridContext, changePage, scrollerRef } = useMonthCells({
+  const { resolvedChildren, monthsListOrGridContext, changePage, scrollerRef } = useMonthCells({
     getItems,
     focusOnMount,
+    children,
   });
   const pageNavigationTargetRef = React.useRef<PageGridNavigationTarget | null>(null);
 
@@ -77,14 +77,14 @@ export function useBaseCalendarMonthGrid(parameters: useBaseCalendarMonthGrid.Pa
     (externalProps: GenericHTMLProps) => {
       return mergeReactProps(externalProps, {
         role: 'radiogroup',
-        children: children == null ? null : children({ months: items }),
+        children: resolvedChildren,
         onKeyDown,
         style: {
           [cellsPerRowCssVar]: cellsPerRow,
         },
       });
     },
-    [items, children, onKeyDown, cellsPerRow, cellsPerRowCssVar],
+    [resolvedChildren, onKeyDown, cellsPerRow, cellsPerRowCssVar],
   );
 
   return React.useMemo(
@@ -106,7 +106,6 @@ export namespace useBaseCalendarMonthGrid {
      * @default true
      */
     canChangeYear?: boolean;
-    children?: (parameters: ChildrenParameters) => React.ReactNode;
   }
 
   export interface Parameters extends PublicParameters {
@@ -114,9 +113,5 @@ export namespace useBaseCalendarMonthGrid {
      * The CSS variable that must contain the number of cells per row.
      */
     cellsPerRowCssVar: string;
-  }
-
-  export interface ChildrenParameters {
-    months: PickerValidDate[];
   }
 }

@@ -4,26 +4,29 @@ import { getWeekdays } from '../../../../utils/date-utils';
 import { useUtils } from '../../../../hooks/useUtils';
 import { GenericHTMLProps } from '../../../base-utils/types';
 import { mergeReactProps } from '../../../base-utils/mergeReactProps';
-import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 
 export function useBaseCalendarDayGridHeader(parameters: useBaseCalendarDayGridHeader.Parameters) {
   const { children } = parameters;
   const utils = useUtils();
-  const baseRootContext = useBaseCalendarRootContext();
 
-  const days = React.useMemo(
-    () => getWeekdays(utils, baseRootContext.currentDate),
-    [utils, baseRootContext.currentDate],
-  );
+  const days = React.useMemo(() => getWeekdays(utils, utils.date()), [utils]);
+
+  const resolvedChildren = React.useMemo(() => {
+    if (!React.isValidElement(children) && typeof children === 'function') {
+      return children({ days });
+    }
+
+    return children;
+  }, [children, days]);
 
   const getDayGridHeaderProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
       return mergeReactProps(externalProps, {
         role: 'row',
-        children: children == null ? null : children({ days }),
+        children: resolvedChildren,
       });
     },
-    [days, children],
+    [resolvedChildren],
   );
 
   return React.useMemo(() => ({ getDayGridHeaderProps }), [getDayGridHeaderProps]);
@@ -31,7 +34,11 @@ export function useBaseCalendarDayGridHeader(parameters: useBaseCalendarDayGridH
 
 export namespace useBaseCalendarDayGridHeader {
   export interface Parameters {
-    children?: (parameters: ChildrenParameters) => React.ReactNode;
+    /**
+     * The children of the component.
+     * If a function is provided, it will be called with the days of the week as its parameter.
+     */
+    children?: React.ReactNode | ((parameters: ChildrenParameters) => React.ReactNode);
   }
 
   export interface ChildrenParameters {

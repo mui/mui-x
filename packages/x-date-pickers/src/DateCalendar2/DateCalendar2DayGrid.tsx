@@ -54,10 +54,10 @@ const renderRow = (props: any) => <DateCalendar2DayGridRow {...props} />;
 const renderDay = (props: any) => <WrappedDayCell {...props} />;
 
 const WrappedDateCalendar2DayGridBody = React.forwardRef(function WrappedDateCalendar2DayGridBody(
-  props: Pick<Calendar.DayGridBody.Props, 'freezeCurrentMonth'>,
+  props: Pick<Calendar.DayGridBody.Props, 'freezeMonth'>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { freezeCurrentMonth } = props;
+  const { freezeMonth } = props;
   const translations = usePickerTranslations();
   const { classes, displayWeekNumber, fixedWeekNumber } = useDateCalendar2PrivateContext();
   const utils = useUtils();
@@ -113,7 +113,7 @@ const WrappedDateCalendar2DayGridBody = React.forwardRef(function WrappedDateCal
       ref={ref}
       className={classes.dayGridBody}
       fixedWeekNumber={fixedWeekNumber}
-      freezeCurrentMonth={freezeCurrentMonth}
+      freezeMonth={freezeMonth}
       render={renderDayGridBody}
     >
       {children}
@@ -134,7 +134,7 @@ function WrappedDateCalendar2DayGridBodyWithTransition(props: Partial<CSSTransit
       nodeRef={ref}
       {...other}
     >
-      <WrappedDateCalendar2DayGridBody ref={ref} freezeCurrentMonth={!props.in} />
+      <WrappedDateCalendar2DayGridBody ref={ref} freezeMonth={!props.in} />
     </CSSTransition>
   );
 }

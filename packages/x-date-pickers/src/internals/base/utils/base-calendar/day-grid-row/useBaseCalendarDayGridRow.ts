@@ -8,16 +8,24 @@ export function useBaseCalendarDayGridRow(parameters: useBaseCalendarDayGridRow.
   const { children, ctx } = parameters;
   const ref = React.useRef<HTMLDivElement>(null);
 
+  const resolvedChildren = React.useMemo(() => {
+    if (!React.isValidElement(children) && typeof children === 'function') {
+      return children({ days: ctx.days });
+    }
+
+    return children;
+  }, [children, ctx.days]);
+
   const getDayGridRowProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
       return mergeReactProps(externalProps, {
         ref,
         role: 'row',
         'aria-rowindex': ctx.rowIndex + 1,
-        children: children == null ? null : children({ days: ctx.days }),
+        children: resolvedChildren,
       });
     },
-    [ctx.days, ctx.rowIndex, children],
+    [ctx.rowIndex, resolvedChildren],
   );
 
   const context: BaseCalendarDayGridRowContext = React.useMemo(() => ({ ref }), [ref]);
@@ -35,7 +43,11 @@ export namespace useBaseCalendarDayGridRow {
      * The memoized context forwarded by the wrapper component so that this component does not need to subscribe to any context.
      */
     ctx: Context;
-    children?: (parameters: ChildrenParameters) => React.ReactNode;
+    /**
+     * The children of the component.
+     * If a function is provided, it will be called with the days to render as its parameter.
+     */
+    children?: React.ReactNode | ((parameters: ChildrenParameters) => React.ReactNode);
   }
 
   export interface ChildrenParameters {

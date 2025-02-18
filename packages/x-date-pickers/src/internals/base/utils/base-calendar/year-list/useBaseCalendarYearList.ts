@@ -1,6 +1,5 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { PickerValidDate } from '../../../../../models';
 import { GenericHTMLProps } from '../../../base-utils/types';
 import { mergeReactProps } from '../../../base-utils/mergeReactProps';
 import { navigateInList } from '../utils/keyboardNavigation';
@@ -9,7 +8,11 @@ import { useYearCells } from '../utils/useYearCells';
 export function useBaseCalendarYearList(parameters: useBaseCalendarYearList.Parameters) {
   const { children, getItems, focusOnMount, loop = true } = parameters;
   const cellRefs = React.useRef<(HTMLElement | null)[]>([]);
-  const { items, yearsListOrGridContext, scrollerRef } = useYearCells({ getItems, focusOnMount });
+  const { resolvedChildren, yearsListOrGridContext, scrollerRef } = useYearCells({
+    getItems,
+    focusOnMount,
+    children,
+  });
 
   const onKeyDown = useEventCallback((event: React.KeyboardEvent) => {
     navigateInList({
@@ -24,11 +27,11 @@ export function useBaseCalendarYearList(parameters: useBaseCalendarYearList.Para
     (externalProps: GenericHTMLProps) => {
       return mergeReactProps(externalProps, {
         role: 'radiogroup',
-        children: children == null ? null : children({ years: items }),
+        children: resolvedChildren,
         onKeyDown,
       });
     },
-    [items, children, onKeyDown],
+    [resolvedChildren, onKeyDown],
   );
 
   return React.useMemo(
@@ -45,10 +48,5 @@ export namespace useBaseCalendarYearList {
      * @default true
      */
     loop?: boolean;
-    children?: (parameters: ChildrenParameters) => React.ReactNode;
-  }
-
-  export interface ChildrenParameters {
-    years: PickerValidDate[];
   }
 }

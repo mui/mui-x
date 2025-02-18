@@ -18,7 +18,7 @@ const CalendarDayGridBody = React.forwardRef(function CalendarDayGrid(
     fixedWeekNumber,
     focusOnMount,
     offset,
-    freezeCurrentMonth,
+    freezeMonth,
     ...otherProps
   } = props;
   const { getDayGridBodyProps, rowsRefs, context, scrollerRef } = useBaseCalendarDayGridBody({
@@ -26,7 +26,7 @@ const CalendarDayGridBody = React.forwardRef(function CalendarDayGrid(
     fixedWeekNumber,
     focusOnMount,
     offset,
-    freezeCurrentMonth,
+    freezeMonth,
   });
   const ref = useForkRef(scrollerRef, forwardedRef);
   const state = React.useMemo(() => ({}), []);

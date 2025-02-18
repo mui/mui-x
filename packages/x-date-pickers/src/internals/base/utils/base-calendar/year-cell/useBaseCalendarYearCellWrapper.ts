@@ -64,10 +64,8 @@ export function useBaseCalendarYearCellWrapper(
     return isInvalid;
   }, [baseRootContext.disabled, isInvalid]);
 
-  const isTabbable = React.useMemo(
-    () => baseYearListOrGridContext.tabbableYears.some((year) => utils.isSameYear(year, value)),
-    [baseYearListOrGridContext, value, utils],
-  );
+  const canCellBeTabbed = baseYearListOrGridContext.canCellBeTabbed;
+  const isTabbable = React.useMemo(() => canCellBeTabbed(value), [canCellBeTabbed, value]);
 
   const selectYear = useEventCallback((date: PickerValidDate) => {
     if (baseRootContext.readOnly) {

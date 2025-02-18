@@ -9,7 +9,11 @@ import { useYearCells } from '../utils/useYearCells';
 export function useBaseCalendarYearGrid(parameters: useBaseCalendarYearGrid.Parameters) {
   const { children, cellsPerRow, cellsPerRowCssVar, getItems, focusOnMount } = parameters;
   const yearsCellRefs = React.useRef<(HTMLElement | null)[]>([]);
-  const { items, scrollerRef, yearsListOrGridContext } = useYearCells({ getItems, focusOnMount });
+  const { resolvedChildren, scrollerRef, yearsListOrGridContext } = useYearCells({
+    getItems,
+    focusOnMount,
+    children,
+  });
 
   const getCellsInCalendar = useEventCallback(() => {
     const grid: HTMLElement[][] = Array.from(
@@ -41,14 +45,14 @@ export function useBaseCalendarYearGrid(parameters: useBaseCalendarYearGrid.Para
     (externalProps: GenericHTMLProps) => {
       return mergeReactProps(externalProps, {
         role: 'radiogroup',
-        children: children == null ? null : children({ years: items }),
+        children: resolvedChildren,
         onKeyDown,
         style: {
           [cellsPerRowCssVar]: cellsPerRow,
         },
       });
     },
-    [items, children, onKeyDown, cellsPerRow, cellsPerRowCssVar],
+    [resolvedChildren, onKeyDown, cellsPerRow, cellsPerRowCssVar],
   );
 
   return React.useMemo(
@@ -64,7 +68,6 @@ export namespace useBaseCalendarYearGrid {
      * This is used to make sure the keyboard navigation works correctly.
      */
     cellsPerRow: number;
-    children?: (parameters: ChildrenParameters) => React.ReactNode;
   }
 
   export interface Parameters extends PublicParameters {
@@ -75,6 +78,9 @@ export namespace useBaseCalendarYearGrid {
   }
 
   export interface ChildrenParameters {
+    /**
+     * The list of years to render.
+     */
     years: PickerValidDate[];
   }
 }
