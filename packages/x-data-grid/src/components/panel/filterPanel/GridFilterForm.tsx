@@ -157,6 +157,7 @@ const FilterFormDeleteIcon = styled('div', {
   overridesResolver: (_, styles) => styles.filterFormDeleteIcon,
 })<{ ownerState: OwnerState }>({
   flexShrink: 0,
+  display: 'flex',
   justifyContent: 'center',
 });
 
