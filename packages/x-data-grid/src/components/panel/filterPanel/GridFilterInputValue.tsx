@@ -78,9 +78,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
           ...textFieldProps?.slotProps,
           input: {
             endAdornment: applying ? (
-              <rootProps.slots.baseInputAdornment position="end">
-                <rootProps.slots.loadIcon fontSize="small" color="action" />
-              </rootProps.slots.baseInputAdornment>
+              <rootProps.slots.loadIcon fontSize="small" color="action" />
             ) : null,
             ...textFieldProps?.slotProps?.input,
           },

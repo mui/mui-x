@@ -857,12 +857,6 @@
       "class": null
     },
     {
-      "name": "baseInputAdornment",
-      "description": "The custom InputAdornment component used in the grid.",
-      "default": "InputAdornment",
-      "class": null
-    },
-    {
       "name": "baseTextField",
       "description": "The custom TextField component used in the grid.",
       "default": "TextField",
@@ -902,12 +896,6 @@
       "name": "basePopper",
       "description": "The custom Popper component used in the grid.",
       "default": "Popper",
-      "class": null
-    },
-    {
-      "name": "baseInputLabel",
-      "description": "The custom InputLabel component used in the grid.",
-      "default": "InputLabel",
       "class": null
     },
     {

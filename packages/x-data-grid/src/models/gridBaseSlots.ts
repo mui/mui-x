@@ -290,11 +290,7 @@ export type TextFieldProps = {
   placeholder?: string;
   size?: 'small' | 'medium';
   slotProps?: {
-    input?: {
-      disabled?: boolean;
-      endAdornment?: React.ReactNode;
-      startAdornment?: React.ReactNode;
-    };
+    input?: Partial<InputProps>;
     inputLabel?: {};
     htmlInput?: React.InputHTMLAttributes<HTMLInputElement>;
   };

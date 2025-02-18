@@ -236,9 +236,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
           slotProps={{
             input: {
               startAdornment: (
-                <rootProps.slots.baseInputAdornment position="start">
-                  <rootProps.slots.quickFilterIcon />
-                </rootProps.slots.baseInputAdornment>
+                <rootProps.slots.quickFilterIcon />
               ),
               endAdornment: (
                 <rootProps.slots.baseIconButton

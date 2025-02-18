@@ -6,7 +6,7 @@ import MUICheckbox from '@mui/material/Checkbox';
 import MUIChip from '@mui/material/Chip';
 import MUICircularProgress from '@mui/material/CircularProgress';
 import MUIDivider from '@mui/material/Divider';
-import MUIInputBase from '@mui/material/InputBase';
+import MUIInputBase, { InputBaseProps as MUIInputBaseProps } from '@mui/material/InputBase';
 import MUIFocusTrap from '@mui/material/Unstable_TrapFocus';
 import MUILinearProgress from '@mui/material/LinearProgress';
 import MUIListItemIcon from '@mui/material/ListItemIcon';
@@ -68,7 +68,6 @@ export { useMaterialCSSVariables } from './variables';
 const ClickAwayListener = forwardRef(MUIClickAwayListener);
 
 const BaseSelect = forwardRef<any, GridSlotProps['baseSelect']>(function BaseSelect(props, ref) {
-  const rootProps = useGridRootProps();
   const {
     id,
     label,
@@ -91,7 +90,6 @@ const BaseSelect = forwardRef<any, GridSlotProps['baseSelect']>(function BaseSel
         htmlFor={id}
         shrink
         variant="outlined"
-        {...rootProps.slotProps?.baseInputLabel}
       >
         {label}
       </MUIInputLabel>
@@ -172,10 +170,8 @@ const baseSlots: GridBaseSlots = {
   baseTextField: BaseTextField,
   baseButton: MUIButton,
   baseIconButton: MUIIconButton,
-  baseInputAdornment: MUIInputAdornment,
   baseTooltip: MUITooltip,
   basePopper: BasePopper,
-  baseInputLabel: MUIInputLabel,
   baseSelect: BaseSelect,
   baseSelectOption: BaseSelectOption,
   baseSkeleton: MUISkeleton,
@@ -267,7 +263,7 @@ function BaseTextField(props: GridSlotProps['baseTextField']) {
       variant="outlined"
       {...rest}
       inputProps={slotProps?.htmlInput}
-      InputProps={slotProps?.input}
+      InputProps={transformInputProps(slotProps?.input as any)}
       InputLabelProps={{
         shrink: true,
         ...(slotProps as any)?.inputLabel,
@@ -340,8 +336,40 @@ function BaseAutocomplete(props: GridSlotProps['baseAutocomplete']) {
 }
 
 function BaseInput(props: GridSlotProps['baseInput']) {
-  const { slotProps, ...rest } = props;
-  return <MUIInputBase {...rest} inputProps={slotProps?.htmlInput} />;
+  return (
+    <MUIInputBase {...transformInputProps(props)} />
+  );
+}
+
+function transformInputProps(props: GridSlotProps['baseInput'] | undefined) {
+  if (!props) {
+    return undefined;
+  }
+
+  let {
+    slotProps,
+    startAdornment,
+    endAdornment,
+    ...rest
+  } = props;
+  const result = rest as Partial<MUIInputBaseProps>;
+
+  if (startAdornment) {
+    startAdornment =
+      <MUIInputAdornment position='start'>{startAdornment}</MUIInputAdornment>
+  }
+
+  if (endAdornment) {
+    endAdornment =
+      <MUIInputAdornment position='end'>{endAdornment}</MUIInputAdornment>
+  }
+
+  result.startAdornment = startAdornment;
+  result.endAdornment = endAdornment;
+
+  result.inputProps = slotProps?.htmlInput;
+
+  return result;
 }
 
 const transformOrigin = {
