@@ -1,72 +1,92 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { SeriesId } from '../models/seriesType/common';
-import { useScatterSeries } from '../hooks';
+import useSlotProps from '@mui/utils/useSlotProps';
+import { ScatterMarkerElementProps, ScatterMarkerProps } from './ScatterMarker.types';
 
-export interface ScatterMarkerProps {
-  ownerState: ScatterMarkerOwnerState;
-  /**
-   * Callback fired when clicking on a scatter item.
-   * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.
-   */
-  onClick?: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
-}
+function ScatterMarkerElement({
+  x,
+  y,
+  onItemClick,
+  dataIndex,
+  color,
+  isHighlighted,
+  isFaded,
+  series,
+  interactionProps,
+  slots,
+  slotProps,
+}: ScatterMarkerElementProps) {
+  const Marker = slots?.marker ?? ScatterMarker;
 
-export interface ScatterMarkerOwnerState {
-  /**
-   * ID of the series this marker belongs to.
-   */
-  id: SeriesId;
-  dataIndex: number;
-  x: number;
-  y: number;
-  color: string;
-  isHighlighted: boolean;
-  isFaded: boolean;
+  const markerProps = useSlotProps({
+    elementType: Marker,
+    externalSlotProps: slotProps?.marker,
+    additionalProps: {
+      series,
+      x,
+      y,
+      dataIndex,
+      color,
+      isHighlighted,
+      isFaded,
+      onClick: onItemClick,
+      cursor: onItemClick ? 'pointer' : 'unset',
+      ...interactionProps,
+    },
+    ownerState: {},
+  });
+
+  return <Marker {...markerProps} />;
 }
 
 /**
  * TODO: Document
  */
-function ScatterMarker({ ownerState, ...other }: ScatterMarkerProps) {
-  const series = useScatterSeries(ownerState.id);
-
-  if (!series) {
-    return null;
-  }
-
+function ScatterMarker({
+  series,
+  isFaded,
+  isHighlighted,
+  x,
+  y,
+  color,
+  ...other
+}: ScatterMarkerProps) {
   return (
     <circle
       cx={0}
       cy={0}
-      r={(ownerState.isHighlighted ? 1.2 : 1) * series.markerSize}
-      transform={`translate(${ownerState.x}, ${ownerState.y})`}
-      fill={ownerState.color}
-      opacity={ownerState.isFaded ? 0.3 : 1}
+      r={(isHighlighted ? 1.2 : 1) * series.markerSize}
+      transform={`translate(${x}, ${y})`}
+      fill={color}
+      opacity={isFaded ? 0.3 : 1}
       {...other}
     />
   );
 }
 
-ScatterMarker.propTypes = {
+ScatterMarkerElement.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  /**
-   * Callback fired when clicking on a scatter item.
-   * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.
-   */
-  onClick: PropTypes.func,
-  ownerState: PropTypes.shape({
-    color: PropTypes.string.isRequired,
-    dataIndex: PropTypes.number.isRequired,
-    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    isFaded: PropTypes.bool.isRequired,
-    isHighlighted: PropTypes.bool.isRequired,
-    x: PropTypes.number.isRequired,
-    y: PropTypes.number.isRequired,
-  }).isRequired,
+  color: PropTypes.string.isRequired,
+  dataIndex: PropTypes.number.isRequired,
+  interactionProps: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.shape({
+      onPointerDown: PropTypes.func.isRequired,
+      onPointerEnter: PropTypes.func.isRequired,
+      onPointerLeave: PropTypes.func.isRequired,
+    }),
+  ]).isRequired,
+  isFaded: PropTypes.bool.isRequired,
+  isHighlighted: PropTypes.bool.isRequired,
+  onItemClick: PropTypes.func,
+  series: PropTypes.object.isRequired,
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+  x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired,
 } as any;
 
-export { ScatterMarker };
+export { ScatterMarkerElement };
