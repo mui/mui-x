@@ -422,10 +422,7 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
       >
         <FilterFormDeleteIcon
           {...deleteIconProps}
-          className={clsx(
-            classes.deleteIcon,
-            deleteIconProps.className,
-          )}
+          className={clsx(classes.deleteIcon, deleteIconProps.className)}
           ownerState={rootProps}
         >
           <rootProps.slots.baseIconButton
