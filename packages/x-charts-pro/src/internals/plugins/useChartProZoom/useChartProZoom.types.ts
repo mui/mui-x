@@ -37,7 +37,7 @@ export interface UseChartProZoomState {
     /**
      * Mapping of axis id to the zoom data.
      */
-    zoomData: ZoomData[];
+    zoomData: readonly ZoomData[];
     /**
      * Internal information to know if the user control the state or not.
      */

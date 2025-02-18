@@ -85,7 +85,7 @@ export interface UseChartCartesianAxisState {
    */
   zoom?: {
     isInteracting: boolean;
-    zoomData: ZoomData[];
+    zoomData: readonly ZoomData[];
   };
   cartesianAxis: {
     x: AxisConfig<ScaleName, any, ChartsXAxisProps>[];

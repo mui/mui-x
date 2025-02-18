@@ -69,7 +69,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
         zoom: {
           ...prevState.zoom,
           isInteracting: true,
-          zoomData: [...paramsZoomData],
+          zoomData: paramsZoomData,
         },
       };
     });
@@ -103,8 +103,8 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     (zoomData: ZoomData[] | ((prev: ZoomData[]) => ZoomData[])) => {
       store.update((prevState) => {
         const newZoomData =
-          typeof zoomData === 'function' ? zoomData(prevState.zoom.zoomData) : zoomData;
-        onZoomChange?.([...newZoomData]);
+          typeof zoomData === 'function' ? zoomData([...prevState.zoom.zoomData]) : zoomData;
+        onZoomChange?.(newZoomData);
 
         if (prevState.zoom.isControlled) {
           return prevState;
@@ -114,7 +114,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
           ...prevState,
           zoom: {
             ...prevState.zoom,
-            zoomData: [...newZoomData],
+            zoomData: newZoomData,
           },
         };
       });
@@ -445,14 +445,13 @@ useChartProZoom.getInitialState = (params) => {
   };
   return {
     zoom: {
-      zoomData: [
+      zoomData:
         // eslint-disable-next-line no-nested-ternary
-        ...(zoomData !== undefined
+        zoomData !== undefined
           ? zoomData
           : initialZoom !== undefined
             ? initialZoom
-            : initializeZoomData(optionsLookup)),
-      ],
+            : initializeZoomData(optionsLookup),
       isInteracting: false,
       isControlled: zoomData !== undefined,
     },
