@@ -185,7 +185,8 @@ Below are described the steps you need to make to migrate from v7 to v8.
 
 ### Slots
 
-- The `MuiDataGrid-paper` slot has been renamed to `MuiDataGrid-panelContent`.
+- The `baseFormControl` slot was removed.
+- The `paper` slot has been renamed to `panelContent`.
 
 <!-- ### Editing
 

@@ -804,12 +804,6 @@
       "class": null
     },
     {
-      "name": "baseFormControl",
-      "description": "The custom FormControl component used in the grid.",
-      "default": "FormControl",
-      "class": null
-    },
-    {
       "name": "baseSelect",
       "description": "The custom Select component used in the grid.",
       "default": "Select",
