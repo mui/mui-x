@@ -241,8 +241,6 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
 
     const hasLogicOperatorColumn: boolean = hasMultipleFilters && logicOperators.length > 0;
 
-    const baseFormControlProps = rootProps.slotProps?.baseFormControl || {};
-
     const baseSelectProps = rootProps.slotProps?.baseSelect || {};
     const isBaseSelectNative = baseSelectProps.native ?? false;
 
@@ -423,12 +421,9 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
         ref={ref}
       >
         <FilterFormDeleteIcon
-          as={rootProps.slots.baseFormControl}
-          {...baseFormControlProps}
           {...deleteIconProps}
           className={clsx(
             classes.deleteIcon,
-            baseFormControlProps.className,
             deleteIconProps.className,
           )}
           ownerState={rootProps}
@@ -516,9 +511,8 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
           ))}
         </FilterFormColumnInput>
         <FilterFormOperatorInput
-          variant="outlined"
-          size="small"
           as={rootProps.slots.baseSelect}
+          size="small"
           {...operatorInputProps}
           className={clsx(classes.operatorInput, operatorInputProps.className)}
           ownerState={rootProps}
@@ -547,9 +541,6 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
           ))}
         </FilterFormOperatorInput>
         <FilterFormValueInput
-          variant="outlined"
-          size="small"
-          as={rootProps.slots.baseFormControl}
           {...valueInputPropsOther}
           className={clsx(classes.valueInput, valueInputPropsOther.className)}
           ownerState={rootProps}
