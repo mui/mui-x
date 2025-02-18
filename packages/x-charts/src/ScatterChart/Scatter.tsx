@@ -1,13 +1,8 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useSlotProps from '@mui/utils/useSlotProps';
-import {
-  ScatterMarkerElementProps,
-  ScatterMarkerSlotProps,
-  ScatterMarkerSlots,
-} from './Scatter.types';
-import { ScatterMarker } from './ScatterMarker';
+import { ScatterMarkerSlotProps, ScatterMarkerSlots } from './ScatterMarker.types';
+import { ScatterMarkerElement } from './ScatterMarker';
 import {
   DefaultizedScatterSeriesType,
   ScatterItemIdentifier,
@@ -129,8 +124,8 @@ function Scatter(props: ScatterProps) {
       {cleanData.map((dataPoint) => (
         <ScatterMarkerElement
           key={dataPoint.id ?? dataPoint.dataIndex}
-          id={series.id}
           dataIndex={dataPoint.dataIndex}
+          series={series}
           color={dataPoint.color}
           isHighlighted={dataPoint.isHighlighted}
           isFaded={dataPoint.isFaded}
@@ -153,73 +148,6 @@ function Scatter(props: ScatterProps) {
     </g>
   );
 }
-
-function ScatterMarkerElement({
-  id,
-  x,
-  y,
-  onItemClick,
-  dataIndex,
-  color,
-  isHighlighted,
-  isFaded,
-  interactionProps,
-  slots,
-  slotProps,
-}: ScatterMarkerElementProps) {
-  const Marker = slots?.marker ?? ScatterMarker;
-
-  const ownerState = {
-    id,
-    dataIndex,
-    color,
-    isFaded,
-    isHighlighted,
-    x,
-    y,
-  };
-
-  const markerProps = useSlotProps({
-    elementType: Marker,
-    externalSlotProps: slotProps?.marker,
-    additionalProps: {
-      onClick: onItemClick,
-      cursor: onItemClick ? 'pointer' : 'unset',
-      ...interactionProps,
-    },
-    ownerState,
-  });
-
-  return <Marker {...markerProps} />;
-}
-
-ScatterMarkerElement.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  color: PropTypes.string.isRequired,
-  dataIndex: PropTypes.number.isRequired,
-  /**
-   * ID of the series this marker belongs to.
-   */
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  interactionProps: PropTypes.oneOfType([
-    PropTypes.object,
-    PropTypes.shape({
-      onPointerDown: PropTypes.func.isRequired,
-      onPointerEnter: PropTypes.func.isRequired,
-      onPointerLeave: PropTypes.func.isRequired,
-    }),
-  ]).isRequired,
-  isFaded: PropTypes.bool.isRequired,
-  isHighlighted: PropTypes.bool.isRequired,
-  onItemClick: PropTypes.func,
-  slotProps: PropTypes.object,
-  slots: PropTypes.object,
-  x: PropTypes.number.isRequired,
-  y: PropTypes.number.isRequired,
-} as any;
 
 Scatter.propTypes = {
   // ----------------------------- Warning --------------------------------
