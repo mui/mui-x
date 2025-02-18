@@ -14,7 +14,7 @@ export interface HeatmapSeriesType
   /**
    * Data associated to each bar.
    */
-  data?: HeatmapValueType[];
+  data?: readonly HeatmapValueType[];
   /**
    * The key used to retrieve data from the dataset.
    */
