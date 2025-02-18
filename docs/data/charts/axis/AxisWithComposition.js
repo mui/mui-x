@@ -19,7 +19,10 @@ export default function AxisWithComposition() {
             label: 'Quarters',
           },
         ]}
-        yAxis={[{ id: 'money' }, { id: 'quantities' }]}
+        yAxis={[
+          { id: 'money', position: 'right' },
+          { id: 'quantities', position: 'left' },
+        ]}
         series={[
           {
             type: 'line',
@@ -59,7 +62,7 @@ export default function AxisWithComposition() {
           labelStyle={{ fontSize: 18 }}
         />
         <ChartsYAxis axisId="quantities" label="# units sold" />
-        <ChartsYAxis axisId="money" position="right" label="revenue" />
+        <ChartsYAxis axisId="money" label="revenue" />
       </ChartContainer>
     </Box>
   );

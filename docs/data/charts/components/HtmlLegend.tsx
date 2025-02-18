@@ -56,8 +56,8 @@ export default function HtmlLegend() {
       >
         <ChartsSurface>
           <BarPlot />
-          <ChartsXAxis position="bottom" axisId="x-axis" />
-          <ChartsYAxis position="left" />
+          <ChartsXAxis axisId="x-axis" />
+          <ChartsYAxis />
         </ChartsSurface>
         <MyCustomLegend />
       </ChartDataProvider>

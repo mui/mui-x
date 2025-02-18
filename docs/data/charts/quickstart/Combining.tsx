@@ -55,13 +55,11 @@ export default function Combining() {
             },
           ]}
           yAxis={[
-            {
-              id: 'price',
-              scaleType: 'linear',
-            },
+            { id: 'price', scaleType: 'linear', position: 'left' },
             {
               id: 'volume',
               scaleType: 'linear',
+              position: 'right',
               valueFormatter: (value) => `${(value / 1000000).toLocaleString()}M`,
             },
           ]}
@@ -73,7 +71,6 @@ export default function Combining() {
           <LineHighlightPlot />
           <ChartsXAxis
             label="date"
-            position="bottom"
             axisId="date"
             tickInterval={(value, index) => {
               return index % 30 === 0;
@@ -84,7 +81,6 @@ export default function Combining() {
           />
           <ChartsYAxis
             label="Price (USD)"
-            position="left"
             axisId="price"
             tickLabelStyle={{ fontSize: 10 }}
             sx={{
@@ -95,7 +91,6 @@ export default function Combining() {
           />
           <ChartsYAxis
             label="Volume"
-            position="right"
             axisId="volume"
             tickLabelStyle={{ fontSize: 10 }}
             sx={{
