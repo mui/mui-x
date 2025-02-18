@@ -89,7 +89,7 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
       inputRef: inputRefProp,
       placeholder: inPlaceholder,
     },
-    internalProps: { readOnly = false, disabled = false },
+    internalProps: { readOnly = false, disabled = false, focused },
     parsedSelectedSections,
     activeSectionIndex,
     state,
@@ -478,6 +478,7 @@ export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
       autoComplete: 'off',
       value: shouldShowPlaceholder ? '' : valueStr,
       onChange: handleInputChange,
+      focused,
     },
   };
 };

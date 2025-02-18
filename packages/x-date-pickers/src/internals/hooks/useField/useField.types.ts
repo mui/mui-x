@@ -123,6 +123,10 @@ export interface UseFieldInternalProps<
    * @default false
    */
   autoFocus?: boolean;
+  /**
+   * If `true`, the field is visually focused.
+   */
+  focused?: boolean;
 }
 
 export interface UseFieldCommonAdditionalProps
@@ -164,6 +168,7 @@ interface UseFieldV6AdditionalProps
     >
   > {
   enableAccessibleFieldDOMStructure: false;
+  focused?: boolean;
 }
 
 export interface UseFieldV7ForwardedProps {
@@ -184,6 +189,7 @@ interface UseFieldV7AdditionalProps {
   value: string;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   areAllSectionsEmpty: boolean;
+  focused: boolean;
 }
 
 export type UseFieldResponse<
