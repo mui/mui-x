@@ -244,6 +244,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
               endAdornment: (
                 <rootProps.slots.baseInputAdornment position="end">
                   <rootProps.slots.baseIconButton
+                    size="small"
                     aria-label={apiRef.current.getLocaleText('columnsManagementDeleteIconLabel')}
                     style={
                       searchValue

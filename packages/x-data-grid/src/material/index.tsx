@@ -19,8 +19,8 @@ import MUIFormControlLabel, { formControlLabelClasses } from '@mui/material/Form
 import MUISelect from '@mui/material/Select';
 import MUISwitch from '@mui/material/Switch';
 import MUIButton from '@mui/material/Button';
-import MUIIconButton from '@mui/material/IconButton';
-import MUIInputAdornment from '@mui/material/InputAdornment';
+import MUIIconButton, { iconButtonClasses } from '@mui/material/IconButton';
+import MUIInputAdornment, { inputAdornmentClasses } from '@mui/material/InputAdornment';
 import MUITooltip from '@mui/material/Tooltip';
 import MUIPopper, { PopperProps as MUIPopperProps } from '@mui/material/Popper';
 import MUIClickAwayListener from '@mui/material/ClickAwayListener';
@@ -172,7 +172,7 @@ const baseSlots: GridBaseSlots = {
   baseTextField: BaseTextField,
   baseButton: MUIButton,
   baseIconButton: MUIIconButton,
-  baseInputAdornment: MUIInputAdornment,
+  baseInputAdornment: BaseInputAdornment,
   baseTooltip: MUITooltip,
   basePopper: BasePopper,
   baseInputLabel: MUIInputLabel,
@@ -462,4 +462,17 @@ function BaseSelectOption({ native, ...props }: NonNullable<GridSlotProps['baseS
     return <option {...props} />;
   }
   return <MUIMenuItem {...props} />;
+}
+
+function BaseInputAdornment(props: GridSlotProps['baseInputAdornment']) {
+  return (
+    <MUIInputAdornment
+      sx={{
+        [`&.${inputAdornmentClasses.positionEnd} .${iconButtonClasses.sizeSmall}`]: {
+          marginRight: '-7px',
+        },
+      }}
+      {...props}
+    />
+  );
 }
