@@ -16,7 +16,7 @@ import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopDateRangePickerProps } from './DesktopDateRangePicker.types';
 import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
-import { MultiInputDateRangeField } from '../MultiInputDateRangeField';
+import { SingleInputDateRangeField } from '../SingleInputDateRangeField';
 import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker';
 import { validateDateRange } from '../validation';
 
@@ -64,7 +64,7 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
     views: ['day'] as const,
     openTo: 'day' as const,
     slots: {
-      field: MultiInputDateRangeField,
+      field: SingleInputDateRangeField,
       ...defaultizedProps.slots,
     },
     slotProps: {

@@ -34,14 +34,14 @@ const getChildTypeFromChildName = (childName: string): PickersGridChildComponent
     return 'UI-view';
   }
 
-  if (
-    childName.match(/^MultiInput([A-Za-z]+)RangeField$/) ||
-    childName.match(/^([A-Za-z]+)RangePicker$/)
-  ) {
+  if (childName.match(/^MultiInput([A-Za-z]+)RangeField$/)) {
     return 'multi-input-range-field';
   }
 
-  if (childName.match(/^SingleInput([A-Za-z]+)RangeField$/)) {
+  if (
+    childName.match(/^SingleInput([A-Za-z]+)RangeField$/) ||
+    childName.match(/^([A-Za-z]+)RangePicker$/)
+  ) {
     return 'single-input-range-field';
   }
 

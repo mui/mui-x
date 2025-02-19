@@ -14,7 +14,7 @@ import { rangeValueManager } from '../internals/utils/valueManagers';
 import { MobileDateRangePickerProps } from './MobileDateRangePicker.types';
 import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
-import { MultiInputDateRangeField } from '../MultiInputDateRangeField';
+import { SingleInputDateRangeField } from '../SingleInputDateRangeField';
 import { useMobileRangePicker } from '../internals/hooks/useMobileRangePicker';
 import { validateDateRange } from '../validation';
 
@@ -62,7 +62,7 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
     views: ['day'] as const,
     openTo: 'day' as const,
     slots: {
-      field: MultiInputDateRangeField,
+      field: SingleInputDateRangeField,
       ...defaultizedProps.slots,
     },
     slotProps: {

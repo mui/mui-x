@@ -2,14 +2,14 @@ import * as React from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimeRangePicker } from '@mui/x-date-pickers-pro/DateTimeRangePicker';
-import { SingleInputDateTimeRangeField } from '@mui/x-date-pickers-pro/SingleInputDateTimeRangeField';
+import { MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputDateTimeRangeField';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 
-export default function SingleInputDateTimeRangePicker() {
+export default function MultiInputDateTimeRangePicker() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['SingleInputDateTimeRangeField']}>
-        <DateTimeRangePicker slots={{ field: SingleInputDateTimeRangeField }} />
+      <DemoContainer components={['MultiInputDateTimeRangeField']}>
+        <DateTimeRangePicker slots={{ field: MultiInputDateTimeRangeField }} />
       </DemoContainer>
     </LocalizationProvider>
   );

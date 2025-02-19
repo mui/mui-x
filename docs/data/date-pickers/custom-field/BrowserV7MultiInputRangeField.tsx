@@ -153,6 +153,8 @@ function BrowserMultiInputDateRangeField(
   );
 }
 
+BrowserMultiInputDateRangeField.fieldType = 'multi-input';
+
 function BrowserDateRangePicker(props: DateRangePickerProps) {
   return (
     <DateRangePicker

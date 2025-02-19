@@ -21,6 +21,7 @@ import {
 import { getReleaseInfo } from '../../utils/releaseInfo';
 import { useRangePosition } from '../useRangePosition';
 import { PickerRangePositionContext } from '../../../hooks/usePickerRangePositionContext';
+import { getRangeFieldType } from '../../utils/date-fields-utils';
 
 const releaseInfo = getReleaseInfo();
 
@@ -41,7 +42,7 @@ export const useMobileRangePicker = <
 
   const { slots, slotProps: innerSlotProps, label, inputRef, localeText } = props;
 
-  const fieldType = (slots.field as any).fieldType ?? 'multi-input';
+  const fieldType = getRangeFieldType(slots.field);
   const rangePositionResponse = useRangePosition(props);
   const contextTranslations = usePickerTranslations();
 

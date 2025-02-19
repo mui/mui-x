@@ -67,9 +67,13 @@ Please refer to [this section](/x/react-date-pickers/base-concepts/#testing-cave
 
 ## Form props
 
-The component can be disabled or read-only.
+The component supports the `disabled`, `readOnly` and `name` form props:
 
 {{"demo": "FormPropsDateRangePickers.js"}}
+
+:::success
+The `name` prop is not available when using the Date Range Picker with the Multi Input Date Range Field.
+:::
 
 ## Customization
 
@@ -83,15 +87,15 @@ This prop will be ignored on the mobile picker.
 
 {{"demo": "DateRangePickerCalendarProp.js"}}
 
-### Use a single input field
+### Use a multi input field
 
-You can pass the `SingleInputDateRangeField` component to the Date Range Picker to use it for keyboard editing.
+You can pass the `MultiInputDateRangeField` component to the Date Range Picker to use it for keyboard editing.
 In such case the Picker component can pass the `name` prop to the input.
 
-{{"demo": "SingleInputDateRangePicker.js"}}
+{{"demo": "MultiInputDateRangePicker.js"}}
 
 :::info
-You can find more information in a [dedicated documentation page section](/x/react-date-pickers/custom-field/#use-single-input-fields-on-range-pickers).
+You can find more information in a [dedicated documentation page section](/x/react-date-pickers/custom-field/#usage-inside-a-range-picker).
 :::
 
 ### Add shortcuts

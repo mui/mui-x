@@ -1,3 +1,4 @@
+<SingleInputDateTimeRangeField label="Check-in - Check-out" />
 <MultiInputDateTimeRangeField
   slotProps={{
     textField: ({ position }) => ({
@@ -5,4 +6,3 @@
     }),
   }}
 />
-<SingleInputDateTimeRangeField label="Check-in - Check-out" />

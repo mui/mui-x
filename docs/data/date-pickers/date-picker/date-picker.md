@@ -76,7 +76,7 @@ See the [Fields documentation](/x/react-date-pickers/fields/) for more details.
 
 ## Form props
 
-The component can be disabled or read-only.
+The component supports the `disabled`, `readOnly` and `name` form props:
 
 {{"demo": "FormPropsDatePickers.js"}}
 
