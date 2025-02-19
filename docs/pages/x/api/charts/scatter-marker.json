@@ -1,0 +1,36 @@
+{
+  "props": {
+    "color": { "type": { "name": "string" }, "required": true },
+    "dataIndex": { "type": { "name": "number" }, "required": true },
+    "isFaded": { "type": { "name": "bool" }, "required": true },
+    "isHighlighted": { "type": { "name": "bool" }, "required": true },
+    "seriesId": {
+      "type": { "name": "union", "description": "string<br>&#124;&nbsp;number" },
+      "required": true
+    },
+    "size": { "type": {}, "required": true },
+    "x": { "type": { "name": "number" }, "required": true },
+    "y": { "type": { "name": "number" }, "required": true },
+    "onClick": { "type": {} }
+  },
+  "name": "ScatterMarker",
+  "imports": [
+    "import { ScatterMarker } from '@mui/x-charts/ScatterChart';",
+    "import { ScatterMarker } from '@mui/x-charts';",
+    "import { ScatterMarker } from '@mui/x-charts-pro';"
+  ],
+  "slots": [
+    {
+      "name": "marker",
+      "description": "The component that renders the marker for a scatter point.",
+      "default": "ScatterMarker",
+      "class": null
+    }
+  ],
+  "classes": [],
+  "muiName": "MuiScatterMarker",
+  "filename": "/packages/x-charts/src/ScatterChart/ScatterMarker.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li></ul>",
+  "cssComponent": false
+}
