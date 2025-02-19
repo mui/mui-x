@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { ScatterChart, ScatterMarkerProps } from '@mui/x-charts/ScatterChart';
-import { useScatterSeries } from '@mui/x-charts/hooks';
 
 const data = [
   {
@@ -143,7 +142,7 @@ const data = [
   },
 ];
 
-export default function ScatterCustomSize() {
+export default function ScatterCustomShape() {
   return (
     <ScatterChart
       width={600}
@@ -153,14 +152,14 @@ export default function ScatterCustomSize() {
           id: '1',
           label: 'Series A',
           data: data.map((v) => ({ x: v.x1, y: v.y1, id: v.id })),
-          markerSize: 8,
+          markerSize: 6,
           labelMarkType: 'square',
         },
         {
           id: '2',
           label: 'Series B',
           data: data.map((v) => ({ x: v.x1, y: v.y2, id: v.id })),
-          markerSize: 4,
+          markerSize: 6,
           labelMarkType: 'line',
         },
       ]}
@@ -169,30 +168,36 @@ export default function ScatterCustomSize() {
   );
 }
 
-function CustomMarker({ ownerState, ...other }: ScatterMarkerProps) {
-  const series = useScatterSeries(ownerState.id);
-
-  if (!series) {
-    return null;
-  }
-
+function CustomMarker({
+  series,
+  x,
+  y,
+  isHighlighted,
+  isFaded,
+  dataIndex,
+  color,
+  ownerState: _,
+  ...other
+}: ScatterMarkerProps) {
   const commonProps = {
     x: 0,
     y: 0,
-    width: (ownerState.isHighlighted ? 1.2 : 1) * series.markerSize,
-    height: (ownerState.isHighlighted ? 1.2 : 1) * series.markerSize,
-    transform: `translate(${ownerState.x}, ${ownerState.y})`,
-    fill: ownerState.color,
-    opacity: ownerState.isFaded ? 0.3 : 1,
+    width: (isHighlighted ? 1.2 : 1) * series.markerSize,
+    height: (isHighlighted ? 1.2 : 1) * series.markerSize,
+    transform: `translate(${x}, ${y})`,
+    fill: color,
+    opacity: isFaded ? 0.3 : 1,
     ...other,
   };
 
   if (series.id === '1') {
     return (
-      <path
-        d="M11.524 3.464a.5.5 0 0 1 .952 0l1.657 5.1a.5.5 0 0 0 .475.346h5.364a.5.5 0 0 1 .294.904l-4.34 3.153a.5.5 0 0 0-.181.559l1.657 5.1a.5.5 0 0 1-.77.56l-4.338-3.153a.5.5 0 0 0-.588 0l-4.339 3.153a.5.5 0 0 1-.77-.56l1.658-5.1a.5.5 0 0 0-.182-.56L3.734 9.815a.5.5 0 0 1 .294-.904h5.364a.5.5 0 0 0 .475-.346l1.657-5.1Z"
-        {...commonProps}
-      />
+      <g {...commonProps}>
+        <path
+          d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z"
+          transform={`scale(${(1 / 12) * (isHighlighted ? 1.2 : 1) * series.markerSize})`}
+        />
+      </g>
     );
   }
 
