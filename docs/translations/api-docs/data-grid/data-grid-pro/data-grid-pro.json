@@ -879,6 +879,10 @@
       "nodeName": "the column header separator",
       "conditions": "the side is &quot;right&quot;"
     },
+    "columnsManagementEmptyText": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the columns management empty text element"
+    },
     "columnsManagementFooter": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the columns management footer element"
@@ -890,6 +894,10 @@
     "columnsManagementRow": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the columns management row element"
+    },
+    "columnsManagementScrollArea": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the columns management scroll area element"
     },
     "columnsManagementSearchInput": {
       "description": "Styles applied to {{nodeName}}.",
