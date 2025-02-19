@@ -385,6 +385,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
               {...baseDateValidationProps}
               {...commonViewProps}
               onMonthSwitchingAnimationEnd={onMonthSwitchingAnimationEnd}
+              hasFocus={hasFocus}
               onFocusedDayChange={(focusedDate) =>
                 setVisibleDate({ target: focusedDate, reason: 'cell-interaction' })
               }
@@ -394,7 +395,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
               shouldDisableDate={shouldDisableDate}
               shouldDisableMonth={shouldDisableMonth}
               shouldDisableYear={shouldDisableYear}
-              hasFocus={hasFocus}
               onFocusedViewChange={(isViewFocused) => setFocusedView('day', isViewFocused)}
               showDaysOutsideCurrentMonth={showDaysOutsideCurrentMonth}
               fixedWeekNumber={fixedWeekNumber}

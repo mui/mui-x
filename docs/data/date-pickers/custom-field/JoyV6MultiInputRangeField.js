@@ -29,12 +29,10 @@ function JoyField(props) {
   const {
     // Should be ignored
     enableAccessibleFieldDOMStructure,
+    triggerRef,
     disabled,
     id,
     label,
-    InputProps: { ref: anchorRef, startAdornment, endAdornment } = {},
-    endDecorator,
-    startDecorator,
     slotProps,
     inputRef,
     ...other
@@ -45,24 +43,12 @@ function JoyField(props) {
       <FormLabel>{label}</FormLabel>
       <Input
         disabled={disabled}
-        startDecorator={
-          <React.Fragment>
-            {startAdornment}
-            {startDecorator}
-          </React.Fragment>
-        }
-        endDecorator={
-          <React.Fragment>
-            {endAdornment}
-            {endDecorator}
-          </React.Fragment>
-        }
         slotProps={{
           ...slotProps,
           input: { ...slotProps?.input, ref: inputRef },
         }}
         {...other}
-        ref={anchorRef}
+        ref={triggerRef}
       />
     </FormControl>
   );
@@ -79,36 +65,42 @@ function JoyMultiInputDateRangeField(props) {
   const startTextFieldProps = useSlotProps({
     elementType: 'input',
     externalSlotProps: slotProps?.textField,
+    additionalProps: { label: 'Start' },
     ownerState: { position: 'start' },
   });
 
   const endTextFieldProps = useSlotProps({
     elementType: 'input',
     externalSlotProps: slotProps?.textField,
+    additionalProps: { label: 'End' },
     ownerState: { position: 'end' },
   });
 
   const fieldResponse = useMultiInputRangeField({
     manager,
     internalProps: { ...internalProps, enableAccessibleFieldDOMStructure: false },
-    startForwardedProps: startTextFieldProps,
-    endForwardedProps: endTextFieldProps,
+    rootProps: {
+      ref: pickerContext.rootRef,
+      spacing: 2,
+      overflow: 'auto',
+      direction: 'row',
+      alignItems: 'center',
+      ...otherForwardedProps,
+    },
+    startTextFieldProps,
+    endTextFieldProps,
   });
 
   return (
-    <Stack
-      spacing={2}
-      overflow="auto"
-      direction="row"
-      alignItems="center"
-      {...otherForwardedProps}
-      ref={pickerContext.rootRef}
-    >
-      <JoyField {...fieldResponse.startDate} />
+    <Stack {...fieldResponse.root}>
+      <JoyField
+        {...fieldResponse.startTextField}
+        triggerRef={pickerContext.triggerRef}
+      />
       <FormControl>
         <Typography sx={{ marginTop: '25px' }}>{' – '}</Typography>
       </FormControl>
-      <JoyField {...fieldResponse.endDate} />
+      <JoyField {...fieldResponse.endTextField} />
     </Stack>
   );
 }

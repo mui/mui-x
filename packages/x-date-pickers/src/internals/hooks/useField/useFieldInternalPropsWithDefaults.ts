@@ -1,5 +1,6 @@
 import * as React from 'react';
-import type { FieldChangeHandler, UseFieldInternalProps } from './useField.types';
+import useForkRef from '@mui/utils/useForkRef';
+import type { FieldChangeHandler } from './useField.types';
 import {
   PickerAnyManager,
   PickerManagerError,
@@ -9,26 +10,25 @@ import {
 } from '../../models';
 import { useLocalizationContext } from '../useUtils';
 import { useNullablePickerContext } from '../useNullablePickerContext';
-
-export const PickerFieldPrivateContext = React.createContext<PickerFieldPrivateContextValue | null>(
-  null,
-);
+import { useNullableFieldPrivateContext } from '../useNullableFieldPrivateContext';
 
 /**
  * Applies the default values to the field internal props.
  * This is a temporary hook that will be removed during a follow up when `useField` will receive the internal props without the defaults.
  * It is only here to allow the migration to be done in smaller steps.
  */
-export function useFieldInternalPropsWithDefaults<TManager extends PickerAnyManager>({
-  manager,
-  internalProps,
-}: {
-  manager: TManager;
-  internalProps: PickerManagerFieldInternalProps<TManager>;
-}): PickerManagerFieldInternalPropsWithDefaults<TManager> {
+export function useFieldInternalPropsWithDefaults<TManager extends PickerAnyManager>(
+  parameters: UseFieldInternalPropsWithDefaultsParameters<TManager>,
+): PickerManagerFieldInternalPropsWithDefaults<TManager> {
+  const { manager, internalProps, skipContextFieldRefAssignment } = parameters;
   const localizationContext = useLocalizationContext();
   const pickerContext = useNullablePickerContext();
-  const fieldPrivateContext = React.useContext(PickerFieldPrivateContext);
+  const fieldPrivateContext = useNullableFieldPrivateContext();
+
+  const handleFieldRef = useForkRef(
+    internalProps.unstableFieldRef,
+    skipContextFieldRefAssignment ? null : fieldPrivateContext?.fieldRef,
+  );
 
   const setValue = pickerContext?.setValue;
   const handleChangeFromPicker: FieldChangeHandler<
@@ -54,11 +54,15 @@ export function useFieldInternalPropsWithDefaults<TManager extends PickerAnyMana
         onChange: handleChangeFromPicker,
         timezone: pickerContext.timezone,
         disabled: pickerContext.disabled,
+        readOnly: pickerContext.readOnly,
+        autoFocus: pickerContext.autoFocus && !pickerContext.open,
+        focused: pickerContext.open ? true : undefined,
         format: pickerContext.fieldFormat,
         formatDensity: fieldPrivateContext.formatDensity,
         enableAccessibleFieldDOMStructure: fieldPrivateContext.enableAccessibleFieldDOMStructure,
         selectedSections: fieldPrivateContext.selectedSections,
         onSelectedSectionsChange: fieldPrivateContext.onSelectedSectionsChange,
+        unstableFieldRef: handleFieldRef,
         ...internalProps,
       };
     }
@@ -74,14 +78,16 @@ export function useFieldInternalPropsWithDefaults<TManager extends PickerAnyMana
     fieldPrivateContext,
     internalProps,
     handleChangeFromPicker,
+    handleFieldRef,
   ]);
 }
 
-export interface PickerFieldPrivateContextValue
-  extends Pick<
-    UseFieldInternalProps<any, any, any>,
-    | 'formatDensity'
-    | 'enableAccessibleFieldDOMStructure'
-    | 'selectedSections'
-    | 'onSelectedSectionsChange'
-  > {}
+interface UseFieldInternalPropsWithDefaultsParameters<TManager extends PickerAnyManager> {
+  manager: TManager;
+  internalProps: PickerManagerFieldInternalProps<TManager>;
+  /**
+   * Hack to make sure that on multi input range field, the `useNullableFieldPrivateContext().fieldRef` is only bound to the field matching the range position.
+   * @default false
+   */
+  skipContextFieldRefAssignment?: boolean;
+}

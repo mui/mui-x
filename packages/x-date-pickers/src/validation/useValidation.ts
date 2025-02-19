@@ -41,7 +41,7 @@ interface UseValidationOptions<TValue extends PickerValidValue, TError, TValidat
   props: TValidationProps;
 }
 
-interface UseValidationReturnValue<TValue extends PickerValidValue, TError> {
+export interface UseValidationReturnValue<TValue extends PickerValidValue, TError> {
   /**
    * The validation error associated to the value passed to the `useValidation` hook.
    */
