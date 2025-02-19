@@ -39,8 +39,7 @@ function addLabelDimension(
   {
     tickLabelStyle: style,
     tickLabelInterval,
-    // FIXME: Define the default value in the correct place
-    tickLabelMinGap = 8,
+    tickLabelMinGap,
     reverse,
     isMounted,
   }: Pick<ChartsXAxisProps, 'tickLabelInterval' | 'tickLabelStyle'> &
@@ -100,6 +99,7 @@ const defaultProps = {
   disableLine: false,
   disableTicks: false,
   tickSize: 6,
+  tickLabelMinGap: 4,
 } as const;
 
 /**
@@ -139,6 +139,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickLabelInterval,
     tickPlacement,
     tickLabelPlacement,
+    tickLabelMinGap,
     sx,
     offset,
   } = defaultizedProps;
@@ -185,6 +186,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   const xTicksWithDimension = addLabelDimension(xTicks, {
     tickLabelStyle: axisTickLabelProps.style,
     tickLabelInterval,
+    tickLabelMinGap,
     reverse,
     isMounted,
   });
