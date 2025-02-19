@@ -14,7 +14,7 @@ export interface UseChartSeriesParameters<T extends ChartSeriesType = ChartSerie
    * Each type of series has its own specificity.
    * Please refer to the appropriate docs page to learn more about it.
    */
-  series?: readonly AllSeriesType<T>[];
+  series?: Readonly<AllSeriesType<T>[]>;
   /**
    * Color palette used to colorize multiple series.
    * @default rainbowSurgePalette
@@ -30,7 +30,7 @@ export type UseChartSeriesDefaultizedParameters<T extends ChartSeriesType = Char
      * Each type of series has its own specificity.
      * Please refer to the appropriate docs page to learn more about it.
      */
-    series: readonly AllSeriesType<T>[];
+    series: Readonly<AllSeriesType<T>[]>;
     /**
      * Color palette used to colorize multiple series.
      * @default rainbowSurgePalette

@@ -8,7 +8,10 @@ export interface GridShadowScrollAreaProps extends React.HTMLAttributes<HTMLDivE
 const reveal = keyframes({ from: { opacity: 0 }, to: { opacity: 1 } });
 const detectScroll = keyframes({ 'from, to': { '--scrollable': '" "' } });
 
-const ShadowScrollArea = styled('div')({
+const ShadowScrollArea = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'ShadowScrollArea',
+})({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
@@ -49,6 +52,9 @@ const ShadowScrollArea = styled('div')({
   },
 });
 
+/**
+ * Adds scroll shadows above and below content in a scrollable container.
+ */
 export function GridShadowScrollArea(props: GridShadowScrollAreaProps) {
   const { children, ...rest } = props;
   return <ShadowScrollArea {...rest}>{children}</ShadowScrollArea>;

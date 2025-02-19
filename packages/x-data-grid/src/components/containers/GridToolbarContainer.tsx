@@ -34,7 +34,7 @@ const GridToolbarContainerRoot = styled('div', {
   alignItems: 'center',
   flexWrap: 'wrap',
   gap: vars.spacing(1),
-  padding: vars.spacing(0.5, 0.5, 0),
+  padding: vars.spacing(0.5),
   borderBottom: `1px solid ${vars.colors.border.base}`,
 });
 
