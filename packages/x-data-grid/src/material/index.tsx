@@ -372,7 +372,13 @@ function transformInputProps(props: GridSlotProps['baseInput'] | undefined) {
     );
   }
 
-  result.inputProps = slotProps?.htmlInput;
+  if (slotProps?.htmlInput) {
+    if (result.inputProps) {
+      result.inputProps = { ...result.inputProps, ...slotProps?.htmlInput };
+    } else {
+      result.inputProps = slotProps?.htmlInput;
+    }
+  }
 
   return result;
 }
