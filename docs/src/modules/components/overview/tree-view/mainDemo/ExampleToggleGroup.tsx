@@ -36,15 +36,15 @@ export default function ExampleToggleGroup({ selected, onToggleChange }: Example
         size="small"
         onChange={(_event, value) => onToggleChange(value)}
       >
-        <ToggleButton value="github" title="GitHub" sx={{ flexGrow: 1 }}>
-          <img src="/static/x/overview/github_dark.svg" height={18} alt="GitHub logo" />
-        </ToggleButton>
-        <ToggleButton value="vscode" title="VS Code" sx={{ flexGrow: 1 }}>
-          <img src="/static/x/overview/vscode.svg" height={18} alt="vscode logo" />
-        </ToggleButton>
         <ToggleButton value="figma" title="Figma" sx={{ flexGrow: 1 }}>
           <img src="/static/x/overview/figma.svg" height={24} alt="figma logo" />
         </ToggleButton>
+        <ToggleButton value="github" title="GitHub" sx={{ flexGrow: 1 }}>
+          <img src="/static/x/overview/github_dark.svg" height={18} alt="GitHub logo" />
+        </ToggleButton>
+        {/* <ToggleButton value="vscode" title="VS Code" sx={{ flexGrow: 1 }}>
+        <img src="/static/x/overview/vscode.svg" height={18} alt="vscode logo" />
+      </ToggleButton> */}
       </StyledToggleButtonGroup>
     </Paper>
   );
