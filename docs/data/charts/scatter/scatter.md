@@ -1,7 +1,7 @@
 ---
 title: React Scatter chart
 productId: x-charts
-components: ScatterChart, ScatterChartPro, ScatterPlot, ChartsVoronoiHandler, ChartsGrid
+components: ScatterChart, ScatterChartPro, ScatterPlot, ChartsGrid
 ---
 
 # Charts - Scatter
@@ -11,7 +11,8 @@ components: ScatterChart, ScatterChartPro, ScatterPlot, ChartsVoronoiHandler, Ch
 ## Basics
 
 Scatter chart series should contain a `data` property containing an array of objects.
-Those objects require `x`, `y`, and `id` properties.
+Those objects require the `x` and `y` properties.
+With an optional `id` property if more optimization is needed.
 
 {{"demo": "BasicScatter.js"}}
 
@@ -22,8 +23,8 @@ It accepts an array of objects such as `dataset={[{a: 1, b: 32, c: 873}, {a: 2, 
 
 You can reuse this data when defining the series.
 The scatter series work a bit differently than in other charts.
-You need to specify the `datasetKeys` properties which is an object that requires `x`, `y`, and `id` keys.
-With an optional `z` key if needed.
+You need to specify the `datasetKeys` properties which is an object that requires the `x` and `y` keys.
+With an optional `id` and `z` keys if needed.
 
 {{"demo": "ScatterDataset.js"}}
 
@@ -38,12 +39,6 @@ If the distance with the pointer is larger than this radius, no item will be sel
 Or set the `disableVoronoi` prop to `true` to trigger interactions only when hovering exactly over an element instead of Voronoi cells.
 
 {{"demo": "VoronoiInteraction.js"}}
-
-To use this feature with composition, add the `ChartsVoronoiHandler`.
-
-```jsx
-<ChartsVoronoiHandler voronoiMaxRadius={50} />
-```
 
 ## Click event
 
@@ -114,4 +109,20 @@ See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information
 
 ### Shape 🚧
 
-### Size 🚧
+### Size
+
+You can customize the size of points in a scatter chart using the `markerSize` prop of every series.
+For circles, the `markerSize` is the radius of the point in pixels.
+
+{{"demo": "ScatterCustomSize.js"}}
+
+## Plot Customization
+
+You can customize the plotting of the data in a scatter chart by providing custom components as `children` of the `ScatterChart` component.
+
+A scatter chart's series can be accessed through the `useScatterSeries` hook.
+This hook returns the order of the series and information about the series themselves, including their data points, color, etc.
+
+See [Custom components](/x/react-charts/components/) to learn how to further customize your charts.
+
+{{"demo": "CustomScatter.js"}}

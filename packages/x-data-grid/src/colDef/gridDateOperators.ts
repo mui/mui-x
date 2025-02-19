@@ -1,4 +1,7 @@
-import { GridFilterInputDate } from '../components/panel/filterPanel/GridFilterInputDate';
+import {
+  GridFilterInputDate,
+  GridFilterInputDateProps,
+} from '../components/panel/filterPanel/GridFilterInputDate';
 import { GridFilterItem } from '../models/gridFilterItem';
 import { GridFilterOperator, GetApplyFilterFn } from '../models/gridFilterOperator';
 
@@ -47,7 +50,9 @@ function buildApplyFilterFn(
   };
 }
 
-export const getGridDateOperators = (showTime?: boolean): GridFilterOperator<any, Date, any>[] => [
+export const getGridDateOperators = (
+  showTime?: boolean,
+): GridFilterOperator<any, Date, any, GridFilterInputDateProps>[] => [
   {
     value: 'is',
     getApplyFilterFn: (filterItem) => {

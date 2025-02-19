@@ -15,10 +15,6 @@ import { ChartsClipPath } from '../ChartsClipPath';
 import { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
 import { ChartsGrid, ChartsGridProps } from '../ChartsGrid';
 import {
-  ChartsOnAxisClickHandler,
-  ChartsOnAxisClickHandlerProps,
-} from '../ChartsOnAxisClickHandler';
-import {
   ChartsOverlay,
   ChartsOverlayProps,
   ChartsOverlaySlotProps,
@@ -29,6 +25,7 @@ import { ChartDataProvider } from '../ChartDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
 import { ChartsWrapper } from '../internals/components/ChartsWrapper';
+import { BarChartPluginsSignatures } from './BarChart.plugins';
 
 export interface BarChartSlots
   extends ChartsAxisSlots,
@@ -44,16 +41,18 @@ export interface BarChartSlotProps
     ChartsTooltipSlotProps {}
 
 export interface BarChartProps
-  extends Omit<ChartContainerProps<'bar'>, 'series' | 'plugins' | 'zAxis'>,
+  extends Omit<
+      ChartContainerProps<'bar', BarChartPluginsSignatures>,
+      'series' | 'plugins' | 'zAxis'
+    >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<BarPlotProps, 'slots' | 'slotProps'>,
-    Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
-    ChartsOnAxisClickHandlerProps {
+    Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
   /**
    * The series to display in the bar chart.
    * An array of [[BarSeriesType]] objects.
    */
-  series: MakeOptional<BarSeriesType, 'type'>[];
+  series: Readonly<MakeOptional<BarSeriesType, 'type'>[]>;
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -107,7 +106,6 @@ const BarChart = React.forwardRef(function BarChart(
     chartsWrapperProps,
     chartContainerProps,
     barPlotProps,
-    axisClickHandlerProps,
     gridProps,
     clipPathProps,
     clipPathGroupProps,
@@ -125,11 +123,10 @@ const BarChart = React.forwardRef(function BarChart(
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
 
   return (
-    <ChartDataProvider {...chartDataProviderProps}>
+    <ChartDataProvider<'bar', BarChartPluginsSignatures> {...chartDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps}>
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
-          {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
           <ChartsGrid {...gridProps} />
           <g {...clipPathGroupProps}>
             <BarPlot {...barPlotProps} />
@@ -186,7 +183,7 @@ BarChart.propTypes = {
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
-   * @default blueberryTwilightPalette
+   * @default rainbowSurgePalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   /**
@@ -216,11 +213,12 @@ BarChart.propTypes = {
    */
   hideLegend: PropTypes.bool,
   /**
-   * The item currently highlighted. Turns highlighting into a controlled prop.
+   * The highlighted item.
+   * Used when the highlight is controlled.
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.

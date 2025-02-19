@@ -7,7 +7,7 @@ export const calculateMargins = <
   T extends ChartsLegendSlotExtension &
     Pick<LayoutConfig, 'margin'> & {
       hideLegend?: boolean;
-      series?: Partial<ChartsSeriesConfig[CartesianChartSeriesType]['seriesProp']>[];
+      series?: Readonly<Partial<ChartsSeriesConfig[CartesianChartSeriesType]['seriesProp']>[]>;
     },
 >(
   props: T,
@@ -20,7 +20,7 @@ export const calculateMargins = <
   }
 
   if (props.slotProps?.legend?.direction === 'vertical') {
-    if (props.slotProps?.legend?.position?.horizontal === 'left') {
+    if (props.slotProps?.legend?.position?.horizontal === 'start') {
       return {
         ...DEFAULT_MARGINS,
         left: DEFAULT_LEGEND_FACING_MARGIN,

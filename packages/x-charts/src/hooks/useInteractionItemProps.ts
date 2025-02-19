@@ -1,13 +1,13 @@
 'use client';
 import * as React from 'react';
 import { SeriesItemIdentifier } from '../models';
-import { useHighlighted } from '../context';
-import { useStore } from '../internals/store/useStore';
+import { useChartContext } from '../context/ChartProvider';
+import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
+import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 
 export const useInteractionItemProps = (skip?: boolean) => {
-  const store = useStore();
-
-  const { setHighlighted, clearHighlighted } = useHighlighted();
+  const { instance } =
+    useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
 
   if (skip) {
     return () => ({});
@@ -19,14 +19,8 @@ export const useInteractionItemProps = (skip?: boolean) => {
       }
     };
     const onPointerEnter = () => {
-      store.update((prev) => ({
-        ...prev,
-        interaction: {
-          ...prev.interaction,
-          item: data,
-        },
-      }));
-      setHighlighted({
+      instance.setItemInteraction(data);
+      instance.setHighlight({
         seriesId: data.seriesId,
         dataIndex: data.dataIndex,
       });
@@ -36,26 +30,8 @@ export const useInteractionItemProps = (skip?: boolean) => {
         event.currentTarget.releasePointerCapture(event.pointerId);
       }
 
-      store.update((prev) => {
-        const prevItem = prev.interaction.item;
-        if (
-          prevItem === null ||
-          Object.keys(data).some(
-            (key) => data[key as keyof typeof data] !== prevItem[key as keyof typeof prevItem],
-          )
-        ) {
-          // The item is already something else, no need to clean it.
-          return prev;
-        }
-        return {
-          ...prev,
-          interaction: {
-            ...prev.interaction,
-            item: null,
-          },
-        };
-      });
-      clearHighlighted();
+      instance.removeItemInteraction(data);
+      instance.clearHighlight();
     };
     return {
       onPointerEnter,

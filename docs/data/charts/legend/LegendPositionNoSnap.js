@@ -42,8 +42,8 @@ export default function LegendPositionNoSnap() {
         {
           propName: 'horizontal',
           knob: 'select',
-          defaultValue: 'middle',
-          options: ['left', 'middle', 'right'],
+          defaultValue: 'center',
+          options: ['start', 'center', 'end'],
         },
         {
           propName: 'itemsNumber',
@@ -54,7 +54,7 @@ export default function LegendPositionNoSnap() {
         },
       ]}
       renderDemo={(
-        /** @type {{ itemsNumber: number | undefined; direction: "horizontal" | "vertical";  vertical: "top" | "middle" | "bottom"; horizontal: "left" | "middle" | "right"; }} */
+        /** @type {{ itemsNumber: number | undefined; direction: "horizontal" | "vertical";  vertical: "top" | "middle" | "bottom"; horizontal: "start" | "center" | "end"; }} */
         props,
       ) => (
         <PieChart
@@ -74,7 +74,7 @@ export default function LegendPositionNoSnap() {
         />
       )}
       getCode={(
-        /** @type {{props:{ itemsNumber: number | undefined; direction: "horizontal" | "vertical";  vertical: "top" | "middle" | "bottom"; horizontal: "left" | "middle" | "right";}}} */
+        /** @type {{props:{ itemsNumber: number | undefined; direction: "horizontal" | "vertical";  vertical: "top" | "middle" | "bottom"; horizontal: "start" | "center" | "end";}}} */
         { props },
       ) => {
         return `

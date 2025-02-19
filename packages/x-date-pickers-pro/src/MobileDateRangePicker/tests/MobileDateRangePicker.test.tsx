@@ -291,6 +291,22 @@ describe('<MobileDateRangePicker />', () => {
     });
   });
 
+  it('should ignore "currentMonthCalendarPosition" prop value and have expected selection behavior', () => {
+    render(
+      <MobileDateRangePicker
+        currentMonthCalendarPosition={2}
+        open
+        referenceDate={adapterToUse.date('2022-04-17')}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('gridcell', { name: '3' }));
+    fireEvent.click(screen.getByRole('gridcell', { name: '5' }));
+
+    expect(screen.getByText('Apr 3')).not.to.equal(null);
+    expect(screen.getByText('Apr 5')).not.to.equal(null);
+  });
+
   // TODO: Write test
   // it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
   // })

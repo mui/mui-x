@@ -253,7 +253,7 @@ describe('<DataGrid /> - Row selection', () => {
 
       await user.click(checkboxInput!);
 
-      await waitFor(() => expect(getActiveCell()).to.equal('0-0'));
+      expect(getActiveCell()).to.equal('0-0');
     });
 
     it('should select all visible rows regardless of pagination', async () => {

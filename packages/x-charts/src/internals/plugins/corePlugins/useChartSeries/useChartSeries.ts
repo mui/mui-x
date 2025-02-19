@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { ChartPlugin } from '../../models';
 import { UseChartSeriesSignature } from './useChartSeries.types';
-import { blueberryTwilightPalette } from '../../../../colorPalettes';
+import { rainbowSurgePalette } from '../../../../colorPalettes';
 import { preprocessSeries } from './processSeries';
 
 export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({
@@ -49,9 +49,9 @@ useChartSeries.params = {
 const EMPTY_ARRAY: any[] = [];
 
 useChartSeries.getDefaultizedParams = ({ params }) => ({
-  series: EMPTY_ARRAY,
   ...params,
-  colors: params.colors ?? blueberryTwilightPalette,
+  series: params.series?.length ? params.series : EMPTY_ARRAY,
+  colors: params.colors ?? rainbowSurgePalette,
   theme: params.theme ?? 'light',
 });
 

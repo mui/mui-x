@@ -6,6 +6,8 @@ const zhHKGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: '沒有行',
   noResultsOverlayLabel: '未找到結果。',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: '密度',

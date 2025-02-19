@@ -6,9 +6,12 @@ import {
   gridTabIndexColumnHeaderFilterSelector,
   getDataGridUtilityClass,
   GridFilterItem,
-  gridDimensionsSelector,
 } from '@mui/x-data-grid';
 import {
+  gridColumnsTotalWidthSelector,
+  gridHasFillerSelector,
+  gridHeaderFilterHeightSelector,
+  gridVerticalScrollbarWidthSelector,
   useGridColumnHeaders as useGridColumnHeadersCommunity,
   UseGridColumnHeadersProps,
   GetHeadersParams,
@@ -69,9 +72,11 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
   const disableHeaderFiltering = !rootProps.headerFilters;
-  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
-  const gridHasFiller = dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width;
+  const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
+  const gridHasFiller = useGridSelector(apiRef, gridHasFillerSelector);
+  const headerFilterHeight = useGridSelector(apiRef, gridHeaderFilterHeightSelector);
+  const scrollbarWidth = useGridSelector(apiRef, gridVerticalScrollbarWidthSelector);
 
   const columnHeaderFilterFocus = useGridSelector(apiRef, gridFocusColumnHeaderFilterSelector);
 
@@ -120,13 +125,12 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       const item = getFilterItem(colDef);
 
       const pinnedPosition = params?.position;
-      const scrollbarWidth = dimensions.hasScrollY ? dimensions.scrollbarSize : 0;
       const pinnedOffset = getPinnedCellOffset(
         pinnedPosition,
         colDef.computedWidth,
         columnIndex,
         columnPositions,
-        dimensions.columnsTotalWidth,
+        columnsTotalWidth,
         scrollbarWidth,
       );
 
@@ -146,7 +150,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         <rootProps.slots.headerFilterCell
           colIndex={columnIndex}
           key={`${colDef.field}-filter`}
-          height={dimensions.headerFilterHeight}
+          height={headerFilterHeight}
           width={colDef.computedWidth}
           colDef={colDef}
           hasFocus={hasFocus}

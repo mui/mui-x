@@ -62,12 +62,10 @@ const defaultFormats: AdapterFormats = {
   seconds: 'ss',
 
   fullDate: 'iYYYY, iMMMM Do',
-  keyboardDateTime: 'iYYYY/iMM/iDD LT',
   shortDate: 'iD iMMM',
   normalDate: 'dddd, iD iMMM',
   normalDateWithWeekday: 'DD iMMMM',
 
-  fullTime: 'LT',
   fullTime12h: 'hh:mm A',
   fullTime24h: 'HH:mm',
 

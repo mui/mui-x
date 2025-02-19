@@ -1,5 +1,5 @@
 import type { ChartsLabelMarkProps } from '../../ChartsLabel';
-import type { HighlightScope } from '../../context';
+import { HighlightScope } from '../../internals/plugins/featurePlugins/useChartHighlight/highlightConfig.types';
 import type { StackOffsetType, StackOrderType } from '../stacking';
 
 export type SeriesId = number | string;

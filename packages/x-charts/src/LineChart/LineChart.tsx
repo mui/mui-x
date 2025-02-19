@@ -22,10 +22,6 @@ import {
 } from './LineHighlightPlot';
 import { ChartsGrid, ChartsGridProps } from '../ChartsGrid';
 import {
-  ChartsOnAxisClickHandler,
-  ChartsOnAxisClickHandlerProps,
-} from '../ChartsOnAxisClickHandler';
-import {
   ChartsOverlay,
   ChartsOverlayProps,
   ChartsOverlaySlotProps,
@@ -36,6 +32,7 @@ import { useChartContainerProps } from '../ChartContainer/useChartContainerProps
 import { ChartDataProvider } from '../ChartDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../internals/components/ChartsWrapper';
+import { LineChartPluginsSignatures } from './LineChart.plugins';
 
 export interface LineChartSlots
   extends ChartsAxisSlots,
@@ -57,15 +54,17 @@ export interface LineChartSlotProps
     ChartsTooltipSlotProps {}
 
 export interface LineChartProps
-  extends Omit<ChartContainerProps, 'series' | 'plugins' | 'zAxis'>,
+  extends Omit<
+      ChartContainerProps<'line', LineChartPluginsSignatures>,
+      'series' | 'plugins' | 'zAxis'
+    >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
-    Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
-    ChartsOnAxisClickHandlerProps {
+    Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
   /**
    * The series to display in the line chart.
    * An array of [[LineSeriesType]] objects.
    */
-  series: MakeOptional<LineSeriesType, 'type'>[];
+  series: Readonly<MakeOptional<LineSeriesType, 'type'>[]>;
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -131,7 +130,6 @@ const LineChart = React.forwardRef(function LineChart(
   const {
     chartsWrapperProps,
     chartContainerProps,
-    axisClickHandlerProps,
     gridProps,
     clipPathProps,
     clipPathGroupProps,
@@ -153,11 +151,10 @@ const LineChart = React.forwardRef(function LineChart(
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
 
   return (
-    <ChartDataProvider {...chartDataProviderProps}>
+    <ChartDataProvider<'line', LineChartPluginsSignatures> {...chartDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps}>
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
-          {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
           <ChartsGrid {...gridProps} />
           <g {...clipPathGroupProps}>
             <AreaPlot {...areaPlotProps} />
@@ -207,7 +204,7 @@ LineChart.propTypes = {
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
-   * @default blueberryTwilightPalette
+   * @default rainbowSurgePalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   /**
@@ -241,11 +238,12 @@ LineChart.propTypes = {
    */
   hideLegend: PropTypes.bool,
   /**
-   * The item currently highlighted. Turns highlighting into a controlled prop.
+   * The highlighted item.
+   * Used when the highlight is controlled.
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.

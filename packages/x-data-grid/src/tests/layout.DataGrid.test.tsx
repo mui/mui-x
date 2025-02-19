@@ -1157,7 +1157,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
       { field: 'username', width: 300 },
     ];
 
-    it('grid container', async () => {
+    it('grid container', () => {
       render(
         <div style={{ maxWidth: 400 }}>
           <div style={{ display: 'grid' }}>
@@ -1166,12 +1166,10 @@ describe('<DataGrid /> - Layout & warnings', () => {
         </div>,
       );
 
-      await waitFor(() => {
-        expect(grid('root')).toHaveComputedStyle({ width: '400px' });
-      });
+      expect(grid('root')).toHaveComputedStyle({ width: '400px' });
     });
 
-    it('flex container', async () => {
+    it('flex container', () => {
       render(
         <div style={{ maxWidth: 400 }}>
           <div style={{ display: 'flex' }}>
@@ -1180,9 +1178,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
         </div>,
       );
 
-      await waitFor(() => {
-        expect(grid('root')).toHaveComputedStyle({ width: '400px' });
-      });
+      expect(grid('root')).toHaveComputedStyle({ width: '400px' });
     });
   });
 

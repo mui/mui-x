@@ -12,7 +12,6 @@ import {
   MarkPlot,
   MarkPlotProps,
 } from '@mui/x-charts/LineChart';
-import { ChartsOnAxisClickHandler } from '@mui/x-charts/ChartsOnAxisClickHandler';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
@@ -26,6 +25,7 @@ import { ChartContainerProProps } from '../ChartContainerPro';
 import { useIsZoomInteracting } from '../hooks/zoom';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
+import { LINE_CHART_PRO_PLUGINS, LineChartProPluginsSignatures } from './LineChartPro.plugins';
 
 function AreaPlotZoom(props: AreaPlotProps) {
   const isInteracting = useIsZoomInteracting();
@@ -145,11 +145,10 @@ const LineChartPro = React.forwardRef(function LineChartPro(
   ref: React.Ref<SVGSVGElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiLineChartPro' });
-  const { initialZoom, onZoomChange, apiRef, ...other } = props;
+  const { initialZoom, zoomData, onZoomChange, apiRef, ...other } = props;
   const {
     chartsWrapperProps,
     chartContainerProps,
-    axisClickHandlerProps,
     gridProps,
     clipPathProps,
     clipPathGroupProps,
@@ -163,8 +162,18 @@ const LineChartPro = React.forwardRef(function LineChartPro(
     legendProps,
     children,
   } = useLineChartProps(other);
-  const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps(
-    { ...chartContainerProps, initialZoom, onZoomChange, apiRef },
+  const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
+    'line',
+    LineChartProPluginsSignatures
+  >(
+    {
+      ...chartContainerProps,
+      initialZoom,
+      zoomData,
+      onZoomChange,
+      apiRef,
+      plugins: LINE_CHART_PRO_PLUGINS,
+    },
     ref,
   );
 
@@ -175,7 +184,6 @@ const LineChartPro = React.forwardRef(function LineChartPro(
       <ChartsWrapper {...chartsWrapperProps}>
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
-          {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
           <ChartsGrid {...gridProps} />
           <g {...clipPathGroupProps}>
             <AreaPlotZoom {...areaPlotProps} />
@@ -227,7 +235,7 @@ LineChartPro.propTypes = {
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
-   * @default blueberryTwilightPalette
+   * @default rainbowSurgePalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   /**
@@ -261,11 +269,12 @@ LineChartPro.propTypes = {
    */
   hideLegend: PropTypes.bool,
   /**
-   * The item currently highlighted. Turns highlighting into a controlled prop.
+   * The highlighted item.
+   * Used when the highlight is controlled.
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.
@@ -274,6 +283,7 @@ LineChartPro.propTypes = {
   id: PropTypes.string,
   /**
    * The list of zoom data related to each axis.
+   * Used to initialize the zoom in a specific configuration without controlling it.
    */
   initialZoom: PropTypes.arrayOf(
     PropTypes.shape({
@@ -587,6 +597,16 @@ LineChartPro.propTypes = {
       id: PropTypes.string,
       max: PropTypes.number,
       min: PropTypes.number,
+    }),
+  ),
+  /**
+   * The list of zoom data related to each axis.
+   */
+  zoomData: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      end: PropTypes.number.isRequired,
+      start: PropTypes.number.isRequired,
     }),
   ),
 } as any;

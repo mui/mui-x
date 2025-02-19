@@ -12,7 +12,7 @@ import {
   GridColDef,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
 import {
   $,
   grid,
@@ -733,7 +733,7 @@ describe('<DataGridPro /> - Row pinning', () => {
   testSkipIf(isJSDOM)('should support cell editing', async () => {
     const processRowUpdate = spy((row) => ({ ...row, currencyPair: 'USD-GBP' }));
     const columns: GridColDef[] = [{ field: 'id' }, { field: 'name', editable: true }];
-    render(
+    const { user } = render(
       <div style={{ width: 400, height: 400 }}>
         <DataGridPro
           rows={[
@@ -752,15 +752,16 @@ describe('<DataGridPro /> - Row pinning', () => {
     );
 
     const cell = getCell(0, 1);
-    fireEvent.doubleClick(cell);
+    await user.dblClick(cell);
 
     const input = cell.querySelector('input')!;
-    fireEvent.change(input, { target: { value: 'Marcus' } });
-    fireEvent.keyDown(input, { key: 'Enter' });
+    // remove the previous value before typing in the new one
+    // was "fireEvent.change(input, { target: { value: 'Marcus' } })"
+    await user.clear(input);
+    await user.type(input, 'Marcus');
+    await user.keyboard('{Enter}');
 
-    await waitFor(() => {
-      expect(cell.textContent).to.equal('Marcus');
-    });
+    expect(cell.textContent).to.equal('Marcus');
     expect(processRowUpdate.callCount).to.equal(1);
     expect(processRowUpdate.lastCall.args[0]).to.deep.equal({ id: 3, name: 'Marcus' });
   });
@@ -769,7 +770,7 @@ describe('<DataGridPro /> - Row pinning', () => {
   testSkipIf(isJSDOM)('should support row editing', async () => {
     const processRowUpdate = spy((row) => ({ ...row, currencyPair: 'USD-GBP' }));
     const columns: GridColDef[] = [{ field: 'id' }, { field: 'name', editable: true }];
-    render(
+    const { user } = render(
       <div style={{ width: 400, height: 400 }}>
         <DataGridPro
           rows={[
@@ -789,15 +790,16 @@ describe('<DataGridPro /> - Row pinning', () => {
     );
 
     const cell = getCell(0, 1);
-    fireEvent.doubleClick(cell);
+    await user.dblClick(cell);
 
     const input = cell.querySelector('input')!;
-    fireEvent.change(input, { target: { value: 'Marcus' } });
-    fireEvent.keyDown(input, { key: 'Enter' });
+    // remove the previous value before typing in the new one
+    // was "fireEvent.change(input, { target: { value: 'Marcus' } })"
+    await user.clear(input);
+    await user.type(input, 'Marcus');
+    await user.keyboard('{Enter}');
 
-    await waitFor(() => {
-      expect(cell.textContent).to.equal('Marcus');
-    });
+    expect(cell.textContent).to.equal('Marcus');
     expect(processRowUpdate.callCount).to.equal(1);
     expect(processRowUpdate.lastCall.args[0]).to.deep.equal({ id: 3, name: 'Marcus' });
   });

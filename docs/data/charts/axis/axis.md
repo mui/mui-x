@@ -70,6 +70,13 @@ To distinguish tick and tooltip, it uses the `context.location`.
 
 {{"demo": "FormatterDemoNoSnap.js"}}
 
+#### Using the D3 formatter
+
+The context gives you access to the axis scale.
+The D3 [tickFormat(tickNumber, scpecifier)](https://d3js.org/d3-scale/linear#tickFormat) method can be interesting to adapt ticks format based on the scale properties.
+
+{{"demo": "FormatterD3.js"}}
+
 ### Axis sub domain
 
 By default, the axis domain is computed such that all your data is visible.

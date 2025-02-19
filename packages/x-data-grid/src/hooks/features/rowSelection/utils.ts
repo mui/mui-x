@@ -1,5 +1,5 @@
 import { RefObject } from '@mui/x-internals/types';
-import { GridSignature } from '../../utils/useGridApiEventHandler';
+import { GridSignature } from '../../../constants/signature';
 import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
 import { gridFilteredRowsLookupSelector } from '../filter/gridFilterSelector';
 import { gridSortedRowIdsSelector } from '../sorting/gridSortingSelector';
@@ -146,7 +146,7 @@ const getFilteredRowNodeSiblings = (
 
   const parentNode = tree[parent] as GridGroupNode;
 
-  return parentNode.children.filter((childId) => childId !== id && filteredRows[childId]);
+  return parentNode.children.filter((childId) => childId !== id && filteredRows[childId] !== false);
 };
 
 export const findRowsToSelect = (
@@ -158,7 +158,7 @@ export const findRowsToSelect = (
   addRow: (rowId: GridRowId) => void,
 ) => {
   const filteredRows = gridFilteredRowsLookupSelector(apiRef);
-  const rowSelectionModel = gridRowSelectionStateSelector(apiRef.current.state);
+  const rowSelectionModel = gridRowSelectionStateSelector(apiRef);
   const selectionManager = createRowSelectionManager(rowSelectionModel);
   const selectedDescendants: Set<GridRowId> = new Set([]);
 
@@ -218,7 +218,7 @@ export const findRowsToDeselect = (
   autoSelectParents: boolean,
   removeRow: (rowId: GridRowId) => void,
 ) => {
-  const rowSelectionModel = gridRowSelectionStateSelector(apiRef.current.state);
+  const rowSelectionModel = gridRowSelectionStateSelector(apiRef);
   const selectionManager = createRowSelectionManager(rowSelectionModel);
 
   if (!autoSelectParents && !autoSelectDescendants) {

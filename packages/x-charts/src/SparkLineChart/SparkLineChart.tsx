@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { MakeOptional } from '@mui/x-internals/types';
+import { ChartsColor, ChartsColorPalette } from '../colorPalettes';
 import { BarPlot } from '../BarChart';
 import { LinePlot, AreaPlot, LineHighlightPlot } from '../LineChart';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
@@ -34,7 +35,10 @@ export interface SparkLineChartSlotProps
     ChartsTooltipSlotProps {}
 
 export interface SparkLineChartProps
-  extends Omit<ChartContainerProps, 'series' | 'xAxis' | 'yAxis' | 'zAxis' | 'margin' | 'plugins'> {
+  extends Omit<
+    ChartContainerProps,
+    'series' | 'xAxis' | 'yAxis' | 'zAxis' | 'margin' | 'plugins' | 'colors'
+  > {
   /**
    * The xAxis configuration.
    * Notice it is a single [[AxisConfig]] object, not an array of configuration.
@@ -106,6 +110,12 @@ export interface SparkLineChartProps
    * @default {}
    */
   slotProps?: SparkLineChartSlotProps;
+
+  /**
+   * Color used to colorize the sparkline.
+   * @default rainbowSurgePalette[0]
+   */
+  color?: ChartsColor;
 }
 
 const SPARKLINE_DEFAULT_MARGIN = {
@@ -134,7 +144,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
     width,
     height,
     margin = SPARKLINE_DEFAULT_MARGIN,
-    colors,
+    color,
     sx,
     showTooltip,
     showHighlight,
@@ -159,6 +169,14 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
   };
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
+
+  const colors: ChartsColorPalette | undefined = React.useMemo(() => {
+    if (color == null) {
+      return undefined;
+    }
+
+    return typeof color === 'function' ? (mode: 'light' | 'dark') => [color(mode)] : [color];
+  }, [color]);
 
   return (
     <ChartContainer
@@ -238,10 +256,10 @@ SparkLineChart.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
   /**
-   * Color palette used to colorize multiple series.
-   * @default blueberryTwilightPalette
+   * Color used to colorize the sparkline.
+   * @default rainbowSurgePalette[0]
    */
-  colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
+  color: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   /**
    * @default 'linear'
    */
@@ -273,15 +291,20 @@ SparkLineChart.propTypes = {
    */
   disableAxisListener: PropTypes.bool,
   /**
+   * If true, the voronoi interaction are ignored.
+   */
+  disableVoronoi: PropTypes.bool,
+  /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height: PropTypes.number,
   /**
-   * The item currently highlighted. Turns highlighting into a controlled prop.
+   * The highlighted item.
+   * Used when the highlight is controlled.
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.
@@ -306,11 +329,25 @@ SparkLineChart.propTypes = {
     top: PropTypes.number,
   }),
   /**
+   * The function called for onClick events.
+   * The second argument contains information about all line/bar elements at the current mouse position.
+   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
+   * @param {null | AxisData} data The data about the clicked axis and items associated with it.
+   */
+  onAxisClick: PropTypes.func,
+  /**
    * The callback fired when the highlighted item changes.
    *
    * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
+  /**
+   * Callback fired when clicking close to an item.
+   * This is only available for scatter plot for now.
+   * @param {MouseEvent} event Mouse event caught at the svg level
+   * @param {ScatterItemIdentifier} scatterItemIdentifier Identify which item got clicked
+   */
+  onItemClick: PropTypes.func,
   /**
    * Type of plot used.
    * @default 'line'
@@ -357,6 +394,11 @@ SparkLineChart.propTypes = {
    * @default (value: number | null) => (value === null ? '' : value.toString())
    */
   valueFormatter: PropTypes.func,
+  /**
+   * Defines the maximal distance between a scatter point and the pointer that triggers the interaction.
+   * If `undefined`, the radius is assumed to be infinite.
+   */
+  voronoiMaxRadius: PropTypes.number,
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */

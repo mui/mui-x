@@ -86,5 +86,5 @@ export function useGridListView(
 }
 
 function getListColumnWidth(apiRef: RefObject<GridPrivateApiCommunity>) {
-  return gridDimensionsSelector(apiRef.current.state).viewportInnerSize.width;
+  return gridDimensionsSelector(apiRef).viewportInnerSize.width;
 }

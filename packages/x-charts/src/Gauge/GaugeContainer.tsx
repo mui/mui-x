@@ -114,12 +114,6 @@ GaugeContainer.propTypes = {
   cy: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   desc: PropTypes.string,
   /**
-   * If `true`, the charts will not listen to the mouse move event.
-   * It might break interactive features, but will improve performance.
-   * @default false
-   */
-  disableAxisListener: PropTypes.bool,
-  /**
    * The end angle (deg).
    * @default 360
    */

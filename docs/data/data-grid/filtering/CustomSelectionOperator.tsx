@@ -35,9 +35,7 @@ export default function CustomSelectionOperator() {
 
         return (value, row, col, apiRef) => {
           const rowId = apiRef.current.getRowId(row);
-          const rowSelectionModel = gridRowSelectionStateSelector(
-            apiRef.current.state,
-          );
+          const rowSelectionModel = gridRowSelectionStateSelector(apiRef);
           if (rowSelectionModel.ids.has(rowId)) {
             return true;
           }

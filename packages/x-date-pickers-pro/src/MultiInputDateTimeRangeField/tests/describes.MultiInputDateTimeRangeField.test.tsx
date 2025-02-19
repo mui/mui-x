@@ -26,7 +26,7 @@ describe('<MultiInputDateTimeRangeField />', () => {
     componentFamily: 'field',
     views: ['year', 'month', 'day', 'hours', 'minutes'],
     setValue: (value, { setEndDate } = {}) => {
-      setValueOnFieldInput(adapterToUse.format(value, 'keyboardDateTime'), setEndDate ? 1 : 0);
+      setValueOnFieldInput(adapterToUse.format(value, 'keyboardDateTime12h'), setEndDate ? 1 : 0);
     },
   }));
 });

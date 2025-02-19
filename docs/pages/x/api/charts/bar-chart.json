@@ -22,7 +22,7 @@
     },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
-      "default": "blueberryTwilightPalette"
+      "default": "rainbowSurgePalette"
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
@@ -34,7 +34,7 @@
     "highlightedItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string }"
+        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string }"
       }
     },
     "id": { "type": { "name": "string" } },

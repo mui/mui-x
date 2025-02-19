@@ -74,7 +74,13 @@ GridToolbar.propTypes = {
   /**
    * Props passed to the quick filter component.
    */
-  quickFilterProps: PropTypes.object,
+  quickFilterProps: PropTypes.shape({
+    className: PropTypes.string,
+    debounceMs: PropTypes.number,
+    quickFilterFormatter: PropTypes.func,
+    quickFilterParser: PropTypes.func,
+    slotProps: PropTypes.object,
+  }),
   /**
    * Show the quick filter component.
    * @default false

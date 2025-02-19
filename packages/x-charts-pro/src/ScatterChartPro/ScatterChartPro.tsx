@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ScatterChartProps, ScatterPlot } from '@mui/x-charts/ScatterChart';
-import { ChartsVoronoiHandler } from '@mui/x-charts/ChartsVoronoiHandler';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
@@ -15,10 +14,17 @@ import { useScatterChartProps, ChartsWrapper } from '@mui/x-charts/internals';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartContainerProProps } from '../ChartContainerPro/ChartContainerPro';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
+import {
+  SCATTER_CHART_PRO_PLUGINS,
+  ScatterChartProPluginsSignatures,
+} from './ScatterChartPro.plugins';
 
 export interface ScatterChartProProps
   extends Omit<ScatterChartProps, 'apiRef'>,
-    Omit<ChartContainerProProps<'scatter'>, 'series' | 'plugins' | 'seriesConfig'> {}
+    Omit<
+      ChartContainerProProps<'scatter', ScatterChartProPluginsSignatures>,
+      'series' | 'plugins' | 'seriesConfig' | 'onItemClick'
+    > {}
 
 /**
  * Demos:
@@ -35,11 +41,10 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   ref: React.Ref<SVGSVGElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiScatterChartPro' });
-  const { initialZoom, onZoomChange, apiRef, ...other } = props;
+  const { initialZoom, zoomData, onZoomChange, apiRef, ...other } = props;
   const {
     chartsWrapperProps,
     chartContainerProps,
-    voronoiHandlerProps,
     chartsAxisProps,
     gridProps,
     scatterPlotProps,
@@ -48,8 +53,18 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
     axisHighlightProps,
     children,
   } = useScatterChartProps(other);
-  const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps(
-    { ...chartContainerProps, initialZoom, onZoomChange, apiRef },
+  const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
+    'scatter',
+    ScatterChartProPluginsSignatures
+  >(
+    {
+      ...chartContainerProps,
+      initialZoom,
+      zoomData,
+      onZoomChange,
+      apiRef,
+      plugins: SCATTER_CHART_PRO_PLUGINS,
+    },
     ref,
   );
 
@@ -60,7 +75,6 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
       <ChartsWrapper {...chartsWrapperProps}>
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
-          {!props.disableVoronoi && <ChartsVoronoiHandler {...voronoiHandlerProps} />}
           <ChartsAxis {...chartsAxisProps} />
           <ChartsGrid {...gridProps} />
           <g data-drawing-container>
@@ -106,7 +120,7 @@ ScatterChartPro.propTypes = {
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
-   * @default blueberryTwilightPalette
+   * @default rainbowSurgePalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   /**
@@ -141,11 +155,12 @@ ScatterChartPro.propTypes = {
    */
   hideLegend: PropTypes.bool,
   /**
-   * The item currently highlighted. Turns highlighting into a controlled prop.
+   * The highlighted item.
+   * Used when the highlight is controlled.
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.
@@ -154,6 +169,7 @@ ScatterChartPro.propTypes = {
   id: PropTypes.string,
   /**
    * The list of zoom data related to each axis.
+   * Used to initialize the zoom in a specific configuration without controlling it.
    */
   initialZoom: PropTypes.arrayOf(
     PropTypes.shape({
@@ -184,6 +200,13 @@ ScatterChartPro.propTypes = {
     right: PropTypes.number,
     top: PropTypes.number,
   }),
+  /**
+   * The function called for onClick events.
+   * The second argument contains information about all line/bar elements at the current mouse position.
+   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
+   * @param {null | AxisData} data The data about the clicked axis and items associated with it.
+   */
+  onAxisClick: PropTypes.func,
   /**
    * The callback fired when the highlighted item changes.
    *
@@ -459,6 +482,16 @@ ScatterChartPro.propTypes = {
       id: PropTypes.string,
       max: PropTypes.number,
       min: PropTypes.number,
+    }),
+  ),
+  /**
+   * The list of zoom data related to each axis.
+   */
+  zoomData: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      end: PropTypes.number.isRequired,
+      start: PropTypes.number.isRequired,
     }),
   ),
 } as any;

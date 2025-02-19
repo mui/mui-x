@@ -9,13 +9,15 @@ import {
   GridRowMultiSelectionApi,
 } from '../../../models/api/gridRowSelectionApi';
 import { GridGroupNode, GridRowId } from '../../../models/gridRows';
-import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { GridSignature } from '../../../constants/signature';
+import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridSelector } from '../../utils/useGridSelector';
 import {
   gridRowsLookupSelector,
   gridRowMaximumTreeDepthSelector,
+  gridRowNodeSelector,
   gridRowTreeSelector,
 } from '../rows/gridRowsSelector';
 import {
@@ -171,14 +173,13 @@ export const useGridRowSelection = (
           ].join('\n'),
         );
       }
-      const currentModel = gridRowSelectionStateSelector(apiRef.current.state);
+      const currentModel = gridRowSelectionStateSelector(apiRef);
       if (currentModel !== model) {
         logger.debug(`Setting selection model`);
         apiRef.current.setState((state) => ({
           ...state,
           rowSelection: props.rowSelection ? model : emptyModel,
         }));
-        apiRef.current.forceUpdate();
       }
     },
     [apiRef, logger, props.rowSelection, props.signature, canHaveMultipleSelection],
@@ -186,7 +187,7 @@ export const useGridRowSelection = (
 
   const isRowSelected = React.useCallback<GridRowSelectionApi['isRowSelected']>(
     (id) => {
-      const model = gridRowSelectionStateSelector(apiRef.current.state);
+      const model = gridRowSelectionStateSelector(apiRef);
       const selectionManager = createRowSelectionManager(model);
       return selectionManager.has(id);
     },
@@ -203,7 +204,7 @@ export const useGridRowSelection = (
         return false;
       }
 
-      const rowNode = apiRef.current.getRowNode(id);
+      const rowNode = gridRowNodeSelector(apiRef, id);
       if (rowNode?.type === 'footer' || rowNode?.type === 'pinnedRow') {
         return false;
       }
@@ -254,7 +255,7 @@ export const useGridRowSelection = (
       } else {
         logger.debug(`Toggling selection for row ${id}`);
 
-        const selectionModel = gridRowSelectionStateSelector(apiRef.current.state);
+        const selectionModel = gridRowSelectionStateSelector(apiRef);
 
         const newSelectionModel: GridRowSelectionModel = {
           type: selectionModel.type,
@@ -329,7 +330,7 @@ export const useGridRowSelection = (
         }
       }
 
-      const currentSelectionModel = gridRowSelectionStateSelector(apiRef.current.state);
+      const currentSelectionModel = gridRowSelectionStateSelector(apiRef);
       let newSelectionModel: GridRowSelectionModel | undefined;
       if (resetSelection) {
         newSelectionModel = { type: 'include', ids: selectableIds };
@@ -475,7 +476,7 @@ export const useGridRowSelection = (
    */
   const removeOutdatedSelection = React.useCallback(
     (sortModelUpdated = false) => {
-      const currentSelection = gridRowSelectionStateSelector(apiRef.current.state);
+      const currentSelection = gridRowSelectionStateSelector(apiRef);
       const rowsLookup = gridRowsLookupSelector(apiRef);
       const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
 
@@ -483,7 +484,7 @@ export const useGridRowSelection = (
         if (props.filterMode === 'server') {
           return !rowsLookup[id];
         }
-        return filteredRowsLookup[id] !== true;
+        return !rowsLookup[id] || filteredRowsLookup[id] === false;
       };
 
       const newSelectionModel = {
@@ -617,7 +618,7 @@ export const useGridRowSelection = (
         }
       }
 
-      const rowNode = apiRef.current.getRowNode(params.id);
+      const rowNode = gridRowNodeSelector(apiRef, params.id);
       if (rowNode!.type === 'pinnedRow') {
         return;
       }
@@ -824,7 +825,7 @@ export const useGridRowSelection = (
     }
 
     // props.isRowSelectable changed
-    const currentSelection = gridRowSelectionStateSelector(apiRef.current.state);
+    const currentSelection = gridRowSelectionStateSelector(apiRef);
 
     if (typeof isRowSelectable === 'function') {
       let selectableIds = new Set<GridRowId>();
@@ -849,7 +850,7 @@ export const useGridRowSelection = (
       return;
     }
 
-    const currentSelection = gridRowSelectionStateSelector(apiRef.current.state);
+    const currentSelection = gridRowSelectionStateSelector(apiRef);
     if (
       !canHaveMultipleSelection &&
       ((currentSelection.type === 'include' && currentSelection.ids.size > 1) ||

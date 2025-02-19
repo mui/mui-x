@@ -17,10 +17,6 @@ import {
 } from '@mui/x-charts/internals';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import {
-  ChartsOnAxisClickHandler,
-  ChartsOnAxisClickHandlerProps,
-} from '@mui/x-charts/ChartsOnAxisClickHandler';
-import {
   ChartsOverlay,
   ChartsOverlayProps,
   ChartsOverlaySlotProps,
@@ -29,9 +25,10 @@ import {
 import { ChartContainerPro, ChartContainerProProps } from '../ChartContainerPro';
 import { HeatmapSeriesType } from '../models/seriesType/heatmap';
 import { HeatmapPlot } from './HeatmapPlot';
-import { plugin as heatmapPlugin } from './plugin';
+import { seriesConfig as heatmapSeriesConfig } from './seriesConfig';
 import { HeatmapTooltip, HeatmapTooltipProps } from './HeatmapTooltip';
 import { HeatmapItemSlotProps, HeatmapItemSlots } from './HeatmapItem';
+import { HEATMAP_PLUGINS, HeatmapPluginsSignatures } from './Heatmap.plugins';
 
 export interface HeatmapSlots extends ChartsAxisSlots, ChartsOverlaySlots, HeatmapItemSlots {
   /**
@@ -49,29 +46,28 @@ export interface HeatmapSlotProps
 
 export interface HeatmapProps
   extends Omit<
-      ChartContainerProProps,
-      'series' | 'plugins' | 'xAxis' | 'yAxis' | 'zoom' | 'onZoomChange' | 'skipAnimation'
+      ChartContainerProProps<'heatmap', HeatmapPluginsSignatures>,
+      'series' | 'plugins' | 'xAxis' | 'yAxis' | 'skipAnimation'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
-    Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
-    ChartsOnAxisClickHandlerProps {
+    Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
   /**
    * The configuration of the x-axes.
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  xAxis: MakeOptional<AxisConfig<'band', any, ChartsXAxisProps>, 'id' | 'scaleType'>[];
+  xAxis: Readonly<MakeOptional<AxisConfig<'band', any, ChartsXAxisProps>, 'id' | 'scaleType'>[]>;
   /**
    * The configuration of the y-axes.
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  yAxis: MakeOptional<AxisConfig<'band', any, ChartsYAxisProps>, 'id' | 'scaleType'>[];
+  yAxis: Readonly<MakeOptional<AxisConfig<'band', any, ChartsYAxisProps>, 'id' | 'scaleType'>[]>;
   /**
    * The series to display in the bar chart.
    * An array of [[HeatmapSeriesType]] objects.
    */
-  series: MakeOptional<HeatmapSeriesType, 'type'>[];
+  series: Readonly<MakeOptional<HeatmapSeriesType, 'type'>[]>;
   /**
    * The configuration of the tooltip.
    * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
@@ -102,7 +98,7 @@ const defaultColorMap = interpolateRgbBasis([
   '#084081',
 ]);
 
-const seriesConfig: ChartSeriesConfig<'heatmap'> = { heatmap: heatmapPlugin };
+const seriesConfig: ChartSeriesConfig<'heatmap'> = { heatmap: heatmapSeriesConfig };
 
 const Heatmap = React.forwardRef(function Heatmap(
   inProps: HeatmapProps,
@@ -164,7 +160,7 @@ const Heatmap = React.forwardRef(function Heatmap(
   const Tooltip = props.slots?.tooltip ?? HeatmapTooltip;
 
   return (
-    <ChartContainerPro
+    <ChartContainerPro<'heatmap', HeatmapPluginsSignatures>
       ref={ref}
       seriesConfig={seriesConfig}
       series={series.map((s) => ({
@@ -183,8 +179,9 @@ const Heatmap = React.forwardRef(function Heatmap(
       disableAxisListener
       highlightedItem={highlightedItem}
       onHighlightChange={onHighlightChange}
+      onAxisClick={onAxisClick}
+      plugins={HEATMAP_PLUGINS}
     >
-      {onAxisClick && <ChartsOnAxisClickHandler onAxisClick={onAxisClick} />}
       <g clipPath={`url(#${clipPathId})`}>
         <HeatmapPlot slots={slots} slotProps={slotProps} />
         <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
@@ -211,9 +208,7 @@ Heatmap.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   apiRef: PropTypes.shape({
-    current: PropTypes.shape({
-      setZoomData: PropTypes.func.isRequired,
-    }),
+    current: PropTypes.object,
   }),
   /**
    * Indicate which axis to display the bottom of the charts.
@@ -225,7 +220,7 @@ Heatmap.propTypes = {
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
-   * @default blueberryTwilightPalette
+   * @default rainbowSurgePalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   /**
@@ -244,27 +239,18 @@ Heatmap.propTypes = {
    */
   height: PropTypes.number,
   /**
-   * The item currently highlighted. Turns highlighting into a controlled prop.
+   * The highlighted item.
+   * Used when the highlight is controlled.
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
-  /**
-   * The list of zoom data related to each axis.
-   */
-  initialZoom: PropTypes.arrayOf(
-    PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      end: PropTypes.number.isRequired,
-      start: PropTypes.number.isRequired,
-    }),
-  ),
   /**
    * Indicate which axis to display the left of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.

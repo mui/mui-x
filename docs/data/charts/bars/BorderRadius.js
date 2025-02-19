@@ -78,7 +78,7 @@ const chartSettingsH = {
   slotProps: {
     legend: {
       direction: 'horizontal',
-      position: { vertical: 'bottom', horizontal: 'middle' },
+      position: { vertical: 'bottom', horizontal: 'center' },
     },
   },
 };

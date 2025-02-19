@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro, GridDataSourceCacheDefault } from '@mui/x-data-grid-pro';
+import { DataGrid, GridDataSourceCacheDefault } from '@mui/x-data-grid';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
 const lowTTLCache = new GridDataSourceCacheDefault({ ttl: 1000 * 10 }); // 10 seconds
@@ -43,7 +43,7 @@ export default function ServerSideDataGridTTL() {
 
   return (
     <div style={{ width: '100%', height: 400 }}>
-      <DataGridPro
+      <DataGrid
         columns={columns}
         unstable_dataSource={dataSource}
         unstable_dataSourceCache={lowTTLCache}

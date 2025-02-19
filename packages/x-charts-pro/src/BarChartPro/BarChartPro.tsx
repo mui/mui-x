@@ -3,7 +3,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { BarPlotProps, BarChartProps, BarPlot } from '@mui/x-charts/BarChart';
-import { ChartsOnAxisClickHandler } from '@mui/x-charts/ChartsOnAxisClickHandler';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
@@ -17,6 +16,7 @@ import { ChartContainerProProps } from '../ChartContainerPro';
 import { useIsZoomInteracting } from '../hooks/zoom';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
+import { BAR_CHART_PRO_PLUGINS, BarChartProPluginsSignatures } from './BarChartPro.plugins';
 
 function BarChartPlotZoom(props: BarPlotProps) {
   const isInteracting = useIsZoomInteracting();
@@ -84,12 +84,11 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   ref: React.Ref<SVGSVGElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiBarChartPro' });
-  const { initialZoom, onZoomChange, apiRef, ...other } = props;
+  const { initialZoom, zoomData, onZoomChange, apiRef, ...other } = props;
   const {
     chartsWrapperProps,
     chartContainerProps,
     barPlotProps,
-    axisClickHandlerProps,
     gridProps,
     clipPathProps,
     clipPathGroupProps,
@@ -100,8 +99,18 @@ const BarChartPro = React.forwardRef(function BarChartPro(
     children,
   } = useBarChartProps(other);
 
-  const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps(
-    { ...chartContainerProps, initialZoom, onZoomChange, apiRef },
+  const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
+    'bar',
+    BarChartProPluginsSignatures
+  >(
+    {
+      ...chartContainerProps,
+      initialZoom,
+      zoomData,
+      onZoomChange,
+      apiRef,
+      plugins: BAR_CHART_PRO_PLUGINS,
+    },
     ref,
   );
 
@@ -112,7 +121,6 @@ const BarChartPro = React.forwardRef(function BarChartPro(
       <ChartsWrapper {...chartsWrapperProps}>
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
-          {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
           <ChartsGrid {...gridProps} />
           <g {...clipPathGroupProps}>
             <BarChartPlotZoom {...barPlotProps} />
@@ -171,7 +179,7 @@ BarChartPro.propTypes = {
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
-   * @default blueberryTwilightPalette
+   * @default rainbowSurgePalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   /**
@@ -201,11 +209,12 @@ BarChartPro.propTypes = {
    */
   hideLegend: PropTypes.bool,
   /**
-   * The item currently highlighted. Turns highlighting into a controlled prop.
+   * The highlighted item.
+   * Used when the highlight is controlled.
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.
@@ -214,6 +223,7 @@ BarChartPro.propTypes = {
   id: PropTypes.string,
   /**
    * The list of zoom data related to each axis.
+   * Used to initialize the zoom in a specific configuration without controlling it.
    */
   initialZoom: PropTypes.arrayOf(
     PropTypes.shape({
@@ -526,6 +536,16 @@ BarChartPro.propTypes = {
       id: PropTypes.string,
       max: PropTypes.number,
       min: PropTypes.number,
+    }),
+  ),
+  /**
+   * The list of zoom data related to each axis.
+   */
+  zoomData: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      end: PropTypes.number.isRequired,
+      start: PropTypes.number.isRequired,
     }),
   ),
 } as any;

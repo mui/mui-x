@@ -1,19 +1,22 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import type {} from '../typeOverloads';
 import { ChartsSurface, ChartsSurfaceProps } from '@mui/x-charts/ChartsSurface';
-import { ChartSeriesType } from '@mui/x-charts/internals';
+import { ChartAnyPluginSignature, ChartSeriesType } from '@mui/x-charts/internals';
 import { useChartContainerProProps } from './useChartContainerProProps';
 import { AllPluginSignatures } from '../internals/plugins/allPlugins';
 import { ChartDataProviderPro, ChartDataProviderProProps } from '../ChartDataProviderPro';
 
-export interface ChartContainerProProps<TSeries extends ChartSeriesType = ChartSeriesType>
-  extends ChartDataProviderProProps<TSeries, AllPluginSignatures<TSeries>>,
-    ChartsSurfaceProps {}
+export type ChartContainerProProps<
+  TSeries extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+> = ChartDataProviderProProps<TSeries, TSignatures> & ChartsSurfaceProps;
 
-type ChartContainerProComponent = <TSeries extends ChartSeriesType = ChartSeriesType>(
-  props: ChartContainerProProps<TSeries> & { ref?: React.ForwardedRef<SVGSVGElement> },
+type ChartContainerProComponent = <
+  TSeries extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+>(
+  props: ChartContainerProProps<TSeries, TSignatures> & { ref?: React.ForwardedRef<SVGSVGElement> },
 ) => React.JSX.Element;
 
 /**
@@ -42,9 +45,12 @@ type ChartContainerProComponent = <TSeries extends ChartSeriesType = ChartSeries
  */
 const ChartContainerPro = React.forwardRef(function ChartContainerProInner<
   TSeries extends ChartSeriesType = ChartSeriesType,
->(props: ChartContainerProProps<TSeries>, ref: React.Ref<SVGSVGElement>) {
-  const { chartDataProviderProProps, children, chartsSurfaceProps } =
-    useChartContainerProProps<TSeries>(props, ref);
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+>(props: ChartContainerProProps<TSeries, TSignatures>, ref: React.Ref<SVGSVGElement>) {
+  const { chartDataProviderProProps, children, chartsSurfaceProps } = useChartContainerProProps<
+    TSeries,
+    TSignatures
+  >(props, ref);
 
   return (
     <ChartDataProviderPro {...chartDataProviderProProps}>
@@ -87,11 +93,12 @@ ChartContainerPro.propTypes = {
    */
   height: PropTypes.number,
   /**
-   * The item currently highlighted. Turns highlighting into a controlled prop.
+   * The highlighted item.
+   * Used when the highlight is controlled.
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.

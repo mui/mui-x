@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
 import { GridRoot, GridContextProvider, GridValidRowModel } from '@mui/x-data-grid';
 import { validateProps } from '@mui/x-data-grid/internals';
+import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import { DataGridProProps } from '../models/dataGridProProps';
@@ -17,11 +18,13 @@ export type { GridProSlotsComponent as GridSlots } from '../models';
 
 const configuration = {
   hooks: {
+    useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes,
     useGridRowAriaAttributes,
   },
 };
 const releaseInfo = getReleaseInfo();
+const watermark = <Watermark packageName="x-data-grid-pro" releaseInfo={releaseInfo} />;
 
 const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowModel>(
   inProps: DataGridProProps<R>,
@@ -34,6 +37,7 @@ const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowMod
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, propValidatorsDataGridPro);
   }
+
   return (
     <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
       <GridRoot
@@ -43,7 +47,7 @@ const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowMod
         {...props.slotProps?.root}
         ref={ref}
       >
-        <Watermark packageName="x-data-grid-pro" releaseInfo={releaseInfo} />
+        {watermark}
       </GridRoot>
     </GridContextProvider>
   );
@@ -57,8 +61,8 @@ interface DataGridProComponent {
 }
 
 /**
- * Demos:
- * - [DataGridPro](https://mui.com/x/react-data-grid/demo/)
+ * Features:
+ * - [DataGridPro](https://mui.com/x/react-data-grid/features/)
  *
  * API:
  * - [DataGridPro API](https://mui.com/x/api/data-grid/data-grid-pro/)
@@ -352,6 +356,8 @@ DataGridProRaw.propTypes = {
   getRowHeight: PropTypes.func,
   /**
    * Return the id of a given [[GridRowModel]].
+   * Ensure the reference of this prop is stable to avoid performance implications.
+   * It could be done by either defining the prop outside of the component or by memoizing it.
    */
   getRowId: PropTypes.func,
   /**
@@ -967,12 +973,18 @@ DataGridProRaw.propTypes = {
    * @default false
    */
   treeData: PropTypes.bool,
+  /**
+   * The data source of the Data Grid Pro.
+   */
   unstable_dataSource: PropTypes.shape({
     getChildrenCount: PropTypes.func,
     getGroupKey: PropTypes.func,
     getRows: PropTypes.func.isRequired,
     updateRow: PropTypes.func,
   }),
+  /**
+   * Data source cache object.
+   */
   unstable_dataSourceCache: PropTypes.shape({
     clear: PropTypes.func.isRequired,
     get: PropTypes.func.isRequired,
@@ -1005,6 +1017,11 @@ DataGridProRaw.propTypes = {
    * Use in combination with `unstable_listColumn`.
    */
   unstable_listView: PropTypes.bool,
+  /**
+   * Callback fired when the data source request fails.
+   * @param {Error} error The error object.
+   * @param {GridGetRowsParams} params With all properties from [[GridGetRowsParams]].
+   */
   unstable_onDataSourceError: PropTypes.func,
   /**
    * If `true`, the Data Grid enables column virtualization when `getRowHeight` is set to `() => 'auto'`.

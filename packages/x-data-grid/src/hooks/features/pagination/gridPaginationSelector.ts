@@ -1,4 +1,8 @@
-import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
+import {
+  createSelector,
+  createRootSelector,
+  createSelectorMemoized,
+} from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import {
   gridExpandedSortedRowEntriesSelector,
@@ -15,7 +19,9 @@ const ALL_RESULTS_PAGE_VALUE = -1;
  * @category Pagination
  * @ignore - do not document.
  */
-export const gridPaginationSelector = (state: GridStateCommunity) => state.pagination;
+export const gridPaginationSelector = createRootSelector(
+  (state: GridStateCommunity) => state.pagination,
+);
 
 /**
  * @category Pagination

@@ -14,7 +14,7 @@ const config = {
   margin: { top: 0, left: 0, bottom: 0, right: 0 },
   width: 400,
   height: 400,
-};
+} as const;
 
 // Plot as follow to simplify click position
 //

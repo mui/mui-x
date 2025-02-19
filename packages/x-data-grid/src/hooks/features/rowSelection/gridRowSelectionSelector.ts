@@ -1,10 +1,16 @@
-import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
+import {
+  createSelector,
+  createRootSelector,
+  createSelectorMemoized,
+} from '../../../utils/createSelector';
 import { gridDataRowIdsSelector, gridRowsLookupSelector } from '../rows/gridRowsSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { gridFilteredRowCountSelector } from '../filter/gridFilterSelector';
 
-export const gridRowSelectionStateSelector = (state: GridStateCommunity) => state.rowSelection;
+export const gridRowSelectionStateSelector = createRootSelector(
+  (state: GridStateCommunity) => state.rowSelection,
+);
 
 export const selectedGridRowsCountSelector = createSelector(
   gridRowSelectionStateSelector,

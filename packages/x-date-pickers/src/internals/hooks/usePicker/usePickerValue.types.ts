@@ -359,4 +359,9 @@ export interface SetValueActionOptions<TError = string | null> {
    * @default false
    */
   skipPublicationIfPristine?: boolean;
+  /**
+   * Whether the picker should close.
+   * @default changeImportance === "accept"
+   */
+  shouldClose?: boolean;
 }

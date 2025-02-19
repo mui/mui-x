@@ -269,15 +269,29 @@ export interface AxisScaleComputedConfig {
   };
 }
 
-export type AxisValueFormatterContext = {
-  /**
-   * Location indicates where the value will be displayed.
-   * - `'tick'` The value is displayed on the axis ticks.
-   * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
-   * - `'legend'` The value is displayed in the legend when using color legend.
-   */
-  location: 'tick' | 'tooltip' | 'legend';
-};
+export type AxisValueFormatterContext<S extends ScaleName = ScaleName> =
+  | {
+      /**
+       * Location indicates where the value will be displayed.
+       * - `'tick'` The value is displayed on the axis ticks.
+       * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
+       * - `'legend'` The value is displayed in the legend when using color legend.
+       */
+      location: 'legend';
+    }
+  | {
+      /**
+       * Location indicates where the value will be displayed.
+       * - `'tick'` The value is displayed on the axis ticks.
+       * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
+       * - `'legend'` The value is displayed in the legend when using color legend.
+       */
+      location: 'tick' | 'tooltip';
+      /**
+       * The d3-scale instance associated to the axis.
+       */
+      scale: AxisScaleConfig[S]['scale'];
+    };
 
 export type AxisConfig<
   S extends ScaleName = ScaleName,
@@ -301,7 +315,7 @@ export type AxisConfig<
   /**
    * The data used by `'band'` and `'point'` scales.
    */
-  data?: V[];
+  data?: readonly V[];
   /**
    * The key used to retrieve `data` from the `dataset` prop.
    */
@@ -312,7 +326,10 @@ export type AxisConfig<
    * @param {AxisValueFormatterContext} context The rendering context of the value.
    * @returns {string} The string to display.
    */
-  valueFormatter?: (value: V, context: AxisValueFormatterContext) => string;
+  valueFormatter?: <TScaleName extends S>(
+    value: V,
+    context: AxisValueFormatterContext<TScaleName>,
+  ) => string;
   /**
    * If `true`, hide this value in the tooltip
    */
@@ -358,4 +375,22 @@ export function isPointScaleConfig(
   scaleConfig: AxisConfig<ScaleName>,
 ): scaleConfig is AxisConfig<'point'> & { scaleType: 'point' } {
   return scaleConfig.scaleType === 'point';
+}
+
+/**
+ * The data format returned by onAxisClick.
+ */
+export interface ChartsAxisData {
+  /**
+   * The index in the axis' data property.
+   */
+  dataIndex: number;
+  /**
+   * Tha value associated to the axis item.
+   */
+  axisValue: number | Date | string;
+  /**
+   * The mapping of series ids to their value for this particular axis index.
+   */
+  seriesValues: Record<string, number | null | undefined>;
 }
