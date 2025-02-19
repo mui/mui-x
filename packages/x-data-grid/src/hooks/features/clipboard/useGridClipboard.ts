@@ -6,6 +6,7 @@ import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
 import { serializeCellValue } from '../export/serializers/csvSerializer';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { isCopyShortcut } from '../../../utils/keyboardUtils';
+import { selectedGridRowsCountSelector } from '../rowSelection';
 
 function writeToClipboardPolyfill(data: string) {
   const span = document.createElement('span');
@@ -86,8 +87,8 @@ export const useGridClipboard = (
       }
 
       let textToCopy = '';
-      const selectedRows = apiRef.current.getSelectedRows();
-      if (selectedRows.size > 0) {
+      const selectedRowsCount = selectedGridRowsCountSelector(apiRef);
+      if (selectedRowsCount > 0) {
         textToCopy = apiRef.current.getDataAsCsv({
           includeHeaders: false,
           delimiter: clipboardCopyCellDelimiter,

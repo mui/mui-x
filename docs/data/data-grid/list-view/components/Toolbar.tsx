@@ -6,6 +6,7 @@ import {
   GridToolbarContainer,
   GridToolbarProps,
   GridToolbarQuickFilter,
+  selectedGridRowsCountSelector,
   selectedGridRowsSelector,
   useGridApiContext,
   useGridSelector,
@@ -32,8 +33,7 @@ export interface ToolbarProps extends GridToolbarProps {
 export function Toolbar(props: ToolbarProps) {
   const { listView = false, container, handleUpload, handleDelete } = props;
   const apiRef = useGridApiContext();
-  const selectedRows = useGridSelector(apiRef, selectedGridRowsSelector);
-  const selectionCount = selectedRows.size;
+  const selectionCount = useGridSelector(apiRef, selectedGridRowsCountSelector);
   const showSelectionOptions = selectionCount > 0;
 
   const handleClearSelection = () => {
@@ -42,6 +42,7 @@ export function Toolbar(props: ToolbarProps) {
 
   const handleDeleteSelectedRows = () => {
     handleClearSelection();
+    const selectedRows = selectedGridRowsSelector(apiRef);
     handleDelete?.(Array.from(selectedRows.keys()));
   };
 

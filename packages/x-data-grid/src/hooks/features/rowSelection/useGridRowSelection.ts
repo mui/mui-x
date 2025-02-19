@@ -22,6 +22,7 @@ import {
 } from '../rows/gridRowsSelector';
 import {
   gridRowSelectionStateSelector,
+  selectedGridRowsCountSelector,
   selectedGridRowsSelector,
 } from './gridRowSelectionSelector';
 import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
@@ -578,7 +579,7 @@ export const useGridRowSelection = (
       const isMultipleSelectionDisabled =
         !checkboxSelection && !hasCtrlKey && !isKeyboardEvent(event);
       const resetSelection = !canHaveMultipleSelection || isMultipleSelectionDisabled;
-      const selectedRowsCount = apiRef.current.getSelectedRows().size;
+      const selectedRowsCount = selectedGridRowsCountSelector(apiRef);
 
       if (canHaveMultipleSelection && selectedRowsCount > 1 && !hasCtrlKey) {
         apiRef.current.selectRow(id, true, resetSelection);
