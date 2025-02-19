@@ -150,8 +150,8 @@ export interface PickerContextValue<
    */
   triggerStatus: 'hidden' | 'disabled' | 'enabled';
   /**
-   * The ref to attach to the outermost element of the popup that contain the view if any.
-   * When using a built-in popup component, this property is automatically attached to the right element.
+   * The ref to attach to the popup's outermost element that contains the view, if any.
+   * When using a built-in popup component, this property is automatically attached to the appropriate element.
    */
   popupRef: React.RefObject<any>;
   /**

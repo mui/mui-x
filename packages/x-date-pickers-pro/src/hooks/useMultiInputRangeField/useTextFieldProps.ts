@@ -72,7 +72,6 @@ export function useTextFieldProps<
     case 'date': {
       useManager = useDateManager;
       break;
-      break;
     }
     case 'time': {
       useManager = useTimeManager;
@@ -154,7 +153,7 @@ export function useTextFieldProps<
     onChange: handleChange,
   };
 
-  const splittedProps = useSplitFieldProps(allProps, 'date');
+  const splittedProps = useSplitFieldProps(allProps, valueType);
   const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
     manager,
     internalProps: splittedProps.internalProps,
