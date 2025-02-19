@@ -15,6 +15,8 @@ import {
 
 const queryClient = new QueryClient();
 
+const items = [];
+
 const fetchData = async (_parentId) => {
   const length = randomInt(5, 10);
   const rows = Array.from({ length }, () => ({
@@ -44,7 +46,7 @@ export function FetchChildren() {
 
   return (
     <RichTreeViewPro
-      items={[]}
+      items={items}
       experimentalFeatures={{ lazyLoading: true }}
       dataSource={{
         getChildrenCount: (item) => item?.childrenCount,

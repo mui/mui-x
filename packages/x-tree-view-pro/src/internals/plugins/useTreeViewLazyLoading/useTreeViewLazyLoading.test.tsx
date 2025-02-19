@@ -2,7 +2,6 @@ import { expect } from 'chai';
 import { act, fireEvent } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-import { randomName, randomId } from '@mui/x-data-grid-generator';
 import { UseTreeViewLazyLoadingSignature } from '@mui/x-tree-view/internals';
 
 type ItemType = TreeViewBaseItem<{
@@ -14,8 +13,8 @@ type ItemType = TreeViewBaseItem<{
 const mockFetchData = async (): Promise<ItemType[]> => {
   const items = [
     {
-      id: randomId(),
-      label: randomName({}, {}),
+      id: Math.random().toString(),
+      label: Math.random().toString(),
       childrenCount: 1,
     },
   ];

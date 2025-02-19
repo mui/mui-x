@@ -20,6 +20,9 @@ type ItemType = TreeViewBaseItem<{
   label: string;
   childrenCount?: number;
 }>;
+
+const items: ItemType[] = [];
+
 const fetchData = async (_parentId?: string): Promise<ItemType[]> => {
   const length: number = randomInt(5, 10);
   const rows = Array.from({ length }, () => ({
@@ -49,7 +52,7 @@ export function FetchChildren() {
 
   return (
     <RichTreeViewPro
-      items={[]}
+      items={items}
       experimentalFeatures={{ lazyLoading: true }}
       dataSource={{
         getChildrenCount: (item) => item?.childrenCount as number,
