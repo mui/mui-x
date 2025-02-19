@@ -169,13 +169,30 @@ export function GridSidebarColumnPanelBody({
 
   const availableFields = React.useMemo(() => {
     return fields.filter((field) => {
+      if (pivotModel.rows.find((item) => item.field === field)) {
+        return false;
+      }
+      if (pivotModel.columns.find((item) => item.field === field)) {
+        return false;
+      }
+      if (pivotModel.values.find((item) => item.field === field)) {
+        return false;
+      }
       if (searchState.enabled) {
         const fieldName = getColumnName(field);
         return fieldName.toLowerCase().includes(searchState.value.toLowerCase());
       }
       return true;
     });
-  }, [searchState.value, searchState.enabled, fields, getColumnName]);
+  }, [
+    pivotModel.columns,
+    pivotModel.rows,
+    pivotModel.values,
+    searchState.value,
+    searchState.enabled,
+    fields,
+    getColumnName,
+  ]);
 
   const updatePivotModel = React.useCallback<UpdatePivotModel>(
     ({ field, targetSection, originSection, targetField, targetFieldPosition }) => {
