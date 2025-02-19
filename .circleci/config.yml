@@ -75,6 +75,7 @@ packages-jsdom: &packages-jsdom
     - 'x-license'
     - 'x-codemod'
     - 'x-internals'
+    - '*'
 
 packages-browser: &packages-browser
   package:
@@ -89,6 +90,7 @@ packages-browser: &packages-browser
     - 'x-tree-view'
     - 'x-tree-view-pro'
     - 'x-license'
+    - '*'
 
 test-react-18-context: &test-react-18-context
   <<: *default-context
