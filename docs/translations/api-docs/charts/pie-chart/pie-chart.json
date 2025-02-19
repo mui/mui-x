@@ -25,7 +25,7 @@
     },
     "onItemClick": { "description": "Callback fired when a pie arc is clicked." },
     "series": {
-      "description": "The series to display in the pie chart. An array of [[PieSeriesType]] objects."
+      "description": "The series to display in the pie chart. An array of <a href='/x/api/charts/pie-series-type/'>PieSeriesType</a> objects."
     },
     "skipAnimation": {
       "description": "If <code>true</code>, animations are skipped. If unset or <code>false</code>, the animations respects the user&#39;s <code>prefers-reduced-motion</code> setting."
