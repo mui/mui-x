@@ -73,7 +73,7 @@ const InputAdornment = styled(MUIInputAdornment)({
   [`&.${inputAdornmentClasses.positionEnd} .${iconButtonClasses.sizeSmall}`]: {
     marginRight: '-7px',
   },
-})
+});
 
 const BaseSelect = forwardRef<any, GridSlotProps['baseSelect']>(function BaseSelect(props, ref) {
   const {
@@ -367,9 +367,7 @@ function transformInputProps(props: GridSlotProps['baseInput'] | undefined) {
   }
 
   if (result.endAdornment) {
-    result.endAdornment = (
-      <InputAdornment position="end">{result.endAdornment}</InputAdornment>
-    );
+    result.endAdornment = <InputAdornment position="end">{result.endAdornment}</InputAdornment>;
   }
 
   if (slotProps?.htmlInput) {
@@ -495,4 +493,3 @@ function BaseSelectOption({ native, ...props }: NonNullable<GridSlotProps['baseS
   }
   return <MUIMenuItem {...props} />;
 }
-
