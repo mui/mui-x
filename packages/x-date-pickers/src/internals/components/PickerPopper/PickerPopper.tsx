@@ -420,7 +420,7 @@ export function PickerPopper(inProps: PickerPopperProps) {
     externalSlotProps: slotProps?.popper,
     additionalProps: {
       transition: true,
-      role: viewContainerRole,
+      role: viewContainerRole == null ? undefined : viewContainerRole,
       open,
       placement,
       anchorEl: triggerRef.current,
