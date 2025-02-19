@@ -52,7 +52,7 @@ export interface BarChartProps
    * The series to display in the bar chart.
    * An array of [[BarSeriesType]] objects.
    */
-  series: MakeOptional<BarSeriesType, 'type'>[];
+  series: Readonly<MakeOptional<BarSeriesType, 'type'>[]>;
   /**
    * Option to display a cartesian grid in the background.
    */

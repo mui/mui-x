@@ -35,7 +35,10 @@ function processColorMap(axisConfig: ZAxisConfig) {
   };
 }
 
-function getZAxisState(zAxis?: MakeOptional<ZAxisConfig, 'id'>[], dataset?: DatasetType) {
+function getZAxisState(
+  zAxis?: readonly MakeOptional<ZAxisConfig, 'id'>[],
+  dataset?: Readonly<DatasetType>,
+) {
   if (!zAxis || zAxis.length === 0) {
     return { axis: {}, axisIds: [] };
   }

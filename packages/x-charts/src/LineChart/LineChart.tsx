@@ -64,7 +64,7 @@ export interface LineChartProps
    * The series to display in the line chart.
    * An array of [[LineSeriesType]] objects.
    */
-  series: MakeOptional<LineSeriesType, 'type'>[];
+  series: Readonly<MakeOptional<LineSeriesType, 'type'>[]>;
   /**
    * Option to display a cartesian grid in the background.
    */

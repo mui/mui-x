@@ -93,7 +93,7 @@
     {
       "key": "tickLabel",
       "className": "MuiChartsAxis-tickLabel",
-      "description": "Styles applied to ticks label.",
+      "description": "Styles applied to ticks label.\n\n⚠️ For performance reasons, only the inline styles get considered for bounding box computation.\nModifying text size by adding properties like `font-size` or `letter-spacing` to this class might cause labels to overlap.",
       "isGlobal": false
     },
     {

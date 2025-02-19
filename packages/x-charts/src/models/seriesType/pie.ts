@@ -30,7 +30,7 @@ export type ChartsPieSorting = 'none' | 'asc' | 'desc' | ((a: number, b: number)
 
 export interface PieSeriesType<TData = PieValueType> extends CommonSeriesType<TData> {
   type: 'pie';
-  data: TData[];
+  data: Readonly<TData[]>;
   /**
    * The radius between circle center and the beginning of the arc.
    * Can be a number (in px) or a string with a percentage such as '50%'.

@@ -266,6 +266,14 @@ export interface GridClasses {
    */
   columnsManagementFooter: string;
   /**
+   * Styles applied to the columns management scroll area element.
+   */
+  columnsManagementScrollArea: string;
+  /**
+   * Styles applied to the columns management empty text element.
+   */
+  columnsManagementEmptyText: string;
+  /**
    * Styles applied to the top container.
    */
   'container--top': string;
@@ -592,6 +600,11 @@ export interface GridClasses {
    */
   sortIcon: string;
   /**
+   * Styles applied to the shadow scroll area element.
+   * @ignore - do not document.
+   */
+  shadowScrollArea: string;
+  /**
    * Styles applied to the toolbar container element.
    */
   toolbarContainer: string;
@@ -753,6 +766,8 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnsManagementHeader',
   'columnsManagementSearchInput',
   'columnsManagementFooter',
+  'columnsManagementScrollArea',
+  'columnsManagementEmptyText',
   'container--top',
   'container--bottom',
   'detailPanel',
@@ -827,6 +842,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'scrollbarFiller--pinnedRight',
   'selectedRowCount',
   'sortIcon',
+  'shadowScrollArea',
   'toolbarContainer',
   'toolbarFilterList',
   'toolbarPromptControl',

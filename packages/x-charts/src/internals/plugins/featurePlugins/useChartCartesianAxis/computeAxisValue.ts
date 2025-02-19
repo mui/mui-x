@@ -33,7 +33,7 @@ function getRange(
   return axis.reverse ? [range[1], range[0]] : range;
 }
 
-const isDateData = (data?: any[]): data is Date[] => data?.[0] instanceof Date;
+const isDateData = (data?: readonly any[]): data is Date[] => data?.[0] instanceof Date;
 
 function createDateFormatter(
   axis: AxisConfig<'band' | 'point', any, ChartsAxisProps>,

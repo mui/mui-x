@@ -11,7 +11,7 @@
     "color": { "type": { "description": "string" } },
     "connectNulls": { "type": { "description": "boolean" }, "default": "false" },
     "curve": { "type": { "description": "CurveType" }, "default": "'monotoneX'" },
-    "data": { "type": { "description": "(number | null)[]" } },
+    "data": { "type": { "description": "readonly (number | null)[]" } },
     "dataKey": { "type": { "description": "string" } },
     "disableHighlight": { "type": { "description": "boolean" }, "default": "false" },
     "highlightScope": { "type": { "description": "Partial&lt;HighlightScope&gt;" } },

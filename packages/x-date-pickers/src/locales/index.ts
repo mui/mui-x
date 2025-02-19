@@ -1,5 +1,6 @@
 export * from './beBY';
 export * from './bgBG';
+export * from './bnBD';
 export * from './caES';
 export * from './csCZ';
 export * from './daDK';

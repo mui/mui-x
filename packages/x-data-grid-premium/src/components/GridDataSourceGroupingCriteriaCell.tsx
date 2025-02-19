@@ -7,6 +7,7 @@ import {
   gridDataSourceErrorSelector,
   gridDataSourceLoadingIdSelector,
   gridRowSelector,
+  vars,
 } from '@mui/x-data-grid-pro/internals';
 import {
   useGridSelector,
@@ -126,8 +127,7 @@ export function GridDataSourceGroupingCriteriaCell(props: GridGroupingCriteriaCe
         ml:
           rootProps.rowGroupingColumnMode === 'multiple'
             ? 0
-            : (theme) =>
-                `calc(var(--DataGrid-cellOffsetMultiplier) * ${theme.spacing(rowNode.depth)})`,
+            : `calc(var(--DataGrid-cellOffsetMultiplier) * ${vars.spacing(rowNode.depth)})`,
       }}
     >
       <div className={classes.toggle}>

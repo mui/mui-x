@@ -7,6 +7,8 @@ export const AxisRoot = styled('g', {
   overridesResolver: (props, styles) => styles.root,
 })(({ theme }) => ({
   [`& .${axisClasses.tickLabel}`]: {
+    /* The tick label is measured using only its style prop, so applying properties that change its size will cause the
+     * measurements to be off. As such, it is recommended to apply those properties through the `tickLabelStyle` prop. */
     ...theme.typography.caption,
     fill: (theme.vars || theme).palette.text.primary,
   },

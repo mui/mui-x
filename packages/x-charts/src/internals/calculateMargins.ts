@@ -7,7 +7,7 @@ export const calculateMargins = <
   T extends ChartsLegendSlotExtension &
     Pick<LayoutConfig, 'margin'> & {
       hideLegend?: boolean;
-      series?: Partial<ChartsSeriesConfig[CartesianChartSeriesType]['seriesProp']>[];
+      series?: Readonly<Partial<ChartsSeriesConfig[CartesianChartSeriesType]['seriesProp']>[]>;
     },
 >(
   props: T,

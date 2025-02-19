@@ -147,6 +147,7 @@ Below are described the steps you need to make to migrate from v7 to v8.
 ### Other exports
 
 - `ariaV8` experimental flag is removed. It's now the default behavior.
+- Subcomponents that are in a React Portal must now be wrapped with `GridPortalWrapper`
 
 ### Filtering
 
@@ -181,6 +182,10 @@ Below are described the steps you need to make to migrate from v7 to v8.
 
 - The `detailPanels`, `pinnedColumns`, and `pinnedRowsRenderZone` classes have been removed.
 - The `main--hasSkeletonLoadingOverlay` class has been renamed to `main--hiddenContent` and is now also applied when the "No columns" overlay is displayed.
+
+### Slots
+
+- The `baseFormControl` slot was removed.
 
 <!-- ### Editing
 

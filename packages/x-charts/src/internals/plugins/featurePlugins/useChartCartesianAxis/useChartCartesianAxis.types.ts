@@ -43,17 +43,17 @@ export interface UseChartCartesianAxisParameters {
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  xAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>[];
+  xAxis?: readonly MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>[];
   /**
    * The configuration of the y-axes.
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  yAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[];
+  yAxis?: readonly MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[];
   /**
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
-  dataset?: DatasetType;
+  dataset?: Readonly<DatasetType>;
   /**
    * The function called for onClick events.
    * The second argument contains information about all line/bar elements at the current mouse position.
@@ -85,7 +85,7 @@ export interface UseChartCartesianAxisState {
    */
   zoom?: {
     isInteracting: boolean;
-    zoomData: ZoomData[];
+    zoomData: readonly ZoomData[];
   };
   cartesianAxis: {
     x: AxisConfig<ScaleName, any, ChartsXAxisProps>[];

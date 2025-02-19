@@ -23,5 +23,5 @@ export type SeriesProcessorResult<TSeriesType extends ChartSeriesType> = {
 
 export type SeriesProcessor<TSeriesType extends ChartSeriesType> = (
   params: SeriesProcessorParams<TSeriesType>,
-  dataset?: DatasetType,
+  dataset?: Readonly<DatasetType>,
 ) => SeriesProcessorResult<TSeriesType>;

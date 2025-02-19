@@ -42,7 +42,7 @@ export interface PieChartProps
    * The series to display in the pie chart.
    * An array of [[PieSeriesType]] objects.
    */
-  series: MakeOptional<PieSeriesType<MakeOptional<PieValueType, 'id'>>, 'type'>[];
+  series: Readonly<MakeOptional<PieSeriesType<MakeOptional<PieValueType, 'id'>>, 'type'>[]>;
   /**
    * If `true`, the legend is not rendered.
    */

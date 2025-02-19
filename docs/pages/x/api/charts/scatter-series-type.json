@@ -7,7 +7,7 @@
   "properties": {
     "type": { "type": { "description": "'scatter'" }, "required": true },
     "color": { "type": { "description": "string" } },
-    "data": { "type": { "description": "ScatterValueType[]" } },
+    "data": { "type": { "description": "readonly ScatterValueType[]" } },
     "datasetKeys": {
       "type": {
         "description": "{<br />  /**<br />   * The key used to retrieve data from the dataset for the X axis.<br />   */<br />  x: string<br />  /**<br />   * The key used to retrieve data from the dataset for the Y axis.<br />   */<br />  y: string<br />  /**<br />   * The key used to retrieve data from the dataset for the Z axis.<br />   */<br />  z?: string<br />  /**<br />   * The key used to retrieve data from the dataset for the id.<br />   */<br />  id?: string<br />}"

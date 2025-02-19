@@ -35,7 +35,7 @@ export interface OrdinalColorConfig<Value = number | Date | string> {
    * The value to map.
    * If undefined, it will be integers from 0 to the number of colors.
    */
-  values?: Value[];
+  values?: readonly Value[];
   /**
    * The color palette.
    * Items equal to `values[k]` will get the color of `colors[k]`.
