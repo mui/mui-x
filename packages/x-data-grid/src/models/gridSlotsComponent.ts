@@ -56,11 +56,6 @@ export interface GridBaseSlots {
    */
   baseTextField: React.JSXElementConstructor<GridSlotProps['baseTextField']>;
   /**
-   * The custom FormControl component used in the grid.
-   * @default FormControl
-   */
-  baseFormControl: React.JSXElementConstructor<GridSlotProps['baseFormControl']>;
-  /**
    * The custom Select component used in the grid.
    * @default Select
    */
