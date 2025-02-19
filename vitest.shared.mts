@@ -60,14 +60,14 @@ export default defineConfig({
       screenshotFailures: false,
     },
     ...(process.env.CI && {
-      minWorkers: 1,
-      maxWorkers: 1,
+      // minWorkers: 1,
+      // maxWorkers: 1,
       poolOptions: {
         forks: {
-          singleFork: true,
+          // singleFork: true,
         },
         threads: {
-          singleThread: true,
+          // singleThread: true,
         },
       },
     }),
