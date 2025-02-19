@@ -32,7 +32,7 @@ const useUtilityClasses = (ownerState: AxisConfig<any, any, ChartsXAxisProps>) =
   return composeClasses(slots, getAxisUtilityClass, classes);
 };
 
-type LabelExtraData = { width: number; height: number; skipLabel?: boolean };
+type LabelExtraData = { skipLabel?: boolean };
 
 function addLabelDimension(
   xTicks: TickItemType[],
@@ -84,12 +84,15 @@ function addLabelDimension(
     const { offset, labelOffset } = item;
     const textPosition = offset + labelOffset;
 
-    if (labelIndex > 0 && direction * textPosition  < direction * (previousTextLimit + tickLabelMinGap)) {
-      return { ...item, width: 0, height: 0, skipLabel: true };
+    if (
+      labelIndex > 0 &&
+      direction * textPosition < direction * (previousTextLimit + tickLabelMinGap)
+    ) {
+      return { ...item, skipLabel: true };
     }
 
     if (!isPointInside(textPosition)) {
-      return { ...item, width: 0, height: 0, skipLabel: true };
+      return { ...item, skipLabel: true };
     }
 
     const { width, height } = getTickLabelSize(item);
@@ -97,14 +100,17 @@ function addLabelDimension(
     const distance = getMinXTranslation(width, height, style?.angle);
 
     const currentTextLimit = textPosition - (direction * distance) / 2;
-    if (labelIndex > 0 && direction * currentTextLimit < direction * (previousTextLimit + tickLabelMinGap)) {
+    if (
+      labelIndex > 0 &&
+      direction * currentTextLimit < direction * (previousTextLimit + tickLabelMinGap)
+    ) {
       // Except for the first label, we skip all label that overlap with the last accepted.
       // Notice that the early return prevents `previousTextLimit` from being updated.
-      return { ...item, width, height, skipLabel: true };
+      return { ...item, skipLabel: true };
     }
 
     previousTextLimit = textPosition + (direction * distance) / 2;
-    return { ...item, width, height };
+    return item;
   });
 }
 
