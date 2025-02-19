@@ -265,6 +265,14 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-date-pickers/quickstart', title: 'Quickstart' },
       { pathname: '/x/react-date-pickers/base-concepts' },
       {
+        pathname: '/x/react-date-pickers-base-components',
+        subheader: 'Base components',
+        children: [
+          { pathname: '/x/react-date-pickers/base-calendar', title: 'Calendar' },
+          { pathname: '/x/react-date-pickers/base-clock', title: 'Clock' },
+        ],
+      },
+      {
         pathname: '/x/react-date-pickers-components',
         subheader: 'Components',
         children: [
@@ -278,7 +286,6 @@ const pages: MuiPage[] = [
                 title: 'Date Field',
               },
               { pathname: '/x/react-date-pickers/date-calendar', title: 'Date Calendar' },
-              { pathname: '/x/react-date-pickers/base-calendar', title: 'Base UI X: Calendar' },
             ],
           },
           {

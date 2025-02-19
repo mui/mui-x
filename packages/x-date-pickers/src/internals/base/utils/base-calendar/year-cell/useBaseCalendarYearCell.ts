@@ -39,6 +39,9 @@ export function useBaseCalendarYearCell(parameters: useBaseCalendarYearCell.Para
 
 export namespace useBaseCalendarYearCell {
   export interface Parameters {
+    /**
+     * The value to select when this cell is clicked.
+     */
     value: PickerValidDate;
     /**
      * The format used to display the year.

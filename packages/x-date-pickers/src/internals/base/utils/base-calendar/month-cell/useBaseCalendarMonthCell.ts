@@ -39,6 +39,9 @@ export function useBaseCalendarMonthCell(parameters: useBaseCalendarMonthCell.Pa
 
 export namespace useBaseCalendarMonthCell {
   export interface Parameters {
+    /**
+     * The value to select when this cell is clicked.
+     */
     value: PickerValidDate;
     /**
      * The format used to display the month.

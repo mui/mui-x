@@ -250,39 +250,31 @@ export namespace useBaseCalendarRoot {
       OnErrorProps<TValue, TError> {
     /**
      * The controlled value that should be selected.
-     * To render an uncontrolled Calendar, use the `defaultValue` prop instead.
+     * To render an uncontrolled (Range)Calendar, use the `defaultValue` prop instead.
      */
     value?: TValue;
     /**
      * The uncontrolled value that should be initially selected.
-     * To render a controlled Calendar, use the `value` prop instead.
+     * To render a controlled (Range)Calendar, use the `value` prop instead.
      */
     defaultValue?: TValue;
     /**
      * Event handler called when the selected value changes.
      * Provides the new value as an argument.
      * @param {TValue} value The new selected value.
-     * @param {useBaseCalendarRoot.ValueChangeHandlerContext<TError>} context Additional context information.
+     * @param {ValueChangeHandlerContext<TError>} context Additional context information.
      */
-    onValueChange?: (
-      value: TValue,
-      context: useBaseCalendarRoot.ValueChangeHandlerContext<TError>,
-    ) => void;
+    onValueChange?: (value: TValue, context: ValueChangeHandlerContext<TError>) => void;
     /**
      * The date used to decide which month should be displayed in the Days Grid and which year should be displayed in the Months List and Months Grid.
-     * To render an uncontrolled Calendar, use the `defaultVisibleDate` prop instead.
+     * To render an uncontrolled (Range)Calendar, use the `defaultVisibleDate` prop instead.
      */
     visibleDate?: PickerValidDate;
     /**
      * The date used to decide which month should be initially displayed in the Days Grid and which year should be initially displayed in the Months List and Months Grid.
-     * To render a controlled Calendar, use the `visibleDate` prop instead.
+     * To render a controlled (Range)Calendar, use the `visibleDate` prop instead.
      */
     defaultVisibleDate?: PickerValidDate;
-    /**
-     * The date used to generate the new value when both `value` and `defaultValue` are empty.
-     * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.
-     */
-    referenceDate?: PickerValidDate;
     /**
      * Event handler called when the visible date changes.
      * Provides the new visible date as an argument.
@@ -290,13 +282,18 @@ export namespace useBaseCalendarRoot {
      */
     onVisibleDateChange?: (visibleDate: PickerValidDate) => void;
     /**
-     * The amount of months to navigate by when pressing <Calendar.SetVisibleMonth /> or when using keyboard navigation in the day grid.
+     * The date used to generate the new value when both `value` and `defaultValue` are empty.
+     * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.
+     */
+    referenceDate?: PickerValidDate;
+    /**
+     * The amount of months to navigate by when pressing <(Range)Calendar.SetVisibleMonth /> or when using keyboard navigation in the day grid.
      * This is mostly useful when displaying multiple day grids.
      * @default 1
      */
     monthPageSize?: number;
     /**
-     * The amount of months to navigate by when pressing <Calendar.SetVisibleYear /> or when using keyboard navigation in the month grid or the month list.
+     * The amount of months to navigate by when pressing <(Range)Calendar.SetVisibleYear /> or when using keyboard navigation in the month grid or the month list.
      * This is mostly useful when displaying multiple month grids or month lists.
      * @default 1
      */

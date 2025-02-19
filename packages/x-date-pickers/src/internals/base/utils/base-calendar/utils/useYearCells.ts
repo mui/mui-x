@@ -88,7 +88,7 @@ export function useYearCells(parameters: useYearCells.Parameters): useYearCells.
 export namespace useYearCells {
   export interface Parameters extends useCellList.PublicParameters {
     /**
-     * Generate the list of items to render the given visible date.
+     * Generate the list of items to render.
      * @param {GetItemsParameters} parameters The current parameters of the list.
      * @returns {PickerValidDate[]} The list of items.
      */
@@ -119,7 +119,7 @@ export namespace useYearCells {
     maxDate: PickerValidDate;
     /**
      * A function that returns the items that would be rendered if getItems is not provided.
-     * @returns {PickerValidDate[]} The list of to render items.
+     * @returns {PickerValidDate[]} The list of the items to render.
      */
     getDefaultItems: () => PickerValidDate[];
   }

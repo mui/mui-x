@@ -49,7 +49,7 @@ export function useBaseCalendarDayCell(parameters: useBaseCalendarDayCell.Parame
 export namespace useBaseCalendarDayCell {
   export interface Parameters {
     /**
-     * The date object representing the day.
+     * The value to select when this cell is clicked.
      */
     value: PickerValidDate;
     /**
