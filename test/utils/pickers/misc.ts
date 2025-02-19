@@ -66,3 +66,11 @@ export const formatFullTimeValue = (adapter: MuiPickersAdapter, value: PickerVal
   const hasMeridiem = adapter.is12HourCycleInCurrentLocale();
   return adapter.format(value, hasMeridiem ? 'fullTime12h' : 'fullTime24h');
 };
+
+export const isPickerSingleInput = (parameters: OpenPickerParams) => {
+  if (parameters.type === 'date-range' || parameters.type === 'date-time-range') {
+    return parameters.isSingleInput;
+  }
+
+  return true;
+};
