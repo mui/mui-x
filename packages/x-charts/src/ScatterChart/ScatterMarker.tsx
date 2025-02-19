@@ -48,7 +48,7 @@ export interface ScatterMarkerProps {
  * TODO: Document
  */
 const ScatterMarker = consumeSlots(
-  'MuiChartsScatterMarker',
+  'MuiScatterMarker',
   'marker',
   {
     // Currently required to make the prop types work
