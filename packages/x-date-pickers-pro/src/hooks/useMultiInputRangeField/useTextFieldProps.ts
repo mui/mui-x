@@ -95,7 +95,6 @@ export function useTextFieldProps<
       return;
     }
 
-    event.stopPropagation();
     setRangePosition?.(position);
     if (pickerContext.triggerStatus === 'enabled') {
       event.preventDefault();
