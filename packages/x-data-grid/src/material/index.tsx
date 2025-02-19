@@ -1,5 +1,6 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
+import { styled } from '@mui/material/styles';
 import MUIAutocomplete from '@mui/material/Autocomplete';
 import MUIBadge from '@mui/material/Badge';
 import MUICheckbox from '@mui/material/Checkbox';
@@ -67,6 +68,12 @@ import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 export { useMaterialCSSVariables } from './variables';
 
 const ClickAwayListener = forwardRef(MUIClickAwayListener);
+
+const InputAdornment = styled(MUIInputAdornment)({
+  [`&.${inputAdornmentClasses.positionEnd} .${iconButtonClasses.sizeSmall}`]: {
+    marginRight: '-7px',
+  },
+})
 
 const BaseSelect = forwardRef<any, GridSlotProps['baseSelect']>(function BaseSelect(props, ref) {
   const {
@@ -355,13 +362,13 @@ function transformInputProps(props: GridSlotProps['baseInput'] | undefined) {
 
   if (result.startAdornment) {
     result.startAdornment = (
-      <MUIInputAdornment position="start">{result.startAdornment}</MUIInputAdornment>
+      <InputAdornment position="start">{result.startAdornment}</InputAdornment>
     );
   }
 
   if (result.endAdornment) {
     result.endAdornment = (
-      <MUIInputAdornment position="end">{result.endAdornment}</MUIInputAdornment>
+      <InputAdornment position="end">{result.endAdornment}</InputAdornment>
     );
   }
 
@@ -483,15 +490,3 @@ function BaseSelectOption({ native, ...props }: NonNullable<GridSlotProps['baseS
   return <MUIMenuItem {...props} />;
 }
 
-function BaseInputAdornment(props: GridSlotProps['baseInputAdornment']) {
-  return (
-    <MUIInputAdornment
-      sx={{
-        [`&.${inputAdornmentClasses.positionEnd} .${iconButtonClasses.sizeSmall}`]: {
-          marginRight: '-7px',
-        },
-      }}
-      {...props}
-    />
-  );
-}
