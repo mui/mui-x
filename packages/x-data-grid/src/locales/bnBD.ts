@@ -6,8 +6,6 @@ const bnBDGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'কোনো সারি নেই',
   noResultsOverlayLabel: 'কোনো ফলাফল পাওয়া যায়নি।',
-  noColumnsOverlayLabel: 'কোনো কলাম নেই',
-  noColumnsOverlayManageColumns: 'কলাম পরিচালনা করুন',
 
   // Density selector toolbar button text
   toolbarDensity: 'ঘনত্ব',
@@ -32,18 +30,6 @@ const bnBDGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterPlaceholder: 'অনুসন্ধান করুন…',
   toolbarQuickFilterLabel: 'অনুসন্ধান',
   toolbarQuickFilterDeleteIconLabel: 'পরিষ্কার করুন',
-
-  // Prompt toolbar field
-  toolbarPromptControlPlaceholder: 'একটি প্রম্পট লিখুন…',
-  toolbarPromptControlWithRecordingPlaceholder: 'লিখুন বা রেকর্ড করুন…',
-  toolbarPromptControlRecordingPlaceholder: 'শুনছে…',
-  toolbarPromptControlLabel: 'প্রম্পট ইনপুট',
-  toolbarPromptControlRecordButtonDefaultLabel: 'রেকর্ড',
-  toolbarPromptControlRecordButtonActiveLabel: 'রেকর্ড বন্ধ করুন',
-  toolbarPromptControlSendActionLabel: 'পাঠান',
-  toolbarPromptControlSendActionAriaLabel: 'প্রম্পট পাঠান',
-  toolbarPromptControlErrorMessage:
-    'অনুরোধ প্রক্রিয়াকরণে সমস্যা হয়েছে। অনুগ্রহ করে অন্য প্রম্পট দিয়ে আবার চেষ্টা করুন।',
 
   // Export selector toolbar button text
   toolbarExport: 'এক্সপোর্ট',
@@ -116,7 +102,6 @@ const bnBDGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'বড় বা সমান',
   'headerFilterOperator<': 'ছোট',
   'headerFilterOperator<=': 'ছোট বা সমান',
-  headerFilterClear: 'ফিল্টার মুছুন',
 
   // Filter values text
   filterValueAny: 'যেকোনো',

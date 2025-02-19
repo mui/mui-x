@@ -9,7 +9,7 @@ const views: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'এএম/পিএম',
 };
 
-const bnBDPickers: Partial<PickersLocaleText> = {
+const bnBDPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
   previousMonth: 'আগের মাস',
   nextMonth: 'পরের মাস',
@@ -43,8 +43,12 @@ const bnBDPickers: Partial<PickersLocaleText> = {
   dateRangePickerToolbarTitle: 'তারিখের পরিসীমা নির্বাচন করুন',
 
   // Clock labels
-  clockLabelText: (view, formattedTime) =>
-    `নির্বাচন করুন ${views[view]}. ${!formattedTime ? 'কোনও সময় নির্বাচন করা হয়নি' : `নির্বাচিত সময় ${formattedTime}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `নির্বাচন করুন ${views[view]}. ${
+      !formattedTime && (time === null || !utils.isValid(time))
+        ? 'কোনও সময় নির্বাচন করা হয়নি'
+        : `নির্বাচিত সময় ${formattedTime ?? utils.format(time, 'fullTime')}}`
+    }`,
   hoursClockNumberText: (hours) => `${hours} ঘণ্টা`,
   minutesClockNumberText: (minutes) => `${minutes} মিনিট`,
   secondsClockNumberText: (seconds) => `${seconds} সেকেন্ড`,
@@ -59,10 +63,14 @@ const bnBDPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (formattedDate) =>
-    formattedDate ? `তারিখ নির্বাচন করুন, নির্বাচিত তারিখ ${formattedDate}` : 'তারিখ নির্বাচন করুন',
-  openTimePickerDialogue: (formattedTime) =>
-    formattedTime ? `সময় নির্বাচন করুন, নির্বাচিত সময় ${formattedTime}` : 'সময় নির্বাচন করুন',
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `তারিখ নির্বাচন করুন, নির্বাচিত তারিখ ${formattedDate ?? utils.format(value, 'fullDate')}`
+      : 'তারিখ নির্বাচন করুন',
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `সময় নির্বাচন করুন, নির্বাচিত সময় ${formattedTime ?? utils.format(value, 'fullTime')}`
+      : 'সময় নির্বাচন করুন',
   fieldClearLabel: 'পরিষ্কার',
 
   // Table labels

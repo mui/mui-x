@@ -12,8 +12,8 @@
     "importName": "bnBD",
     "localeName": "Bangla",
     "missingKeysCount": 2,
-    "totalKeysCount": 135,
-    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/bnBD.ts"
+    "totalKeysCount": 123,
+    "githubLink": "https://github.com/mui/mui-x/blob/v7.x/packages/x-data-grid/src/locales/bnBD.ts"
   },
   {
     "languageTag": "be-BY",
