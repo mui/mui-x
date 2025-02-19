@@ -1,10 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { RefObject } from '@mui/x-internals/types';
-import {
-  unstable_useEnhancedEffect as useEnhancedEffect,
-  unstable_useEventCallback as useEventCallback,
-} from '@mui/utils';
+import useEventCallback from '@mui/utils/useEventCallback';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useLazyRef from '@mui/utils/useLazyRef';
 import useTimeout from '@mui/utils/useTimeout';
 import { useRtl } from '@mui/system/RtlProvider';

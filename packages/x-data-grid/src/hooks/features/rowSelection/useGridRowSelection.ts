@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import { unstable_useEventCallback as useEventCallback } from '@mui/utils';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
