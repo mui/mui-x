@@ -21,10 +21,10 @@ export const preprocessSeries = <TSeriesType extends ChartSeriesType>({
   seriesConfig,
   dataset,
 }: {
-  series: AllSeriesType<TSeriesType>[];
+  series: Readonly<AllSeriesType<TSeriesType>[]>;
   colors: string[];
   seriesConfig: ChartSeriesConfig<TSeriesType>;
-  dataset?: DatasetType;
+  dataset?: Readonly<DatasetType>;
 }) => {
   // Group series by type
   const seriesGroups: { [type in ChartSeriesType]?: SeriesProcessorParams<type> } = {};

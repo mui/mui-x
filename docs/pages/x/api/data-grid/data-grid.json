@@ -687,12 +687,6 @@
       "class": null
     },
     {
-      "name": "baseFormControl",
-      "description": "The custom FormControl component used in the grid.",
-      "default": "FormControl",
-      "class": null
-    },
-    {
       "name": "baseSelect",
       "description": "The custom Select component used in the grid.",
       "default": "Select",
@@ -1325,6 +1319,12 @@
       "isGlobal": false
     },
     {
+      "key": "columnsManagementEmptyText",
+      "className": "MuiDataGrid-columnsManagementEmptyText",
+      "description": "Styles applied to the columns management empty text element.",
+      "isGlobal": false
+    },
+    {
       "key": "columnsManagementFooter",
       "className": "MuiDataGrid-columnsManagementFooter",
       "description": "Styles applied to the columns management footer element.",
@@ -1340,6 +1340,12 @@
       "key": "columnsManagementRow",
       "className": "MuiDataGrid-columnsManagementRow",
       "description": "Styles applied to the columns management row element.",
+      "isGlobal": false
+    },
+    {
+      "key": "columnsManagementScrollArea",
+      "className": "MuiDataGrid-columnsManagementScrollArea",
+      "description": "Styles applied to the columns management scroll area element.",
       "isGlobal": false
     },
     {
