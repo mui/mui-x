@@ -287,11 +287,14 @@ For more complex cases, you may need to adjust the code manually. To aid you in 
 
 ## Replace `topAxis`, `rightAxis`, `bottomAxis`, and `leftAxis` props by `position` in the axis config
 
-The following props have been removed from the axis config: `topAxis`, `rightAxis`, `bottomAxis`, and `leftAxis`.
+The following props have been removed `topAxis`, `rightAxis`, `bottomAxis`, and `leftAxis`.
 
-Replaced the `topAxis`, `rightAxis`, `bottomAxis` and `leftAxis` props by a `position` prop in the axis config that accepts `'top' | 'right' | 'bottom' | 'left' | 'none'`.
+To modify the axis placement, use the new `position` property in the axis config.
+It accepts `'top' | 'right' | 'bottom' | 'left' | 'none'`.
 
 If you were previously disabling an axis by setting it to `null`, you should now set its `position` to `'none'`.
+
+> Notice this new API allows you to [stack multiple axes on the same side of the chart](https://next.mui.com/x/react-charts/axis/#multiple-axes-on-the-same-side)
 
 ```diff
  <LineChart
