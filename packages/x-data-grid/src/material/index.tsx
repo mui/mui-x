@@ -11,16 +11,17 @@ import MUIFocusTrap from '@mui/material/Unstable_TrapFocus';
 import MUILinearProgress from '@mui/material/LinearProgress';
 import MUIListItemIcon from '@mui/material/ListItemIcon';
 import MUIListItemText from '@mui/material/ListItemText';
+import { MenuProps as MUIMenuProps } from '@mui/material/Menu';
 import MUIMenuList from '@mui/material/MenuList';
 import MUIMenuItem from '@mui/material/MenuItem';
 import MUITextField from '@mui/material/TextField';
 import MUIFormControl from '@mui/material/FormControl';
-import MUIFormControlLabel from '@mui/material/FormControlLabel';
+import MUIFormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
 import MUISelect from '@mui/material/Select';
 import MUISwitch from '@mui/material/Switch';
 import MUIButton from '@mui/material/Button';
-import MUIIconButton from '@mui/material/IconButton';
-import MUIInputAdornment from '@mui/material/InputAdornment';
+import MUIIconButton, { iconButtonClasses } from '@mui/material/IconButton';
+import MUIInputAdornment, { inputAdornmentClasses } from '@mui/material/InputAdornment';
 import MUITooltip from '@mui/material/Tooltip';
 import MUIPopper, { PopperProps as MUIPopperProps } from '@mui/material/Popper';
 import MUIClickAwayListener from '@mui/material/ClickAwayListener';
@@ -83,6 +84,14 @@ const BaseSelect = forwardRef<any, GridSlotProps['baseSelect']>(function BaseSel
     fullWidth,
     ...rest
   } = props;
+  const menuProps = {
+    PaperProps: {
+      onKeyDown,
+    },
+  } as Partial<MUIMenuProps>;
+  if (onClose) {
+    menuProps.onClose = onClose;
+  }
   return (
     <MUIFormControl size={size} fullWidth={fullWidth} style={style} disabled={disabled} ref={ref}>
       <MUIInputLabel id={labelId} htmlFor={id} shrink variant="outlined">
@@ -99,12 +108,7 @@ const BaseSelect = forwardRef<any, GridSlotProps['baseSelect']>(function BaseSel
         notched
         inputProps={slotProps?.htmlInput}
         onOpen={onOpen}
-        MenuProps={{
-          onClose,
-          PaperProps: {
-            onKeyDown,
-          },
-        }}
+        MenuProps={menuProps}
         size={size}
       />
     </MUIFormControl>
@@ -228,7 +232,14 @@ function BaseCheckbox(props: GridSlotProps['baseCheckbox'], ref: React.Ref<HTMLB
         />
       }
       label={label}
-      sx={fullWidth ? { width: '100%', margin: 0 } : undefined}
+      sx={(theme) => ({
+        gap: 0.5,
+        margin: 0,
+        width: fullWidth ? '100%' : undefined,
+        [`& .${formControlLabelClasses.label}`]: {
+          fontSize: theme.typography.pxToRem(14),
+        },
+      })}
     />
   );
 }
@@ -470,4 +481,17 @@ function BaseSelectOption({ native, ...props }: NonNullable<GridSlotProps['baseS
     return <option {...props} />;
   }
   return <MUIMenuItem {...props} />;
+}
+
+function BaseInputAdornment(props: GridSlotProps['baseInputAdornment']) {
+  return (
+    <MUIInputAdornment
+      sx={{
+        [`&.${inputAdornmentClasses.positionEnd} .${iconButtonClasses.sizeSmall}`]: {
+          marginRight: '-7px',
+        },
+      }}
+      {...props}
+    />
+  );
 }
