@@ -44,11 +44,7 @@ const bnBDPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>
-    `নির্বাচন করুন ${views[view]}. ${
-      !formattedTime && (time === null || !utils.isValid(time))
-        ? 'কোনও সময় নির্বাচন করা হয়নি'
-        : `নির্বাচিত সময় ${formattedTime ?? utils.format(time, 'fullTime')}}`
-    }`,
+    `নির্বাচন করুন ${views[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'কোনও সময় নির্বাচন করা হয়নি' : `নির্বাচিত সময় ${formattedTime ?? utils.format(time, 'fullTime')}}`}`,
   hoursClockNumberText: (hours) => `${hours} ঘণ্টা`,
   minutesClockNumberText: (minutes) => `${minutes} মিনিট`,
   secondsClockNumberText: (seconds) => `${seconds} সেকেন্ড`,
