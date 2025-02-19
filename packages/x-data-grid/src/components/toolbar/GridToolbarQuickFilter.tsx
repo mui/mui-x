@@ -157,32 +157,26 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
       slotProps={{
         ...slotProps?.root.slotProps,
         input: {
-          startAdornment: (
-            <rootProps.slots.baseInputAdornment position="start">
-              <rootProps.slots.quickFilterIcon fontSize="small" />
-            </rootProps.slots.baseInputAdornment>
-          ),
+          startAdornment: <rootProps.slots.quickFilterIcon fontSize="small" />,
           endAdornment: (
-            <rootProps.slots.baseInputAdornment position="end">
-              <rootProps.slots.baseIconButton
-                aria-label={apiRef.current.getLocaleText('toolbarQuickFilterDeleteIconLabel')}
-                size="small"
-                edge="end"
-                style={
-                  searchValue
-                    ? {
-                        visibility: 'visible',
-                      }
-                    : {
-                        visibility: 'hidden',
-                      }
-                }
-                onClick={handleSearchReset}
-                {...rootProps.slotProps?.baseIconButton}
-              >
-                <rootProps.slots.quickFilterClearIcon fontSize="small" />
-              </rootProps.slots.baseIconButton>
-            </rootProps.slots.baseInputAdornment>
+            <rootProps.slots.baseIconButton
+              aria-label={apiRef.current.getLocaleText('toolbarQuickFilterDeleteIconLabel')}
+              size="small"
+              edge="end"
+              style={
+                searchValue
+                  ? {
+                      visibility: 'visible',
+                    }
+                  : {
+                      visibility: 'hidden',
+                    }
+              }
+              onClick={handleSearchReset}
+              {...rootProps.slotProps?.baseIconButton}
+            >
+              <rootProps.slots.quickFilterClearIcon fontSize="small" />
+            </rootProps.slots.baseIconButton>
           ),
           ...slotProps?.root.slotProps?.input,
         },

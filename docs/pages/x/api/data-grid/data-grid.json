@@ -675,12 +675,6 @@
       "class": null
     },
     {
-      "name": "baseInputAdornment",
-      "description": "The custom InputAdornment component used in the grid.",
-      "default": "InputAdornment",
-      "class": null
-    },
-    {
       "name": "baseTextField",
       "description": "The custom TextField component used in the grid.",
       "default": "TextField",
@@ -720,12 +714,6 @@
       "name": "basePopper",
       "description": "The custom Popper component used in the grid.",
       "default": "Popper",
-      "class": null
-    },
-    {
-      "name": "baseInputLabel",
-      "description": "The custom InputLabel component used in the grid.",
-      "default": "InputLabel",
       "class": null
     },
     {
@@ -1319,6 +1307,12 @@
       "isGlobal": false
     },
     {
+      "key": "columnsManagementEmptyText",
+      "className": "MuiDataGrid-columnsManagementEmptyText",
+      "description": "Styles applied to the columns management empty text element.",
+      "isGlobal": false
+    },
+    {
       "key": "columnsManagementFooter",
       "className": "MuiDataGrid-columnsManagementFooter",
       "description": "Styles applied to the columns management footer element.",
@@ -1334,6 +1328,12 @@
       "key": "columnsManagementRow",
       "className": "MuiDataGrid-columnsManagementRow",
       "description": "Styles applied to the columns management row element.",
+      "isGlobal": false
+    },
+    {
+      "key": "columnsManagementScrollArea",
+      "className": "MuiDataGrid-columnsManagementScrollArea",
+      "description": "Styles applied to the columns management scroll area element.",
       "isGlobal": false
     },
     {

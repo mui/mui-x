@@ -879,6 +879,10 @@
       "nodeName": "the column header separator",
       "conditions": "the side is &quot;right&quot;"
     },
+    "columnsManagementEmptyText": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the columns management empty text element"
+    },
     "columnsManagementFooter": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the columns management footer element"
@@ -890,6 +894,10 @@
     "columnsManagementRow": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the columns management row element"
+    },
+    "columnsManagementScrollArea": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the columns management scroll area element"
     },
     "columnsManagementSearchInput": {
       "description": "Styles applied to {{nodeName}}.",
@@ -1223,8 +1231,6 @@
     "baseDivider": "The custom Divider component used in the grid.",
     "baseIconButton": "The custom IconButton component used in the grid.",
     "baseInput": "The custom Input component used in the grid.",
-    "baseInputAdornment": "The custom InputAdornment component used in the grid.",
-    "baseInputLabel": "The custom InputLabel component used in the grid.",
     "baseLinearProgress": "The custom LinearProgress component used in the grid.",
     "baseMenuItem": "The custom MenuItem component used in the grid.",
     "baseMenuList": "The custom MenuList component used in the grid.",

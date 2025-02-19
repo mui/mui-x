@@ -276,6 +276,36 @@ If you prefer the old behavior, you can create a custom field that renders a rea
 See [Custom field—Using a read-only Text Field on mobile](/x/react-date-pickers/custom-field/#using-a-read-only-text-field-on-mobile) to learn more.
 :::
 
+### New default fields for the range pickers
+
+The range pickers now use single input fields by default:
+
+- Date Range Picker: `<SingleInputDateRangeField />` instead of `<MultiInputDateRangeField />`
+- Time Range Picker: `<SingleInputTimeRangeField />` instead of `<MultiInputTimeRangeField />`
+- Date Time Range Picker: `<SingleInputDateTimeRangeField />` instead of `<MultiInputDateTimeRangeField />`
+
+You can manually pass the multi input fields to your picker if you prefer them:
+
+```diff
+ import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
++import { MultiInputDateRangePicker } from '@mui/x-date-pickers-pro/MultiInputDateRangePicker';
+
+ <DateRangePicker
++  slots={{ field: MultiInputDateRangePicker }}
+ />
+```
+
+If you were already using a single input field, you no longer need to manually pass it to the picker:
+
+```diff
+ import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+-import { SingleInputDateRangePicker } from '@mui/x-date-pickers-pro/SingleInputDateRangePicker';
+
+ <DateRangePicker
+-  slots={{ field: SingleInputDateRangePicker }}
+ />
+```
+
 ### Month Calendar
 
 To simplify the theme and class structure, the `<PickersMonth />` component has been moved inside the Month Calendar component.
