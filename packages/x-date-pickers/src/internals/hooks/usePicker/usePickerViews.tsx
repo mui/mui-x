@@ -83,7 +83,7 @@ export interface UsePickerViewParams<
   props: TExternalProps;
   propsFromPickerValue: UsePickerValueViewsResponse<TValue>;
   autoFocusView: boolean;
-  viewContainerRole: 'dialog' | 'tooltip' | undefined;
+  viewContainerRole: 'dialog' | 'tooltip' | null;
   /**
    * A function that intercepts the regular picker rendering.
    * Can be used to consume the provided `viewRenderers` and render a custom component wrapping them.
@@ -159,10 +159,10 @@ export interface UsePickerViewsPrivateContextValue {
    * It is equal to "dialog" when the view is rendered inside a `@mui/material/Dialog`.
    * It is equal to "dialog" when the view is rendered inside a `@mui/material/Popper` and the focus is trapped inside the view.
    * It is equal to "tooltip" when the view is rendered inside a `@mui/material/Popper` and the focus remains inside the field.
-   * It is always equal to undefined if the picker does not have a field (static pickers).
-   * It is always equal to undefined if the component you are accessing the context from is not wrapped by a picker.
+   * It is always equal to null if the picker does not have a field (static pickers).
+   * It is always equal to null if the component you are accessing the context from is not wrapped by a picker.
    */
-  viewContainerRole: 'dialog' | 'tooltip' | undefined;
+  viewContainerRole: 'dialog' | 'tooltip' | null;
 }
 
 export interface UsePickerViewsFieldPrivateContextValue {

@@ -35,7 +35,7 @@ export const useStaticPicker = <
     props,
     variant: displayStaticWrapperAs,
     autoFocusView: autoFocus ?? false,
-    viewContainerRole: undefined,
+    viewContainerRole: null,
     localeText,
   });
 
