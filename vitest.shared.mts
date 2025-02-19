@@ -62,7 +62,14 @@ export default defineConfig({
     ...(process.env.CI && {
       minWorkers: 1,
       maxWorkers: 1,
-      poolOptions: {},
+      poolOptions: {
+        forks: {
+          singleFork: true,
+        },
+        threads: {
+          singleThread: true,
+        },
+      },
     }),
     exclude: [
       '**/*.spec.{js,ts,tsx}',
