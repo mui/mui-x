@@ -72,7 +72,6 @@ export function useTextFieldProps<
     case 'date': {
       useManager = useDateManager;
       break;
-      break;
     }
     case 'time': {
       useManager = useTimeManager;
