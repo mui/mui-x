@@ -2,7 +2,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { ScatterMarkerSlotProps, ScatterMarkerSlots } from './ScatterMarker.types';
-import { ScatterMarkerElement } from './ScatterMarker';
 import {
   DefaultizedScatterSeriesType,
   ScatterItemIdentifier,
@@ -19,6 +18,7 @@ import {
   UseChartVoronoiSignature,
 } from '../internals/plugins/featurePlugins/useChartVoronoi';
 import { useChartContext } from '../context/ChartProvider';
+import { ScatterMarker } from './ScatterMarker';
 
 export interface ScatterProps {
   series: DefaultizedScatterSeriesType;
@@ -122,16 +122,17 @@ function Scatter(props: ScatterProps) {
   return (
     <g>
       {cleanData.map((dataPoint) => (
-        <ScatterMarkerElement
+        <ScatterMarker
           key={dataPoint.id ?? dataPoint.dataIndex}
           dataIndex={dataPoint.dataIndex}
-          series={series}
+          seriesId={series.id}
+          size={series.markerSize}
           color={dataPoint.color}
           isHighlighted={dataPoint.isHighlighted}
           isFaded={dataPoint.isFaded}
           x={dataPoint.x}
           y={dataPoint.y}
-          onItemClick={
+          onClick={
             onItemClick &&
             ((event) =>
               onItemClick(event, {
@@ -140,7 +141,7 @@ function Scatter(props: ScatterProps) {
                 dataIndex: dataPoint.dataIndex,
               }))
           }
-          interactionProps={dataPoint.interactionProps}
+          {...dataPoint.interactionProps}
           slots={slots}
           slotProps={slotProps}
         />
