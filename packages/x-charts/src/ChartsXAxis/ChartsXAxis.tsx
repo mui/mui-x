@@ -43,8 +43,9 @@ function addLabelDimension(
     reverse,
     isMounted,
   }: Pick<ChartsXAxisProps, 'tickLabelInterval' | 'tickLabelStyle'> &
-    Pick<AxisDefaultized<ScaleName, any, ChartsXAxisProps>, 'reverse' | 'tickLabelMinGap'> & {
+    Pick<AxisDefaultized<ScaleName, any, ChartsXAxisProps>, 'reverse'> & {
       isMounted: boolean;
+      tickLabelMinGap: NonNullable<ChartsXAxisProps['tickLabelMinGap']>;
     },
 ): (TickItemType & LabelExtraData)[] {
   const withDimension = xTicks.map((tick) => {
