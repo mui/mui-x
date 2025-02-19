@@ -21,7 +21,7 @@ export const preprocessSeries = <TSeriesType extends ChartSeriesType>({
   seriesConfig,
   dataset,
 }: {
-  series: readonly AllSeriesType<TSeriesType>[];
+  series: Readonly<AllSeriesType<TSeriesType>[]>;
   colors: string[];
   seriesConfig: ChartSeriesConfig<TSeriesType>;
   dataset?: Readonly<DatasetType>;
