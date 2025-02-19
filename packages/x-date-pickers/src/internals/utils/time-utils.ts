@@ -1,4 +1,4 @@
-import { MuiPickersAdapter, PickerValidDate, TimeView } from '../../models';
+import { MuiPickersAdapter, PickerValidDate } from '../../models';
 import { DateOrTimeViewWithMeridiem, TimeViewWithMeridiem } from '../models';
 import { areViewsEqual } from './views';
 
@@ -59,7 +59,11 @@ export const createIsAfterIgnoreDatePart =
 
 export const resolveTimeFormat = (
   utils: MuiPickersAdapter,
-  { format, views, ampm }: { format?: string; views: readonly TimeView[]; ampm: boolean },
+  {
+    format,
+    views,
+    ampm,
+  }: { format?: string; views: readonly TimeViewWithMeridiem[]; ampm: boolean },
 ) => {
   if (format != null) {
     return format;

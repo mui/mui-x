@@ -159,7 +159,12 @@ export const useDesktopRangePicker = <
     >
       <PickerFieldUIContextProvider slots={slots} slotProps={slotProps} inputRef={inputRef}>
         <PickerRangePositionContext.Provider value={rangePositionResponse}>
-          <Field {...enrichedFieldResponse.fieldProps} />
+          <Field
+            {...enrichedFieldResponse.fieldProps}
+            data-active-range-position={
+              providerProps.contextValue.open ? rangePositionResponse.rangePosition : undefined
+            }
+          />
           <PickerPopper
             role="tooltip"
             containerRef={popperRef}

@@ -1,0 +1,50 @@
+{
+  "props": {
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    },
+    "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
+  },
+  "name": "TimeRangePickerToolbar",
+  "imports": [
+    "import { TimeRangePickerToolbar } from '@mui/x-date-pickers-pro/TimeRangePicker';",
+    "import { TimeRangePickerToolbar } from '@mui/x-date-pickers-pro';"
+  ],
+  "classes": [
+    {
+      "key": "container",
+      "className": "MuiTimeRangePickerToolbar-container",
+      "description": "Styles applied to the container element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiTimeRangePickerToolbar-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "separator",
+      "className": "MuiTimeRangePickerToolbar-separator",
+      "description": "Styles applied to the separator element.",
+      "isGlobal": false
+    },
+    {
+      "key": "timeContainer",
+      "className": "MuiTimeRangePickerToolbar-timeContainer",
+      "description": "Styles applied to the time container element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiTimeRangePickerToolbar",
+  "filename": "/packages/x-date-pickers-pro/src/TimeRangePicker/TimeRangePickerToolbar.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/time-range-picker/\">Time Range Picker <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "cssComponent": false
+}

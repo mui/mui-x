@@ -35,6 +35,7 @@ const enUSPickers: PickersLocaleText = {
   dateTimePickerToolbarTitle: 'Select date & time',
   timePickerToolbarTitle: 'Select time',
   dateRangePickerToolbarTitle: 'Select date range',
+  timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>

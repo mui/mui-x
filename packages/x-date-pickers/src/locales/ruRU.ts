@@ -42,6 +42,7 @@ const ruRUPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Выбрать дату и время',
   timePickerToolbarTitle: 'Выбрать время',
   dateRangePickerToolbarTitle: 'Выбрать период',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>

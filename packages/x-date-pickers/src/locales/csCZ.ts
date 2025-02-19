@@ -42,6 +42,7 @@ const csCZPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Vyberte datum a čas',
   timePickerToolbarTitle: 'Vyberte čas',
   dateRangePickerToolbarTitle: 'Vyberete rozmezí dat',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
