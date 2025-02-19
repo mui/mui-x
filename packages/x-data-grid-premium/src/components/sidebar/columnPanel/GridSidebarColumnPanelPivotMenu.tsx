@@ -12,6 +12,7 @@ import type {
   FieldTransferObject,
   UpdatePivotModel,
 } from './GridSidebarColumnPanelBody';
+import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 
 export function GridSidebarColumnPanelPivotMenu(props: {
   field: string;
@@ -23,6 +24,7 @@ export function GridSidebarColumnPanelPivotMenu(props: {
   const rootProps = useGridRootProps();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const apiRef = useGridApiContext();
   const isAvailableField = modelKey === null;
   const fieldIndexInModel = !isAvailableField
     ? props.pivotModel[modelKey].findIndex((item) => item.field === field)
@@ -106,6 +108,7 @@ export function GridSidebarColumnPanelPivotMenu(props: {
         aria-controls={open ? 'pivot-menu' : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
+        aria-label={apiRef.current.getLocaleText('pivotMenuOptions')}
         onClick={handleClick}
       >
         {isAvailableField ? (
@@ -117,9 +120,15 @@ export function GridSidebarColumnPanelPivotMenu(props: {
 
       {isAvailableField ? (
         <Menu {...menuProps}>
-          <MenuItem onClick={() => handleMove('rows')}>Add to Rows</MenuItem>
-          <MenuItem onClick={() => handleMove('columns')}>Add to Columns</MenuItem>
-          <MenuItem onClick={() => handleMove('values')}>Add to Values</MenuItem>
+          <MenuItem onClick={() => handleMove('rows')}>
+            {apiRef.current.getLocaleText('pivotMenuAddToRows')}
+          </MenuItem>
+          <MenuItem onClick={() => handleMove('columns')}>
+            {apiRef.current.getLocaleText('pivotMenuAddToColumns')}
+          </MenuItem>
+          <MenuItem onClick={() => handleMove('values')}>
+            {apiRef.current.getLocaleText('pivotMenuAddToValues')}
+          </MenuItem>
         </Menu>
       ) : (
         <Menu {...menuProps}>
@@ -127,52 +136,52 @@ export function GridSidebarColumnPanelPivotMenu(props: {
             <ListItemIcon>
               <rootProps.slots.pivotMenuMoveUpIcon />
             </ListItemIcon>
-            <ListItemText>Move up</ListItemText>
+            <ListItemText>{apiRef.current.getLocaleText('pivotMenuMoveUp')}</ListItemText>
           </MenuItem>
           <MenuItem disabled={!canMoveDown} onClick={() => handleMove('down')}>
             <ListItemIcon>
               <rootProps.slots.pivotMenuMoveDownIcon />
             </ListItemIcon>
-            <ListItemText>Move down</ListItemText>
+            <ListItemText>{apiRef.current.getLocaleText('pivotMenuMoveDown')}</ListItemText>
           </MenuItem>
           <Divider />
           <MenuItem disabled={!canMoveUp} onClick={() => handleMove('top')}>
             <ListItemIcon>
               <rootProps.slots.pivotMenuMoveToTopIcon />
             </ListItemIcon>
-            <ListItemText>Move to top</ListItemText>
+            <ListItemText>{apiRef.current.getLocaleText('pivotMenuMoveToTop')}</ListItemText>
           </MenuItem>
           <MenuItem disabled={!canMoveDown} onClick={() => handleMove('bottom')}>
             <ListItemIcon>
               <rootProps.slots.pivotMenuMoveToBottomIcon />
             </ListItemIcon>
-            <ListItemText>Move to bottom</ListItemText>
+            <ListItemText>{apiRef.current.getLocaleText('pivotMenuMoveToBottom')}</ListItemText>
           </MenuItem>
           <Divider />
           <MenuItem onClick={() => handleMove('rows')}>
             <ListItemIcon>
               {modelKey === 'rows' ? <rootProps.slots.pivotMenuCheckIcon /> : null}
             </ListItemIcon>
-            <ListItemText>Rows</ListItemText>
+            <ListItemText>{apiRef.current.getLocaleText('pivotMenuRows')}</ListItemText>
           </MenuItem>
           <MenuItem onClick={() => handleMove('columns')}>
             <ListItemIcon>
               {modelKey === 'columns' ? <rootProps.slots.pivotMenuCheckIcon /> : null}
             </ListItemIcon>
-            <ListItemText>Columns</ListItemText>
+            <ListItemText>{apiRef.current.getLocaleText('pivotMenuColumns')}</ListItemText>
           </MenuItem>
           <MenuItem onClick={() => handleMove('values')}>
             <ListItemIcon>
               {modelKey === 'values' ? <rootProps.slots.pivotMenuCheckIcon /> : null}
             </ListItemIcon>
-            <ListItemText>Values</ListItemText>
+            <ListItemText>{apiRef.current.getLocaleText('pivotMenuValues')}</ListItemText>
           </MenuItem>
           <Divider />
           <MenuItem onClick={() => handleMove(null)}>
             <ListItemIcon>
               <rootProps.slots.pivotMenuRemoveIcon />
             </ListItemIcon>
-            <ListItemText>Remove</ListItemText>
+            <ListItemText>{apiRef.current.getLocaleText('pivotMenuRemove')}</ListItemText>
           </MenuItem>
         </Menu>
       )}

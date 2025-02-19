@@ -8,6 +8,7 @@ import { getAvailableAggregationFunctions } from '../../../hooks/features/aggreg
 import { PivotField } from './GridSidebarColumnPanelPivotField';
 import { GridSidebarCollapsibleSection } from '../GridSidebarCollapsibleSection';
 import { useResize } from '../../../hooks/utils/useResize';
+import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 
 const Container = styled('div')({
   flex: 1,
@@ -132,6 +133,7 @@ export function GridSidebarColumnPanelBody({
   pivotModel: PivotModel;
   onPivotModelChange: React.Dispatch<React.SetStateAction<PivotModel>>;
 }) {
+  const apiRef = useGridApiContext();
   const { ref: resizeHandleRef } = useResize({
     direction: 'vertical',
     getInitialSize: (handle) => {
@@ -307,6 +309,10 @@ export function GridSidebarColumnPanelBody({
     }
   }, []);
 
+  const rowsLabel = apiRef.current.getLocaleText('pivotRows');
+  const columnsLabel = apiRef.current.getLocaleText('pivotColumns');
+  const valuesLabel = apiRef.current.getLocaleText('pivotValues');
+
   return (
     <Container data-dragging={drag.active} onDragLeave={handleDragLeave}>
       <TopPane
@@ -316,7 +322,9 @@ export function GridSidebarColumnPanelBody({
         data-section={null}
         data-drag-over={drag.active && drag.dropZone === null}
       >
-        {availableFields.length === 0 && <Placeholder>No fields</Placeholder>}
+        {availableFields.length === 0 && (
+          <Placeholder>{apiRef.current.getLocaleText('pivotNoFields')}</Placeholder>
+        )}
         {availableFields.length > 0 && (
           <FieldList>
             {availableFields.map((field) => (
@@ -345,19 +353,22 @@ export function GridSidebarColumnPanelBody({
           <CollapsibleSection
             title={
               <CollapsibleSectionTitle>
-                Rows
+                {rowsLabel}
                 {pivotModel.rows.length > 0 && (
                   <rootProps.slots.baseBadge badgeContent={pivotModel.rows.length} />
                 )}
               </CollapsibleSectionTitle>
             }
+            aria-label={apiRef.current.getLocaleText('sidebarCollapseSection')(rowsLabel)}
             onDrop={handleDrop}
             onDragEnter={handleDragEnter}
             onDragOver={handleDragOver}
             data-section="rows"
             data-drag-over={drag.dropZone === 'rows'}
           >
-            {pivotModel.rows.length === 0 && <Placeholder>Drag here to create rows</Placeholder>}
+            {pivotModel.rows.length === 0 && (
+              <Placeholder>{apiRef.current.getLocaleText('pivotDragToRows')}</Placeholder>
+            )}
             {pivotModel.rows.length > 0 && (
               <FieldList>
                 {pivotModel.rows.map(({ field, hidden }) => (
@@ -385,12 +396,13 @@ export function GridSidebarColumnPanelBody({
           <CollapsibleSection
             title={
               <CollapsibleSectionTitle>
-                Columns
+                {columnsLabel}
                 {pivotModel.columns.length > 0 && (
                   <rootProps.slots.baseBadge badgeContent={pivotModel.columns.length} />
                 )}
               </CollapsibleSectionTitle>
             }
+            aria-label={apiRef.current.getLocaleText('sidebarCollapseSection')(columnsLabel)}
             onDrop={handleDrop}
             onDragEnter={handleDragEnter}
             onDragOver={handleDragOver}
@@ -398,7 +410,7 @@ export function GridSidebarColumnPanelBody({
             data-drag-over={drag.dropZone === 'columns'}
           >
             {pivotModel.columns.length === 0 && (
-              <Placeholder>Drag here to create columns</Placeholder>
+              <Placeholder>{apiRef.current.getLocaleText('pivotDragToColumns')}</Placeholder>
             )}
             {pivotModel.columns.length > 0 && (
               <FieldList>
@@ -427,12 +439,13 @@ export function GridSidebarColumnPanelBody({
           <CollapsibleSection
             title={
               <CollapsibleSectionTitle>
-                Values
+                {valuesLabel}
                 {pivotModel.values.length > 0 && (
                   <rootProps.slots.baseBadge badgeContent={pivotModel.values.length} />
                 )}
               </CollapsibleSectionTitle>
             }
+            aria-label={apiRef.current.getLocaleText('sidebarCollapseSection')(valuesLabel)}
             onDrop={handleDrop}
             onDragEnter={handleDragEnter}
             onDragOver={handleDragOver}
@@ -440,7 +453,7 @@ export function GridSidebarColumnPanelBody({
             data-drag-over={drag.dropZone === 'values'}
           >
             {pivotModel.values.length === 0 && (
-              <Placeholder>Drag here to create values</Placeholder>
+              <Placeholder>{apiRef.current.getLocaleText('pivotDragToValues')}</Placeholder>
             )}
             {pivotModel.values.length > 0 && (
               <FieldList>

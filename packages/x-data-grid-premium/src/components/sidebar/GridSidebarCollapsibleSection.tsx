@@ -46,7 +46,7 @@ const CollapsibleSectionContent = styled('div')(({ theme }) => ({
 }));
 
 export function GridSidebarCollapsibleSection(props: GridSidebarCollapsibleSectionProps) {
-  const { title, children, ...rest } = props;
+  const { title, 'aria-label': ariaLabel, children, ...rest } = props;
   const [open, setOpen] = React.useState(true);
   const id = useId();
 
@@ -57,6 +57,7 @@ export function GridSidebarCollapsibleSection(props: GridSidebarCollapsibleSecti
         tabIndex={0}
         aria-controls={open ? id : undefined}
         aria-expanded={!open}
+        aria-label={ariaLabel}
         onClick={() => setOpen(!open)}
       >
         {title}

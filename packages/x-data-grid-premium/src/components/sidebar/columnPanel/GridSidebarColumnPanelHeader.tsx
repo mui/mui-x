@@ -9,6 +9,7 @@ import { GridSidebarHeader } from '../GridSidebarHeader';
 import { GridSidebarCloseButton } from '../GridSidebarCloseButton';
 import { GridSidebarSearchButton } from '../GridSidebarSearchButton';
 import { GridSidebarSearchField } from '../GridSidebarSearchField';
+import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 
 export interface GridSidebarColumnPanelHeaderProps
   extends Pick<
@@ -51,6 +52,7 @@ const SearchField = styled(GridSidebarSearchField)(({ theme }) => ({
 
 export function GridSidebarColumnPanelHeader(props: GridSidebarColumnPanelHeaderProps) {
   const { pivotMode, searchState, onPivotModeChange, onSearchStateChange } = props;
+  const apiRef = useGridApiContext();
 
   const enableSearch = () => {
     onSearchStateChange((state) => ({ ...state, enabled: true }));
@@ -70,7 +72,7 @@ export function GridSidebarColumnPanelHeader(props: GridSidebarColumnPanelHeader
       ) : (
         <HeaderRow>
           <Typography variant="subtitle1" fontWeight="medium" sx={{ mr: 'auto' }}>
-            Pivot settings
+            {apiRef.current.getLocaleText('pivotSettings')}
           </Typography>
           <GridSidebarSearchButton onClick={enableSearch} />
           <GridSidebarCloseButton sx={{ mr: -1 }} />
@@ -86,7 +88,7 @@ export function GridSidebarColumnPanelHeader(props: GridSidebarColumnPanelHeader
               size="small"
             />
           }
-          label="Pivot"
+          label={apiRef.current.getLocaleText('pivotToggleLabel')}
           sx={{
             display: 'flex',
             justifyContent: 'space-between',

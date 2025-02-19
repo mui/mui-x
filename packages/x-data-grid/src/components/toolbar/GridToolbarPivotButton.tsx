@@ -1,8 +1,10 @@
 import * as React from 'react';
 import PivotTableChartIcon from '@mui/icons-material/PivotTableChart';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 export function GridToolbarPivotButton() {
+  const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   // @ts-ignore
   const pivotParams = rootProps.pivotParams;
@@ -23,12 +25,9 @@ export function GridToolbarPivotButton() {
       {...rootProps.slotProps?.baseButton}
       onClick={() => {
         pivotParams.onPivotSettingsOpenChange(!pivotParams.pivotSettingsOpen);
-        if (!pivotParams.isPivotMode && !pivotParams.pivotSettingsOpen) {
-          pivotParams.onPivotModeChange(true);
-        }
       }}
     >
-      Pivot
+      {apiRef.current.getLocaleText('toolbarPivot')}
     </rootProps.slots.baseButton>
   );
 }
