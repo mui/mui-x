@@ -1448,6 +1448,12 @@
       "isGlobal": false
     },
     {
+      "key": "columnsManagementEmptyText",
+      "className": "MuiDataGridPro-columnsManagementEmptyText",
+      "description": "Styles applied to the columns management empty text element.",
+      "isGlobal": false
+    },
+    {
       "key": "columnsManagementFooter",
       "className": "MuiDataGridPro-columnsManagementFooter",
       "description": "Styles applied to the columns management footer element.",
@@ -1463,6 +1469,12 @@
       "key": "columnsManagementRow",
       "className": "MuiDataGridPro-columnsManagementRow",
       "description": "Styles applied to the columns management row element.",
+      "isGlobal": false
+    },
+    {
+      "key": "columnsManagementScrollArea",
+      "className": "MuiDataGridPro-columnsManagementScrollArea",
+      "description": "Styles applied to the columns management scroll area element.",
       "isGlobal": false
     },
     {

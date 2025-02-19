@@ -5,7 +5,7 @@ import {
   CartesianSeriesType,
 } from '@mui/x-charts/internals';
 
-export type HeatmapValueType = [number, number, number];
+export type HeatmapValueType = readonly [number, number, number];
 
 export interface HeatmapSeriesType
   extends Omit<CommonSeriesType<HeatmapValueType>, 'color'>,
