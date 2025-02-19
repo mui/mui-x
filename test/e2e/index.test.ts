@@ -994,31 +994,30 @@ async function initializeEnvironment(
         await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
       });
 
-      it('should have the same selection process when "readOnly" with single input field with an accessible DOM structure', async () => {
+      it('should have the same selection process as a non-range picker when using a single input field with an accessible DOM structure', async () => {
         // firefox in CI is not happy with this test
         if (browserType.name() === 'firefox') {
           return;
         }
 
         await renderFixture('DatePicker/ReadonlyDesktopDateRangePickerSingle');
+        await page.getByRole('button').click();
 
-        await page.locator(`.${pickersSectionListClasses.root}`).first().click();
-
-        // assert that the tooltip has been opened
-        await page.waitForSelector('[role="tooltip"]', { state: 'attached' });
+        // assert that the dialog has been opened
+        await page.waitForSelector('[role="dialog"]', { state: 'attached' });
 
         await page.getByRole('gridcell', { name: '11' }).first().click();
         await page.getByRole('gridcell', { name: '13' }).first().click();
 
         // assert that the tooltip closes after selection is complete
-        await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
+        await page.waitForSelector('[role="dialog"]', { state: 'detached' });
 
         expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
           '04/11/2022 – 04/13/2022',
         );
       });
 
-      it('should have the same selection process when "readOnly" with single input field with a non-accessible DOM structure', async () => {
+      it('should have the same selection process as a non-range picker when using a single input field with a non-accessible DOM structure', async () => {
         // firefox in CI is not happy with this test
         if (browserType.name() === 'firefox') {
           return;
@@ -1027,17 +1026,16 @@ async function initializeEnvironment(
         await renderFixture(
           'DatePicker/ReadonlyDesktopDateRangePickerSingleNonAccessibleDOMStructure',
         );
-
-        await page.getByRole('textbox').click();
+        await page.getByRole('button').click();
 
         // assert that the tooltip has been opened
-        await page.waitForSelector('[role="tooltip"]', { state: 'attached' });
+        await page.waitForSelector('[role="dialog"]', { state: 'attached' });
 
         await page.getByRole('gridcell', { name: '11' }).first().click();
         await page.getByRole('gridcell', { name: '13' }).first().click();
 
         // assert that the tooltip closes after selection is complete
-        await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
+        await page.waitForSelector('[role="dialog"]', { state: 'detached' });
 
         expect(await page.getByRole('textbox').inputValue()).to.equal('04/11/2022 – 04/13/2022');
       });
@@ -1055,7 +1053,7 @@ async function initializeEnvironment(
         await renderFixture('DatePicker/SingleDesktopDateRangePickerWithTZ');
 
         // open the picker
-        await page.getByRole('group').click();
+        await page.getByRole('button').click();
 
         await page.getByRole('spinbutton', { name: 'Month' }).first().press('ArrowDown');
 

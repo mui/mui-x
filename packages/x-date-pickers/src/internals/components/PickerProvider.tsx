@@ -25,7 +25,7 @@ import { IsValidValueContext } from '../../hooks/useIsValidValue';
 import {
   PickerFieldPrivateContext,
   PickerFieldPrivateContextValue,
-} from '../hooks/useField/useFieldInternalPropsWithDefaults';
+} from '../hooks/useNullableFieldPrivateContext';
 import { PickerContext } from '../../hooks/usePickerContext';
 
 export const PickerActionsContext = React.createContext<PickerActionsContextValue<
@@ -46,6 +46,9 @@ export const PickerPrivateContext = React.createContext<PickerPrivateContextValu
   dismissViews: () => {},
   hasUIView: true,
   doesTheCurrentViewHasAnUI: () => true,
+  rootRefObject: { current: null },
+  viewContainerRole: null,
+  labelId: undefined,
 });
 
 /**
@@ -108,6 +111,12 @@ export interface PickerContextValue<
    */
   readOnly: boolean;
   /**
+   * Whether the picker should be focused on mount.
+   * If the picker has a field and is not open, the field should be focused.
+   * If the picker does not have a field (if it is a static picker) or is not open, the view should be focused.
+   */
+  autoFocus: boolean;
+  /**
    * The responsive variant of the picker.
    * It is equal to "desktop" when using a desktop picker (like <DesktopDatePicker />).
    * It is equal to "mobile" when using a mobile picker (like <MobileDatePicker />).
@@ -140,6 +149,11 @@ export interface PickerContextValue<
    * If it is "enabled", the field should render an interactive UI to open the Picker.
    */
   triggerStatus: 'hidden' | 'disabled' | 'enabled';
+  /**
+   * The ref to attach to the popup's outermost element that contains the view, if any.
+   * When using a built-in popup component, this property is automatically attached to the appropriate element.
+   */
+  popupRef: React.RefObject<any>;
   /**
    * The format to use when rendering the value in the field.
    * It is equal to the picker `format` prop if defined.
@@ -198,4 +212,13 @@ export interface PickerPrivateContextValue
    * The ownerState of the picker.
    */
   ownerState: PickerOwnerState;
+  /**
+   * The ref of the root element.
+   * This is the object counterpart of the `usePickerContext().rootRef` property which can be a function.
+   */
+  rootRefObject: React.RefObject<HTMLDivElement | null>;
+  /**
+   * The id of the label element.
+   */
+  labelId: string | undefined;
 }

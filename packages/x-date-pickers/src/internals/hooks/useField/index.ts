@@ -12,4 +12,3 @@ export {
   createDateStrForV6InputFromSections,
 } from './useField.utils';
 export { useFieldInternalPropsWithDefaults } from './useFieldInternalPropsWithDefaults';
-export type { PickerFieldPrivateContextValue } from './useFieldInternalPropsWithDefaults';

@@ -1,11 +1,7 @@
 import * as React from 'react';
-import {
-  UseFieldResponse,
-  FormProps,
-  PickerValue,
-  PickerRangeValue,
-} from '@mui/x-date-pickers/internals';
+import { PickerValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
 import { FieldRef, PickerFieldSlotProps } from '@mui/x-date-pickers/models';
+import type { UseMultiInputRangeFieldTextFieldProps } from '../hooks/useMultiInputRangeField';
 
 export type { FieldRangeSection } from '@mui/x-date-pickers/internals';
 
@@ -14,19 +10,12 @@ export type FieldType = 'single-input' | 'multi-input';
 /**
  * Props the `textField` slot of the multi input field can receive when used inside a picker.
  */
-export interface MultiInputFieldSlotTextFieldProps extends FormProps {
-  label?: React.ReactNode;
-  id?: string;
-  onKeyDown?: React.KeyboardEventHandler;
-  onClick?: React.MouseEventHandler;
-  onFocus?: React.FocusEventHandler;
-  focused?: boolean;
-  InputProps?: {
-    ref?: React.Ref<any>;
-    endAdornment?: React.ReactNode;
-    startAdornment?: React.ReactNode;
-  };
-}
+export type MultiInputFieldSlotTextFieldProps<
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
+> = UseMultiInputRangeFieldTextFieldProps<
+  TEnableAccessibleFieldDOMStructure,
+  { label?: React.ReactNode; focused?: boolean }
+>;
 
 /**
  * Props the `root` slot of the multi input field can receive when used inside a picker.
@@ -54,20 +43,3 @@ export interface RangeFieldSeparatorProps {
 export type PickerRangeFieldSlotProps<TEnableAccessibleFieldDOMStructure extends boolean> =
   PickerFieldSlotProps<PickerRangeValue, TEnableAccessibleFieldDOMStructure> &
     RangeFieldSeparatorProps;
-
-/**
- * Props the text field receives when used with a multi input picker.
- * Only contains what the MUI components are passing to the text field, not what users can pass using the `props.slotProps.textField`.
- */
-export type BaseMultiInputPickersTextFieldProps<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> = Omit<
-  UseFieldResponse<TEnableAccessibleFieldDOMStructure, MultiInputFieldSlotTextFieldProps>,
-  | 'slots'
-  | 'slotProps'
-  | 'clearable'
-  | 'onClear'
-  | 'openPickerButtonPosition'
-  | 'clearButtonPosition'
-  | 'openPickerAriaLabel'
->;
