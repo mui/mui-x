@@ -85,14 +85,7 @@ const BaseSelect = forwardRef<any, GridSlotProps['baseSelect']>(function BaseSel
     ...rest
   } = props;
   return (
-    <MUIFormControl
-      size={size}
-      fullWidth={fullWidth}
-      style={style}
-      disabled={disabled}
-      {...rootProps.slotProps?.baseFormControl}
-      ref={ref}
-    >
+    <MUIFormControl size={size} fullWidth={fullWidth} style={style} disabled={disabled} ref={ref}>
       <MUIInputLabel
         id={labelId}
         htmlFor={id}
@@ -177,7 +170,6 @@ const baseSlots: GridBaseSlots = {
   baseMenuList: BaseMenuList,
   baseMenuItem: BaseMenuItem,
   baseTextField: BaseTextField,
-  baseFormControl: MUIFormControl,
   baseButton: MUIButton,
   baseIconButton: MUIIconButton,
   baseInputAdornment: MUIInputAdornment,

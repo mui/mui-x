@@ -14,7 +14,7 @@ export function useSkipAnimation(skipAnimation?: boolean): boolean | undefined {
     throw new Error(
       [
         'MUI X: Could not find the animation ref context.',
-        'It looks like you rendered your component outside of a ChartsContainer parent component.',
+        'It looks like you rendered your component outside of a ChartContainer parent component.',
       ].join('\n'),
     );
   }
