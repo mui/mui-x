@@ -1,4 +1,4 @@
-import {} from './typeOverloads/modules';
+import './typeOverloads/modules';
 
 // exports from MIT package
 export * from '@mui/x-charts/constants';

@@ -11,7 +11,10 @@ import { defaultizeAxis } from './defaultizeAxis';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxis.selectors';
 import { getAxisValue } from './getAxisValue';
 import { getSVGPoint } from '../../../getSVGPoint';
-import { selectorChartsInteractionAxis } from '../useChartInteraction';
+import {
+  selectorChartsInteractionAxis,
+  selectorChartsInteractionIsInitialized,
+} from '../useChartInteraction';
 
 export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<any>> = ({
   params,
@@ -42,6 +45,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
   const processedSeries = useSelector(store, selectorChartSeriesProcessed);
 
   const interactionAxis = useSelector(store, selectorChartsInteractionAxis);
+  const isInteractionEnabled = useSelector(store, selectorChartsInteractionIsInitialized);
   const { axis: xAxisWithScale, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
   const { axis: yAxisWithScale, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
 
@@ -76,7 +80,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
 
   React.useEffect(() => {
     const element = svgRef.current;
-    if (element === null || params.disableAxisListener) {
+    if (!isInteractionEnabled || element === null || params.disableAxisListener) {
       return () => {};
     }
 
@@ -87,7 +91,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
         y: -1,
       };
 
-      instance.cleanInteraction();
+      instance.cleanInteraction?.();
     };
 
     const handleMove = (event: MouseEvent | TouchEvent) => {
@@ -109,7 +113,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       }
       mousePosition.current.isInChart = true;
 
-      instance.setAxisInteraction({
+      instance.setAxisInteraction?.({
         x: getAxisValue(xAxisWithScale[usedXAxis], svgPoint.x),
         y: getAxisValue(yAxisWithScale[usedYAxis], svgPoint.y),
       });
@@ -147,6 +151,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     usedYAxis,
     instance,
     params.disableAxisListener,
+    isInteractionEnabled,
   ]);
 
   React.useEffect(() => {

@@ -8,6 +8,14 @@
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/arSD.ts"
   },
   {
+    "languageTag": "bn-BD",
+    "importName": "bnBD",
+    "localeName": "Bangla",
+    "missingKeysCount": 2,
+    "totalKeysCount": 135,
+    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/bnBD.ts"
+  },
+  {
     "languageTag": "be-BY",
     "importName": "beBY",
     "localeName": "Belarusian",
@@ -187,7 +195,7 @@
     "languageTag": "pl-PL",
     "importName": "plPL",
     "localeName": "Polish",
-    "missingKeysCount": 24,
+    "missingKeysCount": 2,
     "totalKeysCount": 135,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/plPL.ts"
   },
@@ -259,7 +267,7 @@
     "languageTag": "uk-UA",
     "importName": "ukUA",
     "localeName": "Ukrainian",
-    "missingKeysCount": 21,
+    "missingKeysCount": 0,
     "totalKeysCount": 135,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/ukUA.ts"
   },

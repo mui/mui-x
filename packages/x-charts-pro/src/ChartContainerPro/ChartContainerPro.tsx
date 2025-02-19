@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import type {} from '../typeOverloads';
 import { ChartsSurface, ChartsSurfaceProps } from '@mui/x-charts/ChartsSurface';
 import { ChartAnyPluginSignature, ChartSeriesType } from '@mui/x-charts/internals';
 import { useChartContainerProProps } from './useChartContainerProProps';

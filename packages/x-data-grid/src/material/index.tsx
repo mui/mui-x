@@ -1,5 +1,6 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
+import MUIAutocomplete from '@mui/material/Autocomplete';
 import MUIBadge from '@mui/material/Badge';
 import MUICheckbox from '@mui/material/Checkbox';
 import MUIChip from '@mui/material/Chip';
@@ -14,12 +15,12 @@ import MUIMenuList from '@mui/material/MenuList';
 import MUIMenuItem from '@mui/material/MenuItem';
 import MUITextField from '@mui/material/TextField';
 import MUIFormControl from '@mui/material/FormControl';
-import MUIFormControlLabel from '@mui/material/FormControlLabel';
+import MUIFormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
 import MUISelect from '@mui/material/Select';
 import MUISwitch from '@mui/material/Switch';
 import MUIButton from '@mui/material/Button';
-import MUIIconButton from '@mui/material/IconButton';
-import MUIInputAdornment from '@mui/material/InputAdornment';
+import MUIIconButton, { iconButtonClasses } from '@mui/material/IconButton';
+import MUIInputAdornment, { inputAdornmentClasses } from '@mui/material/InputAdornment';
 import MUITooltip from '@mui/material/Tooltip';
 import MUIPopper, { PopperProps as MUIPopperProps } from '@mui/material/Popper';
 import MUIClickAwayListener from '@mui/material/ClickAwayListener';
@@ -62,6 +63,8 @@ import type { GridSlotProps } from '../models/gridSlotsComponentsProps';
 import type { PopperProps } from '../models/gridBaseSlots';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
+export { useMaterialCSSVariables } from './variables';
+
 const ClickAwayListener = forwardRef(MUIClickAwayListener);
 
 const BaseSelect = forwardRef<any, GridSlotProps['baseSelect']>(function BaseSelect(props, ref) {
@@ -82,14 +85,7 @@ const BaseSelect = forwardRef<any, GridSlotProps['baseSelect']>(function BaseSel
     ...rest
   } = props;
   return (
-    <MUIFormControl
-      size={size}
-      fullWidth={fullWidth}
-      style={style}
-      disabled={disabled}
-      {...rootProps.slotProps?.baseFormControl}
-      ref={ref}
-    >
+    <MUIFormControl size={size} fullWidth={fullWidth} style={style} disabled={disabled} ref={ref}>
       <MUIInputLabel
         id={labelId}
         htmlFor={id}
@@ -164,6 +160,7 @@ const iconSlots: GridIconSlotsComponent = {
 };
 
 const baseSlots: GridBaseSlots = {
+  baseAutocomplete: BaseAutocomplete,
   baseBadge: MUIBadge,
   baseCheckbox: React.forwardRef(BaseCheckbox),
   baseCircularProgress: MUICircularProgress,
@@ -173,10 +170,9 @@ const baseSlots: GridBaseSlots = {
   baseMenuList: BaseMenuList,
   baseMenuItem: BaseMenuItem,
   baseTextField: BaseTextField,
-  baseFormControl: MUIFormControl,
   baseButton: MUIButton,
   baseIconButton: MUIIconButton,
-  baseInputAdornment: MUIInputAdornment,
+  baseInputAdornment: BaseInputAdornment,
   baseTooltip: MUITooltip,
   basePopper: BasePopper,
   baseInputLabel: MUIInputLabel,
@@ -184,7 +180,6 @@ const baseSlots: GridBaseSlots = {
   baseSelectOption: BaseSelectOption,
   baseSkeleton: MUISkeleton,
   baseSwitch: MUISwitch,
-  baseChip: MUIChip,
 };
 
 const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
@@ -242,7 +237,14 @@ function BaseCheckbox(props: GridSlotProps['baseCheckbox'], ref: React.Ref<HTMLB
         />
       }
       label={label}
-      sx={fullWidth ? { width: '100%', margin: 0 } : undefined}
+      sx={(theme) => ({
+        gap: 0.5,
+        margin: 0,
+        width: fullWidth ? '100%' : undefined,
+        [`& .${formControlLabelClasses.label}`]: {
+          fontSize: theme.typography.pxToRem(14),
+        },
+      })}
     />
   );
 }
@@ -277,6 +279,69 @@ function BaseTextField(props: GridSlotProps['baseTextField']) {
         shrink: true,
         ...(slotProps as any)?.inputLabel,
       }}
+    />
+  );
+}
+
+function BaseAutocomplete(props: GridSlotProps['baseAutocomplete']) {
+  const rootProps = useGridRootProps();
+  const {
+    id,
+    multiple,
+    freeSolo,
+    options,
+    getOptionLabel,
+    isOptionEqualToValue,
+    value,
+    onChange,
+    label,
+    placeholder,
+    slotProps,
+    ...rest
+  } = props;
+
+  return (
+    <MUIAutocomplete<string, true, false, true>
+      id={id}
+      multiple={multiple}
+      freeSolo={freeSolo}
+      options={options}
+      getOptionLabel={getOptionLabel}
+      isOptionEqualToValue={isOptionEqualToValue}
+      value={value}
+      onChange={onChange}
+      renderTags={(currentValue, getTagProps) =>
+        currentValue.map((option, index) => {
+          const { key, ...tagProps } = getTagProps({ index });
+          return (
+            <MUIChip
+              key={key}
+              variant="outlined"
+              size="small"
+              label={typeof option === 'string' ? option : getOptionLabel?.(option as any)}
+              {...tagProps}
+            />
+          );
+        })
+      }
+      renderInput={(params) => {
+        const { inputProps, InputProps, InputLabelProps, ...inputRest } = params;
+        return (
+          <rootProps.slots.baseTextField
+            {...inputRest}
+            label={label}
+            placeholder={placeholder}
+            slotProps={{
+              input: InputProps,
+              inputLabel: InputLabelProps,
+              htmlInput: inputProps,
+            }}
+            {...slotProps?.textField}
+            {...rootProps.slotProps?.baseTextField}
+          />
+        );
+      }}
+      {...rest}
     />
   );
 }
@@ -397,4 +462,17 @@ function BaseSelectOption({ native, ...props }: NonNullable<GridSlotProps['baseS
     return <option {...props} />;
   }
   return <MUIMenuItem {...props} />;
+}
+
+function BaseInputAdornment(props: GridSlotProps['baseInputAdornment']) {
+  return (
+    <MUIInputAdornment
+      sx={{
+        [`&.${inputAdornmentClasses.positionEnd} .${iconButtonClasses.sizeSmall}`]: {
+          marginRight: '-7px',
+        },
+      }}
+      {...props}
+    />
+  );
 }

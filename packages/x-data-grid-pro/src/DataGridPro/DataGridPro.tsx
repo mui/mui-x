@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
 import { GridRoot, GridContextProvider, GridValidRowModel } from '@mui/x-data-grid';
 import { validateProps } from '@mui/x-data-grid/internals';
+import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import { DataGridProProps } from '../models/dataGridProProps';
@@ -17,6 +18,7 @@ export type { GridProSlotsComponent as GridSlots } from '../models';
 
 const configuration = {
   hooks: {
+    useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes,
     useGridRowAriaAttributes,
   },
@@ -823,12 +825,6 @@ DataGridProRaw.propTypes = {
    * @returns {Promise<R> | R} The final values to update the row.
    */
   processRowUpdate: PropTypes.func,
-  /**
-   * If `true`, the page is set to 0 after each sorting or filtering.
-   * This prop will be removed in the next major version and resetting the page will become the default behavior.
-   * @default false
-   */
-  resetPageOnSortFilter: PropTypes.bool,
   /**
    * The milliseconds throttle delay for resizing the grid.
    * @default 60

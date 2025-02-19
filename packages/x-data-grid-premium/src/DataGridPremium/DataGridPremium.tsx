@@ -9,6 +9,7 @@ import {
   PropValidator,
   validateProps,
 } from '@mui/x-data-grid-pro/internals';
+import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useDataGridPremiumComponent } from './useDataGridPremiumComponent';
 import {
@@ -24,6 +25,7 @@ export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
 const configuration = {
   hooks: {
+    useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes,
     useGridRowAriaAttributes,
   },
@@ -906,12 +908,6 @@ DataGridPremiumRaw.propTypes = {
    * @returns {Promise<R> | R} The final values to update the row.
    */
   processRowUpdate: PropTypes.func,
-  /**
-   * If `true`, the page is set to 0 after each sorting or filtering.
-   * This prop will be removed in the next major version and resetting the page will become the default behavior.
-   * @default false
-   */
-  resetPageOnSortFilter: PropTypes.bool,
   /**
    * The milliseconds throttle delay for resizing the grid.
    * @default 60

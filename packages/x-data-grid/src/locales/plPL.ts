@@ -33,15 +33,16 @@ const plPLGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterDeleteIconLabel: 'Wyczyść',
 
   // Prompt toolbar field
-  // toolbarPromptControlPlaceholder: 'Type a prompt…',
-  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
-  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
-  // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
-  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
-  // toolbarPromptControlSendActionLabel: 'Send',
-  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
-  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+  toolbarPromptControlPlaceholder: 'Wpisz polecenie...',
+  toolbarPromptControlWithRecordingPlaceholder: 'Wpisz lub nagraj polecenie...',
+  toolbarPromptControlRecordingPlaceholder: 'Nasłuchiwanie polecenia...',
+  toolbarPromptControlLabel: 'Wprowadź polecenie',
+  toolbarPromptControlRecordButtonDefaultLabel: 'Nagrywaj',
+  toolbarPromptControlRecordButtonActiveLabel: 'Zatrzymaj nagrywanie',
+  toolbarPromptControlSendActionLabel: 'Wyślij',
+  toolbarPromptControlSendActionAriaLabel: 'Wyślij polecenie',
+  toolbarPromptControlErrorMessage:
+    'Wystąpił błąd podczas przetwarzania żądania. Spróbuj ponownie z innym poleceniem.',
 
   // Export selector toolbar button text
   toolbarExport: 'Eksportuj',
@@ -55,7 +56,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Brak kolumn',
   columnsManagementShowHideAllText: 'Wyświetl/Ukryj wszystkie',
   columnsManagementReset: 'Resetuj',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementDeleteIconLabel: 'Wyczyść',
 
   // Filter panel text
   filterPanelAddFilter: 'Dodaj filtr',
@@ -85,12 +86,12 @@ const plPLGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'jest pusty',
   filterOperatorIsNotEmpty: 'nie jest pusty',
   filterOperatorIsAnyOf: 'jest jednym z',
-  // 'filterOperator=': '=',
-  // 'filterOperator!=': '!=',
-  // 'filterOperator>': '>',
-  // 'filterOperator>=': '>=',
-  // 'filterOperator<': '<',
-  // 'filterOperator<=': '<=',
+  'filterOperator=': 'równa się',
+  'filterOperator!=': 'nie równa się',
+  'filterOperator>': 'większy niż',
+  'filterOperator>=': 'większy lub równy',
+  'filterOperator<': 'mniejszy niż',
+  'filterOperator<=': 'mniejszy lub równy',
 
   // Header filter operators text
   headerFilterOperatorContains: 'Zawiera',
@@ -113,8 +114,8 @@ const plPLGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>': 'Większy niż',
   'headerFilterOperator>=': 'Większy lub równy',
   'headerFilterOperator<': 'Mniejszy niż',
-  'headerFilterOperator<=': 'Mniejszy lub równe',
-  // headerFilterClear: 'Clear filter',
+  'headerFilterOperator<=': 'Mniejszy lub równy',
+  headerFilterClear: 'Wyczyść',
 
   // Filter values text
   filterValueAny: 'dowolny',
@@ -185,11 +186,11 @@ const plPLGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Agregacja',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationFunctionLabelSum: 'suma',
+  aggregationFunctionLabelAvg: 'średnia',
+  aggregationFunctionLabelMin: 'minimum',
+  aggregationFunctionLabelMax: 'maximum',
+  aggregationFunctionLabelSize: 'rozmiar',
 };
 
 export const plPL: Localization = getGridLocalization(plPLGrid, plPLCore);

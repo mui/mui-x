@@ -36,12 +36,6 @@
       }
     },
     "id": { "type": { "name": "string" } },
-    "initialZoom": {
-      "type": {
-        "name": "arrayOf",
-        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, end: number, start: number }&gt;"
-      }
-    },
     "leftAxis": {
       "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
       "default": "yAxisIds[0] The id of the first provided axis"

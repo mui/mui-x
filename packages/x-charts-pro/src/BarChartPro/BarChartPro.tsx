@@ -84,7 +84,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   ref: React.Ref<SVGSVGElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiBarChartPro' });
-  const { initialZoom, onZoomChange, apiRef, ...other } = props;
+  const { initialZoom, zoomData, onZoomChange, apiRef, ...other } = props;
   const {
     chartsWrapperProps,
     chartContainerProps,
@@ -103,7 +103,14 @@ const BarChartPro = React.forwardRef(function BarChartPro(
     'bar',
     BarChartProPluginsSignatures
   >(
-    { ...chartContainerProps, initialZoom, onZoomChange, apiRef, plugins: BAR_CHART_PRO_PLUGINS },
+    {
+      ...chartContainerProps,
+      initialZoom,
+      zoomData,
+      onZoomChange,
+      apiRef,
+      plugins: BAR_CHART_PRO_PLUGINS,
+    },
     ref,
   );
 
@@ -216,6 +223,7 @@ BarChartPro.propTypes = {
   id: PropTypes.string,
   /**
    * The list of zoom data related to each axis.
+   * Used to initialize the zoom in a specific configuration without controlling it.
    */
   initialZoom: PropTypes.arrayOf(
     PropTypes.shape({
@@ -528,6 +536,16 @@ BarChartPro.propTypes = {
       id: PropTypes.string,
       max: PropTypes.number,
       min: PropTypes.number,
+    }),
+  ),
+  /**
+   * The list of zoom data related to each axis.
+   */
+  zoomData: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      end: PropTypes.number.isRequired,
+      start: PropTypes.number.isRequired,
     }),
   ),
 } as any;
