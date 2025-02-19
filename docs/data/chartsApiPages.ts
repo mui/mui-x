@@ -214,6 +214,10 @@ const chartsApiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
+    pathname: '/x/api/charts/scatter-marker',
+    title: 'ScatterMarker',
+  },
+  {
     pathname: '/x/api/charts/scatter-plot',
     title: 'ScatterPlot',
   },
