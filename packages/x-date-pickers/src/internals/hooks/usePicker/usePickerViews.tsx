@@ -155,7 +155,7 @@ export interface UsePickerViewsPrivateContextValue {
    */
   doesTheCurrentViewHasAnUI: () => boolean;
   /**
-   * The aria role associated to the view container.
+   * The aria role associated with the view container.
    * It is equal to "dialog" when the view is rendered inside a `@mui/material/Dialog`.
    * It is equal to "dialog" when the view is rendered inside a `@mui/material/Popper` and the focus is trapped inside the view.
    * It is equal to "tooltip" when the view is rendered inside a `@mui/material/Popper` and the focus remains inside the field.
