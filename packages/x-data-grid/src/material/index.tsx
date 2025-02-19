@@ -11,6 +11,7 @@ import MUIFocusTrap from '@mui/material/Unstable_TrapFocus';
 import MUILinearProgress from '@mui/material/LinearProgress';
 import MUIListItemIcon from '@mui/material/ListItemIcon';
 import MUIListItemText from '@mui/material/ListItemText';
+import { MenuProps as MUIMenuProps } from '@mui/material/Menu';
 import MUIMenuList from '@mui/material/MenuList';
 import MUIMenuItem from '@mui/material/MenuItem';
 import MUITextField from '@mui/material/TextField';
@@ -84,6 +85,14 @@ const BaseSelect = forwardRef<any, GridSlotProps['baseSelect']>(function BaseSel
     fullWidth,
     ...rest
   } = props;
+  const menuProps = {
+    PaperProps: {
+      onKeyDown,
+    },
+  } as Partial<MUIMenuProps>;
+  if (onClose) {
+    menuProps.onClose = onClose;
+  }
   return (
     <MUIFormControl size={size} fullWidth={fullWidth} style={style} disabled={disabled} ref={ref}>
       <MUIInputLabel
@@ -106,12 +115,7 @@ const BaseSelect = forwardRef<any, GridSlotProps['baseSelect']>(function BaseSel
         notched
         inputProps={slotProps?.htmlInput}
         onOpen={onOpen}
-        MenuProps={{
-          onClose,
-          PaperProps: {
-            onKeyDown,
-          },
-        }}
+        MenuProps={menuProps}
         size={size}
       />
     </MUIFormControl>

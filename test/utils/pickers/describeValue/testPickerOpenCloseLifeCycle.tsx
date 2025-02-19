@@ -3,7 +3,12 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import { PickerRangeValue, PickerValidValue } from '@mui/x-date-pickers/internals';
-import { getExpectedOnChangeCount, getFieldInputRoot, openPicker } from 'test/utils/pickers';
+import {
+  getExpectedOnChangeCount,
+  getFieldInputRoot,
+  isPickerSingleInput,
+  openPicker,
+} from 'test/utils/pickers';
 import { describeSkipIf, testSkipIf } from 'test/utils/skipIf';
 import { DescribeValueTestSuite } from './describeValue.types';
 import { fireUserEvent } from '../../fireUserEvent';
@@ -16,7 +21,8 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
     options;
 
   const isRangeType = pickerParams.type === 'date-range' || pickerParams.type === 'date-time-range';
-  const viewWrapperRole = isRangeType && pickerParams.variant === 'desktop' ? 'tooltip' : 'dialog';
+  const viewWrapperRole =
+    isPickerSingleInput(options) || pickerParams.variant === 'mobile' ? 'dialog' : 'tooltip';
   const shouldCloseOnSelect =
     (pickerParams.type === 'date' || pickerParams.type === 'date-range') &&
     pickerParams.variant === 'desktop';
@@ -182,8 +188,9 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should not call onClose or onAccept when selecting a date and `props.closeOnSelect` is false', () => {
+    it('should not call onClose or onAccept when selecting a date and `props.closeOnSelect` is false', function test() {
       // increase the timeout of this test as it tends to sometimes fail on CI with `DesktopDateTimeRangePicker` or `MobileDateTimeRangePicker`
+      this.timeout(10000);
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
