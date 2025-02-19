@@ -49,8 +49,8 @@ useChartSeries.params = {
 const EMPTY_ARRAY: any[] = [];
 
 useChartSeries.getDefaultizedParams = ({ params }) => ({
-  series: EMPTY_ARRAY,
   ...params,
+  series: params.series?.length ? params.series : EMPTY_ARRAY,
   colors: params.colors ?? rainbowSurgePalette,
   theme: params.theme ?? 'light',
 });

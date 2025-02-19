@@ -12,7 +12,7 @@ import { createAxisFilterMapper, createGetAxisFilters } from './createAxisFilter
 import { ZoomAxisFilters, ZoomData } from './zoom.types';
 import { createZoomLookup } from './createZoomLookup';
 
-export const createZoomMap = (zoom: ZoomData[]) => {
+export const createZoomMap = (zoom: readonly ZoomData[]) => {
   const zoomItemMap = new Map<AxisId, ZoomData>();
   zoom.forEach((zoomItem) => {
     zoomItemMap.set(zoomItem.axisId, zoomItem);

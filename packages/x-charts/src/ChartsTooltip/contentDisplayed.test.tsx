@@ -13,7 +13,7 @@ const config: Partial<BarChartProps> = {
   hideLegend: true,
   width: 400,
   height: 400,
-};
+} as const;
 
 // Plot as follow to simplify click position
 //
