@@ -37,4 +37,8 @@ describe('<PieChart />', () => {
       ],
     }),
   );
+
+  it('does not crash when missing series', () => {
+    render(<PieChart series={[]} width={400} height={200} />);
+  });
 });
