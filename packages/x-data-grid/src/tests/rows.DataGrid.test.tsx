@@ -749,7 +749,7 @@ describe('<DataGrid /> - Rows', () => {
         expect(getRow(2)).toHaveInlineStyle({ minHeight: '100px' });
       });
 
-      it('should not virtualize columns if a row has auto height', () => {
+      it('should not virtualize columns if a row has auto height', async () => {
         render(
           <TestCase
             rows={baselineProps.rows.slice(0, 1)}
@@ -759,7 +759,9 @@ describe('<DataGrid /> - Rows', () => {
             width={100}
           />,
         );
-        expect($$(`.${gridClasses.cell}:not(.${gridClasses.cellEmpty})`)).to.have.length(2);
+        await waitFor(() => {
+          expect($$(`.${gridClasses.cell}:not(.${gridClasses.cellEmpty})`)).to.have.length(2);
+        });
       });
 
       it('should measure rows while scrolling', async () => {
