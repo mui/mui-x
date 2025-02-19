@@ -3,10 +3,15 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled, SxProps, Theme } from '@mui/material/styles';
 import clsx from 'clsx';
+import { SeriesId } from '../models/seriesType/common';
+import { consumeSlots } from '../internals/consumeSlots';
 import { ChartsLabelMarkClasses, labelMarkClasses, useUtilityClasses } from './labelMarkClasses';
-import { consumeThemeProps } from '../internals/consumeThemeProps';
 
 export interface ChartsLabelMarkProps {
+  /**
+   * ID of the series this mark refers to.
+   */
+  seriesId?: SeriesId;
   /**
    * The type of the mark.
    * @default 'square'
@@ -69,8 +74,9 @@ const Root = styled('div', {
  * Generates the label mark for the tooltip and legend.
  * @ignore - internal component.
  */
-const ChartsLabelMark = consumeThemeProps(
+const ChartsLabelMark = consumeSlots(
   'MuiChartsLabelMark',
+  'legendLabelMark',
   {
     defaultProps: { type: 'square' },
     classesResolver: useUtilityClasses,

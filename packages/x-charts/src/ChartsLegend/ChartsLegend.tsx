@@ -85,10 +85,11 @@ const ChartsLegend = consumeSlots(
     // We omit it here to avoid passing to slots.
     omitProps: ['position'],
     classesResolver: useUtilityClasses,
+    propagateSlots: true,
   },
   function ChartsLegend(props: ChartsLegendProps, ref: React.Ref<HTMLUListElement>) {
     const data = useLegend();
-    const { direction, onItemClick, className, classes, ...other } = props;
+    const { direction, onItemClick, className, classes, slots, slotProps, ...other } = props;
 
     if (data.items.length === 0) {
       return null;
@@ -118,9 +119,12 @@ const ChartsLegend = consumeSlots(
                 }
               >
                 <ChartsLabelMark
+                  seriesId={item.seriesId}
                   className={classes?.mark}
                   color={item.color}
                   type={item.markType}
+                  slots={slots}
+                  slotProps={slotProps}
                 />
                 <ChartsLabel className={classes?.label}>{item.label}</ChartsLabel>
               </Element>
