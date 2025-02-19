@@ -32,9 +32,8 @@ const useUtilityClasses = (ownerState: AxisConfig<any, any, ChartsXAxisProps>) =
   return composeClasses(slots, getAxisUtilityClass, classes);
 };
 
-type LabelExtraData = { skipLabel?: boolean };
-
-function addLabelDimension(
+/* Returns a set of indices of the tick labels that should be visible.  */
+function getVisibleLabels(
   xTicks: TickItemType[],
   {
     tickLabelStyle: style,
@@ -49,7 +48,7 @@ function addLabelDimension(
       tickLabelMinGap: NonNullable<ChartsXAxisProps['tickLabelMinGap']>;
       isPointInside: (position: number) => boolean;
     },
-): (TickItemType & LabelExtraData)[] {
+): Set<TickItemType> {
   const getTickLabelSize = (tick: TickItemType) => {
     if (!isMounted || tick.formattedValue === undefined) {
       return { width: 0, height: 0 };
@@ -64,54 +63,48 @@ function addLabelDimension(
   };
 
   if (typeof tickLabelInterval === 'function') {
-    return xTicks.map((item, index) => {
-      const skipLabel = !tickLabelInterval(item.value, index);
-      const size = skipLabel ? { width: 0, height: 0 } : getTickLabelSize(item);
-
-      return {
-        ...item,
-        ...size,
-        skipLabel,
-      };
-    });
+    return new Set(xTicks.filter((item, index) => tickLabelInterval(item.value, index)));
   }
 
   // Filter label to avoid overlap
   let previousTextLimit = 0;
   const direction = reverse ? -1 : 1;
 
-  return xTicks.map((item, labelIndex) => {
-    const { offset, labelOffset } = item;
-    const textPosition = offset + labelOffset;
+  return new Set(
+    xTicks.filter((item, labelIndex) => {
+      const { offset, labelOffset } = item;
+      const textPosition = offset + labelOffset;
 
-    if (
-      labelIndex > 0 &&
-      direction * textPosition < direction * (previousTextLimit + tickLabelMinGap)
-    ) {
-      return { ...item, skipLabel: true };
-    }
+      if (
+        labelIndex > 0 &&
+        direction * textPosition < direction * (previousTextLimit + tickLabelMinGap)
+      ) {
+        return false;
+      }
 
-    if (!isPointInside(textPosition)) {
-      return { ...item, skipLabel: true };
-    }
+      if (!isPointInside(textPosition)) {
+        return false;
+      }
 
-    const { width, height } = getTickLabelSize(item);
+      /* Measuring text width is expensive, so we need to delay it as much as possible to improve performance. */
+      const { width, height } = getTickLabelSize(item);
 
-    const distance = getMinXTranslation(width, height, style?.angle);
+      const distance = getMinXTranslation(width, height, style?.angle);
 
-    const currentTextLimit = textPosition - (direction * distance) / 2;
-    if (
-      labelIndex > 0 &&
-      direction * currentTextLimit < direction * (previousTextLimit + tickLabelMinGap)
-    ) {
-      // Except for the first label, we skip all label that overlap with the last accepted.
-      // Notice that the early return prevents `previousTextLimit` from being updated.
-      return { ...item, skipLabel: true };
-    }
+      const currentTextLimit = textPosition - (direction * distance) / 2;
+      if (
+        labelIndex > 0 &&
+        direction * currentTextLimit < direction * (previousTextLimit + tickLabelMinGap)
+      ) {
+        // Except for the first label, we skip all label that overlap with the last accepted.
+        // Notice that the early return prevents `previousTextLimit` from being updated.
+        return false;
+      }
 
-    previousTextLimit = textPosition + (direction * distance) / 2;
-    return item;
-  });
+      previousTextLimit = textPosition + (direction * distance) / 2;
+      return true;
+    }),
+  );
 }
 
 const XAxisRoot = styled(AxisRoot, {
@@ -208,7 +201,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickLabelPlacement,
   });
 
-  const xTicksWithDimension = addLabelDimension(xTicks, {
+  const visibleLabels = getVisibleLabels(xTicks, {
     tickLabelStyle: axisTickLabelProps.style,
     tickLabelInterval,
     tickLabelMinGap,
@@ -255,8 +248,9 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
         <Line x1={left} x2={left + width} className={classes.line} {...slotProps?.axisLine} />
       )}
 
-      {xTicksWithDimension.map(
-        ({ formattedValue, offset: tickOffset, labelOffset, skipLabel }, index) => {
+      {xTicks.map(
+        (item, index) => {
+          const { formattedValue, offset: tickOffset, labelOffset } = item;
           const xTickLabel = labelOffset ?? 0;
           const yTickLabel = positionSign * (tickSize + 3);
 
@@ -265,6 +259,8 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
             { x: tickOffset + xTickLabel, y: -1 },
             { direction: 'x' },
           );
+          const skipLabel = !visibleLabels.has(item);
+
           return (
             <g
               key={index}
