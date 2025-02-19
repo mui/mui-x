@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { unstable_generateUtilityClasses as generateUtilityClasses } from '@mui/utils';
 import useEventCallback from '@mui/utils/useEventCallback';
-import Paper from '@mui/material/Paper';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { vars } from '../../constants/cssVariables';
 import { useCSSVariablesClass } from '../../utils/css/context';
@@ -41,16 +40,18 @@ export const gridPanelClasses = generateUtilityClasses<keyof GridPanelClasses>('
 
 const GridPanelRoot = styled(NotRendered<GridSlotProps['basePopper']>, {
   name: 'MuiDataGrid',
-  slot: 'Panel',
+  slot: 'panel',
 })<{ ownerState: OwnerState }>({
   zIndex: vars.zIndex.panel,
 });
 
-const GridPaperRoot = styled(Paper, {
+const GridPanelContent = styled('div', {
   name: 'MuiDataGrid',
-  slot: 'Paper',
+  slot: 'panelContent',
 })<{ ownerState: OwnerState }>({
   backgroundColor: vars.colors.background.overlay,
+  borderRadius: vars.radius.base,
+  boxShadow: vars.shadows.overlay,
   minWidth: 300,
   maxHeight: 450,
   display: 'flex',
@@ -114,14 +115,9 @@ const GridPanel = forwardRef<HTMLElement, GridPanelProps>((props, ref) => {
       {...rootProps.slotProps?.basePopper}
       ref={ref}
     >
-      <GridPaperRoot
-        className={classes.paper}
-        ownerState={rootProps}
-        elevation={8}
-        onKeyDown={handleKeyDown}
-      >
+      <GridPanelContent className={classes.paper} ownerState={rootProps} onKeyDown={handleKeyDown}>
         {isPlaced && children}
-      </GridPaperRoot>
+      </GridPanelContent>
     </GridPanelRoot>
   );
 });

@@ -188,6 +188,7 @@ Below are described the steps you need to make to migrate from v7 to v8.
 - The `baseFormControl` slot was removed.
 - The `baseInputLabel` slot was removed.
 - The `baseInputAdornment` slot was removed.
+- The `paper` slot has been renamed to `panelContent`.
 
 <!-- ### Editing
 
