@@ -26,6 +26,8 @@ const ruRUGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Нет строк',
   noResultsOverlayLabel: 'Данные не найдены.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'Высота строки',

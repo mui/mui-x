@@ -1,8 +1,14 @@
 import { gridColumnLookupSelector } from '@mui/x-data-grid-pro';
-import { createSelector, createSelectorMemoized } from '@mui/x-data-grid/internals';
+import {
+  createSelector,
+  createRootSelector,
+  createSelectorMemoized,
+} from '@mui/x-data-grid-pro/internals';
 import { GridStatePremium } from '../../../models/gridStatePremium';
 
-const gridRowGroupingStateSelector = (state: GridStatePremium) => state.rowGrouping;
+const gridRowGroupingStateSelector = createRootSelector(
+  (state: GridStatePremium) => state.rowGrouping,
+);
 
 export const gridRowGroupingModelSelector = createSelector(
   gridRowGroupingStateSelector,

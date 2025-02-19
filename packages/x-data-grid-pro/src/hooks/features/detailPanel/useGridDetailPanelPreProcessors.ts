@@ -50,7 +50,7 @@ export const useGridDetailPanelPreProcessors = (
         return classes;
       }
 
-      const expandedRowIds = gridDetailPanelExpandedRowIdsSelector(privateApiRef.current.state);
+      const expandedRowIds = gridDetailPanelExpandedRowIdsSelector(privateApiRef);
       if (!expandedRowIds.has(id)) {
         return classes;
       }

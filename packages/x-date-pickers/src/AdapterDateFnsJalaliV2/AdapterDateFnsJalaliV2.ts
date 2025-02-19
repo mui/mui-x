@@ -1,50 +1,52 @@
-/* eslint-disable class-methods-use-this */
+// date-fns-jalali@<3 has no exports field defined
+// See https://github.com/date-fns/date-fns/issues/1781
+/* eslint-disable import/extensions, class-methods-use-this */
 // @ts-nocheck
-import addSeconds from 'date-fns-jalali/addSeconds';
-import addMinutes from 'date-fns-jalali/addMinutes';
-import addHours from 'date-fns-jalali/addHours';
-import addDays from 'date-fns-jalali/addDays';
-import addWeeks from 'date-fns-jalali/addWeeks';
-import addMonths from 'date-fns-jalali/addMonths';
-import addYears from 'date-fns-jalali/addYears';
-import endOfDay from 'date-fns-jalali/endOfDay';
-import endOfWeek from 'date-fns-jalali/endOfWeek';
-import endOfYear from 'date-fns-jalali/endOfYear';
-import dateFnsFormat from 'date-fns-jalali/format';
-import getHours from 'date-fns-jalali/getHours';
-import getSeconds from 'date-fns-jalali/getSeconds';
-import getMilliseconds from 'date-fns-jalali/getMilliseconds';
-import getWeek from 'date-fns-jalali/getWeek';
-import getYear from 'date-fns-jalali/getYear';
-import getMonth from 'date-fns-jalali/getMonth';
-import getDate from 'date-fns-jalali/getDate';
-import getDaysInMonth from 'date-fns-jalali/getDaysInMonth';
-import getMinutes from 'date-fns-jalali/getMinutes';
-import isAfter from 'date-fns-jalali/isAfter';
-import isBefore from 'date-fns-jalali/isBefore';
-import isEqual from 'date-fns-jalali/isEqual';
-import isSameDay from 'date-fns-jalali/isSameDay';
-import isSameYear from 'date-fns-jalali/isSameYear';
-import isSameMonth from 'date-fns-jalali/isSameMonth';
-import isSameHour from 'date-fns-jalali/isSameHour';
-import isValid from 'date-fns-jalali/isValid';
-import dateFnsParse from 'date-fns-jalali/parse';
-import setDate from 'date-fns-jalali/setDate';
-import setHours from 'date-fns-jalali/setHours';
-import setMinutes from 'date-fns-jalali/setMinutes';
-import setMonth from 'date-fns-jalali/setMonth';
-import setSeconds from 'date-fns-jalali/setSeconds';
-import setMilliseconds from 'date-fns-jalali/setMilliseconds';
-import setYear from 'date-fns-jalali/setYear';
-import startOfDay from 'date-fns-jalali/startOfDay';
-import startOfMonth from 'date-fns-jalali/startOfMonth';
-import endOfMonth from 'date-fns-jalali/endOfMonth';
-import startOfWeek from 'date-fns-jalali/startOfWeek';
-import startOfYear from 'date-fns-jalali/startOfYear';
-import isWithinInterval from 'date-fns-jalali/isWithinInterval';
-import defaultLocale from 'date-fns-jalali/locale/fa-IR';
-import { Locale as DateFnsLocale } from 'date-fns-jalali/locale';
-import longFormatters from 'date-fns-jalali/_lib/format/longFormatters';
+import addSeconds from 'date-fns-jalali/addSeconds/index.js';
+import addMinutes from 'date-fns-jalali/addMinutes/index.js';
+import addHours from 'date-fns-jalali/addHours/index.js';
+import addDays from 'date-fns-jalali/addDays/index.js';
+import addWeeks from 'date-fns-jalali/addWeeks/index.js';
+import addMonths from 'date-fns-jalali/addMonths/index.js';
+import addYears from 'date-fns-jalali/addYears/index.js';
+import endOfDay from 'date-fns-jalali/endOfDay/index.js';
+import endOfWeek from 'date-fns-jalali/endOfWeek/index.js';
+import endOfYear from 'date-fns-jalali/endOfYear/index.js';
+import dateFnsFormat from 'date-fns-jalali/format/index.js';
+import getHours from 'date-fns-jalali/getHours/index.js';
+import getSeconds from 'date-fns-jalali/getSeconds/index.js';
+import getMilliseconds from 'date-fns-jalali/getMilliseconds/index.js';
+import getWeek from 'date-fns-jalali/getWeek/index.js';
+import getYear from 'date-fns-jalali/getYear/index.js';
+import getMonth from 'date-fns-jalali/getMonth/index.js';
+import getDate from 'date-fns-jalali/getDate/index.js';
+import getDaysInMonth from 'date-fns-jalali/getDaysInMonth/index.js';
+import getMinutes from 'date-fns-jalali/getMinutes/index.js';
+import isAfter from 'date-fns-jalali/isAfter/index.js';
+import isBefore from 'date-fns-jalali/isBefore/index.js';
+import isEqual from 'date-fns-jalali/isEqual/index.js';
+import isSameDay from 'date-fns-jalali/isSameDay/index.js';
+import isSameYear from 'date-fns-jalali/isSameYear/index.js';
+import isSameMonth from 'date-fns-jalali/isSameMonth/index.js';
+import isSameHour from 'date-fns-jalali/isSameHour/index.js';
+import isValid from 'date-fns-jalali/isValid/index.js';
+import dateFnsParse from 'date-fns-jalali/parse/index.js';
+import setDate from 'date-fns-jalali/setDate/index.js';
+import setHours from 'date-fns-jalali/setHours/index.js';
+import setMinutes from 'date-fns-jalali/setMinutes/index.js';
+import setMonth from 'date-fns-jalali/setMonth/index.js';
+import setSeconds from 'date-fns-jalali/setSeconds/index.js';
+import setMilliseconds from 'date-fns-jalali/setMilliseconds/index.js';
+import setYear from 'date-fns-jalali/setYear/index.js';
+import startOfDay from 'date-fns-jalali/startOfDay/index.js';
+import startOfMonth from 'date-fns-jalali/startOfMonth/index.js';
+import endOfMonth from 'date-fns-jalali/endOfMonth/index.js';
+import startOfWeek from 'date-fns-jalali/startOfWeek/index.js';
+import startOfYear from 'date-fns-jalali/startOfYear/index.js';
+import isWithinInterval from 'date-fns-jalali/isWithinInterval/index.js';
+import defaultLocale from 'date-fns-jalali/locale/fa-IR/index.js';
+import type { Locale as DateFnsLocale } from 'date-fns-jalali';
+import longFormatters from 'date-fns-jalali/_lib/format/longFormatters/index.js';
 import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
 import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
 
@@ -68,10 +70,8 @@ const defaultFormats: AdapterFormats = {
   normalDate: 'd MMMM',
   normalDateWithWeekday: 'EEE, d MMMM',
 
-  fullTime: 'p',
   fullTime12h: 'hh:mm aaa',
   fullTime24h: 'HH:mm',
-  keyboardDateTime: 'P p',
   keyboardDateTime12h: 'P hh:mm aa',
   keyboardDateTime24h: 'P HH:mm',
 };

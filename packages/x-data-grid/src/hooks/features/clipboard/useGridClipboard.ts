@@ -119,7 +119,12 @@ export const useGridClipboard = (
     [apiRef, ignoreValueFormatter, clipboardCopyCellDelimiter],
   );
 
-  useGridNativeEventListener(apiRef, apiRef.current.rootElementRef!, 'keydown', handleCopy);
+  useGridNativeEventListener(
+    apiRef,
+    () => apiRef.current.rootElementRef.current,
+    'keydown',
+    handleCopy,
+  );
 
   useGridApiOptionHandler(apiRef, 'clipboardCopy', props.onClipboardCopy);
 };

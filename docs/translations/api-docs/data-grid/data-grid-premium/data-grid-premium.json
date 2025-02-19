@@ -169,7 +169,9 @@
         "GridRowHeightReturnValue": "The row height value. If <code>null</code> or <code>undefined</code> then the default row height is applied. If &quot;auto&quot; then the row height is calculated based on the content."
       }
     },
-    "getRowId": { "description": "Return the id of a given GridRowModel." },
+    "getRowId": {
+      "description": "Return the id of a given GridRowModel. Ensure the reference of this prop is stable to avoid performance implications. It could be done by either defining the prop outside of the component or by memoizing it."
+    },
     "getRowSpacing": {
       "description": "Function that allows to specify the spacing between rows.",
       "typeDescriptions": {
@@ -1275,14 +1277,14 @@
     }
   },
   "slotDescriptions": {
+    "baseAutocomplete": "The custom Autocomplete component used in the grid for both header and cells.",
     "baseBadge": "The custom Badge component used in the grid for both header and cells.",
     "baseButton": "The custom Button component used in the grid.",
     "baseCheckbox": "The custom Checkbox component used in the grid for both header and cells.",
-    "baseChip": "The custom Chip component used in the grid.",
     "baseCircularProgress": "The custom CircularProgress component used in the grid.",
     "baseDivider": "The custom Divider component used in the grid.",
-    "baseFormControl": "The custom FormControl component used in the grid.",
     "baseIconButton": "The custom IconButton component used in the grid.",
+    "baseInput": "The custom Input component used in the grid.",
     "baseInputAdornment": "The custom InputAdornment component used in the grid.",
     "baseInputLabel": "The custom InputLabel component used in the grid.",
     "baseLinearProgress": "The custom LinearProgress component used in the grid.",
@@ -1292,6 +1294,7 @@
     "baseSelect": "The custom Select component used in the grid.",
     "baseSelectOption": "The custom SelectOption component used in the grid.",
     "baseSkeleton": "The custom Skeleton component used in the grid.",
+    "baseSwitch": "The custom Switch component used in the grid.",
     "baseTextField": "The custom TextField component used in the grid.",
     "baseTooltip": "The custom Tooltip component used in the grid.",
     "booleanCellFalseIcon": "Icon displayed on the boolean cell to represent the false value.",
@@ -1344,6 +1347,7 @@
     "loadingOverlay": "Loading overlay component rendered when the grid is in a loading state.",
     "menuItemCheckIcon": "Icon displayed to indicate that a menu item is selected.",
     "moreActionsIcon": "Icon displayed on the <code>actions</code> column type to open the menu.",
+    "noColumnsOverlay": "No columns overlay component rendered when the grid has no columns.",
     "noResultsOverlay": "No results overlay component rendered when the grid has no results after filtering.",
     "noRowsOverlay": "No rows overlay component rendered when the grid has no rows.",
     "openFilterButtonIcon": "Icon displayed on the open filter button present in the toolbar by default.",

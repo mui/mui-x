@@ -10,7 +10,7 @@
     "colorMap": {
       "type": { "description": "OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig" }
     },
-    "data": { "type": { "description": "V[]" } },
+    "data": { "type": { "description": "readonly V[]" } },
     "dataKey": { "type": { "description": "string" } },
     "domainLimit": {
       "type": {
@@ -34,7 +34,9 @@
       "default": "'extremities'"
     },
     "valueFormatter": {
-      "type": { "description": "(value: V, context: AxisValueFormatterContext) =&gt; string" }
+      "type": {
+        "description": "&lt;TScaleName extends S&gt;(value: V, context: AxisValueFormatterContext&lt;TScaleName&gt;) =&gt; string"
+      }
     },
     "zoom": { "type": { "description": "boolean | ZoomOptions" }, "isProPlan": true }
   }
