@@ -17,18 +17,16 @@ describe('<DateRangePicker />', () => {
     Component: DateRangePicker,
   });
 
-  it('should not open mobile picker dialog when clicked on input', async () => {
-    // Test with accessible DOM structure
-    const { unmount, user } = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+  it('should not open mobile picker dialog when clicked on input with accessible DOM structure', async () => {
+    const { user } = renderWithProps({ enableAccessibleFieldDOMStructure: true });
     await user.click(getFieldInputRoot());
 
     expect(screen.queryByRole('tooltip')).not.to.equal(null);
     expect(screen.queryByRole('dialog')).to.equal(null);
+  });
 
-    unmount();
-
-    // Test with non-accessible DOM structure
-    renderWithProps({ enableAccessibleFieldDOMStructure: false });
+  it('should not open mobile picker dialog when clicked on input with non-accessible DOM structure', async () => {
+    const { user } = renderWithProps({ enableAccessibleFieldDOMStructure: false });
     await user.click(screen.getAllByRole('textbox')[0]);
 
     expect(screen.queryByRole('tooltip')).not.to.equal(null);

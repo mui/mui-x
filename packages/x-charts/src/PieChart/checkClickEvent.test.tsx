@@ -25,7 +25,7 @@ describe('PieChart - click event', () => {
   });
 
   describe('onItemClick', () => {
-    it('should add cursor="pointer" to bar elements', () => {
+    it('should add cursor="pointer" to arc elements', () => {
       render(
         <PieChart
           {...config}

@@ -151,7 +151,6 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
     type: 'date-time-range',
     variant: 'mobile',
     initialFocus: 'start',
-    clock,
     values: [
       // initial start and end dates
       [adapterToUse.date('2018-01-01T11:30:00'), adapterToUse.date('2018-01-04T11:45:00')],
@@ -181,7 +180,7 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
         : expectedPlaceholder;
       expectFieldValueV7(endSectionsContainer, expectedEndValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue, setEndDate = false }) => {
+    setNewValue: async (value, _, { isOpened, applySameValue, setEndDate = false }) => {
       if (!isOpened) {
         openPicker({
           type: 'date-time-range',

@@ -110,7 +110,6 @@ describe('<MobileDateRangePicker /> - Describes', () => {
     defaultProps: {
       slots: { field: SingleInputDateRangeField },
     },
-    clock,
     values: [
       // initial start and end dates
       [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-04')],
@@ -133,8 +132,9 @@ describe('<MobileDateRangePicker /> - Describes', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (
+    setNewValue: async (
       value,
+      _,
       { isOpened, applySameValue, setEndDate = false, selectSection, pressKey },
     ) => {
       let newValue: PickerNonNullableRangeValue;
