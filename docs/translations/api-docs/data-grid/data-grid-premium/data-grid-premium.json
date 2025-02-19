@@ -599,9 +599,6 @@
         "Promise<R> | R": "The final values to update the row."
       }
     },
-    "resetPageOnSortFilter": {
-      "description": "If <code>true</code>, the page is set to 0 after each sorting or filtering. This prop will be removed in the next major version and resetting the page will become the default behavior."
-    },
     "resizeThrottleMs": { "description": "The milliseconds throttle delay for resizing the grid." },
     "rowBufferPx": { "description": "Row region in pixels to render before/after the viewport" },
     "rowCount": {
@@ -944,6 +941,10 @@
       "nodeName": "the column header separator",
       "conditions": "the side is &quot;right&quot;"
     },
+    "columnsManagementEmptyText": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the columns management empty text element"
+    },
     "columnsManagementFooter": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the columns management footer element"
@@ -955,6 +956,10 @@
     "columnsManagementRow": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the columns management row element"
+    },
+    "columnsManagementScrollArea": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the columns management scroll area element"
     },
     "columnsManagementSearchInput": {
       "description": "Styles applied to {{nodeName}}.",
@@ -1280,13 +1285,12 @@
     }
   },
   "slotDescriptions": {
+    "baseAutocomplete": "The custom Autocomplete component used in the grid for both header and cells.",
     "baseBadge": "The custom Badge component used in the grid for both header and cells.",
     "baseButton": "The custom Button component used in the grid.",
     "baseCheckbox": "The custom Checkbox component used in the grid for both header and cells.",
-    "baseChip": "The custom Chip component used in the grid.",
     "baseCircularProgress": "The custom CircularProgress component used in the grid.",
     "baseDivider": "The custom Divider component used in the grid.",
-    "baseFormControl": "The custom FormControl component used in the grid.",
     "baseIconButton": "The custom IconButton component used in the grid.",
     "baseInput": "The custom Input component used in the grid.",
     "baseInputAdornment": "The custom InputAdornment component used in the grid.",

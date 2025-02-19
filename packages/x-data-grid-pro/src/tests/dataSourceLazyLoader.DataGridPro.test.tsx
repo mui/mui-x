@@ -139,7 +139,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       });
     });
 
-    it('should keep the scroll position when sorting is applied', async () => {
+    it('should reset the scroll position when sorting is applied', async () => {
       render(<TestDataSourceLazyLoader />);
       // wait until the rows are rendered
       await waitFor(() => expect(getRow(0)).not.to.be.undefined);
@@ -163,7 +163,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       });
 
       const afterSortSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
-      expect(afterSortSearchParams.get('end')).to.equal(beforeSortSearchParams.get('end'));
+      expect(afterSortSearchParams.get('end')).to.equal('9');
     });
 
     // Behavior is wrong https://stackblitz.com/edit/react-hb51i5yh?file=Demo.tsx

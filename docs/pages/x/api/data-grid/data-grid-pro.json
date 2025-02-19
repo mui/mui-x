@@ -512,7 +512,6 @@
         "returned": "Promise<R> | R"
       }
     },
-    "resetPageOnSortFilter": { "type": { "name": "bool" }, "default": "false" },
     "resizeThrottleMs": { "type": { "name": "number" }, "default": "60" },
     "rowBufferPx": { "type": { "name": "number" }, "default": "150" },
     "rowCount": { "type": { "name": "number" } },
@@ -616,12 +615,6 @@
       "name": "headerFilterMenu",
       "description": "Component responsible for showing menu in Header filter row",
       "default": "GridHeaderFilterMenu",
-      "class": null
-    },
-    {
-      "name": "baseChip",
-      "description": "The custom Chip component used in the grid.",
-      "default": "Chip",
       "class": null
     },
     {
@@ -751,6 +744,12 @@
       "class": "MuiDataGridPro-row"
     },
     {
+      "name": "baseAutocomplete",
+      "description": "The custom Autocomplete component used in the grid for both header and cells.",
+      "default": "Autocomplete",
+      "class": null
+    },
+    {
       "name": "baseBadge",
       "description": "The custom Badge component used in the grid for both header and cells.",
       "default": "Badge",
@@ -802,12 +801,6 @@
       "name": "baseTextField",
       "description": "The custom TextField component used in the grid.",
       "default": "TextField",
-      "class": null
-    },
-    {
-      "name": "baseFormControl",
-      "description": "The custom FormControl component used in the grid.",
-      "default": "FormControl",
       "class": null
     },
     {
@@ -1455,6 +1448,12 @@
       "isGlobal": false
     },
     {
+      "key": "columnsManagementEmptyText",
+      "className": "MuiDataGridPro-columnsManagementEmptyText",
+      "description": "Styles applied to the columns management empty text element.",
+      "isGlobal": false
+    },
+    {
       "key": "columnsManagementFooter",
       "className": "MuiDataGridPro-columnsManagementFooter",
       "description": "Styles applied to the columns management footer element.",
@@ -1470,6 +1469,12 @@
       "key": "columnsManagementRow",
       "className": "MuiDataGridPro-columnsManagementRow",
       "description": "Styles applied to the columns management row element.",
+      "isGlobal": false
+    },
+    {
+      "key": "columnsManagementScrollArea",
+      "className": "MuiDataGridPro-columnsManagementScrollArea",
+      "description": "Styles applied to the columns management scroll area element.",
       "isGlobal": false
     },
     {

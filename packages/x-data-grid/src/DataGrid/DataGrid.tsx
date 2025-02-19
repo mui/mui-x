@@ -11,11 +11,13 @@ import { useDataGridComponent } from './useDataGridComponent';
 import { useDataGridProps } from './useDataGridProps';
 import { GridValidRowModel } from '../models/gridRows';
 import { propValidatorsDataGrid, validateProps } from '../internals/utils/propValidation';
+import { useMaterialCSSVariables } from '../material/variables';
 
 export type { GridSlotsComponent as GridSlots } from '../models';
 
 const configuration = {
   hooks: {
+    useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes,
     useGridRowAriaAttributes,
   },
@@ -674,12 +676,6 @@ DataGridRaw.propTypes = {
    * @returns {Promise<R> | R} The final values to update the row.
    */
   processRowUpdate: PropTypes.func,
-  /**
-   * If `true`, the page is set to 0 after each sorting or filtering.
-   * This prop will be removed in the next major version and resetting the page will become the default behavior.
-   * @default false
-   */
-  resetPageOnSortFilter: PropTypes.bool,
   /**
    * The milliseconds throttle delay for resizing the grid.
    * @default 60

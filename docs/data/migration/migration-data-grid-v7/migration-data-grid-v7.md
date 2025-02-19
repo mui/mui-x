@@ -50,6 +50,7 @@ Below are described the steps you need to make to migrate from v7 to v8.
 ### Changes to the public API
 
 - The `rowPositionsDebounceMs` prop was removed.
+- The `resetPageOnSortFilter` prop was removed. The Data Grid now goes back to the first page after sort or filter is applied.
 - The `apiRef.current.resize()` method was removed.
 - The `apiRef.current.forceUpdate()` method was removed. Use selectors combined with `useGridSelector()` hook to react to changes in the state.
 - The `<GridOverlays />` component is not exported anymore.
@@ -84,6 +85,16 @@ Below are described the steps you need to make to migrate from v7 to v8.
   - Throw an error if `apiRef` is `null`
 
 - `createUseGridApiEventHandler()` is not exported anymore.
+
+### Behavioral changes
+
+- The "Reset" button in the column visibility panel now resets to the initial column visibility model instead of the model when the panel was opened. The reset behavior follows these rules:
+
+  1. If an initial `columnVisibilityModel` is provided, it resets to that model.
+  2. If a controlled `columnVisibilityModel` is provided, it resets to the first model value.
+  3. When the columns are updated (via the `columns` prop or `updateColumns()` API method), the reset reference point updates to the current `columnVisibilityModel`.
+
+  To revert to the previous behavior, provide a custom component to the `slots.columnsManagement`.
 
 ### Localization
 
@@ -136,6 +147,7 @@ Below are described the steps you need to make to migrate from v7 to v8.
 ### Other exports
 
 - `ariaV8` experimental flag is removed. It's now the default behavior.
+- Subcomponents that are in a React Portal must now be wrapped with `GridPortalWrapper`
 
 ### Filtering
 
@@ -170,6 +182,10 @@ Below are described the steps you need to make to migrate from v7 to v8.
 
 - The `detailPanels`, `pinnedColumns`, and `pinnedRowsRenderZone` classes have been removed.
 - The `main--hasSkeletonLoadingOverlay` class has been renamed to `main--hiddenContent` and is now also applied when the "No columns" overlay is displayed.
+
+### Slots
+
+- The `baseFormControl` slot was removed.
 
 <!-- ### Editing
 

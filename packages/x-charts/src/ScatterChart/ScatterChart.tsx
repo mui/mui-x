@@ -56,7 +56,7 @@ export interface ScatterChartProps
    * The series to display in the scatter chart.
    * An array of [[ScatterSeriesType]] objects.
    */
-  series: MakeOptional<ScatterSeriesType, 'type'>[];
+  series: Readonly<MakeOptional<ScatterSeriesType, 'type'>[]>;
   /**
    * The configuration of axes highlight.
    * @see See {@link https://mui.com/x/react-charts/highlighting/ highlighting docs} for more details.

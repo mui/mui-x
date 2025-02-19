@@ -36,7 +36,7 @@ describe('useSkipAnimation', () => {
 
     const errorMessage1 = 'MUI X: Could not find the animation ref context.';
     const errorMessage2 =
-      'It looks like you rendered your component outside of a ChartsContainer parent component.';
+      'It looks like you rendered your component outside of a ChartContainer parent component.';
     const errorMessage3 = 'The above error occurred in the <UseSkipAnimation> component:';
     const expectedError =
       reactMajor < 19

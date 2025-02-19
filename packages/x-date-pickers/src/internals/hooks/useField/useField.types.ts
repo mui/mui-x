@@ -123,6 +123,10 @@ export interface UseFieldInternalProps<
    * @default false
    */
   autoFocus?: boolean;
+  /**
+   * If `true`, the component is displayed in focused state.
+   */
+  focused?: boolean;
 }
 
 export interface UseFieldCommonAdditionalProps
@@ -149,9 +153,9 @@ export type UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure extends bo
 
 export interface UseFieldV6ForwardedProps {
   inputRef?: React.Ref<HTMLInputElement>;
-  onBlur?: () => void;
+  onBlur?: React.FocusEventHandler;
   onClick?: React.MouseEventHandler;
-  onFocus?: () => void;
+  onFocus?: React.FocusEventHandler;
   onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
   placeholder?: string;
 }
@@ -164,14 +168,15 @@ interface UseFieldV6AdditionalProps
     >
   > {
   enableAccessibleFieldDOMStructure: false;
+  focused?: boolean;
 }
 
 export interface UseFieldV7ForwardedProps {
   focused?: boolean;
   sectionListRef?: React.Ref<PickersSectionListRef>;
-  onBlur?: () => void;
+  onBlur?: React.FocusEventHandler;
   onClick?: React.MouseEventHandler;
-  onFocus?: () => void;
+  onFocus?: React.FocusEventHandler;
   onInput?: React.FormEventHandler<HTMLDivElement>;
   onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
 }
@@ -184,6 +189,7 @@ interface UseFieldV7AdditionalProps {
   value: string;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   areAllSectionsEmpty: boolean;
+  focused: boolean;
 }
 
 export type UseFieldResponse<
