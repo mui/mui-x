@@ -176,7 +176,7 @@ const PieChart = React.forwardRef(function PieChart(inProps: PieChartProps, ref)
           {
             id: DEFAULT_X_AXIS_KEY,
             scaleType: 'point',
-            data: [...new Array(Math.max(...series.map((s) => s.data.length)))].map(
+            data: [...new Array(Math.max(0, ...series.map((s) => s.data.length)))].map(
               (_, index) => index,
             ),
           },
