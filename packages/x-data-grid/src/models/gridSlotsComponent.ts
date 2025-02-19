@@ -46,11 +46,6 @@ export interface GridBaseSlots {
    */
   baseMenuItem: React.JSXElementConstructor<GridSlotProps['baseMenuItem']>;
   /**
-   * The custom InputAdornment component used in the grid.
-   * @default InputAdornment
-   */
-  baseInputAdornment: React.JSXElementConstructor<GridSlotProps['baseInputAdornment']>;
-  /**
    * The custom TextField component used in the grid.
    * @default TextField
    */
@@ -85,11 +80,6 @@ export interface GridBaseSlots {
    * @default Popper
    */
   basePopper: React.JSXElementConstructor<GridSlotProps['basePopper']>;
-  /**
-   * The custom InputLabel component used in the grid.
-   * @default InputLabel
-   */
-  baseInputLabel: React.JSXElementConstructor<GridSlotProps['baseInputLabel']>;
   /**
    * The custom SelectOption component used in the grid.
    * @default SelectOption
