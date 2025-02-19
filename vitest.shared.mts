@@ -60,7 +60,6 @@ export default defineConfig({
       screenshotFailures: false,
     },
     ...(process.env.CI && {
-      logHeapUsage: true,
       testTimeout: 15000,
       // minWorkers: 1,
       // maxWorkers: 1,
