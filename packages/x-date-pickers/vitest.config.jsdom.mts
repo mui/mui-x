@@ -9,15 +9,15 @@ export const filterReplace = filterReplacePlugin(
     {
       filter: /\/AdapterDateFnsV2\/.*/,
       replace: {
-        from: /from 'date-fns'/g,
-        to: "from 'date-fns-v2'",
+        from: /from 'date-fns/g,
+        to: "from 'date-fns-v2",
       },
     },
     {
       filter: /\/AdapterDateFnsJalaliV2\/.*/,
       replace: {
-        from: /from 'date-fns-jalali'/g,
-        to: "from 'date-fns-jalali-v2'",
+        from: /from 'date-fns-jalali/g,
+        to: "from 'date-fns-jalali-v2",
       },
     },
   ],
