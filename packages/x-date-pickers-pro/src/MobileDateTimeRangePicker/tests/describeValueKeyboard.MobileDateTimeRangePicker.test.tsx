@@ -10,7 +10,7 @@ import {
 } from 'test/utils/pickers';
 import { MobileDateTimeRangePicker } from '@mui/x-date-pickers-pro/MobileDateTimeRangePicker';
 
-describe('<MobileDateTimeRangePicker /> - Describe Value', () => {
+describe('<MobileDateTimeRangePicker /> - Describe Value Keyboard', () => {
   const { render } = createPickerRenderer();
 
   describeValue<PickerRangeValue, 'picker'>(MobileDateTimeRangePicker, () => ({
@@ -48,14 +48,13 @@ describe('<MobileDateTimeRangePicker /> - Describe Value', () => {
         : expectedPlaceholder;
       expectFieldValueV7(endSectionsContainer, expectedEndValueStr);
     },
-    setNewValue: async (value, _, { isOpened, applySameValue, setEndDate = false }) => {
+    setNewValue: async (value, user, { isOpened, applySameValue, setEndDate = false }) => {
       if (!isOpened) {
         openPicker({
           type: 'date-time-range',
           initialFocus: setEndDate ? 'end' : 'start',
         });
       }
-
       let newValue: PickerNonNullableRangeValue;
       if (applySameValue) {
         newValue = value;
@@ -69,6 +68,13 @@ describe('<MobileDateTimeRangePicker /> - Describe Value', () => {
           adapterToUse.addMinutes(adapterToUse.addHours(adapterToUse.addDays(value[0], 1), 1), 5),
           value[1],
         ];
+      }
+
+      // if we want to set the end date, we firstly need to switch to end date "range position"
+      if (setEndDate) {
+        fireEvent.click(
+          screen.getByRole('button', { name: adapterToUse.format(value[1], 'shortDate') }),
+        );
       }
 
       fireEvent.click(
@@ -89,9 +95,18 @@ describe('<MobileDateTimeRangePicker /> - Describe Value', () => {
         }),
       );
       if (hasMeridiem) {
-        // meridiem is an extra view on `DesktopDateTimeRangePicker`
+        // meridiem is an extra view on `MobileDateTimeRangePicker`
         // we need to click it to finish selection
         fireEvent.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
+      }
+      // Close the picker
+      if (!isOpened) {
+        await user.keyboard('[Escape]');
+      } else {
+        // return to the start date view in case we'd like to repeat the selection process
+        fireEvent.click(
+          screen.getByRole('button', { name: adapterToUse.format(newValue[0], 'shortDate') }),
+        );
       }
 
       return newValue;
