@@ -406,12 +406,6 @@
   {
     "name": "selectedGridRowsSelector",
     "returnType": "Map<GridRowId, GridValidRowModel>",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
-    "name": "selectedIdsLookupSelector",
-    "returnType": "Record<GridRowId, GridRowId>",
     "description": ""
   }
 ]
