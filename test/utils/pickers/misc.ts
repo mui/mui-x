@@ -69,7 +69,7 @@ export const formatFullTimeValue = (adapter: MuiPickersAdapter, value: PickerVal
 
 export const isPickerSingleInput = (parameters: OpenPickerParams) => {
   if (parameters.type === 'date-range' || parameters.type === 'date-time-range') {
-    return parameters.isSingleInput;
+    return parameters.fieldType === 'single-input';
   }
 
   return true;

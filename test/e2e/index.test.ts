@@ -951,7 +951,7 @@ async function initializeEnvironment(
         if (browserType.name() === 'firefox') {
           return;
         }
-        await renderFixture('DatePicker/BasicDesktopDateRangePicker');
+        await renderFixture('DatePicker/MultiInputDesktopDateRangePicker');
 
         // Old selector: await page.getByRole('textbox', { name: 'Start' }).click();
         await page.locator(`.${pickersSectionListClasses.root}`).first().click();
@@ -975,7 +975,7 @@ async function initializeEnvironment(
         if (browserType.name() === 'firefox') {
           return;
         }
-        await renderFixture('DatePicker/BasicDesktopDateRangePicker');
+        await renderFixture('DatePicker/MultiInputDesktopDateRangePicker');
 
         // Old selector: await page.getByRole('textbox', { name: 'Start' }).click();
         await page.locator(`.${pickersSectionListClasses.root}`).first().click();
@@ -1110,7 +1110,7 @@ describe('e2e: chromium on Android', () => {
   });
 
   it('should allow re-selecting value to have the same start and end date', async () => {
-    await renderFixture('DatePicker/BasicDesktopDateRangePicker');
+    await renderFixture('DatePicker/MultiInputDesktopDateRangePicker');
 
     // Old selector: await page.getByRole('textbox', { name: 'Start' }).tap();
     await page.locator(`.${pickersSectionListClasses.root}`).first().tap();
