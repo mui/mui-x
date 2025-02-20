@@ -3,7 +3,7 @@ import {
   DataGrid,
   getGridDefaultColumnTypes,
   DEFAULT_GRID_COL_TYPE_KEY,
-  gridRowSelectionStateSelector,
+  gridRowSelectionManagerSelector,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
@@ -31,8 +31,8 @@ export default function CustomSelectionOperator() {
 
         return (value, row, col, apiRef) => {
           const rowId = apiRef.current.getRowId(row);
-          const rowSelectionModel = gridRowSelectionStateSelector(apiRef);
-          if (rowSelectionModel.ids.has(rowId)) {
+          const rowSelectionManager = gridRowSelectionManagerSelector(apiRef);
+          if (rowSelectionManager.has(rowId)) {
             return true;
           }
 
