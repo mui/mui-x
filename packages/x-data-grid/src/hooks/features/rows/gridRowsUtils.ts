@@ -79,7 +79,7 @@ export const getRowIdFromRowModel = (
 export const getRowValue = (
   row: GridValidRowModel,
   colDef: GridColDef,
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: RefObject<GridApiCommunity>,
 ) => {
   const field = colDef.field;
 
