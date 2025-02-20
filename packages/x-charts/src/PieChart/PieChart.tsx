@@ -5,7 +5,7 @@ import { useThemeProps } from '@mui/material/styles';
 import { MakeOptional } from '@mui/x-internals/types';
 import { ChartContainerProps } from '../ChartContainer';
 import { PieSeriesType } from '../models/seriesType';
-import { ChartsTooltip, ChartsTooltipSlotExtension } from '../ChartsTooltip';
+import { ChartsTooltip, ChartsTooltipProps, ChartsTooltipSlotExtension } from '../ChartsTooltip';
 import { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
 import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import { PiePlot, PiePlotProps, PiePlotSlotProps, PiePlotSlots } from './PiePlot';
@@ -122,13 +122,13 @@ const PieChart = React.forwardRef(function PieChart(
     ref,
   );
 
-  const tooltipProps: ChartsTooltipSlotExtension = {
-    slots:
-      slots || slotProps?.tooltip?.slots ? { ...slots, ...slotProps?.tooltip?.slots } : undefined,
-    slotProps: slotProps ? { ...slotProps, ...slotProps?.tooltip?.slotProps } : undefined,
+  const Tooltip = slots?.tooltip ?? ChartsTooltip;
+  const tooltipProps: ChartsTooltipProps = {
+    slots,
+    slotProps,
+    ...slotProps?.tooltip,
   };
 
-  const Tooltip = slots?.tooltip ?? ChartsTooltip;
   return (
     <ChartDataProvider<'pie', PieChartPluginSignatures> {...chartDataProviderProps}>
       <ChartsWrapper

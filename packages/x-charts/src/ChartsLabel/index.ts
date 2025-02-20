@@ -7,3 +7,5 @@ export { labelMarkClasses } from './labelMarkClasses';
 export type { ChartsLabelMarkClasses } from './labelMarkClasses';
 export { labelGradientClasses } from './labelGradientClasses';
 export type { ChartsLabelGradientClasses } from './labelGradientClasses';
+
+export type { ChartsLabelMarkSlotProps, ChartsLabelMarkSlots } from './chartsLabelMark.types';

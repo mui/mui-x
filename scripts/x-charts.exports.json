@@ -87,6 +87,8 @@
   { "name": "ChartsLabelGradientClasses", "kind": "Interface" },
   { "name": "ChartsLabelMarkClasses", "kind": "Interface" },
   { "name": "ChartsLabelMarkProps", "kind": "Interface" },
+  { "name": "ChartsLabelMarkSlotProps", "kind": "Interface" },
+  { "name": "ChartsLabelMarkSlots", "kind": "Interface" },
   { "name": "ChartsLegend", "kind": "Variable" },
   { "name": "ChartsLegendClasses", "kind": "Interface" },
   { "name": "ChartsLegendPosition", "kind": "TypeAlias" },
