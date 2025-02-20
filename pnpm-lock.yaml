@@ -99,8 +99,8 @@ importers:
         specifier: ^5.16.14
         version: 5.16.14(@emotion/react@11.14.0(@types/react@19.0.8)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.8)(react@19.0.0))(@types/react@19.0.8)(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#30265e0a3c96381a71339d71375560296084c068
-        version: https://codeload.github.com/mui/material-ui/tar.gz/30265e0a3c96381a71339d71375560296084c068(@babel/core@7.26.9)(encoding@0.1.13)
+        specifier: github:mui/material-ui#ee0f8d2ca1c571ee82414bfb55ebc33bbb1c56df
+        version: https://codeload.github.com/mui/material-ui/tar.gz/ee0f8d2ca1c571ee82414bfb55ebc33bbb1c56df(@babel/core@7.26.9)(encoding@0.1.13)
       '@mui/utils':
         specifier: ^5.16.14
         version: 5.16.14(@types/react@19.0.8)(react@19.0.0)
@@ -3271,8 +3271,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/30265e0a3c96381a71339d71375560296084c068':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/30265e0a3c96381a71339d71375560296084c068}
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/ee0f8d2ca1c571ee82414bfb55ebc33bbb1c56df':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/ee0f8d2ca1c571ee82414bfb55ebc33bbb1c56df}
     version: 7.0.0-alpha.2
     engines: {pnpm: 9.15.4}
 
@@ -12336,7 +12336,7 @@ snapshots:
       '@emotion/styled': 11.14.0(@emotion/react@11.14.0(@types/react@19.0.8)(react@19.0.0))(@types/react@19.0.8)(react@19.0.0)
       '@types/react': 19.0.8
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/30265e0a3c96381a71339d71375560296084c068(@babel/core@7.26.9)(encoding@0.1.13)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/ee0f8d2ca1c571ee82414bfb55ebc33bbb1c56df(@babel/core@7.26.9)(encoding@0.1.13)':
     dependencies:
       '@googleapis/sheets': 9.3.1(encoding@0.1.13)
       '@netlify/functions': 3.0.0
