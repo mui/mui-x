@@ -11,11 +11,13 @@ import { useDataGridComponent } from './useDataGridComponent';
 import { useDataGridProps } from './useDataGridProps';
 import { GridValidRowModel } from '../models/gridRows';
 import { propValidatorsDataGrid, validateProps } from '../internals/utils/propValidation';
+import { useMaterialCSSVariables } from '../material/variables';
 
 export type { GridSlotsComponent as GridSlots } from '../models';
 
 const configuration = {
   hooks: {
+    useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes,
     useGridRowAriaAttributes,
   },

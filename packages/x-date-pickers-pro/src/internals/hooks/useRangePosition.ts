@@ -1,8 +1,5 @@
-import * as React from 'react';
 import useControlled from '@mui/utils/useControlled';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { FieldRef } from '@mui/x-date-pickers/models';
-import { PickerRangeValue } from '@mui/x-date-pickers/internals';
 import { RangePosition } from '../../models';
 
 export interface UseRangePositionProps {
@@ -29,10 +26,7 @@ export interface UseRangePositionResponse {
   setRangePosition: (newPosition: RangePosition) => void;
 }
 
-export const useRangePosition = (
-  props: UseRangePositionProps,
-  singleInputFieldRef?: React.RefObject<FieldRef<PickerRangeValue> | null>,
-): UseRangePositionResponse => {
+export const useRangePosition = (props: UseRangePositionProps): UseRangePositionResponse => {
   const [rangePosition, setRangePosition] = useControlled({
     name: 'useRangePosition',
     state: 'rangePosition',
@@ -40,31 +34,9 @@ export const useRangePosition = (
     default: props.defaultRangePosition ?? 'start',
   });
 
-  // When using a single input field,
-  // we want to select the 1st section of the edited date when updating the range position.
-  const syncRangePositionWithSingleInputField = (newRangePosition: RangePosition) => {
-    if (singleInputFieldRef?.current == null) {
-      return;
-    }
-
-    const sections = singleInputFieldRef.current.getSections();
-    const targetActiveSectionIndex = newRangePosition === 'start' ? 0 : sections.length / 2;
-    const activeSectionIndex = singleInputFieldRef.current.getActiveSectionIndex();
-    // if the active section is already within the target range, we don't need to update it.
-    if (
-      activeSectionIndex &&
-      activeSectionIndex >= targetActiveSectionIndex &&
-      activeSectionIndex < targetActiveSectionIndex + sections.length / 2
-    ) {
-      return;
-    }
-    singleInputFieldRef.current.setSelectedSections(targetActiveSectionIndex);
-  };
-
   const handleRangePositionChange = useEventCallback((newRangePosition: RangePosition) => {
     setRangePosition(newRangePosition);
     props.onRangePositionChange?.(newRangePosition);
-    syncRangePositionWithSingleInputField(newRangePosition);
   });
 
   return { rangePosition, setRangePosition: handleRangePositionChange };

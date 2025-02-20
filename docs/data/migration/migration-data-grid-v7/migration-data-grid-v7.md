@@ -34,6 +34,19 @@ Since v8 is a major release, it contains some changes that affect the public API
 These changes were done for consistency, improve stability and make room for new features.
 Below are described the steps you need to make to migrate from v7 to v8.
 
+### Setting license key
+
+The deprecated `LicenseInfo` export was removed from the `@mui/x-data-grid-pro` and `@mui/x-data-grid-premium` packages.
+You have to import it from `@mui/x-license` instead:
+
+```diff
+-import { LicenseInfo } from '@mui/x-data-grid-pro';
+-import { LicenseInfo } from '@mui/x-data-grid-premium';
++import { LicenseInfo } from '@mui/x-license';
+
+ LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
+```
+
 ### Props
 
 - Passing additional props (like `data-*`, `aria-*`) directly on the Data Grid component is no longer supported. To pass the props, use `slotProps`:
@@ -147,6 +160,7 @@ Below are described the steps you need to make to migrate from v7 to v8.
 ### Other exports
 
 - `ariaV8` experimental flag is removed. It's now the default behavior.
+- Subcomponents that are in a React Portal must now be wrapped with `GridPortalWrapper`
 
 ### Filtering
 
@@ -181,6 +195,13 @@ Below are described the steps you need to make to migrate from v7 to v8.
 
 - The `detailPanels`, `pinnedColumns`, and `pinnedRowsRenderZone` classes have been removed.
 - The `main--hasSkeletonLoadingOverlay` class has been renamed to `main--hiddenContent` and is now also applied when the "No columns" overlay is displayed.
+
+### Slots
+
+- The `baseFormControl` slot was removed.
+- The `baseInputLabel` slot was removed.
+- The `baseInputAdornment` slot was removed.
+- The `paper` slot has been renamed to `panelContent`.
 
 <!-- ### Editing
 

@@ -683,12 +683,6 @@
       "class": null
     },
     {
-      "name": "baseChip",
-      "description": "The custom Chip component used in the grid.",
-      "default": "Chip",
-      "class": null
-    },
-    {
       "name": "bottomContainer",
       "description": "Component rendered for the bottom container.",
       "default": "GridBottomContainer",
@@ -815,6 +809,12 @@
       "class": "MuiDataGridPremium-row"
     },
     {
+      "name": "baseAutocomplete",
+      "description": "The custom Autocomplete component used in the grid for both header and cells.",
+      "default": "Autocomplete",
+      "class": null
+    },
+    {
       "name": "baseBadge",
       "description": "The custom Badge component used in the grid for both header and cells.",
       "default": "Badge",
@@ -857,21 +857,9 @@
       "class": null
     },
     {
-      "name": "baseInputAdornment",
-      "description": "The custom InputAdornment component used in the grid.",
-      "default": "InputAdornment",
-      "class": null
-    },
-    {
       "name": "baseTextField",
       "description": "The custom TextField component used in the grid.",
       "default": "TextField",
-      "class": null
-    },
-    {
-      "name": "baseFormControl",
-      "description": "The custom FormControl component used in the grid.",
-      "default": "FormControl",
       "class": null
     },
     {
@@ -908,12 +896,6 @@
       "name": "basePopper",
       "description": "The custom Popper component used in the grid.",
       "default": "Popper",
-      "class": null
-    },
-    {
-      "name": "baseInputLabel",
-      "description": "The custom InputLabel component used in the grid.",
-      "default": "InputLabel",
       "class": null
     },
     {
@@ -1549,6 +1531,12 @@
       "isGlobal": false
     },
     {
+      "key": "columnsManagementEmptyText",
+      "className": "MuiDataGridPremium-columnsManagementEmptyText",
+      "description": "Styles applied to the columns management empty text element.",
+      "isGlobal": false
+    },
+    {
       "key": "columnsManagementFooter",
       "className": "MuiDataGridPremium-columnsManagementFooter",
       "description": "Styles applied to the columns management footer element.",
@@ -1564,6 +1552,12 @@
       "key": "columnsManagementRow",
       "className": "MuiDataGridPremium-columnsManagementRow",
       "description": "Styles applied to the columns management row element.",
+      "isGlobal": false
+    },
+    {
+      "key": "columnsManagementScrollArea",
+      "className": "MuiDataGridPremium-columnsManagementScrollArea",
+      "description": "Styles applied to the columns management scroll area element.",
       "isGlobal": false
     },
     {

@@ -11,7 +11,6 @@ import { ChartsAxisProps } from '../ChartsAxis';
 import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsLegendSlotExtension } from '../ChartsLegend';
 import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
-import { calculateMargins } from '../internals/calculateMargins';
 import { BAR_CHART_PLUGINS, BarChartPluginsSignatures } from './BarChart.plugins';
 
 /**
@@ -34,10 +33,6 @@ export const useBarChartProps = (props: BarChartProps) => {
     sx,
     axisHighlight,
     grid,
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
     children,
     slots,
     slotProps,
@@ -78,7 +73,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     })),
     width,
     height,
-    margin: calculateMargins({ margin, hideLegend, slotProps, series }),
+    margin,
     colors,
     dataset,
     xAxis:
@@ -126,10 +121,6 @@ export const useBarChartProps = (props: BarChartProps) => {
   };
 
   const chartsAxisProps: ChartsAxisProps = {
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
     slots,
     slotProps,
   };
