@@ -34,6 +34,19 @@ Since v8 is a major release, it contains some changes that affect the public API
 These changes were done for consistency, improve stability and make room for new features.
 Below are described the steps you need to make to migrate from v7 to v8.
 
+### Setting license key
+
+The deprecated `LicenseInfo` export was removed from the `@mui/x-data-grid-pro` and `@mui/x-data-grid-premium` packages.
+You have to import it from `@mui/x-license` instead:
+
+```diff
+-import { LicenseInfo } from '@mui/x-data-grid-pro';
+-import { LicenseInfo } from '@mui/x-data-grid-premium';
++import { LicenseInfo } from '@mui/x-license';
+
+ LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
+```
+
 ### Props
 
 - Passing additional props (like `data-*`, `aria-*`) directly on the Data Grid component is no longer supported. To pass the props, use `slotProps`:
