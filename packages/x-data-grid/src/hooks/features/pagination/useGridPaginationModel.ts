@@ -47,7 +47,7 @@ export const getDerivedPaginationModel = (
     paginationModel = paginationModelProp;
   }
 
-  const validPage = getValidPage(paginationModel.page, pageCount);
+  const validPage = pageSize === -1 ? 0 : getValidPage(paginationModel.page, pageCount);
   if (validPage !== paginationModel.page) {
     paginationModel = { ...paginationModel, page: validPage };
   }
