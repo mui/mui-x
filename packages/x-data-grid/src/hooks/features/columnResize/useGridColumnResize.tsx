@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import {
-  unstable_ownerDocument as ownerDocument,
-  unstable_useEventCallback as useEventCallback,
-} from '@mui/utils';
+import useEventCallback from '@mui/utils/useEventCallback';
+import ownerDocument from '@mui/utils/ownerDocument';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { useRtl } from '@mui/system/RtlProvider';
 import {
