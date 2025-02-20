@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { alpha, styled } from '@mui/material/styles';
+import { styled } from '@mui/system';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch, { switchClasses } from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
 import { outlinedInputClasses } from '@mui/material/OutlinedInput';
+import { vars } from '@mui/x-data-grid/internals';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridSidebarHeader } from '../GridSidebarHeader';
 import { GridSidebarCloseButton } from '../GridSidebarCloseButton';
@@ -28,27 +29,27 @@ export interface GridSidebarColumnPanelHeaderProps
   >;
 }
 
-const HeaderRow = styled('div')(({ theme }) => ({
+const HeaderRow = styled('div')({
   position: 'relative',
   display: 'flex',
   alignItems: 'center',
-  padding: theme.spacing(1.25, 2),
+  padding: vars.spacing(1.25, 2),
   '& + &': {
-    borderTop: `1px solid ${alpha(theme.palette.divider, 0.06)}`,
+    borderTop: `1px solid ${vars.colors.border.muted}`,
   },
-}));
+});
 
-const SearchField = styled(GridSidebarSearchField)(({ theme }) => ({
+const SearchField = styled(GridSidebarSearchField)({
   width: '100%',
-  borderBottom: `1px solid ${alpha(theme.palette.divider, 0.06)}`,
+  borderBottom: `1px solid ${vars.colors.border.muted}`,
+  // TODO: Remove material imports
   [`& .${outlinedInputClasses.root}`]: {
     height: 50,
-    fontSize: theme.typography.pxToRem(14),
   },
   [`& .${outlinedInputClasses.notchedOutline}`]: {
     display: 'none',
   },
-}));
+});
 
 export function GridSidebarColumnPanelHeader(props: GridSidebarColumnPanelHeaderProps) {
   const { pivotMode, searchState, onPivotModeChange, onSearchStateChange } = props;

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/system';
+import { vars } from '@mui/x-data-grid/internals';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import useId from '@mui/utils/useId';
 
@@ -9,41 +10,41 @@ interface GridSidebarCollapsibleSectionProps
   children: React.ReactNode;
 }
 
-const CollapsibleSection = styled('div')<{ open: boolean }>(({ theme, open }) => ({
+const CollapsibleSection = styled('div')<{ open: boolean }>(({ open }) => ({
   display: 'flex',
   flexDirection: 'column',
   overflow: 'hidden',
-  borderRadius: theme.shape.borderRadius,
-  border: `1px solid ${theme.palette.divider}`,
+  borderRadius: vars.radius.base,
+  border: `1px solid ${vars.colors.border.base}`,
   flex: open ? '1 0 auto' : '0 0 auto',
 }));
 
-const CollapsibleSectionTrigger = styled('div')(({ theme }) => ({
+const CollapsibleSectionTrigger = styled('div')({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
   height: 40,
-  padding: theme.spacing(0, 1.5),
+  padding: vars.spacing(0, 1.5),
   '&:hover': {
-    backgroundColor: theme.palette.action.hover,
+    backgroundColor: vars.colors.interactive.hover,
     cursor: 'pointer',
   },
-}));
+});
 
-const CollapsibleSectionIcon = styled('svg')<{ open: boolean }>(({ theme, open }) => ({
-  color: theme.palette.text.secondary,
+const CollapsibleSectionIcon = styled('svg')<{ open: boolean }>(({ open }) => ({
+  color: vars.colors.foreground.muted,
   transform: open ? 'none' : 'rotate(180deg)',
-  transition: theme.transitions.create(['transform'], {
-    duration: theme.transitions.duration.shorter,
-    easing: theme.transitions.easing.easeInOut,
+  transition: vars.transition(['transform'], {
+    duration: vars.transitions.duration.short,
+    easing: vars.transitions.easing.easeInOut,
   }),
 }));
 
-const CollapsibleSectionContent = styled('div')(({ theme }) => ({
-  borderTop: `1px solid ${theme.palette.divider}`,
+const CollapsibleSectionContent = styled('div')({
+  borderTop: `1px solid ${vars.colors.border.base}`,
   flex: 1,
   overflow: 'hidden',
-}));
+});
 
 export function GridSidebarCollapsibleSection(props: GridSidebarCollapsibleSectionProps) {
   const { title, 'aria-label': ariaLabel, children, ...rest } = props;

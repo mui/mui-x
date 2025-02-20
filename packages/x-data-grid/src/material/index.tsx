@@ -61,6 +61,7 @@ import {
   GridMoveToBottomIcon,
   GridDeleteIcon,
   GridExpandLessIcon,
+  GridPivotIcon,
 } from './icons';
 import type { GridIconSlotsComponent } from '../models';
 import type { GridBaseSlots } from '../models/gridSlotsComponent';
@@ -165,6 +166,7 @@ const iconSlots: GridIconSlotsComponent = {
   filterPanelRemoveAllIcon: GridDeleteForeverIcon,
   columnReorderIcon: GridDragIcon,
   menuItemCheckIcon: GridCheckIcon,
+  pivotIcon: GridPivotIcon,
   pivotMenuAddIcon: GridAddIcon,
   pivotMenuMoveUpIcon: GridExpandLessIcon,
   pivotMenuMoveDownIcon: GridExpandMoreIcon,

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { styled, SxProps, Theme } from '@mui/material/styles';
-import { DataGridProcessedProps, useGridSelector } from '@mui/x-data-grid/internals';
+import { styled } from '@mui/system';
+import { DataGridProcessedProps, useGridSelector, vars } from '@mui/x-data-grid/internals';
 import {
   getDataGridUtilityClass,
   gridDimensionsSelector,
@@ -10,9 +10,7 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import clsx from 'clsx';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
-export type GridSidebarHeaderProps = React.HTMLAttributes<HTMLDivElement> & {
-  sx?: SxProps<Theme>;
-};
+export type GridSidebarHeaderProps = React.HTMLAttributes<HTMLDivElement>;
 
 type OwnerState = DataGridProcessedProps;
 
@@ -30,11 +28,11 @@ const GridSidebarHeaderRoot = styled('div', {
   name: 'DataGrid',
   slot: 'SidebarHeader',
   overridesResolver: (_, styles) => styles.sidebarHeader,
-})<{ ownerState: OwnerState }>(({ theme }) => ({
+})<{ ownerState: OwnerState }>({
   position: 'sticky',
   top: 0,
-  borderBottom: `1px solid ${theme.palette.divider}`,
-}));
+  borderBottom: `1px solid ${vars.colors.border.base}`,
+});
 
 export function GridSidebarHeader(props: GridSidebarHeaderProps) {
   const { className, children, ...other } = props;

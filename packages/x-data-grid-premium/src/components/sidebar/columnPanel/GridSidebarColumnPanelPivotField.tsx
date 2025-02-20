@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/system';
 import {
   getDataGridUtilityClass,
   GridColDef,
@@ -11,7 +11,7 @@ import {
 import { selectClasses } from '@mui/material/Select';
 import { outlinedInputClasses } from '@mui/material/OutlinedInput';
 import composeClasses from '@mui/utils/composeClasses';
-import { DataGridProcessedProps } from '@mui/x-data-grid/internals';
+import { DataGridProcessedProps, vars } from '@mui/x-data-grid/internals';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { PivotModel } from '../../../hooks/features/pivoting/useGridPivoting';
 import { useGridRootProps } from '../../../typeOverloads/reexports';
@@ -69,14 +69,14 @@ const PivotFieldRoot = styled('div', {
   ownerState: OwnerState;
   dropPosition: DropPosition;
   section: FieldTransferObject['modelKey'];
-}>(({ theme }) => ({
+}>({
   flexShrink: 0,
   position: 'relative',
-  padding: theme.spacing(0, 1, 0, 2),
+  padding: vars.spacing(0, 1, 0, 2),
   height: '32px',
   display: 'flex',
   alignItems: 'center',
-  gap: theme.spacing(0.5),
+  gap: vars.spacing(0.5),
   borderWidth: 0,
   borderTopWidth: 2,
   borderBottomWidth: 2,
@@ -85,10 +85,10 @@ const PivotFieldRoot = styled('div', {
   margin: '-1px 0', // collapse vertical borders
   cursor: 'grab',
   variants: [
-    { props: { dropPosition: 'top' }, style: { borderTopColor: theme.palette.primary.main } },
+    { props: { dropPosition: 'top' }, style: { borderTopColor: vars.colors.interactive.selected } },
     {
       props: { dropPosition: 'bottom' },
-      style: { borderBottomColor: theme.palette.primary.main },
+      style: { borderBottomColor: vars.colors.interactive.selected },
     },
     {
       props: { section: null },
@@ -96,9 +96,9 @@ const PivotFieldRoot = styled('div', {
     },
   ],
   '&:hover': {
-    backgroundColor: theme.palette.action.hover,
+    backgroundColor: vars.colors.interactive.hover,
   },
-}));
+});
 
 const PivotFieldName = styled('span')({
   flex: 1,
@@ -112,41 +112,41 @@ const PivotFieldActionContainer = styled('div')({
   alignItems: 'center',
 });
 
-const PivotFieldDragIcon = styled('div')(({ theme }) => ({
+const PivotFieldDragIcon = styled('div')({
   position: 'absolute',
   left: -1,
   width: 16,
   display: 'flex',
   justifyContent: 'center',
-  color: theme.palette.text.primary,
+  color: vars.colors.foreground.base,
   opacity: 0,
   '[draggable="true"]:hover > &': {
     opacity: 0.3,
   },
-}));
+});
 
-const PivotFieldCheckbox = styled(NotRendered<GridSlotProps['baseCheckbox']>)(({ theme }) => ({
+const PivotFieldCheckbox = styled(NotRendered<GridSlotProps['baseCheckbox']>)({
   flex: 1,
   position: 'relative',
-  margin: theme.spacing(0, 0, 0, -1),
+  margin: vars.spacing(0, 0, 0, -1),
   cursor: 'grab',
-}));
+});
 
-const AggregationSelectRoot = styled(NotRendered<GridSlotProps['baseSelect']>)(({ theme }) => ({
-  fontSize: theme.typography.pxToRem(12),
+const AggregationSelectRoot = styled(NotRendered<GridSlotProps['baseSelect']>)({
+  fontSize: vars.typography.small.fontSize,
   [`& .${selectClasses.select}.${selectClasses.outlined}.${outlinedInputClasses.input}`]: {
-    padding: theme.spacing(0.75, 3, 0.75, 1),
+    padding: vars.spacing(0.75, 3, 0.75, 1),
   },
   [`& .${selectClasses.icon}`]: {
     right: 0,
   },
   '&:hover': {
-    backgroundColor: theme.palette.action.hover,
+    backgroundColor: vars.colors.interactive.hover,
   },
   [`&:not(:focus-within) .${outlinedInputClasses.notchedOutline}`]: {
     border: 0,
   },
-}));
+});
 
 function AggregationSelect({
   aggFunc,

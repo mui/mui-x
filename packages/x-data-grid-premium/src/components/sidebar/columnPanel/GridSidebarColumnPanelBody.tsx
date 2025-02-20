@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { alpha, styled } from '@mui/material/styles';
+import { styled } from '@mui/system';
 import { GridColDef, GridShadowScrollArea } from '@mui/x-data-grid';
-
+import { vars } from '@mui/x-data-grid/internals';
 import { PivotModel } from '../../../hooks/features/pivoting/useGridPivoting';
 import { useGridRootProps } from '../../../typeOverloads/reexports';
 import { getAvailableAggregationFunctions } from '../../../hooks/features/aggregation/gridAggregationUtils';
@@ -17,17 +17,17 @@ const Container = styled('div')({
   overflow: 'hidden',
 });
 
-const TopPane = styled(GridShadowScrollArea)(({ theme }) => ({
+const TopPane = styled(GridShadowScrollArea)({
   flex: 1,
   minHeight: 50,
-  transition: theme.transitions.create('background-color', {
-    duration: theme.transitions.duration.short,
-    easing: theme.transitions.easing.easeInOut,
+  transition: vars.transition(['background-color'], {
+    duration: vars.transitions.duration.short,
+    easing: vars.transitions.easing.easeInOut,
   }),
   '&[data-drag-over="true"]': {
-    backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.hoverOpacity),
+    backgroundColor: vars.colors.interactive.hover,
   },
-}));
+});
 
 const BottomPane = styled('div')({
   position: 'relative',
@@ -41,37 +41,38 @@ const ScrollArea = styled(GridShadowScrollArea)({
   height: '100%',
 });
 
-const CollapsibleSection = styled(GridSidebarCollapsibleSection)(({ theme }) => ({
-  margin: theme.spacing(0.5, 1),
-  transition: theme.transitions.create(['border-color', 'background-color'], {
-    duration: theme.transitions.duration.short,
-    easing: theme.transitions.easing.easeInOut,
+const CollapsibleSection = styled(GridSidebarCollapsibleSection)({
+  margin: vars.spacing(0.5, 1),
+  transition: vars.transition(['border-color', 'background-color'], {
+    duration: vars.transitions.duration.short,
+    easing: vars.transitions.easing.easeInOut,
   }),
   '&[data-drag-over="true"]': {
-    backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.hoverOpacity),
-    borderColor: theme.palette.primary.main,
+    backgroundColor: vars.colors.interactive.hover,
+    borderColor: vars.colors.interactive.selected,
     borderStyle: 'dashed',
   },
-}));
+});
 
-const CollapsibleSectionTitle = styled('div')(({ theme }) => ({
+const CollapsibleSectionTitle = styled('div')({
   flex: 1,
-  marginRight: theme.spacing(1.75),
+  marginRight: vars.spacing(1.75),
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  gap: theme.spacing(1),
-  ...theme.typography.subtitle2,
-}));
+  gap: vars.spacing(1),
+  ...vars.typography.body,
+  fontWeight: vars.typography.fontWeight.medium,
+});
 
-const FieldList = styled('div')(({ theme }) => ({
+const FieldList = styled('div')({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
-  padding: theme.spacing(0.5, 0),
-}));
+  padding: vars.spacing(0.5, 0),
+});
 
-const Placeholder = styled('div')(({ theme }) => ({
+const Placeholder = styled('div')({
   flex: 1,
   display: 'flex',
   alignItems: 'center',
@@ -80,12 +81,12 @@ const Placeholder = styled('div')(({ theme }) => ({
   textAlign: 'center',
   minHeight: 42,
   height: '100%',
-  padding: theme.spacing(0, 1),
-  fontSize: theme.typography.pxToRem(13),
-  color: theme.palette.text.secondary,
-}));
+  padding: vars.spacing(0, 1),
+  color: vars.colors.foreground.muted,
+  ...vars.typography.small,
+});
 
-const ResizeHandle = styled('div')(({ theme }) => ({
+const ResizeHandle = styled('div')({
   position: 'absolute',
   zIndex: 2,
   top: 0,
@@ -93,14 +94,14 @@ const ResizeHandle = styled('div')(({ theme }) => ({
   width: '100%',
   height: 6,
   cursor: 'ns-resize',
-  borderTop: '1px solid var(--DataGrid-rowBorderColor)',
+  borderTop: `1px solid ${vars.colors.border.base}`,
   transition: 'border-top 0.1s ease-in-out',
   userSelect: 'none',
   touchAction: 'pan-y',
   '&:hover': {
-    borderTop: `2px solid ${theme.palette.primary.main}`,
+    borderTop: `2px solid ${vars.colors.interactive.selected}`,
   },
-}));
+});
 
 export interface FieldTransferObject {
   field: string;

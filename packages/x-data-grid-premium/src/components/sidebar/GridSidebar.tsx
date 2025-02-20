@@ -1,14 +1,12 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled, SxProps, Theme } from '@mui/material/styles';
-import { DataGridProcessedProps } from '@mui/x-data-grid/internals';
+import { styled } from '@mui/system';
+import { DataGridProcessedProps, vars } from '@mui/x-data-grid/internals';
 import { getDataGridUtilityClass, useGridRootProps } from '@mui/x-data-grid';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useResize } from '../../hooks/utils/useResize';
 
-export type GridSidebarProps = React.HTMLAttributes<HTMLDivElement> & {
-  sx?: SxProps<Theme>;
-};
+export type GridSidebarProps = React.HTMLAttributes<HTMLDivElement>;
 
 type OwnerState = DataGridProcessedProps;
 
@@ -22,7 +20,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const ResizeHandle = styled('div')(({ theme }) => ({
+const ResizeHandle = styled('div')({
   position: 'absolute',
   zIndex: 2,
   top: 0,
@@ -30,14 +28,14 @@ const ResizeHandle = styled('div')(({ theme }) => ({
   height: '100%',
   width: 6,
   cursor: 'ew-resize',
-  borderLeft: '1px solid var(--DataGrid-rowBorderColor)',
+  borderLeft: `1px solid ${vars.colors.border.base}`,
   transition: 'border-left 0.1s ease-in-out',
   userSelect: 'none',
   touchAction: 'pan-x',
   '&:hover': {
-    borderLeft: `2px solid ${theme.palette.primary.main}`,
+    borderLeft: `2px solid ${vars.colors.interactive.selected}`,
   },
-}));
+});
 
 const GridSidebarRoot = styled('div', {
   name: 'DataGrid',

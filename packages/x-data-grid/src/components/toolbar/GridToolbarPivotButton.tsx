@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PivotTableChartIcon from '@mui/icons-material/PivotTableChart';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
@@ -19,7 +18,7 @@ export function GridToolbarPivotButton() {
           variant="dot"
           {...rootProps.slotProps?.baseBadge}
         >
-          <PivotTableChartIcon fontSize="small" />
+          <rootProps.slots.pivotIcon fontSize="small" />
         </rootProps.slots.baseBadge>
       }
       {...rootProps.slotProps?.baseButton}

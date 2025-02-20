@@ -34,6 +34,7 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     [k.spacingUnit]: t.spacing(1),
 
     [k.colors.border.base]: borderColor,
+    [k.colors.border.muted]: alpha(borderColor, 0.6),
     [k.colors.background.base]: backgroundBase,
     [k.colors.background.overlay]: t.palette.background.paper,
     [k.colors.background.backdrop]: backgroundBackdrop,
@@ -41,12 +42,11 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     [k.colors.foreground.muted]: t.palette.text.secondary,
     [k.colors.foreground.accent]: t.palette.primary.dark,
     [k.colors.foreground.disabled]: t.palette.text.disabled,
-
-    [k.colors.interactive.hover]: removeOpacity(t.palette.action.hover),
+    [k.colors.interactive.hover]: t.palette.action.hover,
     [k.colors.interactive.hoverOpacity]: t.palette.action.hoverOpacity,
-    [k.colors.interactive.focus]: removeOpacity(t.palette.primary.main),
+    [k.colors.interactive.focus]: t.palette.primary.main,
     [k.colors.interactive.focusOpacity]: t.palette.action.focusOpacity,
-    [k.colors.interactive.disabled]: removeOpacity(t.palette.action.disabled),
+    [k.colors.interactive.disabled]: t.palette.action.disabled,
     [k.colors.interactive.disabledOpacity]: t.palette.action.disabledOpacity,
     [k.colors.interactive.selected]: selectedColor,
     [k.colors.interactive.selectedOpacity]: t.palette.action.selectedOpacity,
@@ -95,12 +95,4 @@ function getBorderColor(theme: Theme) {
     return lighten(alpha(theme.palette.divider, 1), 0.88);
   }
   return darken(alpha(theme.palette.divider, 1), 0.68);
-}
-
-function setOpacity(color: string, opacity: number) {
-  return `rgba(from ${color} r g b / ${opacity})`;
-}
-
-function removeOpacity(color: string) {
-  return setOpacity(color, 1);
 }
