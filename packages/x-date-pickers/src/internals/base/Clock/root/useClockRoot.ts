@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useEventCallback from '@mui/utils/useEventCallback';
 import {
   OnErrorProps,
   PickerChangeImportance,
@@ -8,7 +9,7 @@ import {
 } from '../../../../models';
 import { useTimeManager } from '../../../../managers';
 import { ExportedValidateTimeProps, ValidateTimeProps } from '../../../../validation/validateTime';
-import { useUtils } from '../../../hooks/useUtils';
+import { useLocalizationContext } from '../../../hooks/useUtils';
 import { FormProps, PickerValue } from '../../../models';
 import { useControlledValueWithTimezone } from '../../../hooks/useValueWithTimezone';
 import { ClockSection } from '../utils/types';
@@ -37,8 +38,9 @@ export function useClockRoot(parameters: useClockRoot.Parameters) {
     // Children
     children,
   } = parameters;
-  const utils = useUtils();
+
   const manager = useTimeManager();
+  const adapter = useLocalizationContext();
 
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
     name: 'Clock',
@@ -78,9 +80,23 @@ export function useClockRoot(parameters: useClockRoot.Parameters) {
 
   const isEmpty = value == null;
 
+  const setValue: ClockRootContext['setValue'] = useEventCallback((newValue, options) => {
+    const context: useClockRoot.ValueChangeHandlerContext = {
+      section: options.section,
+      validationError: manager.validator({
+        adapter,
+        value: newValue,
+        timezone,
+        props: { ...validationProps, onError },
+      }),
+    };
+    console.log('NEW VALUE', newValue, options);
+    handleValueChange(newValue, context);
+  });
+
   const context: ClockRootContext = React.useMemo(
-    () => ({ timezone, disabled, readOnly, validationProps }),
-    [timezone, disabled, readOnly, validationProps],
+    () => ({ timezone, disabled, readOnly, validationProps, value, setValue }),
+    [timezone, disabled, readOnly, validationProps, value, setValue],
   );
 
   return React.useMemo(
@@ -128,7 +144,7 @@ export namespace useClockRoot {
     /**
      * The section handled by the UI that triggered the change.
      */
-    section: ClockSection;
+    section: ClockSection | 'unknown';
     /**
      * The validation error associated to the new value.
      */

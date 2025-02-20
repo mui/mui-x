@@ -86,15 +86,6 @@ export function useBaseCalendarRoot<
     [referenceDateProp, timezone],
   );
 
-  const getValidationErrorForNewValue = useEventCallback((newValue: TValue) => {
-    return manager.validator({
-      adapter,
-      value: newValue,
-      timezone,
-      props: { ...valueValidationProps, onError },
-    });
-  });
-
   const sectionsRef = React.useRef<Record<BaseCalendarSection, Record<number, PickerValidDate>>>({
     day: {},
     month: {},
@@ -168,7 +159,12 @@ export function useBaseCalendarRoot<
       handleValueChange(newValue, {
         section: options.section,
         changeImportance: options.changeImportance,
-        validationError: getValidationErrorForNewValue(newValue),
+        validationError: manager.validator({
+          adapter,
+          value: newValue,
+          timezone,
+          props: { ...valueValidationProps, onError },
+        }),
       });
     },
   );

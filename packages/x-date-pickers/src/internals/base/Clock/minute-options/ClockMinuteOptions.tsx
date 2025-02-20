@@ -3,13 +3,14 @@ import * as React from 'react';
 import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
 import { BaseUIComponentProps } from '../../base-utils/types';
 import { useClockMinuteOptions } from './useClockMinuteOptions';
+import { ClockOptionListContext } from '../utils/ClockOptionListContext';
 
 const ClockMinuteOptions = React.forwardRef(function ClockMinuteOptions(
   props: ClockMinuteOptions.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, render, children, ...otherProps } = props;
-  const { getOptionsProps } = useClockMinuteOptions({
+  const { getOptionsProps, context } = useClockMinuteOptions({
     children,
   });
 
@@ -24,7 +25,11 @@ const ClockMinuteOptions = React.forwardRef(function ClockMinuteOptions(
     extraProps: otherProps,
   });
 
-  return renderElement();
+  return (
+    <ClockOptionListContext.Provider value={context}>
+      {renderElement()}
+    </ClockOptionListContext.Provider>
+  );
 });
 
 export namespace ClockMinuteOptions {

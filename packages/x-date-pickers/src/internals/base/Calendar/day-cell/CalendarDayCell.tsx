@@ -31,7 +31,7 @@ const customStyleHookMapping: CustomStyleHookMapping<CalendarDayCell.State> = {
   },
 };
 
-const InnerCalendarDayCell = React.forwardRef(function CalendarDayGrid(
+const InnerCalendarDayCell = React.forwardRef(function InnerCalendarDayCell(
   props: InnerCalendarDayCellProps,
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {

@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { PickersTimezone } from '../../../../models';
+import { PickersTimezone, PickerValidDate } from '../../../../models';
 import { ValidateTimeProps } from '../../../../validation';
+import { ClockSection } from '../utils/types';
 
 export interface ClockRootContext {
   /**
@@ -19,6 +20,17 @@ export interface ClockRootContext {
    * The props to check if a time is valid or not.
    */
   validationProps: ValidateTimeProps;
+  /**
+   * The currently selected value.
+   */
+  value: PickerValidDate | null;
+  /**
+   * Update the currently selected value.
+   * @param {PickerValidDate} value The value to select.
+   * @param {object} options The options to select the date.
+   * @param {ClockSection | "unknown"} options.section The section handled by the UI that triggered the change.
+   */
+  setValue: (value: PickerValidDate, options: { section: ClockSection | 'unknown' }) => void;
 }
 
 export const ClockRootContext = React.createContext<ClockRootContext | undefined>(undefined);

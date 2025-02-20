@@ -4,6 +4,7 @@ import { GenericHTMLProps } from '../../base-utils/types';
 import { mergeReactProps } from '../../base-utils/mergeReactProps';
 import { PickerValidDate } from '../../../../models';
 import { useClockRootContext } from '../root/ClockRootContext';
+import { ClockOptionListContext } from '../utils/ClockOptionListContext';
 
 export function useClockMinuteOptions(parameters: useClockMinuteOptions.Parameters) {
   const { children, getItems } = parameters;
@@ -39,6 +40,14 @@ export function useClockMinuteOptions(parameters: useClockMinuteOptions.Paramete
     return children;
   }, [children, items]);
 
+  const context: ClockOptionListContext = React.useMemo(
+    () => ({
+      canOptionBeTabbed: () => true,
+      isOptionInvalid: () => false,
+    }),
+    [],
+  );
+
   const getOptionsProps = React.useCallback(
     (externalProps: GenericHTMLProps) => {
       return mergeReactProps(externalProps, { role: 'listbox', children: resolvedChildren });
@@ -46,7 +55,7 @@ export function useClockMinuteOptions(parameters: useClockMinuteOptions.Paramete
     [resolvedChildren],
   );
 
-  return React.useMemo(() => ({ getOptionsProps }), [getOptionsProps]);
+  return React.useMemo(() => ({ getOptionsProps, context }), [getOptionsProps, context]);
 }
 
 export namespace useClockMinuteOptions {

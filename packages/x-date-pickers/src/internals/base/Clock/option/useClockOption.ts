@@ -27,5 +27,17 @@ export namespace useClockOption {
      * The value to select when this option is clicked.
      */
     value: PickerValidDate;
+    /**
+     * The memoized context forwarded by the wrapper component so that this component does not need to subscribe to any context.
+     */
+    ctx: Context;
+  }
+
+  export interface Context {
+    isSelected: boolean;
+    isDisabled: boolean;
+    isInvalid: boolean;
+    isTabbable: boolean;
+    selectOption: (value: PickerValidDate) => void;
   }
 }
