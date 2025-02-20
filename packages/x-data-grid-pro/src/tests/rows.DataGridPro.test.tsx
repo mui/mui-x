@@ -2,6 +2,7 @@ import * as React from 'react';
 import { createRenderer, act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
+import { vi } from 'vitest';
 import { RefObject } from '@mui/x-internals/types';
 import {
   $,
@@ -13,7 +14,6 @@ import {
   getColumnValues,
   getRows,
   getColumnHeaderCell,
-  sleep,
 } from 'test/utils/helperFn';
 import {
   GridRowModel,
@@ -176,23 +176,37 @@ describe('<DataGridPro /> - Rows', () => {
       );
     }
 
-    it('should not throttle by default', () => {
-      render(<TestCase />);
-      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-      act(() => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
-      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Fila', 'Puma']);
-    });
+    describe('throttling', () => {
+      beforeEach(() => {
+        vi.useFakeTimers();
+      });
 
-    it('should allow to enable throttle', async () => {
-      render(<TestCase throttleRowsMs={200} />);
-      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-      await act(() => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
+      afterEach(() => {
+        vi.useRealTimers();
+      });
 
-      await sleep(10);
-      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-
-      await waitFor(() => {
+      it('should not throttle by default', () => {
+        render(<TestCase />);
+        expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+        act(() => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
         expect(getColumnValues(0)).to.deep.equal(['Nike', 'Fila', 'Puma']);
+      });
+
+      it('should allow to enable throttle', async () => {
+        render(<TestCase throttleRowsMs={100} />);
+        expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+
+        await act(() => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
+
+        await vi.advanceTimersByTimeAsync(10);
+        expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+
+        await vi.advanceTimersByTimeAsync(100);
+        // It seems that the trigger is not dependant only on timeout.
+        vi.useRealTimers();
+        await waitFor(async () => {
+          expect(getColumnValues(0)).to.deep.equal(['Nike', 'Fila', 'Puma']);
+        });
       });
     });
 
@@ -355,37 +369,40 @@ describe('<DataGridPro /> - Rows', () => {
       );
     }
 
-    it('should not throttle by default', () => {
-      render(<TestCase />);
-      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-      const newRows = [
-        {
-          id: 3,
-          brand: 'Asics',
-        },
-      ];
-      act(() => apiRef.current?.setRows(newRows));
+    describe('throttling', () => {
+      beforeEach(() => {
+        vi.useFakeTimers();
+      });
 
-      expect(getColumnValues(0)).to.deep.equal(['Asics']);
-    });
+      afterEach(() => {
+        vi.useRealTimers();
+      });
 
-    it('should allow to enable throttle', async () => {
-      render(<TestCase throttleRowsMs={200} />);
-      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-      const newRows = [
-        {
-          id: 3,
-          brand: 'Asics',
-        },
-      ];
-      await act(() => apiRef.current?.setRows(newRows));
+      it('should not throttle by default', () => {
+        render(<TestCase />);
+        expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+        act(() => apiRef.current?.setRows([{ id: 3, brand: 'Asics' }]));
 
-      await sleep(20);
-
-      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-
-      await waitFor(() => {
         expect(getColumnValues(0)).to.deep.equal(['Asics']);
+      });
+
+      it('should allow to enable throttle', async () => {
+        render(<TestCase throttleRowsMs={100} />);
+        expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+        await act(() => apiRef.current?.setRows([{ id: 3, brand: 'Asics' }]));
+
+        await vi.advanceTimersByTimeAsync(10);
+        expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+        expect(vi.getTimerCount()).to.equal(1);
+
+        await vi.runAllTimersAsync();
+        expect(vi.getTimerCount()).to.equal(0);
+
+        // It seems that the trigger is not dependant only on timeout.
+        vi.useRealTimers();
+        await waitFor(async () => {
+          expect(getColumnValues(0)).to.deep.equal(['Asics']);
+        });
       });
     });
 
