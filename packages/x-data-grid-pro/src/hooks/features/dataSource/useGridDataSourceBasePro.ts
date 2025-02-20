@@ -6,7 +6,7 @@ import {
   GridRowId,
   useGridSelector,
   GridDataSourceCacheDefaultConfig,
-  GridDataSourceError,
+  GridGetRowsError,
 } from '@mui/x-data-grid';
 import {
   gridRowGroupsToFetchSelector,
@@ -151,9 +151,8 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         apiRef.current.unstable_dataSource.setChildrenFetchError(id, childrenFetchError);
         if (typeof onDataSourceErrorProp === 'function') {
           onDataSourceErrorProp(
-            new GridDataSourceError({
+            new GridGetRowsError({
               message: childrenFetchError.message,
-              operationType: 'fetchRows',
               params: fetchParams,
               cause: childrenFetchError,
             }),

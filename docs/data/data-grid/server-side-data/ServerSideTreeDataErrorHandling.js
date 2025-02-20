@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiRef, GridGetRowsError } from '@mui/x-data-grid-pro';
 import Snackbar from '@mui/material/Snackbar';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
@@ -90,7 +90,7 @@ export default function ServerSideTreeDataErrorHandling() {
           treeData
           unstable_dataSource={dataSource}
           unstable_onDataSourceError={(error) => {
-            if (error.isFetch()) {
+            if (error instanceof GridGetRowsError) {
               const params = error.params;
               if (!params.groupKeys || params.groupKeys.length === 0) {
                 setRootError(error.message);

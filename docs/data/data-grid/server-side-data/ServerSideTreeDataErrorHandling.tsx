@@ -5,6 +5,7 @@ import {
   GridInitialState,
   GridDataSource,
   GridGetRowsResponse,
+  GridGetRowsError,
 } from '@mui/x-data-grid-pro';
 import Snackbar from '@mui/material/Snackbar';
 import Button from '@mui/material/Button';
@@ -96,7 +97,7 @@ export default function ServerSideTreeDataErrorHandling() {
           treeData
           unstable_dataSource={dataSource}
           unstable_onDataSourceError={(error) => {
-            if (error.isFetch()) {
+            if (error instanceof GridGetRowsError) {
               const params = error.params;
               if (!params.groupKeys || params.groupKeys.length === 0) {
                 setRootError(error.message);

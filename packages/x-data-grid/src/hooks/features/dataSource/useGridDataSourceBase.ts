@@ -17,7 +17,7 @@ import { gridPaginationModelSelector } from '../pagination/gridPaginationSelecto
 import { gridGetRowsParamsSelector } from './gridDataSourceSelector';
 import { CacheChunkManager, DataSourceRowsUpdateStrategy } from './utils';
 import { GridDataSourceCacheDefault, type GridDataSourceCacheDefaultConfig } from './cache';
-import { GridDataSourceError } from './gridDataSourceError';
+import { GridGetRowsError } from './gridDataSourceError';
 
 import type { GridDataSourceApi, GridDataSourceApiBase, GridDataSourcePrivateApi } from './models';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -151,9 +151,8 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
           });
           if (typeof onDataSourceErrorProp === 'function') {
             onDataSourceErrorProp(
-              new GridDataSourceError({
+              new GridGetRowsError({
                 message: (originalError as Error)?.message,
-                operationType: 'fetchRows',
                 params: fetchParams,
                 cause: originalError as Error,
               }),

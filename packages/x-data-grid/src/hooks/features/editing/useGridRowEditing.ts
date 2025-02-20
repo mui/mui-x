@@ -49,7 +49,7 @@ import {
 import { GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 import { getDefaultCellValue } from './utils';
 import type { GridUpdateRowParams } from '../../../models/gridDataSource';
-import { GridDataSourceError } from '../dataSource';
+import { GridUpdateRowError } from '../dataSource';
 
 export const useGridRowEditing = (
   apiRef: RefObject<GridPrivateApiCommunity>,
@@ -547,9 +547,8 @@ export const useGridRowEditing = (
 
           if (typeof props.unstable_onDataSourceError === 'function') {
             props.unstable_onDataSourceError(
-              new GridDataSourceError({
+              new GridUpdateRowError({
                 message: errorThrown?.message,
-                operationType: 'updateRow',
                 params: updateParams,
                 cause: errorThrown,
               }),

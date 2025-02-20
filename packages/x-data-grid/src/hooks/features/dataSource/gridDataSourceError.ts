@@ -1,56 +1,39 @@
 import { GridGetRowsParams, GridUpdateRowParams } from '../../../models/gridDataSource';
 
-/**
- * Type of data source operation that caused the error
- */
-export type GridDataSourceOperationType = 'fetchRows' | 'updateRow';
-
-/**
- * Custom error class for data source operations
- */
-export class GridDataSourceError<
-  T extends GridGetRowsParams = GridGetRowsParams,
-  Q extends GridUpdateRowParams = GridUpdateRowParams,
-> extends Error {
-  /**
-   * The type of operation that failed
-   */
-  readonly operationType: GridDataSourceOperationType;
-
+export class GridGetRowsError<T extends GridGetRowsParams = GridGetRowsParams> extends Error {
   /**
    * The parameters used in the failed request
    */
-  readonly params: T | Q;
+  readonly params: T;
 
   /**
    * The original error that caused this error
    */
   readonly cause?: Error;
 
-  constructor(options: {
-    message: string;
-    operationType: GridDataSourceOperationType;
-    params: T | Q;
-    cause?: Error;
-  }) {
+  constructor(options: { message: string; params: T; cause?: Error }) {
     super(options.message);
-    this.name = 'GridDataSourceError';
-    this.operationType = options.operationType;
+    this.name = 'GridGetRowsError';
     this.params = options.params;
     this.cause = options.cause;
   }
+}
+
+export class GridUpdateRowError extends Error {
+  /**
+   * The parameters used in the failed request
+   */
+  readonly params: GridUpdateRowParams;
 
   /**
-   * Returns true if this error was caused by a fetch operation
+   * The original error that caused this error
    */
-  isFetch(): this is GridDataSourceError & { params: T } {
-    return this.operationType === 'fetchRows';
-  }
+  readonly cause?: Error;
 
-  /**
-   * Returns true if this error was caused by an update operation
-   */
-  isUpdate(): this is GridDataSourceError & { params: Q } {
-    return this.operationType === 'updateRow';
+  constructor(options: { message: string; params: GridUpdateRowParams; cause?: Error }) {
+    super(options.message);
+    this.name = 'GridUpdateRowError';
+    this.params = options.params;
+    this.cause = options.cause;
   }
 }

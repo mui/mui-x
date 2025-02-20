@@ -32,7 +32,10 @@ import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColu
 import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
 import { GridColumnGroupingModel } from '../gridColumnGrouping';
 import { GridPaginationMeta, GridPaginationModel } from '../gridPaginationProps';
-import { GridDataSourceError } from '../../hooks/features/dataSource/gridDataSourceError';
+import {
+  GridGetRowsError,
+  GridUpdateRowError,
+} from '../../hooks/features/dataSource/gridDataSourceError';
 import type { GridAutosizeOptions } from '../../hooks/features/columnResize';
 import type { GridDataSource, GridDataSourceCache } from '../gridDataSource';
 import type { GridRowSelectionPropagation } from '../gridRowSelectionModel';
@@ -838,9 +841,9 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   unstable_dataSourceCache?: GridDataSourceCache | null;
   /**
    * Callback fired when a data source request fails.
-   * @param {GridDataSourceError} error The data source error object.
+   * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
    */
-  unstable_onDataSourceError?: (error: GridDataSourceError) => void;
+  unstable_onDataSourceError?: (error: GridGetRowsError | GridUpdateRowError) => void;
 }
 
 export interface DataGridProSharedPropsWithDefaultValue {

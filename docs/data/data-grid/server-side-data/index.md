@@ -296,25 +296,25 @@ If the promise resolves, the grid updates the row and mutates the cache. In case
 You could handle the errors with the data source by providing an error handler function using the `unstable_onDataSourceError`.
 It will be called whenever there's an error in fetching or updating the data.
 
-This function recieves an error object of type `GridDataSourceError` which includes the parameters of type `GridGetRowsParams` or `GridUpdateRowParams`.
+This function recieves an error object of type `GridGetRowsError` or `GridUpdateRowError`.
 
-The `GridDataSourceError` object provides helper methods to check the type of the error:
+The type of the `error.params` as based on the type of the error.
 
-| Method       | Description                                                          | Type of `error.params` |
-| :----------- | :------------------------------------------------------------------- | :--------------------- |
-| `isFetch()`  | Returns `true` if the error is a result of a `getRows` operation.    | `GridGetRowsParams`    |
-| `isUpdate()` | Returns `true` if the error is a result of an `updateRow` operation. | `GridUpdateRowParams`  |
+| Error type           | Type of `error.params` |
+| :------------------- | :--------------------- |
+| `GridGetRowsError`   | `GridGetRowsParams`    |
+| `GridUpdateRowError` | `GridUpdateRowParams`  |
 
 ```tsx
 <DataGrid
   columns={columns}
   unstable_dataSource={customDataSource}
   unstable_onDataSourceError={(error) => {
-    if (error.isFetch()) {
+    if (error instanceof GridGetRowsError) {
       // `error.params` is of type `GridGetRowsParams`
       // fetch related logic, e.g set an overlay state
     }
-    if (error.isUpdate()) {
+    if (error instanceof GridUpdateRowError) {
       // `error.params` is of type `GridUpdateRowParams`
       // update related logic, e.g set a snackbar state
     }

@@ -5,6 +5,7 @@ import {
   GridInitialState,
   GridToolbar,
   GridDataSource,
+  GridGetRowsError,
 } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
@@ -122,13 +123,11 @@ export default function ServerSideErrorHandling() {
           {...props}
           unstable_dataSource={dataSource}
           unstable_onDataSourceError={(dataSourceError) => {
-            if (dataSourceError.isFetch()) {
+            if (dataSourceError instanceof GridGetRowsError) {
               setError(dataSourceError.message);
               return;
             }
-            if (dataSourceError.isUpdate()) {
-              setSnackbar({ children: dataSourceError.message, severity: 'error' });
-            }
+            setSnackbar({ children: dataSourceError.message, severity: 'error' });
           }}
           unstable_dataSourceCache={null}
           apiRef={apiRef}

@@ -5,6 +5,7 @@ import {
   useGridApiRef,
   useKeepGroupedColumnsHidden,
   GridGetRowsResponse,
+  GridGetRowsError,
 } from '@mui/x-data-grid-premium';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import Snackbar from '@mui/material/Snackbar';
@@ -85,7 +86,7 @@ export default function ServerSideRowGroupingErrorHandling() {
           columns={columns}
           unstable_dataSource={dataSource}
           unstable_onDataSourceError={(error) => {
-            if (error.isFetch()) {
+            if (error instanceof GridGetRowsError) {
               if (!error.params.groupKeys || error.params.groupKeys.length === 0) {
                 setRootError(error.message);
               } else {

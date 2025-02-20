@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { DataGrid, useGridApiRef, GridToolbar } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  useGridApiRef,
+  GridToolbar,
+  GridGetRowsError,
+} from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -116,13 +121,11 @@ export default function ServerSideErrorHandling() {
           {...props}
           unstable_dataSource={dataSource}
           unstable_onDataSourceError={(dataSourceError) => {
-            if (dataSourceError.isFetch()) {
+            if (dataSourceError instanceof GridGetRowsError) {
               setError(dataSourceError.message);
               return;
             }
-            if (dataSourceError.isUpdate()) {
-              setSnackbar({ children: dataSourceError.message, severity: 'error' });
-            }
+            setSnackbar({ children: dataSourceError.message, severity: 'error' });
           }}
           unstable_dataSourceCache={null}
           apiRef={apiRef}
