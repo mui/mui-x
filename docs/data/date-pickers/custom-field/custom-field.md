@@ -56,7 +56,7 @@ You can pass conditional props to the `textField` slot to customize the input st
 
 ### Customize the separator
 
-You can use the `separator` slot to pass custom props to the `Typography` rendered between the two Text Field:
+You can use the `separator` slot to pass custom props to the `Typography` rendered between the two Text Fields:
 
 {{"demo": "MultiInputFieldSeparatorSlotProps.js"}}
 
