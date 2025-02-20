@@ -34,8 +34,6 @@ export const useGridStatePersistence = (apiRef: RefObject<GridPrivateApiCommunit
       response.callbacks.forEach((callback) => {
         callback();
       });
-
-      apiRef.current.forceUpdate();
     },
     [apiRef],
   );

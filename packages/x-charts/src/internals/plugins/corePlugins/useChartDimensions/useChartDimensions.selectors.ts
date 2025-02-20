@@ -1,19 +1,63 @@
 import { ChartRootSelector, createSelector } from '../../utils/selectors';
-import { UseChartDimensionsSignature } from './useChartDimensions.types';
+import type { UseChartDimensionsSignature } from './useChartDimensions.types';
+import {
+  selectorChartBottomAxisSize,
+  selectorChartLeftAxisSize,
+  selectorChartRightAxisSize,
+  selectorChartTopAxisSize,
+} from '../../featurePlugins/useChartCartesianAxis/useChartAxisSize.selectors';
 
 export const selectorChartDimensionsState: ChartRootSelector<UseChartDimensionsSignature> = (
   state,
 ) => state.dimensions;
 
-export const selectorChartDrawingArea = createSelector(
+const selectorChartMargin = createSelector(
   selectorChartDimensionsState,
-  (dimensionsState) => ({
-    width: dimensionsState.width,
-    left: dimensionsState.left,
-    right: dimensionsState.right,
-    height: dimensionsState.height,
-    top: dimensionsState.top,
-    bottom: dimensionsState.bottom,
+  (dimensionsState) => dimensionsState.margin,
+);
+const selectorChartWidth = createSelector(
+  selectorChartDimensionsState,
+  (dimensionsState) => dimensionsState.width,
+);
+const selectorChartHeight = createSelector(
+  selectorChartDimensionsState,
+  (dimensionsState) => dimensionsState.height,
+);
+
+const selectorChartTopMargin = createSelector(selectorChartMargin, (margin) => margin.top);
+const selectorChartRightMargin = createSelector(selectorChartMargin, (margin) => margin.right);
+const selectorChartBottomMargin = createSelector(selectorChartMargin, (margin) => margin.bottom);
+const selectorChartLeftMargin = createSelector(selectorChartMargin, (margin) => margin.left);
+
+export const selectorChartDrawingArea = createSelector(
+  selectorChartWidth,
+  selectorChartHeight,
+  selectorChartTopMargin,
+  selectorChartRightMargin,
+  selectorChartBottomMargin,
+  selectorChartLeftMargin,
+  selectorChartTopAxisSize,
+  selectorChartRightAxisSize,
+  selectorChartBottomAxisSize,
+  selectorChartLeftAxisSize,
+  (
+    width,
+    height,
+    marginTop,
+    marginRight,
+    marginBottom,
+    marginLeft,
+    axisSizeTop,
+    axisSizeRight,
+    axisSizeBottom,
+    axisSizeLeft,
+  ) => ({
+    width: width - marginLeft - marginRight - axisSizeLeft - axisSizeRight,
+    left: marginLeft + axisSizeLeft,
+    right: marginRight + axisSizeRight,
+    height: height - marginTop - marginBottom - axisSizeTop - axisSizeBottom,
+    top: marginTop + axisSizeTop,
+    bottom: marginBottom + axisSizeBottom,
   }),
 );
 
@@ -26,19 +70,10 @@ export const selectorChartPropsSize = createSelector(
 );
 
 export const selectorChartContainerSize = createSelector(
-  selectorChartDimensionsState,
-  (dimensionsState) => ({
-    width: dimensionsState.width + dimensionsState.left + dimensionsState.right,
-    height: dimensionsState.height + dimensionsState.top + dimensionsState.bottom,
+  selectorChartWidth,
+  selectorChartHeight,
+  (width, height) => ({
+    width,
+    height,
   }),
-);
-
-/**
- * Get the id attribute of the chart.
- * @param {ChartState<[UseChartIdSignature]>} state The state of the chart.
- * @returns {string} The id attribute of the chart.
- */
-export const selectorChartHasIntrinsicSize = createSelector(
-  selectorChartContainerSize,
-  (svgSize) => svgSize.width > 0 && svgSize.height > 0,
 );

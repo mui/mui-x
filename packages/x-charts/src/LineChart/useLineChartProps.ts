@@ -5,7 +5,6 @@ import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPathProps } from '../ChartsClipPath';
 import { ChartsGridProps } from '../ChartsGrid';
 import { ChartsLegendSlotExtension } from '../ChartsLegend';
-import { ChartsOnAxisClickHandlerProps } from '../ChartsOnAxisClickHandler';
 import { ChartsOverlayProps } from '../ChartsOverlay';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { ChartContainerProps } from '../ChartContainer';
@@ -15,7 +14,7 @@ import { LineHighlightPlotProps } from './LineHighlightPlot';
 import { LinePlotProps } from './LinePlot';
 import { MarkPlotProps } from './MarkPlot';
 import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
-import { calculateMargins } from '../internals/calculateMargins';
+import { LINE_CHART_PLUGINS, LineChartPluginsSignatures } from './LineChart.plugins';
 
 /**
  * A helper function that extracts LineChartProps from the input props
@@ -35,7 +34,6 @@ export const useLineChartProps = (props: LineChartProps) => {
     colors,
     dataset,
     sx,
-    onAxisClick,
     onAreaClick,
     onLineClick,
     onMarkClick,
@@ -43,10 +41,6 @@ export const useLineChartProps = (props: LineChartProps) => {
     disableLineItemHighlight,
     hideLegend,
     grid,
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
     children,
     slots,
     slotProps,
@@ -61,7 +55,7 @@ export const useLineChartProps = (props: LineChartProps) => {
   const id = useId();
   const clipPathId = `${id}-clip-path`;
 
-  const chartContainerProps: Omit<ChartContainerProps<'line'>, 'plugins'> = {
+  const chartContainerProps: ChartContainerProps<'line', LineChartPluginsSignatures> = {
     ...other,
     series: series.map((s) => ({
       disableHighlight: !!disableLineItemHighlight,
@@ -70,7 +64,7 @@ export const useLineChartProps = (props: LineChartProps) => {
     })),
     width,
     height,
-    margin: calculateMargins({ margin, hideLegend, slotProps, series }),
+    margin,
     colors,
     dataset,
     xAxis: xAxis ?? [
@@ -89,14 +83,10 @@ export const useLineChartProps = (props: LineChartProps) => {
     disableAxisListener:
       slotProps?.tooltip?.trigger !== 'axis' &&
       axisHighlight?.x === 'none' &&
-      axisHighlight?.y === 'none' &&
-      !onAxisClick,
+      axisHighlight?.y === 'none',
     className,
     skipAnimation,
-  };
-
-  const axisClickHandlerProps: ChartsOnAxisClickHandlerProps = {
-    onAxisClick,
+    plugins: LINE_CHART_PLUGINS,
   };
 
   const gridProps: ChartsGridProps = {
@@ -138,10 +128,6 @@ export const useLineChartProps = (props: LineChartProps) => {
   };
 
   const chartsAxisProps: ChartsAxisProps = {
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
     slots,
     slotProps,
   };
@@ -170,7 +156,6 @@ export const useLineChartProps = (props: LineChartProps) => {
   return {
     chartsWrapperProps,
     chartContainerProps,
-    axisClickHandlerProps,
     gridProps,
     clipPathProps,
     clipPathGroupProps,

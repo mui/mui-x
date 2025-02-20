@@ -5,12 +5,12 @@ import {
   useGridApiOptionHandler,
   gridVisibleColumnDefinitionsSelector,
   useGridApiMethod,
-  gridDimensionsSelector,
 } from '@mui/x-data-grid';
 import {
   useGridVisibleRows,
   GridInfiniteLoaderPrivateApi,
   useTimeout,
+  gridHorizontalScrollbarHeightSelector,
 } from '@mui/x-data-grid/internals';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { styled } from '@mui/system';
@@ -63,13 +63,8 @@ export const useGridInfiniteLoader = (
     }
   });
 
-  const virtualScroller = apiRef.current.virtualScrollerRef.current;
-  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
-
-  const marginBottom =
-    props.scrollEndThreshold - (dimensions.hasScrollX ? dimensions.scrollbarSize : 0);
-
   React.useEffect(() => {
+    const virtualScroller = apiRef.current.virtualScrollerRef.current;
     if (!isEnabled) {
       return;
     }
@@ -77,6 +72,9 @@ export const useGridInfiniteLoader = (
       return;
     }
     observer.current?.disconnect();
+
+    const horizontalScrollbarHeight = gridHorizontalScrollbarHeightSelector(apiRef);
+    const marginBottom = props.scrollEndThreshold - horizontalScrollbarHeight;
 
     observer.current = new IntersectionObserver(handleLoadMoreRows, {
       threshold: 1,
@@ -86,7 +84,7 @@ export const useGridInfiniteLoader = (
     if (triggerElement.current) {
       observer.current.observe(triggerElement.current);
     }
-  }, [virtualScroller, handleLoadMoreRows, isEnabled, marginBottom]);
+  }, [apiRef, handleLoadMoreRows, isEnabled, props.scrollEndThreshold]);
 
   const updateTarget = (node: HTMLElement | null) => {
     if (triggerElement.current !== node) {

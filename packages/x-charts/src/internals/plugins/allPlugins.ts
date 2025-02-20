@@ -4,12 +4,12 @@ import {
   useChartCartesianAxis,
   UseChartCartesianAxisSignature,
 } from './featurePlugins/useChartCartesianAxis';
-import { UseChartHighlightSignature } from './featurePlugins/useChartHighlight';
-import { useChartHighlight } from './featurePlugins/useChartHighlight/useChartHighlight';
+import { useChartHighlight, UseChartHighlightSignature } from './featurePlugins/useChartHighlight';
 import {
   useChartInteraction,
   UseChartInteractionSignature,
 } from './featurePlugins/useChartInteraction';
+import { useChartVoronoi, UseChartVoronoiSignature } from './featurePlugins/useChartVoronoi';
 import { useChartZAxis, UseChartZAxisSignature } from './featurePlugins/useChartZAxis';
 import { ConvertSignaturesIntoPlugins } from './models/helpers';
 
@@ -18,6 +18,7 @@ export type AllPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesTyp
   UseChartCartesianAxisSignature<TSeries>,
   UseChartInteractionSignature,
   UseChartHighlightSignature,
+  UseChartVoronoiSignature,
 ];
 
 export type AllPluginsType<TSeries extends ChartSeriesType = ChartSeriesType> =
@@ -28,4 +29,5 @@ export const ALL_PLUGINS = [
   useChartCartesianAxis,
   useChartInteraction,
   useChartHighlight,
+  useChartVoronoi,
 ];

@@ -7,7 +7,6 @@
     "fill": { "type": { "name": "string" }, "default": "'currentColor'" },
     "label": { "type": { "name": "string" } },
     "labelStyle": { "type": { "name": "object" } },
-    "position": { "type": { "name": "enum", "description": "'bottom'<br>&#124;&nbsp;'top'" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
@@ -110,7 +109,7 @@
     {
       "key": "tickLabel",
       "className": "MuiChartsXAxis-tickLabel",
-      "description": "Styles applied to ticks label.",
+      "description": "Styles applied to ticks label.\n\n⚠️ For performance reasons, only the inline styles get considered for bounding box computation.\nModifying text size by adding properties like `font-size` or `letter-spacing` to this class might cause labels to overlap.",
       "isGlobal": false
     },
     {

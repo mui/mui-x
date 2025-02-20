@@ -11,15 +11,6 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 <p class="description">Drag and drop your items to reorder them.</p>
 
-:::success
-To be able to reorder items, you first have to enable the `itemsReordering` experimental feature:
-
-```tsx
-<RichTreeViewPro items={ITEMS} experimentalFeatures={{ itemsReordering: true }} />
-```
-
-:::
-
 ## Enable drag & drop re-ordering
 
 You can enable the drag & drop re-ordering of items by setting the `itemsReordering` prop to `true`:

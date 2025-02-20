@@ -7,6 +7,7 @@ export type {
   ChartsXAxisProps,
   ScaleName,
   ContinuousScaleName,
+  ChartsAxisData,
 } from './axis';
 
 // Utils shared across the X packages

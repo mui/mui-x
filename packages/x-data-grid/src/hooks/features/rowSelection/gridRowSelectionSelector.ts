@@ -1,9 +1,15 @@
-import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
-import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
+import {
+  createSelector,
+  createRootSelector,
+  createSelectorMemoized,
+} from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
+import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 
-export const gridRowSelectionStateSelector = (state: GridStateCommunity) => state.rowSelection;
+export const gridRowSelectionStateSelector = createRootSelector(
+  (state: GridStateCommunity) => state.rowSelection,
+);
 
 export const selectedGridRowsCountSelector = createSelector(
   gridRowSelectionStateSelector,

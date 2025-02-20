@@ -73,7 +73,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
   it('should work with the paginated grid', () => {
     render(
       <TestDataGridSelection
-        initialState={{ pagination: { paginationModel: { page: 0, pageSize: 3 } } }}
+        initialState={{ pagination: { paginationModel: { page: 0, pageSize: 3 }, rowCount: 4 } }}
         rowLength={30}
         pagination
         pageSizeOptions={[3]}

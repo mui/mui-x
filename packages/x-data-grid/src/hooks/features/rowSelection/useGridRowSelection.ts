@@ -8,13 +8,15 @@ import {
   GridRowMultiSelectionApi,
 } from '../../../models/api/gridRowSelectionApi';
 import { GridGroupNode, GridRowId } from '../../../models/gridRows';
-import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { GridSignature } from '../../../constants/signature';
+import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridSelector } from '../../utils/useGridSelector';
 import {
   gridRowsLookupSelector,
   gridRowMaximumTreeDepthSelector,
+  gridRowNodeSelector,
   gridRowTreeSelector,
 } from '../rows/gridRowsSelector';
 import {
@@ -113,7 +115,7 @@ export const useGridRowSelection = (
   const propRowSelectionModel = React.useMemo(() => {
     return getSelectionModelPropValue(
       props.rowSelectionModel,
-      gridRowSelectionStateSelector(apiRef.current.state),
+      gridRowSelectionStateSelector(apiRef),
     );
   }, [apiRef, props.rowSelectionModel]);
 
@@ -181,21 +183,20 @@ export const useGridRowSelection = (
           ].join('\n'),
         );
       }
-      const currentModel = gridRowSelectionStateSelector(apiRef.current.state);
+      const currentModel = gridRowSelectionStateSelector(apiRef);
       if (currentModel !== model) {
         logger.debug(`Setting selection model`);
         apiRef.current.setState((state) => ({
           ...state,
           rowSelection: props.rowSelection ? model : [],
         }));
-        apiRef.current.forceUpdate();
       }
     },
     [apiRef, logger, props.rowSelection, props.signature, canHaveMultipleSelection],
   );
 
   const isRowSelected = React.useCallback<GridRowSelectionApi['isRowSelected']>(
-    (id) => gridRowSelectionStateSelector(apiRef.current.state).includes(id),
+    (id) => gridRowSelectionStateSelector(apiRef).includes(id),
     [apiRef],
   );
 
@@ -209,7 +210,7 @@ export const useGridRowSelection = (
         return false;
       }
 
-      const rowNode = apiRef.current.getRowNode(id);
+      const rowNode = gridRowNodeSelector(apiRef, id);
       if (rowNode?.type === 'footer' || rowNode?.type === 'pinnedRow') {
         return false;
       }
@@ -257,7 +258,7 @@ export const useGridRowSelection = (
       } else {
         logger.debug(`Toggling selection for row ${id}`);
 
-        const selection = gridRowSelectionStateSelector(apiRef.current.state);
+        const selection = gridRowSelectionStateSelector(apiRef);
 
         const newSelection: Set<GridRowId> = new Set(selection);
         newSelection.delete(id);
@@ -452,7 +453,7 @@ export const useGridRowSelection = (
    */
   const removeOutdatedSelection = React.useCallback(
     (sortModelUpdated = false) => {
-      const currentSelection = gridRowSelectionStateSelector(apiRef.current.state);
+      const currentSelection = gridRowSelectionStateSelector(apiRef);
       const rowsLookup = gridRowsLookupSelector(apiRef);
       const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
 
@@ -463,7 +464,7 @@ export const useGridRowSelection = (
         if (props.filterMode === 'server') {
           return !rowsLookup[id];
         }
-        return filteredRowsLookup[id] !== true;
+        return !rowsLookup[id] || filteredRowsLookup[id] === false;
       };
 
       let hasChanged = false;
@@ -574,7 +575,7 @@ export const useGridRowSelection = (
         }
       }
 
-      const rowNode = apiRef.current.getRowNode(params.id);
+      const rowNode = gridRowNodeSelector(apiRef, params.id);
       if (rowNode!.type === 'pinnedRow') {
         return;
       }
@@ -757,7 +758,7 @@ export const useGridRowSelection = (
     }
 
     // props.isRowSelectable changed
-    const currentSelection = gridRowSelectionStateSelector(apiRef.current.state);
+    const currentSelection = gridRowSelectionStateSelector(apiRef);
 
     if (isRowSelectable) {
       const newSelection = currentSelection.filter((id) => isRowSelectable(id));
@@ -773,7 +774,7 @@ export const useGridRowSelection = (
       return;
     }
 
-    const currentSelection = gridRowSelectionStateSelector(apiRef.current.state);
+    const currentSelection = gridRowSelectionStateSelector(apiRef);
     if (!canHaveMultipleSelection && currentSelection.length > 1) {
       // See https://github.com/mui/mui-x/issues/8455
       apiRef.current.setRowSelectionModel([]);

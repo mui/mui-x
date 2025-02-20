@@ -40,7 +40,7 @@ export type ChartDataProviderProps<
  * >
  *   <ChartsSurface>
  *      <BarPlot />
- *      <ChartsXAxis position="bottom" axisId="x-axis" />
+ *      <ChartsXAxis axisId="x-axis" />
  *   </ChartsSurface>
  *   {'Custom Legend Component'}
  * </ChartDataProvider>
@@ -68,9 +68,12 @@ ChartDataProvider.propTypes = {
   children: PropTypes.node,
   /**
    * Color palette used to colorize multiple series.
-   * @default blueberryTwilightPalette
+   * @default rainbowSurgePalette
    */
   colors: PropTypes.any,
+  /**
+   * An array of objects that can be used to populate series and axes data using their `dataKey` property.
+   */
   dataset: PropTypes.any,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.

@@ -28,7 +28,7 @@ export const useGridColumnMenu = (apiRef: RefObject<GridPrivateApiCommunity>): v
    */
   const showColumnMenu = React.useCallback<GridColumnMenuApi['showColumnMenu']>(
     (field) => {
-      const columnMenuState = gridColumnMenuSelector(apiRef.current.state);
+      const columnMenuState = gridColumnMenuSelector(apiRef);
       const newState = { open: true, field };
       const shouldUpdate =
         newState.open !== columnMenuState.open || newState.field !== columnMenuState.field;
@@ -53,7 +53,7 @@ export const useGridColumnMenu = (apiRef: RefObject<GridPrivateApiCommunity>): v
   );
 
   const hideColumnMenu = React.useCallback<GridColumnMenuApi['hideColumnMenu']>(() => {
-    const columnMenuState = gridColumnMenuSelector(apiRef.current.state);
+    const columnMenuState = gridColumnMenuSelector(apiRef);
 
     if (columnMenuState.field) {
       const columnLookup = gridColumnLookupSelector(apiRef);
@@ -99,7 +99,7 @@ export const useGridColumnMenu = (apiRef: RefObject<GridPrivateApiCommunity>): v
   const toggleColumnMenu = React.useCallback<GridColumnMenuApi['toggleColumnMenu']>(
     (field) => {
       logger.debug('Toggle Column Menu');
-      const columnMenu = gridColumnMenuSelector(apiRef.current.state);
+      const columnMenu = gridColumnMenuSelector(apiRef);
       if (!columnMenu.open || columnMenu.field !== field) {
         showColumnMenu(field);
       } else {

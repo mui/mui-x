@@ -400,6 +400,10 @@ export interface GridEventLookup
     GridCellEventLookup,
     GridControlledStateEventLookup {
   /**
+   * Fired when rootElementRef.current becomes available.
+   */
+  rootMount: { params: HTMLElement };
+  /**
    * Fired when the grid is unmounted.
    */
   unmount: {};

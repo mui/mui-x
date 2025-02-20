@@ -8,23 +8,11 @@
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
-    "highlightedItem": {
-      "description": "The highlighted item. Used when the highlight is controlled."
-    },
     "id": {
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
     },
-    "initialZoom": { "description": "The list of zoom data related to each axis." },
     "margin": {
       "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend. Accepts an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
-    },
-    "onHighlightChange": {
-      "description": "The callback fired when the highlighted item changes.",
-      "typeDescriptions": { "highlightedItem": "The newly highlighted item." }
-    },
-    "onZoomChange": {
-      "description": "Callback fired when the zoom has changed.",
-      "typeDescriptions": { "zoomData": "Updated zoom data." }
     },
     "series": {
       "description": "The array of series to display. Each type of series has its own specificity. Please refer to the appropriate docs page to learn more about it."
@@ -34,14 +22,7 @@
     },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
-    },
-    "xAxis": {
-      "description": "The configuration of the x-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
-    },
-    "yAxis": {
-      "description": "The configuration of the y-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
-    },
-    "zAxis": { "description": "The configuration of the z-axes." }
+    }
   },
   "classDescriptions": {}
 }

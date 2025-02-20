@@ -41,8 +41,6 @@ export {
   GRID_COLUMN_MENU_SLOT_PROPS,
 } from './components/reexports';
 
-export type { GridDataSourceCache } from '@mui/x-data-grid-pro';
-
 export type {
   GridGetRowsParamsPremium as GridGetRowsParams,
   GridGetRowsResponsePremium as GridGetRowsResponse,

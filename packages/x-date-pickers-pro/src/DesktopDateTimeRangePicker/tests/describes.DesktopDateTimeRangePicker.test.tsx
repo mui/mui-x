@@ -10,7 +10,8 @@ import {
   describeRangeValidation,
   getFieldSectionsContainer,
 } from 'test/utils/pickers';
-import { DesktopDateTimeRangePicker } from '../DesktopDateTimeRangePicker';
+import { DesktopDateTimeRangePicker } from '@mui/x-date-pickers-pro/DesktopDateTimeRangePicker';
+import { MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputDateTimeRangeField';
 
 describe('<DesktopDateTimeRangePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({
@@ -29,6 +30,7 @@ describe('<DesktopDateTimeRangePicker /> - Describes', () => {
     views: ['day', 'hours', 'minutes'],
     componentFamily: 'picker',
     variant: 'desktop',
+    fieldType: 'single-input',
   }));
 
   describeConformance(<DesktopDateTimeRangePicker />, () => ({
@@ -53,6 +55,10 @@ describe('<DesktopDateTimeRangePicker /> - Describes', () => {
     type: 'date-time-range',
     variant: 'desktop',
     initialFocus: 'start',
+    fieldType: 'multi-input',
+    defaultProps: {
+      slots: { field: MultiInputDateTimeRangeField },
+    },
     clock,
     values: [
       // initial start and end dates

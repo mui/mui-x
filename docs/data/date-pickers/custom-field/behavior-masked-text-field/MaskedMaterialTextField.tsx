@@ -137,6 +137,7 @@ function MaskedDateField(props: DatePickerFieldProps) {
     <TextField
       placeholder={parsedFormat}
       error={hasValidationError}
+      focused={pickerContext.open}
       name={pickerContext.name}
       label={pickerContext.label}
       className={pickerContext.rootClassName}

@@ -16,7 +16,7 @@ import {
 } from '@mui/x-charts/ChartsTooltip';
 import { useXAxis, useYAxis } from '@mui/x-charts/hooks';
 import { getLabel, ChartsLabelMark } from '@mui/x-charts/internals';
-import { useHeatmapSeries } from '../hooks/useSeries';
+import { useHeatmapSeriesContext } from '../hooks/useHeatmapSeries';
 
 export interface HeatmapTooltipProps
   extends Omit<ChartsTooltipContainerProps, 'trigger' | 'children'> {}
@@ -44,7 +44,7 @@ function DefaultHeatmapTooltipContent(props: Pick<HeatmapTooltipProps, 'classes'
 
   const xAxis = useXAxis();
   const yAxis = useYAxis();
-  const heatmapSeries = useHeatmapSeries();
+  const heatmapSeries = useHeatmapSeriesContext();
 
   const tooltipData = useItemTooltip<'heatmap'>();
 
@@ -60,10 +60,12 @@ function DefaultHeatmapTooltipContent(props: Pick<HeatmapTooltipProps, 'classes'
   const [xIndex, yIndex] = value;
 
   const formattedX =
-    xAxis.valueFormatter?.(xAxis.data![xIndex], { location: 'tooltip' }) ??
-    xAxis.data![xIndex].toLocaleString();
+    xAxis.valueFormatter?.(xAxis.data![xIndex], {
+      location: 'tooltip',
+      scale: xAxis.scale,
+    }) ?? xAxis.data![xIndex].toLocaleString();
   const formattedY =
-    yAxis.valueFormatter?.(yAxis.data![yIndex], { location: 'tooltip' }) ??
+    yAxis.valueFormatter?.(yAxis.data![yIndex], { location: 'tooltip', scale: yAxis.scale }) ??
     yAxis.data![yIndex].toLocaleString();
   const formattedValue = series[seriesId].valueFormatter(value, {
     dataIndex: identifier.dataIndex,
