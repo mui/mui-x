@@ -8,7 +8,7 @@ describe('<MobileDateTimeRangePicker /> - Describe Conformance', () => {
 
   describePicker(MobileDateTimeRangePicker, {
     render,
-    fieldType: 'multi-input',
+    fieldType: 'single-input',
     variant: 'mobile',
   });
 

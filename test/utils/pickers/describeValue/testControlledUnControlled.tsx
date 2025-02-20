@@ -257,7 +257,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         expect(fieldRoot).to.have.class(inputBaseClasses.error);
         expect(fieldRoot).to.have.attribute('aria-invalid', 'true');
 
-        if (isRangeType && !params.isSingleInput) {
+        if (isRangeType && params.fieldType === 'multi-input') {
           const fieldRootEnd = getFieldInputRoot(1);
           expect(fieldRootEnd).to.have.class(inputBaseClasses.error);
           expect(fieldRootEnd).to.have.attribute('aria-invalid', 'true');

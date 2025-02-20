@@ -5,12 +5,12 @@ import {
   adapterToUse,
   expectFieldValueV7,
   describeValue,
-  getFieldSectionsContainer,
   openPicker,
+  getFieldInputRoot,
 } from 'test/utils/pickers';
 import { MobileDateTimeRangePicker } from '@mui/x-date-pickers-pro/MobileDateTimeRangePicker';
 
-describe('<MobileDateTimeRangePicker /> - Describe Value', () => {
+describe('<MobileDateTimeRangePicker /> - Describe Value Single Input', () => {
   const { render } = createPickerRenderer();
 
   describeValue<PickerRangeValue, 'picker'>(MobileDateTimeRangePicker, () => ({
@@ -19,6 +19,7 @@ describe('<MobileDateTimeRangePicker /> - Describe Value', () => {
     type: 'date-time-range',
     variant: 'mobile',
     initialFocus: 'start',
+    fieldType: 'single-input',
     values: [
       // initial start and end dates
       [adapterToUse.date('2018-01-01T11:30:00'), adapterToUse.date('2018-01-04T11:45:00')],
@@ -29,30 +30,32 @@ describe('<MobileDateTimeRangePicker /> - Describe Value', () => {
     assertRenderedValue: (expectedValues: any[]) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       const expectedPlaceholder = hasMeridiem ? 'MM/DD/YYYY hh:mm aa' : 'MM/DD/YYYY hh:mm';
+      const fieldRoot = getFieldInputRoot(0);
 
-      const startSectionsContainer = getFieldSectionsContainer(0);
       const expectedStartValueStr = expectedValues[0]
         ? adapterToUse.format(
             expectedValues[0],
             hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
           )
         : expectedPlaceholder;
-      expectFieldValueV7(startSectionsContainer, expectedStartValueStr);
 
-      const endSectionsContainer = getFieldSectionsContainer(1);
       const expectedEndValueStr = expectedValues[1]
         ? adapterToUse.format(
             expectedValues[1],
             hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
           )
         : expectedPlaceholder;
-      expectFieldValueV7(endSectionsContainer, expectedEndValueStr);
+
+      const expectedValueStr = `${expectedStartValueStr} – ${expectedEndValueStr}`;
+
+      expectFieldValueV7(fieldRoot, expectedValueStr);
     },
     setNewValue: async (value, _, { isOpened, applySameValue, setEndDate = false }) => {
       if (!isOpened) {
         openPicker({
           type: 'date-time-range',
           initialFocus: setEndDate ? 'end' : 'start',
+          fieldType: 'single-input',
         });
       }
 

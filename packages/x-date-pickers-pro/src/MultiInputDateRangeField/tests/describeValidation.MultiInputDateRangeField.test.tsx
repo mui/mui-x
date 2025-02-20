@@ -12,6 +12,7 @@ describe('<MultiInputDateRangeField /> - Describe Validation', () => {
   describeRangeValidation(MultiInputDateRangeField, () => ({
     render,
     componentFamily: 'field',
+    fieldType: 'multi-input',
     views: ['year', 'month', 'day'],
     setValue: (value, { setEndDate } = {}) => {
       setValueOnFieldInput(adapterToUse.format(value, 'keyboardDate'), setEndDate ? 1 : 0);

@@ -21,8 +21,8 @@
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "margin": {
       "type": {
-        "name": "shape",
-        "description": "{ bottom?: number, left?: number, right?: number, top?: number }"
+        "name": "union",
+        "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
       }
     },
     "onHighlightChange": {

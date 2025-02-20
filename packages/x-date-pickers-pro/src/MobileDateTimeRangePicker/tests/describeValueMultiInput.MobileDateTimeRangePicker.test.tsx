@@ -9,8 +9,9 @@ import {
   openPicker,
 } from 'test/utils/pickers';
 import { MobileDateTimeRangePicker } from '@mui/x-date-pickers-pro/MobileDateTimeRangePicker';
+import { MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputDateTimeRangeField';
 
-describe('<MobileDateTimeRangePicker /> - Describe Value Keyboard', () => {
+describe('<MobileDateTimeRangePicker /> - Describe Value Multi Input', () => {
   const { render } = createPickerRenderer();
 
   describeValue<PickerRangeValue, 'picker'>(MobileDateTimeRangePicker, () => ({
@@ -19,6 +20,10 @@ describe('<MobileDateTimeRangePicker /> - Describe Value Keyboard', () => {
     type: 'date-time-range',
     variant: 'mobile',
     initialFocus: 'start',
+    fieldType: 'multi-input',
+    defaultProps: {
+      slots: { field: MultiInputDateTimeRangeField },
+    },
     values: [
       // initial start and end dates
       [adapterToUse.date('2018-01-01T11:30:00'), adapterToUse.date('2018-01-04T11:45:00')],
@@ -53,6 +58,7 @@ describe('<MobileDateTimeRangePicker /> - Describe Value Keyboard', () => {
         openPicker({
           type: 'date-time-range',
           initialFocus: setEndDate ? 'end' : 'start',
+          fieldType: 'multi-input',
         });
       }
       let newValue: PickerNonNullableRangeValue;

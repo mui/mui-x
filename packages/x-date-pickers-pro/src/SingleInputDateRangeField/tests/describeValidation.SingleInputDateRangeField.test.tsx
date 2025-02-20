@@ -8,6 +8,6 @@ describe('<SingleInputDateRangeField /> - Describe Validation', () => {
     render,
     componentFamily: 'field',
     views: ['year', 'month', 'day'],
-    isSingleInput: true,
+    fieldType: 'single-input',
   }));
 });

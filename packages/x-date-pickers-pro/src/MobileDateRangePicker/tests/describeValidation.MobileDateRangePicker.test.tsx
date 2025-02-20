@@ -9,5 +9,6 @@ describe('<MobileDateRangePicker /> - Describe Validation', () => {
     componentFamily: 'picker',
     views: ['day'],
     variant: 'mobile',
+    fieldType: 'single-input',
   }));
 });

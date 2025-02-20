@@ -15,6 +15,7 @@ describe('<MultiInputTimeRangeField /> - Describe Validation', () => {
     render,
     componentFamily: 'field',
     views: ['hours', 'minutes'],
+    fieldType: 'multi-input',
     setValue: (value, { setEndDate } = {}) => {
       setValueOnFieldInput(
         adapterToUse.format(

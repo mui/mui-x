@@ -10,9 +10,9 @@ import {
   getFieldSectionsContainer,
   getFieldInputRoot,
 } from 'test/utils/pickers';
-import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
+import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 
-describe('<MobileDateRangePicker /> - Describe Value', () => {
+describe('<MobileDateRangePicker /> - Describes', () => {
   const { render } = createPickerRenderer();
 
   describeValue<PickerRangeValue, 'picker'>(MobileDateRangePicker, () => ({
@@ -21,6 +21,10 @@ describe('<MobileDateRangePicker /> - Describe Value', () => {
     type: 'date-range',
     variant: 'mobile',
     initialFocus: 'start',
+    fieldType: 'multi-input',
+    defaultProps: {
+      slots: { field: MultiInputDateRangeField },
+    },
     values: [
       // initial start and end dates
       [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-04')],
@@ -52,7 +56,7 @@ describe('<MobileDateRangePicker /> - Describe Value', () => {
       }
 
       if (!isOpened) {
-        openPicker({ type: 'date-range', initialFocus: 'start' });
+        openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'multi-input' });
       }
 
       fireEvent.click(
@@ -77,10 +81,7 @@ describe('<MobileDateRangePicker /> - Describe Value', () => {
     type: 'date-range',
     variant: 'mobile',
     initialFocus: 'start',
-    isSingleInput: true,
-    defaultProps: {
-      slots: { field: SingleInputDateRangeField },
-    },
+    fieldType: 'single-input',
     values: [
       // initial start and end dates
       [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-04')],

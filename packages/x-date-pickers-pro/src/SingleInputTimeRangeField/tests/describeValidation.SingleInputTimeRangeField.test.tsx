@@ -8,6 +8,6 @@ describe('<SingleInputTimeRangeField /> - Describe Validation', () => {
     render,
     componentFamily: 'field',
     views: ['hours', 'minutes', 'seconds'],
-    isSingleInput: true,
+    fieldType: 'single-input',
   }));
 });

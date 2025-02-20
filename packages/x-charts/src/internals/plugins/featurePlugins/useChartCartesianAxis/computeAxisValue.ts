@@ -73,7 +73,7 @@ export function computeAxisValue<T extends ChartSeriesType>(
     axis?: AxisConfig<ScaleName, any, ChartsXAxisProps>[];
     axisDirection: 'x';
   },
-): ComputeResult<ChartsAxisProps>;
+): ComputeResult<ChartsXAxisProps>;
 export function computeAxisValue<T extends ChartSeriesType>({
   drawingArea,
   formattedSeries,
@@ -84,7 +84,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
   zoomOptions,
   getFilters,
 }: ComputeCommonParams<T> & {
-  axis?: AxisConfig<ScaleName, any, ChartsAxisProps>[];
+  axis?: AxisConfig[];
   axisDirection: 'x' | 'y'; // | 'radius' | 'rotation';
 }) {
   if (allAxis === undefined) {
@@ -120,6 +120,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
       const zoomedRange = zoomScaleRange(scaleRange, zoomRange);
 
       completeAxis[axis.id] = {
+        offset: 0,
         categoryGapRatio,
         barGapRatio,
         ...axis,
@@ -145,6 +146,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
       const zoomedRange = zoomScaleRange(scaleRange, zoomRange);
 
       completeAxis[axis.id] = {
+        offset: 0,
         ...axis,
         data,
         scale: scalePoint(axis.data!, zoomedRange),
@@ -190,6 +192,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
     const domain = [axis.min ?? minDomain, axis.max ?? maxDomain];
 
     completeAxis[axis.id] = {
+      offset: 0,
       ...axis,
       data,
       scaleType: scaleType as any,

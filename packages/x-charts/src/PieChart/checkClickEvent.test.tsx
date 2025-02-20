@@ -7,6 +7,8 @@ import { PieChart } from '@mui/x-charts/PieChart';
 const config = {
   width: 400,
   height: 400,
+  xAxis: [{ position: 'none' }],
+  yAxis: [{ position: 'none' }],
 } as const;
 
 describe('PieChart - click event', () => {

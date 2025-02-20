@@ -9,5 +9,6 @@ describe('<MobileDateTimeRangePicker /> - Describe Validation', () => {
     views: ['day', 'hours', 'minutes'],
     componentFamily: 'picker',
     variant: 'mobile',
+    fieldType: 'single-input',
   }));
 });

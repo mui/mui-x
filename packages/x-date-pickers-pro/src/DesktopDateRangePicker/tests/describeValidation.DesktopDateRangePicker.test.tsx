@@ -9,5 +9,6 @@ describe('<DesktopDateRangePicker /> - Describe Validation', () => {
     componentFamily: 'picker',
     views: ['day'],
     variant: 'desktop',
+    fieldType: 'single-input',
   }));
 });

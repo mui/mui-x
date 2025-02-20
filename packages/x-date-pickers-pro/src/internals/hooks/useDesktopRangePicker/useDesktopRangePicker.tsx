@@ -17,7 +17,7 @@ import {
 import { getReleaseInfo } from '../../utils/releaseInfo';
 import { useRangePosition } from '../useRangePosition';
 import { PickerRangePositionContext } from '../../../hooks/usePickerRangePositionContext';
-import { getViewContainerRoleForRangePicker } from '../../utils/date-fields-utils';
+import { getRangeFieldType } from '../../utils/date-fields-utils';
 
 const releaseInfo = getReleaseInfo();
 
@@ -38,7 +38,8 @@ export const useDesktopRangePicker = <
 
   const { slots, slotProps, inputRef, localeText } = props;
 
-  const viewContainerRole = getViewContainerRoleForRangePicker(slots.field, 'desktop');
+  const fieldType = getRangeFieldType(slots.field);
+  const viewContainerRole = fieldType === 'single-input' ? 'dialog' : 'tooltip';
   const rangePositionResponse = useRangePosition(props);
 
   const { providerProps, renderCurrentView, ownerState } = usePicker<
