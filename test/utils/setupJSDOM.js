@@ -17,4 +17,15 @@ window.getComputedStyle = function getComputedStyleMock() {
   };
 };
 
+/* Not implemented by JSDOM. We need to set it to `SVGElement` instead of `SVGGraphicsElement` because JSDOM returns
+ * `SVGElement` when referencing an `SVGTextElement`: https://github.com/jsdom/jsdom/issues/3310 */
+window.SVGElement.prototype.getBBox = function getBBoxMock() {
+  return {
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+  };
+};
+
 module.exports = { ...coreExports, mochaHooks };

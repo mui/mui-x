@@ -4,15 +4,14 @@ import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, Theme, styled } from '@mui/material/styles';
+import { useMounted } from '../hooks/useMounted';
 import { useTicks, TickItemType } from '../hooks/useTicks';
 import { AxisDefaultized, ChartsXAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
-import { ChartsText, ChartsTextProps } from '../ChartsText';
+import { ChartsText, ChartsTextProps, ChartsTextStyle } from '../ChartsText';
 import { getMinXTranslation } from '../internals/geometry';
-import { useMounted } from '../hooks/useMounted';
 import { useDrawingArea } from '../hooks/useDrawingArea';
-import { getWordsByLines } from '../internals/getWordsByLines';
 import { isInfinity } from '../internals/isInfinity';
 import { isBandScale } from '../internals/isBandScale';
 import { useChartContext } from '../context/ChartProvider/useChartContext';
@@ -32,43 +31,76 @@ const useUtilityClasses = (ownerState: ChartsXAxisProps & { theme: Theme }) => {
   return composeClasses(slots, getAxisUtilityClass, classes);
 };
 
-type LabelExtraData = { width: number; height: number; skipLabel?: boolean };
+function useVisibleLabels({
+  xTicks,
+  labelRefsMapRef,
+  tickLabelStyle,
+  tickLabelInterval,
+  reverse,
+}: {
+  xTicks: TickItemType[];
+  labelRefsMapRef: React.RefObject<Map<number, SVGGraphicsElement>>;
+  tickLabelStyle?: ChartsTextStyle;
+  tickLabelInterval: ChartsXAxisProps['tickLabelInterval'];
+  reverse?: boolean;
+}) {
+  const isLabelVisibilityUserDefined = typeof tickLabelInterval === 'function';
+  const textMeasurementCache = React.useRef<Map<number, { width: number; height: number }>>(
+    new Map(),
+  );
+  const mounted = useMounted(true);
 
-function addLabelDimension(
+  // Note: by moving this into a hook the compiler doesn't notice the issue, but we shouldn't be able to access this in
+  // a ref.
+  const measure = React.useCallback(
+    (index: number) => {
+      const value =
+        textMeasurementCache.current.get(index) ?? labelRefsMapRef.current.get(index)?.getBBox();
+
+      if (value !== undefined) {
+        textMeasurementCache.current.set(index, { width: value.width, height: value.height });
+      }
+
+      return value ?? { width: 0, height: 0 };
+    },
+    [labelRefsMapRef],
+  );
+
+  // Can only measure after the chart is mounted, so for now render all ticks.
+  if (!mounted) {
+    return new Set(xTicks.map((_, i) => i));
+  }
+
+  const visibleLabels = isLabelVisibilityUserDefined
+    ? new Set(
+        xTicks
+          .filter((item, index) => tickLabelInterval(item.value, index))
+          .map((_, index) => index),
+      )
+    : computeVisibleLabels(xTicks, { tickLabelStyle, reverse, measure });
+
+  return visibleLabels;
+}
+
+function computeVisibleLabels(
   xTicks: TickItemType[],
   {
     tickLabelStyle: style,
-    tickLabelInterval,
     reverse,
-    isMounted,
-  }: Pick<ChartsXAxisProps, 'tickLabelInterval' | 'tickLabelStyle'> &
-    Pick<AxisDefaultized, 'reverse'> & { isMounted: boolean },
-): (TickItemType & LabelExtraData)[] {
-  const withDimension = xTicks.map((tick) => {
-    if (!isMounted || tick.formattedValue === undefined) {
-      return { ...tick, width: 0, height: 0 };
-    }
-    const tickSizes = getWordsByLines({ style, needsComputation: true, text: tick.formattedValue });
-    return {
-      ...tick,
-      width: Math.max(...tickSizes.map((size) => size.width)),
-      height: Math.max(tickSizes.length * tickSizes[0].height),
-    };
-  });
-
-  if (typeof tickLabelInterval === 'function') {
-    return withDimension.map((item, index) => ({
-      ...item,
-      skipLabel: !tickLabelInterval(item.value, index),
-    }));
-  }
-
+    measure,
+  }: Pick<ChartsXAxisProps, 'tickLabelStyle'> &
+    Pick<AxisDefaultized, 'reverse'> & {
+      measure: (labelIndex: number) => { width: number; height: number };
+    },
+): Set<number> {
+  const visibleLabels = new Set<number>();
   // Filter label to avoid overlap
   let currentTextLimit = 0;
   let previousTextLimit = 0;
   const direction = reverse ? -1 : 1;
-  return withDimension.map((item, labelIndex) => {
-    const { width, offset, labelOffset, height } = item;
+  xTicks.forEach((item, labelIndex) => {
+    const { width, height } = measure(labelIndex);
+    const { offset, labelOffset } = item;
 
     const distance = getMinXTranslation(width, height, style?.angle);
     const textPosition = offset + labelOffset;
@@ -78,11 +110,14 @@ function addLabelDimension(
     if (labelIndex > 0 && direction * currentTextLimit < direction * previousTextLimit) {
       // Except for the first label, we skip all label that overlap with the last accepted.
       // Notice that the early return prevents `previousTextLimit` from being updated.
-      return { ...item, skipLabel: true };
+      return;
     }
+
+    visibleLabels.add(labelIndex);
     previousTextLimit = textPosition + (direction * (gapRatio * distance)) / 2;
-    return item;
   });
+
+  return visibleLabels;
 }
 
 const XAxisRoot = styled(AxisRoot, {
@@ -110,8 +145,6 @@ const defaultProps = {
 function ChartsXAxis(inProps: ChartsXAxisProps) {
   const { xAxis, xAxisIds } = useXAxes();
   const { scale: xScale, tickNumber, reverse, ...settings } = xAxis[inProps.axisId ?? xAxisIds[0]];
-
-  const isMounted = useMounted();
 
   const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsXAxis' });
 
@@ -142,6 +175,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   const classes = useUtilityClasses({ ...defaultizedProps, theme });
   const { left, top, width, height } = useDrawingArea();
   const { instance } = useChartContext();
+  const labelRefsMapRef = React.useRef(new Map<number, SVGGraphicsElement>());
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
@@ -177,11 +211,12 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickLabelPlacement,
   });
 
-  const xTicksWithDimension = addLabelDimension(xTicks, {
+  const visibleLabels = useVisibleLabels({
+    xTicks,
+    labelRefsMapRef,
     tickLabelStyle: axisTickLabelProps.style,
     tickLabelInterval,
     reverse,
-    isMounted,
   });
 
   const labelRefPoint = {
@@ -221,7 +256,8 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
         <Line x1={left} x2={left + width} className={classes.line} {...slotProps?.axisLine} />
       )}
 
-      {xTicksWithDimension.map(({ formattedValue, offset, labelOffset, skipLabel }, index) => {
+      {xTicks.map(({ formattedValue, offset, labelOffset }, index) => {
+        const isLabelVisible = visibleLabels.has(index);
         const xTickLabel = labelOffset ?? 0;
         const yTickLabel = positionSign * (tickSize + 3);
 
@@ -240,14 +276,23 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
               />
             )}
 
-            {formattedValue !== undefined && !skipLabel && showTickLabel && (
+            {formattedValue !== undefined && isLabelVisible && showTickLabel ? (
               <TickLabel
                 x={xTickLabel}
                 y={yTickLabel}
                 {...axisTickLabelProps}
-                text={formattedValue.toString()}
+                ref={(ref) => {
+                  const labelRefsMap = labelRefsMapRef.current;
+
+                  if (ref == null) {
+                    labelRefsMap.delete(index);
+                  } else {
+                    labelRefsMap.set(index, ref);
+                  }
+                }}
+                text={formattedValue?.toString() ?? ''}
               />
-            )}
+            ) : null}
           </g>
         );
       })}
