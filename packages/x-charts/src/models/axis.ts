@@ -141,6 +141,7 @@ export interface ChartsXAxisProps extends ChartsAxisProps {
   axis?: 'x';
   /**
    * The minimum gap in pixels between two tick labels.
+   * If two tick labels are closer than this minimum gap, one of them will be hidden.
    * @default 8
    */
   tickLabelMinGap?: number;
