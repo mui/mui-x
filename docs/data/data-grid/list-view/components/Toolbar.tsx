@@ -6,8 +6,8 @@ import {
   GridToolbarContainer,
   GridToolbarProps,
   GridToolbarQuickFilter,
-  selectedGridRowsCountSelector,
-  selectedGridRowsSelector,
+  gridRowSelectionCountSelector,
+  gridRowSelectionIdsSelector,
   useGridApiContext,
   useGridSelector,
 } from '@mui/x-data-grid-premium';
@@ -33,7 +33,7 @@ export interface ToolbarProps extends GridToolbarProps {
 export function Toolbar(props: ToolbarProps) {
   const { listView = false, container, handleUpload, handleDelete } = props;
   const apiRef = useGridApiContext();
-  const selectionCount = useGridSelector(apiRef, selectedGridRowsCountSelector);
+  const selectionCount = useGridSelector(apiRef, gridRowSelectionCountSelector);
   const showSelectionOptions = selectionCount > 0;
 
   const handleClearSelection = () => {
@@ -42,7 +42,7 @@ export function Toolbar(props: ToolbarProps) {
 
   const handleDeleteSelectedRows = () => {
     handleClearSelection();
-    const selectedRows = selectedGridRowsSelector(apiRef);
+    const selectedRows = gridRowSelectionIdsSelector(apiRef);
     handleDelete?.(Array.from(selectedRows.keys()));
   };
 

@@ -4,8 +4,8 @@ import {
   GridDeleteIcon,
   GridToolbarContainer,
   GridToolbarQuickFilter,
-  selectedGridRowsCountSelector,
-  selectedGridRowsSelector,
+  gridRowSelectionCountSelector,
+  gridRowSelectionIdsSelector,
   useGridApiContext,
   useGridSelector,
 } from '@mui/x-data-grid-premium';
@@ -23,7 +23,7 @@ import { ToolbarButton } from './ToolbarButton';
 export function Toolbar(props) {
   const { listView = false, container, handleUpload, handleDelete } = props;
   const apiRef = useGridApiContext();
-  const selectionCount = useGridSelector(apiRef, selectedGridRowsCountSelector);
+  const selectionCount = useGridSelector(apiRef, gridRowSelectionCountSelector);
   const showSelectionOptions = selectionCount > 0;
 
   const handleClearSelection = () => {
@@ -32,7 +32,7 @@ export function Toolbar(props) {
 
   const handleDeleteSelectedRows = () => {
     handleClearSelection();
-    const selectedRows = selectedGridRowsSelector(apiRef);
+    const selectedRows = gridRowSelectionIdsSelector(apiRef);
     handleDelete?.(Array.from(selectedRows.keys()));
   };
 

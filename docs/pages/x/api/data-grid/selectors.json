@@ -299,6 +299,12 @@
   { "name": "gridRowIsEditingSelector", "returnType": "boolean", "description": "" },
   { "name": "gridRowMaximumTreeDepthSelector", "returnType": "number", "description": "" },
   { "name": "gridRowNodeSelector", "returnType": "GridTreeNode", "description": "" },
+  { "name": "gridRowSelectionCountSelector", "returnType": "number", "description": "" },
+  {
+    "name": "gridRowSelectionIdsSelector",
+    "returnType": "Map<GridRowId, GridValidRowModel>",
+    "description": ""
+  },
   {
     "name": "gridRowSelectionManagerSelector",
     "returnType": "RowSelectionManager",
@@ -406,11 +412,5 @@
     "returnType": "{ rows: GridRowEntry<GridValidRowModel>[]; range: { firstRowIndex: number; lastRowIndex: number } | null; rowIdToIndexMap: Map<GridRowId, number> }",
     "category": "Pagination",
     "description": "Get the rows, range and rowIndex lookup map after filtering and sorting.\nDoes not contain the collapsed children."
-  },
-  { "name": "selectedGridRowsCountSelector", "returnType": "number", "description": "" },
-  {
-    "name": "selectedGridRowsSelector",
-    "returnType": "Map<GridRowId, GridValidRowModel>",
-    "description": ""
   }
 ]

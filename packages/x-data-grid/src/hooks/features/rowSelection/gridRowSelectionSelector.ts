@@ -18,7 +18,7 @@ export const gridRowSelectionManagerSelector = createSelectorMemoized(
   createRowSelectionManager,
 );
 
-export const selectedGridRowsCountSelector = createSelector(
+export const gridRowSelectionCountSelector = createSelector(
   gridRowSelectionStateSelector,
   gridFilteredRowCountSelector,
   (selection, filteredRowCount) => {
@@ -30,7 +30,7 @@ export const selectedGridRowsCountSelector = createSelector(
   },
 );
 
-export const selectedGridRowsSelector = createSelectorMemoized(
+export const gridRowSelectionIdsSelector = createSelectorMemoized(
   gridRowSelectionStateSelector,
   gridRowsLookupSelector,
   gridDataRowIdsSelector,

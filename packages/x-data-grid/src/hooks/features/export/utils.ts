@@ -7,8 +7,8 @@ import { gridFilteredSortedRowIdsSelector } from '../filter';
 import { GridRowId } from '../../../models';
 import { gridPinnedRowsSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
 import {
-  selectedGridRowsCountSelector,
-  selectedGridRowsSelector,
+  gridRowSelectionCountSelector,
+  gridRowSelectionIdsSelector,
 } from '../rowSelection/gridRowSelectionSelector';
 
 interface GridGetColumnsToExportParams {
@@ -42,7 +42,7 @@ export const getColumnsToExport = ({
 export const defaultGetRowsToExport = ({ apiRef }: GridCsvGetRowsToExportParams): GridRowId[] => {
   const filteredSortedRowIds = gridFilteredSortedRowIdsSelector(apiRef);
   const rowTree = gridRowTreeSelector(apiRef);
-  const selectedRowsCount = selectedGridRowsCountSelector(apiRef);
+  const selectedRowsCount = gridRowSelectionCountSelector(apiRef);
   const bodyRows = filteredSortedRowIds.filter((id) => rowTree[id].type !== 'footer');
   const pinnedRows = gridPinnedRowsSelector(apiRef);
   const topPinnedRowsIds = pinnedRows?.top?.map((row) => row.id) || [];
@@ -52,7 +52,7 @@ export const defaultGetRowsToExport = ({ apiRef }: GridCsvGetRowsToExportParams)
   bodyRows.push(...bottomPinnedRowsIds);
 
   if (selectedRowsCount > 0) {
-    const selectedRows = selectedGridRowsSelector(apiRef);
+    const selectedRows = gridRowSelectionIdsSelector(apiRef);
     return bodyRows.filter((id) => selectedRows.has(id));
   }
 

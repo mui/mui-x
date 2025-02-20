@@ -23,8 +23,8 @@ import {
 import {
   gridRowSelectionManagerSelector,
   gridRowSelectionStateSelector,
-  selectedGridRowsCountSelector,
-  selectedGridRowsSelector,
+  gridRowSelectionCountSelector,
+  gridRowSelectionIdsSelector,
 } from './gridRowSelectionSelector';
 import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
 import {
@@ -214,7 +214,7 @@ export const useGridRowSelection = (
   );
 
   const getSelectedRows = React.useCallback<GridRowSelectionApi['getSelectedRows']>(
-    () => selectedGridRowsSelector(apiRef),
+    () => gridRowSelectionIdsSelector(apiRef),
     [apiRef],
   );
 
@@ -577,7 +577,7 @@ export const useGridRowSelection = (
       const isMultipleSelectionDisabled =
         !checkboxSelection && !hasCtrlKey && !isKeyboardEvent(event);
       const resetSelection = !canHaveMultipleSelection || isMultipleSelectionDisabled;
-      const selectedRowsCount = selectedGridRowsCountSelector(apiRef);
+      const selectedRowsCount = gridRowSelectionCountSelector(apiRef);
 
       if (canHaveMultipleSelection && selectedRowsCount > 1 && !hasCtrlKey) {
         apiRef.current.selectRow(id, true, resetSelection);
