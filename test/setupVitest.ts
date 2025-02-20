@@ -98,3 +98,8 @@ if (isJsdom) {
   // @ts-expect-error
   globalThis.window.Touch = Touch;
 }
+
+vi.mock('@mui/internal-test-utils', async (importOriginal) => ({
+  ...(await importOriginal('@mui/internal-test-utils')),
+  createRenderer: (await importOriginal('./createRenderer')).createRenderer,
+}));

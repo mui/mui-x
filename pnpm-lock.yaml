@@ -120,6 +120,9 @@ importers:
       '@playwright/test':
         specifier: 1.50.1
         version: 1.50.1
+      '@testing-library/user-event':
+        specifier: ^14.6.1
+        version: 14.6.1(@testing-library/dom@10.4.0)
       '@types/babel__core':
         specifier: ^7.20.5
         version: 7.20.5
@@ -1633,6 +1636,9 @@ importers:
       '@react-spring/web':
         specifier: ^9.7.5
         version: 9.7.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@testing-library/user-event':
+        specifier: ^14.6.1
+        version: 14.6.1(@testing-library/dom@10.4.0)
       '@types/chai':
         specifier: ^4.3.20
         version: 4.3.20
