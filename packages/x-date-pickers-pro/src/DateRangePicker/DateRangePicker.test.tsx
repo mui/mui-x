@@ -21,7 +21,7 @@ describe('<DateRangePicker />', () => {
     Component: DateRangePicker,
   });
 
-  it('should not use mobile picker by default', () => {
+  it('should not use the mobile picker by default', () => {
     // Test with accessible DOM structure
     const { unmount } = renderWithProps({ enableAccessibleFieldDOMStructure: true });
     openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
@@ -35,7 +35,7 @@ describe('<DateRangePicker />', () => {
     expect(screen.queryByRole('dialog')).to.have.class(pickerPopperClasses.root);
   });
 
-  it('should open mobile picker dialog when clicked on input when `useMediaQuery` returns `false`', () => {
+  it('should use the mobile picker when `useMediaQuery` returns `false`', () => {
     const originalMatchMedia = window.matchMedia;
     window.matchMedia = stubMatchMedia(false);
 
