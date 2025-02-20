@@ -68,6 +68,7 @@
     "axisTick": "Custom component for the axis tick.",
     "axisTickLabel": "Custom component for tick label.",
     "legend": "Custom rendering of the legend.",
+    "legendLabelMark": "Symbol next to the legend.",
     "line": "The component that renders the line.",
     "lineHighlight": "",
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",

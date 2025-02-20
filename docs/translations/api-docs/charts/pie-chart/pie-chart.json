@@ -39,6 +39,7 @@
   "classDescriptions": {},
   "slotDescriptions": {
     "legend": "Custom rendering of the legend.",
+    "legendLabelMark": "Symbol next to the legend.",
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
     "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
     "pieArc": "",

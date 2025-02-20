@@ -71,6 +71,10 @@ For the `pie` series, the `labelMarkType` property is available for each of the 
 
 {{"demo": "LegendMarkTypeNoSnap.js", "hideToolbar": true, "bg": "playground"}}
 
+For more advanced use cases, you can also provide a component to the `legendLabelMark` slot to fully customize the mark.
+
+{{"demo": "LegendCustomLabelMark.js" }}
+
 ### Scrollable legend
 
 The legend can be made scrollable by setting the `overflowY` for vertical legends or `overflowX` for horizontal legends.

@@ -122,6 +122,7 @@
       "default": "ChartsLegend",
       "class": null
     },
+    { "name": "legendLabelMark", "description": "Symbol next to the legend.", "class": null },
     {
       "name": "line",
       "description": "The component that renders the line.",

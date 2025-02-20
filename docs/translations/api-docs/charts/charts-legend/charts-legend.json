@@ -30,5 +30,8 @@
       "nodeName": "the legend in column layout"
     }
   },
-  "slotDescriptions": { "legend": "Custom rendering of the legend." }
+  "slotDescriptions": {
+    "legend": "Custom rendering of the legend.",
+    "legendLabelMark": "Symbol next to the legend."
+  }
 }

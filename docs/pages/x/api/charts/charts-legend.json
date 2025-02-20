@@ -30,7 +30,8 @@
       "description": "Custom rendering of the legend.",
       "default": "ChartsLegend",
       "class": null
-    }
+    },
+    { "name": "legendLabelMark", "description": "Symbol next to the legend.", "class": null }
   ],
   "classes": [
     {
