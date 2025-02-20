@@ -27,6 +27,7 @@ export interface GridRowSelectionApi {
   /**
    * Returns an array of the selected rows.
    * @returns {Map<GridRowId, GridRowModel>} A `Map` with the selected rows.
+   * @deprecated Use `gridRowSelectionIdsSelector`, `gridRowSelectionCountSelector`, or `gridRowSelectionManagerSelector` instead.
    */
   getSelectedRows: () => Map<GridRowId, GridRowModel>;
   /**
