@@ -353,7 +353,7 @@ ChartsXAxis.propTypes = {
   /**
    * The minimum gap in pixels between two tick labels.
    * If two tick labels are closer than this minimum gap, one of them will be hidden.
-   * @default 8
+   * @default 4
    */
   tickLabelMinGap: PropTypes.number,
   /**
