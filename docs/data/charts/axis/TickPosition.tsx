@@ -10,14 +10,14 @@ export default function TickPosition() {
         xAxis={[
           {
             ...xAxisCommon,
-            id: 'bottomAxis',
             scaleType: 'point',
             tickInterval: (time) => time.getHours() === 0,
+            position: 'bottom',
           },
           {
             ...xAxisCommon,
-            id: 'topAxis',
             scaleType: 'point',
+            position: 'top',
           },
         ]}
         {...config}
@@ -84,9 +84,7 @@ const config = {
     { data: y2, showMark },
   ],
   height: 300,
-  topAxis: 'topAxis',
-  bottomAxis: 'bottomAxis',
-  leftAxis: null,
+  yAxis: [{ position: 'none' as const }],
 };
 const xAxisCommon = {
   data: timeData,

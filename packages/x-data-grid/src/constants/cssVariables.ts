@@ -100,6 +100,7 @@ const keys = {
   },
   shadows: {
     base: '--DataGrid-t-shadows-base',
+    overlay: '--DataGrid-t-shadows-overlay',
   },
   zIndex: {
     panel: '--DataGrid-t-z-index-panel',

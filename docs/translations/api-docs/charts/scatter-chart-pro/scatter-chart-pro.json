@@ -5,9 +5,6 @@
       "description": "The configuration of axes highlight.",
       "seeMoreText": "See {{link}} for more details."
     },
-    "bottomAxis": {
-      "description": "Indicate which axis to display the bottom of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
-    },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
@@ -31,9 +28,6 @@
     },
     "initialZoom": {
       "description": "The list of zoom data related to each axis. Used to initialize the zoom in a specific configuration without controlling it."
-    },
-    "leftAxis": {
-      "description": "Indicate which axis to display the left of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
     },
     "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
     "margin": {
@@ -61,9 +55,6 @@
       "description": "Callback fired when the zoom has changed.",
       "typeDescriptions": { "zoomData": "Updated zoom data." }
     },
-    "rightAxis": {
-      "description": "Indicate which axis to display the right of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
-    },
     "series": {
       "description": "The series to display in the scatter chart. An array of <a href='/x/api/charts/scatter-series-type/'>ScatterSeriesType</a> objects."
     },
@@ -72,9 +63,6 @@
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
-    "topAxis": {
-      "description": "Indicate which axis to display the top of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
-    },
     "voronoiMaxRadius": {
       "description": "Defines the maximal distance between a scatter point and the pointer that triggers the interaction. If <code>undefined</code>, the radius is assumed to be infinite."
     },
