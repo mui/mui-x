@@ -4,11 +4,11 @@ export interface ChartsLabelMarkSlots {
   /**
    * Symbol next to the label of a series.
    */
-  legendLabelMark?: React.JSXElementConstructor<ChartsLabelMarkProps>;
+  labelMark?: React.JSXElementConstructor<ChartsLabelMarkProps>;
 }
 
 export interface ChartsLabelMarkSlotProps {
-  legendLabelMark?: ChartsLabelMarkProps;
+  labelMark?: ChartsLabelMarkProps;
 }
 
 export interface ChartsLabelMarkSlotExtension {

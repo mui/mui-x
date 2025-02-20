@@ -80,6 +80,7 @@
     "import { ChartsTooltip } from '@mui/x-charts-pro';"
   ],
   "slots": [
+    { "name": "labelMark", "description": "Symbol next to the label of a series.", "class": null },
     {
       "name": "tooltip",
       "description": "Custom component for the tooltip popper.",

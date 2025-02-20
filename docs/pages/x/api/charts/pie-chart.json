@@ -49,15 +49,11 @@
     "import { PieChart } from '@mui/x-charts-pro';"
   ],
   "slots": [
+    { "name": "labelMark", "description": "Symbol next to the label of a series.", "class": null },
     {
       "name": "legend",
       "description": "Custom rendering of the legend.",
       "default": "ChartsLegend",
-      "class": null
-    },
-    {
-      "name": "legendLabelMark",
-      "description": "Symbol next to the label of a series.",
       "class": null
     },
     {

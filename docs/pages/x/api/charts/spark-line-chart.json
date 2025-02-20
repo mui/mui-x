@@ -104,6 +104,7 @@
       "default": "BarElementPath",
       "class": null
     },
+    { "name": "labelMark", "description": "Symbol next to the label of a series.", "class": null },
     {
       "name": "line",
       "description": "The component that renders the line.",

@@ -7,7 +7,7 @@ import { BarPlot } from '../BarChart';
 import { LinePlot, AreaPlot, LineHighlightPlot } from '../LineChart';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
-import { ChartsTooltip } from '../ChartsTooltip';
+import { ChartsTooltip, ChartsTooltipSlotExtension } from '../ChartsTooltip';
 import { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../models/axis';
@@ -159,6 +159,11 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
   };
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
+  const tooltipProps: ChartsTooltipSlotExtension = {
+    slots:
+      slots || slotProps?.tooltip?.slots ? { ...slots, ...slotProps?.tooltip?.slots } : undefined,
+    slotProps: slotProps ? { ...slotProps, ...slotProps?.tooltip?.slotProps } : undefined,
+  };
 
   const colors: ChartsColorPalette | undefined = React.useMemo(() => {
     if (color == null) {
@@ -220,7 +225,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
       )}
 
       <ChartsAxisHighlight {...axisHighlight} />
-      {showTooltip && <Tooltip {...props.slotProps?.tooltip} />}
+      {showTooltip && <Tooltip {...tooltipProps} />}
 
       {children}
     </ChartContainer>

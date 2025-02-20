@@ -160,6 +160,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(
     axisHighlightProps,
     lineHighlightPlotProps,
     legendProps,
+    tooltipProps,
     children,
   } = useLineChartProps(other);
   const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
@@ -197,7 +198,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(
             <MarkPlotZoom {...markPlotProps} />
           </g>
           <LineHighlightPlot {...lineHighlightPlotProps} />
-          {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
+          {!props.loading && <Tooltip {...tooltipProps} />}
           <ChartsClipPath {...clipPathProps} />
           {children}
         </ChartsSurface>

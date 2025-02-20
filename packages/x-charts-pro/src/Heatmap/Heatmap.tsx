@@ -6,7 +6,7 @@ import useId from '@mui/utils/useId';
 import { MakeOptional } from '@mui/x-internals/types';
 import { interpolateRgbBasis } from '@mui/x-charts-vendor/d3-interpolate';
 import { ChartsAxis, ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
-import { ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
+import { ChartsTooltipProps, ChartsTooltipSlotExtension } from '@mui/x-charts/ChartsTooltip';
 import {
   ChartsAxisSlots,
   ChartsAxisSlotProps,
@@ -154,6 +154,11 @@ const Heatmap = React.forwardRef(function Heatmap(
   );
 
   const Tooltip = props.slots?.tooltip ?? HeatmapTooltip;
+  const tooltipProps: ChartsTooltipSlotExtension = {
+    slots:
+      slots || slotProps?.tooltip?.slots ? { ...slots, ...slotProps?.tooltip?.slots } : undefined,
+    slotProps: slotProps ? { ...slotProps, ...slotProps?.tooltip?.slotProps } : undefined,
+  };
 
   return (
     <ChartContainerPro<'heatmap', HeatmapPluginsSignatures>
@@ -183,7 +188,7 @@ const Heatmap = React.forwardRef(function Heatmap(
         <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
       </g>
       <ChartsAxis slots={slots} slotProps={slotProps} />
-      {!loading && <Tooltip {...slotProps?.tooltip} />}
+      {!loading && <Tooltip {...tooltipProps} />}
 
       <ChartsClipPath id={clipPathId} />
       {children}

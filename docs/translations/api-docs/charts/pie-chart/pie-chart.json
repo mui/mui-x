@@ -38,8 +38,8 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
+    "labelMark": "Symbol next to the label of a series.",
     "legend": "Custom rendering of the legend.",
-    "legendLabelMark": "Symbol next to the label of a series.",
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
     "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
     "pieArc": "",

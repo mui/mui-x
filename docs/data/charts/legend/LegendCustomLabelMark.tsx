@@ -9,7 +9,7 @@ const seriesConfig = [
   { id: 3, data: [10], label: 'Series D' },
 ];
 
-function CustomLegendLabelMark({ className, color }: ChartsLabelMarkProps) {
+function CustomLabelMark({ className, color }: ChartsLabelMarkProps) {
   return (
     <svg className={className} viewBox="0 0 24 24" width={12} height={12}>
       <path
@@ -26,7 +26,7 @@ export default function LegendCustomLabelMark() {
       series={seriesConfig}
       xAxis={[{ scaleType: 'band', data: ['A'] }]}
       height={200}
-      slots={{ legendLabelMark: CustomLegendLabelMark }}
+      slots={{ labelMark: CustomLabelMark }}
     />
   );
 }

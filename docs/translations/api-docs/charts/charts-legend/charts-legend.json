@@ -31,7 +31,7 @@
     }
   },
   "slotDescriptions": {
-    "legend": "Custom rendering of the legend.",
-    "legendLabelMark": "Symbol next to the label of a series."
+    "labelMark": "Symbol next to the label of a series.",
+    "legend": "Custom rendering of the legend."
   }
 }

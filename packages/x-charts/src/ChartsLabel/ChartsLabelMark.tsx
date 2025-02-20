@@ -76,7 +76,7 @@ const Root = styled('div', {
  */
 const ChartsLabelMark = consumeSlots(
   'MuiChartsLabelMark',
-  'legendLabelMark',
+  'labelMark',
   {
     defaultProps: { type: 'square' },
     classesResolver: useUtilityClasses,

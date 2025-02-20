@@ -71,11 +71,13 @@ For the `pie` series, the `labelMarkType` property is available for each of the 
 
 {{"demo": "LegendMarkTypeNoSnap.js", "hideToolbar": true, "bg": "playground"}}
 
-For more advanced use cases, you can also provide a component to the `legendLabelMark` slot to fully customize the mark.
+For more advanced use cases, you can also provide a component to the `labelMark` slot to fully customize the mark.
 
 {{"demo": "LegendCustomLabelMark.js" }}
 
-When a `legendLabelMark` slot is provided, the `labelMarkType` property is ignored.
+Passing a component to `labelMark` or using `labelMarkType` affects not only the legend but other places where the label mark is shown, such as tooltips.
+
+When a `labelMark` slot is provided, the `labelMarkType` property is ignored.
 
 ### Scrollable legend
 

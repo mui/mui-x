@@ -10,6 +10,7 @@ import type { ScatterPlotProps } from './ScatterPlot';
 import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
 import { SCATTER_CHART_PLUGINS, ScatterChartPluginsSignatures } from './ScatterChart.plugins';
 import { UseChartVoronoiSignature } from '../internals/plugins/featurePlugins/useChartVoronoi';
+import { ChartsTooltipSlotExtension } from '../ChartsTooltip';
 
 /**
  * A helper function that extracts ScatterChartProps from the input props
@@ -105,6 +106,12 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     legendDirection: props.slotProps?.legend?.direction,
   };
 
+  const tooltipProps: ChartsTooltipSlotExtension = {
+    slots:
+      slots || slotProps?.tooltip?.slots ? { ...slots, ...slotProps?.tooltip?.slots } : undefined,
+    slotProps: slotProps ? { ...slotProps, ...slotProps?.tooltip?.slotProps } : undefined,
+  };
+
   return {
     chartsWrapperProps,
     chartContainerProps,
@@ -114,6 +121,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     overlayProps,
     legendProps,
     axisHighlightProps,
+    tooltipProps,
     children,
   };
 };

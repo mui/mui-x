@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/material/styles';
+import { ChartsLabelMarkSlotExtension } from '../ChartsLabel/chartsLabelMark.types';
 import { ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
 import { useItemTooltip } from './useItemTooltip';
 import {
@@ -13,7 +14,7 @@ import {
 } from './ChartsTooltipTable';
 import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
 
-export interface ChartsItemTooltipContentProps {
+export interface ChartsItemTooltipContentProps extends ChartsLabelMarkSlotExtension {
   /**
    * Override or extend the styles applied to the component.
    */
@@ -22,7 +23,7 @@ export interface ChartsItemTooltipContentProps {
 }
 
 function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
-  const { classes: propClasses, sx } = props;
+  const { classes: propClasses, sx, slots, slotProps } = props;
   const tooltipData = useItemTooltip();
 
   const classes = useUtilityClasses(propClasses);
@@ -38,7 +39,14 @@ function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
         <tbody>
           <ChartsTooltipRow className={classes.row}>
             <ChartsTooltipCell className={clsx(classes.markCell, classes.cell)}>
-              <ChartsLabelMark type={markType} color={color} className={classes.mark} />
+              <ChartsLabelMark
+                seriesId={tooltipData.identifier.seriesId}
+                type={markType}
+                color={color}
+                className={classes.mark}
+                slots={slots}
+                slotProps={slotProps}
+              />
             </ChartsTooltipCell>
             <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)}>
               {label}
@@ -62,6 +70,16 @@ ChartsItemTooltipContent.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

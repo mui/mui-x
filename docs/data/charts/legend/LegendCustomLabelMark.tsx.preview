@@ -2,5 +2,5 @@
   series={seriesConfig}
   xAxis={[{ scaleType: 'band', data: ['A'] }]}
   height={200}
-  slots={{ legendLabelMark: CustomLegendLabelMark }}
+  slots={{ labelMark: CustomLabelMark }}
 />

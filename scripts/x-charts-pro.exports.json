@@ -117,6 +117,7 @@
   { "name": "ChartsTooltipPaper", "kind": "Variable" },
   { "name": "ChartsTooltipProps", "kind": "Interface" },
   { "name": "ChartsTooltipRow", "kind": "Variable" },
+  { "name": "ChartsTooltipSlotExtension", "kind": "Interface" },
   { "name": "ChartsTooltipSlotProps", "kind": "Interface" },
   { "name": "ChartsTooltipSlots", "kind": "Interface" },
   { "name": "ChartsTooltipTable", "kind": "Variable" },

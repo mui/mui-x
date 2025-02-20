@@ -2,12 +2,32 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import HTMLElementType from '@mui/utils/HTMLElementType';
+import { PopperProps } from '@mui/material/Popper';
+import {
+  ChartsLabelMarkSlotProps,
+  ChartsLabelMarkSlots,
+} from '../ChartsLabel/chartsLabelMark.types';
 import { ChartsItemTooltipContent } from './ChartsItemTooltipContent';
 import { ChartsAxisTooltipContent } from './ChartsAxisTooltipContent';
 import { ChartsTooltipContainer, ChartsTooltipContainerProps } from './ChartsTooltipContainer';
 import { useUtilityClasses } from './chartsTooltipClasses';
 
-export interface ChartsTooltipProps extends Omit<ChartsTooltipContainerProps, 'children'> {}
+export interface ChartsTooltipSlotExtension {
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: ChartsLabelMarkSlots & PopperProps['slots'];
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: ChartsLabelMarkSlotProps & PopperProps['slotProps'];
+}
+
+export interface ChartsTooltipProps
+  extends Omit<ChartsTooltipContainerProps, 'children' | 'slots' | 'slotProps'>,
+    ChartsTooltipSlotExtension {}
 
 /**
  * Demos:
@@ -19,16 +39,16 @@ export interface ChartsTooltipProps extends Omit<ChartsTooltipContainerProps, 'c
  * - [ChartsTooltip API](https://mui.com/x/api/charts/charts-tool-tip/)
  */
 function ChartsTooltip(props: ChartsTooltipProps) {
-  const { classes: propClasses, trigger = 'axis' } = props;
+  const { classes: propClasses, trigger = 'axis', slots, slotProps } = props;
 
   const classes = useUtilityClasses(propClasses);
 
   return (
     <ChartsTooltipContainer {...props} classes={classes}>
       {trigger === 'axis' ? (
-        <ChartsAxisTooltipContent classes={classes} />
+        <ChartsAxisTooltipContent classes={classes} slots={slots} slotProps={slotProps} />
       ) : (
-        <ChartsItemTooltipContent classes={classes} />
+        <ChartsItemTooltipContent classes={classes} slots={slots} slotProps={slotProps} />
       )}
     </ChartsTooltipContainer>
   );
@@ -235,13 +255,12 @@ ChartsTooltip.propTypes = {
     }),
   ]),
   /**
-   * The props used for each slot inside the Popper.
+   * The props used for each component slot.
    * @default {}
    */
   slotProps: PropTypes.object,
   /**
-   * The components used for each slot inside the Popper.
-   * Either a string to use a HTML element or a component.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.object,
