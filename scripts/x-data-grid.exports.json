@@ -459,6 +459,7 @@
   { "name": "GridRowProps", "kind": "Interface" },
   { "name": "GridRowSelectionApi", "kind": "Interface" },
   { "name": "GridRowSelectionCheckboxParams", "kind": "Interface" },
+  { "name": "gridRowSelectionManagerSelector", "kind": "Variable" },
   { "name": "GridRowSelectionModel", "kind": "TypeAlias" },
   { "name": "GridRowSelectionPropagation", "kind": "TypeAlias" },
   { "name": "gridRowSelectionStateSelector", "kind": "Variable" },

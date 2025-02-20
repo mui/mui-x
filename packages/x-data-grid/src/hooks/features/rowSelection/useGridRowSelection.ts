@@ -21,6 +21,7 @@ import {
   gridRowTreeSelector,
 } from '../rows/gridRowsSelector';
 import {
+  gridRowSelectionManagerSelector,
   gridRowSelectionStateSelector,
   selectedGridRowsCountSelector,
   selectedGridRowsSelector,
@@ -188,8 +189,7 @@ export const useGridRowSelection = (
 
   const isRowSelected = React.useCallback<GridRowSelectionApi['isRowSelected']>(
     (id) => {
-      const model = gridRowSelectionStateSelector(apiRef);
-      const selectionManager = createRowSelectionManager(model);
+      const selectionManager = gridRowSelectionManagerSelector(apiRef);
       return selectionManager.has(id);
     },
     [apiRef],

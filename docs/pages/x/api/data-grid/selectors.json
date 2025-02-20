@@ -300,6 +300,11 @@
   { "name": "gridRowMaximumTreeDepthSelector", "returnType": "number", "description": "" },
   { "name": "gridRowNodeSelector", "returnType": "GridTreeNode", "description": "" },
   {
+    "name": "gridRowSelectionManagerSelector",
+    "returnType": "RowSelectionManager",
+    "description": ""
+  },
+  {
     "name": "gridRowSelectionStateSelector",
     "returnType": "GridRowSelectionModel",
     "description": ""

@@ -37,7 +37,6 @@ import {
   type GridColumnsRenderContext,
   type GridRowEntry,
   type GridRowId,
-  createRowSelectionManager,
 } from '../../../models';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
@@ -57,7 +56,7 @@ import { gridFocusedVirtualCellSelector } from './gridFocusedVirtualCellSelector
 import { roundToDecimalPlaces } from '../../../utils/roundToDecimalPlaces';
 import { isJSDOM } from '../../../utils/isJSDOM';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
-import { gridRowSelectionStateSelector } from '../rowSelection';
+import { gridRowSelectionManagerSelector } from '../rowSelection';
 
 const MINIMUM_COLUMN_WIDTH = 50;
 
@@ -119,7 +118,7 @@ export const useGridVirtualScroller = () => {
   const [panels, setPanels] = React.useState(EMPTY_DETAIL_PANELS);
 
   const isRtl = useRtl();
-  const rowSelectionModel = useGridSelector(apiRef, gridRowSelectionStateSelector);
+  const rowSelectionManager = useGridSelector(apiRef, gridRowSelectionManagerSelector);
   const currentPage = useGridVisibleRows(apiRef);
   const mainRef = apiRef.current.mainElementRef;
   const scrollerRef = apiRef.current.virtualScrollerRef;
@@ -452,8 +451,6 @@ export const useGridVirtualScroller = () => {
     const rowProps = rootProps.slotProps?.row;
     const columnPositions = gridColumnPositionsSelector(apiRef);
 
-    const selectionManager = createRowSelectionManager(rowSelectionModel);
-
     rowIndexes.forEach((rowIndexInPage) => {
       const { id, model } = rowModels[rowIndexInPage];
       const rowIndex = (currentPage?.range?.firstRowIndex || 0) + rowIndexOffset + rowIndexInPage;
@@ -493,7 +490,7 @@ export const useGridVirtualScroller = () => {
         ? apiRef.current.unstable_getRowHeight(id)
         : 'auto';
 
-      const isSelected = selectionManager.has(id) && apiRef.current.isRowSelectable(id);
+      const isSelected = rowSelectionManager.has(id) && apiRef.current.isRowSelectable(id);
 
       let isFirstVisible = false;
       if (params.position === undefined) {
