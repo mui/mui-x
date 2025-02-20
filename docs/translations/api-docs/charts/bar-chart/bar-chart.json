@@ -77,7 +77,7 @@
     "bar": "The component that renders the bar.",
     "barLabel": "The component that renders the bar label.",
     "legend": "Custom rendering of the legend.",
-    "legendLabelMark": "Symbol next to the legend.",
+    "legendLabelMark": "Symbol next to the label of a series.",
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
     "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
     "tooltip": "Custom component for the tooltip popper."

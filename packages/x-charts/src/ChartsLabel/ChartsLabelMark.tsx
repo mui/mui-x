@@ -82,7 +82,7 @@ const ChartsLabelMark = consumeSlots(
     classesResolver: useUtilityClasses,
   },
   function ChartsLabelMark(props: ChartsLabelMarkProps, ref: React.Ref<HTMLDivElement>) {
-    const { type, color, className, classes, seriesId: unused, ...other } = props;
+    const { type, color, className, classes, seriesId, ...other } = props;
 
     return (
       <Root

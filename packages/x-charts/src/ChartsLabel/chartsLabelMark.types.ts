@@ -2,8 +2,7 @@ import { ChartsLabelMarkProps } from './ChartsLabelMark';
 
 export interface ChartsLabelMarkSlots {
   /**
-   * Symbol next to the legend.
-   * TODO: Improve
+   * Symbol next to the label of a series.
    */
   legendLabelMark?: React.JSXElementConstructor<ChartsLabelMarkProps>;
 }

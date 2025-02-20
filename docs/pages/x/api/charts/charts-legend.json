@@ -31,7 +31,11 @@
       "default": "ChartsLegend",
       "class": null
     },
-    { "name": "legendLabelMark", "description": "Symbol next to the legend.", "class": null }
+    {
+      "name": "legendLabelMark",
+      "description": "Symbol next to the label of a series.",
+      "class": null
+    }
   ],
   "classes": [
     {

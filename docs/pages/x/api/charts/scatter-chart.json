@@ -127,7 +127,11 @@
       "default": "ChartsLegend",
       "class": null
     },
-    { "name": "legendLabelMark", "description": "Symbol next to the legend.", "class": null },
+    {
+      "name": "legendLabelMark",
+      "description": "Symbol next to the label of a series.",
+      "class": null
+    },
     {
       "name": "loadingOverlay",
       "description": "Overlay component rendered when the chart is in a loading state.",
