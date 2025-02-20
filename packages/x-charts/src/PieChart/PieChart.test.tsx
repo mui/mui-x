@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { createRenderer } from '@mui/internal-test-utils/createRenderer';
+import { createRenderer, screen } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/describeConformance';
 import { PieChart } from '@mui/x-charts/PieChart';
+import { expect } from 'chai';
 
 describe('<PieChart />', () => {
   const { render } = createRenderer();
@@ -37,4 +38,11 @@ describe('<PieChart />', () => {
       ],
     }),
   );
+
+  it('should render "No Data" overlay when series prop is an empty array', () => {
+    render(<PieChart height={100} width={100} series={[]} />);
+
+    const noDataOverlay = screen.getByText('No data to display');
+    expect(noDataOverlay).toBeVisible();
+  });
 });
