@@ -14,7 +14,7 @@ import {
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
-import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
+import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 
 describe('<MobileDateRangePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({
@@ -30,6 +30,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
     componentFamily: 'picker',
     views: ['day'],
     variant: 'mobile',
+    fieldType: 'single-input',
   }));
 
   describeConformance(<MobileDateRangePicker />, () => ({
@@ -54,6 +55,10 @@ describe('<MobileDateRangePicker /> - Describes', () => {
     type: 'date-range',
     variant: 'mobile',
     initialFocus: 'start',
+    fieldType: 'multi-input',
+    defaultProps: {
+      slots: { field: MultiInputDateRangeField },
+    },
     clock,
     values: [
       // initial start and end dates
@@ -86,7 +91,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
       }
 
       if (!isOpened) {
-        openPicker({ type: 'date-range', initialFocus: 'start' });
+        openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'multi-input' });
       }
 
       fireEvent.click(
@@ -112,10 +117,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
     type: 'date-range',
     variant: 'mobile',
     initialFocus: 'start',
-    isSingleInput: true,
-    defaultProps: {
-      slots: { field: SingleInputDateRangeField },
-    },
+    fieldType: 'single-input',
     clock,
     values: [
       // initial start and end dates

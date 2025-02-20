@@ -1,4 +1,0 @@
-<DateRangePicker
-  slots={{ field: SingleInputDateRangeField }}
-  slotProps={{ textField: { InputProps: { endAdornment: <Calendar /> } } }}
-/>

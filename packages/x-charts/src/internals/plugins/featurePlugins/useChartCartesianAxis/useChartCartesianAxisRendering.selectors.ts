@@ -3,7 +3,6 @@ import {
   selectorChartSeriesConfig,
   selectorChartSeriesProcessed,
 } from '../../corePlugins/useChartSeries';
-import { AxisId } from '../../../../models/axis';
 import { createSelector } from '../../utils/selectors';
 import { computeAxisValue } from './computeAxisValue';
 import { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
@@ -11,6 +10,11 @@ import { ChartState } from '../../models/chart';
 import { createAxisFilterMapper, createGetAxisFilters } from './createAxisFilterMapper';
 import { ZoomAxisFilters, ZoomData } from './zoom.types';
 import { createZoomLookup } from './createZoomLookup';
+import { AxisId } from '../../../../models/axis';
+import {
+  selectorChartRawXAxis,
+  selectorChartRawYAxis,
+} from './useChartCartesianAxisLayout.selectors';
 
 export const createZoomMap = (zoom: readonly ZoomData[]) => {
   const zoomItemMap = new Map<AxisId, ZoomData>();
@@ -20,21 +24,7 @@ export const createZoomMap = (zoom: readonly ZoomData[]) => {
   return zoomItemMap;
 };
 
-export const selectorChartCartesianAxisState = (
-  state: ChartState<[UseChartCartesianAxisSignature]>,
-) => state.cartesianAxis;
-
 const selectorChartZoomState = (state: ChartState<[UseChartCartesianAxisSignature]>) => state.zoom;
-
-export const selectorChartRawXAxis = createSelector(
-  selectorChartCartesianAxisState,
-  (axis) => axis?.x,
-);
-
-export const selectorChartRawYAxis = createSelector(
-  selectorChartCartesianAxisState,
-  (axis) => axis?.y,
-);
 
 /**
  * Following selectors are not exported because they exist in the MIT chart only to ba able to reuse the Zoom state from the pro.
@@ -111,7 +101,7 @@ const selectorChartZoomAxisFilters = createSelector(
       return undefined;
     }
 
-    const xFilters = xAxis.reduce<ZoomAxisFilters>((acc, axis, index) => {
+    const xFilters = xAxis?.reduce<ZoomAxisFilters>((acc, axis, index) => {
       const filter = xMapper(axis, index);
       if (filter !== null) {
         acc[axis.id] = filter;
@@ -119,7 +109,7 @@ const selectorChartZoomAxisFilters = createSelector(
       return acc;
     }, {});
 
-    const yFilters = yAxis.reduce<ZoomAxisFilters>((acc, axis, index) => {
+    const yFilters = yAxis?.reduce<ZoomAxisFilters>((acc, axis, index) => {
       const filter = yMapper(axis, index);
       if (filter !== null) {
         acc[axis.id] = filter;
@@ -127,7 +117,7 @@ const selectorChartZoomAxisFilters = createSelector(
       return acc;
     }, {} as ZoomAxisFilters);
 
-    if (Object.keys(xFilters).length === 0 && Object.keys(yFilters).length === 0) {
+    if (Object.keys(xFilters ?? {}).length === 0 && Object.keys(yFilters ?? {}).length === 0) {
       return undefined;
     }
 

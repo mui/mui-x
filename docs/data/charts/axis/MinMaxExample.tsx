@@ -50,7 +50,6 @@ export default function MinMaxExample() {
         ]}
         series={[{ data }]}
         height={300}
-        margin={{ top: 10 }}
       />
       <Slider
         value={value}

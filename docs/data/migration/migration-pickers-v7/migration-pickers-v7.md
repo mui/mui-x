@@ -477,7 +477,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
    }
   ```
 
-- The component passed to the `field` slot no longer receives the `value`, `onChange`, `timezone`, `format`, `disabled`, `className`, `sx`, `label` and `name` props.
+- The component passed to the `field` slot no longer receives the `value`, `onChange`, `timezone`, `format`, `disabled`, `className`, `sx`, `label`, `name`, `autoFocus`, `focused` and `readOnly` props.
   You can use the `usePickerContext` hook instead:
 
   ```diff
@@ -512,6 +512,17 @@ If the updated values do not fit your use case, you can [override them](/x/react
 
   -const { name } = props;
   +const { name } = usePickerContext();
+
+  -const { autoFocus } = props;
+  +const { autoFocus: pickerAutoFocus, open } = usePickerContext();
+  +const autoFocus = pickerAutoFocus && !open,
+
+  -const { focused } = props;
+  +const { open } = usePickerContext();
+  +const focused = open ? true : undefined;
+
+  -const { readOnly } = props;
+  +const { readOnly } = usePickerContext();
   ```
 
   :::success
