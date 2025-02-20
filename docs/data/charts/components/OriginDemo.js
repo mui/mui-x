@@ -67,8 +67,8 @@ export default function OriginDemo() {
           data: poly,
         },
       ]}
-      xAxis={[{ data: x, scaleType: 'linear', min: -1, max: 3 }]}
-      yAxis={[{ min: -2, max: 5 }]}
+      xAxis={[{ data: x, scaleType: 'linear', min: -1, max: 3, position: 'none' }]}
+      yAxis={[{ min: -2, max: 5, position: 'none' }]}
     >
       <CartesianAxis />
       <LinePlot />

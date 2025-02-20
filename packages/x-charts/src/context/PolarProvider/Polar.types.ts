@@ -7,6 +7,7 @@ import {
   ChartsRotationAxisProps,
   ChartsRadiusAxisProps,
 } from '../../models/axis';
+import { ChartsAxisProps } from '../../ChartsAxis';
 
 export type PolarProviderProps = {
   /**
@@ -28,7 +29,7 @@ export type PolarProviderProps = {
   children: React.ReactNode;
 };
 
-export type DefaultizedAxisConfig<Axis> = {
+export type DefaultizedAxisConfig<Axis extends ChartsAxisProps> = {
   [axisId: AxisId]: AxisDefaultized<ScaleName, any, Axis>;
 };
 

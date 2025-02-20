@@ -28,7 +28,6 @@ export default function PieShapeNoSnap() {
           ]}
           width={300}
           height={300}
-          margin={{ right: 5 }}
           hideLegend
         />
       )}

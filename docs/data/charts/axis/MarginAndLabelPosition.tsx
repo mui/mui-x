@@ -41,16 +41,15 @@ export default function MarginAndLabelPosition() {
                 ? value.split('').join('\n')
                 : usAirportPassengers.find((item) => item.code === value)!.fullName,
             label: 'airports',
+            height: fixMargin ? 60 : undefined,
             labelStyle: fixLabel
               ? {
                   // Move the x-axis label with style
-                  transform: 'translateY(40px)',
+                  transform: 'translateY(35px)',
                 }
               : {},
           },
         ]}
-        // Modify the margin
-        margin={fixMargin ? { top: 5, right: 5, bottom: 80, left: 100 } : undefined}
         sx={
           fixLabel
             ? {
@@ -76,6 +75,7 @@ export default function MarginAndLabelPosition() {
           {
             valueFormatter: (value) => `${(value / 1000).toLocaleString()}k`,
             label: 'passengers',
+            width: fixMargin ? 60 : undefined,
           },
         ]}
       />

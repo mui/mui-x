@@ -1,26 +1,10 @@
 {
   "props": {
-    "bottomAxis": {
-      "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
-      "default": "xAxisIds[0] The id of the first provided axis"
-    },
-    "leftAxis": {
-      "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
-      "default": "yAxisIds[0] The id of the first provided axis"
-    },
-    "rightAxis": {
-      "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
-      "default": "null"
-    },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
-    },
-    "topAxis": {
-      "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
-      "default": "null"
     }
   },
   "name": "ChartsAxis",

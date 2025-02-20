@@ -46,7 +46,7 @@ export default function SwitchSeriesType() {
         >
           <BarPlot />
           <LinePlot />
-          <ChartsXAxis label="X axis" position="bottom" axisId="x-axis-id" />
+          <ChartsXAxis label="X axis" axisId="x-axis-id" />
         </ChartContainer>
       </div>
     </Box>

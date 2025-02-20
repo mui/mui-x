@@ -110,12 +110,6 @@ ScatterChartPro.propTypes = {
     x: PropTypes.oneOf(['band', 'line', 'none']),
     y: PropTypes.oneOf(['band', 'line', 'none']),
   }),
-  /**
-   * Indicate which axis to display the bottom of the charts.
-   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.
-   * @default xAxisIds[0] The id of the first provided axis
-   */
-  bottomAxis: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   children: PropTypes.node,
   className: PropTypes.string,
   /**
@@ -179,12 +173,6 @@ ScatterChartPro.propTypes = {
     }),
   ),
   /**
-   * Indicate which axis to display the left of the charts.
-   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
-   * @default yAxisIds[0] The id of the first provided axis
-   */
-  leftAxis: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  /**
    * If `true`, a loading overlay is displayed.
    * @default false
    */
@@ -194,12 +182,15 @@ ScatterChartPro.propTypes = {
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
    */
-  margin: PropTypes.shape({
-    bottom: PropTypes.number,
-    left: PropTypes.number,
-    right: PropTypes.number,
-    top: PropTypes.number,
-  }),
+  margin: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.shape({
+      bottom: PropTypes.number,
+      left: PropTypes.number,
+      right: PropTypes.number,
+      top: PropTypes.number,
+    }),
+  ]),
   /**
    * The function called for onClick events.
    * The second argument contains information about all line/bar elements at the current mouse position.
@@ -225,12 +216,6 @@ ScatterChartPro.propTypes = {
    * @param {ZoomData[]} zoomData Updated zoom data.
    */
   onZoomChange: PropTypes.func,
-  /**
-   * Indicate which axis to display the right of the charts.
-   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
-   * @default null
-   */
-  rightAxis: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   /**
    * The series to display in the scatter chart.
    * An array of [[ScatterSeriesType]] objects.
@@ -259,12 +244,6 @@ ScatterChartPro.propTypes = {
   theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
   /**
-   * Indicate which axis to display the top of the charts.
-   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.
-   * @default null
-   */
-  topAxis: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  /**
    * Defines the maximal distance between a scatter point and the pointer that triggers the interaction.
    * If `undefined`, the radius is assumed to be infinite.
    */
@@ -280,6 +259,7 @@ ScatterChartPro.propTypes = {
    */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
+      axis: PropTypes.oneOf(['x']),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
@@ -314,13 +294,15 @@ ScatterChartPro.propTypes = {
       disableTicks: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
       fill: PropTypes.string,
+      height: PropTypes.number,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      position: PropTypes.oneOf(['bottom', 'top']),
+      offset: PropTypes.number,
+      position: PropTypes.oneOf(['bottom', 'none', 'top']),
       reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
@@ -366,6 +348,7 @@ ScatterChartPro.propTypes = {
    */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({
+      axis: PropTypes.oneOf(['y']),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
@@ -406,7 +389,8 @@ ScatterChartPro.propTypes = {
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      position: PropTypes.oneOf(['left', 'right']),
+      offset: PropTypes.number,
+      position: PropTypes.oneOf(['left', 'none', 'right']),
       reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
@@ -431,6 +415,7 @@ ScatterChartPro.propTypes = {
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
       valueFormatter: PropTypes.func,
+      width: PropTypes.number,
       zoom: PropTypes.oneOfType([
         PropTypes.shape({
           filterMode: PropTypes.oneOf(['discard', 'keep']),

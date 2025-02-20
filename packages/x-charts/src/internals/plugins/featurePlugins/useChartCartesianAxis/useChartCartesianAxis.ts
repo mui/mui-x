@@ -8,7 +8,7 @@ import { useSelector } from '../../../store/useSelector';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import { defaultizeAxis } from './defaultizeAxis';
-import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxis.selectors';
+import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
 import { getAxisValue } from './getAxisValue';
 import { getSVGPoint } from '../../../getSVGPoint';
 import {
@@ -164,30 +164,30 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       event.preventDefault();
 
       let dataIndex: number | null = null;
-      let isXaxis: boolean = false;
+      let isXAxis: boolean = false;
       if (interactionAxis.x === null && interactionAxis.y === null) {
         const svgPoint = getSVGPoint(element, event);
 
         const xIndex = getAxisValue(xAxisWithScale[usedXAxis], svgPoint.x)?.index ?? null;
-        isXaxis = xIndex !== null && xIndex !== -1;
+        isXAxis = xIndex !== null && xIndex !== -1;
 
-        dataIndex = isXaxis
+        dataIndex = isXAxis
           ? xIndex
           : (getAxisValue(yAxisWithScale[usedYAxis], svgPoint.y)?.index ?? null);
       } else {
-        isXaxis = interactionAxis.x !== null && interactionAxis.x.index !== -1;
-        dataIndex = isXaxis
+        isXAxis = interactionAxis.x !== null && interactionAxis.x.index !== -1;
+        dataIndex = isXAxis
           ? interactionAxis.x && interactionAxis.x.index
           : interactionAxis.y && interactionAxis.y.index;
       }
 
-      const USED_AXIS_ID = isXaxis ? xAxisIds[0] : yAxisIds[0];
+      const USED_AXIS_ID = isXAxis ? xAxisIds[0] : yAxisIds[0];
       if (dataIndex == null || dataIndex === -1) {
         return;
       }
 
       // The .data exist because otherwise the dataIndex would be null or -1.
-      const axisValue = (isXaxis ? xAxisWithScale : yAxisWithScale)[USED_AXIS_ID].data![dataIndex];
+      const axisValue = (isXAxis ? xAxisWithScale : yAxisWithScale)[USED_AXIS_ID].data![dataIndex];
 
       const seriesValues: Record<string, number | null | undefined> = {};
 
@@ -200,7 +200,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
             const providedXAxisId = seriesItem.xAxisId;
             const providedYAxisId = seriesItem.yAxisId;
 
-            const axisKey = isXaxis ? providedXAxisId : providedYAxisId;
+            const axisKey = isXAxis ? providedXAxisId : providedYAxisId;
             if (axisKey === undefined || axisKey === USED_AXIS_ID) {
               seriesValues[seriesId] = seriesItem.data[dataIndex];
             }
