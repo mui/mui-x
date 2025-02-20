@@ -372,6 +372,7 @@ Heatmap.propTypes = {
         PropTypes.func,
       ]),
       tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+      tickLabelMinGap: PropTypes.number,
       tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
       tickLabelStyle: PropTypes.object,
       tickMaxStep: PropTypes.number,
