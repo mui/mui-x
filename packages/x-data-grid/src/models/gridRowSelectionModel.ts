@@ -7,7 +7,7 @@ export type GridRowSelectionPropagation = {
 
 export type GridRowSelectionModel = { type: 'include' | 'exclude'; ids: Set<GridRowId> };
 
-interface RowSelectionManager {
+export interface RowSelectionManager {
   data: Set<GridRowId>;
   has(id: GridRowId): boolean;
   select(id: GridRowId): void;
