@@ -42,10 +42,8 @@ import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../internals/constants';
 import { gridClasses } from '../../../constants/gridClasses';
 import { isEventTargetInPortal } from '../../../utils/domUtils';
 import { isMultipleRowSelectionEnabled, findRowsToSelect, findRowsToDeselect } from './utils';
-import {
-  createRowSelectionManager,
-  type GridRowSelectionModel,
-} from '../../../models/gridRowSelectionModel';
+import { type GridRowSelectionModel } from '../../../models/gridRowSelectionModel';
+import { createRowSelectionManager } from '../../../models/gridRowSelectionManager';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination';
 
 const emptyModel = { type: 'include', ids: new Set<GridRowId>() } as const;

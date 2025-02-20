@@ -15,10 +15,8 @@ import type { GridHeaderSelectionCheckboxParams } from '../../models/params/grid
 import { gridExpandedSortedRowIdsSelector } from '../../hooks/features/filter/gridFilterSelector';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../../hooks/features/pagination/gridPaginationSelector';
 import type { GridRowId } from '../../models/gridRows';
-import {
-  createRowSelectionManager,
-  type GridRowSelectionModel,
-} from '../../models/gridRowSelectionModel';
+import { type GridRowSelectionModel } from '../../models/gridRowSelectionModel';
+import { createRowSelectionManager } from '../../models/gridRowSelectionManager';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 

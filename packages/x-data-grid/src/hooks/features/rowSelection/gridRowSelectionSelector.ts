@@ -7,7 +7,7 @@ import { gridDataRowIdsSelector, gridRowsLookupSelector } from '../rows/gridRows
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { gridFilteredRowCountSelector } from '../filter/gridFilterSelector';
-import { createRowSelectionManager } from '../../../models/gridRowSelectionModel';
+import { createRowSelectionManager } from '../../../models/gridRowSelectionManager';
 
 export const gridRowSelectionStateSelector = createRootSelector(
   (state: GridStateCommunity) => state.rowSelection,
