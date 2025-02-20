@@ -35,7 +35,10 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
 
     [k.colors.border.base]: borderColor,
     [k.colors.background.base]: backgroundBase,
-    [k.colors.background.overlay]: t.palette.background.paper,
+    [k.colors.background.overlay]:
+      t.palette.mode === 'dark'
+        ? `color-mix(in srgb, ${t.palette.background.paper} 95%, #fff)`
+        : t.palette.background.paper,
     [k.colors.background.backdrop]: backgroundBackdrop,
     [k.colors.foreground.base]: t.palette.text.primary,
     [k.colors.foreground.muted]: t.palette.text.secondary,
@@ -81,6 +84,7 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     [k.transitions.duration.long]: `${t.transitions.duration.standard}ms`,
 
     [k.shadows.base]: t.shadows[2],
+    [k.shadows.overlay]: t.shadows[8],
 
     [k.zIndex.panel]: t.zIndex.modal,
     [k.zIndex.menu]: t.zIndex.modal,

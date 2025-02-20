@@ -44,7 +44,7 @@ export default function MarginAndLabelPosition() {
             labelStyle: fixLabel
               ? {
                   // Move the x-axis label with style
-                  transform: 'translateY(30px)',
+                  transform: 'translateY(40px)',
                 }
               : {},
           },

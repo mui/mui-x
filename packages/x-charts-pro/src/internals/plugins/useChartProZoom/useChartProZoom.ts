@@ -103,7 +103,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     (zoomData: ZoomData[] | ((prev: ZoomData[]) => ZoomData[])) => {
       store.update((prevState) => {
         const newZoomData =
-          typeof zoomData === 'function' ? zoomData(prevState.zoom.zoomData) : zoomData;
+          typeof zoomData === 'function' ? zoomData([...prevState.zoom.zoomData]) : zoomData;
         onZoomChange?.(newZoomData);
 
         if (prevState.zoom.isControlled) {
@@ -136,7 +136,11 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   );
 
   const isDraggingRef = React.useRef(false);
-  const touchStartRef = React.useRef<{ x: number; y: number; zoomData: ZoomData[] } | null>(null);
+  const touchStartRef = React.useRef<{
+    x: number;
+    y: number;
+    zoomData: readonly ZoomData[];
+  } | null>(null);
   React.useEffect(() => {
     const element = svgRef.current;
     if (element === null || !isPanEnabled) {

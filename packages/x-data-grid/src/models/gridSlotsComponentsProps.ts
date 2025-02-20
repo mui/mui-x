@@ -4,11 +4,8 @@ import type { ButtonProps as MUIButtonProps } from '@mui/material/Button';
 import type { CircularProgressProps as MUICircularProgressProps } from '@mui/material/CircularProgress';
 import type { LinearProgressProps as MUILinearProgressProps } from '@mui/material/LinearProgress';
 import type { MenuItemProps as MUIMenuItemProps } from '@mui/material/MenuItem';
-import type { FormControlProps } from '@mui/material/FormControl';
 import type { IconButtonProps as MUIIconButtonProps } from '@mui/material/IconButton';
-import type { InputAdornmentProps } from '@mui/material/InputAdornment';
 import type { TooltipProps as MUITooltipProps } from '@mui/material/Tooltip';
-import type { InputLabelProps } from '@mui/material/InputLabel';
 import type { TablePaginationProps } from '@mui/material/TablePagination';
 import type { GridToolbarProps } from '../components/toolbar/GridToolbar';
 import type { ColumnHeaderFilterIconButtonProps } from '../components/columnHeaders/GridColumnHeaderFilterIconButton';
@@ -63,12 +60,10 @@ export interface BaseLinearProgressPropsOverrides {}
 export interface BaseMenuListPropsOverrides {}
 export interface BaseMenuItemPropsOverrides {}
 export interface BaseTextFieldPropsOverrides {}
-export interface BaseFormControlPropsOverrides {}
 export interface BaseSelectPropsOverrides {}
 export interface BaseSwitchPropsOverrides {}
 export interface BaseButtonPropsOverrides {}
 export interface BaseIconButtonPropsOverrides {}
-export interface BaseInputAdornmentPropsOverrides {}
 export interface BaseTooltipPropsOverrides {}
 export interface BasePopperPropsOverrides {}
 export interface BaseInputPropsOverrides {}
@@ -109,15 +104,12 @@ interface BaseSlotProps {
   baseMenuList: MenuListProps & BaseMenuListPropsOverrides;
   baseMenuItem: MenuItemProps & BaseMenuItemPropsOverrides;
   baseTextField: TextFieldProps & BaseTextFieldPropsOverrides;
-  baseFormControl: FormControlProps & BaseFormControlPropsOverrides;
   baseSwitch: SwitchProps & BaseSwitchPropsOverrides;
   baseButton: ButtonProps & BaseButtonPropsOverrides;
   baseIconButton: IconButtonProps & BaseIconButtonPropsOverrides;
   basePopper: PopperProps & BasePopperPropsOverrides;
   baseTooltip: TooltipProps & BaseTooltipPropsOverrides;
   baseInput: InputProps & BaseInputPropsOverrides;
-  baseInputLabel: InputLabelProps & BaseInputLabelPropsOverrides;
-  baseInputAdornment: InputAdornmentProps & BaseInputAdornmentPropsOverrides;
   baseSelect: SelectProps & BaseSelectPropsOverrides;
   baseSelectOption: SelectOptionProps & BaseSelectOptionPropsOverrides;
   baseSkeleton: SkeletonProps & BaseSkeletonPropsOverrides;

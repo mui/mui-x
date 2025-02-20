@@ -157,6 +157,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     externalSlotProps: slotProps?.axisTickLabel,
     additionalProps: {
       style: {
+        ...theme.typography.caption,
         fontSize: 12,
         textAnchor: 'middle',
         dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',

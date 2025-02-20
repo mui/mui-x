@@ -175,9 +175,10 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     // All the floating point dimensions should be rounded to .1 decimal places to avoid subpixel rendering issues
     // https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
     // https://github.com/mui/mui-x/issues/15721
-    const rootElement = apiRef.current.rootElementRef.current;
-
-    const scrollbarSize = measureScrollbarSize(rootElement, props.scrollbarSize);
+    const scrollbarSize = measureScrollbarSize(
+      apiRef.current.mainElementRef.current,
+      props.scrollbarSize,
+    );
 
     const rowsMeta = gridRowsMetaSelector(apiRef);
     const topContainerHeight = headersTotalHeight + rowsMeta.pinnedTopRowsTotalHeight;
@@ -423,32 +424,32 @@ function getStaticDimensions(
 }
 
 const scrollbarSizeCache = new WeakMap<Element, number>();
-function measureScrollbarSize(rootElement: Element | null, scrollbarSize: number | undefined) {
+function measureScrollbarSize(element: Element | null, scrollbarSize: number | undefined) {
   if (scrollbarSize !== undefined) {
     return scrollbarSize;
   }
 
-  if (rootElement === null) {
+  if (element === null) {
     return 0;
   }
 
-  const cachedSize = scrollbarSizeCache.get(rootElement);
+  const cachedSize = scrollbarSizeCache.get(element);
   if (cachedSize !== undefined) {
     return cachedSize;
   }
 
-  const doc = ownerDocument(rootElement);
+  const doc = ownerDocument(element);
   const scrollDiv = doc.createElement('div');
   scrollDiv.style.width = '99px';
   scrollDiv.style.height = '99px';
   scrollDiv.style.position = 'absolute';
   scrollDiv.style.overflow = 'scroll';
   scrollDiv.className = 'scrollDiv';
-  rootElement.appendChild(scrollDiv);
+  element.appendChild(scrollDiv);
   const size = scrollDiv.offsetWidth - scrollDiv.clientWidth;
-  rootElement.removeChild(scrollDiv);
+  element.removeChild(scrollDiv);
 
-  scrollbarSizeCache.set(rootElement, size);
+  scrollbarSizeCache.set(element, size);
 
   return size;
 }

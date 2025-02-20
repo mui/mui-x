@@ -56,18 +56,18 @@ export interface HeatmapProps
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  xAxis: MakeOptional<AxisConfig<'band', any, ChartsXAxisProps>, 'id' | 'scaleType'>[];
+  xAxis: Readonly<MakeOptional<AxisConfig<'band', any, ChartsXAxisProps>, 'id' | 'scaleType'>[]>;
   /**
    * The configuration of the y-axes.
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  yAxis: MakeOptional<AxisConfig<'band', any, ChartsYAxisProps>, 'id' | 'scaleType'>[];
+  yAxis: Readonly<MakeOptional<AxisConfig<'band', any, ChartsYAxisProps>, 'id' | 'scaleType'>[]>;
   /**
    * The series to display in the bar chart.
    * An array of [[HeatmapSeriesType]] objects.
    */
-  series: MakeOptional<HeatmapSeriesType, 'type'>[];
+  series: Readonly<MakeOptional<HeatmapSeriesType, 'type'>[]>;
   /**
    * The configuration of the tooltip.
    * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.

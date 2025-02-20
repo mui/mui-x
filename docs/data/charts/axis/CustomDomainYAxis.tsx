@@ -1,14 +1,14 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
+import { BarChart } from '@mui/x-charts/BarChart';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 
-const settings: BarChartProps = {
+const settings = {
   height: 200,
   series: [{ data: [60, -15, 66, 68, 87, 82, 83, 85, 92, 75, 76, 50, 91] }],
   margin: { top: 10, bottom: 20 },
-};
+} as const;
 
 // Extend a value to match a multiple of the step.
 function extend(value: number, step: number) {
