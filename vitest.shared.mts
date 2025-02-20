@@ -59,11 +59,9 @@ export default defineConfig({
       headless: true,
       screenshotFailures: false,
     },
-    ...(process.env.CIRCLECI && {
+    ...(process.env.CI && {
       minWorkers: 1,
       maxWorkers: 2,
-    }),
-    ...(process.env.CI && {
       testTimeout: 15000,
       poolOptions: {
         forks: {
