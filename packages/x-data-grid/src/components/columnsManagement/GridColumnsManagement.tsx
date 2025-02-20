@@ -236,33 +236,27 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
           type="search"
           slotProps={{
             input: {
-              startAdornment: (
-                <rootProps.slots.baseInputAdornment position="start">
-                  <rootProps.slots.quickFilterIcon fontSize="small" />
-                </rootProps.slots.baseInputAdornment>
-              ),
+              startAdornment: <rootProps.slots.quickFilterIcon fontSize="small" />,
               endAdornment: (
-                <rootProps.slots.baseInputAdornment position="end">
-                  <rootProps.slots.baseIconButton
-                    size="small"
-                    aria-label={apiRef.current.getLocaleText('columnsManagementDeleteIconLabel')}
-                    style={
-                      searchValue
-                        ? {
-                            visibility: 'visible',
-                          }
-                        : {
-                            visibility: 'hidden',
-                          }
-                    }
-                    tabIndex={-1}
-                    onClick={handleSearchReset}
-                    edge="end"
-                    {...rootProps.slotProps?.baseIconButton}
-                  >
-                    <rootProps.slots.quickFilterClearIcon fontSize="small" />
-                  </rootProps.slots.baseIconButton>
-                </rootProps.slots.baseInputAdornment>
+                <rootProps.slots.baseIconButton
+                  size="small"
+                  aria-label={apiRef.current.getLocaleText('columnsManagementDeleteIconLabel')}
+                  style={
+                    searchValue
+                      ? {
+                          visibility: 'visible',
+                        }
+                      : {
+                          visibility: 'hidden',
+                        }
+                  }
+                  tabIndex={-1}
+                  onClick={handleSearchReset}
+                  edge="end"
+                  {...rootProps.slotProps?.baseIconButton}
+                >
+                  <rootProps.slots.quickFilterClearIcon fontSize="small" />
+                </rootProps.slots.baseIconButton>
               ),
             },
             htmlInput: {

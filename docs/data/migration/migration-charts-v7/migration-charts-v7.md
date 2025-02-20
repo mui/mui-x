@@ -284,3 +284,46 @@ npx @mui/x-codemod@latest v8.0.0/charts/rename-sparkline-colors-to-color <path>
 ```
 
 For more complex cases, you may need to adjust the code manually. To aid you in finding these cases, the codemod adds a comment prefixed by `mui-x-codemod`, which you can search for in your codebase.
+
+## Replace `topAxis`, `rightAxis`, `bottomAxis`, and `leftAxis` props by `position` in the axis config
+
+The following props have been removed `topAxis`, `rightAxis`, `bottomAxis`, and `leftAxis`.
+
+To modify the axis placement, use the new `position` property in the axis config.
+It accepts `'top' | 'right' | 'bottom' | 'left' | 'none'`.
+
+If you were previously disabling an axis by setting it to `null`, you should now set its `position` to `'none'`.
+
+> Notice this new API allows you to [stack multiple axes on the same side of the chart](https://next.mui.com/x/react-charts/axis/#multiple-axes-on-the-same-side)
+
+```diff
+ <LineChart
+   yAxis={[
+     {
+       scaleType: 'linear',
++      position: 'right',
+     },
+   ]}
+   series={[{ data: [1, 10, 30, 50, 70, 90, 100], label: 'linear' }]}
+   height={400}
+-  rightAxis={{}}
+ />
+```
+
+## Remove `position` prop from `ChartsXAxis` and `ChartsYAxis`
+
+The `position` prop has been removed from the `ChartsXAxis` and `ChartsYAxis` components. Configure it directly in the axis config.
+
+```diff
+ <ChartContainer
+   yAxis={[
+     {
+       id: 'my-axis',
++      position: 'right',
+     },
+   ]}
+ >
+-  <ChartsYAxis axisId="my-axis" position="right" />
++  <ChartsYAxis axisId="my-axis" />
+ </ChartContainer>
+```

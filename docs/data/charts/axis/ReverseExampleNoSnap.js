@@ -79,7 +79,7 @@ export default function ReverseExampleNoSnap() {
           ]}
           yAxis={[
             { id: 'leftAxis', reverse: reverseLeft },
-            { id: 'rightAxis', reverse: reverseRight },
+            { id: 'rightAxis', reverse: reverseRight, position: 'right' },
           ]}
           dataset={dataset}
           height={400}
@@ -91,11 +91,7 @@ export default function ReverseExampleNoSnap() {
 
           <ChartsXAxis />
           <ChartsYAxis axisId="leftAxis" label="temerature (°C)" />
-          <ChartsYAxis
-            axisId="rightAxis"
-            position="right"
-            label="precipitation (mm)"
-          />
+          <ChartsYAxis axisId="rightAxis" label="precipitation (mm)" />
           <ChartsTooltip />
         </ChartContainer>
       </Box>

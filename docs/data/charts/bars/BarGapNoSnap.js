@@ -36,7 +36,6 @@ export default function BarGapNoSnap() {
           dataset={balanceSheet}
           series={series}
           height={300}
-          margin={{ top: 15 }}
           xAxis={[
             {
               scaleType: 'band',
