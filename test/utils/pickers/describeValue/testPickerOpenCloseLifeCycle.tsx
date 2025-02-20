@@ -207,7 +207,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
         // increase the timeout of this test as it tends to sometimes fail on CI with `DesktopDateTimeRangePicker` or `MobileDateTimeRangePicker`
         timeout: 10000,
       },
-      // @ts-expect-error
+      // @ts-expect-error mocha types are incorrect
       async () => {
         const onChange = spy();
         const onAccept = spy();

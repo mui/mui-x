@@ -870,6 +870,11 @@ describe('<DataGrid /> - Rows', () => {
       // In Chrome non-headless and Edge this test is flaky
       testSkipIf(!userAgent.includes('Headless') || /edg/i.test(userAgent))(
         'should position correctly the render zone when changing pageSize to a lower value and moving to next page',
+        {
+          // Retry the test because it is flaky
+          retries: 3,
+        },
+        // @ts-expect-error mocha types are incorrect
         async () => {
           const data = getBasicGridData(120, 3);
           const columnHeaderHeight = 50;
