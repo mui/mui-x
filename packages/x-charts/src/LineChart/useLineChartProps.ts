@@ -1,6 +1,6 @@
 'use client';
 import useId from '@mui/utils/useId';
-import { ChartsTooltipSlotExtension } from '@mui/x-charts';
+import { ChartsTooltipSlotExtension } from '../ChartsTooltip';
 import { ChartsAxisProps } from '../ChartsAxis';
 import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPathProps } from '../ChartsClipPath';
