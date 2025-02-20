@@ -20,7 +20,6 @@
     "@mui/x-license": "workspace:*",
     "@playwright/test": "^1.50.1",
     "@react-spring/web": "^9.7.5",
-    "@testing-library/user-event": "^14.6.1",
     "@types/chai": "^4.3.20",
     "@types/karma": "^6.3.9",
     "@types/moment-jalaali": "^0.7.9",
