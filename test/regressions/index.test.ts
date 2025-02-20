@@ -2,7 +2,7 @@ import * as fse from 'fs-extra';
 import { expect } from 'chai';
 import * as path from 'path';
 import * as childProcess from 'child_process';
-import { chromium, Page } from '@playwright/test';
+import { chromium } from '@playwright/test';
 import materialPackageJson from '@mui/material/package.json';
 
 function sleep(timeoutMS: number | undefined) {
@@ -22,18 +22,6 @@ const timeSensitiveSuites = [
   'ServerSideRowGroupingGroupExpansion',
 ];
 
-async function navigateToTest(page: Page, testName: string) {
-  try {
-    await page.getByText(new RegExp(`^${testName}$`)).dispatchEvent('click');
-  } catch (error) {
-    // When one demo crashes, the page becomes empty and there are no links to demos,
-    // so navigation to the next demo throws an error.
-    // Reloading the page fixes this.
-    await page.reload({ waitUntil: 'networkidle' });
-    await page.getByText(new RegExp(`^${testName}$`)).dispatchEvent('click');
-  }
-}
-
 const isConsoleWarningIgnored = (msg?: string) => {
   const isMuiV6Error =
     isMaterialUIv6 &&
@@ -52,7 +40,7 @@ const isConsoleWarningIgnored = (msg?: string) => {
 };
 
 async function main() {
-  const baseURL = 'http://localhost:5001';
+  const baseUrl = 'http://localhost:5001';
   const screenshotDir = path.resolve(__dirname, './screenshots/chrome');
 
   const browser = await chromium.launch({
@@ -65,10 +53,7 @@ async function main() {
   });
   // reuse viewport from `vrtest`
   // https://github.com/nathanmarks/vrtest/blob/1185b852a6c1813cedf5d81f6d6843d9a241c1ce/src/server/runner.js#L44
-  const page = await browser.newPage({
-    baseURL,
-    viewport: { width: 1000, height: 700 },
-  });
+  const page = await browser.newPage({ viewport: { width: 1000, height: 700 } });
 
   // Block images since they slow down tests (need download).
   // They're also most likely decorative for documentation demos
@@ -84,7 +69,7 @@ async function main() {
 
   let errorConsole: string | undefined;
 
-  page.on('console', async (msg) => {
+  page.on('console', (msg) => {
     // Filter out native user-agent errors e.g. "Failed to load resource: net::ERR_FAILED"
     if (msg.args().length > 0 && (msg.type() === 'error' || msg.type() === 'warning')) {
       errorConsole = msg.text();
@@ -93,7 +78,7 @@ async function main() {
 
   // Wait for all requests to finish.
   // This should load shared resources such as fonts.
-  await page.goto(`/#no-dev`, { waitUntil: 'networkidle' });
+  await page.goto(`${baseUrl}#dev`, { waitUntil: 'networkidle' });
 
   // Simulate portrait mode for date pickers.
   // See `usePickerOrientation`.
@@ -110,10 +95,17 @@ async function main() {
       return (link as HTMLAnchorElement).href;
     });
   });
-  routes = routes.map((route) => route.replace(baseURL, ''));
+  routes = routes.map((route) => route.replace(baseUrl, ''));
 
   // prepare screenshots
   await fse.emptyDir(screenshotDir);
+
+  async function navigateToTest(route: string) {
+    // Use client-side routing which is much faster than full page navigation via page.goto().
+    return page.evaluate((_route) => {
+      window.muiFixture.navigate(`${_route}#no-dev`);
+    }, route);
+  }
 
   describe('visual regressions', () => {
     after(async () => {
@@ -130,9 +122,7 @@ async function main() {
     });
 
     routes.forEach((route) => {
-      const pathURL = route.replace(baseURL, '');
-
-      it(`creates screenshots of ${pathURL}`, async function test() {
+      it(`creates screenshots of ${route}`, async function test() {
         // Move cursor offscreen to not trigger unwanted hover effects.
         // This needs to be done before the navigation to avoid hover and mouse enter/leave effects.
         await page.mouse.move(0, 0);
@@ -146,9 +136,17 @@ async function main() {
           this.timeout(6000);
         }
 
-        await navigateToTest(page, pathURL);
+        try {
+          await navigateToTest(route);
+        } catch (error) {
+          // When one demo crashes, the page becomes empty and there are no links to demos,
+          // so navigation to the next demo throws an error.
+          // Reloading the page fixes this.
+          await page.reload();
+          await navigateToTest(route);
+        }
 
-        const screenshotPath = path.resolve(screenshotDir, path.join('.', `${pathURL}.png`));
+        const screenshotPath = path.resolve(screenshotDir, `.${route}.png`);
         await fse.ensureDir(path.dirname(screenshotPath));
 
         const testcase = await page.waitForSelector(
@@ -197,17 +195,14 @@ async function main() {
     });
 
     it('should position the headers matching the columns', async () => {
-      const pathURL = `/docs-data-grid-virtualization/ColumnVirtualizationGrid`;
-      const screenshotPath = path.resolve(
-        screenshotDir,
-        path.join('.', `${pathURL}ScrollLeft400px.png`),
-      );
+      const route = '/docs-data-grid-virtualization/ColumnVirtualizationGrid';
+      const screenshotPath = path.resolve(screenshotDir, `.${route}ScrollLeft400px.png`);
       await fse.ensureDir(path.dirname(screenshotPath));
 
-      await navigateToTest(page, pathURL);
+      await navigateToTest(route);
 
       const testcase = await page.waitForSelector(
-        `[data-testid="testcase"][data-testpath="${baseURL}"]:not([aria-busy="true"])`,
+        `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
       );
 
       await page.evaluate(() => {
@@ -226,15 +221,15 @@ async function main() {
 
     it('should take a screenshot of the print preview', async function test() {
       this.timeout(20000);
-      const pathURL = `/docs-data-grid-export/ExportDefaultToolbar`;
 
-      const screenshotPath = path.resolve(screenshotDir, path.join('.', `${pathURL}Print.png`));
+      const route = '/docs-data-grid-export/ExportDefaultToolbar';
+      const screenshotPath = path.resolve(screenshotDir, `.${route}Print.png`);
       await fse.ensureDir(path.dirname(screenshotPath));
 
-      await navigateToTest(page, pathURL);
+      await navigateToTest(route);
 
       // Click the export button in the toolbar.
-      await page.getByLabel('Export').click({ force: true });
+      await page.getByRole('button', { name: 'Export' }).click();
 
       const printButton = page.getByRole('menuitem', { name: 'Print' });
       // Click the print export option from the export menu in the toolbar.
