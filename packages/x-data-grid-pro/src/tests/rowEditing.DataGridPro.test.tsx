@@ -15,8 +15,9 @@ import {
 import Portal from '@mui/material/Portal';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { createRenderer, fireEvent, act, screen, waitFor } from '@mui/internal-test-utils';
-import { getCell, getRow, sleep, spyApi } from 'test/utils/helperFn';
+import { getCell, getRow, spyApi } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
+import { vi } from 'vitest';
 
 describe('<DataGridPro /> - Row editing', () => {
   const { render } = createRenderer();
@@ -409,14 +410,22 @@ describe('<DataGridPro /> - Row editing', () => {
       });
 
       describe('with debounceMs > 0', () => {
+        beforeEach(() => {
+          vi.useFakeTimers();
+        });
+
+        afterEach(() => {
+          vi.useRealTimers();
+        });
+
         it('should debounce multiple changes if debounceMs > 0', async () => {
           const renderEditCell = spy(defaultRenderEditCell);
 
           render(<TestCase column1Props={{ renderEditCell }} />);
-          act(() => apiRef.current?.startRowEditMode({ id: 0 }));
+          await act(async () => apiRef.current?.startRowEditMode({ id: 0 }));
           expect(renderEditCell.lastCall.args[0].value).to.equal('USDGBP');
           renderEditCell.resetHistory();
-          act(() => {
+          await act(async () => {
             apiRef.current?.setEditCellValue({
               id: 0,
               field: 'currencyPair',
@@ -425,7 +434,7 @@ describe('<DataGridPro /> - Row editing', () => {
             });
           });
           expect(renderEditCell.callCount).to.equal(0);
-          act(() => {
+          await act(async () => {
             apiRef.current?.setEditCellValue({
               id: 0,
               field: 'currencyPair',
@@ -435,12 +444,10 @@ describe('<DataGridPro /> - Row editing', () => {
           });
           expect(renderEditCell.callCount).to.equal(0);
 
-          await sleep(100);
-          expect(renderEditCell.callCount).to.equal(0);
-
-          await sleep(10);
+          await act(async () => {
+            await vi.advanceTimersByTimeAsync(100);
+          });
           expect(renderEditCell.callCount).not.to.equal(0);
-
           expect(renderEditCell.lastCall.args[0].value).to.equal('USD GBP');
         });
       });

@@ -196,12 +196,16 @@ describe('<DataGridPro /> - Rows', () => {
         render(<TestCase throttleRowsMs={100} />);
         expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
 
-        await act(() => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
+        await act(async () => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
 
-        await vi.advanceTimersByTimeAsync(10);
+        await act(async () => {
+          await vi.advanceTimersByTimeAsync(10);
+        });
         expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
 
-        await vi.advanceTimersByTimeAsync(100);
+        await act(async () => {
+          await vi.advanceTimersByTimeAsync(100);
+        });
         // It seems that the trigger is not dependant only on timeout.
         vi.useRealTimers();
         await waitFor(async () => {
@@ -391,11 +395,15 @@ describe('<DataGridPro /> - Rows', () => {
         expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
         await act(() => apiRef.current?.setRows([{ id: 3, brand: 'Asics' }]));
 
-        await vi.advanceTimersByTimeAsync(10);
+        await act(async () => {
+          await vi.advanceTimersByTimeAsync(10);
+        });
         expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
         expect(vi.getTimerCount()).to.equal(1);
 
-        await vi.runAllTimersAsync();
+        await act(async () => {
+          await vi.advanceTimersByTimeAsync(100);
+        });
         expect(vi.getTimerCount()).to.equal(0);
 
         // It seems that the trigger is not dependant only on timeout.
