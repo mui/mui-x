@@ -901,10 +901,16 @@ describe('<DataGrid /> - Rows', () => {
 
           const virtualScroller = grid('virtualScroller')!;
           virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
-          await act(async () => virtualScroller.dispatchEvent(new Event('scroll')));
-          expect(gridOffsetTop()).not.to.equal(0);
+          await act(async () => {
+            virtualScroller.dispatchEvent(new Event('scroll'));
+          });
+          await waitFor(() => {
+            expect(gridOffsetTop()).not.to.equal(0);
+          });
 
-          apiRefPage.current?.setPageSize(10);
+          await act(async () => {
+            apiRefPage.current?.setPageSize(10);
+          });
 
           await user.click(screen.getByRole('button', { name: /next page/i }));
 
