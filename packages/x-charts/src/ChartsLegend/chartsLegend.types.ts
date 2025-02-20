@@ -1,4 +1,3 @@
-import { ChartsLabelMarkProps } from '../ChartsLabel';
 import type { ChartsLegendProps } from './ChartsLegend';
 import { ContinuousColorLegendProps } from './ContinuousColorLegend';
 import { ChartsLegendPosition } from './legend.types';
@@ -13,19 +12,12 @@ export interface ChartsLegendSlots {
     | React.JSXElementConstructor<ChartsLegendProps>
     | React.JSXElementConstructor<ContinuousColorLegendProps>
     | React.JSXElementConstructor<PiecewiseColorLegendProps>;
-
-  /**
-   * Symbol next to the legend.
-   * TODO: Improve
-   */
-  legendLabelMark?: React.JSXElementConstructor<ChartsLabelMarkProps>;
 }
 
 export interface ChartsLegendSlotProps {
   legend?: Partial<ChartsLegendProps | ContinuousColorLegendProps | PiecewiseColorLegendProps> &
     // We allow position only on slots.
     ChartsLegendPosition;
-  legendLabelMark?: ChartsLabelMarkProps;
 }
 
 export interface ChartsLegendSlotExtension {

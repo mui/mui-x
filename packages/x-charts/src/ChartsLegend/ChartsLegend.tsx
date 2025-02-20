@@ -3,6 +3,7 @@ import * as React from 'react';
 import { styled, SxProps, Theme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { ChartsLabelMarkSlotExtension } from '../ChartsLabel/chartsLabelMark.types';
 import { useLegend } from '../hooks/useLegend';
 import type { Direction } from './direction';
 import { SeriesLegendItemContext } from './legendContext.types';
@@ -12,7 +13,7 @@ import { legendClasses, useUtilityClasses, type ChartsLegendClasses } from './ch
 import { consumeSlots } from '../internals/consumeSlots';
 import { ChartsLabel } from '../ChartsLabel/ChartsLabel';
 
-export interface ChartsLegendProps {
+export interface ChartsLegendProps extends ChartsLabelMarkSlotExtension {
   /**
    * Callback fired when a legend item is clicked.
    * @param {React.MouseEvent<HTMLButtonElement, MouseEvent>} event The click event.
