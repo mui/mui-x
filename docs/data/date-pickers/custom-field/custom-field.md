@@ -31,7 +31,7 @@ You can use the `dateSeparator` prop to change the separator rendered between th
 ### Change the format density
 
 You can control the field format spacing using the `formatDensity` prop.
-Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+Setting `formatDensity` to `"spacious"` adds space before and after each `/`, `-` and `.` character.
 
 {{"demo": "FieldFormatDensity.js"}}
 
