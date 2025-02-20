@@ -3,7 +3,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled, SxProps, Theme } from '@mui/material/styles';
 import clsx from 'clsx';
-import { ChartsLabelMarkSlotExtension } from '@mui/x-charts/ChartsLabel/chartsLabelMark.types';
 import { SeriesId } from '../models/seriesType/common';
 import { consumeSlots } from '../internals/consumeSlots';
 import { ChartsLabelMarkClasses, labelMarkClasses, useUtilityClasses } from './labelMarkClasses';

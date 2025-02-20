@@ -1,7 +1,7 @@
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { ChartsLabelMarkSlotExtension } from './chartsLabelMark.types';
+import type { ChartsLabelMarkSlotExtension } from './chartsLabelMark.types';
 import type { ChartsLabelMarkProps } from './ChartsLabelMark';
 
 export interface ChartsLabelMarkClasses {

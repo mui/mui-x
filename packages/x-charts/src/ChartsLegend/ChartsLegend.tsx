@@ -75,6 +75,10 @@ const RootElement = styled('ul', {
     alignItems: 'center',
     gap: theme.spacing(1),
   },
+  [`& .${legendClasses.mark}`]: {
+    width: 12,
+    height: 12,
+  },
 }));
 
 const ChartsLegend = consumeSlots(

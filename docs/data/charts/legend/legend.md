@@ -75,6 +75,8 @@ For more advanced use cases, you can also provide a component to the `legendLabe
 
 {{"demo": "LegendCustomLabelMark.js" }}
 
+When a `legendLabelMark` slot is provided, the `labelMarkType` property is ignored.
+
 ### Scrollable legend
 
 The legend can be made scrollable by setting the `overflowY` for vertical legends or `overflowX` for horizontal legends.
