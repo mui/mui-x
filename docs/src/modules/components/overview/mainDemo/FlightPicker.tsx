@@ -5,6 +5,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import FlightLandIcon from '@mui/icons-material/FlightLand';
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 
 export default function FlightPicker() {
   return (
@@ -14,6 +15,7 @@ export default function FlightPicker() {
         Book your flight
       </Typography>
       <DateRangePicker
+        slots={{ field: MultiInputDateRangeField }}
         slotProps={{
           textField: ({ position }) => ({
             label: position === 'start' ? 'Outbound' : 'Inbound',

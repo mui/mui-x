@@ -105,6 +105,8 @@ function JoyMultiInputDateRangeField(props) {
   );
 }
 
+JoyMultiInputDateRangeField.fieldType = 'multi-input';
+
 function JoyDateRangePicker(props) {
   return (
     <DateRangePicker
