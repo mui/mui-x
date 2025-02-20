@@ -33,9 +33,10 @@ export const useStaticPicker = <
   const { providerProps, renderCurrentView } = usePicker<PickerValue, TView, TExternalProps>({
     ...pickerParams,
     props,
-    autoFocusView: autoFocus ?? false,
-    localeText,
     variant: displayStaticWrapperAs,
+    autoFocusView: autoFocus ?? false,
+    viewContainerRole: null,
+    localeText,
   });
 
   const Layout = slots?.layout ?? PickerStaticLayout;

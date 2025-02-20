@@ -114,7 +114,7 @@ export const buildFieldInteractions = <P extends {}>({
         const hasMultipleInputs =
           // @ts-ignore
           Component.render.name.includes('Range') &&
-          allProps.slots?.field?.fieldType !== 'single-input';
+          allProps.slots?.field?.fieldType === 'multi-input';
         if (hasMultipleInputs) {
           allProps.slotProps.field.unstableStartFieldRef = fieldRef;
         } else {

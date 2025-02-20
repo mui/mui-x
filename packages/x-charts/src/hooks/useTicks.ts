@@ -110,7 +110,7 @@ export function useTicks(
         return [
           ...filteredDomain.map((value) => ({
             value,
-            formattedValue: valueFormatter?.(value, { location: 'tick' }) ?? `${value}`,
+            formattedValue: valueFormatter?.(value, { location: 'tick', scale }) ?? `${value}`,
             offset:
               scale(value)! -
               (scale.step() - scale.bandwidth()) / 2 +
@@ -141,7 +141,7 @@ export function useTicks(
 
       return filteredDomain.map((value) => ({
         value,
-        formattedValue: valueFormatter?.(value, { location: 'tick' }) ?? `${value}`,
+        formattedValue: valueFormatter?.(value, { location: 'tick', scale }) ?? `${value}`,
         offset: scale(value)!,
         labelOffset: 0,
       }));
@@ -158,7 +158,7 @@ export function useTicks(
     return ticks.map((value: any) => ({
       value,
       formattedValue:
-        valueFormatter?.(value, { location: 'tick' }) ?? scale.tickFormat(tickNumber)(value),
+        valueFormatter?.(value, { location: 'tick', scale }) ?? scale.tickFormat(tickNumber)(value),
       offset: scale(value),
       labelOffset: 0,
     }));

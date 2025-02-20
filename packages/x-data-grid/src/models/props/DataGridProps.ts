@@ -756,6 +756,8 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   columns: readonly GridColDef<R>[];
   /**
    * Return the id of a given [[GridRowModel]].
+   * Ensure the reference of this prop is stable to avoid performance implications.
+   * It could be done by either defining the prop outside of the component or by memoizing it.
    */
   getRowId?: GridRowIdGetter<R>;
   /**

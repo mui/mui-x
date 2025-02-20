@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import type {} from '../typeOverloads';
 import { ChartsSurface, ChartsSurfaceProps } from '@mui/x-charts/ChartsSurface';
 import { ChartAnyPluginSignature, ChartSeriesType } from '@mui/x-charts/internals';
 import { useChartContainerProProps } from './useChartContainerProProps';
@@ -40,7 +39,7 @@ type ChartContainerProComponent = <
  *   xAxis={[{ data: ["A", "B"], scaleType: "band", id: "x-axis" }]}
  * >
  *    <BarPlot />
- *    <ChartsXAxis position="bottom" axisId="x-axis" />
+ *    <ChartsXAxis axisId="x-axis" />
  * </ChartContainerPro>
  * ```
  */

@@ -12,7 +12,10 @@ import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
 import { D3Scale } from '../models/axis';
 import { useItemHighlightedGetter } from '../hooks/useItemHighlightedGetter';
-import { selectorChartsInteractionIsVoronoiEnabled } from '../internals/plugins/featurePlugins/useChartInteraction';
+import {
+  selectorChartsVoronoiIsVoronoiEnabled,
+  UseChartVoronoiSignature,
+} from '../internals/plugins/featurePlugins/useChartVoronoi';
 import { useChartContext } from '../context/ChartProvider';
 
 export interface ScatterProps {
@@ -47,8 +50,8 @@ function Scatter(props: ScatterProps) {
   const { series, xScale, yScale, color, colorGetter, markerSize, onItemClick } = props;
 
   const { instance } = useChartContext();
-  const store = useStore();
-  const isVoronoiEnabled = useSelector(store, selectorChartsInteractionIsVoronoiEnabled);
+  const store = useStore<[UseChartVoronoiSignature]>();
+  const isVoronoiEnabled = useSelector(store, selectorChartsVoronoiIsVoronoiEnabled);
 
   const skipInteractionHandlers = isVoronoiEnabled || series.disableHover;
   const getInteractionItemProps = useInteractionItemProps(skipInteractionHandlers);

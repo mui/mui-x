@@ -16,5 +16,5 @@ export type LayoutConfig = {
    * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
    * @default object Depends on the charts type.
    */
-  margin?: Partial<ChartMargin>;
+  margin?: Partial<ChartMargin> | number;
 };

@@ -16,10 +16,6 @@
     },
     "barLabel": { "type": { "name": "union", "description": "'value'<br>&#124;&nbsp;func" } },
     "borderRadius": { "type": { "name": "number" } },
-    "bottomAxis": {
-      "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
-      "default": "xAxisIds[0] The id of the first provided axis"
-    },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
@@ -48,15 +44,11 @@
       "type": { "name": "enum", "description": "'horizontal'<br>&#124;&nbsp;'vertical'" },
       "default": "'vertical'"
     },
-    "leftAxis": {
-      "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
-      "default": "yAxisIds[0] The id of the first provided axis"
-    },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "margin": {
       "type": {
-        "name": "shape",
-        "description": "{ bottom?: number, left?: number, right?: number, top?: number }"
+        "name": "union",
+        "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
       }
     },
     "onAxisClick": {
@@ -87,10 +79,6 @@
         "describedArgs": ["zoomData"]
       }
     },
-    "rightAxis": {
-      "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
-      "default": "null"
-    },
     "skipAnimation": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
@@ -98,27 +86,29 @@
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
-    "topAxis": {
-      "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
-      "default": "null"
-    },
     "width": { "type": { "name": "number" } },
     "xAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ classes?: object, colorMap?: { colors: Array&lt;string&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt; }<br>&#124;&nbsp;{ color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, disableLine?: bool, disableTicks?: bool, domainLimit?: 'nice'<br>&#124;&nbsp;'strict'<br>&#124;&nbsp;func, fill?: string, hideTooltip?: bool, id?: number<br>&#124;&nbsp;string, label?: string, labelStyle?: object, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, position?: 'bottom'<br>&#124;&nbsp;'top', reverse?: bool, scaleType?: 'band'<br>&#124;&nbsp;'linear'<br>&#124;&nbsp;'log'<br>&#124;&nbsp;'point'<br>&#124;&nbsp;'pow'<br>&#124;&nbsp;'sqrt'<br>&#124;&nbsp;'time'<br>&#124;&nbsp;'utc', slotProps?: object, slots?: object, stroke?: string, sx?: Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelPlacement?: 'middle'<br>&#124;&nbsp;'tick', tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickPlacement?: 'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start', tickSize?: number, valueFormatter?: func, zoom?: { filterMode?: 'discard'<br>&#124;&nbsp;'keep', maxEnd?: number, maxSpan?: number, minSpan?: number, minStart?: number, panning?: bool, step?: number }<br>&#124;&nbsp;bool }&gt;"
+        "description": "Array&lt;{ axis?: 'x', classes?: object, colorMap?: { colors: Array&lt;string&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt; }<br>&#124;&nbsp;{ color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, disableLine?: bool, disableTicks?: bool, domainLimit?: 'nice'<br>&#124;&nbsp;'strict'<br>&#124;&nbsp;func, fill?: string, height?: number, hideTooltip?: bool, id?: number<br>&#124;&nbsp;string, label?: string, labelStyle?: object, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, offset?: number, position?: 'bottom'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'top', reverse?: bool, scaleType?: 'band'<br>&#124;&nbsp;'linear'<br>&#124;&nbsp;'log'<br>&#124;&nbsp;'point'<br>&#124;&nbsp;'pow'<br>&#124;&nbsp;'sqrt'<br>&#124;&nbsp;'time'<br>&#124;&nbsp;'utc', slotProps?: object, slots?: object, stroke?: string, sx?: Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelPlacement?: 'middle'<br>&#124;&nbsp;'tick', tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickPlacement?: 'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start', tickSize?: number, valueFormatter?: func, zoom?: { filterMode?: 'discard'<br>&#124;&nbsp;'keep', maxEnd?: number, maxSpan?: number, minSpan?: number, minStart?: number, panning?: bool, step?: number }<br>&#124;&nbsp;bool }&gt;"
       }
     },
     "yAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ classes?: object, colorMap?: { colors: Array&lt;string&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt; }<br>&#124;&nbsp;{ color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, disableLine?: bool, disableTicks?: bool, domainLimit?: 'nice'<br>&#124;&nbsp;'strict'<br>&#124;&nbsp;func, fill?: string, hideTooltip?: bool, id?: number<br>&#124;&nbsp;string, label?: string, labelStyle?: object, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, position?: 'left'<br>&#124;&nbsp;'right', reverse?: bool, scaleType?: 'band'<br>&#124;&nbsp;'linear'<br>&#124;&nbsp;'log'<br>&#124;&nbsp;'point'<br>&#124;&nbsp;'pow'<br>&#124;&nbsp;'sqrt'<br>&#124;&nbsp;'time'<br>&#124;&nbsp;'utc', slotProps?: object, slots?: object, stroke?: string, sx?: Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelPlacement?: 'middle'<br>&#124;&nbsp;'tick', tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickPlacement?: 'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start', tickSize?: number, valueFormatter?: func, zoom?: { filterMode?: 'discard'<br>&#124;&nbsp;'keep', maxEnd?: number, maxSpan?: number, minSpan?: number, minStart?: number, panning?: bool, step?: number }<br>&#124;&nbsp;bool }&gt;"
+        "description": "Array&lt;{ axis?: 'y', classes?: object, colorMap?: { colors: Array&lt;string&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt; }<br>&#124;&nbsp;{ color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, disableLine?: bool, disableTicks?: bool, domainLimit?: 'nice'<br>&#124;&nbsp;'strict'<br>&#124;&nbsp;func, fill?: string, hideTooltip?: bool, id?: number<br>&#124;&nbsp;string, label?: string, labelStyle?: object, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, offset?: number, position?: 'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right', reverse?: bool, scaleType?: 'band'<br>&#124;&nbsp;'linear'<br>&#124;&nbsp;'log'<br>&#124;&nbsp;'point'<br>&#124;&nbsp;'pow'<br>&#124;&nbsp;'sqrt'<br>&#124;&nbsp;'time'<br>&#124;&nbsp;'utc', slotProps?: object, slots?: object, stroke?: string, sx?: Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelPlacement?: 'middle'<br>&#124;&nbsp;'tick', tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickPlacement?: 'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start', tickSize?: number, valueFormatter?: func, width?: number, zoom?: { filterMode?: 'discard'<br>&#124;&nbsp;'keep', maxEnd?: number, maxSpan?: number, minSpan?: number, minStart?: number, panning?: bool, step?: number }<br>&#124;&nbsp;bool }&gt;"
       }
     },
     "zAxis": {
       "type": {
         "name": "arrayOf",
         "description": "Array&lt;{ colorMap?: { colors: Array&lt;string&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt; }<br>&#124;&nbsp;{ color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, id?: string, max?: number, min?: number }&gt;"
+      }
+    },
+    "zoomData": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, end: number, start: number }&gt;"
       }
     }
   },

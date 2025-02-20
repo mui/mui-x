@@ -1,4 +1,5 @@
 import { ChartPluginSignature } from '../../models';
+import type { UseChartCartesianAxisSignature } from '../../featurePlugins/useChartCartesianAxis';
 
 export interface ChartMargin {
   /**
@@ -33,7 +34,7 @@ export interface UseChartDimensionsParameters {
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
    */
-  margin?: Partial<ChartMargin>;
+  margin?: Partial<ChartMargin> | number;
 }
 
 export type UseChartDimensionsDefaultizedParameters = UseChartDimensionsParameters & {
@@ -43,21 +44,9 @@ export type UseChartDimensionsDefaultizedParameters = UseChartDimensionsParamete
 export interface UseChartDimensionsState {
   dimensions: {
     /**
-     * The gap between the left border of the SVG and the drawing area.
+     * The drawing area's margin.
      */
-    left: number;
-    /**
-     * The gap between the top border of the SVG and the drawing area.
-     */
-    top: number;
-    /**
-     * The gap between the bottom border of the SVG and the drawing area.
-     */
-    bottom: number;
-    /**
-     * The gap between the right border of the SVG and the drawing area.
-     */
-    right: number;
+    margin: ChartMargin;
     /**
      * The width of the drawing area.
      */
@@ -102,4 +91,5 @@ export type UseChartDimensionsSignature = ChartPluginSignature<{
   defaultizedParams: UseChartDimensionsDefaultizedParameters;
   state: UseChartDimensionsState;
   instance: UseChartDimensionsInstance;
+  optionalDependencies: [UseChartCartesianAxisSignature];
 }>;
