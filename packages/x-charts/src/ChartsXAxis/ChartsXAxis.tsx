@@ -207,8 +207,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickLabelMinGap,
     reverse,
     isMounted,
-    isPointInside: (offset: number) =>
-      instance.isPointInside({ x: offset, y: -1 }, { direction: 'x' }),
+    isPointInside: (x: number) => instance.isPointInside({ x, y: -1 }, { direction: 'x' }),
   });
 
   const labelRefPoint = {
@@ -248,45 +247,39 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
         <Line x1={left} x2={left + width} className={classes.line} {...slotProps?.axisLine} />
       )}
 
-      {xTicks.map(
-        (item, index) => {
-          const { formattedValue, offset: tickOffset, labelOffset } = item;
-          const xTickLabel = labelOffset ?? 0;
-          const yTickLabel = positionSign * (tickSize + 3);
+      {xTicks.map((item, index) => {
+        const { formattedValue, offset: tickOffset, labelOffset } = item;
+        const xTickLabel = labelOffset ?? 0;
+        const yTickLabel = positionSign * (tickSize + 3);
 
-          const showTick = instance.isPointInside({ x: tickOffset, y: -1 }, { direction: 'x' });
-          const showTickLabel = instance.isPointInside(
-            { x: tickOffset + xTickLabel, y: -1 },
-            { direction: 'x' },
-          );
-          const skipLabel = !visibleLabels.has(item);
+        const showTick = instance.isPointInside({ x: tickOffset, y: -1 }, { direction: 'x' });
+        const showTickLabel = visibleLabels.has(item);
 
-          return (
-            <g
-              key={index}
-              transform={`translate(${tickOffset}, 0)`}
-              className={classes.tickContainer}
-            >
-              {!disableTicks && showTick && (
-                <Tick
-                  y2={positionSign * tickSize}
-                  className={classes.tick}
-                  {...slotProps?.axisTick}
-                />
-              )}
+        return (
+          <g
+            key={index}
+            transform={`translate(${tickOffset}, 0)`}
+            className={classes.tickContainer}
+          >
+            {!disableTicks && showTick && (
+              <Tick
+                y2={positionSign * tickSize}
+                className={classes.tick}
+                {...slotProps?.axisTick}
+              />
+            )}
 
-              {formattedValue !== undefined && !skipLabel && showTickLabel && (
-                <TickLabel
-                  x={xTickLabel}
-                  y={yTickLabel}
-                  {...axisTickLabelProps}
-                  text={formattedValue.toString()}
-                />
-              )}
-            </g>
-          );
-        },
-      )}
+            {formattedValue !== undefined && showTickLabel && (
+              <TickLabel
+                x={xTickLabel}
+                y={yTickLabel}
+                {...axisTickLabelProps}
+                text={formattedValue.toString()}
+              />
+            )}
+          </g>
+        );
+      })}
 
       {label && (
         <g className={classes.label}>
