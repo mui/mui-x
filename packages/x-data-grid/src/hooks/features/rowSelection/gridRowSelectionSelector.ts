@@ -15,9 +15,7 @@ export const gridRowSelectionStateSelector = createRootSelector(
 
 export const gridRowSelectionManagerSelector = createSelectorMemoized(
   gridRowSelectionStateSelector,
-  (rowSelectionState) => {
-    return createRowSelectionManager(rowSelectionState);
-  },
+  createRowSelectionManager,
 );
 
 export const selectedGridRowsCountSelector = createSelector(
