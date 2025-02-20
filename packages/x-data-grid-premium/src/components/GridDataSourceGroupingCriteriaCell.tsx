@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import Box from '@mui/material/Box';
 import {
   useGridPrivateApiContext,
   gridDataSourceErrorSelector,
   gridDataSourceLoadingIdSelector,
   gridRowSelector,
+  vars,
 } from '@mui/x-data-grid-pro/internals';
 import {
   useGridSelector,
@@ -120,14 +120,13 @@ export function GridDataSourceGroupingCriteriaCell(props: GridGroupingCriteriaCe
   }
 
   return (
-    <Box
+    <div
       className={classes.root}
-      sx={{
-        ml:
+      style={{
+        marginLeft:
           rootProps.rowGroupingColumnMode === 'multiple'
             ? 0
-            : (theme) =>
-                `calc(var(--DataGrid-cellOffsetMultiplier) * ${theme.spacing(rowNode.depth)})`,
+            : `calc(var(--DataGrid-cellOffsetMultiplier) * ${vars.spacing(rowNode.depth)})`,
       }}
     >
       <div className={classes.toggle}>
@@ -143,6 +142,6 @@ export function GridDataSourceGroupingCriteriaCell(props: GridGroupingCriteriaCe
       {!hideDescendantCount && descendantCount > 0 ? (
         <span style={{ whiteSpace: 'pre' }}> ({descendantCount})</span>
       ) : null}
-    </Box>
+    </div>
   );
 }

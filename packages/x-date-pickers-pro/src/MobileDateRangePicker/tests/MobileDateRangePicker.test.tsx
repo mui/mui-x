@@ -12,6 +12,7 @@ import {
 import { DateRange } from '@mui/x-date-pickers-pro/models';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
+import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 
 describe('<MobileDateRangePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
@@ -39,23 +40,23 @@ describe('<MobileDateRangePicker />', () => {
   });
 
   describe('picker state', () => {
-    it('should open when focusing the start input', () => {
+    it('should open when focusing the start input (multi input field)', () => {
       const onOpen = spy();
 
-      render(<MobileDateRangePicker onOpen={onOpen} />);
+      render(<MobileDateRangePicker onOpen={onOpen} slots={{ field: MultiInputDateRangeField }} />);
 
-      openPicker({ type: 'date-range', initialFocus: 'start' });
+      openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'multi-input' });
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();
     });
 
-    it('should open when focusing the end input', () => {
+    it('should open when focusing the end input (multi input field)', () => {
       const onOpen = spy();
 
-      render(<MobileDateRangePicker onOpen={onOpen} />);
+      render(<MobileDateRangePicker onOpen={onOpen} slots={{ field: MultiInputDateRangeField }} />);
 
-      openPicker({ type: 'date-range', initialFocus: 'end' });
+      openPicker({ type: 'date-range', initialFocus: 'end', fieldType: 'multi-input' });
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();
@@ -80,7 +81,7 @@ describe('<MobileDateRangePicker />', () => {
       );
 
       // Open the picker
-      openPicker({ type: 'date-range', initialFocus: 'start' });
+      openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -101,7 +102,7 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(0);
     });
 
-    it('should call onChange with updated end date when opening from end input', () => {
+    it('should call onChange with updated end date when opening from end input (multi input field)', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -116,11 +117,12 @@ describe('<MobileDateRangePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           defaultValue={defaultValue}
+          slots={{ field: MultiInputDateRangeField }}
         />,
       );
 
       // Open the picker
-      openPicker({ type: 'date-range', initialFocus: 'end' });
+      openPicker({ type: 'date-range', initialFocus: 'end', fieldType: 'multi-input' });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -134,7 +136,7 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(0);
     });
 
-    it('should call onClose and onAccept when selecting the end date if props.closeOnSelect = true', () => {
+    it('should call onClose and onAccept when selecting the end date if props.closeOnSelect = true (multi input field)', () => {
       const onAccept = spy();
       const onClose = spy();
       const defaultValue: DateRange<PickerValidDate> = [
@@ -148,10 +150,11 @@ describe('<MobileDateRangePicker />', () => {
           onClose={onClose}
           defaultValue={defaultValue}
           closeOnSelect
+          slots={{ field: MultiInputDateRangeField }}
         />,
       );
 
-      openPicker({ type: 'date-range', initialFocus: 'end' });
+      openPicker({ type: 'date-range', initialFocus: 'end', fieldType: 'multi-input' });
 
       // Change the end date
       fireEvent.click(screen.getByRole('gridcell', { name: '3' }));
@@ -181,7 +184,7 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-range', initialFocus: 'start' });
+      openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
 
       // Change the start date (already tested)
       fireEvent.click(screen.getByRole('gridcell', { name: '3' }));
@@ -213,7 +216,7 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-range', initialFocus: 'start' });
+      openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
 
       // Change the start date (already tested)
       fireEvent.click(screen.getByRole('gridcell', { name: '3' }));
@@ -246,7 +249,7 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-range', initialFocus: 'start' });
+      openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
 
       // Clear the date
       fireEvent.click(screen.getByText(/clear/i));
@@ -272,7 +275,7 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-range', initialFocus: 'start' });
+      openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
 
       // Clear the date
       fireEvent.click(screen.getByText(/clear/i));
@@ -282,12 +285,12 @@ describe('<MobileDateRangePicker />', () => {
     });
 
     it('should correctly set focused styles when input is focused', () => {
-      render(<MobileDateRangePicker />);
+      render(<MobileDateRangePicker label="Picker" />);
 
-      const startSectionsContainer = getFieldSectionsContainer();
-      fireEvent.focus(startSectionsContainer);
+      const sectionsContainer = getFieldSectionsContainer();
+      fireEvent.focus(sectionsContainer);
 
-      expect(screen.getByText('Start', { selector: 'label' })).to.have.class('Mui-focused');
+      expect(screen.getByText('Picker', { selector: 'label' })).to.have.class('Mui-focused');
     });
   });
 

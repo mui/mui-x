@@ -6,6 +6,11 @@ export type { GridSlotProps } from './gridSlotsComponentsProps';
 
 export interface GridBaseSlots {
   /**
+   * The custom Autocomplete component used in the grid for both header and cells.
+   * @default Autocomplete
+   */
+  baseAutocomplete: React.JSXElementConstructor<GridSlotProps['baseAutocomplete']>;
+  /**
    * The custom Badge component used in the grid for both header and cells.
    * @default Badge
    */
@@ -20,11 +25,6 @@ export interface GridBaseSlots {
    * @default CircularProgress
    */
   baseCircularProgress: React.JSXElementConstructor<GridSlotProps['baseCircularProgress']>;
-  /**
-   * The custom Chip component used in the grid.
-   * @default Chip
-   */
-  baseChip: React.JSXElementConstructor<GridSlotProps['baseChip']>;
   /**
    * The custom Divider component used in the grid.
    * @default Divider
@@ -46,20 +46,10 @@ export interface GridBaseSlots {
    */
   baseMenuItem: React.JSXElementConstructor<GridSlotProps['baseMenuItem']>;
   /**
-   * The custom InputAdornment component used in the grid.
-   * @default InputAdornment
-   */
-  baseInputAdornment: React.JSXElementConstructor<GridSlotProps['baseInputAdornment']>;
-  /**
    * The custom TextField component used in the grid.
    * @default TextField
    */
   baseTextField: React.JSXElementConstructor<GridSlotProps['baseTextField']>;
-  /**
-   * The custom FormControl component used in the grid.
-   * @default FormControl
-   */
-  baseFormControl: React.JSXElementConstructor<GridSlotProps['baseFormControl']>;
   /**
    * The custom Select component used in the grid.
    * @default Select
@@ -91,11 +81,6 @@ export interface GridBaseSlots {
    */
   basePopper: React.JSXElementConstructor<GridSlotProps['basePopper']>;
   /**
-   * The custom InputLabel component used in the grid.
-   * @default InputLabel
-   */
-  baseInputLabel: React.JSXElementConstructor<GridSlotProps['baseInputLabel']>;
-  /**
    * The custom SelectOption component used in the grid.
    * @default SelectOption
    */
@@ -116,11 +101,6 @@ export interface GridBaseSlots {
  * Grid components React prop interface containing all the overridable components.
  */
 export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponent {
-  /**
-   * The custom Chip component used in the grid.
-   * @default Chip
-   */
-  baseChip: React.JSXElementConstructor<GridSlotProps['baseChip']>;
   /**
    * Component rendered for the bottom container.
    * @default GridBottomContainer

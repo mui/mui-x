@@ -5,8 +5,9 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import ownerWindow from '@mui/utils/ownerWindow';
 import { DEFAULT_MARGINS } from '../../../../constants';
 import { ChartPlugin } from '../../models';
-import { UseChartDimensionsSignature } from './useChartDimensions.types';
-import { selectorChartDimensionsState } from './useChartDimensions.selectors';
+import type { UseChartDimensionsSignature } from './useChartDimensions.types';
+import { selectorChartDrawingArea } from './useChartDimensions.selectors';
+import { defaultizeMargin } from '../../../defaultizeMargin';
 
 const MAX_COMPUTE_RUN = 10;
 
@@ -35,19 +36,23 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
     const newWidth = Math.floor(parseFloat(computedStyle.width)) || 0;
 
     store.update((prev) => {
-      const prevWidth = prev.dimensions.width + prev.dimensions.left + prev.dimensions.right;
-      const prevHeight = prev.dimensions.height + prev.dimensions.top + prev.dimensions.bottom;
-
-      if (prevWidth === newWidth && prevHeight === newHeight) {
+      if (prev.dimensions.width === newWidth && prev.dimensions.height === newHeight) {
         return prev;
       }
 
       return {
         ...prev,
         dimensions: {
-          ...prev.dimensions,
-          width: newWidth - prev.dimensions.left - prev.dimensions.right,
-          height: newHeight - prev.dimensions.top - prev.dimensions.bottom,
+          margin: {
+            top: params.margin.top,
+            right: params.margin.right,
+            bottom: params.margin.bottom,
+            left: params.margin.left,
+          },
+          width: params.width ?? newWidth,
+          height: params.height ?? newHeight,
+          propsWidth: params.width,
+          propsHeight: params.height,
         },
       };
     });
@@ -55,33 +60,49 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
       height: newHeight,
       width: newWidth,
     };
-  }, [store, svgRef]);
+  }, [
+    store,
+    svgRef,
+    params.height,
+    params.width,
+    // Margin is an object, so we need to include all the properties to prevent infinite loops.
+    params.margin.left,
+    params.margin.right,
+    params.margin.top,
+    params.margin.bottom,
+  ]);
 
-  store.update((prev) => {
-    if (
-      (params.width === undefined || prev.dimensions.propsWidth === params.width) &&
-      (params.height === undefined || prev.dimensions.propsHeight === params.height)
-    ) {
-      return prev;
-    }
+  React.useEffect(() => {
+    store.update((prev) => {
+      const width = params.width ?? prev.dimensions.width;
+      const height = params.height ?? prev.dimensions.height;
 
-    return {
-      ...prev,
-      dimensions: {
-        ...prev.dimensions,
-        width:
-          params.width === undefined
-            ? prev.dimensions.width
-            : params.width - prev.dimensions.left - prev.dimensions.right,
-        height:
-          params.height === undefined
-            ? prev.dimensions.height
-            : params.height - prev.dimensions.top - prev.dimensions.bottom,
-        propsWidth: params.width,
-        propsHeight: params.height,
-      },
-    };
-  });
+      return {
+        ...prev,
+        dimensions: {
+          margin: {
+            top: params.margin.top,
+            right: params.margin.right,
+            bottom: params.margin.bottom,
+            left: params.margin.left,
+          },
+          width,
+          height,
+          propsHeight: params.height,
+          propsWidth: params.width,
+        },
+      };
+    });
+  }, [
+    store,
+    params.height,
+    params.width,
+    // Margin is an object, so we need to include all the properties to prevent infinite loops.
+    params.margin.left,
+    params.margin.right,
+    params.margin.top,
+    params.margin.bottom,
+  ]);
 
   React.useEffect(() => {
     // Ensure the error detection occurs after the first rendering.
@@ -177,7 +198,8 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
       if (options?.targetElement && options?.targetElement.closest('[data-drawing-container]')) {
         return true;
       }
-      const drawingArea = selectorChartDimensionsState(store.value);
+
+      const drawingArea = selectorChartDrawingArea(store.value);
 
       const isInsideX = x >= drawingArea.left - 1 && x <= drawingArea.left + drawingArea.width;
       const isInsideY = y >= drawingArea.top - 1 && y <= drawingArea.top + drawingArea.height;
@@ -206,15 +228,17 @@ useChartDimensions.params = {
 
 useChartDimensions.getDefaultizedParams = ({ params }) => ({
   ...params,
-  margin: params.margin ? { ...DEFAULT_MARGINS, ...params.margin } : DEFAULT_MARGINS,
+  margin: defaultizeMargin(params.margin, DEFAULT_MARGINS),
 });
 
-useChartDimensions.getInitialState = ({ width, height, margin }) => ({
-  dimensions: {
-    ...margin,
-    width: (width ?? 0) - margin.left - margin.right,
-    height: (height ?? 0) - margin.top - margin.bottom,
-    propsWidth: width,
-    propsHeight: height,
-  },
-});
+useChartDimensions.getInitialState = ({ width, height, margin }) => {
+  return {
+    dimensions: {
+      margin,
+      width: width ?? 0,
+      height: height ?? 0,
+      propsWidth: width,
+      propsHeight: height,
+    },
+  };
+};

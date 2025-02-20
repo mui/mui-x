@@ -10,7 +10,6 @@
     "fill": { "description": "The fill color of the axis text." },
     "label": { "description": "The label of the axis." },
     "labelStyle": { "description": "The style applied to the axis label." },
-    "position": { "description": "Position of the axis." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
     "stroke": { "description": "The stroke color of the axis line." },
@@ -19,6 +18,9 @@
     },
     "tickLabelInterval": {
       "description": "Defines which ticks get its label displayed. Its value can be: - &#39;auto&#39; In such case, labels are displayed if they do not overlap with the previous one. - a filtering function of the form (value, index) =&gt; boolean. Warning: the index is tick index, not data ones."
+    },
+    "tickLabelMinGap": {
+      "description": "The minimum gap in pixels between two tick labels. If two tick labels are closer than this minimum gap, one of them will be hidden."
     },
     "tickLabelPlacement": {
       "description": "The placement of ticks label. Can be the middle of the band, or the tick position. Only used if scale is &#39;band&#39;."
@@ -58,7 +60,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "group including the tick and its label"
     },
-    "tickLabel": { "description": "Styles applied to {{nodeName}}.", "nodeName": "ticks label" },
+    "tickLabel": {
+      "description": "Styles applied to {{nodeName}}.<br>⚠️ For performance reasons, only the inline styles get considered for bounding box computation. Modifying text size by adding properties like <code>font-size</code> or <code>letter-spacing</code> to this class might cause labels to overlap.",
+      "nodeName": "ticks label"
+    },
     "top": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the top axis" }
   }
 }

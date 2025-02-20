@@ -92,14 +92,9 @@ export interface SparkLineChartProps
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
-   * @default {
-   *   top: 5,
-   *   bottom: 5,
-   *   left: 5,
-   *   right: 5,
-   * }
+   * @default 5
    */
-  margin?: Partial<ChartMargin>;
+  margin?: Partial<ChartMargin> | number;
   /**
    * Overridable component slots.
    * @default {}
@@ -118,12 +113,7 @@ export interface SparkLineChartProps
   color?: ChartsColor;
 }
 
-const SPARKLINE_DEFAULT_MARGIN = {
-  top: 5,
-  bottom: 5,
-  left: 5,
-  right: 5,
-};
+const SPARK_LINE_DEFAULT_MARGIN = 5;
 
 /**
  * Demos:
@@ -143,7 +133,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
     yAxis,
     width,
     height,
-    margin = SPARKLINE_DEFAULT_MARGIN,
+    margin = SPARK_LINE_DEFAULT_MARGIN,
     color,
     sx,
     showTooltip,
@@ -201,12 +191,14 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
           data: Array.from({ length: data.length }, (_, index) => index),
           hideTooltip: xAxis === undefined,
           ...xAxis,
+          position: 'none',
         },
       ]}
       yAxis={[
         {
           id: DEFAULT_Y_AXIS_KEY,
           ...yAxis,
+          position: 'none',
         },
       ]}
       colors={colors}
@@ -315,19 +307,17 @@ SparkLineChart.propTypes = {
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
-   * @default {
-   *   top: 5,
-   *   bottom: 5,
-   *   left: 5,
-   *   right: 5,
-   * }
+   * @default 5
    */
-  margin: PropTypes.shape({
-    bottom: PropTypes.number,
-    left: PropTypes.number,
-    right: PropTypes.number,
-    top: PropTypes.number,
-  }),
+  margin: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.shape({
+      bottom: PropTypes.number,
+      left: PropTypes.number,
+      right: PropTypes.number,
+      top: PropTypes.number,
+    }),
+  ]),
   /**
    * The function called for onClick events.
    * The second argument contains information about all line/bar elements at the current mouse position.
@@ -408,6 +398,7 @@ SparkLineChart.propTypes = {
    * Notice it is a single [[AxisConfig]] object, not an array of configuration.
    */
   xAxis: PropTypes.shape({
+    axis: PropTypes.oneOf(['x']),
     classes: PropTypes.object,
     colorMap: PropTypes.oneOfType([
       PropTypes.shape({
@@ -440,13 +431,15 @@ SparkLineChart.propTypes = {
     disableTicks: PropTypes.bool,
     domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
     fill: PropTypes.string,
+    height: PropTypes.number,
     hideTooltip: PropTypes.bool,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     label: PropTypes.string,
     labelStyle: PropTypes.object,
     max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
     min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-    position: PropTypes.oneOf(['bottom', 'top']),
+    offset: PropTypes.number,
+    position: PropTypes.oneOf(['bottom', 'none', 'top']),
     reverse: PropTypes.bool,
     scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
     slotProps: PropTypes.object,
@@ -459,6 +452,7 @@ SparkLineChart.propTypes = {
     ]),
     tickInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.array, PropTypes.func]),
     tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+    tickLabelMinGap: PropTypes.number,
     tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
     tickLabelStyle: PropTypes.object,
     tickMaxStep: PropTypes.number,
@@ -473,6 +467,7 @@ SparkLineChart.propTypes = {
    * Notice it is a single [[AxisConfig]] object, not an array of configuration.
    */
   yAxis: PropTypes.shape({
+    axis: PropTypes.oneOf(['y']),
     classes: PropTypes.object,
     colorMap: PropTypes.oneOfType([
       PropTypes.shape({
@@ -511,7 +506,8 @@ SparkLineChart.propTypes = {
     labelStyle: PropTypes.object,
     max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
     min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-    position: PropTypes.oneOf(['left', 'right']),
+    offset: PropTypes.number,
+    position: PropTypes.oneOf(['left', 'none', 'right']),
     reverse: PropTypes.bool,
     scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
     slotProps: PropTypes.object,
@@ -532,6 +528,7 @@ SparkLineChart.propTypes = {
     tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
     tickSize: PropTypes.number,
     valueFormatter: PropTypes.func,
+    width: PropTypes.number,
   }),
 } as any;
 

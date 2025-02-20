@@ -7,6 +7,7 @@ import {
   ChartsRotationAxisProps,
   ChartsRadiusAxisProps,
 } from '../../models/axis';
+import { ChartsAxisProps } from '../../ChartsAxis';
 
 export type PolarProviderProps = {
   /**
@@ -24,11 +25,11 @@ export type PolarProviderProps = {
   /**
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
-  dataset?: DatasetType;
+  dataset?: Readonly<DatasetType>;
   children: React.ReactNode;
 };
 
-export type DefaultizedAxisConfig<Axis> = {
+export type DefaultizedAxisConfig<Axis extends ChartsAxisProps> = {
   [axisId: AxisId]: AxisDefaultized<ScaleName, any, Axis>;
 };
 
