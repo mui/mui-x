@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled, SxProps, Theme } from '@mui/material/styles';
 import clsx from 'clsx';
+import { PieItemId } from '../models';
 import { SeriesId } from '../models/seriesType/common';
 import { consumeSlots } from '../internals/consumeSlots';
 import { ChartsLabelMarkClasses, labelMarkClasses, useUtilityClasses } from './labelMarkClasses';
@@ -12,6 +13,10 @@ export interface ChartsLabelMarkProps {
    * ID of the series this mark refers to.
    */
   seriesId?: SeriesId;
+  /**
+   * ID of the data point this mark refers to. Used for pie charts, instead of `seriesId`.
+   */
+  itemId?: PieItemId;
   /**
    * The type of the mark.
    * @default 'square'
@@ -82,7 +87,7 @@ const ChartsLabelMark = consumeSlots(
     classesResolver: useUtilityClasses,
   },
   function ChartsLabelMark(props: ChartsLabelMarkProps, ref: React.Ref<HTMLDivElement>) {
-    const { type, color, className, classes, seriesId, ...other } = props;
+    const { type, color, className, classes, seriesId, itemId, ...other } = props;
 
     return (
       <Root

@@ -66,6 +66,7 @@ function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
                       type={markType}
                       color={color}
                       className={classes.mark}
+                      seriesId={seriesId}
                       slots={slots}
                       slotProps={slotProps}
                     />

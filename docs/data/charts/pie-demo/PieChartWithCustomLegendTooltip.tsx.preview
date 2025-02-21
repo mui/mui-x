@@ -1,0 +1,14 @@
+<PieChart
+  series={[
+    {
+      data: [
+        { id: 'cross', value: 10, label: 'Cross' },
+        { id: 'diamond', value: 15, label: 'Diamond' },
+        { id: 'star', value: 20, label: 'Star' },
+      ],
+    },
+  ]}
+  width={200}
+  height={200}
+  slots={{ labelMark: CustomMark }}
+/>

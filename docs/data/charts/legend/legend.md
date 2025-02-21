@@ -79,6 +79,8 @@ Passing a component to `labelMark` or using `labelMarkType` affects not only the
 
 When a `labelMark` slot is provided, the `labelMarkType` property is ignored.
 
+Customizing the mark shape of a pie chart depending on the series is slightly different. You can find how to do it in [this example](/x/react-charts/pie-demo/#pie-chart-with-custom-legend-and-tooltip).
+
 ### Scrollable legend
 
 The legend can be made scrollable by setting the `overflowY` for vertical legends or `overflowX` for horizontal legends.

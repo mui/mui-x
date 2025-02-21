@@ -122,6 +122,7 @@ const ChartsLegend = consumeSlots(
                 <ChartsLabelMark
                   seriesId={item.seriesId}
                   className={classes?.mark}
+                  itemId={item.itemId}
                   color={item.color}
                   type={item.markType}
                   slots={slots}

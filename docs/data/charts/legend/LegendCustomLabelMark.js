@@ -8,13 +8,20 @@ const seriesConfig = [
   { id: 3, data: [10], label: 'Series D' },
 ];
 
-function CustomLabelMark({ className, color }) {
+const cross =
+  'M-5.35,-1.783L-1.783,-1.783L-1.783,-5.35L1.783,-5.35L1.783,-1.783L5.35,-1.783L5.35,1.783L1.783,1.783L1.783,5.35L-1.783,5.35L-1.783,1.783L-5.35,1.783Z';
+const diamond = 'M0,-7.423L4.285,0L0,7.423L-4.285,0Z';
+const star =
+  'M0,-7.528L1.69,-2.326L7.16,-2.326L2.735,0.889L4.425,6.09L0,2.875L-4.425,6.09L-2.735,0.889L-7.16,-2.326L-1.69,-2.326Z';
+const wye =
+  'M2.152,1.243L2.152,5.547L-2.152,5.547L-2.152,1.243L-5.88,-0.91L-3.728,-4.638L0,-2.485L3.728,-4.638L5.88,-0.91Z';
+const symbols = [cross, diamond, star, wye];
+
+function CustomLabelMark({ className, seriesId, color }) {
+  const symbol = symbols[seriesId];
   return (
-    <svg className={className} viewBox="0 0 24 24" width={12} height={12}>
-      <path
-        d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z"
-        fill={color}
-      />
+    <svg className={className} viewBox="-8 -8 16 16" width={14} height={14}>
+      <path d={symbol} fill={color} />
     </svg>
   );
 }

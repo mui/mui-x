@@ -32,6 +32,10 @@ function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
     return null;
   }
   const { color, label, formattedValue, markType } = tooltipData;
+  const itemId =
+    typeof tooltipData.value === 'object' && tooltipData.value !== null && 'id' in tooltipData.value
+      ? tooltipData.value.id
+      : undefined;
 
   return (
     <ChartsTooltipPaper sx={sx} className={classes.paper}>
@@ -41,6 +45,7 @@ function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
             <ChartsTooltipCell className={clsx(classes.markCell, classes.cell)}>
               <ChartsLabelMark
                 seriesId={tooltipData.identifier.seriesId}
+                itemId={itemId}
                 type={markType}
                 color={color}
                 className={classes.mark}
