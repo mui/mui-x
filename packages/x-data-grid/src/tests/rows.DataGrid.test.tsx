@@ -900,9 +900,9 @@ describe('<DataGrid /> - Rows', () => {
           expect(gridOffsetTop()).to.equal(0);
 
           const virtualScroller = grid('virtualScroller')!;
-          virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
           await act(async () => {
-            virtualScroller.dispatchEvent(new Event('scroll'));
+            // Scroll to measure all cells
+            virtualScroller.scrollTo({ top: 10e6 });
           });
           await waitFor(() => {
             expect(gridOffsetTop()).not.to.equal(0);
