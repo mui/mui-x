@@ -5,9 +5,6 @@ import isDockerFunction from 'is-docker';
 import ciEnvironment from 'ci-info';
 import notifyAboutMuiXTelemetry from './notify';
 
-// This is the key that stores whether or not telemetry is enabled or disabled.
-const TELEMETRY_KEY_IS_COLLECTING = 'telemetry.isCollecting';
-
 // This is the key that specifies when the user was informed about telemetry collection.
 const TELEMETRY_KEY_NOTIFY_DATE = 'telemetry.notifiedAt';
 
@@ -43,7 +40,7 @@ export class TelemetryStorage {
   }
 
   private notify = () => {
-    if (!this.conf || this.isCollecting !== true) {
+    if (!this.conf) {
       return;
     }
 
@@ -72,20 +69,5 @@ export class TelemetryStorage {
     const generated = randomBytes(32).toString('hex');
     this.conf?.set(TELEMETRY_KEY_ID, generated);
     return generated;
-  }
-
-  public setEnabled = async (isCollecting: boolean) => {
-    this.conf?.set(TELEMETRY_KEY_IS_COLLECTING, !!isCollecting);
-  };
-
-  /**
-   * This method is used to determine if we're collecting telemetry data.
-   *  - `true` when telemetry is manually enabled.
-   *  - `false` when telemetry is manually disabled.
-   *  - `null` when telemetry is not configured.
-   */
-  public get isCollecting(): true | false | null {
-    const value = this.conf?.get(TELEMETRY_KEY_IS_COLLECTING);
-    return typeof value === 'boolean' ? value : null;
   }
 }

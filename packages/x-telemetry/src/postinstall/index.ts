@@ -29,7 +29,6 @@ import { TelemetryStorage } from './storage';
 
   const contextData: TelemetryContextType = {
     config: {
-      isCollecting: storage.isCollecting,
       isInitialized: true,
     },
     traits: {

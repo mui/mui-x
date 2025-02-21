@@ -3,7 +3,6 @@
 
 export interface TelemetryContextType {
   config: {
-    isCollecting: true | false | null;
     isInitialized: boolean;
   };
   traits: Record<string, any> & {
@@ -18,7 +17,6 @@ export interface TelemetryContextType {
 
 const defaultValue: TelemetryContextType = {
   config: {
-    isCollecting: null,
     isInitialized: false,
   },
   traits: {},

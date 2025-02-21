@@ -17,10 +17,6 @@ function shouldSendTelemetry(telemetryContext: TelemetryContextType): boolean {
     return false;
   }
 
-  if (typeof telemetryContext.config.isCollecting === 'boolean') {
-    return telemetryContext.config.isCollecting;
-  }
-
   // Disabled by default
   return false;
 }
