@@ -24,7 +24,6 @@ import {
   PickerContextValue,
   PickerPrivateContextValue,
 } from '../../components/PickerProvider';
-import { useOpenState } from '../useOpenState';
 import { isTimeView } from '../../utils/time-utils';
 import { useViews } from '../useViews';
 import { PickerFieldPrivateContextValue } from '../useNullableFieldPrivateContext';
