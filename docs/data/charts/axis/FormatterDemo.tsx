@@ -100,9 +100,9 @@ const dataset = [
   },
 ];
 
-const valueFormatter = (value) => `${value}mm`;
+const valueFormatter = (value: number | null) => `${value}mm`;
 
-export default function FormatterDemoNoSnap() {
+export default function FormatterDemo() {
   return (
     <BarChart
       dataset={dataset}

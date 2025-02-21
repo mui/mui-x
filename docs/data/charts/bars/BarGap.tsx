@@ -10,7 +10,7 @@ const series = addLabels([
   { dataKey: 'totEq', stack: 'passive' },
 ]);
 
-export default function BarGapNoSnap() {
+export default function BarGap() {
   return (
     <ChartsUsageDemo
       componentName="Bar gap"

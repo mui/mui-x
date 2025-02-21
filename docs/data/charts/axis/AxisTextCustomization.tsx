@@ -9,7 +9,7 @@ const chartSetting = {
   height: 300,
 };
 
-export default function AxisTextCustomizationNoSnap() {
+export default function AxisTextCustomization() {
   return (
     <ChartsUsageDemo
       componentName="Alert"

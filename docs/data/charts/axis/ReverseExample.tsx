@@ -33,7 +33,7 @@ const series = [
   { type: 'bar', dataKey: 'precip', color: '#bfdbf7', yAxisId: 'rightAxis' },
 ];
 
-export default function ReverseExampleNoSnap() {
+export default function ReverseExample() {
   const [reverseX, setReverseX] = React.useState(false);
   const [reverseLeft, setReverseLeft] = React.useState(false);
   const [reverseRight, setReverseRight] = React.useState(false);

@@ -60,11 +60,11 @@ type ConditionalTypes = {
   /**
    * The options for these knobs: `select` and `radio`
    */
-  options: Array<string>;
+  options: readonly string[];
   /**
    * The labels for these knobs: `radio`
    */
-  labels?: Array<string>;
+  labels?: readonly string[];
   /**
    * Option for knobs: `number`
    */
@@ -156,7 +156,7 @@ interface ChartDemoPropsFormProps<PropName extends string> {
   /**
    * Configuration
    */
-  data: DataType<PropName>[];
+  data: readonly DataType<PropName>[];
   /**
    * Props to be displayed in the form
    */

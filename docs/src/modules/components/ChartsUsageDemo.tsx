@@ -8,7 +8,7 @@ import DemoPropsForm, { DataType } from './DemoPropsForm';
 export type ChartsUsageDemoProps<P extends string> = {
   componentName: string;
   childrenAccepted?: boolean;
-  data: DataType<P>[];
+  data: readonly DataType<P>[];
   renderDemo: (props: Record<P, any>, setProps: (props: Record<P, any>) => void) => React.ReactNode;
   getCode: (props: { name: string; props: Record<P, any>; childrenAccepted: boolean }) => string;
 };

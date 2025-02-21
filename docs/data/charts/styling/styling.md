@@ -154,7 +154,7 @@ Those values define the space between the SVG border and the drawing area.
 
 You might want to modify those values to leave more space for your axis ticks or reduce them to provide more space for the data.
 
-{{"demo": "MarginNoSnap.js", "hideToolbar": true, "bg": "playground"}}
+{{"demo": "Margin.js", "hideToolbar": true, "bg": "playground"}}
 
 ### CSS
 
