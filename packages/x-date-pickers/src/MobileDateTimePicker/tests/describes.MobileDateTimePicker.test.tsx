@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { screen, fireEvent, fireTouchChangedEvent } from '@mui/internal-test-utils';
+import { screen, fireEvent } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
   expectFieldValueV7,
   openPicker,
-  getClockTouchEvent,
   describeValidation,
   describeValue,
   describePicker,
@@ -82,22 +81,16 @@ describe('<MobileDateTimePicker /> - Describes', () => {
         screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
       );
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      // change hours
-      const hourClockEvent = getClockTouchEvent(
-        adapterToUse.getHours(newValue),
-        hasMeridiem ? '12hours' : '24hours',
+      const hours = adapterToUse.format(newValue, hasMeridiem ? 'hours12h' : 'hours24h');
+      const hoursNumber = adapterToUse.getHours(newValue);
+      fireEvent.click(screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }));
+      fireEvent.click(
+        screen.getByRole('option', { name: `${adapterToUse.getMinutes(newValue)} minutes` }),
       );
-      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', hourClockEvent);
-      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', hourClockEvent);
-      // change minutes
-      const minutesClockEvent = getClockTouchEvent(adapterToUse.getMinutes(newValue), 'minutes');
-      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', minutesClockEvent);
-      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', minutesClockEvent);
-
       if (hasMeridiem) {
-        const newHours = adapterToUse.getHours(newValue);
-        // select appropriate meridiem
-        fireEvent.click(screen.getByRole('button', { name: newHours >= 12 ? 'PM' : 'AM' }));
+        // meridiem is an extra view on `DesktopDateTimePicker`
+        // we need to click it to finish selection
+        fireEvent.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
       }
 
       // Close the picker
