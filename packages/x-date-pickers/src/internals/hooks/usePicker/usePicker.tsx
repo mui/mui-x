@@ -17,7 +17,6 @@ import {
 } from '../../models';
 import { useLocalizationContext, useUtils } from '../useUtils';
 import { useReduceAnimations } from '../useReduceAnimations';
-import { usePickerDateState, usePickerOrientation } from './usePicker.utils';
 import { FieldRef, InferError, PickerOwnerState } from '../../../models';
 import {
   PickerActionsContextValue,
@@ -27,6 +26,8 @@ import {
 import { isTimeView } from '../../utils/time-utils';
 import { useViews } from '../useViews';
 import { PickerFieldPrivateContextValue } from '../useNullableFieldPrivateContext';
+import { useOrientation } from './hooks/useOrientation';
+import { useValueAndOpenStates } from './hooks/useValueAndOpenStates';
 
 export const usePicker = <
   TValue extends PickerValidValue,
@@ -70,17 +71,15 @@ export const usePicker = <
     name,
   } = props;
 
-  const utils = useUtils();
-  const adapter = useLocalizationContext();
-  const reduceAnimations = useReduceAnimations(reduceAnimationsProp);
+  const { className, sx, ...propsToForwardToView } = props;
 
   /**
    * TODO: Improve how we generate the aria-label and aria-labelledby attributes.
    */
   const labelId = useId();
-
-  const { className, sx, ...propsToForwardToView } = props;
-
+  const utils = useUtils();
+  const adapter = useLocalizationContext();
+  const reduceAnimations = useReduceAnimations(reduceAnimationsProp);
   const { current: initialView } = React.useRef<TView | null>(openTo ?? null);
   const triggerRef = React.useRef<HTMLElement>(null);
   const popupRef = React.useRef<HTMLElement>(null);
@@ -88,7 +87,7 @@ export const usePicker = <
   const rootRefObject = React.useRef<HTMLDivElement>(null);
   const rootRef = useForkRef(ref, rootRefObject);
 
-  const { open, setOpen, timezone, dateState, setValue, setValueFromView } = usePickerDateState<
+  const { timezone, state, setOpen, setValue, setValueFromView } = useValueAndOpenStates<
     TValue,
     TView,
     TExternalProps
@@ -111,24 +110,24 @@ export const usePicker = <
     setValue(valueManager.getTodayValue(utils, timezone, valueType)),
   );
 
-  const acceptValueChanges = useEventCallback(() => setValue(dateState.lastPublishedValue));
+  const acceptValueChanges = useEventCallback(() => setValue(state.lastPublishedValue));
 
   const cancelValueChanges = useEventCallback(() =>
-    setValue(dateState.lastCommittedValue, { skipPublicationIfPristine: true }),
+    setValue(state.lastCommittedValue, { skipPublicationIfPristine: true }),
   );
 
   const dismissViews = useEventCallback(() => {
-    setValue(dateState.lastPublishedValue, {
+    setValue(state.lastPublishedValue, {
       skipPublicationIfPristine: true,
     });
   });
 
   const valueWithoutError = React.useMemo(
-    () => valueManager.cleanValue(utils, dateState.draft),
-    [utils, valueManager, dateState.draft],
+    () => valueManager.cleanValue(utils, state.draft),
+    [utils, valueManager, state.draft],
   );
 
-  const orientation = usePickerOrientation(views, props.orientation);
+  const orientation = useOrientation(views, props.orientation);
 
   const { view, setView, defaultView, focusedView, setFocusedView, setValueAndGoToNextView } =
     useViews({
@@ -186,7 +185,7 @@ export const usePicker = <
 
   useEnhancedEffect(() => {
     // Handle case of `DateTimePicker` without time renderers
-    if (currentViewMode === 'field' && open) {
+    if (currentViewMode === 'field' && state.open) {
       setOpen(false);
       setTimeout(() => {
         fieldRef?.current?.setSelectedSections(view);
@@ -198,7 +197,7 @@ export const usePicker = <
   }, [view]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEnhancedEffect(() => {
-    if (!open) {
+    if (!state.open) {
       return;
     }
 
@@ -222,16 +221,12 @@ export const usePicker = <
       setView(newView);
     }
     setFocusedView(newView, true);
-  }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [state.open]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const ownerState = React.useMemo<PickerOwnerState>(
     () => ({
-      isPickerValueEmpty: valueManager.areValuesEqual(
-        utils,
-        dateState.draft,
-        valueManager.emptyValue,
-      ),
-      isPickerOpen: open,
+      isPickerValueEmpty: valueManager.areValuesEqual(utils, state.draft, valueManager.emptyValue),
+      isPickerOpen: state.open,
       isPickerDisabled: props.disabled ?? false,
       isPickerReadOnly: props.readOnly ?? false,
       pickerOrientation: orientation,
@@ -240,8 +235,8 @@ export const usePicker = <
     [
       utils,
       valueManager,
-      dateState.draft,
-      open,
+      state.draft,
+      state.open,
       orientation,
       variant,
       props.disabled,
@@ -285,9 +280,9 @@ export const usePicker = <
   const contextValue = React.useMemo<PickerContextValue<TValue, TView, TError>>(
     () => ({
       ...actionsContextValue,
-      value: dateState.draft,
+      value: state.draft,
       timezone,
-      open,
+      open: state.open,
       views,
       view: popperView,
       initialView,
@@ -309,7 +304,7 @@ export const usePicker = <
     }),
     [
       actionsContextValue,
-      dateState.draft,
+      state.draft,
       rootRef,
       variant,
       orientation,
@@ -324,7 +319,7 @@ export const usePicker = <
       triggerRef,
       triggerStatus,
       timezone,
-      open,
+      state.open,
       popperView,
       views,
       initialView,

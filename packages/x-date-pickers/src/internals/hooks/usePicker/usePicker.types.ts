@@ -180,7 +180,11 @@ export interface UsePickerReturnValue<TValue extends PickerValidValue> {
 
 export type PickerSelectionState = 'partial' | 'shallow' | 'finish';
 
-export interface UsePickerValueState<TValue extends PickerValidValue> {
+export interface UsePickerState<TValue extends PickerValidValue> {
+  /**
+   * Whether the picker is open.
+   */
+  open: boolean;
   /**
    * Date displayed on the views and the field.
    * It is updated whenever the user modifies something.

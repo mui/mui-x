@@ -1,64 +1,15 @@
 import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
 import useEventCallback from '@mui/utils/useEventCallback';
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import {
-  DateOrTimeViewWithMeridiem,
-  PickerOrientation,
-  PickerValidValue,
-  PickerValueManager,
-} from '../../models';
-import { arrayIncludes } from '../../utils/utils';
-import { PickerSelectionState, UsePickerProps, UsePickerValueState } from './usePicker.types';
-import { useValueWithTimezone } from '../useValueWithTimezone';
-import { useUtils } from '../useUtils';
-import { InferError, PickerChangeHandlerContext } from '../../../models';
-import { SetValueActionOptions } from '../../components/PickerProvider';
-import { useValidation, Validator } from '../../../validation';
-import { useOpenState } from '../useOpenState';
+import { DateOrTimeViewWithMeridiem, PickerValidValue, PickerValueManager } from '../../../models';
+import { PickerSelectionState, UsePickerProps, UsePickerState } from '../usePicker.types';
+import { useValueWithTimezone } from '../../useValueWithTimezone';
+import { useUtils } from '../../useUtils';
+import { InferError, PickerChangeHandlerContext } from '../../../../models';
+import { SetValueActionOptions } from '../../../components/PickerProvider';
+import { useValidation, Validator } from '../../../../validation';
 
-function getOrientation(): PickerOrientation {
-  if (typeof window === 'undefined') {
-    return 'portrait';
-  }
-
-  if (window.screen && window.screen.orientation && window.screen.orientation.angle) {
-    return Math.abs(window.screen.orientation.angle) === 90 ? 'landscape' : 'portrait';
-  }
-
-  // Support IOS safari
-  if (window.orientation) {
-    return Math.abs(Number(window.orientation)) === 90 ? 'landscape' : 'portrait';
-  }
-
-  return 'portrait';
-}
-
-export function usePickerOrientation(
-  views: readonly DateOrTimeViewWithMeridiem[],
-  customOrientation: PickerOrientation | undefined,
-): PickerOrientation {
-  const [orientation, setOrientation] = React.useState(getOrientation);
-
-  useEnhancedEffect(() => {
-    const eventHandler = () => {
-      setOrientation(getOrientation());
-    };
-    window.addEventListener('orientationchange', eventHandler);
-    return () => {
-      window.removeEventListener('orientationchange', eventHandler);
-    };
-  }, []);
-
-  if (arrayIncludes(views, ['hours', 'minutes', 'seconds'])) {
-    // could not display 13:34:44 in landscape mode
-    return 'portrait';
-  }
-
-  return customOrientation ?? orientation;
-}
-
-export function usePickerDateState<
+export function useValueAndOpenStates<
   TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UsePickerProps<TValue, TView, any, any>,
@@ -80,10 +31,10 @@ export function usePickerDateState<
   } = props;
 
   const { current: defaultValue } = React.useRef(defaultValueProp);
-  const { current: isControlled } = React.useRef(valueProp !== undefined);
+  const { current: isValueControlled } = React.useRef(valueProp !== undefined);
+  const { current: isOpenControlled } = React.useRef(openProp !== undefined);
   const [previousTimezoneProp, setPreviousTimezoneProp] = React.useState(timezoneProp);
   const utils = useUtils();
-  const { open, setOpen } = useOpenState({ open: openProp, onOpen, onClose });
 
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).renderInput != null) {
@@ -98,12 +49,12 @@ export function usePickerDateState<
   /* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
   if (process.env.NODE_ENV !== 'production') {
     React.useEffect(() => {
-      if (isControlled !== (valueProp !== undefined)) {
+      if (isValueControlled !== (valueProp !== undefined)) {
         console.error(
           [
             `MUI X: A component is changing the ${
-              isControlled ? '' : 'un'
-            }controlled value of a picker to be ${isControlled ? 'un' : ''}controlled.`,
+              isValueControlled ? '' : 'un'
+            }controlled value of a picker to be ${isValueControlled ? 'un' : ''}controlled.`,
             'Elements should not switch from uncontrolled to controlled (or vice versa).',
             `Decide between using a controlled or uncontrolled value` +
               'for the lifetime of the component.',
@@ -115,7 +66,7 @@ export function usePickerDateState<
     }, [valueProp]);
 
     React.useEffect(() => {
-      if (!isControlled && defaultValue !== defaultValueProp) {
+      if (!isValueControlled && defaultValue !== defaultValueProp) {
         console.error(
           [
             `MUI X: A component is changing the defaultValue of an uncontrolled picker after being initialized. ` +
@@ -140,7 +91,7 @@ export function usePickerDateState<
     valueManager,
   });
 
-  const [dateState, setDateState] = React.useState<UsePickerValueState<TValue>>(() => {
+  const [state, setState] = React.useState<UsePickerState<TValue>>(() => {
     let initialValue: TValue;
     if (valuePropWithTimezoneToRender !== undefined) {
       initialValue = valuePropWithTimezoneToRender;
@@ -151,6 +102,7 @@ export function usePickerDateState<
     }
 
     return {
+      open: false,
       draft: initialValue,
       lastPublishedValue: initialValue,
       lastCommittedValue: initialValue,
@@ -163,21 +115,36 @@ export function usePickerDateState<
     props,
     validator,
     timezone,
-    value: dateState.draft,
+    value: state.draft,
     onError: props.onError,
   });
 
-  const timezoneFromDraftValue = valueManager.getTimezone(utils, dateState.draft);
+  const timezoneFromDraftValue = valueManager.getTimezone(utils, state.draft);
   if (previousTimezoneProp !== timezoneProp) {
     setPreviousTimezoneProp(timezoneProp);
 
     if (timezoneProp && timezoneFromDraftValue && timezoneProp !== timezoneFromDraftValue) {
-      setDateState((prev) => ({
+      setState((prev) => ({
         ...prev,
         draft: valueManager.setTimezone(utils, timezoneProp, prev.draft),
       }));
     }
   }
+
+  const setOpen = useEventCallback((action: React.SetStateAction<boolean>) => {
+    const newOpen = typeof action === 'function' ? action(state.open) : action;
+    if (!isOpenControlled) {
+      setOpen(newOpen);
+    }
+
+    if (newOpen && onOpen) {
+      onOpen();
+    }
+
+    if (!newOpen && onClose) {
+      onClose();
+    }
+  });
 
   const setValue = useEventCallback((newValue: TValue, options?: SetValueActionOptions<TError>) => {
     const {
@@ -190,19 +157,19 @@ export function usePickerDateState<
 
     let shouldPublish: boolean;
     let shouldCommit: boolean;
-    if (!skipPublicationIfPristine && !isControlled && !dateState.hasBeenModifiedSinceMount) {
+    if (!skipPublicationIfPristine && !isValueControlled && !state.hasBeenModifiedSinceMount) {
       // If the value is not controlled and the value has never been modified before,
       // Then clicking on any value (including the one equal to `defaultValue`) should call `onChange` and `onAccept`
       shouldPublish = true;
       shouldCommit = changeImportance === 'accept';
     } else {
-      shouldPublish = !valueManager.areValuesEqual(utils, newValue, dateState.lastPublishedValue);
+      shouldPublish = !valueManager.areValuesEqual(utils, newValue, state.lastPublishedValue);
       shouldCommit =
         changeImportance === 'accept' &&
-        !valueManager.areValuesEqual(utils, newValue, dateState.lastCommittedValue);
+        !valueManager.areValuesEqual(utils, newValue, state.lastCommittedValue);
     }
 
-    setDateState((prev) => ({
+    setState((prev) => ({
       ...prev,
       draft: newValue,
       lastPublishedValue: shouldPublish ? newValue : prev.lastPublishedValue,
@@ -239,14 +206,14 @@ export function usePickerDateState<
     }
   });
 
-  if (dateState.lastControlledValue !== valueProp) {
+  if (state.lastControlledValue !== valueProp) {
     const isUpdateComingFromPicker = valueManager.areValuesEqual(
       utils,
-      dateState.draft,
+      state.draft,
       valuePropWithTimezoneToRender,
     );
 
-    setDateState((prev) => ({
+    setState((prev) => ({
       ...prev,
       lastControlledValue: valueProp,
       ...(isUpdateComingFromPicker
@@ -264,7 +231,7 @@ export function usePickerDateState<
     (newValue: TValue, selectionState: PickerSelectionState = 'partial') => {
       // TODO: Expose a new method (private?) like `setView` that only updates the draft value.
       if (selectionState === 'shallow') {
-        setDateState((prev) => ({
+        setState((prev) => ({
           ...prev,
           draft: newValue,
           hasBeenModifiedSinceMount: true,
@@ -277,7 +244,19 @@ export function usePickerDateState<
     },
   );
 
-  return { open, setOpen, timezone, dateState, setValue, setValueFromView };
+  // It is required to update inner state in useEffect in order to avoid situation when
+  // Our component is not mounted yet, but `open` state is set to `true` (for example initially opened)
+  React.useEffect(() => {
+    if (isOpenControlled) {
+      if (openProp === undefined) {
+        throw new Error('You must not mix controlling and uncontrolled mode for `open` prop');
+      }
+
+      setState((prevState) => ({ ...prevState, open: openProp }));
+    }
+  }, [isOpenControlled, openProp]);
+
+  return { timezone, state, setValue, setValueFromView, setOpen };
 }
 
 interface UsePickerDateStateParameters<
