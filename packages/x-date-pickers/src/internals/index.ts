@@ -16,6 +16,8 @@ export type {
   ExportedPickerFieldUIProps,
   PickerFieldUISlots,
   PickerFieldUISlotProps,
+  PickerFieldUISlotsFromContext,
+  PickerFieldUISlotPropsFromContext,
 } from './components/PickerFieldUI';
 export { PickerProvider } from './components/PickerProvider';
 export type { PickerContextValue } from './components/PickerProvider';
