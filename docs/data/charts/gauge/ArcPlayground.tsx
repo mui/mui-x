@@ -3,7 +3,7 @@ import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import Box from '@mui/material/Box';
 import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge';
 
-export default function ArcPlaygroundNoSnap() {
+export default function ArcPlayground() {
   return (
     <ChartsUsageDemo
       componentName="Gauge"

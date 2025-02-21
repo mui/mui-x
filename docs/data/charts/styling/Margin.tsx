@@ -11,7 +11,7 @@ const data = ['left', 'right', 'top', 'bottom'].map((propName) => ({
   min: 0,
   max: 200,
 }));
-export default function MarginNoSnap() {
+export default function Margin() {
   return (
     <ChartsUsageDemo
       componentName="Margin demos"

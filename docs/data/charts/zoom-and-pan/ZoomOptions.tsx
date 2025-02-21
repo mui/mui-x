@@ -50,7 +50,7 @@ const knobs = [
   },
 ];
 
-export default function ZoomOptionsNoSnap() {
+export default function ZoomOptions() {
   return (
     <ChartsUsageDemo
       componentName="Zoom Options demo"

@@ -56,7 +56,7 @@ const lineSeries = [
   },
 ];
 
-export default function LegendClickNoSnap() {
+export default function LegendClick() {
   const [itemData, setItemData] = React.useState();
 
   return (

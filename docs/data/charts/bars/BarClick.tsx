@@ -42,7 +42,7 @@ const barChartsParams = {
   height: 400,
 };
 
-export default function BarClickNoSnap() {
+export default function BarClick() {
   const [itemData, setItemData] = React.useState();
   const [axisData, setAxisData] = React.useState();
 

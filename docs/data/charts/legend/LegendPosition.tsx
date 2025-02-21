@@ -22,7 +22,7 @@ const data = [
   { id: 14, value: 20, label: 'Series O' },
 ];
 
-export default function LegendPositionNoSnap() {
+export default function LegendPosition() {
   return (
     <ChartsUsageDemo
       componentName="Legend"

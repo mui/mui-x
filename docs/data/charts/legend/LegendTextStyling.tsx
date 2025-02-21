@@ -12,7 +12,7 @@ const data = [
   { id: 3, value: 10, label: 'Series D' },
 ];
 
-export default function LegendTextStylingNoSnap() {
+export default function LegendTextStyling() {
   return (
     <ChartsUsageDemo
       componentName="Legend"

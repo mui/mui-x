@@ -1,15 +1,13 @@
 // @ts-check
 import * as React from 'react';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
+import { interpolateRdYlBu } from 'd3-scale-chromatic';
 import { LineChart } from '@mui/x-charts/LineChart';
-import {
-  piecewiseColorDefaultLabelFormatter,
-  PiecewiseColorLegend,
-} from '@mui/x-charts/ChartsLegend';
 import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';
+import { ContinuousColorLegend } from '@mui/x-charts/ChartsLegend';
 import { dataset } from './tempAnomaly';
 
-export default function PiecewiseInteractiveDemoNoSnap() {
+export default function ContinuousInteractiveDemo() {
   return (
     <ChartsUsageDemo
       componentName="Legend"
@@ -23,28 +21,30 @@ export default function PiecewiseInteractiveDemoNoSnap() {
         {
           propName: 'labelPosition',
           knob: 'select',
-          defaultValue: 'extremes',
+          defaultValue: 'end',
           options: ['start', 'end', 'extremes'],
         },
         {
-          propName: 'markType',
-          knob: 'select',
-          defaultValue: 'square',
-          options: ['square', 'circle', 'line'],
+          propName: 'length',
+          knob: 'number',
+          defaultValue: 50,
+          min: 10,
         },
         {
-          propName: 'onlyShowExtremes',
+          propName: 'thickness',
+          knob: 'number',
+          defaultValue: 12,
+          min: 1,
+          max: 20,
+        },
+        {
+          propName: 'reverse',
           knob: 'switch',
           defaultValue: false,
         },
-        {
-          propName: 'padding',
-          knob: 'number',
-          defaultValue: 0,
-        },
       ]}
       renderDemo={(
-        /** @type {{ direction: "vertical" | "horizontal"; markType: 'square' | 'circle' | 'line'; labelPosition:  'start' | 'end' | 'extremes'; padding: number; onlyShowExtremes: boolean; }} */
+        /** @type {{ direction: "horizontal" | "vertical"; length: number; thickness: number;  labelPosition:  'start' | 'end' | 'extremes'; reverse: boolean; }} */
         props,
       ) => (
         <LineChart
@@ -63,11 +63,6 @@ export default function PiecewiseInteractiveDemoNoSnap() {
               dataKey: 'year',
               disableLine: true,
               valueFormatter: (value) => value.getFullYear().toString(),
-              colorMap: {
-                type: 'piecewise',
-                thresholds: [new Date(1961, 0, 1), new Date(1990, 0, 1)],
-                colors: ['blue', 'gray', 'red'],
-              },
             },
           ]}
           yAxis={[
@@ -75,27 +70,27 @@ export default function PiecewiseInteractiveDemoNoSnap() {
               disableLine: true,
               disableTicks: true,
               valueFormatter: (value) => `${value}°`,
+              colorMap: {
+                type: 'continuous',
+                min: -0.5,
+                max: 1.5,
+                color: (t) => interpolateRdYlBu(1 - t),
+              },
             },
           ]}
           grid={{ horizontal: true }}
           height={300}
-          slots={{
-            legend: PiecewiseColorLegend,
-          }}
+          slots={{ legend: ContinuousColorLegend }}
           slotProps={{
             legend: {
-              axisDirection: 'x',
+              axisDirection: 'y',
               direction: props.direction,
-              markType: props.markType,
+              thickness: props.thickness,
               labelPosition: props.labelPosition,
-              labelFormatter: props.onlyShowExtremes
-                ? (params) =>
-                    params.index === 0 || params.index === params.length
-                      ? piecewiseColorDefaultLabelFormatter(params)
-                      : ''
-                : undefined,
+              reverse: props.reverse,
               sx: {
-                padding: props.padding,
+                [props.direction === 'horizontal' ? 'width' : 'height']:
+                  `${props.length}${props.direction === 'horizontal' ? '%' : 'px'}`,
               },
             },
           }}
@@ -104,25 +99,23 @@ export default function PiecewiseInteractiveDemoNoSnap() {
         </LineChart>
       )}
       getCode={(
-        /** @type {{props:{ direction: "vertical" | "horizontal"; markType: 'square' | 'circle' | 'line'; labelPosition:  'start' | 'end' | 'extremes'; padding: number; onlyShowExtremes: boolean; }}} */
+        /** @type {{props: { direction: "horizontal" | "vertical"; length: number; thickness: number;  labelPosition:  'start' | 'end' | 'extremes'; reverse: boolean; }}} */
         { props },
       ) => {
         return `
-import { 
-  PiecewiseColorLegend,
-  piecewiseColorDefaultLabelFormatter,
-} from '@mui/x-charts/ChartsLegend';
+import { ContinuousColorLegend } from '@mui/x-charts/ChartsLegend';
 
 <LineChart
   {/** ... */}
-  slots={{ legend: PiecewiseColorLegend }}
+  slots={{ legend: ContinuousColorLegend }}
   slotProps={{
     legend: {
-      axisDirection: 'x',
+      axisDirection: 'y',
       direction: '${props.direction}',
-      markType: '${props.markType}',
+      thickness: ${props.thickness},
       labelPosition: '${props.labelPosition}',
-      sx: { padding: ${props.padding} },${props.onlyShowExtremes ? "\n      labelFormatter: (params) =>\n        params.index === 0 || params.index === params.length\n          ? piecewiseColorDefaultLabelFormatter(params) \n          : ''" : ''}
+      reverse: ${props.reverse},
+      sx: { ${props.direction === 'horizontal' ? 'width' : 'height'}: '${props.length}${props.direction === 'horizontal' ? '%' : 'px'}' },
     },
   }}
 />

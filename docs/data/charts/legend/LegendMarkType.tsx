@@ -11,7 +11,7 @@ const seriesConfig = [
   { id: 3, data: [10], label: 'Series D' },
 ];
 
-export default function LegendMarkTypeNoSnap() {
+export default function LegendMarkType() {
   return (
     <ChartsUsageDemo
       componentName="Legend"

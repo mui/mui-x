@@ -4,12 +4,51 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
-import { PieChart } from '@mui/x-charts/PieChart';
-import { HighlightedCode } from '@mui/docs/HighlightedCode';
-import { mobileAndDesktopOS, platforms, valueFormatter } from './webUsageStats';
 
-export default function PieClickNoSnap() {
+import { LineChart } from '@mui/x-charts/LineChart';
+
+import { HighlightedCode } from '@mui/docs/HighlightedCode';
+
+const lineChartsParams = {
+  series: [
+    {
+      id: 'series-1',
+      data: [3, 4, 1, 6, 5],
+      label: 'A',
+      area: true,
+      stack: 'total',
+      highlightScope: {
+        highlight: 'item',
+      },
+    },
+    {
+      id: 'series-2',
+      data: [4, 3, 1, 5, 8],
+      label: 'B',
+      area: true,
+      stack: 'total',
+      highlightScope: {
+        highlight: 'item',
+      },
+    },
+    {
+      id: 'series-3',
+      data: [4, 2, 5, 4, 1],
+      label: 'C',
+      area: true,
+      stack: 'total',
+      highlightScope: {
+        highlight: 'item',
+      },
+    },
+  ],
+  xAxis: [{ data: [0, 3, 6, 9, 12], scaleType: 'linear', id: 'axis1' }],
+  height: 400,
+};
+
+export default function LineClick() {
   const [itemData, setItemData] = React.useState();
+  const [axisData, setAxisData] = React.useState();
 
   return (
     <Stack
@@ -18,13 +57,13 @@ export default function PieClickNoSnap() {
       sx={{ width: '100%' }}
     >
       <Box sx={{ flexGrow: 1 }}>
-        <PieChart
-          series={series}
-          width={300}
-          height={300}
-          hideLegend
-          onItemClick={(event, d) => setItemData(d)}
-        />{' '}
+        <LineChart
+          {...lineChartsParams}
+          onAreaClick={(event, d) => setItemData(d)}
+          onMarkClick={(event, d) => setItemData(d)}
+          onLineClick={(event, d) => setItemData(d)}
+          onAxisClick={(event, d) => setAxisData(d)}
+        />
       </Box>
 
       <Stack direction="column" sx={{ width: { xs: '100%', md: '40%' } }}>
@@ -41,6 +80,7 @@ export default function PieClickNoSnap() {
             size="small"
             onClick={() => {
               setItemData(null);
+              setAxisData(null);
             }}
           >
             <UndoOutlinedIcon fontSize="small" />
@@ -49,6 +89,9 @@ export default function PieClickNoSnap() {
         <HighlightedCode
           code={`// Data from item click
 ${itemData ? JSON.stringify(itemData, null, 2) : '// The data will appear here'}
+
+// Data from axis click
+${axisData ? JSON.stringify(axisData, null, 2) : '// The data will appear here'}
 `}
           language="json"
           copyButtonHidden
@@ -57,20 +100,3 @@ ${itemData ? JSON.stringify(itemData, null, 2) : '// The data will appear here'}
     </Stack>
   );
 }
-
-const series = [
-  {
-    innerRadius: 0,
-    outerRadius: 80,
-    id: 'platform-series',
-    data: platforms,
-    valueFormatter,
-  },
-  {
-    innerRadius: 100,
-    outerRadius: 120,
-    id: 'OS-series',
-    data: mobileAndDesktopOS,
-    valueFormatter,
-  },
-];

@@ -18,7 +18,7 @@ const data = [
 
 const itemsNumber = 8;
 
-export default function LegendDimensionNoSnap() {
+export default function LegendDimension() {
   return (
     <ChartsUsageDemo
       componentName="Legend"

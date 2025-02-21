@@ -3,7 +3,7 @@ import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import Box from '@mui/material/Box';
 import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge';
 
-export default function TextPlaygroundNoSnap() {
+export default function TextPlayground() {
   return (
     <ChartsUsageDemo
       componentName="Gauge"

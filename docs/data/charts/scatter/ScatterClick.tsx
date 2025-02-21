@@ -53,7 +53,7 @@ const scatterChartsParams = {
   height: 400,
 };
 
-export default function ScatterClickNoSnap() {
+export default function ScatterClick() {
   const [data, setData] = React.useState();
 
   const { axis, item, ...other } = data ?? {};

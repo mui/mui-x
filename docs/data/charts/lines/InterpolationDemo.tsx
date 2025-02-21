@@ -35,7 +35,7 @@ function getExample(curveType) {
 />`;
 }
 
-export default function InterpolationDemoNoSnap() {
+export default function InterpolationDemo() {
   const [curveType, setCurveType] = React.useState(curveTypes[0]);
 
   return (
