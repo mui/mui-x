@@ -1,0 +1,4 @@
+.className {
+  composes: block from './parent.css';
+  color: red;
+}

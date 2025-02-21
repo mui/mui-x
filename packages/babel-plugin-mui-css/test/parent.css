@@ -1,0 +1,4 @@
+.block {
+  composes: line from './css/child.css';
+  display: block;
+}
