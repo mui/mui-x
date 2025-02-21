@@ -388,10 +388,14 @@ export const usePicker = <
       onChange: setValueAndGoToNextView,
       view: popperView,
       onViewChange: setView,
-      focusedView,
-      onFocusedViewChange: setFocusedView,
       showViewSwitcher: timeViewsCount > 1,
       timeViewsCount,
+      ...(viewContainerRole === 'tooltip'
+        ? { focusedView: null, onFocusedViewChange: () => {} }
+        : {
+            focusedView,
+            onFocusedViewChange: setFocusedView,
+          }),
     };
 
     if (RendererInterceptor) {
