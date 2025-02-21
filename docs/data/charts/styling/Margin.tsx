@@ -27,7 +27,7 @@ const axes = ['xAxisHeight', 'yAxisWidth'].map(
     }) as const,
 );
 
-export default function MarginNoSnap() {
+export default function Margin() {
   return (
     <ChartsUsageDemo
       componentName="Margin demos"
