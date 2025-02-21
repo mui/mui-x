@@ -43,7 +43,7 @@ export default function CustomFilterPanelPosition() {
         slots={{ toolbar: CustomToolbar }}
         slotProps={{
           panel: {
-            anchorEl: filterButtonEl,
+            target: filterButtonEl,
           },
           toolbar: { setFilterButtonEl },
         }}

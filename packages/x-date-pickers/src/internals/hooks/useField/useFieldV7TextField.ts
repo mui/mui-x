@@ -17,7 +17,7 @@ import { FieldRangeSection } from '../../models';
 
 export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
   const {
-    internalProps: { disabled, readOnly = false, autoFocus = false },
+    internalProps: { disabled, readOnly = false, autoFocus = false, focused: focusedProp },
     forwardedProps: {
       sectionListRef: inSectionListRef,
       onBlur,
@@ -25,7 +25,6 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
       onFocus,
       onInput,
       onPaste,
-      focused: focusedProp,
     },
     fieldValueManager,
     applyCharacterEditing,
@@ -114,7 +113,11 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
         return sectionListRef.current.getSectionIndexFromDOMElement(activeElement);
       },
       focusField: (newSelectedSections = 0) => {
-        if (!sectionListRef.current) {
+        if (
+          !sectionListRef.current ||
+          // if the field is already focused, we don't need to focus it again
+          interactions.getActiveSectionIndexFromDOM() != null
+        ) {
           return;
         }
 
@@ -256,8 +259,8 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
     updateValueFromValueStr(pastedValue);
   });
 
-  const handleContainerFocus = useEventCallback((...args) => {
-    onFocus?.(...(args as []));
+  const handleContainerFocus = useEventCallback((event: React.FocusEvent) => {
+    onFocus?.(event);
 
     if (focused || !sectionListRef.current) {
       return;
@@ -274,8 +277,8 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
     }
   });
 
-  const handleContainerBlur = useEventCallback((...args) => {
-    onBlur?.(...(args as []));
+  const handleContainerBlur = useEventCallback((event: React.FocusEvent) => {
+    onBlur?.(event);
     setTimeout(() => {
       if (!sectionListRef.current) {
         return;

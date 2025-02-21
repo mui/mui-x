@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { warnOnce } from '@mui/x-internals/warning';
 import { TreeViewPlugin } from '../../models';
 import { TreeViewItemId } from '../../../models';
 import { UseTreeViewLabelSignature } from './useTreeViewLabel.types';
@@ -59,23 +58,10 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({ st
 
 useTreeViewLabel.itemPlugin = useTreeViewLabelItemPlugin;
 
-useTreeViewLabel.getDefaultizedParams = ({ params, experimentalFeatures }) => {
-  const canUseFeature = experimentalFeatures?.labelEditing;
-  if (process.env.NODE_ENV !== 'production') {
-    if (params.isItemEditable && !canUseFeature) {
-      warnOnce([
-        'MUI X: The label editing feature requires the `labelEditing` experimental feature to be enabled.',
-        'You can do it by passing `experimentalFeatures={{ labelEditing: true}}` to the Rich Tree View Pro component.',
-        'Check the documentation for more details: https://mui.com/x/react-tree-view/rich-tree-view/editing/',
-      ]);
-    }
-  }
-
-  return {
-    ...params,
-    isItemEditable: canUseFeature ? (params.isItemEditable ?? false) : false,
-  };
-};
+useTreeViewLabel.getDefaultizedParams = ({ params }) => ({
+  ...params,
+  isItemEditable: params.isItemEditable ?? false,
+});
 
 useTreeViewLabel.getInitialState = () => ({
   label: { editedItemId: null },

@@ -1,0 +1,8 @@
+<DataGrid
+  {...data}
+  initialState={{
+    columns: {
+      columnVisibilityModel: initialColumns,
+    },
+  }}
+/>

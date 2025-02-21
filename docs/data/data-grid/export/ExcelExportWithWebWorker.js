@@ -33,7 +33,7 @@ export default function ExcelExportWithWebWorker() {
 
   const { data, loading } = useDemoData({
     dataSet: 'Commodity',
-    rowLength: 10000,
+    rowLength: 50_000,
     editable: true,
   });
 

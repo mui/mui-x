@@ -1,4 +1,4 @@
-import {} from './typeOverloads/modules';
+import './typeOverloads/modules';
 
 // exports from MIT package
 export * from '@mui/x-charts/constants';
@@ -16,8 +16,6 @@ export * from '@mui/x-charts/ChartsText';
 export * from '@mui/x-charts/ChartsTooltip';
 export * from '@mui/x-charts/ChartsLegend';
 export * from '@mui/x-charts/ChartsAxisHighlight';
-export * from '@mui/x-charts/ChartsVoronoiHandler';
-export * from '@mui/x-charts/ChartsOnAxisClickHandler';
 export * from '@mui/x-charts/BarChart';
 export * from '@mui/x-charts/LineChart';
 export * from '@mui/x-charts/PieChart';
@@ -29,6 +27,7 @@ export * from '@mui/x-charts/ChartDataProvider';
 export * from '@mui/x-charts/ChartsLabel';
 
 // Pro components
+export * from './hooks';
 export * from './Heatmap';
 export * from './ChartContainerPro';
 export * from './ChartDataProviderPro';

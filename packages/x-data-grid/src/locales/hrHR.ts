@@ -6,6 +6,8 @@ const hrHRGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Nema redova',
   noResultsOverlayLabel: 'Nema rezultata.',
+  noColumnsOverlayLabel: 'Nema stupaca',
+  noColumnsOverlayManageColumns: 'Upravljaj stupcima',
 
   // Density selector toolbar button text
   toolbarDensity: 'Gustoća',

@@ -17,6 +17,8 @@ export interface GridLocaleText {
   // Root
   noRowsLabel: string;
   noResultsOverlayLabel: string;
+  noColumnsOverlayLabel: string;
+  noColumnsOverlayManageColumns: string;
 
   // Density selector toolbar button text
   toolbarDensity: React.ReactNode;

@@ -147,12 +147,19 @@ Those will fix the chart's size to the given value (in px).
 
 ### Placement
 
-At the core of chart layout is the drawing area which corresponds to the space available to represent data.
+There are two concepts to consider when defining the placement of a chart:
 
-This space can be defined with the `margin` prop and its properties `top`, `bottom`, `left`, and `right`.
-Those values define the space between the SVG border and the drawing area.
+- **`margin`**: The space between the SVG border and the axis or drawing area.
+- **`axis size`**: The space taken by the [axis](/x/react-charts/axis/#position). Each axis has its own size.
 
-You might want to modify those values to leave more space for your axis ticks or reduce them to provide more space for the data.
+The axes have a default size.
+To update it, use the `xAxis` and `yAxis` configuration as follows:
+
+- **`x-axis`**: Uses the `height` prop to define the space taken by the axis.
+- **`y-axis`**: Uses the `width` prop instead.
+
+Axes only take up space in the side they are positioned.
+If the axis is not be displayed (`position: 'none'`), they will not take up any space, regardless of their size.
 
 {{"demo": "MarginNoSnap.js", "hideToolbar": true, "bg": "playground"}}
 

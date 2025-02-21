@@ -4,7 +4,7 @@ import type { ExportedPickersSectionListProps } from '../PickersSectionList';
 import type { UseFieldInternalProps, UseFieldResponse } from '../internals/hooks/useField';
 import type { PickersTextFieldProps } from '../PickersTextField';
 import {
-  BaseForwardedSingleInputFieldProps,
+  BaseSingleInputFieldProps,
   FieldRangeSection,
   PickerRangeValue,
   PickerValidValue,
@@ -177,7 +177,7 @@ export type PickerFieldSlotProps<
 export type BaseSingleInputPickersTextFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
 > = Omit<
-  UseFieldResponse<TEnableAccessibleFieldDOMStructure, BaseForwardedSingleInputFieldProps>,
+  UseFieldResponse<TEnableAccessibleFieldDOMStructure, BaseSingleInputFieldProps>,
   | 'slots'
   | 'slotProps'
   | 'clearable'
