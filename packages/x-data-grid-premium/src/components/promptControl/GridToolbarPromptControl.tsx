@@ -9,6 +9,7 @@ import {
   gridColumnDefinitionsSelector,
   gridColumnLookupSelector,
   GridLogicOperator,
+  GridRowSelectionModel,
   gridRowsLookupSelector,
   GridSingleSelectColDef,
 } from '@mui/x-data-grid';
@@ -169,13 +170,16 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
         );
 
         const rows = getVisibleRows(apiRef, rootProps);
-        const selectedRowIds =
-          result.select === -1
-            ? []
-            : rows.rows.slice(0, result.select).map((r) => {
-                return apiRef.current.getRowId(r);
-              });
-        apiRef.current.setRowSelectionModel(selectedRowIds);
+        const rowSelectionModel: GridRowSelectionModel = { type: 'include', ids: new Set() };
+        if (result.select !== -1) {
+          for (let i = 0; i < result.select; i += 1) {
+            const row = rows.rows[i];
+            const id = apiRef.current.getRowId(row);
+            rowSelectionModel.ids.add(id);
+          }
+        }
+
+        apiRef.current.setRowSelectionModel(rowSelectionModel);
 
         const columns = apiRef.current.getAllColumns();
         const targetIndex =
@@ -236,41 +240,37 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
         slotProps={{
           input: {
             startAdornment: supportsSpeechRecognition && (
-              <rootProps.slots.baseInputAdornment position="start">
-                <RecordButton
-                  className={classes.recordButton}
-                  lang={lang}
-                  recording={isRecording}
-                  setRecording={setRecording}
-                  disabled={isLoading}
-                  onUpdate={setQuery}
-                  onDone={handleDone}
-                  onError={setError}
-                />
-              </rootProps.slots.baseInputAdornment>
+              <RecordButton
+                className={classes.recordButton}
+                lang={lang}
+                recording={isRecording}
+                setRecording={setRecording}
+                disabled={isLoading}
+                onUpdate={setQuery}
+                onDone={handleDone}
+                onError={setError}
+              />
             ),
             endAdornment: (
-              <rootProps.slots.baseInputAdornment position="end">
-                <rootProps.slots.baseTooltip
-                  title={apiRef.current.getLocaleText('toolbarPromptControlSendActionLabel')}
-                >
-                  <div>
-                    <rootProps.slots.baseIconButton
-                      className={classes.sendButton}
-                      disabled={isLoading || isRecording || query === ''}
-                      color="primary"
-                      onClick={processPrompt}
-                      size="small"
-                      aria-label={apiRef.current.getLocaleText(
-                        'toolbarPromptControlSendActionAriaLabel',
-                      )}
-                      edge="end"
-                    >
-                      <rootProps.slots.toolbarPromptSendIcon fontSize="small" />
-                    </rootProps.slots.baseIconButton>
-                  </div>
-                </rootProps.slots.baseTooltip>
-              </rootProps.slots.baseInputAdornment>
+              <rootProps.slots.baseTooltip
+                title={apiRef.current.getLocaleText('toolbarPromptControlSendActionLabel')}
+              >
+                <div>
+                  <rootProps.slots.baseIconButton
+                    className={classes.sendButton}
+                    disabled={isLoading || isRecording || query === ''}
+                    color="primary"
+                    onClick={processPrompt}
+                    size="small"
+                    aria-label={apiRef.current.getLocaleText(
+                      'toolbarPromptControlSendActionAriaLabel',
+                    )}
+                    edge="end"
+                  >
+                    <rootProps.slots.toolbarPromptSendIcon fontSize="small" />
+                  </rootProps.slots.baseIconButton>
+                </div>
+              </rootProps.slots.baseTooltip>
             ),
           },
         }}

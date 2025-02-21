@@ -10,7 +10,6 @@ export default function HighlightHeatmap() {
         xAxis={[{ data: [1, 2, 3, 4] }]}
         yAxis={[{ data: ['A', 'B', 'C', 'D', 'E'] }]}
         series={[{ data, highlightScope: { highlight: 'item', fade: 'global' } }]}
-        margin={{ top: 5, right: 5, left: 20 }}
         height={300}
       />
     </Box>

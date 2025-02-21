@@ -1,3 +1,4 @@
+// @ts-check
 import * as React from 'react';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { BarChart } from '@mui/x-charts/BarChart';
@@ -5,7 +6,7 @@ import { BarChart } from '@mui/x-charts/BarChart';
 const data = ['left', 'right', 'top', 'bottom'].map((propName) => ({
   propName,
   knob: 'number',
-  defaultValue: 80,
+  defaultValue: 60,
   step: 1,
   min: 0,
   max: 200,
@@ -15,7 +16,10 @@ export default function MarginNoSnap() {
     <ChartsUsageDemo
       componentName="Margin demos"
       data={data}
-      renderDemo={(props) => (
+      renderDemo={(
+        /** @type {{ left: number; right: number; top: number; bottom: number; }} */
+        props,
+      ) => (
         <div style={{ width: '100%', margin: 4 }}>
           <BarChart
             series={[{ data: [6, 18, 12] }]}
@@ -31,28 +35,27 @@ export default function MarginNoSnap() {
                 id: 'x-axis',
                 scaleType: 'band',
                 data: ['Page 1', 'Page 2', 'Page 3'],
+                position: 'top',
               },
             ]}
-            topAxis="x-axis"
-            rightAxis={{}}
+            yAxis={[{ position: 'right' }]}
           />
         </div>
       )}
-      getCode={({ props }) => {
-        return [
-          `import { BarChart } from '@mui/x-charts/BarChart';`,
-          '',
-          `<BarChart`,
-          `  // ...`,
-          `  margin={{`,
-          `    left: ${props.left},`,
-          `    right: ${props.right},`,
-          `    top: ${props.top},`,
-          `    bottom: ${props.bottom},`,
-          `  }}`,
-          '/>',
-        ].join('\n');
-      }}
+      getCode={(
+        /** @type {{props: { left: number; right: number; top: number; bottom: number; }}} */
+        { props },
+      ) => `import { BarChart } from '@mui/x-charts/BarChart';
+
+<BarChart
+  // ...
+  margin={{
+    left: ${props.left},
+    right: ${props.right},
+    top: ${props.top},
+    bottom: ${props.bottom},
+  }}
+/>`}
     />
   );
 }
