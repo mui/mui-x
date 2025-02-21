@@ -1,10 +1,8 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
-import {
-  unstable_composeClasses as composeClasses,
-  unstable_useForkRef as useForkRef,
-  unstable_useEventCallback as useEventCallback,
-} from '@mui/utils';
+import useEventCallback from '@mui/utils/useEventCallback';
+import useForkRef from '@mui/utils/useForkRef';
+import composeClasses from '@mui/utils/composeClasses';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useOnMount } from '../../hooks/utils/useOnMount';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';

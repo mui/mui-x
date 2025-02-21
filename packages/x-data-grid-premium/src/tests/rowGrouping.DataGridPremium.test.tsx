@@ -316,7 +316,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
       expect(getColumnValues(1)).to.deep.equal(['', '0', '3', '', '1', '4', '', '2']);
     });
 
-    it('should not use valueGetter to group the rows when defined', () => {
+    it('should use valueGetter to group the rows when defined', () => {
       render(
         <Test
           columns={[
@@ -332,7 +332,15 @@ describe('<DataGridPremium /> - Row grouping', () => {
           defaultGroupingExpansionDepth={-1}
         />,
       );
-      expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', 'Cat B (2)', '', '']);
+      expect(getColumnValues(0)).to.deep.equal([
+        'value Cat A (3)',
+        '',
+        '',
+        '',
+        'value Cat B (2)',
+        '',
+        '',
+      ]);
       expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2', '', '3', '4']);
     });
 

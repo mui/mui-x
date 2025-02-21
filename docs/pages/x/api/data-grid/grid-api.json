@@ -393,7 +393,7 @@
     },
     "setRows": { "type": { "description": "(rows: GridRowModel[]) =&gt; void" }, "required": true },
     "setRowSelectionModel": {
-      "type": { "description": "(rowIds: readonly GridRowId[]) =&gt; void" },
+      "type": { "description": "(rowIds: GridRowSelectionModel) =&gt; void" },
       "required": true
     },
     "setSortModel": {

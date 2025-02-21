@@ -75,6 +75,37 @@ const InputAdornment = styled(MUIInputAdornment)({
   },
 });
 
+const FormControlLabel = styled(MUIFormControlLabel, {
+  shouldForwardProp: (prop) => prop !== 'fullWidth',
+})<{ fullWidth?: boolean }>(({ theme }) => ({
+  gap: theme.spacing(0.5),
+  margin: 0,
+  [`& .${formControlLabelClasses.label}`]: {
+    fontSize: theme.typography.pxToRem(14),
+  },
+  variants: [
+    {
+      props: { fullWidth: true },
+      style: {
+        width: '100%',
+      },
+    },
+  ],
+}));
+
+const Checkbox = styled(MUICheckbox, {
+  shouldForwardProp: (prop) => prop !== 'density',
+})<{ density?: GridSlotProps['baseCheckbox']['density'] }>(({ theme }) => ({
+  variants: [
+    {
+      props: { density: 'compact' },
+      style: {
+        padding: theme.spacing(0.5),
+      },
+    },
+  ],
+}));
+
 const BaseSelect = forwardRef<any, GridSlotProps['baseSelect']>(function BaseSelect(props, ref) {
   const {
     id,
@@ -191,16 +222,12 @@ const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
 
 export default materialSlots;
 
-const CHECKBOX_COMPACT = { p: 0.5 };
-
 function BaseCheckbox(props: GridSlotProps['baseCheckbox'], ref: React.Ref<HTMLButtonElement>) {
-  const { autoFocus, label, fullWidth, slotProps, className, density, ...other } = props;
+  const { autoFocus, label, fullWidth, slotProps, className, ...other } = props;
 
   const elementRef = React.useRef<HTMLButtonElement>(null);
   const handleRef = useForkRef(elementRef, ref);
   const rippleRef = React.useRef<any>(null);
-
-  const sx = density === 'compact' ? CHECKBOX_COMPACT : undefined;
 
   React.useEffect(() => {
     if (autoFocus) {
@@ -215,38 +242,29 @@ function BaseCheckbox(props: GridSlotProps['baseCheckbox'], ref: React.Ref<HTMLB
 
   if (!label) {
     return (
-      <MUICheckbox
+      <Checkbox
         {...other}
         className={className}
         inputProps={slotProps?.htmlInput}
         ref={handleRef}
-        sx={sx}
         touchRippleRef={rippleRef}
       />
     );
   }
 
   return (
-    <MUIFormControlLabel
+    <FormControlLabel
       className={className}
       control={
-        <MUICheckbox
+        <Checkbox
           {...other}
           inputProps={slotProps?.htmlInput}
           ref={handleRef}
-          sx={sx}
           touchRippleRef={rippleRef}
         />
       }
       label={label}
-      sx={(theme) => ({
-        gap: 0.5,
-        margin: 0,
-        width: fullWidth ? '100%' : undefined,
-        [`& .${formControlLabelClasses.label}`]: {
-          fontSize: theme.typography.pxToRem(14),
-        },
-      })}
+      fullWidth={fullWidth}
     />
   );
 }

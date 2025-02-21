@@ -327,3 +327,13 @@ The `position` prop has been removed from the `ChartsXAxis` and `ChartsYAxis` co
 +  <ChartsYAxis axisId="my-axis" />
  </ChartContainer>
 ```
+
+## Rework spacing between tick labels
+
+The spacing between tick labels has been reworked to be more predictable.
+
+Before, the minimum spacing between tick labels depended on the width of the labels.
+Now, the minimum spacing is consistent and is set by a new `minTickLabelGap` property.
+
+A consequence of this improved spacing is that tick labels may render differently than before.
+It is, therefore, recommended that you verify that your charts have the desired appearance after upgrading.

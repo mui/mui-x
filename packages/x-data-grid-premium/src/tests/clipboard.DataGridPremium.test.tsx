@@ -10,7 +10,7 @@ import {
 import { act, createRenderer, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { SinonSpy, spy, stub, SinonStub } from 'sinon';
-import { getCell, getColumnValues, sleep } from 'test/utils/helperFn';
+import { getCell, getColumnValues, includeRowSelection, sleep } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 
 describe('<DataGridPremium /> - Clipboard', () => {
@@ -390,7 +390,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
     describe('row selection', () => {
       it('should paste into each selected row if single row of data is pasted', async () => {
-        const { user } = render(<Test rowSelectionModel={[0, 1, 2]} />);
+        const { user } = render(<Test rowSelectionModel={includeRowSelection([0, 1, 2])} />);
 
         const cell = getCell(2, 1);
         cell.focus();
@@ -407,7 +407,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       });
 
       it('should paste into selected rows if multiple rows of data are pasted', async () => {
-        const { user } = render(<Test rowSelectionModel={[0, 1, 2]} />);
+        const { user } = render(<Test rowSelectionModel={includeRowSelection([0, 1, 2])} />);
 
         const cell = getCell(2, 1);
         cell.focus();
@@ -429,7 +429,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       });
 
       it('should ignore row selection when single cell value is pasted', async () => {
-        const { user } = render(<Test rowSelectionModel={[0, 1, 2]} />);
+        const { user } = render(<Test rowSelectionModel={includeRowSelection([0, 1, 2])} />);
 
         const cell = getCell(2, 1);
         cell.focus();
