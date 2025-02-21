@@ -145,9 +145,9 @@ The `getSeriesToDisplay` function was removed in favor of the `useLegend` hook. 
 
 ## Renaming tooltip slots and props
 
-The slots `popper`, `axisContent`, and `itemContent` are replaced by the slot `tooltip` which is now the single entry point to customize the tooltip.
+The slots `popper`, `axisContent`, and `itemContent` have been replaced by the `tooltip` slot, which is now the single entry point to customize the tooltip.
 
-For consistency, the `tooltip` props is replaced by the `slotProps.tooltip`.
+For consistency, the `tooltip` props have been replaced by the `slotProps.tooltip`.
 
 ```diff
  <LineChart
@@ -156,9 +156,9 @@ For consistency, the `tooltip` props is replaced by the `slotProps.tooltip`.
  />
 ```
 
-To create your custom tooltip, we provide some helpers:
+Some helpers are provided to create your custom tooltip:
 
-- To override the **tooltip content**, use the `useItemTooltip` or `useAxisTooltip` to get the data, and wrapp your component in `ChartsTooltipContainer` to follow the pointer position.
+- To override the **tooltip content**, use the `useItemTooltip` or `useAxisTooltip` to get the data, and wrap your component in `ChartsTooltipContainer` to follow the pointer position.
 - To override the **tooltip placement**, use the `ChartsItemTooltipContent` or `ChartsItemTooltipContent` to get the default data display, and place them in your custom tooltip.
 
 ## Removing ResponsiveChartContainer ✅
