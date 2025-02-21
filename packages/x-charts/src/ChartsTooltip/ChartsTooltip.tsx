@@ -44,7 +44,7 @@ function ChartsTooltip(props: ChartsTooltipProps) {
   const classes = useUtilityClasses(propClasses);
 
   return (
-    <ChartsTooltipContainer slots={slots} slotProps={slotProps} {...props} classes={classes}>
+    <ChartsTooltipContainer {...props} classes={classes}>
       {trigger === 'axis' ? (
         <ChartsAxisTooltipContent classes={classes} slots={slots} slotProps={slotProps} />
       ) : (
