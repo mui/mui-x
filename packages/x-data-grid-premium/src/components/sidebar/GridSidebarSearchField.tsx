@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { GridSlotProps } from '@mui/x-data-grid';
-import SearchIcon from '@mui/icons-material/Search';
-import CancelIcon from '@mui/icons-material/Cancel';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
@@ -28,24 +26,19 @@ export function GridSidebarSearchField(props: GridSidebarSearchFieldProps) {
       aria-label={apiRef.current.getLocaleText('pivotSearchControlLabel')}
       placeholder={apiRef.current.getLocaleText('pivotSearchControlPlaceholder')}
       onKeyDown={handleKeyDown}
+      fullWidth
       slotProps={{
         input: {
-          startAdornment: (
-            <rootProps.slots.baseInputAdornment position="start">
-              <SearchIcon fontSize="small" />
-            </rootProps.slots.baseInputAdornment>
-          ),
+          startAdornment: <rootProps.slots.pivotSearchIcon fontSize="small" />,
           endAdornment: (
-            <rootProps.slots.baseInputAdornment position="end">
-              <rootProps.slots.baseIconButton
-                edge="end"
-                size="small"
-                onClick={props.onClear}
-                aria-label={apiRef.current.getLocaleText('pivotSearchControlClear')}
-              >
-                <CancelIcon fontSize="small" />
-              </rootProps.slots.baseIconButton>
-            </rootProps.slots.baseInputAdornment>
+            <rootProps.slots.baseIconButton
+              edge="end"
+              size="small"
+              onClick={props.onClear}
+              aria-label={apiRef.current.getLocaleText('pivotSearchControlClear')}
+            >
+              <rootProps.slots.pivotSearchClearIcon fontSize="small" />
+            </rootProps.slots.baseIconButton>
           ),
         },
       }}

@@ -75,6 +75,11 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     [k.typography.small.fontWeight]: t.typography.caption.fontWeight as string,
     [k.typography.small.letterSpacing]: t.typography.caption.letterSpacing as string,
     [k.typography.small.lineHeight]: t.typography.caption.lineHeight as string,
+    [k.typography.large.fontFamily]: t.typography.body1.fontFamily as string,
+    [k.typography.large.fontSize]: t.typography.body1.fontSize as string,
+    [k.typography.large.fontWeight]: t.typography.body1.fontWeight as string,
+    [k.typography.large.letterSpacing]: t.typography.body1.letterSpacing as string,
+    [k.typography.large.lineHeight]: t.typography.body1.lineHeight as string,
 
     [k.transitions.easing.easeIn]: t.transitions.easing.easeIn,
     [k.transitions.easing.easeOut]: t.transitions.easing.easeOut,

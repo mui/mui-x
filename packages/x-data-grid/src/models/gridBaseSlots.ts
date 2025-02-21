@@ -273,6 +273,10 @@ export type SwitchProps = {
   checked?: boolean;
   onChange?: React.ChangeEventHandler;
   size?: 'small' | 'medium';
+  label?: React.ReactNode;
+  labelPlacement?: 'start' | 'end';
+  className?: string;
+  fullWidth?: boolean;
 };
 
 export type TextFieldProps = {
@@ -306,4 +310,10 @@ export type TooltipProps = {
   children: React.ReactElement<any, any>;
   enterDelay?: number;
   title: React.ReactNode;
+};
+
+export type ChipProps = {
+  label: string;
+  size?: 'small' | 'medium';
+  variant?: 'outlined' | 'filled';
 };

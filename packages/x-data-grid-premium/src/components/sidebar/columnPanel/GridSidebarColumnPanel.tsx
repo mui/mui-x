@@ -25,7 +25,6 @@ export function GridSidebarColumnPanel({
         searchState={searchState}
         onSearchStateChange={setSearchState}
       />
-
       <Body
         pivotModel={pivotModel}
         columns={pivotParams.initialColumns ?? []}

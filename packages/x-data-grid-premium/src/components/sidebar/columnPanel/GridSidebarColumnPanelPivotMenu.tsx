@@ -1,12 +1,8 @@
 import * as React from 'react';
 import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Divider from '@mui/material/Divider';
 
 import { PivotModel } from '../../../hooks/features/pivoting/useGridPivoting';
-import { useGridRootProps } from '../../../typeOverloads/reexports';
+import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import type {
   DropPosition,
   FieldTransferObject,
@@ -120,69 +116,73 @@ export function GridSidebarColumnPanelPivotMenu(props: {
 
       {isAvailableField ? (
         <Menu {...menuProps}>
-          <MenuItem onClick={() => handleMove('rows')}>
+          <rootProps.slots.baseMenuItem onClick={() => handleMove('rows')}>
             {apiRef.current.getLocaleText('pivotMenuAddToRows')}
-          </MenuItem>
-          <MenuItem onClick={() => handleMove('columns')}>
+          </rootProps.slots.baseMenuItem>
+          <rootProps.slots.baseMenuItem onClick={() => handleMove('columns')}>
             {apiRef.current.getLocaleText('pivotMenuAddToColumns')}
-          </MenuItem>
-          <MenuItem onClick={() => handleMove('values')}>
+          </rootProps.slots.baseMenuItem>
+          <rootProps.slots.baseMenuItem onClick={() => handleMove('values')}>
             {apiRef.current.getLocaleText('pivotMenuAddToValues')}
-          </MenuItem>
+          </rootProps.slots.baseMenuItem>
         </Menu>
       ) : (
         <Menu {...menuProps}>
-          <MenuItem disabled={!canMoveUp} onClick={() => handleMove('up')}>
-            <ListItemIcon>
-              <rootProps.slots.pivotMenuMoveUpIcon />
-            </ListItemIcon>
-            <ListItemText>{apiRef.current.getLocaleText('pivotMenuMoveUp')}</ListItemText>
-          </MenuItem>
-          <MenuItem disabled={!canMoveDown} onClick={() => handleMove('down')}>
-            <ListItemIcon>
-              <rootProps.slots.pivotMenuMoveDownIcon />
-            </ListItemIcon>
-            <ListItemText>{apiRef.current.getLocaleText('pivotMenuMoveDown')}</ListItemText>
-          </MenuItem>
-          <Divider />
-          <MenuItem disabled={!canMoveUp} onClick={() => handleMove('top')}>
-            <ListItemIcon>
-              <rootProps.slots.pivotMenuMoveToTopIcon />
-            </ListItemIcon>
-            <ListItemText>{apiRef.current.getLocaleText('pivotMenuMoveToTop')}</ListItemText>
-          </MenuItem>
-          <MenuItem disabled={!canMoveDown} onClick={() => handleMove('bottom')}>
-            <ListItemIcon>
-              <rootProps.slots.pivotMenuMoveToBottomIcon />
-            </ListItemIcon>
-            <ListItemText>{apiRef.current.getLocaleText('pivotMenuMoveToBottom')}</ListItemText>
-          </MenuItem>
-          <Divider />
-          <MenuItem onClick={() => handleMove('rows')}>
-            <ListItemIcon>
-              {modelKey === 'rows' ? <rootProps.slots.pivotMenuCheckIcon /> : null}
-            </ListItemIcon>
-            <ListItemText>{apiRef.current.getLocaleText('pivotMenuRows')}</ListItemText>
-          </MenuItem>
-          <MenuItem onClick={() => handleMove('columns')}>
-            <ListItemIcon>
-              {modelKey === 'columns' ? <rootProps.slots.pivotMenuCheckIcon /> : null}
-            </ListItemIcon>
-            <ListItemText>{apiRef.current.getLocaleText('pivotMenuColumns')}</ListItemText>
-          </MenuItem>
-          <MenuItem onClick={() => handleMove('values')}>
-            <ListItemIcon>
-              {modelKey === 'values' ? <rootProps.slots.pivotMenuCheckIcon /> : null}
-            </ListItemIcon>
-            <ListItemText>{apiRef.current.getLocaleText('pivotMenuValues')}</ListItemText>
-          </MenuItem>
-          <Divider />
-          <MenuItem onClick={() => handleMove(null)}>
-            <ListItemIcon>
-              <rootProps.slots.pivotMenuRemoveIcon />
-            </ListItemIcon>
-            <ListItemText>{apiRef.current.getLocaleText('pivotMenuRemove')}</ListItemText>
-          </MenuItem>
+          <rootProps.slots.baseMenuItem
+            disabled={!canMoveUp}
+            onClick={() => handleMove('up')}
+            iconStart={<rootProps.slots.pivotMenuMoveUpIcon />}
+          >
+            {apiRef.current.getLocaleText('pivotMenuMoveUp')}
+          </rootProps.slots.baseMenuItem>
+          <rootProps.slots.baseMenuItem
+            disabled={!canMoveDown}
+            onClick={() => handleMove('down')}
+            iconStart={<rootProps.slots.pivotMenuMoveDownIcon />}
+          >
+            {apiRef.current.getLocaleText('pivotMenuMoveDown')}
+          </rootProps.slots.baseMenuItem>
+          <rootProps.slots.baseDivider />
+          <rootProps.slots.baseMenuItem
+            disabled={!canMoveUp}
+            onClick={() => handleMove('top')}
+            iconStart={<rootProps.slots.pivotMenuMoveToTopIcon />}
+          >
+            {apiRef.current.getLocaleText('pivotMenuMoveToTop')}
+          </rootProps.slots.baseMenuItem>
+          <rootProps.slots.baseMenuItem
+            disabled={!canMoveDown}
+            onClick={() => handleMove('bottom')}
+            iconStart={<rootProps.slots.pivotMenuMoveToBottomIcon />}
+          >
+            {apiRef.current.getLocaleText('pivotMenuMoveToBottom')}
+          </rootProps.slots.baseMenuItem>
+          <rootProps.slots.baseDivider />
+          <rootProps.slots.baseMenuItem
+            onClick={() => handleMove('rows')}
+            iconStart={modelKey === 'rows' ? <rootProps.slots.pivotMenuCheckIcon /> : <span />}
+          >
+            {apiRef.current.getLocaleText('pivotMenuRows')}
+          </rootProps.slots.baseMenuItem>
+          <rootProps.slots.baseMenuItem
+            onClick={() => handleMove('columns')}
+            iconStart={modelKey === 'columns' ? <rootProps.slots.pivotMenuCheckIcon /> : <span />}
+          >
+            {apiRef.current.getLocaleText('pivotMenuColumns')}
+          </rootProps.slots.baseMenuItem>
+          <rootProps.slots.baseMenuItem
+            onClick={() => handleMove('values')}
+            iconStart={modelKey === 'values' ? <rootProps.slots.pivotMenuCheckIcon /> : <span />}
+          >
+            {apiRef.current.getLocaleText('pivotMenuValues')}
+          </rootProps.slots.baseMenuItem>
+          <rootProps.slots.baseDivider />
+          <rootProps.slots.baseMenuItem
+            onClick={() => handleMove(null)}
+            iconStart={<rootProps.slots.pivotMenuRemoveIcon />}
+          >
+            {apiRef.current.getLocaleText('pivotMenuRemove')}
+          </rootProps.slots.baseMenuItem>
         </Menu>
       )}
     </div>

@@ -1,3 +1,4 @@
+import { GridSearchIcon } from '@mui/x-data-grid';
 import type { GridPremiumIconSlotsComponent } from '../models';
 import {
   GridWorkspacesIcon,
@@ -5,6 +6,7 @@ import {
   GridFunctionsIcon,
   GridSendPromptIcon,
   GridRecordPromptIcon,
+  GridClearIcon,
 } from './icons';
 
 const iconsSlots: GridPremiumIconSlotsComponent = {
@@ -13,6 +15,8 @@ const iconsSlots: GridPremiumIconSlotsComponent = {
   columnMenuAggregationIcon: GridFunctionsIcon,
   toolbarPromptSendIcon: GridSendPromptIcon,
   toolbarPromptRecordIcon: GridRecordPromptIcon,
+  pivotSearchIcon: GridSearchIcon,
+  pivotSearchClearIcon: GridClearIcon,
 };
 
 const materialSlots = {

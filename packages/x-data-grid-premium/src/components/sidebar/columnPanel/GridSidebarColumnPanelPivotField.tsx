@@ -7,14 +7,12 @@ import {
   GridSortDirection,
   NotRendered,
 } from '@mui/x-data-grid';
-
-import { selectClasses } from '@mui/material/Select';
-import { outlinedInputClasses } from '@mui/material/OutlinedInput';
+import Menu from '@mui/material/Menu';
 import composeClasses from '@mui/utils/composeClasses';
 import { DataGridProcessedProps, vars } from '@mui/x-data-grid/internals';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { PivotModel } from '../../../hooks/features/pivoting/useGridPivoting';
-import { useGridRootProps } from '../../../typeOverloads/reexports';
+import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { getAvailableAggregationFunctions } from '../../../hooks/features/aggregation/gridAggregationUtils';
 import { GridSidebarColumnPanelPivotMenu as PivotMenu } from './GridSidebarColumnPanelPivotMenu';
 import type {
@@ -132,22 +130,6 @@ const PivotFieldCheckbox = styled(NotRendered<GridSlotProps['baseCheckbox']>)({
   cursor: 'grab',
 });
 
-const AggregationSelectRoot = styled(NotRendered<GridSlotProps['baseSelect']>)({
-  fontSize: vars.typography.small.fontSize,
-  [`& .${selectClasses.select}.${selectClasses.outlined}.${outlinedInputClasses.input}`]: {
-    padding: vars.spacing(0.75, 3, 0.75, 1),
-  },
-  [`& .${selectClasses.icon}`]: {
-    right: 0,
-  },
-  '&:hover': {
-    backgroundColor: vars.colors.interactive.hover,
-  },
-  [`&:not(:focus-within) .${outlinedInputClasses.notchedOutline}`]: {
-    border: 0,
-  },
-});
-
 function AggregationSelect({
   aggFunc,
   field,
@@ -160,6 +142,8 @@ function AggregationSelect({
   colDef: GridColDef;
 }) {
   const rootProps = useGridRootProps();
+  const [aggregationMenuOpen, setAggregationMenuOpen] = React.useState(false);
+  const aggregationMenuTriggerRef = React.useRef<HTMLDivElement>(null);
 
   const availableAggregationFunctions = React.useMemo(
     () =>
@@ -171,42 +155,50 @@ function AggregationSelect({
     [colDef, rootProps.aggregationFunctions],
   );
 
+  const handleClick = (func: string) => {
+    onPivotModelChange((prev) => {
+      return {
+        ...prev,
+        values: prev.values.map((col) => {
+          if (col.field === field) {
+            return { ...col, aggFunc: func };
+          }
+          return col;
+        }),
+      };
+    });
+    setAggregationMenuOpen(false);
+  };
+
   return (
-    <AggregationSelectRoot
-      as={rootProps.slots.baseSelect}
-      {...rootProps.slotProps?.baseSelect}
-      size="small"
-      value={aggFunc}
-      onChange={(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const newValue = event.target.value;
-        onPivotModelChange((prev) => {
-          return {
-            ...prev,
-            values: prev.values.map((col) => {
-              if (col.field === field) {
-                return {
-                  ...col,
-                  aggFunc: newValue,
-                };
-              }
-              return col;
-            }),
-          };
-        });
-      }}
-    >
-      {availableAggregationFunctions.map((func) => (
-        <rootProps.slots.baseSelectOption
-          key={func}
-          value={func}
-          native={false}
-          // @ts-ignore TODO: Fix types for MUISelectOption
-          dense
-        >
-          {func}
-        </rootProps.slots.baseSelectOption>
-      ))}
-    </AggregationSelectRoot>
+    <React.Fragment>
+      <rootProps.slots.baseChip
+        label={aggFunc}
+        size="small"
+        variant="outlined"
+        ref={aggregationMenuTriggerRef}
+        id="aggregation-menu-trigger"
+        aria-controls="aggregation-menu"
+        aria-haspopup="true"
+        aria-expanded={aggregationMenuOpen ? 'true' : undefined}
+        onClick={() => setAggregationMenuOpen(true)}
+      />
+      <Menu
+        open={aggregationMenuOpen}
+        onClose={() => setAggregationMenuOpen(false)}
+        anchorEl={aggregationMenuTriggerRef.current}
+      >
+        {availableAggregationFunctions.map((func) => (
+          <rootProps.slots.baseMenuItem
+            key={func}
+            selected={aggFunc === func}
+            onClick={() => handleClick(func)}
+          >
+            {func}
+          </rootProps.slots.baseMenuItem>
+        ))}
+      </Menu>
+    </React.Fragment>
   );
 }
 

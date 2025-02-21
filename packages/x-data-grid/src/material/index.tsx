@@ -80,6 +80,31 @@ const InputAdornment = styled(MUIInputAdornment)({
   },
 });
 
+const FormControlLabel = styled(MUIFormControlLabel, {
+  shouldForwardProp: (prop) => prop !== 'fullWidth',
+})<{ fullWidth?: boolean }>(({ theme }) => ({
+  gap: theme.spacing(0.5),
+  margin: 0,
+  [`& .${formControlLabelClasses.label}`]: {
+    fontSize: theme.typography.pxToRem(14),
+  },
+  variants: [
+    {
+      props: { fullWidth: true },
+      style: {
+        width: '100%',
+      },
+    },
+    {
+      props: { labelPlacement: 'start', fullWidth: true },
+      style: {
+        justifyContent: 'space-between',
+        width: '100%',
+      },
+    },
+  ],
+}));
+
 const BaseSelect = forwardRef<any, GridSlotProps['baseSelect']>(function BaseSelect(props, ref) {
   const {
     id,
@@ -180,6 +205,7 @@ const baseSlots: GridBaseSlots = {
   baseAutocomplete: BaseAutocomplete,
   baseBadge: MUIBadge,
   baseCheckbox: React.forwardRef(BaseCheckbox),
+  baseChip: MUIChip,
   baseCircularProgress: MUICircularProgress,
   baseDivider: MUIDivider,
   baseInput: BaseInput,
@@ -194,7 +220,7 @@ const baseSlots: GridBaseSlots = {
   baseSelect: BaseSelect,
   baseSelectOption: BaseSelectOption,
   baseSkeleton: MUISkeleton,
-  baseSwitch: MUISwitch,
+  baseSwitch: forwardRef(BaseSwitch),
 };
 
 const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
@@ -268,6 +294,24 @@ function BaseCheckbox(props: GridSlotProps['baseCheckbox'], ref: React.Ref<HTMLB
             : {}),
         },
       })}
+    />
+  );
+}
+
+function BaseSwitch(props: GridSlotProps['baseSwitch'], ref: React.Ref<HTMLButtonElement>) {
+  const { label, labelPlacement, className, fullWidth, ...other } = props;
+
+  if (!label) {
+    return <MUISwitch {...other} className={className} ref={ref} />;
+  }
+
+  return (
+    <FormControlLabel
+      className={className}
+      control={<MUISwitch {...other} ref={ref} />}
+      fullWidth={fullWidth}
+      label={label}
+      labelPlacement={labelPlacement}
     />
   );
 }

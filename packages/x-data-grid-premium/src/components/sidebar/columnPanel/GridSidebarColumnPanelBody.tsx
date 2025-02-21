@@ -3,7 +3,7 @@ import { styled } from '@mui/system';
 import { GridColDef, GridShadowScrollArea } from '@mui/x-data-grid';
 import { vars } from '@mui/x-data-grid/internals';
 import { PivotModel } from '../../../hooks/features/pivoting/useGridPivoting';
-import { useGridRootProps } from '../../../typeOverloads/reexports';
+import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { getAvailableAggregationFunctions } from '../../../hooks/features/aggregation/gridAggregationUtils';
 import { PivotField } from './GridSidebarColumnPanelPivotField';
 import { GridSidebarCollapsibleSection } from '../GridSidebarCollapsibleSection';
@@ -83,7 +83,7 @@ const Placeholder = styled('div')({
   height: '100%',
   padding: vars.spacing(0, 1),
   color: vars.colors.foreground.muted,
-  ...vars.typography.small,
+  ...vars.typography.body,
 });
 
 const ResizeHandle = styled('div')({

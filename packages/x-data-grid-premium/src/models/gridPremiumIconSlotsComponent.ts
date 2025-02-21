@@ -26,4 +26,14 @@ export interface GridPremiumIconSlotsComponent {
    * @default GridFunctionsIcon
    */
   toolbarPromptRecordIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon used for the search icon in the sidebar search field
+   * @default GridSearchIcon
+   */
+  pivotSearchIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon used for the clear button in the sidebar search field
+   * @default GridClearIcon
+   */
+  pivotSearchClearIcon: React.JSXElementConstructor<any>;
 }
