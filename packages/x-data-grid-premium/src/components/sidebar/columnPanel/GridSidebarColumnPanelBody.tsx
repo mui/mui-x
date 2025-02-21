@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled } from '@mui/system';
 import { GridColDef, GridShadowScrollArea } from '@mui/x-data-grid';
 import { vars } from '@mui/x-data-grid/internals';
-import { PivotModel } from '../../../hooks/features/pivoting/useGridPivoting';
+import { GridPivotModel } from '../../../hooks/features/pivoting/gridPivotingInterfaces';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { getAvailableAggregationFunctions } from '../../../hooks/features/aggregation/gridAggregationUtils';
 import { PivotField } from './GridSidebarColumnPanelPivotField';
@@ -131,8 +131,8 @@ export function GridSidebarColumnPanelBody({
     value: string;
     enabled: boolean;
   };
-  pivotModel: PivotModel;
-  onPivotModelChange: React.Dispatch<React.SetStateAction<PivotModel>>;
+  pivotModel: GridPivotModel;
+  onPivotModelChange: React.Dispatch<React.SetStateAction<GridPivotModel>>;
 }) {
   const apiRef = useGridApiContext();
   const { ref: resizeHandleRef } = useResize({
@@ -233,16 +233,16 @@ export function GridSidebarColumnPanelBody({
               field,
               aggFunc,
             });
-            newModel.values = newSectionArray as PivotModel['values'];
+            newModel.values = newSectionArray as GridPivotModel['values'];
           } else if (targetSection === 'columns') {
             const sort = isSameSection
               ? prev.columns.find((item) => item.field === field)?.sort
               : undefined;
             newSectionArray.splice(toIndex, 0, { field, sort });
-            newModel.columns = newSectionArray as PivotModel['columns'];
+            newModel.columns = newSectionArray as GridPivotModel['columns'];
           } else if (targetSection === 'rows') {
             newSectionArray.splice(toIndex, 0, { field });
-            newModel.rows = newSectionArray as PivotModel['rows'];
+            newModel.rows = newSectionArray as GridPivotModel['rows'];
           }
         }
         if (!isSameSection && originSection) {

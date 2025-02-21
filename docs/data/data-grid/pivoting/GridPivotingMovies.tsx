@@ -3,7 +3,7 @@ import {
   DataGridPremium,
   useGridApiRef,
   unstable_useGridPivoting,
-  Unstable_GridPivotModel as PivotModel,
+  GridPivotModel,
   GridColDef,
   GridToolbar,
 } from '@mui/x-data-grid-premium';
@@ -22,7 +22,7 @@ export default function GridPivotingMovies() {
       ] as GridColDef[],
     };
   }, [movieData]);
-  const [pivotModel, setPivotModel] = React.useState<PivotModel>({
+  const [pivotModel, setPivotModel] = React.useState<GridPivotModel>({
     rows: [{ field: 'company' }],
     columns: [
       { field: 'year', sort: 'desc' },

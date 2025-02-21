@@ -22,23 +22,11 @@ import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPrem
 import { GridAggregationModel } from '../aggregation';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import { isGroupingColumn } from '../rowGrouping';
-
-export interface PivotModel {
-  columns: { field: GridColDef['field']; sort?: 'asc' | 'desc'; hidden?: boolean }[];
-  rows: {
-    field: GridColDef['field'];
-    hidden?: boolean;
-  }[];
-  values: {
-    field: GridColDef['field'];
-    aggFunc: string;
-    hidden?: boolean;
-  }[];
-}
+import { type GridPivotModel } from './gridPivotingInterfaces';
 
 function sortColumnGroups(
   columnGroups: GridColumnNode[],
-  pivotModelColumns: PivotModel['columns'],
+  pivotModelColumns: GridPivotModel['columns'],
   depth = 0,
 ) {
   if (depth > pivotModelColumns.length - 1) {
@@ -73,7 +61,7 @@ const getPivotedData = ({
 }: {
   rows: GridRowModel[];
   columns: GridColDef[];
-  pivotModel: PivotModel;
+  pivotModel: GridPivotModel;
   apiRef: React.MutableRefObject<GridApiPremium>;
 }): {
   rows: DataGridPremiumProcessedProps['rows'];
@@ -247,8 +235,8 @@ export const useGridPivoting = ({
   onPivotSettingsOpenChange,
 }: {
   // initialIsPivot?: boolean;
-  pivotModel: PivotModel;
-  onPivotModelChange: React.Dispatch<React.SetStateAction<PivotModel>>;
+  pivotModel: GridPivotModel;
+  onPivotModelChange: React.Dispatch<React.SetStateAction<GridPivotModel>>;
   apiRef: RefObject<GridApiPremium | null>;
   pivotMode: boolean;
   onPivotModeChange: (isPivot: boolean) => void;

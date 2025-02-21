@@ -5,7 +5,7 @@ import {
   GridColDef,
   GridToolbar,
   useGridApiRef,
-  Unstable_GridPivotModel,
+  GridPivotModel,
 } from '@mui/x-data-grid-premium';
 
 const rows = [
@@ -122,7 +122,7 @@ const getQuarterField = (field: string) => `${field}-quarter`;
 export default function GridPivotingFinancial() {
   const apiRef = useGridApiRef();
 
-  const [pivotModel, setPivotModel] = React.useState<Unstable_GridPivotModel>({
+  const [pivotModel, setPivotModel] = React.useState<GridPivotModel>({
     rows: [{ field: 'ticker' }],
     columns: [
       { field: getYearField('date'), sort: 'asc' },

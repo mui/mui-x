@@ -5,8 +5,8 @@ import {
   DataGridPremium,
   DataGridPremiumProps,
   GridColDef,
+  GridPivotModel,
   GridToolbar,
-  Unstable_GridPivotModel,
   unstable_useGridPivoting,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
@@ -130,7 +130,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
 
   function Test(
     props: {
-      initialPivotModel: Unstable_GridPivotModel;
+      initialPivotModel: GridPivotModel;
       initialIsPivotMode?: boolean;
     } & Partial<DataGridPremiumProps>,
   ) {
@@ -138,7 +138,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
 
     const { initialPivotModel, initialIsPivotMode, ...other } = props;
 
-    const [pivotModel, setPivotModel] = React.useState<Unstable_GridPivotModel>(initialPivotModel);
+    const [pivotModel, setPivotModel] = React.useState<GridPivotModel>(initialPivotModel);
 
     const [isPivotMode, setIsPivotMode] = React.useState(initialIsPivotMode ?? false);
 

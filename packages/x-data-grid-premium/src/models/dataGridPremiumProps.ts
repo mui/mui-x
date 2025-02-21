@@ -25,7 +25,7 @@ import { GridPremiumSlotsComponent } from './gridPremiumSlotsComponent';
 import { GridInitialStatePremium } from './gridStatePremium';
 import { GridApiPremium } from './gridApiPremium';
 import { GridCellSelectionModel } from '../hooks/features/cellSelection';
-import type { PivotModel } from '../hooks/features/pivoting/useGridPivoting';
+import type { GridPivotModel } from '../hooks/features/pivoting/gridPivotingInterfaces';
 import {
   GridDataSourcePremium as GridDataSource,
   GridGetRowsParamsPremium as GridGetRowsParams,
@@ -218,8 +218,8 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
       | 'columnVisibilityModel'
       | 'columnGroupingModel'
     >;
-    pivotModel: PivotModel;
-    onPivotModelChange: React.Dispatch<React.SetStateAction<PivotModel>>;
+    pivotModel: GridPivotModel;
+    onPivotModelChange: React.Dispatch<React.SetStateAction<GridPivotModel>>;
     initialColumns: GridColDef[] | undefined;
     pivotSettingsOpen: boolean;
     onPivotSettingsOpenChange: (isPivotSettingsOpen: boolean) => void;

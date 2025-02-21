@@ -3,7 +3,7 @@ import {
   DataGridPremium,
   useGridApiRef,
   unstable_useGridPivoting,
-  Unstable_GridPivotModel as PivotModel,
+  GridPivotModel,
   GridToolbar,
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
@@ -17,7 +17,7 @@ export default function GridPivotingCommodities() {
     editable: true,
   });
 
-  const [pivotModel, setPivotModel] = React.useState<PivotModel>({
+  const [pivotModel, setPivotModel] = React.useState<GridPivotModel>({
     rows: [{ field: 'brokerName' }],
     columns: [{ field: 'commodity', sort: 'asc' }],
     values: [{ field: 'quantity', aggFunc: 'sum' }],

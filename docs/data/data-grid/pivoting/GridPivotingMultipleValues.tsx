@@ -5,7 +5,7 @@ import {
   GridColDef,
   GridRowModel,
   unstable_useGridPivoting,
-  Unstable_GridPivotModel as PivotModel,
+  GridPivotModel,
 } from '@mui/x-data-grid-premium';
 
 const initialRows: GridRowModel[] = [
@@ -40,7 +40,7 @@ const initialColumns: GridColDef[] = [
 export default function GridPivotingMultipleValues() {
   const apiRef = useGridApiRef();
 
-  const [pivotModel, setPivotModel] = React.useState<PivotModel>({
+  const [pivotModel, setPivotModel] = React.useState<GridPivotModel>({
     rows: [{ field: 'type' }],
     columns: [{ field: 'product' }],
     values: [

@@ -11,7 +11,7 @@ import Menu from '@mui/material/Menu';
 import composeClasses from '@mui/utils/composeClasses';
 import { DataGridProcessedProps, vars } from '@mui/x-data-grid/internals';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import { PivotModel } from '../../../hooks/features/pivoting/useGridPivoting';
+import { GridPivotModel } from '../../../hooks/features/pivoting/gridPivotingInterfaces';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { getAvailableAggregationFunctions } from '../../../hooks/features/aggregation/gridAggregationUtils';
 import { GridSidebarColumnPanelPivotMenu as PivotMenu } from './GridSidebarColumnPanelPivotMenu';
@@ -24,19 +24,19 @@ import type {
 type PivotFieldProps = {
   children: React.ReactNode;
   field: FieldTransferObject['field'];
-  pivotModel: PivotModel;
+  pivotModel: GridPivotModel;
   updatePivotModel: UpdatePivotModel;
-  onPivotModelChange: React.Dispatch<React.SetStateAction<PivotModel>>;
+  onPivotModelChange: React.Dispatch<React.SetStateAction<GridPivotModel>>;
   slots: DataGridPremiumProcessedProps['slots'];
   slotProps: DataGridPremiumProcessedProps['slotProps'];
   onDragStart: (modelKey: FieldTransferObject['modelKey']) => void;
   onDragEnd: () => void;
 } & (
-  | { modelKey: 'columns'; sort: PivotModel['columns'][number]['sort']; hidden?: boolean }
+  | { modelKey: 'columns'; sort: GridPivotModel['columns'][number]['sort']; hidden?: boolean }
   | { modelKey: 'rows'; hidden?: boolean }
   | {
       modelKey: 'values';
-      aggFunc: PivotModel['values'][number]['aggFunc'];
+      aggFunc: GridPivotModel['values'][number]['aggFunc'];
       colDef: GridColDef;
       hidden?: boolean;
     }
@@ -136,9 +136,9 @@ function AggregationSelect({
   onPivotModelChange,
   colDef,
 }: {
-  aggFunc: PivotModel['values'][number]['aggFunc'];
+  aggFunc: GridPivotModel['values'][number]['aggFunc'];
   field: FieldTransferObject['field'];
-  onPivotModelChange: React.Dispatch<React.SetStateAction<PivotModel>>;
+  onPivotModelChange: React.Dispatch<React.SetStateAction<GridPivotModel>>;
   colDef: GridColDef;
 }) {
   const rootProps = useGridRootProps();
