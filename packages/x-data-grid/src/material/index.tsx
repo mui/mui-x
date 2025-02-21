@@ -58,10 +58,6 @@ import {
   GridClearIcon,
   GridLoadIcon,
   GridDeleteForeverIcon,
-  GridMoveToTopIcon,
-  GridMoveToBottomIcon,
-  GridDeleteIcon,
-  GridExpandLessIcon,
   GridPivotIcon,
 } from './icons';
 import type { GridIconSlotsComponent } from '../models';
@@ -74,11 +70,11 @@ export { useMaterialCSSVariables } from './variables';
 
 const ClickAwayListener = forwardRef(MUIClickAwayListener);
 
-const InputAdornment = styled(MUIInputAdornment)({
+const InputAdornment = styled(MUIInputAdornment)(({ theme }) => ({
   [`&.${inputAdornmentClasses.positionEnd} .${iconButtonClasses.sizeSmall}`]: {
-    marginRight: '-7px',
+    marginRight: theme.spacing(-0.75),
   },
-});
+}));
 
 const FormControlLabel = styled(MUIFormControlLabel, {
   shouldForwardProp: (prop) => prop !== 'fullWidth',
@@ -192,7 +188,7 @@ const iconSlots: GridIconSlotsComponent = {
   detailPanelCollapseIcon: GridRemoveIcon,
   rowReorderIcon: GridDragIcon,
   quickFilterIcon: GridSearchIcon,
-  quickFilterClearIcon: GridCloseIcon,
+  quickFilterClearIcon: GridClearIcon,
   columnMenuHideIcon: GridVisibilityOffIcon,
   columnMenuSortAscendingIcon: GridArrowUpwardIcon,
   columnMenuSortDescendingIcon: GridArrowDownwardIcon,
@@ -205,13 +201,6 @@ const iconSlots: GridIconSlotsComponent = {
   columnReorderIcon: GridDragIcon,
   menuItemCheckIcon: GridCheckIcon,
   pivotIcon: GridPivotIcon,
-  pivotMenuAddIcon: GridAddIcon,
-  pivotMenuMoveUpIcon: GridExpandLessIcon,
-  pivotMenuMoveDownIcon: GridExpandMoreIcon,
-  pivotMenuMoveToTopIcon: GridMoveToTopIcon,
-  pivotMenuMoveToBottomIcon: GridMoveToBottomIcon,
-  pivotMenuCheckIcon: GridCheckIcon,
-  pivotMenuRemoveIcon: GridDeleteIcon,
 };
 
 const baseSlots: GridBaseSlots = {

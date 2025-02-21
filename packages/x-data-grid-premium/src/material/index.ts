@@ -1,4 +1,12 @@
-import { GridSearchIcon } from '@mui/x-data-grid';
+import {
+  GridSearchIcon,
+  GridClearIcon,
+  GridAddIcon,
+  GridCheckIcon,
+  GridExpandMoreIcon,
+  GridExpandLessIcon,
+  GridDeleteIcon,
+} from '@mui/x-data-grid';
 import type { GridPremiumIconSlotsComponent } from '../models';
 import {
   GridWorkspacesIcon,
@@ -6,7 +14,8 @@ import {
   GridFunctionsIcon,
   GridSendPromptIcon,
   GridRecordPromptIcon,
-  GridClearIcon,
+  GridMoveToTopIcon,
+  GridMoveToBottomIcon,
 } from './icons';
 
 const iconsSlots: GridPremiumIconSlotsComponent = {
@@ -17,6 +26,13 @@ const iconsSlots: GridPremiumIconSlotsComponent = {
   toolbarPromptRecordIcon: GridRecordPromptIcon,
   pivotSearchIcon: GridSearchIcon,
   pivotSearchClearIcon: GridClearIcon,
+  pivotMenuAddIcon: GridAddIcon,
+  pivotMenuMoveUpIcon: GridExpandLessIcon,
+  pivotMenuMoveDownIcon: GridExpandMoreIcon,
+  pivotMenuMoveToTopIcon: GridMoveToTopIcon,
+  pivotMenuMoveToBottomIcon: GridMoveToBottomIcon,
+  pivotMenuCheckIcon: GridCheckIcon,
+  pivotMenuRemoveIcon: GridDeleteIcon,
 };
 
 const materialSlots = {
