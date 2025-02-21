@@ -5,6 +5,218 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.0.0-beta.0
+
+_Feb 21, 2025_
+
+We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
+
+- 🔧 End of alpha and all its breaking changes 🎉
+- 📊 Decouple `margin` and `axis-size`. A new API that enable multiple axis (#16418) @JCQuintas
+- 🗺️ Added Bangla (bn-BD) locale (#16648) @officialkidmax
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@lhilgert9, @officialkidmax.
+Following are all team members who have contributed to this release:
+@alexfauquette, @bernardobelchior, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @oliviertassinari, @romgrk.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### Breaking changes
+
+- The `slots.baseFormControl` component was removed.
+
+- The "Reset" button in the column visibility panel now resets to the initial column visibility model instead of the model when the panel was opened. The reset behavior follows these rules:
+
+  1. If an initial `columnVisibilityModel` is provided, it resets to that model.
+  2. If a controlled `columnVisibilityModel` is provided, it resets to the first model value.
+  3. When the columns are updated (via the `columns` prop or `updateColumns()` API method), the reset reference point updates to the current `columnVisibilityModel`.
+
+  To revert to the previous behavior, provide a custom component to the `slots.columnsManagement`.
+
+- The deprecated `LicenseInfo` export has been removed from the `@mui/x-data-grid-pro` and `@mui/x-data-grid-premium` packages.
+  You have to import it from `@mui/x-license` instead:
+
+  ```diff
+  - import { LicenseInfo } from '@mui/x-data-grid-pro';
+  - import { LicenseInfo } from '@mui/x-data-grid-premium';
+  + import { LicenseInfo } from '@mui/x-license';
+
+  LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
+  ```
+
+- The row selection model has been changed from `GridRowId[]` to `{ type: 'include' | 'exclude'; ids: Set<GridRowId> }`.
+  Using `Set` allows for a more efficient row selection management.
+  The `exclude` selection type allows to select all rows except the ones in the `ids` set.
+
+  This change impacts the following props:
+
+  - `rowSelectionModel`
+  - `onRowSelectionModelChange`
+  - `initialState.rowSelectionModel`
+
+  ```diff
+  - const [rowSelectionModel, setRowSelectionModel] = React.useState<GridRowSelectionModel>([]);
+  + const [rowSelectionModel, setRowSelectionModel] = React.useState<GridRowSelectionModel>({ type: 'include', ids: new Set() });
+  ```
+
+  This change also impacts the `gridRowSelectionStateSelector` selector.
+  For convenience, use the `gridRowSelectionManagerSelector` selector to handle both selection types:
+
+  ```diff
+  - const rowSelection = gridRowSelectionStateSelector(apiRef);
+  - const isRowSelected = rowSelection.includes(rowId);
+  + const rowSelectionManager = gridRowSelectionManagerSelector(apiRef);
+  + const isRowSelected = rowSelectionManager.has(rowId);
+  ```
+
+  There is also a `createRowSelectionManager` utility function that can be used to manage the row selection:
+
+  ```ts
+  const rowSelectionManager = createRowSelectionManager({
+    type: 'include',
+    ids: new Set(),
+  });
+  rowSelectionManager.select(rowId);
+  rowSelectionManager.unselect(rowId);
+  rowSelectionManager.has(rowId);
+  ```
+
+- The `selectedIdsLookupSelector` selector has been removed. Use the `gridRowSelectionManagerSelector` or `gridRowSelectionStateSelector` selectors instead.
+- The `selectedGridRowsSelector` has been renamed to `gridRowSelectionIdsSelector`.
+- The `selectedGridRowsCountSelector` has been renamed to `gridRowSelectionCountSelector`.
+
+#### `@mui/x-data-grid@8.0.0-beta.0`
+
+- [DataGrid] Column Visibility: Update "Reset" button behavior (#16626) @MBilalShafi
+- [DataGrid] Column management design updates (#16630) @KenanYusuf
+- [DataGrid] Fix scrollbar overlapping cells on mount (#16639) @KenanYusuf
+- [DataGrid] Fix: base Select menuprops onClose (#16643) @romgrk
+- [DataGrid] Replace `sx` prop usage with `styled()` components (#16665) @KenanYusuf
+- [DataGrid] Reshape row selection model (#15651) @cherniavskii
+- [DataGrid] Refactor: create base Autocomplete (#16390) @romgrk
+- [DataGrid] Refactor: remove base form control (#16634) @romgrk
+- [DataGrid] Refactor: remove base input label & adornment (#16646) @romgrk
+- [DataGrid] Refactor: remove material containers (#16633) @romgrk
+- [DataGrid] Refactor: theme to CSS variables (#16588) @romgrk
+- [l10n] Added Bangla (bn-BD) locale (#16648) @officialkidmax
+
+#### `@mui/x-data-grid-pro@8.0.0-beta.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.0.0-beta.0`, plus:
+
+- [DataGridPro] Remove `LicenseInfo` reexports (#16671) @cherniavskii
+
+#### `@mui/x-data-grid-premium@8.0.0-beta.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.0.0-beta.0`, plus:
+
+- [DataGridPremium] Use `valueGetter` to get row group keys (#16016) @cherniavskii
+
+### Date and Time Pickers
+
+#### Breaking changes
+
+- The `<DateRangePicker />` now uses a `dialog` instead of a `tooltip` to render their view when used with a single input range field.
+
+#### `@mui/x-date-pickers@8.0.0-beta.0`
+
+- [l10n] Added Bangla (bn-BD) locale (#16648) @officialkidmax
+- [pickers] Clean the typing of the slots on the range pickers (#16670) @flaviendelangle
+- [pickers] Fix `TimeClock` meridiem button selected styles (#16681) @LukasTy
+- [pickers] Make the single input field the default field on range pickers  (#16656) @flaviendelangle
+- [pickers] Move the opening logic to the range fields (#16175) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@8.0.0-beta.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.0.0-beta.0`.
+
+### Charts
+
+#### Breaking changes
+
+- Charts array inputs are now `readonly`. Allowing externally defined `as const` to be used as a prop value of the React component.
+  ```tsx
+  const xAxis = [{ position: 'bottom' }] as const
+  <BarChart xAxis={xAxis} />
+  ```
+
+- Replace `topAxis`, `rightAxis`, `bottomAxis` and `leftAxis` props by the `position` property in the axis config.
+  If you were using them to place axis, set the `position` property to the corresponding value `'top' | 'right' | 'bottom' | 'left'`.
+  If you were disabling an axis by setting it to `null`, set its `position` to `'none'`.
+
+  ```diff
+   <LineChart
+     yAxis={[
+       {
+         scaleType: 'linear',
+  +      position: 'right',
+       },
+     ]}
+     series={[{ data: [1, 10, 30, 50, 70, 90, 100], label: 'linear' }]}
+     height={400}
+  -  rightAxis={{}}
+   />
+  ```
+
+- Remove `position` prop from `ChartsXAxis` and `ChartsYAxis`.
+  The `position` prop has been removed from the `ChartsXAxis` and `ChartsYAxis` components. Configure it directly in the axis config.
+
+  ```diff
+   <ChartContainer
+     yAxis={[
+       {
+         id: 'my-axis',
+  +      position: 'right',
+       },
+     ]}
+   >
+  -  <ChartsYAxis axisId="my-axis" position="right" />
+  +  <ChartsYAxis axisId="my-axis" />
+   </ChartContainer>
+  ```
+
+- Add `minTickLabelGap` to x-axis, which allows users to define the minimum gap, in pixels, between two tick labels. The default value is 4px. Make sure to check your charts as the spacing between tick labels might have changed.
+
+#### `@mui/x-charts@8.0.0-beta.0`
+
+- [charts] Add `minTickLabelGap` to x-axis (#16548) @bernardobelchior
+- [charts] Add unit test for pie chart with empty series (#16663) @bernardobelchior
+- [charts] Decouple `margin` and `axis-size` (#16418) @JCQuintas
+- [charts] Fix default label measurement being off (#16635) @bernardobelchior
+- [charts] Fix typo in error message (#16641) @JCQuintas
+- [charts] Improve axis size docs (#16673) @JCQuintas
+- [charts] Improve performance of rendering ticks in x-axis (#16536) @bernardobelchior
+- [charts] Make `defaultizeAxis` function type-safe (#16642) @JCQuintas
+- [charts] Make `series.data` readonly (#16645) @JCQuintas
+- [charts] Make array inputs readonly (#16632) @JCQuintas
+- [charts] Remove state initialization hack (#16520) @alexfauquette
+- [charts] Fix scroll overflow on mobile (#16675) @oliviertassinari
+
+#### `@mui/x-charts-pro@8.0.0-beta.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.0.0-beta.0`, plus:
+
+- [charts-pro] Add back zoom control (#16550) @alexfauquette
+
+### Tree View
+
+#### `@mui/x-tree-view@8.0.0-beta.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.0.0-beta.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.0.0-beta.0`.
+
+### Docs
+
+- [docs] Fix migration guide introduction for charts (#16679) @alexfauquette
+- [code-infra] Native Node.js ESM (#16603) @Janpot
+- [test] Revert timeout increase for possibly slow tests (#16651) @LukasTy
+
 ## 8.0.0-alpha.12
 
 _Feb 17, 2025_
