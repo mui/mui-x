@@ -134,7 +134,7 @@ export function useValueAndOpenStates<
   const setOpen = useEventCallback((action: React.SetStateAction<boolean>) => {
     const newOpen = typeof action === 'function' ? action(state.open) : action;
     if (!isOpenControlled) {
-      setOpen(newOpen);
+      setState((prevState) => ({ ...prevState, open: newOpen }));
     }
 
     if (newOpen && onOpen) {
