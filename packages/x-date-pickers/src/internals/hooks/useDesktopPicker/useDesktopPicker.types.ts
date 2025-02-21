@@ -32,11 +32,6 @@ export interface UseDesktopPickerSlots
    * Component used to enter the date with the keyboard.
    */
   field: React.ElementType;
-  /**
-   * Form control with an input to render the value inside the default field.
-   * @default TextField from '@mui/material' or PickersTextField if `enableAccessibleFieldDOMStructure` is `true`.
-   */
-  textField?: React.ElementType;
 }
 
 export interface ExportedUseDesktopPickerSlotProps<
