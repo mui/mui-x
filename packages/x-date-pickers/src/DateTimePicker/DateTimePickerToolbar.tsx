@@ -82,10 +82,11 @@ const DateTimePickerToolbarRoot = styled(PickersToolbar, {
       props: { toolbarVariant: 'desktop' },
       style: {
         borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
-        [`& .${pickersToolbarClasses.content} .${pickersToolbarTextClasses.selected}`]: {
-          color: (theme.vars || theme).palette.primary.main,
-          fontWeight: theme.typography.fontWeightBold,
-        },
+        [`& .${pickersToolbarClasses.content} .${pickersToolbarTextClasses.root}[data-selected]`]:
+          {
+            color: (theme.vars || theme).palette.primary.main,
+            fontWeight: theme.typography.fontWeightBold,
+          },
       },
     },
     {
