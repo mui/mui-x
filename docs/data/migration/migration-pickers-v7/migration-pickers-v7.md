@@ -990,11 +990,11 @@ If the updated values do not fit your use case, you can [override them](/x/react
   +const isTodayValid = isValidValue(dayjs());
   ```
 
-## ⏩ Renamed variables and types
+## ✅ Renamed variables and types
 
 The following variables and types have been renamed to have a coherent `Picker` / `Pickers` prefix:
 
-- `usePickersTranslations`
+- ✅ `usePickersTranslations`
 
   ```diff
   -import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
@@ -1009,7 +1009,7 @@ The following variables and types have been renamed to have a coherent `Picker` 
   +const translations = usePickerTranslations();
   ```
 
-- `usePickersContext`
+- ✅ `usePickersContext`
 
   ```diff
   -import { usePickersContext } from '@mui/x-date-pickers/hooks';
@@ -1036,7 +1036,7 @@ The following variables and types have been renamed to have a coherent `Picker` 
   +import { PickerValueType } from '@mui/x-date-pickers-pro';
   ```
 
-- `RangeFieldSection`
+- ✅ `RangeFieldSection`
 
   ```diff
   -import { RangeFieldSection } from '@mui/x-date-pickers-pro/models';
@@ -1046,14 +1046,16 @@ The following variables and types have been renamed to have a coherent `Picker` 
   +import { FieldRangeSection } from '@mui/x-date-pickers-pro';
   ```
 
-- `PickerShortcutChangeImportance`
+- ✅ `PickerShortcutChangeImportance`
 
   ```diff
   -import { PickerShortcutChangeImportance } from '@mui/x-date-pickers/PickersShortcuts';
   -import { PickerShortcutChangeImportance } from '@mui/x-date-pickers';
+  -import { PickerShortcutChangeImportance } from '@mui/x-date-pickers-pro';
 
   +import { PickerChangeImportance } from '@mui/x-date-pickers/models';
   +import { PickerChangeImportance } from '@mui/x-date-pickers';
+  +import { PickerChangeImportance } from '@mui/x-date-pickers-pro';
   ```
 
 ## ⏩ Hooks breaking changes
