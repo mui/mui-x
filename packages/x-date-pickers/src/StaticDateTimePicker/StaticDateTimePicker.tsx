@@ -9,7 +9,7 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
 import { DateOrTimeView } from '../models';
 import { validateDateTime } from '../validation';
-import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
+import { PickerViewRendererLookup } from '../internals/hooks/usePicker';
 import { PickerValue } from '../internals/models';
 
 type StaticDateTimePickerComponent = ((

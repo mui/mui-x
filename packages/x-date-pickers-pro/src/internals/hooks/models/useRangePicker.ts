@@ -1,10 +1,9 @@
 import {
-  UsePickerParams,
+  UsePickerParameters,
   BasePickerProps,
   ExportedBaseToolbarProps,
-  UsePickerViewsProps,
-  UsePickerValueNonStaticProps,
-  UsePickerProviderNonStaticProps,
+  UsePickerProps,
+  UsePickerNonStaticProps,
   DateOrTimeViewWithMeridiem,
   ExportedBaseTabsProps,
   PickerRangeValue,
@@ -29,15 +28,14 @@ export interface UseRangePickerSlotProps<TEnableAccessibleFieldDOMStructure exte
 }
 
 export interface RangeOnlyPickerProps
-  extends UsePickerValueNonStaticProps,
-    UsePickerProviderNonStaticProps,
+  extends UsePickerNonStaticProps,
     BaseRangeNonStaticPickerProps,
     UseRangePositionProps {}
 
 export interface UseRangePickerProps<
   TView extends DateOrTimeViewWithMeridiem,
   TError,
-  TExternalProps extends UsePickerViewsProps<any, TView, any>,
+  TExternalProps extends UsePickerProps<PickerRangeValue, TView, TError, any>,
 > extends RangeOnlyPickerProps,
     BasePickerProps<PickerRangeValue, TView, TError, TExternalProps> {}
 
@@ -45,7 +43,7 @@ export interface UseRangePickerParams<
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseRangePickerProps<TView, any, TExternalProps>,
 > extends Pick<
-    UsePickerParams<PickerRangeValue, TView, TExternalProps>,
+    UsePickerParameters<PickerRangeValue, TView, TExternalProps>,
     'valueManager' | 'valueType' | 'validator' | 'rendererInterceptor' | 'ref'
   > {
   props: TExternalProps;

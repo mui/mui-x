@@ -1,8 +1,9 @@
 import {
   PickersModalDialogSlots,
   PickersModalDialogSlotProps,
-  UsePickerViewsProps,
+  UsePickerProps,
   DateOrTimeViewWithMeridiem,
+  PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import {
   RangeOnlyPickerProps,
@@ -24,7 +25,7 @@ export interface UseMobileRangePickerProps<
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-  TExternalProps extends UsePickerViewsProps<any, TView, any>,
+  TExternalProps extends UsePickerProps<PickerRangeValue, TView, TError, any>,
 > extends UseRangePickerProps<TView, TError, TExternalProps> {
   /**
    * Overridable component slots.
