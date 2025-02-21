@@ -9,8 +9,13 @@ productId: x-charts
 ## Introduction
 
 This is a reference guide for upgrading `@mui/x-charts` from v7 to v8.
-The change between v7 and v8 is mostly here to match the version with other MUI X packages.
-No big breaking changes are expected.
+This new major bring improvements (and breaking changes) by fixing some API inconsistencies and updating the way to customize charts.
+
+With the v8 you can now:
+
+- Have access to the charts internal outside of the SVG by using the `ChartDataProvider` (see the [new composition docs](/x/react-charts/composition/#structural-components)).
+- Easily customize the legend since it's now an HTML element, and not a SVG one (see the [new legend docs](/x/react-charts/legend/#customization)).
+- Simplified customization of the tooltip with a [new DX](#renaming-tooltip-slots-and-props) and [more demos](/x/react-charts/tooltip/#overriding-content-2).
 
 ## Start using the new release
 
@@ -137,6 +142,24 @@ Renames `LegendPosition` to `Position`.
 ## The `getSeriesToDisplay` function was removed
 
 The `getSeriesToDisplay` function was removed in favor of the `useLegend` hook. You can check the [HTML Components example](/x/react-charts/components/#html-components) for usage information.
+
+## Renaming tooltip slots and props
+
+The slots `popper`, `axisContent`, and `itemContent` are replaced by the slot `tooltip` which is now the single entry point to customize the tooltip.
+
+For consistency, the `tooltip` props is replaced by the `slotProps.tooltip`.
+
+```diff
+ <LineChart
+-   tooltip={{ trigger: 'item' }}
++   slotProps={{ tooltip: { trigger: 'item' }}}
+ />
+```
+
+To create your custom tooltip, we provide some helpers:
+
+- To override the **tooltip content**, use the `useItemTooltip` or `useAxisTooltip` to get the data, and wrapp your component in `ChartsTooltipContainer` to follow the pointer position.
+- To override the **tooltip placement**, use the `ChartsItemTooltipContent` or `ChartsItemTooltipContent` to get the default data display, and place them in your custom tooltip.
 
 ## Removing ResponsiveChartContainer ✅
 
