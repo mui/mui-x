@@ -3,32 +3,35 @@ import { resolve, join, relative, basename, dirname } from 'path';
 import { readFileSync } from 'fs';
 import gulpUtil from 'gulp-util';
 import rimraf from 'rimraf';
+import babel from '@babel/core';
+import gulpBabel from 'gulp-babel';
+
+const __dirname = import.meta.dirname
 
 describe('babel-plugin-mui-css', () => {
   function transform(path, configuration = {}) {
     // remove css modules transform plugin (simulates clean processes)
-    delete require.cache[resolve(__dirname, '../src/index.js')];
-    const babel = require('babel-core');
+    // delete require.cache[resolve(__dirname, '../src/index.js')];
     if (configuration && !('devMode' in configuration)) configuration.devMode = true;
 
     return babel.transformFileSync(resolve(__dirname, path), {
       babelrc: false,
-      // presets: [['env', { targets: { node: '6.12' } }]],
-      plugins: ['transform-object-rest-spread', ['@babel/../../src/index.js', configuration]],
+      plugins: [
+        ['@babel/../../src/index.js', configuration]
+      ],
     });
   }
 
   function createBabelStream(configuration = {}) {
     // remove css modules transform plugin (simulates clean processes)
-    delete require.cache[resolve(__dirname, '../src/index.js')];
-    const gulpBabel = require('gulp-babel');
+    // delete require.cache[resolve(__dirname, '../src/index.js')];
     // set css-modules-require-hook in dev to clear cache
     if (configuration && !('devMode' in configuration)) configuration.devMode = true;
 
-    console.log(configuration)
     return gulpBabel({
-      presets: [['env', { targets: { node: '6.12' } }]],
-      plugins: ['transform-object-rest-spread', ['@babel/../../src/index.js', configuration]],
+      plugins: [
+        ['@babel/../../src/index.js', configuration]
+      ],
     });
   }
 
@@ -337,11 +340,9 @@ describe('babel-plugin-mui-css', () => {
   describe('calling without options', () => {
     it('keeps requires/imports', () => {
       delete require.cache[resolve(__dirname, '../src/index.js')];
-      const babel = require('babel-core');
       const result = babel.transformFileSync(resolve(__dirname, 'fixtures/import.js'), {
         babelrc: false,
-        presets: [['env', { targets: { node: '6.12' } }]],
-        plugins: ['transform-object-rest-spread', '@babel/../../src/index.js'],
+        plugins: ['@babel/../../src/index.js'],
       });
 
       expect(result.code).to.be.equal(readExpected('fixtures/import.expected.js'));

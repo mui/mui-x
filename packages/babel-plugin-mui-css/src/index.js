@@ -1,32 +1,10 @@
 import { resolve, dirname, isAbsolute } from 'path';
-import * as requireHooksOptions from './options_resolvers';
-import { extractCssFile } from './utils';
+// import * as requireHooksOptions from './options_resolvers';
+import { extractCssFile } from './utils/index.js';
 
 const defaultOptions = {
   generateScopedName: '[name]__[local]___[hash:base64:5]',
 };
-
-function updateStyleSheetPath(pathStringLiteral, importPathFormatter) {
-  if (!importPathFormatter) {
-    return pathStringLiteral;
-  }
-
-  return {
-    ...pathStringLiteral,
-    value: importPathFormatter(pathStringLiteral.value),
-  };
-}
-
-function findExpressionStatementChild(path, t) {
-  const parent = path.parentPath;
-  if (!parent) {
-    throw new Error('Invalid expression structure');
-  }
-  if (t.isExpressionStatement(parent) || t.isProgram(parent) || t.isBlockStatement(parent)) {
-    return path;
-  }
-  return findExpressionStatementChild(parent, t);
-}
 
 export default function transformCssModules({ types: t }) {
   /**
@@ -130,24 +108,22 @@ export default function transformCssModules({ types: t }) {
       };
 
       // resolve options
-      Object.keys(requireHooksOptions).forEach((key) => {
-        // skip undefined options
-        if (currentConfig[key] === undefined) {
-          if (key === 'importPathFormatter' && thisPluginOptions && thisPluginOptions[key]) {
-            thisPluginOptions[key] = requireHooksOptions[key](thisPluginOptions[key]);
-          }
-          return;
-        }
-
-        inProcessingFunction = true;
-        currentConfig[key] = requireHooksOptions[key](currentConfig[key], currentConfig);
-        inProcessingFunction = false;
-      });
+      // Object.keys(requireHooksOptions).forEach((key) => {
+      //   // skip undefined options
+      //   if (currentConfig[key] === undefined) {
+      //     if (key === 'importPathFormatter' && thisPluginOptions && thisPluginOptions[key]) {
+      //       thisPluginOptions[key] = requireHooksOptions[key](thisPluginOptions[key]);
+      //     }
+      //     return;
+      //   }
+      //
+      //   inProcessingFunction = true;
+      //   currentConfig[key] = requireHooksOptions[key](currentConfig[key], currentConfig);
+      //   inProcessingFunction = false;
+      // });
 
       // wrap or define processCss function that collect generated css
       currentConfig.processCss = pushStylesCreator(currentConfig.processCss);
-
-      require('css-modules-require-hook')(currentConfig);
 
       initialized = true;
 
@@ -155,7 +131,7 @@ export default function transformCssModules({ types: t }) {
     },
     post() {
       // extract css only if is this option set
-      if (thisPluginOptions && thisPluginOptions.extractCss) {
+      if (thisPluginOptions?.extractCss) {
         // always rewrite file :-/
         extractCssFile(process.cwd(), cssMap, thisPluginOptions.extractCss);
       }
@@ -213,6 +189,28 @@ export default function transformCssModules({ types: t }) {
   };
 
   return pluginApi;
+}
+
+function findExpressionStatementChild(path, t) {
+  const parent = path.parentPath;
+  if (!parent) {
+    throw new Error('Invalid expression structure');
+  }
+  if (t.isExpressionStatement(parent) || t.isProgram(parent) || t.isBlockStatement(parent)) {
+    return path;
+  }
+  return findExpressionStatementChild(parent, t);
+}
+
+function updateStyleSheetPath(pathStringLiteral, importPathFormatter) {
+  if (!importPathFormatter) {
+    return pathStringLiteral;
+  }
+
+  return {
+    ...pathStringLiteral,
+    value: importPathFormatter(pathStringLiteral.value),
+  };
 }
 
 function resolveModulePath(filename) {

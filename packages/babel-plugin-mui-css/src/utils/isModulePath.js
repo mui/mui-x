@@ -1,5 +1,5 @@
 import { resolve as resolvePath } from 'path';
-import isString from './isString';
+import isString from './isString.js';
 
 /**
  * Is given path a valid file or node module path?

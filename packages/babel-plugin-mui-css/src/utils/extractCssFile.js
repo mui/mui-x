@@ -1,5 +1,5 @@
-import writeCssFile from './writeCssFile';
 import { basename, dirname, extname, join, relative, resolve } from 'path';
+import writeCssFile from './writeCssFile.js';
 
 export const PATH_VARIABLES = ['[path]', '[name]'];
 
