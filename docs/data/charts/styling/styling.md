@@ -158,7 +158,7 @@ To update it, use the `xAxis` and `yAxis` configuration as follows:
 - **`x-axis`**: Uses the `height` prop to define the space taken by the axis.
 - **`y-axis`**: Uses the `width` prop instead.
 
-Axes sizes only take up space in the side they are positioned.
+Axes only take up space in the side they are positioned.
 If the axis is not be displayed (`position: 'none'`), they will not take up any space, regardless of their size.
 
 {{"demo": "MarginNoSnap.js", "hideToolbar": true, "bg": "playground"}}
