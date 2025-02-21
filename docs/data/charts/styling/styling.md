@@ -150,7 +150,7 @@ Those will fix the chart's size to the given value (in px).
 There are two concepts to consider when defining the placement of a chart:
 
 - **`margin`**: The space between the SVG border and the axis or drawing area.
-- **`axis size`**: The space taken by the [axis](/x/react-charts/axis/#position). Each axis has their own size.
+- **`axis size`**: The space taken by the [axis](/x/react-charts/axis/#position). Each axis has its own size.
 
 The axes have a default size.
 To update it, use the `xAxis` and `yAxis` configuration as follows:
