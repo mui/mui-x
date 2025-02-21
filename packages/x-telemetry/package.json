@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-telemetry",
-  "version": "8.0.0-alpha.10",
+  "version": "8.0.0-alpha.12",
   "description": "MUI X Telemetry",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -8,7 +8,7 @@
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
   },
-  "homepage": "https://mui.com/x/guide/telemetry/",
+  "homepage": "https://mui.com/x/guides/telemetry/",
   "publishConfig": {
     "access": "public",
     "directory": "build"
@@ -24,9 +24,6 @@
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "sideEffects": false,
-  "bin": {
-    "mui-x-telemetry": "cli/index.js"
-  },
   "packageScripts": {
     "postinstall": "node ./postinstall/index.js"
   },
@@ -36,14 +33,13 @@
     "directory": "packages/x-telemetry"
   },
   "dependencies": {
-    "@babel/runtime": "^7.26.7",
+    "@babel/runtime": "^7.26.9",
     "@mui/utils": "^5.16.6 || ^6.0.0",
     "ci-info": "^4.0.0",
     "conf": "^5.0.0",
     "device-uuid": "^1.0.4",
     "is-docker": "^2.2.1",
-    "node-machine-id": "^1.1.12",
-    "yargs": "^17.7.2"
+    "node-machine-id": "^1.1.12"
   },
   "devDependencies": {
     "@mui/internal-test-utils": "^1.0.26",

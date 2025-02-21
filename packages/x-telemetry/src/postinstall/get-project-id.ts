@@ -1,26 +1,17 @@
 import { exec } from 'child_process';
 import { createHash } from 'crypto';
+import util from 'util';
+
+const asyncExec = util.promisify(exec);
 
 async function execCLI(command: string): Promise<string | null> {
   try {
-    const promise = new Promise<Buffer | string>((resolve, reject) => {
-      exec(
-        command,
-        {
-          timeout: 1000,
-          windowsHide: true,
-        },
-        (error: null | Error, stdout: Buffer | string) => {
-          if (error) {
-            reject(error);
-            return;
-          }
-          resolve(stdout);
-        },
-      );
+    const response = await asyncExec(command, {
+      timeout: 1000,
+      windowsHide: true,
     });
 
-    return String(await promise).trim();
+    return String(response).trim();
   } catch (_) {
     return null;
   }
@@ -28,7 +19,7 @@ async function execCLI(command: string): Promise<string | null> {
 
 // Q: Why does MUI need a project ID? Why is it looking at my git remote?
 // A:
-// MUI' telemetry is and always will anonimise this values. We need a way to
+// MUI's telemetry always anonymizes these values. We need a way to
 // differentiate different projects to track feature usage accurately.
 // For example, to prevent a feature from appearing to be constantly `used`
 // and then `unused` when switching between local projects.

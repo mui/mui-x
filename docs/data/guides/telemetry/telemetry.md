@@ -40,14 +40,6 @@ import { ponyfillGlobal } from '@mui/utils';
 ponyfillGlobal.__MUI_X_TELEMETRY_DISABLED__ = false;
 ```
 
-### Using the CLI
-
-You can use the `npx mui-x-telemetry` command to enable or disable telemetry:
-
-```bash
-npx mui-x-telemetry enable
-```
-
 ## Opting Out
 
 To opt-out of telemetry, you can use one of the following methods:
@@ -80,12 +72,4 @@ You can set the `__MUI_X_TELEMETRY_DISABLED__` flag in your application to `true
 import { ponyfillGlobal } from '@mui/utils';
 
 ponyfillGlobal.__MUI_X_TELEMETRY_DISABLED__ = true;
-```
-
-### Using the CLI
-
-You can use the `npx mui-x-telemetry` command to disable telemetry:
-
-```bash
-npx mui-x-telemetry disable
 ```

@@ -6,15 +6,7 @@ Package used by some of MUI X to collects **anonymous** telemetry data about ge
 
 Currently, **it's disabled by default,** and you could opt-in to it in 3 ways:
 
-1. By using CLI util to enable/disable it for the current machine.
-
-```shell
-npx mui-x-telemetry enable
-# or
-npx mui-x-telemetry disable
-```
-
-2. By setting it directly to package settings on the application start (e.g. in main file).
+1. By setting it directly to package settings on the application start (e.g. in main file).
 
 ```js
 import { muiXTelemetrySettings } from '@mui/x-telemetry';
@@ -26,7 +18,7 @@ muiXTelemetrySettings.enableTelemetry(); // to enable telemetry collection and s
 muiXTelemetrySettings.disableTelemetry(); // to disable telemetry collection and sending
 ```
 
-3. By setting the environment variable.
+2. By setting the environment variable.
 
 ```dotenv
 MUI_X_TELEMETRY_DISABLED=false # Enable telemetry
@@ -36,7 +28,7 @@ MUI_X_TELEMETRY_DISABLED=true # Enable telemetry
 
 > ⚠️ Note that some frameworks requires to prefix the variable with `REACT_APP_`, `NEXT_PUBLIC_`, etc.
 
-4. By setting the flag to global object on the application start (e.g. in main file).
+3. By setting the flag to global object on the application start (e.g. in main file).
 
 ```js
 import { ponyfillGlobal } from '@mui/utils';
@@ -56,44 +48,4 @@ if (typeof window !== 'undefined') {
 if (typeof window !== 'undefined') {
   window.__MUI_X_TELEMETRY_DISABLED__ = true; // disabled
 }
-```
-
-## CLI util
-
-The purpose of this utility is to enable/disable telemetry for the current machine.
-
-### Possible commands
-
-```bash
-npx mui-x-telemetry <command>
-
-Commands:
-  npx mui-x-telemetry enable   Enable MUI X telemetry
-  npx mui-x-telemetry disable  Disable MUI X telemetry
-  npx mui-x-telemetry status   Check the status of MUI X telemetry
-  npx mui-x-telemetry config   Get path where the global config is stored
-
-Options:
-  --help  Show help                                                    [boolean]
-```
-
-### How to enable
-
-```shell
-$ npx mui-x-telemetry enable
-[telemetry] MUI X telemetry enabled
-```
-
-### How to disable
-
-```shell
-$ npx mui-x-telemetry disable
-[telemetry] MUI X telemetry disabled
-```
-
-### How to current status
-
-```shell
-$ npx mui-x-telemetry status
-[telemetry] MUI X telemetry is enabled
 ```
