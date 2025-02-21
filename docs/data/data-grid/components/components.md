@@ -173,6 +173,7 @@ declare module '@mui/x-data-grid' {
       someCustomNumber: 42,
     },
   }}
+  showToolbar
 />;
 ```
 
@@ -197,6 +198,7 @@ declare module '@mui/x-data-grid-pro' {
       someCustomNumber: 42,
     },
   }}
+  showToolbar
 />;
 ```
 
@@ -221,6 +223,7 @@ declare module '@mui/x-data-grid-premium' {
       someCustomNumber: 42,
     },
   }}
+  showToolbar
 />;
 ```
 
