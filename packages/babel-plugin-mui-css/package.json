@@ -2,10 +2,10 @@
   "name": "babel-plugin-mui-css",
   "version": "1.6.2",
   "description": "Transform required css modules so one can use generated class names.",
-  "main": "src/index.js",
+  "main": "build/index.ts",
   "type": "module",
   "scripts": {
-    "build": "babel src --ignore **/*.spec.js -d build",
+    "build": "tsc",
     "test": "cross-env NODE_ENV=test mocha"
   },
   "repository": {
@@ -19,17 +19,20 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "css-modules-require-hook": "^4.0.6",
-    "mkdirp": "^0.5.1"
+    "@mui/x-internals": "workspace:*",
+    "mkdirp": "^3.0.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.26.4",
     "@babel/core": "^7.26.9",
+    "@types/node": "^20.17.19",
     "chai": "^5.2.0",
     "cross-env": "^5.0.0",
     "mocha": "^11.1.0",
     "outdent": "^0.8.0",
-    "rimraf": "^2.5.4"
+    "rimraf": "^2.5.4",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3"
   },
   "engines": {
     "node": ">=4.0.0"

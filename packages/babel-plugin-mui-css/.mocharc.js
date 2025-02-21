@@ -5,4 +5,5 @@ export default {
     '**/node_modules/**',
   ],
   recursive: true,
+  require: 'tsx',
 };
