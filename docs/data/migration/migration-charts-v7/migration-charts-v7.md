@@ -9,7 +9,7 @@ productId: x-charts
 ## Introduction
 
 This is a reference guide for upgrading `@mui/x-charts` from v7 to v8.
-This new major bring improvements (and breaking changes) by fixing some API inconsistencies and updating the way to customize charts.
+This new major brings improvements (and breaking changes) by fixing some API inconsistencies and updating the way to customize charts.
 
 With the v8 you can now:
 
@@ -159,7 +159,7 @@ For consistency, the `tooltip` props have been replaced by the `slotProps.toolti
 Some helpers are provided to create your custom tooltip:
 
 - To override the **tooltip content**, use the `useItemTooltip` or `useAxisTooltip` to get the data, and wrap your component in `ChartsTooltipContainer` to follow the pointer position.
-- To override the **tooltip placement**, use the `ChartsItemTooltipContent` or `ChartsItemTooltipContent` to get the default data display, and place them in your custom tooltip.
+- To override the **tooltip placement**, use the `ChartsAxisTooltipContent` or `ChartsItemTooltipContent` to get the default data display, and place them in your custom tooltip.
 
 ## Removing ResponsiveChartContainer ✅
 
