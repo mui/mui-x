@@ -9,11 +9,8 @@ export type ChartsUsageDemoProps<P extends string> = {
   componentName: string;
   childrenAccepted?: boolean;
   data: DataType<P>[];
-  renderDemo: (
-    props: Record<string, any>,
-    setProps: (props: Record<string, any>) => void,
-  ) => React.ReactNode;
-  getCode: (props: { name: string; props: any; childrenAccepted: boolean }) => string;
+  renderDemo: (props: Record<P, any>, setProps: (props: Record<P, any>) => void) => React.ReactNode;
+  getCode: (props: { name: string; props: Record<P, any>; childrenAccepted: boolean }) => string;
 };
 
 export default function ChartsUsageDemo<P extends string>({
