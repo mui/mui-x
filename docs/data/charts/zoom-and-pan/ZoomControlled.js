@@ -36,7 +36,7 @@ export default function ZoomControlled() {
   const [zoomData, setZoomData] = React.useState(initialZoomData);
 
   return (
-    <Stack direction={'column'} alignItems={'center'}>
+    <Stack sx={{ width: '100%', justifyContent: 'flex-start' }}>
       <LineChartPro
         {...chartProps}
         onZoomChange={(newZoomData) => setZoomData(newZoomData)}
@@ -50,21 +50,23 @@ export default function ZoomControlled() {
         xAxis={barAxis}
       />
       <pre>{JSON.stringify(zoomData, null, 2)}</pre>
-      <Button
-        variant="contained"
-        onClick={() =>
-          setZoomData([{ axisId: 'shared-x-axis', start: 0, end: 100 }])
-        }
-      >
-        Reset zoom
-      </Button>
+      <div>
+        <Button
+          variant="contained"
+          onClick={() =>
+            setZoomData([{ axisId: 'shared-x-axis', start: 0, end: 100 }])
+          }
+        >
+          Reset zoom
+        </Button>
+      </div>
     </Stack>
   );
 }
 
 const chartProps = {
-  width: 600,
   height: 300,
+  sx: { width: '100%' },
   series: [
     {
       label: 'Series A',

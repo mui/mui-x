@@ -3,7 +3,7 @@ import { GridSignature } from '../../../constants/signature';
 import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
 import { gridFilteredRowsLookupSelector } from '../filter/gridFilterSelector';
 import { gridSortedRowIdsSelector } from '../sorting/gridSortingSelector';
-import { selectedIdsLookupSelector } from './gridRowSelectionSelector';
+import { gridRowSelectionManagerSelector } from './gridRowSelectionSelector';
 import { gridRowTreeSelector } from '../rows/gridRowsSelector';
 import { createSelector } from '../../../utils/createSelector';
 import type { GridGroupNode, GridRowId, GridRowTreeConfig } from '../../../models/gridRows';
@@ -12,7 +12,7 @@ import type {
   GridPrivateApiCommunity,
   GridApiCommunity,
 } from '../../../models/api/gridApiCommunity';
-import type { GridRowSelectionPropagation } from '../../../models/gridRowSelectionModel';
+import { type GridRowSelectionPropagation } from '../../../models/gridRowSelectionModel';
 
 export const ROW_SELECTION_PROPAGATION_DEFAULT: GridRowSelectionPropagation = {
   parents: true,
@@ -53,17 +53,17 @@ export function getCheckboxPropsSelector(groupId: GridRowId, autoSelectParents: 
     gridRowTreeSelector,
     gridSortedRowIdsSelector,
     gridFilteredRowsLookupSelector,
-    selectedIdsLookupSelector,
-    (rowTree, sortedRowIds, filteredRowsLookup, rowSelectionLookup) => {
+    gridRowSelectionManagerSelector,
+    (rowTree, sortedRowIds, filteredRowsLookup, rowSelectionManager) => {
       const groupNode = rowTree[groupId];
       if (!groupNode || groupNode.type !== 'group') {
         return {
           isIndeterminate: false,
-          isChecked: rowSelectionLookup[groupId] === groupId,
+          isChecked: rowSelectionManager.has(groupId),
         };
       }
 
-      if (rowSelectionLookup[groupId] === groupId) {
+      if (rowSelectionManager.has(groupId)) {
         return {
           isIndeterminate: false,
           isChecked: true,
@@ -81,7 +81,7 @@ export function getCheckboxPropsSelector(groupId: GridRowId, autoSelectParents: 
         const id = sortedRowIds[index];
         if (filteredRowsLookup[id] !== false) {
           selectableDescendantsCount += 1;
-          if (rowSelectionLookup[id] !== undefined) {
+          if (rowSelectionManager.has(id)) {
             selectedDescendantsCount += 1;
           }
         }
@@ -90,10 +90,10 @@ export function getCheckboxPropsSelector(groupId: GridRowId, autoSelectParents: 
         isIndeterminate:
           selectedDescendantsCount > 0 &&
           (selectedDescendantsCount < selectableDescendantsCount ||
-            rowSelectionLookup[groupId] === undefined),
+            !rowSelectionManager.has(groupId)),
         isChecked: autoSelectParents
           ? selectedDescendantsCount > 0
-          : rowSelectionLookup[groupId] === groupId,
+          : rowSelectionManager.has(groupId),
       };
     },
   );
@@ -157,7 +157,7 @@ export const findRowsToSelect = (
   addRow: (rowId: GridRowId) => void,
 ) => {
   const filteredRows = gridFilteredRowsLookupSelector(apiRef);
-  const selectedIdsLookup = selectedIdsLookupSelector(apiRef);
+  const rowSelectionManager = gridRowSelectionManagerSelector(apiRef);
   const selectedDescendants: Set<GridRowId> = new Set([]);
 
   if (!autoSelectDescendants && !autoSelectParents) {
@@ -178,7 +178,7 @@ export const findRowsToSelect = (
 
   if (autoSelectParents) {
     const checkAllDescendantsSelected = (rowId: GridRowId): boolean => {
-      if (selectedIdsLookup[rowId] !== rowId && !selectedDescendants.has(rowId)) {
+      if (!rowSelectionManager.has(rowId) && !selectedDescendants.has(rowId)) {
         return false;
       }
       const node = tree[rowId];
@@ -216,7 +216,7 @@ export const findRowsToDeselect = (
   autoSelectParents: boolean,
   removeRow: (rowId: GridRowId) => void,
 ) => {
-  const selectedIdsLookup = selectedIdsLookupSelector(apiRef);
+  const rowSelectionManager = gridRowSelectionManagerSelector(apiRef);
 
   if (!autoSelectParents && !autoSelectDescendants) {
     return;
@@ -225,7 +225,7 @@ export const findRowsToDeselect = (
   if (autoSelectParents) {
     const allParents = getRowNodeParents(tree, deselectedRow);
     allParents.forEach((parent) => {
-      const isSelected = selectedIdsLookup[parent] === parent;
+      const isSelected = rowSelectionManager.has(parent);
       if (isSelected) {
         removeRow(parent);
       }
