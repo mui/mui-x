@@ -3,28 +3,45 @@ import PropTypes from 'prop-types';
 import Box from '@mui/joy/Box';
 import { BrandingProvider } from '@mui/docs/branding';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
-import DemoPropsForm from './DemoPropsForm';
+import DemoPropsForm, { DataType } from './DemoPropsForm';
 
-export default function ChartsUsageDemo({
+export type ChartsUsageDemoProps<P extends string> = {
+  componentName: string;
+  childrenAccepted?: boolean;
+  data: DataType<P>[];
+  renderDemo: (
+    props: Record<string, any>,
+    setProps: (props: Record<string, any>) => void,
+  ) => React.ReactNode;
+  getCode: (props: { name: string; props: any; childrenAccepted: boolean }) => string;
+};
+
+export default function ChartsUsageDemo<P extends string>({
   componentName,
   childrenAccepted = false,
   data,
   renderDemo,
   getCode,
-}) {
+}: ChartsUsageDemoProps<P>) {
   const [props, setProps] = React.useState(
-    data.reduce((acc, { propName, defaultValue }) => {
-      acc[propName] = defaultValue;
-      return acc;
-    }, {}),
+    data.reduce(
+      (acc, { propName, defaultValue }) => {
+        acc[propName] = defaultValue;
+        return acc;
+      },
+      {} as Record<string, any>,
+    ),
   );
 
   React.useEffect(() => {
     setProps(
-      data.reduce((acc, { propName, defaultValue }) => {
-        acc[propName] = defaultValue;
-        return acc;
-      }, {}),
+      data.reduce(
+        (acc, { propName, defaultValue }) => {
+          acc[propName] = defaultValue;
+          return acc;
+        },
+        {} as Record<string, any>,
+      ),
     );
   }, [data]);
 
@@ -57,12 +74,13 @@ export default function ChartsUsageDemo({
           <HighlightedCode
             code={getCode({
               name: componentName,
-              props: Object.entries(props).reduce((acc, [key, value]) => {
-                if (data.find((d) => d.propName === key)?.codeBlockDisplay !== false) {
+              props: Object.entries(props).reduce(
+                (acc, [key, value]) => {
                   acc[key] = value;
-                }
-                return acc;
-              }, {}),
+                  return acc;
+                },
+                {} as Record<string, any>,
+              ),
               childrenAccepted,
             })}
             language="jsx"

@@ -31,52 +31,40 @@ const shallowEqual = (item1: { [k: string]: any }, item2: { [k: string]: any }) 
   return equal;
 };
 
-type DataType<PropName> = {
+type Placement =
+  | 'top-start'
+  | 'top'
+  | 'top-end'
+  | 'left-start'
+  | 'right-start'
+  | 'left'
+  | 'right'
+  | 'left-end'
+  | 'right-end'
+  | 'bottom-start'
+  | 'bottom'
+  | 'bottom-end';
+
+type DefaultTypes<PropName> = {
   /**
    * Name of the prop, for example 'children'
    */
   propName: PropName;
   /**
-   * The controller to be used:
-   * - `switch`: render the switch component for boolean
-   * - `color`: render the built-in color selector
-   * - `select`: render <select> with the specified options
-   * - `input`: render <input />
-   * - `radio`: render group of radios
-   * - `slider`: render the slider component
+   * The display name of the prop, for example 'X Axis Label'
    */
-  knob:
-    | 'switch'
-    | 'color'
-    | 'select'
-    | 'input'
-    | 'radio'
-    | 'controlled'
-    | 'number'
-    | 'placement'
-    | 'slider';
+  displayName?: string;
+};
+
+type ConditionalTypes = {
   /**
    * The options for these knobs: `select` and `radio`
    */
-  options?: Array<string>;
+  options: Array<string>;
   /**
    * The labels for these knobs: `radio`
    */
   labels?: Array<string>;
-  /**
-   * The default value to be used by the components.
-   * If exists, it will be injected to the `renderDemo` callback but it will not show
-   * in the code block.
-   *
-   * To make it appears in the code block, specified `codeBlockDisplay: true`
-   */
-  defaultValue?: string | number | boolean;
-  /**
-   * If not specify (`undefined`), the prop displays when user change the value
-   * If `true`, the prop with defaultValue will always display in the code block.
-   * If `false`, the prop does not display in the code block.
-   */
-  codeBlockDisplay?: boolean;
   /**
    * Option for knobs: `number`
    */
@@ -90,6 +78,75 @@ type DataType<PropName> = {
    */
   max?: number;
 };
+
+type NumberDataType<PropName> = {
+  knob: 'number' | 'slider';
+  /**
+   * The default value to be used by the components.
+   */
+  defaultValue?: number;
+} & DefaultTypes<PropName> &
+  Pick<ConditionalTypes, 'step' | 'min' | 'max'>;
+
+type SelectDataType<PropName> = {
+  knob: 'select';
+  /**
+   * The default value to be used by the components.
+   */
+  defaultValue?: string;
+} & DefaultTypes<PropName> &
+  Pick<ConditionalTypes, 'options'>;
+
+type RadioDataType<PropName> = {
+  knob: 'radio';
+  /**
+   * The default value to be used by the components.
+   */
+  defaultValue?: string;
+} & DefaultTypes<PropName> &
+  Pick<ConditionalTypes, 'options' | 'labels'>;
+
+type SwitchDataType<PropName> = {
+  knob: 'switch';
+  /**
+   * The default value to be used by the components.
+   */
+  defaultValue?: boolean;
+} & DefaultTypes<PropName>;
+
+type ColorDataType<PropName> = {
+  knob: 'color';
+  /**
+   * The default value to be used by the components.
+   */
+  defaultValue?: string;
+} & DefaultTypes<PropName> &
+  Pick<ConditionalTypes, 'options'>;
+
+type InputDataType<PropName> = {
+  knob: 'input';
+  /**
+   * The default value to be used by the components.
+   */
+  defaultValue?: string;
+} & DefaultTypes<PropName>;
+
+type PlacementDataType<PropName> = {
+  knob: 'placement';
+  /**
+   * The default value to be used by the components.
+   */
+  defaultValue?: Placement;
+} & DefaultTypes<PropName>;
+
+export type DataType<PropName extends string> =
+  | NumberDataType<PropName>
+  | SelectDataType<PropName>
+  | RadioDataType<PropName>
+  | SwitchDataType<PropName>
+  | ColorDataType<PropName>
+  | InputDataType<PropName>
+  | PlacementDataType<PropName>;
 
 interface ChartDemoPropsFormProps<PropName extends string> {
   /**
@@ -222,8 +279,10 @@ export default function ChartDemoPropsForm<T extends string>({
           },
         }}
       >
-        {data.map(({ propName, knob, options = [], defaultValue, labels, step, min, max }) => {
+        {data.map((propData) => {
+          const { propName, knob, defaultValue, displayName } = propData;
           const resolvedValue = props[propName] ?? defaultValue;
+          const title = displayName || propName;
           if (!knob) {
             return null;
           }
@@ -234,7 +293,7 @@ export default function ChartDemoPropsForm<T extends string>({
                 size="small"
                 sx={{ justifyContent: 'space-between', display: 'flex', flexDirection: 'row' }}
               >
-                <FormLabel>{propName}</FormLabel>
+                <FormLabel>{title}</FormLabel>
                 <Switch
                   checked={Boolean(resolvedValue)}
                   onChange={(event) =>
@@ -248,9 +307,10 @@ export default function ChartDemoPropsForm<T extends string>({
             );
           }
           if (knob === 'slider') {
+            const { step, min, max } = propData;
             return (
               <FormControl key={propName}>
-                <FormLabel>{propName}</FormLabel>
+                <FormLabel>{title}</FormLabel>
                 <Slider
                   value={Number.parseFloat(`${resolvedValue}`)}
                   onChange={(_, value) =>
@@ -267,10 +327,11 @@ export default function ChartDemoPropsForm<T extends string>({
             );
           }
           if (knob === 'radio') {
+            const { options, labels } = propData;
             const labelId = `${componentName}-${propName}`;
             return (
               <FormControl key={propName} size="small">
-                <FormLabel sx={{ textTransform: 'capitalize' }}>{propName}</FormLabel>
+                <FormLabel>{title}</FormLabel>
                 <RadioGroup
                   // orientation="horizontal"
                   name={labelId}
@@ -308,9 +369,10 @@ export default function ChartDemoPropsForm<T extends string>({
             );
           }
           if (knob === 'color') {
+            const { options } = propData;
             return (
               <FormControl key={propName} sx={{ mb: 1 }} size="small">
-                <FormLabel>{propName}</FormLabel>
+                <FormLabel>{title}</FormLabel>
                 <RadioGroup
                   name={`${componentName}-color`}
                   value={resolvedValue || ''}
@@ -343,9 +405,10 @@ export default function ChartDemoPropsForm<T extends string>({
             );
           }
           if (knob === 'select') {
+            const { options } = propData;
             return (
               <FormControl key={propName} size="small">
-                <FormLabel sx={{ textTransform: 'capitalize' }}>{propName}</FormLabel>
+                <FormLabel>{title}</FormLabel>
                 <Select
                   placeholder="Select a variant..."
                   value={(resolvedValue || 'none') as string}
@@ -368,7 +431,7 @@ export default function ChartDemoPropsForm<T extends string>({
           if (knob === 'input') {
             return (
               <FormControl key={propName}>
-                <FormLabel>{propName}</FormLabel>
+                <FormLabel>{title}</FormLabel>
                 <Input
                   size="small"
                   value={props[propName] ?? ''}
@@ -389,17 +452,14 @@ export default function ChartDemoPropsForm<T extends string>({
             );
           }
           if (knob === 'number') {
+            const { step, min, max } = propData;
             return (
               <FormControl key={propName}>
-                <FormLabel>{propName}</FormLabel>
+                <FormLabel>{title}</FormLabel>
                 <Input
                   size="small"
                   type="number"
-                  value={
-                    typeof props[propName] === 'number'
-                      ? (props[propName] as number)
-                      : (defaultValue as string)
-                  }
+                  value={typeof props[propName] === 'number' ? props[propName] : defaultValue}
                   onChange={(event) => {
                     if (Number.isNaN(Number.parseFloat(event.target.value))) {
                       return;
@@ -430,7 +490,7 @@ export default function ChartDemoPropsForm<T extends string>({
             return (
               <FormControl key={propName}>
                 {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
-                <FormLabel>Placement</FormLabel>
+                <FormLabel>{displayName ?? 'Placement'}</FormLabel>
                 <RadioGroup
                   name="placement"
                   value={resolvedValue}

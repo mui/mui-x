@@ -1,3 +1,4 @@
+// @ts-check
 import * as React from 'react';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { BarChart } from '@mui/x-charts/BarChart';
@@ -40,6 +41,7 @@ export default function BarGapNoSnap() {
             {
               scaleType: 'band',
               dataKey: 'year',
+              // @ts-expect-error
               categoryGapRatio: props.categoryGapRatio,
               barGapRatio: props.barGapRatio,
             },
