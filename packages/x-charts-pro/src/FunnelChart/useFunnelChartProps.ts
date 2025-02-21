@@ -5,7 +5,7 @@ import { ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import { ChartsLegendSlotExtension } from '@mui/x-charts/ChartsLegend';
 import useId from '@mui/utils/useId';
 import { ChartsClipPathProps } from '@mui/x-charts/ChartsClipPath';
-import { ChartsWrapperProps, calculateMargins } from '@mui/x-charts/internals';
+import { ChartsWrapperProps, defaultizeMargin } from '@mui/x-charts/internals';
 import { ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
 import { FunnelPlotProps } from './FunnelPlot';
 import type { FunnelChartProps } from './FunnelChart';
@@ -31,10 +31,6 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     colors,
     // dataset,
     sx,
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
     children,
     slots,
     slotProps,
@@ -49,7 +45,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     apiRef,
     ...rest
   } = props;
-  const margin = { ...defaultMargin, ...marginProps };
+  const margin = defaultizeMargin(marginProps, defaultMargin);
 
   const id = useId();
   const clipPathId = `${id}-clip-path`;
@@ -79,7 +75,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     })),
     width,
     height,
-    margin: calculateMargins({ margin, hideLegend, slotProps, series }),
+    margin,
     colors,
     // dataset,
     xAxis: xAxis?.map((axis) => ({
@@ -114,10 +110,6 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
   };
 
   const chartsAxisProps: ChartsAxisProps = {
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
     slots,
     slotProps,
   };

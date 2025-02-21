@@ -1,8 +1,7 @@
 'use client';
+import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
-import * as React from 'react';
-
 import { ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import { ChartsOverlay, ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
@@ -16,7 +15,7 @@ import { FunnelPlot, FunnelPlotProps } from './FunnelPlot';
 import { FunnelSeriesType } from './funnel.types';
 import { useFunnelChartProps } from './useFunnelChartProps';
 import { ChartContainerProProps } from '../ChartContainerPro';
-import { plugin as funnelPlugin } from './plugin';
+import { seriesConfig as funnelSeriesConfig } from './seriesConfig';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { FunnelChartSlotExtension } from './funnelSlots.types';
@@ -50,7 +49,7 @@ export interface FunnelChartProps
   axisHighlight?: ChartsAxisHighlightProps;
 }
 
-const seriesConfig: ChartSeriesConfig<'funnel'> = { funnel: funnelPlugin };
+const seriesConfig: ChartSeriesConfig<'funnel'> = { funnel: funnelSeriesConfig };
 
 const FunnelChart = React.forwardRef(function FunnelChart(
   props: FunnelChartProps,

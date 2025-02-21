@@ -20,7 +20,7 @@ const createPoint = ({
     ? { x: other, y: main, useBandWidth, stackOffset }
     : { x: main, y: other, useBandWidth, stackOffset };
 
-const formatter: SeriesProcessor<'funnel'> = (params, dataset) => {
+const seriesProcessor: SeriesProcessor<'funnel'> = (params, dataset) => {
   const { seriesOrder, series } = params;
 
   // Create a data set with format adapted to d3
@@ -154,4 +154,4 @@ const formatter: SeriesProcessor<'funnel'> = (params, dataset) => {
   };
 };
 
-export default formatter;
+export default seriesProcessor;

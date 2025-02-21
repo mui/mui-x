@@ -8,10 +8,10 @@ import { CurveType } from '@mui/x-charts/models';
 import { useTheme } from '@mui/material/styles';
 import { FunnelItemIdentifier, FunnelDataPoints } from './funnel.types';
 import { FunnelSection } from './FunnelSection';
-import { useFunnelSeries } from '../hooks/useSeries';
 import { alignLabel, positionLabel } from './labelUtils';
 import { funnelHorizontalStepCurve, funnelVerticalStepCurve } from './funnelStepCurve';
 import { FunnelPlotSlotExtension } from './funnelPlotSlots.types';
+import { useFunnelSeriesContext } from '../hooks/useFunnelSeries';
 
 cartesianSeriesTypes.addType('funnel');
 
@@ -36,7 +36,7 @@ const getFunnelCurve = (curve: CurveType | undefined, isHorizontal: boolean): Cu
 };
 
 const useAggregatedData = () => {
-  const seriesData = useFunnelSeries();
+  const seriesData = useFunnelSeriesContext();
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
 

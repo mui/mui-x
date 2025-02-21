@@ -65,9 +65,9 @@ export const positionLabel = ({
     useBand?: boolean,
   ) => number | undefined;
   isHorizontal: boolean;
-  values: FunnelDataPoints[];
+  values: readonly FunnelDataPoints[];
   dataIndex: number;
-  baseScaleData: number[];
+  baseScaleData: readonly number[];
 }) => {
   const vertical: Position['vertical'] = position?.vertical ?? 'middle';
   const horizontal: Position['horizontal'] = position?.horizontal ?? 'center';
