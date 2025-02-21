@@ -13,7 +13,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 
 - 🔧 End of alpha and all its breaking changes 🎉
 - 📊 Decouple `margin` and `axis-size`. A new API that enable multiple axis (#16418) @JCQuintas
-- 🗺️ Added Bangla (bn-BD) locale (#16648) @officialkidmax
+- 🗺️ Added Bangla (bn-BD) locale
 
 Special thanks go out to the community contributors who have helped make this release possible:
 @lhilgert9, @officialkidmax.
@@ -125,7 +125,7 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-beta.0`, plus:
 
 - [l10n] Added Bangla (bn-BD) locale (#16648) @officialkidmax
 - [pickers] Clean the typing of the slots on the range pickers (#16670) @flaviendelangle
-- [pickers] Fix `TimeClock` meridiem button selected styles (#16681) @LukasTy
+- [pickers] Fix Time Clock meridiem button selected styles (#16681) @LukasTy
 - [pickers] Make the single input field the default field on range pickers  (#16656) @flaviendelangle
 - [pickers] Move the opening logic to the range fields (#16175) @flaviendelangle
 
