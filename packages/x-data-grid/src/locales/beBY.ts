@@ -25,6 +25,8 @@ const beBYGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Няма радкоў',
   noResultsOverlayLabel: 'Дадзеныя не знойдзены.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
 
   // Density selector toolbar button text
   toolbarDensity: 'Вышыня радка',

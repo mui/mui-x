@@ -42,7 +42,6 @@ function JoyDateField(props) {
     // Can be used to style the component
     disabled,
     readOnly,
-    focused,
     error,
     inputRef,
     // The rest can be passed to the root element

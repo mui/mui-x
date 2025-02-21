@@ -17,9 +17,6 @@
     "exportState": {
       "description": "Generates a serializable object containing the exportable parts of the DataGrid state.<br />These values can then be passed to the <code>initialState</code> prop or injected using the <code>restoreState</code> method."
     },
-    "forceUpdate": {
-      "description": "Forces the grid to rerender. It&#39;s often used after a state update."
-    },
     "getAllColumns": {
       "description": "Returns an array of <a href=\"/x/api/data-grid/grid-col-def/\">GridColDef</a> containing all the column definitions."
     },

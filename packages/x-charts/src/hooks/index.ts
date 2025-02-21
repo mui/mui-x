@@ -5,14 +5,12 @@ export * from './useAxis';
 export * from './useZAxis';
 export * from './useColorScale';
 export * from './useSvgRef';
+export * from './useSeries';
+export * from './useScatterSeries';
+export * from './usePieSeries';
+export * from './useBarSeries';
+export * from './useLineSeries';
 export * from './useItemHighlighted';
 export * from './useItemHighlightedGetter';
-export {
-  useSeries as unstable_useSeries,
-  usePieSeries as unstable_usePieSeries,
-  useLineSeries as unstable_useLineSeries,
-  useBarSeries as unstable_useBarSeries,
-  useScatterSeries as unstable_useScatterSeries,
-} from './useSeries';
 export * from './useLegend';
 export { useChartGradientId, useChartGradientIdObjectBound } from './useChartGradientId';

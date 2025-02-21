@@ -20,14 +20,8 @@ import { ChartsSurface } from '../ChartsSurface';
 import { ChartDataProvider } from '../ChartDataProvider';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
 import { ChartsWrapper } from '../internals/components/ChartsWrapper';
-import {
-  useChartInteraction,
-  UseChartInteractionSignature,
-} from '../internals/plugins/featurePlugins/useChartInteraction';
-import {
-  useChartHighlight,
-  UseChartHighlightSignature,
-} from '../internals/plugins/featurePlugins/useChartHighlight';
+import { PIE_CHART_PLUGINS, PieChartPluginSignatures } from './PieChart.plugins';
+import { defaultizeMargin } from '../internals/defaultizeMargin';
 
 export interface PieChartSlots
   extends PiePlotSlots,
@@ -42,17 +36,14 @@ export interface PieChartSlotProps
     ChartsTooltipSlotProps {}
 
 export interface PieChartProps
-  extends Omit<
-      ChartContainerProps<'pie', [UseChartInteractionSignature, UseChartHighlightSignature]>,
-      'series'
-    >,
+  extends Omit<ChartContainerProps<'pie', PieChartPluginSignatures>, 'series'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     Pick<PiePlotProps, 'skipAnimation'> {
   /**
    * The series to display in the pie chart.
    * An array of [[PieSeriesType]] objects.
    */
-  series: MakeOptional<PieSeriesType<MakeOptional<PieValueType, 'id'>>, 'type'>[];
+  series: Readonly<MakeOptional<PieSeriesType<MakeOptional<PieValueType, 'id'>>, 'type'>[]>;
   /**
    * If `true`, the legend is not rendered.
    */
@@ -73,7 +64,6 @@ export interface PieChartProps
   slotProps?: PieChartSlotProps;
 }
 
-const PIE_CHART_PLUGGINS = [useChartInteraction, useChartHighlight] as const;
 const defaultMargin = { top: 5, bottom: 5, left: 5, right: 5 };
 
 /**
@@ -110,11 +100,11 @@ const PieChart = React.forwardRef(function PieChart(
     className,
     ...other
   } = props;
-  const margin = { ...defaultMargin, ...marginProps };
+  const margin = defaultizeMargin(marginProps, defaultMargin);
 
   const { chartDataProviderProps, chartsSurfaceProps } = useChartContainerProps<
     'pie',
-    [UseChartInteractionSignature, UseChartHighlightSignature]
+    PieChartPluginSignatures
   >(
     {
       ...other,
@@ -127,14 +117,14 @@ const PieChart = React.forwardRef(function PieChart(
       onHighlightChange,
       className,
       skipAnimation,
-      plugins: PIE_CHART_PLUGGINS,
+      plugins: PIE_CHART_PLUGINS,
     },
     ref,
   );
 
   const Tooltip = slots?.tooltip ?? ChartsTooltip;
   return (
-    <ChartDataProvider {...chartDataProviderProps}>
+    <ChartDataProvider<'pie', PieChartPluginSignatures> {...chartDataProviderProps}>
       <ChartsWrapper
         legendPosition={props.slotProps?.legend?.position}
         legendDirection={props?.slotProps?.legend?.direction ?? 'vertical'}
@@ -170,7 +160,7 @@ PieChart.propTypes = {
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
-   * @default blueberryTwilightPalette
+   * @default rainbowSurgePalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   /**
@@ -209,12 +199,15 @@ PieChart.propTypes = {
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
    */
-  margin: PropTypes.shape({
-    bottom: PropTypes.number,
-    left: PropTypes.number,
-    right: PropTypes.number,
-    top: PropTypes.number,
-  }),
+  margin: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.shape({
+      bottom: PropTypes.number,
+      left: PropTypes.number,
+      right: PropTypes.number,
+      top: PropTypes.number,
+    }),
+  ]),
   /**
    * The callback fired when the highlighted item changes.
    *

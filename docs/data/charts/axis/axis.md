@@ -70,6 +70,13 @@ To distinguish tick and tooltip, it uses the `context.location`.
 
 {{"demo": "FormatterDemoNoSnap.js"}}
 
+#### Using the D3 formatter
+
+The context gives you access to the axis scale.
+The D3 [tickFormat(tickNumber, scpecifier)](https://d3js.org/d3-scale/linear#tickFormat) method can be interesting to adapt ticks format based on the scale properties.
+
+{{"demo": "FormatterD3.js"}}
+
 ### Axis sub domain
 
 By default, the axis domain is computed such that all your data is visible.
@@ -184,6 +191,33 @@ At the bottom, you can see one tick for the beginning and the middle of the day 
 
 {{"demo": "TickLabelPosition.js"}}
 
+## Position
+
+The axis position can be customized with the `position` property of the axis configuration.
+Its value can be:
+
+- `'top'` or `'bottom'` for the x-axis.
+- `'left'` or `'right'` for the y-axis.
+- `'none'` to hide the axis.
+
+{{"demo": "ModifyAxisPosition.js"}}
+
+### Hiding axis
+
+To hide an axis, set its `position` to `'none'`.
+The axis is still computed and used for the scaling.
+
+{{"demo": "HidingAxis.js"}}
+
+### Multiple axes on the same side
+
+You can display multiple axes on the same side.
+If two or more axes share the same `position`, they are displayed in the order they are defined from closest to the chart to farthest.
+
+To avoid overlapping, you can use the `height` prop for `xAxis` and `width` for `yAxis` to increase the space between the axes.
+
+{{"demo": "MultipleAxes.js"}}
+
 ## Axis customization
 
 You can further customize the axis rendering besides the axis definition.
@@ -202,26 +236,6 @@ In the following demo, the margin is modified to provide more space to the x and
 The x-axis label placement is based on the axis configuration, and the y-axis is placed using a CSS selector.
 
 {{"demo": "MarginAndLabelPosition.js"}}
-
-### Position
-
-Charts components provide 4 props: `topAxis`, `rightAxis`, `bottomAxis`, and `leftAxis` allowing to define the 4 axes of the chart.
-Those props can accept three type of value:
-
-- `null` to not display the axis
-- `string` which should correspond to the id of a `xAxis` for top and bottom. Or to the id of a `yAxis` for left and right.
-- `object` which will be passed as props to `<XAxis />` or `<YAxis />`. It allows to specify which axis should be represent with the `axisId` property, and to customize the design of the axis.
-
-The demo below uses `leftAxis={null}` to remove the left axis, and `rightAxis={{}}` to set a right axis without overriding the default y-axis configuration.
-
-{{"demo": "ModifyAxisPosition.js"}}
-
-### Hiding axis
-
-To hide an axis, set it to `null`.
-For example `leftAxis={null}` hides the left axis.
-
-{{"demo": "HidingAxis.js"}}
 
 ### Rendering
 

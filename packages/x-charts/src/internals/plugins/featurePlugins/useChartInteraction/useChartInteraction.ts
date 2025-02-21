@@ -14,9 +14,23 @@ export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({
   });
 
   const removeItemInteraction = useEventCallback(
-    (itemToRemove: ChartItemIdentifier<ChartSeriesType>) => {
+    (itemToRemove?: ChartItemIdentifier<ChartSeriesType>) => {
       store.update((prev) => {
         const prevItem = prev.interaction.item;
+
+        if (!itemToRemove) {
+          // Remove without taking care of the current item
+          return prevItem === null
+            ? prev
+            : {
+                ...prev,
+                interaction: {
+                  ...prev.interaction,
+                  item: null,
+                },
+              };
+        }
+
         if (
           prevItem === null ||
           Object.keys(itemToRemove).some(
@@ -25,7 +39,7 @@ export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({
               prevItem[key as keyof typeof prevItem],
           )
         ) {
-          // The item is already something else, no need to clean it.
+          // The current item is already different from the one to remove. No need to clean it.
           return prev;
         }
 
@@ -94,7 +108,6 @@ export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({
   });
 
   return {
-    params: {},
     instance: {
       cleanInteraction,
       setItemInteraction,

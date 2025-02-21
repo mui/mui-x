@@ -1,31 +1,34 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import {
-  unstable_composeClasses as composeClasses,
-  unstable_useEventCallback as useEventCallback,
-} from '@mui/utils';
+import useEventCallback from '@mui/utils/useEventCallback';
+import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/system';
 import { fastMemo } from '@mui/x-internals/fastMemo';
+import { RefObject } from '@mui/x-internals/types';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass, gridClasses } from '../constants';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridApiEventHandler } from '../hooks/utils/useGridApiEventHandler';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
-import { gridDimensionsSelector } from '../hooks/features/dimensions/gridDimensionsSelectors';
+import {
+  gridDimensionsSelector,
+  gridColumnsTotalWidthSelector,
+} from '../hooks/features/dimensions/gridDimensionsSelectors';
 import { gridDensityFactorSelector } from '../hooks/features/density/densitySelector';
-import { gridColumnsTotalWidthSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { GridScrollParams } from '../models/params/gridScrollParams';
 import { GridEventListener } from '../models/events';
 import { useTimeout } from '../hooks/utils/useTimeout';
 import { getTotalHeaderHeight } from '../hooks/features/columns/gridColumnsUtils';
+import { createSelector } from '../utils/createSelector';
 
 const CLIFF = 1;
 const SLOP = 1.5;
 
 interface ScrollAreaProps {
   scrollDirection: 'left' | 'right';
+  scrollPosition: RefObject<GridScrollParams>;
 }
 
 type OwnerState = DataGridProcessedProps & Pick<ScrollAreaProps, 'scrollDirection'>;
@@ -62,21 +65,44 @@ const GridScrollAreaRawRoot = styled('div', {
   },
 }));
 
-function GridScrollAreaRaw(props: ScrollAreaProps) {
-  const { scrollDirection } = props;
+const offsetSelector = createSelector(
+  gridDimensionsSelector,
+  (dimensions, direction: ScrollAreaProps['scrollDirection']) => {
+    if (direction === 'left') {
+      return dimensions.leftPinnedWidth;
+    }
+    if (direction === 'right') {
+      return dimensions.rightPinnedWidth + (dimensions.hasScrollX ? dimensions.scrollbarSize : 0);
+    }
+    return 0;
+  },
+);
+
+function GridScrollAreaWrapper(props: ScrollAreaProps) {
+  const apiRef = useGridApiContext();
+  const [dragging, setDragging] = React.useState<boolean>(false);
+
+  useGridApiEventHandler(apiRef, 'columnHeaderDragStart', () => setDragging(true));
+  useGridApiEventHandler(apiRef, 'columnHeaderDragEnd', () => setDragging(false));
+
+  if (!dragging) {
+    return null;
+  }
+
+  return <GridScrollAreaContent {...props} />;
+}
+
+function GridScrollAreaContent(props: ScrollAreaProps) {
+  const { scrollDirection, scrollPosition } = props;
   const rootRef = React.useRef<HTMLDivElement>(null);
   const apiRef = useGridApiContext();
   const timeout = useTimeout();
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
-  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
-
-  const scrollPosition = React.useRef<GridScrollParams>({
-    left: 0,
-    top: 0,
-  });
+  const sideOffset = useGridSelector(apiRef, offsetSelector, scrollDirection);
 
   const getCanScrollMore = () => {
+    const dimensions = gridDimensionsSelector(apiRef);
     if (scrollDirection === 'left') {
       // Only render if the user has not reached yet the start of the list
       return scrollPosition.current.left > 0;
@@ -91,7 +117,6 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
     return false;
   };
 
-  const [dragging, setDragging] = React.useState<boolean>(false);
   const [canScrollMore, setCanScrollMore] = React.useState<boolean>(getCanScrollMore);
 
   const rootProps = useGridRootProps();
@@ -106,15 +131,12 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
   };
 
   if (scrollDirection === 'left') {
-    style.left = dimensions.leftPinnedWidth;
+    style.left = sideOffset;
   } else if (scrollDirection === 'right') {
-    style.right =
-      dimensions.rightPinnedWidth + (dimensions.hasScrollX ? dimensions.scrollbarSize : 0);
+    style.right = sideOffset;
   }
 
-  const handleScrolling: GridEventListener<'scrollPositionChange'> = (newScrollPosition) => {
-    scrollPosition.current = newScrollPosition;
-
+  const handleScrolling: GridEventListener<'scrollPositionChange'> = () => {
     setCanScrollMore(getCanScrollMore);
   };
 
@@ -143,19 +165,9 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
     });
   });
 
-  const handleColumnHeaderDragStart = useEventCallback(() => {
-    setDragging(true);
-  });
-
-  const handleColumnHeaderDragEnd = useEventCallback(() => {
-    setDragging(false);
-  });
-
   useGridApiEventHandler(apiRef, 'scrollPositionChange', handleScrolling);
-  useGridApiEventHandler(apiRef, 'columnHeaderDragStart', handleColumnHeaderDragStart);
-  useGridApiEventHandler(apiRef, 'columnHeaderDragEnd', handleColumnHeaderDragEnd);
 
-  if (!dragging || !canScrollMore) {
+  if (!canScrollMore) {
     return null;
   }
 
@@ -170,4 +182,4 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
   );
 }
 
-export const GridScrollArea = fastMemo(GridScrollAreaRaw);
+export const GridScrollArea = fastMemo(GridScrollAreaWrapper);

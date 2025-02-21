@@ -3,7 +3,7 @@ import { ContinuousColorConfig, OrdinalColorConfig, PiecewiseColorConfig } from 
 
 export interface ZAxisConfig<V = any> {
   id: string;
-  data?: V[];
+  data?: readonly V[];
   /**
    * The key used to retrieve `data` from the `dataset` prop.
    */

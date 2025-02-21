@@ -11,7 +11,7 @@ const chartSetting = {
   ],
   width: 500,
   height: 300,
-  margin: { left: 60 },
+  margin: { left: 30 },
   sx: {
     [`.${axisClasses.left} .${axisClasses.label}`]: {
       transform: 'translate(-20px, 0)',

@@ -1,27 +1,34 @@
-import { ChartRootSelector, createSelector } from '../../utils/selectors';
-import { UseChartInteractionSignature } from './useChartInteraction.types';
+import { ChartOptionalRootSelector, createSelector } from '../../utils/selectors';
+import { AxisInteractionData, UseChartInteractionSignature } from './useChartInteraction.types';
 
-const selectInteraction: ChartRootSelector<UseChartInteractionSignature> = (state) =>
+const EMPTY_AXIS_INTERACTION: AxisInteractionData = { x: null, y: null };
+
+const selectInteraction: ChartOptionalRootSelector<UseChartInteractionSignature> = (state) =>
   state.interaction;
+
+export const selectorChartsInteractionIsInitialized = createSelector(
+  selectInteraction,
+  (interaction) => interaction !== undefined,
+);
 
 export const selectorChartsInteractionItem = createSelector(
   selectInteraction,
-  (interaction) => interaction.item,
+  (interaction) => interaction?.item ?? null,
 );
 
 export const selectorChartsInteractionAxis = createSelector(
   selectInteraction,
-  (interaction) => interaction.axis,
+  (interaction) => interaction?.axis ?? EMPTY_AXIS_INTERACTION,
 );
 
 export const selectorChartsInteractionXAxis = createSelector(
-  selectInteraction,
-  (interaction) => interaction.axis.x,
+  selectorChartsInteractionAxis,
+  (axis) => axis.x,
 );
 
 export const selectorChartsInteractionYAxis = createSelector(
-  selectInteraction,
-  (interaction) => interaction.axis.y,
+  selectorChartsInteractionAxis,
+  (axis) => axis.y,
 );
 
 export const selectorChartsInteractionItemIsDefined = createSelector(
@@ -37,9 +44,4 @@ export const selectorChartsInteractionXAxisIsDefined = createSelector(
 export const selectorChartsInteractionYAxisIsDefined = createSelector(
   selectorChartsInteractionYAxis,
   (y) => y !== null,
-);
-
-export const selectorChartsInteractionIsVoronoiEnabled = createSelector(
-  selectInteraction,
-  (interaction) => interaction.isVoronoiEnabled,
 );

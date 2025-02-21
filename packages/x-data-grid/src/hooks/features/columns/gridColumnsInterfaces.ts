@@ -18,6 +18,7 @@ export interface GridColumnsState {
   orderedFields: string[];
   lookup: GridColumnLookup;
   columnVisibilityModel: GridColumnVisibilityModel;
+  initialColumnVisibilityModel: GridColumnVisibilityModel;
 }
 
 export interface GridPinnedColumnFields {

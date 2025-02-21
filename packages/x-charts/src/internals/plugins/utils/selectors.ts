@@ -20,6 +20,12 @@ export type ChartRootSelector<TSignature extends ChartAnyPluginSignature> = <
   state: ChartState<TSignatures>,
 ) => TSignature['state'][keyof TSignature['state']];
 
+export type ChartOptionalRootSelector<TSignature extends ChartAnyPluginSignature> = <
+  TSignatures extends [TSignature],
+>(
+  state: ChartState<[], TSignatures>,
+) => TSignature['state'][keyof TSignature['state']] | undefined;
+
 export type ChartsSelector<TState, TArgs, TResult> = (state: TState, args: TArgs) => TResult;
 
 /**

@@ -25,8 +25,15 @@ describe('<MultiInputTimeRangeField />', () => {
     clock,
     componentFamily: 'field',
     views: ['hours', 'minutes'],
+    fieldType: 'multi-input',
     setValue: (value, { setEndDate } = {}) => {
-      setValueOnFieldInput(adapterToUse.format(value, 'fullTime'), setEndDate ? 1 : 0);
+      setValueOnFieldInput(
+        adapterToUse.format(
+          value,
+          adapterToUse.is12HourCycleInCurrentLocale() ? 'fullTime12h' : 'fullTime24h',
+        ),
+        setEndDate ? 1 : 0,
+      );
     },
   }));
 });
