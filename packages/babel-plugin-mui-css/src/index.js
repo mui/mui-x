@@ -1,5 +1,3 @@
-import { resolve, dirname, isAbsolute } from 'path';
-// import * as requireHooksOptions from './options_resolvers';
 import { extractCssFile } from './utils/index.js';
 
 const defaultOptions = {
@@ -7,32 +5,6 @@ const defaultOptions = {
 };
 
 export default function transformCssModules({ types: t }) {
-  /**
-   * @param {String} filepath     javascript file path
-   * @param {String} cssFile      requireed css file path
-   * @returns {Array} array of class names
-   */
-  function requireCssFile(filepath, cssFile) {
-    let filePathOrModuleName = cssFile;
-
-    // only resolve path to file when we have a file path
-    if (!/^\w/i.test(filePathOrModuleName)) {
-      const from = resolveModulePath(filepath);
-      filePathOrModuleName = resolve(from, filePathOrModuleName);
-    }
-
-    // css-modules-require-hooks throws if file is ignored
-    try {
-      return require(filePathOrModuleName);
-    } catch (e) {
-      // As a last resort, require the cssFile itself. This enables loading of CSS files from external deps
-      try {
-        return require(cssFile);
-      } catch (f) {
-        return {}; // return empty object, this simulates result of ignored stylesheet file
-      }
-    }
-  }
 
   // is css modules require hook initialized?
   let initialized = false;
@@ -41,19 +13,9 @@ export default function transformCssModules({ types: t }) {
   // because it will cause circular dependency in babel-node and babel-register process
   let inProcessingFunction = false;
 
-  let matchExtensions = /\.css$/i;
-
   function matcher(extensions = ['.css']) {
     const extensionsPattern = extensions.join('|').replace(/\./g, '\\\.');
     return new RegExp(`(${extensionsPattern})$`, 'i');
-  }
-
-  function buildClassNameToScopeNameMap(tokens) {
-    return t.ObjectExpression(
-      Object.keys(tokens).map((token) =>
-        t.ObjectProperty(t.StringLiteral(token), t.StringLiteral(tokens[token])),
-      ),
-    );
   }
 
   const cssMap = new Map();
@@ -85,10 +47,6 @@ export default function transformCssModules({ types: t }) {
       delete currentConfig.extractCss;
       delete currentConfig.keepImport;
       delete currentConfig.importPathFormatter;
-
-      // match file extensions, speeds up transform by creating one
-      // RegExp ahead of execution time
-      matchExtensions = matcher(currentConfig.extensions);
 
       const pushStylesCreator = (toWrap) => (css, filepath) => {
         let processed;
@@ -137,7 +95,6 @@ export default function transformCssModules({ types: t }) {
       }
     },
     visitor: {
-      // const styles = require('./styles.css');
       // const styles = css({ options: true }, {
       //   root: { ... },
       // });
@@ -152,70 +109,58 @@ export default function transformCssModules({ types: t }) {
         }
 
         if (args.length !== 2) {
-          throw new Error(`Missing arguments: ${path.getSource()}`)
+          console.log(file)
+          throw new Error(`Missing arguments: ${formatLocation('TODO', path.node)}`)
         }
-          // || !args.length || !t.isStringLiteral(args[0])
 
-        const [{ value: stylesheetPath }] = args;
-
-        if (matchExtensions.test(stylesheetPath)) {
-          const requiringFile = file.opts.filename;
-          const tokens = requireCssFile(requiringFile, stylesheetPath);
-
-          // if parent expression is not a Program, replace expression with tokens
-          // Otherwise remove require from file, we just want to get generated css for our output
-          if (!t.isExpressionStatement(path.parent)) {
-            path.replaceWith(buildClassNameToScopeNameMap(tokens));
-
-            // Keeped import will places before closest expression statement child
-            if (thisPluginOptions && thisPluginOptions.keepImport === true) {
-              findExpressionStatementChild(path, t).insertBefore(
-                t.expressionStatement(
-                  t.callExpression(t.identifier('require'), [
-                    updateStyleSheetPath(
-                      t.stringLiteral(stylesheetPath),
-                      thisPluginOptions.importPathFormatter,
-                    ),
-                  ]),
-                ),
-              );
-            }
-          } else if (!thisPluginOptions || thisPluginOptions.keepImport !== true) {
-            path.remove();
-          }
+        if (!t.isStringLiteral(args[0])) {
+          console.log(file)
+          throw new Error(`Invalid CSS prefix: ${formatLocation('TODO', path.node)}`)
         }
+
+        if (!t.isObjectExpression(args[1])) {
+          console.log(file)
+          throw new Error(`Invalid CSS styles: ${formatLocation('TODO', path.node)}`)
+        }
+
+        const [prefixNode, classesNode] = args;
+
+        const prefix = prefixNode.extra.rawValue;
+        // XXX: security
+        const classes = eval('(' + file.code.slice(
+          classesNode.start,
+          classesNode.end,
+        ) + ')');
+
+        console.log({ prefix, classes })
+
+        // const requiringFile = file.opts.filename;
+
+        path.replaceWith(buildClassesNode(prefix, classes));
       },
     },
   };
 
+  function buildClassesNode(prefix, classes) {
+    return t.ObjectExpression(
+      Object.keys(classes).map((className) => {
+        return t.ObjectProperty(
+          t.StringLiteral(className),
+          t.StringLiteral(generateClassName(prefix, className))
+        )
+      }),
+    );
+  }
+
   return pluginApi;
 }
 
-function findExpressionStatementChild(path, t) {
-  const parent = path.parentPath;
-  if (!parent) {
-    throw new Error('Invalid expression structure');
-  }
-  if (t.isExpressionStatement(parent) || t.isProgram(parent) || t.isBlockStatement(parent)) {
-    return path;
-  }
-  return findExpressionStatementChild(parent, t);
+function generateClassName(prefix, className) {
+  if (!prefix) { return className }
+  if (className === 'root') { return prefix }
+  return `${prefix}--${className}`
 }
 
-function updateStyleSheetPath(pathStringLiteral, importPathFormatter) {
-  if (!importPathFormatter) {
-    return pathStringLiteral;
-  }
-
-  return {
-    ...pathStringLiteral,
-    value: importPathFormatter(pathStringLiteral.value),
-  };
-}
-
-function resolveModulePath(filename) {
-  const dir = dirname(filename);
-  if (isAbsolute(dir)) return dir;
-  if (process.env.PWD) return resolve(process.env.PWD, dir);
-  return resolve(dir);
+function formatLocation(filename, node) {
+  return `${node.loc.start.line}:${node.loc.start.column}`
 }

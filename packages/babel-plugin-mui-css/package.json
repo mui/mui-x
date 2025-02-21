@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "babel src --ignore **/*.spec.js -d build",
-    "test": "mocha"
+    "test": "cross-env NODE_ENV=test mocha"
   },
   "repository": {
     "type": "git",
@@ -30,17 +30,8 @@
     "babel-register": "7.0.0-beta.3",
     "chai": "^5.2.0",
     "cross-env": "^5.0.0",
-    "eslint": "^1.9.0",
-    "eslint-config-airbnb-lite": "^1.0.0",
-    "gulp-babel": "7.0.0",
-    "gulp-util": "^3.0.7",
     "mocha": "^11.1.0",
-    "nyc": "^17.1.0",
-    "postcss": "^5.x",
-    "postcss-modules-extract-imports": "^1.x",
-    "postcss-modules-local-by-default": "^1.x",
-    "postcss-modules-scope": "^1.x",
-    "postcss-modules-values": "^1.x",
+    "outdent": "^0.8.0",
     "rimraf": "^2.5.4"
   },
   "engines": {
