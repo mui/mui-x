@@ -44,7 +44,7 @@ Following are all team members who have contributed to this release:
   - import { LicenseInfo } from '@mui/x-data-grid-premium';
   + import { LicenseInfo } from '@mui/x-license';
 
-  LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
+   LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
   ```
 
 - The row selection model has been changed from `GridRowId[]` to `{ type: 'include' | 'exclude'; ids: Set<GridRowId> }`.
