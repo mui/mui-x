@@ -1,16 +1,13 @@
 import * as React from 'react';
-import { warnOnce } from '@mui/x-internals/warning';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import useId from '@mui/utils/useId';
 import {
-  PickerSelectionState,
   PickerViewsRendererProps,
   UsePickerParameters,
   UsePickerProps,
   UsePickerReturnValue,
-  UsePickerValueState,
 } from './usePicker.types';
 import {
   DateOrTimeViewWithMeridiem,
@@ -20,24 +17,16 @@ import {
 } from '../../models';
 import { useLocalizationContext, useUtils } from '../useUtils';
 import { useReduceAnimations } from '../useReduceAnimations';
-import { usePickerOrientation } from './usePicker.utils';
-import {
-  FieldRef,
-  InferError,
-  PickerChangeHandlerContext,
-  PickerOwnerState,
-} from '../../../models';
+import { usePickerDateState, usePickerOrientation } from './usePicker.utils';
+import { FieldRef, InferError, PickerOwnerState } from '../../../models';
 import {
   PickerActionsContextValue,
   PickerContextValue,
   PickerPrivateContextValue,
-  SetValueActionOptions,
 } from '../../components/PickerProvider';
-import { useValueWithTimezone } from '../useValueWithTimezone';
 import { useOpenState } from '../useOpenState';
 import { isTimeView } from '../../utils/time-utils';
 import { useViews } from '../useViews';
-import { useValidation } from '../../../validation';
 import { PickerFieldPrivateContextValue } from '../useNullableFieldPrivateContext';
 
 export const usePicker = <
@@ -59,12 +48,6 @@ export const usePicker = <
   type TError = InferError<TExternalProps>;
 
   const {
-    // Value props
-    value: valueProp,
-    defaultValue: defaultValueProp,
-    onChange,
-    referenceDate,
-    timezone: timezoneProp,
     // View props
     views,
     view: viewProp,
@@ -72,12 +55,6 @@ export const usePicker = <
     onViewChange,
     viewRenderers,
     reduceAnimations: reduceAnimationsProp,
-    // Lifecycle props
-    open: openProp,
-    onOpen,
-    onClose,
-    onAccept,
-    closeOnSelect,
     disableOpenPicker,
     // Form props
     disabled,
@@ -97,7 +74,6 @@ export const usePicker = <
   const utils = useUtils();
   const adapter = useLocalizationContext();
   const reduceAnimations = useReduceAnimations(reduceAnimationsProp);
-  const { open, setOpen } = useOpenState({ open: openProp, onOpen, onClose });
 
   /**
    * TODO: Improve how we generate the aria-label and aria-labelledby attributes.
@@ -106,190 +82,18 @@ export const usePicker = <
 
   const { className, sx, ...propsToForwardToView } = props;
 
-  const { current: defaultValue } = React.useRef(defaultValueProp);
-  const { current: isControlled } = React.useRef(valueProp !== undefined);
   const { current: initialView } = React.useRef<TView | null>(openTo ?? null);
   const triggerRef = React.useRef<HTMLElement>(null);
   const popupRef = React.useRef<HTMLElement>(null);
   const fieldRef = React.useRef<FieldRef<PickerValue> | FieldRef<PickerRangeValue> | null>(null);
   const rootRefObject = React.useRef<HTMLDivElement>(null);
   const rootRef = useForkRef(ref, rootRefObject);
-  const [previousTimezoneProp, setPreviousTimezoneProp] = React.useState(timezoneProp);
 
-  if (process.env.NODE_ENV !== 'production') {
-    if ((props as any).renderInput != null) {
-      warnOnce([
-        'MUI X: The `renderInput` prop has been removed in version 6.0 of the Date and Time Pickers.',
-        'You can replace it with the `textField` component slot in most cases.',
-        'For more information, please have a look at the migration guide (https://mui.com/x/migration/migration-pickers-v5/#input-renderer-required-in-v5).',
-      ]);
-    }
-  }
-
-  /* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
-  if (process.env.NODE_ENV !== 'production') {
-    React.useEffect(() => {
-      if (isControlled !== (valueProp !== undefined)) {
-        console.error(
-          [
-            `MUI X: A component is changing the ${
-              isControlled ? '' : 'un'
-            }controlled value of a picker to be ${isControlled ? 'un' : ''}controlled.`,
-            'Elements should not switch from uncontrolled to controlled (or vice versa).',
-            `Decide between using a controlled or uncontrolled value` +
-              'for the lifetime of the component.',
-            "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
-            'More info: https://fb.me/react-controlled-components',
-          ].join('\n'),
-        );
-      }
-    }, [valueProp]);
-
-    React.useEffect(() => {
-      if (!isControlled && defaultValue !== defaultValueProp) {
-        console.error(
-          [
-            `MUI X: A component is changing the defaultValue of an uncontrolled picker after being initialized. ` +
-              `To suppress this warning opt to use a controlled value.`,
-          ].join('\n'),
-        );
-      }
-    }, [JSON.stringify(defaultValue)]);
-  }
-  /* eslint-enable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
-
-  const {
-    timezone,
-    value: valuePropWithTimezoneToRender,
-    handleValueChange,
-  } = useValueWithTimezone({
-    timezone: timezoneProp,
-    value: valueProp,
-    defaultValue,
-    referenceDate,
-    onChange,
-    valueManager,
-  });
-
-  const [dateState, setDateState] = React.useState<UsePickerValueState<TValue>>(() => {
-    let initialValue: TValue;
-    if (valuePropWithTimezoneToRender !== undefined) {
-      initialValue = valuePropWithTimezoneToRender;
-    } else if (defaultValue !== undefined) {
-      initialValue = defaultValue;
-    } else {
-      initialValue = valueManager.emptyValue;
-    }
-
-    return {
-      draft: initialValue,
-      lastPublishedValue: initialValue,
-      lastCommittedValue: initialValue,
-      lastControlledValue: valueProp,
-      hasBeenModifiedSinceMount: false,
-    };
-  });
-
-  const timezoneFromDraftValue = valueManager.getTimezone(utils, dateState.draft);
-  if (previousTimezoneProp !== timezoneProp) {
-    setPreviousTimezoneProp(timezoneProp);
-
-    if (timezoneProp && timezoneFromDraftValue && timezoneProp !== timezoneFromDraftValue) {
-      setDateState((prev) => ({
-        ...prev,
-        draft: valueManager.setTimezone(utils, timezoneProp, prev.draft),
-      }));
-    }
-  }
-
-  const { getValidationErrorForNewValue } = useValidation({
-    props,
-    validator,
-    timezone,
-    value: dateState.draft,
-    onError: props.onError,
-  });
-
-  const setValue = useEventCallback((newValue: TValue, options?: SetValueActionOptions<TError>) => {
-    const {
-      changeImportance = 'accept',
-      skipPublicationIfPristine = false,
-      validationError,
-      shortcut,
-      shouldClose = changeImportance === 'accept',
-    } = options ?? {};
-
-    let shouldPublish: boolean;
-    let shouldCommit: boolean;
-    if (!skipPublicationIfPristine && !isControlled && !dateState.hasBeenModifiedSinceMount) {
-      // If the value is not controlled and the value has never been modified before,
-      // Then clicking on any value (including the one equal to `defaultValue`) should call `onChange` and `onAccept`
-      shouldPublish = true;
-      shouldCommit = changeImportance === 'accept';
-    } else {
-      shouldPublish = !valueManager.areValuesEqual(utils, newValue, dateState.lastPublishedValue);
-      shouldCommit =
-        changeImportance === 'accept' &&
-        !valueManager.areValuesEqual(utils, newValue, dateState.lastCommittedValue);
-    }
-
-    setDateState((prev) => ({
-      ...prev,
-      draft: newValue,
-      lastPublishedValue: shouldPublish ? newValue : prev.lastPublishedValue,
-      lastCommittedValue: shouldCommit ? newValue : prev.lastCommittedValue,
-      hasBeenModifiedSinceMount: true,
-    }));
-
-    let cachedContext: PickerChangeHandlerContext<TError> | null = null;
-    const getContext = (): PickerChangeHandlerContext<TError> => {
-      if (!cachedContext) {
-        cachedContext = {
-          validationError:
-            validationError == null ? getValidationErrorForNewValue(newValue) : validationError,
-        };
-
-        if (shortcut) {
-          cachedContext.shortcut = shortcut;
-        }
-      }
-
-      return cachedContext;
-    };
-
-    if (shouldPublish) {
-      handleValueChange(newValue, getContext());
-    }
-
-    if (shouldCommit && onAccept) {
-      onAccept(newValue, getContext());
-    }
-
-    if (shouldClose) {
-      setOpen(false);
-    }
-  });
-
-  if (dateState.lastControlledValue !== valueProp) {
-    const isUpdateComingFromPicker = valueManager.areValuesEqual(
-      utils,
-      dateState.draft,
-      valuePropWithTimezoneToRender,
-    );
-
-    setDateState((prev) => ({
-      ...prev,
-      lastControlledValue: valueProp,
-      ...(isUpdateComingFromPicker
-        ? {}
-        : {
-            lastCommittedValue: valuePropWithTimezoneToRender,
-            lastPublishedValue: valuePropWithTimezoneToRender,
-            draft: valuePropWithTimezoneToRender,
-            hasBeenModifiedSinceMount: true,
-          }),
-    }));
-  }
+  const { open, setOpen, timezone, dateState, setValue, setValueFromView } = usePickerDateState<
+    TValue,
+    TView,
+    TExternalProps
+  >({ props, valueManager, validator });
 
   const isValid = (testedValue: TValue) => {
     const error = validator({
@@ -319,23 +123,6 @@ export const usePicker = <
       skipPublicationIfPristine: true,
     });
   });
-
-  const setValueFromView = useEventCallback(
-    (newValue: TValue, selectionState: PickerSelectionState = 'partial') => {
-      // TODO: Expose a new method (private?) like `setView` that only updates the draft value.
-      if (selectionState === 'shallow') {
-        setDateState((prev) => ({
-          ...prev,
-          draft: newValue,
-          hasBeenModifiedSinceMount: true,
-        }));
-      }
-
-      setValue(newValue, {
-        changeImportance: selectionState === 'finish' && closeOnSelect ? 'accept' : 'set',
-      });
-    },
-  );
 
   const valueWithoutError = React.useMemo(
     () => valueManager.cleanValue(utils, dateState.draft),
