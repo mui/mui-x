@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy, SinonSpy } from 'sinon';
-import { DataGrid, DataGridProps, GridToolbar, GridToolbarExport } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridToolbarExport } from '@mui/x-data-grid';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createRenderer, screen, fireEvent } from '@mui/internal-test-utils';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
@@ -34,7 +34,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
 
   describe('component: GridToolbar', () => {
     it('should export with the default csvOptions', async () => {
-      render(<TestCase slots={{ toolbar: GridToolbar }} />);
+      render(<TestCase showToolbar />);
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
@@ -45,12 +45,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
     });
 
     it('should apply custom csvOptions', async () => {
-      render(
-        <TestCase
-          slots={{ toolbar: GridToolbar }}
-          slotProps={{ toolbar: { csvOptions: { delimiter: ';' } } }}
-        />,
-      );
+      render(<TestCase showToolbar slotProps={{ toolbar: { csvOptions: { delimiter: ';' } } }} />);
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
@@ -63,7 +58,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
     it('should disable csv export when passing `csvOptions.disableToolbarButton`', () => {
       render(
         <TestCase
-          slots={{ toolbar: GridToolbar }}
+          showToolbar
           slotProps={{ toolbar: { csvOptions: { disableToolbarButton: true } } }}
         />,
       );
@@ -88,7 +83,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
               { id: 6, name: ',=1+1' },
               { id: 7, name: 'value,=1+1' },
             ]}
-            slots={{ toolbar: GridToolbar }}
+            showToolbar
           />
         </div>,
       );
@@ -125,7 +120,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
               { id: 2, name: null },
               { id: 3, name: 1234 },
             ]}
-            slots={{ toolbar: GridToolbar }}
+            showToolbar
           />
         </div>,
       );
