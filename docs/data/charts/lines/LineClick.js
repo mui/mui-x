@@ -79,7 +79,7 @@ export default function LineClick() {
             aria-label="reset"
             size="small"
             onClick={() => {
-              setItemData(null);
+              setItemData(undefined);
               setAxisData(null);
             }}
           >

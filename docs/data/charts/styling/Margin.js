@@ -1,34 +1,33 @@
-// @ts-check
 import * as React from 'react';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { useDrawingArea, useXAxis, useYAxis } from '@mui/x-charts/hooks';
 
-const data = ['left', 'right', 'top', 'bottom']
-  .map((propName) => ({
-    propName,
-    knob: 'number',
-    defaultValue: 40,
-    step: 1,
-    min: 0,
-    max: 200,
-  }))
-  .concat(
-    ['xAxisHeight', 'yAxisWidth'].map((propName) => ({
-      propName,
-      knob: 'number',
-      defaultValue: 30,
-      step: 1,
-      min: 0,
-      max: 200,
-    })),
-  );
+const margins = ['left', 'right', 'top', 'bottom'].map((propName) => ({
+  propName,
+  knob: 'number',
+  defaultValue: 40,
+  step: 1,
+  min: 0,
+  max: 200,
+}));
+
+const axes = ['xAxisHeight', 'yAxisWidth'].map((propName) => ({
+  propName,
+  knob: 'number',
+  defaultValue: 30,
+  step: 1,
+  min: 0,
+  max: 200,
+}));
+
 export default function MarginNoSnap() {
   return (
     <ChartsUsageDemo
       componentName="Margin demos"
       data={[
-        ...data,
+        ...margins,
+        ...axes,
         {
           propName: 'hideXAxis',
           knob: 'switch',

@@ -39,9 +39,7 @@ export default function PieClick() {
           <IconButton
             aria-label="reset"
             size="small"
-            onClick={() => {
-              setItemData(null);
-            }}
+            onClick={() => setItemData(undefined)}
           >
             <UndoOutlinedIcon fontSize="small" />
           </IconButton>
