@@ -11,10 +11,10 @@ import {
 import { arrayIncludes } from '../../utils/utils';
 import { PickerSelectionState, UsePickerProps, UsePickerValueState } from './usePicker.types';
 import { useValueWithTimezone } from '../useValueWithTimezone';
-import { useLocalizationContext, useUtils } from '../useUtils';
+import { useUtils } from '../useUtils';
 import { InferError, PickerChangeHandlerContext } from '../../../models';
 import { SetValueActionOptions } from '../../components/PickerProvider';
-import { Validator } from '../../../validation';
+import { useValidation, Validator } from '../../../validation';
 import { useOpenState } from '../useOpenState';
 
 function getOrientation(): PickerOrientation {
@@ -82,7 +82,6 @@ export function usePickerDateState<
   const { current: defaultValue } = React.useRef(defaultValueProp);
   const { current: isControlled } = React.useRef(valueProp !== undefined);
   const [previousTimezoneProp, setPreviousTimezoneProp] = React.useState(timezoneProp);
-  const adapter = useLocalizationContext();
   const utils = useUtils();
   const { open, setOpen } = useOpenState({ open: openProp, onOpen, onClose });
 
@@ -160,6 +159,14 @@ export function usePickerDateState<
     };
   });
 
+  const { getValidationErrorForNewValue } = useValidation({
+    props,
+    validator,
+    timezone,
+    value: dateState.draft,
+    onError: props.onError,
+  });
+
   const timezoneFromDraftValue = valueManager.getTimezone(utils, dateState.draft);
   if (previousTimezoneProp !== timezoneProp) {
     setPreviousTimezoneProp(timezoneProp);
@@ -208,9 +215,7 @@ export function usePickerDateState<
       if (!cachedContext) {
         cachedContext = {
           validationError:
-            validationError == null
-              ? validator({ adapter, value: newValue, timezone, props })
-              : validationError,
+            validationError == null ? getValidationErrorForNewValue(newValue) : validationError,
         };
 
         if (shortcut) {
