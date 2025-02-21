@@ -587,8 +587,8 @@
     "rowSelection": { "type": { "name": "bool" }, "default": "true" },
     "rowSelectionModel": {
       "type": {
-        "name": "union",
-        "description": "Array&lt;number<br>&#124;&nbsp;string&gt;<br>&#124;&nbsp;number<br>&#124;&nbsp;string"
+        "name": "shape",
+        "description": "{ ids: Set, type: 'exclude'<br>&#124;&nbsp;'include' }"
       }
     },
     "rowSelectionPropagation": {

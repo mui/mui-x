@@ -156,7 +156,7 @@
     "previousIconButton": "Button allowing to switch to the left view.",
     "rightArrowIcon": "Icon displayed in the right view switch button.",
     "shortcuts": "Custom component for the shortcuts.",
-    "textField": "Form control with an input to render the value inside the default field.",
+    "textField": "Form control with an input to render the value.",
     "toolbar": "Custom component for the toolbar rendered above the views."
   }
 }

@@ -1,23 +1,46 @@
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { PickerFieldSlotProps, PickerOwnerState } from '@mui/x-date-pickers/models';
 import {
   PickerPopperSlots,
   PickerPopperSlotProps,
   UsePickerProps,
   DateOrTimeViewWithMeridiem,
   PickerRangeValue,
+  PickerFieldUISlotsFromContext,
+  PickerFieldUISlotPropsFromContext,
 } from '@mui/x-date-pickers/internals';
+import {
+  ExportedPickersLayoutSlotProps,
+  ExportedPickersLayoutSlots,
+} from '@mui/x-date-pickers/PickersLayout';
 import {
   RangeOnlyPickerProps,
   UseRangePickerParams,
   UseRangePickerProps,
-  UseRangePickerSlotProps,
-  UseRangePickerSlots,
 } from '../models/useRangePicker';
 
-export interface UseDesktopRangePickerSlots extends UseRangePickerSlots, PickerPopperSlots {}
+export interface UseDesktopRangePickerSlots
+  extends PickerPopperSlots,
+    ExportedPickersLayoutSlots<PickerRangeValue>,
+    PickerFieldUISlotsFromContext {
+  /**
+   * Component used to enter the date with the keyboard.
+   */
+  field: React.ElementType;
+}
 
 export interface UseDesktopRangePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends UseRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
-    PickerPopperSlotProps {}
+  extends PickerPopperSlotProps,
+    ExportedPickersLayoutSlotProps<PickerRangeValue>,
+    PickerFieldUISlotPropsFromContext {
+  field?: SlotComponentPropsFromProps<
+    PickerFieldSlotProps<PickerRangeValue, TEnableAccessibleFieldDOMStructure> & {
+      dateSeparator?: string;
+    },
+    {},
+    PickerOwnerState
+  >;
+}
 
 export interface DesktopRangeOnlyPickerProps extends RangeOnlyPickerProps {
   /**

@@ -8,6 +8,7 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { DateRangeValidationError } from '@mui/x-date-pickers-pro/models';
 import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
+import { FieldOwnerState } from '@mui/x-date-pickers/models';
 
 function CustomInputAdornment(props: InputAdornmentProps & { hasError?: boolean }) {
   const { hasError, children, sx, ...other } = props;
@@ -43,12 +44,14 @@ export default function AddWarningIconWhenInvalidRange() {
           onError={setError}
           slots={{ field: MultiInputDateRangeField }}
           slotProps={{
-            textField: (ownerState) => ({
+            textField: ({
+              position,
+            }: FieldOwnerState & { position?: 'start' | 'end' }) => ({
               InputProps: {
                 endAdornment: (
                   <CustomInputAdornment
                     position="end"
-                    hasError={!!error[ownerState.position === 'start' ? 0 : 1]}
+                    hasError={!!error[position === 'start' ? 0 : 1]}
                   />
                 ),
               },
