@@ -20,6 +20,7 @@ import { useBaseCalendarDayGridNavigation } from './useBaseCalendarDayGridsNavig
 import { BaseCalendarRootContext } from './BaseCalendarRootContext';
 import { BaseCalendarSection } from '../utils/types';
 import { BaseCalendarRootVisibleDateContext } from './BaseCalendarRootVisibleDateContext';
+import { useValidation } from '../../../../../validation';
 
 export function useBaseCalendarRoot<
   TValue extends PickerValidValue,
@@ -151,6 +152,14 @@ export function useBaseCalendarRoot<
     [adapter, dateValidationProps, timezone],
   );
 
+  const { getValidationErrorForNewValue } = useValidation({
+    props: { ...valueValidationProps, onError },
+    validator: manager.validator,
+    timezone,
+    value,
+    onError,
+  });
+
   const setValue = useEventCallback(
     (
       newValue: TValue,
@@ -159,12 +168,7 @@ export function useBaseCalendarRoot<
       handleValueChange(newValue, {
         section: options.section,
         changeImportance: options.changeImportance,
-        validationError: manager.validator({
-          adapter,
-          value: newValue,
-          timezone,
-          props: { ...valueValidationProps, onError },
-        }),
+        validationError: getValidationErrorForNewValue(newValue),
       });
     },
   );
