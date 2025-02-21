@@ -1,7 +1,7 @@
 export { useMobileRangePicker } from './useMobileRangePicker';
 export type {
   UseMobileRangePickerSlots,
-  ExportedUseMobileRangePickerSlotProps as UseMobileRangePickerSlotProps,
+  UseMobileRangePickerSlotProps,
   MobileRangeOnlyPickerProps,
   UseMobileRangePickerProps,
 } from './useMobileRangePicker.types';
