@@ -71,10 +71,13 @@ describe('babel-plugin-mui-css', () => {
       source: js`
         const styles = css('MuiDataGrid-panel', {
           root: {
-            '#some-id': {
+            '#id': {
               color: 'black',
             },
-            '&.some-class': {
+            '.class-a': {
+              color: 'black',
+            },
+            '&.class-b': {
               color: 'black',
             },
             '> input': {
@@ -90,8 +93,9 @@ describe('babel-plugin-mui-css', () => {
       `,
       css: css`
         .MuiDataGrid-panel {  }
-        .MuiDataGrid-panel #some-id { color:black; }
-        .MuiDataGrid-panel.some-class { color:black; }
+        .MuiDataGrid-panel #id { color:black; }
+        .MuiDataGrid-panel .class-a { color:black; }
+        .MuiDataGrid-panel.class-b { color:black; }
         .MuiDataGrid-panel > input { color:black; }
       `
     })

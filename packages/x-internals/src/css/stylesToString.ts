@@ -15,8 +15,6 @@ export function stylesToString(rootSelector: string, rootStyles: CSSObject) {
   stack.length = 0;
   stack.push(rootSelector, rootStyles, '');
 
-  console.log({ rootSelector, rootStyles })
-
   const rules = [] as string[];
 
   while (stack.length > 0) {
@@ -24,8 +22,6 @@ export function stylesToString(rootSelector: string, rootStyles: CSSObject) {
     const styles = stack.pop();
     const nested = stack.pop();
     const selector = transformSelector(nested, parents);
-
-    console.log({ parents, selector })
 
     let output = `${selector} { `;
 
