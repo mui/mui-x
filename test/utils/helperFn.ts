@@ -1,6 +1,6 @@
 import { spy } from 'sinon';
 import { act, screen } from '@mui/internal-test-utils';
-import { gridClasses } from '@mui/x-data-grid';
+import { gridClasses, GridRowId } from '@mui/x-data-grid';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import type { GridApiCommon } from '@mui/x-data-grid/models/api/gridApiCommon';
 
@@ -195,3 +195,7 @@ export const getSelectInput = (combobox: Element) => {
 export function getSelectByName(name: string) {
   return getSelectInput(screen.getByRole('combobox', { name }))!;
 }
+
+export const includeRowSelection = (ids: GridRowId[]) => {
+  return { type: 'include', ids: new Set(ids) } as const;
+};

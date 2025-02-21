@@ -66,7 +66,7 @@ Please refer to [this section](/x/react-date-pickers/base-concepts/#testing-cave
 
 ## Form props
 
-The component can be disabled or read-only.
+The component supports the `disabled`, `readOnly` and `name` form props:
 
 {{"demo": "FormPropsDateTimeRangePickers.js"}}
 
@@ -82,14 +82,14 @@ This prop will be ignored on the mobile picker.
 
 {{"demo": "DateTimeRangePickerCalendarProp.js"}}
 
-### Use a single input field
+### Use a multi input field
 
-You can pass the `SingleInputDateTimeRangeField` component to the Date Time Range Picker to use it for keyboard editing:
+You can pass the `MultiInputDateTimeRangeField` component to the Date Time Range Picker to use it for keyboard editing:
 
-{{"demo": "SingleInputDateTimeRangePicker.js"}}
+{{"demo": "MultiInputDateTimeRangePicker.js"}}
 
 :::info
-You can find more information in a [dedicated documentation page section](/x/react-date-pickers/custom-field/#use-single-input-fields-on-range-pickers).
+You can find more information in a [dedicated documentation page section](/x/react-date-pickers/custom-field/#usage-inside-a-range-picker).
 :::
 
 ### Customize the field

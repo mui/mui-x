@@ -9,8 +9,9 @@ export default function BasicDateRangeField() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer
-        components={['MultiInputDateRangeField', 'SingleInputDateRangeField']}
+        components={['SingleInputDateRangeField', 'MultiInputDateRangeField']}
       >
+        <SingleInputDateRangeField label="Departure - Return" />
         <MultiInputDateRangeField
           slotProps={{
             textField: ({ position }) => ({
@@ -18,7 +19,6 @@ export default function BasicDateRangeField() {
             }),
           }}
         />
-        <SingleInputDateRangeField label="Departure - Return" />
       </DemoContainer>
     </LocalizationProvider>
   );
