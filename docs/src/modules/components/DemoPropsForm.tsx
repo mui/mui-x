@@ -164,45 +164,6 @@ interface ChartDemoPropsFormProps<PropName extends string> {
   onPropsChange: (data: Record<PropName, any> | ((data: Record<PropName, any>) => void)) => void;
 }
 
-function ControlledColorRadio(props: any) {
-  const { value, ...other } = props;
-  return (
-    <Paper
-      color={value}
-      sx={{
-        width: 28,
-        height: 28,
-        borderRadius: 'sm',
-        textTransform: 'capitalize',
-        position: 'relative',
-        bgcolor: value,
-      }}
-    >
-      <Radio
-        {...other}
-        value={value}
-        icon={<Check sx={{ opacity: 0 }} />}
-        checkedIcon={
-          <Check
-            fontSize="medium"
-            color="inherit"
-            sx={(theme) => ({
-              zIndex: 1,
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              pointerEvents: 'none',
-              color: theme.palette.background.default,
-            })}
-          />
-        }
-        sx={{ width: '100%', height: '100%', margin: 0 }}
-      />
-    </Paper>
-  );
-}
-
 export default function ChartDemoPropsForm<T extends string>({
   componentName,
   data,
@@ -592,5 +553,44 @@ export default function ChartDemoPropsForm<T extends string>({
         })}
       </Box>
     </Box>
+  );
+}
+
+function ControlledColorRadio(props: any) {
+  const { value, ...other } = props;
+  return (
+    <Paper
+      color={value}
+      sx={{
+        width: 28,
+        height: 28,
+        borderRadius: 'sm',
+        textTransform: 'capitalize',
+        position: 'relative',
+        bgcolor: value,
+      }}
+    >
+      <Radio
+        {...other}
+        value={value}
+        icon={<Check sx={{ opacity: 0 }} />}
+        checkedIcon={
+          <Check
+            fontSize="medium"
+            color="inherit"
+            sx={(theme) => ({
+              zIndex: 1,
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              pointerEvents: 'none',
+              color: theme.palette.background.default,
+            })}
+          />
+        }
+        sx={{ width: '100%', height: '100%', margin: 0 }}
+      />
+    </Paper>
   );
 }
