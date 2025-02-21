@@ -3,11 +3,7 @@ import {
   DesktopDateTimePickerSlots,
   DesktopDateTimePickerSlotProps,
 } from '../DesktopDateTimePicker';
-import {
-  BaseSingleInputFieldProps,
-  DateOrTimeViewWithMeridiem,
-  PickerValue,
-} from '../internals/models';
+import { BaseSingleInputFieldProps, PickerValue } from '../internals/models';
 import {
   MobileDateTimePickerProps,
   MobileDateTimePickerSlots,
@@ -27,10 +23,7 @@ export interface DateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure exte
 export interface DateTimePickerProps<TEnableAccessibleFieldDOMStructure extends boolean = true>
   extends DesktopDateTimePickerProps<TEnableAccessibleFieldDOMStructure>,
     ExportedYearCalendarProps,
-    Omit<
-      MobileDateTimePickerProps<DateOrTimeViewWithMeridiem, TEnableAccessibleFieldDOMStructure>,
-      'views'
-    > {
+    Omit<MobileDateTimePickerProps<TEnableAccessibleFieldDOMStructure>, 'views'> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'

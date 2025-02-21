@@ -3,14 +3,23 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { StaticDateTimePickerProps } from './StaticDateTimePicker.types';
 import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
-import { renderTimeViewClock } from '../timeViewRenderers';
+import {
+  renderDigitalClockTimeView,
+  renderMultiSectionDigitalClockTimeView,
+} from '../timeViewRenderers';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
-import { DateOrTimeView } from '../models';
 import { validateDateTime } from '../validation';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
-import { PickerValue } from '../internals/models';
+import { DateOrTimeViewWithMeridiem, PickerValue } from '../internals/models';
+import { mergeSx } from '../internals/utils/utils';
+import {
+  multiSectionDigitalClockClasses,
+  multiSectionDigitalClockSectionClasses,
+} from '../MultiSectionDigitalClock';
+import { DIALOG_WIDTH, VIEW_HEIGHT } from '../internals/constants/dimensions';
+import { digitalClockClasses } from '../DigitalClock';
 
 type StaticDateTimePickerComponent = ((
   props: StaticDateTimePickerProps & React.RefAttributes<HTMLDivElement>,
@@ -30,29 +39,42 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker(
   inProps: StaticDateTimePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const defaultizedProps = useDateTimePickerDefaultizedProps<
-    DateOrTimeView,
-    StaticDateTimePickerProps
-  >(inProps, 'MuiStaticDateTimePicker');
+  const defaultizedProps = useDateTimePickerDefaultizedProps<StaticDateTimePickerProps>(
+    inProps,
+    'MuiStaticDateTimePicker',
+  );
 
   const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';
   const ampmInClock = defaultizedProps.ampmInClock ?? displayStaticWrapperAs === 'desktop';
+
+  const renderTimeView = defaultizedProps.shouldRenderTimeInASingleColumn
+    ? renderDigitalClockTimeView
+    : renderMultiSectionDigitalClockTimeView;
 
   const viewRenderers: PickerViewRendererLookup<PickerValue, any, any> = {
     day: renderDateViewCalendar,
     month: renderDateViewCalendar,
     year: renderDateViewCalendar,
-    hours: renderTimeViewClock,
-    minutes: renderTimeViewClock,
-    seconds: renderTimeViewClock,
+    hours: renderTimeView,
+    minutes: renderTimeView,
+    seconds: renderTimeView,
+    meridiem: renderTimeView,
     ...defaultizedProps.viewRenderers,
   };
+
+  // Need to avoid adding the `meridiem` view when unexpected renderer is specified
+  const shouldHoursRendererContainMeridiemView =
+    viewRenderers.hours?.name === renderMultiSectionDigitalClockTimeView.name;
+  const views = !shouldHoursRendererContainMeridiemView
+    ? defaultizedProps.views.filter((view) => view !== 'meridiem')
+    : defaultizedProps.views;
 
   // Props with the default values specific to the static variant
   const props = {
     ...defaultizedProps,
     viewRenderers,
     displayStaticWrapperAs,
+    views,
     ampmInClock,
     yearsPerRow: defaultizedProps.yearsPerRow ?? (displayStaticWrapperAs === 'mobile' ? 3 : 4),
     slotProps: {
@@ -67,9 +89,35 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker(
         ...defaultizedProps.slotProps?.toolbar,
       },
     },
+    sx: mergeSx(
+      [
+        {
+          [`& .${multiSectionDigitalClockClasses.root}`]: {
+            width: DIALOG_WIDTH,
+          },
+          [`& .${multiSectionDigitalClockSectionClasses.root}`]: {
+            flex: 1,
+            // account for the border on `MultiSectionDigitalClock`
+            maxHeight: VIEW_HEIGHT - 1,
+            [`.${multiSectionDigitalClockSectionClasses.item}`]: {
+              width: 'auto',
+            },
+          },
+          [`& .${digitalClockClasses.root}`]: {
+            width: DIALOG_WIDTH,
+            maxHeight: VIEW_HEIGHT,
+            flex: 1,
+            [`.${digitalClockClasses.item}`]: {
+              justifyContent: 'center',
+            },
+          },
+        },
+      ],
+      defaultizedProps?.sx,
+    ),
   };
 
-  const { renderPicker } = useStaticPicker<DateOrTimeView, typeof props>({
+  const { renderPicker } = useStaticPicker<DateOrTimeViewWithMeridiem, typeof props>({
     ref,
     props,
     valueManager: singleItemValueManager,

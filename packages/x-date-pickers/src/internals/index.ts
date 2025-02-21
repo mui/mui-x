@@ -121,7 +121,7 @@ export type {
 export type { RangePosition } from './models/pickers';
 export type { BaseSingleInputFieldProps, FieldRangeSection } from './models/fields';
 export type { BasePickerProps, BasePickerInputProps } from './models/props/basePickerProps';
-export type { BaseClockProps, DesktopOnlyTimePickerProps, AmPmProps } from './models/props/time';
+export type { BaseClockProps, DigitalTimePickerProps, AmPmProps } from './models/props/time';
 export type { ExportedBaseTabsProps } from './models/props/tabs';
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
 export type { FormProps } from './models/formProps';
