@@ -16,6 +16,7 @@ import { ClockSection } from '../utils/types';
 import { GenericHTMLProps } from '../../base-utils/types';
 import { mergeReactProps } from '../../base-utils/mergeReactProps';
 import { ClockRootContext } from './ClockRootContext';
+import { useValidation } from '../../../../validation';
 
 export function useClockRoot(parameters: useClockRoot.Parameters) {
   const {
@@ -80,15 +81,18 @@ export function useClockRoot(parameters: useClockRoot.Parameters) {
 
   const isEmpty = value == null;
 
+  const { getValidationErrorForNewValue } = useValidation({
+    props: { ...validationProps, onError },
+    validator: manager.validator,
+    timezone,
+    value,
+    onError,
+  });
+
   const setValue: ClockRootContext['setValue'] = useEventCallback((newValue, options) => {
     const context: useClockRoot.ValueChangeHandlerContext = {
       section: options.section,
-      validationError: manager.validator({
-        adapter,
-        value: newValue,
-        timezone,
-        props: { ...validationProps, onError },
-      }),
+      validationError: getValidationErrorForNewValue(newValue),
     };
     console.log('NEW VALUE', newValue, options);
     handleValueChange(newValue, context);
