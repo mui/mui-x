@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { act, createRenderer, fireEvent } from '@mui/internal-test-utils';
-import { getCell } from 'test/utils/helperFn';
+import { getCell, includeRowSelection } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import {
@@ -73,14 +73,15 @@ describe('<DataGridPremium /> - Row selection', () => {
     it('should auto select parents when controlling row selection model', () => {
       const onRowSelectionModelChange = spy();
       render(
-        <Test rowSelectionModel={[3, 4]} onRowSelectionModelChange={onRowSelectionModelChange} />,
+        <Test
+          rowSelectionModel={includeRowSelection([3, 4])}
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
       );
 
-      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal([
-        3,
-        4,
-        'auto-generated-row-category1/Cat B',
-      ]);
+      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+        includeRowSelection([3, 4, 'auto-generated-row-category1/Cat B']),
+      );
     });
 
     it('should select all the children when selecting a parent', () => {
@@ -146,13 +147,15 @@ describe('<DataGridPremium /> - Row selection', () => {
 
       fireEvent.click(getCell(1, 0).querySelector('input')!);
       expect(apiRef.current?.getSelectedRows()).to.have.keys(expectedKeys);
-      expect(apiRef.current?.state.rowSelection.length).to.equal(expectedCount);
+      expect(apiRef.current?.state.rowSelection.type).to.equal('include');
+      expect(apiRef.current?.state.rowSelection.ids.size).to.equal(expectedCount);
 
       act(() => {
         apiRef.current?.updateRows([...rows]);
       });
       expect(apiRef.current?.getSelectedRows()).to.have.keys(expectedKeys);
-      expect(apiRef.current?.state.rowSelection.length).to.equal(expectedCount);
+      expect(apiRef.current?.state.rowSelection.type).to.equal('include');
+      expect(apiRef.current?.state.rowSelection.ids.size).to.equal(expectedCount);
     });
 
     it('should select all the children when selecting an indeterminate parent', () => {
