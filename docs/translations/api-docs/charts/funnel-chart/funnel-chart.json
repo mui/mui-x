@@ -5,9 +5,6 @@
       "description": "The configuration of axes highlight. Default is set to &#39;band&#39; in the bar direction. Depends on <code>layout</code> prop.",
       "seeMoreText": "See {{link}} for more details."
     },
-    "bottomAxis": {
-      "description": "Indicate which axis to display the bottom of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
-    },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "disableAxisListener": {
       "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
@@ -22,9 +19,8 @@
     "id": {
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
     },
-    "initialZoom": { "description": "The list of zoom data related to each axis." },
-    "leftAxis": {
-      "description": "Indicate which axis to display the left of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
+    "initialZoom": {
+      "description": "The list of zoom data related to each axis. Used to initialize the zoom in a specific configuration without controlling it."
     },
     "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
     "margin": {
@@ -48,9 +44,6 @@
         "funnelItemIdentifier": "The funnel item identifier."
       }
     },
-    "rightAxis": {
-      "description": "Indicate which axis to display the right of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
-    },
     "series": {
       "description": "The series to display in the funnel chart. An array of FunnelSeriesType objects."
     },
@@ -59,9 +52,6 @@
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
-    "topAxis": {
-      "description": "Indicate which axis to display the top of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
-    },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     },
@@ -70,7 +60,8 @@
     },
     "yAxis": {
       "description": "The configuration of the y-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
-    }
+    },
+    "zoomData": { "description": "The list of zoom data related to each axis." }
   },
   "classDescriptions": {},
   "slotDescriptions": {
