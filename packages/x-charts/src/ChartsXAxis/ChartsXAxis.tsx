@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, styled } from '@mui/material/styles';
+import { ellipsize } from '../internals/ellipsize';
+import { getStringSize } from '../internals/domUtils';
 import { useTicks, TickItemType } from '../hooks/useTicks';
 import { AxisConfig, AxisDefaultized, ChartsXAxisProps, ScaleName } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
@@ -107,6 +109,32 @@ function getVisibleLabels(
   );
 }
 
+function shortenLabels(
+  visibleLabels: Set<TickItemType>,
+  axisWidth: number,
+  maxHeight: number,
+  { tickLabelStyle }: Pick<ChartsXAxisProps, 'tickLabelStyle'>,
+) {
+  const shortenedLabels = new Map<TickItemType, string>();
+
+  for (const item of visibleLabels) {
+    if (item.formattedValue) {
+      console.log({ item, maxHeight, width: axisWidth - item.offset });
+      shortenedLabels.set(
+        item,
+        ellipsize(item.formattedValue.toString(), {
+          width: axisWidth - item.offset + 100,
+          height: maxHeight,
+          angle: tickLabelStyle?.angle ?? 0,
+          measureText: (text) => getStringSize(text, tickLabelStyle),
+        }),
+      );
+    }
+  }
+
+  return shortenedLabels;
+}
+
 const XAxisRoot = styled(AxisRoot, {
   name: 'MuiChartsXAxis',
   slot: 'Root',
@@ -160,6 +188,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickLabelMinGap,
     sx,
     offset,
+    height: axisHeight,
   } = defaultizedProps;
 
   const theme = useTheme();
@@ -210,6 +239,10 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     isPointInside: (x: number) => instance.isPointInside({ x, y: -1 }, { direction: 'x' }),
   });
 
+  const shortenedLabels = shortenLabels(visibleLabels, width, axisHeight, {
+    tickLabelStyle,
+  });
+
   const labelRefPoint = {
     x: left + width / 2,
     y: positionSign * (tickSize + 22),
@@ -243,16 +276,18 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
       className={classes.root}
       sx={sx}
     >
+      <rect x={0} y={0} width={430} height={axisHeight} fill="red" opacity={0.1} />
       {!disableLine && (
         <Line x1={left} x2={left + width} className={classes.line} {...slotProps?.axisLine} />
       )}
 
       {xTicks.map((item, index) => {
-        const { formattedValue, offset: tickOffset, labelOffset } = item;
+        const { offset: tickOffset, labelOffset } = item;
         const xTickLabel = labelOffset ?? 0;
         const yTickLabel = positionSign * (tickSize + 3);
 
         const showTick = instance.isPointInside({ x: tickOffset, y: -1 }, { direction: 'x' });
+        const formattedValue = shortenedLabels.get(item);
         const showTickLabel = visibleLabels.has(item);
 
         return (
@@ -274,7 +309,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
                 x={xTickLabel}
                 y={yTickLabel}
                 {...axisTickLabelProps}
-                text={formattedValue.toString()}
+                text={formattedValue}
               />
             )}
           </g>
