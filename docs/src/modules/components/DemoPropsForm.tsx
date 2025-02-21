@@ -489,7 +489,6 @@ export default function ChartDemoPropsForm<T extends string>({
           if (knob === 'placement') {
             return (
               <FormControl key={propName}>
-                {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
                 <FormLabel>{displayName ?? 'Placement'}</FormLabel>
                 <RadioGroup
                   name="placement"

@@ -1,0 +1,2 @@
+<Gauge width={100} height={100} value={50} />
+<Gauge width={100} height={100} value={50} valueMin={10} valueMax={60} />
