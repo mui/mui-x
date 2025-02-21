@@ -5,6 +5,8 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, styled } from '@mui/material/styles';
 import { useRtl } from '@mui/system/RtlProvider';
+import { clampAngle } from '../internals/clampAngle';
+import { ellipsize } from '../internals/ellipsize';
 import { getStringSize } from '../internals/domUtils';
 import { useTicks, TickItemType } from '../hooks/useTicks';
 import { AxisConfig, AxisDefaultized, ChartsXAxisProps, ScaleName } from '../models/axis';
@@ -109,6 +111,32 @@ function getVisibleLabels(
       return true;
     }),
   );
+}
+
+function shortenLabels(
+  visibleLabels: Set<TickItemType>,
+  axisWidth: number,
+  maxHeight: number,
+  { tickLabelStyle }: Pick<ChartsXAxisProps, 'tickLabelStyle'>,
+) {
+  const shortenedLabels = new Map<TickItemType, string>();
+
+  for (const item of visibleLabels) {
+    if (item.formattedValue) {
+      console.log({ item, maxHeight, width: axisWidth - item.offset });
+      shortenedLabels.set(
+        item,
+        ellipsize(item.formattedValue.toString(), {
+          width: axisWidth - item.offset + 100,
+          height: maxHeight,
+          angle: tickLabelStyle?.angle ?? 0,
+          measureText: (text) => getStringSize(text, tickLabelStyle),
+        }),
+      );
+    }
+  }
+
+  return shortenedLabels;
 }
 
 const XAxisRoot = styled(AxisRoot, {
@@ -223,6 +251,10 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     isPointInside: (x: number) => instance.isPointInside({ x, y: -1 }, { direction: 'x' }),
   });
 
+    const shortenedLabels = shortenLabels(visibleLabels, width, axisHeight, {
+        tickLabelStyle,
+    });
+
   const axisLabelProps = useSlotProps({
     elementType: Label,
     externalSlotProps: slotProps?.axisLabel,
@@ -270,11 +302,12 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
       )}
 
       {xTicks.map((item, index) => {
-        const { formattedValue, offset: tickOffset, labelOffset } = item;
+        const { offset: tickOffset, labelOffset } = item;
         const xTickLabel = labelOffset ?? 0;
         const yTickLabel = positionSign * (tickSize + 3);
 
         const showTick = instance.isPointInside({ x: tickOffset, y: -1 }, { direction: 'x' });
+        const formattedValue = shortenedLabels.get(item);
         const showTickLabel = visibleLabels.has(item);
 
         return (
@@ -297,7 +330,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
                 y={yTickLabel}
                 data-testid="ChartsXAxisTickLabel"
                 {...axisTickLabelProps}
-                text={formattedValue.toString()}
+                text={formattedValue}
               />
             )}
           </g>
