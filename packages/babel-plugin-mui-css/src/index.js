@@ -1,11 +1,4 @@
-import { extractCssFile } from './utils/index.js';
-
-const defaultOptions = {
-  generateScopedName: '[name]__[local]___[hash:base64:5]',
-};
-
 export default function transformCssModules({ types: t }) {
-
   // is css modules require hook initialized?
   let initialized = false;
   // are we requiring a module for preprocessCss, processCss, etc?
@@ -13,90 +6,26 @@ export default function transformCssModules({ types: t }) {
   // because it will cause circular dependency in babel-node and babel-register process
   let inProcessingFunction = false;
 
-  function matcher(extensions = ['.css']) {
-    const extensionsPattern = extensions.join('|').replace(/\./g, '\\\.');
-    return new RegExp(`(${extensionsPattern})$`, 'i');
-  }
-
-  const cssMap = new Map();
-  let thisPluginOptions = null;
-
   const pluginApi = {
     manipulateOptions(options) {
       if (initialized || inProcessingFunction) {
         return options;
       }
 
-      // find options for this plugin
-      // we have to use this hack because plugin.key does not have to be 'css-modules-transform'
-      // so we will identify it by comparing manipulateOptions
-      if (Array.isArray(options.plugins[0])) {
-        // babel 6
-        thisPluginOptions = options.plugins.filter(
-          ([plugin]) => plugin.manipulateOptions === pluginApi.manipulateOptions,
-        )[0][1];
-      } else {
-        // babel 7
-        thisPluginOptions = options.plugins.filter(
-          (plugin) => plugin.manipulateOptions === pluginApi.manipulateOptions,
-        )[0].options;
-      }
-
-      const currentConfig = { ...defaultOptions, ...thisPluginOptions };
-      // this is not a css-require-ook config
-      delete currentConfig.extractCss;
-      delete currentConfig.keepImport;
-      delete currentConfig.importPathFormatter;
-
-      const pushStylesCreator = (toWrap) => (css, filepath) => {
-        let processed;
-
-        if (typeof toWrap === 'function') {
-          processed = toWrap(css, filepath);
-        }
-
-        if (typeof processed !== 'string') processed = css;
-
-        // set css content only if is new
-        if (!cssMap.has(filepath) || cssMap.get(filepath) !== processed) {
-          cssMap.set(filepath, processed);
-        }
-
-        return processed;
-      };
-
-      // resolve options
-      // Object.keys(requireHooksOptions).forEach((key) => {
-      //   // skip undefined options
-      //   if (currentConfig[key] === undefined) {
-      //     if (key === 'importPathFormatter' && thisPluginOptions && thisPluginOptions[key]) {
-      //       thisPluginOptions[key] = requireHooksOptions[key](thisPluginOptions[key]);
-      //     }
-      //     return;
-      //   }
-      //
-      //   inProcessingFunction = true;
-      //   currentConfig[key] = requireHooksOptions[key](currentConfig[key], currentConfig);
-      //   inProcessingFunction = false;
-      // });
-
-      // wrap or define processCss function that collect generated css
-      currentConfig.processCss = pushStylesCreator(currentConfig.processCss);
+      // TODO: options?
 
       initialized = true;
 
       return options;
     },
+
     post() {
-      // extract css only if is this option set
-      if (thisPluginOptions?.extractCss) {
-        // always rewrite file :-/
-        extractCssFile(process.cwd(), cssMap, thisPluginOptions.extractCss);
-      }
+      // TODO: output CSS file
     },
+
     visitor: {
-      // const styles = css({ options: true }, {
-      //   root: { ... },
+      // const styles = css('prefix', {
+      //   class1: { ... },
       // });
       CallExpression(path, { file }) {
         const {
@@ -126,7 +55,10 @@ export default function transformCssModules({ types: t }) {
         const [prefixNode, classesNode] = args;
 
         const prefix = prefixNode.extra.rawValue;
-        // XXX: security
+
+
+        // XXX: security, need to parse it properly
+
         const classes = eval('(' + file.code.slice(
           classesNode.start,
           classesNode.end,
