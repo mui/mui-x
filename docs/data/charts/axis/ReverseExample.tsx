@@ -31,7 +31,7 @@ const series = [
   { type: 'line', dataKey: 'min', color: '#577399' },
   { type: 'line', dataKey: 'max', color: '#fe5f55' },
   { type: 'bar', dataKey: 'precip', color: '#bfdbf7', yAxisId: 'rightAxis' },
-];
+] as const;
 
 export default function ReverseExample() {
   const [reverseX, setReverseX] = React.useState(false);

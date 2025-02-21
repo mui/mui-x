@@ -8,6 +8,7 @@ import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
+import { ScatterItemIdentifier } from '@mui/x-charts/models';
 
 const scatterChartsParams = {
   series: [
@@ -51,25 +52,13 @@ const scatterChartsParams = {
     },
   ],
   height: 400,
-};
+} as const;
 
 export default function ScatterClick() {
-  const [data, setData] = React.useState();
+  const [data, setData] = React.useState<ScatterItemIdentifier>();
 
-  const { axis, item, ...other } = data ?? {};
+  const { ...other } = data ?? {};
   const dataDisplayed = data && {
-    ...(item
-      ? {
-          item: {
-            dataIndex: item.dataIndex,
-            series: {
-              id: item.series.id,
-              toReplace: '',
-            },
-          },
-        }
-      : undefined),
-    ...(axis ? { axis } : undefined),
     ...other,
   };
   return (
@@ -81,7 +70,7 @@ export default function ScatterClick() {
       <Box sx={{ flexGrow: 1 }}>
         <ScatterChart
           {...scatterChartsParams}
-          onItemClick={(event, d) => setData(d)}
+          onItemClick={(_: any, d: ScatterItemIdentifier) => setData(d)}
         />
       </Box>
       <Stack direction="column" sx={{ width: { xs: '100%', md: '40%' } }}>
@@ -96,9 +85,7 @@ export default function ScatterClick() {
           <IconButton
             aria-label="reset"
             size="small"
-            onClick={() => {
-              setData(null);
-            }}
+            onClick={() => setData(undefined)}
           >
             <UndoOutlinedIcon fontSize="small" />
           </IconButton>
@@ -106,10 +93,7 @@ export default function ScatterClick() {
         <HighlightedCode
           code={
             dataDisplayed
-              ? JSON.stringify(dataDisplayed, null, 1).replace(
-                  '"toReplace": ""',
-                  '// ... (entire series definition)',
-                )
+              ? JSON.stringify(dataDisplayed, null, 1)
               : '// The data will appear here'
           }
           language="json"

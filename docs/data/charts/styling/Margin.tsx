@@ -3,14 +3,17 @@ import * as React from 'react';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { BarChart } from '@mui/x-charts/BarChart';
 
-const data = ['left', 'right', 'top', 'bottom'].map((propName) => ({
-  propName,
-  knob: 'number',
-  defaultValue: 60,
-  step: 1,
-  min: 0,
-  max: 200,
-}));
+const data = ['left', 'right', 'top', 'bottom'].map(
+  (propName) =>
+    ({
+      propName,
+      knob: 'number',
+      defaultValue: 60,
+      step: 1,
+      min: 0,
+      max: 200,
+    }) as const,
+);
 export default function Margin() {
   return (
     <ChartsUsageDemo

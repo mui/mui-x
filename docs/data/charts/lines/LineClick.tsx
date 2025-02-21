@@ -8,6 +8,7 @@ import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
 import { LineChart } from '@mui/x-charts/LineChart';
 
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
+import { ChartsAxisData, LineItemIdentifier } from '@mui/x-charts/models';
 
 const lineChartsParams = {
   series: [
@@ -44,11 +45,11 @@ const lineChartsParams = {
   ],
   xAxis: [{ data: [0, 3, 6, 9, 12], scaleType: 'linear', id: 'axis1' }],
   height: 400,
-};
+} as const;
 
 export default function LineClick() {
-  const [itemData, setItemData] = React.useState();
-  const [axisData, setAxisData] = React.useState();
+  const [itemData, setItemData] = React.useState<LineItemIdentifier>();
+  const [axisData, setAxisData] = React.useState<ChartsAxisData | null>();
 
   return (
     <Stack
@@ -79,7 +80,7 @@ export default function LineClick() {
             aria-label="reset"
             size="small"
             onClick={() => {
-              setItemData(null);
+              setItemData(undefined);
               setAxisData(null);
             }}
           >

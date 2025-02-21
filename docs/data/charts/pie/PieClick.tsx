@@ -7,9 +7,10 @@ import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import { mobileAndDesktopOS, platforms, valueFormatter } from './webUsageStats';
+import { PieItemIdentifier } from '@mui/x-charts/models';
 
 export default function PieClick() {
-  const [itemData, setItemData] = React.useState();
+  const [itemData, setItemData] = React.useState<PieItemIdentifier>();
 
   return (
     <Stack
@@ -39,9 +40,7 @@ export default function PieClick() {
           <IconButton
             aria-label="reset"
             size="small"
-            onClick={() => {
-              setItemData(null);
-            }}
+            onClick={() => setItemData(undefined)}
           >
             <UndoOutlinedIcon fontSize="small" />
           </IconButton>

@@ -7,11 +7,9 @@ import MenuItem from '@mui/material/MenuItem';
 import { LineChart } from '@mui/x-charts/LineChart';
 
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
+import { CurveType } from '@mui/x-charts/models';
 
-/**
- * @type {import('@mui/x-charts/models').CurveType[]}
- */
-const curveTypes = [
+const curveTypes: CurveType[] = [
   'linear',
   'catmullRom',
   'monotoneX',
@@ -22,10 +20,7 @@ const curveTypes = [
   'stepAfter',
 ];
 
-/**
- * @param {import('@mui/x-charts/models').CurveType} curveType
- */
-function getExample(curveType) {
+function getExample(curveType: CurveType) {
   return `<LineChart
   series={[
     { curve: "${curveType}", data: [1, 5, 2, 6, 3, 9.3] },
@@ -45,8 +40,7 @@ export default function InterpolationDemo() {
         label="interpolation method"
         value={curveType}
         sx={{ minWidth: 200, mb: 2 }}
-        // @ts-expect-error
-        onChange={(event) => setCurveType(event.target.value)}
+        onChange={(event) => setCurveType(event.target.value as CurveType)}
       >
         {curveTypes.map((curve) => (
           <MenuItem key={curve} value={curve}>

@@ -8,6 +8,7 @@ import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
 import { BarChart } from '@mui/x-charts/BarChart';
 
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
+import { BarItemIdentifier, ChartsAxisData } from '@mui/x-charts/models';
 
 const barChartsParams = {
   series: [
@@ -40,11 +41,11 @@ const barChartsParams = {
   ],
   xAxis: [{ data: ['0', '3', '6', '9', '12'], scaleType: 'band', id: 'axis1' }],
   height: 400,
-};
+} as const;
 
 export default function BarClick() {
-  const [itemData, setItemData] = React.useState();
-  const [axisData, setAxisData] = React.useState();
+  const [itemData, setItemData] = React.useState<BarItemIdentifier>();
+  const [axisData, setAxisData] = React.useState<ChartsAxisData | null>();
 
   return (
     <Stack
@@ -73,7 +74,7 @@ export default function BarClick() {
             aria-label="reset"
             size="small"
             onClick={() => {
-              setItemData(null);
+              setItemData(undefined);
               setAxisData(null);
             }}
           >
