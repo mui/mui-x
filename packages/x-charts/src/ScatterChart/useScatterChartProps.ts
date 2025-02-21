@@ -10,7 +10,7 @@ import type { ScatterPlotProps } from './ScatterPlot';
 import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
 import { SCATTER_CHART_PLUGINS, ScatterChartPluginsSignatures } from './ScatterChart.plugins';
 import { UseChartVoronoiSignature } from '../internals/plugins/featurePlugins/useChartVoronoi';
-import { ChartsTooltipProps, ChartsTooltipSlotExtension } from '../ChartsTooltip';
+import { ChartsTooltipProps } from '../ChartsTooltip';
 
 /**
  * A helper function that extracts ScatterChartProps from the input props

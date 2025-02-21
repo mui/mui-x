@@ -5,7 +5,7 @@ import { useThemeProps } from '@mui/material/styles';
 import { MakeOptional } from '@mui/x-internals/types';
 import { ChartContainerProps } from '../ChartContainer';
 import { PieSeriesType } from '../models/seriesType';
-import { ChartsTooltip, ChartsTooltipProps, ChartsTooltipSlotExtension } from '../ChartsTooltip';
+import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
 import { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
 import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import { PiePlot, PiePlotProps, PiePlotSlotProps, PiePlotSlots } from './PiePlot';
