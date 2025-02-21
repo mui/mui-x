@@ -15,8 +15,6 @@ const styles = css(
     alignLeft: {},
   },
 );
-
-console.log(styles.root);
 ```
 
 ```js
@@ -25,8 +23,6 @@ const styles = {
   root: 'MuiDataGrid-aggregationColumnHeader',
   alignLeft: 'MuiDataGrid-aggregationColumnHeader--alignLeft',
 };
-
-console.log(styles.alignLeft);
 ```
 
 ## License
