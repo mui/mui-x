@@ -152,10 +152,14 @@ There are two concepts to consider when defining the placement of a chart:
 - **`margin`**: The space between the SVG border and the axis or drawing area.
 - **`axis size`**: The space taken by the [axis](/x/react-charts/axis/#position). Each axis has their own size.
 
-To define the axis size, you can use the `xAxis` and `yAxis` configuration. The size is only taken into account if the axis has a position different from `none`.
+The axes have a default size.
+To update it, use the `xAxis` and `yAxis` configuration as follows:
 
-- **`x-axis`**: Uses the `height` prop to calculate the space taken by the axis.
+- **`x-axis`**: Uses the `height` prop to define the space taken by the axis.
 - **`y-axis`**: Uses the `width` prop instead.
+
+Axes sizes only take up space in the side they are positioned.
+If the axis is not be displayed (`position: 'none'`), they will not take up any space, regardless of their size.
 
 {{"demo": "MarginNoSnap.js", "hideToolbar": true, "bg": "playground"}}
 
