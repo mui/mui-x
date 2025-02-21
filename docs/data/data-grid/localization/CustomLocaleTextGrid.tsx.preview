@@ -7,7 +7,5 @@
     toolbarDensityStandard: 'Medium',
     toolbarDensityComfortable: 'Large',
   }}
-  slots={{
-    toolbar: GridToolbar,
-  }}
+  showToolbar
 />
