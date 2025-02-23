@@ -18,7 +18,7 @@ import {
   DateTimePickerToolbarProps,
   ExportedDateTimePickerToolbarProps,
 } from './DateTimePickerToolbar';
-import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
+import { PickerViewRendererLookup } from '../internals/hooks/usePicker';
 import { DateViewRendererProps } from '../dateViewRenderers';
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
