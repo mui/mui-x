@@ -5,7 +5,7 @@ import { useThemeProps } from '@mui/material/styles';
 import { MakeOptional } from '@mui/x-internals/types';
 import { ChartContainerProps } from '../ChartContainer';
 import { PieSeriesType } from '../models/seriesType';
-import { ChartsTooltip } from '../ChartsTooltip';
+import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
 import { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
 import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import { PiePlot, PiePlotProps, PiePlotSlotProps, PiePlotSlots } from './PiePlot';
@@ -123,6 +123,12 @@ const PieChart = React.forwardRef(function PieChart(
   );
 
   const Tooltip = slots?.tooltip ?? ChartsTooltip;
+  const tooltipProps: ChartsTooltipProps = {
+    slots,
+    slotProps,
+    ...slotProps?.tooltip,
+  };
+
   return (
     <ChartDataProvider<'pie', PieChartPluginSignatures> {...chartDataProviderProps}>
       <ChartsWrapper
@@ -140,7 +146,7 @@ const PieChart = React.forwardRef(function PieChart(
         <ChartsSurface {...chartsSurfaceProps}>
           <PiePlot slots={slots} slotProps={slotProps} onItemClick={onItemClick} />
           <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
-          {!loading && <Tooltip trigger="item" {...slotProps?.tooltip} />}
+          {!loading && <Tooltip trigger="item" {...tooltipProps} />}
           {children}
         </ChartsSurface>
       </ChartsWrapper>

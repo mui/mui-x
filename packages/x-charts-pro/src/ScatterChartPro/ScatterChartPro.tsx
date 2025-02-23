@@ -51,6 +51,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
     overlayProps,
     legendProps,
     axisHighlightProps,
+    tooltipProps,
     children,
   } = useScatterChartProps(other);
   const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
@@ -83,7 +84,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
           </g>
           <ChartsOverlay {...overlayProps} />
           <ChartsAxisHighlight {...axisHighlightProps} />
-          {!props.loading && <Tooltip {...props?.slotProps?.tooltip} trigger="item" />}
+          {!props.loading && <Tooltip {...tooltipProps} trigger="item" />}
           {children}
         </ChartsSurface>
       </ChartsWrapper>

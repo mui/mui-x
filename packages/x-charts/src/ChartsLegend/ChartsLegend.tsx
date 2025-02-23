@@ -3,6 +3,7 @@ import * as React from 'react';
 import { styled, SxProps, Theme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { ChartsLabelMarkSlotExtension } from '../ChartsLabel/chartsLabelMark.types';
 import { useLegend } from '../hooks/useLegend';
 import type { Direction } from './direction';
 import { SeriesLegendItemContext } from './legendContext.types';
@@ -12,7 +13,7 @@ import { legendClasses, useUtilityClasses, type ChartsLegendClasses } from './ch
 import { consumeSlots } from '../internals/consumeSlots';
 import { ChartsLabel } from '../ChartsLabel/ChartsLabel';
 
-export interface ChartsLegendProps {
+export interface ChartsLegendProps extends ChartsLabelMarkSlotExtension {
   /**
    * Callback fired when a legend item is clicked.
    * @param {React.MouseEvent<HTMLButtonElement, MouseEvent>} event The click event.
@@ -85,10 +86,11 @@ const ChartsLegend = consumeSlots(
     // We omit it here to avoid passing to slots.
     omitProps: ['position'],
     classesResolver: useUtilityClasses,
+    propagateSlots: true,
   },
   function ChartsLegend(props: ChartsLegendProps, ref: React.Ref<HTMLUListElement>) {
     const data = useLegend();
-    const { direction, onItemClick, className, classes, ...other } = props;
+    const { direction, onItemClick, className, classes, slots, slotProps, ...other } = props;
 
     if (data.items.length === 0) {
       return null;
@@ -118,9 +120,13 @@ const ChartsLegend = consumeSlots(
                 }
               >
                 <ChartsLabelMark
+                  seriesId={item.seriesId}
                   className={classes?.mark}
+                  dataIndex={item.dataIndex}
                   color={item.color}
                   type={item.markType}
+                  slots={slots}
+                  slotProps={slotProps}
                 />
                 <ChartsLabel className={classes?.label}>{item.label}</ChartsLabel>
               </Element>

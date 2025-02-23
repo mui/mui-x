@@ -76,6 +76,7 @@
   "slotDescriptions": {
     "area": "The component that renders the area.",
     "bar": "The component that renders the bar.",
+    "labelMark": "Symbol next to the label of a series.",
     "line": "The component that renders the line.",
     "lineHighlight": "",
     "mark": "",

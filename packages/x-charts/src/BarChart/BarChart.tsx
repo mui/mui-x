@@ -113,6 +113,7 @@ const BarChart = React.forwardRef(function BarChart(
     chartsAxisProps,
     axisHighlightProps,
     legendProps,
+    tooltipProps,
     children,
   } = useBarChartProps(props);
   const { chartDataProviderProps, chartsSurfaceProps } = useChartContainerProps(
@@ -134,7 +135,7 @@ const BarChart = React.forwardRef(function BarChart(
             <ChartsAxisHighlight {...axisHighlightProps} />
           </g>
           <ChartsAxis {...chartsAxisProps} />
-          {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
+          {!props.loading && <Tooltip {...tooltipProps} />}
           <ChartsClipPath {...clipPathProps} />
           {children}
         </ChartsSurface>

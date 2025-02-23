@@ -2,8 +2,12 @@ import type { ChartsLegendProps } from './ChartsLegend';
 import { ContinuousColorLegendProps } from './ContinuousColorLegend';
 import { ChartsLegendPosition } from './legend.types';
 import { PiecewiseColorLegendProps } from './PiecewiseColorLegend';
+import {
+  ChartsLabelMarkSlotProps,
+  ChartsLabelMarkSlots,
+} from '../ChartsLabel/chartsLabelMark.types';
 
-export interface ChartsLegendSlots {
+export interface ChartsLegendSlots extends ChartsLabelMarkSlots {
   /**
    * Custom rendering of the legend.
    * @default ChartsLegend
@@ -14,7 +18,7 @@ export interface ChartsLegendSlots {
     | React.JSXElementConstructor<PiecewiseColorLegendProps>;
 }
 
-export interface ChartsLegendSlotProps {
+export interface ChartsLegendSlotProps extends ChartsLabelMarkSlotProps {
   legend?: Partial<ChartsLegendProps | ContinuousColorLegendProps | PiecewiseColorLegendProps> &
     // We allow position only on slots.
     ChartsLegendPosition;

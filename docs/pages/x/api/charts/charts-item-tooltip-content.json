@@ -1,5 +1,13 @@
 {
-  "props": { "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } } },
+  "props": {
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ChartsItemTooltipContent",
   "imports": [
     "import { ChartsItemTooltipContent } from '@mui/x-charts/ChartsTooltip';",

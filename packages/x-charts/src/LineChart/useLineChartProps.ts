@@ -1,5 +1,6 @@
 'use client';
 import useId from '@mui/utils/useId';
+import { ChartsTooltipProps } from '../ChartsTooltip';
 import { ChartsAxisProps } from '../ChartsAxis';
 import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPathProps } from '../ChartsClipPath';
@@ -153,6 +154,12 @@ export const useLineChartProps = (props: LineChartProps) => {
     legendDirection: props.slotProps?.legend?.direction,
   };
 
+  const tooltipProps: ChartsTooltipProps = {
+    slots,
+    slotProps,
+    ...slotProps?.tooltip,
+  };
+
   return {
     chartsWrapperProps,
     chartContainerProps,
@@ -167,6 +174,7 @@ export const useLineChartProps = (props: LineChartProps) => {
     axisHighlightProps,
     lineHighlightPlotProps,
     legendProps,
+    tooltipProps,
     children,
   };
 };
