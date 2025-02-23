@@ -1,24 +1,28 @@
 import { join as joinPath } from 'node:path';
-import { readFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { expect } from 'chai';
 import outdent from 'outdent';
+import { mkdirp } from 'mkdirp';
 import rimraf from 'rimraf';
 import babel from '@babel/core';
 
-const OUTPUT_DIR = joinPath(import.meta.dirname, './output')
-const OUTPUT_CSS = joinPath(OUTPUT_DIR, './index.css')
+const RUNTIME_DIR = joinPath(import.meta.dirname, './runtime')
+const INPUT_VARS = joinPath(RUNTIME_DIR, './vars.ts')
+const OUTPUT_CSS = joinPath(RUNTIME_DIR, './output.css')
 
 describe('babel-plugin-mui-css', () => {
-  // opts.source
-  // opts.js
-  // opts.css
-  function transform(opts, configuration = {}) {
+  // opts: { source, config, js, css, vars }
+  function transform(opts) {
+    writeFileSync(INPUT_VARS, opts.vars ?? '')
+
     const result = babel.transformSync(outdent.string(opts.source), {
       babelrc: false,
       plugins: [
-        ['@babel/../../src/index.ts', {
+        [joinPath(import.meta.dirname, '../build/index.js'), {
+          cssMinify: false,
           cssOutput: OUTPUT_CSS,
-          ...configuration
+          cssVariables: INPUT_VARS,
+          ...opts.config
         }]
       ],
       generatorOpts: { filename: 'source.js' },
@@ -32,12 +36,13 @@ describe('babel-plugin-mui-css', () => {
     }
   }
 
-  beforeEach((done) => {
-    rimraf(OUTPUT_DIR, done);
+  beforeEach(() => {
+    rimraf.sync(RUNTIME_DIR);
+    mkdirp.sync(RUNTIME_DIR);
   });
 
-  after((done) => {
-    rimraf(OUTPUT_DIR, done);
+  after(() => {
+    rimraf.sync(RUNTIME_DIR);
   });
 
   it('works', () => {
@@ -100,7 +105,69 @@ describe('babel-plugin-mui-css', () => {
       `
     })
   });
+
+  it('supports CSS variables', () => {
+    transform({
+      filename: 'source.ts',
+      vars: ts`
+        export const vars = {
+          color: {
+            primary: '#599eff',
+          },
+        } as const;
+      `,
+      source: js`
+        const styles = css('MuiDataGrid-panel', {
+          root: {
+            color: vars.color.primary,
+          },
+        })
+      `,
+      js: js`
+        const styles = {
+          "root": "MuiDataGrid-panel"
+        };
+      `,
+      css: css`
+        .MuiDataGrid-panel { color:#599eff; }
+      `
+    })
+  });
+
+  it('supports minification', () => {
+    transform({
+      filename: 'source.ts',
+      config: { cssMinify: true },
+      source: js`
+        const styles = css('MuiDataGrid-panel', {
+          root: {
+            '#id': {
+              color: 'black',
+            },
+            '.class-a': {
+              color: 'black',
+            },
+            '&.class-b': {
+              color: 'black',
+            },
+            '> input': {
+              color: 'black',
+            },
+          }
+        })
+      `,
+      js: js`
+        const styles = {
+          "root": "MuiDataGrid-panel"
+        };
+      `,
+      css: css`
+        .MuiDataGrid-panel #id,.MuiDataGrid-panel .class-a,.MuiDataGrid-panel.class-b,.MuiDataGrid-panel>input{color:#000}
+      `
+    })
+  });
 });
 
 function js(strings) { return strings[0] }
+function ts(strings) { return strings[0] }
 function css(strings) { return strings[0] }

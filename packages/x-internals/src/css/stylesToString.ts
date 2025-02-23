@@ -5,7 +5,7 @@ import unitLessProperties from './unitLessProperties';
 
 const DASH_CHAR_CODE = '-'.charCodeAt(0);
 
-const SPECIAL_CHAR = /#|\.|\s|>|&|:/;
+const SPECIAL_CHAR = /--|#|\.|\s|>|&|:/;
 const UPPERCASE_LETTERS = /[A-Z]/g;
 
 // TODO: By using native CSS nesting, we could make `stylesToString` more simple & performant.
@@ -26,17 +26,19 @@ export function stylesToString(rootSelector: string, rootStyles: CSSObject) {
     let output = `${selector} { `;
 
     for (const key in styles) {
-      if (isSubStyles(key)) {
-        stack.unshift(
-          key,
-          styles[key],
-          selector,
-        );
-      } else if (isVariable(key)) {
-        const cssKey = key;
-        const cssValue = styles[key];
+      if (isSpecial(key)) {
+        if (isVariable(key)) {
+          const cssKey = key;
+          const cssValue = styles[key];
 
-        output += cssKey + ':' + cssValue + ';';
+          output += cssKey + ':' + cssValue + ';';
+        } else /* nested selector */ {
+          stack.unshift(
+            key,
+            styles[key],
+            selector,
+          );
+        }
       } else {
         const cssKey = key.replaceAll(UPPERCASE_LETTERS, uppercaseToDashLowercase);
         const cssValue = transformValue(cssKey, styles[key]);
@@ -65,6 +67,12 @@ function transformSelector(selector: string, parents: string) {
 }
 
 function transformValue(cssKey: string, value: any) {
+  if (process.env.NODE_ENV === 'development') {
+    if (typeof value !== 'number' && typeof value !== 'string') {
+      throw new Error(`Invalid CSS: "${cssKey}: ${JSON.stringify(value) ?? 'undefined'}"`)
+    }
+  }
+
   if (typeof value !== 'number') {
     return value;
   }
@@ -74,7 +82,8 @@ function transformValue(cssKey: string, value: any) {
   return String(value) + 'px';
 }
 
-function isSubStyles(key: string) {
+/** If the property is a nested selector or a CSS variable */
+function isSpecial(key: string) {
   return SPECIAL_CHAR.test(key);
 }
 

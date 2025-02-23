@@ -1,27 +1,63 @@
 import * as vm from 'node:vm';
-import { writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { mkdirp } from 'mkdirp';
+import { transform as lightning } from 'lightningcss';
+import * as Babel from '@babel/core';
 import * as CSS from '@mui/x-internals/css';
+
+type BabelT = typeof Babel;
 
 const PLUGIN_NAME = 'mui-css'
 
-export default function transformCSS({ types: t }) {
-  let cssRules = []
-  let cssOutput = 'index.css'
+export default function transformCSS({ types: t }: BabelT) {
+  let state = {
+    cssMinify: true,
+    cssRules: [],
+    cssOutput: 'index.css',
+    cssVariables: '',
+    cssConcat: [], // FIXME: check if needed
+  }
 
   return {
     name: PLUGIN_NAME,
 
-    pre(file) {
+    manipulateOptions(options: any) {
+      const self = findSelf(options.plugins)
+      let content: string | undefined
+      try {
+        content = readFileSync('mui-css.config.json').toString()
+      } catch (e) {}
+      if (content) {
+        const newOptions = JSON.parse(content)
+        self.options = { ...self.options, ...newOptions }
+      }
+      return options
+    },
+
+    pre(file: Babel.BabelFile) {
       const opts = findSelf(file.opts.plugins).options
-      cssRules = [];
-      cssOutput = opts?.cssOutput ?? 'index.css'
+      state = {
+        cssMinify: true,
+        cssRules: [],
+        cssOutput: opts?.cssOutput ?? 'index.css',
+        cssVariables: getCSSVariablesCode(opts?.cssVariables),
+        cssConcat: opts?.cssConcat ?? [],
+      }
     },
 
     post() {
-      mkdirp.sync(dirname(cssOutput))
-      writeFileSync(cssOutput, cssRules.join('\n'));
+      let { code: cssMinified } = lightning({
+        filename: 'index.css',
+        code: Buffer.from(
+          state.cssConcat.map(filepath => readFileSync(filepath).toString()).join('\n') +
+          state.cssRules.join('\n')
+        ),
+        minify: true,
+      });
+
+      mkdirp.sync(dirname(state.cssOutput))
+      writeFileSync(state.cssOutput, cssMinified);
     },
 
     visitor: {
@@ -49,20 +85,19 @@ export default function transformCSS({ types: t }) {
         const prefix = prefixNode.extra.rawValue;
 
         const context = {
-          source: file.code.slice(
+          __source: file.code.slice(
             classesNode.start,
             classesNode.end,
           ),
-          result: null,
+          __result: null,
         }
         vm.createContext(context)
         vm.runInContext(`
-          result = eval('(' + source + ')')
+          ${state.cssVariables};
+          __result = eval('(' + __source + ')')
         `, context);
 
-        const classes = context.result;
-
-        // const requiringFile = file.opts.filename;
+        const classes = context.__result;
 
         path.replaceWith(buildClassesNode(prefix, classes));
       },
@@ -70,7 +105,7 @@ export default function transformCSS({ types: t }) {
   };
 
   function buildClassesNode(prefix: string, classes: Record<string, object>) {
-    return t.ObjectExpression(
+    return t.objectExpression(
       Object.keys(classes).map((className) => {
 
         const identifier = className;
@@ -80,11 +115,11 @@ export default function transformCSS({ types: t }) {
         const generatedCSS =
           CSS.stylesToString('.' + cssClassName, cssStyles as any).map(c => c.trim()).join('\n')
 
-        cssRules.push(generatedCSS)
+        state.cssRules.push(generatedCSS)
 
-        return t.ObjectProperty(
-          t.StringLiteral(identifier),
-          t.StringLiteral(cssClassName)
+        return t.objectProperty(
+          t.stringLiteral(identifier),
+          t.stringLiteral(cssClassName)
         )
       }),
     );
@@ -100,6 +135,17 @@ function generateClassName(prefix: string, className: string) {
   return `${prefix}--${className}`
 }
 
-function formatLocation(file, node) {
-  return `FILE_TODO:${node.loc.start.line}:${node.loc.start.column}`
+function formatLocation(file: Babel.BabelFile, node: Babel.Node) {
+  return `${file.opts.filename}:${node.loc.start.line}:${node.loc.start.column}`
+}
+
+function getCSSVariablesCode(filepath: string | undefined) {
+  if (filepath === undefined) {
+    return ''
+  }
+  return Babel.transformSync(readFileSync(filepath).toString(), {
+    presets: ['@babel/preset-typescript'],
+    plugins: ['babel-plugin-remove-import-export'],
+    filename: filepath,
+  }).code as string;
 }

@@ -1,3 +1,4 @@
+const fs = require('fs')
 // @ts-check
 const path = require('path');
 const generateReleaseInfo = require('./packages/x-license/generateReleaseInfo');
@@ -92,6 +93,13 @@ module.exports = function getBabelConfig(api) {
       },
     ],
   ];
+
+  if (fs.existsSync('./mui-css.config.json')) {
+    plugins.push([
+      './packages/babel-plugin-mui-css/',
+      JSON.parse(fs.readFileSync('./mui-css.config.json')),
+    ])
+  }
 
   if (process.env.NODE_ENV === 'test') {
     plugins.push(['@babel/plugin-transform-export-namespace-from']);
