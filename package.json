@@ -200,9 +200,9 @@
     "react-is": "^19.0.0",
     "@types/node": "^20.17.19"
   },
-  "packageManager": "pnpm@9.15.4",
+  "packageManager": "pnpm@10.4.1",
   "engines": {
-    "pnpm": "9.15.4"
+    "pnpm": "10.4.1"
   },
   "pnpm": {
     "patchedDependencies": {
