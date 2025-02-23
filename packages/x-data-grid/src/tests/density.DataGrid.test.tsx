@@ -3,7 +3,7 @@ import { spy } from 'sinon';
 import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
 import { grid } from 'test/utils/helperFn';
 import { expect } from 'chai';
-import { DataGrid, DataGridProps, GridToolbar, gridClasses } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, gridClasses } from '@mui/x-data-grid';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 import {
   COMFORTABLE_DENSITY_FACTOR,
@@ -58,9 +58,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Density', () => {
           <DataGrid
             {...baselineProps}
             initialState={{ density: 'compact' }}
-            slots={{
-              toolbar: GridToolbar,
-            }}
+            showToolbar
             rowHeight={rowHeight}
           />
         </div>,
@@ -88,13 +86,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Density', () => {
       function Grid(props: Partial<DataGridProps>) {
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGrid
-              {...baselineProps}
-              slots={{
-                toolbar: GridToolbar,
-              }}
-              {...props}
-            />
+            <DataGrid {...baselineProps} showToolbar {...props} />
           </div>
         );
       }
@@ -121,13 +113,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Density', () => {
       function Test() {
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGrid
-              {...baselineProps}
-              slots={{
-                toolbar: GridToolbar,
-              }}
-              onDensityChange={onDensityChange}
-            />
+            <DataGrid {...baselineProps} showToolbar onDensityChange={onDensityChange} />
           </div>
         );
       }
@@ -144,13 +130,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Density', () => {
       const rowHeight = 30;
       render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid
-            {...baselineProps}
-            slots={{
-              toolbar: GridToolbar,
-            }}
-            rowHeight={rowHeight}
-          />
+          <DataGrid {...baselineProps} showToolbar rowHeight={rowHeight} />
         </div>,
       );
 
@@ -165,13 +145,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Density', () => {
       const rowHeight = 30;
       render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid
-            {...baselineProps}
-            slots={{
-              toolbar: GridToolbar,
-            }}
-            rowHeight={rowHeight}
-          />
+          <DataGrid {...baselineProps} showToolbar rowHeight={rowHeight} />
         </div>,
       );
 

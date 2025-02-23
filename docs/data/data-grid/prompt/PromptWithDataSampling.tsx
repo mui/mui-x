@@ -45,6 +45,7 @@ export default function PromptWithDataSampling() {
         slots={{
           toolbar: ToolbarWithPromptInput,
         }}
+        showToolbar
       />
     </div>
   );

@@ -101,9 +101,7 @@ const getTogglableColumns = (columns: GridColDef[]) => {
 };
 
 <DataGridPremium
-  slots={{
-    toolbar: GridToolbar,
-  }}
+  showToolbar
   slotProps={{
     columnsManagement: {
       getTogglableColumns,
@@ -120,9 +118,7 @@ To disable `Show/Hide All` checkbox or `Reset` button in the footer of the colum
 
 ```tsx
 <DataGrid
-  slots={{
-    toolbar: GridToolbar,
-  }}
+  showToolbar
   slotProps={{
     columnsManagement: {
       disableShowHideToggle: true,

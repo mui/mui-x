@@ -28,6 +28,7 @@ export default function DensitySelectorGrid() {
         slots={{
           toolbar: CustomToolbar,
         }}
+        showToolbar
       />
     </div>
   );

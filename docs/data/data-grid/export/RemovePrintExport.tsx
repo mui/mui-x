@@ -24,6 +24,7 @@ export default function RemovePrintExport() {
         slots={{
           toolbar: CustomToolbar,
         }}
+        showToolbar
       />
     </div>
   );

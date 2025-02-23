@@ -10,7 +10,7 @@
     pagination
     pageSizeOptions={pageSizeOptions}
     initialState={initialStateWithPagination}
-    slots={{ toolbar: GridToolbar }}
+    showToolbar
     slotProps={{ toolbar: { showQuickFilter: true } }}
   />
 </div>

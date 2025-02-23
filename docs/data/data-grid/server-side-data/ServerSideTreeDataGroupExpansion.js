@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro, useGridApiRef, GridToolbar } from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import Button from '@mui/material/Button';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
@@ -65,7 +65,7 @@ export default function ServerSideTreeDataGroupExpansion() {
           pagination
           pageSizeOptions={pageSizeOptions}
           initialState={initialStateWithPagination}
-          slots={{ toolbar: GridToolbar }}
+          showToolbar
           slotProps={{ toolbar: { showQuickFilter: true } }}
           defaultGroupingExpansionDepth={-1}
         />

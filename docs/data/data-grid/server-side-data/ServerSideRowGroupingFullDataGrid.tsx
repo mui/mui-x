@@ -4,7 +4,6 @@ import {
   GridDataSource,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
-  GridToolbar,
 } from '@mui/x-data-grid-premium';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import Button from '@mui/material/Button';
@@ -66,9 +65,7 @@ export default function ServerSideRowGroupingFullDataGrid() {
           unstable_dataSource={dataSource}
           apiRef={apiRef}
           initialState={initialState}
-          slots={{
-            toolbar: GridToolbar,
-          }}
+          showToolbar
           slotProps={{
             toolbar: {
               showQuickFilter: true,

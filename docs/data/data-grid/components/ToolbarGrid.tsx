@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function ToolbarGrid() {
@@ -11,7 +11,7 @@ export default function ToolbarGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid {...data} loading={loading} slots={{ toolbar: GridToolbar }} />
+      <DataGrid {...data} loading={loading} showToolbar />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro, useGridApiRef, GridToolbar } from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import Button from '@mui/material/Button';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { QueryClient } from '@tanstack/query-core';
@@ -96,7 +96,7 @@ export default function ServerSideTreeDataCustomCache() {
           pagination
           pageSizeOptions={pageSizeOptions}
           initialState={initialState}
-          slots={{ toolbar: GridToolbar }}
+          showToolbar
           slotProps={{ toolbar: { showQuickFilter: true } }}
         />
       </div>

@@ -52,6 +52,7 @@ export default function VariableRowHeightGrid() {
         slots={{
           toolbar: CustomToolbar,
         }}
+        showToolbar
       />
     </div>
   );

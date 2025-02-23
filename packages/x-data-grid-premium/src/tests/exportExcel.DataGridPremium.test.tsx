@@ -5,7 +5,6 @@ import {
   useGridApiRef,
   DataGridPremium,
   GridApi,
-  GridToolbar,
   DataGridPremiumProps,
   GridActionsCellItem,
 } from '@mui/x-data-grid-premium';
@@ -59,7 +58,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
     });
 
     it('should display export option', async () => {
-      const { user } = render(<TestCaseExcelExport slots={{ toolbar: GridToolbar }} />);
+      const { user } = render(<TestCaseExcelExport showToolbar />);
 
       await user.click(screen.getByRole('button', { name: 'Export' }));
       expect(screen.queryByRole('menu')).not.to.equal(null);

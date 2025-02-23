@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
 import { getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { expect } from 'chai';
-import { DataGrid, GridToolbar, GridColumnsManagementProps } from '@mui/x-data-grid';
+import { DataGrid, GridColumnsManagementProps } from '@mui/x-data-grid';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -39,12 +39,7 @@ describe('<DataGrid /> - Toolbar', () => {
     it('should hide "id" column when hiding it from the column selector', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid
-            {...baselineProps}
-            slots={{
-              toolbar: GridToolbar,
-            }}
-          />
+          <DataGrid {...baselineProps} showToolbar />
         </div>,
       );
 
@@ -71,9 +66,7 @@ describe('<DataGrid /> - Toolbar', () => {
           <DataGrid
             {...baselineProps}
             columns={customColumns}
-            slots={{
-              toolbar: GridToolbar,
-            }}
+            showToolbar
             initialState={{
               columns: {
                 columnVisibilityModel: { id: false, brand: false },
@@ -94,12 +87,7 @@ describe('<DataGrid /> - Toolbar', () => {
     it('should keep the focus on the switch after toggling a column', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid
-            {...baselineProps}
-            slots={{
-              toolbar: GridToolbar,
-            }}
-          />
+          <DataGrid {...baselineProps} showToolbar />
         </div>,
       );
 
@@ -140,9 +128,7 @@ describe('<DataGrid /> - Toolbar', () => {
           <DataGrid
             {...baselineProps}
             columns={customColumns}
-            slots={{
-              toolbar: GridToolbar,
-            }}
+            showToolbar
             slotProps={{
               columnsManagement: {
                 searchPredicate: columnSearchPredicate,

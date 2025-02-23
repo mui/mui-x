@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
@@ -77,7 +77,7 @@ export default function FilteringLocalStorage() {
       <DataGrid
         {...data}
         loading={loading}
-        slots={{ toolbar: GridToolbar }}
+        showToolbar
         filterModel={filterModel}
         onFilterModelChange={onFilterModelChange}
       />

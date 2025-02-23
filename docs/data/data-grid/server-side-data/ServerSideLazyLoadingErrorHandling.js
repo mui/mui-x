@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   DataGridPro,
   useGridApiRef,
-  GridToolbar,
   GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid-pro';
 import Checkbox from '@mui/material/Checkbox';
@@ -99,7 +98,7 @@ function ServerSideLazyLoadingErrorHandling() {
           unstable_dataSourceCache={null}
           unstable_lazyLoading
           paginationModel={{ page: 0, pageSize: 10 }}
-          slots={{ toolbar: GridToolbar }}
+          showToolbar
         />
       </div>
     </div>

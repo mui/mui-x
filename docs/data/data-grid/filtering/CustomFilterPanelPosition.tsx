@@ -41,6 +41,7 @@ export default function CustomFilterPanelPosition() {
         {...data}
         loading={loading}
         slots={{ toolbar: CustomToolbar }}
+        showToolbar
         slotProps={{
           panel: {
             target: filterButtonEl,

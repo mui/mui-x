@@ -6,7 +6,6 @@ import {
   DataGrid,
   GridColumnVisibilityModel,
   GridFilterModel,
-  GridToolbar,
 } from '@mui/x-data-grid';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
@@ -80,7 +79,7 @@ export default function QuickFilteringExcludeHiddenColumns() {
           disableColumnFilter
           disableColumnSelector
           disableDensitySelector
-          slots={{ toolbar: GridToolbar }}
+          showToolbar
           slotProps={{
             toolbar: {
               showQuickFilter: true,

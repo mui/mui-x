@@ -133,6 +133,7 @@ export default function PageSizeAutoPremium() {
         rows={rows}
         columns={columns}
         slots={{ toolbar: CustomToolbar }}
+        showToolbar
         autoPageSize
       />
     </div>

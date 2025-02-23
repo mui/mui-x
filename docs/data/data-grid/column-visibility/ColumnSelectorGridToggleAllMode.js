@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPremium, GridToolbar } from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function ColumnSelectorGridToggleAllMode() {
@@ -13,7 +13,7 @@ export default function ColumnSelectorGridToggleAllMode() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPremium
         {...data}
-        slots={{ toolbar: GridToolbar }}
+        showToolbar
         slotProps={{
           columnsManagement: {
             toggleAllMode: 'filteredOnly',
