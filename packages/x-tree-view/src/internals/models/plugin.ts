@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { EventHandlers } from '@mui/utils/types';
-import { TreeViewExperimentalFeatures, TreeViewInstance, TreeViewModel } from './treeView';
+import { TreeViewExperimentalFeatures, TreeViewInstance } from './treeView';
 import type { MergeSignaturesProperty, OptionalIfEmpty } from './helpers';
 import { TreeViewEventLookupElement } from './events';
 import type { TreeViewCorePluginSignatures } from '../corePlugins';
@@ -14,19 +14,10 @@ export interface TreeViewPluginOptions<TSignature extends TreeViewAnyPluginSigna
   slots: TSignature['slots'];
   slotProps: TSignature['slotProps'];
   experimentalFeatures: TreeViewUsedExperimentalFeatures<TSignature>;
-  models: TreeViewUsedModels<TSignature>;
   store: TreeViewUsedStore<TSignature>;
   rootRef: React.RefObject<HTMLUListElement | null>;
   plugins: TreeViewPlugin<TreeViewAnyPluginSignature>[];
 }
-
-type TreeViewModelsInitializer<TSignature extends TreeViewAnyPluginSignature> = {
-  [TControlled in keyof TSignature['models']]: {
-    getDefaultValue: (
-      params: TSignature['defaultizedParams'],
-    ) => Exclude<TSignature['defaultizedParams'][TControlled], undefined>;
-  };
-};
 
 type TreeViewResponse<TSignature extends TreeViewAnyPluginSignature> = {
   getRootProps?: <TOther extends EventHandlers = {}>(
@@ -48,7 +39,6 @@ export type TreeViewPluginSignature<
     contextValue?: {};
     slots?: { [key in keyof T['slots']]: React.ElementType };
     slotProps?: { [key in keyof T['slotProps']]: {} | (() => {}) };
-    modelNames?: keyof T['defaultizedParams'];
     experimentalFeatures?: string;
     dependencies?: readonly TreeViewAnyPluginSignature[];
     optionalDependencies?: readonly TreeViewAnyPluginSignature[];
@@ -64,13 +54,6 @@ export type TreeViewPluginSignature<
   contextValue: T extends { contextValue: {} } ? T['contextValue'] : {};
   slots: T extends { slots: {} } ? T['slots'] : {};
   slotProps: T extends { slotProps: {} } ? T['slotProps'] : {};
-  models: T extends { defaultizedParams: {}; modelNames: keyof T['defaultizedParams'] }
-    ? {
-        [TControlled in T['modelNames']]-?: TreeViewModel<
-          Exclude<T['defaultizedParams'][TControlled], undefined>
-        >;
-      }
-    : {};
   experimentalFeatures: T extends { experimentalFeatures: string }
     ? { [key in T['experimentalFeatures']]?: boolean }
     : {};
@@ -92,7 +75,6 @@ export type TreeViewAnyPluginSignature = {
   contextValue: any;
   slots: any;
   slotProps: any;
-  models: any;
   experimentalFeatures: any;
   publicAPI: any;
 };
@@ -133,14 +115,6 @@ type TreeViewUsedExperimentalFeatures<TSignature extends TreeViewAnyPluginSignat
     TSignature['optionalDependencies']
   >;
 
-type RemoveSetValue<Models extends Record<string, TreeViewModel<any>>> = {
-  [K in keyof Models]: Omit<Models[K], 'setValue'>;
-};
-
-export type TreeViewUsedModels<TSignature extends TreeViewAnyPluginSignature> =
-  TSignature['models'] &
-    RemoveSetValue<MergeSignaturesProperty<TreeViewRequiredPlugins<TSignature>, 'models'>>;
-
 export type TreeViewUsedEvents<TSignature extends TreeViewAnyPluginSignature> =
   TSignature['events'] & MergeSignaturesProperty<TreeViewRequiredPlugins<TSignature>, 'events'>;
 
@@ -161,7 +135,6 @@ export type TreeViewPlugin<TSignature extends TreeViewAnyPluginSignature> = {
   }) => TSignature['defaultizedParams'];
   getInitialState?: (params: TreeViewUsedDefaultizedParams<TSignature>) => TSignature['state'];
   getInitialCache?: () => TSignature['cache'];
-  models?: TreeViewModelsInitializer<TSignature>;
   params: Record<keyof TSignature['params'], true>;
   itemPlugin?: TreeViewItemPlugin;
   /**
