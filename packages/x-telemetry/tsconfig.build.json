@@ -7,13 +7,9 @@
     "declaration": true,
     "noEmit": false,
     "emitDeclarationOnly": true,
-    "outDir": "build/esm",
+    "outDir": "build",
     "rootDir": "./src"
   },
-  "references": [
-    { "path": "../x-internals/tsconfig.build.json" },
-    { "path": "../x-telemetry/tsconfig.build.json" }
-  ],
-  "include": ["src/**/*.ts*"],
+  "include": ["src/**/*.ts*", "src/compiled/**/*.js*"],
   "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*"]
 }

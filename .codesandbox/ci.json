@@ -4,6 +4,7 @@
   "node": "20",
   "packages": [
     "packages/x-license",
+    "packages/x-telemetry",
     "packages/x-data-grid",
     "packages/x-data-grid-pro",
     "packages/x-data-grid-premium",
@@ -19,6 +20,7 @@
   ],
   "publishDirectory": {
     "@mui/x-license": "packages/x-license/build",
+    "@mui/x-telemetry": "packages/x-telemetry/build",
     "@mui/x-data-grid": "packages/x-data-grid/build",
     "@mui/x-data-grid-pro": "packages/x-data-grid-pro/build",
     "@mui/x-data-grid-premium": "packages/x-data-grid-premium/build",
