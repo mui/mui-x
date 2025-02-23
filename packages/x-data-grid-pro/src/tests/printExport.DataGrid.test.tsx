@@ -13,7 +13,7 @@ import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { createRenderer, screen, fireEvent, act } from '@mui/internal-test-utils';
 
 describe('<DataGridPro /> - Print export', () => {
-  const { render, clock } = createRenderer();
+  const { render } = createRenderer();
 
   const NB_ROWS = 2;
   const defaultData = getBasicGridData(NB_ROWS, 2);
@@ -55,8 +55,6 @@ describe('<DataGridPro /> - Print export', () => {
   ];
 
   describe('Export toolbar', () => {
-    clock.withFakeTimers();
-
     it('should display print button by default', () => {
       render(<Test slots={{ toolbar: GridToolbar }} />);
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));

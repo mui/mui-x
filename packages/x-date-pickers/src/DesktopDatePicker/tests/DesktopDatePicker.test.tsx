@@ -3,14 +3,14 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { TransitionProps } from '@mui/material/transitions';
 import { inputBaseClasses } from '@mui/material/InputBase';
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { createPickerRenderer, adapterToUse, openPicker } from 'test/utils/pickers';
 import { describeSkipIf, testSkipIf, isJSDOM } from 'test/utils/skipIf';
 import { PickersActionBar, PickersActionBarAction } from '@mui/x-date-pickers/PickersActionBar';
 
 describe('<DesktopDatePicker />', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describe('Views', () => {
     it('should switch between views uncontrolled', () => {
@@ -80,7 +80,7 @@ describe('<DesktopDatePicker />', () => {
       expect(handleViewChange.lastCall.firstArg).to.equal('month');
     });
 
-    it('should go to the relevant `view` when `views` prop changes', () => {
+    it('should go to the relevant `view` when `views` prop changes', async () => {
       const { setProps } = render(
         <DesktopDatePicker defaultValue={adapterToUse.date('2018-01-01')} views={['year']} />,
       );
@@ -95,9 +95,7 @@ describe('<DesktopDatePicker />', () => {
       setProps({ views: ['month', 'year'] });
       openPicker({ type: 'date' });
       // wait for all pending changes to be flushed
-      clock.runToLast();
-
-      // should have changed the open view
+      await // should have changed the open view
       expect(screen.getByRole('radio', { checked: true, name: 'January' })).not.to.equal(null);
     });
 
@@ -111,7 +109,7 @@ describe('<DesktopDatePicker />', () => {
       expect(document.activeElement).to.have.text('5');
     });
 
-    it('should go to the relevant `view` when `view` prop changes', () => {
+    it('should go to the relevant `view` when `view` prop changes', async () => {
       const { setProps } = render(
         <DesktopDatePicker
           defaultValue={adapterToUse.date('2018-01-01')}
@@ -130,9 +128,7 @@ describe('<DesktopDatePicker />', () => {
       setProps({ view: 'year' });
       openPicker({ type: 'date' });
       // wait for all pending changes to be flushed
-      clock.runToLast();
-
-      // should have changed the open view
+      await // should have changed the open view
       expect(screen.getByRole('radio', { checked: true, name: '2018' })).not.to.equal(null);
     });
   });
@@ -164,7 +160,9 @@ describe('<DesktopDatePicker />', () => {
     });
 
     afterEach(() => {
-      window.scrollTo(originalScrollX, originalScrollY);
+      if (!isJSDOM) {
+        window.scrollTo?.(originalScrollX, originalScrollY);
+      }
     });
 
     it('does not scroll when opened', () => {
@@ -201,7 +199,10 @@ describe('<DesktopDatePicker />', () => {
       render(<BottomAnchoredDesktopTimePicker />);
       const scrollYBeforeOpen = window.scrollY;
 
-      fireEvent.click(screen.getByLabelText(/choose date/i));
+      // Can't use `userEvent.click` as it scrolls the window before it clicks on browsers.
+      act(() => {
+        screen.getByLabelText(/choose date/i).click();
+      });
 
       expect(handleClose.callCount).to.equal(0);
       expect(handleOpen.callCount).to.equal(1);

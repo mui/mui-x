@@ -6,7 +6,7 @@ import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 
 describe('<YearCalendar />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake', clockConfig: new Date(2019, 0, 1) });
+  const { render } = createPickerRenderer({ clockConfig: new Date(2019, 0, 1) });
 
   it('allows to pick year standalone by click, `Enter` and `Space`', () => {
     const onChange = spy();

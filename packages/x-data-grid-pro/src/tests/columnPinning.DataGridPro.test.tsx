@@ -39,7 +39,7 @@ function createDragOverEvent(target: ChildNode) {
 }
 
 describe('<DataGridPro /> - Column pinning', () => {
-  const { render, clock } = createRenderer();
+  const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
 
@@ -505,8 +505,6 @@ describe('<DataGridPro /> - Column pinning', () => {
     });
 
     describe('with fake timers', () => {
-      clock.withFakeTimers();
-
       it('should not render menu items if the column has `pinnable` equals to false', () => {
         render(
           <TestCase
@@ -523,7 +521,6 @@ describe('<DataGridPro /> - Column pinning', () => {
         expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).not.to.equal(null);
         fireEvent.keyDown(screen.getByRole('menu'), { key: 'Escape' });
 
-        clock.runToLast();
         // Ensure that the first menu was closed
         expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).to.equal(null);
 

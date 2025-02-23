@@ -6,6 +6,7 @@ import {
   ErrorBoundary,
   waitFor,
   reactMajor,
+  act,
 } from '@mui/internal-test-utils';
 import { stub, spy } from 'sinon';
 import { expect } from 'chai';
@@ -36,7 +37,7 @@ import { describeSkipIf, testSkipIf, isJSDOM, isOSX } from 'test/utils/skipIf';
 const getVariable = (name: string) => $('.MuiDataGrid-root')!.style.getPropertyValue(name);
 
 describe('<DataGrid /> - Layout & warnings', () => {
-  const { clock, render } = createRenderer();
+  const { render } = createRenderer();
 
   const baselineProps = {
     rows: [
@@ -189,8 +190,6 @@ describe('<DataGrid /> - Layout & warnings', () => {
     });
 
     describe('layout warnings', () => {
-      clock.withFakeTimers();
-
       it('should error if the container has no intrinsic height', () => {
         expect(() => {
           render(
@@ -199,7 +198,6 @@ describe('<DataGrid /> - Layout & warnings', () => {
             </div>,
           );
           // Use timeout to allow simpler tests in JSDOM.
-          clock.tick(0);
         }).toErrorDev(
           'MUI X: useResizeContainer - The parent DOM element of the Data Grid has an empty height.',
         );
@@ -215,7 +213,6 @@ describe('<DataGrid /> - Layout & warnings', () => {
             </div>,
           );
           // Use timeout to allow simpler tests in JSDOM.
-          clock.tick(0);
         }).toErrorDev(
           'MUI X: useResizeContainer - The parent DOM element of the Data Grid has an empty width',
         );
@@ -223,8 +220,6 @@ describe('<DataGrid /> - Layout & warnings', () => {
     });
 
     describe('swallow warnings', () => {
-      clock.withFakeTimers();
-
       beforeEach(() => {
         stub(console, 'error');
       });
@@ -242,7 +237,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
           </div>,
         );
         const firstHeight = grid('root')?.clientHeight;
-        clock.tick(10);
+
         const secondHeight = grid('root')?.clientHeight;
         expect(firstHeight).to.equal(secondHeight);
       });
@@ -695,38 +690,34 @@ describe('<DataGrid /> - Layout & warnings', () => {
         );
       });
 
-      // On MacOS the scrollbar has zero width
-      testSkipIf(isOSX)(
-        'should include the scrollbar in the intrinsic height when there are more columns to show',
-        () => {
-          const columnHeaderHeight = 40;
-          const rowHeight = 30;
+      it('should include the scrollbar in the intrinsic height when there are more columns to show', () => {
+        const columnHeaderHeight = 40;
+        const rowHeight = 30;
 
-          let apiRef!: RefObject<GridApi | null>;
-          function Test() {
-            apiRef = useGridApiRef();
-            return (
-              <div style={{ width: 150 }}>
-                <DataGrid
-                  {...baselineProps}
-                  apiRef={apiRef}
-                  columnHeaderHeight={columnHeaderHeight}
-                  rowHeight={rowHeight}
-                  columns={[{ field: 'brand' }, { field: 'year' }]}
-                  autoHeight
-                />
-              </div>
-            );
-          }
-          render(<Test />);
-
-          const scrollbarSize = apiRef.current?.state.dimensions.scrollbarSize || 0;
-          expect(scrollbarSize).not.to.equal(0);
-          expect(grid('main')!.clientHeight).to.equal(
-            scrollbarSize + columnHeaderHeight + rowHeight * baselineProps.rows.length,
+        let apiRef!: RefObject<GridApi | null>;
+        function Test() {
+          apiRef = useGridApiRef();
+          return (
+            <div style={{ width: 150 }}>
+              <DataGrid
+                {...baselineProps}
+                apiRef={apiRef}
+                columnHeaderHeight={columnHeaderHeight}
+                rowHeight={rowHeight}
+                columns={[{ field: 'brand' }, { field: 'year' }]}
+                autoHeight
+              />
+            </div>
           );
-        },
-      );
+        }
+        render(<Test />);
+
+        const scrollbarSize = apiRef.current?.state.dimensions.scrollbarSize || 0;
+        expect(scrollbarSize).not.to.equal(0);
+        expect(grid('main')!.clientHeight).to.equal(
+          scrollbarSize + columnHeaderHeight + rowHeight * baselineProps.rows.length,
+        );
+      });
 
       it('should give some space to the noRows overlay', () => {
         const rowHeight = 30;
@@ -959,7 +950,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
         'The Data Grid component requires all rows to have a unique `id` property',
         reactMajor < 19 &&
           'The Data Grid component requires all rows to have a unique `id` property',
-        reactMajor < 19 && 'The above error occurred in the <ForwardRef(DataGrid)> component',
+        reactMajor < 19 && 'The above error occurred in the <ForwardRef(DataGrid',
       ]);
       expect((errorRef.current as any).errors).to.have.length(1);
       expect((errorRef.current as any).errors[0].toString()).to.include(
@@ -1203,7 +1194,9 @@ describe('<DataGrid /> - Layout & warnings', () => {
       // It should not have a horizontal scrollbar
       expect(getVariable('--DataGrid-hasScrollX')).to.equal('0');
 
-      await sleep(200);
+      await act(async () => {
+        await sleep(200);
+      });
       // The width should not increase infinitely
       expect(virtualScroller.clientWidth).to.equal(initialVirtualScrollerWidth);
     },
