@@ -39,7 +39,7 @@ The following options are available:
 - **maxSpan**: Restricts the maximum span size.
 - **panning**: Enables or disables panning.
 
-{{"demo": "ZoomOptionsNoSnap.js", "hideToolbar": true, "bg": "playground"}}
+{{"demo": "ZoomOptions.js", "hideToolbar": true, "bg": "playground"}}
 
 ## Zoom filtering
 

@@ -53,7 +53,7 @@ Pie series shape is described by multiple properties:
 - `startAngle`/`endAngle` The angle range of the pie chart. Values are given in degrees.
 - `cx`/`cy` The center of the pie charts. By default the middle of the drawing area.
 
-{{"demo": "PieShapeNoSnap.js", "hideToolbar": true, "bg": "playground"}}
+{{"demo": "PieShape.js", "hideToolbar": true, "bg": "playground"}}
 
 The following properties accept percentage string (for example `'50%'`).
 
@@ -103,7 +103,7 @@ const onItemClick = (
 ) => {};
 ```
 
-{{"demo": "PieClickNoSnap.js"}}
+{{"demo": "PieClick.js"}}
 
 ## Animation
 

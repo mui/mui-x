@@ -52,7 +52,7 @@ const onItemClick = (
 ) => {};
 ```
 
-{{"demo": "ScatterClickNoSnap.js"}}
+{{"demo": "ScatterClick.js"}}
 
 If `disableVoronoi=true`, users need to click precisely on the scatter element, and the mouse event will come from this element.
 
