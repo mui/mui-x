@@ -1457,6 +1457,50 @@ describe('<DataGrid /> - Filter', () => {
       setProps({ filterModel: { items: [{ id: 0, field: 'level', operator: '=', value: 0 }] } });
       expect(tooltip.textContent).to.contain('0');
     });
+
+    it('should display `label` instead of `value` if `label` exists', () => {
+      const { setProps } = render(
+        <DataGrid
+          filterModel={{
+            items: [{ field: 'status', operator: 'isAnyOf', value: ['Status 0', 'Status 1'] }],
+          }}
+          rows={[
+            { id: 0, status: 'Status 0' },
+            { id: 1, status: 'Status 1' },
+            { id: 2, status: 'Status 2' },
+          ]}
+          columns={[
+            {
+              field: 'status',
+              type: 'singleSelect',
+              valueOptions: [
+                { label: 'pending', value: 'Status 0' },
+                { label: 'success', value: 'Status 1' },
+                { label: 'error', value: 'Status 2' },
+              ],
+            },
+          ]}
+          slots={{ toolbar: GridToolbarFilterButton }}
+        />,
+      );
+
+      const filterButton = document.querySelector('button[aria-label="Show filters"]')!;
+      expect(screen.queryByRole('tooltip')).to.equal(null);
+
+      fireEvent.mouseOver(filterButton);
+      clock.tick(1000); // tooltip display delay
+
+      const tooltip = screen.getByRole('tooltip');
+
+      expect(tooltip).toBeVisible();
+      expect(tooltip.textContent).to.contain('pending');
+      expect(tooltip.textContent).to.contain('success');
+
+      setProps({
+        filterModel: { items: [{ field: 'status', operator: 'isAnyOf', value: ['Status 2'] }] },
+      });
+      expect(tooltip.textContent).to.contain('error');
+    });
   });
 
   describe('custom `filterOperators`', () => {
