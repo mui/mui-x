@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "test:performance": "vitest bench",
+    "build": "pnpm --filter=\"@mui/x-charts-pro...\" build",
     "test:performance:browser": "vitest bench --browser"
   },
   "devDependencies": {
