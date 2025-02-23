@@ -2,9 +2,14 @@ import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { unstable_debounce as debounce } from '@mui/utils';
-
+import { warnOnce } from '@mui/x-internals/warning';
+import { gridRowIdSelector } from '../../core/gridPropsSelectors';
 import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
-import { GridGetRowsResponse, GridDataSourceCache } from '../../../models/gridDataSource';
+import {
+  GridGetRowsResponse,
+  GridDataSourceCache,
+  GridGetRowsParams,
+} from '../../../models/gridDataSource';
 import { runIf } from '../../../utils/utils';
 import { GridStrategyGroup } from '../../core/strategyProcessing';
 import { useGridSelector } from '../../utils/useGridSelector';
@@ -12,8 +17,9 @@ import { gridPaginationModelSelector } from '../pagination/gridPaginationSelecto
 import { gridGetRowsParamsSelector } from './gridDataSourceSelector';
 import { CacheChunkManager, DataSourceRowsUpdateStrategy } from './utils';
 import { GridDataSourceCacheDefault, type GridDataSourceCacheDefaultConfig } from './cache';
+import { GridGetRowsError } from './gridDataSourceError';
 
-import type { GridDataSourceApi, GridDataSourceApiBase } from './models';
+import type { GridDataSourceApi, GridDataSourceApiBase, GridDataSourcePrivateApi } from './models';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type { GridStrategyProcessor } from '../../core/strategyProcessing';
@@ -52,6 +58,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     clearDataSourceState?: () => void;
   } = {},
 ) => {
+  const rowIdToGetRowsParams = React.useRef<Record<GridRowId, GridGetRowsParams>>({});
   const setStrategyAvailability = React.useCallback(() => {
     apiRef.current.setStrategyAvailability(
       GridStrategyGroup.DataSource,
@@ -66,7 +73,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
   const lastRequestId = React.useRef<number>(0);
 
-  const onError = props.unstable_onDataSourceError;
+  const onDataSourceErrorProp = props.unstable_onDataSourceError;
 
   const cacheChunkManager = useLazyRef<CacheChunkManager, void>(() => {
     const sortedPageSizeOptions = props.pageSizeOptions
@@ -125,6 +132,9 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         const cacheResponses = cacheChunkManager.splitResponse(fetchParams, getRowsResponse);
         cacheResponses.forEach((response, key) => {
           cache.set(key, response);
+          response.rows.forEach((row) => {
+            rowIdToGetRowsParams.current[row.id] = fetchParams;
+          });
         });
 
         if (lastRequestId.current === requestId) {
@@ -133,13 +143,30 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
             fetchParams,
           });
         }
-      } catch (error) {
+      } catch (originalError) {
         if (lastRequestId.current === requestId) {
           apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
-            error: error as Error,
+            error: originalError as Error,
             fetchParams,
           });
-          onError?.(error as Error, fetchParams);
+          if (typeof onDataSourceErrorProp === 'function') {
+            onDataSourceErrorProp(
+              new GridGetRowsError({
+                message: (originalError as Error)?.message,
+                params: fetchParams,
+                cause: originalError as Error,
+              }),
+            );
+          } else if (process.env.NODE_ENV !== 'production') {
+            warnOnce(
+              [
+                'MUI X: A call to `unstable_dataSource.getRows()` threw an error which was not handled because `unstable_onDataSourceError()` is missing.',
+                'To handle the error pass a callback to the `unstable_onDataSourceError` prop, for example `<DataGrid unstable_onDataSourceError={(error) => ...} />`.',
+                'For more detail, see https://mui.com/x/react-data-grid/server-side-data/#error-handling.',
+              ],
+              'error',
+            );
+          }
         }
       } finally {
         if (defaultRowsUpdateStrategyActive && lastRequestId.current === requestId) {
@@ -153,10 +180,31 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       apiRef,
       defaultRowsUpdateStrategyActive,
       props.unstable_dataSource?.getRows,
-      onError,
+      onDataSourceErrorProp,
       options,
       props.signature,
     ],
+  );
+
+  const mutateRowInCache = React.useCallback<GridDataSourcePrivateApi['mutateRowInCache']>(
+    (rowId, rowUpdate) => {
+      const getRowsParams = rowIdToGetRowsParams.current[rowId];
+      if (!getRowsParams) {
+        return;
+      }
+      const cachedData = cache.get(getRowsParams);
+      if (!cachedData) {
+        return;
+      }
+      const updatedRows = [...cachedData.rows];
+      const rowIndex = updatedRows.findIndex((row) => gridRowIdSelector(apiRef, row) === rowId);
+      if (rowIndex === -1) {
+        return;
+      }
+      updatedRows[rowIndex] = rowUpdate;
+      cache.set(getRowsParams, { ...cachedData, rows: updatedRows });
+    },
+    [apiRef, cache],
   );
 
   const handleStrategyActivityChange = React.useCallback<
@@ -196,6 +244,10 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     },
   };
 
+  const dataSourcePrivateApi: GridDataSourcePrivateApi = {
+    mutateRowInCache,
+  };
+
   const debouncedFetchRows = React.useMemo(() => debounce(fetchRows, 0), [fetchRows]);
 
   const isFirstRender = React.useRef(true);
@@ -219,7 +271,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   }, [apiRef, props.unstable_dataSource]);
 
   return {
-    api: { public: dataSourceApi },
+    api: { public: dataSourceApi, private: dataSourcePrivateApi },
     strategyProcessor: {
       strategyName: DataSourceRowsUpdateStrategy.Default,
       group: 'dataSourceRowsUpdate' as const,

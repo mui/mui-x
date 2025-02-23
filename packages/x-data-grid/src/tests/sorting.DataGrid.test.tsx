@@ -10,10 +10,10 @@ import {
   GridApi,
   GridColDef,
   gridStringOrNumberComparator,
+  GridInitialState,
 } from '@mui/x-data-grid';
 import { getColumnValues, getColumnHeaderCell } from 'test/utils/helperFn';
 import { spy } from 'sinon';
-import { GridInitialState } from '@mui/x-data-grid-pro';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
