@@ -96,7 +96,7 @@ module.exports = function getBabelConfig(api) {
 
   if (fs.existsSync('./mui-css.config.json')) {
     plugins.push([
-      './packages/babel-plugin-mui-css/',
+      './packages/babel-plugin-mui-css/build/index.js',
       JSON.parse(fs.readFileSync('./mui-css.config.json')),
     ])
   }
