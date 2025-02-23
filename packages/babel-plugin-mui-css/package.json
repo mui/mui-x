@@ -1,7 +1,7 @@
 {
   "name": "babel-plugin-mui-css",
-  "version": "1.6.2",
-  "description": "Transform required css modules so one can use generated class names.",
+  "version": "1.0.0",
+  "private": true,
   "main": "build/index.js",
   "type": "module",
   "scripts": {
