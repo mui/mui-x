@@ -74,7 +74,7 @@ import {
   listViewStateInitializer,
   propsStateInitializer,
 } from '@mui/x-data-grid-pro/internals';
-import { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
+import { GridPrivateApiPremium } from '../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 import { useGridDataSourcePremium as useGridDataSource } from '../hooks/features/dataSource/useGridDataSourcePremium';
 // Premium-only features
@@ -97,10 +97,10 @@ import {
 import { useGridClipboardImport } from '../hooks/features/clipboard/useGridClipboardImport';
 
 export const useDataGridPremiumComponent = (
-  inputApiRef: RefObject<GridApiPremium | null> | undefined,
+  apiRef: RefObject<GridPrivateApiPremium>,
   props: DataGridPremiumProcessedProps,
 ) => {
-  const apiRef = useGridInitialization<GridPrivateApiPremium, GridApiPremium>(inputApiRef, props);
+  useGridInitialization<GridPrivateApiPremium>(apiRef, props);
 
   /**
    * Register all pre-processors called during state initialization here.
@@ -195,6 +195,4 @@ export const useDataGridPremiumComponent = (
   useGridDataSource(apiRef, props);
   useGridVirtualization(apiRef, props);
   useGridListView(apiRef, props);
-
-  return apiRef;
 };

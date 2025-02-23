@@ -852,6 +852,12 @@
       "class": null
     },
     {
+      "name": "baseChip",
+      "description": "The custom Chip component used in the grid.",
+      "default": "Chip",
+      "class": null
+    },
+    {
       "name": "booleanCellTrueIcon",
       "description": "Icon displayed on the boolean cell to represent the true value.",
       "default": "GridCheckIcon",
@@ -1065,6 +1071,12 @@
       "name": "menuItemCheckIcon",
       "description": "Icon displayed to indicate that a menu item is selected.",
       "default": "GridCheckIcon",
+      "class": null
+    },
+    {
+      "name": "pivotIcon",
+      "description": "Icon displayed in the pivot menu.",
+      "default": "GridPivotIcon",
       "class": null
     },
     {
@@ -1610,6 +1622,12 @@
       "isGlobal": false
     },
     {
+      "key": "mainContent",
+      "className": "MuiDataGridPro-mainContent",
+      "description": "",
+      "isGlobal": false
+    },
+    {
       "key": "menu",
       "className": "MuiDataGridPro-menu",
       "description": "Styles applied to the menu element.",
@@ -1703,6 +1721,18 @@
       "key": "pinnedRows--top",
       "className": "MuiDataGridPro-pinnedRows--top",
       "description": "Styles applied to the top pinned rows container.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotField",
+      "className": "MuiDataGridPro-pivotField",
+      "description": "Styles applied to the pivot field.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotField--sorted",
+      "className": "MuiDataGridPro-pivotField--sorted",
+      "description": "Styles applied to the pivot field when sorted.",
       "isGlobal": false
     },
     {
@@ -1943,6 +1973,12 @@
       "key": "withBorderColor",
       "className": "MuiDataGridPro-withBorderColor",
       "description": "Styles applied to cells, column header and other elements that have border.\nSets border color only.",
+      "isGlobal": false
+    },
+    {
+      "key": "withSidePanel",
+      "className": "MuiDataGridPro-withSidePanel",
+      "description": "",
       "isGlobal": false
     },
     {

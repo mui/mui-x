@@ -8,6 +8,7 @@ import {
   propValidatorsDataGridPro,
   PropValidator,
   validateProps,
+  useGridApiInitialization,
 } from '@mui/x-data-grid-pro/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
@@ -18,8 +19,11 @@ import {
 } from '../models/dataGridPremiumProps';
 import { useDataGridPremiumProps } from './useDataGridPremiumProps';
 import { getReleaseInfo } from '../utils/releaseInfo';
+import { GridSidebar } from '../components/sidebar/GridSidebar';
+import { GridSidebarColumnPanel } from '../components/sidebar/columnPanel/GridSidebarColumnPanel';
 import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
+import type { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
@@ -44,12 +48,26 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useDataGridPremiumProps(inProps);
-  const privateApiRef = useDataGridPremiumComponent(props.apiRef, props);
+  const privateApiRef = useGridApiInitialization<GridPrivateApiPremium, GridApiPremium>(
+    props.apiRef,
+    props,
+  );
+  useDataGridPremiumComponent(privateApiRef, props);
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
+
+  const { pivotParams } = props;
+  const pivotSettingsOpen = pivotParams?.pivotSettingsOpen ?? false;
 
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, dataGridPremiumPropValidators);
   }
+
+  const sidePanel =
+    pivotParams && pivotSettingsOpen ? (
+      <GridSidebar>
+        <GridSidebarColumnPanel pivotParams={pivotParams} />
+      </GridSidebar>
+    ) : null;
 
   return (
     <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
@@ -59,6 +77,7 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
         sx={props.sx}
         {...props.slotProps?.root}
         ref={ref}
+        sidePanel={sidePanel}
       >
         {watermark}
       </GridRoot>
@@ -898,6 +917,35 @@ DataGridPremiumRaw.propTypes = {
   pinnedRows: PropTypes.shape({
     bottom: PropTypes.arrayOf(PropTypes.object),
     top: PropTypes.arrayOf(PropTypes.object),
+  }),
+  pivotParams: PropTypes /* @typescript-to-proptypes-ignore */.shape({
+    initialColumns: PropTypes.array,
+    onPivotModeChange: PropTypes.func.isRequired,
+    onPivotModelChange: PropTypes.func.isRequired,
+    pivotMode: PropTypes.bool.isRequired,
+    pivotModel: PropTypes.shape({
+      columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+      rows: PropTypes.arrayOf(
+        PropTypes.shape({
+          field: PropTypes.string.isRequired,
+        }),
+      ).isRequired,
+      values: PropTypes.arrayOf(
+        PropTypes.shape({
+          aggFunc: PropTypes.string.isRequired,
+          field: PropTypes.string.isRequired,
+        }),
+      ).isRequired,
+    }).isRequired,
+    props: PropTypes.shape({
+      aggregationModel: PropTypes.object,
+      columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
+      columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+      columnVisibilityModel: PropTypes.object,
+      getAggregationPosition: PropTypes.func,
+      rowGroupingModel: PropTypes.arrayOf(PropTypes.string),
+      rows: PropTypes.array,
+    }),
   }),
   /**
    * Callback called before updating a row with new values in the row and cell editing.

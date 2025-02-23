@@ -43,6 +43,7 @@ type ColumnPropertyWrapper<P extends WrappableColumnProperty> = (params: {
     id: GridRowId,
     field: string,
   ) => GridAggregationLookup[GridRowId][string] | null;
+  pivotMode: boolean;
 }) => GridBaseColDef[P];
 
 const getAggregationValueWrappedValueGetter: ColumnPropertyWrapper<'valueGetter'> = ({
@@ -100,6 +101,7 @@ const getAggregationValueWrappedRenderCell: ColumnPropertyWrapper<'renderCell'> 
   value: renderCell,
   aggregationRule,
   getCellAggregationResult,
+  pivotMode,
 }) => {
   const wrappedRenderCell: GridBaseColDef['renderCell'] = (params) => {
     const cellAggregationResult = getCellAggregationResult(params.id, params.field);
@@ -109,7 +111,15 @@ const getAggregationValueWrappedRenderCell: ColumnPropertyWrapper<'renderCell'> 
           return <GridFooterCell {...params} />;
         }
 
+        if (pivotMode && cellAggregationResult.value === 0) {
+          return null;
+        }
+
         return params.formattedValue;
+      }
+
+      if (pivotMode && cellAggregationResult.value === 0) {
+        return null;
       }
 
       const aggregationMeta: GridAggregationCellMeta = {
@@ -172,6 +182,10 @@ const getWrappedRenderHeader: ColumnPropertyWrapper<'renderHeader'> = ({
   aggregationRule,
 }) => {
   const wrappedRenderHeader: GridBaseColDef['renderHeader'] = (params) => {
+    // TODO: investigate why colDef is undefined
+    if (!params.colDef) {
+      return null;
+    }
     return (
       <GridAggregationHeader
         {...params}
@@ -191,10 +205,12 @@ export const wrapColumnWithAggregationValue = ({
   column,
   apiRef,
   aggregationRule,
+  pivotMode,
 }: {
   column: GridBaseColDef;
   apiRef: RefObject<GridApiPremium>;
   aggregationRule: GridAggregationRule;
+  pivotMode: boolean;
 }): GridBaseColDef => {
   const getCellAggregationResult = (
     id: GridRowId,
@@ -241,6 +257,7 @@ export const wrapColumnWithAggregationValue = ({
       colDef: column,
       aggregationRule,
       getCellAggregationResult,
+      pivotMode,
     });
 
     if (wrappedProperty !== originalValue) {
