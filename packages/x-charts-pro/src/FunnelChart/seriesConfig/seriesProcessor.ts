@@ -46,7 +46,10 @@ const seriesProcessor: SeriesProcessor<'funnel'> = (params) => {
 
     completedSeries[seriesId].dataPoints = completedSeries[seriesId].data.map(
       (item, dataIndex, array) => {
-        const currentMaxMain = item.value ?? 0;
+        // Main = main axis, Other = other axis
+        // For horizontal layout, main is y, other is x
+        // For vertical layout, main is x, other is y
+        const currentMaxMain = item.value;
         const nextDataIndex = dataIndex === array.length - 1 ? dataIndex : dataIndex + 1;
         const nextMaxMain = array[nextDataIndex].value ?? 0;
         const nextMaxOther = 0;

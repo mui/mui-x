@@ -17,11 +17,9 @@ const getValueExtremum = (
           const { dataPoints } = series[seriesId];
 
           if (
-            yAxisId !== axis.id &&
-            xAxisId !== axis.id &&
-            isDefaultAxis &&
-            yAxisId !== undefined &&
-            xAxisId !== undefined
+            // We skip except if the axis id is not defined for the direction and we are on the default one.
+            !(isDefaultAxis && yAxisId === undefined && direction === 'y') &&
+            !(isDefaultAxis && xAxisId === undefined && direction === 'x')
           ) {
             return acc;
           }
