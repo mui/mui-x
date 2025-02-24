@@ -17,7 +17,6 @@ export default function FunnelAxis() {
             position: 'left',
           },
         ]}
-        margin={{ left: 50 }}
         {...funnelProps}
       >
         <ChartsYAxis axisId="y" disableLine disableTicks />

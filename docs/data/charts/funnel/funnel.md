@@ -97,6 +97,6 @@ To do so, set the `scaleType` property to `linear`.
 ## Display axis
 
 The funnel chart does not display an axis by default.
-To display an axis, pass the `ChartsXAxis` and `ChartsYAxis` components as a child of the `FunnelChart` component.
+To display an axis, pass the `ChartsXAxis` or `ChartsYAxis` components as a child of the `FunnelChart` component.
 
 {{"demo": "FunnelAxis.js"}}
