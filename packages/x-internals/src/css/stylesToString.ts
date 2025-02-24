@@ -8,8 +8,6 @@ const DASH_CHAR_CODE = '-'.charCodeAt(0);
 const SPECIAL_CHAR = /--|#|\.|\s|>|&|:/;
 const UPPERCASE_LETTERS = /[A-Z]/g;
 
-// TODO: By using native CSS nesting, we could make `stylesToString` more simple & performant.
-
 const stack = [] as any[];
 export function stylesToString(rootSelector: string, rootStyles: CSSObject) {
   stack.length = 0;
