@@ -257,7 +257,7 @@ Use the `setRowChildrenExpansion` method on `apiRef` to programmatically set the
 {{"demo": "RowGroupingSetChildrenExpansion.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::warning
-The `apiRef.current.setRowChildrenExpansion` method is not compatible with the [server-side tree data](/x/react-data-grid/server-side-data/tree-data/) and [server-side row grouping](/x/react-data-grid/server-side-data/row-grouping/). Use `apiRef.current.unstable_dataSource.fetchRows` instead.
+The `apiRef.current.setRowChildrenExpansion` method is not compatible with the [server-side tree data](/x/react-data-grid/server-side-data/tree-data/) and [server-side row grouping](/x/react-data-grid/server-side-data/row-grouping/). Use `apiRef.current.dataSource.fetchRows()` instead.
 :::
 
 ### Customize grouping cell indent

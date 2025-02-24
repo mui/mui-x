@@ -59,13 +59,13 @@ export default function ServerSideTreeData() {
 
   return (
     <div style={{ width: '100%' }}>
-      <Button onClick={() => apiRef.current?.unstable_dataSource.cache.clear()}>
+      <Button onClick={() => apiRef.current?.dataSource.cache.clear()}>
         Reset cache
       </Button>
       <div style={{ height: 400 }}>
         <DataGridPro
           columns={columns}
-          unstable_dataSource={dataSource}
+          dataSource={dataSource}
           treeData
           apiRef={apiRef}
           pagination

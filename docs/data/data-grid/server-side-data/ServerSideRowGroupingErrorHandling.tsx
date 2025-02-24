@@ -65,7 +65,7 @@ export default function ServerSideRowGroupingErrorHandling() {
         <Button
           onClick={() => {
             setRootError('');
-            apiRef.current?.unstable_dataSource.fetchRows();
+            apiRef.current?.dataSource.fetchRows();
           }}
         >
           Refetch rows
@@ -83,8 +83,8 @@ export default function ServerSideRowGroupingErrorHandling() {
       <div style={{ height: 400, position: 'relative' }}>
         <DataGridPremium
           columns={columns}
-          unstable_dataSource={dataSource}
-          unstable_onDataSourceError={(error, params) => {
+          dataSource={dataSource}
+          onDataSourceError={(error, params) => {
             if (!params.groupKeys || params.groupKeys.length === 0) {
               setRootError(error.message);
             } else {
@@ -93,7 +93,7 @@ export default function ServerSideRowGroupingErrorHandling() {
               );
             }
           }}
-          unstable_dataSourceCache={null}
+          dataSourceCache={null}
           apiRef={apiRef}
           initialState={initialState}
         />

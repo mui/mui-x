@@ -6,7 +6,7 @@ title: React Data Grid - Server-side tree data
 
 <p class="description">Tree data lazy-loading with server-side data source.</p>
 
-To dynamically load tree data from the server, including lazy-loading of children, you must create a data source and pass the `unstable_dataSource` prop to the Data Grid, as detailed in the [overview section](/x/react-data-grid/server-side-data/).
+To dynamically load tree data from the server, including lazy-loading of children, you must create a data source and pass the `dataSource` prop to the Data Grid, as detailed in the [overview section](/x/react-data-grid/server-side-data/).
 
 :::info
 If you are looking for tree data on the client-side, see [client-side tree data](/x/react-data-grid/tree-data/).
@@ -67,7 +67,7 @@ Open the Info section of your browser console to see the requests being made and
 
 ## Error handling
 
-For each row group expansion, the data source is called to fetch the children. If an error occurs during the fetch, the grid will display an error message in the row group cell. `unstable_onDataSourceError` is also triggered with the error and the fetch params.
+For each row group expansion, the data source is called to fetch the children. If an error occurs during the fetch, the grid will display an error message in the row group cell. `onDataSourceError` is also triggered with the error and the fetch params.
 
 The demo below shows a toast apart from the default error message in the grouping cell. Cache has been disabled in this demo for simplicity.
 
@@ -85,7 +85,7 @@ The following demo uses `defaultGroupingExpansionDepth={-1}` to expand all level
 ## Custom cache
 
 The data source uses a cache by default to store the fetched data.
-Use the `unstable_dataSourceCache` prop to provide a custom cache if necessary.
+Use the `dataSourceCache` prop to provide a custom cache if necessary.
 See [Data caching](/x/react-data-grid/server-side-data/#data-caching) for more info.
 
 The following demo uses `QueryClient` from `@tanstack/react-core` as a data source cache.

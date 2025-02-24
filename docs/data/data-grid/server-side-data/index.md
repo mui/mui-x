@@ -121,7 +121,7 @@ const customDataSource: GridDataSource = {
 
 <DataGrid
   columns={columns}
-  unstable_dataSource={customDataSource}
+  dataSource={customDataSource}
   pagination
 />
 ```
@@ -167,7 +167,7 @@ When the corresponding models update, the Data Grid calls the `getRows` method w
 <DataGrid
   columns={columns}
   // automatically sets `sortingMode="server"`, `filterMode="server"`, `paginationMode="server"`
-  unstable_dataSource={customDataSource}
+  dataSource={customDataSource}
 />
 ```
 
@@ -228,7 +228,7 @@ Changing those would require a new response to be retrieved and stored in the ch
 
 ### Customize the cache lifetime
 
-The `GridDataSourceCacheDefault` has a default Time To Live (`ttl`) of 5 minutes. To customize it, pass the `ttl` option in milliseconds to the `GridDataSourceCacheDefault` constructor, and then pass it as the `unstable_dataSourceCache` prop.
+The `GridDataSourceCacheDefault` has a default Time To Live (`ttl`) of 5 minutes. To customize it, pass the `ttl` option in milliseconds to the `GridDataSourceCacheDefault` constructor, and then pass it as the `dataSourceCache` prop.
 
 ```tsx
 import { GridDataSourceCacheDefault } from '@mui/x-data-grid';
@@ -237,8 +237,8 @@ const lowTTLCache = new GridDataSourceCacheDefault({ ttl: 1000 * 10 }); // 10 se
 
 <DataGrid
   columns={columns}
-  unstable_dataSource={customDataSource}
-  unstable_dataSourceCache={lowTTLCache}
+  dataSource={customDataSource}
+  dataSourceCache={lowTTLCache}
 />;
 ```
 
@@ -246,7 +246,7 @@ const lowTTLCache = new GridDataSourceCacheDefault({ ttl: 1000 * 10 }); // 10 se
 
 ### Custom cache
 
-To provide a custom cache, use `unstable_dataSourceCache` prop, which could be either written from scratch or based on another cache library.
+To provide a custom cache, use `dataSourceCache` prop, which could be either written from scratch or based on another cache library.
 This prop accepts a generic interface of type `GridDataSourceCache`.
 
 ```tsx
@@ -259,21 +259,17 @@ export interface GridDataSourceCache {
 
 ### Disable cache
 
-To disable the data source cache, pass `null` to the `unstable_dataSourceCache` prop.
+To disable the data source cache, pass `null` to the `dataSourceCache` prop.
 
 ```tsx
-<DataGrid
-  columns={columns}
-  unstable_dataSource={customDataSource}
-  unstable_dataSourceCache={null}
-/>
+<DataGrid columns={columns} dataSource={customDataSource} dataSourceCache={null} />
 ```
 
 {{"demo": "ServerSideDataGridNoCache.js", "bg": "inline"}}
 
 ## Error handling
 
-You could handle the errors with the data source by providing an error handler function using the `unstable_onDataSourceError`.
+You could handle the errors with the data source by providing an error handler function using the `onDataSourceError`.
 It will be called whenever there's an error in fetching the data.
 
 The first argument of this function is the error object, and the second argument is the fetch parameters of type `GridGetRowsParams`.
@@ -281,8 +277,8 @@ The first argument of this function is the error object, and the second argument
 ```tsx
 <DataGridPro
   columns={columns}
-  unstable_dataSource={customDataSource}
-  unstable_onDataSourceError={(error, params) => {
+  dataSource={customDataSource}
+  onDataSourceError={(error, params) => {
     console.error(error);
   }}
 />
@@ -292,7 +288,7 @@ The first argument of this function is the error object, and the second argument
 
 ## Updating data 🚧
 
-This feature is yet to be implemented, when completed, the method `unstable_dataSource.updateRow` will be called with the `GridRowModel` whenever the user edits a row.
+This feature is yet to be implemented, when completed, the method `dataSource.updateRow` will be called with the `GridRowModel` whenever the user edits a row.
 It will work in a similar way as the `processRowUpdate` prop.
 
 Feel free to upvote the related GitHub [issue](https://github.com/mui/mui-x/issues/13261) to see this feature land faster.

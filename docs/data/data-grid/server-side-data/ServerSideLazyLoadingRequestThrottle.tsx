@@ -107,10 +107,10 @@ function ServerSideLazyLoadingRequestThrottle() {
     <div style={{ width: '100%', height: 500 }}>
       <DataGridPro
         {...props}
-        unstable_dataSource={dataSource}
+        dataSource={dataSource}
         rowCount={rowCount}
-        unstable_lazyLoading
-        unstable_lazyLoadingRequestThrottleMs={throttleMs}
+        lazyLoading
+        lazyLoadingRequestThrottleMs={throttleMs}
         paginationModel={{ page: 0, pageSize: 10 }}
         slots={{
           footerRowCount: GridCustomFooterRowCount,

@@ -66,11 +66,11 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
     apiRef.current.setStrategyAvailability(
       GridStrategyGroup.DataSource,
       DataSourceRowsUpdateStrategy.Default,
-      props.unstable_dataSource && !props.unstable_lazyLoading ? () => true : () => false,
+      props.dataSource && !props.lazyLoading ? () => true : () => false,
     );
-  }, [apiRef, props.unstable_dataSource, props.unstable_lazyLoading]);
+  }, [apiRef, props.dataSource, props.lazyLoading]);
 
-  const onError = props.unstable_onDataSourceError;
+  const onError = props.onDataSourceError;
 
   const fetchRowChildren = React.useCallback<GridDataSourcePrivateApiPro['fetchRowChildren']>(
     async (id) => {
@@ -82,7 +82,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         nestedDataManager.clearPendingRequest(id);
         return;
       }
-      const getRows = props.unstable_dataSource?.getRows;
+      const getRows = props.dataSource?.getRows;
       if (!getRows) {
         nestedDataManager.clearPendingRequest(id);
         return;
@@ -112,13 +112,13 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         apiRef.current.updateServerRows(rows, rowNode.path);
         apiRef.current.setRowCount(cachedData.rowCount === undefined ? -1 : cachedData.rowCount);
         apiRef.current.setRowChildrenExpansion(id, true);
-        apiRef.current.unstable_dataSource.setChildrenLoading(id, false);
+        apiRef.current.dataSource.setChildrenLoading(id, false);
         return;
       }
 
       const existingError = gridDataSourceErrorsSelector(apiRef)[id] ?? null;
       if (existingError) {
-        apiRef.current.unstable_dataSource.setChildrenFetchError(id, null);
+        apiRef.current.dataSource.setChildrenFetchError(id, null);
       }
 
       try {
@@ -129,7 +129,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
           return;
         }
         if (nestedDataManager.getRequestStatus(id) === RequestStatus.UNKNOWN) {
-          apiRef.current.unstable_dataSource.setChildrenLoading(id, false);
+          apiRef.current.dataSource.setChildrenLoading(id, false);
           return;
         }
         nestedDataManager.setRequestSettled(id);
@@ -146,10 +146,10 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         apiRef.current.setRowChildrenExpansion(id, true);
       } catch (error) {
         const childrenFetchError = error as Error;
-        apiRef.current.unstable_dataSource.setChildrenFetchError(id, childrenFetchError);
+        apiRef.current.dataSource.setChildrenFetchError(id, childrenFetchError);
         onError?.(childrenFetchError, fetchParams);
       } finally {
-        apiRef.current.unstable_dataSource.setChildrenLoading(id, false);
+        apiRef.current.dataSource.setChildrenLoading(id, false);
         nestedDataManager.setRequestSettled(id);
       }
     },
@@ -160,7 +160,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       onError,
       apiRef,
       props.treeData,
-      props.unstable_dataSource?.getRows,
+      props.dataSource?.getRows,
     ],
   );
 
@@ -223,8 +223,8 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
   }, [apiRef]);
 
   const dataSourceApi: GridDataSourceApiPro = {
-    unstable_dataSource: {
-      ...api.public.unstable_dataSource,
+    dataSource: {
+      ...api.public.dataSource,
       setChildrenLoading,
       setChildrenFetchError,
     },
