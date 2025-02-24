@@ -1,5 +1,4 @@
 import { DatasetType, SeriesProcessor, ChartSeriesDefaultized } from '@mui/x-charts/internals';
-import { warnOnce } from '@mui/x-internals/warning';
 
 type FunnelDataset = DatasetType<number>;
 
@@ -51,30 +50,16 @@ const seriesProcessor: SeriesProcessor<'funnel'> = (params, dataset) => {
 
   seriesOrder.forEach((seriesId) => {
     const currentSeries = series[seriesId];
-    // Use dataKey if needed and available
-    // const dataKey = currentSeries.dataKey;
-    const dataKey = undefined;
 
     completedSeries[seriesId] = {
       labelMarkType: 'square',
       layout: isHorizontal ? 'horizontal' : 'vertical',
       valueFormatter: (item) => (item == null ? '' : item.value.toLocaleString()),
       ...currentSeries,
-      data: dataKey
-        ? dataset!.map((data, i) => {
-            const value = data[dataKey];
-            if (typeof value !== 'number') {
-              if (process.env.NODE_ENV !== 'production') {
-                warnOnce([
-                  `MUI X: your dataset key "${dataKey}" is used for plotting funnels, but contains nonnumerical elements.`,
-                  'Funnel plots only support number values.',
-                ]);
-              }
-              return { id: `${seriesId}-funnel-item-${i}`, value: 0 };
-            }
-            return { id: `${seriesId}-funnel-item-${i}`, value };
-          })
-        : currentSeries.data!.map((v, i) => ({ id: `${seriesId}-funnel-item-${v.id ?? i}`, ...v })),
+      data: currentSeries.data!.map((v, i) => ({
+        id: `${seriesId}-funnel-item-${v.id ?? i}`,
+        ...v,
+      })),
       dataPoints: [],
     };
 
@@ -101,15 +86,6 @@ const seriesProcessor: SeriesProcessor<'funnel'> = (params, dataset) => {
             useBandWidth: false,
             stackOffset,
           }),
-          // Middle right
-          // {
-          //   x: currentMaxMain - (currentMaxMain - nextMaxMain) * 0,
-          //   y: currentMaxOther - (currentMaxOther - nextMaxOther) * 0.1,
-          // },
-          // {
-          //   x: currentMaxMain - (currentMaxMain - nextMaxMain) * 1,
-          //   y: currentMaxOther - (currentMaxOther - nextMaxOther) * 0.9,
-          // },
           // Bottom right (vertical) or Top right (horizontal)
           createPoint({
             main: nextMaxMain,
@@ -126,15 +102,6 @@ const seriesProcessor: SeriesProcessor<'funnel'> = (params, dataset) => {
             useBandWidth: true,
             stackOffset,
           }),
-          // Middle left
-          // {
-          //   x: -nextMaxMain - (currentMaxMain - nextMaxMain) * 0,
-          //   y: currentMaxOther - (currentMaxOther - nextMaxOther) * 0.9,
-          // },
-          // {
-          //   x: -nextMaxMain - (currentMaxMain - nextMaxMain) * 1,
-          //   y: currentMaxOther - (currentMaxOther - nextMaxOther) * 0.1,
-          // },
           // Top left (vertical) or Bottom left (horizontal)
           createPoint({
             main: -currentMaxMain,

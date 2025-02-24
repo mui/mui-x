@@ -12,11 +12,11 @@ const legendGetter: LegendGetter<'funnel'> = (params) => {
       }
 
       acc.push({
-        markType: item.labelMarkType ?? series[seriesId].labelMarkType!,
+        markType: item.labelMarkType ?? series[seriesId].labelMarkType,
         seriesId,
-        id: item.id!,
+        id: item.id,
         itemId: item.id,
-        color: item.color!,
+        color: item.color,
         label: formattedLabel,
       });
     });

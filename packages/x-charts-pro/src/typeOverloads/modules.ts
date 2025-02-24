@@ -30,7 +30,7 @@ declare module '@mui/x-charts/internals' {
       series: DefaultizedFunnelSeriesType;
       seriesProp: FunnelSeriesType;
       itemIdentifier: FunnelItemIdentifier;
-      valueType: FunnelValueType;
+      valueType: MakeRequired<FunnelValueType, 'id' | 'color'>;
       cartesian: true;
     };
   }

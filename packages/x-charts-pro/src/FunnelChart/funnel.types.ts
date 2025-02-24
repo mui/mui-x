@@ -6,7 +6,7 @@ import {
   SeriesId,
 } from '@mui/x-charts/internals';
 import { CurveType, Position } from '@mui/x-charts/models';
-import { DefaultizedProps } from '@mui/x-internals/types';
+import { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
 
 export type FunnelItemId = string | number;
 
@@ -103,6 +103,7 @@ export type FunnelItem = {
 export interface DefaultizedFunnelSeriesType
   extends DefaultizedProps<FunnelSeriesType, CommonDefaultizedProps | 'layout'> {
   dataPoints: FunnelDataPoints[][];
+  data: Readonly<MakeRequired<FunnelValueType, 'id' | 'color'>[]>;
 }
 
 export type FunnelDataPoints = Record<'x' | 'y', number> & {
