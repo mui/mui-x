@@ -69,6 +69,7 @@ export default function GridExportMenu() {
         {...data}
         loading={loading}
         slots={{ toolbar: CustomToolbar }}
+        showToolbar
       />
     </div>
   );

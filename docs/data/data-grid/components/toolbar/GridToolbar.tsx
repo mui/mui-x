@@ -134,7 +134,12 @@ export default function GridToolbar() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid {...data} loading={loading} slots={{ toolbar: CustomToolbar }} />
+      <DataGrid
+        {...data}
+        loading={loading}
+        slots={{ toolbar: CustomToolbar }}
+        showToolbar
+      />
     </div>
   );
 }

@@ -1,3 +1,8 @@
 <TailwindDemoContainer documentBody={documentBody}>
-  <DataGrid {...data} loading={loading} slots={{ toolbar: CustomToolbar }} />
+  <DataGrid
+    {...data}
+    loading={loading}
+    slots={{ toolbar: CustomToolbar }}
+    showToolbar
+  />
 </TailwindDemoContainer>

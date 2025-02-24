@@ -106,6 +106,7 @@ export default function GridToolbarFilterBar() {
         onFilterModelChange={(newFilterModel) => setFilterModel(newFilterModel)}
         slots={{ toolbar: CustomToolbar }}
         slotProps={{ toolbar: { onRemoveFilter } }}
+        showToolbar
       />
     </div>
   );

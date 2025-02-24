@@ -138,6 +138,7 @@ export default function GridToolbarSettingsMenu() {
             onSettingsChange: setSettings,
           },
         }}
+        showToolbar
       />
     </div>
   );

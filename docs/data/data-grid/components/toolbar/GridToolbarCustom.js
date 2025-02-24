@@ -85,7 +85,12 @@ export default function GridToolbarCustom({ window }) {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <TailwindDemoContainer documentBody={documentBody}>
-        <DataGrid {...data} loading={loading} slots={{ toolbar: CustomToolbar }} />
+        <DataGrid
+          {...data}
+          loading={loading}
+          slots={{ toolbar: CustomToolbar }}
+          showToolbar
+        />
       </TailwindDemoContainer>
     </div>
   );
