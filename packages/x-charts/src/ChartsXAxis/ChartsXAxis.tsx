@@ -280,7 +280,6 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
       className={classes.root}
       sx={sx}
     >
-      <rect x={0} y={0} width={430} height={axisHeight} fill="red" opacity={0.1} />
       {!disableLine && (
         <Line x1={left} x2={left + width} className={classes.line} {...slotProps?.axisLine} />
       )}
