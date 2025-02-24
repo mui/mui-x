@@ -97,6 +97,7 @@ function ServerSideLazyLoadingRequestThrottle() {
           footerRowCount: GridCustomFooterRowCount,
           toolbar: GridCustomToolbar,
         }}
+        showToolbar
         slotProps={{
           footerRowCount: {
             requestCount,
