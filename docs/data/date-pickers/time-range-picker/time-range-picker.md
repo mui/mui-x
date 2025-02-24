@@ -17,13 +17,12 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 ## Component composition
 
-The component is built using the `MultiInputTimeRangeField` for the keyboard editing, the `DigitalClock` for the desktop view editing, and the `TimeClock` for the mobile view editing.
+The component is built using the `SingleInputTimeRangeField` for the keyboard editing and the `DigitalClock` for the view editing.
 
 Check-out their documentation page for more information:
 
 - [Time Range Field](/x/react-date-pickers/time-range-field/)
 - [Digital Clock](/x/react-date-pickers/digital-clock/)
-- [Time Clock](/x/react-date-pickers/time-clock/)
 
 ## Uncontrolled vs. controlled value
 
