@@ -212,6 +212,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
       style: {
         ...theme.typography.caption,
         fontSize: 12,
+        lineHeight: 1.25,
         textAnchor: 'middle',
         dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
         ...tickLabelStyle,
