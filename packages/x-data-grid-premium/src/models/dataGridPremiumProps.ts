@@ -4,6 +4,8 @@ import {
   GridValidRowModel,
   GridGroupNode,
   GridEventListener,
+  GridGetRowsError,
+  GridUpdateRowError,
 } from '@mui/x-data-grid-pro';
 import {
   GridExperimentalProFeatures,
@@ -203,9 +205,10 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    */
   unstable_dataSource?: GridDataSource;
   /**
-   * Callback fired when the data source request fails.
-   * @param {Error} error The error object.
-   * @param {GridGetRowsParams} params With all properties from [[GridGetRowsParams]].
+   * Callback fired when a data source request fails.
+   * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
    */
-  unstable_onDataSourceError?: (error: Error, params: GridGetRowsParams) => void;
+  unstable_onDataSourceError?: (
+    error: GridGetRowsError<GridGetRowsParams> | GridUpdateRowError,
+  ) => void;
 }
