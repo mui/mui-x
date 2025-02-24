@@ -5,11 +5,54 @@ import { ChartItemIdentifier, ChartSeriesType } from '../../../../models/seriesT
 
 export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({ store }) => {
   const cleanInteraction = useEventCallback(() => {
-    store.update((prev) => ({
-      ...prev,
-      interaction: { ...prev.interaction, axis: { x: null, y: null }, item: null },
-    }));
+    store.update((prev) => {
+      return {
+        ...prev,
+        interaction: { ...prev.interaction, axis: { x: null, y: null }, item: null },
+      };
+    });
   });
+
+  const removeItemInteraction = useEventCallback(
+    (itemToRemove?: ChartItemIdentifier<ChartSeriesType>) => {
+      store.update((prev) => {
+        const prevItem = prev.interaction.item;
+
+        if (!itemToRemove) {
+          // Remove without taking care of the current item
+          return prevItem === null
+            ? prev
+            : {
+                ...prev,
+                interaction: {
+                  ...prev.interaction,
+                  item: null,
+                },
+              };
+        }
+
+        if (
+          prevItem === null ||
+          Object.keys(itemToRemove).some(
+            (key) =>
+              itemToRemove[key as keyof typeof itemToRemove] !==
+              prevItem[key as keyof typeof prevItem],
+          )
+        ) {
+          // The current item is already different from the one to remove. No need to clean it.
+          return prev;
+        }
+
+        return {
+          ...prev,
+          interaction: {
+            ...prev.interaction,
+            item: null,
+          },
+        };
+      });
+    },
+  );
 
   const setItemInteraction = useEventCallback((newItem: ChartItemIdentifier<ChartSeriesType>) => {
     store.update((prev) => ({
@@ -65,10 +108,10 @@ export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({
   });
 
   return {
-    params: {},
     instance: {
       cleanInteraction,
       setItemInteraction,
+      removeItemInteraction,
       setAxisInteraction,
       enableVoronoid,
       disableVoronoid,

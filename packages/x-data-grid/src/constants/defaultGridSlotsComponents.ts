@@ -13,6 +13,7 @@ import {
   GridRowCount,
   GridColumnsManagement,
   GridColumnHeaderSortIcon,
+  GridNoColumnsOverlay,
 } from '../components';
 import { GridCell } from '../components/cell/GridCell';
 import { GridColumnHeaders } from '../components/GridColumnHeaders';
@@ -21,6 +22,7 @@ import { GridDetailPanels } from '../components/GridDetailPanels';
 import { GridPinnedRows } from '../components/GridPinnedRows';
 import { GridNoResultsOverlay } from '../components/GridNoResultsOverlay';
 import materialSlots from '../material';
+import { GridBottomContainer } from '../components/virtualization/GridBottomContainer';
 
 // TODO: camelCase these key. It's a private helper now.
 // Remove then need to call `uncapitalizeObjectKeys`.
@@ -33,6 +35,7 @@ export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   columnMenu: GridColumnMenu,
   columnHeaders: GridColumnHeaders,
   detailPanels: GridDetailPanels,
+  bottomContainer: GridBottomContainer,
   footer: GridFooter,
   footerRowCount: GridRowCount,
   toolbar: null,
@@ -40,6 +43,7 @@ export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   loadingOverlay: GridLoadingOverlay,
   noResultsOverlay: GridNoResultsOverlay,
   noRowsOverlay: GridNoRowsOverlay,
+  noColumnsOverlay: GridNoColumnsOverlay,
   pagination: GridPagination,
   filterPanel: GridFilterPanel,
   columnsPanel: GridColumnsPanel,

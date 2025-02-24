@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import {
-  unstable_ownerDocument as ownerDocument,
-  unstable_useEventCallback as useEventcallback,
-} from '@mui/utils';
+import useEventCallback from '@mui/utils/useEventCallback';
+import ownerDocument from '@mui/utils/ownerDocument';
 import { gridClasses } from '../../../constants/gridClasses';
 import { GridEventListener, GridEventLookup } from '../../../models/events';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -87,7 +85,6 @@ export const useGridFocus = (
           },
         };
       });
-      apiRef.current.forceUpdate();
 
       // The row might have been deleted
       if (!apiRef.current.getRow(id)) {
@@ -129,8 +126,6 @@ export const useGridFocus = (
           },
         };
       });
-
-      apiRef.current.forceUpdate();
     },
     [apiRef, logger, publishCellFocusOut],
   );
@@ -159,8 +154,6 @@ export const useGridFocus = (
           },
         };
       });
-
-      apiRef.current.forceUpdate();
     },
     [apiRef, logger, publishCellFocusOut],
   );
@@ -195,8 +188,6 @@ export const useGridFocus = (
           },
         };
       });
-
-      apiRef.current.forceUpdate();
     },
     [apiRef],
   );
@@ -398,7 +389,6 @@ export const useGridFocus = (
             columnGroupHeader: null,
           },
         }));
-        apiRef.current.forceUpdate();
 
         // There's a focused cell but another element (not a cell) was clicked
         // Publishes an event to notify that the focus was lost
@@ -455,7 +445,7 @@ export const useGridFocus = (
     }
   }, [apiRef, props.pagination, props.paginationMode]);
 
-  const handlePaginationModelChange = useEventcallback(() => {
+  const handlePaginationModelChange = useEventCallback(() => {
     const currentFocusedCell = gridFocusCellSelector(apiRef);
     if (!currentFocusedCell) {
       return;

@@ -40,7 +40,6 @@ Server-side aggregation requires some additional steps to implement:
         paginationModel,
    +    aggregationModel,
       }) => {
-        const rows = await fetchRows();
    -    const response = await fetchData({ sortModel, filterModel, paginationModel });
    +    const response = await fetchData({ sortModel, filterModel, paginationModel, aggregationModel });
         return {

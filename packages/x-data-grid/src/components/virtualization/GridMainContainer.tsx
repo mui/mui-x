@@ -4,8 +4,8 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridConfiguration } from '../../hooks/utils/useGridConfiguration';
-import { GridDimensions } from '../../hooks/features/dimensions';
 import { GridLoadingOverlayVariant } from '../GridLoadingOverlay';
+import { GridOverlayType } from '../base/GridOverlays';
 
 const GridPanelAnchor = styled('div')({
   position: 'absolute',
@@ -15,7 +15,9 @@ const GridPanelAnchor = styled('div')({
 });
 
 type OwnerState = Pick<DataGridProcessedProps, 'classes'> & {
-  dimensions: GridDimensions;
+  hasScrollX: boolean;
+  hasPinnedRight: boolean;
+  overlayType: GridOverlayType;
   loadingOverlayVariant: GridLoadingOverlayVariant | null;
 };
 
@@ -23,11 +25,12 @@ const Element = styled('div', {
   name: 'MuiDataGrid',
   slot: 'Main',
   overridesResolver: (props, styles) => {
-    const { ownerState } = props;
+    const { ownerState, loadingOverlayVariant, overlayType } = props;
+    const hideContent = loadingOverlayVariant === 'skeleton' || overlayType === 'noColumnsOverlay';
     return [
       styles.main,
-      ownerState.dimensions.rightPinnedWidth > 0 && styles['main--hasPinnedRight'],
-      ownerState.loadingOverlayVariant === 'skeleton' && styles['main--hasSkeletonLoadingOverlay'],
+      ownerState.hasPinnedRight && styles['main--hasPinnedRight'],
+      hideContent && styles['main--hiddenContent'],
     ];
   },
 })<{ ownerState: OwnerState }>({

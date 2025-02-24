@@ -6,7 +6,7 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import { options } from '../utils/options';
 
 describe('BarChart', () => {
-  const dataLength = 250;
+  const dataLength = 150;
   const data = Array.from({ length: dataLength + 1 }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,

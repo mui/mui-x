@@ -1,4 +1,7 @@
-import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector';
+// use-sync-external-store has no exports field defined
+// See https://github.com/facebook/react/issues/30698
+// eslint-disable-next-line import/extensions
+import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector.js';
 import { TreeViewAnyPluginSignature, TreeViewState } from '../models';
 import { TreeViewStore } from '../utils/TreeViewStore';
 import { TreeViewSelector } from '../utils/selectors';

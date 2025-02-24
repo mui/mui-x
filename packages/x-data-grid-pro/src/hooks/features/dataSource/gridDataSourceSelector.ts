@@ -1,35 +1,10 @@
-import {
-  GridPaginationModel,
-  gridFilterModelSelector,
-  gridSortModelSelector,
-  gridPaginationModelSelector,
-  GridRowId,
-} from '@mui/x-data-grid';
-import { createSelector } from '@mui/x-data-grid/internals';
+import { createSelector, createRootSelector } from '@mui/x-data-grid/internals';
+import type { GridRowId } from '@mui/x-data-grid';
 import { GridStatePro } from '../../../models/gridStatePro';
 
-const computeStartEnd = (paginationModel: GridPaginationModel) => {
-  const start = paginationModel.page * paginationModel.pageSize;
-  const end = start + paginationModel.pageSize - 1;
-  return { start, end };
-};
-
-export const gridGetRowsParamsSelector = createSelector(
-  gridFilterModelSelector,
-  gridSortModelSelector,
-  gridPaginationModelSelector,
-  (filterModel, sortModel, paginationModel) => {
-    return {
-      groupKeys: [],
-      paginationModel,
-      sortModel,
-      filterModel,
-      ...computeStartEnd(paginationModel),
-    };
-  },
+export const gridDataSourceStateSelector = createRootSelector(
+  (state: GridStatePro) => state.dataSource,
 );
-
-export const gridDataSourceStateSelector = (state: GridStatePro) => state.dataSource;
 
 export const gridDataSourceLoadingSelector = createSelector(
   gridDataSourceStateSelector,

@@ -10,7 +10,7 @@ export default function ControlledSelectionGrid() {
   });
 
   const [rowSelectionModel, setRowSelectionModel] =
-    React.useState<GridRowSelectionModel>([]);
+    React.useState<GridRowSelectionModel>({ type: 'include', ids: new Set() });
 
   return (
     <div style={{ height: 400, width: '100%' }}>

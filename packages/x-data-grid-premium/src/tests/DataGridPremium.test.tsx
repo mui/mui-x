@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import { createRenderer, act, waitFor } from '@mui/internal-test-utils';
+import { createRenderer, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import {
   DataGridPremium as DataGrid,
@@ -104,6 +104,6 @@ describe('<DataGrid /> - Quick filter', () => {
       },
     });
 
-    await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['20th Century Fox (1)', '']));
+    expect(getColumnValues(0)).to.deep.equal(['20th Century Fox (1)', '']);
   });
 });

@@ -6,7 +6,7 @@ import { LineChart } from '@mui/x-charts/LineChart';
 import { options } from '../utils/options';
 
 describe('LineChart', () => {
-  const dataLength = 600;
+  const dataLength = 200;
   const data = Array.from({ length: dataLength }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,

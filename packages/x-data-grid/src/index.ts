@@ -23,7 +23,7 @@ export { GridColumnHeaders } from './components/GridColumnHeaders';
 export type { GridColumnHeadersProps } from './components/GridColumnHeaders';
 
 /**
- * Reexportable components.
+ * Reexportable exports.
  */
 export {
   GridColumnMenu,
@@ -36,6 +36,14 @@ export * as Export from './components/export/index.parts';
 export * as FilterPanel from './components/filterPanel/index.parts';
 export * as Toolbar from './components/toolbarV8/index.parts';
 export * as QuickFilter from './components/quickFilter/index.parts';
+
+export type {
+  GridGetRowsParams,
+  GridGetRowsResponse,
+  GridDataSource,
+} from './models/gridDataSource';
+
+export type { GridDataSourceApiBase, GridDataSourceApi } from './hooks/features/dataSource/models';
 
 /**
  * The full grid API.

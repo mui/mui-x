@@ -1,74 +1,7 @@
 {
   "props": {
-    "autoComplete": { "type": { "name": "string" } },
-    "autoFocus": { "type": { "name": "bool" }, "default": "false" },
     "className": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" } },
-    "color": {
-      "type": {
-        "name": "enum",
-        "description": "'error'<br>&#124;&nbsp;'info'<br>&#124;&nbsp;'primary'<br>&#124;&nbsp;'secondary'<br>&#124;&nbsp;'success'<br>&#124;&nbsp;'warning'"
-      },
-      "default": "'primary'"
-    },
-    "defaultValue": { "type": { "name": "any" } },
-    "disabled": { "type": { "name": "bool" }, "default": "false" },
-    "error": { "type": { "name": "bool" }, "default": "false" },
-    "focused": { "type": { "name": "bool" } },
-    "FormHelperTextProps": { "type": { "name": "object" } },
-    "fullWidth": { "type": { "name": "bool" }, "default": "false" },
-    "helperText": { "type": { "name": "node" } },
-    "hiddenLabel": { "type": { "name": "bool" }, "default": "false" },
-    "id": { "type": { "name": "string" } },
-    "InputLabelProps": { "type": { "name": "object" } },
-    "inputProps": { "type": { "name": "object" } },
-    "InputProps": { "type": { "name": "object" } },
-    "inputRef": {
-      "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current: any }" }
-    },
-    "label": { "type": { "name": "node" } },
-    "margin": {
-      "type": {
-        "name": "enum",
-        "description": "'dense'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'normal'"
-      },
-      "default": "'none'"
-    },
-    "maxRows": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" } },
-    "minRows": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" } },
-    "multiline": { "type": { "name": "bool" }, "default": "false" },
-    "name": { "type": { "name": "string" } },
-    "onChange": {
-      "type": { "name": "func" },
-      "signature": { "type": "function(event: object) => void", "describedArgs": ["event"] }
-    },
-    "placeholder": { "type": { "name": "string" } },
-    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } },
-    "required": { "type": { "name": "bool" }, "default": "false" },
-    "rows": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" } },
-    "select": { "type": { "name": "bool" }, "default": "false" },
-    "SelectProps": { "type": { "name": "object" } },
-    "size": { "type": { "name": "enum", "description": "'medium'<br>&#124;&nbsp;'small'" } },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      },
-      "additionalInfo": { "sx": true }
-    },
-    "type": {
-      "type": {
-        "name": "union",
-        "description": "'button'<br>&#124;&nbsp;'checkbox'<br>&#124;&nbsp;'color'<br>&#124;&nbsp;'date'<br>&#124;&nbsp;'datetime-local'<br>&#124;&nbsp;'email'<br>&#124;&nbsp;'file'<br>&#124;&nbsp;'hidden'<br>&#124;&nbsp;'image'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'number'<br>&#124;&nbsp;'password'<br>&#124;&nbsp;'radio'<br>&#124;&nbsp;'range'<br>&#124;&nbsp;'reset'<br>&#124;&nbsp;'search'<br>&#124;&nbsp;'submit'<br>&#124;&nbsp;'tel'<br>&#124;&nbsp;'text'<br>&#124;&nbsp;'time'<br>&#124;&nbsp;'url'<br>&#124;&nbsp;'week'<br>&#124;&nbsp;object"
-      }
-    },
-    "value": { "type": { "name": "any" } },
-    "variant": {
-      "type": {
-        "name": "enum",
-        "description": "'filled'<br>&#124;&nbsp;'outlined'<br>&#124;&nbsp;'standard'"
-      },
-      "default": "'outlined'"
-    }
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
   },
   "name": "QuickFilterControl",
   "imports": [
@@ -77,14 +10,7 @@
     "import { QuickFilterControl } from '@mui/x-data-grid-pro';",
     "import { QuickFilterControl } from '@mui/x-data-grid-premium';"
   ],
-  "classes": [
-    {
-      "key": "root",
-      "className": "MuiQuickFilterControl-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    }
-  ],
+  "classes": [],
   "muiName": "MuiQuickFilterControl",
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid/src/components/quickFilter/QuickFilterControl.tsx",

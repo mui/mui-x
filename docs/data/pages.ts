@@ -32,8 +32,8 @@ const pages: MuiPage[] = [
     title: 'Data Grid',
     children: [
       { pathname: '/x/react-data-grid', title: 'Overview' },
-      { pathname: '/x/react-data-grid/getting-started', title: 'Quickstart' },
-      { pathname: '/x/react-data-grid/demo', title: 'Feature showcase' },
+      { pathname: '/x/react-data-grid/quickstart' },
+      { pathname: '/x/react-data-grid/features' },
       {
         pathname: '/x/react-data-grid/main-features',
         subheader: 'Main features',
@@ -141,12 +141,10 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-data-grid/server-side-data-group',
             title: 'Server-side data',
-            plan: 'pro',
             children: [
               {
                 pathname: '/x/react-data-grid/server-side-data',
                 title: 'Overview',
-                plan: 'pro',
                 unstable: true,
               },
               {
@@ -285,9 +283,8 @@ const pages: MuiPage[] = [
     title: 'Date and Time Pickers',
     children: [
       { pathname: '/x/react-date-pickers', title: 'Overview' },
-      { pathname: '/x/react-date-pickers/getting-started' },
+      { pathname: '/x/react-date-pickers/quickstart', title: 'Quickstart' },
       { pathname: '/x/react-date-pickers/base-concepts' },
-      { pathname: '/x/react-date-pickers/faq', title: 'FAQs' },
       {
         pathname: '/x/react-date-pickers-components',
         subheader: 'Components',
@@ -442,7 +439,7 @@ const pages: MuiPage[] = [
     title: 'Charts',
     children: [
       { pathname: '/x/react-charts', title: 'Overview' },
-      { pathname: '/x/react-charts/getting-started' },
+      { pathname: '/x/react-charts/quickstart', title: 'Quickstart' },
       {
         pathname: '/x/react-chart-components',
         subheader: 'Components',
@@ -554,7 +551,7 @@ const pages: MuiPage[] = [
     title: 'Tree View',
     children: [
       { pathname: '/x/react-tree-view', title: 'Overview' },
-      { pathname: '/x/react-tree-view/getting-started' },
+      { pathname: '/x/react-tree-view/quickstart', title: 'Quickstart' },
       {
         pathname: '/x/react-tree-view/simple-tree-view',
         subheader: 'Simple Tree View',

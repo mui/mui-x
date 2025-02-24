@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid",
-  "version": "8.0.0-alpha.9",
+  "version": "8.0.0-alpha.12",
   "description": "The Community plan edition of the Data Grid components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -38,7 +38,7 @@
     "build:node": "node ../../scripts/build.mjs node",
     "build:stable": "node ../../scripts/build.mjs stable",
     "build:copy-files": "node ../../scripts/copyFiles.mjs",
-    "build:types": "node ../../scripts/buildTypes.mjs",
+    "build:types": "tsx ../../scripts/buildTypes.mts",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -47,18 +47,19 @@
     "directory": "packages/x-data-grid"
   },
   "dependencies": {
-    "@babel/runtime": "^7.26.7",
-    "@mui/utils": "^5.16.6 || ^6.0.0",
+    "@babel/runtime": "^7.26.9",
+    "@mui/utils": "^5.16.6 || ^6.0.0 || ^7.0.0-alpha",
     "@mui/x-internals": "workspace:*",
     "clsx": "^2.1.1",
     "prop-types": "^15.8.1",
-    "reselect": "^5.1.1"
+    "reselect": "^5.1.1",
+    "use-sync-external-store": "^1.4.0"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/material": "^5.15.14 || ^6.0.0",
-    "@mui/system": "^5.15.14 || ^6.0.0",
+    "@mui/material": "^5.15.14 || ^6.0.0 || ^7.0.0-alpha",
+    "@mui/system": "^5.15.14 || ^6.0.0 || ^7.0.0-alpha",
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
@@ -71,11 +72,12 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.26",
+    "@mui/internal-test-utils": "^2.0.2",
     "@mui/material": "^5.16.14",
     "@mui/system": "^5.16.14",
     "@mui/types": "^7.2.20",
     "@types/prop-types": "^15.7.14",
+    "@types/use-sync-external-store": "^0.0.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "rimraf": "^6.0.1"

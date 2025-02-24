@@ -46,9 +46,10 @@ export default function BorderRadius() {
         borderRadius={radius}
       />
       <HighlightedCode
-        code={[`<BarChart`, `  /* ... */`, `  borderRadius={${radius}}`, `/>`].join(
-          '\n',
-        )}
+        code={`<BarChart
+  // ...
+  borderRadius={${radius}}
+/>`}
         language="jsx"
         copyButtonHidden
       />
@@ -78,7 +79,7 @@ const chartSettingsH = {
   slotProps: {
     legend: {
       direction: 'horizontal',
-      position: { vertical: 'bottom', horizontal: 'middle' },
+      position: { vertical: 'bottom', horizontal: 'center' },
     },
   },
 };

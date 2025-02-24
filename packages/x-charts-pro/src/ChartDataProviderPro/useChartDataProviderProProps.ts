@@ -1,16 +1,22 @@
 'use client';
-import { ChartSeriesType, useChartDataProviderProps } from '@mui/x-charts/internals';
+import {
+  ChartAnyPluginSignature,
+  ChartSeriesType,
+  useChartDataProviderProps,
+} from '@mui/x-charts/internals';
 import type { ChartDataProviderProProps } from './ChartDataProviderPro';
+import type { AllPluginSignatures } from '../internals/plugins/allPlugins';
 
-export const useChartDataProviderProProps = <TSeries extends ChartSeriesType = ChartSeriesType>(
-  props: ChartDataProviderProProps<TSeries>,
+export const useChartDataProviderProProps = <
+  TSeries extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+>(
+  props: ChartDataProviderProProps<TSeries, TSignatures>,
 ) => {
-  const { animationProviderProps, chartProviderProps, highlightedProviderProps, children } =
-    useChartDataProviderProps(props);
+  const { animationProviderProps, chartProviderProps, children } = useChartDataProviderProps(props);
 
   return {
     children,
-    highlightedProviderProps,
     animationProviderProps,
     chartProviderProps,
   };

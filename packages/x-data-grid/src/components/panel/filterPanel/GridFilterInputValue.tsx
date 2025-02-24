@@ -1,23 +1,15 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { TextFieldProps } from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/utils';
 import { useTimeout } from '../../../hooks/utils/useTimeout';
+import { TextFieldProps } from '../../../models/gridBaseSlots';
 import { GridFilterItem } from '../../../models/gridFilterItem';
-import { GridFilterInputValueProps } from './GridFilterInputValueProps';
+import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
-export type GridTypeFilterInputValueProps = GridFilterInputValueProps &
-  TextFieldProps & {
-    type?: 'text' | 'number' | 'date' | 'datetime-local';
-    headerFilterMenu?: React.ReactNode;
-    clearButton?: React.ReactNode | null;
-    /**
-     * It is `true` if the filter either has a value or an operator with no value
-     * required is selected (for example `isEmpty`)
-     */
-    isFilterActive?: boolean;
-  };
+export type GridTypeFilterInputValueProps = GridFilterInputValueProps<TextFieldProps> & {
+  type?: 'text' | 'number' | 'date' | 'datetime-local';
+};
 
 type ItemPlusTag = GridFilterItem & { fromInput?: string };
 
@@ -31,12 +23,12 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
     tabIndex,
     disabled,
     isFilterActive,
+    slotProps,
     clearButton,
     headerFilterMenu,
-    InputProps,
-    variant = 'outlined',
     ...others
   } = props;
+  const textFieldProps = slotProps?.root;
 
   const filterTimeout = useTimeout();
   const [filterValueState, setFilterValueState] = React.useState<string | undefined>(
@@ -80,27 +72,25 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
         placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
         value={filterValueState ?? ''}
         onChange={onFilterChange}
-        variant={variant}
         type={type || 'text'}
         disabled={disabled}
-        InputProps={{
-          endAdornment: applying ? (
-            <rootProps.slots.baseInputAdornment position="end">
+        slotProps={{
+          ...textFieldProps?.slotProps,
+          input: {
+            endAdornment: applying ? (
               <rootProps.slots.loadIcon fontSize="small" color="action" />
-            </rootProps.slots.baseInputAdornment>
-          ) : null,
-          ...InputProps,
-          inputProps: {
-            tabIndex,
-            ...InputProps?.inputProps,
+            ) : null,
+            ...textFieldProps?.slotProps?.input,
           },
-        }}
-        InputLabelProps={{
-          shrink: true,
+          htmlInput: {
+            tabIndex,
+            ...textFieldProps?.slotProps?.htmlInput,
+          },
         }}
         inputRef={focusElementRef}
         {...rootProps.slotProps?.baseTextField}
         {...others}
+        {...textFieldProps}
       />
       {headerFilterMenu}
       {clearButton}
@@ -125,12 +115,28 @@ GridFilterInputValue.propTypes = {
     current: PropTypes.object.isRequired,
   }).isRequired,
   applyValue: PropTypes.func.isRequired,
+  className: PropTypes.string,
   clearButton: PropTypes.node,
+  disabled: PropTypes.bool,
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,
     PropTypes.object,
   ]),
   headerFilterMenu: PropTypes.node,
+  inputRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: (props, propName) => {
+        if (props[propName] == null) {
+          return null;
+        }
+        if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {
+          return new Error(`Expected prop '${propName}' to be of type Element`);
+        }
+        return null;
+      },
+    }),
+  ]),
   /**
    * It is `true` if the filter either has a value or an operator with no value
    * required is selected (for example `isEmpty`)
@@ -142,6 +148,11 @@ GridFilterInputValue.propTypes = {
     operator: PropTypes.string.isRequired,
     value: PropTypes.any,
   }).isRequired,
+  onBlur: PropTypes.func,
+  onFocus: PropTypes.func,
+  slotProps: PropTypes.object,
+  tabIndex: PropTypes.number,
+  type: PropTypes.oneOf(['date', 'datetime-local', 'number', 'text']),
 } as any;
 
 export { GridFilterInputValue };

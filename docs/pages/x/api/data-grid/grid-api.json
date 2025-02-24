@@ -40,7 +40,6 @@
       "type": { "description": "(params?: GridExportStateParams) =&gt; InitialState" },
       "required": true
     },
-    "forceUpdate": { "type": { "description": "() =&gt; void" }, "required": true },
     "getAllColumns": { "type": { "description": "() =&gt; GridStateColDef[]" }, "required": true },
     "getAllGroupDetails": {
       "type": { "description": "() =&gt; GridColumnGroupLookup" },
@@ -394,7 +393,7 @@
     },
     "setRows": { "type": { "description": "(rows: GridRowModel[]) =&gt; void" }, "required": true },
     "setRowSelectionModel": {
-      "type": { "description": "(rowIds: readonly GridRowId[]) =&gt; void" },
+      "type": { "description": "(rowIds: GridRowSelectionModel) =&gt; void" },
       "required": true
     },
     "setSortModel": {
@@ -466,11 +465,7 @@
       "required": true,
       "isProPlan": true
     },
-    "unstable_dataSource": {
-      "type": { "description": "GridDataSourceApiBase" },
-      "required": true,
-      "isProPlan": true
-    },
+    "unstable_dataSource": { "type": { "description": "GridDataSourceApiBase" }, "required": true },
     "unstable_replaceRows": {
       "type": { "description": "(firstRowToReplace: number, newRows: GridRowModel[]) =&gt; void" },
       "required": true
