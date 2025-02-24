@@ -92,7 +92,7 @@
     "recast": "^0.23.9",
     "rifm": "0.12.1",
     "rimraf": "^6.0.1",
-    "rxjs": "^7.8.1",
+    "rxjs": "^7.8.2",
     "styled-components": "^6.1.15",
     "stylis": "^4.3.6",
     "stylis-plugin-rtl": "^2.1.1",
