@@ -50,6 +50,7 @@ export default function QuickFilterOutsideOfGrid() {
           slots={{
             toolbar: MyCustomToolbar,
           }}
+          showToolbar
           initialState={{
             filter: {
               filterModel: {

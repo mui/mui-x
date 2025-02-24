@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import { styled } from '@mui/material/styles';
 
@@ -67,9 +67,9 @@ export default function NoResultsOverlayCustom() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
+        showToolbar
         slots={{
           noResultsOverlay: CustomNoResultsOverlay,
-          toolbar: GridToolbar,
         }}
         initialState={{
           ...data.initialState,
