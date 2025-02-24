@@ -13,6 +13,8 @@ import {
   GridEventListener,
   gridPaginatedVisibleSortedGridRowIdsSelector,
   gridExpandedSortedRowIdsSelector,
+  gridRowSelectionIdsSelector,
+  gridRowSelectionCountSelector,
 } from '@mui/x-data-grid';
 import {
   getRowIdFromRowModel,
@@ -253,11 +255,10 @@ function defaultPasteResolver({
     return true;
   });
 
-  const selectedRows = apiRef.current.getSelectedRows();
-
-  if (selectedRows.size > 0 && !isSingleValuePasted) {
+  if (gridRowSelectionCountSelector(apiRef) > 0 && !isSingleValuePasted) {
     // Multiple values are pasted starting from the first and top-most cell
     const pastedRowsDataCount = pastedData.length;
+    const selectedRows = gridRowSelectionIdsSelector(apiRef);
 
     // There's no guarantee that the selected rows are in the same order as the pasted rows
     selectedRows.forEach((row, rowId) => {

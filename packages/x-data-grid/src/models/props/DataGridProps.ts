@@ -25,7 +25,7 @@ import {
 } from '../params';
 import { GridCellParams } from '../params/gridCellParams';
 import { GridFilterModel } from '../gridFilterModel';
-import { GridInputRowSelectionModel, GridRowSelectionModel } from '../gridRowSelectionModel';
+import { GridRowSelectionModel } from '../gridRowSelectionModel';
 import { GridInitialStateCommunity } from '../gridStateCommunity';
 import { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
 import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
@@ -712,7 +712,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   /**
    * Sets the row selection model of the Data Grid.
    */
-  rowSelectionModel?: GridInputRowSelectionModel;
+  rowSelectionModel?: GridRowSelectionModel;
   /**
    * Callback fired when the selection state of one or multiple rows changes.
    * @param {GridRowSelectionModel} rowSelectionModel With all the row ids [[GridSelectionModel]].

@@ -358,7 +358,7 @@ npx @mui/x-codemod@next v8.0.0/pickers/preset-safe <path|folder>
 The list includes these transformers
 
 - [`rename-adapter-date-fns-imports`](#rename-adapter-date-fns-imports)
-- [`rename-and-move-field-value-type`](#rename-and-move-field-value-type)
+- [`rename-type-imports`](#rename-type-imports)
 
 #### `rename-adapter-date-fns-imports`
 
@@ -390,13 +390,25 @@ The list includes these transformers
 npx @mui/x-codemod@next v8.0.0/pickers/rename-adapter-date-fns-imports <path>
 ```
 
-#### `rename-and-move-field-value-type`
+#### `rename-type-imports`
 
-Renames `FieldValueType` to `PickerValueType`.
+Renames:
+
+- `usePickersTranslations` to `usePickerTranslations`
+- `usePickersContext` to `usePickerContext`
+- `FieldValueType` to `PickerValueType`
+- `RangeFieldSection` to `FieldRangeSection`
+- `PickerShortcutChangeImportance` to `PickerChangeImportance`
 
 ```diff
+-import { usePickersTranslations, usePickersContext } from '@mui/x-date-pickers/hooks';
++import { usePickerTranslations, usePickerContext } from '@mui/x-date-pickers/hooks';
 -import { FieldValueType } from '@mui/x-date-pickers';
 +import { PickerValueType } from '@mui/x-date-pickers';
+-import { RangeFieldSection } from '@mui/x-date-pickers-pro/models';
++import { FieldRangeSection } from '@mui/x-date-pickers-pro/models';
+-import { PickerShortcutChangeImportance } from '@mui/x-date-pickers/PickersShortcuts';
++import { PickerChangeImportance } from '@mui/x-date-pickers/models';
 
  interface MyComponentProps {
 -  valueType: FieldValueType;
@@ -409,7 +421,7 @@ Renames `FieldValueType` to `PickerValueType`.
 <!-- #default-branch-switch -->
 
 ```bash
-npx @mui/x-codemod@next v8.0.0/pickers/rename-and-move-field-value-type <path>
+npx @mui/x-codemod@next v8.0.0/pickers/rename-type-imports <path>
 ```
 
 ## v7.0.0

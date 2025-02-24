@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import {
-  unstable_useEventCallback as useEventCallback,
-  unstable_useEnhancedEffect as useEnhancedEffect,
-} from '@mui/utils';
+import useEventCallback from '@mui/utils/useEventCallback';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { warnOnce } from '@mui/x-internals/warning';
 import {
   useGridApiEventHandler,
