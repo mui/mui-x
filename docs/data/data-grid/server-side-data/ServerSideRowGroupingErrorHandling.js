@@ -82,8 +82,8 @@ export default function ServerSideRowGroupingErrorHandling() {
       <div style={{ height: 400, position: 'relative' }}>
         <DataGridPremium
           columns={columns}
-          unstable_dataSource={dataSource}
-          unstable_onDataSourceError={(error) => {
+          dataSource={dataSource}
+          onDataSourceError={(error) => {
             if (error instanceof GridGetRowsError) {
               if (!error.params.groupKeys || error.params.groupKeys.length === 0) {
                 setRootError(error.message);

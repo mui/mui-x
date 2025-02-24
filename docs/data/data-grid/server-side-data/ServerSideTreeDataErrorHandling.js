@@ -88,8 +88,8 @@ export default function ServerSideTreeDataErrorHandling() {
         <DataGridPro
           {...props}
           treeData
-          unstable_dataSource={dataSource}
-          unstable_onDataSourceError={(error) => {
+          dataSource={dataSource}
+          onDataSourceError={(error) => {
             if (error instanceof GridGetRowsError) {
               if (!error.params.groupKeys || error.params.groupKeys.length === 0) {
                 setRootError(error.message);
