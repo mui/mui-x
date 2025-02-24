@@ -48,6 +48,7 @@ export default function UseGridSelector() {
         slots={{
           toolbar: Toolbar,
         }}
+        showToolbar
       />
     </div>
   );

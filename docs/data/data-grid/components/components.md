@@ -57,7 +57,7 @@ These components will be deprecated in v8 and replaced by the new [Toolbar compo
 
 :::
 
-To enable the toolbar you need to add the `toolbar: GridToolbar` to the Data Grid `slots` prop.
+To enable the toolbar you need to add the `showToolbar` prop to the Data Grid.
 This demo showcases how this can be achieved.
 
 {{"demo": "ToolbarGrid.js", "bg": "inline"}}
@@ -180,6 +180,7 @@ declare module '@mui/x-data-grid' {
       someCustomNumber: 42,
     },
   }}
+  showToolbar
 />;
 ```
 
@@ -204,6 +205,7 @@ declare module '@mui/x-data-grid-pro' {
       someCustomNumber: 42,
     },
   }}
+  showToolbar
 />;
 ```
 
@@ -228,6 +230,7 @@ declare module '@mui/x-data-grid-premium' {
       someCustomNumber: 42,
     },
   }}
+  showToolbar
 />;
 ```
 
