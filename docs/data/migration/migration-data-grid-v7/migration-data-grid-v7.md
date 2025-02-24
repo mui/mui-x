@@ -156,12 +156,15 @@ You have to import it from `@mui/x-license` instead:
   ```diff
    <DataGrid
   -  unstable_onDataSourceError={(error: Error, params: GridGetRowsParams) => {
-  -    if (params.something) {
+  -    if (params.filterModel) {
+  -      // do something
+  -    }
+  -  }}
   +  unstable_onDataSourceError={(error: GridGetRowsError | GridUpdateRowError) => {
-  +    if (error instanceof GridGetRowsError && error.params.something) {
-          // do something
-       }
-     }}
+  +    if (error instanceof GridGetRowsError && error.params.filterModel) {
+  +      // do something
+  +    }
+  +  }}
    />
   ```
 
