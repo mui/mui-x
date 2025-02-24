@@ -134,13 +134,21 @@ export type DataType =
   | InputDataType
   | PlacementDataType;
 
+type OptionsOrString<Data extends Record<string, DataType>> = {
+  [K in keyof Data]: Data[K] extends { options: readonly string[] }
+    ? Data[K]['options'] extends readonly (infer T)[]
+      ? T
+      : string
+    : string;
+};
+
 export type PropsFromData<Data extends Record<string, DataType>> = {
   [K in keyof Data]: Data[K]['knob'] extends 'number' | 'slider'
     ? number
     : Data[K]['knob'] extends 'select' | 'color'
-      ? string
+      ? OptionsOrString<Data>[K]
       : Data[K]['knob'] extends 'radio'
-        ? string
+        ? OptionsOrString<Data>[K]
         : Data[K]['knob'] extends 'switch'
           ? boolean
           : Data[K]['knob'] extends 'input'
