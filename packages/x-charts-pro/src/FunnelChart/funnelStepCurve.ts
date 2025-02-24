@@ -16,7 +16,7 @@ class FunnelStep implements CurveGenerator {
 
   private y: number = NaN;
 
-  private current_point: number = 0;
+  private currentPoint: number = 0;
 
   private isHorizontal: boolean = false;
 
@@ -36,14 +36,14 @@ class FunnelStep implements CurveGenerator {
   lineStart(): void {
     this.x = NaN;
     this.y = NaN;
-    this.current_point = 0;
+    this.currentPoint = 0;
   }
 
   lineEnd(): void {
-    if (this.current_point === 2) {
+    if (this.currentPoint === 2) {
       this.context.lineTo(this.x, this.y);
     }
-    if (this.line || (this.line !== 0 && this.current_point === 1)) {
+    if (this.line || (this.line !== 0 && this.currentPoint === 1)) {
       this.context.closePath();
     }
     if (this.line >= 0) {
@@ -55,12 +55,12 @@ class FunnelStep implements CurveGenerator {
     x = +x;
     y = +y;
 
-    if (this.current_point === 0) {
+    if (this.currentPoint === 0) {
       this.context.moveTo(x, y);
-    } else if (this.isHorizontal && (this.current_point === 2 || this.current_point === 1)) {
+    } else if (this.isHorizontal && (this.currentPoint === 2 || this.currentPoint === 1)) {
       this.context.lineTo(x, this.y);
       this.context.lineTo(x, y);
-    } else if (this.current_point === 3 && !this.isHorizontal) {
+    } else if (this.currentPoint === 3 && !this.isHorizontal) {
       this.context.lineTo(x, this.y);
       this.context.lineTo(x, y);
     } else {
@@ -68,7 +68,7 @@ class FunnelStep implements CurveGenerator {
       this.context.lineTo(x, y);
     }
 
-    this.current_point += 1;
+    this.currentPoint += 1;
     this.x = x;
     this.y = y;
   }
