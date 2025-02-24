@@ -116,7 +116,7 @@ export default function transformCSS({ types: t }: BabelT) {
     return t.objectExpression(
       Object.keys(classes).map((className) => {
         const identifier = className;
-        const cssClassName = generateClassName(prefix, className);
+        const cssClassName = CSS.generateClassName(prefix, className);
         const cssStyles = classes[className];
 
         const generatedCSS = CSS.stylesToString(`.${cssClassName}`, cssStyles as any)
@@ -133,13 +133,6 @@ export default function transformCSS({ types: t }: BabelT) {
 
 function findSelf(plugins) {
   return plugins.find((p) => p.key === PLUGIN_NAME);
-}
-
-function generateClassName(prefix: string, className: string) {
-  if (className === 'root') {
-    return prefix;
-  }
-  return `${prefix}--${className}`;
 }
 
 function formatLocation(file: Babel.BabelFile, node: Babel.Node) {
