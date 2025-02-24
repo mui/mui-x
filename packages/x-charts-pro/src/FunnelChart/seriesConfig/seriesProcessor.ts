@@ -1,6 +1,4 @@
-import { DatasetType, SeriesProcessor, ChartSeriesDefaultized } from '@mui/x-charts/internals';
-
-type FunnelDataset = DatasetType<number>;
+import { SeriesProcessor, ChartSeriesDefaultized } from '@mui/x-charts/internals';
 
 const createPoint = ({
   main,
@@ -19,30 +17,8 @@ const createPoint = ({
     ? { x: other, y: main, useBandWidth, stackOffset }
     : { x: main, y: other, useBandWidth, stackOffset };
 
-const seriesProcessor: SeriesProcessor<'funnel'> = (params, dataset) => {
+const seriesProcessor: SeriesProcessor<'funnel'> = (params) => {
   const { seriesOrder, series } = params;
-
-  // Create a data set with format adapted to d3
-  const d3Dataset: FunnelDataset = (dataset as FunnelDataset) ?? [];
-  seriesOrder.forEach((id) => {
-    const data = series[id].data;
-    if (data !== undefined) {
-      data.forEach((item, index) => {
-        if (d3Dataset.length <= index) {
-          d3Dataset.push({ [id]: item.value });
-        } else {
-          d3Dataset[index][id] = item.value;
-        }
-      });
-    } else if (dataset === undefined) {
-      throw new Error(
-        [
-          `MUI X: funnel series with id='${id}' has no data.`,
-          'Either provide a data property to the series or use the dataset prop.',
-        ].join('\n'),
-      );
-    }
-  });
 
   const completedSeries: Record<string, ChartSeriesDefaultized<'funnel'>> = {};
 
