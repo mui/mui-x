@@ -274,16 +274,31 @@ To disable the data source cache, pass `null` to the `unstable_dataSourceCache` 
 ## Error handling
 
 You could handle the errors with the data source by providing an error handler function using the `unstable_onDataSourceError`.
-It will be called whenever there's an error in fetching the data.
+It will be called whenever there's an error in fetching or updating the data.
 
-The first argument of this function is the error object, and the second argument is the fetch parameters of type `GridGetRowsParams`.
+Currently, the function recieves an error object of type `GridGetRowsError`.
+
+The typing of the parameter also supports `GridUpdateRowError` which will be available with the [Server-side data—Updating data](#updating-data) feature.
+Here's the error types and their corresponding `error.params` type:
+
+| Error type           | Type of `error.params` |
+| :------------------- | :--------------------- |
+| `GridGetRowsError`   | `GridGetRowsParams`    |
+| `GridUpdateRowError` | `GridUpdateRowParams`  |
 
 ```tsx
-<DataGridPro
+<DataGrid
   columns={columns}
   unstable_dataSource={customDataSource}
-  unstable_onDataSourceError={(error, params) => {
-    console.error(error);
+  unstable_onDataSourceError={(error) => {
+    if (error instanceof GridGetRowsError) {
+      // `error.params` is of type `GridGetRowsParams`
+      // fetch related logic, e.g set an overlay state
+    }
+    if (error instanceof GridUpdateRowError) {
+      // `error.params` is of type `GridUpdateRowParams`
+      // update related logic, e.g set a snackbar state
+    }
   }}
 />
 ```

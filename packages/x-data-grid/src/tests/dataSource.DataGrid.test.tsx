@@ -160,8 +160,8 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
 
     setProps({
       paginationModel: { page: 1, pageSize: 10 },
-      sortModel: [{ field: 'name', sort: 'asc' }],
-      filterModel: { items: [{ field: 'name', value: 'John', operator: 'contains' }] },
+      sortModel: [{ field: 'id', sort: 'asc' }],
+      filterModel: { items: [{ field: 'id', value: 'abc', operator: 'doesNotContain' }] },
     });
 
     await waitFor(() => {
