@@ -653,6 +653,7 @@
     "showColumnVerticalBorder": {
       "description": "If <code>true</code>, vertical borders will be displayed between column header items."
     },
+    "showToolbar": { "description": "If <code>true</code>, the toolbar is displayed." },
     "slotProps": {
       "description": "Overridable components props dynamically passed to the component at rendering."
     },

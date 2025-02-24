@@ -1058,6 +1058,11 @@ DataGridPremiumRaw.propTypes = {
    */
   showColumnVerticalBorder: PropTypes.bool,
   /**
+   * If `true`, the toolbar is displayed.
+   * @default false
+   */
+  showToolbar: PropTypes.bool,
+  /**
    * Overridable components props dynamically passed to the component at rendering.
    */
   slotProps: PropTypes.object,

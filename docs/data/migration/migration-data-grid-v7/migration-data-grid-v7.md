@@ -160,6 +160,18 @@ You have to import it from `@mui/x-license` instead:
   - Throw an error if `apiRef` is `null`
 
 - `createUseGridApiEventHandler()` is not exported anymore.
+- The `showToolbar` prop is now required to display the toolbar.
+
+  It is no longer necessary to pass `GridToolbar` as a slot to display the default toolbar.
+
+  ```diff
+   <DataGrid
+  +  showToolbar
+  -  slots={{
+  -    toolbar: GridToolbar,
+  -  }}
+   />
+  ```
 
 ### Behavioral changes
 

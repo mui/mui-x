@@ -317,6 +317,11 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    */
   showColumnVerticalBorder: boolean;
   /**
+   * If `true`, the toolbar is displayed.
+   * @default false
+   */
+  showToolbar: boolean;
+  /**
    * The order of the sorting sequence.
    * @default ['asc', 'desc', null]
    */

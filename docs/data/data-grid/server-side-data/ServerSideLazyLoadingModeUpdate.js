@@ -68,6 +68,7 @@ function ServerSideLazyLoadingModeUpdate() {
         paginationModel={{ page: 0, pageSize: 10 }}
         rowCount={rowCount}
         slots={{ toolbar: GridCustomToolbar }}
+        showToolbar
         slotProps={{
           toolbar: {
             count: rowCount,

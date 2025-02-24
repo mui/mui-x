@@ -95,7 +95,12 @@ export default function CustomExport() {
 
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <DataGrid {...data} loading={loading} slots={{ toolbar: CustomToolbar }} />
+      <DataGrid
+        {...data}
+        loading={loading}
+        slots={{ toolbar: CustomToolbar }}
+        showToolbar
+      />
     </div>
   );
 }

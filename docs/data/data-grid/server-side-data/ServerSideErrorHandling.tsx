@@ -3,7 +3,6 @@ import {
   DataGrid,
   useGridApiRef,
   GridInitialState,
-  GridToolbar,
   GridDataSource,
 } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
@@ -116,7 +115,7 @@ export default function ServerSideErrorHandling() {
           pagination
           pageSizeOptions={pageSizeOptions}
           initialState={initialState}
-          slots={{ toolbar: GridToolbar }}
+          showToolbar
         />
         {error && <ErrorOverlay error={error} />}
       </div>
