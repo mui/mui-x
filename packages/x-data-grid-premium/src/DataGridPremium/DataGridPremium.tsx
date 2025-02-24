@@ -1125,7 +1125,7 @@ DataGridPremiumRaw.propTypes = {
   unstable_listView: PropTypes.bool,
   /**
    * Callback fired when a data source request fails.
-   * @param {GridDataSourceError} error The data source error object.
+   * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
    */
   unstable_onDataSourceError: PropTypes.func,
   /**

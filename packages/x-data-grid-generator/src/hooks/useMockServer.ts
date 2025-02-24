@@ -369,7 +369,10 @@ export const useMockServer = <T extends GridGetRowsResponse>(
         const delay = randomInt(minDelay, maxDelay);
 
         if (shouldRequestsFailRef.current) {
-          setTimeout(() => reject(new Error(`Could not update the row with the id ${rowId}`)), delay);
+          setTimeout(
+            () => reject(new Error(`Could not update the row with the id ${rowId}`)),
+            delay,
+          );
           return;
         }
 
