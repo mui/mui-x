@@ -134,29 +134,25 @@ export type DataType =
   | InputDataType
   | PlacementDataType;
 
-type OptionsOrString<Data extends Record<string, DataType>> = {
-  [K in keyof Data]: Data[K] extends { options: readonly string[] }
-    ? Data[K]['options'] extends readonly (infer T)[]
+export type PropsFromData<Data extends Record<string, DataType>> = {
+  [K in keyof Data]: Data[K] extends { options: readonly (infer T)[] }
+    ? Data[K] extends { defaultValue: any }
       ? T
-      : string
-    : string;
+      : T | undefined
+    : Data[K] extends { defaultValue: any }
+      ? FromKnob<Data[K]>
+      : FromKnob<Data[K]> | undefined;
 };
 
-export type PropsFromData<Data extends Record<string, DataType>> = {
-  [K in keyof Data]: Data[K]['knob'] extends 'number' | 'slider'
-    ? number
-    : Data[K]['knob'] extends 'select' | 'color'
-      ? OptionsOrString<Data>[K]
-      : Data[K]['knob'] extends 'radio'
-        ? OptionsOrString<Data>[K]
-        : Data[K]['knob'] extends 'switch'
-          ? boolean
-          : Data[K]['knob'] extends 'input'
-            ? string
-            : Data[K]['knob'] extends 'placement'
-              ? Placement
-              : never;
-};
+export type FromKnob<DT extends DataType> = DT['knob'] extends 'number' | 'slider'
+  ? number
+  : DT['knob'] extends 'switch'
+    ? boolean
+    : DT['knob'] extends 'input'
+      ? string
+      : DT['knob'] extends 'placement'
+        ? Placement
+        : never;
 
 interface ChartDemoPropsFormProps<
   Data extends Record<string, DataType>,
@@ -380,7 +376,7 @@ export default function ChartDemoPropsForm<
                 <FormLabel>{title}</FormLabel>
                 <Select
                   placeholder="Select a variant..."
-                  value={(resolvedValue || 'none') as string}
+                  value={resolvedValue || 'none'}
                   onChange={(event) =>
                     onPropsChange((latestProps) => ({
                       ...latestProps,
@@ -494,7 +490,7 @@ export default function ChartDemoPropsForm<
                         color: 'text.secondary',
                       }}
                     >
-                      {resolvedValue}
+                      {`${resolvedValue}`}
                     </Box>
                     {/* void */}
                     <div />
