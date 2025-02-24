@@ -21,7 +21,6 @@ import RadioGroup from '@mui/material/RadioGroup';
 import Select from '@mui/material/Select';
 import Paper from '@mui/material/Paper';
 import Switch from '@mui/material/Switch';
-import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 const shallowEqual = (item1: { [k: string]: any }, item2: { [k: string]: any }) => {
@@ -136,22 +135,13 @@ type PlacementDataType = {
   defaultValue?: Placement;
 } & DefaultTypes;
 
-type MarginDataType = {
-  knob: 'margin';
-  /**
-   * The default value to be used by the components.
-   */
-  defaultValue: Margin;
-} & DefaultTypes;
-
 export type DataType =
   | NumberDataType
   | SelectDataType
   | RadioDataType
   | SwitchDataType
   | InputDataType
-  | PlacementDataType
-  | MarginDataType;
+  | PlacementDataType;
 
 export type PropsFromData<Data extends Record<string, DataType>> = {
   [K in keyof Data]: Data[K] extends { options: readonly (infer T)[] }
@@ -468,58 +458,6 @@ export default function ChartDemoPropsForm<
                     },
                   }}
                 />
-              </FormControl>
-            );
-          }
-          if (knob === 'margin') {
-            const value = props[propName] as Margin;
-            return (
-              <FormControl key={propName}>
-                <FormLabel>{propName}</FormLabel>
-                <Box
-                  sx={{
-                    display: 'grid',
-                    gap: 1,
-                    alignItems: 'center',
-                    gridTemplateAreas: `
-                      '. top .'
-                      'left . right'
-                      '. bottom .'
-                    `,
-
-                    [`& .${inputClasses.root}`]: {
-                      bgcolor: 'background.body',
-                    },
-                  }}
-                >
-                  {(['top', 'right', 'bottom', 'left'] as const).map((direction) => (
-                    <Stack key={direction} sx={{ gridArea: direction }}>
-                      <FormLabel>{direction}</FormLabel>
-                      <Input
-                        size="small"
-                        type="number"
-                        aria-label={direction}
-                        value={value[direction] ?? 0}
-                        sx={{
-                          textTransform: 'capitalize',
-                          width: 50,
-                        }}
-                        onChange={(event) => {
-                          if (Number.isNaN(Number.parseFloat(event.target.value))) {
-                            return;
-                          }
-                          onPropsChange((latestProps) => ({
-                            ...latestProps,
-                            [propName]: {
-                              ...(latestProps[propName] as Margin),
-                              [direction]: Number.parseFloat(event.target.value),
-                            },
-                          }));
-                        }}
-                      />
-                    </Stack>
-                  ))}
-                </Box>
               </FormControl>
             );
           }
