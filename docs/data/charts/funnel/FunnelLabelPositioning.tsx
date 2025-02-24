@@ -4,57 +4,50 @@ import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import Stack from '@mui/material/Stack';
 
-export default function FunnelLabelPositioningNoSnap() {
+export default function FunnelLabelPositioning() {
   return (
     <ChartsUsageDemo
       componentName="Funnel label positioning"
-      data={[
+      data={
         {
-          propName: 'horizontal',
-          knob: 'select',
-          defaultValue: 'start',
-          options: ['start', 'center', 'end'],
-        },
-        {
-          propName: 'vertical',
-          knob: 'select',
-          defaultValue: 'top',
-          options: ['top', 'middle', 'bottom'],
-        },
-        {
-          propName: 'textAnchor',
-          knob: 'select',
-          defaultValue: 'end',
-          options: ['start', 'middle', 'end'],
-        },
-        {
-          propName: 'dominantBaseline',
-          knob: 'select',
-          defaultValue: 'middle',
-          options: [
-            'auto',
-            'baseline',
-            'hanging',
-            'middle',
-            'central',
-            'text-after-edge',
-            'text-before-edge',
-          ],
-        },
-        {
-          propName: 'margin',
-          knob: 'margin',
-          defaultValue: { top: 15, right: 0, bottom: 0, left: -10 },
-        },
-        {
-          propName: 'hide',
-          knob: 'switch',
-        },
-      ]}
-      renderDemo={(
-        /** @type {Omit<import('@mui/x-charts-pro/FunnelChart/funnel.types').FunnelLabelOptions, 'position'> & {horizontal: import('@mui/x-charts/models').Position['horizontal'], vertical: import('@mui/x-charts/models').Position['vertical'], hide: boolean}} */
-        props,
-      ) => (
+          horizontal: {
+            knob: 'select',
+            defaultValue: 'start',
+            options: ['start', 'center', 'end'],
+          },
+          vertical: {
+            knob: 'select',
+            defaultValue: 'top',
+            options: ['top', 'middle', 'bottom'],
+          },
+          textAnchor: {
+            knob: 'select',
+            defaultValue: 'end',
+            options: ['start', 'middle', 'end'],
+          },
+          dominantBaseline: {
+            knob: 'select',
+            defaultValue: 'middle',
+            options: [
+              'auto',
+              'baseline',
+              'hanging',
+              'middle',
+              'central',
+              'text-after-edge',
+              'text-before-edge',
+            ],
+          },
+          margin: {
+            knob: 'margin',
+            defaultValue: { top: 15, right: 0, bottom: 0, left: -10 },
+          },
+          hide: {
+            knob: 'switch',
+          },
+        } as const
+      }
+      renderDemo={(props) => (
         <Stack sx={{ width: '100%' }}>
           <FunnelChart
             series={[
@@ -85,10 +78,7 @@ export default function FunnelLabelPositioningNoSnap() {
           />
         </Stack>
       )}
-      getCode={(
-        /** @type {{props: Omit<import('@mui/x-charts-pro/FunnelChart/funnel.types').FunnelLabelOptions, 'position' | 'margin'> & {margin: any ,horizontal: import('@mui/x-charts/models').Position['horizontal'], vertical: import('@mui/x-charts/models').Position['vertical'], hide: boolean}}} */
-        { props },
-      ) => {
+      getCode={({ props }) => {
         if (props.hide) {
           return `import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 

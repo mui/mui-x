@@ -171,7 +171,9 @@ export type FromKnob<DT extends DataType> = DT['knob'] extends 'number' | 'slide
       ? string
       : DT['knob'] extends 'placement'
         ? Placement
-        : never;
+        : DT['knob'] extends 'margin'
+          ? Margin
+          : never;
 
 interface ChartDemoPropsFormProps<
   Data extends Record<string, DataType>,
