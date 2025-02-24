@@ -49,7 +49,7 @@ export default function ZoomOptions() {
     <ChartsUsageDemo
       componentName="Zoom Options demo"
       data={knobs}
-      renderDemo={(props: any) => (
+      renderDemo={(props) => (
         <div style={{ width: '100%', margin: 4 }}>
           <BarChartPro
             height={300}
@@ -64,7 +64,7 @@ export default function ZoomOptions() {
           />
         </div>
       )}
-      getCode={({ props }: any) => {
+      getCode={({ props }) => {
         return `import { BarChart } from '@mui/x-charts/BarChart';
 
 <BarChart
