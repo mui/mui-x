@@ -5,24 +5,22 @@ import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import Stack from '@mui/material/Stack';
 import { populationByEducationLevelPercentageSeries } from './populationByEducationLevel';
 
-const curveTypes = ['bumpY', 'bumpX', 'linear', 'step'];
+const curveTypes = ['bumpY', 'bumpX', 'linear', 'step'] as const;
 
-export default function FunnelCurvesNoSnap() {
+export default function FunnelCurves() {
   return (
     <ChartsUsageDemo
       componentName="Funnel curve"
-      data={[
+      data={
         {
-          propName: `curveType`,
-          knob: 'radio',
-          options: curveTypes,
-          defaultValue: curveTypes[0],
-        },
-      ]}
-      renderDemo={(
-        /** @type {{ curveType: import('@mui/x-charts-pro/FunnelChart/funnel.types').FunnelCurveType }} */
-        props,
-      ) => (
+          curveType: {
+            knob: 'radio',
+            options: curveTypes,
+            defaultValue: curveTypes[0],
+          },
+        } as const
+      }
+      renderDemo={(props) => (
         <Stack sx={{ width: '100%' }}>
           <FunnelChart
             series={[
@@ -48,10 +46,7 @@ export default function FunnelCurvesNoSnap() {
           />
         </Stack>
       )}
-      getCode={(
-        /** @type {{props:{ curveType: import('@mui/x-charts-pro/FunnelChart/funnel.types').FunnelCurveType }}} */
-        { props },
-      ) => {
+      getCode={({ props }) => {
         return `import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 
 <FunnelChart

@@ -1,6 +1,12 @@
 <FunnelChart
-  // Use palette
-  colors={palette}
-  series={[populationByEducationLevelPercentageSeries]}
-  {...funnelParams}
+  colors={['lightcoral', 'red']} // Use custom colors
+  series={[
+    {
+      data: [
+        { value: 20 }, // Get color from the palette
+        { value: 10, color: 'slateblue' }, // Override palette color (red)
+      ],
+    },
+  ]}
+  height={300}
 />
