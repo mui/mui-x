@@ -73,20 +73,30 @@ const useAggregatedData = () => {
 
       const curve = getFunnelCurve(currentSeries.curve, isHorizontal);
 
-      const xPosition = (v: number, bandIndex: number, stackOffset?: number, useBand?: boolean) => {
+      const xPosition = (
+        value: number,
+        bandIndex: number,
+        stackOffset?: number,
+        useBand?: boolean,
+      ) => {
         if (isXAxisBand) {
-          const value = xScale(bandIndex);
-          return useBand ? value! + bandWidth : value!;
+          const position = xScale(bandIndex)!;
+          return useBand ? position + bandWidth : position;
         }
-        return xScale(isHorizontal ? v + (stackOffset || 0) : v)!;
+        return xScale(isHorizontal ? value + (stackOffset || 0) : value)!;
       };
 
-      const yPosition = (v: number, bandIndex: number, stackOffset?: number, useBand?: boolean) => {
+      const yPosition = (
+        value: number,
+        bandIndex: number,
+        stackOffset?: number,
+        useBand?: boolean,
+      ) => {
         if (isYAxisBand) {
-          const value = yScale(bandIndex);
-          return useBand ? value! + bandWidth : value!;
+          const position = yScale(bandIndex);
+          return useBand ? position! + bandWidth : position!;
         }
-        return yScale(isHorizontal ? v : v + (stackOffset || 0))!;
+        return yScale(isHorizontal ? value : value + (stackOffset || 0))!;
       };
 
       return currentSeries.dataPoints.map((values, dataIndex) => {
