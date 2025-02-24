@@ -212,6 +212,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
       style: {
         ...theme.typography.caption,
         fontSize: 12,
+        lineHeight: 1.25,
         textAnchor: 'middle',
         dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
         ...tickLabelStyle,
@@ -246,7 +247,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
 
   /* If there's an axis title, the tick labels have less space to render  */
   const tickLabelsMaxHeight = (label ? labelRefPoint.y : axisHeight) - tickSize;
-  console.log({ tickLabelsMaxHeight });
+  console.log({ tickLabelsMaxHeight, label, axisHeight });
 
   const shortenedLabels = shortenLabels(visibleLabels, width, tickLabelsMaxHeight, {
     tickLabelStyle: axisTickLabelProps.style,
