@@ -90,7 +90,6 @@ This prop will be ignored on the mobile picker.
 ### Use a multi input field
 
 You can pass the `MultiInputDateRangeField` component to the Date Range Picker to use it for keyboard editing.
-In such case the Picker component can pass the `name` prop to the input.
 
 {{"demo": "MultiInputDateRangePicker.js"}}
 

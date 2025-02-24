@@ -73,18 +73,14 @@ The component can be disabled or read-only.
 
 ## Customization
 
-### Use a single input field
+### Use a multi input field
 
-:::warning
-NOT READY
-:::
+You can pass the `MultiInputTimeRangeField` component to the Time Range Picker to use it for keyboard editing:
 
-You can pass the `SingleInputTimeRangeField` component to the Time Range Picker to use it for keyboard editing:
-
-{{"demo": "SingleInputTimeRangePicker.js"}}
+{{"demo": "MultiInputTimeRangePicker.js"}}
 
 :::info
-For more information, check out the [Custom field](/x/react-date-pickers/custom-field/#use-single-input-fields-on-range-pickers) page.
+For more information, check out the [Custom field](/x/react-date-pickers/custom-field/#usage-inside-a-range-picker) page.
 :::
 
 ### Change end time label
