@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 8.0.0-beta.0
 
-_Feb 21, 2025_
+_Feb 24, 2025_
 
 We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
 
@@ -87,6 +87,18 @@ Following are all team members who have contributed to this release:
 - The `selectedIdsLookupSelector` selector has been removed. Use the `gridRowSelectionManagerSelector` or `gridRowSelectionStateSelector` selectors instead.
 - The `selectedGridRowsSelector` has been renamed to `gridRowSelectionIdsSelector`.
 - The `selectedGridRowsCountSelector` has been renamed to `gridRowSelectionCountSelector`.
+- The `showToolbar` prop is now required to display the toolbar.
+
+  It is no longer necessary to pass `GridToolbar` as a slot to display the default toolbar.
+
+  ```diff
+   <DataGrid
+  +  showToolbar
+  -  slots={{
+  -    toolbar: GridToolbar,
+  -  }}
+   />
+  ```
 
 #### `@mui/x-data-grid@8.0.0-beta.0`
 
@@ -101,6 +113,7 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Refactor: remove base input label & adornment (#16646) @romgrk
 - [DataGrid] Refactor: remove material containers (#16633) @romgrk
 - [DataGrid] Refactor: theme to CSS variables (#16588) @romgrk
+- [DataGrid] Add `showToolbar` prop to enable default toolbar (#16687) @KenanYusuf
 - [l10n] Added Bangla (bn-BD) locale (#16648) @officialkidmax
 
 #### `@mui/x-data-grid-pro@8.0.0-beta.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -126,7 +139,7 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-beta.0`, plus:
 - [l10n] Added Bangla (bn-BD) locale (#16648) @officialkidmax
 - [pickers] Clean the typing of the slots on the range pickers (#16670) @flaviendelangle
 - [pickers] Fix Time Clock meridiem button selected styles (#16681) @LukasTy
-- [pickers] Make the single input field the default field on range pickers  (#16656) @flaviendelangle
+- [pickers] Make the single input field the default field on range pickers (#16656) @flaviendelangle
 - [pickers] Move the opening logic to the range fields (#16175) @flaviendelangle
 
 #### `@mui/x-date-pickers-pro@8.0.0-beta.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -138,6 +151,7 @@ Same changes as in `@mui/x-date-pickers@8.0.0-beta.0`.
 #### Breaking changes
 
 - Charts array inputs are now `readonly`. Allowing externally defined `as const` to be used as a prop value of the React component.
+
   ```tsx
   const xAxis = [{ position: 'bottom' }] as const
   <BarChart xAxis={xAxis} />
@@ -197,7 +211,7 @@ Same changes as in `@mui/x-date-pickers@8.0.0-beta.0`.
 
 #### `@mui/x-charts-pro@8.0.0-beta.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-tree-view@8.0.0-beta.0`, plus:
+Same changes as in `@mui/x-charts@8.0.0-beta.0`, plus:
 
 - [charts-pro] Add back zoom control (#16550) @alexfauquette
 
@@ -211,11 +225,16 @@ Internal changes.
 
 Same changes as in `@mui/x-tree-view@8.0.0-beta.0`.
 
+### `@mui/x-codemod@8.0.0-beta.0`
+
+- [codemod] Improve Pickers renaming codemod (#16685) @LukasTy
+
 ### Docs
 
 - [docs] Fix migration guide introduction for charts (#16679) @alexfauquette
 - [code-infra] Native Node.js ESM (#16603) @Janpot
 - [test] Revert timeout increase for possibly slow tests (#16651) @LukasTy
+- [docs] Improve Pickers migration page (#16682) @LukasTy
 
 ## 8.0.0-alpha.12
 
