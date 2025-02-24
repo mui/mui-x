@@ -16,7 +16,8 @@ The funnel accepts a series which must have a data property containing an array 
 
 ### Display legends
 
-The funnel chart displays a legend by default. The only requirement is to provide a `label` value in the data objects.
+The funnel chart displays a legend by default.
+The only requirement is to provide a `label` value in the data objects.
 
 To disable the legend, set the `hideLegend` property to `true`.
 
