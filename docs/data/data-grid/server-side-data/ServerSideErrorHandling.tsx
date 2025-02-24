@@ -3,7 +3,6 @@ import {
   DataGrid,
   useGridApiRef,
   GridInitialState,
-  GridToolbar,
   GridDataSource,
   GridGetRowsError,
 } from '@mui/x-data-grid';
@@ -134,7 +133,7 @@ export default function ServerSideErrorHandling() {
           pagination
           pageSizeOptions={pageSizeOptions}
           initialState={initialState}
-          slots={{ toolbar: GridToolbar }}
+          showToolbar
         />
         {!!snackbar && (
           <Snackbar
