@@ -10,6 +10,7 @@ export const AxisRoot = styled('g', {
     /* The tick label is measured using only its style prop, so applying properties that change its size will cause the
      * measurements to be off. As such, it is recommended to apply those properties through the `tickLabelStyle` prop. */
     ...theme.typography.caption,
+    lineHeight: 1.25,
     fill: (theme.vars || theme).palette.text.primary,
   },
   [`& .${axisClasses.label}`]: {
