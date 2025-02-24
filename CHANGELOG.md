@@ -23,9 +23,8 @@ Following are all team members who have contributed to this release:
 ### Data Grid
 
 #### `@mui/x-data-grid@7.27.1`
-[DataGrid]  #16485
 
-- [DataGrid] Fix the pagination unexpected behavior when using -1 for "All" rows per page (#16666) @nusr
+- [DataGrid] Fix the pagination unexpected behavior when using -1 for "All" rows per page (#16485) @nusr
 - [DataGrid] Extract `getRowId` API method as a selector (#16574) @MBilalShafi
 - [DataGrid] Fix scrollbars overlapping cells on mount (#16653) @KenanYusuf
 - [l10n] Add Bangla (bn-BD) locale (#16649) @officialkidmax
