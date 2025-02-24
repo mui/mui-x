@@ -9,7 +9,6 @@ export default function FunnelAxis() {
     <Box sx={{ width: '100%', maxWidth: 400 }}>
       <FunnelChart
         series={[populationByEducationLevelPercentageSeriesLabeled]}
-        xAxis={[{ id: 'x', position: 'top' }]}
         yAxis={[
           {
             id: 'y',

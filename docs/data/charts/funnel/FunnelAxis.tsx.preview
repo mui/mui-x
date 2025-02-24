@@ -1,6 +1,5 @@
 <FunnelChart
   series={[populationByEducationLevelPercentageSeriesLabeled]}
-  xAxis={[{ id: 'x', position: 'top' }]}
   yAxis={[
     {
       id: 'y',

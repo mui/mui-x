@@ -12,6 +12,7 @@ export default function FunnelColor() {
             data: [
               { value: 20 }, // Get color from the palette
               { value: 10, color: 'slateblue' }, // Override palette color (red)
+              { value: 5 },
             ],
           },
         ]}

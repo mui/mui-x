@@ -1,5 +1,5 @@
 'use client';
-import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '@mui/x-charts/constants';
+import { DEFAULT_MARGINS, DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '@mui/x-charts/constants';
 import { ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import { ChartsLegendSlotExtension } from '@mui/x-charts/ChartsLegend';
@@ -10,8 +10,6 @@ import { ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
 import { FunnelPlotProps } from './FunnelPlot';
 import type { FunnelChartProps } from './FunnelChart';
 import { ChartContainerProProps } from '../ChartContainerPro';
-
-const defaultMargin = { top: 20, bottom: 20, left: 20, right: 20 };
 
 /**
  * A helper function that extracts FunnelChartProps from the input props
@@ -44,7 +42,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     apiRef,
     ...rest
   } = props;
-  const margin = defaultizeMargin(marginProps, defaultMargin);
+  const margin = defaultizeMargin(marginProps, DEFAULT_MARGINS);
 
   const id = useId();
   const clipPathId = `${id}-clip-path`;
@@ -69,24 +67,27 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     ...rest,
     series: series.map((s) => ({
       type: 'funnel' as const,
+      layout: isHorizontal ? 'horizontal' : 'vertical',
       ...s,
     })),
     width,
     height,
     margin,
     colors,
-    xAxis: xAxis?.map((axis) => ({
-      ...(axis?.scaleType === 'band' || isHorizontal
-        ? defaultBandAxisConfig
-        : defaultLinearAxisConfig),
+    xAxis: (xAxis ?? [{}]).map((axis) => ({
+      id: DEFAULT_X_AXIS_KEY,
+      position: 'none',
+      ...(axis?.scaleType === 'band' || isHorizontal ? defaultBandAxisConfig : {}),
+      ...(axis?.scaleType && axis?.scaleType !== 'band' ? defaultLinearAxisConfig : {}),
       ...axis,
-    })) ?? [{ id: DEFAULT_X_AXIS_KEY, ...(isHorizontal ? defaultBandAxisConfig : {}) }],
-    yAxis: yAxis?.map((axis) => ({
-      ...(axis?.scaleType === 'band' || !isHorizontal
-        ? defaultBandAxisConfig
-        : defaultLinearAxisConfig),
+    })),
+    yAxis: (yAxis ?? [{}]).map((axis) => ({
+      id: DEFAULT_Y_AXIS_KEY,
+      position: 'none',
+      ...(axis?.scaleType === 'band' || !isHorizontal ? defaultBandAxisConfig : {}),
+      ...(axis?.scaleType && axis?.scaleType !== 'band' ? defaultLinearAxisConfig : {}),
       ...axis,
-    })) ?? [{ id: DEFAULT_Y_AXIS_KEY, ...(isHorizontal ? {} : defaultBandAxisConfig) }],
+    })),
     sx,
     highlightedItem,
     onHighlightChange,
