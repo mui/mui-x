@@ -65,7 +65,7 @@ const RangeCalendarMonthGrid = React.forwardRef(function RangeCalendarMonthList(
   );
 });
 
-export namespace RangeCalendarMonthGrid {
+namespace RangeCalendarMonthGrid {
   export interface State {
     /**
      * The number of cells per row.

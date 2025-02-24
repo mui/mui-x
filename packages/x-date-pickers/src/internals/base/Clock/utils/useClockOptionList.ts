@@ -1,5 +1,5 @@
 export function useClockOptionList() {}
 
-export namespace useClockOptionList {
+namespace useClockOptionList {
   export interface Parameters {}
 }

@@ -29,7 +29,7 @@ export function useBaseCalendarDayGridRowWrapper(
   return { ref, ctx };
 }
 
-export namespace useBaseCalendarDayGridRowWrapper {
+namespace useBaseCalendarDayGridRowWrapper {
   export interface Parameters extends Pick<useBaseCalendarDayGridRow.Parameters, 'value'> {
     /**
      * The ref forwarded by the parent component.

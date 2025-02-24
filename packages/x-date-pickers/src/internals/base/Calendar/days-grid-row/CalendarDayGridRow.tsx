@@ -44,7 +44,7 @@ const CalendarDayGridRow = React.forwardRef(function CalendarDayGridRow(
   return <MemoizedInnerCalendarDayGridRow {...props} ref={ref} ctx={ctx} />;
 });
 
-export namespace CalendarDayGridRow {
+namespace CalendarDayGridRow {
   export interface State {}
 
   export interface Props

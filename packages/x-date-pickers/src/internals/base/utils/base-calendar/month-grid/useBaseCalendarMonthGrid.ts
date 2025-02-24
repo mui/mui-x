@@ -93,7 +93,7 @@ export function useBaseCalendarMonthGrid(parameters: useBaseCalendarMonthGrid.Pa
   );
 }
 
-export namespace useBaseCalendarMonthGrid {
+namespace useBaseCalendarMonthGrid {
   export interface PublicParameters extends useMonthCells.Parameters {
     /**
      * The number of cells per row.

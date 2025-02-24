@@ -38,7 +38,7 @@ const CalendarYearList = React.forwardRef(function CalendarYearList(
   );
 });
 
-export namespace CalendarYearList {
+namespace CalendarYearList {
   export interface State {}
 
   export interface Props

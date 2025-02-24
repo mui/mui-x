@@ -62,7 +62,7 @@ export function useClockOptionWrapper(
   };
 }
 
-export namespace useClockOptionWrapper {
+namespace useClockOptionWrapper {
   export interface Parameters extends Pick<useClockOption.Parameters, 'value'> {
     /**
      * The ref forwarded by the parent component.

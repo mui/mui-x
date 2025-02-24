@@ -65,7 +65,7 @@ const ClockRoot = React.forwardRef(function ClockRoot(
   return <ClockRootContext.Provider value={context}>{renderElement()}</ClockRootContext.Provider>;
 });
 
-export namespace ClockRoot {
+namespace ClockRoot {
   export interface State {}
 
   export interface Props

@@ -56,7 +56,7 @@ export function useCellList(parameters: useCellList.Parameters): useCellList.Ret
   return { scrollerRef };
 }
 
-export namespace useCellList {
+namespace useCellList {
   export interface PublicParameters {
     /**
      * If `true`, the first tabbable children inside this component will be focused on mount.

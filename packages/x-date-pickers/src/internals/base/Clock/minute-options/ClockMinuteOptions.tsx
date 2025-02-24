@@ -32,7 +32,7 @@ const ClockMinuteOptions = React.forwardRef(function ClockMinuteOptions(
   );
 });
 
-export namespace ClockMinuteOptions {
+namespace ClockMinuteOptions {
   export interface State {}
 
   export interface Props

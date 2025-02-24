@@ -45,7 +45,7 @@ const CalendarMonthCell = React.forwardRef(function CalendarMonthCell(
   return <MemoizedInnerCalendarMonthCell {...props} ref={ref} ctx={ctx} />;
 });
 
-export namespace CalendarMonthCell {
+namespace CalendarMonthCell {
   export interface State {
     /**
      * Whether the month is selected.

@@ -203,7 +203,7 @@ export function useBuildRangeCalendarRootContext(
   return context;
 }
 
-export namespace useBuildRangeCalendarRootContext {
+namespace useBuildRangeCalendarRootContext {
   export interface Parameters {
     value: PickerRangeValue;
     baseContext: BaseCalendarRootContext;

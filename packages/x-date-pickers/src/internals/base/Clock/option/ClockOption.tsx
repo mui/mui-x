@@ -39,7 +39,7 @@ const ClockOption = React.forwardRef(function ClockOption(
   return <MemoizedInnerClockOption ref={ref} {...props} ctx={ctx} />;
 });
 
-export namespace ClockOption {
+namespace ClockOption {
   export interface State {}
 
   export interface Props

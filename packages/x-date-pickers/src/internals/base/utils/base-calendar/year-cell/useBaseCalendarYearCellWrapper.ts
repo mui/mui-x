@@ -114,7 +114,7 @@ export function useBaseCalendarYearCellWrapper(
   return { ref: mergedRef, ctx };
 }
 
-export namespace useBaseCalendarYearCellWrapper {
+namespace useBaseCalendarYearCellWrapper {
   export interface Parameters extends Pick<useBaseCalendarYearCell.Parameters, 'value'> {
     /**
      * The ref forwarded by the parent component.

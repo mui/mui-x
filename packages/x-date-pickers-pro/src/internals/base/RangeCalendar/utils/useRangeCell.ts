@@ -165,7 +165,7 @@ export function useRangeCell(parameters: useRangeCell.Parameters) {
   );
 }
 
-export namespace useRangeCell {
+namespace useRangeCell {
   export interface Parameters {
     value: PickerValidDate;
     ctx: Context;

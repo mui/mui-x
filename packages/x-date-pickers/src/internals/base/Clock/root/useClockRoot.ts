@@ -109,7 +109,7 @@ export function useClockRoot(parameters: useClockRoot.Parameters) {
   );
 }
 
-export namespace useClockRoot {
+namespace useClockRoot {
   export interface Parameters
     extends TimezoneProps,
       FormProps,

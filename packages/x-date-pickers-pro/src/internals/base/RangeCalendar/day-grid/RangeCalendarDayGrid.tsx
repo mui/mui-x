@@ -29,7 +29,7 @@ const RangeCalendarDayGrid = React.forwardRef(function RangeCalendarDayGrid(
   return renderElement();
 });
 
-export namespace RangeCalendarDayGrid {
+namespace RangeCalendarDayGrid {
   export interface State {}
 
   export interface Props extends BaseUIComponentProps<'div', State> {}

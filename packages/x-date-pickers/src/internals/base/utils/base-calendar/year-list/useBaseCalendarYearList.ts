@@ -40,7 +40,7 @@ export function useBaseCalendarYearList(parameters: useBaseCalendarYearList.Para
   );
 }
 
-export namespace useBaseCalendarYearList {
+namespace useBaseCalendarYearList {
   export interface Parameters extends useYearCells.Parameters {
     /**
      * Whether to loop keyboard focus back to the first item

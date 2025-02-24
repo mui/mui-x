@@ -50,7 +50,7 @@ const RangeCalendarSetVisibleMonth = React.forwardRef(function RangeCalendarSetV
   return <MemoizedInnerRangeCalendarSetVisibleMonth ref={ref} {...props} ctx={ctx} />;
 });
 
-export namespace RangeCalendarSetVisibleMonth {
+namespace RangeCalendarSetVisibleMonth {
   export interface State {
     /**
      * The direction of the target month relative to the current visible month.

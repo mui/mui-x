@@ -21,7 +21,7 @@ export function useClockOption(parameters: useClockOption.Parameters) {
   return React.useMemo(() => ({ getOptionsProps }), [getOptionsProps]);
 }
 
-export namespace useClockOption {
+namespace useClockOption {
   export interface Parameters {
     /**
      * The value to select when this option is clicked.

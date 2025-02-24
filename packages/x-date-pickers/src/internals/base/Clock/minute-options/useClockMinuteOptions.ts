@@ -58,7 +58,7 @@ export function useClockMinuteOptions(parameters: useClockMinuteOptions.Paramete
   return React.useMemo(() => ({ getOptionsProps, context }), [getOptionsProps, context]);
 }
 
-export namespace useClockMinuteOptions {
+namespace useClockMinuteOptions {
   export interface Parameters {
     /**
      * Generate the list of items to render.

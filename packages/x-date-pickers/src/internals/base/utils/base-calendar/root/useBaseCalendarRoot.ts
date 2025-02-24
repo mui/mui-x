@@ -243,7 +243,7 @@ export function useBaseCalendarRoot<
   };
 }
 
-export namespace useBaseCalendarRoot {
+namespace useBaseCalendarRoot {
   export interface PublicParameters<TValue extends PickerValidValue, TError>
     extends TimezoneProps,
       FormProps,

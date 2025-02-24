@@ -46,7 +46,7 @@ export function useBaseCalendarDayCell(parameters: useBaseCalendarDayCell.Parame
   return React.useMemo(() => ({ getDayCellProps }), [getDayCellProps]);
 }
 
-export namespace useBaseCalendarDayCell {
+namespace useBaseCalendarDayCell {
   export interface Parameters {
     /**
      * The value to select when this cell is clicked.

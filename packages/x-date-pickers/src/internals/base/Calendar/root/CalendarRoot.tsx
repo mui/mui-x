@@ -90,7 +90,7 @@ const CalendarRoot = React.forwardRef(function CalendarRoot(
   );
 });
 
-export namespace CalendarRoot {
+namespace CalendarRoot {
   export interface State {}
 
   export interface Props

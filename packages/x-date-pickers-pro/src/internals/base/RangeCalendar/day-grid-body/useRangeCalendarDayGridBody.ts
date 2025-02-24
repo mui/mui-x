@@ -31,6 +31,6 @@ export function useRangeCalendarDayGridBody(parameters: useRangeCalendarDayGridB
   return { getDayGridBodyProps, ...rest };
 }
 
-export namespace useRangeCalendarDayGridBody {
+namespace useRangeCalendarDayGridBody {
   export interface Parameters extends useBaseCalendarDayGridBody.Parameters {}
 }

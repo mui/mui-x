@@ -53,7 +53,7 @@ const RangeCalendarMonthList = React.forwardRef(function RangeCalendarMonthList(
   );
 });
 
-export namespace RangeCalendarMonthList {
+namespace RangeCalendarMonthList {
   export interface State {}
 
   export interface Props

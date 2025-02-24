@@ -23,7 +23,7 @@ export function useBaseCalendarSetVisibleYear(
   return React.useMemo(() => ({ getSetVisibleYearProps }), [getSetVisibleYearProps]);
 }
 
-export namespace useBaseCalendarSetVisibleYear {
+namespace useBaseCalendarSetVisibleYear {
   export interface Parameters {
     /**
      * The year to navigate to.

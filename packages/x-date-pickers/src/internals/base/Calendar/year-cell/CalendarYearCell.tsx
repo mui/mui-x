@@ -45,7 +45,7 @@ const CalendarYearCell = React.forwardRef(function CalendarsYearCell(
   return <MemoizedInnerCalendarYearCell ref={ref} {...props} ctx={ctx} />;
 });
 
-export namespace CalendarYearCell {
+namespace CalendarYearCell {
   export interface State {
     /**
      * Whether the year is selected.
