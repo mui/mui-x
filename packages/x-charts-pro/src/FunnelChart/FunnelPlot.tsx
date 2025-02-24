@@ -145,7 +145,7 @@ const useAggregatedData = () => {
       });
     });
 
-    return result.flatMap((v) => v.toReversed().flat());
+    return result.flat();
   }, [seriesData, xAxis, xAxisIds, yAxis, yAxisIds]);
 
   return allData;
