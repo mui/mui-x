@@ -13,17 +13,17 @@ export function doesTextFitInRect(text: string, config: EllipsizeConfig) {
   const angle = degToRad(config.angle);
   const textSize = measureText(text);
 
-  console.log({ text, textSize, config });
-
   const angledWidth = textSize.width * Math.cos(angle) + textSize.height * Math.sin(angle);
   const angledHeight = textSize.width * Math.sin(angle) + textSize.height * Math.cos(angle);
+
+  console.log({ text, textSize, config, angledWidth, angledHeight });
 
   return angledWidth <= width && angledHeight <= height;
 }
 
 export function ellipsize(text: string, config: EllipsizeConfig) {
   if (doesTextFitInRect(text, config)) {
-    console.log({ text, config, result: text });
+    console.log('fit', { text, config, result: text });
     return text;
   }
 
@@ -41,7 +41,7 @@ export function ellipsize(text: string, config: EllipsizeConfig) {
   return '';
 }
 
-const WHITE_SPACE = /\s/g;
+const WHITE_SPACE = /\s/;
 
 export function shortenText(text: string) {
   // If text has less than two characters, we can't shorten it, so just return an empty string.

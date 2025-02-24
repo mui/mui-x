@@ -80,7 +80,7 @@ describe('shortenText', () => {
     expect(inputs).to.be.deep.equal(expected);
   });
 
-  it.skip('splits unicode characters properly', () => {
+  it('splits unicode characters properly', () => {
     // 5 latin characters + 7 emoji => 12 graphemes.
     // Result should have 6 graphemes.
     expect(shortenText('emoji👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️👱🏽‍♀️')).to.be.equal('emoji👱🏽‍♀️');
