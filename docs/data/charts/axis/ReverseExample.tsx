@@ -90,7 +90,7 @@ export default function ReverseExample() {
           <MarkPlot />
 
           <ChartsXAxis />
-          <ChartsYAxis axisId="leftAxis" label="temerature (°C)" />
+          <ChartsYAxis axisId="leftAxis" label="temperature (°C)" />
           <ChartsYAxis axisId="rightAxis" label="precipitation (mm)" />
           <ChartsTooltip />
         </ChartContainer>
