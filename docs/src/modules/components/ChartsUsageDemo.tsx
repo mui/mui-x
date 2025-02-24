@@ -3,41 +3,38 @@ import PropTypes from 'prop-types';
 import Box from '@mui/joy/Box';
 import { BrandingProvider } from '@mui/docs/branding';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
-import DemoPropsForm, { DataType } from './DemoPropsForm';
+import DemoPropsForm, { DataType, PropsFromData } from './DemoPropsForm';
 
-export type ChartsUsageDemoProps<P extends string> = {
+export type ChartsUsageDemoProps<Data extends Record<string, DataType>, Props> = {
   componentName: string;
   childrenAccepted?: boolean;
-  data: readonly DataType<P>[];
-  renderDemo: (props: Record<P, any>, setProps: (props: Record<P, any>) => void) => React.ReactNode;
-  getCode: (props: { name: string; props: Record<P, any>; childrenAccepted: boolean }) => string;
+  data: Data;
+  renderDemo: (props: Props, setProps: (props: Props) => void) => React.ReactNode;
+  getCode: (props: { name: string; props: Props; childrenAccepted: boolean }) => string;
 };
 
-export default function ChartsUsageDemo<P extends string>({
+export default function ChartsUsageDemo<
+  Data extends Record<string, DataType>,
+  Props extends PropsFromData<Data> = PropsFromData<Data>,
+>({
   componentName,
   childrenAccepted = false,
   data,
   renderDemo,
   getCode,
-}: ChartsUsageDemoProps<P>) {
-  const [props, setProps] = React.useState(
-    data.reduce(
-      (acc, { propName, defaultValue }) => {
-        acc[propName] = defaultValue;
-        return acc;
-      },
-      {} as Record<string, any>,
+}: ChartsUsageDemoProps<Data, Props>) {
+  const [props, setProps] = React.useState<Props>(
+    Object.entries(data).reduce(
+      (acc, [propName, value]) => ({ ...acc, [propName]: value.defaultValue }),
+      {} as Props,
     ),
   );
 
   React.useEffect(() => {
     setProps(
-      data.reduce(
-        (acc, { propName, defaultValue }) => {
-          acc[propName] = defaultValue;
-          return acc;
-        },
-        {} as Record<string, any>,
+      Object.entries(data).reduce(
+        (acc, [propName, value]) => ({ ...acc, [propName]: value.defaultValue }),
+        {} as Props,
       ),
     );
   }, [data]);
@@ -71,13 +68,7 @@ export default function ChartsUsageDemo<P extends string>({
           <HighlightedCode
             code={getCode({
               name: componentName,
-              props: Object.entries(props).reduce(
-                (acc, [key, value]) => {
-                  acc[key] = value;
-                  return acc;
-                },
-                {} as Record<string, any>,
-              ),
+              props,
               childrenAccepted,
             })}
             language="jsx"
