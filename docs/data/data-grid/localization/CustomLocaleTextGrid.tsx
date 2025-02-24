@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function CustomLocaleTextGrid() {
@@ -20,9 +20,7 @@ export default function CustomLocaleTextGrid() {
           toolbarDensityStandard: 'Medium',
           toolbarDensityComfortable: 'Large',
         }}
-        slots={{
-          toolbar: GridToolbar,
-        }}
+        showToolbar
       />
     </div>
   );

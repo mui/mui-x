@@ -5,7 +5,5 @@
     { field: 'desk' },
   ]}
   rows={rows}
-  slots={{
-    toolbar: GridToolbar,
-  }}
+  showToolbar
 />

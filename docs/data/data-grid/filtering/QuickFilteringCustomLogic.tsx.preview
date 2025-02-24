@@ -3,4 +3,5 @@
   loading={loading}
   columns={columns}
   slots={{ toolbar: QuickSearchToolbar }}
+  showToolbar
 />

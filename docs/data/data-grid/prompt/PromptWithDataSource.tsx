@@ -80,6 +80,7 @@ export default function PromptWithDataSource() {
         slots={{
           toolbar: ToolbarWithPromptInput,
         }}
+        showToolbar
       />
     </div>
   );
