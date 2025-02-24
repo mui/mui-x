@@ -251,10 +251,6 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     isPointInside: (x: number) => instance.isPointInside({ x, y: -1 }, { direction: 'x' }),
   });
 
-    const shortenedLabels = shortenLabels(visibleLabels, width, axisHeight, {
-        tickLabelStyle,
-    });
-
   const axisLabelProps = useSlotProps({
     elementType: Label,
     externalSlotProps: slotProps?.axisLabel,
@@ -290,6 +286,14 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     x: left + width / 2,
     y: positionSign * (axisHeight - labelHeight),
   };
+
+  /* If there's an axis title, the tick labels have less space to render  */
+  const tickLabelsMaxHeight = (label ? labelRefPoint.y : axisHeight) - tickSize;
+  console.log({ tickLabelsMaxHeight });
+
+  const shortenedLabels = shortenLabels(visibleLabels, width, tickLabelsMaxHeight, {
+    tickLabelStyle: axisTickLabelProps.style,
+  });
 
   return (
     <XAxisRoot
