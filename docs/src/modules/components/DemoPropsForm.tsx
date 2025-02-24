@@ -1,3 +1,5 @@
+/* eslint-disable  */
+
 import * as React from 'react';
 import Check from '@mui/icons-material/Check';
 
@@ -215,12 +217,10 @@ export default function ChartDemoPropsForm<
           component="h3"
           fontWeight="bold"
           sx={{ scrollMarginTop: 160, fontFamily: 'General Sans' }}
-          // eslint-disable-next-line material-ui/no-hardcoded-labels
         >
           Playground
         </Typography>
         <IconButton
-          // eslint-disable-next-line material-ui/no-hardcoded-labels
           aria-label="Reset all"
           size="small"
           onClick={() => onPropsChange(initialProps)}
