@@ -1439,6 +1439,7 @@ describe('<DataGrid /> - Filter', () => {
             },
           ]}
           slots={{ toolbar: GridToolbarFilterButton }}
+          showToolbar
         />,
       );
 
@@ -1503,6 +1504,7 @@ describe('<DataGrid /> - Filter', () => {
               },
             ]}
             slots={{ toolbar: GridToolbarFilterButton }}
+            showToolbar
           />
         </div>,
       );

@@ -137,7 +137,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
 
   describe('component: GridToolbarExport', () => {
     it('should export with the default csvOptions', async () => {
-      render(<TestCase slots={{ toolbar: () => <GridToolbarExport /> }} />);
+      render(<TestCase slots={{ toolbar: () => <GridToolbarExport /> }} showToolbar />);
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
@@ -151,6 +151,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
       render(
         <TestCase
           slots={{ toolbar: () => <GridToolbarExport csvOptions={{ delimiter: ';' }} /> }}
+          showToolbar
         />,
       );
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
@@ -168,6 +169,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
           slots={{
             toolbar: () => <GridToolbarExport csvOptions={{ disableToolbarButton: true }} />,
           }}
+          showToolbar
         />,
       );
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
