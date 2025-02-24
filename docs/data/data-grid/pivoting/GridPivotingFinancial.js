@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-  DataGridPremium,
-  unstable_useGridPivoting,
-  useGridApiRef,
-} from '@mui/x-data-grid-premium';
+import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
 
 const rows = [
   {
@@ -130,17 +126,8 @@ export default function GridPivotingFinancial() {
     ],
   });
 
-  const [isPivotMode, setIsPivotMode] = React.useState(false);
-
-  const pivotParams = unstable_useGridPivoting({
-    apiRef,
-    pivotModel,
-    onPivotModelChange: setPivotModel,
-    pivotMode: isPivotMode,
-    onPivotModeChange: setIsPivotMode,
-  });
-
-  console.log('pivotParams', pivotParams);
+  const [pivotMode, setPivotMode] = React.useState(true);
+  const [pivotPanelOpen, setPivotPanelOpen] = React.useState(true);
 
   return (
     <div style={{ width: '100%' }}>
@@ -150,7 +137,12 @@ export default function GridPivotingFinancial() {
           columns={columns}
           apiRef={apiRef}
           showToolbar
-          pivotParams={pivotParams}
+          pivotModel={pivotModel}
+          onPivotModelChange={setPivotModel}
+          pivotMode={pivotMode}
+          onPivotModeChange={setPivotMode}
+          pivotPanelOpen={pivotPanelOpen}
+          onPivotPanelOpenChange={setPivotPanelOpen}
           cellSelection
           columnGroupHeaderHeight={36}
         />

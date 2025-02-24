@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Menu from '@mui/material/Menu';
 
+import { useGridSelector } from '@mui/x-data-grid-pro';
 import { GridPivotModel } from '../../../hooks/features/pivoting/gridPivotingInterfaces';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import type {
@@ -9,6 +10,7 @@ import type {
   UpdatePivotModel,
 } from './GridSidebarColumnPanelBody';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
+import { gridPivotModelSelector } from '../../../hooks/features/pivoting/gridPivotingSelectors';
 
 export function GridSidebarColumnPanelPivotMenu(props: {
   field: string;
@@ -22,10 +24,11 @@ export function GridSidebarColumnPanelPivotMenu(props: {
   const open = Boolean(anchorEl);
   const apiRef = useGridApiContext();
   const isAvailableField = modelKey === null;
+  const pivotModel = useGridSelector(apiRef, gridPivotModelSelector);
   const fieldIndexInModel = !isAvailableField
-    ? props.pivotModel[modelKey].findIndex((item) => item.field === field)
+    ? pivotModel[modelKey].findIndex((item) => item.field === field)
     : -1;
-  const modelLength = !isAvailableField ? props.pivotModel[modelKey].length : 0;
+  const modelLength = !isAvailableField ? pivotModel[modelKey].length : 0;
   const canMoveUp = fieldIndexInModel > 0;
   const canMoveDown = !isAvailableField && fieldIndexInModel < modelLength - 1;
 
@@ -51,19 +54,19 @@ export function GridSidebarColumnPanelPivotMenu(props: {
 
     switch (to) {
       case 'up':
-        targetField = props.pivotModel[modelKey!][fieldIndexInModel - 1].field;
+        targetField = pivotModel[modelKey!][fieldIndexInModel - 1].field;
         targetFieldPosition = 'top';
         break;
       case 'down':
-        targetField = props.pivotModel[modelKey!][fieldIndexInModel + 1].field;
+        targetField = pivotModel[modelKey!][fieldIndexInModel + 1].field;
         targetFieldPosition = 'bottom';
         break;
       case 'top':
-        targetField = props.pivotModel[modelKey!][0].field;
+        targetField = pivotModel[modelKey!][0].field;
         targetFieldPosition = 'top';
         break;
       case 'bottom':
-        targetField = props.pivotModel[modelKey!][modelLength - 1].field;
+        targetField = pivotModel[modelKey!][modelLength - 1].field;
         targetFieldPosition = 'bottom';
         break;
       case 'rows':

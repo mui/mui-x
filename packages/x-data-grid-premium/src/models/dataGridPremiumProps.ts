@@ -6,7 +6,6 @@ import {
   GridEventListener,
   GridGetRowsError,
   GridUpdateRowError,
-  GridColDef,
 } from '@mui/x-data-grid-pro';
 import {
   GridExperimentalProFeatures,
@@ -207,25 +206,12 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    */
   dataSource?: GridDataSource;
 
-  pivotParams?: {
-    pivotMode: boolean;
-    onPivotModeChange: (pivotMode: boolean) => void;
-    props?: Pick<
-      DataGridPremiumProps,
-      | 'rows'
-      | 'columns'
-      | 'rowGroupingModel'
-      | 'aggregationModel'
-      | 'getAggregationPosition'
-      | 'columnVisibilityModel'
-      | 'columnGroupingModel'
-    >;
-    pivotModel: GridPivotModel;
-    onPivotModelChange: React.Dispatch<React.SetStateAction<GridPivotModel>>;
-    initialColumns: GridColDef[] | undefined;
-    pivotSettingsOpen: boolean;
-    onPivotSettingsOpenChange: (isPivotSettingsOpen: boolean) => void;
-  };
+  pivotModel?: GridPivotModel;
+  onPivotModelChange?: React.Dispatch<React.SetStateAction<GridPivotModel>>;
+  pivotMode?: boolean;
+  onPivotModeChange?: (isPivot: boolean) => void;
+  pivotPanelOpen?: boolean;
+  onPivotPanelOpenChange?: (pivotPanelOpen: boolean) => void;
   /**
    * Callback fired when a data source request fails.
    * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.

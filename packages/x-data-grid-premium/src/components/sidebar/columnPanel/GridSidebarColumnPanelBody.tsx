@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
-import { GridColDef, GridShadowScrollArea } from '@mui/x-data-grid';
+import { GridColDef, GridShadowScrollArea, useGridSelector } from '@mui/x-data-grid';
 import { vars } from '@mui/x-data-grid/internals';
+import {
+  gridPivotInitialColumnsSelector,
+  gridPivotModelSelector,
+} from '../../../hooks/features/pivoting/gridPivotingSelectors';
 import { GridPivotModel } from '../../../hooks/features/pivoting/gridPivotingInterfaces';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { getAvailableAggregationFunctions } from '../../../hooks/features/aggregation/gridAggregationUtils';
@@ -121,18 +125,12 @@ export type UpdatePivotModel = (params: {
 const INITIAL_DRAG_STATE = { active: false, dropZone: null, initialModelKey: null };
 
 export function GridSidebarColumnPanelBody({
-  columns,
   searchState,
-  pivotModel,
-  onPivotModelChange,
 }: {
-  columns: GridColDef[];
   searchState: {
     value: string;
     enabled: boolean;
   };
-  pivotModel: GridPivotModel;
-  onPivotModelChange: React.Dispatch<React.SetStateAction<GridPivotModel>>;
 }) {
   const apiRef = useGridApiContext();
   const { ref: resizeHandleRef } = useResize({
@@ -144,6 +142,7 @@ export function GridSidebarColumnPanelBody({
       handle.parentElement!.style.height = `${newSize}px`;
     },
   });
+  const columns = useGridSelector(apiRef, gridPivotInitialColumnsSelector);
   const fields = React.useMemo(() => columns.map((col) => col.field), [columns]);
   const rootProps = useGridRootProps();
   const [drag, setDrag] = React.useState<{
@@ -151,6 +150,12 @@ export function GridSidebarColumnPanelBody({
     dropZone: FieldTransferObject['modelKey'];
     initialModelKey: FieldTransferObject['modelKey'];
   }>(INITIAL_DRAG_STATE);
+  const pivotModel = useGridSelector(apiRef, gridPivotModelSelector);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const onPivotModelChange = React.useCallback(apiRef.current.setPivotModel, [
+    apiRef.current.setPivotModel,
+  ]);
 
   const initialColumnsLookup = React.useMemo(() => {
     return columns.reduce(

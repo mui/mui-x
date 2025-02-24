@@ -1,19 +1,23 @@
 import * as React from 'react';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { useGridSelector } from '../../hooks/utils/useGridSelector';
+
+// TODO: use selector
+const getPivotMode = (state: any) => state.pivoting?.pivotMode;
 
 export function GridToolbarPivotButton() {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  // @ts-ignore
-  const pivotParams = rootProps.pivotParams;
+
+  const pivotMode = useGridSelector(apiRef, getPivotMode);
 
   return (
     <rootProps.slots.baseButton
       size="small"
       startIcon={
         <rootProps.slots.baseBadge
-          badgeContent={pivotParams.pivotMode ? 1 : 0}
+          badgeContent={pivotMode ? 1 : 0}
           color="primary"
           variant="dot"
           {...rootProps.slotProps?.baseBadge}
@@ -23,7 +27,8 @@ export function GridToolbarPivotButton() {
       }
       {...rootProps.slotProps?.baseButton}
       onClick={() => {
-        pivotParams.onPivotSettingsOpenChange(!pivotParams.pivotSettingsOpen);
+        // @ts-ignore
+        apiRef.current.setPivotPanelOpen((prev) => !prev);
       }}
     >
       {apiRef.current.getLocaleText('toolbarPivot')}

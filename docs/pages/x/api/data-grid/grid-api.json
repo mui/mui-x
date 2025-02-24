@@ -365,6 +365,23 @@
       "required": true,
       "isProPlan": true
     },
+    "setPivotMode": {
+      "type": { "description": "(mode: boolean | ((prev: boolean) =&gt; boolean)) =&gt; void" },
+      "required": true,
+      "isPremiumPlan": true
+    },
+    "setPivotModel": {
+      "type": {
+        "description": "(model: GridPivotModel | ((prev: GridPivotModel) =&gt; GridPivotModel)) =&gt; void"
+      },
+      "required": true,
+      "isPremiumPlan": true
+    },
+    "setPivotPanelOpen": {
+      "type": { "description": "(open: boolean | ((prev: boolean) =&gt; boolean)) =&gt; void" },
+      "required": true,
+      "isPremiumPlan": true
+    },
     "setQuickFilterValues": {
       "type": { "description": "(values: any[]) =&gt; void" },
       "required": true

@@ -204,6 +204,14 @@ const getColumnLabel = (col: GridColDef) => col.headerName || col.field;
 
 const collator = new Intl.Collator();
 
+// TODO: use selectors
+const getPivotMode = (state: any) => {
+  return state.pivoting?.pivotMode ?? false;
+};
+const getInitialColumns = (state: any) => {
+  return state.pivoting?.initialColumns ?? [];
+};
+
 const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
   function GridFilterForm(props, ref) {
     const {
@@ -250,10 +258,8 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
 
     const { InputComponentProps, ...valueInputPropsOther } = valueInputProps;
 
-    // @ts-ignore
-    const isPivotMode = rootProps.pivotParams?.pivotMode ?? false;
-    // @ts-ignore
-    const initialColumns = rootProps.pivotParams?.initialColumns;
+    const isPivotMode = useGridSelector(apiRef, getPivotMode);
+    const initialColumns = useGridSelector(apiRef, getInitialColumns);
 
     const { filteredColumns, selectedField } = React.useMemo(() => {
       let itemField: string | undefined = item.field;

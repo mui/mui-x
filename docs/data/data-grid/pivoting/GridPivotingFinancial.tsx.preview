@@ -4,7 +4,12 @@
     columns={columns}
     apiRef={apiRef}
     showToolbar
-    pivotParams={pivotParams}
+    pivotModel={pivotModel}
+    onPivotModelChange={setPivotModel}
+    pivotMode={pivotMode}
+    onPivotModeChange={setPivotMode}
+    pivotPanelOpen={pivotPanelOpen}
+    onPivotPanelOpenChange={setPivotPanelOpen}
     cellSelection
     columnGroupHeaderHeight={36}
   />

@@ -1,4 +1,23 @@
-import { type GridColDef } from '@mui/x-data-grid-pro';
+import type { GridColDef } from '@mui/x-data-grid-pro';
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+
+export type GridPivotingPropsOverrides = {
+  rows: DataGridPremiumProcessedProps['rows'];
+  columns: DataGridPremiumProcessedProps['columns'];
+  rowGroupingModel: NonNullable<DataGridPremiumProcessedProps['rowGroupingModel']>;
+  aggregationModel: NonNullable<DataGridPremiumProcessedProps['aggregationModel']>;
+  getAggregationPosition: NonNullable<DataGridPremiumProcessedProps['getAggregationPosition']>;
+  columnVisibilityModel: NonNullable<DataGridPremiumProcessedProps['columnVisibilityModel']>;
+  columnGroupingModel: NonNullable<DataGridPremiumProcessedProps['columnGroupingModel']>;
+};
+
+export interface GridPivotingState {
+  pivotModel: GridPivotModel;
+  pivotMode: boolean;
+  pivotPanelOpen: boolean;
+  propsOverrides: GridPivotingPropsOverrides | undefined;
+  initialColumns: GridColDef[] | undefined;
+}
 
 export interface GridPivotModel {
   columns: { field: GridColDef['field']; sort?: 'asc' | 'desc'; hidden?: boolean }[];
@@ -11,4 +30,10 @@ export interface GridPivotModel {
     aggFunc: string;
     hidden?: boolean;
   }[];
+}
+
+export interface GridPivotingApi {
+  setPivotModel: (model: GridPivotModel | ((prev: GridPivotModel) => GridPivotModel)) => void;
+  setPivotMode: (mode: boolean | ((prev: boolean) => boolean)) => void;
+  setPivotPanelOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
 }

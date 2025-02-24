@@ -1,21 +1,22 @@
 import * as React from 'react';
 import { GridSlotProps } from '@mui/x-data-grid';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 // TODO: Figure out what the types should be for this component
 // If users can provide a custom icon button, this could be something other than IconButtonProps
 export function GridSidebarCloseButton(props: GridSlotProps['baseIconButton']) {
   const rootProps = useGridRootProps();
-  const { slots, pivotParams } = rootProps;
+  const apiRef = useGridApiContext();
 
   return (
-    <slots.baseIconButton
+    <rootProps.slots.baseIconButton
       size="small"
       {...props}
-      onClick={() => pivotParams?.onPivotSettingsOpenChange(false)}
+      onClick={() => apiRef.current.setPivotPanelOpen(false)}
     >
       {/* Replace with a new slots.closeButtonIcon or similar */}
-      <slots.filterPanelDeleteIcon fontSize="small" />
-    </slots.baseIconButton>
+      <rootProps.slots.filterPanelDeleteIcon fontSize="small" />
+    </rootProps.slots.baseIconButton>
   );
 }

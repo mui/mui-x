@@ -2,9 +2,8 @@ import * as React from 'react';
 import {
   DataGridPremium,
   useGridApiRef,
-  unstable_useGridPivoting,
-  GridPivotModel,
   GridColDef,
+  GridPivotModel,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
@@ -34,18 +33,8 @@ export default function GridPivotingMovies() {
     ],
   });
 
-  const [isPivotMode, setIsPivotMode] = React.useState(true);
-  const [pivotSettingsOpen, setPivotSettingsOpen] = React.useState(false);
-
-  const pivotParams = unstable_useGridPivoting({
-    apiRef,
-    pivotModel,
-    onPivotModelChange: setPivotModel,
-    pivotMode: isPivotMode,
-    onPivotModeChange: setIsPivotMode,
-    pivotSettingsOpen,
-    onPivotSettingsOpenChange: setPivotSettingsOpen,
-  });
+  const [isPivotMode, setIsPivotMode] = React.useState(false);
+  const [pivotSettingsOpen, setPivotSettingsOpen] = React.useState(true);
 
   return (
     <div style={{ width: '100%' }}>
@@ -53,7 +42,12 @@ export default function GridPivotingMovies() {
         <DataGridPremium
           rows={data.rows}
           columns={data.columns}
-          pivotParams={pivotParams}
+          pivotModel={pivotModel}
+          onPivotModelChange={setPivotModel}
+          pivotMode={isPivotMode}
+          onPivotModeChange={setIsPivotMode}
+          pivotPanelOpen={pivotSettingsOpen}
+          onPivotPanelOpenChange={setPivotSettingsOpen}
           apiRef={apiRef}
           showToolbar
           columnGroupHeaderHeight={36}

@@ -4,7 +4,10 @@
     columns={data.columns}
     apiRef={apiRef}
     showToolbar
-    pivotParams={pivotParams}
+    pivotModel={pivotModel}
+    onPivotModelChange={setPivotModel}
+    pivotMode={isPivotMode}
+    onPivotModeChange={setIsPivotMode}
     loading={loading}
     columnGroupHeaderHeight={36}
   />

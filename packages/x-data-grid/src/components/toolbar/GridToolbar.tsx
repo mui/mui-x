@@ -38,8 +38,9 @@ const GridToolbar = forwardRef<HTMLDivElement, GridToolbarProps>(function GridTo
     ...other
   } = props as typeof props & { excelOptions: any };
   const rootProps = useGridRootProps();
+  // TODO: add experimental feature flag
   // @ts-ignore
-  const hasPivotParams = !!rootProps.pivotParams;
+  const hasPivotParams = true;
 
   if (
     rootProps.disableColumnFilter &&

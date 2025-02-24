@@ -2,7 +2,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
-import { GridRoot, GridContextProvider, GridValidRowModel } from '@mui/x-data-grid-pro';
+import {
+  GridRoot,
+  GridContextProvider,
+  GridValidRowModel,
+  useGridSelector,
+} from '@mui/x-data-grid-pro';
 import {
   propValidatorsDataGrid,
   propValidatorsDataGridPro,
@@ -24,6 +29,7 @@ import { GridSidebarColumnPanel } from '../components/sidebar/columnPanel/GridSi
 import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
 import type { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
+import { gridPivotPanelOpenSelector } from '../hooks/features/pivoting/gridPivotingSelectors';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
@@ -47,27 +53,26 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
   inProps: DataGridPremiumProps<R>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const props = useDataGridPremiumProps(inProps);
+  const initialProps = useDataGridPremiumProps(inProps);
   const privateApiRef = useGridApiInitialization<GridPrivateApiPremium, GridApiPremium>(
-    props.apiRef,
-    props,
+    initialProps.apiRef,
+    initialProps,
   );
-  useDataGridPremiumComponent(privateApiRef, props);
+
+  const props = useDataGridPremiumComponent(privateApiRef, initialProps);
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
-  const { pivotParams } = props;
-  const pivotSettingsOpen = pivotParams?.pivotSettingsOpen ?? false;
+  const pivotSettingsOpen = useGridSelector(privateApiRef, gridPivotPanelOpenSelector);
 
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, dataGridPremiumPropValidators);
   }
 
-  const sidePanel =
-    pivotParams && pivotSettingsOpen ? (
-      <GridSidebar>
-        <GridSidebarColumnPanel pivotParams={pivotParams} />
-      </GridSidebar>
-    ) : null;
+  const sidePanel = pivotSettingsOpen ? (
+    <GridSidebar>
+      <GridSidebarColumnPanel />
+    </GridSidebar>
+  ) : null;
 
   return (
     <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
@@ -800,6 +805,9 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onPinnedColumnsChange: PropTypes.func,
+  onPivotModeChange: PropTypes.func,
+  onPivotModelChange: PropTypes.func,
+  onPivotPanelOpenChange: PropTypes.func,
   /**
    * Callback fired when the preferences panel is closed.
    * @param {GridPreferencePanelParams} params With all properties from [[GridPreferencePanelParams]].
@@ -955,35 +963,24 @@ DataGridPremiumRaw.propTypes = {
     bottom: PropTypes.arrayOf(PropTypes.object),
     top: PropTypes.arrayOf(PropTypes.object),
   }),
-  pivotParams: PropTypes /* @typescript-to-proptypes-ignore */.shape({
-    initialColumns: PropTypes.array,
-    onPivotModeChange: PropTypes.func.isRequired,
-    onPivotModelChange: PropTypes.func.isRequired,
-    pivotMode: PropTypes.bool.isRequired,
-    pivotModel: PropTypes.shape({
-      columns: PropTypes.arrayOf(PropTypes.object).isRequired,
-      rows: PropTypes.arrayOf(
-        PropTypes.shape({
-          field: PropTypes.string.isRequired,
-        }),
-      ).isRequired,
-      values: PropTypes.arrayOf(
-        PropTypes.shape({
-          aggFunc: PropTypes.string.isRequired,
-          field: PropTypes.string.isRequired,
-        }),
-      ).isRequired,
-    }).isRequired,
-    props: PropTypes.shape({
-      aggregationModel: PropTypes.object,
-      columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
-      columns: PropTypes.arrayOf(PropTypes.object).isRequired,
-      columnVisibilityModel: PropTypes.object,
-      getAggregationPosition: PropTypes.func,
-      rowGroupingModel: PropTypes.arrayOf(PropTypes.string),
-      rows: PropTypes.array,
-    }),
+  pivotMode: PropTypes.bool,
+  pivotModel: PropTypes.shape({
+    columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+    rows: PropTypes.arrayOf(
+      PropTypes.shape({
+        field: PropTypes.string.isRequired,
+        hidden: PropTypes.bool,
+      }),
+    ).isRequired,
+    values: PropTypes.arrayOf(
+      PropTypes.shape({
+        aggFunc: PropTypes.string.isRequired,
+        field: PropTypes.string.isRequired,
+        hidden: PropTypes.bool,
+      }),
+    ).isRequired,
   }),
+  pivotPanelOpen: PropTypes.bool,
   /**
    * Callback called before updating a row with new values in the row and cell editing.
    * @template R

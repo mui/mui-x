@@ -1,19 +1,16 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
 import { vars } from '@mui/x-data-grid/internals';
-import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import { useGridSelector } from '@mui/x-data-grid-pro';
 import { GridSidebarHeader } from '../GridSidebarHeader';
 import { GridSidebarCloseButton } from '../GridSidebarCloseButton';
 import { GridSidebarSearchButton } from '../GridSidebarSearchButton';
 import { GridSidebarSearchField } from '../GridSidebarSearchField';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { gridPivotModeSelector } from '../../../hooks/features/pivoting/gridPivotingSelectors';
 
-export interface GridSidebarColumnPanelHeaderProps
-  extends Pick<
-    NonNullable<DataGridPremiumProcessedProps['pivotParams']>,
-    'pivotMode' | 'onPivotModeChange'
-  > {
+export interface GridSidebarColumnPanelHeaderProps {
   searchState: {
     value: string;
     enabled: boolean;
@@ -50,13 +47,15 @@ const Title = styled('span')({
 });
 
 export function GridSidebarColumnPanelHeader(props: GridSidebarColumnPanelHeaderProps) {
-  const { pivotMode, searchState, onPivotModeChange, onSearchStateChange } = props;
+  const { searchState, onSearchStateChange } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
 
   const enableSearch = () => {
     onSearchStateChange((state) => ({ ...state, enabled: true }));
   };
+
+  const pivotMode = useGridSelector(apiRef, gridPivotModeSelector);
 
   return (
     <GridSidebarHeader>
@@ -83,7 +82,7 @@ export function GridSidebarColumnPanelHeader(props: GridSidebarColumnPanelHeader
         <rootProps.slots.baseSwitch
           checked={pivotMode}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-            onPivotModeChange(event.target.checked)
+            apiRef.current.setPivotMode(event.target.checked)
           }
           size="small"
           label={apiRef.current.getLocaleText('pivotToggleLabel')}

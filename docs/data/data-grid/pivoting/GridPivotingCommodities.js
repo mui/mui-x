@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-  DataGridPremium,
-  useGridApiRef,
-  unstable_useGridPivoting,
-} from '@mui/x-data-grid-premium';
+import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function GridPivotingCommodities() {
@@ -11,7 +7,7 @@ export default function GridPivotingCommodities() {
 
   const { data, loading } = useDemoData({
     dataSet: 'Commodity',
-    rowLength: 1_000,
+    rowLength: 10_000,
     editable: true,
   });
 
@@ -23,14 +19,6 @@ export default function GridPivotingCommodities() {
 
   const [isPivotMode, setIsPivotMode] = React.useState(false);
 
-  const pivotParams = unstable_useGridPivoting({
-    apiRef,
-    pivotModel,
-    onPivotModelChange: setPivotModel,
-    pivotMode: isPivotMode,
-    onPivotModeChange: setIsPivotMode,
-  });
-
   return (
     <div style={{ width: '100%' }}>
       <div style={{ height: 600, width: '100%' }}>
@@ -39,7 +27,10 @@ export default function GridPivotingCommodities() {
           columns={data.columns}
           apiRef={apiRef}
           showToolbar
-          pivotParams={pivotParams}
+          pivotModel={pivotModel}
+          onPivotModelChange={setPivotModel}
+          pivotMode={isPivotMode}
+          onPivotModeChange={setIsPivotMode}
           loading={loading}
           columnGroupHeaderHeight={36}
         />

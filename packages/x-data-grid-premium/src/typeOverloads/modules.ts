@@ -15,6 +15,7 @@ import type {
 import { GridRowGroupingInternalCache } from '../hooks/features/rowGrouping/gridRowGroupingInterfaces';
 import { GridAggregationInternalCache } from '../hooks/features/aggregation/gridAggregationInterfaces';
 import type { GridExcelExportOptions } from '../hooks/features/export/gridExcelExportInterface';
+import type { GridPivotModel } from '../hooks/features/pivoting/gridPivotingInterfaces';
 
 export interface GridControlledStateEventLookupPremium {
   /**
@@ -33,6 +34,12 @@ export interface GridControlledStateEventLookupPremium {
    * Fired when the state of the Excel export task changes
    */
   excelExportStateChange: { params: 'pending' | 'finished' };
+  /**
+   * Fired when the pivot model changes.
+   */
+  pivotModelChange: { params: GridPivotModel };
+  pivotModeChange: { params: boolean };
+  pivotPanelOpenChange: { params: boolean };
 }
 
 interface GridEventLookupPremium extends GridEventLookupPro {
