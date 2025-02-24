@@ -54,7 +54,7 @@ The demo below shows how to display active filter chips on the toolbar.
 
 {{"demo": "GridToolbarFilterBar.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Custom elements
+## Custom elements
 
 Use the `render` prop to replace default elements. See [Components usage—Customization](/x/react-data-grid/components/usage/#customization) for more details.
 

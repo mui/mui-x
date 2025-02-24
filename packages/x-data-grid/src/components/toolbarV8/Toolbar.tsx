@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import clsx from 'clsx';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import { vars } from '../../constants/cssVariables';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridComponentRenderer, RenderProp } from '../../hooks/utils/useGridComponentRenderer';
 import { ToolbarContext } from './ToolbarContext';
@@ -32,14 +33,14 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const ToolbarRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'Toolbar',
-})<{ ownerState: OwnerState }>(({ theme }) => ({
+})<{ ownerState: OwnerState }>({
   flex: 0,
   display: 'flex',
   alignItems: 'center',
-  gap: theme.spacing(0.25),
-  padding: theme.spacing(0.5),
-  borderBottom: `1px solid ${theme.palette.divider}`,
-}));
+  gap: vars.spacing(0.25),
+  padding: vars.spacing(0.5),
+  borderBottom: `1px solid ${vars.colors.border.base}`,
+});
 
 /**
  * The top level Toolbar component that provides context to child components.

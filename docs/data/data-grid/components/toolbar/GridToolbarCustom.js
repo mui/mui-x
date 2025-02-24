@@ -14,7 +14,7 @@ import {
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import { TailwindDemoContainer } from '@mui/x-data-grid/internals';
-import ClearIcon from '@mui/icons-material/Clear';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 function Button(props) {
   return (
@@ -22,7 +22,7 @@ function Button(props) {
       type="button"
       {...props}
       className={clsx(
-        'flex h-9 items-center justify-center rounded border border-gray-200 bg-gray-50 px-2.5 text-sm font-medium text-gray-900 whitespace-nowrap select-none hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-blue-600 active:bg-gray-100',
+        'flex h-9 items-center justify-center rounded border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 px-2.5 text-sm font-bold text-neutral-700 dark:text-neutral-200 whitespace-nowrap select-none hover:bg-neutral-100 dark:hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-blue-600 active:bg-neutral-100 dark:active:bg-neutral-700',
         props.className,
       )}
     />
@@ -34,7 +34,7 @@ function TextInput(props) {
     <input
       {...props}
       className={clsx(
-        'h-9 rounded border border-gray-200 px-2.5 text-base text-gray-900 focus:outline focus:outline-2 focus:-outline-offset-1 focus:outline-blue-600',
+        'h-9 rounded border border-neutral-200 dark:border-neutral-700 dark:bg-neutral-900 px-2.5 text-base text-neutral-900 dark:text-neutral-200 focus:outline focus:outline-2 focus:-outline-offset-1 focus:outline-blue-600',
         props.className,
       )}
     />
@@ -43,7 +43,7 @@ function TextInput(props) {
 
 function CustomToolbar() {
   return (
-    <Toolbar className="flex gap-2 p-2 border-b border-gray-200">
+    <Toolbar className="flex gap-2 p-2 border-b border-neutral-200 dark:border-neutral-700">
       <ColumnsPanelTrigger
         render={<ToolbarButton render={<Button>Columns</Button>} />}
       />
@@ -62,7 +62,7 @@ function CustomToolbar() {
           <QuickFilterClear
             render={
               <Button aria-label="Clear" className="rounded-l-none">
-                <ClearIcon className="text-sm" />
+                <CancelIcon className="text-xl" />
               </Button>
             }
           />

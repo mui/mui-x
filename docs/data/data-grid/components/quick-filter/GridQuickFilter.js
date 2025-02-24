@@ -9,7 +9,7 @@ import {
 import { useDemoData } from '@mui/x-data-grid-generator';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
-import ClearIcon from '@mui/icons-material/Clear';
+import CancelIcon from '@mui/icons-material/Cancel';
 import SearchIcon from '@mui/icons-material/Search';
 
 function CustomToolbar() {
@@ -37,8 +37,9 @@ function CustomToolbar() {
                       edge="end"
                       size="small"
                       aria-label="Clear search"
+                      sx={{ marginRight: -0.75 }}
                     >
-                      <ClearIcon fontSize="small" />
+                      <CancelIcon fontSize="small" />
                     </QuickFilterClear>
                   </InputAdornment>
                 ) : null,
