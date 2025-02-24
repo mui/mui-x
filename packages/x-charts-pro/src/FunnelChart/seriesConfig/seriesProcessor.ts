@@ -47,13 +47,13 @@ const seriesProcessor: SeriesProcessor<'funnel'> = (params, dataset) => {
 
   const completedSeries: Record<string, ChartSeriesDefaultized<'funnel'>> = {};
 
+  const isHorizontal = seriesOrder.some((seriesId) => series[seriesId].layout === 'horizontal');
+
   seriesOrder.forEach((seriesId) => {
     const currentSeries = series[seriesId];
     // Use dataKey if needed and available
     // const dataKey = currentSeries.dataKey;
     const dataKey = undefined;
-
-    const isHorizontal = currentSeries.layout === 'horizontal';
 
     completedSeries[seriesId] = {
       labelMarkType: 'square',

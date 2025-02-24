@@ -33,7 +33,7 @@ export interface FunnelChartProps
    * The series to display in the funnel chart.
    * An array of [[FunnelSeriesType]] objects.
    */
-  series: MakeOptional<FunnelSeriesType, 'type'>[];
+  series: Readonly<MakeOptional<FunnelSeriesType, 'type'>[]>;
   /**
    * If `true`, the legend is not rendered.
    * @default false
