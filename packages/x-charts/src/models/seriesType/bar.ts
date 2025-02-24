@@ -15,7 +15,7 @@ export interface BarSeriesType
   /**
    * Data associated to each bar.
    */
-  data?: (number | null)[];
+  data?: readonly (number | null)[];
   /**
    * The key used to retrieve data from the dataset.
    */

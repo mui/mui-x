@@ -11,7 +11,7 @@ import { ChartsAxisProps } from '../ChartsAxis';
 import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsLegendSlotExtension } from '../ChartsLegend';
 import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
-import { calculateMargins } from '../internals/calculateMargins';
+import { BAR_CHART_PLUGINS, BarChartPluginsSignatures } from './BarChart.plugins';
 
 /**
  * A helper function that extracts BarChartProps from the input props
@@ -33,10 +33,6 @@ export const useBarChartProps = (props: BarChartProps) => {
     sx,
     axisHighlight,
     grid,
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
     children,
     slots,
     slotProps,
@@ -68,7 +64,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     ),
   } as const;
 
-  const chartContainerProps: Omit<ChartContainerProps<'bar'>, 'plugins'> = {
+  const chartContainerProps: ChartContainerProps<'bar', BarChartPluginsSignatures> = {
     ...rest,
     series: series.map((s) => ({
       type: 'bar' as const,
@@ -77,7 +73,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     })),
     width,
     height,
-    margin: calculateMargins({ margin, hideLegend, slotProps, series }),
+    margin,
     colors,
     dataset,
     xAxis:
@@ -94,6 +90,7 @@ export const useBarChartProps = (props: BarChartProps) => {
       axisHighlight?.y === 'none',
     className,
     skipAnimation,
+    plugins: BAR_CHART_PLUGINS,
   };
 
   const barPlotProps: BarPlotProps = {
@@ -124,10 +121,6 @@ export const useBarChartProps = (props: BarChartProps) => {
   };
 
   const chartsAxisProps: ChartsAxisProps = {
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
     slots,
     slotProps,
   };

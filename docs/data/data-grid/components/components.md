@@ -50,7 +50,7 @@ As mentioned above, the column menu is a component slot that can be recomposed e
 
 ### Toolbar
 
-To enable the toolbar you need to add the `toolbar: GridToolbar` to the Data Grid `slots` prop.
+To enable the toolbar you need to add the `showToolbar` prop to the Data Grid.
 This demo showcases how this can be achieved.
 
 {{"demo": "ToolbarGrid.js", "bg": "inline"}}
@@ -173,6 +173,7 @@ declare module '@mui/x-data-grid' {
       someCustomNumber: 42,
     },
   }}
+  showToolbar
 />;
 ```
 
@@ -197,6 +198,7 @@ declare module '@mui/x-data-grid-pro' {
       someCustomNumber: 42,
     },
   }}
+  showToolbar
 />;
 ```
 
@@ -221,6 +223,7 @@ declare module '@mui/x-data-grid-premium' {
       someCustomNumber: 42,
     },
   }}
+  showToolbar
 />;
 ```
 

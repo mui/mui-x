@@ -34,6 +34,19 @@ Since v8 is a major release, it contains some changes that affect the public API
 These changes were done for consistency, improve stability and make room for new features.
 Below are described the steps you need to make to migrate from v7 to v8.
 
+### Setting license key
+
+The deprecated `LicenseInfo` export was removed from the `@mui/x-data-grid-pro` and `@mui/x-data-grid-premium` packages.
+You have to import it from `@mui/x-license` instead:
+
+```diff
+-import { LicenseInfo } from '@mui/x-data-grid-pro';
+-import { LicenseInfo } from '@mui/x-data-grid-premium';
++import { LicenseInfo } from '@mui/x-license';
+
+ LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
+```
+
 ### Props
 
 - Passing additional props (like `data-*`, `aria-*`) directly on the Data Grid component is no longer supported. To pass the props, use `slotProps`:
@@ -46,11 +59,53 @@ Below are described the steps you need to make to migrate from v7 to v8.
   To revert to the previous behavior, pass `rowSelectionPropagation={{ parents: false, descendants: false }}`.
 - The prop `indeterminateCheckboxAction` has been removed. Clicking on an indeterminate checkbox "selects" the unselected descendants.
 - The "Select all" checkbox would now be checked when all the selectable rows are selected, ignoring rows that are not selectable because of the `isRowSelectable` prop.
+- The row selection model has been changed from `GridRowId[]` to `{ type: 'include' | 'exclude'; ids: Set<GridRowId> }`.
+  Using `Set` allows for a more efficient row selection management.
+  The `exclude` selection type allows to select all rows except the ones in the `ids` set.
+
+  This change impacts the following props:
+
+  - `rowSelectionModel`
+  - `onRowSelectionModelChange`
+  - `initialState.rowSelectionModel`
+
+  ```diff
+  -const [rowSelectionModel, setRowSelectionModel] = React.useState<GridRowSelectionModel>([]);
+  +const [rowSelectionModel, setRowSelectionModel] = React.useState<GridRowSelectionModel>({ type: 'include', ids: new Set() });
+  ```
+
+  This change also impacts the `gridRowSelectionStateSelector` selector.
+  For convenience, use the `gridRowSelectionManagerSelector` selector to handle both selection types:
+
+  ```diff
+  -const rowSelection = gridRowSelectionStateSelector(apiRef);
+  -const isRowSelected = rowSelection.includes(rowId);
+  +const rowSelectionManager = gridRowSelectionManagerSelector(apiRef);
+  +const isRowSelected = rowSelectionManager.has(rowId);
+  ```
+
+  There is also a `createRowSelectionManager` utility function that can be used to manage the row selection:
+
+  ```ts
+  const rowSelectionManager = createRowSelectionManager({
+    type: 'include',
+    ids: new Set(),
+  });
+  rowSelectionManager.select(rowId);
+  rowSelectionManager.unselect(rowId);
+  rowSelectionManager.has(rowId);
+  ```
+
+- The `selectedIdsLookupSelector` selector has been removed. Use the `gridRowSelectionManagerSelector` or `gridRowSelectionStateSelector` selectors instead.
+- The `selectedGridRowsSelector` has been renamed to `gridRowSelectionIdsSelector`.
+- The `selectedGridRowsCountSelector` has been renamed to `gridRowSelectionCountSelector`.
 
 ### Changes to the public API
 
 - The `rowPositionsDebounceMs` prop was removed.
+- The `resetPageOnSortFilter` prop was removed. The Data Grid now goes back to the first page after sort or filter is applied.
 - The `apiRef.current.resize()` method was removed.
+- The `apiRef.current.forceUpdate()` method was removed. Use selectors combined with `useGridSelector()` hook to react to changes in the state.
 - The `<GridOverlays />` component is not exported anymore.
 - The `sanitizeFilterItemValue()` utility is not exported anymore.
 - `gridRowsDataRowIdToIdLookupSelector` was removed. Use `gridRowsLookupSelector` in combination with `getRowId()` API method instead.
@@ -82,7 +137,29 @@ Below are described the steps you need to make to migrate from v7 to v8.
   - Return early if `apiRef` is `null`
   - Throw an error if `apiRef` is `null`
 
-- `createUseGridApiEventHandler` is not exported anymore.
+- `createUseGridApiEventHandler()` is not exported anymore.
+- The `showToolbar` prop is now required to display the toolbar.
+
+  It is no longer necessary to pass `GridToolbar` as a slot to display the default toolbar.
+
+  ```diff
+   <DataGrid
+  +  showToolbar
+  -  slots={{
+  -    toolbar: GridToolbar,
+  -  }}
+   />
+  ```
+
+### Behavioral changes
+
+- The "Reset" button in the column visibility panel now resets to the initial column visibility model instead of the model when the panel was opened. The reset behavior follows these rules:
+
+  1. If an initial `columnVisibilityModel` is provided, it resets to that model.
+  2. If a controlled `columnVisibilityModel` is provided, it resets to the first model value.
+  3. When the columns are updated (via the `columns` prop or `updateColumns()` API method), the reset reference point updates to the current `columnVisibilityModel`.
+
+  To revert to the previous behavior, provide a custom component to the `slots.columnsManagement`.
 
 ### Localization
 
@@ -94,14 +171,21 @@ Below are described the steps you need to make to migrate from v7 to v8.
 
 ### State
 
-- The selectors signature has been updated due to the support of arguments in the selectors. Pass `undefined` as `arguments` if the selector doesn't use any arguments.
+- The selectors signature has been updated. They are only accepting `apiRef` as a first argument. Some selectors support additional arguments.
 
   ```diff
   -mySelector(state, instanceId)
-  +mySelector(state, arguments, instanceId)
+  +mySelector(apiRef)
   ```
 
-- The `useGridSelector` signature has been updated due to the introduction of arguments parameter in the selectors. Pass `undefined` as `arguments` if the selector doesn't use any arguments.
+  or
+
+  ```diff
+  -mySelector(state, instanceId)
+  +mySelector(apiRef, arguments)
+  ```
+
+- The `useGridSelector()` signature has been updated due to the introduction of arguments parameter in the selectors. Pass `undefined` as `arguments` if the selector doesn't use any arguments.
 
   ```diff
   -const output = useGridSelector(apiRef, selector, equals);
@@ -128,6 +212,7 @@ Below are described the steps you need to make to migrate from v7 to v8.
 ### Other exports
 
 - `ariaV8` experimental flag is removed. It's now the default behavior.
+- Subcomponents that are in a React Portal must now be wrapped with `GridPortalWrapper`
 
 ### Filtering
 
@@ -161,6 +246,14 @@ Below are described the steps you need to make to migrate from v7 to v8.
   ```
 
 - The `detailPanels`, `pinnedColumns`, and `pinnedRowsRenderZone` classes have been removed.
+- The `main--hasSkeletonLoadingOverlay` class has been renamed to `main--hiddenContent` and is now also applied when the "No columns" overlay is displayed.
+
+### Slots
+
+- The `baseFormControl` slot was removed.
+- The `baseInputLabel` slot was removed.
+- The `baseInputAdornment` slot was removed.
+- The `paper` slot has been renamed to `panelContent`.
 
 <!-- ### Editing
 

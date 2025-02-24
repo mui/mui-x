@@ -101,7 +101,6 @@ const GridGenericColumnHeaderItem = forwardRef<HTMLDivElement, GridGenericColumn
         className={clsx(classes.root, headerClassName)}
         style={{
           ...style,
-          height,
           width,
         }}
         role="columnheader"

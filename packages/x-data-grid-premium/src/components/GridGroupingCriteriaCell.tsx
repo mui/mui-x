@@ -1,6 +1,6 @@
 import * as React from 'react';
 import composeClasses from '@mui/utils/composeClasses';
-import Box from '@mui/material/Box';
+import { vars } from '@mui/x-data-grid/internals';
 import {
   useGridSelector,
   gridFilteredDescendantCountLookupSelector,
@@ -73,18 +73,14 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
   }
 
   return (
-    <Box
+    <div
       className={classes.root}
-      sx={[
-        rootProps.rowGroupingColumnMode === 'multiple'
-          ? {
-              ml: 0,
-            }
-          : (theme) => ({
-              ml: `calc(var(--DataGrid-cellOffsetMultiplier) * var(--depth) * ${theme.spacing(1)})`,
-            }),
-      ]}
-      style={{ '--depth': rowNode.depth } as any}
+      style={{
+        marginLeft:
+          rootProps.rowGroupingColumnMode === 'multiple'
+            ? 0
+            : `calc(var(--DataGrid-cellOffsetMultiplier) * ${rowNode.depth} * ${vars.spacing(1)})`,
+      }}
     >
       <div className={classes.toggle}>
         {filteredDescendantCount > 0 && (
@@ -108,6 +104,6 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
       {!hideDescendantCount && filteredDescendantCount > 0 ? (
         <span style={{ whiteSpace: 'pre' }}> ({filteredDescendantCount})</span>
       ) : null}
-    </Box>
+    </div>
   );
 }

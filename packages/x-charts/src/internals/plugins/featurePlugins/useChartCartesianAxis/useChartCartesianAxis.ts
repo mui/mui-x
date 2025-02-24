@@ -2,21 +2,27 @@
 import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
 import { ChartPlugin } from '../../models';
-import { ChartSeriesType } from '../../../../models/seriesType/config';
 import { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 import { rainbowSurgePalette } from '../../../../colorPalettes';
 import { useSelector } from '../../../store/useSelector';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import { defaultizeAxis } from './defaultizeAxis';
-import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxis.selectors';
+import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
 import { getAxisValue } from './getAxisValue';
 import { getSVGPoint } from '../../../getSVGPoint';
-import { selectorChartsInteractionAxis } from '../useChartInteraction';
+import {
+  selectorChartsInteractionAxis,
+  selectorChartsInteractionIsInitialized,
+} from '../useChartInteraction';
 
-export const useChartCartesianAxis: ChartPlugin<
-  UseChartCartesianAxisSignature<ChartSeriesType>
-> = ({ params, store, seriesConfig, svgRef, instance }) => {
+export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<any>> = ({
+  params,
+  store,
+  seriesConfig,
+  svgRef,
+  instance,
+}) => {
   const { xAxis, yAxis, dataset } = params;
 
   if (process.env.NODE_ENV !== 'production') {
@@ -39,6 +45,7 @@ export const useChartCartesianAxis: ChartPlugin<
   const processedSeries = useSelector(store, selectorChartSeriesProcessed);
 
   const interactionAxis = useSelector(store, selectorChartsInteractionAxis);
+  const isInteractionEnabled = useSelector(store, selectorChartsInteractionIsInitialized);
   const { axis: xAxisWithScale, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
   const { axis: yAxisWithScale, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
 
@@ -73,7 +80,7 @@ export const useChartCartesianAxis: ChartPlugin<
 
   React.useEffect(() => {
     const element = svgRef.current;
-    if (element === null || params.disableAxisListener) {
+    if (!isInteractionEnabled || element === null || params.disableAxisListener) {
       return () => {};
     }
 
@@ -84,7 +91,7 @@ export const useChartCartesianAxis: ChartPlugin<
         y: -1,
       };
 
-      instance.cleanInteraction();
+      instance.cleanInteraction?.();
     };
 
     const handleMove = (event: MouseEvent | TouchEvent) => {
@@ -106,7 +113,7 @@ export const useChartCartesianAxis: ChartPlugin<
       }
       mousePosition.current.isInChart = true;
 
-      instance.setAxisInteraction({
+      instance.setAxisInteraction?.({
         x: getAxisValue(xAxisWithScale[usedXAxis], svgPoint.x),
         y: getAxisValue(yAxisWithScale[usedYAxis], svgPoint.y),
       });
@@ -144,6 +151,7 @@ export const useChartCartesianAxis: ChartPlugin<
     usedYAxis,
     instance,
     params.disableAxisListener,
+    isInteractionEnabled,
   ]);
 
   React.useEffect(() => {
@@ -156,30 +164,30 @@ export const useChartCartesianAxis: ChartPlugin<
       event.preventDefault();
 
       let dataIndex: number | null = null;
-      let isXaxis: boolean = false;
+      let isXAxis: boolean = false;
       if (interactionAxis.x === null && interactionAxis.y === null) {
         const svgPoint = getSVGPoint(element, event);
 
         const xIndex = getAxisValue(xAxisWithScale[usedXAxis], svgPoint.x)?.index ?? null;
-        isXaxis = xIndex !== null && xIndex !== -1;
+        isXAxis = xIndex !== null && xIndex !== -1;
 
-        dataIndex = isXaxis
+        dataIndex = isXAxis
           ? xIndex
           : (getAxisValue(yAxisWithScale[usedYAxis], svgPoint.y)?.index ?? null);
       } else {
-        isXaxis = interactionAxis.x !== null && interactionAxis.x.index !== -1;
-        dataIndex = isXaxis
+        isXAxis = interactionAxis.x !== null && interactionAxis.x.index !== -1;
+        dataIndex = isXAxis
           ? interactionAxis.x && interactionAxis.x.index
           : interactionAxis.y && interactionAxis.y.index;
       }
 
-      const USED_AXIS_ID = isXaxis ? xAxisIds[0] : yAxisIds[0];
+      const USED_AXIS_ID = isXAxis ? xAxisIds[0] : yAxisIds[0];
       if (dataIndex == null || dataIndex === -1) {
         return;
       }
 
       // The .data exist because otherwise the dataIndex would be null or -1.
-      const axisValue = (isXaxis ? xAxisWithScale : yAxisWithScale)[USED_AXIS_ID].data![dataIndex];
+      const axisValue = (isXAxis ? xAxisWithScale : yAxisWithScale)[USED_AXIS_ID].data![dataIndex];
 
       const seriesValues: Record<string, number | null | undefined> = {};
 
@@ -192,7 +200,7 @@ export const useChartCartesianAxis: ChartPlugin<
             const providedXAxisId = seriesItem.xAxisId;
             const providedYAxisId = seriesItem.yAxisId;
 
-            const axisKey = isXaxis ? providedXAxisId : providedYAxisId;
+            const axisKey = isXAxis ? providedXAxisId : providedYAxisId;
             if (axisKey === undefined || axisKey === USED_AXIS_ID) {
               seriesValues[seriesId] = seriesItem.data[dataIndex];
             }

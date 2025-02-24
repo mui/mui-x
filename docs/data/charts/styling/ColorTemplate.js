@@ -35,11 +35,6 @@ const legendPlacement = {
       direction: 'vertical',
     },
   },
-  margin: {
-    top: 20,
-    right: 20,
-    left: 30,
-  },
 };
 const series = [
   { label: 'Series 1', data: getGaussianSeriesData([-5, 0]) },

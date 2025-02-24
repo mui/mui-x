@@ -14,20 +14,7 @@ export const useChartDataProviderProps = <
 >(
   props: ChartDataProviderProps<TSeries, TSignatures>,
 ) => {
-  const {
-    apiRef,
-    width,
-    height,
-    series,
-    margin,
-    colors,
-    dataset,
-    children,
-    skipAnimation,
-    plugins,
-    seriesConfig,
-    ...other
-  } = props;
+  const { children, skipAnimation, plugins, seriesConfig, ...other } = props;
 
   const theme = useTheme();
 
@@ -35,13 +22,6 @@ export const useChartDataProviderProps = <
     plugins,
     seriesConfig,
     pluginParams: {
-      apiRef,
-      width,
-      height,
-      margin,
-      dataset,
-      series,
-      colors,
       theme: theme.palette.mode,
       ...other,
     } as unknown as MergeSignaturesProperty<

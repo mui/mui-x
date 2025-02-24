@@ -3,7 +3,6 @@ import {
   DataGridPro,
   useGridApiRef,
   GridInitialState,
-  GridToolbar,
   GridDataSource,
 } from '@mui/x-data-grid-pro';
 import Button from '@mui/material/Button';
@@ -71,7 +70,7 @@ export default function ServerSideTreeData() {
           pagination
           pageSizeOptions={pageSizeOptions}
           initialState={initialStateWithPagination}
-          slots={{ toolbar: GridToolbar }}
+          showToolbar
           slotProps={{ toolbar: { showQuickFilter: true } }}
         />
       </div>

@@ -101,6 +101,7 @@ export default function CustomRatingOperator() {
         slots={{
           toolbar: Toolbar,
         }}
+        showToolbar
         initialState={{
           ...data.initialState,
           filter: {

@@ -79,7 +79,7 @@ export interface AdapterFormats {
   keyboardDate: string;
   /**
    * The abbreviated month name and the day of the month.
-   * Used in the `DateRangePicker` toolbar.
+   * Used in the `DateTimePicker` and `DateRangePicker` toolbars.
    * @example "Jan 1"
    */
   shortDate: string;
@@ -98,12 +98,6 @@ export interface AdapterFormats {
 
   // Time formats
   /**
-   * The hours and the minutes.
-   * Used for the aria-label of the opening button of the `TimePicker`.
-   * @example "11:44 PM" for locales with meridiem, "23:44" for locales without meridiem.
-   */
-  fullTime: string;
-  /**
    * The hours with the meridiem and minutes.
    * @example "11:44 PM"
    */
@@ -115,12 +109,6 @@ export interface AdapterFormats {
   fullTime24h: string;
 
   // Date & Time formats
-  /**
-   * A keyboard input friendly time format.
-   * Used in the date-time fields.
-   * @example "02/13/2020 11:44 PM" for locales with meridiem, "02/13/2020 23:44" for locales without meridiem.
-   */
-  keyboardDateTime: string;
   /**
    * A keyboard input friendly time format for 12-hour clock.
    * Used in the date-time fields.

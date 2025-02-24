@@ -1,0 +1,11 @@
+<DataGrid
+  {...data}
+  initialState={{
+    columns: {
+      columnVisibilityModel: initialColumns,
+    },
+  }}
+  slots={{
+    noColumnsOverlay: CustomNoColumnsOverlay,
+  }}
+/>

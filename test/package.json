@@ -6,7 +6,7 @@
     "typescript": "tsc -p tsconfig.json"
   },
   "devDependencies": {
-    "@babel/runtime": "^7.26.7",
+    "@babel/runtime": "^7.26.9",
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@mui/material": "^5.16.14",
@@ -24,7 +24,7 @@
     "@types/karma": "^6.3.9",
     "@types/moment-jalaali": "^0.7.9",
     "@types/prop-types": "^15.7.14",
-    "@types/react": "^19.0.8",
+    "@types/react": "^19.0.10",
     "@types/react-router": "^5.1.20",
     "@types/semver": "^7.5.8",
     "chai": "^4.5.0",
@@ -34,10 +34,10 @@
     "prop-types": "^15.8.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router": "^7.1.5",
+    "react-router": "^7.2.0",
     "react-transition-group": "^4.4.5",
-    "semver": "^7.7.0",
-    "stylis": "^4.3.5",
+    "semver": "^7.7.1",
+    "stylis": "^4.3.6",
     "stylis-plugin-rtl": "^2.1.1"
   }
 }

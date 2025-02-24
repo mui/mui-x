@@ -1,10 +1,8 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import {
-  unstable_composeClasses as composeClasses,
-  unstable_useEventCallback as useEventCallback,
-} from '@mui/utils';
+import useEventCallback from '@mui/utils/useEventCallback';
+import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/system';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { RefObject } from '@mui/x-internals/types';
@@ -104,7 +102,7 @@ function GridScrollAreaContent(props: ScrollAreaProps) {
   const sideOffset = useGridSelector(apiRef, offsetSelector, scrollDirection);
 
   const getCanScrollMore = () => {
-    const dimensions = gridDimensionsSelector(apiRef.current.state);
+    const dimensions = gridDimensionsSelector(apiRef);
     if (scrollDirection === 'left') {
       // Only render if the user has not reached yet the start of the list
       return scrollPosition.current.left > 0;

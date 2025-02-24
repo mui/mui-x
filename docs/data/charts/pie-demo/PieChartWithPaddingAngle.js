@@ -21,7 +21,6 @@ export default function PieChartWithPaddingAngle() {
             data,
           },
         ]}
-        margin={{ right: 5 }}
         width={200}
         height={200}
         hideLegend
@@ -37,7 +36,6 @@ export default function PieChartWithPaddingAngle() {
             data,
           },
         ]}
-        margin={{ right: 5 }}
         width={200}
         height={200}
         hideLegend

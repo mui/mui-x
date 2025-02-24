@@ -4,11 +4,14 @@ import { ChartsSurfaceProps } from '../ChartsSurface';
 import { ChartDataProviderProps } from '../ChartDataProvider';
 import type { ChartContainerProps } from './ChartContainer';
 import { ChartSeriesType } from '../models/seriesType/config';
-import { ALL_PLUGINS, AllPluginSignatures, AllPluginsType } from '../internals/plugins/allPlugins';
-import { ChartAnyPluginSignature } from '../internals/plugins/models';
+import { ALL_PLUGINS, AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
 
-export type UseChartContainerPropsReturnValue<TSeries extends ChartSeriesType> = {
-  chartDataProviderProps: ChartDataProviderProps<TSeries, AllPluginSignatures<TSeries>>;
+export type UseChartContainerPropsReturnValue<
+  TSeries extends ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[],
+> = {
+  chartDataProviderProps: Omit<ChartDataProviderProps<TSeries, TSignatures>, 'children'>;
   chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> };
   children: React.ReactNode;
 };
@@ -19,7 +22,7 @@ export const useChartContainerProps = <
 >(
   props: ChartContainerProps<TSeries, TSignatures>,
   ref: React.Ref<SVGSVGElement>,
-): UseChartContainerPropsReturnValue<TSeries> => {
+): UseChartContainerPropsReturnValue<TSeries, TSignatures> => {
   const {
     width,
     height,
@@ -30,6 +33,9 @@ export const useChartContainerProps = <
     dataset,
     desc,
     onAxisClick,
+    disableVoronoi,
+    voronoiMaxRadius,
+    onItemClick,
     disableAxisListener,
     highlightedItem,
     onHighlightChange,
@@ -42,7 +48,7 @@ export const useChartContainerProps = <
     seriesConfig,
     plugins,
     ...other
-  } = props as ChartContainerProps<TSeries, AllPluginSignatures<TSeries>>;
+  } = props as ChartContainerProps<TSeries, AllPluginSignatures>;
 
   const chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> } = {
     title,
@@ -52,10 +58,7 @@ export const useChartContainerProps = <
     ...other,
   };
 
-  const chartDataProviderProps: Omit<
-    ChartDataProviderProps<TSeries, AllPluginSignatures<TSeries>>,
-    'children'
-  > = {
+  const chartDataProviderProps: Omit<ChartDataProviderProps<TSeries, TSignatures>, 'children'> = {
     margin,
     series,
     colors,
@@ -63,16 +66,19 @@ export const useChartContainerProps = <
     highlightedItem,
     onHighlightChange,
     onAxisClick,
+    disableVoronoi,
+    voronoiMaxRadius,
+    onItemClick,
     xAxis,
     yAxis,
     zAxis,
     skipAnimation,
     width,
     height,
-    seriesConfig,
-    plugins: plugins ?? (ALL_PLUGINS as unknown as AllPluginsType<TSeries>),
     disableAxisListener,
-  };
+    seriesConfig,
+    plugins: plugins ?? ALL_PLUGINS,
+  } as unknown as Omit<ChartDataProviderProps<TSeries, TSignatures>, 'children'>;
 
   return {
     chartDataProviderProps,
