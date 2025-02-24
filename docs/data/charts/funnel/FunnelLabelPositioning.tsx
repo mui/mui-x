@@ -38,15 +38,15 @@ export default function FunnelLabelPositioning() {
               'text-before-edge',
             ],
           },
-          offsetY: {
-            knob: 'slider',
-            defaultValue: 15,
-            min: -50,
-            max: 50,
-          },
           offsetX: {
             knob: 'slider',
             defaultValue: -10,
+            min: -50,
+            max: 50,
+          },
+          offsetY: {
+            knob: 'slider',
+            defaultValue: 15,
             min: -50,
             max: 50,
           },
