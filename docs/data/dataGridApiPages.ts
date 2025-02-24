@@ -49,12 +49,20 @@ const dataGridApiPages: MuiPage[] = [
     title: 'GridToolbarQuickFilter',
   },
   {
+    pathname: '/x/api/data-grid/quick-filter',
+    title: 'QuickFilter',
+  },
+  {
     pathname: '/x/api/data-grid/quick-filter-clear',
     title: 'QuickFilterClear',
   },
   {
     pathname: '/x/api/data-grid/quick-filter-control',
     title: 'QuickFilterControl',
+  },
+  {
+    pathname: '/x/api/data-grid/toolbar',
+    title: 'Toolbar',
   },
   {
     pathname: '/x/api/data-grid/toolbar-button',
