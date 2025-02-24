@@ -151,6 +151,23 @@ You have to import it from `@mui/x-license` instead:
    />
   ```
 
+- The signature of `unstable_onDataSourceError()` has been updated to support future use-cases.
+
+  ```diff
+   <DataGrid
+  -  unstable_onDataSourceError={(error: Error, params: GridGetRowsParams) => {
+  -    if (params.filterModel) {
+  -      // do something
+  -    }
+  -  }}
+  +  unstable_onDataSourceError={(error: GridGetRowsError | GridUpdateRowError) => {
+  +    if (error instanceof GridGetRowsError && error.params.filterModel) {
+  +      // do something
+  +    }
+  +  }}
+   />
+  ```
+
 ### Behavioral changes
 
 - The "Reset" button in the column visibility panel now resets to the initial column visibility model instead of the model when the panel was opened. The reset behavior follows these rules:

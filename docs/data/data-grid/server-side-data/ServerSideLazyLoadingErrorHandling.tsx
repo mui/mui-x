@@ -5,6 +5,7 @@ import {
   GridDataSource,
   GridGetRowsParams,
   GRID_ROOT_GROUP_ID,
+  GridGetRowsError,
 } from '@mui/x-data-grid-pro';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -98,7 +99,11 @@ function ServerSideLazyLoadingErrorHandling() {
           {...props}
           apiRef={apiRef}
           unstable_dataSource={dataSource}
-          unstable_onDataSourceError={(_, params) => setRetryParams(params)}
+          unstable_onDataSourceError={(error) => {
+            if (error instanceof GridGetRowsError) {
+              setRetryParams(error.params);
+            }
+          }}
           unstable_dataSourceCache={null}
           unstable_lazyLoading
           paginationModel={{ page: 0, pageSize: 10 }}
