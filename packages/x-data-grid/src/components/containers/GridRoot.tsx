@@ -82,7 +82,12 @@ const GridRoot = forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(pro
 
   return (
     <GridRootStyles
-      className={clsx(classes.root, className, cssVariables.className, sidePanel && gridClasses.withSidePanel)}
+      className={clsx(
+        classes.root,
+        className,
+        cssVariables.className,
+        sidePanel && gridClasses.withSidePanel,
+      )}
       ownerState={ownerState}
       {...other}
       ref={handleRef}
