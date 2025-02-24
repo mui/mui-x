@@ -29,7 +29,7 @@ Each legend item is composed of two main elements: the `mark` and the `label`.
 The example below explains how it is possible to customize some parts the legend.
 And shows how to use both the `legendClasses` variable and the CSS class directly.
 
-{{"demo": "LegendDimensionNoSnap.js", "hideToolbar": true, "bg": "playground"}}
+{{"demo": "LegendDimension.js", "hideToolbar": true, "bg": "playground"}}
 
 ### Position
 
@@ -47,7 +47,7 @@ The `position` property is only available in the `slotProps`, but not in the `<C
 In the second case, you are free to place the legend where you want.
 :::
 
-{{"demo": "LegendPositionNoSnap.js", "hideToolbar": true, "bg": "playground"}}
+{{"demo": "LegendPosition.js", "hideToolbar": true, "bg": "playground"}}
 
 ### Hiding
 
@@ -62,14 +62,14 @@ Changing the `label` style can be done by targeting the root component's font pr
 To change the `mark` color or shape, the `fill` class is used instead.
 Keep in mind that the `mark` is an SVG element, so the `fill` property is used to change its color.
 
-{{"demo": "LegendTextStylingNoSnap.js", "hideToolbar": true, "bg": "playground"}}
+{{"demo": "LegendTextStyling.js", "hideToolbar": true, "bg": "playground"}}
 
 ### Change mark shape
 
 To change the mark shape, you can use the `labelMarkType` property of the series item.
 For the `pie` series, the `labelMarkType` property is available for each of the pie slices too.
 
-{{"demo": "LegendMarkTypeNoSnap.js", "hideToolbar": true, "bg": "playground"}}
+{{"demo": "LegendMarkType.js", "hideToolbar": true, "bg": "playground"}}
 
 ### Scrollable legend
 
@@ -135,7 +135,7 @@ Or a function `({value, formattedValue}) => string`.
 
 It is also possible to reverse the gradient with the `reverse` prop.
 
-{{"demo": "ContinuousInteractiveDemoNoSnap.js", "hideToolbar": true, "bg": "playground"}}
+{{"demo": "ContinuousInteractiveDemo.js", "hideToolbar": true, "bg": "playground"}}
 
 ### Piecewise color mapping
 
@@ -157,7 +157,7 @@ labelFormatter = ({ index, length, min, max, formattedMin, formattedMax }) =>
 The `markType` can be changed with the `markType` prop.
 Since the color values are based on the axis, and not the series, the `markType` has to be set directly on the legend.
 
-{{"demo": "PiecewiseInteractiveDemoNoSnap.js", "hideToolbar": true, "bg": "playground"}}
+{{"demo": "PiecewiseInteractiveDemo.js", "hideToolbar": true, "bg": "playground"}}
 
 ## Click event
 
@@ -175,4 +175,4 @@ const clickHandler = (
 The `context` object contains different properties depending on the legend type.
 Click the legend items to see their content.
 
-{{"demo": "LegendClickNoSnap.js"}}
+{{"demo": "LegendClick.js"}}
