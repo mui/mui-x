@@ -9,6 +9,8 @@ import {
   GridGroupNode,
   GridFeatureMode,
   GridListColDef,
+  GridGetRowsError,
+  GridUpdateRowError,
 } from '@mui/x-data-grid';
 import type {
   GridExperimentalFeatures,
@@ -272,9 +274,8 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    */
   dataSource?: GridDataSource;
   /**
-   * Callback fired when the data source request fails.
-   * @param {Error} error The error object.
-   * @param {GridGetRowsParams} params With all properties from [[GridGetRowsParams]].
+   * Callback fired when a data source request fails.
+   * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
    */
-  onDataSourceError?: (error: Error, params: GridGetRowsParams) => void;
+  onDataSourceError?: (error: GridGetRowsError<GridGetRowsParams> | GridUpdateRowError) => void;
 }

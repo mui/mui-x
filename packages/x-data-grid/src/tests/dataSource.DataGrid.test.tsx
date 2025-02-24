@@ -124,7 +124,9 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
-    setProps({ filterModel: { items: [{ field: 'name', value: 'John', operator: 'contains' }] } });
+    setProps({
+      filterModel: { items: [{ field: 'id', value: 'abc', operator: 'doesNotContain' }] },
+    });
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
     });
@@ -135,7 +137,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
-    setProps({ sortModel: [{ field: 'name', sort: 'asc' }] });
+    setProps({ sortModel: [{ field: 'id', sort: 'asc' }] });
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
     });
@@ -160,8 +162,8 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
 
     setProps({
       paginationModel: { page: 1, pageSize: 10 },
-      sortModel: [{ field: 'name', sort: 'asc' }],
-      filterModel: { items: [{ field: 'name', value: 'John', operator: 'contains' }] },
+      sortModel: [{ field: 'id', sort: 'asc' }],
+      filterModel: { items: [{ field: 'id', value: 'abc', operator: 'doesNotContain' }] },
     });
 
     await waitFor(() => {

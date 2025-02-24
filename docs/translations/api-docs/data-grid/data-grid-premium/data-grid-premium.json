@@ -416,11 +416,8 @@
       }
     },
     "onDataSourceError": {
-      "description": "Callback fired when the data source request fails.",
-      "typeDescriptions": {
-        "error": "The error object.",
-        "params": "With all properties from GridGetRowsParams."
-      }
+      "description": "Callback fired when a data source request fails.",
+      "typeDescriptions": { "error": "The data source error object." }
     },
     "onDensityChange": {
       "description": "Callback fired when the density changes.",

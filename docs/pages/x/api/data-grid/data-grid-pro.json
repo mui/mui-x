@@ -340,8 +340,8 @@
     "onDataSourceError": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(error: Error, params: GridGetRowsParams) => void",
-        "describedArgs": ["error", "params"]
+        "type": "function(error: GridGetRowsError | GridUpdateRowError) => void",
+        "describedArgs": ["error"]
       }
     },
     "onDensityChange": {

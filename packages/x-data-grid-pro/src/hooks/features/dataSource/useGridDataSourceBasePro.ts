@@ -6,6 +6,7 @@ import {
   GridRowId,
   useGridSelector,
   GridDataSourceCacheDefaultConfig,
+  GridGetRowsError,
 } from '@mui/x-data-grid';
 import {
   gridRowGroupsToFetchSelector,
@@ -15,6 +16,7 @@ import {
   DataSourceRowsUpdateStrategy,
   GridStrategyGroup,
 } from '@mui/x-data-grid/internals';
+import { warnOnce } from '@mui/x-internals/warning';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { NestedDataManager, RequestStatus } from './utils';
@@ -70,7 +72,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
     );
   }, [apiRef, props.dataSource, props.lazyLoading]);
 
-  const onError = props.onDataSourceError;
+  const onDataSourceErrorProp = props.onDataSourceError;
 
   const fetchRowChildren = React.useCallback<GridDataSourcePrivateApiPro['fetchRowChildren']>(
     async (id) => {
@@ -147,7 +149,24 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       } catch (error) {
         const childrenFetchError = error as Error;
         apiRef.current.dataSource.setChildrenFetchError(id, childrenFetchError);
-        onError?.(childrenFetchError, fetchParams);
+        if (typeof onDataSourceErrorProp === 'function') {
+          onDataSourceErrorProp(
+            new GridGetRowsError({
+              message: childrenFetchError.message,
+              params: fetchParams,
+              cause: childrenFetchError,
+            }),
+          );
+        } else if (process.env.NODE_ENV !== 'production') {
+          warnOnce(
+            [
+              'MUI X: A call to `dataSource.getRows()` threw an error which was not handled because `unstable_onDataSourceError()` is missing.',
+              'To handle the error pass a callback to the `onDataSourceError` prop, for example `<DataGrid unstable_onDataSourceError={(error) => ...} />`.',
+              'For more detail, see https://mui.com/x/react-data-grid/server-side-data/#error-handling.',
+            ],
+            'error',
+          );
+        }
       } finally {
         apiRef.current.dataSource.setChildrenLoading(id, false);
         nestedDataManager.setRequestSettled(id);
@@ -157,7 +176,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       nestedDataManager,
       cacheChunkManager,
       cache,
-      onError,
+      onDataSourceErrorProp,
       apiRef,
       props.treeData,
       props.dataSource?.getRows,

@@ -67,9 +67,12 @@ Open the Info section of your browser console to see the requests being made and
 
 ## Error handling
 
-For each row group expansion, the data source is called to fetch the children. If an error occurs during the fetch, the grid will display an error message in the row group cell. `onDataSourceError` is also triggered with the error and the fetch params.
+For each row group expansion, the data source is called to fetch the children.
+If an error occurs during the fetch, the grid will display an error message in the row group cell.
+`onDataSourceError` is also triggered with the error object containing the params as mentioned in the [Server-side data—Error handling](/x/react-data-grid/server-side-data/#error-handling) section.
 
-The demo below shows a toast apart from the default error message in the grouping cell. Cache has been disabled in this demo for simplicity.
+The demo below shows a toast apart from the default error message in the grouping cell.
+Cache has been disabled in this demo for simplicity.
 
 {{"demo": "ServerSideTreeDataErrorHandling.js", "bg": "inline"}}
 

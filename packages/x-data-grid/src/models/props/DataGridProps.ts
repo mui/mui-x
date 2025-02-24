@@ -33,8 +33,12 @@ import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
 import { GridColumnGroupingModel } from '../gridColumnGrouping';
 import { GridPaginationMeta, GridPaginationModel } from '../gridPaginationProps';
 import type { GridAutosizeOptions } from '../../hooks/features/columnResize';
-import type { GridDataSource, GridDataSourceCache, GridGetRowsParams } from '../gridDataSource';
+import type { GridDataSource, GridDataSourceCache } from '../gridDataSource';
 import type { GridRowSelectionPropagation } from '../gridRowSelectionModel';
+import type {
+  GridGetRowsError,
+  GridUpdateRowError,
+} from '../../hooks/features/dataSource/gridDataSourceError';
 
 export interface GridExperimentalFeatures {
   /**
@@ -507,11 +511,10 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onCellEditStop?: GridEventListener<'cellEditStop'>;
   /**
-   * Callback fired when the data source request fails.
-   * @param {Error} error The error object.
-   * @param {GridGetRowsParams} params With all properties from [[GridGetRowsParams]].
+   * Callback fired when a data source request fails.
+   * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
    */
-  onDataSourceError?: (error: Error, params: GridGetRowsParams) => void;
+  onDataSourceError?: (error: GridGetRowsError | GridUpdateRowError) => void;
   /**
    * Callback fired when the row turns to edit mode.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
