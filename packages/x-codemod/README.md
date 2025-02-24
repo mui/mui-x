@@ -324,6 +324,8 @@ npx @mui/x-codemod@next v8.0.0/data-grid/preset-safe <path|folder>
 The list includes these transformers
 
 - [`remove-stabilized-v8-experimentalFeatures`](#remove-stabilized-v8-experimentalFeatures)
+- [`remove-props`](#remove-props)
+- [`rename-props`](#rename-props)
 
 #### `remove-stabilized-v8-experimentalFeatures`
 
@@ -341,6 +343,49 @@ Remove feature flags for stabilized `experimentalFeatures`.
 
 ```bash
 npx @mui/x-codemod@next v8.0.0/data-grid/remove-stabilized-experimentalFeatures <path>
+```
+
+#### `remove-props`
+
+Remove props that are no longer supported.
+
+The list includes these props:
+
+- `indeterminateCheckboxAction`
+- `rowPositionsDebounceMs`
+
+```diff
+ <DataGrid
+-  indeterminateCheckboxAction="deselect"
+-  rowPositionsDebounceMs={100}
+ />
+```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@next v8.0.0/data-grid/remove-props <path>
+```
+
+#### `rename-props`
+
+Rename props to the new ones.
+
+The list includes these props:
+
+- `unstable_rowSpanning` to `rowSpanning`
+
+```diff
+ <DataGrid
+-  unstable_rowSpanning
++  rowSpanning
+ />
+```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@next v8.0.0/data-grid/rename-props <path>
 ```
 
 ### Pickers codemods
