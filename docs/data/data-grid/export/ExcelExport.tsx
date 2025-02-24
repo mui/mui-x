@@ -134,6 +134,7 @@ export default function ExcelExport() {
         slots={{
           toolbar: CustomToolbar,
         }}
+        showToolbar
       />
     </div>
   );
