@@ -179,10 +179,8 @@ export interface MuiPickersAdapter<TLocale = any> {
     value?: T,
     timezone?: PickersTimezone,
   ): DateBuilderReturnType<T>;
-  // TODO v9: Remove.
   /**
    * Creates an invalid date in the date library format.
-   * @deprecated This method will be removed in the next major release (v9.0.0).
    * @returns {PickerValidDate} The invalid date.
    */
   getInvalidDate(): PickerValidDate;

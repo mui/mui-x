@@ -282,8 +282,8 @@ export const useField = <
 
   const localizationContext = useLocalizationContext();
   const openPickerAriaLabel = React.useMemo(
-    () => getOpenDialogAriaText({ ...localizationContext, value: state.value }),
-    [getOpenDialogAriaText, state.value, localizationContext],
+    () => getOpenDialogAriaText({ ...localizationContext, value }),
+    [getOpenDialogAriaText, value, localizationContext],
   );
 
   const commonAdditionalProps: UseFieldCommonAdditionalProps = {
