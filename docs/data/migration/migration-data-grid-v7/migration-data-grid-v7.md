@@ -48,7 +48,7 @@ npx @mui/x-codemod@latest v8.0.0/preset-safe <path>
 If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/HEAD/packages/x-codemod/README.md#preset-safe-for-data-grid-v800) for more details.
 :::
 
-Breaking changes that are handled by this codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen.
+Breaking changes that are handled by this codemod are prefixed with a ✅ emoji.
 
 If you have already applied the `v8.0.0/data-grid/preset-safe` (or `v8.0.0/preset-safe`) codemod, then you should not need to take any further action on these items.
 
@@ -97,7 +97,7 @@ You have to import it from `@mui/x-license` instead:
 
 - The default value of the `rowSelectionPropagation` prop has been changed to `{ parents: true, descendants: true }` which means that the selection will be propagated to the parents and descendants by default.
   To revert to the previous behavior, pass `rowSelectionPropagation={{ parents: false, descendants: false }}`.
-- The prop `indeterminateCheckboxAction` has been removed. Clicking on an indeterminate checkbox "selects" the unselected descendants.
+- ✅ The prop `indeterminateCheckboxAction` has been removed. Clicking on an indeterminate checkbox "selects" the unselected descendants.
 - The "Select all" checkbox would now be checked when all the selectable rows are selected, ignoring rows that are not selectable because of the `isRowSelectable` prop.
 - The row selection model has been changed from `GridRowId[]` to `{ type: 'include' | 'exclude'; ids: Set<GridRowId> }`.
   Using `Set` allows for a more efficient row selection management.
@@ -142,7 +142,7 @@ You have to import it from `@mui/x-license` instead:
 
 ### Changes to the public API
 
-- The `rowPositionsDebounceMs` prop was removed.
+- ✅ The `rowPositionsDebounceMs` prop was removed.
 - The `resetPageOnSortFilter` prop was removed. The Data Grid now goes back to the first page after sort or filter is applied.
 - The `apiRef.current.resize()` method was removed.
 - The `apiRef.current.forceUpdate()` method was removed. Use selectors combined with `useGridSelector()` hook to react to changes in the state.
@@ -157,7 +157,7 @@ You have to import it from `@mui/x-license` instead:
   +const rowId = apiRef.current.getRowId(rowsLookup[id]);
   ```
 
-- The feature row spanning is now stable.
+- ✅ The feature row spanning is now stable.
 
   ```diff
    <DataGrid
@@ -251,7 +251,7 @@ You have to import it from `@mui/x-license` instead:
 
 ### Other exports
 
-- `ariaV8` experimental flag is removed. It's now the default behavior.
+- ✅ `ariaV8` experimental flag is removed. It's now the default behavior.
 - Subcomponents that are in a React Portal must now be wrapped with `GridPortalWrapper`
 
 ### Filtering
