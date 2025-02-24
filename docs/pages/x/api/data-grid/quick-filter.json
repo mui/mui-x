@@ -20,17 +20,17 @@
       }
     }
   },
-  "name": "QuickFilterRoot",
+  "name": "QuickFilter",
   "imports": [
-    "import { QuickFilterRoot } from '@mui/x-data-grid/components';",
-    "import { QuickFilterRoot } from '@mui/x-data-grid';",
-    "import { QuickFilterRoot } from '@mui/x-data-grid-pro';",
-    "import { QuickFilterRoot } from '@mui/x-data-grid-premium';"
+    "import { QuickFilter } from '@mui/x-data-grid/components';",
+    "import { QuickFilter } from '@mui/x-data-grid';",
+    "import { QuickFilter } from '@mui/x-data-grid-pro';",
+    "import { QuickFilter } from '@mui/x-data-grid-premium';"
   ],
   "classes": [],
-  "muiName": "MuiQuickFilterRoot",
+  "muiName": "MuiQuickFilter",
   "forwardsRefTo": "GridRoot",
-  "filename": "/packages/x-data-grid/src/components/quickFilter/QuickFilterRoot.tsx",
+  "filename": "/packages/x-data-grid/src/components/quickFilter/QuickFilter.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-data-grid/components/quick-filter\">Data Grid - Quick Filter</a></li></ul>",
   "cssComponent": false

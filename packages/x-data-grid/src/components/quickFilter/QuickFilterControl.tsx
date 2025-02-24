@@ -5,7 +5,7 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridComponentRenderer, RenderProp } from '../../hooks/utils/useGridComponentRenderer';
 import type { GridSlotProps } from '../../models';
-import { QuickFilterState, useQuickFilterRootContext } from './QuickFilterRootContext';
+import { QuickFilterState, useQuickFilterContext } from './QuickFilterContext';
 
 export type QuickFilterControlProps = Omit<GridSlotProps['baseTextField'], 'className'> & {
   /**
@@ -34,7 +34,7 @@ const QuickFilterControl = forwardRef<HTMLInputElement, QuickFilterControlProps>
   function QuickFilterControl(props, ref) {
     const { render, className, ...other } = props;
     const rootProps = useGridRootProps();
-    const { state, controlRef, onValueChange, clearValue } = useQuickFilterRootContext();
+    const { state, controlRef, onValueChange, clearValue } = useQuickFilterContext();
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
     const handleRef = useForkRef(controlRef, ref);
 

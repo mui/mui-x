@@ -1,18 +1,23 @@
 import * as React from 'react';
-import { DataGrid, Toolbar, ColumnsPanel } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  Toolbar,
+  ToolbarButton,
+  ColumnsPanelTrigger,
+} from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Tooltip from '@mui/material/Tooltip';
 import ViewColumnIcon from '@mui/icons-material/ViewColumn';
 
 function CustomToolbar() {
   return (
-    <Toolbar.Root>
+    <Toolbar>
       <Tooltip title="Columns">
-        <ColumnsPanel.Trigger render={<Toolbar.Button />}>
+        <ColumnsPanelTrigger render={<ToolbarButton />}>
           <ViewColumnIcon fontSize="small" />
-        </ColumnsPanel.Trigger>
+        </ColumnsPanelTrigger>
       </Tooltip>
-    </Toolbar.Root>
+    </Toolbar>
   );
 }
 

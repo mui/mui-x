@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, Toolbar } from '@mui/x-data-grid';
+import { DataGrid, Toolbar, ToolbarButton } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Tooltip from '@mui/material/Tooltip';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -39,9 +39,9 @@ function CustomToolbar(props) {
   const settingsMenuTriggerRef = React.useRef(null);
 
   return (
-    <Toolbar.Root>
+    <Toolbar>
       <Tooltip title="Settings">
-        <Toolbar.Button
+        <ToolbarButton
           ref={settingsMenuTriggerRef}
           id="settings-menu-trigger"
           aria-controls="settings-menu"
@@ -50,7 +50,7 @@ function CustomToolbar(props) {
           onClick={() => setSettingsMenuOpen(true)}
         >
           <SettingsIcon fontSize="small" sx={{ ml: 'auto' }} />
-        </Toolbar.Button>
+        </ToolbarButton>
       </Tooltip>
 
       <Menu
@@ -106,7 +106,7 @@ function CustomToolbar(props) {
           <ListItemText>Show cell borders</ListItemText>
         </MenuItem>
       </Menu>
-    </Toolbar.Root>
+    </Toolbar>
   );
 }
 

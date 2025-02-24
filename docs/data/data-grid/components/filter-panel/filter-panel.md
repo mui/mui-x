@@ -13,7 +13,7 @@ githubLabel: 'component: data grid'
 :::warning
 This component is incomplete.
 
-Currently, the Trigger is the only composable part of the Filter Panel available.
+Currently, the `FilterPanelTrigger` is the only part of the Filter Panel component available.
 Future versions of the Filter Panel component will make it possible to compose each of its parts to create a custom filter panel.
 
 In the meantime, it's still possible to deeply customize the panel's subcomponents using custom slots.
@@ -31,14 +31,14 @@ The demo below shows how to add a filter panel trigger to a custom toolbar.
 ## Anatomy
 
 ```tsx
-import { FilterPanel } from '@mui/x-data-grid';
+import { FilterPanelTrigger } from '@mui/x-data-grid';
 
-<FilterPanel.Trigger />;
+<FilterPanelTrigger />;
 ```
 
-### Trigger
+### FilterPanelTrigger
 
-`Trigger` is a button that opens/closes the filter panel.
+`FilterPanelTrigger` is a button that opens/closes the filter panel.
 It renders the `baseButton` slot.
 
 ## Custom elements
@@ -50,4 +50,4 @@ See [Components usage—Customization](/x/react-data-grid/components/usage/#cust
 
 ### ARIA
 
-You must apply a text label or an `aria-label` attribute to the `<FilterPanel.Trigger />`.
+You must apply a text label or an `aria-label` attribute to the `<FilterPanelTrigger />`.

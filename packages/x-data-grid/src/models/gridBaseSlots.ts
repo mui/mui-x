@@ -159,13 +159,13 @@ export type MenuItemProps = {
 };
 
 export type ToolbarProps = {
-  ref?: React.Ref<HTMLDivElement>;
+  ref?: Ref<HTMLDivElement>;
   role?: string;
   'aria-orientation'?: string;
 };
 
 export type ToolbarButtonProps = {
-  ref?: React.Ref<HTMLButtonElement>;
+  ref?: Ref<HTMLButtonElement>;
   tabIndex?: number;
   onKeyDown?: React.KeyboardEventHandler<HTMLButtonElement>;
 };
@@ -310,6 +310,7 @@ export type TextFieldProps = {
   tabIndex?: number;
   type?: React.HTMLInputTypeAttribute;
   value?: string;
+  ref?: Ref;
 };
 
 export type TooltipProps = {

@@ -1,7 +1,7 @@
 ---
 title: React Data Grid - Toolbar component
 productId: x-data-grid
-components: ToolbarRoot, ToolbarButton
+components: Toolbar, ToolbarButton
 packageName: '@mui/x-data-grid'
 githubLabel: 'component: data grid'
 ---
@@ -21,21 +21,21 @@ To extend the default toolbar, the code in the demo below can be copied and cust
 ## Anatomy
 
 ```tsx
-import { Toolbar } from '@mui/x-data-grid';
+import { Toolbar, ToolbarButton } from '@mui/x-data-grid';
 
-<Toolbar.Root>
-  <Toolbar.Button />
-</Toolbar.Root>;
+<Toolbar>
+  <ToolbarButton />
+</Toolbar>;
 ```
 
-### Root
+### Toolbar
 
-`Root` is the top level component that provides context to child components.
+`Toolbar` is the top level component that provides context to child components.
 It renders a styled `<div />` element.
 
-### Button
+### ToolbarButton
 
-`Button` is a button that can be used to perform actions from the toolbar.
+`ToolbarButton` is a button that can be used to perform actions from the toolbar.
 It renders the `baseIconButton` slot.
 
 ## Recipes
@@ -70,9 +70,9 @@ The component follows the WAI-ARIA authoring practices.
 
 ### ARIA
 
-- The element rendered by the `<Toolbar.Root />` component has the `toolbar` role.
-- The element rendered by the `<Toolbar.Root />` component has `aria-orientation` set to `horizontal`.
-- You must apply a text label or an `aria-label` attribute to the `<Toolbar.Button />`.
+- The element rendered by the `<Toolbar />` component has the `toolbar` role.
+- The element rendered by the `<Toolbar />` component has `aria-orientation` set to `horizontal`.
+- You must apply a text label or an `aria-label` attribute to the `<ToolbarButton />`.
 
 ### Keyboard
 

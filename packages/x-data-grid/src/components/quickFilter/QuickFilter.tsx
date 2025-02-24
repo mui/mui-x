@@ -1,14 +1,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_debounce as debounce } from '@mui/utils';
-import { QuickFilterRootContext } from './QuickFilterRootContext';
+import { QuickFilterContext } from './QuickFilterContext';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridQuickFilterValuesSelector } from '../../hooks/features/filter';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { GridFilterModel } from '../../models';
 
-export type QuickFilterRootProps = {
+export type QuickFilterProps = {
   children: React.ReactNode;
   /**
    * Function responsible for parsing text input in an array of independent values for quick filtering.
@@ -45,9 +45,9 @@ const DEFAULT_FORMATTER = (values: string[]) => values.join(' ');
  *
  * API:
  *
- * - [QuickFilterRoot API](https://mui.com/x/api/data-grid/quick-filter-root/)
+ * - [QuickFilter API](https://mui.com/x/api/data-grid/quick-filter/)
  */
-function QuickFilterRoot(props: QuickFilterRootProps) {
+function QuickFilter(props: QuickFilterProps) {
   const rootProps = useGridRootProps();
   const {
     parser = DEFAULT_PARSER,
@@ -97,14 +97,10 @@ function QuickFilterRoot(props: QuickFilterRootProps) {
     [value, handleValueChange, handleClear],
   );
 
-  return (
-    <QuickFilterRootContext.Provider value={contextValue}>
-      {children}
-    </QuickFilterRootContext.Provider>
-  );
+  return <QuickFilterContext.Provider value={contextValue}>{children}</QuickFilterContext.Provider>;
 }
 
-QuickFilterRoot.propTypes = {
+QuickFilter.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -131,4 +127,4 @@ QuickFilterRoot.propTypes = {
   parser: PropTypes.func,
 } as any;
 
-export { QuickFilterRoot };
+export { QuickFilter };

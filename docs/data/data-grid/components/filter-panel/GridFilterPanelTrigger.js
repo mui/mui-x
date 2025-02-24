@@ -1,18 +1,23 @@
 import * as React from 'react';
-import { DataGrid, Toolbar, FilterPanel } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  Toolbar,
+  ToolbarButton,
+  FilterPanelTrigger,
+} from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Tooltip from '@mui/material/Tooltip';
 import FilterListIcon from '@mui/icons-material/FilterList';
 
 function CustomToolbar() {
   return (
-    <Toolbar.Root>
+    <Toolbar>
       <Tooltip title="Filters">
-        <FilterPanel.Trigger render={<Toolbar.Button />}>
+        <FilterPanelTrigger render={<ToolbarButton />}>
           <FilterListIcon fontSize="small" />
-        </FilterPanel.Trigger>
+        </FilterPanelTrigger>
       </Tooltip>
-    </Toolbar.Root>
+    </Toolbar>
   );
 }
 

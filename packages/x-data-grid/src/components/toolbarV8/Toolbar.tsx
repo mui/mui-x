@@ -6,15 +6,15 @@ import clsx from 'clsx';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridComponentRenderer, RenderProp } from '../../hooks/utils/useGridComponentRenderer';
-import { ToolbarRootContext } from './ToolbarRootContext';
+import { ToolbarContext } from './ToolbarContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
-export type ToolbarRootProps = React.HTMLAttributes<HTMLDivElement> & {
+export type ToolbarProps = React.HTMLAttributes<HTMLDivElement> & {
   /**
    * A function to customize rendering of the component.
    */
-  render?: RenderProp<React.ComponentProps<typeof Toolbar>>;
+  render?: RenderProp<React.ComponentProps<typeof ToolbarRoot>>;
 };
 
 type OwnerState = DataGridProcessedProps;
@@ -29,7 +29,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const Toolbar = styled('div', {
+const ToolbarRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'Toolbar',
 })<{ ownerState: OwnerState }>(({ theme }) => ({
@@ -51,9 +51,9 @@ const Toolbar = styled('div', {
  *
  * API:
  *
- * - [ToolbarRoot API](https://mui.com/x/api/data-grid/toolbar-root/)
+ * - [Toolbar API](https://mui.com/x/api/data-grid/toolbar/)
  */
-const ToolbarRoot = forwardRef<HTMLDivElement, ToolbarRootProps>(function ToolbarRoot(props, ref) {
+const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(props, ref) {
   const { render, className, ...other } = props;
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
@@ -117,7 +117,7 @@ const ToolbarRoot = forwardRef<HTMLDivElement, ToolbarRootProps>(function Toolba
     [registerItem, unregisterItem, focusableItemId, onItemKeyDown],
   );
 
-  const element = useGridComponentRenderer(Toolbar, render, {
+  const element = useGridComponentRenderer(ToolbarRoot, render, {
     role: 'toolbar',
     'aria-orientation': 'horizontal',
     className: clsx(classes.root, className),
@@ -132,10 +132,10 @@ const ToolbarRoot = forwardRef<HTMLDivElement, ToolbarRootProps>(function Toolba
     }
   }, [items]);
 
-  return <ToolbarRootContext.Provider value={contextValue}>{element}</ToolbarRootContext.Provider>;
+  return <ToolbarContext.Provider value={contextValue}>{element}</ToolbarContext.Provider>;
 });
 
-ToolbarRoot.propTypes = {
+Toolbar.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -146,4 +146,4 @@ ToolbarRoot.propTypes = {
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
 } as any;
 
-export { ToolbarRoot };
+export { Toolbar };

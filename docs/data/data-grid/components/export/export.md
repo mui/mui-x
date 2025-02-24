@@ -19,26 +19,26 @@ The demo below shows how to add export triggers to a custom toolbar.
 ## Anatomy
 
 ```tsx
-import { Export } from '@mui/x-data-grid';
+import { ExportPrint, ExportCsv, ExportExcel } from '@mui/x-data-grid';
 
-<Export.Print />
-<Export.Csv />
-<Export.Excel />
+<ExportPrint />
+<ExportCsv />
+<ExportExcel />
 ```
 
-### Print
+### ExportPrint
 
-`Print` is a button that triggers a print export.
+`ExportPrint` is a button that triggers a print export.
 It renders the `baseButton` slot.
 
-### Csv
+### ExportCsv
 
-`Csv` is a button that triggers a CSV export.
+`ExportCsv` is a button that triggers a CSV export.
 It renders the `baseButton` slot.
 
-### Excel
+### ExportExcel
 
-`Excel` is a button that triggers an Excel export.
+`ExportExcel` is a button that triggers an Excel export.
 It renders the `baseButton` slot.
 
 ## Recipes
@@ -60,4 +60,4 @@ See [Components usage—Customization](/x/react-data-grid/components/usage/#cust
 
 ### ARIA
 
-You must apply a text label or an `aria-label` attribute to the `<Export.Print />`, `<Export.Csv />` and `<Export.Excel />` components.
+You must apply a text label or an `aria-label` attribute to the `<ExportPrint />`, `<ExportCsv />` and `<ExportExcel />` components.

@@ -4,7 +4,7 @@ export interface QuickFilterState {
   value: string;
 }
 
-export interface QuickFilterRootContextValue {
+export interface QuickFilterContextValue {
   state: QuickFilterState;
   controlRef: React.RefObject<HTMLInputElement | null>;
   triggerRef: React.RefObject<HTMLButtonElement | null>;
@@ -12,16 +12,16 @@ export interface QuickFilterRootContextValue {
   clearValue: () => void;
 }
 
-export const QuickFilterRootContext = React.createContext<QuickFilterRootContextValue | undefined>(
+export const QuickFilterContext = React.createContext<QuickFilterContextValue | undefined>(
   undefined,
 );
 
-export function useQuickFilterRootContext() {
-  const context = React.useContext(QuickFilterRootContext);
+export function useQuickFilterContext() {
+  const context = React.useContext(QuickFilterContext);
 
   if (context === undefined) {
     throw new Error(
-      'MUI X: Missing context. Quick Filter parts must be placed within <QuickFilter.Root>.',
+      'MUI X: Missing context. Quick Filter subcomponents must be placed within a <QuickFilter /> component.',
     );
   }
 

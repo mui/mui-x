@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { DataGrid, Toolbar, QuickFilter } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  Toolbar,
+  QuickFilter,
+  QuickFilterControl,
+  QuickFilterClear,
+} from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
@@ -8,9 +14,9 @@ import SearchIcon from '@mui/icons-material/Search';
 
 function CustomToolbar() {
   return (
-    <Toolbar.Root>
-      <QuickFilter.Root>
-        <QuickFilter.Control
+    <Toolbar>
+      <QuickFilter>
+        <QuickFilterControl
           render={({ ref, ...other }) => (
             <TextField
               {...other}
@@ -27,21 +33,21 @@ function CustomToolbar() {
                 ),
                 endAdornment: other.value ? (
                   <InputAdornment position="end">
-                    <QuickFilter.Clear
+                    <QuickFilterClear
                       edge="end"
                       size="small"
                       aria-label="Clear search"
                     >
                       <ClearIcon fontSize="small" />
-                    </QuickFilter.Clear>
+                    </QuickFilterClear>
                   </InputAdornment>
                 ) : null,
               }}
             />
           )}
         />
-      </QuickFilter.Root>
-    </Toolbar.Root>
+      </QuickFilter>
+    </Toolbar>
   );
 }
 

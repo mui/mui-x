@@ -1,7 +1,7 @@
 ---
 title: React Data Grid - Quick Filter component
 productId: x-data-grid
-components: QuickFilterRoot, QuickFilterControl, QuickFilterClear
+components: QuickFilter, QuickFilterControl, QuickFilterClear
 packageName: '@mui/x-data-grid'
 githubLabel: 'component: data grid'
 ---
@@ -19,27 +19,27 @@ The demo below shows the default quick filter configuration.
 ## Anatomy
 
 ```tsx
-import { QuickFilter } from '@mui/x-data-grid';
+import { QuickFilter, QuickFilterControl, QuickFilterClear } from '@mui/x-data-grid';
 
-<QuickFilter.Root>
-  <QuickFilter.Control />
-  <QuickFilter.Clear />
-</QuickFilter.Root>;
+<QuickFilter>
+  <QuickFilterControl />
+  <QuickFilterClear />
+</QuickFilter>;
 ```
 
-### Root
+### QuickFilter
 
-`Root` is the top level component that provides context to child components.
+`QuickFilter` is the top level component that provides context to child components.
 It does not render any DOM elements.
 
-### Control
+### QuickFilterControl
 
-`Control` takes user input and filters row data.
+`QuickFilterControl` takes user input and filters row data.
 It renders the `baseTextField` slot.
 
-### Clear
+### QuickFilterClear
 
-`Clear` is a button that resets the filter value.
+`QuickFilterClear` is a button that resets the filter value.
 It renders the `baseIconButton` slot.
 
 ## Custom elements
@@ -51,8 +51,8 @@ See [Components usage—Customization](/x/react-data-grid/components/usage/#cust
 
 ### ARIA
 
-- You must render a `<label />` with a `for` attribute set to the `id` of `<QuickFilter.Control />`, or apply an `aria-label` attribute to the `<QuickFilter.Control />`.
-- You must apply a text label or an `aria-label` attribute to the `<QuickFilter.Clear />`.
+- You must render a `<label />` with a `for` attribute set to the `id` of `<QuickFilterControl />`, or apply an `aria-label` attribute to the `<QuickFilterControl />`.
+- You must apply a text label or an `aria-label` attribute to the `<QuickFilterClear />`.
 
 ### Keyboard
 

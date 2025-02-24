@@ -7,7 +7,8 @@ import {
   useGridSelector,
   GridFilterListIcon,
   Toolbar,
-  FilterPanel,
+  ToolbarButton,
+  FilterPanelTrigger,
 } from '@mui/x-data-grid-pro';
 import Chip from '@mui/material/Chip';
 import Tooltip from '@mui/material/Tooltip';
@@ -20,11 +21,11 @@ function CustomToolbar({ onRemoveFilter }) {
   const columns = useGridSelector(apiRef, gridColumnLookupSelector);
 
   return (
-    <Toolbar.Root>
+    <Toolbar>
       <Tooltip title="Filters">
-        <FilterPanel.Trigger render={<Toolbar.Button />}>
+        <FilterPanelTrigger render={<ToolbarButton />}>
           <GridFilterListIcon fontSize="small" />
-        </FilterPanel.Trigger>
+        </FilterPanelTrigger>
       </Tooltip>
 
       {activeFilters.map((filter) => {
@@ -47,7 +48,7 @@ function CustomToolbar({ onRemoveFilter }) {
           />
         );
       })}
-    </Toolbar.Root>
+    </Toolbar>
   );
 }
 

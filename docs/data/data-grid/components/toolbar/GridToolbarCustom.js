@@ -3,10 +3,14 @@ import clsx from 'clsx';
 import {
   DataGrid,
   Toolbar,
-  ColumnsPanel,
-  FilterPanel,
-  Export,
+  ToolbarButton,
+  ColumnsPanelTrigger,
+  FilterPanelTrigger,
+  ExportCsv,
+  ExportPrint,
   QuickFilter,
+  QuickFilterControl,
+  QuickFilterClear,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import { TailwindDemoContainer } from '@mui/x-data-grid/internals';
@@ -39,23 +43,23 @@ function TextInput(props) {
 
 function CustomToolbar() {
   return (
-    <Toolbar.Root className="flex gap-2 p-2 border-b border-gray-200">
-      <ColumnsPanel.Trigger
-        render={<Toolbar.Button render={<Button>Columns</Button>} />}
+    <Toolbar className="flex gap-2 p-2 border-b border-gray-200">
+      <ColumnsPanelTrigger
+        render={<ToolbarButton render={<Button>Columns</Button>} />}
       />
-      <FilterPanel.Trigger
-        render={<Toolbar.Button render={<Button>Filter</Button>} />}
+      <FilterPanelTrigger
+        render={<ToolbarButton render={<Button>Filter</Button>} />}
       />
-      <Export.Csv render={<Toolbar.Button render={<Button>Export CSV</Button>} />} />
-      <Export.Print render={<Toolbar.Button render={<Button>Print</Button>} />} />
-      <QuickFilter.Root>
+      <ExportCsv render={<ToolbarButton render={<Button>Export CSV</Button>} />} />
+      <ExportPrint render={<ToolbarButton render={<Button>Print</Button>} />} />
+      <QuickFilter>
         <div className="flex ml-auto">
-          <QuickFilter.Control
+          <QuickFilterControl
             aria-label="Search"
             placeholder="Search"
             render={<TextInput className="w-56 rounded-r-none border-r-0" />}
           />
-          <QuickFilter.Clear
+          <QuickFilterClear
             render={
               <Button aria-label="Clear" className="rounded-l-none">
                 <ClearIcon className="text-sm" />
@@ -63,8 +67,8 @@ function CustomToolbar() {
             }
           />
         </div>
-      </QuickFilter.Root>
-    </Toolbar.Root>
+      </QuickFilter>
+    </Toolbar>
   );
 }
 

@@ -1,2 +1,2 @@
-export * from './ToolbarRoot';
+export * from './Toolbar';
 export * from './ToolbarButton';

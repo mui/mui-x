@@ -14,18 +14,18 @@ By default, the `<DataGrid />` component includes all of the interfaces necessar
 
 ## Composition
 
-The components are composable and consist of several parts. For example, `Toolbar.Root` and `Toolbar.Button` are parts of the [Toolbar component](/x/react-data-grid/components/toolbar/).
+The components are composable and consist of several parts. For example, `Toolbar` and `ToolbarButton` are parts of the [Toolbar component](/x/react-data-grid/components/toolbar/).
 
 The snippet below is an example of how to assemble components to create a custom toolbar.
 
 ```tsx
-import { Toolbar, FilterPanel } from '@mui/x-data-grid';
+import { Toolbar, ToolbarButton, FilterPanelTrigger } from '@mui/x-data-grid';
 
 function CustomToolbar() {
   return (
-    <Toolbar.Root>
-      <FilterPanel.Trigger render={<Toolbar.Button />}>Filters</FilterPanel.Trigger>
-    </Toolbar.Root>
+    <Toolbar>
+      <FilterPanelTrigger render={<ToolbarButton />}>Filters</FilterPanelTrigger>
+    </Toolbar>
   );
 }
 ```
@@ -34,7 +34,7 @@ The custom toolbar can then be passed to the `toolbar` [slot](/x/react-data-grid
 
 ```tsx
 function App() {
-  return <DataGrid slots={{ toolbar: CustomToolbar }} />;
+  return <DataGrid slots={{ toolbar: CustomToolbar }} showToolbar />;
 }
 ```
 
@@ -42,7 +42,7 @@ Any props passed to these parts will be forwarded directly to their correspondin
 
 ```tsx
 // This will render a <div /> element with the class and aria-label attributes
-<Toolbar.Root className="my-toolbar" aria-label="Grid toolbar" />
+<Toolbar className="my-toolbar" aria-label="Grid toolbar" />
 ```
 
 ## Customization
@@ -54,13 +54,13 @@ The component parts are highly customizable, built to integrate with any design 
 The `className` prop can be used to apply styles:
 
 ```tsx
-<FilterPanel.Trigger className="text-blue-600 underline" />
+<FilterPanelTrigger className="text-blue-600 underline" />
 ```
 
 Some components also provide internal state that can be used to conditionally apply classes:
 
 ```tsx
-<FilterPanel.Trigger
+<FilterPanelTrigger
   className={(state) => (state.open ? 'text-blue-600' : 'text-gray-900')}
 />
 ```
@@ -70,21 +70,19 @@ Some components also provide internal state that can be used to conditionally ap
 The `render` prop can be used to override the element rendered by each grid component:
 
 ```tsx
-<FilterPanel.Trigger render={<MyCustomButton />} />
+<FilterPanelTrigger render={<MyCustomButton />} />
 ```
 
 A function can also be passed to the `render` prop to control which props are forwarded to the custom element:
 
 ```tsx
-<FilterPanel.Trigger
-  render={(props) => <MyCustomButton onClick={props.onClick} />}
-/>
+<FilterPanelTrigger render={(props) => <MyCustomButton onClick={props.onClick} />} />
 ```
 
 Some components also provide internal state that can be used to control what is returned by the `render` function:
 
 ```tsx
-<FilterPanel.Trigger
+<FilterPanelTrigger
   render={(props, state) => (
     <MyCustomButton {...props}>
       {state.open ? 'Close filter panel' : 'Open filter panel'}

@@ -13,7 +13,7 @@ githubLabel: 'component: data grid'
 :::warning
 This component is incomplete.
 
-Currently, the Trigger is the only composable part of the Columns Panel available.
+Currently, the `ColumnsPanelTrigger` is the only part of the Columns Panel component available.
 Future versions of the Columns Panel component will make it possible to compose each of its parts to create a custom columns panel.
 
 In the meantime, it's still possible to deeply customize the panel's subcomponents using custom slots.
@@ -30,14 +30,14 @@ The demo below shows how to add a columns panel trigger to a custom toolbar.
 ## Anatomy
 
 ```tsx
-import { ColumnsPanel } from '@mui/x-data-grid';
+import { ColumnsPanelTrigger } from '@mui/x-data-grid';
 
-<ColumnsPanel.Trigger />;
+<ColumnsPanelTrigger />;
 ```
 
-### Trigger
+### ColumnsPanelTrigger
 
-`Trigger` is a button that opens/closes the columns panel.
+`ColumnsPanelTrigger` is a button that opens/closes the columns panel.
 It renders the `baseButton` slot.
 
 ## Custom elements
@@ -49,4 +49,4 @@ See [Components usage—Customization](/x/react-data-grid/components/usage/#cust
 
 ### ARIA
 
-You must apply a text label or an `aria-label` attribute to the `<ColumnsPanel.Trigger />`.
+You must apply a text label or an `aria-label` attribute to the `<ColumnsPanelTrigger />`.

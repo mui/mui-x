@@ -6,7 +6,7 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridComponentRenderer, RenderProp } from '../../hooks/utils/useGridComponentRenderer';
 import type { GridSlotProps } from '../../models';
-import { useToolbarRootContext } from './ToolbarRootContext';
+import { useToolbarContext } from './ToolbarContext';
 
 export type ToolbarButtonProps = GridSlotProps['baseIconButton'] & {
   /**
@@ -34,8 +34,7 @@ const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
     const rootProps = useGridRootProps();
     const buttonRef = React.useRef<HTMLButtonElement>(null);
     const handleRef = useForkRef(buttonRef, ref);
-    const { focusableItemId, registerItem, unregisterItem, onItemKeyDown } =
-      useToolbarRootContext();
+    const { focusableItemId, registerItem, unregisterItem, onItemKeyDown } = useToolbarContext();
 
     React.useEffect(() => {
       registerItem(id!);

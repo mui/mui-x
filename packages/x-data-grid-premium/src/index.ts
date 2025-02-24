@@ -42,12 +42,3 @@ export type {
   GridDataSourceApiBasePremium as GridDataSourceApiBase,
   GridDataSourcePremiumPrivateApi as GridDataSourcePrivateApi,
 } from './hooks/features/dataSource/models';
-
-// Components without premium features
-export * as ColumnsPanel from '@mui/x-data-grid/components/columnsPanel/index.parts';
-export * as FilterPanel from '@mui/x-data-grid/components/filterPanel/index.parts';
-export * as Toolbar from '@mui/x-data-grid/components/toolbarV8/index.parts';
-export * as QuickFilter from '@mui/x-data-grid/components/quickFilter/index.parts';
-
-// Components with premium features
-export * as Export from './components/export/index.parts';

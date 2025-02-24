@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { DataGrid, Toolbar, Export } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  Toolbar,
+  ExportCsv,
+  ExportPrint,
+  ToolbarButton,
+} from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Tooltip from '@mui/material/Tooltip';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
@@ -7,18 +13,18 @@ import PrintIcon from '@mui/icons-material/Print';
 
 function CustomToolbar() {
   return (
-    <Toolbar.Root>
+    <Toolbar>
       <Tooltip title="Download as CSV">
-        <Export.Csv render={<Toolbar.Button />}>
+        <ExportCsv render={<ToolbarButton />}>
           <FileDownloadIcon fontSize="small" />
-        </Export.Csv>
+        </ExportCsv>
       </Tooltip>
       <Tooltip title="Print">
-        <Export.Print render={<Toolbar.Button />}>
+        <ExportPrint render={<ToolbarButton />}>
           <PrintIcon fontSize="small" />
-        </Export.Print>
+        </ExportPrint>
       </Tooltip>
-    </Toolbar.Root>
+    </Toolbar>
   );
 }
 

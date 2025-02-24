@@ -2,10 +2,14 @@ import * as React from 'react';
 import {
   DataGrid,
   Toolbar,
-  ColumnsPanel,
-  FilterPanel,
+  ToolbarButton,
+  ColumnsPanelTrigger,
+  FilterPanelTrigger,
   QuickFilter,
-  Export,
+  ExportCsv,
+  ExportPrint,
+  QuickFilterControl,
+  QuickFilterClear,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Tooltip from '@mui/material/Tooltip';
@@ -27,21 +31,21 @@ function CustomToolbar() {
   const downloadMenuTriggerRef = React.useRef<HTMLButtonElement>(null);
 
   return (
-    <Toolbar.Root>
+    <Toolbar>
       <Tooltip title="Columns">
-        <ColumnsPanel.Trigger render={<Toolbar.Button />}>
+        <ColumnsPanelTrigger render={<ToolbarButton />}>
           <ViewColumnIcon fontSize="small" />
-        </ColumnsPanel.Trigger>
+        </ColumnsPanelTrigger>
       </Tooltip>
 
       <Tooltip title="Filters">
-        <FilterPanel.Trigger
+        <FilterPanelTrigger
           render={(props, state) => (
-            <Toolbar.Button {...props} color="default">
+            <ToolbarButton {...props} color="default">
               <Badge badgeContent={state.filterCount} color="primary" variant="dot">
                 <FilterListIcon fontSize="small" />
               </Badge>
-            </Toolbar.Button>
+            </ToolbarButton>
           )}
         />
       </Tooltip>
@@ -49,13 +53,13 @@ function CustomToolbar() {
       <Divider orientation="vertical" variant="middle" flexItem sx={{ mx: 0.5 }} />
 
       <Tooltip title="Print">
-        <Export.Print render={<Toolbar.Button />}>
+        <ExportPrint render={<ToolbarButton />}>
           <PrintIcon fontSize="small" />
-        </Export.Print>
+        </ExportPrint>
       </Tooltip>
 
       <Tooltip title="Download">
-        <Toolbar.Button
+        <ToolbarButton
           ref={downloadMenuTriggerRef}
           id="export-menu-trigger"
           aria-controls="export-menu"
@@ -64,7 +68,7 @@ function CustomToolbar() {
           onClick={() => setDownloadMenuOpen(true)}
         >
           <FileDownloadIcon fontSize="small" />
-        </Toolbar.Button>
+        </ToolbarButton>
       </Tooltip>
 
       <Menu
@@ -76,17 +80,17 @@ function CustomToolbar() {
           'aria-labelledby': 'export-menu-trigger',
         }}
       >
-        <Export.Csv render={<MenuItem />} onClick={() => setDownloadMenuOpen(false)}>
+        <ExportCsv render={<MenuItem />} onClick={() => setDownloadMenuOpen(false)}>
           Download as CSV
-        </Export.Csv>
+        </ExportCsv>
         {/* Available to MUI X Premium users */}
-        {/* <Export.Excel render={<MenuItem />}>
+        {/* <ExportExcel render={<MenuItem />}>
           Download as Excel
-        </Export.Excel> */}
+        </ExportExcel> */}
       </Menu>
 
-      <QuickFilter.Root>
-        <QuickFilter.Control
+      <QuickFilter>
+        <QuickFilterControl
           render={({ ref, ...other }) => (
             <TextField
               {...other}
@@ -103,21 +107,21 @@ function CustomToolbar() {
                 ),
                 endAdornment: other.value ? (
                   <InputAdornment position="end">
-                    <QuickFilter.Clear
+                    <QuickFilterClear
                       edge="end"
                       size="small"
                       aria-label="Clear search"
                     >
                       <ClearIcon fontSize="small" />
-                    </QuickFilter.Clear>
+                    </QuickFilterClear>
                   </InputAdornment>
                 ) : null,
               }}
             />
           )}
         />
-      </QuickFilter.Root>
-    </Toolbar.Root>
+      </QuickFilter>
+    </Toolbar>
   );
 }
 

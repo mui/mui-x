@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { DataGridPremium, Toolbar, Export } from '@mui/x-data-grid-premium';
+import {
+  DataGridPremium,
+  Toolbar,
+  ToolbarButton,
+  ExportCsv,
+  ExportExcel,
+  ExportPrint,
+} from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Tooltip from '@mui/material/Tooltip';
 import Menu from '@mui/material/Menu';
@@ -13,7 +20,7 @@ function ExportMenu() {
   return (
     <React.Fragment>
       <Tooltip title="Export">
-        <Toolbar.Button
+        <ToolbarButton
           ref={triggerRef}
           id="export-menu-trigger"
           aria-controls="export-menu"
@@ -22,7 +29,7 @@ function ExportMenu() {
           onClick={() => setOpen(true)}
         >
           <FileDownloadIcon fontSize="small" />
-        </Toolbar.Button>
+        </ToolbarButton>
       </Tooltip>
       <Menu
         id="export-menu"
@@ -33,9 +40,9 @@ function ExportMenu() {
           'aria-labelledby': 'export-menu-trigger',
         }}
       >
-        <Export.Csv render={<MenuItem />}>Download as CSV</Export.Csv>
-        <Export.Excel render={<MenuItem />}>Download as Excel</Export.Excel>
-        <Export.Print render={<MenuItem />}>Print</Export.Print>
+        <ExportCsv render={<MenuItem />}>Download as CSV</ExportCsv>
+        <ExportExcel render={<MenuItem />}>Download as Excel</ExportExcel>
+        <ExportPrint render={<MenuItem />}>Print</ExportPrint>
       </Menu>
     </React.Fragment>
   );
@@ -43,9 +50,9 @@ function ExportMenu() {
 
 function CustomToolbar() {
   return (
-    <Toolbar.Root>
+    <Toolbar>
       <ExportMenu />
-    </Toolbar.Root>
+    </Toolbar>
   );
 }
 
