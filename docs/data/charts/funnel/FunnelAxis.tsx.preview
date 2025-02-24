@@ -11,6 +11,5 @@
   margin={{ left: 50 }}
   {...funnelProps}
 >
-  <ChartsXAxis axisId="x" />
-  <ChartsYAxis axisId="y" />
+  <ChartsYAxis axisId="y" disableLine disableTicks />
 </FunnelChart>

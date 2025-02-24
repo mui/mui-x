@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
-import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { populationByEducationLevelPercentageSeriesLabeled } from './populationByEducationLevel';
 
@@ -21,8 +20,7 @@ export default function FunnelAxis() {
         margin={{ left: 50 }}
         {...funnelProps}
       >
-        <ChartsXAxis axisId="x" />
-        <ChartsYAxis axisId="y" />
+        <ChartsYAxis axisId="y" disableLine disableTicks />
       </FunnelChart>
     </Box>
   );
