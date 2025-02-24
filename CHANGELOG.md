@@ -2,8 +2,6 @@
 
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
-
-
 ## 7.27.1
 
 _Feb 24, 2025_
@@ -48,7 +46,7 @@ Same changes as in `@mui/x-data-grid-pro@7.27.1`.
 Same changes as in `@mui/x-date-pickers@7.27.1`.
 
 ### Charts
- 
+
 #### `@mui/x-charts@7.27.1`
 
 - [charts] Fix empty series array in pie chart (#16657) @bernardobelchior
