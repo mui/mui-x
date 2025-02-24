@@ -3,7 +3,6 @@ import {
   DataGridPro,
   useGridApiRef,
   GridInitialState,
-  GridToolbar,
   GridDataSourceCache,
   GridDataSource,
   GridGetRowsParams,
@@ -104,7 +103,7 @@ export default function ServerSideTreeDataCustomCache() {
           pagination
           pageSizeOptions={pageSizeOptions}
           initialState={initialState}
-          slots={{ toolbar: GridToolbar }}
+          showToolbar
           slotProps={{ toolbar: { showQuickFilter: true } }}
         />
       </div>

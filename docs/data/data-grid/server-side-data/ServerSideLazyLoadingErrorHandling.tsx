@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   DataGridPro,
   useGridApiRef,
-  GridToolbar,
   GridDataSource,
   GridGetRowsParams,
   GRID_ROOT_GROUP_ID,
@@ -103,7 +102,7 @@ function ServerSideLazyLoadingErrorHandling() {
           unstable_dataSourceCache={null}
           unstable_lazyLoading
           paginationModel={{ page: 0, pageSize: 10 }}
-          slots={{ toolbar: GridToolbar }}
+          showToolbar
         />
       </div>
     </div>

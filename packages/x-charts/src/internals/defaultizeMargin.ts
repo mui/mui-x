@@ -1,16 +1,18 @@
-import type { LayoutConfig } from '../models';
-import type { ChartMargin } from './plugins/corePlugins/useChartDimensions/useChartDimensions.types';
+import type {
+  ChartMargin,
+  UseChartDimensionsParameters,
+} from './plugins/corePlugins/useChartDimensions/useChartDimensions.types';
 
 export function defaultizeMargin(
-  input: LayoutConfig['margin'],
+  input: UseChartDimensionsParameters['margin'],
   defaultMargin: ChartMargin,
 ): ChartMargin;
 export function defaultizeMargin(
-  input: LayoutConfig['margin'],
+  input: UseChartDimensionsParameters['margin'],
   defaultMargin?: ChartMargin,
 ): Partial<ChartMargin> | undefined;
 export function defaultizeMargin(
-  input: LayoutConfig['margin'],
+  input: UseChartDimensionsParameters['margin'],
   defaultMargin?: ChartMargin,
 ): Partial<ChartMargin> | undefined {
   if (typeof input === 'number') {

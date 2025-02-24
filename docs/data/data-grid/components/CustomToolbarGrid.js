@@ -43,6 +43,7 @@ export default function CustomToolbarGrid() {
         slots={{
           toolbar: CustomToolbar,
         }}
+        showToolbar
       />
     </div>
   );

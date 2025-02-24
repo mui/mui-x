@@ -3,5 +3,6 @@
   rows={rows}
   columns={columns}
   slots={{ toolbar: CustomToolbar }}
+  showToolbar
   autoPageSize
 />
