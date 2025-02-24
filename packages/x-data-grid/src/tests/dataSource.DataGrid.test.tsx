@@ -124,7 +124,9 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
-    setProps({ filterModel: { items: [{ field: 'id', value: 'abc', operator: 'doesNotContain' }] } });
+    setProps({
+      filterModel: { items: [{ field: 'id', value: 'abc', operator: 'doesNotContain' }] },
+    });
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
     });
