@@ -18,11 +18,11 @@
     "@testing-library/user-event": "^14.6.1",
     "@vitejs/plugin-react": "^4.3.4",
     "@vitejs/plugin-react-swc": "^3.8.0",
-    "@vitest/browser": "3.0.5",
-    "@vitest/ui": "3.0.5",
+    "@vitest/browser": "3.0.6",
+    "@vitest/ui": "3.0.6",
     "jsdom": "^26.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "vitest": "3.0.5"
+    "vitest": "3.0.6"
   }
 }
