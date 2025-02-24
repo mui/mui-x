@@ -7,12 +7,12 @@ export function defaultizeColor<T extends AllSeriesType>(
 ): T {
   if (
     series.type === 'pie' ||
-    // @ts-ignore funnel is a pro feature
+    // @ts-expect-error funnel is a pro feature
     series.type === 'funnel'
   ) {
     return {
       ...series,
-      data: series.data?.map((d, index) => ({ color: colors[index % colors.length], ...d })),
+      data: series.data.map((d, index) => ({ color: colors[index % colors.length], ...d })),
     };
   }
   return { color: colors[seriesIndex % colors.length], ...series };
