@@ -8,7 +8,7 @@ function read(fileName) {
   return readFile(path.join(__dirname, fileName));
 }
 
-describe.only('v8.0.0/data-grid', () => {
+describe('v8.0.0/data-grid', () => {
   describe('preset-safe', () => {
     it('transforms code as needed', () => {
       const actual = transform(
