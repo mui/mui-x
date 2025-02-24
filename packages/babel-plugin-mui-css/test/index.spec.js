@@ -6,33 +6,36 @@ import { mkdirp } from 'mkdirp';
 import rimraf from 'rimraf';
 import babel from '@babel/core';
 
-const RUNTIME_DIR = joinPath(import.meta.dirname, './runtime')
-const INPUT_VARS = joinPath(RUNTIME_DIR, './vars.ts')
-const OUTPUT_CSS = joinPath(RUNTIME_DIR, './output.css')
+const RUNTIME_DIR = joinPath(import.meta.dirname, './runtime');
+const INPUT_VARS = joinPath(RUNTIME_DIR, './vars.ts');
+const OUTPUT_CSS = joinPath(RUNTIME_DIR, './output.css');
 
 describe('babel-plugin-mui-css', () => {
   // opts: { source, config, js, css, vars }
   function transform(opts) {
-    writeFileSync(INPUT_VARS, opts.vars ?? '')
+    writeFileSync(INPUT_VARS, opts.vars ?? '');
 
     const result = babel.transformSync(outdent.string(opts.source), {
       babelrc: false,
       plugins: [
-        [joinPath(import.meta.dirname, '../build/index.js'), {
-          cssMinify: false,
-          cssOutput: OUTPUT_CSS,
-          cssVariables: INPUT_VARS,
-          ...opts.config
-        }]
+        [
+          joinPath(import.meta.dirname, '../build/index.js'),
+          {
+            cssMinify: false,
+            cssOutput: OUTPUT_CSS,
+            cssVariables: INPUT_VARS,
+            ...opts.config,
+          },
+        ],
       ],
       generatorOpts: { filename: 'source.js' },
     });
 
-    expect(result.code).to.be.equal(outdent.string(opts.js))
+    expect(result.code).to.be.equal(outdent.string(opts.js));
 
     if (opts.css) {
-      const resultCSS = readFileSync(OUTPUT_CSS).toString()
-      expect(resultCSS).to.be.equal(outdent.string(opts.css))
+      const resultCSS = readFileSync(OUTPUT_CSS).toString();
+      expect(resultCSS).to.be.equal(outdent.string(opts.css));
     }
   }
 
@@ -64,10 +67,14 @@ describe('babel-plugin-mui-css', () => {
         };
       `,
       css: css`
-        .MuiDataGrid-panel { border:1px solid black; }
-        .MuiDataGrid-panel--focused { border:1px solid blue; }
-      `
-    })
+        .MuiDataGrid-panel {
+          border: 1px solid black;
+        }
+        .MuiDataGrid-panel--focused {
+          border: 1px solid blue;
+        }
+      `,
+    });
   });
 
   it('transforms nested selectors', () => {
@@ -97,13 +104,22 @@ describe('babel-plugin-mui-css', () => {
         };
       `,
       css: css`
-        .MuiDataGrid-panel {  }
-        .MuiDataGrid-panel #id { color:black; }
-        .MuiDataGrid-panel .class-a { color:black; }
-        .MuiDataGrid-panel.class-b { color:black; }
-        .MuiDataGrid-panel > input { color:black; }
-      `
-    })
+        .MuiDataGrid-panel {
+        }
+        .MuiDataGrid-panel #id {
+          color: black;
+        }
+        .MuiDataGrid-panel .class-a {
+          color: black;
+        }
+        .MuiDataGrid-panel.class-b {
+          color: black;
+        }
+        .MuiDataGrid-panel > input {
+          color: black;
+        }
+      `,
+    });
   });
 
   it('supports CSS variables', () => {
@@ -129,9 +145,11 @@ describe('babel-plugin-mui-css', () => {
         };
       `,
       css: css`
-        .MuiDataGrid-panel { color:#599eff; }
-      `
-    })
+        .MuiDataGrid-panel {
+          color: #599eff;
+        }
+      `,
+    });
   });
 
   it('supports minification', () => {
@@ -162,12 +180,23 @@ describe('babel-plugin-mui-css', () => {
         };
       `,
       css: css`
-        .MuiDataGrid-panel #id,.MuiDataGrid-panel .class-a,.MuiDataGrid-panel.class-b,.MuiDataGrid-panel>input{color:#000}
-      `
-    })
+        .MuiDataGrid-panel #id,
+        .MuiDataGrid-panel .class-a,
+        .MuiDataGrid-panel.class-b,
+        .MuiDataGrid-panel > input {
+          color: #000;
+        }
+      `,
+    });
   });
 });
 
-function js(strings) { return strings[0] }
-function ts(strings) { return strings[0] }
-function css(strings) { return strings[0] }
+function js(strings) {
+  return strings[0];
+}
+function ts(strings) {
+  return strings[0];
+}
+function css(strings) {
+  return strings[0];
+}

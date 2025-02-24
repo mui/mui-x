@@ -1,4 +1,4 @@
-const fs = require('fs')
+const fs = require('fs');
 // @ts-check
 const path = require('path');
 const generateReleaseInfo = require('./packages/x-license/generateReleaseInfo');
@@ -98,7 +98,7 @@ module.exports = function getBabelConfig(api) {
     plugins.push([
       './packages/babel-plugin-mui-css/build/index.js',
       JSON.parse(fs.readFileSync('./mui-css.config.json')),
-    ])
+    ]);
   }
 
   if (process.env.NODE_ENV === 'test') {

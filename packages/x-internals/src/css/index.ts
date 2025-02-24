@@ -1,1 +1,1 @@
-export * from './stylesToString'
+export * from './stylesToString';

@@ -4,25 +4,38 @@ This Babel plugin finds all `css()` calls and replaces them with class names, ex
 
 ## Example
 
-```js
-// component.ts: before
-const styles = css(
-  'MuiDataGrid-aggregationColumnHeader',
-  {
-    root: {
-      border: '1px solid red',
-    },
-    alignLeft: {},
-  },
-);
-```
+Before:
 
 ```js
-// component.ts: after
+/* component.ts */
+const styles = css('MuiDataGrid-panel', {
+  root: {
+    border: '1px solid black',
+  },
+  focused: {
+    border: '1px solid blue',
+  },
+});
+```
+
+After:
+
+```js
+/* component.ts */
 const styles = {
-  root: 'MuiDataGrid-aggregationColumnHeader',
-  alignLeft: 'MuiDataGrid-aggregationColumnHeader--alignLeft',
+  root: 'MuiDataGrid-panel',
+  focused: 'MuiDataGrid-panel--focused',
 };
+```
+
+```css
+/* output.css */
+.MuiDataGrid-panel {
+  border: 1px solid black;
+}
+.MuiDataGrid-panel--focused {
+  border: 1px solid blue;
+}
 ```
 
 ## License

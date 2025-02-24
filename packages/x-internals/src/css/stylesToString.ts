@@ -32,12 +32,8 @@ export function stylesToString(rootSelector: string, rootStyles: CSSObject) {
           const cssValue = styles[key];
 
           output += cssKey + ':' + cssValue + ';';
-        } else /* nested selector */ {
-          stack.unshift(
-            key,
-            styles[key],
-            selector,
-          );
+        } /* nested selector */ else {
+          stack.unshift(key, styles[key], selector);
         }
       } else {
         const cssKey = key.replaceAll(UPPERCASE_LETTERS, uppercaseToDashLowercase);
@@ -69,7 +65,7 @@ function transformSelector(selector: string, parents: string) {
 function transformValue(cssKey: string, value: any) {
   if (process.env.NODE_ENV === 'development') {
     if (typeof value !== 'number' && typeof value !== 'string') {
-      throw new Error(`Invalid CSS: "${cssKey}: ${JSON.stringify(value) ?? 'undefined'}"`)
+      throw new Error(`Invalid CSS: "${cssKey}: ${JSON.stringify(value) ?? 'undefined'}"`);
     }
   }
 
