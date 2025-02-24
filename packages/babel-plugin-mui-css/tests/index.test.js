@@ -10,6 +10,7 @@ const RUNTIME_DIR = joinPath(import.meta.dirname, './runtime');
 const INPUT_VARS = joinPath(RUNTIME_DIR, './vars.ts');
 const OUTPUT_CSS = joinPath(RUNTIME_DIR, './output.css');
 
+// prettier-ignore
 describe('babel-plugin-mui-css', () => {
   // opts: { source, config, js, css, vars }
   function transform(opts) {
@@ -67,12 +68,8 @@ describe('babel-plugin-mui-css', () => {
         };
       `,
       css: css`
-        .MuiDataGrid-panel {
-          border: 1px solid black;
-        }
-        .MuiDataGrid-panel--focused {
-          border: 1px solid blue;
-        }
+        .MuiDataGrid-panel { border:1px solid black; }
+        .MuiDataGrid-panel--focused { border:1px solid blue; }
       `,
     });
   });
@@ -104,20 +101,11 @@ describe('babel-plugin-mui-css', () => {
         };
       `,
       css: css`
-        .MuiDataGrid-panel {
-        }
-        .MuiDataGrid-panel #id {
-          color: black;
-        }
-        .MuiDataGrid-panel .class-a {
-          color: black;
-        }
-        .MuiDataGrid-panel.class-b {
-          color: black;
-        }
-        .MuiDataGrid-panel > input {
-          color: black;
-        }
+        .MuiDataGrid-panel {  }
+        .MuiDataGrid-panel #id { color:black; }
+        .MuiDataGrid-panel .class-a { color:black; }
+        .MuiDataGrid-panel.class-b { color:black; }
+        .MuiDataGrid-panel > input { color:black; }
       `,
     });
   });
@@ -145,9 +133,7 @@ describe('babel-plugin-mui-css', () => {
         };
       `,
       css: css`
-        .MuiDataGrid-panel {
-          color: #599eff;
-        }
+        .MuiDataGrid-panel { color:#599eff; }
       `,
     });
   });
@@ -180,12 +166,7 @@ describe('babel-plugin-mui-css', () => {
         };
       `,
       css: css`
-        .MuiDataGrid-panel #id,
-        .MuiDataGrid-panel .class-a,
-        .MuiDataGrid-panel.class-b,
-        .MuiDataGrid-panel > input {
-          color: #000;
-        }
+        .MuiDataGrid-panel #id,.MuiDataGrid-panel .class-a,.MuiDataGrid-panel.class-b,.MuiDataGrid-panel>input{color:#000}
       `,
     });
   });

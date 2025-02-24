@@ -40,8 +40,8 @@ export default function transformCSS({ types: t }: BabelT) {
     pre(file: Babel.BabelFile) {
       const opts = findSelf(file.opts.plugins).options;
       state = {
-        cssMinify: true,
         cssRules: [],
+        cssMinify: opts?.cssMinify ?? true,
         cssOutput: opts?.cssOutput ?? 'index.css',
         cssVariables: getCSSVariablesCode(opts?.cssVariables),
         cssConcat: opts?.cssConcat ?? [],
@@ -49,17 +49,21 @@ export default function transformCSS({ types: t }: BabelT) {
     },
 
     post() {
-      const { code: cssMinified } = lightning({
-        filename: 'index.css',
-        code: Buffer.from(
-          state.cssConcat.map((filepath) => readFileSync(filepath).toString()).join('\n') +
-            state.cssRules.join('\n'),
-        ),
-        minify: true,
-      });
+      let cssOutput = (state.cssConcat
+        .map((filepath) => readFileSync(filepath).toString())
+        .join('\n') + state.cssRules.join('\n')) as string | Uint8Array;
+
+      if (state.cssMinify) {
+        const { code: cssMinified } = lightning({
+          filename: 'index.css',
+          code: Buffer.from(cssOutput),
+          minify: true,
+        });
+        cssOutput = cssMinified;
+      }
 
       mkdirp.sync(dirname(state.cssOutput));
-      writeFileSync(state.cssOutput, cssMinified);
+      writeFileSync(state.cssOutput, cssOutput);
     },
 
     visitor: {
