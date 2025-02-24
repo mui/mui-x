@@ -24,7 +24,7 @@ import {
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopTimeRangePickerProps } from './DesktopTimeRangePicker.types';
 import { useTimeRangePickerDefaultizedProps } from '../TimeRangePicker/shared';
-import { MultiInputTimeRangeField } from '../MultiInputTimeRangeField';
+import { SingleInputTimeRangeField } from '../SingleInputTimeRangeField';
 import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker';
 import { validateTimeRange } from '../validation/validateTimeRange';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
@@ -104,7 +104,7 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
     ampmInClock: true,
     format: resolveTimeFormat(utils, defaultizedProps),
     slots: {
-      field: MultiInputTimeRangeField,
+      field: SingleInputTimeRangeField,
       layout: DesktopDateTimePickerLayout,
       ...defaultizedProps.slots,
     },
@@ -113,7 +113,6 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
       field: (ownerState: any) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
-        ref,
       }),
       tabs: {
         hidden: true,
@@ -131,6 +130,7 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
     TEnableAccessibleFieldDOMStructure,
     typeof props
   >({
+    ref,
     props,
     valueManager: rangeValueManager,
     valueType: 'time',

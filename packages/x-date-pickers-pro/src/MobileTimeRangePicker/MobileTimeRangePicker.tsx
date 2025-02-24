@@ -26,7 +26,7 @@ import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { MobileTimeRangePickerProps } from './MobileTimeRangePicker.types';
 import { useTimeRangePickerDefaultizedProps } from '../TimeRangePicker/shared';
-import { MultiInputTimeRangeField } from '../MultiInputTimeRangeField';
+import { SingleInputTimeRangeField } from '../SingleInputTimeRangeField';
 import { useMobileRangePicker } from '../internals/hooks/useMobileRangePicker';
 import { validateTimeRange } from '../validation/validateTimeRange';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
@@ -106,7 +106,7 @@ const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker<
     viewRenderers,
     format: resolveTimeFormat(utils, defaultizedProps),
     slots: {
-      field: MultiInputTimeRangeField,
+      field: SingleInputTimeRangeField,
       ...defaultizedProps.slots,
     },
     slotProps: {
@@ -114,7 +114,6 @@ const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker<
       field: (ownerState: any) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
-        ref,
       }),
       tabs: {
         hidden: false,
@@ -132,6 +131,7 @@ const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker<
     TEnableAccessibleFieldDOMStructure,
     typeof props
   >({
+    ref,
     props,
     valueManager: rangeValueManager,
     valueType: 'time',
