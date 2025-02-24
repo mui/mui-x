@@ -158,18 +158,6 @@ export type MenuItemProps = {
   style?: React.CSSProperties;
 };
 
-export type ToolbarProps = {
-  ref?: Ref<HTMLDivElement>;
-  role?: string;
-  'aria-orientation'?: string;
-};
-
-export type ToolbarButtonProps = {
-  ref?: Ref<HTMLButtonElement>;
-  tabIndex?: number;
-  onKeyDown?: React.KeyboardEventHandler<HTMLButtonElement>;
-};
-
 type BasePlacement = 'top' | 'bottom' | 'left' | 'right';
 type VariationPlacement =
   | 'top-start'
@@ -310,7 +298,7 @@ export type TextFieldProps = {
   tabIndex?: number;
   type?: React.HTMLInputTypeAttribute;
   value?: string;
-  ref?: Ref;
+  ref?: Ref<HTMLInputElement>;
 };
 
 export type TooltipProps = {
