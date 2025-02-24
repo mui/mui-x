@@ -29,7 +29,6 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     height,
     margin: marginProps,
     colors,
-    // dataset,
     sx,
     children,
     slots,
@@ -54,7 +53,6 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     scaleType: 'band',
     categoryGapRatio: 0,
     data: Array.from(
-      // { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
       { length: Math.max(...series.map((s) => (s.data ?? []).length)) },
       (_, index) => index,
     ),
@@ -77,7 +75,6 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     height,
     margin,
     colors,
-    // dataset,
     xAxis: xAxis?.map((axis) => ({
       ...(axis?.scaleType === 'band' || isHorizontal
         ? defaultBandAxisConfig
