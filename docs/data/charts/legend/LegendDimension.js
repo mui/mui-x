@@ -20,21 +20,17 @@ export default function LegendDimension() {
   return (
     <ChartsUsageDemo
       componentName="Legend"
-      data={[
-        {
-          propName: 'direction',
+      data={{
+        direction: {
           knob: 'select',
           defaultValue: 'horizontal',
           options: ['horizontal', 'vertical'],
         },
-        { propName: 'markSize', knob: 'number', defaultValue: 15, min: 0 },
-        { propName: 'markGap', knob: 'number', defaultValue: 8, min: 0 },
-        { propName: 'itemGap', knob: 'number', defaultValue: 16, min: 0 },
-      ]}
-      renderDemo={(
-        /** @type {{ direction: "horizontal" | "vertical"; markSize: number; markGap: number; itemGap: number; scrollable: boolean;}} */
-        props,
-      ) => (
+        markSize: { knob: 'number', defaultValue: 15, min: 0 },
+        markGap: { knob: 'number', defaultValue: 8, min: 0 },
+        itemGap: { knob: 'number', defaultValue: 16, min: 0 },
+      }}
+      renderDemo={(props) => (
         <PieChart
           series={[
             {
@@ -60,12 +56,8 @@ export default function LegendDimension() {
           width={200}
         />
       )}
-      getCode={(
-        /** @type {{ props: { direction: "horizontal" | "vertical"; markSize: number; markGap: number; itemGap: number; scrollable: boolean;}}} */
-        { props },
-      ) => {
-        return `
-import { PieChart } from '@mui/x-charts/PieChart';
+      getCode={({ props }) => {
+        return `import { PieChart } from '@mui/x-charts/PieChart';
 import { legendClasses } from '@mui/x-charts/ChartsLegend';
 
 <PieChart

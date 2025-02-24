@@ -2,53 +2,47 @@ import * as React from 'react';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 
-const knobs = [
-  {
-    propName: 'panning',
+const knobs = {
+  panning: {
     knob: 'switch',
     defaultValue: true,
   },
-  {
-    propName: 'minStart',
+  minStart: {
     knob: 'number',
     defaultValue: 0,
     step: 1,
     min: 0,
     max: 50,
   },
-  {
-    propName: 'maxEnd',
+  maxEnd: {
     knob: 'number',
     defaultValue: 100,
     step: 1,
     min: 50,
     max: 100,
   },
-  {
-    propName: 'minSpan',
+  minSpan: {
     knob: 'number',
     defaultValue: 10,
     step: 1,
     min: 0,
     max: 100,
   },
-  {
-    propName: 'maxSpan',
+  maxSpan: {
     knob: 'number',
     defaultValue: 100,
     step: 1,
     min: 0,
     max: 100,
   },
-  {
-    propName: 'step',
+  step: {
     knob: 'number',
     defaultValue: 5,
     step: 1,
     min: 1,
     max: 100,
   },
-] as const;
+} as const;
 
 export default function ZoomOptions() {
   return (
@@ -71,26 +65,24 @@ export default function ZoomOptions() {
         </div>
       )}
       getCode={({ props }: any) => {
-        return [
-          `import { BarChart } from '@mui/x-charts/BarChart';`,
-          '',
-          `<BarChart`,
-          `  // ...`,
-          `  xAxis={[`,
-          `    {`,
-          `      // ...`,
-          `      zoom: {`,
-          `        minStart: ${props.minStart},`,
-          `        maxEnd: ${props.maxEnd},`,
-          `        minSpan: ${props.minSpan},`,
-          `        maxSpan: ${props.maxSpan},`,
-          `        step: ${props.step},`,
-          `        panning: ${props.panning},`,
-          `      }`,
-          `    }`,
-          `  ]}`,
-          '/>',
-        ].join('\n');
+        return `import { BarChart } from '@mui/x-charts/BarChart';
+
+<BarChart
+  // ...
+  xAxis={[
+    {
+  // ...
+  zoom: {
+    minStart: ${props.minStart},
+    maxEnd: ${props.maxEnd},
+    minSpan: ${props.minSpan},
+    maxSpan: ${props.maxSpan},
+    step: ${props.step},
+    panning: ${props.panning},
+  }
+    }
+  ]}
+/>`;
       }}
     />
   );

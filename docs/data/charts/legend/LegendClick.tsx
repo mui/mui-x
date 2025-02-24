@@ -10,7 +10,6 @@ import { ChartsLegend, PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
 
-/** @type {import('@mui/x-charts/PieChart').PieChartProps['series']} */
 const pieSeries = [
   {
     type: 'pie',
@@ -20,9 +19,8 @@ const pieSeries = [
       { label: 'Pie B', id: 'P2-B', value: 300 },
     ],
   },
-];
+] as const;
 
-/** @type {import('@mui/x-charts/BarChart').BarChartProps['series']} */
 const barSeries = [
   {
     type: 'bar',
@@ -36,9 +34,8 @@ const barSeries = [
     label: 'Series 2',
     data: [0, 1, 2],
   },
-];
+] as const;
 
-/** @type {import('@mui/x-charts/LineChart').LineChartProps['series']} */
 const lineSeries = [
   {
     type: 'line',
@@ -52,10 +49,10 @@ const lineSeries = [
     label: 'Series 2',
     data: [0, 1, 2],
   },
-];
+] as const;
 
 export default function LegendClick() {
-  const [itemData, setItemData] = React.useState();
+  const [itemData, setItemData] = React.useState<any>();
 
   return (
     <Stack
@@ -73,12 +70,7 @@ export default function LegendClick() {
         }}
       >
         <Typography>Chart Legend</Typography>
-        <ChartDataProvider
-          // @ts-ignore
-          series={barSeries}
-          width={400}
-          height={60}
-        >
+        <ChartDataProvider series={barSeries} width={400} height={60}>
           <ChartsLegend
             direction="horizontal"
             // @ts-ignore
@@ -86,15 +78,9 @@ export default function LegendClick() {
           />
         </ChartDataProvider>
         <Typography>Pie Chart Legend</Typography>
-        <ChartDataProvider
-          // @ts-ignore
-          series={pieSeries}
-          width={400}
-          height={60}
-        >
+        <ChartDataProvider series={pieSeries} width={400} height={60}>
           <ChartsLegend
             direction="horizontal"
-            // @ts-ignore
             onItemClick={(event, context, index) => setItemData([context, index])}
           />
         </ChartDataProvider>

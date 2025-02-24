@@ -24,37 +24,32 @@ export default function LegendPosition() {
   return (
     <ChartsUsageDemo
       componentName="Legend"
-      data={[
+      data={
         {
-          propName: 'direction',
-          knob: 'select',
-          defaultValue: 'vertical',
-          options: ['horizontal', 'vertical'],
-        },
-        {
-          propName: 'vertical',
-          knob: 'select',
-          defaultValue: 'middle',
-          options: ['top', 'middle', 'bottom'],
-        },
-        {
-          propName: 'horizontal',
-          knob: 'select',
-          defaultValue: 'center',
-          options: ['start', 'center', 'end'],
-        },
-        {
-          propName: 'itemsNumber',
-          knob: 'number',
-          defaultValue: 3,
-          min: 1,
-          max: data.length,
-        },
-      ]}
-      renderDemo={(
-        /** @type {{ itemsNumber: number | undefined; direction: "horizontal" | "vertical";  vertical: "top" | "middle" | "bottom"; horizontal: "start" | "center" | "end"; }} */
-        props,
-      ) => (
+          direction: {
+            knob: 'select',
+            defaultValue: 'vertical',
+            options: ['horizontal', 'vertical'],
+          },
+          vertical: {
+            knob: 'select',
+            defaultValue: 'middle',
+            options: ['top', 'middle', 'bottom'],
+          },
+          horizontal: {
+            knob: 'select',
+            defaultValue: 'center',
+            options: ['start', 'center', 'end'],
+          },
+          itemsNumber: {
+            knob: 'number',
+            defaultValue: 3,
+            min: 1,
+            max: data.length,
+          },
+        } as const
+      }
+      renderDemo={(props) => (
         <PieChart
           series={[
             {
@@ -71,12 +66,8 @@ export default function LegendPosition() {
           }}
         />
       )}
-      getCode={(
-        /** @type {{props:{ itemsNumber: number | undefined; direction: "horizontal" | "vertical";  vertical: "top" | "middle" | "bottom"; horizontal: "start" | "center" | "end";}}} */
-        { props },
-      ) => {
-        return `
-import { PieChart } from '@mui/x-charts/PieChart';
+      getCode={({ props }) => {
+        return `import { PieChart } from '@mui/x-charts/PieChart';
 
 <PieChart
   {/** ... */}

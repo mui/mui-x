@@ -10,42 +10,34 @@ export default function ContinuousInteractiveDemo() {
   return (
     <ChartsUsageDemo
       componentName="Legend"
-      data={[
-        {
-          propName: 'direction',
+      data={{
+        direction: {
           knob: 'select',
           defaultValue: 'horizontal',
           options: ['horizontal', 'vertical'],
         },
-        {
-          propName: 'labelPosition',
+        labelPosition: {
           knob: 'select',
           defaultValue: 'end',
           options: ['start', 'end', 'extremes'],
         },
-        {
-          propName: 'length',
+        length: {
           knob: 'number',
           defaultValue: 50,
           min: 10,
         },
-        {
-          propName: 'thickness',
+        thickness: {
           knob: 'number',
           defaultValue: 12,
           min: 1,
           max: 20,
         },
-        {
-          propName: 'reverse',
+        reverse: {
           knob: 'switch',
           defaultValue: false,
         },
-      ]}
-      renderDemo={(
-        /** @type {{ direction: "horizontal" | "vertical"; length: number; thickness: number;  labelPosition:  'start' | 'end' | 'extremes'; reverse: boolean; }} */
-        props,
-      ) => (
+      }}
+      renderDemo={(props) => (
         <LineChart
           dataset={dataset}
           series={[
@@ -97,12 +89,8 @@ export default function ContinuousInteractiveDemo() {
           <ChartsReferenceLine y={0} />
         </LineChart>
       )}
-      getCode={(
-        /** @type {{props: { direction: "horizontal" | "vertical"; length: number; thickness: number;  labelPosition:  'start' | 'end' | 'extremes'; reverse: boolean; }}} */
-        { props },
-      ) => {
-        return `
-import { ContinuousColorLegend } from '@mui/x-charts/ChartsLegend';
+      getCode={({ props }) => {
+        return `import { ContinuousColorLegend } from '@mui/x-charts/ChartsLegend';
 
 <LineChart
   {/** ... */}

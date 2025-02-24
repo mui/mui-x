@@ -7,48 +7,43 @@ export default function ArcPlayground() {
   return (
     <ChartsUsageDemo
       componentName="Gauge"
-      data={[
-        {
-          propName: `value`,
+      data={{
+        value: {
           knob: 'number',
           defaultValue: 75,
           step: 1,
           min: 0,
           max: 100,
         },
-        {
-          propName: `startAngle`,
+        startAngle: {
           knob: 'number',
           defaultValue: 0,
           step: 1,
           min: -360,
           max: 360,
         },
-        {
-          propName: `endAngle`,
+        endAngle: {
           knob: 'number',
           defaultValue: 360,
           step: 1,
           min: -360,
           max: 360,
         },
-        {
-          propName: `innerRadius`,
+        innerRadius: {
           knob: 'number',
           defaultValue: 80,
           step: 1,
           min: 0,
           max: 100,
         },
-        {
-          propName: `outerRadius`,
+        outerRadius: {
           knob: 'number',
           defaultValue: 100,
           step: 1,
           min: 0,
           max: 100,
         },
-      ]}
+      }}
       renderDemo={(props) => (
         <Box
           sx={{
@@ -71,19 +66,18 @@ export default function ArcPlayground() {
       )}
       getCode={({ props }) => {
         const { innerRadius, outerRadius, ...numberProps } = props;
-        return [
-          `import { Gauge } from '@mui/x-charts/Gauge';`,
-          '',
-          `<Gauge`,
-          ...Object.entries(numberProps).map(
-            ([name, value]) => `  ${name}={${value}}`,
-          ),
-          ...Object.entries({ innerRadius, outerRadius }).map(
-            ([name, value]) => `  ${name}="${value}%"`,
-          ),
-          `  // ...`,
-          '/>',
-        ].join('\n');
+        return `import { Gauge } from '@mui/x-charts/Gauge';
+
+<Gauge
+  ${Object.entries(numberProps)
+    .map(([name, value]) => `${name}={${value}}`)
+    .join('\n  ')}
+  ${Object.entries({ innerRadius, outerRadius })
+    .map(([name, value]) => `${name}="${value}%"`)
+    .join('\n  ')}
+  // ...
+/>
+`;
       }}
     />
   );

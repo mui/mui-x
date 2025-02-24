@@ -13,24 +13,22 @@ export default function BarGap() {
   return (
     <ChartsUsageDemo
       componentName="Bar gap"
-      data={[
-        {
-          propName: `categoryGapRatio`,
+      data={{
+        categoryGapRatio: {
           knob: 'number',
           defaultValue: 0.3,
           step: 0.1,
           min: 0,
           max: 1,
         },
-        {
-          propName: `barGapRatio`,
+        barGapRatio: {
           knob: 'number',
           defaultValue: 0.1,
           step: 0.1,
           min: -2,
           max: 5,
         },
-      ]}
+      }}
       renderDemo={(props) => (
         <BarChart
           dataset={balanceSheet}
@@ -40,7 +38,7 @@ export default function BarGap() {
             {
               scaleType: 'band',
               dataKey: 'year',
-              // @ts-expect-error
+              // @ts-expect-error, issue with band scale types
               categoryGapRatio: props.categoryGapRatio,
               barGapRatio: props.barGapRatio,
             },
@@ -50,20 +48,19 @@ export default function BarGap() {
         />
       )}
       getCode={({ props }) => {
-        return [
-          `import { BarChart } from '@mui/x-charts/BarChart';`,
-          '',
-          `<BarChart`,
-          `  // ...`,
-          `  xAxis={[`,
-          `    {`,
-          `      scaleType: 'band'`,
-          `      data: ['Page 1', 'Page 2', 'Page 3']`,
-          `      categoryGapRatio: ${props.categoryGapRatio}`,
-          `      barGapRatio: ${props.barGapRatio}`,
-          `    }`,
-          '/>',
-        ].join('\n');
+        return `import { BarChart } from '@mui/x-charts/BarChart';
+
+<BarChart
+  // ...
+  xAxis={[
+    {
+      scaleType: 'band',
+      data: ['Page 1', 'Page 2', 'Page 3'],
+      categoryGapRatio: ${props.categoryGapRatio},
+      barGapRatio: ${props.barGapRatio},
+    },
+  ]}
+/>`;
       }}
     />
   );

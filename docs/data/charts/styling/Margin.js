@@ -3,46 +3,43 @@ import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { useDrawingArea, useXAxis, useYAxis } from '@mui/x-charts/hooks';
 
-const margins = ['left', 'right', 'top', 'bottom'].map((propName) => ({
-  propName,
+const defaultMargin = {
   knob: 'number',
   defaultValue: 40,
   step: 1,
   min: 0,
   max: 200,
-}));
+};
 
-const axes = ['xAxisHeight', 'yAxisWidth'].map((propName) => ({
-  propName,
+const defaultAxisSize = {
   knob: 'number',
   defaultValue: 30,
   step: 1,
   min: 0,
   max: 200,
-}));
+};
 
 export default function Margin() {
   return (
     <ChartsUsageDemo
       componentName="Margin demos"
-      data={[
-        ...margins,
-        ...axes,
-        {
-          propName: 'hideXAxis',
+      data={{
+        left: defaultMargin,
+        right: defaultMargin,
+        top: defaultMargin,
+        bottom: defaultMargin,
+        xAxisHeight: defaultAxisSize,
+        yAxisWidth: defaultAxisSize,
+        hideXAxis: {
           knob: 'switch',
           defaultValue: false,
         },
-        {
-          propName: 'hideYAxis',
+        hideYAxis: {
           knob: 'switch',
           defaultValue: false,
         },
-      ]}
-      renderDemo={(
-        /** @type {{ left: number; right: number; top: number; bottom: number; xAxisHeight: number; yAxisWidth: number; hideXAxis: boolean; hideYAxis: boolean; }} */
-        props,
-      ) => (
+      }}
+      renderDemo={(props) => (
         <div style={{ width: '100%', margin: 4 }}>
           <BarChart
             series={[{ data: [6, 18, 12] }]}
@@ -76,10 +73,7 @@ export default function Margin() {
           </BarChart>
         </div>
       )}
-      getCode={(
-        /** @type {{props: { left: number; right: number; top: number; bottom: number; xAxisHeight: number; yAxisWidth: number; hideXAxis: boolean; hideYAxis: boolean; }}} */
-        { props },
-      ) =>
+      getCode={({ props }) =>
         `import { BarChart } from '@mui/x-charts/BarChart';
 
 <BarChart

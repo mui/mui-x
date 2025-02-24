@@ -7,40 +7,36 @@ export default function TextPlayground() {
   return (
     <ChartsUsageDemo
       componentName="Gauge"
-      data={[
-        {
-          propName: `value`,
+      data={{
+        value: {
           knob: 'number',
           defaultValue: 75,
           step: 1,
           min: 0,
           max: 100,
         },
-        {
-          propName: `fontSize`,
+        fontSize: {
           knob: 'number',
           defaultValue: 40,
           step: 1,
           min: 5,
           max: 50,
         },
-        {
-          propName: `dx`,
+        dx: {
           knob: 'number',
           defaultValue: 0,
           step: 1,
           min: -100,
           max: 100,
         },
-        {
-          propName: `dy`,
+        dy: {
           knob: 'number',
           defaultValue: 0,
           step: 1,
           min: -100,
           max: 100,
         },
-      ]}
+      }}
       renderDemo={(props) => (
         <Box
           sx={{
@@ -64,28 +60,23 @@ export default function TextPlayground() {
           />
         </Box>
       )}
-      getCode={({ props }) => {
-        return [
-          `import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge';`,
-          '',
-          `<Gauge`,
-          `  value={${props.value}}`,
-          `  startAngle={-110}`,
-          `  endAngle={110}`,
-          `  sx={{`,
-          // eslint-disable-next-line no-template-curly-in-string
-          '    [`& .${gaugeClasses.valueText}`]: {',
-          `      fontSize: ${props.fontSize},`,
-          `      transform: 'translate(${props.dx}px, ${props.dy}px)',`,
-          `    },`,
-          `  }}`,
-          '  text={',
-          // eslint-disable-next-line no-template-curly-in-string
-          '     ({ value, valueMax }) => `${value} / ${valueMax}`',
-          '  }',
-          '/>',
-        ].join('\n');
-      }}
+      getCode={({
+        props,
+      }) => `import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge';
+
+<Gauge
+  value={${props.value}}
+  startAngle={-110}
+  endAngle={110}
+  sx={{
+    [& .${gaugeClasses.valueText}]: {
+      fontSize: ${props.fontSize},
+      transform: 'translate(${props.dx}px, ${props.dy}px)',
+    },
+  }}
+  text={({ value, valueMax }) => \`\${value} / \${valueMax}\`}
+/>
+`}
     />
   );
 }

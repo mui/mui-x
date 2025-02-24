@@ -14,25 +14,20 @@ export default function LegendTextStyling() {
   return (
     <ChartsUsageDemo
       componentName="Legend"
-      data={[
-        { propName: 'fontSize', knob: 'number', defaultValue: 14 },
-        {
-          propName: 'color',
+      data={{
+        fontSize: { knob: 'number', defaultValue: 14 },
+        color: {
           knob: 'select',
           defaultValue: 'blue',
           options: ['blue', 'red', 'green'],
         },
-        {
-          propName: 'markColor',
+        markColor: {
           knob: 'select',
           defaultValue: 'blue',
           options: ['blue', 'red', 'green'],
         },
-      ]}
-      renderDemo={(
-        /** @type {{  fontSize: number; color: string; markColor: string; }} */
-        props,
-      ) => (
+      }}
+      renderDemo={(props) => (
         <PieChart
           series={[
             {
@@ -54,12 +49,8 @@ export default function LegendTextStyling() {
           }}
         />
       )}
-      getCode={(
-        /** @type {{props: {  fontSize: number; color: string; markColor: string;  }}} */
-        { props },
-      ) => {
-        return `
-import { PieChart } from '@mui/x-charts/PieChart';
+      getCode={({ props }) => {
+        return `import { PieChart } from '@mui/x-charts/PieChart';
 import { labelMarkClasses } from '@mui/x-charts/ChartsLabel';
 
 <PieChart

@@ -12,21 +12,19 @@ export default function AxisTextCustomization() {
   return (
     <ChartsUsageDemo
       componentName="Alert"
-      data={[
-        { propName: 'angle', knob: 'number', defaultValue: 45, min: -180, max: 180 },
+      data={
         {
-          propName: 'textAnchor',
-          knob: 'select',
-          defaultValue: 'start',
-          options: ['start', 'middle', 'end'],
-        },
-        { propName: 'fontSize', knob: 'number', defaultValue: 12 },
-        { propName: 'labelFontSize', knob: 'number', defaultValue: 14 },
-      ]}
-      renderDemo={(
-        /** @type {{ labelFontSize: number; angle: number; textAnchor: 'start'| 'middle'| 'end'; fontSize: number; }} */
-        props,
-      ) => (
+          angle: { knob: 'number', defaultValue: 45, min: -180, max: 180 },
+          textAnchor: {
+            knob: 'select',
+            defaultValue: 'start',
+            options: ['start', 'middle', 'end'],
+          },
+          fontSize: { knob: 'number', defaultValue: 12 },
+          labelFontSize: { knob: 'number', defaultValue: 14 },
+        } as const
+      }
+      renderDemo={(props) => (
         <Box sx={{ width: '100%', maxWidth: 400 }}>
           <BarChart
             dataset={dataset}
@@ -58,10 +56,7 @@ export default function AxisTextCustomization() {
           />
         </Box>
       )}
-      getCode={(
-        /** @type {{props: { labelFontSize: number; angle: number; textAnchor: 'start'| 'middle'| 'end'; fontSize: number; }}} */
-        { props },
-      ) => `import { BarChart } from '@mui/x-charts/BarChart';
+      getCode={({ props }) => `import { BarChart } from '@mui/x-charts/BarChart';
 
 <ScatterChart
   // ...

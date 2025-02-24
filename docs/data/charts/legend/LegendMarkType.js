@@ -13,18 +13,14 @@ export default function LegendMarkType() {
   return (
     <ChartsUsageDemo
       componentName="Legend"
-      data={[
-        {
-          propName: 'markType',
+      data={{
+        markType: {
           knob: 'select',
           defaultValue: 'square',
           options: ['square', 'circle', 'line'],
         },
-      ]}
-      renderDemo={(
-        /** @type {{  markType: "square" | "circle" | "line" }} */
-        props,
-      ) => (
+      }}
+      renderDemo={(props) => (
         <BarChart
           series={seriesConfig.map((seriesItem) => ({
             ...seriesItem,
@@ -39,12 +35,8 @@ export default function LegendMarkType() {
           height={200}
         />
       )}
-      getCode={(
-        /** @type {{props: { markType: "square" | "circle" | "line" }}} */
-        { props },
-      ) => {
-        return `
-import { BarChart } from '@mui/x-charts/BarChart';
+      getCode={({ props }) => {
+        return `import { BarChart } from '@mui/x-charts/BarChart';
 
 <BarChart
   {/** ... */}

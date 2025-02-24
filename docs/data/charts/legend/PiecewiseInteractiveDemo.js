@@ -12,40 +12,32 @@ export default function PiecewiseInteractiveDemo() {
   return (
     <ChartsUsageDemo
       componentName="Legend"
-      data={[
-        {
-          propName: 'direction',
+      data={{
+        direction: {
           knob: 'select',
           defaultValue: 'horizontal',
           options: ['horizontal', 'vertical'],
         },
-        {
-          propName: 'labelPosition',
+        labelPosition: {
           knob: 'select',
           defaultValue: 'extremes',
           options: ['start', 'end', 'extremes'],
         },
-        {
-          propName: 'markType',
+        markType: {
           knob: 'select',
           defaultValue: 'square',
           options: ['square', 'circle', 'line'],
         },
-        {
-          propName: 'onlyShowExtremes',
+        onlyShowExtremes: {
           knob: 'switch',
           defaultValue: false,
         },
-        {
-          propName: 'padding',
+        padding: {
           knob: 'number',
           defaultValue: 0,
         },
-      ]}
-      renderDemo={(
-        /** @type {{ direction: "vertical" | "horizontal"; markType: 'square' | 'circle' | 'line'; labelPosition:  'start' | 'end' | 'extremes'; padding: number; onlyShowExtremes: boolean; }} */
-        props,
-      ) => (
+      }}
+      renderDemo={(props) => (
         <LineChart
           dataset={dataset}
           series={[
@@ -102,12 +94,8 @@ export default function PiecewiseInteractiveDemo() {
           <ChartsReferenceLine y={0} />
         </LineChart>
       )}
-      getCode={(
-        /** @type {{props:{ direction: "vertical" | "horizontal"; markType: 'square' | 'circle' | 'line'; labelPosition:  'start' | 'end' | 'extremes'; padding: number; onlyShowExtremes: boolean; }}} */
-        { props },
-      ) => {
-        return `
-import { 
+      getCode={({ props }) => {
+        return `import { 
   PiecewiseColorLegend,
   piecewiseColorDefaultLabelFormatter,
 } from '@mui/x-charts/ChartsLegend';

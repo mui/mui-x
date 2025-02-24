@@ -22,16 +22,13 @@ export default function AxisCustomization() {
   return (
     <ChartsUsageDemo
       componentName="Alert"
-      data={[
-        { propName: 'disableLine', knob: 'switch', defaultValue: false },
-        { propName: 'disableTicks', knob: 'switch', defaultValue: false },
-        { propName: 'label', knob: 'input', defaultValue: 'my axis' },
-        { propName: 'tickSize', knob: 'number', defaultValue: 6 },
-      ]}
-      renderDemo={(
-        /** @type {{ disableLine: boolean; disableTicks: boolean; label: string; tickSize: number; }} */
-        props,
-      ) => (
+      data={{
+        disableLine: { knob: 'switch', defaultValue: false },
+        disableTicks: { knob: 'switch', defaultValue: false },
+        label: { knob: 'input', defaultValue: 'my axis' },
+        tickSize: { knob: 'number', defaultValue: 6 },
+      }}
+      renderDemo={(props) => (
         <Box sx={{ width: '100%', maxWidth: 400 }}>
           <ScatterChart
             series={[
@@ -52,11 +49,9 @@ export default function AxisCustomization() {
           />
         </Box>
       )}
-      getCode={(
-        /** @type {{props: { disableLine: boolean; disableTicks: boolean; label: string; tickSize: number; }}} */
-        { props },
-      ) =>
-        `import { ScatterChart } from '@mui/x-charts/ScatterChart';
+      getCode={({
+        props,
+      }) => `import { ScatterChart } from '@mui/x-charts/ScatterChart';
 
 <ScatterChart
   // ...
@@ -67,8 +62,7 @@ export default function AxisCustomization() {
     tickSize: ${props.tickSize},
   }}
 />
-`
-      }
+`}
     />
   );
 }
