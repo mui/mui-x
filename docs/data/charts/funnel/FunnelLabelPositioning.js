@@ -37,9 +37,17 @@ export default function FunnelLabelPositioning() {
             'text-before-edge',
           ],
         },
-        margin: {
-          knob: 'margin',
-          defaultValue: { top: 15, right: 0, bottom: 0, left: -10 },
+        offsetY: {
+          knob: 'slider',
+          defaultValue: 15,
+          min: -50,
+          max: 50,
+        },
+        offsetX: {
+          knob: 'slider',
+          defaultValue: -10,
+          min: -50,
+          max: 50,
         },
         hide: {
           knob: 'switch',
@@ -66,7 +74,10 @@ export default function FunnelLabelPositioning() {
                       },
                       textAnchor: props.textAnchor,
                       dominantBaseline: props.dominantBaseline,
-                      margin: props.margin,
+                      offset: {
+                        x: props.offsetX,
+                        y: props.offsetY,
+                      },
                     },
               },
             ]}
@@ -104,11 +115,10 @@ export default function FunnelLabelPositioning() {
         },
         textAnchor: '${props.textAnchor}',
         dominantBaseline: '${props.dominantBaseline}',
-        margin: {
-          top: ${props.margin.top},
-          right: ${props.margin.right},
-          bottom: ${props.margin.bottom},
-          left: ${props.margin.left}
+        offset: {
+          x: ${props.offsetX},
+          y: ${props.offsetY}
+        }
       }
     }
   ]}

@@ -137,8 +137,8 @@ export type FunnelLabelOptions = {
     | 'text-after-edge'
     | 'text-before-edge';
   /**
-   * The margin of the label.
+   * The offset of the label from the anchor point.
    * @default 0
    */
-  margin?: number | { top?: number; right?: number; bottom?: number; left?: number };
+  offset?: number | { x?: number; y?: number };
 };

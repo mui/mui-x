@@ -22,7 +22,7 @@ import { FunnelChartSlotExtension } from './funnelSlots.types';
 
 export interface FunnelChartProps
   extends Omit<
-      ChartContainerProProps,
+      ChartContainerProProps<'funnel'>,
       'series' | 'plugins' | 'zAxis' | 'zoom' | 'onZoomChange' | 'dataset'
     >,
     Omit<FunnelPlotProps, 'slots' | 'slotProps'>,
