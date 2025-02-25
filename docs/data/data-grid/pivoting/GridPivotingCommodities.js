@@ -3,7 +3,6 @@ import {
   DataGridPremium,
   useGridApiRef,
   unstable_useGridPivoting,
-  GridToolbar,
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
@@ -39,7 +38,7 @@ export default function GridPivotingCommodities() {
           rows={data.rows}
           columns={data.columns}
           apiRef={apiRef}
-          slots={{ toolbar: GridToolbar }}
+          showToolbar
           pivotParams={pivotParams}
           loading={loading}
           columnGroupHeaderHeight={36}

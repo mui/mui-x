@@ -3,7 +3,6 @@ import {
   DataGridPremium,
   unstable_useGridPivoting,
   GridColDef,
-  GridToolbar,
   useGridApiRef,
   GridPivotModel,
 } from '@mui/x-data-grid-premium';
@@ -153,7 +152,7 @@ export default function GridPivotingFinancial() {
           rows={rows}
           columns={columns}
           apiRef={apiRef}
-          slots={{ toolbar: GridToolbar }}
+          showToolbar
           pivotParams={pivotParams}
           cellSelection
           columnGroupHeaderHeight={36}

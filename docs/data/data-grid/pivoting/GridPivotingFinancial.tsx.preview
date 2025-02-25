@@ -3,7 +3,7 @@
     rows={rows}
     columns={columns}
     apiRef={apiRef}
-    slots={{ toolbar: GridToolbar }}
+    showToolbar
     pivotParams={pivotParams}
     cellSelection
     columnGroupHeaderHeight={36}

@@ -157,7 +157,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
             rows={ROWS}
             columns={COLUMNS}
             apiRef={apiRef}
-            slots={{ toolbar: GridToolbar }}
+            showToolbar
             pivotParams={pivotParams}
             cellSelection
             {...other}

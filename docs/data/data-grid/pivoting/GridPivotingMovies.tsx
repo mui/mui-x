@@ -5,7 +5,6 @@ import {
   unstable_useGridPivoting,
   GridPivotModel,
   GridColDef,
-  GridToolbar,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
@@ -56,7 +55,7 @@ export default function GridPivotingMovies() {
           columns={data.columns}
           pivotParams={pivotParams}
           apiRef={apiRef}
-          slots={{ toolbar: GridToolbar }}
+          showToolbar
           columnGroupHeaderHeight={36}
           sx={{
             '& .MuiDataGrid-columnHeader--filledGroup': {
