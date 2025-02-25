@@ -11,14 +11,13 @@ export default function FunnelAxis() {
         series={[populationByEducationLevelPercentageSeriesLabeled]}
         yAxis={[
           {
-            id: 'y',
             data: ['First', 'Second', 'Third', 'Fourth', 'Fifth'],
             position: 'left',
           },
         ]}
         {...funnelProps}
       >
-        <ChartsYAxis axisId="y" disableLine disableTicks />
+        <ChartsYAxis disableLine disableTicks />
       </FunnelChart>
     </Box>
   );
