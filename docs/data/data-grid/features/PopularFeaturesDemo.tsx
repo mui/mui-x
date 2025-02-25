@@ -512,6 +512,7 @@ export default function PopularFeaturesDemo() {
           detailPanelExpandIcon: ArrowDown,
           detailPanelCollapseIcon: ArrowUp,
         }}
+        showToolbar
         slotProps={{
           toolbar: { showQuickFilter: true },
         }}

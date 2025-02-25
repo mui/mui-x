@@ -53,6 +53,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   rowSpanning: false,
   showCellVerticalBorder: false,
   showColumnVerticalBorder: false,
+  showToolbar: false,
   sortingMode: 'client',
   sortingOrder: ['asc' as const, 'desc' as const, null],
   throttleRowsMs: 0,

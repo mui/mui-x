@@ -17,7 +17,6 @@ const xLabels = [
 export default function BiaxialBarChart() {
   return (
     <BarChart
-      width={500}
       height={300}
       series={[
         {

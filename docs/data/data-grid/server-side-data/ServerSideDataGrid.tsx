@@ -32,7 +32,7 @@ export default function ServerSideDataGrid() {
     <div style={{ width: '100%', height: 400 }}>
       <DataGrid
         columns={columns}
-        unstable_dataSource={dataSource}
+        dataSource={dataSource}
         pagination
         initialState={{
           ...initialState,
