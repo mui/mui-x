@@ -3,6 +3,59 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.27.1
+
+_Feb 25, 2025_
+
+We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+- 🌍 Add Bangla (bn-BD) locale on the Data Grid and Date Pickers
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@nusr, @officialkidmax.
+Following are all team members who have contributed to this release:
+@bernardobelchior, @MBilalShafi, @KenanYusuf.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.27.1`
+
+- [DataGrid] Fix the pagination unexpected behavior when using -1 for "All" rows per page (#16485) @nusr
+- [DataGrid] Extract `getRowId()` API method as a selector (#16574) @MBilalShafi
+- [DataGrid] Fix scrollbars overlapping cells on mount (#16653) @KenanYusuf
+- [l10n] Add Bangla (bn-BD) locale (#16649) @officialkidmax
+
+#### `@mui/x-data-grid-pro@7.27.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.27.1`.
+
+#### `@mui/x-data-grid-premium@7.27.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.27.1`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.27.1`
+
+- [l10n] Add Bangla (bn-BD) locale (#16649) @officialkidmax
+
+#### `@mui/x-date-pickers-pro@7.27.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.27.1`.
+
+### Charts
+
+#### `@mui/x-charts@7.27.1`
+
+- [charts] Fix empty series array in pie chart (#16657) @bernardobelchior
+
+#### `@mui/x-charts-pro@7.27.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@7.27.1`.
+
 ## 7.27.0
 
 _Feb 17, 2025_
