@@ -25,7 +25,7 @@ const ClockOptions = React.forwardRef(function ClockOptions(
   return renderElement();
 });
 
-namespace ClockOptions {
+export namespace ClockOptions {
   export interface State {}
 
   export interface Props extends BaseUIComponentProps<'div', State> {}

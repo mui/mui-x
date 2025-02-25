@@ -46,7 +46,7 @@ const RangeCalendarSetVisibleYear = React.forwardRef(function RangeCalendarSetVi
   return <MemoizedInnerRangeCalendarSetVisibleYear ref={ref} {...props} ctx={ctx} />;
 });
 
-namespace RangeCalendarSetVisibleYear {
+export namespace RangeCalendarSetVisibleYear {
   export interface State {
     /**
      * The direction of the target year relative to the current visible year.

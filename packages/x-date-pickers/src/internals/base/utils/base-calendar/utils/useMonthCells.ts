@@ -120,7 +120,7 @@ export function useMonthCells(parameters: useMonthCells.Parameters): useMonthCel
   return { resolvedChildren, monthsListOrGridContext, changePage, scrollerRef };
 }
 
-namespace useMonthCells {
+export namespace useMonthCells {
   export interface Parameters extends useCellList.PublicParameters {
     /**
      * Generate the list of items to render.

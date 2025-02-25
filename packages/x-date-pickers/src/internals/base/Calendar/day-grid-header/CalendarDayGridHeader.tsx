@@ -26,7 +26,7 @@ const CalendarDayGridHeader = React.forwardRef(function CalendarDayGridHeader(
   return renderElement();
 });
 
-namespace CalendarDayGridHeader {
+export namespace CalendarDayGridHeader {
   export interface State {}
 
   export interface Props

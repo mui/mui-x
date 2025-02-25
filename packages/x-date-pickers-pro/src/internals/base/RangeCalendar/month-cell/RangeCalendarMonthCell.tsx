@@ -47,7 +47,7 @@ const RangeCalendarMonthCell = React.forwardRef(function RangeCalendarMonthCell(
   return <MemoizedInnerRangeCalendarMonthCell {...props} ref={ref} ctx={ctx} />;
 });
 
-namespace RangeCalendarMonthCell {
+export namespace RangeCalendarMonthCell {
   export interface State extends RangeCellState {}
 
   export interface Props

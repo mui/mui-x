@@ -29,7 +29,7 @@ const RangeCalendarDayGridHeader = React.forwardRef(function CalendarDayGridHead
   return renderElement();
 });
 
-namespace RangeCalendarDayGridHeader {
+export namespace RangeCalendarDayGridHeader {
   export interface State {}
 
   export interface Props

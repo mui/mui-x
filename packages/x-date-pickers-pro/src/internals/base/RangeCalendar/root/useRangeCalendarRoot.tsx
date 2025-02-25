@@ -229,7 +229,7 @@ export function useRangeCalendarRoot(parameters: useRangeCalendarRoot.Parameters
   );
 }
 
-namespace useRangeCalendarRoot {
+export namespace useRangeCalendarRoot {
   export interface Parameters
     extends useBaseCalendarRoot.PublicParameters<PickerRangeValue, DateRangeValidationError>,
       ExportedValidateDateRangeProps,

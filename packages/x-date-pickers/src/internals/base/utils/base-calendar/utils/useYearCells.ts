@@ -85,7 +85,7 @@ export function useYearCells(parameters: useYearCells.Parameters): useYearCells.
   return { resolvedChildren, scrollerRef, yearsListOrGridContext };
 }
 
-namespace useYearCells {
+export namespace useYearCells {
   export interface Parameters extends useCellList.PublicParameters {
     /**
      * Generate the list of items to render.

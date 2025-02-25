@@ -66,7 +66,7 @@ export function useBaseCalendarMonthList(parameters: useBaseCalendarMonthList.Pa
   );
 }
 
-namespace useBaseCalendarMonthList {
+export namespace useBaseCalendarMonthList {
   export interface Parameters extends useMonthCells.Parameters {
     /**
      * Whether to loop keyboard focus back to the first item

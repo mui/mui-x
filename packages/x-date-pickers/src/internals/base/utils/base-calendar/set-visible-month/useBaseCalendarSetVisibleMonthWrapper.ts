@@ -102,7 +102,7 @@ export function useBaseCalendarSetVisibleMonthWrapper(
   return { ref: mergedRef, ctx };
 }
 
-namespace useBaseCalendarSetVisibleMonthWrapper {
+export namespace useBaseCalendarSetVisibleMonthWrapper {
   export interface Parameters extends Pick<useBaseCalendarSetVisibleMonth.Parameters, 'target'> {
     /**
      * The ref forwarded by the parent component.

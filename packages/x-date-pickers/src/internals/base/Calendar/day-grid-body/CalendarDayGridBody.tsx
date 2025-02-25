@@ -47,7 +47,7 @@ const CalendarDayGridBody = React.forwardRef(function CalendarDayGrid(
   );
 });
 
-namespace CalendarDayGridBody {
+export namespace CalendarDayGridBody {
   export interface State {}
 
   export interface Props

@@ -12,4 +12,4 @@ export function useBaseCalendarDayGrid() {
   return React.useMemo(() => ({ getDayGridProps }), [getDayGridProps]);
 }
 
-namespace useBaseCalendarDayGrid {}
+export namespace useBaseCalendarDayGrid {}

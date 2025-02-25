@@ -51,7 +51,7 @@ const RangeCalendarDayGridBody = React.forwardRef(function CalendarDayGrid(
   );
 });
 
-namespace RangeCalendarDayGridBody {
+export namespace RangeCalendarDayGridBody {
   export interface State {}
 
   export interface Props

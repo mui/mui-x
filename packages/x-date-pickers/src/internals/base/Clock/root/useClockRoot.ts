@@ -9,7 +9,6 @@ import {
 } from '../../../../models';
 import { useTimeManager } from '../../../../managers';
 import { ExportedValidateTimeProps, ValidateTimeProps } from '../../../../validation/validateTime';
-import { useLocalizationContext } from '../../../hooks/useUtils';
 import { FormProps, PickerValue } from '../../../models';
 import { useControlledValueWithTimezone } from '../../../hooks/useValueWithTimezone';
 import { ClockSection } from '../utils/types';
@@ -17,6 +16,9 @@ import { GenericHTMLProps } from '../../base-utils/types';
 import { mergeReactProps } from '../../base-utils/mergeReactProps';
 import { ClockRootContext } from './ClockRootContext';
 import { useValidation } from '../../../../validation';
+import { useUtils } from '../../../hooks/useUtils';
+import { SECTION_TYPE_GRANULARITY } from '../../../utils/getDefaultReferenceDate';
+import { getTodayDate } from '../../../utils/date-utils';
 
 export function useClockRoot(parameters: useClockRoot.Parameters) {
   const {
@@ -41,7 +43,7 @@ export function useClockRoot(parameters: useClockRoot.Parameters) {
   } = parameters;
 
   const manager = useTimeManager();
-  const adapter = useLocalizationContext();
+  const utils = useUtils();
 
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
     name: 'Clock',
@@ -62,6 +64,23 @@ export function useClockRoot(parameters: useClockRoot.Parameters) {
       shouldDisableTime,
     }),
     [disableFuture, disablePast, maxTime, minTime, shouldDisableTime],
+  );
+
+  const referenceDate = React.useMemo(
+    () =>
+      manager.internal_valueManager.getInitialReferenceValue({
+        value,
+        utils,
+        props: validationProps,
+        referenceDate: referenceDateProp,
+        // TODO: Check if this is the right granularity
+        granularity: SECTION_TYPE_GRANULARITY.day,
+        timezone,
+        getTodayDate: () => getTodayDate(utils, timezone, 'date'),
+      }),
+    // We want the `referenceDate` to update on prop and `timezone` change (https://github.com/mui/mui-x/issues/10804)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [referenceDateProp, timezone],
   );
 
   const resolvedChildren = React.useMemo(() => {
@@ -109,7 +128,7 @@ export function useClockRoot(parameters: useClockRoot.Parameters) {
   );
 }
 
-namespace useClockRoot {
+export namespace useClockRoot {
   export interface Parameters
     extends TimezoneProps,
       FormProps,

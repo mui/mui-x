@@ -102,7 +102,7 @@ export function useCalendarRoot(parameters: useCalendarRoot.Parameters) {
   );
 }
 
-namespace useCalendarRoot {
+export namespace useCalendarRoot {
   export interface Parameters
     extends useBaseCalendarRoot.PublicParameters<PickerValue, DateValidationError>,
       ExportedValidateDateProps {

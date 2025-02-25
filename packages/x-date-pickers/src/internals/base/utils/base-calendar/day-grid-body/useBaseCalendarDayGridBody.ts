@@ -117,7 +117,7 @@ export function useBaseCalendarDayGridBody(parameters: useBaseCalendarDayGridBod
   );
 }
 
-namespace useBaseCalendarDayGridBody {
+export namespace useBaseCalendarDayGridBody {
   export interface Parameters extends useCellList.PublicParameters {
     /**
      * The children of the component.

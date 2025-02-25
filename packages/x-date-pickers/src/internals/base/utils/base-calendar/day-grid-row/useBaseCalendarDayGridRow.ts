@@ -33,7 +33,7 @@ export function useBaseCalendarDayGridRow(parameters: useBaseCalendarDayGridRow.
   return React.useMemo(() => ({ getDayGridRowProps, context }), [getDayGridRowProps, context]);
 }
 
-namespace useBaseCalendarDayGridRow {
+export namespace useBaseCalendarDayGridRow {
   export interface Parameters {
     /**
      * The date object representing the week.

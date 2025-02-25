@@ -60,7 +60,7 @@ const RangeCalendarDayCell = React.forwardRef(function RangeCalendarDayCell(
   return <MemoizedInnerRangeCalendarDayCell ref={ref} {...props} ctx={ctx} />;
 });
 
-namespace RangeCalendarDayCell {
+export namespace RangeCalendarDayCell {
   export interface State extends RangeCellState {
     /**
      * Whether the day is the first day of its week.

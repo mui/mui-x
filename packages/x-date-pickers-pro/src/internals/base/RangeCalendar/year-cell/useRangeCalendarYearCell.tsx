@@ -22,7 +22,7 @@ export function useRangeCalendarYearCell(parameters: useRangeCalendarYearCell.Pa
   return React.useMemo(() => ({ getYearCellProps }), [getYearCellProps]);
 }
 
-namespace useRangeCalendarYearCell {
+export namespace useRangeCalendarYearCell {
   export interface Parameters extends useBaseCalendarYearCell.Parameters {
     /**
      * The memoized context forwarded by the wrapper component so that this component does not need to subscribe to any context.

@@ -61,7 +61,7 @@ export function useBaseCalendarYearGrid(parameters: useBaseCalendarYearGrid.Para
   );
 }
 
-namespace useBaseCalendarYearGrid {
+export namespace useBaseCalendarYearGrid {
   export interface PublicParameters extends useYearCells.Parameters {
     /**
      * Cells rendered per row.

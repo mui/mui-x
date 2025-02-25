@@ -37,7 +37,7 @@ export function useBaseCalendarYearCell(parameters: useBaseCalendarYearCell.Para
   return React.useMemo(() => ({ getYearCellProps }), [getYearCellProps]);
 }
 
-namespace useBaseCalendarYearCell {
+export namespace useBaseCalendarYearCell {
   export interface Parameters {
     /**
      * The value to select when this cell is clicked.

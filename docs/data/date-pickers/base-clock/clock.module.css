@@ -1,0 +1,23 @@
+.Root {
+}
+
+.OptionList {
+  display: flex;
+  flex-direction: column;
+  height: 300px;
+  width: 64px;
+  overflow-y: auto;
+}
+
+.Option {
+  position: relative;
+  user-select: none;
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+  outline: none;
+  box-sizing: border-box;
+  border-radius: 4px;
+  padding: 0;
+  min-height: 32px;
+}

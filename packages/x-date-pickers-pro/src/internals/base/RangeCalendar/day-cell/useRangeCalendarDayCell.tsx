@@ -22,7 +22,7 @@ export function useRangeCalendarDayCell(parameters: useRangeCalendarDayCell.Para
   return React.useMemo(() => ({ getDayCellProps }), [getDayCellProps]);
 }
 
-namespace useRangeCalendarDayCell {
+export namespace useRangeCalendarDayCell {
   export interface Parameters extends useBaseCalendarDayCell.Parameters {
     /**
      * The memoized context forwarded by the wrapper component so that this component does not need to subscribe to any context.

@@ -80,7 +80,7 @@ export function useBaseCalendarDayGridNavigation(
   };
 }
 
-namespace useBaseCalendarDayGridNavigation {
+export namespace useBaseCalendarDayGridNavigation {
   export interface Parameters {
     visibleDate: PickerValidDate;
     setVisibleDate: (visibleDate: PickerValidDate) => void;

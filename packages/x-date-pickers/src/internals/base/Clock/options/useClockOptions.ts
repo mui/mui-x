@@ -11,7 +11,7 @@ export function useClockOptions() {
   return React.useMemo(() => ({ getOptionsProps }), [getOptionsProps]);
 }
 
-namespace useClockOptions {
+export namespace useClockOptions {
   export interface ChildrenParameters {
     items: PickerValidDate[];
   }

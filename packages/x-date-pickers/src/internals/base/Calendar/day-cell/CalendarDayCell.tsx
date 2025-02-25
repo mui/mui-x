@@ -83,7 +83,7 @@ const CalendarDayCell = React.forwardRef(function CalendarDayCell(
   return <MemoizedInnerCalendarDayCell ref={ref} {...props} ctx={ctx} />;
 });
 
-namespace CalendarDayCell {
+export namespace CalendarDayCell {
   export interface State {
     /**
      * Whether the day is selected.

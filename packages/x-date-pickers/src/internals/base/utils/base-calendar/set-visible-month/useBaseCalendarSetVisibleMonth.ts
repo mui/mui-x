@@ -23,7 +23,7 @@ export function useBaseCalendarSetVisibleMonth(
   return React.useMemo(() => ({ getSetVisibleMonthProps }), [getSetVisibleMonthProps]);
 }
 
-namespace useBaseCalendarSetVisibleMonth {
+export namespace useBaseCalendarSetVisibleMonth {
   export interface Parameters {
     /**
      * The month to navigate to.

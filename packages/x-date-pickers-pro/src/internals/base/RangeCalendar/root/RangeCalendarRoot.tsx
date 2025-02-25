@@ -113,7 +113,7 @@ const RangeCalendarRoot = React.forwardRef(function RangeCalendarRoot(
   );
 });
 
-namespace RangeCalendarRoot {
+export namespace RangeCalendarRoot {
   export interface State {
     /**
      * Whether no start date and no end date are selected.

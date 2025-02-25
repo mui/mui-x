@@ -42,7 +42,7 @@ const CalendarSetVisibleYear = React.forwardRef(function CalendarSetVisibleYear(
   return <MemoizedInnerCalendarSetVisibleYear ref={ref} {...props} ctx={ctx} />;
 });
 
-namespace CalendarSetVisibleYear {
+export namespace CalendarSetVisibleYear {
   export interface State {
     /**
      * The direction of the target year relative to the current visible year.

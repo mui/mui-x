@@ -110,7 +110,7 @@ export function useBaseCalendarDayCellWrapper(
   };
 }
 
-namespace useBaseCalendarDayCellWrapper {
+export namespace useBaseCalendarDayCellWrapper {
   export interface Parameters extends Pick<useBaseCalendarDayCell.Parameters, 'value'> {
     /**
      * The ref forwarded by the parent component.

@@ -24,7 +24,7 @@ export function useRangeCalendarDayCellWrapper(
   return { ref, ctx };
 }
 
-namespace useRangeCalendarDayCellWrapper {
+export namespace useRangeCalendarDayCellWrapper {
   export interface Parameters extends useBaseCalendarDayCellWrapper.Parameters {}
 
   export interface ReturnValue extends Omit<useBaseCalendarDayCellWrapper.ReturnValue, 'ctx'> {

@@ -6,7 +6,7 @@ import { PickerValidDate } from '../../../../models';
 import { useClockRootContext } from '../root/ClockRootContext';
 import { ClockOptionListContext } from '../utils/ClockOptionListContext';
 
-export function useClockMinuteOptions(parameters: useClockMinuteOptions.Parameters) {
+export function useClockHourOptions(parameters: useClockHourOptions.Parameters) {
   const { children, getItems } = parameters;
   const utils = useUtils();
   const clockRootContext = useClockRootContext();
@@ -59,7 +59,7 @@ export function useClockMinuteOptions(parameters: useClockMinuteOptions.Paramete
   return React.useMemo(() => ({ getOptionsProps, context }), [getOptionsProps, context]);
 }
 
-export namespace useClockMinuteOptions {
+export namespace useClockHourOptions {
   export interface Parameters {
     /**
      * Generate the list of items to render.

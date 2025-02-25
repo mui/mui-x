@@ -95,7 +95,7 @@ export function useBaseCalendarSetVisibleYearWrapper(
   return { ref: mergedRef, ctx };
 }
 
-namespace useBaseCalendarSetVisibleYearWrapper {
+export namespace useBaseCalendarSetVisibleYearWrapper {
   export interface Parameters extends Pick<useBaseCalendarSetVisibleYear.Parameters, 'target'> {
     /**
      * The ref forwarded by the parent component.

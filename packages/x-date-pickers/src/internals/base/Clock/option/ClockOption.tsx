@@ -9,9 +9,10 @@ const InnerClockOption = React.forwardRef(function InnerClockOption(
   props: InnerClockOptionProps,
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
-  const { className, render, value, ...otherProps } = props;
+  const { className, render, value, ctx, ...otherProps } = props;
   const { getOptionsProps } = useClockOption({
     value,
+    ctx,
   });
 
   const state: ClockOption.State = React.useMemo(() => ({}), []);
@@ -39,7 +40,7 @@ const ClockOption = React.forwardRef(function ClockOption(
   return <MemoizedInnerClockOption ref={ref} {...props} ctx={ctx} />;
 });
 
-namespace ClockOption {
+export namespace ClockOption {
   export interface State {}
 
   export interface Props

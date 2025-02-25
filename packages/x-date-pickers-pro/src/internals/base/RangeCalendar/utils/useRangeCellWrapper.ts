@@ -68,7 +68,7 @@ export function useRangeCellWrapper(parameters: useRangeCellWrapper.Parameters) 
   return { cellRef, ctx };
 }
 
-namespace useRangeCellWrapper {
+export namespace useRangeCellWrapper {
   export interface Parameters {
     value: PickerValidDate;
     section: BaseCalendarSection;

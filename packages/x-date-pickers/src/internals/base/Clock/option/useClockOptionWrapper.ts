@@ -42,7 +42,7 @@ export function useClockOptionWrapper(
       return;
     }
 
-    console.log('SELECT', time);
+    rootContext.setValue(time, { section: optionListContext.section });
   });
 
   const ctx = React.useMemo<useClockOption.Context>(
@@ -62,7 +62,7 @@ export function useClockOptionWrapper(
   };
 }
 
-namespace useClockOptionWrapper {
+export namespace useClockOptionWrapper {
   export interface Parameters extends Pick<useClockOption.Parameters, 'value'> {
     /**
      * The ref forwarded by the parent component.

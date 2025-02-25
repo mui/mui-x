@@ -33,7 +33,7 @@ export function useBaseCalendarDayGridHeaderCell(
   return React.useMemo(() => ({ getDayGridHeaderCellProps }), [getDayGridHeaderCellProps]);
 }
 
-namespace useBaseCalendarDayGridHeaderCell {
+export namespace useBaseCalendarDayGridHeaderCell {
   export interface Parameters {
     value: PickerValidDate;
     /**

@@ -93,7 +93,7 @@ function CompositeList<Metadata>(props: CompositeList.Props<Metadata>) {
   );
 }
 
-namespace CompositeList {
+export namespace CompositeList {
   export interface Props<Metadata> {
     children: React.ReactNode;
     /**

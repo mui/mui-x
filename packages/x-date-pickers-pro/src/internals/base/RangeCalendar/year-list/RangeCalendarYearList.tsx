@@ -43,7 +43,7 @@ const RangeCalendarYearList = React.forwardRef(function CalendarYearList(
   );
 });
 
-namespace CalendarYearList {
+export namespace CalendarYearList {
   export interface State {}
 
   export interface Props

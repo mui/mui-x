@@ -32,7 +32,7 @@ export function useBaseCalendarDayGridHeader(parameters: useBaseCalendarDayGridH
   return React.useMemo(() => ({ getDayGridHeaderProps }), [getDayGridHeaderProps]);
 }
 
-namespace useBaseCalendarDayGridHeader {
+export namespace useBaseCalendarDayGridHeader {
   export interface Parameters {
     /**
      * The children of the component.

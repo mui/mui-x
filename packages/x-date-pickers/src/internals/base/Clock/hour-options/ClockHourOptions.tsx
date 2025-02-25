@@ -2,19 +2,19 @@
 import * as React from 'react';
 import { useComponentRenderer } from '../../base-utils/useComponentRenderer';
 import { BaseUIComponentProps } from '../../base-utils/types';
-import { useClockMinuteOptions } from './useClockMinuteOptions';
+import { useClockHourOptions } from './useClockHourOptions';
 import { ClockOptionListContext } from '../utils/ClockOptionListContext';
 
-const ClockMinuteOptions = React.forwardRef(function ClockMinuteOptions(
-  props: ClockMinuteOptions.Props,
+const ClockHourOptions = React.forwardRef(function ClockHourOptions(
+  props: ClockHourOptions.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, render, children, ...otherProps } = props;
-  const { getOptionsProps, context } = useClockMinuteOptions({
+  const { getOptionsProps, context } = useClockHourOptions({
     children,
   });
 
-  const state: ClockMinuteOptions.State = React.useMemo(() => ({}), []);
+  const state: ClockHourOptions.State = React.useMemo(() => ({}), []);
 
   const { renderElement } = useComponentRenderer({
     propGetter: getOptionsProps,
@@ -32,12 +32,12 @@ const ClockMinuteOptions = React.forwardRef(function ClockMinuteOptions(
   );
 });
 
-export namespace ClockMinuteOptions {
+export namespace ClockHourOptions {
   export interface State {}
 
   export interface Props
-    extends useClockMinuteOptions.Parameters,
+    extends useClockHourOptions.Parameters,
       Omit<BaseUIComponentProps<'div', State>, 'children'> {}
 }
 
-export { ClockMinuteOptions };
+export { ClockHourOptions };

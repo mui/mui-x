@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { PickerValidDate } from '../../../../models';
+import { ClockSection } from './types';
 
 export interface ClockOptionListContext {
   /**
@@ -14,6 +15,10 @@ export interface ClockOptionListContext {
    * @returns {boolean} Whether the option is invalid.
    */
   isOptionInvalid: (option: PickerValidDate) => boolean;
+  /**
+   * The section handled by the component.
+   */
+  section: ClockSection | 'unknown';
 }
 
 export const ClockOptionListContext = React.createContext<ClockOptionListContext | undefined>(

@@ -37,7 +37,7 @@ export function useBaseCalendarMonthCell(parameters: useBaseCalendarMonthCell.Pa
   return React.useMemo(() => ({ getMonthCellProps }), [getMonthCellProps]);
 }
 
-namespace useBaseCalendarMonthCell {
+export namespace useBaseCalendarMonthCell {
   export interface Parameters {
     /**
      * The value to select when this cell is clicked.
