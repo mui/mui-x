@@ -22,7 +22,6 @@ export default function StackBars() {
 }
 
 const config = {
-  width: 600,
   height: 350,
   margin: { left: 40 },
   hideLegend: true,

@@ -19,6 +19,7 @@
       "type": { "description": "(options?: GridAutosizeOptions) =&gt; Promise&lt;void&gt;" },
       "required": true
     },
+    "dataSource": { "type": { "description": "GridDataSourceApiBase" }, "required": true },
     "deleteFilterItem": {
       "type": { "description": "(item: GridFilterItem) =&gt; void" },
       "required": true
@@ -465,7 +466,6 @@
       "required": true,
       "isProPlan": true
     },
-    "unstable_dataSource": { "type": { "description": "GridDataSourceApiBase" }, "required": true },
     "unstable_replaceRows": {
       "type": { "description": "(firstRowToReplace: number, newRows: GridRowModel[]) =&gt; void" },
       "required": true

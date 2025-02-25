@@ -27,7 +27,7 @@ type GetDataGridProForcedProps = (
 
 const getDataGridPremiumForcedProps: GetDataGridProForcedProps = (themedProps) => ({
   signature: GridSignature.DataGridPremium,
-  ...(themedProps.unstable_dataSource
+  ...(themedProps.dataSource
     ? {
         filterMode: 'server',
         sortingMode: 'server',
@@ -92,7 +92,7 @@ export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
   return React.useMemo<DataGridPremiumProcessedProps>(
     () => ({
       ...DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES,
-      ...(themedProps.unstable_dataSource ? { aggregationFunctions: {} } : {}),
+      ...(themedProps.dataSource ? { aggregationFunctions: {} } : {}),
       ...themedProps,
       localeText,
       slots,

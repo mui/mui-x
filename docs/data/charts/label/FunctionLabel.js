@@ -14,7 +14,6 @@ export default function FunctionLabel() {
 }
 
 const props = {
-  width: 500,
   height: 300,
   xAxis: [{ data: ['A', 'B', 'C'], scaleType: 'band' }],
 };

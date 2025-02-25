@@ -162,6 +162,21 @@ DataGridRaw.propTypes = {
    */
   columnVisibilityModel: PropTypes.object,
   /**
+   * The data source object.
+   */
+  dataSource: PropTypes.shape({
+    getRows: PropTypes.func.isRequired,
+    updateRow: PropTypes.func,
+  }),
+  /**
+   * Data source cache object.
+   */
+  dataSourceCache: PropTypes.shape({
+    clear: PropTypes.func.isRequired,
+    get: PropTypes.func.isRequired,
+    set: PropTypes.func.isRequired,
+  }),
+  /**
    * Set the density of the Data Grid.
    * @default "standard"
    */
@@ -519,6 +534,11 @@ DataGridRaw.propTypes = {
    */
   onColumnWidthChange: PropTypes.func,
   /**
+   * Callback fired when a data source request fails.
+   * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
+   */
+  onDataSourceError: PropTypes.func,
+  /**
    * Callback fired when the density changes.
    * @param {GridDensity} density New density value.
    */
@@ -790,27 +810,6 @@ DataGridRaw.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * The data source object.
-   */
-  unstable_dataSource: PropTypes.shape({
-    getRows: PropTypes.func.isRequired,
-    updateRow: PropTypes.func,
-  }),
-  /**
-   * Data source cache object.
-   */
-  unstable_dataSourceCache: PropTypes.shape({
-    clear: PropTypes.func.isRequired,
-    get: PropTypes.func.isRequired,
-    set: PropTypes.func.isRequired,
-  }),
-  /**
-   * Callback fired when the data source request fails.
-   * @param {Error} error The error object.
-   * @param {GridGetRowsParams} params With all properties from [[GridGetRowsParams]].
-   */
-  unstable_onDataSourceError: PropTypes.func,
   /**
    * If `true`, the Data Grid enables column virtualization when `getRowHeight` is set to `() => 'auto'`.
    * By default, column virtualization is disabled when dynamic row height is enabled to measure the row height correctly.

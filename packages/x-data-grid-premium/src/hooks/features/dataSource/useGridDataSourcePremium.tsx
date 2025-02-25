@@ -81,12 +81,12 @@ export const useGridDataSourcePremium = (
   >(
     (groupId, field) => {
       if (groupId === GRID_ROOT_GROUP_ID) {
-        return props.unstable_dataSource?.getAggregatedValue?.(aggregateRowRef.current, field);
+        return props.dataSource?.getAggregatedValue?.(aggregateRowRef.current, field);
       }
       const row = apiRef.current.getRow(groupId);
-      return props.unstable_dataSource?.getAggregatedValue?.(row, field);
+      return props.dataSource?.getAggregatedValue?.(row, field);
     },
-    [apiRef, props.unstable_dataSource],
+    [apiRef, props.dataSource],
   );
 
   const privateApi: GridDataSourcePremiumPrivateApi = {
