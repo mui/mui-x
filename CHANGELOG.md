@@ -13,7 +13,7 @@ We'd like to offer a big thanks to the 5 contributors who made this release poss
 - 🌍 Add Bangla (bn-BD) locale on the Data Grid and Date Pickers
 
 Special thanks go out to the community contributors who have helped make this release possible:
-@nusr.
+@nusr, @officialkidmax.
 Following are all team members who have contributed to this release:
 @bernardobelchior, @MBilalShafi, @KenanYusuf.
 
