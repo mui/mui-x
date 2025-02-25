@@ -18,17 +18,16 @@ function generateId(length: number): string {
   return result;
 }
 
-async function getMachineId(): Promise<string> {
-  if (typeof window === 'undefined' || process.env.NODE_ENV === 'test') {
-    return '';
-  }
-
-  const FingerprintJS = await import('@fingerprintjs/fingerprintjs');
-  const fpPromise = FingerprintJS.load();
-  const fp = await fpPromise;
-  const result = await fp.get();
-  return result.visitorId;
-}
+const getMachineId =
+  typeof window === 'undefined' || process.env.NODE_ENV === 'test'
+    ? () => ''
+    : async () => {
+        const FingerprintJS = await import('@fingerprintjs/fingerprintjs');
+        const fpPromise = FingerprintJS.load();
+        const fp = await fpPromise;
+        const result = await fp.get();
+        return result.visitorId;
+      };
 
 function getAnonymousId(): string {
   if (isWindowStorageAvailable('localStorage')) {
