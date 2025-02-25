@@ -23,8 +23,10 @@
     "@babel/preset-typescript": "^7.26.0",
     "@mui/x-internals": "workspace:*",
     "babel-plugin-remove-import-export": "^1.1.1",
+    "import-graph": "^2.1.0",
     "lightningcss": "^1.29.1",
-    "mkdirp": "^3.0.1"
+    "mkdirp": "^3.0.1",
+    "pkg-dir": "^8.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.26.4",

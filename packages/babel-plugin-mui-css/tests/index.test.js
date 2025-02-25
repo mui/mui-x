@@ -1,23 +1,43 @@
 import { join as joinPath } from 'node:path';
 import { readFileSync, writeFileSync } from 'node:fs';
+import { execSync } from 'node:child_process';
 import { expect } from 'chai';
 import outdent from 'outdent';
 import { mkdirp } from 'mkdirp';
 import rimraf from 'rimraf';
-import babel from '@babel/core';
 
 const RUNTIME_DIR = joinPath(import.meta.dirname, './runtime');
+const INPUT_PACK = joinPath(RUNTIME_DIR, './package.json');
+const INPUT_CONF = joinPath(RUNTIME_DIR, './babel-config.json');
 const INPUT_VARS = joinPath(RUNTIME_DIR, './vars.ts');
-const OUTPUT_CSS = joinPath(RUNTIME_DIR, './output.css');
+const OUTPUT_DIR = joinPath(RUNTIME_DIR, './output');
+const OUTPUT_CSS = joinPath(RUNTIME_DIR, './output/index.css');
 
 // prettier-ignore
 describe('babel-plugin-mui-css', () => {
   // opts: { source, config, js, css, vars }
   function transform(opts) {
+    writeFileSync(INPUT_PACK, JSON.stringify({
+      name: 'test',
+      version: '0.0.0',
+      private: true,
+      main: './src/index.js'
+    }));
     writeFileSync(INPUT_VARS, opts.vars ?? '');
 
-    const result = babel.transformSync(outdent.string(opts.source), {
-      babelrc: false,
+    const sources = typeof opts.source === 'string' ?
+      [{ path: 'index.js', content: opts.source }] :
+      opts.source;
+
+    const outputs = typeof opts.js === 'string' ?
+      [opts.js] :
+      opts.js
+
+    sources.forEach(file => {
+      writeFileSync(joinPath(RUNTIME_DIR, 'src', file.path), outdent.string(file.content));
+    })
+
+    writeFileSync(INPUT_CONF, JSON.stringify({
       plugins: [
         [
           joinPath(import.meta.dirname, '../build/index.js'),
@@ -29,10 +49,25 @@ describe('babel-plugin-mui-css', () => {
           },
         ],
       ],
-      generatorOpts: { filename: 'source.js' },
-    });
+    }));
 
-    expect(result.code).to.be.equal(outdent.string(opts.js));
+    const args = [
+      '--verbose',
+      '--extensions', '".js"',
+      joinPath(RUNTIME_DIR, 'src'),
+      '--config-file', INPUT_CONF,
+      '--out-dir', OUTPUT_DIR,
+      '--ignore', '*.ts',
+    ];
+
+    const command = `cd "${RUNTIME_DIR}" && pnpm exec babel ${args.join(' ')}`;
+    const output = execSync(command).toString();
+
+    sources.forEach((file, i) => {
+      const output = readFileSync(joinPath(OUTPUT_DIR, file.path)).toString()
+
+      expect(output).to.be.equal(outdent.string(outputs[i]));
+    })
 
     if (opts.css) {
       const resultCSS = readFileSync(OUTPUT_CSS).toString();
@@ -42,7 +77,8 @@ describe('babel-plugin-mui-css', () => {
 
   beforeEach(() => {
     rimraf.sync(RUNTIME_DIR);
-    mkdirp.sync(RUNTIME_DIR);
+    mkdirp.sync(joinPath(RUNTIME_DIR, 'src'));
+    mkdirp.sync(joinPath(RUNTIME_DIR, 'output'));
   });
 
   after(() => {
@@ -76,7 +112,6 @@ describe('babel-plugin-mui-css', () => {
 
   it('transforms nested selectors', () => {
     transform({
-      filename: 'source.ts',
       source: js`
         const styles = css('MuiDataGrid-panel', {
           root: {
@@ -112,7 +147,6 @@ describe('babel-plugin-mui-css', () => {
 
   it('supports CSS variables', () => {
     transform({
-      filename: 'source.ts',
       vars: ts`
         export const vars = {
           color: {
@@ -140,7 +174,6 @@ describe('babel-plugin-mui-css', () => {
 
   it('supports minification', () => {
     transform({
-      filename: 'source.ts',
       config: { cssMinify: true },
       source: js`
         const styles = css('MuiDataGrid-panel', {
@@ -167,6 +200,71 @@ describe('babel-plugin-mui-css', () => {
       `,
       css: css`
         .MuiDataGrid-panel #id,.MuiDataGrid-panel .class-a,.MuiDataGrid-panel.class-b,.MuiDataGrid-panel>input{color:#000}
+      `,
+    });
+  });
+
+  it('orders calls correctly', () => {
+    transform({
+      source: [
+        {
+          path: 'index.js',
+          content: js`
+            import { aStyles } from './a.js'
+
+            const indexStyles = css('Styles-index', {
+              root: {
+                color: 'indigo',
+              }
+            })
+          `
+        },
+        {
+          path: 'a.js',
+          content: js`
+            import { bStyles } from './b.js'
+
+            export const aStyles = css('Styles-a', {
+              root: {
+                color: 'almond',
+              }
+            })
+          `
+        },
+        {
+          path: 'b.js',
+          content: js`
+            export const bStyles = css('Styles-b', {
+              root: {
+                color: 'beet',
+              }
+            })
+          `
+        },
+      ],
+      js: [
+        js`
+          import { aStyles } from './a.js';
+          const indexStyles = {
+            "root": "Styles-index"
+          };
+        `,
+        js`
+          import { bStyles } from './b.js';
+          export const aStyles = {
+            "root": "Styles-a"
+          };
+        `,
+        js`
+          export const bStyles = {
+            "root": "Styles-b"
+          };
+        `,
+      ],
+      css: css`
+        .Styles-index { color:indigo; }
+        .Styles-a { color:almond; }
+        .Styles-b { color:beet; }
       `,
     });
   });
