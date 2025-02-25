@@ -1,5 +1,4 @@
-/* eslint-disable  */
-
+/* eslint-disable material-ui/no-hardcoded-labels */
 import * as React from 'react';
 import Check from '@mui/icons-material/Check';
 
@@ -293,6 +292,7 @@ export default function ChartDemoPropsForm<
                       [propName]: Number.parseFloat(`${value}`),
                     }))
                   }
+                  valueLabelDisplay="auto"
                   step={step}
                   min={min}
                   max={max}
