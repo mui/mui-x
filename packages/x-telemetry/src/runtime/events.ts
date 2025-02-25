@@ -4,6 +4,8 @@ const muiXTelemetryEvents = {
   licenseVerification: (
     context: TelemetryEventContext,
     payload: {
+      packageReleaseInfo: string;
+      packageName: string;
       licenseStatus?: string;
     },
   ) => ({

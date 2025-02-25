@@ -52,12 +52,10 @@ export function useLicenseVerifier(
 
     sendMuiXTelemetryEvent(
       muiXTelemetryEvents.licenseVerification(
+        { licenseKey },
         {
           packageName,
           packageReleaseInfo: releaseInfo,
-          licenseKey,
-        },
-        {
           licenseStatus: licenseStatus?.status,
         },
       ),

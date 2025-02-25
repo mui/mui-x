@@ -1,7 +1,5 @@
 export interface TelemetryEventContext {
   licenseKey?: string;
-  packageReleaseInfo: string;
-  packageName: string;
 }
 
 export interface TelemetryEvent {
