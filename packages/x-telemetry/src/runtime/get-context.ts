@@ -1,4 +1,3 @@
-import FingerprintJS from '@fingerprintjs/fingerprintjs';
 import telemetryContext from '../context';
 import type { TelemetryContextType } from '../context';
 import {
@@ -20,10 +19,11 @@ function generateId(length: number): string {
 }
 
 async function getMachineId(): Promise<string> {
-  if (typeof navigator === 'undefined') {
+  if (typeof window === 'undefined') {
     return '';
   }
 
+  const FingerprintJS = await import('@fingerprintjs/fingerprintjs');
   const fpPromise = FingerprintJS.load();
   const fp = await fpPromise;
   const result = await fp.get();
