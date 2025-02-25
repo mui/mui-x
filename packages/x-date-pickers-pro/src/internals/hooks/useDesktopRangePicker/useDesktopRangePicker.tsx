@@ -61,11 +61,6 @@ export const useDesktopRangePicker = <
     elementType: Field,
     externalSlotProps: slotProps?.field,
     ownerState,
-    additionalProps: {
-      'data-active-range-position': providerProps.contextValue.open
-        ? rangePositionResponse.rangePosition
-        : undefined,
-    },
   });
 
   const Layout = slots?.layout ?? PickersLayout;
