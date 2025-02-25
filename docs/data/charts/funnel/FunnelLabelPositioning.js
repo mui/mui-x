@@ -39,13 +39,13 @@ export default function FunnelLabelPositioning() {
         },
         offsetX: {
           knob: 'slider',
-          defaultValue: -10,
+          defaultValue: 10,
           min: -50,
           max: 50,
         },
         offsetY: {
           knob: 'slider',
-          defaultValue: 15,
+          defaultValue: -15,
           min: -50,
           max: 50,
         },

@@ -96,13 +96,13 @@ export const positionLabel = ({
   const stackOffset = values[0].stackOffset;
 
   if (isHorizontal) {
-    maxTop = yPosition(values[0].y, baseScaleData[dataIndex], stackOffset)! + mv;
-    minTop = yPosition(values[1].y, baseScaleData[dataIndex], stackOffset)! + mv;
-    minBottom = yPosition(values[2].y, baseScaleData[dataIndex], stackOffset)! - mv;
-    maxBottom = yPosition(values[3].y, baseScaleData[dataIndex], stackOffset)! - mv;
+    maxTop = yPosition(values[0].y, baseScaleData[dataIndex], stackOffset)! - mv;
+    minTop = yPosition(values[1].y, baseScaleData[dataIndex], stackOffset)! - mv;
+    minBottom = yPosition(values[2].y, baseScaleData[dataIndex], stackOffset)! + mv;
+    maxBottom = yPosition(values[3].y, baseScaleData[dataIndex], stackOffset)! + mv;
     minRight = 0;
     maxRight =
-      xPosition(Math.min(...values.map((v) => v.x)), baseScaleData[dataIndex], stackOffset, true)! -
+      xPosition(Math.min(...values.map((v) => v.x)), baseScaleData[dataIndex], stackOffset, true)! +
       mh;
     minLeft = 0;
     maxLeft =
@@ -110,44 +110,44 @@ export const positionLabel = ({
     center = maxRight - (maxRight - maxLeft) / 2;
     leftCenter = 0;
     rightCenter = 0;
-    middle = yPosition(0, baseScaleData[dataIndex], stackOffset)!;
+    middle = yPosition(0, baseScaleData[dataIndex], stackOffset)! - mv;
     topMiddle =
       yPosition(
         values[0].y - (values[0].y - values[1].y) / 2,
         baseScaleData[dataIndex],
         stackOffset,
-      )! + mv;
+      )! - mv;
     bottomMiddle =
       yPosition(
         values[3].y - (values[3].y - values[2].y) / 2,
         baseScaleData[dataIndex],
         stackOffset,
-      )! - mv;
+      )! + mv;
   } else {
     minTop = 0;
     maxTop =
-      yPosition(Math.max(...values.map((v) => v.y)), baseScaleData[dataIndex], stackOffset)! + mv;
+      yPosition(Math.max(...values.map((v) => v.y)), baseScaleData[dataIndex], stackOffset)! - mv;
     minBottom = 0;
     maxBottom =
       yPosition(Math.min(...values.map((v) => v.y)), baseScaleData[dataIndex], stackOffset, true)! -
       mv;
-    maxRight = xPosition(values[0].x, baseScaleData[dataIndex], stackOffset)! - mh;
-    minRight = xPosition(values[1].x, baseScaleData[dataIndex], stackOffset)! - mh;
-    minLeft = xPosition(values[2].x, baseScaleData[dataIndex], stackOffset)! + mh;
-    maxLeft = xPosition(values[3].x, baseScaleData[dataIndex], stackOffset)! + mh;
-    center = xPosition(0, baseScaleData[dataIndex], stackOffset)!;
+    maxRight = xPosition(values[0].x, baseScaleData[dataIndex], stackOffset)! + mh;
+    minRight = xPosition(values[1].x, baseScaleData[dataIndex], stackOffset)! + mh;
+    minLeft = xPosition(values[2].x, baseScaleData[dataIndex], stackOffset)! - mh;
+    maxLeft = xPosition(values[3].x, baseScaleData[dataIndex], stackOffset)! - mh;
+    center = xPosition(0, baseScaleData[dataIndex], stackOffset)! - mh;
     rightCenter =
       xPosition(
         values[0].x - (values[0].x - values[1].x) / 2,
         baseScaleData[dataIndex],
         stackOffset,
-      )! - mh;
+      )! + mh;
     leftCenter =
       xPosition(
         values[3].x - (values[3].x - values[2].x) / 2,
         baseScaleData[dataIndex],
         stackOffset,
-      )! + mh;
+      )! - mh;
     middle = yPosition(
       values[0].y - (values[0].y - values[1].y) / 2,
       baseScaleData[dataIndex],
