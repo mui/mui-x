@@ -23,8 +23,7 @@ export * from './gridDensity';
 export * from './logger';
 export * from './muiEvent';
 export * from './events';
-export type { GridSortDirection, GridComparatorFn, GridSortModel } from './gridSortModel';
-export { GridSortCellParams } from './gridSortModel';
+export type { GridSortCellParams, GridSortDirection, GridComparatorFn, GridSortModel } from './gridSortModel';
 export * from './gridColumnGrouping';
 export type { GridDataSourceCache } from './gridDataSource';
 // Do not export GridExportFormat and GridExportExtension which are override in pro package
