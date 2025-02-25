@@ -56,7 +56,6 @@ export interface FunnelSeriesType
   /**
    * The type of curve to use for the line. Read more about curves at
    * [line interpolation](https://mui.com/x/react-charts/lines/#interpolation).
-   *
    * @default 'linear'
    */
   curve?: FunnelCurveType;
@@ -64,9 +63,10 @@ export interface FunnelSeriesType
    * The label configuration for the funnel plot.
    * Allows to customize the position and margin of the label that is displayed on the funnel sections.
    *
-   * @default { vertical: 'middle', horizontal: 'middle' }
+   * If set to `false`, the label will not be displayed.
+   * @default { vertical: 'middle', horizontal: 'center' }
    */
-  sectionLabel?: false | FunnelLabelOptions | ((item: FunnelItem) => FunnelLabelOptions | false);
+  sectionLabel?: FunnelLabelOptions | ((item: FunnelItem) => FunnelLabelOptions | false) | false;
 }
 
 /**
@@ -114,7 +114,7 @@ export type FunnelDataPoints = Record<'x' | 'y', number> & {
 export type FunnelLabelOptions = {
   /**
    * The position of the label.
-   * @default { vertical: 'middle', horizontal: 'middle' }
+   * @default { vertical: 'middle', horizontal: 'center' }
    */
   position?: Position;
   /**
@@ -138,6 +138,7 @@ export type FunnelLabelOptions = {
     | 'text-before-edge';
   /**
    * The offset of the label from the anchor point.
+   * If a single number is provided, the offset will be applied in both directions.
    * @default 0
    */
   offset?: number | { x?: number; y?: number };

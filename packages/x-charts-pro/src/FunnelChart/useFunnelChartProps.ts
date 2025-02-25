@@ -51,7 +51,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     scaleType: 'band',
     categoryGapRatio: 0,
     data: Array.from(
-      { length: Math.max(...series.map((s) => (s.data ?? []).length)) },
+      { length: Math.max(...series.map((s) => (s.data ?? []).length), 0) },
       (_, index) => index,
     ),
   } as const;
