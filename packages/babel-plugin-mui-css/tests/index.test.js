@@ -62,7 +62,6 @@ describe('babel-plugin-mui-css', () => {
 
     const command = `cd "${RUNTIME_DIR}" && pnpm exec babel ${args.join(' ')}`;
     execSync(command).toString();
-    console.log(command)
 
     sources.forEach((file, i) => {
       const output = readFileSync(joinPath(OUTPUT_DIR, file.path)).toString()
@@ -83,7 +82,7 @@ describe('babel-plugin-mui-css', () => {
   });
 
   after(() => {
-    // rimraf.sync(RUNTIME_DIR);
+    rimraf.sync(RUNTIME_DIR);
   });
 
   it('works', () => {
