@@ -13,7 +13,7 @@ type BabelT = typeof Babel;
 const PLUGIN_NAME = 'mui-css';
 
 export default function transformCSS({ types: t }: BabelT) {
-  let state = {
+  const state = {
     cssMinify: true,
     cssRules: [] as { filepath: string; content: string }[],
     cssOutput: 'index.css',
@@ -182,8 +182,8 @@ function getCSSVariablesCode(filepath: string | undefined) {
   return r;
 }
 
-async function createImportMap(filepath) {
-  const graph = await IG.createGraph(filepath, {
+async function createImportMap(rootPath: string) {
+  const graph = await IG.createGraph(rootPath, {
     extensions: ['ts', 'tsx', 'js', 'jsx'],
   });
 

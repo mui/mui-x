@@ -61,7 +61,7 @@ describe('babel-plugin-mui-css', () => {
     ];
 
     const command = `cd "${RUNTIME_DIR}" && pnpm exec babel ${args.join(' ')}`;
-    const output = execSync(command).toString();
+    execSync(command).toString();
 
     sources.forEach((file, i) => {
       const output = readFileSync(joinPath(OUTPUT_DIR, file.path)).toString()

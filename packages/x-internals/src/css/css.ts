@@ -11,13 +11,13 @@ let element = undefined as HTMLStyleElement | undefined;
  * be compiled away by the babel plugin.
  */
 
-export function css<T extends Record<string, CSSObject>>(prefix: string, classes: T): CSSMeta<T> {
+export function css<T extends Record<string, CSSObject>>(prefix: string, styles: T): CSSMeta<T> {
   if (process.env.NODE_ENV === 'production') {
     throw new Error(
       'The `css()` utility should not be called in a production bundle. Please report this error.',
     );
   } else {
-    return cssDevMode(prefix, classes);
+    return cssDevMode(prefix, styles);
   }
 }
 
@@ -25,23 +25,23 @@ export function css<T extends Record<string, CSSObject>>(prefix: string, classes
 const indexById = {} as Record<string, number>;
 const blobs = [] as string[];
 
-function cssDevMode<T extends Record<string, CSSObject>>(prefix: string, classes: T): CSSMeta<T> {
-  let css = '';
+function cssDevMode<T extends Record<string, CSSObject>>(prefix: string, styles: T): CSSMeta<T> {
+  let output = '';
 
   const result = {} as any;
-  for (const key in classes) {
-    if (Object.hasOwn(classes, key)) {
+  for (const key in styles) {
+    if (Object.hasOwn(styles, key)) {
       const className = generateClassName(prefix, key);
       result[key] = className;
 
-      css += generateCSS(`.${className}`, classes[key]);
+      output += generateCSS(`.${className}`, styles[key]);
     }
   }
 
   const id = prefix;
   const index = indexById[id] ?? blobs.length;
   indexById[id] = index;
-  blobs[index] = css;
+  blobs[index] = output;
 
   injectCSS();
 
@@ -57,7 +57,7 @@ export function generateClassName(prefix: string, className: string) {
 
 function generateCSS(selector: string, styles: Record<string, any>) {
   if (typeof document === 'undefined') {
-    return;
+    return '';
   }
   return stylesToString(selector, styles).join('\n');
 }
