@@ -45,9 +45,9 @@ import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 import { GridStrategyGroup } from '../../core/strategyProcessing';
 
 export const rowsStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps, 'unstable_dataSource' | 'rows' | 'rowCount' | 'getRowId' | 'loading'>
+  Pick<DataGridProcessedProps, 'dataSource' | 'rows' | 'rowCount' | 'getRowId' | 'loading'>
 > = (state, props, apiRef) => {
-  const isDataSourceAvailable = !!props.unstable_dataSource;
+  const isDataSourceAvailable = !!props.dataSource;
   apiRef.current.caches.rows = createRowsInternalCache({
     rows: isDataSourceAvailable ? [] : props.rows,
     getRowId: props.getRowId,
@@ -79,7 +79,7 @@ export const useGridRows = (
     | 'pagination'
     | 'paginationMode'
     | 'loading'
-    | 'unstable_dataSource'
+    | 'dataSource'
   >,
 ): void => {
   if (process.env.NODE_ENV !== 'production') {
@@ -525,20 +525,20 @@ export const useGridRows = (
     throttledRowsChange,
   ]);
 
-  const previousDataSource = useLazyRef(() => props.unstable_dataSource);
+  const previousDataSource = useLazyRef(() => props.dataSource);
   const handleStrategyProcessorChange = React.useCallback<
     GridEventListener<'activeStrategyProcessorChange'>
   >(
     (methodName) => {
-      if (props.unstable_dataSource && props.unstable_dataSource !== previousDataSource.current) {
-        previousDataSource.current = props.unstable_dataSource;
+      if (props.dataSource && props.dataSource !== previousDataSource.current) {
+        previousDataSource.current = props.dataSource;
         return;
       }
       if (methodName === 'rowTreeCreation') {
         groupRows();
       }
     },
-    [groupRows, previousDataSource, props.unstable_dataSource],
+    [groupRows, previousDataSource, props.dataSource],
   );
 
   const handleStrategyActivityChange = React.useCallback<
@@ -609,7 +609,7 @@ export const useGridRows = (
       lastRowCount.current = props.rowCount;
     }
 
-    const currentRows = props.unstable_dataSource
+    const currentRows = props.dataSource
       ? Array.from(apiRef.current.getRowModels().values())
       : props.rows;
     const areNewRowsAlreadyInState =
@@ -661,7 +661,7 @@ export const useGridRows = (
     props.rowCount,
     props.getRowId,
     props.loading,
-    props.unstable_dataSource,
+    props.dataSource,
     logger,
     throttledRowsChange,
     apiRef,

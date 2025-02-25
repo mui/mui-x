@@ -68,7 +68,7 @@ The second argument of `valueFormatter` provides some rendering context for adva
 In the next demo, `valueFormatter` is used to shorten months and introduce a breaking space for ticks only.
 To distinguish tick and tooltip, it uses the `context.location`.
 
-{{"demo": "FormatterDemoNoSnap.js"}}
+{{"demo": "FormatterDemo.js"}}
 
 #### Using the D3 formatter
 
@@ -112,7 +112,7 @@ They always display the same data, going from -15 to 92, but with different `dom
 By default, the axes' directions are left to right and bottom to top.
 You can change this behavior with the property `reverse`.
 
-{{"demo": "ReverseExampleNoSnap.js"}}
+{{"demo": "ReverseExample.js"}}
 
 ## Grid
 
@@ -241,13 +241,13 @@ The x-axis label placement is based on the axis configuration, and the y-axis is
 
 Axes rendering can be further customized. Below is an interactive demonstration of the axis props.
 
-{{"demo": "AxisCustomizationNoSnap.js", "hideToolbar": true, "bg": "playground"}}
+{{"demo": "AxisCustomization.js", "hideToolbar": true, "bg": "playground"}}
 
 ### Text customization
 
 To customize the text elements (ticks label and the axis label) use the `tickLabelStyle` and `labelStyle` properties of the axis configuration.
 
-{{"demo": "AxisTextCustomizationNoSnap.js", "hideToolbar": true, "bg": "playground"}}
+{{"demo": "AxisTextCustomization.js", "hideToolbar": true, "bg": "playground"}}
 
 ## Composition
 

@@ -48,16 +48,16 @@ export const useGridTreeDataPreProcessors = (
     | 'disableChildrenFiltering'
     | 'defaultGroupingExpansionDepth'
     | 'isGroupExpandedByDefault'
-    | 'unstable_dataSource'
+    | 'dataSource'
   >,
 ) => {
   const setStrategyAvailability = React.useCallback(() => {
     privateApiRef.current.setStrategyAvailability(
       GridStrategyGroup.RowTree,
       TreeDataStrategy.Default,
-      props.treeData && !props.unstable_dataSource ? () => true : () => false,
+      props.treeData && !props.dataSource ? () => true : () => false,
     );
-  }, [privateApiRef, props.treeData, props.unstable_dataSource]);
+  }, [privateApiRef, props.treeData, props.dataSource]);
 
   const getGroupingColDef = React.useCallback(() => {
     const groupingColDefProp = props.groupingColDef;
@@ -96,7 +96,7 @@ export const useGridTreeDataPreProcessors = (
 
   const updateGroupingColumn = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
-      if (props.unstable_dataSource) {
+      if (props.dataSource) {
         return columnsState;
       }
       const groupingColDefField = GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES.field;
@@ -128,7 +128,7 @@ export const useGridTreeDataPreProcessors = (
 
       return columnsState;
     },
-    [props.treeData, props.unstable_dataSource, getGroupingColDef],
+    [props.treeData, props.dataSource, getGroupingColDef],
   );
 
   const createRowTreeForTreeData = React.useCallback<GridStrategyProcessor<'rowTreeCreation'>>(
