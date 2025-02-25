@@ -14,7 +14,7 @@ export default function FunnelStacked() {
             sectionLabel: {
               position: { horizontal: 'end' },
               textAnchor: 'start',
-              margin: { right: -10 },
+              offset: { x: -10 },
             },
           },
           { data: dataSmall },

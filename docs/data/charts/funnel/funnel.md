@@ -73,7 +73,7 @@ By default, multiple series are displayed on top of each other.
 
 Simply provide multiple series to the funnel chart and make sure that they have different colors or styles to differentiate them.
 
-The order of the series determines the display order.  
+The order of the series determines the display order.
 The first series is at the bottom and the last is at the top.
 
 {{"demo": "FunnelStacked.js"}}
