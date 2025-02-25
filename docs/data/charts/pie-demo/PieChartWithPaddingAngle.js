@@ -11,7 +11,7 @@ const data = [
 
 export default function PieChartWithPaddingAngle() {
   return (
-    <Stack direction="row">
+    <Stack width="100%" direction="row" flexWrap="wrap">
       <PieChart
         series={[
           {
@@ -33,11 +33,12 @@ export default function PieChartWithPaddingAngle() {
             paddingAngle: 5,
             innerRadius: 60,
             outerRadius: 80,
+            cy: '75%',
             data,
           },
         ]}
         width={200}
-        height={200}
+        height={150}
         hideLegend
       />
     </Stack>

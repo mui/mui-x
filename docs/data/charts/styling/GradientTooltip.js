@@ -16,7 +16,6 @@ export default function GradientTooltip() {
           color: 'url(#Gradient)',
         },
       ]}
-      width={400}
       height={200}
     >
       <linearGradient id="Gradient" x1="0%" y1="100%" x2="0%" y2="0%">
