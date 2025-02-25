@@ -155,12 +155,20 @@ export function useTicks(
     }
 
     const ticks = typeof tickInterval === 'object' ? tickInterval : scale.ticks(tickNumber);
-    return ticks.map((value: any) => ({
-      value,
-      formattedValue:
-        valueFormatter?.(value, { location: 'tick', scale }) ?? scale.tickFormat(tickNumber)(value),
-      offset: scale(value),
-      labelOffset: 0,
-    }));
+    return ticks.map((value: any, i) => {
+      return {
+        value,
+        formattedValue:
+          valueFormatter?.(value, { location: 'tick', scale }) ??
+          scale.tickFormat(tickNumber)(value),
+        offset: scale(value),
+        // Allowing the label to be placed in the middle of a continuous scale is weird.
+        // But it is useful in some cases, like funnel categories with a linear scale.
+        labelOffset:
+          tickLabelPlacement === 'tick'
+            ? 0
+            : scale(ticks[i - 1] ?? 0) - (scale(value) + scale(ticks[i - 1] ?? 0)) / 2,
+      };
+    });
   }, [scale, tickInterval, tickNumber, valueFormatter, tickPlacement, tickLabelPlacement]);
 }
