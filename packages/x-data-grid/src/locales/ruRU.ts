@@ -26,6 +26,8 @@ const ruRUGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Нет строк',
   noResultsOverlayLabel: 'Данные не найдены.',
+  noColumnsOverlayLabel: 'Нет столбцов',
+  noColumnsOverlayManageColumns: 'Управление столбцами',
 
   // Density selector toolbar button text
   toolbarDensity: 'Высота строки',
@@ -55,6 +57,18 @@ const ruRUGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Поиск',
   toolbarQuickFilterDeleteIconLabel: 'Очистить',
 
+  // Prompt toolbar field
+  toolbarPromptControlPlaceholder: 'Введите запрос…',
+  toolbarPromptControlWithRecordingPlaceholder: 'Введите или запишите запрос…',
+  toolbarPromptControlRecordingPlaceholder: 'Прослушивание запроса…',
+  toolbarPromptControlLabel: 'Ввод запроса',
+  toolbarPromptControlRecordButtonDefaultLabel: 'Запись',
+  toolbarPromptControlRecordButtonActiveLabel: 'Остановить запись',
+  toolbarPromptControlSendActionLabel: 'Отправить',
+  toolbarPromptControlSendActionAriaLabel: 'Отправить запрос',
+  toolbarPromptControlErrorMessage:
+    'При обработке запроса произошла ошибка. Пожалуйста, повторите попытку с другим запросом.',
+
   // Export selector toolbar button text
   toolbarExport: 'Экспорт',
   toolbarExportLabel: 'Экспорт',
@@ -67,7 +81,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Нет столбцов',
   columnsManagementShowHideAllText: 'Показать/Скрыть Всё',
   columnsManagementReset: 'Сбросить',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementDeleteIconLabel: 'Очистить',
 
   // Filter panel text
   filterPanelAddFilter: 'Добавить фильтр',
@@ -83,9 +97,9 @@ const ruRUGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'содержит',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'не содержит',
   filterOperatorEquals: 'равен',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'не равен',
   filterOperatorStartsWith: 'начинается с',
   filterOperatorEndsWith: 'заканчивается на',
   filterOperatorIs: 'равен',
@@ -106,9 +120,9 @@ const ruRUGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'содержит',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'не содержит',
   headerFilterOperatorEquals: 'равен',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'не равен',
   headerFilterOperatorStartsWith: 'начинается с',
   headerFilterOperatorEndsWith: 'заканчивается на',
   headerFilterOperatorIs: 'равен',
@@ -126,6 +140,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'больше или равно',
   'headerFilterOperator<': 'меньше чем',
   'headerFilterOperator<=': 'меньше или равно',
+  headerFilterClear: 'Очистить фильтр',
 
   // Filter values text
   filterValueAny: 'любой',

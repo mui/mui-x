@@ -227,9 +227,9 @@
     "languageTag": "ru-RU",
     "importName": "ruRU",
     "localeName": "Russian",
-    "missingKeysCount": 5,
-    "totalKeysCount": 123,
-    "githubLink": "https://github.com/mui/mui-x/blob/v7.x/packages/x-data-grid/src/locales/ruRU.ts"
+    "missingKeysCount": 0,
+    "totalKeysCount": 135,
+    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/ruRU.ts"
   },
   {
     "languageTag": "sk-SK",
