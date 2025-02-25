@@ -70,6 +70,7 @@ async function run(argv) {
     MUI_BUILD_VERBOSE: verbose,
     MUI_BABEL_RUNTIME_VERSION: babelRuntimeVersion,
     MUI_OUT_FILE_EXTENSION: outFileExtension,
+    MUI_CSS_OUTPUT_DIR: outDir,
   };
 
   const babelArgs = [

@@ -1,4 +1,4 @@
-import { join as joinPath } from 'node:path';
+import { join as joinPath, dirname } from 'node:path';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { execSync } from 'node:child_process';
 import { expect } from 'chai';
@@ -61,7 +61,8 @@ describe('babel-plugin-mui-css', () => {
     ];
 
     const command = `cd "${RUNTIME_DIR}" && pnpm exec babel ${args.join(' ')}`;
-    execSync(command).toString();
+
+    execSync(command, { env: { ...process.env, ...opts.env } });
 
     sources.forEach((file, i) => {
       const output = readFileSync(joinPath(OUTPUT_DIR, file.path)).toString()
@@ -106,6 +107,32 @@ describe('babel-plugin-mui-css', () => {
       css: css`
         .MuiDataGrid-panel { border:1px solid black; }
         .MuiDataGrid-panel--focused { border:1px solid blue; }
+      `,
+    });
+  });
+
+  it('supports MUI_CSS_OUTPUT_DIR', () => {
+    transform({
+      env: {
+        MUI_CSS_OUTPUT_DIR: dirname(OUTPUT_CSS),
+      },
+      config: {
+        cssOutput: 'index.css',
+      },
+      source: js`
+        const styles = css('MuiDataGrid-panel', {
+          root: {
+            border: '1px solid black',
+          },
+        })
+      `,
+      js: js`
+        const styles = {
+          "root": "MuiDataGrid-panel"
+        };
+      `,
+      css: css`
+        .MuiDataGrid-panel { border:1px solid black; }
       `,
     });
   });

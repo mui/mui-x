@@ -36,21 +36,26 @@ export default function transformCSS({ types: t }: BabelT) {
       return a.filepath.localeCompare(b.filepath);
     });
 
-    let cssOutput = '';
+    let cssContent = '';
 
-    cssOutput = state.cssRules.map((r) => r.content).join('\n');
+    cssContent = state.cssRules.map((r) => r.content).join('\n');
 
     if (state.cssMinify) {
       const { code: cssMinified } = lightning({
         filename: 'index.css',
-        code: Buffer.from(cssOutput),
+        code: Buffer.from(cssContent),
         minify: true,
       });
-      cssOutput = cssMinified as any;
+      cssContent = cssMinified as any;
     }
 
-    mkdirp.sync(dirname(state.cssOutput));
-    writeFileSync(state.cssOutput, cssOutput);
+    const outputPath = joinPath(
+      process.env.MUI_CSS_OUTPUT_DIR ?? '',
+      state.cssOutput,
+    )
+
+    mkdirp.sync(dirname(outputPath));
+    writeFileSync(outputPath, cssContent);
   });
 
   return {
