@@ -240,24 +240,13 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     isPointInside: (x: number) => instance.isPointInside({ x, y: -1 }, { direction: 'x' }),
   });
 
-  const labelRefPoint = {
-    x: left + width / 2,
-    y: positionSign * (axisHeight - 14),
-  };
-
-  /* If there's an axis title, the tick labels have less space to render  */
-  const tickLabelsMaxHeight = (label ? labelRefPoint.y : axisHeight) - tickSize;
-  console.log({ tickLabelsMaxHeight, label, axisHeight });
-
-  const shortenedLabels = shortenLabels(visibleLabels, width, tickLabelsMaxHeight, {
-    tickLabelStyle: axisTickLabelProps.style,
-  });
-
   const axisLabelProps = useSlotProps({
     elementType: Label,
     externalSlotProps: slotProps?.axisLabel,
     additionalProps: {
       style: {
+        ...theme.typography.body1,
+        lineHeight: 1.25,
         fontSize: 14,
         textAnchor: 'middle',
         dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
@@ -265,6 +254,20 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
       },
     } as Partial<ChartsTextProps>,
     ownerState: {},
+  });
+
+  const labelHeight = label === undefined ? 0 : getStringSize(label, axisLabelProps.style).height;
+  const labelRefPoint = {
+    x: left + width / 2,
+    y: positionSign * (axisHeight - labelHeight),
+  };
+
+  /* If there's an axis title, the tick labels have less space to render  */
+  const tickLabelsMaxHeight = axisHeight - labelHeight - tickSize;
+  console.log({ tickLabelsMaxHeight, label, axisHeight, labelHeight });
+
+  const shortenedLabels = shortenLabels(visibleLabels, width, tickLabelsMaxHeight, {
+    tickLabelStyle: axisTickLabelProps.style,
   });
 
   const domain = xScale.domain();
