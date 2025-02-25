@@ -454,6 +454,7 @@
     "scrollbarSize": { "type": { "name": "number" } },
     "showCellVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
     "showColumnVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
+    "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" } },
     "slots": { "type": { "name": "object" }, "additionalInfo": { "slotsApi": true } },
     "sortingMode": {
@@ -486,8 +487,8 @@
     "unstable_onDataSourceError": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(error: Error, params: GridGetRowsParams) => void",
-        "describedArgs": ["error", "params"]
+        "type": "function(error: GridGetRowsError | GridUpdateRowError) => void",
+        "describedArgs": ["error"]
       }
     },
     "virtualizeColumnsWithAutoRowHeight": { "type": { "name": "bool" }, "default": "false" }
@@ -563,7 +564,7 @@
     {
       "name": "toolbar",
       "description": "Toolbar component rendered inside the Header component.",
-      "default": "null",
+      "default": "GridToolbar",
       "class": null
     },
     {

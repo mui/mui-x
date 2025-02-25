@@ -3,9 +3,7 @@
   checkboxSelection
   disableRowSelectionOnClick
   keepNonExistentRowsSelected
-  slots={{
-    toolbar: GridToolbar,
-  }}
+  showToolbar
   slotProps={{
     toolbar: {
       showQuickFilter: true,

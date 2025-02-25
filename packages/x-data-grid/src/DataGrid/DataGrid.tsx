@@ -743,6 +743,11 @@ DataGridRaw.propTypes = {
    */
   showColumnVerticalBorder: PropTypes.bool,
   /**
+   * If `true`, the toolbar is displayed.
+   * @default false
+   */
+  showToolbar: PropTypes.bool,
+  /**
    * Overridable components props dynamically passed to the component at rendering.
    */
   slotProps: PropTypes.object,
@@ -795,9 +800,8 @@ DataGridRaw.propTypes = {
     set: PropTypes.func.isRequired,
   }),
   /**
-   * Callback fired when the data source request fails.
-   * @param {Error} error The error object.
-   * @param {GridGetRowsParams} params With all properties from [[GridGetRowsParams]].
+   * Callback fired when a data source request fails.
+   * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
    */
   unstable_onDataSourceError: PropTypes.func,
   /**

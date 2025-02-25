@@ -2,7 +2,7 @@
   {...data}
   loading={loading}
   columns={columns}
-  slots={{ toolbar: GridToolbar }}
+  showToolbar
   filterModel={filterModel}
   onFilterModelChange={(newFilterModel) => setFilterModel(newFilterModel)}
 />

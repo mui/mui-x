@@ -25,6 +25,7 @@ export default function ExportCustomToolbar() {
         slots={{
           toolbar: CustomToolbar,
         }}
+        showToolbar
       />
     </div>
   );
